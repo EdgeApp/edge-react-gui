@@ -25,7 +25,8 @@ type Props = {
   onFocus(): void,
   onSubmitEditing(): void,
   onBlur(): void,
-  onChangeText(string): void
+  onChangeText(string): void,
+  maxLength?: number
 }
 
 type State = {
@@ -99,6 +100,7 @@ class Input extends Component<Props, State> {
         labelHeight={26}
         keyboardType={this.props.keyboardType}
         placeholder={this.props.placeholder}
+        maxLength={this.props.maxLength}
       />
     )
   }
