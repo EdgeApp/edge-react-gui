@@ -249,6 +249,7 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
       const signedTransaction = await WALLET_API.signTransaction(srcWallet, state.cryptoExchange.transaction)
       const broadcastedTransaction = await WALLET_API.broadcastTransaction(srcWallet, signedTransaction)
       await WALLET_API.saveTransaction(srcWallet, signedTransaction)
+
       const category = sprintf(
         '%s:%s %s %s',
         s.strings.fragment_transaction_exchange,
@@ -256,7 +257,7 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
         s.strings.word_to_in_convert_from_to_string,
         state.cryptoExchange.toCurrencyCode
       )
-
+      const shapeShiftOrderId = (state.cryptoExchange.transaction && state.cryptoExchange.transaction.otherParams && state.cryptoExchange.transaction.otherParams.exchangeData && state.cryptoExchange.transaction.otherParams.exchangeData.orderId) ? 'https://shapeshift.io/#/status/' + state.cryptoExchange.transaction.otherParams.exchangeData.orderId : ''
       const notes = sprintf(
         s.strings.exchange_notes_metadata,
         state.cryptoExchange.fromDisplayAmount,
@@ -264,7 +265,8 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
         fromWallet.name,
         state.cryptoExchange.toDisplayAmount,
         state.cryptoExchange.toWalletPrimaryInfo.displayDenomination.name,
-        toWallet.name
+        toWallet.name,
+        shapeShiftOrderId
       )
 
       const edgeMetaData: EdgeMetadata = {
