@@ -130,7 +130,6 @@ export const setNativeAmount = (info: SetNativeAmountInfo, forceUpdateGui?: bool
   const setAmounts: SetCryptoExchangeAmounts = {
     forceUpdateGui
   }
-
   if (whichWallet === Constants.FROM) {
     const fromDisplayAmount = bns.div(primaryNativeAmount, fromPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
     setAmounts.fromNativeAmount = primaryNativeAmount
@@ -190,6 +189,10 @@ export const setNativeAmount = (info: SetNativeAmountInfo, forceUpdateGui?: bool
 
       setAmounts.fromNativeAmount = fromNativeAmount
       setAmounts.fromDisplayAmount = fromDisplayAmount
+      if (fromNativeAmount === '0' && primaryNativeAmount === '0') {
+        setAmounts.forceUpdateGui = true
+        holderObject.processingAmount = ''
+      }
       // dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT, {native: fromNativeAmount, display: fromDisplayAmount, forceUpdateGui}))
     }
   }

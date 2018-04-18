@@ -63,6 +63,10 @@ function cryptoExchangerReducer (state = initialState, action) {
         toNativeAmount: '0',
         fromDisplayAmount: '0',
         toDisplayAmount: '0',
+        minerFee: '0',
+        fee: '',
+        exchangeRate: 1,
+        transaction: null,
         quoteExpireDate: null
       }
     case Constants.SELECT_TO_WALLET_CRYPTO_EXCHANGE:
@@ -78,6 +82,10 @@ function cryptoExchangerReducer (state = initialState, action) {
         toNativeAmount: '0',
         fromDisplayAmount: '0',
         toDisplayAmount: '0',
+        minerFee: '0',
+        fee: '',
+        exchangeRate: 1,
+        transaction: null,
         quoteExpireDate: null
       }
     case Constants.DISABLE_WALLET_LIST_MODAL_VISIBILITY:
