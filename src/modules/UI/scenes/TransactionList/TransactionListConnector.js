@@ -9,8 +9,8 @@ import * as UTILS from '../../../utils'
 import { updateExchangeRates } from '../../components/ExchangeRate/action'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
-import { fetchTransactions } from './action'
-import TransactionList from './TransactionList.ui'
+import { fetchMoreTransactions } from './action'
+import { type DispatchProps, type StateProps, TransactionList } from './TransactionList.ui'
 
 const mapStateToProps = (state: State) => {
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
@@ -54,11 +54,12 @@ const mapStateToProps = (state: State) => {
   const balanceInFiat = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, balanceInCryptoDisplay)
   const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
 
-  return {
+  const out: StateProps = {
+    loading: false,
     displayDenomination,
     updatingBalance: false,
     transactions,
-    searchVisible: state.ui.scenes.transactionList.searchVisible,
+    // searchVisible: state.ui.scenes.transactionList.searchVisible,
     contactsList: state.ui.scenes.transactionList.contactsList,
     selectedWalletId,
     selectedCurrencyCode: currencyCode,
@@ -74,12 +75,12 @@ const mapStateToProps = (state: State) => {
     fiatSymbol,
     showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility
   }
+  return out
 }
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   updateExchangeRates: () => dispatch(updateExchangeRates()),
-  fetchTransactions: (walletId: string, currencyCode: string, options: Object) =>
-    dispatch(fetchTransactions(walletId, currencyCode, options))
+  fetchMoreTransactions: (walletId: string, currencyCode: string) => dispatch(fetchMoreTransactions(walletId, currencyCode))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(TransactionList)
