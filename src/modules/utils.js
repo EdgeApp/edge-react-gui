@@ -1,17 +1,15 @@
 // @flow
 
 import { bns, div, eq, gte, mul, toFixed } from 'biggystring'
-import getSymbolFromCurrency from 'currency-symbol-map'
 import type { EdgeCurrencyInfo, EdgeCurrencyPlugin, EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeTransaction, EdgeReceiveAddress } from 'edge-core-js'
 import _ from 'lodash'
 import { Platform } from 'react-native'
 
 import borderColors from '../theme/variables/css3Colors'
 import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet } from '../types'
+import { FIAT_CODES_SYMBOLS as currencySymbolMap, getSymbolFromCurrency } from '../constants/indexConstants.js'
 
 const DIVIDE_PRECISION = 18
-
-const currencySymbolMap = require('currency-symbol-map').currencySymbolMap
 
 export const cutOffText = (str: string, lng: number) => {
   if (str.length >= lng) {
