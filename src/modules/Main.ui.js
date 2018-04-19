@@ -255,6 +255,7 @@ export default class Main extends Component<Props, State> {
                       tabBarPosition={'bottom'}
                       showLabel={true}
                       tabBarStyle={styles.footerTabStyles}
+                      onEnter={() => this.props.updateCurrentSceneKey(Constants.EDGE)}
                     >
                       <Stack key={Constants.WALLET_LIST} icon={this.icon(Constants.WALLET_LIST)} tabBarLabel={WALLETS}>
                         <Scene
@@ -264,6 +265,7 @@ export default class Main extends Component<Props, State> {
                           renderTitle={this.renderTitle(WALLETS)}
                           renderLeftButton={this.renderHelpButton()}
                           renderRightButton={this.renderMenuButton()}
+                          onEnter={() => this.props.updateCurrentSceneKey(Constants.WALLET_LIST_SCENE)}
                         />
 
                         <Scene
@@ -273,6 +275,7 @@ export default class Main extends Component<Props, State> {
                           renderTitle={this.renderTitle(CREATE_WALLET)}
                           renderLeftButton={this.renderBackButton(WALLETS)}
                           renderRightButton={this.renderEmptyButton()}
+                          onEnter={() => this.props.updateCurrentSceneKey(Constants.CREATE_WALLET_NAME)}
                         />
 
                         <Scene
@@ -282,6 +285,7 @@ export default class Main extends Component<Props, State> {
                           renderTitle={this.renderTitle(CREATE_WALLET_SELECT_CRYPTO)}
                           renderLeftButton={this.renderBackButton()}
                           renderRightButton={this.renderEmptyButton()}
+                          onEnter={() => this.props.updateCurrentSceneKey(Constants.CREATE_WALLET_SELECT_CRYPTO)}
                         />
 
                         <Scene
@@ -291,6 +295,7 @@ export default class Main extends Component<Props, State> {
                           renderTitle={this.renderTitle(CREATE_WALLET_SELECT_FIAT)}
                           renderLeftButton={this.renderBackButton()}
                           renderRightButton={this.renderEmptyButton()}
+                          onEnter={() => this.props.updateCurrentSceneKey(Constants.CREATE_WALLET_SELECT_FIAT)}
                         />
 
                         <Scene
@@ -300,6 +305,7 @@ export default class Main extends Component<Props, State> {
                           renderTitle={this.renderTitle(CREATE_WALLET)}
                           renderLeftButton={this.renderBackButton()}
                           renderRightButton={this.renderEmptyButton()}
+                          onEnter={() => this.props.updateCurrentSceneKey(Constants.CREATE_WALLET_REVIEW)}
                         />
 
                         <Scene
@@ -324,6 +330,7 @@ export default class Main extends Component<Props, State> {
                           renderRightButton={this.renderEmptyButton()}
                           animation={'fade'}
                           duration={600}
+                          onEnter={() => this.props.updateCurrentSceneKey(Constants.MANAGE_TOKENS)}
                         />
                         <Scene
                           key={Constants.ADD_TOKEN}
@@ -333,6 +340,7 @@ export default class Main extends Component<Props, State> {
                           renderLeftButton={this.renderBackButton()}
                           renderRightButton={this.renderEmptyButton()}
                           renderTitle={this.renderTitle(ADD_TOKEN)}
+                          onEnter={() => this.props.updateCurrentSceneKey(Constants.ADD_TOKEN)}
                         />
                         <Scene
                           key={Constants.EDIT_TOKEN}
@@ -341,6 +349,7 @@ export default class Main extends Component<Props, State> {
                           renderLeftButton={this.renderBackButton()}
                           renderRightButton={this.renderEmptyButton()}
                           renderTitle={this.renderTitle(EDIT_TOKEN)}
+                          onEnter={() => this.props.updateCurrentSceneKey(Constants.EDIT_TOKEN)}
                         />
                       </Stack>
 
@@ -353,6 +362,7 @@ export default class Main extends Component<Props, State> {
                         renderTitle={this.renderWalletListNavBar()}
                         renderLeftButton={this.renderRequestMenuButton()}
                         renderRightButton={this.renderMenuButton()}
+                        onEnter={() => this.props.updateCurrentSceneKey(Constants.REQUEST)}
                       />
 
                       <Stack key={Constants.SCAN} icon={this.icon(Constants.SCAN)} tabBarLabel={SEND}>
@@ -362,6 +372,7 @@ export default class Main extends Component<Props, State> {
                           onEnter={() => {
                             this.props.requestPermission(CAMERA)
                             this.props.dispatchEnableScan()
+                            this.props.updateCurrentSceneKey(Constants.SCAN)
                           }}
                           onExit={this.props.dispatchDisableScan}
                           component={Scan}
@@ -376,6 +387,7 @@ export default class Main extends Component<Props, State> {
                           renderTitle={this.renderTitle(EDGE_LOGIN)}
                           renderLeftButton={this.renderHelpButton()}
                           renderRightButton={this.renderEmptyButton()}
+                          onEnter={() => this.props.updateCurrentSceneKey(Constants.EDGE_LOGIN)}
                         />
                       </Stack>
 
@@ -387,6 +399,7 @@ export default class Main extends Component<Props, State> {
                           renderTitle={this.renderTitle(EXCHANGE)}
                           renderLeftButton={this.renderExchangeButton()}
                           renderRightButton={this.renderMenuButton()}
+                          onEnter={() => this.props.updateCurrentSceneKey(Constants.EXCHANGE)}
                         />
                         <Scene
                           key={Constants.CHANGE_MINING_FEE_EXCHANGE}
@@ -395,6 +408,7 @@ export default class Main extends Component<Props, State> {
                           renderTitle={this.renderTitle(CHANGE_MINING_FEE)}
                           renderLeftButton={this.renderBackButton()}
                           renderRightButton={this.renderHelpButton()}
+                          onEnter={() => this.props.updateCurrentSceneKey(Constants.CHANGE_MINING_FEE_EXCHANGE)}
                         />
                       </Stack>
                     </Tabs>
@@ -409,6 +423,7 @@ export default class Main extends Component<Props, State> {
                         renderTitle={this.renderTitle(SEND_CONFIRMATION)}
                         renderLeftButton={this.renderBackButton()}
                         renderRightButton={this.renderSendConfirmationButton()}
+                        onEnter={() => this.props.updateCurrentSceneKey(Constants.SEND_CONFIRMATION_NOT_USED)}
                       />
                       <Scene
                         key={Constants.CHANGE_MINING_FEE_SEND_CONFIRMATION}
@@ -417,6 +432,7 @@ export default class Main extends Component<Props, State> {
                         renderTitle={this.renderTitle(CHANGE_MINING_FEE)}
                         renderLeftButton={this.renderBackButton()}
                         renderRightButton={this.renderHelpButton()}
+                        onEnter={() => this.props.updateCurrentSceneKey(Constants.CHANGE_MINING_FEE_SEND_CONFIRMATION)}
                       />
                     </Stack>
 
@@ -428,6 +444,7 @@ export default class Main extends Component<Props, State> {
                         renderTitle={this.renderTitle(MANAGE_TOKENS)}
                         renderLeftButton={this.renderBackButton()}
                         renderRightButton={this.renderEmptyButton()}
+                        onEnter={() => this.props.updateCurrentSceneKey(Constants.MANAGE_TOKENS_NOT_USED)}
                       />
 
                       <Scene
@@ -437,6 +454,7 @@ export default class Main extends Component<Props, State> {
                         renderTitle={this.renderTitle(ADD_TOKEN)}
                         renderLeftButton={this.renderBackButton()}
                         renderRightButton={this.renderEmptyButton()}
+                        onEnter={() => this.props.updateCurrentSceneKey(Constants.ADD_TOKEN)}
                       />
                     </Stack>
 
@@ -448,6 +466,7 @@ export default class Main extends Component<Props, State> {
                         renderTitle={this.renderTitle(SETTINGS)}
                         renderLeftButton={this.renderBackButton()}
                         renderRightButton={this.renderEmptyButton()}
+                        onEnter={() => this.props.updateCurrentSceneKey(Constants.SETTINGS_OVERVIEW)}
                       />
                       <Scene
                         key={Constants.CHANGE_PASSWORD}
@@ -456,6 +475,7 @@ export default class Main extends Component<Props, State> {
                         renderTitle={this.renderTitle(CHANGE_PASSWORD)}
                         renderLeftButton={this.renderBackButton()}
                         renderRightButton={this.renderEmptyButton()}
+                        onEnter={() => this.props.updateCurrentSceneKey(Constants.CHANGE_PASSWORD)}
                       />
                       <Scene
                         key={Constants.CHANGE_PIN}
@@ -472,6 +492,7 @@ export default class Main extends Component<Props, State> {
                         renderTitle={this.renderTitle(OTP)}
                         renderLeftButton={this.renderBackButton()}
                         renderRightButton={this.renderEmptyButton()}
+                        onEnter={() => this.props.updateCurrentSceneKey(Constants.CHANGE_PIN)}
                       />
                       <Scene
                         key={Constants.RECOVER_PASSWORD}
@@ -480,6 +501,7 @@ export default class Main extends Component<Props, State> {
                         renderTitle={this.renderTitle(PASSWORD_RECOVERY)}
                         renderLeftButton={this.renderBackButton()}
                         renderRightButton={this.renderEmptyButton()}
+                        onEnter={() => this.props.updateCurrentSceneKey(Constants.RECOVER_PASSWORD)}
                       />
                       {this.renderCurrencySettings()}
                       <Scene
@@ -489,6 +511,7 @@ export default class Main extends Component<Props, State> {
                         renderTitle={this.renderTitle(DEFAULT_FIAT)}
                         renderLeftButton={this.renderBackButton()}
                         renderRightButton={this.renderEmptyButton()}
+                        onEnter={() => this.props.updateCurrentSceneKey(Constants.DEFAULT_FIAT_SETTING)}
                       />
                     </Stack>
                   </Scene>
