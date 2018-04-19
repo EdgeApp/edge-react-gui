@@ -23,32 +23,40 @@ import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView'
 import styles, { styles as styleRaw } from './style'
+import type {ContactsState} from '../../../../reducers/contacts/contactsReducer'
 
 // import SearchBar from './components/SearchBar.ui'
 const INITIAL_TRANSACTION_BATCH_NUMBER = 10
-const SUBSEQUENT_TRANSACTION_BATCH_NUMBER = 30
 const SCROLL_THRESHOLD = 0.5
 
-type Props = {
-  getTransactions: (walletId: string, currencyCode: string) => void, // getting transactions from Redux
-  updateExchangeRates: () => void,
-  transactionsSearchHidden: () => void,
-  fetchTransactions: (walletId: string, currencyCode: string, options: Object) => void,
-  contacts: Array<GuiContact>,
-  selectedWalletId: string,
-  selectedCurrencyCode: string,
+export type StateProps = {
   loading: boolean,
+  displayDenomination: EdgeDenomination,
   updatingBalance: boolean,
   transactions: Array<TransactionListTx>,
-  multiplier: string,
-  uiWallet: GuiWallet,
-  displayDenomination: EdgeDenomination,
-  balanceInCrypto: string,
-  fiatSymbol: string,
-  balanceInFiat: number,
+  contactsList: Array<GuiContact>,
+  selectedWalletId: string,
+  selectedCurrencyCode: string,
+  isoFiatCurrencyCode: string,
   fiatCurrencyCode: string,
-  isoFiatCurrencyCode: string
+  uiWallet: GuiWallet,
+  settings: Object,
+  balanceInCrypto: string,
+  balanceInFiat: number,
+  currencyConverter: Object,
+  multiplier: string,
+  contacts: ContactsState,
+  fiatSymbol: string,
+  showToWalletModal: boolean
 }
+
+export type DispatchProps = {
+  updateExchangeRates: () => any,
+  fetchMoreTransactions: (walletId: string, currencyCode: string) => any
+}
+
+type Props = StateProps & DispatchProps
+
 type State = {
   focused: boolean,
   balanceBoxVisible: boolean,
@@ -57,10 +65,7 @@ type State = {
   balanceBoxOpacity: any,
   balanceBoxHeight: any,
   width: ?number,
-  showBalance: boolean,
-  currentCurrencyCode: string,
-  currentWalletId: string,
-  currentEndIndex: number
+  showBalance: boolean
 }
 
 const SHOW_BALANCE_TEXT = s.strings.string_show_balance
@@ -70,7 +75,7 @@ const SENT_TEXT = s.strings.fragment_transaction_list_sent_prefix
 const RECEIVED_TEXT = s.strings.fragment_transaction_list_receive_prefix
 const UNCONFIRMED_TEXT = s.strings.fragment_wallet_unconfirmed
 
-export default class TransactionList extends Component<Props, State> {
+export class TransactionList extends Component<Props, State> {
   state = {
     focused: false,
     animation: new Animated.Value(0),
@@ -84,8 +89,7 @@ export default class TransactionList extends Component<Props, State> {
     dataSrc: [],
     width: undefined,
     currentCurrencyCode: '',
-    currentWalletId: '',
-    currentEndIndex: 0
+    currentWalletId: ''
   }
 
   componentWillMount () {
@@ -94,64 +98,31 @@ export default class TransactionList extends Component<Props, State> {
   }
 
   componentWillReceiveProps (nextProps: Props) {
-    if ((nextProps.selectedWalletId !== this.props.selectedWalletId) ||
-        (nextProps.selectedCurrencyCode !== this.props.selectedCurrencyCode)) {
-      this.fetchListOfTransactions(nextProps.selectedWalletId, nextProps.selectedCurrencyCode)
+    if (nextProps.selectedWalletId !== this.props.selectedWalletId || nextProps.selectedCurrencyCode !== this.props.selectedCurrencyCode) {
+      this.props.fetchMoreTransactions(nextProps.selectedWalletId, nextProps.selectedWalletId)
     }
-  }
-
-  fetchListOfTransactions = (walletId: string, currencyCode: string) => {
-    this.props.fetchTransactions(walletId, currencyCode, {
-      numEntries: this.state.currentEndIndex,
-      numIndex: 0
-    })
   }
 
   handleScrollEnd = () => {
-    const walletId = this.props.selectedWalletId
-    const currencyCode = this.props.selectedCurrencyCode
-    const { currentEndIndex, currentWalletId, currentCurrencyCode } = this.state
-    let newEndIndex = currentEndIndex
-
-    const txLength = this.props.transactions.length
-    if (!txLength) {
-      newEndIndex = INITIAL_TRANSACTION_BATCH_NUMBER
-    } else if (txLength === currentEndIndex) {
-      newEndIndex += SUBSEQUENT_TRANSACTION_BATCH_NUMBER
-    }
-
-    if (
-      newEndIndex !== currentEndIndex ||
-      (currentWalletId !== '' && currentWalletId !== walletId) ||
-      (currentCurrencyCode !== '' && currentCurrencyCode !== currencyCode)
-    ) {
-      this.setState(
-        state => ({
-          currentCurrencyCode: currencyCode,
-          currentEndIndex: newEndIndex,
-          currentWalletId: walletId
-        }),
-        () => this.fetchListOfTransactions(walletId, currencyCode)
-      )
-    }
+    this.props.fetchMoreTransactions(this.props.selectedWalletId, this.props.selectedCurrencyCode)
   }
 
-  _onSearchChange = () => {
-    // this.props.dispatch(updateSearchResults(null))
-    // console.log('this._onSearchChange executing')
-  }
-
-  _onPressSearch = () => {
-    // this.props.transactionsSearchVisible()
-  }
-
-  _onSearchExit = () => {
-    this.props.transactionsSearchHidden()
-  }
-
-  loadMoreTransactions = () => {
-    // console.log('Transactions.ui->loadMoreTransactions being executed')
-  }
+  // _onSearchChange = () => {
+  //   // this.props.dispatch(updateSearchResults(null))
+  //   // console.log('this._onSearchChange executing')
+  // }
+  //
+  // _onPressSearch = () => {
+  //   // this.props.transactionsSearchVisible()
+  // }
+  //
+  // _onSearchExit = () => {
+  //   this.props.transactionsSearchHidden()
+  // }
+  //
+  // loadMoreTransactions = () => {
+  //   // console.log('Transactions.ui->loadMoreTransactions being executed')
+  // }
 
   _onFocus = () => {
     this.setState({ focused: true })
