@@ -1,9 +1,16 @@
 // @flow
 
-import { bitcoinCurrencyPluginFactory, bitcoincashCurrencyPluginFactory, dashCurrencyPluginFactory, litecoinCurrencyPluginFactory } from 'edge-currency-bitcoin'
+import {
+  bitcoinCurrencyPluginFactory,
+  bitcoincashCurrencyPluginFactory,
+  dashCurrencyPluginFactory,
+  litecoinCurrencyPluginFactory,
+  feathercoinCurrencyPluginFactory,
+  zcoinCurrencyPluginFactory
+} from 'edge-currency-bitcoin'
 import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
-import { coinbasePlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
-import type { AbcContext, AbcContextCallbacks, AbcCurrencyPlugin, EdgeCorePluginFactory } from 'edge-core-js'
+import { coinbasePlugin, shapeshiftPlugin, coincapPlugin } from 'edge-exchange-plugins'
+import type { EdgeContext, EdgeContextCallbacks, EdgeCurrencyPlugin, EdgeCorePluginFactory } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Image, Keyboard, Linking, Platform, StatusBar, TouchableWithoutFeedback } from 'react-native'
 import HockeyApp from 'react-native-hockeyapp'
@@ -27,6 +34,7 @@ import scanIcon from '../assets/images/tabbar/scan.png'
 import walletIconSelected from '../assets/images/tabbar/wallets_selected.png'
 import walletIcon from '../assets/images/tabbar/wallets.png'
 import ExchangeDropMenu from '../connectors/components/HeaderMenuExchangeConnector'
+import RequestDropMenu from '../connectors/components/HeaderMenuRequestConnector'
 import ExchangeConnector from '../connectors/scene/CryptoExchangeSceneConnector'
 import EdgeLoginSceneConnector from '../connectors/scene/EdgeLoginSceneConnector'
 import OtpSettingsSceneConnector from '../connectors/scene/OtpSettingsSceneConnector.js'
@@ -71,17 +79,21 @@ import TransactionListConnector from './UI/scenes/TransactionList/TransactionLis
 import { HwBackButtonHandler } from './UI/scenes/WalletList/components/HwBackButtonHandler'
 import WalletList from './UI/scenes/WalletList/WalletListConnector'
 import {passwordReminderModalConnector as PasswordReminderModal} from './UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
+import { ContactsLoaderConnecter as ContactsLoader } from './UI/components/ContactsLoader/indexContactsLoader.js'
 
 const pluginFactories: Array<EdgeCorePluginFactory> = [
   // Exchanges:
   coinbasePlugin,
   shapeshiftPlugin,
+  coincapPlugin,
   // Currencies:
   bitcoincashCurrencyPluginFactory,
   bitcoinCurrencyPluginFactory,
   dashCurrencyPluginFactory,
   ethereumCurrencyPluginFactory,
-  litecoinCurrencyPluginFactory
+  litecoinCurrencyPluginFactory,
+  feathercoinCurrencyPluginFactory,
+  zcoinCurrencyPluginFactory
 ]
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
@@ -132,18 +144,19 @@ const DEFAULT_FIAT = s.strings.title_default_fiat
 type Props = {
   requestPermission: (permission: Permission) => void,
   username?: string,
-  addCurrencyPlugin: AbcCurrencyPlugin => void,
+  addCurrencyPlugin: EdgeCurrencyPlugin => void,
   setKeyboardHeight: number => void,
-  addContext: AbcContext => void,
+  addContext: EdgeContext => void,
   addUsernames: (Array<string>) => void,
   setDeviceDimensions: any => void,
   dispatchEnableScan: () => void,
   dispatchDisableScan: () => void,
   urlReceived: string => void,
-  contextCallbacks: AbcContextCallbacks
+  updateCurrentSceneKey: (string) => void,
+  contextCallbacks: EdgeContextCallbacks
 }
 type State = {
-  context: ?AbcContext
+  context: ?EdgeContext
 }
 export default class Main extends Component<Props, State> {
   keyboardDidShowListener: any
@@ -238,7 +251,7 @@ export default class Main extends Component<Props, State> {
                   <Scene hideNavBar>
                     <Tabs
                       key={Constants.EDGE}
-                      swipeEnabled={true}
+                      swipeEnabled={false}
                       navTransparent={true}
                       tabBarPosition={'bottom'}
                       showLabel={true}
@@ -292,7 +305,10 @@ export default class Main extends Component<Props, State> {
 
                         <Scene
                           key={Constants.TRANSACTION_LIST}
-                          onEnter={() => this.props.requestPermission(CONTACTS)}
+                          onEnter={() => {
+                            this.props.requestPermission(CONTACTS)
+                            this.props.updateCurrentSceneKey(Constants.TRANSACTION_LIST)
+                          }}
                           navTransparent={true}
                           component={TransactionListConnector}
                           renderTitle={this.renderWalletListNavBar()}
@@ -336,7 +352,7 @@ export default class Main extends Component<Props, State> {
                         tabBarLabel={REQUEST}
                         component={Request}
                         renderTitle={this.renderWalletListNavBar()}
-                        renderLeftButton={this.renderHelpButton()}
+                        renderLeftButton={this.renderRequestMenuButton()}
                         renderRightButton={this.renderMenuButton()}
                       />
 
@@ -366,7 +382,7 @@ export default class Main extends Component<Props, State> {
 
                       <Stack key={Constants.EXCHANGE} icon={this.icon(Constants.EXCHANGE)} tabBarLabel={EXCHANGE}>
                         <Scene
-                          key={Constants.EXCHANGE_NOT_USED}
+                          key={Constants.EXCHANGE_SCENE}
                           navTransparent={true}
                           component={ExchangeConnector}
                           renderTitle={this.renderTitle(EXCHANGE)}
@@ -487,6 +503,7 @@ export default class Main extends Component<Props, State> {
         <TransactionAlert />
         <AutoLogout />
         <PasswordReminderModal />
+        <ContactsLoader />
       </MenuProvider>
     )
   }
@@ -542,6 +559,10 @@ export default class Main extends Component<Props, State> {
 
   renderExchangeButton = () => {
     return <ExchangeDropMenu />
+  }
+
+  renderRequestMenuButton = () => {
+    return <RequestDropMenu />
   }
 
   renderSendConfirmationButton = () => {

@@ -1,9 +1,5 @@
-/**
- * Created by paul on 8/16/17.
- */
 // @flow
-// trying to trigger a build. .. will remove this line
-import type { AbcDenomination, AbcMetaToken, EdgeMetadata } from 'edge-core-js'
+import type { EdgeDenomination, EdgeMetaToken, EdgeMetadata, EdgeTransaction, EdgeReceiveAddress } from 'edge-core-js'
 
 export type GuiWallet = {
   id: string,
@@ -15,12 +11,14 @@ export type GuiWallet = {
   currencyCode: string,
   isoFiatCurrencyCode: string,
   fiatCurrencyCode: string,
-  denominations: Array<AbcDenomination>,
-  allDenominations: { [currencyCode: string]: { [denomination: string]: AbcDenomination } },
+  denominations: Array<EdgeDenomination>,
+  allDenominations: { [currencyCode: string]: { [denomination: string]: EdgeDenomination } },
   symbolImage: string | void,
   symbolImageDarkMono: string | void,
-  metaTokens: Array<AbcMetaToken>,
-  enabledTokens: Array<string>
+  metaTokens: Array<EdgeMetaToken>,
+  enabledTokens: Array<string>,
+  receiveAddress: EdgeReceiveAddress,
+  addressLoadingProgress?: number
 }
 
 export type GuiDenomination = {
@@ -66,7 +64,7 @@ export type CustomTokenInfo = {
   multiplier: string,
   denomination: string, // eventually change to mandatory
   isVisible?: boolean, // eventually change to mandatory,
-  denominations: Array<AbcDenomination>
+  denominations: Array<EdgeDenomination>
 }
 
 export type GuiWalletType = {
@@ -82,13 +80,20 @@ export type GuiFiatType = {
   value: string
 }
 
+export type TransactionListTx = {
+  ...EdgeTransaction,
+  dateString?: string,
+  key: number,
+  time: string
+}
+
 export type FlatListItem = {
   key: number,
   item: any
 }
 
 export type DeviceDimensions = {
-  keyboardHeight?: number
+  keyboardHeight: number
 }
 
 export type ExchangePair = {
@@ -117,6 +122,7 @@ export type GuiReceiveAddressMetadata = {
 export type GuiReceiveAddress = {
   metadata: EdgeMetadata,
   publicAddress: string,
+  legacyAddress?: string,
   segwitAddress?: string,
   nativeAmount: string
 }
@@ -173,7 +179,14 @@ export const emptyGuiWallet: GuiWallet = {
   symbolImage: '',
   symbolImageDarkMono: '',
   metaTokens: [],
-  enabledTokens: []
+  enabledTokens: [],
+  receiveAddress: {
+    nativeAmount: '',
+    metadata: {},
+    publicAddress: '',
+    legacyAddress: ''
+  },
+  addressLoadingProgress: 0
 }
 
 export const emptyGuiDenomination: GuiDenomination = {

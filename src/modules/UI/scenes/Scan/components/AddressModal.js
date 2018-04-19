@@ -1,5 +1,6 @@
-import type { AbcCurrencyWallet, AbcParsedUri } from 'edge-core-js'
 // @flow
+
+import type { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Alert, Clipboard } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -16,11 +17,11 @@ import { AddressInput } from './AddressInput.js'
 import { AddressInputButtons } from './AddressInputButtons.js'
 
 type Props = {
-  coreWallet: AbcCurrencyWallet,
+  coreWallet: EdgeCurrencyWallet,
   currencyCode: string,
   addressModalVisible: boolean,
   toggleAddressModal(): void,
-  updateParsedURI(AbcParsedUri): void,
+  updateParsedURI(EdgeParsedUri): void,
   loginWithEdge(string): void,
   onExitButtonFxn: void
 }

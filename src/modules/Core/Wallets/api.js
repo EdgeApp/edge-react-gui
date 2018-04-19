@@ -1,18 +1,18 @@
 // @flow
 
-import type { AbcCurrencyWallet, AbcMetadata, AbcParsedUri, AbcReceiveAddress, AbcSpendInfo, AbcTransaction } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeMetadata, EdgeParsedUri, EdgeReceiveAddress, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import _ from 'lodash'
 const ENABLED_TOKENS_FILENAME = 'EnabledTokens.json'
 
-export const renameWalletRequest = (wallet: AbcCurrencyWallet, name: string) => {
+export const renameWalletRequest = (wallet: EdgeCurrencyWallet, name: string) => {
   return wallet.renameWallet(name).then(() => wallet)
 }
 
-export const getTransactions = (wallet: AbcCurrencyWallet, currencyCode: string): Promise<Array<AbcTransaction>> => {
-  return wallet.getTransactions ? wallet.getTransactions({ currencyCode }) : Promise.resolve([])
+export const getTransactions = (wallet: EdgeCurrencyWallet, currencyCode: string, options?: Object): Promise<Array<EdgeTransaction>> => {
+  return wallet.getTransactions ? wallet.getTransactions({ ...options, currencyCode }) : Promise.resolve([])
 }
 
-const dummyAbcTransaction: AbcTransaction = {
+const dummyEdgeTransaction: EdgeTransaction = {
   txid: '',
   date: 0,
   currencyCode: '',
@@ -25,7 +25,7 @@ const dummyAbcTransaction: AbcTransaction = {
   otherParams: {}
 }
 
-const dummyAbcReceiveAddress: AbcReceiveAddress = {
+const dummyEdgeReceiveAddress: EdgeReceiveAddress = {
   publicAddress: '',
   nativeAmount: '0',
   metadata: {
@@ -33,42 +33,42 @@ const dummyAbcReceiveAddress: AbcReceiveAddress = {
   }
 }
 
-export const setTransactionDetailsRequest = (wallet: AbcCurrencyWallet, txid: string, currencyCode: string, abcMetadata: AbcMetadata): Promise<void> => {
-  return wallet.saveTxMetadata ? wallet.saveTxMetadata(txid, currencyCode, abcMetadata) : Promise.resolve()
+export const setTransactionDetailsRequest = (wallet: EdgeCurrencyWallet, txid: string, currencyCode: string, edgeMetadata: EdgeMetadata): Promise<void> => {
+  return wallet.saveTxMetadata ? wallet.saveTxMetadata(txid, currencyCode, edgeMetadata) : Promise.resolve()
 }
 
-export const getReceiveAddress = (wallet: AbcCurrencyWallet, currencyCode: string): Promise<AbcReceiveAddress> => {
-  return wallet.getReceiveAddress ? wallet.getReceiveAddress(currencyCode) : Promise.resolve(dummyAbcReceiveAddress)
+export const getReceiveAddress = (wallet: EdgeCurrencyWallet, currencyCode: string): Promise<EdgeReceiveAddress> => {
+  return wallet.getReceiveAddress ? wallet.getReceiveAddress(currencyCode) : Promise.resolve(dummyEdgeReceiveAddress)
 }
 
-export const makeSpend = (wallet: AbcCurrencyWallet, spendInfo: AbcSpendInfo): Promise<AbcTransaction> => {
-  return wallet.makeSpend ? wallet.makeSpend(spendInfo) : Promise.resolve(dummyAbcTransaction)
+export const makeSpend = (wallet: EdgeCurrencyWallet, spendInfo: EdgeSpendInfo): Promise<EdgeTransaction> => {
+  return wallet.makeSpend ? wallet.makeSpend(spendInfo) : Promise.resolve(dummyEdgeTransaction)
 }
 
-export const getMaxSpendable = (wallet: AbcCurrencyWallet, spendInfo: AbcSpendInfo): Promise<string> => {
+export const getMaxSpendable = (wallet: EdgeCurrencyWallet, spendInfo: EdgeSpendInfo): Promise<string> => {
   return wallet.getMaxSpendable ? wallet.getMaxSpendable(spendInfo) : Promise.resolve('0')
 }
 
-export const getBalance = (wallet: AbcCurrencyWallet, currencyCode: string): string => {
+export const getBalance = (wallet: EdgeCurrencyWallet, currencyCode: string): string => {
   return wallet.getBalance ? wallet.getBalance({ currencyCode }) : '0'
 }
 
-export const disableTokens = (wallet: AbcCurrencyWallet, tokens: Array<string>) => {
+export const disableTokens = (wallet: EdgeCurrencyWallet, tokens: Array<string>) => {
   return wallet.disableTokens(tokens)
 }
 
-export const enableTokens = (wallet: AbcCurrencyWallet, tokens: Array<string>) => {
+export const enableTokens = (wallet: EdgeCurrencyWallet, tokens: Array<string>) => {
   return wallet.enableTokens(tokens)
 }
 
-export const addCoreCustomToken = (wallet: AbcCurrencyWallet, tokenObj: any) => {
+export const addCoreCustomToken = (wallet: EdgeCurrencyWallet, tokenObj: any) => {
   return wallet
     .addCustomToken(tokenObj)
     .then(() => wallet.enableTokens([tokenObj.currencyCode]))
     .catch(e => console.log(e))
 }
 
-export const getEnabledTokensFromFile = async (wallet: AbcCurrencyWallet): Promise<Array<any>> => {
+export const getEnabledTokensFromFile = async (wallet: EdgeCurrencyWallet): Promise<Array<any>> => {
   try {
     const tokensText = await getEnabledTokensFile(wallet).getText()
     const tokens = JSON.parse(tokensText)
@@ -79,13 +79,13 @@ export const getEnabledTokensFromFile = async (wallet: AbcCurrencyWallet): Promi
   }
 }
 
-export const getEnabledTokensFile = (wallet: AbcCurrencyWallet) => {
+export const getEnabledTokensFile = (wallet: EdgeCurrencyWallet) => {
   const folder = wallet.folder
   const file = folder.file(ENABLED_TOKENS_FILENAME)
   return file
 }
 
-export async function setEnabledTokens (wallet: AbcCurrencyWallet, tokens: Array<string>, tokensToDisable?: Array<string>) {
+export async function setEnabledTokens (wallet: EdgeCurrencyWallet, tokens: Array<string>, tokensToDisable?: Array<string>) {
   // initialize array for eventual setting of file
   const finalTextArray = [...tokens]
   // now stringify the new tokens
@@ -100,7 +100,7 @@ export async function setEnabledTokens (wallet: AbcCurrencyWallet, tokens: Array
   return tokens
 }
 
-export async function updateEnabledTokens (wallet: AbcCurrencyWallet, tokensToEnable: Array<string>, tokensToDisable: Array<string>) {
+export async function updateEnabledTokens (wallet: EdgeCurrencyWallet, tokensToEnable: Array<string>, tokensToDisable: Array<string>) {
   const tokensFile = getEnabledTokensFile(wallet)
   try {
     const tokensText = await tokensFile.getText()
@@ -115,27 +115,27 @@ export async function updateEnabledTokens (wallet: AbcCurrencyWallet, tokensToEn
   }
 }
 
-export const parseURI = (wallet: AbcCurrencyWallet, uri: string): AbcParsedUri => {
+export const parseURI = (wallet: EdgeCurrencyWallet, uri: string): EdgeParsedUri => {
   return wallet.parseUri(uri)
 }
 
-export const signTransaction = (wallet: AbcCurrencyWallet, unsignedTransaction: AbcTransaction): Promise<AbcTransaction> => {
+export const signTransaction = (wallet: EdgeCurrencyWallet, unsignedTransaction: EdgeTransaction): Promise<EdgeTransaction> => {
   return wallet.signTx(unsignedTransaction)
 }
 
-export const broadcastTransaction = (wallet: AbcCurrencyWallet, signedTransaction: AbcTransaction): Promise<AbcTransaction> => {
+export const broadcastTransaction = (wallet: EdgeCurrencyWallet, signedTransaction: EdgeTransaction): Promise<EdgeTransaction> => {
   return wallet.broadcastTx(signedTransaction)
 }
 
-export const saveTransaction = (wallet: AbcCurrencyWallet, signedTransaction: AbcTransaction): Promise<void> => {
+export const saveTransaction = (wallet: EdgeCurrencyWallet, signedTransaction: EdgeTransaction): Promise<void> => {
   return wallet.saveTx(signedTransaction)
 }
 
-export const resyncWallet = (wallet: AbcCurrencyWallet): Promise<void> => {
+export const resyncWallet = (wallet: EdgeCurrencyWallet): Promise<void> => {
   return wallet.resyncBlockchain()
 }
 
-export const getDisplayPrivateSeed = (wallet: AbcCurrencyWallet): string => {
+export const getDisplayPrivateSeed = (wallet: EdgeCurrencyWallet): string => {
   return wallet.getDisplayPrivateSeed() || 'receive-only wallet'
 }
 

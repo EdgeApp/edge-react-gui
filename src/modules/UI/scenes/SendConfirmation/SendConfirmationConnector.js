@@ -1,9 +1,8 @@
-import { bns } from 'biggystring'
-import type { AbcTransaction } from 'edge-core-js'
 // @flow
+
+import { bns } from 'biggystring'
 import { connect } from 'react-redux'
 
-import type { GuiWallet } from '../../../../types'
 import { getCurrencyConverter, getExchangeRate } from '../../../Core/selectors.js'
 import type { Dispatch, State } from '../../../ReduxTypes'
 import { getExchangeDenomination, getSelectedCurrencyCode, getSelectedWallet } from '../../selectors.js'
@@ -16,16 +15,18 @@ import {
   getLabel,
   getNativeAmount,
   getNetworkFee,
+  getParentNetworkFee,
   getPending,
   getPublicAddress,
   getTransaction
 } from './selectors'
-import { SendConfirmation, SendConfirmationDispatchProps, SendConfirmationStateProps } from './SendConfirmation.ui'
+import { SendConfirmation } from './SendConfirmation.ui'
+import type { SendConfirmationDispatchProps, SendConfirmationStateProps } from './SendConfirmation.ui'
 
 const mapStateToProps = (state: State): SendConfirmationStateProps => {
   let fiatPerCrypto = 0
   let secondaryeExchangeCurrencyCode = ''
-  const guiWallet: GuiWallet = getSelectedWallet(state)
+  const guiWallet = getSelectedWallet(state)
   const currencyCode = getSelectedCurrencyCode(state)
 
   if (guiWallet) {
@@ -34,7 +35,7 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
     secondaryeExchangeCurrencyCode = isoFiatCurrencyCode
   }
 
-  const transaction: AbcTransaction = getTransaction(state)
+  const transaction = getTransaction(state)
   const pending = getPending(state)
   const nativeAmount = getNativeAmount(state)
   let error = getError(state)
@@ -49,7 +50,7 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
     errorMsg = error.message
   }
 
-  const out: SendConfirmationStateProps = {
+  const out = {
     nativeAmount,
     errorMsg,
     fiatPerCrypto,
@@ -58,12 +59,15 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
     secondaryeExchangeCurrencyCode,
     resetSlider,
     fiatCurrencyCode: guiWallet.fiatCurrencyCode,
+    parentDisplayDenomination: getDisplayDenomination(state, guiWallet.currencyCode),
+    parentExchangeDenomination: getExchangeDenomination(state, guiWallet.currencyCode),
     primaryDisplayDenomination: getDisplayDenomination(state, currencyCode),
     primaryExchangeDenomination: getExchangeDenomination(state, currencyCode),
     forceUpdateGuiCounter: getForceUpdateGuiCounter(state),
     publicAddress: getPublicAddress(state),
     keyboardIsVisible: getKeyboardIsVisible(state),
     label: getLabel(state),
+    parentNetworkFee: getParentNetworkFee(state),
     networkFee: getNetworkFee(state),
     sliderDisabled: !transaction || !!error || !!pending,
     currencyConverter: getCurrencyConverter(state)

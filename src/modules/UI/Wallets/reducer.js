@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcCurrencyWallet, AbcDenomination, AbcMetaToken } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeReceiveAddress } from 'edge-core-js'
 import _ from 'lodash'
 import { combineReducers } from 'redux'
 
@@ -22,8 +22,9 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
     case Constants.ACCOUNT_INIT_COMPLETE: {
       const wallets = action.data.currencyWallets
       const out = {}
+
       for (const walletId of Object.keys(wallets)) {
-        const tempWallet = schema(wallets[walletId])
+        const tempWallet = schema(wallets[walletId], action.data.receiveAddresses[walletId])
         if (state[walletId]) {
           const enabledTokensOnWallet = state[walletId].enabledTokens
           tempWallet.enabledTokens = enabledTokensOnWallet
@@ -40,7 +41,7 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
       const wallets = action.data.currencyWallets
       const out = {}
       for (const walletId of Object.keys(wallets)) {
-        const tempWallet = schema(wallets[walletId])
+        const tempWallet = schema(wallets[walletId], action.data.receiveAddresses[walletId])
         if (state[walletId]) {
           const enabledTokensOnWallet = state[walletId].enabledTokens
           tempWallet.enabledTokens = enabledTokensOnWallet
@@ -48,7 +49,10 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
             tempWallet.nativeBalances[customToken] = wallets[walletId].getBalance({ currencyCode: customToken })
           })
         }
-        out[walletId] = tempWallet
+        out[walletId] = {
+          ...state[walletId],
+          ...tempWallet
+        }
       }
 
       return out
@@ -136,7 +140,7 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
 
     case ACTION.UPSERT_WALLET: {
       const { data } = action
-      const guiWallet = schema(data.wallet)
+      const guiWallet = schema(data.wallet, state[data.wallet.id].receiveAddress)
       const enabledTokensOnWallet = state[data.wallet.id].enabledTokens
       guiWallet.enabledTokens = enabledTokensOnWallet
       enabledTokensOnWallet.forEach(customToken => {
@@ -144,7 +148,21 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
       })
       return {
         ...state,
-        [data.wallet.id]: guiWallet
+        [data.wallet.id]: {
+          ...state[data.wallet.id],
+          ...guiWallet
+        }
+      }
+    }
+
+    case ACTION.REFRESH_RECEIVE_ADDRESS: {
+      const { data: { walletId, receiveAddress } } = action
+      return {
+        ...state,
+        [walletId]: {
+          ...state[walletId],
+          receiveAddress
+        }
       }
     }
 
@@ -162,6 +180,29 @@ export const walletEnabledTokens = (state: any = {}, action: Action) => {
   }
 
   return state
+}
+
+export const walletLoadingProgress = (state: {[string]: Number} = {}, action: Action) => {
+  if (!action.data) return state
+  const {type, data} = action
+  switch (type) {
+    case ACTION.INSERT_WALLET_IDS_FOR_PROGRESS:
+      const activeWalletIdList = data.activeWalletIds
+      const activeWalletIdProgress = {}
+      activeWalletIdList.map((item) => {
+        activeWalletIdProgress[item] = 0
+      })
+      return activeWalletIdProgress
+    case ACTION.UPDATE_WALLET_LOADING_PROGRESS:
+      // prevent backwards progress
+      if (data.addressLoadingProgress < state[data.walletId]) return state
+      return {
+        ...state,
+        [data.walletId]: data.addressLoadingProgress
+      }
+    default:
+      return state
+  }
 }
 
 export const activeWalletIds = (state: WalletIds = [], action: Action) => {
@@ -218,7 +259,7 @@ export const selectedCurrencyCode = (state: string = '', action: Action) => {
   }
 }
 
-const addTokenPending = (state: boolean = false, action: Action) => {
+export const addTokenPending = (state: boolean = false, action: Action) => {
   // if (!action.data) return state
   const type = action.type
   switch (type) {
@@ -235,7 +276,7 @@ const addTokenPending = (state: boolean = false, action: Action) => {
   }
 }
 
-const manageTokensPending = (state: boolean = false, action: Action) => {
+export const manageTokensPending = (state: boolean = false, action: Action) => {
   if (!action.data) return state
   const type = action.type
   switch (type) {
@@ -248,7 +289,7 @@ const manageTokensPending = (state: boolean = false, action: Action) => {
   }
 }
 
-function schema (wallet: AbcCurrencyWallet): GuiWallet {
+function schema (wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress): GuiWallet {
   const id: string = wallet.id
   const type: string = wallet.type
   const name: string = wallet.name || 'no wallet name'
@@ -258,13 +299,13 @@ function schema (wallet: AbcCurrencyWallet): GuiWallet {
   const isoFiatCurrencyCode: string = wallet.fiatCurrencyCode
   const symbolImage = wallet.currencyInfo.symbolImage
   const symbolImageDarkMono = wallet.currencyInfo.symbolImageDarkMono
-  const metaTokens: Array<AbcMetaToken> = wallet.currencyInfo.metaTokens
-  const denominations: Array<AbcDenomination> = wallet.currencyInfo.denominations
+  const metaTokens: Array<EdgeMetaToken> = wallet.currencyInfo.metaTokens
+  const denominations: Array<EdgeDenomination> = wallet.currencyInfo.denominations
   // TODO: Fetch the token list asynchonously before dispatching `schema`:
   const enabledTokens: Array<string> = []
 
   const allDenominations: {
-    [currencyCode: string]: { [denomination: string]: AbcDenomination }
+    [currencyCode: string]: { [denomination: string]: EdgeDenomination }
   } = {}
 
   // Add all parent currency denominations to allDenominations
@@ -290,7 +331,7 @@ function schema (wallet: AbcCurrencyWallet): GuiWallet {
     const currencyCode: string = metaToken.currencyCode
     const currencyName: string = metaToken.currencyName
     const balance: string = wallet.getBalance({ currencyCode })
-    const denominations: Array<AbcDenomination> = metaToken.denominations
+    const denominations: Array<EdgeDenomination> = metaToken.denominations
 
     // Add token balance to allBalances
     nativeBalances[currencyCode] = balance
@@ -298,7 +339,7 @@ function schema (wallet: AbcCurrencyWallet): GuiWallet {
 
     // Add all token denominations to allDenominations
     const tokenDenominations: {
-      [denomination: string]: AbcDenomination
+      [denomination: string]: EdgeDenomination
     } = denominations.reduce((denominations, denomination) => ({ ...denominations, [denomination.multiplier]: denomination }), {})
     allDenominations[currencyCode] = tokenDenominations
   })
@@ -320,7 +361,8 @@ function schema (wallet: AbcCurrencyWallet): GuiWallet {
     symbolImage,
     symbolImageDarkMono,
     metaTokens,
-    enabledTokens
+    enabledTokens,
+    receiveAddress
   }
 
   return newWallet
@@ -333,5 +375,6 @@ export const wallets = combineReducers({
   selectedWalletId,
   selectedCurrencyCode,
   addTokenPending,
-  manageTokensPending
+  manageTokensPending,
+  walletLoadingProgress
 })

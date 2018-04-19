@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 const API_PREFIX = 'https://info1.edgesecure.co:8444/v1/'
 
 const headers = {

@@ -1,6 +1,9 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 /* globals test expect */
 
 import { scenes as scenesReducer } from './reducer.js'
+import { request } from './Request/reducer.js'
 
 test('initialState', () => {
   const expected = {
@@ -27,20 +30,10 @@ test('initialState', () => {
       exchangeRates: {}
     },
     helpModal: false,
-    request: {
-      inputCurrencySelected: 'fiat',
-      receiveAddress: {
-        amountSatoshi: 0,
-        metadata: {
-          amountFiat: 0,
-          bizId: null,
-          category: '',
-          miscJson: '',
-          notes: '',
-          payeeName: ''
-        },
-        publicAddress: ''
-      }
+    request: request(undefined, {}),
+    requestType: {
+      useLegacyAddress: false,
+      uniqueLegacyAddress: false
     },
     scan: {
       addressModalVisible: false,
@@ -62,6 +55,7 @@ test('initialState', () => {
         blockHeight: -1,
         nativeAmount: '0',
         networkFee: '',
+        parentNetworkFee: '',
         ourReceiveAddresses: [],
         signedTx: '',
         metadata: {},
@@ -90,7 +84,7 @@ test('initialState', () => {
       view: false
     },
     transactionAlert: {
-      abcTransaction: '',
+      edgeTransaction: '',
       displayAlert: false
     },
     transactionDetails: {
@@ -100,7 +94,8 @@ test('initialState', () => {
       searchVisible: false,
       transactions: [],
       transactionsWalletListModalVisibility: false,
-      updatingBalance: true
+      updatingBalance: true,
+      loadingTransactions: false
     },
     walletList: {
       deleteWalletModalVisible: false,
@@ -123,7 +118,8 @@ test('initialState', () => {
     },
     passwordReminderModal: {
       status: null
-    }
+    },
+    currentScene: ''
   }
   const actual = scenesReducer(undefined, {})
 

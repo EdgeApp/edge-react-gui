@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react'
 import type { Node } from 'react'
-import { Platform, TouchableOpacity, View } from 'react-native'
+import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native'
 import Modal from 'react-native-modal'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
@@ -13,21 +13,21 @@ import styles, { exitColor } from './style'
 
 type Props = {
   headerText: string,
-  headerTextStyle?: {},
+  headerTextStyle?: StyleSheet.Styles,
   headerSubtext?: string,
   visibilityBoolean: boolean,
   featuredIcon: Node,
   modalHeaderIcon?: {},
-  modalVisibleStyle?: {},
-  modalBoxStyle?: {},
-  modalContentStyle?: {},
-  modalBodyStyle?: {},
+  modalVisibleStyle?: StyleSheet.Styles,
+  modalBoxStyle?: StyleSheet.Styles,
+  modalContentStyle?: StyleSheet.Styles,
+  modalBodyStyle?: StyleSheet.Styles,
   modalMiddle?: Node, // should be allowed to not give a middle component
-  modalMiddleStyle?: {},
+  modalMiddleStyle?: StyleSheet.Styles,
   modalBottom: Node,
-  modalBottomStyle?: {},
+  modalBottomStyle?: StyleSheet.Styles,
   onExitButtonFxn: ?() => void,
-  style?: any
+  style?: StyleSheet.Styles
 }
 type State = {}
 

@@ -1,18 +1,33 @@
-/* globals test expect */
+/* eslint-disable flowtype/require-valid-file-annotation */
 
-import { wallets as walletsReducer } from './reducer.js'
+/* globals describe test expect */
 
-test('initialState', () => {
-  const expected = {
-    activeWalletIds: [],
-    addTokenPending: false,
-    archivedWalletIds: [],
-    byId: {},
-    manageTokensPending: false,
-    selectedCurrencyCode: '',
-    selectedWalletId: ''
-  }
-  const actual = walletsReducer(undefined, {})
+import {
+  wallets,
+  byId,
+  activeWalletIds,
+  archivedWalletIds,
+  selectedWalletId,
+  selectedCurrencyCode,
+  addTokenPending,
+  manageTokensPending,
+  walletLoadingProgress
+} from './reducer.js'
 
-  expect(actual).toEqual(expected)
+describe('WalletsReducer', () => {
+  test('initialState', () => {
+    const expected = {
+      byId: byId(undefined, {}),
+      activeWalletIds: activeWalletIds(undefined, {}),
+      archivedWalletIds: archivedWalletIds(undefined, {}),
+      selectedWalletId: selectedWalletId(undefined, {}),
+      selectedCurrencyCode: selectedCurrencyCode(undefined, {}),
+      manageTokensPending: manageTokensPending(undefined, {}),
+      addTokenPending: addTokenPending(undefined, {}),
+      walletLoadingProgress: walletLoadingProgress(undefined, {})
+    }
+    const actual = wallets(undefined, {})
+
+    expect(actual).toEqual(expected)
+  })
 })

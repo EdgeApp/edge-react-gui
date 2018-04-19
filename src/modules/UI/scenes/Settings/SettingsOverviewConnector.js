@@ -1,5 +1,6 @@
-import type { AbcAccount } from 'edge-core-js'
 // @flow
+
+import type { EdgeAccount } from 'edge-core-js'
 // import HockeyApp from 'react-native-hockeyapp'
 import { connect } from 'react-redux'
 
@@ -43,7 +44,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   setAutoLogoutTimeInMinutes: (autoLogoutTimeInMinutes: number) => dispatch(setAutoLogoutTimeInMinutesRequest(autoLogoutTimeInMinutes)),
   confirmPassword: (arg: string) => dispatch(checkCurrentPassword(arg)),
   lockSettings: () => dispatch(lockSettings()),
-  dispatchUpdateEnableTouchIdEnable: (arg: boolean, account: AbcAccount) => dispatch(updateTouchIdEnabled(arg, account)),
+  dispatchUpdateEnableTouchIdEnable: (arg: boolean, account: EdgeAccount) => dispatch(updateTouchIdEnabled(arg, account)),
   sendLogs: (text: string) => dispatch(sendLogs(text)),
   resetConfirmPasswordError: (arg: Object) => dispatch(actions.dispatchActionObject(Constants.SET_CONFIRM_PASSWORD_ERROR, arg)),
   resetSendLogsStatus: () => dispatch(resetSendLogsStatus()),

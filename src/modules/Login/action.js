@@ -1,11 +1,11 @@
 // @flow
 
-import type { AbcAccount, AbcCurrencyWallet } from 'edge-core-js'
+import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import { Platform } from 'react-native'
 import Locale from 'react-native-locale'
 import PushNotification from 'react-native-push-notification'
 import { Actions } from 'react-native-router-flux'
-
+import _ from 'lodash'
 import * as actions from '../../actions/indexActions'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
@@ -15,19 +15,25 @@ import * as SETTINGS_API from '../Core/Account/settings.js'
 import * as CONTEXT_API from '../Core/Context/api'
 import * as CORE_SELECTORS from '../Core/selectors'
 import { updateWalletsRequest } from '../Core/Wallets/action.js'
+import { insertWalletIdsForProgress } from '../UI/Wallets/action.js'
 import type { Dispatch, GetState } from '../ReduxTypes'
+import { getReceiveAddresses } from '../utils.js'
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
-export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => async (dispatch: Dispatch, getState: GetState) => {
+export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const context = CORE_SELECTORS.getContext(state)
-  const accounts = await context.fetchLoginMessages()
   let otpResetPending = false
-  for (const key in accounts) {
-    if (key === account.username) {
-      otpResetPending = accounts[key].otpResetPending
+  try {
+    const accounts = await context.fetchLoginMessages()
+    for (const key in accounts) {
+      if (key === account.username) {
+        otpResetPending = accounts[key].otpResetPending
+      }
     }
+  } catch (e) {
+    console.log(e)
   }
   const currencyCodes = {}
   if (Platform.OS === Constants.IOS) {
@@ -44,7 +50,7 @@ export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => a
     walletId: '',
     currencyCode: '',
     currencyPlugins: [],
-    otpInfo: {enabled: account.otpEnabled, otpKey: account.otpKey, otpResetPending},
+    otpInfo: { enabled: account.otpEnabled, otpKey: account.otpKey, otpResetPending },
     autoLogoutTimeInSeconds: '',
     bluetoothMode: '',
     pinLoginEnabled: false,
@@ -75,35 +81,51 @@ export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => a
       // lets create the wallet
       const ethWalletName = s.strings.string_first_ethereum_wallet_name
       const btcWalletName = s.strings.string_first_bitcoin_wallet_name
+      const bchWalletName = s.strings.string_first_bitcoincash_wallet_name
       const ethWalletType = Constants.ETHEREUM_WALLET
       const btcWalletType = Constants.BITCOIN_WALLET
+      const bchWalletType = Constants.BITCOINCASH_WALLET
       let fiatCurrencyCode = Constants.USD_FIAT
       if (localeInfo.currencyCode && typeof localeInfo.currencyCode === 'string' && localeInfo.currencyCode.length >= 3) {
         fiatCurrencyCode = 'iso:' + localeInfo.currencyCode
       }
-      const abcWallet = await ACCOUNT_API.createCurrencyWalletRequest(account, ethWalletType, { name: ethWalletName, fiatCurrencyCode })
+      const edgeWallet = await ACCOUNT_API.createCurrencyWalletRequest(account, ethWalletType, { name: ethWalletName, fiatCurrencyCode })
       await ACCOUNT_API.createCurrencyWalletRequest(account, btcWalletType, { name: btcWalletName, fiatCurrencyCode })
-      accountInitObject.walletId = abcWallet.id
-      accountInitObject.currencyCode = abcWallet.currencyInfo.currencyCode
+      await ACCOUNT_API.createCurrencyWalletRequest(account, bchWalletType, { name: bchWalletName, fiatCurrencyCode })
+      accountInitObject.walletId = edgeWallet.id
+      accountInitObject.currencyCode = edgeWallet.currencyInfo.currencyCode
     } else {
       // We have a wallet
       const { walletId, currencyCode } = ACCOUNT_API.getFirstActiveWalletInfo(account, currencyCodes)
       accountInitObject.walletId = walletId
       accountInitObject.currencyCode = currencyCode
     }
-    const { activeWalletIds, archivedWalletIds, currencyWallets } = account
-    for (const walletId of Object.keys(currencyWallets)) {
-      const abcWallet: AbcCurrencyWallet = currencyWallets[walletId]
-      if (abcWallet.type === 'wallet:ethereum') {
-        if (state.ui.wallets && state.ui.wallets.byId && state.ui.wallets.byId[walletId]) {
-          const enabledTokens = state.ui.wallets.byId[walletId].enabledTokens
-          abcWallet.enableTokens(enabledTokens)
-        }
-      }
-    }
+    const activeWalletIds = account.activeWalletIds
+    dispatch(insertWalletIdsForProgress(activeWalletIds))
+    const archivedWalletIds = account.archivedWalletIds
+    const currencyWallets = account.currencyWallets
+
     accountInitObject.activeWalletIds = activeWalletIds
     accountInitObject.archivedWalletIds = archivedWalletIds
     accountInitObject.currencyWallets = currencyWallets
+
+    for (const walletId of Object.keys(currencyWallets)) {
+      const edgeWallet: EdgeCurrencyWallet = currencyWallets[walletId]
+      if (edgeWallet.type === 'wallet:ethereum') {
+        if (state.ui.wallets && state.ui.wallets.byId && state.ui.wallets.byId[walletId]) {
+          const enabledTokens = state.ui.wallets.byId[walletId].enabledTokens
+          const customTokens = state.ui.settings.customTokens
+          const enabledNotHiddenTokens = enabledTokens.filter((token) => {
+            let isVisible = true // assume we will enable token
+            const tokenIndex = _.findIndex(customTokens, (item) => item.currencyCode === token)
+            // if token is not supposed to be visible, not point in enabling it
+            if (tokenIndex > -1 && (customTokens[tokenIndex].isVisible === false)) isVisible = false
+            return isVisible
+          })
+          edgeWallet.enableTokens(enabledNotHiddenTokens)
+        }
+      }
+    }
 
     const settings = await SETTINGS_API.getSyncedSettings(account)
     const syncDefaults = SETTINGS_API.SYNCED_ACCOUNT_DEFAULTS
@@ -137,7 +159,15 @@ export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => a
     const coreFinal = { ...coreDefaults, ...coreSettings }
     accountInitObject.pinMode = coreFinal.pinMode
     accountInitObject.otpMode = coreFinal.otpMode
-    dispatch(actions.dispatchActionObject(Constants.ACCOUNT_INIT_COMPLETE, accountInitObject))
+
+    const receiveAddresses = await getReceiveAddresses(currencyWallets)
+
+    dispatch(
+      actions.dispatchActionObject(Constants.ACCOUNT_INIT_COMPLETE, {
+        ...accountInitObject,
+        receiveAddresses
+      })
+    )
     // $FlowFixMe
     dispatch(updateWalletsRequest())
   } catch (e) {

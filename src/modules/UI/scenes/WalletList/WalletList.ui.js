@@ -6,12 +6,12 @@ import { TwoButtonTextModalComponent, StaticModalComponent } from '../../../../c
 import { Actions } from 'react-native-router-flux'
 import SortableListView from 'react-native-sortable-listview'
 import Ionicon from 'react-native-vector-icons/Ionicons'
+import SimplifiedDropdown from '../../components/SimpleDropdown/SimpleDropdown.ui.js'
 
 import WalletIcon from '../../../../assets/images/walletlist/my-wallets.png'
 import * as Constants from '../../../../constants/indexConstants.js'
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
-import { PLATFORM } from '../../../../theme/variables/platform.js'
 import * as UTILS from '../../../utils'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
@@ -40,7 +40,8 @@ type State = {
   balanceBoxVisible: boolean,
   showOtpResetModal: boolean,
   showMessageModal: boolean,
-  messageModalMessage: ?string
+  messageModalMessage: ?string,
+  isWalletProgressVisible: boolean
 }
 type Props = {
   activeWalletIds: Array<string>,
@@ -57,7 +58,8 @@ type Props = {
   updateActiveWalletsOrder: (Array<string>) => void,
   walletRowOption: (walletId: string, option: string, archived: boolean) => void,
   disableOtp: () => void,
-  keepOtp: () => void
+  keepOtp: () => void,
+  progressPercentage: number
 }
 
 export default class WalletList extends Component<Props, State> {
@@ -74,7 +76,9 @@ export default class WalletList extends Component<Props, State> {
       balanceBoxVisible: true,
       showOtpResetModal: this.props.otpResetPending,
       showMessageModal: false,
-      messageModalMessage: null
+      messageModalMessage: null,
+      isWalletProgressVisible: true,
+      progressPercentage: 0
     }
   }
 
@@ -132,26 +136,25 @@ export default class WalletList extends Component<Props, State> {
         <View style={styles.container}>
           <WalletOptions />
           <Gradient style={styles.gradient} />
-
+          {this.state.isWalletProgressVisible && this.renderWalletListProgressDropdown()}
           <TouchableOpacity onPress={this.handleOnBalanceBoxPress}>
             {this.state.balanceBoxVisible ? this.balanceBox(fiatBalanceString) : this.hiddenBalanceBox()}
           </TouchableOpacity>
 
           <View style={[styles.walletsBox]}>
-            <Gradient style={[styles.walletsBoxHeaderWrap, UTILS.border()]}>
-              <View style={[styles.walletsBoxHeaderTextWrap, UTILS.border()]}>
+            <Gradient style={[styles.walletsBoxHeaderWrap]}>
+              <View style={[styles.walletsBoxHeaderTextWrap]}>
                 <View style={styles.leftArea}>
                   <Image source={WalletIcon} style={[styles.walletIcon]} />
                   <T style={styles.walletsBoxHeaderText}>{WALLETS_HEADER_TEXT}</T>
                 </View>
               </View>
 
-              <View style={[styles.donePlusContainer, UTILS.border()]}>
+              <View style={[styles.donePlusContainer]}>
                 {this.state.sortableListExists && (
                   <Animated.View
                     style={[
                       styles.doneContainer,
-                      UTILS.border(),
                       {
                         opacity: this.state.sortableListOpacity,
                         zIndex: this.state.sortableListZIndex
@@ -167,7 +170,6 @@ export default class WalletList extends Component<Props, State> {
                   <Animated.View
                     style={[
                       styles.plusContainer,
-                      UTILS.border(),
                       {
                         opacity: this.state.fullListOpacity,
                         zIndex: this.state.fullListZIndex
@@ -193,6 +195,29 @@ export default class WalletList extends Component<Props, State> {
       </SafeAreaView>
     )
   }
+
+  onDismissProgressDropdown = () => {
+    this.setState({
+      isWalletProgressVisible: false
+    })
+  }
+
+  renderWalletListProgressDropdown = () => {
+    if (this.props.progressPercentage === 100) {
+      setTimeout(() => {
+        this.setState({
+          isWalletProgressVisible: false
+        })
+      }, 2000)
+    }
+    const heightOfDropdown = 100 // pixels
+    return (
+      <SimplifiedDropdown onPress={this.onDismissProgressDropdown} containerHeight={heightOfDropdown} containerStyle={styles.walletListProgressDropdown}>
+        <T style={styles.walletListProgressDropdownTopText}>{s.strings.fragment_wallets_syncing_wallet_txs} {this.props.progressPercentage}%</T>
+      </SimplifiedDropdown>
+    )
+  }
+
   showModal = () => {
     if (this.state.showOtpResetModal) {
       return <TwoButtonTextModalComponent
@@ -238,21 +263,18 @@ export default class WalletList extends Component<Props, State> {
   }
 
   renderActiveSortableList = (activeWalletsArray: any, activeWalletsObject: any) => {
-    const { width } = PLATFORM.deviceWidth
     return (
-      <View style={[styles.listsContainer, UTILS.border()]}>
+      <View style={[styles.listsContainer]}>
         {this.state.sortableListExists && (
           <Animated.View
             testID={'sortableList'}
             style={[
-              UTILS.border(),
               { flex: 1, opacity: this.state.sortableListOpacity, zIndex: this.state.sortableListZIndex },
-              styles.sortableList,
-              UTILS.border()
+              styles.sortableList
             ]}
           >
             <SortableListView
-              style={{ flex: 1, width }}
+              style={styles.sortableWalletListContainer}
               data={activeWalletsObject}
               order={this.props.activeWalletIds}
               onRowMoved={this.onActiveRowMoved}
@@ -266,7 +288,7 @@ export default class WalletList extends Component<Props, State> {
         {this.state.fullListExists && (
           <Animated.View testID={'fullList'} style={[{ flex: 1, opacity: this.state.fullListOpacity, zIndex: this.state.fullListZIndex }, styles.fullList]}>
             <FlatList
-              style={{ flex: 1, width }}
+              style={styles.sortableWalletListContainer}
               data={activeWalletsArray}
               extraData={this.props.wallets}
               renderItem={item => <FullWalletListRow data={item} settings={this.props.settings} customTokens={this.props.customTokens} />}

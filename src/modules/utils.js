@@ -2,7 +2,7 @@
 
 import { bns, div, eq, gte, mul, toFixed } from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
-import type { AbcCurrencyInfo, AbcCurrencyPlugin, AbcDenomination, AbcMetaToken, AbcTransaction } from 'edge-core-js'
+import type { EdgeCurrencyInfo, EdgeCurrencyPlugin, EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeTransaction, EdgeReceiveAddress } from 'edge-core-js'
 import _ from 'lodash'
 import { Platform } from 'react-native'
 
@@ -21,7 +21,7 @@ export const cutOffText = (str: string, lng: number) => {
   }
 }
 
-export const findDenominationSymbol = (denoms: Array<AbcDenomination>, value: string) => {
+export const findDenominationSymbol = (denoms: Array<EdgeDenomination>, value: string) => {
   for (const v of denoms) {
     if (v.name === value) {
       return v.symbol
@@ -29,7 +29,7 @@ export const findDenominationSymbol = (denoms: Array<AbcDenomination>, value: st
   }
 }
 
-export const getWalletDefaultDenomProps = (wallet: Object, settingsState: Object, currencyCode?: string /* for metaTokens */): AbcDenomination => {
+export const getWalletDefaultDenomProps = (wallet: Object, settingsState: Object, currencyCode?: string /* for metaTokens */): EdgeDenomination => {
   const allWalletDenoms = wallet.allDenominations
   let walletCurrencyCode
   if (currencyCode) {
@@ -40,7 +40,7 @@ export const getWalletDefaultDenomProps = (wallet: Object, settingsState: Object
     walletCurrencyCode = wallet.currencyCode
   }
   const currencySettings = settingsState[walletCurrencyCode] // includes 'denomination', currencyName, and currencyCode
-  let denomProperties: AbcDenomination
+  let denomProperties: EdgeDenomination
   if (allWalletDenoms[walletCurrencyCode]) {
     denomProperties = allWalletDenoms[walletCurrencyCode][currencySettings.denomination] // includes name, multiplier, and symbol
   } else {
@@ -91,9 +91,9 @@ export const inputBottomPadding = () => {
 
 // will take the metaTokens property on the wallet (that comes from currencyInfo), merge with account-level custom tokens added, and only return if enabled (wallet-specific)
 // $FlowFixMe
-export const mergeTokens = (preferredAbcMetaTokens: Array<AbcMetaToken | CustomTokenInfo>, abcMetaTokens: Array<CustomTokenInfo>) => {
-  const tokensEnabled = [...preferredAbcMetaTokens] // initially set the array to currencyInfo (from plugin), since it takes priority
-  for (const x of abcMetaTokens) {
+export const mergeTokens = (preferredEdgeMetaTokens: Array<EdgeMetaToken | CustomTokenInfo>, edgeMetaTokens: Array<CustomTokenInfo>) => {
+  const tokensEnabled = [...preferredEdgeMetaTokens] // initially set the array to currencyInfo (from plugin), since it takes priority
+  for (const x of edgeMetaTokens) {
     // loops through the account-level array
     let found = false // assumes it is not present in the currencyInfo from plugin
     for (const val of tokensEnabled) {
@@ -107,10 +107,10 @@ export const mergeTokens = (preferredAbcMetaTokens: Array<AbcMetaToken | CustomT
   return tokensEnabled
 }
 
-export const mergeTokensRemoveInvisible = (preferredAbcMetaTokens: Array<AbcMetaToken>, abcMetaTokens: Array<CustomTokenInfo>) => {
-  const tokensEnabled = [...preferredAbcMetaTokens] // initially set the array to currencyInfo (from plugin), since it takes priority
+export const mergeTokensRemoveInvisible = (preferredEdgeMetaTokens: Array<EdgeMetaToken>, edgeMetaTokens: Array<CustomTokenInfo>) => {
+  const tokensEnabled = [...preferredEdgeMetaTokens] // initially set the array to currencyInfo (from plugin), since it takes priority
   const tokensToAdd = []
-  for (const x of abcMetaTokens) {
+  for (const x of edgeMetaTokens) {
     // loops through the account-level array
     if (x.isVisible !== false && _.findIndex(tokensEnabled, walletToken => walletToken.currencyCode === x.currencyCode) === -1) {
       tokensToAdd.push(x)
@@ -140,7 +140,7 @@ export const truncateDecimals = (input: string, precision: number, allowBlank: b
     return input
   }
   const [integers, decimals] = input.split('.')
-  return `${integers}.${decimals.slice(0, precision)}`
+  return precision > 0 ? `${integers}.${decimals.slice(0, precision)}` : integers
 }
 
 /**
@@ -271,7 +271,7 @@ export const unspacedLowercase = (input: string) => {
   return newInput
 }
 
-export const getCurrencyInfo = (plugins: Array<AbcCurrencyPlugin>, currencyCode: string): AbcCurrencyInfo | void => {
+export const getCurrencyInfo = (plugins: Array<EdgeCurrencyPlugin>, currencyCode: string): EdgeCurrencyInfo | void => {
   for (const plugin of plugins) {
     const info = plugin.currencyInfo
     for (const denomination of info.denominations) {
@@ -306,8 +306,8 @@ export const decimalPlacesToDenomination = (decimalPlaces: string): string => {
   return denomination
 }
 
-export const isReceivedTransaction = (abcTransaction: AbcTransaction): boolean => gte(abcTransaction.nativeAmount, '0')
-export const isSentTransaction = (abcTransaction: AbcTransaction): boolean => !isReceivedTransaction(abcTransaction)
+export const isReceivedTransaction = (edgeTransaction: EdgeTransaction): boolean => gte(edgeTransaction.nativeAmount, '0')
+export const isSentTransaction = (edgeTransaction: EdgeTransaction): boolean => !isReceivedTransaction(edgeTransaction)
 
 export const getTimeMeasurement = (inMinutes: number): string => {
   switch (true) {
@@ -383,12 +383,12 @@ export const getTimeInMinutes = (params: { measurement: string, value: number })
   return strategy(value)
 }
 
-export const convertAbcToGuiDenomination = (abcDenomination: AbcDenomination): GuiDenomination => {
+export const convertAbcToGuiDenomination = (edgeDenomination: EdgeDenomination): GuiDenomination => {
   const guiDenomination: GuiDenomination = {
-    name: abcDenomination.name,
-    currencyCode: abcDenomination.name,
-    symbol: abcDenomination.symbol ? abcDenomination.symbol : '',
-    multiplier: abcDenomination.multiplier,
+    name: edgeDenomination.name,
+    currencyCode: edgeDenomination.name,
+    symbol: edgeDenomination.symbol ? edgeDenomination.symbol : '',
+    multiplier: edgeDenomination.multiplier,
     precision: 0
   }
   return guiDenomination
@@ -429,4 +429,22 @@ export const daysBetween = (DateInMillisecondsA: number, dateInMillisecondsB: nu
   const millisecondsBetween = dateInMillisecondsB - DateInMillisecondsA
   const daysBetween = millisecondsBetween / MILLISECONDS_PER_DAY
   return daysBetween
+}
+
+export const getReceiveAddresses = (currencyWallets: { [id: string]: EdgeCurrencyWallet }): Promise<{ [id: string]: EdgeReceiveAddress }> => {
+  const ids = Object.keys(currencyWallets)
+  const promises = ids.map(id => {
+    return currencyWallets[id].getReceiveAddress()
+  })
+  return Promise.all(promises).then(receiveAddresses => {
+    return ids.reduce(
+      (result, id, index) => {
+        return {
+          ...result,
+          [id]: receiveAddresses[index]
+        }
+      },
+      {}
+    )
+  })
 }

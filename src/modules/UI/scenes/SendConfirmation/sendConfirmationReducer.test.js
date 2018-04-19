@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 /* globals test expect */
 
 import { sendConfirmation as sendConfirmationReducer } from './reducer.js'
@@ -15,6 +17,7 @@ test('initialState', () => {
       blockHeight: -1,
       nativeAmount: '0',
       networkFee: '',
+      parentNetworkFee: '',
       ourReceiveAddresses: [],
       signedTx: '',
       metadata: {},

@@ -1,25 +1,21 @@
 // @flow
 
-import type { AbcTransaction } from 'edge-core-js'
+import type { EdgeTransaction } from 'edge-core-js'
 import { combineReducers } from 'redux'
 
 import type { Action } from '../../../ReduxTypes.js'
 import * as ACTION from './action'
+import * as WALLET_ACTION from '../../Wallets/action.js'
 
-export type TransactionsState = Array<AbcTransaction>
+export type TransactionsState = Array<EdgeTransaction>
 
 const transactions = (state: TransactionsState = [], action: Action) => {
-  let transactions
   if (!action.data) return state
   switch (action.type) {
     case ACTION.UPDATE_TRANSACTIONS:
       return action.data.transactions
-    case ACTION.NEW_TRANSACTIONS:
-      transactions = action.data.transactions
-      return [...state, ...transactions]
-    case ACTION.CHANGED_TRANSACTIONS:
-      transactions = action.data.transactions
-      return [...state, ...transactions]
+    case WALLET_ACTION.SELECT_WALLET:
+      return []
     default:
       return state
   }
@@ -58,11 +54,23 @@ const transactionsWalletListModalVisibility = (state = false, action) => {
   }
 }
 
+const loadingTransactions = (state = false, action) => {
+  switch (action.type) {
+    case ACTION.START_TRANSACTIONS_LOADING:
+      return true
+    case ACTION.END_TRANSACTIONS_LOADING:
+      return false
+    default:
+      return state
+  }
+}
+
 export const transactionList = combineReducers({
   transactions,
   searchVisible,
   updatingBalance,
-  transactionsWalletListModalVisibility
+  transactionsWalletListModalVisibility,
+  loadingTransactions
 })
 
 export default transactionList

@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 import React, { Component } from 'react'
 import { Text } from 'react-native'
 
@@ -23,7 +25,7 @@ export default class FormattedText extends Component {
 
   render () {
     return (
-      <Text {...this.props} allowFontScaling style={[this.style, this.props.style]} ref={'nativeForward'}>
+      <Text {...this.props} style={[this.style, this.props.style]} ref={'nativeForward'} allowFontScaling={false}>
         {this.props.children}
       </Text>
     )

@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeReceiveAddress } from 'edge-core-js'
 import _ from 'lodash'
 import { Actions } from 'react-native-router-flux'
 
@@ -8,6 +8,7 @@ import type { CustomTokenInfo } from '../../../types.js'
 import * as SETTINGS_API from '../../Core/Account/settings.js'
 import * as CORE_SELECTORS from '../../Core/selectors.js'
 import * as WALLET_API from '../../Core/Wallets/api.js'
+import * as Constants from '../../../constants/indexConstants'
 import type { Dispatch, GetState } from '../../ReduxTypes'
 import { displayErrorAlert } from '../../UI/components/ErrorAlert/actions'
 import * as UTILS from '../../utils'
@@ -15,7 +16,7 @@ import { addTokenAsync } from '../scenes/AddToken/action'
 import * as UI_SELECTORS from '../selectors.js'
 import { updateSettings } from '../Settings/action'
 import * as SETTINGS_SELECTORS from '../Settings/selectors'
-
+import * as actions from '../../../actions/indexActions'
 export const PREFIX = 'UI/Wallets/'
 
 export const UPSERT_WALLET = PREFIX + 'UPSERT_WALLET'
@@ -38,11 +39,49 @@ export const EDIT_CUSTOM_TOKEN_FAILURE = 'EDIT_CUSTOM_TOKEN_FAILURE'
 export const UPDATE_EXISTING_TOKEN_SUCCESS = 'UPDATE_EXISTING_TOKEN_SUCCESS'
 export const OVERWRITE_THEN_DELETE_TOKEN_SUCCESS = 'OVERWRITE_THEN_DELETE_TOKEN_SUCCESS'
 export const ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS = 'ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS'
+export const UPDATE_WALLET_LOADING_PROGRESS = 'UPDATE_WALLET_LOADING_PROGRESS'
+export const INSERT_WALLET_IDS_FOR_PROGRESS = 'INSERT_WALLET_IDS_FOR_PROGRESS'
 
-export const selectWallet = (walletId: string, currencyCode: string) => ({
-  type: SELECT_WALLET,
-  data: { walletId, currencyCode }
+export const refreshReceiveAddressRequest = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const currentWalletId = state.ui.wallets.selectedWalletId
+
+  if (walletId === currentWalletId) {
+    const wallet = state.core.wallets.byId[walletId]
+    wallet.getReceiveAddress().then(receiveAddress => {
+      dispatch(refreshReceiveAddress(walletId, receiveAddress))
+    })
+  }
+}
+
+export const REFRESH_RECEIVE_ADDRESS = PREFIX + 'REFRESH_RECEIVE_ADDRESS'
+export const refreshReceiveAddress = (walletId: string, receiveAddress: EdgeReceiveAddress) => ({
+  type: REFRESH_RECEIVE_ADDRESS,
+  data: {
+    walletId,
+    receiveAddress
+  }
 })
+
+export const selectWallet = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const currentWalletId = state.ui.wallets.selectedWalletId
+  const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
+  if (walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode) {
+    dispatch({
+      type: SELECT_WALLET,
+      data: { walletId, currencyCode }
+    })
+    const wallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
+    WALLET_API.getReceiveAddress(wallet, currencyCode)
+      .then(receiveAddress => {
+        dispatch(actions.dispatchActionObject(Constants.NEW_RECEIVE_ACCRESS, { receiveAddress }))
+      })
+      .catch(e => {
+        console.log('error on getting wallet receive address')
+      })
+  }
+}
 
 function dispatchUpsertWallet (dispatch, wallet, walletId) {
   dispatch(upsertWallet(wallet))
@@ -81,17 +120,17 @@ export const refreshWallet = (walletId: string) => (dispatch: Dispatch, getState
   }
 }
 
-export const upsertWallet = (wallet: AbcCurrencyWallet) => (dispatch: Dispatch, getState: GetState) => {
+export const upsertWallet = (wallet: EdgeCurrencyWallet) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const loginStatus = SETTINGS_SELECTORS.getLoginStatus(state)
   if (!loginStatus) {
     dispatch({ type: 'LOGGED_OUT' })
-    return
   }
-
   dispatch({
     type: UPSERT_WALLET,
-    data: { wallet }
+    data: {
+      wallet
+    }
   })
 }
 
@@ -156,6 +195,7 @@ export const getEnabledTokens = (walletId: string) => async (dispatch: Dispatch,
     await Promise.all(promiseArray)
     // now reflect that change in Redux's version of the wallet
     dispatch(updateWalletEnabledTokens(walletId, tokensToEnable))
+    dispatch(refreshWallet(walletId))
   } catch (e) {
     dispatch(displayErrorAlert(e.message))
   }
@@ -391,7 +431,7 @@ export function updateExistingTokenSuccess (tokenObj: CustomTokenInfo) {
   }
 }
 
-export function overwriteThenDeleteTokenSuccess (tokenObj: CustomTokenInfo, oldCurrencyCode: string, coreWalletsToUpdate: Array<AbcCurrencyWallet>) {
+export function overwriteThenDeleteTokenSuccess (tokenObj: CustomTokenInfo, oldCurrencyCode: string, coreWalletsToUpdate: Array<EdgeCurrencyWallet>) {
   return {
     type: OVERWRITE_THEN_DELETE_TOKEN_SUCCESS,
     data: { tokenObj, oldCurrencyCode, coreWalletsToUpdate }
@@ -402,6 +442,30 @@ export function addNewTokenThenDeleteOldSuccess (data: any) {
   return {
     type: ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS,
     data
+  }
+}
+
+export const updateWalletLoadingProgress = (walletId: string, newWalletProgress: number) => (dispatch: Dispatch, getState: GetState) => {
+  const data = {
+    walletId,
+    addressLoadingProgress: newWalletProgress
+  }
+  const state = getState()
+  const currentWalletProgress = state.ui.wallets.walletLoadingProgress[walletId]
+  const marginalProgress = newWalletProgress - currentWalletProgress
+
+  if (newWalletProgress !== 1 && marginalProgress < 0.1) return
+
+  dispatch({
+    type: UPDATE_WALLET_LOADING_PROGRESS,
+    data
+  })
+}
+
+export function insertWalletIdsForProgress (activeWalletIds: Array<string>) {
+  return {
+    type: INSERT_WALLET_IDS_FOR_PROGRESS,
+    data: { activeWalletIds }
   }
 }
 

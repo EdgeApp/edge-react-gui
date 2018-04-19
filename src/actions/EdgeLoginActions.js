@@ -1,11 +1,12 @@
-import type { AbcLobby } from 'edge-core-js'
+// @flow
+
+import type { EdgeLobby } from 'edge-core-js'
 import { Actions } from 'react-native-router-flux'
 
 import * as Constants from '../constants/indexConstants'
-// @flow
 import * as actions from './indexActions'
 
-export function storeLobby (type: string, data: AbcLobby) {
+export function storeLobby (type: string, data: EdgeLobby) {
   return {
     type,
     data
@@ -16,7 +17,7 @@ export const loginWithEdge = (url: string) => async (dispatch: any, getState: an
   const splitArray = url.split('edge/')
   const state = getState()
   const account = state.core.account
-  const lobby: AbcLobby = await account.fetchLobby(splitArray[1]).catch(e => {
+  const lobby: EdgeLobby = await account.fetchLobby(splitArray[1]).catch(e => {
     dispatch(actions.dispatchActionString(Constants.SET_LOBBY_ERROR, e.message))
   })
   if (lobby) {

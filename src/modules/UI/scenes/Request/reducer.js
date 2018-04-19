@@ -1,48 +1,58 @@
-import * as ACTION from './action'
+// @flow
 
-const initialState = {
-  inputCurrencySelected: 'fiat',
-  receiveAddress: {
-    publicAddress: '',
-    amountSatoshi: 0,
-    metadata: {
-      payeeName: '',
-      category: '',
-      notes: '',
-      amountFiat: 0,
-      bizId: null,
-      miscJson: ''
-    }
-  }
+import * as ACTION from './action'
+import type { Action } from '../../../ReduxTypes.js'
+import type { GuiReceiveAddress } from '../../../../types.js'
+import * as Constants from '../../../../constants/indexConstants.js'
+
+export type RequestSceneState = {
+  inputCurrencySelected: string,
+  receiveAddress: GuiReceiveAddress
 }
 
-export const request = (state = initialState, action) => {
-  const { type, data = {} } = action
-  switch (type) {
-    case ACTION.UPDATE_RECEIVE_ADDRESS_SUCCESS: {
-      const { receiveAddress } = data
+const receiveAddress: GuiReceiveAddress = {
+  publicAddress: '',
+  nativeAmount: '0',
+  metadata: {}
+}
+
+const initialState: RequestSceneState = {
+  inputCurrencySelected: 'fiat',
+  receiveAddress
+}
+
+export const request = (state: RequestSceneState = initialState, action: Action): RequestSceneState => {
+  switch (action.type) {
+    case Constants.UPDATE_RECEIVE_ADDRESS_SUCCESS: {
+      if (!action.data) {
+        return state
+      }
       return {
         ...state,
-        receiveAddress
+        receiveAddress: action.data.receiveAddress
       }
     }
 
     case ACTION.UPDATE_INPUT_CURRENCY_SELECTED: {
-      const { inputCurrencySelected } = data
+      if (!action.data) {
+        return state
+      }
       return {
         ...state,
-        inputCurrencySelected
+        inputCurrencySelected: action.data.inputCurrencySelected
       }
     }
 
     case ACTION.UPDATE_AMOUNT_REQUESTED_IN_CRYPTO: {
       const { receiveAddress } = state
-      const amountSatoshi = data.amountRequestedInCrypto
+      if (!action.data) {
+        return state
+      }
       return {
         ...state,
         receiveAddress: {
           ...receiveAddress,
-          amountSatoshi
+          amountSatoshi: action.data.amountRequestedInCrypto
         }
       }
     }
@@ -59,58 +69,13 @@ export const request = (state = initialState, action) => {
       }
     }
 
-    case ACTION.UPDATE_PAYEE_NAME: {
-      const { receiveAddress } = state
-      const { metadata = {} } = receiveAddress
-      const { payeeName = '' } = metadata
-      return {
-        ...state,
-        receiveAddress: {
-          ...receiveAddress,
-          metadata: {
-            ...metadata,
-            payeeName
-          }
-        }
-      }
-    }
-
-    case ACTION.UPDATE_CATEGORY: {
-      const { receiveAddress } = state
-      const { metadata = {} } = receiveAddress
-      const { category = '' } = metadata
-      return {
-        ...state,
-        receiveAddress: {
-          ...receiveAddress,
-          metadata: {
-            ...metadata,
-            category
-          }
-        }
-      }
-    }
-
-    case ACTION.UPDATE_NOTES: {
-      const { receiveAddress } = state
-      const { metadata = {} } = receiveAddress
-      const { notes = '' } = metadata
-      return {
-        ...state,
-        receiveAddress: {
-          ...receiveAddress,
-          metadata: {
-            ...metadata,
-            notes
-          }
-        }
-      }
-    }
-
     case ACTION.UPDATE_AMOUNT_REQUESTED_IN_FIAT: {
       const { receiveAddress } = state
       const { metadata = {} } = receiveAddress
-      const amountFiat = data.amountRequestedInFiat
+      if (!action.data) {
+        return state
+      }
+      const amountFiat = action.data.amountRequestedInFiat
 
       // console.log('update fiat')
       return {
@@ -119,39 +84,7 @@ export const request = (state = initialState, action) => {
           ...receiveAddress,
           metadata: {
             ...metadata,
-            amountFiat
-          }
-        }
-      }
-    }
-
-    case ACTION.UPDATE_BIZ_ID: {
-      const { receiveAddress } = state
-      const { metadata = {} } = receiveAddress
-      const { bizId = null } = metadata
-      return {
-        ...state,
-        receiveAddress: {
-          ...receiveAddress,
-          metadata: {
-            ...metadata,
-            bizId
-          }
-        }
-      }
-    }
-
-    case ACTION.UPDATE_MISC_JSON: {
-      const { receiveAddress } = state
-      const { metadata = {} } = receiveAddress
-      const { miscJson = '' } = metadata
-      return {
-        ...state,
-        receiveAddress: {
-          ...receiveAddress,
-          metadata: {
-            ...metadata,
-            miscJson
+            amountFiat: amountFiat
           }
         }
       }

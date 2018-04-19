@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 import { StyleSheet } from 'react-native'
 
 import THEME from '../../../../theme/variables/airbitz'
@@ -6,7 +8,7 @@ export default StyleSheet.create({
   container: {
     backgroundColor: THEME.COLORS.TRANSPARENT,
     flexDirection: 'row',
-    alignItems: 'center',
+    alignSelf: 'center',
     marginVertical: 15,
     marginHorizontal: 35
   },

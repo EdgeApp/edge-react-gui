@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcMetaToken } from 'edge-core-js'
+import type { EdgeMetaToken } from 'edge-core-js'
 import _ from 'lodash'
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, ScrollView, View } from 'react-native'
@@ -45,7 +45,8 @@ export type EditTokenOwnProps = {
   walletId: string,
   addTokenPending: boolean,
   currencyCode: string,
-  metaTokens: Array<AbcMetaToken>
+  metaTokens: Array<EdgeMetaToken>,
+  onDeleteToken: string => void
 }
 
 type State = {
@@ -124,6 +125,7 @@ export default class EditToken extends Component<EditTokenComponentProps, State>
                   label={s.strings.addtoken_currency_code_input_text}
                   returnKeyType={'done'}
                   autoCorrect={false}
+                  maxLength={5}
                 />
               </View>
               <View style={[styles.contractAddressArea]}>
@@ -175,6 +177,7 @@ export default class EditToken extends Component<EditTokenComponentProps, State>
   deleteToken = () => {
     const { walletId, currencyCode } = this.props
     this.props.deleteCustomToken(walletId, currencyCode)
+    this.props.onDeleteToken(currencyCode)
   }
 
   onChangeName = (input: string) => {
@@ -184,12 +187,8 @@ export default class EditToken extends Component<EditTokenComponentProps, State>
   }
 
   onChangeCurrencyCode = (input: string) => {
-    const forcedUpperCase = input.toUpperCase()
-    /* forcedUpperCase needed to defend against React Native bug
-      https://github.com/facebook/react-native/issues/11776
-    */
     this.setState({
-      currencyCode: forcedUpperCase.substring(0, 5)
+      currencyCode: input
     })
   }
 
@@ -206,18 +205,30 @@ export default class EditToken extends Component<EditTokenComponentProps, State>
   }
 
   _onSave = () => {
-    const { currencyName, currencyCode, decimalPlaces, contractAddress } = this.state
-    if (currencyName && currencyCode && decimalPlaces && contractAddress) {
-      const { walletId } = this.props
-      const visibleTokens = UTILS.mergeTokensRemoveInvisible(this.props.metaTokens, this.props.customTokens)
-      const indexInVisibleTokens = _.findIndex(visibleTokens, token => token.currencyCode === currencyCode)
-      if (currencyCode !== this.props.currencyCode) {
-        // if the currencyCode will change
-        if (indexInVisibleTokens >= 0) {
-          // if the new currency code is already taken / visible
-          Alert.alert(s.strings.edittoken_delete_title, s.strings.edittoken_duplicate_currency_code)
+    const currencyCode = this.state.currencyCode.toUpperCase()
+    this.setState({
+      currencyCode
+    }, () => {
+      const { currencyName, decimalPlaces, contractAddress } = this.state
+      if (currencyName && currencyCode && decimalPlaces && contractAddress) {
+        const { walletId } = this.props
+        const visibleTokens = UTILS.mergeTokensRemoveInvisible(this.props.metaTokens, this.props.customTokens)
+        const indexInVisibleTokens = _.findIndex(visibleTokens, token => token.currencyCode === currencyCode)
+        if (currencyCode !== this.props.currencyCode) {
+          // if the currencyCode will change
+          if (indexInVisibleTokens >= 0) {
+            // if the new currency code is already taken / visible
+            Alert.alert(s.strings.edittoken_delete_title, s.strings.edittoken_duplicate_currency_code)
+          } else {
+            // not in the array of visible tokens, CASE 3
+            if (parseInt(decimalPlaces) !== 'NaN') {
+              const denomination = UTILS.decimalPlacesToDenomination(decimalPlaces)
+              this.props.editCustomToken(walletId, currencyName, currencyCode, contractAddress, denomination, this.props.currencyCode)
+            } else {
+              Alert.alert(s.strings.edittoken_delete_title, s.strings.edittoken_invalid_decimal_places)
+            }
+          }
         } else {
-          // not in the array of visible tokens, CASE 3
           if (parseInt(decimalPlaces) !== 'NaN') {
             const denomination = UTILS.decimalPlacesToDenomination(decimalPlaces)
             this.props.editCustomToken(walletId, currencyName, currencyCode, contractAddress, denomination, this.props.currencyCode)
@@ -226,15 +237,8 @@ export default class EditToken extends Component<EditTokenComponentProps, State>
           }
         }
       } else {
-        if (parseInt(decimalPlaces) !== 'NaN') {
-          const denomination = UTILS.decimalPlacesToDenomination(decimalPlaces)
-          this.props.editCustomToken(walletId, currencyName, currencyCode, contractAddress, denomination, this.props.currencyCode)
-        } else {
-          Alert.alert(s.strings.edittoken_delete_title, s.strings.edittoken_invalid_decimal_places)
-        }
+        Alert.alert(s.strings.edittoken_delete_title, s.strings.addtoken_default_error_message)
       }
-    } else {
-      Alert.alert(s.strings.edittoken_delete_title, s.strings.addtoken_default_error_message)
-    }
+    })
   }
 }

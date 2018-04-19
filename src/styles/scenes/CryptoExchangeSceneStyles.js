@@ -57,6 +57,12 @@ const CryptoExchangeSceneStyle = {
     width: '90%',
     height: THEME.BUTTONS.HEIGHT
   },
+  timerContainer: {
+    container: {
+      width: 1,
+      height: 1
+    }
+  },
   confirmModal: {
     middle: {
       container: {
@@ -70,6 +76,7 @@ const CryptoExchangeSceneStyle = {
         marginLeft: 0,
         marginRight: 0,
         width: '100%',
+        maxWidth: 270,
         alignSelf: 'center'
       },
       currencyIcon: {
@@ -116,7 +123,6 @@ const CryptoExchangeSceneStyle = {
     bottom: {
       justifyContent: 'center',
       alignSelf: 'center',
-      alignItem: 'center',
       height: 35
     },
     bottomButton: {
@@ -157,12 +163,11 @@ const CryptoExchangeSceneStyle = {
     noWalletSelected: {
       ...Styles.TextAndIconButtonStyle,
       textContainer: {
-        paddingLeft: 32
       },
       inner: {
         ...Styles.TextAndIconButtonStyle.inner,
         width: '100%',
-        justifyContent: 'space-around'
+        justifyContent: 'center'
       }
     },
     iconContainer: {

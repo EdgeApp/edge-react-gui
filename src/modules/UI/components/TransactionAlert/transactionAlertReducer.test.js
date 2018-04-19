@@ -1,10 +1,12 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 /* globals test expect */
 
 import { transactionAlert as transactionAlertReducer } from './reducer.js'
 
 test('initialState', () => {
   const expected = {
-    abcTransaction: '',
+    edgeTransaction: '',
     displayAlert: false
   }
   const actual = transactionAlertReducer(undefined, {})

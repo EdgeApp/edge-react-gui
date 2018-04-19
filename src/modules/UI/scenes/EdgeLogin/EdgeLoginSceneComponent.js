@@ -1,5 +1,6 @@
-import type { AbcLobby } from 'edge-core-js'
 // @flow
+
+import type { EdgeLobby } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Image, Text, View } from 'react-native'
 
@@ -10,7 +11,7 @@ import SafeAreaView from '../../components/SafeAreaView'
 
 type EdgeLoginSceneProps = {
   style: Object,
-  lobby?: AbcLobby,
+  lobby?: EdgeLobby,
   error?: string,
   isProcessing: boolean,
   accept(): void,

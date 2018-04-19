@@ -1,3 +1,5 @@
+// @flow
+
 /* globals test describe expect */
 
 import {

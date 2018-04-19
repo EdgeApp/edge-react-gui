@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 // import * as Constants from '../../constants/'
 import { Dimensions } from 'react-native'
 
@@ -7,35 +9,25 @@ const screenDimensions = {
   height: Dimensions.get('window').height,
   width: Dimensions.get('window').width
 }
-const OFFSET_HACK = -19
 
 const StaticModalStyle = {
   container: {
     position: 'absolute',
-    top: OFFSET_HACK,
-    left: OFFSET_HACK,
-    width: '100%',
-    height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: THEME.COLORS.MODAL_BOX
-  },
-  touchOut: {
-    position: 'relative',
-    width: '100%',
-    height: '100%',
-    backgroundColor: THEME.COLORS.TRANSPARENT
+    top: screenDimensions.height * 1 / 8,
+    left: 0,
+    right: 0
   },
   modalBox: {
-    top: screenDimensions.height / 4,
-    left: screenDimensions.width / 8,
-    width: screenDimensions.width * 3 / 4,
-    alignItems: 'stretch',
-    position: 'absolute',
-    // height: (screenDimensions.height) / 3,
-    backgroundColor: THEME.COLORS.WHITE,
+    paddingHorizontal: screenDimensions.width / 8,
+    width: screenDimensions.width,
     flexDirection: 'column',
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
+    alignItems: 'stretch'
+  },
+  innerBox: {
+    backgroundColor: THEME.COLORS.WHITE
   },
   header: {
     position: 'relative',

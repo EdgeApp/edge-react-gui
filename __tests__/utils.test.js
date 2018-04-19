@@ -1,5 +1,5 @@
-/* globals describe test expect */
 // @flow
+/* globals describe test expect */
 
 import {
   getTimeInMinutes,
@@ -183,6 +183,14 @@ describe('truncateDecimals', function () {
     const actual = truncateDecimals(input, precision)
     expect(actual).toBe(expected)
   })
+
+  test('1.123456789 to 0 => 1', function () {
+    const input = '1.123456789'
+    const precision = 0
+    const expected = '1'
+    const actual = truncateDecimals(input, precision)
+    expect(actual).toBe(expected)
+  })
 })
 
 describe('getNewArrayWithItem', function () {
@@ -361,8 +369,8 @@ describe('mergeTokens', function () {
     const tokenA = { currencyCode: 'TA', currencyName: 'TA' }
     const tokenD = { currencyCode: 'TD', currencyName: 'TD' }
 
-    const preferredAbcMetaTokens = [preferredTokenA, preferredTokenB]
-    const abcMetaTokens = [tokenA, tokenD]
+    const preferredEdgeMetaTokens = [preferredTokenA, preferredTokenB]
+    const edgeMetaTokens = [tokenA, tokenD]
 
     const expected = [
       preferredTokenA, // from preferredAbcTokens
@@ -370,7 +378,7 @@ describe('mergeTokens', function () {
       tokenD
     ]
     // $FlowExpectedError
-    const actual = mergeTokens(preferredAbcMetaTokens, abcMetaTokens)
+    const actual = mergeTokens(preferredEdgeMetaTokens, edgeMetaTokens)
     expect(actual).toEqual(expected)
   })
 
@@ -378,12 +386,12 @@ describe('mergeTokens', function () {
     const tokenA = { currencyCode: 'TA', currencyName: 'TA' }
     const tokenD = { currencyCode: 'TD', currencyName: 'TD' }
 
-    const preferredAbcMetaTokens = []
-    const abcMetaTokens = [tokenA, tokenD]
+    const preferredEdgeMetaTokens = []
+    const edgeMetaTokens = [tokenA, tokenD]
 
     const expected = [tokenA, tokenD]
     // $FlowExpectedError
-    const actual = mergeTokens(preferredAbcMetaTokens, abcMetaTokens)
+    const actual = mergeTokens(preferredEdgeMetaTokens, edgeMetaTokens)
     expect(actual).toEqual(expected)
   })
 
@@ -391,12 +399,12 @@ describe('mergeTokens', function () {
     const preferredTokenA = { currencyCode: 'TA', currencyName: 'TA', preferred: true }
     const preferredTokenB = { currencyCode: 'TB', currencyName: 'TB', preferred: true }
 
-    const preferredAbcMetaTokens = [preferredTokenA, preferredTokenB]
-    const abcMetaTokens = []
+    const preferredEdgeMetaTokens = [preferredTokenA, preferredTokenB]
+    const edgeMetaTokens = []
 
     const expected = [preferredTokenA, preferredTokenB]
     // $FlowExpectedError
-    const actual = mergeTokens(preferredAbcMetaTokens, abcMetaTokens)
+    const actual = mergeTokens(preferredEdgeMetaTokens, edgeMetaTokens)
     expect(actual).toEqual(expected)
   })
 })

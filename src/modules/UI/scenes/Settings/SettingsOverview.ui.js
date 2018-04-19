@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Alert, ScrollView, Text, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -31,7 +31,7 @@ type Props = {
   defaultFiat: string,
   autoLogoutTimeInMinutes: number,
   username: string,
-  account: AbcAccount,
+  account: EdgeAccount,
   pinLoginEnabled: boolean,
   supportsTouchId: boolean,
   touchIdEnabled: boolean,
@@ -43,7 +43,7 @@ type Props = {
   setAutoLogoutTimeInMinutes(number): void,
   confirmPassword(string): void,
   lockSettings(): void,
-  dispatchUpdateEnableTouchIdEnable(boolean, AbcAccount): void,
+  dispatchUpdateEnableTouchIdEnable(boolean, EdgeAccount): void,
   sendLogs(string): void,
   resetConfirmPasswordError(Object): void,
   resetSendLogsStatus(): void,

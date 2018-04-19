@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 import React, { Component } from 'react'
 
 // import * as Constants from '../../../common/constants'
@@ -71,6 +73,8 @@ class FormField extends Component {
         onSubmitEditing={this.onSubmitEditing.bind(this)}
         value={this.props.value}
         keyboardType={this.props.keyboardType}
+        maxLength={this.props.maxLength}
+        autoCorrect={this.props.autoCorrect}
       />
     )
   }

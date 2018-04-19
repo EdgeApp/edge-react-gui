@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcMetaToken } from 'edge-core-js'
+import type { EdgeMetaToken } from 'edge-core-js'
 import _ from 'lodash'
 import React, { Component } from 'react'
 import { ActivityIndicator, FlatList, View } from 'react-native'
@@ -33,7 +33,7 @@ export type ManageTokensProps = ManageTokensOwnProps & ManageTokensDispatchProps
 
 export type State = {
   enabledList: Array<string>,
-  combinedCurrencyInfos: Array<AbcMetaToken>
+  combinedCurrencyInfos: Array<EdgeMetaToken>
 }
 
 export default class ManageTokens extends Component<ManageTokensProps, State> {
@@ -138,6 +138,13 @@ export default class ManageTokens extends Component<ManageTokensProps, State> {
     )
   }
 
+  _onDeleteToken = (currencyCode: string) => {
+    const enabledListAfterDelete = _.difference(this.state.enabledList, [currencyCode])
+    this.setState({
+      enabledList: enabledListAfterDelete
+    })
+  }
+
   _onAddToken = (currencyCode: string) => {
     const newEnabledList = _.union(this.state.enabledList, [currencyCode])
     this.setState({
@@ -152,6 +159,6 @@ export default class ManageTokens extends Component<ManageTokensProps, State> {
 
   goToEditTokenScene = (currencyCode: string) => {
     const { id, metaTokens } = this.props.guiWallet
-    Actions.editToken({ walletId: id, currencyCode, metaTokens })
+    Actions.editToken({ walletId: id, currencyCode, metaTokens, onDeleteToken: this._onDeleteToken })
   }
 }

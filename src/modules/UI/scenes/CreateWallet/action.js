@@ -1,7 +1,8 @@
+// @flow
+
 import { Actions } from 'react-native-router-flux'
 
 import * as Constants from '../../../../constants/indexConstants.js'
-// @flow
 import * as ACCOUNT_API from '../../../Core/Account/api.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import type { Dispatch, GetState } from '../../../ReduxTypes'
@@ -43,11 +44,11 @@ export const createCurrencyWallet = (
     name: walletName,
     fiatCurrencyCode
   })
-    .then(abcWallet => {
+    .then(edgeWallet => {
       Actions.popTo(Constants.WALLET_LIST_SCENE)
       dispatch(WALLET_ACTIONS.createWalletSuccess())
       if (selectWallet) {
-        dispatch(WALLET_ACTIONS.selectWallet(abcWallet.id, abcWallet.currencyInfo.currencyCode))
+        dispatch(WALLET_ACTIONS.selectWallet(edgeWallet.id, edgeWallet.currencyInfo.currencyCode))
       }
     })
     .catch(e => {

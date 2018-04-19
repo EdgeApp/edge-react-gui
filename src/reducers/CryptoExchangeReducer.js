@@ -41,7 +41,8 @@ const initialState = {
   transaction: null,
   gettingTransaction: false,
   availableShapeShiftTokens: [],
-  shiftPendingTransaction: false
+  shiftPendingTransaction: false,
+  quoteExpireDate: null
 }
 
 function cryptoExchangerReducer (state = initialState, action) {
@@ -61,7 +62,12 @@ function cryptoExchangerReducer (state = initialState, action) {
         fromNativeAmount: '0',
         toNativeAmount: '0',
         fromDisplayAmount: '0',
-        toDisplayAmount: '0'
+        toDisplayAmount: '0',
+        minerFee: '0',
+        fee: '',
+        exchangeRate: 1,
+        transaction: null,
+        quoteExpireDate: null
       }
     case Constants.SELECT_TO_WALLET_CRYPTO_EXCHANGE:
       return {
@@ -75,7 +81,12 @@ function cryptoExchangerReducer (state = initialState, action) {
         fromNativeAmount: '0',
         toNativeAmount: '0',
         fromDisplayAmount: '0',
-        toDisplayAmount: '0'
+        toDisplayAmount: '0',
+        minerFee: '0',
+        fee: '',
+        exchangeRate: 1,
+        transaction: null,
+        quoteExpireDate: null
       }
     case Constants.DISABLE_WALLET_LIST_MODAL_VISIBILITY:
       return { ...state, walletListModalVisible: false }
@@ -108,7 +119,12 @@ function cryptoExchangerReducer (state = initialState, action) {
     case Constants.UPDATE_SHIFT_TRANSACTION:
       return {
         ...state,
-        transaction: action.data.abcTransaction,
+        transaction: action.data.edgeTransaction,
+        toNativeAmount: action.data.toNativeAmount,
+        toDisplayAmount: action.data.toDisplayAmount,
+        fromNativeAmount: action.data.fromNativeAmount,
+        fromDisplayAmount: action.data.fromDisplayAmount,
+        quoteExpireDate: action.data.quoteExpireDate,
         fee:
           action.data.networkFee && state.fromCurrencyCode
             ? s.strings.string_fee_with_colon + ' ' + action.data.networkFee + ' ' + state.fromWalletPrimaryInfo.displayDenomination.name
@@ -121,7 +137,8 @@ function cryptoExchangerReducer (state = initialState, action) {
         ...state,
         transaction: null,
         insufficientError: false,
-        genericShapeShiftError: null
+        genericShapeShiftError: null,
+        quoteExpireDate: null
       }
     case Constants.SHIFT_COMPLETE:
       return { ...initialState, availableShapeShiftTokens: state.availableShapeShiftTokens }
@@ -180,7 +197,8 @@ function cryptoExchangerReducer (state = initialState, action) {
         gettingTransaction: true,
         insufficientError: false,
         genericShapeShiftError: null,
-        shiftTransactionError: null
+        shiftTransactionError: null,
+        quoteExpireDate: null
       }
     case Constants.ON_AVAILABLE_SHAPE_SHIFT_TOKENS:
       return {...state, availableShapeShiftTokens: action.data}

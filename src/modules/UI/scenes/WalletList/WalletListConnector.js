@@ -25,6 +25,8 @@ const mapStateToProps = (state: State) => {
   const dimensions = state.ui.scenes.dimensions
   const customTokens = state.ui.settings.customTokens
   const otpResetPending = SETTINGS_SELECTORS.getOtpResetPending(state)
+  const progressPercentage = UI_SELECTORS.getWalletLoadingPercent(state)
+
   return {
     settings,
     coreWallets,
@@ -38,7 +40,8 @@ const mapStateToProps = (state: State) => {
     currencyConverter,
     dimensions,
     customTokens,
-    otpResetPending
+    otpResetPending,
+    progressPercentage
   }
 }
 

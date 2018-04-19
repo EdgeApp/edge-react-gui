@@ -1,13 +1,13 @@
 // @flow
 
-import type { AbcAccountCallbacks, AbcTransaction } from 'edge-core-js'
+import type { EdgeAccountCallbacks, EdgeTransaction } from 'edge-core-js'
 
 import type { Dispatch } from '../../ReduxTypes'
 import { newTransactionsRequest, refreshTransactionsRequest } from '../../UI/scenes/TransactionList/action.js'
-import { refreshWallet } from '../../UI/Wallets/action.js'
+import { refreshWallet, refreshReceiveAddressRequest, updateWalletLoadingProgress } from '../../UI/Wallets/action.js'
 import { updateWalletsRequest } from '../Wallets/action.js'
 
-const makeAccountCallbacks = (dispatch: Dispatch): AbcAccountCallbacks => {
+const makeAccountCallbacks = (dispatch: Dispatch): EdgeAccountCallbacks => {
   const callbacks = {
     onDataChanged: () => console.log('onDataChanged'),
     onLoggedOut: () => console.log('onLoggedOut'),
@@ -20,9 +20,10 @@ const makeAccountCallbacks = (dispatch: Dispatch): AbcAccountCallbacks => {
       dispatch(updateWalletsRequest())
     },
 
-    onAddressesChecked (walletId: string, progressRatio: number) {
-      if (progressRatio === 1) {
-        console.log(`${walletId} - onAddressesChecked with ratio: ${progressRatio}`)
+    onAddressesChecked (walletId: string, transactionCount: number) {
+      console.log(`${walletId} - onAddressesChecked with progress ratio: ${transactionCount}`)
+      if (transactionCount > 0) {
+        dispatch(updateWalletLoadingProgress(walletId, transactionCount))
       }
     },
 
@@ -31,7 +32,7 @@ const makeAccountCallbacks = (dispatch: Dispatch): AbcAccountCallbacks => {
       dispatch(refreshWallet(walletId))
     },
 
-    onTransactionsChanged (walletId: string, transactions: Array<AbcTransaction>) {
+    onTransactionsChanged (walletId: string, transactions: Array<EdgeTransaction>) {
       if (transactions && transactions.length) {
         console.log(`${walletId} - onTransactionsChanged, num of tx's changed: ${transactions.length}`)
         for (const tx of transactions) {
@@ -40,12 +41,13 @@ const makeAccountCallbacks = (dispatch: Dispatch): AbcAccountCallbacks => {
       } else {
         console.log(`${walletId} - onTransactionsChanged: No transactions`)
       }
+      dispatch(refreshReceiveAddressRequest(walletId))
       // $FlowFixMe
-      dispatch(refreshTransactionsRequest(walletId))
+      dispatch(refreshTransactionsRequest(walletId, transactions))
       dispatch(refreshWallet(walletId))
     },
 
-    onNewTransactions (walletId: string, transactions: Array<AbcTransaction>) {
+    onNewTransactions (walletId: string, transactions: Array<EdgeTransaction>) {
       if (transactions && transactions.length) {
         console.log(`${walletId} - onNewTransactions, num of new tx's: ${transactions.length}`)
         for (const tx of transactions) {
@@ -54,10 +56,11 @@ const makeAccountCallbacks = (dispatch: Dispatch): AbcAccountCallbacks => {
       } else {
         console.log(`${walletId} - onNewTransactions: No transactions`)
       }
+      dispatch(refreshReceiveAddressRequest(walletId))
       dispatch(newTransactionsRequest(walletId, transactions))
       dispatch(refreshWallet(walletId))
       // $FlowFixMe
-      dispatch(refreshTransactionsRequest(walletId))
+      dispatch(refreshTransactionsRequest(walletId, transactions))
     },
 
     onBlockHeightChanged (walletId: string, blockHeight: number) {

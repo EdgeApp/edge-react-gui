@@ -1,7 +1,30 @@
 # edge-react-gui
 
-## 1.0.7-pending
+## 1.0.9
 
+* Add BCH to default wallets for new accounts
+* Fix hang for offline login
+* Enable landscape mode for iOS tablets
+* Fix rendering issues in landscape mode
+
+edge-currency-bitcoin:
+* Improve networking code to save server status/states more often. Fixes LTC connectivity issues
+
+edge-core-js
+* Remove dropped transactions from being reported to GUI
+
+## 1.0.8
+
+* Fix unconfirmed transactions having incorrect date
+* Fix incorrect sort order of unconfirmed transactions
+* Fix Request screen Copy button when using legacy addresses for BCH/LTC
+
+## 1.0.7
+
+* Significantly improved performance for accounts with large wallets
+* Fix occasional crash when uploading logs
+* Reduce disk storage requirements for app logs
+* Allow displaying of legacy address formats for BCH and LTC
 * Use new popup menu library to fix offscreen visibility issues
 * Dynamic check of token availability from ShapeShift
 * Change wording in wallet option popup
@@ -37,7 +60,7 @@ edge-core-js:
 
 * Fix Wallet List dropdown selector on iPhone X
 * Use correct Bitcoin Cash logo
- 
+
 ## 1.0.3
 
 Improvements
