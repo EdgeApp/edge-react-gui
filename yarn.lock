@@ -6540,15 +6540,16 @@ react-native-tab-view@^0.0.70:
   dependencies:
     prop-types "^15.5.10"
 
-"react-native-tcp@git://github.com/Airbitz/react-native-tcp.git#b27f3825e127947c52b14146de01b995338994e7":
+"react-native-tcp@git://github.com/Airbitz/react-native-tcp.git#c6af8f728fcbbae23d20c0211fd5b6c322f7a446":
   version "3.2.2"
-  resolved "git://github.com/Airbitz/react-native-tcp.git#b27f3825e127947c52b14146de01b995338994e7"
+  resolved "git://github.com/Airbitz/react-native-tcp.git#c6af8f728fcbbae23d20c0211fd5b6c322f7a446"
   dependencies:
     base64-js "0.0.8"
     buffer "^5.0.0"
     events "^1.0.2"
     ip-regex "^1.0.3"
     process "^0.11.9"
+    stream-browserify "^1.0.0"
     util "^0.10.3"
 
 react-native-udp@^2.0.0:
