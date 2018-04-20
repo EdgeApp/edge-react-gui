@@ -3,8 +3,8 @@
 import type { EdgeTransaction } from 'edge-core-js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
-import type { Dispatch, GetState } from '../../../ReduxTypes'
 import type { TransactionListTx } from '../../../../types.js'
+import type { Dispatch, GetState, State } from '../../../ReduxTypes'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 import * as UTILS from '../../../utils'
 import { displayTransactionAlert } from '../../components/TransactionAlert/actions'
@@ -28,29 +28,84 @@ export const END_TRANSACTIONS_LOADING = PREFIX + 'END_TRANSACTIONS_LOADING'
 
 export const CHANGED_TRANSACTIONS = PREFIX + 'CHANGED_TRANSACTIONS'
 export const SUBSEQUENT_TRANSACTION_BATCH_NUMBER = 30
+export const INITIAL_TRANSACTION_BATCH_NUMBER = 10
 
-export const fetchTransactions = (walletId: string, currencyCode: string, options: Object = {}) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const wallet = CORE_SELECTORS.getWallet(state, walletId)
-  if (wallet) {
-    WALLET_API.getTransactions(wallet, currencyCode, options).then(transactions => {
-      let key = -1
-      const transactionsWithKeys = transactions.map((tx) => {
-        const txDate = new Date(tx.date * 1000)
-        const dateString = txDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
-        const time = txDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' })
-        key++
-        return {
-          ...tx,
-          dateString,
-          time,
-          key
-        }
-      })
-      dispatch(updateTransactions(transactionsWithKeys))
-    }).catch((e) => {
-      console.warn('Issue with getTransactions: ', e.message)
+export const fetchMoreTransactions = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
+  const state: State = getState()
+  const { currentWalletId, currentCurrencyCode } = state.ui.scenes.transactionList
+  let { currentEndIndex, transactions } = state.ui.scenes.transactionList
+
+  if ((currentWalletId !== '' && currentWalletId !== walletId) ||
+    (currentCurrencyCode !== '' && currentCurrencyCode !== currencyCode)) {
+    currentEndIndex = 0
+    transactions = []
+  }
+
+  const newStartIndex = currentEndIndex ? currentEndIndex + 1 : 0
+  let newEndIndex = currentEndIndex
+
+  const txLength = transactions.length
+  if (!txLength) {
+    newEndIndex = INITIAL_TRANSACTION_BATCH_NUMBER - 1
+  } else if (txLength === currentEndIndex + 1) {
+    newEndIndex += SUBSEQUENT_TRANSACTION_BATCH_NUMBER
+  }
+
+  if (
+    newEndIndex !== currentEndIndex ||
+    (currentWalletId !== '' && currentWalletId !== walletId) ||
+    (currentCurrencyCode !== '' && currentCurrencyCode !== currencyCode)
+  ) {
+    getAndMergeTransactions(state, dispatch, walletId, currencyCode, {
+      numEntries: newEndIndex - newStartIndex + 1,
+      numIndex: newStartIndex
     })
+  }
+}
+
+export const fetchTransactions = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
+  const state: State = getState()
+
+  getAndMergeTransactions(state, dispatch, walletId, currencyCode, {
+    numEntries: state.ui.scenes.transactionList.currentEndIndex + 1,
+    numIndex: 0
+  })
+}
+
+const getAndMergeTransactions = (state: State, dispatch: Dispatch, walletId: string, currencyCode: string, options: Object) => {
+  const wallet = CORE_SELECTORS.getWallet(state, walletId)
+  const currentEndIndex = options.numIndex + options.numEntries - 1
+  if (wallet) {
+    let transactionsWithKeys = []
+    let key = 0
+    if (options && options.numIndex > 0) {
+      transactionsWithKeys = transactionsWithKeys.concat(state.ui.scenes.transactionList.transactions)
+      key = transactionsWithKeys.length
+    }
+    WALLET_API.getTransactions(wallet, currencyCode, options)
+      .then(transactions => {
+        for (const tx of transactions) {
+          const txDate = new Date(tx.date * 1000)
+          const dateString = txDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
+          const time = txDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' })
+          transactionsWithKeys.push({
+            ...tx,
+            dateString,
+            time,
+            key
+          })
+          key++
+        }
+        dispatch(updateTransactions({
+          transactions: transactionsWithKeys,
+          currentCurrencyCode: currencyCode,
+          currentWalletId: walletId,
+          currentEndIndex
+        }))
+      })
+      .catch(e => {
+        console.warn('Issue with getTransactions: ', e.message)
+      })
   }
 }
 
@@ -78,9 +133,14 @@ export const newTransactionsRequest = (walletId: string, edgeTransactions: Array
   dispatch(displayTransactionAlert(edgeTransaction))
 }
 
-export const updateTransactions = (transactions: Array<TransactionListTx>) => ({
+export const updateTransactions = (transactionUpdate: {
+  transactions: Array<TransactionListTx>,
+  currentCurrencyCode: string,
+  currentWalletId: string,
+  currentEndIndex: number
+}) => ({
   type: UPDATE_TRANSACTIONS,
-  data: { transactions }
+  data: transactionUpdate
 })
 
 export const updateBalance = () => ({
