@@ -2084,10 +2084,6 @@ currency-codes@^1.1.2:
     first-match "~0.0.1"
     nub "~0.0.0"
 
-currency-symbol-map@^4.0.1:
-  version "4.0.4"
-  resolved "https://registry.yarnpkg.com/currency-symbol-map/-/currency-symbol-map-4.0.4.tgz#3cfba625974dd3f86822d327ecbd10248695e95e"
-
 dashdash@^1.12.0:
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/dashdash/-/dashdash-1.14.1.tgz#853cfa0f7cbe2fed5de20326b8dd581035f6e2f0"
@@ -2361,9 +2357,9 @@ edge-core-js@0.7.0:
     scrypt-js "^2.0.3"
     utf8 "^3.0.0"
 
-edge-currency-bitcoin@2.17.0:
-  version "2.17.0"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-2.17.0.tgz#2afbfc992ee568469a4413d400537904f8abe054"
+edge-currency-bitcoin@2.17.1:
+  version "2.17.1"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-2.17.1.tgz#66de3940329cfcdced7b3704c33af6f4426caf4b"
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "^3.0.0"
@@ -2376,9 +2372,9 @@ edge-currency-bitcoin@2.17.0:
     unorm "^1.4.1"
     uri-js "^3.0.2"
 
-edge-currency-ethereum@0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/edge-currency-ethereum/-/edge-currency-ethereum-0.10.0.tgz#5ea59971497bf0294a9d64071f4cd6110501f3f7"
+edge-currency-ethereum@0.10.1:
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/edge-currency-ethereum/-/edge-currency-ethereum-0.10.1.tgz#febf56621dc5097ef3dfa8a9e4817ee522663506"
   dependencies:
     biggystring "^3.0.0"
     bn.js "^4.11.7"
@@ -6540,15 +6536,16 @@ react-native-tab-view@^0.0.70:
   dependencies:
     prop-types "^15.5.10"
 
-"react-native-tcp@git://github.com/Airbitz/react-native-tcp.git#b27f3825e127947c52b14146de01b995338994e7":
+"react-native-tcp@git://github.com/Airbitz/react-native-tcp.git#c6af8f728fcbbae23d20c0211fd5b6c322f7a446":
   version "3.2.2"
-  resolved "git://github.com/Airbitz/react-native-tcp.git#b27f3825e127947c52b14146de01b995338994e7"
+  resolved "git://github.com/Airbitz/react-native-tcp.git#c6af8f728fcbbae23d20c0211fd5b6c322f7a446"
   dependencies:
     base64-js "0.0.8"
     buffer "^5.0.0"
     events "^1.0.2"
     ip-regex "^1.0.3"
     process "^0.11.9"
+    stream-browserify "^1.0.0"
     util "^0.10.3"
 
 react-native-udp@^2.0.0:

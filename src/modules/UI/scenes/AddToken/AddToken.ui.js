@@ -91,6 +91,7 @@ export class AddToken extends Component<AddTokenProps, State> {
                   label={s.strings.addtoken_currency_code_input_text}
                   returnKeyType={'done'}
                   autoCorrect={false}
+                  maxLength={5}
                 />
               </View>
               <View style={[styles.contractAddressArea]}>
@@ -138,12 +139,8 @@ export class AddToken extends Component<AddTokenProps, State> {
   }
 
   onChangeCurrencyCode = (input: string) => {
-    const forcedUpperCase = input.toUpperCase()
-    /* forcedUpperCase needed to defend against React Native bug
-      https://github.com/facebook/react-native/issues/11776
-    */
     this.setState({
-      currencyCode: forcedUpperCase.substring(0, 5)
+      currencyCode: input
     })
   }
 
@@ -160,23 +157,28 @@ export class AddToken extends Component<AddTokenProps, State> {
   }
 
   _onSave = () => {
-    const { currencyName, currencyCode, decimalPlaces, contractAddress } = this.state
-    const { currentCustomTokens, wallet, walletId } = this.props
-    const currentCustomTokenIndex = _.findIndex(currentCustomTokens, item => item.currencyCode === currencyCode)
-    const metaTokensIndex = _.findIndex(wallet.metaTokens, item => item.currencyCode === currencyCode)
-    // if token is hard-coded into wallets of this type
-    if (metaTokensIndex >= 0) Alert.alert(s.strings.manage_tokens_duplicate_currency_code)
-    // if that token already exists and is visible (ie not deleted)
-    if (currentCustomTokenIndex >= 0 && currentCustomTokens[currentCustomTokenIndex].isVisible !== false) {
-      Alert.alert(s.strings.manage_tokens_duplicate_currency_code)
-    } else {
-      if (currencyName && currencyCode && decimalPlaces && contractAddress) {
-        const denomination = decimalPlacesToDenomination(decimalPlaces)
-        this.props.addNewToken(walletId, currencyName, currencyCode, contractAddress, denomination)
-        this.props.onAddToken(currencyCode)
+    const currencyCode = this.state.currencyCode.toUpperCase()
+    this.setState({
+      currencyCode
+    }, () => {
+      const { currencyName, decimalPlaces, contractAddress } = this.state
+      const { currentCustomTokens, wallet, walletId } = this.props
+      const currentCustomTokenIndex = _.findIndex(currentCustomTokens, item => item.currencyCode === currencyCode)
+      const metaTokensIndex = _.findIndex(wallet.metaTokens, item => item.currencyCode === currencyCode)
+      // if token is hard-coded into wallets of this type
+      if (metaTokensIndex >= 0) Alert.alert(s.strings.manage_tokens_duplicate_currency_code)
+      // if that token already exists and is visible (ie not deleted)
+      if (currentCustomTokenIndex >= 0 && currentCustomTokens[currentCustomTokenIndex].isVisible !== false) {
+        Alert.alert(s.strings.manage_tokens_duplicate_currency_code)
       } else {
-        Alert.alert(s.strings.addtoken_invalid_information)
+        if (currencyName && currencyCode && decimalPlaces && contractAddress) {
+          const denomination = decimalPlacesToDenomination(decimalPlaces)
+          this.props.addNewToken(walletId, currencyName, currencyCode, contractAddress, denomination)
+          this.props.onAddToken(currencyCode)
+        } else {
+          Alert.alert(s.strings.addtoken_invalid_information)
+        }
       }
-    }
+    })
   }
 }
