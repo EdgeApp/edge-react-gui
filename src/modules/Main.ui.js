@@ -52,6 +52,7 @@ import T from './UI/components/FormattedText'
 import BackButton from './UI/components/Header/Component/BackButton.ui'
 import HelpButton from './UI/components/Header/Component/HelpButtonConnector'
 import Header from './UI/components/Header/Header.ui'
+import WalletName from './UI/components/Header/WalletName/WalletNameConnector.js'
 import HelpModal from './UI/components/HelpModal'
 import TransactionAlert from './UI/components/TransactionAlert/TransactionAlertConnector'
 import { CAMERA, CONTACTS, type Permission } from './UI/permissions.js'
@@ -129,7 +130,6 @@ const EDGE_LOGIN = s.strings.title_edge_login
 const EXCHANGE = s.strings.title_exchange
 const CHANGE_MINING_FEE = s.strings.title_change_mining_fee
 const BACK = s.strings.title_back
-const SEND_CONFIRMATION = s.strings.title_send_confirmation
 const MANAGE_TOKENS = s.strings.title_manage_tokens
 const ADD_TOKEN = s.strings.title_add_token
 const EDIT_TOKEN = s.strings.title_edit_token
@@ -406,7 +406,7 @@ export default class Main extends Component<Props, State> {
                         hideTabBar
                         panHandlers={null}
                         component={SendConfirmation}
-                        renderTitle={this.renderTitle(SEND_CONFIRMATION)}
+                        renderTitle={this.renderWalletName()}
                         renderLeftButton={this.renderBackButton()}
                         renderRightButton={this.renderSendConfirmationButton()}
                       />
@@ -529,6 +529,10 @@ export default class Main extends Component<Props, State> {
 
   renderWalletListNavBar = () => {
     return <Header />
+  }
+
+  renderWalletName = () => {
+    return <WalletName />
   }
 
   renderEmptyButton = () => {

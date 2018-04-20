@@ -7,7 +7,8 @@ import { PLATFORM } from '../../../../theme/variables/platform.js'
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 30,
+    marginTop: 15,
+    marginBottom: 30,
     marginHorizontal: 30
   },
   slider: {
