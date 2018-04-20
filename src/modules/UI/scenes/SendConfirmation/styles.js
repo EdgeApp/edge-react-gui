@@ -87,5 +87,13 @@ export default StyleSheet.create({
   },
   maxSpend: {
     color: THEME.COLORS.ACCENT_ORANGE
+  },
+  balanceText: {
+    color: THEME.COLORS.WHITE,
+    fontSize: 16
+  },
+  balanceContainer: {
+    alignItems: 'center',
+    marginTop: 15
   }
 })
