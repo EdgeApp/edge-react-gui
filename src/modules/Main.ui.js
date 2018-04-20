@@ -130,7 +130,6 @@ const EDGE_LOGIN = s.strings.title_edge_login
 const EXCHANGE = s.strings.title_exchange
 const CHANGE_MINING_FEE = s.strings.title_change_mining_fee
 const BACK = s.strings.title_back
-// const SEND_CONFIRMATION = s.strings.title_send_confirmation
 const MANAGE_TOKENS = s.strings.title_manage_tokens
 const ADD_TOKEN = s.strings.title_add_token
 const EDIT_TOKEN = s.strings.title_edit_token
