@@ -1,5 +1,33 @@
 # edge-react-gui
 
+## 1.1.3
+
+* Add links to ShapeShift order ID in transaction notes field
+* Fix errors when switching wallets in Exchange screen
+* Change Ethereum add-token URI format to `token-info`
+
+edge-currency-bitcoin:
+* Fix timeout errors on iOS due to react-native-tcp
+* Improve Electrum server selection
+* Improve spending reliability by broadcasting to API services as well as Electrum nodes
+
+## 1.1.2
+
+* Improve performance when selecting a wallet with lots of transactions
+* Add support for FTC and XZC blockchains
+* Add support for HUR and IND ERC20 tokens
+* Utilize ShapeShift “precise” orders for accurate receive amounts
+* Add progress indicator for wallet syncing transactions from network
+* Fix token still appearing when custom token is deleted
+* Use ‘bits’ as the default BTC and BCH denomination for new accounts
+* Add ability to scan QR code to add custom token
+
+edge-exchange-plugins
+* Add CoinCap as an exchange rate source to cover more coins and tokens
+
+edge-currency-bitcoin:
+* Fix persistent timeout errors when sending LTC, BCH, BTC, and Dash
+
 ## 1.0.9
 
 * Add BCH to default wallets for new accounts
