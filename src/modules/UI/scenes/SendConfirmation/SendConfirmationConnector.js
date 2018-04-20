@@ -7,7 +7,7 @@ import { getCurrencyConverter, getExchangeRate } from '../../../Core/selectors.j
 import type { Dispatch, State } from '../../../ReduxTypes'
 import { convertNativeToExchange } from '../../../utils'
 import { getExchangeDenomination, getSelectedCurrencyCode, getSelectedWallet } from '../../selectors.js'
-import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
+import { getExchangeDenomination as settingsGetExchangeDenomination, getDisplayDenomination } from '../../Settings/selectors.js'
 import { reset, signBroadcastAndSave, updateAmount, updateSpendPending } from './action.js'
 import {
   getError,
@@ -33,7 +33,7 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
   const balanceInCrypto = guiWallet.nativeBalances[currencyCode]
 
   const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
-  const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, currencyCode)
+  const exchangeDenomination = settingsGetExchangeDenomination(state, currencyCode)
   // $FlowFixMe
   const balanceInCryptoDisplay = convertNativeToExchange(exchangeDenomination.multiplier)(balanceInCrypto)
   const balanceInFiat = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, balanceInCryptoDisplay)
@@ -68,9 +68,9 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
     secondaryeExchangeCurrencyCode,
     resetSlider,
     fiatCurrencyCode: guiWallet.fiatCurrencyCode,
-    parentDisplayDenomination: SETTINGS_SELECTORS.getDisplayDenomination(state, guiWallet.currencyCode),
+    parentDisplayDenomination: getDisplayDenomination(state, guiWallet.currencyCode),
     parentExchangeDenomination: getExchangeDenomination(state, guiWallet.currencyCode),
-    primaryDisplayDenomination: SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode),
+    primaryDisplayDenomination: getDisplayDenomination(state, currencyCode),
     primaryExchangeDenomination: getExchangeDenomination(state, currencyCode),
     forceUpdateGuiCounter: getForceUpdateGuiCounter(state),
     publicAddress: getPublicAddress(state),

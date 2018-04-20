@@ -23,7 +23,7 @@ export default StyleSheet.create({
   },
   exchangeRateContainer: {
     alignItems: 'center',
-    marginVertical: 15
+    marginVertical: 12
   },
   recipient: {
     flex: 2,
@@ -94,6 +94,6 @@ export default StyleSheet.create({
   },
   balanceContainer: {
     alignItems: 'center',
-    marginTop: 15
+    marginTop: 10
   }
 })
