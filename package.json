@@ -17,6 +17,10 @@
     "type": "git",
     "url": "git@github.com:Airbitz/edge-react-gui.git"
   },
+  "engines": {
+    "node": ">=8.4.0",
+    "npm": ">=5.3.0"
+  },
   "scripts": {
     "android:clean": "cd android && ./gradlew clean && rm -rf build && cd ../",
     "android:logcat": "adb logcat *:S ReactNative:V ReactNativeJS:V",
