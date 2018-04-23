@@ -6,7 +6,15 @@ import Scan from './Scan.ui'
 import type { Dispatch, State } from '../../../ReduxTypes'
 import { getCameraPermission } from '../../../../reducers/permissions/selectors'
 import { toggleScanToWalletListModal } from '../../components/WalletListModal/action'
-import { toggleAddressModal, toggleEnableTorch, parseUri } from './action'
+import {
+  toggleAddressModal,
+  toggleEnableTorch,
+  qrCodeScanned,
+  legacyAddressModalContinueButtonPressed,
+  legacyAddressModalCancelButtonPressed,
+  addressModalDoneButtonPressed,
+  addressModalCancelButtonPressed
+} from './action'
 
 const mapStateToProps = (state: State) => ({
   cameraPermission: getCameraPermission(state),
@@ -15,10 +23,14 @@ const mapStateToProps = (state: State) => ({
 })
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  parseUri: data => dispatch(parseUri(data)),
+  qrCodeScanned: data => dispatch(qrCodeScanned(data)),
   toggleEnableTorch: () => dispatch(toggleEnableTorch()),
   toggleAddressModal: () => dispatch(toggleAddressModal()),
-  toggleScanToWalletListModal: () => dispatch(toggleScanToWalletListModal())
+  toggleScanToWalletListModal: () => dispatch(toggleScanToWalletListModal()),
+  legacyAddressModalContinueButtonPressed: () => dispatch(legacyAddressModalContinueButtonPressed()),
+  legacyAddressModalCancelButtonPressed: () => dispatch(legacyAddressModalCancelButtonPressed()),
+  addressModalDoneButtonPressed: data => dispatch(addressModalDoneButtonPressed(data)),
+  addressModalCancelButtonPressed: () => dispatch(addressModalCancelButtonPressed())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Scan)

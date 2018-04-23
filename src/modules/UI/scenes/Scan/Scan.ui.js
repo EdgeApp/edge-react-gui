@@ -21,15 +21,19 @@ import SafeAreaView from '../../components/SafeAreaView'
 import { AUTHORIZED, DENIED } from '../../permissions'
 import AddressModal from './components/AddressModalConnector'
 import styles, { styles as styleRaw } from './style'
+import LegacyAddressModal from './LegacyAddressModal/LegacyAddressModalConnector.js'
 
 type Props = {
   cameraPermission: PermissionStatus,
   torchEnabled: boolean,
   scanEnabled: boolean,
-  toggleEnableTorch(): void,
-  toggleAddressModal(): void,
-  toggleScanToWalletListModal(): void,
-  parseUri: (data: string) => void
+  qrCodeScanned: (data: string) => void,
+  toggleEnableTorch: () => void,
+  toggleAddressModal: () => void,
+  toggleScanToWalletListModal: () => void,
+  addressModalDoneButtonPressed: () => void,
+  legacyAddressModalContinueButtonPressed: () => void,
+  legacyAddressModalCancelButtonPressed: () => void
 }
 
 const HEADER_TEXT = s.strings.send_scan_header_text
@@ -42,6 +46,8 @@ const FLASH_TEXT = s.strings.fragment_send_flash
 
 export default class Scan extends Component<Props> {
   render () {
+    const { addressModalDoneButtonPressed, legacyAddressModalContinueButtonPressed, legacyAddressModalCancelButtonPressed } = this.props
+
     return (
       <SafeAreaView>
         <View style={{ flex: 1 }}>
@@ -52,7 +58,7 @@ export default class Scan extends Component<Props> {
             {this.renderCamera()}
 
             <View style={[styles.overlay]}>
-              <AddressModal onExitButtonFxn={this._onToggleAddressModal} />
+              <AddressModal onExitButtonFxn={this._onToggleAddressModal} doneButtonPressed={addressModalDoneButtonPressed} />
 
               <View style={[styles.overlayTop]}>
                 <T style={[styles.overlayTopText]}>{HEADER_TEXT}</T>
@@ -80,6 +86,8 @@ export default class Scan extends Component<Props> {
           </View>
           {this.renderDropUp()}
         </View>
+
+        <LegacyAddressModal continueButtonPressed={legacyAddressModalContinueButtonPressed} cancelButtonPressed={legacyAddressModalCancelButtonPressed} />
       </SafeAreaView>
     )
   }
@@ -103,16 +111,6 @@ export default class Scan extends Component<Props> {
     this.props.toggleScanToWalletListModal()
   }
 
-  onBarCodeRead = (scan: { data: string }) => {
-    if (!this.props.scanEnabled) return
-    const uri = scan.data
-    this.parseUri(uri)
-  }
-
-  parseUri = (data: string) => {
-    this.props.parseUri(data)
-  }
-
   selectPhotoTapped = () => {
     const options = { takePhotoButtonTitle: null }
 
@@ -134,7 +132,7 @@ export default class Scan extends Component<Props> {
     if (this.props.cameraPermission === AUTHORIZED) {
       const torchMode = this.props.torchEnabled ? Camera.constants.TorchMode.on : Camera.constants.TorchMode.off
 
-      return <Camera style={styles.preview} ref="cameraCapture" torchMode={torchMode} onBarCodeRead={this.onBarCodeRead} />
+      return <Camera style={styles.preview} ref="cameraCapture" torchMode={torchMode} onBarCodeRead={({ data }) => this.props.qrCodeScanned(data)} />
     } else if (this.props.cameraPermission === DENIED) {
       return (
         <View style={[styles.preview, { justifyContent: 'center', alignItems: 'center' }]}>
