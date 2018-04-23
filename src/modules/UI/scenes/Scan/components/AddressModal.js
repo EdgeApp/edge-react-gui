@@ -31,6 +31,14 @@ type State = {
 }
 
 export default class AddressModal extends Component<Props, State> {
+  constructor (props: Props) {
+    super(props)
+    this.state = {
+      uri: '',
+      clipboard: ''
+    }
+  }
+
   _setClipboard (props: Props) {
     const coreWallet = props.coreWallet
     Clipboard.getString().then(uri => {

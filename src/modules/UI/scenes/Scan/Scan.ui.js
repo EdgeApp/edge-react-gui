@@ -27,6 +27,7 @@ type Props = {
   cameraPermission: PermissionStatus,
   torchEnabled: boolean,
   scanEnabled: boolean,
+  showToWalletModal: boolean,
   qrCodeScanned: (data: string) => void,
   toggleEnableTorch: () => void,
   toggleAddressModal: () => void,
@@ -84,19 +85,12 @@ export default class Scan extends Component<Props> {
             </View>
             <ABAlert />
           </View>
-          {this.renderDropUp()}
+          {this.props.showToWalletModal && <WalletListModal topDisplacement={Constants.SCAN_WALLET_DIALOG_TOP} type={Constants.FROM} />}
         </View>
 
         <LegacyAddressModal continueButtonPressed={legacyAddressModalContinueButtonPressed} cancelButtonPressed={legacyAddressModalCancelButtonPressed} />
       </SafeAreaView>
     )
-  }
-
-  renderDropUp = () => {
-    if (this.props.showToWalletModal) {
-      return <WalletListModal topDisplacement={Constants.SCAN_WALLET_DIALOG_TOP} type={Constants.FROM} />
-    }
-    return null
   }
 
   _onToggleTorch = () => {

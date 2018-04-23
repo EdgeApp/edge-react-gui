@@ -19,7 +19,8 @@ import {
 const mapStateToProps = (state: State) => ({
   cameraPermission: getCameraPermission(state),
   torchEnabled: state.ui.scenes.scan.torchEnabled,
-  scanEnabled: state.ui.scenes.scan.scanEnabled
+  scanEnabled: state.ui.scenes.scan.scanEnabled,
+  showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility
 })
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
