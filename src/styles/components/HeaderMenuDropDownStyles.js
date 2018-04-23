@@ -50,9 +50,7 @@ const MenuDropDownStyle = {
         alignItems: 'center'
       }
     },
-    menuTriggerUnderlay: {
-
-    }
+    menuTriggerUnderlay: {}
   },
   menuIconWrap: {
     width: '100%',
@@ -60,9 +58,7 @@ const MenuDropDownStyle = {
     alignItems: 'center',
     justifyContent: 'center'
   },
-  menuOptions: {
-
-  },
+  menuOptions: {},
   menuOptionItem: {
     flexDirection: 'row',
     paddingVertical: 4

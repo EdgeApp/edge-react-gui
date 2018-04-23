@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import * as Constants from '../../../../../../constants/indexConstants'
 import s from '../../../../../../locales/strings.js'
 import { MenuDropDownStyle } from '../../../../../../styles/indexStyles'
-import {MenuDropDown} from '../../../../components/MenuDropDown/MenuDropDown.ui.js'
+import { MenuDropDown } from '../../../../components/MenuDropDown/MenuDropDown.ui.js'
 
 type Props = {
   walletKey: string,
@@ -37,7 +37,8 @@ export default class WalletListRowOptions extends Component<Props, State> {
   }
 
   render () {
-    const modifiedMenuDropDownStyle = { // manually overwrite width
+    const modifiedMenuDropDownStyle = {
+      // manually overwrite width
       ...MenuDropDownStyle,
       menuIconWrap: {
         ...MenuDropDownStyle.menuIconWrap,

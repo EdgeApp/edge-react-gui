@@ -1,11 +1,11 @@
 // @flow
 import type { EdgeCurrencyWallet, EdgeReceiveAddress } from 'edge-core-js'
+import _ from 'lodash'
 
 import type { Dispatch, GetState } from '../../ReduxTypes'
 import * as SETTINGS_SELECTORS from '../../UI/Settings/selectors'
-import * as CORE_SELECTORS from '../selectors'
-import _ from 'lodash'
 import { getReceiveAddresses } from '../../utils.js'
+import * as CORE_SELECTORS from '../selectors'
 
 export const PREFIX = 'Core/Wallets/'
 export const UPDATE_WALLETS = PREFIX + 'UPDATE_WALLETS'

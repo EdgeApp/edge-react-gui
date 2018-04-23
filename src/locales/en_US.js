@@ -243,7 +243,8 @@ const strings = {
   otp_disabled_modal: '2FA has been disabled. You can enable it again by tapping on "Enable 2FA" at any time.',
   otp_modal_headline: 'Are you sure you want to disable 2FA?',
   otp_modal_reset_headline: '2FA Reset Requested',
-  otp_modal_reset_description: 'An attempt to login to your account was made by another device and a 2FA reset has been requested. \n\nIf you did not make the request, click "Keep 2FA". Then go to the "Settings" and change your password and PIN. \n\nIf you did request the reset, \nclick on "Disable 2FA".',
+  otp_modal_reset_description:
+    'An attempt to login to your account was made by another device and a 2FA reset has been requested. \n\nIf you did not make the request, click "Keep 2FA". Then go to the "Settings" and change your password and PIN. \n\nIf you did request the reset, \nclick on "Disable 2FA".',
   otp_modal_body: '2FA is recommended to keep your device secure from unauthorized access from other devices.',
   otp_notif_title: '2FA disable has been requested by another device',
   otp_notif_body: 'If you did not create this request, log in as %1$s and change your password',

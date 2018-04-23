@@ -3,7 +3,7 @@
 import { bns } from 'biggystring'
 import type { EdgeDenomination } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, Animated, Image, TouchableHighlight, TouchableOpacity, View, FlatList } from 'react-native'
+import { ActivityIndicator, Animated, FlatList, Image, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 // import Contacts from 'react-native-contacts'
 // import Permissions from 'react-native-permissions'
 import { Actions } from 'react-native-router-flux'
@@ -15,8 +15,7 @@ import sendImage from '../../../../assets/images/transactions/transactions-send.
 import * as Constants from '../../../../constants/indexConstants'
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
-
-import type { GuiWallet, TransactionListTx, GuiContact } from '../../../../types'
+import type { GuiContact, GuiWallet, TransactionListTx } from '../../../../types'
 import WalletListModal from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import * as UTILS from '../../../utils'
 import T from '../../components/FormattedText'
@@ -94,8 +93,7 @@ export default class TransactionList extends Component<Props, State> {
   }
 
   componentWillReceiveProps (nextProps: Props) {
-    if ((nextProps.selectedWalletId !== this.props.selectedWalletId) ||
-        (nextProps.selectedCurrencyCode !== this.props.selectedCurrencyCode)) {
+    if (nextProps.selectedWalletId !== this.props.selectedWalletId || nextProps.selectedCurrencyCode !== this.props.selectedCurrencyCode) {
       this.fetchListOfTransactions(nextProps.selectedWalletId, nextProps.selectedCurrencyCode)
     }
   }
@@ -224,7 +222,7 @@ export default class TransactionList extends Component<Props, State> {
                   ListHeaderComponent={this.renderBalanceBox}
                   style={[styles.transactionsScrollWrap]}
                   data={this.props.transactions}
-                  renderItem={(tx) => this.renderTx(tx, this.props.transactions)}
+                  renderItem={tx => this.renderTx(tx, this.props.transactions)}
                   initialNumToRender={INITIAL_TRANSACTION_BATCH_NUMBER}
                   onEndReached={() => this.handleScrollEnd()}
                   onEndReachedThreshold={SCROLL_THRESHOLD}
@@ -281,7 +279,7 @@ export default class TransactionList extends Component<Props, State> {
       <Animated.View style={[{ height: this.state.balanceBoxHeight }]}>
         <Gradient style={[styles.currentBalanceBox]}>
           {this.state.balanceBoxVisible && (
-            <Animated.View style={[styles.balanceBoxContents, {opacity: this.state.balanceBoxOpacity}]}>
+            <Animated.View style={[styles.balanceBoxContents, { opacity: this.state.balanceBoxOpacity }]}>
               <TouchableOpacity onPress={this.toggleShowBalance} style={[styles.currentBalanceWrap]}>
                 {this.state.showBalance ? (
                   <View style={styles.balanceShownContainer}>
@@ -297,9 +295,7 @@ export default class TransactionList extends Component<Props, State> {
                         {displayDenomination.symbol ? (
                           <T numberOfLines={1} style={[styles.currentBalanceBoxBits, styles.symbol]}>
                             {displayDenomination.symbol + ' '}
-                            <T numberOfLines={1} >
-                              {cryptoAmountString}
-                            </T>
+                            <T numberOfLines={1}>{cryptoAmountString}</T>
                           </T>
                         ) : (
                           <T numberOfLines={1} style={styles.currentBalanceBoxBits}>
@@ -446,9 +442,9 @@ export default class TransactionList extends Component<Props, State> {
           <View style={[styles.transactionInfoWrap]}>
             <View style={styles.transactionLeft}>
               {thumbnailPath ? (
-                <Image style={[styles.transactionLogo]} source={{ uri: thumbnailPath }}/>
+                <Image style={[styles.transactionLogo]} source={{ uri: thumbnailPath }} />
               ) : (
-                <Image style={styles.transactionLogo} source={txImage}/>
+                <Image style={styles.transactionLogo} source={txImage} />
               )}
 
               <View style={[styles.transactionLeftTextWrap]}>

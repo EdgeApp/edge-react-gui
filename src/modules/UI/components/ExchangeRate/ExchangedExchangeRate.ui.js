@@ -30,8 +30,7 @@ export default class ExchangedExchangeRate extends Component<Props> {
   }
 
   isBits (primaryCurrencyInfo: GuiCurrencyInfo) {
-    return (primaryCurrencyInfo.displayDenomination.name === 'bits' ||
-      primaryCurrencyInfo.displayDenomination.name === 'cash')
+    return primaryCurrencyInfo.displayDenomination.name === 'bits' || primaryCurrencyInfo.displayDenomination.name === 'cash'
   }
 
   render () {

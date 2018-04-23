@@ -11,7 +11,7 @@ import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import { saveReceiveAddress } from './action.js'
 import { Request } from './Request.ui'
-import type { RequestDispatchProps, RequestStateProps, RequestLoadingProps } from './Request.ui'
+import type { RequestDispatchProps, RequestLoadingProps, RequestStateProps } from './Request.ui'
 
 const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps => {
   let exchangeSecondaryToPrimaryRatio: number = 0

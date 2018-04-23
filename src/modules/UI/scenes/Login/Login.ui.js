@@ -1,7 +1,7 @@
 // @flow
 
-import { LoginScreen } from 'edge-login-ui-rn'
 import type { EdgeAccount, EdgeContext } from 'edge-core-js'
+import { LoginScreen } from 'edge-login-ui-rn'
 import React, { Component } from 'react'
 import { Actions } from 'react-native-router-flux'
 

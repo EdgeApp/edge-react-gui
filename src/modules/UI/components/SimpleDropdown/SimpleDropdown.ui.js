@@ -2,10 +2,11 @@
 
 import React, { Component } from 'react'
 import type { Node } from 'react'
-import { TouchableWithoutFeedback, StylesSheet, View, Platform } from 'react-native'
-import Ionicon from 'react-native-vector-icons/Ionicons'
-import styles, { rawStyle } from './style.js'
+import { Platform, StylesSheet, TouchableWithoutFeedback, View } from 'react-native'
 import * as Animatable from 'react-native-animatable'
+import Ionicon from 'react-native-vector-icons/Ionicons'
+
+import styles, { rawStyle } from './style.js'
 
 export type Props = {
   height?: number,
@@ -14,15 +15,13 @@ export type Props = {
   containerStyle: StylesSheet.Styles
 }
 
-export type State = {
-
-}
+export type State = {}
 
 export default class WalletListProgressDropdown extends Component<Props> {
   render () {
     const exitIconName = (Platform.OS === 'ios' ? 'ios' : 'md') + '-close'
     return (
-      <Animatable.View animation={'fadeIn'} duration={6000} style={[styles.container, this.props.containerStyle, {height: this.props.height}]}>
+      <Animatable.View animation={'fadeIn'} duration={6000} style={[styles.container, this.props.containerStyle, { height: this.props.height }]}>
         <TouchableWithoutFeedback style={styles.touchableContainer} onPress={this.props.onPress}>
           <View style={styles.touchableInterior}>
             <View style={styles.sideGap} />

@@ -1,9 +1,10 @@
 // @flow
-import React, {Component} from 'react'
-import {View, Text} from 'react-native'
-import Menu, {MenuOptions, MenuOption, MenuTrigger} from 'react-native-popup-menu'
-import {Icon} from '../Icon/Icon.ui'
+import React, { Component } from 'react'
+import { Text, View } from 'react-native'
+import Menu, { MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu'
+
 import * as Constants from '../../../../constants/indexConstants'
+import { Icon } from '../Icon/Icon.ui'
 
 type Props = {
   style: any,
@@ -48,13 +49,9 @@ class MenuDropDown extends Component<Props, State> {
 
     return (
       <View style={[style.container]}>
-        <Menu style={[style.menuButton]} onSelect={(value) => this.props.onSelect(value)}>
-          <MenuTrigger customStyles={style.menuTrigger}>
-            {this.renderMenuIcon(style)}
-          </MenuTrigger>
-          <MenuOptions customStyles={style.menuOptions}>
-            {this.renderMenuOptions(style)}
-          </MenuOptions>
+        <Menu style={[style.menuButton]} onSelect={value => this.props.onSelect(value)}>
+          <MenuTrigger customStyles={style.menuTrigger}>{this.renderMenuIcon(style)}</MenuTrigger>
+          <MenuOptions customStyles={style.menuOptions}>{this.renderMenuOptions(style)}</MenuOptions>
         </Menu>
       </View>
     )

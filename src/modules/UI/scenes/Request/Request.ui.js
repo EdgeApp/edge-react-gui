@@ -82,9 +82,7 @@ export class Request extends Component<Props, State> {
       const publicAddress = nextProps.guiWallet.receiveAddress.publicAddress
       const legacyAddress = nextProps.guiWallet.receiveAddress.legacyAddress
 
-      const abcEncodeUri = nextProps.useLegacyAddress
-        ? { publicAddress, legacyAddress }
-        : { publicAddress }
+      const abcEncodeUri = nextProps.useLegacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
 
       const encodedURI = nextProps.edgeWallet ? nextProps.edgeWallet.encodeUri(abcEncodeUri) : ''
 
@@ -113,14 +111,8 @@ export class Request extends Component<Props, State> {
     }
 
     const color = 'white'
-    const {
-      primaryCurrencyInfo,
-      secondaryCurrencyInfo,
-      exchangeSecondaryToPrimaryRatio
-    } = this.props
-    const requestAddress = this.props.useLegacyAddress
-      ? this.state.legacyAddress
-      : this.state.publicAddress
+    const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio } = this.props
+    const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
 
     return (
       <SafeAreaView>
@@ -161,8 +153,7 @@ export class Request extends Component<Props, State> {
             />
           </View>
 
-          {this.props.showToWalletModal &&
-          <WalletListModal topDisplacement={Constants.REQUEST_WALLET_DIALOG_TOP} type={Constants.TO} />}
+          {this.props.showToWalletModal && <WalletListModal topDisplacement={Constants.REQUEST_WALLET_DIALOG_TOP} type={Constants.TO} />}
         </Gradient>
       </SafeAreaView>
     )

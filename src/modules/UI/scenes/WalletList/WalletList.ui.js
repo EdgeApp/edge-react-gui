@@ -2,26 +2,26 @@
 
 import React, { Component } from 'react'
 import { ActivityIndicator, Animated, FlatList, Image, TouchableOpacity, View } from 'react-native'
-import { TwoButtonTextModalComponent, StaticModalComponent } from '../../../../components/indexComponents'
 import { Actions } from 'react-native-router-flux'
 import SortableListView from 'react-native-sortable-listview'
 import Ionicon from 'react-native-vector-icons/Ionicons'
-import SimplifiedDropdown from '../../components/SimpleDropdown/SimpleDropdown.ui.js'
 
+import iconImage from '../../../../assets/images/otp/OTP-badge_sm.png'
 import WalletIcon from '../../../../assets/images/walletlist/my-wallets.png'
+import { StaticModalComponent, TwoButtonTextModalComponent } from '../../../../components/indexComponents'
 import * as Constants from '../../../../constants/indexConstants.js'
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
+import { TwoButtonModalStyle } from '../../../../styles/indexStyles.js'
 import * as UTILS from '../../../utils'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
-import styles from './style'
-import {TwoButtonModalStyle} from '../../../../styles/indexStyles.js'
 import SafeAreaView from '../../components/SafeAreaView/index.js'
+import SimplifiedDropdown from '../../components/SimpleDropdown/SimpleDropdown.ui.js'
 import FullWalletListRow from './components/WalletListRow/FullWalletListRowConnector'
 import SortableWalletListRow from './components/WalletListRow/SortableWalletListRow.ui.js'
 import WalletOptions from './components/WalletOptions/WalletOptionsConnector.ui.js'
-import iconImage from '../../../../assets/images/otp/OTP-badge_sm.png'
+import styles from './style'
 
 const DONE_TEXT = s.strings.string_done_cap
 const WALLETS_HEADER_TEXT = s.strings.fragment_wallets_header
@@ -213,30 +213,31 @@ export default class WalletList extends Component<Props, State> {
     const heightOfDropdown = 100 // pixels
     return (
       <SimplifiedDropdown onPress={this.onDismissProgressDropdown} containerHeight={heightOfDropdown} containerStyle={styles.walletListProgressDropdown}>
-        <T style={styles.walletListProgressDropdownTopText}>{s.strings.fragment_wallets_syncing_wallet_txs} {this.props.progressPercentage}%</T>
+        <T style={styles.walletListProgressDropdownTopText}>
+          {s.strings.fragment_wallets_syncing_wallet_txs} {this.props.progressPercentage}%
+        </T>
       </SimplifiedDropdown>
     )
   }
 
   showModal = () => {
     if (this.state.showOtpResetModal) {
-      return <TwoButtonTextModalComponent
-        style={TwoButtonModalStyle}
-        headerText={s.strings.otp_modal_reset_headline}
-        showModal
-        middleText={s.strings.otp_modal_reset_description}
-        iconImage={iconImage}
-        cancelText={s.strings.otp_disable}
-        doneText={s.strings.otp_keep}
-        onCancel={this.disableOtp}
-        onDone={this.keepOtp}
-      />
+      return (
+        <TwoButtonTextModalComponent
+          style={TwoButtonModalStyle}
+          headerText={s.strings.otp_modal_reset_headline}
+          showModal
+          middleText={s.strings.otp_modal_reset_description}
+          iconImage={iconImage}
+          cancelText={s.strings.otp_disable}
+          doneText={s.strings.otp_keep}
+          onCancel={this.disableOtp}
+          onDone={this.keepOtp}
+        />
+      )
     }
     if (this.state.showMessageModal) {
-      return <StaticModalComponent
-        cancel={this.cancelStatic}
-        body={this.state.messageModalMessage}
-        modalDismissTimerSeconds={8} />
+      return <StaticModalComponent cancel={this.cancelStatic} body={this.state.messageModalMessage} modalDismissTimerSeconds={8} />
     }
     return null
   }
@@ -268,10 +269,7 @@ export default class WalletList extends Component<Props, State> {
         {this.state.sortableListExists && (
           <Animated.View
             testID={'sortableList'}
-            style={[
-              { flex: 1, opacity: this.state.sortableListOpacity, zIndex: this.state.sortableListZIndex },
-              styles.sortableList
-            ]}
+            style={[{ flex: 1, opacity: this.state.sortableListOpacity, zIndex: this.state.sortableListZIndex }, styles.sortableList]}
           >
             <SortableListView
               style={styles.sortableWalletListContainer}

@@ -1,11 +1,12 @@
 // @flow
 
-import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
-import * as Constants from '../../constants/indexConstants'
+import { connect } from 'react-redux'
+
 import { exchangeTimerExpired } from '../../actions/indexActions'
 import { CircleTimer } from '../../components/CircleTimer'
-import type { State, Dispatch } from '../../modules/ReduxTypes'
+import * as Constants from '../../constants/indexConstants'
+import type { Dispatch, State } from '../../modules/ReduxTypes'
 
 export const mapStateToProps = (state: State) => {
   const expiration = Actions.currentScene === Constants.EXCHANGE_SCENE ? state.cryptoExchange.quoteExpireDate : null
