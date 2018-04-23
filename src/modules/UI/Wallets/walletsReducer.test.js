@@ -3,15 +3,15 @@
 /* globals describe test expect */
 
 import {
-  wallets,
-  byId,
   activeWalletIds,
-  archivedWalletIds,
-  selectedWalletId,
-  selectedCurrencyCode,
   addTokenPending,
+  archivedWalletIds,
+  byId,
   manageTokensPending,
-  walletLoadingProgress
+  selectedCurrencyCode,
+  selectedWalletId,
+  walletLoadingProgress,
+  wallets
 } from './reducer.js'
 
 describe('WalletsReducer', () => {

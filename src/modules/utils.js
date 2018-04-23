@@ -1,13 +1,21 @@
 // @flow
 
 import { bns, div, eq, gte, mul, toFixed } from 'biggystring'
-import type { EdgeCurrencyInfo, EdgeCurrencyPlugin, EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeTransaction, EdgeReceiveAddress } from 'edge-core-js'
+import type {
+  EdgeCurrencyInfo,
+  EdgeCurrencyPlugin,
+  EdgeCurrencyWallet,
+  EdgeDenomination,
+  EdgeMetaToken,
+  EdgeReceiveAddress,
+  EdgeTransaction
+} from 'edge-core-js'
 import _ from 'lodash'
 import { Platform } from 'react-native'
 
+import { FIAT_CODES_SYMBOLS as currencySymbolMap, getSymbolFromCurrency } from '../constants/indexConstants.js'
 import borderColors from '../theme/variables/css3Colors'
 import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet } from '../types'
-import { FIAT_CODES_SYMBOLS as currencySymbolMap, getSymbolFromCurrency } from '../constants/indexConstants.js'
 
 const DIVIDE_PRECISION = 18
 
@@ -428,14 +436,11 @@ export const getReceiveAddresses = (currencyWallets: { [id: string]: EdgeCurrenc
     return currencyWallets[id].getReceiveAddress()
   })
   return Promise.all(promises).then(receiveAddresses => {
-    return ids.reduce(
-      (result, id, index) => {
-        return {
-          ...result,
-          [id]: receiveAddresses[index]
-        }
-      },
-      {}
-    )
+    return ids.reduce((result, id, index) => {
+      return {
+        ...result,
+        [id]: receiveAddresses[index]
+      }
+    }, {})
   })
 }

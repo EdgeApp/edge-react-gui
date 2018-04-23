@@ -5,8 +5,8 @@ import { ActivityIndicator, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import type { SetNativeAmountInfo } from '../../../../actions/CryptoExchangeActions.js'
-import CryptoExchangeConnector from '../../../../connectors/components/CryptoExchangeRateConnector'
 import CryptoExchangeQuoteTimerConnector from '../../../../connectors/components/CryptoExchangeQuoteTimerConnector'
+import CryptoExchangeConnector from '../../../../connectors/components/CryptoExchangeRateConnector'
 import * as Constants from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings.js'
 import { CryptoExchangeSceneStyle } from '../../../../styles/indexStyles'
@@ -192,7 +192,7 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
             <View style={style.shim} />
             <View style={style.actionButtonContainer}>{this.renderButton()}</View>
             <View style={style.shim} />
-            <CryptoExchangeQuoteTimerConnector style={style.timerContainer}/>
+            <CryptoExchangeQuoteTimerConnector style={style.timerContainer} />
           </KeyboardAwareScrollView>
           {this.renderDropUp()}
           {this.renderConfirmation(style.confirmModal)}

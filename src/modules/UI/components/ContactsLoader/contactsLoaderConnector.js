@@ -2,13 +2,12 @@
 
 import { connect } from 'react-redux'
 
-import type { State, Dispatch } from '../../../ReduxTypes.js'
-
-import type {GuiContact} from '../../../../types.js'
+import { loadContactsStart, loadContactsSuccess } from '../../../../reducers/contacts/actions.js'
+import type { GuiContact } from '../../../../types.js'
+import type { Dispatch, State } from '../../../ReduxTypes.js'
+import { displayErrorAlert } from '../ErrorAlert/actions.js'
 import { ContactsLoader } from './ContactsLoader.ui.js'
 import { fetchContacts } from './indexContactsLoader.js'
-import { loadContactsStart, loadContactsSuccess } from '../../../../reducers/contacts/actions.js'
-import { displayErrorAlert } from '../ErrorAlert/actions.js'
 
 export const mapStateToProps = (state: State) => ({
   contactsPermission: state.permissions.contacts

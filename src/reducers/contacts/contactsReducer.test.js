@@ -2,8 +2,8 @@
 
 /* globals test expect */
 
-import { contactsReducer, initialState } from './contactsReducer.js'
 import { loadContactsSuccess } from './actions.js'
+import { contactsReducer, initialState } from './contactsReducer.js'
 
 test('initialState', () => {
   const expected = initialState

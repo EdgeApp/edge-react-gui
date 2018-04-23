@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 import { loginWithEdge } from '../../../../actions/EdgeLoginActions.js'
 import * as Constants from '../../../../constants/indexConstants'
 import { getCameraPermission } from '../../../../reducers/permissions/selectors'
+import type { GuiWallet } from '../../../../types'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import type { Dispatch, State } from '../../../ReduxTypes'
 import { toggleScanToWalletListModal } from '../../components/WalletListModal/action'
@@ -15,7 +16,6 @@ import { updateLabel, updateParsedURI } from '../SendConfirmation/action.js'
 import { toggleWalletListModal } from '../WalletTransferList/action'
 import { disableScan, enableScan, toggleAddressModal, toggleEnableTorch } from './action'
 import Scan from './Scan.ui'
-import type { GuiWallet } from '../../../../types'
 
 const mapStateToProps = (state: State) => {
   const walletId: string = UI_SELECTORS.getSelectedWalletId(state)

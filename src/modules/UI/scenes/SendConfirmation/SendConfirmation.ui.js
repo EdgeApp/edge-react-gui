@@ -9,7 +9,7 @@ import { sprintf } from 'sprintf-js'
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
 import type { CurrencyConverter, GuiCurrencyInfo, GuiDenomination } from '../../../../types'
-import { border, convertAbcToGuiDenomination, convertNativeToDisplay, convertNativeToExchange, getDenomFromIsoCode, decimalOrZero } from '../../../utils.js'
+import { border, convertAbcToGuiDenomination, convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../../utils.js'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
 import type { ExchangedFlipInputAmounts } from '../../components/FlipInput/ExchangedFlipInput2.js'
 import { ExchangedFlipInput } from '../../components/FlipInput/ExchangedFlipInput2.js'
@@ -148,7 +148,11 @@ export class SendConfirmation extends Component<Props, State> {
         const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol
         const exchangeConvertor = convertNativeToExchange(this.props.parentExchangeDenomination.multiplier)
         const cryptoFeeExchangeAmount = exchangeConvertor(parentNetworkFee)
-        const fiatFeeAmount = this.props.currencyConverter.convertCurrency(this.props.parentExchangeDenomination.name, secondaryInfo.exchangeCurrencyCode, cryptoFeeExchangeAmount)
+        const fiatFeeAmount = this.props.currencyConverter.convertCurrency(
+          this.props.parentExchangeDenomination.name,
+          secondaryInfo.exchangeCurrencyCode,
+          cryptoFeeExchangeAmount
+        )
         const fiatFeeAmountString = fiatFeeAmount.toFixed(2)
         const fiatFeeAmountPretty = bns.toFixed(fiatFeeAmountString, 2, 2)
         const fiatFeeString = `${fiatFeeSymbol} ${fiatFeeAmountPretty}`

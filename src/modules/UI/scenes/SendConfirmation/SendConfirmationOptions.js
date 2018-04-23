@@ -4,9 +4,10 @@ import type { EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Keyboard, View } from 'react-native'
 import Menu, { MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu'
-import Text from '../../components/FormattedText'
+
 import s from '../../../../locales/strings.js'
 import { MenuDropDownStyle } from '../../../../styles/indexStyles'
+import Text from '../../components/FormattedText'
 import styles from './styles'
 
 const CHANGE_MINING_FEE_TEXT = s.strings.title_change_mining_fee
@@ -42,7 +43,7 @@ export default class SendConfirmationOptions extends Component<Props, State> {
     const defaultMenuStyle = MenuDropDownStyle
     return (
       <View>
-        <Menu onSelect={value => this.handleMenuOptions(value)} onOpen={ () => Keyboard.dismiss() }>
+        <Menu onSelect={value => this.handleMenuOptions(value)} onOpen={() => Keyboard.dismiss()}>
           <MenuTrigger style={[styles.menuTrigger]}>
             <Text style={[styles.trigger]}>&#8942;</Text>
           </MenuTrigger>

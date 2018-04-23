@@ -1,11 +1,12 @@
 // @flow
 
 import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
+import _ from 'lodash'
 import { Platform } from 'react-native'
 import Locale from 'react-native-locale'
 import PushNotification from 'react-native-push-notification'
 import { Actions } from 'react-native-router-flux'
-import _ from 'lodash'
+
 import * as actions from '../../actions/indexActions'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
@@ -15,8 +16,8 @@ import * as SETTINGS_API from '../Core/Account/settings.js'
 import * as CONTEXT_API from '../Core/Context/api'
 import * as CORE_SELECTORS from '../Core/selectors'
 import { updateWalletsRequest } from '../Core/Wallets/action.js'
-import { insertWalletIdsForProgress } from '../UI/Wallets/action.js'
 import type { Dispatch, GetState } from '../ReduxTypes'
+import { insertWalletIdsForProgress } from '../UI/Wallets/action.js'
 import { getReceiveAddresses } from '../utils.js'
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
@@ -114,11 +115,11 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
         if (state.ui.wallets && state.ui.wallets.byId && state.ui.wallets.byId[walletId]) {
           const enabledTokens = state.ui.wallets.byId[walletId].enabledTokens
           const customTokens = state.ui.settings.customTokens
-          const enabledNotHiddenTokens = enabledTokens.filter((token) => {
+          const enabledNotHiddenTokens = enabledTokens.filter(token => {
             let isVisible = true // assume we will enable token
-            const tokenIndex = _.findIndex(customTokens, (item) => item.currencyCode === token)
+            const tokenIndex = _.findIndex(customTokens, item => item.currencyCode === token)
             // if token is not supposed to be visible, not point in enabling it
-            if (tokenIndex > -1 && (customTokens[tokenIndex].isVisible === false)) isVisible = false
+            if (tokenIndex > -1 && customTokens[tokenIndex].isVisible === false) isVisible = false
             return isVisible
           })
           edgeWallet.enableTokens(enabledNotHiddenTokens)

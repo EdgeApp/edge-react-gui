@@ -1,4 +1,5 @@
 // @flow
+
 import type { EdgeAccount } from 'edge-core-js'
 
 import { categories } from './subcategories.js'

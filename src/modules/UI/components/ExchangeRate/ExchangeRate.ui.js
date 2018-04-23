@@ -1,11 +1,11 @@
 // @flow
 import React, { Component } from 'react'
 import { View } from 'react-native'
-import T from '../../components/FormattedText'
 
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
 import * as UTILS from '../../../utils'
+import T from '../../components/FormattedText'
 import styles from './styles'
 
 const EXCHANGE_RATE_LOADING_TEXT = s.strings.drawer_exchange_rate_loading

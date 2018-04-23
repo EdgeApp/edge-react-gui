@@ -78,8 +78,7 @@ const mapStateToProps = (state: State) => {
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   updateExchangeRates: () => dispatch(updateExchangeRates()),
-  fetchTransactions: (walletId: string, currencyCode: string, options: Object) =>
-    dispatch(fetchTransactions(walletId, currencyCode, options))
+  fetchTransactions: (walletId: string, currencyCode: string, options: Object) => dispatch(fetchTransactions(walletId, currencyCode, options))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(TransactionList)

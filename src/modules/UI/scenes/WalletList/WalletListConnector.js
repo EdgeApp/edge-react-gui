@@ -1,6 +1,7 @@
 // @flow
 import { connect } from 'react-redux'
 
+import { disableOtp, keepOtp } from '../../../../actions/OtpActions'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import type { Dispatch, State } from '../../../ReduxTypes'
 import * as UI_SELECTORS from '../../selectors.js'
@@ -8,7 +9,6 @@ import * as SETTINGS_SELECTORS from '../../Settings/selectors'
 import { updateActiveWalletsOrder, updateArchivedWalletsOrder } from './action'
 import { walletRowOption } from './components/WalletOptions/action.js'
 import WalletList from './WalletList.ui'
-import {disableOtp, keepOtp} from '../../../../actions/OtpActions'
 
 const mapStateToProps = (state: State) => {
   const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
