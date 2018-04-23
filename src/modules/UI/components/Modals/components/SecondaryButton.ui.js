@@ -13,7 +13,7 @@ export type TextProps = {
 class Text extends Component<TextProps> {
   render () {
     return (
-      <RN.Text style={[styles.buttonText, styles.secondaryButtonText, this.props.style]}>
+      <RN.Text numberOfLines={1} ellipsizeMode={'middle'} {...this.props} style={[styles.buttonText, styles.secondaryButtonText, this.props.style]}>
         {this.props.children}
       </RN.Text>
     )
@@ -22,7 +22,8 @@ class Text extends Component<TextProps> {
 
 export type Props = {
   children: Node,
-  style?: Object
+  style?: Object,
+  onPress: () => void
 }
 export class SecondaryButton extends Component<Props> {
   static Text = Text
@@ -30,6 +31,8 @@ export class SecondaryButton extends Component<Props> {
     return (
       <TouchableHighlight
         underlayColor={rawStyles.secondaryButtonUnderlay.color}
+        numberOfLines={1}
+        ellipsizeMode={'middle'}
         {...this.props}
         style={[styles.button, styles.secondaryButton, this.props.style]}
       >

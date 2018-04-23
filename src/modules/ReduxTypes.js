@@ -59,11 +59,15 @@ export type State = {
     },
     scenes: {
       scan: {
+        parsedUri: EdgeParsedUri | null,
         torchEnabled: boolean,
         addressModalVisible: boolean,
         scanEnabled: boolean,
         selectedWalletListModalVisibility: boolean,
-        scanToWalletListModalVisibility: boolean
+        scanToWalletListModalVisibility: boolean,
+        legacyAddressModal: {
+          isActive: boolean
+        }
       },
       sendConfirmation: {
         transaction: EdgeTransaction | null,

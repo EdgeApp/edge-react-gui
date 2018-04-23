@@ -188,6 +188,7 @@ export class InteractiveModal extends Component<Props> {
 
     return (
       <Modal useNativeDriver hideModalContentWhileAnimating
+        avoidKeyboard
         isVisible={isActive}
         {...this.props}
         style={[styles.modal, this.props.style]}>

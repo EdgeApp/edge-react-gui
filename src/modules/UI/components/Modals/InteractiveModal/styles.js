@@ -7,7 +7,7 @@ import THEME from '../../../../../theme/variables/airbitz.js'
 export const rawStyles = {
   modal: {},
   container: {
-    padding: 6,
+    padding: 12,
     backgroundColor: THEME.COLORS.WHITE,
     borderRadius: 4,
     shadowOffset: {
@@ -44,6 +44,7 @@ export const rawStyles = {
     paddingTop: 26
   },
   item: {
+    flex: 1,
     padding: 6
   },
   row: {
@@ -59,6 +60,10 @@ export const rawStyles = {
     fontSize: 16,
     color: THEME.COLORS.GRAY_1,
     fontFamily: THEME.FONTS.DEFAULT
+  },
+  debug: {
+    borderColor: 'red',
+    borderWidth: 1
   }
 }
 

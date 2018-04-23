@@ -10,7 +10,8 @@ export const rawStyles = {
     height: 55,
     borderRadius: 5,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    paddingHorizontal: 12
   },
   buttonText: {
     fontFamily: THEME.FONTS.DEFAULT,
@@ -44,6 +45,11 @@ export const rawStyles = {
   tertiaryButtonUnderlay: { color: THEME.COLORS.GRAY_3 },
   tertiaryButtonText: {
     color: THEME.COLORS.PRIMARY
+  },
+
+  debug: {
+    borderColor: 'red',
+    borderWidth: 1
   }
 }
 
