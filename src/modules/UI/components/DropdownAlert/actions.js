@@ -1,4 +1,5 @@
 // @flow
+
 const PREFIX = 'UI/components/DropdownAlert/'
 export const DISPLAY_DROPDOWN_ALERT = PREFIX + 'DISPLAY_DROPDOWN_ALERT'
 export const DISMISS_DROPDOWN_ALERT = PREFIX + 'DISMISS_DROPDOWN_ALERT'
