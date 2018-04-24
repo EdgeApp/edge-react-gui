@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react'
-import { Image, Text, View } from 'react-native'
+import { Image, StyleSheet, Text, View } from 'react-native'
 
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 // import {sprintf} from 'sprintf-js'
@@ -10,7 +10,7 @@ import THEME from '../../theme/variables/airbitz'
 import TwoButtonsComponent from './TwoButtonsComponent.js'
 
 type Props = {
-  style: any,
+  style: StyleSheet.Styles,
   headerText: string,
   showModal: boolean,
   middleText: string,
@@ -28,14 +28,14 @@ class TwoButtonTextModalComponent extends Component<Props, State> {
   onDone = () => {
     this.props.onDone()
   }
-  renderMiddle = (style: any) => {
+  renderMiddle = (style: StyleSheet.Styles) => {
     return (
       <View style={style.middle.container}>
         <Text style={style.middle.text}>{this.props.middleText}</Text>
       </View>
     )
   }
-  renderIcon = (style: any) => {
+  renderIcon = (style: StyleSheet.Styles) => {
     if (this.props.iconImage) {
       return <Image source={this.props.iconImage} />
     }

@@ -2,14 +2,14 @@
 
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { Text, TouchableHighlight, View } from 'react-native'
+import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 
 import styles from './style'
 
 type Props = {
   icon: string,
-  style: any,
+  style: StyleSheet.Styles,
   onPress: Function,
   title: string | Function,
   iconType: string

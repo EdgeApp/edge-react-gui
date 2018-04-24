@@ -1,11 +1,11 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 
 type Props = {
   exchangeRate: string,
-  style: any
+  style: StyleSheet.Styles
 }
 type State = {}
 export default class CryptoExchageRate extends Component<Props, State> {

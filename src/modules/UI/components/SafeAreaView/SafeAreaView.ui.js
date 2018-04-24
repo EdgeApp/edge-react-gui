@@ -1,12 +1,12 @@
 // @flow
 import React from 'react'
-import { SafeAreaView } from 'react-native'
+import { SafeAreaView, StyleSheet } from 'react-native'
 
 import THEME from '../../../../theme/variables/airbitz.js'
 import Gradient from '../../components/Gradient/Gradient.ui'
 
 type props = {
-  style: any,
+  style: StyleSheet.Styles,
   children: any
 }
 

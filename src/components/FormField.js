@@ -8,7 +8,7 @@ import { Input } from './materialWrappers/indexMaterial'
 /*
 type Props = {
 
- style: any,
+ style: StyleSheet.Styles,
  label?: string,
  value?: string,
  placeholder?: string,
