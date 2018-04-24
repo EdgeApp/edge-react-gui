@@ -1,6 +1,5 @@
 // @flow
 
-import _ from 'lodash'
 import { connect } from 'react-redux'
 
 import * as CORE_SELECTORS from '../../../../Core/selectors.js'
@@ -9,7 +8,10 @@ import type { Dispatch, State } from '../../../../ReduxTypes'
 import { deleteLocalAccount } from '../action'
 import UserList from './UserList'
 
-type StateProps = { usernames: Array<string> }
+type StateProps = {
+  allUsernames: Array<string>,
+  currentUsername: string
+}
 type DispatchProps = {
   logout: (username?: string) => void,
   deleteLocalAccount: string => void
@@ -18,9 +20,9 @@ type DispatchProps = {
 const mapStateToProps = (state: State): StateProps => {
   const currentUsername = CORE_SELECTORS.getUsername(state)
   const allUsernames = CORE_SELECTORS.getUsernames(state)
-  const usernames = _.filter(allUsernames, username => username !== currentUsername)
   return {
-    usernames
+    currentUsername,
+    allUsernames
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
