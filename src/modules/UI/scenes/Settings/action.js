@@ -184,12 +184,13 @@ export function togglePinLoginEnabled (pinLoginEnabled: boolean) {
     const account = CORE_SELECTORS.getAccount(state)
 
     dispatch(SETTINGS_ACTIONS.togglePinLoginEnabled(pinLoginEnabled))
-    return account.changePin({ enableLogin: pinLoginEnabled }).catch(async e => {
+    return account.changePin({ enableLogin: pinLoginEnabled }).catch(async error => {
       const pinLoginEnabled = await context.pinLoginEnabled(account.username)
 
       // TODO: Make a proper error action so we can avoid the double dispatch:
       dispatch(SETTINGS_ACTIONS.togglePinLoginEnabled(pinLoginEnabled))
-      dispatch(displayErrorAlert(e.message))
+      console.log(error)
+      dispatch(displayErrorAlert(error.message))
     })
   }
 }

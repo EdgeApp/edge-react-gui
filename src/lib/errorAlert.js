@@ -12,7 +12,7 @@ export default (store: Store) => (next: Function) => (action: Action) => {
     store.dispatch(displayErrorAlert(error.message))
   }
 
-  if (out && out.then) {
+  if (out && out.then && typeof out.then === 'function') {
     out.catch(error => {
       console.log(error)
       store.dispatch(displayErrorAlert(error.message))

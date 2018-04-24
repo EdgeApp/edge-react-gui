@@ -16,7 +16,10 @@ export const mapDispatchToProps = (dispatch: Dispatch) => ({
   fetchContacts,
   loadContactsStart: () => dispatch(loadContactsStart()),
   loadContactsSuccess: (contacts: Array<GuiContact>) => dispatch(loadContactsSuccess(contacts)),
-  loadContactsFail: (error: Error) => dispatch(displayErrorAlert(error.message))
+  loadContactsFail: (error: Error) => {
+    console.log(error)
+    dispatch(displayErrorAlert(error.message))
+  }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContactsLoader)

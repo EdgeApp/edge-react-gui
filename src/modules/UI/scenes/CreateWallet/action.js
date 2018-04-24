@@ -6,7 +6,6 @@ import * as Constants from '../../../../constants/indexConstants.js'
 import * as ACCOUNT_API from '../../../Core/Account/api.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import type { Dispatch, GetState } from '../../../ReduxTypes'
-import { displayErrorAlert } from '../../components/ErrorAlert/actions'
 import * as WALLET_ACTIONS from '../../Wallets/action'
 
 export const UPDATE_WALLET_NAME = 'UPDATE_WALLET_NAME'
@@ -43,15 +42,11 @@ export const createCurrencyWallet = (
   return ACCOUNT_API.createCurrencyWalletRequest(account, walletType, {
     name: walletName,
     fiatCurrencyCode
+  }).then(edgeWallet => {
+    Actions.popTo(Constants.WALLET_LIST_SCENE)
+    dispatch(WALLET_ACTIONS.createWalletSuccess())
+    if (selectWallet) {
+      dispatch(WALLET_ACTIONS.selectWallet(edgeWallet.id, edgeWallet.currencyInfo.currencyCode))
+    }
   })
-    .then(edgeWallet => {
-      Actions.popTo(Constants.WALLET_LIST_SCENE)
-      dispatch(WALLET_ACTIONS.createWalletSuccess())
-      if (selectWallet) {
-        dispatch(WALLET_ACTIONS.selectWallet(edgeWallet.id, edgeWallet.currencyInfo.currencyCode))
-      }
-    })
-    .catch(e => {
-      dispatch(displayErrorAlert(e.message))
-    })
 }
