@@ -1,4 +1,5 @@
 // @flow
+
 import { toFixed } from 'biggystring'
 
 const EN_US_LOCALE = {

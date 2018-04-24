@@ -1,4 +1,5 @@
 // @flow
+
 import { connect } from 'react-redux'
 
 import { dispatchActionOnly } from '../../actions/indexActions'

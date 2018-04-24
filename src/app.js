@@ -1,4 +1,5 @@
 // @flow
+
 /* global __DEV__ */
 
 import './util/polyfills'
