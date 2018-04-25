@@ -1,6 +1,6 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
-import AddToken from './AddToken.ui.js'
+import { AddToken } from './AddToken.ui.js'
 import AddTokenConnector from './AddTokenConnector'
 
 export { AddToken }

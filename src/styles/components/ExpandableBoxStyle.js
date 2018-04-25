@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 // import * as Constants from '../../constants/indexConstants.js'
 import * as Styles from '../../styles/indexStyles'

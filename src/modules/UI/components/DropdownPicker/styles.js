@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import { StyleSheet } from 'react-native'
 
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
   cancel: {
     flex: 1,
     marginRight: 2,
-    backgroundColor: THEME.COLORS.GREY_2,
+    backgroundColor: THEME.COLORS.GRAY_2,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 3
