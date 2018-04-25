@@ -15,8 +15,6 @@ export type Props = {
   containerStyle: StylesSheet.Styles
 }
 
-export type State = {}
-
 export default class WalletListProgressDropdown extends Component<Props> {
   render () {
     const exitIconName = (Platform.OS === 'ios' ? 'ios' : 'md') + '-close'

@@ -14,9 +14,8 @@ type Props = {
   handlePress: Function,
   sourceWallet: EdgeCurrencyWallet
 }
-type State = {}
 
-export default class CustomFees extends Component<Props, State> {
+export default class CustomFees extends Component<Props> {
   render () {
     return (
       <View style={styles.customFeeButtonContainer}>

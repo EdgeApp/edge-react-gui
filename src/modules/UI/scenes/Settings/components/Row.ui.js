@@ -12,8 +12,8 @@ type Props = {
   isSelected: boolean,
   onPress: () => void
 }
-type State = {}
-class Row extends Component<Props, State> {
+
+class Row extends Component<Props> {
   render () {
     const { left, isSelected, onPress } = this.props
 

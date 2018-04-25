@@ -12,8 +12,8 @@ type Props = {
   label: string,
   walletName?: string
 }
-type State = {}
-export default class OptionSubtext extends Component<Props, State> {
+
+export default class OptionSubtext extends Component<Props> {
   render () {
     const nameOrThisWallet = this.props.walletName || s.strings.fragment_wallets_this_wallet
 

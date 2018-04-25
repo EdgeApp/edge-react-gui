@@ -24,8 +24,7 @@ type Props = {
   onExitButtonFxn(): void
 }
 
-type State = {}
-class TwoButtonTextModalComponent extends Component<Props, State> {
+class TwoButtonTextModalComponent extends Component<Props> {
   onDone = () => {
     this.props.onDone()
   }

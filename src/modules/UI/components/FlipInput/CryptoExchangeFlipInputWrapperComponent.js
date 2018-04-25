@@ -10,8 +10,6 @@ import { WalletNameHeader } from '../Header/Component/WalletNameHeader.ui'
 import { ExchangedFlipInput } from './ExchangedFlipInput2.js'
 import type { ExchangedFlipInputAmounts } from './ExchangedFlipInput2.js'
 
-type State = {}
-
 export type Props = {
   style: StyleSheet.Styles,
   guiWallet: GuiWallet,
@@ -26,8 +24,7 @@ export type Props = {
   launchWalletSelector: () => void,
   onCryptoExchangeAmountChanged: ExchangedFlipInputAmounts => void
 }
-
-export class CryptoExchangeFlipInputWrapperComponent extends Component<Props, State> {
+export class CryptoExchangeFlipInputWrapperComponent extends Component<Props> {
   renderFee (style: StyleSheet.Styles) {
     if (this.props.fee) {
       return (

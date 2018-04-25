@@ -12,9 +12,8 @@ type Props = {
   onPositive: (...args: any) => void,
   onNegative: (...args: any) => void
 }
-type State = {}
 
-export default class OptionButtons extends Component<Props, State> {
+export default class OptionButtons extends Component<Props> {
   render () {
     return (
       <View style={[styles.buttonsWrap]}>

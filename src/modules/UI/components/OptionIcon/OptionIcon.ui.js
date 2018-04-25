@@ -9,9 +9,7 @@ type Props = {
   iconName: string
 }
 
-type State = {}
-
-export default class OptionIcon extends Component<Props, State> {
+export default class OptionIcon extends Component<Props> {
   render () {
     return (
       <FAIcon

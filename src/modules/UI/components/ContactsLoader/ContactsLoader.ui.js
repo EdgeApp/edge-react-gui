@@ -13,9 +13,8 @@ export type Props = {
   loadContactsSuccess: (contacts: Array<GuiContact>) => void,
   loadContactsFail: (error: Error) => void
 }
-export type State = {}
 
-export class ContactsLoader extends Component<Props, State> {
+export class ContactsLoader extends Component<Props> {
   componentWillReceiveProps (nextProps: Props) {
     const { contactsPermission } = nextProps
 

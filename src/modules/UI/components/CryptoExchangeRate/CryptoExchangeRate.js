@@ -7,8 +7,8 @@ type Props = {
   exchangeRate: string,
   style: StyleSheet.Styles
 }
-type State = {}
-export default class CryptoExchageRate extends Component<Props, State> {
+
+export default class CryptoExchageRate extends Component<Props> {
   render () {
     const { container, containerError, text, textError } = this.props.style
     const viewStyle = [container, this.props.insufficient || this.props.genericError ? containerError : null]

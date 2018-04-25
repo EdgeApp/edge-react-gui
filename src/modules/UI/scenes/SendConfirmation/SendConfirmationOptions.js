@@ -26,8 +26,8 @@ type Props = {
   sendMaxSpend: () => void,
   sourceWallet: EdgeCurrencyWallet
 }
-type State = {}
-export default class SendConfirmationOptions extends Component<Props, State> {
+
+export default class SendConfirmationOptions extends Component<Props> {
   handleMenuOptions (key: string) {
     switch (key) {
       case CHANGE_MINING_FEE:
