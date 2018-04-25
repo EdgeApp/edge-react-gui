@@ -2,14 +2,14 @@
 
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { TouchableHighlight, View } from 'react-native'
+import { StyleSheet, TouchableHighlight, View } from 'react-native'
 
 import * as Constants from '../../../../constants/indexConstants'
 import { Icon } from '../Icon/Icon.ui'
 
 type Props = {
   icon: string,
-  style: any,
+  style: StyleSheet.Styles,
   onPress: Function,
   iconType: string
 }

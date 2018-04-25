@@ -1,5 +1,6 @@
 // @flow
 
+import type { Action } from '../../../ReduxTypes.js'
 import * as ACTIONS from './actions'
 
 const initialState = {
@@ -16,7 +17,7 @@ type DropdownAlertState = {
   message: string
 }
 
-export const dropdownAlert = (state: DropdownAlertState = initialState, action: any) => {
+export const dropdownAlert = (state: DropdownAlertState = initialState, action: Action) => {
   const { type, data = {} } = action
   switch (type) {
     case ACTIONS.DISPLAY_DROPDOWN_ALERT: {

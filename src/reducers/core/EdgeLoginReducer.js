@@ -1,4 +1,8 @@
 // @flow
+
+import type { EdgeLobby } from 'edge-core-js'
+
+import type { Action } from '../../modules/ReduxTypes.js'
 import * as Constants from '../../constants/indexConstants'
 
 const initialState = {
@@ -6,8 +10,12 @@ const initialState = {
   error: null,
   isProcessing: false
 }
-
-export default function (state: any = initialState, action: any) {
+export type InitialEdgeLoginState = {
+  lobby: null | EdgeLobby,
+  error: null | Error,
+  isProcessing: boolean
+}
+export default function (state: InitialEdgeLoginState = initialState, action: Action) {
   switch (action.type) {
     case Constants.PROCESS_ABC_LOGIN:
       return { ...state, isProcessing: true }
