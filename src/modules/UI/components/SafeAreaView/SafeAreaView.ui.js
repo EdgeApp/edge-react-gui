@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react'
+import type { Node } from 'react'
 import { SafeAreaView, StyleSheet } from 'react-native'
 
 import THEME from '../../../../theme/variables/airbitz.js'
@@ -8,7 +9,7 @@ import Gradient from '../../components/Gradient/Gradient.ui'
 
 type props = {
   style: StyleSheet.Styles,
-  children: any
+  children: Node
 }
 
 // The Gradient Component is a hack to make the upper portion of the safe area view have the edge gradient

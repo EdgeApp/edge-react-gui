@@ -1,12 +1,18 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import React, { Component } from 'react'
-import { TouchableHighlight, View } from 'react-native'
+import { StyleSheet, TouchableHighlight, View } from 'react-native'
 
 import FormattedText from '../FormattedText'
 import styles, { styles as styleRaw } from './styles'
 
-export default class ShareButton extends Component {
+export type Props = {
+  displayName: string,
+  onPress: () => void,
+  style?: StyleSheet.Styles,
+  border?: StyleSheet.Styles
+}
+export class ShareButton extends Component<Props> {
   render () {
     const { displayName, onPress, style, border } = this.props
     return (
@@ -20,3 +26,5 @@ export default class ShareButton extends Component {
     )
   }
 }
+
+export default ShareButton
