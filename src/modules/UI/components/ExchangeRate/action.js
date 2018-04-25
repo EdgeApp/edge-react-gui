@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 export const UPDATE_EXCHANGE_RATES = 'UPDATE_EXCHANGE_RATES'
 
