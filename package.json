@@ -171,15 +171,8 @@
     "updot": "^1.1.6"
   },
   "flow-coverage-report": {
-    "includeGlob": [
-      "src/**/*.js",
-      "*.js"
-    ],
-    "type": [
-      "text",
-      "html",
-      "json"
-    ]
+    "includeGlob": ["src/**/*.js", "*.js"],
+    "type": ["text", "html", "json"]
   },
   "importSort": {
     ".js, .es": {
@@ -189,12 +182,8 @@
   },
   "jest": {
     "preset": "react-native",
-    "transformIgnorePatterns": [
-      "node_modules/mobx-react"
-    ],
-    "setupFiles": [
-      "./testSetup.js"
-    ]
+    "transformIgnorePatterns": ["node_modules/mobx-react"],
+    "setupFiles": ["./testSetup.js"]
   },
   "prettier": {
     "printWidth": 160
@@ -225,8 +214,6 @@
     "zlib": "browserify-zlib"
   },
   "rnpm": {
-    "assets": [
-      "./src/assets/fonts"
-    ]
+    "assets": ["./src/assets/fonts"]
   }
 }
