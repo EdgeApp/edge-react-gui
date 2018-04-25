@@ -1,4 +1,5 @@
 // @flow
+
 import React, { Component } from 'react'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 

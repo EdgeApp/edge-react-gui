@@ -1,4 +1,5 @@
 // @flow
+
 // Core/Account/api.js
 import type { EdgeAccount, EdgeCreateCurrencyWalletOptions } from 'edge-core-js'
 

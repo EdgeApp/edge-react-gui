@@ -1,4 +1,5 @@
 // @flow
+
 import type { EdgeContext, EdgeContextCallbacks, EdgeContextOptions, EdgeCorePluginFactory } from 'edge-core-js'
 import { makeEdgeContext, makeFakeContexts } from 'edge-core-js'
 
