@@ -1,4 +1,5 @@
 // @flow
+
 import React, { Component } from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 
@@ -8,8 +9,6 @@ import { TextAndIconButton } from '../Buttons'
 import { WalletNameHeader } from '../Header/Component/WalletNameHeader.ui'
 import { ExchangedFlipInput } from './ExchangedFlipInput2.js'
 import type { ExchangedFlipInputAmounts } from './ExchangedFlipInput2.js'
-
-type State = {}
 
 export type Props = {
   style: StyleSheet.Styles,
@@ -25,8 +24,7 @@ export type Props = {
   launchWalletSelector: () => void,
   onCryptoExchangeAmountChanged: ExchangedFlipInputAmounts => void
 }
-
-export class CryptoExchangeFlipInputWrapperComponent extends Component<Props, State> {
+export class CryptoExchangeFlipInputWrapperComponent extends Component<Props> {
   renderFee (style: StyleSheet.Styles) {
     if (this.props.fee) {
       return (

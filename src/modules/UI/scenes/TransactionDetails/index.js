@@ -1,5 +1,5 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
-import TransactionDetails from './TransactionDetails.ui'
+import { TransactionDetails } from './TransactionDetails.ui'
 
 export default TransactionDetails

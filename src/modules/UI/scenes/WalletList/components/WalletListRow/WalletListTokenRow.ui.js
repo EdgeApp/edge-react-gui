@@ -1,15 +1,26 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import React, { Component } from 'react'
 import { TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import type { EdgeDenomination } from 'edge-core-js'
 
 import { intl } from '../../../../../../locales/intl'
 import * as UTILS from '../../../../../utils'
 import T from '../../../../components/FormattedText'
 import styles, { styles as styleRaw } from '../../style'
 
-export default class WalletListTokenRow extends Component {
+export type Props = {
+  active: boolean,
+  selectWallet: (id: string, currencyCode: string) => void,
+  displayDenomination: EdgeDenomination,
+  multiplier: string,
+  parentId: string,
+  sortHandlers: any,
+  currencyCode: string,
+  balance: string
+}
+export default class WalletListTokenRow extends Component<Props> {
   selectWallet = () => {
     const { parentId: walletId, currencyCode } = this.props
     this.props.selectWallet(walletId, currencyCode)

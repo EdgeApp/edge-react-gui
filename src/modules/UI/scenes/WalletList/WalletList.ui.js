@@ -263,7 +263,7 @@ export default class WalletList extends Component<Props, State> {
     })
   }
 
-  renderActiveSortableList = (activeWalletsArray: any, activeWalletsObject: any) => {
+  renderActiveSortableList = (activeWalletsArray: Array<{ key: string }>, activeWalletsObject: {}) => {
     return (
       <View style={[styles.listsContainer]}>
         {this.state.sortableListExists && (

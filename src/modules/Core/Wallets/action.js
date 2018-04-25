@@ -1,4 +1,5 @@
 // @flow
+
 import type { EdgeCurrencyWallet, EdgeReceiveAddress } from 'edge-core-js'
 import _ from 'lodash'
 

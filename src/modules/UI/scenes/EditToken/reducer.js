@@ -1,11 +1,12 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import { combineReducers } from 'redux'
 
+import type { Action } from '../../../ReduxTypes.js'
 import * as WALLET_ACTIONS from '../../Wallets/action'
 import * as ACTION from './action'
 
-export const deleteTokenModalVisible = (state = false, action) => {
+export const deleteTokenModalVisible = (state: boolean = false, action: Action) => {
   switch (action.type) {
     case ACTION.SHOW_DELETE_TOKEN_MODAL:
       return true
@@ -18,7 +19,7 @@ export const deleteTokenModalVisible = (state = false, action) => {
   }
 }
 
-export const deleteCustomTokenProcessing = (state = false, action) => {
+export const deleteCustomTokenProcessing = (state: boolean = false, action: Action) => {
   switch (action.type) {
     case WALLET_ACTIONS.DELETE_CUSTOM_TOKEN_START:
       return true
@@ -31,7 +32,7 @@ export const deleteCustomTokenProcessing = (state = false, action) => {
   }
 }
 
-export const editCustomTokenProcessing = (state = false, action) => {
+export const editCustomTokenProcessing = (state: boolean = false, action: Action) => {
   switch (action.type) {
     case WALLET_ACTIONS.EDIT_CUSTOM_TOKEN_START:
       return true

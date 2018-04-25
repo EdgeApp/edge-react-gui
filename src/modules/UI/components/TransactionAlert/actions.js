@@ -1,4 +1,5 @@
 // @flow
+
 import type { EdgeTransaction } from 'edge-core-js'
 
 const PREFIX = 'UI/components/TransactionAlert/'

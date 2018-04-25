@@ -1,4 +1,5 @@
 // @flow
+
 import React, { Component } from 'react'
 import { TouchableHighlight, View } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'

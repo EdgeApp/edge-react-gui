@@ -1,4 +1,5 @@
 // @flow
+
 import React, { Component } from 'react'
 import { Text, View } from 'react-native'
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -14,10 +15,10 @@ type Props = {
   message: string
 }
 
-export default class ErrorAlert extends Component<Props> {
-  alertIcon = () => <MCIcon name={'alert-outline'} style={styles.alertIcon} />
-  infoIcon = () => <SLIcon name={'question'} style={styles.infoIcon} />
+const alertIcon = <MCIcon name={'alert-outline'} style={styles.alertIcon} />
+const infoIcon = <SLIcon name={'question'} style={styles.infoIcon} />
 
+export default class ErrorAlert extends Component<Props> {
   render () {
     const { displayAlert, dismissAlert, message: error } = this.props
 
@@ -26,9 +27,9 @@ export default class ErrorAlert extends Component<Props> {
         <View>
           <AlertContainer style={styles.alertContainer}>
             <AlertHeader style={styles.alertHeader}>
-              {this.alertIcon()}
+              {alertIcon}
               <Text style={styles.alertHeaderText}>{error}</Text>
-              {this.infoIcon()}
+              {infoIcon}
             </AlertHeader>
           </AlertContainer>
         </View>
