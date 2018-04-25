@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import React, { Component } from 'react'
 import { View } from 'react-native'
@@ -8,7 +8,13 @@ import s from '../../../../../locales/strings.js'
 import { TertiaryButton } from '../../../components/Buttons'
 import styles from '../style.js'
 
-export class AddressInput extends Component {
+export type Props = {
+  uri: string,
+  onChangeText: string => void,
+  onPaste: () => void,
+  onSubmit: () => void
+}
+export class AddressInput extends Component<Props> {
   // this component is for the input area of the Recipient Address Modal
   render () {
     return (

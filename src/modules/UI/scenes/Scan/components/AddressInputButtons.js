@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import React, { Component } from 'react'
 import { TouchableHighlight, View } from 'react-native'
@@ -12,7 +12,11 @@ import { styles as styleRaw } from '../style'
 const CANCEL_TEXT = s.strings.string_cancel_cap
 const DONE_TEXT = s.strings.string_done_cap
 
-export class AddressInputButtons extends Component {
+export type Props = {
+  onSubmit: () => void,
+  onCancel: () => void
+}
+export class AddressInputButtons extends Component<Props> {
   render () {
     return (
       <View style={[ModalStyle.buttonsWrap, border('gray')]}>
