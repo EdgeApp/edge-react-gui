@@ -17,8 +17,8 @@ export type Props = {
   reverse?: boolean,
   style?: StyleSheet.Styles
 }
-type State = {}
-export default class Gradient extends Component<Props, State> {
+
+export default class Gradient extends Component<Props> {
   render () {
     const { reverse, style } = this.props
     return (

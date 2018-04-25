@@ -1,4 +1,5 @@
 // @flow
+
 import type { EdgeContextCallbacks } from 'edge-core-js'
 
 import { updateExchangeRates } from '../../ExchangeRates/action'

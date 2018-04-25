@@ -1,14 +1,14 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 
 type Props = {
   exchangeRate: string,
-  style: any
+  style: StyleSheet.Styles
 }
-type State = {}
-export default class CryptoExchageRate extends Component<Props, State> {
+
+export default class CryptoExchageRate extends Component<Props> {
   render () {
     const { container, containerError, text, textError } = this.props.style
     const viewStyle = [container, this.props.insufficient || this.props.genericError ? containerError : null]

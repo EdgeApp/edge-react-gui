@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 const API_PREFIX = 'https://info1.edgesecure.co:8444/v1/'
 
@@ -26,4 +26,5 @@ const request = (name, path, method, data) => {
     })
 }
 
+// $FlowFixMe
 export const sendLogs = logs => request('SENDING LOGS', 'addLogs/', 'POST', logs)

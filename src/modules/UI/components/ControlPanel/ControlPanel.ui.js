@@ -27,9 +27,8 @@ export type Props = {
   openSelectUser: () => void,
   closeSelectUser: () => void
 }
-type State = {}
 
-export default class ControlPanel extends Component<Props, State> {
+export default class ControlPanel extends Component<Props> {
   _handlePressUserList = () => {
     if (!this.props.usersView) {
       return this.props.openSelectUser()

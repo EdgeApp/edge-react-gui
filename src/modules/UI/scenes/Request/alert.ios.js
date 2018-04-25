@@ -1,6 +1,6 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import { AlertIOS } from 'react-native'
 export default {
-  alert: message => AlertIOS.alert(message)
+  alert: (message: string) => AlertIOS.alert(message)
 }

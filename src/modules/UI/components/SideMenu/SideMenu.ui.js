@@ -1,16 +1,23 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import React, { Component } from 'react'
+import type { Node } from 'react'
 import Drawer from 'react-native-drawer'
 
 import THEME from '../../../../theme/variables/airbitz'
 import ControlPanel from '../ControlPanel'
 
-export default class SideMenu extends Component {
+export type Props = {
+  open: Function,
+  close: Function,
+  children: Node,
+  view: boolean
+}
+export default class SideMenu extends Component<Props> {
   onOpen = this.props.open
   onClose = this.props.close
 
-  tweenHandler = ratio => ({
+  tweenHandler = (ratio: number) => ({
     drawer: {
       shadowColor: THEME.COLORS.BLACK,
       shadowOpacity: ratio,

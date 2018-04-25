@@ -1,19 +1,19 @@
 // @flow
 
 import React, { Component } from 'react'
+import type { Node } from 'react'
 import { TouchableHighlight, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import styles, { styles as styleRaw } from './styles'
 
 type Props = {
-  // tried using 'Node' for left property but created error, needs further investigation
-  left: any,
+  left: Node,
   isSelected: boolean,
   onPress: () => void
 }
-type State = {}
-class Row extends Component<Props, State> {
+
+class Row extends Component<Props> {
   render () {
     const { left, isSelected, onPress } = this.props
 

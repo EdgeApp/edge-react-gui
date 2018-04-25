@@ -1,11 +1,14 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import React, { Component } from 'react'
 import { TextInput, View } from 'react-native'
 
 import styles from './styles'
 
-export default class PinInput extends Component {
+export type Props = {
+  onPinChange: () => void
+}
+export class PinInput extends Component<Props> {
   render () {
     const { onPinChange } = this.props
     return (
@@ -15,3 +18,5 @@ export default class PinInput extends Component {
     )
   }
 }
+
+export default PinInput

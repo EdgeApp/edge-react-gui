@@ -1,5 +1,7 @@
 // @flow
+
 /* global window __DEV__ */
+
 import { applyMiddleware, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
 

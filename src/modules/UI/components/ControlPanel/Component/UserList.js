@@ -1,6 +1,5 @@
 // @flow
 
-import _ from 'lodash'
 import { Icon } from 'native-base'
 import React, { Component } from 'react'
 import { Alert, ScrollView, TouchableHighlight, View } from 'react-native'
@@ -11,26 +10,32 @@ import styles from '../style'
 type Props = {
   usernames: Array<string>,
   logout: (username?: string) => void,
-  deleteLocalAccount: string => void
+  deleteLocalAccount: string => void,
+  allUsernames: Array<string>,
+  currentUsername: string
 }
-type State = {}
-export default class UserList extends Component<Props, State> {
+
+export default class UserList extends Component<Props> {
   render () {
-    return <ScrollView style={styles.userList.container}>{this.rows()}</ScrollView>
+    const { allUsernames, currentUsername } = this.props
+    const usernames = allUsernames.filter(username => username !== currentUsername)
+
+    return (
+      <ScrollView style={styles.userList.container}>
+        {usernames.map(username => (
+          <View key={username} style={styles.userList.row}>
+            <TouchableHighlight style={styles.userList.textContainer} underlayColor={styles.underlay.color} onPress={this.handlePressUserSelect(username)}>
+              <T style={styles.userList.text}>{username}</T>
+            </TouchableHighlight>
+
+            <TouchableHighlight style={styles.userList.icon} underlayColor={styles.underlay.color} onPress={this.handlePressDeleteLocalAccount(username)}>
+              <Icon name="close" />
+            </TouchableHighlight>
+          </View>
+        ))}
+      </ScrollView>
+    )
   }
-
-  rows = () =>
-    _.map(this.props.usernames, (username, index) => (
-      <View key={index} style={styles.userList.row}>
-        <TouchableHighlight style={styles.userList.textContainer} underlayColor={styles.underlay.color} onPress={this.handlePressUserSelect(username)}>
-          <T style={styles.userList.text}>{username}</T>
-        </TouchableHighlight>
-
-        <TouchableHighlight style={styles.userList.icon} underlayColor={styles.underlay.color} onPress={this.handlePressDeleteLocalAccount(username)}>
-          <Icon name="close" />
-        </TouchableHighlight>
-      </View>
-    ))
 
   handlePressUserSelect = (username: string) => () => {
     return this.props.logout(username)

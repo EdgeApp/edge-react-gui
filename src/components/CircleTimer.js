@@ -1,4 +1,5 @@
 // @flow
+
 import React, { Component } from 'react'
 import { View } from 'react-native'
 type Props = {
@@ -7,10 +8,9 @@ type Props = {
   timeExpired(): void
 }
 
-type State = {}
 export const TEN_MINUTES = 600
 
-class CircleTimer extends Component<Props, State> {
+class CircleTimer extends Component<Props> {
   timerTick = () => {
     const now = new Date()
     const nowMilli = now.getTime()
