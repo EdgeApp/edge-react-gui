@@ -37,7 +37,6 @@
     "server": "node ./loggingServer.js",
     "start": "node --max_old_space_size=4000 node_modules/react-native/local-cli/cli.js start ",
     "test": "npm run lint && npm run flow && npm run jest",
-    "tron": "node_modules/.bin/reactotron",
     "updot": "updot",
     "watch": "npm test -- --watch"
   },

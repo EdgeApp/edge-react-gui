@@ -11,7 +11,7 @@ const isIos = Platform.OS === 'ios'
 
 export type Props = {
   withArrow: boolean,
-  onPress: () => any,
+  onPress: () => mixed,
   label?: string
 }
 export default class BackButton extends Component<Props> {
