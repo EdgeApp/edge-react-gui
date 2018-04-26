@@ -6,6 +6,7 @@ import * as Constants from '../../../../../../constants/indexConstants'
 import type { Action } from '../../../../../ReduxTypes.js'
 import { privateSeedUnlocked } from '../GetSeedModal/reducer'
 import { renameWalletInput, walletName } from '../RenameModal/reducer'
+import { xPubKeySyntax } from '../XPubModal/reducer.js'
 import * as ACTION from './action'
 
 const reducers = {}
@@ -64,7 +65,8 @@ const walletList = combineReducers(
     renameWalletInput,
     walletId,
     walletName,
-    privateSeedUnlocked
+    privateSeedUnlocked,
+    xPubKeySyntax
   })
 )
 

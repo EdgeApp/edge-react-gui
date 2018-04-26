@@ -70,7 +70,7 @@ class TertiaryButton extends Component {
         disabled={this.props.disabled}
         underlayColor={styleRaw.tertiaryUnderlay.color}
       >
-        <View>
+        <View style={styles.tertiaryButtonTextWrap}>
           <T style={[styles.tertiaryButtonText, this.props.textStyle]} {...this.props}>
             {this.props.text}
           </T>

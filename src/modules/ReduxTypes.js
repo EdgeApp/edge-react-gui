@@ -104,7 +104,9 @@ export type State = {
         renameWalletInput: string,
         walletId: string,
         walletName: string,
-        privateSeedUnlocked: boolean
+        privateSeedUnlocked: boolean,
+        xPubKeySyntax: string,
+        viewXPubKeyWalletModalVisible: boolean
       },
       walletTransferList: {
         walletTransferList: Array<any>,
