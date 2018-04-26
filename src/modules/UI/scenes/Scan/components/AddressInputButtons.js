@@ -1,5 +1,6 @@
 // @flow
 
+import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { TouchableHighlight, View } from 'react-native'
 
@@ -17,6 +18,11 @@ export type Props = {
   onCancel: () => void
 }
 export class AddressInputButtons extends Component<Props> {
+  constructor (props: any) {
+    super(props)
+    slowlog(this, /.*/, global.slowlogOptions)
+  }
+
   render () {
     return (
       <View style={[ModalStyle.buttonsWrap, border('gray')]}>

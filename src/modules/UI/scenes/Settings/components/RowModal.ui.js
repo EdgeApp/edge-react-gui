@@ -1,5 +1,6 @@
 // @flow
 
+import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { TouchableHighlight, View } from 'react-native'
 
@@ -13,6 +14,10 @@ export type Props = {
   onPress: () => void
 }
 export default class RowModal extends Component<Props> {
+  constructor (props: any) {
+    super(props)
+    slowlog(this, /.*/, global.slowlogOptions)
+  }
   static defaultProps = {
     leftText: '',
     rightText: '',

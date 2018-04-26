@@ -1,5 +1,6 @@
 // @flow
 
+import slowlog from 'react-native-slowlog'
 import { bns } from 'biggystring'
 import React, { Component } from 'react'
 
@@ -110,6 +111,7 @@ export class ExchangedFlipInput extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = propsToState(props)
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   componentWillReceiveProps (nextProps: Props) {

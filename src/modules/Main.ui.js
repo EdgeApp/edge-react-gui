@@ -1,5 +1,6 @@
 // @flow
 
+import slowlog from 'react-native-slowlog'
 import type { EdgeContext, EdgeContextCallbacks, EdgeCorePluginFactory, EdgeCurrencyPlugin } from 'edge-core-js'
 import {
   bitcoinCurrencyPluginFactory,
@@ -164,6 +165,7 @@ export default class Main extends Component<Props, State> {
 
   constructor (props: Props) {
     super(props)
+    slowlog(this, /.*/, global.slowlogOptions)
 
     this.state = {
       context: undefined
