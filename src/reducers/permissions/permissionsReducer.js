@@ -12,7 +12,6 @@ export const initialState = {
 }
 
 export type PermissionsState = { [Permission]: PermissionStatus }
-
 export const permissionsReducer = (state: PermissionsState = initialState, action: Action) => {
   switch (action.type) {
     case UPDATE_PERMISSIONS: {

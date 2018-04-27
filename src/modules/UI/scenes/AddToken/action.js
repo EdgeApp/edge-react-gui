@@ -30,9 +30,10 @@ export const addNewToken = (walletId: string, currencyName: string, currencyCode
         dispatch(WALLET_ACTIONS.refreshWallet(walletId))
         Actions.pop()
       })
-      .catch(e => {
-        dispatch(addNewTokenFailure(e.message))
-        dispatch(displayErrorAlert(e.message))
+      .catch(error => {
+        dispatch(addNewTokenFailure(error.message))
+        console.log(error)
+        dispatch(displayErrorAlert(error.message))
       })
   }
 }

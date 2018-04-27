@@ -139,7 +139,7 @@ export const upsertWallet = (wallet: EdgeCurrencyWallet) => (dispatch: Dispatch,
 export const addCustomToken = (walletId: string, tokenObj: any) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
-  WALLET_API.addCoreCustomToken(wallet, tokenObj).catch(e => dispatch(displayErrorAlert(e.message)))
+  return WALLET_API.addCoreCustomToken(wallet, tokenObj)
 }
 
 export const setEnabledTokens = (walletId: string, enabledTokens: Array<string>, disabledTokens: Array<string>) => (dispatch: Dispatch, getState: GetState) => {
@@ -150,15 +150,13 @@ export const setEnabledTokens = (walletId: string, enabledTokens: Array<string>,
   // get a copy of the relevant core wallet
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
   // now actually tell the wallet to enable the token(s) in the core and save to file
-  WALLET_API.setEnabledTokens(wallet, enabledTokens, disabledTokens)
-    .then(() => {
-      // let Redux know it was completed successfully
-      dispatch(setTokensSuccess())
-      dispatch(updateWalletEnabledTokens(walletId, enabledTokens))
-      // refresh the wallet in Redux
-      dispatch(refreshWallet(walletId))
-    })
-    .catch(e => dispatch(displayErrorAlert(e.message)))
+  return WALLET_API.setEnabledTokens(wallet, enabledTokens, disabledTokens).then(() => {
+    // let Redux know it was completed successfully
+    dispatch(setTokensSuccess())
+    dispatch(updateWalletEnabledTokens(walletId, enabledTokens))
+    // refresh the wallet in Redux
+    dispatch(refreshWallet(walletId))
+  })
 }
 
 export const getEnabledTokens = (walletId: string) => async (dispatch: Dispatch, getState: GetState) => {
@@ -197,8 +195,9 @@ export const getEnabledTokens = (walletId: string) => async (dispatch: Dispatch,
     // now reflect that change in Redux's version of the wallet
     dispatch(updateWalletEnabledTokens(walletId, tokensToEnable))
     dispatch(refreshWallet(walletId))
-  } catch (e) {
-    dispatch(displayErrorAlert(e.message))
+  } catch (error) {
+    console.log(error)
+    dispatch(displayErrorAlert(error.message))
   }
 }
 
@@ -249,8 +248,9 @@ export const editCustomToken = (
             dispatch(updateExistingTokenSuccess(tokenObj))
             Actions.pop()
           })
-          .catch(e => {
-            dispatch(displayErrorAlert(e.message))
+          .catch(error => {
+            console.log(error)
+            dispatch(displayErrorAlert(error.message))
             dispatch(editCustomTokenFailure())
           })
       } else {
@@ -263,8 +263,9 @@ export const editCustomToken = (
                 Actions.pop()
               })
           })
-          .catch(e => {
-            dispatch(displayErrorAlert(e.message))
+          .catch(error => {
+            console.log(error)
+            dispatch(displayErrorAlert(error.message))
             dispatch(editCustomTokenFailure())
           })
       }
@@ -288,8 +289,9 @@ export const editCustomToken = (
             Actions.pop()
           })
         })
-        .catch(e => {
-          dispatch(displayErrorAlert(e.message))
+        .catch(error => {
+          console.log(error)
+          dispatch(displayErrorAlert(error.message))
           dispatch(editCustomTokenFailure())
         })
     }
@@ -380,8 +382,9 @@ export const deleteCustomToken = (walletId: string, currencyCode: string) => (di
       dispatch(deleteCustomTokenSuccess(currencyCode)) // need to remove modal and update settings
       Actions.pop()
     })
-    .catch(e => {
-      dispatch(displayErrorAlert(e.message))
+    .catch(error => {
+      console.log(error)
+      dispatch(displayErrorAlert(error.message))
       dispatch(deleteCustomTokenFailure())
     })
 }
