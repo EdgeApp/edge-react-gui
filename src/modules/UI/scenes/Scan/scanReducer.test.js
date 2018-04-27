@@ -7,11 +7,14 @@ import { scan as scanReducer } from './reducer.js'
 test('initialState', () => {
   const expected = {
     addressModalVisible: false,
-    recipientAddress: '',
     scanEnabled: false,
     scanToWalletListModalVisibility: false,
     selectedWalletListModalVisibility: false,
-    torchEnabled: false
+    torchEnabled: false,
+    legacyAddressModal: {
+      isActive: false
+    },
+    parsedUri: null
   }
   const actual = scanReducer(undefined, {})
 

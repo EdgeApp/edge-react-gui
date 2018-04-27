@@ -115,7 +115,7 @@
     "react-native-locale": "^0.0.17",
     "react-native-material-kit": "git://github.com/Airbitz/react-native-material-kit.git#fix-threadpool",
     "react-native-material-textfield": "git://github.com/Airbitz/react-native-material-textfield.git",
-    "react-native-modal": "^2.2.0",
+    "react-native-modal": "^5.4.0",
     "react-native-permissions": "1.0.6",
     "react-native-picker": "^4.3.0",
     "react-native-popup-menu": "git://github.com/instea/react-native-popup-menu#147aeb728d0f23699d9c5ff3da9e9c2e7d83ac07",

@@ -37,11 +37,14 @@ test('initialState', () => {
     },
     scan: {
       addressModalVisible: false,
-      recipientAddress: '',
       scanEnabled: false,
       scanToWalletListModalVisibility: false,
       selectedWalletListModalVisibility: false,
-      torchEnabled: false
+      torchEnabled: false,
+      legacyAddressModal: {
+        isActive: false
+      },
+      parsedUri: null
     },
     sendConfirmation: {
       label: '',
