@@ -1,12 +1,12 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Platform, View, Text, Alert, Clipboard } from 'react-native'
+import { Platform, Text, Alert, Clipboard } from 'react-native'
 import s from '../../../../../../locales/strings.js'
-import StylizedModal from '../../../../components/Modal/Modal.ui'
-import {PrimaryButton} from '../../../../components/Buttons/Buttons.ui'
-import IonIcon from 'react-native-vector-icons/Ionicons'
-import { colors } from '../../../../../../theme/variables/airbitz.js'
+// import StylizedModal from '../../../../components/Modal/Modal.ui'
+import { InteractiveModal } from '../../../../components/Modals/InteractiveModal/InteractiveModal.ui.js'
+import {PrimaryButton} from '../../../../components/Modals/components/PrimaryButton.ui.js'
+import { Icon } from '../../../../components/Icon/Icon.ui.js'
 import styles from './style.js'
 
 type XPubModalOwnProps = {
@@ -47,25 +47,33 @@ export default class XPubModal extends Component<XPubModalComponentProps, XPubMo
 
   render () {
     const osPrefix = Platform.OS === 'ios' ? 'ios-' : 'md-'
-    const icon = <IonIcon name={`${osPrefix}eye`} size={24} color={colors.primary} style={styles.icon} />
+    // const iconNa = <IonIcon name={`${osPrefix}eye`} size={24} color={colors.primary} style={styles.icon} />
     return (
-      <StylizedModal
-        headerText={s.strings.fragment_wallets_view_xpub_key}
-        featuredIcon={icon}
-        visibilityBoolean={this.props.visibilityBoolean}
-        modalMiddle={<Text style={styles.xPubKeySyntax}>{this.props.xPubKeySyntax}</Text>}
-        modalBottom={this.renderButtons()}
-        onExitButtonFxn={this.props.onExit}
-        onPressFunction={this._onPressCopy}
-      />
-    )
-  }
 
-  renderButtons = () => {
-    return (
-      <View style={styles.doneButtonWrap}>
-        <PrimaryButton text={s.strings.fragment_request_copy_title} textStyle={styles.doneButton} onPressFunction={this._onPressCopy} />
-      </View>
+      <InteractiveModal isActive={this.props.visibilityBoolean} onBackButtonPress={this.props.onExit} onBackdropPress={this.props.onExit} onModalHide={this.props.onExit}>
+        <InteractiveModal.Icon>
+          <Icon style={{}} type={'ionIcons'} name={`${osPrefix}eye`} size={30} />
+        </InteractiveModal.Icon>
+
+        <InteractiveModal.Title>
+          <Text>{s.strings.fragment_wallets_view_xpub_key}</Text>
+        </InteractiveModal.Title>
+
+        <InteractiveModal.Body>
+          <InteractiveModal.Description style={styles.xPubKeySyntax}>{this.props.xPubKeySyntax}</InteractiveModal.Description>
+        </InteractiveModal.Body>
+
+        <InteractiveModal.Footer>
+          <InteractiveModal.Row>
+            <InteractiveModal.Item>
+              <PrimaryButton onPress={this._onPressCopy}>
+                <PrimaryButton.Text>{s.strings.fragment_request_copy_title}</PrimaryButton.Text>
+              </PrimaryButton>
+            </InteractiveModal.Item>
+          </InteractiveModal.Row>
+        </InteractiveModal.Footer>
+      </InteractiveModal>
+
     )
   }
 }
