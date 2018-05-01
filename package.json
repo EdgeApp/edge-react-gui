@@ -1,6 +1,6 @@
 {
   "name": "edge-react-gui",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "private": true,
   "description": "Edge Wallet React GUI",
   "homepage": "https://edgesecure.co",
@@ -37,7 +37,6 @@
     "server": "node ./loggingServer.js",
     "start": "node --max_old_space_size=4000 node_modules/react-native/local-cli/cli.js start ",
     "test": "npm run lint && npm run flow && npm run jest",
-    "tron": "node_modules/.bin/reactotron",
     "updot": "updot",
     "watch": "npm test -- --watch"
   },
@@ -77,8 +76,8 @@
     "dns.js": "^1.0.1",
     "domain-browser": "^1.1.7",
     "edge-core-js": "0.7.0",
-    "edge-currency-bitcoin": "2.17.0",
-    "edge-currency-ethereum": "0.10.0",
+    "edge-currency-bitcoin": "2.17.1",
+    "edge-currency-ethereum": "0.10.1",
     "edge-exchange-plugins": "^0.2.0",
     "edge-login-ui-rn": "^0.2.1",
     "jsc-android": "216113.0.3",
@@ -116,7 +115,7 @@
     "react-native-locale": "^0.0.17",
     "react-native-material-kit": "git://github.com/Airbitz/react-native-material-kit.git#fix-threadpool",
     "react-native-material-textfield": "git://github.com/Airbitz/react-native-material-textfield.git",
-    "react-native-modal": "^2.2.0",
+    "react-native-modal": "^5.4.0",
     "react-native-permissions": "1.0.6",
     "react-native-picker": "^4.3.0",
     "react-native-popup-menu": "git://github.com/instea/react-native-popup-menu#147aeb728d0f23699d9c5ff3da9e9c2e7d83ac07",
@@ -172,15 +171,8 @@
     "updot": "^1.1.6"
   },
   "flow-coverage-report": {
-    "includeGlob": [
-      "src/**/*.js",
-      "*.js"
-    ],
-    "type": [
-      "text",
-      "html",
-      "json"
-    ]
+    "includeGlob": ["src/**/*.js", "*.js"],
+    "type": ["text", "html", "json"]
   },
   "importSort": {
     ".js, .es": {
@@ -190,12 +182,8 @@
   },
   "jest": {
     "preset": "react-native",
-    "transformIgnorePatterns": [
-      "node_modules/mobx-react"
-    ],
-    "setupFiles": [
-      "./testSetup.js"
-    ]
+    "transformIgnorePatterns": ["node_modules/mobx-react"],
+    "setupFiles": ["./testSetup.js"]
   },
   "prettier": {
     "printWidth": 160
@@ -226,8 +214,6 @@
     "zlib": "browserify-zlib"
   },
   "rnpm": {
-    "assets": [
-      "./src/assets/fonts"
-    ]
+    "assets": ["./src/assets/fonts"]
   }
 }

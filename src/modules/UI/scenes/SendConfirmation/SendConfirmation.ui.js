@@ -6,9 +6,10 @@ import React, { Component } from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
+import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
 import type { CurrencyConverter, GuiCurrencyInfo, GuiDenomination } from '../../../../types'
-import { border, convertAbcToGuiDenomination, convertNativeToDisplay, convertNativeToExchange, getDenomFromIsoCode } from '../../../utils.js'
+import { border, convertAbcToGuiDenomination, convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../../utils.js'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
 import type { ExchangedFlipInputAmounts } from '../../components/FlipInput/ExchangedFlipInput2.js'
 import { ExchangedFlipInput } from '../../components/FlipInput/ExchangedFlipInput2.js'
@@ -31,6 +32,8 @@ export type SendConfirmationStateProps = {
   pending: boolean,
   keyboardIsVisible: boolean,
   label: string,
+  balanceInCrypto: string,
+  balanceInFiat: string,
   parentDisplayDenomination: EdgeDenomination,
   parentExchangeDenomination: GuiDenomination,
   primaryDisplayDenomination: EdgeDenomination,
@@ -145,7 +148,11 @@ export class SendConfirmation extends Component<Props, State> {
         const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol
         const exchangeConvertor = convertNativeToExchange(this.props.parentExchangeDenomination.multiplier)
         const cryptoFeeExchangeAmount = exchangeConvertor(parentNetworkFee)
-        const fiatFeeAmount = this.props.currencyConverter.convertCurrency(this.props.parentExchangeDenomination.name, secondaryInfo.exchangeCurrencyCode, cryptoFeeExchangeAmount)
+        const fiatFeeAmount = this.props.currencyConverter.convertCurrency(
+          this.props.parentExchangeDenomination.name,
+          secondaryInfo.exchangeCurrencyCode,
+          cryptoFeeExchangeAmount
+        )
         const fiatFeeAmountString = fiatFeeAmount.toFixed(2)
         const fiatFeeAmountPretty = bns.toFixed(fiatFeeAmountString, 2, 2)
         const fiatFeeString = `${fiatFeeSymbol} ${fiatFeeAmountPretty}`
@@ -169,16 +176,28 @@ export class SendConfirmation extends Component<Props, State> {
       return ''
     }
 
+    const cryptoBalanceAmount: string = convertNativeToDisplay(primaryInfo.displayDenomination.multiplier)(this.props.balanceInCrypto) // convert to correct denomination
+    const cryptoBalanceAmountString = cryptoBalanceAmount ? intl.formatNumber(decimalOrZero(bns.toFixed(cryptoBalanceAmount, 0, 6), 6)) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)
+    const balanceInFiatString = intl.formatNumber(this.props.balanceInFiat || 0, { toFixed: 2 })
+
     return (
       <SafeAreaView>
         <Gradient style={[styles.view]}>
           <Gradient style={styles.gradient} />
           <View style={[styles.mainScrollView]}>
+            <View style={[styles.balanceContainer, styles.error]}>
+              <Text style={styles.balanceText}>
+                Balance: {cryptoBalanceAmountString} {primaryInfo.displayDenomination.name} ({secondaryInfo.displayDenomination.symbol} {balanceInFiatString})
+              </Text>
+            </View>
             <View style={[styles.exchangeRateContainer, styles.error]}>
               {this.props.errorMsg ? (
                 <Text style={[styles.error, styles.errorText]}>{this.props.errorMsg}</Text>
               ) : (
-                <ExchangeRate secondaryDisplayAmount={this.props.fiatPerCrypto} primaryInfo={primaryInfo} secondaryInfo={secondaryInfo} />
+                <ExchangeRate
+                  secondaryDisplayAmount={this.props.fiatPerCrypto}
+                  primaryInfo={primaryInfo}
+                  secondaryInfo={secondaryInfo} />
               )}
             </View>
             <View style={[styles.main, border('yellow')]}>

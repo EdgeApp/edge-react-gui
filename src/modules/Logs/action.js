@@ -1,4 +1,6 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
+
+import type { Dispatch, GetState } from '../ReduxTypes.js'
 
 import * as LOGGER from '../../util/logger'
 import * as LOGS_API from './api'
@@ -10,7 +12,7 @@ export const SEND_LOGS_REQUEST = PREFIX + 'SEND_LOGS_REQUEST'
 export const SEND_LOGS_SUCCESS = PREFIX + 'SEND_LOGS_SUCCESS'
 export const SEND_LOGS_FAILURE = PREFIX + 'SEND_LOGS_FAILURE'
 
-export const sendLogs = text => (dispatch, getState) => {
+export const sendLogs = (text: string) => (dispatch: Dispatch, getState: GetState) => {
   dispatch({ type: SEND_LOGS_REQUEST, text })
 
   const core = getState().core
@@ -43,6 +45,7 @@ export const sendLogs = text => (dispatch, getState) => {
   }
 
   LOGGER.log('SENDING LOGS WITH MESSAGE: ' + text)
+    // $FlowFixMe
     .then(LOGGER.log(walletDump))
     .then(LOGGER.readLogs)
     .then(LOGS_API.sendLogs)
@@ -50,7 +53,7 @@ export const sendLogs = text => (dispatch, getState) => {
     .catch(error => dispatch({ type: SEND_LOGS_FAILURE, error }))
 }
 
-export const resetSendLogsStatus = () => dispatch => {
+export const resetSendLogsStatus = () => (dispatch: Dispatch) => {
   setTimeout(function () {
     dispatch({
       type: SEND_LOGS_PENDING

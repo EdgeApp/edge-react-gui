@@ -1,13 +1,20 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import React, { Component } from 'react'
+import type { Node } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { border as b } from '../../../../utils'
 import styles, { styles as styleRaw } from '../style'
 
-export default class RowRadio extends Component {
+export type Props = {
+  key: string,
+  left: Node,
+  isSelected: boolean,
+  onPress: () => void
+}
+export default class RowRadio extends Component<Props> {
   render () {
     // const option = this.props.option
     const { key, left, isSelected, onPress } = this.props

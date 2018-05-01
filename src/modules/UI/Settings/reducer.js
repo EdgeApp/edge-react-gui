@@ -458,7 +458,6 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         isOtpEnabled: data.enabled,
         otpKey: data.otpKey,
         otpResetPending: data.otpResetPending
-
       }
     }
 

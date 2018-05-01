@@ -1,9 +1,8 @@
 // @flow
 
-import { LOAD_CONTACTS_SUCCESS } from './actions.js'
-
-import type { GuiContact } from '../../types.js'
 import type { Action } from '../../modules/ReduxTypes.js'
+import type { GuiContact } from '../../types.js'
+import { LOAD_CONTACTS_SUCCESS } from './actions.js'
 
 export const initialState = []
 export type ContactsState = Array<GuiContact>

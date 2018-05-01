@@ -10,8 +10,8 @@ import styles from './styles'
 export type Props = {
   value: string
 }
-export type State = {}
-export default class QRCode extends Component<Props, State> {
+
+export default class QRCode extends Component<Props> {
   render () {
     return (
       <View style={styles.qrCodeBorder}>

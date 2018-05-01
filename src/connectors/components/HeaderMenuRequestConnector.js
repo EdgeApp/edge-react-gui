@@ -1,4 +1,5 @@
 // @flow
+
 import { connect } from 'react-redux'
 
 import { dispatchActionOnly } from '../../actions/indexActions'
@@ -6,7 +7,7 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import type { Dispatch, State } from '../../modules/ReduxTypes.js'
 import { openHelpModal } from '../../modules/UI/components/HelpModal/actions'
-import {MenuDropDown} from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui.js'
+import { MenuDropDown } from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui.js'
 import * as Styles from '../../styles/indexStyles'
 import THEME from '../../theme/variables/airbitz'
 

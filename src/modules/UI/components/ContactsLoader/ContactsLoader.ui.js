@@ -2,9 +2,9 @@
 
 import { Component } from 'react'
 
+import type { GuiContact } from '../../../../types.js'
 import { isAuthorized } from '../../permissions.js'
 import type { PermissionStatus } from '../../permissions.js'
-import type { GuiContact } from '../../../../types.js'
 
 export type Props = {
   contactsPermission: PermissionStatus,
@@ -13,9 +13,8 @@ export type Props = {
   loadContactsSuccess: (contacts: Array<GuiContact>) => void,
   loadContactsFail: (error: Error) => void
 }
-export type State = {}
 
-export class ContactsLoader extends Component<Props, State> {
+export class ContactsLoader extends Component<Props> {
   componentWillReceiveProps (nextProps: Props) {
     const { contactsPermission } = nextProps
 

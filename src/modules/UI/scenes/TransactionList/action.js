@@ -1,13 +1,15 @@
 // @flow
 
 import type { EdgeTransaction } from 'edge-core-js'
+
+import type { TransactionListTx } from '../../../../types.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
-import type { TransactionListTx } from '../../../../types.js'
 import type { Dispatch, GetState, State } from '../../../ReduxTypes'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 import * as UTILS from '../../../utils'
 import { displayTransactionAlert } from '../../components/TransactionAlert/actions'
+
 // import type { TransactionListTx } from './TransactionList.ui.js'
 const PREFIX = 'UI/Scenes/TransactionList/'
 export const UPDATE_TRANSACTIONS_LIST = PREFIX + 'UPDATE_TRANSACTIONS_LIST'

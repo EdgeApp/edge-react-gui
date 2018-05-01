@@ -36,7 +36,7 @@ export default StyleSheet.create({
   modalVisibleStyle: {
     flex: 1,
     top: -27,
-    width: PLATFORM.platform === 'ios' ? (PLATFORM.deviceWidth - 20) : '100%',
+    width: PLATFORM.platform === 'ios' ? PLATFORM.deviceWidth - 20 : '100%',
     height: isIphoneX ? PLATFORM.deviceHeight - 120 : PLATFORM.deviceHeight - 80
   },
   modalBoxStyle: {

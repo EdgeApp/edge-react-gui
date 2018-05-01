@@ -5,8 +5,9 @@ import { connect } from 'react-redux'
 
 import { getCurrencyConverter, getExchangeRate } from '../../../Core/selectors.js'
 import type { Dispatch, State } from '../../../ReduxTypes'
+import { convertNativeToExchange } from '../../../utils'
 import { getExchangeDenomination, getSelectedCurrencyCode, getSelectedWallet } from '../../selectors.js'
-import { getDisplayDenomination } from '../../Settings/selectors.js'
+import { getDisplayDenomination, getExchangeDenomination as settingsGetExchangeDenomination } from '../../Settings/selectors.js'
 import { reset, signBroadcastAndSave, updateAmount, updateSpendPending } from './action.js'
 import {
   getError,
@@ -26,8 +27,16 @@ import type { SendConfirmationDispatchProps, SendConfirmationStateProps } from '
 const mapStateToProps = (state: State): SendConfirmationStateProps => {
   let fiatPerCrypto = 0
   let secondaryeExchangeCurrencyCode = ''
+  const currencyConverter = getCurrencyConverter(state)
   const guiWallet = getSelectedWallet(state)
   const currencyCode = getSelectedCurrencyCode(state)
+  const balanceInCrypto = guiWallet.nativeBalances[currencyCode]
+
+  const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
+  const exchangeDenomination = settingsGetExchangeDenomination(state, currencyCode)
+  // $FlowFixMe
+  const balanceInCryptoDisplay = convertNativeToExchange(exchangeDenomination.multiplier)(balanceInCrypto)
+  const balanceInFiat = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, balanceInCryptoDisplay)
 
   if (guiWallet) {
     const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
@@ -70,7 +79,9 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
     parentNetworkFee: getParentNetworkFee(state),
     networkFee: getNetworkFee(state),
     sliderDisabled: !transaction || !!error || !!pending,
-    currencyConverter: getCurrencyConverter(state)
+    currencyConverter,
+    balanceInCrypto,
+    balanceInFiat
   }
   return out
 }

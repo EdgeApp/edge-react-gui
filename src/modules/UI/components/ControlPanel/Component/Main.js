@@ -19,9 +19,8 @@ type Props = {
   logout: (username?: string) => void,
   onPressOption: () => void
 }
-type State = {}
 
-export default class Main extends Component<Props, State> {
+export default class Main extends Component<Props> {
   onLogout = () => {
     this.props.logout()
   }

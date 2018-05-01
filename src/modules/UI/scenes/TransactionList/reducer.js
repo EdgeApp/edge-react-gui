@@ -4,8 +4,8 @@ import type { EdgeTransaction } from 'edge-core-js'
 import { combineReducers } from 'redux'
 
 import type { Action } from '../../../ReduxTypes.js'
-import * as ACTION from './action'
 import * as WALLET_ACTION from '../../Wallets/action.js'
+import * as ACTION from './action'
 
 export type TransactionsState = Array<EdgeTransaction>
 

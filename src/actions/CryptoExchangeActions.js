@@ -1,7 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import type { EdgeCurrencyWallet, EdgeSpendInfo, EdgeTransaction, EdgeMetadata, EdgeSpendTarget } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeMetadata, EdgeSpendInfo, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
 import { Alert } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
@@ -64,7 +64,6 @@ function setShapeTransaction (
     toNativeAmount: string,
     toDisplayAmount: string,
     quoteExpireDate: number
-
   }
 ) {
   return {
@@ -260,7 +259,13 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
         s.strings.word_to_in_convert_from_to_string,
         state.cryptoExchange.toCurrencyCode
       )
-      const shapeShiftOrderId = (state.cryptoExchange.transaction && state.cryptoExchange.transaction.otherParams && state.cryptoExchange.transaction.otherParams.exchangeData && state.cryptoExchange.transaction.otherParams.exchangeData.orderId) ? 'https://shapeshift.io/#/status/' + state.cryptoExchange.transaction.otherParams.exchangeData.orderId : ''
+      const shapeShiftOrderId =
+        state.cryptoExchange.transaction &&
+        state.cryptoExchange.transaction.otherParams &&
+        state.cryptoExchange.transaction.otherParams.exchangeData &&
+        state.cryptoExchange.transaction.otherParams.exchangeData.orderId
+          ? 'https://shapeshift.io/#/status/' + state.cryptoExchange.transaction.otherParams.exchangeData.orderId
+          : ''
       const notes = sprintf(
         s.strings.exchange_notes_metadata,
         state.cryptoExchange.fromDisplayAmount,
@@ -283,16 +288,23 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
       dispatch(actions.dispatchAction(Constants.SHIFT_COMPLETE))
       console.log(broadcastedTransaction)
       dispatch(actions.dispatchAction(Constants.DONE_SHIFT_TRANSACTION))
-      setTimeout(() => { Alert.alert(s.strings.exchange_succeeded, s.strings.exchanges_may_take_minutes) }, 1)
+      setTimeout(() => {
+        Alert.alert(s.strings.exchange_succeeded, s.strings.exchanges_may_take_minutes)
+      }, 1)
     } catch (error) {
       dispatch(actions.dispatchActionString(Constants.SHIFT_ERROR, error.message))
       dispatch(actions.dispatchAction(Constants.DONE_SHIFT_TRANSACTION))
-      setTimeout(() => { Alert.alert(s.strings.exchange_failed, error.message) }, 1)
+      setTimeout(() => {
+        Alert.alert(s.strings.exchange_failed, error.message)
+      }, 1)
     }
   }
 }
 
-const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWallet: string = Constants.FROM, reQuote: boolean = false) => async (dispatch: Dispatch, getState: GetState) => {
+const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWallet: string = Constants.FROM, reQuote: boolean = false) => async (
+  dispatch: Dispatch,
+  getState: GetState
+) => {
   const state = getState()
   const destWallet = CORE_SELECTORS.getWallet(state, toWallet.id)
   const srcWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
@@ -307,16 +319,14 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
     currencyCode: toCurrencyCode
   }
   if (whichWallet === Constants.TO) {
-    spendTarget = {...spendTarget, nativeAmount: toNativeAmount}
+    spendTarget = { ...spendTarget, nativeAmount: toNativeAmount }
   }
   const spendInfo: EdgeSpendInfo = {
     networkFeeOption: state.cryptoExchange.feeSetting,
     currencyCode: fromCurrencyCode,
     nativeAmount: fromNativeAmount,
     quoteFor: whichWallet,
-    spendTargets: [
-      spendTarget
-    ]
+    spendTargets: [spendTarget]
   }
   const srcCurrencyCode = spendInfo.currencyCode
   const destCurrencyCode = spendInfo.spendTargets[0].currencyCode
@@ -371,7 +381,6 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
       toNativeAmount: edgeCoinExchangeQuote.withdrawalAmountNative,
       toDisplayAmount: toDisplayAmount,
       quoteExpireDate: edgeCoinExchangeQuote.expiration
-
     }
     const isAboveLimit = bns.gt(fromNativeAmount, nativeMax)
     const isBelowLimit = bns.lt(fromNativeAmount, nativeMin)

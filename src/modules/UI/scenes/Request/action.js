@@ -1,9 +1,10 @@
 // @flow
+
+import * as Constants from '../../../../constants/indexConstants.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
-import * as UI_SELECTORS from '../../../UI/selectors.js'
-import * as Constants from '../../../../constants/indexConstants.js'
 import type { Dispatch, GetState } from '../../../ReduxTypes.js'
+import * as UI_SELECTORS from '../../../UI/selectors.js'
 
 export const UPDATE_RECEIVE_ADDRESS = 'UPDATE_RECEIVE_ADDRESS'
 export const UPDATE_RECEIVE_ADDRESS_START = 'UPDATE_RECEIVE_ADDRESS_START'

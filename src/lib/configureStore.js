@@ -1,5 +1,7 @@
 // @flow
+
 /* global window __DEV__ */
+
 import { applyMiddleware, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
 
@@ -7,8 +9,9 @@ import thunk from 'redux-thunk'
 import loginStatusChecker from './loginStatusChecker'
 import rootReducer from './rootReducer'
 import soundsMiddleware from './soundsMiddleware'
+import errorAlert from './errorAlert'
 
-let middleware = [loginStatusChecker, thunk, soundsMiddleware]
+let middleware = [errorAlert, loginStatusChecker, thunk, soundsMiddleware]
 // let logger = createLogger()
 
 if (__DEV__) {

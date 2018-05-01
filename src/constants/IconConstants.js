@@ -3,6 +3,7 @@
 // Simple
 export const SIMPLE_ICONS = 'simpleIcons'
 export const CHECK_CIRCLE = 'check'
+
 // Entypo
 export const ENTYPO = 'entypo'
 export const THREE_DOT_MENU = 'dots-three-vertical'
@@ -32,3 +33,7 @@ export const KEYBOARD_ARROW_UP = 'keyboard-arrow-up'
 export const SWAP_VERT = 'swap-vert'
 export const SWAP_HORIZ = 'swap-horiz'
 export const EXCLAMATION = 'exclamation'
+
+// MaterialCommunity
+export const MATERIAL_COMMUNITY = 'materialCommunity'
+export const ALERT = 'alert-circle-outline'

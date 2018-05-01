@@ -1,11 +1,12 @@
 // @flow
+
 import React, { Component } from 'react'
 import { View } from 'react-native'
-import T from '../../components/FormattedText'
 
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
 import * as UTILS from '../../../utils'
+import T from '../../components/FormattedText'
 import styles from './styles'
 
 const EXCHANGE_RATE_LOADING_TEXT = s.strings.drawer_exchange_rate_loading
@@ -22,11 +23,13 @@ export default class ExchangeRate extends Component<Props> {
     const { primaryInfo, primaryDisplayAmount, secondaryInfo, secondaryDisplayAmount } = this.props
 
     const primaryDisplayName: string = primaryInfo.displayDenomination.name
-
     const secondaryDisplaySymbol: string = secondaryInfo.displayDenomination.symbol
-
-    const formattedSecondaryDisplayAmount: string = parseFloat(secondaryDisplayAmount).toFixed(secondaryInfo.displayDenomination.precision)
-
+    const getDisplayExchangeAmount = (secondaryDisplayAmount) => {
+      const primaryRatio = parseInt(primaryInfo.displayDenomination.multiplier) / parseInt(primaryInfo.exchangeDenomination.multiplier)
+      const secondaryRatio = parseInt(secondaryInfo.displayDenomination.multiplier) / parseInt(secondaryInfo.exchangeDenomination.multiplier)
+      return primaryRatio / secondaryRatio * parseFloat(secondaryDisplayAmount)
+    }
+    const formattedSecondaryDisplayAmount: string = (parseFloat(getDisplayExchangeAmount(secondaryDisplayAmount)).toFixed(secondaryInfo.displayDenomination.precision))
     const secondaryCurrencyCode: string = secondaryInfo.displayDenomination.currencyCode
 
     const exchangeData = {

@@ -1,7 +1,7 @@
 // @flow
 
-import type { Action } from '../../ReduxTypes.js'
 import * as Constants from '../../../constants/indexConstants.js'
+import type { Action } from '../../ReduxTypes.js'
 
 export type RequestState = {
   receiveAddress: {

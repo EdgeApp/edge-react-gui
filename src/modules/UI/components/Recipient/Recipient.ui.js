@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import React, { Component } from 'react'
 import { Text, View } from 'react-native'
@@ -8,7 +8,10 @@ import styles from './styles'
 
 const SENT_TO_TEXT = s.strings.send_to_title
 
-export default class Recipient extends Component {
+export type Props = {
+  publicAddress: string
+}
+export class Recipient extends Component<Props> {
   render () {
     return (
       <View style={styles.container}>
@@ -20,3 +23,5 @@ export default class Recipient extends Component {
     )
   }
 }
+
+export default Recipient

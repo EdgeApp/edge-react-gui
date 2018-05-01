@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import { combineReducers } from 'redux'
 
@@ -15,10 +15,6 @@ const walletListModalVisible = (state = false, action) => {
     case ACTION.TOGGLE_SELECTED_WALLET_LIST_MODAL:
       return false
     case ACTION.TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL:
-      return false
-    case ACTION.TOGGLE_SCAN_FROM_WALLET_LIST_MODAL:
-      return false
-    case ACTION.REACT_NATIVE_ROUTER_FLUX_FOCUS:
       return false
     default:
       return state

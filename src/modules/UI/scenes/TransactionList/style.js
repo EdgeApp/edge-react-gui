@@ -4,6 +4,7 @@ import { StyleSheet } from 'react-native'
 
 import THEME from '../../../../theme/variables/airbitz'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
+
 export const styles = {
   gradient: {
     height: THEME.HEADER

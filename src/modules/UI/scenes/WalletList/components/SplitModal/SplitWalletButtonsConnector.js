@@ -5,7 +5,6 @@ import { connect } from 'react-redux'
 import * as Constants from '../../../../../../constants/indexConstants.js'
 import * as CORE_SELECTORS from '../../../../../Core/selectors.js'
 import type { Dispatch, GetState, State } from '../../../../../ReduxTypes'
-import { displayErrorAlert } from '../../../../components/ErrorAlert/actions.js'
 import * as UI_ACTIONS from '../../../../Wallets/action.js'
 import { CLOSE_MODAL_VALUE, START_MODAL_VALUE, SUCCESS_MODAL_VALUE, wrap } from '../WalletOptions/action'
 import SplitWalletButtons from './SplitWalletButtons.ui'
@@ -18,16 +17,10 @@ const splitWallet = (walletId: string) => (dispatch: Dispatch, getState: GetStat
 
   dispatch(wrap(START_MODAL_VALUE(Constants.SPLIT_VALUE), { walletId }))
 
-  account
-    .splitWalletInfo(walletId, getSplitType())
-    .then(() => {
-      dispatch(wrap(SUCCESS_MODAL_VALUE(Constants.SPLIT_VALUE), { walletId }))
-      dispatch(UI_ACTIONS.refreshWallet(walletId))
-    })
-    .catch(e => {
-      console.log(e)
-      dispatch(displayErrorAlert(e.message))
-    })
+  return account.splitWalletInfo(walletId, getSplitType()).then(() => {
+    dispatch(wrap(SUCCESS_MODAL_VALUE(Constants.SPLIT_VALUE), { walletId }))
+    dispatch(UI_ACTIONS.refreshWallet(walletId))
+  })
 }
 
 export type StateProps = {

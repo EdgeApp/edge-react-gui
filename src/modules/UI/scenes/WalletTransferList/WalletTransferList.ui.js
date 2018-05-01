@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import React, { Component } from 'react'
 import { ListView, Text, TouchableHighlight, View } from 'react-native'
@@ -8,7 +8,11 @@ import FAIcon from 'react-native-vector-icons/FontAwesome'
 import * as Constants from '../../../../constants/indexConstants'
 import styles from './style'
 
-export default class WalletTransferList extends Component {
+export type Props = {
+  toggleWalletListModal: () => void,
+  walletTransferList: () => void
+}
+export default class WalletTransferList extends Component<Props> {
   _closeWalletListModal () {
     this.props.toggleWalletListModal()
   }
@@ -41,6 +45,7 @@ export default class WalletTransferList extends Component {
     )
   }
 
+  // $FlowFixMe
   renderWalletRow (walletData) {
     return (
       <TouchableHighlight style={styles.individualRowWrap} onPress={this._selectWalletToSendConfirmation.bind(this)}>
@@ -52,7 +57,7 @@ export default class WalletTransferList extends Component {
     )
   }
 
-  border (color) {
+  border (color: string) {
     return { borderColor: color, borderWidth: 2 }
   }
 }

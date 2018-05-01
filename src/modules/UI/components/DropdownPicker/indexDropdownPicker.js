@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import DropdownPicker from './DropdownPicker.ui.js'
 

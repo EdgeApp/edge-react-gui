@@ -1,5 +1,6 @@
 // @flow
-import type { EdgeDenomination, EdgeMetaToken, EdgeMetadata, EdgeTransaction, EdgeReceiveAddress } from 'edge-core-js'
+
+import type { EdgeDenomination, EdgeMetaToken, EdgeMetadata, EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
 
 export type GuiWallet = {
   id: string,

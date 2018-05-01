@@ -1,5 +1,5 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
-import TransactionList from './TransactionList.ui'
+import { TransactionList } from './TransactionList.ui'
 
 export default TransactionList

@@ -11,7 +11,7 @@ import * as Constants from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings.js'
 import type { GuiCurrencyInfo, GuiReceiveAddress, GuiTransactionRequest, GuiWallet } from '../../../../types.js'
 import WalletListModal from '../../../UI/components/WalletListModal/WalletListModalConnector'
-import ExchangedExchangeRate from '../../components/ExchangeRate/ExchangedExchangeRate.ui.js'
+import ExchangeRate from '../../components/ExchangeRate/index.js'
 import { ExchangedFlipInput } from '../../components/FlipInput/ExchangedFlipInput2.js'
 import type { ExchangedFlipInputAmounts } from '../../components/FlipInput/ExchangedFlipInput2.js'
 import Gradient from '../../components/Gradient/Gradient.ui'
@@ -82,9 +82,7 @@ export class Request extends Component<Props, State> {
       const publicAddress = nextProps.guiWallet.receiveAddress.publicAddress
       const legacyAddress = nextProps.guiWallet.receiveAddress.legacyAddress
 
-      const abcEncodeUri = nextProps.useLegacyAddress
-        ? { publicAddress, legacyAddress }
-        : { publicAddress }
+      const abcEncodeUri = nextProps.useLegacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
 
       const encodedURI = nextProps.edgeWallet ? nextProps.edgeWallet.encodeUri(abcEncodeUri) : ''
 
@@ -113,14 +111,8 @@ export class Request extends Component<Props, State> {
     }
 
     const color = 'white'
-    const {
-      primaryCurrencyInfo,
-      secondaryCurrencyInfo,
-      exchangeSecondaryToPrimaryRatio
-    } = this.props
-    const requestAddress = this.props.useLegacyAddress
-      ? this.state.legacyAddress
-      : this.state.publicAddress
+    const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio } = this.props
+    const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
 
     return (
       <SafeAreaView>
@@ -128,11 +120,10 @@ export class Request extends Component<Props, State> {
           <Gradient style={styles.gradient} />
 
           <View style={styles.exchangeRateContainer}>
-            <ExchangedExchangeRate
-              primaryCurrencyInfo={primaryCurrencyInfo}
-              secondaryCurrencyInfo={secondaryCurrencyInfo}
-              exchangeSecondaryToPrimaryRatio={exchangeSecondaryToPrimaryRatio}
-            />
+            <ExchangeRate
+              primaryInfo={primaryCurrencyInfo}
+              secondaryInfo={secondaryCurrencyInfo}
+              secondaryDisplayAmount={exchangeSecondaryToPrimaryRatio} />
           </View>
 
           <View style={styles.main}>
@@ -161,8 +152,7 @@ export class Request extends Component<Props, State> {
             />
           </View>
 
-          {this.props.showToWalletModal &&
-          <WalletListModal topDisplacement={Constants.REQUEST_WALLET_DIALOG_TOP} type={Constants.TO} />}
+          {this.props.showToWalletModal && <WalletListModal topDisplacement={Constants.REQUEST_WALLET_DIALOG_TOP} type={Constants.TO} />}
         </Gradient>
       </SafeAreaView>
     )
