@@ -9,6 +9,7 @@ import type { Dispatch, GetState, State } from '../../../ReduxTypes'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 import * as UTILS from '../../../utils'
 import { displayTransactionAlert } from '../../components/TransactionAlert/actions'
+import _ from 'lodash'
 
 // import type { TransactionListTx } from './TransactionList.ui.js'
 const PREFIX = 'UI/Scenes/TransactionList/'
@@ -65,12 +66,19 @@ export const fetchMoreTransactions = (walletId: string, currencyCode: string) =>
   }
 }
 
-export const fetchTransactions = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
+export const fetchTransactions = (walletId: string, currencyCode: string, options?: Object) => (dispatch: Dispatch, getState: GetState) => {
   const state: State = getState()
-
+  let numEntries, numIndex
+  if (options) {
+    numEntries = options.numEntries || state.ui.scenes.transactionList.currentEndIndex + 1
+    numIndex = options.numIndex || 0
+  } else {
+    numEntries = state.ui.scenes.transactionList.currentEndIndex + 1
+    numIndex = 0
+  }
   getAndMergeTransactions(state, dispatch, walletId, currencyCode, {
-    numEntries: state.ui.scenes.transactionList.currentEndIndex + 1,
-    numIndex: 0
+    numEntries,
+    numIndex
   })
 }
 
@@ -78,10 +86,15 @@ const getAndMergeTransactions = (state: State, dispatch: Dispatch, walletId: str
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
   const currentEndIndex = options.numIndex + options.numEntries - 1
   if (wallet) {
+    // initialize the master array of transactions that will eventually go into Redux
     let transactionsWithKeys = []
+    // assume counter starts at zero (eg this is the first fetch)
     let key = 0
+    // if there are any options and the starting index is non-zero (eg this is a subsequent fetch)
     if (options && options.numIndex > 0) {
+      // then insert the already-loaded transactions into the master array of transactions
       transactionsWithKeys = transactionsWithKeys.concat(state.ui.scenes.transactionList.transactions)
+      // and fast forward the counter
       key = transactionsWithKeys.length
     }
     WALLET_API.getTransactions(wallet, currencyCode, options)
@@ -128,10 +141,28 @@ export const refreshTransactionsRequest = (walletId: string, transactions: Array
   }
 }
 
-export const newTransactionsRequest = (walletId: string, edgeTransactions: Array<EdgeTransaction>) => (dispatch: Dispatch) => {
+export const newTransactionsRequest = (walletId: string, edgeTransactions: Array<EdgeTransaction>) => (dispatch: Dispatch, getState: GetState) => {
   const edgeTransaction: EdgeTransaction = edgeTransactions[0]
+  const state = getState()
+  const currentViewableTransactions = state.ui.scenes.transactionList.transactions
+  const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
+  const selectedCurrencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+  let numberOfRelevantTransactions = 0
+  for (const transaction of edgeTransactions) {
+    if ((transaction.currencyCode === selectedCurrencyCode) && transaction.wallet && (transaction.wallet.id === selectedWalletId)) {
+      // this next part may be unnecessary
+      const indexOfNewTransaction = _.findIndex(currentViewableTransactions, (tx) => tx.txid === transaction.txid)
+      if (indexOfNewTransaction === -1) {
+        numberOfRelevantTransactions++
+      }
+    }
+  }
+  const options = {
+    numIndex: 0,
+    numEntries: state.ui.scenes.transactionList.currentEndIndex + 1 + numberOfRelevantTransactions
+  }
+  dispatch(fetchTransactions(walletId, selectedCurrencyCode, options))
   if (!UTILS.isReceivedTransaction(edgeTransaction)) return
-
   dispatch(displayTransactionAlert(edgeTransaction))
 }
 
