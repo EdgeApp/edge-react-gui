@@ -90,6 +90,7 @@ export type State = {
         searchVisible: boolean,
         currentCurrencyCode: string,
         currentWalletId: string,
+        numTransactions: number,
         currentEndIndex: number
       },
       transactionDetails: {

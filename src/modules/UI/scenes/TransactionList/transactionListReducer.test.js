@@ -13,6 +13,7 @@ test('initialState', () => {
     loadingTransactions: false,
     currentCurrencyCode: '',
     currentEndIndex: 0,
+    numTransactions: 0,
     currentWalletId: ''
   }
   const actual = transactionListReducer(undefined, {})

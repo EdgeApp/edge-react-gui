@@ -31,6 +31,16 @@ const currentCurrencyCode = (state: string = '', action: Action) => {
   }
 }
 
+const numTransactions = (state: number = 0, action: Action) => {
+  if (!action.data) return state
+  switch (action.type) {
+    case ACTION.UPDATE_TRANSACTIONS:
+      return action.data.numTransactions
+    default:
+      return state
+  }
+}
+
 const currentWalletId = (state: string = '', action: Action) => {
   if (!action.data) return state
   switch (action.type) {
@@ -98,6 +108,7 @@ export const transactionList = combineReducers({
   transactions,
   currentCurrencyCode,
   currentWalletId,
+  numTransactions,
   currentEndIndex,
   searchVisible,
   updatingBalance,

@@ -101,6 +101,7 @@ test('initialState', () => {
       loadingTransactions: false,
       currentCurrencyCode: '',
       currentEndIndex: 0,
+      numTransactions: 0,
       currentWalletId: ''
     },
     walletList: {

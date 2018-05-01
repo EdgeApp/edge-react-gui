@@ -88,6 +88,7 @@ export class TransactionList extends Component<Props, State> {
     dataSrc: [],
     width: undefined,
     currentCurrencyCode: '',
+    numTransactions: 0,
     currentWalletId: ''
   }
 
