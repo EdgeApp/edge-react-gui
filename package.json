@@ -52,7 +52,6 @@
     "dgram": "react-native-udp",
     "dns": "dns.js",
     "domain": "domain-browser",
-    "fs": "react-native-level-fs",
     "http": "react-native-http",
     "https": "https-browserify",
     "net": "react-native-tcp",
@@ -110,7 +109,6 @@
     "react-native-http": "git://github.com/tradle/react-native-http#834492d",
     "react-native-image-picker": "^0.26.4",
     "react-native-keyboard-aware-scroll-view": "^0.4.1",
-    "react-native-level-fs": "^3.0.0",
     "react-native-linear-gradient": "^2.0.0",
     "react-native-locale": "^0.0.17",
     "react-native-material-kit": "git://github.com/Airbitz/react-native-material-kit.git#fix-threadpool",
@@ -168,7 +166,7 @@
     "nyc": "^10.0.0",
     "prettier-eslint-cli": "^4.7.0",
     "rn-nodeify": "^7.0.1",
-    "updot": "^1.1.6"
+    "updot": "^1.1.7"
   },
   "flow-coverage-report": {
     "includeGlob": ["src/**/*.js", "*.js"],
