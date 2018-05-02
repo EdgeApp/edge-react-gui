@@ -9,7 +9,7 @@ import { emptyGuiDenomination } from '../../../../types'
 import type { GuiDenomination } from '../../../../types'
 import { getDenomFromIsoCode } from '../../../utils.js'
 import T from '../../components/FormattedText'
-import ExchangedExchangeRate from '../ExchangeRate/ExchangedExchangeRate.ui.js'
+import ExchangeRate from '../ExchangeRate/index.js'
 import Gradient from '../Gradient/Gradient.ui'
 import SafeAreaView from '../SafeAreaView/SafeAreaViewDrawer.ui.js'
 import Main from './Component/MainConnector'
@@ -70,10 +70,10 @@ export default class ControlPanel extends Component<Props> {
         <Gradient reverse style={styles.container}>
           <View style={styles.bitcoin.container}>
             {this.renderCryptoIcon(currencyLogo)}
-            <ExchangedExchangeRate
-              primaryCurrencyInfo={primaryCurrencyInfo}
-              secondaryCurrencyInfo={secondaryCurrencyInfo}
-              exchangeSecondaryToPrimaryRatio={secondaryToPrimaryRatio}
+            <ExchangeRate
+              primaryInfo={primaryCurrencyInfo}
+              secondaryInfo={secondaryCurrencyInfo}
+              secondaryDisplayAmount={secondaryToPrimaryRatio}
             />
           </View>
           <TouchableHighlight onPress={this._handlePressUserList} underlayColor={styles.underlay.color}>
