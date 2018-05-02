@@ -1,5 +1,6 @@
 // @flow
 
+import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { Text, View } from 'react-native'
 import Slider from 'react-native-slider'
@@ -35,6 +36,7 @@ export default class ABSlider extends Component<Props, State> {
       sliderDisabled: props.sliderDisabled,
       onSlidingComplete: props.onSlidingComplete
     }
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   onSlidingComplete = (value: number) => {

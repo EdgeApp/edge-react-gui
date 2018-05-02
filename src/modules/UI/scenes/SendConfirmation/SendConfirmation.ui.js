@@ -1,5 +1,6 @@
 // @flow
 
+import slowlog from 'react-native-slowlog'
 import { bns } from 'biggystring'
 import type { EdgeDenomination } from 'edge-core-js'
 import React, { Component } from 'react'
@@ -71,6 +72,7 @@ type State = {
 export class SendConfirmation extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
+    slowlog(this, /.*/, global.slowlogOptions)
     const newState: State = {
       secondaryDisplayDenomination: {
         name: '',

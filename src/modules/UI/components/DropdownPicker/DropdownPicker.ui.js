@@ -1,5 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
+import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { KeyboardAvoidingView, ListView, TouchableOpacity, View } from 'react-native'
 
@@ -16,6 +17,7 @@ export default class DropdownPicker extends Component {
       isListVisible: props.startOpen,
       selectedItem: ''
     }
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   handleSelectListItem = item => {

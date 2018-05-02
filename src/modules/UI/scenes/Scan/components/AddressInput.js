@@ -1,5 +1,6 @@
 // @flow
 
+import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { View } from 'react-native'
 
@@ -15,6 +16,11 @@ export type Props = {
   onSubmit: () => void
 }
 export class AddressInput extends Component<Props> {
+  constructor (props: any) {
+    super(props)
+    slowlog(this, /.*/, global.slowlogOptions)
+  }
+
   // this component is for the input area of the Recipient Address Modal
   render () {
     return (

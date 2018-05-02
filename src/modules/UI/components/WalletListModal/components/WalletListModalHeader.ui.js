@@ -1,5 +1,6 @@
 // @flow
 
+import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { TouchableHighlight, View } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -13,6 +14,10 @@ import styles from '../style'
 
 export default class WalletListModalHeader extends Component<any> {
   onSearchExit = this.props.disableWalletListModalVisibility
+  constructor (props: any) {
+    super(props)
+    slowlog(this, /.*/, global.slowlogOptions)
+  }
 
   render () {
     const whichMessage = this.props.whichWallet === Constants.FROM ? 'fragment_excahnge_wallet_from_header_title' : 'fragment_excahnge_wallet_to_header_title'

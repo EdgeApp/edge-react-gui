@@ -1,5 +1,6 @@
 // @flow
 
+import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
@@ -9,6 +10,11 @@ type Props = {
 }
 
 export default class CryptoExchageRate extends Component<Props> {
+  constructor (props: any) {
+    super(props)
+    slowlog(this, /.*/, global.slowlogOptions)
+  }
+
   render () {
     const { container, containerError, text, textError } = this.props.style
     const viewStyle = [container, this.props.insufficient || this.props.genericError ? containerError : null]

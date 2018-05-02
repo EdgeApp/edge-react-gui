@@ -1,5 +1,6 @@
 // @flow
 
+import slowlog from 'react-native-slowlog'
 import { bns } from 'biggystring'
 import _ from 'lodash'
 import React, { Component } from 'react'
@@ -50,6 +51,7 @@ class FullWalletRow extends Component<Props, State> {
     this.state = {
       mergedTokens: []
     }
+    slowlog(this, /.*/, global.slowlogOptions)
   }
   render () {
     return (

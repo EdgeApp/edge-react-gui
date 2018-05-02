@@ -1,5 +1,6 @@
 // @flow
 
+import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { View } from 'react-native'
 
@@ -18,6 +19,11 @@ type State = {
   collapsed: boolean
 }
 class ExpandableBoxComponent extends Component<Props, State> {
+  constructor (props: any) {
+    super(props)
+    slowlog(this, /.*/, global.slowlogOptions)
+  }
+
   componentWillMount () {
     this.setState({
       collapsed: true

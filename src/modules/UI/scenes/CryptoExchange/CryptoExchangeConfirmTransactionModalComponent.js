@@ -1,5 +1,6 @@
 // @flow
 
+import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { ActivityIndicator, Image, Text, TouchableOpacity, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -29,6 +30,11 @@ type CryptoExchangeConfirmTransactionModalOwnProps = {
   pending: boolean
 }
 export default class CryptoExchangeConfirmTransactionModal extends Component<CryptoExchangeConfirmTransactionModalOwnProps> {
+  constructor (props: any) {
+    super(props)
+    slowlog(this, /.*/, global.slowlogOptions)
+  }
+
   render () {
     const style = this.props.style
     const icon = <Icon style={style.icon} name={Constants.EXCHANGE_ICON} size={style.iconSize} type={Constants.FONT_AWESOME} />
