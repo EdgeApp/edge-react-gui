@@ -6086,7 +6086,7 @@ prop-types@15.5.10, prop-types@~15.5.7:
     fbjs "^0.8.9"
     loose-envify "^1.3.1"
 
-prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.6, prop-types@^15.5.7, prop-types@^15.5.8, prop-types@^15.5.9, prop-types@^15.6.0:
+prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.6, prop-types@^15.5.7, prop-types@^15.5.8, prop-types@^15.5.9, prop-types@^15.6.0, prop-types@^15.6.1:
   version "15.6.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.1.tgz#36644453564255ddda391191fb3a125cbdf654ca"
   dependencies:
@@ -6271,7 +6271,7 @@ react-event-listener@^0.5.1:
     prop-types "^15.6.0"
     warning "^3.0.0"
 
-react-native-animatable@^1.1.0, react-native-animatable@^1.2.3:
+react-native-animatable@^1.1.0, react-native-animatable@^1.2.3, react-native-animatable@^1.2.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/react-native-animatable/-/react-native-animatable-1.2.4.tgz#b5fb7657e8f6edadbc26697057a327fb920b3039"
   dependencies:
@@ -6451,19 +6451,19 @@ react-native-mail@^3.0.5:
   dependencies:
     prop-types "^15.5.9"
 
-react-native-modal@^2.2.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/react-native-modal/-/react-native-modal-2.5.0.tgz#a24018ac028e84e6eb8294278fa02720d9f7f320"
-  dependencies:
-    prop-types "15.5.10"
-    react-native-animatable "^1.2.3"
-
 react-native-modal@^4.1.0:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/react-native-modal/-/react-native-modal-4.1.1.tgz#4c1055dc045106542a8e3bb3fd656a6d3bc319d9"
   dependencies:
     prop-types "15.5.10"
     react-native-animatable "^1.2.3"
+
+react-native-modal@^5.4.0:
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/react-native-modal/-/react-native-modal-5.4.0.tgz#95f70b5d68e08824951cd11038b9db2d6fdb9962"
+  dependencies:
+    prop-types "^15.6.1"
+    react-native-animatable "^1.2.4"
 
 react-native-permissions@1.0.6:
   version "1.0.6"
