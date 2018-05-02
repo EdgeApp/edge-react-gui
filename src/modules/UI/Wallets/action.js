@@ -20,7 +20,7 @@ import * as SETTINGS_SELECTORS from '../Settings/selectors'
 
 export const PREFIX = 'UI/Wallets/'
 
-export const UPSERT_WALLET = PREFIX + 'UPSERT_WALLET'
+export const UPSERT_WALLETS = PREFIX + 'UPSERT_WALLETS'
 
 export const ACTIVATE_WALLET_ID = PREFIX + 'ACTIVATE_WALLET_ID'
 export const ARCHIVE_WALLET_ID = PREFIX + 'ARCHIVE_WALLET_ID'
@@ -84,36 +84,46 @@ export const selectWallet = (walletId: string, currencyCode: string) => (dispatc
   }
 }
 
-function dispatchUpsertWallet (dispatch, wallet, walletId) {
-  dispatch(upsertWallet(wallet))
-  refreshDetails[walletId].delayUpsert = false
-  refreshDetails[walletId].lastUpsert = Date.now()
+function dispatchUpsertWallets (dispatch, wallets: Array<EdgeCurrencyWallet>) {
+  global.pcount('dispatchUpsertWallets')
+  dispatch(upsertWallets(wallets))
 }
 
-const refreshDetails = {}
+const refreshDetails = {
+  lastUpsert: 0,
+  delayUpsert: false,
+  walletIds: {}
+}
+
+const upsertFrequency = 3000
 
 export const refreshWallet = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
   if (wallet) {
-    if (!refreshDetails[walletId]) {
-      refreshDetails[walletId] = {
-        delayUpsert: false,
-        lastUpsert: 0
-      }
-    }
-    if (!refreshDetails[walletId].delayUpsert) {
+    if (!refreshDetails.delayUpsert) {
       const now = Date.now()
-      if (now - refreshDetails[walletId].lastUpsert > 3000) {
-        dispatchUpsertWallet(dispatch, wallet, walletId)
+      if (now - refreshDetails.lastUpsert > upsertFrequency) {
+        dispatchUpsertWallets(dispatch, [wallet])
+        refreshDetails.lastUpsert = Date.now()
       } else {
         console.log('refreshWallets setTimeout delay upsert id:' + walletId)
-        refreshDetails[walletId].delayUpsert = true
+        refreshDetails.delayUpsert = true
+        refreshDetails.walletIds[walletId] = wallet
         setTimeout(() => {
-          dispatchUpsertWallet(dispatch, wallet, walletId)
-        }, 3000)
+          const wallets = []
+          for (const wid in refreshDetails.walletIds) {
+            wallets.push(refreshDetails.walletIds[wid])
+          }
+          dispatchUpsertWallets(dispatch, wallets)
+          refreshDetails.delayUpsert = false
+          refreshDetails.lastUpsert = Date.now()
+          refreshDetails.walletIds = {}
+        }, upsertFrequency)
       }
     } else {
+      // Add wallet to the queue to upsert
+      refreshDetails.walletIds[walletId] = wallet
       console.log('refreshWallets delayUpsert id:' + walletId)
     }
   } else {
@@ -121,16 +131,16 @@ export const refreshWallet = (walletId: string) => (dispatch: Dispatch, getState
   }
 }
 
-export const upsertWallet = (wallet: EdgeCurrencyWallet) => (dispatch: Dispatch, getState: GetState) => {
+export const upsertWallets = (wallets: Array<EdgeCurrencyWallet>) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const loginStatus = SETTINGS_SELECTORS.getLoginStatus(state)
   if (!loginStatus) {
     dispatch({ type: 'LOGGED_OUT' })
   }
   dispatch({
-    type: UPSERT_WALLET,
+    type: UPSERT_WALLETS,
     data: {
-      wallet
+      wallets
     }
   })
 }
@@ -374,7 +384,7 @@ export const deleteCustomToken = (walletId: string, currencyCode: string) => (di
     })
     .then(() => {
       coreWalletsToUpdate.forEach(wallet => {
-        dispatch(upsertWallet(wallet))
+        dispatch(upsertWallets([wallet]))
         const newEnabledTokens = _.difference(guiWallets[wallet.id].enabledTokens, [currencyCode])
         dispatch(updateWalletEnabledTokens(wallet.id, newEnabledTokens))
       })
