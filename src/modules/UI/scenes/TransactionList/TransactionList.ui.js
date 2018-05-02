@@ -50,7 +50,6 @@ export type StateProps = {
 }
 
 export type DispatchProps = {
-  updateExchangeRates: () => any,
   fetchMoreTransactions: (walletId: string, currencyCode: string) => any
 }
 
@@ -92,14 +91,9 @@ export class TransactionList extends Component<Props, State> {
     currentWalletId: ''
   }
 
-  componentWillMount () {
-    this.props.updateExchangeRates()
-    this.handleScrollEnd()
-  }
-
   componentWillReceiveProps (nextProps: Props) {
     if (nextProps.selectedWalletId !== this.props.selectedWalletId || nextProps.selectedCurrencyCode !== this.props.selectedCurrencyCode) {
-      this.props.fetchMoreTransactions(nextProps.selectedWalletId, nextProps.selectedWalletId)
+      this.props.fetchMoreTransactions(nextProps.selectedWalletId, nextProps.selectedCurrencyCode)
     }
   }
 

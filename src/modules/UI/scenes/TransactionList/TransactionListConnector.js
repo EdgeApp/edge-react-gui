@@ -6,7 +6,6 @@ import { connect } from 'react-redux'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import type { Dispatch, State } from '../../../ReduxTypes'
 import * as UTILS from '../../../utils'
-import { updateExchangeRates } from '../../components/ExchangeRate/action'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import { fetchMoreTransactions } from './action'
@@ -79,7 +78,6 @@ const mapStateToProps = (state: State) => {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-  updateExchangeRates: () => dispatch(updateExchangeRates()),
   fetchMoreTransactions: (walletId: string, currencyCode: string) => dispatch(fetchMoreTransactions(walletId, currencyCode))
 })
 
