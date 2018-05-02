@@ -347,14 +347,8 @@ export default class TransactionList extends Component<Props, State> {
     Actions.transactionDetails({ edgeTransaction, thumbnailPath })
   }
 
-  isReceivedTransaction (tx: TransactionListTx) {
-    if (tx.nativeAmount) {
-      return bns.gt(tx.nativeAmount, '0')
-    }
-  }
-
   isSentTransaction (tx: TransactionListTx) {
-    return !this.isReceivedTransaction(tx)
+    return (tx.nativeAmount && (tx.nativeAmount.charAt(0) === '-'))
   }
 
   renderTx = (transaction: TransactionListTx, completedTxList: Array<TransactionListTx>) => {
