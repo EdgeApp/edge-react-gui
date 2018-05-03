@@ -1,5 +1,6 @@
 // @flow
 
+import slowlog from 'react-native-slowlog'
 import { bns } from 'biggystring'
 import _ from 'lodash'
 import React, { Component } from 'react'
@@ -26,6 +27,11 @@ const DIVIDE_PRECISION = 18
 } */
 
 export default class WalletListModalBody extends Component<$FlowFixMeProps> {
+  constructor (props: any) {
+    super(props)
+    slowlog(this, /.*/, global.slowlogOptions)
+  }
+
   selectFromWallet = () => {
     LayoutAnimation.easeInEaseOut()
     this.props.disableWalletListModalVisibility()

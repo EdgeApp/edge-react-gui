@@ -1,5 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
+import slowlog from 'react-native-slowlog'
 import { abs, sub } from 'biggystring'
 import React, { Component } from 'react'
 import { Keyboard, Linking, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
@@ -44,6 +45,7 @@ class AmountArea extends Component {
       pickerFontSize: 22
     })
     this.Picker = Picker
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   handleClick = () => {

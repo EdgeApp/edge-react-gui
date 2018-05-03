@@ -1,5 +1,6 @@
 // @flow
 
+import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { ActivityIndicator, Animated, FlatList, Image, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -65,6 +66,7 @@ type Props = {
 export default class WalletList extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
+    slowlog(this, /.*/, global.slowlogOptions)
     this.state = {
       sortableMode: false,
       sortableListOpacity: new Animated.Value(0),

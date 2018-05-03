@@ -1,5 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
+import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { Switch, TouchableHighlight, View } from 'react-native'
 
@@ -8,6 +9,11 @@ import T from '../../../components/FormattedText'
 import styles, { styles as styleRaw } from '../style'
 
 export default class RowSwitch extends Component {
+  constructor (props) {
+    super(props)
+    slowlog(this, /.*/, global.slowlogOptions)
+  }
+
   componentWillMount () {
     this.setState({
       value: this.props.value

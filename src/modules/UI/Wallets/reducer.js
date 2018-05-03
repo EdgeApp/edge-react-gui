@@ -138,21 +138,23 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
       return state
     }
 
-    case ACTION.UPSERT_WALLET: {
+    case ACTION.UPSERT_WALLETS: {
       const { data } = action
-      const guiWallet = schema(data.wallet, state[data.wallet.id].receiveAddress)
-      const enabledTokensOnWallet = state[data.wallet.id].enabledTokens
-      guiWallet.enabledTokens = enabledTokensOnWallet
-      enabledTokensOnWallet.forEach(customToken => {
-        guiWallet.nativeBalances[customToken] = data.wallet.getBalance({ currencyCode: customToken })
-      })
-      return {
-        ...state,
-        [data.wallet.id]: {
-          ...state[data.wallet.id],
+      const wallets = data.wallets
+      const out = { ...state }
+      for (const wallet of wallets) {
+        const guiWallet = schema(wallet, state[wallet.id].receiveAddress)
+        const enabledTokensOnWallet = state[wallet.id].enabledTokens
+        guiWallet.enabledTokens = enabledTokensOnWallet
+        enabledTokensOnWallet.forEach(customToken => {
+          guiWallet.nativeBalances[customToken] = wallet.getBalance({ currencyCode: customToken })
+        })
+        out[wallet.id] = {
+          ...state[wallet.id],
           ...guiWallet
         }
       }
+      return out
     }
 
     case ACTION.REFRESH_RECEIVE_ADDRESS: {

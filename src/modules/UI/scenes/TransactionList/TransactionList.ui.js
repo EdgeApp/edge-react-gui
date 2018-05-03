@@ -1,6 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
+import slowlog from 'react-native-slowlog'
 import type { EdgeDenomination } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Animated, FlatList, Image, TouchableHighlight, TouchableOpacity, View } from 'react-native'
@@ -88,7 +89,13 @@ export class TransactionList extends Component<Props, State> {
     width: undefined,
     currentCurrencyCode: '',
     numTransactions: 0,
-    currentWalletId: ''
+    currentWalletId: '',
+    currentEndIndex: 0
+  }
+
+  constructor (props: Props) {
+    super(props)
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   componentWillReceiveProps (nextProps: Props) {
@@ -314,14 +321,8 @@ export class TransactionList extends Component<Props, State> {
     Actions.transactionDetails({ edgeTransaction, thumbnailPath })
   }
 
-  isReceivedTransaction (tx: TransactionListTx) {
-    if (tx.nativeAmount) {
-      return bns.gt(tx.nativeAmount, '0')
-    }
-  }
-
   isSentTransaction (tx: TransactionListTx) {
-    return !this.isReceivedTransaction(tx)
+    return (tx.nativeAmount && (tx.nativeAmount.charAt(0) === '-'))
   }
 
   renderTx = (transaction: TransactionListTx, completedTxList: Array<TransactionListTx>) => {

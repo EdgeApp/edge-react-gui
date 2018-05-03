@@ -23,6 +23,10 @@ import { getReceiveAddresses } from '../utils.js'
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
 export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => async (dispatch: Dispatch, getState: GetState) => {
+  const walletInfos = account.allKeys
+  const filteredWalletInfos = walletInfos.map(({ keys, id, ...info }) => info)
+  console.log('Wallet Infos:', filteredWalletInfos)
+
   const state = getState()
   const context = CORE_SELECTORS.getContext(state)
   let otpResetPending = false

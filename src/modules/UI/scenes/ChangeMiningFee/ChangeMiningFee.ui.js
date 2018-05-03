@@ -1,5 +1,6 @@
 // @flow
 
+import slowlog from 'react-native-slowlog'
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
 import { View } from 'react-native'
@@ -41,6 +42,7 @@ export default class ChangeMiningFee extends Component<ChangeMiningFeeProps, Sta
     this.state = {
       feeSetting: props.feeSetting
     }
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   componentWillUnmount () {

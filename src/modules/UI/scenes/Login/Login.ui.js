@@ -1,5 +1,6 @@
 // @flow
 
+import slowlog from 'react-native-slowlog'
 import type { EdgeAccount, EdgeContext } from 'edge-core-js'
 import { LoginScreen } from 'edge-login-ui-rn'
 import React, { Component } from 'react'
@@ -24,6 +25,7 @@ export default class Login extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = { key: 0 }
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   onLogin = (error: ?Error = null, account: ?EdgeAccount, touchIdInfo: ?Object = null) => {

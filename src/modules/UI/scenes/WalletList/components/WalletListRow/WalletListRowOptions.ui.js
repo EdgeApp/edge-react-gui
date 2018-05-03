@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-
+import slowlog from 'react-native-slowlog'
 import * as Constants from '../../../../../../constants/indexConstants'
 import { MenuDropDownStyle } from '../../../../../../styles/indexStyles'
 import { MenuDropDown } from '../../../../components/MenuDropDown/MenuDropDown.ui.js'
@@ -26,6 +26,7 @@ export default class WalletListRowOptions extends Component<Props> {
         this.options.push(temp)
       }
     }
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   optionAction = (optionKey: string) => {

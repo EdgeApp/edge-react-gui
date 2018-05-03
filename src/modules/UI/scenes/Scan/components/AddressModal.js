@@ -1,5 +1,6 @@
 // @flow
 
+import slowlog from 'react-native-slowlog'
 import type { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Clipboard } from 'react-native'
@@ -37,6 +38,7 @@ export default class AddressModal extends Component<Props, State> {
       uri: '',
       clipboard: ''
     }
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   _setClipboard (props: Props) {

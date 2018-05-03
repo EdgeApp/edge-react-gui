@@ -1,5 +1,6 @@
 // @flow
 
+import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { ActivityIndicator, Text, TouchableHighlight, View } from 'react-native'
 import Camera from 'react-native-camera'
@@ -46,6 +47,11 @@ const ADDRESS_TEXT = s.strings.fragment_send_address
 const FLASH_TEXT = s.strings.fragment_send_flash
 
 export default class Scan extends Component<Props> {
+  constructor (props: Props) {
+    super(props)
+    slowlog(this, /.*/, global.slowlogOptions)
+  }
+
   render () {
     const { addressModalDoneButtonPressed, legacyAddressModalContinueButtonPressed, legacyAddressModalCancelButtonPressed } = this.props
 

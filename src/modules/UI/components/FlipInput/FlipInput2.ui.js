@@ -1,5 +1,6 @@
 // @flow
 
+import slowlog from 'react-native-slowlog'
 import { bns } from 'biggystring'
 import React, { Component } from 'react'
 import { Animated, Platform, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
@@ -115,6 +116,7 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
   constructor (props: Props) {
     super(props)
     this.state = getInitialState(props)
+    slowlog(this, /.*/, global.slowlogOptions)
   }
   componentWillMount () {
     this.animatedValue = new Animated.Value(0)
