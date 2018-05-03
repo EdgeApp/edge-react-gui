@@ -1,5 +1,6 @@
 // @flow
 
+import slowlog from 'react-native-slowlog'
 import _ from 'lodash'
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, ScrollView, View } from 'react-native'
@@ -58,6 +59,7 @@ export class AddToken extends Component<AddTokenProps, State> {
       decimalPlaces: this.props.decimalPlaces || '',
       multiplier: ''
     }
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   render () {

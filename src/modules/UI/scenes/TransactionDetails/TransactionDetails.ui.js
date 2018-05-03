@@ -1,5 +1,6 @@
 // @flow
 
+import slowlog from 'react-native-slowlog'
 import { bns } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeDenomination, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
@@ -139,6 +140,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
         symbol: ''
       }
     }
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   onFocusPayee = () => {

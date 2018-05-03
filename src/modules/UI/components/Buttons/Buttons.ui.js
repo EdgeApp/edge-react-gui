@@ -1,5 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
+import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { TouchableHighlight, View } from 'react-native'
 
@@ -19,6 +20,7 @@ class PrimaryButton extends Component {
         this.style.push(props.style)
       }
     }
+    slowlog(this, /.*/, global.slowlogOptions)
   }
   onPress = () => {
     if (!this.props.processingFlag) {

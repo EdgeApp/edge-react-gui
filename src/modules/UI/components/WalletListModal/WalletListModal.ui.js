@@ -1,5 +1,6 @@
 // @flow
 
+import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { ScrollView } from 'react-native'
 import * as Animatable from 'react-native-animatable'
@@ -18,6 +19,11 @@ type Props = {
   currentScene: string
 }
 export default class WalletListModal extends Component<Props> {
+  constructor (props: any) {
+    super(props)
+    slowlog(this, /.*/, global.slowlogOptions)
+  }
+
   render () {
     const top = this.props.topDisplacement ? this.props.topDisplacement : 38
     return (

@@ -1,5 +1,6 @@
 // @flow
 
+import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -92,6 +93,7 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
       toExchangeAmount: ''
     }
     this.state = newState
+    slowlog(this, /.*/, global.slowlogOptions)
   }
   componentWillMount () {
     this.props.getShapeShiftTokens()

@@ -1,5 +1,6 @@
 // @flow
 
+import slowlog from 'react-native-slowlog'
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
 import { View } from 'react-native'
@@ -37,6 +38,7 @@ export default class CustomFeesModal extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {}
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   componentWillMount = () => {
