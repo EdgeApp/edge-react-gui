@@ -14,7 +14,7 @@ type XPubModalOwnProps = {
 }
 
 type XPubModalStateProps = {
-  xPubKeySyntax: string,
+  xPubSyntax: string,
   visibilityBoolean: boolean,
 }
 
@@ -31,7 +31,7 @@ type XPubModalComponentProps = XPubModalOwnProps & XPubModalStateProps & XPubMod
 export default class XPubModal extends Component<XPubModalComponentProps, XPubModalState> {
   _onPressCopy = () => {
     try {
-      Clipboard.setString(this.props.xPubKeySyntax)
+      Clipboard.setString(this.props.xPubSyntax)
       Alert.alert(
         s.strings.fragment_wallets_pubkey_copied_title,
         s.strings.fragment_wallets_pubkey_copied_success,
@@ -56,11 +56,11 @@ export default class XPubModal extends Component<XPubModalComponentProps, XPubMo
         </InteractiveModal.Icon>
 
         <InteractiveModal.Title>
-          <Text>{s.strings.fragment_wallets_view_xpub_key}</Text>
+          <Text>{s.strings.fragment_wallets_view_xpub}</Text>
         </InteractiveModal.Title>
 
         <InteractiveModal.Body>
-          <InteractiveModal.Description style={styles.xPubKeySyntax}>{this.props.xPubKeySyntax}</InteractiveModal.Description>
+          <InteractiveModal.Description style={styles.xPubSyntax}>{this.props.xPubSyntax}</InteractiveModal.Description>
         </InteractiveModal.Body>
 
         <InteractiveModal.Footer>

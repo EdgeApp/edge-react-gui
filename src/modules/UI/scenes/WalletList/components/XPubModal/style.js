@@ -27,7 +27,7 @@ export const styles = {
     alignItems: 'stretch',
     justifyContent: 'center'
   },
-  xPubKeySyntax: {
+  xPubSyntax: {
     textAlign: 'center'
   },
   pasteButtonRow: {

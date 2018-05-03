@@ -108,8 +108,8 @@ export type State = {
         walletId: string,
         walletName: string,
         privateSeedUnlocked: boolean,
-        xPubKeySyntax: string,
-        viewXPubKeyWalletModalVisible: boolean
+        xPubSyntax: string,
+        viewXPubWalletModalVisible: boolean
       },
       walletTransferList: {
         walletTransferList: Array<any>,

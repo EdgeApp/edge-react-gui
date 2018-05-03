@@ -41,9 +41,9 @@ export const WALLET_OPTIONS = {
     label: s.strings.string_add_edit_tokens,
     modalVisible: false
   },
-  VIEW_XPUB_KEY: {
-    value: 'viewXPubKey',
-    label: s.strings.fragment_wallets_view_xpub_key,
+  VIEW_XPUB: {
+    value: 'viewXPub',
+    label: s.strings.fragment_wallets_view_xpub,
     modalVisible: true
   }
 }
@@ -56,7 +56,7 @@ export const RENAME_VALUE = 'rename'
 export const ADD_TOKENS_VALUE = 'addTokensValue'
 export const DELETE_VALUE = 'delete'
 export const GET_SEED_VALUE = 'getSeed'
-export const VIEW_XPUB_KEY_VALUE = 'viewXPubKey'
+export const VIEW_XPUB_VALUE = 'viewXPub'
 export const RESYNC_VALUE = 'resync'
 export const ADD_TOKEN_VALUE = 'addToken'
 export const ARCHIVE_VALUE = 'archive'

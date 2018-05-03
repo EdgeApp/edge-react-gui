@@ -102,12 +102,12 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
         dispatch(wrap(OPEN_MODAL_VALUE(Constants.GET_SEED_VALUE), { walletId }))
       }
 
-    case Constants.VIEW_XPUB_KEY_VALUE:
+    case Constants.VIEW_XPUB_VALUE:
       return (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
         const wallet = CORE_SELECTORS.getWallet(state, walletId)
-        const xPubKey = wallet.getDisplayPublicSeed()
-        dispatch(wrap(OPEN_MODAL_VALUE(Constants.VIEW_XPUB_KEY_VALUE), { xPubKey, walletId }))
+        const xPub = wallet.getDisplayPublicSeed()
+        dispatch(wrap(OPEN_MODAL_VALUE(Constants.VIEW_XPUB_VALUE), { xPub, walletId }))
       }
   }
 }
