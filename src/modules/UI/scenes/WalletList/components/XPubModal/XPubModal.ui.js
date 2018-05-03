@@ -7,7 +7,6 @@ import s from '../../../../../../locales/strings.js'
 import { InteractiveModal } from '../../../../components/Modals/InteractiveModal/InteractiveModal.ui.js'
 import {PrimaryButton} from '../../../../components/Modals/components/PrimaryButton.ui.js'
 import { Icon } from '../../../../components/Icon/Icon.ui.js'
-import styles from './style.js'
 
 type XPubModalOwnProps = {
 
@@ -47,7 +46,6 @@ export default class XPubModal extends Component<XPubModalComponentProps, XPubMo
 
   render () {
     const osPrefix = Platform.OS === 'ios' ? 'ios-' : 'md-'
-    // const iconNa = <IonIcon name={`${osPrefix}eye`} size={24} color={colors.primary} style={styles.icon} />
     return (
 
       <InteractiveModal isActive={this.props.visibilityBoolean} onBackButtonPress={this.props.onExit} onBackdropPress={this.props.onExit} onModalHide={this.props.onExit}>
@@ -60,7 +58,7 @@ export default class XPubModal extends Component<XPubModalComponentProps, XPubMo
         </InteractiveModal.Title>
 
         <InteractiveModal.Body>
-          <InteractiveModal.Description style={styles.xPubSyntax}>{this.props.xPubSyntax}</InteractiveModal.Description>
+          <InteractiveModal.Description style={{textAlign: 'center'}}>{this.props.xPubSyntax}</InteractiveModal.Description>
         </InteractiveModal.Body>
 
         <InteractiveModal.Footer>
