@@ -51,9 +51,7 @@ type AndroidHackSpacerProps = {
 }
 export class AndroidHackSpacer extends Component<AndroidHackSpacerProps> {
   render () {
-    return (
-      <View style={styles.androidHackSpacer} />
-    )
+    return <View style={styles.androidHackSpacer} />
   }
 }
 
@@ -187,17 +185,13 @@ export class InteractiveModal extends Component<Props> {
     const footer = children.find(child => child.type === InteractiveModal.Footer)
 
     return (
-      <Modal useNativeDriver hideModalContentWhileAnimating
-        avoidKeyboard
-        isVisible={isActive}
-        {...this.props}
-        style={[styles.modal, this.props.style]}>
+      <Modal useNativeDriver avoidKeyboard isVisible={isActive} {...this.props} style={[styles.modal, this.props.style]}>
         {icon}
         <Container>
           <Icon.AndroidHackSpacer />
           <Header style={styles.header}>{title}</Header>
-          <Body>{body}</Body>
-          <Footer>{footer}</Footer>
+          {body}
+          {footer}
         </Container>
       </Modal>
     )

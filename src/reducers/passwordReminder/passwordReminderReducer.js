@@ -66,11 +66,12 @@ export type PasswordReminderReducerAction =
       }
     }
   | {
-    type: 'REQUEST_CHANGE_PASSWORD',
-    data: {
-      currentDate: number
+      type: 'REQUEST_CHANGE_PASSWORD',
+      data: {
+        currentDate: number
+      }
     }
-  } | {
+  | {
       type: 'default',
       data: {}
     }
@@ -162,14 +163,12 @@ export const untranslatedReducer = (state: PasswordReminderState = initialState,
     }
 
     case 'PASSWORD_REMINDER_POSTPONED': {
-      const lastPasswordUse = action.data.currentDate // fake to prevent recalulation using older date
       const nonPasswordDaysRemaining = NON_PASSWORD_DAYS_POSTPONEMENT
       const nonPasswordLoginsRemaining = NON_PASSWORD_LOGINS_POSTPONEMENT
-      const needsPasswordCheck = false
+      const needsPasswordCheck = nonPasswordLoginsRemaining <= 0 || nonPasswordDaysRemaining <= 0
 
       return {
         ...state,
-        lastPasswordUse,
         needsPasswordCheck,
         nonPasswordDaysRemaining,
         nonPasswordLoginsRemaining

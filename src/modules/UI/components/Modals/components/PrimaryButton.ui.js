@@ -28,17 +28,10 @@ export type Props = {
 export class PrimaryButton extends Component<Props> {
   static Text = Text
   render () {
+    const { children, style, ...props } = this.props
     return (
-      <TouchableHighlight
-        underlayColor={rawStyles.primaryButtonUnderlay.color}
-        numberOfLines={1}
-        ellipsizeMode={'middle'}
-        {...this.props}
-        style={[styles.button, styles.primaryButton, this.props.style]}
-      >
-        <View>
-          {this.props.children}
-        </View>
+      <TouchableHighlight underlayColor={rawStyles.primaryButtonUnderlay.color} {...props} style={[styles.button, styles.primaryButton, style]}>
+        <View>{this.props.children}</View>
       </TouchableHighlight>
     )
   }

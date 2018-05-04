@@ -7,11 +7,10 @@ import THEME from '../../../../../theme/variables/airbitz.js'
 export const rawStyles = {
   //  ALL BUTTONS
   button: {
-    height: 55,
+    padding: 14,
     borderRadius: 5,
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 12
+    justifyContent: 'center'
   },
   buttonText: {
     fontFamily: THEME.FONTS.DEFAULT,

@@ -6,7 +6,7 @@ import { Actions } from 'react-native-router-flux'
 import { checkPassword, requestChangePassword, setPasswordReminder } from './indexPasswordReminderModal.js'
 import { PasswordReminderModal } from './PasswordReminderModal.ui.js'
 import { postponePasswordReminder } from '../../../../reducers/passwordReminder/indexPasswordReminder.js'
-import {CHANGE_PASSWORD} from '../../../../constants/indexConstants.js'
+import { CHANGE_PASSWORD } from '../../../../constants/indexConstants.js'
 
 import type { State, Dispatch } from '../../../ReduxTypes.js'
 import type { PasswordReminder } from '../../../../types.js'

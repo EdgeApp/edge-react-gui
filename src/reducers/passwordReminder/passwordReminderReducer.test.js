@@ -283,4 +283,25 @@ describe('PasswordReminder', () => {
       })
     })
   })
+
+  describe('Change Password Requested', () => {
+    describe('REQUEST_CHANGE_PASSWORD', () => {
+      test('Set false needsPasswordCheck', () => {
+        const action = {
+          type: 'REQUEST_CHANGE_PASSWORD',
+          data: {
+            currentDate: Date.now()
+          }
+        }
+        const state = {
+          ...initialState,
+          needsPasswordCheck: true
+        }
+        const expected = false
+        const actual = uut(state, action).needsPasswordCheck
+
+        expect(actual).toEqual(expected)
+      })
+    })
+  })
 })

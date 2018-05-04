@@ -1,14 +1,14 @@
 // @flow
 
 import React, { Component } from 'react'
-import { ActivityIndicator } from 'react-native'
+import { ActivityIndicator, Text } from 'react-native'
 import { equals } from 'ramda'
 
 import * as Constants from '../../../../constants/indexConstants.js'
 import s from '../../../../locales/strings.js'
 import { Icon } from '../Icon/Icon.ui'
 
-import { Modal, SecondaryButton, TertiaryButton, Title } from './components'
+import { InteractiveModal, SecondaryButton, TertiaryButton } from '../Modals'
 import { PasswordInput } from './components/PasswordInput.ui.js'
 import { styles } from './styles.js'
 import type { PasswordReminder } from '../../../../types.js'
@@ -43,46 +43,52 @@ export class PasswordReminderModal extends Component<Props, State> {
 
   render () {
     return (
-      <Modal isVisible={this.props.isVisible} onModalHide={this.reset}>
-        <Modal.Container>
-          <Modal.FeaturedIcon>
-            <Icon style={styles.icon} name={Constants.LOCKED_ICON} type={Constants.ION_ICONS} />
-          </Modal.FeaturedIcon>
+      <InteractiveModal isActive={this.props.isVisible} onModalHide={this.reset}>
+        <InteractiveModal.Icon>
+          <Icon style={styles.icon} name={Constants.LOCKED_ICON} type={Constants.ION_ICONS} />
+        </InteractiveModal.Icon>
 
-          <Modal.Header>
-            <Title>{s.strings.password_reminder_remember_your_password}</Title>
-          </Modal.Header>
+        <InteractiveModal.Title>
+          <Text>{s.strings.password_reminder_remember_your_password}</Text>
+        </InteractiveModal.Title>
 
-          <Modal.Body>
-            <Modal.Description style={styles.descriptionTop}>{s.strings.password_reminder_you_will_need_your_password}</Modal.Description>
-            <Modal.Description style={styles.descriptionBottom}>{s.strings.password_reminder_enter_password_below}</Modal.Description>
+        <InteractiveModal.Body>
+          <InteractiveModal.Description>{s.strings.password_reminder_you_will_need_your_password}</InteractiveModal.Description>
+          <InteractiveModal.Description>{s.strings.password_reminder_enter_password_below}</InteractiveModal.Description>
 
-            <Modal.Item>
+          <InteractiveModal.Row>
+            <InteractiveModal.Item>
               <PasswordInput onChangeText={this.onChangeText} error={this.error()} />
-            </Modal.Item>
-          </Modal.Body>
+            </InteractiveModal.Item>
+          </InteractiveModal.Row>
+        </InteractiveModal.Body>
 
-          <Modal.Footer style={styles.footer}>
-            <Modal.Item style={styles.buttonContainer}>
+        <InteractiveModal.Footer>
+          <InteractiveModal.Row>
+            <InteractiveModal.Item>
               <TertiaryButton onPress={this.onSubmit} disabled={this.isChecking()}>
                 {this.isChecking() ? <ActivityIndicator /> : <TertiaryButton.Text>{s.strings.password_reminder_check_password}</TertiaryButton.Text>}
               </TertiaryButton>
-            </Modal.Item>
+            </InteractiveModal.Item>
+          </InteractiveModal.Row>
 
-            <Modal.Item style={styles.buttonContainer}>
+          <InteractiveModal.Row>
+            <InteractiveModal.Item>
               <TertiaryButton onPress={this.onRequestChangePassword} disabled={this.isChecking()}>
                 <TertiaryButton.Text>{s.strings.password_reminder_forgot_password}</TertiaryButton.Text>
               </TertiaryButton>
-            </Modal.Item>
+            </InteractiveModal.Item>
+          </InteractiveModal.Row>
 
-            <Modal.Item style={styles.buttonContainer}>
+          <InteractiveModal.Row>
+            <InteractiveModal.Item>
               <SecondaryButton onPress={this.onPostpone} disabled={this.isChecking()}>
                 <SecondaryButton.Text>{s.strings.password_reminder_postpone}</SecondaryButton.Text>
               </SecondaryButton>
-            </Modal.Item>
-          </Modal.Footer>
-        </Modal.Container>
-      </Modal>
+            </InteractiveModal.Item>
+          </InteractiveModal.Row>
+        </InteractiveModal.Footer>
+      </InteractiveModal>
     )
   }
 

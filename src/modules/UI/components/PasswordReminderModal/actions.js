@@ -22,11 +22,8 @@ export const checkPassword = (password: string) => (dispatch: Dispatch, getState
   dispatch(checkPasswordStart())
   ACCOUNT_API.checkPassword(account, password).then(isValidPassword => {
     if (isValidPassword) {
-      Alert.alert(
-        s.strings.password_reminder_verified,
-        s.strings.password_reminder_great_job
-      )
       dispatch(checkPasswordSuccess())
+      setTimeout(() => Alert.alert(s.strings.password_reminder_verified, s.strings.password_reminder_great_job), 500)
     } else {
       dispatch(checkPasswordFail())
     }

@@ -28,15 +28,10 @@ export type Props = {
 export class TertiaryButton extends Component<Props> {
   static Text = Text
   render () {
+    const { children, style, ...props } = this.props
     return (
-      <TouchableHighlight
-        underlayColor={rawStyles.tertiaryButtonUnderlay.color}
-        {...this.props}
-        style={[styles.button, styles.tertiaryButton, this.props.style]}
-      >
-        <View>
-          {this.props.children}
-        </View>
+      <TouchableHighlight underlayColor={rawStyles.tertiaryButtonUnderlay.color} {...props} style={[styles.button, styles.tertiaryButton, style]}>
+        <View>{this.props.children}</View>
       </TouchableHighlight>
     )
   }
