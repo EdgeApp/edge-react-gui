@@ -14,9 +14,10 @@ export type ContainerProps = {
 }
 export class Container extends Component<ContainerProps> {
   render () {
+    const { children, style, ...props } = this.props
     return (
-      <View {...this.props} style={[styles.container, this.props.style]}>
-        {this.props.children}
+      <View style={[styles.container, style]} {...props}>
+        {children}
       </View>
     )
   }
@@ -29,9 +30,10 @@ export type HeaderProps = {
 }
 export class Header extends Component<HeaderProps> {
   render () {
+    const { children, style, ...props } = this.props
     return (
-      <View {...this.props} style={[styles.header, this.props.style]}>
-        {this.props.children}
+      <View style={[styles.header, style]} {...props}>
+        {children}
       </View>
     )
   }
@@ -63,9 +65,10 @@ export type IconProps = {
 export class Icon extends Component<IconProps> {
   static AndroidHackSpacer = AndroidHackSpacer
   render () {
+    const { children, style, ...props } = this.props
     return (
-      <View {...this.props} style={[styles.icon, this.props.style]}>
-        {this.props.children}
+      <View style={[styles.icon, style]} {...props}>
+        {children}
       </View>
     )
   }
@@ -78,9 +81,10 @@ type TitleProps = {
 }
 export class Title extends Component<TitleProps> {
   render () {
+    const { children, style, ...props } = this.props
     return (
-      <Text style={[styles.title, this.props.style]} {...this.props}>
-        {this.props.children}
+      <Text style={[styles.title, style]} {...props}>
+        {children}
       </Text>
     )
   }
@@ -93,9 +97,10 @@ export type DescriptionProps = {
 }
 export class Description extends Component<DescriptionProps> {
   render () {
+    const { children, style, ...props } = this.props
     return (
-      <Text {...this.props} style={[styles.description, this.props.style]}>
-        {this.props.children}
+      <Text style={[styles.description, style]} {...props}>
+        {children}
       </Text>
     )
   }
@@ -108,9 +113,10 @@ type BodyProps = {
 }
 export class Body extends Component<BodyProps> {
   render () {
+    const { children, style, ...props } = this.props
     return (
-      <View style={[styles.body, this.props.style]} {...this.props}>
-        {this.props.children}
+      <View style={[styles.body, style]} {...props}>
+        {children}
       </View>
     )
   }
@@ -123,9 +129,10 @@ type FooterProps = {
 }
 export class Footer extends Component<FooterProps> {
   render () {
+    const { children, style, ...props } = this.props
     return (
-      <View style={[styles.footer, this.props.style]} {...this.props}>
-        {this.props.children}
+      <View style={[styles.footer, style]} {...props}>
+        {children}
       </View>
     )
   }
@@ -138,9 +145,10 @@ type ItemProps = {
 }
 export class Item extends Component<ItemProps> {
   render () {
+    const { children, style, ...props } = this.props
     return (
-      <View style={[styles.item, this.props.style]} {...this.props}>
-        {this.props.children}
+      <View style={[styles.item, style]} {...props}>
+        {children}
       </View>
     )
   }
@@ -153,9 +161,10 @@ type RowProps = {
 }
 export class Row extends Component<RowProps> {
   render () {
+    const { children, style, ...props } = this.props
     return (
-      <View style={[styles.row, this.props.style]} {...this.props}>
-        {this.props.children}
+      <View style={[styles.row, style]} {...props}>
+        {children}
       </View>
     )
   }
@@ -177,7 +186,7 @@ export class InteractiveModal extends Component<Props> {
   static Row = Row
 
   render () {
-    const { isActive } = this.props
+    const { isActive, style, ...props } = this.props
     const children = React.Children.toArray(this.props.children)
     const icon = children.find(child => child.type === InteractiveModal.Icon)
     const title = children.find(child => child.type === InteractiveModal.Title)
@@ -185,7 +194,7 @@ export class InteractiveModal extends Component<Props> {
     const footer = children.find(child => child.type === InteractiveModal.Footer)
 
     return (
-      <Modal useNativeDriver avoidKeyboard isVisible={isActive} {...this.props} style={[styles.modal, this.props.style]}>
+      <Modal useNativeDriver avoidKeyboard isVisible={isActive} style={[styles.modal, style]} {...props}>
         {icon}
         <Container>
           <Icon.AndroidHackSpacer />

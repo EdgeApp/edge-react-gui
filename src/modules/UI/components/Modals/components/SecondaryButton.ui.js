@@ -2,27 +2,28 @@
 
 import React, { Component } from 'react'
 import type { Node } from 'react-native'
-import RN, { TouchableHighlight, View } from 'react-native'
+import { StyleSheet, Text as RNText, TouchableHighlight, View } from 'react-native'
 
 import { styles, rawStyles } from './styles.js'
 
 export type TextProps = {
   children: Node,
-  style?: Object
+  style?: StyleSheet.Styles
 }
 class Text extends Component<TextProps> {
   render () {
+    const { children, style, ...props } = this.props
     return (
-      <RN.Text numberOfLines={1} ellipsizeMode={'middle'} {...this.props} style={[styles.buttonText, styles.secondaryButtonText, this.props.style]}>
-        {this.props.children}
-      </RN.Text>
+      <RNText numberOfLines={1} ellipsizeMode={'middle'} style={[styles.buttonText, styles.secondaryButtonText, style]} {...props}>
+        {children}
+      </RNText>
     )
   }
 }
 
 export type Props = {
   children: Node,
-  style?: Object,
+  style?: StyleSheet.Styles,
   onPress: () => void
 }
 export class SecondaryButton extends Component<Props> {
@@ -30,8 +31,8 @@ export class SecondaryButton extends Component<Props> {
   render () {
     const { children, style, ...props } = this.props
     return (
-      <TouchableHighlight underlayColor={rawStyles.secondaryButtonUnderlay.color} {...props} style={[styles.button, styles.secondaryButton, style]}>
-        <View>{this.props.children}</View>
+      <TouchableHighlight underlayColor={rawStyles.secondaryButtonUnderlay.color} style={[styles.button, styles.secondaryButton, style]} {...props}>
+        <View>{children}</View>
       </TouchableHighlight>
     )
   }
