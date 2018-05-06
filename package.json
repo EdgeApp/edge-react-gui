@@ -131,6 +131,7 @@
     "react-native-tcp": "git://github.com/Airbitz/react-native-tcp.git#c6af8f728fcbbae23d20c0211fd5b6c322f7a446",
     "react-native-udp": "^2.0.0",
     "react-native-vector-icons": "^4.2.0",
+    "react-native-webview-file-upload-android": "https://github.com/rhinogram/react-native-webview-file-upload-android.git#feature/support-file-downloading",
     "react-redux": "^5.0.5",
     "readable-stream": "^1.0.33",
     "redux": "^3.7.1",
@@ -147,6 +148,7 @@
     "babel-eslint": "^8.1.0",
     "babel-preset-react-native": "^1.9.0",
     "body-parser": "^1.18.2",
+    "edge-plugin-simplex": "https://github.com/Airbitz/edge-plugin-simplex.git#b49f2d9",
     "eslint": "^4.17.0",
     "eslint-config-standard": "^11.0.0-beta.0",
     "eslint-plugin-flowtype": "^2.35.0",
@@ -156,7 +158,6 @@
     "eslint-plugin-react": "^7.3.0",
     "eslint-plugin-react-native": "^3.0.1",
     "eslint-plugin-standard": "^3.0.1",
-    "edge-plugin-simplex": "https://github.com/teneighty/edge-plugin-simplex.git#master",
     "express": "^4.16.2",
     "flow-bin": "^0.62.0",
     "flow-coverage-report": "^0.4.1",
@@ -173,8 +174,15 @@
     "updot": "^1.1.7"
   },
   "flow-coverage-report": {
-    "includeGlob": ["src/**/*.js", "*.js"],
-    "type": ["text", "html", "json"]
+    "includeGlob": [
+      "src/**/*.js",
+      "*.js"
+    ],
+    "type": [
+      "text",
+      "html",
+      "json"
+    ]
   },
   "importSort": {
     ".js, .es": {
@@ -184,8 +192,12 @@
   },
   "jest": {
     "preset": "react-native",
-    "transformIgnorePatterns": ["node_modules/mobx-react"],
-    "setupFiles": ["./testSetup.js"]
+    "transformIgnorePatterns": [
+      "node_modules/mobx-react"
+    ],
+    "setupFiles": [
+      "./testSetup.js"
+    ]
   },
   "prettier": {
     "printWidth": 160
@@ -218,12 +230,14 @@
     "zlib": "browserify-zlib"
   },
   "rnpm": {
-    "assets": ["./src/assets/fonts"]
+    "assets": [
+      "./src/assets/fonts"
+    ]
   },
   "plugins": {
     "buysell": [
       "edge-plugin-simplex"
     ],
-    "spend": [ ]
+    "spend": []
   }
 }

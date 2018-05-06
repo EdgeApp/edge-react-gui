@@ -10,6 +10,7 @@ import {
   Image,
   TouchableWithoutFeedback,
   BackHandler} from 'react-native'
+import AndroidWebView from 'react-native-webview-file-upload-android'
 import {connect} from 'react-redux'
 import {Actions} from 'react-native-router-flux'
 
@@ -239,12 +240,22 @@ class PluginView extends React.Component<PluginProps, PluginState> {
     return (
       <SafeAreaView>
         <Gradient style={styles.gradient} />
-        <WebView
-          ref={this._setWebview}
-          onMessage={this._onMessage}
-          source={this._renderWebView()}
-          scalesPageToFit={contentScaling}
-        />
+        {Platform.select({
+          android: () =>
+            <AndroidWebView
+              ref={this._setWebview}
+              onMessage={this._onMessage}
+              source={this._renderWebView()}
+              scalesPageToFit={contentScaling}
+            />,
+          ios: () =>
+            <WebView
+              ref={this._setWebview}
+              onMessage={this._onMessage}
+              source={this._renderWebView()}
+              scalesPageToFit={contentScaling}
+            />
+        })()}
       </SafeAreaView>
     )
   }
