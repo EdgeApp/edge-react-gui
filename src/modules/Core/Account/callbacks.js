@@ -60,7 +60,7 @@ const makeAccountCallbacks = (dispatch: Dispatch): EdgeAccountCallbacks => {
       dispatch(newTransactionsRequest(walletId, transactions))
       dispatch(refreshWallet(walletId))
       // $FlowFixMe
-      dispatch(refreshTransactionsRequest(walletId, transactions))
+      // dispatch(refreshTransactionsRequest(walletId, transactions))
     },
 
     onBlockHeightChanged (walletId: string, blockHeight: number) {
