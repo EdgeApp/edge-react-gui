@@ -74,7 +74,7 @@
     "core-js": "2.5.2",
     "dns.js": "^1.0.1",
     "domain-browser": "^1.1.7",
-    "edge-core-js": "0.7.0",
+    "edge-core-js": "0.8.0",
     "edge-currency-bitcoin": "2.17.1",
     "edge-currency-ethereum": "0.10.1",
     "edge-exchange-plugins": "^0.2.0",
