@@ -31,18 +31,19 @@ export const WALLET_OPTIONS = {
   },
   SPLIT: {
     value: 'split',
-    currencyCode: 'BTC',
+    currencyCode: ['BTC'],
     label: s.strings.string_split_bitcoin_cash,
     modalVisible: true
   },
   MANAGE_TOKENS: {
     value: 'manageTokens',
-    currencyCode: 'ETH',
+    currencyCode: ['ETH'],
     label: s.strings.string_add_edit_tokens,
     modalVisible: false
   },
   VIEW_XPUB: {
     value: 'viewXPub',
+    currencyCode: ['BTC', 'BCH', 'DASH', 'FTC', 'ZER', 'LTC'],
     label: s.strings.fragment_wallets_view_xpub,
     modalVisible: true
   }
