@@ -45,7 +45,7 @@ export const rawStyles = {
   },
   item: {
     flex: 1,
-    padding: 6
+    padding: 4
   },
   row: {
     flexDirection: 'row'
@@ -59,7 +59,8 @@ export const rawStyles = {
     paddingVertical: 6,
     fontSize: 16,
     color: THEME.COLORS.GRAY_1,
-    fontFamily: THEME.FONTS.DEFAULT
+    fontFamily: THEME.FONTS.DEFAULT,
+    alignSelf: 'center'
   },
   debug: {
     borderColor: 'red',

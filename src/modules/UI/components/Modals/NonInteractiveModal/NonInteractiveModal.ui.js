@@ -15,9 +15,10 @@ export type ContainerProps = {
 }
 export class Container extends Component<ContainerProps> {
   render () {
+    const { children, style, ...props } = this.props
     return (
-      <View {...this.props} style={[styles.container, this.props.style]}>
-        {this.props.children}
+      <View style={[styles.container, style]} {...props}>
+        {children}
       </View>
     )
   }
@@ -30,9 +31,12 @@ export type HeaderProps = {
 }
 export class Header extends Component<HeaderProps> {
   render () {
+    const { children, style, ...props } = this.props
     return (
-      <View style={[styles.header, this.props.style]}>
-        <Gradient reverse style={[styles.gradient]}>{this.props.children}</Gradient>
+      <View style={[styles.header, style]} {...props}>
+        <Gradient reverse style={[styles.gradient]}>
+          {children}
+        </Gradient>
       </View>
     )
   }
@@ -45,9 +49,10 @@ export type FooterProps = {
 }
 export class Footer extends Component<FooterProps> {
   render () {
+    const { children, style, ...props } = this.props
     return (
-      <View {...this.props} style={[styles.footer, this.props.style]}>
-        {this.props.children}
+      <View style={[styles.footer, style]} {...props}>
+        {children}
       </View>
     )
   }
@@ -60,9 +65,10 @@ export type IconProps = {
 }
 export class Icon extends Component<IconProps> {
   render () {
+    const { children, style, ...props } = this.props
     return (
-      <View {...this.props} style={[styles.icon, this.props.style]}>
-        {this.props.children}
+      <View style={[styles.icon, style]} {...props}>
+        {children}
       </View>
     )
   }
@@ -75,9 +81,10 @@ export type MessageProps = {
 }
 export class Message extends Component<MessageProps> {
   render () {
+    const { children, style, ...props } = this.props
     return (
-      <Text {...this.props} style={[styles.message, this.props.style]}>
-        {this.props.children}
+      <Text style={[styles.message, style]} {...props}>
+        {children}
       </Text>
     )
   }
@@ -120,7 +127,7 @@ export class NonInteractiveModal extends Component<Props> {
     const message = children.find(child => child.type === NonInteractiveModal.Message)
 
     return (
-      <Modal useNativeDriver hideModalContentWhileAnimating {...this.props} isVisible={isVisible} onModalShow={this.onModalShow} onModalHide={this.onModalHide}>
+      <Modal useNativeDriver isVisible={isVisible} onModalShow={this.onModalShow} onModalHide={this.onModalHide} {...this.props}>
         <Container style={styles.container}>
           <Header>{icon}</Header>
           <Footer>{message}</Footer>

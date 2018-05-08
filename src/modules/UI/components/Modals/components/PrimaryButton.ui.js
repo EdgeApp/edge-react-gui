@@ -2,43 +2,37 @@
 
 import React, { Component } from 'react'
 import type { Node } from 'react-native'
-import RN, { TouchableHighlight, View } from 'react-native'
+import { StyleSheet, Text as RNText, TouchableHighlight, View } from 'react-native'
 
 import { styles, rawStyles } from './styles.js'
 
 export type TextProps = {
   children: Node,
-  style?: Object
+  style?: StyleSheet.Styles
 }
 class Text extends Component<TextProps> {
   render () {
+    const { children, style, ...props } = this.props
     return (
-      <RN.Text numberOfLines={1} ellipsizeMode={'middle'} {...this.props} style={[styles.buttonText, styles.primaryButtonText, this.props.style]}>
-        {this.props.children}
-      </RN.Text>
+      <RNText numberOfLines={1} ellipsizeMode={'middle'} style={[styles.buttonText, styles.primaryButtonText, style]} {...props}>
+        {children}
+      </RNText>
     )
   }
 }
 
 export type Props = {
   children: Node,
-  style?: Object,
+  style?: StyleSheet.Styles,
   onPress: () => void
 }
 export class PrimaryButton extends Component<Props> {
   static Text = Text
   render () {
+    const { children, style, ...props } = this.props
     return (
-      <TouchableHighlight
-        underlayColor={rawStyles.primaryButtonUnderlay.color}
-        numberOfLines={1}
-        ellipsizeMode={'middle'}
-        {...this.props}
-        style={[styles.button, styles.primaryButton, this.props.style]}
-      >
-        <View>
-          {this.props.children}
-        </View>
+      <TouchableHighlight underlayColor={rawStyles.primaryButtonUnderlay.color} style={[styles.button, styles.primaryButton, style]} {...props}>
+        <View>{children}</View>
       </TouchableHighlight>
     )
   }
