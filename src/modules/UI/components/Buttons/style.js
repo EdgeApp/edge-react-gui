@@ -50,6 +50,11 @@ export const styles = {
     borderWidth: 1,
     borderColor: THEME.COLORS.SECONDARY
   },
+  tertiaryButtonTextWrap: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center'
+  },
   tertiaryButtonText: {
     color: THEME.COLORS.SECONDARY
   },

@@ -109,6 +109,8 @@ test('initialState', () => {
       getSeedWalletModalVisible: false,
       privateSeedUnlocked: false,
       renameWalletInput: '',
+      viewXPubWalletModalVisible: false,
+      xPubSyntax: '',
       renameWalletModalVisible: false,
       resyncWalletModalVisible: false,
       splitWalletModalVisible: false,
