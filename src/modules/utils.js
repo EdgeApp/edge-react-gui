@@ -444,3 +444,10 @@ export const getReceiveAddresses = (currencyWallets: { [id: string]: EdgeCurrenc
     }, {})
   })
 }
+
+export const MILLISECONDS_PER_DAY = 86400000
+export const daysBetween = (DateInMillisecondsA: number, dateInMillisecondsB: number) => {
+  const millisecondsBetween = dateInMillisecondsB - DateInMillisecondsA
+  const daysBetween = millisecondsBetween / MILLISECONDS_PER_DAY
+  return daysBetween
+}

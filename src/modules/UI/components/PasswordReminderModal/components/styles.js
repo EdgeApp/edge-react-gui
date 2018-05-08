@@ -4,26 +4,26 @@ import { StyleSheet } from 'react-native'
 
 import THEME from '../../../../../theme/variables/airbitz.js'
 
-export const rawStyles = {
+export const styles = {
   //  ALL BUTTONS
   button: {
-    padding: 14,
+    height: 55,
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center'
   },
   buttonText: {
     fontFamily: THEME.FONTS.DEFAULT,
-    fontSize: 18
+    fontSize: 16
   },
 
   // PRIMARY BUTTON
   primaryButton: {
-    backgroundColor: THEME.COLORS.SECONDARY
+    backgroundColor: THEME.COLORS.PRIMARY
   },
   primaryButtonUnderlay: { color: THEME.COLORS.PRIMARY },
   primaryButtonText: {
-    color: THEME.COLORS.WHITE
+    color: THEME.COLORS.PRIMARY
   },
 
   // SECONDARY BUTTON
@@ -44,12 +44,7 @@ export const rawStyles = {
   tertiaryButtonUnderlay: { color: THEME.COLORS.GRAY_3 },
   tertiaryButtonText: {
     color: THEME.COLORS.PRIMARY
-  },
-
-  debug: {
-    borderColor: 'red',
-    borderWidth: 1
   }
 }
 
-export const styles = StyleSheet.create(rawStyles)
+export default StyleSheet.create(styles)

@@ -14,7 +14,7 @@ import * as Constants from '../../../../constants/indexConstants'
 type Props = {
   style: StyleSheet.Styles,
   name: string,
-  size: number,
+  size?: number,
   type: string
 }
 
