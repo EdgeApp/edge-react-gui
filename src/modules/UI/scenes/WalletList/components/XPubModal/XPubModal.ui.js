@@ -3,10 +3,10 @@
 import React, { Component } from 'react'
 import { Platform, Text, Alert, Clipboard } from 'react-native'
 import s from '../../../../../../locales/strings.js'
-// import StylizedModal from '../../../../components/Modal/Modal.ui'
 import { InteractiveModal } from '../../../../components/Modals/InteractiveModal/InteractiveModal.ui.js'
 import {PrimaryButton} from '../../../../components/Modals/components/PrimaryButton.ui.js'
 import { Icon } from '../../../../components/Icon/Icon.ui.js'
+import {ION_ICONS, EYE_ICON} from '../../../../../../constants/IconConstants.js'
 
 type XPubModalOwnProps = {
 
@@ -50,7 +50,7 @@ export default class XPubModal extends Component<XPubModalComponentProps, XPubMo
 
       <InteractiveModal isActive={this.props.visibilityBoolean} onBackButtonPress={this.props.onExit} onBackdropPress={this.props.onExit} onModalHide={this.props.onExit}>
         <InteractiveModal.Icon>
-          <Icon style={{}} type={'ionIcons'} name={`${osPrefix}eye`} size={30} />
+          <Icon style={{}} type={ION_ICONS} name={`${osPrefix}${EYE_ICON}`} size={30} />
         </InteractiveModal.Icon>
 
         <InteractiveModal.Title>
