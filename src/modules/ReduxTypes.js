@@ -88,6 +88,9 @@ export type State = {
         contactsList: Array<GuiContact>,
         updatingBalance: boolean,
         searchVisible: boolean,
+        currentCurrencyCode: string,
+        currentWalletId: string,
+        numTransactions: number,
         currentEndIndex: number
       },
       transactionDetails: {

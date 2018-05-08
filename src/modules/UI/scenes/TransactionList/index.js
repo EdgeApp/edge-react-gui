@@ -1,5 +1,5 @@
 // @flow
 
-import TransactionList from './TransactionList.ui'
+import { TransactionList } from './TransactionList.ui'
 
 export default TransactionList

@@ -21,6 +21,45 @@ const transactions = (state: TransactionsState = [], action: Action) => {
   }
 }
 
+const currentCurrencyCode = (state: string = '', action: Action) => {
+  if (!action.data) return state
+  switch (action.type) {
+    case ACTION.UPDATE_TRANSACTIONS:
+      return action.data.currentCurrencyCode
+    default:
+      return state
+  }
+}
+
+const numTransactions = (state: number = 0, action: Action) => {
+  if (!action.data) return state
+  switch (action.type) {
+    case ACTION.UPDATE_TRANSACTIONS:
+      return action.data.numTransactions
+    default:
+      return state
+  }
+}
+
+const currentWalletId = (state: string = '', action: Action) => {
+  if (!action.data) return state
+  switch (action.type) {
+    case ACTION.UPDATE_TRANSACTIONS:
+      return action.data.currentWalletId
+    default:
+      return state
+  }
+}
+const currentEndIndex = (state: number = 0, action: Action) => {
+  if (!action.data) return state
+  switch (action.type) {
+    case ACTION.UPDATE_TRANSACTIONS:
+      return action.data.currentEndIndex
+    default:
+      return state
+  }
+}
+
 const searchVisible = (state: boolean = false, action: Action) => {
   switch (action.type) {
     case ACTION.TRANSACTIONS_SEARCH_VISIBLE:
@@ -67,6 +106,10 @@ const loadingTransactions = (state = false, action) => {
 
 export const transactionList = combineReducers({
   transactions,
+  currentCurrencyCode,
+  currentWalletId,
+  numTransactions,
+  currentEndIndex,
   searchVisible,
   updatingBalance,
   transactionsWalletListModalVisibility,
