@@ -215,9 +215,9 @@ export type ComponentLayoutMeasurements = {
 
 export type PasswordReminder = {
   needsPasswordCheck: boolean,
-  lastPasswordUse: Date,
-  nonPasswordDaysRemaining: number,
-  nonPasswordLoginsRemaining: number,
+  lastPasswordUse: number,
+  passwordUseCount: number,
+  nonPasswordLoginsCount: number,
   nonPasswordDaysLimit: number,
   nonPasswordLoginsLimit: number
 }

@@ -8,79 +8,82 @@ import { UNLOCK as UNLOCK_WALLET_SEED } from '../../modules/UI/scenes/WalletList
 import { CHECK_PASSWORD_SUCCESS, REQUEST_CHANGE_PASSWORD } from '../../modules/UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
 import { PASSWORD_REMINDER_POSTPONED } from './indexPasswordReminder.js'
 
-export const INITIAL_NON_PASSWORD_DAYS_LIMIT = 8
-export const INITIAL_NON_PASSWORD_LOGINS_LIMIT = 8
-export const INITIAL_NON_PASSWORD_DAYS_REMAINING = 8
-export const INITIAL_NON_PASSWORD_LOGINS_REMAINING = 8
+export const INITIAL_NON_PASSWORD_DAYS_LIMIT = 2
+export const INITIAL_NON_PASSWORD_LOGINS_LIMIT = 2
 
-export const MAX_NON_PASSWORD_DAYS_LIMIT = 32 // max number of consecutive non password days
+export const MAX_NON_PASSWORD_DAYS_LIMIT = 64 // max number of consecutive non password days
 export const MAX_NON_PASSWORD_LOGINS_LIMIT = 128 // max number of consecutive non password logins
 
 export const NON_PASSWORD_DAYS_GROWTH_RATE = 2
 export const NON_PASSWORD_LOGINS_GROWTH_RATE = 2
 
-export const NON_PASSWORD_DAYS_POSTPONEMENT = 4
-export const NON_PASSWORD_LOGINS_POSTPONEMENT = 4
+export const NON_PASSWORD_DAYS_POSTPONEMENT = 2
+export const NON_PASSWORD_LOGINS_POSTPONEMENT = 2
+
+export const INITIAL_PASSWORD_USES = 0
+
+type NewAccountAction = {
+  type: 'NEW_ACCOUNT_LOGIN',
+  data: {
+    currentDate: number
+  }
+}
+type PasswordUsedAction = {
+  type: 'PASSWORD_USED',
+  data: {
+    currentDate: number
+  }
+}
+type PasswordLoginAction = {
+  type: 'PASSWORD_LOGIN',
+  data: {
+    lastPasswordUse: number,
+    passwordUseCount: number,
+    nonPasswordDaysLimit: number,
+    nonPasswordLoginsLimit: number,
+    currentDate: number
+  }
+}
+type PasswordReminderPostponedAction = {
+  type: 'PASSWORD_REMINDER_POSTPONED',
+  data: {
+    currentDate: number
+  }
+}
+type NonPasswordLoginAction = {
+  type: 'NON_PASSWORD_LOGIN',
+  data: {
+    lastPasswordUse: number,
+    nonPasswordDaysLimit: number,
+    nonPasswordLoginsLimit: number,
+    nonPasswordLoginsCount: number,
+    currentDate: number
+  }
+}
+type ChangePasswordAction = {
+  type: 'REQUEST_CHANGE_PASSWORD',
+  data: {
+    currentDate: number
+  }
+}
+type DefaultAction = {
+  type: 'default',
+  data: {}
+}
 
 export type PasswordReminderReducerAction =
-  | {
-      type: 'NEW_ACCOUNT_LOGIN',
-      data: {
-        currentDate: number
-      }
-    }
-  | {
-      type: 'PASSWORD_USED',
-      data: {
-        currentDate: number
-      }
-    }
-  | {
-      type: 'PASSWORD_REMINDER_POSTPONED',
-      data: {
-        currentDate: number
-      }
-    }
-  | {
-      type: 'PASSWORD_LOGIN',
-      data: {
-        needsPasswordCheck: boolean,
-        lastPasswordUse: number,
-        nonPasswordDaysRemaining: number,
-        nonPasswordLoginsRemaining: number,
-        nonPasswordDaysLimit: number,
-        nonPasswordLoginsLimit: number,
-        currentDate: number
-      }
-    }
-  | {
-      type: 'NON_PASSWORD_LOGIN',
-      data: {
-        needsPasswordCheck: boolean,
-        lastPasswordUse: number,
-        nonPasswordDaysRemaining: number,
-        nonPasswordLoginsRemaining: number,
-        nonPasswordDaysLimit: number,
-        nonPasswordLoginsLimit: number,
-        currentDate: number
-      }
-    }
-  | {
-      type: 'REQUEST_CHANGE_PASSWORD',
-      data: {
-        currentDate: number
-      }
-    }
-  | {
-      type: 'default',
-      data: {}
-    }
+  | NewAccountAction
+  | PasswordUsedAction
+  | PasswordLoginAction
+  | PasswordReminderPostponedAction
+  | NonPasswordLoginAction
+  | ChangePasswordAction
+  | DefaultAction
 
 export type PasswordReminderState = {
   needsPasswordCheck: boolean,
   lastPasswordUse: number,
-  nonPasswordDaysRemaining: number,
-  nonPasswordLoginsRemaining: number,
+  passwordUseCount: number,
   nonPasswordDaysLimit: number,
   nonPasswordLoginsLimit: number
 }
@@ -88,8 +91,8 @@ export type PasswordReminderState = {
 export const initialState = {
   needsPasswordCheck: false,
   lastPasswordUse: 0,
-  nonPasswordDaysRemaining: INITIAL_NON_PASSWORD_DAYS_REMAINING,
-  nonPasswordLoginsRemaining: INITIAL_NON_PASSWORD_LOGINS_REMAINING,
+  passwordUseCount: 0,
+  nonPasswordLoginsCount: 0,
   nonPasswordDaysLimit: INITIAL_NON_PASSWORD_DAYS_LIMIT,
   nonPasswordLoginsLimit: INITIAL_NON_PASSWORD_LOGINS_LIMIT
 }
@@ -106,81 +109,76 @@ export const untranslatedReducer = (state: PasswordReminderState = initialState,
     }
 
     case 'PASSWORD_LOGIN': {
+      const passwordUseCount = action.data.passwordUseCount + 1
       const lastPasswordUse = action.data.currentDate
-      const nonPasswordDaysLimit = Math.min(action.data.nonPasswordDaysLimit * NON_PASSWORD_DAYS_GROWTH_RATE, MAX_NON_PASSWORD_DAYS_LIMIT)
-      const nonPasswordLoginsLimit = Math.min(action.data.nonPasswordLoginsLimit * NON_PASSWORD_LOGINS_GROWTH_RATE, MAX_NON_PASSWORD_LOGINS_LIMIT)
-      const nonPasswordDaysRemaining = nonPasswordDaysLimit
-      const nonPasswordLoginsRemaining = nonPasswordLoginsLimit
-      const needsPasswordCheck = nonPasswordLoginsRemaining <= 0 || nonPasswordDaysRemaining <= 0
+      const needsPasswordCheck = false
+      const nonPasswordLoginsCount = 0
+
+      const nonPasswordDaysLimit = Math.min(Math.pow(NON_PASSWORD_DAYS_GROWTH_RATE, passwordUseCount), MAX_NON_PASSWORD_DAYS_LIMIT)
+      const nonPasswordLoginsLimit = Math.min(Math.pow(NON_PASSWORD_LOGINS_GROWTH_RATE, passwordUseCount), MAX_NON_PASSWORD_LOGINS_LIMIT)
 
       return {
         ...state,
         lastPasswordUse,
-        nonPasswordDaysRemaining,
-        nonPasswordLoginsRemaining,
+        needsPasswordCheck,
         nonPasswordDaysLimit,
+        nonPasswordLoginsCount,
         nonPasswordLoginsLimit,
-        needsPasswordCheck
+        passwordUseCount
       }
     }
 
     case 'NON_PASSWORD_LOGIN': {
-      const lastPasswordUse = action.data.lastPasswordUse
-      const nonPasswordDaysLimit = action.data.nonPasswordDaysLimit
-      const nonPasswordLoginsLimit = action.data.nonPasswordLoginsLimit
-      const nonPasswordDaysRemaining = action.data.nonPasswordDaysLimit - daysBetween(action.data.lastPasswordUse, action.data.currentDate)
-      const nonPasswordLoginsRemaining = action.data.nonPasswordLoginsRemaining - 1
-      const needsPasswordCheck = nonPasswordLoginsRemaining <= 0 || nonPasswordDaysRemaining <= 0
+      const nonPasswordLoginsCount = action.data.nonPasswordLoginsCount + 1
+      const needsPasswordCheck =
+        nonPasswordLoginsCount >= action.data.nonPasswordLoginsLimit ||
+        daysBetween(action.data.lastPasswordUse, action.data.currentDate) >= action.data.nonPasswordDaysLimit
 
       return {
         ...state,
-        lastPasswordUse,
-        nonPasswordLoginsRemaining,
-        nonPasswordDaysRemaining,
-        nonPasswordLoginsLimit,
-        nonPasswordDaysLimit,
+        ...action.data,
+        nonPasswordLoginsCount,
         needsPasswordCheck
       }
     }
 
     case 'PASSWORD_USED': {
+      const passwordUseCount = state.passwordUseCount + 1
       const lastPasswordUse = action.data.currentDate
-      const nonPasswordDaysLimit = Math.min(state.nonPasswordDaysLimit * NON_PASSWORD_DAYS_GROWTH_RATE, MAX_NON_PASSWORD_DAYS_LIMIT)
-      const nonPasswordLoginsLimit = Math.min(state.nonPasswordLoginsLimit * NON_PASSWORD_LOGINS_GROWTH_RATE, MAX_NON_PASSWORD_LOGINS_LIMIT)
-      const nonPasswordDaysRemaining = nonPasswordDaysLimit
-      const nonPasswordLoginsRemaining = nonPasswordLoginsLimit
-      const needsPasswordCheck = nonPasswordLoginsRemaining <= 0 || nonPasswordDaysRemaining <= 0
+      const needsPasswordCheck = false
+      const nonPasswordLoginsCount = 0
+      const nonPasswordDaysLimit = Math.min(Math.pow(NON_PASSWORD_DAYS_GROWTH_RATE, passwordUseCount), MAX_NON_PASSWORD_DAYS_LIMIT)
+      const nonPasswordLoginsLimit = Math.min(Math.pow(NON_PASSWORD_LOGINS_GROWTH_RATE, passwordUseCount), MAX_NON_PASSWORD_LOGINS_LIMIT)
 
       return {
         ...state,
         lastPasswordUse,
-        nonPasswordDaysRemaining,
-        nonPasswordLoginsRemaining,
+        needsPasswordCheck,
+        nonPasswordDaysLimit,
+        nonPasswordLoginsCount,
+        nonPasswordLoginsLimit,
+        passwordUseCount
+      }
+    }
+
+    case 'PASSWORD_REMINDER_POSTPONED': {
+      const nonPasswordDaysLimit = state.nonPasswordDaysLimit + NON_PASSWORD_DAYS_POSTPONEMENT
+      const nonPasswordLoginsLimit = state.nonPasswordLoginsLimit + NON_PASSWORD_LOGINS_POSTPONEMENT
+      const nonPasswordLoginsCount = 0
+      const needsPasswordCheck = false
+
+      return {
+        ...state,
+        nonPasswordLoginsCount,
         nonPasswordDaysLimit,
         nonPasswordLoginsLimit,
         needsPasswordCheck
       }
     }
 
-    case 'PASSWORD_REMINDER_POSTPONED': {
-      const nonPasswordDaysRemaining = NON_PASSWORD_DAYS_POSTPONEMENT
-      const nonPasswordLoginsRemaining = NON_PASSWORD_LOGINS_POSTPONEMENT
-      const needsPasswordCheck = nonPasswordLoginsRemaining <= 0 || nonPasswordDaysRemaining <= 0
-
-      return {
-        ...state,
-        needsPasswordCheck,
-        nonPasswordDaysRemaining,
-        nonPasswordLoginsRemaining
-      }
-    }
-
     case 'REQUEST_CHANGE_PASSWORD': {
-      const lastPasswordUse = action.data.currentDate // fake to prevent recalulation using older date
-
       return {
-        ...initialState,
-        lastPasswordUse
+        ...initialState
       }
     }
 

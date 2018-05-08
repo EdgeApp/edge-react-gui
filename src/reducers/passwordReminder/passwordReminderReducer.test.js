@@ -7,8 +7,6 @@ import {
   initialState,
   MAX_NON_PASSWORD_DAYS_LIMIT,
   MAX_NON_PASSWORD_LOGINS_LIMIT,
-  NON_PASSWORD_DAYS_GROWTH_RATE,
-  NON_PASSWORD_LOGINS_GROWTH_RATE,
   NON_PASSWORD_LOGINS_POSTPONEMENT,
   NON_PASSWORD_DAYS_POSTPONEMENT
 } from './indexPasswordReminder.js'
@@ -23,9 +21,9 @@ describe('PasswordReminder', () => {
   })
 
   describe('Non-password login', () => {
-    describe('Decrement nonPasswordLoginsRemaining', () => {
+    describe('Increment nonPasswordLoginsCount', () => {
       test('PIN_LOGIN', () => {
-        const expected = initialState.nonPasswordLoginsRemaining - 1
+        const expected = initialState.nonPasswordLoginsCount + 1
         const action = {
           type: 'NON_PASSWORD_LOGIN',
           data: {
@@ -33,25 +31,27 @@ describe('PasswordReminder', () => {
             currentDate: Date.now()
           }
         }
-        const actual = uut(initialState, action).nonPasswordLoginsRemaining
+        const actual = uut(initialState, action).nonPasswordLoginsCount
 
         expect(actual).toEqual(expected)
       })
     })
 
-    describe('Decrement nonPasswordDaysRemaining', () => {
+    describe('Load nonPasswordLoginsLimit', () => {
       test('PIN_LOGIN', () => {
-        const days = 1
-        const testDate = MILLISECONDS_PER_DAY * days
-        const expected = initialState.nonPasswordDaysRemaining - days
+        const nonPasswordLoginsLimit = 12
+        const nonPasswordDaysLimit = 6
+        const expected = nonPasswordLoginsLimit
         const action = {
           type: 'NON_PASSWORD_LOGIN',
           data: {
             ...initialState,
-            currentDate: testDate
+            nonPasswordDaysLimit,
+            nonPasswordLoginsLimit,
+            currentDate: Date.now()
           }
         }
-        const actual = uut(initialState, action).nonPasswordDaysRemaining
+        const actual = uut(initialState, action).nonPasswordLoginsLimit
 
         expect(actual).toEqual(expected)
       })
@@ -62,9 +62,8 @@ describe('PasswordReminder', () => {
     describe(`* Set needsPasswordCheck -> false,
       * Update nonPasswordLoginsLimit,
       * Update nonPasswordDaysLimit,
-      * Set nonPasswordDaysRemaining -> nonPasswordLoginsLimit,
-      * Set nonPasswordLoginsRemaining -> nonPasswordDaysLimit,
-      * Update lastPasswordUse`, () => {
+      * Update lastPasswordUse
+      * reset nonPasswordLoginsCount`, () => {
       test('NEW_ACCOUNT_LOGIN', () => {
         const testDate = Date.now()
         const lastPasswordUse = testDate
@@ -84,54 +83,19 @@ describe('PasswordReminder', () => {
         expect(actual).toEqual(expected)
       })
 
-      test('PASSWORD_LOGIN', () => {
-        const testDate = MILLISECONDS_PER_DAY * 1
-        const needsPasswordCheck = false
-        const lastPasswordUse = testDate
-
-        const nonPasswordDaysLimit = initialState.nonPasswordDaysLimit * NON_PASSWORD_DAYS_GROWTH_RATE
-        const nonPasswordLoginsLimit = initialState.nonPasswordLoginsLimit * NON_PASSWORD_LOGINS_GROWTH_RATE
-
-        const nonPasswordDaysRemaining = nonPasswordDaysLimit
-        const nonPasswordLoginsRemaining = nonPasswordLoginsLimit
-
-        const expected = {
-          ...initialState,
-          needsPasswordCheck,
-          nonPasswordDaysRemaining,
-          nonPasswordLoginsRemaining,
-          lastPasswordUse,
-          nonPasswordDaysLimit,
-          nonPasswordLoginsLimit
-        }
-        const action = {
-          type: 'PASSWORD_LOGIN',
-          data: {
-            ...initialState,
-            currentDate: testDate
-          }
-        }
-        const actual = uut(initialState, action)
-
-        expect(actual).toEqual(expected)
-      })
-
       test('PASSWORD_USED', () => {
         const testDate = new Date()
         const needsPasswordCheck = false
         const lastPasswordUse = testDate
+        const passwordUseCount = 1
 
-        const nonPasswordDaysLimit = initialState.nonPasswordDaysLimit * NON_PASSWORD_DAYS_GROWTH_RATE
-        const nonPasswordLoginsLimit = initialState.nonPasswordLoginsLimit * NON_PASSWORD_LOGINS_GROWTH_RATE
-
-        const nonPasswordDaysRemaining = nonPasswordDaysLimit
-        const nonPasswordLoginsRemaining = nonPasswordLoginsLimit
+        const nonPasswordDaysLimit = 2
+        const nonPasswordLoginsLimit = 2
 
         const expected = {
           ...initialState,
+          passwordUseCount,
           needsPasswordCheck,
-          nonPasswordDaysRemaining,
-          nonPasswordLoginsRemaining,
           lastPasswordUse,
           nonPasswordDaysLimit,
           nonPasswordLoginsLimit
@@ -153,6 +117,7 @@ describe('PasswordReminder', () => {
         const testDate = new Date()
         const previousState = {
           ...initialState,
+          passwordUseCount: 100,
           nonPasswordLoginsLimit: MAX_NON_PASSWORD_LOGINS_LIMIT
         }
         const expected = MAX_NON_PASSWORD_LOGINS_LIMIT
@@ -174,7 +139,7 @@ describe('PasswordReminder', () => {
         const testDate = Date.now()
         const previousState = {
           ...initialState,
-          nonPasswordDaysLimit: MAX_NON_PASSWORD_DAYS_LIMIT
+          passwordUseCount: 100
         }
         const expected = MAX_NON_PASSWORD_DAYS_LIMIT
         const action = {
@@ -237,7 +202,7 @@ describe('PasswordReminder', () => {
 
   describe('Password Reminder skipped', () => {
     describe('PASSWORD_REMINDER_POSTPONED', () => {
-      test('Set nonPasswordDaysRemaining = 4', () => {
+      test('Increase nonPasswordDaysLimit', () => {
         const action = {
           type: 'PASSWORD_REMINDER_POSTPONED',
           data: {
@@ -245,13 +210,13 @@ describe('PasswordReminder', () => {
           }
         }
 
-        const expected = NON_PASSWORD_DAYS_POSTPONEMENT
-        const actual = uut(initialState, action).nonPasswordDaysRemaining
+        const expected = initialState.nonPasswordDaysLimit + NON_PASSWORD_DAYS_POSTPONEMENT
+        const actual = uut(initialState, action).nonPasswordDaysLimit
 
         expect(actual).toEqual(expected)
       })
 
-      test('Set nonPasswordLoginsRemaining = 4', () => {
+      test('Increase nonPasswordLoginsLimit', () => {
         const action = {
           type: 'PASSWORD_REMINDER_POSTPONED',
           data: {
@@ -259,8 +224,8 @@ describe('PasswordReminder', () => {
           }
         }
 
-        const expected = NON_PASSWORD_LOGINS_POSTPONEMENT
-        const actual = uut(initialState, action).nonPasswordLoginsRemaining
+        const expected = initialState.nonPasswordLoginsLimit + NON_PASSWORD_LOGINS_POSTPONEMENT
+        const actual = uut(initialState, action).nonPasswordLoginsLimit
 
         expect(actual).toEqual(expected)
       })

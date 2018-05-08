@@ -36,10 +36,10 @@ export const LOCAL_ACCOUNT_DEFAULTS = {
   passwordReminder: {
     needsPasswordCheck: false,
     lastPasswordUse: 0,
-    nonPasswordDaysRemaining: 8,
-    nonPasswordLoginsRemaining: 8,
-    nonPasswordDaysLimit: 8,
-    nonPasswordLoginsLimit: 8
+    passwordUseCount: 0,
+    nonPasswordLoginsCount: 0,
+    nonPasswordDaysLimit: 2,
+    nonPasswordLoginsLimit: 2
   }
 }
 

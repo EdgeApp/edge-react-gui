@@ -42,6 +42,8 @@ export class PasswordReminderModal extends Component<Props, State> {
   }
 
   render () {
+    const error = this.props.status === 'INVALID' ? s.strings.password_reminder_invalid : ''
+    const isChecking = this.props.status === 'IS_CHECKING'
     return (
       <InteractiveModal isActive={this.props.isVisible} onModalHide={this.reset}>
         <InteractiveModal.Icon>
@@ -58,7 +60,7 @@ export class PasswordReminderModal extends Component<Props, State> {
 
           <InteractiveModal.Row>
             <InteractiveModal.Item>
-              <PasswordInput onChangeText={this.onChangeText} error={this.error()} />
+              <PasswordInput onChangeText={this.onChangeText} error={error} />
             </InteractiveModal.Item>
           </InteractiveModal.Row>
         </InteractiveModal.Body>
@@ -66,15 +68,15 @@ export class PasswordReminderModal extends Component<Props, State> {
         <InteractiveModal.Footer>
           <InteractiveModal.Row>
             <InteractiveModal.Item>
-              <TertiaryButton onPress={this.onSubmit} disabled={this.isChecking()}>
-                {this.isChecking() ? <ActivityIndicator /> : <TertiaryButton.Text>{s.strings.password_reminder_check_password}</TertiaryButton.Text>}
+              <TertiaryButton onPress={this.onSubmit} disabled={isChecking}>
+                {isChecking ? <ActivityIndicator /> : <TertiaryButton.Text>{s.strings.password_reminder_check_password}</TertiaryButton.Text>}
               </TertiaryButton>
             </InteractiveModal.Item>
           </InteractiveModal.Row>
 
           <InteractiveModal.Row>
             <InteractiveModal.Item>
-              <TertiaryButton onPress={this.onRequestChangePassword} disabled={this.isChecking()}>
+              <TertiaryButton onPress={this.onRequestChangePassword} disabled={isChecking}>
                 <TertiaryButton.Text>{s.strings.password_reminder_forgot_password}</TertiaryButton.Text>
               </TertiaryButton>
             </InteractiveModal.Item>
@@ -82,7 +84,7 @@ export class PasswordReminderModal extends Component<Props, State> {
 
           <InteractiveModal.Row>
             <InteractiveModal.Item>
-              <SecondaryButton onPress={this.onPostpone} disabled={this.isChecking()}>
+              <SecondaryButton onPress={this.onPostpone} disabled={isChecking}>
                 <SecondaryButton.Text>{s.strings.password_reminder_postpone}</SecondaryButton.Text>
               </SecondaryButton>
             </InteractiveModal.Item>
@@ -90,14 +92,6 @@ export class PasswordReminderModal extends Component<Props, State> {
         </InteractiveModal.Footer>
       </InteractiveModal>
     )
-  }
-
-  isChecking = () => {
-    return this.props.status === 'IS_CHECKING'
-  }
-
-  error = () => {
-    return this.props.status === 'INVALID' ? s.strings.password_reminder_invalid : ''
   }
 
   onChangeText = (password: string) => {
@@ -108,10 +102,6 @@ export class PasswordReminderModal extends Component<Props, State> {
 
   onSubmit = () => {
     this.props.onSubmit(this.state.password)
-  }
-
-  verified = () => {
-    return this.props.status === 'VERIFIED'
   }
 
   onRequestChangePassword = () => {
