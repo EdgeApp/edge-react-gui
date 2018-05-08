@@ -8,7 +8,8 @@ import { MenuDropDown } from '../../../../components/MenuDropDown/MenuDropDown.u
 
 type Props = {
   walletKey: string,
-  executeWalletRowOption: (walletKey: string, option: string) => void
+  executeWalletRowOption: (walletKey: string, option: string) => void,
+  currencyCode: Array<string>
 }
 export default class WalletListRowOptions extends Component<Props> {
   options: Array<{ value: string, label: string }>
@@ -18,7 +19,7 @@ export default class WalletListRowOptions extends Component<Props> {
     this.options = []
     for (const walletOption in Constants.WALLET_OPTIONS) {
       const option = Constants.WALLET_OPTIONS[walletOption]
-      if (!option.currencyCode || this.props.currencyCode === option.currencyCode) {
+      if (!option.currencyCode || option.currencyCode.includes(this.props.currencyCode)) {
         const temp = {
           value: option.value,
           label: option.label
