@@ -37,7 +37,13 @@ export default class ChangePassword extends Component<ChangePinComponentProps> {
       <SafeAreaView>
         <Gradient style={styles.gradient} />
         <View style={styles.container}>
-          <ChangePinScreen account={this.props.account} context={this.props.context} onComplete={this.onComplete} onCancel={this.onComplete} />
+          <ChangePinScreen
+            account={this.props.account}
+            context={this.props.context}
+            onComplete={this.onComplete}
+            onCancel={this.onComplete}
+            showHeader={false}
+          />
         </View>
       </SafeAreaView>
     )

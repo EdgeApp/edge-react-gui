@@ -1993,7 +1993,7 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-create-react-class@^15.5.1, create-react-class@^15.5.2, create-react-class@^15.6.0:
+create-react-class@^15.5.2, create-react-class@^15.6.0:
   version "15.6.3"
   resolved "https://registry.yarnpkg.com/create-react-class/-/create-react-class-15.6.3.tgz#2d73237fb3f970ae6ebe011a9e66f46dbca80036"
   dependencies:
@@ -2316,9 +2316,9 @@ ecc-jsbn@~0.1.1:
   dependencies:
     jsbn "~0.1.0"
 
-edge-core-js@0.8.0:
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.8.0.tgz#3a2492d28bdb351f102d7eb7fe3bc77853a7c42f"
+edge-core-js@0.8.1:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.8.1.tgz#2dea183448cad2d37fbe78e778caa1dfdff248ab"
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -2377,12 +2377,12 @@ edge-exchange-plugins@^0.2.0:
   dependencies:
     iso4217 "^0.2.0"
 
-edge-login-ui-rn@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.2.1.tgz#be76190e9261e8ee1d30471fd4f9b8b836211b02"
+edge-login-ui-rn@^0.2.13:
+  version "0.2.13"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.2.13.tgz#701216613023a0c4000ba7af7159020626f7a9cb"
   dependencies:
     material-ui "^0.20.0"
-    moment "~2.14.1"
+    moment "^2.19.3"
     native-base "^2.3.9"
     react-native-keyboard-aware-scroll-view "^0.4.1"
     react-native-linear-gradient "^2.0.0"
@@ -2391,7 +2391,7 @@ edge-login-ui-rn@^0.2.1:
     react-native-modal "^4.1.0"
     react-native-qrcode "^0.2.6"
     react-native-vector-icons "^4.4.2"
-    react-redux "~4.4.5"
+    react-redux "^5.0.7"
     redux "~3.5.2"
     redux-thunk "~2.1.0"
     sprintf-js "^1.0.3"
@@ -5216,9 +5216,9 @@ mobx@^3.3.1:
   version "3.6.2"
   resolved "https://registry.yarnpkg.com/mobx/-/mobx-3.6.2.tgz#fb9f5ff5090539a1ad54e75dc4c098b602693320"
 
-moment@~2.14.1:
-  version "2.14.1"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.14.1.tgz#b35b27c47e57ed2ddc70053d6b07becdb291741c"
+moment@^2.19.3:
+  version "2.22.1"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.1.tgz#529a2e9bf973f259c9643d237fda84de3a26e8ad"
 
 morgan@~1.6.1:
   version "1.6.1"
@@ -6013,7 +6013,7 @@ prop-types@15.5.10, prop-types@~15.5.7:
     fbjs "^0.8.9"
     loose-envify "^1.3.1"
 
-prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.6, prop-types@^15.5.7, prop-types@^15.5.8, prop-types@^15.5.9, prop-types@^15.6.0, prop-types@^15.6.1:
+prop-types@^15.5.10, prop-types@^15.5.6, prop-types@^15.5.7, prop-types@^15.5.8, prop-types@^15.5.9, prop-types@^15.6.0, prop-types@^15.6.1:
   version "15.6.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.1.tgz#36644453564255ddda391191fb3a125cbdf654ca"
   dependencies:
@@ -6571,7 +6571,7 @@ react-proxy@^1.1.7:
     lodash "^4.6.1"
     react-deep-force-update "^1.0.0"
 
-react-redux@^5.0.5:
+react-redux@^5.0.5, react-redux@^5.0.7:
   version "5.0.7"
   resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-5.0.7.tgz#0dc1076d9afb4670f993ffaef44b8f8c1155a4c8"
   dependencies:
@@ -6581,17 +6581,6 @@ react-redux@^5.0.5:
     lodash-es "^4.17.5"
     loose-envify "^1.1.0"
     prop-types "^15.6.0"
-
-react-redux@~4.4.5:
-  version "4.4.9"
-  resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-4.4.9.tgz#8ca6d4670925a454ce67086c2305e9630670909a"
-  dependencies:
-    create-react-class "^15.5.1"
-    hoist-non-react-statics "^2.5.0"
-    invariant "^2.0.0"
-    lodash "^4.2.0"
-    loose-envify "^1.1.0"
-    prop-types "^15.5.4"
 
 react-timer-mixin@^0.13.2:
   version "0.13.3"
