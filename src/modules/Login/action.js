@@ -94,9 +94,9 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       if (localeInfo.currencyCode && typeof localeInfo.currencyCode === 'string' && localeInfo.currencyCode.length >= 3) {
         fiatCurrencyCode = 'iso:' + localeInfo.currencyCode
       }
-      const edgeWallet = await ACCOUNT_API.createCurrencyWalletRequest(account, ethWalletType, { name: ethWalletName, fiatCurrencyCode })
-      await ACCOUNT_API.createCurrencyWalletRequest(account, btcWalletType, { name: btcWalletName, fiatCurrencyCode })
+      const edgeWallet = await ACCOUNT_API.createCurrencyWalletRequest(account, btcWalletType, { name: btcWalletName, fiatCurrencyCode })
       await ACCOUNT_API.createCurrencyWalletRequest(account, bchWalletType, { name: bchWalletName, fiatCurrencyCode })
+      await ACCOUNT_API.createCurrencyWalletRequest(account, ethWalletType, { name: ethWalletName, fiatCurrencyCode })
       accountInitObject.walletId = edgeWallet.id
       accountInitObject.currencyCode = edgeWallet.currencyInfo.currencyCode
     } else {
