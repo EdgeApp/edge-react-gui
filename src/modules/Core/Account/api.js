@@ -1,4 +1,5 @@
 // @flow
+
 // Core/Account/api.js
 import type { EdgeAccount, EdgeCreateCurrencyWalletOptions } from 'edge-core-js'
 
@@ -50,4 +51,8 @@ export const updateArchivedWalletsOrderRequest = (account: EdgeAccount, archived
   }, {})
 
   return account.changeWalletStates(newKeyStates).then(() => account.archivedWalletIds)
+}
+
+export const checkPassword = (account: EdgeAccount, password: string) => {
+  return account.checkPassword(password)
 }

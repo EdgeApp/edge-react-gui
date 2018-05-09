@@ -1,9 +1,9 @@
 // @flow
 
+import slowlog from 'react-native-slowlog'
 import type { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 import React, { Component } from 'react'
-import { Alert, Clipboard } from 'react-native'
-import { Actions } from 'react-native-router-flux'
+import { Clipboard } from 'react-native'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
@@ -23,6 +23,7 @@ type Props = {
   toggleAddressModal(): void,
   updateParsedURI(EdgeParsedUri): void,
   loginWithEdge(string): void,
+  doneButtonPressed(string): void,
   onExitButtonFxn: void
 }
 type State = {
@@ -31,11 +32,13 @@ type State = {
 }
 
 export default class AddressModal extends Component<Props, State> {
-  componentWillMount () {
-    this.setState({
+  constructor (props: Props) {
+    super(props)
+    this.state = {
       uri: '',
       clipboard: ''
-    })
+    }
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   _setClipboard (props: Props) {
@@ -109,26 +112,8 @@ export default class AddressModal extends Component<Props, State> {
 
   onSubmit = () => {
     const uri = this.state.uri
-    // We want to check to see if the url is an edge login.
-
-    if (/^airbitz:\/\/edge\//.test(uri)) {
-      this.props.loginWithEdge(uri)
-      return
-    }
-
-    const coreWallet = this.props.coreWallet
-    try {
-      const parsedURI = WALLET_API.parseURI(coreWallet, uri)
-      parsedURI.currencyCode = this.props.currencyCode // remove when Ethereum addresses support indicating currencyCodes
-
-      // console.log('AddressModal parsedURI', parsedURI)
-      this.props.toggleAddressModal()
-      this.props.updateParsedURI(parsedURI)
-      Actions.sendConfirmation('fromScan')
-    } catch (e) {
-      Alert.alert('Invalid Address', 'The address you input is not a valid address.')
-      // console.log(e)
-    }
+    this.props.toggleAddressModal()
+    this.props.doneButtonPressed(uri)
   }
   onCancel = () => {
     this.props.toggleAddressModal()

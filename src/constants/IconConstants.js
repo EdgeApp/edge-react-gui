@@ -3,6 +3,7 @@
 // Simple
 export const SIMPLE_ICONS = 'simpleIcons'
 export const CHECK_CIRCLE = 'check'
+
 // Entypo
 export const ENTYPO = 'entypo'
 export const THREE_DOT_MENU = 'dots-three-vertical'
@@ -24,6 +25,7 @@ export const ION_ICONS = 'ionIcons'
 export const CLOSE_ICON = 'close'
 export const UNLOCKED_ICON = 'ios-unlock-outline'
 export const LOCKED_ICON = 'ios-lock-outline'
+export const EYE_ICON = 'eye'
 
 // Material
 export const MATERIAL_ICONS = 'material'
@@ -32,3 +34,7 @@ export const KEYBOARD_ARROW_UP = 'keyboard-arrow-up'
 export const SWAP_VERT = 'swap-vert'
 export const SWAP_HORIZ = 'swap-horiz'
 export const EXCLAMATION = 'exclamation'
+
+// MaterialCommunity
+export const MATERIAL_COMMUNITY = 'materialCommunity'
+export const ALERT = 'alert-circle-outline'

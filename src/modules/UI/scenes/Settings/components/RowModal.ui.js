@@ -1,5 +1,6 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
+import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { TouchableHighlight, View } from 'react-native'
 
@@ -7,7 +8,21 @@ import { border as b } from '../../../../utils'
 import T from '../../../components/FormattedText'
 import styles, { styles as styleRaw } from '../style'
 
-export default class RowModal extends Component {
+export type Props = {
+  leftText: string,
+  rightText: string,
+  onPress: () => void
+}
+export default class RowModal extends Component<Props> {
+  constructor (props: any) {
+    super(props)
+    slowlog(this, /.*/, global.slowlogOptions)
+  }
+  static defaultProps = {
+    leftText: '',
+    rightText: '',
+    onPress: () => {}
+  }
   render () {
     return (
       <TouchableHighlight style={[styles.settingsRowContainer]} disabled={false} underlayColor={styleRaw.underlay.color} onPress={this.props.onPress}>

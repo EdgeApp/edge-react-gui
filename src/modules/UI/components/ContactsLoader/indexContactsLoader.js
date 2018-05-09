@@ -1,7 +1,7 @@
 // @flow
 
-import ContactsLoaderConnecter from './contactsLoaderConnector.js'
-import { ContactsLoader } from './ContactsLoader.ui.js'
 import { fetchContacts } from './actions.js'
+import { ContactsLoader } from './ContactsLoader.ui.js'
+import ContactsLoaderConnecter from './contactsLoaderConnector.js'
 
 export { fetchContacts, ContactsLoaderConnecter, ContactsLoader }

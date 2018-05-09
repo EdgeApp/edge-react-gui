@@ -1,9 +1,10 @@
 // @flow
 
 import { bns } from 'biggystring'
+import slowlog from 'react-native-slowlog'
 import type { EdgeDenomination } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, Animated, Image, TouchableHighlight, TouchableOpacity, View, FlatList } from 'react-native'
+import { ActivityIndicator, Animated, FlatList, Image, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 // import Contacts from 'react-native-contacts'
 // import Permissions from 'react-native-permissions'
 import { Actions } from 'react-native-router-flux'
@@ -15,40 +16,46 @@ import sendImage from '../../../../assets/images/transactions/transactions-send.
 import * as Constants from '../../../../constants/indexConstants'
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
-
-import type { GuiWallet, TransactionListTx, GuiContact } from '../../../../types'
+import type { GuiContact, GuiWallet, TransactionListTx } from '../../../../types'
 import WalletListModal from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import * as UTILS from '../../../utils'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView'
 import styles, { styles as styleRaw } from './style'
+import type {ContactsState} from '../../../../reducers/contacts/contactsReducer'
 
 // import SearchBar from './components/SearchBar.ui'
 const INITIAL_TRANSACTION_BATCH_NUMBER = 10
-const SUBSEQUENT_TRANSACTION_BATCH_NUMBER = 30
 const SCROLL_THRESHOLD = 0.5
 
-type Props = {
-  getTransactions: (walletId: string, currencyCode: string) => void, // getting transactions from Redux
-  updateExchangeRates: () => void,
-  transactionsSearchHidden: () => void,
-  fetchTransactions: (walletId: string, currencyCode: string, options: Object) => void,
-  contacts: Array<GuiContact>,
-  selectedWalletId: string,
-  selectedCurrencyCode: string,
+export type StateProps = {
   loading: boolean,
+  displayDenomination: EdgeDenomination,
   updatingBalance: boolean,
   transactions: Array<TransactionListTx>,
-  multiplier: string,
-  uiWallet: GuiWallet,
-  displayDenomination: EdgeDenomination,
-  balanceInCrypto: string,
-  fiatSymbol: string,
-  balanceInFiat: number,
+  contactsList: Array<GuiContact>,
+  selectedWalletId: string,
+  selectedCurrencyCode: string,
+  isoFiatCurrencyCode: string,
   fiatCurrencyCode: string,
-  isoFiatCurrencyCode: string
+  uiWallet: GuiWallet,
+  settings: Object,
+  balanceInCrypto: string,
+  balanceInFiat: number,
+  currencyConverter: Object,
+  multiplier: string,
+  contacts: ContactsState,
+  fiatSymbol: string,
+  showToWalletModal: boolean
 }
+
+export type DispatchProps = {
+  fetchMoreTransactions: (walletId: string, currencyCode: string) => any
+}
+
+type Props = StateProps & DispatchProps
+
 type State = {
   focused: boolean,
   balanceBoxVisible: boolean,
@@ -57,10 +64,7 @@ type State = {
   balanceBoxOpacity: any,
   balanceBoxHeight: any,
   width: ?number,
-  showBalance: boolean,
-  currentCurrencyCode: string,
-  currentWalletId: string,
-  currentEndIndex: number
+  showBalance: boolean
 }
 
 const SHOW_BALANCE_TEXT = s.strings.string_show_balance
@@ -70,7 +74,7 @@ const SENT_TEXT = s.strings.fragment_transaction_list_sent_prefix
 const RECEIVED_TEXT = s.strings.fragment_transaction_list_receive_prefix
 const UNCONFIRMED_TEXT = s.strings.fragment_wallet_unconfirmed
 
-export default class TransactionList extends Component<Props, State> {
+export class TransactionList extends Component<Props, State> {
   state = {
     focused: false,
     animation: new Animated.Value(0),
@@ -84,74 +88,42 @@ export default class TransactionList extends Component<Props, State> {
     dataSrc: [],
     width: undefined,
     currentCurrencyCode: '',
+    numTransactions: 0,
     currentWalletId: '',
     currentEndIndex: 0
   }
 
-  componentWillMount () {
-    this.props.updateExchangeRates()
-    this.handleScrollEnd()
+  constructor (props: Props) {
+    super(props)
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   componentWillReceiveProps (nextProps: Props) {
-    if ((nextProps.selectedWalletId !== this.props.selectedWalletId) ||
-        (nextProps.selectedCurrencyCode !== this.props.selectedCurrencyCode)) {
-      this.fetchListOfTransactions(nextProps.selectedWalletId, nextProps.selectedCurrencyCode)
+    if (nextProps.selectedWalletId !== this.props.selectedWalletId || nextProps.selectedCurrencyCode !== this.props.selectedCurrencyCode) {
+      this.props.fetchMoreTransactions(nextProps.selectedWalletId, nextProps.selectedCurrencyCode)
     }
-  }
-
-  fetchListOfTransactions = (walletId: string, currencyCode: string) => {
-    this.props.fetchTransactions(walletId, currencyCode, {
-      numEntries: this.state.currentEndIndex,
-      numIndex: 0
-    })
   }
 
   handleScrollEnd = () => {
-    const walletId = this.props.selectedWalletId
-    const currencyCode = this.props.selectedCurrencyCode
-    const { currentEndIndex, currentWalletId, currentCurrencyCode } = this.state
-    let newEndIndex = currentEndIndex
-
-    const txLength = this.props.transactions.length
-    if (!txLength) {
-      newEndIndex = INITIAL_TRANSACTION_BATCH_NUMBER
-    } else if (txLength === currentEndIndex) {
-      newEndIndex += SUBSEQUENT_TRANSACTION_BATCH_NUMBER
-    }
-
-    if (
-      newEndIndex !== currentEndIndex ||
-      (currentWalletId !== '' && currentWalletId !== walletId) ||
-      (currentCurrencyCode !== '' && currentCurrencyCode !== currencyCode)
-    ) {
-      this.setState(
-        state => ({
-          currentCurrencyCode: currencyCode,
-          currentEndIndex: newEndIndex,
-          currentWalletId: walletId
-        }),
-        () => this.fetchListOfTransactions(walletId, currencyCode)
-      )
-    }
+    this.props.fetchMoreTransactions(this.props.selectedWalletId, this.props.selectedCurrencyCode)
   }
 
-  _onSearchChange = () => {
-    // this.props.dispatch(updateSearchResults(null))
-    // console.log('this._onSearchChange executing')
-  }
-
-  _onPressSearch = () => {
-    // this.props.transactionsSearchVisible()
-  }
-
-  _onSearchExit = () => {
-    this.props.transactionsSearchHidden()
-  }
-
-  loadMoreTransactions = () => {
-    // console.log('Transactions.ui->loadMoreTransactions being executed')
-  }
+  // _onSearchChange = () => {
+  //   // this.props.dispatch(updateSearchResults(null))
+  //   // console.log('this._onSearchChange executing')
+  // }
+  //
+  // _onPressSearch = () => {
+  //   // this.props.transactionsSearchVisible()
+  // }
+  //
+  // _onSearchExit = () => {
+  //   this.props.transactionsSearchHidden()
+  // }
+  //
+  // loadMoreTransactions = () => {
+  //   // console.log('Transactions.ui->loadMoreTransactions being executed')
+  // }
 
   _onFocus = () => {
     this.setState({ focused: true })
@@ -224,7 +196,7 @@ export default class TransactionList extends Component<Props, State> {
                   ListHeaderComponent={this.renderBalanceBox}
                   style={[styles.transactionsScrollWrap]}
                   data={this.props.transactions}
-                  renderItem={(tx) => this.renderTx(tx, this.props.transactions)}
+                  renderItem={tx => this.renderTx(tx, this.props.transactions)}
                   initialNumToRender={INITIAL_TRANSACTION_BATCH_NUMBER}
                   onEndReached={() => this.handleScrollEnd()}
                   onEndReachedThreshold={SCROLL_THRESHOLD}
@@ -281,7 +253,7 @@ export default class TransactionList extends Component<Props, State> {
       <Animated.View style={[{ height: this.state.balanceBoxHeight }]}>
         <Gradient style={[styles.currentBalanceBox]}>
           {this.state.balanceBoxVisible && (
-            <Animated.View style={[styles.balanceBoxContents, {opacity: this.state.balanceBoxOpacity}]}>
+            <Animated.View style={[styles.balanceBoxContents, { opacity: this.state.balanceBoxOpacity }]}>
               <TouchableOpacity onPress={this.toggleShowBalance} style={[styles.currentBalanceWrap]}>
                 {this.state.showBalance ? (
                   <View style={styles.balanceShownContainer}>
@@ -297,9 +269,7 @@ export default class TransactionList extends Component<Props, State> {
                         {displayDenomination.symbol ? (
                           <T numberOfLines={1} style={[styles.currentBalanceBoxBits, styles.symbol]}>
                             {displayDenomination.symbol + ' '}
-                            <T numberOfLines={1} >
-                              {cryptoAmountString}
-                            </T>
+                            <T numberOfLines={1}>{cryptoAmountString}</T>
                           </T>
                         ) : (
                           <T numberOfLines={1} style={styles.currentBalanceBoxBits}>
@@ -351,14 +321,8 @@ export default class TransactionList extends Component<Props, State> {
     Actions.transactionDetails({ edgeTransaction, thumbnailPath })
   }
 
-  isReceivedTransaction (tx: TransactionListTx) {
-    if (tx.nativeAmount) {
-      return bns.gt(tx.nativeAmount, '0')
-    }
-  }
-
   isSentTransaction (tx: TransactionListTx) {
-    return !this.isReceivedTransaction(tx)
+    return (tx.nativeAmount && (tx.nativeAmount.charAt(0) === '-'))
   }
 
   renderTx = (transaction: TransactionListTx, completedTxList: Array<TransactionListTx>) => {
@@ -446,9 +410,9 @@ export default class TransactionList extends Component<Props, State> {
           <View style={[styles.transactionInfoWrap]}>
             <View style={styles.transactionLeft}>
               {thumbnailPath ? (
-                <Image style={[styles.transactionLogo]} source={{ uri: thumbnailPath }}/>
+                <Image style={[styles.transactionLogo]} source={{ uri: thumbnailPath }} />
               ) : (
-                <Image style={styles.transactionLogo} source={txImage}/>
+                <Image style={styles.transactionLogo} source={txImage} />
               )}
 
               <View style={[styles.transactionLeftTextWrap]}>

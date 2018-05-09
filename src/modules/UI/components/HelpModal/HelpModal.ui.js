@@ -19,9 +19,8 @@ type Props = {
   modal: any,
   closeModal: () => void
 }
-type State = {}
 
-export default class HelpModal extends Component<Props, State> {
+export default class HelpModal extends Component<Props> {
   render () {
     return (
       <StylizedModal

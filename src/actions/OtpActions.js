@@ -20,7 +20,7 @@ export const disableOtp = () => async (dispatch: Dispatch, getState: GetState) =
   const account = CORE_SELECTORS.getAccount(state)
   try {
     await account.disableOtp()
-    dispatch(SETTINGS_ACTIONS.updateOtpInfo({enabled: false, otpKey: null, otpResetPending: false}))
+    dispatch(SETTINGS_ACTIONS.updateOtpInfo({ enabled: false, otpKey: null, otpResetPending: false }))
   } catch (e) {
     console.log(e)
   }

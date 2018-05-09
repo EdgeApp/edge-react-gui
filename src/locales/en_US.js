@@ -79,6 +79,10 @@ const strings = {
   fragment_wallets_split_wallet: 'Split Wallet',
   fragment_wallets_get_seed_wallet: 'Get Seed',
   fragment_wallets_seed_share_title: 'Edge Wallet (%s) Seed',
+  fragment_wallets_view_xpub: 'View XPub Address',
+  fragment_wallets_pubkey_copied_title: 'XPub Address Copied',
+  fragment_wallets_pubkey_copied_success: 'The XPub Address has been successfully copied to the clipboard.',
+  fragment_wallets_pubkey_copied_error: 'There has been an error copying your XPub Address.',
   fragment_wallets_header: 'My Wallets',
   fragment_wallets_rename_wallet: 'Rename Wallet',
   fragment_wallets_resync_wallet_first_confirm_message_mobile: 'Are you sure you want to resync ',
@@ -243,12 +247,43 @@ const strings = {
   otp_disabled_modal: '2FA has been disabled. You can enable it again by tapping on "Enable 2FA" at any time.',
   otp_modal_headline: 'Are you sure you want to disable 2FA?',
   otp_modal_reset_headline: '2FA Reset Requested',
-  otp_modal_reset_description: 'An attempt to login to your account was made by another device and a 2FA reset has been requested. \n\nIf you did not make the request, click "Keep 2FA". Then go to the "Settings" and change your password and PIN. \n\nIf you did request the reset, \nclick on "Disable 2FA".',
+  otp_modal_reset_description:
+    'An attempt to login to your account was made by another device and a 2FA reset has been requested. \n\nIf you did not make the request, click "Keep 2FA". Then go to the "Settings" and change your password and PIN. \n\nIf you did request the reset, \nclick on "Disable 2FA".',
   otp_modal_body: '2FA is recommended to keep your device secure from unauthorized access from other devices.',
   otp_notif_title: '2FA disable has been requested by another device',
   otp_notif_body: 'If you did not create this request, log in as %1$s and change your password',
 
-  word_to_in_convert_from_to_string: 'to'
+  word_to_in_convert_from_to_string: 'to',
+
+  legacy_address_modal_title: 'Legacy Address Detected',
+  legacy_address_modal_warning:
+    'Warning: You have scanned a legacy format address that may not be for %1$s as it is indistinguishable from other currency addresses.\n\nDo you want to continue sending to this address?',
+  legacy_address_modal_continue: 'Continue',
+  legacy_address_modal_cancel: 'Cancel',
+
+  password_reminder_remember_your_password: 'Remember your password?',
+  password_reminder_you_will_need_your_password: 'You will need your password if your device gets lost or stolen, or if you uninstall the app.',
+  password_reminder_enter_password_below: 'Enter it below to make sure:',
+  password_reminder_check_password: 'Check Password',
+  password_reminder_forgot_password: 'I forgot, change password',
+  password_reminder_postpone: 'Later',
+  password_reminder_great_job: 'Great job remembering your password.',
+  password_reminder_verified: 'Password Verified',
+  password_reminder_invalid: 'Invalid Password',
+
+  password_check_check_later: 'Later',
+  password_check_check_my_password: 'Check MY Password',
+  password_check_checking: 'Checking password…',
+  password_check_current_password: 'Current password',
+  password_check_great_job: 'Great job remembering your password.',
+  password_check_incorrect_password_message: 'Incorrect Password. Try again?',
+  password_check_incorrect_password_title: 'Incorrect Password.',
+
+  password_check_skip_formatted:
+    'Please create a new account and transfer your funds if you forgot your password. Your password CANNOT BE RECOVERED by %1$s and you will lose access to your funds without your password.',
+  password_check_skip: 'Please create a new account and transfer your funds if you forgot your password.',
+
+  password: 'Password'
 }
 
 export default strings

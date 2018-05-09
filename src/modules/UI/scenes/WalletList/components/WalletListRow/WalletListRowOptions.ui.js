@@ -1,28 +1,25 @@
 // @flow
 
 import React, { Component } from 'react'
-
+import slowlog from 'react-native-slowlog'
 import * as Constants from '../../../../../../constants/indexConstants'
-import s from '../../../../../../locales/strings.js'
 import { MenuDropDownStyle } from '../../../../../../styles/indexStyles'
-import {MenuDropDown} from '../../../../components/MenuDropDown/MenuDropDown.ui.js'
+import { MenuDropDown } from '../../../../components/MenuDropDown/MenuDropDown.ui.js'
 
 type Props = {
   walletKey: string,
-  executeWalletRowOption: (walletKey: string, option: string) => void
+  executeWalletRowOption: (walletKey: string, option: string) => void,
+  currencyCode: Array<string>
 }
-type State = {}
-export default class WalletListRowOptions extends Component<Props, State> {
+export default class WalletListRowOptions extends Component<Props> {
   options: Array<{ value: string, label: string }>
   constructor (props: Props) {
     super(props)
-    this.state = {
-      archiveSyntax: s.strings['fragmet_wallets_list_' + (this.props.archived ? 'restore' : 'archive') + '_title_capitalized']
-    }
+
     this.options = []
     for (const walletOption in Constants.WALLET_OPTIONS) {
       const option = Constants.WALLET_OPTIONS[walletOption]
-      if (!option.currencyCode || this.props.currencyCode === option.currencyCode) {
+      if (!option.currencyCode || option.currencyCode.includes(this.props.currencyCode)) {
         const temp = {
           value: option.value,
           label: option.label
@@ -30,6 +27,7 @@ export default class WalletListRowOptions extends Component<Props, State> {
         this.options.push(temp)
       }
     }
+    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   optionAction = (optionKey: string) => {
@@ -37,7 +35,8 @@ export default class WalletListRowOptions extends Component<Props, State> {
   }
 
   render () {
-    const modifiedMenuDropDownStyle = { // manually overwrite width
+    const modifiedMenuDropDownStyle = {
+      // manually overwrite width
       ...MenuDropDownStyle,
       menuIconWrap: {
         ...MenuDropDownStyle.menuIconWrap,

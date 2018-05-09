@@ -1,8 +1,9 @@
 // @flow
 
+import AsyncLock from 'async-lock'
 import dateFormat from 'dateformat'
 import RNFS from 'react-native-fs'
-import AsyncLock from 'async-lock'
+
 import ENV from '../../env.json'
 
 const path1 = RNFS.DocumentDirectoryPath + '/logs1.txt'
@@ -16,7 +17,7 @@ const isObject = (item: any) => typeof item === 'object' && item !== null
 
 const normalize = (...info: Array<any>) => `${getTime()} | ${info.map(item => (isObject(item) ? JSON.stringify(item) : item)).join(' ')}`
 
-const lock = new AsyncLock({maxPending: 100000})
+const lock = new AsyncLock({ maxPending: 100000 })
 // function saveToBuffer (log: string) {
 //   buffer = buffer !== '' ? buffer + '\n' + log : log
 // }

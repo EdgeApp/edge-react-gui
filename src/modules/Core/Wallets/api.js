@@ -8,6 +8,10 @@ export const renameWalletRequest = (wallet: EdgeCurrencyWallet, name: string) =>
   return wallet.renameWallet(name).then(() => wallet)
 }
 
+export const getNumTransactions = (wallet: EdgeCurrencyWallet, currencyCode: string): number => {
+  return wallet.getNumTransactions ? wallet.getNumTransactions({ currencyCode }) : 0
+}
+
 export const getTransactions = (wallet: EdgeCurrencyWallet, currencyCode: string, options?: Object): Promise<Array<EdgeTransaction>> => {
   return wallet.getTransactions ? wallet.getTransactions({ ...options, currencyCode }) : Promise.resolve([])
 }

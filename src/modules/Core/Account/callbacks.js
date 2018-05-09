@@ -4,7 +4,7 @@ import type { EdgeAccountCallbacks, EdgeTransaction } from 'edge-core-js'
 
 import type { Dispatch } from '../../ReduxTypes'
 import { newTransactionsRequest, refreshTransactionsRequest } from '../../UI/scenes/TransactionList/action.js'
-import { refreshWallet, refreshReceiveAddressRequest, updateWalletLoadingProgress } from '../../UI/Wallets/action.js'
+import { refreshReceiveAddressRequest, refreshWallet, updateWalletLoadingProgress } from '../../UI/Wallets/action.js'
 import { updateWalletsRequest } from '../Wallets/action.js'
 
 const makeAccountCallbacks = (dispatch: Dispatch): EdgeAccountCallbacks => {
@@ -60,7 +60,7 @@ const makeAccountCallbacks = (dispatch: Dispatch): EdgeAccountCallbacks => {
       dispatch(newTransactionsRequest(walletId, transactions))
       dispatch(refreshWallet(walletId))
       // $FlowFixMe
-      dispatch(refreshTransactionsRequest(walletId, transactions))
+      // dispatch(refreshTransactionsRequest(walletId, transactions))
     },
 
     onBlockHeightChanged (walletId: string, blockHeight: number) {

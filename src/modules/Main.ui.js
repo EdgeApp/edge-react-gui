@@ -1,23 +1,24 @@
 // @flow
 
+import slowlog from 'react-native-slowlog'
+import type { EdgeContext, EdgeContextCallbacks, EdgeCorePluginFactory, EdgeCurrencyPlugin } from 'edge-core-js'
 import {
   bitcoinCurrencyPluginFactory,
   bitcoincashCurrencyPluginFactory,
   dashCurrencyPluginFactory,
-  litecoinCurrencyPluginFactory,
   feathercoinCurrencyPluginFactory,
+  litecoinCurrencyPluginFactory,
   zcoinCurrencyPluginFactory
 } from 'edge-currency-bitcoin'
 import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
-import { coinbasePlugin, shapeshiftPlugin, coincapPlugin } from 'edge-exchange-plugins'
-import type { EdgeContext, EdgeContextCallbacks, EdgeCurrencyPlugin, EdgeCorePluginFactory } from 'edge-core-js'
+import { coinbasePlugin, coincapPlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
 import React, { Component } from 'react'
 import { Image, Keyboard, Linking, Platform, StatusBar, TouchableWithoutFeedback } from 'react-native'
 import HockeyApp from 'react-native-hockeyapp'
 import Locale from 'react-native-locale'
+import { MenuProvider } from 'react-native-popup-menu'
 import { Actions, Drawer, Modal, Overlay, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
 import SplashScreen from 'react-native-smart-splash-screen'
-import { MenuProvider } from 'react-native-popup-menu'
 // $FlowFixMe
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'
 import { connect } from 'react-redux'
@@ -46,6 +47,7 @@ import { makeCoreContext } from '../util/makeContext.js'
 import * as CONTEXT_API from './Core/Context/api'
 import { styles } from './style.js'
 import AutoLogout from './UI/components/AutoLogout/AutoLogoutConnector'
+import { ContactsLoaderConnecter as ContactsLoader } from './UI/components/ContactsLoader/indexContactsLoader.js'
 import ControlPanel from './UI/components/ControlPanel/ControlPanelConnector'
 import ErrorAlert from './UI/components/ErrorAlert/ErrorAlertConnector'
 import T from './UI/components/FormattedText'
@@ -55,7 +57,8 @@ import Header from './UI/components/Header/Header.ui'
 import WalletName from './UI/components/Header/WalletName/WalletNameConnector.js'
 import HelpModal from './UI/components/HelpModal'
 import TransactionAlert from './UI/components/TransactionAlert/TransactionAlertConnector'
-import { CAMERA, CONTACTS, type Permission } from './UI/permissions.js'
+import { CAMERA, CONTACTS } from './UI/permissions.js'
+import type { Permission } from './UI/permissions.js'
 import AddToken from './UI/scenes/AddToken/AddTokenConnector.js'
 import ChangeMiningFeeExchange from './UI/scenes/ChangeMiningFee/ChangeMiningFeeExchangeConnector.ui'
 import ChangeMiningFeeSendConfirmation from './UI/scenes/ChangeMiningFee/ChangeMiningFeeSendConfirmationConnector.ui'
@@ -79,7 +82,7 @@ import TransactionDetails from './UI/scenes/TransactionDetails/TransactionDetail
 import TransactionListConnector from './UI/scenes/TransactionList/TransactionListConnector'
 import { HwBackButtonHandler } from './UI/scenes/WalletList/components/HwBackButtonHandler'
 import WalletList from './UI/scenes/WalletList/WalletListConnector'
-import { ContactsLoaderConnecter as ContactsLoader } from './UI/components/ContactsLoader/indexContactsLoader.js'
+import { passwordReminderModalConnector as PasswordReminderModal } from './UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
 
 const pluginFactories: Array<EdgeCorePluginFactory> = [
   // Exchanges:
@@ -151,7 +154,7 @@ type Props = {
   dispatchEnableScan: () => void,
   dispatchDisableScan: () => void,
   urlReceived: string => void,
-  updateCurrentSceneKey: (string) => void,
+  updateCurrentSceneKey: string => void,
   contextCallbacks: EdgeContextCallbacks
 }
 type State = {
@@ -163,6 +166,7 @@ export default class Main extends Component<Props, State> {
 
   constructor (props: Props) {
     super(props)
+    slowlog(this, /.*/, global.slowlogOptions)
 
     this.state = {
       context: undefined
@@ -502,6 +506,7 @@ export default class Main extends Component<Props, State> {
         <TransactionAlert />
         <AutoLogout />
         <ContactsLoader />
+        <PasswordReminderModal />
       </MenuProvider>
     )
   }

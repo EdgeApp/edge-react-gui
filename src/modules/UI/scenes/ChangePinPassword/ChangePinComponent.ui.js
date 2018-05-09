@@ -1,7 +1,7 @@
 // @flow
 
-import { ChangePinScreen } from 'edge-login-ui-rn'
 import type { EdgeAccount, EdgeContext } from 'edge-core-js'
+import { ChangePinScreen } from 'edge-login-ui-rn'
 import React, { Component } from 'react'
 import { View } from 'react-native'
 
@@ -37,7 +37,13 @@ export default class ChangePassword extends Component<ChangePinComponentProps> {
       <SafeAreaView>
         <Gradient style={styles.gradient} />
         <View style={styles.container}>
-          <ChangePinScreen account={this.props.account} context={this.props.context} onComplete={this.onComplete} onCancel={this.onComplete} />
+          <ChangePinScreen
+            account={this.props.account}
+            context={this.props.context}
+            onComplete={this.onComplete}
+            onCancel={this.onComplete}
+            showHeader={false}
+          />
         </View>
       </SafeAreaView>
     )

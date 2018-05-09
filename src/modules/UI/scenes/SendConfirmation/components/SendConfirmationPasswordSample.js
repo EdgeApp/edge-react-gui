@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import React, { Component } from 'react'
 import { Text, TextInput, View } from 'react-native'
@@ -8,7 +8,8 @@ import styles from '../styles'
 
 const PASSWORD_TEXT = s.strings.send_confirmation_enter_send_password
 
-export default class Password extends Component {
+export type Props = {}
+export default class Password extends Component<Props> {
   render () {
     return (
       <View style={styles.container}>

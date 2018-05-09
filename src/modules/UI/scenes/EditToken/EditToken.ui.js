@@ -206,21 +206,31 @@ export default class EditToken extends Component<EditTokenComponentProps, State>
 
   _onSave = () => {
     const currencyCode = this.state.currencyCode.toUpperCase()
-    this.setState({
-      currencyCode
-    }, () => {
-      const { currencyName, decimalPlaces, contractAddress } = this.state
-      if (currencyName && currencyCode && decimalPlaces && contractAddress) {
-        const { walletId } = this.props
-        const visibleTokens = UTILS.mergeTokensRemoveInvisible(this.props.metaTokens, this.props.customTokens)
-        const indexInVisibleTokens = _.findIndex(visibleTokens, token => token.currencyCode === currencyCode)
-        if (currencyCode !== this.props.currencyCode) {
-          // if the currencyCode will change
-          if (indexInVisibleTokens >= 0) {
-            // if the new currency code is already taken / visible
-            Alert.alert(s.strings.edittoken_delete_title, s.strings.edittoken_duplicate_currency_code)
+    this.setState(
+      {
+        currencyCode
+      },
+      () => {
+        const { currencyName, decimalPlaces, contractAddress } = this.state
+        if (currencyName && currencyCode && decimalPlaces && contractAddress) {
+          const { walletId } = this.props
+          const visibleTokens = UTILS.mergeTokensRemoveInvisible(this.props.metaTokens, this.props.customTokens)
+          const indexInVisibleTokens = _.findIndex(visibleTokens, token => token.currencyCode === currencyCode)
+          if (currencyCode !== this.props.currencyCode) {
+            // if the currencyCode will change
+            if (indexInVisibleTokens >= 0) {
+              // if the new currency code is already taken / visible
+              Alert.alert(s.strings.edittoken_delete_title, s.strings.edittoken_duplicate_currency_code)
+            } else {
+              // not in the array of visible tokens, CASE 3
+              if (parseInt(decimalPlaces) !== 'NaN') {
+                const denomination = UTILS.decimalPlacesToDenomination(decimalPlaces)
+                this.props.editCustomToken(walletId, currencyName, currencyCode, contractAddress, denomination, this.props.currencyCode)
+              } else {
+                Alert.alert(s.strings.edittoken_delete_title, s.strings.edittoken_invalid_decimal_places)
+              }
+            }
           } else {
-            // not in the array of visible tokens, CASE 3
             if (parseInt(decimalPlaces) !== 'NaN') {
               const denomination = UTILS.decimalPlacesToDenomination(decimalPlaces)
               this.props.editCustomToken(walletId, currencyName, currencyCode, contractAddress, denomination, this.props.currencyCode)
@@ -229,16 +239,9 @@ export default class EditToken extends Component<EditTokenComponentProps, State>
             }
           }
         } else {
-          if (parseInt(decimalPlaces) !== 'NaN') {
-            const denomination = UTILS.decimalPlacesToDenomination(decimalPlaces)
-            this.props.editCustomToken(walletId, currencyName, currencyCode, contractAddress, denomination, this.props.currencyCode)
-          } else {
-            Alert.alert(s.strings.edittoken_delete_title, s.strings.edittoken_invalid_decimal_places)
-          }
+          Alert.alert(s.strings.edittoken_delete_title, s.strings.addtoken_default_error_message)
         }
-      } else {
-        Alert.alert(s.strings.edittoken_delete_title, s.strings.addtoken_default_error_message)
       }
-    })
+    )
   }
 }

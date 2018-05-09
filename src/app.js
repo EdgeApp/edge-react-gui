@@ -1,4 +1,5 @@
 // @flow
+
 /* global __DEV__ */
 
 import './util/polyfills'
@@ -32,7 +33,7 @@ global.clog = console.log
 
 // $FlowFixMe
 global.OS = Platform.OS
-
+global.slowlogOptions = { threshold: 16 }
 // Disable the font scaling
 Text.defaultProps.allowFontScaling = false
 TextInput.defaultProps.allowFontScaling = false

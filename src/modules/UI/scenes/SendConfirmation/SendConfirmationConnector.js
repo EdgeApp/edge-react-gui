@@ -7,7 +7,7 @@ import { getCurrencyConverter, getExchangeRate } from '../../../Core/selectors.j
 import type { Dispatch, State } from '../../../ReduxTypes'
 import { convertNativeToExchange } from '../../../utils'
 import { getExchangeDenomination, getSelectedCurrencyCode, getSelectedWallet } from '../../selectors.js'
-import { getExchangeDenomination as settingsGetExchangeDenomination, getDisplayDenomination } from '../../Settings/selectors.js'
+import { getDisplayDenomination, getExchangeDenomination as settingsGetExchangeDenomination } from '../../Settings/selectors.js'
 import { reset, signBroadcastAndSave, updateAmount, updateSpendPending } from './action.js'
 import {
   getError,
@@ -82,7 +82,6 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
     currencyConverter,
     balanceInCrypto,
     balanceInFiat
-
   }
   return out
 }

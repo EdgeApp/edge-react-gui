@@ -14,9 +14,7 @@ type Props = {
   routeFunction(): void
 }
 
-type State = {}
-
-export default class RowRoute extends Component<Props, State> {
+export default class RowRoute extends Component<Props> {
   render () {
     return (
       <TouchableHighlight style={[styles.settingsRowContainer]} underlayColor={styleRaw.underlay.color} disabled={false} onPress={this.props.routeFunction}>

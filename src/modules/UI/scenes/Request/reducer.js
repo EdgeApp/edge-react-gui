@@ -1,9 +1,9 @@
 // @flow
 
-import * as ACTION from './action'
-import type { Action } from '../../../ReduxTypes.js'
-import type { GuiReceiveAddress } from '../../../../types.js'
 import * as Constants from '../../../../constants/indexConstants.js'
+import type { GuiReceiveAddress } from '../../../../types.js'
+import type { Action } from '../../../ReduxTypes.js'
+import * as ACTION from './action'
 
 export type RequestSceneState = {
   inputCurrencySelected: string,

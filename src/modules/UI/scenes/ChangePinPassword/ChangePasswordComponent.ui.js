@@ -1,7 +1,7 @@
 // @flow
 
-import { ChangePasswordScreen } from 'edge-login-ui-rn'
 import type { EdgeAccount, EdgeContext } from 'edge-core-js'
+import { ChangePasswordScreen } from 'edge-login-ui-rn'
 import React, { Component } from 'react'
 import { View } from 'react-native'
 

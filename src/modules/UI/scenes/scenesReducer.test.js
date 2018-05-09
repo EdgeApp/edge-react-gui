@@ -37,11 +37,14 @@ test('initialState', () => {
     },
     scan: {
       addressModalVisible: false,
-      recipientAddress: '',
       scanEnabled: false,
       scanToWalletListModalVisibility: false,
       selectedWalletListModalVisibility: false,
-      torchEnabled: false
+      torchEnabled: false,
+      legacyAddressModal: {
+        isActive: false
+      },
+      parsedUri: null
     },
     sendConfirmation: {
       label: '',
@@ -95,13 +98,19 @@ test('initialState', () => {
       transactions: [],
       transactionsWalletListModalVisibility: false,
       updatingBalance: true,
-      loadingTransactions: false
+      loadingTransactions: false,
+      currentCurrencyCode: '',
+      currentEndIndex: 0,
+      numTransactions: 0,
+      currentWalletId: ''
     },
     walletList: {
       deleteWalletModalVisible: false,
       getSeedWalletModalVisible: false,
       privateSeedUnlocked: false,
       renameWalletInput: '',
+      viewXPubWalletModalVisible: false,
+      xPubSyntax: '',
       renameWalletModalVisible: false,
       resyncWalletModalVisible: false,
       splitWalletModalVisible: false,
@@ -116,7 +125,10 @@ test('initialState', () => {
       walletListModalVisible: false,
       walletTransferList: []
     },
-    currentScene: ''
+    currentScene: '',
+    passwordReminderModal: {
+      status: null
+    }
   }
   const actual = scenesReducer(undefined, {})
 

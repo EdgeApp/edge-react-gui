@@ -1,7 +1,8 @@
 // @flow
 
+import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
-import { View, Image, Text, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { ActivityIndicator, Image, Text, TouchableOpacity, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import * as Constants from '../../../../constants/indexConstants'
@@ -29,19 +30,27 @@ type CryptoExchangeConfirmTransactionModalOwnProps = {
   pending: boolean
 }
 export default class CryptoExchangeConfirmTransactionModal extends Component<CryptoExchangeConfirmTransactionModalOwnProps> {
+  constructor (props: any) {
+    super(props)
+    slowlog(this, /.*/, global.slowlogOptions)
+  }
+
   render () {
     const style = this.props.style
     const icon = <Icon style={style.icon} name={Constants.EXCHANGE_ICON} size={style.iconSize} type={Constants.FONT_AWESOME} />
 
-    return <StylizedModal
-      visibilityBoolean={true}
-      featuredIcon={icon}
-      headerText={s.strings.title_confirm_exchange}
-      headerTextStyle={{color: THEME.COLORS.PRIMARY, marginTop: -10, marginBottom: 10}}
-      modalMiddle={this.renderMiddle(style)}
-      modalBottom={this.renderBottom(style)}
-      modalBottomStyle={style.bottom}
-      onExitButtonFxn={this.props.pending ? null : this.props.closeFunction} />
+    return (
+      <StylizedModal
+        visibilityBoolean={true}
+        featuredIcon={icon}
+        headerText={s.strings.title_confirm_exchange}
+        headerTextStyle={{ color: THEME.COLORS.PRIMARY, marginTop: -10, marginBottom: 10 }}
+        modalMiddle={this.renderMiddle(style)}
+        modalBottom={this.renderBottom(style)}
+        modalBottomStyle={style.bottom}
+        onExitButtonFxn={this.props.pending ? null : this.props.closeFunction}
+      />
+    )
   }
 
   renderLogo = (style: Object, logo?: string) => {
@@ -79,19 +88,21 @@ export default class CryptoExchangeConfirmTransactionModal extends Component<Cry
           <View style={shim} />
           <View style={shim} />
         </View>
-        <Slider onSlidingComplete={this.props.confirmFunction}
-          sliderDisabled={this.props.pending}
-          parentStyle={sliderParent} />
+        <Slider onSlidingComplete={this.props.confirmFunction} sliderDisabled={this.props.pending} parentStyle={sliderParent} />
       </View>
     )
   }
 
   renderBottom = (style: Object) => {
     if (this.props.pending) {
-      return (
-        <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'small'} />
-      )
+      return <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size={'small'} />
     }
-    return <TouchableOpacity><Text style={style.bottomButton} onPress={this.props.closeFunction}>{s.strings.string_cancel_cap}</Text></TouchableOpacity>
+    return (
+      <TouchableOpacity>
+        <Text style={style.bottomButton} onPress={this.props.closeFunction}>
+          {s.strings.string_cancel_cap}
+        </Text>
+      </TouchableOpacity>
+    )
   }
 }

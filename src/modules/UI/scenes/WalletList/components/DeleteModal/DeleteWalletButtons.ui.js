@@ -11,9 +11,8 @@ type Props = {
   onDone: () => void,
   walletId: string
 }
-type State = {}
 
-export default class DeleteWalletButtons extends Component<Props, State> {
+export default class DeleteWalletButtons extends Component<Props> {
   onNegative = () => {
     this.props.onNegative()
     this.props.onDone()

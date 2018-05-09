@@ -1,6 +1,8 @@
 // @flow
 
+import slowlog from 'react-native-slowlog'
 import { bns } from 'biggystring'
+import _ from 'lodash'
 import React, { Component } from 'react'
 import { ActivityIndicator, Image, Platform, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -16,7 +18,6 @@ import { getEnabledTokens, selectWallet } from '../../../../Wallets/action.js'
 import styles, { styles as styleRaw } from '../../style.js'
 import RowOptions from './WalletListRowOptions.ui'
 import WalletListTokenRow from './WalletListTokenRowConnector.js'
-import _ from 'lodash'
 
 const DIVIDE_PRECISION = 18
 
@@ -50,6 +51,7 @@ class FullWalletRow extends Component<Props, State> {
     this.state = {
       mergedTokens: []
     }
+    slowlog(this, /.*/, global.slowlogOptions)
   }
   render () {
     return (
@@ -102,11 +104,11 @@ class FullWalletListRow extends Component<Props, State> {
     const enabledTokens = walletData.enabledTokens
 
     const customTokens = this.props.settings.customTokens
-    const enabledNotHiddenTokens = enabledTokens.filter((token) => {
+    const enabledNotHiddenTokens = enabledTokens.filter(token => {
       let isVisible = true // assume we will enable token
-      const tokenIndex = _.findIndex(customTokens, (item) => item.currencyCode === token)
+      const tokenIndex = _.findIndex(customTokens, item => item.currencyCode === token)
       // if token is not supposed to be visible, not point in enabling it
-      if (tokenIndex > -1 && (customTokens[tokenIndex].isVisible === false)) isVisible = false
+      if (tokenIndex > -1 && customTokens[tokenIndex].isVisible === false) isVisible = false
       return isVisible
     })
 

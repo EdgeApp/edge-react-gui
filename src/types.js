@@ -1,5 +1,6 @@
 // @flow
-import type { EdgeDenomination, EdgeMetaToken, EdgeMetadata, EdgeTransaction, EdgeReceiveAddress } from 'edge-core-js'
+
+import type { EdgeDenomination, EdgeMetaToken, EdgeMetadata, EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
 
 export type GuiWallet = {
   id: string,
@@ -210,4 +211,13 @@ export type ComponentLayoutMeasurements = {
   height: Number,
   pageX: Number,
   pageY: Number
+}
+
+export type PasswordReminder = {
+  needsPasswordCheck: boolean,
+  lastPasswordUse: number,
+  passwordUseCount: number,
+  nonPasswordLoginsCount: number,
+  nonPasswordDaysLimit: number,
+  nonPasswordLoginsLimit: number
 }

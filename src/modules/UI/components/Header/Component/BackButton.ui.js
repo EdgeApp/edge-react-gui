@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import { Icon } from 'native-base'
 import React, { Component } from 'react'
@@ -9,9 +9,15 @@ import styles from '../style'
 
 const isIos = Platform.OS === 'ios'
 
-export default class BackButton extends Component {
+export type Props = {
+  withArrow: boolean,
+  onPress: () => mixed,
+  label?: string
+}
+export default class BackButton extends Component<Props> {
   static defaultProps = {
-    withArrow: false
+    withArrow: false,
+    onPress: () => {}
   }
 
   render () {

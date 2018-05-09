@@ -1,7 +1,9 @@
 // @flow
+
 import type { EdgeAccount } from 'edge-core-js'
 
 import { categories } from './subcategories.js'
+import type { PasswordReminder } from '../../../types.js'
 
 // Default Core Settings
 export const CORE_DEFAULTS = {
@@ -29,7 +31,17 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   customTokens: []
 }
 
-export const LOCAL_ACCOUNT_DEFAULTS = { bluetoothMode: false }
+export const LOCAL_ACCOUNT_DEFAULTS = {
+  bluetoothMode: false,
+  passwordReminder: {
+    needsPasswordCheck: false,
+    lastPasswordUse: 0,
+    passwordUseCount: 0,
+    nonPasswordLoginsCount: 0,
+    nonPasswordDaysLimit: 2,
+    nonPasswordLoginsLimit: 2
+  }
+}
 
 const SYNCHED_SETTINGS_FILENAME = 'Settings.json'
 const LOCAL_SETTINGS_FILENAME = 'Settings.json'
@@ -43,7 +55,7 @@ export const setPINModeRequest = (account: EdgeAccount, pinMode: boolean) =>
     ? account.enablePIN() // $FlowFixMe isablePIN not found on EdgeAccount type
     : account.disablePIN()
 
-export const setPINRequest = (account: EdgeAccount, pin: string) => account.changePIN(pin)
+export const setPINRequest = (account: EdgeAccount, pin: string) => account.changePin({ pin })
 
 // Account Settings
 export const setAutoLogoutTimeInSecondsRequest = (account: EdgeAccount, autoLogoutTimeInSeconds: number) =>
@@ -68,6 +80,12 @@ export const setMerchantModeRequest = (account: EdgeAccount, merchantMode: boole
 export const setBluetoothModeRequest = (account: EdgeAccount, bluetoothMode: boolean) =>
   getLocalSettings(account).then(settings => {
     const updatedSettings = updateSettings(settings, { bluetoothMode })
+    return setLocalSettings(account, updatedSettings)
+  })
+
+export const setPasswordReminderRequest = (account: EdgeAccount, passwordReminder: PasswordReminder) =>
+  getLocalSettings(account).then(settings => {
+    const updatedSettings = updateSettings(settings, { passwordReminder })
     return setLocalSettings(account, updatedSettings)
   })
 

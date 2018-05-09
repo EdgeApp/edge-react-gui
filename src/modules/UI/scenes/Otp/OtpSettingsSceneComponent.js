@@ -1,4 +1,5 @@
 // @flow
+
 import React, { Component } from 'react'
 import { Text, View } from 'react-native'
 
@@ -8,10 +9,10 @@ import * as Constants from '../../../../constants/indexConstants.js'
 import s from '../../../../locales/strings.js'
 import { OtpSettingsScreenStyles } from '../../../../styles/indexStyles.js'
 import { PrimaryButton, TertiaryButton } from '../../components/Buttons/index'
+import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui.js'
 import SafeAreaView from '../../components/SafeAreaView'
 import OtpHeroComponent from './OtpHeroComponent.js'
-import T from '../../components/FormattedText'
 
 type OtpSettingsSceneProps = {
   isOtpEnabled: boolean,
@@ -57,7 +58,13 @@ export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, S
     this.setState({
       showMessageModal: true,
       messageModalMessage: null,
-      messageModalComponent: <Text style={{textAlign: 'center'}}><T>{s.strings.otp_enabled_modal_part_one} <T isBold>{s.strings.otp_enabled_modal_part_two}</T></T></Text>
+      messageModalComponent: (
+        <Text style={{ textAlign: 'center' }}>
+          <T>
+            {s.strings.otp_enabled_modal_part_one} <T isBold>{s.strings.otp_enabled_modal_part_two}</T>
+          </T>
+        </Text>
+      )
     })
     this.props.enableOtp()
   }

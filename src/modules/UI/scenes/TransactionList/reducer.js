@@ -4,8 +4,8 @@ import type { EdgeTransaction } from 'edge-core-js'
 import { combineReducers } from 'redux'
 
 import type { Action } from '../../../ReduxTypes.js'
-import * as ACTION from './action'
 import * as WALLET_ACTION from '../../Wallets/action.js'
+import * as ACTION from './action'
 
 export type TransactionsState = Array<EdgeTransaction>
 
@@ -16,6 +16,45 @@ const transactions = (state: TransactionsState = [], action: Action) => {
       return action.data.transactions
     case WALLET_ACTION.SELECT_WALLET:
       return []
+    default:
+      return state
+  }
+}
+
+const currentCurrencyCode = (state: string = '', action: Action) => {
+  if (!action.data) return state
+  switch (action.type) {
+    case ACTION.UPDATE_TRANSACTIONS:
+      return action.data.currentCurrencyCode
+    default:
+      return state
+  }
+}
+
+const numTransactions = (state: number = 0, action: Action) => {
+  if (!action.data) return state
+  switch (action.type) {
+    case ACTION.UPDATE_TRANSACTIONS:
+      return action.data.numTransactions
+    default:
+      return state
+  }
+}
+
+const currentWalletId = (state: string = '', action: Action) => {
+  if (!action.data) return state
+  switch (action.type) {
+    case ACTION.UPDATE_TRANSACTIONS:
+      return action.data.currentWalletId
+    default:
+      return state
+  }
+}
+const currentEndIndex = (state: number = 0, action: Action) => {
+  if (!action.data) return state
+  switch (action.type) {
+    case ACTION.UPDATE_TRANSACTIONS:
+      return action.data.currentEndIndex
     default:
       return state
   }
@@ -67,6 +106,10 @@ const loadingTransactions = (state = false, action) => {
 
 export const transactionList = combineReducers({
   transactions,
+  currentCurrencyCode,
+  currentWalletId,
+  numTransactions,
+  currentEndIndex,
   searchVisible,
   updatingBalance,
   transactionsWalletListModalVisibility,

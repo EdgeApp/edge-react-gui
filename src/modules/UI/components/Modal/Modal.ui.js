@@ -29,9 +29,8 @@ type Props = {
   onExitButtonFxn: ?() => void,
   style?: StyleSheet.Styles
 }
-type State = {}
 
-export default class StylizedModal extends Component<Props, State> {
+export default class StylizedModal extends Component<Props> {
   showExitIcon = () => {
     const exitIconName = (Platform.OS === 'ios' ? 'ios' : 'md') + '-close'
     if (this.props.onExitButtonFxn) {

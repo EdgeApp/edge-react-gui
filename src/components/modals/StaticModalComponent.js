@@ -51,9 +51,7 @@ class StaticModalComponent extends Component<Props> {
                 <Icon style={styles.icon} name={Constants.CHECK_CIRCLE} size={styles.iconSize} type={Constants.SIMPLE_ICONS} />
               </LinearGradient>
               <View style={styles.bottom}>
-                <View style={styles.bodyRow}>
-                  {this.renderMiddle(styles)}
-                </View>
+                <View style={styles.bodyRow}>{this.renderMiddle(styles)}</View>
               </View>
             </View>
           </View>

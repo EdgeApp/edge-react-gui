@@ -31,15 +31,21 @@ export const WALLET_OPTIONS = {
   },
   SPLIT: {
     value: 'split',
-    currencyCode: 'BTC',
+    currencyCode: ['BTC'],
     label: s.strings.string_split_bitcoin_cash,
     modalVisible: true
   },
   MANAGE_TOKENS: {
     value: 'manageTokens',
-    currencyCode: 'ETH',
+    currencyCode: ['ETH'],
     label: s.strings.string_add_edit_tokens,
     modalVisible: false
+  },
+  VIEW_XPUB: {
+    value: 'viewXPub',
+    currencyCode: ['BTC', 'BCH', 'DASH', 'FTC', 'ZER', 'LTC'],
+    label: s.strings.fragment_wallets_view_xpub,
+    modalVisible: true
   }
 }
 
@@ -51,6 +57,7 @@ export const RENAME_VALUE = 'rename'
 export const ADD_TOKENS_VALUE = 'addTokensValue'
 export const DELETE_VALUE = 'delete'
 export const GET_SEED_VALUE = 'getSeed'
+export const VIEW_XPUB_VALUE = 'viewXPub'
 export const RESYNC_VALUE = 'resync'
 export const ADD_TOKEN_VALUE = 'addToken'
 export const ARCHIVE_VALUE = 'archive'

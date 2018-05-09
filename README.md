@@ -28,7 +28,11 @@ Edge Wallet is:
 ### Install nodejs (v 8.4+) and npm (v 5.3+)
 
     https://nodejs.org/en/download/
-    
+
+### Install yarn
+
+    https://yarnpkg.com
+
 ### Install React Native CLI
 
     npm install -g react-native-cli
@@ -36,7 +40,7 @@ Edge Wallet is:
 ### Checkout develop branch & install node_modules
 
     cd edge-react-gui
-    npm i
+    yarn
 
 ### Android NDK Setup
 

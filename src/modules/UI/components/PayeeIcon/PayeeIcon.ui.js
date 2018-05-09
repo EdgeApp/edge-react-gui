@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import React, { Component } from 'react'
 import { Image, View } from 'react-native'
@@ -7,7 +7,11 @@ import ReceivedIcon from '../../../../assets/images/transactions/transaction-det
 import SentIcon from '../../../../assets/images/transactions/transaction-details-sent.png'
 import styles from './style'
 
-class PayeeIcon extends Component {
+export type Props = {
+  thumbnailPath: string,
+  direction: string
+}
+export class PayeeIcon extends Component<Props> {
   render () {
     return <View style={[styles.modalHeaderIconWrapBottom]}>{this.renderIcon()}</View>
   }

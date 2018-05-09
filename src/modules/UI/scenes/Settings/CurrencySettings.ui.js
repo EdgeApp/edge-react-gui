@@ -21,8 +21,8 @@ type Props = {
   selectDenomination: string => void,
   selectedDenominationKey: string
 }
-type State = {}
-export default class CurrencySettings extends Component<Props, State> {
+
+export default class CurrencySettings extends Component<Props> {
   header () {
     return (
       <Gradient style={[styles.headerRow, b()]}>

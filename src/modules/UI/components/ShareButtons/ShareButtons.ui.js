@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import React, { Component } from 'react'
 import { View } from 'react-native'
@@ -10,7 +10,11 @@ import styles from './styles.js'
 const COPY_TEXT = s.strings.fragment_request_copy_title
 const SHARE_TEXT = s.strings.string_share
 
-export default class ShareButtons extends Component {
+export type Props = {
+  copyToClipboard: Function,
+  shareViaShare: Function
+}
+export class ShareButtons extends Component<Props> {
   render () {
     const {
       copyToClipboard,
@@ -35,3 +39,5 @@ export default class ShareButtons extends Component {
     )
   }
 }
+
+export default ShareButtons

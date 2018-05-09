@@ -201,7 +201,7 @@ function cryptoExchangerReducer (state = initialState, action) {
         quoteExpireDate: null
       }
     case Constants.ON_AVAILABLE_SHAPE_SHIFT_TOKENS:
-      return {...state, availableShapeShiftTokens: action.data}
+      return { ...state, availableShapeShiftTokens: action.data }
     case Constants.DONE_MAKE_SPEND:
       return { ...state, gettingTransaction: false }
     case Constants.START_SHIFT_TRANSACTION:

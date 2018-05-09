@@ -162,8 +162,7 @@ const CryptoExchangeSceneStyle = {
     walletSelector: Styles.TextAndIconButtonStyle,
     noWalletSelected: {
       ...Styles.TextAndIconButtonStyle,
-      textContainer: {
-      },
+      textContainer: {},
       inner: {
         ...Styles.TextAndIconButtonStyle.inner,
         width: '100%',
