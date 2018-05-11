@@ -6,6 +6,7 @@ import Menu, { MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-m
 
 import * as Constants from '../../../../constants/indexConstants'
 import { Icon } from '../Icon/Icon.ui'
+import { getObjectDiff } from '../../../utils'
 
 type Props = {
   style: StyleSheet.Styles,
@@ -33,6 +34,17 @@ class MenuDropDown extends Component<Props, State> {
       pageY: 0
     }
     slowlog(this, /.*/, global.slowlogOptions)
+  }
+
+  shouldComponentUpdate (nextProps: Props) {
+    const diffElement = getObjectDiff(this.props, nextProps, {
+      data: true, value: true, '0': true, '1': true, '2': true, '3': true, '4': true, '5': true, '6': true, '7': true, '8': true
+    })
+    if (diffElement) {
+      return true
+    } else {
+      return false
+    }
   }
 
   renderMenuOptions (style: StyleSheet.Styles) {

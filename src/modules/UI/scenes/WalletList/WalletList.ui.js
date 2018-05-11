@@ -84,6 +84,23 @@ export default class WalletList extends Component<Props, State> {
     }
   }
 
+  shouldComponentUpdate (nextProps: Props) {
+    let traverseObjects, ignoreObjects
+    if (this.state.sortableListExists) {
+      traverseObjects = { dimensions: true }
+      ignoreObjects = undefined
+    } else {
+      traverseObjects = undefined
+      ignoreObjects = { dimensions: true }
+    }
+    const diffElement = UTILS.getObjectDiff(this.props, nextProps, traverseObjects, ignoreObjects)
+    if (diffElement) {
+      return true
+    } else {
+      return false
+    }
+  }
+
   componentWillReceiveProps (nextProps: Props) {
     if (nextProps.otpResetPending && nextProps.otpResetPending !== this.props.otpResetPending) {
       this.setState({

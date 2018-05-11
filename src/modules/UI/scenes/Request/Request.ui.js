@@ -21,6 +21,7 @@ import RequestStatus from '../../components/RequestStatus/index.js'
 import SafeAreaView from '../../components/SafeAreaView/index.js'
 import ShareButtons from '../../components/ShareButtons/index.js'
 import styles from './styles.js'
+import { getObjectDiff } from '../../../utils'
 
 export type RequestStateProps = {
   currencyCode: string,
@@ -71,6 +72,16 @@ export class Request extends Component<Props, State> {
       result: ''
     }
     slowlog(this, /.*/, global.slowlogOptions)
+  }
+
+  shouldComponentUpdate (nextProps: Props) {
+    const diffElement = getObjectDiff(this.props, nextProps, {
+      primaryCurrencyInfo: true,
+      secondaryCurrencyInfo: true,
+      displayDenomination: true,
+      exchangeDenomination: true
+    })
+    return !!diffElement
   }
 
   componentWillReceiveProps (nextProps: Props) {

@@ -9,6 +9,7 @@ import * as Constants from '../../constants/indexConstants.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import { StaticModalStyle } from '../../styles/indexStyles.js'
 import THEME from '../../theme/variables/airbitz'
+import { getObjectDiff } from '../../modules/utils'
 
 type Props = {
   modalDismissTimerSeconds: number,
@@ -19,6 +20,10 @@ type Props = {
 }
 class StaticModalComponent extends Component<Props> {
   reset: number
+  shouldComponentUpdate (nextProps: Props) {
+    const diffElement = getObjectDiff(this.props, nextProps, {style: true, children: true})
+    return !!diffElement
+  }
   componentDidMount () {
     if (this.props.modalDismissTimerSeconds) {
       this.reset = setTimeout(() => {
