@@ -17,6 +17,7 @@ import {
   getSupportedFiats,
   isCompleteExchangeData,
   daysBetween,
+  getObjectDiff,
   MILLISECONDS_PER_DAY
 } from '../src/modules/utils.js'
 
@@ -493,4 +494,148 @@ describe('daysBetween', () => {
     const b = MILLISECONDS_PER_DAY * end
     expect(daysBetween(a, b)).toEqual(days)
   })
+})
+
+describe('getObjectDiff', () => {
+  test('simple equal', () => {
+    const obj1 = {
+      a: '1',
+      b: '2'
+    }
+    const obj2 = {
+      a: '1',
+      b: '2'
+    }
+    expect(getObjectDiff(obj1, obj2)).toEqual('')
+  })
+
+  test('simple unequal', () => {
+    const obj1 = {
+      a: '1',
+      b: '3'
+    }
+    const obj2 = {
+      a: '1',
+      b: '2'
+    }
+    expect(getObjectDiff(obj1, obj2)).toEqual('b')
+  })
+
+  test('nested unequal no traverse', () => {
+    const obj1 = {
+      a: '1',
+      b: {
+        c: 1
+      }
+    }
+    const obj2 = {
+      a: '1',
+      b: {
+        c: 1
+      }
+    }
+    expect(getObjectDiff(obj1, obj2)).toEqual('b')
+  })
+
+  test('nested unequal w/traverse', () => {
+    const obj1 = {
+      a: '1',
+      b: {
+        c: 1
+      }
+    }
+    const obj2 = {
+      a: '1',
+      b: {
+        c: 2
+      }
+    }
+    expect(getObjectDiff(obj1, obj2, {b: true})).toEqual('b')
+  })
+
+  test('nested equal w/traverse', () => {
+    const obj1 = {
+      a: '1',
+      b: {
+        c: 2
+      }
+    }
+    const obj2 = {
+      a: '1',
+      b: {
+        c: 2
+      }
+    }
+    expect(getObjectDiff(obj1, obj2, {b: true})).toEqual('')
+  })
+
+  test('missing element obj2', () => {
+    const obj1 = {
+      a: '1',
+      b: {
+        c: 2
+      },
+      d: false
+    }
+    const obj2 = {
+      a: '1',
+      b: {
+        c: 2
+      }
+    }
+    expect(getObjectDiff(obj1, obj2, {b: true})).toEqual('d')
+  })
+
+  test('missing element obj1', () => {
+    const obj1 = {
+      a: '1',
+      b: {
+        c: 2
+      }
+    }
+    const obj2 = {
+      a: '1',
+      b: {
+        c: 2
+      },
+      d: false
+    }
+    expect(getObjectDiff(obj1, obj2, {b: true})).toEqual('d')
+  })
+
+
+  test('missing nested element obj2', () => {
+    const obj1 = {
+      a: '1',
+      b: {
+        c: 2,
+        d: 3
+      },
+    }
+    const obj2 = {
+      a: '1',
+      b: {
+        c: 2
+      }
+    }
+    expect(getObjectDiff(obj1, obj2, {b: true})).toEqual('b')
+  })
+
+  test('missing nested element obj1', () => {
+    const obj1 = {
+      a: '1',
+      b: {
+        c: 2
+      }
+    }
+    const obj2 = {
+      a: '1',
+      b: {
+        c: 2,
+        d: true
+      }
+    }
+    expect(getObjectDiff(obj1, obj2, {b: true})).toEqual('b')
+  })
+
 })

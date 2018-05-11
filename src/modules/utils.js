@@ -451,3 +451,51 @@ export const daysBetween = (DateInMillisecondsA: number, dateInMillisecondsB: nu
   const daysBetween = millisecondsBetween / MILLISECONDS_PER_DAY
   return daysBetween
 }
+
+// Does a shallow compare of obj1 to obj2 and returns the element name of the element which differs
+// between the two. Will recursively deep compare any unequal elements specified in traverseObjects.
+// Returns the element name of the unequal element or '' if objects are equal
+export function getObjectDiff (obj1: Object, obj2: Object, traverseObjects?: Object): string {
+  const comparedElements = {}
+  for (const e in obj1) {
+    comparedElements[e] = true
+    if (obj1.hasOwnProperty(e)) {
+      if (obj2.hasOwnProperty(e)) {
+        if (obj1[e] !== obj2[e]) {
+          if (traverseObjects && traverseObjects[e] && typeof obj1[e] === 'object') {
+            const deepDiff = getObjectDiff(obj1[e], obj2[e], traverseObjects)
+            if (deepDiff) {
+              return e
+            }
+          } else {
+            return e
+          }
+        }
+      } else {
+        return e
+      }
+    }
+  }
+  for (const e in obj2) {
+    if (comparedElements[e]) {
+      continue
+    }
+    if (obj2.hasOwnProperty(e)) {
+      if (obj1.hasOwnProperty(e)) {
+        if (obj1[e] !== obj2[e]) {
+          if (traverseObjects && traverseObjects[e] && typeof obj1[e] === 'object') {
+            const deepDiff = getObjectDiff(obj2[e], obj1[e], traverseObjects)
+            if (deepDiff) {
+              return e
+            }
+          } else {
+            return e
+          }
+        }
+      } else {
+        return e
+      }
+    }
+  }
+  return ''
+}
