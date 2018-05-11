@@ -472,16 +472,16 @@ export function getObjectDiff (obj1: Object, obj2: Object, traverseObjects?: Obj
           if (traverseObjects && traverseObjects[e] && typeof obj1[e] === 'object') {
             const deepDiff = getObjectDiff(obj1[e], obj2[e], traverseObjects, ignoreObjects)
             if (deepDiff) {
-              console.log(`getObjectDiff:${e}`)
+              // console.log(`getObjectDiff:${e}`)
               return e
             }
           } else {
-            console.log(`getObjectDiff:${e}`)
+            // console.log(`getObjectDiff:${e}`)
             return e
           }
         }
       } else {
-        console.log(`getObjectDiff:${e}`)
+        // console.log(`getObjectDiff:${e}`)
         return e
       }
     }
