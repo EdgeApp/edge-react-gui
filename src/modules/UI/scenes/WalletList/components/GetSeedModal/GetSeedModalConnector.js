@@ -19,6 +19,8 @@ const checkCurrentPassword = (password: string) => async (dispatch: Dispatch, ge
   dispatch({ type: isPassword ? UNLOCK : LOCK })
 }
 
+const nullFunc = () => null
+
 const mapStateToProps = (state: State): GetSeedModalStateProps => {
   const wallet = CORE_SELECTORS.getWallet(state, state.ui.scenes.walletList.walletId)
   const walletId = state.ui.scenes.walletList.walletId
@@ -26,7 +28,7 @@ const mapStateToProps = (state: State): GetSeedModalStateProps => {
 
   return {
     visibilityBoolean: state.ui.scenes.walletList[VISIBLE_MODAL_NAME(Constants.GET_SEED_VALUE)],
-    getSeed: wallet ? wallet.getDisplayPrivateSeed : () => null,
+    getSeed: wallet ? wallet.getDisplayPrivateSeed : nullFunc,
     walletId: walletId,
     privateSeedUnlocked: state.ui.scenes.walletList.privateSeedUnlocked,
     walletName

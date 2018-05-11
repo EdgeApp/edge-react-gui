@@ -282,9 +282,21 @@ export default class WalletList extends Component<Props, State> {
     })
   }
 
+  renderRow = (row: Object) => {
+    return (
+      <SortableWalletListRow data={row} dimensions={this.props.dimensions} />
+    )
+  }
+
+  renderItem = (item: Object) => {
+    return (
+      <FullWalletListRow data={item} settings={this.props.settings} customTokens={this.props.customTokens} />
+    )
+  }
+
   renderActiveSortableList = (activeWalletsArray: Array<{ key: string }>, activeWalletsObject: {}) => {
     return (
-      <View style={[styles.listsContainer]}>
+      <View style={styles.listsContainer}>
         {this.state.sortableListExists && (
           <Animated.View
             testID={'sortableList'}
@@ -296,7 +308,7 @@ export default class WalletList extends Component<Props, State> {
               order={this.props.activeWalletIds}
               onRowMoved={this.onActiveRowMoved}
               render={ARCHIVED_TEXT}
-              renderRow={row => <SortableWalletListRow data={row} dimensions={this.props.dimensions} />}
+              renderRow={this.renderRow}
               executeWalletRowOption={this.executeWalletRowOption}
               dimensions={this.props.dimensions}
             />
@@ -308,7 +320,7 @@ export default class WalletList extends Component<Props, State> {
               style={styles.sortableWalletListContainer}
               data={activeWalletsArray}
               extraData={this.props.wallets}
-              renderItem={item => <FullWalletListRow data={item} settings={this.props.settings} customTokens={this.props.customTokens} />}
+              renderItem={this.renderItem}
               sortableMode={this.state.sortableMode}
               executeWalletRowOption={this.executeWalletRowOption}
               settings={this.props.settings}

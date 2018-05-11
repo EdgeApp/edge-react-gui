@@ -15,6 +15,18 @@ export const dropDownStyle = {
   ...Styles.MenuDropDownStyleHeader,
   icon: { ...Styles.MenuDropDownStyle.icon, color: THEME.COLORS.WHITE }
 }
+
+const help = {
+  label: s.strings.string_help,
+  key: s.strings.string_help,
+  value: {
+    title: Constants.HELP_VALUE,
+    value: Constants.HELP_VALUE
+  }
+}
+
+const helpArray = [help]
+
 export const mapStateToProps = (state: State) => {
   const useLegacyAddress = state.ui.scenes.requestType.useLegacyAddress
   const uniqueLegacyAddress = state.ui.scenes.requestType.uniqueLegacyAddress
@@ -27,15 +39,7 @@ export const mapStateToProps = (state: State) => {
       value: useLegacyAddress ? Constants.USE_REGULAR_REQUEST_ADDRESS : Constants.USE_LEGACY_REQUEST_ADDRESS
     }
   }
-  const help = {
-    label: s.strings.string_help,
-    key: s.strings.string_help,
-    value: {
-      title: Constants.HELP_VALUE,
-      value: Constants.HELP_VALUE
-    }
-  }
-  const dropDownButtons = uniqueLegacyAddress ? [addressToggle, help] : [help]
+  const dropDownButtons = uniqueLegacyAddress ? [addressToggle, help] : helpArray
   return {
     style: dropDownStyle,
     data: dropDownButtons,
