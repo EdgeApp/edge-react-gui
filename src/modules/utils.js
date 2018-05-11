@@ -312,8 +312,12 @@ export const decimalPlacesToDenomination = (decimalPlaces: string): string => {
   return denomination
 }
 
-export const isReceivedTransaction = (edgeTransaction: EdgeTransaction): boolean => gte(edgeTransaction.nativeAmount, '0')
-export const isSentTransaction = (edgeTransaction: EdgeTransaction): boolean => !isReceivedTransaction(edgeTransaction)
+export const isReceivedTransaction = (edgeTransaction: EdgeTransaction): boolean => {
+  return !isSentTransaction(edgeTransaction)
+}
+export const isSentTransaction = (edgeTransaction: EdgeTransaction): boolean => {
+  return (!!edgeTransaction.nativeAmount && (edgeTransaction.nativeAmount.charAt(0) === '-'))
+}
 
 export const getTimeMeasurement = (inMinutes: number): string => {
   switch (true) {
