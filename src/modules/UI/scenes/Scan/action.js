@@ -60,6 +60,7 @@ export const parseUriReset = () => ({
 })
 
 export const parseUri = (data: string) => (dispatch: Dispatch, getState: GetState) => {
+  if (!data) return
   const state = getState()
   const edgeWallet = state.core.wallets.byId[state.ui.wallets.selectedWalletId]
   const guiWallet = state.ui.wallets.byId[state.ui.wallets.selectedWalletId]
@@ -107,7 +108,13 @@ export const parseUri = (data: string) => (dispatch: Dispatch, getState: GetStat
     }
   } catch (error) {
     dispatch(disableScan())
-    Alert.alert(s.strings.fragment_send_send_bitcoin_unscannable, error.toString(), [{ text: s.strings.string_ok, onPress: () => dispatch(enableScan()) }])
+    setTimeout(
+      () =>
+        Alert.alert(s.strings.scan_invalid_address_error_title, s.strings.scan_invalid_address_error_description, [
+          { text: s.strings.string_ok, onPress: () => dispatch(enableScan()) }
+        ]),
+      500
+    )
   }
 }
 
