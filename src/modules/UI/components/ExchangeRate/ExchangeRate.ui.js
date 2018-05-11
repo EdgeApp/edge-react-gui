@@ -19,6 +19,16 @@ type Props = {
 }
 
 export default class ExchangeRate extends Component<Props> {
+  shouldComponentUpdate (nextProps: Props) {
+    const diffElement = UTILS.getObjectDiff(this.props, nextProps, {
+      primaryInfo: true,
+      secondaryInfo: true,
+      displayDenomination: true,
+      exchangeDenomination: true
+    })
+    return !!diffElement
+  }
+
   render () {
     const { primaryInfo, primaryDisplayAmount, secondaryInfo, secondaryDisplayAmount } = this.props
 
