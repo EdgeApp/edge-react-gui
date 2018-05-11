@@ -82,7 +82,6 @@
     "jsc-android": "216113.0.3",
     "https-browserify": "0.0.1",
     "lodash": "^4.17.2",
-    "native-base": "^2.2.1",
     "os-browserify": "^0.1.2",
     "path-browserify": "0.0.0",
     "process": "^0.11.10",
