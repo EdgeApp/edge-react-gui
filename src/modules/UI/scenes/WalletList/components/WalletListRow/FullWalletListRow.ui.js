@@ -11,7 +11,7 @@ import { connect } from 'react-redux'
 import { intl } from '../../../../../../locales/intl'
 import s from '../../../../../../locales/strings.js'
 import type { CustomTokenInfo, GuiDenomination } from '../../../../../../types'
-import { cutOffText, decimalOrZero, mergeTokensRemoveInvisible, truncateDecimals } from '../../../../../utils.js'
+import { cutOffText, decimalOrZero, mergeTokensRemoveInvisible, truncateDecimals, getObjectDiff } from '../../../../../utils.js'
 import T from '../../../../components/FormattedText'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
 import { getEnabledTokens, selectWallet } from '../../../../Wallets/action.js'
@@ -53,6 +53,14 @@ class FullWalletRow extends Component<Props, State> {
     }
     slowlog(this, /.*/, global.slowlogOptions)
   }
+
+  shouldComponentUpdate (nextProps: Props) {
+    const diffElement = getObjectDiff(this.props, nextProps, {
+      data: true
+    })
+    return !!diffElement
+  }
+
   render () {
     return (
       <View>

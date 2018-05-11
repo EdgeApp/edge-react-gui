@@ -5,7 +5,7 @@ import { bns } from 'biggystring'
 import React, { Component } from 'react'
 
 import type { GuiCurrencyInfo } from '../../../../types'
-import { precisionAdjust } from '../../../utils.js'
+import { precisionAdjust, getObjectDiff } from '../../../utils.js'
 import { FlipInput } from './FlipInput2.ui.js'
 import type { FlipInputFieldInfo } from './FlipInput2.ui.js'
 
@@ -116,6 +116,18 @@ export class ExchangedFlipInput extends Component<Props, State> {
 
   componentWillReceiveProps (nextProps: Props) {
     this.setState(propsToState(nextProps))
+  }
+
+  shouldComponentUpdate (nextProps: Props, nextState: State) {
+    const diffElement = getObjectDiff(this.props, nextProps, {
+      primaryCurrencyInfo: true,
+      secondaryCurrencyInfo: true,
+    })
+    const diffElementState = getObjectDiff(this.state, nextState, {
+      primaryInfo: true,
+      secondaryInfo: true
+    })
+    return !!diffElement && !!diffElementState
   }
 
   onAmountChanged = (decimalAmount: string): void => {
