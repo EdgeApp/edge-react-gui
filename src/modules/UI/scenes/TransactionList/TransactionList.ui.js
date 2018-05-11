@@ -2,15 +2,13 @@
 
 import { bns } from 'biggystring'
 import slowlog from 'react-native-slowlog'
-import type { EdgeDenomination } from 'edge-core-js'
+import type { EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Animated, FlatList, Image, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 // import Contacts from 'react-native-contacts'
 // import Permissions from 'react-native-permissions'
 import { Actions } from 'react-native-router-flux'
 
-import receivedTypeImage from '../../../../assets/images/transactions/transaction-type-received.png'
-import sentTypeImage from '../../../../assets/images/transactions/transaction-type-sent.png'
 import requestImage from '../../../../assets/images/transactions/transactions-request.png'
 import sendImage from '../../../../assets/images/transactions/transactions-send.png'
 import * as Constants from '../../../../constants/indexConstants'
@@ -24,6 +22,7 @@ import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView'
 import styles, { styles as styleRaw } from './style'
 import type {ContactsState} from '../../../../reducers/contacts/contactsReducer'
+import {TransactionRow} from './components/TransactionRow.ui.js'
 
 // import SearchBar from './components/SearchBar.ui'
 const INITIAL_TRANSACTION_BATCH_NUMBER = 10
@@ -51,7 +50,7 @@ export type StateProps = {
 }
 
 export type DispatchProps = {
-  fetchMoreTransactions: (walletId: string, currencyCode: string) => any
+  fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => any
 }
 
 type Props = StateProps & DispatchProps
@@ -64,18 +63,19 @@ type State = {
   balanceBoxOpacity: any,
   balanceBoxHeight: any,
   width: ?number,
+  reset: boolean,
   showBalance: boolean
 }
 
 const SHOW_BALANCE_TEXT = s.strings.string_show_balance
 const REQUEST_TEXT = s.strings.fragment_request_subtitle
 const SEND_TEXT = s.strings.fragment_send_subtitle
-const SENT_TEXT = s.strings.fragment_transaction_list_sent_prefix
-const RECEIVED_TEXT = s.strings.fragment_transaction_list_receive_prefix
-const UNCONFIRMED_TEXT = s.strings.fragment_wallet_unconfirmed
+
+const emptyArray = []
 
 export class TransactionList extends Component<Props, State> {
   state = {
+    reset: true,
     focused: false,
     animation: new Animated.Value(0),
     op: new Animated.Value(0),
@@ -100,12 +100,18 @@ export class TransactionList extends Component<Props, State> {
 
   componentWillReceiveProps (nextProps: Props) {
     if (nextProps.selectedWalletId !== this.props.selectedWalletId || nextProps.selectedCurrencyCode !== this.props.selectedCurrencyCode) {
-      this.props.fetchMoreTransactions(nextProps.selectedWalletId, nextProps.selectedCurrencyCode)
+      this.props.fetchMoreTransactions(nextProps.selectedWalletId, nextProps.selectedCurrencyCode, this.state.reset)
+      if (this.state.reset) {
+        this.setState({ reset: false })
+      }
     }
   }
 
   handleScrollEnd = () => {
-    this.props.fetchMoreTransactions(this.props.selectedWalletId, this.props.selectedCurrencyCode)
+    this.props.fetchMoreTransactions(this.props.selectedWalletId, this.props.selectedCurrencyCode, this.state.reset)
+    if (this.state.reset) {
+      this.setState({ reset: false })
+    }
   }
 
   // _onSearchChange = () => {
@@ -185,20 +191,21 @@ export class TransactionList extends Component<Props, State> {
   }
 
   render () {
+    const txs = this.state.reset ? emptyArray : this.props.transactions
     return (
       <SafeAreaView>
-        <View style={[styles.scene]}>
+        <View style={styles.scene}>
           <Gradient style={styles.gradient} />
-          <View style={[styles.scrollView]}>
-            <View style={[styles.container]}>
-              <View style={[styles.transactionsWrap]}>
+          <View style={styles.scrollView}>
+            <View style={styles.container}>
+              <View style={styles.transactionsWrap}>
                 <FlatList
                   ListHeaderComponent={this.renderBalanceBox}
-                  style={[styles.transactionsScrollWrap]}
-                  data={this.props.transactions}
-                  renderItem={tx => this.renderTx(tx, this.props.transactions)}
+                  style={styles.transactionsScrollWrap}
+                  data={txs}
+                  renderItem={this.renderTx}
                   initialNumToRender={INITIAL_TRANSACTION_BATCH_NUMBER}
-                  onEndReached={() => this.handleScrollEnd()}
+                  onEndReached={this.handleScrollEnd}
                   onEndReachedThreshold={SCROLL_THRESHOLD}
                 />
               </View>
@@ -317,119 +324,23 @@ export class TransactionList extends Component<Props, State> {
     )
   }
 
-  _goToTxDetail = (edgeTransaction, thumbnailPath) => {
+  goToTxDetail = (edgeTransaction: EdgeTransaction, thumbnailPath: string) => {
     Actions.transactionDetails({ edgeTransaction, thumbnailPath })
   }
 
-  isSentTransaction (tx: TransactionListTx) {
-    return (tx.nativeAmount && (tx.nativeAmount.charAt(0) === '-'))
-  }
-
-  renderTx = (transaction: TransactionListTx, completedTxList: Array<TransactionListTx>) => {
-    // $FlowFixMe
-    const tx = transaction.item
-    let txColorStyle, lastOfDate, txImage, thumbnailPath, pendingTimeStyle, pendingTimeSyntax, transactionPartner
-    let txName = ''
-
-    let currencyName = this.props.uiWallet.currencyNames[this.props.selectedCurrencyCode]
-    if (!currencyName) {
-      currencyName = this.props.selectedCurrencyCode
-    }
-    if (this.isSentTransaction(tx)) {
-      // XXX -paulvp Why is this hard coded here?
-      txColorStyle = styles.accentRed
-      txName = SENT_TEXT + currencyName
-      txImage = sentTypeImage
-    } else {
-      txColorStyle = styles.accentGreen
-      txName = RECEIVED_TEXT + currencyName
-      txImage = receivedTypeImage
-    }
-
-    if (tx.metadata && tx.metadata.name) {
-      if (this.props.contacts) {
-        const contact = this.props.contacts.find(element => {
-          const fullName = element.givenName && element.familyName ? element.givenName + ' ' + element.familyName : element.givenName
-          const found = element.thumbnailPath && UTILS.unspacedLowercase(fullName) === UTILS.unspacedLowercase(tx.metadata.name)
-          // if (found) console.log('element is: ', element)
-          return found
-        })
-        if (contact) {
-          thumbnailPath = contact.thumbnailPath
-        }
-      }
-    }
-
-    if (completedTxList[tx.key + 1]) {
-      // is there a subsequent transaction?
-      lastOfDate = tx.dateString !== completedTxList[tx.key + 1].dateString
-    } else {
-      lastOfDate = false // 'lasteOfDate' may be a misnomer since the very last transaction in the list should have a bottom border
-    }
-
-    const stepOne = UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(bns.abs(tx.nativeAmount))
-
-    const amountString = intl.formatNumber(UTILS.decimalOrZero(UTILS.truncateDecimals(stepOne, 6), 6))
-    const fiatSymbol = this.props.fiatSymbol ? UTILS.getFiatSymbol(this.props.isoFiatCurrencyCode) : ''
-    let fiatAmountString
-    if (tx.metadata && tx.metadata.amountFiat) {
-      fiatAmountString = bns.abs(tx.metadata.amountFiat.toFixed(2))
-      fiatAmountString = intl.formatNumber(bns.toFixed(fiatAmountString, 2, 2), { toFixed: 2 })
-    } else {
-      fiatAmountString = intl.formatNumber('0.00', { toFixed: 2 })
-    }
-
-    if (tx.blockHeight <= 0) {
-      pendingTimeStyle = styles.transactionPending
-      pendingTimeSyntax = UNCONFIRMED_TEXT
-    } else {
-      pendingTimeStyle = styles.transactionTime
-      pendingTimeSyntax = tx.time
-    }
-
-    if (tx.metadata && tx.metadata.name) {
-      transactionPartner = tx.metadata.name
-    } else {
-      transactionPartner = txName
-    }
-
+  renderTx = (transaction: TransactionListTx) => {
     return (
-      <View style={[styles.singleTransactionWrap]}>
-        {(tx.key === 0 || tx.dateString !== completedTxList[tx.key - 1].dateString) && (
-          <View style={styles.singleDateArea}>
-            <View style={styles.leftDateArea}>
-              <T style={styles.formattedDate}>{tx.dateString}</T>
-            </View>
-          </View>
-        )}
-        <TouchableHighlight
-          onPress={() => this._goToTxDetail(tx, thumbnailPath)}
-          underlayColor={styleRaw.transactionUnderlay.color}
-          style={[styles.singleTransaction, { borderBottomWidth: lastOfDate ? 0 : 1 }]}
-        >
-          <View style={[styles.transactionInfoWrap]}>
-            <View style={styles.transactionLeft}>
-              {thumbnailPath ? (
-                <Image style={[styles.transactionLogo]} source={{ uri: thumbnailPath }} />
-              ) : (
-                <Image style={styles.transactionLogo} source={txImage} />
-              )}
-
-              <View style={[styles.transactionLeftTextWrap]}>
-                <T style={[styles.transactionPartner]}>{transactionPartner}</T>
-                <T style={[styles.transactionTimePendingArea, pendingTimeStyle]}>{pendingTimeSyntax}</T>
-              </View>
-            </View>
-
-            <View style={[styles.transactionRight]}>
-              <T style={[styles.transactionBitAmount, txColorStyle, styles.symbol]}>
-                {this.props.displayDenomination.symbol} {amountString}
-              </T>
-              <T style={[styles.transactionDollarAmount, txColorStyle]}>{fiatSymbol + ' ' + fiatAmountString}</T>
-            </View>
-          </View>
-        </TouchableHighlight>
-      </View>
+      <TransactionRow
+        transaction={transaction}
+        transactions={this.props.transactions}
+        selectedCurrencyCode={this.props.selectedCurrencyCode}
+        contacts={this.props.contacts}
+        uiWallet={this.props.uiWallet}
+        displayDenomination={this.props.displayDenomination}
+        isoFiatCurrencyCode={this.props.isoFiatCurrencyCode}
+        fiatCurrencyCode={this.props.fiatCurrencyCode}
+        onClick={this.goToTxDetail}
+      />
     )
   }
 }
