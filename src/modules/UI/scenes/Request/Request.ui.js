@@ -74,14 +74,18 @@ export class Request extends Component<Props, State> {
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
-  shouldComponentUpdate (nextProps: Props) {
+  shouldComponentUpdate (nextProps: Props, nextState: State) {
+    let diffElement2: string = ''
     const diffElement = getObjectDiff(this.props, nextProps, {
       primaryCurrencyInfo: true,
       secondaryCurrencyInfo: true,
       displayDenomination: true,
       exchangeDenomination: true
     })
-    return !!diffElement
+    if (!diffElement) {
+      diffElement2 = getObjectDiff(this.state, nextState)
+    }
+    return !!diffElement || !!diffElement2
   }
 
   componentWillReceiveProps (nextProps: Props) {

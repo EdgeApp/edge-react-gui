@@ -84,7 +84,7 @@ export default class WalletList extends Component<Props, State> {
     }
   }
 
-  shouldComponentUpdate (nextProps: Props) {
+  shouldComponentUpdate (nextProps: Props, nextState: State) {
     let traverseObjects, ignoreObjects
     if (this.state.sortableListExists) {
       traverseObjects = { dimensions: true }
@@ -93,12 +93,15 @@ export default class WalletList extends Component<Props, State> {
       traverseObjects = undefined
       ignoreObjects = { dimensions: true }
     }
-    const diffElement = UTILS.getObjectDiff(this.props, nextProps, traverseObjects, ignoreObjects)
-    if (diffElement) {
-      return true
-    } else {
-      return false
+
+    let diffElement2: string = ''
+    const diffElement = UTILS.getObjectDiff(this.props, nextProps, {
+      traverseObjects, ignoreObjects
+    })
+    if (!diffElement) {
+      diffElement2 = UTILS.getObjectDiff(this.state, nextState)
     }
+    return !!diffElement || !!diffElement2
   }
 
   componentWillReceiveProps (nextProps: Props) {

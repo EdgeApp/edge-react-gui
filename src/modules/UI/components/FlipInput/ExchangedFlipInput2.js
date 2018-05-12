@@ -119,15 +119,18 @@ export class ExchangedFlipInput extends Component<Props, State> {
   }
 
   shouldComponentUpdate (nextProps: Props, nextState: State) {
+    let diffElement2: string = ''
     const diffElement = getObjectDiff(this.props, nextProps, {
       primaryCurrencyInfo: true,
       secondaryCurrencyInfo: true
     })
-    const diffElementState = getObjectDiff(this.state, nextState, {
-      primaryInfo: true,
-      secondaryInfo: true
-    })
-    return !!diffElement && !!diffElementState
+    if (!diffElement) {
+      diffElement2 = getObjectDiff(this.state, nextState, {
+        primaryInfo: true,
+        secondaryInfo: true
+      })
+    }
+    return !!diffElement || !!diffElement2
   }
 
   onAmountChanged = (decimalAmount: string): void => {
