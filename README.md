@@ -62,7 +62,8 @@ For best results, please consider using the following versions (up-to-date as of
 - **Android SDK** API 23 Revision 3 through API 27 Revision 1
 - **Yarn** version 1.6.0
 - **Node** version 9.5.0
-
+- **Java NDK** version 15c
+- **Java JDK** version 8u171
 
 ### Add API key in env.json
 
