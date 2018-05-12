@@ -1,7 +1,7 @@
 // @flow
 
 import type { Action } from '../../modules/ReduxTypes.js'
-import { daysBetween } from '../../modules/utils.js'
+import { daysBetween, MILLISECONDS_PER_DAY } from '../../modules/utils.js'
 import { ACCOUNT_INIT_COMPLETE } from '../../constants/indexConstants.js'
 import { SET_SETTINGS_LOCK } from '../../modules/UI/Settings/action.js'
 import { UNLOCK as UNLOCK_WALLET_SEED } from '../../modules/UI/scenes/WalletList/components/GetSeedModal/GetSeedModalConnector.js'
@@ -25,46 +25,42 @@ export const INITIAL_PASSWORD_USES = 0
 type NewAccountAction = {
   type: 'NEW_ACCOUNT_LOGIN',
   data: {
-    currentDate: number
+    lastLoginDate: number
   }
 }
 type PasswordUsedAction = {
   type: 'PASSWORD_USED',
   data: {
-    currentDate: number
+    lastPasswordUseDate: number
   }
 }
 type PasswordLoginAction = {
   type: 'PASSWORD_LOGIN',
   data: {
-    lastPasswordUse: number,
+    lastPasswordUseDate: number,
     passwordUseCount: number,
     nonPasswordDaysLimit: number,
     nonPasswordLoginsLimit: number,
-    currentDate: number
+    lastLoginDate: number
   }
 }
 type PasswordReminderPostponedAction = {
   type: 'PASSWORD_REMINDER_POSTPONED',
-  data: {
-    currentDate: number
-  }
+  data: {}
 }
 type NonPasswordLoginAction = {
   type: 'NON_PASSWORD_LOGIN',
   data: {
-    lastPasswordUse: number,
+    lastPasswordUseDate: number,
     nonPasswordDaysLimit: number,
     nonPasswordLoginsLimit: number,
     nonPasswordLoginsCount: number,
-    currentDate: number
+    lastLoginDate: number
   }
 }
 type ChangePasswordAction = {
   type: 'REQUEST_CHANGE_PASSWORD',
-  data: {
-    currentDate: number
-  }
+  data: {}
 }
 type DefaultAction = {
   type: 'default',
@@ -81,36 +77,40 @@ export type PasswordReminderReducerAction =
   | DefaultAction
 
 export type PasswordReminderState = {
+  lastLoginDate: number,
+  lastPasswordUseDate: number,
   needsPasswordCheck: boolean,
-  lastPasswordUse: number,
-  passwordUseCount: number,
   nonPasswordDaysLimit: number,
-  nonPasswordLoginsLimit: number
+  nonPasswordLoginsCount: number,
+  nonPasswordLoginsLimit: number,
+  passwordUseCount: number
 }
 
 export const initialState = {
+  lastLoginDate: -Infinity,
+  lastPasswordUseDate: -Infinity,
   needsPasswordCheck: false,
-  lastPasswordUse: 0,
-  passwordUseCount: 0,
-  nonPasswordLoginsCount: 0,
   nonPasswordDaysLimit: INITIAL_NON_PASSWORD_DAYS_LIMIT,
-  nonPasswordLoginsLimit: INITIAL_NON_PASSWORD_LOGINS_LIMIT
+  nonPasswordLoginsCount: 0,
+  nonPasswordLoginsLimit: INITIAL_NON_PASSWORD_LOGINS_LIMIT,
+  passwordUseCount: 0
 }
 
 export const untranslatedReducer = (state: PasswordReminderState = initialState, action: PasswordReminderReducerAction) => {
   switch (action.type) {
     case 'NEW_ACCOUNT_LOGIN': {
-      const lastPasswordUse = action.data.currentDate
+      const lastPasswordUseDate = action.data.lastLoginDate
 
       return {
         ...state,
-        lastPasswordUse
+        ...action.data,
+        lastPasswordUseDate
       }
     }
 
     case 'PASSWORD_LOGIN': {
       const passwordUseCount = action.data.passwordUseCount + 1
-      const lastPasswordUse = action.data.currentDate
+      const lastPasswordUseDate = action.data.lastLoginDate
       const needsPasswordCheck = false
       const nonPasswordLoginsCount = 0
 
@@ -119,7 +119,8 @@ export const untranslatedReducer = (state: PasswordReminderState = initialState,
 
       return {
         ...state,
-        lastPasswordUse,
+        ...action.data,
+        lastPasswordUseDate,
         needsPasswordCheck,
         nonPasswordDaysLimit,
         nonPasswordLoginsCount,
@@ -131,8 +132,8 @@ export const untranslatedReducer = (state: PasswordReminderState = initialState,
     case 'NON_PASSWORD_LOGIN': {
       const nonPasswordLoginsCount = action.data.nonPasswordLoginsCount + 1
       const needsPasswordCheck =
-        nonPasswordLoginsCount >= action.data.nonPasswordLoginsLimit ||
-        daysBetween(action.data.lastPasswordUse, action.data.currentDate) >= action.data.nonPasswordDaysLimit
+        (nonPasswordLoginsCount >= action.data.nonPasswordLoginsLimit) ||
+        daysBetween(action.data.lastPasswordUseDate, action.data.lastLoginDate) >= action.data.nonPasswordDaysLimit
 
       return {
         ...state,
@@ -144,7 +145,7 @@ export const untranslatedReducer = (state: PasswordReminderState = initialState,
 
     case 'PASSWORD_USED': {
       const passwordUseCount = state.passwordUseCount + 1
-      const lastPasswordUse = action.data.currentDate
+      const lastPasswordUseDate = action.data.lastPasswordUseDate
       const needsPasswordCheck = false
       const nonPasswordLoginsCount = 0
       const nonPasswordDaysLimit = Math.min(Math.pow(NON_PASSWORD_DAYS_GROWTH_RATE, passwordUseCount), MAX_NON_PASSWORD_DAYS_LIMIT)
@@ -152,24 +153,24 @@ export const untranslatedReducer = (state: PasswordReminderState = initialState,
 
       return {
         ...state,
-        lastPasswordUse,
+        ...action.data,
+        passwordUseCount,
+        lastPasswordUseDate,
         needsPasswordCheck,
         nonPasswordDaysLimit,
         nonPasswordLoginsCount,
-        nonPasswordLoginsLimit,
-        passwordUseCount
+        nonPasswordLoginsLimit
       }
     }
 
     case 'PASSWORD_REMINDER_POSTPONED': {
-      const nonPasswordDaysLimit = state.nonPasswordDaysLimit + NON_PASSWORD_DAYS_POSTPONEMENT
-      const nonPasswordLoginsLimit = state.nonPasswordLoginsLimit + NON_PASSWORD_LOGINS_POSTPONEMENT
-      const nonPasswordLoginsCount = 0
+      const nonPasswordDaysLimit = (state.lastLoginDate / MILLISECONDS_PER_DAY) - (state.lastPasswordUseDate / MILLISECONDS_PER_DAY) + 2
+      const nonPasswordLoginsLimit = state.nonPasswordLoginsCount + 2
       const needsPasswordCheck = false
 
       return {
         ...state,
-        nonPasswordLoginsCount,
+        ...action.data,
         nonPasswordDaysLimit,
         nonPasswordLoginsLimit,
         needsPasswordCheck
@@ -195,22 +196,26 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
 
   // $FlowFixMe
   if ((action.type === 'LOGIN' || action.type === ACCOUNT_INIT_COMPLETE) && action.data.account.newAccount) {
+    const now = Date.now()
     translatedAction = {
       type: 'NEW_ACCOUNT_LOGIN',
       data: {
-        currentDate: Date.now()
+        lastLoginDate: now,
+        lastPasswordUseDate: now
       }
     }
   }
 
   // $FlowFixMe
   if ((action.type === 'LOGIN' || action.type === ACCOUNT_INIT_COMPLETE) && action.data.account.passwordLogin) {
+    const now = Date.now()
     translatedAction = {
       type: 'PASSWORD_LOGIN',
       data: {
         // $FlowFixMe
         ...action.data.passwordReminder,
-        currentDate: Date.now()
+        lastLoginDate: now,
+        lastPasswordUseDate: now
       }
     }
   }
@@ -222,7 +227,7 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
       data: {
         // $FlowFixMe
         ...action.data.passwordReminder,
-        currentDate: Date.now()
+        lastLoginDate: Date.now()
       }
     }
   }
@@ -231,7 +236,7 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
     translatedAction = {
       type: 'PASSWORD_USED',
       data: {
-        currentDate: Date.now()
+        lastPasswordUseDate: Date.now()
       }
     }
   }
@@ -239,7 +244,7 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
     translatedAction = {
       type: 'PASSWORD_USED',
       data: {
-        currentDate: Date.now()
+        lastPasswordUseDate: Date.now()
       }
     }
   }
@@ -247,7 +252,7 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
     translatedAction = {
       type: 'PASSWORD_USED',
       data: {
-        currentDate: Date.now()
+        lastPasswordUseDate: Date.now()
       }
     }
   }
@@ -255,18 +260,14 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
   if (action.type === PASSWORD_REMINDER_POSTPONED) {
     translatedAction = {
       type: 'PASSWORD_REMINDER_POSTPONED',
-      data: {
-        currentDate: Date.now()
-      }
+      data: {}
     }
   }
 
   if (action.type === REQUEST_CHANGE_PASSWORD) {
     translatedAction = {
       type: 'REQUEST_CHANGE_PASSWORD',
-      data: {
-        currentDate: Date.now()
-      }
+      data: {}
     }
   }
 

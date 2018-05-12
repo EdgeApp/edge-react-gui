@@ -62,6 +62,8 @@ const strings = {
   fragment_send_flash: 'Flash',
   fragment_send_other_wallet_header_title: 'Choose a wallet to transfer funds to:',
   fragment_send_send_bitcoin_unscannable: 'Unable to scan QR code',
+  scan_invalid_address_error_title: 'Invalid Address',
+  scan_invalid_address_error_description: 'Not a valid public address',
   fragment_send_send_to_hint: 'Public Address or Private Key',
   fragment_send_subtitle: 'Send',
   fragment_transaction_exchange: 'Exchange',

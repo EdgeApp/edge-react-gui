@@ -159,7 +159,7 @@ export const emptyCurrencyInfo: GuiCurrencyInfo = {
 
 export type PasswordReminder = {
   needsPasswordCheck: boolean,
-  lastPasswordUse: number,
+  lastPasswordUseDate: number,
   passwordUseCount: number,
   nonPasswordLoginsCount: number,
   nonPasswordDaysLimit: number,
