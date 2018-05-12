@@ -11,24 +11,23 @@ import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import { saveReceiveAddress } from './action.js'
 import { Request } from './Request.ui'
-import type { RequestDispatchProps, RequestLoadingProps, RequestStateProps } from './Request.ui'
+import type { RequestDispatchProps, RequestStateProps } from './Request.ui'
 
-const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps => {
-  let exchangeSecondaryToPrimaryRatio: number = 0
+const mapStateToProps = (state: State): RequestStateProps => {
   const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
   const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
   if (!guiWallet || !currencyCode) {
     return {
-      currencyCode: null,
+      currencyCode: '',
       edgeWallet: null,
-      exchangeSecondaryToPrimaryRatio: null,
+      exchangeSecondaryToPrimaryRatio: 0,
       guiWallet: null,
       loading: true,
       primaryCurrencyInfo: null,
-      request: {},
+      receiveAddress: null,
       secondaryCurrencyInfo: null,
-      showToWalletModal: null,
-      useLegacyAddress: null
+      showToWalletModal: false,
+      useLegacyAddress: false
     }
   }
 
@@ -54,7 +53,7 @@ const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps 
     exchangeDenomination: secondaryExchangeDenomination
   }
   const isoFiatCurrencyCode: string = guiWallet.isoFiatCurrencyCode
-  exchangeSecondaryToPrimaryRatio = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+  const exchangeSecondaryToPrimaryRatio = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
 
   return {
     currencyCode,
@@ -63,7 +62,7 @@ const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps 
     guiWallet,
     loading: false,
     primaryCurrencyInfo,
-    request: state.ui.scenes.request,
+    receiveAddress: state.ui.scenes.request.receiveAddress,
     secondaryCurrencyInfo,
     showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility,
     useLegacyAddress: state.ui.scenes.requestType.useLegacyAddress

@@ -10,7 +10,7 @@ import { sprintf } from 'sprintf-js'
 
 import * as Constants from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings.js'
-import type { GuiCurrencyInfo, GuiReceiveAddress, GuiTransactionRequest, GuiWallet } from '../../../../types.js'
+import type { GuiCurrencyInfo, GuiReceiveAddress, GuiWallet } from '../../../../types.js'
 import WalletListModal from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
 import { ExchangedFlipInput } from '../../components/FlipInput/ExchangedFlipInput2.js'
@@ -25,36 +25,23 @@ import { getObjectDiff } from '../../../utils'
 
 export type RequestStateProps = {
   currencyCode: string,
-  edgeWallet: EdgeCurrencyWallet,
+  edgeWallet: EdgeCurrencyWallet | null,
   exchangeSecondaryToPrimaryRatio: number,
-  guiWallet: GuiWallet,
-  loading: false,
-  primaryCurrencyInfo: GuiCurrencyInfo,
-  request: GuiTransactionRequest,
-  secondaryCurrencyInfo: GuiCurrencyInfo,
+  guiWallet: GuiWallet | null,
+  loading: boolean,
+  primaryCurrencyInfo: GuiCurrencyInfo | null,
+  receiveAddress: GuiReceiveAddress | null,
+  secondaryCurrencyInfo: GuiCurrencyInfo | null,
   showToWalletModal: boolean,
   useLegacyAddress: boolean
-}
-export type RequestLoadingProps = {
-  edgeWallet: null,
-  currencyCode: null,
-  exchangeSecondaryToPrimaryRatio: null,
-  guiWallet: null,
-  loading: true,
-  primaryCurrencyInfo: null,
-  request: Object,
-  secondaryCurrencyInfo: null,
-  showToWalletModal: null,
-  useLegacyAddress: null
 }
 
 export type RequestDispatchProps = {
   saveReceiveAddress(GuiReceiveAddress): void
 }
 
-export type LoadingProps = RequestLoadingProps & RequestDispatchProps
-export type LoadedProps = RequestStateProps & RequestDispatchProps
-export type Props = LoadingProps | LoadedProps
+export type Props = RequestStateProps & RequestDispatchProps
+
 export type State = {
   publicAddress: string,
   legacyAddress: string,
@@ -91,13 +78,19 @@ export class Request extends Component<Props, State> {
   componentWillReceiveProps (nextProps: Props) {
     if (nextProps.loading) return
 
-    const didAddressChange = this.state.publicAddress !== nextProps.guiWallet.receiveAddress.publicAddress
+    const didAddressChange = this.state.publicAddress !== (nextProps.guiWallet ? nextProps.guiWallet.receiveAddress.publicAddress : '')
     const changeLegacyPublic = nextProps.useLegacyAddress !== this.props.useLegacyAddress
-    const didWalletChange = this.props.edgeWallet && nextProps.edgeWallet.id !== this.props.edgeWallet.id
+    const prevWalletId = this.props.edgeWallet ? this.props.edgeWallet.id : ''
+    const nextWalletId = nextProps.edgeWallet ? nextProps.edgeWallet.id : ''
+    const didWalletChange = prevWalletId !== nextWalletId
 
     if (didAddressChange || changeLegacyPublic || didWalletChange) {
-      const publicAddress = nextProps.guiWallet.receiveAddress.publicAddress
-      const legacyAddress = nextProps.guiWallet.receiveAddress.legacyAddress
+      let publicAddress = ''
+      let legacyAddress = ''
+      if (nextProps.guiWallet) {
+        publicAddress = nextProps.guiWallet.receiveAddress.publicAddress
+        legacyAddress = nextProps.guiWallet.receiveAddress.legacyAddress
+      }
 
       const abcEncodeUri = nextProps.useLegacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
 
@@ -111,24 +104,13 @@ export class Request extends Component<Props, State> {
     }
   }
 
-  onExchangeAmountChanged = (amounts: ExchangedFlipInputAmounts) => {
-    const { publicAddress, legacyAddress } = this.state
-    const edgeEncodeUri: EdgeEncodeUri = this.props.useLegacyAddress && legacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
-    if (bns.gt(amounts.nativeAmount, '0')) {
-      edgeEncodeUri.nativeAmount = amounts.nativeAmount
-    }
-    const encodedURI = this.props.edgeWallet ? this.props.edgeWallet.encodeUri(edgeEncodeUri) : ''
-
-    this.setState({ encodedURI })
-  }
-
   render () {
-    if (this.props.loading) {
+    const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio } = this.props
+    if (this.props.loading || !primaryCurrencyInfo || !secondaryCurrencyInfo) {
       return <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size={'large'} />
     }
 
     const color = 'white'
-    const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio } = this.props
     const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
 
     return (
@@ -196,7 +178,9 @@ export class Request extends Component<Props, State> {
 
   showResult = (result: { activityType: string }) => {
     if (result.action === Share.sharedAction) {
-      this.props.saveReceiveAddress(this.props.request.receiveAddress)
+      if (this.props.receiveAddress) {
+        this.props.saveReceiveAddress(this.props.receiveAddress)
+      }
 
       if (result.activityType) {
         this.setState({
