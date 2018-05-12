@@ -51,6 +51,20 @@ Set `ANDROID_NDK_HOME` environment variable to the path of the NDK. ie
 
     export ANDROID_NDK_HOME=/Users/bob/Library/Android/sdk/ndk-bundle
 
+### Android Recommended Versioning & Configuration
+
+For best results, please consider using the following versions (up-to-date as of 2018-05-11)
+
+- **Gradle** version 4.1
+- **Android Plugin** version 3.0.1
+- **Compile SDK** version API 27
+- **Build Tools** version 25.0.3
+- **Android SDK** API 23 Revision 3 through API 27 Revision 1
+- **Yarn** version 1.6.0
+- **Node** version 9.5.0
+- **Java NDK** version 15c
+- **Java JDK** version 8u171
+
 ### Add API key in env.json
 
 Get an API key from https://developer.airbitz.co by scanning the QR code with your Airbitz wallet (https://airbitz.co/app)
