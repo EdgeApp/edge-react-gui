@@ -86,7 +86,7 @@ function propsToState (props: Props): State {
 
   const primaryInfo: FlipInputFieldInfo = {
     currencyName: props.primaryCurrencyInfo.displayDenomination.name,
-    currencySymbol: props.primaryCurrencyInfo.displayDenomination.symbol,
+    currencySymbol: props.primaryCurrencyInfo.displayDenomination.symbol ? props.primaryCurrencyInfo.displayDenomination.symbol : '',
     currencyCode: props.primaryCurrencyInfo.displayCurrencyCode,
     maxEntryDecimals: primaryEntryPrecision,
     maxConversionDecimals: primaryConversionPrecision
@@ -94,7 +94,7 @@ function propsToState (props: Props): State {
 
   const secondaryInfo: FlipInputFieldInfo = {
     currencyName: props.secondaryCurrencyInfo.displayDenomination.name,
-    currencySymbol: props.secondaryCurrencyInfo.displayDenomination.symbol,
+    currencySymbol: props.secondaryCurrencyInfo.displayDenomination.symbol ? props.secondaryCurrencyInfo.displayDenomination.symbol : '',
     currencyCode: props.secondaryCurrencyInfo.displayCurrencyCode,
     maxEntryDecimals: secondaryPrecision,
     maxConversionDecimals: secondaryPrecision

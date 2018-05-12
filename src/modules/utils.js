@@ -205,18 +205,14 @@ export function getDenomFromIsoCode (currencyCode: string): GuiDenomination {
   if (restrictedCurrencyCodes.findIndex(item => item === currencyCode) !== -1) {
     return {
       name: '',
-      currencyCode: '',
       symbol: '',
-      precision: 0,
       multiplier: '0'
     }
   }
   const symbol = getSymbolFromCurrency(currencyCode)
   const denom: GuiDenomination = {
     name: currencyCode,
-    currencyCode,
     symbol,
-    precision: 2,
     multiplier: '100'
   }
   return denom
@@ -391,17 +387,6 @@ export const getTimeInMinutes = (params: { measurement: string, value: number })
     return Infinity
   }
   return strategy(value)
-}
-
-export const convertAbcToGuiDenomination = (edgeDenomination: EdgeDenomination): GuiDenomination => {
-  const guiDenomination: GuiDenomination = {
-    name: edgeDenomination.name,
-    currencyCode: edgeDenomination.name,
-    symbol: edgeDenomination.symbol ? edgeDenomination.symbol : '',
-    multiplier: edgeDenomination.multiplier,
-    precision: 0
-  }
-  return guiDenomination
 }
 
 export type PrecisionAdjustParams = {

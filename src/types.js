@@ -22,14 +22,7 @@ export type GuiWallet = {
   addressLoadingProgress?: number
 }
 
-export type GuiDenomination = {
-  name: string,
-  currencyCode?: string,
-  symbol: string,
-  multiplier: string,
-  precision?: number
-}
-
+export type GuiDenomination = EdgeDenomination
 export type GuiCurrencyInfo = {
   displayCurrencyCode: string,
   exchangeCurrencyCode: string,
