@@ -19,7 +19,7 @@ import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView/index.js'
 import SimplifiedDropdown from '../../components/SimpleDropdown/SimpleDropdown.ui.js'
-import FullWalletListRow from './components/WalletListRow/FullWalletListRowConnector'
+import FullWalletListRow from './components/WalletListRow/FullWalletListRow.ui.js'
 import SortableWalletListRow from './components/WalletListRow/SortableWalletListRow.ui.js'
 import WalletOptions from './components/WalletOptions/WalletOptionsConnector.ui.js'
 import styles from './style'
@@ -293,7 +293,8 @@ export default class WalletList extends Component<Props, State> {
 
   renderItem = (item: Object) => {
     return (
-      <FullWalletListRow data={item} settings={this.props.settings} customTokens={this.props.customTokens} />
+      // $FlowFixMe sortHandlers error. Where does sortHandlers even come from?
+      <FullWalletListRow data={item} customTokens={this.props.customTokens} />
     )
   }
 
