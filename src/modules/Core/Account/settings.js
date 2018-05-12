@@ -35,7 +35,7 @@ export const LOCAL_ACCOUNT_DEFAULTS = {
   bluetoothMode: false,
   passwordReminder: {
     needsPasswordCheck: false,
-    lastPasswordUse: 0,
+    lastPasswordUseDate: 0,
     passwordUseCount: 0,
     nonPasswordLoginsCount: 0,
     nonPasswordDaysLimit: 2,
