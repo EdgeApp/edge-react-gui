@@ -1,12 +1,12 @@
 // @flow
 
-import { Icon } from 'native-base'
 import React, { Component } from 'react'
 import { Alert, ScrollView, TouchableHighlight, View } from 'react-native'
 
+import { Icon } from '../../Icon/Icon.ui.js'
 import T from '../../../components/FormattedText'
 import styles from '../style'
-
+import * as Constants from '../../../../../constants/indexConstants.js'
 type Props = {
   usernames: Array<string>,
   logout: (username?: string) => void,
@@ -29,7 +29,9 @@ export default class UserList extends Component<Props> {
             </TouchableHighlight>
 
             <TouchableHighlight style={styles.userList.icon} underlayColor={styles.underlay.color} onPress={this.handlePressDeleteLocalAccount(username)}>
-              <Icon name="close" />
+              <View /* Hack, do not remove */>
+                <Icon size={20} name={'close'} type={Constants.MATERIAL_ICONS} style={{}} />
+              </View>
             </TouchableHighlight>
           </View>
         ))}
