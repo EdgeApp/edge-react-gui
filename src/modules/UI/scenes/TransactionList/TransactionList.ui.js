@@ -181,22 +181,9 @@ export class TransactionList extends Component<Props, State> {
   //
   // _onCancel = () => this.setState({ width: 0 })
 
-      Animated.parallel([
-        Animated.sequence([
-          Animated.timing(this.state.animation, { toValue: toWidth, duration: 200 }),
-          Animated.timing(this.state.op, { toValue: toOpacity, duration: 200 })
-        ]),
-        Animated.sequence([
-          Animated.sequence([Animated.timing(this.state.balanceBoxOpacity, { toValue: toBalanceBoxOpacity, duration: 400 })]),
-          Animated.timing(this.state.balanceBoxHeight, { toValue: toBalanceBoxHeight, duration: 400 })
-        ])
-      ]).start(() => this.setState({ balanceBoxVisible: false }))
-    }
+  toggleShowBalance = () => {
+    this.setState({ showBalance: !this.state.showBalance })
   }
-
-  _onCancel = () => this.setState({ width: 0 })
-
-  toggleShowBalance = () => this.setState({ showBalance: !this.state.showBalance })
 
   renderDropUp = () => {
     if (this.props.showToWalletModal) {
@@ -207,6 +194,11 @@ export class TransactionList extends Component<Props, State> {
 
   render () {
     const txs = this.state.reset ? emptyArray : this.props.transactions
+    if (this.state.showBalance) {
+      this.currentRenderBalanceBox = this.renderBalanceBoxTrue
+    } else {
+      this.currentRenderBalanceBox = this.renderBalanceBoxFalse
+    }
     return (
       <SafeAreaView>
         <View style={styles.scene}>
@@ -215,7 +207,7 @@ export class TransactionList extends Component<Props, State> {
             <View style={styles.container}>
               <View style={styles.transactionsWrap}>
                 <FlatList
-                  ListHeaderComponent={this.renderBalanceBox}
+                  ListHeaderComponent={this.currentRenderBalanceBox}
                   style={styles.transactionsScrollWrap}
                   data={txs}
                   renderItem={this.renderTx}
@@ -232,7 +224,7 @@ export class TransactionList extends Component<Props, State> {
     )
   }
 
-  renderBalanceBox = () => {
+  renderBalanceBox = (showBalance: boolean) => () => {
     const {
       loading,
       uiWallet,
@@ -277,7 +269,7 @@ export class TransactionList extends Component<Props, State> {
           {this.state.balanceBoxVisible && (
             <Animated.View style={[styles.balanceBoxContents, { opacity: this.state.balanceBoxOpacity }]}>
               <TouchableOpacity onPress={this.toggleShowBalance} style={[styles.currentBalanceWrap]}>
-                {this.state.showBalance ? (
+                {showBalance ? (
                   <View style={styles.balanceShownContainer}>
                     <View style={[styles.iconWrap]}>
                       {logo ? (
@@ -338,6 +330,10 @@ export class TransactionList extends Component<Props, State> {
       </Animated.View>
     )
   }
+
+  renderBalanceBoxTrue = this.renderBalanceBox(true)
+  renderBalanceBoxFalse = this.renderBalanceBox(false)
+  currentRenderBalanceBox = this.renderBalanceBoxTrue
 
   goToTxDetail = (edgeTransaction: EdgeTransaction, thumbnailPath: string) => {
     Actions.transactionDetails({ edgeTransaction, thumbnailPath })
