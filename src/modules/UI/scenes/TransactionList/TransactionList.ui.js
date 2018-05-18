@@ -131,40 +131,55 @@ export class TransactionList extends Component<Props, State> {
   //   // console.log('Transactions.ui->loadMoreTransactions being executed')
   // }
 
-  _onFocus = () => {
-    this.setState({ focused: true })
-    this._toggleCancelVisibility()
-  }
-
-  _onBlur = () => {
-    this.setState({ focused: false })
-    this._toggleCancelVisibility()
-  }
-
-  _toggleCancelVisibility = () => {
-    let toOpacity, toWidth, toBalanceBoxHeight, toBalanceBoxOpacity
-    if (this.state.focused) {
-      toOpacity = 0
-      toWidth = 0
-      toBalanceBoxHeight = 200
-      toBalanceBoxOpacity = 1.0
-      this.setState({ balanceBoxVisible: true })
-
-      Animated.parallel([
-        Animated.sequence([
-          Animated.timing(this.state.op, { toValue: toOpacity, duration: 200 }),
-          Animated.timing(this.state.animation, { toValue: toWidth, duration: 200 })
-        ]),
-        Animated.sequence([
-          Animated.timing(this.state.balanceBoxHeight, { toValue: toBalanceBoxHeight, duration: 400 }),
-          Animated.timing(this.state.balanceBoxOpacity, { toValue: toBalanceBoxOpacity, duration: 400 })
-        ])
-      ]).start()
-    } else {
-      toOpacity = 1
-      toWidth = 60
-      toBalanceBoxHeight = 0
-      toBalanceBoxOpacity = 0.0
+  // // _onFocus = () => {
+  // //   this.setState({ focused: true })
+  // //   this._toggleCancelVisibility()
+  // // }
+  // //
+  // // _onBlur = () => {
+  // //   this.setState({ focused: false })
+  // //   this._toggleCancelVisibility()
+  // // }
+  // //
+  // _toggleCancelVisibility = () => {
+  //   let toOpacity, toWidth, toBalanceBoxHeight, toBalanceBoxOpacity
+  //   if (this.state.focused) {
+  //     toOpacity = 0
+  //     toWidth = 0
+  //     toBalanceBoxHeight = 200
+  //     toBalanceBoxOpacity = 1.0
+  //     this.setState({ balanceBoxVisible: true })
+  //
+  //     Animated.parallel([
+  //       Animated.sequence([
+  //         Animated.timing(this.state.op, { toValue: toOpacity, duration: 200 }),
+  //         Animated.timing(this.state.animation, { toValue: toWidth, duration: 200 })
+  //       ]),
+  //       Animated.sequence([
+  //         Animated.timing(this.state.balanceBoxHeight, { toValue: toBalanceBoxHeight, duration: 400 }),
+  //         Animated.timing(this.state.balanceBoxOpacity, { toValue: toBalanceBoxOpacity, duration: 400 })
+  //       ])
+  //     ]).start()
+  //   } else {
+  //     toOpacity = 1
+  //     toWidth = 60
+  //     toBalanceBoxHeight = 0
+  //     toBalanceBoxOpacity = 0.0
+  //
+  //     Animated.parallel([
+  //       Animated.sequence([
+  //         Animated.timing(this.state.animation, { toValue: toWidth, duration: 200 }),
+  //         Animated.timing(this.state.op, { toValue: toOpacity, duration: 200 })
+  //       ]),
+  //       Animated.sequence([
+  //         Animated.sequence([Animated.timing(this.state.balanceBoxOpacity, { toValue: toBalanceBoxOpacity, duration: 400 })]),
+  //         Animated.timing(this.state.balanceBoxHeight, { toValue: toBalanceBoxHeight, duration: 400 })
+  //       ])
+  //     ]).start(() => this.setState({ balanceBoxVisible: false }))
+  //   }
+  // }
+  //
+  // _onCancel = () => this.setState({ width: 0 })
 
       Animated.parallel([
         Animated.sequence([
