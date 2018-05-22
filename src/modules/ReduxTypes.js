@@ -71,6 +71,16 @@ export type State = {
         scanToWalletListModalVisibility: boolean,
         legacyAddressModal: {
           isActive: boolean
+        },
+        privateKeyModal: {
+          primaryModal: {
+            isActive: boolean
+          },
+          secondaryModal: {
+            isActive: boolean
+          },
+          error: Error | null,
+          isSweeping: boolean
         }
       },
       sendConfirmation: {
