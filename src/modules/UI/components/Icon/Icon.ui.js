@@ -32,8 +32,9 @@ const Icon = ({ style, name, size, type }: Props) => {
       return <SimpleIcon style={style} name={name} size={size} />
     case Constants.MATERIAL_COMMUNITY:
       return <MCIcon style={style} name={name} size={size} />
+    default:
+      return <FAIcon name={'question'} style={style} />
   }
-  return null
 }
 
 export { Icon }
