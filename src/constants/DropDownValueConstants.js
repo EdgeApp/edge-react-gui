@@ -43,7 +43,7 @@ export const WALLET_OPTIONS = {
   },
   VIEW_XPUB: {
     value: 'viewXPub',
-    currencyCode: ['BTC', 'BCH', 'DASH', 'FTC', 'ZER', 'LTC'],
+    currencyCode: ['BTC', 'BCH', 'DASH', 'FTC', 'XZC', 'LTC'],
     label: s.strings.fragment_wallets_view_xpub,
     modalVisible: true
   }
