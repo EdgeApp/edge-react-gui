@@ -79,8 +79,8 @@
     "edge-currency-ethereum": "0.10.1",
     "edge-exchange-plugins": "^0.2.0",
     "edge-login-ui-rn": "^0.3.1",
-    "jsc-android": "216113.0.3",
     "https-browserify": "0.0.1",
+    "jsc-android": "216113.0.3",
     "lodash": "^4.17.2",
     "os-browserify": "^0.1.2",
     "path-browserify": "0.0.0",
@@ -103,7 +103,7 @@
     "react-native-dropdownalert": "git://github.com/Airbitz/react-native-dropdownalert.git",
     "react-native-fast-crypto": "^1.5.5",
     "react-native-flip-view": "git://github.com/Airbitz/react-native-flip-view.git",
-    "react-native-fs": "^2.9.7",
+    "react-native-fs": "^2.9.12",
     "react-native-hockeyapp": "0.5.1",
     "react-native-http": "git://github.com/tradle/react-native-http#834492d",
     "react-native-image-picker": "^0.26.4",
@@ -169,8 +169,15 @@
     "updot": "^1.1.7"
   },
   "flow-coverage-report": {
-    "includeGlob": ["src/**/*.js", "*.js"],
-    "type": ["text", "html", "json"]
+    "includeGlob": [
+      "src/**/*.js",
+      "*.js"
+    ],
+    "type": [
+      "text",
+      "html",
+      "json"
+    ]
   },
   "importSort": {
     ".js, .es": {
@@ -180,8 +187,12 @@
   },
   "jest": {
     "preset": "react-native",
-    "transformIgnorePatterns": ["node_modules/mobx-react"],
-    "setupFiles": ["./testSetup.js"]
+    "transformIgnorePatterns": [
+      "node_modules/mobx-react"
+    ],
+    "setupFiles": [
+      "./testSetup.js"
+    ]
   },
   "prettier": {
     "printWidth": 160
@@ -212,6 +223,8 @@
     "zlib": "browserify-zlib"
   },
   "rnpm": {
-    "assets": ["./src/assets/fonts"]
+    "assets": [
+      "./src/assets/fonts"
+    ]
   }
 }
