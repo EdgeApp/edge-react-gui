@@ -6431,7 +6431,7 @@ react-native-router-flux@4.0.0-beta.28:
     prop-types "^15.6.0"
     react-navigation "1.0.0-beta.22"
 
-react-native-share@^1.0.21:
+react-native-share@^1.0.27:
   version "1.0.27"
   resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-1.0.27.tgz#1861afe0d1256bde95d19520ca5d5c3cd348ffad"
 
