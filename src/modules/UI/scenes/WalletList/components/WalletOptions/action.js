@@ -109,5 +109,11 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
         const xPub = wallet.getDisplayPublicSeed()
         dispatch(wrap(OPEN_MODAL_VALUE(Constants.VIEW_XPUB_VALUE), { xPub, walletId }))
       }
+    case Constants.EXPORT_WALLET_TRANSACTIONS_VALUE:
+      return async (dispatch: Dispatch, getState: GetState) => {
+        const state = getState()
+        const wallet = state.core.wallets.byId[walletId]
+        Actions[Constants.TRANSACTIONS_EXPORT]({ sourceWallet: wallet })
+      }
   }
 }
