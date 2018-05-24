@@ -3,52 +3,6 @@
 import s from '../locales/strings.js'
 import THEME from '../theme/variables/airbitz'
 
-export const WALLET_OPTIONS = {
-  SORT: {
-    value: 'sort',
-    label: s.strings.fragment_wallets_sort,
-    modalVisible: false
-  },
-  RENAME: {
-    value: 'rename',
-    label: s.strings.string_rename,
-    modalVisible: true
-  },
-  DELETE: {
-    value: 'delete',
-    label: s.strings.string_delete,
-    modalVisible: true
-  },
-  RESYNC: {
-    value: 'resync',
-    label: s.strings.string_resync,
-    modalVisible: true
-  },
-  GET_SEED: {
-    value: 'getSeed',
-    label: s.strings.string_master_private_key,
-    modalVisible: true
-  },
-  SPLIT: {
-    value: 'split',
-    currencyCode: ['BTC'],
-    label: s.strings.string_split_bitcoin_cash,
-    modalVisible: true
-  },
-  MANAGE_TOKENS: {
-    value: 'manageTokens',
-    currencyCode: ['ETH'],
-    label: s.strings.string_add_edit_tokens,
-    modalVisible: false
-  },
-  VIEW_XPUB: {
-    value: 'viewXPub',
-    currencyCode: ['BTC', 'BCH', 'DASH', 'FTC', 'XZC', 'LTC'],
-    label: s.strings.fragment_wallets_view_xpub,
-    modalVisible: true
-  }
-}
-
 export const CHANGE_MINING_FEE_VALUE = 'changeMiningFee'
 export const EXCHANGE_MAX_AMOUNT_VALUE = 'exchangeMaxAmountValue'
 export const HELP_VALUE = 'helpValue'
@@ -64,8 +18,60 @@ export const ARCHIVE_VALUE = 'archive'
 export const ACTIVATE_VALUE = 'activate'
 export const RESTORE_VALUE = 'restore'
 export const SPLIT_VALUE = 'split'
+export const EXPORT_WALLET_TRANSACTIONS_VALUE = 'exportWalletTransactions'
 export const MANAGE_TOKENS_VALUE = 'manageTokens'
 export const REQUEST_WALLET_DIALOG_TOP = THEME.HEADER
 export const TRANSACTIONLIST_WALLET_DIALOG_TOP = THEME.HEADER
 export const SCAN_WALLET_DIALOG_TOP = THEME.HEADER
 export const CRYPTO_EXCHANGE_WALLET_DIALOG_TOP = THEME.HEADER
+
+export const WALLET_OPTIONS = {
+  SORT: {
+    value: SORT_VALUE,
+    label: s.strings.fragment_wallets_sort,
+    modalVisible: false
+  },
+  RENAME: {
+    value: RENAME_VALUE,
+    label: s.strings.string_rename,
+    modalVisible: true
+  },
+  DELETE: {
+    value: DELETE_VALUE,
+    label: s.strings.string_delete,
+    modalVisible: true
+  },
+  RESYNC: {
+    value: RESYNC_VALUE,
+    label: s.strings.string_resync,
+    modalVisible: true
+  },
+  EXPORT: {
+    value: EXPORT_WALLET_TRANSACTIONS_VALUE,
+    label: s.strings.fragment_wallets_export_transactions,
+    modalVisible: false
+  },
+  GET_SEED: {
+    value: GET_SEED_VALUE,
+    label: s.strings.string_master_private_key,
+    modalVisible: true
+  },
+  SPLIT: {
+    value: SPLIT_VALUE,
+    currencyCode: ['BTC'],
+    label: s.strings.string_split_bitcoin_cash,
+    modalVisible: true
+  },
+  MANAGE_TOKENS: {
+    value: MANAGE_TOKENS_VALUE,
+    currencyCode: ['ETH'],
+    label: s.strings.string_add_edit_tokens,
+    modalVisible: false
+  },
+  VIEW_XPUB: {
+    value: VIEW_XPUB_VALUE,
+    currencyCode: ['BTC', 'BCH', 'DASH', 'FTC', 'XZC', 'LTC'],
+    label: s.strings.fragment_wallets_view_xpub,
+    modalVisible: true
+  }
+}

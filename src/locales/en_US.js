@@ -85,6 +85,7 @@ const strings = {
   fragment_wallets_pubkey_copied_title: 'XPub Address Copied',
   fragment_wallets_pubkey_copied_success: 'The XPub Address has been successfully copied to the clipboard.',
   fragment_wallets_pubkey_copied_error: 'There has been an error copying your XPub Address.',
+  fragment_wallets_export_transactions: 'Export Transactions',
   fragment_wallets_header: 'My Wallets',
   fragment_wallets_rename_wallet: 'Rename Wallet',
   fragment_wallets_resync_wallet_first_confirm_message_mobile: 'Are you sure you want to resync ',
@@ -193,6 +194,7 @@ const strings = {
   title_change_pin: 'Change Pin',
   title_confirm_exchange: 'Confirm exchange',
   title_create_wallet: 'Create Wallet',
+  title_export_transactions: 'Export transactions',
   title_default_fiat: 'Default Fiat',
   title_edge_login: 'Edge Login',
   title_ethereum_settings: 'Ethereum Settings',
@@ -285,7 +287,14 @@ const strings = {
     'Please create a new account and transfer your funds if you forgot your password. Your password CANNOT BE RECOVERED by %1$s and you will lose access to your funds without your password.',
   password_check_skip: 'Please create a new account and transfer your funds if you forgot your password.',
 
-  password: 'Password'
+  password: 'Password',
+  // export scene
+  string_export_qbo: 'Export Quickbooks QBO',
+  string_export_qbo_abbrev: 'Email QBO',
+  string_export_csv: 'Export CSV',
+  string_export_csv_abbrev: 'Email CSV',
+  email_address: 'Email Address',
+  email_export: 'Enter the email address where you want to send your exported file'
 }
 
 export default strings
