@@ -7,7 +7,6 @@ import * as ACCOUNT_API from '../../../../../Core/Account/api.js'
 import * as CORE_SELECTORS from '../../../../../Core/selectors.js'
 import type { Dispatch, GetState } from '../../../../../ReduxTypes'
 import * as WALLET_SELECTORS from '../../../../selectors.js'
-import type { EdgeGetTransactionsOptions } from 'edge-core-js'
 
 export const OPEN_MODAL_VALUE = (value: string) => `OPEN_${value.toUpperCase()}_WALLET_MODAL`
 export const OPEN_MODAL_FUNCTION = (value: string) => `open${value.charAt(0).toUpperCase() + value.slice(1)}WalletModal`
@@ -114,19 +113,7 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
       return async (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
         const wallet = state.core.wallets.byId[walletId]
-        // get the files
-        const transactionOptions: EdgeGetTransactionsOptions = {
-
-        }
-        const qbo = await wallet.exportTransactionsToQBO(transactionOptions)
-        console.log('allen: ', qbo)
         Actions[Constants.TRANSACTIONS_EXPORT]({ sourceWallet: wallet })
-        // Actions[Constants.CHANGE_MINING_FEE_EXCHANGE]({ sourceWallet: wallet })
-        // Constants.CREATE_WALLET_SELECT_FIAT
-        // Actions.manageTokens({ guiWallet: wallet })
-        // walletId: string, option: string, archived: boolean
-        // console.log('allen: walletid ', walletId)
-        // dispatch(wrap(OPEN_MODAL_VALUE(Constants.RESYNC_VALUE), { walletId }))
       }
   }
 }
