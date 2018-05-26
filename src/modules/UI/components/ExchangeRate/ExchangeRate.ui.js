@@ -42,7 +42,7 @@ export default class ExchangeRate extends Component<Props> {
     }
     const precision = secondaryInfo.displayDenomination.multiplier ? log10(secondaryInfo.displayDenomination.multiplier) : 0
     const formattedSecondaryDisplayAmount: string = (parseFloat(getDisplayExchangeAmount(secondaryDisplayAmount)).toFixed(precision))
-    const secondaryCurrencyCode: string = secondaryInfo.displayDenomination.currencyCode
+    const secondaryCurrencyCode: string = secondaryInfo.displayDenomination.name
 
     const exchangeData = {
       primaryDisplayAmount: primaryDisplayAmount || '1',
