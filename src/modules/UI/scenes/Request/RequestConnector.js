@@ -11,23 +11,23 @@ import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import { saveReceiveAddress } from './action.js'
 import { Request } from './Request.ui'
-import type { RequestDispatchProps, RequestStateProps } from './Request.ui'
+import type { RequestDispatchProps, RequestLoadingProps, RequestStateProps } from './Request.ui'
 
-const mapStateToProps = (state: State): RequestStateProps => {
+const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps => {
   const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
   const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
   if (!guiWallet || !currencyCode) {
     return {
-      currencyCode: '',
+      currencyCode: null,
       edgeWallet: null,
-      exchangeSecondaryToPrimaryRatio: 0,
+      exchangeSecondaryToPrimaryRatio: null,
       guiWallet: null,
       loading: true,
       primaryCurrencyInfo: null,
       receiveAddress: null,
       secondaryCurrencyInfo: null,
-      showToWalletModal: false,
-      useLegacyAddress: false
+      showToWalletModal: null,
+      useLegacyAddress: null
     }
   }
 

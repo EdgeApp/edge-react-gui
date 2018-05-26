@@ -25,23 +25,36 @@ import { getObjectDiff } from '../../../utils'
 
 export type RequestStateProps = {
   currencyCode: string,
-  edgeWallet: EdgeCurrencyWallet | null,
+  edgeWallet: EdgeCurrencyWallet,
   exchangeSecondaryToPrimaryRatio: number,
-  guiWallet: GuiWallet | null,
-  loading: boolean,
-  primaryCurrencyInfo: GuiCurrencyInfo | null,
-  receiveAddress: GuiReceiveAddress | null,
-  secondaryCurrencyInfo: GuiCurrencyInfo | null,
+  guiWallet: GuiWallet,
+  loading: false,
+  primaryCurrencyInfo: GuiCurrencyInfo,
+  receiveAddress: GuiReceiveAddress,
+  secondaryCurrencyInfo: GuiCurrencyInfo,
   showToWalletModal: boolean,
   useLegacyAddress: boolean
+}
+export type RequestLoadingProps = {
+  edgeWallet: null,
+  currencyCode: null,
+  exchangeSecondaryToPrimaryRatio: null,
+  guiWallet: null,
+  loading: true,
+  primaryCurrencyInfo: null,
+  receiveAddress: null,
+  secondaryCurrencyInfo: null,
+  showToWalletModal: null,
+  useLegacyAddress: null
 }
 
 export type RequestDispatchProps = {
   saveReceiveAddress(GuiReceiveAddress): void
 }
 
-export type Props = RequestStateProps & RequestDispatchProps
-
+export type LoadingProps = RequestLoadingProps & RequestDispatchProps
+export type LoadedProps = RequestStateProps & RequestDispatchProps
+export type Props = LoadingProps | LoadedProps
 export type State = {
   publicAddress: string,
   legacyAddress: string,
@@ -78,19 +91,13 @@ export class Request extends Component<Props, State> {
   componentWillReceiveProps (nextProps: Props) {
     if (nextProps.loading) return
 
-    const didAddressChange = this.state.publicAddress !== (nextProps.guiWallet ? nextProps.guiWallet.receiveAddress.publicAddress : '')
+    const didAddressChange = this.state.publicAddress !== nextProps.guiWallet.receiveAddress.publicAddress
     const changeLegacyPublic = nextProps.useLegacyAddress !== this.props.useLegacyAddress
-    const prevWalletId = this.props.edgeWallet ? this.props.edgeWallet.id : ''
-    const nextWalletId = nextProps.edgeWallet ? nextProps.edgeWallet.id : ''
-    const didWalletChange = prevWalletId !== nextWalletId
+    const didWalletChange = this.props.edgeWallet && nextProps.edgeWallet.id !== this.props.edgeWallet.id
 
     if (didAddressChange || changeLegacyPublic || didWalletChange) {
-      let publicAddress = ''
-      let legacyAddress = ''
-      if (nextProps.guiWallet) {
-        publicAddress = nextProps.guiWallet.receiveAddress.publicAddress
-        legacyAddress = nextProps.guiWallet.receiveAddress.legacyAddress
-      }
+      const publicAddress = nextProps.guiWallet.receiveAddress.publicAddress
+      const legacyAddress = nextProps.guiWallet.receiveAddress.legacyAddress
 
       const abcEncodeUri = nextProps.useLegacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
 
@@ -105,12 +112,12 @@ export class Request extends Component<Props, State> {
   }
 
   render () {
-    const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio } = this.props
-    if (this.props.loading || !primaryCurrencyInfo || !secondaryCurrencyInfo) {
+    if (this.props.loading) {
       return <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size={'large'} />
     }
 
     const color = 'white'
+    const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio } = this.props
     const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
 
     return (
