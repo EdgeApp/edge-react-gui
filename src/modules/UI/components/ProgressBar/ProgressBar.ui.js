@@ -2,7 +2,6 @@
 
 import React, { Component } from 'react'
 import { View, Animated, Easing } from 'react-native'
-import Gradient from '../Gradient/Gradient.ui.js'
 import style from './styles.js'
 
 type Props = {
@@ -21,7 +20,7 @@ export default class ProgressBar extends Component<Props> {
       Animated.timing(this.animation, {
         toValue: this.props.progress,
         easing: Easing.ease,
-        duration: 2000
+        duration: 1500
       }).start()
     }
   }
@@ -36,7 +35,6 @@ export default class ProgressBar extends Component<Props> {
     return (
       <View style={style.container}>
         <Animated.View style={[style.bar, style.animated, { width: widthInterpolated }]} />
-        <Gradient style={[style.bar, { width: '100%' }]} />
       </View>
     )
   }

@@ -42,7 +42,6 @@ type State = {
   showOtpResetModal: boolean,
   showMessageModal: boolean,
   messageModalMessage: ?string,
-  isWalletProgressVisible: boolean
 }
 type Props = {
   activeWalletIds: Array<string>,
@@ -79,7 +78,6 @@ export default class WalletList extends Component<Props, State> {
       showOtpResetModal: this.props.otpResetPending,
       showMessageModal: false,
       messageModalMessage: null,
-      isWalletProgressVisible: true,
       progressPercentage: 0
     }
   }
@@ -138,7 +136,7 @@ export default class WalletList extends Component<Props, State> {
         <View style={styles.container}>
           <WalletOptions />
           <Gradient style={styles.gradient} />
-          {this.renderWalletListProgressDropdown()}
+          <ProgressBar progress={this.props.progressPercentage} />
           <TouchableOpacity onPress={this.handleOnBalanceBoxPress}>
             {this.state.balanceBoxVisible ? this.balanceBox(fiatBalanceString) : this.hiddenBalanceBox()}
           </TouchableOpacity>
@@ -195,25 +193,6 @@ export default class WalletList extends Component<Props, State> {
           {this.showModal()}
         </View>
       </SafeAreaView>
-    )
-  }
-
-  onDismissProgressDropdown = () => {
-    this.setState({
-      isWalletProgressVisible: false
-    })
-  }
-
-  renderWalletListProgressDropdown = () => {
-    if (this.props.progressPercentage === 100) {
-      setTimeout(() => {
-        this.setState({
-          isWalletProgressVisible: false
-        })
-      }, 2000)
-    }
-    return (
-      <ProgressBar progress={this.props.progressPercentage} />
     )
   }
 

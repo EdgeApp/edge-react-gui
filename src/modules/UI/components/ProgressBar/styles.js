@@ -9,12 +9,9 @@ export const styles = {
   bar: {
     position: 'absolute',
     right: 0,
-    top: 0,
-    bottom: 0
-  },
-  animated: {
-    backgroundColor: '#E9E9E9',
-    zIndex: 100
+    top: -3,
+    bottom: 0,
+    backgroundColor: '#E9E9E9'
   }
 }
 
