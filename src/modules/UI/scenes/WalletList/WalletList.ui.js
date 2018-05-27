@@ -19,6 +19,7 @@ import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView/index.js'
 import SimplifiedDropdown from '../../components/SimpleDropdown/SimpleDropdown.ui.js'
+import ProgressBar from '../../components/ProgressBar/ProgressBar.ui.js'
 import FullWalletListRow from './components/WalletListRow/FullWalletListRowConnector'
 import SortableWalletListRow from './components/WalletListRow/SortableWalletListRow.ui.js'
 import WalletOptions from './components/WalletOptions/WalletOptionsConnector.ui.js'
@@ -213,12 +214,14 @@ export default class WalletList extends Component<Props, State> {
       }, 2000)
     }
     const heightOfDropdown = 100 // pixels
+    console.log(this.props.progressPercentage)
     return (
-      <SimplifiedDropdown onPress={this.onDismissProgressDropdown} containerHeight={heightOfDropdown} containerStyle={styles.walletListProgressDropdown}>
-        <T style={styles.walletListProgressDropdownTopText}>
-          {s.strings.fragment_wallets_syncing_wallet_txs} {this.props.progressPercentage}%
-        </T>
-      </SimplifiedDropdown>
+      <ProgressBar progress={this.props.progressPercentage / 100} duration={500} />
+      // <SimplifiedDropdown onPress={this.onDismissProgressDropdown} containerHeight={heightOfDropdown} containerStyle={styles.walletListProgressDropdown}>
+      //   <T style={styles.walletListProgressDropdownTopText}>
+      //     {s.strings.fragment_wallets_syncing_wallet_txs} {this.props.progressPercentage}%
+      //   </T>
+      // </SimplifiedDropdown>
     )
   }
 
