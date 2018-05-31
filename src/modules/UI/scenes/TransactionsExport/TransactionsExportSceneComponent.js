@@ -44,7 +44,7 @@ export class TransactionsExportSceneComponent extends Component<Props> {
 
     }
     const file = await this.props.sourceWallet.exportTransactionsToQBO(transactionOptions)
-    const path = RNFS.DocumentDirectoryPath + '/transactions.qbo'
+    const path = RNFS.DocumentDirectoryPath + '/My Wallet.QBO'
     RNFS.writeFile(path, file, 'utf8')
       .then((success) => {
         console.log('FS: FILE WRITTEN!')
@@ -59,7 +59,7 @@ export class TransactionsExportSceneComponent extends Component<Props> {
 
     }
     const file = await this.props.sourceWallet.exportTransactionsToCSV(transactionOptions)
-    const path = RNFS.DocumentDirectoryPath + '/transactions.csv'
+    const path = RNFS.DocumentDirectoryPath + '/My Wallet.csv'
     RNFS.writeFile(path, file, 'utf8')
       .then((success) => {
         console.log('FS: FILE WRITTEN!')
