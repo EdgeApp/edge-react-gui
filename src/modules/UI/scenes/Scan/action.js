@@ -7,12 +7,13 @@ import type { EdgeParsedUri } from 'edge-core-js'
 import * as Constants from '../../../../constants/indexConstants.js'
 import type { Dispatch, GetState } from '../../../ReduxTypes.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
-import * as UTILS from '../../../utils.js'
+import { isEdgeLogin, denominationToDecimalPlaces, noOp } from '../../../utils.js'
 import { loginWithEdge } from '../../../../actions/EdgeLoginActions.js'
 import { updateParsedURI } from '../SendConfirmation/action.js'
 import s from '../../../../locales/strings.js'
 
 import { activated as legacyAddressModalActivated, deactivated as legacyAddressModalDeactivated } from './LegacyAddressModal/LegacyAddressModalActions.js'
+import { activated as privateKeyModalActivated } from './PrivateKeyModal/PrivateKeyModalActions.js'
 
 export const PREFIX = 'SCAN/'
 
@@ -62,60 +63,65 @@ export const parseUriReset = () => ({
 export const parseUri = (data: string) => (dispatch: Dispatch, getState: GetState) => {
   if (!data) return
   const state = getState()
-  const edgeWallet = state.core.wallets.byId[state.ui.wallets.selectedWalletId]
-  const guiWallet = state.ui.wallets.byId[state.ui.wallets.selectedWalletId]
-  if (/^airbitz:\/\/edge\//.test(data)) {
+  const selectedWalletId = state.ui.wallets.selectedWalletId
+  const edgeWallet = state.core.wallets.byId[selectedWalletId]
+  const guiWallet = state.ui.wallets.byId[selectedWalletId]
+  if (isEdgeLogin(data)) {
     // EDGE LOGIN
     dispatch(loginWithEdge(data))
     Actions[Constants.EDGE_LOGIN]()
     return
   }
 
-  let parsedUri
-  try {
-    parsedUri = WALLET_API.parseURI(edgeWallet, data)
-    dispatch(parseUriSucceeded(parsedUri))
+  WALLET_API.parseUri(edgeWallet, data).then(
+    parsedUri => {
+      dispatch(parseUriSucceeded(parsedUri))
 
-    if (parsedUri.token) {
-      // TOKEN
-      const { contractAddress, currencyName, multiplier } = parsedUri.token
-      const currencyCode = parsedUri.token.currencyCode.toUpperCase()
-      const wallet = guiWallet
-      const walletId = guiWallet.id
-      let decimalPlaces = 18
-      if (parsedUri.token && parsedUri.token.multiplier) {
-        decimalPlaces = UTILS.denominationToDecimalPlaces(parsedUri.token.multiplier)
+      if (parsedUri.token) {
+        // TOKEN URI
+        const { contractAddress, currencyName, multiplier } = parsedUri.token
+        const currencyCode = parsedUri.token.currencyCode.toUpperCase()
+        let decimalPlaces = 18
+        if (parsedUri.token && parsedUri.token.multiplier) {
+          decimalPlaces = denominationToDecimalPlaces(parsedUri.token.multiplier)
+        }
+        const parameters = {
+          contractAddress,
+          currencyCode,
+          currencyName,
+          multiplier,
+          decimalPlaces,
+          walletId: selectedWalletId,
+          wallet: guiWallet,
+          onAddToken: noOp
+        }
+        Actions.addToken(parameters)
+      } else if (parsedUri.legacyAddress) {
+        // LEGACY ADDRESS URI
+        dispatch(legacyAddressModalActivated())
+        return
       }
-      const parameters = {
-        contractAddress,
-        currencyCode,
-        currencyName,
-        multiplier,
-        decimalPlaces,
-        walletId,
-        wallet,
-        onAddToken: UTILS.noOp
+      if (parsedUri.privateKeys && parsedUri.privateKeys.length >= 1) {
+        // PRIVATE KEY URI
+        dispatch(privateKeyModalActivated())
+      } else {
+        // PUBLIC ADDRESS URI
+        dispatch(updateParsedURI(parsedUri))
+        Actions.sendConfirmation('fromScan')
       }
-      Actions.addToken(parameters)
-    } else if (parsedUri.legacyAddress) {
-      // LEGACY ADDRESS
-      setTimeout(() => dispatch(legacyAddressModalActivated()), 1000)
-      return
-    } else {
-      // PUBLIC ADDRESS
-      dispatch(updateParsedURI(parsedUri))
-      Actions.sendConfirmation('fromScan')
+    },
+    () => {
+      // INVALID URI
+      dispatch(disableScan())
+      setTimeout(
+        () =>
+          Alert.alert(s.strings.scan_invalid_address_error_title, s.strings.scan_invalid_address_error_description, [
+            { text: s.strings.string_ok, onPress: () => dispatch(enableScan()) }
+          ]),
+        500
+      )
     }
-  } catch (error) {
-    dispatch(disableScan())
-    setTimeout(
-      () =>
-        Alert.alert(s.strings.scan_invalid_address_error_title, s.strings.scan_invalid_address_error_description, [
-          { text: s.strings.string_ok, onPress: () => dispatch(enableScan()) }
-        ]),
-      500
-    )
-  }
+  )
 }
 
 export const qrCodeScanned = (data: string) => (dispatch: Dispatch, getState: GetState) => {
