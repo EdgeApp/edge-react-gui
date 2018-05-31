@@ -23,6 +23,7 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   LTC: { denomination: '100000000' },
   FTC: { denomination: '100000000' },
   XZC: { denomination: '100000000' },
+  XMR: { denomination: '1000000000000' },
   ETH: { denomination: '1000000000000000000' },
   REP: { denomination: '1000000000000000000' },
   WINGS: { denomination: '1000000000000000000' },

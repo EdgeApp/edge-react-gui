@@ -431,6 +431,12 @@ async@^2.1.4, async@^2.4.0:
   dependencies:
     lodash "^4.14.0"
 
+async@^2.6.0:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/async/-/async-2.6.1.tgz#b245a23ca71930044ec53fa46aa00a3e87c6a610"
+  dependencies:
+    lodash "^4.17.10"
+
 asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
@@ -2368,6 +2374,18 @@ edge-currency-ethereum@0.10.1:
     ethereumjs-util "^5.1.2"
     ethereumjs-wallet "git://github.com/Airbitz/ethereumjs-wallet.git#6157e11ea10a734fbe55f4c7ea542780975b60ef"
     jsonschema "^1.1.1"
+    sprintf-js "^1.1.1"
+    uri-js "^3.0.2"
+
+"edge-currency-monero@git://github.com/Airbitz/edge-currency-monero.git":
+  version "0.0.1"
+  resolved "git://github.com/Airbitz/edge-currency-monero.git#911f66fd442aa08128c5ff3e7d01cf6c6f35ffcc"
+  dependencies:
+    biggystring "^3.0.0"
+    buffer "^5.0.6"
+    jsonschema "^1.1.1"
+    mymonero-core-js "git://github.com/Airbitz/mymonero-core-js.git"
+    node-xhr "^1.0.5"
     sprintf-js "^1.1.1"
     uri-js "^3.0.2"
 
@@ -4881,6 +4899,10 @@ lodash@^4.0.0, lodash@^4.10.1, lodash@^4.11.1, lodash@^4.14.0, lodash@^4.15.0, l
   version "4.17.5"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.5.tgz#99a92d65c0272debe8c96b6057bc8fbfa3bed511"
 
+lodash@^4.17.10:
+  version "4.17.10"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
+
 lodash@~4.11.1:
   version "4.11.2"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.11.2.tgz#d6b4338b110a58e21dae5cebcfdbbfd2bc4cdb3b"
@@ -5259,6 +5281,12 @@ mute-stream@0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.7.tgz#3075ce93bc21b8fab43e1bc4da7e8115ed1e7bab"
 
+"mymonero-core-js@git://github.com/Airbitz/mymonero-core-js.git":
+  version "0.9.0"
+  resolved "git://github.com/Airbitz/mymonero-core-js.git#95f87b4d42f76927d847ba18f4e8c080107ef336"
+  dependencies:
+    async "^2.6.0"
+
 n64@0.0.18:
   version "0.0.18"
   resolved "https://registry.yarnpkg.com/n64/-/n64-0.0.18.tgz#dfdf8dc8f1a02fffab4204a22031607561abc718"
@@ -5379,6 +5407,10 @@ node-pre-gyp@^0.6.39:
     semver "^5.3.0"
     tar "^2.2.1"
     tar-pack "^3.4.0"
+
+node-xhr@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/node-xhr/-/node-xhr-1.0.5.tgz#ce95b84c19b0a29f79aa277c5e9076297e27f2e9"
 
 noop-logger@^0.1.1:
   version "0.1.1"
