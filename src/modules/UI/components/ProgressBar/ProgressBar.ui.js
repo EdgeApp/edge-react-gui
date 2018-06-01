@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import React, {PureComponent } from 'react'
 import { View, Animated, Easing } from 'react-native'
 import style from './styles.js'
 
@@ -8,7 +8,7 @@ type Props = {
   progress: number
 }
 
-export default class ProgressBar extends Component<Props> {
+export default class ProgressBar extends PureComponent<Props> {
   animation: Animated.Value
 
   componentWillMount () {
