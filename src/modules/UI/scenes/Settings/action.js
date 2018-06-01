@@ -11,6 +11,7 @@ import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'
 import * as CORE_SELECTORS from '../../../Core/selectors'
 import { displayErrorAlert } from '../../components/ErrorAlert/actions.js'
 import * as SETTINGS_ACTIONS from '../../Settings/action.js'
+import { restoreWalletsRequest } from '../../../Core/Account/api.js'
 
 const PREFIX = 'UI/Scenes/Settings/'
 
@@ -145,6 +146,12 @@ export const updateTouchIdEnabled = (arg: boolean, account: EdgeAccount) => asyn
   } else {
     disableTouchId(context, account)
   }
+}
+
+export const restoreWallets = () => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const account = state.core.account
+  restoreWalletsRequest(account)
 }
 
 const setPINModeStart = (pinMode: boolean) => ({
