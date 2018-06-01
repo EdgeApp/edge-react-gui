@@ -12,6 +12,7 @@ import {
 } from 'edge-currency-bitcoin'
 import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
 import { moneroCurrencyPluginFactory } from 'edge-currency-monero'
+import { rippleCurrencyPluginFactory } from 'edge-currency-ripple'
 import { coinbasePlugin, coincapPlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
 import React, { Component } from 'react'
 import { Image, Keyboard, Linking, Platform, StatusBar, TouchableWithoutFeedback } from 'react-native'
@@ -96,6 +97,7 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   dashCurrencyPluginFactory,
   ethereumCurrencyPluginFactory,
   moneroCurrencyPluginFactory,
+  rippleCurrencyPluginFactory,
   litecoinCurrencyPluginFactory,
   feathercoinCurrencyPluginFactory,
   zcoinCurrencyPluginFactory

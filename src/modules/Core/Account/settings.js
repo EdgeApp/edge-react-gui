@@ -19,6 +19,7 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   merchantMode: false,
   BTC: { denomination: '100' },
   BCH: { denomination: '100' },
+  XRP: { denomination: '1000000' },
   DASH: { denomination: '100000000' },
   LTC: { denomination: '100000000' },
   FTC: { denomination: '100000000' },
