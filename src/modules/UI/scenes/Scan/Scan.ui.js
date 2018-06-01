@@ -23,6 +23,7 @@ import { AUTHORIZED, DENIED } from '../../permissions'
 import AddressModal from './components/AddressModalConnector'
 import styles, { styles as styleRaw } from './style'
 import LegacyAddressModal from './LegacyAddressModal/LegacyAddressModalConnector.js'
+import PrivateKeyModal from './PrivateKeyModal/PrivateKeyModalConnector.js'
 
 type Props = {
   cameraPermission: PermissionStatus,
@@ -95,6 +96,7 @@ export default class Scan extends Component<Props> {
         </View>
 
         <LegacyAddressModal continueButtonPressed={legacyAddressModalContinueButtonPressed} cancelButtonPressed={legacyAddressModalCancelButtonPressed} />
+        <PrivateKeyModal />
       </SafeAreaView>
     )
   }

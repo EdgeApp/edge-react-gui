@@ -496,3 +496,9 @@ export function getObjectDiff (obj1: Object, obj2: Object, traverseObjects?: Obj
   }
   return ''
 }
+
+export const isEdgeLogin = (data: string) => {
+  const EDGE_LOGIN_REG_EXP = /^airbitz:\/\/edge\//
+
+  return EDGE_LOGIN_REG_EXP.test(data)
+}

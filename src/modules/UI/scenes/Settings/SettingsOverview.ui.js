@@ -19,6 +19,7 @@ import { Icon } from '../../components/Icon/Icon.ui'
 import SafeAreaView from '../../components/SafeAreaView'
 import AutoLogoutModal from './components/AutoLogoutModal.ui'
 import ConfirmPasswordModal from './components/ConfirmPasswordModal.ui'
+import {RestoreWalletsModal} from './components/RestoreWalletsModal.ui'
 import RowModal from './components/RowModal.ui'
 import RowRoute from './components/RowRoute.ui'
 import RowSwitch from './components/RowSwitch.ui'
@@ -47,10 +48,12 @@ type Props = {
   sendLogs(string): void,
   resetConfirmPasswordError(Object): void,
   resetSendLogsStatus(): void,
-  onTogglePinLoginEnabled(enableLogin: boolean): void
+  onTogglePinLoginEnabled(enableLogin: boolean): void,
+  onConfirmRestoreWallets: () => void
 }
 type State = {
   showAutoLogoutModal: boolean,
+  restoreWalletsModalIsActive: boolean,
   showSendLogsModal: boolean,
   showConfirmPasswordModal: boolean,
   autoLogoutTimeInMinutes: number
@@ -64,6 +67,7 @@ export default class SettingsOverview extends Component<Props, State> {
     super(props)
     this.state = {
       showAutoLogoutModal: false,
+      restoreWalletsModalIsActive: false,
       showSendLogsModal: false,
       showConfirmPasswordModal: false,
       autoLogoutTimeInMinutes: props.autoLogoutTimeInMinutes
@@ -133,6 +137,15 @@ export default class SettingsOverview extends Component<Props, State> {
   }
 
   _onPressDebug = () => {}
+
+  onConfirmRestoreWallets = () => {
+    this.setState({ restoreWalletsModalIsActive: false })
+    this.props.onConfirmRestoreWallets()
+  }
+
+  onCancelRestoreWallets = () => {
+    this.setState({ restoreWalletsModalIsActive: false })
+  }
 
   onDoneAutoLogoutModal = (autoLogoutTimeInMinutes: number) => {
     this.setState({
@@ -242,12 +255,22 @@ export default class SettingsOverview extends Component<Props, State> {
 
             <RowRoute disabled={false} leftText={s.strings.settings_button_send_logs} scene={'changePassword'} routeFunction={this.showSendLogsModal} />
 
+            <RowModal onPress={this.showRestoreWalletModal} leftText={s.strings.restore_wallets_modal_title} />
+
             <View style={[styles.debugArea, b('green')]}>
               <PrimaryButton text={s.strings.settings_button_debug} onPressFunction={this._onPressDebug} />
             </View>
 
             <View style={styles.emptyBottom} />
           </View>
+
+          <RestoreWalletsModal
+            isActive={this.state.restoreWalletsModalIsActive}
+            onConfirm={this.onConfirmRestoreWallets}
+            onCancel={this.onCancelRestoreWallets}
+            onBackButtonPress={this.onCancelRestoreWallets}
+            onBackdropPress={this.onCancelRestoreWallets}
+          />
 
           <AutoLogoutModal
             autoLogoutTimeInMinutes={this.state.autoLogoutTimeInMinutes}
@@ -289,6 +312,7 @@ export default class SettingsOverview extends Component<Props, State> {
     this.props.resetConfirmPasswordError({ confirmPasswordError: '' })
     this.setState({ showConfirmPasswordModal: false })
   }
+  showRestoreWalletModal = () => this.setState({ restoreWalletsModalIsActive: true })
   showAutoLogoutModal = () => this.setState({ showAutoLogoutModal: true })
   showSendLogsModal = () => this.setState({ showSendLogsModal: true })
   renderRowRoute = (x: Object, i: number) => <RowRoute disabled={false} key={i} leftText={x.text} routeFunction={x.routeFunction} right={x.right} />

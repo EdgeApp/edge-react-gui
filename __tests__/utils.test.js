@@ -16,6 +16,7 @@ import {
   convertNativeToExchange,
   getSupportedFiats,
   isCompleteExchangeData,
+  isEdgeLogin,
   daysBetween,
   getObjectDiff,
   MILLISECONDS_PER_DAY
@@ -637,5 +638,13 @@ describe('getObjectDiff', () => {
     }
     expect(getObjectDiff(obj1, obj2, {b: true})).toEqual('b')
   })
+})
 
+describe('isEdgeLogin', () => {
+  test('Edge Login', () => {
+    expect(isEdgeLogin('airbitz://edge/')).toBe(true)
+  })
+  test('Non Edge Login', () => {
+    expect(isEdgeLogin('not an edge login')).toBe(false)
+  })
 })

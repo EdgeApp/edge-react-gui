@@ -285,7 +285,21 @@ const strings = {
     'Please create a new account and transfer your funds if you forgot your password. Your password CANNOT BE RECOVERED by %1$s and you will lose access to your funds without your password.',
   password_check_skip: 'Please create a new account and transfer your funds if you forgot your password.',
 
-  password: 'Password'
+  password: 'Password',
+
+  private_key_modal_private_key: '%1$s Private Key',
+  private_key_modal_with_public_address: 'with Public Address:',
+  private_key_modal_sweep_from_private_address: 'Sweep Funds From Private Key',
+  private_key_modal_send_to_public_address: 'Send Funds to Public Address',
+  private_key_modal_import: 'Import',
+  private_key_modal_cancel: 'Cancel',
+  private_key_modal_success: 'Private key successfully swept',
+  private_key_modal_importing_private_key: 'Importing Private Key',
+
+  restore_wallets_modal_title: 'Restore Wallets',
+  restore_wallets_modal_description: 'This will restore all deleted and archived wallets',
+  restore_wallets_modal_confirm: 'Confirm',
+  restore_wallets_modal_cancel: 'Cancel'
 }
 
 export default strings
