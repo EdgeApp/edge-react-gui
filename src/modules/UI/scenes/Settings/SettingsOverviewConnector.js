@@ -10,7 +10,7 @@ import type { Dispatch, State } from '../../../../modules/ReduxTypes'
 import * as CORE_SELECTORS from '../../../Core/selectors'
 import { resetSendLogsStatus, sendLogs } from '../../../Logs/action'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors'
-import { checkCurrentPassword, lockSettings, setAutoLogoutTimeInMinutesRequest, togglePinLoginEnabled, updateTouchIdEnabled } from './action'
+import { checkCurrentPassword, lockSettings, setAutoLogoutTimeInMinutesRequest, togglePinLoginEnabled, updateTouchIdEnabled, restoreWallets } from './action'
 import SettingsOverview from './SettingsOverview.ui'
 
 // settings_button_lock_settings, or //settings_button_unlock_settings
@@ -48,7 +48,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   sendLogs: (text: string) => dispatch(sendLogs(text)),
   resetConfirmPasswordError: (arg: Object) => dispatch(actions.dispatchActionObject(Constants.SET_CONFIRM_PASSWORD_ERROR, arg)),
   resetSendLogsStatus: () => dispatch(resetSendLogsStatus()),
-  onTogglePinLoginEnabled: (enableLogin: boolean) => dispatch(togglePinLoginEnabled(enableLogin))
+  onTogglePinLoginEnabled: (enableLogin: boolean) => dispatch(togglePinLoginEnabled(enableLogin)),
+  onConfirmRestoreWallets: () => dispatch(restoreWallets())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SettingsOverview)
