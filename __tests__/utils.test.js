@@ -16,6 +16,7 @@ import {
   convertNativeToExchange,
   getSupportedFiats,
   isCompleteExchangeData,
+  isEdgeLogin,
   daysBetween,
   MILLISECONDS_PER_DAY
 } from '../src/modules/utils.js'
@@ -492,5 +493,14 @@ describe('daysBetween', () => {
     const a = MILLISECONDS_PER_DAY * start
     const b = MILLISECONDS_PER_DAY * end
     expect(daysBetween(a, b)).toEqual(days)
+  })
+})
+
+describe('isEdgeLogin', () => {
+  test('Edge Login', () => {
+    expect(isEdgeLogin('airbitz://edge/')).toBe(true)
+  })
+  test('Non Edge Login', () => {
+    expect(isEdgeLogin('not an edge login')).toBe(false)
   })
 })
