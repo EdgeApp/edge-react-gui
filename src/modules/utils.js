@@ -451,3 +451,9 @@ export const daysBetween = (DateInMillisecondsA: number, dateInMillisecondsB: nu
   const daysBetween = millisecondsBetween / MILLISECONDS_PER_DAY
   return daysBetween
 }
+
+export const isEdgeLogin = (data: string) => {
+  const EDGE_LOGIN_REG_EXP = /^airbitz:\/\/edge\//
+
+  return EDGE_LOGIN_REG_EXP.test(data)
+}
