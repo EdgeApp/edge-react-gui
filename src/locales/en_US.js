@@ -294,7 +294,12 @@ const strings = {
   private_key_modal_import: 'Import',
   private_key_modal_cancel: 'Cancel',
   private_key_modal_success: 'Private key successfully swept',
-  private_key_modal_importing_private_key: 'Importing Private Key'
+  private_key_modal_importing_private_key: 'Importing Private Key',
+
+  restore_wallets_modal_title: 'Restore Wallets',
+  restore_wallets_modal_description: 'This will restore all deleted and archived wallets',
+  restore_wallets_modal_confirm: 'Confirm',
+  restore_wallets_modal_cancel: 'Cancel'
 }
 
 export default strings
