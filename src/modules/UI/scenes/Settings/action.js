@@ -2,6 +2,7 @@
 
 import type { EdgeAccount } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
+import { Actions } from 'react-native-router-flux'
 
 import type { Dispatch, GetState } from '../../../../../src/modules/ReduxTypes.js'
 import * as actions from '../../../../actions/indexActions.js'
@@ -151,7 +152,7 @@ export const updateTouchIdEnabled = (arg: boolean, account: EdgeAccount) => asyn
 export const restoreWallets = () => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const account = state.core.account
-  restoreWalletsRequest(account)
+  restoreWalletsRequest(account).then(Actions.walletList)
 }
 
 const setPINModeStart = (pinMode: boolean) => ({
