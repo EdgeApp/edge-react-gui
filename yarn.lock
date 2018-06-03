@@ -2422,9 +2422,9 @@ edge-currency-ethereum@0.10.1:
     sprintf-js "^1.1.1"
     uri-js "^3.0.2"
 
-"edge-currency-ripple@git://github.com/Airbitz/edge-currency-ripple.git#752e482":
+"edge-currency-ripple@git://github.com/Airbitz/edge-currency-ripple.git#83f6446":
   version "0.0.1"
-  resolved "git://github.com/Airbitz/edge-currency-ripple.git#752e4820e972018a2431da4f97f717dbf2983b36"
+  resolved "git://github.com/Airbitz/edge-currency-ripple.git#83f6446a9e8c57fb60eda77ef35741f63f79fc7b"
   dependencies:
     biggystring "^3.0.0"
     jsonschema "^1.1.1"
