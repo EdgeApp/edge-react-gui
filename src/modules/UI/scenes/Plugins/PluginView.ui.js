@@ -170,7 +170,11 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   }
 
   componentDidUpdate () {
-    this.updateBridge(this.props)
+    this.bridge.context.account = this.props.account
+    this.bridge.context.coreWallets = this.props.coreWallets
+    this.bridge.context.wallets = this.props.wallets
+    this.bridge.context.walletName = this.props.walletName
+    this.bridge.context.walletId = this.props.walletId
   }
 
   componentDidMount () {
@@ -235,6 +239,17 @@ class PluginView extends React.Component<PluginProps, PluginState> {
     this.webview = webview
   }
 
+  _onNavigationStateChange = (navState) => {
+    if (navState.loading) {
+      return
+    }
+    if (!navState.canGoForward) {
+      this.bridge.navStackPush(navState.url)
+    } else if (!navState.canGoBack) {
+      this.bridge.navStackClear()
+    }
+  }
+
   render () {
     const contentScaling = Platform.OS !== 'ios'
     return (
@@ -247,6 +262,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
               onMessage={this._onMessage}
               source={this._renderWebView()}
               scalesPageToFit={contentScaling}
+              onNavigationStateChange={this._onNavigationStateChange}
             />,
           ios: () =>
             <WebView
@@ -254,6 +270,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
               onMessage={this._onMessage}
               source={this._renderWebView()}
               scalesPageToFit={contentScaling}
+              onNavigationStateChange={this._onNavigationStateChange}
             />
         })()}
       </SafeAreaView>

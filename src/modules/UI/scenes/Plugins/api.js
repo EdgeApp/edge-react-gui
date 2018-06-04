@@ -27,10 +27,10 @@ let navStack: Array<string> = []
 let _context: Context = null
 
 export function pop (): any {
+  navStack.pop()
   if (navStack.length === 0) {
     Actions.pop()
   } else {
-    navStack.pop()
     if (_context) {
       _context.back()
     }
@@ -43,7 +43,7 @@ export class PluginBridge {
   constructor (context: Context) {
     _context = this.context = context
     // reset navstack
-    // navStack = []
+    navStack = []
   }
 
   componentDidMount () {
