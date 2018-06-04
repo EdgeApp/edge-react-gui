@@ -70,5 +70,6 @@ fastlane/screenshots
 
 /src/assets/plugins.json
 /android/app/src/main/assets/plugins/
+/ios/plugins/
 
 *.swp
