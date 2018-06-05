@@ -78,7 +78,7 @@
     "edge-currency-bitcoin": "git://github.com/Airbitz/edge-currency-bitcoin.git#f0abf75",
     "edge-currency-ethereum": "0.10.1",
     "edge-currency-monero": "git://github.com/Airbitz/edge-currency-monero.git#a013a71",
-    "edge-currency-ripple": "git://github.com/Airbitz/edge-currency-ripple.git#83f6446",
+    "edge-currency-ripple": "^0.0.2",
     "edge-exchange-plugins": "^0.2.0",
     "edge-login-ui-rn": "^0.3.1",
     "https-browserify": "0.0.1",

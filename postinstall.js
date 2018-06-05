@@ -4,8 +4,8 @@ const fs = require('fs')
 const jsonFormat = require('json-format')
 
 const fixModules = [
-  'ripple-lib',
-  'edge-currency-ripple/node_modules/ripple-lib'
+  'edge-ripple-lib',
+  'edge-currency-ripple/node_modules/edge-ripple-lib'
 ]
 
 const falseModules = [
