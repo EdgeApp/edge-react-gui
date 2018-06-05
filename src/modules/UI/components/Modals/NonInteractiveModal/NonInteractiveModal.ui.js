@@ -90,59 +90,98 @@ export class Message extends Component<MessageProps> {
   }
 }
 
+// ITEM /////////////////////////////////////////////////////////////////////////////
+type ItemProps = {
+  children: Node,
+  style?: StyleSheet.Styles
+}
+export class Item extends Component<ItemProps> {
+  render () {
+    const { children, style, ...props } = this.props
+
+    return (
+      <View style={[styles.item, style]} {...props}>
+        {children}
+      </View>
+    )
+  }
+}
+
+// ROW /////////////////////////////////////////////////////////////////////////////
+type RowProps = {
+  children: Node,
+  style?: StyleSheet.Styles
+}
+export class Row extends Component<RowProps> {
+  render () {
+    const { children, style, ...props } = this.props
+
+    return (
+      <View style={[styles.row, style]} {...props}>
+        {children}
+      </View>
+    )
+  }
+}
+
 // NON_INTERACTIVE_MODAL /////////////////////////////////////////////////////////////////////////////
 export type Props = {
-  isVisible: boolean,
-  durationInSeconds: number,
   children: Node,
-  onModalShow: () => void,
-  onModalHide: () => void,
-  onExpired?: () => void,
-  onCancel?: () => void,
+  style?: StyleSheet.Styles,
+  durationInSeconds: number,
+  isActive: boolean,
+  onBackButtonPress?: () => void,
   onBackdropPress?: () => void,
-  onBackButtonPress?: () => void
+  onExpire?: () => void,
+  onModalHide: () => void,
+  onModalShow: () => void
 }
 export class NonInteractiveModal extends Component<Props> {
   static Header = Header
   static Footer = Footer
   static Icon = Icon
   static Message = Message
+  static Item = Item
+  static Row = Row
 
   static defaultProps = {
     durationInSeconds: 8,
-    onModalShow: () => {},
-    onModalHide: () => {},
-    onExpired: () => {},
-    onCancel: () => {},
+    onBackButtonPress: () => {},
     onBackdropPress: () => {},
-    onBackButtonPress: () => {}
+    onExpire: () => {},
+    onModalHide: () => {},
+    onModalShow: () => {}
   }
 
   timer: number
 
   render () {
-    const { isVisible } = this.props
+    const { isActive, style, ...props } = this.props
     const children = React.Children.toArray(this.props.children)
     const icon = children.find(child => child.type === NonInteractiveModal.Icon)
-    const message = children.find(child => child.type === NonInteractiveModal.Message)
+    const footer = children.find(child => child.type === NonInteractiveModal.Footer)
 
     return (
-      <Modal useNativeDriver isVisible={isVisible} onModalShow={this.onModalShow} onModalHide={this.onModalHide} {...this.props}>
+      <Modal useNativeDriver isVisible={isActive} onModalShow={this.onModalShow} onModalHide={this.onModalHide} {...props}>
         <Container style={styles.container}>
           <Header>{icon}</Header>
-          <Footer>{message}</Footer>
+          <Footer>{footer}</Footer>
         </Container>
       </Modal>
     )
   }
 
   onModalShow = () => {
-    this.timer = setTimeout(this.props.onExpired, this.props.durationInSeconds * 1000)
-    this.props.onModalShow()
+    const { durationInSeconds, onExpire, onModalShow } = this.props
+
+    this.timer = setTimeout(onExpire, durationInSeconds * 1000)
+    onModalShow()
   }
 
   onModalHide = () => {
+    const { onModalHide } = this.props
+
     clearTimeout(this.timer)
-    this.props.onModalHide()
+    onModalHide()
   }
 }

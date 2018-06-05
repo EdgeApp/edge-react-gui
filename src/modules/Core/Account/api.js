@@ -28,6 +28,17 @@ export const activateWalletRequest = (account: EdgeAccount, walletId: string) =>
   return account.changeWalletStates({ [walletId]: { archived: false } })
 }
 
+export const restoreWalletsRequest = (account: EdgeAccount) => {
+  const restoreKeys = account.allKeys.filter(key => key.archived || key.deleted)
+  return Promise.all(
+    restoreKeys.map(key => key.id).map(walletId =>
+      account.changeWalletStates({
+        [walletId]: { archived: false, deleted: false }
+      })
+    )
+  )
+}
+
 export const archiveWalletRequest = (account: EdgeAccount, walletId: string) => {
   return account.changeWalletStates({ [walletId]: { archived: true } })
 }

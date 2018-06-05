@@ -31,6 +31,7 @@ export default class ProgressBar extends PureComponent<Props> {
       outputRange: ['0%', '100%'],
       extrapolate: 'clamp'
     })
+
     return (
       <View style={style.container}>
         <Animated.View style={[style.bar, style.animated, { width: widthInterpolated }]} />
