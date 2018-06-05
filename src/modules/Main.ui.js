@@ -226,7 +226,7 @@ export default class Main extends Component<Props, State> {
   doDeepLink (url: string) {
     const parsedUri = URI.parse(url)
     const query = parsedUri.query
-    if (!query.includes('token=')) {
+    if (!query || !query.includes('token=')) {
       return
     }
     const splitArray = query.split('token=')
