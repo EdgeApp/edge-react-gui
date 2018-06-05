@@ -243,6 +243,11 @@ class PluginView extends React.Component<PluginProps, PluginState> {
     if (navState.loading) {
       return
     }
+    // TODO: improve handling of edge-ret URIs
+    if (navState.url.match(/edge-ret:\/\/plugins/)) {
+      Actions.pop()
+      return
+    }
     if (!navState.canGoForward) {
       this.bridge.navStackPush(navState.url)
     } else if (!navState.canGoBack) {
