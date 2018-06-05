@@ -18,7 +18,7 @@ import * as UTILS from '../../../utils'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView/index.js'
-import SimplifiedDropdown from '../../components/SimpleDropdown/SimpleDropdown.ui.js'
+import ProgressBar from '../../components/ProgressBar/ProgressBar.ui.js'
 import FullWalletListRow from './components/WalletListRow/FullWalletListRowConnector'
 import SortableWalletListRow from './components/WalletListRow/SortableWalletListRow.ui.js'
 import WalletOptions from './components/WalletOptions/WalletOptionsConnector.ui.js'
@@ -195,30 +195,6 @@ export default class WalletList extends Component<Props, State> {
           {this.showModal()}
         </View>
       </SafeAreaView>
-    )
-  }
-
-  onDismissProgressDropdown = () => {
-    this.setState({
-      isWalletProgressVisible: false
-    })
-  }
-
-  renderWalletListProgressDropdown = () => {
-    if (this.props.progressPercentage === 100) {
-      setTimeout(() => {
-        this.setState({
-          isWalletProgressVisible: false
-        })
-      }, 2000)
-    }
-    const heightOfDropdown = 100 // pixels
-    return (
-      <SimplifiedDropdown onPress={this.onDismissProgressDropdown} containerHeight={heightOfDropdown} containerStyle={styles.walletListProgressDropdown}>
-        <T style={styles.walletListProgressDropdownTopText}>
-          {s.strings.fragment_wallets_syncing_wallet_txs} {this.props.progressPercentage}%
-        </T>
-      </SimplifiedDropdown>
     )
   }
 
@@ -484,6 +460,19 @@ export default class WalletList extends Component<Props, State> {
           </View>
         </View>
       </View>
+    )
+  }
+
+  renderWalletListProgressDropdown = () => {
+    if (this.props.progressPercentage === 100) {
+      setTimeout(() => {
+        this.setState({
+          isWalletProgressVisible: false
+        })
+      }, 2000)
+    }
+    return (
+      <ProgressBar progress={this.props.progressPercentage} />
     )
   }
 }
