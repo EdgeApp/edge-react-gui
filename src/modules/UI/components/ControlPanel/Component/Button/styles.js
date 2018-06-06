@@ -43,7 +43,7 @@ export const rawStyles = {
     justifyContent: 'center'
   },
   underlay: {
-    color: `${THEME.COLORS.PRIMARY}${THEME.ALPHA.LOW}`
+    color: `${THEME.COLORS.WHITE}${THEME.ALPHA.LOW}`
   },
   debug: {
     borderColor: 'red',
