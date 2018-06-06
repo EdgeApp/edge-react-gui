@@ -14,9 +14,11 @@ export class Text extends Component<TextProps> {
   render () {
     const { children, style, ...props } = this.props
 
-    return <RNText style={[styles.text, style]} {...props}>
-      {children}
-    </RNText>
+    return (
+      <RNText style={[styles.text, style]} {...props}>
+        {children}
+      </RNText>
+    )
   }
 }
 
@@ -28,9 +30,11 @@ export class Left extends Component<LeftProps> {
   render () {
     const { children, style, ...props } = this.props
 
-    return <View style={[styles.left, style]} {...props}>
-      {children}
-    </View>
+    return (
+      <View style={[styles.left, style]} {...props}>
+        {children}
+      </View>
+    )
   }
 }
 
@@ -42,9 +46,11 @@ export class Center extends Component<CenterProps> {
   render () {
     const { children, style, ...props } = this.props
 
-    return <View style={[styles.center, style]} {...props}>
-      {children}
-    </View>
+    return (
+      <View style={[styles.center, style]} {...props}>
+        {children}
+      </View>
+    )
   }
 }
 
@@ -56,9 +62,11 @@ export class Right extends Component<RightProps> {
   render () {
     const { children, style, ...props } = this.props
 
-    return <View style={[styles.right, style]} {...props}>
-      {children}
-    </View>
+    return (
+      <View style={[styles.right, style]} {...props}>
+        {children}
+      </View>
+    )
   }
 }
 
@@ -77,10 +85,12 @@ export class Button extends Component<ButtonProps> {
   render () {
     const { children, style, onPress, underlayColor = rawStyles.underlay.color, ...props } = this.props
 
-    return <TouchableHighlight underlayColor={underlayColor} onPress={onPress}>
-      <View style={[styles.button, style]} {...props}>
-        {children}
-      </View>
-    </TouchableHighlight>
+    return (
+      <TouchableHighlight underlayColor={underlayColor} onPress={onPress}>
+        <View style={[styles.button, style]} {...props}>
+          {children}
+        </View>
+      </TouchableHighlight>
+    )
   }
 }
