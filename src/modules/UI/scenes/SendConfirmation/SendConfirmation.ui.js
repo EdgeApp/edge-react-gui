@@ -10,7 +10,7 @@ import { sprintf } from 'sprintf-js'
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
 import type { CurrencyConverter, GuiCurrencyInfo, GuiDenomination } from '../../../../types'
-import { border, convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../../utils.js'
+import { convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../../utils.js'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
 import type { ExchangedFlipInputAmounts } from '../../components/FlipInput/ExchangedFlipInput2.js'
 import { ExchangedFlipInput } from '../../components/FlipInput/ExchangedFlipInput2.js'
@@ -201,7 +201,7 @@ export class SendConfirmation extends Component<Props, State> {
                 <ExchangeRate secondaryDisplayAmount={this.props.fiatPerCrypto} primaryInfo={primaryInfo} secondaryInfo={secondaryInfo} />
               )}
             </View>
-            <View style={[styles.main, border('yellow')]}>
+            <View style={styles.main}>
               <ExchangedFlipInput
                 primaryCurrencyInfo={{ ...primaryInfo }}
                 secondaryCurrencyInfo={{ ...secondaryInfo }}
