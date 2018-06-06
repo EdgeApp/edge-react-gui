@@ -36,6 +36,7 @@ export const rawStyles = {
   },
   text: {
     fontSize: 16,
+    fontFamily: THEME.FONTS.DEFAULT,
     color: 'white',
     backgroundColor: 'transparent',
     alignItems: 'center',

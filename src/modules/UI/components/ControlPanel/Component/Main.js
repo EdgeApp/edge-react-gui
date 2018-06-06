@@ -39,6 +39,8 @@ export default class Main extends Component<Props> {
     ) : (
       <View style={{ flex: 1, justifyContent: 'space-between' }}>
         <View>
+          <Separator />
+
           <Button onPress={Actions.walletList}>
             <Button.Left>
               <Image source={walletIcon} />
@@ -139,7 +141,6 @@ export default class Main extends Component<Props> {
             </Button.Center>
           </Button>
         </View>
-
       </View>
     )
   }
