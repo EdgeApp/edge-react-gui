@@ -7,8 +7,8 @@ import { THEME } from '../../../../../../theme/variables/airbitz.js'
 export const rawStyles = {
   separator: {
     width: '100%',
-    borderColor: THEME.COLORS.OPACITY_WHITE,
-    borderWidth: 0.8
+    height: 0.8,
+    backgroundColor: THEME.COLORS.OPACITY_WHITE
   }
 }
 export const styles = StyleSheet.create(rawStyles)
