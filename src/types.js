@@ -22,14 +22,7 @@ export type GuiWallet = {
   addressLoadingProgress?: number
 }
 
-export type GuiDenomination = {
-  name: string,
-  currencyCode?: string,
-  symbol: string,
-  multiplier: string,
-  precision?: number
-}
-
+export type GuiDenomination = EdgeDenomination
 export type GuiCurrencyInfo = {
   displayCurrencyCode: string,
   exchangeCurrencyCode: string,
@@ -97,27 +90,9 @@ export type DeviceDimensions = {
   keyboardHeight: number
 }
 
-export type ExchangePair = {
-  rate: string,
-  limit: number,
-  pair: string,
-  maxLimit: number,
-  min: number,
-  minerFee: number
-}
-
 export type GuiTouchIdInfo = {
   isTouchEnabled: boolean,
   isTouchSupported: boolean
-}
-
-export type GuiReceiveAddressMetadata = {
-  amountFiat: number,
-  bizId?: any,
-  category: string,
-  miscJson: string,
-  notes: string,
-  payeeName: string
 }
 
 export type GuiReceiveAddress = {
@@ -126,28 +101,6 @@ export type GuiReceiveAddress = {
   legacyAddress?: string,
   segwitAddress?: string,
   nativeAmount: string
-}
-
-export type GuiTransactionRequest = {
-  inputCurrencySelected: string,
-  receiveAddress: GuiReceiveAddress
-}
-
-export type GuiRequestPrimaryInfo = {
-  displayCurrencyCode: string,
-  displayDenomination: GuiDenomination,
-  multiplier: string,
-  name: string,
-  symbol: string
-}
-
-export type GuiRequestSecondaryInfo = {
-  displayCurrencyCode: string,
-  displayDenomination: GuiDenomination,
-  exchangeDenomination: GuiDenomination,
-  multiplier: string,
-  name: string,
-  symbol: string
 }
 
 export type FlipInputFieldInfo = GuiCurrencyInfo & {
@@ -202,15 +155,6 @@ export const emptyCurrencyInfo: GuiCurrencyInfo = {
   exchangeCurrencyCode: '',
   displayDenomination: emptyGuiDenomination,
   exchangeDenomination: emptyGuiDenomination
-}
-
-export type ComponentLayoutMeasurements = {
-  x: Number,
-  y: Number,
-  width: Number,
-  height: Number,
-  pageX: Number,
-  pageY: Number
 }
 
 export type PasswordReminder = {
