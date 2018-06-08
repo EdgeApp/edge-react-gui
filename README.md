@@ -20,7 +20,7 @@ Edge Wallet is:
 ## Requirements
 
   ### MacOS
-   
+
    Xcode >= 9
 
 ## Getting Started
@@ -40,7 +40,9 @@ Edge Wallet is:
 ### Checkout develop branch & install node_modules
 
     cd edge-react-gui
-    yarn
+    yarn --network-concurrency 1
+
+The `--network-concurrency 1` seems to work around a concurrency bug in yarn.
 
 ### Android NDK Setup
 

@@ -9,12 +9,14 @@ const strings = {
   change_currency_fee: 'Change Currency',
   could_not_select: 'Could Not Select Wallet',
   dialog_title: 'Set Auto Logoff time',
+
   drawer_exchange_rate_loading: 'Exchange Rate Loading',
-  drawer_more: 'More',
+  drawer_exchange: 'Exchange',
   drawer_request: 'Request',
-  drawer_scan: 'Scan',
-  drawer_transactions: 'Transactions',
+  drawer_scan_qr_send: 'Scan QR (Send)',
+  drawer_sweep_private_key: 'Sweep Private Key',
   drawer_wallets: 'Wallets',
+
   dropdown_exchange_max_amount: 'Exchange Max Amount',
   edge_description: 'This application would like to create or access its wallet in your Edge account.\n\n It will not have access to any other wallets.',
   exchange_failed: 'Exchange Failed',

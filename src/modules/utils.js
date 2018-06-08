@@ -205,18 +205,14 @@ export function getDenomFromIsoCode (currencyCode: string): GuiDenomination {
   if (restrictedCurrencyCodes.findIndex(item => item === currencyCode) !== -1) {
     return {
       name: '',
-      currencyCode: '',
       symbol: '',
-      precision: 0,
       multiplier: '0'
     }
   }
   const symbol = getSymbolFromCurrency(currencyCode)
   const denom: GuiDenomination = {
     name: currencyCode,
-    currencyCode,
     symbol,
-    precision: 2,
     multiplier: '100'
   }
   return denom
@@ -312,8 +308,12 @@ export const decimalPlacesToDenomination = (decimalPlaces: string): string => {
   return denomination
 }
 
-export const isReceivedTransaction = (edgeTransaction: EdgeTransaction): boolean => gte(edgeTransaction.nativeAmount, '0')
-export const isSentTransaction = (edgeTransaction: EdgeTransaction): boolean => !isReceivedTransaction(edgeTransaction)
+export const isReceivedTransaction = (edgeTransaction: EdgeTransaction): boolean => {
+  return !isSentTransaction(edgeTransaction)
+}
+export const isSentTransaction = (edgeTransaction: EdgeTransaction): boolean => {
+  return (!!edgeTransaction.nativeAmount && (edgeTransaction.nativeAmount.charAt(0) === '-'))
+}
 
 export const getTimeMeasurement = (inMinutes: number): string => {
   switch (true) {
@@ -389,17 +389,6 @@ export const getTimeInMinutes = (params: { measurement: string, value: number })
   return strategy(value)
 }
 
-export const convertAbcToGuiDenomination = (edgeDenomination: EdgeDenomination): GuiDenomination => {
-  const guiDenomination: GuiDenomination = {
-    name: edgeDenomination.name,
-    currencyCode: edgeDenomination.name,
-    symbol: edgeDenomination.symbol ? edgeDenomination.symbol : '',
-    multiplier: edgeDenomination.multiplier,
-    precision: 0
-  }
-  return guiDenomination
-}
-
 export type PrecisionAdjustParams = {
   exchangeSecondaryToPrimaryRatio: number,
   secondaryExchangeMultiplier: string,
@@ -450,6 +439,66 @@ export const daysBetween = (DateInMillisecondsA: number, dateInMillisecondsB: nu
   const millisecondsBetween = dateInMillisecondsB - DateInMillisecondsA
   const daysBetween = millisecondsBetween / MILLISECONDS_PER_DAY
   return daysBetween
+}
+
+// Does a shallow compare of obj1 to obj2 and returns the element name of the element which differs
+// between the two. Will recursively deep compare any unequal elements specified in traverseObjects.
+// Returns the element name of the unequal element or '' if objects are equal
+export function getObjectDiff (obj1: Object, obj2: Object, traverseObjects?: Object, ignoreObjects?: Object): string {
+  const comparedElements = {}
+  for (const e in obj1) {
+    if (ignoreObjects && ignoreObjects[e]) {
+      continue
+    }
+    comparedElements[e] = true
+    if (obj1.hasOwnProperty(e)) {
+      if (obj2.hasOwnProperty(e)) {
+        if (obj1[e] !== obj2[e]) {
+          if (traverseObjects && traverseObjects[e] && typeof obj1[e] === 'object') {
+            const deepDiff = getObjectDiff(obj1[e], obj2[e], traverseObjects, ignoreObjects)
+            if (deepDiff) {
+              // console.log(`getObjectDiff:${e}`)
+              return e
+            }
+          } else {
+            // console.log(`getObjectDiff:${e}`)
+            return e
+          }
+        }
+      } else {
+        // console.log(`getObjectDiff:${e}`)
+        return e
+      }
+    }
+  }
+  for (const e in obj2) {
+    if (
+      (comparedElements && comparedElements[e]) ||
+      (ignoreObjects && ignoreObjects[e])) {
+      continue
+    }
+    if (obj2.hasOwnProperty(e)) {
+      if (obj1.hasOwnProperty(e)) {
+        if (obj1[e] !== obj2[e]) {
+          if (traverseObjects && traverseObjects[e] && typeof obj1[e] === 'object') {
+            const deepDiff = getObjectDiff(obj2[e], obj1[e], traverseObjects)
+            if (deepDiff) {
+              return e
+            }
+          } else {
+            return e
+          }
+        }
+      } else {
+        return e
+      }
+    }
+  }
+  return ''
+}
+
+export function snooze (ms: number): Promise<void> {
+  return new Promise((resolve: any) => setTimeout(resolve, ms))
 }
 
 export const isEdgeLogin = (data: string) => {
