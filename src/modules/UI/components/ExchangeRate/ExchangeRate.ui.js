@@ -8,6 +8,7 @@ import s from '../../../../locales/strings.js'
 import * as UTILS from '../../../utils'
 import T from '../../components/FormattedText'
 import styles from './styles'
+import { log10 } from 'biggystring'
 
 const EXCHANGE_RATE_LOADING_TEXT = s.strings.drawer_exchange_rate_loading
 
@@ -19,6 +20,16 @@ type Props = {
 }
 
 export default class ExchangeRate extends Component<Props> {
+  shouldComponentUpdate (nextProps: Props) {
+    const diffElement = UTILS.getObjectDiff(this.props, nextProps, {
+      primaryInfo: true,
+      secondaryInfo: true,
+      displayDenomination: true,
+      exchangeDenomination: true
+    })
+    return !!diffElement
+  }
+
   render () {
     const { primaryInfo, primaryDisplayAmount, secondaryInfo, secondaryDisplayAmount } = this.props
 
@@ -29,14 +40,14 @@ export default class ExchangeRate extends Component<Props> {
       const secondaryRatio = parseInt(secondaryInfo.displayDenomination.multiplier) / parseInt(secondaryInfo.exchangeDenomination.multiplier)
       return primaryRatio / secondaryRatio * parseFloat(secondaryDisplayAmount)
     }
-    let formattedSecondaryDisplayAmount: string = (parseFloat(getDisplayExchangeAmount(secondaryDisplayAmount)).toFixed(secondaryInfo.displayDenomination.precision))
-    let precision = secondaryInfo.displayDenomination.precision
+    let precision = secondaryInfo.displayDenomination.multiplier ? log10(secondaryInfo.displayDenomination.multiplier) : 0
+    let formattedSecondaryDisplayAmount: string = (parseFloat(getDisplayExchangeAmount(secondaryDisplayAmount)).toFixed(precision))
     // if exchange rate is too low, then add decimal places
     if (parseFloat(formattedSecondaryDisplayAmount) <= 0.1) {
       precision += 3
       formattedSecondaryDisplayAmount = (parseFloat(getDisplayExchangeAmount(secondaryDisplayAmount)).toFixed(precision))
     }
-    const secondaryCurrencyCode: string = secondaryInfo.displayDenomination.currencyCode
+    const secondaryCurrencyCode: string = secondaryInfo.displayDenomination.name
 
     const exchangeData = {
       primaryDisplayAmount: primaryDisplayAmount || '1',

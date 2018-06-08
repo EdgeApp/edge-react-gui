@@ -10,7 +10,7 @@ import { sprintf } from 'sprintf-js'
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
 import type { CurrencyConverter, GuiCurrencyInfo, GuiDenomination } from '../../../../types'
-import { border, convertAbcToGuiDenomination, convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../../utils.js'
+import { border, convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../../utils.js'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
 import type { ExchangedFlipInputAmounts } from '../../components/FlipInput/ExchangedFlipInput2.js'
 import { ExchangedFlipInput } from '../../components/FlipInput/ExchangedFlipInput2.js'
@@ -114,12 +114,11 @@ export class SendConfirmation extends Component<Props, State> {
   }
 
   render () {
-    const primaryDisplayDenomination = convertAbcToGuiDenomination(this.props.primaryDisplayDenomination)
-    const parentDisplayDenomination = convertAbcToGuiDenomination(this.props.parentDisplayDenomination)
+    const parentDisplayDenomination = this.props.parentDisplayDenomination
 
     const primaryInfo: GuiCurrencyInfo = {
       displayCurrencyCode: this.props.currencyCode,
-      displayDenomination: primaryDisplayDenomination,
+      displayDenomination: this.props.primaryDisplayDenomination,
       exchangeCurrencyCode: this.props.primaryExchangeDenomination.name,
       exchangeDenomination: this.props.primaryExchangeDenomination
     }
@@ -128,7 +127,7 @@ export class SendConfirmation extends Component<Props, State> {
 
     if (this.props.secondaryeExchangeCurrencyCode === '') {
       if (this.state.secondaryDisplayDenomination.currencyCode) {
-        exchangeCurrencyCode = this.state.secondaryDisplayDenomination.currencyCode
+        exchangeCurrencyCode = this.state.secondaryDisplayDenomination.name
       }
     }
 
@@ -143,11 +142,11 @@ export class SendConfirmation extends Component<Props, State> {
       const { networkFee, parentNetworkFee } = this.props
 
       if (parentNetworkFee && bns.gt(parentNetworkFee, '0')) {
-        const cryptoFeeSymbol = parentDisplayDenomination.symbol
+        const cryptoFeeSymbol = parentDisplayDenomination.symbol ? parentDisplayDenomination.symbol : ''
         const cryptoFeeMultiplier = this.props.parentExchangeDenomination.multiplier
         const cryptoFeeAmount = parentNetworkFee ? convertNativeToDisplay(cryptoFeeMultiplier)(parentNetworkFee) : ''
         const cryptoFeeString = `${cryptoFeeSymbol} ${cryptoFeeAmount}`
-        const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol
+        const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol ? secondaryInfo.displayDenomination.symbol : ''
         const exchangeConvertor = convertNativeToExchange(this.props.parentExchangeDenomination.multiplier)
         const cryptoFeeExchangeAmount = exchangeConvertor(parentNetworkFee)
         const fiatFeeAmount = this.props.currencyConverter.convertCurrency(
@@ -162,11 +161,11 @@ export class SendConfirmation extends Component<Props, State> {
       }
 
       if (bns.gt(networkFee, '0')) {
-        const cryptoFeeSymbol = primaryInfo.displayDenomination.symbol
+        const cryptoFeeSymbol = primaryInfo.displayDenomination.symbol ? primaryInfo.displayDenomination.symbol : ''
         const cryptoFeeMultiplier = this.props.primaryExchangeDenomination.multiplier
         const cryptoFeeAmount = networkFee ? convertNativeToDisplay(cryptoFeeMultiplier)(networkFee) : ''
         const cryptoFeeString = `${cryptoFeeSymbol} ${cryptoFeeAmount}`
-        const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol
+        const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol ? secondaryInfo.displayDenomination.symbol : ''
         const exchangeConvertor = convertNativeToExchange(primaryInfo.exchangeDenomination.multiplier)
         const cryptoFeeExchangeAmount = exchangeConvertor(networkFee)
         const fiatFeeAmount = this.props.currencyConverter.convertCurrency(this.props.currencyCode, secondaryInfo.exchangeCurrencyCode, cryptoFeeExchangeAmount)

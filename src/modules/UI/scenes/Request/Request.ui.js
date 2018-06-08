@@ -10,7 +10,7 @@ import { sprintf } from 'sprintf-js'
 
 import * as Constants from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings.js'
-import type { GuiCurrencyInfo, GuiReceiveAddress, GuiTransactionRequest, GuiWallet } from '../../../../types.js'
+import type { GuiCurrencyInfo, GuiReceiveAddress, GuiWallet } from '../../../../types.js'
 import WalletListModal from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
 import { ExchangedFlipInput } from '../../components/FlipInput/ExchangedFlipInput2.js'
@@ -21,6 +21,7 @@ import RequestStatus from '../../components/RequestStatus/index.js'
 import SafeAreaView from '../../components/SafeAreaView/index.js'
 import ShareButtons from '../../components/ShareButtons/index.js'
 import styles from './styles.js'
+import { getObjectDiff } from '../../../utils'
 
 export type RequestStateProps = {
   currencyCode: string,
@@ -29,7 +30,7 @@ export type RequestStateProps = {
   guiWallet: GuiWallet,
   loading: false,
   primaryCurrencyInfo: GuiCurrencyInfo,
-  request: GuiTransactionRequest,
+  receiveAddress: GuiReceiveAddress,
   secondaryCurrencyInfo: GuiCurrencyInfo,
   showToWalletModal: boolean,
   useLegacyAddress: boolean
@@ -41,7 +42,7 @@ export type RequestLoadingProps = {
   guiWallet: null,
   loading: true,
   primaryCurrencyInfo: null,
-  request: Object,
+  receiveAddress: null,
   secondaryCurrencyInfo: null,
   showToWalletModal: null,
   useLegacyAddress: null
@@ -73,6 +74,20 @@ export class Request extends Component<Props, State> {
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
+  shouldComponentUpdate (nextProps: Props, nextState: State) {
+    let diffElement2: string = ''
+    const diffElement = getObjectDiff(this.props, nextProps, {
+      primaryCurrencyInfo: true,
+      secondaryCurrencyInfo: true,
+      displayDenomination: true,
+      exchangeDenomination: true
+    })
+    if (!diffElement) {
+      diffElement2 = getObjectDiff(this.state, nextState)
+    }
+    return !!diffElement || !!diffElement2
+  }
+
   componentWillReceiveProps (nextProps: Props) {
     if (nextProps.loading) return
 
@@ -94,17 +109,6 @@ export class Request extends Component<Props, State> {
         legacyAddress: legacyAddress
       })
     }
-  }
-
-  onExchangeAmountChanged = (amounts: ExchangedFlipInputAmounts) => {
-    const { publicAddress, legacyAddress } = this.state
-    const edgeEncodeUri: EdgeEncodeUri = this.props.useLegacyAddress && legacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
-    if (bns.gt(amounts.nativeAmount, '0')) {
-      edgeEncodeUri.nativeAmount = amounts.nativeAmount
-    }
-    const encodedURI = this.props.edgeWallet ? this.props.edgeWallet.encodeUri(edgeEncodeUri) : ''
-
-    this.setState({ encodedURI })
   }
 
   render () {
@@ -181,7 +185,9 @@ export class Request extends Component<Props, State> {
 
   showResult = (result: { activityType: string }) => {
     if (result.action === Share.sharedAction) {
-      this.props.saveReceiveAddress(this.props.request.receiveAddress)
+      if (this.props.receiveAddress) {
+        this.props.saveReceiveAddress(this.props.receiveAddress)
+      }
 
       if (result.activityType) {
         this.setState({

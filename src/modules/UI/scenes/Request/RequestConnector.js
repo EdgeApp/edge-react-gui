@@ -14,7 +14,6 @@ import { Request } from './Request.ui'
 import type { RequestDispatchProps, RequestLoadingProps, RequestStateProps } from './Request.ui'
 
 const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps => {
-  let exchangeSecondaryToPrimaryRatio: number = 0
   const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
   const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
   if (!guiWallet || !currencyCode) {
@@ -25,7 +24,7 @@ const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps 
       guiWallet: null,
       loading: true,
       primaryCurrencyInfo: null,
-      request: {},
+      receiveAddress: null,
       secondaryCurrencyInfo: null,
       showToWalletModal: null,
       useLegacyAddress: null
@@ -39,7 +38,7 @@ const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps 
   const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
   const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
   const primaryExchangeCurrencyCode: string = primaryExchangeDenomination.name
-  const secondaryExchangeCurrencyCode: string = secondaryExchangeDenomination.currencyCode ? secondaryExchangeDenomination.currencyCode : ''
+  const secondaryExchangeCurrencyCode: string = secondaryExchangeDenomination.name ? secondaryExchangeDenomination.name : ''
 
   const primaryCurrencyInfo: GuiCurrencyInfo = {
     displayCurrencyCode: currencyCode,
@@ -54,7 +53,7 @@ const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps 
     exchangeDenomination: secondaryExchangeDenomination
   }
   const isoFiatCurrencyCode: string = guiWallet.isoFiatCurrencyCode
-  exchangeSecondaryToPrimaryRatio = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+  const exchangeSecondaryToPrimaryRatio = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
 
   return {
     currencyCode,
@@ -63,7 +62,7 @@ const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps 
     guiWallet,
     loading: false,
     primaryCurrencyInfo,
-    request: state.ui.scenes.request,
+    receiveAddress: state.ui.scenes.request.receiveAddress,
     secondaryCurrencyInfo,
     showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility,
     useLegacyAddress: state.ui.scenes.requestType.useLegacyAddress
