@@ -9,12 +9,14 @@ const strings = {
   change_currency_fee: 'Change Currency',
   could_not_select: 'Could Not Select Wallet',
   dialog_title: 'Set Auto Logoff time',
+
   drawer_exchange_rate_loading: 'Exchange Rate Loading',
-  drawer_more: 'More',
+  drawer_exchange: 'Exchange',
   drawer_request: 'Request',
-  drawer_scan: 'Scan',
-  drawer_transactions: 'Transactions',
+  drawer_scan_qr_send: 'Scan QR (Send)',
+  drawer_sweep_private_key: 'Sweep Private Key',
   drawer_wallets: 'Wallets',
+
   dropdown_exchange_max_amount: 'Exchange Max Amount',
   edge_description: 'This application would like to create or access its wallet in your Edge account.\n\n It will not have access to any other wallets.',
   exchange_failed: 'Exchange Failed',
@@ -294,7 +296,21 @@ const strings = {
   string_export_csv: 'Export CSV',
   string_export_csv_abbrev: 'Email CSV',
   email_address: 'Email Address',
-  email_export: 'Enter the email address where you want to send your exported file'
+  email_export: 'Enter the email address where you want to send your exported file',
+  // private key 
+  private_key_modal_private_key: '%1$s Private Key',
+  private_key_modal_with_public_address: 'with Public Address:',
+  private_key_modal_sweep_from_private_address: 'Sweep Funds From Private Key',
+  private_key_modal_send_to_public_address: 'Send Funds to Public Address',
+  private_key_modal_import: 'Import',
+  private_key_modal_cancel: 'Cancel',
+  private_key_modal_success: 'Private key successfully swept',
+  private_key_modal_importing_private_key: 'Importing Private Key',
+
+  restore_wallets_modal_title: 'Restore Wallets',
+  restore_wallets_modal_description: 'This will restore all deleted and archived wallets',
+  restore_wallets_modal_confirm: 'Confirm',
+  restore_wallets_modal_cancel: 'Cancel'
 }
 
 export default strings

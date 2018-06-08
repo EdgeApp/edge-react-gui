@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import s from '../../../../../locales/strings.js'
 import type { Dispatch, State } from '../../../../ReduxTypes'
 import * as UI_SELECTORS from '../../../selectors'
-import { toggleScanToWalletListModal, toggleSelectedWalletListModal } from '../../WalletListModal/action'
+import { toggleScanToWalletListModal, toggleWalletListModalVisibility } from '../../WalletListModal/action'
 import { WalletNameHeader } from './WalletNameHeader.ui'
 import WalletSelector from './WalletSelector.ui'
 import type { DispatchProps, StateProps } from './WalletSelector.ui'
@@ -23,7 +23,7 @@ const mapStateToProps = (state: State): StateProps => {
 }
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   onPress: () => {
-    dispatch(toggleSelectedWalletListModal())
+    dispatch(toggleWalletListModalVisibility())
     dispatch(toggleScanToWalletListModal())
   }
 })
