@@ -452,6 +452,10 @@ export const daysBetween = (DateInMillisecondsA: number, dateInMillisecondsB: nu
   return daysBetween
 }
 
+export function snooze (ms: number): Promise<void> {
+  return new Promise((resolve: any) => setTimeout(resolve, ms))
+}
+
 export const isEdgeLogin = (data: string) => {
   const EDGE_LOGIN_REG_EXP = /^airbitz:\/\/edge\//
 
