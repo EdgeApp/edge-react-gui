@@ -17,7 +17,6 @@ type Props = PassedProps
 
 export class TransactionsExportSceneComponent extends Component<Props> {
   render () {
-    console.log('allen: ', this.props)
     const styles = TransactionExportSceneStyle
     return <SafeAreaView>
       <View style={styles.container}>
@@ -63,7 +62,7 @@ export class TransactionsExportSceneComponent extends Component<Props> {
     RNFS.writeFile(path, file, 'utf8')
       .then((success) => {
         console.log('FS: FILE WRITTEN!')
-        this.openShareApp(path, 'Share Transactions CVS')
+        this.openShareApp(path, 'Share Transactions CSV')
       })
       .catch((err) => {
         console.log('FS: ', err.message)
