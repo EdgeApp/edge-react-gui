@@ -7,9 +7,12 @@ import * as Constants from '../../../../../constants/indexConstants'
 import type { State } from '../../../../ReduxTypes'
 import { TextAndIconButton } from '../../Buttons/TextAndIconButton.ui'
 import { walletSelectorStyles } from '../style'
+import s from '../../../../../locales/strings'
+import { WalletNameHeader } from './WalletNameHeader.ui.js'
 
 export type StateProps = {
-  title: string | Function
+  selectedWalletName: string | null,
+  selectedWalletCurrencyCode: string
 }
 
 export type DispatchProps = {
@@ -25,13 +28,22 @@ export default class WalletSelector extends Component<Props, State> {
   }
 
   render () {
+    let title = s.strings.loading
+    if (this.props.selectedWalletName) {
+      const selectedWalletName = this.props.selectedWalletName
+      const selectedWalletCurrencyCode = this.props.selectedWalletCurrencyCode
+      title = function HeaderComp (styles) {
+        return <WalletNameHeader name={selectedWalletName} denomination={selectedWalletCurrencyCode} styles={styles} />
+      }
+    }
+
     return (
       <TextAndIconButton
         style={walletSelectorStyles}
         icon={Constants.KEYBOARD_ARROW_DOWN}
         iconType={Constants.MATERIAL_ICONS}
         onPress={this.props.onPress}
-        title={this.props.title}
+        title={title}
       />
     )
   }
