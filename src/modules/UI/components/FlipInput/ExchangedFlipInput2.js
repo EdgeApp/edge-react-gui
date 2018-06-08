@@ -5,7 +5,7 @@ import { bns } from 'biggystring'
 import React, { Component } from 'react'
 
 import type { GuiCurrencyInfo } from '../../../../types'
-import { precisionAdjust } from '../../../utils.js'
+import { precisionAdjust, getObjectDiff } from '../../../utils.js'
 import { FlipInput } from './FlipInput2.ui.js'
 import type { FlipInputFieldInfo } from './FlipInput2.ui.js'
 
@@ -86,7 +86,7 @@ function propsToState (props: Props): State {
 
   const primaryInfo: FlipInputFieldInfo = {
     currencyName: props.primaryCurrencyInfo.displayDenomination.name,
-    currencySymbol: props.primaryCurrencyInfo.displayDenomination.symbol,
+    currencySymbol: props.primaryCurrencyInfo.displayDenomination.symbol ? props.primaryCurrencyInfo.displayDenomination.symbol : '',
     currencyCode: props.primaryCurrencyInfo.displayCurrencyCode,
     maxEntryDecimals: primaryEntryPrecision,
     maxConversionDecimals: primaryConversionPrecision
@@ -94,7 +94,7 @@ function propsToState (props: Props): State {
 
   const secondaryInfo: FlipInputFieldInfo = {
     currencyName: props.secondaryCurrencyInfo.displayDenomination.name,
-    currencySymbol: props.secondaryCurrencyInfo.displayDenomination.symbol,
+    currencySymbol: props.secondaryCurrencyInfo.displayDenomination.symbol ? props.secondaryCurrencyInfo.displayDenomination.symbol : '',
     currencyCode: props.secondaryCurrencyInfo.displayCurrencyCode,
     maxEntryDecimals: secondaryPrecision,
     maxConversionDecimals: secondaryPrecision
@@ -116,6 +116,21 @@ export class ExchangedFlipInput extends Component<Props, State> {
 
   componentWillReceiveProps (nextProps: Props) {
     this.setState(propsToState(nextProps))
+  }
+
+  shouldComponentUpdate (nextProps: Props, nextState: State) {
+    let diffElement2: string = ''
+    const diffElement = getObjectDiff(this.props, nextProps, {
+      primaryCurrencyInfo: true,
+      secondaryCurrencyInfo: true
+    })
+    if (!diffElement) {
+      diffElement2 = getObjectDiff(this.state, nextState, {
+        primaryInfo: true,
+        secondaryInfo: true
+      })
+    }
+    return !!diffElement || !!diffElement2
   }
 
   onAmountChanged = (decimalAmount: string): void => {

@@ -5,7 +5,7 @@ import type { EdgeCurrencyPlugin, EdgeDenomination } from 'edge-core-js'
 import type { State } from '../../ReduxTypes'
 import isoFiatDenominations from './IsoFiatDenominations.js'
 
-const emptyAbcDenom: EdgeDenomination = {
+const emptyEdgeDenomination: EdgeDenomination = {
   name: '',
   multiplier: '',
   symbol: ''
@@ -37,7 +37,7 @@ export const getCurrencySettings = (state: State, currencyCode: string) => {
   return currencySettings
 }
 
-export const getDenominations = (state: State, currencyCode: string) => {
+export const getDenominations = (state: State, currencyCode: string): Array<EdgeDenomination> => {
   const currencySettings = getCurrencySettings(state, currencyCode)
   const denominations = currencySettings.denominations
   return denominations
@@ -50,27 +50,37 @@ export const getDisplayDenominationKey = (state: State, currencyCode: string) =>
   return selectedDenominationKey
 }
 
-export const getDisplayDenominationFromSettings = (settings: any, currencyCode: string) => {
+export const getDisplayDenominationFromSettings = (settings: any, currencyCode: string): EdgeDenomination => {
   const currencySettings = settings[currencyCode] || isoFiatDenominations[currencyCode]
   const selectedDenominationKey = currencySettings.denomination
   const denominations = currencySettings.denominations
-  const selectedDenomination = denominations.find(denomination => denomination.multiplier === selectedDenominationKey)
+  let selectedDenomination: EdgeDenomination = emptyEdgeDenomination
+  for (const d of denominations) {
+    if (d.multiplier === selectedDenominationKey) {
+      selectedDenomination = d
+    }
+  }
   return selectedDenomination
 }
 
-export const getDisplayDenominationFull = (state: State, currencyCode: string) => {
+export const getDisplayDenominationFull = (state: State, currencyCode: string): EdgeDenomination => {
   const settings = state.ui.settings
   const currencySettings = settings[currencyCode]
   const selectedDenominationKey = currencySettings.denomination
   const denominations = currencySettings.denominations
-  const selectedDenomination = denominations.find(denomination => denomination.multiplier === selectedDenominationKey)
+  let selectedDenomination: EdgeDenomination = emptyEdgeDenomination
+  for (const d of denominations) {
+    if (d.multiplier === selectedDenominationKey) {
+      selectedDenomination = d
+    }
+  }
   return selectedDenomination
 }
 
 export const getDisplayDenomination = (state: State, currencyCode: string): EdgeDenomination => {
   const selectedDenominationKey = getDisplayDenominationKey(state, currencyCode)
   const denominations = getDenominations(state, currencyCode)
-  let selectedDenomination: EdgeDenomination = emptyAbcDenom
+  let selectedDenomination: EdgeDenomination = emptyEdgeDenomination
   for (const d of denominations) {
     if (d.multiplier === selectedDenominationKey) {
       selectedDenomination = d
@@ -81,7 +91,12 @@ export const getDisplayDenomination = (state: State, currencyCode: string): Edge
 
 export const getExchangeDenomination = (state: State, currencyCode: string) => {
   const denominations = getDenominations(state, currencyCode)
-  const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
+  let exchangeDenomination: EdgeDenomination = emptyEdgeDenomination
+  for (const d of denominations) {
+    if (d.name === currencyCode) {
+      exchangeDenomination = d
+    }
+  }
   return exchangeDenomination
 }
 
