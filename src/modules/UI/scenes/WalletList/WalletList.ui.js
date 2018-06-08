@@ -41,7 +41,8 @@ type State = {
   balanceBoxVisible: boolean,
   showOtpResetModal: boolean,
   showMessageModal: boolean,
-  messageModalMessage: ?string,
+  isWalletProgressVisible: boolean,
+  messageModalMessage: ?string
 }
 type Props = {
   activeWalletIds: Array<string>,
@@ -78,7 +79,8 @@ export default class WalletList extends Component<Props, State> {
       showOtpResetModal: this.props.otpResetPending,
       showMessageModal: false,
       messageModalMessage: null,
-      progressPercentage: 0
+      progressPercentage: 0,
+      isWalletProgressVisible: false
     }
   }
 
