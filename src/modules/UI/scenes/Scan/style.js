@@ -188,6 +188,10 @@ export const styles = {
   },
   doneUnderlay: {
     color: THEME.COLORS.PRIMARY
+  },
+  privateKeyIcon: {
+    color: THEME.COLORS.WHITE,
+    transform: [{rotate: '270deg'}]
   }
 }
 export default StyleSheet.create(styles)
