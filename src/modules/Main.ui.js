@@ -8,9 +8,13 @@ import {
   dashCurrencyPluginFactory,
   feathercoinCurrencyPluginFactory,
   litecoinCurrencyPluginFactory,
+  qtumCurrencyPluginFactory,
+  ufoCurrencyPluginFactory,
   zcoinCurrencyPluginFactory
 } from 'edge-currency-bitcoin'
 import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
+import { moneroCurrencyPluginFactory } from 'edge-currency-monero'
+import { rippleCurrencyPluginFactory } from 'edge-currency-ripple'
 import { coinbasePlugin, coincapPlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
 import React, { Component } from 'react'
 import { Image, Keyboard, Linking, Platform, StatusBar, TouchableWithoutFeedback } from 'react-native'
@@ -94,9 +98,13 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   bitcoinCurrencyPluginFactory,
   dashCurrencyPluginFactory,
   ethereumCurrencyPluginFactory,
+  moneroCurrencyPluginFactory,
+  rippleCurrencyPluginFactory,
+  qtumCurrencyPluginFactory,
   litecoinCurrencyPluginFactory,
   feathercoinCurrencyPluginFactory,
-  zcoinCurrencyPluginFactory
+  zcoinCurrencyPluginFactory,
+  ufoCurrencyPluginFactory
 ]
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux

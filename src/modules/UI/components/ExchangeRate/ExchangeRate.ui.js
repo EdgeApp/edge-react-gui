@@ -40,8 +40,13 @@ export default class ExchangeRate extends Component<Props> {
       const secondaryRatio = parseInt(secondaryInfo.displayDenomination.multiplier) / parseInt(secondaryInfo.exchangeDenomination.multiplier)
       return primaryRatio / secondaryRatio * parseFloat(secondaryDisplayAmount)
     }
-    const precision = secondaryInfo.displayDenomination.multiplier ? log10(secondaryInfo.displayDenomination.multiplier) : 0
-    const formattedSecondaryDisplayAmount: string = (parseFloat(getDisplayExchangeAmount(secondaryDisplayAmount)).toFixed(precision))
+    let precision = secondaryInfo.displayDenomination.multiplier ? log10(secondaryInfo.displayDenomination.multiplier) : 0
+    let formattedSecondaryDisplayAmount: string = (parseFloat(getDisplayExchangeAmount(secondaryDisplayAmount)).toFixed(precision))
+    // if exchange rate is too low, then add decimal places
+    if (parseFloat(formattedSecondaryDisplayAmount) <= 0.1) {
+      precision += 3
+      formattedSecondaryDisplayAmount = (parseFloat(getDisplayExchangeAmount(secondaryDisplayAmount)).toFixed(precision))
+    }
     const secondaryCurrencyCode: string = secondaryInfo.displayDenomination.name
 
     const exchangeData = {
@@ -51,7 +56,6 @@ export default class ExchangeRate extends Component<Props> {
       secondaryDisplaySymbol,
       secondaryCurrencyCode
     }
-
     const formattedPrimaryAmount = intl.formatNumber(primaryDisplayAmount || '1')
     const formattedSecondaryAmount = intl.formatNumber(formattedSecondaryDisplayAmount, { toFixed: precision })
 

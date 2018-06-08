@@ -497,6 +497,10 @@ export function getObjectDiff (obj1: Object, obj2: Object, traverseObjects?: Obj
   return ''
 }
 
+export function snooze (ms: number): Promise<void> {
+  return new Promise((resolve: any) => setTimeout(resolve, ms))
+}
+
 export const isEdgeLogin = (data: string) => {
   const EDGE_LOGIN_REG_EXP = /^airbitz:\/\/edge\//
 

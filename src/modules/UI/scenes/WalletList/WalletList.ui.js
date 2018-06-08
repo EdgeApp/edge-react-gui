@@ -18,7 +18,7 @@ import * as UTILS from '../../../utils'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView/index.js'
-import SimplifiedDropdown from '../../components/SimpleDropdown/SimpleDropdown.ui.js'
+import ProgressBar from '../../components/ProgressBar/ProgressBar.ui.js'
 import FullWalletListRow from './components/WalletListRow/FullWalletListRow.ui.js'
 import SortableWalletListRow from './components/WalletListRow/SortableWalletListRow.ui.js'
 import WalletOptions from './components/WalletOptions/WalletOptionsConnector.ui.js'
@@ -42,7 +42,6 @@ type State = {
   showOtpResetModal: boolean,
   showMessageModal: boolean,
   messageModalMessage: ?string,
-  isWalletProgressVisible: boolean
 }
 type Props = {
   activeWalletIds: Array<string>,
@@ -79,7 +78,6 @@ export default class WalletList extends Component<Props, State> {
       showOtpResetModal: this.props.otpResetPending,
       showMessageModal: false,
       messageModalMessage: null,
-      isWalletProgressVisible: true,
       progressPercentage: 0
     }
   }
@@ -158,7 +156,7 @@ export default class WalletList extends Component<Props, State> {
         <View style={styles.container}>
           <WalletOptions />
           <Gradient style={styles.gradient} />
-          {this.state.isWalletProgressVisible && this.renderWalletListProgressDropdown()}
+          <ProgressBar progress={this.props.progressPercentage} />
           <TouchableOpacity onPress={this.handleOnBalanceBoxPress}>
             {this.state.balanceBoxVisible ? this.balanceBox(fiatBalanceString) : this.hiddenBalanceBox()}
           </TouchableOpacity>
@@ -215,30 +213,6 @@ export default class WalletList extends Component<Props, State> {
           {this.showModal()}
         </View>
       </SafeAreaView>
-    )
-  }
-
-  onDismissProgressDropdown = () => {
-    this.setState({
-      isWalletProgressVisible: false
-    })
-  }
-
-  renderWalletListProgressDropdown = () => {
-    if (this.props.progressPercentage === 100) {
-      setTimeout(() => {
-        this.setState({
-          isWalletProgressVisible: false
-        })
-      }, 2000)
-    }
-    const heightOfDropdown = 100 // pixels
-    return (
-      <SimplifiedDropdown onPress={this.onDismissProgressDropdown} containerHeight={heightOfDropdown} containerStyle={styles.walletListProgressDropdown}>
-        <T style={styles.walletListProgressDropdownTopText}>
-          {s.strings.fragment_wallets_syncing_wallet_txs} {this.props.progressPercentage}%
-        </T>
-      </SimplifiedDropdown>
     )
   }
 
