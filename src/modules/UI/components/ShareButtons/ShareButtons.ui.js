@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { View } from 'react-native'
 
 import s from '../../../../locales/strings'
@@ -14,7 +14,7 @@ export type Props = {
   copyToClipboard: Function,
   shareViaShare: Function
 }
-export class ShareButtons extends Component<Props> {
+export class ShareButtons extends PureComponent<Props> {
   render () {
     const {
       copyToClipboard,

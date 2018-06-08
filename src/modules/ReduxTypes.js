@@ -135,9 +135,6 @@ export type State = {
       walletListModal: {
         walletListModalVisibility: boolean
       },
-      sideMenu: {
-        view: boolean
-      },
       createWallet: {
         isCreatingWallet: boolean
       },
