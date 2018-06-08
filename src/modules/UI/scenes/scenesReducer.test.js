@@ -93,9 +93,6 @@ test('initialState', () => {
     changeMiningFee: {
       isCustomFeeVisible: false
     },
-    sideMenu: {
-      view: false
-    },
     transactionAlert: {
       edgeTransaction: '',
       displayAlert: false
