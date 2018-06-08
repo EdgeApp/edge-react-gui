@@ -53,6 +53,13 @@ if (!__DEV__) {
   // console.log = () => {}
 }
 
+const enableWhyDidYouUpdate = false
+
+if (__DEV__ && enableWhyDidYouUpdate) {
+  const { whyDidYouUpdate } = require('why-did-you-update')
+  whyDidYouUpdate(React)
+}
+
 if (ENV.LOG_SERVER) {
   // $FlowFixMe: suppressing this error until we can find a workaround
   console.log = function () {

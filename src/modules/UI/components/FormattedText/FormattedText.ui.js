@@ -2,10 +2,15 @@
 
 import React, { Component } from 'react'
 import { Text } from 'react-native'
-
 import styles from './style'
+import { getObjectDiff } from '../../../utils.js'
 
 export default class FormattedText extends Component {
+  shouldComponentUpdate (nextProps) {
+    const diffElement = getObjectDiff(this.props, nextProps, {style: true, children: true})
+    return !!diffElement
+  }
+
   constructor (props) {
     super(props)
     this.style = this.props.isBold ? [styles.boldStyle] : [styles.defaultStyle]
