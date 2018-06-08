@@ -21,7 +21,7 @@ export class PrimaryModal extends Component<Props> {
     return (
       <InteractiveModal isActive={isActive} onBackdropPress={onBackdropPress} onBackButtonPress={onBackButtonPress}>
         <InteractiveModal.Icon>
-          <Icon style={{}} type={'ionIcons'} name="ios-key" size={30} />
+          <Icon style={{transform: [{rotate: '270deg'}]}} type={'ionIcons'} name='ios-key' size={30} />
         </InteractiveModal.Icon>
 
         <InteractiveModal.Title>
