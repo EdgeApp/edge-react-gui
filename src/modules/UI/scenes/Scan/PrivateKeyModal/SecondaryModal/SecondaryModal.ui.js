@@ -7,6 +7,7 @@ import { NonInteractiveModal } from '../../../../components/Modals'
 
 import { Icon } from '../../../../components/Icon/Icon.ui'
 import s from '../../../../../../locales/strings.js'
+import styles from '../../style.js'
 
 export type Props = {
   error: Error | null,
@@ -23,7 +24,7 @@ export class SecondaryModal extends Component<Props> {
     return (
       <NonInteractiveModal isActive={isActive} onBackButtonPress={onBackButtonPress} onBackdropPress={onBackdropPress} onModalHide={onModalHide}>
         <NonInteractiveModal.Icon>
-          <Icon style={{}} type={'ionIcons'} name={'ios-key'} size={30} />
+          <Icon style={styles.privateKeyIcon} type={'ionIcons'} name={'ios-key'} size={30} />
         </NonInteractiveModal.Icon>
 
         <NonInteractiveModal.Footer>
