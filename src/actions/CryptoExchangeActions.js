@@ -18,10 +18,12 @@ import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../types'
 import * as actions from './indexActions'
 
 const DIVIDE_PRECISION = 18
+const KEYSTROKE_DELAY = 1500
 const holderObject = {
-  newAmount: '',
-  processingAmount: '',
-  status: 'finished'
+  status: 'finished',
+  lastKeyStrokeTime: 0,
+  processingCounter: 0,
+  processingObject: {}
 }
 
 export type SetNativeAmountInfo = {
@@ -190,7 +192,7 @@ export const setNativeAmount = (info: SetNativeAmountInfo, forceUpdateGui?: bool
       setAmounts.fromDisplayAmount = fromDisplayAmount
       if (fromNativeAmount === '0' && primaryNativeAmount === '0') {
         setAmounts.forceUpdateGui = true
-        holderObject.processingAmount = ''
+        // holderObject.processingAmount = ''
       }
       // dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT, {native: fromNativeAmount, display: fromDisplayAmount, forceUpdateGui}))
     }
@@ -213,8 +215,8 @@ async function makeShiftTransaction (dispatch: Dispatch, fromWallet: GuiWallet |
 const processMakeSpendError = e => (dispatch: Dispatch, getState: GetState) => {
   console.log(e)
   dispatch(actions.dispatchAction(Constants.DONE_MAKE_SPEND))
-  holderObject.status = 'finished'
-  holderObject.processingAmount = ''
+  // holderObject.status = 'finished'
+  // holderObject.processingAmount = ''
   if (e.name === Constants.INSUFFICIENT_FUNDS || e.message === Constants.INSUFFICIENT_FUNDS) {
     dispatch(actions.dispatchAction(Constants.RECEIVED_INSUFFICIENT_FUNDS_ERROR))
     return
@@ -321,13 +323,14 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
   if (whichWallet === Constants.TO) {
     spendTarget = { ...spendTarget, nativeAmount: toNativeAmount }
   }
-  const spendInfo: EdgeSpendInfo = {
+  let spendInfo: EdgeSpendInfo = {
     networkFeeOption: state.cryptoExchange.feeSetting,
     currencyCode: fromCurrencyCode,
     nativeAmount: fromNativeAmount,
     quoteFor: whichWallet,
     spendTargets: [spendTarget]
   }
+
   const srcCurrencyCode = spendInfo.currencyCode
   const destCurrencyCode = spendInfo.spendTargets[0].currencyCode
 
@@ -335,74 +338,121 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
     // there is no reason to get a transaction when the amount is 0
     return
   }
-  holderObject.newAmount = fromNativeAmount
-  if (holderObject.status === 'pending') {
-    //  we are still waiting on the previous make spend to return
+  if (srcCurrencyCode === destCurrencyCode) {
     return
   }
-  if (holderObject.newAmount === holderObject.processingAmount && !reQuote) {
-    //  there is no new typing from when we returned.
-    return
-  }
-  if (srcCurrencyCode !== destCurrencyCode) {
-    holderObject.status = 'pending'
-    holderObject.processingAmount = fromNativeAmount
-    dispatch(actions.dispatchAction(Constants.START_MAKE_SPEND))
-    const edgeCoinExchangeQuote = await srcWallet.getQuote(spendInfo)
+
+  holderObject.processingObject = { spendInfo }
+
+  holderObject.lastKeyStrokeTime = Date.now()
+
+  console.log(`getShiftTransaction:fromNativeAmount=${fromNativeAmount}`)
+
+  const isAboveLimit = bns.gt(fromNativeAmount, nativeMax)
+  const isBelowLimit = bns.lt(fromNativeAmount, nativeMin)
+
+  if (isAboveLimit) {
+    const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, fromCurrencyCode)
+    // $FlowFixMe
+    const nativeToDisplayRatio = displayDenomination.multiplier
+    const displayMax = UTILS.convertNativeToDisplay(nativeToDisplayRatio)(nativeMax)
+    const errorMessage = sprintf(s.strings.amount_above_limit, displayMax)
+    console.log(`getShiftTransaction:above limit`)
+    holderObject.processingCounter++
     holderObject.status = 'finished'
-    const edgeTransaction = edgeCoinExchangeQuote.edgeTransacton
-    dispatch(actions.dispatchAction(Constants.DONE_MAKE_SPEND))
-    if (holderObject.newAmount !== holderObject.processingAmount) {
-      // If there is the user has typed something different in the time it took to
-      // get back the transaction, there is no point in going on,
-      // we need to re-run the transaction
-      holderObject.processingAmount = ''
-      try {
-        await dispatch(getShiftTransaction(fromWallet, toWallet, whichWallet))
-      } catch (e) {
-        dispatch(processMakeSpendError(e))
-      }
-      return
-    }
-    const fromPrimaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
-    const toPrimaryInfo = state.cryptoExchange.toWalletPrimaryInfo
-    const ratio = fromPrimaryInfo.displayDenomination.multiplier.toString()
-    const networkFee = UTILS.convertNativeToDenomination(ratio)(edgeTransaction.networkFee)
-
-    const fromDisplayAmountTemp = bns.div(edgeCoinExchangeQuote.depositAmountNative, fromPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
-    const fromDisplayAmount = bns.toFixed(fromDisplayAmountTemp, 0, 8)
-    const toDisplayAmountTemp = bns.div(edgeCoinExchangeQuote.withdrawalAmountNative, toPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
-    const toDisplayAmount = bns.toFixed(toDisplayAmountTemp, 0, 8)
-    const returnObject = {
-      edgeTransaction,
-      networkFee,
-      fromNativeAmount: edgeCoinExchangeQuote.depositAmountNative, // This needs to be calculated
-      fromDisplayAmount: fromDisplayAmount,
-      toNativeAmount: edgeCoinExchangeQuote.withdrawalAmountNative,
-      toDisplayAmount: toDisplayAmount,
-      quoteExpireDate: edgeCoinExchangeQuote.expiration
-    }
-    const isAboveLimit = bns.gt(fromNativeAmount, nativeMax)
-    const isBelowLimit = bns.lt(fromNativeAmount, nativeMin)
-
-    if (isAboveLimit) {
-      const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, fromCurrencyCode)
-      // $FlowFixMe
-      const nativeToDisplayRatio = displayDenomination.multiplier
-      const displayMax = UTILS.convertNativeToDisplay(nativeToDisplayRatio)(nativeMax)
-      const errorMessage = sprintf(s.strings.amount_above_limit, displayMax)
-      throw Error(errorMessage)
-    }
-    if (isBelowLimit) {
-      const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, fromCurrencyCode)
-      // $FlowFixMe
-      const nativeToDisplayRatio = displayDenomination.multiplier
-      const displayMin = UTILS.convertNativeToDisplay(nativeToDisplayRatio)(nativeMin)
-      const errorMessage = sprintf(s.strings.amount_below_limit, displayMin)
-      throw Error(errorMessage)
-    }
-    dispatch(setShapeTransaction(Constants.UPDATE_SHIFT_TRANSACTION, returnObject))
+    throw Error(errorMessage)
   }
+  if (isBelowLimit) {
+    const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, fromCurrencyCode)
+    // $FlowFixMe
+    const nativeToDisplayRatio = displayDenomination.multiplier
+    const displayMin = UTILS.convertNativeToDisplay(nativeToDisplayRatio)(nativeMin)
+    const errorMessage = sprintf(s.strings.amount_below_limit, displayMin)
+    holderObject.processingCounter++
+    holderObject.status = 'finished'
+    console.log(`getShiftTransaction:below limit`)
+    throw Error(errorMessage)
+  }
+
+  if (holderObject.status === 'delay') {
+    //  we are still waiting on the previous make spend to return
+    console.log('getShiftTransaction:delay return')
+    return
+  }
+  // if (holderObject.newAmount === holderObject.processingAmount && !reQuote) {
+  //   // there is no new typing from when we returned.
+  //   return
+  // }
+  dispatch(actions.dispatchAction(Constants.START_MAKE_SPEND))
+
+  let delay = KEYSTROKE_DELAY
+
+  if (holderObject.status !== 'processing') {
+    holderObject.status = 'delay'
+    while (1) {
+      console.log('getShiftTransaction:snoozing...')
+      await UTILS.snooze(delay)
+      const now = Date.now()
+      const additionalDelay = KEYSTROKE_DELAY - (now - holderObject.lastKeyStrokeTime)
+      if (additionalDelay <= 0) {
+        console.log('getShiftTransaction:woke up. break out')
+        break
+      }
+      console.log(`getShiftTransaction:woke up. delay additional ${additionalDelay}ms`)
+      delay = additionalDelay
+    }
+  } else {
+    console.log(`getShiftTransaction:skip snooze`)
+  }
+
+  holderObject.processingCounter++
+  const processingCounter = holderObject.processingCounter
+  spendInfo = holderObject.processingObject.spendInfo
+  holderObject.status = 'processing'
+  console.log(`getShiftTransaction:processing counter=${processingCounter}...`)
+  let error
+  let edgeCoinExchangeQuote
+  try {
+    edgeCoinExchangeQuote = await srcWallet.getQuote(spendInfo)
+  } catch (e) {
+    console.log(`getShiftTransaction:error counter=${processingCounter}`, e)
+    error = e
+  }
+  if (holderObject.processingCounter !== processingCounter) {
+    console.log(`getShiftTransaction:done processing processingCounter=> ${processingCounter} !== ${holderObject.processingCounter}`)
+    // If there is the user has typed something different in the time it took to
+    // get back the transaction, there is no point in going on,
+    // Another promise is in flight that will resolve.
+    return
+  }
+
+  if (error || !edgeCoinExchangeQuote) {
+    throw error
+  }
+
+  const edgeTransaction = edgeCoinExchangeQuote.edgeTransacton
+  holderObject.status = 'finished'
+  console.log(`getShiftTransaction:finished counter=${processingCounter} !!`)
+  dispatch(actions.dispatchAction(Constants.DONE_MAKE_SPEND))
+  const fromPrimaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
+  const toPrimaryInfo = state.cryptoExchange.toWalletPrimaryInfo
+  const ratio = fromPrimaryInfo.displayDenomination.multiplier.toString()
+  const networkFee = UTILS.convertNativeToDenomination(ratio)(edgeTransaction.networkFee)
+
+  const fromDisplayAmountTemp = bns.div(edgeCoinExchangeQuote.depositAmountNative, fromPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
+  const fromDisplayAmount = bns.toFixed(fromDisplayAmountTemp, 0, 8)
+  const toDisplayAmountTemp = bns.div(edgeCoinExchangeQuote.withdrawalAmountNative, toPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
+  const toDisplayAmount = bns.toFixed(toDisplayAmountTemp, 0, 8)
+  const returnObject = {
+    edgeTransaction,
+    networkFee,
+    fromNativeAmount: edgeCoinExchangeQuote.depositAmountNative, // This needs to be calculated
+    fromDisplayAmount: fromDisplayAmount,
+    toNativeAmount: edgeCoinExchangeQuote.withdrawalAmountNative,
+    toDisplayAmount: toDisplayAmount,
+    quoteExpireDate: edgeCoinExchangeQuote.expiration
+  }
+  dispatch(setShapeTransaction(Constants.UPDATE_SHIFT_TRANSACTION, returnObject))
 }
 
 export const selectToFromWallet = (type: string, wallet: GuiWallet, currencyCode?: string) => async (dispatch: Dispatch, getState: GetState) => {
