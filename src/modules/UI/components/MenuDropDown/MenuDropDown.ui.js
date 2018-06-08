@@ -6,6 +6,7 @@ import Menu, { MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-m
 
 import * as Constants from '../../../../constants/indexConstants'
 import { Icon } from '../Icon/Icon.ui'
+import { getObjectDiff } from '../../../utils'
 
 type Props = {
   style: StyleSheet.Styles,
@@ -35,11 +36,22 @@ class MenuDropDown extends Component<Props, State> {
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
+  shouldComponentUpdate (nextProps: Props, nextState: State) {
+    let diffElement2: string = ''
+    const diffElement = getObjectDiff(this.props, nextProps, {
+      data: true, value: true, '0': true, '1': true, '2': true, '3': true, '4': true, '5': true, '6': true, '7': true, '8': true
+    })
+    if (!diffElement) {
+      diffElement2 = getObjectDiff(this.state, nextState)
+    }
+    return !!diffElement || !!diffElement2
+  }
+
   renderMenuOptions (style: StyleSheet.Styles) {
     const items = this.props.data.map(item => (
       <MenuOption style={style.menuOption} value={item.value} key={'ld' + (item.key || item.value)}>
-        <View style={[style.menuOptionItem]}>
-          <Text style={[style.optionText]}>{item.label}</Text>
+        <View style={style.menuOptionItem}>
+          <Text style={style.optionText}>{item.label}</Text>
         </View>
       </MenuOption>
     ))
@@ -50,8 +62,8 @@ class MenuDropDown extends Component<Props, State> {
     const style = this.props.style
 
     return (
-      <View style={[style.container]}>
-        <Menu style={[style.menuButton]} onSelect={value => this.props.onSelect(value)}>
+      <View style={style.container}>
+        <Menu style={style.menuButton} onSelect={this.props.onSelect}>
           <MenuTrigger customStyles={style.menuTrigger}>{this.renderMenuIcon(style)}</MenuTrigger>
           <MenuOptions customStyles={style.menuOptions}>{this.renderMenuOptions(style)}</MenuOptions>
         </Menu>

@@ -141,6 +141,7 @@
     "tty-browserify": "0.0.0",
     "url": "^0.10.3",
     "vm-browserify": "0.0.4",
+    "why-did-you-update": "^0.1.1",
     "yarn": "^1.3.2"
   },
   "devDependencies": {
@@ -172,8 +173,15 @@
     "updot": "^1.1.7"
   },
   "flow-coverage-report": {
-    "includeGlob": ["src/**/*.js", "*.js"],
-    "type": ["text", "html", "json"]
+    "includeGlob": [
+      "src/**/*.js",
+      "*.js"
+    ],
+    "type": [
+      "text",
+      "html",
+      "json"
+    ]
   },
   "importSort": {
     ".js, .es": {
@@ -183,8 +191,12 @@
   },
   "jest": {
     "preset": "react-native",
-    "transformIgnorePatterns": ["node_modules/mobx-react"],
-    "setupFiles": ["./testSetup.js"]
+    "transformIgnorePatterns": [
+      "node_modules/mobx-react"
+    ],
+    "setupFiles": [
+      "./testSetup.js"
+    ]
   },
   "prettier": {
     "printWidth": 160
@@ -217,6 +229,8 @@
     "zlib": "browserify-zlib"
   },
   "rnpm": {
-    "assets": ["./src/assets/fonts"]
+    "assets": [
+      "./src/assets/fonts"
+    ]
   }
 }

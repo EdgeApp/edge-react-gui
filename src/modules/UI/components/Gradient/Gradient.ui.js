@@ -6,6 +6,7 @@ import { StyleSheet } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import THEME from '../../../../theme/variables/airbitz'
+import { getObjectDiff } from '../../../utils'
 
 const REVERSE_COLORS = [THEME.COLORS.GRADIENT.DARK, THEME.COLORS.GRADIENT.LIGHT]
 const COLORS = [THEME.COLORS.GRADIENT.LIGHT, THEME.COLORS.GRADIENT.DARK]
@@ -19,6 +20,11 @@ export type Props = {
 }
 
 export class Gradient extends Component<Props> {
+  shouldComponentUpdate (nextProps: Props) {
+    const diffElement = getObjectDiff(this.props, nextProps, {style: true, children: true})
+    return !!diffElement
+  }
+
   render () {
     const { reverse, style } = this.props
     return (

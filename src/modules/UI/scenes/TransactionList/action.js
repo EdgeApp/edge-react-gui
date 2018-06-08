@@ -33,15 +33,19 @@ export const CHANGED_TRANSACTIONS = PREFIX + 'CHANGED_TRANSACTIONS'
 export const SUBSEQUENT_TRANSACTION_BATCH_NUMBER = 30
 export const INITIAL_TRANSACTION_BATCH_NUMBER = 10
 
-export const fetchMoreTransactions = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
+const emptyArray = []
+
+export const fetchMoreTransactions = (walletId: string, currencyCode: string, reset: boolean) => (dispatch: Dispatch, getState: GetState) => {
   const state: State = getState()
   const { currentWalletId, currentCurrencyCode, numTransactions } = state.ui.scenes.transactionList
   let { currentEndIndex, transactions } = state.ui.scenes.transactionList
 
-  if ((currentWalletId !== '' && currentWalletId !== walletId) ||
+  if (
+    reset ||
+    (currentWalletId !== '' && currentWalletId !== walletId) ||
     (currentCurrencyCode !== '' && currentCurrencyCode !== currencyCode)) {
     currentEndIndex = 0
-    transactions = []
+    transactions = emptyArray
   }
 
   const newStartIndex = currentEndIndex ? currentEndIndex + 1 : 0

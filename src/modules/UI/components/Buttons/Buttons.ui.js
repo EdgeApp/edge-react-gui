@@ -1,14 +1,14 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
 import slowlog from 'react-native-slowlog'
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { TouchableHighlight, View } from 'react-native'
 
 import s from '../../../../locales/strings.js'
 import T from '../FormattedText'
 import styles, { styles as styleRaw } from './style'
 
-class PrimaryButton extends Component {
+class PrimaryButton extends PureComponent {
   constructor (props) {
     super(props)
     this.style = [styles.primaryButtonWrap, styles.stylizedButton]
@@ -46,7 +46,7 @@ class PrimaryButton extends Component {
 
 const CANCEL_TEXT = s.strings.string_cancel
 
-class SecondaryButton extends Component {
+class SecondaryButton extends PureComponent {
   render () {
     return (
       <TouchableHighlight
@@ -63,7 +63,7 @@ class SecondaryButton extends Component {
   }
 }
 
-class TertiaryButton extends Component {
+class TertiaryButton extends PureComponent {
   render () {
     return (
       <TouchableHighlight
