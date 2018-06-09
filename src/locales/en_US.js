@@ -305,7 +305,20 @@ const strings = {
   restore_wallets_modal_title: 'Restore Wallets',
   restore_wallets_modal_description: 'This will restore all deleted and archived wallets',
   restore_wallets_modal_confirm: 'Confirm',
-  restore_wallets_modal_cancel: 'Cancel'
+  restore_wallets_modal_cancel: 'Cancel',
+
+  unique_identifier: 'Unique Identifier',
+  unique_identifier_dropdown_option: 'Add %s',
+  unique_identifier_destination_tag: 'Destination Tag',
+  unique_identifier_payment_id: 'Payment ID',
+  unique_identifier_dropdown_option_destination_tag: 'Add Destination Tag',
+  unique_identifier_dropdown_option_payment_id: 'Add Payment ID',
+  unique_identifier_modal_title_destination_tag: 'Destination Tag',
+  unique_identifier_modal_title_payment_id: 'Payment ID',
+  unique_identifier_modal_description: 'Please enter the %s number to be sent to the recipient of this transaction',
+  unique_identifier_modal_confirm: 'Confirm',
+  unique_identifier_modal_cancel: 'Cancel',
+  unique_identifier_display_text: '%1$s: %2$s'
 }
 
 export default strings
