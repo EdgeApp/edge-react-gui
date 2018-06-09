@@ -19,6 +19,8 @@ import Gradient from '../../components/Gradient/Gradient.ui'
 import Recipient from '../../components/Recipient/index.js'
 import SafeAreaView from '../../components/SafeAreaView'
 import ABSlider from '../../components/Slider/index.js'
+import { UniqueIdentifier } from './components/UniqueIdentifier/UniqueIdentifier.ui.js'
+import { UniqueIdentifierModalConnect as UniqueIdentifierModal } from './components/UniqueIdentifierModal/UniqueIdentifierModalConnector.js'
 import styles from './styles.js'
 
 const DIVIDE_PRECISION = 18
@@ -45,14 +47,16 @@ export type SendConfirmationStateProps = {
   sliderDisabled: boolean,
   resetSlider: boolean,
   forceUpdateGuiCounter: number,
-  currencyConverter: CurrencyConverter
+  currencyConverter: CurrencyConverter,
+  uniqueIdentifier?: string
 }
 
 export type SendConfirmationDispatchProps = {
   updateSpendPending: boolean => any,
   signBroadcastAndSave: () => any,
   reset: () => any,
-  updateAmount: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) => any
+  updateAmount: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) => any,
+  uniqueIdentifierUpdated: (uniqueIdentifier: string) => any
 }
 
 type routerParam = {
@@ -61,19 +65,19 @@ type routerParam = {
 
 type Props = SendConfirmationStateProps & SendConfirmationDispatchProps & routerParam
 
-type State = {
+type State = {|
   secondaryDisplayDenomination: GuiDenomination,
   nativeAmount: string,
   overridePrimaryExchangeAmount: string,
   forceUpdateGuiCounter: number,
   keyboardVisible: boolean
-}
+|}
 
 export class SendConfirmation extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
-    const newState: State = {
+    this.state = {
       secondaryDisplayDenomination: {
         name: '',
         multiplier: '1',
@@ -84,7 +88,6 @@ export class SendConfirmation extends Component<Props, State> {
       forceUpdateGuiCounter: 0,
       nativeAmount: props.nativeAmount
     }
-    this.state = newState
   }
 
   componentWillMount () {
@@ -195,10 +198,7 @@ export class SendConfirmation extends Component<Props, State> {
               {this.props.errorMsg ? (
                 <Text style={[styles.error, styles.errorText]}>{this.props.errorMsg}</Text>
               ) : (
-                <ExchangeRate
-                  secondaryDisplayAmount={this.props.fiatPerCrypto}
-                  primaryInfo={primaryInfo}
-                  secondaryInfo={secondaryInfo} />
+                <ExchangeRate secondaryDisplayAmount={this.props.fiatPerCrypto} primaryInfo={primaryInfo} secondaryInfo={secondaryInfo} />
               )}
             </View>
             <View style={[styles.main, border('yellow')]}>
@@ -215,6 +215,14 @@ export class SendConfirmation extends Component<Props, State> {
                 <Text style={[styles.feeAreaText]}>{networkFeeSyntax()}</Text>
               </View>
               <Recipient label={this.props.label} link={''} publicAddress={this.props.publicAddress} style={styles.recipient} />
+
+              {this.props.uniqueIdentifier && (
+                <UniqueIdentifier>
+                  <UniqueIdentifier.Text>
+                    <Text>{uniqueIdentifierText(this.props.currencyCode, this.props.uniqueIdentifier)}</Text>
+                  </UniqueIdentifier.Text>
+                </UniqueIdentifier>
+              )}
             </View>
             <View style={[styles.pendingSymbolArea]}>
               {this.props.pending && <ActivityIndicator style={[{ flex: 1, alignSelf: 'center' }]} size={'small'} />}
@@ -230,6 +238,10 @@ export class SendConfirmation extends Component<Props, State> {
             </View>
           </View>
         </Gradient>
+
+        {(this.props.currencyCode === 'XRP' || this.props.currencyCode === 'XMR') && (
+          <UniqueIdentifierModal onConfirm={this.props.uniqueIdentifierUpdated} currencyCode={this.props.currencyCode} />
+        )}
       </SafeAreaView>
     )
   }
@@ -237,4 +249,12 @@ export class SendConfirmation extends Component<Props, State> {
   onExchangeAmountChanged = ({ nativeAmount, exchangeAmount }: ExchangedFlipInputAmounts) => {
     this.props.updateAmount(nativeAmount, exchangeAmount, this.props.fiatPerCrypto.toString())
   }
+}
+
+const uniqueIdentifierText = (currencyCode: string, uniqueIdentifier: string): string => {
+  return currencyCode === 'XRP'
+    ? sprintf(s.strings.unique_identifier_display_text, s.strings.unique_identifier_destination_tag, uniqueIdentifier)
+    : currencyCode === 'XMR'
+      ? sprintf(s.strings.unique_identifier_display_text, s.strings.unique_identifier_payment_id, uniqueIdentifier)
+      : sprintf(s.strings.unique_identifier_display_text, s.strings.unique_identifier, uniqueIdentifier)
 }

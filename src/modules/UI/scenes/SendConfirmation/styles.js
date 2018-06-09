@@ -15,11 +15,11 @@ export default StyleSheet.create({
     alignItems: 'stretch'
   },
   mainScrollView: {
-    flex: 1
+    flex: 1,
+    alignItems: 'center'
   },
   main: {
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start'
+    alignItems: 'center'
   },
   exchangeRateContainer: {
     alignItems: 'center',
@@ -95,5 +95,9 @@ export default StyleSheet.create({
   balanceContainer: {
     alignItems: 'center',
     marginTop: 10
+  },
+  debug: {
+    borderWidth: 1,
+    borderColor: 'red'
   }
 })

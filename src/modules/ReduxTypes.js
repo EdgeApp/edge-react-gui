@@ -62,6 +62,10 @@ export type State = {
     },
     scenes: {
       passwordReminderModal: PasswordReminderModalState,
+      uniqueIdentifierModal: {
+        isActive: boolean,
+        uniqueIdentifier: string
+      },
       scan: {
         parsedUri: EdgeParsedUri | null,
         torchEnabled: boolean,

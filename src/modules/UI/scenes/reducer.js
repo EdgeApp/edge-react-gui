@@ -23,6 +23,7 @@ import transactionList from './TransactionList/reducer'
 import walletList from './WalletList/reducer'
 import { walletTransferListReducer as walletTransferList } from './WalletTransferList/reducer'
 import { passwordReminderModalReducer as passwordReminderModal } from '../components/PasswordReminderModal/indexPasswordReminderModal.js'
+import { UniqueIdentifierModalReducer as uniqueIdentifierModal } from './SendConfirmation/components/UniqueIdentifierModal/UniqueIdentifierModalReducer.js'
 
 export const currentScene = (state: string = '', action: Action) => {
   if (!action.data) return state
@@ -54,5 +55,6 @@ export const scenes = combineReducers({
   exchangeRate,
   ABAlert,
   currentScene,
-  passwordReminderModal
+  passwordReminderModal,
+  uniqueIdentifierModal
 })

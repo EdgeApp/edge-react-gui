@@ -8,7 +8,7 @@ import type { Dispatch, State } from '../../../ReduxTypes'
 import { convertNativeToExchange } from '../../../utils'
 import { getExchangeDenomination, getSelectedCurrencyCode, getSelectedWallet } from '../../selectors.js'
 import { getDisplayDenomination, getExchangeDenomination as settingsGetExchangeDenomination } from '../../Settings/selectors.js'
-import { reset, signBroadcastAndSave, updateAmount, updateSpendPending } from './action.js'
+import { reset, signBroadcastAndSave, updateAmount, updateSpendPending, uniqueIdentifierUpdated } from './action.js'
 import {
   getError,
   getForceUpdateGuiCounter,
@@ -59,6 +59,8 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
     errorMsg = error.message
   }
 
+  const uniqueIdentifier = state.ui.scenes.sendConfirmation.parsedUri.uniqueIdentifier
+
   const out = {
     nativeAmount,
     errorMsg,
@@ -81,13 +83,17 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
     sliderDisabled: !transaction || !!error || !!pending,
     currencyConverter,
     balanceInCrypto,
-    balanceInFiat
+    balanceInFiat,
+    uniqueIdentifier
   }
   return out
 }
 
 const mapDispatchToProps = (dispatch: Dispatch): SendConfirmationDispatchProps => ({
-  updateAmount: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) => dispatch(updateAmount(nativeAmount, exchangeAmount, fiatPerCrypto)),
+  updateAmount: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) => {
+    return dispatch(updateAmount(nativeAmount, exchangeAmount, fiatPerCrypto))
+  },
+  uniqueIdentifierUpdated: (uniqueIdentifier: string) => dispatch(uniqueIdentifierUpdated(uniqueIdentifier)),
   reset: () => dispatch(reset()),
   updateSpendPending: (pending: boolean): any => dispatch(updateSpendPending(pending)),
   signBroadcastAndSave: (): any => dispatch(signBroadcastAndSave())
