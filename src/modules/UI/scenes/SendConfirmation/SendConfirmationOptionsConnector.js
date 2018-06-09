@@ -9,18 +9,23 @@ import type { Dispatch, State } from '../../../ReduxTypes'
 import { openHelpModal } from '../../components/HelpModal/actions.js'
 import { updateMaxSpend } from './action'
 import SendConfirmationOptions from './SendConfirmationOptions'
+import { activated } from './components/UniqueIdentifierModal/UniqueIdentifierModalActions.js'
 
 const mapStateToProps = (state: State) => {
   const sourceWalletId = state.ui.wallets.selectedWalletId
+  const currencyCode = state.ui.wallets.selectedCurrencyCode
+
   return {
-    sourceWallet: CORE_SELECTORS.getWallet(state, sourceWalletId)
+    sourceWallet: CORE_SELECTORS.getWallet(state, sourceWalletId),
+    currencyCode
   }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   changeMiningFee: sourceWallet => Actions[CHANGE_MINING_FEE_SEND_CONFIRMATION]({ sourceWallet }),
   openHelpModal: () => dispatch(openHelpModal()),
-  sendMaxSpend: () => dispatch(updateMaxSpend())
+  sendMaxSpend: () => dispatch(updateMaxSpend()),
+  uniqueIdentifierModalActivated: () => dispatch(activated())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SendConfirmationOptions)

@@ -28,7 +28,7 @@ export default class ProgressBar extends PureComponent<Props> {
   render () {
     const widthInterpolated = this.animation.interpolate({
       inputRange: [0, 100],
-      outputRange: ['100%', '0%'],
+      outputRange: ['0%', '100%'],
       extrapolate: 'clamp'
     })
 

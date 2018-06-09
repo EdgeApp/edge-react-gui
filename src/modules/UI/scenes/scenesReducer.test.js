@@ -93,9 +93,6 @@ test('initialState', () => {
     changeMiningFee: {
       isCustomFeeVisible: false
     },
-    sideMenu: {
-      view: false
-    },
     transactionAlert: {
       edgeTransaction: '',
       displayAlert: false
@@ -138,6 +135,10 @@ test('initialState', () => {
     currentScene: '',
     passwordReminderModal: {
       status: null
+    },
+    uniqueIdentifierModal: {
+      isActive: false,
+      uniqueIdentifier: ''
     }
   }
   const actual = scenesReducer(undefined, {})

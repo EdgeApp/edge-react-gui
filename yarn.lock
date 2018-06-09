@@ -2604,9 +2604,9 @@ ecc-jsbn@~0.1.1:
   dependencies:
     jsbn "~0.1.0"
 
-edge-core-js@0.9.0-beta.1:
-  version "0.9.0-beta.1"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.9.0-beta.1.tgz#eb7cb91580aeda4e3e71493a81e17edc42149407"
+edge-core-js@0.9.3:
+  version "0.9.3"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.9.3.tgz#f5890a63dc061090eb291d5d5d76853827dc582a"
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -2658,9 +2658,9 @@ edge-currency-ethereum@0.10.1:
     sprintf-js "^1.1.1"
     uri-js "^3.0.2"
 
-"edge-currency-monero@git://github.com/Airbitz/edge-currency-monero.git#a013a71":
-  version "0.0.1"
-  resolved "git://github.com/Airbitz/edge-currency-monero.git#a013a714645cd57ac39019d978aba11a2ff6f8ea"
+edge-currency-monero@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.0.4.tgz#eadde897e800b935830b3634bd8e553c68ed67cc"
   dependencies:
     biggystring "^3.0.0"
     buffer "^5.0.6"
@@ -2670,9 +2670,9 @@ edge-currency-ethereum@0.10.1:
     sprintf-js "^1.1.1"
     uri-js "^3.0.2"
 
-edge-currency-ripple@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/edge-currency-ripple/-/edge-currency-ripple-0.0.2.tgz#abc8357b745c7bf8d103ab6283957a106785a57d"
+edge-currency-ripple@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/edge-currency-ripple/-/edge-currency-ripple-0.0.4.tgz#d407265e4a4ebde5df383916c59795d2017589bd"
   dependencies:
     biggystring "^3.0.0"
     edge-ripple-lib "^1.0.0-beta.1"
@@ -5506,7 +5506,11 @@ lodash.escape@^3.0.0:
   dependencies:
     lodash._root "^3.0.0"
 
-lodash.filter@^4.4.0:
+lodash.every@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/lodash.every/-/lodash.every-4.6.0.tgz#eb89984bebc4364279bb3aefbbd1ca19bfa6c6a7"
+
+lodash.filter@^4.4.0, lodash.filter@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/lodash.filter/-/lodash.filter-4.6.0.tgz#668b1d4981603ae1cc5a6fa760143e480b4c4ace"
 
@@ -5530,6 +5534,14 @@ lodash.isequal@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
 
+lodash.isfunction@^3.0.8:
+  version "3.0.9"
+  resolved "https://registry.yarnpkg.com/lodash.isfunction/-/lodash.isfunction-3.0.9.tgz#06de25df4db327ac931981d1bdb067e5af68d051"
+
+lodash.isstring@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/lodash.isstring/-/lodash.isstring-4.0.1.tgz#d527dfb5456eca7cc9bb95d5daeaf88ba54a5451"
+
 lodash.keys@^3.0.0:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/lodash.keys/-/lodash.keys-3.1.2.tgz#4dbc0472b156be50a0b286855d1bd0b0c656098a"
@@ -5537,6 +5549,10 @@ lodash.keys@^3.0.0:
     lodash._getnative "^3.0.0"
     lodash.isarguments "^3.0.0"
     lodash.isarray "^3.0.0"
+
+lodash.keys@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/lodash.keys/-/lodash.keys-4.2.0.tgz#a08602ac12e4fb83f91fc1fb7a360a4d9ba35205"
 
 lodash.map@^4.4.0:
   version "4.6.0"
@@ -5562,7 +5578,7 @@ lodash.padstart@^4.1.0:
   version "4.6.1"
   resolved "https://registry.yarnpkg.com/lodash.padstart/-/lodash.padstart-4.6.1.tgz#d2e3eebff0d9d39ad50f5cbd1b52a7bce6bb611b"
 
-lodash.pick@^4.2.1:
+lodash.pick@^4.2.1, lodash.pick@^4.4.0:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/lodash.pick/-/lodash.pick-4.4.0.tgz#52f05610fff9ded422611441ed1fc123a03001b3"
 
@@ -5578,7 +5594,7 @@ lodash.restparam@^3.0.0:
   version "3.6.1"
   resolved "https://registry.yarnpkg.com/lodash.restparam/-/lodash.restparam-3.6.1.tgz#936a4e309ef330a7645ed4145986c85ae5b20805"
 
-lodash.some@^4.4.0:
+lodash.some@^4.4.0, lodash.some@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/lodash.some/-/lodash.some-4.6.0.tgz#1bb9f314ef6b8baded13b549169b2a945eb68e4d"
 
@@ -5610,6 +5626,10 @@ lodash.throttle@^4.1.1:
 lodash.unescape@4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/lodash.unescape/-/lodash.unescape-4.0.1.tgz#bf2249886ce514cda112fae9218cdc065211fc9c"
+
+lodash.union@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/lodash.union/-/lodash.union-4.6.0.tgz#48bb5088409f16f1821666641c44dd1aaae3cd88"
 
 lodash@4.17.4:
   version "4.17.4"
@@ -7286,7 +7306,14 @@ react-native-fast-crypto@^1.5.5:
   version "1.0.5"
   resolved "git://github.com/Airbitz/react-native-flip-view.git#9796c6469385559da6689a4f56f540fc6f3d003a"
 
-react-native-fs@^2.5.1, react-native-fs@^2.9.7:
+react-native-fs@^2.5.1:
+  version "2.9.11"
+  resolved "https://registry.yarnpkg.com/react-native-fs/-/react-native-fs-2.9.11.tgz#0fd134ecc8ae53fe8023267f51463eb77287c93a"
+  dependencies:
+    base-64 "^0.1.0"
+    utf8 "^2.1.1"
+
+react-native-fs@^2.9.12:
   version "2.9.12"
   resolved "https://registry.yarnpkg.com/react-native-fs/-/react-native-fs-2.9.12.tgz#88d6c1e8eb26acbebca955e1cbd9c47d2c9452ba"
   dependencies:
@@ -7410,7 +7437,7 @@ react-native-router-flux@4.0.0-beta.28:
     prop-types "^15.6.0"
     react-navigation "1.0.0-beta.22"
 
-react-native-share@^1.0.21:
+react-native-share@^1.0.27:
   version "1.0.27"
   resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-1.0.27.tgz#1861afe0d1256bde95d19520ca5d5c3cd348ffad"
 
@@ -9370,6 +9397,20 @@ which@^1.2.12, which@^1.2.14, which@^1.2.4, which@^1.2.9, which@^1.3.0:
   resolved "https://registry.yarnpkg.com/which/-/which-1.3.1.tgz#a45043d54f5805316da8d62f9f50918d3da70b0a"
   dependencies:
     isexe "^2.0.0"
+
+why-did-you-update@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/why-did-you-update/-/why-did-you-update-0.1.1.tgz#c73d361511fecd899056e9954ca9b1ab760d3097"
+  dependencies:
+    lodash.every "^4.6.0"
+    lodash.filter "^4.6.0"
+    lodash.isequal "^4.5.0"
+    lodash.isfunction "^3.0.8"
+    lodash.isstring "^4.0.1"
+    lodash.keys "^4.2.0"
+    lodash.pick "^4.4.0"
+    lodash.some "^4.6.0"
+    lodash.union "^4.6.0"
 
 wide-align@^1.1.0:
   version "1.1.3"

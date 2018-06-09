@@ -9,6 +9,7 @@ import * as Constants from '../../constants/indexConstants.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import { StaticModalStyle } from '../../styles/indexStyles.js'
 import THEME from '../../theme/variables/airbitz'
+import { getObjectDiff } from '../../modules/utils'
 
 type Props = {
   modalDismissTimerSeconds: number,
@@ -17,8 +18,17 @@ type Props = {
   isVisible: boolean,
   cancel(): void
 }
+
+const gradientStart = { x: 0, y: 0 }
+const gradientEnd = { x: 1, y: 0 }
+const gradientColors = [THEME.COLORS.GRADIENT.DARK, THEME.COLORS.GRADIENT.LIGHT]
+
 class StaticModalComponent extends Component<Props> {
   reset: number
+  shouldComponentUpdate (nextProps: Props) {
+    const diffElement = getObjectDiff(this.props, nextProps, {style: true, children: true})
+    return !!diffElement
+  }
   componentDidMount () {
     if (this.props.modalDismissTimerSeconds) {
       this.reset = setTimeout(() => {
@@ -44,9 +54,9 @@ class StaticModalComponent extends Component<Props> {
             <View style={styles.innerBox}>
               <LinearGradient
                 style={styles.header}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                colors={[THEME.COLORS.GRADIENT.DARK, THEME.COLORS.GRADIENT.LIGHT]}
+                start={gradientStart}
+                end={gradientEnd}
+                colors={gradientColors}
               >
                 <Icon style={styles.icon} name={Constants.CHECK_CIRCLE} size={styles.iconSize} type={Constants.SIMPLE_ICONS} />
               </LinearGradient>

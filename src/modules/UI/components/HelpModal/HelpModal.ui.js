@@ -21,6 +21,11 @@ type Props = {
 }
 
 export default class HelpModal extends Component<Props> {
+  getRef = (ref: any) => {
+    // $FlowFixMe
+    this.webview = ref
+  }
+
   render () {
     return (
       <StylizedModal
@@ -29,10 +34,7 @@ export default class HelpModal extends Component<Props> {
         headerText={s.strings.help_modal_title}
         modalMiddle={
           <WebView
-            ref={ref => {
-              // $FlowFixMe
-              this.webview = ref
-            }}
+            ref={this.getRef}
             scalesPageToFit={contentScaling}
             style={styles.webView}
             source={{ uri: CONTENT_URI }}

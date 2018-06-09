@@ -57,8 +57,6 @@ export const styles = {
     borderBottomColor: THEME.COLORS.GRAY_3,
     paddingLeft: 20,
     paddingRight: 20,
-    paddingTop: 15,
-    paddingBottom: 15,
     justifyContent: 'space-around'
   },
   settingsRowTextRow: {

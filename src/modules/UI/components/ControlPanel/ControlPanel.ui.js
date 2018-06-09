@@ -10,7 +10,7 @@ import person from '../../../../assets/images/sidenav/accounts.png'
 import buysell from '../../../../assets/images/sidenav/buysell.png'
 import { emptyGuiDenomination } from '../../../../types'
 import type { GuiDenomination } from '../../../../types'
-import { getDenomFromIsoCode } from '../../../utils.js'
+import { getDenomFromIsoCode, getObjectDiff } from '../../../utils.js'
 import T from '../../components/FormattedText'
 import s from '../../../../locales/strings.js'
 import ExchangeRate from '../ExchangeRate/index.js'
@@ -41,6 +41,19 @@ export default class ControlPanel extends Component<Props> {
     }
     if (this.props.usersView) {
       return this.props.closeSelectUser()
+    }
+  }
+
+  shouldComponentUpdate (nextProps: Props) {
+    const diffElement = getObjectDiff(this.props, nextProps, {
+      primaryDisplayDenomination: true,
+      primaryExchangeDenomination: true,
+      styles: true
+    })
+    if (diffElement) {
+      return true
+    } else {
+      return false
     }
   }
 

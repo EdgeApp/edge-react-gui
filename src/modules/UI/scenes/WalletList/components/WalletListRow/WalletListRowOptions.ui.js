@@ -11,6 +11,16 @@ type Props = {
   executeWalletRowOption: (walletKey: string, option: string) => void,
   currencyCode: Array<string>
 }
+
+const modifiedMenuDropDownStyle = {
+  // manually overwrite width
+  ...MenuDropDownStyle,
+  menuIconWrap: {
+    ...MenuDropDownStyle.menuIconWrap,
+    width: 46
+  }
+}
+
 export default class WalletListRowOptions extends Component<Props> {
   options: Array<{ value: string, label: string }>
   constructor (props: Props) {
@@ -35,14 +45,6 @@ export default class WalletListRowOptions extends Component<Props> {
   }
 
   render () {
-    const modifiedMenuDropDownStyle = {
-      // manually overwrite width
-      ...MenuDropDownStyle,
-      menuIconWrap: {
-        ...MenuDropDownStyle.menuIconWrap,
-        width: 46
-      }
-    }
     return <MenuDropDown style={modifiedMenuDropDownStyle} onSelect={this.optionAction} data={this.options} />
   }
 }
