@@ -41,6 +41,7 @@ import walletIcon from '../assets/images/tabbar/wallets.png'
 import ExchangeDropMenu from '../connectors/components/HeaderMenuExchangeConnector'
 import RequestDropMenu from '../connectors/components/HeaderMenuRequestConnector'
 import ExchangeConnector from '../connectors/scene/CryptoExchangeSceneConnector'
+import TransactionsExportSceneConnector from '../connectors/scene/TransactionsExportSceneConnector'
 import EdgeLoginSceneConnector from '../connectors/scene/EdgeLoginSceneConnector'
 import OtpSettingsSceneConnector from '../connectors/scene/OtpSettingsSceneConnector.js'
 import PasswordRecoveryConnector from '../connectors/scene/PasswordRecoveryConnector.js'
@@ -135,6 +136,7 @@ const WALLETS = s.strings.title_wallets
 const CREATE_WALLET_SELECT_CRYPTO = s.strings.title_create_wallet_select_crypto
 const CREATE_WALLET_SELECT_FIAT = s.strings.title_create_wallet_select_fiat
 const CREATE_WALLET = s.strings.title_create_wallet
+const TRANSACTIONS_EXPORT = s.strings.title_export_transactions
 const REQUEST = s.strings.title_request
 const SEND = s.strings.title_send
 const EDGE_LOGIN = s.strings.title_edge_login
@@ -353,6 +355,14 @@ export default class Main extends Component<Props, State> {
                           renderLeftButton={this.renderBackButton()}
                           renderRightButton={this.renderEmptyButton()}
                           renderTitle={this.renderTitle(EDIT_TOKEN)}
+                        />
+                        <Scene
+                          key={Constants.TRANSACTIONS_EXPORT}
+                          navTransparent={true}
+                          component={TransactionsExportSceneConnector}
+                          renderTitle={this.renderTitle(TRANSACTIONS_EXPORT)}
+                          renderLeftButton={this.renderBackButton(WALLETS)}
+                          renderRightButton={this.renderEmptyButton()}
                         />
                       </Stack>
 
