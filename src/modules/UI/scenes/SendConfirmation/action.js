@@ -1,7 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import type { EdgeMetadata, EdgeParsedUri, EdgeTransaction } from 'edge-core-js'
+import type { EdgeMetadata, EdgeParsedUri, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import { Actions } from 'react-native-router-flux'
 
 import { OPEN_AB_ALERT } from '../../../../constants/indexConstants'
@@ -28,12 +28,44 @@ export const updateAmount = (nativeAmount: string, exchangeAmount: string, fiatP
   dispatch(createTX({ nativeAmount, metadata }, false))
 }
 
+export const uniqueIdentifierUpdated = (uniqueIdentifier: string) => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const walletId = getSelectedWalletId(state)
+  const edgeWallet = getWallet(state, walletId)
+  const parsedUri = state.ui.scenes.sendConfirmation.parsedUri
+  const newParsedUri = { ...parsedUri, uniqueIdentifier }
+  const spendInfo: EdgeSpendInfo = {
+    currencyCode: parsedUri.currencyCode,
+    nativeAmount: parsedUri.nativeAmount || '0',
+    metadata: parsedUri.metadata,
+    spendTargets: [
+      {
+        publicAddress: parsedUri.publicAddress,
+        nativeAmount: parsedUri.nativeAmount || '0',
+        otherParams: {
+          uniqueIdentifier: uniqueIdentifier
+        }
+      }
+    ]
+  }
+
+  makeSpend(edgeWallet, spendInfo)
+    .then(edgeTransaction => {
+      dispatch(updateTransaction(edgeTransaction, newParsedUri))
+    })
+    .catch(e => {
+      console.log(e)
+      dispatch(updateTransaction(null, newParsedUri))
+    })
+}
+
 export const createTX = (parsedUri: GuiMakeSpendInfo | EdgeParsedUri, forceUpdateGui?: boolean = true) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const walletId = getSelectedWalletId(state)
   const edgeWallet = getWallet(state, walletId)
   const parsedUriClone = { ...parsedUri }
   const spendInfo = getSpendInfo(state, parsedUriClone)
+
   makeSpend(edgeWallet, spendInfo)
     .then(edgeTransaction => {
       dispatch(updateTransaction(edgeTransaction, parsedUriClone, forceUpdateGui, null))
@@ -46,6 +78,7 @@ export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => 
   const walletId = getSelectedWalletId(state)
   const edgeWallet = getWallet(state, walletId)
   const spendInfo = getSpendInfo(state)
+
   getMaxSpendable(edgeWallet, spendInfo)
     .then(nativeAmount => {
       const amount: EdgeParsedUri = { nativeAmount }
