@@ -135,6 +135,10 @@ test('initialState', () => {
     currentScene: '',
     passwordReminderModal: {
       status: null
+    },
+    uniqueIdentifierModal: {
+      isActive: false,
+      uniqueIdentifier: ''
     }
   }
   const actual = scenesReducer(undefined, {})
