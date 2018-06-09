@@ -3,7 +3,7 @@
 import slowlog from 'react-native-slowlog'
 import { abs, sub } from 'biggystring'
 import React, { Component } from 'react'
-import { Keyboard, Linking, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { Linking, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import Picker from 'react-native-picker'
 import { sprintf } from 'sprintf-js'
 
@@ -202,9 +202,7 @@ class AmountArea extends Component {
                 autoCorrect={false}
                 onFocus={this.props.onFocusNotes}
                 onBlur={this.props.onBlurNotes}
-                // onSubmitEditing={this.props.onBlurNotes}
                 blurOnSubmit={false}
-                onScroll={() => Keyboard.dismiss()}
                 ref={ ref => { this.amountInput = ref } }
               />
             </View>
