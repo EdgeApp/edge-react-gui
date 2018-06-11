@@ -1,5 +1,6 @@
 // @flow
 import { connect } from 'react-redux'
+
 import type { Dispatch, State } from '../../modules/ReduxTypes'
 import { TransactionsExportSceneComponent } from '../../modules/UI/scenes/TransactionsExport/TransactionsExportSceneComponent.js'
 const mapStateToProps = (state: State) => {
