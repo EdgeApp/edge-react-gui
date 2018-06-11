@@ -1,17 +1,16 @@
 // @flow
 
+import { equals } from 'ramda'
 import React, { Component } from 'react'
 import { ActivityIndicator, Text } from 'react-native'
-import { equals } from 'ramda'
 
 import * as Constants from '../../../../constants/indexConstants.js'
 import s from '../../../../locales/strings.js'
+import type { PasswordReminder } from '../../../../types.js'
 import { Icon } from '../Icon/Icon.ui'
-
 import { InteractiveModal, SecondaryButton, TertiaryButton } from '../Modals'
 import { PasswordInput } from './components/PasswordInput.ui.js'
 import { styles } from './styles.js'
-import type { PasswordReminder } from '../../../../types.js'
 
 type Props = {
   status: 'IS_CHECKING' | 'VERIFIED' | 'INVALID' | null,
