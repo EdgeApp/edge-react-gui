@@ -5,11 +5,11 @@
 import { applyMiddleware, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
 
+import errorAlert from './errorAlert'
 // import createLogger from 'redux-logger'
 import loginStatusChecker from './loginStatusChecker'
 import rootReducer from './rootReducer'
 import soundsMiddleware from './soundsMiddleware'
-import errorAlert from './errorAlert'
 
 let middleware = [errorAlert, loginStatusChecker, thunk, soundsMiddleware]
 // let logger = createLogger()
