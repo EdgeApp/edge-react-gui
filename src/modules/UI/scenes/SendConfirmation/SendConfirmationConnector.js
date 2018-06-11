@@ -8,7 +8,7 @@ import type { Dispatch, State } from '../../../ReduxTypes'
 import { convertNativeToExchange } from '../../../utils'
 import { getExchangeDenomination, getSelectedCurrencyCode, getSelectedWallet } from '../../selectors.js'
 import { getDisplayDenomination, getExchangeDenomination as settingsGetExchangeDenomination } from '../../Settings/selectors.js'
-import { reset, signBroadcastAndSave, updateAmount, updateSpendPending, uniqueIdentifierUpdated } from './action.js'
+import { reset, signBroadcastAndSave, uniqueIdentifierUpdated, updateAmount, updateSpendPending } from './action.js'
 import {
   getError,
   getForceUpdateGuiCounter,

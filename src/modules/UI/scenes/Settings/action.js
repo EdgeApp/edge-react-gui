@@ -8,11 +8,11 @@ import type { Dispatch, GetState } from '../../../../../src/modules/ReduxTypes.j
 import * as actions from '../../../../actions/indexActions.js'
 import * as Constants from '../../../../constants/indexConstants.js'
 import s from '../../../../locales/strings.js'
+import { restoreWalletsRequest } from '../../../Core/Account/api.js'
 import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'
 import * as CORE_SELECTORS from '../../../Core/selectors'
 import { displayErrorAlert } from '../../components/ErrorAlert/actions.js'
 import * as SETTINGS_ACTIONS from '../../Settings/action.js'
-import { restoreWalletsRequest } from '../../../Core/Account/api.js'
 
 const PREFIX = 'UI/Scenes/Settings/'
 

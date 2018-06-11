@@ -1,20 +1,20 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import { bns } from 'biggystring'
-
+import type { EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
-import * as UTILS from '../../../../utils'
-import styles, {styles as styleRaw} from '../style'
-import {intl} from '../../../../../locales/intl'
-import type {GuiWallet, TransactionListTx} from '../../../../../types'
+import { Image, TouchableHighlight, View } from 'react-native'
+import slowlog from 'react-native-slowlog'
+
 import receivedTypeImage from '../../../../../assets/images/transactions/transaction-type-received.png'
 import sentTypeImage from '../../../../../assets/images/transactions/transaction-type-sent.png'
+import { intl } from '../../../../../locales/intl'
 import s from '../../../../../locales/strings'
-import type {ContactsState} from '../../../../../reducers/contacts/contactsReducer'
-import { Image, TouchableHighlight, View } from 'react-native'
+import type { ContactsState } from '../../../../../reducers/contacts/contactsReducer'
+import type { GuiWallet, TransactionListTx } from '../../../../../types'
+import * as UTILS from '../../../../utils'
 import T from '../../../components/FormattedText'
-import type { EdgeDenomination, EdgeTransaction } from 'edge-core-js'
+import styles, { styles as styleRaw } from '../style'
 
 type TransactionRowOwnProps = {
   transactions: Array<TransactionListTx>,
@@ -43,7 +43,7 @@ export class TransactionRow extends Component<Props, State> {
   }
 
   shouldComponentUpdate (nextProps: Props) {
-    const diffElement = UTILS.getObjectDiff(this.props, nextProps, {transaction: true}, {transactions: true})
+    const diffElement = UTILS.getObjectDiff(this.props, nextProps, { transaction: true }, { transactions: true })
     if (diffElement) {
       return true
     } else {
@@ -103,9 +103,9 @@ export class TransactionRow extends Component<Props, State> {
     let fiatAmountString
     if (tx.metadata && tx.metadata.amountFiat) {
       fiatAmountString = bns.abs(tx.metadata.amountFiat.toFixed(2))
-      fiatAmountString = intl.formatNumber(bns.toFixed(fiatAmountString, 2, 2), {toFixed: 2})
+      fiatAmountString = intl.formatNumber(bns.toFixed(fiatAmountString, 2, 2), { toFixed: 2 })
     } else {
-      fiatAmountString = intl.formatNumber('0.00', {toFixed: 2})
+      fiatAmountString = intl.formatNumber('0.00', { toFixed: 2 })
     }
 
     if (tx.blockHeight <= 0) {
@@ -134,14 +134,14 @@ export class TransactionRow extends Component<Props, State> {
         <TouchableHighlight
           onPress={() => this.props.onClick(tx, thumbnailPath)}
           underlayColor={styleRaw.transactionUnderlay.color}
-          style={[styles.singleTransaction, {borderBottomWidth: lastOfDate ? 0 : 1}]}
+          style={[styles.singleTransaction, { borderBottomWidth: lastOfDate ? 0 : 1 }]}
         >
           <View style={[styles.transactionInfoWrap]}>
             <View style={styles.transactionLeft}>
               {thumbnailPath ? (
-                <Image style={[styles.transactionLogo]} source={{uri: thumbnailPath}}/>
+                <Image style={[styles.transactionLogo]} source={{ uri: thumbnailPath }} />
               ) : (
-                <Image style={styles.transactionLogo} source={txImage}/>
+                <Image style={styles.transactionLogo} source={txImage} />
               )}
 
               <View style={[styles.transactionLeftTextWrap]}>

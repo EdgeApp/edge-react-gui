@@ -1,10 +1,10 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import { bns } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeDenomination, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Animated, Easing, Keyboard, ScrollView, TextInput, TouchableOpacity, View } from 'react-native'
+import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../../../locales/strings.js'

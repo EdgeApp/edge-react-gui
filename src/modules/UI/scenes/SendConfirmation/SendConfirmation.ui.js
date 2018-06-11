@@ -1,10 +1,10 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import { bns } from 'biggystring'
 import type { EdgeDenomination } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, View } from 'react-native'
+import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
 import { intl } from '../../../../locales/intl'

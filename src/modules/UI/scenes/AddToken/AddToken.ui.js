@@ -1,9 +1,9 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import _ from 'lodash'
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, ScrollView, View } from 'react-native'
+import slowlog from 'react-native-slowlog'
 
 import { FormField } from '../../../../components/FormField.js'
 import s from '../../../../locales/strings.js'

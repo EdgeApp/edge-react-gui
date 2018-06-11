@@ -1,13 +1,12 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { ActivityIndicator, Text, TouchableHighlight, View } from 'react-native'
 import Camera from 'react-native-camera'
-
 // $FlowFixMe
 import ImagePicker from 'react-native-image-picker'
 import { Actions } from 'react-native-router-flux'
+import slowlog from 'react-native-slowlog'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
@@ -21,9 +20,9 @@ import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView'
 import { AUTHORIZED, DENIED } from '../../permissions'
 import AddressModal from './components/AddressModalConnector'
-import styles, { styles as styleRaw } from './style'
 import LegacyAddressModal from './LegacyAddressModal/LegacyAddressModalConnector.js'
 import PrivateKeyModal from './PrivateKeyModal/PrivateKeyModalConnector.js'
+import styles, { styles as styleRaw } from './style'
 
 type Props = {
   cameraPermission: PermissionStatus,
@@ -130,7 +129,7 @@ export default class Scan extends Component<Props> {
     })
   }
 
-  onBarCodeRead = (result: { data: string}) => {
+  onBarCodeRead = (result: { data: string }) => {
     return this.props.qrCodeScanned(result.data)
   }
 

@@ -1,9 +1,9 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { ActivityIndicator, Animated, FlatList, Image, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import slowlog from 'react-native-slowlog'
 import SortableListView from 'react-native-sortable-listview'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
@@ -17,8 +17,8 @@ import { TwoButtonModalStyle } from '../../../../styles/indexStyles.js'
 import * as UTILS from '../../../utils'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
-import SafeAreaView from '../../components/SafeAreaView/index.js'
 import ProgressBar from '../../components/ProgressBar/ProgressBar.ui.js'
+import SafeAreaView from '../../components/SafeAreaView/index.js'
 import FullWalletListRow from './components/WalletListRow/FullWalletListRow.ui.js'
 import SortableWalletListRow from './components/WalletListRow/SortableWalletListRow.ui.js'
 import WalletOptions from './components/WalletOptions/WalletOptionsConnector.ui.js'
@@ -96,7 +96,8 @@ export default class WalletList extends Component<Props, State> {
 
     let diffElement2: string = ''
     const diffElement = UTILS.getObjectDiff(this.props, nextProps, {
-      traverseObjects, ignoreObjects
+      traverseObjects,
+      ignoreObjects
     })
     if (!diffElement) {
       diffElement2 = UTILS.getObjectDiff(this.state, nextState)
@@ -262,9 +263,7 @@ export default class WalletList extends Component<Props, State> {
   }
 
   renderRow = (row: Object) => {
-    return (
-      <SortableWalletListRow data={row} dimensions={this.props.dimensions} />
-    )
+    return <SortableWalletListRow data={row} dimensions={this.props.dimensions} />
   }
 
   renderItem = (item: Object) => {
@@ -504,8 +503,6 @@ export default class WalletList extends Component<Props, State> {
         })
       }, 2000)
     }
-    return (
-      <ProgressBar progress={this.props.progressPercentage} />
-    )
+    return <ProgressBar progress={this.props.progressPercentage} />
   }
 }
