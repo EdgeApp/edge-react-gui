@@ -312,7 +312,7 @@ export const isReceivedTransaction = (edgeTransaction: EdgeTransaction): boolean
   return !isSentTransaction(edgeTransaction)
 }
 export const isSentTransaction = (edgeTransaction: EdgeTransaction): boolean => {
-  return (!!edgeTransaction.nativeAmount && (edgeTransaction.nativeAmount.charAt(0) === '-'))
+  return !!edgeTransaction.nativeAmount && edgeTransaction.nativeAmount.charAt(0) === '-'
 }
 
 export const getTimeMeasurement = (inMinutes: number): string => {
@@ -472,9 +472,7 @@ export function getObjectDiff (obj1: Object, obj2: Object, traverseObjects?: Obj
     }
   }
   for (const e in obj2) {
-    if (
-      (comparedElements && comparedElements[e]) ||
-      (ignoreObjects && ignoreObjects[e])) {
+    if ((comparedElements && comparedElements[e]) || (ignoreObjects && ignoreObjects[e])) {
       continue
     }
     if (obj2.hasOwnProperty(e)) {
