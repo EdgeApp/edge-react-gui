@@ -94,9 +94,23 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       if (localeInfo.currencyCode && typeof localeInfo.currencyCode === 'string' && localeInfo.currencyCode.length >= 3) {
         fiatCurrencyCode = 'iso:' + localeInfo.currencyCode
       }
-      const edgeWallet = await ACCOUNT_API.createCurrencyWalletRequest(account, btcWalletType, { name: btcWalletName, fiatCurrencyCode })
-      await ACCOUNT_API.createCurrencyWalletRequest(account, bchWalletType, { name: bchWalletName, fiatCurrencyCode })
-      await ACCOUNT_API.createCurrencyWalletRequest(account, ethWalletType, { name: ethWalletName, fiatCurrencyCode })
+      let edgeWallet
+      if (global.currencyCode) {
+        let walletType, walletName
+        // We got installed via a currencyCode referral. Only create one wallet of that type
+        for (const plugin of currencyPlugins) {
+          if (plugin.currencyInfo.currencyCode.toLowerCase() === global.currencyCode.toLowerCase()) {
+            walletType = plugin.currencyInfo.walletTypes[0]
+            walletName = `My ${plugin.currencyInfo.currencyName}`
+            edgeWallet = await ACCOUNT_API.createCurrencyWalletRequest(account, walletType, { name: walletName, fiatCurrencyCode })
+          }
+        }
+      }
+      if (!edgeWallet) {
+        edgeWallet = await ACCOUNT_API.createCurrencyWalletRequest(account, btcWalletType, { name: btcWalletName, fiatCurrencyCode })
+        await ACCOUNT_API.createCurrencyWalletRequest(account, bchWalletType, { name: bchWalletName, fiatCurrencyCode })
+        await ACCOUNT_API.createCurrencyWalletRequest(account, ethWalletType, { name: ethWalletName, fiatCurrencyCode })
+      }
       accountInitObject.walletId = edgeWallet.id
       accountInitObject.currencyCode = edgeWallet.currencyInfo.currencyCode
     } else {
