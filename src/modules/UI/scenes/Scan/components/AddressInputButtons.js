@@ -5,7 +5,6 @@ import React, { Component } from 'react'
 import { TouchableHighlight, View } from 'react-native'
 
 import s from '../../../../../locales/strings.js'
-import { border } from '../../../../utils.js'
 import T from '../../../components/FormattedText'
 import ModalStyle from '../../../components/Modal/style'
 import { styles as styleRaw } from '../style'
@@ -25,7 +24,7 @@ export class AddressInputButtons extends Component<Props> {
 
   render () {
     return (
-      <View style={[ModalStyle.buttonsWrap, border('gray')]}>
+      <View style={ModalStyle.buttonsWrap}>
         <TouchableHighlight
           style={[ModalStyle.cancelButtonWrap, ModalStyle.stylizedButton]}
           underlayColor={styleRaw.cancelUnderlay.color}
