@@ -138,7 +138,7 @@ const CREATE_WALLET_SELECT_FIAT = s.strings.title_create_wallet_select_fiat
 const CREATE_WALLET = s.strings.title_create_wallet
 const TRANSACTIONS_EXPORT = s.strings.title_export_transactions
 const REQUEST = s.strings.title_request
-const SEND = s.strings.title_send
+const SCAN = s.strings.title_scan
 const EDGE_LOGIN = s.strings.title_edge_login
 const EXCHANGE = s.strings.title_exchange
 const CHANGE_MINING_FEE = s.strings.title_change_mining_fee
@@ -377,7 +377,7 @@ export default class Main extends Component<Props, State> {
                         renderRightButton={this.renderMenuButton()}
                       />
 
-                      <Stack key={Constants.SCAN} icon={this.icon(Constants.SCAN)} tabBarLabel={SEND}>
+                      <Stack key={Constants.SCAN} icon={this.icon(Constants.SCAN)} tabBarLabel={SCAN}>
                         <Scene
                           key={Constants.SCAN_NOT_USED}
                           navTransparent={true}
