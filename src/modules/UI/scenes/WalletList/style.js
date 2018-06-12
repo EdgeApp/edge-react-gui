@@ -398,6 +398,11 @@ export const styles = {
   },
   walletListProgressDropdownBottomText: {
     color: THEME.COLORS.WHITE
+  },
+
+  progressBarSpacer: {
+    height: 3,
+    backgroundColor: '#E9E9EF'
   }
 }
 
