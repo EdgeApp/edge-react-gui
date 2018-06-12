@@ -110,6 +110,7 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
+const UTILITY_SERVER_FILE = 'utilityServer.json'
 const HOCKEY_APP_ID = Platform.select(ENV.HOCKEY_APP_ID)
 global.etherscanApiKey = ENV.ETHERSCAN_API_KEY
 
@@ -138,7 +139,7 @@ const CREATE_WALLET_SELECT_FIAT = s.strings.title_create_wallet_select_fiat
 const CREATE_WALLET = s.strings.title_create_wallet
 const TRANSACTIONS_EXPORT = s.strings.title_export_transactions
 const REQUEST = s.strings.title_request
-const SEND = s.strings.title_send
+const SCAN = s.strings.title_scan
 const EDGE_LOGIN = s.strings.title_edge_login
 const EXCHANGE = s.strings.title_exchange
 const CHANGE_MINING_FEE = s.strings.title_change_mining_fee
@@ -170,6 +171,40 @@ type Props = {
 type State = {
   context: ?EdgeContext
 }
+
+async function queryUtilServer (context: EdgeContext, usernames: Array<string>) {
+  let jsonObj: null | Object = null
+  try {
+    const json = await context.io.folder.file(UTILITY_SERVER_FILE).getText()
+    jsonObj = JSON.parse(json)
+  } catch (err) {
+    console.log(err)
+  }
+
+  if (jsonObj) {
+    if (jsonObj.currencyCode) {
+      global.currencyCode = jsonObj.currencyCode
+    }
+    return
+  }
+  if (usernames.length === 0 && !jsonObj) {
+    // New app launch. Query the utility server for referral information
+    try {
+      const response = await context.io.fetch('https://util1.edge.app/ref')
+      if (response) {
+        const util = await response.json()
+        if (util.currencyCode) {
+          global.currencyCode = util.currencyCode
+        }
+        // Save util data
+        context.io.folder.file(UTILITY_SERVER_FILE).setText(JSON.stringify(util))
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+}
+
 export default class Main extends Component<Props, State> {
   keyboardDidShowListener: any
   keyboardDidHideListener: any
@@ -203,6 +238,7 @@ export default class Main extends Component<Props, State> {
 
       CONTEXT_API.listUsernames(context).then(usernames => {
         this.props.addUsernames(usernames)
+        queryUtilServer(context, usernames)
       })
       setIntlLocale(localeInfo)
       selectLocale('enUS')
@@ -377,7 +413,7 @@ export default class Main extends Component<Props, State> {
                         renderRightButton={this.renderMenuButton()}
                       />
 
-                      <Stack key={Constants.SCAN} icon={this.icon(Constants.SCAN)} tabBarLabel={SEND}>
+                      <Stack key={Constants.SCAN} icon={this.icon(Constants.SCAN)} tabBarLabel={SCAN}>
                         <Scene
                           key={Constants.SCAN_NOT_USED}
                           navTransparent={true}
