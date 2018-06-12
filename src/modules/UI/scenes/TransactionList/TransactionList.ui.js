@@ -351,6 +351,7 @@ export class TransactionList extends Component<Props, State> {
         isoFiatCurrencyCode={this.props.isoFiatCurrencyCode}
         fiatCurrencyCode={this.props.fiatCurrencyCode}
         onClick={this.goToTxDetail}
+        fiatSymbol={this.props.fiatSymbol}
       />
     )
   }
