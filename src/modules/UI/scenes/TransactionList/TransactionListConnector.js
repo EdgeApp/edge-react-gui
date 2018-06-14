@@ -72,7 +72,9 @@ const mapStateToProps = (state: State) => {
     multiplier,
     contacts: state.contacts,
     fiatSymbol,
-    showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility
+    showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility,
+    requiredConfirmations: 10
+    // requiredConfirmations: wallet.currencyInfo.requiredConfirmations || 0
   }
   return out
 }

@@ -285,6 +285,9 @@ export const styles = {
   transactionPending: {
     color: THEME.COLORS.ACCENT_RED
   },
+  transactionPartialConfirmation: {
+    color: THEME.COLORS.ACCENT_ORANGE
+  },
   transactionDollarAmount: {
     fontSize: 12,
     color: THEME.COLORS.GRAY_2,
