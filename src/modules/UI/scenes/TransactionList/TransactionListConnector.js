@@ -10,6 +10,7 @@ import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import { fetchMoreTransactions } from './action'
 import { type DispatchProps, type StateProps, TransactionList } from './TransactionList.ui'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 
 const mapStateToProps = (state: State) => {
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
@@ -19,7 +20,7 @@ const mapStateToProps = (state: State) => {
       loading: true
     }
   }
-
+  const coreWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
   const fiatSymbol = UTILS.getFiatSymbol(UI_SELECTORS.getSelectedWallet(state).fiatCurrencyCode)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
   const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
@@ -52,6 +53,8 @@ const mapStateToProps = (state: State) => {
   const balanceInCryptoDisplay = UTILS.convertNativeToExchange(exchangeDenomination.multiplier)(balanceInCrypto)
   const balanceInFiat = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, balanceInCryptoDisplay)
   const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
+  // set default requiredConfirmations to 1, so once the tx is in a block consider fully confirmed
+  const requiredConfirmations = coreWallet.currencyInfo ? coreWallet.currencyInfo.requiredConfirmations : 1
 
   const out: StateProps = {
     loading: false,
@@ -73,8 +76,7 @@ const mapStateToProps = (state: State) => {
     contacts: state.contacts,
     fiatSymbol,
     showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility,
-    requiredConfirmations: 10
-    // requiredConfirmations: wallet.currencyInfo.requiredConfirmations || 0
+    requiredConfirmations
   }
   return out
 }

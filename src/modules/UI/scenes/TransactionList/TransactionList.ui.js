@@ -47,7 +47,7 @@ export type StateProps = {
   contacts: ContactsState,
   fiatSymbol: string,
   showToWalletModal: boolean,
-  requiredConfirmations: number
+  requiredConfirmations?: number
 }
 
 export type DispatchProps = {
