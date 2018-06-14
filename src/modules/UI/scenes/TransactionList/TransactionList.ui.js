@@ -1,28 +1,28 @@
 // @flow
 
 import { bns } from 'biggystring'
-import slowlog from 'react-native-slowlog'
 import type { EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Animated, FlatList, Image, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 // import Contacts from 'react-native-contacts'
 // import Permissions from 'react-native-permissions'
 import { Actions } from 'react-native-router-flux'
+import slowlog from 'react-native-slowlog'
 
 import requestImage from '../../../../assets/images/transactions/transactions-request.png'
 import sendImage from '../../../../assets/images/transactions/transactions-send.png'
 import * as Constants from '../../../../constants/indexConstants'
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
+import type { ContactsState } from '../../../../reducers/contacts/contactsReducer'
 import type { GuiContact, GuiWallet, TransactionListTx } from '../../../../types'
 import WalletListModal from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import * as UTILS from '../../../utils'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView'
+import { TransactionRow } from './components/TransactionRow.ui.js'
 import styles, { styles as styleRaw } from './style'
-import type {ContactsState} from '../../../../reducers/contacts/contactsReducer'
-import {TransactionRow} from './components/TransactionRow.ui.js'
 
 // import SearchBar from './components/SearchBar.ui'
 const INITIAL_TRANSACTION_BATCH_NUMBER = 10

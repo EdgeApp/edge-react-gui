@@ -21,9 +21,7 @@ export class SecondaryButton extends Component<SecondaryButtonProps, SecondaryBu
         underlayColor={styleRaw.secondaryButtonUnderlay.color}
         style={[styles.button, styles.secondaryButton, this.props.style]}
       >
-        <View>
-          {this.props.children}
-        </View>
+        <View>{this.props.children}</View>
       </TouchableHighlight>
     )
   }

@@ -1,8 +1,8 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-import slowlog from 'react-native-slowlog'
 import React, { PureComponent } from 'react'
 import { TouchableHighlight, View } from 'react-native'
+import slowlog from 'react-native-slowlog'
 
 import s from '../../../../locales/strings.js'
 import T from '../FormattedText'

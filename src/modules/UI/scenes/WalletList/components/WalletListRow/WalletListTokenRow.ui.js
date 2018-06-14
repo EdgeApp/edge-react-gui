@@ -1,9 +1,9 @@
 // @flow
 
+import type { EdgeDenomination } from 'edge-core-js'
 import React, { PureComponent } from 'react'
 import { TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import type { EdgeDenomination } from 'edge-core-js'
 
 import { intl } from '../../../../../../locales/intl'
 import * as UTILS from '../../../../../utils'
@@ -18,11 +18,11 @@ type OwnProps = {
 }
 
 export type StateProps = {
-  displayDenomination: EdgeDenomination,
+  displayDenomination: EdgeDenomination
 }
 
 export type DispatchProps = {
-  selectWallet: (id: string, currencyCode: string) => any,
+  selectWallet: (id: string, currencyCode: string) => any
 }
 
 type Props = OwnProps & StateProps & DispatchProps

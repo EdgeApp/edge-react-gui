@@ -9,7 +9,8 @@ import * as UTILS from '../../../utils'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import { fetchMoreTransactions } from './action'
-import { type DispatchProps, type StateProps, TransactionList } from './TransactionList.ui'
+import { TransactionList } from './TransactionList.ui'
+import type { DispatchProps, StateProps } from './TransactionList.ui'
 
 const mapStateToProps = (state: State) => {
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)

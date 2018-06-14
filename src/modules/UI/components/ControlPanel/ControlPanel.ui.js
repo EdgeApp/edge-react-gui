@@ -83,11 +83,7 @@ export default class ControlPanel extends Component<Props> {
         <Gradient reverse style={styles.container}>
           <View style={styles.bitcoin.container}>
             {this.renderCryptoIcon(currencyLogo)}
-            <ExchangeRate
-              primaryInfo={primaryCurrencyInfo}
-              secondaryInfo={secondaryCurrencyInfo}
-              secondaryDisplayAmount={secondaryToPrimaryRatio}
-            />
+            <ExchangeRate primaryInfo={primaryCurrencyInfo} secondaryInfo={secondaryCurrencyInfo} secondaryDisplayAmount={secondaryToPrimaryRatio} />
           </View>
           <TouchableHighlight onPress={this._handlePressUserList} underlayColor={styles.underlay.color}>
             <View style={styles.user.container}>

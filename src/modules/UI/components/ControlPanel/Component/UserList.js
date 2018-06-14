@@ -3,10 +3,11 @@
 import React, { Component } from 'react'
 import { Alert, ScrollView, TouchableHighlight, View } from 'react-native'
 
-import { Icon } from '../../Icon/Icon.ui.js'
-import T from '../../../components/FormattedText'
-import styles from '../style'
 import * as Constants from '../../../../../constants/indexConstants.js'
+import T from '../../../components/FormattedText'
+import { Icon } from '../../Icon/Icon.ui.js'
+import styles from '../style'
+
 type Props = {
   usernames: Array<string>,
   logout: (username?: string) => void,

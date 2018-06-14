@@ -16,11 +16,7 @@ export class PrimaryButton extends Component<Props, State> {
   static Text: Node
   render () {
     return (
-      <TouchableHighlight
-        onPress={this.props.onPress}
-        underlayColor={styleRaw.primaryButtonUnderlay.color}
-        style={[styles.primaryButton, this.props.style]}
-      >
+      <TouchableHighlight onPress={this.props.onPress} underlayColor={styleRaw.primaryButtonUnderlay.color} style={[styles.primaryButton, this.props.style]}>
         {this.props.children}
       </TouchableHighlight>
     )

@@ -1,7 +1,6 @@
 // @flow
 
 import type { Action } from '../../../../ReduxTypes.js'
-
 import * as ACTION from '../action'
 
 export const initialState = false

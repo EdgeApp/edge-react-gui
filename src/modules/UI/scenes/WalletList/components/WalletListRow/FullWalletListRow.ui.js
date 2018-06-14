@@ -1,17 +1,17 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import { bns } from 'biggystring'
 import _ from 'lodash'
 import React, { Component } from 'react'
 import { ActivityIndicator, Image, Platform, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import slowlog from 'react-native-slowlog'
 import { connect } from 'react-redux'
 
 import { intl } from '../../../../../../locales/intl'
 import s from '../../../../../../locales/strings.js'
 import type { CustomTokenInfo, GuiDenomination } from '../../../../../../types'
-import { cutOffText, decimalOrZero, truncateDecimals, getObjectDiff } from '../../../../../utils.js'
+import { cutOffText, decimalOrZero, getObjectDiff, truncateDecimals } from '../../../../../utils.js'
 import T from '../../../../components/FormattedText'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
 import { getEnabledTokens, selectWallet } from '../../../../Wallets/action.js'
@@ -47,7 +47,8 @@ export default class FullWalletListRow extends Component<OwnProps> {
 
   shouldComponentUpdate (nextProps: OwnProps) {
     const diffElement = getObjectDiff(this.props, nextProps, {
-      data: true, item: true
+      data: true,
+      item: true
     })
     return !!diffElement
   }
@@ -55,11 +56,7 @@ export default class FullWalletListRow extends Component<OwnProps> {
   render () {
     return (
       <View>
-        {this.props.data.item.id ? (
-          <FullWalletListRowConnected data={this.props.data} customTokens={this.props.customTokens} />
-        ) : (
-          <FullListRowEmptyData />
-        )}
+        {this.props.data.item.id ? <FullWalletListRowConnected data={this.props.data} customTokens={this.props.customTokens} /> : <FullListRowEmptyData />}
       </View>
     )
   }
@@ -73,7 +70,8 @@ class FullWalletListRowConnect extends Component<Props> {
 
   shouldComponentUpdate (nextProps: Props) {
     const diffElement = getObjectDiff(this.props, nextProps, {
-      data: true, item: true
+      data: true,
+      item: true
     })
     return !!diffElement
   }
@@ -161,11 +159,7 @@ class FullWalletListRowConnect extends Component<Props> {
                 </View>
               </View>
 
-              <WalletListRowOptions
-                currencyCode={walletData.currencyCode}
-                executeWalletRowOption={walletData.executeWalletRowOption}
-                walletKey={id}
-              />
+              <WalletListRowOptions currencyCode={walletData.currencyCode} executeWalletRowOption={walletData.executeWalletRowOption} walletKey={id} />
             </View>
           </TouchableHighlight>
           {this.renderTokenRow(id, enabledNativeBalances)}

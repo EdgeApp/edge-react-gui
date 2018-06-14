@@ -2,8 +2,8 @@
 
 import type { EdgeAccount } from 'edge-core-js'
 
-import { categories } from './subcategories.js'
 import type { PasswordReminder } from '../../../types.js'
+import { categories } from './subcategories.js'
 
 // Default Core Settings
 export const CORE_DEFAULTS = {
