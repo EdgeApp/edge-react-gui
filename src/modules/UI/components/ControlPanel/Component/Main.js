@@ -32,7 +32,7 @@ export type Props = {
 }
 export default class Main extends Component<Props> {
   render () {
-    const { logout, usersView } = this.props
+    const { usersView } = this.props
 
     return usersView ? (
       <UserList />
@@ -115,7 +115,7 @@ export default class Main extends Component<Props> {
         <View>
           <Separator />
 
-          <Button onPress={logout}>
+          <Button onPress={this.handleLogout}>
             <Button.Left>
               <Image style={styles.iconImage} source={logoutImage} />
             </Button.Left>
@@ -143,5 +143,9 @@ export default class Main extends Component<Props> {
         </View>
       </View>
     )
+  }
+
+  handleLogout = () => {
+    this.props.logout()
   }
 }
