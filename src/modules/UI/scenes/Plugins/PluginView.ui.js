@@ -1,40 +1,31 @@
 // @flow
 
 import React from 'react'
-import {
-  WebView,
-  FlatList,
-  Platform,
-  Text,
-  View,
-  Image,
-  TouchableWithoutFeedback,
-  BackHandler} from 'react-native'
+import { WebView, FlatList, Platform, Text, View, Image, TouchableWithoutFeedback, BackHandler } from 'react-native'
 import AndroidWebView from 'react-native-webview-file-upload-android'
-import {connect} from 'react-redux'
-import {Actions} from 'react-native-router-flux'
+import { connect } from 'react-redux'
+import { Actions } from 'react-native-router-flux'
 
 import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView'
 import styles from './style.js'
 
-import {openABAlert} from '../../components/ABAlert/action'
+import { openABAlert } from '../../components/ABAlert/action'
 import * as Constants from '../../../../constants/indexConstants'
 import T from '../../../UI/components/FormattedText'
 
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
 
-import {buySellPlugins, spendPlugins} from './plugins'
-import {PluginBridge, pop as pluginPop} from './api'
+import { buySellPlugins, spendPlugins } from './plugins'
+import { PluginBridge, pop as pluginPop } from './api'
 
 import BackButton from '../../components/Header/Component/BackButton.ui'
 import s from '../../../../locales/strings.js'
 
 const BACK = s.strings.title_back
 
-type PluginListProps = {
-}
+type PluginListProps = {}
 
 type PluginListState = {
   data: Array<Object>
@@ -48,23 +39,16 @@ class PluginList extends React.Component<PluginListProps, PluginListState> {
     }
   }
 
-  _onPress = (plugin) => {
-    Actions.plugin({plugin: plugin})
+  _onPress = plugin => {
+    Actions.plugin({ plugin: plugin })
   }
 
-  _renderPlugin = ({item}) => (
-    <TouchableWithoutFeedback onPress={() => this._onPress(item)} key={item.name}>
+  _renderPlugin = ({ item }) => (
+    <TouchableWithoutFeedback onPress={() => this._onPress(item)}>
       <View style={styles.pluginRow}>
         <View style={styles.pluginBox}>
           <View style={styles.pluginLeft}>
-            <View style={[styles.logo]}>
-              {item.imageUrl && (
-                <Image
-                  style={{height: '100%'}}
-                  source={{uri: item.imageUrl}}
-                />
-              )}
-            </View>
+            <View style={[styles.logo]}>{item.imageUrl && <Image style={{ height: '100%' }} source={{ uri: item.imageUrl }} />}</View>
             <View style={styles.textBoxWrap}>
               <Text style={styles.titleBox}>{item.name}</Text>
               <Text style={styles.subtitleBox}>{item.subtitle}</Text>
@@ -80,10 +64,7 @@ class PluginList extends React.Component<PluginListProps, PluginListState> {
       <SafeAreaView>
         <Gradient style={styles.gradient} />
         <View style={styles.container}>
-          <FlatList
-            data={this.state.data}
-            renderItem={this._renderPlugin}
-          />
+          <FlatList data={this.state.data} renderItem={this._renderPlugin} keyExtractor={item => item.name} />
         </View>
       </SafeAreaView>
     )
@@ -161,7 +142,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   }
 
   toggleWalletList = () => {
-    this.setState({showWalletList: !this.state.showWalletList})
+    this.setState({ showWalletList: !this.state.showWalletList })
   }
 
   handleBack = () => {
@@ -194,21 +175,21 @@ class PluginView extends React.Component<PluginProps, PluginState> {
     this.webview.injectJavaScript('window.history.back()')
   }
 
-  _renderTitle = (title) => {
-    Actions.refresh({renderTitle: (
-      <T style={styles.titleStyle}>{title}</T>
-    )})
+  _renderTitle = title => {
+    Actions.refresh({
+      renderTitle: <T style={styles.titleStyle}>{title}</T>
+    })
   }
 
-  _pluginReturn = (data) => {
+  _pluginReturn = data => {
     this.webview.injectJavaScript(`window.PLUGIN_RETURN('${JSON.stringify(data)}')`)
   }
 
-  _nextMessage = (datastr) => {
+  _nextMessage = datastr => {
     this.webview.injectJavaScript(`window.PLUGIN_NEXT('${datastr}')`)
   }
 
-  _onMessage = (event) => {
+  _onMessage = event => {
     if (!this.webview) {
       return
     }
@@ -219,27 +200,27 @@ class PluginView extends React.Component<PluginProps, PluginState> {
       console.log(e)
       return
     }
-    const {cbid, func} = data
+    const { cbid, func } = data
     this._nextMessage(cbid)
 
     if (this.bridge[func]) {
       this.bridge[func](data)
-        .then((res) => {
-          this._pluginReturn({cbid, func, err: null, res})
+        .then(res => {
+          this._pluginReturn({ cbid, func, err: null, res })
         })
-        .catch((err) => {
-          this._pluginReturn({cbid, func, err, res: null})
+        .catch(err => {
+          this._pluginReturn({ cbid, func, err, res: null })
         })
     } else {
-      this._pluginReturn({cbid, func, err: 'invalid function'})
+      this._pluginReturn({ cbid, func, err: 'invalid function' })
     }
   }
 
-  _setWebview = (webview) => {
+  _setWebview = webview => {
     this.webview = webview
   }
 
-  _onNavigationStateChange = (navState) => {
+  _onNavigationStateChange = navState => {
     if (navState.loading) {
       return
     }
@@ -261,15 +242,16 @@ class PluginView extends React.Component<PluginProps, PluginState> {
       <SafeAreaView>
         <Gradient style={styles.gradient} />
         {Platform.select({
-          android: () =>
+          android: () => (
             <AndroidWebView
               ref={this._setWebview}
               onMessage={this._onMessage}
               source={this._renderWebView()}
               scalesPageToFit={contentScaling}
               onNavigationStateChange={this._onNavigationStateChange}
-            />,
-          ios: () =>
+            />
+          ),
+          ios: () => (
             <WebView
               ref={this._setWebview}
               onMessage={this._onMessage}
@@ -277,13 +259,14 @@ class PluginView extends React.Component<PluginProps, PluginState> {
               scalesPageToFit={contentScaling}
               onNavigationStateChange={this._onNavigationStateChange}
             />
+          )
         })()}
       </SafeAreaView>
     )
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const account = CORE_SELECTORS.getAccount(state)
   const guiWallet = UI_SELECTORS.getSelectedWallet(state)
   const abcWallet = CORE_SELECTORS.getWallet(state, guiWallet.id)
@@ -302,9 +285,9 @@ const mapStateToProps = (state) => {
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  showAlert: (alertSyntax) => dispatch(openABAlert(Constants.OPEN_AB_ALERT, alertSyntax))
+const mapDispatchToProps = dispatch => ({
+  showAlert: alertSyntax => dispatch(openABAlert(Constants.OPEN_AB_ALERT, alertSyntax))
 })
 
 const PluginViewConnect = connect(mapStateToProps, mapDispatchToProps)(PluginView)
-export {PluginViewConnect, PluginBuySell, PluginSpend}
+export { PluginViewConnect, PluginBuySell, PluginSpend }

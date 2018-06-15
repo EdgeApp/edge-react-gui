@@ -4,7 +4,6 @@ import React, { Component } from 'react'
 import { Image, TouchableHighlight, View } from 'react-native'
 import MDIcon from 'react-native-vector-icons/MaterialIcons'
 import { Actions } from 'react-native-router-flux'
-import { sprintf } from 'sprintf-js'
 
 import person from '../../../../assets/images/sidenav/accounts.png'
 import buysell from '../../../../assets/images/sidenav/buysell.png'
@@ -19,7 +18,7 @@ import SafeAreaView from '../SafeAreaView/SafeAreaViewDrawer.ui.js'
 import Main from './Component/MainConnector'
 import styles from './style'
 
-const PLUGIN_BUYSELL_TEXT = sprintf(s.strings.title_plugin_buysell)
+const PLUGIN_BUYSELL_TEXT = s.strings.title_plugin_buysell
 
 export type Props = {
   currencyLogo: string,
@@ -50,11 +49,7 @@ export default class ControlPanel extends Component<Props> {
       primaryExchangeDenomination: true,
       styles: true
     })
-    if (diffElement) {
-      return true
-    } else {
-      return false
-    }
+    return !!diffElement
   }
 
   render () {
@@ -89,11 +84,7 @@ export default class ControlPanel extends Component<Props> {
         <Gradient reverse style={styles.container}>
           <View style={styles.bitcoin.container}>
             {this.renderCryptoIcon(currencyLogo)}
-            <ExchangeRate
-              primaryInfo={primaryCurrencyInfo}
-              secondaryInfo={secondaryCurrencyInfo}
-              secondaryDisplayAmount={secondaryToPrimaryRatio}
-            />
+            <ExchangeRate primaryInfo={primaryCurrencyInfo} secondaryInfo={secondaryCurrencyInfo} secondaryDisplayAmount={secondaryToPrimaryRatio} />
           </View>
           <TouchableHighlight onPress={this._handlePressUserList} underlayColor={styles.underlay.color}>
             <View style={[styles.user.container, styles.others.borderBottom]}>
@@ -119,7 +110,8 @@ export default class ControlPanel extends Component<Props> {
                   <T style={styles.others.text}>{PLUGIN_BUYSELL_TEXT}</T>
                 </View>
               </View>
-            </TouchableHighlight>)}
+            </TouchableHighlight>
+          )}
           <Main />
         </Gradient>
       </SafeAreaView>
