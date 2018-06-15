@@ -25,7 +25,8 @@ type TransactionRowOwnProps = {
   displayDenomination: EdgeDenomination,
   isoFiatCurrencyCode: string,
   fiatCurrencyCode: string,
-  onClick: (edgeTransaction: EdgeTransaction, thumbnailPath: string) => void
+  onClick: (edgeTransaction: EdgeTransaction, thumbnailPath: string) => void,
+  fiatSymbol: string
 }
 
 type State = {}
@@ -99,7 +100,7 @@ export class TransactionRow extends Component<Props, State> {
     const stepOne = UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(bns.abs(tx.nativeAmount))
 
     const amountString = intl.formatNumber(UTILS.decimalOrZero(UTILS.truncateDecimals(stepOne, 6), 6))
-    const fiatSymbol = this.props.fiatSymbol ? UTILS.getFiatSymbol(this.props.isoFiatCurrencyCode) : ''
+    const fiatSymbol = this.props.fiatSymbol || ''
     let fiatAmountString
     if (tx.metadata && tx.metadata.amountFiat) {
       fiatAmountString = bns.abs(tx.metadata.amountFiat.toFixed(2))

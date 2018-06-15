@@ -2356,9 +2356,9 @@ ecc-jsbn@~0.1.1:
   dependencies:
     jsbn "~0.1.0"
 
-edge-core-js@0.9.3:
-  version "0.9.3"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.9.3.tgz#f5890a63dc061090eb291d5d5d76853827dc582a"
+edge-core-js@0.9.4:
+  version "0.9.4"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.9.4.tgz#99d1c1a2cbb8314228d496b15817563484bf497c"
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -2380,9 +2380,9 @@ edge-core-js@0.9.3:
     utf8 "^3.0.0"
     ws "^5.1.1"
 
-"edge-currency-bitcoin@git://github.com/Airbitz/edge-currency-bitcoin.git#f0abf75":
-  version "2.19.0-beta.0"
-  resolved "git://github.com/Airbitz/edge-currency-bitcoin.git#f0abf758ab4415568e3ef1b06b66bc5d92d8828b"
+edge-currency-bitcoin@2.20.1:
+  version "2.20.1"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-2.20.1.tgz#cd6e54d9a312c4d80d9cf25c16dd815eeb675c3e"
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "^3.0.0"
@@ -2410,9 +2410,9 @@ edge-currency-ethereum@0.10.1:
     sprintf-js "^1.1.1"
     uri-js "^3.0.2"
 
-edge-currency-monero@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.0.4.tgz#eadde897e800b935830b3634bd8e553c68ed67cc"
+edge-currency-monero@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.0.5.tgz#38b0418188c0441466299d2784c3082c817f660f"
   dependencies:
     biggystring "^3.0.0"
     buffer "^5.0.6"
@@ -2422,9 +2422,9 @@ edge-currency-monero@^0.0.4:
     sprintf-js "^1.1.1"
     uri-js "^3.0.2"
 
-edge-currency-ripple@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/edge-currency-ripple/-/edge-currency-ripple-0.0.4.tgz#d407265e4a4ebde5df383916c59795d2017589bd"
+edge-currency-ripple@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/edge-currency-ripple/-/edge-currency-ripple-0.0.5.tgz#bcc0718efe2ae0716d394818c4458b51679dd0de"
   dependencies:
     biggystring "^3.0.0"
     edge-ripple-lib "^1.0.0-beta.1"
@@ -2438,9 +2438,9 @@ edge-exchange-plugins@^0.2.0:
   dependencies:
     iso4217 "^0.2.0"
 
-edge-login-ui-rn@^0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.3.1.tgz#cd839d7af017acecf1c2758467d17490db784ea6"
+edge-login-ui-rn@^0.3.3:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.3.3.tgz#6eeaf17f3576c93ca16d3c2dfc718d0a048596cd"
   dependencies:
     material-ui "^0.20.0"
     moment "^2.19.3"

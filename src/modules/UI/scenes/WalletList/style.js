@@ -380,13 +380,6 @@ export const styles = {
     backgroundColor: THEME.COLORS.TRANSPARENT,
     color: THEME.COLORS.SECONDARY
   },
-  seedSecondLayer: {
-    marginTop: 12,
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row'
-  },
 
   // beginning of wallet list progress dropdown //
   walletListProgressDropdown: {
@@ -398,6 +391,11 @@ export const styles = {
   },
   walletListProgressDropdownBottomText: {
     color: THEME.COLORS.WHITE
+  },
+
+  progressBarSpacer: {
+    height: 3,
+    backgroundColor: '#E9E9EF'
   }
 }
 

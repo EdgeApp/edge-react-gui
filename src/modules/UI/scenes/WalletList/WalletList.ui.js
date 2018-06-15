@@ -80,7 +80,7 @@ export default class WalletList extends Component<Props, State> {
       showMessageModal: false,
       messageModalMessage: null,
       progressPercentage: 0,
-      isWalletProgressVisible: false
+      isWalletProgressVisible: true
     }
   }
 
@@ -158,7 +158,7 @@ export default class WalletList extends Component<Props, State> {
         <View style={styles.container}>
           <WalletOptions />
           <Gradient style={styles.gradient} />
-          <ProgressBar progress={this.props.progressPercentage} />
+          {this.state.isWalletProgressVisible ? this.renderWalletListProgressDropdown() : <View style={styles.progressBarSpacer} />}
           <TouchableOpacity onPress={this.handleOnBalanceBoxPress}>
             {this.state.balanceBoxVisible ? this.balanceBox(fiatBalanceString) : this.hiddenBalanceBox()}
           </TouchableOpacity>

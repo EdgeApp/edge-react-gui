@@ -213,6 +213,7 @@ const strings = {
   title_request: 'Request',
   title_send_confirmation: 'Send Confirmation',
   title_send: 'Send',
+  title_scan: 'Scan',
   title_settings: 'Settings',
   title_transaction_details: 'Transaction Details',
   title_transactions: 'Transactions',
