@@ -12,6 +12,7 @@ import * as Constants from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings.js'
 import type { GuiCurrencyInfo, GuiReceiveAddress, GuiWallet } from '../../../../types.js'
 import WalletListModal from '../../../UI/components/WalletListModal/WalletListModalConnector'
+import XRPMinimumModal from './components/XRPMinimumModal/XRPMinimumModal.ui.js'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
 import { ExchangedFlipInput } from '../../components/FlipInput/ExchangedFlipInput2.js'
 import type { ExchangedFlipInputAmounts } from '../../components/FlipInput/ExchangedFlipInput2.js'
@@ -33,7 +34,8 @@ export type RequestStateProps = {
   receiveAddress: GuiReceiveAddress,
   secondaryCurrencyInfo: GuiCurrencyInfo,
   showToWalletModal: boolean,
-  useLegacyAddress: boolean
+  useLegacyAddress: boolean,
+  currentScene?: string
 }
 export type RequestLoadingProps = {
   edgeWallet: null,
@@ -45,7 +47,8 @@ export type RequestLoadingProps = {
   receiveAddress: null,
   secondaryCurrencyInfo: null,
   showToWalletModal: null,
-  useLegacyAddress: null
+  useLegacyAddress: null,
+  currentScene?: string
 }
 
 export type RequestDispatchProps = {
@@ -59,7 +62,9 @@ export type State = {
   publicAddress: string,
   legacyAddress: string,
   encodedURI: string,
-  result: string
+  result: string,
+  isXRPMinimumModalVisible: boolean,
+  hasXRPMinimumModalAlreadyShown: boolean
 }
 
 export class Request extends Component<Props, State> {
@@ -69,9 +74,17 @@ export class Request extends Component<Props, State> {
       publicAddress: '',
       legacyAddress: '',
       encodedURI: '',
-      result: ''
+      result: '',
+      isXRPMinimumModalVisible: false,
+      hasXRPMinimumModalAlreadyShown: false
     }
     slowlog(this, /.*/, global.slowlogOptions)
+  }
+
+  onCloseXRPMinimumModal = () => {
+    this.setState({
+      isXRPMinimumModalVisible: false
+    })
   }
 
   shouldComponentUpdate (nextProps: Props, nextState: State) {
@@ -109,6 +122,19 @@ export class Request extends Component<Props, State> {
         legacyAddress: legacyAddress
       })
     }
+    // old blank address to new
+    if (didWalletChange) {
+      if (nextProps.currencyCode === 'XRP') {
+        if (!this.state.hasXRPMinimumModalAlreadyShown) {
+          if (bns.lt(nextProps.guiWallet.primaryNativeBalance, '20')) {
+            this.setState({
+              isXRPMinimumModalVisible: true,
+              hasXRPMinimumModalAlreadyShown: true
+            })
+          }
+        }
+      }
+    }
   }
 
   render () {
@@ -123,6 +149,10 @@ export class Request extends Component<Props, State> {
     return (
       <SafeAreaView>
         <Gradient style={styles.view}>
+          <XRPMinimumModal
+            visibilityBoolean={this.state.isXRPMinimumModalVisible}
+            onExit={this.onCloseXRPMinimumModal}
+          />
           <Gradient style={styles.gradient} />
 
           <View style={styles.exchangeRateContainer}>

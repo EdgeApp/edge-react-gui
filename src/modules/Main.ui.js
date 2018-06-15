@@ -405,6 +405,7 @@ export default class Main extends Component<Props, State> {
                       <Scene
                         key={Constants.REQUEST}
                         navTransparent={true}
+                        onEnter={() => this.props.updateCurrentSceneKey(Constants.REQUEST) }
                         icon={this.icon(Constants.REQUEST)}
                         tabBarLabel={REQUEST}
                         component={Request}
