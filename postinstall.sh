@@ -15,6 +15,8 @@ node postinstall.js
 sed "s/\,[[:space:]]'-DANDROID_STL=c++_shared'//g" ./node_modules/react-native-fast-crypto/android/build.gradle > build.gradle
 mv build.gradle ./node_modules/react-native-fast-crypto/android/build.gradle
 
+node ./copy-plugin.js
+
 # Disable minification
 # Macs don't have `sed -i`, so we use a temporary file for the sed output:
 #sed -e 's/minify:.*,/minify: false,/' ./node_modules/react-native/local-cli/bundle/buildBundle.js > buildBundle.js

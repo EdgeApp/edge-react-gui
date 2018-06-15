@@ -88,6 +88,7 @@ import TransactionListConnector from './UI/scenes/TransactionList/TransactionLis
 import { HwBackButtonHandler } from './UI/scenes/WalletList/components/HwBackButtonHandler'
 import WalletList from './UI/scenes/WalletList/WalletListConnector'
 import { passwordReminderModalConnector as PasswordReminderModal } from './UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
+import { PluginView, PluginBuySell, PluginSpend, renderPluginBackButton } from './UI/scenes/Plugins'
 
 const pluginFactories: Array<EdgeCorePluginFactory> = [
   // Exchanges:
@@ -153,6 +154,8 @@ const CHANGE_PIN = s.strings.title_change_pin
 const PASSWORD_RECOVERY = s.strings.title_password_recovery
 const OTP = s.strings.title_otp
 const DEFAULT_FIAT = s.strings.title_default_fiat
+const PLUGIN_BUYSELL = s.strings.title_plugin_buysell
+const PLUGIN_SPEND = s.strings.title_plugin_spend
 
 type Props = {
   requestPermission: (permission: Permission) => void,
@@ -261,7 +264,7 @@ export default class Main extends Component<Props, State> {
   doDeepLink (url: string) {
     const parsedUri = URI.parse(url)
     const query = parsedUri.query
-    if (!query.includes('token=')) {
+    if (!query || !query.includes('token=')) {
       return
     }
     const splitArray = query.split('token=')
@@ -549,6 +552,47 @@ export default class Main extends Component<Props, State> {
                         renderRightButton={this.renderEmptyButton()}
                       />
                     </Stack>
+
+                    <Stack key={Constants.BUYSELL} hideDrawerButton={true}>
+                      <Scene
+                        key={Constants.BUYSELL}
+                        navTransparent={true}
+                        component={PluginBuySell}
+                        renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
+                        renderLeftButton={this.renderBackButton(BACK)}
+                        renderRightButton={this.renderEmptyButton()}
+                        onLeft={Actions.pop} />
+                      <Scene
+                        key={Constants.PLUGIN}
+                        navTransparent={true}
+                        component={PluginView}
+                        renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
+                        renderLeftButton={renderPluginBackButton(BACK)}
+                        renderRightButton={this.renderEmptyButton()}
+                      />
+                    </Stack>
+
+                    <Stack key={Constants.SPEND} hideDrawerButton={true}>
+                      <Scene
+                        key={Constants.SPEND}
+                        navTransparent={true}
+                        component={PluginSpend}
+                        renderTitle={this.renderTitle(PLUGIN_SPEND)}
+                        renderLeftButton={this.renderBackButton(BACK)}
+                        renderRightButton={this.renderEmptyButton()}
+                        onLeft={Actions.pop} />
+                      {/*
+                        <Scene
+                          key={Constants.PLUGIN}
+                          navTransparent={true}
+                          component={PluginView}
+                          renderTitle={this.renderTitle(PLUGIN_SPEND)}
+                          renderLeftButton={this.renderBackButton(BACK)}
+                          renderRightButton={this.renderEmptyButton()}
+                        />
+                      ) */}
+                    </Stack>
+
                   </Scene>
                 </Drawer>
               </Stack>

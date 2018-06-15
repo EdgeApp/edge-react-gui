@@ -185,6 +185,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:27.0.1'
     compile 'com.facebook.react:react-native:+'
     compile project(':react-native-push-notification')
+    compile project(':react-native-webview-file-upload-android')
     // From node_modules
 }
 

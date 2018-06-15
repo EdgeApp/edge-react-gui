@@ -3,17 +3,22 @@
 import React, { Component } from 'react'
 import { Image, TouchableHighlight, View } from 'react-native'
 import MDIcon from 'react-native-vector-icons/MaterialIcons'
+import { Actions } from 'react-native-router-flux'
 
 import person from '../../../../assets/images/sidenav/accounts.png'
+import buysell from '../../../../assets/images/sidenav/buysell.png'
 import { emptyGuiDenomination } from '../../../../types'
 import type { GuiDenomination } from '../../../../types'
 import { getDenomFromIsoCode, getObjectDiff } from '../../../utils.js'
 import T from '../../components/FormattedText'
+import s from '../../../../locales/strings.js'
 import ExchangeRate from '../ExchangeRate/index.js'
 import Gradient from '../Gradient/Gradient.ui'
 import SafeAreaView from '../SafeAreaView/SafeAreaViewDrawer.ui.js'
 import Main from './Component/MainConnector'
 import styles from './style'
+
+const PLUGIN_BUYSELL_TEXT = s.strings.title_plugin_buysell
 
 export type Props = {
   currencyLogo: string,
@@ -44,11 +49,7 @@ export default class ControlPanel extends Component<Props> {
       primaryExchangeDenomination: true,
       styles: true
     })
-    if (diffElement) {
-      return true
-    } else {
-      return false
-    }
+    return !!diffElement
   }
 
   render () {
@@ -83,14 +84,10 @@ export default class ControlPanel extends Component<Props> {
         <Gradient reverse style={styles.container}>
           <View style={styles.bitcoin.container}>
             {this.renderCryptoIcon(currencyLogo)}
-            <ExchangeRate
-              primaryInfo={primaryCurrencyInfo}
-              secondaryInfo={secondaryCurrencyInfo}
-              secondaryDisplayAmount={secondaryToPrimaryRatio}
-            />
+            <ExchangeRate primaryInfo={primaryCurrencyInfo} secondaryInfo={secondaryCurrencyInfo} secondaryDisplayAmount={secondaryToPrimaryRatio} />
           </View>
           <TouchableHighlight onPress={this._handlePressUserList} underlayColor={styles.underlay.color}>
-            <View style={styles.user.container}>
+            <View style={[styles.user.container, styles.others.borderBottom]}>
               <View style={styles.iconImageContainer}>
                 <Image style={styles.iconImage} source={person} />
               </View>
@@ -98,6 +95,23 @@ export default class ControlPanel extends Component<Props> {
               <MDIcon style={styles.icon} name={arrowIcon} />
             </View>
           </TouchableHighlight>
+
+          {!this.props.usersView && (
+            <TouchableHighlight
+              style={styles.others.iosTouchableHighlight}
+              underlayColor={styles.main.iosTouchableHighlightUnderlayColor}
+              onPress={Actions.buysell}
+            >
+              <View style={[styles.others.link, styles.others.borderBottom, { flex: 1 }]}>
+                <View style={styles.iconImageContainer}>
+                  <Image style={styles.iconImage} source={buysell} />
+                </View>
+                <View style={styles.others.textContainer}>
+                  <T style={styles.others.text}>{PLUGIN_BUYSELL_TEXT}</T>
+                </View>
+              </View>
+            </TouchableHighlight>
+          )}
           <Main />
         </Gradient>
       </SafeAreaView>

@@ -133,6 +133,7 @@
     "react-native-tcp": "git://github.com/Airbitz/react-native-tcp.git#c6af8f728fcbbae23d20c0211fd5b6c322f7a446",
     "react-native-udp": "^2.0.0",
     "react-native-vector-icons": "^4.2.0",
+    "react-native-webview-file-upload-android": "https://github.com/rhinogram/react-native-webview-file-upload-android.git#feature/support-file-downloading",
     "react-redux": "^5.0.5",
     "readable-stream": "^1.0.33",
     "redux": "^3.7.1",
@@ -150,6 +151,7 @@
     "babel-eslint": "^8.1.0",
     "babel-preset-react-native": "^1.9.0",
     "body-parser": "^1.18.2",
+    "edge-plugin-simplex": "https://github.com/Airbitz/edge-plugin-simplex.git#1fdfc1d",
     "eslint": "^4.17.0",
     "eslint-config-standard": "^11.0.0-beta.0",
     "eslint-plugin-flowtype": "^2.35.0",
@@ -234,5 +236,11 @@
     "assets": [
       "./src/assets/fonts"
     ]
+  },
+  "plugins": {
+    "buysell": [
+      "edge-plugin-simplex"
+    ],
+    "spend": []
   }
 }

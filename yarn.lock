@@ -2458,6 +2458,10 @@ edge-login-ui-rn@^0.3.3:
     sprintf-js "^1.0.3"
     zxcvbn "^4.4.2"
 
+"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#1fdfc1d":
+  version "0.0.1"
+  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#1fdfc1d74e28ea60012cb357c05fab24818994a9"
+
 edge-ripple-keypairs@^0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/edge-ripple-keypairs/-/edge-ripple-keypairs-0.0.1.tgz#734f39733132a11098a70b93c58f27740e15740c"
@@ -4767,6 +4771,10 @@ keycode@^2.1.8:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/keycode/-/keycode-2.2.0.tgz#3d0af56dc7b8b8e5cba8d0a97f107204eec22b04"
 
+keymirror@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/keymirror/-/keymirror-0.1.1.tgz#918889ea13f8d0a42e7c557250eee713adc95c35"
+
 kind-of@^3.0.2, kind-of@^3.0.3, kind-of@^3.2.0:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-3.2.2.tgz#31ea21a734bab9bbb0f32466d893aea51e4a3c64"
@@ -6656,6 +6664,14 @@ react-native-vector-icons@~4.4.2:
     lodash "^4.0.0"
     prop-types "^15.5.10"
     yargs "^8.0.2"
+
+"react-native-webview-file-upload-android@https://github.com/rhinogram/react-native-webview-file-upload-android.git#feature/support-file-downloading":
+  version "0.4.2"
+  resolved "https://github.com/rhinogram/react-native-webview-file-upload-android.git#42b27c177de747b3f4f2992b12e82651dda48261"
+  dependencies:
+    keymirror "^0.1.1"
+    prop-types "^15.6.0"
+    warning "^3.0.0"
 
 react-native@0.51.0:
   version "0.51.0"
