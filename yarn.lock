@@ -2410,9 +2410,9 @@ edge-currency-ethereum@0.10.1:
     sprintf-js "^1.1.1"
     uri-js "^3.0.2"
 
-edge-currency-monero@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.0.4.tgz#eadde897e800b935830b3634bd8e553c68ed67cc"
+edge-currency-monero@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.0.5.tgz#38b0418188c0441466299d2784c3082c817f660f"
   dependencies:
     biggystring "^3.0.0"
     buffer "^5.0.6"
@@ -2422,9 +2422,9 @@ edge-currency-monero@^0.0.4:
     sprintf-js "^1.1.1"
     uri-js "^3.0.2"
 
-edge-currency-ripple@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/edge-currency-ripple/-/edge-currency-ripple-0.0.4.tgz#d407265e4a4ebde5df383916c59795d2017589bd"
+edge-currency-ripple@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/edge-currency-ripple/-/edge-currency-ripple-0.0.5.tgz#bcc0718efe2ae0716d394818c4458b51679dd0de"
   dependencies:
     biggystring "^3.0.0"
     edge-ripple-lib "^1.0.0-beta.1"
