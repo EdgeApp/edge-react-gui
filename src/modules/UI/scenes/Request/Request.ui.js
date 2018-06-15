@@ -34,8 +34,7 @@ export type RequestStateProps = {
   receiveAddress: GuiReceiveAddress,
   secondaryCurrencyInfo: GuiCurrencyInfo,
   showToWalletModal: boolean,
-  useLegacyAddress: boolean,
-  currentScene?: string
+  useLegacyAddress: boolean
 }
 export type RequestLoadingProps = {
   edgeWallet: null,
@@ -47,8 +46,7 @@ export type RequestLoadingProps = {
   receiveAddress: null,
   secondaryCurrencyInfo: null,
   showToWalletModal: null,
-  useLegacyAddress: null,
-  currentScene?: string
+  useLegacyAddress: null
 }
 
 export type RequestDispatchProps = {
@@ -126,7 +124,7 @@ export class Request extends Component<Props, State> {
     if (didWalletChange) {
       if (nextProps.currencyCode === 'XRP') {
         if (!this.state.hasXRPMinimumModalAlreadyShown) {
-          if (bns.lt(nextProps.guiWallet.primaryNativeBalance, '20')) {
+          if (bns.lt(nextProps.guiWallet.primaryNativeBalance, '20000000')) {
             this.setState({
               isXRPMinimumModalVisible: true,
               hasXRPMinimumModalAlreadyShown: true
