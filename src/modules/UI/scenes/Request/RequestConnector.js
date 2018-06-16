@@ -27,7 +27,8 @@ const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps 
       receiveAddress: null,
       secondaryCurrencyInfo: null,
       showToWalletModal: null,
-      useLegacyAddress: null
+      useLegacyAddress: null,
+      currentScene: state.ui.scenes.currentScene
     }
   }
 
@@ -65,7 +66,8 @@ const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps 
     receiveAddress: state.ui.scenes.request.receiveAddress,
     secondaryCurrencyInfo,
     showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility,
-    useLegacyAddress: state.ui.scenes.requestType.useLegacyAddress
+    useLegacyAddress: state.ui.scenes.requestType.useLegacyAddress,
+    currentScene: state.ui.scenes.currentScene
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch): RequestDispatchProps => ({
