@@ -210,7 +210,7 @@ const strings = {
   title_edit_token: 'Edit Token',
   title_add_token: 'Add Token',
   title_password_recovery: 'Password Recovery',
-  title_plugin_buysell: 'Buy/Sell',
+  title_plugin_buysell: 'Buy Cryptocurrency',
   title_plugin_spend: 'Spend',
   title_otp: '2 Factor Authentication',
   title_request: 'Request',

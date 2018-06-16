@@ -77,7 +77,7 @@ class AmountArea extends Component {
       amountString = UTILS.decimalOrZero(UTILS.truncateDecimals(convertedAmount, 6), 6) // limit to 6 decimals, check if infinitesimal, and remove unnecessary trailing zeroes
       feeSyntax = ''
       leftData = {
-        color: THEME.COLORS.ACCENT_GREEN,
+        color: THEME.COLORS.ACCENT_BLUE,
         syntax: s.strings.fragment_transaction_income
       }
     } else {

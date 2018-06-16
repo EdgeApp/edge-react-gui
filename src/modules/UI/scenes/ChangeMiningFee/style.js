@@ -36,8 +36,8 @@ const styles = {
     borderColor: THEME.COLORS.GRAY_2
   },
   selected: {
-    borderColor: THEME.COLORS.ACCENT_GREEN,
-    backgroundColor: THEME.COLORS.ACCENT_GREEN
+    borderColor: THEME.COLORS.ACCENT_BLUE,
+    backgroundColor: THEME.COLORS.ACCENT_BLUE
   },
   label: {
     fontSize: 16,
