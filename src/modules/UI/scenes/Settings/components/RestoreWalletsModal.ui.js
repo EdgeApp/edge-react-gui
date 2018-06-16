@@ -21,7 +21,7 @@ export class RestoreWalletsModal extends Component<Props> {
     return (
       <InteractiveModal isActive={isActive} onBackdropPress={onBackdropPress} onBackButtonPress={onBackButtonPress}>
         <InteractiveModal.Icon>
-          <Icon style={{}} type={'ionIcons'} name="ios-key" size={30} />
+          <Icon style={{}} type={'entypo'} name="wallet" size={30} />
         </InteractiveModal.Icon>
 
         <InteractiveModal.Title>
