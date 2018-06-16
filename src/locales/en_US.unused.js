@@ -676,6 +676,7 @@ const strings = {
   title_Exchange: 'Exchange',
   title_LTC_Settings: 'LTC Settings',
   title_FTC_Settings: 'FTC Settings',
+  title_UFO_Settings: 'UFO Settings',
   title_Password_Recovery: 'Password Recovery',
   title_Settings: 'Settings',
   title_Transaction_Details: 'Transaction Details',
