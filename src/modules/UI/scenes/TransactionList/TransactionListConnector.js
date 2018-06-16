@@ -10,6 +10,7 @@ import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import { fetchMoreTransactions } from './action'
 import { type DispatchProps, type StateProps, TransactionList } from './TransactionList.ui'
+import type { EdgeCurrencyWallet, EdgeCurrencyInfo } from 'edge-core-js'
 
 const mapStateToProps = (state: State) => {
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
@@ -19,7 +20,7 @@ const mapStateToProps = (state: State) => {
       loading: true
     }
   }
-
+  const coreWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
   const fiatSymbol = UTILS.getFiatSymbol(UI_SELECTORS.getSelectedWallet(state).fiatCurrencyCode)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
   const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
@@ -52,6 +53,9 @@ const mapStateToProps = (state: State) => {
   const balanceInCryptoDisplay = UTILS.convertNativeToExchange(exchangeDenomination.multiplier)(balanceInCrypto)
   const balanceInFiat = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, balanceInCryptoDisplay)
   const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
+  const currencyInfo: EdgeCurrencyInfo = coreWallet.currencyInfo
+  // set default requiredConfirmations to 1, so once the tx is in a block consider fully confirmed
+  const requiredConfirmations = currencyInfo.requiredConfirmations ? currencyInfo.requiredConfirmations : 1
 
   const out: StateProps = {
     loading: false,
@@ -72,13 +76,14 @@ const mapStateToProps = (state: State) => {
     multiplier,
     contacts: state.contacts,
     fiatSymbol,
-    showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility
+    showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility,
+    requiredConfirmations
   }
   return out
 }
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-  fetchMoreTransactions: (walletId: string, currencyCode: string) => dispatch(fetchMoreTransactions(walletId, currencyCode))
+  fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => dispatch(fetchMoreTransactions(walletId, currencyCode, reset))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(TransactionList)

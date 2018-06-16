@@ -9,12 +9,14 @@ const strings = {
   change_currency_fee: 'Change Currency',
   could_not_select: 'Could Not Select Wallet',
   dialog_title: 'Set Auto Logoff time',
+
   drawer_exchange_rate_loading: 'Exchange Rate Loading',
-  drawer_more: 'More',
+  drawer_exchange: 'Exchange',
   drawer_request: 'Request',
-  drawer_scan: 'Scan',
-  drawer_transactions: 'Transactions',
+  drawer_scan_qr_send: 'Scan QR (Send)',
+  drawer_sweep_private_key: 'Sweep Private Key',
   drawer_wallets: 'Wallets',
+
   dropdown_exchange_max_amount: 'Exchange Max Amount',
   edge_description: 'This application would like to create or access its wallet in your Edge account.\n\n It will not have access to any other wallets.',
   exchange_failed: 'Exchange Failed',
@@ -57,6 +59,8 @@ const strings = {
   fragment_request_copy_title: 'Copy',
   fragment_request_subtitle: 'Request',
   fragment_request_address_copied: 'Request address successfully copied to clipboard',
+  request_xrp_minimum_notification_title: 'Minimum XRP Required',
+  request_xrp_minimum_notification_body: 'Ripple (XRP) wallets require a 20 XRP minimum balance. You must deposit at least 20 XRP to this address before this wallet will show a balance or transactions. 20 XRP will be unspendable for the lifetime of this wallet address.',
   fragment_send_address_dialog_title: 'Send to Public Address',
   fragment_send_address: 'Address',
   fragment_send_flash: 'Flash',
@@ -73,6 +77,7 @@ const strings = {
   fragment_transaction_list_sent_prefix: 'Sent ',
   fragment_transaction_transfer: 'Transfer',
   fragment_wallet_unconfirmed: 'Pending',
+  fragment_transaction_list_confirmation_progress: '%s of %s Confirmations',
   fragment_wallets_addwallet_name_hint: 'New Wallet Name',
   fragment_wallets_balance_text: 'Total Balance',
   fragment_wallets_delete_wallet: 'Delete Wallet',
@@ -85,6 +90,7 @@ const strings = {
   fragment_wallets_pubkey_copied_title: 'XPub Address Copied',
   fragment_wallets_pubkey_copied_success: 'The XPub Address has been successfully copied to the clipboard.',
   fragment_wallets_pubkey_copied_error: 'There has been an error copying your XPub Address.',
+  fragment_wallets_export_transactions: 'Export Transactions',
   fragment_wallets_header: 'My Wallets',
   fragment_wallets_rename_wallet: 'Rename Wallet',
   fragment_wallets_resync_wallet_first_confirm_message_mobile: 'Are you sure you want to resync ',
@@ -193,6 +199,7 @@ const strings = {
   title_change_pin: 'Change Pin',
   title_confirm_exchange: 'Confirm exchange',
   title_create_wallet: 'Create Wallet',
+  title_export_transactions: 'Export transactions',
   title_default_fiat: 'Default Fiat',
   title_edge_login: 'Edge Login',
   title_ethereum_settings: 'Ethereum Settings',
@@ -203,10 +210,13 @@ const strings = {
   title_edit_token: 'Edit Token',
   title_add_token: 'Add Token',
   title_password_recovery: 'Password Recovery',
+  title_plugin_buysell: 'Buy Cryptocurrency',
+  title_plugin_spend: 'Spend',
   title_otp: '2 Factor Authentication',
   title_request: 'Request',
   title_send_confirmation: 'Send Confirmation',
   title_send: 'Send',
+  title_scan: 'Scan',
   title_settings: 'Settings',
   title_transaction_details: 'Transaction Details',
   title_transactions: 'Transactions',
@@ -235,8 +245,7 @@ const strings = {
   // OTP
   title_otp_enabled: '2FA is enabled',
   title_otp_disabled: 'Protect your account with 2FA',
-  otp_description:
-    '2FA prevents unauthorized access from other devices, even if your username and password is compromised. You can scan a QR code or type in an authentication code to seamlessly authorize other devices',
+  otp_description: '2FA prevents unauthorized access from other devices, even if your username and password is compromised. You can scan a QR code or type in an authentication code to seamlessly authorize other devices',
   otp_enabled_description: 'You can scan a QR code or type in the authentication code to seamlessly authorize other devices.',
   otp_show_code: 'Show authentication code',
   otp_hide_code: 'Hide authentication code',
@@ -244,13 +253,11 @@ const strings = {
   otp_keep: 'KEEP 2FA',
   otp_enable: 'Enable 2FA',
   otp_enabled_modal_part_one: '2FA has been enabled. A unique authentication code will be generated.',
-  otp_enabled_modal_part_two:
-    ' If you lose your phone or uninstall the app, it will take 7 days to disable 2FA and access your account from another device without the authentication code.',
+  otp_enabled_modal_part_two: 'If you lose your phone or uninstall the app, it will take 7 days to disable 2FA and access your account from another device without the authentication code.',
   otp_disabled_modal: '2FA has been disabled. You can enable it again by tapping on "Enable 2FA" at any time.',
   otp_modal_headline: 'Are you sure you want to disable 2FA?',
   otp_modal_reset_headline: '2FA Reset Requested',
-  otp_modal_reset_description:
-    'An attempt to login to your account was made by another device and a 2FA reset has been requested. \n\nIf you did not make the request, click "Keep 2FA". Then go to the "Settings" and change your password and PIN. \n\nIf you did request the reset, \nclick on "Disable 2FA".',
+  otp_modal_reset_description: 'An attempt to login to your account was made by another device and a 2FA reset has been requested. \n\nIf you did not make the request, click "Keep 2FA". Then go to the "Settings" and change your password and PIN. \n\nIf you did request the reset, \nclick on "Disable 2FA".',
   otp_modal_body: '2FA is recommended to keep your device secure from unauthorized access from other devices.',
   otp_notif_title: '2FA disable has been requested by another device',
   otp_notif_body: 'If you did not create this request, log in as %1$s and change your password',
@@ -258,8 +265,7 @@ const strings = {
   word_to_in_convert_from_to_string: 'to',
 
   legacy_address_modal_title: 'Legacy Address Detected',
-  legacy_address_modal_warning:
-    'Warning: You have scanned a legacy format address that may not be for %1$s as it is indistinguishable from other currency addresses.\n\nDo you want to continue sending to this address?',
+  legacy_address_modal_warning: 'Warning: You have scanned a legacy format address that may not be for %1$s as it is indistinguishable from other currency addresses.\n\nDo you want to continue sending to this address?',
   legacy_address_modal_continue: 'Continue',
   legacy_address_modal_cancel: 'Cancel',
 
@@ -281,11 +287,44 @@ const strings = {
   password_check_incorrect_password_message: 'Incorrect Password. Try again?',
   password_check_incorrect_password_title: 'Incorrect Password.',
 
-  password_check_skip_formatted:
-    'Please create a new account and transfer your funds if you forgot your password. Your password CANNOT BE RECOVERED by %1$s and you will lose access to your funds without your password.',
+  password_check_skip_formatted: 'Please create a new account and transfer your funds if you forgot your password. Your password CANNOT BE RECOVERED by %1$s and you will lose access to your funds without your password.',
   password_check_skip: 'Please create a new account and transfer your funds if you forgot your password.',
 
-  password: 'Password'
+  password: 'Password',
+  // export scene
+  string_export_qbo: 'Export Quickbooks QBO',
+  string_export_qbo_abbrev: 'Email QBO',
+  string_export_csv: 'Export CSV',
+  string_export_csv_abbrev: 'Email CSV',
+  email_address: 'Email Address',
+  email_export: 'Enter the email address where you want to send your exported file',
+  // private key
+  private_key_modal_private_key: '%1$s Private Key',
+  private_key_modal_with_public_address: 'with Public Address:',
+  private_key_modal_sweep_from_private_address: 'Sweep Funds From Private Key',
+  private_key_modal_send_to_public_address: 'Send Funds to Public Address',
+  private_key_modal_import: 'Import',
+  private_key_modal_cancel: 'Cancel',
+  private_key_modal_success: 'Private key successfully swept',
+  private_key_modal_importing_private_key: 'Importing Private Key',
+
+  restore_wallets_modal_title: 'Restore Wallets',
+  restore_wallets_modal_description: 'This will restore all deleted and archived wallets',
+  restore_wallets_modal_confirm: 'Confirm',
+  restore_wallets_modal_cancel: 'Cancel',
+
+  unique_identifier: 'Unique Identifier',
+  unique_identifier_dropdown_option: 'Add %s',
+  unique_identifier_destination_tag: 'Destination Tag',
+  unique_identifier_payment_id: 'Payment ID',
+  unique_identifier_dropdown_option_destination_tag: 'Add Destination Tag',
+  unique_identifier_dropdown_option_payment_id: 'Add Payment ID',
+  unique_identifier_modal_title_destination_tag: 'Destination Tag',
+  unique_identifier_modal_title_payment_id: 'Payment ID',
+  unique_identifier_modal_description: 'Please enter the %s number to be sent to the recipient of this transaction',
+  unique_identifier_modal_confirm: 'Confirm',
+  unique_identifier_modal_cancel: 'Cancel',
+  unique_identifier_display_text: '%1$s: %2$s'
 }
 
 export default strings

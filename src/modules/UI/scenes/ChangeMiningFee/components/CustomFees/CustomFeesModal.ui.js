@@ -77,7 +77,7 @@ export default class CustomFeesModal extends Component<Props, State> {
 
   render () {
     const modalMiddle = this.renderModalMiddle()
-    const height = 50 + (modalMiddle.length - 1) * 58
+    const height = 75 + (modalMiddle.length - 1) * 83
     return (
       <StylizedModal
         featuredIcon={<OptionIcon iconName={Constants.CUSTOM_FEES_ICON} />}

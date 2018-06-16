@@ -42,7 +42,7 @@ export const setTransactionDetailsRequest = (wallet: EdgeCurrencyWallet, txid: s
 }
 
 export const getReceiveAddress = (wallet: EdgeCurrencyWallet, currencyCode: string): Promise<EdgeReceiveAddress> => {
-  return wallet.getReceiveAddress ? wallet.getReceiveAddress(currencyCode) : Promise.resolve(dummyEdgeReceiveAddress)
+  return wallet.getReceiveAddress ? wallet.getReceiveAddress({ currencyCode }) : Promise.resolve(dummyEdgeReceiveAddress)
 }
 
 export const makeSpend = (wallet: EdgeCurrencyWallet, spendInfo: EdgeSpendInfo): Promise<EdgeTransaction> => {
@@ -122,6 +122,15 @@ export async function updateEnabledTokens (wallet: EdgeCurrencyWallet, tokensToE
 export const parseURI = (wallet: EdgeCurrencyWallet, uri: string): EdgeParsedUri => {
   return wallet.parseUri(uri)
 }
+
+export const parseUriAsync = (wallet: EdgeCurrencyWallet, uri: string): Promise<EdgeParsedUri> => {
+  try {
+    return Promise.resolve(wallet.parseUri(uri))
+  } catch (error) {
+    return Promise.reject(error)
+  }
+}
+export const parseUri = parseUriAsync
 
 export const signTransaction = (wallet: EdgeCurrencyWallet, unsignedTransaction: EdgeTransaction): Promise<EdgeTransaction> => {
   return wallet.signTx(unsignedTransaction)

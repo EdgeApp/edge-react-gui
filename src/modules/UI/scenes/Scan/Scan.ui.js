@@ -23,6 +23,7 @@ import { AUTHORIZED, DENIED } from '../../permissions'
 import AddressModal from './components/AddressModalConnector'
 import styles, { styles as styleRaw } from './style'
 import LegacyAddressModal from './LegacyAddressModal/LegacyAddressModalConnector.js'
+import PrivateKeyModal from './PrivateKeyModal/PrivateKeyModalConnector.js'
 
 type Props = {
   cameraPermission: PermissionStatus,
@@ -95,6 +96,7 @@ export default class Scan extends Component<Props> {
         </View>
 
         <LegacyAddressModal continueButtonPressed={legacyAddressModalContinueButtonPressed} cancelButtonPressed={legacyAddressModalCancelButtonPressed} />
+        <PrivateKeyModal />
       </SafeAreaView>
     )
   }
@@ -128,11 +130,15 @@ export default class Scan extends Component<Props> {
     })
   }
 
+  onBarCodeRead = (result: { data: string}) => {
+    return this.props.qrCodeScanned(result.data)
+  }
+
   renderCamera = () => {
     if (this.props.cameraPermission === AUTHORIZED) {
       const torchMode = this.props.torchEnabled ? Camera.constants.TorchMode.on : Camera.constants.TorchMode.off
 
-      return <Camera style={styles.preview} ref="cameraCapture" torchMode={torchMode} onBarCodeRead={({ data }) => this.props.qrCodeScanned(data)} />
+      return <Camera style={styles.preview} ref="cameraCapture" torchMode={torchMode} onBarCodeRead={this.onBarCodeRead} />
     } else if (this.props.cameraPermission === DENIED) {
       return (
         <View style={[styles.preview, { justifyContent: 'center', alignItems: 'center' }]}>

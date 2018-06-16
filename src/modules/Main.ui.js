@@ -8,9 +8,13 @@ import {
   dashCurrencyPluginFactory,
   feathercoinCurrencyPluginFactory,
   litecoinCurrencyPluginFactory,
+  qtumCurrencyPluginFactory,
+  ufoCurrencyPluginFactory,
   zcoinCurrencyPluginFactory
 } from 'edge-currency-bitcoin'
 import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
+import { moneroCurrencyPluginFactory } from 'edge-currency-monero'
+import { rippleCurrencyPluginFactory } from 'edge-currency-ripple'
 import { coinbasePlugin, coincapPlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
 import React, { Component } from 'react'
 import { Image, Keyboard, Linking, Platform, StatusBar, TouchableWithoutFeedback } from 'react-native'
@@ -37,6 +41,7 @@ import walletIcon from '../assets/images/tabbar/wallets.png'
 import ExchangeDropMenu from '../connectors/components/HeaderMenuExchangeConnector'
 import RequestDropMenu from '../connectors/components/HeaderMenuRequestConnector'
 import ExchangeConnector from '../connectors/scene/CryptoExchangeSceneConnector'
+import TransactionsExportSceneConnector from '../connectors/scene/TransactionsExportSceneConnector'
 import EdgeLoginSceneConnector from '../connectors/scene/EdgeLoginSceneConnector'
 import OtpSettingsSceneConnector from '../connectors/scene/OtpSettingsSceneConnector.js'
 import PasswordRecoveryConnector from '../connectors/scene/PasswordRecoveryConnector.js'
@@ -83,6 +88,7 @@ import TransactionListConnector from './UI/scenes/TransactionList/TransactionLis
 import { HwBackButtonHandler } from './UI/scenes/WalletList/components/HwBackButtonHandler'
 import WalletList from './UI/scenes/WalletList/WalletListConnector'
 import { passwordReminderModalConnector as PasswordReminderModal } from './UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
+import { PluginView, PluginBuySell, PluginSpend, renderPluginBackButton } from './UI/scenes/Plugins'
 
 const pluginFactories: Array<EdgeCorePluginFactory> = [
   // Exchanges:
@@ -94,13 +100,18 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   bitcoinCurrencyPluginFactory,
   dashCurrencyPluginFactory,
   ethereumCurrencyPluginFactory,
+  moneroCurrencyPluginFactory,
+  rippleCurrencyPluginFactory,
+  qtumCurrencyPluginFactory,
   litecoinCurrencyPluginFactory,
   feathercoinCurrencyPluginFactory,
-  zcoinCurrencyPluginFactory
+  zcoinCurrencyPluginFactory,
+  ufoCurrencyPluginFactory
 ]
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
+const UTILITY_SERVER_FILE = 'utilityServer.json'
 const HOCKEY_APP_ID = Platform.select(ENV.HOCKEY_APP_ID)
 global.etherscanApiKey = ENV.ETHERSCAN_API_KEY
 
@@ -127,8 +138,9 @@ const WALLETS = s.strings.title_wallets
 const CREATE_WALLET_SELECT_CRYPTO = s.strings.title_create_wallet_select_crypto
 const CREATE_WALLET_SELECT_FIAT = s.strings.title_create_wallet_select_fiat
 const CREATE_WALLET = s.strings.title_create_wallet
+const TRANSACTIONS_EXPORT = s.strings.title_export_transactions
 const REQUEST = s.strings.title_request
-const SEND = s.strings.title_send
+const SCAN = s.strings.title_scan
 const EDGE_LOGIN = s.strings.title_edge_login
 const EXCHANGE = s.strings.title_exchange
 const CHANGE_MINING_FEE = s.strings.title_change_mining_fee
@@ -142,6 +154,8 @@ const CHANGE_PIN = s.strings.title_change_pin
 const PASSWORD_RECOVERY = s.strings.title_password_recovery
 const OTP = s.strings.title_otp
 const DEFAULT_FIAT = s.strings.title_default_fiat
+const PLUGIN_BUYSELL = s.strings.title_plugin_buysell
+const PLUGIN_SPEND = s.strings.title_plugin_spend
 
 type Props = {
   requestPermission: (permission: Permission) => void,
@@ -160,6 +174,40 @@ type Props = {
 type State = {
   context: ?EdgeContext
 }
+
+async function queryUtilServer (context: EdgeContext, usernames: Array<string>) {
+  let jsonObj: null | Object = null
+  try {
+    const json = await context.io.folder.file(UTILITY_SERVER_FILE).getText()
+    jsonObj = JSON.parse(json)
+  } catch (err) {
+    console.log(err)
+  }
+
+  if (jsonObj) {
+    if (jsonObj.currencyCode) {
+      global.currencyCode = jsonObj.currencyCode
+    }
+    return
+  }
+  if (usernames.length === 0 && !jsonObj) {
+    // New app launch. Query the utility server for referral information
+    try {
+      const response = await context.io.fetch('https://util1.edge.app/ref')
+      if (response) {
+        const util = await response.json()
+        if (util.currencyCode) {
+          global.currencyCode = util.currencyCode
+        }
+        // Save util data
+        context.io.folder.file(UTILITY_SERVER_FILE).setText(JSON.stringify(util))
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+}
+
 export default class Main extends Component<Props, State> {
   keyboardDidShowListener: any
   keyboardDidHideListener: any
@@ -193,6 +241,7 @@ export default class Main extends Component<Props, State> {
 
       CONTEXT_API.listUsernames(context).then(usernames => {
         this.props.addUsernames(usernames)
+        queryUtilServer(context, usernames)
       })
       setIntlLocale(localeInfo)
       selectLocale('enUS')
@@ -215,7 +264,7 @@ export default class Main extends Component<Props, State> {
   doDeepLink (url: string) {
     const parsedUri = URI.parse(url)
     const query = parsedUri.query
-    if (!query.includes('token=')) {
+    if (!query || !query.includes('token=')) {
       return
     }
     const splitArray = query.split('token=')
@@ -226,6 +275,10 @@ export default class Main extends Component<Props, State> {
   }
   handleOpenURL = (event: Object) => {
     this.doDeepLink(event.url)
+  }
+
+  updateSceneKeyRequest = () => {
+    this.props.updateCurrentSceneKey(Constants.REQUEST)
   }
 
   render () {
@@ -346,11 +399,20 @@ export default class Main extends Component<Props, State> {
                           renderRightButton={this.renderEmptyButton()}
                           renderTitle={this.renderTitle(EDIT_TOKEN)}
                         />
+                        <Scene
+                          key={Constants.TRANSACTIONS_EXPORT}
+                          navTransparent={true}
+                          component={TransactionsExportSceneConnector}
+                          renderTitle={this.renderTitle(TRANSACTIONS_EXPORT)}
+                          renderLeftButton={this.renderBackButton(WALLETS)}
+                          renderRightButton={this.renderEmptyButton()}
+                        />
                       </Stack>
 
                       <Scene
                         key={Constants.REQUEST}
                         navTransparent={true}
+                        onEnter={this.updateSceneKeyRequest}
                         icon={this.icon(Constants.REQUEST)}
                         tabBarLabel={REQUEST}
                         component={Request}
@@ -359,7 +421,7 @@ export default class Main extends Component<Props, State> {
                         renderRightButton={this.renderMenuButton()}
                       />
 
-                      <Stack key={Constants.SCAN} icon={this.icon(Constants.SCAN)} tabBarLabel={SEND}>
+                      <Stack key={Constants.SCAN} icon={this.icon(Constants.SCAN)} tabBarLabel={SCAN}>
                         <Scene
                           key={Constants.SCAN_NOT_USED}
                           navTransparent={true}
@@ -495,6 +557,47 @@ export default class Main extends Component<Props, State> {
                         renderRightButton={this.renderEmptyButton()}
                       />
                     </Stack>
+
+                    <Stack key={Constants.BUYSELL} hideDrawerButton={true}>
+                      <Scene
+                        key={Constants.BUYSELL}
+                        navTransparent={true}
+                        component={PluginBuySell}
+                        renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
+                        renderLeftButton={this.renderBackButton(BACK)}
+                        renderRightButton={this.renderEmptyButton()}
+                        onLeft={Actions.pop} />
+                      <Scene
+                        key={Constants.PLUGIN}
+                        navTransparent={true}
+                        component={PluginView}
+                        renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
+                        renderLeftButton={renderPluginBackButton(BACK)}
+                        renderRightButton={this.renderEmptyButton()}
+                      />
+                    </Stack>
+
+                    <Stack key={Constants.SPEND} hideDrawerButton={true}>
+                      <Scene
+                        key={Constants.SPEND}
+                        navTransparent={true}
+                        component={PluginSpend}
+                        renderTitle={this.renderTitle(PLUGIN_SPEND)}
+                        renderLeftButton={this.renderBackButton(BACK)}
+                        renderRightButton={this.renderEmptyButton()}
+                        onLeft={Actions.pop} />
+                      {/*
+                        <Scene
+                          key={Constants.PLUGIN}
+                          navTransparent={true}
+                          component={PluginView}
+                          renderTitle={this.renderTitle(PLUGIN_SPEND)}
+                          renderLeftButton={this.renderBackButton(BACK)}
+                          renderRightButton={this.renderEmptyButton()}
+                        />
+                      ) */}
+                    </Stack>
+
                   </Scene>
                 </Drawer>
               </Stack>

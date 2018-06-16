@@ -44,6 +44,16 @@ test('initialState', () => {
       legacyAddressModal: {
         isActive: false
       },
+      privateKeyModal: {
+        error: null,
+        isSweeping: false,
+        primaryModal: {
+          isActive: false
+        },
+        secondaryModal: {
+          isActive: false
+        }
+      },
       parsedUri: null
     },
     sendConfirmation: {
@@ -82,9 +92,6 @@ test('initialState', () => {
     },
     changeMiningFee: {
       isCustomFeeVisible: false
-    },
-    sideMenu: {
-      view: false
     },
     transactionAlert: {
       edgeTransaction: '',
@@ -128,6 +135,10 @@ test('initialState', () => {
     currentScene: '',
     passwordReminderModal: {
       status: null
+    },
+    uniqueIdentifierModal: {
+      isActive: false,
+      uniqueIdentifier: ''
     }
   }
   const actual = scenesReducer(undefined, {})

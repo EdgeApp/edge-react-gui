@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { StyleSheet, TouchableHighlight, View } from 'react-native'
 
 import FormattedText from '../FormattedText'
@@ -12,7 +12,7 @@ export type Props = {
   style?: StyleSheet.Styles,
   border?: StyleSheet.Styles
 }
-export class ShareButton extends Component<Props> {
+export class ShareButton extends PureComponent<Props> {
   render () {
     const { displayName, onPress, style, border } = this.props
     return (

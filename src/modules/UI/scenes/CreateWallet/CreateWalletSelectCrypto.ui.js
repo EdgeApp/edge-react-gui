@@ -105,7 +105,7 @@ export class CreateWalletSelectCrypto extends Component<Props, State> {
       )
     })
     const keyboardHeight = this.props.dimensions.keyboardHeight || 0
-    const searchResultsHeight = stylesRaw.usableHeight - keyboardHeight - 36 // substract button area height and FormField height
+    const searchResultsHeight = stylesRaw.usableHeight - keyboardHeight - 58 // substract button area height and FormField height
     return (
       <SafeAreaView>
         <View style={styles.scene}>

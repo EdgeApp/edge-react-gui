@@ -22,6 +22,7 @@ export const ADD_TOKEN = 'addToken'
 export const EDIT_TOKEN = 'editToken'
 export const TRANSACTION_LIST = 'transactionList'
 export const TRANSACTION_DETAILS = 'transactionDetails'
+export const TRANSACTIONS_EXPORT = 'transactionsExport'
 export const SCAN = 'scan'
 export const SCAN_NOT_USED = 'scan_notused'
 export const SEND_CONFIRMATION = 'sendConfirmation'
@@ -34,6 +35,9 @@ export const SETTINGS_OVERVIEW_TAB = 'settingsOverviewTab'
 export const DEFAULT_FIAT_SETTING = 'defaultFiatSetting'
 export const EXCHANGE_SCENE = 'exchangeScene'
 export const CREATE_WALLET = 'createWallet'
+export const BUYSELL = 'buysell'
+export const SPEND = 'spend'
+export const PLUGIN = 'plugin'
 
 export const CURRENCY_SETTINGS = {
   btcSettings: {

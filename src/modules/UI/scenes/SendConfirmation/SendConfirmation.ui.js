@@ -10,7 +10,7 @@ import { sprintf } from 'sprintf-js'
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
 import type { CurrencyConverter, GuiCurrencyInfo, GuiDenomination } from '../../../../types'
-import { border, convertAbcToGuiDenomination, convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../../utils.js'
+import { convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../../utils.js'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
 import type { ExchangedFlipInputAmounts } from '../../components/FlipInput/ExchangedFlipInput2.js'
 import { ExchangedFlipInput } from '../../components/FlipInput/ExchangedFlipInput2.js'
@@ -19,6 +19,8 @@ import Gradient from '../../components/Gradient/Gradient.ui'
 import Recipient from '../../components/Recipient/index.js'
 import SafeAreaView from '../../components/SafeAreaView'
 import ABSlider from '../../components/Slider/index.js'
+import { UniqueIdentifier } from './components/UniqueIdentifier/UniqueIdentifier.ui.js'
+import { UniqueIdentifierModalConnect as UniqueIdentifierModal } from './components/UniqueIdentifierModal/UniqueIdentifierModalConnector.js'
 import styles from './styles.js'
 
 const DIVIDE_PRECISION = 18
@@ -45,14 +47,16 @@ export type SendConfirmationStateProps = {
   sliderDisabled: boolean,
   resetSlider: boolean,
   forceUpdateGuiCounter: number,
-  currencyConverter: CurrencyConverter
+  currencyConverter: CurrencyConverter,
+  uniqueIdentifier?: string
 }
 
 export type SendConfirmationDispatchProps = {
   updateSpendPending: boolean => any,
   signBroadcastAndSave: () => any,
   reset: () => any,
-  updateAmount: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) => any
+  updateAmount: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) => any,
+  uniqueIdentifierUpdated: (uniqueIdentifier: string) => any
 }
 
 type routerParam = {
@@ -61,19 +65,19 @@ type routerParam = {
 
 type Props = SendConfirmationStateProps & SendConfirmationDispatchProps & routerParam
 
-type State = {
+type State = {|
   secondaryDisplayDenomination: GuiDenomination,
   nativeAmount: string,
   overridePrimaryExchangeAmount: string,
   forceUpdateGuiCounter: number,
   keyboardVisible: boolean
-}
+|}
 
 export class SendConfirmation extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
-    const newState: State = {
+    this.state = {
       secondaryDisplayDenomination: {
         name: '',
         multiplier: '1',
@@ -84,7 +88,6 @@ export class SendConfirmation extends Component<Props, State> {
       forceUpdateGuiCounter: 0,
       nativeAmount: props.nativeAmount
     }
-    this.state = newState
   }
 
   componentWillMount () {
@@ -114,12 +117,11 @@ export class SendConfirmation extends Component<Props, State> {
   }
 
   render () {
-    const primaryDisplayDenomination = convertAbcToGuiDenomination(this.props.primaryDisplayDenomination)
-    const parentDisplayDenomination = convertAbcToGuiDenomination(this.props.parentDisplayDenomination)
+    const parentDisplayDenomination = this.props.parentDisplayDenomination
 
     const primaryInfo: GuiCurrencyInfo = {
       displayCurrencyCode: this.props.currencyCode,
-      displayDenomination: primaryDisplayDenomination,
+      displayDenomination: this.props.primaryDisplayDenomination,
       exchangeCurrencyCode: this.props.primaryExchangeDenomination.name,
       exchangeDenomination: this.props.primaryExchangeDenomination
     }
@@ -128,7 +130,7 @@ export class SendConfirmation extends Component<Props, State> {
 
     if (this.props.secondaryeExchangeCurrencyCode === '') {
       if (this.state.secondaryDisplayDenomination.currencyCode) {
-        exchangeCurrencyCode = this.state.secondaryDisplayDenomination.currencyCode
+        exchangeCurrencyCode = this.state.secondaryDisplayDenomination.name
       }
     }
 
@@ -143,11 +145,11 @@ export class SendConfirmation extends Component<Props, State> {
       const { networkFee, parentNetworkFee } = this.props
 
       if (parentNetworkFee && bns.gt(parentNetworkFee, '0')) {
-        const cryptoFeeSymbol = parentDisplayDenomination.symbol
+        const cryptoFeeSymbol = parentDisplayDenomination.symbol ? parentDisplayDenomination.symbol : ''
         const cryptoFeeMultiplier = this.props.parentExchangeDenomination.multiplier
         const cryptoFeeAmount = parentNetworkFee ? convertNativeToDisplay(cryptoFeeMultiplier)(parentNetworkFee) : ''
         const cryptoFeeString = `${cryptoFeeSymbol} ${cryptoFeeAmount}`
-        const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol
+        const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol ? secondaryInfo.displayDenomination.symbol : ''
         const exchangeConvertor = convertNativeToExchange(this.props.parentExchangeDenomination.multiplier)
         const cryptoFeeExchangeAmount = exchangeConvertor(parentNetworkFee)
         const fiatFeeAmount = this.props.currencyConverter.convertCurrency(
@@ -162,11 +164,11 @@ export class SendConfirmation extends Component<Props, State> {
       }
 
       if (bns.gt(networkFee, '0')) {
-        const cryptoFeeSymbol = primaryInfo.displayDenomination.symbol
+        const cryptoFeeSymbol = primaryInfo.displayDenomination.symbol ? primaryInfo.displayDenomination.symbol : ''
         const cryptoFeeMultiplier = this.props.primaryExchangeDenomination.multiplier
         const cryptoFeeAmount = networkFee ? convertNativeToDisplay(cryptoFeeMultiplier)(networkFee) : ''
         const cryptoFeeString = `${cryptoFeeSymbol} ${cryptoFeeAmount}`
-        const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol
+        const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol ? secondaryInfo.displayDenomination.symbol : ''
         const exchangeConvertor = convertNativeToExchange(primaryInfo.exchangeDenomination.multiplier)
         const cryptoFeeExchangeAmount = exchangeConvertor(networkFee)
         const fiatFeeAmount = this.props.currencyConverter.convertCurrency(this.props.currencyCode, secondaryInfo.exchangeCurrencyCode, cryptoFeeExchangeAmount)
@@ -196,13 +198,10 @@ export class SendConfirmation extends Component<Props, State> {
               {this.props.errorMsg ? (
                 <Text style={[styles.error, styles.errorText]}>{this.props.errorMsg}</Text>
               ) : (
-                <ExchangeRate
-                  secondaryDisplayAmount={this.props.fiatPerCrypto}
-                  primaryInfo={primaryInfo}
-                  secondaryInfo={secondaryInfo} />
+                <ExchangeRate secondaryDisplayAmount={this.props.fiatPerCrypto} primaryInfo={primaryInfo} secondaryInfo={secondaryInfo} />
               )}
             </View>
-            <View style={[styles.main, border('yellow')]}>
+            <View style={styles.main}>
               <ExchangedFlipInput
                 primaryCurrencyInfo={{ ...primaryInfo }}
                 secondaryCurrencyInfo={{ ...secondaryInfo }}
@@ -216,6 +215,14 @@ export class SendConfirmation extends Component<Props, State> {
                 <Text style={[styles.feeAreaText]}>{networkFeeSyntax()}</Text>
               </View>
               <Recipient label={this.props.label} link={''} publicAddress={this.props.publicAddress} style={styles.recipient} />
+
+              {this.props.uniqueIdentifier && (
+                <UniqueIdentifier>
+                  <UniqueIdentifier.Text>
+                    <Text>{uniqueIdentifierText(this.props.currencyCode, this.props.uniqueIdentifier)}</Text>
+                  </UniqueIdentifier.Text>
+                </UniqueIdentifier>
+              )}
             </View>
             <View style={[styles.pendingSymbolArea]}>
               {this.props.pending && <ActivityIndicator style={[{ flex: 1, alignSelf: 'center' }]} size={'small'} />}
@@ -231,6 +238,10 @@ export class SendConfirmation extends Component<Props, State> {
             </View>
           </View>
         </Gradient>
+
+        {(this.props.currencyCode === 'XRP' || this.props.currencyCode === 'XMR') && (
+          <UniqueIdentifierModal onConfirm={this.props.uniqueIdentifierUpdated} currencyCode={this.props.currencyCode} />
+        )}
       </SafeAreaView>
     )
   }
@@ -238,4 +249,12 @@ export class SendConfirmation extends Component<Props, State> {
   onExchangeAmountChanged = ({ nativeAmount, exchangeAmount }: ExchangedFlipInputAmounts) => {
     this.props.updateAmount(nativeAmount, exchangeAmount, this.props.fiatPerCrypto.toString())
   }
+}
+
+const uniqueIdentifierText = (currencyCode: string, uniqueIdentifier: string): string => {
+  return currencyCode === 'XRP'
+    ? sprintf(s.strings.unique_identifier_display_text, s.strings.unique_identifier_destination_tag, uniqueIdentifier)
+    : currencyCode === 'XMR'
+      ? sprintf(s.strings.unique_identifier_display_text, s.strings.unique_identifier_payment_id, uniqueIdentifier)
+      : sprintf(s.strings.unique_identifier_display_text, s.strings.unique_identifier, uniqueIdentifier)
 }

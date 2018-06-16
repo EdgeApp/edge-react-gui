@@ -303,6 +303,7 @@ function schema (wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress)
   const symbolImageDarkMono = wallet.currencyInfo.symbolImageDarkMono
   const metaTokens: Array<EdgeMetaToken> = wallet.currencyInfo.metaTokens
   const denominations: Array<EdgeDenomination> = wallet.currencyInfo.denominations
+  const blockHeight: number = wallet.getBlockHeight()
   // TODO: Fetch the token list asynchonously before dispatching `schema`:
   const enabledTokens: Array<string> = []
 
@@ -360,11 +361,12 @@ function schema (wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress)
     fiatCurrencyCode,
     denominations,
     allDenominations,
-    symbolImage,
-    symbolImageDarkMono,
     metaTokens,
     enabledTokens,
-    receiveAddress
+    receiveAddress,
+    blockHeight,
+    symbolImage,
+    symbolImageDarkMono
   }
 
   return newWallet

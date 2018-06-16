@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import type { EdgeDenomination } from 'edge-core-js'
@@ -10,17 +10,24 @@ import * as UTILS from '../../../../../utils'
 import T from '../../../../components/FormattedText'
 import styles, { styles as styleRaw } from '../../style'
 
-export type Props = {
-  active: boolean,
-  selectWallet: (id: string, currencyCode: string) => void,
-  displayDenomination: EdgeDenomination,
-  multiplier: string,
+type OwnProps = {
   parentId: string,
   sortHandlers: any,
   currencyCode: string,
   balance: string
 }
-export default class WalletListTokenRow extends Component<Props> {
+
+export type StateProps = {
+  displayDenomination: EdgeDenomination,
+}
+
+export type DispatchProps = {
+  selectWallet: (id: string, currencyCode: string) => any,
+}
+
+type Props = OwnProps & StateProps & DispatchProps
+
+export class WalletListTokenRow extends PureComponent<Props> {
   selectWallet = () => {
     const { parentId: walletId, currencyCode } = this.props
     this.props.selectWallet(walletId, currencyCode)
@@ -30,7 +37,7 @@ export default class WalletListTokenRow extends Component<Props> {
   render () {
     return (
       <TouchableHighlight
-        style={[styles.tokenRowContainer, this.props.active && styles.activeOpacity]}
+        style={styles.tokenRowContainer}
         underlayColor={styleRaw.tokenRowUnderlay.color}
         delayLongPress={500}
         onPress={this.selectWallet}

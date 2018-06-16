@@ -360,7 +360,7 @@ export const styles = {
     color: THEME.COLORS.PRIMARY
   },
   typeIncome: {
-    color: THEME.COLORS.ACCENT_GREEN
+    color: THEME.COLORS.ACCENT_BLUE
   },
   underlayColor: {
     color: THEME.COLORS.GRAY_4

@@ -3,7 +3,7 @@
 import slowlog from 'react-native-slowlog'
 import { abs, sub } from 'biggystring'
 import React, { Component } from 'react'
-import { Keyboard, Linking, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { Linking, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import Picker from 'react-native-picker'
 import { sprintf } from 'sprintf-js'
 
@@ -77,7 +77,7 @@ class AmountArea extends Component {
       amountString = UTILS.decimalOrZero(UTILS.truncateDecimals(convertedAmount, 6), 6) // limit to 6 decimals, check if infinitesimal, and remove unnecessary trailing zeroes
       feeSyntax = ''
       leftData = {
-        color: THEME.COLORS.ACCENT_GREEN,
+        color: THEME.COLORS.ACCENT_BLUE,
         syntax: s.strings.fragment_transaction_income
       }
     } else {
@@ -188,24 +188,25 @@ class AmountArea extends Component {
           </View>
         </View>
         <View style={[styles.notesRow]}>
-          <View style={[styles.notesInputWrap]}>
-            <TextInput
-              underlineColorAndroid={'transparent'}
-              onChangeText={this.props.onChangeNotesFxn}
-              multiline
-              defaultValue={notes}
-              style={[styles.notesInput]}
-              placeholderTextColor={THEME.COLORS.GRAY_}
-              placeholder={s.strings.transaction_details_notes_title}
-              autoCapitalize="sentences"
-              autoCorrect={false}
-              onFocus={this.props.onFocusNotes}
-              onBlur={this.props.onBlurNotes}
-              // onSubmitEditing={this.props.onBlurNotes}
-              blurOnSubmit={false}
-              onScroll={() => Keyboard.dismiss()}
-            />
-          </View>
+          <TouchableWithoutFeedback onPress={() => this.amountInput.focus()}>
+            <View style={[styles.notesInputWrap]}>
+              <TextInput
+                underlineColorAndroid={'transparent'}
+                onChangeText={this.props.onChangeNotesFxn}
+                multiline
+                defaultValue={notes}
+                style={[styles.notesInput]}
+                placeholderTextColor={THEME.COLORS.GRAY_}
+                placeholder={s.strings.transaction_details_notes_title}
+                autoCapitalize="sentences"
+                autoCorrect={false}
+                onFocus={this.props.onFocusNotes}
+                onBlur={this.props.onBlurNotes}
+                blurOnSubmit={false}
+                ref={ ref => { this.amountInput = ref } }
+              />
+            </View>
+          </TouchableWithoutFeedback>
         </View>
         <View style={[styles.footerArea]}>
           <View style={[styles.buttonArea]}>

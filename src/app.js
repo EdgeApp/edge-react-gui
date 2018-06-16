@@ -31,6 +31,10 @@ console.log('***********************')
 
 global.clog = console.log
 
+const IGNORED_WARNINGS = ['slowlog', 'Setting a timer for a long period of time']
+// $FlowExpectedError
+console.ignoredYellowBox = IGNORED_WARNINGS
+
 // $FlowFixMe
 global.OS = Platform.OS
 global.slowlogOptions = { threshold: 16 }
@@ -44,6 +48,13 @@ if (!__DEV__) {
   console.log = log
   // $FlowFixMe: suppressing this error until we can find a workaround
   // console.log = () => {}
+}
+
+const enableWhyDidYouUpdate = false
+
+if (__DEV__ && enableWhyDidYouUpdate) {
+  const { whyDidYouUpdate } = require('why-did-you-update')
+  whyDidYouUpdate(React)
 }
 
 if (ENV.LOG_SERVER) {

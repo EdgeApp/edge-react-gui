@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { View } from 'react-native'
 import QrCode from 'react-native-qrcode'
 
@@ -11,7 +11,7 @@ export type Props = {
   value: string
 }
 
-export default class QRCode extends Component<Props> {
+export default class QRCode extends PureComponent<Props> {
   render () {
     return (
       <View style={styles.qrCodeBorder}>

@@ -1,17 +1,19 @@
 {
   "name": "edge-react-gui",
-  "version": "1.1.4",
+  "version": "1.2.0",
   "private": true,
   "description": "Edge Wallet React GUI",
-  "homepage": "https://edgesecure.co",
+  "homepage": "https://edge.app",
   "license": "SEE LICENSE IN LICENSE",
   "author": "Edge, Inc.",
   "contributors": [
-    "Paul Puey <paul@edgesecure.co>",
-    "William Swanson<william@edgesecure.co>",
-    "Kevin Sullivan <kevin@edgesecure.co>",
-    "Kylan Hurt <kylan@edgesecure.co>",
-    "Eliran Zack <eliran@edgesecure.co>"
+    "Paul Puey <paul@edge.app>",
+    "William Swanson <william@edge.app>",
+    "Kevin Sullivan <kevin@edge.app>",
+    "Kylan Hurt <kylan@edge.app>",
+    "Allen Hujsak <allen@edge.app>",
+    "Tim Horton <tim@edge.app>",
+    "Eliran Zack <eliran@edge.app>"
   ],
   "repository": {
     "type": "git",
@@ -74,15 +76,16 @@
     "core-js": "2.5.2",
     "dns.js": "^1.0.1",
     "domain-browser": "^1.1.7",
-    "edge-core-js": "0.8.1",
-    "edge-currency-bitcoin": "2.17.1",
+    "edge-core-js": "0.9.4",
+    "edge-currency-bitcoin": "2.20.1",
     "edge-currency-ethereum": "0.10.1",
+    "edge-currency-monero": "^0.0.5",
+    "edge-currency-ripple": "^0.0.6",
     "edge-exchange-plugins": "^0.2.0",
-    "edge-login-ui-rn": "^0.3.1",
-    "jsc-android": "216113.0.3",
+    "edge-login-ui-rn": "^0.3.3",
     "https-browserify": "0.0.1",
+    "jsc-android": "216113.0.3",
     "lodash": "^4.17.2",
-    "native-base": "^2.2.1",
     "os-browserify": "^0.1.2",
     "path-browserify": "0.0.0",
     "process": "^0.11.10",
@@ -104,7 +107,7 @@
     "react-native-dropdownalert": "git://github.com/Airbitz/react-native-dropdownalert.git",
     "react-native-fast-crypto": "^1.5.5",
     "react-native-flip-view": "git://github.com/Airbitz/react-native-flip-view.git",
-    "react-native-fs": "^2.9.7",
+    "react-native-fs": "^2.9.12",
     "react-native-hockeyapp": "0.5.1",
     "react-native-http": "git://github.com/tradle/react-native-http#834492d",
     "react-native-image-picker": "^0.26.4",
@@ -121,7 +124,7 @@
     "react-native-qrcode": "^0.2.3",
     "react-native-randombytes": "git://github.com/Airbitz/react-native-randombytes.git",
     "react-native-router-flux": "4.0.0-beta.28",
-    "react-native-share": "^1.0.21",
+    "react-native-share": "^1.0.27",
     "react-native-slider": "^0.11.0",
     "react-native-slowlog": "^1.0.2",
     "react-native-smart-splash-screen": "^2.3.5",
@@ -130,6 +133,7 @@
     "react-native-tcp": "git://github.com/Airbitz/react-native-tcp.git#c6af8f728fcbbae23d20c0211fd5b6c322f7a446",
     "react-native-udp": "^2.0.0",
     "react-native-vector-icons": "^4.2.0",
+    "react-native-webview-file-upload-android": "https://github.com/rhinogram/react-native-webview-file-upload-android.git#feature/support-file-downloading",
     "react-redux": "^5.0.5",
     "readable-stream": "^1.0.33",
     "redux": "^3.7.1",
@@ -140,12 +144,14 @@
     "tty-browserify": "0.0.0",
     "url": "^0.10.3",
     "vm-browserify": "0.0.4",
+    "why-did-you-update": "^0.1.1",
     "yarn": "^1.3.2"
   },
   "devDependencies": {
     "babel-eslint": "^8.1.0",
     "babel-preset-react-native": "^1.9.0",
     "body-parser": "^1.18.2",
+    "edge-plugin-simplex": "https://github.com/Airbitz/edge-plugin-simplex.git#1fdfc1d",
     "eslint": "^4.17.0",
     "eslint-config-standard": "^11.0.0-beta.0",
     "eslint-plugin-flowtype": "^2.35.0",
@@ -163,6 +169,7 @@
     "import-sort-parser-babylon": "^3.2.0",
     "import-sort-style-module": "^3.0.0",
     "jest": "^20.0.4",
+    "json-format": "^1.0.1",
     "jsonfile": "^4.0.0",
     "nyc": "^10.0.0",
     "prettier-eslint-cli": "^4.7.0",
@@ -170,8 +177,15 @@
     "updot": "^1.1.7"
   },
   "flow-coverage-report": {
-    "includeGlob": ["src/**/*.js", "*.js"],
-    "type": ["text", "html", "json"]
+    "includeGlob": [
+      "src/**/*.js",
+      "*.js"
+    ],
+    "type": [
+      "text",
+      "html",
+      "json"
+    ]
   },
   "importSort": {
     ".js, .es": {
@@ -181,8 +195,12 @@
   },
   "jest": {
     "preset": "react-native",
-    "transformIgnorePatterns": ["node_modules/mobx-react"],
-    "setupFiles": ["./testSetup.js"]
+    "transformIgnorePatterns": [
+      "node_modules/mobx-react"
+    ],
+    "setupFiles": [
+      "./testSetup.js"
+    ]
   },
   "prettier": {
     "printWidth": 160
@@ -200,9 +218,11 @@
     "dns": "dns.js",
     "domain": "domain-browser",
     "fs": "react-native-level-fs",
+    "https-proxy-agent": false,
     "http": "react-native-http",
     "https": "https-browserify",
     "net": "react-native-tcp",
+    "tls": "react-native-tcp/tls",
     "os": "os-browserify",
     "path": "path-browserify",
     "querystring": "querystring-es3",
@@ -213,6 +233,14 @@
     "zlib": "browserify-zlib"
   },
   "rnpm": {
-    "assets": ["./src/assets/fonts"]
+    "assets": [
+      "./src/assets/fonts"
+    ]
+  },
+  "plugins": {
+    "buysell": [
+      "edge-plugin-simplex"
+    ],
+    "spend": []
   }
 }

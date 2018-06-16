@@ -18,8 +18,8 @@ import * as UTILS from '../../../utils'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView/index.js'
-import SimplifiedDropdown from '../../components/SimpleDropdown/SimpleDropdown.ui.js'
-import FullWalletListRow from './components/WalletListRow/FullWalletListRowConnector'
+import ProgressBar from '../../components/ProgressBar/ProgressBar.ui.js'
+import FullWalletListRow from './components/WalletListRow/FullWalletListRow.ui.js'
 import SortableWalletListRow from './components/WalletListRow/SortableWalletListRow.ui.js'
 import WalletOptions from './components/WalletOptions/WalletOptionsConnector.ui.js'
 import styles from './style'
@@ -41,8 +41,8 @@ type State = {
   balanceBoxVisible: boolean,
   showOtpResetModal: boolean,
   showMessageModal: boolean,
-  messageModalMessage: ?string,
-  isWalletProgressVisible: boolean
+  isWalletProgressVisible: boolean,
+  messageModalMessage: ?string
 }
 type Props = {
   activeWalletIds: Array<string>,
@@ -79,9 +79,29 @@ export default class WalletList extends Component<Props, State> {
       showOtpResetModal: this.props.otpResetPending,
       showMessageModal: false,
       messageModalMessage: null,
-      isWalletProgressVisible: true,
-      progressPercentage: 0
+      progressPercentage: 0,
+      isWalletProgressVisible: true
     }
+  }
+
+  shouldComponentUpdate (nextProps: Props, nextState: State) {
+    let traverseObjects, ignoreObjects
+    if (this.state.sortableListExists) {
+      traverseObjects = { dimensions: true }
+      ignoreObjects = undefined
+    } else {
+      traverseObjects = undefined
+      ignoreObjects = { dimensions: true }
+    }
+
+    let diffElement2: string = ''
+    const diffElement = UTILS.getObjectDiff(this.props, nextProps, {
+      traverseObjects, ignoreObjects
+    })
+    if (!diffElement) {
+      diffElement2 = UTILS.getObjectDiff(this.state, nextState)
+    }
+    return !!diffElement || !!diffElement2
   }
 
   componentWillReceiveProps (nextProps: Props) {
@@ -138,7 +158,7 @@ export default class WalletList extends Component<Props, State> {
         <View style={styles.container}>
           <WalletOptions />
           <Gradient style={styles.gradient} />
-          {this.state.isWalletProgressVisible && this.renderWalletListProgressDropdown()}
+          {this.state.isWalletProgressVisible ? this.renderWalletListProgressDropdown() : <View style={styles.progressBarSpacer} />}
           <TouchableOpacity onPress={this.handleOnBalanceBoxPress}>
             {this.state.balanceBoxVisible ? this.balanceBox(fiatBalanceString) : this.hiddenBalanceBox()}
           </TouchableOpacity>
@@ -198,30 +218,6 @@ export default class WalletList extends Component<Props, State> {
     )
   }
 
-  onDismissProgressDropdown = () => {
-    this.setState({
-      isWalletProgressVisible: false
-    })
-  }
-
-  renderWalletListProgressDropdown = () => {
-    if (this.props.progressPercentage === 100) {
-      setTimeout(() => {
-        this.setState({
-          isWalletProgressVisible: false
-        })
-      }, 2000)
-    }
-    const heightOfDropdown = 100 // pixels
-    return (
-      <SimplifiedDropdown onPress={this.onDismissProgressDropdown} containerHeight={heightOfDropdown} containerStyle={styles.walletListProgressDropdown}>
-        <T style={styles.walletListProgressDropdownTopText}>
-          {s.strings.fragment_wallets_syncing_wallet_txs} {this.props.progressPercentage}%
-        </T>
-      </SimplifiedDropdown>
-    )
-  }
-
   showModal = () => {
     if (this.state.showOtpResetModal) {
       return (
@@ -265,9 +261,22 @@ export default class WalletList extends Component<Props, State> {
     })
   }
 
+  renderRow = (row: Object) => {
+    return (
+      <SortableWalletListRow data={row} dimensions={this.props.dimensions} />
+    )
+  }
+
+  renderItem = (item: Object) => {
+    return (
+      // $FlowFixMe sortHandlers error. Where does sortHandlers even come from?
+      <FullWalletListRow data={item} customTokens={this.props.customTokens} />
+    )
+  }
+
   renderActiveSortableList = (activeWalletsArray: Array<{ key: string }>, activeWalletsObject: {}) => {
     return (
-      <View style={[styles.listsContainer]}>
+      <View style={styles.listsContainer}>
         {this.state.sortableListExists && (
           <Animated.View
             testID={'sortableList'}
@@ -279,7 +288,7 @@ export default class WalletList extends Component<Props, State> {
               order={this.props.activeWalletIds}
               onRowMoved={this.onActiveRowMoved}
               render={ARCHIVED_TEXT}
-              renderRow={row => <SortableWalletListRow data={row} dimensions={this.props.dimensions} />}
+              renderRow={this.renderRow}
               executeWalletRowOption={this.executeWalletRowOption}
               dimensions={this.props.dimensions}
             />
@@ -291,7 +300,7 @@ export default class WalletList extends Component<Props, State> {
               style={styles.sortableWalletListContainer}
               data={activeWalletsArray}
               extraData={this.props.wallets}
-              renderItem={item => <FullWalletListRow data={item} settings={this.props.settings} customTokens={this.props.customTokens} />}
+              renderItem={this.renderItem}
               sortableMode={this.state.sortableMode}
               executeWalletRowOption={this.executeWalletRowOption}
               settings={this.props.settings}
@@ -484,6 +493,19 @@ export default class WalletList extends Component<Props, State> {
           </View>
         </View>
       </View>
+    )
+  }
+
+  renderWalletListProgressDropdown = () => {
+    if (this.props.progressPercentage === 100) {
+      setTimeout(() => {
+        this.setState({
+          isWalletProgressVisible: false
+        })
+      }, 2000)
+    }
+    return (
+      <ProgressBar progress={this.props.progressPercentage} />
     )
   }
 }

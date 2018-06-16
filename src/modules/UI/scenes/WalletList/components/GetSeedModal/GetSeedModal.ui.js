@@ -1,14 +1,12 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Share, StyleSheet, View } from 'react-native'
-import { sprintf } from 'sprintf-js'
+import { StyleSheet, View } from 'react-native'
 
 import { FormField } from '../../../../../../components/indexComponents'
 import * as Constants from '../../../../../../constants/indexConstants.js'
 import s from '../../../../../../locales/strings.js'
 import { ConfirmPasswordModalStyle, MaterialInputOnWhite } from '../../../../../../styles/indexStyles'
-import { TertiaryButton } from '../../../../components/Buttons'
 import T from '../../../../components/FormattedText/FormattedText.ui'
 import StylizedModal from '../../../../components/Modal/Modal.ui'
 import OptionButtons from '../../../../components/OptionButtons/OptionButtons.ui.js'
@@ -110,29 +108,10 @@ export default class GetSeed extends Component<GetSeedModalComponentProps, State
     )
   }
 
-  shareSeed = (shareText: string) => {
-    const shareTitle = sprintf(s.strings.fragment_wallets_seed_share_title, this.props.walletName)
-    Share.share(
-      {
-        message: shareText,
-        title: shareTitle,
-        url: undefined
-      },
-      { dialogTitle: shareTitle }
-    )
-      .then(() => {
-        this.onDismiss()
-      })
-      .catch(() => {})
-  }
-
   renderRevealedSeedArea = (seed: string) => {
     return (
       <View style={styles.seedTopLayer}>
         <T style={styles.seedText}>{seed}</T>
-        <View style={styles.seedSecondLayer}>
-          <TertiaryButton onPressFunction={() => this.shareSeed(seed)} text={s.strings.string_share} style={styles.copyButton} />
-        </View>
       </View>
     )
   }
