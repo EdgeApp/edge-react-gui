@@ -296,7 +296,7 @@ export const styles = {
     top: 4
   },
   accentGreen: {
-    color: THEME.COLORS.ACCENT_GREEN
+    color: THEME.COLORS.ACCENT_BLUE
   },
   accentRed: {
     color: THEME.COLORS.ACCENT_RED
