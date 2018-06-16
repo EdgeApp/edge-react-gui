@@ -6,33 +6,41 @@ import { THEME } from '../../../../../../theme/variables/airbitz.js'
 
 export const rawStyles = {
   button: {
-    flexDirection: 'row',
-    width: '100%',
     height: 50,
     backgroundColor: THEME.COLORS.TRANSPARENT,
-    alignItems: 'center',
-    justifyContent: 'space-between'
+    paddingHorizontal: 6
   },
-  left: {
+  row: {
     flexDirection: 'row',
-    width: 50,
+    flex: 1,
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  item: {
     backgroundColor: THEME.COLORS.TRANSPARENT,
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  left: {
+    height: '100%',
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 6
   },
   center: {
     flex: 1,
-    flexDirection: 'row',
+    height: '100%',
     backgroundColor: THEME.COLORS.TRANSPARENT,
-    alignItems: 'center',
-    alignSelf: 'stretch'
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    paddingHorizontal: 6
   },
   right: {
-    flexDirection: 'row',
-    width: 50,
+    height: '100%',
     backgroundColor: THEME.COLORS.TRANSPARENT,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    paddingHorizontal: 6
   },
   text: {
     fontSize: 16,
@@ -46,8 +54,8 @@ export const rawStyles = {
     color: `${THEME.COLORS.WHITE}${THEME.ALPHA.LOW}`
   },
   debug: {
-    borderColor: 'red',
-    borderWidth: 1
+    // borderColor: 'red',
+    // borderWidth: 1
   }
 }
 

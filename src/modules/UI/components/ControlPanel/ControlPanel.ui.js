@@ -1,24 +1,20 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Image, TouchableHighlight, View } from 'react-native'
+import { Image, Text, View } from 'react-native'
 import MDIcon from 'react-native-vector-icons/MaterialIcons'
-import { Actions } from 'react-native-router-flux'
 
-import person from '../../../../assets/images/sidenav/accounts.png'
-import buysell from '../../../../assets/images/sidenav/buysell.png'
+import accountIcon from '../../../../assets/images/sidenav/accounts.png'
+
 import { emptyGuiDenomination } from '../../../../types'
 import type { GuiDenomination } from '../../../../types'
 import { getDenomFromIsoCode, getObjectDiff } from '../../../utils.js'
-import T from '../../components/FormattedText'
-import s from '../../../../locales/strings.js'
 import ExchangeRate from '../ExchangeRate/index.js'
 import Gradient from '../Gradient/Gradient.ui'
 import SafeAreaView from '../SafeAreaView/SafeAreaViewDrawer.ui.js'
 import Main from './Component/MainConnector'
 import styles from './style'
-
-const PLUGIN_BUYSELL_TEXT = s.strings.title_plugin_buysell
+import { Button } from './Component/Button/Button.ui'
 
 export type Props = {
   currencyLogo: string,
@@ -30,25 +26,18 @@ export type Props = {
   styles: Object,
   username: string,
   openSelectUser: () => void,
-  closeSelectUser: () => void
+  closeSelectUser: () => void,
+  usersView: boolean
 }
 
 export default class ControlPanel extends Component<Props> {
-  _handlePressUserList = () => {
-    if (!this.props.usersView) {
-      return this.props.openSelectUser()
-    }
-    if (this.props.usersView) {
-      return this.props.closeSelectUser()
-    }
-  }
-
   shouldComponentUpdate (nextProps: Props) {
     const diffElement = getObjectDiff(this.props, nextProps, {
       primaryDisplayDenomination: true,
       primaryExchangeDenomination: true,
       styles: true
     })
+
     return !!diffElement
   }
 
@@ -78,50 +67,42 @@ export default class ControlPanel extends Component<Props> {
     }
 
     const arrowIcon = this.props.usersView ? 'keyboard-arrow-up' : 'keyboard-arrow-down'
+    const currencyLogoIcon = { uri: currencyLogo }
 
     return (
       <SafeAreaView>
         <Gradient reverse style={styles.container}>
-          <View style={styles.bitcoin.container}>
-            {this.renderCryptoIcon(currencyLogo)}
-            <ExchangeRate primaryInfo={primaryCurrencyInfo} secondaryInfo={secondaryCurrencyInfo} secondaryDisplayAmount={secondaryToPrimaryRatio} />
-          </View>
-          <TouchableHighlight onPress={this._handlePressUserList} underlayColor={styles.underlay.color}>
-            <View style={[styles.user.container, styles.others.borderBottom]}>
-              <View style={styles.iconImageContainer}>
-                <Image style={styles.iconImage} source={person} />
-              </View>
-              <T style={styles.user.name}>{this.props.username}</T>
-              <MDIcon style={styles.icon} name={arrowIcon} />
+          <View style={styles.header}>
+            {!!currencyLogo && <Image style={styles.iconImage} source={currencyLogoIcon} />}
+            <View style={styles.exchangeContainer}>
+              <ExchangeRate primaryInfo={primaryCurrencyInfo} secondaryInfo={secondaryCurrencyInfo} secondaryDisplayAmount={secondaryToPrimaryRatio} />
             </View>
-          </TouchableHighlight>
+          </View>
 
-          {!this.props.usersView && (
-            <TouchableHighlight
-              style={styles.others.iosTouchableHighlight}
-              underlayColor={styles.main.iosTouchableHighlightUnderlayColor}
-              onPress={Actions.buysell}
-            >
-              <View style={[styles.others.link, styles.others.borderBottom, { flex: 1 }]}>
-                <View style={styles.iconImageContainer}>
-                  <Image style={styles.iconImage} source={buysell} />
-                </View>
-                <View style={styles.others.textContainer}>
-                  <T style={styles.others.text}>{PLUGIN_BUYSELL_TEXT}</T>
-                </View>
-              </View>
-            </TouchableHighlight>
-          )}
+          <Button onPress={this.toggleUserList} style={styles.toggleButton} underlayColor={styles.underlay.color}>
+            <Button.Row>
+              <Button.Left>
+                <Image style={styles.iconImage} resizeMode={'contain'} source={accountIcon} />
+              </Button.Left>
+
+              <Button.Center>
+                <Button.Text>
+                  <Text>{this.props.username}</Text>
+                </Button.Text>
+              </Button.Center>
+
+              <Button.Right>
+                <MDIcon style={styles.toggleIcon} name={arrowIcon} />
+              </Button.Right>
+            </Button.Row>
+          </Button>
           <Main />
         </Gradient>
       </SafeAreaView>
     )
   }
 
-  renderCryptoIcon = (currencyLogo: string) => {
-    if (currencyLogo) {
-      return <Image style={styles.bitcoin.icon} source={{ uri: currencyLogo }} />
-    }
-    return <Image style={styles.bitcoin.icon} />
+  toggleUserList = () => {
+    return this.props.usersView ? this.props.closeSelectUser() : this.props.openSelectUser()
   }
 }
