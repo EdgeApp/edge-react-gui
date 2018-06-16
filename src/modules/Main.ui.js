@@ -274,6 +274,10 @@ export default class Main extends Component<Props, State> {
     this.doDeepLink(event.url)
   }
 
+  updateSceneKeyRequest = () => {
+    this.props.updateCurrentSceneKey(Constants.REQUEST)
+  }
+
   render () {
     return (
       <MenuProvider style={styles.mainMenuContext}>
@@ -405,7 +409,7 @@ export default class Main extends Component<Props, State> {
                       <Scene
                         key={Constants.REQUEST}
                         navTransparent={true}
-                        onEnter={() => this.props.updateCurrentSceneKey(Constants.REQUEST) }
+                        onEnter={this.updateSceneKeyRequest}
                         icon={this.icon(Constants.REQUEST)}
                         tabBarLabel={REQUEST}
                         component={Request}

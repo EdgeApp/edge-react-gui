@@ -23,7 +23,7 @@ export default class XRPMinimumModal extends Component<XRPMinimumModalStateProps
         </InteractiveModal.Icon>
 
         <InteractiveModal.Title>
-          <Text>{s.strings.request_xrp_minimum_notification_title}</Text>
+          <Text style={{textAlign: 'center'}}>{s.strings.request_xrp_minimum_notification_title}</Text>
         </InteractiveModal.Title>
 
         <InteractiveModal.Body>
