@@ -11,6 +11,7 @@ import type {GuiWallet, TransactionListTx} from '../../../../../types'
 import receivedTypeImage from '../../../../../assets/images/transactions/transaction-type-received.png'
 import sentTypeImage from '../../../../../assets/images/transactions/transaction-type-sent.png'
 import s from '../../../../../locales/strings'
+import { sprintf } from 'sprintf-js'
 import type {ContactsState} from '../../../../../reducers/contacts/contactsReducer'
 import { Image, TouchableHighlight, View } from 'react-native'
 import T from '../../../components/FormattedText'
@@ -26,18 +27,24 @@ type TransactionRowOwnProps = {
   isoFiatCurrencyCode: string,
   fiatCurrencyCode: string,
   onClick: (edgeTransaction: EdgeTransaction, thumbnailPath: string) => void,
-  fiatSymbol: string
+  fiatSymbol: string,
+  requiredConfirmations: number,
+}
+
+export type TransactionRowStateProps = {
+  walletBlockHeight: number | null
 }
 
 type State = {}
 
 const SENT_TEXT = s.strings.fragment_transaction_list_sent_prefix
 const RECEIVED_TEXT = s.strings.fragment_transaction_list_receive_prefix
-const UNCONFIRMED_TEXT = s.strings.fragment_wallet_unconfirmed
+const CONFIRMATION_PROGRESS_TEXT = s.strings.fragment_transaction_list_confirmation_progress
+const UNCONFIRMED_TRANSACTION = s.strings.fragment_wallet_unconfirmed
 
-type Props = TransactionRowOwnProps
+type Props = TransactionRowOwnProps & TransactionRowStateProps
 
-export class TransactionRow extends Component<Props, State> {
+export class TransactionRowComponent extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
@@ -109,9 +116,17 @@ export class TransactionRow extends Component<Props, State> {
       fiatAmountString = intl.formatNumber('0.00', {toFixed: 2})
     }
 
-    if (tx.blockHeight <= 0) {
+    const { walletBlockHeight, requiredConfirmations } = this.props
+    if (tx.blockHeight <= 0 || walletBlockHeight === null) { // if completely unconfirmed or wallet uninitialized
       pendingTimeStyle = styles.transactionPending
-      pendingTimeSyntax = UNCONFIRMED_TEXT
+      pendingTimeSyntax = UNCONFIRMED_TRANSACTION
+      // if partial confirmation (less than currency threshold)
+      // subtract 1 from requiredConfirmations because one confirmation is when wallet and tx block heights match (difference is zero)
+    } else if ((walletBlockHeight - tx.blockHeight) < requiredConfirmations - 1) {
+      pendingTimeStyle = styles.transactionPartialConfirmation
+      // keep in mind that if the tx.blockHeight is not -1 the that means it must have had at least one confirmation
+      pendingTimeSyntax = sprintf(CONFIRMATION_PROGRESS_TEXT, (walletBlockHeight - tx.blockHeight + 1), requiredConfirmations)
+      // if confirmed past threshold
     } else {
       pendingTimeStyle = styles.transactionTime
       pendingTimeSyntax = tx.time

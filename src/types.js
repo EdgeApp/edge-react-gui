@@ -19,7 +19,8 @@ export type GuiWallet = {
   metaTokens: Array<EdgeMetaToken>,
   enabledTokens: Array<string>,
   receiveAddress: EdgeReceiveAddress,
-  addressLoadingProgress?: number
+  addressLoadingProgress?: number,
+  blockHeight: number | null
 }
 
 export type GuiDenomination = EdgeDenomination
@@ -140,7 +141,8 @@ export const emptyGuiWallet: GuiWallet = {
     publicAddress: '',
     legacyAddress: ''
   },
-  addressLoadingProgress: 0
+  addressLoadingProgress: 0,
+  blockHeight: null
 }
 
 export const emptyGuiDenomination: GuiDenomination = {

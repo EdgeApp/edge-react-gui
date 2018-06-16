@@ -75,6 +75,7 @@ const strings = {
   fragment_transaction_list_sent_prefix: 'Sent ',
   fragment_transaction_transfer: 'Transfer',
   fragment_wallet_unconfirmed: 'Pending',
+  fragment_transaction_list_confirmation_progress: '%s of %s Confirmations',
   fragment_wallets_addwallet_name_hint: 'New Wallet Name',
   fragment_wallets_balance_text: 'Total Balance',
   fragment_wallets_delete_wallet: 'Delete Wallet',

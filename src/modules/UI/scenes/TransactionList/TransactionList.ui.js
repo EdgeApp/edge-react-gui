@@ -22,7 +22,7 @@ import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView'
 import styles, { styles as styleRaw } from './style'
 import type {ContactsState} from '../../../../reducers/contacts/contactsReducer'
-import {TransactionRow} from './components/TransactionRow.ui.js'
+import TransactionRow from './components/TransactionRowConnector.js'
 
 // import SearchBar from './components/SearchBar.ui'
 const INITIAL_TRANSACTION_BATCH_NUMBER = 10
@@ -46,7 +46,8 @@ export type StateProps = {
   multiplier: string,
   contacts: ContactsState,
   fiatSymbol: string,
-  showToWalletModal: boolean
+  showToWalletModal: boolean,
+  requiredConfirmations?: number
 }
 
 export type DispatchProps = {
@@ -352,6 +353,7 @@ export class TransactionList extends Component<Props, State> {
         fiatCurrencyCode={this.props.fiatCurrencyCode}
         onClick={this.goToTxDetail}
         fiatSymbol={this.props.fiatSymbol}
+        requiredConfirmations={this.props.requiredConfirmations}
       />
     )
   }
