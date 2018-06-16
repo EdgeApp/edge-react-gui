@@ -31,10 +31,7 @@ console.log('***********************')
 
 global.clog = console.log
 
-const IGNORED_WARNINGS = [
-  // 'slowlog',
-  'Setting a timer for a long period of time'
-]
+const IGNORED_WARNINGS = ['slowlog', 'Setting a timer for a long period of time']
 // $FlowExpectedError
 console.ignoredYellowBox = IGNORED_WARNINGS
 

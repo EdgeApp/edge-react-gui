@@ -22,6 +22,38 @@ export class Text extends Component<TextProps> {
   }
 }
 
+export type RowProps = {
+  children: Node,
+  style?: StyleSheet.style
+}
+export class Row extends Component<RowProps> {
+  render () {
+    const { children, style, ...props } = this.props
+
+    return (
+      <View style={[styles.row, style]} {...props}>
+        {children}
+      </View>
+    )
+  }
+}
+
+export type ItemProps = {
+  children: Node,
+  style?: StyleSheet.style
+}
+export class Item extends Component<ItemProps> {
+  render () {
+    const { children, style, ...props } = this.props
+
+    return (
+      <View style={[styles.row, style]} {...props}>
+        {children}
+      </View>
+    )
+  }
+}
+
 export type LeftProps = {
   children: Node,
   style?: StyleSheet.style
@@ -77,6 +109,8 @@ export type ButtonProps = {
   style?: StyleSheet.style
 }
 export class Button extends Component<ButtonProps> {
+  static Row = Row
+  static Item = Item
   static Left = Left
   static Center = Center
   static Right = Right
