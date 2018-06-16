@@ -117,7 +117,7 @@ export class TransactionRowComponent extends Component<Props, State> {
     }
 
     const { walletBlockHeight, requiredConfirmations } = this.props
-    if (tx.blockHeight === -1 || walletBlockHeight === null) { // if completely unconfirmed or wallet uninitialized
+    if (tx.blockHeight <= 0 || walletBlockHeight === null) { // if completely unconfirmed or wallet uninitialized
       pendingTimeStyle = styles.transactionPending
       pendingTimeSyntax = UNCONFIRMED_TRANSACTION
       // if partial confirmation (less than currency threshold)
