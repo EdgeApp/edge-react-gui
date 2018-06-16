@@ -2422,10 +2422,11 @@ edge-currency-monero@^0.0.5:
     sprintf-js "^1.1.1"
     uri-js "^3.0.2"
 
-edge-currency-ripple@^0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/edge-currency-ripple/-/edge-currency-ripple-0.0.5.tgz#bcc0718efe2ae0716d394818c4458b51679dd0de"
+edge-currency-ripple@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/edge-currency-ripple/-/edge-currency-ripple-0.0.6.tgz#50aeb7de518187331ddf0178c1d30be4b6ab41dc"
   dependencies:
+    base-x "^1.0.4"
     biggystring "^3.0.0"
     edge-ripple-lib "^1.0.0-beta.1"
     jsonschema "^1.1.1"
