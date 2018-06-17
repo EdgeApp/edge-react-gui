@@ -63,5 +63,9 @@ export const CURRENCY_SETTINGS = {
   ftcSettings: {
     pluginName: 'feathercoin',
     currencyCode: 'FTC'
+  },
+  ufoSettings: {
+    pluginName: 'ufo',
+    currencyCode: 'UFO'
   }
 }

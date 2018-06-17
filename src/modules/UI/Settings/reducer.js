@@ -53,6 +53,9 @@ type SettingsState = {
   LTC: {
     denomination: string
   },
+  UFO: {
+    denomination: string
+  },
   REP: {
     denomination: string
   },
