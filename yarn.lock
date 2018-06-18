@@ -2410,14 +2410,14 @@ edge-currency-ethereum@0.10.1:
     sprintf-js "^1.1.1"
     uri-js "^3.0.2"
 
-edge-currency-monero@^0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.0.5.tgz#38b0418188c0441466299d2784c3082c817f660f"
+edge-currency-monero@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.0.6.tgz#094914ea942fa7835a70272ac7c3c41454e4091b"
   dependencies:
     biggystring "^3.0.0"
     buffer "^5.0.6"
     jsonschema "^1.1.1"
-    mymonero-core-js "git://github.com/Airbitz/mymonero-core-js.git#fc6ace7"
+    mymonero-core-js "git://github.com/Airbitz/mymonero-core-js.git#00e49ad"
     node-xhr "^1.0.5"
     sprintf-js "^1.1.1"
     uri-js "^3.0.2"
@@ -2459,9 +2459,9 @@ edge-login-ui-rn@^0.3.3:
     sprintf-js "^1.0.3"
     zxcvbn "^4.4.2"
 
-"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#1fdfc1d":
-  version "0.0.1"
-  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#1fdfc1d74e28ea60012cb357c05fab24818994a9"
+"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#a2e2682":
+  version "0.0.2"
+  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#a2e268268f76a328d9c40d2f626da42f40464c15"
 
 edge-ripple-keypairs@^0.0.1:
   version "0.0.1"
@@ -5414,9 +5414,9 @@ mute-stream@0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.7.tgz#3075ce93bc21b8fab43e1bc4da7e8115ed1e7bab"
 
-"mymonero-core-js@git://github.com/Airbitz/mymonero-core-js.git#fc6ace7":
+"mymonero-core-js@git://github.com/Airbitz/mymonero-core-js.git#00e49ad":
   version "0.9.0"
-  resolved "git://github.com/Airbitz/mymonero-core-js.git#fc6ace7c287ed83244073f570e3bc689a6f7c480"
+  resolved "git://github.com/Airbitz/mymonero-core-js.git#00e49ada11866f44f7c22ffb0edfb05853b0e074"
   dependencies:
     async "^2.6.0"
 
