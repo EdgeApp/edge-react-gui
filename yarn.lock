@@ -2459,9 +2459,9 @@ edge-login-ui-rn@^0.3.3:
     sprintf-js "^1.0.3"
     zxcvbn "^4.4.2"
 
-"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#1fdfc1d":
-  version "0.0.1"
-  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#1fdfc1d74e28ea60012cb357c05fab24818994a9"
+"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#a2e2682":
+  version "0.0.2"
+  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#a2e268268f76a328d9c40d2f626da42f40464c15"
 
 edge-ripple-keypairs@^0.0.1:
   version "0.0.1"
