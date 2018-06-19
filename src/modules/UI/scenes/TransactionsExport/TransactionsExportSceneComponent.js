@@ -10,10 +10,14 @@ import { PrimaryButton } from '../../components/Buttons/index'
 import Share from 'react-native-share'
 import RNFS from 'react-native-fs'
 
-type PassedProps = {
+export type PassedProps = {
   sourceWallet: EdgeCurrencyWallet
 }
-type Props = PassedProps
+type StateProps = {
+  denomination: string
+}
+
+type Props = StateProps & PassedProps
 
 export class TransactionsExportSceneComponent extends Component<Props> {
   render () {
@@ -40,7 +44,7 @@ export class TransactionsExportSceneComponent extends Component<Props> {
   }
   exportQBO = async () => {
     const transactionOptions: EdgeGetTransactionsOptions = {
-
+      denomination: this.props.denomination
     }
     const file = await this.props.sourceWallet.exportTransactionsToQBO(transactionOptions)
     const path = RNFS.DocumentDirectoryPath + '/My Wallet.QBO'
@@ -55,7 +59,7 @@ export class TransactionsExportSceneComponent extends Component<Props> {
   }
   exportCSV = async () => {
     const transactionOptions: EdgeGetTransactionsOptions = {
-
+      denomination: this.props.denomination
     }
     const file = await this.props.sourceWallet.exportTransactionsToCSV(transactionOptions)
     const path = RNFS.DocumentDirectoryPath + '/My Wallet.csv'
