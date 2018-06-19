@@ -93,7 +93,7 @@ const mapDispatchToProps = (dispatch: Dispatch): SendConfirmationDispatchProps =
   updateAmount: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) => {
     return dispatch(updateAmount(nativeAmount, exchangeAmount, fiatPerCrypto))
   },
-  uniqueIdentifierUpdated: (uniqueIdentifier: string) => dispatch(uniqueIdentifierUpdated(uniqueIdentifier)),
+  uniqueIdentifierUpdated: uniqueIdentifier => dispatch(uniqueIdentifierUpdated({ uniqueIdentifier })),
   reset: () => dispatch(reset()),
   updateSpendPending: (pending: boolean): any => dispatch(updateSpendPending(pending)),
   signBroadcastAndSave: (): any => dispatch(signBroadcastAndSave())

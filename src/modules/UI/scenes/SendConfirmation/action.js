@@ -1,7 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import type { EdgeMetadata, EdgeParsedUri, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
+import type { EdgeMetadata, EdgeParsedUri, EdgeTransaction } from 'edge-core-js'
 import { Actions } from 'react-native-router-flux'
 
 import { OPEN_AB_ALERT } from '../../../../constants/indexConstants'
@@ -26,37 +26,6 @@ export const updateAmount = (nativeAmount: string, exchangeAmount: string, fiatP
   const amountFiat: number = parseFloat(amountFiatString)
   const metadata: EdgeMetadata = { amountFiat }
   dispatch(createTX({ nativeAmount, metadata }, false))
-}
-
-export const uniqueIdentifierUpdated = (uniqueIdentifier: string) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const walletId = getSelectedWalletId(state)
-  const edgeWallet = getWallet(state, walletId)
-  const parsedUri = state.ui.scenes.sendConfirmation.parsedUri
-  const newParsedUri = { ...parsedUri, uniqueIdentifier }
-  const spendInfo: EdgeSpendInfo = {
-    currencyCode: parsedUri.currencyCode,
-    nativeAmount: parsedUri.nativeAmount || '0',
-    metadata: parsedUri.metadata,
-    spendTargets: [
-      {
-        publicAddress: parsedUri.publicAddress,
-        nativeAmount: parsedUri.nativeAmount || '0',
-        otherParams: {
-          uniqueIdentifier: uniqueIdentifier
-        }
-      }
-    ]
-  }
-
-  makeSpend(edgeWallet, spendInfo)
-    .then(edgeTransaction => {
-      dispatch(updateTransaction(edgeTransaction, newParsedUri))
-    })
-    .catch(e => {
-      console.log(e)
-      dispatch(updateTransaction(null, newParsedUri))
-    })
 }
 
 export const createTX = (parsedUri: GuiMakeSpendInfo | EdgeParsedUri, forceUpdateGui?: boolean = true) => (dispatch: Dispatch, getState: GetState) => {
@@ -138,4 +107,4 @@ export const updateSpendPending = (pending: boolean) => ({
   data: { pending }
 })
 
-export { createTX as updateMiningFees, createTX as updateParsedURI }
+export { createTX as updateMiningFees, createTX as updateParsedURI, createTX as uniqueIdentifierUpdated }
