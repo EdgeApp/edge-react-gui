@@ -8,12 +8,13 @@ import { getSceneState, getSelectedCurrencyCode } from '../../selectors.js'
 
 export type GuiMakeSpendInfo = {
   currencyCode?: string,
+  customNetworkFee?: any,
+  metadata?: any,
+  nativeAmount?: string,
   networkFeeOption?: string,
   publicAddress?: string,
-  metadata?: any,
-  customNetworkFee?: any,
-  nativeAmount?: string,
-  spendTargets?: Array<AbcSpendTarget>
+  spendTargets?: Array<AbcSpendTarget>,
+  uniqueIdentifier?: string
 }
 
 export type SendConfirmationState = {
@@ -77,18 +78,31 @@ export const getMetadata = (state: State): EdgeMetadata => getParsedUri(state).m
 export const getPublicAddress = (state: State): string => getParsedUri(state).publicAddress || initialState.parsedUri.publicAddress || ''
 export const getNativeAmount = (state: State): string => getParsedUri(state).nativeAmount || initialState.parsedUri.nativeAmount || ''
 
+export const getUniqueIdentifier = (state: State): string => {
+  const parsedUri = getParsedUri(state)
+  const uniqueIdentifier = parsedUri.uniqueIdentifier
+  return uniqueIdentifier || ''
+}
+
 export const getNetworkFee = (state: State): string => getTransaction(state).networkFee
 export const getParentNetworkFee = (state: State): ?string => getTransaction(state).parentNetworkFee
 
-export const getSpendInfo = (state: State, newSpendInfo?: GuiMakeSpendInfo = {}): EdgeSpendInfo => ({
-  currencyCode: newSpendInfo.currencyCode || getSelectedCurrencyCode(state),
-  metadata: newSpendInfo.metadata ? { ...getMetadata(state), ...newSpendInfo.metadata } : getMetadata(state),
-  spendTargets: [
-    {
-      nativeAmount: newSpendInfo.nativeAmount || getNativeAmount(state),
-      publicAddress: newSpendInfo.publicAddress || getPublicAddress(state)
-    }
-  ],
-  networkFeeOption: newSpendInfo.networkFeeOption || getNetworkFeeOption(state),
-  customNetworkFee: newSpendInfo.customNetworkFee ? { ...getCustomNetworkFee(state), ...newSpendInfo.customNetworkFee } : getCustomNetworkFee(state)
-})
+export const getSpendInfo = (state: State, newSpendInfo?: GuiMakeSpendInfo = {}): EdgeSpendInfo => {
+  const uniqueIdentifier = newSpendInfo.uniqueIdentifier || getUniqueIdentifier(state)
+
+  return {
+    currencyCode: newSpendInfo.currencyCode || getSelectedCurrencyCode(state),
+    metadata: newSpendInfo.metadata ? { ...getMetadata(state), ...newSpendInfo.metadata } : getMetadata(state),
+    spendTargets: [
+      {
+        nativeAmount: newSpendInfo.nativeAmount || getNativeAmount(state),
+        publicAddress: newSpendInfo.publicAddress || getPublicAddress(state),
+        otherParams: {
+          uniqueIdentifier
+        }
+      }
+    ],
+    networkFeeOption: newSpendInfo.networkFeeOption || getNetworkFeeOption(state),
+    customNetworkFee: newSpendInfo.customNetworkFee ? { ...getCustomNetworkFee(state), ...newSpendInfo.customNetworkFee } : getCustomNetworkFee(state)
+  }
+}

@@ -1262,9 +1262,15 @@ big-integer@^1.6.7:
   version "1.6.27"
   resolved "https://registry.yarnpkg.com/big-integer/-/big-integer-1.6.27.tgz#8e56c6f8b2dd6c4fe8d32102b83d4f25868e4b3a"
 
-biggystring@^3.0.0, biggystring@^3.0.1:
+biggystring@^3.0.0:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/biggystring/-/biggystring-3.0.1.tgz#7ba82b7d0cca3331beeeb9d252cb44e2c74068e9"
+  dependencies:
+    bn.js "^4.11.7"
+
+biggystring@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/biggystring/-/biggystring-3.0.2.tgz#e9a8cd1ada0ec54b377a621cde53dea5e19085b6"
   dependencies:
     bn.js "^4.11.7"
 
@@ -2356,13 +2362,13 @@ ecc-jsbn@~0.1.1:
   dependencies:
     jsbn "~0.1.0"
 
-edge-core-js@0.9.5:
-  version "0.9.5"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.9.5.tgz#f1c700618b07e14774c38871364dfba5dd227cf5"
+edge-core-js@0.9.6:
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.9.6.tgz#abc93ca2f7269f2650de36d89b6c1b3a983a1459"
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
-    biggystring "^3.0.1"
+    biggystring "^3.0.2"
     currency-codes "^1.1.2"
     detect-bundler "^1.0.0"
     disklet "^0.2.2"
@@ -2380,9 +2386,9 @@ edge-core-js@0.9.5:
     utf8 "^3.0.0"
     ws "^5.1.1"
 
-edge-currency-bitcoin@2.20.1:
-  version "2.20.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-2.20.1.tgz#cd6e54d9a312c4d80d9cf25c16dd815eeb675c3e"
+edge-currency-bitcoin@2.21.1:
+  version "2.21.1"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-2.21.1.tgz#89c1347b05f3c07ead320515836660d64048345b"
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "^3.0.0"
@@ -2395,9 +2401,9 @@ edge-currency-bitcoin@2.20.1:
     unorm "^1.4.1"
     uri-js "^3.0.2"
 
-edge-currency-ethereum@0.10.1:
-  version "0.10.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-ethereum/-/edge-currency-ethereum-0.10.1.tgz#febf56621dc5097ef3dfa8a9e4817ee522663506"
+edge-currency-ethereum@0.10.2:
+  version "0.10.2"
+  resolved "https://registry.yarnpkg.com/edge-currency-ethereum/-/edge-currency-ethereum-0.10.2.tgz#81b161eaac5dc40744bf33694e9a2f31abf2a72a"
   dependencies:
     biggystring "^3.0.0"
     bn.js "^4.11.7"
@@ -2410,9 +2416,9 @@ edge-currency-ethereum@0.10.1:
     sprintf-js "^1.1.1"
     uri-js "^3.0.2"
 
-edge-currency-monero@^0.0.6:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.0.6.tgz#094914ea942fa7835a70272ac7c3c41454e4091b"
+edge-currency-monero@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.0.7.tgz#502938cbb4ab5733e9f54f934967465c480c1b80"
   dependencies:
     biggystring "^3.0.0"
     buffer "^5.0.6"

@@ -1,5 +1,23 @@
 # edge-react-gui
 
+## 1.2.1
+
+* Support to hold, send, and receive Monero (XMR)
+* Support to hold, send, and receive Ripple (XRP)
+* Support for buying and selling Bitcoin using credit card via Simplex integration
+* Ability to sweep private keys for Bitcoin, Bitcoin Cash, Litecoin, and Dash.
+* Add side menu buttons for send/scan, request, exchange, buy, and sweep
+* Remove Share button for view master private key modal
+* Change progress bar to horizontally animated line
+* Show more decimal places for fiat amounts if needed
+* Make entire transaction notes tappable
+* Fix Shapeshift order logic to prevent errors and speed up response
+* Performance optimizations
+* Add tracking of referral link used for install
+* App behavior modification per referral link
+* Export transaction history to CSV and Quickbooks (QBO) files
+* Ability to restore deleted wallets
+
 ## 1.1.3
 
 * Add links to ShapeShift order ID in transaction notes field

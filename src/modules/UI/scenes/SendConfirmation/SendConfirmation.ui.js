@@ -19,7 +19,7 @@ import Gradient from '../../components/Gradient/Gradient.ui'
 import Recipient from '../../components/Recipient/index.js'
 import SafeAreaView from '../../components/SafeAreaView'
 import ABSlider from '../../components/Slider/index.js'
-// import { UniqueIdentifier } from './components/UniqueIdentifier/UniqueIdentifier.ui.js'
+import { UniqueIdentifier } from './components/UniqueIdentifier/UniqueIdentifier.ui.js'
 import { UniqueIdentifierModalConnect as UniqueIdentifierModal } from './components/UniqueIdentifierModal/UniqueIdentifierModalConnector.js'
 import styles from './styles.js'
 
@@ -216,6 +216,13 @@ export class SendConfirmation extends Component<Props, State> {
               </View>
               <Recipient label={this.props.label} link={''} publicAddress={this.props.publicAddress} style={styles.recipient} />
 
+              {this.props.uniqueIdentifier && (
+                <UniqueIdentifier>
+                  <UniqueIdentifier.Text>
+                    <Text>{uniqueIdentifierText(this.props.currencyCode, this.props.uniqueIdentifier)}</Text>
+                  </UniqueIdentifier.Text>
+                </UniqueIdentifier>
+              )}
             </View>
             <View style={[styles.pendingSymbolArea]}>
               {this.props.pending && <ActivityIndicator style={[{ flex: 1, alignSelf: 'center' }]} size={'small'} />}
@@ -244,10 +251,10 @@ export class SendConfirmation extends Component<Props, State> {
   }
 }
 
-// const uniqueIdentifierText = (currencyCode: string, uniqueIdentifier: string): string => {
-//   return currencyCode === 'XRP'
-//     ? sprintf(s.strings.unique_identifier_display_text, s.strings.unique_identifier_destination_tag, uniqueIdentifier)
-//     : currencyCode === 'XMR'
-//       ? sprintf(s.strings.unique_identifier_display_text, s.strings.unique_identifier_payment_id, uniqueIdentifier)
-//       : sprintf(s.strings.unique_identifier_display_text, s.strings.unique_identifier, uniqueIdentifier)
-// }
+const uniqueIdentifierText = (currencyCode: string, uniqueIdentifier: string): string => {
+  return currencyCode === 'XRP'
+    ? sprintf(s.strings.unique_identifier_display_text, s.strings.unique_identifier_destination_tag, uniqueIdentifier)
+    : currencyCode === 'XMR'
+      ? sprintf(s.strings.unique_identifier_display_text, s.strings.unique_identifier_payment_id, uniqueIdentifier)
+      : sprintf(s.strings.unique_identifier_display_text, s.strings.unique_identifier, uniqueIdentifier)
+}
