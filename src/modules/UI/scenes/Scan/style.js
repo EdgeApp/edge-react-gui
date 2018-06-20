@@ -143,6 +143,9 @@ export const styles = {
     fontSize: 20,
     color: THEME.COLORS.GRAY_1
   },
+  addressInputButton: {
+    paddingHorizontal: 10
+  },
   pasteButtonRow: {
     paddingTop: 12
   },

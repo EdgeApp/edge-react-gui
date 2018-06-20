@@ -40,7 +40,7 @@ export class AddressInput extends Component<Props> {
         </View>
         {this.props.copyMessage && (
           <View style={styles.pasteButtonRow}>
-            <TertiaryButton text={this.props.copyMessage} ellipsizeMode={'middle'} onPressFunction={this.props.onPaste} numberOfLines={1} />
+            <TertiaryButton text={this.props.copyMessage} ellipsizeMode={'middle'} onPressFunction={this.props.onPaste} numberOfLines={1} style={styles.addressInputButton} />
           </View>
         )}
       </View>
