@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react'
-import { View } from 'react-native'
+import { Platform, View } from 'react-native'
+import Mailer from 'react-native-mail'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView/index.js'
 import { TransactionExportSceneStyle } from '../../../../styles/indexStyles'
@@ -9,6 +10,7 @@ import s from '../../../../locales/strings'
 import { PrimaryButton } from '../../components/Buttons/index'
 import Share from 'react-native-share'
 import RNFS from 'react-native-fs'
+import {IOS} from '../../../../constants/indexConstants'
 
 export type PassedProps = {
   sourceWallet: EdgeCurrencyWallet
@@ -47,14 +49,17 @@ export class TransactionsExportSceneComponent extends Component<Props> {
       denomination: this.props.denomination
     }
     const file = await this.props.sourceWallet.exportTransactionsToQBO(transactionOptions)
-    const path = RNFS.DocumentDirectoryPath + '/My Wallet.QBO'
+    const path = Platform.OS === IOS ? RNFS.DocumentDirectoryPath + '/My Wallet.QBO' : RNFS.ExternalDirectoryPath + '/MyWallet.QBO'
     RNFS.writeFile(path, file, 'utf8')
       .then((success) => {
-        console.log('FS: FILE WRITTEN!')
-        this.openShareApp(path, 'Share Transactions QBO')
+        if (Platform.OS === IOS) {
+          this.openShareApp(path, 'Share Transactions QBO')
+          return
+        }
+        this.openMailApp(path, 'Share Transactions QBO', 'QBO', 'MyWallet.QBO')
       })
       .catch((err) => {
-        console.log('FS: ', err.message)
+        console.log('file creation erro: ', err.message)
       })
   }
   exportCSV = async () => {
@@ -62,14 +67,17 @@ export class TransactionsExportSceneComponent extends Component<Props> {
       denomination: this.props.denomination
     }
     const file = await this.props.sourceWallet.exportTransactionsToCSV(transactionOptions)
-    const path = RNFS.DocumentDirectoryPath + '/My Wallet.csv'
+    const path = Platform.OS === IOS ? RNFS.DocumentDirectoryPath + '/My Wallet.csv' : RNFS.ExternalDirectoryPath + '/My Wallet.csv'
     RNFS.writeFile(path, file, 'utf8')
       .then((success) => {
-        console.log('FS: FILE WRITTEN!')
-        this.openShareApp(path, 'Share Transactions CSV')
+        if (Platform.OS === IOS) {
+          this.openShareApp(path, 'Share Transactions CSV')
+          return
+        }
+        this.openMailApp(path, 'Share Transactions CSV', 'csv', 'My Wallet.csv')
       })
       .catch((err) => {
-        console.log('FS: ', err.message)
+        console.log('file creation error: ', err.message)
       })
   }
 
@@ -88,5 +96,29 @@ export class TransactionsExportSceneComponent extends Component<Props> {
         console.log('FS:error on Share  ', err.message)
         console.log('FS:error on Share  ', err)
       })
+  }
+
+  openMailApp = (path: string, subject: string, fileType: string, fileName: string) => {
+    const attachment = {
+      path: path, // The absolute path of the file from which to read data.
+      type: fileType // Mime Type: jpg, png, doc, ppt, html, pdf
+    }
+    Mailer.mail(
+      {
+        subject: subject,
+        recipients: [''],
+        body: ' ',
+        isHTML: true,
+        attachment: attachment
+      },
+      (error, event) => {
+        if (error) {
+          console.log(error)
+        }
+        if (event === 'sent') {
+          console.log('ss: This is sent')
+        }
+      }
+    )
   }
 }
