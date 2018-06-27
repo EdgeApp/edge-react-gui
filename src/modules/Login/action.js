@@ -19,6 +19,7 @@ import { updateWalletsRequest } from '../Core/Wallets/action.js'
 import type { Dispatch, GetState } from '../ReduxTypes'
 import { insertWalletIdsForProgress } from '../UI/Wallets/action.js'
 import { getReceiveAddresses } from '../utils.js'
+import { sprintf } from 'sprintf-js'
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
@@ -101,7 +102,12 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
         for (const plugin of currencyPlugins) {
           if (plugin.currencyInfo.currencyCode.toLowerCase() === global.currencyCode.toLowerCase()) {
             walletType = plugin.currencyInfo.walletTypes[0]
-            walletName = `My ${plugin.currencyInfo.currencyName}`
+            // XXX Hack for Ripple/XRP
+            if (global.currencyCode.toLowerCase() === 'xrp') {
+              walletName = sprintf(s.strings.my_crypto_wallet_name, 'XRP')
+            } else {
+              walletName = sprintf(s.strings.my_crypto_wallet_name, plugin.currencyInfo.currencyName)
+            }
             edgeWallet = await ACCOUNT_API.createCurrencyWalletRequest(account, walletType, { name: walletName, fiatCurrencyCode })
           }
         }
