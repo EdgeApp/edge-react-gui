@@ -112,7 +112,12 @@ export class Request extends Component<Props, State> {
 
       const abcEncodeUri = nextProps.useLegacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
 
-      const encodedURI = nextProps.edgeWallet ? nextProps.edgeWallet.encodeUri(abcEncodeUri) : ''
+      let encodedURI = ''
+      try {
+        encodedURI = nextProps.edgeWallet ? nextProps.edgeWallet.encodeUri(abcEncodeUri) : ''
+      } catch (e) {
+        console.log(e)
+      }
 
       this.setState({
         encodedURI,
@@ -198,7 +203,12 @@ export class Request extends Component<Props, State> {
     if (bns.gt(amounts.nativeAmount, '0')) {
       edgeEncodeUri.nativeAmount = amounts.nativeAmount
     }
-    const encodedURI = this.props.edgeWallet ? this.props.edgeWallet.encodeUri(edgeEncodeUri) : ''
+    let encodedURI = ''
+    try {
+      encodedURI = this.props.edgeWallet ? this.props.edgeWallet.encodeUri(edgeEncodeUri) : ''
+    } catch (e) {
+      console.log(e)
+    }
 
     this.setState({
       encodedURI
