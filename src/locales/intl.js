@@ -29,7 +29,7 @@ const intlHandler = {
   formatNumberInput (input: string, options?: IntlNumberFormatOptionsType): string {
     const _options = {}
 
-    if (input.endsWith('.')) {
+    if (input.endsWith('.') || input.endsWith(',')) {
       return intlHandler.formatNumber(input.slice(0, -1)) + locale.decimalSeparator
     }
     if (input.includes(NATIVE_DECIMAL_SEPARATOR)) {
@@ -76,10 +76,14 @@ const intlHandler = {
     const groupingSeparatorRegExp = new RegExp('\\' + groupingSeparator, 'g')
 
     if (value === decimalSeparator) return true
-    if (value === groupingSeparator || value.slice(-1) === groupingSeparator) return false
-    const standartized = value.replace(groupingSeparatorRegExp, '').replace(decimalSeparator, '.')
+    if (value.endsWith('.') || value.endsWith(',')) {
+      value = value.slice(0, -1) + locale.decimalSeparator
+    }
 
-    return !isNaN(+standartized)
+    // if (value === groupingSeparator || value.slice(-1) === groupingSeparator) return false
+    const standardized = value.replace(groupingSeparatorRegExp, '').replace(decimalSeparator, '.')
+
+    return !isNaN(+standardized)
   },
 
   /**
@@ -127,10 +131,13 @@ const intlHandler = {
    */
   formatToNativeNumber (value: string, options?: IntlNumberFormatOptionsType): string {
     const { decimalSeparator, groupingSeparator } = locale
+    if (value.endsWith('.') || value.endsWith(',')) {
+      value = value.slice(0, -1) + locale.decimalSeparator
+    }
     const groupingSeparatorRegExp = new RegExp('\\' + groupingSeparator, 'g')
-    const standartized = value.replace(groupingSeparatorRegExp, '').replace(decimalSeparator, '.')
+    const standardized = value.replace(groupingSeparatorRegExp, '').replace(decimalSeparator, '.')
 
-    return standartized
+    return standardized
   },
   // $FlowFixMe: add after implementation
   formatDate (date, options) {
