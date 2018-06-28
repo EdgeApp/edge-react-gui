@@ -27,6 +27,7 @@ export const initialState = {
   isTouchSupported: false,
   isTouchEnabled: false,
   isOtpEnabled: false,
+  showOnBoarding: false,
   otpKey: null,
   otpResetDate: null,
   otpResetPending: false,
@@ -160,7 +161,8 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         pinLoginEnabled,
         otpMode,
         denominationKeys,
-        customTokensSettings
+        customTokensSettings,
+        showOnBoarding
       } = data
       let newState = {
         ...state,
@@ -178,6 +180,7 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         pinMode,
         pinLoginEnabled,
         otpMode,
+        showOnBoarding,
         otpResetDate: account.otpResetDate
       }
       denominationKeys.forEach(key => {

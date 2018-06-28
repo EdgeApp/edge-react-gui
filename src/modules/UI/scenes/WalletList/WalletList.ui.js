@@ -55,6 +55,7 @@ type Props = {
   wallets: any,
   renameWalletInput: string,
   otpResetPending: boolean,
+  showOnBoarding: boolean,
   updateArchivedWalletsOrder: (Array<string>) => void,
   updateActiveWalletsOrder: (Array<string>) => void,
   walletRowOption: (walletId: string, option: string, archived: boolean) => void,

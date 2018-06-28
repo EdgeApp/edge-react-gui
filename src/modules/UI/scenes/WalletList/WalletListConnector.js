@@ -27,6 +27,7 @@ const mapStateToProps = (state: State) => {
   const customTokens = state.ui.settings.customTokens
   const otpResetPending = SETTINGS_SELECTORS.getOtpResetPending(state)
   const progressPercentage = UI_SELECTORS.getWalletLoadingPercent(state)
+  const showOnBoarding = SETTINGS_SELECTORS.runOnBoarding(state)
 
   return {
     settings,
@@ -42,7 +43,8 @@ const mapStateToProps = (state: State) => {
     dimensions,
     customTokens,
     otpResetPending,
-    progressPercentage
+    progressPercentage,
+    showOnBoarding
   }
 }
 
