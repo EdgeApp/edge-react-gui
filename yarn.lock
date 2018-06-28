@@ -2416,9 +2416,9 @@ edge-currency-ethereum@0.10.2:
     sprintf-js "^1.1.1"
     uri-js "^3.0.2"
 
-edge-currency-monero@^0.0.7:
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.0.7.tgz#502938cbb4ab5733e9f54f934967465c480c1b80"
+edge-currency-monero@^0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.0.8.tgz#c7c83b3c1672a583b9980fab0c427f8ff2bc1542"
   dependencies:
     biggystring "^3.0.0"
     buffer "^5.0.6"
