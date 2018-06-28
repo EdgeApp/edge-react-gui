@@ -199,7 +199,7 @@ const strings = {
   title_change_pin: 'Change Pin',
   title_confirm_exchange: 'Confirm exchange',
   title_create_wallet: 'Create Wallet',
-  title_export_transactions: 'Export transactions',
+  title_export_transactions: 'Export Transactions',
   title_default_fiat: 'Default Fiat',
   title_edge_login: 'Edge Login',
   title_ethereum_settings: 'Ethereum Settings',
