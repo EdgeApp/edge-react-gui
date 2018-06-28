@@ -12,6 +12,7 @@ import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import { saveReceiveAddress } from './action.js'
 import { Request } from './Request.ui'
 import type { RequestDispatchProps, RequestLoadingProps, RequestStateProps } from './Request.ui'
+import {refreshReceiveAddressRequest} from '../../Wallets/action'
 
 const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps => {
   const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
@@ -73,6 +74,9 @@ const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps 
 const mapDispatchToProps = (dispatch: Dispatch): RequestDispatchProps => ({
   saveReceiveAddress: (receiveAddress: GuiReceiveAddress) => {
     dispatch(saveReceiveAddress(receiveAddress))
+  },
+  refreshReceiveAddressRequest: (walletId) => {
+    dispatch(refreshReceiveAddressRequest(walletId))
   }
 })
 
