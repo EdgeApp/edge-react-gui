@@ -79,7 +79,7 @@
     "edge-core-js": "0.9.6",
     "edge-currency-bitcoin": "2.21.1",
     "edge-currency-ethereum": "0.10.2",
-    "edge-currency-monero": "^0.0.7",
+    "edge-currency-monero": "^0.0.8",
     "edge-currency-ripple": "^0.0.6",
     "edge-exchange-plugins": "^0.2.0",
     "edge-login-ui-rn": "^0.3.3",
