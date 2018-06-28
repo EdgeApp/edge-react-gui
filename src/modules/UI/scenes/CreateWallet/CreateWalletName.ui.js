@@ -27,9 +27,14 @@ type State = {
 export class CreateWalletName extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
-    this.state = {
-      walletName: sprintf(s.strings.my_crypto_wallet_name, this.props.selectedWalletType.label)
+    let walletName = ''
+    // XXX Hack for Ripple
+    if (this.props.selectedWalletType.currencyCode.toLowerCase() === 'xrp') {
+      walletName = sprintf(s.strings.my_crypto_wallet_name, 'XRP')
+    } else {
+      walletName = sprintf(s.strings.my_crypto_wallet_name, this.props.selectedWalletType.label)
     }
+    this.state = { walletName }
   }
 
   isValidWalletName = () => {
