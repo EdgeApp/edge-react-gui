@@ -9,6 +9,7 @@ import * as UTILS from '../../../utils'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import { fetchMoreTransactions } from './action'
+import { toggleAccountBalanceVisibility } from '../WalletList/action.js'
 import { type DispatchProps, type StateProps, TransactionList } from './TransactionList.ui'
 import type { EdgeCurrencyWallet, EdgeCurrencyInfo } from 'edge-core-js'
 
@@ -56,6 +57,8 @@ const mapStateToProps = (state: State) => {
   const currencyInfo: EdgeCurrencyInfo = coreWallet.currencyInfo
   // set default requiredConfirmations to 1, so once the tx is in a block consider fully confirmed
   const requiredConfirmations = currencyInfo.requiredConfirmations ? currencyInfo.requiredConfirmations : 1
+  // eventually we will want the txList balance box visibility to be set to wallet-level setting (not account)
+  const isAccountBalanceVisible = state.ui.settings.isAccountBalanceVisible
 
   const out: StateProps = {
     loading: false,
@@ -77,13 +80,17 @@ const mapStateToProps = (state: State) => {
     contacts: state.contacts,
     fiatSymbol,
     showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility,
-    requiredConfirmations
+    requiredConfirmations,
+    isAccountBalanceVisible
   }
   return out
 }
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-  fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => dispatch(fetchMoreTransactions(walletId, currencyCode, reset))
+  fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => dispatch(fetchMoreTransactions(walletId, currencyCode, reset)),
+  toggleAccountBalanceVisibility: () => {
+    dispatch(toggleAccountBalanceVisibility())
+  }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(TransactionList)

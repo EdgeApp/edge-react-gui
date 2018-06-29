@@ -49,7 +49,7 @@ export const styles = {
     fontSize: 44
   },
   currentBalanceBoxBits: {
-    color: THEME.COLORS.WHITE,
+    color: THEME.COLORS.TRANSPARENT,
     justifyContent: 'space-around',
     flex: 1
   },
