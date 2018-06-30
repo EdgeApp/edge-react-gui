@@ -158,7 +158,7 @@ export default class WalletList extends Component<Props, State> {
         <View style={styles.container}>
           <WalletOptions />
           <Gradient style={styles.gradient} />
-          {this.state.isWalletProgressVisible ? this.renderWalletListProgressDropdown() : <View style={styles.progressBarSpacer} />}
+          {this.state.isWalletProgressVisible && this.renderWalletListProgressDropdown()}
           <TouchableOpacity onPress={this.handleOnBalanceBoxPress}>
             {this.state.balanceBoxVisible ? this.balanceBox(fiatBalanceString) : this.hiddenBalanceBox()}
           </TouchableOpacity>
