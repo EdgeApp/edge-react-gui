@@ -27,7 +27,7 @@ export const initialState = {
   isTouchSupported: false,
   isTouchEnabled: false,
   isOtpEnabled: false,
-  showOnBoarding: false,
+  showOnBoarding: true,
   otpKey: null,
   otpResetDate: null,
   otpResetPending: false,
@@ -492,6 +492,10 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
 
     case ACTION.ADD_CURRENCY_PLUGIN: {
       return currencyPLuginUtil(state, data)
+    }
+    case Constants.COMPLETE_ONBOARDING: {
+      console.log('swiper: completed onboarding')
+      return {...state, showOnBoarding: false}
     }
 
     default:

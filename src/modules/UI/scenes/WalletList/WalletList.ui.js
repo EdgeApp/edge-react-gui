@@ -22,6 +22,7 @@ import ProgressBar from '../../components/ProgressBar/ProgressBar.ui.js'
 import FullWalletListRow from './components/WalletListRow/FullWalletListRow.ui.js'
 import SortableWalletListRow from './components/WalletListRow/SortableWalletListRow.ui.js'
 import WalletOptions from './components/WalletOptions/WalletOptionsConnector.ui.js'
+import OnBoardingSceneConnector from '../../../../connectors/scene/OnBoardingSceneConnector.js'
 import styles from './style'
 
 const DONE_TEXT = s.strings.string_done_cap
@@ -237,6 +238,9 @@ export default class WalletList extends Component<Props, State> {
     }
     if (this.state.showMessageModal) {
       return <StaticModalComponent cancel={this.cancelStatic} body={this.state.messageModalMessage} modalDismissTimerSeconds={8} />
+    }
+    if (this.props.showOnBoarding) {
+      return <OnBoardingSceneConnector />
     }
     return null
   }
