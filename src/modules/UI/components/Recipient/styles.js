@@ -2,18 +2,32 @@
 
 import { StyleSheet } from 'react-native'
 
-import THEME from '../../../../theme/variables/airbitz'
+import THEME, { DEBUG as debug } from '../../../../theme/variables/airbitz.js'
 
 export default StyleSheet.create({
-  container: {
-    backgroundColor: THEME.COLORS.TRANSPARENT,
+  recipient: {
+    flexDirection: 'column',
+    width: '100%',
+    alignItems: 'center',
+    padding: 6
+  },
+  row: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
     flexDirection: 'row',
-    marginVertical: 15,
-    marginHorizontal: 35
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  item: {
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   text: {
     color: THEME.COLORS.WHITE,
-    fontSize: 14,
-    marginHorizontal: 5
-  }
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    fontFamily: THEME.FONTS.DEFAULT,
+    fontSize: 14
+  },
+  debug
 })
