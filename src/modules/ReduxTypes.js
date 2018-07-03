@@ -192,6 +192,7 @@ export type State = {
       bluetoothMode: boolean,
       otpMode: boolean,
       pinMode: boolean,
+      isAccountBalanceVisible: boolean,
       pinLoginEnabled: boolean,
       changesLocked: boolean,
       loginStatus: boolean,
