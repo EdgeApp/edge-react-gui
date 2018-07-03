@@ -1,8 +1,19 @@
 // @flow
 
-import type { EdgeCurrencyWallet, EdgeMetadata, EdgeParsedUri, EdgeReceiveAddress, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeMetadata, EdgeParsedUri, EdgeReceiveAddress, EdgeSpendInfo, EdgeTransaction, EdgePaymentProtocolInfo } from 'edge-core-js'
 import _ from 'lodash'
 const ENABLED_TOKENS_FILENAME = 'EnabledTokens.json'
+
+const BITPAY = {
+  domain: 'bitpay.com',
+  merchantName: (memo: string) => {
+    // Example BitPay memo
+    // "Payment request for BitPay invoice DKffym7WxX6kzJ73yfYS7s for merchant Electronic Frontier Foundation"
+    // eslint-disable-next-line no-unused-vars
+    const [_, merchantName] = memo.split(' for merchant ')
+    return merchantName
+  }
+}
 
 export const renameWalletRequest = (wallet: EdgeCurrencyWallet, name: string) => {
   return wallet.renameWallet(name).then(() => wallet)
@@ -43,6 +54,26 @@ export const setTransactionDetailsRequest = (wallet: EdgeCurrencyWallet, txid: s
 
 export const getReceiveAddress = (wallet: EdgeCurrencyWallet, currencyCode: string): Promise<EdgeReceiveAddress> => {
   return wallet.getReceiveAddress ? wallet.getReceiveAddress({ currencyCode }) : Promise.resolve(dummyEdgeReceiveAddress)
+}
+
+export const makeSpendInfo = (paymentProtocolInfo: EdgePaymentProtocolInfo): Promise<EdgeSpendInfo> => {
+  const { domain, memo, merchant, spendTargets } = paymentProtocolInfo
+
+  const name = domain === BITPAY.domain ? BITPAY.merchantName(memo) : merchant || domain
+  const notes = memo
+
+  return Promise.resolve({
+    networkFeeOption: 'high',
+    metadata: {
+      name,
+      notes
+    },
+    spendTargets
+  })
+}
+
+export const getPaymentProtocolInfo = (wallet: EdgeCurrencyWallet, paymentProtocolUrl: string): Promise<EdgePaymentProtocolInfo> => {
+  return Promise.resolve(paymentProtocolUrl).then(wallet.getPaymentProtocolInfo)
 }
 
 export const makeSpend = (wallet: EdgeCurrencyWallet, spendInfo: EdgeSpendInfo): Promise<EdgeTransaction> => {
