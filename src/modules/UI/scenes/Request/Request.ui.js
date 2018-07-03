@@ -24,6 +24,8 @@ import ShareButtons from '../../components/ShareButtons/index.js'
 import styles from './styles.js'
 import { getObjectDiff } from '../../../utils'
 
+const PUBLIC_ADDRESS_REFRESH_MS = 2000
+
 export type RequestStateProps = {
   currencyCode: string,
   edgeWallet: EdgeCurrencyWallet,
@@ -50,7 +52,8 @@ export type RequestLoadingProps = {
 }
 
 export type RequestDispatchProps = {
-  saveReceiveAddress(GuiReceiveAddress): void
+  saveReceiveAddress(GuiReceiveAddress): void,
+  refreshReceiveAddressRequest(string): void
 }
 
 export type LoadingProps = RequestLoadingProps & RequestDispatchProps
@@ -107,12 +110,24 @@ export class Request extends Component<Props, State> {
     const didWalletChange = this.props.edgeWallet && nextProps.edgeWallet.id !== this.props.edgeWallet.id
 
     if (didAddressChange || changeLegacyPublic || didWalletChange) {
-      const publicAddress = nextProps.guiWallet.receiveAddress.publicAddress
-      const legacyAddress = nextProps.guiWallet.receiveAddress.legacyAddress
+      let publicAddress = nextProps.guiWallet.receiveAddress.publicAddress
+      let legacyAddress = nextProps.guiWallet.receiveAddress.legacyAddress
 
       const abcEncodeUri = nextProps.useLegacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
 
-      const encodedURI = nextProps.edgeWallet ? nextProps.edgeWallet.encodeUri(abcEncodeUri) : ''
+      let encodedURI = s.strings.loading
+      try {
+        encodedURI = nextProps.edgeWallet ? nextProps.edgeWallet.encodeUri(abcEncodeUri) : s.strings.loading
+      } catch (e) {
+        console.log(e)
+        publicAddress = s.strings.loading
+        legacyAddress = s.strings.loading
+        setTimeout(() => {
+          if (nextProps.edgeWallet && nextProps.edgeWallet.id) {
+            nextProps.refreshReceiveAddressRequest(nextProps.edgeWallet.id)
+          }
+        }, PUBLIC_ADDRESS_REFRESH_MS)
+      }
 
       this.setState({
         encodedURI,
@@ -198,7 +213,17 @@ export class Request extends Component<Props, State> {
     if (bns.gt(amounts.nativeAmount, '0')) {
       edgeEncodeUri.nativeAmount = amounts.nativeAmount
     }
-    const encodedURI = this.props.edgeWallet ? this.props.edgeWallet.encodeUri(edgeEncodeUri) : ''
+    let encodedURI = s.strings.loading
+    try {
+      encodedURI = this.props.edgeWallet ? this.props.edgeWallet.encodeUri(edgeEncodeUri) : s.strings.loading
+    } catch (e) {
+      console.log(e)
+      setTimeout(() => {
+        if (this.props.edgeWallet && this.props.edgeWallet.id) {
+          this.props.refreshReceiveAddressRequest(this.props.edgeWallet.id)
+        }
+      }, PUBLIC_ADDRESS_REFRESH_MS)
+    }
 
     this.setState({
       encodedURI

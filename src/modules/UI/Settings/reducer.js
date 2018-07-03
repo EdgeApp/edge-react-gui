@@ -32,7 +32,7 @@ export const initialState = {
   otpResetPending: false,
   confirmPasswordError: '',
   sendLogsStatus: Constants.REQUEST_STATUS.PENDING,
-  isAccountBalanceVisible: false
+  isAccountBalanceVisible: true
 }
 
 type SettingsState = {

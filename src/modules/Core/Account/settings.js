@@ -45,7 +45,7 @@ export const LOCAL_ACCOUNT_DEFAULTS = {
     nonPasswordDaysLimit: 2,
     nonPasswordLoginsLimit: 2
   },
-  isAccountBalanceVisible: false
+  isAccountBalanceVisible: true
 }
 
 const SYNCHED_SETTINGS_FILENAME = 'Settings.json'
