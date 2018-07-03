@@ -52,7 +52,8 @@ export type FlipInputOwnProps = {
 
   // Callback when primaryDecimalAmount changes. **This is only called when the user types into a field or if
   // exchangeSecondaryToPrimaryRatio changes. This does NOT get called when overridePrimaryDecimalAmount is changed by the parent
-  onAmountChanged(decimalAmount: string): void
+  onAmountChanged(decimalAmount: string): void,
+  isEditable: boolean
 }
 
 type Props = FlipInputOwnProps
@@ -261,6 +262,7 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
           }}
           onFocus={() => this.setState({ textInputFrontFocus: true })}
           onBlur={() => this.setState({ textInputFrontFocus: false })}
+          editable={this.props.isEditable}
         />
         <Text style={[top.currencyCode]}>{fieldInfo.currencyName}</Text>
       </View>
@@ -287,6 +289,7 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
           }}
           onFocus={() => this.setState({ textInputBackFocus: true })}
           onBlur={() => this.setState({ textInputBackFocus: false })}
+          editable={this.props.isEditable}
         />
         <Text style={[top.currencyCode]}>{fieldInfo.currencyName}</Text>
       </View>

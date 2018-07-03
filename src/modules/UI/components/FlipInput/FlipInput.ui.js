@@ -26,7 +26,8 @@ type Props = {
   secondaryDisplayAmount: string,
   isValidInput: string => boolean,
   onPrimaryAmountChange: string => void,
-  onSecondaryAmountChange: string => void
+  onSecondaryAmountChange: string => void,
+  isEditable: boolean
 }
 
 const getInitialState = (props: Props) => ({
@@ -162,6 +163,7 @@ export default class FlipInput extends Component<Props, State> {
           }}
           onFocus={() => this.setState({ textInputFrontFocus: true })}
           onBlur={() => this.setState({ textInputFrontFocus: false })}
+          editable={this.props.isEditable}
         />
         <Text style={[top.currencyCode]}>{denominationInfo.displayDenomination.name}</Text>
       </View>
@@ -188,6 +190,7 @@ export default class FlipInput extends Component<Props, State> {
           }}
           onFocus={() => this.setState({ textInputBackFocus: true })}
           onBlur={() => this.setState({ textInputBackFocus: false })}
+          editable={this.props.isEditable}
         />
         <Text style={[top.currencyCode]}>{denominationInfo.displayDenomination.name}</Text>
       </View>
