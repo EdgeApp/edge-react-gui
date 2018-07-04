@@ -23,9 +23,7 @@ export const sendConfirmation = (state: SendConfirmationState = initialState, ac
         state.parsedUri.metadata = { ...state.parsedUri.metadata, ...metadata }
       }
 
-      // $FlowFixMe
       if (customNetworkFee && !isEqual(state.parsedUri.customNetworkFee, customNetworkFee)) {
-        // $FlowFixMe
         state.parsedUri.customNetworkFee = customNetworkFee
       }
 

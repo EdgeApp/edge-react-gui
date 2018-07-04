@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcSpendTarget, EdgeMetadata, EdgeParsedUri, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
+import type { AbcSpendTarget, EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 
 import { STANDARD_FEE } from '../../../../constants/indexConstants'
 import type { State } from '../../../ReduxTypes'
@@ -24,7 +24,7 @@ export type SendConfirmationState = {
 
   nativeAmount: string,
 
-  parsedUri: GuiMakeSpendInfo | EdgeParsedUri,
+  parsedUri: GuiMakeSpendInfo,
   spendInfo: EdgeSpendInfo | null,
 
   isEditable: boolean,
