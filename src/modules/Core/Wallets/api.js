@@ -57,7 +57,7 @@ export const getReceiveAddress = (wallet: EdgeCurrencyWallet, currencyCode: stri
 }
 
 export const makeSpendInfo = (paymentProtocolInfo: EdgePaymentProtocolInfo): Promise<EdgeSpendInfo> => {
-  const { domain, memo, merchant, spendTargets } = paymentProtocolInfo
+  const { domain, memo, merchant, nativeAmount, spendTargets } = paymentProtocolInfo
 
   const name = domain === BITPAY.domain ? BITPAY.merchantName(memo) : merchant || domain
   const notes = memo
@@ -68,6 +68,7 @@ export const makeSpendInfo = (paymentProtocolInfo: EdgePaymentProtocolInfo): Pro
       name,
       notes
     },
+    nativeAmount,
     spendTargets
   })
 }
