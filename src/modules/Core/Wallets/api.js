@@ -151,18 +151,13 @@ export async function updateEnabledTokens (wallet: EdgeCurrencyWallet, tokensToE
   }
 }
 
-export const parseURI = (wallet: EdgeCurrencyWallet, uri: string): EdgeParsedUri => {
-  return wallet.parseUri(uri)
-}
-
-export const parseUriAsync = (wallet: EdgeCurrencyWallet, uri: string): Promise<EdgeParsedUri> => {
+export const parseUri = (wallet: EdgeCurrencyWallet, uri: string): Promise<EdgeParsedUri> => {
   try {
     return Promise.resolve(wallet.parseUri(uri))
   } catch (error) {
     return Promise.reject(error)
   }
 }
-export const parseUri = parseUriAsync
 
 export const signTransaction = (wallet: EdgeCurrencyWallet, unsignedTransaction: EdgeTransaction): Promise<EdgeTransaction> => {
   return wallet.signTx(unsignedTransaction)
