@@ -1,7 +1,10 @@
 // @flow
 
 import * as ACCOUNT_API from '../../../Core/Account/api.js'
+import { setAccountBalanceVisibility } from '../../Settings/action.js'
 import type { Dispatch, GetState } from '../../../ReduxTypes'
+import * as CORE_SELECTORS from '../../../Core/selectors.js'
+import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'
 
 export const TOGGLE_ARCHIVE_VISIBILITY = 'TOGGLE_ARCHIVE_VISIBILITY'
 
@@ -22,6 +25,17 @@ export const updateActiveWalletsOrder = (activeWalletIds: Array<string>) => (dis
       dispatch(wrap(UPDATE_ACTIVE_WALLETS_ORDER_SUCCESS, { activeWalletIds }))
     })
     .catch(e => console.log(e))
+}
+
+export const toggleAccountBalanceVisibility = () => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  const currentAccountBalanceVisibility = state.ui.settings.isAccountBalanceVisible
+  ACCOUNT_SETTINGS.setAccountBalanceVisibility(account, !currentAccountBalanceVisibility)
+    .then(() => dispatch(setAccountBalanceVisibility(!currentAccountBalanceVisibility)))
+    .catch(error => {
+      console.error(error)
+    })
 }
 
 export const updateArchivedWalletsOrder = (archivedWalletIds: Array<string>) => (dispatch: Dispatch, getState: GetState) => {

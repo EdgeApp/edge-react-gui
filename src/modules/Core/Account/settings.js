@@ -44,7 +44,8 @@ export const LOCAL_ACCOUNT_DEFAULTS = {
     nonPasswordLoginsCount: 0,
     nonPasswordDaysLimit: 4,
     nonPasswordLoginsLimit: 4
-  }
+  },
+  isAccountBalanceVisible: true
 }
 
 const SYNCHED_SETTINGS_FILENAME = 'Settings.json'
@@ -92,6 +93,13 @@ export const setPasswordReminderRequest = (account: EdgeAccount, passwordReminde
     const updatedSettings = updateSettings(settings, { passwordReminder })
     return setLocalSettings(account, updatedSettings)
   })
+
+export const setAccountBalanceVisibility = (account: EdgeAccount, isAccountBalanceVisible: boolean) => {
+  return getLocalSettings(account).then(settings => {
+    const updatedSettings = updateSettings(settings, { isAccountBalanceVisible })
+    return setLocalSettings(account, updatedSettings)
+  })
+}
 
 // Currency Settings
 export const setDenominationKeyRequest = (account: EdgeAccount, currencyCode: string, denomination: string) =>

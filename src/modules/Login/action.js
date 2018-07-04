@@ -70,7 +70,8 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     activeWalletIds: [],
     archivedWalletIds: [],
     currencyWallets: {},
-    passwordReminder: {}
+    passwordReminder: {},
+    isAccountBalanceVisible: false
   }
   try {
     const currencyPlugins = await CONTEXT_API.getCurrencyPlugins(context)
@@ -176,6 +177,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     const localFinal = { ...localDefaults, ...localSettings }
     accountInitObject.bluetoothMode = localFinal.bluetoothMode
     accountInitObject.passwordReminder = localFinal.passwordReminder
+    accountInitObject.isAccountBalanceVisible = localFinal.isAccountBalanceVisible
 
     accountInitObject.pinLoginEnabled = await context.pinLoginEnabled(account.username)
 
