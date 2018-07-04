@@ -48,11 +48,9 @@ export const paymentProtocolUriReceived = ({ paymentProtocolURL }: EdgePaymentPr
 
   Promise.resolve(paymentProtocolURL)
     .then(paymentProtocolURL => {
-      return getPaymentProtocolInfo(edgeWallet, paymentProtocolURL)
+      getPaymentProtocolInfo(edgeWallet, paymentProtocolURL)
     })
-    .then(paymentProtocolInfo => {
-      return makeSpendInfo(paymentProtocolInfo)
-    })
+    .then(makeSpendInfo)
     .then(spendInfo => {
       dispatch(newSpendInfo(spendInfo))
 
@@ -96,9 +94,7 @@ export const createTX = (parsedUri: GuiMakeSpendInfo | EdgeParsedUri, forceUpdat
   const spendInfo = getSpendInfo(state, parsedUriClone)
 
   makeSpend(edgeWallet, spendInfo)
-    .then(edgeTransaction => {
-      dispatch(updateTransaction(edgeTransaction, parsedUriClone, forceUpdateGui, null))
-    })
+    .then(edgeTransaction => dispatch(updateTransaction(edgeTransaction, parsedUriClone, forceUpdateGui, null)))
     .catch(e => dispatch(updateTransaction(null, parsedUriClone, forceUpdateGui, e)))
 }
 
@@ -109,9 +105,7 @@ export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => 
   const spendInfo = getSpendInfo(state)
 
   getMaxSpendable(edgeWallet, spendInfo)
-    .then(nativeAmount => {
-      dispatch(createTX({ nativeAmount }, true))
-    })
+    .then(nativeAmount => dispatch(createTX({ nativeAmount }, true)))
     .catch(e => console.log(e))
 }
 
