@@ -5,10 +5,6 @@ import { StyleSheet } from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
 export const styles = StyleSheet.create({
-  dev: {
-    borderColor: THEME.DEBUG.COLORS.HIGHLIGHT,
-    borderWidth: 1
-  },
   container: {
     height: 110,
     marginVertical: 0,
