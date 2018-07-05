@@ -63,7 +63,7 @@ export const makeSpendInfo = (paymentProtocolInfo: EdgePaymentProtocolInfo): Pro
   const notes = memo
 
   return Promise.resolve({
-    networkFeeOption: 'high',
+    networkFeeOption: 'standard',
     metadata: {
       name,
       notes
