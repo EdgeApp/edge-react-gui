@@ -31,7 +31,8 @@ export type ExchangedFlipInputOwnProps = {
 
   // Callback for when the `primaryAmount` changes. This returns both a `nativeAmount` and an `exchangeAmount`. Both
   // amounts are ONLY for the primary field. Parent will not be given values for the secondary field.
-  onExchangeAmountChanged(amounts: ExchangedFlipInputAmounts): void
+  onExchangeAmountChanged(amounts: ExchangedFlipInputAmounts): void,
+  isEditable: boolean
 }
 
 type Props = ExchangedFlipInputOwnProps
@@ -108,6 +109,10 @@ function propsToState (props: Props): State {
 }
 
 export class ExchangedFlipInput extends Component<Props, State> {
+  static defaultProps = {
+    isEditable: true
+  }
+
   constructor (props: Props) {
     super(props)
     this.state = propsToState(props)
@@ -149,6 +154,7 @@ export class ExchangedFlipInput extends Component<Props, State> {
         forceUpdateGuiCounter={this.props.forceUpdateGuiCounter}
         onAmountChanged={this.onAmountChanged}
         keyboardVisible={this.props.keyboardVisible}
+        isEditable={this.props.isEditable}
       />
     )
   }
