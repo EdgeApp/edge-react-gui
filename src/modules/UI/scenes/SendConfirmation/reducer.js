@@ -27,7 +27,8 @@ export const sendConfirmation = (state: SendConfirmationState = initialState, ac
         state.parsedUri.customNetworkFee = customNetworkFee
       }
 
-      const nativeAmount = parsedUri.nativeAmount || '0'
+      const nativeAmount = parsedUri.nativeAmount || state.nativeAmount || '0'
+      const destination = parsedUri.publicAddress || state.destination
 
       return {
         ...state,
@@ -35,7 +36,7 @@ export const sendConfirmation = (state: SendConfirmationState = initialState, ac
         forceUpdateGuiCounter,
         error,
         nativeAmount,
-        destination: parsedUri.publicAddress,
+        destination,
         parsedUri: {
           ...state.parsedUri,
           ...others
