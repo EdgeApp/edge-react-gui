@@ -1,27 +1,19 @@
 // @flow
 
-/* global window __DEV__ */
+/* global window */
 
 import { applyMiddleware, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
 
-// import createLogger from 'redux-logger'
+import ENV from '../../env.json'
 import loginStatusChecker from './loginStatusChecker'
 import rootReducer from './rootReducer'
 import soundsMiddleware from './soundsMiddleware'
 import errorAlert from './errorAlert'
+import perfLogger from './perfLogger.js'
 
-let middleware = [errorAlert, loginStatusChecker, thunk, soundsMiddleware]
-// let logger = createLogger()
-
-if (__DEV__) {
-  // middleware = [...middleware, logger]
-
-  // Comment line below to reenable logger
-  middleware = [...middleware]
-} else {
-  middleware = [...middleware]
-}
+const middleware = [errorAlert, loginStatusChecker, thunk, soundsMiddleware]
+if (ENV.ENABLE_REDUX_PERF_LOGGING) middleware.push(perfLogger)
 
 const composeEnhancers =
   typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({ name: 'ui' }) : compose

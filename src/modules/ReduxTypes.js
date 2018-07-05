@@ -264,5 +264,6 @@ type ThunkDispatch<A> = ((Dispatch, GetState) => Promise<void> | void) => A
 export type Reducer<S, A: Action> = (S, A) => S
 
 export type Store = ReduxStore<State, Action>
+export type Next = $PropertyType<Store, 'dispatch'>
 export type GetState = () => State
 export type Dispatch = ReduxDispatch<Action> & ThunkDispatch<Action>
