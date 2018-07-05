@@ -60,7 +60,9 @@ type Props = {
   walletRowOption: (walletId: string, option: string, archived: boolean) => void,
   disableOtp: () => void,
   keepOtp: () => void,
-  progressPercentage: number
+  toggleAccountBalanceVisibility: () => void,
+  progressPercentage: number,
+  isAccountBalanceVisible: boolean
 }
 
 export default class WalletList extends Component<Props, State> {
@@ -160,7 +162,7 @@ export default class WalletList extends Component<Props, State> {
           <Gradient style={styles.gradient} />
           {this.state.isWalletProgressVisible && this.renderWalletListProgressDropdown()}
           <TouchableOpacity onPress={this.handleOnBalanceBoxPress}>
-            {this.state.balanceBoxVisible ? this.balanceBox(fiatBalanceString) : this.hiddenBalanceBox()}
+            {this.props.isAccountBalanceVisible ? this.balanceBox(fiatBalanceString) : this.hiddenBalanceBox()}
           </TouchableOpacity>
 
           <View style={[styles.walletsBox]}>
@@ -468,7 +470,10 @@ export default class WalletList extends Component<Props, State> {
     return intl.formatNumber(total, { toFixed: 2 })
   }
 
-  handleOnBalanceBoxPress = () => this.setState({ balanceBoxVisible: !this.state.balanceBoxVisible })
+  handleOnBalanceBoxPress = () => {
+    this.props.toggleAccountBalanceVisibility()
+  }
+
   balanceBox (fiatBalanceString: string) {
     return (
       <View style={[styles.totalBalanceBox]}>
