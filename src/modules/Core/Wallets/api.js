@@ -19,8 +19,8 @@ export const renameWalletRequest = (wallet: EdgeCurrencyWallet, name: string) =>
   return wallet.renameWallet(name).then(() => wallet)
 }
 
-export const getNumTransactions = (wallet: EdgeCurrencyWallet, currencyCode: string): number => {
-  return wallet.getNumTransactions ? wallet.getNumTransactions({ currencyCode }) : 0
+export const getNumTransactions = (wallet: EdgeCurrencyWallet, currencyCode: string): Promise<number> => {
+  return Promise.resolve(wallet.getNumTransactions ? wallet.getNumTransactions({ currencyCode }) : 0)
 }
 
 export const getTransactions = (wallet: EdgeCurrencyWallet, currencyCode: string, options?: Object): Promise<Array<EdgeTransaction>> => {
