@@ -47,9 +47,7 @@ export const paymentProtocolUriReceived = ({ paymentProtocolURL }: EdgePaymentPr
   const edgeWallet = getWallet(state, walletId)
 
   Promise.resolve(paymentProtocolURL)
-    .then(paymentProtocolURL => {
-      getPaymentProtocolInfo(edgeWallet, paymentProtocolURL)
-    })
+    .then(paymentProtocolURL => getPaymentProtocolInfo(edgeWallet, paymentProtocolURL))
     .then(makeSpendInfo)
     .then(spendInfo => {
       dispatch(newSpendInfo(spendInfo))
