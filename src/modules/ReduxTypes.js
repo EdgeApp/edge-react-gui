@@ -21,6 +21,8 @@ import type { RequestSceneState } from './UI/scenes/Request/reducer.js'
 
 import type { PasswordReminderModalState } from './UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
 import type { PasswordReminderState } from '../reducers/passwordReminder/indexPasswordReminder.js'
+import type { SendConfirmationState } from './UI/scenes/SendConfirmation/selectors.js'
+
 export type Action = { type: string, data?: any }
 
 export type CurrencyCode = string
@@ -87,17 +89,7 @@ export type State = {
           isSweeping: boolean
         }
       },
-      sendConfirmation: {
-        transaction: EdgeTransaction | null,
-        parsedUri: EdgeParsedUri,
-        error: Error | null,
-        label: string,
-        networkFeeOption: 'low' | 'standard' | 'high' | 'custom',
-        customNetworkFee: any,
-        isKeyboardVisible: boolean,
-        forceUpdateGuiCounter: number,
-        pending: boolean
-      },
+      sendConfirmation: SendConfirmationState,
       changeMiningFee: {
         isCustomFeeVisible: boolean
       },

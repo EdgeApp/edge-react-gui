@@ -57,12 +57,6 @@ export const THEME = {
 
   FOOTER_TABS_HEIGHT: 50,
 
-  DEBUG: {
-    COLORS: {
-      HIGHLIGHT: '#f03a47'
-    }
-  },
-
   FONTS: {
     DEFAULT: 'SourceSansPro-Black',
     BOLD: 'SourceSansPro-Bold',
@@ -120,6 +114,11 @@ export const THEME = {
 
     ROW_PRESSED: '#D9E3ED' // same as GRAY_3
   }
+}
+
+export const DEBUG = {
+  borderWidth: 1,
+  borderColor: 'red'
 }
 
 export default THEME
