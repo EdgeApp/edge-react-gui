@@ -4,7 +4,7 @@
 import detox from 'detox'
 import config from '../package.json'
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 12000
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 120000
 
 beforeAll(async () => {
   await detox.init(config.detox)
