@@ -65,7 +65,7 @@ export const styles = {
   },
 
   // end of searchbar stuff
-  touchablBalanceBox: {
+  touchableBalanceBox: {
     height: 200
   },
   currentBalanceBox: {

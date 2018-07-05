@@ -179,7 +179,7 @@ export class TransactionList extends Component<Props, State> {
       fiatBalanceString = receivedFiatSymbol + ' ' + intl.formatNumber(balanceInFiat || 0, { toFixed: 2 }) + ' ' + fiatCurrencyCode
     }
     return (
-      <TouchableOpacity onPress={this.props.toggleAccountBalanceVisibility} style={styles.touchablBalanceBox} activeOpacity={BALANCE_BOX_OPACITY}>
+      <TouchableOpacity onPress={this.props.toggleAccountBalanceVisibility} style={styles.touchableBalanceBox} activeOpacity={BALANCE_BOX_OPACITY}>
         <Gradient style={[styles.currentBalanceBox]}>
           <View style={styles.balanceBoxContents}>
             {!isAccountBalanceVisible ? (
