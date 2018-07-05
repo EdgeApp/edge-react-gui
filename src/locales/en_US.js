@@ -130,7 +130,7 @@ const strings = {
   settings_button_change_password: 'Change Password',
   settings_button_debug: 'Debug',
   settings_button_lock_settings: 'Tap to Lock Account Settings',
-  settings_button_password_recovery: 'Password Recovery',
+  settings_button_password_recovery: 'Set Up Password Recovery',
   settings_button_logout: 'Logout',
   settings_button_pin: 'Change PIN',
   settings_button_send_logs: 'Send Logs',
