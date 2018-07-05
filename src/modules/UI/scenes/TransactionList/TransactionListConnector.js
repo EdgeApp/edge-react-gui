@@ -57,7 +57,6 @@ const mapStateToProps = (state: State) => {
   const currencyInfo: EdgeCurrencyInfo = coreWallet.currencyInfo
   // set default requiredConfirmations to 1, so once the tx is in a block consider fully confirmed
   const requiredConfirmations = currencyInfo.requiredConfirmations ? currencyInfo.requiredConfirmations : 1
-  // eventually we will want the txList balance box visibility to be set to wallet-level setting (not account)
   const isAccountBalanceVisible = state.ui.settings.isAccountBalanceVisible
 
   const out: StateProps = {
