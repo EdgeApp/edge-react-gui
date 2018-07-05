@@ -154,6 +154,7 @@ const strings = {
   settings_title_pin_login: 'PIN Re-login',
   settings_title: 'Settings',
   settings_alert_unlock: 'Please unlock your account settings',
+  settings_enable_custom_nodes: 'Enable Custom Nodes',
   string_cancel_cap: 'Cancel',
   string_cancel: 'CANCEL',
   string_delete: 'Delete',

@@ -17,21 +17,73 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   autoLogoutTimeInSeconds: 3600,
   defaultFiat: 'USD',
   merchantMode: false,
-  BTC: { denomination: '100' },
-  BCH: { denomination: '100' },
-  XRP: { denomination: '1000000' },
-  DASH: { denomination: '100000000' },
-  LTC: { denomination: '100000000' },
-  FTC: { denomination: '100000000' },
-  XZC: { denomination: '100000000' },
-  QTUM: { denomination: '100000000' },
-  UFO: { denomination: '100000000' },
-  XMR: { denomination: '1000000000000' },
-  ETH: { denomination: '1000000000000000000' },
-  REP: { denomination: '1000000000000000000' },
-  WINGS: { denomination: '1000000000000000000' },
-  IND: { denomination: '1000000000000000000' },
-  HUR: { denomination: '1000000000000000000' },
+  BTC: {
+    denomination: '100',
+    isCustomNodesEnabled: false,
+    customNodesList: []
+  },
+  BCH: {
+    denomination: '100',
+    isCustomNodesEnabled: false,
+    customNodesList: []
+  },
+  XRP: {
+    denomination: '1000000',
+    isCustomNodesEnabled: false,
+    customNodesList: []
+  },
+  DASH: {
+    denomination: '100000000',
+    isCustomNodesEnabled: false,
+    customNodesList: []
+  },
+  LTC: {
+    denomination: '100000000',
+    isCustomNodesEnabled: false,
+    customNodesList: []
+  },
+  FTC: {
+    denomination: '100000000',
+    isCustomNodesEnabled: false,
+    customNodesList: []
+  },
+  XZC: {
+    denomination: '100000000',
+    isCustomNodesEnabled: false,
+    customNodesList: []
+  },
+  QTUM: {
+    denomination: '100000000',
+    isCustomNodesEnabled: false,
+    customNodesList: []
+  },
+  UFO: {
+    denomination: '100000000',
+    isCustomNodesEnabled: false,
+    customNodesList: []
+  },
+  XMR: {
+    denomination: '1000000000000',
+    isCustomNodesEnabled: false,
+    customNodesList: []
+  },
+  ETH: {
+    denomination: '1000000000000000000',
+    isCustomNodesEnabled: false,
+    customNodesList: []
+  },
+  REP: {
+    denomination: '1000000000000000000'
+  },
+  WINGS: {
+    denomination: '1000000000000000000'
+  },
+  IND: {
+    denomination: '1000000000000000000'
+  },
+  HUR: {
+    denomination: '1000000000000000000'
+  },
   customTokens: []
 }
 
@@ -48,7 +100,7 @@ export const LOCAL_ACCOUNT_DEFAULTS = {
   isAccountBalanceVisible: true
 }
 
-const SYNCHED_SETTINGS_FILENAME = 'Settings.json'
+const SYNCED_SETTINGS_FILENAME = 'Settings.json'
 const LOCAL_SETTINGS_FILENAME = 'Settings.json'
 const CATEGORIES_FILENAME = 'Categories.json'
 
@@ -107,6 +159,21 @@ export const setDenominationKeyRequest = (account: EdgeAccount, currencyCode: st
     const updatedSettings = updateCurrencySettings(settings, currencyCode, { denomination })
     return setSyncedSettings(account, updatedSettings)
   })
+
+export const setEnableCustomNodes = (account: EdgeAccount, currencyCode: string, isCustomNodesEnabled: boolean) => {
+  getSyncedSettings(account).then((settings) => {
+    const updatedSettings = {
+      ...settings,
+      // $FlowFixMe
+      [currencyCode]: {
+        ...settings[currencyCode],
+        isCustomNodesEnabled
+      }
+    }
+    updateCurrencySettings(settings, currencyCode, updatedSettings)
+    return setSyncedSettings(account, updatedSettings)
+  })
+}
 
 // Helper Functions
 export const getSyncedSettings = (account: EdgeAccount) =>
@@ -211,7 +278,7 @@ export const getCoreSettings = (account: EdgeAccount): Promise<{ otpMode: boolea
 export const getSyncedSettingsFile = (account: EdgeAccount) => {
   // $FlowFixMe folder not found on EdgeAccount type
   const folder = account.folder
-  return folder.file(SYNCHED_SETTINGS_FILENAME)
+  return folder.file(SYNCED_SETTINGS_FILENAME)
 }
 
 export const getLocalSettingsFile = (account: EdgeAccount) =>
