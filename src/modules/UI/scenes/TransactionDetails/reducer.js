@@ -5,7 +5,7 @@ import { combineReducers } from 'redux'
 import type { Action } from '../../../ReduxTypes.js'
 import * as ACTION from './action.js'
 
-export const subcategories = (state: Array<string> = [], action: Action) => {
+export const subcategories = (state: boolean = false, action: Action) => {
   if (!action.data) return state
   switch (action.type) {
     case ACTION.SET_TRANSACTION_SUBCATEGORIES:

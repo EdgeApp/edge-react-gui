@@ -28,6 +28,7 @@ export const SET_BITCOIN_OVERRIDE_SERVER_START = PREFIX + 'SET_BITCOIN_OVERRIDE_
 
 export const SET_ENABLE_CUSTOM_NODES = 'SET_ENABLE_CUSTOM_NODES'
 export const UPDATE_CUSTOM_NODES_LIST = 'UPDATE_CUSTOM_NODES_LIST'
+export const SET_CUSTOM_NODES_MODAL_VISIBILITY = 'SET_CUSTOM_NODES_MODAL_VISIBILITY'
 
 export const SELECT_DEFAULT_FIAT = PREFIX + 'SELECT_DEFAULT_FIAT'
 
@@ -139,6 +140,25 @@ export const setBitcoinOverrideServerRequest = (overrideServer: string) => (disp
   dispatch(setBitcoinOverrideServerStart(overrideServer))
 
   dispatch(SETTINGS_ACTIONS.setBitcoinOverrideServer(overrideServer))
+}
+
+export const setCustomNodeModalVisibility = (visibility: boolean | null = null) => (dispatch: Dispatch, getState: GetState) => {
+  const state: State = getState()
+  let isSetCustomNodesModalVisible
+  if (visibility === null) {
+    isSetCustomNodesModalVisible = !state.ui.scenes.settings.isSetCustomNodesModalVisible
+  } else {
+    isSetCustomNodesModalVisible = visibility
+  }
+
+  return dispatch(updateSetCustomNodesModalVisibility(isSetCustomNodesModalVisible))
+}
+
+export function updateSetCustomNodesModalVisibility (isSetCustomNodesModalVisible: boolean) {
+  return {
+    type: SET_CUSTOM_NODES_MODAL_VISIBILITY,
+    data: { isSetCustomNodesModalVisible }
+  }
 }
 
 export const toggleEnableCustomNodes = (currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {

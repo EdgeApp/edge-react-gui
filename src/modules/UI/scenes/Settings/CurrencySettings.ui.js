@@ -24,23 +24,13 @@ type Props = {
   selectedDenominationKey: string,
   isCustomNodesEnabled?: boolean,
   customNodesList: Array<string>,
-  closeSetCustomNodesModal: () => void,
-  openSetCustomNodesModal: () => void,
-  saveCustomNodesList: (Array<string>) => void
+  saveCustomNodesList: (Array<string>) => void,
+  isSetCustomNodesModalVisible: boolean,
+  toggleSetCustomNodesModalVisibility: (visibility: boolean | null) => void,
+  toggleEnableCustomNodes: () => void
 }
 
-type State = {
-  isSetEnabledCustomNodesModalVisible: boolean
-}
-
-export default class CurrencySettings extends Component<Props, State> {
-  constructor (props: Props) {
-    super(props)
-    this.state = {
-      isSetEnabledCustomNodesModalVisible: false
-    }
-  }
-
+export default class CurrencySettings extends Component<Props> {
   header () {
     return (
       <Gradient style={[styles.headerRow]}>
@@ -59,22 +49,22 @@ export default class CurrencySettings extends Component<Props, State> {
   }
 
   closeSetCustomNodesModal = () => {
-    this.setState({
-      isSetEnabledCustomNodesModalVisible: false
-    })
+    this.props.toggleSetCustomNodesModalVisibility(false)
   }
 
-  openSetCustomNodesModal = () => {
-    this.setState({
-      isSetEnabledCustomNodesModalVisible: true
-    })
+  enableSetCustomNodes = () => {
+    this.props.toggleEnableCustomNodes()
+  }
+
+  disableSetCustomNodes = () => {
+    this.props.toggleEnableCustomNodes()
   }
 
   onToggleEnableCustomNodes = () => {
-    if (!this.state.isSetEnabledCustomNodesModalVisible) {
-      this.openSetCustomNodesModal()
+    if (!this.props.isSetCustomNodesModalVisible) {
+      this.enableSetCustomNodes()
     } else {
-      this.closeSetCustomNodesModal()
+      this.disableSetCustomNodes()
     }
   }
 
@@ -85,7 +75,7 @@ export default class CurrencySettings extends Component<Props, State> {
           <Gradient style={styles.gradient} />
           <View style={styles.container}>
             <SetCustomNodesModal
-              isActive={this.state.isSetEnabledCustomNodesModalVisible}
+              isActive={this.props.isSetCustomNodesModalVisible}
               onExit={this.closeSetCustomNodesModal}
               customNodesList={this.props.customNodesList}
               saveCustomNodesList={this.props.saveCustomNodesList}
@@ -110,11 +100,11 @@ export default class CurrencySettings extends Component<Props, State> {
               key='enableCustomNodes'
               onToggle={this.onToggleEnableCustomNodes}
               value={this.props.isCustomNodesEnabled}
-              isActive={this.state.isSetEnabledCustomNodesModalVisible}
+              isActive={this.props.isSetCustomNodesModalVisible}
               onSaveCustomNodesList={this.props.saveCustomNodesList}
             />
             <ModalRow
-              onPress={this.openSetCustomNodesModal}
+              onPress={() => this.props.toggleSetCustomNodesModalVisibility(true)}
               leftText={s.strings.settings_set_custom_nodes_modal_title}
               disabled={!this.props.isCustomNodesEnabled}
             />

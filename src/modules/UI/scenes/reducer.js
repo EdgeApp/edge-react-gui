@@ -21,6 +21,7 @@ import sendConfirmation from './SendConfirmation/reducer'
 import transactionDetails from './TransactionDetails/reducer'
 import transactionList from './TransactionList/reducer'
 import walletList from './WalletList/reducer'
+import settings from './Settings/reducer.js'
 import { walletTransferListReducer as walletTransferList } from './WalletTransferList/reducer'
 import { passwordReminderModalReducer as passwordReminderModal } from '../components/PasswordReminderModal/indexPasswordReminderModal.js'
 import { UniqueIdentifierModalReducer as uniqueIdentifierModal } from './SendConfirmation/components/UniqueIdentifierModal/UniqueIdentifierModalReducer.js'
@@ -38,6 +39,7 @@ export const currentScene = (state: string = '', action: Action) => {
 export const scenes = combineReducers({
   scan,
   sendConfirmation,
+  settings,
   changeMiningFee,
   transactionList,
   transactionDetails,

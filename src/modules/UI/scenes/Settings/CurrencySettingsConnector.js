@@ -4,7 +4,12 @@ import { connect } from 'react-redux'
 
 import type { Dispatch, State } from '../../../ReduxTypes.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors'
-import { setDenominationKeyRequest, toggleEnableCustomNodes, saveCustomNodesList } from './action'
+import {
+  setDenominationKeyRequest,
+  toggleEnableCustomNodes,
+  saveCustomNodesList,
+  setCustomNodeModalVisibility
+} from './action'
 import CurrencySettings from './CurrencySettings.ui'
 
 const mapStateToProps = (state: State, ownProps) => ({
@@ -12,13 +17,16 @@ const mapStateToProps = (state: State, ownProps) => ({
   denominations: SETTINGS_SELECTORS.getDenominations(state, ownProps.currencyCode),
   selectedDenominationKey: SETTINGS_SELECTORS.getDisplayDenominationKey(state, ownProps.currencyCode),
   isCustomNodesEnabled: state.ui.settings[ownProps.currencyCode].isCustomNodesEnabled,
-  customNodesList: state.ui.settings[ownProps.currencyCode].customNodesList
+  customNodesList: state.ui.settings[ownProps.currencyCode].customNodesList,
+  isSetCustomNodesModalVisible: state.ui.scenes.settings.isSetCustomNodesModalVisible
 })
 const mapDispatchToProps = (dispatch: Dispatch, ownProps) => ({
   selectDenomination: denominationKey => {
     dispatch(setDenominationKeyRequest(ownProps.currencyCode, denominationKey))
   },
   toggleEnableCustomNodes: () => dispatch(toggleEnableCustomNodes(ownProps.currencyCode)),
+  // $FlowFixMe
+  toggleSetCustomNodesModalVisibility: (visibility: boolean | null) => dispatch(setCustomNodeModalVisibility(visibility)),
   saveCustomNodesList: (customNodesList: Array<string>) => dispatch(saveCustomNodesList(ownProps.currencyCode, customNodesList))
 })
 export default connect(mapStateToProps, mapDispatchToProps)(CurrencySettings)
