@@ -4,7 +4,7 @@ import type { EdgeAccount } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import { Actions } from 'react-native-router-flux'
 
-import type { Dispatch, GetState } from '../../../../../src/modules/ReduxTypes.js'
+import type { Dispatch, GetState, State } from '../../../../../src/modules/ReduxTypes.js'
 import * as actions from '../../../../actions/indexActions.js'
 import * as Constants from '../../../../constants/indexConstants.js'
 import s from '../../../../locales/strings.js'
@@ -13,6 +13,7 @@ import * as CORE_SELECTORS from '../../../Core/selectors'
 import { displayErrorAlert } from '../../components/ErrorAlert/actions.js'
 import * as SETTINGS_ACTIONS from '../../Settings/action.js'
 import { restoreWalletsRequest } from '../../../Core/Account/api.js'
+import { getCryptocurrencySettings } from '../../Settings/selectors.js'
 
 const PREFIX = 'UI/Scenes/Settings/'
 
@@ -140,18 +141,23 @@ export const setBitcoinOverrideServerRequest = (overrideServer: string) => (disp
 }
 
 export const toggleEnableCustomNodes = (currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
+  const state: State = getState()
   const account = CORE_SELECTORS.getAccount(state)
-  // $FlowFixMe
-  const isCustomNodesCurrentlyEnabled = state.ui.settings[currencyCode].isCustomNodesEnabled
+  const currencySettings = getCryptocurrencySettings(state, currencyCode)
+  const isCustomNodesCurrentlyEnabled = currencySettings.isCustomNodesEnabled
   const isCustomNodesNowEnabled = !isCustomNodesCurrentlyEnabled
-  const onSuccess = () => dispatch(setCustomNodesEnabled(isCustomNodesNowEnabled))
+  const onSuccess = () => dispatch(setCustomNodesEnabled(currencyCode, isCustomNodesNowEnabled))
   const onError = e => console.log(e)
   // $FlowFixMe
-  return ACCOUNT_SETTINGS.setEnableCustomNodes(account, currencyCode, isCustomNodesNowEnabled)
+  ACCOUNT_SETTINGS.setEnableCustomNodes(account, currencyCode, isCustomNodesNowEnabled)
     .then(onSuccess)
     .catch(onError)
 }
+
+export const setCustomNodesEnabled = (currencyCode: string, isCustomNodesEnabled: boolean) => ({
+  type: SET_ENABLE_CUSTOM_NODES,
+  data: { currencyCode, isCustomNodesEnabled }
+})
 
 // touch id interaction
 export const updateTouchIdEnabled = (arg: boolean, account: EdgeAccount) => async (dispatch: Dispatch, getState: GetState) => {
@@ -218,11 +224,6 @@ export function togglePinLoginEnabled (pinLoginEnabled: boolean) {
     })
   }
 }
-
-export const setCustomNodesEnabled = (isCustomNodesEnabled: boolean) => ({
-  type: SET_ENABLE_CUSTOM_NODES,
-  data: { isCustomNodesEnabled }
-})
 
 // Settings
 

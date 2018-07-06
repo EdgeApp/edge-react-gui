@@ -164,14 +164,13 @@ export const setEnableCustomNodes = (account: EdgeAccount, currencyCode: string,
   getSyncedSettings(account).then((settings) => {
     const updatedSettings = {
       ...settings,
-      // $FlowFixMe
       [currencyCode]: {
         ...settings[currencyCode],
         isCustomNodesEnabled
       }
     }
     updateCurrencySettings(settings, currencyCode, updatedSettings)
-    return setSyncedSettings(account, updatedSettings)
+    setSyncedSettings(account, updatedSettings)
   })
 }
 

@@ -70,6 +70,12 @@ export type GuiWalletType = {
   currencyCode: string
 }
 
+export type CurrencySetting = {
+  denomination: string,
+  isCustomNodesEnabled?: boolean,
+  customNodesList?: Array<string>
+}
+
 export type GuiFiatType = {
   label: string,
   value: string

@@ -4,7 +4,7 @@ import type { EdgeCurrencyPlugin } from 'edge-core-js'
 import _ from 'lodash'
 
 import * as Constants from '../../../constants/indexConstants.js'
-import type { CustomTokenInfo } from '../../../types'
+import type { CustomTokenInfo, CurrencySetting } from '../../../types'
 import { CORE_DEFAULTS, LOCAL_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_DEFAULTS } from '../../Core/Account/settings.js'
 import { SEND_LOGS_FAILURE, SEND_LOGS_PENDING, SEND_LOGS_REQUEST, SEND_LOGS_SUCCESS } from '../../Logs/action'
 import type { Action } from '../../ReduxTypes'
@@ -35,12 +35,6 @@ export const initialState = {
   isAccountBalanceVisible: true
 }
 
-type CurrencySetting = {
-  denomination: string,
-  isCustomNodesEnabled: boolean,
-  customNodesList: Array<string>
-}
-
 type SettingsState = {
   BCH: CurrencySetting,
   BTC: CurrencySetting,
@@ -51,12 +45,8 @@ type SettingsState = {
   UFO: CurrencySetting,
   XMR: CurrencySetting,
   XRP: CurrencySetting,
-  REP: {
-    denomination: string
-  },
-  WINGS: {
-    denomination: string
-  },
+  REP: CurrencySetting,
+  WINGS: CurrencySetting,
   account: ?Object,
   autoLogoutTimeInSeconds: number,
   bluetoothMode: boolean,
@@ -482,6 +472,17 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
       return {
         ...state,
         isTouchEnabled: data.isTouchEnabled
+      }
+    }
+
+    case ACTION.SET_ENABLE_CUSTOM_NODES: {
+      const {currencyCode, isCustomNodesEnabled} = data
+      return {
+        ...state,
+        [currencyCode]: {
+          ...state[currencyCode],
+          isCustomNodesEnabled
+        }
       }
     }
 

@@ -21,8 +21,8 @@ type Props = {
   logo: string,
   selectDenomination: string => void,
   selectedDenominationKey: string,
-  isCustomNodesEnabled: boolean,
-  customNodesList: Array<string>,
+  isCustomNodesEnabled?: boolean,
+  customNodesList?: Array<string>,
   closeSetCustomNodesModal: () => void,
   openSetCustomNodesModal: () => void
 }
