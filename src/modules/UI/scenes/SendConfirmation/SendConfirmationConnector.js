@@ -1,6 +1,5 @@
 // @flow
 
-import { bns } from 'biggystring'
 import { connect } from 'react-redux'
 
 import { getCurrencyConverter, getExchangeRate } from '../../../Core/selectors.js'
@@ -9,24 +8,14 @@ import { convertNativeToExchange } from '../../../utils'
 import { getExchangeDenomination, getSelectedCurrencyCode, getSelectedWallet } from '../../selectors.js'
 import { getDisplayDenomination, getExchangeDenomination as settingsGetExchangeDenomination } from '../../Settings/selectors.js'
 import { reset, signBroadcastAndSave, updateAmount, updateSpendPending, uniqueIdentifierUpdated } from './action.js'
-import {
-  getError,
-  getForceUpdateGuiCounter,
-  getKeyboardIsVisible,
-  getLabel,
-  getNativeAmount,
-  getNetworkFee,
-  getParentNetworkFee,
-  getPending,
-  getPublicAddress,
-  getTransaction
-} from './selectors'
+import { getError, getForceUpdateGuiCounter, getKeyboardIsVisible, getPending, getPublicAddress, getTransaction } from './selectors'
 import { SendConfirmation } from './SendConfirmation.ui'
 import type { SendConfirmationDispatchProps, SendConfirmationStateProps } from './SendConfirmation.ui'
 
 const mapStateToProps = (state: State): SendConfirmationStateProps => {
+  const sceneState = state.ui.scenes.sendConfirmation
   let fiatPerCrypto = 0
-  let secondaryeExchangeCurrencyCode = ''
+  let secondaryExchangeCurrencyCode = ''
   const currencyConverter = getCurrencyConverter(state)
   const guiWallet = getSelectedWallet(state)
   const currencyCode = getSelectedCurrencyCode(state)
@@ -34,19 +23,19 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
 
   const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
   const exchangeDenomination = settingsGetExchangeDenomination(state, currencyCode)
-  // $FlowFixMe
   const balanceInCryptoDisplay = convertNativeToExchange(exchangeDenomination.multiplier)(balanceInCrypto)
   const balanceInFiat = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, balanceInCryptoDisplay)
 
   if (guiWallet) {
     const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
     fiatPerCrypto = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
-    secondaryeExchangeCurrencyCode = isoFiatCurrencyCode
+    secondaryExchangeCurrencyCode = isoFiatCurrencyCode
   }
 
   const transaction = getTransaction(state)
   const pending = getPending(state)
-  const nativeAmount = getNativeAmount(state)
+  const nativeAmount = sceneState.nativeAmount
+  // const nativeAmount = getNativeAmount(state)
   let error = getError(state)
 
   let errorMsg = null
@@ -55,35 +44,38 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
     error = null
     resetSlider = true
   }
-  if (error && nativeAmount && bns.gt(nativeAmount, '0')) {
-    errorMsg = error.message
-  }
+  errorMsg = error ? error.message : ''
 
-  const uniqueIdentifier = state.ui.scenes.sendConfirmation.parsedUri.uniqueIdentifier
+  const networkFee = transaction ? transaction.networkFee : null
+  const parentNetworkFee = transaction && transaction.parentNetworkFee ? transaction.parentNetworkFee : null
+
+  const uniqueIdentifier = sceneState.parsedUri.uniqueIdentifier
+  const destination = sceneState.destination
 
   const out = {
-    nativeAmount,
-    errorMsg,
-    fiatPerCrypto,
-    currencyCode,
-    pending,
-    secondaryeExchangeCurrencyCode,
-    resetSlider,
-    fiatCurrencyCode: guiWallet.fiatCurrencyCode,
-    parentDisplayDenomination: getDisplayDenomination(state, guiWallet.currencyCode),
-    parentExchangeDenomination: getExchangeDenomination(state, guiWallet.currencyCode),
-    primaryDisplayDenomination: getDisplayDenomination(state, currencyCode),
-    primaryExchangeDenomination: getExchangeDenomination(state, currencyCode),
-    forceUpdateGuiCounter: getForceUpdateGuiCounter(state),
-    publicAddress: getPublicAddress(state),
-    keyboardIsVisible: getKeyboardIsVisible(state),
-    label: getLabel(state),
-    parentNetworkFee: getParentNetworkFee(state),
-    networkFee: getNetworkFee(state),
-    sliderDisabled: !transaction || !!error || !!pending,
-    currencyConverter,
     balanceInCrypto,
     balanceInFiat,
+    currencyCode,
+    currencyConverter,
+    destination,
+    errorMsg,
+    fiatCurrencyCode: guiWallet.fiatCurrencyCode,
+    fiatPerCrypto,
+    forceUpdateGuiCounter: getForceUpdateGuiCounter(state),
+    isEditable: sceneState.isEditable,
+    keyboardIsVisible: getKeyboardIsVisible(state),
+    nativeAmount,
+    networkFee,
+    parentDisplayDenomination: getDisplayDenomination(state, guiWallet.currencyCode),
+    parentExchangeDenomination: getExchangeDenomination(state, guiWallet.currencyCode),
+    parentNetworkFee,
+    pending,
+    primaryDisplayDenomination: getDisplayDenomination(state, currencyCode),
+    primaryExchangeDenomination: getExchangeDenomination(state, currencyCode),
+    publicAddress: getPublicAddress(state),
+    resetSlider,
+    secondaryExchangeCurrencyCode,
+    sliderDisabled: !transaction || !!error || !!pending,
     uniqueIdentifier
   }
   return out

@@ -6,10 +6,13 @@ import { sendConfirmation as sendConfirmationReducer } from './reducer.js'
 
 test('initialState', () => {
   const expected = {
-    label: '',
     pending: false,
     isKeyboardVisible: false,
     forceUpdateGuiCounter: 0,
+    spendInfo: null,
+    nativeAmount: '0',
+    isEditable: true,
+    destination: '',
     transaction: {
       txid: '',
       date: 0,
