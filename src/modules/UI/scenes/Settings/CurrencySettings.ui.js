@@ -10,6 +10,7 @@ import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView'
 import RadioRows from './components/RadioRows.ui.js'
 import SwitchRow from './components/RowSwitch.ui.js'
+import ModalRow from './components/RowModal.ui.js'
 import Row from './components/Row.ui.js'
 import { SetCustomNodesModal } from './components/SetCustomNodesModal.ui.js'
 import styles from './style'
@@ -22,9 +23,10 @@ type Props = {
   selectDenomination: string => void,
   selectedDenominationKey: string,
   isCustomNodesEnabled?: boolean,
-  customNodesList?: Array<string>,
+  customNodesList: Array<string>,
   closeSetCustomNodesModal: () => void,
-  openSetCustomNodesModal: () => void
+  openSetCustomNodesModal: () => void,
+  saveCustomNodesList: (Array<string>) => void
 }
 
 type State = {
@@ -86,6 +88,7 @@ export default class CurrencySettings extends Component<Props, State> {
               isActive={this.state.isSetEnabledCustomNodesModalVisible}
               onExit={this.closeSetCustomNodesModal}
               customNodesList={this.props.customNodesList}
+              saveCustomNodesList={this.props.saveCustomNodesList}
             />
             {this.header()}
             <RadioRows>
@@ -108,6 +111,12 @@ export default class CurrencySettings extends Component<Props, State> {
               onToggle={this.onToggleEnableCustomNodes}
               value={this.props.isCustomNodesEnabled}
               isActive={this.state.isSetEnabledCustomNodesModalVisible}
+              onSaveCustomNodesList={this.props.saveCustomNodesList}
+            />
+            <ModalRow
+              onPress={this.openSetCustomNodesModal}
+              leftText={s.strings.settings_set_custom_nodes_modal_title}
+              disabled={!this.props.isCustomNodesEnabled}
             />
           </View>
         </View>

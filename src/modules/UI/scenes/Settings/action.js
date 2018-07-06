@@ -15,18 +15,19 @@ import * as SETTINGS_ACTIONS from '../../Settings/action.js'
 import { restoreWalletsRequest } from '../../../Core/Account/api.js'
 import { getCryptocurrencySettings } from '../../Settings/selectors.js'
 
-const PREFIX = 'UI/Scenes/Settings/'
+export const PREFIX = 'UI/Scenes/Settings/'
 
-const SET_PIN_MODE_START = PREFIX + 'SET_PIN_MODE_START'
-const SET_PIN_START = PREFIX + 'SET_PIN_START'
+export const SET_PIN_MODE_START = PREFIX + 'SET_PIN_MODE_START'
+export const SET_PIN_START = PREFIX + 'SET_PIN_START'
 
-const SET_DEFAULT_FIAT_START = PREFIX + 'SET_DEFAULT_FIAT_START'
-const SET_MERCHANT_MODE_START = PREFIX + 'SET_MERCHANT_MODE_START'
+export const SET_DEFAULT_FIAT_START = PREFIX + 'SET_DEFAULT_FIAT_START'
+export const SET_MERCHANT_MODE_START = PREFIX + 'SET_MERCHANT_MODE_START'
 
-const SET_BLUETOOTH_MODE_START = PREFIX + 'SET_BLUETOOTH_MODE_START'
-const SET_BITCOIN_OVERRIDE_SERVER_START = PREFIX + 'SET_BITCOIN_OVERRIDE_SERVER_START'
+export const SET_BLUETOOTH_MODE_START = PREFIX + 'SET_BLUETOOTH_MODE_START'
+export const SET_BITCOIN_OVERRIDE_SERVER_START = PREFIX + 'SET_BITCOIN_OVERRIDE_SERVER_START'
 
-const SET_ENABLE_CUSTOM_NODES = 'SET_ENABLE_CUSTOM_NODES'
+export const SET_ENABLE_CUSTOM_NODES = 'SET_ENABLE_CUSTOM_NODES'
+export const UPDATE_CUSTOM_NODES_LIST = 'UPDATE_CUSTOM_NODES_LIST'
 
 export const SELECT_DEFAULT_FIAT = PREFIX + 'SELECT_DEFAULT_FIAT'
 
@@ -146,18 +147,41 @@ export const toggleEnableCustomNodes = (currencyCode: string) => (dispatch: Disp
   const currencySettings = getCryptocurrencySettings(state, currencyCode)
   const isCustomNodesCurrentlyEnabled = currencySettings.isCustomNodesEnabled
   const isCustomNodesNowEnabled = !isCustomNodesCurrentlyEnabled
-  const onSuccess = () => dispatch(setCustomNodesEnabled(currencyCode, isCustomNodesNowEnabled))
   const onError = e => console.log(e)
   // $FlowFixMe
-  ACCOUNT_SETTINGS.setEnableCustomNodes(account, currencyCode, isCustomNodesNowEnabled)
-    .then(onSuccess)
+  return ACCOUNT_SETTINGS.setEnableCustomNodes(account, currencyCode, isCustomNodesNowEnabled)
+    .then(() => {
+      dispatch(setCustomNodesEnabled(currencyCode, isCustomNodesNowEnabled))
+    })
     .catch(onError)
 }
 
-export const setCustomNodesEnabled = (currencyCode: string, isCustomNodesEnabled: boolean) => ({
-  type: SET_ENABLE_CUSTOM_NODES,
-  data: { currencyCode, isCustomNodesEnabled }
-})
+export function setCustomNodesEnabled (currencyCode: string, isCustomNodesEnabled: boolean) {
+  return {
+    type: SET_ENABLE_CUSTOM_NODES,
+    data: { currencyCode, isCustomNodesEnabled }
+  }
+}
+
+export const saveCustomNodesList = (currencyCode: string, customNodesList: Array<string>) => (dispatch: Dispatch, getState: GetState) => {
+  const state: State = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+
+  const onError = e => console.log(e)
+  // $FlowFixMe
+  return ACCOUNT_SETTINGS.setCustomNodesList(account, currencyCode, customNodesList)
+    .then(() => {
+      dispatch(updateCustomNodesList(currencyCode, customNodesList))
+    })
+    .catch(onError)
+}
+
+export function updateCustomNodesList (currencyCode: string, customNodesList: Array<string>) {
+  return {
+    type: UPDATE_CUSTOM_NODES_LIST,
+    data: { currencyCode, customNodesList }
+  }
+}
 
 // touch id interaction
 export const updateTouchIdEnabled = (arg: boolean, account: EdgeAccount) => async (dispatch: Dispatch, getState: GetState) => {

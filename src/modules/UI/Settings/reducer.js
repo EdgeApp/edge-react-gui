@@ -11,6 +11,7 @@ import type { Action } from '../../ReduxTypes'
 import * as ADD_TOKEN_ACTION from '../scenes/AddToken/action.js'
 import * as WALLET_ACTION from '../Wallets/action'
 import * as ACTION from './action.js'
+import * as SETTINGS_ACTION from '../scenes/Settings/action.js'
 
 export const initialState = {
   ...SYNCED_ACCOUNT_DEFAULTS,
@@ -475,13 +476,25 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
       }
     }
 
-    case ACTION.SET_ENABLE_CUSTOM_NODES: {
-      const {currencyCode, isCustomNodesEnabled} = data
+    case SETTINGS_ACTION.SET_ENABLE_CUSTOM_NODES: {
+      const { currencyCode, isCustomNodesEnabled } = data
       return {
         ...state,
         [currencyCode]: {
           ...state[currencyCode],
           isCustomNodesEnabled
+        }
+      }
+    }
+
+    case SETTINGS_ACTION.UPDATE_CUSTOM_NODES_LIST: {
+      const currencyCode = data.currencyCode
+      const customNodesList = data.customNodesList
+      return {
+        ...state,
+        [currencyCode]: {
+          ...state[currencyCode],
+          customNodesList
         }
       }
     }
