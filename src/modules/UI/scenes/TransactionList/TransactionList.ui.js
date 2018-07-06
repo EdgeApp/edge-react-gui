@@ -49,12 +49,12 @@ export type StateProps = {
   fiatSymbol: string,
   showToWalletModal: boolean,
   requiredConfirmations?: number,
-  isAccountBalanceVisible: boolean
+  isBalanceVisible: boolean
 }
 
 export type DispatchProps = {
   fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => any,
-  toggleAccountBalanceVisibility: () => void
+  toggleBalanceVisibility: () => void
 }
 
 type Props = StateProps & DispatchProps
@@ -147,7 +147,7 @@ export class TransactionList extends Component<Props, State> {
       balanceInFiat,
       fiatCurrencyCode,
       isoFiatCurrencyCode,
-      isAccountBalanceVisible
+      isBalanceVisible
     } = this.props
 
     // should we get rid of "loading" area? Currently unused
@@ -179,10 +179,10 @@ export class TransactionList extends Component<Props, State> {
       fiatBalanceString = receivedFiatSymbol + ' ' + intl.formatNumber(balanceInFiat || 0, { toFixed: 2 }) + ' ' + fiatCurrencyCode
     }
     return (
-      <TouchableOpacity onPress={this.props.toggleAccountBalanceVisibility} style={styles.touchableBalanceBox} activeOpacity={BALANCE_BOX_OPACITY}>
+      <TouchableOpacity onPress={this.props.toggleBalanceVisibility} style={styles.touchableBalanceBox} activeOpacity={BALANCE_BOX_OPACITY}>
         <Gradient style={[styles.currentBalanceBox]}>
           <View style={styles.balanceBoxContents}>
-            {!isAccountBalanceVisible ? (
+            {!isBalanceVisible ? (
               <View style={[styles.totalBalanceWrap]}>
                 <View style={[styles.hiddenBalanceBoxDollarsWrap]}>
                   <T style={[styles.currentBalanceBoxHiddenText]}>{SHOW_BALANCE_TEXT}</T>

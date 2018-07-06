@@ -57,7 +57,7 @@ const mapStateToProps = (state: State) => {
   const currencyInfo: EdgeCurrencyInfo = coreWallet.currencyInfo
   // set default requiredConfirmations to 1, so once the tx is in a block consider fully confirmed
   const requiredConfirmations = currencyInfo.requiredConfirmations ? currencyInfo.requiredConfirmations : 1
-  const isAccountBalanceVisible = state.ui.settings.isAccountBalanceVisible
+  const isBalanceVisible = state.ui.settings.isAccountBalanceVisible
 
   const out: StateProps = {
     loading: false,
@@ -80,14 +80,14 @@ const mapStateToProps = (state: State) => {
     fiatSymbol,
     showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility,
     requiredConfirmations,
-    isAccountBalanceVisible
+    isBalanceVisible
   }
   return out
 }
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => dispatch(fetchMoreTransactions(walletId, currencyCode, reset)),
-  toggleAccountBalanceVisibility: () => {
+  toggleBalanceVisibility: () => {
     dispatch(toggleAccountBalanceVisibility())
   }
 })
