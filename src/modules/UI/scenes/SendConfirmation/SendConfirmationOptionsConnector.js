@@ -14,10 +14,12 @@ import { activated } from './components/UniqueIdentifierModal/UniqueIdentifierMo
 const mapStateToProps = (state: State) => {
   const sourceWalletId = state.ui.wallets.selectedWalletId
   const currencyCode = state.ui.wallets.selectedCurrencyCode
+  const isEditable = state.ui.scenes.sendConfirmation.isEditable
 
   return {
     sourceWallet: CORE_SELECTORS.getWallet(state, sourceWalletId),
-    currencyCode
+    currencyCode,
+    isEditable
   }
 }
 

@@ -57,10 +57,13 @@ test('initialState', () => {
       parsedUri: null
     },
     sendConfirmation: {
-      label: '',
       pending: false,
       isKeyboardVisible: false,
       forceUpdateGuiCounter: 0,
+      spendInfo: null,
+      destination: '',
+      isEditable: true,
+      nativeAmount: '0',
       transaction: {
         txid: '',
         date: 0,
