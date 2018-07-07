@@ -125,7 +125,7 @@ export default class EditToken extends Component<EditTokenComponentProps, State>
                   label={s.strings.addtoken_currency_code_input_text}
                   returnKeyType={'done'}
                   autoCorrect={false}
-                  maxLength={5}
+                  maxLength={Constants.MAX_TOKEN_CODE_CHARACTERS}
                 />
               </View>
               <View style={[styles.contractAddressArea]}>
