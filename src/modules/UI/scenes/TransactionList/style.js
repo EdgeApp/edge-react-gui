@@ -309,6 +309,29 @@ export const styles = {
   },
   symbol: {
     fontFamily: THEME.FONTS.SYMBOLS
+  },
+  buyCryptoContainer: {
+    width: PLATFORM.deviceWidth,
+    height: PLATFORM.deviceHeight / 2.3,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 15
+  },
+  buyCryptoBox: {
+    flex: 2,
+    width: '100%',
+    backgroundColor: '#FFF'
+  },
+  buyCryptoNoTransactionBox: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  buyCryptoNoTransactionText: {
+    fontSize: 17,
+    color: THEME.COLORS.ACCENT_BLUE
   }
 }
 

@@ -23,6 +23,7 @@ import SafeAreaView from '../../components/SafeAreaView'
 import styles, { styles as styleRaw } from './style'
 import type {ContactsState} from '../../../../reducers/contacts/contactsReducer'
 import TransactionRow from './components/TransactionRowConnector.js'
+import BuyCrypto from './components/BuyCrypto.ui.js'
 
 // import SearchBar from './components/SearchBar.ui'
 const INITIAL_TRANSACTION_BATCH_NUMBER = 10
@@ -209,6 +210,7 @@ export class TransactionList extends Component<Props, State> {
               <View style={styles.transactionsWrap}>
                 <FlatList
                   ListHeaderComponent={this.currentRenderBalanceBox}
+                  ListEmptyComponent={<BuyCrypto />}
                   style={styles.transactionsScrollWrap}
                   data={txs}
                   renderItem={this.renderTx}
