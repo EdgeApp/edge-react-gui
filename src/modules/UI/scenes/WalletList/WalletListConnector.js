@@ -7,7 +7,12 @@ import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import type { Dispatch, State } from '../../../ReduxTypes'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors'
-import { updateActiveWalletsOrder, updateArchivedWalletsOrder, toggleAccountBalanceVisibility } from './action'
+import {
+  updateActiveWalletsOrder,
+  updateArchivedWalletsOrder,
+  toggleAccountBalanceVisibility,
+  toggleWalletFiatBalanceVisibility  
+} from './action'
 import { walletRowOption } from './components/WalletOptions/action.js'
 import WalletList from './WalletList.ui'
 
@@ -28,6 +33,7 @@ const mapStateToProps = (state: State) => {
   const otpResetPending = SETTINGS_SELECTORS.getOtpResetPending(state)
   const progressPercentage = UI_SELECTORS.getWalletLoadingPercent(state)
   const isAccountBalanceVisible = state.ui.settings.isAccountBalanceVisible
+  const isWalletFiatBalanceVisible = state.ui.settings.isWalletFiatBalanceVisible
 
   return {
     settings,
@@ -44,7 +50,8 @@ const mapStateToProps = (state: State) => {
     customTokens,
     otpResetPending,
     progressPercentage,
-    isAccountBalanceVisible
+    isAccountBalanceVisible,
+    isWalletFiatBalanceVisible
   }
 }
 
@@ -55,7 +62,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   walletRowOption: (walletId, option, archived) => dispatch(walletRowOption(walletId, option, archived)),
   disableOtp: () => dispatch(disableOtp()),
   keepOtp: () => dispatch(keepOtp()),
-  toggleAccountBalanceVisibility: () => dispatch(toggleAccountBalanceVisibility())
+  toggleAccountBalanceVisibility: () => dispatch(toggleAccountBalanceVisibility()),
+  toggleWalletFiatBalanceVisibility: () => dispatch(toggleWalletFiatBalanceVisibility())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(WalletList)

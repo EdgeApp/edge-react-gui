@@ -42,9 +42,7 @@ type State = {
   showOtpResetModal: boolean,
   showMessageModal: boolean,
   isWalletProgressVisible: boolean,
-  messageModalMessage: ?string,
-  isWalletFiatBalanceVisible: boolean,
-  walletFiatBalances: object
+  messageModalMessage: ?string
 }
 type Props = {
   activeWalletIds: Array<string>,
@@ -63,8 +61,10 @@ type Props = {
   disableOtp: () => void,
   keepOtp: () => void,
   toggleAccountBalanceVisibility: () => void,
+  toggleWalletFiatBalanceVisibility: () => void,
   progressPercentage: number,
-  isAccountBalanceVisible: boolean
+  isAccountBalanceVisible: boolean,
+  isWalletFiatBalanceVisible: boolean  
 }
 
 export default class WalletList extends Component<Props, State> {
@@ -84,9 +84,7 @@ export default class WalletList extends Component<Props, State> {
       showMessageModal: false,
       messageModalMessage: null,
       progressPercentage: 0,
-      isWalletProgressVisible: true,
-      walletFiatBalances: {},
-      isWalletFiatBalanceVisible: false
+      isWalletProgressVisible: true
     }
   }
 
@@ -131,9 +129,7 @@ export default class WalletList extends Component<Props, State> {
   }
 
   onFiatSwitchToggle = () => {
-    this.setState({
-      isWalletFiatBalanceVisible: !this.state.isWalletFiatBalanceVisible
-    })
+    this.props.toggleWalletFiatBalanceVisibility()
   }
 
   render () {
@@ -159,12 +155,12 @@ export default class WalletList extends Component<Props, State> {
       activeWalletsObject[x] = tempWalletObj
     })
     let fiatBalanceString
-    const totalTally = this.tallyUpTotalCrypto()
+    const totalBalance = this.tallyUpTotalCrypto()
     const fiatSymbol = settings.defaultFiat ? UTILS.getFiatSymbol(settings.defaultFiat) : ''
     if (fiatSymbol.length !== 1) {
-      fiatBalanceString = totalTally.totalBalance + ' ' + settings.defaultFiat
+      fiatBalanceString = totalBalance + ' ' + settings.defaultFiat
     } else {
-      fiatBalanceString = fiatSymbol + ' ' + totalTally.totalBalance + ' ' + settings.defaultFiat
+      fiatBalanceString = fiatSymbol + ' ' + totalBalance + ' ' + settings.defaultFiat
     }
 
     return (
@@ -212,7 +208,7 @@ export default class WalletList extends Component<Props, State> {
                       }
                     ]}>
                     <View style={styles.fiatToggleSwitchWrap}>
-                      <Switch onValueChange={this.onFiatSwitchToggle} value={this.state.isWalletFiatBalanceVisible} style={styles.fiatSwitchToggle} />
+                      <Switch onValueChange={this.onFiatSwitchToggle} value={this.props.isWalletFiatBalanceVisible} style={styles.fiatSwitchToggle} />
                       <T style={styles.toggleFiatText}>{s.strings.fragment_wallets_fiat_toggle_title}</T>
                     </View>
                     <TouchableOpacity style={[styles.walletsBoxHeaderAddWallet, { width: 41 }]} onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]}>
@@ -224,7 +220,7 @@ export default class WalletList extends Component<Props, State> {
             </Gradient>
 
             {Object.keys(wallets).length > 0 ? (
-              this.renderActiveSortableList(activeWalletsArray, activeWalletsObject, totalTally.fiatBalances)
+              this.renderActiveSortableList(activeWalletsArray, activeWalletsObject)
             ) : (
               <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size={'large'} />
             )}
@@ -283,7 +279,6 @@ export default class WalletList extends Component<Props, State> {
   }
 
   renderItem = (item: Object) => {
-    const fiatSymbol = this.props.settings.defaultFiat ? UTILS.getFiatSymbol(this.props.settings.defaultFiat) : ''
     return (
       // $FlowFixMe sortHandlers error. Where does sortHandlers even come from?
       <FullWalletListRow
@@ -293,8 +288,7 @@ export default class WalletList extends Component<Props, State> {
     )
   }
 
-  renderActiveSortableList = (activeWalletsArray: Array<{ key: string }>, activeWalletsObject: {}, fiatBalances: object) => {
-    const fiatSymbol = this.props.settings.defaultFiat ? UTILS.getFiatSymbol(this.props.settings.defaultFiat) : ''
+  renderActiveSortableList = (activeWalletsArray: Array<{ key: string }>, activeWalletsObject: {}) => {
     return (
       <View style={styles.listsContainer}>
         {this.state.sortableListExists && (
@@ -323,10 +317,7 @@ export default class WalletList extends Component<Props, State> {
               renderItem={this.renderItem}
               sortableMode={this.state.sortableMode}
               executeWalletRowOption={this.executeWalletRowOption}
-              settings={this.props.settings}
-              fiatBalances={fiatBalances}
-              isWalletFiatBalanceVisible={this.state.isWalletFiatBalanceVisible}
-              fiatSymbol={fiatSymbol}              
+              settings={this.props.settings}            
             />
           </Animated.View>
         )}
@@ -483,18 +474,12 @@ export default class WalletList extends Component<Props, State> {
   }
 
   calculateTotalBalance = (values: any) => {
-    const fiatBalances = {}
     let total = 0
     for (const currency in values) {
       const addValue = this.props.currencyConverter.convertCurrency(currency, 'iso:' + this.props.settings.defaultFiat, values[currency])
       total = total + addValue
-      fiatBalances[currency] = intl.formatNumber(addValue, { toFixed: 2}) || intl.formatNumber('0.00', { toFixed: 2})
     }
-    const balanceInfo = {
-      totalBalance: intl.formatNumber(total, { toFixed: 2 }),
-      fiatBalances
-    }
-    return balanceInfo
+    return intl.formatNumber(total, { toFixed: 2 })
   }
 
   handleOnBalanceBoxPress = () => {

@@ -242,7 +242,8 @@ export const styles = {
     color: THEME.COLORS.GRAY_1
   },
   rowBalanceTextWrap: {
-    justifyContent: 'center'
+    justifyContent: 'center',
+    height: 38
   },
   rowBalanceAmountText: {
     fontSize: 16,

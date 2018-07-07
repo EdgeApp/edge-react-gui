@@ -4,14 +4,23 @@ import slowlog from 'react-native-slowlog'
 import { bns } from 'biggystring'
 import _ from 'lodash'
 import React, { Component } from 'react'
+import { getCurrencyConverter } from '../../../../../Core/selectors.js'
+
 import { ActivityIndicator, Image, Platform, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
-
 import { intl } from '../../../../../../locales/intl'
 import s from '../../../../../../locales/strings.js'
 import type { CustomTokenInfo, GuiDenomination } from '../../../../../../types'
-import { cutOffText, decimalOrZero, truncateDecimals, getObjectDiff } from '../../../../../utils.js'
+import {
+  cutOffText,
+  decimalOrZero,
+  truncateDecimals,
+  getObjectDiff,
+  getFiatSymbol,
+  convertNativeToExchange,
+  calculateFiatFromCryptoCurrency
+} from '../../../../../utils.js'
 import T from '../../../../components/FormattedText'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
 import { getEnabledTokens, selectWallet } from '../../../../Wallets/action.js'
@@ -93,7 +102,7 @@ class FullWalletListRowConnect extends Component<Props> {
   }
 
   render () {
-    const { data, walletFiatBalances, isWalletFiatBalanceVisible, fiatSymbol } = this.props
+    const { data, fiatSymbol } = this.props
     const walletData = data.item
     const currencyCode = walletData.currencyCode
     const cryptocurrencyName = walletData.currencyNames[currencyCode]
@@ -105,7 +114,7 @@ class FullWalletListRowConnect extends Component<Props> {
     const symbolImageDarkMono = walletData.symbolImageDarkMono
     const preliminaryCryptoAmount = truncateDecimals(bns.div(walletData.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)
     const finalCryptoAmount = intl.formatNumber(decimalOrZero(preliminaryCryptoAmount, 6)) // check if infinitesimal (would display as zero), cut off trailing zeroes
-
+    const settings = this.props.settings
     // need to crossreference tokensEnabled with nativeBalances
     const enabledNativeBalances = {}
     const enabledTokens = walletData.enabledTokens
@@ -126,6 +135,9 @@ class FullWalletListRowConnect extends Component<Props> {
         }
       }
     }
+
+    const fiatBalance = this.props.fiatBalance
+    const fiatBalanceString = fiatSymbol + ' ' + fiatBalance
 
     return (
       <View style={[{ width: '100%' }]}>
@@ -160,7 +172,7 @@ class FullWalletListRowConnect extends Component<Props> {
               {this.props.isWalletFiatBalanceVisible ? (
                 <View style={[styles.rowBalanceTextWrap]}>
                   <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-                    <T style={[styles.rowBalanceAmountText]}>{`${fiatSymbol} ${this.props.walletFiatBalances[currencyCode]}` }</T>
+                    <T style={[styles.rowBalanceAmountText]}>{fiatBalanceString}</T>
                   </View>
                 </View>
                 ) : (
@@ -194,7 +206,13 @@ class FullWalletListRowConnect extends Component<Props> {
     for (const property in metaTokenBalances) {
       if (metaTokenBalances.hasOwnProperty(property)) {
         if (property !== this.props.data.item.currencyCode) {
-          tokens.push(<WalletListTokenRow parentId={parentId} currencyCode={property} key={property} balance={metaTokenBalances[property]} />)
+          tokens.push(<WalletListTokenRow
+                        parentId={parentId}
+                        currencyCode={property}
+                        key={property}
+                        fiatSymbol={this.props.fiatSymbol}
+                        balance={metaTokenBalances[property]}
+                      />)
         }
       }
     }
@@ -204,11 +222,21 @@ class FullWalletListRowConnect extends Component<Props> {
 const mapStateToProps = (state, ownProps): StateProps => {
   const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, ownProps.data.item.currencyCode)
   const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, ownProps.data.item.currencyCode)
+  const settings = state.ui.settings
+  const fiatSymbol = getFiatSymbol(settings.defaultFiat) || ''
   const customTokens = state.ui.settings.customTokens
+  const currencyConverter = getCurrencyConverter(state)
+  const isWalletFiatBalanceVisible = state.ui.settings.isWalletFiatBalanceVisible
+  const fiatBalance = calculateFiatFromCryptoCurrency(ownProps.data.item, state)
   return {
     displayDenomination,
     exchangeDenomination,
-    customTokens
+    customTokens,
+    settings,
+    fiatSymbol,
+    currencyConverter,
+    isWalletFiatBalanceVisible,
+    fiatBalance
   }
 }
 const mapDispatchToProps = dispatch => ({

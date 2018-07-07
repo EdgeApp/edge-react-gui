@@ -12,7 +12,9 @@ import type {
 } from 'edge-core-js'
 import _ from 'lodash'
 import { Platform } from 'react-native'
-
+import { getCurrencyConverter } from './Core/selectors.js'
+import { intl } from '../locales/intl.js'
+import { getWallet } from './UI/selectors.js'
 import { FIAT_CODES_SYMBOLS as currencySymbolMap, getSymbolFromCurrency } from '../constants/indexConstants.js'
 import borderColors from '../theme/variables/css3Colors'
 import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet } from '../types'
@@ -216,6 +218,23 @@ export function getDenomFromIsoCode (currencyCode: string): GuiDenomination {
     multiplier: '100'
   }
   return denom
+}
+
+// not sure if this can be used with tokens
+export const calculateFiatFromCryptoCurrency = (wallet, state) => {
+  let fiatValue = 0 // default to zero if not calculable
+  const currencyCode = wallet.currencyCode
+  const nativeBalance = wallet.nativeBalances[currencyCode]
+  const settings = state.ui.settings
+  const currencyConverter = getCurrencyConverter(state)
+  if (nativeBalance && nativeBalance !== '0') {
+    const denominations = settings[currencyCode].denominations
+    const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
+    const nativeToExchangeRatio: string = exchangeDenomination.multiplier
+    const cryptoAmount: number = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
+    fiatValue = currencyConverter.convertCurrency(currencyCode, 'iso:' + settings.defaultFiat, cryptoAmount)
+  }
+  return intl.formatNumber(fiatValue, { toFixed: 2})
 }
 
 export function getAllDenomsOfIsoCurrencies (): Array<GuiDenomination> {
