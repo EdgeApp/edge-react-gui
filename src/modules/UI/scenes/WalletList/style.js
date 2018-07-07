@@ -81,14 +81,31 @@ export const styles = {
     marginLeft: 16
   },
   donePlusContainer: {
-    minWidth: 48,
+    minWidth: 160,
     height: 50
   },
   plusContainer: {
     position: 'absolute',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     alignItems: 'center',
-    height: 50
+    height: 50,
+    flexDirection:'row'
+  },
+  fiatToggleSwitchWrap: {
+    paddingRight: 40,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: 160,
+    alignItems: 'center'
+  }, 
+  fiatSwitchToggle: {
+
+  },
+  toggleFiatText: {
+    color: THEME.COLORS.WHITE,
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    marginRight: 24,
+    fontSize: 18
   },
   doneContainer: {
     position: 'absolute',

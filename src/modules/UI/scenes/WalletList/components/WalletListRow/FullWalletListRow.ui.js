@@ -24,7 +24,10 @@ const DIVIDE_PRECISION = 18
 export type OwnProps = {
   data: any, // TODO: Need to type this
   sortHandlers: any,
-  customTokens: Array<CustomTokenInfo>
+  customTokens: Array<CustomTokenInfo>,
+  walletFiatBalances: object,
+  isWalletFiatBalanceVisible: boolean,
+  fiatSymbol: string
 }
 
 type StateProps = {
@@ -56,7 +59,13 @@ export default class FullWalletListRow extends Component<OwnProps> {
     return (
       <View>
         {this.props.data.item.id ? (
-          <FullWalletListRowConnected data={this.props.data} customTokens={this.props.customTokens} />
+          <FullWalletListRowConnected
+            data={this.props.data}
+            customTokens={this.props.customTokens}
+            walletFiatBalances={this.props.walletFiatBalances}
+            isWalletFiatBalanceVisible={this.props.isWalletFiatBalanceVisible}
+            fiatSymbol={this.props.fiatSymbol}            
+          />
         ) : (
           <FullListRowEmptyData />
         )}
@@ -84,7 +93,7 @@ class FullWalletListRowConnect extends Component<Props> {
   }
 
   render () {
-    const { data } = this.props
+    const { data, walletFiatBalances, isWalletFiatBalanceVisible, fiatSymbol } = this.props
     const walletData = data.item
     const currencyCode = walletData.currencyCode
     const cryptocurrencyName = walletData.currencyNames[currencyCode]
@@ -148,19 +157,25 @@ class FullWalletListRowConnect extends Component<Props> {
                   </View>
                 )}
               </View>
-
-              <View style={[styles.rowBalanceTextWrap]}>
-                <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-                  <T style={[styles.rowBalanceAmountText]}>{finalCryptoAmount}</T>
+              {this.props.isWalletFiatBalanceVisible ? (
+                <View style={[styles.rowBalanceTextWrap]}>
+                  <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                    <T style={[styles.rowBalanceAmountText]}>{`${fiatSymbol} ${this.props.walletFiatBalances[currencyCode]}` }</T>
+                  </View>
                 </View>
+                ) : (
+                  <View style={[styles.rowBalanceTextWrap]}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                      <T style={[styles.rowBalanceAmountText]}>{finalCryptoAmount}</T>
+                    </View>
 
-                <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-                  <T style={[styles.rowBalanceDenominationText]}>{cryptocurrencyName} (</T>
-                  <T style={[styles.rowBalanceDenominationText, styles.symbol]}>{symbol || ''}</T>
-                  <T style={[styles.rowBalanceDenominationText]}>)</T>
-                </View>
-              </View>
-
+                    <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                      <T style={[styles.rowBalanceDenominationText]}>{cryptocurrencyName} (</T>
+                      <T style={[styles.rowBalanceDenominationText, styles.symbol]}>{symbol || ''}</T>
+                      <T style={[styles.rowBalanceDenominationText]}>)</T>
+                    </View>
+                    </View>
+              )}
               <WalletListRowOptions
                 currencyCode={walletData.currencyCode}
                 executeWalletRowOption={walletData.executeWalletRowOption}

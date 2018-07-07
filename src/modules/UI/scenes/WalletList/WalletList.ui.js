@@ -2,7 +2,7 @@
 
 import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
-import { ActivityIndicator, Animated, FlatList, Image, TouchableOpacity, View } from 'react-native'
+import { Switch, ActivityIndicator, Animated, FlatList, Image, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import SortableListView from 'react-native-sortable-listview'
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -42,7 +42,9 @@ type State = {
   showOtpResetModal: boolean,
   showMessageModal: boolean,
   isWalletProgressVisible: boolean,
-  messageModalMessage: ?string
+  messageModalMessage: ?string,
+  isWalletFiatBalanceVisible: boolean,
+  walletFiatBalances: object
 }
 type Props = {
   activeWalletIds: Array<string>,
@@ -82,7 +84,9 @@ export default class WalletList extends Component<Props, State> {
       showMessageModal: false,
       messageModalMessage: null,
       progressPercentage: 0,
-      isWalletProgressVisible: true
+      isWalletProgressVisible: true,
+      walletFiatBalances: {},
+      isWalletFiatBalanceVisible: false
     }
   }
 
@@ -126,6 +130,12 @@ export default class WalletList extends Component<Props, State> {
     }
   }
 
+  onFiatSwitchToggle = () => {
+    this.setState({
+      isWalletFiatBalanceVisible: !this.state.isWalletFiatBalanceVisible
+    })
+  }
+
   render () {
     const { wallets, activeWalletIds, settings } = this.props
     const walletsArray = []
@@ -149,11 +159,12 @@ export default class WalletList extends Component<Props, State> {
       activeWalletsObject[x] = tempWalletObj
     })
     let fiatBalanceString
+    const totalTally = this.tallyUpTotalCrypto()
     const fiatSymbol = settings.defaultFiat ? UTILS.getFiatSymbol(settings.defaultFiat) : ''
     if (fiatSymbol.length !== 1) {
-      fiatBalanceString = this.tallyUpTotalCrypto() + ' ' + settings.defaultFiat
+      fiatBalanceString = totalTally.totalBalance + ' ' + settings.defaultFiat
     } else {
-      fiatBalanceString = fiatSymbol + ' ' + this.tallyUpTotalCrypto() + ' ' + settings.defaultFiat
+      fiatBalanceString = fiatSymbol + ' ' + totalTally.totalBalance + ' ' + settings.defaultFiat
     }
 
     return (
@@ -199,8 +210,11 @@ export default class WalletList extends Component<Props, State> {
                         opacity: this.state.fullListOpacity,
                         zIndex: this.state.fullListZIndex
                       }
-                    ]}
-                  >
+                    ]}>
+                    <View style={styles.fiatToggleSwitchWrap}>
+                      <Switch onValueChange={this.onFiatSwitchToggle} value={this.state.isWalletFiatBalanceVisible} style={styles.fiatSwitchToggle} />
+                      <T style={styles.toggleFiatText}>{s.strings.fragment_wallets_fiat_toggle_title}</T>
+                    </View>
                     <TouchableOpacity style={[styles.walletsBoxHeaderAddWallet, { width: 41 }]} onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]}>
                       <Ionicon name="md-add" style={[styles.dropdownIcon]} size={28} color="white" />
                     </TouchableOpacity>
@@ -210,7 +224,7 @@ export default class WalletList extends Component<Props, State> {
             </Gradient>
 
             {Object.keys(wallets).length > 0 ? (
-              this.renderActiveSortableList(activeWalletsArray, activeWalletsObject)
+              this.renderActiveSortableList(activeWalletsArray, activeWalletsObject, totalTally.fiatBalances)
             ) : (
               <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size={'large'} />
             )}
@@ -269,13 +283,18 @@ export default class WalletList extends Component<Props, State> {
   }
 
   renderItem = (item: Object) => {
+    const fiatSymbol = this.props.settings.defaultFiat ? UTILS.getFiatSymbol(this.props.settings.defaultFiat) : ''
     return (
       // $FlowFixMe sortHandlers error. Where does sortHandlers even come from?
-      <FullWalletListRow data={item} customTokens={this.props.customTokens} />
+      <FullWalletListRow
+        data={item}
+        customTokens={this.props.customTokens}
+      />
     )
   }
 
-  renderActiveSortableList = (activeWalletsArray: Array<{ key: string }>, activeWalletsObject: {}) => {
+  renderActiveSortableList = (activeWalletsArray: Array<{ key: string }>, activeWalletsObject: {}, fiatBalances: object) => {
+    const fiatSymbol = this.props.settings.defaultFiat ? UTILS.getFiatSymbol(this.props.settings.defaultFiat) : ''
     return (
       <View style={styles.listsContainer}>
         {this.state.sortableListExists && (
@@ -305,6 +324,9 @@ export default class WalletList extends Component<Props, State> {
               sortableMode={this.state.sortableMode}
               executeWalletRowOption={this.executeWalletRowOption}
               settings={this.props.settings}
+              fiatBalances={fiatBalances}
+              isWalletFiatBalanceVisible={this.state.isWalletFiatBalanceVisible}
+              fiatSymbol={fiatSymbol}              
             />
           </Animated.View>
         )}
@@ -456,17 +478,23 @@ export default class WalletList extends Component<Props, State> {
         }
       }
     }
-    const totalBalance = this.calculateTotalBalance(temporaryTotalCrypto)
-    return totalBalance
+    const balanceInfo = this.calculateTotalBalance(temporaryTotalCrypto)
+    return balanceInfo
   }
 
   calculateTotalBalance = (values: any) => {
+    const fiatBalances = {}
     let total = 0
     for (const currency in values) {
       const addValue = this.props.currencyConverter.convertCurrency(currency, 'iso:' + this.props.settings.defaultFiat, values[currency])
       total = total + addValue
+      fiatBalances[currency] = intl.formatNumber(addValue, { toFixed: 2}) || intl.formatNumber('0.00', { toFixed: 2})
     }
-    return intl.formatNumber(total, { toFixed: 2 })
+    const balanceInfo = {
+      totalBalance: intl.formatNumber(total, { toFixed: 2 }),
+      fiatBalances
+    }
+    return balanceInfo
   }
 
   handleOnBalanceBoxPress = () => {

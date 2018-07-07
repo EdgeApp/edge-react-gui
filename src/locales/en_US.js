@@ -81,6 +81,7 @@ const strings = {
   fragment_transaction_list_confirmation_progress: '%s of %s Confirmations',
   fragment_wallets_addwallet_name_hint: 'New Wallet Name',
   fragment_wallets_balance_text: 'Total Balance',
+  fragment_wallets_fiat_toggle_title: 'Fiat',
   fragment_wallets_delete_wallet: 'Delete Wallet',
   fragment_wallets_set_custom_fees: 'Set Custom Mining Fee',
   fragment_wallets_resync_wallet: 'Resync Wallet',
