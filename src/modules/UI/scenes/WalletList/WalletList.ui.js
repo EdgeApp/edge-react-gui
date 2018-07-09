@@ -221,6 +221,9 @@ export default class WalletList extends Component<Props, State> {
   }
 
   showModal = () => {
+    if (this.props.showOnBoarding) {
+      return <OnBoardingSceneConnector />
+    }
     if (this.state.showOtpResetModal) {
       return (
         <TwoButtonTextModalComponent
@@ -239,9 +242,7 @@ export default class WalletList extends Component<Props, State> {
     if (this.state.showMessageModal) {
       return <StaticModalComponent cancel={this.cancelStatic} body={this.state.messageModalMessage} modalDismissTimerSeconds={8} />
     }
-    if (this.props.showOnBoarding) {
-      return <OnBoardingSceneConnector />
-    }
+
     return null
   }
   disableOtp = () => {

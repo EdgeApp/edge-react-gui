@@ -1,37 +1,47 @@
 // @flow
 import React, { Component } from 'react'
-import { Modal, View, Text } from 'react-native'
+import { Modal } from 'react-native'
+import OnBoardingSlide from './OnBoardingSlide'
 import { OnBoardingSceneStyles } from '../../../../styles/indexStyles.js'
 import Swiper from 'react-native-swiper'
+import PagingDots from '../../../../connectors/components/OnboardingPagingDotsConnector.js'
+import s from '../../../../locales/strings.js'
 type Props= {
-  finishOnBoarding(): void
+  slides: Array<Object>,
+  totalSlides: number,
+  finishOnBoarding(): void,
+  updateSlideIndex(number): void
 }
 
-type State = {
-
-}
-
-export default class WalletList extends Component<Props, State> {
-  onModalClose =() => {
-    console.log('swiper: modalClose ')
+export default class OnBoardingScene extends Component<Props, {}> {
+  renderSlides = (styles: Object) => {
+    let counter = 0
+    return this.props.slides.map(Slide => {
+      counter++
+      const buttonFunction = counter === this.props.totalSlides ? this.props.finishOnBoarding : null
+      console.log('swiper: counter', counter)
+      console.log('swiper: buttonFunction', buttonFunction)
+      return (
+        <OnBoardingSlide
+          slide={Slide}
+          buttonText={s.strings.onboarding_button}
+          finishOnBoarding={buttonFunction}
+          key={'slides_' + counter}
+        />
+      )
+    })
   }
-  slideChanged = (index: number) => {
-    console.log('swiper: index changed ', index)
+  onRequestClose = () => {
+    // do nothing, necessary callback for modal
   }
   render () {
     const styles = OnBoardingSceneStyles
-    return <Modal style={styles.modalContainer} isVisible={true} onRequestClose={this.onModalClose}>
-      <Swiper style={styles.wrapper} showsButtons={false} loop={false} index={0} onIndexChanged={this.slideChanged}>
-        <View style={styles.slide1}>
-          <Text style={styles.text}>Hello Swiper</Text>
-        </View>
-        <View style={styles.slide2}>
-          <Text style={styles.text}>Beautiful</Text>
-        </View>
-        <View style={styles.slide3}>
-          <Text style={styles.text}>And simple</Text>
-        </View>
+    console.log('swiper: render')
+    return <Modal style={styles.modalContainer} isVisible={true} onRequestClose={this.onRequestClose}>
+      <Swiper style={styles.wrapper} showsPagination={false} showsButtons={false} index={0} onIndexChanged={this.props.updateSlideIndex}>
+        {this.renderSlides(styles)}
       </Swiper>
+      <PagingDots styles={styles.dots}/>
     </Modal>
   }
 }

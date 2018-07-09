@@ -2,6 +2,7 @@
 
 /* globals test expect */
 import { onBoarding as onBoardingReducer } from './OnBoardingReducer.js'
+import s from '../locales/strings.js'
 
 test('initialState', () => {
   const expected = {
@@ -9,28 +10,28 @@ test('initialState', () => {
     totalSlides: 4,
     slides: [
       {
-        text: 'title 1',
+        text: s.strings.onboarding_slide_1,
         iOSImage: 'onboard1',
         iPadImage: 'onboard1',
         iPadImageHoriz: 'onboard1',
         androidImage: 'onboard1'
       },
       {
-        text: 'title 2',
+        text: s.strings.onboarding_slide_2,
         iOSImage: 'onboard2',
         iPadImage: 'onboard2',
         iPadImageHoriz: 'onboard2',
         androidImage: 'onboard2'
       },
       {
-        text: 'title 3',
+        text: s.strings.onboarding_slide_3,
         iOSImage: 'onboard3',
         iPadImage: 'onboard3',
         iPadImageHoriz: 'onboard3',
         androidImage: 'onboard3'
       },
       {
-        text: 'title 4',
+        text: s.strings.onboarding_slide_4,
         iOSImage: 'onboard4',
         iPadImage: 'onboard4',
         iPadImageHoriz: 'onboard4',
