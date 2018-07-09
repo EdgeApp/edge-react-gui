@@ -1,24 +1,74 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Text, View } from 'react-native'
+import type { Node } from 'react'
+import { Text as RNText, StyleSheet, View } from 'react-native'
 
-import s from '../../../../locales/strings'
 import styles from './styles'
 
-const SENT_TO_TEXT = s.strings.send_to_title
+export type TextProps = {
+  children: Node,
+  style?: StyleSheet.Styles
+}
+export class Text extends Component<TextProps> {
+  render () {
+    const { children, style, ...props } = this.props
+
+    return (
+      <RNText ellipsizeMode={'middle'} numberOfLines={1} style={[styles.text, style]} {...props}>
+        {children}
+      </RNText>
+    )
+  }
+}
+
+export type RowProps = {
+  children: Node,
+  style?: StyleSheet.Styles
+}
+export class Row extends Component<RowProps> {
+  render () {
+    const { children, style, ...props } = this.props
+
+    return (
+      <View style={[styles.row, style]} {...props}>
+        {children}
+      </View>
+    )
+  }
+}
+
+export type ItemProps = {
+  children: Node,
+  style?: StyleSheet.Styles
+}
+export class Item extends Component<ItemProps> {
+  render () {
+    const { children, style, ...props } = this.props
+
+    return (
+      <View style={[styles.item, style]} {...props}>
+        {children}
+      </View>
+    )
+  }
+}
 
 export type Props = {
-  publicAddress: string
+  children: Node,
+  style?: StyleSheet.Styles
 }
 export class Recipient extends Component<Props> {
+  static Item = Item
+  static Row = Row
+  static Text = Text
+
   render () {
+    const { children, style, ...props } = this.props
+
     return (
-      <View style={styles.container}>
-        <Text style={styles.text}>{SENT_TO_TEXT}</Text>
-        <Text style={styles.text} ellipsizeMode="middle" numberOfLines={1}>
-          {this.props.publicAddress}
-        </Text>
+      <View style={[styles.recipient, style]} {...props}>
+        {children}
       </View>
     )
   }

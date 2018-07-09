@@ -98,7 +98,8 @@ export default class WalletList extends Component<Props, State> {
 
     let diffElement2: string = ''
     const diffElement = UTILS.getObjectDiff(this.props, nextProps, {
-      traverseObjects, ignoreObjects
+      traverseObjects,
+      ignoreObjects
     })
     if (!diffElement) {
       diffElement2 = UTILS.getObjectDiff(this.state, nextState)
@@ -157,7 +158,7 @@ export default class WalletList extends Component<Props, State> {
 
     return (
       <SafeAreaView>
-        <View style={styles.container}>
+        <View style={styles.container} testID={'edge: wallet-list-scene'}>
           <WalletOptions />
           <Gradient style={styles.gradient} />
           {this.state.isWalletProgressVisible && this.renderWalletListProgressDropdown()}
@@ -264,9 +265,7 @@ export default class WalletList extends Component<Props, State> {
   }
 
   renderRow = (row: Object) => {
-    return (
-      <SortableWalletListRow data={row} dimensions={this.props.dimensions} />
-    )
+    return <SortableWalletListRow data={row} dimensions={this.props.dimensions} />
   }
 
   renderItem = (item: Object) => {
@@ -509,8 +508,6 @@ export default class WalletList extends Component<Props, State> {
         })
       }, 2000)
     }
-    return (
-      <ProgressBar progress={this.props.progressPercentage} />
-    )
+    return <ProgressBar progress={this.props.progressPercentage} />
   }
 }

@@ -28,7 +28,8 @@ type Props = {
   sendMaxSpend: () => void,
   uniqueIdentifierModalActivated: () => void,
   sourceWallet: EdgeCurrencyWallet,
-  currencyCode: string
+  currencyCode: string,
+  isEditable: boolean
 }
 
 export default class SendConfirmationOptions extends Component<Props> {
@@ -49,7 +50,7 @@ export default class SendConfirmationOptions extends Component<Props> {
 
   render () {
     const defaultMenuStyle = MenuDropDownStyle
-    const { currencyCode } = this.props
+    const { currencyCode, isEditable } = this.props
     return (
       <View>
         <Menu onSelect={value => this.handleMenuOptions(value)} onOpen={() => Keyboard.dismiss()}>
@@ -64,11 +65,13 @@ export default class SendConfirmationOptions extends Component<Props> {
               </View>
             </MenuOption>
 
-            <MenuOption value={SEND_MAX} style={defaultMenuStyle.menuOption}>
-              <View style={defaultMenuStyle.menuOptionItem}>
-                <Text style={[defaultMenuStyle.optionText, styles.maxSpend]}>{SEND_MAX_TEXT}</Text>
-              </View>
-            </MenuOption>
+            {isEditable && (
+              <MenuOption value={SEND_MAX} style={defaultMenuStyle.menuOption}>
+                <View style={defaultMenuStyle.menuOptionItem}>
+                  <Text style={[defaultMenuStyle.optionText, styles.maxSpend]}>{SEND_MAX_TEXT}</Text>
+                </View>
+              </MenuOption>
+            )}
 
             {currencyCode === 'XMR' && (
               <MenuOption value={ADD_UNIQUE_IDENTIFIER} style={defaultMenuStyle.menuOption}>

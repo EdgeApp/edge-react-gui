@@ -1,5 +1,16 @@
 # edge-react-gui
 
+## 1.2.4
+
+* Add BIP70 support
+* Change password reminder logic to step off twice as quickly after correct password
+* Fix mint progress bar to be on top of blue region
+* Remove IMP fiat currency since we don't have exchange rates for it
+* Make show account balance toggle persistent
+* Make progress bar start at about 10%
+* Change settings for password recovery to show "Setup Password Recovery"
+* Fix dropdown for iPhone X 
+
 ## 1.2.3
 
 * Bump Monero library 0.0.8

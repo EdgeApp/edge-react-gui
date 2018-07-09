@@ -42,8 +42,8 @@ export const LOCAL_ACCOUNT_DEFAULTS = {
     lastPasswordUseDate: 0,
     passwordUseCount: 0,
     nonPasswordLoginsCount: 0,
-    nonPasswordDaysLimit: 2,
-    nonPasswordLoginsLimit: 2
+    nonPasswordDaysLimit: 4,
+    nonPasswordLoginsLimit: 4
   },
   isAccountBalanceVisible: true
 }

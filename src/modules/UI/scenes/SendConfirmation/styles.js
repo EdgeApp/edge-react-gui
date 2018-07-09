@@ -2,7 +2,7 @@
 
 import { StyleSheet } from 'react-native'
 
-import THEME from '../../../../theme/variables/airbitz'
+import THEME, { DEBUG as debug } from '../../../../theme/variables/airbitz'
 
 export default StyleSheet.create({
   gradient: {
@@ -11,26 +11,23 @@ export default StyleSheet.create({
   view: {
     flex: 1,
     flexDirection: 'column',
+    width: '100%',
     justifyContent: 'flex-start',
     alignItems: 'stretch'
   },
   mainScrollView: {
     flex: 1,
-    alignItems: 'center'
-  },
-  main: {
+    width: '100%',
     alignItems: 'center'
   },
   exchangeRateContainer: {
     alignItems: 'center',
     marginVertical: 12
   },
-  recipient: {
-    flex: 2,
-    flexDirection: 'row',
+
+  main: {
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: THEME.COLORS.TRANSPARENT
+    width: '100%'
   },
   feeArea: {
     width: '100%',
@@ -41,6 +38,7 @@ export default StyleSheet.create({
     fontSize: 16,
     color: 'white'
   },
+
   pendingSymbolArea: {
     height: 12
   },
@@ -96,8 +94,5 @@ export default StyleSheet.create({
     alignItems: 'center',
     marginTop: 10
   },
-  debug: {
-    borderWidth: 1,
-    borderColor: 'red'
-  }
+  debug
 })
