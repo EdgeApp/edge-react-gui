@@ -194,6 +194,20 @@ export class TransactionList extends Component<Props, State> {
     return null
   }
 
+  renderBuyCrypto = () => {
+    const wallet = this.props.uiWallet
+    switch (wallet.currencyCode) {
+      case 'BTC':
+        return <BuyCrypto wallet={wallet}/>
+      case 'BCH':
+        return <BuyCrypto wallet={wallet}/>
+      case 'ETH':
+        return <BuyCrypto wallet={wallet}/>
+      default:
+        return null
+    }
+  }
+
   render () {
     const txs = this.state.reset ? emptyArray : this.props.transactions
     if (this.state.showBalance) {
@@ -210,7 +224,7 @@ export class TransactionList extends Component<Props, State> {
               <View style={styles.transactionsWrap}>
                 <FlatList
                   ListHeaderComponent={this.currentRenderBalanceBox}
-                  ListEmptyComponent={<BuyCrypto />}
+                  ListEmptyComponent={this.renderBuyCrypto()}
                   style={styles.transactionsScrollWrap}
                   data={txs}
                   renderItem={this.renderTx}

@@ -312,7 +312,7 @@ export const styles = {
   },
   buyCryptoContainer: {
     width: PLATFORM.deviceWidth,
-    height: PLATFORM.deviceHeight / 2.3,
+    height: 220,
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
@@ -320,8 +320,20 @@ export const styles = {
   },
   buyCryptoBox: {
     flex: 2,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
     width: '100%',
     backgroundColor: '#FFF'
+  },
+  buyCryptoBoxImage: {
+    width: 40,
+    height: 40
+  },
+  buyCryptoBoxText: {
+    marginTop: 10,
+    fontSize: 17,
+    color: THEME.COLORS.GRAY_1
   },
   buyCryptoNoTransactionBox: {
     flex: 1,
