@@ -19,8 +19,6 @@ export default class OnBoardingScene extends Component<Props, {}> {
     return this.props.slides.map(Slide => {
       counter++
       const buttonFunction = counter === this.props.totalSlides ? this.props.finishOnBoarding : null
-      console.log('swiper: counter', counter)
-      console.log('swiper: buttonFunction', buttonFunction)
       return (
         <OnBoardingSlide
           slide={Slide}
@@ -36,7 +34,6 @@ export default class OnBoardingScene extends Component<Props, {}> {
   }
   render () {
     const styles = OnBoardingSceneStyles
-    console.log('swiper: render')
     return <Modal style={styles.modalContainer} isVisible={true} onRequestClose={this.onRequestClose}>
       <Swiper style={styles.wrapper} showsPagination={false} showsButtons={false} index={0} onIndexChanged={this.props.updateSlideIndex}>
         {this.renderSlides(styles)}

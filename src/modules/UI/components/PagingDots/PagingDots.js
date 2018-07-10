@@ -21,10 +21,7 @@ export default class PagingDots extends Component<Props, State> {
     return dots
   }
   render () {
-    console.log('swiper: props', this.props.styles)
-    console.log('swiper: raw ', rawStyles)
     const styles = this.props.styles ? this.props.styles : rawStyles
-    console.log('swiper: using ', styles)
     return <View style={styles.container}>
       {this.renderDots(styles)}
     </View>

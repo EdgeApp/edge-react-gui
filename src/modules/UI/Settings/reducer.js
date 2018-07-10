@@ -494,7 +494,6 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
       return currencyPLuginUtil(state, data)
     }
     case Constants.COMPLETE_ONBOARDING: {
-      console.log('swiper: completed onboarding')
       return {...state, showOnBoarding: false}
     }
 
