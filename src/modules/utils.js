@@ -180,6 +180,7 @@ export const decimalOrZero = (input: string, decimalPlaces: number): string => {
   }
 }
 
+// helper function to convert either currency or token crypto amount to default fiat (formatted)
 getCurrencyFiatBalanceFromWallet = (wallet: GuiWallet, currencyCode: string, state: State) => {
   let fiatAmount = 0
   const settings = state.ui.settings
@@ -194,8 +195,11 @@ getCurrencyFiatBalanceFromWallet = (wallet: GuiWallet, currencyCode: string, sta
     }
     const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
     const nativeToExchangeRatio: string = exchangeDenomination.multiplier
-    fiatAmount = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
-    return fiatAmount
+    const cryptoAmount = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
+    const currencyConverter = getCurrencyConverter(state)
+    const unformattedFiatValue = currencyConverter.convertCurrency(currencyCode, 'iso:' + settings.defaultFiat, cryptoAmount)
+    const formattedFiatValue = intl.formatNumber(unformattedFiatValue, {toFixed: 2})
+    return formattedFiatValue
   }
 }
 
