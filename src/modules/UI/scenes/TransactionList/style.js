@@ -310,6 +310,12 @@ export const styles = {
   symbol: {
     fontFamily: THEME.FONTS.SYMBOLS
   },
+  emptyListLoader: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 230
+  },
   buyCryptoContainer: {
     width: PLATFORM.deviceWidth,
     height: 220,

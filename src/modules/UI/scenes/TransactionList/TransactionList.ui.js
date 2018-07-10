@@ -48,7 +48,8 @@ export type StateProps = {
   contacts: ContactsState,
   fiatSymbol: string,
   showToWalletModal: boolean,
-  requiredConfirmations?: number
+  requiredConfirmations?: number,
+  numTransactions: number
 }
 
 export type DispatchProps = {
@@ -196,6 +197,13 @@ export class TransactionList extends Component<Props, State> {
 
   renderBuyCrypto = () => {
     const wallet = this.props.uiWallet
+    if (this.props.numTransactions) {
+      return (
+        <View style={styles.emptyListLoader}>
+          <ActivityIndicator size={'large'} />
+        </View>
+      )
+    }
     switch (wallet.currencyCode) {
       case 'BTC':
         return <BuyCrypto wallet={wallet}/>
