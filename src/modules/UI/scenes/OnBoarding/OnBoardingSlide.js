@@ -1,11 +1,12 @@
 // @flow
 import React, { Component } from 'react'
-import { View, Text, ImageBackground, Platform } from 'react-native'
+import { View, Text, ImageBackground, Platform, Dimensions } from 'react-native'
 import {
   OnBoardingSlideStyles as styles
 } from '../../../../styles/indexStyles.js'
 import { PrimaryButton } from '../../components/Buttons/'
 import { ANDROID } from '../../../../constants/indexConstants'
+import DeviceInfo from 'react-native-device-info'
 
 type Props = {
   finishOnBoarding?: null | () => void,
@@ -14,11 +15,29 @@ type Props = {
 }
 
 type State = {
-  currentIndex: number,
-  lastSlide: boolean,
+  orientation: string
 }
 
 export default class OnBoardingScene extends Component<Props, State> {
+  constructor (props: Props) {
+    super(props)
+    const { height, width } = Dimensions.get('window')
+    const isLandscape = width > height
+    this.state = {
+      orientation: isLandscape ? 'landscape' : 'portrait'
+    }
+    Dimensions.addEventListener('change', this.update)
+  }
+  update = () => {
+    const { height, width } = Dimensions.get('window')
+    const isLandscape = width > height
+    this.setState({
+      orientation: isLandscape ? 'landscape' : 'portrait'
+    })
+  }
+  componentWillUnmount () {
+    Dimensions.removeEventListener('change', this.update)
+  }
   renderButton = () => {
     if (this.props.finishOnBoarding) {
       return (
@@ -32,8 +51,16 @@ export default class OnBoardingScene extends Component<Props, State> {
     return null
   }
   render () {
-    console.log('swiper: image', this.props.slide.iOSImage)
-    const image = Platform.OS === ANDROID ? this.props.slide.androidImage : this.props.slide.iOSImage
+    const isTablet = DeviceInfo.isTablet()
+    const image = Platform.OS === ANDROID
+      ? this.props.slide.androidImage
+      : (isTablet
+        ? (this.state.orientation === 'landscape'
+          ? this.props.slide.iPadImageHoriz
+          : this.props.slide.iPadImage
+        )
+        : this.props.slide.iOSImage
+      )
     return (
       <ImageBackground source={{uri: image}} style={styles.container}>
         <View style={styles.innerTop} />

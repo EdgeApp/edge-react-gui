@@ -15,29 +15,29 @@ const initialState: OnBoardingType = {
     {
       text: s.strings.onboarding_slide_1,
       iOSImage: 'onboard1',
-      iPadImage: 'onboard1',
-      iPadImageHoriz: 'onboard1',
+      iPadImage: 'iPadOnboarding1Vert',
+      iPadImageHoriz: 'iPadOnboarding1Horiz',
       androidImage: 'onboard1'
     },
     {
       text: s.strings.onboarding_slide_2,
       iOSImage: 'onboard2',
-      iPadImage: 'onboard2',
-      iPadImageHoriz: 'onboard2',
+      iPadImage: 'iPadOnboarding2Vert',
+      iPadImageHoriz: 'iPadOnboarding2Horiz',
       androidImage: 'onboard2'
     },
     {
       text: s.strings.onboarding_slide_3,
       iOSImage: 'onboard3',
-      iPadImage: 'onboard3',
-      iPadImageHoriz: 'onboard3',
+      iPadImage: 'iPadOnboarding3Vert',
+      iPadImageHoriz: 'iPadOnboarding3Horiz',
       androidImage: 'onboard3'
     },
     {
       text: s.strings.onboarding_slide_4,
       iOSImage: 'onboard4',
-      iPadImage: 'onboard4',
-      iPadImageHoriz: 'onboard4',
+      iPadImage: 'iPadOnboarding4Vert',
+      iPadImageHoriz: 'iPadOnboarding4Horiz',
       androidImage: 'onboard4'
     }
   ]
