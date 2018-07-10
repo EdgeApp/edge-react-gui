@@ -180,6 +180,25 @@ export const decimalOrZero = (input: string, decimalPlaces: number): string => {
   }
 }
 
+getCurrencyFiatBalanceFromWallet = (wallet: GuiWallet, currencyCode: string, state: State) => {
+  let fiatAmount = 0
+  const settings = state.ui.settings
+  const nativeBalance = wallet.nativeBalances[currencyCode]
+  if (nativeBalance && nativeBalance !== '0') {
+    let denominations
+    if (settings[currencyCode]) {
+      denominations = settings[currencyCode].denominations
+    } else {
+      const tokenInfo = settings.customTokens.find(token => token.currencyCode === currencyCode)
+      denominations = tokenInfo.denominations
+    }
+    const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
+    const nativeToExchangeRatio: string = exchangeDenomination.multiplier
+    fiatAmount = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
+    return fiatAmount
+  }
+}
+
 // Used to convert outputs from core into other denominations (exchangeDenomination, displayDenomination)
 export const convertNativeToDenomination = (nativeToTargetRatio: string) => (nativeAmount: string): string =>
   div(nativeAmount, nativeToTargetRatio, DIVIDE_PRECISION)
