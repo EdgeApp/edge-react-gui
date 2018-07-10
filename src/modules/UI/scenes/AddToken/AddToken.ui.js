@@ -14,7 +14,7 @@ import Text from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView'
 import styles from './style.js'
-import * as Constants from '../../../../constants/indexConstants.js'
+import { MAX_TOKEN_CODE_CHARACTERS } from '../../../../constants/indexConstants.js'
 
 export type AddTokenOwnProps = {
   walletId: string,
@@ -94,7 +94,7 @@ export class AddToken extends Component<AddTokenProps, State> {
                   label={s.strings.addtoken_currency_code_input_text}
                   returnKeyType={'done'}
                   autoCorrect={false}
-                  maxLength={Constants.MAX_TOKEN_CODE_CHARACTERS}
+                  maxLength={MAX_TOKEN_CODE_CHARACTERS}
                 />
               </View>
               <View style={[styles.contractAddressArea]}>
