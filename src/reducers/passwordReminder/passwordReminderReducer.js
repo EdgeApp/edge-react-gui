@@ -14,8 +14,8 @@ export const INITIAL_NON_PASSWORD_LOGINS_LIMIT = 2
 export const MAX_NON_PASSWORD_DAYS_LIMIT = 64 // max number of consecutive non password days
 export const MAX_NON_PASSWORD_LOGINS_LIMIT = 128 // max number of consecutive non password logins
 
-export const NON_PASSWORD_DAYS_GROWTH_RATE = 2
-export const NON_PASSWORD_LOGINS_GROWTH_RATE = 2
+export const NON_PASSWORD_DAYS_GROWTH_RATE = 4
+export const NON_PASSWORD_LOGINS_GROWTH_RATE = 4
 
 export const NON_PASSWORD_DAYS_POSTPONEMENT = 2
 export const NON_PASSWORD_LOGINS_POSTPONEMENT = 2
