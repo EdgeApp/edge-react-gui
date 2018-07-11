@@ -1,5 +1,5 @@
 // @flow
-import { makeReactNativeFolder } from 'disklet'
+
 import type { EdgeAccount } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import { Actions } from 'react-native-router-flux'
@@ -167,12 +167,13 @@ export const setBitcoinOverrideServerRequest = (overrideServer: string) => (disp
 
 // touch id interaction
 export const updateTouchIdEnabled = (arg: boolean, account: EdgeAccount) => async (dispatch: Dispatch, getState: GetState) => {
+  const folder = CORE_SELECTORS.getFolder(getState())
   // dispatch the update for the new state for
   dispatch(SETTINGS_ACTIONS.updateTouchIdEnabled(arg))
   if (arg) {
-    enableTouchId(makeReactNativeFolder(), account)
+    enableTouchId(folder, account)
   } else {
-    disableTouchId(makeReactNativeFolder(), account)
+    disableTouchId(folder, account)
   }
 }
 
