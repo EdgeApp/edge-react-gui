@@ -30,8 +30,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   setKeyboardHeight: keyboardHeight => {
     return dispatch(setKeyboardHeight(keyboardHeight))
   },
-  addContext: context => {
-    return dispatch(addContext(context))
+  addContext: (context, folder) => {
+    return dispatch(addContext(context, folder))
   },
   addUsernames: usernames => {
     return dispatch(addUsernames(usernames))

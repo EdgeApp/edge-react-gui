@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeContext } from 'edge-core-js'
+import type { DiskletFolder, EdgeContext } from 'edge-core-js'
 
 import * as Constants from '../../../constants/indexConstants.js'
 import type { Action } from '../../ReduxTypes'
@@ -22,9 +22,11 @@ export const context = (state: State = initialState, action: Action) => {
   switch (type) {
     case ACTION.ADD_CONTEXT: {
       const context: EdgeContext = data.context
+      const folder: DiskletFolder = data.folder
       return {
         ...state,
-        context
+        context,
+        folder
       }
     }
 
