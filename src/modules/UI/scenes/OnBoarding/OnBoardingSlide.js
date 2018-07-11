@@ -53,7 +53,13 @@ export default class OnBoardingScene extends Component<Props, State> {
   render () {
     const isTablet = DeviceInfo.isTablet()
     const image = Platform.OS === ANDROID
-      ? this.props.slide.androidImage
+      ? (isTablet
+        ? (this.state.orientation === 'landscape'
+          ? this.props.slide.androidTabletHorizontalImage
+          : this.props.slide.androidTabletVerticalImage
+        )
+        : this.props.slide.androidImage
+      )
       : (isTablet
         ? (this.state.orientation === 'landscape'
           ? this.props.slide.iPadImageHoriz

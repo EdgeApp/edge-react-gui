@@ -17,28 +17,36 @@ const initialState: OnBoardingType = {
       iOSImage: 'onboard1',
       iPadImage: 'iPadOnboarding1Vert',
       iPadImageHoriz: 'iPadOnboarding1Horiz',
-      androidImage: 'onboard1'
+      androidImage: 'onboard1',
+      androidTabletHorizontalImage: 'onboardingHorizTab1',
+      androidTabletVerticalImage: 'onboardingVertTab1'
     },
     {
       text: s.strings.onboarding_slide_2,
       iOSImage: 'onboard2',
       iPadImage: 'iPadOnboarding2Vert',
       iPadImageHoriz: 'iPadOnboarding2Horiz',
-      androidImage: 'onboard2'
+      androidImage: 'onboard2',
+      androidTabletHorizontalImage: 'onboardingHorizTab2',
+      androidTabletVerticalImage: 'onboardingVertTab2'
     },
     {
       text: s.strings.onboarding_slide_3,
       iOSImage: 'onboard3',
       iPadImage: 'iPadOnboarding3Vert',
       iPadImageHoriz: 'iPadOnboarding3Horiz',
-      androidImage: 'onboard3'
+      androidImage: 'onboard3',
+      androidTabletHorizontalImage: 'onboardingHorizTab3',
+      androidTabletVerticalImage: 'onboardingVertTab3'
     },
     {
       text: s.strings.onboarding_slide_4,
       iOSImage: 'onboard4',
       iPadImage: 'iPadOnboarding4Vert',
       iPadImageHoriz: 'iPadOnboarding4Horiz',
-      androidImage: 'onboard4'
+      androidImage: 'onboard4',
+      androidTabletHorizontalImage: 'onboardingHorizTab4',
+      androidTabletVerticalImage: 'onboardingVertTab4'
     }
   ]
 }
