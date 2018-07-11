@@ -84,8 +84,6 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       accountInitObject.currencyPlugins.push({ pluginName, plugin, walletTypes })
     })
 
-    accountInitObject.showOnBoarding = true // TODO remove this
-
     if (account.activeWalletIds.length < 1) {
       // we are going to assume that since there is no wallets, this is a first time user
       accountInitObject.showOnBoarding = true
