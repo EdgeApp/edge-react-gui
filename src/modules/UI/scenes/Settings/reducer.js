@@ -12,7 +12,7 @@ export const isSetCustomNodesModalVisible = (state: boolean = false, action: Act
     case ACTION.UPDATE_CUSTOM_NODES_LIST:
       return false
     case ACTION.SET_ENABLE_CUSTOM_NODES:
-      if (action.data.isCustomNodesEnabled) {
+      if (action.data.isEnabled) {
         return true
       }
       return state

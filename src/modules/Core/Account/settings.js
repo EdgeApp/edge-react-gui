@@ -19,58 +19,80 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   merchantMode: false,
   BTC: {
     denomination: '100',
-    isCustomNodesEnabled: false,
-    customNodesList: []
+    customNodes: {
+      nodesList: [],
+      isEnabled: false
+    }
   },
   BCH: {
     denomination: '100',
-    isCustomNodesEnabled: false,
-    customNodesList: []
+    customNodes: {
+      nodesList: [],
+      isEnabled: false
+    }
   },
   XRP: {
     denomination: '1000000',
-    isCustomNodesEnabled: false,
-    customNodesList: []
+    customNodes: {
+      nodesList: [],
+      isEnabled: false
+    }
   },
   DASH: {
     denomination: '100000000',
-    isCustomNodesEnabled: false,
-    customNodesList: []
+    customNodes: {
+      nodesList: [],
+      isEnabled: false
+    }
   },
   LTC: {
     denomination: '100000000',
-    isCustomNodesEnabled: false,
-    customNodesList: []
+    customNodes: {
+      nodesList: [],
+      isEnabled: false
+    }
   },
   FTC: {
     denomination: '100000000',
-    isCustomNodesEnabled: false,
-    customNodesList: []
+    customNodes: {
+      nodesList: [],
+      isEnabled: false
+    }
   },
   XZC: {
     denomination: '100000000',
-    isCustomNodesEnabled: false,
-    customNodesList: []
+    customNodes: {
+      nodesList: [],
+      isEnabled: false
+    }
   },
   QTUM: {
     denomination: '100000000',
-    isCustomNodesEnabled: false,
-    customNodesList: []
+    customNodes: {
+      nodesList: [],
+      isEnabled: false
+    }
   },
   UFO: {
     denomination: '100000000',
-    isCustomNodesEnabled: false,
-    customNodesList: []
+    customNodes: {
+      nodesList: [],
+      isEnabled: false
+    }
   },
   XMR: {
     denomination: '1000000000000',
-    isCustomNodesEnabled: false,
-    customNodesList: []
+    customNodes: {
+      nodesList: [],
+      isEnabled: false
+    }
   },
   ETH: {
     denomination: '1000000000000000000',
-    isCustomNodesEnabled: false,
-    customNodesList: []
+    customNodes: {
+      nodesList: [],
+      isEnabled: false
+    }
   },
   REP: {
     denomination: '1000000000000000000'
@@ -160,13 +182,16 @@ export const setDenominationKeyRequest = (account: EdgeAccount, currencyCode: st
     return setSyncedSettings(account, updatedSettings)
   })
 
-export const setEnableCustomNodes = (account: EdgeAccount, currencyCode: string, isCustomNodesEnabled: boolean) => {
+export const setEnableCustomNodes = (account: EdgeAccount, currencyCode: string, isEnabled: boolean) => {
   return getSyncedSettings(account).then((settings) => {
     const updatedSettings = {
       ...settings,
       [currencyCode]: {
         ...settings[currencyCode],
-        isCustomNodesEnabled
+        customNodes: {
+          ...settings[currencyCode].customNodes,
+          isEnabled
+        }
       }
     }
     updateCurrencySettings(settings, currencyCode, updatedSettings)
@@ -174,13 +199,16 @@ export const setEnableCustomNodes = (account: EdgeAccount, currencyCode: string,
   })
 }
 
-export const setCustomNodesList = (account: EdgeAccount, currencyCode: string, customNodesList: Array<string>) => {
+export const setCustomNodesList = (account: EdgeAccount, currencyCode: string, nodesList: Array<string>) => {
   return getSyncedSettings(account).then((settings) => {
     const updatedSettings = {
       ...settings,
       [currencyCode]: {
         ...settings[currencyCode],
-        customNodesList
+        customNodes: {
+          ...settings[currencyCode].customNodes,
+          nodesList
+        }
       }
     }
     updateCurrencySettings(settings, currencyCode, updatedSettings)

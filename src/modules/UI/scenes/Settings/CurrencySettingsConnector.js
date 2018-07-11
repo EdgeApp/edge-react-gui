@@ -16,8 +16,8 @@ const mapStateToProps = (state: State, ownProps) => ({
   logo: SETTINGS_SELECTORS.getPlugin(state, ownProps.pluginName).currencyInfo.symbolImage,
   denominations: SETTINGS_SELECTORS.getDenominations(state, ownProps.currencyCode),
   selectedDenominationKey: SETTINGS_SELECTORS.getDisplayDenominationKey(state, ownProps.currencyCode),
-  isCustomNodesEnabled: state.ui.settings[ownProps.currencyCode].isCustomNodesEnabled,
-  customNodesList: state.ui.settings[ownProps.currencyCode].customNodesList,
+  isCustomNodesEnabled: state.ui.settings[ownProps.currencyCode].customNodes.isEnabled || false,
+  customNodesList: state.ui.settings[ownProps.currencyCode].customNodes.nodesList || [],
   isSetCustomNodesModalVisible: state.ui.scenes.settings.isSetCustomNodesModalVisible
 })
 const mapDispatchToProps = (dispatch: Dispatch, ownProps) => ({
@@ -27,6 +27,6 @@ const mapDispatchToProps = (dispatch: Dispatch, ownProps) => ({
   toggleEnableCustomNodes: () => dispatch(toggleEnableCustomNodes(ownProps.currencyCode)),
   // $FlowFixMe
   toggleSetCustomNodesModalVisibility: (visibility: boolean | null) => dispatch(setCustomNodeModalVisibility(visibility)),
-  saveCustomNodesList: (customNodesList: Array<string>) => dispatch(saveCustomNodesList(ownProps.currencyCode, customNodesList))
+  saveCustomNodesList: (nodesList: Array<string>) => dispatch(saveCustomNodesList(ownProps.currencyCode, nodesList))
 })
 export default connect(mapStateToProps, mapDispatchToProps)(CurrencySettings)

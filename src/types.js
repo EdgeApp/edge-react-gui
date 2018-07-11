@@ -70,10 +70,14 @@ export type GuiWalletType = {
   currencyCode: string
 }
 
+export type CustomNodeSetting = {
+  isEnabled: boolean,
+  nodesList: Array<string>
+}
+
 export type CurrencySetting = {
   denomination: string,
-  isCustomNodesEnabled?: boolean,
-  customNodesList?: Array<string>
+  customNodes?: CustomNodeSetting
 }
 
 export type GuiFiatType = {

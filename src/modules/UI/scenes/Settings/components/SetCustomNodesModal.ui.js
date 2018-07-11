@@ -18,7 +18,7 @@ export type SetCustomNodesModalOwnProps = {
 }
 
 export type SetCustomNodesModalState = {
-  readableCustomNodesList: string
+  readableNodesList: string
 }
 
 export type SetCustomNodeModalProps = SetCustomNodesModalOwnProps
@@ -26,26 +26,26 @@ export type SetCustomNodeModalProps = SetCustomNodesModalOwnProps
 export class SetCustomNodesModal extends Component<SetCustomNodeModalProps, SetCustomNodesModalState > {
   constructor (props: SetCustomNodeModalProps) {
     super(props)
-    const readableCustomNodesList = this.props.customNodesList.join('\n')
+    const readableNodesList = this.props.customNodesList.join('\n')
     this.state = {
-      readableCustomNodesList
+      readableNodesList
     }
   }
 
   onChangeText = (input: string) => {
     this.setState({
-      readableCustomNodesList: input
+      readableNodesList: input
     })
   }
 
   handleSave = () => {
-    if (this.state.readableCustomNodesList) {
-      const parsedCustomNodesList = this.state.readableCustomNodesList.split('\n')
-      const cleanedCustomNodesList = parsedCustomNodesList.map((item) => {
+    if (this.state.readableNodesList) {
+      const parsedNodesList = this.state.readableNodesList.split('\n')
+      const cleanedNodesList = parsedNodesList.map((item) => {
         // remove unwanted spaces
         return item.replace(' ', '')
       })
-      this.props.saveCustomNodesList(cleanedCustomNodesList)
+      this.props.saveCustomNodesList(cleanedNodesList)
     } else {
       // if empty then pass an empty array otherwise it will save as [""] which is NOT falsy
       this.props.saveCustomNodesList([])
@@ -70,7 +70,7 @@ export class SetCustomNodesModal extends Component<SetCustomNodeModalProps, SetC
           <View style={styles.customNodesInputWrap}>
             <TextInput
               style={styles.customNodesInput}
-              value={this.state.readableCustomNodesList}
+              value={this.state.readableNodesList}
               onChangeText={this.onChangeText}
               editable={true}
               multiline

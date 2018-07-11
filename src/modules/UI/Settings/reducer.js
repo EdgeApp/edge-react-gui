@@ -4,7 +4,7 @@ import type { EdgeCurrencyPlugin } from 'edge-core-js'
 import _ from 'lodash'
 
 import * as Constants from '../../../constants/indexConstants.js'
-import type { CustomTokenInfo, CurrencySetting } from '../../../types'
+import type { CustomTokenInfo, CurrencySetting } from '../../../types.js'
 import { CORE_DEFAULTS, LOCAL_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_DEFAULTS } from '../../Core/Account/settings.js'
 import { SEND_LOGS_FAILURE, SEND_LOGS_PENDING, SEND_LOGS_REQUEST, SEND_LOGS_SUCCESS } from '../../Logs/action'
 import type { Action } from '../../ReduxTypes'
@@ -477,24 +477,29 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
     }
 
     case SETTINGS_ACTION.SET_ENABLE_CUSTOM_NODES: {
-      const { currencyCode, isCustomNodesEnabled } = data
+      const { currencyCode, isEnabled } = data
       return {
         ...state,
         [currencyCode]: {
           ...state[currencyCode],
-          isCustomNodesEnabled
+          customNodes: {
+            ...state[currencyCode].customNodes,
+            isEnabled
+          }
         }
       }
     }
 
     case SETTINGS_ACTION.UPDATE_CUSTOM_NODES_LIST: {
       const currencyCode = data.currencyCode
-      const customNodesList = data.customNodesList
+      const nodesList = data.nodesList
       return {
         ...state,
         [currencyCode]: {
-          ...state[currencyCode],
-          customNodesList
+          customNodes: {
+            ...state[currencyCode].customNodes,
+            nodesList
+          }
         }
       }
     }

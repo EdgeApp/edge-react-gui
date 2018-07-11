@@ -165,7 +165,7 @@ export const toggleEnableCustomNodes = (currencyCode: string) => (dispatch: Disp
   const state: State = getState()
   const account = CORE_SELECTORS.getAccount(state)
   const currencySettings = getCryptocurrencySettings(state, currencyCode)
-  const isCustomNodesCurrentlyEnabled = currencySettings.isCustomNodesEnabled
+  const isCustomNodesCurrentlyEnabled = currencySettings.customNodes.isEnabled || false
   const isCustomNodesNowEnabled = !isCustomNodesCurrentlyEnabled
   const onError = e => console.log(e)
   // $FlowFixMe
@@ -176,30 +176,30 @@ export const toggleEnableCustomNodes = (currencyCode: string) => (dispatch: Disp
     .catch(onError)
 }
 
-export function setCustomNodesEnabled (currencyCode: string, isCustomNodesEnabled: boolean) {
+export function setCustomNodesEnabled (currencyCode: string, isEnabled: boolean) {
   return {
     type: SET_ENABLE_CUSTOM_NODES,
-    data: { currencyCode, isCustomNodesEnabled }
+    data: { currencyCode, isEnabled }
   }
 }
 
-export const saveCustomNodesList = (currencyCode: string, customNodesList: Array<string>) => (dispatch: Dispatch, getState: GetState) => {
+export const saveCustomNodesList = (currencyCode: string, nodesList: Array<string>) => (dispatch: Dispatch, getState: GetState) => {
   const state: State = getState()
   const account = CORE_SELECTORS.getAccount(state)
 
   const onError = e => console.log(e)
   // $FlowFixMe
-  return ACCOUNT_SETTINGS.setCustomNodesList(account, currencyCode, customNodesList)
+  return ACCOUNT_SETTINGS.setCustomNodesList(account, currencyCode, nodesList)
     .then(() => {
-      dispatch(updateCustomNodesList(currencyCode, customNodesList))
+      dispatch(updateCustomNodesList(currencyCode, nodesList))
     })
     .catch(onError)
 }
 
-export function updateCustomNodesList (currencyCode: string, customNodesList: Array<string>) {
+export function updateCustomNodesList (currencyCode: string, nodesList: Array<string>) {
   return {
     type: UPDATE_CUSTOM_NODES_LIST,
-    data: { currencyCode, customNodesList }
+    data: { currencyCode, nodesList }
   }
 }
 
