@@ -6,7 +6,7 @@ import React, { Component } from 'react'
 import { ActivityIndicator, Alert, ScrollView, View } from 'react-native'
 
 import { FormField } from '../../../../components/FormField.js'
-import * as Constants from '../../../../constants/indexConstants'
+import { MAX_TOKEN_CODE_CHARACTERS, DELETE } from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings.js'
 import type { CustomTokenInfo } from '../../../../types.js'
 import * as UTILS from '../../../utils'
@@ -90,7 +90,7 @@ export default class EditToken extends Component<EditTokenComponentProps, State>
           <StylizedModal
             headerText={s.strings.edittoken_delete_prompt}
             visibilityBoolean={this.props.deleteTokenModalVisible}
-            featuredIcon={<OptionIcon iconName={Constants.DELETE} style={styles.deleteIcon} />}
+            featuredIcon={<OptionIcon iconName={DELETE} style={styles.deleteIcon} />}
             modalBottom={
               <DeleteTokenButtons
                 onPressDelete={this.deleteToken}
@@ -125,7 +125,7 @@ export default class EditToken extends Component<EditTokenComponentProps, State>
                   label={s.strings.addtoken_currency_code_input_text}
                   returnKeyType={'done'}
                   autoCorrect={false}
-                  maxLength={5}
+                  maxLength={MAX_TOKEN_CODE_CHARACTERS}
                 />
               </View>
               <View style={[styles.contractAddressArea]}>
