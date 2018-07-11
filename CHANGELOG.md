@@ -9,7 +9,19 @@
 * Make show account balance toggle persistent
 * Make progress bar start at about 10%
 * Change settings for password recovery to show "Setup Password Recovery"
-* Fix dropdown for iPhone X 
+* Fix dropdown for iPhone X
+
+edge-currency-bitcoin:
+* BIP70
+* Fix sweeping private keys for QTUM, DASH, LTC, FTC, XZC
+* Rename UFO Coin -> UFO
+
+edge-currency-ethereum:
+* Update REP contract address
+
+edge-currency-ripple:
+* Switch currency name to XRP
+* Update block explorer
 
 ## 1.2.3
 
