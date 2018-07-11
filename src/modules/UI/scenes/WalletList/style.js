@@ -89,7 +89,7 @@ export const styles = {
     justifyContent: 'space-around',
     alignItems: 'center',
     height: 50,
-    flexDirection:'row'
+    flexDirection: 'row'
   },
   fiatToggleSwitchWrap: {
     paddingRight: 40,
@@ -97,7 +97,7 @@ export const styles = {
     justifyContent: 'space-between',
     width: 160,
     alignItems: 'center'
-  }, 
+  },
   fiatSwitchToggle: {
 
   },

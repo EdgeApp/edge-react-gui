@@ -53,8 +53,8 @@ export class WalletListTokenRow extends PureComponent<Props> {
           <View style={[styles.tokenRowBalanceTextWrap]}>
             {this.props.isWalletFiatBalanceVisible ? (
               <T style={[styles.tokenRowText]}>
-              {this.props.fiatSymbol + ' ' + this.props.fiatBalance}
-            </T>
+                {this.props.fiatSymbol + ' ' + this.props.fiatBalance}
+              </T>
             ) : (
               <T style={[styles.tokenRowText]}>
                 {intl.formatNumber(UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(this.props.balance) || '0')}

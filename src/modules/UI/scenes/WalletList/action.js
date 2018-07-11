@@ -49,7 +49,7 @@ export const toggleWalletFiatBalanceVisibility = () => (dispatch: Dispatch, getS
     .then(() => dispatch(updateWalletFiatBalanceVisibility(!currentWalletFiatBalanceVisibility)))
     .catch(error => {
       console.error(error)
-    })  
+    })
 }
 
 export const updateArchivedWalletsOrder = (archivedWalletIds: Array<string>) => (dispatch: Dispatch, getState: GetState) => {

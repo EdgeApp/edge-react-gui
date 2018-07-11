@@ -11,7 +11,7 @@ import {
   updateActiveWalletsOrder,
   updateArchivedWalletsOrder,
   toggleAccountBalanceVisibility,
-  toggleWalletFiatBalanceVisibility  
+  toggleWalletFiatBalanceVisibility
 } from './action'
 import { walletRowOption } from './components/WalletOptions/action.js'
 import WalletList from './WalletList.ui'
@@ -34,6 +34,7 @@ const mapStateToProps = (state: State) => {
   const progressPercentage = UI_SELECTORS.getWalletLoadingPercent(state)
   const isAccountBalanceVisible = state.ui.settings.isAccountBalanceVisible
   const isWalletFiatBalanceVisible = state.ui.settings.isWalletFiatBalanceVisible
+  const currentState = state
 
   return {
     settings,
@@ -51,11 +52,12 @@ const mapStateToProps = (state: State) => {
     otpResetPending,
     progressPercentage,
     isAccountBalanceVisible,
-    isWalletFiatBalanceVisible
+    isWalletFiatBalanceVisible,
+    currentState
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch, state: State) => ({
   updateActiveWalletsOrder: activeWalletIds => dispatch(updateActiveWalletsOrder(activeWalletIds)),
   updateArchivedWalletsOrder: archivedWalletIds => dispatch(updateArchivedWalletsOrder(archivedWalletIds)),
   // $FlowFixMe

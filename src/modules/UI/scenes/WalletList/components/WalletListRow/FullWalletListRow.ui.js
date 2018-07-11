@@ -18,7 +18,6 @@ import {
   truncateDecimals,
   getObjectDiff,
   getFiatSymbol,
-  convertNativeToExchange,
   calculateFiatFromCryptoCurrency
 } from '../../../../../utils.js'
 import T from '../../../../components/FormattedText'
@@ -73,7 +72,7 @@ export default class FullWalletListRow extends Component<OwnProps> {
             customTokens={this.props.customTokens}
             walletFiatBalances={this.props.walletFiatBalances}
             isWalletFiatBalanceVisible={this.props.isWalletFiatBalanceVisible}
-            fiatSymbol={this.props.fiatSymbol}            
+            fiatSymbol={this.props.fiatSymbol}
           />
         ) : (
           <FullListRowEmptyData />
@@ -114,7 +113,6 @@ class FullWalletListRowConnect extends Component<Props> {
     const symbolImageDarkMono = walletData.symbolImageDarkMono
     const preliminaryCryptoAmount = truncateDecimals(bns.div(walletData.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)
     const finalCryptoAmount = intl.formatNumber(decimalOrZero(preliminaryCryptoAmount, 6)) // check if infinitesimal (would display as zero), cut off trailing zeroes
-    const settings = this.props.settings
     // need to crossreference tokensEnabled with nativeBalances
     const enabledNativeBalances = {}
     const enabledTokens = walletData.enabledTokens
@@ -175,18 +173,18 @@ class FullWalletListRowConnect extends Component<Props> {
                     <T style={[styles.rowBalanceAmountText]}>{fiatBalanceString}</T>
                   </View>
                 </View>
-                ) : (
-                  <View style={[styles.rowBalanceTextWrap]}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-                      <T style={[styles.rowBalanceAmountText]}>{finalCryptoAmount}</T>
-                    </View>
+              ) : (
+                <View style={[styles.rowBalanceTextWrap]}>
+                  <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                    <T style={[styles.rowBalanceAmountText]}>{finalCryptoAmount}</T>
+                  </View>
 
-                    <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-                      <T style={[styles.rowBalanceDenominationText]}>{cryptocurrencyName} (</T>
-                      <T style={[styles.rowBalanceDenominationText, styles.symbol]}>{symbol || ''}</T>
-                      <T style={[styles.rowBalanceDenominationText]}>)</T>
-                    </View>
-                    </View>
+                  <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                    <T style={[styles.rowBalanceDenominationText]}>{cryptocurrencyName} (</T>
+                    <T style={[styles.rowBalanceDenominationText, styles.symbol]}>{symbol || ''}</T>
+                    <T style={[styles.rowBalanceDenominationText]}>)</T>
+                  </View>
+                </View>
               )}
               <WalletListRowOptions
                 currencyCode={walletData.currencyCode}
@@ -207,12 +205,12 @@ class FullWalletListRowConnect extends Component<Props> {
       if (metaTokenBalances.hasOwnProperty(property)) {
         if (property !== this.props.data.item.currencyCode) {
           tokens.push(<WalletListTokenRow
-                        parentId={parentId}
-                        currencyCode={property}
-                        key={property}
-                        fiatSymbol={this.props.fiatSymbol}
-                        balance={metaTokenBalances[property]}
-                      />)
+            parentId={parentId}
+            currencyCode={property}
+            key={property}
+            fiatSymbol={this.props.fiatSymbol}
+            balance={metaTokenBalances[property]}
+          />)
         }
       }
     }

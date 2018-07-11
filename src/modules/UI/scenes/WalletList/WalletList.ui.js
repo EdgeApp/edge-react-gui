@@ -64,7 +64,7 @@ type Props = {
   toggleWalletFiatBalanceVisibility: () => void,
   progressPercentage: number,
   isAccountBalanceVisible: boolean,
-  isWalletFiatBalanceVisible: boolean  
+  isWalletFiatBalanceVisible: boolean
 }
 
 export default class WalletList extends Component<Props, State> {
@@ -317,7 +317,7 @@ export default class WalletList extends Component<Props, State> {
               renderItem={this.renderItem}
               sortableMode={this.state.sortableMode}
               executeWalletRowOption={this.executeWalletRowOption}
-              settings={this.props.settings}            
+              settings={this.props.settings}
             />
           </Animated.View>
         )}
