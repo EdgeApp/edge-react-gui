@@ -33,6 +33,7 @@ export const SET_SETTINGS_LOCK = PREFIX + 'SET_SETTINGS_LOCK'
 
 // Local Account Settings
 export const SET_BLUETOOTH_MODE = PREFIX + 'SET_BLUETOOTH_MODE'
+export const SET_ACCOUNT_BALANCE_VISIBILITY = PREFIX + 'SET_ACCOUNT_BALANCE_VISIBILITY'
 
 // Currency Settings
 export const SET_BITCOIN_OVERRIDE_SERVER = PREFIX + 'SET_BITCOIN_OVERRIDE_SERVER'
@@ -156,5 +157,12 @@ export const updateOtpInfo = (otpInfo: { enabled: boolean, otpKey: ?string }) =>
   return {
     type: OTP_SETTINGS,
     data: otpInfo
+  }
+}
+
+export const setAccountBalanceVisibility = (isAccountBalanceVisible: boolean) => {
+  return {
+    type: SET_ACCOUNT_BALANCE_VISIBILITY,
+    data: { isAccountBalanceVisible }
   }
 }

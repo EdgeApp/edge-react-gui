@@ -4,15 +4,15 @@ import { THEME } from '../../../../theme/variables/airbitz.js'
 
 export const styles = {
   container: {
-    flexDirection: 'row',
-    height: 3
+    flexDirection: 'row'
   },
   bar: {
     position: 'absolute',
     left: 0,
-    top: 0,
+    top: -3,
     bottom: 0,
-    backgroundColor: THEME.COLORS.ACCENT_MINT
+    backgroundColor: THEME.COLORS.ACCENT_MINT,
+    zIndex: 100
   }
 }
 

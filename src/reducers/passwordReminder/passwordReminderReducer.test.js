@@ -88,8 +88,8 @@ describe('PasswordReminder', () => {
         const needsPasswordCheck = false
         const lastPasswordUseDate = testDate
         const passwordUseCount = 1
-        const nonPasswordDaysLimit = 2
-        const nonPasswordLoginsLimit = 2
+        const nonPasswordDaysLimit = 4
+        const nonPasswordLoginsLimit = 4
 
         const expected = {
           ...initialState,

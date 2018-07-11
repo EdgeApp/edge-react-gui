@@ -7,7 +7,7 @@ import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import type { Dispatch, State } from '../../../ReduxTypes'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors'
-import { updateActiveWalletsOrder, updateArchivedWalletsOrder } from './action'
+import { updateActiveWalletsOrder, updateArchivedWalletsOrder, toggleAccountBalanceVisibility } from './action'
 import { walletRowOption } from './components/WalletOptions/action.js'
 import WalletList from './WalletList.ui'
 
@@ -28,6 +28,7 @@ const mapStateToProps = (state: State) => {
   const otpResetPending = SETTINGS_SELECTORS.getOtpResetPending(state)
   const progressPercentage = UI_SELECTORS.getWalletLoadingPercent(state)
   const showOnBoarding = SETTINGS_SELECTORS.runOnBoarding(state)
+  const isAccountBalanceVisible = state.ui.settings.isAccountBalanceVisible
 
   return {
     settings,
@@ -44,7 +45,8 @@ const mapStateToProps = (state: State) => {
     customTokens,
     otpResetPending,
     progressPercentage,
-    showOnBoarding
+    showOnBoarding,
+    isAccountBalanceVisible
   }
 }
 
@@ -54,7 +56,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   // $FlowFixMe
   walletRowOption: (walletId, option, archived) => dispatch(walletRowOption(walletId, option, archived)),
   disableOtp: () => dispatch(disableOtp()),
-  keepOtp: () => dispatch(keepOtp())
+  keepOtp: () => dispatch(keepOtp()),
+  toggleAccountBalanceVisibility: () => dispatch(toggleAccountBalanceVisibility())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(WalletList)

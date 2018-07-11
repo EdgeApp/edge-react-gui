@@ -1,5 +1,39 @@
 # edge-react-gui
 
+## 1.2.4
+
+* Add BIP70 support
+* Change password reminder logic to step off twice as quickly after correct password
+* Fix mint progress bar to be on top of blue region
+* Remove IMP fiat currency since we don't have exchange rates for it
+* Make show account balance toggle persistent
+* Make progress bar start at about 10%
+* Change settings for password recovery to show "Setup Password Recovery"
+* Fix dropdown for iPhone X
+
+edge-currency-bitcoin:
+* BIP70
+* Fix sweeping private keys for QTUM, DASH, LTC, FTC, XZC
+* Rename UFO Coin -> UFO
+
+edge-currency-ethereum:
+* Update REP contract address
+
+edge-currency-ripple:
+* Switch currency name to XRP
+* Update block explorer
+
+## 1.2.3
+
+* Bump Monero library 0.0.8
+* Check for errors in encodeUri from invalid addresses
+* Poll Edge Core for new QR code address if current public address is invalid
+
+## 1.2.2
+
+* Fix bugs with QBO/CSV export
+* Add support for uniqueIdentifer (XRP destination tag / Monero payment ID)
+
 ## 1.2.1
 
 * Support to hold, send, and receive Monero (XMR)

@@ -32,7 +32,8 @@ export const initialState = {
   otpResetDate: null,
   otpResetPending: false,
   confirmPasswordError: '',
-  sendLogsStatus: Constants.REQUEST_STATUS.PENDING
+  sendLogsStatus: Constants.REQUEST_STATUS.PENDING,
+  isAccountBalanceVisible: true
 }
 
 type SettingsState = {
@@ -85,7 +86,8 @@ type SettingsState = {
     supportedWalletTypes: Array<string>
   },
   confirmPasswordError: string,
-  sendLogsStatus: string
+  sendLogsStatus: string,
+  isAccountBalanceVisible: boolean
 }
 
 const currencyPLuginUtil = (state, payloadData) => {
@@ -162,7 +164,8 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         otpMode,
         denominationKeys,
         customTokensSettings,
-        showOnBoarding
+        showOnBoarding,
+        isAccountBalanceVisible
       } = data
       let newState = {
         ...state,
@@ -181,7 +184,8 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         pinLoginEnabled,
         otpMode,
         showOnBoarding,
-        otpResetDate: account.otpResetDate
+        otpResetDate: account.otpResetDate,
+        isAccountBalanceVisible
       }
       denominationKeys.forEach(key => {
         const currencyCode = key.currencyCode
@@ -495,6 +499,13 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
     }
     case Constants.COMPLETE_ONBOARDING: {
       return {...state, showOnBoarding: false}
+    }
+
+    case ACTION.SET_ACCOUNT_BALANCE_VISIBILITY: {
+      return {
+        ...state,
+        isAccountBalanceVisible: data.isAccountBalanceVisible
+      }
     }
 
     default:

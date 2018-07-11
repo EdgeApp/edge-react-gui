@@ -29,26 +29,26 @@ export type SendConfirmationStateProps = {
   fiatCurrencyCode: string,
   currencyCode: string,
   nativeAmount: string,
-  parentNetworkFee: ?string,
-  networkFee: string,
-  publicAddress: string,
+  parentNetworkFee: string | null,
+  networkFee: string | null,
   pending: boolean,
   keyboardIsVisible: boolean,
-  label: string,
   balanceInCrypto: string,
   balanceInFiat: string,
   parentDisplayDenomination: EdgeDenomination,
   parentExchangeDenomination: GuiDenomination,
   primaryDisplayDenomination: EdgeDenomination,
   primaryExchangeDenomination: GuiDenomination,
-  secondaryeExchangeCurrencyCode: string,
+  secondaryExchangeCurrencyCode: string,
   errorMsg: string | null,
   fiatPerCrypto: number,
   sliderDisabled: boolean,
   resetSlider: boolean,
   forceUpdateGuiCounter: number,
   currencyConverter: CurrencyConverter,
-  uniqueIdentifier?: string
+  uniqueIdentifier?: string,
+  destination: string,
+  isEditable: boolean
 }
 
 export type SendConfirmationDispatchProps = {
@@ -117,8 +117,6 @@ export class SendConfirmation extends Component<Props, State> {
   }
 
   render () {
-    const parentDisplayDenomination = this.props.parentDisplayDenomination
-
     const primaryInfo: GuiCurrencyInfo = {
       displayCurrencyCode: this.props.currencyCode,
       displayDenomination: this.props.primaryDisplayDenomination,
@@ -126,9 +124,9 @@ export class SendConfirmation extends Component<Props, State> {
       exchangeDenomination: this.props.primaryExchangeDenomination
     }
 
-    let exchangeCurrencyCode = this.props.secondaryeExchangeCurrencyCode
+    let exchangeCurrencyCode = this.props.secondaryExchangeCurrencyCode
 
-    if (this.props.secondaryeExchangeCurrencyCode === '') {
+    if (this.props.secondaryExchangeCurrencyCode === '') {
       if (this.state.secondaryDisplayDenomination.currencyCode) {
         exchangeCurrencyCode = this.state.secondaryDisplayDenomination.name
       }
@@ -141,59 +139,25 @@ export class SendConfirmation extends Component<Props, State> {
       exchangeDenomination: this.state.secondaryDisplayDenomination
     }
 
-    const networkFeeSyntax = () => {
-      const { networkFee, parentNetworkFee } = this.props
-
-      if (parentNetworkFee && bns.gt(parentNetworkFee, '0')) {
-        const cryptoFeeSymbol = parentDisplayDenomination.symbol ? parentDisplayDenomination.symbol : ''
-        const cryptoFeeMultiplier = this.props.parentExchangeDenomination.multiplier
-        const cryptoFeeAmount = parentNetworkFee ? convertNativeToDisplay(cryptoFeeMultiplier)(parentNetworkFee) : ''
-        const cryptoFeeString = `${cryptoFeeSymbol} ${cryptoFeeAmount}`
-        const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol ? secondaryInfo.displayDenomination.symbol : ''
-        const exchangeConvertor = convertNativeToExchange(this.props.parentExchangeDenomination.multiplier)
-        const cryptoFeeExchangeAmount = exchangeConvertor(parentNetworkFee)
-        const fiatFeeAmount = this.props.currencyConverter.convertCurrency(
-          this.props.parentExchangeDenomination.name,
-          secondaryInfo.exchangeCurrencyCode,
-          cryptoFeeExchangeAmount
-        )
-        const fiatFeeAmountString = fiatFeeAmount.toFixed(2)
-        const fiatFeeAmountPretty = bns.toFixed(fiatFeeAmountString, 2, 2)
-        const fiatFeeString = `${fiatFeeSymbol} ${fiatFeeAmountPretty}`
-        return sprintf(s.strings.send_confirmation_fee_line, cryptoFeeString, fiatFeeString)
-      }
-
-      if (bns.gt(networkFee, '0')) {
-        const cryptoFeeSymbol = primaryInfo.displayDenomination.symbol ? primaryInfo.displayDenomination.symbol : ''
-        const cryptoFeeMultiplier = this.props.primaryExchangeDenomination.multiplier
-        const cryptoFeeAmount = networkFee ? convertNativeToDisplay(cryptoFeeMultiplier)(networkFee) : ''
-        const cryptoFeeString = `${cryptoFeeSymbol} ${cryptoFeeAmount}`
-        const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol ? secondaryInfo.displayDenomination.symbol : ''
-        const exchangeConvertor = convertNativeToExchange(primaryInfo.exchangeDenomination.multiplier)
-        const cryptoFeeExchangeAmount = exchangeConvertor(networkFee)
-        const fiatFeeAmount = this.props.currencyConverter.convertCurrency(this.props.currencyCode, secondaryInfo.exchangeCurrencyCode, cryptoFeeExchangeAmount)
-        const fiatFeeAmountString = fiatFeeAmount.toFixed(2)
-        const fiatFeeAmountPretty = bns.toFixed(fiatFeeAmountString, 2, 2)
-        const fiatFeeString = `${fiatFeeSymbol} ${fiatFeeAmountPretty}`
-        return sprintf(s.strings.send_confirmation_fee_line, cryptoFeeString, fiatFeeString)
-      }
-      return ''
-    }
-
     const cryptoBalanceAmount: string = convertNativeToDisplay(primaryInfo.displayDenomination.multiplier)(this.props.balanceInCrypto) // convert to correct denomination
     const cryptoBalanceAmountString = cryptoBalanceAmount ? intl.formatNumber(decimalOrZero(bns.toFixed(cryptoBalanceAmount, 0, 6), 6)) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)
     const balanceInFiatString = intl.formatNumber(this.props.balanceInFiat || 0, { toFixed: 2 })
 
+    const destination = this.props.destination
+    const SEND_TO_DESTINATION_TEXT = sprintf(s.strings.send_to_title, destination)
+
     return (
       <SafeAreaView>
         <Gradient style={[styles.view]}>
-          <Gradient style={styles.gradient} />
+          <Gradient style={[styles.gradient]} />
+
           <View style={[styles.mainScrollView]}>
             <View style={[styles.balanceContainer, styles.error]}>
-              <Text style={styles.balanceText}>
+              <Text style={[styles.balanceText]}>
                 Balance: {cryptoBalanceAmountString} {primaryInfo.displayDenomination.name} ({secondaryInfo.displayDenomination.symbol} {balanceInFiatString})
               </Text>
             </View>
+
             <View style={[styles.exchangeRateContainer, styles.error]}>
               {this.props.errorMsg ? (
                 <Text style={[styles.error, styles.errorText]}>{this.props.errorMsg}</Text>
@@ -201,7 +165,8 @@ export class SendConfirmation extends Component<Props, State> {
                 <ExchangeRate secondaryDisplayAmount={this.props.fiatPerCrypto} primaryInfo={primaryInfo} secondaryInfo={secondaryInfo} />
               )}
             </View>
-            <View style={styles.main}>
+
+            <View style={[styles.main]}>
               <ExchangedFlipInput
                 primaryCurrencyInfo={{ ...primaryInfo }}
                 secondaryCurrencyInfo={{ ...secondaryInfo }}
@@ -210,13 +175,24 @@ export class SendConfirmation extends Component<Props, State> {
                 forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
                 onExchangeAmountChanged={this.onExchangeAmountChanged}
                 keyboardVisible={this.state.keyboardVisible}
+                isEditable={this.props.isEditable}
               />
-              <View style={[styles.feeArea]}>
-                <Text style={[styles.feeAreaText]}>{networkFeeSyntax()}</Text>
-              </View>
-              <Recipient label={this.props.label} link={''} publicAddress={this.props.publicAddress} style={styles.recipient} />
 
-              {this.props.uniqueIdentifier && (
+              {(!!this.props.networkFee || !!this.props.parentNetworkFee) && (
+                <View style={[styles.feeArea]}>
+                  <Text style={[styles.feeAreaText]}>{this.networkFeeSyntax()}</Text>
+                </View>
+              )}
+
+              {!!destination && (
+                <Recipient>
+                  <Recipient.Text>
+                    <Text>{SEND_TO_DESTINATION_TEXT}</Text>
+                  </Recipient.Text>
+                </Recipient>
+              )}
+
+              {!!this.props.uniqueIdentifier && (
                 <UniqueIdentifier>
                   <UniqueIdentifier.Text>
                     <Text>{uniqueIdentifierText(this.props.currencyCode, this.props.uniqueIdentifier)}</Text>
@@ -224,9 +200,11 @@ export class SendConfirmation extends Component<Props, State> {
                 </UniqueIdentifier>
               )}
             </View>
+
             <View style={[styles.pendingSymbolArea]}>
               {this.props.pending && <ActivityIndicator style={[{ flex: 1, alignSelf: 'center' }]} size={'small'} />}
             </View>
+
             <View style={[styles.sliderWrap]}>
               <ABSlider
                 forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
@@ -248,6 +226,68 @@ export class SendConfirmation extends Component<Props, State> {
 
   onExchangeAmountChanged = ({ nativeAmount, exchangeAmount }: ExchangedFlipInputAmounts) => {
     this.props.updateAmount(nativeAmount, exchangeAmount, this.props.fiatPerCrypto.toString())
+  }
+
+  networkFeeSyntax = () => {
+    const { networkFee, parentNetworkFee, parentDisplayDenomination } = this.props
+    if (!networkFee && !parentNetworkFee) return ''
+
+    const primaryInfo: GuiCurrencyInfo = {
+      displayCurrencyCode: this.props.currencyCode,
+      displayDenomination: this.props.primaryDisplayDenomination,
+      exchangeCurrencyCode: this.props.primaryExchangeDenomination.name,
+      exchangeDenomination: this.props.primaryExchangeDenomination
+    }
+
+    let exchangeCurrencyCode = this.props.secondaryExchangeCurrencyCode
+
+    if (this.props.secondaryExchangeCurrencyCode === '') {
+      if (this.state.secondaryDisplayDenomination.currencyCode) {
+        exchangeCurrencyCode = this.state.secondaryDisplayDenomination.name
+      }
+    }
+
+    const secondaryInfo: GuiCurrencyInfo = {
+      displayCurrencyCode: this.props.fiatCurrencyCode,
+      displayDenomination: this.state.secondaryDisplayDenomination,
+      exchangeCurrencyCode: exchangeCurrencyCode,
+      exchangeDenomination: this.state.secondaryDisplayDenomination
+    }
+
+    if (parentNetworkFee && bns.gt(parentNetworkFee, '0')) {
+      const cryptoFeeSymbol = parentDisplayDenomination.symbol ? parentDisplayDenomination.symbol : ''
+      const cryptoFeeMultiplier = this.props.parentExchangeDenomination.multiplier
+      const cryptoFeeAmount = parentNetworkFee ? convertNativeToDisplay(cryptoFeeMultiplier)(parentNetworkFee) : ''
+      const cryptoFeeString = `${cryptoFeeSymbol} ${cryptoFeeAmount}`
+      const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol ? secondaryInfo.displayDenomination.symbol : ''
+      const exchangeConvertor = convertNativeToExchange(this.props.parentExchangeDenomination.multiplier)
+      const cryptoFeeExchangeAmount = exchangeConvertor(parentNetworkFee)
+      const fiatFeeAmount = this.props.currencyConverter.convertCurrency(
+        this.props.parentExchangeDenomination.name,
+        secondaryInfo.exchangeCurrencyCode,
+        cryptoFeeExchangeAmount
+      )
+      const fiatFeeAmountString = fiatFeeAmount.toFixed(2)
+      const fiatFeeAmountPretty = bns.toFixed(fiatFeeAmountString, 2, 2)
+      const fiatFeeString = `${fiatFeeSymbol} ${fiatFeeAmountPretty}`
+      return sprintf(s.strings.send_confirmation_fee_line, cryptoFeeString, fiatFeeString)
+    }
+
+    if (networkFee && bns.gt(networkFee, '0')) {
+      const cryptoFeeSymbol = primaryInfo.displayDenomination.symbol ? primaryInfo.displayDenomination.symbol : ''
+      const cryptoFeeMultiplier = this.props.primaryExchangeDenomination.multiplier
+      const cryptoFeeAmount = networkFee ? convertNativeToDisplay(cryptoFeeMultiplier)(networkFee) : ''
+      const cryptoFeeString = `${cryptoFeeSymbol} ${cryptoFeeAmount}`
+      const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol ? secondaryInfo.displayDenomination.symbol : ''
+      const exchangeConvertor = convertNativeToExchange(primaryInfo.exchangeDenomination.multiplier)
+      const cryptoFeeExchangeAmount = exchangeConvertor(networkFee)
+      const fiatFeeAmount = this.props.currencyConverter.convertCurrency(this.props.currencyCode, secondaryInfo.exchangeCurrencyCode, cryptoFeeExchangeAmount)
+      const fiatFeeAmountString = fiatFeeAmount.toFixed(2)
+      const fiatFeeAmountPretty = bns.toFixed(fiatFeeAmountString, 2, 2)
+      const fiatFeeString = `${fiatFeeSymbol} ${fiatFeeAmountPretty}`
+      return sprintf(s.strings.send_confirmation_fee_line, cryptoFeeString, fiatFeeString)
+    }
+    return ''
   }
 }
 

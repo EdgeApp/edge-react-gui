@@ -62,7 +62,9 @@ type Props = {
   walletRowOption: (walletId: string, option: string, archived: boolean) => void,
   disableOtp: () => void,
   keepOtp: () => void,
-  progressPercentage: number
+  toggleAccountBalanceVisibility: () => void,
+  progressPercentage: number,
+  isAccountBalanceVisible: boolean
 }
 
 export default class WalletList extends Component<Props, State> {
@@ -98,7 +100,8 @@ export default class WalletList extends Component<Props, State> {
 
     let diffElement2: string = ''
     const diffElement = UTILS.getObjectDiff(this.props, nextProps, {
-      traverseObjects, ignoreObjects
+      traverseObjects,
+      ignoreObjects
     })
     if (!diffElement) {
       diffElement2 = UTILS.getObjectDiff(this.state, nextState)
@@ -157,12 +160,12 @@ export default class WalletList extends Component<Props, State> {
 
     return (
       <SafeAreaView>
-        <View style={styles.container}>
+        <View style={styles.container} testID={'edge: wallet-list-scene'}>
           <WalletOptions />
           <Gradient style={styles.gradient} />
-          {this.state.isWalletProgressVisible ? this.renderWalletListProgressDropdown() : <View style={styles.progressBarSpacer} />}
+          {this.state.isWalletProgressVisible && this.renderWalletListProgressDropdown()}
           <TouchableOpacity onPress={this.handleOnBalanceBoxPress}>
-            {this.state.balanceBoxVisible ? this.balanceBox(fiatBalanceString) : this.hiddenBalanceBox()}
+            {this.props.isAccountBalanceVisible ? this.balanceBox(fiatBalanceString) : this.hiddenBalanceBox()}
           </TouchableOpacity>
 
           <View style={[styles.walletsBox]}>
@@ -268,9 +271,7 @@ export default class WalletList extends Component<Props, State> {
   }
 
   renderRow = (row: Object) => {
-    return (
-      <SortableWalletListRow data={row} dimensions={this.props.dimensions} />
-    )
+    return <SortableWalletListRow data={row} dimensions={this.props.dimensions} />
   }
 
   renderItem = (item: Object) => {
@@ -474,7 +475,10 @@ export default class WalletList extends Component<Props, State> {
     return intl.formatNumber(total, { toFixed: 2 })
   }
 
-  handleOnBalanceBoxPress = () => this.setState({ balanceBoxVisible: !this.state.balanceBoxVisible })
+  handleOnBalanceBoxPress = () => {
+    this.props.toggleAccountBalanceVisibility()
+  }
+
   balanceBox (fiatBalanceString: string) {
     return (
       <View style={[styles.totalBalanceBox]}>
@@ -510,8 +514,6 @@ export default class WalletList extends Component<Props, State> {
         })
       }, 2000)
     }
-    return (
-      <ProgressBar progress={this.props.progressPercentage} />
-    )
+    return <ProgressBar progress={this.props.progressPercentage} />
   }
 }
