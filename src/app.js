@@ -19,6 +19,7 @@ import s from './locales/strings.js'
 import Main from './modules/MainConnector'
 import { log, logToServer } from './util/logger'
 import { makeCoreContext } from './util/makeContext.js'
+import firebase from 'react-native-firebase'
 
 const store: {} = configureStore({})
 
@@ -30,6 +31,9 @@ console.log('App directory: ' + RNFS.DocumentDirectoryPath)
 console.log('***********************')
 
 global.clog = console.log
+if (ENV.USE_FIREBASE) {
+  global.firebase = firebase
+}
 
 const IGNORED_WARNINGS = ['slowlog', 'Setting a timer for a long period of time']
 // $FlowExpectedError

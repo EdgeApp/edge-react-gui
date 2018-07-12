@@ -6117,6 +6117,10 @@ posix-character-classes@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/posix-character-classes/-/posix-character-classes-0.1.1.tgz#01eac0fe3b5af71a2a6c02feabb8c1fef7e00eab"
 
+postinstall-build@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/postinstall-build/-/postinstall-build-5.0.1.tgz#b917a9079b26178d9a24af5a5cd8cb4a991d11b9"
+
 prebuild-install@^2.0.0, prebuild-install@^2.1.0:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/prebuild-install/-/prebuild-install-2.5.1.tgz#0f234140a73760813657c413cdccdda58296b1da"
@@ -6460,12 +6464,6 @@ react-native-background-task@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/react-native-background-task/-/react-native-background-task-0.2.1.tgz#9d110ed14b245e0d8b9ec8114ce24b33ddda65de"
 
-react-native-blur@^3.2.0:
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/react-native-blur/-/react-native-blur-3.2.2.tgz#5bfb50638d148982c9560436554ed01d77d6d07d"
-  dependencies:
-    prop-types "^15.5.10"
-
 react-native-camera@^0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/react-native-camera/-/react-native-camera-0.12.0.tgz#51afa8acf1696d9d973074b6454c5ba2cce6ac18"
@@ -6543,6 +6541,14 @@ react-native-fast-crypto@^1.5.5:
   dependencies:
     buffer "^5.0.8"
     rfc4648 "^1.0.0"
+
+react-native-firebase@^4.3.5:
+  version "4.3.5"
+  resolved "https://registry.yarnpkg.com/react-native-firebase/-/react-native-firebase-4.3.5.tgz#0c9999453efbb62f2770a027f44b5ee27bfb1e6d"
+  dependencies:
+    opencollective "^1.0.3"
+    postinstall-build "^5.0.1"
+    prop-types "^15.6.1"
 
 "react-native-flip-view@git://github.com/Airbitz/react-native-flip-view.git":
   version "1.0.5"

@@ -19,10 +19,10 @@ Edge Wallet is:
 
 ## Requirements
 
-  ### MacOS
-
+   MacOS High Sierra
    Xcode >= 9
    Android Studio 3.1
+   CocoaPods
 
 ## Getting Started
 
@@ -37,6 +37,10 @@ Edge Wallet is:
 ### Install React Native CLI
 
     npm install -g react-native-cli
+
+### Install CocoaPods
+
+    sudo gem install cocoapods
 
 ### Checkout develop branch & install node_modules
 
