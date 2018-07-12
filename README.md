@@ -19,9 +19,10 @@ Edge Wallet is:
 
 ## Requirements
 
-  ### MacOS
-
+   MacOS High Sierra
    Xcode >= 9
+   Android Studio 3.1
+   CocoaPods
 
 ## Getting Started
 
@@ -37,6 +38,10 @@ Edge Wallet is:
 
     npm install -g react-native-cli
 
+### Install CocoaPods
+
+    sudo gem install cocoapods
+
 ### Checkout develop branch & install node_modules
 
     cd edge-react-gui
@@ -44,21 +49,22 @@ Edge Wallet is:
 
 The `--network-concurrency 1` seems to work around a concurrency bug in yarn.
 
-### Android NDK Setup
+### Android Setup
 
 (MacOS) If the NDK is already installed from Android Studio, it should be in `/Users/[user]/Library/Android/sdk/ndk-bundle`.
 If not, download and unzip the NDK from https://developer.android.com/ndk/index.html
 
-Set `ANDROID_NDK_HOME` environment variable to the path of the NDK. ie
+Set the following environment vars
 
-    export ANDROID_NDK_HOME=/Users/bob/Library/Android/sdk/ndk-bundle
+    export ANDROID_NDK_HOME=/Users/[username]/Library/Android/sdk/ndk-bundle
+    export NDK_HOME=/Users/[username]/Library/Android/sdk/ndk-bundle
+    export SDK_HOME=/Users/[username]/Library/Android/sdk
+    export JAVA_HOME="/Applications/Android Studio.app/Contents/jre/jdk/Contents/Home"
 
 ### Android Recommended Versioning & Configuration
 
 For best results, please consider using the following versions (up-to-date as of 2018-05-11)
 
-- **Gradle** version 4.1
-- **Android Plugin** version 3.0.1
 - **Compile SDK** version API 27
 - **Build Tools** version 25.0.3
 - **Android SDK** API 23 Revision 3 through API 27 Revision 1

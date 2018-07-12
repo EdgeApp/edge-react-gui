@@ -24,3 +24,6 @@ node ./copy-plugin.js
 
 # TODO: Remove the minification hack once the CLI accepts a --minify parameter.
 # See: https://github.com/facebook/react-native/pull/16456
+
+cd ios
+pod install
