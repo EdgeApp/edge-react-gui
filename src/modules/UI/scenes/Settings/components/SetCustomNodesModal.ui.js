@@ -88,13 +88,13 @@ export class SetCustomNodesModal extends Component<SetCustomNodeModalProps, SetC
               onPress={this.handleSave}
               style={styles.primaryButton}
             >
-              <Text style={styles.primaryButtonText}>{this.props.isSetCustomNodesProcessing ? <ActivityIndicator /> : s.strings.string_save}</Text>
+              <PrimaryButton.Text style={styles.primaryButtonText}>{this.props.isSetCustomNodesProcessing ? <ActivityIndicator /> : s.strings.string_save}</PrimaryButton.Text>
             </PrimaryButton>
             <SecondaryButton
               onPress={this.props.onExit}
               style={styles.secondaryButton}
             >
-              <Text style={styles.secondaryButtonText}>{s.strings.string_cancel_cap}</Text>
+              <SecondaryButton.Text style={styles.secondaryButtonText}>{s.strings.string_cancel_cap}</SecondaryButton.Text>
             </SecondaryButton>
           </View>
         </InteractiveModal.Footer>
