@@ -11,7 +11,6 @@ import com.beefe.picker.PickerViewPackage;
 import co.airbitz.AbcCoreJsUi.AbcCoreJsUiPackage;
 import com.zmxv.RNSound.RNSoundPackage;
 import cl.json.RNSharePackage;
-import com.cmcewen.blurview.BlurViewPackage;
 import com.slowpath.hockeyapp.RNHockeyAppModule;
 import com.slowpath.hockeyapp.RNHockeyAppPackage;
 import co.airbitz.fastcrypto.RNFastCryptoPackage;
@@ -59,7 +58,6 @@ public class MainApplication extends Application implements ReactApplication {
             new RNSoundPackage(),
             new RNSharePackage(),
             new RandomBytesPackage(),
-            new BlurViewPackage(),
             new RNHockeyAppPackage(MainApplication.this),
             new RNFastCryptoPackage(),
             new VectorIconsPackage(),
