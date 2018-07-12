@@ -6,9 +6,10 @@ import type { Dispatch, State } from '../../../ReduxTypes.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors'
 import {
   setDenominationKeyRequest,
-  toggleEnableCustomNodes,
+  enableCustomNodes,
+  disableCustomNodes,
   saveCustomNodesList,
-  setCustomNodeModalVisibility
+  updateIsSetCustomNodesModalVisible
 } from './action'
 import CurrencySettings from './CurrencySettings.ui'
 
@@ -24,9 +25,9 @@ const mapDispatchToProps = (dispatch: Dispatch, ownProps) => ({
   selectDenomination: denominationKey => {
     dispatch(setDenominationKeyRequest(ownProps.currencyCode, denominationKey))
   },
-  toggleEnableCustomNodes: () => dispatch(toggleEnableCustomNodes(ownProps.currencyCode)),
-  // $FlowFixMe
-  toggleSetCustomNodesModalVisibility: (visibility: boolean | null) => dispatch(setCustomNodeModalVisibility(visibility)),
+  enableCustomNodes: () => dispatch(enableCustomNodes(ownProps.currencyCode)),
+  disableCustomNodes: () => dispatch(disableCustomNodes(ownProps.currencyCode)),
+  setCustomNodesModalVisibility: (visibility: boolean) => dispatch(updateIsSetCustomNodesModalVisible(visibility)),
   saveCustomNodesList: (nodesList: Array<string>) => dispatch(saveCustomNodesList(ownProps.currencyCode, nodesList))
 })
 export default connect(mapStateToProps, mapDispatchToProps)(CurrencySettings)

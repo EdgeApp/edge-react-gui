@@ -477,31 +477,33 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
     }
 
     case SETTINGS_ACTION.SET_ENABLE_CUSTOM_NODES: {
-      const { currencyCode, isEnabled } = data
-      return {
+      const { isEnabled } = data
+      const updatedSettings = {
         ...state,
-        [currencyCode]: {
-          ...state[currencyCode],
+        [data.currencyCode]: {
+          ...state[data.currencyCode],
           customNodes: {
-            ...state[currencyCode].customNodes,
+            ...state[data.currencyCode].customNodes,
             isEnabled
           }
         }
       }
+      return updatedSettings
     }
 
     case SETTINGS_ACTION.UPDATE_CUSTOM_NODES_LIST: {
-      const currencyCode = data.currencyCode
       const nodesList = data.nodesList
-      return {
+      const updatedSettings = {
         ...state,
-        [currencyCode]: {
+        [data.currencyCode]: {
+          ...state[data.currencyCode],
           customNodes: {
-            ...state[currencyCode].customNodes,
+            ...state[data.currencyCode].customNodes,
             nodesList
           }
         }
       }
+      return updatedSettings
     }
 
     case ACTION.ADD_CURRENCY_PLUGIN: {

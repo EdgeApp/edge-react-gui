@@ -13,7 +13,6 @@ import * as CORE_SELECTORS from '../../../Core/selectors'
 import { displayErrorAlert } from '../../components/ErrorAlert/actions.js'
 import * as SETTINGS_ACTIONS from '../../Settings/action.js'
 import { restoreWalletsRequest } from '../../../Core/Account/api.js'
-import { getCryptocurrencySettings } from '../../Settings/selectors.js'
 
 export const PREFIX = 'UI/Scenes/Settings/'
 
@@ -138,45 +137,39 @@ export const setDenominationKeyRequest = (currencyCode: string, denominationKey:
 
 export const setBitcoinOverrideServerRequest = (overrideServer: string) => (dispatch: Dispatch) => {
   dispatch(setBitcoinOverrideServerStart(overrideServer))
-
   dispatch(SETTINGS_ACTIONS.setBitcoinOverrideServer(overrideServer))
 }
 
-export const setCustomNodeModalVisibility = (visibility: boolean | null = null) => (dispatch: Dispatch, getState: GetState) => {
-  const state: State = getState()
-  let isSetCustomNodesModalVisible
-  if (visibility === null) {
-    isSetCustomNodesModalVisible = !state.ui.scenes.settings.isSetCustomNodesModalVisible
-  } else {
-    isSetCustomNodesModalVisible = visibility
-  }
-
-  return dispatch(updateSetCustomNodesModalVisibility(isSetCustomNodesModalVisible))
-}
-
-export function updateSetCustomNodesModalVisibility (isSetCustomNodesModalVisible: boolean) {
+export function updateIsSetCustomNodesModalVisible (isSetCustomNodesModalVisible: boolean) {
   return {
     type: SET_CUSTOM_NODES_MODAL_VISIBILITY,
     data: { isSetCustomNodesModalVisible }
   }
 }
 
-export const toggleEnableCustomNodes = (currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
+export const enableCustomNodes = (currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
   const state: State = getState()
   const account = CORE_SELECTORS.getAccount(state)
-  const currencySettings = getCryptocurrencySettings(state, currencyCode)
-  const isCustomNodesCurrentlyEnabled = currencySettings.customNodes.isEnabled || false
-  const isCustomNodesNowEnabled = !isCustomNodesCurrentlyEnabled
   const onError = e => console.log(e)
-  // $FlowFixMe
-  return ACCOUNT_SETTINGS.setEnableCustomNodes(account, currencyCode, isCustomNodesNowEnabled)
+  return ACCOUNT_SETTINGS.setIsCustomNodesEnabled(account, currencyCode, true)
     .then(() => {
-      dispatch(setCustomNodesEnabled(currencyCode, isCustomNodesNowEnabled))
+      dispatch(setIsCustomNodesEnabled(currencyCode, true))
     })
     .catch(onError)
 }
 
-export function setCustomNodesEnabled (currencyCode: string, isEnabled: boolean) {
+export const disableCustomNodes = (currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
+  const state: State = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  const onError = e => console.log(e)
+  return ACCOUNT_SETTINGS.setIsCustomNodesEnabled(account, currencyCode, false)
+    .then(() => {
+      dispatch(setIsCustomNodesEnabled(currencyCode, false))
+    })
+    .catch(onError)
+}
+
+export function setIsCustomNodesEnabled (currencyCode: string, isEnabled: boolean) {
   return {
     type: SET_ENABLE_CUSTOM_NODES,
     data: { currencyCode, isEnabled }

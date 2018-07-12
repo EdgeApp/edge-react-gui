@@ -182,37 +182,31 @@ export const setDenominationKeyRequest = (account: EdgeAccount, currencyCode: st
     return setSyncedSettings(account, updatedSettings)
   })
 
-export const setEnableCustomNodes = (account: EdgeAccount, currencyCode: string, isEnabled: boolean) => {
+export const setIsCustomNodesEnabled = (account: EdgeAccount, currencyCode: string, isEnabled: boolean) => {
   return getSyncedSettings(account).then((settings) => {
-    const updatedSettings = {
+    const updatedCurrencySettings = {
       ...settings,
-      [currencyCode]: {
-        ...settings[currencyCode],
-        customNodes: {
-          ...settings[currencyCode].customNodes,
-          isEnabled
-        }
+      customNodes: {
+        ...settings.customNodes,
+        isEnabled
       }
     }
-    updateCurrencySettings(settings, currencyCode, updatedSettings)
-    return setSyncedSettings(account, updatedSettings)
+    updateCurrencySettings(settings, currencyCode, updatedCurrencySettings)
+    return setSyncedSettings(account, updatedCurrencySettings)
   })
 }
 
 export const setCustomNodesList = (account: EdgeAccount, currencyCode: string, nodesList: Array<string>) => {
   return getSyncedSettings(account).then((settings) => {
-    const updatedSettings = {
+    const updatedCurrencySettings = {
       ...settings,
-      [currencyCode]: {
-        ...settings[currencyCode],
-        customNodes: {
-          ...settings[currencyCode].customNodes,
-          nodesList
-        }
+      customNodes: {
+        ...settings.customNodes,
+        nodesList
       }
     }
-    updateCurrencySettings(settings, currencyCode, updatedSettings)
-    return setSyncedSettings(account, updatedSettings)
+    updateCurrencySettings(settings, currencyCode, updatedCurrencySettings)
+    return setSyncedSettings(account, updatedCurrencySettings)
   })
 }
 

@@ -26,8 +26,9 @@ type Props = {
   customNodesList: Array<string>,
   saveCustomNodesList: (Array<string>) => void,
   isSetCustomNodesModalVisible: boolean,
-  toggleSetCustomNodesModalVisibility: (visibility: boolean | null) => void,
-  toggleEnableCustomNodes: () => void
+  setCustomNodesModalVisibility: (visibility: boolean | null) => void,
+  enableCustomNodes: () => void,
+  disableCustomNodes: () => void
 }
 
 export default class CurrencySettings extends Component<Props> {
@@ -49,18 +50,18 @@ export default class CurrencySettings extends Component<Props> {
   }
 
   closeSetCustomNodesModal = () => {
-    this.props.toggleSetCustomNodesModalVisibility(false)
+    this.props.setCustomNodesModalVisibility(false)
   }
 
   enableSetCustomNodes = () => {
-    this.props.toggleEnableCustomNodes()
+    this.props.enableCustomNodes()
   }
 
   disableSetCustomNodes = () => {
-    this.props.toggleEnableCustomNodes()
+    this.props.disableCustomNodes()
   }
 
-  onToggleEnableCustomNodes = () => {
+  onChangeEnableCustomNodes = () => {
     if (!this.props.isSetCustomNodesModalVisible) {
       this.enableSetCustomNodes()
     } else {
@@ -97,14 +98,13 @@ export default class CurrencySettings extends Component<Props> {
             </RadioRows>
             <SwitchRow
               leftText={s.strings.settings_enable_custom_nodes}
-              key='enableCustomNodes'
-              onToggle={this.onToggleEnableCustomNodes}
+              onToggle={this.onChangeEnableCustomNodes}
               value={this.props.isCustomNodesEnabled}
               isActive={this.props.isSetCustomNodesModalVisible}
               onSaveCustomNodesList={this.props.saveCustomNodesList}
             />
             <ModalRow
-              onPress={() => this.props.toggleSetCustomNodesModalVisibility(true)}
+              onPress={() => this.props.setCustomNodesModalVisibility(true)}
               leftText={s.strings.settings_set_custom_nodes_modal_title}
               disabled={!this.props.isCustomNodesEnabled}
             />
