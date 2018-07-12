@@ -184,6 +184,8 @@ export const styles = {
     flex: 1,
     borderBottomWidth: 1,
     borderBottomColor: '#CCCCCC',
+    color: THEME.COLORS.GRAY_1,
+    fontFamily: THEME.FONTS.DEFAULT,
     marginLeft: 11,
     height: 27,
     justifyContent: 'center',
