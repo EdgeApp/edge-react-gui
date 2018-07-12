@@ -62,7 +62,7 @@ export default class CurrencySettings extends Component<Props> {
   }
 
   onChangeEnableCustomNodes = () => {
-    if (!this.props.isSetCustomNodesModalVisible) {
+    if (!this.props.isCustomNodesEnabled) {
       this.enableSetCustomNodes()
     } else {
       this.disableSetCustomNodes()
