@@ -184,8 +184,6 @@ export const styles = {
     flex: 1,
     borderBottomWidth: 1,
     borderBottomColor: '#CCCCCC',
-    color: THEME.COLORS.GRAY_1,
-    fontFamily: THEME.FONTS.DEFAULT,
     marginLeft: 11,
     height: 27,
     justifyContent: 'center',
@@ -206,7 +204,7 @@ export const styles = {
     height: 22,
     fontSize: 13,
     flex: 1,
-    color: THEME.COLORS.GRAY_2,
+    color: THEME.COLORS.GRAY_1,
     fontFamily: THEME.FONTS.DEFAULT
   },
   notesRow: {
