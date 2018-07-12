@@ -208,7 +208,8 @@ export const styles = {
   },
 
   transactionsScrollWrap: {
-    flex: 1
+    flex: 1,
+    backgroundColor: THEME.COLORS.OFF_WHITE
   },
   singleTransaction: {
     height: 60,
@@ -330,7 +331,7 @@ export const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    backgroundColor: '#FFF'
+    backgroundColor: THEME.COLORS.WHITE
   },
   buyCryptoBoxImage: {
     width: 40,
