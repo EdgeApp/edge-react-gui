@@ -16,6 +16,7 @@ import { SetCustomNodesModal } from './components/SetCustomNodesModal.ui.js'
 import styles from './style'
 
 const SETTINGS_DENOMINATION_TEXT = s.strings.settings_denominations_title
+const CUSTOM_NODES_TEXT = s.strings.settings_custom_nodes_title
 
 type Props = {
   denominations: Array<GuiDenomination>,
@@ -31,12 +32,12 @@ type Props = {
 }
 
 export default class CurrencySettings extends Component<Props> {
-  header () {
+  header (title: string) {
     return (
       <Gradient style={[styles.headerRow]}>
         <View style={[styles.headerTextWrap]}>
           <View style={styles.leftArea}>
-            <T style={styles.headerText}>{SETTINGS_DENOMINATION_TEXT}</T>
+            <T style={styles.headerText}>{title}</T>
           </View>
         </View>
       </Gradient>
@@ -79,7 +80,7 @@ export default class CurrencySettings extends Component<Props> {
               customNodesList={this.props.customNodesList}
               saveCustomNodesList={this.props.saveCustomNodesList}
             />
-            {this.header()}
+            {this.header(SETTINGS_DENOMINATION_TEXT)}
             <RadioRows>
               {this.props.denominations.map(denomination => {
                 const key = denomination.multiplier
@@ -94,6 +95,7 @@ export default class CurrencySettings extends Component<Props> {
                 return <Row key={denomination.multiplier} denomination={denomination} left={left} isSelected={isSelected} onPress={onPress} />
               })}
             </RadioRows>
+            {this.header(CUSTOM_NODES_TEXT)}
             <SwitchRow
               leftText={s.strings.settings_enable_custom_nodes}
               onToggle={this.onChangeEnableCustomNodes}

@@ -126,8 +126,7 @@ export const styles = {
   headerText: {
     fontSize: 18,
     color: THEME.COLORS.WHITE,
-    backgroundColor: THEME.COLORS.TRANSPARENT,
-    marginLeft: 16
+    backgroundColor: THEME.COLORS.TRANSPARENT
   },
   headerIcon: {
     backgroundColor: THEME.COLORS.TRANSPARENT,

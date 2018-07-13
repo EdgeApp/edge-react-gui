@@ -9,7 +9,7 @@ export type Props = {
 }
 export class RadioRows extends Component<Props> {
   render () {
-    return <View style={[{ height: 200 }]}>{this.props.children}</View>
+    return <View>{this.props.children}</View>
   }
 }
 

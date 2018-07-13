@@ -140,6 +140,7 @@ const strings = {
   settings_button_use_touchID: 'Use TouchID',
   settings_days: 'Day(s)',
   settings_denominations_title: 'Denominations',
+  settings_custom_nodes_title: 'Custom Nodes',
   settings_hours: 'Hour(s)',
   settings_minutes: 'Minute(s)',
   settings_modal_send_logs_title: 'Send logs?',

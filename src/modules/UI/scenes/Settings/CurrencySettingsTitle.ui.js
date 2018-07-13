@@ -21,7 +21,7 @@ export class CurrencySettingsTitle extends Component<CurrencySettingsTitleCompon
     const { pluginName } = this.props
     let logo
     if (this.props.plugins) {
-      logo = this.props.plugins[pluginName].currencyInfo.symbolImage
+      logo = this.props.plugins[pluginName.toLowerCase()].currencyInfo.symbolImage
     } else {
       logo = ''
     }
