@@ -14,7 +14,6 @@ import {
 import CurrencySettings from './CurrencySettings.ui'
 
 const mapStateToProps = (state: State, ownProps) => ({
-  logo: SETTINGS_SELECTORS.getPlugin(state, ownProps.pluginName).currencyInfo.symbolImage,
   denominations: SETTINGS_SELECTORS.getDenominations(state, ownProps.currencyCode),
   selectedDenominationKey: SETTINGS_SELECTORS.getDisplayDenominationKey(state, ownProps.currencyCode),
   isCustomNodesEnabled: state.ui.settings[ownProps.currencyCode].customNodes.isEnabled || false,

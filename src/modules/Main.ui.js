@@ -45,6 +45,7 @@ import TransactionsExportSceneConnector from '../connectors/scene/TransactionsEx
 import EdgeLoginSceneConnector from '../connectors/scene/EdgeLoginSceneConnector'
 import OtpSettingsSceneConnector from '../connectors/scene/OtpSettingsSceneConnector.js'
 import PasswordRecoveryConnector from '../connectors/scene/PasswordRecoveryConnector.js'
+import CurrencySettingsTitleConnector from './UI/scenes/Settings/CurrencySettingsTitleConnector.js'
 import * as Constants from '../constants/indexConstants'
 import { setIntlLocale } from '../locales/intl'
 import s, { selectLocale } from '../locales/strings.js'
@@ -618,15 +619,13 @@ export default class Main extends Component<Props, State> {
     const settings = []
     for (const key in Constants.CURRENCY_SETTINGS) {
       const { pluginName, currencyCode } = Constants.CURRENCY_SETTINGS[key]
-      const title = s.strings[`title_${pluginName}_settings`]
       settings.push(
         <Scene
-          key={key}
-          pluginName={pluginName}
           currencyCode={currencyCode}
+          key={key}
           navTransparent={true}
           component={CurrencySettings}
-          renderTitle={this.renderTitle(title || pluginName)}
+          renderTitle={<CurrencySettingsTitleConnector key={key} cryptoKey={key} pluginName={pluginName} currencyCode={currencyCode} />}
           renderLeftButton={this.renderBackButton()}
           renderRightButton={this.renderEmptyButton()}
         />

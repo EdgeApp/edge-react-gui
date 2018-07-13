@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Image, View } from 'react-native'
+import { View } from 'react-native'
 
 import s from '../../../../locales/strings.js'
 import type { GuiDenomination } from '../../../../types'
@@ -19,7 +19,6 @@ const SETTINGS_DENOMINATION_TEXT = s.strings.settings_denominations_title
 
 type Props = {
   denominations: Array<GuiDenomination>,
-  logo: string,
   selectDenomination: string => void,
   selectedDenominationKey: string,
   isCustomNodesEnabled?: boolean,
@@ -37,7 +36,6 @@ export default class CurrencySettings extends Component<Props> {
       <Gradient style={[styles.headerRow]}>
         <View style={[styles.headerTextWrap]}>
           <View style={styles.leftArea}>
-            <Image style={{ height: 25, width: 25, resizeMode: Image.resizeMode.contain }} source={{ uri: this.props.logo }} />
             <T style={styles.headerText}>{SETTINGS_DENOMINATION_TEXT}</T>
           </View>
         </View>

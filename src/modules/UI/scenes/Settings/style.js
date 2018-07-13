@@ -10,6 +10,13 @@ export const styles = {
   gradient: {
     height: THEME.HEADER
   },
+  titleStyle: {
+    alignSelf: 'center',
+    fontSize: 20,
+    color: THEME.COLORS.WHITE,
+    fontFamily: THEME.FONTS.DEFAULT,
+    marginLeft: 8
+  },
   body: {
     paddingHorizontal: 20,
     paddingVertical: 5
