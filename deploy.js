@@ -273,7 +273,7 @@ function buildAndroid (buildObj) {
   call(sprintf('./gradlew %s', buildObj.androidTask))
 
   // Reset gradle file back
-  call('git reset --hard origin/' + buildObj.repoBranch)
+  // call('git reset --hard origin/' + buildObj.repoBranch)
   buildObj.ipaFile = buildObj.guiPlatformDir + '/app/build/outputs/apk/release/app-release.apk'
 }
 

@@ -1,6 +1,6 @@
 # Edge Wallet
 
-## A multicurrency mobile wallet for Bitcoin, Ethereum, Litecoin, and Bitcoin Cash
+## A multicurrency mobile wallet for Bitcoin, Bitcoin Cash, Ethereum, Dash, Litecoin, Ripple/XRP and Monero
 
 ![Edge Wallet Screenshots](https://cdn-images-1.medium.com/max/1600/1*xMZMuK0_jGNZNzduvggsdw.png)
 
@@ -20,7 +20,7 @@ Edge Wallet is:
 ## Requirements
 
    MacOS High Sierra
-   Xcode >= 9
+   Xcode 9.2+
    Android Studio 3.1
    CocoaPods
    Android NDK r15c
@@ -46,6 +46,7 @@ Edge Wallet is:
 ### Checkout develop branch & install node_modules
 
     cd edge-react-gui
+    yarn
 
 ### Android NDK Setup
 
@@ -55,9 +56,12 @@ Edge Wallet is:
     (MacOS) If the NDK is already installed from Android Studio, it should be in `/Users/[user]/Library/Android/sdk/ndk-bundle`.
     If you are using a version other than r15c, replace your version with version r15c downloaded from above
 
-Set `ANDROID_NDK_HOME` environment variable to the path of the NDK. ie
+### Set the following environment vars
 
-    export ANDROID_NDK_HOME=/Users/[user]/Library/Android/sdk/ndk-bundle
+    export ANDROID_NDK_HOME=/Users/[username]/Library/Android/sdk/ndk-bundle
+    export NDK_HOME=/Users/[username]/Library/Android/sdk/ndk-bundle
+    export SDK_HOME=/Users/[username]/Library/Android/sdk
+    export JAVA_HOME="/Applications/Android Studio.app/Contents/jre/jdk/Contents/Home"
 
 ### Android Recommended Versioning & Configuration
 
@@ -76,11 +80,27 @@ Copy the env.example.json to env.json and change the `AIRBITZ_API_KEY` to the AP
 
 ---
 
-## Deploying
+## Deploying (MacOS Only)
 
-#### Android
+The included `deploy.js` is a script to automate building, signing, and deploying release builds of Edge. It provides
+the following:
 
-    npm run android:release-install
+* Auto set app version number based on `package.json` version
+* Auto increment and set the buildnum to the value of YYMMDDNN where NN is an auto-incrementing build number within a day
+* Auto sign Android APK with Android keystore files
+* Auto sign iOS IPA with provisioning profiles
+
+### To Use
+
+* Set the env var KEYCHAIN_PASSWORD to the keychain password of the current user
+* Copy the `deploy-config.sample.json` to `deploy-config.json` and edit the parameters accordingly. You'll need a HockeyApp account to get ids and keys
+* Put any Android keystore files into `edge-react-gui/keystores/`
+* If using Firebase, put your account's `google-services.json` and `GoogleService-Info.plist` into `edge-react-gui/`
+
+Run deploy
+
+    ./deploy.js edge ios master
+    ./deploy.js edge android master
 
 ---
 
