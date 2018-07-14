@@ -1,6 +1,10 @@
 # Environmental Variables
 #
 env.json
+**/buildnum.json
+keystores/
+google-services.json
+GoogleService-Info.plist
 
 # Scratch
 **/scratch.*
