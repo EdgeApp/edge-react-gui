@@ -1,6 +1,7 @@
 # Environmental Variables
 #
 env.json
+deploy-config.json
 **/buildnum.json
 keystores/
 google-services.json
