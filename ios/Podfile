@@ -7,6 +7,8 @@ target 'edge' do
 
   # Pods for edge
   pod "HockeySDK", :subspecs => ['AllFeaturesLib']
+  pod 'Firebase/Core'
+  pod 'Firebase/Messaging'
 
   target 'edgeTests' do
     inherit! :search_paths

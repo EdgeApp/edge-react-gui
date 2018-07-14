@@ -14,6 +14,7 @@
 #import "RCTSplashScreen.h"
 #import <React/RCTLinkingManager.h>
 #import <React/RCTPushNotificationManager.h>
+#import <Firebase.h>
 
 @implementation AppDelegate
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
@@ -35,6 +36,7 @@
 {
   NSURL *jsCodeLocation;
 
+  [FIRApp configure];
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
 
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
