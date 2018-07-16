@@ -1,6 +1,7 @@
 // @flow
 
 import slowlog from 'react-native-slowlog'
+import DeviceInfo from 'react-native-device-info'
 import type { EdgeContext, EdgeContextCallbacks, EdgeCorePluginFactory, EdgeCurrencyPlugin } from 'edge-core-js'
 import {
   bitcoinCurrencyPluginFactory,
@@ -235,6 +236,9 @@ export default class Main extends Component<Props, State> {
   componentDidMount () {
     HockeyApp.start()
     HockeyApp.checkForUpdate() // optional
+    const id = DeviceInfo.getUniqueID()
+    global.firebase && global.firebase.analytics().setUserId(id)
+    global.firebase && global.firebase.analytics().logEvent(`Start_App`)
     makeCoreContext(this.props.contextCallbacks, pluginFactories).then(context => {
       // Put the context into Redux:
       this.props.addContext(context)
