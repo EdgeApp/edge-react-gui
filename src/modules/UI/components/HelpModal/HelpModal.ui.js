@@ -12,7 +12,7 @@ import styles from './style.js'
 
 const buildNumber = DeviceInfo.getBuildNumber()
 const versionNumber = DeviceInfo.getVersion()
-const CONTENT_URI = 'https://edgesecure.co/info.html'
+const CONTENT_URI = 'https://edge.app/info-2018-07-11.html'
 const contentScaling = Platform.OS !== 'ios'
 
 type Props = {
@@ -39,7 +39,7 @@ export default class HelpModal extends Component<Props> {
             style={styles.webView}
             source={{ uri: CONTENT_URI }}
             onNavigationStateChange={event => {
-              if (!event.url.includes('info.html')) {
+              if (!event.url.includes('info-2018-07-11.html')) {
                 // if NOT initial URL
                 // $FlowFixMe
                 this.webview.stopLoading() // do not load in WebView
