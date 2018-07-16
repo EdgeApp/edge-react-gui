@@ -24,7 +24,7 @@
     "android:logcat": "adb logcat *:S ReactNative:V ReactNativeJS:V",
     "android:release": "cd android && ./gradlew assembleRelease; cd ../",
     "android:release-install": "npm run android:clean && npm run android:release && cd android/app/build/outputs/apk && adb install app-release.apk; cd ../",
-    "android:run": "npm run android:clean; react-native run-android",
+    "android:run": "react-native run-android",
     "precommit": "npm test",
     "cover": "jest --coverage",
     "flow": "flow",
@@ -110,6 +110,7 @@
     "react-native-dropdown": "git://github.com/g6ling/react-native-dropdown.git",
     "react-native-dropdownalert": "git://github.com/Airbitz/react-native-dropdownalert.git",
     "react-native-fast-crypto": "^1.5.5",
+    "react-native-firebase": "^4.3.5",
     "react-native-flip-view": "git://github.com/Airbitz/react-native-flip-view.git",
     "react-native-fs": "^2.9.12",
     "react-native-hockeyapp": "0.5.1",
@@ -204,7 +205,10 @@
     "transformIgnorePatterns": [
       "node_modules/mobx-react"
     ],
-    "testPathIgnorePatterns": ["node_modules", "<rootDir>/e2e"],
+    "testPathIgnorePatterns": [
+      "node_modules",
+      "<rootDir>/e2e"
+    ],
     "setupFiles": [
       "./testSetup.js"
     ]
