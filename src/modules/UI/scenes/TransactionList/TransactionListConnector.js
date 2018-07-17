@@ -4,6 +4,7 @@ import _ from 'lodash'
 import { connect } from 'react-redux'
 
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
+import { getNumTransactions } from '../../../Core/Wallets/api.js'
 import type { Dispatch, State } from '../../../ReduxTypes'
 import * as UTILS from '../../../utils'
 import * as UI_SELECTORS from '../../selectors.js'
@@ -27,12 +28,10 @@ const mapStateToProps = (state: State) => {
   const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
   const fiatCurrencyCode = wallet.fiatCurrencyCode
   const balanceInCrypto = wallet.nativeBalances[currencyCode]
-
+  const numTransactions = getNumTransactions(coreWallet, currencyCode)
   const settings = SETTINGS_SELECTORS.getSettings(state)
   const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
-
   const transactions = UI_SELECTORS.getTransactions(state)
-
   const index = SETTINGS_SELECTORS.getDisplayDenominationKey(state, currencyCode)
   const denominationsOnWallet = wallet.allDenominations[currencyCode]
   let denomination
@@ -80,6 +79,7 @@ const mapStateToProps = (state: State) => {
     fiatSymbol,
     showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility,
     requiredConfirmations,
+    numTransactions,
     isBalanceVisible
   }
   return out
