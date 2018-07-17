@@ -23,6 +23,7 @@ import SafeAreaView from '../../components/SafeAreaView'
 import styles, { styles as styleRaw } from './style'
 import type {ContactsState} from '../../../../reducers/contacts/contactsReducer'
 import TransactionRow from './components/TransactionRowConnector.js'
+import BuyCrypto from './components/BuyCrypto.ui.js'
 
 // import SearchBar from './components/SearchBar.ui'
 const INITIAL_TRANSACTION_BATCH_NUMBER = 10
@@ -49,6 +50,7 @@ export type StateProps = {
   fiatSymbol: string,
   showToWalletModal: boolean,
   requiredConfirmations?: number,
+  numTransactions: number,
   isBalanceVisible: boolean
 }
 
@@ -109,6 +111,27 @@ export class TransactionList extends Component<Props, State> {
     return null
   }
 
+  renderBuyCrypto = () => {
+    const wallet = this.props.uiWallet
+    if (this.props.numTransactions) {
+      return (
+        <View style={styles.emptyListLoader}>
+          <ActivityIndicator size={'large'} />
+        </View>
+      )
+    }
+    switch (wallet.currencyCode) {
+      case 'BTC':
+        return <BuyCrypto wallet={wallet}/>
+      case 'BCH':
+        return <BuyCrypto wallet={wallet}/>
+      case 'ETH':
+        return <BuyCrypto wallet={wallet}/>
+      default:
+        return null
+    }
+  }
+
   render () {
     const txs = this.state.reset ? emptyArray : this.props.transactions
     return (
@@ -119,6 +142,7 @@ export class TransactionList extends Component<Props, State> {
             <View style={styles.container}>
               <View style={styles.transactionsWrap}>
                 <FlatList
+                  ListEmptyComponent={this.renderBuyCrypto()}
                   ListHeaderComponent={this.currentRenderBalanceBox()}
                   style={styles.transactionsScrollWrap}
                   data={txs}

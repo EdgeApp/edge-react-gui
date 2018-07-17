@@ -228,7 +228,8 @@ export const styles = {
   },
 
   transactionsScrollWrap: {
-    flex: 1
+    flex: 1,
+    backgroundColor: THEME.COLORS.OFF_WHITE
   },
   singleTransaction: {
     height: 60,
@@ -329,6 +330,47 @@ export const styles = {
   },
   symbol: {
     fontFamily: THEME.FONTS.SYMBOLS
+  },
+  emptyListLoader: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 230
+  },
+  buyCryptoContainer: {
+    width: PLATFORM.deviceWidth,
+    height: 220,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 15
+  },
+  buyCryptoBox: {
+    flex: 2,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    backgroundColor: THEME.COLORS.WHITE
+  },
+  buyCryptoBoxImage: {
+    width: 40,
+    height: 40
+  },
+  buyCryptoBoxText: {
+    marginTop: 10,
+    fontSize: 17,
+    color: THEME.COLORS.GRAY_1
+  },
+  buyCryptoNoTransactionBox: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  buyCryptoNoTransactionText: {
+    fontSize: 17,
+    color: THEME.COLORS.ACCENT_BLUE
   }
 }
 
