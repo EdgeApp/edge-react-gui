@@ -2,7 +2,6 @@
 
 import React, { Component } from 'react'
 import { View, Image } from 'react-native'
-import type { EdgeCurrencyPlugin } from 'edge-core-js'
 import T from '../../components/FormattedText'
 import s from '../../../../locales/strings.js'
 import { sprintf } from 'sprintf-js'
@@ -13,21 +12,16 @@ export type CurrencySettingsTitleOwnProps = {
 }
 
 export type CurrencySettingsTitleStateProps = {
-  plugin: EdgeCurrencyPlugin
+  logo: string
 }
 
 export type CurrencySettingsTitleComponentProps = CurrencySettingsTitleStateProps & CurrencySettingsTitleOwnProps
 
 export class CurrencySettingsTitle extends Component<CurrencySettingsTitleComponentProps> {
   render () {
-    const { pluginName } = this.props
-    let logo
-    if (this.props.plugin && this.props.plugin.currencyInfo) {
-      logo = this.props.plugin.currencyInfo.symbolImage
-    } else {
-      logo = ''
-    }
-    const title = sprintf(s.strings.title_crypto_settings, pluginName)
+    const { pluginName, logo } = this.props
+    const capitalizedPluginName = pluginName.charAt(0).toUpperCase() + pluginName.substr(1)
+    const title = sprintf(s.strings.title_crypto_settings, capitalizedPluginName)
     return (
       <View style={{flexDirection: 'row'}}>
         <Image style={{ height: 25, width: 25, resizeMode: Image.resizeMode.contain }} source={{ uri: logo }} />
