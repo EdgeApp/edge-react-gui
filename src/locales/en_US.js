@@ -198,6 +198,7 @@ const strings = {
   title_create_wallet_select_crypto: 'Select Type',
   title_create_wallet_select_fiat: 'Select Fiat',
   title_back: 'Back',
+  title_crypto_settings: '%s Settings',
   title_bitcoin_settings: 'Bitcoin Settings',
   title_bitcoinCash_settings: 'Bitcoin Cash Settings',
   title_change_mining_fee: 'Change Mining Fee',
