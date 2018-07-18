@@ -232,6 +232,8 @@ const strings = {
   transaction_details_category_title: 'Category',
   transaction_details_payee: 'Payee',
   transaction_details_view_advanced_data: 'View advanced transaction data',
+  transaction_details_tx_id_modal_title: 'Transaction ID',
+  transaction_details_show_advanced_block_explorer: 'Show in Block Explorer',
   string_fee_with_brackets: '(Fee)',
   title_Header: 'Header',
   back_button_text: 'Back',
