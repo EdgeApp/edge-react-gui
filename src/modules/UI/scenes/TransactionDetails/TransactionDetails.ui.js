@@ -290,7 +290,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
             type: stringArray[0].toLowerCase(),
             subCategory: stringArray[1]
           })
-          if (this.props.subcategoriesList.indexOf(input) === -1 && categories.indexOf(stringArray[0]) >= 0) {
+          if (this.props.subcategoriesList.indexOf(input) === -1 && categories.indexOf(stringArray[0].toLowerCase()) >= 0) {
             // if this is a new subcategory and the parent category is an accepted type
             this.addNewSubcategory(input)
           }
