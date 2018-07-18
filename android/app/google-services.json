@@ -1,0 +1,43 @@
+{
+  "IMPORTANT_READ_ME": "This is just a placeholder file. Replace with file generated from your Google Firebase account",
+  "project_info": {
+    "project_number": "xxxxxxxxxxx",
+    "firebase_url": "https://edge-wallet.firebaseio.com",
+    "project_id": "edge-wallet",
+    "storage_bucket": "edge-wallet.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:75822264012:android:82de38b26fb9e235",
+        "android_client_info": {
+          "package_name": "co.edgesecure.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "11111111111-rs9edgehrhardhbftbuirrtgmhcswl4c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "replacethisfilereplacethisfilereplaceme"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

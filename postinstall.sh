@@ -24,3 +24,9 @@ node ./copy-plugin.js
 
 # TODO: Remove the minification hack once the CLI accepts a --minify parameter.
 # See: https://github.com/facebook/react-native/pull/16456
+
+unamestr=`uname`
+if [[ "$unamestr" == 'Darwin' ]]; then
+    cd ios
+    pod install
+fi
