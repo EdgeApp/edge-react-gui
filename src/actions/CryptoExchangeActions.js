@@ -250,6 +250,7 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
   }
   if (srcWallet) {
     try {
+      global.firebase && global.firebase.analytics().logEvent(`Exchange_Shift_Start`)
       const signedTransaction = await WALLET_API.signTransaction(srcWallet, state.cryptoExchange.transaction)
       const broadcastedTransaction = await WALLET_API.broadcastTransaction(srcWallet, signedTransaction)
       await WALLET_API.saveTransaction(srcWallet, signedTransaction)
@@ -293,7 +294,9 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
       setTimeout(() => {
         Alert.alert(s.strings.exchange_succeeded, s.strings.exchanges_may_take_minutes)
       }, 1)
+      global.firebase && global.firebase.analytics().logEvent(`Exchange_Shift_Success`)
     } catch (error) {
+      global.firebase && global.firebase.analytics().logEvent(`Exchange_Shift_Failed`)
       dispatch(actions.dispatchActionString(Constants.SHIFT_ERROR, error.message))
       dispatch(actions.dispatchAction(Constants.DONE_SHIFT_TRANSACTION))
       setTimeout(() => {

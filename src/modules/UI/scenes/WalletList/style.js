@@ -48,11 +48,6 @@ export const styles = {
     color: THEME.COLORS.PRIMARY,
     fontSize: 44
   },
-  currentBalanceBoxBits: {
-    color: THEME.COLORS.WHITE,
-    justifyContent: 'space-around',
-    flex: 1
-  },
   // bottom major portion of screen
   walletsBox: {
     // one
