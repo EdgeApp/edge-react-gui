@@ -6,6 +6,8 @@ import { isIphoneX } from '../../../../lib/isIphoneX.js'
 import THEME from '../../../../theme/variables/airbitz'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
 
+export const activeOpacity = THEME.OPACITY.ACTIVE
+
 export const styles = {
   container: {
     flex: 1,
@@ -367,6 +369,19 @@ export const styles = {
   },
   symbol: {
     fontFamily: THEME.FONTS.SYMBOLS
+  },
+  txIDIcon: {
+    color: THEME.COLORS.PRIMARY
+  },
+  blockExplorerButton: {
+    borderWidth: 0,
+    height: 44,
+    justifyContent: 'center'
+  },
+  blockExplorerButtonText: {
+    fontSize: 18,
+    color: THEME.COLORS.ACCENT_BLUE,
+    alignSelf: 'center'
   }
 }
 
