@@ -14,7 +14,8 @@ type OwnProps = {
   parentId: string,
   sortHandlers: any,
   currencyCode: string,
-  balance: string
+  balance: string,
+  fiatSymbol: string
 }
 
 export type StateProps = {

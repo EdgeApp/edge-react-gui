@@ -240,6 +240,10 @@ export const styles = {
     justifyContent: 'center',
     height: 38
   },
+  rowBalanceText: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end'
+  },
   rowBalanceAmountText: {
     fontSize: 16,
     color: THEME.COLORS.GRAY_1,
