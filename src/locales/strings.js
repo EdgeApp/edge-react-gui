@@ -1,12 +1,11 @@
 // @flow
 
-import enUS from './en_US'
-import es from './es'
+import en from './en_US'
 
-const allLocales = { enUS, es }
+const allLocales = { en }
 
 // Set default of US English
-const out = { strings: enUS }
+const out = { strings: en }
 
 // Locale formats can be in the form 'en', 'en-US', 'en_US', or 'enUS'
 export function selectLocale (locale: string): boolean {
@@ -32,7 +31,7 @@ export function selectLocale (locale: string): boolean {
   }
 
   if (choice) {
-    out.strings = Object.assign(enUS, choice)
+    out.strings = Object.assign(en, choice)
   }
 
   return !!choice
@@ -41,6 +40,7 @@ export function selectLocale (locale: string): boolean {
 // If region === false, then only match if locale has no region
 // Otherwise match the first matching language
 function findLocale (language: string, region: boolean) {
+  console.log('Device: findLocale')
   for (const locale in allLocales) {
     if (allLocales.hasOwnProperty(locale)) {
       const localeLang = locale.substr(0, 2)
