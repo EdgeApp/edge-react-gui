@@ -334,7 +334,13 @@ const strings = {
   unique_identifier_modal_description: 'Please enter the %s number to be sent to the recipient of this transaction',
   unique_identifier_modal_confirm: 'Confirm',
   unique_identifier_modal_cancel: 'Cancel',
-  unique_identifier_display_text: '%1$s: %2$s'
+  unique_identifier_display_text: '%1$s: %2$s',
+  // onboarding
+  onboarding_button: 'Got It',
+  onboarding_slide_1: 'Keep track of your cryptocurrency.\n\nTap "+" to create and name new walllets.\nTap three dot menu to rename wallets',
+  onboarding_slide_2: 'Request and send crypto to anyone at anytime.\n\nEnable camera to scan QR codes and send instantly',
+  onboarding_slide_3: 'Exchange and convert multiple currencies.\n\nYour transaction is reasdy in minutes',
+  onboarding_slide_4: 'Have a question?\n\nOur reps are here to help!\nContact us by phone or social media.'
 }
 
 export default strings

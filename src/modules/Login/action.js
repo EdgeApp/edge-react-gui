@@ -51,6 +51,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
   }
   const accountInitObject = {
     account: account,
+    showOnBoarding: false,
     touchIdInfo: touchIdInfo,
     loginStatus: true,
     walletId: '',
@@ -85,6 +86,9 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     })
 
     if (account.activeWalletIds.length < 1) {
+      // we are going to assume that since there is no wallets, this is a first time user
+      accountInitObject.showOnBoarding = true
+      // set the property on the user so that we can launch on boarding
       // lets create the wallet
       const ethWalletName = s.strings.string_first_ethereum_wallet_name
       const btcWalletName = s.strings.string_first_bitcoin_wallet_name

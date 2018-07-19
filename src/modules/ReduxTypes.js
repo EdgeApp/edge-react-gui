@@ -248,7 +248,12 @@ export type State = {
   },
   exchangeRates: number,
   permissions: PermissionsState,
-  contacts: ContactsState
+  contacts: ContactsState,
+  onBoarding: {
+    currentIndex: number,
+    totalSlides: number,
+    slides: Array<Object>
+  },
 }
 
 type ThunkDispatch<A> = ((Dispatch, GetState) => Promise<void> | void) => A

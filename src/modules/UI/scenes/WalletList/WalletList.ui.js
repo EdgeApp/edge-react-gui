@@ -22,6 +22,7 @@ import ProgressBar from '../../components/ProgressBar/ProgressBar.ui.js'
 import FullWalletListRow from './components/WalletListRow/FullWalletListRow.ui.js'
 import SortableWalletListRow from './components/WalletListRow/SortableWalletListRow.ui.js'
 import WalletOptions from './components/WalletOptions/WalletOptionsConnector.ui.js'
+import OnBoardingSceneConnector from '../../../../connectors/scene/OnBoardingSceneConnector.js'
 import styles from './style'
 
 const DONE_TEXT = s.strings.string_done_cap
@@ -55,6 +56,7 @@ type Props = {
   wallets: any,
   renameWalletInput: string,
   otpResetPending: boolean,
+  showOnBoarding: boolean,
   updateArchivedWalletsOrder: (Array<string>) => void,
   updateActiveWalletsOrder: (Array<string>) => void,
   walletRowOption: (walletId: string, option: string, archived: boolean) => void,
@@ -222,6 +224,9 @@ export default class WalletList extends Component<Props, State> {
   }
 
   showModal = () => {
+    if (this.props.showOnBoarding) {
+      return <OnBoardingSceneConnector />
+    }
     if (this.state.showOtpResetModal) {
       return (
         <TwoButtonTextModalComponent
@@ -240,6 +245,7 @@ export default class WalletList extends Component<Props, State> {
     if (this.state.showMessageModal) {
       return <StaticModalComponent cancel={this.cancelStatic} body={this.state.messageModalMessage} modalDismissTimerSeconds={8} />
     }
+
     return null
   }
   disableOtp = () => {

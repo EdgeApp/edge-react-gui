@@ -27,6 +27,7 @@ export const initialState = {
   isTouchSupported: false,
   isTouchEnabled: false,
   isOtpEnabled: false,
+  showOnBoarding: false,
   otpKey: null,
   otpResetDate: null,
   otpResetPending: false,
@@ -163,6 +164,7 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         otpMode,
         denominationKeys,
         customTokensSettings,
+        showOnBoarding,
         isAccountBalanceVisible
       } = data
       let newState = {
@@ -181,6 +183,7 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         pinMode,
         pinLoginEnabled,
         otpMode,
+        showOnBoarding,
         otpResetDate: account.otpResetDate,
         isAccountBalanceVisible
       }
@@ -493,6 +496,9 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
 
     case ACTION.ADD_CURRENCY_PLUGIN: {
       return currencyPLuginUtil(state, data)
+    }
+    case Constants.COMPLETE_ONBOARDING: {
+      return {...state, showOnBoarding: false}
     }
 
     case ACTION.SET_ACCOUNT_BALANCE_VISIBILITY: {
