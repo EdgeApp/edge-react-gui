@@ -3,7 +3,7 @@
 import React, { Component } from 'react'
 import { Actions } from 'react-native-router-flux'
 import s from '../../../../../locales/strings.js'
-import sprintf from 'sprintf-js'
+import { sprintf } from 'sprintf-js'
 import { TouchableWithoutFeedback, View, Image } from 'react-native'
 import T from '../../../components/FormattedText'
 import style from '../style.js'

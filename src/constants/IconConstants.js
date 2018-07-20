@@ -19,6 +19,7 @@ export const RENAME = 'edit'
 export const GET_SEED = 'user-secret'
 export const CUSTOM_FEES_ICON = 'wpexplorer'
 export const EXCHANGE_ICON = 'exchange'
+export const QUESTION_ICON = 'question'
 
 // Ionic
 export const ION_ICONS = 'ionIcons'
