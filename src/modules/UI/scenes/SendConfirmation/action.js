@@ -58,11 +58,7 @@ export const paymentProtocolUriReceived = ({ paymentProtocolURL }: EdgePaymentPr
           Actions.sendConfirmation('fromScan')
         },
         error => {
-          if (error instanceof NoAmountSpecifiedError) {
-            dispatch(makeSpendFailed(null))
-          } else {
-            dispatch(makeSpendFailed(error))
-          }
+          dispatch(makeSpendFailed(error))
           Actions.sendConfirmation('fromScan')
         }
       )
