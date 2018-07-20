@@ -73,7 +73,8 @@ export const paymentProtocolUriReceived = ({ paymentProtocolURL }: EdgePaymentPr
 }
 
 export const MAKE_PAYMENT_PROTOCOL_TRANSACTION_FAILED = PREFIX + 'MAKE_SPEND_FAILED'
-export const makeSpendFailed = (error: Error) => ({
+// add empty string if there is an error but we don't need text feedback to the user
+export const makeSpendFailed = (error: Error | null) => ({
   type: MAKE_PAYMENT_PROTOCOL_TRANSACTION_FAILED,
   data: { error }
 })
@@ -148,10 +149,12 @@ export const updatePaymentProtocolTransaction = (transaction: EdgeTransaction) =
   data: { transaction }
 })
 
-export const updateTransaction = (transaction: ?EdgeTransaction, parsedUri: ?EdgeParsedUri, forceUpdateGui: ?boolean, error: ?Error) => ({
-  type: UPDATE_TRANSACTION,
-  data: { transaction, parsedUri, forceUpdateGui, error }
-})
+export const updateTransaction = (transaction: ?EdgeTransaction, parsedUri: ?EdgeParsedUri, forceUpdateGui: ?boolean, error: ?Error) => {
+  return {
+    type: UPDATE_TRANSACTION,
+    data: { transaction, parsedUri, forceUpdateGui, error }
+  }
+}
 
 export const updateSpendPending = (pending: boolean) => ({
   type: UPDATE_SPEND_PENDING,
