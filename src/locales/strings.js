@@ -40,7 +40,6 @@ export function selectLocale (locale: string): boolean {
 // If region === false, then only match if locale has no region
 // Otherwise match the first matching language
 function findLocale (language: string, region: boolean) {
-  console.log('Device: findLocale')
   for (const locale in allLocales) {
     if (allLocales.hasOwnProperty(locale)) {
       const localeLang = locale.substr(0, 2)
