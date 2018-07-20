@@ -58,10 +58,9 @@ export const onPrivateKeyAccept = () => (dispatch: Dispatch, getState: GetState)
     }
 
     edgeWallet.sweepPrivateKeys(spendInfo).then(
-      (edgeTransaction: EdgeTransaction) => {
-        Promise.resolve(edgeTransaction)
-          .then(() => edgeWallet.signTx(edgeTransaction))
-          .then(() => edgeWallet.broadcastTx(edgeTransaction))
+      (unsignedTx: EdgeTransaction) => {
+        edgeWallet.signTx(unsignedTx)
+          .then((signedTx) => edgeWallet.broadcastTx(signedTx))
           .then(() => dispatch(sweepPrivateKeySuccess()))
       },
       (error: Error) => {
