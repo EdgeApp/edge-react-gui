@@ -36,24 +36,20 @@ export const setSubcategories = (subcategories: Array<string>) => ({
 
 export const setNewSubcategory = (newSubcategory: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
+  const { account } = state.core
   const oldSubcats = state.ui.scenes.transactionDetails.subcategories
   const newSubcategories = [...oldSubcats, newSubcategory]
-  return dispatch(setSubcategoriesRequest(newSubcategories))
+  return ACCOUNT_SETTINGS.setSubcategoriesRequest(account, newSubcategories.sort())
+    .then(() => {
+      dispatch(setSubcategories(newSubcategories.sort()))
+    })
+    .catch(e => {
+      console.error(e)
+    })
 }
 
 export const getSelectedWallet = (state: State) => {
   const { selectedWalletId } = state.ui.wallets
   const selectedWallet = state.core.wallets.byId[selectedWalletId]
   return selectedWallet
-}
-
-// is this following function necessary?
-export const setSubcategoriesRequest = (subcategories: Array<string>) => (dispatch: Dispatch, getState: GetState) => {
-  const { account } = getState().core
-  ACCOUNT_SETTINGS.setSubcategoriesRequest(account, subcategories)
-    .then(() => dispatch(setSubcategories(subcategories)))
-    .then(() => dispatch(getSubcategories()))
-    .catch(e => {
-      console.error(e)
-    })
 }

@@ -4,14 +4,22 @@ import slowlog from 'react-native-slowlog'
 import { bns } from 'biggystring'
 import _ from 'lodash'
 import React, { Component } from 'react'
+
 import { ActivityIndicator, Image, Platform, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
-
 import { intl } from '../../../../../../locales/intl'
 import s from '../../../../../../locales/strings.js'
 import type { CustomTokenInfo, GuiDenomination } from '../../../../../../types'
-import { cutOffText, decimalOrZero, truncateDecimals, getObjectDiff } from '../../../../../utils.js'
+import {
+  cutOffText,
+  decimalOrZero,
+  truncateDecimals,
+  getObjectDiff,
+  getFiatSymbol,
+  calculateFiatFromCryptoCurrency
+} from '../../../../../utils.js'
+import type { State } from '../../../../../ReduxTypes.js'
 import T from '../../../../components/FormattedText'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
 import { getEnabledTokens, selectWallet } from '../../../../Wallets/action.js'
@@ -22,25 +30,11 @@ import WalletListTokenRow from './WalletListTokenRowConnector.js'
 const DIVIDE_PRECISION = 18
 
 export type OwnProps = {
-  data: any, // TODO: Need to type this
-  sortHandlers: any,
-  customTokens: Array<CustomTokenInfo>
+  data: any // TODO: Need to type this
 }
-
-type StateProps = {
-  displayDenomination: GuiDenomination,
-  exchangeDenomination: GuiDenomination
-}
-
-type DispatchProps = {
-  selectWallet: (walletId: string, currencyCode: string) => any,
-  getEnabledTokensList: (walletId: string) => any
-}
-
-type Props = OwnProps & StateProps & DispatchProps
 
 export default class FullWalletListRow extends Component<OwnProps> {
-  constructor (props: any) {
+  constructor (props: OwnProps) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
   }
@@ -56,7 +50,9 @@ export default class FullWalletListRow extends Component<OwnProps> {
     return (
       <View>
         {this.props.data.item.id ? (
-          <FullWalletListRowConnected data={this.props.data} customTokens={this.props.customTokens} />
+          <FullWalletListRowConnected
+            data={this.props.data}
+          />
         ) : (
           <FullListRowEmptyData />
         )}
@@ -65,13 +61,33 @@ export default class FullWalletListRow extends Component<OwnProps> {
   }
 }
 
-class FullWalletListRowConnect extends Component<Props> {
+export type FullWalletListRowLoadedStateProps = {
+  displayDenomination: GuiDenomination,
+  exchangeDenomination: GuiDenomination,
+  customTokens: Array<CustomTokenInfo>,
+  fiatSymbol: string,
+  isWalletFiatBalanceVisible: boolean,
+  fiatBalance: string
+}
+
+export type FullWalletListRowLoadedOwnProps = {
+  data: any
+}
+
+export type FullWalletListRowLoadedDispatchProps = {
+  selectWallet: (walletId: string, currencyCode: string) => void,
+  getEnabledTokensList: (walletId: string) => void
+}
+
+export type FullWalletListRowLoadedComponentProps = FullWalletListRowLoadedStateProps & FullWalletListRowLoadedOwnProps & FullWalletListRowLoadedDispatchProps
+
+class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoadedComponentProps> {
   _onPressSelectWallet = (walletId, currencyCode) => {
     this.props.selectWallet(walletId, currencyCode)
     Actions.transactionList({ params: 'walletList' })
   }
 
-  shouldComponentUpdate (nextProps: Props) {
+  shouldComponentUpdate (nextProps) {
     const diffElement = getObjectDiff(this.props, nextProps, {
       data: true, item: true
     })
@@ -84,7 +100,7 @@ class FullWalletListRowConnect extends Component<Props> {
   }
 
   render () {
-    const { data } = this.props
+    const { data, fiatSymbol } = this.props
     const walletData = data.item
     const currencyCode = walletData.currencyCode
     const cryptocurrencyName = walletData.currencyNames[currencyCode]
@@ -96,7 +112,6 @@ class FullWalletListRowConnect extends Component<Props> {
     const symbolImageDarkMono = walletData.symbolImageDarkMono
     const preliminaryCryptoAmount = truncateDecimals(bns.div(walletData.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)
     const finalCryptoAmount = intl.formatNumber(decimalOrZero(preliminaryCryptoAmount, 6)) // check if infinitesimal (would display as zero), cut off trailing zeroes
-
     // need to crossreference tokensEnabled with nativeBalances
     const enabledNativeBalances = {}
     const enabledTokens = walletData.enabledTokens
@@ -118,13 +133,15 @@ class FullWalletListRowConnect extends Component<Props> {
       }
     }
 
+    const fiatBalance = this.props.fiatBalance
+    const fiatBalanceString = fiatSymbol + ' ' + fiatBalance
+
     return (
       <View style={[{ width: '100%' }]}>
         <View>
           <TouchableHighlight
             style={[styles.rowContainer]}
             underlayColor={styleRaw.walletRowUnderlay.color}
-            {...this.props.sortHandlers}
             onPress={() => this._onPressSelectWallet(id, currencyCode)}
           >
             <View style={[styles.rowContent]}>
@@ -148,19 +165,25 @@ class FullWalletListRowConnect extends Component<Props> {
                   </View>
                 )}
               </View>
-
-              <View style={[styles.rowBalanceTextWrap]}>
-                <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-                  <T style={[styles.rowBalanceAmountText]}>{finalCryptoAmount}</T>
+              {this.props.isWalletFiatBalanceVisible ? (
+                <View style={[styles.rowBalanceTextWrap]}>
+                  <View style={styles.rowBalanceText}>
+                    <T style={[styles.rowBalanceAmountText]}>{fiatBalanceString}</T>
+                  </View>
                 </View>
+              ) : (
+                <View style={[styles.rowBalanceTextWrap]}>
+                  <View style={styles.rowBalanceAmount}>
+                    <T style={[styles.rowBalanceAmountText]}>{finalCryptoAmount}</T>
+                  </View>
 
-                <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-                  <T style={[styles.rowBalanceDenominationText]}>{cryptocurrencyName} (</T>
-                  <T style={[styles.rowBalanceDenominationText, styles.symbol]}>{symbol || ''}</T>
-                  <T style={[styles.rowBalanceDenominationText]}>)</T>
+                  <View style={styles.rowBalanceText}>
+                    <T style={[styles.rowBalanceDenominationText]}>{cryptocurrencyName} (</T>
+                    <T style={[styles.rowBalanceDenominationText, styles.symbol]}>{symbol || ''}</T>
+                    <T style={[styles.rowBalanceDenominationText]}>)</T>
+                  </View>
                 </View>
-              </View>
-
+              )}
               <WalletListRowOptions
                 currencyCode={walletData.currencyCode}
                 executeWalletRowOption={walletData.executeWalletRowOption}
@@ -174,35 +197,48 @@ class FullWalletListRowConnect extends Component<Props> {
     )
   }
 
-  renderTokenRow = (parentId, metaTokenBalances) => {
+  renderTokenRow = (parentId: string, metaTokenBalances) => {
     const tokens = []
     for (const property in metaTokenBalances) {
       if (metaTokenBalances.hasOwnProperty(property)) {
         if (property !== this.props.data.item.currencyCode) {
-          tokens.push(<WalletListTokenRow parentId={parentId} currencyCode={property} key={property} balance={metaTokenBalances[property]} />)
+          tokens.push(<WalletListTokenRow
+            parentId={parentId}
+            currencyCode={property}
+            key={property}
+            fiatSymbol={this.props.fiatSymbol}
+            balance={metaTokenBalances[property]}
+          />)
         }
       }
     }
     return tokens
   }
 }
-const mapStateToProps = (state, ownProps): StateProps => {
+const mapStateToProps = (state: State, ownProps: FullWalletListRowLoadedOwnProps): FullWalletListRowLoadedStateProps => {
   const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, ownProps.data.item.currencyCode)
   const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, ownProps.data.item.currencyCode)
+  const settings = state.ui.settings
+  const fiatSymbol = getFiatSymbol(settings.defaultFiat) || ''
   const customTokens = state.ui.settings.customTokens
+  const isWalletFiatBalanceVisible = state.ui.settings.isWalletFiatBalanceVisible
+  const fiatBalance = calculateFiatFromCryptoCurrency(ownProps.data.item, state)
   return {
     displayDenomination,
     exchangeDenomination,
-    customTokens
+    customTokens,
+    fiatSymbol,
+    isWalletFiatBalanceVisible,
+    fiatBalance
   }
 }
 const mapDispatchToProps = dispatch => ({
-  selectWallet: (walletId, currencyCode) => dispatch(selectWallet(walletId, currencyCode)),
-  getEnabledTokensList: walletId => dispatch(getEnabledTokens(walletId))
+  selectWallet: (walletId: string, currencyCode): string => dispatch(selectWallet(walletId, currencyCode)),
+  getEnabledTokensList: (walletId: string) => dispatch(getEnabledTokens(walletId))
 })
 
 // $FlowFixMe
-const FullWalletListRowConnected = connect(mapStateToProps, mapDispatchToProps)(FullWalletListRowConnect)
+const FullWalletListRowConnected = connect(mapStateToProps, mapDispatchToProps)(FullWalletListRowLoadedComponent)
 
 class FullListRowEmptyData extends Component<any> {
   render () {
