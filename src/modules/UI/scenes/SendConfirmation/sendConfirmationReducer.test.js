@@ -32,7 +32,7 @@ test('initialState', () => {
       publicAddress: '',
       nativeAmount: '0',
       metadata: {
-        payeeName: '',
+        name: '',
         category: '',
         notes: '',
         amountFiat: 0,
@@ -40,7 +40,9 @@ test('initialState', () => {
         miscJson: ''
       }
     },
-    error: null
+    error: null,
+    pin: '',
+    authRequired: 'none'
   }
   const actual = sendConfirmationReducer(undefined, {})
 

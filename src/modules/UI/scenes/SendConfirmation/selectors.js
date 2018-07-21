@@ -5,6 +5,10 @@ import type { AbcSpendTarget, EdgeMetadata, EdgeSpendInfo, EdgeTransaction } fro
 import { STANDARD_FEE } from '../../../../constants/indexConstants'
 import type { State } from '../../../ReduxTypes'
 import { getSceneState, getSelectedCurrencyCode } from '../../selectors.js'
+import { getAccount } from '../../../Core/selectors.js'
+import { getExchangeDenomination } from '../../Settings/selectors.js'
+import { convertNativeToExchange } from '../../../utils.js'
+import { convertCurrency } from '../../../Core/Account/api.js'
 
 export type GuiMakeSpendInfo = {
   currencyCode?: string,
@@ -31,7 +35,10 @@ export type SendConfirmationState = {
 
   pending: boolean,
   transaction: EdgeTransaction,
-  error: Error | null
+  error: Error | null,
+
+  pin: string,
+  authRequired: 'pin' | 'none'
 }
 
 export const initialState = {
@@ -44,7 +51,7 @@ export const initialState = {
     publicAddress: '',
     nativeAmount: '0',
     metadata: {
-      payeeName: '',
+      name: '',
       category: '',
       notes: '',
       amountFiat: 0,
@@ -72,7 +79,10 @@ export const initialState = {
     otherParams: {}
   },
   pending: false,
-  error: null
+  error: null,
+
+  pin: '',
+  authRequired: 'none'
 }
 
 export const getScene = (state: State): any => getSceneState(state, 'sendConfirmation')
@@ -117,4 +127,22 @@ export const getSpendInfo = (state: State, newSpendInfo?: GuiMakeSpendInfo = {})
     networkFeeOption: newSpendInfo.networkFeeOption || getNetworkFeeOption(state),
     customNetworkFee: newSpendInfo.customNetworkFee ? { ...getCustomNetworkFee(state), ...newSpendInfo.customNetworkFee } : getCustomNetworkFee(state)
   }
+}
+
+export type AuthType = 'pin' | 'none'
+export const getAuthRequired = (state: State, spendInfo: EdgeSpendInfo): AuthType => {
+  const currencyCode = spendInfo.currencyCode || spendInfo.spendTargets[0].currencyCode
+  const { nativeAmount } = spendInfo.spendTargets[0]
+  if (!currencyCode || !nativeAmount) throw new Error('Invalid Spend Request')
+
+  const { spendingLimits } = state.ui.settings
+  const account = getAccount(state)
+  const isoFiatCurrencyCode = state.ui.settings.defaultIsoFiat
+  const nativeToExchangeRatio = getExchangeDenomination(state, currencyCode).multiplier
+  const exchangeAmount = convertNativeToExchange(nativeToExchangeRatio)(nativeAmount)
+  const fiatAmount = convertCurrency(account, currencyCode, isoFiatCurrencyCode, parseFloat(exchangeAmount))
+
+  const authType = fiatAmount >= spendingLimits.transaction.amount ? 'pin' : 'none'
+
+  return authType
 }
