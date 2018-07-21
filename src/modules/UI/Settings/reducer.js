@@ -11,6 +11,7 @@ import type { Action } from '../../ReduxTypes'
 import * as ADD_TOKEN_ACTION from '../scenes/AddToken/action.js'
 import * as WALLET_ACTION from '../Wallets/action'
 import * as ACTION from './action.js'
+import { spendingLimits } from './spendingLimits/spendingLimits.js'
 
 export const initialState = {
   ...SYNCED_ACCOUNT_DEFAULTS,
@@ -33,10 +34,16 @@ export const initialState = {
   confirmPasswordError: '',
   sendLogsStatus: Constants.REQUEST_STATUS.PENDING,
   isAccountBalanceVisible: true,
-  isWalletFiatBalanceVisible: false
+  isWalletFiatBalanceVisible: false,
+  spendingLimits: {
+    transaction: {
+      isEnabled: false,
+      amount: 0
+    }
+  }
 }
 
-type SettingsState = {
+export type SettingsState = {
   BCH: {
     denomination: string
   },
@@ -70,12 +77,13 @@ type SettingsState = {
   changesLocked: any,
   customTokens: Array<CustomTokenInfo>,
   defaultFiat: string,
+  defaultIsoFiat: string,
   isOtpEnabled: boolean,
   isTouchEnabled: boolean,
   isTouchSupported: boolean,
-  loginStatus: null,
+  loginStatus: boolean | null,
   merchantMode: boolean,
-  otpKey: null,
+  otpKey: string | null,
   otpResetPending: boolean,
   otpMode: boolean,
   pinMode: boolean,
@@ -88,7 +96,13 @@ type SettingsState = {
   confirmPasswordError: string,
   sendLogsStatus: string,
   isAccountBalanceVisible: boolean,
-  isWalletFiatBalanceVisible: boolean
+  isWalletFiatBalanceVisible: boolean,
+  spendingLimits: {
+    transaction: {
+      isEnabled: boolean,
+      amount: number
+    }
+  }
 }
 
 const currencyPLuginUtil = (state, payloadData) => {
@@ -144,7 +158,7 @@ const currencyPLuginUtil = (state, payloadData) => {
   }
 }
 
-export const settings = (state: SettingsState = initialState, action: Action) => {
+export const settingsLegacy = (state: SettingsState = initialState, action: Action) => {
   const { type, data = {} } = action
 
   switch (type) {
@@ -152,7 +166,6 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
       const {
         touchIdInfo,
         account,
-        loginStatus,
         otpInfo,
         currencyPlugins,
         autoLogoutTimeInSeconds,
@@ -170,7 +183,7 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
       } = data
       let newState = {
         ...state,
-        loginStatus,
+        loginStatus: true,
         isOtpEnabled: otpInfo.enabled,
         otpKey: otpInfo.otpKey,
         otpResetPending: otpInfo.otpResetPending,
@@ -207,7 +220,8 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         const { currencyCode } = key
         newState = {
           ...newState,
-          [currencyCode]: key
+          [currencyCode]: key,
+          defaultIsoFiat: `iso:${defaultFiat}`
         }
       })
       return newState
@@ -424,7 +438,8 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
       const { defaultFiat } = data
       return {
         ...state,
-        defaultFiat
+        defaultFiat,
+        defaultIsoFiat: `iso:${defaultFiat}`
       }
     }
 
@@ -516,4 +531,14 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
     default:
       return state
   }
+}
+
+export const settings = (state: SettingsState = initialState, action: Action) => {
+  const legacy = settingsLegacy(state, action)
+  const result = {
+    ...legacy,
+    spendingLimits: spendingLimits(state.spendingLimits, action)
+  }
+
+  return result
 }

@@ -19,7 +19,7 @@ import { Icon } from '../../components/Icon/Icon.ui'
 import SafeAreaView from '../../components/SafeAreaView'
 import AutoLogoutModal from './components/AutoLogoutModal.ui'
 import ConfirmPasswordModal from './components/ConfirmPasswordModal.ui'
-import {RestoreWalletsModal} from './components/RestoreWalletsModal.ui'
+import { RestoreWalletsModal } from './components/RestoreWalletsModal.ui'
 import RowModal from './components/RowModal.ui'
 import RowRoute from './components/RowRoute.ui'
 import RowSwitch from './components/RowSwitch.ui'
@@ -125,6 +125,10 @@ export default class SettingsOverview extends Component<Props, State> {
     return this.props.isLocked ? this.unlockSettingsAlert() : Actions[Constants.RECOVER_PASSWORD]()
   }
 
+  _onPressSpendingLimits = () => {
+    return Actions[Constants.SPENDING_LIMITS]()
+  }
+
   _onPressOpenLogoffTime = () => {}
 
   _onPressOpenDefaultCurrency = () => {}
@@ -227,6 +231,13 @@ export default class SettingsOverview extends Component<Props, State> {
           </Gradient>
 
           <View>
+            <RowRoute
+              disabled={false}
+              leftText={s.strings.spending_limits}
+              routeFunction={this._onPressSpendingLimits}
+              right={<SimpleIcon style={styles.settingsRowRightArrow} name="arrow-right" />}
+            />
+
             <RowModal onPress={this.showAutoLogoutModal} leftText={s.strings.settings_title_auto_logoff} rightText={autoLogoutRightText} />
 
             <RowRoute
