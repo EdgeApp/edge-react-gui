@@ -9,7 +9,8 @@
     "androidTask": "assembleRelease",
     "hockeyAppToken": "xxxxx",
     "hockeyAppTags": "internal",
-    "teamId": "AppleDeveloperTeamID",
+    "bugsnagApiKey": "xxxxxxxxxx",
+    "appleDeveloperTeamId": "xxxxxxxxxx",
     "ios": {
       "master": {
         "hockeyAppId": "xxxxxxxxx"

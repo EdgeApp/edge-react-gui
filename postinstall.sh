@@ -15,6 +15,11 @@ node postinstall.js
 sed "s/\,[[:space:]]'-DANDROID_STL=c++_shared'//g" ./node_modules/react-native-fast-crypto/android/build.gradle > build.gradle
 mv build.gradle ./node_modules/react-native-fast-crypto/android/build.gradle
 
+# Force xcode build script to out map files
+sed "s/--reset-cache/--reset-cache --sourcemap-output ios-release.bundle.map/g" node_modules/react-native/scripts/react-native-xcode.sh > /tmp/react-native-xcode.sh
+mv /tmp/react-native-xcode.sh node_modules/react-native/scripts/react-native-xcode.sh
+chmod 755 node_modules/react-native/scripts/react-native-xcode.sh
+
 node ./copy-plugin.js
 
 # Disable minification

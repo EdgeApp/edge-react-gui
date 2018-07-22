@@ -138,6 +138,16 @@ function makeCommonPost (buildObj) {
 
   chdir(buildObj.guiDir)
   buildObj.guiHash = rmNewline(cmd('git rev-parse --short HEAD'))
+
+  if (buildObj.platformType === 'android') {
+    buildObj.bundlePath = `${buildObj.guiPlatformDir}/app/build/intermediates/assets/release/index.android.bundle`
+    buildObj.bundleUrl = 'index.android.bundle'
+    buildObj.bundleMapFile = './android-release.bundle.map'
+  } else if (buildObj.platformType === 'ios') {
+    buildObj.bundlePath = `${buildObj.guiPlatformDir}/main.jsbundle`
+    buildObj.bundleUrl = 'main.jsbundle'
+    buildObj.bundleMapFile = '../ios-release.bundle.map'
+  }
 }
 
 function buildCommon (buildObj) {
@@ -220,9 +230,9 @@ function buildIos (buildObj) {
   chdir(buildObj.guiPlatformDir)
 
   // Replace TeamID in exportOptions.plist
-  let gradle = fs.readFileSync(buildObj.guiPlatformDir + '/exportOptions.plist', {encoding: 'utf8'})
-  gradle = gradle.replace('Your10CharacterTeamId', buildObj.appleDeveloperTeamId)
-  fs.writeFileSync(buildObj.guiPlatformDir + '/exportOptions.plist', gradle)
+  let plist = fs.readFileSync(buildObj.guiPlatformDir + '/exportOptions.plist', {encoding: 'utf8'})
+  plist = plist.replace('Your10CharacterTeamId', buildObj.appleDeveloperTeamId)
+  fs.writeFileSync(buildObj.guiPlatformDir + '/exportOptions.plist', plist)
 
   cmdStr = `security unlock-keychain -p '${process.env.KEYCHAIN_PASSWORD || ''}'  "${process.env.HOME || ''}/Library/Keychains/login.keychain"`
   call(cmdStr)
@@ -303,6 +313,26 @@ function buildCommonPost (buildObj) {
 
   call(curl)
   mylog('Uploaded to HockeyApp')
+  mylog('\n\nUploading to Bugsnag')
+  mylog('*********************\n')
+
+  curl =
+    '/usr/bin/curl https://upload.bugsnag.com/ ' +
+    `-F apiKey=${buildObj.bugsnagApiKey} ` +
+    `-F appVersion=${buildObj.buildNum} ` +
+    `-F sourceMap=@${buildObj.bundleMapFile} ` +
+    `-F minifiedUrl=${buildObj.bundleUrl} ` +
+    `-F minifiedFile=@${buildObj.bundlePath} ` +
+    `-F overwrite=true`
+  call(curl)
+
+  if (buildObj.platformType === 'ios') {
+    curl =
+      `/usr/bin/curl https://upload.bugsnag.com/ ` +
+      `-F dsym=@${buildObj.dSymFile} ` +
+      `-F projectRoot=${buildObj.guiPlatformDir}`
+    call(curl)
+  }
 }
 
 function builddate () {

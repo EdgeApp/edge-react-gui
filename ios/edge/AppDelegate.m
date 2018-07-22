@@ -9,6 +9,7 @@
 
 #import "AppDelegate.h"
 
+#import <BugsnagReactNative/BugsnagReactNative.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 #import "RCTSplashScreen.h"
@@ -34,6 +35,7 @@
 }
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [BugsnagReactNative start];
   NSURL *jsCodeLocation;
 
   [FIRApp configure];

@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		009458D283FE4A8BAB096CFB /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3778FEBC546640FEB6B32567 /* libReactNativePermissions.a */; };
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
@@ -106,7 +107,6 @@
 		FD6D9F211FABEF8300D4998E /* libRCTSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FD6D9F011FABEF3A00D4998E /* libRCTSplashScreen.a */; };
 		FD982BCA1FABFDF40057F035 /* splash.png in Resources */ = {isa = PBXBuildFile; fileRef = FD982BC91FABFDF40057F035 /* splash.png */; };
 		FD982BCC1FACDEF00057F035 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = FD982BCB1FACDEF00057F035 /* LaunchScreen.xib */; };
-		FDD9C0D41F1C46ED004372CA /* RNHockeyApp.m in Sources */ = {isa = PBXBuildFile; fileRef = FDD9C0D31F1C46ED004372CA /* RNHockeyApp.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -516,6 +516,62 @@
 			remoteGlobalIDString = 6456441F1EB8DA9100672408;
 			remoteInfo = "RNFS-tvOS";
 		};
+		DA7AB21B2100E88200E3CD07 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FDD9C0981F1C46BD004372CA /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 50953142320EFDF5751CA4B8DAD75A32;
+			remoteInfo = BugsnagReactNative;
+		};
+		DA7AB21D2100E88200E3CD07 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FDD9C0981F1C46BD004372CA /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EC13CD8A06985B2B1DFF1977DD500DA8;
+			remoteInfo = FirebaseCore;
+		};
+		DA7AB21F2100E88200E3CD07 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FDD9C0981F1C46BD004372CA /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2377D1065B6B8FE06BC483A6F145B966;
+			remoteInfo = FirebaseMessaging;
+		};
+		DA7AB2212100E88200E3CD07 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FDD9C0981F1C46BD004372CA /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 54DB50316631600F6199E1B61E3AE2DB;
+			remoteInfo = GoogleToolboxForMac;
+		};
+		DA7AB2232100E88200E3CD07 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FDD9C0981F1C46BD004372CA /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 872733C109028F735CC1B9966FE7F5CD;
+			remoteInfo = nanopb;
+		};
+		DA7AB2252100E88200E3CD07 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FDD9C0981F1C46BD004372CA /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C47DF9E2C4536A1D5C0C6B256FF6E923;
+			remoteInfo = Protobuf;
+		};
+		DA7AB2272100E88200E3CD07 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FDD9C0981F1C46BD004372CA /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = AE9DFD61B58ED2058DC2026FF729B6B4;
+			remoteInfo = React;
+		};
+		DA7AB2292100E88200E3CD07 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FDD9C0981F1C46BD004372CA /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FC8516C2CCFEC18810279F6B9758C563;
+			remoteInfo = yoga;
+		};
 		DA89DDF520F2CF670012B4BD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B9A285CF05C64584ADBBE7ED /* RNFirebase.xcodeproj */;
@@ -571,13 +627,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 9F90C2241D619E9400F3E238;
 			remoteInfo = RCTSplashScreen;
-		};
-		FDD9C0A01F1C46BD004372CA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FDD9C0981F1C46BD004372CA /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = AB971BC238EAE1A78A7A9DA638F59960;
-			remoteInfo = "HockeySDK-HockeySDKResources";
 		};
 		FDD9C0A21F1C46BD004372CA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -719,8 +768,6 @@
 		FD982BC91FABFDF40057F035 /* splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash.png; sourceTree = "<group>"; };
 		FD982BCB1FACDEF00057F035 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
 		FDD9C0981F1C46BD004372CA /* Pods.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Pods.xcodeproj; path = Pods/Pods.xcodeproj; sourceTree = "<group>"; };
-		FDD9C0D21F1C46ED004372CA /* RNHockeyApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RNHockeyApp.h; path = "../node_modules/react-native-hockeyapp/RNHockeyApp/RNHockeyApp.h"; sourceTree = "<group>"; };
-		FDD9C0D31F1C46ED004372CA /* RNHockeyApp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNHockeyApp.m; path = "../node_modules/react-native-hockeyapp/RNHockeyApp/RNHockeyApp.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1142,8 +1189,6 @@
 				E6DE0BE920054BF30004097A /* RNBackgroundFetch.xcodeproj */,
 				FD6D9EE51FABEF3A00D4998E /* RCTSplashScreen.xcodeproj */,
 				980AF5931F9907460014FACB /* RNSound.xcodeproj */,
-				FDD9C0D21F1C46ED004372CA /* RNHockeyApp.h */,
-				FDD9C0D31F1C46ED004372CA /* RNHockeyApp.m */,
 				FDD9C0981F1C46BD004372CA /* Pods.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
@@ -1350,9 +1395,16 @@
 		FDD9C0991F1C46BD004372CA /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				FDD9C0A11F1C46BD004372CA /* HockeySDKResources.bundle */,
+				DA7AB21C2100E88200E3CD07 /* libBugsnagReactNative.a */,
+				DA7AB21E2100E88200E3CD07 /* libFirebaseCore.a */,
+				DA7AB2202100E88200E3CD07 /* libFirebaseMessaging.a */,
+				DA7AB2222100E88200E3CD07 /* libGoogleToolboxForMac.a */,
+				DA7AB2242100E88200E3CD07 /* libnanopb.a */,
 				FDD9C0A31F1C46BD004372CA /* libPods-edge.a */,
 				FDD9C0A51F1C46BD004372CA /* libPods-edgeTests.a */,
+				DA7AB2262100E88200E3CD07 /* libProtobuf.a */,
+				DA7AB2282100E88200E3CD07 /* libReact.a */,
+				DA7AB22A2100E88200E3CD07 /* libyoga.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1388,7 +1440,6 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				9B38789D52A64BEEDB03C5F5 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2039,6 +2090,62 @@
 			remoteRef = DA6569551F17436100226952 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		DA7AB21C2100E88200E3CD07 /* libBugsnagReactNative.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libBugsnagReactNative.a;
+			remoteRef = DA7AB21B2100E88200E3CD07 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DA7AB21E2100E88200E3CD07 /* libFirebaseCore.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libFirebaseCore.a;
+			remoteRef = DA7AB21D2100E88200E3CD07 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DA7AB2202100E88200E3CD07 /* libFirebaseMessaging.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libFirebaseMessaging.a;
+			remoteRef = DA7AB21F2100E88200E3CD07 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DA7AB2222100E88200E3CD07 /* libGoogleToolboxForMac.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libGoogleToolboxForMac.a;
+			remoteRef = DA7AB2212100E88200E3CD07 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DA7AB2242100E88200E3CD07 /* libnanopb.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libnanopb.a;
+			remoteRef = DA7AB2232100E88200E3CD07 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DA7AB2262100E88200E3CD07 /* libProtobuf.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libProtobuf.a;
+			remoteRef = DA7AB2252100E88200E3CD07 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DA7AB2282100E88200E3CD07 /* libReact.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libReact.a;
+			remoteRef = DA7AB2272100E88200E3CD07 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DA7AB22A2100E88200E3CD07 /* libyoga.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libyoga.a;
+			remoteRef = DA7AB2292100E88200E3CD07 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		DA89DDF620F2CF670012B4BD /* libRNFirebase.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -2093,13 +2200,6 @@
 			fileType = archive.ar;
 			path = libRCTSplashScreen.a;
 			remoteRef = FD6D9F001FABEF3A00D4998E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		FDD9C0A11F1C46BD004372CA /* HockeySDKResources.bundle */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = HockeySDKResources.bundle;
-			remoteRef = FDD9C0A01F1C46BD004372CA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		FDD9C0A31F1C46BD004372CA /* libPods-edge.a */ = {
@@ -2258,24 +2358,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		9B38789D52A64BEEDB03C5F5 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-edge/Pods-edge-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/HockeySDK/HockeySDKResources.bundle",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HockeySDKResources.bundle",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-edge/Pods-edge-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -2293,7 +2375,6 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
-				FDD9C0D41F1C46ED004372CA /* RNHockeyApp.m in Sources */,
 				DABD017420086AAF00C51EF3 /* RNBackgroundFetch+AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
