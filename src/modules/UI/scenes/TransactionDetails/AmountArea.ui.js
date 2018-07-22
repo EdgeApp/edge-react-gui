@@ -3,7 +3,7 @@
 import slowlog from 'react-native-slowlog'
 import { abs, sub } from 'biggystring'
 import React, { Component } from 'react'
-import { Linking, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import Picker from 'react-native-picker'
 import { sprintf } from 'sprintf-js'
 
@@ -46,16 +46,6 @@ class AmountArea extends Component {
     })
     this.Picker = Picker
     slowlog(this, /.*/, global.slowlogOptions)
-  }
-
-  handleClick = () => {
-    Linking.canOpenURL(this.props.txExplorerUrl).then(supported => {
-      if (supported) {
-        Linking.openURL(this.props.txExplorerUrl)
-      } else {
-        console.log('Do not know how to open URI: ' + this.props.txExplorerUrl)
-      }
-    })
   }
 
   onEnterCategories = () => {
@@ -213,7 +203,7 @@ class AmountArea extends Component {
             <PrimaryButton text={s.strings.string_save} style={[styles.saveButton]} onPressFunction={this.props.onPressFxn} />
           </View>
           {this.props.txExplorerUrl ? (
-            <TouchableWithoutFeedback onPress={() => this.handleClick()} style={[styles.advancedTxArea]}>
+            <TouchableWithoutFeedback onPress={this.props.onPressAdvancedDetailsButton} style={[styles.advancedTxArea]}>
               <FormattedText style={[styles.advancedTxText]}>{s.strings.transaction_details_view_advanced_data}</FormattedText>
             </TouchableWithoutFeedback>
           ) : null}

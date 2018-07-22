@@ -185,6 +185,7 @@ export type State = {
       otpMode: boolean,
       pinMode: boolean,
       isAccountBalanceVisible: boolean,
+      isWalletFiatBalanceVisible: boolean,
       pinLoginEnabled: boolean,
       changesLocked: boolean,
       loginStatus: boolean,

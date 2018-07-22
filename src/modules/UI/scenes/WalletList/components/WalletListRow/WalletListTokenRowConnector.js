@@ -5,17 +5,26 @@ import { connect } from 'react-redux'
 
 import type { Dispatch, State } from '../../../../../ReduxTypes'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
+import { getWallet } from '../../../../selectors.js'
 import { selectWallet } from '../../../../Wallets/action'
+import {
+  getCurrencyAccountFiatBalanceFromWallet
+} from '../../../../../utils.js'
 
 import { type StateProps, type DispatchProps, WalletListTokenRow } from './WalletListTokenRow.ui.js'
 
 const mapStateToProps = (state: State, ownProps): StateProps => {
+  const isWalletFiatBalanceVisible = state.ui.settings.isWalletFiatBalanceVisible
   const currencyCode: string = ownProps.currencyCode
   // $FlowFixMe
   const displayDenomination: EdgeDenomination = SETTINGS_SELECTORS.getDisplayDenominationFull(state, currencyCode)
+  const wallet = getWallet(state, ownProps.parentId)
 
+  const formattedFiatBalance = getCurrencyAccountFiatBalanceFromWallet(wallet, currencyCode, state)
   return {
-    displayDenomination
+    displayDenomination,
+    fiatBalance: formattedFiatBalance,
+    isWalletFiatBalanceVisible
   }
 }
 
