@@ -14,11 +14,14 @@ type OwnProps = {
   parentId: string,
   sortHandlers: any,
   currencyCode: string,
-  balance: string
+  balance: string,
+  fiatSymbol: string
 }
 
 export type StateProps = {
   displayDenomination: EdgeDenomination,
+  fiatBalance: string,
+  isWalletFiatBalanceVisible: boolean
 }
 
 export type DispatchProps = {
@@ -49,9 +52,15 @@ export class WalletListTokenRow extends PureComponent<Props> {
           </View>
 
           <View style={[styles.tokenRowBalanceTextWrap]}>
-            <T style={[styles.tokenRowText]}>
-              {intl.formatNumber(UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(this.props.balance) || '0')}
-            </T>
+            {this.props.isWalletFiatBalanceVisible ? (
+              <T style={[styles.tokenRowText]}>
+                {this.props.fiatSymbol + ' ' + this.props.fiatBalance}
+              </T>
+            ) : (
+              <T style={[styles.tokenRowText]}>
+                {intl.formatNumber(UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(this.props.balance) || '0')}
+              </T>
+            )}
           </View>
         </View>
       </TouchableHighlight>

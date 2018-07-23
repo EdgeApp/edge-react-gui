@@ -119,7 +119,8 @@ export const LOCAL_ACCOUNT_DEFAULTS = {
     nonPasswordDaysLimit: 4,
     nonPasswordLoginsLimit: 4
   },
-  isAccountBalanceVisible: true
+  isAccountBalanceVisible: true,
+  isWalletFiatBalanceVisible: false
 }
 
 const SYNCED_SETTINGS_FILENAME = 'Settings.json'
@@ -171,6 +172,13 @@ export const setPasswordReminderRequest = (account: EdgeAccount, passwordReminde
 export const setAccountBalanceVisibility = (account: EdgeAccount, isAccountBalanceVisible: boolean) => {
   return getLocalSettings(account).then(settings => {
     const updatedSettings = updateSettings(settings, { isAccountBalanceVisible })
+    return setLocalSettings(account, updatedSettings)
+  })
+}
+
+export const setWalletFiatBalanceVisibility = (account: EdgeAccount, isWalletFiatBalanceVisible: boolean) => {
+  return getLocalSettings(account).then(settings => {
+    const updatedSettings = updateSettings(settings, { isWalletFiatBalanceVisible })
     return setLocalSettings(account, updatedSettings)
   })
 }
