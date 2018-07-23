@@ -285,53 +285,84 @@ function buildAndroid (buildObj) {
 }
 
 function buildCommonPost (buildObj) {
-  mylog('\n\nUploading to HockeyApp')
-  mylog('**********************\n')
-  const url = sprintf('https://rink.hockeyapp.net/api/2/apps/%s/app_versions/upload', buildObj.hockeyAppId)
+  let curl
+  if (buildObj.hockeyAppToken && buildObj.hockeyAppId) {
+    mylog('\n\nUploading to HockeyApp')
+    mylog('**********************\n')
+    const url = sprintf('https://rink.hockeyapp.net/api/2/apps/%s/app_versions/upload', buildObj.hockeyAppId)
 
-  let notes = sprintf('##%s\n\n', buildObj.productName)
-  notes += sprintf('%s (%s)\n\n', buildObj.version, buildObj.buildNum)
-  notes += sprintf('branch: %s\n', buildObj.repoBranch)
-  notes += '### Commits\n'
-  notes += sprintf('#### airbitz-react-gui Hash: %s\n', buildObj.guiHash)
+    let notes = sprintf('##%s\n\n', buildObj.productName)
+    notes += sprintf('%s (%s)\n\n', buildObj.version, buildObj.buildNum)
+    notes += sprintf('branch: %s\n', buildObj.repoBranch)
+    notes += '### Commits\n'
+    notes += sprintf('#### airbitz-react-gui Hash: %s\n', buildObj.guiHash)
 
-  for (const dep of buildObj.coreDeps) {
-    notes += sprintf('#### %s Version: %s\n', dep.repoName, dep.repoHash)
-  }
-  // notes += '#### Plugin Hash: {0}\n'.format(self.PLUGIN_HASH))
+    for (const dep of buildObj.coreDeps) {
+      notes += sprintf('#### %s Version: %s\n', dep.repoName, dep.repoHash)
+    }
+    // notes += '#### Plugin Hash: {0}\n'.format(self.PLUGIN_HASH))
 
-  let curl = sprintf('/usr/bin/curl -F ipa=@%s -H "X-HockeyAppToken: %s" -F "notes_type=1" -F "status=2" -F "notify=0" -F "tags=%s" -F "notes=%s" ',
-    buildObj.ipaFile, buildObj.hockeyAppToken, buildObj.hockeyAppTags, notes)
+    curl = sprintf('/usr/bin/curl -F ipa=@%s -H "X-HockeyAppToken: %s" -F "notes_type=1" -F "status=2" -F "notify=0" -F "tags=%s" -F "notes=%s" ',
+      buildObj.ipaFile, buildObj.hockeyAppToken, buildObj.hockeyAppTags, notes)
 
-  if (buildObj.dSymZip !== undefined) {
-    curl += sprintf('-F dsym=@%s ', buildObj.dSymZip)
-  }
+    if (buildObj.dSymZip !== undefined) {
+      curl += sprintf('-F dsym=@%s ', buildObj.dSymZip)
+    }
 
-  curl += url
+    curl += url
 
-  call(curl)
-  mylog('\nUploaded to HockeyApp')
-  mylog('\n\nUploading to Bugsnag')
-  mylog('*********************\n')
-
-  curl =
-    '/usr/bin/curl https://upload.bugsnag.com/ ' +
-    `-F apiKey=${buildObj.bugsnagApiKey} ` +
-    `-F appVersion=${buildObj.buildNum} ` +
-    `-F sourceMap=@${buildObj.bundleMapFile} ` +
-    `-F minifiedUrl=${buildObj.bundleUrl} ` +
-    `-F minifiedFile=@${buildObj.bundlePath} ` +
-    `-F overwrite=true`
-  call(curl)
-
-  if (buildObj.dSymFile) {
-    const cpa = `cp -a "${buildObj.dSymFile}/Contents/Resources/DWARF/${buildObj.xcodeScheme}" /tmp/`
-    call(cpa)
-    curl =
-      `/usr/bin/curl https://upload.bugsnag.com/ ` +
-      `-F dsym=@/tmp/${buildObj.xcodeScheme} ` +
-      `-F projectRoot=${buildObj.guiPlatformDir}`
     call(curl)
+    mylog('\nUploaded to HockeyApp')
+  }
+
+  if (buildObj.bugsnagApiKey) {
+    mylog('\n\nUploading to Bugsnag')
+    mylog('*********************\n')
+
+    curl =
+      '/usr/bin/curl https://upload.bugsnag.com/ ' +
+      `-F apiKey=${buildObj.bugsnagApiKey} ` +
+      `-F appVersion=${buildObj.buildNum} ` +
+      `-F sourceMap=@${buildObj.bundleMapFile} ` +
+      `-F minifiedUrl=${buildObj.bundleUrl} ` +
+      `-F minifiedFile=@${buildObj.bundlePath} ` +
+      `-F overwrite=true`
+    call(curl)
+
+    if (buildObj.dSymFile) {
+      const cpa = `cp -a "${buildObj.dSymFile}/Contents/Resources/DWARF/${buildObj.xcodeScheme}" /tmp/`
+      call(cpa)
+      curl =
+        `/usr/bin/curl https://upload.bugsnag.com/ ` +
+        `-F dsym=@/tmp/${buildObj.xcodeScheme} ` +
+        `-F projectRoot=${buildObj.guiPlatformDir}`
+      call(curl)
+    }
+  }
+
+  if (buildObj.appCenterApiToken && buildObj.appCenterAppName && buildObj.appCenterGroupName) {
+    mylog('\n\nUploading to App Center')
+    mylog('***********************\n')
+
+    mylog('*** Getting upload URL/ID')
+    curl = `curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'X-API-Token: ${buildObj.appCenterApiToken}' 'https://api.appcenter.ms/v0.1/apps/${buildObj.appCenterGroupName}/${buildObj.appCenterAppName}/release_uploads'`
+    let response = rmNewline(cmd(curl))
+    let responseObj = JSON.parse(response)
+
+    mylog('\n*** Uploading IPA/APK')
+    curl = `curl -F "ipa=@${buildObj.ipaFile}" ${responseObj.upload_url}`
+    call(curl)
+
+    mylog('\n*** Change resource status to committed')
+    curl = `curl -X PATCH --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'X-API-Token: ${buildObj.appCenterApiToken}' -d '{ "status": "committed" }' 'https://api.appcenter.ms/v0.1/apps/${buildObj.appCenterGroupName}/${buildObj.appCenterAppName}/release_uploads/${responseObj.upload_id}'`
+    response = rmNewline(cmd(curl))
+    responseObj = JSON.parse(response)
+
+    mylog('\n*** Releasing to distribution group')
+    curl = `curl -X PATCH --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'X-API-Token: ${buildObj.appCenterApiToken}' -d '{ "destination_name": "${buildObj.appCenterDistroGroup}", "release_notes": "No notes" }' 'https://api.appcenter.ms/${responseObj.release_url}'`
+    call(curl)
+
+    mylog('\n*** Upload to App Center Complete ***')
   }
 }
 

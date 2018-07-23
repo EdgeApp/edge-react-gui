@@ -10,6 +10,9 @@
     "hockeyAppToken": "xxxxx",
     "hockeyAppTags": "internal",
     "bugsnagApiKey": "xxxxxxxxxx",
+    "appCenterApiToken": "xxxxxxxxxx",
+    "appCenterGroupName": "xxxxxxxxxx",
+    "appCenterDistroGroup": "xxxxxxxxxx",
     "appleDeveloperTeamId": "xxxxxxxxxx",
     "ios": {
       "master": {
