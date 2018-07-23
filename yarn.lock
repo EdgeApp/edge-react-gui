@@ -2401,9 +2401,9 @@ ecc-jsbn@~0.1.1:
   dependencies:
     jsbn "~0.1.0"
 
-edge-core-js@0.9.7:
-  version "0.9.7"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.9.7.tgz#49a6ab71efa0627c57fde1acbb7a2d9f88d706d0"
+edge-core-js@0.9.10:
+  version "0.9.10"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.9.10.tgz#74b984497e00c708bf4bb9bc3ccf5e9cef920cc0"
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -2425,9 +2425,9 @@ edge-core-js@0.9.7:
     utf8 "^3.0.0"
     ws "^5.1.1"
 
-edge-currency-bitcoin@2.21.8:
-  version "2.21.8"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-2.21.8.tgz#1bcb6d04614942340d9005f8495009bf27267873"
+edge-currency-bitcoin@3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-3.0.1.tgz#cae3ebb7e1dcc46770ca96202bc0b050742472a1"
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -6117,6 +6117,10 @@ posix-character-classes@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/posix-character-classes/-/posix-character-classes-0.1.1.tgz#01eac0fe3b5af71a2a6c02feabb8c1fef7e00eab"
 
+postinstall-build@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/postinstall-build/-/postinstall-build-5.0.1.tgz#b917a9079b26178d9a24af5a5cd8cb4a991d11b9"
+
 prebuild-install@^2.0.0, prebuild-install@^2.1.0:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/prebuild-install/-/prebuild-install-2.5.1.tgz#0f234140a73760813657c413cdccdda58296b1da"
@@ -6543,6 +6547,14 @@ react-native-fast-crypto@^1.5.5:
   dependencies:
     buffer "^5.0.8"
     rfc4648 "^1.0.0"
+
+react-native-firebase@^4.3.5:
+  version "4.3.6"
+  resolved "https://registry.yarnpkg.com/react-native-firebase/-/react-native-firebase-4.3.6.tgz#91e805a19c4ba0c201e1eff83abdfed748f505dc"
+  dependencies:
+    opencollective "^1.0.3"
+    postinstall-build "^5.0.1"
+    prop-types "^15.6.1"
 
 "react-native-flip-view@git://github.com/Airbitz/react-native-flip-view.git":
   version "1.0.5"

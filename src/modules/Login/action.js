@@ -71,7 +71,8 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     archivedWalletIds: [],
     currencyWallets: {},
     passwordReminder: {},
-    isAccountBalanceVisible: false
+    isAccountBalanceVisible: false,
+    isWalletFiatBalanceVisible: false
   }
   try {
     const currencyPlugins = await CONTEXT_API.getCurrencyPlugins(context)
@@ -105,6 +106,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
             walletType = plugin.currencyInfo.walletTypes[0]
             walletName = sprintf(s.strings.my_crypto_wallet_name, plugin.currencyInfo.currencyName)
             edgeWallet = await ACCOUNT_API.createCurrencyWalletRequest(account, walletType, { name: walletName, fiatCurrencyCode })
+            global.firebase && global.firebase.analytics().logEvent(`Signup_Wallets_Created`)
           }
         }
       }
@@ -112,6 +114,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
         edgeWallet = await ACCOUNT_API.createCurrencyWalletRequest(account, btcWalletType, { name: btcWalletName, fiatCurrencyCode })
         await ACCOUNT_API.createCurrencyWalletRequest(account, bchWalletType, { name: bchWalletName, fiatCurrencyCode })
         await ACCOUNT_API.createCurrencyWalletRequest(account, ethWalletType, { name: ethWalletName, fiatCurrencyCode })
+        global.firebase && global.firebase.analytics().logEvent(`Signup_Wallets_Created`)
       }
       accountInitObject.walletId = edgeWallet.id
       accountInitObject.currencyCode = edgeWallet.currencyInfo.currencyCode
@@ -173,6 +176,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     accountInitObject.bluetoothMode = localFinal.bluetoothMode
     accountInitObject.passwordReminder = localFinal.passwordReminder
     accountInitObject.isAccountBalanceVisible = localFinal.isAccountBalanceVisible
+    accountInitObject.isWalletFiatBalanceVisible = localFinal.isWalletFiatBalanceVisible
 
     accountInitObject.pinLoginEnabled = await context.pinLoginEnabled(account.username)
 

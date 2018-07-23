@@ -1,7 +1,7 @@
 // @flow
 
 import { connect } from 'react-redux'
-
+import { errorNames } from 'edge-core-js'
 import { getCurrencyConverter, getExchangeRate } from '../../../Core/selectors.js'
 import type { Dispatch, State } from '../../../ReduxTypes'
 import { convertNativeToExchange } from '../../../utils'
@@ -45,7 +45,7 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
     resetSlider = true
   }
   errorMsg = error ? error.message : ''
-
+  if (error && error.name === errorNames.NoAmountSpecifiedError) errorMsg = ''
   const networkFee = transaction ? transaction.networkFee : null
   const parentNetworkFee = transaction && transaction.parentNetworkFee ? transaction.parentNetworkFee : null
 

@@ -6,6 +6,7 @@ import type { EdgeCurrencyInfo, EdgeDenomination, EdgeMetadata, EdgeTransaction 
 import React, { Component } from 'react'
 import { Animated, Easing, Keyboard, ScrollView, TextInput, TouchableOpacity, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
+import { AdvancedTransactionDetailsModal } from './components/AdvancedDetailsModal/AdvancedTransactionDetailsModal.ui.js'
 
 import s from '../../../../locales/strings.js'
 import THEME from '../../../../theme/variables/airbitz'
@@ -63,7 +64,8 @@ type State = {
   payeeZIndex: number,
   subcatZIndex: number,
   type: string,
-  walletDefaultDenomProps: EdgeDenomination
+  walletDefaultDenomProps: EdgeDenomination,
+  isAdvancedTransactionDetailsModalVisible: boolean
 }
 
 type TransactionDetailsProps = TransactionDetailsOwnProps & TransactionDetailsDispatchProps
@@ -138,7 +140,8 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
         name: '',
         multiplier: '',
         symbol: ''
-      }
+      },
+      isAdvancedTransactionDetailsModalVisible: false
     }
     slowlog(this, /.*/, global.slowlogOptions)
   }
@@ -287,7 +290,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
             type: stringArray[0].toLowerCase(),
             subCategory: stringArray[1]
           })
-          if (this.props.subcategoriesList.indexOf(input) === -1 && categories.indexOf(stringArray[0]) >= 0) {
+          if (this.props.subcategoriesList.indexOf(input) === -1 && categories.indexOf(stringArray[0].toLowerCase()) >= 0) {
             // if this is a new subcategory and the parent category is an accepted type
             this.addNewSubcategory(input)
           }
@@ -355,6 +358,18 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
 
   amountAreaOpenModal = () => {
     this.props.openHelpModal()
+  }
+
+  onPressAdvancedDetailsButton = () => {
+    this.setState({
+      isAdvancedTransactionDetailsModalVisible: true
+    })
+  }
+
+  onExitAdvancedDetailsModal = () => {
+    this.setState({
+      isAdvancedTransactionDetailsModalVisible: false
+    })
   }
 
   onSaveTxDetails = () => {
@@ -432,6 +447,12 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
         <View style={[{ width: '100%', height: PLATFORM.usableHeight + PLATFORM.toolbarHeight }]}>
           <Gradient style={styles.headerGradient} />
           <View style={{ position: 'relative', top: 66 }}>
+            <AdvancedTransactionDetailsModal
+              onExit={this.onExitAdvancedDetailsModal}
+              isActive={this.state.isAdvancedTransactionDetailsModalVisible}
+              txExplorerUrl={txExplorerLink}
+              txid={this.props.edgeTransaction.txid}
+            />
             {this.state.contactSearchVisibility && (
               <Animated.View
                 id="payeeSearchResults"
@@ -578,9 +599,10 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                     onFocusFiatAmount={this.onFocusFiatAmount}
                     walletDefaultDenomProps={this.state.walletDefaultDenomProps}
                     openModalFxn={this.amountAreaOpenModal}
-                    txExplorerUrl={txExplorerLink}
                     guiWallet={this.guiWallet}
                     onSelectCategory={this.onSelectCategory}
+                    onPressAdvancedDetailsButton={this.onPressAdvancedDetailsButton}
+                    txExplorerUrl={txExplorerLink}
                   />
                 </View>
               </View>

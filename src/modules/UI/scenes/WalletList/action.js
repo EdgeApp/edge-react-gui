@@ -1,7 +1,10 @@
 // @flow
 
 import * as ACCOUNT_API from '../../../Core/Account/api.js'
-import { setAccountBalanceVisibility } from '../../Settings/action.js'
+import {
+  setAccountBalanceVisibility,
+  updateWalletFiatBalanceVisibility
+} from '../../Settings/action.js'
 import type { Dispatch, GetState } from '../../../ReduxTypes'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'
@@ -33,6 +36,17 @@ export const toggleAccountBalanceVisibility = () => (dispatch: Dispatch, getStat
   const currentAccountBalanceVisibility = state.ui.settings.isAccountBalanceVisible
   ACCOUNT_SETTINGS.setAccountBalanceVisibility(account, !currentAccountBalanceVisibility)
     .then(() => dispatch(setAccountBalanceVisibility(!currentAccountBalanceVisibility)))
+    .catch(error => {
+      console.error(error)
+    })
+}
+
+export const toggleWalletFiatBalanceVisibility = () => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  const currentWalletFiatBalanceVisibility = state.ui.settings.isWalletFiatBalanceVisible
+  ACCOUNT_SETTINGS.setWalletFiatBalanceVisibility(account, !currentWalletFiatBalanceVisibility)
+    .then(() => dispatch(updateWalletFiatBalanceVisibility(!currentWalletFiatBalanceVisibility)))
     .catch(error => {
       console.error(error)
     })
