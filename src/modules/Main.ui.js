@@ -1,7 +1,5 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
-import DeviceInfo from 'react-native-device-info'
 import type { EdgeContext, EdgeContextCallbacks, EdgeCorePluginFactory, EdgeCurrencyPlugin } from 'edge-core-js'
 import {
   bitcoinCurrencyPluginFactory,
@@ -19,10 +17,12 @@ import { rippleCurrencyPluginFactory } from 'edge-currency-ripple'
 import { coinbasePlugin, coincapPlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
 import React, { Component } from 'react'
 import { Image, Keyboard, Linking, Platform, StatusBar, TouchableWithoutFeedback } from 'react-native'
+import DeviceInfo from 'react-native-device-info'
 import HockeyApp from 'react-native-hockeyapp'
 import Locale from 'react-native-locale'
 import { MenuProvider } from 'react-native-popup-menu'
 import { Actions, Drawer, Modal, Overlay, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
+import slowlog from 'react-native-slowlog'
 import SplashScreen from 'react-native-smart-splash-screen'
 // $FlowFixMe
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'
@@ -42,10 +42,10 @@ import walletIcon from '../assets/images/tabbar/wallets.png'
 import ExchangeDropMenu from '../connectors/components/HeaderMenuExchangeConnector'
 import RequestDropMenu from '../connectors/components/HeaderMenuRequestConnector'
 import ExchangeConnector from '../connectors/scene/CryptoExchangeSceneConnector'
-import TransactionsExportSceneConnector from '../connectors/scene/TransactionsExportSceneConnector'
 import EdgeLoginSceneConnector from '../connectors/scene/EdgeLoginSceneConnector'
 import OtpSettingsSceneConnector from '../connectors/scene/OtpSettingsSceneConnector.js'
 import PasswordRecoveryConnector from '../connectors/scene/PasswordRecoveryConnector.js'
+import TransactionsExportSceneConnector from '../connectors/scene/TransactionsExportSceneConnector'
 import * as Constants from '../constants/indexConstants'
 import { setIntlLocale } from '../locales/intl'
 import s, { selectLocale } from '../locales/strings.js'
@@ -62,9 +62,10 @@ import HelpButton from './UI/components/Header/Component/HelpButtonConnector'
 import Header from './UI/components/Header/Header.ui'
 import WalletName from './UI/components/Header/WalletName/WalletNameConnector.js'
 import HelpModal from './UI/components/HelpModal'
+import { passwordReminderModalConnector as PasswordReminderModal } from './UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
 import TransactionAlert from './UI/components/TransactionAlert/TransactionAlertConnector'
-import { CAMERA, CONTACTS } from './UI/permissions.js'
 import type { Permission } from './UI/permissions.js'
+import { CAMERA, CONTACTS } from './UI/permissions.js'
 import AddToken from './UI/scenes/AddToken/AddTokenConnector.js'
 import ChangeMiningFeeExchange from './UI/scenes/ChangeMiningFee/ChangeMiningFeeExchangeConnector.ui'
 import ChangeMiningFeeSendConfirmation from './UI/scenes/ChangeMiningFee/ChangeMiningFeeSendConfirmationConnector.ui'
@@ -77,6 +78,7 @@ import { CreateWalletSelectFiat } from './UI/scenes/CreateWallet/CreateWalletSel
 import EditToken from './UI/scenes/EditToken'
 import LoginConnector from './UI/scenes/Login/LoginConnector'
 import ManageTokens from './UI/scenes/ManageTokens'
+import { PluginBuySell, PluginSpend, PluginView, renderPluginBackButton } from './UI/scenes/Plugins'
 import Request from './UI/scenes/Request/index'
 import Scan from './UI/scenes/Scan/ScanConnector'
 import SendConfirmation from './UI/scenes/SendConfirmation/index'
@@ -88,8 +90,6 @@ import TransactionDetails from './UI/scenes/TransactionDetails/TransactionDetail
 import TransactionListConnector from './UI/scenes/TransactionList/TransactionListConnector'
 import { HwBackButtonHandler } from './UI/scenes/WalletList/components/HwBackButtonHandler'
 import WalletList from './UI/scenes/WalletList/WalletListConnector'
-import { passwordReminderModalConnector as PasswordReminderModal } from './UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
-import { PluginView, PluginBuySell, PluginSpend, renderPluginBackButton } from './UI/scenes/Plugins'
 
 const pluginFactories: Array<EdgeCorePluginFactory> = [
   // Exchanges:
@@ -248,7 +248,7 @@ export default class Main extends Component<Props, State> {
         queryUtilServer(context, usernames)
       })
       setIntlLocale(localeInfo)
-      selectLocale('enUS')
+      selectLocale(DeviceInfo.getDeviceLocale())
       SplashScreen.close({
         animationType: SplashScreen.animationType.fade,
         duration: 850,
