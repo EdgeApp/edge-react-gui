@@ -245,6 +245,9 @@ function buildIos (buildObj) {
   mylog('Zipping dSYM for ' + buildObj.xcodeScheme)
   cmdStr = `/usr/bin/zip -r "${buildObj.dSymZip}" "${buildObj.dSymFile}"`
   call(cmdStr)
+
+  cmdStr = `cp -a "${buildDir}/${archiveDir}/Products/Applications/${buildObj.xcodeScheme}.app/main.jsbundle" "${buildObj.guiPlatformDir}/"`
+  call(cmdStr)
 }
 
 function buildAndroid (buildObj) {
