@@ -39,7 +39,7 @@ let _currentPath = __dirname
 //   guiHash: string,
 //   xcodeProject: string,
 //   xcodeScheme: string,
-//   dSymFile: string,
+//   dSymZip: string,
 //   ipaFile: string,
 //   androidTask: string
 // }
@@ -74,7 +74,7 @@ function main () {
   //   version: '',
   //   buildNum: '',
   //   guiHash: '',
-  //   dSymFile: '',
+  //   dSymZip: '',
   //   ipaFile: '',
   //   androidTask: ''
   // }
@@ -212,18 +212,18 @@ function buildIos (buildObj) {
   const archiveDirArray = archiveDir.split('\n')
   archiveDir = archiveDirArray[ 0 ]
 
-  const dSymFile = `${buildDir}/${archiveDir}/dSYMs/${buildObj.xcodeScheme}.app.dSYM`
+  buildObj.dSymFile = `${buildDir}/${archiveDir}/dSYMs/${buildObj.xcodeScheme}.app.dSYM`
   // const appFile = sprintf('%s/%s/Products/Applications/%s.app', buildDir, archiveDir, buildObj.xcodeScheme)
-  const tmpDSymFile = `/tmp/${buildObj.xcodeScheme}.dSYM.zip`
-  const tmpIpaFile = `/tmp/${buildObj.xcodeScheme}.ipa`
+  buildObj.dSymZip = `/tmp/${buildObj.xcodeScheme}.dSYM.zip`
+  buildObj.ipaFile = `/tmp/${buildObj.xcodeScheme}.ipa`
   const tmpIpaDir = '/tmp/'
 
-  if (fs.existsSync(tmpIpaFile)) {
-    call('rm ' + tmpIpaFile)
+  if (fs.existsSync(buildObj.ipaFile)) {
+    call('rm ' + buildObj.ipaFile)
   }
 
-  if (fs.existsSync(tmpDSymFile)) {
-    call('rm ' + tmpDSymFile)
+  if (fs.existsSync(buildObj.dSymZip)) {
+    call('rm ' + buildObj.dSymZip)
   }
 
   mylog('Creating IPA for ' + buildObj.xcodeScheme)
@@ -243,11 +243,8 @@ function buildIos (buildObj) {
   call(cmdStr)
 
   mylog('Zipping dSYM for ' + buildObj.xcodeScheme)
-  cmdStr = `/usr/bin/zip -r "${tmpDSymFile}" "${dSymFile}"`
+  cmdStr = `/usr/bin/zip -r "${buildObj.dSymZip}" "${buildObj.dSymFile}"`
   call(cmdStr)
-
-  buildObj.ipaFile = tmpIpaFile
-  buildObj.dSymFile = tmpDSymFile
 }
 
 function buildAndroid (buildObj) {
@@ -288,7 +285,8 @@ function buildAndroid (buildObj) {
 }
 
 function buildCommonPost (buildObj) {
-  mylog('Uploading to HockeyApp')
+  mylog('\n\nUploading to HockeyApp')
+  mylog('**********************\n')
   const url = sprintf('https://rink.hockeyapp.net/api/2/apps/%s/app_versions/upload', buildObj.hockeyAppId)
 
   let notes = sprintf('##%s\n\n', buildObj.productName)
@@ -305,14 +303,14 @@ function buildCommonPost (buildObj) {
   let curl = sprintf('/usr/bin/curl -F ipa=@%s -H "X-HockeyAppToken: %s" -F "notes_type=1" -F "status=2" -F "notify=0" -F "tags=%s" -F "notes=%s" ',
     buildObj.ipaFile, buildObj.hockeyAppToken, buildObj.hockeyAppTags, notes)
 
-  if (buildObj.dSymFile !== undefined) {
-    curl += sprintf('-F dsym=@%s ', buildObj.dSymFile)
+  if (buildObj.dSymZip !== undefined) {
+    curl += sprintf('-F dsym=@%s ', buildObj.dSymZip)
   }
 
   curl += url
 
   call(curl)
-  mylog('Uploaded to HockeyApp')
+  mylog('\nUploaded to HockeyApp')
   mylog('\n\nUploading to Bugsnag')
   mylog('*********************\n')
 
@@ -326,10 +324,12 @@ function buildCommonPost (buildObj) {
     `-F overwrite=true`
   call(curl)
 
-  if (buildObj.platformType === 'ios') {
+  if (buildObj.dSymFile) {
+    const cpa = `cp -a "${buildObj.dSymFile}/Contents/Resources/DWARF/${buildObj.xcodeScheme}" /tmp/`
+    call(cpa)
     curl =
       `/usr/bin/curl https://upload.bugsnag.com/ ` +
-      `-F dsym=@${buildObj.dSymFile} ` +
+      `-F dsym=@/tmp/${buildObj.xcodeScheme} ` +
       `-F projectRoot=${buildObj.guiPlatformDir}`
     call(curl)
   }
