@@ -20,6 +20,8 @@ import Main from './modules/MainConnector'
 import { log, logToServer } from './util/logger'
 import { makeCoreContext } from './util/makeContext.js'
 import firebase from 'react-native-firebase'
+import { Client } from 'bugsnag-react-native'
+global.bugsnag = new Client(ENV.BUGSNAG_API_KEY)
 
 const store: {} = configureStore({})
 
@@ -154,6 +156,7 @@ BackgroundTask.define(async () => {
         }
       }
     } catch (error) {
+      global.bugsnag.notify(error)
       console.error(error)
     }
   })
