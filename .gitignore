@@ -9,6 +9,7 @@ GoogleService-Info.plist
 android-release.bundle.map
 ios-release.bundle.map
 main.jsbundle
+temp/
 
 # Scratch
 **/scratch.*
