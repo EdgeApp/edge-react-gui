@@ -48,11 +48,6 @@ export const styles = {
     color: THEME.COLORS.PRIMARY,
     fontSize: 44
   },
-  currentBalanceBoxBits: {
-    color: THEME.COLORS.WHITE,
-    justifyContent: 'space-around',
-    flex: 1
-  },
   // bottom major portion of screen
   walletsBox: {
     // one
@@ -81,14 +76,31 @@ export const styles = {
     marginLeft: 16
   },
   donePlusContainer: {
-    minWidth: 48,
+    minWidth: 160,
     height: 50
   },
   plusContainer: {
     position: 'absolute',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     alignItems: 'center',
-    height: 50
+    height: 50,
+    flexDirection: 'row'
+  },
+  fiatToggleSwitchWrap: {
+    paddingRight: 40,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: 160,
+    alignItems: 'center'
+  },
+  fiatSwitchToggle: {
+
+  },
+  toggleFiatText: {
+    color: THEME.COLORS.WHITE,
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    marginRight: 24,
+    fontSize: 18
   },
   doneContainer: {
     position: 'absolute',
@@ -225,7 +237,12 @@ export const styles = {
     color: THEME.COLORS.GRAY_1
   },
   rowBalanceTextWrap: {
-    justifyContent: 'center'
+    justifyContent: 'center',
+    height: 38
+  },
+  rowBalanceText: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end'
   },
   rowBalanceAmountText: {
     fontSize: 16,

@@ -10,10 +10,16 @@ sed "s/react-native-level-fs/react-native-fs/g" ./node_modules/mymonero-core-js/
 mv ./node_modules/mymonero-core-js/package.json.fix ./node_modules/mymonero-core-js/package.json
 
 node postinstall.js
+mkdir -p temp
 
 # Remove inclusion of c++_shared.so library since we are using jsc-android which already includes it
-sed "s/\,[[:space:]]'-DANDROID_STL=c++_shared'//g" ./node_modules/react-native-fast-crypto/android/build.gradle > build.gradle
-mv build.gradle ./node_modules/react-native-fast-crypto/android/build.gradle
+sed "s/\,[[:space:]]'-DANDROID_STL=c++_shared'//g" ./node_modules/react-native-fast-crypto/android/build.gradle > temp/build.gradle
+mv temp/build.gradle ./node_modules/react-native-fast-crypto/android/build.gradle
+
+# Force xcode build script to out map files
+sed "s/--reset-cache/--reset-cache --sourcemap-output ios-release.bundle.map/g" node_modules/react-native/scripts/react-native-xcode.sh > temp/react-native-xcode.sh
+mv temp/react-native-xcode.sh node_modules/react-native/scripts/react-native-xcode.sh
+chmod 755 node_modules/react-native/scripts/react-native-xcode.sh
 
 node ./copy-plugin.js
 
@@ -24,3 +30,9 @@ node ./copy-plugin.js
 
 # TODO: Remove the minification hack once the CLI accepts a --minify parameter.
 # See: https://github.com/facebook/react-native/pull/16456
+
+unamestr=`uname`
+if [[ "$unamestr" == 'Darwin' ]]; then
+    cd ios
+    pod install
+fi

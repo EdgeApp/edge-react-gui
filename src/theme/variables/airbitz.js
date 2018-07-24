@@ -20,7 +20,8 @@ export const colors = {
   gray2: '#909091',
   gray3: '#d8d6d8',
   gray4: '#F7F7F7',
-  white: '#FFFFFF'
+  white: '#FFFFFF',
+  offWhite: '#F6F6F6'
 }
 
 export const opacity = {
@@ -106,6 +107,7 @@ export const THEME = {
     GRAY_3: '#D9E3ED',
     GRAY_4: '#F4F5F6',
     WHITE: '#FFFFFF',
+    OFF_WHITE: '#F6F6F6',
     CLEAR: 'rgba(0, 0, 0, 0)',
     OPACITY_WHITE: 'rgba(255, 255, 255, 0.1)',
 

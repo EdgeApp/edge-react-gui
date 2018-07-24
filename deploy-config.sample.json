@@ -1,0 +1,34 @@
+{
+  "edge": {
+    "productName": "Edge Wallet",
+    "xcodeProject": "edge.xcodeproj",
+    "xcodeScheme": "edge",
+    "androidKeyStore": "edge-release-keystore.jks",
+    "androidKeyStoreAlias": "edge",
+    "androidKeyStorePassword": "xxxxxxxxx",
+    "androidTask": "assembleRelease",
+    "hockeyAppToken": "xxxxx",
+    "hockeyAppTags": "internal",
+    "bugsnagApiKey": "xxxxxxxxxx",
+    "appCenterApiToken": "xxxxxxxxxx",
+    "appCenterGroupName": "xxxxxxxxxx",
+    "appCenterDistroGroup": "xxxxxxxxxx",
+    "appleDeveloperTeamId": "xxxxxxxxxx",
+    "ios": {
+      "master": {
+        "hockeyAppId": "xxxxxxxxx"
+      },
+      "develop": {
+        "hockeyAppId": "xxxxxxxxx"
+      }
+    },
+    "android": {
+      "master": {
+        "hockeyAppId": "xxxxxxxxx"
+      },
+      "develop": {
+        "hockeyAppId": "xxxxxxxxx"
+      }
+    }
+  }
+}
