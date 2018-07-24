@@ -33,10 +33,6 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         style={
           Array [
             undefined,
-            Object {
-              "borderColor": "yellow",
-              "borderWidth": 0,
-            },
           ]
         }
       >
@@ -48,9 +44,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           }
         >
           <Icon
-            allowFontScaling={false}
             name="user-o"
-            size={12}
             style={
               Array [
                 Object {
@@ -58,12 +52,9 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "fontSize": 22,
                 },
-                Object {
-                  "borderColor": "green",
-                  "borderWidth": 0,
-                },
               ]
             }
+            type="fontAwesome"
           />
           <FormattedText
             style={
@@ -103,15 +94,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
       leftText="Change Password"
       right={
         <Icon
-          allowFontScaling={false}
           name="arrow-right"
-          size={12}
           style={
             Object {
               "color": "#4A5157",
               "fontSize": 18,
             }
           }
+          type="simpleIcons"
         />
       }
       routeFunction={[Function]}
@@ -121,15 +111,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
       leftText="Change PIN"
       right={
         <Icon
-          allowFontScaling={false}
           name="arrow-right"
-          size={12}
           style={
             Object {
               "color": "#4A5157",
               "fontSize": 18,
             }
           }
+          type="simpleIcons"
         />
       }
       routeFunction={[Function]}
@@ -139,15 +128,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
       leftText="Setup 2 Factor"
       right={
         <Icon
-          allowFontScaling={false}
           name="arrow-right"
-          size={12}
           style={
             Object {
               "color": "#4A5157",
               "fontSize": 18,
             }
           }
+          type="simpleIcons"
         />
       }
       routeFunction={[Function]}
@@ -157,15 +145,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
       leftText="Set Up Password Recovery"
       right={
         <Icon
-          allowFontScaling={false}
           name="arrow-right"
-          size={12}
           style={
             Object {
               "color": "#4A5157",
               "fontSize": 18,
             }
           }
+          type="simpleIcons"
         />
       }
       routeFunction={[Function]}
@@ -186,10 +173,6 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         style={
           Array [
             undefined,
-            Object {
-              "borderColor": "yellow",
-              "borderWidth": 0,
-            },
           ]
         }
       >
@@ -201,9 +184,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           }
         >
           <Icon
-            allowFontScaling={false}
             name="ios-options"
-            size={12}
             style={
               Array [
                 Object {
@@ -211,12 +192,9 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "fontSize": 22,
                 },
-                Object {
-                  "borderColor": "green",
-                  "borderWidth": 0,
-                },
               ]
             }
+            type="ionIcons"
           />
           <FormattedText
             style={
@@ -239,15 +217,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         leftText="Spending Limits"
         right={
           <Icon
-            allowFontScaling={false}
             name="arrow-right"
-            size={12}
             style={
               Object {
                 "color": "#4A5157",
                 "fontSize": 18,
               }
             }
+            type="simpleIcons"
           />
         }
         routeFunction={[Function]}
@@ -321,10 +298,6 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               "backgroundColor": "#F4F5F6",
               "flex": 1,
               "padding": 20,
-            },
-            Object {
-              "borderColor": "green",
-              "borderWidth": 0,
             },
           ]
         }
@@ -466,10 +439,6 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         style={
           Array [
             undefined,
-            Object {
-              "borderColor": "yellow",
-              "borderWidth": 0,
-            },
           ]
         }
       >
@@ -481,9 +450,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           }
         >
           <Icon
-            allowFontScaling={false}
             name="user-o"
-            size={12}
             style={
               Array [
                 Object {
@@ -491,12 +458,9 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "fontSize": 22,
                 },
-                Object {
-                  "borderColor": "green",
-                  "borderWidth": 0,
-                },
               ]
             }
+            type="fontAwesome"
           />
           <FormattedText
             style={
@@ -536,15 +500,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
       leftText="Change Password"
       right={
         <Icon
-          allowFontScaling={false}
           name="arrow-right"
-          size={12}
           style={
             Object {
               "color": "#4A5157",
               "fontSize": 18,
             }
           }
+          type="simpleIcons"
         />
       }
       routeFunction={[Function]}
@@ -554,15 +517,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
       leftText="Change PIN"
       right={
         <Icon
-          allowFontScaling={false}
           name="arrow-right"
-          size={12}
           style={
             Object {
               "color": "#4A5157",
               "fontSize": 18,
             }
           }
+          type="simpleIcons"
         />
       }
       routeFunction={[Function]}
@@ -572,15 +534,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
       leftText="Setup 2 Factor"
       right={
         <Icon
-          allowFontScaling={false}
           name="arrow-right"
-          size={12}
           style={
             Object {
               "color": "#4A5157",
               "fontSize": 18,
             }
           }
+          type="simpleIcons"
         />
       }
       routeFunction={[Function]}
@@ -590,15 +551,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
       leftText="Set Up Password Recovery"
       right={
         <Icon
-          allowFontScaling={false}
           name="arrow-right"
-          size={12}
           style={
             Object {
               "color": "#4A5157",
               "fontSize": 18,
             }
           }
+          type="simpleIcons"
         />
       }
       routeFunction={[Function]}
@@ -619,10 +579,6 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         style={
           Array [
             undefined,
-            Object {
-              "borderColor": "yellow",
-              "borderWidth": 0,
-            },
           ]
         }
       >
@@ -634,9 +590,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           }
         >
           <Icon
-            allowFontScaling={false}
             name="ios-options"
-            size={12}
             style={
               Array [
                 Object {
@@ -644,12 +598,9 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "fontSize": 22,
                 },
-                Object {
-                  "borderColor": "green",
-                  "borderWidth": 0,
-                },
               ]
             }
+            type="ionIcons"
           />
           <FormattedText
             style={
@@ -672,15 +623,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         leftText="Spending Limits"
         right={
           <Icon
-            allowFontScaling={false}
             name="arrow-right"
-            size={12}
             style={
               Object {
                 "color": "#4A5157",
                 "fontSize": 18,
               }
             }
+            type="simpleIcons"
           />
         }
         routeFunction={[Function]}
@@ -754,10 +704,6 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               "backgroundColor": "#F4F5F6",
               "flex": 1,
               "padding": 20,
-            },
-            Object {
-              "borderColor": "green",
-              "borderWidth": 0,
             },
           ]
         }

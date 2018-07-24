@@ -50,8 +50,8 @@ export const LOCAL_ACCOUNT_DEFAULTS = {
   isWalletFiatBalanceVisible: false,
   spendingLimits: {
     transaction: {
-      amount: 100,
-      isEnabled: true
+      amount: 0,
+      isEnabled: false
     }
   }
 }

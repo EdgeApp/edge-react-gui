@@ -11,7 +11,7 @@ import type { Action } from '../../ReduxTypes'
 import * as ADD_TOKEN_ACTION from '../scenes/AddToken/action.js'
 import * as WALLET_ACTION from '../Wallets/action'
 import * as ACTION from './action.js'
-import { spendingLimits } from './spendingLimits/spendingLimits.js'
+import { spendingLimits } from './spendingLimits/SpendingLimitsReducer.js'
 
 export const initialState = {
   ...SYNCED_ACCOUNT_DEFAULTS,

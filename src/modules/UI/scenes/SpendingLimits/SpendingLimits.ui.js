@@ -10,7 +10,7 @@ import { TextInput } from '../../components/Modals/components/TextInput.ui.js'
 import { PrimaryButton } from '../../components/Modals/components/PrimaryButton.ui.js'
 import styles from './styles.js'
 import SafeAreaView from '../../components/SafeAreaView/SafeAreaView.ui.js'
-import type { SpendingLimits as SpendingLimitsType } from '../../Settings/spendingLimits/spendingLimits.js'
+import type { SpendingLimits as SpendingLimitsType } from '../../Settings/spendingLimits/SpendingLimitsReducer.js'
 
 const ENTER_YOUR_PASSWORD = s.strings.enter_your_password
 const TRANSACTION_SPENDING_LIMIT_TITLE = s.strings.spending_limits_tx_title
@@ -18,7 +18,7 @@ const TRANSACTION_SPENDING_LIMIT_PLACEHOLDER = s.strings.spending_limits_tx_titl
 const TRANSACTION_SPENDING_LIMIT_DESCRIPTION = s.strings.spending_limits_tx_description
 const SAVE_TEXT = s.strings.save
 
-export type Props = {
+export type SpendingLimitsOwnProps = {
   transactionSpendingLimit: {
     amount: number,
     isEnabled: boolean
@@ -26,13 +26,13 @@ export type Props = {
   currencySymbol: string,
   onSubmit: (SpendingLimitsType, password: string) => mixed
 }
-export type State = {
+export type SpendingLimitsState = {
   password: string,
   transactionAmount: number,
   transactionIsEnabled: boolean
 }
-export class SpendingLimits extends Component<Props, State> {
-  constructor (props: Props) {
+export class SpendingLimitsComponent extends Component<SpendingLimitsOwnProps, SpendingLimitsState> {
+  constructor (props: SpendingLimitsOwnProps) {
     super(props)
     this.state = {
       password: '',

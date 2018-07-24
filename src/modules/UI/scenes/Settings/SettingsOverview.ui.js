@@ -4,14 +4,11 @@ import type { EdgeAccount } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Alert, ScrollView, Text, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import FAIcon from 'react-native-vector-icons/FontAwesome'
-import IonIcon from 'react-native-vector-icons/Ionicons'
-import SimpleIcon from 'react-native-vector-icons/SimpleLineIcons'
 
 import * as Constants from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings'
 import { ConfirmPasswordModalStyle } from '../../../../styles/indexStyles'
-import { border as b, getTimeWithMeasurement } from '../../../utils'
+import { getTimeWithMeasurement } from '../../../utils'
 import { PrimaryButton } from '../../components/Buttons'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
@@ -181,9 +178,9 @@ export default class SettingsOverview extends Component<Props, State> {
         <Gradient style={styles.gradient} />
         <ScrollView style={styles.container}>
           <Gradient style={[styles.unlockRow]}>
-            <View style={[styles.accountBoxHeaderTextWrap, b('yellow')]}>
+            <View style={[styles.accountBoxHeaderTextWrap]}>
               <View style={styles.leftArea}>
-                <FAIcon style={[styles.icon, b('green')]} name={Constants.USER_O} />
+                <Icon type={Constants.FONT_AWESOME} style={[styles.icon]} name={Constants.USER_O} />
                 <T style={styles.accountBoxHeaderText}>
                   {s.strings.settings_account_title_cap}: {this.props.username}
                 </T>
@@ -200,31 +197,31 @@ export default class SettingsOverview extends Component<Props, State> {
             leftText={s.strings.settings_button_change_password}
             disabled={this.props.isLocked}
             routeFunction={this._onPressChangePasswordRouting}
-            right={<SimpleIcon style={styles.settingsRowRightArrow} name="arrow-right" />}
+            right={<Icon type={ Constants.SIMPLE_ICONS } style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
           />
           <RowRoute
             leftText={s.strings.settings_button_pin}
             disabled={this.props.isLocked}
             routeFunction={this._onPressChangePinRouting}
-            right={<SimpleIcon style={styles.settingsRowRightArrow} name="arrow-right" />}
+            right={<Icon type={ Constants.SIMPLE_ICONS } style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
           />
           <RowRoute
             leftText={s.strings.settings_button_setup_two_factor}
             disabled={this.props.isLocked}
             routeFunction={this._onPressOtp}
-            right={<SimpleIcon style={styles.settingsRowRightArrow} name="arrow-right" />}
+            right={<Icon type={ Constants.SIMPLE_ICONS } style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
           />
           <RowRoute
             leftText={s.strings.settings_button_password_recovery}
             disabled={this.props.isLocked}
             routeFunction={this._onPressRecoverPasswordRouting}
-            right={<SimpleIcon style={styles.settingsRowRightArrow} name="arrow-right" />}
+            right={<Icon type={ Constants.SIMPLE_ICONS } style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
           />
 
           <Gradient style={[styles.unlockRow]}>
-            <View style={[styles.accountBoxHeaderTextWrap, b('yellow')]}>
+            <View style={[styles.accountBoxHeaderTextWrap]}>
               <View style={styles.leftArea}>
-                <IonIcon name="ios-options" style={[styles.icon, b('green')]} />
+                <Icon type={Constants.ION_ICONS} name="ios-options" style={[styles.icon]} />
                 <T style={styles.accountBoxHeaderText}>{s.strings.settings_options_title_cap}</T>
               </View>
             </View>
@@ -235,7 +232,7 @@ export default class SettingsOverview extends Component<Props, State> {
               disabled={false}
               leftText={s.strings.spending_limits}
               routeFunction={this._onPressSpendingLimits}
-              right={<SimpleIcon style={styles.settingsRowRightArrow} name="arrow-right" />}
+              right={<Icon type={ Constants.SIMPLE_ICONS } style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
             />
 
             <RowModal onPress={this.showAutoLogoutModal} leftText={s.strings.settings_title_auto_logoff} rightText={autoLogoutRightText} />
@@ -268,7 +265,7 @@ export default class SettingsOverview extends Component<Props, State> {
 
             <RowModal onPress={this.showRestoreWalletModal} leftText={s.strings.restore_wallets_modal_title} />
 
-            <View style={[styles.debugArea, b('green')]}>
+            <View style={[styles.debugArea]}>
               <PrimaryButton text={s.strings.settings_button_debug} onPressFunction={this._onPressDebug} />
             </View>
 

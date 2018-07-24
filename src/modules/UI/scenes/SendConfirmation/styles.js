@@ -94,7 +94,11 @@ export default StyleSheet.create({
     alignItems: 'center',
     marginTop: 10
   },
-  row: { width: '100%', paddingHorizontal: 24, justifyContent: 'flex-start' },
+  row: {
+    width: '100%',
+    paddingHorizontal: 24,
+    justifyContent: 'flex-start'
+  },
   rowText: {
     backgroundColor: 'transparent',
     color: 'white'

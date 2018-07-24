@@ -13,7 +13,7 @@ import * as CORE_SELECTORS from '../../../Core/selectors'
 import { displayErrorAlert } from '../../components/ErrorAlert/actions.js'
 import * as SETTINGS_ACTIONS from '../../Settings/action.js'
 import { restoreWalletsRequest, convertCurrency } from '../../../Core/Account/api.js'
-import { newSpendingLimits } from '../../Settings/spendingLimits/spendingLimits.js'
+import { newSpendingLimits } from '../../Settings/spendingLimits/SpendingLimitsReducer.js'
 
 const PREFIX = 'UI/Scenes/Settings/'
 
