@@ -190,7 +190,7 @@ export class SendConfirmation extends Component<Props, State> {
               )}
 
               {!!destination && (
-                <Recipient>
+                <Recipient style={{paddingHorizontal: 20}}>
                   <Recipient.Text>
                     <Text>{SEND_TO_DESTINATION_TEXT}</Text>
                   </Recipient.Text>
