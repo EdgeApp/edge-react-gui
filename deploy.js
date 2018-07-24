@@ -39,7 +39,7 @@ let _currentPath = __dirname
 //   guiHash: string,
 //   xcodeProject: string,
 //   xcodeScheme: string,
-//   dSymFile: string,
+//   dSymZip: string,
 //   ipaFile: string,
 //   androidTask: string
 // }
@@ -74,7 +74,7 @@ function main () {
   //   version: '',
   //   buildNum: '',
   //   guiHash: '',
-  //   dSymFile: '',
+  //   dSymZip: '',
   //   ipaFile: '',
   //   androidTask: ''
   // }
@@ -103,6 +103,7 @@ function makeCommonPre (argv, buildObj) {
   buildObj.repoBranch = argv[4] // master or develop
   buildObj.platformType = argv[3] // ios or android
   buildObj.guiPlatformDir = buildObj.guiDir + '/' + buildObj.platformType
+  buildObj.tmpDir = `${buildObj.guiDir}/temp`
 }
 
 function makeProject (project, buildObj) {
@@ -138,6 +139,16 @@ function makeCommonPost (buildObj) {
 
   chdir(buildObj.guiDir)
   buildObj.guiHash = rmNewline(cmd('git rev-parse --short HEAD'))
+
+  if (buildObj.platformType === 'android') {
+    buildObj.bundlePath = `${buildObj.guiPlatformDir}/app/build/intermediates/assets/release/index.android.bundle`
+    buildObj.bundleUrl = 'index.android.bundle'
+    buildObj.bundleMapFile = '../android-release.bundle.map'
+  } else if (buildObj.platformType === 'ios') {
+    buildObj.bundlePath = `${buildObj.guiPlatformDir}/main.jsbundle`
+    buildObj.bundleUrl = 'main.jsbundle'
+    buildObj.bundleMapFile = '../ios-release.bundle.map'
+  }
 }
 
 function buildCommon (buildObj) {
@@ -202,42 +213,41 @@ function buildIos (buildObj) {
   const archiveDirArray = archiveDir.split('\n')
   archiveDir = archiveDirArray[ 0 ]
 
-  const dSymFile = `${buildDir}/${archiveDir}/dSYMs/${buildObj.xcodeScheme}.app.dSYM`
+  buildObj.dSymFile = `${buildDir}/${archiveDir}/dSYMs/${buildObj.xcodeScheme}.app.dSYM`
   // const appFile = sprintf('%s/%s/Products/Applications/%s.app', buildDir, archiveDir, buildObj.xcodeScheme)
-  const tmpDSymFile = `/tmp/${buildObj.xcodeScheme}.dSYM.zip`
-  const tmpIpaFile = `/tmp/${buildObj.xcodeScheme}.ipa`
-  const tmpIpaDir = '/tmp/'
+  buildObj.dSymZip = `${buildObj.tmpDir}/${buildObj.xcodeScheme}.dSYM.zip`
+  buildObj.ipaFile = `${buildObj.tmpDir}/${buildObj.xcodeScheme}.ipa`
 
-  if (fs.existsSync(tmpIpaFile)) {
-    call('rm ' + tmpIpaFile)
+  if (fs.existsSync(buildObj.ipaFile)) {
+    call('rm ' + buildObj.ipaFile)
   }
 
-  if (fs.existsSync(tmpDSymFile)) {
-    call('rm ' + tmpDSymFile)
+  if (fs.existsSync(buildObj.dSymZip)) {
+    call('rm ' + buildObj.dSymZip)
   }
 
   mylog('Creating IPA for ' + buildObj.xcodeScheme)
   chdir(buildObj.guiPlatformDir)
 
   // Replace TeamID in exportOptions.plist
-  let gradle = fs.readFileSync(buildObj.guiPlatformDir + '/exportOptions.plist', {encoding: 'utf8'})
-  gradle = gradle.replace('Your10CharacterTeamId', buildObj.appleDeveloperTeamId)
-  fs.writeFileSync(buildObj.guiPlatformDir + '/exportOptions.plist', gradle)
+  let plist = fs.readFileSync(buildObj.guiPlatformDir + '/exportOptions.plist', {encoding: 'utf8'})
+  plist = plist.replace('Your10CharacterTeamId', buildObj.appleDeveloperTeamId)
+  fs.writeFileSync(buildObj.guiPlatformDir + '/exportOptions.plist', plist)
 
   cmdStr = `security unlock-keychain -p '${process.env.KEYCHAIN_PASSWORD || ''}'  "${process.env.HOME || ''}/Library/Keychains/login.keychain"`
   call(cmdStr)
 
   call(`security set-keychain-settings -t 7200 -l ${process.env.HOME || ''}/Library/Keychains/login.keychain`)
 
-  cmdStr = `xcodebuild -exportArchive -allowProvisioningUpdates -archivePath "${buildDir}/${archiveDir}" -exportPath ${tmpIpaDir} -exportOptionsPlist ./exportOptions.plist`
+  cmdStr = `xcodebuild -exportArchive -allowProvisioningUpdates -archivePath "${buildDir}/${archiveDir}" -exportPath ${buildObj.tmpDir}/ -exportOptionsPlist ./exportOptions.plist`
   call(cmdStr)
 
   mylog('Zipping dSYM for ' + buildObj.xcodeScheme)
-  cmdStr = `/usr/bin/zip -r "${tmpDSymFile}" "${dSymFile}"`
+  cmdStr = `/usr/bin/zip -r "${buildObj.dSymZip}" "${buildObj.dSymFile}"`
   call(cmdStr)
 
-  buildObj.ipaFile = tmpIpaFile
-  buildObj.dSymFile = tmpDSymFile
+  cmdStr = `cp -a "${buildDir}/${archiveDir}/Products/Applications/${buildObj.xcodeScheme}.app/main.jsbundle" "${buildObj.guiPlatformDir}/"`
+  call(cmdStr)
 }
 
 function buildAndroid (buildObj) {
@@ -246,9 +256,6 @@ function buildAndroid (buildObj) {
   }
 
   chdir(buildObj.guiDir)
-  // call('react-native bundle --dev false --entry-file index.android.js --bundle-output android/main.jsbundle --platform android')
-  // react-native bundle --dev false --entry-file index.android.js --bundle-output android/app/src/main/assets/index.android.bundle --platform android  --assets-dest android/app/src/main/res/
-  // call('sed "s/.*versionCode [0-9]\{{10\}}/        versionCode {0}/" airbitz/build.gradle > /tmp/tmp.gradle'.format(ctx.BUILDNUM_ANDROID))
 
   let gradle = fs.readFileSync(buildObj.guiPlatformDir + '/app/build.gradle', {encoding: 'utf8'})
   // var mystring = '<img src="[media id=5]" />';
@@ -278,7 +285,8 @@ function buildAndroid (buildObj) {
 }
 
 function buildCommonPost (buildObj) {
-  mylog('Uploading to HockeyApp')
+  mylog('\n\nUploading to HockeyApp')
+  mylog('**********************\n')
   const url = sprintf('https://rink.hockeyapp.net/api/2/apps/%s/app_versions/upload', buildObj.hockeyAppId)
 
   let notes = sprintf('##%s\n\n', buildObj.productName)
@@ -295,14 +303,36 @@ function buildCommonPost (buildObj) {
   let curl = sprintf('/usr/bin/curl -F ipa=@%s -H "X-HockeyAppToken: %s" -F "notes_type=1" -F "status=2" -F "notify=0" -F "tags=%s" -F "notes=%s" ',
     buildObj.ipaFile, buildObj.hockeyAppToken, buildObj.hockeyAppTags, notes)
 
-  if (buildObj.dSymFile !== undefined) {
-    curl += sprintf('-F dsym=@%s ', buildObj.dSymFile)
+  if (buildObj.dSymZip !== undefined) {
+    curl += sprintf('-F dsym=@%s ', buildObj.dSymZip)
   }
 
   curl += url
 
   call(curl)
-  mylog('Uploaded to HockeyApp')
+  mylog('\nUploaded to HockeyApp')
+  mylog('\n\nUploading to Bugsnag')
+  mylog('*********************\n')
+
+  curl =
+    '/usr/bin/curl https://upload.bugsnag.com/ ' +
+    `-F apiKey=${buildObj.bugsnagApiKey} ` +
+    `-F appVersion=${buildObj.buildNum} ` +
+    `-F sourceMap=@${buildObj.bundleMapFile} ` +
+    `-F minifiedUrl=${buildObj.bundleUrl} ` +
+    `-F minifiedFile=@${buildObj.bundlePath} ` +
+    `-F overwrite=true`
+  call(curl)
+
+  if (buildObj.dSymFile) {
+    const cpa = `cp -a "${buildObj.dSymFile}/Contents/Resources/DWARF/${buildObj.xcodeScheme}" ${buildObj.tmpDir}/`
+    call(cpa)
+    curl =
+      `/usr/bin/curl https://upload.bugsnag.com/ ` +
+      `-F dsym=@${buildObj.tmpDir}/${buildObj.xcodeScheme} ` +
+      `-F projectRoot=${buildObj.guiPlatformDir}`
+    call(curl)
+  }
 }
 
 function builddate () {

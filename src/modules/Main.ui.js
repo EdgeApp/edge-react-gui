@@ -16,9 +16,8 @@ import { moneroCurrencyPluginFactory } from 'edge-currency-monero'
 import { rippleCurrencyPluginFactory } from 'edge-currency-ripple'
 import { coinbasePlugin, coincapPlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
 import React, { Component } from 'react'
-import { Image, Keyboard, Linking, Platform, StatusBar, TouchableWithoutFeedback } from 'react-native'
+import { Image, Keyboard, Linking, StatusBar, TouchableWithoutFeedback } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
-import HockeyApp from 'react-native-hockeyapp'
 import Locale from 'react-native-locale'
 import { MenuProvider } from 'react-native-popup-menu'
 import { Actions, Drawer, Modal, Overlay, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
@@ -113,7 +112,6 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
 const UTILITY_SERVER_FILE = 'utilityServer.json'
-const HOCKEY_APP_ID = Platform.select(ENV.HOCKEY_APP_ID)
 global.etherscanApiKey = ENV.ETHERSCAN_API_KEY
 
 const RouterWithRedux = connect()(Router)
@@ -223,7 +221,6 @@ export default class Main extends Component<Props, State> {
   }
 
   componentWillMount () {
-    HockeyApp.configure(HOCKEY_APP_ID, true)
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow)
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide)
   }
@@ -234,8 +231,6 @@ export default class Main extends Component<Props, State> {
   }
 
   componentDidMount () {
-    HockeyApp.start()
-    HockeyApp.checkForUpdate() // optional
     const id = DeviceInfo.getUniqueID()
     global.firebase && global.firebase.analytics().setUserId(id)
     global.firebase && global.firebase.analytics().logEvent(`Start_App`)
