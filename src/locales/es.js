@@ -1,8 +1,4 @@
 // @flow
-
-const strings = {
-  fragment_wallets_header: 'Mis Carteras',
-  string_yes: 'Si'
-}
+const strings = require('./strings/es.json')
 
 export default strings
