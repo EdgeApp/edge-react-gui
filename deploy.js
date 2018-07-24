@@ -103,6 +103,7 @@ function makeCommonPre (argv, buildObj) {
   buildObj.repoBranch = argv[4] // master or develop
   buildObj.platformType = argv[3] // ios or android
   buildObj.guiPlatformDir = buildObj.guiDir + '/' + buildObj.platformType
+  buildObj.tmpDir = `${buildObj.guiDir}/temp`
 }
 
 function makeProject (project, buildObj) {
@@ -142,7 +143,7 @@ function makeCommonPost (buildObj) {
   if (buildObj.platformType === 'android') {
     buildObj.bundlePath = `${buildObj.guiPlatformDir}/app/build/intermediates/assets/release/index.android.bundle`
     buildObj.bundleUrl = 'index.android.bundle'
-    buildObj.bundleMapFile = './android-release.bundle.map'
+    buildObj.bundleMapFile = '../android-release.bundle.map'
   } else if (buildObj.platformType === 'ios') {
     buildObj.bundlePath = `${buildObj.guiPlatformDir}/main.jsbundle`
     buildObj.bundleUrl = 'main.jsbundle'
@@ -214,9 +215,8 @@ function buildIos (buildObj) {
 
   buildObj.dSymFile = `${buildDir}/${archiveDir}/dSYMs/${buildObj.xcodeScheme}.app.dSYM`
   // const appFile = sprintf('%s/%s/Products/Applications/%s.app', buildDir, archiveDir, buildObj.xcodeScheme)
-  buildObj.dSymZip = `/tmp/${buildObj.xcodeScheme}.dSYM.zip`
-  buildObj.ipaFile = `/tmp/${buildObj.xcodeScheme}.ipa`
-  const tmpIpaDir = '/tmp/'
+  buildObj.dSymZip = `${buildObj.tmpDir}/${buildObj.xcodeScheme}.dSYM.zip`
+  buildObj.ipaFile = `${buildObj.tmpDir}/${buildObj.xcodeScheme}.ipa`
 
   if (fs.existsSync(buildObj.ipaFile)) {
     call('rm ' + buildObj.ipaFile)
@@ -239,7 +239,7 @@ function buildIos (buildObj) {
 
   call(`security set-keychain-settings -t 7200 -l ${process.env.HOME || ''}/Library/Keychains/login.keychain`)
 
-  cmdStr = `xcodebuild -exportArchive -allowProvisioningUpdates -archivePath "${buildDir}/${archiveDir}" -exportPath ${tmpIpaDir} -exportOptionsPlist ./exportOptions.plist`
+  cmdStr = `xcodebuild -exportArchive -allowProvisioningUpdates -archivePath "${buildDir}/${archiveDir}" -exportPath ${buildObj.tmpDir}/ -exportOptionsPlist ./exportOptions.plist`
   call(cmdStr)
 
   mylog('Zipping dSYM for ' + buildObj.xcodeScheme)
@@ -256,9 +256,6 @@ function buildAndroid (buildObj) {
   }
 
   chdir(buildObj.guiDir)
-  // call('react-native bundle --dev false --entry-file index.android.js --bundle-output android/main.jsbundle --platform android')
-  // react-native bundle --dev false --entry-file index.android.js --bundle-output android/app/src/main/assets/index.android.bundle --platform android  --assets-dest android/app/src/main/res/
-  // call('sed "s/.*versionCode [0-9]\{{10\}}/        versionCode {0}/" airbitz/build.gradle > /tmp/tmp.gradle'.format(ctx.BUILDNUM_ANDROID))
 
   let gradle = fs.readFileSync(buildObj.guiPlatformDir + '/app/build.gradle', {encoding: 'utf8'})
   // var mystring = '<img src="[media id=5]" />';
@@ -328,11 +325,11 @@ function buildCommonPost (buildObj) {
   call(curl)
 
   if (buildObj.dSymFile) {
-    const cpa = `cp -a "${buildObj.dSymFile}/Contents/Resources/DWARF/${buildObj.xcodeScheme}" /tmp/`
+    const cpa = `cp -a "${buildObj.dSymFile}/Contents/Resources/DWARF/${buildObj.xcodeScheme}" ${buildObj.tmpDir}/`
     call(cpa)
     curl =
       `/usr/bin/curl https://upload.bugsnag.com/ ` +
-      `-F dsym=@/tmp/${buildObj.xcodeScheme} ` +
+      `-F dsym=@${buildObj.tmpDir}/${buildObj.xcodeScheme} ` +
       `-F projectRoot=${buildObj.guiPlatformDir}`
     call(curl)
   }
