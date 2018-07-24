@@ -286,21 +286,12 @@ function buildAndroid (buildObj) {
 
 function buildCommonPost (buildObj) {
   let curl
+  const notes = `${buildObj.productName} ${buildObj.version} (${buildObj.buildNum}) branch: ${buildObj.repoBranch} #${buildObj.guiHash}`
+
   if (buildObj.hockeyAppToken && buildObj.hockeyAppId) {
     mylog('\n\nUploading to HockeyApp')
     mylog('**********************\n')
     const url = sprintf('https://rink.hockeyapp.net/api/2/apps/%s/app_versions/upload', buildObj.hockeyAppId)
-
-    let notes = sprintf('##%s\n\n', buildObj.productName)
-    notes += sprintf('%s (%s)\n\n', buildObj.version, buildObj.buildNum)
-    notes += sprintf('branch: %s\n', buildObj.repoBranch)
-    notes += '### Commits\n'
-    notes += sprintf('#### airbitz-react-gui Hash: %s\n', buildObj.guiHash)
-
-    for (const dep of buildObj.coreDeps) {
-      notes += sprintf('#### %s Version: %s\n', dep.repoName, dep.repoHash)
-    }
-    // notes += '#### Plugin Hash: {0}\n'.format(self.PLUGIN_HASH))
 
     curl = sprintf('/usr/bin/curl -F ipa=@%s -H "X-HockeyAppToken: %s" -F "notes_type=1" -F "status=2" -F "notify=0" -F "tags=%s" -F "notes=%s" ',
       buildObj.ipaFile, buildObj.hockeyAppToken, buildObj.hockeyAppTags, notes)
@@ -359,7 +350,7 @@ function buildCommonPost (buildObj) {
     responseObj = JSON.parse(response)
 
     mylog('\n*** Releasing to distribution group')
-    curl = `curl -X PATCH --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'X-API-Token: ${buildObj.appCenterApiToken}' -d '{ "destination_name": "${buildObj.appCenterDistroGroup}", "release_notes": "No notes" }' 'https://api.appcenter.ms/${responseObj.release_url}'`
+    curl = `curl -X PATCH --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'X-API-Token: ${buildObj.appCenterApiToken}' -d '{ "destination_name": "${buildObj.appCenterDistroGroup}", "release_notes": "${notes}" }' 'https://api.appcenter.ms/${responseObj.release_url}'`
     call(curl)
 
     mylog('\n*** Upload to App Center Complete ***')
