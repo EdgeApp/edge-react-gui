@@ -102,7 +102,7 @@
     "react-native-background-fetch": "^2.2.1",
     "react-native-background-task": "^0.2.1",
     "react-native-blur": "^3.2.0",
-    "react-native-camera": "^0.12.0",
+    "react-native-camera": "git://github.com/EdgeApp/react-native-camera#kylan/androidFix",
     "react-native-contacts": "^0.9.0",
     "react-native-contacts-wrapper": "^0.2.3",
     "react-native-crypto": "^2.0.1",

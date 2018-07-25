@@ -134,7 +134,7 @@ export const styles = {
   },
   currentBalanceBoxDollarsWrap: {
     justifyContent: 'flex-start',
-    flex: 4,
+    height: 26,
     paddingTop: 4,
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
