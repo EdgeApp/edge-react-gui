@@ -24,7 +24,7 @@ import T from '../../../../components/FormattedText'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
 import { getEnabledTokens, selectWallet } from '../../../../Wallets/action.js'
 import styles, { styles as styleRaw } from '../../style.js'
-import WalletListRowOptions from './WalletListRowOptions.ui'
+import WalletListRowOptions from './WalletListRowOptionsConnector.js'
 import WalletListTokenRow from './WalletListTokenRowConnector.js'
 
 const DIVIDE_PRECISION = 18
@@ -187,7 +187,7 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
               <WalletListRowOptions
                 currencyCode={walletData.currencyCode}
                 executeWalletRowOption={walletData.executeWalletRowOption}
-                walletKey={id}
+                walletId={id}
               />
             </View>
           </TouchableHighlight>

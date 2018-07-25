@@ -5,6 +5,7 @@ import DeviceInfo from 'react-native-device-info'
 import type { EdgeContext, EdgeContextCallbacks, EdgeCorePluginFactory, EdgeCurrencyPlugin } from 'edge-core-js'
 import {
   bitcoinCurrencyPluginFactory,
+  bitcoingoldCurrencyPluginFactory,
   bitcoincashCurrencyPluginFactory,
   dashCurrencyPluginFactory,
   feathercoinCurrencyPluginFactory,
@@ -97,8 +98,9 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   shapeshiftPlugin,
   coincapPlugin,
   // Currencies:
-  bitcoincashCurrencyPluginFactory,
   bitcoinCurrencyPluginFactory,
+  bitcoingoldCurrencyPluginFactory,
+  bitcoincashCurrencyPluginFactory,
   dashCurrencyPluginFactory,
   ethereumCurrencyPluginFactory,
   moneroCurrencyPluginFactory,
