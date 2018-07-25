@@ -2,7 +2,7 @@
 
 import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
-import { Switch, ActivityIndicator, Animated, FlatList, Image, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Animated, FlatList, Image, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import SortableListView from 'react-native-sortable-listview'
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -207,10 +207,9 @@ export default class WalletList extends Component<Props, State> {
                         zIndex: this.state.fullListZIndex
                       }
                     ]}>
-                    <View style={styles.fiatToggleSwitchWrap}>
-                      <Switch onValueChange={this.onFiatSwitchToggle} value={this.props.isWalletFiatBalanceVisible} style={styles.fiatSwitchToggle} />
-                      <T style={styles.toggleFiatText}>{s.strings.fragment_wallets_fiat_toggle_title}</T>
-                    </View>
+                    <TouchableOpacity style={styles.fiatToggleWrap} onPress={this.onFiatSwitchToggle} >
+                      <T style={styles.toggleFiatText}>{this.props.isWalletFiatBalanceVisible ? s.strings.fragment_wallets_crypto_toggle_title : fiatSymbol}</T>
+                    </TouchableOpacity>
                     <TouchableOpacity style={[styles.walletsBoxHeaderAddWallet, { width: 41 }]} onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]}>
                       <Ionicon name="md-add" style={[styles.dropdownIcon]} size={28} color="white" />
                     </TouchableOpacity>
