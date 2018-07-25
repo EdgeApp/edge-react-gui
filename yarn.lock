@@ -6482,9 +6482,9 @@ react-native-blur@^3.2.0:
   dependencies:
     prop-types "^15.5.10"
 
-react-native-camera@^0.12.0:
+"react-native-camera@git://github.com/EdgeApp/react-native-camera#kylan/androidFix":
   version "0.12.0"
-  resolved "https://registry.yarnpkg.com/react-native-camera/-/react-native-camera-0.12.0.tgz#51afa8acf1696d9d973074b6454c5ba2cce6ac18"
+  resolved "git://github.com/EdgeApp/react-native-camera#2859652ec8c6fe4e73f87db10778c919b12e70a4"
   dependencies:
     prop-types "^15.5.10"
 
