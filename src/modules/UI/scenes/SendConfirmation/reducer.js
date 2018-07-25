@@ -1,5 +1,6 @@
 // @flow
 
+import { add } from 'biggystring'
 import { isEqual } from 'lodash'
 
 import type { Action } from '../../../ReduxTypes.js'
@@ -68,14 +69,15 @@ export const sendConfirmation = (state: SendConfirmationState = initialState, ac
 
     case ACTION.NEW_SPEND_INFO: {
       if (!action.data) return state
-      const { spendInfo, spendInfo: { nativeAmount, metadata: { name: destination } } } = data
-
+      const { spendInfo, spendInfo: { metadata: { name: destination } }, authRequired } = data
+      const nativeAmount = spendInfo.nativeAmount || spendInfo.spendTargets.reduce((sum, target) => add(sum, target.nativeAmount), '0')
       return {
         ...state,
         spendInfo,
         destination,
         nativeAmount,
-        transaction: null
+        transaction: null,
+        authRequired
       }
     }
 
@@ -92,6 +94,14 @@ export const sendConfirmation = (state: SendConfirmationState = initialState, ac
       return {
         ...state,
         pending
+      }
+    }
+
+    case ACTION.NEW_PIN: {
+      const { pin } = data
+      return {
+        ...state,
+        pin
       }
     }
 

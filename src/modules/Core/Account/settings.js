@@ -16,6 +16,7 @@ export const CORE_DEFAULTS = {
 export const SYNCED_ACCOUNT_DEFAULTS = {
   autoLogoutTimeInSeconds: 3600,
   defaultFiat: 'USD',
+  defaultIsoFiat: 'iso:USD',
   merchantMode: false,
   BTC: { denomination: '100' },
   BCH: { denomination: '100' },
@@ -46,7 +47,13 @@ export const LOCAL_ACCOUNT_DEFAULTS = {
     nonPasswordLoginsLimit: 4
   },
   isAccountBalanceVisible: true,
-  isWalletFiatBalanceVisible: false
+  isWalletFiatBalanceVisible: false,
+  spendingLimits: {
+    transaction: {
+      amount: 0,
+      isEnabled: false
+    }
+  }
 }
 
 const SYNCHED_SETTINGS_FILENAME = 'Settings.json'
@@ -105,6 +112,20 @@ export const setAccountBalanceVisibility = (account: EdgeAccount, isAccountBalan
 export const setWalletFiatBalanceVisibility = (account: EdgeAccount, isWalletFiatBalanceVisible: boolean) => {
   return getLocalSettings(account).then(settings => {
     const updatedSettings = updateSettings(settings, { isWalletFiatBalanceVisible })
+    return setLocalSettings(account, updatedSettings)
+  })
+}
+
+export type SpendingLimits = {
+  transaction: {
+    amount: number,
+    isEnabled: boolean
+  }
+}
+
+export const setSpendingLimits = (account: EdgeAccount, spendingLimits: SpendingLimits) => {
+  return getLocalSettings(account).then(settings => {
+    const updatedSettings = updateSettings(settings, { spendingLimits })
     return setLocalSettings(account, updatedSettings)
   })
 }

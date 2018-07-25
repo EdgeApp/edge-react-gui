@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`spendingLimits should render initialState 1`] = `
+Object {
+  "transaction": Object {
+    "amount": 100,
+    "isEnabled": true,
+  },
+}
+`;
+
+exports[`spendingLimits should update when logging in 1`] = `
+Object {
+  "transaction": Object {
+    "amount": 0,
+    "isEnabled": false,
+  },
+}
+`;
+
+exports[`spendingLimits should update when receiving update spending limits action 1`] = `
+Object {
+  "transaction": Object {
+    "amount": 234,
+    "isEnabled": false,
+  },
+}
+`;
+
+exports[`spendingLimits should use defaults when logging in, if not included in action 1`] = `
+Object {
+  "transaction": Object {
+    "amount": 0,
+    "isEnabled": false,
+  },
+}
+`;
