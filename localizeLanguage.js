@@ -2,7 +2,7 @@
 
 const fs = require('fs')
 const masterStrings = require('./src/locales/en_US.js')
-const outputEnglish = require('./src/locales/strings/enUS.json')
+/* const outputEnglish = require('./src/locales/strings/enUS.json')
 
 function isEquivalent (a, b) {
   // Create arrays of property names
@@ -30,4 +30,5 @@ function isEquivalent (a, b) {
 if (!isEquivalent(masterStrings, outputEnglish)) {
   console.log('write the file')
   fs.writeFileSync('./src/locales/strings/enUS.json', JSON.stringify(masterStrings, null, 2))
-}
+} */
+fs.writeFileSync('./src/locales/strings/enUS.json', JSON.stringify(masterStrings, null, 2))
