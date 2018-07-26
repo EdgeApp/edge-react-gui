@@ -2522,9 +2522,9 @@ edge-currency-monero@^0.0.8:
     sprintf-js "^1.1.1"
     uri-js "^3.0.2"
 
-edge-currency-ripple@^0.0.7:
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/edge-currency-ripple/-/edge-currency-ripple-0.0.7.tgz#516aa60fcc51c4413307bc18e61b6fbee2809af6"
+edge-currency-ripple@^0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/edge-currency-ripple/-/edge-currency-ripple-0.0.8.tgz#9c4d4e61374562382111aa3e616659c6fd849594"
   dependencies:
     base-x "^1.0.4"
     biggystring "^3.0.0"
@@ -2532,6 +2532,7 @@ edge-currency-ripple@^0.0.7:
     jsonschema "^1.1.1"
     sprintf-js "^1.1.1"
     uri-js "^3.0.2"
+    url-parse "^1.4.1"
 
 edge-exchange-plugins@^0.2.0:
   version "0.2.0"
@@ -2559,9 +2560,11 @@ edge-login-ui-rn@^0.3.3:
     sprintf-js "^1.0.3"
     zxcvbn "^4.4.2"
 
-"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#a2e2682":
+"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#8f5d040":
   version "0.0.2"
-  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#a2e268268f76a328d9c40d2f626da42f40464c15"
+  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#8f5d04089711b1337276e38a9ac27ff83dc1e0f9"
+  dependencies:
+    moment "^2.22.2"
 
 edge-ripple-keypairs@^0.0.1:
   version "0.0.1"
@@ -5622,6 +5625,10 @@ mobx@^3.3.1:
 moment@^2.19.3:
   version "2.22.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.1.tgz#529a2e9bf973f259c9643d237fda84de3a26e8ad"
+
+moment@^2.22.2:
+  version "2.22.2"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.2.tgz#3c257f9839fc0e93ff53149632239eb90783ff66"
 
 morgan@~1.6.1:
   version "1.6.1"
