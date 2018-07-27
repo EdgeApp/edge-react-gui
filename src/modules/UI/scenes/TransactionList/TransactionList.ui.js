@@ -120,7 +120,12 @@ export class TransactionList extends Component<Props, State> {
         </View>
       )
     }
-    switch (wallet.currencyCode) {
+
+    let currencyCode = ''
+    if (wallet && wallet.currencyCode) {
+      currencyCode = wallet.currencyCode
+    }
+    switch (currencyCode) {
       case 'BTC':
         return <BuyCrypto wallet={wallet}/>
       case 'BCH':
