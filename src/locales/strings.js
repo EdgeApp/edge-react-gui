@@ -1,8 +1,11 @@
 // @flow
 
+import cn from './cn'
 import en from './en_US'
+import es from './es'
+import pt from './pt'
 
-const allLocales = { en }
+const allLocales = { en, es, pt, cn }
 
 // Set default of US English
 const out = { strings: en }
