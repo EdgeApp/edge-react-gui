@@ -203,7 +203,9 @@ function buildIos (buildObj) {
 
   call('agvtool new-marketing-version ' + buildObj.version)
   call('agvtool new-version -all ' + buildObj.buildNum)
-  call(`xcodebuild -project ${buildObj.xcodeProject} -scheme ${buildObj.xcodeScheme} archive`)
+  cmdStr = `xcodebuild -project ${buildObj.xcodeProject} -scheme ${buildObj.xcodeScheme} archive`
+  cmdStr = cmdStr + ' | xcpretty && exit ${PIPE' + 'STATUS[0]}'
+  call(cmdStr)
 
   const buildDate = builddate()
   const buildDir = `${process.env.HOME || ''}/Library/Developer/Xcode/Archives/${buildDate}`
