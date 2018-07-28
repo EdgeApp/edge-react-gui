@@ -333,10 +333,12 @@ const strings = {
   unique_identifier_display_text: '%1$s: %2$s',
   // onboarding
   onboarding_button: 'Got It',
-  onboarding_slide_1: 'Keep track of your cryptocurrency.\n\nTap "+" to create and name new walllets.\nTap three dot menu to rename wallets',
-  onboarding_slide_2: 'Request and send crypto to anyone at anytime.\n\nEnable camera to scan QR codes and send instantly',
-  onboarding_slide_3: 'Exchange and convert multiple currencies.\n\nYour transaction is reasdy in minutes',
-  onboarding_slide_4: 'Have a question?\n\nOur reps are here to help!\nContact us by phone or social media.'
+  onboarding_skip_button: 'Skip',
+  onboarding_slide_1: '\n\nTap [+] to create new walllets for other cryptocurrencies.\nTap on a wa;;et name to send or receive funds for that wallet',
+  onboarding_slide_2: 'Tap the 3 dots to the right of an Ethereum wallet to add token support',
+  onboarding_slide_3: 'To receive cryptocurrency from others [copy] or [share] your wallet address, or have them scan your QR code here ',
+  onboarding_slide_4: 'To send cryptocurrency scan a freind\'s QR code here, or paste the code vial the [Address] button.',
+  onboarding_slide_5: 'Exchange cryptocurrencies by choosing the Source and Destination wallet to trade between them.'
 }
 
 export default strings

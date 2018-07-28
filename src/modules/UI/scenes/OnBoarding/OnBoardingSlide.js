@@ -1,12 +1,13 @@
 // @flow
 import React, { Component } from 'react'
-import { View, Text, ImageBackground, Platform, Dimensions } from 'react-native'
+import { Dimensions, ImageBackground, Platform, Text, View } from 'react-native'
+import DeviceInfo from 'react-native-device-info'
+
+import { ANDROID } from '../../../../constants/indexConstants'
 import {
   OnBoardingSlideStyles as styles
 } from '../../../../styles/indexStyles.js'
 import { PrimaryButton } from '../../components/Buttons/'
-import { ANDROID } from '../../../../constants/indexConstants'
-import DeviceInfo from 'react-native-device-info'
 
 type Props = {
   finishOnBoarding?: null | () => void,
