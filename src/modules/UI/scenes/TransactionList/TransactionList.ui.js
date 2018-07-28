@@ -88,6 +88,13 @@ export class TransactionList extends Component<Props, State> {
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
+  componentDidMount = () => {
+    this.props.fetchMoreTransactions(this.props.selectedWalletId, this.props.selectedCurrencyCode, this.state.reset)
+    if (this.state.reset) {
+      this.setState({ reset: false })
+    }
+  }
+
   componentWillReceiveProps (nextProps: Props) {
     if (nextProps.selectedWalletId !== this.props.selectedWalletId || nextProps.selectedCurrencyCode !== this.props.selectedCurrencyCode) {
       this.props.fetchMoreTransactions(nextProps.selectedWalletId, nextProps.selectedCurrencyCode, this.state.reset)
