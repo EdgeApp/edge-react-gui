@@ -142,7 +142,7 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
 
   componentDidMount () {
     setTimeout(() => {
-      if (this.props.keyboardVisible && this.props.overridePrimaryDecimalAmount === '0') {
+      if (this.props.keyboardVisible && this.props.overridePrimaryDecimalAmount === '0' && this.textInputFront) {
         this.textInputFront.focus()
       }
     }, 400)
@@ -183,7 +183,7 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
       isToggled: !this.state.isToggled
     })
     if (this.state.isToggled) {
-      if (this.state.textInputBackFocus) {
+      if (this.state.textInputBackFocus && this.textInputFront) {
         this.textInputFront.focus()
       }
       Animated.spring(this.animatedValue, {
@@ -193,7 +193,7 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
       }).start()
     }
     if (!this.state.isToggled) {
-      if (this.state.textInputFrontFocus) {
+      if (this.state.textInputFrontFocus && this.textInputFront) {
         this.textInputBack.focus()
       }
       Animated.spring(this.animatedValue, {
