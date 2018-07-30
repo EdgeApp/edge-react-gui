@@ -19,6 +19,9 @@ import s from './locales/strings.js'
 import Main from './modules/MainConnector'
 import { log, logToServer } from './util/logger'
 import { makeCoreContext } from './util/makeContext.js'
+import firebase from 'react-native-firebase'
+import { Client } from 'bugsnag-react-native'
+global.bugsnag = new Client(ENV.BUGSNAG_API_KEY)
 
 const store: {} = configureStore({})
 
@@ -30,6 +33,9 @@ console.log('App directory: ' + RNFS.DocumentDirectoryPath)
 console.log('***********************')
 
 global.clog = console.log
+if (ENV.USE_FIREBASE) {
+  global.firebase = firebase
+}
 
 const IGNORED_WARNINGS = ['slowlog', 'Setting a timer for a long period of time']
 // $FlowExpectedError
@@ -150,6 +156,7 @@ BackgroundTask.define(async () => {
         }
       }
     } catch (error) {
+      global.bugsnag.notify(error)
       console.error(error)
     }
   })

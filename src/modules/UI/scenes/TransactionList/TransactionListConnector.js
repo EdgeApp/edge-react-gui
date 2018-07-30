@@ -4,11 +4,13 @@ import _ from 'lodash'
 import { connect } from 'react-redux'
 
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
+import { getNumTransactions } from '../../../Core/Wallets/api.js'
 import type { Dispatch, State } from '../../../ReduxTypes'
 import * as UTILS from '../../../utils'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import { fetchMoreTransactions } from './action'
+import { toggleAccountBalanceVisibility } from '../WalletList/action.js'
 import { type DispatchProps, type StateProps, TransactionList } from './TransactionList.ui'
 import type { EdgeCurrencyWallet, EdgeCurrencyInfo } from 'edge-core-js'
 
@@ -26,12 +28,10 @@ const mapStateToProps = (state: State) => {
   const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
   const fiatCurrencyCode = wallet.fiatCurrencyCode
   const balanceInCrypto = wallet.nativeBalances[currencyCode]
-
+  const numTransactions = getNumTransactions(coreWallet, currencyCode)
   const settings = SETTINGS_SELECTORS.getSettings(state)
   const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
-
   const transactions = UI_SELECTORS.getTransactions(state)
-
   const index = SETTINGS_SELECTORS.getDisplayDenominationKey(state, currencyCode)
   const denominationsOnWallet = wallet.allDenominations[currencyCode]
   let denomination
@@ -56,6 +56,7 @@ const mapStateToProps = (state: State) => {
   const currencyInfo: EdgeCurrencyInfo = coreWallet.currencyInfo
   // set default requiredConfirmations to 1, so once the tx is in a block consider fully confirmed
   const requiredConfirmations = currencyInfo.requiredConfirmations ? currencyInfo.requiredConfirmations : 1
+  const isBalanceVisible = state.ui.settings.isAccountBalanceVisible
 
   const out: StateProps = {
     loading: false,
@@ -77,13 +78,18 @@ const mapStateToProps = (state: State) => {
     contacts: state.contacts,
     fiatSymbol,
     showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility,
-    requiredConfirmations
+    requiredConfirmations,
+    numTransactions,
+    isBalanceVisible
   }
   return out
 }
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-  fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => dispatch(fetchMoreTransactions(walletId, currencyCode, reset))
+  fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => dispatch(fetchMoreTransactions(walletId, currencyCode, reset)),
+  toggleBalanceVisibility: () => {
+    dispatch(toggleAccountBalanceVisibility())
+  }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(TransactionList)

@@ -3,6 +3,10 @@ package co.edgesecure.app;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.bugsnag.BugsnagReactNative;
+import io.invertase.firebase.RNFirebasePackage;
+import io.invertase.firebase.analytics.RNFirebaseAnalyticsPackage;
+import io.invertase.firebase.database.RNFirebaseDatabasePackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.chirag.RNMail.RNMail;
 import com.reactnativecomponent.splashscreen.RCTSplashScreenPackage;
@@ -12,8 +16,6 @@ import co.airbitz.AbcCoreJsUi.AbcCoreJsUiPackage;
 import com.zmxv.RNSound.RNSoundPackage;
 import cl.json.RNSharePackage;
 import com.cmcewen.blurview.BlurViewPackage;
-import com.slowpath.hockeyapp.RNHockeyAppModule;
-import com.slowpath.hockeyapp.RNHockeyAppPackage;
 import co.airbitz.fastcrypto.RNFastCryptoPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.tradle.react.UdpSocketsModule;
@@ -50,6 +52,10 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            BugsnagReactNative.getPackage(),
+            new RNFirebasePackage(),
+            new RNFirebaseAnalyticsPackage(),
+            new RNFirebaseDatabasePackage(),
             new ReactNativePushNotificationPackage(),
             new RNMail(),
             new RCTSplashScreenPackage(),
@@ -60,7 +66,6 @@ public class MainApplication extends Application implements ReactApplication {
             new RNSharePackage(),
             new RandomBytesPackage(),
             new BlurViewPackage(),
-            new RNHockeyAppPackage(MainApplication.this),
             new RNFastCryptoPackage(),
             new VectorIconsPackage(),
             new UdpSocketsModule(),
@@ -89,6 +94,7 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public void onCreate() {
     super.onCreate();
+    BugsnagReactNative.start(this);
     SoLoader.init(this, /* native exopackage */ false);
     BackgroundTaskPackage.useContext(this);
   }

@@ -9,7 +9,7 @@ import * as UTILS from '../../../utils'
 import { displayDropdownAlert } from '../../components/DropdownAlert/actions'
 import * as UI_SELECTORS from '../../selectors'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
-import { getSubcategories, setTransactionDetails } from './action.js'
+import { getSubcategories, setTransactionDetails, setNewSubcategory } from './action.js'
 import { TransactionDetails } from './TransactionDetails.ui'
 import type { TransactionDetailsOwnProps } from './TransactionDetails.ui'
 
@@ -17,7 +17,7 @@ const mapStateToProps = (state: State, ownProps: TransactionDetailsOwnProps) => 
   const wallets = UI_SELECTORS.getWallets(state)
   const contacts = state.contacts
   const usableHeight: number = PLATFORM.usableHeight
-  const subcategoriesList: Array<string> = state.ui.scenes.transactionDetails.subcategories
+  const subcategoriesList: Array<string> = state.ui.scenes.transactionDetails.subcategories.sort()
   const settings = SETTINGS_SELECTORS.getSettings(state)
   const currencyCode: string = ownProps.edgeTransaction.currencyCode
   const plugins: Object = SETTINGS_SELECTORS.getPlugins(state)
@@ -40,7 +40,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(setTransactionDetails(txid, currencyCode, edgeMetadata))
   },
   getSubcategories: () => dispatch(getSubcategories()),
-  displayDropdownAlert: (message: string, title: string) => dispatch(displayDropdownAlert({ message, title }))
+  displayDropdownAlert: (message: string, title: string) => dispatch(displayDropdownAlert({ message, title })),
+  setNewSubcategory: (newSubcategory: string) => dispatch(setNewSubcategory(newSubcategory))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(TransactionDetails)

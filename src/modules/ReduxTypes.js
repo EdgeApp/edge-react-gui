@@ -1,15 +1,6 @@
 // @flow
 
-import type {
-  EdgeAccount,
-  EdgeContext,
-  EdgeCurrencyPlugin,
-  EdgeCurrencyWallet,
-  EdgeDenomination,
-  EdgeLobby,
-  EdgeParsedUri,
-  EdgeTransaction
-} from 'edge-core-js'
+import type { EdgeAccount, EdgeContext, EdgeCurrencyWallet, EdgeLobby, EdgeParsedUri, EdgeTransaction } from 'edge-core-js'
 import type { Dispatch as ReduxDispatch, Store as ReduxStore } from 'redux'
 
 import type { ContactsState } from '../reducers/contacts/contactsReducer.js'
@@ -22,6 +13,7 @@ import type { RequestSceneState } from './UI/scenes/Request/reducer.js'
 import type { PasswordReminderModalState } from './UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
 import type { PasswordReminderState } from '../reducers/passwordReminder/indexPasswordReminder.js'
 import type { SendConfirmationState } from './UI/scenes/SendConfirmation/selectors.js'
+import type { SettingsState } from './UI/Settings/reducer.js'
 
 export type Action = { type: string, data?: any }
 
@@ -176,37 +168,7 @@ export type State = {
       walletLoadingProgress: { [walletId: string]: number }
     },
     request: RequestState,
-    settings: {
-      autoLogoutTimeInSeconds: number,
-      defaultFiat: string,
-      merchantMode: boolean,
-      customTokens: Array<any>,
-      bluetoothMode: boolean,
-      otpMode: boolean,
-      pinMode: boolean,
-      isAccountBalanceVisible: boolean,
-      pinLoginEnabled: boolean,
-      changesLocked: boolean,
-      loginStatus: boolean,
-      isTouchSupported: boolean,
-      isTouchEnabled: boolean,
-      isOtpEnabled: boolean,
-      otpResetPending: boolean,
-      otpKey: string,
-      [CurrencyCode]: {
-        denomination: string,
-        currencyName: string,
-        currencyCode: string,
-        denominations: Array<EdgeDenomination>,
-        symbolImage: string,
-        symbolImageDarkMono: string
-      },
-      plugins: {
-        arrayPlugins: Array<EdgeCurrencyPlugin>,
-        supportedWalletTypes: Array<string>,
-        [pluginName: string]: EdgeCurrencyPlugin
-      }
-    }
+    settings: SettingsState
   },
   cryptoExchange: {
     exchangeRate: number,

@@ -61,7 +61,7 @@ class SubCategorySelect extends Component<Props, State> {
     )
   }
 
-  renderSubcategory (data: SubcategorySearchResultData, onRegularSelectFxn: Function, filterArray: Array<any>) {
+  renderSubcategory = (data: SubcategorySearchResultData, onRegularSelectFxn: Function, filterArray: Array<any>) => {
     const renderAdd = () => {
       if (filterArray.find(item => item === data.item)) {
         return (
@@ -73,7 +73,7 @@ class SubCategorySelect extends Component<Props, State> {
     }
 
     return (
-      <TouchableHighlight delayPressIn={60} style={[styles.rowContainer]} underlayColor={colors.gray4} onPress={() => onRegularSelectFxn(data.item)}>
+      <TouchableHighlight delayPressIn={60} style={[styles.rowContainer]} underlayColor={colors.gray4} onPress={() => this.props.onPressFxn(data.item)}>
         <View style={[styles.rowContent]}>
           <View style={[styles.rowCategoryTextWrap]}>
             <FormattedText style={[styles.rowCategoryText]} numberOfLines={1}>

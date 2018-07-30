@@ -48,11 +48,6 @@ export const styles = {
     color: THEME.COLORS.PRIMARY,
     fontSize: 44
   },
-  currentBalanceBoxBits: {
-    color: THEME.COLORS.WHITE,
-    justifyContent: 'space-around',
-    flex: 1
-  },
   // bottom major portion of screen
   walletsBox: {
     // one
@@ -81,14 +76,37 @@ export const styles = {
     marginLeft: 16
   },
   donePlusContainer: {
-    minWidth: 48,
+    minWidth: 132,
     height: 50
   },
   plusContainer: {
     position: 'absolute',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: 50,
+    flexDirection: 'row'
+  },
+  fiatToggleWrap: {
+    width: 92,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  walletsBoxHeaderAddWallet: {
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    height: 50
+    top: 0,
+    left: 0,
+    height: '100%',
+    paddingVertical: 12,
+    width: 82
+  },
+  toggleFiatText: {
+    color: THEME.COLORS.WHITE,
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    fontSize: 18,
+    textAlign: 'center'
   },
   doneContainer: {
     position: 'absolute',
@@ -105,15 +123,6 @@ export const styles = {
     backgroundColor: THEME.COLORS.TRANSPARENT,
     top: 0,
     left: 0
-  },
-  walletsBoxHeaderAddWallet: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    top: 0,
-    left: 0,
-    height: '100%',
-    paddingVertical: 12
   },
   dropdownIcon: {
     textAlignVertical: 'center',
@@ -225,7 +234,12 @@ export const styles = {
     color: THEME.COLORS.GRAY_1
   },
   rowBalanceTextWrap: {
-    justifyContent: 'center'
+    justifyContent: 'center',
+    height: 38
+  },
+  rowBalanceText: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end'
   },
   rowBalanceAmountText: {
     fontSize: 16,

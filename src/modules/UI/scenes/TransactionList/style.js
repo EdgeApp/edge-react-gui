@@ -65,15 +65,33 @@ export const styles = {
   },
 
   // end of searchbar stuff
-
+  touchableBalanceBox: {
+    height: 200
+  },
   currentBalanceBox: {
     flex: 1,
     justifyContent: 'center'
   },
+  totalBalanceWrap: {
+    flex: 3,
+    alignItems: 'center',
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  hiddenBalanceBoxDollarsWrap: {
+    flex: 3,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  currentBalanceBoxHiddenText: {
+    color: THEME.COLORS.WHITE,
+    fontSize: 44
+  },
   balanceBoxContents: {
     flex: 1,
     paddingTop: 10,
-    paddingBottom: 20
+    paddingBottom: 20,
+    justifyContent: 'space-between'
   },
   updatingBalanceWrap: {
     alignItems: 'center',
@@ -93,7 +111,8 @@ export const styles = {
   },
   balanceShownContainer: {
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    flexDirection: 'column'
   },
   iconWrap: {
     // two
@@ -102,9 +121,9 @@ export const styles = {
     justifyContent: 'flex-start',
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
-  currentBalanceBoxBitssWrap: {
+  currentBalanceBoxBitsWrap: {
     // two
-    flex: 4,
+    height: 44,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: THEME.COLORS.TRANSPARENT
@@ -115,8 +134,9 @@ export const styles = {
   },
   currentBalanceBoxDollarsWrap: {
     justifyContent: 'flex-start',
-    flex: 4,
-    paddingTop: 4
+    height: 26,
+    paddingTop: 4,
+    backgroundColor: THEME.COLORS.TRANSPARENT
   },
   currentBalanceBoxDollars: {
     // two
@@ -208,7 +228,8 @@ export const styles = {
   },
 
   transactionsScrollWrap: {
-    flex: 1
+    flex: 1,
+    backgroundColor: THEME.COLORS.OFF_WHITE
   },
   singleTransaction: {
     height: 60,
@@ -309,6 +330,47 @@ export const styles = {
   },
   symbol: {
     fontFamily: THEME.FONTS.SYMBOLS
+  },
+  emptyListLoader: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 230
+  },
+  buyCryptoContainer: {
+    width: PLATFORM.deviceWidth,
+    height: 220,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 15
+  },
+  buyCryptoBox: {
+    flex: 2,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    backgroundColor: THEME.COLORS.WHITE
+  },
+  buyCryptoBoxImage: {
+    width: 40,
+    height: 40
+  },
+  buyCryptoBoxText: {
+    marginTop: 10,
+    fontSize: 17,
+    color: THEME.COLORS.GRAY_1
+  },
+  buyCryptoNoTransactionBox: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  buyCryptoNoTransactionText: {
+    fontSize: 17,
+    color: THEME.COLORS.ACCENT_BLUE
   }
 }
 

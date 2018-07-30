@@ -3,6 +3,7 @@
 // Simple
 export const SIMPLE_ICONS = 'simpleIcons'
 export const CHECK_CIRCLE = 'check'
+export const ARROW_RIGHT = 'arrow-right'
 
 // Entypo
 export const ENTYPO = 'entypo'
@@ -19,6 +20,7 @@ export const RENAME = 'edit'
 export const GET_SEED = 'user-secret'
 export const CUSTOM_FEES_ICON = 'wpexplorer'
 export const EXCHANGE_ICON = 'exchange'
+export const QUESTION_ICON = 'question'
 
 // Ionic
 export const ION_ICONS = 'ionIcons'

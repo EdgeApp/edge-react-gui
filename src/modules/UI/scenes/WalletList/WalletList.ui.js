@@ -63,8 +63,10 @@ type Props = {
   disableOtp: () => void,
   keepOtp: () => void,
   toggleAccountBalanceVisibility: () => void,
+  toggleWalletFiatBalanceVisibility: () => void,
   progressPercentage: number,
-  isAccountBalanceVisible: boolean
+  isAccountBalanceVisible: boolean,
+  isWalletFiatBalanceVisible: boolean
 }
 
 export default class WalletList extends Component<Props, State> {
@@ -128,6 +130,10 @@ export default class WalletList extends Component<Props, State> {
     }
   }
 
+  onFiatSwitchToggle = () => {
+    this.props.toggleWalletFiatBalanceVisibility()
+  }
+
   render () {
     const { wallets, activeWalletIds, settings } = this.props
     const walletsArray = []
@@ -151,11 +157,12 @@ export default class WalletList extends Component<Props, State> {
       activeWalletsObject[x] = tempWalletObj
     })
     let fiatBalanceString
+    const totalBalance = this.tallyUpTotalCrypto()
     const fiatSymbol = settings.defaultFiat ? UTILS.getFiatSymbol(settings.defaultFiat) : ''
     if (fiatSymbol.length !== 1) {
-      fiatBalanceString = this.tallyUpTotalCrypto() + ' ' + settings.defaultFiat
+      fiatBalanceString = totalBalance + ' ' + settings.defaultFiat
     } else {
-      fiatBalanceString = fiatSymbol + ' ' + this.tallyUpTotalCrypto() + ' ' + settings.defaultFiat
+      fiatBalanceString = fiatSymbol + ' ' + totalBalance + ' ' + settings.defaultFiat
     }
 
     return (
@@ -201,8 +208,10 @@ export default class WalletList extends Component<Props, State> {
                         opacity: this.state.fullListOpacity,
                         zIndex: this.state.fullListZIndex
                       }
-                    ]}
-                  >
+                    ]}>
+                    <TouchableOpacity style={styles.fiatToggleWrap} onPress={this.onFiatSwitchToggle} >
+                      <T style={styles.toggleFiatText}>{this.props.isWalletFiatBalanceVisible ? s.strings.fragment_wallets_crypto_toggle_title : fiatSymbol}</T>
+                    </TouchableOpacity>
                     <TouchableOpacity style={[styles.walletsBoxHeaderAddWallet, { width: 41 }]} onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]}>
                       <Ionicon name="md-add" style={[styles.dropdownIcon]} size={28} color="white" />
                     </TouchableOpacity>
@@ -277,7 +286,10 @@ export default class WalletList extends Component<Props, State> {
   renderItem = (item: Object) => {
     return (
       // $FlowFixMe sortHandlers error. Where does sortHandlers even come from?
-      <FullWalletListRow data={item} customTokens={this.props.customTokens} />
+      <FullWalletListRow
+        data={item}
+        customTokens={this.props.customTokens}
+      />
     )
   }
 
@@ -440,30 +452,41 @@ export default class WalletList extends Component<Props, State> {
 
   tallyUpTotalCrypto = () => {
     const temporaryTotalCrypto = {}
+    // loop through each of the walletId's
     for (const parentProp in this.props.wallets) {
-      for (const balanceProp in this.props.wallets[parentProp].nativeBalances) {
-        if (!temporaryTotalCrypto[balanceProp]) {
-          temporaryTotalCrypto[balanceProp] = 0
+      // loop through all of the nativeBalances, which includes both parent currency and tokens
+      for (const currencyCode in this.props.wallets[parentProp].nativeBalances) {
+        // if there is no native balance for the currency / token then assume it's zero
+        if (!temporaryTotalCrypto[currencyCode]) {
+          temporaryTotalCrypto[currencyCode] = 0
         }
-        const nativeBalance = this.props.wallets[parentProp].nativeBalances[balanceProp]
+        // get the native balance for this currency
+        const nativeBalance = this.props.wallets[parentProp].nativeBalances[currencyCode]
+        // if it is a non-zero amount then we will process it
         if (nativeBalance && nativeBalance !== '0') {
           let denominations
-          if (this.props.settings[balanceProp]) {
-            denominations = this.props.settings[balanceProp].denominations
+          // check to see if it's a currency first
+          if (this.props.settings[currencyCode]) {
+            // and if so then grab the default denomiation (setting)
+            denominations = this.props.settings[currencyCode].denominations
           } else {
-            const tokenInfo = this.props.settings.customTokens.find(token => token.currencyCode === balanceProp)
+            // otherwise find the token whose currencyCode matches the one that we are working with
+            const tokenInfo = this.props.settings.customTokens.find(token => token.currencyCode === currencyCode)
+            // grab the denominations array (which is equivalent of the denominations from the previous (true) clause)
             denominations = tokenInfo.denominations
           }
-          const exchangeDenomination = denominations.find(denomination => denomination.name === balanceProp)
+          // now go through that array of denominations and find the one whose name matches the currency
+          const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
+          // grab the multiplier, which is the ratio that we can multiply and divide by
           const nativeToExchangeRatio: string = exchangeDenomination.multiplier
-
+          // divide the native amount (eg satoshis) by the ratio to end up with standard crypto amount (which exchanges use)
           const cryptoAmount: number = parseFloat(UTILS.convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
-          temporaryTotalCrypto[balanceProp] = temporaryTotalCrypto[balanceProp] + cryptoAmount
+          temporaryTotalCrypto[currencyCode] = temporaryTotalCrypto[currencyCode] + cryptoAmount
         }
       }
     }
-    const totalBalance = this.calculateTotalBalance(temporaryTotalCrypto)
-    return totalBalance
+    const balanceInfo = this.calculateTotalBalance(temporaryTotalCrypto)
+    return balanceInfo
   }
 
   calculateTotalBalance = (values: any) => {

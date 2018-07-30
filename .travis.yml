@@ -27,10 +27,10 @@ matrix:
         - node --version
         # install NDK
         - openssl aes-256-cbc -K $encrypted_e28d423744bc_key -iv $encrypted_e28d423744bc_iv -in env.json.enc -out env.json -d
-        - git clone https://github.com/urho3d/android-ndk.git $HOME/android-ndk-root
+        - git clone https://github.com/Airbitz/android-ndk-linux.git $HOME/android-ndk-root
         - export ANDROID_NDK_HOME=$HOME/android-ndk-root
         - echo "y" | sdkmanager "cmake;3.6.4111459"
-        - npm install -g yarn@1.3.2
+        - npm install -g yarn@1.5.1
       install:
         - travis_retry yarn install --network-concurrency 1 --child-concurrency 1
         - npm t
@@ -58,14 +58,14 @@ matrix:
         - cd android && ./gradlew assembleDebug && ./gradlew assembleRelease
     - language: objective-c
       os: osx
-      osx_image: xcode9.2
+      osx_image: xcode9.4
       node_js: false
       before_install:
         - nvm install 8.9.3
         - nvm use 8.9.3
         - node --version
         - openssl aes-256-cbc -K $encrypted_e28d423744bc_key -iv $encrypted_e28d423744bc_iv -in env.json.enc -out env.json -d
-        - npm install -g yarn@1.3.2
+        - npm install -g yarn@1.5.1
       install:
         - travis_retry gem install xcpretty
         - travis_retry yarn install --network-concurrency 1 --child-concurrency 1
@@ -74,4 +74,4 @@ matrix:
       xcode_scheme: ios/edge
       script:
         - cd ios
-        - xcodebuild -derivedDataPath build clean build -scheme edge -configuration release -sdk iphonesimulator11.2 CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""
+        - xcodebuild -derivedDataPath build clean build -scheme edge -configuration release -sdk iphonesimulator11.4 CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" | xcpretty && exit ${PIPESTATUS[0]}

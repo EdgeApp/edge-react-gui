@@ -6,6 +6,7 @@ import type { EdgeDenomination } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
+import { Scene } from 'edge-components'
 
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
@@ -21,6 +22,7 @@ import SafeAreaView from '../../components/SafeAreaView'
 import ABSlider from '../../components/Slider/index.js'
 import { UniqueIdentifier } from './components/UniqueIdentifier/UniqueIdentifier.ui.js'
 import { UniqueIdentifierModalConnect as UniqueIdentifierModal } from './components/UniqueIdentifierModal/UniqueIdentifierModalConnector.js'
+import { PinInput } from '../../components/PinInput/PinInput.ui.js'
 import styles from './styles.js'
 
 const DIVIDE_PRECISION = 18
@@ -48,7 +50,9 @@ export type SendConfirmationStateProps = {
   currencyConverter: CurrencyConverter,
   uniqueIdentifier?: string,
   destination: string,
-  isEditable: boolean
+  isEditable: boolean,
+  authRequired: 'pin' | 'none',
+  pin: string
 }
 
 export type SendConfirmationDispatchProps = {
@@ -56,7 +60,8 @@ export type SendConfirmationDispatchProps = {
   signBroadcastAndSave: () => any,
   reset: () => any,
   updateAmount: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) => any,
-  uniqueIdentifierUpdated: (uniqueIdentifier: string) => any
+  uniqueIdentifierUpdated: (uniqueIdentifier: string) => any,
+  onChangePin: (pin: string) => mixed
 }
 
 type routerParam = {
@@ -143,7 +148,7 @@ export class SendConfirmation extends Component<Props, State> {
     const cryptoBalanceAmountString = cryptoBalanceAmount ? intl.formatNumber(decimalOrZero(bns.toFixed(cryptoBalanceAmount, 0, 6), 6)) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)
     const balanceInFiatString = intl.formatNumber(this.props.balanceInFiat || 0, { toFixed: 2 })
 
-    const destination = this.props.destination
+    const { pin, authRequired, destination, onChangePin } = this.props
     const SEND_TO_DESTINATION_TEXT = sprintf(s.strings.send_to_title, destination)
 
     return (
@@ -185,7 +190,7 @@ export class SendConfirmation extends Component<Props, State> {
               )}
 
               {!!destination && (
-                <Recipient>
+                <Recipient style={{paddingHorizontal: 20}}>
                   <Recipient.Text>
                     <Text>{SEND_TO_DESTINATION_TEXT}</Text>
                   </Recipient.Text>
@@ -198,6 +203,18 @@ export class SendConfirmation extends Component<Props, State> {
                     <Text>{uniqueIdentifierText(this.props.currencyCode, this.props.uniqueIdentifier)}</Text>
                   </UniqueIdentifier.Text>
                 </UniqueIdentifier>
+              )}
+
+              {authRequired === 'pin' && (
+                <Scene.Row style={styles.row}>
+                  <Text style={styles.rowText}>{s.strings.four_digit_pin}</Text>
+
+                  <View style={styles.pinInputSpacer} />
+
+                  <View style={styles.pinInputContainer}>
+                    <PinInput fontSize={20} baseColor={'white'} textColor={'white'} tintColor={'white'} onChangePin={onChangePin} style={{}} value={pin} />
+                  </View>
+                </Scene.Row>
               )}
             </View>
 

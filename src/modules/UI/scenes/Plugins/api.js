@@ -155,23 +155,19 @@ export class PluginBridge {
   }
 
   readData (data: any): Promise<string> {
-    /* TODO: replace with enc folder */
-    return this.context.folder.file(data.key).getText()
+    return this.context.folder.getItem(this.context.pluginId, data.key)
   }
 
   writeData (data: any): Promise<boolean> {
     const {key, value} = data
-    /* TODO: replace with enc folder */
-    return this.context.folder.file(key)
-      .setText(value)
+    return this.context.folder.setItem(this.context.pluginId, key, value)
       .then(() => {
         return true
       })
   }
 
   clearData (): Promise<boolean> {
-    /* TODO: replace with enc folder */
-    return this.context.folder.delete()
+    return this.context.folder.deletePlugin(this.context.pluginId)
       .then(() => {
         return true
       })
