@@ -7,6 +7,7 @@ import { ANDROID } from '../../../../constants/indexConstants'
 import {
   OnBoardingSlideStyles as styles
 } from '../../../../styles/indexStyles.js'
+import { PLATFORM } from '../../../../theme/variables/platform'
 
 type Props = {
   slide: Object,
@@ -52,7 +53,7 @@ export default class OnBoardingScene extends Component<Props, State> {
           ? this.props.slide.iPadImageHoriz
           : this.props.slide.iPadImage
         )
-        : this.props.slide.iOSImage
+        : PLATFORM.isIphoneX ? this.props.slide.iPhoneX : this.props.slide.iOSImage
       )
     return (
       <ImageBackground source={{uri: image}} style={styles.container}>
