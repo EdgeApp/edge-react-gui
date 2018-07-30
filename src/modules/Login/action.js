@@ -51,7 +51,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
   }
   const accountInitObject = {
     account: account,
-    showOnBoarding: true,
+    showOnBoarding: false,
     touchIdInfo: touchIdInfo,
     walletId: '',
     currencyCode: '',
@@ -85,7 +85,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       const walletTypes = plugin.currencyInfo.walletTypes
       accountInitObject.currencyPlugins.push({ pluginName, plugin, walletTypes })
     })
-    accountInitObject.showOnBoarding = true
+
     if (account.activeWalletIds.length < 1) {
       // we are going to assume that since there is no wallets, this is a first time user
       accountInitObject.showOnBoarding = true
