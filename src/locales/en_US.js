@@ -334,7 +334,7 @@ const strings = {
   // onboarding
   onboarding_button: 'Got It',
   onboarding_skip_button: 'Skip',
-  onboarding_slide_1: '\n\nTap [+] to create new walllets for other cryptocurrencies.\nTap on a wa;;et name to send or receive funds for that wallet',
+  onboarding_slide_1: '\n\nTap [+] to create new walllets for other cryptocurrencies.\nTap on a wallet name to send or receive funds for that wallet',
   onboarding_slide_2: 'Tap the 3 dots to the right of an Ethereum wallet to add token support',
   onboarding_slide_3: 'To receive cryptocurrency from others [copy] or [share] your wallet address, or have them scan your QR code here ',
   onboarding_slide_4: 'To send cryptocurrency scan a freind\'s QR code here, or paste the code vial the [Address] button.',

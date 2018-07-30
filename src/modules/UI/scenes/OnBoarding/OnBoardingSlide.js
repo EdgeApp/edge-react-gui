@@ -7,12 +7,9 @@ import { ANDROID } from '../../../../constants/indexConstants'
 import {
   OnBoardingSlideStyles as styles
 } from '../../../../styles/indexStyles.js'
-import { PrimaryButton } from '../../components/Buttons/'
 
 type Props = {
-  finishOnBoarding?: null | () => void,
   slide: Object,
-  buttonText?: string,
 }
 
 type State = {
@@ -39,18 +36,7 @@ export default class OnBoardingScene extends Component<Props, State> {
   componentWillUnmount () {
     Dimensions.removeEventListener('change', this.update)
   }
-  renderButton = () => {
-    if (this.props.finishOnBoarding) {
-      return (
-        <PrimaryButton
-          style={styles.button}
-          text={this.props.buttonText}
-          onPressFunction={this.props.finishOnBoarding}
-        />
-      )
-    }
-    return null
-  }
+
   render () {
     const isTablet = DeviceInfo.isTablet()
     const image = Platform.OS === ANDROID
@@ -75,9 +61,6 @@ export default class OnBoardingScene extends Component<Props, State> {
           <View style={styles.textBox}>
             <Text style={styles.text}>{this.props.slide.text}</Text>
           </View>
-        </View>
-        <View style={styles.buttonContainer} >
-          {this.renderButton()}
         </View>
       </ImageBackground>
     )

@@ -27,7 +27,7 @@ export const initialState = {
   isTouchSupported: false,
   isTouchEnabled: false,
   isOtpEnabled: false,
-  showOnBoarding: false,
+  showOnBoarding: true,
   otpKey: null,
   otpResetDate: null,
   otpResetPending: false,

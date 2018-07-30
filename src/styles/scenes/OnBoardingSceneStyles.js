@@ -1,7 +1,7 @@
 // @flow
 
-import { PLATFORM } from '../../theme/variables/platform'
 import THEME from '../../theme/variables/airbitz'
+import { PLATFORM } from '../../theme/variables/platform'
 import {PagingWithDotStyles} from '../components/PagingWithDotStyles'
 
 const OnBoardingSceneStyles = {
@@ -26,13 +26,37 @@ const OnBoardingSceneStyles = {
     container: {
       ...PagingWithDotStyles.container,
       position: 'absolute',
-      top: PLATFORM.deviceHeight * 13 / 16,
+      top: '77%',
       left: 0,
       right: 0,
       height: 20
     }
   },
   wrapper: {
+  },
+  slideContainer: {
+    width: '100%',
+    height: '100%',
+    flexDirection: 'row',
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  buttonContainer: {
+    position: 'absolute',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    width: '100%',
+    height: THEME.BUTTONS.HEIGHT,
+    top: '84%'
+  },
+  shim: {
+    width: '5%'
+  },
+  button: {
+    width: '40%'
+  },
+  buttonAlt: {
+    width: '40%',
+    opacity: 0.7
   }
 }
 

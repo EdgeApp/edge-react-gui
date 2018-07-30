@@ -7,21 +7,13 @@ const OnBoardingSlideStyles = {
     flex: 1
   },
   innerTop: {
-    flex: 4
+    flex: 7
   },
   innerBottom: {
-    flex: 3,
+    flex: 6,
     alignItems: 'center'
   },
-  buttonContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: 10
-  },
-  button: {
-    width: '30%'
-  },
+
   textBox: {
     width: '86%',
     height: '80%',
@@ -31,7 +23,8 @@ const OnBoardingSlideStyles = {
   text: {
     color: THEME.COLORS.WHITE,
     fontSize: 18,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    textAlign: 'center'
   }
 }
 

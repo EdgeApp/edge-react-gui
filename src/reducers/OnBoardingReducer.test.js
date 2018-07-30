@@ -16,8 +16,8 @@ test('initialState', () => {
         iPadImage: 'iPadOnboarding1Vert',
         iPadImageHoriz: 'iPadOnboarding1Horiz',
         androidImage: 'onboard1',
-        androidTabletHorizontalImage: 'onboardingHorizTab1',
-        androidTabletVerticalImage: 'onboardingVertTab1'
+        androidTabletHorizontalImage: 'onboarding_horiz_tab1',
+        androidTabletVerticalImage: 'onboarding_vert_tab1'
       },
       {
         text: s.strings.onboarding_slide_2,
@@ -26,8 +26,8 @@ test('initialState', () => {
         iPadImage: 'iPadOnboarding2Vert',
         iPadImageHoriz: 'iPadOnboarding2Horiz',
         androidImage: 'onboard2',
-        androidTabletHorizontalImage: 'onboardingHorizTab2',
-        androidTabletVerticalImage: 'onboardingVertTab2'
+        androidTabletHorizontalImage: 'onboarding_horiz_tab2',
+        androidTabletVerticalImage: 'onboarding_vert_tab2'
       },
       {
         text: s.strings.onboarding_slide_3,
@@ -36,8 +36,8 @@ test('initialState', () => {
         iPadImage: 'iPadOnboarding3Vert',
         iPadImageHoriz: 'iPadOnboarding3Horiz',
         androidImage: 'onboard3',
-        androidTabletHorizontalImage: 'onboardingHorizTab3',
-        androidTabletVerticalImage: 'onboardingVertTab3'
+        androidTabletHorizontalImage: 'onboarding_horiz_tab3',
+        androidTabletVerticalImage: 'onboarding_vert_tab3'
       },
       {
         text: s.strings.onboarding_slide_4,
@@ -46,8 +46,8 @@ test('initialState', () => {
         iPadImage: 'iPadOnboarding4Vert',
         iPadImageHoriz: 'iPadOnboarding4Horiz',
         androidImage: 'onboard4',
-        androidTabletHorizontalImage: 'onboardingHorizTab4',
-        androidTabletVerticalImage: 'onboardingVertTab4'
+        androidTabletHorizontalImage: 'onboarding_horiz_tab4',
+        androidTabletVerticalImage: 'onboarding_vert_tab4'
       },
       {
         text: s.strings.onboarding_slide_5,
@@ -55,9 +55,9 @@ test('initialState', () => {
         iPhoneX: 'onboardX5',
         iPadImage: 'iPadOnboarding5Vert',
         iPadImageHoriz: 'iPadOnboarding5Horiz',
-        androidImage: 'onboard4',
-        androidTabletHorizontalImage: 'onboardingHorizTab4',
-        androidTabletVerticalImage: 'onboardingVertTab4'
+        androidImage: 'onboard5',
+        androidTabletHorizontalImage: 'onboarding_horiz_tab5',
+        androidTabletVerticalImage: 'onboarding_vert_tab5'
       }
     ]
   }
