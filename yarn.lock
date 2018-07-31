@@ -2455,9 +2455,9 @@ edge-components@^0.0.5:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@0.9.10:
-  version "0.9.10"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.9.10.tgz#74b984497e00c708bf4bb9bc3ccf5e9cef920cc0"
+edge-core-js@0.9.13:
+  version "0.9.13"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.9.13.tgz#0b57c5b296aa7c340e78aec29f64b8dc2acce848"
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -2479,9 +2479,9 @@ edge-core-js@0.9.10:
     utf8 "^3.0.0"
     ws "^5.1.1"
 
-edge-currency-bitcoin@3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-3.0.1.tgz#cae3ebb7e1dcc46770ca96202bc0b050742472a1"
+edge-currency-bitcoin@3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-3.2.0.tgz#2fd4ca0628e27163155a92608067095e4d659aeb"
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"

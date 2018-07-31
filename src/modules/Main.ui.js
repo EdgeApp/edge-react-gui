@@ -4,11 +4,15 @@ import type { EdgeContext, EdgeContextCallbacks, EdgeCorePluginFactory, EdgeCurr
 import {
   bitcoinCurrencyPluginFactory,
   bitcoincashCurrencyPluginFactory,
+  bitcoingoldCurrencyPluginFactory,
   dashCurrencyPluginFactory,
+  digibyteCurrencyPluginFactory,
+  dogecoinCurrencyPluginFactory,
   feathercoinCurrencyPluginFactory,
   litecoinCurrencyPluginFactory,
   qtumCurrencyPluginFactory,
   ufoCurrencyPluginFactory,
+  vertcoinCurrencyPluginFactory,
   zcoinCurrencyPluginFactory
 } from 'edge-currency-bitcoin'
 import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
@@ -98,8 +102,11 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   coincapPlugin,
   // Currencies:
   bitcoincashCurrencyPluginFactory,
+  bitcoingoldCurrencyPluginFactory,
   bitcoinCurrencyPluginFactory,
   dashCurrencyPluginFactory,
+  digibyteCurrencyPluginFactory,
+  dogecoinCurrencyPluginFactory,
   ethereumCurrencyPluginFactory,
   moneroCurrencyPluginFactory,
   rippleCurrencyPluginFactory,
@@ -107,7 +114,8 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   litecoinCurrencyPluginFactory,
   feathercoinCurrencyPluginFactory,
   zcoinCurrencyPluginFactory,
-  ufoCurrencyPluginFactory
+  ufoCurrencyPluginFactory,
+  vertcoinCurrencyPluginFactory
 ]
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
