@@ -74,4 +74,10 @@ export const listSplittableWalletTypes = (account: EdgeAccount, walletId: string
 
 export const splitWalletInfo = (account: EdgeAccount, walletId: string, newWalletType: string) => {
   return account.splitWalletInfo(walletId, newWalletType)
+export const checkPin = (account: EdgeAccount, pin: string): Promise<boolean> => {
+  return account.checkPin(pin)
+}
+
+export const convertCurrency = (account: EdgeAccount, fromCurrencyCode: string, toCurrencyCode: string, amount: number = 1) => {
+  return account.exchangeCache.convertCurrency(fromCurrencyCode, toCurrencyCode, amount)
 }

@@ -6,9 +6,15 @@ target 'edge' do
   # use_frameworks!
 
   # Pods for edge
-  pod "HockeySDK", :subspecs => ['AllFeaturesLib']
   pod 'Firebase/Core'
   pod 'Firebase/Messaging', '~> 5.3.0'
+
+  pod 'React', :path => '../node_modules/react-native', :subspecs => [
+   'BatchedBridge'
+  ]
+#  pod 'React', :path => '../node_modules/react-native'
+  pod 'yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
+  pod 'BugsnagReactNative', :path => '../node_modules/bugsnag-react-native'
 
   target 'edgeTests' do
     inherit! :search_paths
