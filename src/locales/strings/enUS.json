@@ -86,6 +86,7 @@
   "fragment_wallets_set_custom_fees": "Set Custom Mining Fee",
   "fragment_wallets_resync_wallet": "Resync Wallet",
   "fragment_wallets_split_wallet": "Split Wallet",
+  "fragment_wallets_split": "Split %s",
   "fragment_wallets_get_seed_wallet": "Get Seed",
   "fragment_wallets_seed_share_title": "Edge Wallet (%s) Seed",
   "fragment_wallets_view_xpub": "View XPub Address",

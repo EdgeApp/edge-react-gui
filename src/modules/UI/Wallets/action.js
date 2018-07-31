@@ -6,10 +6,11 @@ import { Actions } from 'react-native-router-flux'
 
 import * as actions from '../../../actions/indexActions'
 import * as Constants from '../../../constants/indexConstants'
-import type { CustomTokenInfo } from '../../../types.js'
+import type { CustomTokenInfo, WalletDropdownOption } from '../../../types.js'
 import * as SETTINGS_API from '../../Core/Account/settings.js'
 import * as CORE_SELECTORS from '../../Core/selectors.js'
 import * as WALLET_API from '../../Core/Wallets/api.js'
+import { listSplittableWalletTypes } from '../../Core/Account/api.js'
 import type { Dispatch, GetState } from '../../ReduxTypes'
 import { displayErrorAlert } from '../../UI/components/ErrorAlert/actions'
 import * as UTILS from '../../utils'
@@ -17,7 +18,8 @@ import { addTokenAsync } from '../scenes/AddToken/action'
 import * as UI_SELECTORS from '../selectors.js'
 import { updateSettings } from '../Settings/action'
 import * as SETTINGS_SELECTORS from '../Settings/selectors'
-
+import { sprintf } from 'sprintf-js'
+import s from '../../../locales/strings.js'
 export const PREFIX = 'UI/Wallets/'
 
 export const UPSERT_WALLETS = PREFIX + 'UPSERT_WALLETS'
@@ -42,6 +44,7 @@ export const OVERWRITE_THEN_DELETE_TOKEN_SUCCESS = 'OVERWRITE_THEN_DELETE_TOKEN_
 export const ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS = 'ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS'
 export const UPDATE_WALLET_LOADING_PROGRESS = 'UPDATE_WALLET_LOADING_PROGRESS'
 export const INSERT_WALLET_IDS_FOR_PROGRESS = 'INSERT_WALLET_IDS_FOR_PROGRESS'
+export const UPDATE_SPLITTABLE_WALLET_TYPES = 'UPDATE_SPLITTABLE_WALLET_TYPES'
 
 export const refreshReceiveAddressRequest = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -399,6 +402,27 @@ export const deleteCustomToken = (walletId: string, currencyCode: string) => (di
       dispatch(displayErrorAlert(error.message))
       dispatch(deleteCustomTokenFailure())
     })
+}
+
+export const fetchSplittableWalletTypes = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  const options = []
+  listSplittableWalletTypes(account, walletId).forEach(walletType => {
+    options.push({
+      value: `split-${walletType}`,
+      label: sprintf(s.strings.fragment_wallets_split, walletType.replace('wallet:', '')),
+      modalVisible: true
+    })
+  })
+  dispatch(updateSplittableWalletTypes(walletId, options))
+}
+
+export const updateSplittableWalletTypes = (walletId: string, splittableWalletTypes: Array<WalletDropdownOption>) => {
+  return {
+    type: UPDATE_SPLITTABLE_WALLET_TYPES,
+    data: { walletId, splittableWalletTypes }
+  }
 }
 
 export const deleteCustomTokenStart = () => ({

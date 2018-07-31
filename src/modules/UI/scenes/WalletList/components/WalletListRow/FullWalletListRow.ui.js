@@ -22,7 +22,7 @@ import {
 import type { State } from '../../../../../ReduxTypes.js'
 import T from '../../../../components/FormattedText'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
-import { getEnabledTokens, selectWallet } from '../../../../Wallets/action.js'
+import { getEnabledTokens, selectWallet, fetchSplittableWalletTypes } from '../../../../Wallets/action.js'
 import styles, { styles as styleRaw } from '../../style.js'
 import WalletListRowOptions from './WalletListRowOptionsConnector.js'
 import WalletListTokenRow from './WalletListTokenRowConnector.js'
@@ -76,7 +76,8 @@ export type FullWalletListRowLoadedOwnProps = {
 
 export type FullWalletListRowLoadedDispatchProps = {
   selectWallet: (walletId: string, currencyCode: string) => void,
-  getEnabledTokensList: (walletId: string) => void
+  getEnabledTokensList: (walletId: string) => void,
+  fetchSplittableWalletTypes: (walletId: string) => void
 }
 
 export type FullWalletListRowLoadedComponentProps = FullWalletListRowLoadedStateProps & FullWalletListRowLoadedOwnProps & FullWalletListRowLoadedDispatchProps
@@ -97,6 +98,10 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
   componentWillMount () {
     const walletId = this.props.data.item.id
     this.props.getEnabledTokensList(walletId)
+  }
+
+  componentDidMount () {
+    this.props.fetchSplittableWalletTypes(this.props.data.item.id)
   }
 
   render () {
@@ -234,7 +239,8 @@ const mapStateToProps = (state: State, ownProps: FullWalletListRowLoadedOwnProps
 }
 const mapDispatchToProps = dispatch => ({
   selectWallet: (walletId: string, currencyCode): string => dispatch(selectWallet(walletId, currencyCode)),
-  getEnabledTokensList: (walletId: string) => dispatch(getEnabledTokens(walletId))
+  getEnabledTokensList: (walletId: string) => dispatch(getEnabledTokens(walletId)),
+  fetchSplittableWalletTypes: (walletId: string) => dispatch(fetchSplittableWalletTypes(walletId))
 })
 
 // $FlowFixMe

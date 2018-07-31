@@ -2,6 +2,13 @@
 
 import type { EdgeDenomination, EdgeMetaToken, EdgeMetadata, EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
 
+export type WalletDropdownOption = {
+  value: string,
+  label: string,
+  modalVisible: boolean,
+  currencyCode?: Array<string>
+}
+
 export type GuiWallet = {
   id: string,
   type: string,
@@ -18,6 +25,7 @@ export type GuiWallet = {
   symbolImageDarkMono: string | void,
   metaTokens: Array<EdgeMetaToken>,
   enabledTokens: Array<string>,
+  splittableWalletTypes: Array<WalletDropdownOption>,
   receiveAddress: EdgeReceiveAddress,
   addressLoadingProgress?: number,
   blockHeight: number | null
@@ -135,6 +143,7 @@ export const emptyGuiWallet: GuiWallet = {
   symbolImageDarkMono: '',
   metaTokens: [],
   enabledTokens: [],
+  splittableWalletTypes: [],
   receiveAddress: {
     nativeAmount: '',
     metadata: {},
