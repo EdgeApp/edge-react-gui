@@ -1,11 +1,11 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import type { EdgeAccount, EdgeContext } from 'edge-core-js'
 import { LoginScreen } from 'edge-login-ui-rn'
 import React, { Component } from 'react'
 import { View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import slowlog from 'react-native-slowlog'
 
 import THEME from '../../../../theme/variables/airbitz'
 import makeAccountCallbacks from '../../../Core/Account/callbacks'
@@ -17,7 +17,7 @@ type Props = {
   context: EdgeContext,
   addUsernames: (Array<string>) => void,
   account: ?EdgeAccount,
-  recoveryLogin: boolean,
+  recoveryLogin?: string,
   dispatch: Dispatch,
   username?: string
 }
@@ -48,16 +48,16 @@ export default class Login extends Component<Props, State> {
       }
     }
   }
-
   render () {
     const callbacks = makeAccountCallbacks(this.props.dispatch)
+    const recoveryLogin = this.props.recoveryLogin || ''
     return !this.props.context.listUsernames ? null : (
       <View style={{ flex: 1 }} testID={'edge: login-scene'}>
         <LoginScreen
           username={this.props.username}
           accountOptions={{ callbacks }}
           context={this.props.context}
-          recoveryLogin={this.props.recoveryLogin}
+          recoveryLogin={recoveryLogin}
           onLogin={this.onLogin}
           fontDescription={{
             regularFontFamily: THEME.FONTS.DEFAULT

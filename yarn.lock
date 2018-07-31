@@ -2455,9 +2455,9 @@ edge-components@^0.0.5:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@0.9.10:
-  version "0.9.10"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.9.10.tgz#74b984497e00c708bf4bb9bc3ccf5e9cef920cc0"
+edge-core-js@0.9.13:
+  version "0.9.13"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.9.13.tgz#0b57c5b296aa7c340e78aec29f64b8dc2acce848"
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -2479,9 +2479,9 @@ edge-core-js@0.9.10:
     utf8 "^3.0.0"
     ws "^5.1.1"
 
-edge-currency-bitcoin@3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-3.0.1.tgz#cae3ebb7e1dcc46770ca96202bc0b050742472a1"
+edge-currency-bitcoin@3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-3.2.0.tgz#2fd4ca0628e27163155a92608067095e4d659aeb"
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -2510,9 +2510,9 @@ edge-currency-ethereum@0.10.3:
     sprintf-js "^1.1.1"
     uri-js "^3.0.2"
 
-edge-currency-monero@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.0.8.tgz#c7c83b3c1672a583b9980fab0c427f8ff2bc1542"
+edge-currency-monero@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.0.9.tgz#7e852c19d1080a79754a68d85798110c6d827790"
   dependencies:
     biggystring "^3.0.0"
     buffer "^5.0.6"
@@ -2522,9 +2522,9 @@ edge-currency-monero@^0.0.8:
     sprintf-js "^1.1.1"
     uri-js "^3.0.2"
 
-edge-currency-ripple@^0.0.7:
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/edge-currency-ripple/-/edge-currency-ripple-0.0.7.tgz#516aa60fcc51c4413307bc18e61b6fbee2809af6"
+edge-currency-ripple@^0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/edge-currency-ripple/-/edge-currency-ripple-0.0.8.tgz#9c4d4e61374562382111aa3e616659c6fd849594"
   dependencies:
     base-x "^1.0.4"
     biggystring "^3.0.0"
@@ -2532,6 +2532,7 @@ edge-currency-ripple@^0.0.7:
     jsonschema "^1.1.1"
     sprintf-js "^1.1.1"
     uri-js "^3.0.2"
+    url-parse "^1.4.1"
 
 edge-exchange-plugins@^0.2.0:
   version "0.2.0"
@@ -2539,13 +2540,14 @@ edge-exchange-plugins@^0.2.0:
   dependencies:
     iso4217 "^0.2.0"
 
-edge-login-ui-rn@^0.3.3:
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.3.3.tgz#6eeaf17f3576c93ca16d3c2dfc718d0a048596cd"
+edge-login-ui-rn@^0.3.5:
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.3.5.tgz#a91e3785af2969639c6b707b981b5a98f24801e7"
   dependencies:
     material-ui "^0.20.0"
     moment "^2.19.3"
     native-base "^2.3.9"
+    react-native-device-info "^0.11.0"
     react-native-keyboard-aware-scroll-view "^0.4.1"
     react-native-linear-gradient "^2.0.0"
     react-native-mail "^3.0.5"
@@ -2559,9 +2561,11 @@ edge-login-ui-rn@^0.3.3:
     sprintf-js "^1.0.3"
     zxcvbn "^4.4.2"
 
-"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#a2e2682":
+"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#8f5d040":
   version "0.0.2"
-  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#a2e268268f76a328d9c40d2f626da42f40464c15"
+  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#8f5d04089711b1337276e38a9ac27ff83dc1e0f9"
+  dependencies:
+    moment "^2.22.2"
 
 edge-ripple-keypairs@^0.0.1:
   version "0.0.1"
@@ -5622,6 +5626,10 @@ mobx@^3.3.1:
 moment@^2.19.3:
   version "2.22.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.1.tgz#529a2e9bf973f259c9643d237fda84de3a26e8ad"
+
+moment@^2.22.2:
+  version "2.22.2"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.2.tgz#3c257f9839fc0e93ff53149632239eb90783ff66"
 
 morgan@~1.6.1:
   version "1.6.1"

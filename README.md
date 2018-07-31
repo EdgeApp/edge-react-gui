@@ -102,6 +102,7 @@ the following:
 * Copy the `deploy-config.sample.json` to `deploy-config.json` and edit the parameters accordingly. You'll need a HockeyApp account to get ids and keys
 * Put any Android keystore files into `edge-react-gui/keystores/`
 * If using Firebase, put your account's `google-services.json` and `GoogleService-Info.plist` into `edge-react-gui/`
+* Install xcpretty `sudo gem install xcpretty`
 
 Run deploy
 
