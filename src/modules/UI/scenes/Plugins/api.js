@@ -1,10 +1,11 @@
 // @flow
 
+import type { EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
 import {Linking} from 'react-native'
 import {Actions} from 'react-native-router-flux'
-import type { EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
-import * as WALLET_API from '../../../Core/Wallets/api'
 
+import s from '../../../../locales/strings.js'
+import * as WALLET_API from '../../../Core/Wallets/api'
 const formatWallet = (w) => ({
   'id': w.id,
   'name': w.name,
@@ -48,7 +49,7 @@ export class PluginBridge {
 
   componentDidMount () {
     Actions.refresh({
-      leftTitle: 'Back'
+      leftTitle: s.strings.back_button_text
     })
   }
 
