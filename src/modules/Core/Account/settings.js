@@ -19,6 +19,7 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   defaultIsoFiat: 'iso:USD',
   merchantMode: false,
   BTC: { denomination: '100' },
+  BTG: { denomination: '100' },
   BCH: { denomination: '100' },
   XRP: { denomination: '1000000' },
   DASH: { denomination: '100000000' },
