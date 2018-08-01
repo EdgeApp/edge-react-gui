@@ -82,7 +82,7 @@ export const styles = {
   donePlusSortable: {
     alignItems: 'flex-end',
     marginRight: 30
-  },  
+  },
   plusContainer: {
     position: 'absolute',
     justifyContent: 'space-between',
