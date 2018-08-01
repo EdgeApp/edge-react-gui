@@ -68,7 +68,7 @@ class AmountArea extends Component {
       feeSyntax = ''
       leftData = {
         color: THEME.COLORS.ACCENT_BLUE,
-        syntax: s.stringsfragment_transaction_income
+        syntax: s.strings.fragment_transaction_income
       }
     } else {
       // send tx
