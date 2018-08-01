@@ -68,7 +68,7 @@ class AmountArea extends Component {
       feeSyntax = ''
       leftData = {
         color: THEME.COLORS.ACCENT_BLUE,
-        syntax: s.strings.fragment_transaction_income
+        syntax: s.stringsfragment_transaction_income
       }
     } else {
       // send tx
@@ -105,7 +105,7 @@ class AmountArea extends Component {
     }
 
     if (!notes) notes = ''
-
+    const typeInfo = this.props.types[this.props.type]
     return (
       <View style={[styles.amountAreaContainer]}>
         <View style={[styles.amountAreaCryptoRow]}>
@@ -159,7 +159,7 @@ class AmountArea extends Component {
             onPress={this.onEnterCategories}
             disabled={this.props.subCategorySelectVisibility}
           >
-            <FormattedText style={[{ color: this.props.color }, styles.categoryLeftText]}>{this.props.type.syntax}</FormattedText>
+            <FormattedText style={[{ color: this.props.color }, styles.categoryLeftText]}>{typeInfo.syntax}</FormattedText>
           </TouchableOpacity>
           <View style={[styles.categoryInputArea]}>
             <TextInput
