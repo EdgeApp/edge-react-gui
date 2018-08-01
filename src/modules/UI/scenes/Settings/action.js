@@ -1,5 +1,6 @@
 // @flow
 
+import { makeReactNativeFolder } from 'disklet'
 import type { EdgeAccount } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import { Actions } from 'react-native-router-flux'
@@ -8,11 +9,11 @@ import type { Dispatch, GetState } from '../../../../../src/modules/ReduxTypes.j
 import * as actions from '../../../../actions/indexActions.js'
 import * as Constants from '../../../../constants/indexConstants.js'
 import s from '../../../../locales/strings.js'
+import { convertCurrency, restoreWalletsRequest } from '../../../Core/Account/api.js'
 import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'
 import * as CORE_SELECTORS from '../../../Core/selectors'
 import { displayErrorAlert } from '../../components/ErrorAlert/actions.js'
 import * as SETTINGS_ACTIONS from '../../Settings/action.js'
-import { restoreWalletsRequest, convertCurrency } from '../../../Core/Account/api.js'
 import { newSpendingLimits } from '../../Settings/spendingLimits/SpendingLimitsReducer.js'
 
 const PREFIX = 'UI/Scenes/Settings/'
@@ -167,13 +168,11 @@ export const setBitcoinOverrideServerRequest = (overrideServer: string) => (disp
 
 // touch id interaction
 export const updateTouchIdEnabled = (arg: boolean, account: EdgeAccount) => async (dispatch: Dispatch, getState: GetState) => {
-  const context = CORE_SELECTORS.getContext(getState())
-  // dispatch the update for the new state for
   dispatch(SETTINGS_ACTIONS.updateTouchIdEnabled(arg))
   if (arg) {
-    enableTouchId(context, account)
+    enableTouchId(makeReactNativeFolder(), account)
   } else {
-    disableTouchId(context, account)
+    disableTouchId(makeReactNativeFolder(), account)
   }
 }
 
