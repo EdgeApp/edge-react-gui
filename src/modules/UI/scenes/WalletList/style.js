@@ -79,6 +79,10 @@ export const styles = {
     minWidth: 132,
     height: 50
   },
+  donePlusSortable: {
+    alignItems: 'flex-end',
+    marginRight: 30
+  },
   plusContainer: {
     position: 'absolute',
     justifyContent: 'space-between',
