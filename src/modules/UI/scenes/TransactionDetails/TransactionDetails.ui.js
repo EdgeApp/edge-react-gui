@@ -24,6 +24,34 @@ import SubCategorySelect from './SubCategorySelect.ui.js'
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
 
+const EXCHANGE_TEXT = s.strings.fragment_transaction_exchange
+const EXPENSE_TEXT = s.strings.fragment_transaction_expense
+const TRANSFER_TEXT = s.strings.fragment_transaction_transfer
+const INCOME_TEXT = s.strings.fragment_transaction_income
+
+const types = {
+  exchange: {
+    color: styleRaw.typeExchange.color,
+    syntax: EXCHANGE_TEXT,
+    key: 'exchange'
+  },
+  expense: {
+    color: styleRaw.typeExpense.color,
+    syntax: EXPENSE_TEXT,
+    key: 'expense'
+  },
+  transfer: {
+    color: styleRaw.typeTransfer.color,
+    syntax: TRANSFER_TEXT,
+    key: 'transfer'
+  },
+  income: {
+    color: styleRaw.typeIncome.color,
+    syntax: INCOME_TEXT,
+    key: 'income'
+  }
+}
+
 export type TransactionDetailsOwnProps = {
   edgeTransaction: EdgeTransaction,
   contacts: Array<GuiContact>,
@@ -70,11 +98,6 @@ type State = {
 
 type TransactionDetailsProps = TransactionDetailsOwnProps & TransactionDetailsDispatchProps
 
-const EXCHANGE_TEXT = s.strings.fragment_transaction_exchange
-const EXPENSE_TEXT = s.strings.fragment_transaction_expense
-const TRANSFER_TEXT = s.strings.fragment_transaction_transfer
-const INCOME_TEXT = s.strings.fragment_transaction_income
-
 export class TransactionDetails extends Component<TransactionDetailsProps, State> {
   guiWallet: GuiWallet
   fiatSymbol: string
@@ -90,6 +113,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     let name = ''
     let amountFiat = '0.00'
     let notes = ''
+    const direction = parseInt(props.edgeTransaction.nativeAmount) >= 0 ? 'receive' : 'send'
     if (props.edgeTransaction.wallet) {
       this.guiWallet = props.wallets[props.edgeTransaction.wallet.id]
       this.fiatSymbol = UTILS.getFiatSymbol(this.guiWallet.fiatCurrencyCode)
@@ -108,6 +132,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
       }
     }
 
+    // if there is a user-entered category (type:subcategory)
     if (cat) {
       const colonOccurrence = cat.indexOf(':')
       if (cat && colonOccurrence) {
@@ -117,6 +142,17 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
       }
     }
 
+    // if type is still not defined then figure out if send or receive (expense vs income)
+    if (!type) {
+      if (direction === 'receive') {
+        type = types.income.key
+      } else {
+        type = types.expense.key
+      }
+    } else {
+      type = types[type].key
+    }
+
     this.state = {
       name,
       notes,
@@ -124,7 +160,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
       category: cat,
       amountFiat,
       bizId: 0,
-      direction: parseInt(props.edgeTransaction.nativeAmount) >= 0 ? 'receive' : 'send',
+      direction,
       miscJson: props.edgeTransaction.metadata ? props.edgeTransaction.metadata.miscJson : '',
       dateTimeSyntax: dateString + ' ' + timeString,
       subCategorySelectVisibility: false,
@@ -135,7 +171,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
       subcategoryOpacity: new Animated.Value(0),
       payeeZIndex: 0,
       subcatZIndex: 0,
-      type: type,
+      type,
       walletDefaultDenomProps: {
         name: '',
         multiplier: '',
@@ -401,47 +437,14 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
   }
 
   render () {
-    let type
-
-    const types = {
-      exchange: {
-        color: styleRaw.typeExchange.color,
-        syntax: EXCHANGE_TEXT,
-        key: 'exchange'
-      },
-      expense: {
-        color: styleRaw.typeExpense.color,
-        syntax: EXPENSE_TEXT,
-        key: 'expense'
-      },
-      transfer: {
-        color: styleRaw.typeTransfer.color,
-        syntax: TRANSFER_TEXT,
-        key: 'transfer'
-      },
-      income: {
-        color: styleRaw.typeIncome.color,
-        syntax: INCOME_TEXT,
-        key: 'income'
-      }
-    }
-
-    if (!this.state.type) {
-      if (this.state.direction === 'receive') {
-        type = types.income
-      } else {
-        type = types.expense
-      }
-    } else {
-      type = types[this.state.type]
-    }
-
-    const categoryColor = type.color
     const sortedSubcategories = this.props.subcategoriesList.length > 0 ? this.props.subcategoriesList.sort() : []
     let txExplorerLink = null
     if (this.props.currencyInfo) {
       txExplorerLink = sprintf(this.props.currencyInfo.transactionExplorer, this.props.edgeTransaction.txid)
     }
+
+    const categoryColor = types[this.state.type].color
+
     return (
       <SafeAreaView>
         <View style={[{ width: '100%', height: PLATFORM.usableHeight + PLATFORM.toolbarHeight }]}>
@@ -514,7 +517,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
               >
                 <View style={[styles.modalCategoryRow]}>
                   <TouchableOpacity style={[styles.categoryLeft, { borderColor: categoryColor }]} disabled>
-                    <FormattedText style={[{ color: categoryColor }, styles.categoryLeftText]}>{type.syntax}</FormattedText>
+                    <FormattedText style={[{ color: categoryColor }, styles.categoryLeftText]}>{types[this.state.type].syntax}</FormattedText>
                   </TouchableOpacity>
                   <View style={[styles.modalCategoryInputArea]}>
                     <TextInput
@@ -585,7 +588,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                     categorySelectVisibility={this.state.categorySelectVisibility}
                     onSelectSubCategory={this.onSelectSubCategory}
                     subCategory={this.state.subCategory}
-                    type={type}
+                    type={this.state.type}
                     onEnterCategories={this.onEnterCategories}
                     onExitCategories={this.onExitCategories}
                     usableHeight={PLATFORM.usableHeight}
