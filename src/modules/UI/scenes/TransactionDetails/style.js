@@ -51,7 +51,7 @@ export const styles = {
   payeeNameInput: {
     color: THEME.COLORS.GRAY_1,
     fontSize: 17,
-    height: Platform.OS === 'ios' ? 24 : 27,
+    height: Platform.OS === 'ios' ? 24 : 33,
     textAlign: 'center',
     width: '100%',
     fontFamily: THEME.FONTS.DEFAULT
@@ -142,7 +142,7 @@ export const styles = {
     color: THEME.COLORS.GRAY_1,
     fontSize: 17,
     textAlign: 'center',
-    height: 26,
+    height: PLATFORM.OS === 'ios' ? 26 : 34,
     flex: 1,
     fontFamily: THEME.FONTS.DEFAULT
   },
@@ -203,7 +203,7 @@ export const styles = {
   },
   categoryInput: {
     paddingTop: 4,
-    height: 22,
+    height: PLATFORM.OS === 'ios' ? 22 : 26,
     fontSize: 13,
     flex: 1,
     color: THEME.COLORS.GRAY_1,
