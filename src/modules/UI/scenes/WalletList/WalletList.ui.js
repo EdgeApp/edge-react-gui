@@ -184,7 +184,7 @@ export default class WalletList extends Component<Props, State> {
                 </View>
               </View>
 
-              <View style={[styles.donePlusContainer]}>
+              <View style={[styles.donePlusContainer, this.state.sortableListExists && styles.donePlusSortable]}>
                 {this.state.sortableListExists && (
                   <Animated.View
                     style={[

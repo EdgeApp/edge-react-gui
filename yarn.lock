@@ -1548,9 +1548,16 @@ buffer@^4.9.1:
     ieee754 "^1.1.4"
     isarray "^1.0.0"
 
-buffer@^5.0.0, buffer@^5.0.6, buffer@^5.0.8, buffer@^5.1.0:
+buffer@^5.0.0, buffer@^5.0.6, buffer@^5.0.8:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/buffer/-/buffer-5.1.0.tgz#c913e43678c7cb7c8bd16afbcddb6c5505e8f9fe"
+  dependencies:
+    base64-js "^1.0.2"
+    ieee754 "^1.1.4"
+
+buffer@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/buffer/-/buffer-5.2.0.tgz#53cf98241100099e9eeae20ee6d51d21b16e541e"
   dependencies:
     base64-js "^1.0.2"
     ieee754 "^1.1.4"
@@ -2455,9 +2462,9 @@ edge-components@^0.0.5:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@0.9.10:
-  version "0.9.10"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.9.10.tgz#74b984497e00c708bf4bb9bc3ccf5e9cef920cc0"
+edge-core-js@0.9.14:
+  version "0.9.14"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.9.14.tgz#7f3651b2626eb42337a0408cbc6570c7e323919a"
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -2479,21 +2486,21 @@ edge-core-js@0.9.10:
     utf8 "^3.0.0"
     ws "^5.1.1"
 
-edge-currency-bitcoin@3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-3.0.1.tgz#cae3ebb7e1dcc46770ca96202bc0b050742472a1"
+edge-currency-bitcoin@3.2.2:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-3.2.2.tgz#7cf09a586942f81a9f10e51ab02bc415d943d455"
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
     bn.js "^4.11.8"
-    buffer "^5.1.0"
+    buffer "^5.2.0"
     coinselect "^3.1.11"
     eventemitter3 "^3.1.0"
     jsonschema "^1.2.4"
     stable "^0.1.8"
     unorm "^1.4.1"
     uri-js "^4.2.2"
-    url-parse "^1.4.1"
+    url-parse "^1.4.3"
 
 edge-currency-ethereum@0.10.3:
   version "0.10.3"
@@ -8637,6 +8644,13 @@ urix@^0.1.0:
 url-parse@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.4.1.tgz#4dec9dad3dc8585f862fed461d2e19bbf623df30"
+  dependencies:
+    querystringify "^2.0.0"
+    requires-port "^1.0.0"
+
+url-parse@^1.4.3:
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.4.3.tgz#bfaee455c889023219d757e045fa6a684ec36c15"
   dependencies:
     querystringify "^2.0.0"
     requires-port "^1.0.0"
