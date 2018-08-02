@@ -1,50 +1,15 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-/* globals test expect */
+/* globals test describe expect */
 
 import { sendConfirmation as sendConfirmationReducer } from './reducer.js'
+import { initialState } from './selectors.js'
 
-test('initialState', () => {
-  const expected = {
-    pending: false,
-    isKeyboardVisible: false,
-    forceUpdateGuiCounter: 0,
-    spendInfo: null,
-    nativeAmount: '0',
-    isEditable: true,
-    destination: '',
-    transaction: {
-      txid: '',
-      date: 0,
-      currencyCode: '',
-      blockHeight: -1,
-      nativeAmount: '0',
-      networkFee: '',
-      parentNetworkFee: '',
-      ourReceiveAddresses: [],
-      signedTx: '',
-      metadata: {},
-      otherParams: {}
-    },
-    parsedUri: {
-      networkFeeOption: 'standard',
-      customNetworkFee: {},
-      publicAddress: '',
-      nativeAmount: '0',
-      metadata: {
-        name: '',
-        category: '',
-        notes: '',
-        amountFiat: 0,
-        bizId: 0,
-        miscJson: ''
-      }
-    },
-    error: null,
-    pin: '',
-    authRequired: 'none'
-  }
-  const actual = sendConfirmationReducer(undefined, {})
+describe('sendConfirmationReducer', () => {
+  test('initialState', () => {
+    const expected = initialState
+    const actual = sendConfirmationReducer(undefined, {})
 
-  expect(actual).toEqual(expected)
+    expect(actual).toEqual(expected)
+  })
 })
