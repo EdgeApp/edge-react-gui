@@ -109,7 +109,16 @@ export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => 
   const spendInfo = getSpendInfo(state)
 
   getMaxSpendable(edgeWallet, spendInfo)
-    .then(nativeAmount => dispatch(createTX({ nativeAmount }, true)))
+    .then(nativeAmount => {
+      const state = getState()
+      const spendInfo = getSpendInfo(state, { nativeAmount })
+      const authRequired = getAuthRequired(state, spendInfo)
+
+      dispatch(reset())
+
+      dispatch(newSpendInfo(spendInfo, authRequired))
+      dispatch(createTX({ nativeAmount }, true))
+    })
     .catch(e => console.log(e))
 }
 

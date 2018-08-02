@@ -115,8 +115,8 @@ export const parseUri = (data: string) => (dispatch: Dispatch, getState: GetStat
       }
 
       // PUBLIC ADDRESS URI
+      Actions.sendConfirmation('fromScan')
       dispatch(updateParsedURI(parsedUri))
-      return Actions.sendConfirmation('fromScan')
     },
     () => {
       // INVALID URI
@@ -130,6 +130,21 @@ export const parseUri = (data: string) => (dispatch: Dispatch, getState: GetStat
       )
     }
   )
+}
+
+export const legacyAddressModalContinueButtonPressed = () => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  dispatch(legacyAddressModalDeactivated())
+  const parsedUri = state.ui.scenes.scan.parsedUri
+  setImmediate(() => {
+    if (!parsedUri) {
+      dispatch(enableScan())
+      return
+    }
+
+    Actions.sendConfirmation('fromScan')
+    dispatch(updateParsedURI(parsedUri))
+  })
 }
 
 export const qrCodeScanned = (data: string) => (dispatch: Dispatch, getState: GetState) => {
@@ -147,18 +162,6 @@ export const addressModalDoneButtonPressed = (data: string) => (dispatch: Dispat
 
 export const addressModalCancelButtonPressed = () => (dispatch: Dispatch, getState: GetState) => {
   // dispatch(addressModalDeactivated())
-}
-
-export const legacyAddressModalContinueButtonPressed = () => (dispatch: Dispatch, getState: GetState) => {
-  dispatch(legacyAddressModalDeactivated())
-  dispatch(enableScan())
-
-  const state = getState()
-  const parsedUri = state.ui.scenes.scan.parsedUri
-  if (!parsedUri) return
-
-  dispatch(updateParsedURI(parsedUri))
-  Actions.sendConfirmation('fromScan')
 }
 
 export const legacyAddressModalCancelButtonPressed = () => (dispatch: Dispatch) => {

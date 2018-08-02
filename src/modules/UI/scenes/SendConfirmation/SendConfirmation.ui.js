@@ -51,8 +51,7 @@ export type SendConfirmationStateProps = {
   uniqueIdentifier?: string,
   destination: string,
   isEditable: boolean,
-  authRequired: 'pin' | 'none',
-  pin: string
+  authRequired: 'pin' | 'none'
 }
 
 export type SendConfirmationDispatchProps = {
@@ -79,6 +78,8 @@ type State = {|
 |}
 
 export class SendConfirmation extends Component<Props, State> {
+  pinInput: any
+
   constructor (props: Props) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
@@ -102,6 +103,12 @@ export class SendConfirmation extends Component<Props, State> {
     const secondaryDisplayDenomination = getDenomFromIsoCode(this.props.fiatCurrencyCode)
     const overridePrimaryExchangeAmount = bns.div(this.props.nativeAmount, this.props.primaryExchangeDenomination.multiplier, DIVIDE_PRECISION)
     this.setState({ secondaryDisplayDenomination, overridePrimaryExchangeAmount })
+  }
+
+  componentDidUpdate (prevProps: Props) {
+    if (prevProps.destination === '' && this.props.destination !== '' && this.props.authRequired !== 'none' && this.props.nativeAmount !== '0') {
+      this.pinInput.focus()
+    }
   }
 
   componentWillReceiveProps (nextProps: Props) {
@@ -148,7 +155,7 @@ export class SendConfirmation extends Component<Props, State> {
     const cryptoBalanceAmountString = cryptoBalanceAmount ? intl.formatNumber(decimalOrZero(bns.toFixed(cryptoBalanceAmount, 0, 6), 6)) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)
     const balanceInFiatString = intl.formatNumber(this.props.balanceInFiat || 0, { toFixed: 2 })
 
-    const { pin, authRequired, destination, onChangePin } = this.props
+    const { authRequired, destination } = this.props
     const SEND_TO_DESTINATION_TEXT = sprintf(s.strings.send_to_title, destination)
 
     return (
@@ -183,14 +190,12 @@ export class SendConfirmation extends Component<Props, State> {
                 isEditable={this.props.isEditable}
               />
 
-              {(!!this.props.networkFee || !!this.props.parentNetworkFee) && (
-                <View style={[styles.feeArea]}>
-                  <Text style={[styles.feeAreaText]}>{this.networkFeeSyntax()}</Text>
-                </View>
-              )}
+              <View style={[styles.feeArea]}>
+                {(!!this.props.networkFee || !!this.props.parentNetworkFee) && <Text style={[styles.feeAreaText]}>{this.networkFeeSyntax()}</Text>}
+              </View>
 
               {!!destination && (
-                <Recipient style={{paddingHorizontal: 20}}>
+                <Recipient style={{ paddingHorizontal: 20 }}>
                   <Recipient.Text>
                     <Text>{SEND_TO_DESTINATION_TEXT}</Text>
                   </Recipient.Text>
@@ -212,7 +217,7 @@ export class SendConfirmation extends Component<Props, State> {
                   <View style={styles.pinInputSpacer} />
 
                   <View style={styles.pinInputContainer}>
-                    <PinInput fontSize={20} baseColor={'white'} textColor={'white'} tintColor={'white'} onChangePin={onChangePin} style={{}} value={pin} />
+                    <PinInput ref={ref => (this.pinInput = ref)} fontSize={20} onChangePin={this.handleChangePin} returnKeyType="done" />
                   </View>
                 </Scene.Row>
               )}
@@ -239,6 +244,13 @@ export class SendConfirmation extends Component<Props, State> {
         )}
       </SafeAreaView>
     )
+  }
+
+  handleChangePin = (pin: string) => {
+    this.props.onChangePin(pin)
+    if (pin.length >= 4) {
+      this.pinInput.blur()
+    }
   }
 
   onExchangeAmountChanged = ({ nativeAmount, exchangeAmount }: ExchangedFlipInputAmounts) => {

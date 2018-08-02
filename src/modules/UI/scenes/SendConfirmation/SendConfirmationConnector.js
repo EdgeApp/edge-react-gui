@@ -77,7 +77,6 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
     secondaryExchangeCurrencyCode,
     sliderDisabled: !transaction || !!error || !!pending,
     uniqueIdentifier,
-    pin: state.ui.scenes.sendConfirmation.pin,
     authRequired: state.ui.scenes.sendConfirmation.authRequired
   }
   return out
