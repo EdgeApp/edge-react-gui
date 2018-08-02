@@ -8,6 +8,13 @@
   "could_not_select": "Could Not Select Wallet",
   "dialog_title": "Set Auto Logoff time",
 
+  "wallet_type_bitcoin": "Bitcoin",
+  "wallet_type_bitcoincash": "Bitcoin Cash",
+  "wallet_type_bitcoingold": "Bitcoin Gold",
+  "wallet_type_ethereum": "Ethereum",
+  "wallet_type_monero": "Monero",
+  "wallet_type_dash": "Dash",
+
   "drawer_exchange_rate_loading": "Exchange Rate Loading",
   "drawer_exchange": "Exchange",
   "drawer_request": "Request",
