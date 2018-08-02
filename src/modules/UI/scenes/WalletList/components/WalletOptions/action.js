@@ -32,6 +32,13 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
   if (option === Constants.ARCHIVE_VALUE && archived) {
     option = Constants.ACTIVATE_VALUE
   }
+  let optionsSplit, walletType
+  const hyphenIndex = option.indexOf('-')
+  if (hyphenIndex > 0) {
+    optionsSplit = option.split('-')
+    option = optionsSplit[0]
+    walletType = optionsSplit[1]
+  }
   switch (option) {
     case Constants.RESTORE_VALUE:
     case Constants.ACTIVATE_VALUE:
@@ -94,7 +101,7 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
 
     case Constants.SPLIT_VALUE:
       return (dispatch: Dispatch) => {
-        dispatch(wrap(OPEN_MODAL_VALUE(Constants.SPLIT_VALUE), { walletId }))
+        dispatch(wrap(OPEN_MODAL_VALUE(Constants.SPLIT_VALUE), { walletId, walletType }))
       }
 
     case Constants.GET_SEED_VALUE:

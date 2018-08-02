@@ -411,7 +411,7 @@ export const fetchSplittableWalletTypes = (walletId: string) => (dispatch: Dispa
   listSplittableWalletTypes(account, walletId).forEach(walletType => {
     options.push({
       value: `split-${walletType}`,
-      label: sprintf(s.strings.fragment_wallets_split, walletType.replace('wallet:', '')),
+      label: sprintf(s.strings.fragment_wallets_split, s.strings['wallet_type_' + walletType.replace('wallet:', '')]),
       modalVisible: true
     })
   })
