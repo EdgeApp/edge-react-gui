@@ -12,12 +12,12 @@ export const sendConfirmationLegacy = (state: SendConfirmationState = initialSta
   const { type, data = {} } = action
   switch (type) {
     case ACTION.UPDATE_TRANSACTION: {
-      const { transaction, parsedUri, forceUpdateGui, error } = data
+      const { transaction, parsedUri, forceUpdateGui } = data
       let forceUpdateGuiCounter = state.forceUpdateGuiCounter
       if (forceUpdateGui) {
         forceUpdateGuiCounter++
       }
-      if (!parsedUri) return { ...state, forceUpdateGuiCounter, error, transaction }
+      if (!parsedUri) return { ...state, forceUpdateGuiCounter, transaction }
 
       const { metadata, customNetworkFee, ...others } = parsedUri
       if (!isEqual(state.parsedUri.metadata, metadata)) {
@@ -35,7 +35,6 @@ export const sendConfirmationLegacy = (state: SendConfirmationState = initialSta
         ...state,
         transaction,
         forceUpdateGuiCounter,
-        error,
         nativeAmount,
         destination,
         parsedUri: {
@@ -51,19 +50,7 @@ export const sendConfirmationLegacy = (state: SendConfirmationState = initialSta
 
       return {
         ...state,
-        transaction,
-        isEditable: false
-      }
-    }
-
-    case ACTION.MAKE_PAYMENT_PROTOCOL_TRANSACTION_FAILED: {
-      if (!action.data) return state
-      const { error } = data
-
-      return {
-        ...state,
-        error,
-        isEditable: false
+        transaction
       }
     }
 
@@ -90,24 +77,17 @@ export const sendConfirmationLegacy = (state: SendConfirmationState = initialSta
       }
     }
 
-    case ACTION.UPDATE_SPEND_PENDING: {
-      const { pending } = data
-      return {
-        ...state,
-        pending
-      }
-    }
+    default:
+      return state
+  }
+}
 
-    case ACTION.NEW_PIN: {
-      const { pin } = data
-      return {
-        ...state,
-        pin
-      }
-    }
-
-    case ACTION.RESET: {
-      return initialState
+export const error = (state: Error | null = null, action: Action) => {
+  switch (action.type) {
+    case ACTION.UPDATE_TRANSACTION:
+    case ACTION.MAKE_PAYMENT_PROTOCOL_TRANSACTION_FAILED: {
+      if (!action.data) throw new Error('Invalid Action')
+      return action.data.error
     }
 
     default:
@@ -115,4 +95,50 @@ export const sendConfirmationLegacy = (state: SendConfirmationState = initialSta
   }
 }
 
+export const isEditable = (state: boolean = true, action: Action) => {
+  switch (action.type) {
+    case ACTION.UPDATE_PAYMENT_PROTOCOL_TRANSACTION:
+    case ACTION.MAKE_PAYMENT_PROTOCOL_TRANSACTION_FAILED: {
+      if (!action.data) throw new Error('Invalid Action')
+      return false
+    }
+
+    default:
+      return state
+  }
+}
+
+export const pin = (state: string = '', action: Action) => {
+  switch (action.type) {
+    case ACTION.NEW_PIN: {
+      if (!action.data) throw new Error('Invalid Action')
+      return action.data.pin
+    }
+    default:
+      return state
+  }
+}
+
+export const pending = (state: boolean = false, action: Action) => {
+  switch (action.type) {
+    case ACTION.UPDATE_SPEND_PENDING: {
+      if (!action.data) throw new Error('Invalid Action')
+      return action.data.pending
+    }
+    default:
+      return state
+  }
+}
+
+export const sendConfirmation = (state: SendConfirmationState = initialState, action: Action) => {
+  if (action.type === ACTION.RESET) return initialState
+
+  return {
+    ...sendConfirmationLegacy(state, action),
+    isEditable: isEditable(state.isEditable, action),
+    error: error(state.error, action),
+    pin: pin(state.pin, action),
+    pending: pending(state.pending, action)
+  }
+}
 export default sendConfirmation
