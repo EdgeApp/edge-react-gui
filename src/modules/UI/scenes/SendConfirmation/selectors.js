@@ -97,7 +97,19 @@ export const getForceUpdateGuiCounter = (state: State): number => getScene(state
 export const getNetworkFeeOption = (state: State): string => getParsedUri(state).networkFeeOption || initialState.parsedUri.networkFeeOption || ''
 export const getCustomNetworkFee = (state: State): any => getParsedUri(state).customNetworkFee || initialState.parsedUri.customNetworkFee || {}
 export const getMetadata = (state: State): EdgeMetadata => getParsedUri(state).metadata || initialState.parsedUri.metadata || {}
-export const getPublicAddress = (state: State): string => getParsedUri(state).publicAddress || initialState.parsedUri.publicAddress || ''
+export const getPublicAddress = (state: State): string => {
+  try {
+    return (
+      getParsedUri(state).publicAddress ||
+      initialState.parsedUri.publicAddress ||
+      // $FlowFixMe
+      state.ui.scenes.sendConfirmation.spendInfo.spendTargets[0].publicAddress ||
+      ''
+    )
+  } catch (e) {
+    return ''
+  }
+}
 export const getNativeAmount = (state: State): string | void => state.ui.scenes.sendConfirmation.nativeAmount
 
 export const getUniqueIdentifier = (state: State): string => {

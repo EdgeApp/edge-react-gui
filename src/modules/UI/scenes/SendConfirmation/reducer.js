@@ -8,7 +8,7 @@ import * as ACTION from './action'
 import { initialState } from './selectors'
 import type { SendConfirmationState } from './selectors'
 
-export const sendConfirmation = (state: SendConfirmationState = initialState, action: Action) => {
+export const sendConfirmationLegacy = (state: SendConfirmationState = initialState, action: Action) => {
   const { type, data = {} } = action
   switch (type) {
     case ACTION.UPDATE_TRANSACTION: {
@@ -69,8 +69,9 @@ export const sendConfirmation = (state: SendConfirmationState = initialState, ac
 
     case ACTION.NEW_SPEND_INFO: {
       if (!action.data) return state
-      const { spendInfo, spendInfo: { metadata: { name: destination } }, authRequired } = data
+      const { spendInfo, spendInfo: { metadata: { name } }, authRequired } = data
       const nativeAmount = spendInfo.nativeAmount || spendInfo.spendTargets.reduce((sum, target) => add(sum, target.nativeAmount), '0')
+      const destination = name || spendInfo.spendTargets[0].publicAddress
       return {
         ...state,
         spendInfo,
