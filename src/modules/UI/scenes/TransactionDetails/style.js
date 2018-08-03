@@ -5,6 +5,7 @@ import { Platform, StyleSheet } from 'react-native'
 import { isIphoneX } from '../../../../lib/isIphoneX.js'
 import THEME from '../../../../theme/variables/airbitz'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
+import { scaleFont } from '../../../../lib/scaleFont.js'
 
 export const activeOpacity = THEME.OPACITY.ACTIVE
 
@@ -50,7 +51,7 @@ export const styles = {
   },
   payeeNameInput: {
     color: THEME.COLORS.GRAY_1,
-    fontSize: 17,
+    fontSize: scaleFont(17),
     height: Platform.OS === 'ios' ? 24 : 33,
     textAlign: 'center',
     width: '100%',
@@ -70,7 +71,7 @@ export const styles = {
   },
   date: {
     color: THEME.COLORS.GRAY_2,
-    fontSize: 14
+    fontSize: scaleFont(14)
   },
   amountAreaContainer: {
     flexDirection: 'column'
@@ -79,7 +80,7 @@ export const styles = {
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingTop: 10,
-    paddingBottom: 20,
+    paddingBottom: 14,
     paddingLeft: 15,
     paddingRight: 15
   },
@@ -89,7 +90,7 @@ export const styles = {
     alignItems: 'flex-start'
   },
   amountAreaLeftText: {
-    fontSize: 14
+    fontSize: scaleFont(14)
   },
   amountAreaMiddle: {
     paddingTop: 10,
@@ -102,12 +103,12 @@ export const styles = {
     paddingBottom: 4
   },
   amountAreaMiddleTopText: {
-    fontSize: 26,
+    fontSize: scaleFont(26),
     color: THEME.COLORS.GRAY_1
   },
   amountAreaMiddleBottom: {},
   amountAreaMiddleBottomText: {
-    fontSize: 14,
+    fontSize: scaleFont(14),
     color: THEME.COLORS.GRAY_2
   },
   amountAreaRight: {
@@ -117,7 +118,7 @@ export const styles = {
   },
   amountAreaRightText: {
     color: THEME.COLORS.GRAY_2,
-    fontSize: 14
+    fontSize: scaleFont(14)
   },
   editableFiatRow: {
     flexDirection: 'row',
@@ -140,7 +141,7 @@ export const styles = {
   },
   editableFiat: {
     color: THEME.COLORS.GRAY_1,
-    fontSize: 17,
+    fontSize: scaleFont(17),
     textAlign: 'center',
     height: PLATFORM.OS === 'ios' ? 26 : 34,
     flex: 1,
@@ -153,15 +154,12 @@ export const styles = {
   },
   editableFiatRightText: {
     color: THEME.COLORS.GRAY_2,
-    fontSize: 14
+    fontSize: scaleFont(14)
   },
   categoryRow: {
-    paddingTop: 15,
-    marginTop: 10,
+    marginTop: 18,
     flexDirection: 'row',
-    paddingLeft: 15,
-    paddingRight: 15,
-    height: 44
+    paddingHorizontal: 15
   },
   modalCategoryRow: {
     paddingTop: 8,
@@ -173,24 +171,22 @@ export const styles = {
   categoryLeft: {
     borderRadius: 3,
     borderWidth: 1,
-    paddingLeft: 5,
-    paddingRight: 5,
-    paddingTop: 4,
-    paddingBottom: 6,
-    height: 29
+    paddingHorizontal: 10,
+    paddingTop: 7,
+    paddingBottom: 8
   },
   categoryLeftText: {
-    fontSize: 15
+    fontSize: scaleFont(17),
+    lineHeight: scaleFont(20)
   },
   categoryInputArea: {
     flex: 1,
     borderBottomWidth: 1,
     borderBottomColor: '#CCCCCC',
     marginLeft: 11,
-    height: 27,
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    flexDirection: 'row'
+    height: scaleFont(20) + 15,
+    flexDirection: 'column',
+    justifyContent: 'flex-end'
   },
   modalCategoryInputArea: {
     flex: 1,
@@ -203,17 +199,14 @@ export const styles = {
   },
   categoryInput: {
     paddingTop: 4,
-    height: PLATFORM.OS === 'ios' ? 22 : 26,
-    fontSize: 13,
+    fontSize: scaleFont(15),
     flex: 1,
     color: THEME.COLORS.GRAY_1,
     fontFamily: THEME.FONTS.DEFAULT
   },
   notesRow: {
-    paddingBottom: 20,
-    paddingTop: 14,
-    paddingLeft: 15,
-    paddingRight: 15
+    paddingVertical: 20,
+    paddingHorizontal: 15
   },
   notesInputWrap: {
     borderWidth: 1,
@@ -224,7 +217,7 @@ export const styles = {
   },
   notesInput: {
     color: THEME.COLORS.GRAY_2,
-    fontSize: 15,
+    fontSize: scaleFont(15),
     fontFamily: THEME.FONTS.DEFAULT,
     paddingVertical: 0
   },
@@ -250,7 +243,7 @@ export const styles = {
   },
   advancedTxText: {
     color: THEME.COLORS.SECONDARY,
-    fontSize: 14,
+    fontSize: scaleFont(14),
     paddingTop: 12,
     paddingBottom: 12,
     alignSelf: 'center'
@@ -285,14 +278,14 @@ export const styles = {
     marginRight: 5
   },
   rowCategoryText: {
-    fontSize: 18,
+    fontSize: scaleFont(18),
     color: '#58595C'
   },
   rowPlusWrap: {
     justifyContent: 'center'
   },
   rowPlus: {
-    fontSize: 16,
+    fontSize: scaleFont(16),
     color: '#58595C'
   },
 
@@ -342,13 +335,13 @@ export const styles = {
     justifyContent: 'center'
   },
   contactName: {
-    fontSize: 16,
+    fontSize: scaleFont(16),
     color: '#58595C',
     textAlignVertical: 'center'
   },
   contactBitAmount: {
-    fontSize: 16,
-    color: '#000000',
+    fontSize: scaleFont(16),
+    color: THEME.COLORS.BLACK,
     textAlignVertical: 'center'
   },
 
@@ -379,7 +372,7 @@ export const styles = {
     justifyContent: 'center'
   },
   blockExplorerButtonText: {
-    fontSize: 18,
+    fontSize: scaleFont(18),
     color: THEME.COLORS.ACCENT_BLUE,
     alignSelf: 'center'
   }
