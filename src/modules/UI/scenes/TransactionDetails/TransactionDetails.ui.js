@@ -515,7 +515,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                   }
                 ]}
               >
-                <View style={[styles.modalCategoryRow]}>
+                <View style={[styles.modalCategoryRow]} id='modalCategoryRow'>
                   <TouchableOpacity style={[styles.categoryLeft, { borderColor: categoryColor }]} disabled>
                     <FormattedText style={[{ color: categoryColor }, styles.categoryLeftText]}>{types[this.state.type].syntax}</FormattedText>
                   </TouchableOpacity>
@@ -539,6 +539,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                   </View>
                 </View>
                 <SubCategorySelect
+                  extraTopSpace={8}
                   onPressFxn={this.onSelectSubCategory}
                   enteredSubcategory={this.state.subCategory}
                   usableHeight={PLATFORM.usableHeight}

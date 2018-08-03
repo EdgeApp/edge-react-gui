@@ -6,7 +6,6 @@ import React, { Component } from 'react'
 import { TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import Picker from 'react-native-picker'
 import { sprintf } from 'sprintf-js'
-
 import s from '../../../../locales/strings.js'
 import THEME from '../../../../theme/variables/airbitz'
 import * as UTILS from '../../../utils'

@@ -15,13 +15,16 @@ const categories = ['income', 'expense', 'exchange', 'transfer']
 type State = {
   subcategories: Array<string>,
   filteredSubcategories: Array<string>,
-  enteredSubcategory: string
+  enteredSubcategory: string,
+
 }
 type Props = {
   subcategoriesList: Array<string>,
   enteredSubcategory: string,
   usableHeight: number,
-  onPressFxn: (input: string) => void
+  onPressFxn: (input: string) => void,
+  containerStyle?: Object,
+  extraTopSpace: number
 }
 
 class SubCategorySelect extends Component<Props, State> {
@@ -36,6 +39,7 @@ class SubCategorySelect extends Component<Props, State> {
   }
 
   render () {
+    const { extraTopSpace } = this.props
     const filteredSubcats = !this.props.enteredSubcategory
       ? this.props.subcategoriesList
       : this.props.subcategoriesList.filter(entry => entry.indexOf(this.props.enteredSubcategory) >= 0)
@@ -55,7 +59,7 @@ class SubCategorySelect extends Component<Props, State> {
         style={[{ width: PLATFORM.deviceWidth, height: PLATFORM.usableHeight }]}
         keyExtractor={this.keyExtractor}
         height={this.props.usableHeight - 67}
-        extraTopSpace={0}
+        extraTopSpace={extraTopSpace || 0}
         filterArray={newPotentialSubCategoriesFiltered}
       />
     )
