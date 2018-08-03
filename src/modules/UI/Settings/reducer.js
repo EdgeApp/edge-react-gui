@@ -28,6 +28,7 @@ export const initialState = {
   isTouchSupported: false,
   isTouchEnabled: false,
   isOtpEnabled: false,
+  showOnBoarding: false,
   otpKey: null,
   otpResetDate: null,
   otpResetPending: false,
@@ -93,6 +94,7 @@ export type SettingsState = {
     arrayPlugins: Array<EdgeCurrencyPlugin>,
     supportedWalletTypes: Array<string>
   },
+  showOnBoarding: boolean,
   confirmPasswordError: string,
   sendLogsStatus: string,
   isAccountBalanceVisible: boolean,
@@ -178,6 +180,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         otpMode,
         denominationKeys,
         customTokensSettings,
+        showOnBoarding,
         isAccountBalanceVisible,
         isWalletFiatBalanceVisible
       } = data
@@ -197,6 +200,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         pinMode,
         pinLoginEnabled,
         otpMode,
+        showOnBoarding,
         otpResetDate: account.otpResetDate,
         isAccountBalanceVisible,
         isWalletFiatBalanceVisible
@@ -512,6 +516,9 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
 
     case ACTION.ADD_CURRENCY_PLUGIN: {
       return currencyPLuginUtil(state, data)
+    }
+    case Constants.COMPLETE_ONBOARDING: {
+      return {...state, showOnBoarding: false}
     }
 
     case ACTION.SET_ACCOUNT_BALANCE_VISIBILITY: {
