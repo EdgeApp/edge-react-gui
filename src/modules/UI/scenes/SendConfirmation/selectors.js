@@ -97,7 +97,19 @@ export const getForceUpdateGuiCounter = (state: State): number => getScene(state
 export const getNetworkFeeOption = (state: State): string => getParsedUri(state).networkFeeOption || initialState.parsedUri.networkFeeOption || ''
 export const getCustomNetworkFee = (state: State): any => getParsedUri(state).customNetworkFee || initialState.parsedUri.customNetworkFee || {}
 export const getMetadata = (state: State): EdgeMetadata => getParsedUri(state).metadata || initialState.parsedUri.metadata || {}
-export const getPublicAddress = (state: State): string => getParsedUri(state).publicAddress || initialState.parsedUri.publicAddress || ''
+export const getPublicAddress = (state: State): string => {
+  try {
+    return (
+      getParsedUri(state).publicAddress ||
+      initialState.parsedUri.publicAddress ||
+      // $FlowFixMe
+      state.ui.scenes.sendConfirmation.spendInfo.spendTargets[0].publicAddress ||
+      ''
+    )
+  } catch (e) {
+    return ''
+  }
+}
 export const getNativeAmount = (state: State): string | void => state.ui.scenes.sendConfirmation.nativeAmount
 
 export const getUniqueIdentifier = (state: State): string => {
@@ -131,6 +143,9 @@ export const getSpendInfo = (state: State, newSpendInfo?: GuiMakeSpendInfo = {})
 
 export type AuthType = 'pin' | 'none'
 export const getAuthRequired = (state: State, spendInfo: EdgeSpendInfo): AuthType => {
+  const isEnabled = state.ui.settings.spendingLimits.transaction.isEnabled
+  if (!isEnabled) return 'none'
+
   const currencyCode = spendInfo.currencyCode || spendInfo.spendTargets[0].currencyCode
   const { nativeAmount } = spendInfo.spendTargets[0]
   if (!currencyCode || !nativeAmount) throw new Error('Invalid Spend Request')
@@ -141,8 +156,7 @@ export const getAuthRequired = (state: State, spendInfo: EdgeSpendInfo): AuthTyp
   const nativeToExchangeRatio = getExchangeDenomination(state, currencyCode).multiplier
   const exchangeAmount = convertNativeToExchange(nativeToExchangeRatio)(nativeAmount)
   const fiatAmount = convertCurrency(account, currencyCode, isoFiatCurrencyCode, parseFloat(exchangeAmount))
+  const exceedsLimit = fiatAmount >= spendingLimits.transaction.amount
 
-  const authType = fiatAmount >= spendingLimits.transaction.amount ? 'pin' : 'none'
-
-  return authType
+  return exceedsLimit ? 'pin' : 'none'
 }

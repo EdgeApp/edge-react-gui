@@ -28,24 +28,24 @@ export const initialState = {
   }
 }
 
-export const isEnabled = (state: boolean = true, action: Action) => {
+export const isEnabled = (state: boolean = initialState.transaction.isEnabled, action: Action) => {
   if (!action.data) return state
   switch (action.type) {
     case ACCOUNT_INIT_COMPLETE:
     case NEW_SPENDING_LIMITS: {
-      return action.data.spendingLimits.transaction.isEnabled || state
+      return action.data.spendingLimits.transaction.isEnabled
     }
     default:
       return state
   }
 }
 
-export const amount = (state: number = 100, action: Action) => {
+export const amount = (state: number = initialState.transaction.amount, action: Action) => {
   if (!action.data) return state
   switch (action.type) {
     case ACCOUNT_INIT_COMPLETE:
     case NEW_SPENDING_LIMITS: {
-      return action.data.spendingLimits.transaction.amount || state
+      return action.data.spendingLimits.transaction.amount
     }
     default:
       return state
