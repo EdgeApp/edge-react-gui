@@ -9,7 +9,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
       }
     }
   />
-  <ScrollView
+  <ScrollViewMock
     style={
       Object {
         "height": "100%",
@@ -29,14 +29,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         ]
       }
     >
-      <Component
+      <View
         style={
           Array [
             undefined,
           ]
         }
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -70,8 +70,8 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             : 
             
           </FormattedText>
-        </Component>
-      </Component>
+        </View>
+      </View>
     </Gradient>
     <RowRoute
       disabled={false}
@@ -169,14 +169,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         ]
       }
     >
-      <Component
+      <View
         style={
           Array [
             undefined,
           ]
         }
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -208,10 +208,10 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             Options
           </FormattedText>
-        </Component>
-      </Component>
+        </View>
+      </View>
     </Gradient>
-    <Component>
+    <View>
       <RowRoute
         disabled={false}
         leftText="Spending Limits"
@@ -291,7 +291,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         onPress={[Function]}
         rightText=""
       />
-      <Component
+      <View
         style={
           Array [
             Object {
@@ -306,8 +306,8 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           onPressFunction={[Function]}
           text="Debug"
         />
-      </Component>
-      <Component
+      </View>
+      <View
         style={
           Object {
             "flex": 1,
@@ -315,7 +315,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           }
         }
       />
-    </Component>
+    </View>
     <RestoreWalletsModal
       isActive={false}
       onBackButtonPress={[Function]}
@@ -402,7 +402,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         }
       }
     />
-  </ScrollView>
+  </ScrollViewMock>
 </SafeAreaViewComponent>
 `;
 
@@ -415,7 +415,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
       }
     }
   />
-  <ScrollView
+  <ScrollViewMock
     style={
       Object {
         "height": "100%",
@@ -435,14 +435,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         ]
       }
     >
-      <Component
+      <View
         style={
           Array [
             undefined,
           ]
         }
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -476,8 +476,8 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             : 
             
           </FormattedText>
-        </Component>
-      </Component>
+        </View>
+      </View>
     </Gradient>
     <RowRoute
       disabled={false}
@@ -575,14 +575,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         ]
       }
     >
-      <Component
+      <View
         style={
           Array [
             undefined,
           ]
         }
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -614,10 +614,10 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             Options
           </FormattedText>
-        </Component>
-      </Component>
+        </View>
+      </View>
     </Gradient>
-    <Component>
+    <View>
       <RowRoute
         disabled={false}
         leftText="Spending Limits"
@@ -697,7 +697,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         onPress={[Function]}
         rightText=""
       />
-      <Component
+      <View
         style={
           Array [
             Object {
@@ -712,8 +712,8 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           onPressFunction={[Function]}
           text="Debug"
         />
-      </Component>
-      <Component
+      </View>
+      <View
         style={
           Object {
             "flex": 1,
@@ -721,7 +721,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           }
         }
       />
-    </Component>
+    </View>
     <RestoreWalletsModal
       isActive={false}
       onBackButtonPress={[Function]}
@@ -808,6 +808,6 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         }
       }
     />
-  </ScrollView>
+  </ScrollViewMock>
 </SafeAreaViewComponent>
 `;
