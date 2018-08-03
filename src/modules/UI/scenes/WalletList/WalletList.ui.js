@@ -1,15 +1,16 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { ActivityIndicator, Animated, FlatList, Image, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import slowlog from 'react-native-slowlog'
 import SortableListView from 'react-native-sortable-listview'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import iconImage from '../../../../assets/images/otp/OTP-badge_sm.png'
 import WalletIcon from '../../../../assets/images/walletlist/my-wallets.png'
 import { StaticModalComponent, TwoButtonTextModalComponent } from '../../../../components/indexComponents'
+import OnBoardingConnector from '../../../../connectors/scene/OnBoardingConnector.js'
 import * as Constants from '../../../../constants/indexConstants.js'
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
@@ -17,8 +18,8 @@ import { TwoButtonModalStyle } from '../../../../styles/indexStyles.js'
 import * as UTILS from '../../../utils'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
-import SafeAreaView from '../../components/SafeAreaView/index.js'
 import ProgressBar from '../../components/ProgressBar/ProgressBar.ui.js'
+import SafeAreaView from '../../components/SafeAreaView/index.js'
 import FullWalletListRow from './components/WalletListRow/FullWalletListRow.ui.js'
 import SortableWalletListRow from './components/WalletListRow/SortableWalletListRow.ui.js'
 import WalletOptions from './components/WalletOptions/WalletOptionsConnector.ui.js'
@@ -55,6 +56,7 @@ type Props = {
   wallets: any,
   renameWalletInput: string,
   otpResetPending: boolean,
+  showOnBoarding: boolean,
   updateArchivedWalletsOrder: (Array<string>) => void,
   updateActiveWalletsOrder: (Array<string>) => void,
   walletRowOption: (walletId: string, option: string, archived: boolean) => void,
@@ -231,6 +233,9 @@ export default class WalletList extends Component<Props, State> {
   }
 
   showModal = () => {
+    if (this.props.showOnBoarding) {
+      return <OnBoardingConnector />
+    }
     if (this.state.showOtpResetModal) {
       return (
         <TwoButtonTextModalComponent
@@ -249,6 +254,7 @@ export default class WalletList extends Component<Props, State> {
     if (this.state.showMessageModal) {
       return <StaticModalComponent cancel={this.cancelStatic} body={this.state.messageModalMessage} modalDismissTimerSeconds={8} />
     }
+
     return null
   }
   disableOtp = () => {

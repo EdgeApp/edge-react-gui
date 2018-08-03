@@ -6,6 +6,7 @@ import { Platform } from 'react-native'
 import Locale from 'react-native-locale'
 import PushNotification from 'react-native-push-notification'
 import { Actions } from 'react-native-router-flux'
+import { sprintf } from 'sprintf-js'
 
 import * as actions from '../../actions/indexActions'
 import * as Constants from '../../constants/indexConstants'
@@ -19,7 +20,6 @@ import { updateWalletsRequest } from '../Core/Wallets/action.js'
 import type { Dispatch, GetState } from '../ReduxTypes'
 import { insertWalletIdsForProgress } from '../UI/Wallets/action.js'
 import { getReceiveAddresses } from '../utils.js'
-import { sprintf } from 'sprintf-js'
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
@@ -51,6 +51,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
   }
   const accountInitObject = {
     account: account,
+    showOnBoarding: false,
     touchIdInfo: touchIdInfo,
     walletId: '',
     currencyCode: '',
@@ -86,6 +87,9 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     })
 
     if (account.activeWalletIds.length < 1) {
+      // we are going to assume that since there is no wallets, this is a first time user
+      accountInitObject.showOnBoarding = true
+      // set the property on the user so that we can launch on boarding
       // lets create the wallet
       const ethWalletName = s.strings.string_first_ethereum_wallet_name
       const btcWalletName = s.strings.string_first_bitcoin_wallet_name
