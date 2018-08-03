@@ -157,10 +157,8 @@ class OnBoardingComponent extends Component<Props, State> {
   }
   onRequestClose = () => {
     // do nothing, necessary callback for modal
-    console.log('OB:  on request close. ')
   }
   render () {
-    console.log('OB:  render', this.state.currentIndex)
     const styles = OnBoardingSceneStyles
     const containerWidth = PLATFORM.deviceWidth * this.state.totalSlides
     const containerStyle = {...styles.slideContainer, width: containerWidth}

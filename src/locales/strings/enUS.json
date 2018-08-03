@@ -336,6 +336,9 @@
   "spending_limits_tx_title": "Transaction Spending Limit",
   "spending_limits_tx_placeholder": "Transaction Spending Limit",
   "spending_limits_tx_description": "(Requires PIN above transaction amount)",
+  "four_digit_pin": "4 digit pin",
+  "pin": "PIN",
+
 
   "save": "Save",
   "spending_limits_warning": "** Warning **\\n\\nSetting a password spending limit may prevent you from accessing funds if your password is forgotten. Please make sure you have set up password recovery",

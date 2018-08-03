@@ -5,7 +5,7 @@ import type { EdgeMetadata, EdgeParsedUri, EdgeTransaction, EdgeSpendInfo } from
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
-import { OPEN_AB_ALERT } from '../../../../constants/indexConstants'
+import { OPEN_AB_ALERT, SEND_CONFIRMATION } from '../../../../constants/indexConstants'
 import { getAccount, getWallet } from '../../../Core/selectors.js'
 import {
   broadcastTransaction,
@@ -57,11 +57,11 @@ export const paymentProtocolUriReceived = ({ paymentProtocolURL }: EdgePaymentPr
       return makeSpend(edgeWallet, spendInfo).then(
         edgeTransaction => {
           dispatch(updatePaymentProtocolTransaction(edgeTransaction))
-          Actions.sendConfirmation('fromScan')
+          Actions[SEND_CONFIRMATION]('fromScan')
         },
         error => {
           dispatch(makeSpendFailed(error))
-          Actions.sendConfirmation('fromScan')
+          Actions[SEND_CONFIRMATION]('fromScan')
         }
       )
     })
@@ -109,7 +109,16 @@ export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => 
   const spendInfo = getSpendInfo(state)
 
   getMaxSpendable(edgeWallet, spendInfo)
-    .then(nativeAmount => dispatch(createTX({ nativeAmount }, true)))
+    .then(nativeAmount => {
+      const state = getState()
+      const spendInfo = getSpendInfo(state, { nativeAmount })
+      const authRequired = getAuthRequired(state, spendInfo)
+
+      dispatch(reset())
+
+      dispatch(newSpendInfo(spendInfo, authRequired))
+      dispatch(createTX({ nativeAmount }, true))
+    })
     .catch(e => console.log(e))
 }
 
