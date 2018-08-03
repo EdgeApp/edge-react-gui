@@ -162,11 +162,11 @@ export const styles = {
     paddingHorizontal: 15
   },
   modalCategoryRow: {
-    paddingTop: 8,
+    marginTop: 8,
     flexDirection: 'row',
     paddingLeft: 15,
     paddingRight: 15,
-    height: 38
+    height: scaleFont(20) + 15 // needs to match height ofcategoryInputArea
   },
   categoryLeft: {
     borderRadius: 3,
@@ -278,7 +278,7 @@ export const styles = {
     marginRight: 5
   },
   rowCategoryText: {
-    fontSize: scaleFont(18),
+    fontSize: scaleFont(16),
     color: '#58595C'
   },
   rowPlusWrap: {
