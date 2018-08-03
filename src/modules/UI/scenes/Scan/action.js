@@ -4,7 +4,7 @@ import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import type { EdgeParsedUri } from 'edge-core-js'
 
-import * as Constants from '../../../../constants/indexConstants.js'
+import { ADD_TOKEN, EDGE_LOGIN, SEND_CONFIRMATION } from '../../../../constants/indexConstants.js'
 import type { Dispatch, GetState } from '../../../ReduxTypes.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import { isEdgeLogin, denominationToDecimalPlaces, noOp } from '../../../utils.js'
@@ -69,7 +69,7 @@ export const parseUri = (data: string) => (dispatch: Dispatch, getState: GetStat
   if (isEdgeLogin(data)) {
     // EDGE LOGIN
     dispatch(loginWithEdge(data))
-    Actions[Constants.EDGE_LOGIN]()
+    Actions[EDGE_LOGIN]()
     return
   }
 
@@ -95,7 +95,7 @@ export const parseUri = (data: string) => (dispatch: Dispatch, getState: GetStat
           wallet: guiWallet,
           onAddToken: noOp
         }
-        return Actions.addToken(parameters)
+        return Actions[ADD_TOKEN](parameters)
       }
 
       if (isLegacyAddressUri(parsedUri)) {
@@ -115,7 +115,7 @@ export const parseUri = (data: string) => (dispatch: Dispatch, getState: GetStat
       }
 
       // PUBLIC ADDRESS URI
-      Actions.sendConfirmation('fromScan')
+      Actions[SEND_CONFIRMATION]('fromScan')
       dispatch(updateParsedURI(parsedUri))
     },
     () => {
@@ -142,7 +142,7 @@ export const legacyAddressModalContinueButtonPressed = () => (dispatch: Dispatch
       return
     }
 
-    Actions.sendConfirmation('fromScan')
+    Actions[SEND_CONFIRMATION]('fromScan')
     dispatch(updateParsedURI(parsedUri))
   })
 }

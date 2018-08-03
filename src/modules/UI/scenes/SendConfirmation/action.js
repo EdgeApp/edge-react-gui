@@ -5,7 +5,7 @@ import type { EdgeMetadata, EdgeParsedUri, EdgeTransaction, EdgeSpendInfo } from
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
-import { OPEN_AB_ALERT } from '../../../../constants/indexConstants'
+import { OPEN_AB_ALERT, SEND_CONFIRMATION } from '../../../../constants/indexConstants'
 import { getAccount, getWallet } from '../../../Core/selectors.js'
 import {
   broadcastTransaction,
@@ -57,11 +57,11 @@ export const paymentProtocolUriReceived = ({ paymentProtocolURL }: EdgePaymentPr
       return makeSpend(edgeWallet, spendInfo).then(
         edgeTransaction => {
           dispatch(updatePaymentProtocolTransaction(edgeTransaction))
-          Actions.sendConfirmation('fromScan')
+          Actions[SEND_CONFIRMATION]('fromScan')
         },
         error => {
           dispatch(makeSpendFailed(error))
-          Actions.sendConfirmation('fromScan')
+          Actions[SEND_CONFIRMATION]('fromScan')
         }
       )
     })

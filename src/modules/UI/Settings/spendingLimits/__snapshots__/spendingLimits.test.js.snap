@@ -22,7 +22,7 @@ exports[`spendingLimits should render initialState 1`] = `
 Object {
   "transaction": Object {
     "amount": 0,
-    "isEnabled": true,
+    "isEnabled": false,
   },
 }
 `;

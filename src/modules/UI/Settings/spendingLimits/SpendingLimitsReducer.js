@@ -23,12 +23,12 @@ export const newSpendingLimits = (spendingLimits: SpendingLimits) => ({
 // REDUCERS
 export const initialState = {
   transaction: {
-    isEnabled: true,
+    isEnabled: false,
     amount: 0
   }
 }
 
-export const isEnabled = (state: boolean = true, action: Action) => {
+export const isEnabled = (state: boolean = initialState.transaction.isEnabled, action: Action) => {
   if (!action.data) return state
   switch (action.type) {
     case ACCOUNT_INIT_COMPLETE:
@@ -40,7 +40,7 @@ export const isEnabled = (state: boolean = true, action: Action) => {
   }
 }
 
-export const amount = (state: number = 0, action: Action) => {
+export const amount = (state: number = initialState.transaction.amount, action: Action) => {
   if (!action.data) return state
   switch (action.type) {
     case ACCOUNT_INIT_COMPLETE:
