@@ -1,6 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-
 /* globals describe test expect */
+
+import { clone } from 'ramda'
 
 import { sendConfirmation } from './reducer.js'
 import { initialState } from './selectors.js'
@@ -20,11 +21,107 @@ describe('sendConfirmation reducer', () => {
     expect(actual).toMatchSnapshot()
   })
 
+  describe('destination', () => {
+    describe('updateTransaction', () => {
+      test('with transaction and legacyAddress', () => {
+        const parsedUri = {
+          publicAddress: 'bitcoincash:qpltjkre069mp80ylcj87832ju3zt2gr6gercn9j2z',
+          legacyAddress: '123412341234',
+          nativeAmount: '100000',
+          currencyCode: 'BCH',
+          metadata: {}
+        }
+        const transaction = {
+          blockHeight: 0,
+          currencyCode: 'BCH',
+          date: 0,
+          nativeAmount: '-681',
+          networkFee: '681',
+          otherParams: {},
+          ourReceiveAddresses: ['123123123'],
+          signedTx: '',
+          txid: ''
+        }
+        const error = null
+        const forceUpdateGui = true
+        const initialStateClone = clone(initialState)
+        const action = updateTransaction(transaction, parsedUri, forceUpdateGui, error)
+        const actual = sendConfirmation(initialStateClone, action) // use initialState after sendConfirmation reducer not longer mutates state
+
+        expect(actual).toMatchSnapshot()
+      })
+
+      test('with transaction and name', () => {
+        const parsedUri = {
+          publicAddress: 'bitcoincash:qpltjkre069mp80ylcj87832ju3zt2gr6gercn9j2z',
+          nativeAmount: '100000',
+          currencyCode: 'BCH',
+          metadata: {
+            name: 'airbitz'
+          }
+        }
+        const transaction = {
+          blockHeight: 0,
+          currencyCode: 'BCH',
+          date: 0,
+          nativeAmount: '-681',
+          networkFee: '681',
+          otherParams: {},
+          ourReceiveAddresses: ['123123123'],
+          signedTx: '',
+          txid: ''
+        }
+        const error = null
+        const forceUpdateGui = true
+        const initialStateClone = clone(initialState)
+        const action = updateTransaction(transaction, parsedUri, forceUpdateGui, error)
+        const actual = sendConfirmation(initialStateClone, action) // use initialState after sendConfirmation reducer not longer mutates state
+
+        expect(actual).toMatchSnapshot()
+      })
+
+      test('with error', () => {
+        const transaction = null
+        const parsedUri = { nativeAmount: '100000' }
+        const forceUpdateGui = true
+        const error = new Error()
+        const initialStateClone = clone(initialState)
+        const action = updateTransaction(transaction, parsedUri, forceUpdateGui, error)
+        const actual = sendConfirmation(initialStateClone, action) // use initialState after sendConfirmation reducer not longer mutates state
+
+        expect(actual).toMatchSnapshot()
+      })
+
+      test('with pin error', () => {
+        const parsedUri = null
+        const transaction = {
+          blockHeight: 0,
+          currencyCode: 'BCH',
+          date: 0,
+          nativeAmount: '-681',
+          networkFee: '681',
+          otherParams: {},
+          ourReceiveAddresses: ['123123123'],
+          signedTx: '',
+          txid: ''
+        }
+        const error = new Error('Incorrect Pin')
+        const forceUpdateGui = true
+        const initialStateClone = clone(initialState)
+        const action = updateTransaction(transaction, parsedUri, forceUpdateGui, error)
+        const actual = sendConfirmation(initialStateClone, action) // use initialState after sendConfirmation reducer not longer mutates state
+
+        expect(actual).toMatchSnapshot()
+      })
+    })
+  })
+
   describe('isEditable', () => {
     test('UPDATE_PAYMENT_PROTOCOL_TRANSACTION', () => {
       const edgeTransaction = { id: '123', nativeAmount: '123' }
       const action = updatePaymentProtocolTransaction(edgeTransaction)
-      const actual = sendConfirmation(initialState, action)
+      const initialStateClone = clone(initialState)
+      const actual = sendConfirmation(initialStateClone, action)
 
       expect(actual).toMatchSnapshot()
     })
@@ -32,7 +129,8 @@ describe('sendConfirmation reducer', () => {
     test('MAKE_PAYMENT_PROTOCOL_TRANSACTION_FAILED', () => {
       const error = new Error()
       const action = makeSpendFailed(error)
-      const actual = sendConfirmation(initialState, action)
+      const initialStateClone = clone(initialState)
+      const actual = sendConfirmation(initialStateClone, action)
 
       expect(actual).toMatchSnapshot()
     })
@@ -42,7 +140,8 @@ describe('sendConfirmation reducer', () => {
     test('UPDATE_TRANSACTION', () => {
       const error = new Error()
       const action = updateTransaction(null, null, null, error)
-      const actual = sendConfirmation(initialState, action)
+      const initialStateClone = clone(initialState)
+      const actual = sendConfirmation(initialStateClone, action)
 
       expect(actual).toMatchSnapshot()
     })
@@ -50,7 +149,8 @@ describe('sendConfirmation reducer', () => {
     test('MAKE_PAYMENT_PROTOCOL_TRANSACTION_FAILED', () => {
       const error = new Error()
       const action = makeSpendFailed(error)
-      const actual = sendConfirmation(initialState, action)
+      const initialStateClone = clone(initialState)
+      const actual = sendConfirmation(initialStateClone, action)
 
       expect(actual).toMatchSnapshot()
     })
@@ -58,21 +158,16 @@ describe('sendConfirmation reducer', () => {
 
   test('pin', () => {
     const action = newPin('1234')
-    const actual = sendConfirmation(initialState, action)
-
-    expect(actual).toMatchSnapshot()
-  })
-
-  test('pin', () => {
-    const action = newPin('1234')
-    const actual = sendConfirmation(initialState, action)
+    const initialStateClone = clone(initialState)
+    const actual = sendConfirmation(initialStateClone, action)
 
     expect(actual).toMatchSnapshot()
   })
 
   test('pending', () => {
     const action = updateSpendPending(true)
-    const actual = sendConfirmation(initialState, action)
+    const initialStateClone = clone(initialState)
+    const actual = sendConfirmation(initialStateClone, action)
 
     expect(actual).toMatchSnapshot()
   })
