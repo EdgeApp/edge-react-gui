@@ -19,7 +19,7 @@ export const sendConfirmationLegacy = (state: SendConfirmationState = initialSta
       }
       if (!parsedUri) return { ...state, forceUpdateGuiCounter, transaction }
 
-      const { metadata, customNetworkFee, ...others } = parsedUri
+      const { metadata = {}, customNetworkFee, ...others } = parsedUri
       if (!isEqual(state.parsedUri.metadata, metadata)) {
         state.parsedUri.metadata = { ...state.parsedUri.metadata, ...metadata }
       }
@@ -29,7 +29,7 @@ export const sendConfirmationLegacy = (state: SendConfirmationState = initialSta
       }
 
       const nativeAmount = parsedUri.nativeAmount || state.nativeAmount || '0'
-      const destination = parsedUri.publicAddress || state.destination
+      const destination = metadata.name || parsedUri.legacyAddress || parsedUri.publicAddress || state.destination
 
       return {
         ...state,
