@@ -217,14 +217,21 @@ export const getSyncedSubcategoriesFile = (account: EdgeAccount) =>
   // $FlowFixMe folder not found on EdgeAccount type
   account.folder.file(CATEGORIES_FILENAME)
 
-export const getLocalSettings = (account: EdgeAccount) =>
-  getLocalSettingsFile(account)
+export const getLocalSettings = (account: EdgeAccount) => {
+  return getLocalSettingsFile(account)
     .getText()
     .then(JSON.parse)
-    .catch(() =>
+    .catch(() => {
       // If Settings.json doesn't exist yet, create it, and return it
-      setLocalSettings(account, LOCAL_ACCOUNT_DEFAULTS).then(() => LOCAL_ACCOUNT_DEFAULTS)
-    )
+      return setLocalSettings(account, LOCAL_ACCOUNT_DEFAULTS).then(() => LOCAL_ACCOUNT_DEFAULTS)
+    })
+    .then(settings => {
+      return {
+        ...LOCAL_ACCOUNT_DEFAULTS,
+        ...settings
+      }
+    })
+}
 
 export const setLocalSettings = (account: EdgeAccount, settings: Object) => {
   const text = JSON.stringify(settings)

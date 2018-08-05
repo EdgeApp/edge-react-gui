@@ -301,7 +301,7 @@
   "password_check_skip": "Please create a new account and transfer your funds if you forgot your password.",
 
   "password": "Password",
-  
+
   "string_export_qbo": "Export Quickbooks QBO",
   "string_export_qbo_abbrev": "Email QBO",
   "string_export_csv": "Export CSV",
@@ -344,7 +344,18 @@
   "spending_limits_tx_title": "Transaction Spending Limit",
   "spending_limits_tx_placeholder": "Transaction Spending Limit",
   "spending_limits_tx_description": "(Requires PIN above transaction amount)",
+  "four_digit_pin": "4 digit pin",
+  "pin": "PIN",
+
 
   "save": "Save",
-  "spending_limits_warning": "** Warning **\\n\\nSetting a password spending limit may prevent you from accessing funds if your password is forgotten. Please make sure you have set up password recovery"  
+  "spending_limits_warning": "** Warning **\\n\\nSetting a password spending limit may prevent you from accessing funds if your password is forgotten. Please make sure you have set up password recovery",
+  "onboarding_button": "Got It",
+  "onboarding_skip_button": "Skip",
+  "onboarding_slide_1": "\n\nTap [+] to create new walllets for other cryptocurrencies.\nTap on a wallet name to send or receive funds for that wallet",
+  "onboarding_slide_2": "Tap the 3 dots to the right of an Ethereum wallet to add token support",
+  "onboarding_slide_3": "To receive cryptocurrency from others [copy] or [share] your wallet address, or have them scan your QR code here ",
+  "onboarding_slide_4": "To send cryptocurrency scan a friend's QR code here, or paste the code via the [Address] button.",
+  "onboarding_slide_5": "Exchange cryptocurrencies by choosing the Source and Destination wallet to trade between them."
+
 }

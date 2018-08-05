@@ -8,18 +8,18 @@ import * as ACTION from './action'
 import { initialState } from './selectors'
 import type { SendConfirmationState } from './selectors'
 
-export const sendConfirmation = (state: SendConfirmationState = initialState, action: Action) => {
+export const sendConfirmationLegacy = (state: SendConfirmationState = initialState, action: Action) => {
   const { type, data = {} } = action
   switch (type) {
     case ACTION.UPDATE_TRANSACTION: {
-      const { transaction, parsedUri, forceUpdateGui, error } = data
+      const { transaction, parsedUri, forceUpdateGui } = data
       let forceUpdateGuiCounter = state.forceUpdateGuiCounter
       if (forceUpdateGui) {
         forceUpdateGuiCounter++
       }
-      if (!parsedUri) return { ...state, forceUpdateGuiCounter, error, transaction }
+      if (!parsedUri) return { ...state, forceUpdateGuiCounter, transaction }
 
-      const { metadata, customNetworkFee, ...others } = parsedUri
+      const { metadata = {}, customNetworkFee, ...others } = parsedUri
       if (!isEqual(state.parsedUri.metadata, metadata)) {
         state.parsedUri.metadata = { ...state.parsedUri.metadata, ...metadata }
       }
@@ -29,13 +29,12 @@ export const sendConfirmation = (state: SendConfirmationState = initialState, ac
       }
 
       const nativeAmount = parsedUri.nativeAmount || state.nativeAmount || '0'
-      const destination = parsedUri.publicAddress || state.destination
+      const destination = metadata.name || parsedUri.legacyAddress || parsedUri.publicAddress || state.destination
 
       return {
         ...state,
         transaction,
         forceUpdateGuiCounter,
-        error,
         nativeAmount,
         destination,
         parsedUri: {
@@ -51,26 +50,15 @@ export const sendConfirmation = (state: SendConfirmationState = initialState, ac
 
       return {
         ...state,
-        transaction,
-        isEditable: false
-      }
-    }
-
-    case ACTION.MAKE_PAYMENT_PROTOCOL_TRANSACTION_FAILED: {
-      if (!action.data) return state
-      const { error } = data
-
-      return {
-        ...state,
-        error,
-        isEditable: false
+        transaction
       }
     }
 
     case ACTION.NEW_SPEND_INFO: {
       if (!action.data) return state
-      const { spendInfo, spendInfo: { metadata: { name: destination } }, authRequired } = data
+      const { spendInfo, spendInfo: { metadata: { name } }, authRequired } = data
       const nativeAmount = spendInfo.nativeAmount || spendInfo.spendTargets.reduce((sum, target) => add(sum, target.nativeAmount), '0')
+      const destination = name || spendInfo.spendTargets[0].publicAddress
       return {
         ...state,
         spendInfo,
@@ -89,24 +77,17 @@ export const sendConfirmation = (state: SendConfirmationState = initialState, ac
       }
     }
 
-    case ACTION.UPDATE_SPEND_PENDING: {
-      const { pending } = data
-      return {
-        ...state,
-        pending
-      }
-    }
+    default:
+      return state
+  }
+}
 
-    case ACTION.NEW_PIN: {
-      const { pin } = data
-      return {
-        ...state,
-        pin
-      }
-    }
-
-    case ACTION.RESET: {
-      return initialState
+export const error = (state: Error | null = null, action: Action) => {
+  switch (action.type) {
+    case ACTION.UPDATE_TRANSACTION:
+    case ACTION.MAKE_PAYMENT_PROTOCOL_TRANSACTION_FAILED: {
+      if (!action.data) throw new Error('Invalid Action')
+      return action.data.error
     }
 
     default:
@@ -114,4 +95,50 @@ export const sendConfirmation = (state: SendConfirmationState = initialState, ac
   }
 }
 
+export const isEditable = (state: boolean = true, action: Action) => {
+  switch (action.type) {
+    case ACTION.UPDATE_PAYMENT_PROTOCOL_TRANSACTION:
+    case ACTION.MAKE_PAYMENT_PROTOCOL_TRANSACTION_FAILED: {
+      if (!action.data) throw new Error('Invalid Action')
+      return false
+    }
+
+    default:
+      return state
+  }
+}
+
+export const pin = (state: string = '', action: Action) => {
+  switch (action.type) {
+    case ACTION.NEW_PIN: {
+      if (!action.data) throw new Error('Invalid Action')
+      return action.data.pin
+    }
+    default:
+      return state
+  }
+}
+
+export const pending = (state: boolean = false, action: Action) => {
+  switch (action.type) {
+    case ACTION.UPDATE_SPEND_PENDING: {
+      if (!action.data) throw new Error('Invalid Action')
+      return action.data.pending
+    }
+    default:
+      return state
+  }
+}
+
+export const sendConfirmation = (state: SendConfirmationState = initialState, action: Action) => {
+  if (action.type === ACTION.RESET) return initialState
+
+  return {
+    ...sendConfirmationLegacy(state, action),
+    isEditable: isEditable(state.isEditable, action),
+    error: error(state.error, action),
+    pin: pin(state.pin, action),
+    pending: pending(state.pending, action)
+  }
+}
 export default sendConfirmation

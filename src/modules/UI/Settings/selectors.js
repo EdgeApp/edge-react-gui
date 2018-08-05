@@ -212,3 +212,7 @@ export const getOtpResetPending = (state: State) => {
   const otpResetPending = settings.otpResetPending
   return otpResetPending
 }
+export const runOnBoarding = (state: State) => {
+  const settings = getSettings(state)
+  return settings.showOnBoarding
+}
