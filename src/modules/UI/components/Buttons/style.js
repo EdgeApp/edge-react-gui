@@ -14,7 +14,7 @@ export const styles = {
     height: THEME.BUTTONS.HEIGHT,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100%',
+    flex: 1,
     borderRadius: 3
   },
   stylizedButtonText: {
