@@ -19,13 +19,13 @@ export default class DeleteTokenButtons extends Component<DeleteTokenButtonsProp
       <View style={[styles.deleteModalButtonsArea]}>
         <SecondaryButton
           text={s.strings.string_cancel_cap}
-          onPressFunction={this.props.onPressCancel}
+          onPress={this.props.onPressCancel}
           buttonStyle={[styles.modalCancelButton, styles.button]}
         />
         <PrimaryButton
           text={s.strings.string_delete}
           style={[styles.modalDeleteButton, styles.button]}
-          onPressFunction={this.props.onPressDelete}
+          onPress={this.props.onPressDelete}
           processingElement={<ActivityIndicator />}
           processingFlag={this.props.processingFlag}
         />

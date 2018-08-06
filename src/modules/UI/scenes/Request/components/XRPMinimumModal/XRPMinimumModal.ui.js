@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import { Text } from 'react-native'
 import s from '../../../../../../locales/strings.js'
 import { InteractiveModal } from '../../../../components/Modals/InteractiveModal/InteractiveModal.ui.js'
-import {PrimaryButton} from '../../../../components/Modals/components/PrimaryButton.ui.js'
+import {PrimaryButton} from '../../../../components/Buttons'
 import { Icon } from '../../../../components/Icon/Icon.ui.js'
 import { EXCLAMATION, MATERIAL_COMMUNITY } from '../../../../../../constants/IconConstants.js'
 
@@ -19,7 +19,7 @@ export default class XRPMinimumModal extends Component<XRPMinimumModalStateProps
 
       <InteractiveModal isActive={this.props.visibilityBoolean} onBackButtonPress={this.props.onExit} onBackdropPress={this.props.onExit} onModalHide={this.props.onExit}>
         <InteractiveModal.Icon>
-          <Icon style={{}} type={MATERIAL_COMMUNITY} name={EXCLAMATION} size={30} />
+          <Icon type={MATERIAL_COMMUNITY} name={EXCLAMATION} size={30} />
         </InteractiveModal.Icon>
 
         <InteractiveModal.Title>

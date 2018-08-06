@@ -109,11 +109,11 @@ export default class ManageTokens extends Component<ManageTokensProps, State> {
                 />
               </View>
               <View style={[styles.buttonsArea]}>
-                <SecondaryButton style={[styles.addButton]} text={s.strings.addtoken_add} onPressFunction={this.goToAddTokenScene} />
+                <SecondaryButton style={[styles.addButton]} text={s.strings.addtoken_add} onPress={this.goToAddTokenScene} />
                 <PrimaryButton
                   text={s.strings.string_save}
                   style={[styles.saveButton]}
-                  onPressFunction={this.saveEnabledTokenList}
+                  onPress={this.saveEnabledTokenList}
                   processingElement={<ActivityIndicator />}
                   processingFlag={this.props.manageTokensPending}
                 />

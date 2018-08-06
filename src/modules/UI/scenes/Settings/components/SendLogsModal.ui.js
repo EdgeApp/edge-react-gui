@@ -72,9 +72,9 @@ export default class SendLogsModal extends Component {
 
     switch (status) {
       case SUCCESS:
-        return <PrimaryButton text={s.strings.string_ok} onPressFunction={this.onCancel} />
+        return <PrimaryButton text={s.strings.string_ok} onPress={this.onCancel} />
       case FAILURE:
-        return <PrimaryButton text={s.strings.string_ok} onPressFunction={this.onCancel} />
+        return <PrimaryButton text={s.strings.string_ok} onPress={this.onCancel} />
       case PENDING:
         return <ModalButtons onDone={this.onDone} onCancel={this.onCancel} />
       default:

@@ -123,7 +123,7 @@ export class AddToken extends Component<AddTokenProps, State> {
               <PrimaryButton
                 text={s.strings.string_save}
                 style={styles.saveButton}
-                onPressFunction={this._onSave}
+                onPress={this._onSave}
                 processingElement={<ActivityIndicator />}
                 processingFlag={this.props.addTokenPending}
               />

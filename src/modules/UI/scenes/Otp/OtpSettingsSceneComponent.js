@@ -81,9 +81,9 @@ export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, S
 
   renderButton = () => {
     if (this.props.isOtpEnabled) {
-      return <TertiaryButton text={s.strings.otp_disable} onPressFunction={this.onPress} />
+      return <TertiaryButton text={s.strings.otp_disable} onPress={this.onPress} />
     }
-    return <PrimaryButton text={s.strings.otp_enable} onPressFunction={this.onPress} />
+    return <PrimaryButton text={s.strings.otp_enable} onPress={this.onPress} />
   }
   renderKeyBox = (styles: Object) => {
     if (this.props.isOtpEnabled) {

@@ -4,7 +4,8 @@ import React, { Component } from 'react'
 import { Text } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { InteractiveModal, PrimaryButton, SecondaryButton, TextInput } from '../../../../components/Modals'
+import { InteractiveModal } from '../../../../components/Modals'
+import { PrimaryButton, SecondaryButton } from '../../../../components/Buttons'
 import { Icon } from '../../../../components/Icon/Icon.ui'
 import s from '../../../../../../locales/strings'
 

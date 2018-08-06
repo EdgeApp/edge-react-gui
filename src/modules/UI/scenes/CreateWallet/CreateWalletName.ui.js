@@ -77,11 +77,11 @@ export class CreateWalletName extends Component<Props, State> {
               onNext={this.onNext}
             />
             <View style={styles.buttons}>
-              <SecondaryButton style={[styles.back]} onPressFunction={this.onBack} text={s.strings.title_back} />
+              <SecondaryButton style={[styles.back]} onPress={this.onBack} text={s.strings.title_back} />
 
               <PrimaryButton
                 style={[styles.next]}
-                onPressFunction={this.onNext}
+                onPress={this.onNext}
                 text={s.strings.string_next_capitalized}
                 processingElement={<ActivityIndicator />}
               />

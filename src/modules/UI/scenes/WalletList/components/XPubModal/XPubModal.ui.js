@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import { Platform, Text, Alert, Clipboard } from 'react-native'
 import s from '../../../../../../locales/strings.js'
 import { InteractiveModal } from '../../../../components/Modals/InteractiveModal/InteractiveModal.ui.js'
-import {PrimaryButton} from '../../../../components/Modals/components/PrimaryButton.ui.js'
+import {PrimaryButton} from '../../../../components/Buttons'
 import { Icon } from '../../../../components/Icon/Icon.ui.js'
 import {ION_ICONS, EYE_ICON} from '../../../../../../constants/IconConstants.js'
 

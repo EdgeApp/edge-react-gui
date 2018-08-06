@@ -137,7 +137,7 @@ class OnBoardingComponent extends Component<Props, State> {
         <PrimaryButton
           style={styles.button}
           text={s.strings.onboarding_button}
-          onPressFunction={this.props.finishOnBoarding}
+          onPress={this.props.finishOnBoarding}
         />
       </View>
     }
@@ -145,13 +145,13 @@ class OnBoardingComponent extends Component<Props, State> {
       <PrimaryButton
         style={styles.buttonAlt}
         text={s.strings.onboarding_skip_button}
-        onPressFunction={this.props.finishOnBoarding}
+        onPress={this.props.finishOnBoarding}
       />
       <View style={styles.shim} />
       <PrimaryButton
         style={styles.button}
         text={s.strings.string_next}
-        onPressFunction={this.onNextSlide}
+        onPress={this.onNextSlide}
       />
     </View>
   }

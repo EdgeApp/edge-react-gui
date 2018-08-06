@@ -208,7 +208,7 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
       return (
         <PrimaryButton
           text={s.strings.string_next}
-          onPressFunction={this.props.openConfirmation}
+          onPress={this.props.openConfirmation}
           processingFlag={this.props.gettingTransaction}
           processingElement={<ActivityIndicator />}
         />

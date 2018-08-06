@@ -200,7 +200,7 @@ class AmountArea extends Component {
         </View>
         <View style={[styles.footerArea]}>
           <View style={[styles.buttonArea]}>
-            <PrimaryButton text={s.strings.string_save} style={[styles.saveButton]} onPressFunction={this.props.onPressFxn} />
+            <PrimaryButton text={s.strings.string_save} style={[styles.saveButton]} onPress={this.props.onPressFxn} />
           </View>
           {this.props.txExplorerUrl ? (
             <TouchableWithoutFeedback onPress={this.props.onPressAdvancedDetailsButton} style={[styles.advancedTxArea]}>

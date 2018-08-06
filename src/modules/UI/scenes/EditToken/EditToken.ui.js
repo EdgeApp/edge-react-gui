@@ -154,11 +154,11 @@ export default class EditToken extends Component<EditTokenComponentProps, State>
               <Text style={styles.errorMessageText}>{this.state.errorMessage}</Text>
             </View>
             <View style={[styles.buttonsArea]}>
-              <TertiaryButton text={s.strings.edittoken_delete_token} onPressFunction={this.props.showDeleteTokenModal} buttonStyle={styles.deleteButton} />
+              <TertiaryButton text={s.strings.edittoken_delete_token} onPress={this.props.showDeleteTokenModal} buttonStyle={styles.deleteButton} />
               <PrimaryButton
                 text={s.strings.string_save}
                 style={[styles.saveButton, styles.button]}
-                onPressFunction={this._onSave}
+                onPress={this._onSave}
                 processingElement={<ActivityIndicator />}
                 processingFlag={this.props.editCustomTokenProcessing}
               />

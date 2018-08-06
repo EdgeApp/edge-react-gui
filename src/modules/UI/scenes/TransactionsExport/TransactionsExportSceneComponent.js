@@ -31,14 +31,14 @@ export class TransactionsExportSceneComponent extends Component<Props> {
         <View style={styles.actionButtonContainer} >
           <PrimaryButton
             text={s.strings.string_export_qbo}
-            onPressFunction={this.exportQBO}
+            onPress={this.exportQBO}
           />
         </View>
         <View style={styles.shim} />
         <View style={styles.actionButtonContainer} >
           <PrimaryButton
             text={s.strings.string_export_csv}
-            onPressFunction={this.exportCSV}
+            onPress={this.exportCSV}
           />
         </View>
       </View>
