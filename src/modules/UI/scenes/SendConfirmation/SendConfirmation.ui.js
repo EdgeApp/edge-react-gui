@@ -191,7 +191,7 @@ export class SendConfirmation extends Component<Props, State> {
               />
 
               <Scene.Padding style={{ paddingHorizontal: 54 }}>
-                <Scene.Item style={{ alignItems: 'center' }}>
+                <Scene.Item style={{ alignItems: 'center', flex: -1 }}>
                   {(!!this.props.networkFee || !!this.props.parentNetworkFee) && (
                     <Scene.Row style={{ paddingVertical: 4 }}>
                       <Text style={[styles.feeAreaText]}>{this.networkFeeSyntax()}</Text>
