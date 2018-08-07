@@ -7,7 +7,13 @@ import { TextField } from 'react-native-material-textfield'
 import { THEME } from '../../../../theme/variables/airbitz.js'
 
 const rawStyles = {
-  pinInput: {}
+  pinInput: {
+    justifyContent: 'center'
+  },
+  debug: {
+    borderWidth: 1,
+    borderColor: 'red'
+  }
 }
 const styles = StyleSheet.create(rawStyles)
 
@@ -19,7 +25,9 @@ const DEFAULTS = {
   textColor: THEME.COLORS.WHITE,
   autoFocus: false,
   label: '',
-  keyboardType: 'numeric'
+  keyboardType: 'numeric',
+  inputContainerStyle: { paddingTop: 14, width: 45, alignItems: 'center', justifyContent: 'center' },
+  inputContainerPadding: -10
 }
 
 export type Props = {
