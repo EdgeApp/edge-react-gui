@@ -173,6 +173,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
             style={
               Object {
                 "alignItems": "center",
+                "flex": -1,
               }
             }
           >
