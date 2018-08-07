@@ -57,10 +57,6 @@ const OnBoardingSceneStyles = {
   },
   button: {
     width: '40%'
-  },
-  buttonAlt: {
-    width: '40%',
-    opacity: 0.7
   }
 }
 

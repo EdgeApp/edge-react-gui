@@ -350,7 +350,7 @@
     "** Warning **\\n\\nSetting a password spending limit may prevent you from accessing funds if your password is forgotten. Please make sure you have set up password recovery",
   "onboarding_button": "Got It",
   "onboarding_skip_button": "Skip",
-  "onboarding_slide_1": "\n\nTap [+] to create new wallets for other cryptocurrencies.\nTap on a wallet name to send or receive funds for that wallet",
+  "onboarding_slide_1": "Tap [+] to create new wallets for other cryptocurrencies.\n\nTap on a wallet name to send or receive funds for that wallet",
   "onboarding_slide_2": "Tap the 3 dots to the right of an Ethereum wallet to add token support",
   "onboarding_slide_3":
     "To receive cryptocurrency, [Copy] or [Share] your wallet address, or have the sender scan your QR code presented here at the Request Screen.",
