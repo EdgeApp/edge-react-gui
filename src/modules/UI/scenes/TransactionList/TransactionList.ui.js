@@ -139,6 +139,8 @@ export class TransactionList extends Component<Props, State> {
         return <BuyCrypto wallet={wallet}/>
       case 'ETH':
         return <BuyCrypto wallet={wallet}/>
+      case 'LTC':
+        return <BuyCrypto wallet={wallet}/>
       default:
         return null
     }
