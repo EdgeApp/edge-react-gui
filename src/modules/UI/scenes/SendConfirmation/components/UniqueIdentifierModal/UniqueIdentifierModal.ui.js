@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Text } from 'react-native'
+import { TextInput, Text } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { InteractiveModal } from '../../../../components/Modals'

@@ -1,10 +1,9 @@
 // @flow
 
 import React, { Component } from 'react'
-import { TouchableHighlight, View } from 'react-native'
-
+import { View } from 'react-native'
+import { PrimaryButton, SecondaryButton } from '../Buttons'
 import s from '../../../../locales/strings.js'
-import T from '../FormattedText/FormattedText.ui'
 import styles from './style'
 
 type Props = {
@@ -17,17 +16,13 @@ export default class OptionButtons extends Component<Props> {
   render () {
     return (
       <View style={[styles.buttonsWrap]}>
-        <TouchableHighlight style={[styles.cancelButtonWrap, styles.stylizedButton]} onPress={this.props.onNegative}>
-          <View style={styles.stylizedButtonTextWrap}>
-            <T style={[styles.cancelButton, styles.stylizedButtonText]}>{s.strings.string_cancel_cap}</T>
-          </View>
-        </TouchableHighlight>
+        <SecondaryButton style={[styles.cancelButtonWrap, styles.stylizedButton]} onPress={this.props.onNegative}>
+          <SecondaryButton.Text style={[styles.cancelButton, styles.stylizedButtonText]}>{s.strings.string_cancel_cap}</SecondaryButton.Text>
+        </SecondaryButton>
 
-        <TouchableHighlight style={[styles.doneButtonWrap, styles.stylizedButton]} onPress={this.props.onPositive}>
-          <View style={styles.stylizedButtonTextWrap}>
-            <T style={[styles.doneButton, styles.stylizedButtonText]}>{this.props.positiveText}</T>
-          </View>
-        </TouchableHighlight>
+        <PrimaryButton style={[styles.doneButtonWrap, styles.stylizedButton]} onPress={this.props.onPositive}>
+          <PrimaryButton.Text style={[styles.doneButton, styles.stylizedButtonText]}>{this.props.positiveText}</PrimaryButton.Text>
+        </PrimaryButton>
       </View>
     )
   }
