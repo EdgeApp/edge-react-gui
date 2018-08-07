@@ -11,14 +11,14 @@ const OnBoardingSlideStyles = {
   },
   innerBottom: {
     flex: 6,
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'flex-start'
   },
 
   textBox: {
-    width: '86%',
+    width: '90%',
     height: '80%',
-    padding: 10,
-    marginBottom: 15
+    padding: 5
   },
   text: {
     color: THEME.COLORS.WHITE,
