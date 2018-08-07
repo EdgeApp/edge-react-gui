@@ -25,12 +25,6 @@ export const getNextUsername = (state: State) => {
   return nextUsername
 }
 
-export const getIO = (state: State) => {
-  const context = getContext(state)
-  const io = context.io
-  return io
-}
-
 // Account
 export const getAccount = (state: State) => {
   const core = getCore(state)
