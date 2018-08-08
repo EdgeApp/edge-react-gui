@@ -111,7 +111,7 @@ export const parseUri = (data: string) => (dispatch: Dispatch, getState: GetStat
       if (isPaymentProtocolUri(parsedUri)) {
         // BIP70 URI
         // $FlowFixMe
-        return setTimeout(() => dispatch(paymentProtocolUriReceived()), 500)
+        return dispatch(paymentProtocolUriReceived())
       }
 
       // PUBLIC ADDRESS URI
