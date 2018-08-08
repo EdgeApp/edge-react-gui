@@ -96,6 +96,7 @@ export const rawStyles = {
     marginTop: 10
   },
   row: {
+    alignItems: 'center',
     width: '100%'
   },
   rowText: {
@@ -108,6 +109,9 @@ export const rawStyles = {
   },
   pinInputSpacer: {
     width: 10
+  },
+  footer: {
+    paddingVertical: 24
   },
   debug
 }

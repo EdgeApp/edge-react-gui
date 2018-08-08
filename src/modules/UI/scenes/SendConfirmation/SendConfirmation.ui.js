@@ -231,7 +231,7 @@ export class SendConfirmation extends Component<Props, State> {
 
             <Scene.Row>{this.props.pending && <ActivityIndicator style={[{ flex: 1, alignSelf: 'center' }]} size={'small'} />}</Scene.Row>
 
-            <Scene.Footer style={[styles.row]}>
+            <Scene.Footer style={styles.footer}>
               <ABSlider
                 forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
                 resetSlider={this.props.resetSlider}
