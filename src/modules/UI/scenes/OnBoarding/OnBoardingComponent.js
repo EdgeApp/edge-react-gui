@@ -134,25 +134,19 @@ class OnBoardingComponent extends Component<Props, State> {
   renderButtons = (styles: Object) => {
     if (this.state.currentIndex === this.state.totalSlides - 1) {
       return <View style={styles.buttonContainer} >
-        <PrimaryButton
-          style={styles.button}
-          text={s.strings.onboarding_button}
-          onPress={this.props.finishOnBoarding}
-        />
+        <PrimaryButton style={styles.button} onPress={this.props.finishOnBoarding}>
+          <PrimaryButton.Text>{s.strings.onboarding_button}</PrimaryButton.Text>
+        </PrimaryButton>
       </View>
     }
     return <View style={styles.buttonContainer} >
-      <PrimaryButton
-        style={styles.buttonAlt}
-        text={s.strings.onboarding_skip_button}
-        onPress={this.props.finishOnBoarding}
-      />
+      <PrimaryButton style={styles.buttonAlt} onPress={this.props.finishOnBoarding}>
+        <PrimaryButton.Text>{s.strings.onboarding_skip_button}</PrimaryButton.Text>
+      </PrimaryButton>
       <View style={styles.shim} />
-      <PrimaryButton
-        style={styles.button}
-        text={s.strings.string_next}
-        onPress={this.onNextSlide}
-      />
+      <PrimaryButton style={styles.button} onPress={this.onNextSlide}>
+        <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>
+      </PrimaryButton>
     </View>
   }
   onRequestClose = () => {

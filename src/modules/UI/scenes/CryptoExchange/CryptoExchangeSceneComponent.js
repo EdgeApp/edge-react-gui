@@ -206,12 +206,9 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
   renderButton = () => {
     if (this.props.showNextButton) {
       return (
-        <PrimaryButton
-          text={s.strings.string_next}
-          onPress={this.props.openConfirmation}
-          processingFlag={this.props.gettingTransaction}
-          processingElement={<ActivityIndicator />}
-        />
+        <PrimaryButton onPress={this.props.openConfirmation}>
+          <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>
+        </PrimaryButton>
       )
     }
     if (this.props.gettingTransaction) {

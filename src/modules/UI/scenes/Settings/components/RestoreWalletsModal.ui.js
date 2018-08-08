@@ -3,7 +3,8 @@
 import React, { Component } from 'react'
 import { Text } from 'react-native'
 
-import { InteractiveModal, PrimaryButton, SecondaryButton } from '../../../components/Buttons'
+import { PrimaryButton, SecondaryButton } from '../../../components/Buttons'
+import { InteractiveModal } from '../../../components/Modals'
 import { Icon } from '../../../components/Icon/Icon.ui'
 import s from '../../../../../locales/strings'
 

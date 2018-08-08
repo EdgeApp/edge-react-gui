@@ -304,8 +304,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
       >
         <PrimaryButton
           onPress={[Function]}
-          text="Debug"
-        />
+        >
+          <Text>
+            Debug
+          </Text>
+        </PrimaryButton>
       </View>
       <View
         style={
@@ -710,8 +713,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
       >
         <PrimaryButton
           onPress={[Function]}
-          text="Debug"
-        />
+        >
+          <Text>
+            Debug
+          </Text>
+        </PrimaryButton>
       </View>
       <View
         style={

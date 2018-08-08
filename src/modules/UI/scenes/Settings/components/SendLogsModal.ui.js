@@ -66,15 +66,23 @@ export default class SendLogsModal extends Component {
     }
   }
 
-  getModalBotton = () => {
+  getModalBottom = () => {
     const status = this.props.sendLogsStatus
     const { SUCCESS, FAILURE, PENDING } = Constants.REQUEST_STATUS
 
     switch (status) {
       case SUCCESS:
-        return <PrimaryButton text={s.strings.string_ok} onPress={this.onCancel} />
+        return (
+          <PrimaryButton style={styles.okButton} onPress={this.onCancel}>
+            <PrimaryButton.Text>{s.strings.string_ok}</PrimaryButton.Text>
+          </PrimaryButton>
+        )
       case FAILURE:
-        return <PrimaryButton text={s.strings.string_ok} onPress={this.onCancel} />
+        return (
+          <PrimaryButton style={styles.okButton} onPress={this.onCancel}>
+            <PrimaryButton.Text>{s.strings.string_ok}</PrimaryButton.Text>
+          </PrimaryButton>
+        )
       case PENDING:
         return <ModalButtons onDone={this.onDone} onCancel={this.onCancel} />
       default:
@@ -104,7 +112,7 @@ export default class SendLogsModal extends Component {
         featuredIcon={icon}
         headerText={this.getModalHeaderText()}
         modalMiddle={this.getModalMiddle()}
-        modalBottom={this.getModalBotton()}
+        modalBottom={this.getModalBottom()}
         onExitButtonFxn={this.onCancel}
       />
     )

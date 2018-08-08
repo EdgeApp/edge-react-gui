@@ -19,7 +19,9 @@ export default class CustomFees extends Component<Props> {
   render () {
     return (
       <View style={styles.customFeeButtonContainer}>
-        <PrimaryButton text={s.strings.fragment_wallets_set_custom_fees} style={styles.customFeeButton} onPress={this.props.onPressed} />
+        <PrimaryButton style={styles.customFeeButton} onPress={this.props.onPressed}>
+          <PrimaryButton.Text>{s.strings.fragment_wallets_set_custom_fees}</PrimaryButton.Text>
+        </PrimaryButton>
         <CustomFeesModal handlePress={this.props.handlePress} sourceWallet={this.props.sourceWallet} />
       </View>
     )

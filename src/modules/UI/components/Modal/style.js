@@ -111,7 +111,7 @@ export const styles = {
     paddingTop: 4
   },
   modalBottom: {
-    height: 50,
+    marginTop: 12,
     flexDirection: 'row',
     alignSelf: 'flex-end',
     alignItems: 'flex-end'
