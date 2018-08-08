@@ -51,7 +51,8 @@ export type SendConfirmationStateProps = {
   uniqueIdentifier?: string,
   destination: string,
   isEditable: boolean,
-  authRequired: 'pin' | 'none'
+  authRequired: 'pin' | 'none',
+  address: string
 }
 
 export type SendConfirmationDispatchProps = {
@@ -155,8 +156,9 @@ export class SendConfirmation extends Component<Props, State> {
     const cryptoBalanceAmountString = cryptoBalanceAmount ? intl.formatNumber(decimalOrZero(bns.toFixed(cryptoBalanceAmount, 0, 6), 6)) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)
     const balanceInFiatString = intl.formatNumber(this.props.balanceInFiat || 0, { toFixed: 2 })
 
-    const { authRequired, destination } = this.props
-    const SEND_TO_DESTINATION_TEXT = sprintf(s.strings.send_to_title, destination)
+    const { authRequired, destination, address } = this.props
+    const DESTINATION_TEXT = sprintf(s.strings.send_confirmation_to, destination)
+    const ADDRESS_TEXT = sprintf(s.strings.send_confirmation_address, address)
 
     return (
       <SafeAreaView>
@@ -201,7 +203,15 @@ export class SendConfirmation extends Component<Props, State> {
                   {!!destination && (
                     <Scene.Row style={{ paddingVertical: 4 }}>
                       <Recipient.Text style={{}}>
-                        <Text>{SEND_TO_DESTINATION_TEXT}</Text>
+                        <Text>{DESTINATION_TEXT}</Text>
+                      </Recipient.Text>
+                    </Scene.Row>
+                  )}
+
+                  {!!address && (
+                    <Scene.Row style={{ paddingVertical: 4 }}>
+                      <Recipient.Text style={{}}>
+                        <Text>{ADDRESS_TEXT}</Text>
                       </Recipient.Text>
                     </Scene.Row>
                   )}
