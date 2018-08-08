@@ -9,7 +9,8 @@ export const rawStyles = {
     padding: 14,
     borderRadius: 5,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    flex: 1
   },
   buttonText: {
     fontFamily: THEME.FONTS.DEFAULT,

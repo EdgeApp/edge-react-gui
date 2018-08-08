@@ -48,15 +48,15 @@ const OnBoardingSceneStyles = {
     height: THEME.BUTTONS.HEIGHT,
     top: '84%'
   },
+  buttonText: {
+    color: THEME.COLORS.WHITE,
+    fontSize: 16
+  },
   shim: {
     width: '5%'
   },
   button: {
     width: '40%'
-  },
-  buttonAlt: {
-    width: '40%',
-    opacity: 0.7
   }
 }
 

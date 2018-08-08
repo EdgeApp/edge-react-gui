@@ -5,7 +5,7 @@ import { Animated, Modal, View } from 'react-native'
 import s from '../../../../locales/strings.js'
 import { OnBoardingSceneStyles } from '../../../../styles/indexStyles.js'
 import { PLATFORM } from '../../../../theme/variables/platform'
-import { PrimaryButton } from '../../components/Buttons/'
+import { PrimaryButton } from '../../components/Buttons'
 import { PagingDotsComponent } from '../../components/PagingDots/PagingDotsComponent.js'
 import { OnBoardingSlideComponent } from './OnBoardingSlideComponent.js'
 
@@ -135,17 +135,23 @@ class OnBoardingComponent extends Component<Props, State> {
     if (this.state.currentIndex === this.state.totalSlides - 1) {
       return <View style={styles.buttonContainer} >
         <PrimaryButton style={styles.button} onPress={this.props.finishOnBoarding}>
-          <PrimaryButton.Text>{s.strings.onboarding_button}</PrimaryButton.Text>
+          <PrimaryButton.Text style={styles.buttonText}>{s.strings.onboarding_button}</PrimaryButton.Text>
         </PrimaryButton>
       </View>
     }
     return <View style={styles.buttonContainer} >
-      <PrimaryButton style={styles.buttonAlt} onPress={this.props.finishOnBoarding}>
-        <PrimaryButton.Text>{s.strings.onboarding_skip_button}</PrimaryButton.Text>
+      <PrimaryButton
+        style={styles.button}
+        onPress={this.props.finishOnBoarding}
+      >
+        <PrimaryButton.Text style={styles.buttonText}>{s.strings.onboarding_skip_button}</PrimaryButton.Text>
       </PrimaryButton>
       <View style={styles.shim} />
-      <PrimaryButton style={styles.button} onPress={this.onNextSlide}>
-        <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>
+      <PrimaryButton
+        style={styles.button}
+        onPress={this.onNextSlide}
+      >
+        <PrimaryButton.Text style={styles.buttonText}>{s.strings.string_next_capitalized}</PrimaryButton.Text>
       </PrimaryButton>
     </View>
   }

@@ -4,35 +4,29 @@ exports[`SendConfirmation should render with standard props 1`] = `
 <SafeAreaViewComponent>
   <Gradient
     style={
-      Array [
-        Object {
-          "alignItems": "stretch",
-          "flex": 1,
-          "flexDirection": "column",
-          "justifyContent": "flex-start",
-          "width": "100%",
-        },
-      ]
+      Object {
+        "alignItems": "stretch",
+        "flex": 1,
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+        "width": "100%",
+      }
     }
   >
     <Gradient
       style={
-        Array [
-          Object {
-            "height": 44,
-          },
-        ]
+        Object {
+          "height": 44,
+        }
       }
     />
     <View
       style={
-        Array [
-          Object {
-            "alignItems": "center",
-            "flex": 1,
-            "width": "100%",
-          },
-        ]
+        Object {
+          "alignItems": "center",
+          "flex": 1,
+          "width": "100%",
+        }
       }
     >
       <View
@@ -52,12 +46,10 @@ exports[`SendConfirmation should render with standard props 1`] = `
       >
         <FormattedText
           style={
-            Array [
-              Object {
-                "color": "#FFFFFF",
-                "fontSize": 16,
-              },
-            ]
+            Object {
+              "color": "#FFFFFF",
+              "fontSize": 16,
+            }
           }
         >
           Balance: 
@@ -124,12 +116,10 @@ exports[`SendConfirmation should render with standard props 1`] = `
       </View>
       <View
         style={
-          Array [
-            Object {
-              "alignItems": "center",
-              "width": "100%",
-            },
-          ]
+          Object {
+            "alignItems": "center",
+            "width": "100%",
+          }
         }
       >
         <ExchangedFlipInput
@@ -172,46 +162,51 @@ exports[`SendConfirmation should render with standard props 1`] = `
             }
           }
         />
-        <View
+        <Padding
           style={
-            Array [
-              Object {
-                "alignItems": "center",
-                "backgroundColor": "transparent",
-                "width": "100%",
-              },
-            ]
+            Object {
+              "paddingHorizontal": 54,
+            }
           }
         >
-          <FormattedText
+          <Item
             style={
-              Array [
-                Object {
-                  "color": "white",
-                  "fontSize": 16,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "flex": -1,
+              }
             }
           >
-            
-          </FormattedText>
-        </View>
+            <Row
+              style={
+                Object {
+                  "paddingVertical": 4,
+                }
+              }
+            >
+              <FormattedText
+                style={
+                  Array [
+                    Object {
+                      "backgroundColor": "transparent",
+                      "color": "#FFFFFF",
+                      "fontSize": 16,
+                    },
+                  ]
+                }
+              >
+                
+              </FormattedText>
+            </Row>
+          </Item>
+        </Padding>
       </View>
-      <View
+      <Row />
+      <Footer
         style={
           Array [
             Object {
-              "height": 12,
-            },
-          ]
-        }
-      />
-      <View
-        style={
-          Array [
-            Object {
-              "alignItems": "center",
-              "justifyContent": "center",
+              "width": "100%",
             },
           ]
         }
@@ -226,7 +221,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
           resetSlider={false}
           sliderDisabled={true}
         />
-      </View>
+      </Footer>
     </View>
   </Gradient>
 </SafeAreaViewComponent>

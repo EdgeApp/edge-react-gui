@@ -143,6 +143,9 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
       const wallets = data.wallets
       const out = { ...state }
       for (const wallet of wallets) {
+        if (!state || !state[wallet.id]) {
+          continue
+        }
         const guiWallet = schema(wallet, state[wallet.id].receiveAddress)
         const enabledTokensOnWallet = state[wallet.id].enabledTokens
         guiWallet.enabledTokens = enabledTokensOnWallet
