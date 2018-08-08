@@ -1,7 +1,133 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`sendConfirmation reducer address NEW_SPEND_INFO 1`] = `
+Object {
+  "address": "123123123",
+  "authRequired": "none",
+  "destination": "",
+  "error": null,
+  "forceUpdateGuiCounter": 0,
+  "isEditable": true,
+  "isKeyboardVisible": false,
+  "nativeAmount": "0",
+  "parsedUri": Object {
+    "customNetworkFee": Object {},
+    "metadata": Object {
+      "amountFiat": 0,
+      "bizId": 0,
+      "category": "",
+      "miscJson": "",
+      "name": "",
+      "notes": "",
+    },
+    "nativeAmount": "0",
+    "networkFeeOption": "standard",
+    "publicAddress": "",
+  },
+  "pending": false,
+  "pin": "",
+  "spendInfo": Object {
+    "metadata": Object {},
+    "spendTargets": Array [
+      Object {
+        "nativeAmount": "0",
+        "publicAddress": "123123123",
+      },
+    ],
+  },
+  "transaction": null,
+}
+`;
+
+exports[`sendConfirmation reducer destination newSpendInfo with name 1`] = `
+Object {
+  "address": "123123123",
+  "authRequired": "none",
+  "destination": "airbitz",
+  "error": null,
+  "forceUpdateGuiCounter": 0,
+  "isEditable": true,
+  "isKeyboardVisible": false,
+  "nativeAmount": "1000",
+  "parsedUri": Object {
+    "customNetworkFee": Object {},
+    "metadata": Object {
+      "amountFiat": 0,
+      "bizId": 0,
+      "category": "",
+      "miscJson": "",
+      "name": "",
+      "notes": "",
+    },
+    "nativeAmount": "0",
+    "networkFeeOption": "standard",
+    "publicAddress": "",
+  },
+  "pending": false,
+  "pin": "",
+  "spendInfo": Object {
+    "currencyCode": "BTC",
+    "metadata": Object {
+      "name": "airbitz",
+    },
+    "nativeAmount": "1000",
+    "spendTargets": Array [
+      Object {
+        "currencyCode": "BTC",
+        "nativeAmount": "1000",
+        "publicAddress": "123123123",
+      },
+    ],
+  },
+  "transaction": null,
+}
+`;
+
+exports[`sendConfirmation reducer destination newSpendInfo without name 1`] = `
+Object {
+  "address": "123123123",
+  "authRequired": "none",
+  "destination": "",
+  "error": null,
+  "forceUpdateGuiCounter": 0,
+  "isEditable": true,
+  "isKeyboardVisible": false,
+  "nativeAmount": "1000",
+  "parsedUri": Object {
+    "customNetworkFee": Object {},
+    "metadata": Object {
+      "amountFiat": 0,
+      "bizId": 0,
+      "category": "",
+      "miscJson": "",
+      "name": "",
+      "notes": "",
+    },
+    "nativeAmount": "0",
+    "networkFeeOption": "standard",
+    "publicAddress": "",
+  },
+  "pending": false,
+  "pin": "",
+  "spendInfo": Object {
+    "currencyCode": "BTC",
+    "metadata": Object {},
+    "nativeAmount": "1000",
+    "spendTargets": Array [
+      Object {
+        "currencyCode": "BTC",
+        "nativeAmount": "1000",
+        "publicAddress": "123123123",
+      },
+    ],
+  },
+  "transaction": null,
+}
+`;
+
 exports[`sendConfirmation reducer destination updateTransaction with error 1`] = `
 Object {
+  "address": "",
   "authRequired": "none",
   "destination": "",
   "error": [Error],
@@ -32,6 +158,7 @@ Object {
 
 exports[`sendConfirmation reducer destination updateTransaction with pin error 1`] = `
 Object {
+  "address": "",
   "authRequired": "none",
   "destination": "",
   "error": [Error: Incorrect Pin],
@@ -74,8 +201,9 @@ Object {
 
 exports[`sendConfirmation reducer destination updateTransaction with transaction and legacyAddress 1`] = `
 Object {
+  "address": "",
   "authRequired": "none",
-  "destination": "123412341234",
+  "destination": "",
   "error": null,
   "forceUpdateGuiCounter": 1,
   "isEditable": true,
@@ -118,6 +246,7 @@ Object {
 
 exports[`sendConfirmation reducer destination updateTransaction with transaction and name 1`] = `
 Object {
+  "address": "",
   "authRequired": "none",
   "destination": "airbitz",
   "error": null,
@@ -161,6 +290,7 @@ Object {
 
 exports[`sendConfirmation reducer error MAKE_PAYMENT_PROTOCOL_TRANSACTION_FAILED 1`] = `
 Object {
+  "address": "",
   "authRequired": "none",
   "destination": "",
   "error": [Error],
@@ -203,6 +333,7 @@ Object {
 
 exports[`sendConfirmation reducer error UPDATE_TRANSACTION 1`] = `
 Object {
+  "address": "",
   "authRequired": "none",
   "destination": "",
   "error": [Error],
@@ -233,6 +364,7 @@ Object {
 
 exports[`sendConfirmation reducer initialState 1`] = `
 Object {
+  "address": "",
   "authRequired": "none",
   "destination": "",
   "error": null,
@@ -275,6 +407,7 @@ Object {
 
 exports[`sendConfirmation reducer isEditable MAKE_PAYMENT_PROTOCOL_TRANSACTION_FAILED 1`] = `
 Object {
+  "address": "",
   "authRequired": "none",
   "destination": "",
   "error": [Error],
@@ -317,6 +450,7 @@ Object {
 
 exports[`sendConfirmation reducer isEditable UPDATE_PAYMENT_PROTOCOL_TRANSACTION 1`] = `
 Object {
+  "address": "",
   "authRequired": "none",
   "destination": "",
   "error": null,
@@ -350,6 +484,7 @@ Object {
 
 exports[`sendConfirmation reducer pending 1`] = `
 Object {
+  "address": "",
   "authRequired": "none",
   "destination": "",
   "error": null,
@@ -392,6 +527,7 @@ Object {
 
 exports[`sendConfirmation reducer pin 1`] = `
 Object {
+  "address": "",
   "authRequired": "none",
   "destination": "",
   "error": null,
@@ -434,6 +570,7 @@ Object {
 
 exports[`sendConfirmation reducer reset 1`] = `
 Object {
+  "address": "",
   "authRequired": "none",
   "destination": "",
   "error": null,
