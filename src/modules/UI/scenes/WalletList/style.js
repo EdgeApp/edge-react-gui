@@ -252,6 +252,7 @@ export const styles = {
   },
   rowBalanceDenominationText: {
     fontSize: 14,
+    lineHeight: 18,
     color: THEME.COLORS.GRAY_1,
     textAlign: 'right'
   },

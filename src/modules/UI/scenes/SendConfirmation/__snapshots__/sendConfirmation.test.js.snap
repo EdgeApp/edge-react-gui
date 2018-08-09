@@ -476,11 +476,9 @@ exports[`SendConfirmation should render with standard props 1`] = `
       <Row />
       <Footer
         style={
-          Array [
-            Object {
-              "width": "100%",
-            },
-          ]
+          Object {
+            "paddingVertical": 24,
+          }
         }
       >
         <ABSlider
