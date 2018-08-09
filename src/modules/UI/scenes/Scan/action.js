@@ -100,12 +100,12 @@ export const parseUri = (data: string) => (dispatch: Dispatch, getState: GetStat
 
       if (isLegacyAddressUri(parsedUri)) {
         // LEGACY ADDRESS URI
-        return dispatch(legacyAddressModalActivated())
+        return setTimeout(() => dispatch(legacyAddressModalActivated()), 500)
       }
 
       if (isPrivateKeyUri(parsedUri)) {
         // PRIVATE KEY URI
-        return dispatch(privateKeyModalActivated())
+        return setTimeout(() => dispatch(privateKeyModalActivated()), 500)
       }
 
       if (isPaymentProtocolUri(parsedUri)) {
