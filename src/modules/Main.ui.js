@@ -90,6 +90,7 @@ import SendConfirmationOptions from './UI/scenes/SendConfirmation/SendConfirmati
 import CurrencySettings from './UI/scenes/Settings/CurrencySettingsConnector'
 import DefaultFiatSettingConnector from './UI/scenes/Settings/DefaultFiatSettingConnector'
 import SettingsOverview from './UI/scenes/Settings/SettingsOverviewConnector'
+import { TermsOfServiceComponent } from './UI/scenes/TermsOfService/TermsOfService.ui.js'
 import TransactionDetails from './UI/scenes/TransactionDetails/TransactionDetailsConnector.js'
 import TransactionListConnector from './UI/scenes/TransactionList/TransactionListConnector'
 import { HwBackButtonHandler } from './UI/scenes/WalletList/components/HwBackButtonHandler'
@@ -165,6 +166,7 @@ const OTP = s.strings.title_otp
 const DEFAULT_FIAT = s.strings.title_default_fiat
 const PLUGIN_BUYSELL = s.strings.title_plugin_buysell
 const PLUGIN_SPEND = s.strings.title_plugin_spend
+const TERMS_OF_SERVICE = s.strings.title_terms_of_service
 
 type Props = {
   requestPermission: (permission: Permission) => void,
@@ -615,6 +617,17 @@ export default class Main extends Component<Props, State> {
                           renderRightButton={this.renderEmptyButton()}
                         />
                       ) */}
+                    </Stack>
+                    <Stack key={Constants.TERMS_OF_SERVICE}>
+                      <Scene
+                        key={Constants.TERMS_OF_SERVICE}
+                        navTransparent={true}
+                        component={TermsOfServiceComponent}
+                        renderTitle={this.renderTitle(TERMS_OF_SERVICE)}
+                        renderLeftButton={this.renderBackButton(BACK)}
+                        renderRightButton={this.renderEmptyButton()}
+                        onLeft={Actions.pop}
+                      />
                     </Stack>
                   </Scene>
                 </Drawer>

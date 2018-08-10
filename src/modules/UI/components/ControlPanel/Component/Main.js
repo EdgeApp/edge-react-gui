@@ -14,6 +14,7 @@ import buysellIcon from '../../../../../assets/images/sidenav/buysell.png'
 import logoutImage from '../../../../../assets/images/sidenav/logout.png'
 import settings from '../../../../../assets/images/sidenav/settings.png'
 
+import * as Constants from '../../../../../constants/indexConstants.js'
 import s from '../../../../../locales/strings.js'
 import styles from '../style'
 import UserList from './UserListConnector'
@@ -28,6 +29,7 @@ const EXCHANGE_TEXT = s.strings.drawer_exchange
 const LOGOUT_TEXT = s.strings.settings_button_logout
 const SETTINGS_TEXT = s.strings.settings_title
 const PLUGIN_BUYSELL_TEXT = s.strings.title_plugin_buysell
+const TERMS_OF_SERVICE_TEXT = s.strings.title_terms_of_service
 
 export type Props = {
   logout: (username?: string) => void,
@@ -54,6 +56,8 @@ export default class Main extends Component<Props> {
           <RequestButton />
           <Separator />
           <ExchangeButton />
+          <Separator />
+          <TermsOfServiceButton />
           <Separator />
         </View>
 
@@ -178,6 +182,24 @@ const ExchangeButton = () => {
         <Button.Center>
           <Button.Text>
             <Text>{EXCHANGE_TEXT}</Text>
+          </Button.Text>
+        </Button.Center>
+      </Button.Row>
+    </Button>
+  )
+}
+
+const TermsOfServiceButton = () => {
+  return (
+    <Button onPress={Actions[Constants.TERMS_OF_SERVICE]}>
+      <Button.Row>
+        <Button.Left>
+          <Image source={exchangeIcon} style={styles.iconImage} />
+        </Button.Left>
+
+        <Button.Center>
+          <Button.Text>
+            <Text>{TERMS_OF_SERVICE_TEXT}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>
