@@ -229,7 +229,7 @@ export class SendConfirmation extends Component<Props, State> {
               </Scene.Padding>
             </View>
 
-            <Scene.Row>{this.props.pending && <ActivityIndicator style={[{ flex: 1, alignSelf: 'center' }]} size={'small'} />}</Scene.Row>
+            <Scene.Row style={styles.activityIndicatorSpace}>{this.props.pending && <ActivityIndicator style={[{ flex: 1, alignSelf: 'center' }]} size={'small'} />}</Scene.Row>
 
             <Scene.Footer style={styles.footer}>
               <ABSlider
