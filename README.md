@@ -21,15 +21,15 @@ Edge Wallet is:
 
 Edge is known to build with this exact tool set. Updated versions of these toolsets may break the build or app. If you have issues, try mirroring these exact versions.
 
-   MacOS High Sierra 10.13.3
-   Xcode 9.4.1
-   Android Studio 3.1.3
-   CocoaPods 1.5.3
-   Android NDK r15c *This is must have. Version r17 is known to break native code builds*
-   NodeJS 8.9.3
-   NPM 5.5.1
-   Yarn 1.5.1
-   Java 1.8.0_152
+* MacOS High Sierra 10.13.3
+* Xcode 9.4.1
+* Android Studio 3.1.3
+* CocoaPods 1.5.3
+* Android NDK r15c *This is a must have. Version r17 is known to break native code builds*
+* NodeJS 8.9.3
+* NPM 5.5.1
+* Yarn 1.5.1
+* Java 1.8.0_152
 
 ## Getting Started
 
