@@ -10,6 +10,7 @@ import scanIcon from '../../../../../assets/images/sidenav/scan.png'
 import sweepIcon from '../../../../../assets/images/sidenav/sweep.png'
 import walletIcon from '../../../../../assets/images/sidenav/wallets.png'
 import buysellIcon from '../../../../../assets/images/sidenav/buysell.png'
+import termsIcon from '../../../../../assets/images/sidenav/terms.png'
 
 import logoutImage from '../../../../../assets/images/sidenav/logout.png'
 import settings from '../../../../../assets/images/sidenav/settings.png'
@@ -194,7 +195,7 @@ const TermsOfServiceButton = () => {
     <Button onPress={Actions[Constants.TERMS_OF_SERVICE]}>
       <Button.Row>
         <Button.Left>
-          <Image source={exchangeIcon} style={styles.iconImage} />
+          <Image source={termsIcon} style={styles.iconImage} />
         </Button.Left>
 
         <Button.Center>
