@@ -110,8 +110,11 @@ export const rawStyles = {
   pinInputSpacer: {
     width: 10
   },
+  activityIndicatorSpace: {
+    height: 54,
+    paddingVertical: 18
+  },
   footer: {
-    paddingVertical: 24
   },
   debug
 }
