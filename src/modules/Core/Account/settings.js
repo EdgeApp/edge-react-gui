@@ -37,6 +37,7 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   WINGS: { denomination: '1000000000000000000' },
   IND: { denomination: '1000000000000000000' },
   HUR: { denomination: '1000000000000000000' },
+  USDT: { denomination: '1000000' },
   customTokens: []
 }
 
