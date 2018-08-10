@@ -25,9 +25,9 @@ export const getIsTouchIdEnabled = (state: State) => {
   return settings.isTouchEnabled
 }
 
-export const getLoginStatus = (state: State): boolean => {
+export const getLoginStatus = (state: State): boolean | null => {
   const settings = getSettings(state)
-  const loginStatus: boolean = settings.loginStatus
+  const loginStatus = settings.loginStatus
   return loginStatus
 }
 
@@ -190,7 +190,7 @@ export const getIsOtpEnabled = (state: State) => {
 }
 export const getOtpKey = (state: State) => {
   const settings = getSettings(state)
-  const otpKey: string = settings.otpKey
+  const otpKey: string = settings.otpKey || ''
   return otpKey
 }
 
@@ -221,4 +221,8 @@ export const getOtpResetPending = (state: State) => {
   const settings = getSettings(state)
   const otpResetPending = settings.otpResetPending
   return otpResetPending
+}
+export const runOnBoarding = (state: State) => {
+  const settings = getSettings(state)
+  return settings.showOnBoarding
 }

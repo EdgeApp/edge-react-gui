@@ -16,22 +16,28 @@ export const CORE_DEFAULTS = {
 export const SYNCED_ACCOUNT_DEFAULTS = {
   autoLogoutTimeInSeconds: 3600,
   defaultFiat: 'USD',
+  defaultIsoFiat: 'iso:USD',
   merchantMode: false,
   BTC: { denomination: '100' },
+  BTG: { denomination: '100' },
   BCH: { denomination: '100' },
   XRP: { denomination: '1000000' },
   DASH: { denomination: '100000000' },
+  DOGE: { denomination: '100000000' },
+  DGB: { denomination: '100000000' },
   LTC: { denomination: '100000000' },
   FTC: { denomination: '100000000' },
   XZC: { denomination: '100000000' },
   QTUM: { denomination: '100000000' },
   UFO: { denomination: '100000000' },
+  VTC: { denomination: '100000000' },
   XMR: { denomination: '1000000000000' },
   ETH: { denomination: '1000000000000000000' },
   REP: { denomination: '1000000000000000000' },
   WINGS: { denomination: '1000000000000000000' },
   IND: { denomination: '1000000000000000000' },
   HUR: { denomination: '1000000000000000000' },
+  USDT: { denomination: '1000000' },
   customTokens: []
 }
 
@@ -46,7 +52,13 @@ export const LOCAL_ACCOUNT_DEFAULTS = {
     nonPasswordLoginsLimit: 4
   },
   isAccountBalanceVisible: true,
-  isWalletFiatBalanceVisible: false
+  isWalletFiatBalanceVisible: false,
+  spendingLimits: {
+    transaction: {
+      amount: 0,
+      isEnabled: false
+    }
+  }
 }
 
 const SYNCHED_SETTINGS_FILENAME = 'Settings.json'
@@ -105,6 +117,20 @@ export const setAccountBalanceVisibility = (account: EdgeAccount, isAccountBalan
 export const setWalletFiatBalanceVisibility = (account: EdgeAccount, isWalletFiatBalanceVisible: boolean) => {
   return getLocalSettings(account).then(settings => {
     const updatedSettings = updateSettings(settings, { isWalletFiatBalanceVisible })
+    return setLocalSettings(account, updatedSettings)
+  })
+}
+
+export type SpendingLimits = {
+  transaction: {
+    amount: number,
+    isEnabled: boolean
+  }
+}
+
+export const setSpendingLimits = (account: EdgeAccount, spendingLimits: SpendingLimits) => {
+  return getLocalSettings(account).then(settings => {
+    const updatedSettings = updateSettings(settings, { spendingLimits })
     return setLocalSettings(account, updatedSettings)
   })
 }
@@ -192,14 +218,21 @@ export const getSyncedSubcategoriesFile = (account: EdgeAccount) =>
   // $FlowFixMe folder not found on EdgeAccount type
   account.folder.file(CATEGORIES_FILENAME)
 
-export const getLocalSettings = (account: EdgeAccount) =>
-  getLocalSettingsFile(account)
+export const getLocalSettings = (account: EdgeAccount) => {
+  return getLocalSettingsFile(account)
     .getText()
     .then(JSON.parse)
-    .catch(() =>
+    .catch(() => {
       // If Settings.json doesn't exist yet, create it, and return it
-      setLocalSettings(account, LOCAL_ACCOUNT_DEFAULTS).then(() => LOCAL_ACCOUNT_DEFAULTS)
-    )
+      return setLocalSettings(account, LOCAL_ACCOUNT_DEFAULTS).then(() => LOCAL_ACCOUNT_DEFAULTS)
+    })
+    .then(settings => {
+      return {
+        ...LOCAL_ACCOUNT_DEFAULTS,
+        ...settings
+      }
+    })
+}
 
 export const setLocalSettings = (account: EdgeAccount, settings: Object) => {
   const text = JSON.stringify(settings)

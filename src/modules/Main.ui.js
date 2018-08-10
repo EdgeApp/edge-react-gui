@@ -4,11 +4,15 @@ import type { EdgeContext, EdgeContextCallbacks, EdgeCorePluginFactory, EdgeCurr
 import {
   bitcoinCurrencyPluginFactory,
   bitcoincashCurrencyPluginFactory,
+  bitcoingoldCurrencyPluginFactory,
   dashCurrencyPluginFactory,
+  digibyteCurrencyPluginFactory,
+  // dogecoinCurrencyPluginFactory,
   feathercoinCurrencyPluginFactory,
   litecoinCurrencyPluginFactory,
   qtumCurrencyPluginFactory,
   ufoCurrencyPluginFactory,
+  vertcoinCurrencyPluginFactory,
   zcoinCurrencyPluginFactory
 } from 'edge-currency-bitcoin'
 import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
@@ -44,6 +48,7 @@ import ExchangeConnector from '../connectors/scene/CryptoExchangeSceneConnector'
 import EdgeLoginSceneConnector from '../connectors/scene/EdgeLoginSceneConnector'
 import OtpSettingsSceneConnector from '../connectors/scene/OtpSettingsSceneConnector.js'
 import PasswordRecoveryConnector from '../connectors/scene/PasswordRecoveryConnector.js'
+import SpendingLimitsConnector from './UI/scenes/SpendingLimits/SpendingLimitsConnector.js'
 import TransactionsExportSceneConnector from '../connectors/scene/TransactionsExportSceneConnector'
 import * as Constants from '../constants/indexConstants'
 import { setIntlLocale } from '../locales/intl'
@@ -97,8 +102,11 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   coincapPlugin,
   // Currencies:
   bitcoincashCurrencyPluginFactory,
+  bitcoingoldCurrencyPluginFactory,
   bitcoinCurrencyPluginFactory,
   dashCurrencyPluginFactory,
+  digibyteCurrencyPluginFactory,
+  // dogecoinCurrencyPluginFactory,
   ethereumCurrencyPluginFactory,
   moneroCurrencyPluginFactory,
   rippleCurrencyPluginFactory,
@@ -106,7 +114,8 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   litecoinCurrencyPluginFactory,
   feathercoinCurrencyPluginFactory,
   zcoinCurrencyPluginFactory,
-  ufoCurrencyPluginFactory
+  ufoCurrencyPluginFactory,
+  vertcoinCurrencyPluginFactory
 ]
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
@@ -150,6 +159,7 @@ const EDIT_TOKEN = s.strings.title_edit_token
 const SETTINGS = s.strings.title_settings
 const CHANGE_PASSWORD = s.strings.title_change_password
 const CHANGE_PIN = s.strings.title_change_pin
+const SPENDING_LIMITS = s.strings.spending_limits
 const PASSWORD_RECOVERY = s.strings.title_password_recovery
 const OTP = s.strings.title_otp
 const DEFAULT_FIAT = s.strings.title_default_fiat
@@ -546,6 +556,14 @@ export default class Main extends Component<Props, State> {
                         renderLeftButton={this.renderBackButton()}
                         renderRightButton={this.renderEmptyButton()}
                       />
+                      <Scene
+                        key={Constants.SPENDING_LIMITS}
+                        navTransparent={true}
+                        component={SpendingLimitsConnector}
+                        renderTitle={this.renderTitle(SPENDING_LIMITS)}
+                        renderLeftButton={this.renderBackButton()}
+                        renderRightButton={this.renderEmptyButton()}
+                      />
                       {this.renderCurrencySettings()}
                       <Scene
                         key={Constants.DEFAULT_FIAT_SETTING}
@@ -565,7 +583,8 @@ export default class Main extends Component<Props, State> {
                         renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
                         renderLeftButton={this.renderBackButton(BACK)}
                         renderRightButton={this.renderEmptyButton()}
-                        onLeft={Actions.pop} />
+                        onLeft={Actions.pop}
+                      />
                       <Scene
                         key={Constants.PLUGIN}
                         navTransparent={true}
@@ -584,7 +603,8 @@ export default class Main extends Component<Props, State> {
                         renderTitle={this.renderTitle(PLUGIN_SPEND)}
                         renderLeftButton={this.renderBackButton(BACK)}
                         renderRightButton={this.renderEmptyButton()}
-                        onLeft={Actions.pop} />
+                        onLeft={Actions.pop}
+                      />
                       {/*
                         <Scene
                           key={Constants.PLUGIN}
@@ -596,7 +616,6 @@ export default class Main extends Component<Props, State> {
                         />
                       ) */}
                     </Stack>
-
                   </Scene>
                 </Drawer>
               </Stack>

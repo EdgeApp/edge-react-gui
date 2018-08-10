@@ -5,8 +5,8 @@ import type { EdgeMetadata, EdgeParsedUri, EdgeTransaction, EdgeSpendInfo } from
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
-import { OPEN_AB_ALERT } from '../../../../constants/indexConstants'
-import { getWallet } from '../../../Core/selectors.js'
+import { OPEN_AB_ALERT, SEND_CONFIRMATION } from '../../../../constants/indexConstants'
+import { getAccount, getWallet } from '../../../Core/selectors.js'
 import {
   broadcastTransaction,
   getMaxSpendable,
@@ -19,8 +19,9 @@ import {
 import type { Dispatch, GetState } from '../../../ReduxTypes'
 import { openABAlert } from '../../components/ABAlert/action'
 import { getSelectedWalletId } from '../../selectors.js'
-import { getSpendInfo, getTransaction } from './selectors'
-import type { GuiMakeSpendInfo } from './selectors'
+import { getSpendInfo, getTransaction, getAuthRequired } from './selectors'
+import type { AuthType, GuiMakeSpendInfo } from './selectors'
+import { checkPin } from '../../../Core/Account/api.js'
 
 import s from '../../../../locales/strings.js'
 
@@ -50,16 +51,17 @@ export const paymentProtocolUriReceived = ({ paymentProtocolURL }: EdgePaymentPr
     .then(paymentProtocolURL => getPaymentProtocolInfo(edgeWallet, paymentProtocolURL))
     .then(makeSpendInfo)
     .then(spendInfo => {
-      dispatch(newSpendInfo(spendInfo))
+      const authRequired = getAuthRequired(state, spendInfo)
+      dispatch(newSpendInfo(spendInfo, authRequired))
 
       return makeSpend(edgeWallet, spendInfo).then(
         edgeTransaction => {
           dispatch(updatePaymentProtocolTransaction(edgeTransaction))
-          Actions.sendConfirmation('fromScan')
+          Actions[SEND_CONFIRMATION]('fromScan')
         },
         error => {
           dispatch(makeSpendFailed(error))
-          Actions.sendConfirmation('fromScan')
+          Actions[SEND_CONFIRMATION]('fromScan')
         }
       )
     })
@@ -80,9 +82,9 @@ export const makeSpendFailed = (error: Error | null) => ({
 })
 
 export const NEW_SPEND_INFO = PREFIX + 'NEW_SPEND_INFO'
-export const newSpendInfo = (spendInfo: EdgeSpendInfo) => ({
+export const newSpendInfo = (spendInfo: EdgeSpendInfo, authRequired: AuthType) => ({
   type: NEW_SPEND_INFO,
-  data: { spendInfo }
+  data: { spendInfo, authRequired }
 })
 
 export const createTX = (parsedUri: GuiMakeSpendInfo | EdgeParsedUri, forceUpdateGui?: boolean = true) => (dispatch: Dispatch, getState: GetState) => {
@@ -91,6 +93,9 @@ export const createTX = (parsedUri: GuiMakeSpendInfo | EdgeParsedUri, forceUpdat
   const edgeWallet = getWallet(state, walletId)
   const parsedUriClone = { ...parsedUri }
   const spendInfo = getSpendInfo(state, parsedUriClone)
+
+  const authRequired = getAuthRequired(state, spendInfo)
+  dispatch(newSpendInfo(spendInfo, authRequired))
 
   makeSpend(edgeWallet, spendInfo)
     .then(edgeTransaction => dispatch(updateTransaction(edgeTransaction, parsedUriClone, forceUpdateGui, null)))
@@ -104,18 +109,39 @@ export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => 
   const spendInfo = getSpendInfo(state)
 
   getMaxSpendable(edgeWallet, spendInfo)
-    .then(nativeAmount => dispatch(createTX({ nativeAmount }, true)))
+    .then(nativeAmount => {
+      const state = getState()
+      const spendInfo = getSpendInfo(state, { nativeAmount })
+      const authRequired = getAuthRequired(state, spendInfo)
+
+      dispatch(reset())
+
+      dispatch(newSpendInfo(spendInfo, authRequired))
+      dispatch(createTX({ nativeAmount }, true))
+    })
     .catch(e => console.log(e))
 }
 
 export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
+  const account = getAccount(state)
   const selectedWalletId = getSelectedWalletId(state)
   const wallet = getWallet(state, selectedWalletId)
   const edgeUnsignedTransaction = getTransaction(state)
-  let edgeSignedTransaction = edgeUnsignedTransaction
+  const spendInfo = state.ui.scenes.sendConfirmation.spendInfo
+  if (!spendInfo) throw new Error('Invalid Spend Request')
+  const authRequired = getAuthRequired(state, spendInfo)
+  const pin = state.ui.scenes.sendConfirmation.pin
+
   dispatch(updateSpendPending(true))
+
+  let edgeSignedTransaction = edgeUnsignedTransaction
   try {
+    if (authRequired === 'pin') {
+      const isAuthorized = await checkPin(account, pin)
+      if (!isAuthorized) throw new IncorrectPinError()
+    }
+
     edgeSignedTransaction = await signTransaction(wallet, edgeUnsignedTransaction)
     edgeSignedTransaction = await broadcastTransaction(wallet, edgeSignedTransaction)
     await saveTransaction(wallet, edgeSignedTransaction)
@@ -161,4 +187,19 @@ export const updateSpendPending = (pending: boolean) => ({
   data: { pending }
 })
 
+export const NEW_PIN = PREFIX + 'NEW_PIN'
+export const newPin = (pin: string) => ({
+  type: NEW_PIN,
+  data: { pin }
+})
+
 export { createTX as updateMiningFees, createTX as updateParsedURI, createTX as uniqueIdentifierUpdated }
+
+const errorNames = {
+  IncorrectPinError: 'IncorrectPinError'
+}
+export function IncorrectPinError (message: ?string = 'Incorrect Pin') {
+  const error = new Error(message)
+  error.name = errorNames.IncorrectPinError
+  return error
+}
