@@ -2486,9 +2486,9 @@ edge-core-js@0.9.15:
     utf8 "^3.0.0"
     ws "^5.1.1"
 
-edge-currency-bitcoin@3.2.4:
-  version "3.2.4"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-3.2.4.tgz#87870ffeb0306a3a06d41748f9d9cefe0b913040"
+edge-currency-bitcoin@3.2.6:
+  version "3.2.6"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-3.2.6.tgz#a06053045aa7d1358922f98b701d6c12d91eca19"
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -2502,9 +2502,9 @@ edge-currency-bitcoin@3.2.4:
     uri-js "^4.2.2"
     url-parse "^1.4.3"
 
-edge-currency-ethereum@0.10.3:
-  version "0.10.3"
-  resolved "https://registry.yarnpkg.com/edge-currency-ethereum/-/edge-currency-ethereum-0.10.3.tgz#161541b7ce0b9938e29c97a12990667a692955ae"
+edge-currency-ethereum@0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-ethereum/-/edge-currency-ethereum-0.11.0.tgz#0b79cb2f7095bd0d111106bbe1ec08bed62ddcc3"
   dependencies:
     biggystring "^3.0.0"
     bn.js "^4.11.7"
@@ -2568,9 +2568,9 @@ edge-login-ui-rn@^0.4.0:
     sprintf-js "^1.0.3"
     zxcvbn "^4.4.2"
 
-"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#ff34f3a":
-  version "0.0.2"
-  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#ff34f3a1c57b2b12fa0cee5e07d3bc0c3484b6e1"
+"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#c1b81e1":
+  version "0.0.3"
+  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#c1b81e1c2e61339382edfb345a14435e356dd0c1"
   dependencies:
     moment "^2.22.2"
 
