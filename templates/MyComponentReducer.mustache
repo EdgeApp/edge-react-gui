@@ -1,0 +1,21 @@
+// @flow
+
+import { combineReducers } from 'redux'
+
+import type { Action } from '../../../ReduxTypes.js'
+import { {{actionConstant}} } from './{{capitalizedName}}action.js'
+
+export const {{camelCaseName}}Variable = (state, action: Action) => {
+  switch (action.type) {
+    case {{actionConstant}}:
+      return state
+    default:
+      return state
+  }
+}
+
+export const {{camelCaseName}} = combineReducers({
+  {{camelCaseName}}Variable
+})
+
+

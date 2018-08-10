@@ -1,0 +1,21 @@
+// @flow
+
+import { connect } from 'react-redux'
+
+import type { Dispatch, State } from '../../../ReduxTypes'
+import { {{capitalizedName}}Component } from './{{capitalizedName}}.ui.js'
+import type { {{capitalizedName}}DispatchProps, {{capitalizedName}}StateProps } from './{{capitalizedName}}.ui.js'
+import { {{camelCaseName}}Function } from './{{capitalizedName}}Action.js'
+
+const mapStateToProps = (state: State): {{capitalizedName}}StateProps => {
+  return {
+
+  }
+}
+const mapDispatchToProps = (dispatch: Dispatch): {{capitalizedName}}DispatchProps => {
+  return {
+    {{camelCaseName}}Function: () => { dispatch({{camelCaseName}}Function()) },
+  }
+}
+
+export const {{capitalizedName}}Connector = connect(mapStateToProps, mapDispatchToProps)({{capitalizedName}}Component)
