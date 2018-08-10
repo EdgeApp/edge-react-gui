@@ -55,8 +55,10 @@ class OnBoardingSlideComponent extends Component<Props, State> {
         )
         : PLATFORM.isIphoneX ? this.props.slide.iPhoneX : this.props.slide.iOSImage
       )
+    const container = {...styles.container, width: Dimensions.get('window').width, height: Dimensions.get('window').height}
+    console.log('OB: container', container)
     return (
-      <ImageBackground source={{uri: image}} style={styles.container}>
+      <ImageBackground source={{uri: image}} style={container}>
         <View style={styles.innerTop} />
         <View style={styles.innerBottom}>
           <View style={styles.textBox}>

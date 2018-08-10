@@ -1,10 +1,13 @@
 // @flow
 
+import { Dimensions } from 'react-native'
+
 import THEME from '../../theme/variables/airbitz'
 
 const OnBoardingSlideStyles = {
   container: {
-    flex: 1
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height
   },
   innerTop: {
     flex: 7
