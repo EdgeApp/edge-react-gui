@@ -18,7 +18,8 @@ export const stylesRaw = {
   },
   scrollViewContent: {
     paddingHorizontal: 20,
-    paddingVertical: 5
+    paddingVertical: 5,
+    paddingBottom: 30
   }
 }
 
