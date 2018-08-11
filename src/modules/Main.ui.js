@@ -3,8 +3,8 @@
 import type { EdgeContext, EdgeContextCallbacks, EdgeCorePluginFactory, EdgeCurrencyPlugin } from 'edge-core-js'
 import {
   bitcoinCurrencyPluginFactory,
-  bitcoincashCurrencyPluginFactory,
   bitcoingoldCurrencyPluginFactory,
+  bitcoincashCurrencyPluginFactory,
   dashCurrencyPluginFactory,
   digibyteCurrencyPluginFactory,
   // dogecoinCurrencyPluginFactory,
@@ -101,6 +101,7 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   shapeshiftPlugin,
   coincapPlugin,
   // Currencies:
+
   bitcoincashCurrencyPluginFactory,
   bitcoinCurrencyPluginFactory,
   ethereumCurrencyPluginFactory,

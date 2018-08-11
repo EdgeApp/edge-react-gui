@@ -68,6 +68,14 @@ export const checkPassword = (account: EdgeAccount, password: string) => {
   return account.checkPassword(password)
 }
 
+export const listSplittableWalletTypes = (account: EdgeAccount, walletId: string) => {
+  return account.listSplittableWalletTypes(walletId)
+}
+
+export const splitWalletInfo = (account: EdgeAccount, walletId: string, newWalletType: string) => {
+  return account.splitWalletInfo(walletId, newWalletType)
+}
+
 export const checkPin = (account: EdgeAccount, pin: string): Promise<boolean> => {
   return account.checkPin(pin)
 }

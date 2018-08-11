@@ -12,6 +12,7 @@ export const getSymbolFromCurrency = (currencyCode: string) => {
   if (!FIAT_CODES_SYMBOLS.hasOwnProperty(code)) return ''
   return FIAT_CODES_SYMBOLS[code]
 }
+
 export const FIAT_CODES_SYMBOLS = {
   AED: 'د.إ',
   AFN: '؋',

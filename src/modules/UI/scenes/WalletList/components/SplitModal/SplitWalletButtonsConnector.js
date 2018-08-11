@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 
 import * as Constants from '../../../../../../constants/indexConstants.js'
 import * as CORE_SELECTORS from '../../../../../Core/selectors.js'
+import * as ACCOUNT_API from '../../../../../Core/Account/api'
 import type { Dispatch, GetState, State } from '../../../../../ReduxTypes'
 import * as UI_ACTIONS from '../../../../Wallets/action.js'
 import { CLOSE_MODAL_VALUE, START_MODAL_VALUE, SUCCESS_MODAL_VALUE, wrap } from '../WalletOptions/action'
@@ -17,7 +18,7 @@ const splitWallet = (walletId: string) => (dispatch: Dispatch, getState: GetStat
 
   dispatch(wrap(START_MODAL_VALUE(Constants.SPLIT_VALUE), { walletId }))
 
-  return account.splitWalletInfo(walletId, getSplitType()).then(() => {
+  return ACCOUNT_API.splitWalletInfo(account, walletId, getSplitType()).then(() => {
     dispatch(wrap(SUCCESS_MODAL_VALUE(Constants.SPLIT_VALUE), { walletId }))
     dispatch(UI_ACTIONS.refreshWallet(walletId))
   })

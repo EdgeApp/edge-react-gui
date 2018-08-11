@@ -5,7 +5,7 @@ import _ from 'lodash'
 import { combineReducers } from 'redux'
 
 import * as Constants from '../../../constants/indexConstants.js'
-import type { GuiWallet } from '../../../types.js'
+import type { GuiWallet, WalletDropdownOption } from '../../../types.js'
 import { UPDATE_WALLETS } from '../../Core/Wallets/action.js'
 import type { Action } from '../../ReduxTypes.js'
 import * as ADD_TOKEN_ACTION from '../scenes/AddToken/action.js'
@@ -27,7 +27,9 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
         const tempWallet = schema(wallets[walletId], action.data.receiveAddresses[walletId])
         if (state[walletId]) {
           const enabledTokensOnWallet = state[walletId].enabledTokens
+          const splittableWalletTypes = state[walletId].splittableWalletTypes
           tempWallet.enabledTokens = enabledTokensOnWallet
+          tempWallet.splittableWalletTypes = splittableWalletTypes
           enabledTokensOnWallet.forEach(customToken => {
             tempWallet.nativeBalances[customToken] = wallets[walletId].getBalance({ currencyCode: customToken })
           })
@@ -44,7 +46,9 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
         const tempWallet = schema(wallets[walletId], action.data.receiveAddresses[walletId])
         if (state[walletId]) {
           const enabledTokensOnWallet = state[walletId].enabledTokens
+          const splittableWalletTypes = state[walletId].splittableWalletTypes
           tempWallet.enabledTokens = enabledTokensOnWallet
+          tempWallet.splittableWalletTypes = splittableWalletTypes
           enabledTokensOnWallet.forEach(customToken => {
             tempWallet.nativeBalances[customToken] = wallets[walletId].getBalance({ currencyCode: customToken })
           })
@@ -56,6 +60,17 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
       }
 
       return out
+    }
+
+    case ACTION.UPDATE_SPLITTABLE_WALLET_TYPES: {
+      const { walletId, splittableWalletTypes } = action.data
+      return {
+        ...state,
+        [walletId]: {
+          ...state[walletId],
+          splittableWalletTypes
+        }
+      }
     }
 
     case ACTION.UPDATE_WALLET_ENABLED_TOKENS: {
@@ -148,7 +163,10 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
         }
         const guiWallet = schema(wallet, state[wallet.id].receiveAddress)
         const enabledTokensOnWallet = state[wallet.id].enabledTokens
+        const splittableWalletTypes = state[wallet.id].splittableWalletTypes
+
         guiWallet.enabledTokens = enabledTokensOnWallet
+        guiWallet.splittableWalletTypes = splittableWalletTypes
         enabledTokensOnWallet.forEach(customToken => {
           guiWallet.nativeBalances[customToken] = wallet.getBalance({ currencyCode: customToken })
         })
@@ -307,6 +325,7 @@ function schema (wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress)
   const metaTokens: Array<EdgeMetaToken> = wallet.currencyInfo.metaTokens
   const denominations: Array<EdgeDenomination> = wallet.currencyInfo.denominations
   const blockHeight: number = wallet.getBlockHeight()
+  const splittableWalletTypes: Array<WalletDropdownOption> = []
   // TODO: Fetch the token list asynchonously before dispatching `schema`:
   const enabledTokens: Array<string> = []
 
@@ -366,6 +385,7 @@ function schema (wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress)
     allDenominations,
     metaTokens,
     enabledTokens,
+    splittableWalletTypes,
     receiveAddress,
     blockHeight,
     symbolImage,

@@ -58,8 +58,7 @@ export const WALLET_OPTIONS = {
   },
   SPLIT: {
     value: SPLIT_VALUE,
-    currencyCode: ['BTC'],
-    label: s.strings.string_split_bitcoin_cash,
+    label: s.strings.string_split_network,
     modalVisible: true
   },
   MANAGE_TOKENS: {

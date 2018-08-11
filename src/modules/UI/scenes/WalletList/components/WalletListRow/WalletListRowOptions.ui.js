@@ -1,16 +1,22 @@
 // @flow
 
 import React, { Component } from 'react'
-import slowlog from 'react-native-slowlog'
-import * as Constants from '../../../../../../constants/indexConstants'
 import { MenuDropDownStyle } from '../../../../../../styles/indexStyles'
 import { MenuDropDown } from '../../../../components/MenuDropDown/MenuDropDown.ui.js'
+import type { WalletDropdownOption } from '../../../../../../types.js'
 
-type Props = {
-  walletKey: string,
-  executeWalletRowOption: (walletKey: string, option: string) => void,
-  currencyCode: Array<string>
+export type WalletListRowOptionsOwnProps = {
+  walletId: string,
+  executeWalletRowOption: (walletId: string, option: string) => void,
+  currencyCode: string,
 }
+
+export type WalletListRowOptionsStateProps = {
+  account: Array<string>,
+  options: Array<WalletDropdownOption>
+}
+
+export type WalletListRowOptionsProps = WalletListRowOptionsOwnProps & WalletListRowOptionsStateProps
 
 const modifiedMenuDropDownStyle = {
   // manually overwrite width
@@ -21,30 +27,12 @@ const modifiedMenuDropDownStyle = {
   }
 }
 
-export default class WalletListRowOptions extends Component<Props> {
-  options: Array<{ value: string, label: string }>
-  constructor (props: Props) {
-    super(props)
-
-    this.options = []
-    for (const walletOption in Constants.WALLET_OPTIONS) {
-      const option = Constants.WALLET_OPTIONS[walletOption]
-      if (!option.currencyCode || option.currencyCode.includes(this.props.currencyCode)) {
-        const temp = {
-          value: option.value,
-          label: option.label
-        }
-        this.options.push(temp)
-      }
-    }
-    slowlog(this, /.*/, global.slowlogOptions)
-  }
-
+export default class WalletListRowOptions extends Component<WalletListRowOptionsProps> {
   optionAction = (optionKey: string) => {
-    this.props.executeWalletRowOption(this.props.walletKey, optionKey)
+    this.props.executeWalletRowOption(this.props.walletId, optionKey)
   }
 
   render () {
-    return <MenuDropDown style={modifiedMenuDropDownStyle} onSelect={this.optionAction} data={this.options} />
+    return <MenuDropDown style={modifiedMenuDropDownStyle} onSelect={this.optionAction} data={this.props.options} />
   }
 }

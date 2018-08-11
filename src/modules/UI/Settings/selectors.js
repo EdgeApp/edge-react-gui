@@ -117,16 +117,6 @@ export const getPlugin = (state: State, type: string): EdgeCurrencyPlugin => {
   return plugin
 }
 
-export const getBitcoinPlugin = (state: State): EdgeCurrencyPlugin => {
-  const bitcoinPlugin: EdgeCurrencyPlugin = getPlugin(state, 'bitcoin')
-  return bitcoinPlugin
-}
-
-export const getEthereumPlugin = (state: State): EdgeCurrencyPlugin => {
-  const ethereumPlugin: EdgeCurrencyPlugin = getPlugin(state, 'ethereum')
-  return ethereumPlugin
-}
-
 export const getSupportedWalletTypes = (state: State) => {
   const plugins = getPlugins(state).arrayPlugins
 
