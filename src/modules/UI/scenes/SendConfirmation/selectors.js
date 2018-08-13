@@ -25,6 +25,7 @@ export type SendConfirmationState = {
   isKeyboardVisible: boolean,
   forceUpdateGuiCounter: number,
   destination: string,
+  address: string,
 
   nativeAmount: string,
 
@@ -82,7 +83,8 @@ export const initialState = {
   error: null,
 
   pin: '',
-  authRequired: 'none'
+  authRequired: 'none',
+  address: ''
 }
 
 export const getScene = (state: State): any => getSceneState(state, 'sendConfirmation')
