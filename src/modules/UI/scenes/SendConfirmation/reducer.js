@@ -2,23 +2,22 @@
 
 import { add } from 'biggystring'
 import { isEqual } from 'lodash'
-import type { EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 
 import type { Action } from '../../../ReduxTypes.js'
 import * as ACTION from './action'
 import { initialState } from './selectors'
-import type { SendConfirmationState } from './selectors.js'
+import type { SendConfirmationState } from './selectors'
 
 export const sendConfirmationLegacy = (state: SendConfirmationState = initialState, action: Action) => {
-  switch (action.type) {
+  const { type, data = {} } = action
+  switch (type) {
     case ACTION.UPDATE_TRANSACTION: {
-      if (!action.data) throw new Error('Invalid Action')
-      const { parsedUri, forceUpdateGui } = action.data
+      const { transaction, parsedUri, forceUpdateGui } = data
       let forceUpdateGuiCounter = state.forceUpdateGuiCounter
       if (forceUpdateGui) {
         forceUpdateGuiCounter++
       }
-      if (!parsedUri) return { ...state, forceUpdateGuiCounter }
+      if (!parsedUri) return { ...state, forceUpdateGuiCounter, transaction }
 
       const { metadata = {}, customNetworkFee, ...others } = parsedUri
       if (!isEqual(state.parsedUri.metadata, metadata)) {
@@ -29,9 +28,15 @@ export const sendConfirmationLegacy = (state: SendConfirmationState = initialSta
         state.parsedUri.customNetworkFee = customNetworkFee
       }
 
+      const nativeAmount = parsedUri.nativeAmount || state.nativeAmount || '0'
+      const destination = metadata.name || parsedUri.legacyAddress || parsedUri.publicAddress || state.destination
+
       return {
         ...state,
+        transaction,
         forceUpdateGuiCounter,
+        nativeAmount,
+        destination,
         parsedUri: {
           ...state.parsedUri,
           ...others
@@ -39,30 +44,16 @@ export const sendConfirmationLegacy = (state: SendConfirmationState = initialSta
       }
     }
 
-    default:
-      return state
-  }
-}
+    case ACTION.UPDATE_PAYMENT_PROTOCOL_TRANSACTION: {
+      if (!action.data) return state
+      const { transaction } = data
 
-export const nativeAmount = (state: string = '0', action: Action) => {
-  switch (action.type) {
-    case ACTION.NEW_SPEND_INFO: {
-      if (!action.data) throw new Error('Invalid Action')
-      const nativeAmount = action.data.spendInfo.nativeAmount || action.data.spendInfo.spendTargets.reduce((sum, target) => add(sum, target.nativeAmount), '0')
-      return nativeAmount
+      return {
+        ...state,
+        transaction
+      }
     }
-    case ACTION.UPDATE_TRANSACTION: {
-      if (!action.data) throw new Error('Invalid Action')
-      if (!action.data.parsedUri) return state
-      return action.data.parsedUri.nativeAmount || state.nativeAmount || '0'
-    }
-    default:
-      return state
-  }
-}
 
-export const spendInfo = (state: EdgeSpendInfo | null = null, action: Action) => {
-  switch (action.type) {
     case ACTION.NEW_SPEND_INFO: {
       if (!action.data) return state
       const { spendInfo, spendInfo: { metadata: { name } }, authRequired } = data
@@ -87,45 +78,15 @@ export const spendInfo = (state: EdgeSpendInfo | null = null, action: Action) =>
         authRequired
       }
     }
-    default:
-      return state
-  }
-}
 
-export const address = (state: string = '', action: Action) => {
-  switch (action.type) {
-    case ACTION.NEW_SPEND_INFO: {
-      if (!action.data) throw new Error('Invalid Action')
-      return action.data.spendInfo.spendTargets[0].publicAddress
+    case ACTION.UPDATE_IS_KEYBOARD_VISIBLE: {
+      const { isKeyboardVisible } = data
+      return {
+        ...state,
+        isKeyboardVisible
+      }
     }
-    default:
-      return state
-  }
-}
 
-export const authRequired = (state: 'none' | 'pin' = 'none', action: Action) => {
-  switch (action.type) {
-    case ACTION.NEW_SPEND_INFO: {
-      if (!action.data) throw new Error('Invalid Action')
-      return action.data.authRequired || 'none'
-    }
-    default:
-      return state
-  }
-}
-
-export const destination = (state: string = '', action: Action) => {
-  switch (action.type) {
-    case ACTION.UPDATE_TRANSACTION: {
-      if (!action.data) throw new Error('Invalid Action')
-      if (!action.data.parsedUri || !action.data.parsedUri.metadata || !action.data.parsedUri.metadata.name) return state
-
-      return action.data.parsedUri.metadata.name
-    }
-    case ACTION.NEW_SPEND_INFO: {
-      if (!action.data) throw new Error('Invalid Action')
-      return action.data.spendInfo.metadata.name || ''
-    }
     default:
       return state
   }
@@ -138,9 +99,7 @@ export const error = (state: Error | null = null, action: Action) => {
       if (!action.data) throw new Error('Invalid Action')
       return action.data.error
     }
-    case ACTION.NEW_SPEND_INFO: {
-      return null
-    }
+
     default:
       return state
   }
@@ -181,32 +140,6 @@ export const pending = (state: boolean = false, action: Action) => {
   }
 }
 
-export const transaction = (state: EdgeTransaction | null = null, action: Action) => {
-  switch (action.type) {
-    case ACTION.UPDATE_PAYMENT_PROTOCOL_TRANSACTION:
-    case ACTION.UPDATE_TRANSACTION: {
-      if (!action.data) throw new Error('Invalid Action')
-      return action.data.transaction
-    }
-    case ACTION.NEW_SPEND_INFO: {
-      return null
-    }
-    default:
-      return state
-  }
-}
-
-export const isKeyboardVisible = (state: boolean = false, action: Action) => {
-  switch (action.type) {
-    case ACTION.UPDATE_IS_KEYBOARD_VISIBLE: {
-      if (!action.data) throw new Error('Invalid Action')
-      return action.data.isKeyboardVisible
-    }
-    default:
-      return state
-  }
-}
-
 export const sendConfirmation = (state: SendConfirmationState = initialState, action: Action) => {
   if (action.type === ACTION.RESET) return initialState
 
@@ -215,14 +148,7 @@ export const sendConfirmation = (state: SendConfirmationState = initialState, ac
     isEditable: isEditable(state.isEditable, action),
     error: error(state.error, action),
     pin: pin(state.pin, action),
-    pending: pending(state.pending, action),
-    transaction: transaction(state.transaction, action),
-    isKeyboardVisible: isKeyboardVisible(state.isKeyboardVisible, action),
-    destination: destination(state.destination, action),
-    spendInfo: spendInfo(state.spendInfo, action),
-    nativeAmount: nativeAmount(state.nativeAmount, action),
-    address: address(state.address, action),
-    authRequired: authRequired(state.authRequired, action)
+    pending: pending(state.pending, action)
   }
 }
 export default sendConfirmation
