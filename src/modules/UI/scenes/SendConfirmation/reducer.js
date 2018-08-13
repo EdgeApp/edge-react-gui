@@ -64,8 +64,28 @@ export const nativeAmount = (state: string = '0', action: Action) => {
 export const spendInfo = (state: EdgeSpendInfo | null = null, action: Action) => {
   switch (action.type) {
     case ACTION.NEW_SPEND_INFO: {
-      if (!action.data) throw new Error('Invalid Action')
-      return action.data.spendInfo
+      if (!action.data) return state
+      const { spendInfo, spendInfo: { metadata: { name } }, authRequired } = data
+      const nativeAmount = spendInfo.nativeAmount || spendInfo.spendTargets.reduce((sum, target) => add(sum, target.nativeAmount), '0')
+      const destination = name || spendInfo.spendTargets[0].publicAddress
+      const parsedUri = {
+        ...state.parsedUri,
+        networkFeeOption: spendInfo.networkFeeOption,
+        customNetworkFee: spendInfo.customNetworkFee,
+        publicAddress: spendInfo.spendTargets[0].publicAddress,
+        nativeAmount: spendInfo.spendTargets[0].nativeAmount,
+        metadata: spendInfo.metadata
+      }
+
+      return {
+        ...state,
+        parsedUri,
+        spendInfo,
+        destination,
+        nativeAmount,
+        transaction: null,
+        authRequired
+      }
     }
     default:
       return state
