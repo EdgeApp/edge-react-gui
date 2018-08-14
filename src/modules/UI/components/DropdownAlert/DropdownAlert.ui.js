@@ -3,6 +3,7 @@
 import React, { Component } from 'react'
 import type { Node } from 'react'
 import RNDropdownAlert from 'react-native-dropdownalert'
+
 import { isIphoneX } from '../.././../../lib/isIphoneX.js'
 
 type Props = {

@@ -1,10 +1,10 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-import slowlog from 'react-native-slowlog'
 import { abs, sub } from 'biggystring'
 import React, { Component } from 'react'
 import { TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import Picker from 'react-native-picker'
+import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../../../locales/strings.js'
@@ -193,7 +193,9 @@ class AmountArea extends Component {
                 onFocus={this.props.onFocusNotes}
                 onBlur={this.props.onBlurNotes}
                 blurOnSubmit={false}
-                ref={ ref => { this.amountInput = ref } }
+                ref={ref => {
+                  this.amountInput = ref
+                }}
               />
             </View>
           </TouchableWithoutFeedback>

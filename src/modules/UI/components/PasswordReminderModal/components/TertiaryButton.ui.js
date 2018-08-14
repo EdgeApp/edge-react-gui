@@ -21,9 +21,7 @@ export class TertiaryButton extends Component<TertiaryButtonProps, TertiaryButto
         underlayColor={styleRaw.tertiaryButtonUnderlay.color}
         style={[styles.button, styles.tertiaryButton, this.props.style]}
       >
-        <View>
-          {this.props.children}
-        </View>
+        <View>{this.props.children}</View>
       </TouchableHighlight>
     )
   }

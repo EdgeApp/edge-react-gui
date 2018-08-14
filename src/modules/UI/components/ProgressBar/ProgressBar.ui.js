@@ -1,7 +1,8 @@
 // @flow
 
-import React, {PureComponent } from 'react'
-import { View, Animated, Easing } from 'react-native'
+import React, { PureComponent } from 'react'
+import { Animated, Easing, View } from 'react-native'
+
 import style from './styles.js'
 
 type Props = {

@@ -518,7 +518,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       return currencyPLuginUtil(state, data)
     }
     case Constants.COMPLETE_ONBOARDING: {
-      return {...state, showOnBoarding: false}
+      return { ...state, showOnBoarding: false }
     }
 
     case ACTION.SET_ACCOUNT_BALANCE_VISIBILITY: {

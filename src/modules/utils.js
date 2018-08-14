@@ -11,13 +11,14 @@ import type {
   EdgeTransaction
 } from 'edge-core-js'
 import _ from 'lodash'
-import type { State } from './ReduxTypes'
 import { Platform } from 'react-native'
-import { getCurrencyConverter } from './Core/selectors.js'
-import { intl } from '../locales/intl.js'
+
 import { FIAT_CODES_SYMBOLS as currencySymbolMap, getSymbolFromCurrency } from '../constants/indexConstants.js'
+import { intl } from '../locales/intl.js'
 import borderColors from '../theme/variables/css3Colors'
 import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet } from '../types'
+import { getCurrencyConverter } from './Core/selectors.js'
+import type { State } from './ReduxTypes'
 
 const DIVIDE_PRECISION = 18
 
@@ -201,7 +202,7 @@ export const getCurrencyAccountFiatBalanceFromWallet = (wallet: GuiWallet, curre
   const cryptoAmount = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
   const currencyConverter = getCurrencyConverter(state)
   const unformattedFiatValue = currencyConverter.convertCurrency(currencyCode, 'iso:' + settings.defaultFiat, cryptoAmount)
-  const formattedFiatValue = intl.formatNumber(unformattedFiatValue, {toFixed: 2})
+  const formattedFiatValue = intl.formatNumber(unformattedFiatValue, { toFixed: 2 })
   return formattedFiatValue || '0'
 }
 
@@ -226,7 +227,7 @@ export const getCurrencyWalletFiatBalanceFromWallet = (wallet: GuiWallet, curren
   const cryptoAmount = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
   const currencyConverter = getCurrencyConverter(state)
   const unformattedFiatValue = currencyConverter.convertCurrency(currencyCode, wallet.isoFiatCurrencyCode, cryptoAmount)
-  const formattedFiatValue = intl.formatNumber(unformattedFiatValue, {toFixed: 2})
+  const formattedFiatValue = intl.formatNumber(unformattedFiatValue, { toFixed: 2 })
   return formattedFiatValue || '0'
 }
 
@@ -381,7 +382,7 @@ export const isReceivedTransaction = (edgeTransaction: EdgeTransaction): boolean
   return !isSentTransaction(edgeTransaction)
 }
 export const isSentTransaction = (edgeTransaction: EdgeTransaction): boolean => {
-  return (!!edgeTransaction.nativeAmount && (edgeTransaction.nativeAmount.charAt(0) === '-'))
+  return !!edgeTransaction.nativeAmount && edgeTransaction.nativeAmount.charAt(0) === '-'
 }
 
 export const getTimeMeasurement = (inMinutes: number): string => {
@@ -541,9 +542,7 @@ export function getObjectDiff (obj1: Object, obj2: Object, traverseObjects?: Obj
     }
   }
   for (const e in obj2) {
-    if (
-      (comparedElements && comparedElements[e]) ||
-      (ignoreObjects && ignoreObjects[e])) {
+    if ((comparedElements && comparedElements[e]) || (ignoreObjects && ignoreObjects[e])) {
       continue
     }
     if (obj2.hasOwnProperty(e)) {

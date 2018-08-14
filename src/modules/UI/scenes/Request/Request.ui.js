@@ -1,18 +1,18 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import { bns } from 'biggystring'
 import type { EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, Clipboard, Share, View } from 'react-native'
 import ContactsWrapper from 'react-native-contacts-wrapper'
+import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
 import * as Constants from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings.js'
 import type { GuiCurrencyInfo, GuiReceiveAddress, GuiWallet } from '../../../../types.js'
 import WalletListModal from '../../../UI/components/WalletListModal/WalletListModalConnector'
-import XRPMinimumModal from './components/XRPMinimumModal/XRPMinimumModal.ui.js'
+import { getObjectDiff } from '../../../utils'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
 import { ExchangedFlipInput } from '../../components/FlipInput/ExchangedFlipInput2.js'
 import type { ExchangedFlipInputAmounts } from '../../components/FlipInput/ExchangedFlipInput2.js'
@@ -21,8 +21,8 @@ import QRCode from '../../components/QRCode/index.js'
 import RequestStatus from '../../components/RequestStatus/index.js'
 import SafeAreaView from '../../components/SafeAreaView/index.js'
 import ShareButtons from '../../components/ShareButtons/index.js'
+import XRPMinimumModal from './components/XRPMinimumModal/XRPMinimumModal.ui.js'
 import styles from './styles.js'
-import { getObjectDiff } from '../../../utils'
 
 const PUBLIC_ADDRESS_REFRESH_MS = 2000
 
@@ -162,17 +162,11 @@ export class Request extends Component<Props, State> {
     return (
       <SafeAreaView>
         <Gradient style={styles.view}>
-          <XRPMinimumModal
-            visibilityBoolean={this.state.isXRPMinimumModalVisible}
-            onExit={this.onCloseXRPMinimumModal}
-          />
+          <XRPMinimumModal visibilityBoolean={this.state.isXRPMinimumModalVisible} onExit={this.onCloseXRPMinimumModal} />
           <Gradient style={styles.gradient} />
 
           <View style={styles.exchangeRateContainer}>
-            <ExchangeRate
-              primaryInfo={primaryCurrencyInfo}
-              secondaryInfo={secondaryCurrencyInfo}
-              secondaryDisplayAmount={exchangeSecondaryToPrimaryRatio} />
+            <ExchangeRate primaryInfo={primaryCurrencyInfo} secondaryInfo={secondaryCurrencyInfo} secondaryDisplayAmount={exchangeSecondaryToPrimaryRatio} />
           </View>
 
           <View style={styles.main}>

@@ -3,8 +3,8 @@
 import React from 'react'
 import { Text, View } from 'react-native'
 
-import style from '../style'
 import { getObjectDiff } from '../../../../utils'
+import style from '../style'
 
 type Props = {
   styles: {
@@ -16,7 +16,7 @@ type Props = {
 
 class WalletNameHeader extends React.Component<Props> {
   shouldComponentUpdate (nextProps: Props) {
-    const diffElement = getObjectDiff(this.props, nextProps, {styles: true})
+    const diffElement = getObjectDiff(this.props, nextProps, { styles: true })
     return !!diffElement
   }
 

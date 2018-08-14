@@ -3,8 +3,8 @@
 import React, { Component } from 'react'
 import { TextField } from 'react-native-material-textfield'
 
-import { THEME } from '../../../../../theme/variables/airbitz.js'
 import s from '../../../../../locales/strings.js'
+import { THEME } from '../../../../../theme/variables/airbitz.js'
 
 const DEFAULTS = {
   secureTextEntry: true,

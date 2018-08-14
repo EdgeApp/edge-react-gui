@@ -208,8 +208,9 @@ export default class WalletList extends Component<Props, State> {
                         opacity: this.state.fullListOpacity,
                         zIndex: this.state.fullListZIndex
                       }
-                    ]}>
-                    <TouchableOpacity style={styles.fiatToggleWrap} onPress={this.onFiatSwitchToggle} >
+                    ]}
+                  >
+                    <TouchableOpacity style={styles.fiatToggleWrap} onPress={this.onFiatSwitchToggle}>
                       <T style={styles.toggleFiatText}>{this.props.isWalletFiatBalanceVisible ? s.strings.fragment_wallets_crypto_toggle_title : fiatSymbol}</T>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.walletsBoxHeaderAddWallet, { width: 41 }]} onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]}>
@@ -286,10 +287,7 @@ export default class WalletList extends Component<Props, State> {
   renderItem = (item: Object) => {
     return (
       // $FlowFixMe sortHandlers error. Where does sortHandlers even come from?
-      <FullWalletListRow
-        data={item}
-        customTokens={this.props.customTokens}
-      />
+      <FullWalletListRow data={item} customTokens={this.props.customTokens} />
     )
   }
 

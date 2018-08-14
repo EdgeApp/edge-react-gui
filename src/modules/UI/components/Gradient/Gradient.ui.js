@@ -21,7 +21,7 @@ export type Props = {
 
 export class Gradient extends Component<Props> {
   shouldComponentUpdate (nextProps: Props) {
-    const diffElement = getObjectDiff(this.props, nextProps, {style: true, children: true})
+    const diffElement = getObjectDiff(this.props, nextProps, { style: true, children: true })
     return !!diffElement
   }
 

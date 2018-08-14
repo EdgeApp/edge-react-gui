@@ -1,9 +1,9 @@
 // @flow
 
+import type { EdgeDenomination } from 'edge-core-js'
 import React, { PureComponent } from 'react'
 import { TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import type { EdgeDenomination } from 'edge-core-js'
 
 import { intl } from '../../../../../../locales/intl'
 import * as UTILS from '../../../../../utils'
@@ -25,7 +25,7 @@ export type StateProps = {
 }
 
 export type DispatchProps = {
-  selectWallet: (id: string, currencyCode: string) => any,
+  selectWallet: (id: string, currencyCode: string) => any
 }
 
 type Props = OwnProps & StateProps & DispatchProps
@@ -53,9 +53,7 @@ export class WalletListTokenRow extends PureComponent<Props> {
 
           <View style={[styles.tokenRowBalanceTextWrap]}>
             {this.props.isWalletFiatBalanceVisible ? (
-              <T style={[styles.tokenRowText]}>
-                {this.props.fiatSymbol + ' ' + this.props.fiatBalance}
-              </T>
+              <T style={[styles.tokenRowText]}>{this.props.fiatSymbol + ' ' + this.props.fiatBalance}</T>
             ) : (
               <T style={[styles.tokenRowText]}>
                 {intl.formatNumber(UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(this.props.balance) || '0')}

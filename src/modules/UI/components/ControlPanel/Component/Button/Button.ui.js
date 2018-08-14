@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react'
 import type { Node } from 'react'
-import { StyleSheet, Text as RNText, TouchableHighlight, View } from 'react-native'
+import { Text as RNText, StyleSheet, TouchableHighlight, View } from 'react-native'
 
 import styles, { rawStyles } from './styles.js'
 
