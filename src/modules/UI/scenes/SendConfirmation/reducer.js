@@ -39,6 +39,24 @@ export const sendConfirmationLegacy = (state: SendConfirmationState = initialSta
       }
     }
 
+    case ACTION.NEW_SPEND_INFO: {
+      if (!action.data) throw new Error('Invalid Action')
+      const { spendInfo } = action.data
+      const parsedUri = {
+        ...state.parsedUri,
+        networkFeeOption: spendInfo.networkFeeOption || state.parsedUri.networkFeeOption,
+        customNetworkFee: spendInfo.customNetworkFee || state.parsedUri.customNetworkFee,
+        publicAddress: spendInfo.spendTargets[0].publicAddress || state.parsedUri.publicAddress,
+        nativeAmount: spendInfo.spendTargets[0].nativeAmount || state.parsedUri.nativeAmount,
+        metadata: { ...state.parsedUri.metadata, ...spendInfo.metadata }
+      }
+
+      return {
+        ...state,
+        parsedUri
+      }
+    }
+
     default:
       return state
   }
@@ -106,6 +124,7 @@ export const destination = (state: string = '', action: Action) => {
       if (!action.data) throw new Error('Invalid Action')
       return action.data.spendInfo.metadata.name || ''
     }
+
     default:
       return state
   }
