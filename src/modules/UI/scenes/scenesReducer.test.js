@@ -4,7 +4,6 @@
 
 import { scenes as scenesReducer } from './reducer.js'
 import { request } from './Request/reducer.js'
-
 import { initialState as SendConfirmationInitialState } from './SendConfirmation/selectors.js'
 
 test('initialState', () => {

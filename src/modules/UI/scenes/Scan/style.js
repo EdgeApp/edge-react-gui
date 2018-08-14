@@ -194,7 +194,7 @@ export const styles = {
   },
   privateKeyIcon: {
     color: THEME.COLORS.WHITE,
-    transform: [{rotate: '270deg'}]
+    transform: [{ rotate: '270deg' }]
   }
 }
 export default StyleSheet.create(styles)

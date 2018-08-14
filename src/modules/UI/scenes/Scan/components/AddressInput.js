@@ -1,8 +1,8 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { View } from 'react-native'
+import slowlog from 'react-native-slowlog'
 
 import { FormField } from '../../../../../components/FormField.js'
 import s from '../../../../../locales/strings.js'
@@ -40,7 +40,13 @@ export class AddressInput extends Component<Props> {
         </View>
         {this.props.copyMessage && (
           <View style={styles.pasteButtonRow}>
-            <TertiaryButton text={this.props.copyMessage} ellipsizeMode={'middle'} onPressFunction={this.props.onPaste} numberOfLines={1} style={styles.addressInputButton} />
+            <TertiaryButton
+              text={this.props.copyMessage}
+              ellipsizeMode={'middle'}
+              onPressFunction={this.props.onPaste}
+              numberOfLines={1}
+              style={styles.addressInputButton}
+            />
           </View>
         )}
       </View>

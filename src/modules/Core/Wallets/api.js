@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyWallet, EdgeMetadata, EdgeParsedUri, EdgeReceiveAddress, EdgeSpendInfo, EdgeTransaction, EdgePaymentProtocolInfo } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeMetadata, EdgeParsedUri, EdgePaymentProtocolInfo, EdgeReceiveAddress, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import _ from 'lodash'
 const ENABLED_TOKENS_FILENAME = 'EnabledTokens.json'
 

@@ -2,12 +2,13 @@
 
 import React, { Component } from 'react'
 import { Text } from 'react-native'
-import styles from './style'
+
 import { getObjectDiff } from '../../../utils.js'
+import styles from './style'
 
 export default class FormattedText extends Component {
   shouldComponentUpdate (nextProps) {
-    const diffElement = getObjectDiff(this.props, nextProps, {style: true, children: true})
+    const diffElement = getObjectDiff(this.props, nextProps, { style: true, children: true })
     return !!diffElement
   }
 

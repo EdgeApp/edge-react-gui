@@ -1,9 +1,9 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import { bns } from 'biggystring'
 import React, { Component } from 'react'
 import { Animated, Platform, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
+import slowlog from 'react-native-slowlog'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 
 import * as Constants from '../../../../constants/indexConstants'

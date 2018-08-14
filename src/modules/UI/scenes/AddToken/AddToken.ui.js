@@ -1,11 +1,12 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import _ from 'lodash'
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, ScrollView, View } from 'react-native'
+import slowlog from 'react-native-slowlog'
 
 import { FormField } from '../../../../components/FormField.js'
+import { MAX_TOKEN_CODE_CHARACTERS } from '../../../../constants/indexConstants.js'
 import s from '../../../../locales/strings.js'
 import type { CustomTokenInfo, GuiWallet } from '../../../../types'
 import { decimalPlacesToDenomination } from '../../../utils.js'
@@ -14,7 +15,6 @@ import Text from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView'
 import styles from './style.js'
-import { MAX_TOKEN_CODE_CHARACTERS } from '../../../../constants/indexConstants.js'
 
 export type AddTokenOwnProps = {
   walletId: string,

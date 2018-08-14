@@ -1,11 +1,11 @@
 // @flow
 
-import type { Action } from '../../modules/ReduxTypes.js'
-import { daysBetween, MILLISECONDS_PER_DAY } from '../../modules/utils.js'
 import { ACCOUNT_INIT_COMPLETE } from '../../constants/indexConstants.js'
-import { SET_SETTINGS_LOCK } from '../../modules/UI/Settings/action.js'
-import { UNLOCK as UNLOCK_WALLET_SEED } from '../../modules/UI/scenes/WalletList/components/GetSeedModal/GetSeedModalConnector.js'
+import type { Action } from '../../modules/ReduxTypes.js'
 import { CHECK_PASSWORD_SUCCESS, REQUEST_CHANGE_PASSWORD } from '../../modules/UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
+import { UNLOCK as UNLOCK_WALLET_SEED } from '../../modules/UI/scenes/WalletList/components/GetSeedModal/GetSeedModalConnector.js'
+import { SET_SETTINGS_LOCK } from '../../modules/UI/Settings/action.js'
+import { MILLISECONDS_PER_DAY, daysBetween } from '../../modules/utils.js'
 import { PASSWORD_REMINDER_POSTPONED } from './indexPasswordReminder.js'
 
 export const INITIAL_NON_PASSWORD_DAYS_LIMIT = 2
@@ -132,7 +132,7 @@ export const untranslatedReducer = (state: PasswordReminderState = initialState,
     case 'NON_PASSWORD_LOGIN': {
       const nonPasswordLoginsCount = action.data.nonPasswordLoginsCount + 1
       const needsPasswordCheck =
-        (nonPasswordLoginsCount >= action.data.nonPasswordLoginsLimit) ||
+        nonPasswordLoginsCount >= action.data.nonPasswordLoginsLimit ||
         daysBetween(action.data.lastPasswordUseDate, action.data.lastLoginDate) >= action.data.nonPasswordDaysLimit
 
       return {
@@ -164,7 +164,7 @@ export const untranslatedReducer = (state: PasswordReminderState = initialState,
     }
 
     case 'PASSWORD_REMINDER_POSTPONED': {
-      const nonPasswordDaysLimit = (state.lastLoginDate / MILLISECONDS_PER_DAY) - (state.lastPasswordUseDate / MILLISECONDS_PER_DAY) + 2
+      const nonPasswordDaysLimit = state.lastLoginDate / MILLISECONDS_PER_DAY - state.lastPasswordUseDate / MILLISECONDS_PER_DAY + 2
       const nonPasswordLoginsLimit = state.nonPasswordLoginsCount + 2
       const needsPasswordCheck = false
 

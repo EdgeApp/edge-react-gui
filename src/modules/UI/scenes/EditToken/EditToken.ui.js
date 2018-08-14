@@ -6,7 +6,7 @@ import React, { Component } from 'react'
 import { ActivityIndicator, Alert, ScrollView, View } from 'react-native'
 
 import { FormField } from '../../../../components/FormField.js'
-import { MAX_TOKEN_CODE_CHARACTERS, DELETE } from '../../../../constants/indexConstants'
+import { DELETE, MAX_TOKEN_CODE_CHARACTERS } from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings.js'
 import type { CustomTokenInfo } from '../../../../types.js'
 import * as UTILS from '../../../utils'

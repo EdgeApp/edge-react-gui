@@ -1,8 +1,8 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { KeyboardAvoidingView, ListView, TouchableOpacity, View } from 'react-native'
+import slowlog from 'react-native-slowlog'
 
 import { FormField } from '../../../../components/FormField.js'
 import T from '../../components/FormattedText'
