@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react'
-import { Animated, Modal, View } from 'react-native'
+import { Animated, Modal, Text, View } from 'react-native'
 
 import s from '../../../../locales/strings.js'
 import { OnBoardingSceneStyles } from '../../../../styles/indexStyles.js'
