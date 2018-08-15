@@ -2,7 +2,7 @@
 
 import THEME from '../../theme/variables/airbitz'
 import { PLATFORM } from '../../theme/variables/platform'
-import {PagingWithDotStyles} from '../components/PagingWithDotStyles'
+import { PagingWithDotStyles } from '../components/PagingWithDotStyles'
 
 const OnBoardingSceneStyles = {
   /* modalContainer: {
@@ -32,8 +32,7 @@ const OnBoardingSceneStyles = {
       height: 20
     }
   },
-  wrapper: {
-  },
+  wrapper: {},
   slideContainer: {
     width: '100%',
     height: '100%',

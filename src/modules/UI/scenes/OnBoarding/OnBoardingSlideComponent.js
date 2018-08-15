@@ -4,13 +4,11 @@ import { Dimensions, ImageBackground, Platform, Text, View } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
 import { ANDROID } from '../../../../constants/indexConstants'
-import {
-  OnBoardingSlideStyles as styles
-} from '../../../../styles/indexStyles.js'
+import { OnBoardingSlideStyles as styles } from '../../../../styles/indexStyles.js'
 import { PLATFORM } from '../../../../theme/variables/platform'
 
 type Props = {
-  slide: Object,
+  slide: Object
 }
 
 type State = {
@@ -40,24 +38,17 @@ class OnBoardingSlideComponent extends Component<Props, State> {
 
   render () {
     const isTablet = DeviceInfo.isTablet()
-    const image = Platform.OS === ANDROID
-      ? (isTablet
-        ? (this.state.orientation === 'landscape'
-          ? this.props.slide.androidTabletHorizontalImage
-          : this.props.slide.androidTabletVerticalImage
-        )
-        : this.props.slide.androidImage
-      )
-      : (isTablet
-        ? (this.state.orientation === 'landscape'
-          ? this.props.slide.iPadImageHoriz
-          : this.props.slide.iPadImage
-        )
-        : PLATFORM.isIphoneX ? this.props.slide.iPhoneX : this.props.slide.iOSImage
-      )
-    const container = {...styles.container, width: Dimensions.get('window').width, height: Dimensions.get('window').height}
+    const image =
+      Platform.OS === ANDROID
+        ? isTablet
+          ? this.state.orientation === 'landscape' ? this.props.slide.androidTabletHorizontalImage : this.props.slide.androidTabletVerticalImage
+          : this.props.slide.androidImage
+        : isTablet
+          ? this.state.orientation === 'landscape' ? this.props.slide.iPadImageHoriz : this.props.slide.iPadImage
+          : PLATFORM.isIphoneX ? this.props.slide.iPhoneX : this.props.slide.iOSImage
+    const container = { ...styles.container, width: Dimensions.get('window').width, height: Dimensions.get('window').height }
     return (
-      <ImageBackground source={{uri: image}} style={container}>
+      <ImageBackground source={{ uri: image }} style={container}>
         <View style={styles.innerTop} />
         <View style={styles.innerBottom}>
           <View style={styles.textBox}>

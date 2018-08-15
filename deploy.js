@@ -213,7 +213,7 @@ function buildIos (buildObj) {
   chdir(buildDir)
   let archiveDir = cmd('ls -t')
   const archiveDirArray = archiveDir.split('\n')
-  archiveDir = archiveDirArray[ 0 ]
+  archiveDir = archiveDirArray[0]
 
   buildObj.dSymFile = `${buildDir}/${archiveDir}/dSYMs/${buildObj.xcodeScheme}.app.dSYM`
   // const appFile = sprintf('%s/%s/Products/Applications/%s.app', buildDir, archiveDir, buildObj.xcodeScheme)
@@ -232,7 +232,7 @@ function buildIos (buildObj) {
   chdir(buildObj.guiPlatformDir)
 
   // Replace TeamID in exportOptions.plist
-  let plist = fs.readFileSync(buildObj.guiPlatformDir + '/exportOptions.plist', {encoding: 'utf8'})
+  let plist = fs.readFileSync(buildObj.guiPlatformDir + '/exportOptions.plist', { encoding: 'utf8' })
   plist = plist.replace('Your10CharacterTeamId', buildObj.appleDeveloperTeamId)
   fs.writeFileSync(buildObj.guiPlatformDir + '/exportOptions.plist', plist)
 
@@ -241,7 +241,9 @@ function buildIos (buildObj) {
 
   call(`security set-keychain-settings -t 7200 -l ${process.env.HOME || ''}/Library/Keychains/login.keychain`)
 
-  cmdStr = `xcodebuild -exportArchive -allowProvisioningUpdates -archivePath "${buildDir}/${archiveDir}" -exportPath ${buildObj.tmpDir}/ -exportOptionsPlist ./exportOptions.plist`
+  cmdStr = `xcodebuild -exportArchive -allowProvisioningUpdates -archivePath "${buildDir}/${archiveDir}" -exportPath ${
+    buildObj.tmpDir
+  }/ -exportOptionsPlist ./exportOptions.plist`
   call(cmdStr)
 
   mylog('Zipping dSYM for ' + buildObj.xcodeScheme)
@@ -259,7 +261,7 @@ function buildAndroid (buildObj) {
 
   chdir(buildObj.guiDir)
 
-  let gradle = fs.readFileSync(buildObj.guiPlatformDir + '/app/build.gradle', {encoding: 'utf8'})
+  let gradle = fs.readFileSync(buildObj.guiPlatformDir + '/app/build.gradle', { encoding: 'utf8' })
   // var mystring = '<img src="[media id=5]" />';
   let regex = /versionCode [0-9]{8}/gm
   let newVer = sprintf('versionCode %s', buildObj.buildNum)
@@ -295,8 +297,13 @@ function buildCommonPost (buildObj) {
     mylog('**********************\n')
     const url = sprintf('https://rink.hockeyapp.net/api/2/apps/%s/app_versions/upload', buildObj.hockeyAppId)
 
-    curl = sprintf('/usr/bin/curl -F ipa=@%s -H "X-HockeyAppToken: %s" -F "notes_type=1" -F "status=2" -F "notify=0" -F "tags=%s" -F "notes=%s" ',
-      buildObj.ipaFile, buildObj.hockeyAppToken, buildObj.hockeyAppTags, notes)
+    curl = sprintf(
+      '/usr/bin/curl -F ipa=@%s -H "X-HockeyAppToken: %s" -F "notes_type=1" -F "status=2" -F "notify=0" -F "tags=%s" -F "notes=%s" ',
+      buildObj.ipaFile,
+      buildObj.hockeyAppToken,
+      buildObj.hockeyAppTags,
+      notes
+    )
 
     if (buildObj.dSymZip !== undefined) {
       curl += sprintf('-F dsym=@%s ', buildObj.dSymZip)
@@ -325,10 +332,7 @@ function buildCommonPost (buildObj) {
     if (buildObj.dSymFile) {
       const cpa = `cp -a "${buildObj.dSymFile}/Contents/Resources/DWARF/${buildObj.xcodeScheme}" ${buildObj.tmpDir}/`
       call(cpa)
-      curl =
-        `/usr/bin/curl https://upload.bugsnag.com/ ` +
-        `-F dsym=@${buildObj.tmpDir}/${buildObj.xcodeScheme} ` +
-        `-F projectRoot=${buildObj.guiPlatformDir}`
+      curl = `/usr/bin/curl https://upload.bugsnag.com/ ` + `-F dsym=@${buildObj.tmpDir}/${buildObj.xcodeScheme} ` + `-F projectRoot=${buildObj.guiPlatformDir}`
       call(curl)
     }
   }
@@ -338,7 +342,9 @@ function buildCommonPost (buildObj) {
     mylog('***********************\n')
 
     mylog('*** Getting upload URL/ID')
-    curl = `curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'X-API-Token: ${buildObj.appCenterApiToken}' 'https://api.appcenter.ms/v0.1/apps/${buildObj.appCenterGroupName}/${buildObj.appCenterAppName}/release_uploads'`
+    curl = `curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'X-API-Token: ${
+      buildObj.appCenterApiToken
+    }' 'https://api.appcenter.ms/v0.1/apps/${buildObj.appCenterGroupName}/${buildObj.appCenterAppName}/release_uploads'`
     let response = rmNewline(cmd(curl))
     let responseObj = JSON.parse(response)
 
@@ -347,12 +353,18 @@ function buildCommonPost (buildObj) {
     call(curl)
 
     mylog('\n*** Change resource status to committed')
-    curl = `curl -X PATCH --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'X-API-Token: ${buildObj.appCenterApiToken}' -d '{ "status": "committed" }' 'https://api.appcenter.ms/v0.1/apps/${buildObj.appCenterGroupName}/${buildObj.appCenterAppName}/release_uploads/${responseObj.upload_id}'`
+    curl = `curl -X PATCH --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'X-API-Token: ${
+      buildObj.appCenterApiToken
+    }' -d '{ "status": "committed" }' 'https://api.appcenter.ms/v0.1/apps/${buildObj.appCenterGroupName}/${buildObj.appCenterAppName}/release_uploads/${
+      responseObj.upload_id
+    }'`
     response = rmNewline(cmd(curl))
     responseObj = JSON.parse(response)
 
     mylog('\n*** Releasing to distribution group')
-    curl = `curl -X PATCH --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'X-API-Token: ${buildObj.appCenterApiToken}' -d '{ "destination_name": "${buildObj.appCenterDistroGroup}", "release_notes": "${notes}" }' 'https://api.appcenter.ms/${responseObj.release_url}'`
+    curl = `curl -X PATCH --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'X-API-Token: ${
+      buildObj.appCenterApiToken
+    }' -d '{ "destination_name": "${buildObj.appCenterDistroGroup}", "release_notes": "${notes}" }' 'https://api.appcenter.ms/${responseObj.release_url}'`
     call(curl)
 
     mylog('\n*** Upload to App Center Complete ***')
@@ -379,9 +391,7 @@ function buildnum (oldBuild = '') {
     const oldDay = oldBuild.substr(4, 2)
     const oldNum = oldBuild.substr(6, 2)
 
-    if (year === parseInt(oldYear) &&
-      month === parseInt(oldMonth) &&
-      day === parseInt(oldDay)) {
+    if (year === parseInt(oldYear) && month === parseInt(oldMonth) && day === parseInt(oldDay)) {
       let numInt = parseInt(oldNum)
       numInt++
       num = numInt.toString()

@@ -1,8 +1,8 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-import slowlog from 'react-native-slowlog'
 import React, { PureComponent } from 'react'
 import { TouchableHighlight, View } from 'react-native'
+import slowlog from 'react-native-slowlog'
 
 import s from '../../../../locales/strings.js'
 import T from '../FormattedText'
@@ -24,7 +24,7 @@ class PrimaryButton extends PureComponent {
   }
   onPress = () => {
     if (!this.props.processingFlag) {
-      this.props.onPressFunction()
+      this.props.onPress()
     }
   }
 
@@ -51,7 +51,7 @@ class SecondaryButton extends PureComponent {
     return (
       <TouchableHighlight
         style={[styles.secondaryButtonWrap, styles.stylizedButton, this.props.style]}
-        onPress={this.props.onPressFunction}
+        onPress={this.props.onPress}
         disabled={this.props.disabled}
         underlayColor={styleRaw.secondaryUnderlay.color}
       >
@@ -68,7 +68,7 @@ class TertiaryButton extends PureComponent {
     return (
       <TouchableHighlight
         style={[styles.tertiaryButtonWrap, styles.stylizedButton, this.props.buttonStyle]}
-        onPress={this.props.onPressFunction}
+        onPress={this.props.onPress}
         disabled={this.props.disabled}
         underlayColor={styleRaw.tertiaryUnderlay.color}
       >

@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import type { Dispatch, State } from '../../../../../ReduxTypes.js'
 import { UniqueIdentifierModal } from './UniqueIdentifierModal.ui.js'
-import { deactivated, uniqueIdentifierChanged, reset } from './UniqueIdentifierModalActions.js'
+import { deactivated, reset, uniqueIdentifierChanged } from './UniqueIdentifierModalActions.js'
 
 export const mapStateToProps = (state: State) => ({
   isActive: state.ui.scenes.uniqueIdentifierModal.isActive,

@@ -1,15 +1,5 @@
 // @flow
 
-import {
-  PluginViewConnect,
-  PluginBuySell,
-  PluginSpend,
-  renderPluginBackButton
-} from './PluginView.ui'
+import { PluginBuySell, PluginSpend, PluginViewConnect, renderPluginBackButton } from './PluginView.ui'
 
-export {
-  PluginViewConnect as PluginView,
-  PluginBuySell,
-  PluginSpend,
-  renderPluginBackButton
-}
+export { PluginViewConnect as PluginView, PluginBuySell, PluginSpend, renderPluginBackButton }

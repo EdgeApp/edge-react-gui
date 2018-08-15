@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import type { Node } from 'react-native'
 import { default as RN, TouchableHighlight, View } from 'react-native'
 
-import styles, { styles as styleRaw } from './styles.js'
+import { rawStyles, styles } from '../../Buttons/style.js'
 
 export type TertiaryButtonProps = {
   onPress: Function,
@@ -18,12 +18,10 @@ export class TertiaryButton extends Component<TertiaryButtonProps, TertiaryButto
     return (
       <TouchableHighlight
         onPress={this.props.onPress}
-        underlayColor={styleRaw.tertiaryButtonUnderlay.color}
+        underlayColor={rawStyles.tertiaryButtonUnderlay.color}
         style={[styles.button, styles.tertiaryButton, this.props.style]}
       >
-        <View>
-          {this.props.children}
-        </View>
+        <View>{this.props.children}</View>
       </TouchableHighlight>
     )
   }

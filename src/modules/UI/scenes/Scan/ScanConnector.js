@@ -2,19 +2,19 @@
 
 import { connect } from 'react-redux'
 
-import Scan from './Scan.ui'
-import type { Dispatch, State } from '../../../ReduxTypes'
 import { getCameraPermission } from '../../../../reducers/permissions/selectors'
+import type { Dispatch, State } from '../../../ReduxTypes'
 import { toggleScanToWalletListModal } from '../../components/WalletListModal/action'
 import {
-  toggleAddressModal,
-  toggleEnableTorch,
-  qrCodeScanned,
-  legacyAddressModalContinueButtonPressed,
-  legacyAddressModalCancelButtonPressed,
+  addressModalCancelButtonPressed,
   addressModalDoneButtonPressed,
-  addressModalCancelButtonPressed
+  legacyAddressModalCancelButtonPressed,
+  legacyAddressModalContinueButtonPressed,
+  qrCodeScanned,
+  toggleAddressModal,
+  toggleEnableTorch
 } from './action'
+import Scan from './Scan.ui'
 
 const mapStateToProps = (state: State) => ({
   cameraPermission: getCameraPermission(state),

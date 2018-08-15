@@ -1,5 +1,6 @@
 // @flow
 
+import type { EdgeCurrencyInfo, EdgeCurrencyWallet } from 'edge-core-js'
 import _ from 'lodash'
 import { connect } from 'react-redux'
 
@@ -9,10 +10,10 @@ import type { Dispatch, State } from '../../../ReduxTypes'
 import * as UTILS from '../../../utils'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
-import { fetchMoreTransactions } from './action'
 import { toggleAccountBalanceVisibility } from '../WalletList/action.js'
-import { type DispatchProps, type StateProps, TransactionList } from './TransactionList.ui'
-import type { EdgeCurrencyWallet, EdgeCurrencyInfo } from 'edge-core-js'
+import { fetchMoreTransactions } from './action'
+import type { DispatchProps, StateProps } from './TransactionList.ui'
+import { TransactionList } from './TransactionList.ui'
 
 const mapStateToProps = (state: State) => {
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)

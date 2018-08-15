@@ -5,14 +5,14 @@ import { StyleSheet } from 'react-native'
 import Entypo from 'react-native-vector-icons/Entypo'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import SimpleIcon from 'react-native-vector-icons/SimpleLineIcons'
 
 import * as Constants from '../../../../constants/indexConstants'
 
 type Props = {
-  style: StyleSheet.Styles,
+  style?: StyleSheet.Styles,
   name: string,
   size?: number,
   type: string

@@ -1,16 +1,15 @@
 // @flow
 
-import { Actions } from 'react-native-router-flux'
 import { Alert } from 'react-native'
+import { Actions } from 'react-native-router-flux'
 
 import s from '../../../../locales/strings.js'
 import type { SpendingLimits } from '../../../../types.js'
+import { checkPassword } from '../../../Core/Account/api.js'
 import * as SETTINGS_API from '../../../Core/Account/settings.js'
 import { getAccount } from '../../../Core/selectors.js'
-import { newSpendingLimits } from '../../Settings/spendingLimits/SpendingLimitsReducer.js'
-import { checkPassword } from '../../../Core/Account/api.js'
-
 import type { Dispatch, GetState } from '../../../ReduxTypes.js'
+import { newSpendingLimits } from '../../Settings/spendingLimits/SpendingLimitsReducer.js'
 
 export const setSpendingLimits = (spendingLimits: SpendingLimits, password: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()

@@ -42,7 +42,9 @@ export default class EdgeLoginScene extends Component<EdgeLoginSceneProps> {
       return (
         <View style={style.buttonContainer}>
           <View style={style.buttons}>
-            <SecondaryButton style={style.cancelSolo} onPressFunction={this.props.decline} text={s.strings.string_cancel_cap} />
+            <SecondaryButton style={style.cancelSolo} onPress={this.props.decline}>
+              <SecondaryButton.Text>{s.strings.string_cancel_cap}</SecondaryButton.Text>
+            </SecondaryButton>
           </View>
         </View>
       )
@@ -50,8 +52,12 @@ export default class EdgeLoginScene extends Component<EdgeLoginSceneProps> {
     return (
       <View style={style.buttonContainer}>
         <View style={style.buttons}>
-          <SecondaryButton style={style.cancel} onPressFunction={this.props.decline} text={s.strings.string_cancel_cap} />
-          <PrimaryButton style={style.submit} onPressFunction={this.props.accept} text={s.strings.accept_button_text} />
+          <SecondaryButton style={style.cancel} onPress={this.props.decline}>
+            <SecondaryButton.Text>{s.strings.string_cancel_cap}</SecondaryButton.Text>
+          </SecondaryButton>
+          <PrimaryButton style={style.submit} onPress={this.props.accept}>
+            <PrimaryButton.Text>{s.strings.accept_button_text}</PrimaryButton.Text>
+          </PrimaryButton>
         </View>
       </View>
     )

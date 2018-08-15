@@ -1,9 +1,9 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import slowlog from 'react-native-slowlog'
 
 import type { SetNativeAmountInfo } from '../../../../actions/CryptoExchangeActions.js'
 import CryptoExchangeQuoteTimerConnector from '../../../../connectors/components/CryptoExchangeQuoteTimerConnector'
@@ -151,7 +151,7 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
     console.log(this.props.shiftPendingTransaction)
     return (
       <SafeAreaView>
-        <Gradient style={[style.scene]}>
+        <Gradient style={style.scene}>
           <Gradient style={style.gradient} />
           <KeyboardAwareScrollView
             style={[style.mainScrollView]}
@@ -204,18 +204,13 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
   }
 
   renderButton = () => {
-    if (this.props.showNextButton) {
+    const { showNextButton, gettingTransaction } = this.props
+    if (showNextButton) {
       return (
-        <PrimaryButton
-          text={s.strings.string_next}
-          onPressFunction={this.props.openConfirmation}
-          processingFlag={this.props.gettingTransaction}
-          processingElement={<ActivityIndicator />}
-        />
+        <PrimaryButton onPress={this.props.openConfirmation} disabled={gettingTransaction}>
+          {gettingTransaction ? <ActivityIndicator /> : <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>}
+        </PrimaryButton>
       )
-    }
-    if (this.props.gettingTransaction) {
-      return <ActivityIndicator />
     }
     return null
   }
