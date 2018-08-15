@@ -83,6 +83,7 @@ export default class EditToken extends Component<EditTokenComponentProps, State>
   }
 
   render () {
+    const { editCustomTokenProcessing } = this.props
     return (
       <SafeAreaView>
         <View style={[styles.editTokens]}>
@@ -154,14 +155,12 @@ export default class EditToken extends Component<EditTokenComponentProps, State>
               <Text style={styles.errorMessageText}>{this.state.errorMessage}</Text>
             </View>
             <View style={[styles.buttonsArea]}>
-              <TertiaryButton text={s.strings.edittoken_delete_token} onPressFunction={this.props.showDeleteTokenModal} buttonStyle={styles.deleteButton} />
-              <PrimaryButton
-                text={s.strings.string_save}
-                style={[styles.saveButton, styles.button]}
-                onPressFunction={this._onSave}
-                processingElement={<ActivityIndicator />}
-                processingFlag={this.props.editCustomTokenProcessing}
-              />
+              <TertiaryButton onPress={this.props.showDeleteTokenModal} style={[styles.deleteButton]}>
+                <TertiaryButton.Text>{s.strings.edittoken_delete_token}</TertiaryButton.Text>
+              </TertiaryButton>
+              <PrimaryButton style={[styles.saveButton]} onPress={this._onSave}>
+                {editCustomTokenProcessing ? <ActivityIndicator /> : <PrimaryButton.Text>{s.strings.string_save}</PrimaryButton.Text>}
+              </PrimaryButton>
             </View>
             <View style={styles.bottomPaddingForKeyboard} />
           </ScrollView>

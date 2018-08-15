@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import type { Node } from 'react-native'
 import { Text as RNText, StyleSheet, TouchableHighlight, View } from 'react-native'
 
-import { rawStyles, styles } from './styles.js'
+import { rawStyles, styles } from './style.js'
 
 export type TextProps = {
   children: Node,

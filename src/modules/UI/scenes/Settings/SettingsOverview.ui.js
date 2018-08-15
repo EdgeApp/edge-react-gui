@@ -266,7 +266,9 @@ export default class SettingsOverview extends Component<Props, State> {
             <RowModal onPress={this.showRestoreWalletModal} leftText={s.strings.restore_wallets_modal_title} />
 
             <View style={[styles.debugArea]}>
-              <PrimaryButton text={s.strings.settings_button_debug} onPressFunction={this._onPressDebug} />
+              <PrimaryButton onPress={this._onPressDebug}>
+                <PrimaryButton.Text>{s.strings.settings_button_debug}</PrimaryButton.Text>
+              </PrimaryButton>
             </View>
 
             <View style={styles.emptyBottom} />

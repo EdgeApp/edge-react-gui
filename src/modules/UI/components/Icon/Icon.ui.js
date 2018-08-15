@@ -12,7 +12,7 @@ import SimpleIcon from 'react-native-vector-icons/SimpleLineIcons'
 import * as Constants from '../../../../constants/indexConstants'
 
 type Props = {
-  style: StyleSheet.Styles,
+  style?: StyleSheet.Styles,
   name: string,
   size?: number,
   type: string
