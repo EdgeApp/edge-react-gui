@@ -1,9 +1,9 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { ScrollView } from 'react-native'
 import * as Animatable from 'react-native-animatable'
+import slowlog from 'react-native-slowlog'
 
 import { PLATFORM } from '../../../../theme/variables/platform.js'
 import { border as b } from '../../../utils'

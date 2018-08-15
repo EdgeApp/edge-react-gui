@@ -1,9 +1,9 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import slowlog from 'react-native-slowlog'
 
 import type { SetNativeAmountInfo } from '../../../../actions/CryptoExchangeActions.js'
 import CryptoExchangeQuoteTimerConnector from '../../../../connectors/components/CryptoExchangeQuoteTimerConnector'

@@ -114,8 +114,7 @@ export const rawStyles = {
     height: 54,
     paddingVertical: 18
   },
-  footer: {
-  },
+  footer: {},
   debug
 }
 

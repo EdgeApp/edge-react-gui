@@ -9,10 +9,10 @@ import type { Dispatch, State } from '../../../ReduxTypes'
 import { getDenomFromIsoCode } from '../../../utils'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
+import { refreshReceiveAddressRequest } from '../../Wallets/action'
 import { saveReceiveAddress } from './action.js'
 import { Request } from './Request.ui'
 import type { RequestDispatchProps, RequestLoadingProps, RequestStateProps } from './Request.ui'
-import {refreshReceiveAddressRequest} from '../../Wallets/action'
 
 const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps => {
   const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
@@ -75,7 +75,7 @@ const mapDispatchToProps = (dispatch: Dispatch): RequestDispatchProps => ({
   saveReceiveAddress: (receiveAddress: GuiReceiveAddress) => {
     dispatch(saveReceiveAddress(receiveAddress))
   },
-  refreshReceiveAddressRequest: (walletId) => {
+  refreshReceiveAddressRequest: walletId => {
     dispatch(refreshReceiveAddressRequest(walletId))
   }
 })

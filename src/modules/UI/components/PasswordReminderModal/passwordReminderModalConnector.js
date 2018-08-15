@@ -1,15 +1,14 @@
 // @flow
 
-import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
+import { connect } from 'react-redux'
 
+import { CHANGE_PASSWORD } from '../../../../constants/indexConstants.js'
+import { postponePasswordReminder } from '../../../../reducers/passwordReminder/indexPasswordReminder.js'
+import type { PasswordReminder } from '../../../../types.js'
+import type { Dispatch, State } from '../../../ReduxTypes.js'
 import { checkPassword, requestChangePassword, setPasswordReminder } from './indexPasswordReminderModal.js'
 import { PasswordReminderModal } from './PasswordReminderModal.ui.js'
-import { postponePasswordReminder } from '../../../../reducers/passwordReminder/indexPasswordReminder.js'
-import { CHANGE_PASSWORD } from '../../../../constants/indexConstants.js'
-
-import type { State, Dispatch } from '../../../ReduxTypes.js'
-import type { PasswordReminder } from '../../../../types.js'
 
 export const mapStateToProps = (state: State) => ({
   loginStatus: state.ui.settings.loginStatus,

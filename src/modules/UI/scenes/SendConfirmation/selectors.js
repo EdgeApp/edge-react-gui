@@ -3,12 +3,12 @@
 import type { AbcSpendTarget, EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 
 import { STANDARD_FEE } from '../../../../constants/indexConstants'
-import type { State } from '../../../ReduxTypes'
-import { getSceneState, getSelectedCurrencyCode } from '../../selectors.js'
-import { getAccount } from '../../../Core/selectors.js'
-import { getExchangeDenomination } from '../../Settings/selectors.js'
-import { convertNativeToExchange } from '../../../utils.js'
 import { convertCurrency } from '../../../Core/Account/api.js'
+import { getAccount } from '../../../Core/selectors.js'
+import type { State } from '../../../ReduxTypes'
+import { convertNativeToExchange } from '../../../utils.js'
+import { getSceneState, getSelectedCurrencyCode } from '../../selectors.js'
+import { getExchangeDenomination } from '../../Settings/selectors.js'
 
 export type GuiMakeSpendInfo = {
   currencyCode?: string,

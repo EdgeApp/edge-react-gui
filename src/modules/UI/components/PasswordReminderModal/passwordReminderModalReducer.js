@@ -1,7 +1,7 @@
 // @flow
 
 import type { Action } from '../../../ReduxTypes'
-import { CHECK_PASSWORD_START, CHECK_PASSWORD_SUCCESS, CHECK_PASSWORD_FAIL, PASSWORD_REMINDER_POSTPONED } from './actions.js'
+import { CHECK_PASSWORD_FAIL, CHECK_PASSWORD_START, CHECK_PASSWORD_SUCCESS, PASSWORD_REMINDER_POSTPONED } from './actions.js'
 
 export const initialState = {
   status: null

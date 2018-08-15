@@ -9,7 +9,7 @@ import * as UTILS from '../../../utils'
 import { displayDropdownAlert } from '../../components/DropdownAlert/actions'
 import * as UI_SELECTORS from '../../selectors'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
-import { getSubcategories, setTransactionDetails, setNewSubcategory } from './action.js'
+import { getSubcategories, setNewSubcategory, setTransactionDetails } from './action.js'
 import { TransactionDetails } from './TransactionDetails.ui'
 import type { TransactionDetailsOwnProps } from './TransactionDetails.ui'
 

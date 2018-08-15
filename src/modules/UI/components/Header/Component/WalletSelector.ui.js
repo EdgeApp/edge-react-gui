@@ -1,13 +1,13 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
+import slowlog from 'react-native-slowlog'
 
 import * as Constants from '../../../../../constants/indexConstants'
+import s from '../../../../../locales/strings'
 import type { State } from '../../../../ReduxTypes'
 import { TextAndIconButton } from '../../Buttons/TextAndIconButton.ui'
 import { walletSelectorStyles } from '../style'
-import s from '../../../../../locales/strings'
 import { WalletNameHeader } from './WalletNameHeader.ui.js'
 
 export type StateProps = {

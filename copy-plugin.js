@@ -2,7 +2,7 @@
 
 const fs = require('fs')
 const path = require('path')
-const {plugins} = require('./package.json')
+const { plugins } = require('./package.json')
 
 const pluginsFile = './src/assets/plugins.json'
 const androidDir = './android/app/src/main/assets/plugins/'
@@ -14,7 +14,7 @@ const pluginManifests = {
   spend: []
 }
 
-platforms.forEach((platform) => {
+platforms.forEach(platform => {
   if (!fs.existsSync(platform)) {
     fs.mkdirSync(platform)
   }
@@ -22,12 +22,12 @@ platforms.forEach((platform) => {
 
 function copyAssets (plugin) {
   const manifest = require(`./node_modules/${plugin}/manifest.json`)
-  platforms.forEach((platformDir) => {
+  platforms.forEach(platformDir => {
     const pluginDir = path.join(platformDir, manifest.pluginId)
     if (!fs.existsSync(pluginDir)) {
       fs.mkdirSync(pluginDir)
     }
-    fs.copyFile(`./node_modules/${plugin}/target/index.html`, `${pluginDir}/index.html`, () => { })
+    fs.copyFile(`./node_modules/${plugin}/target/index.html`, `${pluginDir}/index.html`, () => {})
   })
   return manifest
 }

@@ -1,12 +1,12 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import { bns } from 'biggystring'
+import { Scene } from 'edge-components'
 import type { EdgeDenomination } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, View } from 'react-native'
+import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
-import { Scene } from 'edge-components'
 
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
@@ -17,12 +17,12 @@ import type { ExchangedFlipInputAmounts } from '../../components/FlipInput/Excha
 import { ExchangedFlipInput } from '../../components/FlipInput/ExchangedFlipInput2.js'
 import Text from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
+import { PinInput } from '../../components/PinInput/PinInput.ui.js'
 import Recipient from '../../components/Recipient/index.js'
 import SafeAreaView from '../../components/SafeAreaView'
 import ABSlider from '../../components/Slider/index.js'
 import { UniqueIdentifier } from './components/UniqueIdentifier/UniqueIdentifier.ui.js'
 import { UniqueIdentifierModalConnect as UniqueIdentifierModal } from './components/UniqueIdentifierModal/UniqueIdentifierModalConnector.js'
-import { PinInput } from '../../components/PinInput/PinInput.ui.js'
 import styles from './styles.js'
 
 const DIVIDE_PRECISION = 18
@@ -229,7 +229,9 @@ export class SendConfirmation extends Component<Props, State> {
               </Scene.Padding>
             </View>
 
-            <Scene.Row style={styles.activityIndicatorSpace}>{this.props.pending && <ActivityIndicator style={[{ flex: 1, alignSelf: 'center' }]} size={'small'} />}</Scene.Row>
+            <Scene.Row style={styles.activityIndicatorSpace}>
+              {this.props.pending && <ActivityIndicator style={[{ flex: 1, alignSelf: 'center' }]} size={'small'} />}
+            </Scene.Row>
 
             <Scene.Footer style={styles.footer}>
               <ABSlider

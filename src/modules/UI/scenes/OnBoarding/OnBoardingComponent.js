@@ -105,9 +105,9 @@ class OnBoardingComponent extends Component<Props, State> {
     if (index === this.state.totalSlides) {
       return
     }
-    const newValue = (index) * PLATFORM.deviceWidth
+    const newValue = index * PLATFORM.deviceWidth
     Animated.timing(this.animatedValue, {
-      toValue: -(newValue),
+      toValue: -newValue,
       duration: 300
     }).start(this.onCompleteMove(index))
   }
@@ -115,7 +115,6 @@ class OnBoardingComponent extends Component<Props, State> {
     console.log('onboarding: onComplete', index)
     this.setState({
       currentIndex: index
-
     })
   }
   renderSlides = (styles: Object) => {
@@ -123,37 +122,30 @@ class OnBoardingComponent extends Component<Props, State> {
     return this.state.slides.map(Slide => {
       counter++
       // const buttonFunction = counter === this.props.totalSlides ? this.props.finishOnBoarding : null
-      return (
-        <OnBoardingSlideComponent
-          slide={Slide}
-          key={'slides_' + counter}
-        />
-      )
+      return <OnBoardingSlideComponent slide={Slide} key={'slides_' + counter} />
     })
   }
   renderButtons = (styles: Object) => {
     if (this.state.currentIndex === this.state.totalSlides - 1) {
-      return <View style={styles.buttonContainer} >
+      return (
+        <View style={styles.buttonContainer}>
+          <PrimaryButton style={styles.button} onPress={this.props.finishOnBoarding}>
+            <Text style={styles.buttonText}>{s.strings.onboarding_button}</Text>
+          </PrimaryButton>
+        </View>
+      )
+    }
+    return (
+      <View style={styles.buttonContainer}>
         <PrimaryButton style={styles.button} onPress={this.props.finishOnBoarding}>
-          <PrimaryButton.Text style={styles.buttonText}>{s.strings.onboarding_button}</PrimaryButton.Text>
+          <PrimaryButton.Text style={styles.buttonText}>{s.strings.onboarding_skip_button}</PrimaryButton.Text>
+        </PrimaryButton>
+        <View style={styles.shim} />
+        <PrimaryButton style={styles.button} onPress={this.onNextSlide}>
+          <PrimaryButton.Text style={styles.buttonText}>{s.strings.string_next_capitalized}</PrimaryButton.Text>
         </PrimaryButton>
       </View>
-    }
-    return <View style={styles.buttonContainer} >
-      <PrimaryButton
-        style={styles.button}
-        onPress={this.props.finishOnBoarding}
-      >
-        <PrimaryButton.Text style={styles.buttonText}>{s.strings.onboarding_skip_button}</PrimaryButton.Text>
-      </PrimaryButton>
-      <View style={styles.shim} />
-      <PrimaryButton
-        style={styles.button}
-        onPress={this.onNextSlide}
-      >
-        <PrimaryButton.Text style={styles.buttonText}>{s.strings.string_next_capitalized}</PrimaryButton.Text>
-      </PrimaryButton>
-    </View>
+    )
   }
   onRequestClose = () => {
     // do nothing, necessary callback for modal
@@ -161,17 +153,17 @@ class OnBoardingComponent extends Component<Props, State> {
   render () {
     const styles = OnBoardingSceneStyles
     const containerWidth = PLATFORM.deviceWidth * this.state.totalSlides
-    const containerStyle = {...styles.slideContainer, width: containerWidth}
-    const animatedStyle = {left: this.animatedValue}
-    return <Modal style={styles.modalContainer} isVisible={true} onRequestClose={this.onRequestClose}>
-      <View style={styles.slideContainer}>
-        <Animated.View style={[containerStyle, animatedStyle]}>
-          {this.renderSlides(styles)}
-        </Animated.View>
-        <PagingDotsComponent styles={styles.dots} totalItems={this.state.totalSlides} currentIndex={this.state.currentIndex}/>
-        {this.renderButtons(styles)}
-      </View>
-    </Modal>
+    const containerStyle = { ...styles.slideContainer, width: containerWidth }
+    const animatedStyle = { left: this.animatedValue }
+    return (
+      <Modal style={styles.modalContainer} isVisible={true} onRequestClose={this.onRequestClose}>
+        <View style={styles.slideContainer}>
+          <Animated.View style={[containerStyle, animatedStyle]}>{this.renderSlides(styles)}</Animated.View>
+          <PagingDotsComponent styles={styles.dots} totalItems={this.state.totalSlides} currentIndex={this.state.currentIndex} />
+          {this.renderButtons(styles)}
+        </View>
+      </Modal>
+    )
   }
 }
-export {OnBoardingComponent}
+export { OnBoardingComponent }

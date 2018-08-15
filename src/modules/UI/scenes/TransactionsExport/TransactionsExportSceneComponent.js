@@ -6,7 +6,7 @@ import RNFS from 'react-native-fs'
 import Mailer from 'react-native-mail'
 import Share from 'react-native-share'
 
-import {IOS} from '../../../../constants/indexConstants'
+import { IOS } from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings'
 import { TransactionExportSceneStyle } from '../../../../styles/indexStyles'
 import { PrimaryButton } from '../../components/Buttons/index'
@@ -25,41 +25,52 @@ type Props = StateProps & PassedProps
 export class TransactionsExportSceneComponent extends Component<Props> {
   render () {
     const styles = TransactionExportSceneStyle
-    return <SafeAreaView>
-      <View style={styles.container}>
-        <Gradient style={styles.gradient} />
-        <View style={styles.shim} />
-        <View style={styles.actionButtonContainer} >
-          <PrimaryButton onPress={this.exportQBO}>
-            <PrimaryButton.Text>{s.strings.string_export_qbo}</PrimaryButton.Text>
-          </PrimaryButton>
+    return (
+      <SafeAreaView>
+        <View style={styles.container}>
+          <Gradient style={styles.gradient} />
+          <View style={styles.shim} />
+          <View style={styles.actionButtonContainer}>
+            <PrimaryButton onPress={this.exportQBO}>
+              <PrimaryButton.Text>{s.strings.string_export_qbo}</PrimaryButton.Text>
+            </PrimaryButton>
+          </View>
+          <View style={styles.shim} />
+          <View style={styles.actionButtonContainer}>
+            <PrimaryButton onPress={this.exportCSV}>
+              <PrimaryButton.Text>{s.strings.string_export_csv}</PrimaryButton.Text>
+            </PrimaryButton>
+          </View>
         </View>
-        <View style={styles.shim} />
-        <View style={styles.actionButtonContainer} >
-          <PrimaryButton onPress={this.exportCSV}>
-            <PrimaryButton.Text>{s.strings.string_export_csv}</PrimaryButton.Text>
-          </PrimaryButton>
-        </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    )
   }
   exportQBO = async () => {
     const date = new Date()
-    const fileNameAppend = date.getFullYear().toString() + date.getMonth().toString() + date.getDate().toString() + date.getHours().toString() + date.getMinutes().toString() + date.getSeconds().toString()
+    const fileNameAppend =
+      date.getFullYear().toString() +
+      date.getMonth().toString() +
+      date.getDate().toString() +
+      date.getHours().toString() +
+      date.getMinutes().toString() +
+      date.getSeconds().toString()
     const transactionOptions: EdgeGetTransactionsOptions = {
       denomination: this.props.denomination
     }
     const file = await this.props.sourceWallet.exportTransactionsToQBO(transactionOptions)
-    const path = Platform.OS === IOS ? RNFS.DocumentDirectoryPath + '/MyWallet' + fileNameAppend + '.QBO' : RNFS.ExternalDirectoryPath + '/MyWallet' + fileNameAppend + '.QBO'
+    const path =
+      Platform.OS === IOS
+        ? RNFS.DocumentDirectoryPath + '/MyWallet' + fileNameAppend + '.QBO'
+        : RNFS.ExternalDirectoryPath + '/MyWallet' + fileNameAppend + '.QBO'
     RNFS.writeFile(path, file, 'utf8')
-      .then((success) => {
+      .then(success => {
         if (Platform.OS === IOS) {
           this.openShareApp(path, 'Share Transactions QBO')
           return
         }
-        this.openMailApp(path, 'Share Transactions QBO', 'QBO', ('MyWallet' + fileNameAppend + '.QBO'))
+        this.openMailApp(path, 'Share Transactions QBO', 'QBO', 'MyWallet' + fileNameAppend + '.QBO')
       })
-      .catch((err) => {
+      .catch(err => {
         console.log('file creation erro: ', err.message)
       })
   }
@@ -70,14 +81,14 @@ export class TransactionsExportSceneComponent extends Component<Props> {
     const file = await this.props.sourceWallet.exportTransactionsToCSV(transactionOptions)
     const path = Platform.OS === IOS ? RNFS.DocumentDirectoryPath + '/MyWallet.csv' : RNFS.ExternalDirectoryPath + '/MyWallet.csv'
     RNFS.writeFile(path, file, 'utf8')
-      .then((success) => {
+      .then(success => {
         if (Platform.OS === IOS) {
           this.openShareApp(path, 'Share Transactions CSV')
           return
         }
         this.openMailApp(path, 'Share Transactions CSV', 'csv', 'My Wallet.csv')
       })
-      .catch((err) => {
+      .catch(err => {
         console.log('file creation error: ', err.message)
       })
   }
@@ -93,7 +104,7 @@ export class TransactionsExportSceneComponent extends Component<Props> {
       .then(() => {
         console.log('FS: Success')
       })
-      .catch((err) => {
+      .catch(err => {
         console.log('FS:error on Share  ', err.message)
         console.log('FS:error on Share  ', err)
       })

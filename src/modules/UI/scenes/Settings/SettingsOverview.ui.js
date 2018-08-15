@@ -197,25 +197,25 @@ export default class SettingsOverview extends Component<Props, State> {
             leftText={s.strings.settings_button_change_password}
             disabled={this.props.isLocked}
             routeFunction={this._onPressChangePasswordRouting}
-            right={<Icon type={ Constants.SIMPLE_ICONS } style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
+            right={<Icon type={Constants.SIMPLE_ICONS} style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
           />
           <RowRoute
             leftText={s.strings.settings_button_pin}
             disabled={this.props.isLocked}
             routeFunction={this._onPressChangePinRouting}
-            right={<Icon type={ Constants.SIMPLE_ICONS } style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
+            right={<Icon type={Constants.SIMPLE_ICONS} style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
           />
           <RowRoute
             leftText={s.strings.settings_button_setup_two_factor}
             disabled={this.props.isLocked}
             routeFunction={this._onPressOtp}
-            right={<Icon type={ Constants.SIMPLE_ICONS } style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
+            right={<Icon type={Constants.SIMPLE_ICONS} style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
           />
           <RowRoute
             leftText={s.strings.settings_button_password_recovery}
             disabled={this.props.isLocked}
             routeFunction={this._onPressRecoverPasswordRouting}
-            right={<Icon type={ Constants.SIMPLE_ICONS } style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
+            right={<Icon type={Constants.SIMPLE_ICONS} style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
           />
 
           <Gradient style={[styles.unlockRow]}>
@@ -232,7 +232,7 @@ export default class SettingsOverview extends Component<Props, State> {
               disabled={false}
               leftText={s.strings.spending_limits}
               routeFunction={this._onPressSpendingLimits}
-              right={<Icon type={ Constants.SIMPLE_ICONS } style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
+              right={<Icon type={Constants.SIMPLE_ICONS} style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
             />
 
             <RowModal onPress={this.showAutoLogoutModal} leftText={s.strings.settings_title_auto_logoff} rightText={autoLogoutRightText} />
