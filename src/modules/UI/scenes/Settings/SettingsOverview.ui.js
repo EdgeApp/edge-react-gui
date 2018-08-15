@@ -273,27 +273,28 @@ export default class SettingsOverview extends Component<Props, State> {
 
             <View style={styles.emptyBottom} />
           </View>
+        </ScrollView>
+        <RestoreWalletsModal
+          isActive={this.state.restoreWalletsModalIsActive}
+          onConfirm={this.onConfirmRestoreWallets}
+          onCancel={this.onCancelRestoreWallets}
+          onBackButtonPress={this.onCancelRestoreWallets}
+          onBackdropPress={this.onCancelRestoreWallets}
+        />
 
-          <RestoreWalletsModal
-            isActive={this.state.restoreWalletsModalIsActive}
-            onConfirm={this.onConfirmRestoreWallets}
-            onCancel={this.onCancelRestoreWallets}
-            onBackButtonPress={this.onCancelRestoreWallets}
-            onBackdropPress={this.onCancelRestoreWallets}
-          />
-
-          <AutoLogoutModal
-            autoLogoutTimeInMinutes={this.state.autoLogoutTimeInMinutes}
-            showModal={this.state.showAutoLogoutModal}
-            onDone={this.onDoneAutoLogoutModal}
-            onCancel={this.onCancelAutoLogoutModal}
-          />
-          <SendLogsModal
-            showModal={this.state.showSendLogsModal}
-            sendLogsStatus={this.props.sendLogsStatus}
-            onDone={this.onDoneSendLogsModal}
-            onCancel={this.onCancelSendLogsModal}
-          />
+        <AutoLogoutModal
+          autoLogoutTimeInMinutes={this.state.autoLogoutTimeInMinutes}
+          showModal={this.state.showAutoLogoutModal}
+          onDone={this.onDoneAutoLogoutModal}
+          onCancel={this.onCancelAutoLogoutModal}
+        />
+        <SendLogsModal
+          showModal={this.state.showSendLogsModal}
+          sendLogsStatus={this.props.sendLogsStatus}
+          onDone={this.onDoneSendLogsModal}
+          onCancel={this.onCancelSendLogsModal}
+        />
+        {this.state.showConfirmPasswordModal && (
           <ConfirmPasswordModal
             style={ConfirmPasswordModalStyle}
             headerText={''}
@@ -302,7 +303,7 @@ export default class SettingsOverview extends Component<Props, State> {
             onDone={this.confirmPassword}
             onCancel={this.hideConfirmPasswordModal}
           />
-        </ScrollView>
+        )}
       </SafeAreaView>
     )
   }
