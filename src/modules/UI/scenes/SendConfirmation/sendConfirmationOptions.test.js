@@ -4,7 +4,7 @@
 import React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
-import SendConfirmationOptions from './sendConfirmationOptions.js'
+import SendConfirmationOptions from './SendConfirmationOptions.js'
 
 describe('SendConfirmation', () => {
   it('should render with standard props', () => {
