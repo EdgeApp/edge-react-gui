@@ -1,8 +1,8 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { ActivityIndicator, Image, Text, TouchableOpacity, View } from 'react-native'
+import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
 import * as Constants from '../../../../constants/indexConstants'
@@ -61,7 +61,7 @@ export default class CryptoExchangeConfirmTransactionModal extends Component<Cry
   }
 
   renderMiddle = (style: Object) => {
-    const { container, top, topRight, topLeft, shim, bottom, bottomLeft, bottomRight, text, sliderParent } = style.middle
+    const { container, top, topRight, topLeft, bottom, bottomLeft, bottomRight, text, sliderParent } = style.middle
     const fromCurrencyAmount = this.props.fromCurrencyAmount ? this.props.fromCurrencyAmount : ''
     const fromCurrencyCode = this.props.fromCurrencyCode ? this.props.fromCurrencyCode : ''
     const fee = this.props.fee || ''
@@ -75,18 +75,11 @@ export default class CryptoExchangeConfirmTransactionModal extends Component<Cry
             <Text style={text}>{sprintf(s.strings.string_from_exchange_info, fromCurrencyAmount, fromCurrencyCode, fee, fromWallet.name)}</Text>
           </View>
         </View>
-
-        <View style={shim} />
-
         <View style={bottom}>
           <View style={bottomLeft}>{this.renderLogo(style, this.props.toCurrencyIconDark)}</View>
-
           <View style={bottomRight}>
             <Text style={text}>{sprintf(s.strings.string_to_exchange_info, this.props.toCurrencyAmount, this.props.toCurrencyCode, toWallet.name)}</Text>
           </View>
-
-          <View style={shim} />
-          <View style={shim} />
         </View>
         <Slider onSlidingComplete={this.props.confirmFunction} sliderDisabled={this.props.pending} parentStyle={sliderParent} />
       </View>

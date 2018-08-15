@@ -4,8 +4,8 @@ import { combineReducers } from 'redux'
 
 import type { Action } from '../../../../ReduxTypes.js'
 import { primaryModal } from './PrimaryModal/PrimaryModalReducer.js'
+import { SWEEP_PRIVATE_KEY_FAIL, SWEEP_PRIVATE_KEY_RESET, SWEEP_PRIVATE_KEY_START, SWEEP_PRIVATE_KEY_SUCCESS } from './PrivateKeyModalActions.js'
 import { secondaryModal } from './SecondaryModal/SecondaryModalReducer.js'
-import { SWEEP_PRIVATE_KEY_START, SWEEP_PRIVATE_KEY_SUCCESS, SWEEP_PRIVATE_KEY_FAIL, SWEEP_PRIVATE_KEY_RESET } from './PrivateKeyModalActions.js'
 
 const initialIsSweepingState = false
 type IsSweepingState = boolean

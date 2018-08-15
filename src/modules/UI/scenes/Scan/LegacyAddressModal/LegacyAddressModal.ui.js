@@ -4,10 +4,10 @@ import React, { Component } from 'react'
 import { Text } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { Icon } from '../../../components/Icon/Icon.ui.js'
-import { InteractiveModal, PrimaryButton, SecondaryButton } from '../../../components/Modals'
-
 import s from '../../../../../locales/strings.js'
+import { PrimaryButton, SecondaryButton } from '../../../components/Buttons'
+import { Icon } from '../../../components/Icon/Icon.ui.js'
+import { InteractiveModal } from '../../../components/Modals'
 
 type Props = {
   isActive: boolean,

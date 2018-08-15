@@ -1,12 +1,11 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import { bns } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeDenomination, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Animated, Easing, Keyboard, ScrollView, TextInput, TouchableOpacity, View } from 'react-native'
+import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
-import { AdvancedTransactionDetailsModal } from './components/AdvancedDetailsModal/AdvancedTransactionDetailsModal.ui.js'
 
 import s from '../../../../locales/strings.js'
 import THEME from '../../../../theme/variables/airbitz'
@@ -18,6 +17,7 @@ import Gradient from '../../components/Gradient/Gradient.ui'
 import PayeeIcon from '../../components/PayeeIcon/PayeeIcon.ui.js'
 import SafeAreaView from '../../components/SafeAreaView'
 import AmountArea from './AmountArea.ui.js'
+import { AdvancedTransactionDetailsModal } from './components/AdvancedDetailsModal/AdvancedTransactionDetailsModal.ui.js'
 import ContactSearchResults from './ContactSearchResults.ui.js'
 import styles, { styles as styleRaw } from './style'
 import SubCategorySelect from './SubCategorySelect.ui.js'

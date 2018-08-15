@@ -1,12 +1,13 @@
 // @flow
-import slowlog from 'react-native-slowlog'
+
 import React, { Component } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import Menu, { MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu'
+import slowlog from 'react-native-slowlog'
 
 import * as Constants from '../../../../constants/indexConstants'
-import { Icon } from '../Icon/Icon.ui'
 import { getObjectDiff } from '../../../utils'
+import { Icon } from '../Icon/Icon.ui'
 
 type Props = {
   style: StyleSheet.Styles,
@@ -39,7 +40,17 @@ class MenuDropDown extends Component<Props, State> {
   shouldComponentUpdate (nextProps: Props, nextState: State) {
     let diffElement2: string = ''
     const diffElement = getObjectDiff(this.props, nextProps, {
-      data: true, value: true, '0': true, '1': true, '2': true, '3': true, '4': true, '5': true, '6': true, '7': true, '8': true
+      data: true,
+      value: true,
+      '0': true,
+      '1': true,
+      '2': true,
+      '3': true,
+      '4': true,
+      '5': true,
+      '6': true,
+      '7': true,
+      '8': true
     })
     if (!diffElement) {
       diffElement2 = getObjectDiff(this.state, nextState)

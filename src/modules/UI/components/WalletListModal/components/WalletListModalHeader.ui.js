@@ -1,8 +1,8 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { TouchableHighlight, View } from 'react-native'
+import slowlog from 'react-native-slowlog'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import * as Constants from '../../../../../constants/indexConstants'

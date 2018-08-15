@@ -3,9 +3,8 @@
 import { connect } from 'react-redux'
 
 import type { Dispatch, State } from '../../../../../ReduxTypes.js'
-
-import { deactivated } from './PrimaryModalActions.js'
 import { PrimaryModal } from './PrimaryModal.ui.js'
+import { deactivated } from './PrimaryModalActions.js'
 
 export const mapStateToProps = (state: State) => ({
   isActive: state.ui.scenes.scan.privateKeyModal.primaryModal.isActive

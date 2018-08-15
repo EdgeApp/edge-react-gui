@@ -3,9 +3,10 @@
 import React, { Component } from 'react'
 import { Text } from 'react-native'
 
-import { InteractiveModal, PrimaryButton, SecondaryButton } from '../../../components/Modals'
-import { Icon } from '../../../components/Icon/Icon.ui'
 import s from '../../../../../locales/strings'
+import { PrimaryButton, SecondaryButton } from '../../../components/Buttons'
+import { Icon } from '../../../components/Icon/Icon.ui'
+import { InteractiveModal } from '../../../components/Modals'
 
 export type Props = {
   isActive: boolean,

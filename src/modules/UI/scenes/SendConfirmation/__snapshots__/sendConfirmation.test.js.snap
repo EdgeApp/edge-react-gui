@@ -201,13 +201,16 @@ exports[`SendConfirmation should render with standard props 1`] = `
           </Item>
         </Padding>
       </View>
-      <Row />
-      <Footer
+      <Row
         style={
           Object {
-            "paddingVertical": 24,
+            "height": 54,
+            "paddingVertical": 18,
           }
         }
+      />
+      <Footer
+        style={Object {}}
       >
         <ABSlider
           forceUpdateGuiCounter={0}

@@ -3,9 +3,9 @@
 
 import { clone } from 'ramda'
 
+import { makeSpendFailed, newPin, reset, updatePaymentProtocolTransaction, updateSpendPending, updateTransaction } from './action.js'
 import { sendConfirmation } from './reducer.js'
 import { initialState } from './selectors.js'
-import { newPin, reset, updateSpendPending, updatePaymentProtocolTransaction, makeSpendFailed, updateTransaction } from './action.js'
 
 describe('sendConfirmation reducer', () => {
   test('initialState', () => {

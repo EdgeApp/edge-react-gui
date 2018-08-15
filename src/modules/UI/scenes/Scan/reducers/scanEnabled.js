@@ -1,7 +1,6 @@
 // @flow
 
 import type { Action } from '../../../../ReduxTypes.js'
-
 import * as ACTION from '../action'
 import { DEACTIVATED as PRIMARY_MODAL_DEACTIVATED } from '../PrivateKeyModal/PrimaryModal/PrimaryModalActions.js'
 

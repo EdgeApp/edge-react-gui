@@ -7,7 +7,6 @@ import {
   bitcoingoldCurrencyPluginFactory,
   dashCurrencyPluginFactory,
   digibyteCurrencyPluginFactory,
-  dogecoinCurrencyPluginFactory,
   feathercoinCurrencyPluginFactory,
   litecoinCurrencyPluginFactory,
   qtumCurrencyPluginFactory,
@@ -48,7 +47,6 @@ import ExchangeConnector from '../connectors/scene/CryptoExchangeSceneConnector'
 import EdgeLoginSceneConnector from '../connectors/scene/EdgeLoginSceneConnector'
 import OtpSettingsSceneConnector from '../connectors/scene/OtpSettingsSceneConnector.js'
 import PasswordRecoveryConnector from '../connectors/scene/PasswordRecoveryConnector.js'
-import SpendingLimitsConnector from './UI/scenes/SpendingLimits/SpendingLimitsConnector.js'
 import TransactionsExportSceneConnector from '../connectors/scene/TransactionsExportSceneConnector'
 import * as Constants from '../constants/indexConstants'
 import { setIntlLocale } from '../locales/intl'
@@ -90,6 +88,7 @@ import SendConfirmationOptions from './UI/scenes/SendConfirmation/SendConfirmati
 import CurrencySettings from './UI/scenes/Settings/CurrencySettingsConnector'
 import DefaultFiatSettingConnector from './UI/scenes/Settings/DefaultFiatSettingConnector'
 import SettingsOverview from './UI/scenes/Settings/SettingsOverviewConnector'
+import SpendingLimitsConnector from './UI/scenes/SpendingLimits/SpendingLimitsConnector.js'
 import { TermsOfServiceComponent } from './UI/scenes/TermsOfService/TermsOfService.ui.js'
 import TransactionDetails from './UI/scenes/TransactionDetails/TransactionDetailsConnector.js'
 import TransactionListConnector from './UI/scenes/TransactionList/TransactionListConnector'
@@ -103,20 +102,20 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   coincapPlugin,
   // Currencies:
   bitcoincashCurrencyPluginFactory,
-  bitcoingoldCurrencyPluginFactory,
   bitcoinCurrencyPluginFactory,
-  dashCurrencyPluginFactory,
-  digibyteCurrencyPluginFactory,
-  dogecoinCurrencyPluginFactory,
   ethereumCurrencyPluginFactory,
-  moneroCurrencyPluginFactory,
   rippleCurrencyPluginFactory,
-  qtumCurrencyPluginFactory,
+  moneroCurrencyPluginFactory,
+  dashCurrencyPluginFactory,
   litecoinCurrencyPluginFactory,
-  feathercoinCurrencyPluginFactory,
+  // dogecoinCurrencyPluginFactory,
+  qtumCurrencyPluginFactory,
+  digibyteCurrencyPluginFactory,
+  bitcoingoldCurrencyPluginFactory,
+  vertcoinCurrencyPluginFactory,
   zcoinCurrencyPluginFactory,
-  ufoCurrencyPluginFactory,
-  vertcoinCurrencyPluginFactory
+  feathercoinCurrencyPluginFactory,
+  ufoCurrencyPluginFactory
 ]
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux

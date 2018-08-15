@@ -5,16 +5,15 @@ import { Image, Text, View } from 'react-native'
 import MDIcon from 'react-native-vector-icons/MaterialIcons'
 
 import accountIcon from '../../../../assets/images/sidenav/accounts.png'
-
 import { emptyGuiDenomination } from '../../../../types'
 import type { GuiDenomination } from '../../../../types'
 import { getDenomFromIsoCode, getObjectDiff } from '../../../utils.js'
 import ExchangeRate from '../ExchangeRate/index.js'
 import Gradient from '../Gradient/Gradient.ui'
 import SafeAreaView from '../SafeAreaView/SafeAreaViewDrawer.ui.js'
+import { Button } from './Component/Button/Button.ui'
 import Main from './Component/MainConnector'
 import styles from './style'
-import { Button } from './Component/Button/Button.ui'
 
 export type Props = {
   currencyLogo: string,

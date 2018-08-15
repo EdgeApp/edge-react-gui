@@ -1,8 +1,7 @@
 // @flow
 
-import type { Dispatch, GetState } from '../ReduxTypes.js'
-
 import * as LOGGER from '../../util/logger'
+import type { Dispatch, GetState } from '../ReduxTypes.js'
 import * as LOGS_API from './api'
 
 const PREFIX = 'Logs/'

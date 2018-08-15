@@ -4,8 +4,8 @@
 import React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
+import { LOCKED_ICON, UNLOCKED_ICON } from '../../../../constants/IconConstants.js'
 import SettingsOverview from './SettingsOverview.ui.js'
-import { UNLOCKED_ICON, LOCKED_ICON } from '../../../../constants/IconConstants.js'
 
 describe('MyComponent', () => {
   it('should render UnLocked SettingsOverview', () => {

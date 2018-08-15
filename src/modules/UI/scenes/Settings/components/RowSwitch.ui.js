@@ -1,8 +1,8 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { Switch, TouchableHighlight, View } from 'react-native'
+import slowlog from 'react-native-slowlog'
 
 import { border as b } from '../../../../utils'
 import T from '../../../components/FormattedText'

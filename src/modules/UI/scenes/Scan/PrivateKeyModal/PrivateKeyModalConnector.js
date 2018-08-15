@@ -3,7 +3,6 @@
 import { connect } from 'react-redux'
 
 import type { Dispatch, State } from '../../../../ReduxTypes.js'
-
 import { PrivateKeyModal } from './PrivateKeyModal.ui.js'
 import { onPrivateKeyAccept, onPrivateKeyReject, sweepPrivateKeyReset } from './PrivateKeyModalActions.js'
 
