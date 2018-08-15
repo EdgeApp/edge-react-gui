@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 
-import styles from './style'
+import { styles } from './style'
 
 type Props = {
   icon: string,

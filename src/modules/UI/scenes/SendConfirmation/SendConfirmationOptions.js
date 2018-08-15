@@ -65,7 +65,8 @@ export default class SendConfirmationOptions extends Component<Props> {
               </View>
             </MenuOption>
 
-            {isEditable && (
+            {isEditable &&
+              currencyCode !== 'XMR' && (
               <MenuOption value={SEND_MAX} style={defaultMenuStyle.menuOption}>
                 <View style={defaultMenuStyle.menuOptionItem}>
                   <Text style={[defaultMenuStyle.optionText, styles.maxSpend]}>{SEND_MAX_TEXT}</Text>

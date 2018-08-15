@@ -5,8 +5,8 @@ import { Alert, Clipboard, Platform, Text } from 'react-native'
 
 import { EYE_ICON, ION_ICONS } from '../../../../../../constants/IconConstants.js'
 import s from '../../../../../../locales/strings.js'
+import { PrimaryButton } from '../../../../components/Buttons'
 import { Icon } from '../../../../components/Icon/Icon.ui.js'
-import { PrimaryButton } from '../../../../components/Modals/components/PrimaryButton.ui.js'
 import { InteractiveModal } from '../../../../components/Modals/InteractiveModal/InteractiveModal.ui.js'
 
 type XPubModalOwnProps = {}

@@ -5,8 +5,7 @@ import { Animated, Modal, View } from 'react-native'
 import s from '../../../../locales/strings.js'
 import { OnBoardingSceneStyles } from '../../../../styles/indexStyles.js'
 import { PLATFORM } from '../../../../theme/variables/platform'
-import Text from '../../components/FormattedText'
-import { PrimaryButton } from '../../components/Modals/components/index.js'
+import { PrimaryButton } from '../../components/Buttons'
 import { PagingDotsComponent } from '../../components/PagingDots/PagingDotsComponent.js'
 import { OnBoardingSlideComponent } from './OnBoardingSlideComponent.js'
 
@@ -139,11 +138,11 @@ class OnBoardingComponent extends Component<Props, State> {
     return (
       <View style={styles.buttonContainer}>
         <PrimaryButton style={styles.button} onPress={this.props.finishOnBoarding}>
-          <Text style={styles.buttonText}>{s.strings.onboarding_skip_button}</Text>
+          <PrimaryButton.Text style={styles.buttonText}>{s.strings.onboarding_skip_button}</PrimaryButton.Text>
         </PrimaryButton>
         <View style={styles.shim} />
         <PrimaryButton style={styles.button} onPress={this.onNextSlide}>
-          <Text style={styles.buttonText}>{s.strings.string_next_capitalized}</Text>
+          <PrimaryButton.Text style={styles.buttonText}>{s.strings.string_next_capitalized}</PrimaryButton.Text>
         </PrimaryButton>
       </View>
     )
