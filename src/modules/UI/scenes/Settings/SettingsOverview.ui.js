@@ -271,36 +271,35 @@ export default class SettingsOverview extends Component<Props, State> {
 
             <View style={styles.emptyBottom} />
           </View>
-
-          <RestoreWalletsModal
-            isActive={this.state.restoreWalletsModalIsActive}
-            onConfirm={this.onConfirmRestoreWallets}
-            onCancel={this.onCancelRestoreWallets}
-            onBackButtonPress={this.onCancelRestoreWallets}
-            onBackdropPress={this.onCancelRestoreWallets}
-          />
-
-          <AutoLogoutModal
-            autoLogoutTimeInMinutes={this.state.autoLogoutTimeInMinutes}
-            showModal={this.state.showAutoLogoutModal}
-            onDone={this.onDoneAutoLogoutModal}
-            onCancel={this.onCancelAutoLogoutModal}
-          />
-          <SendLogsModal
-            showModal={this.state.showSendLogsModal}
-            sendLogsStatus={this.props.sendLogsStatus}
-            onDone={this.onDoneSendLogsModal}
-            onCancel={this.onCancelSendLogsModal}
-          />
-          <ConfirmPasswordModal
-            style={ConfirmPasswordModalStyle}
-            headerText={''}
-            error={this.props.confirmPasswordError}
-            showModal={this.state.showConfirmPasswordModal}
-            onDone={this.confirmPassword}
-            onCancel={this.hideConfirmPasswordModal}
-          />
         </ScrollView>
+        <RestoreWalletsModal
+          isActive={this.state.restoreWalletsModalIsActive}
+          onConfirm={this.onConfirmRestoreWallets}
+          onCancel={this.onCancelRestoreWallets}
+          onBackButtonPress={this.onCancelRestoreWallets}
+          onBackdropPress={this.onCancelRestoreWallets}
+        />
+
+        <AutoLogoutModal
+          autoLogoutTimeInMinutes={this.state.autoLogoutTimeInMinutes}
+          showModal={this.state.showAutoLogoutModal}
+          onDone={this.onDoneAutoLogoutModal}
+          onCancel={this.onCancelAutoLogoutModal}
+        />
+        <SendLogsModal
+          showModal={this.state.showSendLogsModal}
+          sendLogsStatus={this.props.sendLogsStatus}
+          onDone={this.onDoneSendLogsModal}
+          onCancel={this.onCancelSendLogsModal}
+        />
+        <ConfirmPasswordModal
+          style={ConfirmPasswordModalStyle}
+          headerText={''}
+          error={this.props.confirmPasswordError}
+          showModal={this.state.showConfirmPasswordModal}
+          onDone={this.confirmPassword}
+          onCancel={this.hideConfirmPasswordModal}
+        />
       </SafeAreaView>
     )
   }
