@@ -1,6 +1,6 @@
 {
   "name": "edge-react-gui",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "private": true,
   "description": "Edge Wallet React GUI",
   "homepage": "https://edge.app",
@@ -25,7 +25,7 @@
     "android:release": "cd android && ./gradlew assembleRelease; cd ../",
     "android:release-install": "npm run android:clean && npm run android:release && cd android/app/build/outputs/apk && adb install app-release.apk; cd ../",
     "android:run": "react-native run-android",
-    "precommit": "lint-staged",
+    "precommit": "lint-staged && npm run lint && npm run flow && npm test",
     "cover": "jest --coverage",
     "flow": "flow",
     "flow:0": "flow; exit 0",
@@ -88,7 +88,7 @@
     "edge-currency-monero": "^0.0.9",
     "edge-currency-ripple": "^0.0.8",
     "edge-exchange-plugins": "^0.2.0",
-    "edge-login-ui-rn": "^0.4.0",
+    "edge-login-ui-rn": "^0.4.2",
     "https-browserify": "0.0.1",
     "jsc-android": "216113.0.3",
     "lodash": "^4.17.2",
@@ -181,6 +181,7 @@
     "json-format": "^1.0.1",
     "jsonfile": "^4.0.0",
     "nyc": "^10.0.0",
+    "lint-staged": "^6.1.1",
     "prettier-eslint-cli": "^4.7.0",
     "rn-nodeify": "^7.0.1",
     "updot": "^1.1.7"

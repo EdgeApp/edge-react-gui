@@ -24,6 +24,10 @@ export const styles = {
   doneButton: {
     color: THEME.COLORS.PRIMARY
   },
+  okButton: {
+    marginTop: 16,
+    flex: 1
+  },
   rowContainer: {
     height: 44,
     borderBottomWidth: 1,

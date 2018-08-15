@@ -31,11 +31,15 @@ export class TransactionsExportSceneComponent extends Component<Props> {
           <Gradient style={styles.gradient} />
           <View style={styles.shim} />
           <View style={styles.actionButtonContainer}>
-            <PrimaryButton text={s.strings.string_export_qbo} onPressFunction={this.exportQBO} />
+            <PrimaryButton onPress={this.exportQBO}>
+              <PrimaryButton.Text>{s.strings.string_export_qbo}</PrimaryButton.Text>
+            </PrimaryButton>
           </View>
           <View style={styles.shim} />
           <View style={styles.actionButtonContainer}>
-            <PrimaryButton text={s.strings.string_export_csv} onPressFunction={this.exportCSV} />
+            <PrimaryButton onPress={this.exportCSV}>
+              <PrimaryButton.Text>{s.strings.string_export_csv}</PrimaryButton.Text>
+            </PrimaryButton>
           </View>
         </View>
       </SafeAreaView>

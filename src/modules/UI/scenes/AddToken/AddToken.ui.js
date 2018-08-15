@@ -64,6 +64,7 @@ export class AddToken extends Component<AddTokenProps, State> {
   }
 
   render () {
+    const { addTokenPending } = this.props
     return (
       <SafeAreaView>
         <View style={[styles.addTokens]}>
@@ -120,13 +121,9 @@ export class AddToken extends Component<AddTokenProps, State> {
               </View>
             </View>
             <View style={[styles.buttonsArea]}>
-              <PrimaryButton
-                text={s.strings.string_save}
-                style={styles.saveButton}
-                onPressFunction={this._onSave}
-                processingElement={<ActivityIndicator />}
-                processingFlag={this.props.addTokenPending}
-              />
+              <PrimaryButton style={styles.saveButton} onPress={this._onSave}>
+                {addTokenPending ? <ActivityIndicator /> : <PrimaryButton.Text>{s.strings.string_save}</PrimaryButton.Text>}
+              </PrimaryButton>
             </View>
             <View style={styles.bottomPaddingForKeyboard} />
           </ScrollView>
