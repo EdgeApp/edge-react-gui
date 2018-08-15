@@ -8,6 +8,7 @@ import { PLATFORM } from '../../../../theme/variables/platform'
 export const stylesRaw = {
   usableHeight: PLATFORM.usableHeight,
   scene: {
+    flex: 1
   },
   gradient: {
     height: THEME.HEADER,
@@ -15,6 +16,11 @@ export const stylesRaw = {
   },
   scrollView: {
     height: 716 - 10 - THEME.HEADER
+  },
+  webView: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1
   },
   scrollViewContent: {
     paddingHorizontal: 20,
