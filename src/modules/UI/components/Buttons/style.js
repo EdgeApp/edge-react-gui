@@ -48,6 +48,14 @@ export const rawStyles = {
   tertiaryButtonText: {
     color: THEME.COLORS.PRIMARY
   },
+  // Text BUTTON
+  textButton: {
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  textButtonUnderlay: { color: THEME.COLORS.TRANSPARENT },
+  textButtonText: {
+    color: THEME.COLORS.WHITE
+  },
 
   debug: {
     borderColor: 'red',

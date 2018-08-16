@@ -40,7 +40,6 @@ export default class Login extends Component<Props, State> {
 
   componentWillReceiveProps (nextProps: Props) {
     // If we have logged out, destroy and recreate the login screen:
-    console.log('swiper login ', nextProps)
     if (this.props.account && nextProps.account && nextProps.account !== this.props.account) {
       if (typeof nextProps.account.username === 'undefined') {
         this.setState({ key: this.state.key + 1 })
