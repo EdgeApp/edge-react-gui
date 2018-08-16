@@ -19,7 +19,8 @@ import * as UTILS from '../../../utils'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView/index.js'
-import { WalletListProgressBarConnector } from './components/WalletListProgressBar/WalletListProgressBarConnector'
+import { WiredProgressBar } from '../../components/WiredProgressBar/WiredProgressBar.ui.js'
+import { getWalletLoadingPercent } from '../../selectors.js'
 import FullWalletListRow from './components/WalletListRow/FullWalletListRow.ui.js'
 import SortableWalletListRow from './components/WalletListRow/SortableWalletListRow.ui.js'
 import WalletOptions from './components/WalletOptions/WalletOptionsConnector.ui.js'
@@ -170,7 +171,7 @@ export default class WalletList extends Component<Props, State> {
         <View style={styles.container} testID={'edge: wallet-list-scene'}>
           <WalletOptions />
           <Gradient style={styles.gradient} />
-          <WalletListProgressBarConnector />
+          <WiredProgressBar progress={state => getWalletLoadingPercent(state)} />
           <TouchableOpacity onPress={this.handleOnBalanceBoxPress}>
             {this.props.isAccountBalanceVisible ? this.balanceBox(fiatBalanceString) : this.hiddenBalanceBox()}
           </TouchableOpacity>
