@@ -62,7 +62,6 @@ export type State = {
   publicAddress: string,
   legacyAddress: string,
   encodedURI: string,
-  result: string,
   isXRPMinimumModalVisible: boolean,
   hasXRPMinimumModalAlreadyShown: boolean
 }
@@ -74,7 +73,6 @@ export class Request extends Component<Props, State> {
       publicAddress: '',
       legacyAddress: '',
       encodedURI: '',
-      result: '',
       isXRPMinimumModalVisible: false,
       hasXRPMinimumModalAlreadyShown: false
     }
@@ -234,11 +232,7 @@ export class Request extends Component<Props, State> {
         title: sprintf(s.strings.request_qr_email_title, s.strings.app_name)
       },
       { dialogTitle: s.strings.request_share_edge_request }
-    ).catch(error => {
-      this.setState({
-        result: 'error: ' + error.message
-      })
-    })
+    )
   }
 
   shareViaEmail = () => {
