@@ -122,8 +122,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       accountInitObject.currencyCode = edgeWallet.currencyInfo.currencyCode
     } else {
       // We have a wallet
-      // Actions.edge()
-      Actions[Constants.ONBOARDING]()
+      Actions.edge()
       const { walletId, currencyCode } = ACCOUNT_API.getFirstActiveWalletInfo(account, currencyCodes)
       accountInitObject.walletId = walletId
       accountInitObject.currencyCode = currencyCode
