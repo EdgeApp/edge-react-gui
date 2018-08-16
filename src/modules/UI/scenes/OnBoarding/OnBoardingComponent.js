@@ -144,7 +144,6 @@ class OnBoardingComponent extends Component<Props, State> {
   render () {
     const styles = OnBoardingSceneStyles
     const containerWidth = Dimensions.get('window').width * this.state.totalSlides
-    console.log('swiper: width', containerWidth)
     const containerStyle = { ...styles.slideContainer, width: containerWidth }
     const animatedStyle = { left: this.animatedValue }
     const buttonFunction = this.state.currentIndex === this.state.totalSlides - 1 ? this.finishOnBoarding : this.onNextSlide
