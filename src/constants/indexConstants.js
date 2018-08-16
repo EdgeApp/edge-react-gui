@@ -7,7 +7,6 @@ export * from '../modules/UI/components/WalletListModal/action'
 export * from './DropDownValueConstants'
 export * from './FeeConstants'
 export * from './ErrorConstants'
-export * from './OnBoardingConstants'
 export { REQUEST_STATUS } from './RequestStatusConstants'
 export * from './WalletAndCurrencyConstants.js'
 

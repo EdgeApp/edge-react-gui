@@ -51,6 +51,7 @@ import TransactionsExportSceneConnector from '../connectors/scene/TransactionsEx
 import * as Constants from '../constants/indexConstants'
 import { setIntlLocale } from '../locales/intl'
 import s, { selectLocale } from '../locales/strings.js'
+import { OnBoardingComponent } from '../modules/UI/scenes/OnBoarding/OnBoardingComponent.js'
 import { makeCoreContext } from '../util/makeContext.js'
 import * as CONTEXT_API from './Core/Context/api'
 import { styles } from './style.js'
@@ -299,6 +300,7 @@ export default class Main extends Component<Props, State> {
               <Stack key={Constants.ROOT} hideNavBar panHandlers={null}>
                 <Scene key={Constants.LOGIN} initial component={LoginConnector} username={this.props.username} />
 
+                <Scene key={Constants.ONBOARDING} navTransparent={true} component={OnBoardingComponent} />
                 <Scene
                   key={Constants.TRANSACTION_DETAILS}
                   navTransparent={true}

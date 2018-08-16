@@ -4,7 +4,6 @@ import type { EdgeAccount, EdgeContext } from 'edge-core-js'
 import { LoginScreen } from 'edge-login-ui-rn'
 import React, { Component } from 'react'
 import { View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 
 import THEME from '../../../../theme/variables/airbitz'
@@ -31,7 +30,6 @@ export default class Login extends Component<Props, State> {
 
   onLogin = (error: ?Error = null, account: ?EdgeAccount, touchIdInfo: ?Object = null) => {
     if (error || !account) return
-    Actions.edge()
     this.props.initializeAccount(account, touchIdInfo)
 
     CONTEXT_API.listUsernames(this.props.context) // update users list after each login
