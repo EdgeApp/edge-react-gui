@@ -51,7 +51,6 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
   }
   const accountInitObject = {
     account: account,
-    showOnBoarding: false,
     touchIdInfo: touchIdInfo,
     walletId: '',
     currencyCode: '',
@@ -85,10 +84,9 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       const walletTypes = plugin.currencyInfo.walletTypes
       accountInitObject.currencyPlugins.push({ pluginName, plugin, walletTypes })
     })
-
     if (account.activeWalletIds.length < 1) {
       // we are going to assume that since there is no wallets, this is a first time user
-      accountInitObject.showOnBoarding = true
+      Actions[Constants.ONBOARDING]()
       // set the property on the user so that we can launch on boarding
       // lets create the wallet
       const ethWalletName = s.strings.string_first_ethereum_wallet_name
@@ -124,6 +122,8 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       accountInitObject.currencyCode = edgeWallet.currencyInfo.currencyCode
     } else {
       // We have a wallet
+      // Actions.edge()
+      Actions[Constants.ONBOARDING]()
       const { walletId, currencyCode } = ACCOUNT_API.getFirstActiveWalletInfo(account, currencyCodes)
       accountInitObject.walletId = walletId
       accountInitObject.currencyCode = currencyCode
