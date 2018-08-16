@@ -7,7 +7,7 @@ import Gradient from '../../components/Gradient/Gradient.ui.js'
 import SafeAreaView from '../../components/SafeAreaView'
 import { styles } from './TermsOfServiceStyle.js'
 
-const WEB_URI = 'https://edge.app/terms-of-service/'
+const WEB_URI = 'https://edge.app/tos/'
 
 export type TermsOfServiceOwnProps = {}
 
