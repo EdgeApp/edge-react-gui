@@ -6,7 +6,6 @@ import THEME from '../../../../../../theme/variables/airbitz'
 import { PLATFORM } from '../../../../../../theme/variables/platform'
 
 const styles = {
-
   customFeeButtonContainer: {
     marginTop: 18
   },
@@ -26,6 +25,9 @@ const styles = {
   },
   modalBoxStyle: {
     top: PLATFORM.deviceHeight / 12
+  },
+  customFeeButton: {
+    flex: -1
   }
 }
 
