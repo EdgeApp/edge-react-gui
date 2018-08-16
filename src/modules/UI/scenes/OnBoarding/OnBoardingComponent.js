@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import { Animated, Dimensions, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
+import { EDGE } from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings.js'
 import { OnBoardingSceneStyles } from '../../../../styles/indexStyles.js'
 import { PLATFORM } from '../../../../theme/variables/platform'
@@ -130,7 +131,7 @@ class OnBoardingComponent extends Component<Props, State> {
     })
   }
   finishOnBoarding = () => {
-    Actions.edge()
+    Actions[EDGE]()
   }
   renderSlides = (styles: Object) => {
     let counter = 0
