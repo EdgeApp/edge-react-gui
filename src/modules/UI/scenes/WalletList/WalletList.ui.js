@@ -18,8 +18,8 @@ import { TwoButtonModalStyle } from '../../../../styles/indexStyles.js'
 import * as UTILS from '../../../utils'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
-import ProgressBar from '../../components/ProgressBar/ProgressBar.ui.js'
 import SafeAreaView from '../../components/SafeAreaView/index.js'
+import { WalletListProgressBarConnector } from './components/WalletListProgressBar/WalletListProgressBarConnector'
 import FullWalletListRow from './components/WalletListRow/FullWalletListRow.ui.js'
 import SortableWalletListRow from './components/WalletListRow/SortableWalletListRow.ui.js'
 import WalletOptions from './components/WalletOptions/WalletOptionsConnector.ui.js'
@@ -170,7 +170,7 @@ export default class WalletList extends Component<Props, State> {
         <View style={styles.container} testID={'edge: wallet-list-scene'}>
           <WalletOptions />
           <Gradient style={styles.gradient} />
-          {this.state.isWalletProgressVisible && this.renderWalletListProgressDropdown()}
+          <WalletListProgressBarConnector />
           <TouchableOpacity onPress={this.handleOnBalanceBoxPress}>
             {this.props.isAccountBalanceVisible ? this.balanceBox(fiatBalanceString) : this.hiddenBalanceBox()}
           </TouchableOpacity>
@@ -525,16 +525,5 @@ export default class WalletList extends Component<Props, State> {
         </View>
       </View>
     )
-  }
-
-  renderWalletListProgressDropdown = () => {
-    if (this.props.progressPercentage === 100) {
-      setTimeout(() => {
-        this.setState({
-          isWalletProgressVisible: false
-        })
-      }, 2000)
-    }
-    return <ProgressBar progress={this.props.progressPercentage} />
   }
 }
