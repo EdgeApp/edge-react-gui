@@ -57,7 +57,14 @@ export default class SendLogsModal extends Component {
     switch (status) {
       case PENDING:
         return (
-          <FormField style={styles.sendLogsModalInput} label="Type some text" value={this.state.text} onChangeText={this.onChangeText} returnKeyType="done" />
+          <FormField
+            style={styles.sendLogsModalInput}
+            autoFocus
+            label="Type some text"
+            value={this.state.text}
+            onChangeText={this.onChangeText}
+            returnKeyType="done"
+          />
         )
       case LOADING:
         return <ActivityIndicator />

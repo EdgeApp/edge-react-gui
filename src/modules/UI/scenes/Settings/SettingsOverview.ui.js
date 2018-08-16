@@ -301,16 +301,14 @@ export default class SettingsOverview extends Component<Props, State> {
           onDone={this.onDoneSendLogsModal}
           onCancel={this.onCancelSendLogsModal}
         />
-        {this.state.showConfirmPasswordModal && (
-          <ConfirmPasswordModal
-            style={ConfirmPasswordModalStyle}
-            headerText={''}
-            error={this.props.confirmPasswordError}
-            showModal={this.state.showConfirmPasswordModal}
-            onDone={this.confirmPassword}
-            onCancel={this.hideConfirmPasswordModal}
-          />
-        )}
+        <ConfirmPasswordModal
+          style={ConfirmPasswordModalStyle}
+          headerText={''}
+          error={this.props.confirmPasswordError}
+          showModal={this.state.showConfirmPasswordModal}
+          onDone={this.confirmPassword}
+          onCancel={this.hideConfirmPasswordModal}
+        />
       </SafeAreaView>
     )
   }
