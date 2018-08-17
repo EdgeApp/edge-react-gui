@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyPlugin, EdgeDenomination } from 'edge-core-js'
+import type { EdgeCurrencyInfo, EdgeDenomination } from 'edge-core-js'
 
 import type { State } from '../../ReduxTypes'
 import isoFiatDenominations from './IsoFiatDenominations.js'
@@ -111,49 +111,39 @@ export const getPlugins = (state: State) => {
   return plugins
 }
 
-export const getPlugin = (state: State, type: string): EdgeCurrencyPlugin => {
+export const getPluginInfo = (state: State, type: string): EdgeCurrencyInfo => {
   const plugins = getPlugins(state)
-  const plugin: EdgeCurrencyPlugin = plugins[type.toLowerCase()]
-  return plugin
-}
-
-export const getBitcoinPlugin = (state: State): EdgeCurrencyPlugin => {
-  const bitcoinPlugin: EdgeCurrencyPlugin = getPlugin(state, 'bitcoin')
-  return bitcoinPlugin
-}
-
-export const getEthereumPlugin = (state: State): EdgeCurrencyPlugin => {
-  const ethereumPlugin: EdgeCurrencyPlugin = getPlugin(state, 'ethereum')
-  return ethereumPlugin
+  const currencyInfo: EdgeCurrencyInfo = plugins[type.toLowerCase()]
+  return currencyInfo
 }
 
 export const getSupportedWalletTypes = (state: State) => {
-  const plugins = getPlugins(state).arrayPlugins
+  const allCurrencyInfos = getPlugins(state).allCurrencyInfos
 
   const supportedWalletTypes = []
-  for (const plugin of plugins) {
-    if (plugin.currencyInfo.pluginName === 'bitcoin') {
+  for (const currencyInfo of allCurrencyInfos) {
+    if (currencyInfo.pluginName === 'bitcoin') {
       supportedWalletTypes.push({
         label: 'Bitcoin (Segwit)',
         value: 'wallet:bitcoin-bip49',
-        symbolImage: plugin.currencyInfo.symbolImage,
-        symbolImageDarkMono: plugin.currencyInfo.symbolImageDarkMono,
-        currencyCode: plugin.currencyInfo.currencyCode
+        symbolImage: currencyInfo.symbolImage,
+        symbolImageDarkMono: currencyInfo.symbolImageDarkMono,
+        currencyCode: currencyInfo.currencyCode
       })
       supportedWalletTypes.push({
         label: 'Bitcoin (no Segwit)',
         value: 'wallet:bitcoin-bip44',
-        symbolImage: plugin.currencyInfo.symbolImage,
-        symbolImageDarkMono: plugin.currencyInfo.symbolImageDarkMono,
-        currencyCode: plugin.currencyInfo.currencyCode
+        symbolImage: currencyInfo.symbolImage,
+        symbolImageDarkMono: currencyInfo.symbolImageDarkMono,
+        currencyCode: currencyInfo.currencyCode
       })
     } else {
       supportedWalletTypes.push({
-        label: plugin.currencyInfo.currencyName,
-        value: plugin.currencyInfo.walletTypes[0],
-        symbolImage: plugin.currencyInfo.symbolImage,
-        symbolImageDarkMono: plugin.currencyInfo.symbolImageDarkMono,
-        currencyCode: plugin.currencyInfo.currencyCode
+        label: currencyInfo.currencyName,
+        value: currencyInfo.walletTypes[0],
+        symbolImage: currencyInfo.symbolImage,
+        symbolImageDarkMono: currencyInfo.symbolImageDarkMono,
+        currencyCode: currencyInfo.currencyCode
       })
     }
   }
