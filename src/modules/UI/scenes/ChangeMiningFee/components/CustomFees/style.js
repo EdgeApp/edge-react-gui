@@ -6,7 +6,6 @@ import THEME from '../../../../../../theme/variables/airbitz'
 import { PLATFORM } from '../../../../../../theme/variables/platform'
 
 const styles = {
-
   customFeeButtonContainer: {
     marginTop: 18
   },
