@@ -2532,9 +2532,9 @@ edge-core-js@0.9.15:
     utf8 "^3.0.0"
     ws "^5.1.1"
 
-edge-currency-bitcoin@3.2.7:
-  version "3.2.7"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-3.2.7.tgz#a954414d9d73b2a697ff34aee88160a03abc716d"
+edge-currency-bitcoin@3.2.9:
+  version "3.2.9"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-3.2.9.tgz#8bbcd7e680363566a580143135bc22e40525d9bb"
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -7188,6 +7188,10 @@ react-native-sortable-listview@^0.2.7:
 react-native-sound@^0.10.4:
   version "0.10.9"
   resolved "https://registry.yarnpkg.com/react-native-sound/-/react-native-sound-0.10.9.tgz#6b00b0f4afd017cde09fbb9d171df1b5d5b851a8"
+
+react-native-swipe-gestures@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-swipe-gestures/-/react-native-swipe-gestures-1.0.2.tgz#914e1a72a94bc55b322b4622a01103ab879296dd"
 
 react-native-tab-view@^0.0.70:
   version "0.0.70"

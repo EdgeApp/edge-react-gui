@@ -10,7 +10,6 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import iconImage from '../../../../assets/images/otp/OTP-badge_sm.png'
 import WalletIcon from '../../../../assets/images/walletlist/my-wallets.png'
 import { StaticModalComponent, TwoButtonTextModalComponent } from '../../../../components/indexComponents'
-import OnBoardingConnector from '../../../../connectors/scene/OnBoardingConnector.js'
 import * as Constants from '../../../../constants/indexConstants.js'
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
@@ -56,7 +55,6 @@ type Props = {
   wallets: any,
   renameWalletInput: string,
   otpResetPending: boolean,
-  showOnBoarding: boolean,
   updateArchivedWalletsOrder: (Array<string>) => void,
   updateActiveWalletsOrder: (Array<string>) => void,
   walletRowOption: (walletId: string, option: string, archived: boolean) => void,
@@ -234,9 +232,6 @@ export default class WalletList extends Component<Props, State> {
   }
 
   showModal = () => {
-    if (this.props.showOnBoarding) {
-      return <OnBoardingConnector />
-    }
     if (this.state.showOtpResetModal) {
       return (
         <TwoButtonTextModalComponent
