@@ -52,7 +52,6 @@ export type RequestLoadingProps = {
 }
 
 export type RequestDispatchProps = {
-  saveReceiveAddress(GuiReceiveAddress): void,
   refreshReceiveAddressRequest(string): void
 }
 
@@ -63,7 +62,6 @@ export type State = {
   publicAddress: string,
   legacyAddress: string,
   encodedURI: string,
-  result: string,
   isXRPMinimumModalVisible: boolean,
   hasXRPMinimumModalAlreadyShown: boolean
 }
@@ -75,7 +73,6 @@ export class Request extends Component<Props, State> {
       publicAddress: '',
       legacyAddress: '',
       encodedURI: '',
-      result: '',
       isXRPMinimumModalVisible: false,
       hasXRPMinimumModalAlreadyShown: false
     }
@@ -219,33 +216,13 @@ export class Request extends Component<Props, State> {
       }, PUBLIC_ADDRESS_REFRESH_MS)
     }
 
-    this.setState({
-      encodedURI
-    })
+    this.setState({ encodedURI })
   }
 
   copyToClipboard = () => {
     const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
     Clipboard.setString(requestAddress)
     Alert.alert(s.strings.fragment_request_address_copied)
-  }
-
-  showResult = (result: { activityType: string }) => {
-    if (result.action === Share.sharedAction) {
-      if (this.props.receiveAddress) {
-        this.props.saveReceiveAddress(this.props.receiveAddress)
-      }
-
-      if (result.activityType) {
-        this.setState({
-          result: 'shared with an activityType: ' + result.activityType
-        })
-      } else {
-        this.setState({ result: 'shared' })
-      }
-    } else if (result.action === Share.dismissedAction) {
-      this.setState({ result: 'dismissed' })
-    }
   }
 
   shareMessage = () => {
@@ -256,12 +233,6 @@ export class Request extends Component<Props, State> {
       },
       { dialogTitle: s.strings.request_share_edge_request }
     )
-      .then(this.showResult)
-      .catch(error =>
-        this.setState({
-          result: 'error: ' + error.message
-        })
-      )
   }
 
   shareViaEmail = () => {
