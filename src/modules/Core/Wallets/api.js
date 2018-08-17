@@ -48,7 +48,7 @@ const dummyEdgeReceiveAddress: EdgeReceiveAddress = {
   }
 }
 
-export const setTransactionDetailsRequest = (wallet: EdgeCurrencyWallet, txid: string, currencyCode: string, edgeMetadata: EdgeMetadata): Promise<void> => {
+export const setTransactionDetailsRequest = (wallet: EdgeCurrencyWallet, txid: string, currencyCode: string, edgeMetadata: EdgeMetadata): Promise<mixed> => {
   return wallet.saveTxMetadata ? wallet.saveTxMetadata(txid, currencyCode, edgeMetadata) : Promise.resolve()
 }
 
@@ -172,11 +172,11 @@ export const broadcastTransaction = (wallet: EdgeCurrencyWallet, signedTransacti
   return wallet.broadcastTx(signedTransaction)
 }
 
-export const saveTransaction = (wallet: EdgeCurrencyWallet, signedTransaction: EdgeTransaction): Promise<void> => {
+export const saveTransaction = (wallet: EdgeCurrencyWallet, signedTransaction: EdgeTransaction): Promise<mixed> => {
   return wallet.saveTx(signedTransaction)
 }
 
-export const resyncWallet = (wallet: EdgeCurrencyWallet): Promise<void> => {
+export const resyncWallet = (wallet: EdgeCurrencyWallet): Promise<mixed> => {
   return wallet.resyncBlockchain()
 }
 
