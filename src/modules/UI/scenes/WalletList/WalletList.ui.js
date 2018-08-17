@@ -166,10 +166,10 @@ export default class WalletList extends Component<Props, State> {
 
     return (
       <SafeAreaView>
-        <View style={styles.container} testID={'edge: wallet-list-scene'}>
+        <View style={styles.container}>
           <WalletOptions />
           <Gradient style={styles.gradient} />
-          <WiredProgressBar progress={state => getWalletLoadingPercent(state)} />
+          <WiredProgressBar progress={getWalletLoadingPercent} />
           <TouchableOpacity onPress={this.handleOnBalanceBoxPress}>
             {this.props.isAccountBalanceVisible ? this.balanceBox(fiatBalanceString) : this.hiddenBalanceBox()}
           </TouchableOpacity>
