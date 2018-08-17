@@ -2,10 +2,6 @@
 
 import type { EdgeContext } from 'edge-core-js'
 
-export const getCurrencyPlugins = (context: EdgeContext) => {
-  return context.getCurrencyPlugins()
-}
-
 export const deleteLocalAccount = (context: EdgeContext, username: string) => {
   return context.deleteLocalAccount(username)
 }
