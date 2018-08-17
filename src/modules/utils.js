@@ -1,15 +1,7 @@
 // @flow
 
 import { bns, div, eq, gte, mul, toFixed } from 'biggystring'
-import type {
-  EdgeCurrencyInfo,
-  EdgeCurrencyPlugin,
-  EdgeCurrencyWallet,
-  EdgeDenomination,
-  EdgeMetaToken,
-  EdgeReceiveAddress,
-  EdgeTransaction
-} from 'edge-core-js'
+import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
 import _ from 'lodash'
 import { Platform } from 'react-native'
 
@@ -343,9 +335,8 @@ export const unspacedLowercase = (input: string) => {
   return newInput
 }
 
-export const getCurrencyInfo = (plugins: Array<EdgeCurrencyPlugin>, currencyCode: string): EdgeCurrencyInfo | void => {
-  for (const plugin of plugins) {
-    const info = plugin.currencyInfo
+export const getCurrencyInfo = (allCurrencyInfos: Array<EdgeCurrencyInfo>, currencyCode: string): EdgeCurrencyInfo | void => {
+  for (const info of allCurrencyInfos) {
     for (const denomination of info.denominations) {
       if (denomination.name === currencyCode) {
         return info

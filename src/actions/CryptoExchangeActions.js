@@ -2,6 +2,7 @@
 
 import { bns } from 'biggystring'
 import type { EdgeCurrencyWallet, EdgeMetadata, EdgeSpendInfo, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
+import { errorNames } from 'edge-core-js'
 import { Alert } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
@@ -217,7 +218,7 @@ const processMakeSpendError = e => (dispatch: Dispatch, getState: GetState) => {
   dispatch(actions.dispatchAction(Constants.DONE_MAKE_SPEND))
   // holderObject.status = 'finished'
   // holderObject.processingAmount = ''
-  if (e.name === Constants.INSUFFICIENT_FUNDS || e.message === Constants.INSUFFICIENT_FUNDS) {
+  if (e.name === errorNames.InsufficientFundsError || e.message === Constants.INSUFFICIENT_FUNDS) {
     dispatch(actions.dispatchAction(Constants.RECEIVED_INSUFFICIENT_FUNDS_ERROR))
     return
   }

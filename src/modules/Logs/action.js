@@ -11,7 +11,7 @@ export const SEND_LOGS_REQUEST = PREFIX + 'SEND_LOGS_REQUEST'
 export const SEND_LOGS_SUCCESS = PREFIX + 'SEND_LOGS_SUCCESS'
 export const SEND_LOGS_FAILURE = PREFIX + 'SEND_LOGS_FAILURE'
 
-export const sendLogs = (text: string) => (dispatch: Dispatch, getState: GetState) => {
+export const sendLogs = (text: string) => async (dispatch: Dispatch, getState: GetState) => {
   dispatch({ type: SEND_LOGS_REQUEST, text })
 
   const core = getState().core
@@ -20,7 +20,7 @@ export const sendLogs = (text: string) => (dispatch: Dispatch, getState: GetStat
     for (const walletId in core.wallets.byId) {
       const wallet = core.wallets.byId[walletId]
       if (wallet) {
-        const dataDump = wallet.dumpData()
+        const dataDump = await wallet.dumpData()
         let ds = ''
         ds = ds + '--------------------- Wallet Data Dump ----------------------\n'
         ds = ds + `Wallet ID: ${dataDump.walletId}\n`

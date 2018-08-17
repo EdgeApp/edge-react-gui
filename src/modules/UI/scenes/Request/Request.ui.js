@@ -99,7 +99,7 @@ export class Request extends Component<Props, State> {
     return !!diffElement || !!diffElement2
   }
 
-  componentWillReceiveProps (nextProps: Props) {
+  async componentWillReceiveProps (nextProps: Props) {
     if (nextProps.loading) return
 
     const didAddressChange = this.state.publicAddress !== nextProps.guiWallet.receiveAddress.publicAddress
@@ -114,7 +114,7 @@ export class Request extends Component<Props, State> {
 
       let encodedURI = s.strings.loading
       try {
-        encodedURI = nextProps.edgeWallet ? nextProps.edgeWallet.encodeUri(abcEncodeUri) : s.strings.loading
+        encodedURI = nextProps.edgeWallet ? await nextProps.edgeWallet.encodeUri(abcEncodeUri) : s.strings.loading
       } catch (e) {
         console.log(e)
         publicAddress = s.strings.loading
@@ -198,7 +198,7 @@ export class Request extends Component<Props, State> {
     )
   }
 
-  onExchangeAmountChanged = (amounts: ExchangedFlipInputAmounts) => {
+  onExchangeAmountChanged = async (amounts: ExchangedFlipInputAmounts) => {
     const { publicAddress, legacyAddress } = this.state
     const edgeEncodeUri: EdgeEncodeUri = this.props.useLegacyAddress && legacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
     if (bns.gt(amounts.nativeAmount, '0')) {
@@ -206,7 +206,7 @@ export class Request extends Component<Props, State> {
     }
     let encodedURI = s.strings.loading
     try {
-      encodedURI = this.props.edgeWallet ? this.props.edgeWallet.encodeUri(edgeEncodeUri) : s.strings.loading
+      encodedURI = this.props.edgeWallet ? await this.props.edgeWallet.encodeUri(edgeEncodeUri) : s.strings.loading
     } catch (e) {
       console.log(e)
       setTimeout(() => {

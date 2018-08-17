@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeAccount, EdgeContext, EdgeCurrencyWallet, EdgeLobby, EdgeParsedUri, EdgeTransaction } from 'edge-core-js'
+import type { DiskletFolder, EdgeAccount, EdgeContext, EdgeCurrencyWallet, EdgeLobby, EdgeParsedUri, EdgeTransaction } from 'edge-core-js'
 import type { Dispatch as ReduxDispatch, Store as ReduxStore } from 'redux'
 
 import type { ContactsState } from '../reducers/contacts/contactsReducer.js'
@@ -26,6 +26,7 @@ export type State = {
     account: EdgeAccount,
     context: {
       context: EdgeContext,
+      folder: DiskletFolder,
       usernames: Array<Username>,
       nextUsername: Username
     },

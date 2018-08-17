@@ -79,14 +79,13 @@ export class PluginBridge {
     return Promise.resolve(wallets)
   }
 
-  getAddress (data: any): Promise<Address> {
+  async getAddress (data: any): Promise<Address> {
     const walletId = data.walletId
     const coreWallet = this.context.coreWallets[walletId]
     const currencyCode = data.currencyCode
-    return WALLET_API.getReceiveAddress(coreWallet, currencyCode).then(address => {
-      const encodeUri = coreWallet.encodeUri(address)
-      return { encodeUri, address }
-    })
+    const address = await WALLET_API.getReceiveAddress(coreWallet, currencyCode)
+    const encodeUri = await coreWallet.encodeUri(address)
+    return { encodeUri, address }
   }
 
   finalizeReceiveRequest (data: any): Promise<boolean> {

@@ -13,6 +13,12 @@ export const getContext = (state: State) => {
   return context
 }
 
+export const getFolder = (state: State) => {
+  const core = getCore(state)
+  const folder = core.context.folder
+  return folder
+}
+
 export const getUsernames = (state: State) => {
   const core = getCore(state)
   const usernames = core.context.usernames
@@ -23,12 +29,6 @@ export const getNextUsername = (state: State) => {
   const core = getCore(state)
   const nextUsername = core.context.nextUsername
   return nextUsername
-}
-
-export const getIO = (state: State) => {
-  const context = getContext(state)
-  const io = context.io
-  return io
 }
 
 // Account
