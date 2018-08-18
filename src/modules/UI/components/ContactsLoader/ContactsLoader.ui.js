@@ -36,7 +36,7 @@ export class ContactsLoader extends Component<Props> {
     return contacts.filter(item => item.givenName)
   }
 
-  sortContacts = (contacts: Array<GuiContact>) => {
+  sortContacts = (contacts: Array<GuiContact>): Array<GuiContact> => {
     return contacts.sort((a, b) => a.givenName.toUpperCase().localeCompare(b.givenName.toUpperCase()))
   }
 

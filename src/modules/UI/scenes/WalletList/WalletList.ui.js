@@ -403,7 +403,7 @@ export default class WalletList extends Component<Props, State> {
     }
   }
 
-  sortActiveWallets = (wallets: any) => {
+  sortActiveWallets = (wallets: any): Array<string> => {
     const activeOrdered = Object.keys(wallets)
       .filter(key => !wallets[key].archived) // filter out archived wallets
       .sort((a, b) => {
@@ -437,7 +437,7 @@ export default class WalletList extends Component<Props, State> {
 
   getNewOrder = (order: any, action: any) => {
     const { to, from } = action
-    const newOrder = [].concat(order)
+    const newOrder = [...order]
     newOrder.splice(to, 0, newOrder.splice(from, 1)[0])
 
     return newOrder
