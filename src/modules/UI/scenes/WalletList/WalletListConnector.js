@@ -26,7 +26,6 @@ const mapStateToProps = (state: State) => {
   const dimensions = state.ui.scenes.dimensions
   const customTokens = state.ui.settings.customTokens
   const otpResetPending = SETTINGS_SELECTORS.getOtpResetPending(state)
-  const progressPercentage = UI_SELECTORS.getWalletLoadingPercent(state)
   const isAccountBalanceVisible = state.ui.settings.isAccountBalanceVisible
   const isWalletFiatBalanceVisible = state.ui.settings.isWalletFiatBalanceVisible
   const currentState = state
@@ -45,7 +44,6 @@ const mapStateToProps = (state: State) => {
     dimensions,
     customTokens,
     otpResetPending,
-    progressPercentage,
     isAccountBalanceVisible,
     isWalletFiatBalanceVisible,
     currentState
