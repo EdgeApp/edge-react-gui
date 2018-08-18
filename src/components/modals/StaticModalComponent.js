@@ -24,7 +24,7 @@ const gradientEnd = { x: 1, y: 0 }
 const gradientColors = [THEME.COLORS.GRADIENT.DARK, THEME.COLORS.GRADIENT.LIGHT]
 
 class StaticModalComponent extends Component<Props> {
-  reset: number
+  reset: TimeoutID
   shouldComponentUpdate (nextProps: Props) {
     const diffElement = getObjectDiff(this.props, nextProps, { style: true, children: true })
     return !!diffElement
@@ -37,7 +37,7 @@ class StaticModalComponent extends Component<Props> {
     }
   }
   componentWillUnmount () {
-    clearInterval(this.reset)
+    clearTimeout(this.reset)
   }
   renderMiddle = (styles: Object) => {
     if (this.props.bodyComponent) {

@@ -172,7 +172,7 @@
     "eslint-plugin-react-native": "^3.0.1",
     "eslint-plugin-standard": "^3.0.1",
     "express": "^4.16.2",
-    "flow-bin": "^0.62.0",
+    "flow-bin": "^0.63.0",
     "flow-coverage-report": "^0.4.1",
     "husky": "^0.12.0",
     "import-sort-cli": "^5.0.0",
@@ -181,8 +181,8 @@
     "jest": "^23.4.1",
     "json-format": "^1.0.1",
     "jsonfile": "^4.0.0",
-    "nyc": "^10.0.0",
     "lint-staged": "^6.1.1",
+    "nyc": "^10.0.0",
     "prettier-eslint-cli": "^4.7.0",
     "rn-nodeify": "^7.0.1",
     "updot": "^1.1.7"
