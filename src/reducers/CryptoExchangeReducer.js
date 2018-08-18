@@ -2,7 +2,21 @@
 
 import * as Constants from '../constants/indexConstants'
 import s from '../locales/strings.js'
-import type { State } from '../modules/ReduxTypes'
+import type { State } from '../modules/ReduxTypes.js'
+import type { GuiCurrencyInfo } from '../types.js'
+
+const dummyCurrencyInfo: GuiCurrencyInfo = {
+  displayCurrencyCode: '',
+  exchangeCurrencyCode: '',
+  displayDenomination: {
+    name: '',
+    multiplier: '1'
+  },
+  exchangeDenomination: {
+    name: '',
+    multiplier: '1'
+  }
+}
 
 const initialState = {
   exchangeRate: 1,
@@ -18,7 +32,7 @@ const initialState = {
   fromCurrencyCode: null,
   fromNativeAmount: '0',
   fromDisplayAmount: '0',
-  fromWalletPrimaryInfo: null,
+  fromWalletPrimaryInfo: dummyCurrencyInfo,
   fromCurrencyIcon: null,
   fromCurrencyIconDark: null,
 
@@ -26,10 +40,11 @@ const initialState = {
   toCurrencyCode: null,
   toNativeAmount: '0',
   toDisplayAmount: '0',
-  toWalletPrimaryInfo: null,
+  toWalletPrimaryInfo: dummyCurrencyInfo,
   toCurrencyIcon: null,
   toCurrencyIconDark: null,
 
+  fee: 0,
   insufficientError: false,
   feeSetting: Constants.STANDARD_FEE,
   walletListModalVisible: false,
@@ -271,7 +286,7 @@ function deepCopyState (state) {
 }
 
 // Nuke the state on logout:
-export const cryptoExchanger = (state: $PropertyType<State, 'cryptoExchange'>, action: any) => {
+export const cryptoExchanger = (state: $PropertyType<State, 'cryptoExchange'>, action: any): $PropertyType<State, 'cryptoExchange'> => {
   if (action.type === Constants.LOGOUT || action.type === Constants.DEEP_LINK_RECEIVED) {
     return cryptoExchangerReducer(undefined, { type: 'DUMMY_ACTION_PLEASE_IGNORE' })
   }

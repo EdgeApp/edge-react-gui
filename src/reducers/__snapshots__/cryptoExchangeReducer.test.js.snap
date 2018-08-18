@@ -1,0 +1,64 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`initialState 1`] = `
+Object {
+  "availableShapeShiftTokens": Array [],
+  "changeWallet": "none",
+  "confirmTransactionModalVisible": false,
+  "exchangeRate": 1,
+  "fee": 0,
+  "feeSetting": "standard",
+  "forceUpdateGuiCounter": 0,
+  "fromCurrencyCode": null,
+  "fromCurrencyIcon": null,
+  "fromCurrencyIconDark": null,
+  "fromDisplayAmount": "0",
+  "fromNativeAmount": "0",
+  "fromWallet": null,
+  "fromWalletPrimaryInfo": Object {
+    "displayCurrencyCode": "",
+    "displayDenomination": Object {
+      "multiplier": "1",
+      "name": "",
+    },
+    "exchangeCurrencyCode": "",
+    "exchangeDenomination": Object {
+      "multiplier": "1",
+      "name": "",
+    },
+  },
+  "genericShapeShiftError": null,
+  "gettingTransaction": false,
+  "insufficientError": false,
+  "minerFee": "0",
+  "nativeMax": "0",
+  "nativeMin": "0",
+  "quoteExpireDate": null,
+  "reverseExchange": 1,
+  "reverseMinerFee": "0",
+  "reverseNativeMax": "0",
+  "reverseNativeMin": "0",
+  "shiftPendingTransaction": false,
+  "shiftTransactionError": null,
+  "toCurrencyCode": null,
+  "toCurrencyIcon": null,
+  "toCurrencyIconDark": null,
+  "toDisplayAmount": "0",
+  "toNativeAmount": "0",
+  "toWallet": null,
+  "toWalletPrimaryInfo": Object {
+    "displayCurrencyCode": "",
+    "displayDenomination": Object {
+      "multiplier": "1",
+      "name": "",
+    },
+    "exchangeCurrencyCode": "",
+    "exchangeDenomination": Object {
+      "multiplier": "1",
+      "name": "",
+    },
+  },
+  "transaction": null,
+  "walletListModalVisible": false,
+}
+`;
