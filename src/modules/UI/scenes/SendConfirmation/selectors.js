@@ -34,7 +34,7 @@ export type SendConfirmationState = {
   isEditable: boolean,
 
   pending: boolean,
-  transaction: EdgeTransaction,
+  transaction: EdgeTransaction | null,
   error: Error | null,
 
   pin: string,
