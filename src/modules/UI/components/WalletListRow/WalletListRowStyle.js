@@ -13,8 +13,8 @@ export const stylesRaw = {
     paddingHorizontal: 20
   },
   rowLeft: {
-    justifyContent: 'flex-start',
-    alignItems: 'center'
+    justifyContent: 'center',
+    alignItems: 'flex-start'
   },
   rowRight: {
     alignSelf: 'flex-end'
@@ -42,10 +42,14 @@ export const stylesRaw = {
     color: THEME.COLORS.GRAY_1
   },
   rowRightCryptoText: {
-    color: THEME.COLORS.GRAY_1
+    color: THEME.COLORS.GRAY_1,
+    fontSize: 14,
+    lineHeight: 18
   },
   rowRightFiatText: {
-    color: THEME.COLORS.GRAY_1
+    color: THEME.COLORS.GRAY_1,
+    fontSize: 14,
+    lineHeight: 18
   },
   headerContent: {
     justifyContent: 'space-between',

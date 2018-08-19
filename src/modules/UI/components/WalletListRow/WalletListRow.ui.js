@@ -1,14 +1,16 @@
 // @flow
 
 // import _ from 'lodash'
+import { bns } from 'biggystring'
+
 import React, { Component } from 'react'
 import { TouchableHighlight, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 import { connect } from 'react-redux'
-
+import { intl } from '../../../../locales/intl.js'
 import type { CustomTokenInfo, GuiDenomination } from '../../../../types.js'
 import type { Dispatch, State } from '../../../ReduxTypes'
-import { border as b, calculateFiatFromCryptoCurrency, cutOffText, getFiatSymbol } from '../../../utils.js'
+import { decimalOrZero, DIVIDE_PRECISION, getWalletDefaultDenomProps, calculateFiatFromCryptoCurrency, cutOffText, getFiatSymbol, findDenominationSymbol, truncateDecimals, formatNumber } from '../../../utils.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../Settings/selectors.js'
 import Text from '../FormattedText'
 import { styles, stylesRaw } from './WalletListRowStyle.js'
@@ -40,11 +42,11 @@ export class WalletListRowComponent extends Component<WalletListRowProps, Wallet
   }
 
   render () {
-    const { wallet, onPressSelectWallet } = this.props
-    // const { settings } = this.props
+    const { wallet, onPressSelectWallet, settings } = this.props
     const { currencyCode, name, id, enabledTokens, nativeBalances } = wallet
-    // const denomination = wallet.allDenominations[currencyCode]
-    /* let multiplier
+    const denomination = wallet.allDenominations[currencyCode]
+    const denomProps = getWalletDefaultDenomProps(wallet, settings, currencyCode)
+    let multiplier
     if (denomination) {
       multiplier = denomination[settings[currencyCode].denomination].multiplier
     } else {
@@ -54,7 +56,7 @@ export class WalletListRowComponent extends Component<WalletListRowProps, Wallet
       } else {
         return // let it blow up. It shouldn't be attempting to display
       }
-    } */
+    }
 
     // need to crossreference tokensEnabled with nativeBalances
     const enabledNativeBalances = {}
@@ -64,27 +66,25 @@ export class WalletListRowComponent extends Component<WalletListRowProps, Wallet
         enabledNativeBalances[prop] = nativeBalances[prop]
       }
     }
-
-    // const preliminaryCryptoAmount = truncateDecimals(bns.div(wallet.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)
-    // const finalCryptoAmount = intl.formatNumber(decimalOrZero(preliminaryCryptoAmount, 6)) // check if infinitesimal (would display as zero), cut off trailing zeroes
+    const cryptoSymbol = denomination.symbol
+    const preliminaryCryptoAmount = truncateDecimals(bns.div(wallet.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)
+    const finalCryptoAmount = intl.formatNumber(decimalOrZero(preliminaryCryptoAmount, 6)) // check if infinitesimal (would display as zero), cut off trailing zeroes
 
     return (
-      <View style={[{ width: '100%' }, b()]}>
-        <TouchableHighlight style={[styles.rowContainer, b()]} underlayColor={stylesRaw.underlay.color} onPress={() => onPressSelectWallet(id, currencyCode)}>
-          <View style={[{ width: '100%', flexDirection: 'row', justifyContent: 'space-between' }, b()]}>
-            <View style={[styles.rowLeft, b()]}>
-              <View style={[styles.rowNameTextWrapAndroid]}>
-                <Text style={[styles.rowNameText]} numberOfLines={1}>
-                  {cutOffText(name, 34)}
-                </Text>
-              </View>
+      <View style={[{ width: '100%' }]}>
+        <TouchableHighlight style={[styles.rowContainer]} underlayColor={stylesRaw.underlay.color} onPress={() => onPressSelectWallet(id, currencyCode)}>
+          <View style={[{ width: '100%', flexDirection: 'row', justifyContent: 'space-between' }]}>
+            <View style={[styles.rowLeft]}>
+              <Text style={[styles.rowNameText]} numberOfLines={1}>
+                {cutOffText(name, 34)}
+              </Text>
             </View>
-            <View style={[styles.rowRight, b()]}>
-              <View style={[styles.rowRightCryptoWrap, b()]}>
-                <Text style={[styles.rowRightCrytpText, b()]}>Howdy</Text>
+            <View style={[styles.rowRight]}>
+              <View style={[styles.rowRightCryptoWrap]}>
+                <Text style={[styles.rowRightCrytoText]}>{finalCryptoAmount} {cryptoSymbol || ''}</Text>
               </View>
-              <View style={[styles.rowRightFiatWrap, b()]}>
-                <Text style={[styles.rowRightFiatText, b()]}>Doody</Text>
+              <View style={[styles.rowRightFiatWrap]}>
+                <Text style={[styles.rowRightFiatText]}>Doody</Text>
               </View>
             </View>
           </View>
