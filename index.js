@@ -1,9 +1,8 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
 import './shim.js'
-
 import { AppRegistry } from 'react-native'
-
 import App from './src/app.js'
+import { name as appName } from './app.json'
 
-AppRegistry.registerComponent('edge', () => App)
+AppRegistry.registerComponent(appName, () => App);
