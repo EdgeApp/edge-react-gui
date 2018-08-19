@@ -97,7 +97,7 @@ export class SendConfirmation extends Component<Props, State> {
     }
   }
 
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     this.setState({ keyboardVisible: this.props.data === 'fromScan' })
   }
   componentDidMount () {
@@ -112,7 +112,7 @@ export class SendConfirmation extends Component<Props, State> {
     }
   }
 
-  componentWillReceiveProps (nextProps: Props) {
+  UNSAFE_componentWillReceiveProps (nextProps: Props) {
     const newState = {}
     if (nextProps.forceUpdateGuiCounter !== this.state.forceUpdateGuiCounter) {
       const overridePrimaryExchangeAmount = bns.div(nextProps.nativeAmount, nextProps.primaryExchangeDenomination.multiplier, DIVIDE_PRECISION)

@@ -79,7 +79,7 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
     return !!diffElement
   }
 
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     const walletId = this.props.data.item.id
     this.props.getEnabledTokensList(walletId)
   }
@@ -221,7 +221,10 @@ const mapDispatchToProps = dispatch => ({
 })
 
 // $FlowFixMe
-const FullWalletListRowConnected = connect(mapStateToProps, mapDispatchToProps)(FullWalletListRowLoadedComponent)
+const FullWalletListRowConnected = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(FullWalletListRowLoadedComponent)
 
 class FullListRowEmptyData extends Component<any> {
   render () {

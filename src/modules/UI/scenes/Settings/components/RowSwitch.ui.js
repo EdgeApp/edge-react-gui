@@ -14,7 +14,7 @@ export default class RowSwitch extends Component {
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     this.setState({
       value: this.props.value
     })

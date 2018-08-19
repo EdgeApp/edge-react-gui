@@ -110,7 +110,7 @@ export default class WalletList extends Component<Props, State> {
     return !!diffElement || !!diffElement2
   }
 
-  componentWillReceiveProps (nextProps: Props) {
+  UNSAFE_componentWillReceiveProps (nextProps: Props) {
     if (nextProps.otpResetPending && nextProps.otpResetPending !== this.props.otpResetPending) {
       this.setState({
         showOtpResetModal: true

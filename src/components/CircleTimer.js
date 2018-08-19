@@ -25,7 +25,7 @@ class CircleTimer extends Component<Props> {
     console.log('timer: percentage ', percentage) */
     setTimeout(this.timerTick, 1000)
   }
-  componentWillReceiveProps (nextProps: Props) {
+  UNSAFE_componentWillReceiveProps (nextProps: Props) {
     if (nextProps.expiration !== null && nextProps.expiration !== this.props.expiration) {
       setTimeout(this.timerTick, 1000)
     }

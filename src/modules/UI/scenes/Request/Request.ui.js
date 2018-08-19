@@ -99,7 +99,7 @@ export class Request extends Component<Props, State> {
     return !!diffElement || !!diffElement2
   }
 
-  async componentWillReceiveProps (nextProps: Props) {
+  async UNSAFE_componentWillReceiveProps (nextProps: Props) {
     if (nextProps.loading) return
 
     const didAddressChange = this.state.publicAddress !== nextProps.guiWallet.receiveAddress.publicAddress

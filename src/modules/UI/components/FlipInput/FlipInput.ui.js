@@ -76,7 +76,7 @@ export default class FlipInput extends Component<Props, State> {
       }).start()
     }
   }
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     this.animatedValue = new Animated.Value(0)
     this.frontInterpolate = this.animatedValue.interpolate({
       inputRange: [0, 1],
@@ -96,7 +96,7 @@ export default class FlipInput extends Component<Props, State> {
     })
   }
 
-  componentWillReceiveProps (nextProps: Props) {
+  UNSAFE_componentWillReceiveProps (nextProps: Props) {
     if (!bns.eq(nextProps.primaryDisplayAmount, this.state.primaryDisplayAmount)) {
       this.setState({
         primaryDisplayAmount: UTILS.truncateDecimals(nextProps.primaryDisplayAmount, 8)

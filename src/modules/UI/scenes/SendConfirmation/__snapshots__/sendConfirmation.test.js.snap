@@ -20,7 +20,7 @@ exports[`SendConfirmation should render with destination 1`] = `
         }
       }
     />
-    <View
+    <Component
       style={
         Object {
           "alignItems": "center",
@@ -29,7 +29,7 @@ exports[`SendConfirmation should render with destination 1`] = `
         }
       }
     >
-      <View
+      <Component
         style={
           Array [
             Object {
@@ -62,8 +62,8 @@ exports[`SendConfirmation should render with destination 1`] = `
           0.00
           )
         </FormattedText>
-      </View>
-      <View
+      </Component>
+      <Component
         style={
           Array [
             Object {
@@ -113,8 +113,8 @@ exports[`SendConfirmation should render with destination 1`] = `
             }
           }
         />
-      </View>
-      <View
+      </Component>
+      <Component
         style={
           Object {
             "alignItems": "center",
@@ -230,7 +230,7 @@ exports[`SendConfirmation should render with destination 1`] = `
             </Row>
           </Item>
         </Padding>
-      </View>
+      </Component>
       <Row
         style={
           Object {
@@ -253,7 +253,7 @@ exports[`SendConfirmation should render with destination 1`] = `
           sliderDisabled={true}
         />
       </Footer>
-    </View>
+    </Component>
   </Gradient>
 </SafeAreaViewComponent>
 `;

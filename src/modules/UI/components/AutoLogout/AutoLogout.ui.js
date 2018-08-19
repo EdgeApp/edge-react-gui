@@ -19,7 +19,7 @@ export default class AutoLogout extends Component<Props, State> {
     appState: 'active'
   }
 
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     AppState.addEventListener('change', this.handleAppStateChange)
   }
 

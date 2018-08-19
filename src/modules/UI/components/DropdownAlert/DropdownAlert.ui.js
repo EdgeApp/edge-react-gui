@@ -15,7 +15,7 @@ type Props = {
 
 export default class DropdownAlert extends Component<Props> {
   dropdownAlert: ?{ alert: Function }
-  componentWillReceiveProps (nextProps: Props) {
+  UNSAFE_componentWillReceiveProps (nextProps: Props) {
     if (this.shouldDisplay(this.props, nextProps)) {
       if (this.dropdownAlert) this.dropdownAlert.alert()
     }

@@ -12,7 +12,7 @@ type Props = {
 }
 
 export default class ABAlert extends Component<Props> {
-  componentWillReceiveProps (nextProps: Props) {
+  UNSAFE_componentWillReceiveProps (nextProps: Props) {
     // prevent duplicate alerts
     if (this.props.view === nextProps.view) return
 

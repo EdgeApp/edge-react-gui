@@ -30,7 +30,7 @@ type State = {
 }
 
 export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, State> {
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     this.setState({
       showMessageModal: false,
       messageModalMessage: '',
