@@ -1,13 +1,14 @@
 // @flow
 
 import React, { Component } from 'react'
-import { ScrollView } from 'react-native'
+import { FlatList, View } from 'react-native'
 import * as Animatable from 'react-native-animatable'
 import slowlog from 'react-native-slowlog'
 
 import { PLATFORM } from '../../../../theme/variables/platform.js'
+import { GuiWallet } from '../../../ReduxTypes.js'
 import { border as b } from '../../../utils'
-import WalletListModalBody from './components/WalletListModalBodyConnector'
+import { WalletListRowConnector } from '../WalletListRow/WalletListRow.ui.js'
 import WalletListModalHeader from './components/WalletListModalHeaderConnector'
 import styles from './style'
 
@@ -16,7 +17,8 @@ type Props = {
   type: string,
   whichWallet?: string,
   dropdownWalletListVisible: boolean,
-  currentScene: string
+  currentScene: string,
+  wallets: Array<GuiWallet>
 }
 export default class WalletListModal extends Component<Props> {
   constructor (props: any) {
@@ -24,14 +26,27 @@ export default class WalletListModal extends Component<Props> {
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
+  renderWalletListRow = ({ item }) => {
+    return <WalletListRowConnector wallet={item} />
+  }
+
+  keyExtractor = (item: GuiWalletType, index: number): number => {
+    return item.id
+  }
+
   render () {
+    const { wallets } = this.props
+    const walletList = []
     const top = this.props.topDisplacement ? this.props.topDisplacement : 38
+    for (const id in wallets) {
+      walletList.push(wallets[id])
+    }
     return (
       <Animatable.View style={[b(), styles.topLevel, { position: 'absolute', top: top, height: PLATFORM.usableHeight }]} animation="fadeInUp" duration={250}>
-        <ScrollView>
+        <View>
           <WalletListModalHeader type={this.props.type} whichWallet={this.props.whichWallet} />
-          <WalletListModalBody style={{ flex: 1 }} type={this.props.type} />
-        </ScrollView>
+          <FlatList style={{ width: '100%', height: 500 }} data={walletList} renderItem={this.renderWalletListRow} />
+        </View>
       </Animatable.View>
     )
   }
