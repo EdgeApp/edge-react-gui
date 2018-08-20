@@ -7,14 +7,12 @@
   "change_currency_fee": "Change Currency",
   "could_not_select": "Could Not Select Wallet",
   "dialog_title": "Set Auto Logoff time",
-
   "drawer_exchange_rate_loading": "Exchange Rate Loading",
   "drawer_exchange": "Exchange",
   "drawer_request": "Request",
   "drawer_scan_qr_send": "Scan QR (Send)",
   "drawer_sweep_private_key": "Sweep Private Key",
   "drawer_wallets": "Wallets",
-
   "dropdown_exchange_max_amount": "Exchange Max Amount",
   "edge_description": "This application would like to create or access its wallet in your Edge account.\n\n It will not have access to any other wallets.",
   "exchange_failed": "Exchange Failed",
@@ -26,7 +24,7 @@
   "fragmet_wallets_managetokens_option": "Manage Tokens",
   "managetokens_top_instructions": "Please select which tokens you would like displayed within the wallet:",
   "manage_tokens_duplicate_currency_code": "A token with that currency code already exists.",
-  "addtoken_top_instructions": "To add a token, please fill out the following form and press 'Save'",
+  "addtoken_top_instructions": "To add a token, please fill out the following form and press \"Save\" ",
   "accept_button_text": "Accept",
   "addtoken_contract_address_input_text": "Contract Address",
   "addtoken_currency_code_input_text": "Token Code",
@@ -38,7 +36,7 @@
   "addtoken_denomination_input_text": "Number of Decimal Places",
   "addtoken_name_input_text": "Token Name",
   "addtoken_add": "Add",
-  "edittoken_top_instructions": "Fill out token info and tap 'Save' to edit token:",
+  "edittoken_top_instructions": "Fill out token info and tap \"Save\" to edit token:",
   "edittoken_delete_token": "Delete Token",
   "edittoken_delete_prompt": "Are you sure you want to delete this token?",
   "edittoken_delete_title": "Unable to Edit Token",
@@ -246,7 +244,6 @@
   "transaction_details_notes_title": "Notes",
   "string_search": "Search",
   "confirm_password_text": "Confirm Password",
-
   "title_otp_enabled": "2FA is enabled",
   "title_otp_disabled": "Protect your account with 2FA",
   "otp_description": "2FA prevents unauthorized access from other devices, even if your username and password is compromised. You can scan a QR code or type in an authentication code to seamlessly authorize other devices",
@@ -265,14 +262,11 @@
   "otp_modal_body": "2FA is recommended to keep your device secure from unauthorized access from other devices.",
   "otp_notif_title": "2FA disable has been requested by another device",
   "otp_notif_body": "If you did not create this request, log in as %1$s and change your password",
-
   "word_to_in_convert_from_to_string": "to",
-
   "legacy_address_modal_title": "Legacy Address Detected",
   "legacy_address_modal_warning": "Warning: You have scanned a legacy format address that may not be for %1$s as it is indistinguishable from other currency addresses.\n\nDo you want to continue sending to this address?",
   "legacy_address_modal_continue": "Continue",
   "legacy_address_modal_cancel": "Cancel",
-
   "password_reminder_remember_your_password": "Remember your password?",
   "password_reminder_you_will_need_your_password": "You will need your password if your device gets lost or stolen, or if you uninstall the app.",
   "password_reminder_enter_password_below": "Enter it below to make sure:",
@@ -282,7 +276,6 @@
   "password_reminder_great_job": "Great job remembering your password.",
   "password_reminder_verified": "Password Verified",
   "password_reminder_invalid": "Invalid Password",
-
   "password_check_check_later": "Later",
   "password_check_check_my_password": "Check MY Password",
   "password_check_checking": "Checking password…",
@@ -290,19 +283,15 @@
   "password_check_great_job": "Great job remembering your password.",
   "password_check_incorrect_password_message": "Incorrect Password. Try again?",
   "password_check_incorrect_password_title": "Incorrect Password.",
-
   "password_check_skip_formatted": "Please create a new account and transfer your funds if you forgot your password. Your password CANNOT BE RECOVERED by %1$s and you will lose access to your funds without your password.",
   "password_check_skip": "Please create a new account and transfer your funds if you forgot your password.",
-
   "password": "Password",
-
   "string_export_qbo": "Export Quickbooks QBO",
   "string_export_qbo_abbrev": "Email QBO",
   "string_export_csv": "Export CSV",
   "string_export_csv_abbrev": "Email CSV",
   "email_address": "Email Address",
   "email_export": "Enter the email address where you want to send your exported file",
-
   "private_key_modal_private_key": "%1$s Private Key",
   "private_key_modal_with_public_address": "with Public Address:",
   "private_key_modal_sweep_from_private_address": "Sweep Funds From Private Key",
@@ -311,12 +300,10 @@
   "private_key_modal_cancel": "Cancel",
   "private_key_modal_success": "Private key successfully swept",
   "private_key_modal_importing_private_key": "Importing Private Key",
-
   "restore_wallets_modal_title": "Restore Wallets",
   "restore_wallets_modal_description": "This will restore all deleted and archived wallets",
   "restore_wallets_modal_confirm": "Confirm",
   "restore_wallets_modal_cancel": "Cancel",
-
   "unique_identifier": "Unique Identifier",
   "unique_identifier_dropdown_option": "Add %s",
   "unique_identifier_destination_tag": "Destination Tag",
@@ -329,7 +316,6 @@
   "unique_identifier_modal_confirm": "Confirm",
   "unique_identifier_modal_cancel": "Cancel",
   "unique_identifier_display_text": "%1$s: %2$s",
-
   "enter_your_password": "Enter your password",
   "spending_limits": "Spending Limits",
   "spending_limits_daily_title": "Daily Spending Limit",
@@ -338,10 +324,9 @@
   "spending_limits_tx_title": "Transaction Spending Limit",
   "spending_limits_tx_placeholder": "Transaction Spending Limit",
   "spending_limits_tx_description": "(Requires PIN above transaction amount)",
-  "four_digit_pin": "4 Digit PIN",
-  "pin": "PIN",
-
   "save": "Save",
+  "four_digit_pin": "4 Digit Pin",
+  "pin": "PIN",
   "spending_limits_warning": "** Warning **\\n\\nSetting a password spending limit may prevent you from accessing funds if your password is forgotten. Please make sure you have set up password recovery",
   "onboarding_button": "Got It",
   "onboarding_skip_button": "Skip",
