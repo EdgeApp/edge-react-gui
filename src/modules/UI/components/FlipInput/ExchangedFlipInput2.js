@@ -31,7 +31,7 @@ export type ExchangedFlipInputOwnProps = {
 
   // Callback for when the `primaryAmount` changes. This returns both a `nativeAmount` and an `exchangeAmount`. Both
   // amounts are ONLY for the primary field. Parent will not be given values for the secondary field.
-  onExchangeAmountChanged(amounts: ExchangedFlipInputAmounts): void,
+  onExchangeAmountChanged(amounts: ExchangedFlipInputAmounts): mixed,
   isEditable: boolean
 }
 

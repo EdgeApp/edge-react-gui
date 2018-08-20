@@ -3,14 +3,13 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import { connect } from 'react-redux'
 
-import type { GuiCurrencyInfo, GuiDenomination, GuiReceiveAddress, GuiWallet } from '../../../../types'
+import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../../../types'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import type { Dispatch, State } from '../../../ReduxTypes'
 import { getDenomFromIsoCode } from '../../../utils'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import { refreshReceiveAddressRequest } from '../../Wallets/action'
-import { saveReceiveAddress } from './action.js'
 import { Request } from './Request.ui'
 import type { RequestDispatchProps, RequestLoadingProps, RequestStateProps } from './Request.ui'
 
@@ -72,10 +71,7 @@ const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps 
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch): RequestDispatchProps => ({
-  saveReceiveAddress: (receiveAddress: GuiReceiveAddress) => {
-    dispatch(saveReceiveAddress(receiveAddress))
-  },
-  refreshReceiveAddressRequest: walletId => {
+  refreshReceiveAddressRequest: (walletId: string) => {
     dispatch(refreshReceiveAddressRequest(walletId))
   }
 })
