@@ -2,11 +2,7 @@
 
 import DeviceInfo from 'react-native-device-info'
 
-/* import cn from './cn' */
 import en from './en_US'
-
-/* import es from './es'
-import pt from './pt' */
 
 const allLocales = { en }
 
