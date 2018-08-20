@@ -7,7 +7,7 @@ import './util/polyfills'
 import { Client } from 'bugsnag-react-native'
 import React, { Component } from 'react'
 import { AppState, AsyncStorage, Platform, Text, TextInput } from 'react-native'
-import BackgroundTask from 'react-native-background-task'
+import BackgroundFetch from 'react-native-background-fetch'
 import firebase from 'react-native-firebase'
 import RNFS from 'react-native-fs'
 import PushNotification from 'react-native-push-notification'
@@ -46,7 +46,14 @@ console.ignoredYellowBox = IGNORED_WARNINGS
 global.OS = Platform.OS
 global.slowlogOptions = { threshold: 16 }
 // Disable the font scaling
+if (!Text.defaultProps) {
+  Text.defaultProps = {}
+}
 Text.defaultProps.allowFontScaling = false
+
+if (!TextInput.defaultProps) {
+  TextInput.defaultProps = {}
+}
 TextInput.defaultProps.allowFontScaling = false
 
 if (!__DEV__) {
@@ -120,7 +127,11 @@ global.pcount = function (label: string) {
   }
 }
 
-BackgroundTask.define(async () => {
+BackgroundFetch.configure({
+  minimumFetchInterval: 15,
+  stopOnTerminate: false,
+  startOnBoot: true
+}, async () => {
   console.log('appStateLog: running background task')
   const lastNotif = await AsyncStorage.getItem(Constants.LOCAL_STORAGE_BACKGROUND_PUSH_KEY)
   const now = new Date()
@@ -128,7 +139,7 @@ BackgroundTask.define(async () => {
     const lastNotifDate = new Date(lastNotif).getTime() / 1000
     const delta = now.getTime() / 1000 - lastNotifDate
     if (delta < Constants.PUSH_DELAY_SECONDS) {
-      BackgroundTask.finish()
+      BackgroundFetch.finish()
       return
     }
   }
@@ -163,15 +174,22 @@ BackgroundTask.define(async () => {
     }
   })
   await AsyncStorage.setItem(Constants.LOCAL_STORAGE_BACKGROUND_PUSH_KEY, now.toString())
-  BackgroundTask.finish()
+
+  // Required: Signal completion of your task to native code
+  // If you fail to do this, the OS can terminate your app
+  // or assign battery-blame for consuming too much background-time
+  BackgroundFetch.finish(BackgroundFetch.FETCH_RESULT_NEW_DATA)
+}, (error) => {
+  console.log('RNBackgroundFetch failed to start')
+  console.log(error)
 })
+
 function _handleAppStateChange () {
   console.log('appStateLog: ', AppState.currentState)
 }
 function _handleSingleAppStateChange () {
   if (AppState.currentState === 'background') {
     AppState.removeEventListener('change', _handleSingleAppStateChange)
-    BackgroundTask.schedule()
   }
 }
 export default class App extends Component<{}> {
@@ -179,7 +197,6 @@ export default class App extends Component<{}> {
     console.log('appStateLog: Component Mounted', AppState.currentState)
     AppState.addEventListener('change', _handleAppStateChange)
     if (Platform.OS === Constants.IOS) {
-      BackgroundTask.schedule()
     } else {
       AppState.addEventListener('change', _handleSingleAppStateChange)
     }

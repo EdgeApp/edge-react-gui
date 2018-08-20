@@ -100,7 +100,7 @@ export default class SettingsOverview extends Component<Props, State> {
       })
     }
   }
-  componentWillReceiveProps (nextProps: Props) {
+  UNSAFE_componentWillReceiveProps (nextProps: Props) {
     if (nextProps.isLocked !== this.props.isLocked && this.state.showConfirmPasswordModal) {
       this.setState({ showConfirmPasswordModal: false })
       this.props.resetConfirmPasswordError({ confirmPasswordError: '' })

@@ -47,11 +47,11 @@ type State = {
 }
 
 export default class GetSeed extends Component<GetSeedModalComponentProps, State> {
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     this.setState(() => ({ confimPassword: '', error: '' }))
   }
 
-  componentWillReceiveProps () {
+  UNSAFE_componentWillReceiveProps () {
     if (this.props.privateSeedUnlocked) {
       this.setState(() => ({ confimPassword: '', error: '' }))
     }
