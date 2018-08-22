@@ -224,7 +224,11 @@ export const styles = {
     padding: scale(3)
   },
   notesInput: {
+<<<<<<< HEAD
     color: THEME.COLORS.GRAY_1,
+=======
+    color: THEME.COLORS.GRAY_2,
+>>>>>>> Scaled transaction details module to different devices
     fontSize: scale(15),
     fontFamily: THEME.FONTS.DEFAULT,
     paddingVertical: 0
