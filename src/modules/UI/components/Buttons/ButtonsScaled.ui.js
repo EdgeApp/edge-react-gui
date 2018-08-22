@@ -1,8 +1,14 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
+<<<<<<< HEAD
 import React, { PureComponent } from 'react'
 import { TouchableHighlight, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
+=======
+import slowlog from 'react-native-slowlog'
+import React, { PureComponent } from 'react'
+import { TouchableHighlight, View } from 'react-native'
+>>>>>>> Scaled transaction details module to different devices
 
 import s from '../../../../locales/strings.js'
 import T from '../FormattedTextScaled'
