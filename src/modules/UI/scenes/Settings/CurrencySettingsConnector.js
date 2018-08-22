@@ -8,7 +8,7 @@ import { setDenominationKeyRequest } from './action'
 import CurrencySettings from './CurrencySettings.ui'
 
 const mapStateToProps = (state: State, ownProps) => ({
-  logo: SETTINGS_SELECTORS.getPlugin(state, ownProps.pluginName).currencyInfo.symbolImage,
+  logo: SETTINGS_SELECTORS.getPluginInfo(state, ownProps.pluginName).symbolImage,
   denominations: SETTINGS_SELECTORS.getDenominations(state, ownProps.currencyCode),
   selectedDenominationKey: SETTINGS_SELECTORS.getDisplayDenominationKey(state, ownProps.currencyCode)
 })

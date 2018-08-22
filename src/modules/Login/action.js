@@ -14,7 +14,6 @@ import s from '../../locales/strings.js'
 import * as ACCOUNT_API from '../Core/Account/api'
 import * as SETTINGS_API from '../Core/Account/settings.js'
 // Login/action.js
-import * as CONTEXT_API from '../Core/Context/api'
 import * as CORE_SELECTORS from '../Core/selectors'
 import { updateWalletsRequest } from '../Core/Wallets/action.js'
 import type { Dispatch, GetState } from '../ReduxTypes'
@@ -51,7 +50,6 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
   }
   const accountInitObject = {
     account: account,
-    showOnBoarding: false,
     touchIdInfo: touchIdInfo,
     walletId: '',
     currencyCode: '',
@@ -76,19 +74,17 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     spendingLimits: {}
   }
   try {
-    const currencyPlugins = await CONTEXT_API.getCurrencyPlugins(context)
-    currencyPlugins.forEach(plugin => {
-      plugin.currencyInfo.walletTypes.forEach(type => {
-        currencyCodes[type] = plugin.currencyInfo.currencyCode
+    for (const pluginName in account.currencyTools) {
+      const { currencyInfo } = account.currencyTools[pluginName]
+      const { currencyCode } = currencyInfo
+      currencyInfo.walletTypes.forEach(type => {
+        currencyCodes[type] = currencyCode
       })
-      const pluginName = plugin.pluginName
-      const walletTypes = plugin.currencyInfo.walletTypes
-      accountInitObject.currencyPlugins.push({ pluginName, plugin, walletTypes })
-    })
-
+      accountInitObject.currencyPlugins.push({ pluginName, currencyInfo })
+    }
     if (account.activeWalletIds.length < 1) {
       // we are going to assume that since there is no wallets, this is a first time user
-      accountInitObject.showOnBoarding = true
+      Actions[Constants.ONBOARDING]()
       // set the property on the user so that we can launch on boarding
       // lets create the wallet
       const ethWalletName = s.strings.string_first_ethereum_wallet_name
@@ -105,10 +101,11 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       if (global.currencyCode) {
         let walletType, walletName
         // We got installed via a currencyCode referral. Only create one wallet of that type
-        for (const plugin of currencyPlugins) {
-          if (plugin.currencyInfo.currencyCode.toLowerCase() === global.currencyCode.toLowerCase()) {
-            walletType = plugin.currencyInfo.walletTypes[0]
-            walletName = sprintf(s.strings.my_crypto_wallet_name, plugin.currencyInfo.currencyName)
+        for (const pluginName in account.currencyTools) {
+          const { currencyInfo } = account.currencyTools[pluginName]
+          if (currencyInfo.currencyCode.toLowerCase() === global.currencyCode.toLowerCase()) {
+            walletType = currencyInfo.walletTypes[0]
+            walletName = sprintf(s.strings.my_crypto_wallet_name, currencyInfo.currencyName)
             edgeWallet = await ACCOUNT_API.createCurrencyWalletRequest(account, walletType, { name: walletName, fiatCurrencyCode })
             global.firebase && global.firebase.analytics().logEvent(`Signup_Wallets_Created`)
           }
@@ -124,6 +121,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       accountInitObject.currencyCode = edgeWallet.currencyInfo.currencyCode
     } else {
       // We have a wallet
+      Actions[Constants.EDGE]()
       const { walletId, currencyCode } = ACCOUNT_API.getFirstActiveWalletInfo(account, currencyCodes)
       accountInitObject.walletId = walletId
       accountInitObject.currencyCode = currencyCode

@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyPlugin } from 'edge-core-js'
+import type { EdgeCurrencyInfo } from 'edge-core-js'
 import _ from 'lodash'
 
 import * as Constants from '../../../constants/indexConstants.js'
@@ -19,7 +19,7 @@ export const initialState = {
   ...CORE_DEFAULTS,
   changesLocked: true,
   plugins: {
-    arrayPlugins: [],
+    allCurrencyInfos: [],
     supportedWalletTypes: []
   },
   pinLoginEnabled: false,
@@ -28,7 +28,6 @@ export const initialState = {
   isTouchSupported: false,
   isTouchEnabled: false,
   isOtpEnabled: false,
-  showOnBoarding: false,
   otpKey: null,
   otpResetDate: null,
   otpResetPending: false,
@@ -91,10 +90,10 @@ export type SettingsState = {
   pinLoginEnabled: boolean,
   otpResetDate: ?string,
   plugins: {
-    arrayPlugins: Array<EdgeCurrencyPlugin>,
+    [pluginName: string]: EdgeCurrencyInfo,
+    allCurrencyInfos: Array<EdgeCurrencyInfo>,
     supportedWalletTypes: Array<string>
   },
-  showOnBoarding: boolean,
   confirmPasswordError: string,
   sendLogsStatus: string,
   isAccountBalanceVisible: boolean,
@@ -110,9 +109,10 @@ export type SettingsState = {
 const currencyPLuginUtil = (state, payloadData) => {
   const { plugins } = state
   const { supportedWalletTypes } = plugins
-  const { arrayPlugins } = plugins
-  const { pluginName, plugin, walletTypes } = payloadData
-  const currencyInfo = plugin.currencyInfo
+  const { allCurrencyInfos } = plugins
+  const { currencyInfo } = payloadData
+  const { pluginName, walletTypes } = currencyInfo
+
   // Build up object with all the information for the parent currency, accesible by the currencyCode
   const defaultParentCurrencyInfo = state[currencyInfo.currencyCode]
   const parentCurrencyInfo = {
@@ -153,8 +153,8 @@ const currencyPLuginUtil = (state, payloadData) => {
     ...currencyInfos,
     plugins: {
       ...plugins,
-      [pluginName]: plugin,
-      arrayPlugins: [...arrayPlugins, plugin],
+      [pluginName]: currencyInfo,
+      allCurrencyInfos: [...allCurrencyInfos, currencyInfo],
       supportedWalletTypes: [...supportedWalletTypes, ...walletTypes]
     }
   }
@@ -180,7 +180,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         otpMode,
         denominationKeys,
         customTokensSettings,
-        showOnBoarding,
         isAccountBalanceVisible,
         isWalletFiatBalanceVisible
       } = data
@@ -200,7 +199,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         pinMode,
         pinLoginEnabled,
         otpMode,
-        showOnBoarding,
         otpResetDate: account.otpResetDate,
         isAccountBalanceVisible,
         isWalletFiatBalanceVisible
@@ -516,9 +514,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
 
     case ACTION.ADD_CURRENCY_PLUGIN: {
       return currencyPLuginUtil(state, data)
-    }
-    case Constants.COMPLETE_ONBOARDING: {
-      return { ...state, showOnBoarding: false }
     }
 
     case ACTION.SET_ACCOUNT_BALANCE_VISIBILITY: {

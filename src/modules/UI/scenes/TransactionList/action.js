@@ -86,7 +86,7 @@ export const fetchTransactions = (walletId: string, currencyCode: string, option
   })
 }
 
-const getAndMergeTransactions = (state: State, dispatch: Dispatch, walletId: string, currencyCode: string, options: Object) => {
+const getAndMergeTransactions = async (state: State, dispatch: Dispatch, walletId: string, currencyCode: string, options: Object) => {
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
   const currentEndIndex = options.startIndex + options.startEntries - 1
   if (wallet) {
@@ -101,34 +101,34 @@ const getAndMergeTransactions = (state: State, dispatch: Dispatch, walletId: str
       // and fast forward the counter
       key = transactionsWithKeys.length
     }
-    const numTransactions = WALLET_API.getNumTransactions(wallet, currencyCode)
-    WALLET_API.getTransactions(wallet, currencyCode, options)
-      .then(transactions => {
-        for (const tx of transactions) {
-          const txDate = new Date(tx.date * 1000)
-          const dateString = txDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
-          const time = txDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' })
-          transactionsWithKeys.push({
-            ...tx,
-            dateString,
-            time,
-            key
-          })
-          key++
-        }
-        dispatch(
-          updateTransactions({
-            numTransactions,
-            transactions: transactionsWithKeys,
-            currentCurrencyCode: currencyCode,
-            currentWalletId: walletId,
-            currentEndIndex
-          })
-        )
-      })
-      .catch(e => {
-        console.warn('Issue with getTransactions: ', e.message)
-      })
+    try {
+      const numTransactions = await WALLET_API.getNumTransactions(wallet, currencyCode)
+      const transactions = await WALLET_API.getTransactions(wallet, currencyCode, options)
+
+      for (const tx of transactions) {
+        const txDate = new Date(tx.date * 1000)
+        const dateString = txDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
+        const time = txDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' })
+        transactionsWithKeys.push({
+          ...tx,
+          dateString,
+          time,
+          key
+        })
+        key++
+      }
+      dispatch(
+        updateTransactions({
+          numTransactions,
+          transactions: transactionsWithKeys,
+          currentCurrencyCode: currencyCode,
+          currentWalletId: walletId,
+          currentEndIndex
+        })
+      )
+    } catch (e) {
+      console.warn('Issue with getTransactions: ', e.message)
+    }
   }
 }
 

@@ -3,7 +3,7 @@
 
 import { clone } from 'ramda'
 
-import { makeSpendFailed, newPin, reset, updatePaymentProtocolTransaction, updateSpendPending, updateTransaction } from './action.js'
+import { makeSpendFailed, newPin, newSpendInfo, reset, updatePaymentProtocolTransaction, updateSpendPending, updateTransaction } from './action.js'
 import { sendConfirmation } from './reducer.js'
 import { initialState } from './selectors.js'
 
@@ -113,6 +113,51 @@ describe('sendConfirmation reducer', () => {
 
         expect(actual).toMatchSnapshot()
       })
+    })
+
+    describe('newSpendInfo', () => {
+      test('with name', () => {
+        const spendInfo = {
+          currencyCode: 'BTC',
+          nativeAmount: '1000',
+          spendTargets: [{ currencyCode: 'BTC', nativeAmount: '1000', publicAddress: '123123123' }],
+          metadata: { name: 'airbitz' }
+        }
+        const action = newSpendInfo(spendInfo, 'none')
+        const initialStateClone = clone(initialState)
+        const actual = sendConfirmation(initialStateClone, action)
+
+        expect(actual).toMatchSnapshot()
+      })
+
+      test('without name', () => {
+        const spendInfo = {
+          currencyCode: 'BTC',
+          nativeAmount: '1000',
+          spendTargets: [{ currencyCode: 'BTC', nativeAmount: '1000', publicAddress: '123123123' }],
+          metadata: {}
+        }
+        const action = newSpendInfo(spendInfo, 'none')
+        const initialStateClone = clone(initialState)
+        const actual = sendConfirmation(initialStateClone, action)
+
+        expect(actual).toMatchSnapshot()
+      })
+    })
+  })
+
+  describe('address', () => {
+    test('NEW_SPEND_INFO', () => {
+      const spendInfo = {
+        spendTargets: [{ publicAddress: '123123123', nativeAmount: '0' }],
+        metadata: {}
+      }
+      const action = newSpendInfo(spendInfo, 'none')
+      const initialStateClone = clone(initialState)
+
+      const actual = sendConfirmation(initialStateClone, action)
+
+      expect(actual).toMatchSnapshot()
     })
   })
 

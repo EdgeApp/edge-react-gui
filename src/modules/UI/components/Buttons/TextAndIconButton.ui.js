@@ -25,7 +25,7 @@ class TextAndIconButton extends Component<Props, State> {
     onPress: PropTypes.func.isRequired,
     title: PropTypes.oneOfType([PropTypes.string.isRequired, PropTypes.func.isRequired])
   }
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     this.setState({
       pressed: false
     })

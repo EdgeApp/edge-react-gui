@@ -10,7 +10,7 @@ export const rawStyles = {
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1
+    flex: -1
   },
   buttonText: {
     fontFamily: THEME.FONTS.DEFAULT,
@@ -47,6 +47,14 @@ export const rawStyles = {
   tertiaryButtonUnderlay: { color: THEME.COLORS.GRAY_3 },
   tertiaryButtonText: {
     color: THEME.COLORS.PRIMARY
+  },
+  // Text BUTTON
+  textButton: {
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  textButtonUnderlay: { color: THEME.COLORS.TRANSPARENT },
+  textButtonText: {
+    color: THEME.COLORS.WHITE
   },
 
   debug: {

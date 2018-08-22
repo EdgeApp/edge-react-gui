@@ -1,6 +1,7 @@
 // @flow
 
-import type { EdgeContext, EdgeContextCallbacks, EdgeCorePluginFactory, EdgeCurrencyPlugin } from 'edge-core-js'
+import { makeReactNativeFolder } from 'disklet'
+import type { DiskletFolder, EdgeContext, EdgeContextCallbacks, EdgeCorePluginFactory, EdgeCurrencyPlugin } from 'edge-core-js'
 import {
   bitcoinCurrencyPluginFactory,
   bitcoincashCurrencyPluginFactory,
@@ -51,6 +52,7 @@ import TransactionsExportSceneConnector from '../connectors/scene/TransactionsEx
 import * as Constants from '../constants/indexConstants'
 import { setIntlLocale } from '../locales/intl'
 import s, { selectLocale } from '../locales/strings.js'
+import { OnBoardingComponent } from '../modules/UI/scenes/OnBoarding/OnBoardingComponent.js'
 import { makeCoreContext } from '../util/makeContext.js'
 import * as CONTEXT_API from './Core/Context/api'
 import { styles } from './style.js'
@@ -170,7 +172,7 @@ type Props = {
   username?: string,
   addCurrencyPlugin: EdgeCurrencyPlugin => void,
   setKeyboardHeight: number => void,
-  addContext: EdgeContext => void,
+  addContext: (EdgeContext, DiskletFolder) => void,
   addUsernames: (Array<string>) => void,
   setDeviceDimensions: any => void,
   dispatchEnableScan: () => void,
@@ -183,10 +185,10 @@ type State = {
   context: ?EdgeContext
 }
 
-async function queryUtilServer (context: EdgeContext, usernames: Array<string>) {
+async function queryUtilServer (context: EdgeContext, folder: DiskletFolder, usernames: Array<string>) {
   let jsonObj: null | Object = null
   try {
-    const json = await context.io.folder.file(UTILITY_SERVER_FILE).getText()
+    const json = await folder.file(UTILITY_SERVER_FILE).getText()
     jsonObj = JSON.parse(json)
   } catch (err) {
     console.log(err)
@@ -201,14 +203,14 @@ async function queryUtilServer (context: EdgeContext, usernames: Array<string>) 
   if (usernames.length === 0 && !jsonObj) {
     // New app launch. Query the utility server for referral information
     try {
-      const response = await context.io.fetch('https://util1.edge.app/ref')
+      const response = await fetch('https://util1.edge.app/ref')
       if (response) {
         const util = await response.json()
         if (util.currencyCode) {
           global.currencyCode = util.currencyCode
         }
         // Save util data
-        context.io.folder.file(UTILITY_SERVER_FILE).setText(JSON.stringify(util))
+        folder.file(UTILITY_SERVER_FILE).setText(JSON.stringify(util))
       }
     } catch (e) {
       console.log(e)
@@ -229,7 +231,7 @@ export default class Main extends Component<Props, State> {
     }
   }
 
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow)
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide)
   }
@@ -244,12 +246,14 @@ export default class Main extends Component<Props, State> {
     global.firebase && global.firebase.analytics().setUserId(id)
     global.firebase && global.firebase.analytics().logEvent(`Start_App`)
     makeCoreContext(this.props.contextCallbacks, pluginFactories).then(context => {
+      const folder = makeReactNativeFolder()
+
       // Put the context into Redux:
-      this.props.addContext(context)
+      this.props.addContext(context, folder)
 
       CONTEXT_API.listUsernames(context).then(usernames => {
         this.props.addUsernames(usernames)
-        queryUtilServer(context, usernames)
+        queryUtilServer(context, folder, usernames)
       })
       setIntlLocale(localeInfo)
       selectLocale(DeviceInfo.getDeviceLocale())
@@ -299,6 +303,7 @@ export default class Main extends Component<Props, State> {
               <Stack key={Constants.ROOT} hideNavBar panHandlers={null}>
                 <Scene key={Constants.LOGIN} initial component={LoginConnector} username={this.props.username} />
 
+                <Scene key={Constants.ONBOARDING} navTransparent={true} component={OnBoardingComponent} />
                 <Scene
                   key={Constants.TRANSACTION_DETAILS}
                   navTransparent={true}

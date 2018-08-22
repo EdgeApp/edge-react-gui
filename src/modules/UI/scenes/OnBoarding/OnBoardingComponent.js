@@ -1,14 +1,17 @@
 // @flow
 import React, { Component } from 'react'
-import { Animated, Modal, Text, View } from 'react-native'
+import { Animated, Dimensions, View } from 'react-native'
+import { Actions } from 'react-native-router-flux'
 
+import { EDGE } from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings.js'
 import { OnBoardingSceneStyles } from '../../../../styles/indexStyles.js'
 import { PLATFORM } from '../../../../theme/variables/platform'
-import { PrimaryButton } from '../../components/Buttons'
+import { PrimaryButton, TextButton } from '../../components/Buttons'
 import { PagingDotsComponent } from '../../components/PagingDots/PagingDotsComponent.js'
 import { OnBoardingSlideComponent } from './OnBoardingSlideComponent.js'
 
+/* import Modal from 'react-native-modal' */
 // import Swiper from 'react-native-swiper'
 export type OnBoardSlide = {
   text: string,
@@ -24,7 +27,6 @@ export type OnBoardSlide = {
 type Props = {
   slides: Array<Object>,
   totalSlides: number,
-  finishOnBoarding(): void,
   updateSlideIndex(number): void
 }
 type State = {
@@ -100,6 +102,7 @@ class OnBoardingComponent extends Component<Props, State> {
     this.animatedValue = new Animated.Value(0)
     this.state = getInitialState()
   }
+
   onNextSlide = () => {
     const index = this.state.currentIndex + 1
     if (index === this.state.totalSlides) {
@@ -111,58 +114,58 @@ class OnBoardingComponent extends Component<Props, State> {
       duration: 300
     }).start(this.onCompleteMove(index))
   }
+  onPreviousSlide = () => {
+    const index = this.state.currentIndex - 1
+    if (index === -1) {
+      return
+    }
+    const newValue = index * Dimensions.get('window').width
+    Animated.timing(this.animatedValue, {
+      toValue: -newValue,
+      duration: 300
+    }).start(this.onCompleteMove(index))
+  }
   onCompleteMove = (index: number) => {
-    console.log('onboarding: onComplete', index)
     this.setState({
       currentIndex: index
     })
+  }
+  finishOnBoarding = () => {
+    Actions[EDGE]()
   }
   renderSlides = (styles: Object) => {
     let counter = 0
     return this.state.slides.map(Slide => {
       counter++
       // const buttonFunction = counter === this.props.totalSlides ? this.props.finishOnBoarding : null
-      return <OnBoardingSlideComponent slide={Slide} key={'slides_' + counter} />
+      return <OnBoardingSlideComponent slide={Slide} key={'slides_' + counter} swipeLeft={this.onNextSlide} swipeRight={this.onPreviousSlide} />
     })
   }
-  renderButtons = (styles: Object) => {
-    if (this.state.currentIndex === this.state.totalSlides - 1) {
-      return (
-        <View style={styles.buttonContainer}>
-          <PrimaryButton style={styles.button} onPress={this.props.finishOnBoarding}>
-            <Text style={styles.buttonText}>{s.strings.onboarding_button}</Text>
-          </PrimaryButton>
-        </View>
-      )
-    }
-    return (
-      <View style={styles.buttonContainer}>
-        <PrimaryButton style={styles.button} onPress={this.props.finishOnBoarding}>
-          <PrimaryButton.Text style={styles.buttonText}>{s.strings.onboarding_skip_button}</PrimaryButton.Text>
-        </PrimaryButton>
-        <View style={styles.shim} />
-        <PrimaryButton style={styles.button} onPress={this.onNextSlide}>
-          <PrimaryButton.Text style={styles.buttonText}>{s.strings.string_next_capitalized}</PrimaryButton.Text>
-        </PrimaryButton>
-      </View>
-    )
-  }
-  onRequestClose = () => {
-    // do nothing, necessary callback for modal
-  }
+
   render () {
     const styles = OnBoardingSceneStyles
-    const containerWidth = PLATFORM.deviceWidth * this.state.totalSlides
+    const containerWidth = Dimensions.get('window').width * this.state.totalSlides
     const containerStyle = { ...styles.slideContainer, width: containerWidth }
     const animatedStyle = { left: this.animatedValue }
+    const buttonFunction = this.state.currentIndex === this.state.totalSlides - 1 ? this.finishOnBoarding : this.onNextSlide
+    const buttonText = this.state.currentIndex === this.state.totalSlides - 1 ? s.strings.onboarding_button : s.strings.string_next_capitalized
     return (
-      <Modal style={styles.modalContainer} isVisible={true} onRequestClose={this.onRequestClose}>
+      <View style={styles.mainContainer}>
         <View style={styles.slideContainer}>
           <Animated.View style={[containerStyle, animatedStyle]}>{this.renderSlides(styles)}</Animated.View>
           <PagingDotsComponent styles={styles.dots} totalItems={this.state.totalSlides} currentIndex={this.state.currentIndex} />
-          {this.renderButtons(styles)}
+          <View style={styles.buttonContainerRow}>
+            <PrimaryButton style={styles.button} onPress={buttonFunction}>
+              <PrimaryButton.Text style={styles.buttonText}>{buttonText}</PrimaryButton.Text>
+            </PrimaryButton>
+          </View>
+          <View style={styles.textOnlyContainer}>
+            <TextButton style={styles.textOnlyButton} onPress={this.finishOnBoarding}>
+              <TextButton.Text style={styles.buttonText}>{s.strings.onboarding_skip_button}</TextButton.Text>
+            </TextButton>
+          </View>
         </View>
-      </Modal>
+      </View>
     )
   }
 }
