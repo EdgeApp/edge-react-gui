@@ -7,7 +7,7 @@ import React, { Component } from 'react'
 import { Animated, Easing, Keyboard, ScrollView, TextInput, TouchableOpacity, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
-
+import { scale } from '../../../../lib/scaling.js'
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
 import THEME from '../../../../theme/variables/airbitz'
@@ -476,8 +476,8 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                     width: '100%',
                     backgroundColor: THEME.COLORS.WHITE,
                     position: 'absolute',
-                    top: 4,
-                    height: PLATFORM.usableHeight,
+                    top: scale(4),
+                    height: scale(PLATFORM.usableHeight),
                     zIndex: 99999
                   }
                 ]}

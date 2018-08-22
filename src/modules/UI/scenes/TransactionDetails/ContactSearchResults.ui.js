@@ -5,7 +5,8 @@ import { Image, TouchableHighlight, View } from 'react-native'
 
 import ContactImage from '../../../../assets/images/contact.png'
 import FormattedText from '../../components/FormattedText'
-import SearchResults from '../../components/SearchResults'
+import SearchResults from '../../components/SearchResultsScaled'
+import { scale } from '../../../../lib/scaling.js'
 import styles from './style'
 
 class ContactSearchResults extends Component {
@@ -40,9 +41,9 @@ class ContactSearchResults extends Component {
             <View style={styles.contactLeft}>
               <View style={[styles.contactLogo]}>
                 {data.item.thumbnailPath ? (
-                  <Image source={{ uri: data.item.thumbnailPath }} style={{ height: 40, width: 40, borderRadius: 20 }} />
+                  <Image source={{ uri: data.item.thumbnailPath }} style={{ height: scale(40), width: scale(40), borderRadius: 20 }} />
                 ) : (
-                  <Image source={ContactImage} style={{ height: 40, width: 40, borderRadius: 20 }} />
+                  <Image source={ContactImage} style={{ height: scale(40), width: scale(40), borderRadius: 20 }} />
                 )}
               </View>
               <View style={[styles.contactLeftTextWrap]}>
