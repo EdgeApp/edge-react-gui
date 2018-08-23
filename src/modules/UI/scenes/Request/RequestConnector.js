@@ -9,7 +9,7 @@ import type { Dispatch, State } from '../../../ReduxTypes'
 import { getDenomFromIsoCode } from '../../../utils'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
-import { selectWalletFromModal, refreshReceiveAddressRequest } from '../../Wallets/action'
+import { refreshReceiveAddressRequest, selectWalletFromModal } from '../../Wallets/action'
 import { Request } from './Request.ui'
 import type { RequestDispatchProps, RequestLoadingProps, RequestStateProps } from './Request.ui'
 

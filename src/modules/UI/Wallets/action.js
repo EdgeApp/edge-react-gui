@@ -88,11 +88,11 @@ export const selectWallet = (walletId: string, currencyCode: string) => (dispatc
 export const selectWalletFromModal = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
   dispatch(selectWallet(walletId, currencyCode))
   dispatch(closeAllWalletListModals())
-  dispatch(refreshReceiveAddressRequest())
+  dispatch(refreshReceiveAddressRequest(walletId))
 }
 
 export const closeAllWalletListModals = () => ({
-    type: CLOSE_ALL_WALLET_LIST_MODALS
+  type: CLOSE_ALL_WALLET_LIST_MODALS
 })
 
 function dispatchUpsertWallets (dispatch, wallets: Array<EdgeCurrencyWallet>) {

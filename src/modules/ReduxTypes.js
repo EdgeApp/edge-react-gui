@@ -121,7 +121,7 @@ export type State = {
         walletListModalVisible: boolean
       },
       walletListModal: {
-        walletListModalVisibility: boolean
+        walletListModalVisible: boolean
       },
       createWallet: {
         isCreatingWallet: boolean

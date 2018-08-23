@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 
 import { getCameraPermission } from '../../../../reducers/permissions/selectors'
 import type { Dispatch, State } from '../../../ReduxTypes'
-import { toggleScanToWalletListModal } from '../../components/WalletListModal/action'
 import { selectWalletFromModal } from '../../Wallets/action.js'
 import {
   addressModalCancelButtonPressed,

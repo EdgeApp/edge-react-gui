@@ -2,6 +2,7 @@
 
 // import _ from 'lodash'
 import { bns } from 'biggystring'
+import _ from 'lodash'
 import React, { Component } from 'react'
 import { TouchableHighlight, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
@@ -15,8 +16,6 @@ import {
   calculateFiatFromCryptoCurrency,
   cutOffText,
   decimalOrZero,
-  findDenominationSymbol,
-  formatNumber,
   getFiatSymbol,
   getWalletDefaultDenomProps,
   truncateDecimals
@@ -26,13 +25,17 @@ import Text from '../FormattedText'
 import { styles, stylesRaw } from './WalletListRowStyle.js'
 
 export type WalletListRowOwnProps = {
-  wallet: any
-  // onPress: Function,
+  wallet: any,
+  onSelectWallet: (string, string) => void  
 }
 
-export type WalletListRowStateProps = {}
+export type WalletListRowStateProps = {
+  fiatBalance: string,
+  settings: Object
+}
 
-export type WalletListRowDispatchProps = {}
+export type WalletListRowDispatchProps = {
+}
 
 export type WalletListRowProps = WalletListRowOwnProps & WalletListRowStateProps & WalletListRowDispatchProps
 
@@ -53,9 +56,9 @@ export class WalletListRowComponent extends Component<WalletListRowProps, Wallet
 
   render () {
     const { wallet, onSelectWallet, settings, fiatBalance } = this.props
-    const { currencyCode, name, id, enabledTokens, nativeBalances } = wallet
+    const { currencyCode, name, id /*, enabledTokens, nativeBalances */ } = wallet
     const denomination = wallet.allDenominations[currencyCode]
-    const denomProps = getWalletDefaultDenomProps(wallet, settings, currencyCode)
+    // const denomProps = getWalletDefaultDenomProps(wallet, settings, currencyCode)
     let multiplier
     if (denomination) {
       multiplier = denomination[settings[currencyCode].denomination].multiplier
@@ -81,8 +84,7 @@ export class WalletListRowComponent extends Component<WalletListRowProps, Wallet
     const preliminaryCryptoAmount = truncateDecimals(bns.div(wallet.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)
     const finalCryptoAmount = intl.formatNumber(decimalOrZero(preliminaryCryptoAmount, 6)) // check if infinitesimal (would display as zero), cut off trailing zeroes
     const fiatSymbol = getFiatSymbol(settings.defaultFiat) || ''
-    const textStyle = styles.rowRightFiatText
-    const textStyleRaw = stylesRaw.rowRightFiatText
+
     return (
       <View style={styles.rowWrapper}>
         <TouchableHighlight style={[styles.rowContainer]} underlayColor={stylesRaw.underlay.color} onPress={() => onSelectWallet(id, currencyCode)}>

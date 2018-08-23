@@ -53,7 +53,8 @@ export type RequestLoadingProps = {
 }
 
 export type RequestDispatchProps = {
-  refreshReceiveAddressRequest(string): void
+  refreshReceiveAddressRequest(string): void,
+  onSelectWallet: (string, string) => void
 }
 
 export type LoadingProps = RequestLoadingProps & RequestDispatchProps

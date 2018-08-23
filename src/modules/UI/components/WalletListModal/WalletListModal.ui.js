@@ -6,8 +6,7 @@ import * as Animatable from 'react-native-animatable'
 import slowlog from 'react-native-slowlog'
 
 import { PLATFORM } from '../../../../theme/variables/platform.js'
-import { GuiWallet } from '../../../ReduxTypes.js'
-import { border as b } from '../../../utils'
+import type { GuiWallet } from '../../../../types.js'
 import { WalletListRowConnector } from '../WalletListRow/WalletListRow.ui.js'
 import WalletListModalHeader from './components/WalletListModalHeaderConnector'
 import styles from './style'
@@ -17,7 +16,8 @@ type Props = {
   type: string,
   whichWallet?: string,
   currentScene: string,
-  wallets: Array<GuiWallet>
+  wallets: Object,
+  onSelectWallet: (string, string) => void
 }
 export default class WalletListModal extends Component<Props> {
   constructor (props: any) {
@@ -25,13 +25,14 @@ export default class WalletListModal extends Component<Props> {
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
-  renderWalletListRow = ({ item }) => {
+  renderWalletListRow = (walletItem: {item: GuiWallet, index: number, separators: any}) => {
     const { onSelectWallet } = this.props
-    return <WalletListRowConnector onSelectWallet={onSelectWallet} wallet={item} />
+    const wallet = walletItem.item
+    return <WalletListRowConnector onSelectWallet={onSelectWallet} wallet={walletItem} />
   }
 
-  keyExtractor = (item: GuiWalletType, index: number): number => {
-    return item.id
+  keyExtractor = (item: {item: GuiWallet, index: number, separators: any}, index: number): number => {
+    return item.index
   }
 
   render () {
@@ -42,7 +43,7 @@ export default class WalletListModal extends Component<Props> {
       walletList.push(wallets[id])
     }
     return (
-      <Animatable.View style={[b(), styles.topLevel, { position: 'absolute', top: top, height: PLATFORM.usableHeight }]} animation="fadeInUp" duration={250}>
+      <Animatable.View style={[styles.topLevel, { position: 'absolute', top: top, height: PLATFORM.usableHeight }]} animation="fadeInUp" duration={250}>
         <View>
           <WalletListModalHeader type={this.props.type} whichWallet={this.props.whichWallet} />
           <FlatList style={{ width: '100%', height: 500 }} data={walletList} renderItem={this.renderWalletListRow} />

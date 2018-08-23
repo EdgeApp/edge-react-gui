@@ -8,7 +8,6 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import * as Constants from '../../../../../constants/indexConstants'
 import s from '../../../../../locales/strings.js'
 import THEME from '../../../../../theme/variables/airbitz'
-import { border as b } from '../../../../utils'
 import T from '../../../components/FormattedText'
 import styles from '../style'
 
