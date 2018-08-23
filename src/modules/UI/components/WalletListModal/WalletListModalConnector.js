@@ -14,10 +14,6 @@ const mapStateToProps = (state: State, ownProps: any) => {
     whichWallet,
     topDisplacement,
     walletList: state.ui.wallets.byId,
-    // $FlowFixMe
-    dropdownWalletListVisible: state.ui.scenes.walletListModal.walletListModalVisible,
-    walletTransferModalVisible: state.ui.scenes.walletTransferList.walletListModalVisible,
-    scanToWalletListModalVisibility: state.ui.scenes.scan.scanToWalletListModalVisibility,
     dimensions: state.ui.scenes.dimensions,
     wallets
   }

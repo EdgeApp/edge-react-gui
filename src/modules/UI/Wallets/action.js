@@ -42,6 +42,7 @@ export const OVERWRITE_THEN_DELETE_TOKEN_SUCCESS = 'OVERWRITE_THEN_DELETE_TOKEN_
 export const ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS = 'ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS'
 export const UPDATE_WALLET_LOADING_PROGRESS = 'UPDATE_WALLET_LOADING_PROGRESS'
 export const INSERT_WALLET_IDS_FOR_PROGRESS = 'INSERT_WALLET_IDS_FOR_PROGRESS'
+export const CLOSE_ALL_WALLET_LIST_MODALS = 'CLOSE_ALL_WALLET_LIST_MODALS'
 
 export const refreshReceiveAddressRequest = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -83,6 +84,16 @@ export const selectWallet = (walletId: string, currencyCode: string) => (dispatc
       })
   }
 }
+
+export const selectWalletFromModal = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
+  dispatch(selectWallet(walletId, currencyCode))
+  dispatch(closeAllWalletListModals())
+  dispatch(refreshReceiveAddressRequest())
+}
+
+export const closeAllWalletListModals = () => ({
+    type: CLOSE_ALL_WALLET_LIST_MODALS
+})
 
 function dispatchUpsertWallets (dispatch, wallets: Array<EdgeCurrencyWallet>) {
   global.pcount('dispatchUpsertWallets')

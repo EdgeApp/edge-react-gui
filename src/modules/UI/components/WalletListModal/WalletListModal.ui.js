@@ -16,7 +16,6 @@ type Props = {
   topDisplacement: number,
   type: string,
   whichWallet?: string,
-  dropdownWalletListVisible: boolean,
   currentScene: string,
   wallets: Array<GuiWallet>
 }

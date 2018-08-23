@@ -255,7 +255,7 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
   renderDropUp = () => {
     if (this.props.showWalletSelectModal) {
       return (
-        <WalletListModal topDisplacement={Constants.CRYPTO_EXCHANGE_WALLET_DIALOG_TOP} type={Constants.CRYPTO_EXCHANGE} whichWallet={this.state.whichWallet} />
+        <WalletListModal onSelectWallet={() => console.log('hi')} topDisplacement={Constants.CRYPTO_EXCHANGE_WALLET_DIALOG_TOP} type={Constants.CRYPTO_EXCHANGE} whichWallet={this.state.whichWallet} />
       )
     }
     return null

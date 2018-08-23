@@ -53,7 +53,7 @@ export default class Scan extends Component<Props> {
   }
 
   render () {
-    const { addressModalDoneButtonPressed, legacyAddressModalContinueButtonPressed, legacyAddressModalCancelButtonPressed } = this.props
+    const { addressModalDoneButtonPressed, legacyAddressModalContinueButtonPressed, legacyAddressModalCancelButtonPressed, onSelectWallet } = this.props
 
     return (
       <SafeAreaView>
@@ -108,10 +108,6 @@ export default class Scan extends Component<Props> {
 
   _onToggleAddressModal = () => {
     this.props.toggleAddressModal()
-  }
-
-  _onToggleWalletListModal = () => {
-    this.props.toggleScanToWalletListModal()
   }
 
   selectPhotoTapped = () => {

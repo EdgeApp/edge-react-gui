@@ -9,7 +9,7 @@ import type { Dispatch, State } from '../../../ReduxTypes'
 import { getDenomFromIsoCode } from '../../../utils'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
-import { onSelectWallet, refreshReceiveAddressRequest } from '../../Wallets/action'
+import { selectWalletFromModal, refreshReceiveAddressRequest } from '../../Wallets/action'
 import { Request } from './Request.ui'
 import type { RequestDispatchProps, RequestLoadingProps, RequestStateProps } from './Request.ui'
 
@@ -65,7 +65,7 @@ const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps 
     primaryCurrencyInfo,
     receiveAddress: state.ui.scenes.request.receiveAddress,
     secondaryCurrencyInfo,
-    showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility,
+    showToWalletModal: state.ui.scenes.walletListModal.walletListModalVisible,
     useLegacyAddress: state.ui.scenes.requestType.useLegacyAddress,
     currentScene: state.ui.scenes.currentScene
   }
@@ -74,7 +74,7 @@ const mapDispatchToProps = (dispatch: Dispatch): RequestDispatchProps => ({
   refreshReceiveAddressRequest: (walletId: string) => {
     dispatch(refreshReceiveAddressRequest(walletId))
   },
-  onSelectWallet: (walletId: string, currencyCode: string) => dispatch(selectWallet(walletId, currencyCode))
+  onSelectWallet: (walletId: string, currencyCode: string) => dispatch(selectWalletFromModal(walletId, currencyCode))
 })
 
 export default connect(

@@ -154,7 +154,7 @@ export class Request extends Component<Props, State> {
     }
 
     const color = 'white'
-    const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio } = this.props
+    const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio, onSelectWallet } = this.props
     const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
 
     return (
