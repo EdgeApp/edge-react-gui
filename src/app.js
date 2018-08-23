@@ -131,31 +131,34 @@ BackgroundTask.define(async () => {
       BackgroundTask.finish()
       return
     }
-  }
-  makeCoreContext().then(async context => {
-    try {
-      const result = await context.fetchLoginMessages()
-      const date = new Date(Date.now() + 1000)
-      // for each key
-      for (const key in result) {
-        // skip loop if the property is from prototype
-        if (!result.hasOwnProperty(key)) continue
-        const obj = result[key]
-        if (obj.otpResetPending) {
-          if (Platform.OS === Constants.IOS) {
-            PushNotification.localNotificationSchedule({
-              title: s.strings.otp_notif_title,
-              message: sprintf(s.strings.otp_notif_body, key),
-              date
-            })
-          } else {
-            PushNotification.localNotificationSchedule({
-              message: s.strings.otp_notif_title,
-              subText: sprintf(s.strings.otp_notif_body, key),
-              date
-            })
+    makeCoreContext().then(async context => {
+      try {
+        const result = await context.fetchLoginMessages()
+        const date = new Date(Date.now() + 1000)
+        // for each key
+        for (const key in result) {
+          // skip loop if the property is from prototype
+          if (!result.hasOwnProperty(key)) continue
+          const obj = result[key]
+          if (obj.otpResetPending) {
+            if (Platform.OS === Constants.IOS) {
+              PushNotification.localNotificationSchedule({
+                title: s.strings.otp_notif_title,
+                message: sprintf(s.strings.otp_notif_body, key),
+                date
+              })
+            } else {
+              PushNotification.localNotificationSchedule({
+                message: s.strings.otp_notif_title,
+                subText: sprintf(s.strings.otp_notif_body, key),
+                date
+              })
+            }
           }
         }
+      } catch (error) {
+        global.bugsnag.notify(error)
+        console.error(error)
       }
     } catch (error) {
       global.bugsnag.notify(error)

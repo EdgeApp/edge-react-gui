@@ -7,10 +7,17 @@ import { PLATFORM } from '../../../../theme/variables/platform.js'
 
 export const stylesRaw = {
   usableHeight: PLATFORM.usableHeight,
+  rowWrapper: {
+    width: '100%'
+  },
   rowContainer: {
     justifyContent: 'space-between',
     paddingVertical: 8,
     paddingHorizontal: 20
+  },
+  rowInfo: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   rowLeft: {
     justifyContent: 'center',
@@ -42,11 +49,13 @@ export const stylesRaw = {
     color: THEME.COLORS.GRAY_1
   },
   rowRightCryptoText: {
+    textAlign: 'right',
     color: THEME.COLORS.GRAY_1,
     fontSize: 14,
     lineHeight: 18
   },
   rowRightFiatText: {
+    textAlign: 'right',
     color: THEME.COLORS.GRAY_1,
     fontSize: 14,
     lineHeight: 18

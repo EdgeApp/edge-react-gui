@@ -12,7 +12,7 @@ import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet } from '
 import { getCurrencyConverter } from './Core/selectors.js'
 import type { State } from './ReduxTypes'
 
-const DIVIDE_PRECISION = 18
+export const DIVIDE_PRECISION = 18
 
 export const cutOffText = (str: string, lng: number) => {
   if (str.length >= lng) {
@@ -78,7 +78,7 @@ export const border = (color: ?string) => {
   const borderColor = color || getRandomColor()
   return {
     borderColor: borderColor,
-    borderWidth: 1
+    borderWidth: 0
   }
 }
 
@@ -430,7 +430,7 @@ export const getTimeInMinutes = (params: { measurement: string, value: number })
   const { measurement, value } = params
   const measurementStrategies = {
     seconds (v) {
-      const val = Math.round(v / 60 * 100) / 100
+      const val = Math.round((v / 60) * 100) / 100
       return val
     },
     minutes (v) {

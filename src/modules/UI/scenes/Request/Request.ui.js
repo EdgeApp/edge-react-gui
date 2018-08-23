@@ -193,7 +193,9 @@ export class Request extends Component<Props, State> {
             />
           </View>
 
-          {this.props.showToWalletModal && <WalletListModal topDisplacement={Constants.REQUEST_WALLET_DIALOG_TOP} type={Constants.TO} />}
+          {this.props.showToWalletModal && (
+            <WalletListModal topDisplacement={Constants.REQUEST_WALLET_DIALOG_TOP} type={Constants.TO} onSelectWallet={onSelectWallet} />
+          )}
         </Gradient>
       </SafeAreaView>
     )

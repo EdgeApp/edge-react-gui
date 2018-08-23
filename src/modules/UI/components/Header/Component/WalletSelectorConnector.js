@@ -22,4 +22,7 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
     dispatch(toggleScanToWalletListModal())
   }
 })
-export default connect(mapStateToProps, mapDispatchToProps)(WalletSelector)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(WalletSelector)

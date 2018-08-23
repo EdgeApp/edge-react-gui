@@ -112,8 +112,9 @@ export class TransactionList extends Component<Props, State> {
   }
 
   renderDropUp = () => {
+    const { onSelectWallet } = this.props
     if (this.props.showToWalletModal) {
-      return <WalletListModal topDisplacement={Constants.TRANSACTIONLIST_WALLET_DIALOG_TOP} type={Constants.FROM} />
+      return <WalletListModal topDisplacement={Constants.TRANSACTIONLIST_WALLET_DIALOG_TOP} type={Constants.FROM} onSelectWallet={onSelectWallet} />
     }
     return null
   }

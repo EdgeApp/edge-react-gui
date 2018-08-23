@@ -9,7 +9,7 @@ import type { Dispatch, State } from '../../../ReduxTypes'
 import { getDenomFromIsoCode } from '../../../utils'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
-import { refreshReceiveAddressRequest } from '../../Wallets/action'
+import { onSelectWallet, refreshReceiveAddressRequest } from '../../Wallets/action'
 import { Request } from './Request.ui'
 import type { RequestDispatchProps, RequestLoadingProps, RequestStateProps } from './Request.ui'
 
@@ -73,7 +73,11 @@ const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps 
 const mapDispatchToProps = (dispatch: Dispatch): RequestDispatchProps => ({
   refreshReceiveAddressRequest: (walletId: string) => {
     dispatch(refreshReceiveAddressRequest(walletId))
-  }
+  },
+  onSelectWallet: (walletId: string, currencyCode: string) => dispatch(selectWallet(walletId, currencyCode))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Request)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Request)

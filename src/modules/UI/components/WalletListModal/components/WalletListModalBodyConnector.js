@@ -35,4 +35,7 @@ const mapDispatchToProps = (dispatch: Dispatch): {} => ({
   updateReceiveAddress: (walletId, currencyCode) => dispatch(updateReceiveAddress(walletId, currencyCode))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(WalletListModalBody)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(WalletListModalBody)

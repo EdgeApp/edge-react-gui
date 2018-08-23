@@ -12,6 +12,7 @@ import { setKeyboardHeight } from './UI/dimensions/action'
 import { updateCurrentSceneKey } from './UI/scenes/action.js'
 import { disableScan, enableScan } from './UI/scenes/Scan/action'
 import { addCurrencyPlugin } from './UI/Settings/action'
+import { selectWallet } from './UI/Wallets/action.js'
 
 const mapStateToProps = () => ({})
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -46,6 +47,10 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   urlReceived: backupKey => {
     return dispatch(actions.deepLinkLogout(backupKey))
   },
-  contextCallbacks: makeContextCallbacks(dispatch)
+  contextCallbacks: makeContextCallbacks(dispatch),
+  onSelectWallet: (walletId, currencyCode) => dispatch(selectWallet(walletId, currencyCode))
 })
-export default connect(mapStateToProps, mapDispatchToProps)(Main)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Main)

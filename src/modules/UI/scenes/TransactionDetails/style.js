@@ -231,7 +231,7 @@ export const styles = {
   footerArea: {
     backgroundColor: THEME.COLORS.GRAY_4,
     paddingTop: 20,
-    height: PLATFORM.deviceHeight * 1 / 3 + 40,
+    height: (PLATFORM.deviceHeight * 1) / 3 + 40,
     paddingLeft: 15,
     paddingRight: 15
   },

@@ -9,6 +9,7 @@ import type { Dispatch, State } from '../../../ReduxTypes'
 import * as UTILS from '../../../utils'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
+import { selectWallet } from '../../Wallets/action.js'
 import { toggleAccountBalanceVisibility } from '../WalletList/action.js'
 import { fetchMoreTransactions } from './action'
 import type { DispatchProps, StateProps } from './TransactionList.ui'
@@ -89,7 +90,11 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => dispatch(fetchMoreTransactions(walletId, currencyCode, reset)),
   toggleBalanceVisibility: () => {
     dispatch(toggleAccountBalanceVisibility())
-  }
+  },
+  onSelectWallet: (walletId: string, currencyCode: string) => dispatch(selectWallet(walletId, currencyCode))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(TransactionList)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TransactionList)

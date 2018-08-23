@@ -161,7 +161,9 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
     }
 
     case ACTION.REFRESH_RECEIVE_ADDRESS: {
-      const { data: { walletId, receiveAddress } } = action
+      const {
+        data: { walletId, receiveAddress }
+      } = action
       return {
         ...state,
         [walletId]: {

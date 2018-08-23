@@ -27,7 +27,8 @@ export default class WalletListModal extends Component<Props> {
   }
 
   renderWalletListRow = ({ item }) => {
-    return <WalletListRowConnector wallet={item} />
+    const { onSelectWallet } = this.props
+    return <WalletListRowConnector onSelectWallet={onSelectWallet} wallet={item} />
   }
 
   keyExtractor = (item: GuiWalletType, index: number): number => {
@@ -35,9 +36,9 @@ export default class WalletListModal extends Component<Props> {
   }
 
   render () {
-    const { wallets } = this.props
+    const { wallets, topDisplacement } = this.props
     const walletList = []
-    const top = this.props.topDisplacement ? this.props.topDisplacement : 38
+    const top = topDisplacement || 38
     for (const id in wallets) {
       walletList.push(wallets[id])
     }

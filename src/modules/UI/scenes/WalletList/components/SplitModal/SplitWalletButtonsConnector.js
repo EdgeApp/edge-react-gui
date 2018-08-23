@@ -42,4 +42,7 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   onDone: () => dispatch({ type: CLOSE_MODAL_VALUE(Constants.SPLIT_VALUE) })
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(SplitWalletButtons)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SplitWalletButtons)

@@ -91,7 +91,9 @@ export default class Scan extends Component<Props> {
             </View>
             <ABAlert />
           </View>
-          {this.props.showToWalletModal && <WalletListModal topDisplacement={Constants.SCAN_WALLET_DIALOG_TOP} type={Constants.FROM} />}
+          {this.props.showToWalletModal && (
+            <WalletListModal topDisplacement={Constants.SCAN_WALLET_DIALOG_TOP} type={Constants.FROM} onSelectWallet={onSelectWallet} />
+          )}
         </View>
 
         <LegacyAddressModal continueButtonPressed={legacyAddressModalContinueButtonPressed} cancelButtonPressed={legacyAddressModalCancelButtonPressed} />
@@ -137,7 +139,13 @@ export default class Scan extends Component<Props> {
     if (this.props.cameraPermission === AUTHORIZED) {
       const torchMode = this.props.torchEnabled ? Camera.constants.TorchMode.on : Camera.constants.TorchMode.off
 
+<<<<<<< HEAD
       return <Camera style={styles.preview} ref="cameraCapture" torchMode={torchMode} onBarCodeRead={this.onBarCodeRead} />
+=======
+      return (
+        <RNCamera style={styles.preview} type={RNCamera.Constants.Type.back} ref="cameraCapture" flashMode={torchMode} onBarCodeRead={this.onBarCodeRead} />
+      )
+>>>>>>> 36fe2fc6... WIP get fiat showing aligned-right
     } else if (this.props.cameraPermission === DENIED) {
       return (
         <View style={[styles.preview, { justifyContent: 'center', alignItems: 'center' }]}>

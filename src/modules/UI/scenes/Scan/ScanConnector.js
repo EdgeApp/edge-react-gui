@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { getCameraPermission } from '../../../../reducers/permissions/selectors'
 import type { Dispatch, State } from '../../../ReduxTypes'
 import { toggleScanToWalletListModal } from '../../components/WalletListModal/action'
+import { onSelectWallet } from '../../Wallets/action.js'
 import {
   addressModalCancelButtonPressed,
   addressModalDoneButtonPressed,
@@ -31,7 +32,11 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   legacyAddressModalContinueButtonPressed: () => dispatch(legacyAddressModalContinueButtonPressed()),
   legacyAddressModalCancelButtonPressed: () => dispatch(legacyAddressModalCancelButtonPressed()),
   addressModalDoneButtonPressed: data => dispatch(addressModalDoneButtonPressed(data)),
-  addressModalCancelButtonPressed: () => dispatch(addressModalCancelButtonPressed())
+  addressModalCancelButtonPressed: () => dispatch(addressModalCancelButtonPressed()),
+  onSelectWallet: (walletId: string, currencyCode: string) => dispatch(selectWallet(walletId, currencyCode))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Scan)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Scan)

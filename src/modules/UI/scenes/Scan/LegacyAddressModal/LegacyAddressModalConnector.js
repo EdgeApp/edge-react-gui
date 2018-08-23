@@ -18,5 +18,8 @@ export const mapDispatchToProps = (dispatch: Dispatch) => ({
   }
 })
 
-export const LegacyAddressModalConnector = connect(mapStateToProps, mapDispatchToProps)(LegacyAddressModal)
+export const LegacyAddressModalConnector = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LegacyAddressModal)
 export default LegacyAddressModalConnector

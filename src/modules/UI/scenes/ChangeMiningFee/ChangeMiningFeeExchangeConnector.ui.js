@@ -16,4 +16,7 @@ export const mapDispatchToProps = (dispatch: Dispatch) => ({
   onSubmit: (feeSetting: string) => dispatch(changeFee(feeSetting))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(ChangeMiningFee)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ChangeMiningFee)
