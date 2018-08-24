@@ -99,7 +99,7 @@ export const mapDispatchToProps = (dispatch: Dispatch): CryptoExchangeSceneCompo
   openConfirmation: () => dispatch(actions.dispatchAction(Constants.OPEN_CRYPTO_EXC_CONF_MODAL)),
   setNativeAmount: (data: SetNativeAmountInfo) => dispatch(actions.setNativeAmount(data)),
   getShapeShiftTokens: () => dispatch(actions.getShapeShiftTokens()),
-  onSelectWallet: (walletId: string, currencyCode: string) => dispatch(selectWalletForExchange(walletId, currencyCode))
+  onSelectWallet: (walletId: string, currencyCode: string) => { selectWalletForExchange(walletId, currencyCode) }
 })
 
 export default connect(

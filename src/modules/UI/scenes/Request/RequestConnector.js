@@ -74,7 +74,7 @@ const mapDispatchToProps = (dispatch: Dispatch): RequestDispatchProps => ({
   refreshReceiveAddressRequest: (walletId: string) => {
     dispatch(refreshReceiveAddressRequest(walletId))
   },
-  onSelectWallet: (walletId: string, currencyCode: string) => dispatch(selectWalletFromModal(walletId, currencyCode))
+  onSelectWallet: (walletId: string, currencyCode: string) => { dispatch(selectWalletFromModal(walletId, currencyCode)) }
 })
 
 export default connect(

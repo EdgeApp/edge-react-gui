@@ -101,7 +101,7 @@ export class WalletListRowComponent extends Component<WalletListRowProps, Wallet
                 </Text>
               </View>
               <View style={[styles.rowRightFiatWrap]}>
-                <Text propId={'fiatArea'} style={styles.rowRightFiatText}>{`${fiatSymbol} ${fiatBalance}`}</Text>
+                <Text style={styles.rowRightFiatText}>{`${fiatSymbol} ${fiatBalance}`}</Text>
               </View>
             </View>
           </View>

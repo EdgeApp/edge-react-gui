@@ -91,7 +91,7 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   toggleBalanceVisibility: () => {
     dispatch(toggleAccountBalanceVisibility())
   },
-  onSelectWallet: (walletId: string, currencyCode: string) => dispatch(selectWalletFromModal(walletId, currencyCode))
+  onSelectWallet: (walletId: string, currencyCode: string) => { dispatch(selectWalletFromModal(walletId, currencyCode)) }
 })
 
 export default connect(
