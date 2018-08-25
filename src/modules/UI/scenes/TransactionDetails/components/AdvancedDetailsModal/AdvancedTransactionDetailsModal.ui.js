@@ -31,7 +31,6 @@ export class AdvancedTransactionDetailsModal extends Component<AdvancedTransacti
 
   copyToClipboard = () => {
     Clipboard.setString(this.props.txid)
-    this.props.onExit()
     Alert.alert(s.strings.transaction_details_copy_txid)
   }
 
