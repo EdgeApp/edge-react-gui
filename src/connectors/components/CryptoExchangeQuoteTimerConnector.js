@@ -17,7 +17,4 @@ export const mapStateToProps = (state: State) => {
 export const mapDispatchToProps = (dispatch: Dispatch) => ({
   timeExpired: () => dispatch(exchangeTimerExpired())
 })
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CircleTimer)
+export default connect(mapStateToProps, mapDispatchToProps)(CircleTimer)

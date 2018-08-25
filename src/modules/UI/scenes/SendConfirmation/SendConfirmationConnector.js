@@ -95,7 +95,4 @@ const mapDispatchToProps = (dispatch: Dispatch): SendConfirmationDispatchProps =
   onChangePin: (pin: string) => dispatch(newPin(pin))
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SendConfirmation)
+export default connect(mapStateToProps, mapDispatchToProps)(SendConfirmation)

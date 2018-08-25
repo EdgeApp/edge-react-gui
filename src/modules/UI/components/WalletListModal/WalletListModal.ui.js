@@ -25,13 +25,13 @@ export default class WalletListModal extends Component<Props> {
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
-  renderWalletListRow = (walletItem: {item: GuiWallet, index: number, separators: any}) => {
+  renderWalletListRow = (walletItem: { item: GuiWallet, index: number, separators: any }) => {
     const { onSelectWallet } = this.props
     const wallet = walletItem.item
     return <WalletListRowConnector onSelectWallet={onSelectWallet} wallet={wallet} />
   }
 
-  keyExtractor = (item: {item: GuiWallet, index: number, separators: any}, index: number): number => {
+  keyExtractor = (item: { item: GuiWallet, index: number, separators: any }, index: number): number => {
     return item.index
   }
 
@@ -50,7 +50,7 @@ export default class WalletListModal extends Component<Props> {
             style={{ width: '100%', height: 500 }}
             data={walletList}
             renderItem={this.renderWalletListRow}
-            ItemSeparatorComponent={() => (<View style={styles.separator} />)}
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
           />
         </View>
       </Animatable.View>

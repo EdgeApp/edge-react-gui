@@ -19,7 +19,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   closeAlert: () => dispatch(actions.dispatchAction(Constants.CLOSE_AB_ALERT))
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ABAlert)
+export default connect(mapStateToProps, mapDispatchToProps)(ABAlert)

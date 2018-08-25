@@ -13,7 +13,4 @@ export const mapDispatchToProps = (dispatch: Dispatch) => ({
   onPressed: () => dispatch(wrap(OPEN_MODAL_VALUE(Constants.CUSTOM_FEES)))
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CustomFees)
+export default connect(mapStateToProps, mapDispatchToProps)(CustomFees)

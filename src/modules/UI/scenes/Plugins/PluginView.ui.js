@@ -286,8 +286,5 @@ const mapDispatchToProps = dispatch => ({
   showAlert: alertSyntax => dispatch(openABAlert(Constants.OPEN_AB_ALERT, alertSyntax))
 })
 
-const PluginViewConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PluginView)
+const PluginViewConnect = connect(mapStateToProps, mapDispatchToProps)(PluginView)
 export { PluginViewConnect, PluginBuySell, PluginSpend }

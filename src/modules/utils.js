@@ -430,7 +430,7 @@ export const getTimeInMinutes = (params: { measurement: string, value: number })
   const { measurement, value } = params
   const measurementStrategies = {
     seconds (v) {
-      const val = Math.round((v / 60) * 100) / 100
+      const val = Math.round(v / 60 * 100) / 100
       return val
     },
     minutes (v) {

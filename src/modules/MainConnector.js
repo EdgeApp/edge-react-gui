@@ -50,7 +50,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   contextCallbacks: makeContextCallbacks(dispatch),
   onSelectWallet: (walletId, currencyCode) => dispatch(selectWallet(walletId, currencyCode))
 })
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Main)
+export default connect(mapStateToProps, mapDispatchToProps)(Main)

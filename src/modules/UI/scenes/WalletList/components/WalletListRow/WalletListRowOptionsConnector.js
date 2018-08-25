@@ -19,7 +19,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   updateRenameWalletInput: input => dispatch(updateRenameWalletInput(input))
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(WalletListRowOptions)
+export default connect(mapStateToProps, mapDispatchToProps)(WalletListRowOptions)

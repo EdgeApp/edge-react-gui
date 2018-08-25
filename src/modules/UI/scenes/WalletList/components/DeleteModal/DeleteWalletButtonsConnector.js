@@ -31,7 +31,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   onDone: () => dispatch({ type: CLOSE_MODAL_VALUE(Constants.DELETE_VALUE) })
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(DeleteWalletButtons)
+export default connect(mapStateToProps, mapDispatchToProps)(DeleteWalletButtons)

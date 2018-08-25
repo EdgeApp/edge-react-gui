@@ -15,7 +15,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   toggleWalletListModal: () => dispatch(toggleWalletListModal())
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(WalletTransferList)
+export default connect(mapStateToProps, mapDispatchToProps)(WalletTransferList)

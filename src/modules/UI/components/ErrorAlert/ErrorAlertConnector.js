@@ -15,7 +15,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   dismissAlert: () => dispatch(dismissErrorAlert())
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ErrorAlert)
+export default connect(mapStateToProps, mapDispatchToProps)(ErrorAlert)

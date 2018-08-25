@@ -21,7 +21,4 @@ const mapDispatchToProps = (dispatch: Dispatch): CreateWalletReviewDispatchProps
   }
 })
 
-export const CreateWalletReview = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CreateWalletReviewConnector)
+export const CreateWalletReview = connect(mapStateToProps, mapDispatchToProps)(CreateWalletReviewConnector)

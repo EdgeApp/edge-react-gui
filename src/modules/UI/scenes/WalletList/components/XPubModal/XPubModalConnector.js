@@ -25,7 +25,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(XPubModal)
+export default connect(mapStateToProps, mapDispatchToProps)(XPubModal)

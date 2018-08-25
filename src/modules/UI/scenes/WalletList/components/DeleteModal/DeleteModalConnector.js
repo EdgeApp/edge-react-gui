@@ -14,7 +14,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   onExitButtonFxn: () => dispatch({ type: CLOSE_MODAL_VALUE(Constants.DELETE_VALUE) })
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(DeleteModal)
+export default connect(mapStateToProps, mapDispatchToProps)(DeleteModal)

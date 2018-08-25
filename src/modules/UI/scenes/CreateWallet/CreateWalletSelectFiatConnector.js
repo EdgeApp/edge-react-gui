@@ -12,7 +12,4 @@ const mapStateToProps = (state: State): CreateWalletSelectFiatStateProps => ({
   dimensions: state.ui.scenes.dimensions
 })
 const mapDispatchToProps = () => ({})
-export const CreateWalletSelectFiat = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CreateWalletSelectFiatComponent)
+export const CreateWalletSelectFiat = connect(mapStateToProps, mapDispatchToProps)(CreateWalletSelectFiatComponent)

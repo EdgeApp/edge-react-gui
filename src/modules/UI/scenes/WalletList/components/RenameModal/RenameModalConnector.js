@@ -15,7 +15,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   onExitButtonFxn: () => dispatch({ type: CLOSE_MODAL_VALUE(Constants.RENAME_VALUE) })
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(RenameModal)
+export default connect(mapStateToProps, mapDispatchToProps)(RenameModal)

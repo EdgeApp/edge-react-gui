@@ -20,7 +20,4 @@ const mapStateToProps = (state: State, ownProps: any) => {
 }
 
 // const mapDispatchToProps = () => ({})
-export default connect(
-  mapStateToProps,
-  {}
-)(WalletListModal)
+export default connect(mapStateToProps, {})(WalletListModal)

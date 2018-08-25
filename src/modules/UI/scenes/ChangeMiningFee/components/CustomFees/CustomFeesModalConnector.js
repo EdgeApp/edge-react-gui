@@ -40,7 +40,4 @@ const mapDispatchToProps = (dispatch: Dispatch): CustomFeesModalDispatchProps =>
   onDone: () => dispatch({ type: CLOSE_MODAL_VALUE(Constants.CUSTOM_FEES) })
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CustomFeesModal)
+export default connect(mapStateToProps, mapDispatchToProps)(CustomFeesModal)

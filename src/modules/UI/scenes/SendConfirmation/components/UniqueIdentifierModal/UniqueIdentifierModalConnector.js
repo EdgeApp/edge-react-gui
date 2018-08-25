@@ -22,8 +22,5 @@ export const mapDispatchToProps = (dispatch: Dispatch, ownProps: Object) => ({
   onModalHide: () => dispatch(reset())
 })
 
-export const UniqueIdentifierModalConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(UniqueIdentifierModal)
+export const UniqueIdentifierModalConnect = connect(mapStateToProps, mapDispatchToProps)(UniqueIdentifierModal)
 export default UniqueIdentifierModalConnect

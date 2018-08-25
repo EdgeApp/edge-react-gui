@@ -23,9 +23,7 @@ export default class WalletListModalHeader extends Component<any> {
     const headerSyntax =
       this.props.type === Constants.FROM
         ? 'fragment_select_wallet_header_title'
-        : this.props.type === Constants.CRYPTO_EXCHANGE
-          ? whichMessage
-          : 'fragment_send_other_wallet_header_title'
+        : this.props.type === Constants.CRYPTO_EXCHANGE ? whichMessage : 'fragment_send_other_wallet_header_title'
     return (
       <View style={[styles.rowContainer, styles.headerContainer]}>
         <View style={[styles.headerContent]}>

@@ -14,7 +14,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   onExitButtonFxn: () => dispatch({ type: CLOSE_MODAL_VALUE(Constants.SPLIT_VALUE) })
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SplitModal)
+export default connect(mapStateToProps, mapDispatchToProps)(SplitModal)

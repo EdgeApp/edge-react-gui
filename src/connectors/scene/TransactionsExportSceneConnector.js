@@ -19,7 +19,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   //
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TransactionsExportSceneComponent)
+export default connect(mapStateToProps, mapDispatchToProps)(TransactionsExportSceneComponent)

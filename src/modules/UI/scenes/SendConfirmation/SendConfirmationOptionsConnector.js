@@ -30,7 +30,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   uniqueIdentifierModalActivated: () => dispatch(activated())
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SendConfirmationOptions)
+export default connect(mapStateToProps, mapDispatchToProps)(SendConfirmationOptions)

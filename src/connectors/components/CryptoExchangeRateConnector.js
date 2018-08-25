@@ -32,7 +32,4 @@ export const mapStateToProps = (state: State, ownProps: Object) => {
 
 export const mapDispatchToProps = () => ({})
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LinkedComponent)
+export default connect(mapStateToProps, mapDispatchToProps)(LinkedComponent)

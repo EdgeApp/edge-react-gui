@@ -21,8 +21,5 @@ export const mapDispatchToProps = (dispatch: Dispatch) => ({
   }
 })
 
-export const PrimaryModalConnector = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PrimaryModal)
+export const PrimaryModalConnector = connect(mapStateToProps, mapDispatchToProps)(PrimaryModal)
 export default PrimaryModalConnector

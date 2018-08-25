@@ -44,7 +44,4 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   onDone: () => dispatch({ type: CLOSE_MODAL_VALUE(Constants.RESYNC_VALUE) })
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ResyncWalletButtons)
+export default connect(mapStateToProps, mapDispatchToProps)(ResyncWalletButtons)
