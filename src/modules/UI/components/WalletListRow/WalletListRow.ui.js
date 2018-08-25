@@ -30,7 +30,8 @@ import { styles, stylesRaw } from './WalletListRowStyle.js'
 
 export type WalletListRowOwnProps = {
   wallet: GuiWallet,
-  onSelectWallet: (string, string) => void
+  onSelectWallet: (string, string) => void,
+  excludedCurrencyCode?: string
 }
 
 export type WalletListRowStateProps = {
@@ -59,7 +60,7 @@ export class WalletListRowComponent extends Component<WalletListRowProps, Wallet
   }
 
   render () {
-    const { wallet, onSelectWallet, settings, fiatBalance } = this.props
+    const { wallet, onSelectWallet, settings, fiatBalance, excludedCurrencyCode } = this.props
     const { currencyCode, name, id, enabledTokens, nativeBalances, metaTokens } = wallet
     const denominations = wallet.allDenominations[currencyCode]
     const multiplier = getSetCurrencyMultiplier(currencyCode, settings, denominations)
@@ -87,9 +88,39 @@ export class WalletListRowComponent extends Component<WalletListRowProps, Wallet
         }
       }
     }
+    // remove wallet options that are illogical!
+    let disabled = false
+    if (excludedCurrencyCode) {
+      // if wallets need to be excluded
+      if (currencyCode === 'ETH') {
+        // if it may have tokens
+        if (currencyCode === excludedCurrencyCode) {
+          // if Ethereum should be disabled
+          if (enabledTokens.length === 0) {
+            // if ETH is excluded but has no tokens
+            return null // don't show it
+          } else {
+            // if ETH is excluded but DOES have tokens
+            disabled = true
+          }
+        } else {
+          // if a token should be disabled
+          const excludedItemIndex = tokensToRender.indexOf(excludedCurrencyCode)
+          if (excludedItemIndex > -1) tokensToRender.splice(excludedItemIndex, 1)
+        }
+      } else {
+        // if it does not have tokens
+        if (currencyCode === excludedCurrencyCode) return null
+      }
+    }
     return (
       <View style={styles.rowWrapper}>
-        <TouchableHighlight style={[styles.rowContainer]} underlayColor={stylesRaw.underlay.color} onPress={() => onSelectWallet(id, currencyCode)}>
+        <TouchableHighlight
+          style={[styles.rowContainer]}
+          disabled={disabled}
+          underlayColor={stylesRaw.underlay.color}
+          onPress={() => onSelectWallet(id, currencyCode)}
+        >
           <View style={styles.rowInfo}>
             <View style={[styles.rowLeft]}>
               <Text style={[styles.rowNameText]} numberOfLines={1}>

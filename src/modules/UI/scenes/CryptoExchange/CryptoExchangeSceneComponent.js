@@ -255,14 +255,38 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
   }
 
   renderDropUp = () => {
-    const { onSelectWallet } = this.props
+    const { onSelectWallet, fromCurrencyCode, fromWallet, toCurrencyCode, toWallet } = this.props
+    const { whichWallet } = this.state
+    let excludedCurrencyCode = ''
+    // some complex logic because 'toCurrencyCode/fromCurrencyCode'
+    // can be denomination (needs to change to actual currencyCode)
+    if (whichWallet === Constants.TO) {
+      if (fromWallet) {
+        if (fromWallet.enabledTokens.length > 1) {
+          // could be token
+          excludedCurrencyCode = fromCurrencyCode
+        } else {
+          excludedCurrencyCode = fromWallet.currencyCode
+        }
+      }
+    } else {
+      if (toWallet) {
+        if (toWallet.enabledTokens.length > 1) {
+          // could be token
+          excludedCurrencyCode = toCurrencyCode
+        } else {
+          excludedCurrencyCode = toWallet.currencyCode
+        }
+      }
+    }
     if (this.props.showWalletSelectModal) {
       return (
         <WalletListModal
           onSelectWallet={onSelectWallet}
           topDisplacement={Constants.CRYPTO_EXCHANGE_WALLET_DIALOG_TOP}
           type={Constants.CRYPTO_EXCHANGE}
-          whichWallet={this.state.whichWallet}
+          whichWallet={whichWallet}
+          excludedCurrencyCode={excludedCurrencyCode}
         />
       )
     }
