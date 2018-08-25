@@ -50,7 +50,7 @@ export default class WalletListModal extends Component<Props> {
             style={{ width: '100%', height: 500 }}
             data={walletList}
             renderItem={this.renderWalletListRow}
-            ItemSeparatorComponent={() => <View style={styles.separator} />}
+            // ItemSeparatorComponent={() => <View style={styles.separator} />}
           />
         </View>
       </Animatable.View>

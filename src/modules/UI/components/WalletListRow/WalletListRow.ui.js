@@ -9,15 +9,19 @@ import slowlog from 'react-native-slowlog'
 import { connect } from 'react-redux'
 
 import { intl } from '../../../../locales/intl.js'
-import type { CustomTokenInfo, GuiDenomination } from '../../../../types.js'
+import type { CurrencyConverter, CustomTokenInfo, GuiDenomination, GuiWallet } from '../../../../types.js'
+import { getCurrencyConverter } from '../../../Core/selectors.js'
 import type { Dispatch, State } from '../../../ReduxTypes'
 import {
   DIVIDE_PRECISION,
-  calculateFiatFromCryptoCurrency,
+  calculateWalletFiatFromCrypto,
   cutOffText,
   decimalOrZero,
   getFiatSymbol,
+  getSetCurrencyMultiplier,
+  getSetTokenMultiplier,
   getWalletDefaultDenomProps,
+  mergeTokensRemoveInvisible,
   truncateDecimals
 } from '../../../utils.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../Settings/selectors.js'
@@ -25,13 +29,14 @@ import Text from '../FormattedText'
 import { styles, stylesRaw } from './WalletListRowStyle.js'
 
 export type WalletListRowOwnProps = {
-  wallet: any,
+  wallet: GuiWallet,
   onSelectWallet: (string, string) => void
 }
 
 export type WalletListRowStateProps = {
   fiatBalance: string,
-  settings: Object
+  settings: Object,
+  currencyConverter: CurrencyConverter
 }
 
 export type WalletListRowDispatchProps = {}
@@ -55,35 +60,33 @@ export class WalletListRowComponent extends Component<WalletListRowProps, Wallet
 
   render () {
     const { wallet, onSelectWallet, settings, fiatBalance } = this.props
-    const { currencyCode, name, id } = wallet
-    const denomination = wallet.allDenominations[currencyCode]
-    // const denomProps = getWalletDefaultDenomProps(wallet, settings, currencyCode)
-    let multiplier
-    if (denomination) {
-      multiplier = denomination[settings[currencyCode].denomination].multiplier
-    } else {
-      const customDenom = _.find(settings.customTokens, item => item.currencyCode === currencyCode)
-      if (customDenom && customDenom.denominations && customDenom.denominations[0]) {
-        multiplier = customDenom.denominations[0].multiplier
-      } else {
-        return // let it blow up. It shouldn't be attempting to display
-      }
-    }
+    const { currencyCode, name, id, enabledTokens, nativeBalances, metaTokens } = wallet
+    const denominations = wallet.allDenominations[currencyCode]
+    const multiplier = getSetCurrencyMultiplier(currencyCode, settings, denominations)
 
-    // need to crossreference tokensEnabled with nativeBalances
-    /* const enabledNativeBalances = {}
-
-    for (const prop in nativeBalances) {
-      if (prop !== currencyCode && enabledTokens.includes(prop)) {
-        enabledNativeBalances[prop] = nativeBalances[prop]
-      }
-    } */
     const defaultDenomProps = getWalletDefaultDenomProps(wallet, settings, currencyCode)
     const cryptoSymbol = defaultDenomProps.symbol
     const preliminaryCryptoAmount = truncateDecimals(bns.div(wallet.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)
     const finalCryptoAmount = intl.formatNumber(decimalOrZero(preliminaryCryptoAmount, 6)) // check if infinitesimal (would display as zero), cut off trailing zeroes
-    const fiatSymbol = getFiatSymbol(settings.defaultFiat) || ''
+    const fiatSymbol = getFiatSymbol(wallet.isoFiatCurrencyCode) || ''
+    // determine tokens to render
+    const enabledTokenNativeBalances = {}
+    for (const currency in nativeBalances) {
+      if (currency !== currencyCode && enabledTokens.includes(currency)) {
+        enabledTokenNativeBalances[currency] = nativeBalances[currency]
+      }
+    }
 
+    const combinedTokens = mergeTokensRemoveInvisible(metaTokens, settings.customTokens)
+    const tokensToRender = []
+    for (const tokenCode in enabledTokenNativeBalances) {
+      if (tokenCode !== currencyCode) {
+        const index = _.findIndex(combinedTokens, token => token.currencyCode === tokenCode)
+        if (index >= 0) {
+          tokensToRender.push(tokenCode)
+        }
+      }
+    }
     return (
       <View style={styles.rowWrapper}>
         <TouchableHighlight style={[styles.rowContainer]} underlayColor={stylesRaw.underlay.color} onPress={() => onSelectWallet(id, currencyCode)}>
@@ -100,12 +103,52 @@ export class WalletListRowComponent extends Component<WalletListRowProps, Wallet
                 </Text>
               </View>
               <View style={[styles.rowRightFiatWrap]}>
-                <Text style={styles.rowRightFiatText}>{`${fiatSymbol} ${fiatBalance}`}</Text>
+                <Text style={styles.rowRightFiatText}>
+                  {fiatSymbol} {fiatBalance}
+                </Text>
               </View>
             </View>
           </View>
         </TouchableHighlight>
+        {tokensToRender.map(tokenCode => this.renderTokenRow(tokenCode, enabledTokenNativeBalances))}
       </View>
+    )
+  }
+
+  renderTokenRow = (currencyCode: string, metaTokenBalances: Object) => {
+    const { settings, wallet, currencyConverter, onSelectWallet } = this.props
+    const denomination = wallet.allDenominations[currencyCode]
+    const multiplier = getSetTokenMultiplier(currencyCode, settings, denomination)
+    const nativeBalance = metaTokenBalances[currencyCode]
+    const cryptoAmount = bns.div(nativeBalance, multiplier, DIVIDE_PRECISION)
+    const parentId = wallet.id
+    let fiatValue = 0
+    fiatValue = currencyConverter.convertCurrency(currencyCode, wallet.isoFiatCurrencyCode, cryptoAmount)
+    const fiatBalance = intl.formatNumber(fiatValue, { toFixed: 2 }) || '0'
+    const fiatSymbol = getFiatSymbol(wallet.isoFiatCurrencyCode) || ''
+    return (
+      <TouchableHighlight
+        style={[styles.tokenRowContainer]}
+        underlayColor={stylesRaw.underlay.color}
+        key={currencyCode}
+        onPress={() => onSelectWallet(parentId, currencyCode)}
+      >
+        <View style={styles.currencyRowContent}>
+          <View style={styles.currencyRowNameTextWrap}>
+            <Text style={styles.currencyRowText}>{currencyCode}</Text>
+          </View>
+          <View style={[styles.rowRight]}>
+            <View style={[styles.rowRightCryptoWrap]}>
+              <Text style={[styles.rowRightCryptoText]}>{cryptoAmount}</Text>
+            </View>
+            <View style={[styles.rowRightFiatWrap]}>
+              <Text style={styles.rowRightFiatText}>
+                {fiatSymbol} {fiatBalance}
+              </Text>
+            </View>
+          </View>
+        </View>
+      </TouchableHighlight>
     )
   }
 }
@@ -114,12 +157,14 @@ const mapStateToProps = (state: State, ownProps: WalletListRowOwnProps): WalletL
   const displayDenomination = getDisplayDenomination(state, ownProps.wallet.currencyCode)
   const exchangeDenomination = getExchangeDenomination(state, ownProps.wallet.currencyCode)
   const settings = state.ui.settings
-  const fiatBalance = calculateFiatFromCryptoCurrency(ownProps.wallet, state)
+  const fiatBalance = calculateWalletFiatFromCrypto(ownProps.wallet, state)
+  const currencyConverter = getCurrencyConverter(state)
   return {
     displayDenomination,
     exchangeDenomination,
     fiatBalance,
-    settings
+    settings,
+    currencyConverter
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch): WalletListRowDispatchProps => {

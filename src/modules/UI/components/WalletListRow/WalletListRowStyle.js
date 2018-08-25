@@ -13,7 +13,9 @@ export const stylesRaw = {
   rowContainer: {
     justifyContent: 'space-between',
     paddingVertical: 8,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: THEME.COLORS.GRAY_3
   },
   rowInfo: {
     flexDirection: 'row',
@@ -89,7 +91,7 @@ export const stylesRaw = {
   // beginning of token rows //
 
   tokenRowContainer: {
-    padding: 16,
+    paddingVertical: 8,
     paddingLeft: 30,
     paddingRight: 20,
     backgroundColor: THEME.COLORS.GRAY_4,

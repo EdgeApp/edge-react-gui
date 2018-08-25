@@ -16,7 +16,8 @@ export const styles = {
     paddingTop: 50
   },
   headerContainer: {
-    backgroundColor: THEME.COLORS.GRAY_1
+    backgroundColor: THEME.COLORS.GRAY_1,
+    paddingVertical: 8
   },
   modalBody: {
     width: PLATFORM.deviceWidth,
@@ -86,13 +87,8 @@ export const styles = {
   },
   symbol: {
     fontFamily: THEME.FONTS.SYMBOLS
-  },
-  // end of token rows //
-  separator: {
-    flex: 1,
-    borderBottomWidth: 1,
-    borderBottomColor: THEME.COLORS.GRAY_3
   }
+  // end of token rows //
 }
 
 export default StyleSheet.create(styles)
