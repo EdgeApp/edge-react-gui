@@ -92,7 +92,7 @@ export const styles = {
     flex: 1,
     borderBottomWidth: 1,
     borderBottomColor: THEME.COLORS.GRAY_3
-  }  
+  }
 }
 
 export default StyleSheet.create(styles)

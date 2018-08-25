@@ -71,7 +71,7 @@ export type CryptoExchangeSceneComponentDispatchProps = {
   openConfirmation: () => any,
   getShapeShiftTokens: () => any,
   setNativeAmount: (data: SetNativeAmountInfo) => any,
-  onSelectWallet: (string, string) => void  
+  onSelectWallet: (string, string) => any
 }
 
 type Props = CryptoExchangeSceneComponentStateProps & CryptoExchangeSceneComponentDispatchProps

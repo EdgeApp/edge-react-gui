@@ -57,8 +57,7 @@ export type StateProps = {
 export type DispatchProps = {
   fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => any,
   toggleBalanceVisibility: () => void,
-  onSelectWallet: (string, string) => void  
-  
+  onSelectWallet: (string, string) => void
 }
 
 type Props = StateProps & DispatchProps

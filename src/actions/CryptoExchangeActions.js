@@ -564,9 +564,11 @@ export const selectWalletForExchange = (walletId: string, currencyCode: string) 
   const wallet = state.ui.wallets.byId[walletId]
   switch (state.cryptoExchange.changeWallet) {
     case Constants.TO:
-      return dispatch(selectToFromWallet(Constants.SELECT_TO_WALLET_CRYPTO_EXCHANGE, wallet, currencyCode))
+      dispatch(selectToFromWallet(Constants.SELECT_TO_WALLET_CRYPTO_EXCHANGE, wallet, currencyCode))
+      break
     case Constants.FROM:
-      return dispatch(selectToFromWallet(Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE, wallet, currencyCode))
+      dispatch(selectToFromWallet(Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE, wallet, currencyCode))
+      break
     default:
   }
 }

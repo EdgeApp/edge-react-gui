@@ -4,6 +4,7 @@ import { bns } from 'biggystring'
 import { connect } from 'react-redux'
 
 import type { SetNativeAmountInfo } from '../../actions/CryptoExchangeActions'
+import { selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
 import * as actions from '../../actions/indexActions'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
@@ -16,7 +17,7 @@ import type {
 } from '../../modules/UI/scenes/CryptoExchange/CryptoExchangeSceneComponent'
 import { emptyCurrencyInfo, emptyGuiWallet } from '../../types.js'
 import type { GuiCurrencyInfo } from '../../types.js'
-import { selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
+
 const DIVIDE_PRECISION = 18
 
 export const mapStateToProps = (state: State): CryptoExchangeSceneComponentStateProps => {
@@ -99,10 +100,9 @@ export const mapDispatchToProps = (dispatch: Dispatch): CryptoExchangeSceneCompo
   openConfirmation: () => dispatch(actions.dispatchAction(Constants.OPEN_CRYPTO_EXC_CONF_MODAL)),
   setNativeAmount: (data: SetNativeAmountInfo) => dispatch(actions.setNativeAmount(data)),
   getShapeShiftTokens: () => dispatch(actions.getShapeShiftTokens()),
-  onSelectWallet: (walletId: string, currencyCode: string) => { dispatch(selectWalletForExchange(walletId, currencyCode)) }
+  onSelectWallet: (walletId: string, currencyCode: string) => {
+    dispatch(selectWalletForExchange(walletId, currencyCode))
+  }
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CryptoExchangeSceneComponent)
+export default connect(mapStateToProps, mapDispatchToProps)(CryptoExchangeSceneComponent)

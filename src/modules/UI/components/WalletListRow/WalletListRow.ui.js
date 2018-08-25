@@ -26,7 +26,7 @@ import { styles, stylesRaw } from './WalletListRowStyle.js'
 
 export type WalletListRowOwnProps = {
   wallet: any,
-  onSelectWallet: (string, string) => void  
+  onSelectWallet: (string, string) => void
 }
 
 export type WalletListRowStateProps = {
@@ -34,8 +34,7 @@ export type WalletListRowStateProps = {
   settings: Object
 }
 
-export type WalletListRowDispatchProps = {
-}
+export type WalletListRowDispatchProps = {}
 
 export type WalletListRowProps = WalletListRowOwnProps & WalletListRowStateProps & WalletListRowDispatchProps
 
@@ -56,7 +55,7 @@ export class WalletListRowComponent extends Component<WalletListRowProps, Wallet
 
   render () {
     const { wallet, onSelectWallet, settings, fiatBalance } = this.props
-    const { currencyCode, name, id /*, enabledTokens, nativeBalances */ } = wallet
+    const { currencyCode, name, id } = wallet
     const denomination = wallet.allDenominations[currencyCode]
     // const denomProps = getWalletDefaultDenomProps(wallet, settings, currencyCode)
     let multiplier
@@ -127,7 +126,4 @@ const mapDispatchToProps = (dispatch: Dispatch): WalletListRowDispatchProps => {
   return {}
 }
 
-export const WalletListRowConnector = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(WalletListRowComponent)
+export const WalletListRowConnector = connect(mapStateToProps, mapDispatchToProps)(WalletListRowComponent)
