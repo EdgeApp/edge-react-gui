@@ -1,12 +1,22 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-/* globals test expect */
+/* globals describe test expect */
 
-import { account as accountReducer } from './reducer.js'
+import { account as accountReducer, initialState, loggedIn } from './reducer.js'
 
-test('initialState', () => {
-  const expected = {}
-  const actual = accountReducer(undefined, {})
+describe('account', () => {
+  test('initialState', () => {
+    const expected = initialState
+    const actual = accountReducer(undefined, {})
 
-  expect(actual).toEqual(expected)
+    expect(actual).toEqual(expected)
+  })
+
+  test('LOGGED_IN', () => {
+    const account = { id: '123123', activeWalletIds: ['1', '2', '3'] }
+    const action = loggedIn(account)
+    const actual = accountReducer(initialState, action)
+
+    expect(actual).toMatchSnapshot()
+  })
 })
