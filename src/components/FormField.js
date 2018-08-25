@@ -43,7 +43,7 @@ class FormField extends Component {
     label: '',
     keyboardType: 'default'
   }
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     const secure = this.props.secureTextEntry ? this.props.secureTextEntry : false
     this.setState({
       secure: secure,

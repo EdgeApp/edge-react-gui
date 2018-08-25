@@ -24,7 +24,7 @@ class ExpandableBoxComponent extends Component<Props, State> {
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     this.setState({
       collapsed: true
     })

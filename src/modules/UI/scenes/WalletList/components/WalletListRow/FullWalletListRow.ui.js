@@ -79,7 +79,7 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
     return !!diffElement
   }
 
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     const walletId = this.props.data.item.id
     this.props.getEnabledTokensList(walletId)
   }

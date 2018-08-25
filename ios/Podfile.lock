@@ -1,17 +1,9 @@
 PODS:
-  - BugsnagReactNative (2.10.0):
-    - BugsnagReactNative/Core (= 2.10.0)
-    - React
-  - BugsnagReactNative/Core (2.10.0):
-    - React
   - Firebase/Core (5.3.0):
     - Firebase/CoreOnly
     - FirebaseAnalytics (= 5.0.1)
   - Firebase/CoreOnly (5.3.0):
     - FirebaseCore (= 5.0.4)
-  - Firebase/Messaging (5.3.0):
-    - Firebase/CoreOnly
-    - FirebaseMessaging (= 3.0.2)
   - FirebaseAnalytics (5.0.1):
     - FirebaseCore (~> 5.0)
     - FirebaseInstanceID (~> 3.0)
@@ -21,14 +13,7 @@ PODS:
     - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
   - FirebaseInstanceID (3.1.1):
     - FirebaseCore (~> 5.0)
-  - FirebaseMessaging (3.0.2):
-    - FirebaseCore (~> 5.0)
-    - FirebaseInstanceID (~> 3.0)
-    - GoogleToolboxForMac/Logger (~> 2.1)
-    - Protobuf (~> 3.1)
   - GoogleToolboxForMac/Defines (2.1.4)
-  - GoogleToolboxForMac/Logger (2.1.4):
-    - GoogleToolboxForMac/Defines (= 2.1.4)
   - "GoogleToolboxForMac/NSData+zlib (2.1.4)":
     - GoogleToolboxForMac/Defines (= 2.1.4)
   - nanopb (0.3.8):
@@ -36,25 +21,9 @@ PODS:
     - nanopb/encode (= 0.3.8)
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
-  - Protobuf (3.6.0)
-  - React (0.51.0):
-    - React/Core (= 0.51.0)
-  - React/BatchedBridge (0.51.0):
-    - React/Core
-    - React/cxxreact_legacy
-  - React/Core (0.51.0):
-    - yoga (= 0.51.0.React)
-  - React/cxxreact_legacy (0.51.0):
-    - React/jschelpers_legacy
-  - React/jschelpers_legacy (0.51.0)
-  - yoga (0.51.0.React)
 
 DEPENDENCIES:
-  - BugsnagReactNative (from `../node_modules/bugsnag-react-native`)
-  - Firebase/Core
-  - Firebase/Messaging (~> 5.3.0)
-  - React/BatchedBridge (from `../node_modules/react-native`)
-  - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
+  - Firebase/Core (~> 5.3.0)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -62,32 +31,17 @@ SPEC REPOS:
     - FirebaseAnalytics
     - FirebaseCore
     - FirebaseInstanceID
-    - FirebaseMessaging
     - GoogleToolboxForMac
     - nanopb
-    - Protobuf
-
-EXTERNAL SOURCES:
-  BugsnagReactNative:
-    :path: "../node_modules/bugsnag-react-native"
-  React:
-    :path: "../node_modules/react-native"
-  yoga:
-    :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  BugsnagReactNative: 0b7626917d3612281d07aea84e5041f123290fee
   Firebase: 68afeeb05461db02d7c9e3215cda28068670f4aa
   FirebaseAnalytics: b3628aea54c50464c32c393fb2ea032566e7ecc2
   FirebaseCore: 62f1b792a49bb9e8b4073f24606d2c93ffc352f0
   FirebaseInstanceID: f3f0657372592ecdfdfe2cac604a5a75758376a6
-  FirebaseMessaging: 6894b8fe0a0cf26c3b13dad729f1131654ae0bdb
   GoogleToolboxForMac: 91c824d21e85b31c2aae9bb011c5027c9b4e738f
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
-  Protobuf: 0fc0ad8bec688b2a3017a139953e01374fedbd5f
-  React: 541ba768b9855e10cdc76f55427a5cd0653ca806
-  yoga: 17521bbb0dd54a47c0b3ac43253e78cdac7488e0
 
-PODFILE CHECKSUM: be7f9f8b0d033f4b3a5f50a08fe3be3188c47ecd
+PODFILE CHECKSUM: 8da40ca8d52df737cfb333d4311ec5524cd28a60
 
 COCOAPODS: 1.5.3

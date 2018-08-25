@@ -427,7 +427,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     this.props.getSubcategories()
   }
 
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     // check if metaToken, is not then do not set walletDefaultProps to anything other than initial blank values
     if (UTILS.isCryptoParentCurrency(this.guiWallet, this.props.edgeTransaction.currencyCode)) {
       this.setState({ walletDefaultDenomProps: UTILS.getWalletDefaultDenomProps(this.guiWallet, this.props.settings) })

@@ -15,7 +15,7 @@ export type Props = {
 }
 
 export class ContactsLoader extends Component<Props> {
-  componentWillReceiveProps (nextProps: Props) {
+  UNSAFE_componentWillReceiveProps (nextProps: Props) {
     const { contactsPermission } = nextProps
 
     if (!isAuthorized(this.props.contactsPermission) && isAuthorized(contactsPermission)) {

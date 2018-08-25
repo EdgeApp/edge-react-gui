@@ -28,7 +28,7 @@ export default class CurrencySettings extends Component<Props> {
       <Gradient style={[styles.headerRow, b()]}>
         <View style={[styles.headerTextWrap, b()]}>
           <View style={styles.leftArea}>
-            <Image style={{ height: 25, width: 25, resizeMode: Image.resizeMode.contain }} source={{ uri: this.props.logo }} />
+            <Image style={{ height: 25, width: 25, resizeMode: 'contain' }} source={{ uri: this.props.logo }} />
             <T style={styles.headerText}>{SETTINGS_DENOMINATION_TEXT}</T>
           </View>
         </View>

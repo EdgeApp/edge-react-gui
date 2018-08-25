@@ -70,7 +70,7 @@ export default class AddressModal extends Component<Props, State> {
     this._setClipboard(this.props)
   }
 
-  componentWillReceiveProps (nextProps: Props) {
+  UNSAFE_componentWillReceiveProps (nextProps: Props) {
     this._setClipboard(nextProps)
     const uriShouldBeCleaned = !this.props.addressModalVisible && !!this.state.uri.length
     if (uriShouldBeCleaned) {
