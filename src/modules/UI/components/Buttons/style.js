@@ -1,8 +1,8 @@
 // @flow
 
 import { StyleSheet } from 'react-native'
-import { scale } from '../../../../lib/scaling.js'
 
+import { scale } from '../../../../lib/scaling.js'
 import THEME from '../../../../theme/variables/airbitz'
 
 export const rawStyles = {
