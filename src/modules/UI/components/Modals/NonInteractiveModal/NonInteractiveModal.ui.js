@@ -153,7 +153,7 @@ export class NonInteractiveModal extends Component<Props> {
     onModalShow: () => {}
   }
 
-  timer: number
+  timer: TimeoutID
 
   render () {
     const { isActive, style, ...props } = this.props
@@ -174,7 +174,9 @@ export class NonInteractiveModal extends Component<Props> {
   onModalShow = () => {
     const { durationInSeconds, onExpire, onModalShow } = this.props
 
-    this.timer = setTimeout(onExpire, durationInSeconds * 1000)
+    if (onExpire != null) {
+      this.timer = setTimeout(onExpire, durationInSeconds * 1000)
+    }
     onModalShow()
   }
 

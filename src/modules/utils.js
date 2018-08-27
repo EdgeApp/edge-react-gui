@@ -92,7 +92,7 @@ export const inputBottomPadding = () => {
 
 // will take the metaTokens property on the wallet (that comes from currencyInfo), merge with account-level custom tokens added, and only return if enabled (wallet-specific)
 // $FlowFixMe
-export const mergeTokens = (preferredEdgeMetaTokens: Array<EdgeMetaToken | CustomTokenInfo>, edgeMetaTokens: Array<CustomTokenInfo>) => {
+export const mergeTokens = (preferredEdgeMetaTokens: Array<$ReadOnly<EdgeMetaToken | CustomTokenInfo>>, edgeMetaTokens: Array<CustomTokenInfo>) => {
   const tokensEnabled = [...preferredEdgeMetaTokens] // initially set the array to currencyInfo (from plugin), since it takes priority
   for (const x of edgeMetaTokens) {
     // loops through the account-level array
@@ -257,7 +257,9 @@ export const convertDisplayToNative = (nativeToDisplayRatio: string) => (display
 
 export const isCryptoParentCurrency = (wallet: GuiWallet, currencyCode: string) => currencyCode === wallet.currencyCode
 
-export const getNewArrayWithoutItem = (array: Array<any>, targetItem: any) => array.filter(item => item !== targetItem)
+export function getNewArrayWithoutItem<T> (array: Array<T>, targetItem: T): Array<T> {
+  return array.filter(item => item !== targetItem)
+}
 
 export const getNewArrayWithItem = (array: Array<any>, item: any) => (!array.includes(item) ? [...array, item] : array)
 
@@ -428,7 +430,7 @@ export const getTimeInMinutes = (params: { measurement: string, value: number })
   const { measurement, value } = params
   const measurementStrategies = {
     seconds (v) {
-      const val = Math.round(v / 60 * 100) / 100
+      const val = Math.round((v / 60) * 100) / 100
       return val
     },
     minutes (v) {

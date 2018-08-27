@@ -27,10 +27,10 @@ const mapStateToProps = (state: State) => {
     primaryDisplayDenomination = SETTINGS_SELECTORS.getDisplayDenominationFull(state, currencyCode)
     primaryExchangeDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
     secondaryDisplayAmount =
-      parseFloat(1) *
-      parseFloat(secondaryToPrimaryRatio) *
-      // $FlowFixMe
-      parseFloat(primaryDisplayDenomination.multiplier) /
+      (parseFloat(1) *
+        parseFloat(secondaryToPrimaryRatio) *
+        // $FlowFixMe
+        parseFloat(primaryDisplayDenomination.multiplier)) /
       parseFloat(primaryExchangeDenomination.multiplier)
   }
 
@@ -51,4 +51,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   openSelectUser: () => dispatch(openSelectUser()),
   closeSelectUser: () => dispatch(closeSelectUser())
 })
-export default connect(mapStateToProps, mapDispatchToProps)(ControlPanel)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ControlPanel)

@@ -4,6 +4,7 @@
 
 ; Ignore "BUCK" generated dirs
 <PROJECT_ROOT>/\.buckd/
+<PROJECT_ROOT>/\.vscode/
 
 ; Ignore unexpected extra "@providesModule"
 .*/node_modules/.*/node_modules/fbjs/.*
@@ -15,6 +16,7 @@
 .*/Libraries/react-native/ReactNative.js
 
 .*/node_modules/react-native/.*
+.*/node_modules/react-native-device-info/.*
 .*/node_modules/react-native-dropdown/.*
 .*/node_modules/react-native-dropdownalert/.*
 .*/node_modules/react-native-experimental-navigation/.*
@@ -47,8 +49,6 @@ module.system=haste
 
 # TODO: Remove this once everybody switches to core-js:
 module.name_mapper='edge-login$' -> 'edge-core-js'
-
-experimental.strict_type_args=true
 
 munge_underscores=true
 

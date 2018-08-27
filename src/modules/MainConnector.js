@@ -48,4 +48,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   },
   contextCallbacks: makeContextCallbacks(dispatch)
 })
-export default connect(mapStateToProps, mapDispatchToProps)(Main)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Main)

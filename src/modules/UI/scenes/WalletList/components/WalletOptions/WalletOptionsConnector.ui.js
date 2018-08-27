@@ -8,4 +8,7 @@ import WalletOptions from './WalletOptions.ui'
 const mapStateToProps = (state: State): {} => ({})
 const mapDispatchToProps = (dispatch: Dispatch): {} => ({})
 
-export default connect(mapStateToProps, mapDispatchToProps)(WalletOptions)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(WalletOptions)

@@ -119,7 +119,7 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
     this.state = getInitialState(props)
     slowlog(this, /.*/, global.slowlogOptions)
   }
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     this.animatedValue = new Animated.Value(0)
     this.frontInterpolate = this.animatedValue.interpolate({
       inputRange: [0, 1],
@@ -148,7 +148,7 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
     }, 400)
   }
 
-  componentWillReceiveProps (nextProps: Props) {
+  UNSAFE_componentWillReceiveProps (nextProps: Props) {
     // Check if primary changed first. Don't bother to check secondary if parent passed in a primary
     if (
       nextProps.overridePrimaryDecimalAmount !== this.state.overridePrimaryDecimalAmount ||

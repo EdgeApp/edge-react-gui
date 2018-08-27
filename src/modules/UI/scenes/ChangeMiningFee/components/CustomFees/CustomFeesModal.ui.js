@@ -41,7 +41,7 @@ export default class CustomFeesModal extends Component<Props, State> {
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
-  componentWillMount = () => {
+  UNSAFE_componentWillMount = () => {
     this._initState()
   }
 

@@ -101,4 +101,7 @@ export const mapDispatchToProps = (dispatch: Dispatch): CryptoExchangeSceneCompo
   getShapeShiftTokens: () => dispatch(actions.getShapeShiftTokens())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(CryptoExchangeSceneComponent)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CryptoExchangeSceneComponent)

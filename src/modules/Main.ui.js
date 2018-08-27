@@ -52,6 +52,8 @@ import TransactionsExportSceneConnector from '../connectors/scene/TransactionsEx
 import * as Constants from '../constants/indexConstants'
 import { setIntlLocale } from '../locales/intl'
 import s, { selectLocale } from '../locales/strings.js'
+import { LoadingScene } from '../modules/UI/components/Loading/LoadingScene.ui.js'
+import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
 import { OnBoardingComponent } from '../modules/UI/scenes/OnBoarding/OnBoardingComponent.js'
 import { makeCoreContext } from '../util/makeContext.js'
 import * as CONTEXT_API from './Core/Context/api'
@@ -232,7 +234,7 @@ export default class Main extends Component<Props, State> {
     }
   }
 
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow)
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide)
   }
@@ -416,7 +418,7 @@ export default class Main extends Component<Props, State> {
                         <Scene
                           key={Constants.TRANSACTIONS_EXPORT}
                           navTransparent={true}
-                          component={TransactionsExportSceneConnector}
+                          component={ifLoggedIn(TransactionsExportSceneConnector, LoadingScene)}
                           renderTitle={this.renderTitle(TRANSACTIONS_EXPORT)}
                           renderLeftButton={this.renderBackButton(WALLETS)}
                           renderRightButton={this.renderEmptyButton()}
@@ -593,7 +595,7 @@ export default class Main extends Component<Props, State> {
                       <Scene
                         key={Constants.PLUGIN}
                         navTransparent={true}
-                        component={PluginView}
+                        component={ifLoggedIn(PluginView, LoadingScene)}
                         renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
                         renderLeftButton={renderPluginBackButton(BACK)}
                         renderRightButton={this.renderEmptyButton()}

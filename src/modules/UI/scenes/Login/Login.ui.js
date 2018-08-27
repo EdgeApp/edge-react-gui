@@ -38,7 +38,7 @@ export default class Login extends Component<Props, State> {
       })
   }
 
-  componentWillReceiveProps (nextProps: Props) {
+  UNSAFE_componentWillReceiveProps (nextProps: Props) {
     // If we have logged out, destroy and recreate the login screen:
     if (this.props.account && nextProps.account && nextProps.account !== this.props.account) {
       if (typeof nextProps.account.username === 'undefined') {

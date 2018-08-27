@@ -18,4 +18,7 @@ const mapStateToProps = (state: State): {} => {
 }
 const mapDispatchToProps = () => ({})
 
-export default connect(mapStateToProps, mapDispatchToProps)(TransactionRowComponent)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TransactionRowComponent)

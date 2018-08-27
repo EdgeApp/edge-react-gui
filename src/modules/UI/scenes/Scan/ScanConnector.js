@@ -34,4 +34,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   addressModalCancelButtonPressed: () => dispatch(addressModalCancelButtonPressed())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Scan)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Scan)

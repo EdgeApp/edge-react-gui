@@ -56,11 +56,17 @@ class OnBoardingSlideComponent extends Component<Props, State> {
     const image =
       Platform.OS === ANDROID
         ? isTablet
-          ? this.state.orientation === 'landscape' ? this.props.slide.androidTabletHorizontalImage : this.props.slide.androidTabletVerticalImage
+          ? this.state.orientation === 'landscape'
+            ? this.props.slide.androidTabletHorizontalImage
+            : this.props.slide.androidTabletVerticalImage
           : this.props.slide.androidImage
         : isTablet
-          ? this.state.orientation === 'landscape' ? this.props.slide.iPadImageHoriz : this.props.slide.iPadImage
-          : PLATFORM.isIphoneX ? this.props.slide.iPhoneX : this.props.slide.iOSImage
+          ? this.state.orientation === 'landscape'
+            ? this.props.slide.iPadImageHoriz
+            : this.props.slide.iPadImage
+          : PLATFORM.isIphoneX
+            ? this.props.slide.iPhoneX
+            : this.props.slide.iOSImage
     const container = { ...styles.container, width: Dimensions.get('window').width, height: Dimensions.get('window').height }
     const config = {
       velocityThreshold: 0.3,

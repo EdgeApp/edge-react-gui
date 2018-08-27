@@ -17,8 +17,9 @@ import { TwoButtonModalStyle } from '../../../../styles/indexStyles.js'
 import * as UTILS from '../../../utils'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
-import ProgressBar from '../../components/ProgressBar/ProgressBar.ui.js'
 import SafeAreaView from '../../components/SafeAreaView/index.js'
+import { WiredProgressBar } from '../../components/WiredProgressBar/WiredProgressBar.ui.js'
+import { getWalletLoadingPercent } from '../../selectors.js'
 import FullWalletListRow from './components/WalletListRow/FullWalletListRow.ui.js'
 import SortableWalletListRow from './components/WalletListRow/SortableWalletListRow.ui.js'
 import WalletOptions from './components/WalletOptions/WalletOptionsConnector.ui.js'
@@ -109,7 +110,7 @@ export default class WalletList extends Component<Props, State> {
     return !!diffElement || !!diffElement2
   }
 
-  componentWillReceiveProps (nextProps: Props) {
+  UNSAFE_componentWillReceiveProps (nextProps: Props) {
     if (nextProps.otpResetPending && nextProps.otpResetPending !== this.props.otpResetPending) {
       this.setState({
         showOtpResetModal: true
@@ -165,10 +166,10 @@ export default class WalletList extends Component<Props, State> {
 
     return (
       <SafeAreaView>
-        <View style={styles.container} testID={'edge: wallet-list-scene'}>
+        <View style={styles.container}>
           <WalletOptions />
           <Gradient style={styles.gradient} />
-          {this.state.isWalletProgressVisible && this.renderWalletListProgressDropdown()}
+          <WiredProgressBar progress={getWalletLoadingPercent} />
           <TouchableOpacity onPress={this.handleOnBalanceBoxPress}>
             {this.props.isAccountBalanceVisible ? this.balanceBox(fiatBalanceString) : this.hiddenBalanceBox()}
           </TouchableOpacity>
@@ -403,7 +404,7 @@ export default class WalletList extends Component<Props, State> {
     }
   }
 
-  sortActiveWallets = (wallets: any) => {
+  sortActiveWallets = (wallets: any): Array<string> => {
     const activeOrdered = Object.keys(wallets)
       .filter(key => !wallets[key].archived) // filter out archived wallets
       .sort((a, b) => {
@@ -437,7 +438,7 @@ export default class WalletList extends Component<Props, State> {
 
   getNewOrder = (order: any, action: any) => {
     const { to, from } = action
-    const newOrder = [].concat(order)
+    const newOrder = [...order]
     newOrder.splice(to, 0, newOrder.splice(from, 1)[0])
 
     return newOrder
@@ -520,16 +521,5 @@ export default class WalletList extends Component<Props, State> {
         </View>
       </View>
     )
-  }
-
-  renderWalletListProgressDropdown = () => {
-    if (this.props.progressPercentage === 100) {
-      setTimeout(() => {
-        this.setState({
-          isWalletProgressVisible: false
-        })
-      }, 2000)
-    }
-    return <ProgressBar progress={this.props.progressPercentage} />
   }
 }

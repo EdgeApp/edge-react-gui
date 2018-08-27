@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react'
 import { ActivityIndicator, Text, TouchableHighlight, View } from 'react-native'
-import Camera from 'react-native-camera'
+import { RNCamera } from 'react-native-camera'
 // $FlowFixMe
 import ImagePicker from 'react-native-image-picker'
 import { Actions } from 'react-native-router-flux'
@@ -135,9 +135,11 @@ export default class Scan extends Component<Props> {
 
   renderCamera = () => {
     if (this.props.cameraPermission === AUTHORIZED) {
-      const torchMode = this.props.torchEnabled ? Camera.constants.TorchMode.on : Camera.constants.TorchMode.off
+      const torchMode = this.props.torchEnabled ? RNCamera.Constants.FlashMode.on : RNCamera.Constants.FlashMode.off
 
-      return <Camera style={styles.preview} ref="cameraCapture" torchMode={torchMode} onBarCodeRead={this.onBarCodeRead} />
+      return (
+        <RNCamera style={styles.preview} type={RNCamera.Constants.Type.back} ref="cameraCapture" flashMode={torchMode} onBarCodeRead={this.onBarCodeRead} />
+      )
     } else if (this.props.cameraPermission === DENIED) {
       return (
         <View style={[styles.preview, { justifyContent: 'center', alignItems: 'center' }]}>

@@ -9,4 +9,7 @@ const mapStateToProps = (state: State) => ({
   dimensions: state.ui.scenes.dimensions
 })
 
-export default connect(mapStateToProps, {})(SearchResults)
+export default connect(
+  mapStateToProps,
+  {}
+)(SearchResults)

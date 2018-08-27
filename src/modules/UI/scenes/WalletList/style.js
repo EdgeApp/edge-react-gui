@@ -1,6 +1,6 @@
 // @flow
 
-import { Image, Platform, StyleSheet } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 
 import THEME from '../../../../theme/variables/airbitz'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
@@ -224,13 +224,13 @@ export const styles = {
     height: 22,
     width: 22,
     marginRight: 5,
-    resizeMode: Image.resizeMode.contain,
+    resizeMode: 'contain',
     alignSelf: 'center'
   },
   rowCurrencyLogoIOS: {
     height: 22,
     width: 26,
-    resizeMode: Image.resizeMode.contain,
+    resizeMode: 'contain',
     alignSelf: 'flex-start'
   },
   rowNameText: {

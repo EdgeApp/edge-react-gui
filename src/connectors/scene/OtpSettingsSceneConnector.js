@@ -19,4 +19,7 @@ export const mapDispatchToProps = (dispatch: Dispatch) => ({
   disableOtp: () => dispatch(disableOtp())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(OtpSettingsSceneComponent)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(OtpSettingsSceneComponent)

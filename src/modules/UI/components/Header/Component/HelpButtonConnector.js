@@ -11,4 +11,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   openHelpModal: () => dispatch(openHelpModal())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(HelpButton)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HelpButton)

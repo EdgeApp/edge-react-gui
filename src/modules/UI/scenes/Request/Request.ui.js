@@ -3,8 +3,9 @@
 import { bns } from 'biggystring'
 import type { EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, Alert, Clipboard, Share, View } from 'react-native'
+import { ActivityIndicator, Alert, Clipboard, View } from 'react-native'
 import ContactsWrapper from 'react-native-contacts-wrapper'
+import Share from 'react-native-share'
 import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
@@ -99,7 +100,7 @@ export class Request extends Component<Props, State> {
     return !!diffElement || !!diffElement2
   }
 
-  async componentWillReceiveProps (nextProps: Props) {
+  async UNSAFE_componentWillReceiveProps (nextProps: Props) {
     if (nextProps.loading) return
 
     const didAddressChange = this.state.publicAddress !== nextProps.guiWallet.receiveAddress.publicAddress
@@ -226,13 +227,14 @@ export class Request extends Component<Props, State> {
   }
 
   shareMessage = () => {
-    Share.share(
-      {
-        message: this.state.encodedURI,
-        title: sprintf(s.strings.request_qr_email_title, s.strings.app_name)
-      },
-      { dialogTitle: s.strings.request_share_edge_request }
-    )
+    const shareOptions = {
+      url: '',
+      title: sprintf(s.strings.request_qr_email_title, s.strings.app_name, this.props.currencyCode),
+      message: sprintf(s.strings.request_qr_email_title, s.strings.app_name, this.props.currencyCode) + ': ' + this.state.encodedURI,
+      subject: sprintf(s.strings.request_qr_email_title, s.strings.app_name, this.props.currencyCode) //  for email
+    }
+
+    Share.open(shareOptions).catch(e => console.log(e))
   }
 
   shareViaEmail = () => {
