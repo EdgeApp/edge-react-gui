@@ -460,7 +460,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
       <SafeAreaView>
         <View style={[{ width: '100%', height: PLATFORM.usableHeight + PLATFORM.toolbarHeight }]}>
           <Gradient style={styles.headerGradient} />
-          <View style={{ position: 'relative', top: 66 }}>
+          <View style={{ position: 'relative', top: scale(66) }}>
             <AdvancedTransactionDetailsModal
               onExit={this.onExitAdvancedDetailsModal}
               isActive={this.state.isAdvancedTransactionDetailsModalVisible}
