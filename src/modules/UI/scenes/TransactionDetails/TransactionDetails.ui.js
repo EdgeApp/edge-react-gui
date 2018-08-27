@@ -609,6 +609,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                   />
                 </View>
               </View>
+              <View style={{ height: 300 }} />
             </ScrollView>
           </View>
         </View>
