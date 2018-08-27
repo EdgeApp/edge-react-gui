@@ -223,7 +223,7 @@ export const styles = {
     padding: 3
   },
   notesInput: {
-    color: THEME.COLORS.GRAY_2,
+    color: THEME.COLORS.GRAY_1,
     fontSize: 15,
     fontFamily: THEME.FONTS.DEFAULT,
     paddingVertical: 0
@@ -235,23 +235,16 @@ export const styles = {
     paddingLeft: 15,
     paddingRight: 15
   },
-  buttonArea: {
-    height: 50
-  },
-  saveButton: {
-    height: 50
-  },
   advancedTxArea: {
     padding: 12,
-    paddingBottom: 12,
+    paddingVertical: 16,
     justifyContent: 'center',
-    alignItems: 'center',
-    height: 50
+    alignItems: 'center'
   },
   advancedTxText: {
     color: THEME.COLORS.SECONDARY,
     fontSize: 14,
-    paddingTop: 12,
+    paddingTop: 30,
     paddingBottom: 12,
     alignSelf: 'center'
   },
