@@ -235,9 +235,6 @@ export const styles = {
     paddingLeft: 15,
     paddingRight: 15
   },
-  saveButton: {
-    flex: -1
-  },
   advancedTxArea: {
     padding: 12,
     paddingVertical: 16,
