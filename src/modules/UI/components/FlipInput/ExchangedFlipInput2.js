@@ -119,7 +119,7 @@ export class ExchangedFlipInput extends Component<Props, State> {
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
-  componentWillReceiveProps (nextProps: Props) {
+  UNSAFE_componentWillReceiveProps (nextProps: Props) {
     this.setState(propsToState(nextProps))
   }
 

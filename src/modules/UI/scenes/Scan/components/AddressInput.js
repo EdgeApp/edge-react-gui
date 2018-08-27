@@ -7,6 +7,7 @@ import slowlog from 'react-native-slowlog'
 import { FormField } from '../../../../../components/FormField.js'
 import s from '../../../../../locales/strings.js'
 import { TertiaryButton } from '../../../components/Buttons'
+import { InteractiveModal } from '../../../components/Modals'
 import styles from '../style.js'
 
 export type Props = {
@@ -40,9 +41,11 @@ export class AddressInput extends Component<Props> {
         </View>
         {this.props.copyMessage && (
           <View style={styles.pasteButtonRow}>
-            <TertiaryButton ellipsizeMode={'middle'} onPress={this.props.onPaste} numberOfLines={1} style={styles.addressInputButton}>
-              <TertiaryButton.Text>{this.props.copyMessage}</TertiaryButton.Text>
-            </TertiaryButton>
+            <InteractiveModal.Item>
+              <TertiaryButton ellipsizeMode={'middle'} onPress={this.props.onPaste} numberOfLines={1} style={styles.addressInputButton}>
+                <TertiaryButton.Text>{this.props.copyMessage}</TertiaryButton.Text>
+              </TertiaryButton>
+            </InteractiveModal.Item>
           </View>
         )}
       </View>

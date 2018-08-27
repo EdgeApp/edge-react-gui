@@ -10,11 +10,12 @@ export const rawStyles = {
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1
+    flex: -1
   },
   buttonText: {
     fontFamily: THEME.FONTS.DEFAULT,
-    fontSize: 18
+    fontSize: 18,
+    lineHeight: 18
   },
   text: {
     fontFamily: THEME.FONTS.DEFAULT

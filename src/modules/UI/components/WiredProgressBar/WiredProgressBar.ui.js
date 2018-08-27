@@ -29,7 +29,7 @@ export class ProgressBar extends PureComponent<ProgressBarProps, ProgressBarStat
     }
   }
 
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     this.animation = new Animated.Value(this.props.progress)
   }
 

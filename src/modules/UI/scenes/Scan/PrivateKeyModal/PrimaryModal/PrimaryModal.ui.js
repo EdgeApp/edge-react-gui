@@ -32,19 +32,18 @@ export class PrimaryModal extends Component<Props> {
         <InteractiveModal.Footer>
           <InteractiveModal.Row>
             <InteractiveModal.Item>
-              <PrimaryButton onPress={onAccept}>
-                <PrimaryButton.Text>
-                  <Text>{s.strings.private_key_modal_import}</Text>
-                </PrimaryButton.Text>
-              </PrimaryButton>
-            </InteractiveModal.Item>
-
-            <InteractiveModal.Item>
-              <SecondaryButton onPress={onReject}>
+              <SecondaryButton onPress={onReject} style={{ flex: -1 }}>
                 <SecondaryButton.Text>
                   <Text>{s.strings.private_key_modal_cancel}</Text>
                 </SecondaryButton.Text>
               </SecondaryButton>
+            </InteractiveModal.Item>
+            <InteractiveModal.Item>
+              <PrimaryButton onPress={onAccept} style={{ flex: -1 }}>
+                <PrimaryButton.Text>
+                  <Text>{s.strings.private_key_modal_import}</Text>
+                </PrimaryButton.Text>
+              </PrimaryButton>
             </InteractiveModal.Item>
           </InteractiveModal.Row>
         </InteractiveModal.Footer>

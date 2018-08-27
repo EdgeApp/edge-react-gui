@@ -339,6 +339,7 @@ const strings = {
   unique_identifier_modal_confirm: 'Confirm',
   unique_identifier_modal_cancel: 'Cancel',
   unique_identifier_display_text: '%1$s: %2$s',
+  unique_identifier_add: 'Add %s',
 
   enter_your_password: 'Enter your password',
   spending_limits: 'Spending Limits',

@@ -25,6 +25,9 @@ const styles = {
   },
   modalBoxStyle: {
     top: PLATFORM.deviceHeight / 12
+  },
+  customFeeButton: {
+    flex: -1
   }
 }
 

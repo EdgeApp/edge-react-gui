@@ -3,7 +3,7 @@
 import type { EdgeAccount, EdgeContext } from 'edge-core-js'
 import { ChangePasswordScreen } from 'edge-login-ui-rn'
 import React, { Component } from 'react'
-import { View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 
 import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView'
@@ -36,7 +36,7 @@ export default class ChangePassword extends Component<ChangePasswordComponent> {
     return (
       <SafeAreaView>
         <Gradient style={styles.gradient} />
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
           <ChangePasswordScreen
             account={this.props.account}
             context={this.props.context}
@@ -44,7 +44,8 @@ export default class ChangePassword extends Component<ChangePasswordComponent> {
             onCancel={this.onComplete}
             showHeader={this.props.showHeader}
           />
-        </View>
+          <View style={[styles.bottomShim, { height: 360 }]} />
+        </ScrollView>
       </SafeAreaView>
     )
   }

@@ -95,7 +95,7 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
     this.state = newState
     slowlog(this, /.*/, global.slowlogOptions)
   }
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     this.props.getShapeShiftTokens()
   }
 
@@ -104,7 +104,7 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
     // this.setState({overridePrimaryExchangeAmount})
   }
 
-  componentWillReceiveProps (nextProps: Props) {
+  UNSAFE_componentWillReceiveProps (nextProps: Props) {
     if (this.state.forceUpdateGuiCounter !== nextProps.forceUpdateGuiCounter) {
       this.setState({
         fromExchangeAmount: nextProps.fromExchangeAmount,

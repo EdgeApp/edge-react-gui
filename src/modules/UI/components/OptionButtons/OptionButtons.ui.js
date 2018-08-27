@@ -5,6 +5,7 @@ import { View } from 'react-native'
 
 import s from '../../../../locales/strings.js'
 import { PrimaryButton, SecondaryButton } from '../Buttons'
+import { InteractiveModal } from '../Modals/InteractiveModal/InteractiveModal.ui'
 import styles from './style.js'
 
 type Props = {
@@ -17,13 +18,17 @@ export default class OptionButtons extends Component<Props> {
   render () {
     return (
       <View style={[styles.buttonsWrap]}>
-        <SecondaryButton style={styles.cancelButtonWrap} onPress={this.props.onNegative}>
-          <SecondaryButton.Text>{s.strings.string_cancel_cap}</SecondaryButton.Text>
-        </SecondaryButton>
+        <InteractiveModal.Item>
+          <SecondaryButton onPress={this.props.onNegative}>
+            <SecondaryButton.Text>{s.strings.string_cancel_cap}</SecondaryButton.Text>
+          </SecondaryButton>
+        </InteractiveModal.Item>
 
-        <PrimaryButton style={styles.doneButtonWrap} onPress={this.props.onPositive}>
-          <PrimaryButton.Text>{this.props.positiveText}</PrimaryButton.Text>
-        </PrimaryButton>
+        <InteractiveModal.Item>
+          <PrimaryButton onPress={this.props.onPositive}>
+            <PrimaryButton.Text>{this.props.positiveText}</PrimaryButton.Text>
+          </PrimaryButton>
+        </InteractiveModal.Item>
       </View>
     )
   }
