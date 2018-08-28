@@ -201,7 +201,7 @@ const strings = {
   title_bitcoinCash_settings: 'Bitcoin Cash Settings',
   title_change_mining_fee: 'Change Mining Fee',
   title_change_password: 'Change Password',
-  title_change_pin: 'Change Pin',
+  title_change_pin: 'Change PIN',
   title_confirm_exchange: 'Confirm exchange',
   title_create_wallet: 'Create Wallet',
   title_export_transactions: 'Export Transactions',
@@ -350,7 +350,7 @@ const strings = {
   spending_limits_tx_placeholder: 'Transaction Spending Limit',
   spending_limits_tx_description: '(Requires PIN above transaction amount)',
   save: 'Save',
-  four_digit_pin: '4 Digit Pin',
+  four_digit_pin: '4 Digit PIN',
   pin: 'PIN',
   spending_limits_warning:
     '** Warning **\\n\\nSetting a password spending limit may prevent you from accessing funds if your password is forgotten. Please make sure you have set up password recovery',
