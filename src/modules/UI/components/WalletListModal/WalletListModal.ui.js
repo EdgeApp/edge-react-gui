@@ -7,7 +7,7 @@ import slowlog from 'react-native-slowlog'
 
 import { PLATFORM } from '../../../../theme/variables/platform.js'
 import type { GuiWallet } from '../../../../types.js'
-import { WalletListRowConnector } from '../WalletListRow/WalletListRow.ui.js'
+import { WalletListRowConnector } from '../WalletListRow/WalletListRowConnector.js'
 import WalletListModalHeader from './components/WalletListModalHeaderConnector'
 import styles from './style'
 

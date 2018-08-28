@@ -30,7 +30,7 @@ export const findDenominationSymbol = (denoms: Array<EdgeDenomination>, value: s
   }
 }
 
-export const getSetCurrencyMultiplier = (currencyCode: string, settings: Object, denominations: Object) => {
+export const getSettingsCurrencyMultiplier = (currencyCode: string, settings: Object, denominations: Object) => {
   const setCurrencyDenomination = settings[currencyCode].denomination
   const denominationsInfo = denominations[setCurrencyDenomination]
   const multiplier = denominationsInfo.multiplier
@@ -38,7 +38,7 @@ export const getSetCurrencyMultiplier = (currencyCode: string, settings: Object,
 }
 
 // tokens can only have one denomination / multiplier from what I understand
-export const getSetTokenMultiplier = (currencyCode: string, settings: Object, denomination: Object): string => {
+export const getSettingsTokenMultiplier = (currencyCode: string, settings: Object, denomination: Object): string => {
   let multiplier
   if (denomination) {
     multiplier = denomination[settings[currencyCode].denomination].multiplier
@@ -470,7 +470,7 @@ export const getTimeInMinutes = (params: { measurement: string, value: number })
   const { measurement, value } = params
   const measurementStrategies = {
     seconds (v) {
-      const val = Math.round(v / 60 * 100) / 100
+      const val = Math.round((v / 60) * 100) / 100
       return val
     },
     minutes (v) {
