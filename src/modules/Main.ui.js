@@ -20,7 +20,7 @@ import { moneroCurrencyPluginFactory } from 'edge-currency-monero'
 import { rippleCurrencyPluginFactory } from 'edge-currency-ripple'
 import { coinbasePlugin, coincapPlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
 import React, { Component } from 'react'
-import { Image, Keyboard, Linking, StatusBar, TouchableWithoutFeedback } from 'react-native'
+import { Image, Keyboard, Linking, StatusBar, TouchableWithoutFeedback, View } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import Locale from 'react-native-locale'
 import { MenuProvider } from 'react-native-popup-menu'
@@ -679,7 +679,11 @@ export default class Main extends Component<Props, State> {
   }
 
   renderTitle = (title: string) => {
-    return <T style={styles.titleStyle}>{title}</T>
+    return (
+      <View style={styles.titleWrapper}>
+        <T style={styles.titleStyle}>{title}</T>
+      </View>
+    )
   }
 
   renderMenuButton = () => {
