@@ -26,7 +26,7 @@ export type Props = {
   style?: StyleSheet.Styles,
   onPress: () => void
 }
-export class PrimaryButton extends Component<Props> {
+export class PrimaryButtonScaled extends Component<Props> {
   static Text = Text
   render () {
     const { children, style, ...props } = this.props
