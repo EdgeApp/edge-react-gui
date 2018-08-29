@@ -8,8 +8,6 @@ test('initialState', () => {
   const expected = {
     addressModalVisible: false,
     scanEnabled: false,
-    scanToWalletListModalVisibility: false,
-    selectedWalletListModalVisibility: false,
     torchEnabled: false,
     legacyAddressModal: {
       isActive: false

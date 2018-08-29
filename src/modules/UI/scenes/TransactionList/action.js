@@ -222,9 +222,3 @@ export function updateSearchResults (data) {
     data
   }
 }
-
-export function toggleTransactionsWalletListModal () {
-  return {
-    type: TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL
-  }
-}

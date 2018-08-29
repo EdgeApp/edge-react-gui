@@ -12,7 +12,7 @@ import { intl } from '../../../../../../locales/intl'
 import s from '../../../../../../locales/strings.js'
 import type { CustomTokenInfo, GuiDenomination } from '../../../../../../types'
 import type { State } from '../../../../../ReduxTypes.js'
-import { calculateFiatFromCryptoCurrency, cutOffText, decimalOrZero, getFiatSymbol, getObjectDiff, truncateDecimals } from '../../../../../utils.js'
+import { calculateSettingsFiatFromCrypto, cutOffText, decimalOrZero, getFiatSymbol, getObjectDiff, truncateDecimals } from '../../../../../utils.js'
 import T from '../../../../components/FormattedText'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
 import { getEnabledTokens, selectWallet } from '../../../../Wallets/action.js'
@@ -205,7 +205,7 @@ const mapStateToProps = (state: State, ownProps: FullWalletListRowLoadedOwnProps
   const fiatSymbol = getFiatSymbol(settings.defaultFiat) || ''
   const customTokens = state.ui.settings.customTokens
   const isWalletFiatBalanceVisible = state.ui.settings.isWalletFiatBalanceVisible
-  const fiatBalance = calculateFiatFromCryptoCurrency(ownProps.data.item, state)
+  const fiatBalance = calculateSettingsFiatFromCrypto(ownProps.data.item, state)
   return {
     displayDenomination,
     exchangeDenomination,
@@ -221,10 +221,7 @@ const mapDispatchToProps = dispatch => ({
 })
 
 // $FlowFixMe
-const FullWalletListRowConnected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(FullWalletListRowLoadedComponent)
+const FullWalletListRowConnected = connect(mapStateToProps, mapDispatchToProps)(FullWalletListRowLoadedComponent)
 
 class FullListRowEmptyData extends Component<any> {
   render () {

@@ -23,7 +23,7 @@ exports[`Request should render with loaded props 1`] = `
         }
       }
     />
-    <Component
+    <View
       style={
         Object {
           "alignItems": "center",
@@ -36,8 +36,8 @@ exports[`Request should render with loaded props 1`] = `
         secondaryDisplayAmount={Object {}}
         secondaryInfo={Object {}}
       />
-    </Component>
-    <Component
+    </View>
+    <View
       style={
         Object {
           "alignItems": "center",
@@ -65,8 +65,8 @@ exports[`Request should render with loaded props 1`] = `
         amountRequestedInCrypto={0}
         requestAddress=""
       />
-    </Component>
-    <Component
+    </View>
+    <View
       style={
         Object {
           "alignItems": "stretch",
@@ -80,7 +80,7 @@ exports[`Request should render with loaded props 1`] = `
         shareViaSMS={[Function]}
         shareViaShare={[Function]}
       />
-    </Component>
+    </View>
   </Gradient>
 </SafeAreaViewComponent>
 `;

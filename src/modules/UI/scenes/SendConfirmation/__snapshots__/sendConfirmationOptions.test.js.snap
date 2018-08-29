@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SendConfirmation XMR 1`] = `
-<Component>
-  <ForwardRef(enhanceContext-Context.Consumer(Menu))
+<View>
+  <Menu
     onBackdropPress={[Function]}
     onClose={[Function]}
     onOpen={[Function]}
@@ -10,7 +10,7 @@ exports[`SendConfirmation XMR 1`] = `
     renderer={[Function]}
     rendererProps={Object {}}
   >
-    <ForwardRef(enhanceContext-Context.Consumer(MenuTrigger))
+    <MenuTrigger
       customStyles={Object {}}
       disabled={false}
       style={
@@ -32,8 +32,8 @@ exports[`SendConfirmation XMR 1`] = `
       >
         ⋮
       </FormattedText>
-    </ForwardRef(enhanceContext-Context.Consumer(MenuTrigger))>
-    <ForwardRef(enhanceContext-Context.Consumer(MenuOptions))
+    </MenuTrigger>
+    <MenuOptions
       customStyles={Object {}}
       optionsContainerStyle={
         Object {
@@ -41,7 +41,7 @@ exports[`SendConfirmation XMR 1`] = `
         }
       }
     >
-      <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
+      <MenuOption
         customStyles={Object {}}
         disableTouchable={false}
         disabled={false}
@@ -54,7 +54,7 @@ exports[`SendConfirmation XMR 1`] = `
         }
         value="CHANGE_MINING_FEE"
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -72,9 +72,9 @@ exports[`SendConfirmation XMR 1`] = `
           >
             Change Mining Fee
           </FormattedText>
-        </Component>
-      </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
-      <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
+        </View>
+      </MenuOption>
+      <MenuOption
         customStyles={Object {}}
         disableTouchable={false}
         disabled={false}
@@ -87,7 +87,7 @@ exports[`SendConfirmation XMR 1`] = `
         }
         value="ADD_UNIQUE_IDENTIFIER"
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -107,9 +107,9 @@ exports[`SendConfirmation XMR 1`] = `
           >
             Add Payment ID
           </FormattedText>
-        </Component>
-      </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
-      <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
+        </View>
+      </MenuOption>
+      <MenuOption
         customStyles={Object {}}
         disableTouchable={false}
         disabled={false}
@@ -122,7 +122,7 @@ exports[`SendConfirmation XMR 1`] = `
         }
         value="HELP"
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -140,16 +140,16 @@ exports[`SendConfirmation XMR 1`] = `
           >
             Help
           </FormattedText>
-        </Component>
-      </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
-    </ForwardRef(enhanceContext-Context.Consumer(MenuOptions))>
-  </ForwardRef(enhanceContext-Context.Consumer(Menu))>
-</Component>
+        </View>
+      </MenuOption>
+    </MenuOptions>
+  </Menu>
+</View>
 `;
 
 exports[`SendConfirmation XRP 1`] = `
-<Component>
-  <ForwardRef(enhanceContext-Context.Consumer(Menu))
+<View>
+  <Menu
     onBackdropPress={[Function]}
     onClose={[Function]}
     onOpen={[Function]}
@@ -157,7 +157,7 @@ exports[`SendConfirmation XRP 1`] = `
     renderer={[Function]}
     rendererProps={Object {}}
   >
-    <ForwardRef(enhanceContext-Context.Consumer(MenuTrigger))
+    <MenuTrigger
       customStyles={Object {}}
       disabled={false}
       style={
@@ -179,8 +179,8 @@ exports[`SendConfirmation XRP 1`] = `
       >
         ⋮
       </FormattedText>
-    </ForwardRef(enhanceContext-Context.Consumer(MenuTrigger))>
-    <ForwardRef(enhanceContext-Context.Consumer(MenuOptions))
+    </MenuTrigger>
+    <MenuOptions
       customStyles={Object {}}
       optionsContainerStyle={
         Object {
@@ -188,7 +188,7 @@ exports[`SendConfirmation XRP 1`] = `
         }
       }
     >
-      <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
+      <MenuOption
         customStyles={Object {}}
         disableTouchable={false}
         disabled={false}
@@ -201,7 +201,7 @@ exports[`SendConfirmation XRP 1`] = `
         }
         value="CHANGE_MINING_FEE"
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -219,9 +219,9 @@ exports[`SendConfirmation XRP 1`] = `
           >
             Change Mining Fee
           </FormattedText>
-        </Component>
-      </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
-      <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
+        </View>
+      </MenuOption>
+      <MenuOption
         customStyles={Object {}}
         disableTouchable={false}
         disabled={false}
@@ -234,7 +234,7 @@ exports[`SendConfirmation XRP 1`] = `
         }
         value="SEND_MAX"
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -257,9 +257,9 @@ exports[`SendConfirmation XRP 1`] = `
           >
             Send Max Amount
           </FormattedText>
-        </Component>
-      </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
-      <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
+        </View>
+      </MenuOption>
+      <MenuOption
         customStyles={Object {}}
         disableTouchable={false}
         disabled={false}
@@ -272,7 +272,7 @@ exports[`SendConfirmation XRP 1`] = `
         }
         value="ADD_UNIQUE_IDENTIFIER"
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -292,9 +292,9 @@ exports[`SendConfirmation XRP 1`] = `
           >
             Add Destination Tag
           </FormattedText>
-        </Component>
-      </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
-      <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
+        </View>
+      </MenuOption>
+      <MenuOption
         customStyles={Object {}}
         disableTouchable={false}
         disabled={false}
@@ -307,7 +307,7 @@ exports[`SendConfirmation XRP 1`] = `
         }
         value="HELP"
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -325,16 +325,16 @@ exports[`SendConfirmation XRP 1`] = `
           >
             Help
           </FormattedText>
-        </Component>
-      </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
-    </ForwardRef(enhanceContext-Context.Consumer(MenuOptions))>
-  </ForwardRef(enhanceContext-Context.Consumer(Menu))>
-</Component>
+        </View>
+      </MenuOption>
+    </MenuOptions>
+  </Menu>
+</View>
 `;
 
 exports[`SendConfirmation not editable 1`] = `
-<Component>
-  <ForwardRef(enhanceContext-Context.Consumer(Menu))
+<View>
+  <Menu
     onBackdropPress={[Function]}
     onClose={[Function]}
     onOpen={[Function]}
@@ -342,7 +342,7 @@ exports[`SendConfirmation not editable 1`] = `
     renderer={[Function]}
     rendererProps={Object {}}
   >
-    <ForwardRef(enhanceContext-Context.Consumer(MenuTrigger))
+    <MenuTrigger
       customStyles={Object {}}
       disabled={false}
       style={
@@ -364,8 +364,8 @@ exports[`SendConfirmation not editable 1`] = `
       >
         ⋮
       </FormattedText>
-    </ForwardRef(enhanceContext-Context.Consumer(MenuTrigger))>
-    <ForwardRef(enhanceContext-Context.Consumer(MenuOptions))
+    </MenuTrigger>
+    <MenuOptions
       customStyles={Object {}}
       optionsContainerStyle={
         Object {
@@ -373,7 +373,7 @@ exports[`SendConfirmation not editable 1`] = `
         }
       }
     >
-      <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
+      <MenuOption
         customStyles={Object {}}
         disableTouchable={false}
         disabled={false}
@@ -386,7 +386,7 @@ exports[`SendConfirmation not editable 1`] = `
         }
         value="CHANGE_MINING_FEE"
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -404,9 +404,9 @@ exports[`SendConfirmation not editable 1`] = `
           >
             Change Mining Fee
           </FormattedText>
-        </Component>
-      </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
-      <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
+        </View>
+      </MenuOption>
+      <MenuOption
         customStyles={Object {}}
         disableTouchable={false}
         disabled={false}
@@ -419,7 +419,7 @@ exports[`SendConfirmation not editable 1`] = `
         }
         value="HELP"
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -437,16 +437,16 @@ exports[`SendConfirmation not editable 1`] = `
           >
             Help
           </FormattedText>
-        </Component>
-      </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
-    </ForwardRef(enhanceContext-Context.Consumer(MenuOptions))>
-  </ForwardRef(enhanceContext-Context.Consumer(Menu))>
-</Component>
+        </View>
+      </MenuOption>
+    </MenuOptions>
+  </Menu>
+</View>
 `;
 
 exports[`SendConfirmation should render with standard props 1`] = `
-<Component>
-  <ForwardRef(enhanceContext-Context.Consumer(Menu))
+<View>
+  <Menu
     onBackdropPress={[Function]}
     onClose={[Function]}
     onOpen={[Function]}
@@ -454,7 +454,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
     renderer={[Function]}
     rendererProps={Object {}}
   >
-    <ForwardRef(enhanceContext-Context.Consumer(MenuTrigger))
+    <MenuTrigger
       customStyles={Object {}}
       disabled={false}
       style={
@@ -476,8 +476,8 @@ exports[`SendConfirmation should render with standard props 1`] = `
       >
         ⋮
       </FormattedText>
-    </ForwardRef(enhanceContext-Context.Consumer(MenuTrigger))>
-    <ForwardRef(enhanceContext-Context.Consumer(MenuOptions))
+    </MenuTrigger>
+    <MenuOptions
       customStyles={Object {}}
       optionsContainerStyle={
         Object {
@@ -485,7 +485,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
         }
       }
     >
-      <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
+      <MenuOption
         customStyles={Object {}}
         disableTouchable={false}
         disabled={false}
@@ -498,7 +498,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
         }
         value="CHANGE_MINING_FEE"
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -516,9 +516,9 @@ exports[`SendConfirmation should render with standard props 1`] = `
           >
             Change Mining Fee
           </FormattedText>
-        </Component>
-      </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
-      <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
+        </View>
+      </MenuOption>
+      <MenuOption
         customStyles={Object {}}
         disableTouchable={false}
         disabled={false}
@@ -531,7 +531,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
         }
         value="SEND_MAX"
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -554,9 +554,9 @@ exports[`SendConfirmation should render with standard props 1`] = `
           >
             Send Max Amount
           </FormattedText>
-        </Component>
-      </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
-      <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
+        </View>
+      </MenuOption>
+      <MenuOption
         customStyles={Object {}}
         disableTouchable={false}
         disabled={false}
@@ -569,7 +569,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
         }
         value="HELP"
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -587,9 +587,9 @@ exports[`SendConfirmation should render with standard props 1`] = `
           >
             Help
           </FormattedText>
-        </Component>
-      </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
-    </ForwardRef(enhanceContext-Context.Consumer(MenuOptions))>
-  </ForwardRef(enhanceContext-Context.Consumer(Menu))>
-</Component>
+        </View>
+      </MenuOption>
+    </MenuOptions>
+  </Menu>
+</View>
 `;

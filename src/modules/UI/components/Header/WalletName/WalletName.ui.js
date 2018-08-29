@@ -19,8 +19,7 @@ class WalletName extends React.Component<Props> {
       return (
         <View style={style.headerNameContainer}>
           <Text style={walletSelectorStyles.text} ellipsizeMode={'middle'} numberOfLines={1}>
-            {name}:
-            <Text style={[style.cCode, walletSelectorStyles.text]}>{denomination}</Text>
+            {name}:<Text style={[style.cCode, walletSelectorStyles.text]}>{denomination}</Text>
           </Text>
         </View>
       )

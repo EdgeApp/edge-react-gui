@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`QRCode should render 1`] = `
-<Component
+<View
   style={
     Object {
       "backgroundColor": "#FFFFFF",
@@ -15,5 +15,5 @@ exports[`QRCode should render 1`] = `
     fgColor="#25292C"
     size={333.5}
   />
-</Component>
+</View>
 `;

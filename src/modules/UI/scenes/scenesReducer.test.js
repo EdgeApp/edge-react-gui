@@ -39,8 +39,6 @@ test('initialState', () => {
     scan: {
       addressModalVisible: false,
       scanEnabled: false,
-      scanToWalletListModalVisibility: false,
-      selectedWalletListModalVisibility: false,
       torchEnabled: false,
       legacyAddressModal: {
         isActive: false
@@ -71,7 +69,6 @@ test('initialState', () => {
     transactionList: {
       searchVisible: false,
       transactions: [],
-      transactionsWalletListModalVisibility: false,
       updatingBalance: true,
       loadingTransactions: false,
       currentCurrencyCode: '',

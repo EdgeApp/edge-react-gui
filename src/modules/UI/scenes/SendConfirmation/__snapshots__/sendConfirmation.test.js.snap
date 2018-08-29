@@ -20,7 +20,7 @@ exports[`SendConfirmation should render with destination 1`] = `
         }
       }
     />
-    <Component
+    <View
       style={
         Object {
           "alignItems": "center",
@@ -29,7 +29,7 @@ exports[`SendConfirmation should render with destination 1`] = `
         }
       }
     >
-      <Component
+      <View
         style={
           Array [
             Object {
@@ -62,8 +62,8 @@ exports[`SendConfirmation should render with destination 1`] = `
           0.00
           )
         </FormattedText>
-      </Component>
-      <Component
+      </View>
+      <View
         style={
           Array [
             Object {
@@ -113,8 +113,8 @@ exports[`SendConfirmation should render with destination 1`] = `
             }
           }
         />
-      </Component>
-      <Component
+      </View>
+      <View
         style={
           Object {
             "alignItems": "center",
@@ -230,7 +230,7 @@ exports[`SendConfirmation should render with destination 1`] = `
             </Row>
           </Item>
         </Padding>
-      </Component>
+      </View>
       <Row
         style={
           Object {
@@ -253,7 +253,7 @@ exports[`SendConfirmation should render with destination 1`] = `
           sliderDisabled={true}
         />
       </Footer>
-    </Component>
+    </View>
   </Gradient>
 </SafeAreaViewComponent>
 `;
@@ -278,7 +278,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
         }
       }
     />
-    <Component
+    <View
       style={
         Object {
           "alignItems": "center",
@@ -287,7 +287,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
         }
       }
     >
-      <Component
+      <View
         style={
           Array [
             Object {
@@ -320,8 +320,8 @@ exports[`SendConfirmation should render with standard props 1`] = `
           0.00
           )
         </FormattedText>
-      </Component>
-      <Component
+      </View>
+      <View
         style={
           Array [
             Object {
@@ -371,8 +371,8 @@ exports[`SendConfirmation should render with standard props 1`] = `
             }
           }
         />
-      </Component>
-      <Component
+      </View>
+      <View
         style={
           Object {
             "alignItems": "center",
@@ -473,7 +473,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
             </Row>
           </Item>
         </Padding>
-      </Component>
+      </View>
       <Row
         style={
           Object {
@@ -496,7 +496,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
           sliderDisabled={true}
         />
       </Footer>
-    </Component>
+    </View>
   </Gradient>
 </SafeAreaViewComponent>
 `;
@@ -521,7 +521,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
         }
       }
     />
-    <Component
+    <View
       style={
         Object {
           "alignItems": "center",
@@ -530,7 +530,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
         }
       }
     >
-      <Component
+      <View
         style={
           Array [
             Object {
@@ -563,8 +563,8 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           0.00
           )
         </FormattedText>
-      </Component>
-      <Component
+      </View>
+      <View
         style={
           Array [
             Object {
@@ -614,8 +614,8 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
             }
           }
         />
-      </Component>
-      <Component
+      </View>
+      <View
         style={
           Object {
             "alignItems": "center",
@@ -722,7 +722,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
             </Row>
           </Item>
         </Padding>
-      </Component>
+      </View>
       <Row
         style={
           Object {
@@ -745,7 +745,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           sliderDisabled={true}
         />
       </Footer>
-    </Component>
+    </View>
   </Gradient>
   <Connect(UniqueIdentifierModal)
     currencyCode="XMR"
@@ -773,7 +773,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
         }
       }
     />
-    <Component
+    <View
       style={
         Object {
           "alignItems": "center",
@@ -782,7 +782,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
         }
       }
     >
-      <Component
+      <View
         style={
           Array [
             Object {
@@ -815,8 +815,8 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           0.00
           )
         </FormattedText>
-      </Component>
-      <Component
+      </View>
+      <View
         style={
           Array [
             Object {
@@ -866,8 +866,8 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
             }
           }
         />
-      </Component>
-      <Component
+      </View>
+      <View
         style={
           Object {
             "alignItems": "center",
@@ -974,7 +974,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
             </Row>
           </Item>
         </Padding>
-      </Component>
+      </View>
       <Row
         style={
           Object {
@@ -997,7 +997,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           sliderDisabled={true}
         />
       </Footer>
-    </Component>
+    </View>
   </Gradient>
   <Connect(UniqueIdentifierModal)
     currencyCode="XRP"

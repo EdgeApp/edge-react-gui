@@ -12,7 +12,7 @@ import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet } from '
 import { getCurrencyConverter } from './Core/selectors.js'
 import type { State } from './ReduxTypes'
 
-const DIVIDE_PRECISION = 18
+export const DIVIDE_PRECISION = 18
 
 export const cutOffText = (str: string, lng: number) => {
   if (str.length >= lng) {
@@ -28,6 +28,29 @@ export const findDenominationSymbol = (denoms: Array<EdgeDenomination>, value: s
       return v.symbol
     }
   }
+}
+
+export const getSettingsCurrencyMultiplier = (currencyCode: string, settings: Object, denominations: Object) => {
+  const setCurrencyDenomination = settings[currencyCode].denomination
+  const denominationsInfo = denominations[setCurrencyDenomination]
+  const multiplier = denominationsInfo.multiplier
+  return multiplier
+}
+
+// tokens can only have one denomination / multiplier from what I understand
+export const getSettingsTokenMultiplier = (currencyCode: string, settings: Object, denomination: Object): string => {
+  let multiplier
+  if (denomination) {
+    multiplier = denomination[settings[currencyCode].denomination].multiplier
+  } else {
+    const customDenom = _.find(settings.customTokens, item => item.currencyCode === currencyCode)
+    if (customDenom && customDenom.denominations && customDenom.denominations[0]) {
+      multiplier = customDenom.denominations[0].multiplier
+    } else {
+      return '1'
+    }
+  }
+  return multiplier
 }
 
 export const getWalletDefaultDenomProps = (wallet: Object, settingsState: Object, currencyCode?: string /* for metaTokens */): EdgeDenomination => {
@@ -224,7 +247,7 @@ export const getCurrencyWalletFiatBalanceFromWallet = (wallet: GuiWallet, curren
 }
 
 // not sure if this can be used with tokens
-export const calculateFiatFromCryptoCurrency = (wallet: GuiWallet, state: State): string => {
+export const calculateSettingsFiatFromCrypto = (wallet: GuiWallet, state: State): string => {
   let fiatValue = 0 // default to zero if not calculable
   const currencyCode = wallet.currencyCode
   const nativeBalance = wallet.nativeBalances[currencyCode]
@@ -237,6 +260,23 @@ export const calculateFiatFromCryptoCurrency = (wallet: GuiWallet, state: State)
   const nativeToExchangeRatio: string = exchangeDenomination.multiplier
   const cryptoAmount: number = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
   fiatValue = currencyConverter.convertCurrency(currencyCode, 'iso:' + settings.defaultFiat, cryptoAmount)
+  return intl.formatNumber(fiatValue, { toFixed: 2 }) || '0'
+}
+
+// not sure if this can be used with tokens
+export const calculateWalletFiatFromCrypto = (wallet: GuiWallet, state: State): string => {
+  let fiatValue = 0 // default to zero if not calculable
+  const currencyCode = wallet.currencyCode
+  const nativeBalance = wallet.nativeBalances[currencyCode]
+  const settings = state.ui.settings
+  const currencyConverter = getCurrencyConverter(state)
+  if (!nativeBalance || nativeBalance === '0') return '0'
+  const denominations = settings[currencyCode].denominations
+  const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
+  if (!exchangeDenomination) return '0'
+  const nativeToExchangeRatio: string = exchangeDenomination.multiplier
+  const cryptoAmount: number = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
+  fiatValue = currencyConverter.convertCurrency(currencyCode, wallet.isoFiatCurrencyCode, cryptoAmount)
   return intl.formatNumber(fiatValue, { toFixed: 2 }) || '0'
 }
 
