@@ -38,7 +38,14 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   IND: { denomination: '1000000000000000000' },
   HUR: { denomination: '1000000000000000000' },
   USDT: { denomination: '1000000' },
-  customTokens: []
+  customTokens: [],
+  passwordRecoveryRemindersShown: {
+    '20': false,
+    '200': false,
+    '2000': false,
+    '20000': false,
+    '200000': false
+  }
 }
 
 export const LOCAL_ACCOUNT_DEFAULTS = {

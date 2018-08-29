@@ -103,6 +103,13 @@ export type SettingsState = {
       isEnabled: boolean,
       amount: number
     }
+  },
+  passwordRecoveryRemindersShown: {
+    '20': boolean,
+    '200': boolean,
+    '2000': boolean,
+    '20000': boolean,
+    '200000': boolean
   }
 }
 
