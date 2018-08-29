@@ -60,6 +60,9 @@ export type State = {
         isActive: boolean,
         uniqueIdentifier: string
       },
+      passwordRecoveryReminderModal: {
+        isVisible: boolean
+      },
       scan: {
         parsedUri: EdgeParsedUri | null,
         torchEnabled: boolean,

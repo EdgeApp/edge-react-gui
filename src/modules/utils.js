@@ -430,7 +430,7 @@ export const getTimeInMinutes = (params: { measurement: string, value: number })
   const { measurement, value } = params
   const measurementStrategies = {
     seconds (v) {
-      const val = Math.round(v / 60 * 100) / 100
+      const val = Math.round((v / 60) * 100) / 100
       return val
     },
     minutes (v) {
@@ -566,4 +566,57 @@ export const isEdgeLogin = (data: string) => {
   const EDGE_LOGIN_REG_EXP = /^airbitz:\/\/edge\//
 
   return EDGE_LOGIN_REG_EXP.test(data)
+}
+
+export const tallyUpTotalCrypto = (state: State) => {
+  const temporaryTotalCrypto = {}
+  const wallets = state.ui.wallets.byId
+  const settings = state.ui.settings
+  // loop through each of the walletId's
+  for (const parentProp in wallets) {
+    // loop through all of the nativeBalances, which includes both parent currency and tokens
+    for (const currencyCode in wallets[parentProp].nativeBalances) {
+      // if there is no native balance for the currency / token then assume it's zero
+      if (!temporaryTotalCrypto[currencyCode]) {
+        temporaryTotalCrypto[currencyCode] = 0
+      }
+      // get the native balance for this currency
+      const nativeBalance = wallets[parentProp].nativeBalances[currencyCode]
+      // if it is a non-zero amount then we will process it
+      if (nativeBalance && nativeBalance !== '0') {
+        let denominations
+        // check to see if it's a currency first
+        if (settings[currencyCode]) {
+          // and if so then grab the default denomiation (setting)
+          denominations = settings[currencyCode].denominations
+        } else {
+          // otherwise find the token whose currencyCode matches the one that we are working with
+          const tokenInfo = settings.customTokens.find(token => token.currencyCode === currencyCode)
+          // grab the denominations array (which is equivalent of the denominations from the previous (true) clause)
+          if (!tokenInfo) continue
+          denominations = tokenInfo.denominations
+        }
+        // now go through that array of denominations and find the one whose name matches the currency
+        const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
+        if (!exchangeDenomination) continue
+        // grab the multiplier, which is the ratio that we can multiply and divide by
+        const nativeToExchangeRatio: string = exchangeDenomination.multiplier
+        // divide the native amount (eg satoshis) by the ratio to end up with standard crypto amount (which exchanges use)
+        const cryptoAmount: number = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
+        temporaryTotalCrypto[currencyCode] = temporaryTotalCrypto[currencyCode] + cryptoAmount
+      }
+    }
+  }
+  const balanceInfo = calculateTotalBalance(temporaryTotalCrypto, state)
+  return balanceInfo
+}
+
+export const calculateTotalBalance = (values: any, state: State) => {
+  let total = 0
+  const currencyConverter = getCurrencyConverter(state)
+  for (const currency in values) {
+    const addValue = currencyConverter.convertCurrency(currency, 'iso:USD', values[currency])
+    total = total + addValue
+  }
+  return intl.formatNumber(total, { toFixed: 2 })
 }

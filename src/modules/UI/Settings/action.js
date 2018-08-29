@@ -48,15 +48,19 @@ export const ADD_CURRENCY_PLUGIN = PREFIX + 'ADD_CURRENCY_PLUGIN'
 // tokens
 export const SET_CUSTOM_TOKENS = PREFIX + 'SET_CUSTOM_TOKENS'
 
-export const updateSettings = (settings: Object) => ({
-  type: UPDATE_SETTINGS,
-  data: { settings }
-})
+export const updateSettings = (settings: Object) => {
+  return {
+    type: UPDATE_SETTINGS,
+    data: { settings }
+  }
+}
 
-export const loadSettings = (settings: Object) => ({
-  type: LOAD_SETTINGS,
-  data: { settings }
-})
+export const loadSettings = (settings: Object) => {
+  return {
+    type: LOAD_SETTINGS,
+    data: { settings }
+  }
+}
 
 export const setPINMode = (pinMode: boolean) => ({
   type: SET_PIN_MODE,
