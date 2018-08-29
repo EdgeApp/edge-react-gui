@@ -75,7 +75,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     isAccountBalanceVisible: false,
     isWalletFiatBalanceVisible: false,
     spendingLimits: {},
-    passwordRecoveryRemindersShown: SETTINGS_API.PASSWORD_RECOVER_REMINDERS_SHOWN
+    passwordRecoveryRemindersShown: SETTINGS_API.PASSWORD_RECOVERY_REMINDERS_SHOWN
   }
   try {
     for (const pluginName in account.currencyTools) {

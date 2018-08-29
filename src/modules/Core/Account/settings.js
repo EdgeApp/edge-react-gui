@@ -11,7 +11,7 @@ export const CORE_DEFAULTS = {
   pinMode: false
 }
 
-export const PASSWORD_RECOVER_REMINDERS_SHOWN = {
+export const PASSWORD_RECOVERY_REMINDERS_SHOWN = {
   '20': false,
   '200': false,
   '2000': false,
@@ -47,7 +47,7 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   HUR: { denomination: '1000000000000000000' },
   USDT: { denomination: '1000000' },
   customTokens: [],
-  passwordRecoveryRemindersShown: PASSWORD_RECOVER_REMINDERS_SHOWN
+  passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN
 }
 
 export const LOCAL_ACCOUNT_DEFAULTS = {
