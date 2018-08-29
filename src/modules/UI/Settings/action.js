@@ -49,7 +49,6 @@ export const ADD_CURRENCY_PLUGIN = PREFIX + 'ADD_CURRENCY_PLUGIN'
 export const SET_CUSTOM_TOKENS = PREFIX + 'SET_CUSTOM_TOKENS'
 
 export const updateSettings = (settings: Object) => {
-  console.log('updateSettings: ', settings)
   return {
     type: UPDATE_SETTINGS,
     data: { settings }
@@ -57,7 +56,6 @@ export const updateSettings = (settings: Object) => {
 }
 
 export const loadSettings = (settings: Object) => {
-  console.log('loadSettings: ', settings)
   return {
     type: LOAD_SETTINGS,
     data: { settings }

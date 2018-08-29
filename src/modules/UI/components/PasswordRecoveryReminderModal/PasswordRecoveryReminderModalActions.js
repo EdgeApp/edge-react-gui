@@ -7,11 +7,10 @@ import { RECOVER_PASSWORD as PASSWORD_RECOVERY_SCENE } from '../../../../constan
 import { setPasswordRecoveryRemindersAsync } from '../../../Core/Account/settings.js'
 import type { Dispatch, GetState } from '../../../ReduxTypes.js'
 import { tallyUpTotalCrypto } from '../../../utils.js'
-import { updateSettings as updateReduxSettings } from '../../Settings/action.js'
 
 export const SHOW_PASSWORD_RECOVERY_MODAL = 'SHOW_PASSWORD_RECOVERY_MODAL'
 export const HIDE_PASSWORD_RECOVERY_MODAL = 'HIDE_PASSWORD_RECOVERY_MODAL'
-export const UPDATE_SHOW_PASSWORD_RECOVER_REMINDER_MODAL = 'UPDATE_SHOW_PASSWORD_RECOVER_REMINDER_MODAL'
+export const UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL = 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL'
 
 export const checkPasswordRecovery = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -34,7 +33,7 @@ export const checkPasswordRecovery = () => async (dispatch: Dispatch, getState: 
 
 export const updateShowPasswordRecoveryReminderModal = (level: string, wasShown: boolean) => {
   return {
-    type: UPDATE_SHOW_PASSWORD_RECOVER_REMINDER_MODAL,
+    type: UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL,
     data: {
       level,
       wasShown
