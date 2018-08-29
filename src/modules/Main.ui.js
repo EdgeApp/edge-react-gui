@@ -68,7 +68,7 @@ import HelpButton from './UI/components/Header/Component/HelpButtonConnector'
 import Header from './UI/components/Header/Header.ui'
 import WalletName from './UI/components/Header/WalletName/WalletNameConnector.js'
 import HelpModal from './UI/components/HelpModal'
-import { PasswordRecoveryModalConnector } from './UI/components/PasswordRecoveryModal/PasswordRecoveryModalConnector.js'
+import { PasswordRecoveryReminderModalConnector } from './UI/components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalConnector.js'
 import { passwordReminderModalConnector as PasswordReminderModal } from './UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
 import TransactionAlert from './UI/components/TransactionAlert/TransactionAlertConnector'
 import { CAMERA, CONTACTS, type Permission } from './UI/permissions.js'
@@ -634,7 +634,7 @@ export default class Main extends Component<Props, State> {
         <AutoLogout />
         <ContactsLoader />
         <PasswordReminderModal />
-        <PasswordRecoveryModalConnector />
+        <PasswordRecoveryReminderModalConnector />
       </MenuProvider>
     )
   }

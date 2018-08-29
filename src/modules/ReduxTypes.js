@@ -60,7 +60,7 @@ export type State = {
         isActive: boolean,
         uniqueIdentifier: string
       },
-      passwordRecoveryModal: {
+      passwordRecoveryReminderModal: {
         isVisible: boolean
       },
       scan: {

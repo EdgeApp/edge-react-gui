@@ -11,6 +11,14 @@ export const CORE_DEFAULTS = {
   pinMode: false
 }
 
+export const PASSWORD_RECOVER_REMINDERS_SHOWN = {
+  '20': false,
+  '200': false,
+  '2000': false,
+  '20000': false,
+  '200000': false
+}
+
 // TODO:  Remove hardcoded currency defaults
 // Default Account Settings
 export const SYNCED_ACCOUNT_DEFAULTS = {
@@ -39,13 +47,7 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   HUR: { denomination: '1000000000000000000' },
   USDT: { denomination: '1000000' },
   customTokens: [],
-  passwordRecoveryRemindersShown: {
-    '20': false,
-    '200': false,
-    '2000': false,
-    '20000': false,
-    '200000': false
-  }
+  passwordRecoveryRemindersShown: PASSWORD_RECOVER_REMINDERS_SHOWN
 }
 
 export const LOCAL_ACCOUNT_DEFAULTS = {
@@ -140,6 +142,15 @@ export const setSpendingLimits = (account: EdgeAccount, spendingLimits: Spending
     const updatedSettings = updateSettings(settings, { spendingLimits })
     return setLocalSettings(account, updatedSettings)
   })
+}
+export async function setPasswordRecoveryRemindersAsync (account: EdgeAccount, level: string, wasShown: boolean) {
+  const settings = await getSyncedSettings(account)
+  const passwordRecoveryRemindersShown = {
+    ...settings.passwordRecoveryRemindersShown,
+    [level]: wasShown
+  }
+  const updatedSettings = updateSettings(settings, { passwordRecoveryRemindersShown })
+  return setSyncedSettings(account, updatedSettings)
 }
 
 // Currency Settings

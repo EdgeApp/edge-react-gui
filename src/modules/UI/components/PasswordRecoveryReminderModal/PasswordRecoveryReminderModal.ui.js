@@ -8,26 +8,28 @@ import { PrimaryButton, TertiaryButton } from '../Buttons'
 import Text from '../FormattedText/index.js'
 import { Icon } from '../Icon/Icon.ui'
 import { InteractiveModal } from '../Modals'
-import { styles } from './PasswordRecoveryModalStyles.js'
+import { styles } from './PasswordRecoveryReminderModalStyles.js'
 
-export type PasswordRecoveryModalOwnProps = {}
+export type PasswordRecoveryReminderModalOwnProps = {}
 
-export type PasswordRecoveryModalStateProps = {
+export type PasswordRecoveryReminderModalStateProps = {
   isVisible: boolean
 }
 
-export type PasswordRecoveryModalDispatchProps = {
-  hidePasswordRecoveryModal: () => void,
+export type PasswordRecoveryReminderModalDispatchProps = {
+  hidePasswordRecoveryReminderModal: () => void,
   onGoToPasswordRecoveryScene: () => void
 }
 
-export type PasswordRecoveryModalProps = PasswordRecoveryModalOwnProps & PasswordRecoveryModalStateProps & PasswordRecoveryModalDispatchProps
+export type PasswordRecoveryReminderModalProps = PasswordRecoveryReminderModalOwnProps &
+  PasswordRecoveryReminderModalStateProps &
+  PasswordRecoveryReminderModalDispatchProps
 
-export class PasswordRecoveryModalComponent extends Component<PasswordRecoveryModalProps> {
+export class PasswordRecoveryReminderModalComponent extends Component<PasswordRecoveryReminderModalProps> {
   render () {
-    const { isVisible, hidePasswordRecoveryModal, onGoToPasswordRecoveryScene } = this.props
+    const { isVisible, hidePasswordRecoveryReminderModal, onGoToPasswordRecoveryScene } = this.props
     return (
-      <InteractiveModal isActive={isVisible} onModalHide={hidePasswordRecoveryModal}>
+      <InteractiveModal isActive={isVisible} onModalHide={hidePasswordRecoveryReminderModal}>
         <InteractiveModal.Icon>
           <Icon style={styles.icon} name={Constants.LOCKED_ICON} type={Constants.ION_ICONS} />
         </InteractiveModal.Icon>
@@ -49,7 +51,7 @@ export class PasswordRecoveryModalComponent extends Component<PasswordRecoveryMo
 
           <InteractiveModal.Row>
             <InteractiveModal.Item>
-              <TertiaryButton onPress={hidePasswordRecoveryModal}>
+              <TertiaryButton onPress={hidePasswordRecoveryReminderModal}>
                 <TertiaryButton.Text>{s.strings.password_check_check_later}</TertiaryButton.Text>
               </TertiaryButton>
             </InteractiveModal.Item>

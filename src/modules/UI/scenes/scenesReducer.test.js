@@ -104,7 +104,7 @@ test('initialState', () => {
     passwordReminderModal: {
       status: null
     },
-    passwordRecoveryModal: {
+    passwordRecoveryReminderModal: {
       isVisible: false
     },
     uniqueIdentifierModal: {

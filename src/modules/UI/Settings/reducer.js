@@ -8,6 +8,7 @@ import type { CustomTokenInfo } from '../../../types'
 import { CORE_DEFAULTS, LOCAL_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_DEFAULTS } from '../../Core/Account/settings.js'
 import { SEND_LOGS_FAILURE, SEND_LOGS_PENDING, SEND_LOGS_REQUEST, SEND_LOGS_SUCCESS } from '../../Logs/action'
 import type { Action } from '../../ReduxTypes'
+import { UPDATE_SHOW_PASSWORD_RECOVER_REMINDER_MODAL } from '../components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalActions.js'
 import * as ADD_TOKEN_ACTION from '../scenes/AddToken/action.js'
 import * as WALLET_ACTION from '../Wallets/action'
 import * as ACTION from './action.js'
@@ -188,7 +189,8 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         denominationKeys,
         customTokensSettings,
         isAccountBalanceVisible,
-        isWalletFiatBalanceVisible
+        isWalletFiatBalanceVisible,
+        passwordRecoveryRemindersShown
       } = data
       let newState = {
         ...state,
@@ -208,7 +210,8 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         otpMode,
         otpResetDate: account.otpResetDate,
         isAccountBalanceVisible,
-        isWalletFiatBalanceVisible
+        isWalletFiatBalanceVisible,
+        passwordRecoveryRemindersShown
       }
       denominationKeys.forEach(key => {
         const currencyCode = key.currencyCode
@@ -537,6 +540,16 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
+    case UPDATE_SHOW_PASSWORD_RECOVER_REMINDER_MODAL: {
+      const { level, wasShown } = data
+      return {
+        ...state,
+        passwordRecoveryRemindersShown: {
+          ...state.passwordRecoveryRemindersShown,
+          [level]: wasShown
+        }
+      }
+    }
     default:
       return state
   }

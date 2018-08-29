@@ -1,12 +1,12 @@
 // @flow
 
-import { bns } from 'biggystring'
 import type { EdgeAccountCallbacks, EdgeTransaction } from 'edge-core-js'
 
 import type { Dispatch } from '../../ReduxTypes'
-import { checkPasswordRecovery } from '../../UI/components/PasswordRecoveryModal/PasswordRecoveryModalActions.js'
+import { checkPasswordRecovery } from '../../UI/components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalActions.js'
 import { newTransactionsRequest, refreshTransactionsRequest } from '../../UI/scenes/TransactionList/action.js'
 import { refreshReceiveAddressRequest, refreshWallet, updateWalletLoadingProgress } from '../../UI/Wallets/action.js'
+import { isReceivedTransaction } from '../../utils.js'
 import { updateWalletsRequest } from '../Wallets/action.js'
 
 const makeAccountCallbacks = (dispatch: Dispatch): EdgeAccountCallbacks => {
@@ -63,7 +63,7 @@ const makeAccountCallbacks = (dispatch: Dispatch): EdgeAccountCallbacks => {
       dispatch(refreshWallet(walletId))
       // now check if password recovery is set up
       const finalTxIndex = transactions.length - 1
-      if (bns.gt(transactions[finalTxIndex].nativeAmount, '0')) dispatch(checkPasswordRecovery())
+      if (isReceivedTransaction(transactions[finalTxIndex])) dispatch(checkPasswordRecovery())
 
       // $FlowFixMe
       // dispatch(refreshTransactionsRequest(walletId, transactions))

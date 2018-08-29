@@ -3,7 +3,7 @@
 import { combineReducers } from 'redux'
 
 import type { Action } from '../../../ReduxTypes'
-import { HIDE_PASSWORD_RECOVERY_MODAL, SHOW_PASSWORD_RECOVERY_MODAL } from './PasswordRecoveryModalActions.js'
+import { HIDE_PASSWORD_RECOVERY_MODAL, SHOW_PASSWORD_RECOVERY_MODAL } from './PasswordRecoveryReminderModalActions.js'
 
 export const isVisible = (state: boolean = false, action: Action) => {
   switch (action.type) {
@@ -16,6 +16,6 @@ export const isVisible = (state: boolean = false, action: Action) => {
   }
 }
 
-export const passwordRecoveryModal = combineReducers({
+export const passwordRecoveryReminderModal = combineReducers({
   isVisible
 })
