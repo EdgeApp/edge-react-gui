@@ -339,19 +339,19 @@ export default class Main extends Component<Props, State> {
                         />
 
                         <Scene
-                          key={Constants.CREATE_WALLET_NAME}
+                          key={Constants.CREATE_WALLET_SELECT_CRYPTO}
                           navTransparent={true}
-                          component={CreateWalletName}
-                          renderTitle={this.renderTitle(CREATE_WALLET)}
+                          component={CreateWalletSelectCrypto}
+                          renderTitle={this.renderTitle(CREATE_WALLET_SELECT_CRYPTO)}
                           renderLeftButton={this.renderBackButton(WALLETS)}
                           renderRightButton={this.renderEmptyButton()}
                         />
 
                         <Scene
-                          key={Constants.CREATE_WALLET_SELECT_CRYPTO}
+                          key={Constants.CREATE_WALLET_NAME}
                           navTransparent={true}
-                          component={CreateWalletSelectCrypto}
-                          renderTitle={this.renderTitle(CREATE_WALLET_SELECT_CRYPTO)}
+                          component={CreateWalletName}
+                          renderTitle={this.renderTitle(CREATE_WALLET)}
                           renderLeftButton={this.renderBackButton()}
                           renderRightButton={this.renderEmptyButton()}
                         />
