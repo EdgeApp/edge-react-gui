@@ -15,7 +15,9 @@ export const rawStyles = {
   buttonText: {
     fontFamily: THEME.FONTS.DEFAULT,
     fontSize: 18,
-    lineHeight: 18
+    lineHeight: 18,
+    position: 'relative',
+    top: 1
   },
   text: {
     fontFamily: THEME.FONTS.DEFAULT
