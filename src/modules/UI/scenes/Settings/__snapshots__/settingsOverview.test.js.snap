@@ -12,6 +12,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
   <ScrollViewMock
     style={
       Object {
+        "backgroundColor": "#FFFFFF",
         "height": "100%",
         "position": "relative",
       }
@@ -421,6 +422,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
   <ScrollViewMock
     style={
       Object {
+        "backgroundColor": "#FFFFFF",
         "height": "100%",
         "position": "relative",
       }

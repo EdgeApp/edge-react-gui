@@ -10,7 +10,8 @@ const debug = {
 }
 export const rawStyles = {
   scene: {
-    padding: 24
+    padding: 24,
+    backgroundColor: THEME.COLORS.WHITE
   },
   spacer: {
     height: 28
