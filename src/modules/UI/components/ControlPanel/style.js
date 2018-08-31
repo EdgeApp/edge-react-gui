@@ -9,7 +9,7 @@ export default {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    padding: 20
+    paddingHorizontal: 12
   },
   logoIcon: {
     width: 25,
