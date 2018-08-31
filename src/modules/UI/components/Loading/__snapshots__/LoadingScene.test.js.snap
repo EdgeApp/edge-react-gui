@@ -8,7 +8,7 @@ exports[`LoadingScene should render 1`] = `
     }
   }
 >
-  <View
+  <Component
     style={
       Object {
         "alignItems": "center",
@@ -25,7 +25,7 @@ exports[`LoadingScene should render 1`] = `
         }
       }
     />
-    <View
+    <Component
       style={
         Object {
           "alignItems": "center",
@@ -40,7 +40,7 @@ exports[`LoadingScene should render 1`] = `
         hidesWhenStopped={true}
         size="large"
       />
-    </View>
-  </View>
+    </Component>
+  </Component>
 </SafeAreaViewComponent>
 `;
