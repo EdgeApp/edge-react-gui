@@ -27,7 +27,7 @@ export default class PasswordRecovery extends Component<Props> {
             onCancel={this.props.onComplete}
             showHeader={this.props.showHeader}
           />
-          <View style={{ height: 320 }} />
+          <View style={[styles.bottomShim, { height: 320 }]} />
         </ScrollView>
       </SafeAreaView>
     )

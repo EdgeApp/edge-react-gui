@@ -3,7 +3,6 @@
 import React, { Component } from 'react'
 import { ActivityIndicator, Text, TouchableHighlight, View } from 'react-native'
 import { RNCamera } from 'react-native-camera'
-
 // $FlowFixMe
 import ImagePicker from 'react-native-image-picker'
 import { Actions } from 'react-native-router-flux'
@@ -36,7 +35,8 @@ type Props = {
   toggleScanToWalletListModal: () => void,
   addressModalDoneButtonPressed: () => void,
   legacyAddressModalContinueButtonPressed: () => void,
-  legacyAddressModalCancelButtonPressed: () => void
+  legacyAddressModalCancelButtonPressed: () => void,
+  onSelectWallet: (string, string) => void
 }
 
 const HEADER_TEXT = s.strings.send_scan_header_text
@@ -54,7 +54,7 @@ export default class Scan extends Component<Props> {
   }
 
   render () {
-    const { addressModalDoneButtonPressed, legacyAddressModalContinueButtonPressed, legacyAddressModalCancelButtonPressed } = this.props
+    const { addressModalDoneButtonPressed, legacyAddressModalContinueButtonPressed, legacyAddressModalCancelButtonPressed, onSelectWallet } = this.props
 
     return (
       <SafeAreaView>
@@ -92,7 +92,9 @@ export default class Scan extends Component<Props> {
             </View>
             <ABAlert />
           </View>
-          {this.props.showToWalletModal && <WalletListModal topDisplacement={Constants.SCAN_WALLET_DIALOG_TOP} type={Constants.FROM} />}
+          {this.props.showToWalletModal && (
+            <WalletListModal topDisplacement={Constants.SCAN_WALLET_DIALOG_TOP} type={Constants.FROM} onSelectWallet={onSelectWallet} />
+          )}
         </View>
 
         <LegacyAddressModal continueButtonPressed={legacyAddressModalContinueButtonPressed} cancelButtonPressed={legacyAddressModalCancelButtonPressed} />
@@ -107,10 +109,6 @@ export default class Scan extends Component<Props> {
 
   _onToggleAddressModal = () => {
     this.props.toggleAddressModal()
-  }
-
-  _onToggleWalletListModal = () => {
-    this.props.toggleScanToWalletListModal()
   }
 
   selectPhotoTapped = () => {
@@ -138,7 +136,9 @@ export default class Scan extends Component<Props> {
     if (this.props.cameraPermission === AUTHORIZED) {
       const torchMode = this.props.torchEnabled ? RNCamera.Constants.FlashMode.on : RNCamera.Constants.FlashMode.off
 
-      return <RNCamera style={styles.preview} type={RNCamera.Constants.Type.back} ref="cameraCapture" flashMode={torchMode} onBarCodeRead={this.onBarCodeRead} />
+      return (
+        <RNCamera style={styles.preview} type={RNCamera.Constants.Type.back} ref="cameraCapture" flashMode={torchMode} onBarCodeRead={this.onBarCodeRead} />
+      )
     } else if (this.props.cameraPermission === DENIED) {
       return (
         <View style={[styles.preview, { justifyContent: 'center', alignItems: 'center' }]}>

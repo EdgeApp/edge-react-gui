@@ -34,7 +34,7 @@
     "ios:run": "react-native run-ios",
     "lint": "eslint '*.js' 'src/**/*.js'",
     "lint:fix": "npm run format",
-    "localize": "node ./localizeLanguage.js",
+    "localize": "node ./localizeLanguage.js; git add ./src/locales/strings",
     "server": "node ./loggingServer.js",
     "start": "node --max_old_space_size=4000 node_modules/react-native/local-cli/cli.js start ",
     "test": "jest",

@@ -8,6 +8,7 @@ import ABAlert from '../components/ABAlert/reducer'
 import controlPanel from '../components/ControlPanel/reducer.js'
 import exchangeRate from '../components/ExchangeRate/reducer.js'
 import { helpModal } from '../components/HelpModal/reducer.js'
+import { passwordRecoveryReminderModal } from '../components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalReducer.js'
 import { passwordReminderModalReducer as passwordReminderModal } from '../components/PasswordReminderModal/indexPasswordReminderModal.js'
 import transactionAlert from '../components/TransactionAlert/reducer.js'
 import walletListModal from '../components/WalletListModal/reducer'
@@ -55,6 +56,7 @@ export const scenes = combineReducers({
   exchangeRate,
   ABAlert,
   currentScene,
+  passwordRecoveryReminderModal,
   passwordReminderModal,
   uniqueIdentifierModal
 })

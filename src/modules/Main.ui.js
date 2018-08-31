@@ -68,6 +68,7 @@ import HelpButton from './UI/components/Header/Component/HelpButtonConnector'
 import Header from './UI/components/Header/Header.ui'
 import WalletName from './UI/components/Header/WalletName/WalletNameConnector.js'
 import HelpModal from './UI/components/HelpModal'
+import { PasswordRecoveryReminderModalConnector } from './UI/components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalConnector.js'
 import { passwordReminderModalConnector as PasswordReminderModal } from './UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
 import TransactionAlert from './UI/components/TransactionAlert/TransactionAlertConnector'
 import { CAMERA, CONTACTS, type Permission } from './UI/permissions.js'
@@ -338,19 +339,19 @@ export default class Main extends Component<Props, State> {
                         />
 
                         <Scene
-                          key={Constants.CREATE_WALLET_NAME}
+                          key={Constants.CREATE_WALLET_SELECT_CRYPTO}
                           navTransparent={true}
-                          component={CreateWalletName}
-                          renderTitle={this.renderTitle(CREATE_WALLET)}
+                          component={CreateWalletSelectCrypto}
+                          renderTitle={this.renderTitle(CREATE_WALLET_SELECT_CRYPTO)}
                           renderLeftButton={this.renderBackButton(WALLETS)}
                           renderRightButton={this.renderEmptyButton()}
                         />
 
                         <Scene
-                          key={Constants.CREATE_WALLET_SELECT_CRYPTO}
+                          key={Constants.CREATE_WALLET_NAME}
                           navTransparent={true}
-                          component={CreateWalletSelectCrypto}
-                          renderTitle={this.renderTitle(CREATE_WALLET_SELECT_CRYPTO)}
+                          component={CreateWalletName}
+                          renderTitle={this.renderTitle(CREATE_WALLET)}
                           renderLeftButton={this.renderBackButton()}
                           renderRightButton={this.renderEmptyButton()}
                         />
@@ -633,6 +634,7 @@ export default class Main extends Component<Props, State> {
         <AutoLogout />
         <ContactsLoader />
         <PasswordReminderModal />
+        <PasswordRecoveryReminderModalConnector />
       </MenuProvider>
     )
   }

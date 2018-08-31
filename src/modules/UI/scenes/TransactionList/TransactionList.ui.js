@@ -56,7 +56,8 @@ export type StateProps = {
 
 export type DispatchProps = {
   fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => any,
-  toggleBalanceVisibility: () => void
+  toggleBalanceVisibility: () => void,
+  onSelectWallet: (string, string) => void
 }
 
 type Props = StateProps & DispatchProps
@@ -112,8 +113,9 @@ export class TransactionList extends Component<Props, State> {
   }
 
   renderDropUp = () => {
-    if (this.props.showToWalletModal) {
-      return <WalletListModal topDisplacement={Constants.TRANSACTIONLIST_WALLET_DIALOG_TOP} type={Constants.FROM} />
+    const { onSelectWallet, showToWalletModal } = this.props
+    if (showToWalletModal) {
+      return <WalletListModal topDisplacement={Constants.TRANSACTIONLIST_WALLET_DIALOG_TOP} type={Constants.FROM} onSelectWallet={onSelectWallet} />
     }
     return null
   }

@@ -53,7 +53,8 @@ export type RequestLoadingProps = {
 }
 
 export type RequestDispatchProps = {
-  refreshReceiveAddressRequest(string): void
+  refreshReceiveAddressRequest(string): void,
+  onSelectWallet: (string, string) => void
 }
 
 export type LoadingProps = RequestLoadingProps & RequestDispatchProps
@@ -154,7 +155,7 @@ export class Request extends Component<Props, State> {
     }
 
     const color = 'white'
-    const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio } = this.props
+    const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio, onSelectWallet } = this.props
     const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
 
     return (
@@ -193,7 +194,9 @@ export class Request extends Component<Props, State> {
             />
           </View>
 
-          {this.props.showToWalletModal && <WalletListModal topDisplacement={Constants.REQUEST_WALLET_DIALOG_TOP} type={Constants.TO} />}
+          {this.props.showToWalletModal && (
+            <WalletListModal topDisplacement={Constants.REQUEST_WALLET_DIALOG_TOP} type={Constants.TO} onSelectWallet={onSelectWallet} />
+          )}
         </Gradient>
       </SafeAreaView>
     )
