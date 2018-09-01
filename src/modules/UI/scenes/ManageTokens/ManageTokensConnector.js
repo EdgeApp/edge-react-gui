@@ -16,4 +16,7 @@ const mapDispatchToProps = (dispatch: Dispatch): ManageTokensDispatchProps => ({
   setEnabledTokensList: (walletId: string, enabledTokens: Array<string>, oldEnabledTokensList: Array<string>) =>
     dispatch(setEnabledTokens(walletId, enabledTokens, oldEnabledTokensList))
 })
-export default connect(mapStateToProps, mapDispatchToProps)(ManageTokens)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ManageTokens)

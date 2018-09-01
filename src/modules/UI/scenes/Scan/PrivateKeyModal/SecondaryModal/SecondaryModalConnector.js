@@ -20,5 +20,8 @@ export const mapDispatchToProps = (dispatch: Dispatch) => ({
   }
 })
 
-export const SecondaryModalConnector = connect(mapStateToProps, mapDispatchToProps)(SecondaryModal)
+export const SecondaryModalConnector = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SecondaryModal)
 export default SecondaryModalConnector

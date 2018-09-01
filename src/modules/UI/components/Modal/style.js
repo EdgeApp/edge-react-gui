@@ -16,7 +16,7 @@ export const styles = {
   topLevelModal: {
     alignItems: 'center',
     position: 'absolute',
-    top: PLATFORM.deviceHeight * 1 / 8,
+    top: (PLATFORM.deviceHeight * 1) / 8,
     left: 0,
     right: 0,
     backgroundColor: 'transparent'
@@ -26,7 +26,7 @@ export const styles = {
     paddingBottom: 14,
     borderRadius: 3,
     backgroundColor: THEME.COLORS.WHITE,
-    width: PLATFORM.deviceWidth * 3 / 4
+    width: (PLATFORM.deviceWidth * 3) / 4
   },
   modalBox: {
     alignItems: 'stretch',

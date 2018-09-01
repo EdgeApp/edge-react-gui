@@ -23,5 +23,9 @@ export function ifLoggedIn<Klass> (LoggedIn: Klass, LoggedOut: ComponentType<{}>
   const mergeProps = (stateProps, dispatchProps, ownProps) => stateProps
 
   // $FlowFixMe
-  return connect(mapStateToProps, null, mergeProps)(IfLoggedIn)
+  return connect(
+    mapStateToProps,
+    null,
+    mergeProps
+  )(IfLoggedIn)
 }

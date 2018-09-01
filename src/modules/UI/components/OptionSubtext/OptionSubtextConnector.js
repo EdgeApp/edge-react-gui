@@ -12,4 +12,7 @@ const mapStateToProps = (state: State, ownProps: { label: string, confirmationTe
   walletName: getWalletName(state, state.ui.scenes.walletList.walletId)
 })
 const mapDispatchToProps = () => ({})
-export default connect(mapStateToProps, mapDispatchToProps)(OptionSubtext)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(OptionSubtext)

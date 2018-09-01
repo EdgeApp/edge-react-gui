@@ -15,7 +15,7 @@ const StaticModalStyle = {
     position: 'absolute',
     justifyContent: 'center',
     alignItems: 'center',
-    top: screenDimensions.height * 1 / 8,
+    top: (screenDimensions.height * 1) / 8,
     left: 0,
     right: 0
   },

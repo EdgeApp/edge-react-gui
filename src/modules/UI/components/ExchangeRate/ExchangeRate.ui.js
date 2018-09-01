@@ -38,7 +38,7 @@ export default class ExchangeRate extends Component<Props> {
     const getDisplayExchangeAmount = secondaryDisplayAmount => {
       const primaryRatio = parseInt(primaryInfo.displayDenomination.multiplier) / parseInt(primaryInfo.exchangeDenomination.multiplier)
       const secondaryRatio = parseInt(secondaryInfo.displayDenomination.multiplier) / parseInt(secondaryInfo.exchangeDenomination.multiplier)
-      return primaryRatio / secondaryRatio * parseFloat(secondaryDisplayAmount)
+      return (primaryRatio / secondaryRatio) * parseFloat(secondaryDisplayAmount)
     }
     let precision = secondaryInfo.displayDenomination.multiplier ? log10(secondaryInfo.displayDenomination.multiplier) : 0
     let formattedSecondaryDisplayAmount: string = parseFloat(getDisplayExchangeAmount(secondaryDisplayAmount)).toFixed(precision)

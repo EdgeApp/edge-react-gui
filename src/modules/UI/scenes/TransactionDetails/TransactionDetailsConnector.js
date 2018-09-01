@@ -44,4 +44,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   setNewSubcategory: (newSubcategory: string) => dispatch(setNewSubcategory(newSubcategory))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(TransactionDetails)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TransactionDetails)

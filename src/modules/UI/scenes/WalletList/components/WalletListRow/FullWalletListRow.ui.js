@@ -221,7 +221,10 @@ const mapDispatchToProps = dispatch => ({
 })
 
 // $FlowFixMe
-const FullWalletListRowConnected = connect(mapStateToProps, mapDispatchToProps)(FullWalletListRowLoadedComponent)
+const FullWalletListRowConnected = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(FullWalletListRowLoadedComponent)
 
 class FullListRowEmptyData extends Component<any> {
   render () {

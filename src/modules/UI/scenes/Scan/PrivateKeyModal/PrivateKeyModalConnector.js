@@ -19,5 +19,8 @@ export const mapDispatchToProps = (dispatch: Dispatch) => ({
   }
 })
 
-export const PrivateKeyModalConnector = connect(mapStateToProps, mapDispatchToProps)(PrivateKeyModal)
+export const PrivateKeyModalConnector = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PrivateKeyModal)
 export default PrivateKeyModalConnector
