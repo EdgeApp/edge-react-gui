@@ -73,4 +73,4 @@ matrix:
       xcode_scheme: ios/edge
       script:
         - cd ios
-        - node ../execKeepAlive.js 'xcodebuild -workspace edge.xcworkspace -derivedDataPath build clean build -scheme edge -configuration release -sdk iphonesimulator11.4 CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""' 'xcpretty && exit ${PIPESTATUS[0]}'
+        - node ../execKeepAlive.js 'xcodebuild -workspace edge.xcworkspace -derivedDataPath build clean build -scheme edge -configuration release -sdk iphonesimulator11.4 CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""' 'xcpretty'
