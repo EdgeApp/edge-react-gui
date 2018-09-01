@@ -199,12 +199,14 @@ export async function setSyncedSettingsAsync (account: EdgeAccount, settings: Ob
   await SettingsFile.setText(text)
 }
 
-export async function setSubcategoriesRequest (account: EdgeAccount, subcategories: any) {
+export type CategoriesFile = { categories: Array<string> }
+
+export async function setSubcategoriesRequest (account: EdgeAccount, subcategories: CategoriesFile) {
   // const subcats = await getSyncedSubcategories(account)
   return setSyncedSubcategories(account, subcategories)
 }
 
-export async function setSyncedSubcategories (account: EdgeAccount, subcategories: any) {
+export async function setSyncedSubcategories (account: EdgeAccount, subcategories: CategoriesFile) {
   let finalText = {}
   if (!subcategories.categories) {
     finalText.categories = subcategories
@@ -229,7 +231,7 @@ export const getSyncedSubcategories = (account: EdgeAccount) =>
     })
     .catch(() =>
       // If Categories.json doesn't exist yet, create it, and return it
-      setSyncedSubcategories(account, SYNCED_SUBCATEGORIES_DEFAULTS).then(() => SYNCED_SUBCATEGORIES_DEFAULTS)
+      setSyncedSubcategories(account, SYNCED_SUBCATEGORIES_DEFAULTS).then(() => SYNCED_SUBCATEGORIES_DEFAULTS.categories)
     )
 
 export const getSyncedSubcategoriesFile = (account: EdgeAccount) =>

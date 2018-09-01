@@ -26,7 +26,6 @@ let _currentPath = __dirname
 //   platformType: string,
 //   guiPlatformDir: string,
 //   productName: string,
-//   xcodeProject: string,
 //   xcodeScheme: string,
 //   teamId: string,
 //   provisioningProfile: string,
@@ -37,7 +36,6 @@ let _currentPath = __dirname
 //   buildNum: string,
 //   guiDir: string,
 //   guiHash: string,
-//   xcodeProject: string,
 //   xcodeScheme: string,
 //   dSymZip: string,
 //   ipaFile: string,
@@ -64,7 +62,6 @@ function main () {
   //   platformType: '',
   //   guiPlatformDir: '',
   //   productName: '',
-  //   xcodeProject: '',
   //   xcodeScheme: '',
   //   teamId: '',
   //   provisioningProfile: '',
@@ -203,7 +200,7 @@ function buildIos (buildObj) {
 
   call('agvtool new-marketing-version ' + buildObj.version)
   call('agvtool new-version -all ' + buildObj.buildNum)
-  cmdStr = `xcodebuild -project ${buildObj.xcodeProject} -scheme ${buildObj.xcodeScheme} archive`
+  cmdStr = `xcodebuild -workspace ${buildObj.xcodeWorkspace} -scheme ${buildObj.xcodeScheme} archive`
   cmdStr = cmdStr + ' | xcpretty && exit ${PIPE' + 'STATUS[0]}'
   call(cmdStr)
 
