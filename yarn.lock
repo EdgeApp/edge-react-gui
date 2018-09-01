@@ -2786,9 +2786,9 @@ edge-components@^0.0.5:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.10.0.tgz#a8d42e03be40269df986d469835d063ccaee12f7"
+edge-core-js@0.10.2:
+  version "0.10.2"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.10.2.tgz#0b70b1acc56c9f693e86d7a8153c9b24a1196de1"
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -2803,7 +2803,7 @@ edge-core-js@0.10.0:
     node-fetch "^2.0.0"
     redux "^3.6.0"
     redux-keto "^0.3.2"
-    redux-pixies "^0.3.4"
+    redux-pixies "^0.3.5"
     regenerator-runtime "^0.11.1"
     rfc4648 "^1.1.0"
     scrypt-js "^2.0.3"
@@ -7695,9 +7695,9 @@ redux-keto@^0.3.2:
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/redux-keto/-/redux-keto-0.3.2.tgz#15c18d61fec5e76e3d0d3f02767a996fee4ff622"
 
-redux-pixies@^0.3.4:
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/redux-pixies/-/redux-pixies-0.3.4.tgz#e9b88f059c246931a6a17fc63392cbbd30724954"
+redux-pixies@^0.3.5:
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/redux-pixies/-/redux-pixies-0.3.5.tgz#6ff1d83334d73925202d73d72a45e3d652ee4634"
 
 redux-thunk@^2.2.0:
   version "2.3.0"

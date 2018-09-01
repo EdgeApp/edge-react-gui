@@ -59,7 +59,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     currencyPlugins: [],
     otpInfo: { enabled: account.otpKey != null, otpKey: account.otpKey, otpResetPending },
     autoLogoutTimeInSeconds: '',
-    bluetoothMode: '',
+    bluetoothMode: false,
     pinLoginEnabled: false,
     pinMode: false,
     otpMode: false,
