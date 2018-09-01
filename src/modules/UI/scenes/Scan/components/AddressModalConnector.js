@@ -34,4 +34,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddressModal)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AddressModal)

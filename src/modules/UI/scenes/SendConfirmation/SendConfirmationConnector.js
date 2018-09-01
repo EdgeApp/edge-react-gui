@@ -99,4 +99,7 @@ const mapDispatchToProps = (dispatch: Dispatch): SendConfirmationDispatchProps =
   }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(SendConfirmation)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SendConfirmation)

@@ -20,4 +20,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     Actions.pop()
   }
 })
-export default connect(mapStateToProps, mapDispatchToProps)(DefaultFiatSetting)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DefaultFiatSetting)

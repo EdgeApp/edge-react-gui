@@ -51,4 +51,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   onConfirmRestoreWallets: () => dispatch(restoreWallets())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(SettingsOverview)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SettingsOverview)

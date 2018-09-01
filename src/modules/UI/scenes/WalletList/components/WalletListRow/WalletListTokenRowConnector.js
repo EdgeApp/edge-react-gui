@@ -30,4 +30,7 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   selectWallet: (walletId, currencyCode) => dispatch(selectWallet(walletId, currencyCode))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(WalletListTokenRow)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(WalletListTokenRow)

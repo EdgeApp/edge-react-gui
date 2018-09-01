@@ -34,4 +34,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   onSelectWallet: (walletId: string, currencyCode: string) => dispatch(selectWalletFromModal(walletId, currencyCode))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Scan)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Scan)

@@ -17,4 +17,7 @@ const mapDispatchToProps = (dispatch: Dispatch, ownProps) => ({
     dispatch(setDenominationKeyRequest(ownProps.currencyCode, denominationKey))
   }
 })
-export default connect(mapStateToProps, mapDispatchToProps)(CurrencySettings)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CurrencySettings)
