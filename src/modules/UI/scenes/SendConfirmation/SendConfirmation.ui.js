@@ -1,28 +1,28 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import { bns } from 'biggystring'
+import { Scene } from 'edge-components'
 import type { EdgeDenomination } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, View } from 'react-native'
+import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
-import { Scene } from 'edge-components'
 
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
 import type { CurrencyConverter, GuiCurrencyInfo, GuiDenomination } from '../../../../types'
 import { convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../../utils.js'
+import { PrimaryButton } from '../../components/Buttons/PrimaryButton.ui.js'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
 import type { ExchangedFlipInputAmounts } from '../../components/FlipInput/ExchangedFlipInput2.js'
 import { ExchangedFlipInput } from '../../components/FlipInput/ExchangedFlipInput2.js'
 import Text from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
+import { PinInput } from '../../components/PinInput/PinInput.ui.js'
 import Recipient from '../../components/Recipient/index.js'
 import SafeAreaView from '../../components/SafeAreaView'
 import ABSlider from '../../components/Slider/index.js'
-import { UniqueIdentifier } from './components/UniqueIdentifier/UniqueIdentifier.ui.js'
 import { UniqueIdentifierModalConnect as UniqueIdentifierModal } from './components/UniqueIdentifierModal/UniqueIdentifierModalConnector.js'
-import { PinInput } from '../../components/PinInput/PinInput.ui.js'
 import styles from './styles.js'
 
 const DIVIDE_PRECISION = 18
@@ -51,7 +51,8 @@ export type SendConfirmationStateProps = {
   uniqueIdentifier?: string,
   destination: string,
   isEditable: boolean,
-  authRequired: 'pin' | 'none'
+  authRequired: 'pin' | 'none',
+  address: string
 }
 
 export type SendConfirmationDispatchProps = {
@@ -60,7 +61,8 @@ export type SendConfirmationDispatchProps = {
   reset: () => any,
   updateAmount: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) => any,
   uniqueIdentifierUpdated: (uniqueIdentifier: string) => any,
-  onChangePin: (pin: string) => mixed
+  onChangePin: (pin: string) => mixed,
+  uniqueIdentifierButtonPressed: () => void
 }
 
 type routerParam = {
@@ -96,7 +98,7 @@ export class SendConfirmation extends Component<Props, State> {
     }
   }
 
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     this.setState({ keyboardVisible: this.props.data === 'fromScan' })
   }
   componentDidMount () {
@@ -111,7 +113,7 @@ export class SendConfirmation extends Component<Props, State> {
     }
   }
 
-  componentWillReceiveProps (nextProps: Props) {
+  UNSAFE_componentWillReceiveProps (nextProps: Props) {
     const newState = {}
     if (nextProps.forceUpdateGuiCounter !== this.state.forceUpdateGuiCounter) {
       const overridePrimaryExchangeAmount = bns.div(nextProps.nativeAmount, nextProps.primaryExchangeDenomination.multiplier, DIVIDE_PRECISION)
@@ -155,8 +157,9 @@ export class SendConfirmation extends Component<Props, State> {
     const cryptoBalanceAmountString = cryptoBalanceAmount ? intl.formatNumber(decimalOrZero(bns.toFixed(cryptoBalanceAmount, 0, 6), 6)) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)
     const balanceInFiatString = intl.formatNumber(this.props.balanceInFiat || 0, { toFixed: 2 })
 
-    const { authRequired, destination } = this.props
-    const SEND_TO_DESTINATION_TEXT = sprintf(s.strings.send_to_title, destination)
+    const { address, authRequired, currencyCode, destination, uniqueIdentifier } = this.props
+    const DESTINATION_TEXT = sprintf(s.strings.send_confirmation_to, destination)
+    const ADDRESS_TEXT = sprintf(s.strings.send_confirmation_address, address)
 
     return (
       <SafeAreaView>
@@ -199,23 +202,31 @@ export class SendConfirmation extends Component<Props, State> {
                   )}
 
                   {!!destination && (
-                    <Scene.Row style={{ paddingVertical: 4 }}>
+                    <Scene.Row style={{ paddingVertical: 10 }}>
                       <Recipient.Text style={{}}>
-                        <Text>{SEND_TO_DESTINATION_TEXT}</Text>
+                        <Text>{DESTINATION_TEXT}</Text>
                       </Recipient.Text>
                     </Scene.Row>
                   )}
 
-                  {!!this.props.uniqueIdentifier && (
-                    <Scene.Row>
-                      <UniqueIdentifier.Text>
-                        <Text>{uniqueIdentifierText(this.props.currencyCode, this.props.uniqueIdentifier)}</Text>
-                      </UniqueIdentifier.Text>
+                  {!!address && (
+                    <Scene.Row style={{ paddingVertical: 4 }}>
+                      <Recipient.Text style={{}}>
+                        <Text>{ADDRESS_TEXT}</Text>
+                      </Recipient.Text>
+                    </Scene.Row>
+                  )}
+
+                  {(currencyCode === 'XMR' || currencyCode === 'XRP') && (
+                    <Scene.Row style={{ paddingVertical: 10 }}>
+                      <PrimaryButton style={{ height: 40 }} onPress={this.props.uniqueIdentifierButtonPressed}>
+                        <PrimaryButton.Text ellipsizeMode={'tail'}>{uniqueIdentifierText(currencyCode, uniqueIdentifier)}</PrimaryButton.Text>
+                      </PrimaryButton>
                     </Scene.Row>
                   )}
 
                   {authRequired === 'pin' && (
-                    <Scene.Row style={{ width: '100%', justifyContent: 'flex-start', alignItems: 'center' }}>
+                    <Scene.Row style={{ paddingVertical: 10, width: '100%', justifyContent: 'flex-start', alignItems: 'center' }}>
                       <Text style={styles.rowText}>{s.strings.four_digit_pin}</Text>
 
                       <View style={styles.pinInputSpacer} />
@@ -229,7 +240,9 @@ export class SendConfirmation extends Component<Props, State> {
               </Scene.Padding>
             </View>
 
-            <Scene.Row>{this.props.pending && <ActivityIndicator style={[{ flex: 1, alignSelf: 'center' }]} size={'small'} />}</Scene.Row>
+            <Scene.Row style={styles.activityIndicatorSpace}>
+              {this.props.pending && <ActivityIndicator style={[{ flex: 1, alignSelf: 'center' }]} size={'small'} />}
+            </Scene.Row>
 
             <Scene.Footer style={styles.footer}>
               <ABSlider
@@ -243,8 +256,8 @@ export class SendConfirmation extends Component<Props, State> {
           </View>
         </Gradient>
 
-        {(this.props.currencyCode === 'XRP' || this.props.currencyCode === 'XMR') && (
-          <UniqueIdentifierModal onConfirm={this.props.uniqueIdentifierUpdated} currencyCode={this.props.currencyCode} />
+        {(currencyCode === 'XRP' || currencyCode === 'XMR') && (
+          <UniqueIdentifierModal onConfirm={this.props.uniqueIdentifierUpdated} currencyCode={currencyCode} />
         )}
       </SafeAreaView>
     )
@@ -324,10 +337,14 @@ export class SendConfirmation extends Component<Props, State> {
   }
 }
 
-const uniqueIdentifierText = (currencyCode: string, uniqueIdentifier: string): string => {
-  return currencyCode === 'XRP'
-    ? sprintf(s.strings.unique_identifier_display_text, s.strings.unique_identifier_destination_tag, uniqueIdentifier)
-    : currencyCode === 'XMR'
-      ? sprintf(s.strings.unique_identifier_display_text, s.strings.unique_identifier_payment_id, uniqueIdentifier)
-      : sprintf(s.strings.unique_identifier_display_text, s.strings.unique_identifier, uniqueIdentifier)
+export const uniqueIdentifierText = (currencyCode: string, uniqueIdentifier?: string): string => {
+  if (!uniqueIdentifier) {
+    if (currencyCode === 'XRP') return sprintf(s.strings.unique_identifier_add, s.strings.unique_identifier_destination_tag)
+    if (currencyCode === 'XMR') return sprintf(s.strings.unique_identifier_add, s.strings.unique_identifier_payment_id)
+  }
+
+  if (currencyCode === 'XRP') return sprintf(s.strings.unique_identifier_display_text, s.strings.unique_identifier_destination_tag, uniqueIdentifier)
+  if (currencyCode === 'XMR') return sprintf(s.strings.unique_identifier_display_text, s.strings.unique_identifier_payment_id, uniqueIdentifier)
+
+  throw new Error('Invalid currency code')
 }

@@ -3,12 +3,12 @@
 import type { AbcSpendTarget, EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 
 import { STANDARD_FEE } from '../../../../constants/indexConstants'
-import type { State } from '../../../ReduxTypes'
-import { getSceneState, getSelectedCurrencyCode } from '../../selectors.js'
-import { getAccount } from '../../../Core/selectors.js'
-import { getExchangeDenomination } from '../../Settings/selectors.js'
-import { convertNativeToExchange } from '../../../utils.js'
 import { convertCurrency } from '../../../Core/Account/api.js'
+import { getAccount } from '../../../Core/selectors.js'
+import type { State } from '../../../ReduxTypes'
+import { convertNativeToExchange } from '../../../utils.js'
+import { getSceneState, getSelectedCurrencyCode } from '../../selectors.js'
+import { getExchangeDenomination } from '../../Settings/selectors.js'
 
 export type GuiMakeSpendInfo = {
   currencyCode?: string,
@@ -25,6 +25,7 @@ export type SendConfirmationState = {
   isKeyboardVisible: boolean,
   forceUpdateGuiCounter: number,
   destination: string,
+  address: string,
 
   nativeAmount: string,
 
@@ -34,7 +35,7 @@ export type SendConfirmationState = {
   isEditable: boolean,
 
   pending: boolean,
-  transaction: EdgeTransaction,
+  transaction: EdgeTransaction | null,
   error: Error | null,
 
   pin: string,
@@ -82,7 +83,8 @@ export const initialState = {
   error: null,
 
   pin: '',
-  authRequired: 'none'
+  authRequired: 'none',
+  address: ''
 }
 
 export const getScene = (state: State): any => getSceneState(state, 'sendConfirmation')

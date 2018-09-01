@@ -7,9 +7,9 @@ import Modal from 'react-native-modal'
 
 import * as Constants from '../../constants/indexConstants.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
+import { getObjectDiff } from '../../modules/utils'
 import { StaticModalStyle } from '../../styles/indexStyles.js'
 import THEME from '../../theme/variables/airbitz'
-import { getObjectDiff } from '../../modules/utils'
 
 type Props = {
   modalDismissTimerSeconds: number,
@@ -24,9 +24,9 @@ const gradientEnd = { x: 1, y: 0 }
 const gradientColors = [THEME.COLORS.GRADIENT.DARK, THEME.COLORS.GRADIENT.LIGHT]
 
 class StaticModalComponent extends Component<Props> {
-  reset: number
+  reset: TimeoutID
   shouldComponentUpdate (nextProps: Props) {
-    const diffElement = getObjectDiff(this.props, nextProps, {style: true, children: true})
+    const diffElement = getObjectDiff(this.props, nextProps, { style: true, children: true })
     return !!diffElement
   }
   componentDidMount () {
@@ -37,7 +37,7 @@ class StaticModalComponent extends Component<Props> {
     }
   }
   componentWillUnmount () {
-    clearInterval(this.reset)
+    clearTimeout(this.reset)
   }
   renderMiddle = (styles: Object) => {
     if (this.props.bodyComponent) {
@@ -52,12 +52,7 @@ class StaticModalComponent extends Component<Props> {
         <TouchableOpacity onPress={this.props.cancel}>
           <View style={styles.modalBox}>
             <View style={styles.innerBox}>
-              <LinearGradient
-                style={styles.header}
-                start={gradientStart}
-                end={gradientEnd}
-                colors={gradientColors}
-              >
+              <LinearGradient style={styles.header} start={gradientStart} end={gradientEnd} colors={gradientColors}>
                 <Icon style={styles.icon} name={Constants.CHECK_CIRCLE} size={styles.iconSize} type={Constants.SIMPLE_ICONS} />
               </LinearGradient>
               <View style={styles.bottom}>

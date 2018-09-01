@@ -14,6 +14,11 @@ export const stylesRaw = {
     color: THEME.COLORS.WHITE,
     fontFamily: THEME.FONTS.DEFAULT
   },
+  titleWrapper: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%'
+  },
   helpModal: {
     flex: 1
   },

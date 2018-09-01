@@ -1,12 +1,13 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Text } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { InteractiveModal, PrimaryButton, SecondaryButton, TextInput } from '../../../../components/Modals'
-import { Icon } from '../../../../components/Icon/Icon.ui'
 import s from '../../../../../../locales/strings'
+import { PrimaryButton, SecondaryButton } from '../../../../components/Buttons'
+import Text from '../../../../components/FormattedText'
+import { Icon } from '../../../../components/Icon/Icon.ui'
+import { InteractiveModal, TextInput } from '../../../../components/Modals'
 
 export type Props = {
   isActive: boolean,
@@ -67,19 +68,18 @@ export class UniqueIdentifierModal extends Component<Props> {
         <InteractiveModal.Footer>
           <InteractiveModal.Row>
             <InteractiveModal.Item>
-              <PrimaryButton onPress={() => this.onConfirm()}>
-                <PrimaryButton.Text>
-                  <Text>{confirm}</Text>
-                </PrimaryButton.Text>
-              </PrimaryButton>
-            </InteractiveModal.Item>
-
-            <InteractiveModal.Item>
-              <SecondaryButton onPress={() => onCancel()}>
+              <SecondaryButton onPress={() => onCancel()} style={{ flex: -1 }}>
                 <SecondaryButton.Text>
                   <Text>{cancel}</Text>
                 </SecondaryButton.Text>
               </SecondaryButton>
+            </InteractiveModal.Item>
+            <InteractiveModal.Item>
+              <PrimaryButton onPress={() => this.onConfirm()} style={{ flex: -1 }}>
+                <PrimaryButton.Text>
+                  <Text>{confirm}</Text>
+                </PrimaryButton.Text>
+              </PrimaryButton>
             </InteractiveModal.Item>
           </InteractiveModal.Row>
         </InteractiveModal.Footer>

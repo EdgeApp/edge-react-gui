@@ -1,10 +1,10 @@
 // @flow
 
 import { combineReducers } from 'redux'
-import type { Action } from '../../../ReduxTypes.js'
 
 // ACTIONS
 import { ACCOUNT_INIT_COMPLETE } from '../../../../constants/indexConstants.js'
+import type { Action } from '../../../ReduxTypes.js'
 
 export type SpendingLimits = {
   transaction: {

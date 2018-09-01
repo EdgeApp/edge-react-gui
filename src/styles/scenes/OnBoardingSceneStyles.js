@@ -1,8 +1,7 @@
 // @flow
 
 import THEME from '../../theme/variables/airbitz'
-import { PLATFORM } from '../../theme/variables/platform'
-import {PagingWithDotStyles} from '../components/PagingWithDotStyles'
+import { PagingWithDotStyles } from '../components/PagingWithDotStyles'
 
 const OnBoardingSceneStyles = {
   /* modalContainer: {
@@ -11,10 +10,10 @@ const OnBoardingSceneStyles = {
     zIndex: 1,
     elevation: 1
   }, */
-  modalContainer: {
+  mainContainer: {
     alignItems: 'center',
     position: 'absolute',
-    top: PLATFORM.deviceHeight * 1 / 8,
+    top: 0,
     left: 0,
     right: 0,
     width: '100%',
@@ -32,31 +31,49 @@ const OnBoardingSceneStyles = {
       height: 20
     }
   },
-  wrapper: {
-  },
+  wrapper: {},
   slideContainer: {
     width: '100%',
     height: '100%',
     flexDirection: 'row',
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
-  buttonContainer: {
-    position: 'absolute',
-    justifyContent: 'center',
+  slideContainer2: {
+    width: '100%',
+    height: '100%',
     flexDirection: 'row',
+    backgroundColor: THEME.COLORS.ACCENT_MINT
+  },
+  buttonContainerRow: {
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    flexDirection: 'column',
     width: '100%',
     height: THEME.BUTTONS.HEIGHT,
-    top: '84%'
+    top: '82%'
+  },
+  buttonContainer: {
+    width: '50%',
+    height: THEME.BUTTONS.HEIGHT
   },
   buttonText: {
     color: THEME.COLORS.WHITE,
     fontSize: 16
   },
-  shim: {
-    width: '5%'
-  },
   button: {
-    width: '40%'
+    width: '30%'
+  },
+  textOnlyButton: {
+    width: '20%'
+  },
+  textOnlyContainer: {
+    position: 'absolute',
+    alignItems: 'flex-end',
+    flexDirection: 'column',
+    width: '100%',
+    height: THEME.BUTTONS.HEIGHT,
+    top: '3%'
   }
 }
 

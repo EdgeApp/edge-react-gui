@@ -2,36 +2,39 @@
 
 import { connect } from 'react-redux'
 
-import Scan from './Scan.ui'
-import type { Dispatch, State } from '../../../ReduxTypes'
 import { getCameraPermission } from '../../../../reducers/permissions/selectors'
-import { toggleScanToWalletListModal } from '../../components/WalletListModal/action'
+import type { Dispatch, State } from '../../../ReduxTypes'
+import { selectWalletFromModal } from '../../Wallets/action.js'
 import {
-  toggleAddressModal,
-  toggleEnableTorch,
-  qrCodeScanned,
-  legacyAddressModalContinueButtonPressed,
-  legacyAddressModalCancelButtonPressed,
+  addressModalCancelButtonPressed,
   addressModalDoneButtonPressed,
-  addressModalCancelButtonPressed
+  legacyAddressModalCancelButtonPressed,
+  legacyAddressModalContinueButtonPressed,
+  qrCodeScanned,
+  toggleAddressModal,
+  toggleEnableTorch
 } from './action'
+import Scan from './Scan.ui'
 
 const mapStateToProps = (state: State) => ({
   cameraPermission: getCameraPermission(state),
   torchEnabled: state.ui.scenes.scan.torchEnabled,
   scanEnabled: state.ui.scenes.scan.scanEnabled,
-  showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility
+  showToWalletModal: state.ui.scenes.walletListModal.walletListModalVisible
 })
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   qrCodeScanned: data => dispatch(qrCodeScanned(data)),
   toggleEnableTorch: () => dispatch(toggleEnableTorch()),
   toggleAddressModal: () => dispatch(toggleAddressModal()),
-  toggleScanToWalletListModal: () => dispatch(toggleScanToWalletListModal()),
   legacyAddressModalContinueButtonPressed: () => dispatch(legacyAddressModalContinueButtonPressed()),
   legacyAddressModalCancelButtonPressed: () => dispatch(legacyAddressModalCancelButtonPressed()),
   addressModalDoneButtonPressed: data => dispatch(addressModalDoneButtonPressed(data)),
-  addressModalCancelButtonPressed: () => dispatch(addressModalCancelButtonPressed())
+  addressModalCancelButtonPressed: () => dispatch(addressModalCancelButtonPressed()),
+  onSelectWallet: (walletId: string, currencyCode: string) => dispatch(selectWalletFromModal(walletId, currencyCode))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Scan)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Scan)

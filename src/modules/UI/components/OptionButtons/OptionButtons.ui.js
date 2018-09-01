@@ -1,11 +1,12 @@
 // @flow
 
 import React, { Component } from 'react'
-import { TouchableHighlight, View } from 'react-native'
+import { View } from 'react-native'
 
 import s from '../../../../locales/strings.js'
-import T from '../FormattedText/FormattedText.ui'
-import styles from './style'
+import { PrimaryButton, SecondaryButton } from '../Buttons'
+import { InteractiveModal } from '../Modals/InteractiveModal/InteractiveModal.ui'
+import styles from './style.js'
 
 type Props = {
   positiveText: string,
@@ -17,17 +18,17 @@ export default class OptionButtons extends Component<Props> {
   render () {
     return (
       <View style={[styles.buttonsWrap]}>
-        <TouchableHighlight style={[styles.cancelButtonWrap, styles.stylizedButton]} onPress={this.props.onNegative}>
-          <View style={styles.stylizedButtonTextWrap}>
-            <T style={[styles.cancelButton, styles.stylizedButtonText]}>{s.strings.string_cancel_cap}</T>
-          </View>
-        </TouchableHighlight>
+        <InteractiveModal.Item>
+          <SecondaryButton onPress={this.props.onNegative}>
+            <SecondaryButton.Text>{s.strings.string_cancel_cap}</SecondaryButton.Text>
+          </SecondaryButton>
+        </InteractiveModal.Item>
 
-        <TouchableHighlight style={[styles.doneButtonWrap, styles.stylizedButton]} onPress={this.props.onPositive}>
-          <View style={styles.stylizedButtonTextWrap}>
-            <T style={[styles.doneButton, styles.stylizedButtonText]}>{this.props.positiveText}</T>
-          </View>
-        </TouchableHighlight>
+        <InteractiveModal.Item>
+          <PrimaryButton onPress={this.props.onPositive}>
+            <PrimaryButton.Text>{this.props.positiveText}</PrimaryButton.Text>
+          </PrimaryButton>
+        </InteractiveModal.Item>
       </View>
     )
   }

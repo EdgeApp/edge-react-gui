@@ -1,8 +1,7 @@
 // @flow
 
 import type { Action } from '../../../../../ReduxTypes.js'
-
-import { ACTIVATED, DEACTIVATED, UNIQUE_IDENTIFIER_CHANGED, RESET } from './UniqueIdentifierModalActions.js'
+import { ACTIVATED, DEACTIVATED, RESET, UNIQUE_IDENTIFIER_CHANGED } from './UniqueIdentifierModalActions.js'
 
 export type State = {
   isActive: boolean,

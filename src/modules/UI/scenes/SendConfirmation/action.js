@@ -1,29 +1,28 @@
 // @flow
 
 import { bns } from 'biggystring'
-import type { EdgeMetadata, EdgeParsedUri, EdgeTransaction, EdgeSpendInfo } from 'edge-core-js'
+import type { EdgeMetadata, EdgeParsedUri, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import { OPEN_AB_ALERT, SEND_CONFIRMATION } from '../../../../constants/indexConstants'
+import s from '../../../../locales/strings.js'
+import { checkPin } from '../../../Core/Account/api.js'
 import { getAccount, getWallet } from '../../../Core/selectors.js'
 import {
   broadcastTransaction,
   getMaxSpendable,
-  makeSpend,
-  saveTransaction,
-  signTransaction,
   getPaymentProtocolInfo,
-  makeSpendInfo
+  makeSpend,
+  makeSpendInfo,
+  saveTransaction,
+  signTransaction
 } from '../../../Core/Wallets/api.js'
 import type { Dispatch, GetState } from '../../../ReduxTypes'
 import { openABAlert } from '../../components/ABAlert/action'
 import { getSelectedWalletId } from '../../selectors.js'
-import { getSpendInfo, getTransaction, getAuthRequired } from './selectors'
+import { getAuthRequired, getSpendInfo, getTransaction } from './selectors'
 import type { AuthType, GuiMakeSpendInfo } from './selectors'
-import { checkPin } from '../../../Core/Account/api.js'
-
-import s from '../../../../locales/strings.js'
 
 const PREFIX = 'UI/SendConfimation/'
 

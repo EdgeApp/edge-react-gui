@@ -1,8 +1,8 @@
 /* globals describe it expect */
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-import { spendingLimits, initialState, newSpendingLimits } from './SpendingLimitsReducer.js'
 import { ACCOUNT_INIT_COMPLETE } from '../../../../constants/indexConstants.js'
+import { initialState, newSpendingLimits, spendingLimits } from './SpendingLimitsReducer.js'
 
 describe('spendingLimits', () => {
   it('should render initialState', () => {

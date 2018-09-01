@@ -1,8 +1,8 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
+import slowlog from 'react-native-slowlog'
 
 type Props = {
   exchangeRate: string,

@@ -1,17 +1,17 @@
 // @flow
 
+import { equals } from 'ramda'
 import React, { Component } from 'react'
 import { ActivityIndicator, Text } from 'react-native'
-import { equals } from 'ramda'
 
 import * as Constants from '../../../../constants/indexConstants.js'
 import s from '../../../../locales/strings.js'
+import type { PasswordReminder } from '../../../../types.js'
+import { SecondaryButton, TertiaryButton } from '../Buttons'
 import { Icon } from '../Icon/Icon.ui'
-
-import { InteractiveModal, SecondaryButton, TertiaryButton } from '../Modals'
+import { InteractiveModal } from '../Modals'
 import { PasswordInput } from './components/PasswordInput.ui.js'
 import { styles } from './styles.js'
-import type { PasswordReminder } from '../../../../types.js'
 
 type Props = {
   status: 'IS_CHECKING' | 'VERIFIED' | 'INVALID' | null,
@@ -35,7 +35,7 @@ export class PasswordReminderModal extends Component<Props, State> {
     this.state = this.initialState()
   }
 
-  componentWillReceiveProps (nextProps: Props) {
+  UNSAFE_componentWillReceiveProps (nextProps: Props) {
     if (nextProps.loginStatus && !equals(this.props.passwordReminder, nextProps.passwordReminder)) {
       nextProps.setPasswordReminder(nextProps.passwordReminder)
     }
@@ -68,7 +68,7 @@ export class PasswordReminderModal extends Component<Props, State> {
         <InteractiveModal.Footer>
           <InteractiveModal.Row>
             <InteractiveModal.Item>
-              <TertiaryButton onPress={this.onSubmit} disabled={isChecking}>
+              <TertiaryButton onPress={this.onSubmit} disabled={isChecking} style={{ flex: -1 }}>
                 {isChecking ? <ActivityIndicator /> : <TertiaryButton.Text>{s.strings.password_reminder_check_password}</TertiaryButton.Text>}
               </TertiaryButton>
             </InteractiveModal.Item>
@@ -76,7 +76,7 @@ export class PasswordReminderModal extends Component<Props, State> {
 
           <InteractiveModal.Row>
             <InteractiveModal.Item>
-              <TertiaryButton onPress={this.onRequestChangePassword} disabled={isChecking}>
+              <TertiaryButton onPress={this.onRequestChangePassword} disabled={isChecking} style={{ flex: -1 }}>
                 <TertiaryButton.Text>{s.strings.password_reminder_forgot_password}</TertiaryButton.Text>
               </TertiaryButton>
             </InteractiveModal.Item>
@@ -84,7 +84,7 @@ export class PasswordReminderModal extends Component<Props, State> {
 
           <InteractiveModal.Row>
             <InteractiveModal.Item>
-              <SecondaryButton onPress={this.onPostpone} disabled={isChecking}>
+              <SecondaryButton onPress={this.onPostpone} disabled={isChecking} style={{ flex: -1 }}>
                 <SecondaryButton.Text>{s.strings.password_reminder_postpone}</SecondaryButton.Text>
               </SecondaryButton>
             </InteractiveModal.Item>

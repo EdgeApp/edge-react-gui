@@ -1,8 +1,11 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
 /* globals jest */
-
+jest.mock('react-native-share', () => 'RNShare')
+jest.mock('react-native-device-info', () => ({ getDeviceLocale: jest.fn() }))
+jest.mock('react-native-share', () => 'RNShare')
 jest.mock('mobx-react/native', () => require('mobx-react/custom'))
+jest.mock('react-native-qrcode', () => 'QRCode')
 jest.mock('Linking', () => {
   return {
     addEventListener: jest.fn(),

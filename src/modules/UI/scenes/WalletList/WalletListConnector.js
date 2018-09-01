@@ -7,12 +7,7 @@ import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import type { Dispatch, State } from '../../../ReduxTypes'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors'
-import {
-  updateActiveWalletsOrder,
-  updateArchivedWalletsOrder,
-  toggleAccountBalanceVisibility,
-  toggleWalletFiatBalanceVisibility
-} from './action'
+import { toggleAccountBalanceVisibility, toggleWalletFiatBalanceVisibility, updateActiveWalletsOrder, updateArchivedWalletsOrder } from './action'
 import { walletRowOption } from './components/WalletOptions/action.js'
 import WalletList from './WalletList.ui'
 
@@ -31,8 +26,6 @@ const mapStateToProps = (state: State) => {
   const dimensions = state.ui.scenes.dimensions
   const customTokens = state.ui.settings.customTokens
   const otpResetPending = SETTINGS_SELECTORS.getOtpResetPending(state)
-  const progressPercentage = UI_SELECTORS.getWalletLoadingPercent(state)
-  const showOnBoarding = SETTINGS_SELECTORS.runOnBoarding(state)
   const isAccountBalanceVisible = state.ui.settings.isAccountBalanceVisible
   const isWalletFiatBalanceVisible = state.ui.settings.isWalletFiatBalanceVisible
   const currentState = state
@@ -51,8 +44,6 @@ const mapStateToProps = (state: State) => {
     dimensions,
     customTokens,
     otpResetPending,
-    progressPercentage,
-    showOnBoarding,
     isAccountBalanceVisible,
     isWalletFiatBalanceVisible,
     currentState
@@ -70,4 +61,7 @@ const mapDispatchToProps = (dispatch: Dispatch, state: State) => ({
   toggleWalletFiatBalanceVisibility: () => dispatch(toggleWalletFiatBalanceVisibility())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(WalletList)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(WalletList)

@@ -3,14 +3,14 @@
 /* globals test describe expect */
 
 import {
-  passwordReminderModalReducer as uut,
-  checkPasswordStart,
-  checkPasswordSuccess,
-  checkPasswordFail,
-  initialState,
+  INVALID,
   IS_CHECKING,
   VERIFIED,
-  INVALID
+  checkPasswordFail,
+  checkPasswordStart,
+  checkPasswordSuccess,
+  initialState,
+  passwordReminderModalReducer as uut
 } from './indexPasswordReminderModal.js'
 
 describe('PasswordReminderModal', () => {

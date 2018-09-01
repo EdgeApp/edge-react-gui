@@ -3,8 +3,8 @@
 import React, { Component } from 'react'
 import type { Node } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-
 import { default as Modal } from 'react-native-modal'
+
 import { styles } from './styles.js'
 
 // CONTAINER /////////////////////////////////////////////////////////////////////////////

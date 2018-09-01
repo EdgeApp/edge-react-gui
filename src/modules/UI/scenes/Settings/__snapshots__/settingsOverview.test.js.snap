@@ -9,9 +9,10 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
       }
     }
   />
-  <ScrollViewMock
+  <ScrollView
     style={
       Object {
+        "backgroundColor": "#FFFFFF",
         "height": "100%",
         "position": "relative",
       }
@@ -29,14 +30,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         ]
       }
     >
-      <View
+      <Component
         style={
           Array [
             undefined,
           ]
         }
       >
-        <View
+        <Component
           style={
             Object {
               "flexDirection": "row",
@@ -70,8 +71,8 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             : 
             
           </FormattedText>
-        </View>
-      </View>
+        </Component>
+      </Component>
     </Gradient>
     <RowRoute
       disabled={false}
@@ -169,14 +170,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         ]
       }
     >
-      <View
+      <Component
         style={
           Array [
             undefined,
           ]
         }
       >
-        <View
+        <Component
           style={
             Object {
               "flexDirection": "row",
@@ -208,10 +209,10 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             Options
           </FormattedText>
-        </View>
-      </View>
+        </Component>
+      </Component>
     </Gradient>
-    <View>
+    <Component>
       <RowRoute
         disabled={false}
         leftText="Spending Limits"
@@ -291,7 +292,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         onPress={[Function]}
         rightText=""
       />
-      <View
+      <Component
         style={
           Array [
             Object {
@@ -303,11 +304,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         }
       >
         <PrimaryButton
-          onPressFunction={[Function]}
-          text="Debug"
-        />
-      </View>
-      <View
+          onPress={[Function]}
+        >
+          <Text>
+            Debug
+          </Text>
+        </PrimaryButton>
+      </Component>
+      <Component
         style={
           Object {
             "flex": 1,
@@ -315,94 +319,94 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           }
         }
       />
-    </View>
-    <RestoreWalletsModal
-      isActive={false}
-      onBackButtonPress={[Function]}
-      onBackdropPress={[Function]}
-      onCancel={[Function]}
-      onConfirm={[Function]}
-    />
-    <AutoLogoutModal
-      autoLogoutTimeInMinutes={0}
-      onCancel={[Function]}
-      onDone={[Function]}
-      showModal={false}
-    />
-    <SendLogsModal
-      onCancel={[Function]}
-      onDone={[Function]}
-      sendLogsStatus=""
-      showModal={false}
-    />
-    <ConfirmPasswordModal
-      error=""
-      headerText=""
-      onCancel={[Function]}
-      onDone={[Function]}
-      showModal={false}
-      style={
-        Object {
+    </Component>
+  </ScrollView>
+  <RestoreWalletsModal
+    isActive={false}
+    onBackButtonPress={[Function]}
+    onBackdropPress={[Function]}
+    onCancel={[Function]}
+    onConfirm={[Function]}
+  />
+  <AutoLogoutModal
+    autoLogoutTimeInMinutes={0}
+    onCancel={[Function]}
+    onDone={[Function]}
+    showModal={false}
+  />
+  <SendLogsModal
+    onCancel={[Function]}
+    onDone={[Function]}
+    sendLogsStatus=""
+    showModal={false}
+  />
+  <ConfirmPasswordModal
+    error=""
+    headerText=""
+    onCancel={[Function]}
+    onDone={[Function]}
+    showModal={false}
+    style={
+      Object {
+        "bottom": Object {
+          "width": "100%",
+        },
+        "bottomActivity": Object {
+          "alignItems": "center",
+          "justifyContent": "space-around",
+          "width": "100%",
+        },
+        "icon": Object {
+          "alignItems": "center",
+          "backgroundColor": "transparent",
+          "color": "#0E4B75",
+          "justifyContent": "center",
+          "position": "relative",
+          "textAlign": "center",
+        },
+        "iconSize": 48,
+        "middle": Object {
           "bottom": Object {
+            "flex": 4,
+            "flexDirection": "row",
+          },
+          "bottomLeft": Object {
+            "alignItems": "center",
+            "flex": 2,
+            "flexDirection": "column",
+          },
+          "bottomRight": Object {
+            "flex": 8,
+          },
+          "clearShim": Object {
+            "height": 20,
+          },
+          "container": Object {
             "width": "100%",
           },
-          "bottomActivity": Object {
+          "shim": Object {
+            "backgroundColor": "#FFFFFF",
+            "height": 10,
+          },
+          "text": Object {
+            "color": "#4A5157",
+          },
+          "top": Object {
+            "flex": 4,
+            "flexDirection": "row",
+          },
+          "topLeft": Object {
             "alignItems": "center",
-            "justifyContent": "space-around",
-            "width": "100%",
+            "flex": 2,
+            "flexDirection": "column",
           },
-          "icon": Object {
-            "alignItems": "center",
-            "backgroundColor": "transparent",
-            "color": "#0E4B75",
-            "justifyContent": "center",
-            "position": "relative",
-            "textAlign": "center",
+          "topRight": Object {
+            "flex": 8,
           },
-          "iconSize": 48,
-          "middle": Object {
-            "bottom": Object {
-              "flex": 4,
-              "flexDirection": "row",
-            },
-            "bottomLeft": Object {
-              "alignItems": "center",
-              "flex": 2,
-              "flexDirection": "column",
-            },
-            "bottomRight": Object {
-              "flex": 8,
-            },
-            "clearShim": Object {
-              "height": 20,
-            },
-            "container": Object {
-              "width": "100%",
-            },
-            "shim": Object {
-              "backgroundColor": "#FFFFFF",
-              "height": 10,
-            },
-            "text": Object {
-              "color": "#4A5157",
-            },
-            "top": Object {
-              "flex": 4,
-              "flexDirection": "row",
-            },
-            "topLeft": Object {
-              "alignItems": "center",
-              "flex": 2,
-              "flexDirection": "column",
-            },
-            "topRight": Object {
-              "flex": 8,
-            },
-          },
-        }
+        },
       }
-    />
-  </ScrollViewMock>
+    }
+  />
 </SafeAreaViewComponent>
 `;
 
@@ -415,9 +419,10 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
       }
     }
   />
-  <ScrollViewMock
+  <ScrollView
     style={
       Object {
+        "backgroundColor": "#FFFFFF",
         "height": "100%",
         "position": "relative",
       }
@@ -435,14 +440,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         ]
       }
     >
-      <View
+      <Component
         style={
           Array [
             undefined,
           ]
         }
       >
-        <View
+        <Component
           style={
             Object {
               "flexDirection": "row",
@@ -476,8 +481,8 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             : 
             
           </FormattedText>
-        </View>
-      </View>
+        </Component>
+      </Component>
     </Gradient>
     <RowRoute
       disabled={false}
@@ -575,14 +580,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         ]
       }
     >
-      <View
+      <Component
         style={
           Array [
             undefined,
           ]
         }
       >
-        <View
+        <Component
           style={
             Object {
               "flexDirection": "row",
@@ -614,10 +619,10 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             Options
           </FormattedText>
-        </View>
-      </View>
+        </Component>
+      </Component>
     </Gradient>
-    <View>
+    <Component>
       <RowRoute
         disabled={false}
         leftText="Spending Limits"
@@ -697,7 +702,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         onPress={[Function]}
         rightText=""
       />
-      <View
+      <Component
         style={
           Array [
             Object {
@@ -709,11 +714,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         }
       >
         <PrimaryButton
-          onPressFunction={[Function]}
-          text="Debug"
-        />
-      </View>
-      <View
+          onPress={[Function]}
+        >
+          <Text>
+            Debug
+          </Text>
+        </PrimaryButton>
+      </Component>
+      <Component
         style={
           Object {
             "flex": 1,
@@ -721,93 +729,93 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           }
         }
       />
-    </View>
-    <RestoreWalletsModal
-      isActive={false}
-      onBackButtonPress={[Function]}
-      onBackdropPress={[Function]}
-      onCancel={[Function]}
-      onConfirm={[Function]}
-    />
-    <AutoLogoutModal
-      autoLogoutTimeInMinutes={0}
-      onCancel={[Function]}
-      onDone={[Function]}
-      showModal={false}
-    />
-    <SendLogsModal
-      onCancel={[Function]}
-      onDone={[Function]}
-      sendLogsStatus=""
-      showModal={false}
-    />
-    <ConfirmPasswordModal
-      error=""
-      headerText=""
-      onCancel={[Function]}
-      onDone={[Function]}
-      showModal={false}
-      style={
-        Object {
+    </Component>
+  </ScrollView>
+  <RestoreWalletsModal
+    isActive={false}
+    onBackButtonPress={[Function]}
+    onBackdropPress={[Function]}
+    onCancel={[Function]}
+    onConfirm={[Function]}
+  />
+  <AutoLogoutModal
+    autoLogoutTimeInMinutes={0}
+    onCancel={[Function]}
+    onDone={[Function]}
+    showModal={false}
+  />
+  <SendLogsModal
+    onCancel={[Function]}
+    onDone={[Function]}
+    sendLogsStatus=""
+    showModal={false}
+  />
+  <ConfirmPasswordModal
+    error=""
+    headerText=""
+    onCancel={[Function]}
+    onDone={[Function]}
+    showModal={false}
+    style={
+      Object {
+        "bottom": Object {
+          "width": "100%",
+        },
+        "bottomActivity": Object {
+          "alignItems": "center",
+          "justifyContent": "space-around",
+          "width": "100%",
+        },
+        "icon": Object {
+          "alignItems": "center",
+          "backgroundColor": "transparent",
+          "color": "#0E4B75",
+          "justifyContent": "center",
+          "position": "relative",
+          "textAlign": "center",
+        },
+        "iconSize": 48,
+        "middle": Object {
           "bottom": Object {
+            "flex": 4,
+            "flexDirection": "row",
+          },
+          "bottomLeft": Object {
+            "alignItems": "center",
+            "flex": 2,
+            "flexDirection": "column",
+          },
+          "bottomRight": Object {
+            "flex": 8,
+          },
+          "clearShim": Object {
+            "height": 20,
+          },
+          "container": Object {
             "width": "100%",
           },
-          "bottomActivity": Object {
+          "shim": Object {
+            "backgroundColor": "#FFFFFF",
+            "height": 10,
+          },
+          "text": Object {
+            "color": "#4A5157",
+          },
+          "top": Object {
+            "flex": 4,
+            "flexDirection": "row",
+          },
+          "topLeft": Object {
             "alignItems": "center",
-            "justifyContent": "space-around",
-            "width": "100%",
+            "flex": 2,
+            "flexDirection": "column",
           },
-          "icon": Object {
-            "alignItems": "center",
-            "backgroundColor": "transparent",
-            "color": "#0E4B75",
-            "justifyContent": "center",
-            "position": "relative",
-            "textAlign": "center",
+          "topRight": Object {
+            "flex": 8,
           },
-          "iconSize": 48,
-          "middle": Object {
-            "bottom": Object {
-              "flex": 4,
-              "flexDirection": "row",
-            },
-            "bottomLeft": Object {
-              "alignItems": "center",
-              "flex": 2,
-              "flexDirection": "column",
-            },
-            "bottomRight": Object {
-              "flex": 8,
-            },
-            "clearShim": Object {
-              "height": 20,
-            },
-            "container": Object {
-              "width": "100%",
-            },
-            "shim": Object {
-              "backgroundColor": "#FFFFFF",
-              "height": 10,
-            },
-            "text": Object {
-              "color": "#4A5157",
-            },
-            "top": Object {
-              "flex": 4,
-              "flexDirection": "row",
-            },
-            "topLeft": Object {
-              "alignItems": "center",
-              "flex": 2,
-              "flexDirection": "column",
-            },
-            "topRight": Object {
-              "flex": 8,
-            },
-          },
-        }
+        },
       }
-    />
-  </ScrollViewMock>
+    }
+  />
 </SafeAreaViewComponent>
 `;

@@ -1,12 +1,11 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import { bns } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeDenomination, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Animated, Easing, Keyboard, ScrollView, TextInput, TouchableOpacity, View } from 'react-native'
+import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
-import { AdvancedTransactionDetailsModal } from './components/AdvancedDetailsModal/AdvancedTransactionDetailsModal.ui.js'
 
 import s from '../../../../locales/strings.js'
 import THEME from '../../../../theme/variables/airbitz'
@@ -18,6 +17,7 @@ import Gradient from '../../components/Gradient/Gradient.ui'
 import PayeeIcon from '../../components/PayeeIcon/PayeeIcon.ui.js'
 import SafeAreaView from '../../components/SafeAreaView'
 import AmountArea from './AmountArea.ui.js'
+import { AdvancedTransactionDetailsModal } from './components/AdvancedDetailsModal/AdvancedTransactionDetailsModal.ui.js'
 import ContactSearchResults from './ContactSearchResults.ui.js'
 import styles, { styles as styleRaw } from './style'
 import SubCategorySelect from './SubCategorySelect.ui.js'
@@ -427,7 +427,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     this.props.getSubcategories()
   }
 
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     // check if metaToken, is not then do not set walletDefaultProps to anything other than initial blank values
     if (UTILS.isCryptoParentCurrency(this.guiWallet, this.props.edgeTransaction.currencyCode)) {
       this.setState({ walletDefaultDenomProps: UTILS.getWalletDefaultDenomProps(this.guiWallet, this.props.settings) })
@@ -609,6 +609,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                   />
                 </View>
               </View>
+              <View style={{ height: 300 }} />
             </ScrollView>
           </View>
         </View>

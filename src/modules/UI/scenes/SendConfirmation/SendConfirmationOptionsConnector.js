@@ -8,8 +8,8 @@ import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import type { Dispatch, State } from '../../../ReduxTypes'
 import { openHelpModal } from '../../components/HelpModal/actions.js'
 import { updateMaxSpend } from './action'
-import SendConfirmationOptions from './SendConfirmationOptions'
 import { activated } from './components/UniqueIdentifierModal/UniqueIdentifierModalActions.js'
+import SendConfirmationOptions from './SendConfirmationOptions'
 
 const mapStateToProps = (state: State) => {
   const sourceWalletId = state.ui.wallets.selectedWalletId
@@ -30,4 +30,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   uniqueIdentifierModalActivated: () => dispatch(activated())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(SendConfirmationOptions)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SendConfirmationOptions)

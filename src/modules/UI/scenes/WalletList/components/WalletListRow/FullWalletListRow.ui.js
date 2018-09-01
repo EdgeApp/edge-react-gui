@@ -1,25 +1,18 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import { bns } from 'biggystring'
 import _ from 'lodash'
 import React, { Component } from 'react'
-
 import { ActivityIndicator, Image, Platform, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import slowlog from 'react-native-slowlog'
 import { connect } from 'react-redux'
+
 import { intl } from '../../../../../../locales/intl'
 import s from '../../../../../../locales/strings.js'
 import type { CustomTokenInfo, GuiDenomination } from '../../../../../../types'
-import {
-  cutOffText,
-  decimalOrZero,
-  truncateDecimals,
-  getObjectDiff,
-  getFiatSymbol,
-  calculateFiatFromCryptoCurrency
-} from '../../../../../utils.js'
 import type { State } from '../../../../../ReduxTypes.js'
+import { calculateSettingsFiatFromCrypto, cutOffText, decimalOrZero, getFiatSymbol, getObjectDiff, truncateDecimals } from '../../../../../utils.js'
 import T from '../../../../components/FormattedText'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
 import { getEnabledTokens, selectWallet } from '../../../../Wallets/action.js'
@@ -41,23 +34,14 @@ export default class FullWalletListRow extends Component<OwnProps> {
 
   shouldComponentUpdate (nextProps: OwnProps) {
     const diffElement = getObjectDiff(this.props, nextProps, {
-      data: true, item: true
+      data: true,
+      item: true
     })
     return !!diffElement
   }
 
   render () {
-    return (
-      <View>
-        {this.props.data.item.id ? (
-          <FullWalletListRowConnected
-            data={this.props.data}
-          />
-        ) : (
-          <FullListRowEmptyData />
-        )}
-      </View>
-    )
+    return <View>{this.props.data.item.id ? <FullWalletListRowConnected data={this.props.data} /> : <FullListRowEmptyData />}</View>
   }
 }
 
@@ -89,12 +73,13 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
 
   shouldComponentUpdate (nextProps) {
     const diffElement = getObjectDiff(this.props, nextProps, {
-      data: true, item: true
+      data: true,
+      item: true
     })
     return !!diffElement
   }
 
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     const walletId = this.props.data.item.id
     this.props.getEnabledTokensList(walletId)
   }
@@ -150,7 +135,7 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
                   <View style={[styles.rowNameTextWrapIOS]}>
                     <T style={[styles.rowNameText]} numberOfLines={1}>
                       {symbolImageDarkMono && (
-                        <Image style={[styles.rowCurrencyLogoIOS]} transform={[{ translateY: 6 }]} source={{ uri: symbolImageDarkMono }} />
+                        <Image style={[styles.rowCurrencyLogoIOS]} transform={[{ translateY: 3 }]} source={{ uri: symbolImageDarkMono }} />
                       )}{' '}
                       {cutOffText(name, 34)}
                     </T>
@@ -184,11 +169,7 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
                   </View>
                 </View>
               )}
-              <WalletListRowOptions
-                currencyCode={walletData.currencyCode}
-                executeWalletRowOption={walletData.executeWalletRowOption}
-                walletKey={id}
-              />
+              <WalletListRowOptions currencyCode={walletData.currencyCode} executeWalletRowOption={walletData.executeWalletRowOption} walletKey={id} />
             </View>
           </TouchableHighlight>
           {this.renderTokenRow(id, enabledNativeBalances)}
@@ -202,13 +183,15 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
     for (const property in metaTokenBalances) {
       if (metaTokenBalances.hasOwnProperty(property)) {
         if (property !== this.props.data.item.currencyCode) {
-          tokens.push(<WalletListTokenRow
-            parentId={parentId}
-            currencyCode={property}
-            key={property}
-            fiatSymbol={this.props.fiatSymbol}
-            balance={metaTokenBalances[property]}
-          />)
+          tokens.push(
+            <WalletListTokenRow
+              parentId={parentId}
+              currencyCode={property}
+              key={property}
+              fiatSymbol={this.props.fiatSymbol}
+              balance={metaTokenBalances[property]}
+            />
+          )
         }
       }
     }
@@ -222,7 +205,7 @@ const mapStateToProps = (state: State, ownProps: FullWalletListRowLoadedOwnProps
   const fiatSymbol = getFiatSymbol(settings.defaultFiat) || ''
   const customTokens = state.ui.settings.customTokens
   const isWalletFiatBalanceVisible = state.ui.settings.isWalletFiatBalanceVisible
-  const fiatBalance = calculateFiatFromCryptoCurrency(ownProps.data.item, state)
+  const fiatBalance = calculateSettingsFiatFromCrypto(ownProps.data.item, state)
   return {
     displayDenomination,
     exchangeDenomination,
@@ -238,7 +221,10 @@ const mapDispatchToProps = dispatch => ({
 })
 
 // $FlowFixMe
-const FullWalletListRowConnected = connect(mapStateToProps, mapDispatchToProps)(FullWalletListRowLoadedComponent)
+const FullWalletListRowConnected = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(FullWalletListRowLoadedComponent)
 
 class FullListRowEmptyData extends Component<any> {
   render () {

@@ -4,21 +4,19 @@ import React, { Component } from 'react'
 import { Image, Text, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
+import buysellIcon from '../../../../../assets/images/sidenav/buysell.png'
 import exchangeIcon from '../../../../../assets/images/sidenav/exchange.png'
+import logoutImage from '../../../../../assets/images/sidenav/logout.png'
 import receiveIcon from '../../../../../assets/images/sidenav/receive.png'
 import scanIcon from '../../../../../assets/images/sidenav/scan.png'
+import settings from '../../../../../assets/images/sidenav/settings.png'
 import sweepIcon from '../../../../../assets/images/sidenav/sweep.png'
 import walletIcon from '../../../../../assets/images/sidenav/wallets.png'
-import buysellIcon from '../../../../../assets/images/sidenav/buysell.png'
-
-import logoutImage from '../../../../../assets/images/sidenav/logout.png'
-import settings from '../../../../../assets/images/sidenav/settings.png'
-
 import s from '../../../../../locales/strings.js'
 import styles from '../style'
-import UserList from './UserListConnector'
 import { Button } from './Button/Button.ui.js'
 import { Separator } from './Separator/Separator.ui.js'
+import UserList from './UserListConnector'
 
 const WALLETS_TEXT = s.strings.drawer_wallets
 const SCAN_TEXT = s.strings.drawer_scan_qr_send

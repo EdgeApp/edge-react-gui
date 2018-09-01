@@ -39,7 +39,7 @@ export const createCurrencyWallet = (
 
   dispatch(WALLET_ACTIONS.createWalletStart())
   // Try and get the new format param from the legacy walletType if it's mentioned
-  const [ type, format ] = walletType.split('-')
+  const [type, format] = walletType.split('-')
   return ACCOUNT_API.createCurrencyWalletRequest(account, type, {
     name: walletName,
     fiatCurrencyCode,

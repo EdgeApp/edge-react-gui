@@ -3,7 +3,6 @@
 import { connect } from 'react-redux'
 
 import type { Dispatch, State } from '../../../../ReduxTypes.js'
-
 import { PrivateKeyModal } from './PrivateKeyModal.ui.js'
 import { onPrivateKeyAccept, onPrivateKeyReject, sweepPrivateKeyReset } from './PrivateKeyModalActions.js'
 
@@ -20,5 +19,8 @@ export const mapDispatchToProps = (dispatch: Dispatch) => ({
   }
 })
 
-export const PrivateKeyModalConnector = connect(mapStateToProps, mapDispatchToProps)(PrivateKeyModal)
+export const PrivateKeyModalConnector = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PrivateKeyModal)
 export default PrivateKeyModalConnector

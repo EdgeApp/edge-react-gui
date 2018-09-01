@@ -18,4 +18,7 @@ const mapDispatchToProps = (dispatch: Function): {} => ({
   disableWalletListModalVisibility: () => dispatch(disableWalletListModalVisibility())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(WalletListModalHeader)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(WalletListModalHeader)

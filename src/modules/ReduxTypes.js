@@ -1,17 +1,16 @@
 // @flow
 
-import type { EdgeAccount, EdgeContext, EdgeCurrencyWallet, EdgeLobby, EdgeParsedUri, EdgeTransaction } from 'edge-core-js'
+import type { DiskletFolder, EdgeAccount, EdgeContext, EdgeCurrencyWallet, EdgeLobby, EdgeParsedUri, EdgeTransaction } from 'edge-core-js'
 import type { Dispatch as ReduxDispatch, Store as ReduxStore } from 'redux'
 
 import type { ContactsState } from '../reducers/contacts/contactsReducer.js'
+import type { PasswordReminderState } from '../reducers/passwordReminder/indexPasswordReminder.js'
 import type { PermissionsState } from '../reducers/permissions/permissionsReducer.js'
 import type { DeviceDimensions, GuiContact, GuiCurrencyInfo, GuiWallet, TransactionListTx } from '../types'
+import type { PasswordReminderModalState } from './UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
 import type { Permission, PermissionStatus } from './UI/permissions.js'
 import type { RequestState } from './UI/Request/reducer.js'
 import type { RequestSceneState } from './UI/scenes/Request/reducer.js'
-
-import type { PasswordReminderModalState } from './UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
-import type { PasswordReminderState } from '../reducers/passwordReminder/indexPasswordReminder.js'
 import type { SendConfirmationState } from './UI/scenes/SendConfirmation/selectors.js'
 import type { SettingsState } from './UI/Settings/reducer.js'
 
@@ -27,6 +26,7 @@ export type State = {
     account: EdgeAccount,
     context: {
       context: EdgeContext,
+      folder: DiskletFolder,
       usernames: Array<Username>,
       nextUsername: Username
     },
@@ -59,6 +59,9 @@ export type State = {
       uniqueIdentifierModal: {
         isActive: boolean,
         uniqueIdentifier: string
+      },
+      passwordRecoveryReminderModal: {
+        isVisible: boolean
       },
       scan: {
         parsedUri: EdgeParsedUri | null,
@@ -121,7 +124,7 @@ export type State = {
         walletListModalVisible: boolean
       },
       walletListModal: {
-        walletListModalVisibility: boolean
+        walletListModalVisible: boolean
       },
       createWallet: {
         isCreatingWallet: boolean

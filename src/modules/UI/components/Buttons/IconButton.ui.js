@@ -27,7 +27,7 @@ class IconButton extends Component<Props, State> {
     onPress: PropTypes.func.isRequired,
     iconType: PropTypes.string.isRequired
   }
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     this.setState({
       pressed: false
     })

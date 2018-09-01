@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`QRCode should render 1`] = `
+<Component
+  style={
+    Object {
+      "backgroundColor": "#FFFFFF",
+      "borderRadius": 4,
+      "padding": 10,
+    }
+  }
+>
+  <QRCode
+    bgColor="#FFFFFF"
+    fgColor="#25292C"
+    size={333.5}
+  />
+</Component>
+`;

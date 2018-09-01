@@ -2,8 +2,8 @@
 
 import type { EdgeLobby } from 'edge-core-js'
 
-import type { Action } from '../../modules/ReduxTypes.js'
 import * as Constants from '../../constants/indexConstants'
+import type { Action } from '../../modules/ReduxTypes.js'
 
 const initialState = {
   lobby: null,

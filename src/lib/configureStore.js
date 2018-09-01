@@ -6,11 +6,11 @@ import { applyMiddleware, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
 
 import ENV from '../../env.json'
+import errorAlert from './errorAlert'
 import loginStatusChecker from './loginStatusChecker'
+import perfLogger from './perfLogger.js'
 import rootReducer from './rootReducer'
 import soundsMiddleware from './soundsMiddleware'
-import errorAlert from './errorAlert'
-import perfLogger from './perfLogger.js'
 
 const middleware = [errorAlert, loginStatusChecker, thunk, soundsMiddleware]
 if (ENV.ENABLE_REDUX_PERF_LOGGING) middleware.push(perfLogger)

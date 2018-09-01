@@ -1,16 +1,17 @@
 // @flow
 
 import React, { Component } from 'react'
+import { Image, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import s from '../../../../../locales/strings.js'
 import { sprintf } from 'sprintf-js'
-import { TouchableWithoutFeedback, View, Image } from 'react-native'
+
+import s from '../../../../../locales/strings.js'
+import type { GuiWallet } from '../../../../../types'
 import T from '../../../components/FormattedText'
 import style from '../style.js'
-import type { GuiWallet } from '../../../../../types'
 
 export type Props = {
-  wallet: GuiWallet,
+  wallet: GuiWallet
 }
 
 export default class BuyCrypto extends Component<Props> {

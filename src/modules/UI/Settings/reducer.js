@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyPlugin } from 'edge-core-js'
+import type { EdgeCurrencyInfo } from 'edge-core-js'
 import _ from 'lodash'
 
 import * as Constants from '../../../constants/indexConstants.js'
@@ -8,6 +8,7 @@ import type { CustomTokenInfo } from '../../../types'
 import { CORE_DEFAULTS, LOCAL_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_DEFAULTS } from '../../Core/Account/settings.js'
 import { SEND_LOGS_FAILURE, SEND_LOGS_PENDING, SEND_LOGS_REQUEST, SEND_LOGS_SUCCESS } from '../../Logs/action'
 import type { Action } from '../../ReduxTypes'
+import { UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL } from '../components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalActions.js'
 import * as ADD_TOKEN_ACTION from '../scenes/AddToken/action.js'
 import * as WALLET_ACTION from '../Wallets/action'
 import * as ACTION from './action.js'
@@ -19,7 +20,7 @@ export const initialState = {
   ...CORE_DEFAULTS,
   changesLocked: true,
   plugins: {
-    arrayPlugins: [],
+    allCurrencyInfos: [],
     supportedWalletTypes: []
   },
   pinLoginEnabled: false,
@@ -28,7 +29,6 @@ export const initialState = {
   isTouchSupported: false,
   isTouchEnabled: false,
   isOtpEnabled: false,
-  showOnBoarding: false,
   otpKey: null,
   otpResetDate: null,
   otpResetPending: false,
@@ -91,10 +91,10 @@ export type SettingsState = {
   pinLoginEnabled: boolean,
   otpResetDate: ?string,
   plugins: {
-    arrayPlugins: Array<EdgeCurrencyPlugin>,
+    [pluginName: string]: EdgeCurrencyInfo,
+    allCurrencyInfos: Array<EdgeCurrencyInfo>,
     supportedWalletTypes: Array<string>
   },
-  showOnBoarding: boolean,
   confirmPasswordError: string,
   sendLogsStatus: string,
   isAccountBalanceVisible: boolean,
@@ -104,15 +104,23 @@ export type SettingsState = {
       isEnabled: boolean,
       amount: number
     }
+  },
+  passwordRecoveryRemindersShown: {
+    '20': boolean,
+    '200': boolean,
+    '2000': boolean,
+    '20000': boolean,
+    '200000': boolean
   }
 }
 
 const currencyPLuginUtil = (state, payloadData) => {
   const { plugins } = state
   const { supportedWalletTypes } = plugins
-  const { arrayPlugins } = plugins
-  const { pluginName, plugin, walletTypes } = payloadData
-  const currencyInfo = plugin.currencyInfo
+  const { allCurrencyInfos } = plugins
+  const { currencyInfo } = payloadData
+  const { pluginName, walletTypes } = currencyInfo
+
   // Build up object with all the information for the parent currency, accesible by the currencyCode
   const defaultParentCurrencyInfo = state[currencyInfo.currencyCode]
   const parentCurrencyInfo = {
@@ -153,8 +161,8 @@ const currencyPLuginUtil = (state, payloadData) => {
     ...currencyInfos,
     plugins: {
       ...plugins,
-      [pluginName]: plugin,
-      arrayPlugins: [...arrayPlugins, plugin],
+      [pluginName]: currencyInfo,
+      allCurrencyInfos: [...allCurrencyInfos, currencyInfo],
       supportedWalletTypes: [...supportedWalletTypes, ...walletTypes]
     }
   }
@@ -180,9 +188,9 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         otpMode,
         denominationKeys,
         customTokensSettings,
-        showOnBoarding,
         isAccountBalanceVisible,
-        isWalletFiatBalanceVisible
+        isWalletFiatBalanceVisible,
+        passwordRecoveryRemindersShown
       } = data
       let newState = {
         ...state,
@@ -200,10 +208,10 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         pinMode,
         pinLoginEnabled,
         otpMode,
-        showOnBoarding,
         otpResetDate: account.otpResetDate,
         isAccountBalanceVisible,
-        isWalletFiatBalanceVisible
+        isWalletFiatBalanceVisible,
+        passwordRecoveryRemindersShown
       }
       denominationKeys.forEach(key => {
         const currencyCode = key.currencyCode
@@ -517,9 +525,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     case ACTION.ADD_CURRENCY_PLUGIN: {
       return currencyPLuginUtil(state, data)
     }
-    case Constants.COMPLETE_ONBOARDING: {
-      return {...state, showOnBoarding: false}
-    }
 
     case ACTION.SET_ACCOUNT_BALANCE_VISIBILITY: {
       return {
@@ -535,6 +540,16 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
+    case UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL: {
+      const { level, wasShown } = data
+      return {
+        ...state,
+        passwordRecoveryRemindersShown: {
+          ...state.passwordRecoveryRemindersShown,
+          [level]: wasShown
+        }
+      }
+    }
     default:
       return state
   }

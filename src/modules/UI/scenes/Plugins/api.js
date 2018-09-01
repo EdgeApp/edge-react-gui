@@ -1,17 +1,18 @@
 // @flow
 
-import {Linking} from 'react-native'
-import {Actions} from 'react-native-router-flux'
 import type { EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
+import { Linking } from 'react-native'
+import { Actions } from 'react-native-router-flux'
+
 import * as WALLET_API from '../../../Core/Wallets/api'
 
-const formatWallet = (w) => ({
-  'id': w.id,
-  'name': w.name,
-  'type': w.type,
-  'currencyCode': w.currencyCode,
-  'primaryNativeBalance': w.currencyCode,
-  'fiatCurrencyCode': w.fiatCurrencyCode
+const formatWallet = w => ({
+  id: w.id,
+  name: w.name,
+  type: w.type,
+  currencyCode: w.currencyCode,
+  primaryNativeBalance: w.currencyCode,
+  fiatCurrencyCode: w.fiatCurrencyCode
 })
 
 type Context = any
@@ -74,20 +75,17 @@ export class PluginBridge {
 
   wallets (): Promise<Wallets> {
     console.log(this.context.wallets)
-    const wallets = Object.keys(this.context.wallets)
-      .map((key) => formatWallet(this.context.wallets[key]))
+    const wallets = Object.keys(this.context.wallets).map(key => formatWallet(this.context.wallets[key]))
     return Promise.resolve(wallets)
   }
 
-  getAddress (data: any): Promise<Address> {
+  async getAddress (data: any): Promise<Address> {
     const walletId = data.walletId
     const coreWallet = this.context.coreWallets[walletId]
     const currencyCode = data.currencyCode
-    return WALLET_API.getReceiveAddress(coreWallet, currencyCode)
-      .then((address) => {
-        const encodeUri = coreWallet.encodeUri(address)
-        return {encodeUri, address}
-      })
+    const address = await WALLET_API.getReceiveAddress(coreWallet, currencyCode)
+    const encodeUri = await coreWallet.encodeUri(address)
+    return { encodeUri, address }
   }
 
   finalizeReceiveRequest (data: any): Promise<boolean> {
@@ -112,39 +110,58 @@ export class PluginBridge {
   }
 
   createSpendRequest (data: any): Promise<boolean> {
-    const {toAddress, nativeAmount} = data
-    return this._spend([{
-      publicAddress: toAddress,
-      nativeAmount: nativeAmount
-    }], true, true)
+    const { toAddress, nativeAmount } = data
+    return this._spend(
+      [
+        {
+          publicAddress: toAddress,
+          nativeAmount: nativeAmount
+        }
+      ],
+      true,
+      true
+    )
   }
 
   createSpendRequest2 (data: any): Promise<boolean> {
-    const {toAddress, toAddress2, nativeAmount, nativeAmount2} = data
-    return this._spend([{
-      publicAddress: toAddress,
-      nativeAmount: nativeAmount
-    }, {
-      publicAddress: toAddress2,
-      nativeAmount: nativeAmount2
-    }], true, true)
+    const { toAddress, toAddress2, nativeAmount, nativeAmount2 } = data
+    return this._spend(
+      [
+        {
+          publicAddress: toAddress,
+          nativeAmount: nativeAmount
+        },
+        {
+          publicAddress: toAddress2,
+          nativeAmount: nativeAmount2
+        }
+      ],
+      true,
+      true
+    )
   }
 
   requestSign (data: any): Promise<boolean> {
-    const {toAddress, nativeAmount} = data
-    return this._spend([{
-      publicAddress: toAddress,
-      nativeAmount: nativeAmount
-    }], true, false)
+    const { toAddress, nativeAmount } = data
+    return this._spend(
+      [
+        {
+          publicAddress: toAddress,
+          nativeAmount: nativeAmount
+        }
+      ],
+      true,
+      false
+    )
   }
 
   broadcastTx (data: any): Promise<EdgeTransaction> {
-    const {coreWallet, rawtx} = data
+    const { coreWallet, rawtx } = data
     return WALLET_API.broadcastTransaction(coreWallet, rawtx)
   }
 
   saveTx (data: any): Promise<EdgeTransaction> {
-    const {coreWallet, signedTransaction} = data
+    const { coreWallet, signedTransaction } = data
     return WALLET_API.signTransaction(coreWallet, signedTransaction)
   }
 
@@ -159,18 +176,16 @@ export class PluginBridge {
   }
 
   writeData (data: any): Promise<boolean> {
-    const {key, value} = data
-    return this.context.folder.setItem(this.context.pluginId, key, value)
-      .then(() => {
-        return true
-      })
+    const { key, value } = data
+    return this.context.folder.setItem(this.context.pluginId, key, value).then(() => {
+      return true
+    })
   }
 
   clearData (): Promise<boolean> {
-    return this.context.folder.deletePlugin(this.context.pluginId)
-      .then(() => {
-        return true
-      })
+    return this.context.folder.deletePlugin(this.context.pluginId).then(() => {
+      return true
+    })
   }
 
   getAffiliateInfo (): Promise<any> {
@@ -178,7 +193,7 @@ export class PluginBridge {
   }
 
   get (data: any): Promise<string> {
-    const {key} = data
+    const { key } = data
     if (this.context.plugin.environment[key]) {
       return Promise.resolve(this.context.plugin.environment[key])
     } else {
@@ -192,7 +207,7 @@ export class PluginBridge {
   }
 
   showAlert (data: any): Promise<boolean> {
-    this.context.showAlert({success: data['success'], title: data['title'], message: data['message']})
+    this.context.showAlert({ success: data['success'], title: data['title'], message: data['message'] })
     return Promise.resolve(true)
   }
 
@@ -201,7 +216,7 @@ export class PluginBridge {
   }
 
   title (data: any): Promise<boolean> {
-    const {title} = data
+    const { title } = data
     this.context.renderTitle(title)
     return Promise.resolve(true)
   }

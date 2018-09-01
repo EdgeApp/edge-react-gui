@@ -1,9 +1,9 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { Text, View } from 'react-native'
 import Slider from 'react-native-slider'
+import slowlog from 'react-native-slowlog'
 
 import leftArrowImg from '../../../../assets/images/slider/keyboard-arrow-left.png'
 import s from '../../../../locales/strings.js'
@@ -47,7 +47,7 @@ export default class ABSlider extends Component<Props, State> {
     }
   }
 
-  componentWillReceiveProps (nextProps: Props) {
+  UNSAFE_componentWillReceiveProps (nextProps: Props) {
     if (nextProps.resetSlider && nextProps.forceUpdateGuiCounter !== this.state.forceUpdateGuiCounter) {
       this.setState({
         value: 10,

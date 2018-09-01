@@ -1,16 +1,17 @@
 // @flow
 
+import { Gradient, Scene } from 'edge-components'
 import React, { Component } from 'react'
 import { Switch } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
 import s from '../../../../locales/strings.js'
-import { Gradient, Scene } from 'edge-components'
+import { PrimaryButton } from '../../components/Buttons'
 import { PasswordInput } from '../../components/Modals/components/PasswordInput.ui.js'
 import { TextInput } from '../../components/Modals/components/TextInput.ui.js'
-import { PrimaryButton } from '../../components/Modals/components/PrimaryButton.ui.js'
-import styles from './styles.js'
 import SafeAreaView from '../../components/SafeAreaView/SafeAreaView.ui.js'
 import type { SpendingLimits as SpendingLimitsType } from '../../Settings/spendingLimits/SpendingLimitsReducer.js'
+import styles from './styles.js'
 
 const ENTER_YOUR_PASSWORD = s.strings.enter_your_password
 const TRANSACTION_SPENDING_LIMIT_TITLE = s.strings.spending_limits_tx_title

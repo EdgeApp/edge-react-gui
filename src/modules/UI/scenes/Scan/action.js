@@ -1,17 +1,16 @@
 // @flow
 
+import type { EdgeParsedUri } from 'edge-core-js'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import type { EdgeParsedUri } from 'edge-core-js'
 
-import { ADD_TOKEN, EDGE_LOGIN, SEND_CONFIRMATION } from '../../../../constants/indexConstants.js'
-import type { Dispatch, GetState } from '../../../ReduxTypes.js'
-import * as WALLET_API from '../../../Core/Wallets/api.js'
-import { isEdgeLogin, denominationToDecimalPlaces, noOp } from '../../../utils.js'
 import { loginWithEdge } from '../../../../actions/EdgeLoginActions.js'
-import { updateParsedURI, paymentProtocolUriReceived } from '../SendConfirmation/action.js'
+import { ADD_TOKEN, EDGE_LOGIN, SEND_CONFIRMATION } from '../../../../constants/indexConstants.js'
 import s from '../../../../locales/strings.js'
-
+import * as WALLET_API from '../../../Core/Wallets/api.js'
+import type { Dispatch, GetState } from '../../../ReduxTypes.js'
+import { denominationToDecimalPlaces, isEdgeLogin, noOp } from '../../../utils.js'
+import { paymentProtocolUriReceived, updateParsedURI } from '../SendConfirmation/action.js'
 import { activated as legacyAddressModalActivated, deactivated as legacyAddressModalDeactivated } from './LegacyAddressModal/LegacyAddressModalActions.js'
 import { activated as privateKeyModalActivated } from './PrivateKeyModal/PrivateKeyModalActions.js'
 

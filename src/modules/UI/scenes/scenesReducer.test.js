@@ -4,7 +4,6 @@
 
 import { scenes as scenesReducer } from './reducer.js'
 import { request } from './Request/reducer.js'
-
 import { initialState as SendConfirmationInitialState } from './SendConfirmation/selectors.js'
 
 test('initialState', () => {
@@ -40,8 +39,6 @@ test('initialState', () => {
     scan: {
       addressModalVisible: false,
       scanEnabled: false,
-      scanToWalletListModalVisibility: false,
-      selectedWalletListModalVisibility: false,
       torchEnabled: false,
       legacyAddressModal: {
         isActive: false
@@ -72,7 +69,6 @@ test('initialState', () => {
     transactionList: {
       searchVisible: false,
       transactions: [],
-      transactionsWalletListModalVisibility: false,
       updatingBalance: true,
       loadingTransactions: false,
       currentCurrencyCode: '',
@@ -104,6 +100,9 @@ test('initialState', () => {
     currentScene: '',
     passwordReminderModal: {
       status: null
+    },
+    passwordRecoveryReminderModal: {
+      isVisible: false
     },
     uniqueIdentifierModal: {
       isActive: false,

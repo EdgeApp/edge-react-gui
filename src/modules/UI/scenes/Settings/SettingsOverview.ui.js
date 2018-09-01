@@ -100,7 +100,7 @@ export default class SettingsOverview extends Component<Props, State> {
       })
     }
   }
-  componentWillReceiveProps (nextProps: Props) {
+  UNSAFE_componentWillReceiveProps (nextProps: Props) {
     if (nextProps.isLocked !== this.props.isLocked && this.state.showConfirmPasswordModal) {
       this.setState({ showConfirmPasswordModal: false })
       this.props.resetConfirmPasswordError({ confirmPasswordError: '' })
@@ -197,25 +197,25 @@ export default class SettingsOverview extends Component<Props, State> {
             leftText={s.strings.settings_button_change_password}
             disabled={this.props.isLocked}
             routeFunction={this._onPressChangePasswordRouting}
-            right={<Icon type={ Constants.SIMPLE_ICONS } style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
+            right={<Icon type={Constants.SIMPLE_ICONS} style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
           />
           <RowRoute
             leftText={s.strings.settings_button_pin}
             disabled={this.props.isLocked}
             routeFunction={this._onPressChangePinRouting}
-            right={<Icon type={ Constants.SIMPLE_ICONS } style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
+            right={<Icon type={Constants.SIMPLE_ICONS} style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
           />
           <RowRoute
             leftText={s.strings.settings_button_setup_two_factor}
             disabled={this.props.isLocked}
             routeFunction={this._onPressOtp}
-            right={<Icon type={ Constants.SIMPLE_ICONS } style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
+            right={<Icon type={Constants.SIMPLE_ICONS} style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
           />
           <RowRoute
             leftText={s.strings.settings_button_password_recovery}
             disabled={this.props.isLocked}
             routeFunction={this._onPressRecoverPasswordRouting}
-            right={<Icon type={ Constants.SIMPLE_ICONS } style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
+            right={<Icon type={Constants.SIMPLE_ICONS} style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
           />
 
           <Gradient style={[styles.unlockRow]}>
@@ -232,7 +232,7 @@ export default class SettingsOverview extends Component<Props, State> {
               disabled={false}
               leftText={s.strings.spending_limits}
               routeFunction={this._onPressSpendingLimits}
-              right={<Icon type={ Constants.SIMPLE_ICONS } style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
+              right={<Icon type={Constants.SIMPLE_ICONS} style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
             />
 
             <RowModal onPress={this.showAutoLogoutModal} leftText={s.strings.settings_title_auto_logoff} rightText={autoLogoutRightText} />
@@ -266,41 +266,42 @@ export default class SettingsOverview extends Component<Props, State> {
             <RowModal onPress={this.showRestoreWalletModal} leftText={s.strings.restore_wallets_modal_title} />
 
             <View style={[styles.debugArea]}>
-              <PrimaryButton text={s.strings.settings_button_debug} onPressFunction={this._onPressDebug} />
+              <PrimaryButton onPress={this._onPressDebug}>
+                <PrimaryButton.Text>{s.strings.settings_button_debug}</PrimaryButton.Text>
+              </PrimaryButton>
             </View>
 
             <View style={styles.emptyBottom} />
           </View>
-
-          <RestoreWalletsModal
-            isActive={this.state.restoreWalletsModalIsActive}
-            onConfirm={this.onConfirmRestoreWallets}
-            onCancel={this.onCancelRestoreWallets}
-            onBackButtonPress={this.onCancelRestoreWallets}
-            onBackdropPress={this.onCancelRestoreWallets}
-          />
-
-          <AutoLogoutModal
-            autoLogoutTimeInMinutes={this.state.autoLogoutTimeInMinutes}
-            showModal={this.state.showAutoLogoutModal}
-            onDone={this.onDoneAutoLogoutModal}
-            onCancel={this.onCancelAutoLogoutModal}
-          />
-          <SendLogsModal
-            showModal={this.state.showSendLogsModal}
-            sendLogsStatus={this.props.sendLogsStatus}
-            onDone={this.onDoneSendLogsModal}
-            onCancel={this.onCancelSendLogsModal}
-          />
-          <ConfirmPasswordModal
-            style={ConfirmPasswordModalStyle}
-            headerText={''}
-            error={this.props.confirmPasswordError}
-            showModal={this.state.showConfirmPasswordModal}
-            onDone={this.confirmPassword}
-            onCancel={this.hideConfirmPasswordModal}
-          />
         </ScrollView>
+        <RestoreWalletsModal
+          isActive={this.state.restoreWalletsModalIsActive}
+          onConfirm={this.onConfirmRestoreWallets}
+          onCancel={this.onCancelRestoreWallets}
+          onBackButtonPress={this.onCancelRestoreWallets}
+          onBackdropPress={this.onCancelRestoreWallets}
+        />
+
+        <AutoLogoutModal
+          autoLogoutTimeInMinutes={this.state.autoLogoutTimeInMinutes}
+          showModal={this.state.showAutoLogoutModal}
+          onDone={this.onDoneAutoLogoutModal}
+          onCancel={this.onCancelAutoLogoutModal}
+        />
+        <SendLogsModal
+          showModal={this.state.showSendLogsModal}
+          sendLogsStatus={this.props.sendLogsStatus}
+          onDone={this.onDoneSendLogsModal}
+          onCancel={this.onCancelSendLogsModal}
+        />
+        <ConfirmPasswordModal
+          style={ConfirmPasswordModalStyle}
+          headerText={''}
+          error={this.props.confirmPasswordError}
+          showModal={this.state.showConfirmPasswordModal}
+          onDone={this.confirmPassword}
+          onCancel={this.hideConfirmPasswordModal}
+        />
       </SafeAreaView>
     )
   }

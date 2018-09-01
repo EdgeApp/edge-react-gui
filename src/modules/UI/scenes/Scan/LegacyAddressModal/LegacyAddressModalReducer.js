@@ -1,7 +1,6 @@
 // @flow
 
 import type { Action } from '../../../../ReduxTypes.js'
-
 import { ACTIVATED, DEACTIVATED, TOGGLED } from './LegacyAddressModalActions.js'
 
 export type LegacyAddressModalState = {

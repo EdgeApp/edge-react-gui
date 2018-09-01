@@ -2,13 +2,8 @@
 
 /* globals test describe expect */
 
-import {
-  untranslatedReducer as uut,
-  initialState,
-  MAX_NON_PASSWORD_DAYS_LIMIT,
-  MAX_NON_PASSWORD_LOGINS_LIMIT
-} from './indexPasswordReminder.js'
 import { MILLISECONDS_PER_DAY, daysBetween } from '../../modules/utils.js'
+import { MAX_NON_PASSWORD_DAYS_LIMIT, MAX_NON_PASSWORD_LOGINS_LIMIT, initialState, untranslatedReducer as uut } from './indexPasswordReminder.js'
 
 describe('PasswordReminder', () => {
   test('initialState', () => {

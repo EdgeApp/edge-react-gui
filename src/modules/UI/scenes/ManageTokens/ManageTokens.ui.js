@@ -71,6 +71,7 @@ export default class ManageTokens extends Component<ManageTokensProps, State> {
 
   render () {
     const { metaTokens } = this.props.guiWallet
+    const { manageTokensPending } = this.props
     const accountMetaTokenInfo = [...this.props.settingsCustomTokens]
     const combinedTokenInfo = UTILS.mergeTokensRemoveInvisible(metaTokens, accountMetaTokenInfo)
 
@@ -109,14 +110,12 @@ export default class ManageTokens extends Component<ManageTokensProps, State> {
                 />
               </View>
               <View style={[styles.buttonsArea]}>
-                <SecondaryButton style={[styles.addButton]} text={s.strings.addtoken_add} onPressFunction={this.goToAddTokenScene} />
-                <PrimaryButton
-                  text={s.strings.string_save}
-                  style={[styles.saveButton]}
-                  onPressFunction={this.saveEnabledTokenList}
-                  processingElement={<ActivityIndicator />}
-                  processingFlag={this.props.manageTokensPending}
-                />
+                <SecondaryButton style={[styles.addButton]} onPress={this.goToAddTokenScene}>
+                  <SecondaryButton.Text>{s.strings.addtoken_add}</SecondaryButton.Text>
+                </SecondaryButton>
+                <PrimaryButton style={[styles.saveButton]} onPress={this.saveEnabledTokenList}>
+                  {manageTokensPending ? <ActivityIndicator /> : <PrimaryButton.Text>{s.strings.string_save}</PrimaryButton.Text>}
+                </PrimaryButton>
               </View>
             </View>
           </View>

@@ -75,7 +75,6 @@ export const styles = {
   },
   buttonsArea: {
     marginTop: 16,
-    height: 52,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -96,11 +95,12 @@ export const styles = {
     left: 3
   },
   deleteButton: {
-    marginRight: 2
+    flex: 1,
+    marginRight: 1
   },
   saveButton: {
-    marginLeft: 2,
-    backgroundColor: THEME.COLORS.SECONDARY
+    flex: 1,
+    marginLeft: 1
   },
   deleteModalButtonsArea: {
     height: 52,

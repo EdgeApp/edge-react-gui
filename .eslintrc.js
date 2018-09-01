@@ -22,6 +22,6 @@ module.exports = {
     'react/no-typos': 'error',
     'react/prop-types': 0,
     'react/self-closing-comp': ['error', { component: true }],
-    camelcase: 'error'
+    camelcase: 'warn'
   }
 }

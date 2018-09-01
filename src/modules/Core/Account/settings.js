@@ -2,13 +2,21 @@
 
 import type { EdgeAccount } from 'edge-core-js'
 
-import { categories } from './subcategories.js'
 import type { PasswordReminder } from '../../../types.js'
+import { categories } from './subcategories.js'
 
 // Default Core Settings
 export const CORE_DEFAULTS = {
   otpMode: false,
   pinMode: false
+}
+
+export const PASSWORD_RECOVERY_REMINDERS_SHOWN = {
+  '20': false,
+  '200': false,
+  '2000': false,
+  '20000': false,
+  '200000': false
 }
 
 // TODO:  Remove hardcoded currency defaults
@@ -38,7 +46,8 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   IND: { denomination: '1000000000000000000' },
   HUR: { denomination: '1000000000000000000' },
   USDT: { denomination: '1000000' },
-  customTokens: []
+  customTokens: [],
+  passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN
 }
 
 export const LOCAL_ACCOUNT_DEFAULTS = {
@@ -134,6 +143,15 @@ export const setSpendingLimits = (account: EdgeAccount, spendingLimits: Spending
     return setLocalSettings(account, updatedSettings)
   })
 }
+export async function setPasswordRecoveryRemindersAsync (account: EdgeAccount, level: string, wasShown: boolean) {
+  const settings = await getSyncedSettings(account)
+  const passwordRecoveryRemindersShown = {
+    ...settings.passwordRecoveryRemindersShown,
+    [level]: wasShown
+  }
+  const updatedSettings = updateSettings(settings, { passwordRecoveryRemindersShown })
+  return setSyncedSettings(account, updatedSettings)
+}
 
 // Currency Settings
 export const setDenominationKeyRequest = (account: EdgeAccount, currencyCode: string, denomination: string) =>
@@ -181,12 +199,14 @@ export async function setSyncedSettingsAsync (account: EdgeAccount, settings: Ob
   await SettingsFile.setText(text)
 }
 
-export async function setSubcategoriesRequest (account: EdgeAccount, subcategories: any) {
+export type CategoriesFile = { categories: Array<string> }
+
+export async function setSubcategoriesRequest (account: EdgeAccount, subcategories: CategoriesFile) {
   // const subcats = await getSyncedSubcategories(account)
   return setSyncedSubcategories(account, subcategories)
 }
 
-export async function setSyncedSubcategories (account: EdgeAccount, subcategories: any) {
+export async function setSyncedSubcategories (account: EdgeAccount, subcategories: CategoriesFile) {
   let finalText = {}
   if (!subcategories.categories) {
     finalText.categories = subcategories
@@ -211,7 +231,7 @@ export const getSyncedSubcategories = (account: EdgeAccount) =>
     })
     .catch(() =>
       // If Categories.json doesn't exist yet, create it, and return it
-      setSyncedSubcategories(account, SYNCED_SUBCATEGORIES_DEFAULTS).then(() => SYNCED_SUBCATEGORIES_DEFAULTS)
+      setSyncedSubcategories(account, SYNCED_SUBCATEGORIES_DEFAULTS).then(() => SYNCED_SUBCATEGORIES_DEFAULTS.categories)
     )
 
 export const getSyncedSubcategoriesFile = (account: EdgeAccount) =>

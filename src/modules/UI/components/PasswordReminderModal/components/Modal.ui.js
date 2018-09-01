@@ -7,7 +7,7 @@ import Modal from 'react-native-modal'
 
 import styles from './modalStyles.js'
 
-export {Modal}
+export { Modal }
 export default Modal
 
 // CONTAINER /////////////////////////////////////////////////////////////////////////////
