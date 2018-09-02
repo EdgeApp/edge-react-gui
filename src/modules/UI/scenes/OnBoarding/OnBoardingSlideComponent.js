@@ -10,6 +10,7 @@ import { PLATFORM } from '../../../../theme/variables/platform'
 
 type Props = {
   slide: Object,
+  index: number,
   swipeLeft(): void,
   swipeRight(): void
 }
@@ -69,15 +70,20 @@ class OnBoardingSlideComponent extends Component<Props, State> {
             : this.props.slide.iOSImage
     const container = { ...styles.container, width: Dimensions.get('window').width, height: Dimensions.get('window').height }
     const config = {
-      velocityThreshold: 0.3,
-      directionalOffsetThreshold: 10
+      velocityThreshold: 0.6,
+      directionalOffsetThreshold: 200
     }
+    const textBox = this.props.index === 2 ? styles.textBoxSlide2 : styles.textBox
     return (
       <GestureRecognizer onSwipe={(direction, state) => this.onSwipe(direction)} config={config}>
-        <ImageBackground source={{ uri: image }} style={container}>
+        <ImageBackground
+          source={{ uri: image }}
+          style={container}
+          imageStyle={{ resizeMode: 'stretch', width: Dimensions.get('window').width, height: Dimensions.get('window').height }}
+        >
           <View style={styles.innerTop} />
           <View style={styles.innerBottom}>
-            <View style={styles.textBox}>
+            <View style={textBox}>
               <Text style={styles.text}>{this.props.slide.text}</Text>
             </View>
           </View>
