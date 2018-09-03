@@ -4,6 +4,7 @@ import { bns } from 'biggystring'
 import { connect } from 'react-redux'
 
 import type { SetNativeAmountInfo } from '../../actions/CryptoExchangeActions'
+import { selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
 import * as actions from '../../actions/indexActions'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
@@ -83,7 +84,7 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
     toCurrencyIconDark: state.cryptoExchange.toCurrencyIconDark || '',
     fee: state.cryptoExchange.fee,
     forceUpdateGuiCounter: state.cryptoExchange.forceUpdateGuiCounter,
-    showWalletSelectModal: state.cryptoExchange.walletListModalVisible,
+    showWalletSelectModal: state.ui.scenes.walletListModal.walletListModalVisible,
     showConfirmShiftModal: state.cryptoExchange.confirmTransactionModalVisible,
     showNextButton,
     gettingTransaction: state.cryptoExchange.gettingTransaction,
@@ -98,7 +99,10 @@ export const mapDispatchToProps = (dispatch: Dispatch): CryptoExchangeSceneCompo
   closeConfirmation: () => dispatch(actions.dispatchAction(Constants.CLOSE_CRYPTO_EXC_CONF_MODAL)),
   openConfirmation: () => dispatch(actions.dispatchAction(Constants.OPEN_CRYPTO_EXC_CONF_MODAL)),
   setNativeAmount: (data: SetNativeAmountInfo) => dispatch(actions.setNativeAmount(data)),
-  getShapeShiftTokens: () => dispatch(actions.getShapeShiftTokens())
+  getShapeShiftTokens: () => dispatch(actions.getShapeShiftTokens()),
+  onSelectWallet: (walletId: string, currencyCode: string) => {
+    dispatch(selectWalletForExchange(walletId, currencyCode))
+  }
 })
 
 export default connect(

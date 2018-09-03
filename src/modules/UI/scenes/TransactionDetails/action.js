@@ -26,7 +26,9 @@ export const setTransactionDetails = (txid: string, currencyCode: string, edgeMe
 
 export const getSubcategories = () => (dispatch: Dispatch, getState: GetState) => {
   const { account } = getState().core
-  ACCOUNT_SETTINGS.getSyncedSubcategories(account).then(s => dispatch(setSubcategories(s)))
+  ACCOUNT_SETTINGS.getSyncedSubcategories(account).then(s => {
+    return dispatch(setSubcategories(s))
+  })
 }
 
 export const setSubcategories = (subcategories: Array<string>) => ({
@@ -39,7 +41,7 @@ export const setNewSubcategory = (newSubcategory: string) => (dispatch: Dispatch
   const { account } = state.core
   const oldSubcats = state.ui.scenes.transactionDetails.subcategories
   const newSubcategories = [...oldSubcats, newSubcategory]
-  return ACCOUNT_SETTINGS.setSubcategoriesRequest(account, newSubcategories.sort())
+  return ACCOUNT_SETTINGS.setSubcategoriesRequest(account, { categories: newSubcategories.sort() })
     .then(() => {
       dispatch(setSubcategories(newSubcategories.sort()))
     })

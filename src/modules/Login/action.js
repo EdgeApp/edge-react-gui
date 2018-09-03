@@ -59,7 +59,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     currencyPlugins: [],
     otpInfo: { enabled: account.otpKey != null, otpKey: account.otpKey, otpResetPending },
     autoLogoutTimeInSeconds: '',
-    bluetoothMode: '',
+    bluetoothMode: false,
     pinLoginEnabled: false,
     pinMode: false,
     otpMode: false,
@@ -74,7 +74,8 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     passwordReminder: {},
     isAccountBalanceVisible: false,
     isWalletFiatBalanceVisible: false,
-    spendingLimits: {}
+    spendingLimits: {},
+    passwordRecoveryRemindersShown: SETTINGS_API.PASSWORD_RECOVERY_REMINDERS_SHOWN
   }
   try {
     for (const pluginName in account.currencyTools) {
@@ -164,6 +165,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     accountInitObject.defaultFiat = syncFinal.defaultFiat
     accountInitObject.merchantMode = syncFinal.merchantMode
     accountInitObject.customTokens = syncFinal.customTokens
+    accountInitObject.passwordRecoveryRemindersShown = syncFinal.passwordRecoveryRemindersShown
     accountInitObject.denominationKeys.push({ currencyCode: 'BTC', denominationKey: syncFinal.BTC.denomination })
     accountInitObject.denominationKeys.push({ currencyCode: 'BCH', denominationKey: syncFinal.BCH.denomination })
     accountInitObject.denominationKeys.push({ currencyCode: 'ETH', denominationKey: syncFinal.ETH.denomination })

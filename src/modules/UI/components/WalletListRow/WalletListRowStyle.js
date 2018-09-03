@@ -2,10 +2,32 @@
 
 import { StyleSheet } from 'react-native'
 
-import THEME from '../../../../theme/variables/airbitz'
+import THEME from '../../../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
 
-export const styles = {
+export const stylesRaw = {
+  usableHeight: PLATFORM.usableHeight,
+  rowWrapper: {
+    width: '100%'
+  },
+  rowContainer: {
+    justifyContent: 'space-between',
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: THEME.COLORS.GRAY_3
+  },
+  rowInfo: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  rowLeft: {
+    justifyContent: 'center',
+    alignItems: 'flex-start'
+  },
+  rowRight: {
+    alignSelf: 'flex-end'
+  },
   topLevel: {
     zIndex: 10,
     width: '100%',
@@ -16,23 +38,29 @@ export const styles = {
     paddingTop: 50
   },
   headerContainer: {
-    backgroundColor: THEME.COLORS.GRAY_1,
-    paddingVertical: 8
+    backgroundColor: THEME.COLORS.GRAY_1
   },
   modalBody: {
     width: PLATFORM.deviceWidth,
     zIndex: 4
   },
-  rowContainer: {
-    backgroundColor: THEME.COLORS.WHITE,
-    padding: 16,
-    paddingLeft: 20,
-    paddingRight: 20,
-    justifyContent: 'space-between'
-  },
+
   rowNameText: {
     fontSize: 18,
-    fontFamily: THEME.FONTS.DEFAULT
+    fontFamily: THEME.FONTS.DEFAULT,
+    color: THEME.COLORS.GRAY_1
+  },
+  rowRightCryptoText: {
+    textAlign: 'right',
+    color: THEME.COLORS.GRAY_1,
+    fontSize: 14,
+    lineHeight: 18
+  },
+  rowRightFiatText: {
+    textAlign: 'right',
+    color: THEME.COLORS.GRAY_1,
+    fontSize: 14,
+    lineHeight: 18
   },
   headerContent: {
     justifyContent: 'space-between',
@@ -63,7 +91,7 @@ export const styles = {
   // beginning of token rows //
 
   tokenRowContainer: {
-    padding: 16,
+    paddingVertical: 8,
     paddingLeft: 30,
     paddingRight: 20,
     backgroundColor: THEME.COLORS.GRAY_4,
@@ -91,4 +119,4 @@ export const styles = {
   // end of token rows //
 }
 
-export default StyleSheet.create(styles)
+export const styles = StyleSheet.create(stylesRaw)

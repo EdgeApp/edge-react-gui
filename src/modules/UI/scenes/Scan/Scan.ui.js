@@ -35,7 +35,8 @@ type Props = {
   toggleScanToWalletListModal: () => void,
   addressModalDoneButtonPressed: () => void,
   legacyAddressModalContinueButtonPressed: () => void,
-  legacyAddressModalCancelButtonPressed: () => void
+  legacyAddressModalCancelButtonPressed: () => void,
+  onSelectWallet: (string, string) => void
 }
 
 const HEADER_TEXT = s.strings.send_scan_header_text
@@ -53,7 +54,7 @@ export default class Scan extends Component<Props> {
   }
 
   render () {
-    const { addressModalDoneButtonPressed, legacyAddressModalContinueButtonPressed, legacyAddressModalCancelButtonPressed } = this.props
+    const { addressModalDoneButtonPressed, legacyAddressModalContinueButtonPressed, legacyAddressModalCancelButtonPressed, onSelectWallet } = this.props
 
     return (
       <SafeAreaView>
@@ -91,7 +92,9 @@ export default class Scan extends Component<Props> {
             </View>
             <ABAlert />
           </View>
-          {this.props.showToWalletModal && <WalletListModal topDisplacement={Constants.SCAN_WALLET_DIALOG_TOP} type={Constants.FROM} />}
+          {this.props.showToWalletModal && (
+            <WalletListModal topDisplacement={Constants.SCAN_WALLET_DIALOG_TOP} type={Constants.FROM} onSelectWallet={onSelectWallet} />
+          )}
         </View>
 
         <LegacyAddressModal continueButtonPressed={legacyAddressModalContinueButtonPressed} cancelButtonPressed={legacyAddressModalCancelButtonPressed} />
@@ -106,10 +109,6 @@ export default class Scan extends Component<Props> {
 
   _onToggleAddressModal = () => {
     this.props.toggleAddressModal()
-  }
-
-  _onToggleWalletListModal = () => {
-    this.props.toggleScanToWalletListModal()
   }
 
   selectPhotoTapped = () => {

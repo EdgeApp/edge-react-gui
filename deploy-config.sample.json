@@ -1,7 +1,7 @@
 {
   "edge": {
     "productName": "Edge Wallet",
-    "xcodeProject": "edge.xcodeproj",
+    "xcodeWorkspace": "edge.xcworkspace",
     "xcodeScheme": "edge",
     "androidKeyStore": "edge-release-keystore.jks",
     "androidKeyStoreAlias": "edge",
