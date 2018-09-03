@@ -1,3 +1,4 @@
+// @flow
 // flow-typed signature: 2991c1bc398f4e5a314e188fa39d27f2
 // flow-typed version: 1ad2a03c70/why-did-you-update_v0.x.x/flow_>=v0.41.x
 

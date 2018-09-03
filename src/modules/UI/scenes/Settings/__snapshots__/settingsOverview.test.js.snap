@@ -292,6 +292,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         onPress={[Function]}
         rightText=""
       />
+      <RowRoute
+        disabled={false}
+        leftText="Terms of Service"
+        scene="termsOfService"
+      />
       <Component
         style={
           Array [
@@ -701,6 +706,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         leftText="Restore Wallets"
         onPress={[Function]}
         rightText=""
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Terms of Service"
+        scene="termsOfService"
       />
       <Component
         style={

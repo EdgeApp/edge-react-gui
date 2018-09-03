@@ -38,6 +38,7 @@ export const EXCHANGE_SCENE = 'exchangeScene'
 export const CREATE_WALLET = 'createWallet'
 export const BUYSELL = 'buysell'
 export const SPEND = 'spend'
+export const TERMS_OF_SERVICE = 'termsOfService'
 export const PLUGIN = 'plugin'
 export const SPENDING_LIMITS = 'spendingLimits'
 
