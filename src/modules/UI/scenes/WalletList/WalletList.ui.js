@@ -18,7 +18,7 @@ import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView/index.js'
 import { WiredProgressBar } from '../../components/WiredProgressBar/WiredProgressBar.ui.js'
-import { getTotalFiatAmount, getWalletLoadingPercent } from '../../selectors.js'
+import { getWalletLoadingPercent } from '../../selectors.js'
 import { getDefaultFiat, getIsAccountBalanceVisible } from '../../Settings/selectors.js'
 import FullWalletListRow from './components/WalletListRow/FullWalletListRow.ui.js'
 import SortableWalletListRow from './components/WalletListRow/SortableWalletListRow.ui.js'
@@ -158,7 +158,7 @@ export default class WalletList extends Component<Props, State> {
           <WiredProgressBar progress={getWalletLoadingPercent} />
           <WiredBalanceBox
             showBalance={getIsAccountBalanceVisible}
-            fiatAmount={getTotalFiatAmount}
+            fiatAmount={UTILS.getTotalFiatAmount}
             fiatCurrencyCode={getDefaultFiat}
             onPress={this.props.toggleAccountBalanceVisibility}
           />

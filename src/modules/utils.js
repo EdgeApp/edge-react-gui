@@ -608,7 +608,7 @@ export const isEdgeLogin = (data: string) => {
   return EDGE_LOGIN_REG_EXP.test(data)
 }
 
-export const tallyUpTotalCrypto = (state: State) => {
+export const getTotalFiatAmount = (state: State) => {
   const temporaryTotalCrypto = {}
   const wallets = state.ui.wallets.byId
   const settings = state.ui.settings
@@ -647,11 +647,11 @@ export const tallyUpTotalCrypto = (state: State) => {
       }
     }
   }
-  const balanceInfo = calculateTotalBalance(temporaryTotalCrypto, state)
+  const balanceInfo = calculateTotalFiatBalance(temporaryTotalCrypto, state)
   return balanceInfo
 }
 
-export const calculateTotalBalance = (values: any, state: State) => {
+export const calculateTotalFiatBalance = (values: any, state: State) => {
   let total = 0
   const currencyConverter = getCurrencyConverter(state)
   for (const currency in values) {

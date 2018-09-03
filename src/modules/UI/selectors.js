@@ -2,11 +2,8 @@
 
 import _ from 'lodash'
 
-import { intl } from '../../locales/intl.js'
 import type { GuiDenomination, GuiWallet, TransactionListTx } from '../../types'
-import { getCurrencyConverter } from '../Core/selectors.js'
 import type { State } from '../ReduxTypes'
-import { convertNativeToExchange } from '../utils.js'
 import * as SETTINGS_SELECTORS from './Settings/selectors'
 
 export const getWallets = (state: State) => {
@@ -114,59 +111,4 @@ export const getScenesState = (state: State) => {
 export const getSceneState = (state: State, sceneKey: string) => {
   const sceneState = getScenesState(state)[sceneKey]
   return sceneState
-}
-
-export const getTotalFiatAmount = (state: State) => {
-  const wallets = state.ui.wallets.byId
-  const settings = SETTINGS_SELECTORS.getSettings(state)
-  const temporaryTotalCrypto = {}
-  const fiatCurrencyCode = SETTINGS_SELECTORS.getDefaultFiat(state)
-  const currencyConverter = getCurrencyConverter(state)
-
-  // loop through each of the walletId's
-  for (const parentProp in wallets) {
-    // loop through all of the nativeBalances, which includes both parent currency and tokens
-    for (const currencyCode in wallets[parentProp].nativeBalances) {
-      // if there is no native balance for the currency / token then assume it's zero
-      if (!temporaryTotalCrypto[currencyCode]) {
-        temporaryTotalCrypto[currencyCode] = 0
-      }
-      // get the native balance for this currency
-      const nativeBalance = wallets[parentProp].nativeBalances[currencyCode]
-      // if it is a non-zero amount then we will process it
-      if (nativeBalance && nativeBalance !== '0') {
-        let denominations
-        // check to see if it's a currency first
-        if (settings[currencyCode]) {
-          // and if so then grab the default denomiation (setting)
-          denominations = settings[currencyCode].denominations
-        } else {
-          // otherwise find the token whose currencyCode matches the one that we are working with
-          const tokenInfo = settings.customTokens.find(token => token.currencyCode === currencyCode)
-          // grab the denominations array (which is equivalent of the denominations from the previous (true) clause)
-          denominations = tokenInfo ? tokenInfo.denominations : []
-        }
-        // now go through that array of denominations and find the one whose name matches the currency
-        const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
-        // grab the multiplier, which is the ratio that we can multiply and divide by
-        if (exchangeDenomination) {
-          const nativeToExchangeRatio: string = exchangeDenomination.multiplier
-          // divide the native amount (eg satoshis) by the ratio to end up with standard crypto amount (which exchanges use)
-          const cryptoAmount: number = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
-          temporaryTotalCrypto[currencyCode] = temporaryTotalCrypto[currencyCode] + cryptoAmount
-        }
-      }
-    }
-  }
-  const balanceInfo = calculateTotalBalance(temporaryTotalCrypto, fiatCurrencyCode, currencyConverter)
-  return balanceInfo
-}
-
-const calculateTotalBalance = (values: any, fiatCurrencyCode: string, currencyConverter: Function) => {
-  let total = 0
-  for (const currency in values) {
-    const addValue = currencyConverter.convertCurrency(currency, 'iso:' + fiatCurrencyCode, values[currency])
-    total = total + addValue
-  }
-  return intl.formatNumber(total, { toFixed: 2 })
 }
