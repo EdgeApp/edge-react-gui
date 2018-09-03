@@ -556,10 +556,20 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
 }
 
 export const settings = (state: SettingsState = initialState, action: Action) => {
+  let result = state
   const legacy = settingsLegacy(state, action)
-  const result = {
-    ...legacy,
-    spendingLimits: spendingLimits(state.spendingLimits, action)
+
+  if (legacy !== state) {
+    result = legacy
+  }
+
+  const spendingLimitsObj = spendingLimits(state.spendingLimits, action)
+
+  if (spendingLimitsObj !== state.spendingLimits) {
+    result = {
+      ...result,
+      spendingLimits: spendingLimitsObj
+    }
   }
 
   return result

@@ -138,7 +138,7 @@ class OnBoardingComponent extends Component<Props, State> {
     return this.state.slides.map(Slide => {
       counter++
       // const buttonFunction = counter === this.props.totalSlides ? this.props.finishOnBoarding : null
-      return <OnBoardingSlideComponent slide={Slide} key={'slides_' + counter} swipeLeft={this.onNextSlide} swipeRight={this.onPreviousSlide} />
+      return <OnBoardingSlideComponent slide={Slide} key={'slides_' + counter} swipeLeft={this.onNextSlide} swipeRight={this.onPreviousSlide} index={counter} />
     })
   }
 
