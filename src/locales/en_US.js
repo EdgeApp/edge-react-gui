@@ -364,7 +364,7 @@ const strings = {
   onboarding_slide_5: 'Exchange cryptocurrencies by choosing the Source Wallet and Receiving Wallet to trade between them.',
   otp_out_of_sync_title: 'Warning',
   otp_out_of_sync_body:
-    'This device does not have the proper 2-factor token. You can still access your funds with limited functionality, but cannot create wallets or change account options’'
+    'This device does not have the proper 2-factor token. You can still access your funds with limited functionality, but cannot create wallets or change account options'
 }
 
 // export default strings
