@@ -11,7 +11,6 @@ import iconImage from '../../../../assets/images/otp/OTP-badge_sm.png'
 import WalletIcon from '../../../../assets/images/walletlist/my-wallets.png'
 import { StaticModalComponent, TwoButtonTextModalComponent } from '../../../../components/indexComponents'
 import * as Constants from '../../../../constants/indexConstants.js'
-import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
 import { TwoButtonModalStyle } from '../../../../styles/indexStyles.js'
 import * as UTILS from '../../../utils'
@@ -20,16 +19,16 @@ import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView/index.js'
 import { WiredProgressBar } from '../../components/WiredProgressBar/WiredProgressBar.ui.js'
 import { getWalletLoadingPercent } from '../../selectors.js'
+import { getDefaultFiat, getIsAccountBalanceVisible } from '../../Settings/selectors.js'
 import FullWalletListRow from './components/WalletListRow/FullWalletListRow.ui.js'
 import SortableWalletListRow from './components/WalletListRow/SortableWalletListRow.ui.js'
 import WalletOptions from './components/WalletOptions/WalletOptionsConnector.ui.js'
+import { WiredBalanceBox } from './components/WiredBalanceBox/WiredBalanceBox.ui.js'
 import styles from './style'
 
 const DONE_TEXT = s.strings.string_done_cap
 const WALLETS_HEADER_TEXT = s.strings.fragment_wallets_header
 const ARCHIVED_TEXT = s.strings.fragmet_wallets_list_archive_title_capitalized
-const SHOW_BALANCE_TEXT = s.strings.string_show_balance
-const BALANCE_TEXT = s.strings.fragment_wallets_balance_text
 
 type State = {
   sortableMode: boolean,
@@ -47,12 +46,8 @@ type State = {
 }
 type Props = {
   activeWalletIds: Array<string>,
-  currencyConverter: any,
   customTokens: Array<any>,
   dimensions: any,
-  settings: any,
-  walletId: string,
-  walletName: string,
   wallets: any,
   renameWalletInput: string,
   otpResetPending: boolean,
@@ -63,11 +58,10 @@ type Props = {
   keepOtp: () => void,
   toggleAccountBalanceVisibility: () => void,
   toggleWalletFiatBalanceVisibility: () => void,
-  progressPercentage: number,
   isAccountBalanceVisible: boolean,
-  isWalletFiatBalanceVisible: boolean
+  isWalletFiatBalanceVisible: boolean,
+  defaultFiat: string
 }
-
 export default class WalletList extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
@@ -84,7 +78,6 @@ export default class WalletList extends Component<Props, State> {
       showOtpResetModal: this.props.otpResetPending,
       showMessageModal: false,
       messageModalMessage: null,
-      progressPercentage: 0,
       isWalletProgressVisible: true
     }
   }
@@ -134,7 +127,7 @@ export default class WalletList extends Component<Props, State> {
   }
 
   render () {
-    const { wallets, activeWalletIds, settings } = this.props
+    const { wallets, activeWalletIds, defaultFiat } = this.props
     const walletsArray = []
     const activeWallets = {}
     for (const wallet in wallets) {
@@ -155,14 +148,7 @@ export default class WalletList extends Component<Props, State> {
       const tempWalletObj = wallets[x] ? wallets[x] : { key: null }
       activeWalletsObject[x] = tempWalletObj
     })
-    let fiatBalanceString
-    const totalBalance = this.tallyUpTotalCrypto()
-    const fiatSymbol = settings.defaultFiat ? UTILS.getFiatSymbol(settings.defaultFiat) : ''
-    if (fiatSymbol.length !== 1) {
-      fiatBalanceString = totalBalance + ' ' + settings.defaultFiat
-    } else {
-      fiatBalanceString = fiatSymbol + ' ' + totalBalance + ' ' + settings.defaultFiat
-    }
+    const fiatSymbol = defaultFiat ? UTILS.getFiatSymbol(defaultFiat) : ''
 
     return (
       <SafeAreaView>
@@ -170,10 +156,12 @@ export default class WalletList extends Component<Props, State> {
           <WalletOptions />
           <Gradient style={styles.gradient} />
           <WiredProgressBar progress={getWalletLoadingPercent} />
-          <TouchableOpacity onPress={this.handleOnBalanceBoxPress}>
-            {this.props.isAccountBalanceVisible ? this.balanceBox(fiatBalanceString) : this.hiddenBalanceBox()}
-          </TouchableOpacity>
-
+          <WiredBalanceBox
+            showBalance={getIsAccountBalanceVisible}
+            fiatAmount={UTILS.getTotalFiatAmount}
+            fiatCurrencyCode={getDefaultFiat}
+            onPress={this.props.toggleAccountBalanceVisibility}
+          />
           <View style={[styles.walletsBox]}>
             <Gradient style={[styles.walletsBoxHeaderWrap]}>
               <View style={[styles.walletsBoxHeaderTextWrap]}>
@@ -316,7 +304,6 @@ export default class WalletList extends Component<Props, State> {
               renderItem={this.renderItem}
               sortableMode={this.state.sortableMode}
               executeWalletRowOption={this.executeWalletRowOption}
-              settings={this.props.settings}
             />
           </Animated.View>
         )}
@@ -442,84 +429,5 @@ export default class WalletList extends Component<Props, State> {
     newOrder.splice(to, 0, newOrder.splice(from, 1)[0])
 
     return newOrder
-  }
-
-  tallyUpTotalCrypto = () => {
-    const temporaryTotalCrypto = {}
-    // loop through each of the walletId's
-    for (const parentProp in this.props.wallets) {
-      // loop through all of the nativeBalances, which includes both parent currency and tokens
-      for (const currencyCode in this.props.wallets[parentProp].nativeBalances) {
-        // if there is no native balance for the currency / token then assume it's zero
-        if (!temporaryTotalCrypto[currencyCode]) {
-          temporaryTotalCrypto[currencyCode] = 0
-        }
-        // get the native balance for this currency
-        const nativeBalance = this.props.wallets[parentProp].nativeBalances[currencyCode]
-        // if it is a non-zero amount then we will process it
-        if (nativeBalance && nativeBalance !== '0') {
-          let denominations
-          // check to see if it's a currency first
-          if (this.props.settings[currencyCode]) {
-            // and if so then grab the default denomiation (setting)
-            denominations = this.props.settings[currencyCode].denominations
-          } else {
-            // otherwise find the token whose currencyCode matches the one that we are working with
-            const tokenInfo = this.props.settings.customTokens.find(token => token.currencyCode === currencyCode)
-            // grab the denominations array (which is equivalent of the denominations from the previous (true) clause)
-            denominations = tokenInfo.denominations
-          }
-          // now go through that array of denominations and find the one whose name matches the currency
-          const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
-          // grab the multiplier, which is the ratio that we can multiply and divide by
-          const nativeToExchangeRatio: string = exchangeDenomination.multiplier
-          // divide the native amount (eg satoshis) by the ratio to end up with standard crypto amount (which exchanges use)
-          const cryptoAmount: number = parseFloat(UTILS.convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
-          temporaryTotalCrypto[currencyCode] = temporaryTotalCrypto[currencyCode] + cryptoAmount
-        }
-      }
-    }
-    const balanceInfo = this.calculateTotalBalance(temporaryTotalCrypto)
-    return balanceInfo
-  }
-
-  calculateTotalBalance = (values: any) => {
-    let total = 0
-    for (const currency in values) {
-      const addValue = this.props.currencyConverter.convertCurrency(currency, 'iso:' + this.props.settings.defaultFiat, values[currency])
-      total = total + addValue
-    }
-    return intl.formatNumber(total, { toFixed: 2 })
-  }
-
-  handleOnBalanceBoxPress = () => {
-    this.props.toggleAccountBalanceVisibility()
-  }
-
-  balanceBox (fiatBalanceString: string) {
-    return (
-      <View style={[styles.totalBalanceBox]}>
-        <View style={[styles.totalBalanceWrap]}>
-          <View style={[styles.totalBalanceHeader]}>
-            <T style={[styles.totalBalanceText]}>{BALANCE_TEXT}</T>
-          </View>
-          <View style={[styles.currentBalanceBoxDollarsWrap]}>
-            <T style={[styles.currentBalanceBoxDollars]}>{fiatBalanceString}</T>
-          </View>
-        </View>
-      </View>
-    )
-  }
-
-  hiddenBalanceBox () {
-    return (
-      <View style={[styles.totalBalanceBox]}>
-        <View style={[styles.totalBalanceWrap]}>
-          <View style={[styles.hiddenBalanceBoxDollarsWrap]}>
-            <T style={[styles.currentBalanceBoxDollars]}>{SHOW_BALANCE_TEXT}</T>
-          </View>
-        </View>
-      </View>
-    )
   }
 }

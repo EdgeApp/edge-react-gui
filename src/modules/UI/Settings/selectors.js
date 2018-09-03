@@ -212,3 +212,8 @@ export const getOtpResetPending = (state: State) => {
   const otpResetPending = settings.otpResetPending
   return otpResetPending
 }
+
+export const getIsAccountBalanceVisible = (state: State) => {
+  const settings = getSettings(state)
+  return settings.isAccountBalanceVisible
+}
