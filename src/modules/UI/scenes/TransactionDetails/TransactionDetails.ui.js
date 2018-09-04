@@ -411,18 +411,25 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
   }
 
   onSaveTxDetails = () => {
-    let category
-    if (this.state.type) {
-      category = this.state.type.charAt(0).toUpperCase() + this.state.type.slice(1) + ':' + this.state.subCategory
+    const { name, notes, bizId, miscJson, type, subCategory, amountFiat } = this.state
+    const { edgeTransaction } = this.props
+    let category, finalAmountFiat
+    if (type) {
+      category = type.charAt(0).toUpperCase() + type.slice(1) + ':' + subCategory
     } else {
       category = undefined
     }
-    const { name, notes, bizId, miscJson } = this.state
-    const txid = this.props.edgeTransaction.txid
-    const newAmountFiat = this.state.amountFiat
-    const amountFiat: number = !newAmountFiat ? 0.0 : Number.parseFloat(newAmountFiat.replace(',', '.'))
-    const edgeMetadata: EdgeMetadata = { name, category, notes, amountFiat, bizId, miscJson }
-    this.props.setTransactionDetails(txid, this.props.edgeTransaction.currencyCode, edgeMetadata)
+    const txid = edgeTransaction.txid
+    const decimalAmountFiat = Number.parseFloat(amountFiat.replace(',', '.'))
+    if (isNaN(decimalAmountFiat)) {
+      // if invalid number set to previous saved amountFiat
+      finalAmountFiat = edgeTransaction.metadata ? edgeTransaction.metadata.amountFiat : 0.0
+    } else {
+      // if a valid number or empty string then set to zero (empty) or actual number
+      finalAmountFiat = !amountFiat ? 0.0 : decimalAmountFiat
+    }
+    const edgeMetadata: EdgeMetadata = { name, category, notes, amountFiat: finalAmountFiat, bizId, miscJson }
+    this.props.setTransactionDetails(txid, edgeTransaction.currencyCode, edgeMetadata)
   }
 
   componentDidMount () {
