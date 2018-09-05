@@ -51,6 +51,10 @@ export const CURRENCY_SETTINGS = {
     pluginName: 'bitcoinCash',
     currencyCode: 'BCH'
   },
+  btgSettings: {
+    pluginName: 'bitcoinGold',
+    currencyCode: 'BTG'
+  },
   ethSettings: {
     pluginName: 'ethereum',
     currencyCode: 'ETH'
