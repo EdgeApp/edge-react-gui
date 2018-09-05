@@ -2709,9 +2709,9 @@ dir-glob@^2.0.0:
     arrify "^1.0.1"
     path-type "^3.0.0"
 
-disklet@^0.2.2:
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/disklet/-/disklet-0.2.5.tgz#bf96726e13be18ea99a693daac0ce0575715347c"
+disklet@^0.2.7:
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/disklet/-/disklet-0.2.7.tgz#03cf699df295043067b6a6215c9f11cb18f15fd0"
   dependencies:
     assert "^1.4.1"
     react "16.0.0-alpha.12"
@@ -2786,16 +2786,16 @@ edge-components@^0.0.5:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@0.10.2:
-  version "0.10.2"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.10.2.tgz#0b70b1acc56c9f693e86d7a8153c9b24a1196de1"
+edge-core-js@0.10.3:
+  version "0.10.3"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.10.3.tgz#ab0570e46f96ace544779bd31442f74ea0128a21"
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
     biggystring "^3.0.2"
     currency-codes "^1.1.2"
     detect-bundler "^1.0.0"
-    disklet "^0.2.2"
+    disklet "^0.2.7"
     elliptic "^6.4.0"
     hash.js "^1.0.3"
     hmac-drbg "^1.0.1"
