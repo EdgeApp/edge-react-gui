@@ -2,24 +2,29 @@
 /* globals describe test expect */
 
 import {
-  getTimeInMinutes,
-  truncateDecimals,
-  getNewArrayWithItem,
-  getNewArrayWithoutItem,
-  mergeTokens,
-  getTimeWithMeasurement,
-  getTimeMeasurement,
+  MILLISECONDS_PER_DAY,
+  autoCorrectDate,
   convertDisplayToNative,
-  isValidInput,
   convertNativeToDenomination,
   convertNativeToDisplay,
   convertNativeToExchange,
+  daysBetween,
+  getNewArrayWithItem,
+  getNewArrayWithoutItem,
+  getObjectDiff,
   getSupportedFiats,
+  getTimeInMinutes,
+  getTimeMeasurement,
+  getTimeWithMeasurement,
   isCompleteExchangeData,
   isEdgeLogin,
-  daysBetween,
-  getObjectDiff,
-  MILLISECONDS_PER_DAY
+  isTooFarAhead,
+  isTooFarBehind,
+  isValidInput,
+  mergeTokens,
+  msToSeconds,
+  secondsToMs,
+  truncateDecimals
 } from '../src/modules/utils.js'
 
 describe('isValidInput', function () {
@@ -551,7 +556,7 @@ describe('getObjectDiff', () => {
         c: 2
       }
     }
-    expect(getObjectDiff(obj1, obj2, {b: true})).toEqual('b')
+    expect(getObjectDiff(obj1, obj2, { b: true })).toEqual('b')
   })
 
   test('nested equal w/traverse', () => {
@@ -567,7 +572,7 @@ describe('getObjectDiff', () => {
         c: 2
       }
     }
-    expect(getObjectDiff(obj1, obj2, {b: true})).toEqual('')
+    expect(getObjectDiff(obj1, obj2, { b: true })).toEqual('')
   })
 
   test('missing element obj2', () => {
@@ -584,7 +589,7 @@ describe('getObjectDiff', () => {
         c: 2
       }
     }
-    expect(getObjectDiff(obj1, obj2, {b: true})).toEqual('d')
+    expect(getObjectDiff(obj1, obj2, { b: true })).toEqual('d')
   })
 
   test('missing element obj1', () => {
@@ -601,9 +606,8 @@ describe('getObjectDiff', () => {
       },
       d: false
     }
-    expect(getObjectDiff(obj1, obj2, {b: true})).toEqual('d')
+    expect(getObjectDiff(obj1, obj2, { b: true })).toEqual('d')
   })
-
 
   test('missing nested element obj2', () => {
     const obj1 = {
@@ -611,7 +615,7 @@ describe('getObjectDiff', () => {
       b: {
         c: 2,
         d: 3
-      },
+      }
     }
     const obj2 = {
       a: '1',
@@ -619,7 +623,7 @@ describe('getObjectDiff', () => {
         c: 2
       }
     }
-    expect(getObjectDiff(obj1, obj2, {b: true})).toEqual('b')
+    expect(getObjectDiff(obj1, obj2, { b: true })).toEqual('b')
   })
 
   test('missing nested element obj1', () => {
@@ -636,7 +640,7 @@ describe('getObjectDiff', () => {
         d: true
       }
     }
-    expect(getObjectDiff(obj1, obj2, {b: true})).toEqual('b')
+    expect(getObjectDiff(obj1, obj2, { b: true })).toEqual('b')
   })
 })
 
@@ -646,5 +650,70 @@ describe('isEdgeLogin', () => {
   })
   test('Non Edge Login', () => {
     expect(isEdgeLogin('not an edge login')).toBe(false)
+  })
+})
+
+describe('secondsToMs', () => {
+  test('converts 1 seconds to 1000 ms', () => {
+    expect(secondsToMs(1)).toEqual(1000)
+  })
+})
+
+describe('msToSeconds', () => {
+  test('converts 1000 ms to 1 second', () => {
+    expect(msToSeconds(1000)).toEqual(1)
+  })
+})
+
+describe('isTooFarAhead', () => {
+  const currentDateInSeconds = 1535739631.095 // 2018-08-31T18:20:31.095Z
+  const invalidFutureDateInSeconds = 1535739631.095 * 1000 // +050635-08-27T05:58:15.000Z
+  const validFutureDateInSeconds = 1535739631.095 + 1000 // 2018-08-31T18:20:32.095Z
+
+  test('if given invalid future date', () => {
+    expect(isTooFarAhead(invalidFutureDateInSeconds, currentDateInSeconds)).toBe(true)
+  })
+
+  test('if given valid future date', () => {
+    expect(isTooFarAhead(validFutureDateInSeconds, currentDateInSeconds)).toBe(false)
+  })
+})
+
+describe('isTooFarBehind', () => {
+  const invalidPastDateInSeconds = 1535739631.095 / 1000 // 1970-01-18T18:35:39.631Z
+  const validPastDateInSeconds = 1535739631.095 - 1000 // 2018-08-31T18:20:30.095Z
+
+  test('if given invalid past date', () => {
+    expect(isTooFarBehind(invalidPastDateInSeconds)).toBe(true)
+  })
+
+  test('if given valid past date', () => {
+    expect(isTooFarBehind(validPastDateInSeconds)).toBe(false)
+  })
+})
+
+describe('autoCorrectDate', () => {
+  const currentDateInSeconds = 1535739631.095 // 2018-08-31T18:20:31.095Z
+
+  const invalidFutureDateInSeconds = 1535739631.095 * 1000 // +050635-08-27T05:58:15.000Z
+  const validFutureDateInSeconds = 1535739631.095 + 1000 // 2018-08-31T18:20:32.095Z
+
+  const invalidPastDateInSeconds = 1535739631.095 / 1000 // 1970-01-18T18:35:39.631Z
+  const validPastDateInSeconds = 1535739631.095 - 1000 // 2018-08-31T18:20:30.095Z
+
+  test('if given invalid future date', () => {
+    expect(autoCorrectDate(invalidFutureDateInSeconds, currentDateInSeconds)).toEqual(currentDateInSeconds)
+  })
+
+  test('if given valid future date', () => {
+    expect(autoCorrectDate(validFutureDateInSeconds, currentDateInSeconds)).toEqual(validFutureDateInSeconds)
+  })
+
+  test('if given invalid past date', () => {
+    expect(autoCorrectDate(invalidPastDateInSeconds, currentDateInSeconds)).toEqual(currentDateInSeconds)
+  })
+
+  test('if given valid past date', () => {
+    expect(autoCorrectDate(validPastDateInSeconds, currentDateInSeconds)).toEqual(validPastDateInSeconds)
   })
 })
