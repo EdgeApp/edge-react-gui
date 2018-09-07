@@ -3,6 +3,7 @@
 import type { EdgeLobby } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Image, Text, View } from 'react-native'
+import { sprintf } from 'sprintf-js'
 
 import s from '../../../../locales/strings.js'
 import { PrimaryButton, SecondaryButton } from '../../components/Buttons/index'
@@ -21,12 +22,17 @@ type EdgeLoginSceneProps = {
 export default class EdgeLoginScene extends Component<EdgeLoginSceneProps> {
   renderBody (style: Object) {
     let message = this.props.error
+    let textStyle = style.bodyText
     if (!this.props.error) {
       message = s.strings.edge_description
     }
+    if (this.props.lobby && this.props.lobby.loginRequest && this.props.lobby.loginRequest.appId === '') {
+      textStyle = style.bodyTextWarning
+      message = sprintf(s.strings.edge_description_warning, this.props.lobby.loginRequest.displayName)
+    }
     return (
       <View style={style.body}>
-        <Text style={style.bodyText}>{message}</Text>
+        <Text style={textStyle}>{message}</Text>
       </View>
     )
   }
