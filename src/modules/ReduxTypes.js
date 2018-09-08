@@ -210,7 +210,9 @@ export type State = {
     shiftPendingTransaction: boolean,
     quoteExpireDate: number | null
   },
-  exchangeRates: number,
+  exchangeRates: {
+    [string]: number
+  },
   permissions: PermissionsState,
   contacts: ContactsState
 }

@@ -44,7 +44,6 @@ export type StateProps = {
   settings: Object,
   balanceInCrypto: string,
   balanceInFiat: number,
-  currencyConverter: Object,
   multiplier: string,
   contacts: ContactsState,
   fiatSymbol: string,

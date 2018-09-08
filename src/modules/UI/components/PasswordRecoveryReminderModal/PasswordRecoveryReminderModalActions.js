@@ -6,7 +6,7 @@ import { Actions } from 'react-native-router-flux'
 import { RECOVER_PASSWORD as PASSWORD_RECOVERY_SCENE } from '../../../../constants/indexConstants.js'
 import { setPasswordRecoveryRemindersAsync } from '../../../Core/Account/settings.js'
 import type { Dispatch, GetState } from '../../../ReduxTypes.js'
-import { getTotalFiatAmount } from '../../../utils.js'
+import { getTotalFiatAmountFromExchangeRates } from '../../../utils.js'
 
 export const updateShowPasswordRecoveryReminderModal = (level: string, wasShown: boolean) => ({
   type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL',
@@ -36,7 +36,7 @@ export const checkPasswordRecovery = () => async (dispatch: Dispatch, getState: 
   const passwordRecoveryRemindersShown = settings.passwordRecoveryRemindersShown
   const isPasswordRecoverySetup = !!account.recoveryKey
   if (isPasswordRecoverySetup) return
-  const totalDollars = getTotalFiatAmount(state)
+  const totalDollars = getTotalFiatAmountFromExchangeRates(state, 'iso:USD')
   for (const level in passwordRecoveryRemindersShown) {
     if (bns.lt(totalDollars, level)) return // if balance is not big enough to trigger then exit routine
     if (passwordRecoveryRemindersShown[level] === true) continue // if it's already been shown then go to higher level

@@ -7,13 +7,13 @@ import type { SetNativeAmountInfo } from '../../actions/CryptoExchangeActions'
 import { selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
 import * as actions from '../../actions/indexActions'
 import s from '../../locales/strings.js'
-import { getExchangeRate } from '../../modules/Core/selectors.js'
 import type { Dispatch, State } from '../../modules/ReduxTypes'
 import { CryptoExchangeSceneComponent } from '../../modules/UI/scenes/CryptoExchange/CryptoExchangeSceneComponent'
 import type {
   CryptoExchangeSceneComponentDispatchProps,
   CryptoExchangeSceneComponentStateProps
 } from '../../modules/UI/scenes/CryptoExchange/CryptoExchangeSceneComponent'
+import { getExchangeRate } from '../../modules/UI/selectors.js'
 import { emptyCurrencyInfo, emptyGuiWallet } from '../../types.js'
 import type { GuiCurrencyInfo } from '../../types.js'
 

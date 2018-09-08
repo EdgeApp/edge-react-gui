@@ -4,11 +4,11 @@ import type { EdgeCurrencyInfo, EdgeCurrencyWallet } from 'edge-core-js'
 import _ from 'lodash'
 import { connect } from 'react-redux'
 
-import * as CORE_SELECTORS from '../../../Core/selectors.js'
+import { getWallet } from '../../../Core/selectors.js'
 import type { Dispatch, State } from '../../../ReduxTypes'
-import * as UTILS from '../../../utils'
-import * as UI_SELECTORS from '../../selectors.js'
-import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
+import { convertNativeToExchange, getFiatSymbol } from '../../../utils'
+import { convertCurrency, getSelectedCurrencyCode, getSelectedWallet, getSelectedWalletId, getTransactions } from '../../selectors.js'
+import { getCustomTokens, getDisplayDenomination, getDisplayDenominationKey, getExchangeDenomination, getSettings } from '../../Settings/selectors.js'
 import { selectWalletFromModal } from '../../Wallets/action.js'
 import { toggleAccountBalanceVisibility } from '../WalletList/action.js'
 import { fetchMoreTransactions } from './action'
@@ -16,31 +16,30 @@ import type { DispatchProps, StateProps } from './TransactionList.ui'
 import { TransactionList } from './TransactionList.ui'
 
 const mapStateToProps = (state: State) => {
-  const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
-  const wallet = UI_SELECTORS.getSelectedWallet(state)
+  const selectedWalletId = getSelectedWalletId(state)
+  const wallet = getSelectedWallet(state)
   if (!wallet) {
     return {
       loading: true
     }
   }
-  const coreWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
-  const fiatSymbol = UTILS.getFiatSymbol(UI_SELECTORS.getSelectedWallet(state).fiatCurrencyCode)
-  const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+  const coreWallet: EdgeCurrencyWallet = getWallet(state, selectedWalletId)
+  const fiatSymbol = getFiatSymbol(getSelectedWallet(state).fiatCurrencyCode)
+  const currencyCode = getSelectedCurrencyCode(state)
   const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
   const fiatCurrencyCode = wallet.fiatCurrencyCode
   const balanceInCrypto = wallet.nativeBalances[currencyCode]
   const numTransactions = state.ui.scenes.transactionList.numTransactions
-  const settings = SETTINGS_SELECTORS.getSettings(state)
-  const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
-  const transactions = UI_SELECTORS.getTransactions(state)
-  const index = SETTINGS_SELECTORS.getDisplayDenominationKey(state, currencyCode)
+  const settings = getSettings(state)
+  const transactions = getTransactions(state)
+  const index = getDisplayDenominationKey(state, currencyCode)
   const denominationsOnWallet = wallet.allDenominations[currencyCode]
   let denomination
   if (denominationsOnWallet) {
     denomination = denominationsOnWallet[index]
   } else {
     // if it is a token
-    const customTokens = SETTINGS_SELECTORS.getCustomTokens(state)
+    const customTokens = getCustomTokens(state)
     const customTokenIndex = _.findIndex(customTokens, item => item.currencyCode === currencyCode)
     denomination = {
       ...customTokens[customTokenIndex].denominations[0],
@@ -49,11 +48,11 @@ const mapStateToProps = (state: State) => {
     }
   }
   const multiplier = denomination.multiplier
-  const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, currencyCode)
+  const exchangeDenomination = getExchangeDenomination(state, currencyCode)
   // $FlowFixMe
-  const balanceInCryptoDisplay = UTILS.convertNativeToExchange(exchangeDenomination.multiplier)(balanceInCrypto)
-  const balanceInFiat = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, balanceInCryptoDisplay)
-  const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
+  const balanceInCryptoDisplay = convertNativeToExchange(exchangeDenomination.multiplier)(balanceInCrypto)
+  const balanceInFiat = convertCurrency(state, currencyCode, isoFiatCurrencyCode, parseFloat(balanceInCryptoDisplay))
+  const displayDenomination = getDisplayDenomination(state, currencyCode)
   const currencyInfo: EdgeCurrencyInfo = coreWallet.currencyInfo
   // set default requiredConfirmations to 1, so once the tx is in a block consider fully confirmed
   const requiredConfirmations = currencyInfo.requiredConfirmations ? currencyInfo.requiredConfirmations : 1
@@ -74,7 +73,6 @@ const mapStateToProps = (state: State) => {
     settings,
     balanceInCrypto,
     balanceInFiat,
-    currencyConverter,
     multiplier,
     contacts: state.contacts,
     fiatSymbol,

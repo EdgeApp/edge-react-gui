@@ -8,6 +8,7 @@ import type { CustomTokenInfo } from '../../../types.js'
 import * as SETTINGS_API from '../../Core/Account/settings.js'
 import * as CORE_SELECTORS from '../../Core/selectors.js'
 import * as WALLET_API from '../../Core/Wallets/api.js'
+import { updateExchangeRates } from '../../ExchangeRates/action.js'
 import type { Dispatch, GetState } from '../../ReduxTypes'
 import { displayErrorAlert } from '../../UI/components/ErrorAlert/actions'
 import * as UTILS from '../../utils'
@@ -198,6 +199,7 @@ export const upsertWallets = (wallets: Array<EdgeCurrencyWallet>) => (dispatch: 
   if (!loginStatus) {
     dispatch({ type: 'LOGGED_OUT' })
   }
+  dispatch(updateExchangeRates())
   dispatch({
     type: 'UI/WALLETS/UPSERT_WALLETS',
     data: {

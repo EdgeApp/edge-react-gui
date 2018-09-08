@@ -1,16 +1,13 @@
 // @flow
 
 import type { Action } from '../ReduxTypes.js'
+const intialState = {}
 
-const initialState = 0
-
-type ExchangeRateState = ?number
-const exchangeRatesReducer = (state = initialState, action: Action) => {
+type ExchangeRateState = Object
+const exchangeRatesReducer = (state = intialState, action) => {
   switch (action.type) {
-    case 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES': {
-      return state + 1
-    }
-
+    case 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES':
+      return action.data.exchangeRates
     default:
       return state
   }

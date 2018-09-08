@@ -5,7 +5,7 @@
 import { exchangeRates } from './reducer.js'
 
 test('initialState', () => {
-  const expected = 0
+  const expected = {}
   const actual = exchangeRates(undefined, {})
 
   expect(actual).toEqual(expected)
