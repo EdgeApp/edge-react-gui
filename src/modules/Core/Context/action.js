@@ -1,13 +1,13 @@
 // @flow
 
-import type { EdgeContext } from 'edge-core-js'
+import type { DiskletFolder, EdgeContext } from 'edge-core-js'
 
 const PREFIX = 'Core/Context/'
 
 export const ADD_CONTEXT = PREFIX + 'ADD_CONTEXT'
-export const addContext = (context: EdgeContext) => ({
+export const addContext = (context: EdgeContext, folder: DiskletFolder) => ({
   type: ADD_CONTEXT,
-  data: { context }
+  data: { context, folder }
 })
 
 export const ADD_USERNAMES = PREFIX + 'ADD_USERNAMES'

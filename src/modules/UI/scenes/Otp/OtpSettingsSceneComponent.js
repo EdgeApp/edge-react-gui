@@ -30,7 +30,7 @@ type State = {
 }
 
 export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, State> {
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     this.setState({
       showMessageModal: false,
       messageModalMessage: '',
@@ -81,9 +81,17 @@ export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, S
 
   renderButton = () => {
     if (this.props.isOtpEnabled) {
-      return <TertiaryButton text={s.strings.otp_disable} onPressFunction={this.onPress} />
+      return (
+        <TertiaryButton onPress={this.onPress}>
+          <TertiaryButton.Text>{s.strings.otp_disable}</TertiaryButton.Text>
+        </TertiaryButton>
+      )
     }
-    return <PrimaryButton text={s.strings.otp_enable} onPressFunction={this.onPress} />
+    return (
+      <PrimaryButton onPress={this.onPress}>
+        <PrimaryButton.Text>{s.strings.otp_disable}</PrimaryButton.Text>
+      </PrimaryButton>
+    )
   }
   renderKeyBox = (styles: Object) => {
     if (this.props.isOtpEnabled) {

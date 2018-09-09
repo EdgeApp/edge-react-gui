@@ -1,13 +1,13 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
-import { TouchableHighlight, View } from 'react-native'
+import { View } from 'react-native'
+import slowlog from 'react-native-slowlog'
 
 import s from '../../../../../locales/strings.js'
-import T from '../../../components/FormattedText'
+import { PrimaryButton, SecondaryButton } from '../../../components/Buttons'
 import ModalStyle from '../../../components/Modal/style'
-import { styles as styleRaw } from '../style'
+import { InteractiveModal } from '../../../components/Modals'
 
 const CANCEL_TEXT = s.strings.string_cancel_cap
 const DONE_TEXT = s.strings.string_done_cap
@@ -25,25 +25,17 @@ export class AddressInputButtons extends Component<Props> {
   render () {
     return (
       <View style={ModalStyle.buttonsWrap}>
-        <TouchableHighlight
-          style={[ModalStyle.cancelButtonWrap, ModalStyle.stylizedButton]}
-          underlayColor={styleRaw.cancelUnderlay.color}
-          onPress={this.props.onCancel}
-        >
-          <View style={ModalStyle.stylizedButtonTextWrap}>
-            <T style={[ModalStyle.cancelButton, ModalStyle.stylizedButtonText]}>{CANCEL_TEXT}</T>
-          </View>
-        </TouchableHighlight>
+        <InteractiveModal.Item>
+          <SecondaryButton onPress={this.props.onCancel}>
+            <SecondaryButton.Text>{CANCEL_TEXT}</SecondaryButton.Text>
+          </SecondaryButton>
+        </InteractiveModal.Item>
 
-        <TouchableHighlight
-          style={[ModalStyle.doneButtonWrap, ModalStyle.stylizedButton]}
-          underlayColor={styleRaw.doneUnderlay.color}
-          onPress={this.props.onSubmit}
-        >
-          <View style={ModalStyle.stylizedButtonTextWrap}>
-            <T style={[ModalStyle.doneButton, ModalStyle.stylizedButtonText]}>{DONE_TEXT}</T>
-          </View>
-        </TouchableHighlight>
+        <InteractiveModal.Item>
+          <PrimaryButton onPress={this.props.onSubmit}>
+            <PrimaryButton.Text>{DONE_TEXT}</PrimaryButton.Text>
+          </PrimaryButton>
+        </InteractiveModal.Item>
       </View>
     )
   }

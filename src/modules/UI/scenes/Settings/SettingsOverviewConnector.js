@@ -1,7 +1,6 @@
 // @flow
 
 import type { EdgeAccount } from 'edge-core-js'
-// import HockeyApp from 'react-native-hockeyapp'
 import { connect } from 'react-redux'
 
 import * as actions from '../../../../actions/indexActions.js'
@@ -10,7 +9,7 @@ import type { Dispatch, State } from '../../../../modules/ReduxTypes'
 import * as CORE_SELECTORS from '../../../Core/selectors'
 import { resetSendLogsStatus, sendLogs } from '../../../Logs/action'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors'
-import { checkCurrentPassword, lockSettings, setAutoLogoutTimeInMinutesRequest, togglePinLoginEnabled, updateTouchIdEnabled, restoreWallets } from './action'
+import { checkCurrentPassword, lockSettings, restoreWallets, setAutoLogoutTimeInMinutesRequest, togglePinLoginEnabled, updateTouchIdEnabled } from './action'
 import SettingsOverview from './SettingsOverview.ui'
 
 // settings_button_lock_settings, or //settings_button_unlock_settings
@@ -52,4 +51,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   onConfirmRestoreWallets: () => dispatch(restoreWallets())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(SettingsOverview)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SettingsOverview)

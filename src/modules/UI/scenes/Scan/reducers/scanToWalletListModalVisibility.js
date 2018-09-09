@@ -1,7 +1,6 @@
 // @flow
 
 import type { Action } from '../../../../ReduxTypes.js'
-
 import * as WALLET_LIST_MODAL_ACTION from '../../../components/WalletListModal/action'
 import * as ACTION from '../action'
 

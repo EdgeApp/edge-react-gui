@@ -2,7 +2,7 @@
 
 import { PasswordRecoveryScreen } from 'edge-login-ui-rn'
 import React, { Component } from 'react'
-import { View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 
 import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView'
@@ -19,7 +19,7 @@ export default class PasswordRecovery extends Component<Props> {
     return (
       <SafeAreaView>
         <Gradient style={styles.gradient} />
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
           <PasswordRecoveryScreen
             account={this.props.account}
             context={this.props.context}
@@ -27,7 +27,8 @@ export default class PasswordRecovery extends Component<Props> {
             onCancel={this.props.onComplete}
             showHeader={this.props.showHeader}
           />
-        </View>
+          <View style={[styles.bottomShim, { height: 320 }]} />
+        </ScrollView>
       </SafeAreaView>
     )
   }

@@ -3,10 +3,9 @@
 import React, { Component } from 'react'
 import { ActivityIndicator, Text, View } from 'react-native'
 
-import { NonInteractiveModal } from '../../../../components/Modals'
-
-import { Icon } from '../../../../components/Icon/Icon.ui'
 import s from '../../../../../../locales/strings.js'
+import { Icon } from '../../../../components/Icon/Icon.ui'
+import { NonInteractiveModal } from '../../../../components/Modals'
 import styles from '../../style.js'
 
 export type Props = {
@@ -28,31 +27,26 @@ export class SecondaryModal extends Component<Props> {
         </NonInteractiveModal.Icon>
 
         <NonInteractiveModal.Footer>
-          {
-            error
-              ? <NonInteractiveModal.Message>
-                <Text>{error.message}</Text>
+          {error ? (
+            <NonInteractiveModal.Message>
+              <Text>{error.message}</Text>
+            </NonInteractiveModal.Message>
+          ) : null}
+
+          {isSweeping ? (
+            <View>
+              <NonInteractiveModal.Message>
+                <Text>{s.strings.private_key_modal_importing_private_key}</Text>
               </NonInteractiveModal.Message>
-              : null
-          }
+              <ActivityIndicator size={'large'} style={{ padding: 10 }} />
+            </View>
+          ) : null}
 
-          {
-            isSweeping
-              ? <View>
-                <NonInteractiveModal.Message>
-                  <Text>{s.strings.private_key_modal_importing_private_key}</Text>
-                </NonInteractiveModal.Message>
-                <ActivityIndicator size={'large'} style={{ padding: 10 }} />
-              </View>
-              : null
-          }
-
-          { !isSweeping && !error
-            ? <NonInteractiveModal.Message>
+          {!isSweeping && !error ? (
+            <NonInteractiveModal.Message>
               <Text>{s.strings.private_key_modal_success}</Text>
             </NonInteractiveModal.Message>
-            : null
-          }
+          ) : null}
         </NonInteractiveModal.Footer>
       </NonInteractiveModal>
     )

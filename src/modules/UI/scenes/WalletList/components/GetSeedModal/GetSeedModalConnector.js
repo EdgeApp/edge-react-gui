@@ -49,4 +49,7 @@ const mapDispatchToProps = (dispatch: Dispatch): GetSeedModalDispatchProps => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(GetSeedModal)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(GetSeedModal)

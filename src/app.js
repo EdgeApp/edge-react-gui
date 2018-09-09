@@ -4,9 +4,11 @@
 
 import './util/polyfills'
 
+import { Client } from 'bugsnag-react-native'
 import React, { Component } from 'react'
-import { AsyncStorage, Platform, Text, TextInput } from 'react-native'
-import BackgroundTask from 'react-native-background-task'
+import { AppState, AsyncStorage, Platform, Text, TextInput } from 'react-native'
+import BackgroundFetch from 'react-native-background-fetch'
+import firebase from 'react-native-firebase'
 import RNFS from 'react-native-fs'
 import PushNotification from 'react-native-push-notification'
 import { Provider } from 'react-redux'
@@ -19,7 +21,8 @@ import s from './locales/strings.js'
 import Main from './modules/MainConnector'
 import { log, logToServer } from './util/logger'
 import { makeCoreContext } from './util/makeContext.js'
-import firebase from 'react-native-firebase'
+
+global.bugsnag = new Client(ENV.BUGSNAG_API_KEY)
 
 const store: {} = configureStore({})
 
@@ -43,7 +46,14 @@ console.ignoredYellowBox = IGNORED_WARNINGS
 global.OS = Platform.OS
 global.slowlogOptions = { threshold: 16 }
 // Disable the font scaling
+if (!Text.defaultProps) {
+  Text.defaultProps = {}
+}
 Text.defaultProps.allowFontScaling = false
+
+if (!TextInput.defaultProps) {
+  TextInput.defaultProps = {}
+}
 TextInput.defaultProps.allowFontScaling = false
 
 if (!__DEV__) {
@@ -117,53 +127,83 @@ global.pcount = function (label: string) {
   }
 }
 
-BackgroundTask.define(async () => {
-  const lastNotif = await AsyncStorage.getItem(Constants.LOCAL_STORAGE_BACKGROUND_PUSH_KEY)
-  const now = new Date()
-  if (lastNotif) {
-    const lastNotifDate = new Date(lastNotif).getTime() / 1000
-    const delta = now.getTime() / 1000 - lastNotifDate
-    if (delta < Constants.PUSH_DELAY_SECONDS) {
-      BackgroundTask.finish()
-      return
+BackgroundFetch.configure(
+  {
+    minimumFetchInterval: 15,
+    stopOnTerminate: false,
+    startOnBoot: true
+  },
+  async () => {
+    console.log('appStateLog: running background task')
+    const lastNotif = await AsyncStorage.getItem(Constants.LOCAL_STORAGE_BACKGROUND_PUSH_KEY)
+    const now = new Date()
+    if (lastNotif) {
+      const lastNotifDate = new Date(lastNotif).getTime() / 1000
+      const delta = now.getTime() / 1000 - lastNotifDate
+      if (delta < Constants.PUSH_DELAY_SECONDS) {
+        BackgroundFetch.finish()
+        return
+      }
     }
-  }
-  makeCoreContext().then(async context => {
-    try {
-      const result = await context.fetchLoginMessages()
-      const date = new Date(Date.now() + 1000)
-      // for each key
-      for (const key in result) {
-        // skip loop if the property is from prototype
-        if (!result.hasOwnProperty(key)) continue
-        const obj = result[key]
-        if (obj.otpResetPending) {
-          if (Platform.OS === Constants.IOS) {
-            PushNotification.localNotificationSchedule({
-              title: s.strings.otp_notif_title,
-              message: sprintf(s.strings.otp_notif_body, key),
-              date
-            })
-          } else {
-            PushNotification.localNotificationSchedule({
-              message: s.strings.otp_notif_title,
-              subText: sprintf(s.strings.otp_notif_body, key),
-              date
-            })
+    makeCoreContext().then(async context => {
+      try {
+        const result = await context.fetchLoginMessages()
+        const date = new Date(Date.now() + 1000)
+        // for each key
+        for (const key in result) {
+          // skip loop if the property is from prototype
+          if (!result.hasOwnProperty(key)) continue
+          const obj = result[key]
+          if (obj.otpResetPending) {
+            if (Platform.OS === Constants.IOS) {
+              PushNotification.localNotificationSchedule({
+                title: s.strings.otp_notif_title,
+                message: sprintf(s.strings.otp_notif_body, key),
+                date
+              })
+            } else {
+              PushNotification.localNotificationSchedule({
+                message: s.strings.otp_notif_title,
+                subText: sprintf(s.strings.otp_notif_body, key),
+                date
+              })
+            }
           }
         }
+      } catch (error) {
+        global.bugsnag.notify(error)
+        console.error(error)
       }
-    } catch (error) {
-      console.error(error)
-    }
-  })
-  await AsyncStorage.setItem(Constants.LOCAL_STORAGE_BACKGROUND_PUSH_KEY, now.toString())
-  BackgroundTask.finish()
-})
+    })
+    await AsyncStorage.setItem(Constants.LOCAL_STORAGE_BACKGROUND_PUSH_KEY, now.toString())
 
+    // Required: Signal completion of your task to native code
+    // If you fail to do this, the OS can terminate your app
+    // or assign battery-blame for consuming too much background-time
+    BackgroundFetch.finish(BackgroundFetch.FETCH_RESULT_NEW_DATA)
+  },
+  error => {
+    console.log('RNBackgroundFetch failed to start')
+    console.log(error)
+  }
+)
+
+function _handleAppStateChange () {
+  console.log('appStateLog: ', AppState.currentState)
+}
+function _handleSingleAppStateChange () {
+  if (AppState.currentState === 'background') {
+    AppState.removeEventListener('change', _handleSingleAppStateChange)
+  }
+}
 export default class App extends Component<{}> {
   componentDidMount () {
-    BackgroundTask.schedule()
+    console.log('appStateLog: Component Mounted', AppState.currentState)
+    AppState.addEventListener('change', _handleAppStateChange)
+    if (Platform.OS === Constants.IOS) {
+    } else {
+      AppState.addEventListener('change', _handleSingleAppStateChange)
+    }
   }
 
   render () {

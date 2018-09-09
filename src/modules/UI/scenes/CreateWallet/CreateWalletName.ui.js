@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import { ActivityIndicator, Alert, View } from 'react-native'
+import { Alert, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
@@ -77,14 +77,13 @@ export class CreateWalletName extends Component<Props, State> {
               onNext={this.onNext}
             />
             <View style={styles.buttons}>
-              <SecondaryButton style={[styles.back]} onPressFunction={this.onBack} text={s.strings.title_back} />
+              <SecondaryButton style={[styles.back]} onPress={this.onBack}>
+                <SecondaryButton.Text>{s.strings.title_back}</SecondaryButton.Text>
+              </SecondaryButton>
 
-              <PrimaryButton
-                style={[styles.next]}
-                onPressFunction={this.onNext}
-                text={s.strings.string_next_capitalized}
-                processingElement={<ActivityIndicator />}
-              />
+              <PrimaryButton style={[styles.next]} onPress={this.onNext}>
+                <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>
+              </PrimaryButton>
             </View>
           </View>
         </View>

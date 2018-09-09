@@ -8,11 +8,12 @@ import type { Dispatch, GetState, State } from '../../../../../src/modules/Redux
 import * as actions from '../../../../actions/indexActions.js'
 import * as Constants from '../../../../constants/indexConstants.js'
 import s from '../../../../locales/strings.js'
+import { convertCurrency, restoreWalletsRequest } from '../../../Core/Account/api.js'
 import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'
 import * as CORE_SELECTORS from '../../../Core/selectors'
 import { displayErrorAlert } from '../../components/ErrorAlert/actions.js'
 import * as SETTINGS_ACTIONS from '../../Settings/action.js'
-import { restoreWalletsRequest } from '../../../Core/Account/api.js'
+import { newSpendingLimits } from '../../Settings/spendingLimits/SpendingLimitsReducer.js'
 
 export const PREFIX = 'UI/Scenes/Settings/'
 
@@ -75,12 +76,39 @@ export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatc
 
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
-  const onSuccess = () => dispatch(SETTINGS_ACTIONS.setDefaultFiat(defaultFiat))
-  const onError = e => console.log(e)
 
-  return ACCOUNT_SETTINGS.setDefaultFiatRequest(account, defaultFiat)
-    .then(onSuccess)
-    .catch(onError)
+  // PSEUDO_CODE
+  // get spendingLimits
+  const spendingLimits = state.ui.settings.spendingLimits
+  const { transaction } = spendingLimits
+  const previousDefaultIsoFiat = state.ui.settings.defaultIsoFiat
+
+  Promise.resolve()
+    .then(() => {
+      // update default fiat in account settings
+      ACCOUNT_SETTINGS.setDefaultFiatRequest(account, defaultFiat)
+    })
+    .then(() => {
+      // update default fiat in settings
+      dispatch(SETTINGS_ACTIONS.setDefaultFiat(defaultFiat))
+      const nextDefaultIsoFiat = getState().ui.settings.defaultIsoFiat
+      // convert from previous fiat to next fiat
+      return convertCurrency(account, previousDefaultIsoFiat, nextDefaultIsoFiat, transaction.amount)
+    })
+    .then(transactionAmount => {
+      const nextSpendingLimits = {
+        transaction: {
+          ...transaction,
+          amount: parseFloat(transactionAmount.toFixed(2))
+        }
+      }
+
+      // update spending limits in account settings
+      ACCOUNT_SETTINGS.setSpendingLimits(account, nextSpendingLimits)
+      // update spending limits in settings
+      dispatch(newSpendingLimits(nextSpendingLimits))
+    })
+    .catch(e => console.log(e))
 }
 
 export const setMerchantModeRequest = (merchantMode: boolean) => (dispatch: Dispatch, getState: GetState) => {
@@ -198,13 +226,13 @@ export function updateCustomNodesList (currencyCode: string, nodesList: Array<st
 
 // touch id interaction
 export const updateTouchIdEnabled = (arg: boolean, account: EdgeAccount) => async (dispatch: Dispatch, getState: GetState) => {
-  const context = CORE_SELECTORS.getContext(getState())
+  const folder = CORE_SELECTORS.getFolder(getState())
   // dispatch the update for the new state for
   dispatch(SETTINGS_ACTIONS.updateTouchIdEnabled(arg))
   if (arg) {
-    enableTouchId(context, account)
+    enableTouchId(folder, account)
   } else {
-    disableTouchId(context, account)
+    disableTouchId(folder, account)
   }
 }
 

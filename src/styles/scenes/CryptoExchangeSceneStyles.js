@@ -1,7 +1,5 @@
 // @flow
 
-import { Image } from 'react-native'
-
 import THEME from '../../theme/variables/airbitz'
 import * as Styles from '../indexStyles'
 
@@ -82,7 +80,7 @@ const CryptoExchangeSceneStyle = {
       currencyIcon: {
         height: 25,
         width: 25,
-        resizeMode: Image.resizeMode.contain
+        resizeMode: 'contain'
       },
       altCurrencyText: {
         color: THEME.COLORS.PRIMARY,
@@ -90,7 +88,8 @@ const CryptoExchangeSceneStyle = {
       },
       top: {
         flex: 4,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        marginBottom: 20
       },
       topRight: {
         flex: 8
@@ -106,7 +105,8 @@ const CryptoExchangeSceneStyle = {
       },
       bottom: {
         flex: 4,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        marginBottom: 20
       },
       bottomRight: {
         flex: 8
@@ -192,7 +192,7 @@ const CryptoExchangeSceneStyle = {
     currencyIcon: {
       height: 25,
       width: 25,
-      resizeMode: Image.resizeMode.contain
+      resizeMode: 'contain'
     },
     altCurrencyText: {
       color: THEME.COLORS.WHITE,

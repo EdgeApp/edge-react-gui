@@ -1,9 +1,10 @@
 // @flow
 
 import { StyleSheet } from 'react-native'
-import { PLATFORM } from '../../../../../theme/variables/platform.js'
-import THEME from '../../../../../theme/variables/airbitz.js'
+
 import { isIphoneX } from '../../../../../lib/isIphoneX.js'
+import THEME from '../../../../../theme/variables/airbitz.js'
+import { PLATFORM } from '../../../../../theme/variables/platform.js'
 
 export const styles = {
   stylizedButtonText: {
@@ -24,6 +25,10 @@ export const styles = {
   },
   doneButton: {
     color: THEME.COLORS.PRIMARY
+  },
+  okButton: {
+    marginTop: 16,
+    flex: 1
   },
   rowContainer: {
     height: 44,
@@ -81,9 +86,7 @@ export const styles = {
     flex: 1,
     margin: 4
   },
-  txIDIcon: {
-
-  },
+  txIDIcon: {},
   customNodesInputWrap: {
     borderWidth: 1,
     borderColor: '#CCCCCC',

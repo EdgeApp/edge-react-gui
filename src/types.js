@@ -177,3 +177,10 @@ export type PasswordReminder = {
   nonPasswordDaysLimit: number,
   nonPasswordLoginsLimit: number
 }
+
+export type SpendingLimits = {
+  transaction: {
+    isEnabled: boolean,
+    amount: number
+  }
+}

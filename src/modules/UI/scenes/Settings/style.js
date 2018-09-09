@@ -19,11 +19,13 @@ export const styles = {
   },
   body: {
     paddingHorizontal: 20,
-    paddingVertical: 5
+    paddingVertical: 5,
+    backgroundColor: THEME.COLORS.WHITE
   },
   container: {
     position: 'relative',
-    height: '100%'
+    height: '100%',
+    backgroundColor: THEME.COLORS.WHITE
   },
   listStyle: {
     height: 100
@@ -184,7 +186,10 @@ export const styles = {
   },
   underlayColor: {
     color: THEME.COLORS.GRAY_4
-  }
+  },
   /// ////// end of default fiat area //////////
+  bottomShim: {
+    backgroundColor: THEME.COLORS.WHITE
+  }
 }
 export default StyleSheet.create(styles)

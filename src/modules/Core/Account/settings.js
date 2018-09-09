@@ -2,8 +2,8 @@
 
 import type { EdgeAccount } from 'edge-core-js'
 
-import { categories } from './subcategories.js'
 import type { PasswordReminder } from '../../../types.js'
+import { categories } from './subcategories.js'
 
 // Default Core Settings
 export const CORE_DEFAULTS = {
@@ -11,11 +11,20 @@ export const CORE_DEFAULTS = {
   pinMode: false
 }
 
+export const PASSWORD_RECOVERY_REMINDERS_SHOWN = {
+  '20': false,
+  '200': false,
+  '2000': false,
+  '20000': false,
+  '200000': false
+}
+
 // TODO:  Remove hardcoded currency defaults
 // Default Account Settings
 export const SYNCED_ACCOUNT_DEFAULTS = {
   autoLogoutTimeInSeconds: 3600,
   defaultFiat: 'USD',
+  defaultIsoFiat: 'iso:USD',
   merchantMode: false,
   BTC: {
     denomination: '100',
@@ -45,6 +54,20 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
       isEnabled: false
     }
   },
+  DOGE: {
+    denomination: '100000000',
+    customNodes: {
+      nodesList: [],
+      isEnabled: false
+    }
+  },
+  DGB: {
+    denomination: '100000000',
+    customNodes: {
+      nodesList: [],
+      isEnabled: false
+    }
+  },
   LTC: {
     denomination: '100000000',
     customNodes: {
@@ -53,6 +76,13 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
     }
   },
   FTC: {
+    denomination: '100000000',
+    customNodes: {
+      nodesList: [],
+      isEnabled: false
+    }
+  },
+  VTC: {
     denomination: '100000000',
     customNodes: {
       nodesList: [],
@@ -73,13 +103,6 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
       isEnabled: false
     }
   },
-  UFO: {
-    denomination: '100000000',
-    customNodes: {
-      nodesList: [],
-      isEnabled: false
-    }
-  },
   XMR: {
     denomination: '1000000000000',
     customNodes: {
@@ -89,6 +112,13 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   },
   ETH: {
     denomination: '1000000000000000000',
+    customNodes: {
+      nodesList: [],
+      isEnabled: false
+    }
+  },
+  UFO: {
+    denomination: '100000000',
     customNodes: {
       nodesList: [],
       isEnabled: false
@@ -106,7 +136,8 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   HUR: {
     denomination: '1000000000000000000'
   },
-  customTokens: []
+  customTokens: [],
+  passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN
 }
 
 export const LOCAL_ACCOUNT_DEFAULTS = {
@@ -120,7 +151,13 @@ export const LOCAL_ACCOUNT_DEFAULTS = {
     nonPasswordLoginsLimit: 4
   },
   isAccountBalanceVisible: true,
-  isWalletFiatBalanceVisible: false
+  isWalletFiatBalanceVisible: false,
+  spendingLimits: {
+    transaction: {
+      amount: 0,
+      isEnabled: false
+    }
+  }
 }
 
 const SYNCED_SETTINGS_FILENAME = 'Settings.json'
@@ -183,6 +220,29 @@ export const setWalletFiatBalanceVisibility = (account: EdgeAccount, isWalletFia
   })
 }
 
+export type SpendingLimits = {
+  transaction: {
+    amount: number,
+    isEnabled: boolean
+  }
+}
+
+export const setSpendingLimits = (account: EdgeAccount, spendingLimits: SpendingLimits) => {
+  return getLocalSettings(account).then(settings => {
+    const updatedSettings = updateSettings(settings, { spendingLimits })
+    return setLocalSettings(account, updatedSettings)
+  })
+}
+export async function setPasswordRecoveryRemindersAsync (account: EdgeAccount, level: string, wasShown: boolean) {
+  const settings = await getSyncedSettings(account)
+  const passwordRecoveryRemindersShown = {
+    ...settings.passwordRecoveryRemindersShown,
+    [level]: wasShown
+  }
+  const updatedSettings = updateSettings(settings, { passwordRecoveryRemindersShown })
+  return setSyncedSettings(account, updatedSettings)
+}
+
 // Currency Settings
 export const setDenominationKeyRequest = (account: EdgeAccount, currencyCode: string, denomination: string) =>
   getSyncedSettings(account).then(settings => {
@@ -191,7 +251,7 @@ export const setDenominationKeyRequest = (account: EdgeAccount, currencyCode: st
   })
 
 export const setIsCustomNodesEnabled = (account: EdgeAccount, currencyCode: string, isEnabled: boolean) => {
-  return getSyncedSettings(account).then((settings) => {
+  return getSyncedSettings(account).then(settings => {
     const updatedCurrencySettings = {
       ...settings,
       customNodes: {
@@ -205,7 +265,7 @@ export const setIsCustomNodesEnabled = (account: EdgeAccount, currencyCode: stri
 }
 
 export const setCustomNodesList = (account: EdgeAccount, currencyCode: string, nodesList: Array<string>) => {
-  return getSyncedSettings(account).then((settings) => {
+  return getSyncedSettings(account).then(settings => {
     const updatedCurrencySettings = {
       ...settings,
       customNodes: {
@@ -257,12 +317,14 @@ export async function setSyncedSettingsAsync (account: EdgeAccount, settings: Ob
   await SettingsFile.setText(text)
 }
 
-export async function setSubcategoriesRequest (account: EdgeAccount, subcategories: any) {
+export type CategoriesFile = { categories: Array<string> }
+
+export async function setSubcategoriesRequest (account: EdgeAccount, subcategories: CategoriesFile) {
   // const subcats = await getSyncedSubcategories(account)
   return setSyncedSubcategories(account, subcategories)
 }
 
-export async function setSyncedSubcategories (account: EdgeAccount, subcategories: any) {
+export async function setSyncedSubcategories (account: EdgeAccount, subcategories: CategoriesFile) {
   let finalText = {}
   if (!subcategories.categories) {
     finalText.categories = subcategories
@@ -287,21 +349,28 @@ export const getSyncedSubcategories = (account: EdgeAccount) =>
     })
     .catch(() =>
       // If Categories.json doesn't exist yet, create it, and return it
-      setSyncedSubcategories(account, SYNCED_SUBCATEGORIES_DEFAULTS).then(() => SYNCED_SUBCATEGORIES_DEFAULTS)
+      setSyncedSubcategories(account, SYNCED_SUBCATEGORIES_DEFAULTS).then(() => SYNCED_SUBCATEGORIES_DEFAULTS.categories)
     )
 
 export const getSyncedSubcategoriesFile = (account: EdgeAccount) =>
   // $FlowFixMe folder not found on EdgeAccount type
   account.folder.file(CATEGORIES_FILENAME)
 
-export const getLocalSettings = (account: EdgeAccount) =>
-  getLocalSettingsFile(account)
+export const getLocalSettings = (account: EdgeAccount) => {
+  return getLocalSettingsFile(account)
     .getText()
     .then(JSON.parse)
-    .catch(() =>
+    .catch(() => {
       // If Settings.json doesn't exist yet, create it, and return it
-      setLocalSettings(account, LOCAL_ACCOUNT_DEFAULTS).then(() => LOCAL_ACCOUNT_DEFAULTS)
-    )
+      return setLocalSettings(account, LOCAL_ACCOUNT_DEFAULTS).then(() => LOCAL_ACCOUNT_DEFAULTS)
+    })
+    .then(settings => {
+      return {
+        ...LOCAL_ACCOUNT_DEFAULTS,
+        ...settings
+      }
+    })
+}
 
 export const setLocalSettings = (account: EdgeAccount, settings: Object) => {
   const text = JSON.stringify(settings)

@@ -38,10 +38,12 @@ export const createCurrencyWallet = (
   const account = CORE_SELECTORS.getAccount(state)
 
   dispatch(WALLET_ACTIONS.createWalletStart())
-
-  return ACCOUNT_API.createCurrencyWalletRequest(account, walletType, {
+  // Try and get the new format param from the legacy walletType if it's mentioned
+  const [type, format] = walletType.split('-')
+  return ACCOUNT_API.createCurrencyWalletRequest(account, type, {
     name: walletName,
-    fiatCurrencyCode
+    fiatCurrencyCode,
+    keyOptions: format ? { format } : {}
   }).then(edgeWallet => {
     Actions.popTo(Constants.WALLET_LIST_SCENE)
     dispatch(WALLET_ACTIONS.createWalletSuccess())

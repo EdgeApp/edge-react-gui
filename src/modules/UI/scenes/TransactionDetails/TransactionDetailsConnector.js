@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyInfo, EdgeCurrencyPlugin, EdgeMetadata } from 'edge-core-js'
+import type { EdgeCurrencyInfo, EdgeMetadata } from 'edge-core-js'
 import { connect } from 'react-redux'
 
 import { PLATFORM } from '../../../../theme/variables/platform.js'
@@ -9,7 +9,7 @@ import * as UTILS from '../../../utils'
 import { displayDropdownAlert } from '../../components/DropdownAlert/actions'
 import * as UI_SELECTORS from '../../selectors'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
-import { getSubcategories, setTransactionDetails, setNewSubcategory } from './action.js'
+import { getSubcategories, setNewSubcategory, setTransactionDetails } from './action.js'
 import { TransactionDetails } from './TransactionDetails.ui'
 import type { TransactionDetailsOwnProps } from './TransactionDetails.ui'
 
@@ -21,8 +21,8 @@ const mapStateToProps = (state: State, ownProps: TransactionDetailsOwnProps) => 
   const settings = SETTINGS_SELECTORS.getSettings(state)
   const currencyCode: string = ownProps.edgeTransaction.currencyCode
   const plugins: Object = SETTINGS_SELECTORS.getPlugins(state)
-  const arrayPlugins: Array<EdgeCurrencyPlugin> = plugins.arrayPlugins
-  const currencyInfo: EdgeCurrencyInfo | void = UTILS.getCurrencyInfo(arrayPlugins, currencyCode)
+  const allCurrencyInfos: Array<EdgeCurrencyInfo> = plugins.allCurrencyInfos
+  const currencyInfo: EdgeCurrencyInfo | void = UTILS.getCurrencyInfo(allCurrencyInfos, currencyCode)
 
   return {
     contacts,
@@ -44,4 +44,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   setNewSubcategory: (newSubcategory: string) => dispatch(setNewSubcategory(newSubcategory))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(TransactionDetails)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TransactionDetails)

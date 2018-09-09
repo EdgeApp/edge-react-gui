@@ -3,9 +3,8 @@
 import { connect } from 'react-redux'
 
 import type { Dispatch, State } from '../../../../../ReduxTypes.js'
-
-import { deactivated } from './SecondaryModalActions.js'
 import { SecondaryModal } from './SecondaryModal.ui.js'
+import { deactivated } from './SecondaryModalActions.js'
 
 export const mapStateToProps = (state: State) => ({
   error: state.ui.scenes.scan.privateKeyModal.error,
@@ -21,5 +20,8 @@ export const mapDispatchToProps = (dispatch: Dispatch) => ({
   }
 })
 
-export const SecondaryModalConnector = connect(mapStateToProps, mapDispatchToProps)(SecondaryModal)
+export const SecondaryModalConnector = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SecondaryModal)
 export default SecondaryModalConnector

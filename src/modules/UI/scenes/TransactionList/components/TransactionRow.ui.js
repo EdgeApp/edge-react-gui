@@ -1,21 +1,21 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import { bns } from 'biggystring'
-
+import type { EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
-import * as UTILS from '../../../../utils'
-import styles, {styles as styleRaw} from '../style'
-import {intl} from '../../../../../locales/intl'
-import type {GuiWallet, TransactionListTx} from '../../../../../types'
+import { Image, TouchableHighlight, View } from 'react-native'
+import slowlog from 'react-native-slowlog'
+import { sprintf } from 'sprintf-js'
+
 import receivedTypeImage from '../../../../../assets/images/transactions/transaction-type-received.png'
 import sentTypeImage from '../../../../../assets/images/transactions/transaction-type-sent.png'
+import { intl } from '../../../../../locales/intl'
 import s from '../../../../../locales/strings'
-import { sprintf } from 'sprintf-js'
-import type {ContactsState} from '../../../../../reducers/contacts/contactsReducer'
-import { Image, TouchableHighlight, View } from 'react-native'
+import type { ContactsState } from '../../../../../reducers/contacts/contactsReducer'
+import type { GuiWallet, TransactionListTx } from '../../../../../types'
+import * as UTILS from '../../../../utils'
 import T from '../../../components/FormattedText'
-import type { EdgeDenomination, EdgeTransaction } from 'edge-core-js'
+import styles, { styles as styleRaw } from '../style'
 
 type TransactionRowOwnProps = {
   transactions: Array<TransactionListTx>,
@@ -28,7 +28,7 @@ type TransactionRowOwnProps = {
   fiatCurrencyCode: string,
   onClick: (edgeTransaction: EdgeTransaction, thumbnailPath: string) => void,
   fiatSymbol: string,
-  requiredConfirmations: number,
+  requiredConfirmations: number
 }
 
 export type TransactionRowStateProps = {
@@ -51,7 +51,7 @@ export class TransactionRowComponent extends Component<Props, State> {
   }
 
   shouldComponentUpdate (nextProps: Props) {
-    const diffElement = UTILS.getObjectDiff(this.props, nextProps, {transaction: true}, {transactions: true})
+    const diffElement = UTILS.getObjectDiff(this.props, nextProps, { transaction: true }, { transactions: true })
     if (diffElement) {
       return true
     } else {
@@ -111,21 +111,22 @@ export class TransactionRowComponent extends Component<Props, State> {
     let fiatAmountString
     if (tx.metadata && tx.metadata.amountFiat) {
       fiatAmountString = bns.abs(tx.metadata.amountFiat.toFixed(2))
-      fiatAmountString = intl.formatNumber(bns.toFixed(fiatAmountString, 2, 2), {toFixed: 2})
+      fiatAmountString = intl.formatNumber(bns.toFixed(fiatAmountString, 2, 2), { toFixed: 2 })
     } else {
-      fiatAmountString = intl.formatNumber('0.00', {toFixed: 2})
+      fiatAmountString = intl.formatNumber('0.00', { toFixed: 2 })
     }
 
     const { walletBlockHeight, requiredConfirmations } = this.props
-    if (tx.blockHeight <= 0 || walletBlockHeight === null) { // if completely unconfirmed or wallet uninitialized
+    if (tx.blockHeight <= 0 || walletBlockHeight === null) {
+      // if completely unconfirmed or wallet uninitialized
       pendingTimeStyle = styles.transactionPending
       pendingTimeSyntax = UNCONFIRMED_TRANSACTION
       // if partial confirmation (less than currency threshold)
       // subtract 1 from requiredConfirmations because one confirmation is when wallet and tx block heights match (difference is zero)
-    } else if ((walletBlockHeight - tx.blockHeight) < requiredConfirmations - 1) {
+    } else if (walletBlockHeight - tx.blockHeight < requiredConfirmations - 1) {
       pendingTimeStyle = styles.transactionPartialConfirmation
       // keep in mind that if the tx.blockHeight is not -1 the that means it must have had at least one confirmation
-      pendingTimeSyntax = sprintf(CONFIRMATION_PROGRESS_TEXT, (walletBlockHeight - tx.blockHeight + 1), requiredConfirmations)
+      pendingTimeSyntax = sprintf(CONFIRMATION_PROGRESS_TEXT, walletBlockHeight - tx.blockHeight + 1, requiredConfirmations)
       // if confirmed past threshold
     } else {
       pendingTimeStyle = styles.transactionTime
@@ -150,14 +151,14 @@ export class TransactionRowComponent extends Component<Props, State> {
         <TouchableHighlight
           onPress={() => this.props.onClick(tx, thumbnailPath)}
           underlayColor={styleRaw.transactionUnderlay.color}
-          style={[styles.singleTransaction, {borderBottomWidth: lastOfDate ? 0 : 1}]}
+          style={[styles.singleTransaction, { borderBottomWidth: lastOfDate ? 0 : 1 }]}
         >
           <View style={[styles.transactionInfoWrap]}>
             <View style={styles.transactionLeft}>
               {thumbnailPath ? (
-                <Image style={[styles.transactionLogo]} source={{uri: thumbnailPath}}/>
+                <Image style={[styles.transactionLogo]} source={{ uri: thumbnailPath }} />
               ) : (
-                <Image style={styles.transactionLogo} source={txImage}/>
+                <Image style={styles.transactionLogo} source={txImage} />
               )}
 
               <View style={[styles.transactionLeftTextWrap]}>

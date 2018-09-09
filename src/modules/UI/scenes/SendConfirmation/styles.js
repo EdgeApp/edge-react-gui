@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native'
 
 import THEME, { DEBUG as debug } from '../../../../theme/variables/airbitz'
 
-export default StyleSheet.create({
+export const rawStyles = {
   gradient: {
     height: THEME.HEADER
   },
@@ -36,7 +36,8 @@ export default StyleSheet.create({
   },
   feeAreaText: {
     fontSize: 16,
-    color: 'white'
+    color: THEME.COLORS.WHITE,
+    backgroundColor: THEME.COLORS.TRANSPARENT
   },
 
   pendingSymbolArea: {
@@ -94,5 +95,27 @@ export default StyleSheet.create({
     alignItems: 'center',
     marginTop: 10
   },
+  row: {
+    alignItems: 'center',
+    width: '100%'
+  },
+  rowText: {
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    color: THEME.COLORS.WHITE
+  },
+  pinInputContainer: {
+    width: 60,
+    height: 50
+  },
+  pinInputSpacer: {
+    width: 10
+  },
+  activityIndicatorSpace: {
+    height: 54,
+    paddingVertical: 18
+  },
+  footer: {},
   debug
-})
+}
+
+export default StyleSheet.create(rawStyles)

@@ -22,4 +22,7 @@ export const mapDispatchToProps = (dispatch: Dispatch) => ({
   }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(ContactsLoader)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ContactsLoader)

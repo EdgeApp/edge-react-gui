@@ -84,15 +84,6 @@ const updatingBalance = (state: boolean = true, action) => {
   }
 }
 
-const transactionsWalletListModalVisibility = (state = false, action) => {
-  switch (action.type) {
-    case ACTION.TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL:
-      return !state
-    default:
-      return state
-  }
-}
-
 const loadingTransactions = (state = false, action) => {
   switch (action.type) {
     case ACTION.START_TRANSACTIONS_LOADING:
@@ -112,7 +103,6 @@ export const transactionList = combineReducers({
   currentEndIndex,
   searchVisible,
   updatingBalance,
-  transactionsWalletListModalVisibility,
   loadingTransactions
 })
 

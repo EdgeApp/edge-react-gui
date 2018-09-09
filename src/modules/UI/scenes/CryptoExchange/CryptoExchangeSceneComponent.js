@@ -1,9 +1,9 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import slowlog from 'react-native-slowlog'
 
 import type { SetNativeAmountInfo } from '../../../../actions/CryptoExchangeActions.js'
 import CryptoExchangeQuoteTimerConnector from '../../../../connectors/components/CryptoExchangeQuoteTimerConnector'
@@ -35,6 +35,7 @@ export type CryptoExchangeSceneComponentStateProps = {
   toPrimaryInfo: GuiCurrencyInfo,
   toButtonText: string,
   toFiatToCrypto: number,
+  showWalletSelectModal: boolean,
 
   // Exchange rate between crypto to crypto
   exchangeRate: number,
@@ -69,7 +70,8 @@ export type CryptoExchangeSceneComponentDispatchProps = {
   closeConfirmation: () => any,
   openConfirmation: () => any,
   getShapeShiftTokens: () => any,
-  setNativeAmount: (data: SetNativeAmountInfo) => any
+  setNativeAmount: (data: SetNativeAmountInfo) => any,
+  onSelectWallet: (string, string) => any
 }
 
 type Props = CryptoExchangeSceneComponentStateProps & CryptoExchangeSceneComponentDispatchProps
@@ -95,7 +97,7 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
     this.state = newState
     slowlog(this, /.*/, global.slowlogOptions)
   }
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     this.props.getShapeShiftTokens()
   }
 
@@ -104,7 +106,7 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
     // this.setState({overridePrimaryExchangeAmount})
   }
 
-  componentWillReceiveProps (nextProps: Props) {
+  UNSAFE_componentWillReceiveProps (nextProps: Props) {
     if (this.state.forceUpdateGuiCounter !== nextProps.forceUpdateGuiCounter) {
       this.setState({
         fromExchangeAmount: nextProps.fromExchangeAmount,
@@ -151,7 +153,7 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
     console.log(this.props.shiftPendingTransaction)
     return (
       <SafeAreaView>
-        <Gradient style={[style.scene]}>
+        <Gradient style={style.scene}>
           <Gradient style={style.gradient} />
           <KeyboardAwareScrollView
             style={[style.mainScrollView]}
@@ -204,18 +206,13 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
   }
 
   renderButton = () => {
-    if (this.props.showNextButton) {
+    const { showNextButton, gettingTransaction } = this.props
+    if (showNextButton) {
       return (
-        <PrimaryButton
-          text={s.strings.string_next}
-          onPressFunction={this.props.openConfirmation}
-          processingFlag={this.props.gettingTransaction}
-          processingElement={<ActivityIndicator />}
-        />
+        <PrimaryButton onPress={this.props.openConfirmation} disabled={gettingTransaction}>
+          {gettingTransaction ? <ActivityIndicator /> : <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>}
+        </PrimaryButton>
       )
-    }
-    if (this.props.gettingTransaction) {
-      return <ActivityIndicator />
     }
     return null
   }
@@ -258,9 +255,39 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
   }
 
   renderDropUp = () => {
+    const { onSelectWallet, fromCurrencyCode, fromWallet, toCurrencyCode, toWallet } = this.props
+    const { whichWallet } = this.state
+    let excludedCurrencyCode = ''
+    // some complex logic because 'toCurrencyCode/fromCurrencyCode'
+    // can be denomination (needs to change to actual currencyCode)
+    if (whichWallet === Constants.TO) {
+      if (fromWallet) {
+        if (fromWallet.enabledTokens.length > 1) {
+          // could be token
+          excludedCurrencyCode = fromCurrencyCode
+        } else {
+          excludedCurrencyCode = fromWallet.currencyCode
+        }
+      }
+    } else {
+      if (toWallet) {
+        if (toWallet.enabledTokens.length > 1) {
+          // could be token
+          excludedCurrencyCode = toCurrencyCode
+        } else {
+          excludedCurrencyCode = toWallet.currencyCode
+        }
+      }
+    }
     if (this.props.showWalletSelectModal) {
       return (
-        <WalletListModal topDisplacement={Constants.CRYPTO_EXCHANGE_WALLET_DIALOG_TOP} type={Constants.CRYPTO_EXCHANGE} whichWallet={this.state.whichWallet} />
+        <WalletListModal
+          onSelectWallet={onSelectWallet}
+          topDisplacement={Constants.CRYPTO_EXCHANGE_WALLET_DIALOG_TOP}
+          type={Constants.CRYPTO_EXCHANGE}
+          whichWallet={whichWallet}
+          excludedCurrencyCode={excludedCurrencyCode}
+        />
       )
     }
     return null

@@ -1,13 +1,15 @@
 // @flow
 
-import { connect } from 'react-redux'
 import { errorNames } from 'edge-core-js'
+import { connect } from 'react-redux'
+
 import { getCurrencyConverter, getExchangeRate } from '../../../Core/selectors.js'
 import type { Dispatch, State } from '../../../ReduxTypes'
 import { convertNativeToExchange } from '../../../utils'
 import { getExchangeDenomination, getSelectedCurrencyCode, getSelectedWallet } from '../../selectors.js'
 import { getDisplayDenomination, getExchangeDenomination as settingsGetExchangeDenomination } from '../../Settings/selectors.js'
-import { reset, signBroadcastAndSave, updateAmount, updateSpendPending, uniqueIdentifierUpdated } from './action.js'
+import { newPin, reset, signBroadcastAndSave, uniqueIdentifierUpdated, updateAmount, updateSpendPending } from './action.js'
+import { activated as uniqueIdentifierModalActivated } from './components/UniqueIdentifierModal/UniqueIdentifierModalActions.js'
 import { getError, getForceUpdateGuiCounter, getKeyboardIsVisible, getPending, getPublicAddress, getTransaction } from './selectors'
 import { SendConfirmation } from './SendConfirmation.ui'
 import type { SendConfirmationDispatchProps, SendConfirmationStateProps } from './SendConfirmation.ui'
@@ -76,7 +78,9 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
     resetSlider,
     secondaryExchangeCurrencyCode,
     sliderDisabled: !transaction || !!error || !!pending,
-    uniqueIdentifier
+    uniqueIdentifier,
+    authRequired: state.ui.scenes.sendConfirmation.authRequired,
+    address: state.ui.scenes.sendConfirmation.address
   }
   return out
 }
@@ -88,7 +92,14 @@ const mapDispatchToProps = (dispatch: Dispatch): SendConfirmationDispatchProps =
   uniqueIdentifierUpdated: uniqueIdentifier => dispatch(uniqueIdentifierUpdated({ uniqueIdentifier })),
   reset: () => dispatch(reset()),
   updateSpendPending: (pending: boolean): any => dispatch(updateSpendPending(pending)),
-  signBroadcastAndSave: (): any => dispatch(signBroadcastAndSave())
+  signBroadcastAndSave: (): any => dispatch(signBroadcastAndSave()),
+  onChangePin: (pin: string) => dispatch(newPin(pin)),
+  uniqueIdentifierButtonPressed: () => {
+    dispatch(uniqueIdentifierModalActivated())
+  }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(SendConfirmation)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SendConfirmation)

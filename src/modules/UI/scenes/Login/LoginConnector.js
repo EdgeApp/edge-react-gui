@@ -20,4 +20,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   initializeAccount: (account, touchIdInfo) => dispatch(initializeAccount(account, touchIdInfo))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Login)

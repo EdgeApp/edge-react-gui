@@ -3,6 +3,7 @@
 export const LOGIN = 'login'
 export const ROOT = 'root'
 export const EDGE = 'edge'
+export const ONBOARDING = 'onboarding'
 export const CHANGE_PASSWORD = 'changePassword'
 export const CHANGE_PIN = 'changePin'
 export const OTP_SETUP = 'otpSetup'
@@ -37,7 +38,9 @@ export const EXCHANGE_SCENE = 'exchangeScene'
 export const CREATE_WALLET = 'createWallet'
 export const BUYSELL = 'buysell'
 export const SPEND = 'spend'
+export const TERMS_OF_SERVICE = 'termsOfService'
 export const PLUGIN = 'plugin'
+export const SPENDING_LIMITS = 'spendingLimits'
 
 export const CURRENCY_SETTINGS = {
   btcSettings: {
@@ -47,6 +50,10 @@ export const CURRENCY_SETTINGS = {
   bchSettings: {
     pluginName: 'bitcoinCash',
     currencyCode: 'BCH'
+  },
+  btgSettings: {
+    pluginName: 'bitcoinGold',
+    currencyCode: 'BTG'
   },
   ethSettings: {
     pluginName: 'ethereum',

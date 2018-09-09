@@ -2,8 +2,8 @@
 
 import Sound from 'react-native-sound'
 
-import type { Action } from '../modules/ReduxTypes.js'
 import { OPEN_AB_ALERT } from '../../src/constants/ActionConstants'
+import type { Action } from '../modules/ReduxTypes.js'
 import { DISPLAY_TRANSACTION_ALERT } from '../modules/UI/components/TransactionAlert/actions'
 
 const AUDIO_RECEUVED_FILE = 'audio_received.mp3'

@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyWallet, EdgeMetadata, EdgeParsedUri, EdgeReceiveAddress, EdgeSpendInfo, EdgeTransaction, EdgePaymentProtocolInfo } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeMetadata, EdgeParsedUri, EdgePaymentProtocolInfo, EdgeReceiveAddress, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import _ from 'lodash'
 const ENABLED_TOKENS_FILENAME = 'EnabledTokens.json'
 
@@ -19,8 +19,8 @@ export const renameWalletRequest = (wallet: EdgeCurrencyWallet, name: string) =>
   return wallet.renameWallet(name).then(() => wallet)
 }
 
-export const getNumTransactions = (wallet: EdgeCurrencyWallet, currencyCode: string): number => {
-  return wallet.getNumTransactions ? wallet.getNumTransactions({ currencyCode }) : 0
+export const getNumTransactions = (wallet: EdgeCurrencyWallet, currencyCode: string): Promise<number> => {
+  return Promise.resolve(wallet.getNumTransactions ? wallet.getNumTransactions({ currencyCode }) : 0)
 }
 
 export const getTransactions = (wallet: EdgeCurrencyWallet, currencyCode: string, options?: Object): Promise<Array<EdgeTransaction>> => {
@@ -48,7 +48,7 @@ const dummyEdgeReceiveAddress: EdgeReceiveAddress = {
   }
 }
 
-export const setTransactionDetailsRequest = (wallet: EdgeCurrencyWallet, txid: string, currencyCode: string, edgeMetadata: EdgeMetadata): Promise<void> => {
+export const setTransactionDetailsRequest = (wallet: EdgeCurrencyWallet, txid: string, currencyCode: string, edgeMetadata: EdgeMetadata): Promise<mixed> => {
   return wallet.saveTxMetadata ? wallet.saveTxMetadata(txid, currencyCode, edgeMetadata) : Promise.resolve()
 }
 
@@ -151,18 +151,13 @@ export async function updateEnabledTokens (wallet: EdgeCurrencyWallet, tokensToE
   }
 }
 
-export const parseURI = (wallet: EdgeCurrencyWallet, uri: string): EdgeParsedUri => {
-  return wallet.parseUri(uri)
-}
-
-export const parseUriAsync = (wallet: EdgeCurrencyWallet, uri: string): Promise<EdgeParsedUri> => {
+export const parseUri = (wallet: EdgeCurrencyWallet, uri: string): Promise<EdgeParsedUri> => {
   try {
     return Promise.resolve(wallet.parseUri(uri))
   } catch (error) {
     return Promise.reject(error)
   }
 }
-export const parseUri = parseUriAsync
 
 export const signTransaction = (wallet: EdgeCurrencyWallet, unsignedTransaction: EdgeTransaction): Promise<EdgeTransaction> => {
   return wallet.signTx(unsignedTransaction)
@@ -172,11 +167,11 @@ export const broadcastTransaction = (wallet: EdgeCurrencyWallet, signedTransacti
   return wallet.broadcastTx(signedTransaction)
 }
 
-export const saveTransaction = (wallet: EdgeCurrencyWallet, signedTransaction: EdgeTransaction): Promise<void> => {
+export const saveTransaction = (wallet: EdgeCurrencyWallet, signedTransaction: EdgeTransaction): Promise<mixed> => {
   return wallet.saveTx(signedTransaction)
 }
 
-export const resyncWallet = (wallet: EdgeCurrencyWallet): Promise<void> => {
+export const resyncWallet = (wallet: EdgeCurrencyWallet): Promise<mixed> => {
   return wallet.resyncBlockchain()
 }
 

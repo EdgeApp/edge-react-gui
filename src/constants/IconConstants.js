@@ -3,6 +3,7 @@
 // Simple
 export const SIMPLE_ICONS = 'simpleIcons'
 export const CHECK_CIRCLE = 'check'
+export const ARROW_RIGHT = 'arrow-right'
 
 // Entypo
 export const ENTYPO = 'entypo'

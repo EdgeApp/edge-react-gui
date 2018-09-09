@@ -16,7 +16,8 @@ export const styles = {
     paddingTop: 50
   },
   headerContainer: {
-    backgroundColor: THEME.COLORS.GRAY_1
+    backgroundColor: THEME.COLORS.GRAY_1,
+    paddingVertical: 8
   },
   modalBody: {
     width: PLATFORM.deviceWidth,

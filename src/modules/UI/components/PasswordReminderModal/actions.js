@@ -2,10 +2,10 @@
 
 import { Alert } from 'react-native'
 
-import type { GetState, Dispatch } from '../../../ReduxTypes.js'
+import s from '../../../../locales/strings.js'
 import * as ACCOUNT_API from '../../../Core/Account/api.js'
 import * as SETTINGS_API from '../../../Core/Account/settings.js'
-import s from '../../../../locales/strings.js'
+import type { Dispatch, GetState } from '../../../ReduxTypes.js'
 
 export const PREFIX = 'PasswordReminderModal/'
 

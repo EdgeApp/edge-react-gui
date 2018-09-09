@@ -1,25 +1,18 @@
 // @flow
 
 import { bns, div, eq, gte, mul, toFixed } from 'biggystring'
-import type {
-  EdgeCurrencyInfo,
-  EdgeCurrencyPlugin,
-  EdgeCurrencyWallet,
-  EdgeDenomination,
-  EdgeMetaToken,
-  EdgeReceiveAddress,
-  EdgeTransaction
-} from 'edge-core-js'
+import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
 import _ from 'lodash'
-import type { State } from './ReduxTypes'
 import { Platform } from 'react-native'
-import { getCurrencyConverter } from './Core/selectors.js'
-import { intl } from '../locales/intl.js'
+
 import { FIAT_CODES_SYMBOLS as currencySymbolMap, getSymbolFromCurrency } from '../constants/indexConstants.js'
+import { intl } from '../locales/intl.js'
 import borderColors from '../theme/variables/css3Colors'
 import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet } from '../types'
+import { getCurrencyConverter } from './Core/selectors.js'
+import type { State } from './ReduxTypes'
 
-const DIVIDE_PRECISION = 18
+export const DIVIDE_PRECISION = 18
 
 export const cutOffText = (str: string, lng: number) => {
   if (str.length >= lng) {
@@ -35,6 +28,29 @@ export const findDenominationSymbol = (denoms: Array<EdgeDenomination>, value: s
       return v.symbol
     }
   }
+}
+
+export const getSettingsCurrencyMultiplier = (currencyCode: string, settings: Object, denominations: Object) => {
+  const setCurrencyDenomination = settings[currencyCode].denomination
+  const denominationsInfo = denominations[setCurrencyDenomination]
+  const multiplier = denominationsInfo.multiplier
+  return multiplier
+}
+
+// tokens can only have one denomination / multiplier from what I understand
+export const getSettingsTokenMultiplier = (currencyCode: string, settings: Object, denomination: Object): string => {
+  let multiplier
+  if (denomination) {
+    multiplier = denomination[settings[currencyCode].denomination].multiplier
+  } else {
+    const customDenom = _.find(settings.customTokens, item => item.currencyCode === currencyCode)
+    if (customDenom && customDenom.denominations && customDenom.denominations[0]) {
+      multiplier = customDenom.denominations[0].multiplier
+    } else {
+      return '1'
+    }
+  }
+  return multiplier
 }
 
 export const getWalletDefaultDenomProps = (wallet: Object, settingsState: Object, currencyCode?: string /* for metaTokens */): EdgeDenomination => {
@@ -99,7 +115,7 @@ export const inputBottomPadding = () => {
 
 // will take the metaTokens property on the wallet (that comes from currencyInfo), merge with account-level custom tokens added, and only return if enabled (wallet-specific)
 // $FlowFixMe
-export const mergeTokens = (preferredEdgeMetaTokens: Array<EdgeMetaToken | CustomTokenInfo>, edgeMetaTokens: Array<CustomTokenInfo>) => {
+export const mergeTokens = (preferredEdgeMetaTokens: Array<$ReadOnly<EdgeMetaToken | CustomTokenInfo>>, edgeMetaTokens: Array<CustomTokenInfo>) => {
   const tokensEnabled = [...preferredEdgeMetaTokens] // initially set the array to currencyInfo (from plugin), since it takes priority
   for (const x of edgeMetaTokens) {
     // loops through the account-level array
@@ -201,7 +217,7 @@ export const getCurrencyAccountFiatBalanceFromWallet = (wallet: GuiWallet, curre
   const cryptoAmount = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
   const currencyConverter = getCurrencyConverter(state)
   const unformattedFiatValue = currencyConverter.convertCurrency(currencyCode, 'iso:' + settings.defaultFiat, cryptoAmount)
-  const formattedFiatValue = intl.formatNumber(unformattedFiatValue, {toFixed: 2})
+  const formattedFiatValue = intl.formatNumber(unformattedFiatValue, { toFixed: 2 })
   return formattedFiatValue || '0'
 }
 
@@ -226,12 +242,12 @@ export const getCurrencyWalletFiatBalanceFromWallet = (wallet: GuiWallet, curren
   const cryptoAmount = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
   const currencyConverter = getCurrencyConverter(state)
   const unformattedFiatValue = currencyConverter.convertCurrency(currencyCode, wallet.isoFiatCurrencyCode, cryptoAmount)
-  const formattedFiatValue = intl.formatNumber(unformattedFiatValue, {toFixed: 2})
+  const formattedFiatValue = intl.formatNumber(unformattedFiatValue, { toFixed: 2 })
   return formattedFiatValue || '0'
 }
 
 // not sure if this can be used with tokens
-export const calculateFiatFromCryptoCurrency = (wallet: GuiWallet, state: State): string => {
+export const calculateSettingsFiatFromCrypto = (wallet: GuiWallet, state: State): string => {
   let fiatValue = 0 // default to zero if not calculable
   const currencyCode = wallet.currencyCode
   const nativeBalance = wallet.nativeBalances[currencyCode]
@@ -244,6 +260,23 @@ export const calculateFiatFromCryptoCurrency = (wallet: GuiWallet, state: State)
   const nativeToExchangeRatio: string = exchangeDenomination.multiplier
   const cryptoAmount: number = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
   fiatValue = currencyConverter.convertCurrency(currencyCode, 'iso:' + settings.defaultFiat, cryptoAmount)
+  return intl.formatNumber(fiatValue, { toFixed: 2 }) || '0'
+}
+
+// not sure if this can be used with tokens
+export const calculateWalletFiatFromCrypto = (wallet: GuiWallet, state: State): string => {
+  let fiatValue = 0 // default to zero if not calculable
+  const currencyCode = wallet.currencyCode
+  const nativeBalance = wallet.nativeBalances[currencyCode]
+  const settings = state.ui.settings
+  const currencyConverter = getCurrencyConverter(state)
+  if (!nativeBalance || nativeBalance === '0') return '0'
+  const denominations = settings[currencyCode].denominations
+  const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
+  if (!exchangeDenomination) return '0'
+  const nativeToExchangeRatio: string = exchangeDenomination.multiplier
+  const cryptoAmount: number = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
+  fiatValue = currencyConverter.convertCurrency(currencyCode, wallet.isoFiatCurrencyCode, cryptoAmount)
   return intl.formatNumber(fiatValue, { toFixed: 2 }) || '0'
 }
 
@@ -264,7 +297,9 @@ export const convertDisplayToNative = (nativeToDisplayRatio: string) => (display
 
 export const isCryptoParentCurrency = (wallet: GuiWallet, currencyCode: string) => currencyCode === wallet.currencyCode
 
-export const getNewArrayWithoutItem = (array: Array<any>, targetItem: any) => array.filter(item => item !== targetItem)
+export function getNewArrayWithoutItem<T> (array: Array<T>, targetItem: T): Array<T> {
+  return array.filter(item => item !== targetItem)
+}
 
 export const getNewArrayWithItem = (array: Array<any>, item: any) => (!array.includes(item) ? [...array, item] : array)
 
@@ -342,9 +377,8 @@ export const unspacedLowercase = (input: string) => {
   return newInput
 }
 
-export const getCurrencyInfo = (plugins: Array<EdgeCurrencyPlugin>, currencyCode: string): EdgeCurrencyInfo | void => {
-  for (const plugin of plugins) {
-    const info = plugin.currencyInfo
+export const getCurrencyInfo = (allCurrencyInfos: Array<EdgeCurrencyInfo>, currencyCode: string): EdgeCurrencyInfo | void => {
+  for (const info of allCurrencyInfos) {
     for (const denomination of info.denominations) {
       if (denomination.name === currencyCode) {
         return info
@@ -381,7 +415,7 @@ export const isReceivedTransaction = (edgeTransaction: EdgeTransaction): boolean
   return !isSentTransaction(edgeTransaction)
 }
 export const isSentTransaction = (edgeTransaction: EdgeTransaction): boolean => {
-  return (!!edgeTransaction.nativeAmount && (edgeTransaction.nativeAmount.charAt(0) === '-'))
+  return !!edgeTransaction.nativeAmount && edgeTransaction.nativeAmount.charAt(0) === '-'
 }
 
 export const getTimeMeasurement = (inMinutes: number): string => {
@@ -436,7 +470,7 @@ export const getTimeInMinutes = (params: { measurement: string, value: number })
   const { measurement, value } = params
   const measurementStrategies = {
     seconds (v) {
-      const val = Math.round(v / 60 * 100) / 100
+      const val = Math.round((v / 60) * 100) / 100
       return val
     },
     minutes (v) {
@@ -504,9 +538,9 @@ export const getReceiveAddresses = (currencyWallets: { [id: string]: EdgeCurrenc
 }
 
 export const MILLISECONDS_PER_DAY = 86400000
-export const daysBetween = (DateInMillisecondsA: number, dateInMillisecondsB: number) => {
-  const millisecondsBetween = dateInMillisecondsB - DateInMillisecondsA
-  const daysBetween = millisecondsBetween / MILLISECONDS_PER_DAY
+export const daysBetween = (DateInMsA: number, dateInMsB: number) => {
+  const msBetween = dateInMsB - DateInMsA
+  const daysBetween = msBetween / MILLISECONDS_PER_DAY
   return daysBetween
 }
 
@@ -541,9 +575,7 @@ export function getObjectDiff (obj1: Object, obj2: Object, traverseObjects?: Obj
     }
   }
   for (const e in obj2) {
-    if (
-      (comparedElements && comparedElements[e]) ||
-      (ignoreObjects && ignoreObjects[e])) {
+    if ((comparedElements && comparedElements[e]) || (ignoreObjects && ignoreObjects[e])) {
       continue
     }
     if (obj2.hasOwnProperty(e)) {
@@ -574,4 +606,85 @@ export const isEdgeLogin = (data: string) => {
   const EDGE_LOGIN_REG_EXP = /^airbitz:\/\/edge\//
 
   return EDGE_LOGIN_REG_EXP.test(data)
+}
+
+export const getTotalFiatAmount = (state: State) => {
+  const temporaryTotalCrypto = {}
+  const wallets = state.ui.wallets.byId
+  const settings = state.ui.settings
+  // loop through each of the walletId's
+  for (const parentProp in wallets) {
+    // loop through all of the nativeBalances, which includes both parent currency and tokens
+    for (const currencyCode in wallets[parentProp].nativeBalances) {
+      // if there is no native balance for the currency / token then assume it's zero
+      if (!temporaryTotalCrypto[currencyCode]) {
+        temporaryTotalCrypto[currencyCode] = 0
+      }
+      // get the native balance for this currency
+      const nativeBalance = wallets[parentProp].nativeBalances[currencyCode]
+      // if it is a non-zero amount then we will process it
+      if (nativeBalance && nativeBalance !== '0') {
+        let denominations
+        // check to see if it's a currency first
+        if (settings[currencyCode]) {
+          // and if so then grab the default denomiation (setting)
+          denominations = settings[currencyCode].denominations
+        } else {
+          // otherwise find the token whose currencyCode matches the one that we are working with
+          const tokenInfo = settings.customTokens.find(token => token.currencyCode === currencyCode)
+          // grab the denominations array (which is equivalent of the denominations from the previous (true) clause)
+          if (!tokenInfo) continue
+          denominations = tokenInfo.denominations
+        }
+        // now go through that array of denominations and find the one whose name matches the currency
+        const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
+        if (!exchangeDenomination) continue
+        // grab the multiplier, which is the ratio that we can multiply and divide by
+        const nativeToExchangeRatio: string = exchangeDenomination.multiplier
+        // divide the native amount (eg satoshis) by the ratio to end up with standard crypto amount (which exchanges use)
+        const cryptoAmount: number = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
+        temporaryTotalCrypto[currencyCode] = temporaryTotalCrypto[currencyCode] + cryptoAmount
+      }
+    }
+  }
+  const balanceInfo = calculateTotalFiatBalance(temporaryTotalCrypto, state)
+  return balanceInfo
+}
+
+export const calculateTotalFiatBalance = (values: any, state: State) => {
+  let total = 0
+  const currencyConverter = getCurrencyConverter(state)
+  for (const currency in values) {
+    const addValue = currencyConverter.convertCurrency(currency, 'iso:USD', values[currency])
+    total = total + addValue
+  }
+  return intl.formatNumber(total, { toFixed: 2 })
+}
+
+export const isTooFarAhead = (dateInSeconds: number, currentDateInSeconds: number) => {
+  const secondsPerDay = 86400
+  const daysPerMonth = 30
+  const monthInFuture = currentDateInSeconds + secondsPerDay * daysPerMonth
+  return dateInSeconds > monthInFuture
+}
+
+export const isTooFarBehind = (dateInSeconds: number) => {
+  const dateOfBitcoinGenesisInSeconds = 1230940800 // 2009-01-03T00:00:00.000Z
+  return dateInSeconds < dateOfBitcoinGenesisInSeconds
+}
+
+export const autoCorrectDate = (dateInSeconds: number, currentDateInSeconds: number = msToSeconds(Date.now())) => {
+  if (isTooFarAhead(dateInSeconds, currentDateInSeconds)) return dateInSeconds / 1000
+  if (isTooFarBehind(dateInSeconds)) return dateInSeconds * 1000
+  return dateInSeconds
+}
+
+export const secondsToMs = (dateInSeconds: number) => {
+  const msPerSecond = 1000
+  return dateInSeconds * msPerSecond
+}
+
+export const msToSeconds = (dateInMs: number) => {
+  const msPerSecond = 1000
+  return dateInMs / msPerSecond
 }

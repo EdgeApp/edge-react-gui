@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 
-import styles from './style'
+import { styles } from './style'
 
 type Props = {
   icon: string,
@@ -25,7 +25,7 @@ class TextAndIconButton extends Component<Props, State> {
     onPress: PropTypes.func.isRequired,
     title: PropTypes.oneOfType([PropTypes.string.isRequired, PropTypes.func.isRequired])
   }
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     this.setState({
       pressed: false
     })

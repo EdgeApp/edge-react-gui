@@ -22,24 +22,25 @@
   <uses-feature android:name="android.hardware.fingerprint" android:required="false" />
   <uses-feature android:name="android.hardware.location" android:required="false" />
   <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <permission
-        android:name="co.edgesecure.app.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
+  <permission
+    android:name="co.edgesecure.app.permission.C2D_MESSAGE"
+    android:protectionLevel="signature" />
   <uses-permission android:name="co.edgesecure.app.permission.C2D_MESSAGE" />
   <uses-permission android:name="android.permission.VIBRATE" />
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
   <uses-sdk
     android:minSdkVersion="19"
-    android:targetSdkVersion="25" />
+    android:targetSdkVersion="26" />
 
   <application
     android:name=".MainApplication"
-    android:allowBackup="true"
     android:label="@string/app_name"
     android:icon="@mipmap/ic_launcher"
+    android:allowBackup="false"
     android:theme="@style/AppTheme">
-    <activity android:name="net.hockeyapp.android.UpdateActivity" />
-    <activity android:name="net.hockeyapp.android.FeedbackActivity" />
+    <meta-data android:name="com.bugsnag.android.API_KEY"
+               android:value="5aca2dbe708503471d8137625e092675"/>
     <activity
       android:name=".MainActivity"
       android:label="@string/app_name"
@@ -69,15 +70,15 @@
       android:exported="true"
       android:permission="com.google.android.c2dm.permission.SEND" >
       <intent-filter>
-          <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-          <category android:name="co.edgesecure.app" />
+        <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+        <category android:name="co.edgesecure.app" />
       </intent-filter>
     </receiver>
 
     <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationPublisher" />
     <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationBootEventReceiver">
       <intent-filter>
-          <action android:name="android.intent.action.BOOT_COMPLETED" />
+        <action android:name="android.intent.action.BOOT_COMPLETED" />
       </intent-filter>
     </receiver>
     <service android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationRegistrationService"/>
@@ -85,7 +86,7 @@
       android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerService"
       android:exported="false" >
       <intent-filter>
-          <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+        <action android:name="com.google.android.c2dm.intent.RECEIVE" />
       </intent-filter>
     </service>
   </application>

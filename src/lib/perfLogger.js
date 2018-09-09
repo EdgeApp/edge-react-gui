@@ -2,7 +2,7 @@
 
 import RNFS from 'react-native-fs'
 
-import type { Store, Action, Next } from '../modules/ReduxTypes.js'
+import type { Action, Next, Store } from '../modules/ReduxTypes.js'
 
 const perfLoggerCSV = RNFS.DocumentDirectoryPath + '/perfLogger.csv'
 RNFS.writeFile(perfLoggerCSV, 'action type,start,end\n', 'utf8')

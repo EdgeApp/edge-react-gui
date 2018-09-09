@@ -1,6 +1,7 @@
 // @flow
 
 import type { EdgeTransaction } from 'edge-core-js'
+import _ from 'lodash'
 
 import type { TransactionListTx } from '../../../../types.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
@@ -9,7 +10,6 @@ import type { Dispatch, GetState, State } from '../../../ReduxTypes'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 import * as UTILS from '../../../utils'
 import { displayTransactionAlert } from '../../components/TransactionAlert/actions'
-import _ from 'lodash'
 
 // import type { TransactionListTx } from './TransactionList.ui.js'
 const PREFIX = 'UI/Scenes/TransactionList/'
@@ -40,10 +40,7 @@ export const fetchMoreTransactions = (walletId: string, currencyCode: string, re
   const { currentWalletId, currentCurrencyCode, numTransactions } = state.ui.scenes.transactionList
   let { currentEndIndex, transactions } = state.ui.scenes.transactionList
 
-  if (
-    reset ||
-    (currentWalletId !== '' && currentWalletId !== walletId) ||
-    (currentCurrencyCode !== '' && currentCurrencyCode !== currencyCode)) {
+  if (reset || (currentWalletId !== '' && currentWalletId !== walletId) || (currentCurrencyCode !== '' && currentCurrencyCode !== currencyCode)) {
     currentEndIndex = 0
     transactions = emptyArray
   }
@@ -89,7 +86,7 @@ export const fetchTransactions = (walletId: string, currencyCode: string, option
   })
 }
 
-const getAndMergeTransactions = (state: State, dispatch: Dispatch, walletId: string, currencyCode: string, options: Object) => {
+const getAndMergeTransactions = async (state: State, dispatch: Dispatch, walletId: string, currencyCode: string, options: Object) => {
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
   const currentEndIndex = options.startIndex + options.startEntries - 1
   if (wallet) {
@@ -104,32 +101,34 @@ const getAndMergeTransactions = (state: State, dispatch: Dispatch, walletId: str
       // and fast forward the counter
       key = transactionsWithKeys.length
     }
-    const numTransactions = WALLET_API.getNumTransactions(wallet, currencyCode)
-    WALLET_API.getTransactions(wallet, currencyCode, options)
-      .then(transactions => {
-        for (const tx of transactions) {
-          const txDate = new Date(tx.date * 1000)
-          const dateString = txDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
-          const time = txDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' })
-          transactionsWithKeys.push({
-            ...tx,
-            dateString,
-            time,
-            key
-          })
-          key++
-        }
-        dispatch(updateTransactions({
+    try {
+      const numTransactions = await WALLET_API.getNumTransactions(wallet, currencyCode)
+      const transactions = await WALLET_API.getTransactions(wallet, currencyCode, options)
+
+      for (const tx of transactions) {
+        const txDate = new Date(tx.date * 1000)
+        const dateString = txDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
+        const time = txDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' })
+        transactionsWithKeys.push({
+          ...tx,
+          dateString,
+          time,
+          key
+        })
+        key++
+      }
+      dispatch(
+        updateTransactions({
           numTransactions,
           transactions: transactionsWithKeys,
           currentCurrencyCode: currencyCode,
           currentWalletId: walletId,
           currentEndIndex
-        }))
-      })
-      .catch(e => {
-        console.warn('Issue with getTransactions: ', e.message)
-      })
+        })
+      )
+    } catch (e) {
+      console.warn('Issue with getTransactions: ', e.message)
+    }
   }
 }
 
@@ -158,9 +157,9 @@ export const newTransactionsRequest = (walletId: string, edgeTransactions: Array
   const selectedCurrencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
   let numberOfRelevantTransactions = 0
   for (const transaction of edgeTransactions) {
-    if ((transaction.currencyCode === selectedCurrencyCode) && transaction.wallet && (transaction.wallet.id === selectedWalletId)) {
+    if (transaction.currencyCode === selectedCurrencyCode && transaction.wallet && transaction.wallet.id === selectedWalletId) {
       // this next part may be unnecessary
-      const indexOfNewTransaction = _.findIndex(currentViewableTransactions, (tx) => tx.txid === transaction.txid)
+      const indexOfNewTransaction = _.findIndex(currentViewableTransactions, tx => tx.txid === transaction.txid)
       if (indexOfNewTransaction === -1) {
         numberOfRelevantTransactions++
       }
@@ -221,11 +220,5 @@ export function updateSearchResults (data) {
   return {
     type: UPDATE_SEARCH_RESULTS,
     data
-  }
-}
-
-export function toggleTransactionsWalletListModal () {
-  return {
-    type: TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL
   }
 }

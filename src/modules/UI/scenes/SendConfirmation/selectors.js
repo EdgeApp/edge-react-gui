@@ -3,8 +3,12 @@
 import type { AbcSpendTarget, EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 
 import { STANDARD_FEE } from '../../../../constants/indexConstants'
+import { convertCurrency } from '../../../Core/Account/api.js'
+import { getAccount } from '../../../Core/selectors.js'
 import type { State } from '../../../ReduxTypes'
+import { convertNativeToExchange } from '../../../utils.js'
 import { getSceneState, getSelectedCurrencyCode } from '../../selectors.js'
+import { getExchangeDenomination } from '../../Settings/selectors.js'
 
 export type GuiMakeSpendInfo = {
   currencyCode?: string,
@@ -21,6 +25,7 @@ export type SendConfirmationState = {
   isKeyboardVisible: boolean,
   forceUpdateGuiCounter: number,
   destination: string,
+  address: string,
 
   nativeAmount: string,
 
@@ -30,8 +35,11 @@ export type SendConfirmationState = {
   isEditable: boolean,
 
   pending: boolean,
-  transaction: EdgeTransaction,
-  error: Error | null
+  transaction: EdgeTransaction | null,
+  error: Error | null,
+
+  pin: string,
+  authRequired: 'pin' | 'none'
 }
 
 export const initialState = {
@@ -44,7 +52,7 @@ export const initialState = {
     publicAddress: '',
     nativeAmount: '0',
     metadata: {
-      payeeName: '',
+      name: '',
       category: '',
       notes: '',
       amountFiat: 0,
@@ -72,7 +80,11 @@ export const initialState = {
     otherParams: {}
   },
   pending: false,
-  error: null
+  error: null,
+
+  pin: '',
+  authRequired: 'none',
+  address: ''
 }
 
 export const getScene = (state: State): any => getSceneState(state, 'sendConfirmation')
@@ -87,7 +99,19 @@ export const getForceUpdateGuiCounter = (state: State): number => getScene(state
 export const getNetworkFeeOption = (state: State): string => getParsedUri(state).networkFeeOption || initialState.parsedUri.networkFeeOption || ''
 export const getCustomNetworkFee = (state: State): any => getParsedUri(state).customNetworkFee || initialState.parsedUri.customNetworkFee || {}
 export const getMetadata = (state: State): EdgeMetadata => getParsedUri(state).metadata || initialState.parsedUri.metadata || {}
-export const getPublicAddress = (state: State): string => getParsedUri(state).publicAddress || initialState.parsedUri.publicAddress || ''
+export const getPublicAddress = (state: State): string => {
+  try {
+    return (
+      getParsedUri(state).publicAddress ||
+      initialState.parsedUri.publicAddress ||
+      // $FlowFixMe
+      state.ui.scenes.sendConfirmation.spendInfo.spendTargets[0].publicAddress ||
+      ''
+    )
+  } catch (e) {
+    return ''
+  }
+}
 export const getNativeAmount = (state: State): string | void => state.ui.scenes.sendConfirmation.nativeAmount
 
 export const getUniqueIdentifier = (state: State): string => {
@@ -117,4 +141,24 @@ export const getSpendInfo = (state: State, newSpendInfo?: GuiMakeSpendInfo = {})
     networkFeeOption: newSpendInfo.networkFeeOption || getNetworkFeeOption(state),
     customNetworkFee: newSpendInfo.customNetworkFee ? { ...getCustomNetworkFee(state), ...newSpendInfo.customNetworkFee } : getCustomNetworkFee(state)
   }
+}
+
+export type AuthType = 'pin' | 'none'
+export const getAuthRequired = (state: State, spendInfo: EdgeSpendInfo): AuthType => {
+  const isEnabled = state.ui.settings.spendingLimits.transaction.isEnabled
+  if (!isEnabled) return 'none'
+
+  const currencyCode = spendInfo.currencyCode || spendInfo.spendTargets[0].currencyCode
+  const { nativeAmount } = spendInfo.spendTargets[0]
+  if (!currencyCode || !nativeAmount) throw new Error('Invalid Spend Request')
+
+  const { spendingLimits } = state.ui.settings
+  const account = getAccount(state)
+  const isoFiatCurrencyCode = state.ui.settings.defaultIsoFiat
+  const nativeToExchangeRatio = getExchangeDenomination(state, currencyCode).multiplier
+  const exchangeAmount = convertNativeToExchange(nativeToExchangeRatio)(nativeAmount)
+  const fiatAmount = convertCurrency(account, currencyCode, isoFiatCurrencyCode, parseFloat(exchangeAmount))
+  const exceedsLimit = fiatAmount >= spendingLimits.transaction.amount
+
+  return exceedsLimit ? 'pin' : 'none'
 }

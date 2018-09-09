@@ -1,6 +1,6 @@
 // @flow
 
-import { Image, Platform, StyleSheet } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 
 import THEME from '../../../../theme/variables/airbitz'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
@@ -12,41 +12,6 @@ export const styles = {
   container: {
     flex: 1,
     alignItems: 'stretch'
-  },
-  totalBalanceBox: {
-    // one
-    height: 111,
-    justifyContent: 'center'
-  },
-  totalBalanceWrap: {
-    flex: 3,
-    alignItems: 'center',
-    backgroundColor: THEME.COLORS.TRANSPARENT
-  },
-  totalBalanceHeader: {
-    flex: 2,
-    justifyContent: 'flex-end',
-    backgroundColor: THEME.COLORS.TRANSPARENT
-  },
-  totalBalanceText: {
-    fontSize: 18,
-    color: THEME.COLORS.PRIMARY
-  },
-  currentBalanceBoxDollarsWrap: {
-    flex: 3,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    backgroundColor: THEME.COLORS.TRANSPARENT
-  },
-  hiddenBalanceBoxDollarsWrap: {
-    flex: 3,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: THEME.COLORS.TRANSPARENT
-  },
-  currentBalanceBoxDollars: {
-    color: THEME.COLORS.PRIMARY,
-    fontSize: 44
   },
   // bottom major portion of screen
   walletsBox: {
@@ -76,31 +41,41 @@ export const styles = {
     marginLeft: 16
   },
   donePlusContainer: {
-    minWidth: 160,
+    minWidth: 132,
     height: 50
+  },
+  donePlusSortable: {
+    alignItems: 'flex-end',
+    marginRight: 30
   },
   plusContainer: {
     position: 'absolute',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     alignItems: 'center',
     height: 50,
     flexDirection: 'row'
   },
-  fiatToggleSwitchWrap: {
-    paddingRight: 40,
+  fiatToggleWrap: {
+    width: 92,
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: 160,
+    justifyContent: 'center',
     alignItems: 'center'
   },
-  fiatSwitchToggle: {
-
+  walletsBoxHeaderAddWallet: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    top: 0,
+    left: 0,
+    height: '100%',
+    paddingVertical: 12,
+    width: 82
   },
   toggleFiatText: {
     color: THEME.COLORS.WHITE,
     backgroundColor: THEME.COLORS.TRANSPARENT,
-    marginRight: 24,
-    fontSize: 18
+    fontSize: 18,
+    textAlign: 'center'
   },
   doneContainer: {
     position: 'absolute',
@@ -117,15 +92,6 @@ export const styles = {
     backgroundColor: THEME.COLORS.TRANSPARENT,
     top: 0,
     left: 0
-  },
-  walletsBoxHeaderAddWallet: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    top: 0,
-    left: 0,
-    height: '100%',
-    paddingVertical: 12
   },
   dropdownIcon: {
     textAlignVertical: 'center',
@@ -223,13 +189,13 @@ export const styles = {
     height: 22,
     width: 22,
     marginRight: 5,
-    resizeMode: Image.resizeMode.contain,
+    resizeMode: 'contain',
     alignSelf: 'center'
   },
   rowCurrencyLogoIOS: {
     height: 22,
     width: 26,
-    resizeMode: Image.resizeMode.contain,
+    resizeMode: 'contain',
     alignSelf: 'flex-start'
   },
   rowNameText: {
@@ -251,6 +217,7 @@ export const styles = {
   },
   rowBalanceDenominationText: {
     fontSize: 14,
+    lineHeight: 18,
     color: THEME.COLORS.GRAY_1,
     textAlign: 'right'
   },

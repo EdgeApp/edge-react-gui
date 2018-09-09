@@ -28,7 +28,7 @@ const strings = {
   fragmet_wallets_managetokens_option: 'Manage Tokens',
   managetokens_top_instructions: 'Please select which tokens you would like displayed within the wallet:',
   manage_tokens_duplicate_currency_code: 'A token with that currency code already exists.',
-  addtoken_top_instructions: "To add a token, please fill out the following form and press 'Save'",
+  addtoken_top_instructions: 'To add a token, please fill out the following form and press "Save" ',
   accept_button_text: 'Accept',
   addtoken_contract_address_input_text: 'Contract Address',
   addtoken_currency_code_input_text: 'Token Code',
@@ -40,7 +40,7 @@ const strings = {
   addtoken_denomination_input_text: 'Number of Decimal Places',
   addtoken_name_input_text: 'Token Name',
   addtoken_add: 'Add',
-  edittoken_top_instructions: "Fill out token info and tap 'Save' to edit token:",
+  edittoken_top_instructions: 'Fill out token info and tap "Save" to edit token:',
   edittoken_delete_token: 'Delete Token',
   edittoken_delete_prompt: 'Are you sure you want to delete this token?',
   edittoken_delete_title: 'Unable to Edit Token',
@@ -48,7 +48,7 @@ const strings = {
   edittoken_invalid_decimal_places: 'Please enter a valid numer of decimal places.',
   edittoken_improper_token_load: 'Unable to load initial data.',
   fragment_wallets_sort: 'Sort',
-  fragment_wallets_this_wallet: 'this wallet?', // needs work
+  fragment_wallets_this_wallet: 'this wallet?',
   fragment_select_wallet_header_title: 'Choose one of the following as selected wallet:',
   fragment_create_wallet_create_wallet: 'Create Wallet',
   fragment_create_wallet_select_valid: 'Please select valid data',
@@ -84,6 +84,7 @@ const strings = {
   fragment_wallets_addwallet_name_hint: 'New Wallet Name',
   fragment_wallets_balance_text: 'Total Balance',
   fragment_wallets_fiat_toggle_title: 'Fiat',
+  fragment_wallets_crypto_toggle_title: 'Crypto',
   fragment_wallets_delete_wallet: 'Delete Wallet',
   fragment_wallets_set_custom_fees: 'Set Custom Mining Fee',
   fragment_wallets_resync_wallet: 'Resync Wallet',
@@ -120,7 +121,7 @@ const strings = {
   mining_fee_high_label_choice: 'High',
   mining_fee_low_label_choice: 'Low',
   mining_fee_standard_label_choice: 'Standard',
-  request_qr_email_title: '%1$s Bitcoin Request',
+  request_qr_email_title: '%1$s %2$s Request',
   request_qr_your_receiving_wallet_address: 'Your Receiving Wallet Address',
   request_share_edge_request: 'Share Edge Request',
   select_recv_wallet: 'Select Receiving Wallet',
@@ -130,6 +131,8 @@ const strings = {
   send_confirmation_slide_to_confirm: 'Slide to Confirm',
   send_scan_header_text: 'Scan to Send, Import, or Edge Login',
   send_to_title: 'To: %s',
+  send_confirmation_to: 'To: %s',
+  send_confirmation_address: 'Address: %s',
   settings_account_title_cap: 'Account',
   settings_button_change_password: 'Change Password',
   settings_button_debug: 'Debug',
@@ -176,8 +179,6 @@ const strings = {
   string_first_bitcoin_wallet_name: 'My Bitcoin',
   string_first_bitcoincash_wallet_name: 'My BitcoinCash',
   my_crypto_wallet_name: 'My %s',
-
-  // Exchange
   string_from_exchange_info: 'You are about to exchange\n %1$s %2$s\n (%3$s)\n from %4$s',
   string_help: 'Help',
   string_next: 'NEXT',
@@ -206,7 +207,7 @@ const strings = {
   title_bitcoinCash_settings: 'Bitcoin Cash Settings',
   title_change_mining_fee: 'Change Mining Fee',
   title_change_password: 'Change Password',
-  title_change_pin: 'Change Pin',
+  title_change_pin: 'Change PIN',
   title_confirm_exchange: 'Confirm exchange',
   title_create_wallet: 'Create Wallet',
   title_export_transactions: 'Export Transactions',
@@ -228,17 +229,20 @@ const strings = {
   title_send: 'Send',
   title_scan: 'Scan',
   title_settings: 'Settings',
+  title_terms_of_service: 'Terms of Service',
   title_transaction_details: 'Transaction Details',
   title_transactions: 'Transactions',
   title_wallets: 'Wallets',
   title_use_legacy_address: 'Use Legacy Address',
   title_use_regular_address: 'Use Regular Address',
   token_not_supported: 'Token is not supported by exchange',
-  amount_above_limit: 'Transaction amount is above the max limit of %1$s',
-  amount_below_limit: 'Transaction amount is below the min limit of %1$s',
+  amount_above_limit: 'Transaction amount is above the max limit of %1$s %2$s',
+  amount_below_limit: 'Transaction amount is below the min limit of %1$s %2$s',
   transaction_details_category_title: 'Category',
   transaction_details_payee: 'Payee',
   transaction_details_view_advanced_data: 'View advanced transaction data',
+  transaction_details_copy_txid_title: 'Copied',
+  transaction_details_copy_txid_message: 'The transaction ID has been copied to your clipboard',
   transaction_details_tx_id_modal_title: 'Transaction ID',
   transaction_details_show_advanced_block_explorer: 'Show in Block Explorer',
   string_fee_with_brackets: '(Fee)',
@@ -254,7 +258,7 @@ const strings = {
   transaction_details_notes_title: 'Notes',
   string_search: 'Search',
   confirm_password_text: 'Confirm Password',
-  // OTP
+
   title_otp_enabled: '2FA is enabled',
   title_otp_disabled: 'Protect your account with 2FA',
   otp_description:
@@ -295,6 +299,9 @@ const strings = {
   password_reminder_verified: 'Password Verified',
   password_reminder_invalid: 'Invalid Password',
 
+  password_recovery_reminder_modal_title: 'Password Recovery Setup',
+  password_recovery_reminder_modal_message: "You've been accumulating quite a bit of crypto. Would you like to set up your password recovery?",
+  password_recovery_reminder_modal_set_up: 'Set Up Now',
   password_check_check_later: 'Later',
   password_check_check_my_password: 'Check MY Password',
   password_check_checking: 'Checking password…',
@@ -308,14 +315,14 @@ const strings = {
   password_check_skip: 'Please create a new account and transfer your funds if you forgot your password.',
 
   password: 'Password',
-  // export scene
+
   string_export_qbo: 'Export Quickbooks QBO',
   string_export_qbo_abbrev: 'Email QBO',
   string_export_csv: 'Export CSV',
   string_export_csv_abbrev: 'Email CSV',
   email_address: 'Email Address',
   email_export: 'Enter the email address where you want to send your exported file',
-  // private key
+
   private_key_modal_private_key: '%1$s Private Key',
   private_key_modal_with_public_address: 'with Public Address:',
   private_key_modal_sweep_from_private_address: 'Sweep Funds From Private Key',
@@ -341,7 +348,31 @@ const strings = {
   unique_identifier_modal_description: 'Please enter the %s number to be sent to the recipient of this transaction',
   unique_identifier_modal_confirm: 'Confirm',
   unique_identifier_modal_cancel: 'Cancel',
-  unique_identifier_display_text: '%1$s: %2$s'
+  unique_identifier_display_text: '%1$s: %2$s',
+  unique_identifier_add: 'Add %s',
+
+  enter_your_password: 'Enter your password',
+  spending_limits: 'Spending Limits',
+  spending_limits_daily_title: 'Daily Spending Limit',
+  spending_limits_daily_placeholder: 'Daily Spending Limit',
+  spending_limits_daily_description: '(Requires password above daily limit)',
+  spending_limits_tx_title: 'Transaction Spending Limit',
+  spending_limits_tx_placeholder: 'Transaction Spending Limit',
+  spending_limits_tx_description: '(Requires PIN above transaction amount)',
+  save: 'Save',
+  four_digit_pin: '4 Digit PIN',
+  pin: 'PIN',
+  spending_limits_warning:
+    '** Warning **\\n\\nSetting a password spending limit may prevent you from accessing funds if your password is forgotten. Please make sure you have set up password recovery',
+  onboarding_button: 'Got It',
+  onboarding_skip_button: 'Skip',
+  onboarding_slide_1: 'Tap [+] to create new wallets for other cryptocurrencies.\n\nTap on a wallet name to send or receive funds for that wallet.',
+  onboarding_slide_2: 'Tap the 3 dots to the right of an Ethereum wallet to add token support.',
+  onboarding_slide_3:
+    'To receive cryptocurrency, [Copy] or [Share] your wallet address, or have the sender scan your QR code presented here at the Request Screen.',
+  onboarding_slide_4: "To send cryptocurrency scan a friend's QR code here, or paste the code via the [Address] button.",
+  onboarding_slide_5: 'Exchange cryptocurrencies by choosing the Source Wallet and Receiving Wallet to trade between them.'
 }
 
-export default strings
+// export default strings
+module.exports = strings

@@ -1,29 +1,26 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Platform, Text, Alert, Clipboard } from 'react-native'
+import { Alert, Clipboard, Platform, Text } from 'react-native'
+
+import { EYE_ICON, ION_ICONS } from '../../../../../../constants/IconConstants.js'
 import s from '../../../../../../locales/strings.js'
-import { InteractiveModal } from '../../../../components/Modals/InteractiveModal/InteractiveModal.ui.js'
-import {PrimaryButton} from '../../../../components/Modals/components/PrimaryButton.ui.js'
+import { PrimaryButton } from '../../../../components/Buttons'
 import { Icon } from '../../../../components/Icon/Icon.ui.js'
-import {ION_ICONS, EYE_ICON} from '../../../../../../constants/IconConstants.js'
+import { InteractiveModal } from '../../../../components/Modals/InteractiveModal/InteractiveModal.ui.js'
 
-type XPubModalOwnProps = {
-
-}
+type XPubModalOwnProps = {}
 
 type XPubModalStateProps = {
   xPubSyntax: string,
-  visibilityBoolean: boolean,
+  visibilityBoolean: boolean
 }
 
 type XPubModalDispatchProps = {
   onExit: () => void
 }
 
-type XPubModalState = {
-
-}
+type XPubModalState = {}
 
 type XPubModalComponentProps = XPubModalOwnProps & XPubModalStateProps & XPubModalDispatchProps
 
@@ -31,13 +28,12 @@ export default class XPubModal extends Component<XPubModalComponentProps, XPubMo
   _onPressCopy = () => {
     try {
       Clipboard.setString(this.props.xPubSyntax)
-      Alert.alert(
-        s.strings.fragment_wallets_pubkey_copied_title,
-        s.strings.fragment_wallets_pubkey_copied_success,
-        [{
-          text: s.strings.string_ok, onPress: () => this.props.onExit()
-        }]
-      )
+      Alert.alert(s.strings.fragment_wallets_pubkey_copied_title, s.strings.fragment_wallets_pubkey_copied_success, [
+        {
+          text: s.strings.string_ok,
+          onPress: () => this.props.onExit()
+        }
+      ])
     } catch (e) {
       console.log('Error:', e.title, e.message)
       Alert.alert('Error', s.strings.fragment_wallets_pubkey_copied_error)
@@ -47,8 +43,12 @@ export default class XPubModal extends Component<XPubModalComponentProps, XPubMo
   render () {
     const osPrefix = Platform.OS === 'ios' ? 'ios-' : 'md-'
     return (
-
-      <InteractiveModal isActive={this.props.visibilityBoolean} onBackButtonPress={this.props.onExit} onBackdropPress={this.props.onExit} onModalHide={this.props.onExit}>
+      <InteractiveModal
+        isActive={this.props.visibilityBoolean}
+        onBackButtonPress={this.props.onExit}
+        onBackdropPress={this.props.onExit}
+        onModalHide={this.props.onExit}
+      >
         <InteractiveModal.Icon>
           <Icon style={{}} type={ION_ICONS} name={`${osPrefix}${EYE_ICON}`} size={30} />
         </InteractiveModal.Icon>
@@ -58,7 +58,7 @@ export default class XPubModal extends Component<XPubModalComponentProps, XPubMo
         </InteractiveModal.Title>
 
         <InteractiveModal.Body>
-          <InteractiveModal.Description style={{textAlign: 'center'}}>{this.props.xPubSyntax}</InteractiveModal.Description>
+          <InteractiveModal.Description style={{ textAlign: 'center' }}>{this.props.xPubSyntax}</InteractiveModal.Description>
         </InteractiveModal.Body>
 
         <InteractiveModal.Footer>
@@ -71,7 +71,6 @@ export default class XPubModal extends Component<XPubModalComponentProps, XPubMo
           </InteractiveModal.Row>
         </InteractiveModal.Footer>
       </InteractiveModal>
-
     )
   }
 }

@@ -1,8 +1,8 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { View } from 'react-native'
+import slowlog from 'react-native-slowlog'
 
 import * as Constants from '../constants/indexConstants.js'
 import { TextAndIconButton } from '../modules/UI/components/Buttons/TextAndIconButton.ui.js'
@@ -24,7 +24,7 @@ class ExpandableBoxComponent extends Component<Props, State> {
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     this.setState({
       collapsed: true
     })

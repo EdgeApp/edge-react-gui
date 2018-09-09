@@ -26,13 +26,13 @@ type State = {
   isThinking: boolean
 }
 export default class ConfirmPasswordModal extends Component<ConfirmPasswordModalProps, State> {
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     this.setState({
       confimPassword: '',
       isThinking: false
     })
   }
-  componentWillReceiveProps (nextProps: ConfirmPasswordModalProps) {
+  UNSAFE_componentWillReceiveProps (nextProps: ConfirmPasswordModalProps) {
     if (!nextProps.showModal) {
       this.setState({
         confimPassword: '',

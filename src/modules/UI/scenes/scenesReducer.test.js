@@ -4,6 +4,7 @@
 
 import { scenes as scenesReducer } from './reducer.js'
 import { request } from './Request/reducer.js'
+import { initialState as SendConfirmationInitialState } from './SendConfirmation/selectors.js'
 
 test('initialState', () => {
   const expected = {
@@ -41,8 +42,6 @@ test('initialState', () => {
     scan: {
       addressModalVisible: false,
       scanEnabled: false,
-      scanToWalletListModalVisibility: false,
-      selectedWalletListModalVisibility: false,
       torchEnabled: false,
       legacyAddressModal: {
         isActive: false
@@ -59,43 +58,7 @@ test('initialState', () => {
       },
       parsedUri: null
     },
-    sendConfirmation: {
-      pending: false,
-      isKeyboardVisible: false,
-      forceUpdateGuiCounter: 0,
-      spendInfo: null,
-      destination: '',
-      isEditable: true,
-      nativeAmount: '0',
-      transaction: {
-        txid: '',
-        date: 0,
-        currencyCode: '',
-        blockHeight: -1,
-        nativeAmount: '0',
-        networkFee: '',
-        parentNetworkFee: '',
-        ourReceiveAddresses: [],
-        signedTx: '',
-        metadata: {},
-        otherParams: {}
-      },
-      parsedUri: {
-        networkFeeOption: 'standard',
-        customNetworkFee: {},
-        publicAddress: '',
-        nativeAmount: '0',
-        metadata: {
-          payeeName: '',
-          category: '',
-          notes: '',
-          amountFiat: 0,
-          bizId: 0,
-          miscJson: ''
-        }
-      },
-      error: null
-    },
+    sendConfirmation: SendConfirmationInitialState,
     changeMiningFee: {
       isCustomFeeVisible: false
     },
@@ -109,7 +72,6 @@ test('initialState', () => {
     transactionList: {
       searchVisible: false,
       transactions: [],
-      transactionsWalletListModalVisibility: false,
       updatingBalance: true,
       loadingTransactions: false,
       currentCurrencyCode: '',
@@ -141,6 +103,9 @@ test('initialState', () => {
     currentScene: '',
     passwordReminderModal: {
       status: null
+    },
+    passwordRecoveryReminderModal: {
+      isVisible: false
     },
     uniqueIdentifierModal: {
       isActive: false,

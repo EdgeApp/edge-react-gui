@@ -4,63 +4,66 @@ import { StyleSheet } from 'react-native'
 
 import THEME from '../../../../theme/variables/airbitz'
 
-export const styles = {
-  buttonsWrap: {
-    flex: 1,
-    flexDirection: 'row',
-    alignSelf: 'flex-end'
-  },
-  stylizedButton: {
-    height: THEME.BUTTONS.HEIGHT,
+export const rawStyles = {
+  button: {
+    padding: 14,
+    borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1,
-    borderRadius: 3
+    flex: -1
   },
-  stylizedButtonText: {
-    color: THEME.COLORS.WHITE,
-    fontSize: 16,
-    fontFamily: THEME.FONTS.DEFAULT
+  buttonText: {
+    fontFamily: THEME.FONTS.DEFAULT,
+    fontSize: 18,
+    lineHeight: 18,
+    position: 'relative',
+    top: 1
   },
   text: {
     fontFamily: THEME.FONTS.DEFAULT
   },
-  primaryButtonWrap: {
+  // PRIMARY BUTTON
+  primaryButton: {
     backgroundColor: THEME.COLORS.SECONDARY
   },
-  primaryUnderlay: {
-    color: THEME.COLORS.PRIMARY
-  },
+  primaryButtonUnderlay: { color: THEME.COLORS.PRIMARY },
   primaryButtonText: {
-    color: THEME.COLORS.GRADIENT.LIGHT
+    color: THEME.COLORS.WHITE
   },
 
-  secondaryButtonWrap: {
-    backgroundColor: THEME.COLORS.GRAY_2,
-    alignSelf: 'flex-start'
+  // SECONDARY BUTTON
+  secondaryButton: {
+    backgroundColor: THEME.COLORS.GRAY_2
   },
+  secondaryButtonUnderlay: { color: THEME.COLORS.GRAY_1 },
   secondaryButtonText: {
-    color: THEME.COLORS.GRADIENT.LIGHT
+    color: THEME.COLORS.WHITE
   },
-  secondaryUnderlay: {
-    color: THEME.COLORS.GRAY_1
-  },
-  tertiaryButtonWrap: {
+
+  //  TERTIARY BUTTON
+  tertiaryButton: {
     backgroundColor: THEME.COLORS.WHITE,
-    borderWidth: 1,
-    borderColor: THEME.COLORS.SECONDARY
+    borderWidth: 2,
+    borderColor: THEME.COLORS.SECONDARY,
+    padding: 12
   },
-  tertiaryButtonTextWrap: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'center'
-  },
+  tertiaryButtonUnderlay: { color: THEME.COLORS.GRAY_3 },
   tertiaryButtonText: {
-    color: THEME.COLORS.SECONDARY
+    color: THEME.COLORS.PRIMARY
   },
-  tertiaryUnderlay: {
-    color: THEME.COLORS.GRAY_3
+  // Text BUTTON
+  textButton: {
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  textButtonUnderlay: { color: THEME.COLORS.TRANSPARENT },
+  textButtonText: {
+    color: THEME.COLORS.WHITE
+  },
+
+  debug: {
+    borderColor: 'red',
+    borderWidth: 1
   }
 }
 
-export default StyleSheet.create(styles)
+export const styles = StyleSheet.create(rawStyles)

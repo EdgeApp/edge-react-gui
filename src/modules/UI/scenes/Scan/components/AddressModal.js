@@ -1,9 +1,9 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import type { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Clipboard } from 'react-native'
+import slowlog from 'react-native-slowlog'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
@@ -41,22 +41,23 @@ export default class AddressModal extends Component<Props, State> {
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
-  _setClipboard (props: Props) {
+  async _setClipboard (props: Props) {
     const coreWallet = props.coreWallet
-    Clipboard.getString().then(uri => {
-      try {
-        // Will throw in case uri is invalid
-        WALLET_API.parseURI(coreWallet, uri)
-        // console.log('AddressModal parsedURI', parsedURI)
-        this.setState({
-          clipboard: uri
-        })
-      } catch (e) {
-        // console.log('Clipboard does not contain a valid address.')
-        // console.log(`Clipboard: ${uri}`)
-        // console.log(e)
-      }
-    })
+
+    try {
+      const uri = await Clipboard.getString()
+
+      // Will throw in case uri is invalid
+      await WALLET_API.parseUri(coreWallet, uri)
+
+      this.setState({
+        clipboard: uri
+      })
+    } catch (e) {
+      // console.log('Clipboard does not contain a valid address.')
+      // console.log(`Clipboard: ${uri}`)
+      // console.log(e)
+    }
   }
 
   _flushUri () {
@@ -69,7 +70,7 @@ export default class AddressModal extends Component<Props, State> {
     this._setClipboard(this.props)
   }
 
-  componentWillReceiveProps (nextProps: Props) {
+  UNSAFE_componentWillReceiveProps (nextProps: Props) {
     this._setClipboard(nextProps)
     const uriShouldBeCleaned = !this.props.addressModalVisible && !!this.state.uri.length
     if (uriShouldBeCleaned) {

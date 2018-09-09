@@ -1,11 +1,10 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import type { EdgeAccount, EdgeContext } from 'edge-core-js'
 import { LoginScreen } from 'edge-login-ui-rn'
 import React, { Component } from 'react'
 import { View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
+import slowlog from 'react-native-slowlog'
 
 import THEME from '../../../../theme/variables/airbitz'
 import makeAccountCallbacks from '../../../Core/Account/callbacks'
@@ -17,7 +16,7 @@ type Props = {
   context: EdgeContext,
   addUsernames: (Array<string>) => void,
   account: ?EdgeAccount,
-  recoveryLogin: boolean,
+  recoveryLogin: string,
   dispatch: Dispatch,
   username?: string
 }
@@ -31,7 +30,6 @@ export default class Login extends Component<Props, State> {
 
   onLogin = (error: ?Error = null, account: ?EdgeAccount, touchIdInfo: ?Object = null) => {
     if (error || !account) return
-    Actions.edge()
     this.props.initializeAccount(account, touchIdInfo)
 
     CONTEXT_API.listUsernames(this.props.context) // update users list after each login
@@ -40,7 +38,7 @@ export default class Login extends Component<Props, State> {
       })
   }
 
-  componentWillReceiveProps (nextProps: Props) {
+  UNSAFE_componentWillReceiveProps (nextProps: Props) {
     // If we have logged out, destroy and recreate the login screen:
     if (this.props.account && nextProps.account && nextProps.account !== this.props.account) {
       if (typeof nextProps.account.username === 'undefined') {

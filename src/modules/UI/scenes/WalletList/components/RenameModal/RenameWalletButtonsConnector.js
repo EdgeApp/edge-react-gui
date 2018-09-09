@@ -37,4 +37,7 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   onDone: () => dispatch({ type: CLOSE_MODAL_VALUE(Constants.WALLET_OPTIONS.RENAME.value) })
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(RenameWalletButtons)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(RenameWalletButtons)

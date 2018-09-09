@@ -1,11 +1,12 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import _ from 'lodash'
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, ScrollView, View } from 'react-native'
+import slowlog from 'react-native-slowlog'
 
 import { FormField } from '../../../../components/FormField.js'
+import { MAX_TOKEN_CODE_CHARACTERS } from '../../../../constants/indexConstants.js'
 import s from '../../../../locales/strings.js'
 import type { CustomTokenInfo, GuiWallet } from '../../../../types'
 import { decimalPlacesToDenomination } from '../../../utils.js'
@@ -14,7 +15,6 @@ import Text from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView'
 import styles from './style.js'
-import { MAX_TOKEN_CODE_CHARACTERS } from '../../../../constants/indexConstants.js'
 
 export type AddTokenOwnProps = {
   walletId: string,
@@ -64,6 +64,7 @@ export class AddToken extends Component<AddTokenProps, State> {
   }
 
   render () {
+    const { addTokenPending } = this.props
     return (
       <SafeAreaView>
         <View style={[styles.addTokens]}>
@@ -120,13 +121,9 @@ export class AddToken extends Component<AddTokenProps, State> {
               </View>
             </View>
             <View style={[styles.buttonsArea]}>
-              <PrimaryButton
-                text={s.strings.string_save}
-                style={styles.saveButton}
-                onPressFunction={this._onSave}
-                processingElement={<ActivityIndicator />}
-                processingFlag={this.props.addTokenPending}
-              />
+              <PrimaryButton style={styles.saveButton} onPress={this._onSave}>
+                {addTokenPending ? <ActivityIndicator /> : <PrimaryButton.Text>{s.strings.string_save}</PrimaryButton.Text>}
+              </PrimaryButton>
             </View>
             <View style={styles.bottomPaddingForKeyboard} />
           </ScrollView>

@@ -64,14 +64,13 @@ export class CreateWalletReview extends Component<CreateWalletReviewProps> {
               </Text>
             </View>
             <View style={[styles.buttons]}>
-              <SecondaryButton style={[styles.cancel]} onPressFunction={this.onBack} text={s.strings.title_back} />
+              <SecondaryButton style={[styles.cancel]} onPress={this.onBack}>
+                <SecondaryButton.Text>{s.strings.title_back}</SecondaryButton.Text>
+              </SecondaryButton>
 
-              <PrimaryButton
-                onPressFunction={this.onSubmit}
-                text={s.strings.fragment_create_wallet_create_wallet}
-                processingFlag={isCreatingWallet}
-                processingElement={<ActivityIndicator />}
-              />
+              <PrimaryButton style={[styles.create]} onPress={this.onSubmit}>
+                {isCreatingWallet ? <ActivityIndicator /> : <PrimaryButton.Text>{s.strings.fragment_create_wallet_create_wallet}</PrimaryButton.Text>}
+              </PrimaryButton>
             </View>
           </View>
         </View>

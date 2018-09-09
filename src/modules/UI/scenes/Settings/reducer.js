@@ -1,6 +1,7 @@
 // @flow
 
 import { combineReducers } from 'redux'
+
 import type { Action } from '../../../../../src/modules/ReduxTypes.js'
 import * as ACTION from './action.js'
 

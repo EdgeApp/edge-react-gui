@@ -18,14 +18,16 @@ export default StyleSheet.create({
     backgroundColor: THEME.COLORS.GRAY_3
   },
   alertHeaderText: {
+    maxWidth: 320,
+    textAlign: 'center',
     color: THEME.COLORS.GRAY_1
   },
   alertIcon: {
     color: THEME.COLORS.ACCENT_RED,
-    paddingHorizontal: 10
+    paddingRight: 15
   },
   infoIcon: {
     color: THEME.COLORS.PRIMARY,
-    paddingHorizontal: 10
+    paddingLeft: 15
   }
 })

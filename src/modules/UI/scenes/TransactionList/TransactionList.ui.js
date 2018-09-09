@@ -1,29 +1,29 @@
 // @flow
 
 import { bns } from 'biggystring'
-import slowlog from 'react-native-slowlog'
 import type { EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Animated, FlatList, Image, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 // import Contacts from 'react-native-contacts'
 // import Permissions from 'react-native-permissions'
 import { Actions } from 'react-native-router-flux'
+import slowlog from 'react-native-slowlog'
 
 import requestImage from '../../../../assets/images/transactions/transactions-request.png'
 import sendImage from '../../../../assets/images/transactions/transactions-send.png'
 import * as Constants from '../../../../constants/indexConstants'
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
+import type { ContactsState } from '../../../../reducers/contacts/contactsReducer'
 import type { GuiContact, GuiWallet, TransactionListTx } from '../../../../types'
 import WalletListModal from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import * as UTILS from '../../../utils'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView'
-import styles, { styles as styleRaw } from './style'
-import type {ContactsState} from '../../../../reducers/contacts/contactsReducer'
-import TransactionRow from './components/TransactionRowConnector.js'
 import BuyCrypto from './components/BuyCrypto.ui.js'
+import TransactionRow from './components/TransactionRowConnector.js'
+import styles, { styles as styleRaw } from './style'
 
 // import SearchBar from './components/SearchBar.ui'
 const INITIAL_TRANSACTION_BATCH_NUMBER = 10
@@ -56,7 +56,8 @@ export type StateProps = {
 
 export type DispatchProps = {
   fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => any,
-  toggleBalanceVisibility: () => void
+  toggleBalanceVisibility: () => void,
+  onSelectWallet: (string, string) => void
 }
 
 type Props = StateProps & DispatchProps
@@ -88,7 +89,14 @@ export class TransactionList extends Component<Props, State> {
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
-  componentWillReceiveProps (nextProps: Props) {
+  componentDidMount = () => {
+    this.props.fetchMoreTransactions(this.props.selectedWalletId, this.props.selectedCurrencyCode, this.state.reset)
+    if (this.state.reset) {
+      this.setState({ reset: false })
+    }
+  }
+
+  UNSAFE_componentWillReceiveProps (nextProps: Props) {
     if (nextProps.selectedWalletId !== this.props.selectedWalletId || nextProps.selectedCurrencyCode !== this.props.selectedCurrencyCode) {
       this.props.fetchMoreTransactions(nextProps.selectedWalletId, nextProps.selectedCurrencyCode, this.state.reset)
       if (this.state.reset) {
@@ -105,8 +113,9 @@ export class TransactionList extends Component<Props, State> {
   }
 
   renderDropUp = () => {
-    if (this.props.showToWalletModal) {
-      return <WalletListModal topDisplacement={Constants.TRANSACTIONLIST_WALLET_DIALOG_TOP} type={Constants.FROM} />
+    const { onSelectWallet, showToWalletModal } = this.props
+    if (showToWalletModal) {
+      return <WalletListModal topDisplacement={Constants.TRANSACTIONLIST_WALLET_DIALOG_TOP} type={Constants.FROM} onSelectWallet={onSelectWallet} />
     }
     return null
   }
@@ -120,13 +129,20 @@ export class TransactionList extends Component<Props, State> {
         </View>
       )
     }
-    switch (wallet.currencyCode) {
+
+    let currencyCode = ''
+    if (wallet && wallet.currencyCode) {
+      currencyCode = wallet.currencyCode
+    }
+    switch (currencyCode) {
       case 'BTC':
-        return <BuyCrypto wallet={wallet}/>
+        return <BuyCrypto wallet={wallet} />
       case 'BCH':
-        return <BuyCrypto wallet={wallet}/>
+        return <BuyCrypto wallet={wallet} />
       case 'ETH':
-        return <BuyCrypto wallet={wallet}/>
+        return <BuyCrypto wallet={wallet} />
+      case 'LTC':
+        return <BuyCrypto wallet={wallet} />
       default:
         return null
     }

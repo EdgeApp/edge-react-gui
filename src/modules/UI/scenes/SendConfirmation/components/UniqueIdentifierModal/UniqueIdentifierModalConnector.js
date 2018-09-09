@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import type { Dispatch, State } from '../../../../../ReduxTypes.js'
 import { UniqueIdentifierModal } from './UniqueIdentifierModal.ui.js'
-import { deactivated, uniqueIdentifierChanged, reset } from './UniqueIdentifierModalActions.js'
+import { deactivated, reset, uniqueIdentifierChanged } from './UniqueIdentifierModalActions.js'
 
 export const mapStateToProps = (state: State) => ({
   isActive: state.ui.scenes.uniqueIdentifierModal.isActive,
@@ -22,5 +22,8 @@ export const mapDispatchToProps = (dispatch: Dispatch, ownProps: Object) => ({
   onModalHide: () => dispatch(reset())
 })
 
-export const UniqueIdentifierModalConnect = connect(mapStateToProps, mapDispatchToProps)(UniqueIdentifierModal)
+export const UniqueIdentifierModalConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(UniqueIdentifierModal)
 export default UniqueIdentifierModalConnect

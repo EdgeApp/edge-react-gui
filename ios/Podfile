@@ -6,13 +6,7 @@ target 'edge' do
   # use_frameworks!
 
   # Pods for edge
-  pod "HockeySDK", :subspecs => ['AllFeaturesLib']
-  pod 'Firebase/Core'
-  pod 'Firebase/Messaging', '~> 5.3.0'
-
-  target 'edgeTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
+  pod 'Firebase/Core', '~> 5.3.0'
 
 end
+

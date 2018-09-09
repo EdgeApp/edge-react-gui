@@ -1,10 +1,10 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import { bns } from 'biggystring'
 import _ from 'lodash'
 import React, { Component } from 'react'
 import { LayoutAnimation, TouchableHighlight, View } from 'react-native'
+import slowlog from 'react-native-slowlog'
 
 import type { GuiWallet } from '../../../../../types'
 import * as UTILS from '../../../../utils'

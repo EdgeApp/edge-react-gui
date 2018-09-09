@@ -125,11 +125,18 @@ export const styles = {
   },
   buttons: {
     marginTop: 24,
-    height: 44,
     flexDirection: 'row'
   },
+  create: {
+    flex: 1
+  },
   next: {
-    marginLeft: 2
+    marginLeft: 1,
+    flex: 1
+  },
+  back: {
+    marginRight: 1,
+    flex: 1
   },
   buttonText: {
     color: THEME.COLORS.WHITE,

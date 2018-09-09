@@ -1,27 +1,23 @@
 // @flow
 
 import React from 'react'
-import { WebView, FlatList, Platform, Text, View, Image, TouchableWithoutFeedback, BackHandler } from 'react-native'
+import { BackHandler, FlatList, Image, Platform, Text, TouchableWithoutFeedback, View, WebView } from 'react-native'
+import { Actions } from 'react-native-router-flux'
 import AndroidWebView from 'react-native-webview-file-upload-android'
 import { connect } from 'react-redux'
-import { Actions } from 'react-native-router-flux'
 
-import Gradient from '../../components/Gradient/Gradient.ui'
-import SafeAreaView from '../../components/SafeAreaView'
-import styles from './style.js'
-
-import { openABAlert } from '../../components/ABAlert/action'
 import * as Constants from '../../../../constants/indexConstants'
-import T from '../../../UI/components/FormattedText'
-
-import * as CORE_SELECTORS from '../../../Core/selectors.js'
-import * as UI_SELECTORS from '../../selectors.js'
-
-import { buySellPlugins, spendPlugins } from './plugins'
-import { PluginBridge, pop as pluginPop } from './api'
-
-import BackButton from '../../components/Header/Component/BackButton.ui'
 import s from '../../../../locales/strings.js'
+import * as CORE_SELECTORS from '../../../Core/selectors.js'
+import T from '../../../UI/components/FormattedText'
+import { openABAlert } from '../../components/ABAlert/action'
+import Gradient from '../../components/Gradient/Gradient.ui'
+import BackButton from '../../components/Header/Component/BackButton.ui'
+import SafeAreaView from '../../components/SafeAreaView'
+import * as UI_SELECTORS from '../../selectors.js'
+import { PluginBridge, pop as pluginPop } from './api'
+import { buySellPlugins, spendPlugins } from './plugins'
+import styles from './style.js'
 
 const BACK = s.strings.title_back
 
@@ -133,7 +129,8 @@ class PluginView extends React.Component<PluginProps, PluginState> {
       walletName: props.walletName,
       walletId: props.walletId,
       navigationState: this.props.navigation.state,
-      folder: props.account.folder.folder(this.plugin.name),
+      folder: props.account.pluginData,
+      pluginId: this.plugin.pluginId,
       toggleWalletList: this.toggleWalletList,
       showAlert: this.props.showAlert,
       back: this._webviewBack,
@@ -289,5 +286,8 @@ const mapDispatchToProps = dispatch => ({
   showAlert: alertSyntax => dispatch(openABAlert(Constants.OPEN_AB_ALERT, alertSyntax))
 })
 
-const PluginViewConnect = connect(mapStateToProps, mapDispatchToProps)(PluginView)
+const PluginViewConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PluginView)
 export { PluginViewConnect, PluginBuySell, PluginSpend }

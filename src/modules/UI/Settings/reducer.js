@@ -1,17 +1,19 @@
 // @flow
 
-import type { EdgeCurrencyPlugin } from 'edge-core-js'
+import type { EdgeCurrencyInfo } from 'edge-core-js'
 import _ from 'lodash'
 
 import * as Constants from '../../../constants/indexConstants.js'
-import type { CustomTokenInfo, CurrencySetting } from '../../../types.js'
+import type { CustomTokenInfo } from '../../../types.js'
 import { CORE_DEFAULTS, LOCAL_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_DEFAULTS } from '../../Core/Account/settings.js'
 import { SEND_LOGS_FAILURE, SEND_LOGS_PENDING, SEND_LOGS_REQUEST, SEND_LOGS_SUCCESS } from '../../Logs/action'
-import type { Action } from '../../ReduxTypes'
+import type { Action } from '../../ReduxTypes.js'
+import { UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL } from '../components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalActions.js'
 import * as ADD_TOKEN_ACTION from '../scenes/AddToken/action.js'
+import { SET_ENABLE_CUSTOM_NODES, UPDATE_CUSTOM_NODES_LIST } from '../scenes/Settings/action.js'
 import * as WALLET_ACTION from '../Wallets/action'
 import * as ACTION from './action.js'
-import * as SETTINGS_ACTION from '../scenes/Settings/action.js'
+import { spendingLimits } from './spendingLimits/SpendingLimitsReducer.js'
 
 export const initialState = {
   ...SYNCED_ACCOUNT_DEFAULTS,
@@ -19,7 +21,7 @@ export const initialState = {
   ...CORE_DEFAULTS,
   changesLocked: true,
   plugins: {
-    arrayPlugins: [],
+    allCurrencyInfos: [],
     supportedWalletTypes: []
   },
   pinLoginEnabled: false,
@@ -34,20 +36,39 @@ export const initialState = {
   confirmPasswordError: '',
   sendLogsStatus: Constants.REQUEST_STATUS.PENDING,
   isAccountBalanceVisible: true,
-  isWalletFiatBalanceVisible: false
+  isWalletFiatBalanceVisible: false,
+  spendingLimits: {
+    transaction: {
+      isEnabled: false,
+      amount: 0
+    }
+  }
 }
 
-type SettingsState = {
+export type CurrencySetting = {
+  denomination: string,
+  customNodes?: {
+    nodesList?: Array<string>,
+    isEnabled?: boolean
+  }
+}
+
+export type SettingsState = {
   BCH: CurrencySetting,
   BTC: CurrencySetting,
   DASH: CurrencySetting,
   FTC: CurrencySetting,
   ETH: CurrencySetting,
   LTC: CurrencySetting,
+  VTC: CurrencySetting,
+  XZC: CurrencySetting,
+  QTUM: CurrencySetting,
   UFO: CurrencySetting,
   XMR: CurrencySetting,
   XRP: CurrencySetting,
   REP: CurrencySetting,
+  DOGE: CurrencySetting,
+  DGB: CurrencySettings,
   WINGS: CurrencySetting,
   account: ?Object,
   autoLogoutTimeInSeconds: number,
@@ -55,33 +76,49 @@ type SettingsState = {
   changesLocked: any,
   customTokens: Array<CustomTokenInfo>,
   defaultFiat: string,
+  defaultIsoFiat: string,
   isOtpEnabled: boolean,
   isTouchEnabled: boolean,
   isTouchSupported: boolean,
-  loginStatus: null,
+  loginStatus: boolean | null,
   merchantMode: boolean,
-  otpKey: null,
+  otpKey: string | null,
   otpResetPending: boolean,
   otpMode: boolean,
   pinMode: boolean,
   pinLoginEnabled: boolean,
   otpResetDate: ?string,
   plugins: {
-    arrayPlugins: Array<EdgeCurrencyPlugin>,
+    [pluginName: string]: EdgeCurrencyInfo,
+    allCurrencyInfos: Array<EdgeCurrencyInfo>,
     supportedWalletTypes: Array<string>
   },
   confirmPasswordError: string,
   sendLogsStatus: string,
   isAccountBalanceVisible: boolean,
-  isWalletFiatBalanceVisible: boolean
+  isWalletFiatBalanceVisible: boolean,
+  spendingLimits: {
+    transaction: {
+      isEnabled: boolean,
+      amount: number
+    }
+  },
+  passwordRecoveryRemindersShown: {
+    '20': boolean,
+    '200': boolean,
+    '2000': boolean,
+    '20000': boolean,
+    '200000': boolean
+  }
 }
 
 const currencyPLuginUtil = (state, payloadData) => {
   const { plugins } = state
   const { supportedWalletTypes } = plugins
-  const { arrayPlugins } = plugins
-  const { pluginName, plugin, walletTypes } = payloadData
-  const currencyInfo = plugin.currencyInfo
+  const { allCurrencyInfos } = plugins
+  const { currencyInfo } = payloadData
+  const { pluginName, walletTypes } = currencyInfo
+
   // Build up object with all the information for the parent currency, accesible by the currencyCode
   const defaultParentCurrencyInfo = state[currencyInfo.currencyCode]
   const parentCurrencyInfo = {
@@ -122,14 +159,14 @@ const currencyPLuginUtil = (state, payloadData) => {
     ...currencyInfos,
     plugins: {
       ...plugins,
-      [pluginName]: plugin,
-      arrayPlugins: [...arrayPlugins, plugin],
+      [pluginName]: currencyInfo,
+      allCurrencyInfos: [...allCurrencyInfos, currencyInfo],
       supportedWalletTypes: [...supportedWalletTypes, ...walletTypes]
     }
   }
 }
 
-export const settings = (state: SettingsState = initialState, action: Action) => {
+export const settingsLegacy = (state: SettingsState = initialState, action: Action) => {
   const { type, data = {} } = action
 
   switch (type) {
@@ -137,7 +174,6 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
       const {
         touchIdInfo,
         account,
-        loginStatus,
         otpInfo,
         currencyPlugins,
         autoLogoutTimeInSeconds,
@@ -151,11 +187,12 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         denominationKeys,
         customTokensSettings,
         isAccountBalanceVisible,
-        isWalletFiatBalanceVisible
+        isWalletFiatBalanceVisible,
+        passwordRecoveryRemindersShown
       } = data
       let newState = {
         ...state,
-        loginStatus,
+        loginStatus: true,
         isOtpEnabled: otpInfo.enabled,
         otpKey: otpInfo.otpKey,
         otpResetPending: otpInfo.otpResetPending,
@@ -171,7 +208,8 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         otpMode,
         otpResetDate: account.otpResetDate,
         isAccountBalanceVisible,
-        isWalletFiatBalanceVisible
+        isWalletFiatBalanceVisible,
+        passwordRecoveryRemindersShown
       }
       denominationKeys.forEach(key => {
         const currencyCode = key.currencyCode
@@ -192,7 +230,8 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         const { currencyCode } = key
         newState = {
           ...newState,
-          [currencyCode]: key
+          [currencyCode]: key,
+          defaultIsoFiat: `iso:${defaultFiat}`
         }
       })
       return newState
@@ -409,7 +448,8 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
       const { defaultFiat } = data
       return {
         ...state,
-        defaultFiat
+        defaultFiat,
+        defaultIsoFiat: `iso:${defaultFiat}`
       }
     }
 
@@ -480,7 +520,7 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
       }
     }
 
-    case SETTINGS_ACTION.SET_ENABLE_CUSTOM_NODES: {
+    case SET_ENABLE_CUSTOM_NODES: {
       const { isEnabled } = data
       const updatedSettings = {
         ...state,
@@ -495,7 +535,7 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
       return updatedSettings
     }
 
-    case SETTINGS_ACTION.UPDATE_CUSTOM_NODES_LIST: {
+    case UPDATE_CUSTOM_NODES_LIST: {
       const nodesList = data.nodesList
       const updatedSettings = {
         ...state,
@@ -528,7 +568,37 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
       }
     }
 
+    case UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL: {
+      const { level, wasShown } = data
+      return {
+        ...state,
+        passwordRecoveryRemindersShown: {
+          ...state.passwordRecoveryRemindersShown,
+          [level]: wasShown
+        }
+      }
+    }
     default:
       return state
   }
+}
+
+export const settings = (state: SettingsState = initialState, action: Action) => {
+  let result = state
+  const legacy = settingsLegacy(state, action)
+
+  if (legacy !== state) {
+    result = legacy
+  }
+
+  const spendingLimitsObj = spendingLimits(state.spendingLimits, action)
+
+  if (spendingLimitsObj !== state.spendingLimits) {
+    result = {
+      ...result,
+      spendingLimits: spendingLimitsObj
+    }
+  }
+
+  return result
 }

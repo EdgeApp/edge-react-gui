@@ -3,7 +3,7 @@
 import React, { Component } from 'react'
 
 // import * as Constants from '../../../common/constants'
-import { Input } from './materialWrappers/indexMaterial'
+import { Input, InputWithAutoFocus } from './materialWrappers/indexMaterial'
 
 /*
 type Props = {
@@ -43,7 +43,7 @@ class FormField extends Component {
     label: '',
     keyboardType: 'default'
   }
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     const secure = this.props.secureTextEntry ? this.props.secureTextEntry : false
     this.setState({
       secure: secure,
@@ -52,31 +52,59 @@ class FormField extends Component {
   }
   render () {
     const { container, baseColor, tintColor, textColor, errorColor, titleTextStyle } = this.props.style
-    return (
-      <Input
-        label={this.props.label}
-        onChangeText={this.props.onChangeText}
-        error={this.props.error}
-        containerStyle={container}
-        secureTextEntry={this.state.secure}
-        returnKeyType={this.props.returnKeyType}
-        baseColor={baseColor}
-        tintColor={tintColor}
-        textColor={textColor}
-        errorColor={errorColor}
-        titleTextStyle={titleTextStyle}
-        autoFocus={this.state.autoFocus}
-        forceFocus={this.props.forceFocus}
-        onFocus={this.props.onFocus}
-        onBlur={this.props.onBlur}
-        autoCapitalize={this.props.autoCapitalize}
-        onSubmitEditing={this.onSubmitEditing.bind(this)}
-        value={this.props.value}
-        keyboardType={this.props.keyboardType}
-        maxLength={this.props.maxLength}
-        autoCorrect={this.props.autoCorrect}
-      />
-    )
+    if (this.props.autoFocus) {
+      return (
+        <InputWithAutoFocus
+          label={this.props.label}
+          onChangeText={this.props.onChangeText}
+          error={this.props.error}
+          containerStyle={container}
+          secureTextEntry={this.state.secure}
+          returnKeyType={this.props.returnKeyType}
+          baseColor={baseColor}
+          tintColor={tintColor}
+          textColor={textColor}
+          errorColor={errorColor}
+          titleTextStyle={titleTextStyle}
+          forceFocus={this.props.forceFocus}
+          onFocus={this.props.onFocus}
+          onBlur={this.props.onBlur}
+          autoCapitalize={this.props.autoCapitalize}
+          onSubmitEditing={this.onSubmitEditing.bind(this)}
+          value={this.props.value}
+          keyboardType={this.props.keyboardType}
+          maxLength={this.props.maxLength}
+          autoCorrect={this.props.autoCorrect}
+          autoFocus={this.state.autoFocus}
+        />
+      )
+    } else {
+      return (
+        <Input
+          label={this.props.label}
+          onChangeText={this.props.onChangeText}
+          error={this.props.error}
+          containerStyle={container}
+          secureTextEntry={this.state.secure}
+          returnKeyType={this.props.returnKeyType}
+          baseColor={baseColor}
+          tintColor={tintColor}
+          textColor={textColor}
+          errorColor={errorColor}
+          titleTextStyle={titleTextStyle}
+          autoFocus={this.state.autoFocus}
+          forceFocus={this.props.forceFocus}
+          onFocus={this.props.onFocus}
+          onBlur={this.props.onBlur}
+          autoCapitalize={this.props.autoCapitalize}
+          onSubmitEditing={this.onSubmitEditing.bind(this)}
+          value={this.props.value}
+          keyboardType={this.props.keyboardType}
+          maxLength={this.props.maxLength}
+          autoCorrect={this.props.autoCorrect}
+        />
+      )
+    }
   }
   onSubmitEditing = () => {
     if (this.props.onSubmitEditing) {

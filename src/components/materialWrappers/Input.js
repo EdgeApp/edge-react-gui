@@ -46,7 +46,7 @@ class Input extends Component<Props, State> {
     placeholder: ''
   }
   textInput: TextField
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     this.textInput = null
     this.setState({
       inputText: '',
@@ -59,7 +59,7 @@ class Input extends Component<Props, State> {
     }
   }
 
-  componentWillReceiveProps (nextProps: any) {
+  UNSAFE_componentWillReceiveProps (nextProps: any) {
     if (nextProps.value !== this.state.inputText) {
       this.setState({
         inputText: nextProps.value,

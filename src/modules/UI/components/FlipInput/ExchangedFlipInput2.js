@@ -1,11 +1,11 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import { bns } from 'biggystring'
 import React, { Component } from 'react'
+import slowlog from 'react-native-slowlog'
 
 import type { GuiCurrencyInfo } from '../../../../types'
-import { precisionAdjust, getObjectDiff } from '../../../utils.js'
+import { getObjectDiff, precisionAdjust } from '../../../utils.js'
 import { FlipInput } from './FlipInput2.ui.js'
 import type { FlipInputFieldInfo } from './FlipInput2.ui.js'
 
@@ -31,7 +31,7 @@ export type ExchangedFlipInputOwnProps = {
 
   // Callback for when the `primaryAmount` changes. This returns both a `nativeAmount` and an `exchangeAmount`. Both
   // amounts are ONLY for the primary field. Parent will not be given values for the secondary field.
-  onExchangeAmountChanged(amounts: ExchangedFlipInputAmounts): void,
+  onExchangeAmountChanged(amounts: ExchangedFlipInputAmounts): mixed,
   isEditable: boolean
 }
 
@@ -119,7 +119,7 @@ export class ExchangedFlipInput extends Component<Props, State> {
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
-  componentWillReceiveProps (nextProps: Props) {
+  UNSAFE_componentWillReceiveProps (nextProps: Props) {
     this.setState(propsToState(nextProps))
   }
 

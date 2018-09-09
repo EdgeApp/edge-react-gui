@@ -6,6 +6,10 @@ deploy-config.json
 keystores/
 google-services.json
 GoogleService-Info.plist
+android-release.bundle.map
+ios-release.bundle.map
+main.jsbundle
+temp/
 
 # Scratch
 **/scratch.*
@@ -62,18 +66,23 @@ buildnum.json
 # BUCK
 buck-out/
 \.buckd/
+*.keystore
 
 # fastlane
 #
 # It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
 # screenshots whenever they are needed.
 # For more information about the recommended setup visit:
-# https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Gitignore.md
+# https://docs.fastlane.tools/best-practices/source-control/
 
-fastlane/report.xml
-fastlane/Preview.html
-fastlane/screenshots
+*/fastlane/report.xml
+*/fastlane/Preview.html
+*/fastlane/screenshots
 
+# Bundle artifact
+*.jsbundle
+
+## App Plugins
 /src/assets/plugins.json
 /android/app/src/main/assets/plugins/
 /ios/plugins/

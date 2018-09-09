@@ -1,5 +1,24 @@
 # edge-react-gui
 
+## 1.3.0
+
+* Add support for ERC20 Tether, Digibyte, Bitcoin Gold, and Vertcoin
+* Support buying Litecoin with credit card
+* Add toggle to show fiat balances of wallets in Wallet List screen
+* Add per transaction PIN spending limits
+* Show transaction/event history of Simplex transactions
+* Fix occasional error popup on login/logout
+* Add onboarding screens for new accounts
+* Fix QBO file format bugs causing errored imports
+* Fix persistence of category field in transaction details
+* Switch to Bugsnag for crash reporting
+* Fix sweeping private keys for several currencies
+* Fix slow max spend for several currencies
+* Fix Cancel of sweeping private key not re-enabling scanner
+* Fix several crashes
+* Add cards to empty LTC, BTC, ETH, and BCH wallets to show user link to buy with credit card
+* Do not show "No Amount Specified" error when user first scans Monero/XRP QR codes
+
 ## 1.2.4
 
 * Add BIP70 support

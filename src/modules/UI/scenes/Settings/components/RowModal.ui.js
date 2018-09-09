@@ -1,8 +1,8 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import React, { Component } from 'react'
 import { TouchableHighlight, View } from 'react-native'
+import slowlog from 'react-native-slowlog'
 
 import T from '../../../components/FormattedText'
 import styles, { styles as styleRaw } from '../style'
@@ -24,7 +24,12 @@ export default class RowModal extends Component<Props> {
   }
   render () {
     return (
-      <TouchableHighlight style={[styles.settingsRowContainer]} disabled={this.props.disabled || false} underlayColor={styleRaw.underlay.color} onPress={this.props.onPress}>
+      <TouchableHighlight
+        style={[styles.settingsRowContainer]}
+        disabled={this.props.disabled || false}
+        underlayColor={styleRaw.underlay.color}
+        onPress={this.props.onPress}
+      >
         <View style={[styles.settingsRowTextRow]}>
           <View style={[styles.settingsRowLeftContainer]}>
             <T style={[styles.settingsRowLeftText, this.props.disabled ? styles.settingsRowLeftTextDisabled : null]}>{this.props.leftText}</T>

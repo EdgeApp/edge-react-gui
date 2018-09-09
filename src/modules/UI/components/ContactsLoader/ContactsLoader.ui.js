@@ -15,7 +15,7 @@ export type Props = {
 }
 
 export class ContactsLoader extends Component<Props> {
-  componentWillReceiveProps (nextProps: Props) {
+  UNSAFE_componentWillReceiveProps (nextProps: Props) {
     const { contactsPermission } = nextProps
 
     if (!isAuthorized(this.props.contactsPermission) && isAuthorized(contactsPermission)) {
@@ -36,7 +36,7 @@ export class ContactsLoader extends Component<Props> {
     return contacts.filter(item => item.givenName)
   }
 
-  sortContacts = (contacts: Array<GuiContact>) => {
+  sortContacts = (contacts: Array<GuiContact>): Array<GuiContact> => {
     return contacts.sort((a, b) => a.givenName.toUpperCase().localeCompare(b.givenName.toUpperCase()))
   }
 

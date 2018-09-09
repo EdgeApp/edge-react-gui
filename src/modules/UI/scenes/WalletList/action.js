@@ -1,13 +1,10 @@
 // @flow
 
 import * as ACCOUNT_API from '../../../Core/Account/api.js'
-import {
-  setAccountBalanceVisibility,
-  updateWalletFiatBalanceVisibility
-} from '../../Settings/action.js'
-import type { Dispatch, GetState } from '../../../ReduxTypes'
-import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'
+import * as CORE_SELECTORS from '../../../Core/selectors.js'
+import type { Dispatch, GetState } from '../../../ReduxTypes'
+import { setAccountBalanceVisibility, updateWalletFiatBalanceVisibility } from '../../Settings/action.js'
 
 export const TOGGLE_ARCHIVE_VISIBILITY = 'TOGGLE_ARCHIVE_VISIBILITY'
 

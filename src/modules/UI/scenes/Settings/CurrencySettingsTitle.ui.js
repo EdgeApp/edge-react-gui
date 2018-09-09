@@ -1,10 +1,11 @@
 // @flow
 
 import React, { Component } from 'react'
-import { View, Image } from 'react-native'
-import T from '../../components/FormattedText'
-import s from '../../../../locales/strings.js'
+import { Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
+
+import s from '../../../../locales/strings.js'
+import T from '../../components/FormattedText'
 import styles from './style.js'
 
 export type CurrencySettingsTitleOwnProps = {
@@ -23,7 +24,7 @@ export class CurrencySettingsTitle extends Component<CurrencySettingsTitleCompon
     const capitalizedPluginName = pluginName.charAt(0).toUpperCase() + pluginName.substr(1)
     const title = sprintf(s.strings.title_crypto_settings, capitalizedPluginName)
     return (
-      <View style={{flexDirection: 'row'}}>
+      <View style={{ flexDirection: 'row' }}>
         <Image style={{ height: 25, width: 25, resizeMode: Image.resizeMode.contain }} source={{ uri: logo }} />
         <T style={styles.titleStyle}>{title || ''}</T>
       </View>

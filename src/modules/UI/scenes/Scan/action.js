@@ -1,17 +1,16 @@
 // @flow
 
+import type { EdgeParsedUri } from 'edge-core-js'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import type { EdgeParsedUri } from 'edge-core-js'
 
-import * as Constants from '../../../../constants/indexConstants.js'
-import type { Dispatch, GetState } from '../../../ReduxTypes.js'
-import * as WALLET_API from '../../../Core/Wallets/api.js'
-import { isEdgeLogin, denominationToDecimalPlaces, noOp } from '../../../utils.js'
 import { loginWithEdge } from '../../../../actions/EdgeLoginActions.js'
-import { updateParsedURI, paymentProtocolUriReceived } from '../SendConfirmation/action.js'
+import { ADD_TOKEN, EDGE_LOGIN, SEND_CONFIRMATION } from '../../../../constants/indexConstants.js'
 import s from '../../../../locales/strings.js'
-
+import * as WALLET_API from '../../../Core/Wallets/api.js'
+import type { Dispatch, GetState } from '../../../ReduxTypes.js'
+import { denominationToDecimalPlaces, isEdgeLogin, noOp } from '../../../utils.js'
+import { paymentProtocolUriReceived, updateParsedURI } from '../SendConfirmation/action.js'
 import { activated as legacyAddressModalActivated, deactivated as legacyAddressModalDeactivated } from './LegacyAddressModal/LegacyAddressModalActions.js'
 import { activated as privateKeyModalActivated } from './PrivateKeyModal/PrivateKeyModalActions.js'
 
@@ -69,7 +68,7 @@ export const parseUri = (data: string) => (dispatch: Dispatch, getState: GetStat
   if (isEdgeLogin(data)) {
     // EDGE LOGIN
     dispatch(loginWithEdge(data))
-    Actions[Constants.EDGE_LOGIN]()
+    Actions[EDGE_LOGIN]()
     return
   }
 
@@ -95,17 +94,17 @@ export const parseUri = (data: string) => (dispatch: Dispatch, getState: GetStat
           wallet: guiWallet,
           onAddToken: noOp
         }
-        return Actions.addToken(parameters)
+        return Actions[ADD_TOKEN](parameters)
       }
 
       if (isLegacyAddressUri(parsedUri)) {
         // LEGACY ADDRESS URI
-        return dispatch(legacyAddressModalActivated())
+        return setTimeout(() => dispatch(legacyAddressModalActivated()), 500)
       }
 
       if (isPrivateKeyUri(parsedUri)) {
         // PRIVATE KEY URI
-        return dispatch(privateKeyModalActivated())
+        return setTimeout(() => dispatch(privateKeyModalActivated()), 500)
       }
 
       if (isPaymentProtocolUri(parsedUri)) {
@@ -115,8 +114,8 @@ export const parseUri = (data: string) => (dispatch: Dispatch, getState: GetStat
       }
 
       // PUBLIC ADDRESS URI
+      Actions[SEND_CONFIRMATION]('fromScan')
       dispatch(updateParsedURI(parsedUri))
-      return Actions.sendConfirmation('fromScan')
     },
     () => {
       // INVALID URI
@@ -130,6 +129,21 @@ export const parseUri = (data: string) => (dispatch: Dispatch, getState: GetStat
       )
     }
   )
+}
+
+export const legacyAddressModalContinueButtonPressed = () => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  dispatch(legacyAddressModalDeactivated())
+  const parsedUri = state.ui.scenes.scan.parsedUri
+  setImmediate(() => {
+    if (!parsedUri) {
+      dispatch(enableScan())
+      return
+    }
+
+    Actions[SEND_CONFIRMATION]('fromScan')
+    dispatch(updateParsedURI(parsedUri))
+  })
 }
 
 export const qrCodeScanned = (data: string) => (dispatch: Dispatch, getState: GetState) => {
@@ -147,18 +161,6 @@ export const addressModalDoneButtonPressed = (data: string) => (dispatch: Dispat
 
 export const addressModalCancelButtonPressed = () => (dispatch: Dispatch, getState: GetState) => {
   // dispatch(addressModalDeactivated())
-}
-
-export const legacyAddressModalContinueButtonPressed = () => (dispatch: Dispatch, getState: GetState) => {
-  dispatch(legacyAddressModalDeactivated())
-  dispatch(enableScan())
-
-  const state = getState()
-  const parsedUri = state.ui.scenes.scan.parsedUri
-  if (!parsedUri) return
-
-  dispatch(updateParsedURI(parsedUri))
-  Actions.sendConfirmation('fromScan')
 }
 
 export const legacyAddressModalCancelButtonPressed = () => (dispatch: Dispatch) => {

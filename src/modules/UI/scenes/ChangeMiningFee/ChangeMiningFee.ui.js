@@ -1,9 +1,9 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
 import { View } from 'react-native'
+import slowlog from 'react-native-slowlog'
 
 import * as FEE from '../../../../constants/FeeConstants'
 import s from '../../../../locales/strings.js'

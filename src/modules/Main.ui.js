@@ -1,16 +1,18 @@
 // @flow
 
-import slowlog from 'react-native-slowlog'
-import DeviceInfo from 'react-native-device-info'
-import type { EdgeContext, EdgeContextCallbacks, EdgeCorePluginFactory, EdgeCurrencyPlugin } from 'edge-core-js'
+import { makeReactNativeFolder } from 'disklet'
+import type { DiskletFolder, EdgeContext, EdgeContextCallbacks, EdgeCorePluginFactory, EdgeCurrencyPlugin } from 'edge-core-js'
 import {
   bitcoinCurrencyPluginFactory,
   bitcoincashCurrencyPluginFactory,
+  bitcoingoldCurrencyPluginFactory,
   dashCurrencyPluginFactory,
+  digibyteCurrencyPluginFactory,
   feathercoinCurrencyPluginFactory,
   litecoinCurrencyPluginFactory,
   qtumCurrencyPluginFactory,
   ufoCurrencyPluginFactory,
+  vertcoinCurrencyPluginFactory,
   zcoinCurrencyPluginFactory
 } from 'edge-currency-bitcoin'
 import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
@@ -18,11 +20,12 @@ import { moneroCurrencyPluginFactory } from 'edge-currency-monero'
 import { rippleCurrencyPluginFactory } from 'edge-currency-ripple'
 import { coinbasePlugin, coincapPlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
 import React, { Component } from 'react'
-import { Image, Keyboard, Linking, Platform, StatusBar, TouchableWithoutFeedback } from 'react-native'
-import HockeyApp from 'react-native-hockeyapp'
+import { Image, Keyboard, Linking, StatusBar, TouchableWithoutFeedback, View } from 'react-native'
+import DeviceInfo from 'react-native-device-info'
 import Locale from 'react-native-locale'
 import { MenuProvider } from 'react-native-popup-menu'
 import { Actions, Drawer, Modal, Overlay, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
+import slowlog from 'react-native-slowlog'
 import SplashScreen from 'react-native-smart-splash-screen'
 // $FlowFixMe
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'
@@ -42,14 +45,16 @@ import walletIcon from '../assets/images/tabbar/wallets.png'
 import ExchangeDropMenu from '../connectors/components/HeaderMenuExchangeConnector'
 import RequestDropMenu from '../connectors/components/HeaderMenuRequestConnector'
 import ExchangeConnector from '../connectors/scene/CryptoExchangeSceneConnector'
-import TransactionsExportSceneConnector from '../connectors/scene/TransactionsExportSceneConnector'
 import EdgeLoginSceneConnector from '../connectors/scene/EdgeLoginSceneConnector'
 import OtpSettingsSceneConnector from '../connectors/scene/OtpSettingsSceneConnector.js'
 import PasswordRecoveryConnector from '../connectors/scene/PasswordRecoveryConnector.js'
-import CurrencySettingsTitleConnector from './UI/scenes/Settings/CurrencySettingsTitleConnector.js'
+import TransactionsExportSceneConnector from '../connectors/scene/TransactionsExportSceneConnector'
 import * as Constants from '../constants/indexConstants'
 import { setIntlLocale } from '../locales/intl'
 import s, { selectLocale } from '../locales/strings.js'
+import { LoadingScene } from '../modules/UI/components/Loading/LoadingScene.ui.js'
+import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
+import { OnBoardingComponent } from '../modules/UI/scenes/OnBoarding/OnBoardingComponent.js'
 import { makeCoreContext } from '../util/makeContext.js'
 import * as CONTEXT_API from './Core/Context/api'
 import { styles } from './style.js'
@@ -63,9 +68,10 @@ import HelpButton from './UI/components/Header/Component/HelpButtonConnector'
 import Header from './UI/components/Header/Header.ui'
 import WalletName from './UI/components/Header/WalletName/WalletNameConnector.js'
 import HelpModal from './UI/components/HelpModal'
+import { PasswordRecoveryReminderModalConnector } from './UI/components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalConnector.js'
+import { passwordReminderModalConnector as PasswordReminderModal } from './UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
 import TransactionAlert from './UI/components/TransactionAlert/TransactionAlertConnector'
-import { CAMERA, CONTACTS } from './UI/permissions.js'
-import type { Permission } from './UI/permissions.js'
+import { CAMERA, CONTACTS, type Permission } from './UI/permissions.js'
 import AddToken from './UI/scenes/AddToken/AddTokenConnector.js'
 import ChangeMiningFeeExchange from './UI/scenes/ChangeMiningFee/ChangeMiningFeeExchangeConnector.ui'
 import ChangeMiningFeeSendConfirmation from './UI/scenes/ChangeMiningFee/ChangeMiningFeeSendConfirmationConnector.ui'
@@ -78,19 +84,21 @@ import { CreateWalletSelectFiat } from './UI/scenes/CreateWallet/CreateWalletSel
 import EditToken from './UI/scenes/EditToken'
 import LoginConnector from './UI/scenes/Login/LoginConnector'
 import ManageTokens from './UI/scenes/ManageTokens'
+import { PluginBuySell, PluginSpend, PluginView, renderPluginBackButton } from './UI/scenes/Plugins'
 import Request from './UI/scenes/Request/index'
 import Scan from './UI/scenes/Scan/ScanConnector'
 import SendConfirmation from './UI/scenes/SendConfirmation/index'
 import SendConfirmationOptions from './UI/scenes/SendConfirmation/SendConfirmationOptionsConnector.js'
 import CurrencySettings from './UI/scenes/Settings/CurrencySettingsConnector'
+import CurrencySettingsTitleConnector from './UI/scenes/Settings/CurrencySettingsTitleConnector.js'
 import DefaultFiatSettingConnector from './UI/scenes/Settings/DefaultFiatSettingConnector'
 import SettingsOverview from './UI/scenes/Settings/SettingsOverviewConnector'
+import SpendingLimitsConnector from './UI/scenes/SpendingLimits/SpendingLimitsConnector.js'
+import { TermsOfServiceComponent } from './UI/scenes/TermsOfService/TermsOfService.ui.js'
 import TransactionDetails from './UI/scenes/TransactionDetails/TransactionDetailsConnector.js'
 import TransactionListConnector from './UI/scenes/TransactionList/TransactionListConnector'
 import { HwBackButtonHandler } from './UI/scenes/WalletList/components/HwBackButtonHandler'
 import WalletList from './UI/scenes/WalletList/WalletListConnector'
-import { passwordReminderModalConnector as PasswordReminderModal } from './UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
-import { PluginView, PluginBuySell, PluginSpend, renderPluginBackButton } from './UI/scenes/Plugins'
 
 const pluginFactories: Array<EdgeCorePluginFactory> = [
   // Exchanges:
@@ -100,21 +108,24 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   // Currencies:
   bitcoincashCurrencyPluginFactory,
   bitcoinCurrencyPluginFactory,
-  dashCurrencyPluginFactory,
   ethereumCurrencyPluginFactory,
-  moneroCurrencyPluginFactory,
   rippleCurrencyPluginFactory,
-  qtumCurrencyPluginFactory,
+  moneroCurrencyPluginFactory,
+  dashCurrencyPluginFactory,
   litecoinCurrencyPluginFactory,
-  feathercoinCurrencyPluginFactory,
+  // dogecoinCurrencyPluginFactory,
+  qtumCurrencyPluginFactory,
+  digibyteCurrencyPluginFactory,
+  bitcoingoldCurrencyPluginFactory,
+  vertcoinCurrencyPluginFactory,
   zcoinCurrencyPluginFactory,
+  feathercoinCurrencyPluginFactory,
   ufoCurrencyPluginFactory
 ]
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
 const UTILITY_SERVER_FILE = 'utilityServer.json'
-const HOCKEY_APP_ID = Platform.select(ENV.HOCKEY_APP_ID)
 global.etherscanApiKey = ENV.ETHERSCAN_API_KEY
 
 const RouterWithRedux = connect()(Router)
@@ -153,18 +164,20 @@ const EDIT_TOKEN = s.strings.title_edit_token
 const SETTINGS = s.strings.title_settings
 const CHANGE_PASSWORD = s.strings.title_change_password
 const CHANGE_PIN = s.strings.title_change_pin
+const SPENDING_LIMITS = s.strings.spending_limits
 const PASSWORD_RECOVERY = s.strings.title_password_recovery
 const OTP = s.strings.title_otp
 const DEFAULT_FIAT = s.strings.title_default_fiat
 const PLUGIN_BUYSELL = s.strings.title_plugin_buysell
 const PLUGIN_SPEND = s.strings.title_plugin_spend
+const TERMS_OF_SERVICE = s.strings.title_terms_of_service
 
 type Props = {
   requestPermission: (permission: Permission) => void,
   username?: string,
   addCurrencyPlugin: EdgeCurrencyPlugin => void,
   setKeyboardHeight: number => void,
-  addContext: EdgeContext => void,
+  addContext: (EdgeContext, DiskletFolder) => void,
   addUsernames: (Array<string>) => void,
   setDeviceDimensions: any => void,
   dispatchEnableScan: () => void,
@@ -177,10 +190,10 @@ type State = {
   context: ?EdgeContext
 }
 
-async function queryUtilServer (context: EdgeContext, usernames: Array<string>) {
+async function queryUtilServer (context: EdgeContext, folder: DiskletFolder, usernames: Array<string>) {
   let jsonObj: null | Object = null
   try {
-    const json = await context.io.folder.file(UTILITY_SERVER_FILE).getText()
+    const json = await folder.file(UTILITY_SERVER_FILE).getText()
     jsonObj = JSON.parse(json)
   } catch (err) {
     console.log(err)
@@ -195,14 +208,14 @@ async function queryUtilServer (context: EdgeContext, usernames: Array<string>) 
   if (usernames.length === 0 && !jsonObj) {
     // New app launch. Query the utility server for referral information
     try {
-      const response = await context.io.fetch('https://util1.edge.app/ref')
+      const response = await fetch('https://util1.edge.app/ref')
       if (response) {
         const util = await response.json()
         if (util.currencyCode) {
           global.currencyCode = util.currencyCode
         }
         // Save util data
-        context.io.folder.file(UTILITY_SERVER_FILE).setText(JSON.stringify(util))
+        folder.file(UTILITY_SERVER_FILE).setText(JSON.stringify(util))
       }
     } catch (e) {
       console.log(e)
@@ -223,8 +236,7 @@ export default class Main extends Component<Props, State> {
     }
   }
 
-  componentWillMount () {
-    HockeyApp.configure(HOCKEY_APP_ID, true)
+  UNSAFE_componentWillMount () {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow)
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide)
   }
@@ -235,21 +247,21 @@ export default class Main extends Component<Props, State> {
   }
 
   componentDidMount () {
-    HockeyApp.start()
-    HockeyApp.checkForUpdate() // optional
     const id = DeviceInfo.getUniqueID()
     global.firebase && global.firebase.analytics().setUserId(id)
     global.firebase && global.firebase.analytics().logEvent(`Start_App`)
     makeCoreContext(this.props.contextCallbacks, pluginFactories).then(context => {
+      const folder = makeReactNativeFolder()
+
       // Put the context into Redux:
-      this.props.addContext(context)
+      this.props.addContext(context, folder)
 
       CONTEXT_API.listUsernames(context).then(usernames => {
         this.props.addUsernames(usernames)
-        queryUtilServer(context, usernames)
+        queryUtilServer(context, folder, usernames)
       })
       setIntlLocale(localeInfo)
-      selectLocale('enUS')
+      selectLocale(DeviceInfo.getDeviceLocale())
       SplashScreen.close({
         animationType: SplashScreen.animationType.fade,
         duration: 850,
@@ -296,6 +308,7 @@ export default class Main extends Component<Props, State> {
               <Stack key={Constants.ROOT} hideNavBar panHandlers={null}>
                 <Scene key={Constants.LOGIN} initial component={LoginConnector} username={this.props.username} />
 
+                <Scene key={Constants.ONBOARDING} navTransparent={true} component={OnBoardingComponent} />
                 <Scene
                   key={Constants.TRANSACTION_DETAILS}
                   navTransparent={true}
@@ -329,19 +342,19 @@ export default class Main extends Component<Props, State> {
                         />
 
                         <Scene
-                          key={Constants.CREATE_WALLET_NAME}
+                          key={Constants.CREATE_WALLET_SELECT_CRYPTO}
                           navTransparent={true}
-                          component={CreateWalletName}
-                          renderTitle={this.renderTitle(CREATE_WALLET)}
+                          component={CreateWalletSelectCrypto}
+                          renderTitle={this.renderTitle(CREATE_WALLET_SELECT_CRYPTO)}
                           renderLeftButton={this.renderBackButton(WALLETS)}
                           renderRightButton={this.renderEmptyButton()}
                         />
 
                         <Scene
-                          key={Constants.CREATE_WALLET_SELECT_CRYPTO}
+                          key={Constants.CREATE_WALLET_NAME}
                           navTransparent={true}
-                          component={CreateWalletSelectCrypto}
-                          renderTitle={this.renderTitle(CREATE_WALLET_SELECT_CRYPTO)}
+                          component={CreateWalletName}
+                          renderTitle={this.renderTitle(CREATE_WALLET)}
                           renderLeftButton={this.renderBackButton()}
                           renderRightButton={this.renderEmptyButton()}
                         />
@@ -407,7 +420,7 @@ export default class Main extends Component<Props, State> {
                         <Scene
                           key={Constants.TRANSACTIONS_EXPORT}
                           navTransparent={true}
-                          component={TransactionsExportSceneConnector}
+                          component={ifLoggedIn(TransactionsExportSceneConnector, LoadingScene)}
                           renderTitle={this.renderTitle(TRANSACTIONS_EXPORT)}
                           renderLeftButton={this.renderBackButton(WALLETS)}
                           renderRightButton={this.renderEmptyButton()}
@@ -552,6 +565,14 @@ export default class Main extends Component<Props, State> {
                         renderLeftButton={this.renderBackButton()}
                         renderRightButton={this.renderEmptyButton()}
                       />
+                      <Scene
+                        key={Constants.SPENDING_LIMITS}
+                        navTransparent={true}
+                        component={SpendingLimitsConnector}
+                        renderTitle={this.renderTitle(SPENDING_LIMITS)}
+                        renderLeftButton={this.renderBackButton()}
+                        renderRightButton={this.renderEmptyButton()}
+                      />
                       {this.renderCurrencySettings()}
                       <Scene
                         key={Constants.DEFAULT_FIAT_SETTING}
@@ -571,11 +592,12 @@ export default class Main extends Component<Props, State> {
                         renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
                         renderLeftButton={this.renderBackButton(BACK)}
                         renderRightButton={this.renderEmptyButton()}
-                        onLeft={Actions.pop} />
+                        onLeft={Actions.pop}
+                      />
                       <Scene
                         key={Constants.PLUGIN}
                         navTransparent={true}
-                        component={PluginView}
+                        component={ifLoggedIn(PluginView, LoadingScene)}
                         renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
                         renderLeftButton={renderPluginBackButton(BACK)}
                         renderRightButton={this.renderEmptyButton()}
@@ -590,7 +612,8 @@ export default class Main extends Component<Props, State> {
                         renderTitle={this.renderTitle(PLUGIN_SPEND)}
                         renderLeftButton={this.renderBackButton(BACK)}
                         renderRightButton={this.renderEmptyButton()}
-                        onLeft={Actions.pop} />
+                        onLeft={Actions.pop}
+                      />
                       {/*
                         <Scene
                           key={Constants.PLUGIN}
@@ -602,7 +625,17 @@ export default class Main extends Component<Props, State> {
                         />
                       ) */}
                     </Stack>
-
+                    <Stack key={Constants.TERMS_OF_SERVICE}>
+                      <Scene
+                        key={Constants.TERMS_OF_SERVICE}
+                        navTransparent={true}
+                        component={TermsOfServiceComponent}
+                        renderTitle={this.renderTitle(TERMS_OF_SERVICE)}
+                        renderLeftButton={this.renderBackButton(BACK)}
+                        renderRightButton={this.renderEmptyButton()}
+                        onLeft={Actions.pop}
+                      />
+                    </Stack>
                   </Scene>
                 </Drawer>
               </Stack>
@@ -615,6 +648,7 @@ export default class Main extends Component<Props, State> {
         <AutoLogout />
         <ContactsLoader />
         <PasswordReminderModal />
+        <PasswordRecoveryReminderModalConnector />
       </MenuProvider>
     )
   }
@@ -659,7 +693,11 @@ export default class Main extends Component<Props, State> {
   }
 
   renderTitle = (title: string) => {
-    return <T style={styles.titleStyle}>{title}</T>
+    return (
+      <View style={styles.titleWrapper}>
+        <T style={styles.titleStyle}>{title}</T>
+      </View>
+    )
   }
 
   renderMenuButton = () => {

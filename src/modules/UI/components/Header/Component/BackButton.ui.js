@@ -3,10 +3,10 @@
 import React, { Component } from 'react'
 import { Platform, TouchableOpacity } from 'react-native'
 
-import { Icon } from '../../Icon/Icon.ui.js'
-import T from '../../../components/FormattedText'
-import styles from '../style'
 import * as Constants from '../../../../../constants/indexConstants.js'
+import T from '../../../components/FormattedText'
+import { Icon } from '../../Icon/Icon.ui.js'
+import styles from '../style'
 
 const isIos = Platform.OS === 'ios'
 

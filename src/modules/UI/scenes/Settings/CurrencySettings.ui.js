@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import { View } from 'react-native'
+import { Image, View } from 'react-native'
 
 import s from '../../../../locales/strings.js'
 import type { GuiDenomination } from '../../../../types'
@@ -9,9 +9,9 @@ import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView'
 import RadioRows from './components/RadioRows.ui.js'
-import SwitchRow from './components/RowSwitch.ui.js'
-import ModalRow from './components/RowModal.ui.js'
 import Row from './components/Row.ui.js'
+import ModalRow from './components/RowModal.ui.js'
+import SwitchRow from './components/RowSwitch.ui.js'
 import { SetCustomNodesModal } from './components/SetCustomNodesModal.ui.js'
 import styles from './style'
 
@@ -28,7 +28,8 @@ type Props = {
   isSetCustomNodesModalVisible: boolean,
   setCustomNodesModalVisibility: (visibility: boolean | null) => void,
   enableCustomNodes: () => void,
-  disableCustomNodes: () => void
+  disableCustomNodes: () => void,
+  logo: string
 }
 
 export default class CurrencySettings extends Component<Props> {
@@ -37,7 +38,8 @@ export default class CurrencySettings extends Component<Props> {
       <Gradient style={[styles.headerRow]}>
         <View style={[styles.headerTextWrap]}>
           <View style={styles.leftArea}>
-            <T style={styles.headerText}>{title}</T>
+            <Image style={{ height: 25, width: 25, resizeMode: 'contain' }} source={{ uri: this.props.logo }} />
+            <T style={styles.headerText}>{SETTINGS_DENOMINATION_TEXT}</T>
           </View>
         </View>
       </Gradient>
@@ -81,7 +83,7 @@ export default class CurrencySettings extends Component<Props> {
               saveCustomNodesList={this.props.saveCustomNodesList}
             />
             {this.header(SETTINGS_DENOMINATION_TEXT)}
-            <RadioRows>
+            <RadioRows style={{}}>
               {this.props.denominations.map(denomination => {
                 const key = denomination.multiplier
                 const left = (
