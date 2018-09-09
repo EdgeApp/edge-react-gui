@@ -68,7 +68,7 @@ export type SettingsState = {
   XRP: CurrencySetting,
   REP: CurrencySetting,
   DOGE: CurrencySetting,
-  DGB: CurrencySettings,
+  DGB: CurrencySetting,
   WINGS: CurrencySetting,
   account: ?Object,
   autoLogoutTimeInSeconds: number,

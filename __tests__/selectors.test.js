@@ -1,4 +1,3 @@
-// @flow
 /* globals describe test expect */
 
 import * as CORE_SELECTORS from '../src/modules/Core/selectors'
