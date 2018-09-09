@@ -656,7 +656,9 @@ export default class Main extends Component<Props, State> {
   renderCurrencySettings = () => {
     const settings = []
     for (const key in Constants.CURRENCY_SETTINGS) {
+      console.log('currencySettings key: ', key)
       const { pluginName, currencyCode } = Constants.CURRENCY_SETTINGS[key]
+      console.log('pluginName is: ', pluginName )
       settings.push(
         <Scene
           currencyCode={currencyCode}
@@ -666,6 +668,7 @@ export default class Main extends Component<Props, State> {
           renderTitle={<CurrencySettingsTitleConnector key={key} cryptoKey={key} pluginName={pluginName} currencyCode={currencyCode} />}
           renderLeftButton={this.renderBackButton()}
           renderRightButton={this.renderEmptyButton()}
+          pluginName={pluginName}
         />
       )
     }
