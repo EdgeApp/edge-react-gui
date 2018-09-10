@@ -356,11 +356,14 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
   const isBelowLimit = bns.lt(fromNativeAmount, nativeMin)
 
   if (isAboveLimit) {
+    const settings = SETTINGS_SELECTORS.getSettings(state)
+    const currentCurrencyDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, fromCurrencyCode)
+
     const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, fromCurrencyCode)
     // $FlowFixMe
     const nativeToDisplayRatio = displayDenomination.multiplier
     const displayMax = UTILS.convertNativeToDisplay(nativeToDisplayRatio)(nativeMax)
-    const errorMessage = sprintf(s.strings.amount_above_limit, displayMax, fromCurrencyCode)
+    const errorMessage = sprintf(s.strings.amount_above_limit, displayMax, currentCurrencyDenomination.name)
     console.log(`getShiftTransaction:above limit`)
     holderObject.processingCounter++
     holderObject.status = 'finished'
@@ -369,11 +372,14 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
     return
   }
   if (isBelowLimit) {
+    const settings = SETTINGS_SELECTORS.getSettings(state)
+    const currentCurrencyDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, fromCurrencyCode)
+
     const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, fromCurrencyCode)
     // $FlowFixMe
     const nativeToDisplayRatio = displayDenomination.multiplier
     const displayMin = UTILS.convertNativeToDisplay(nativeToDisplayRatio)(nativeMin)
-    const errorMessage = sprintf(s.strings.amount_below_limit, displayMin, fromCurrencyCode)
+    const errorMessage = sprintf(s.strings.amount_below_limit, displayMin, currentCurrencyDenomination.name)
     holderObject.processingCounter++
     holderObject.status = 'finished'
     console.log(`getShiftTransaction:below limit`)
