@@ -2,6 +2,8 @@
 
 import type { DiskletFolder, EdgeContext } from 'edge-core-js'
 
+import type { Dispatch, GetState } from '../../ReduxTypes.js'
+
 const PREFIX = 'Core/Context/'
 
 export const ADD_CONTEXT = PREFIX + 'ADD_CONTEXT'
@@ -33,3 +35,17 @@ export const deleteLocalAccountError = (username: string) => ({
   type: DELETE_LOCAL_ACCOUNT_ERROR,
   data: { username }
 })
+
+export const fetchLoginMessages = (context: EdgeContext) => async (dispatch: Dispatch, getState: GetState) => {
+  try {
+    const accounts = await context.fetchLoginMessages()
+    console.log(accounts)
+    /* for (const key in accounts) {
+      if (key === account.username) {
+        otpResetPending = accounts[key].otpResetPending
+      }
+    } */
+  } catch (e) {
+    console.log(e)
+  }
+}

@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import * as actions from '../actions/indexActions'
 import { requestPermission } from '../reducers/permissions/actions.js'
-import { addContext, addUsernames } from './Core/Context/action.js'
+import { addContext, addUsernames, fetchLoginMessages } from './Core/Context/action.js'
 import makeContextCallbacks from './Core/Context/callbacks'
 import Main from './Main.ui'
 import type { Dispatch } from './ReduxTypes'
@@ -48,7 +48,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     return dispatch(actions.deepLinkLogout(backupKey))
   },
   contextCallbacks: makeContextCallbacks(dispatch),
-  onSelectWallet: (walletId, currencyCode) => dispatch(selectWallet(walletId, currencyCode))
+  onSelectWallet: (walletId, currencyCode) => dispatch(selectWallet(walletId, currencyCode)),
+  onContextCreated: context => dispatch(fetchLoginMessages(context))
 })
 export default connect(
   mapStateToProps,

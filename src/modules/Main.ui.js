@@ -181,6 +181,7 @@ type Props = {
   setDeviceDimensions: any => void,
   dispatchEnableScan: () => void,
   dispatchDisableScan: () => void,
+  onContextCreated: EdgeContext => void,
   urlReceived: string => void,
   updateCurrentSceneKey: string => void,
   contextCallbacks: EdgeContextCallbacks
@@ -250,6 +251,7 @@ export default class Main extends Component<Props, State> {
     global.firebase && global.firebase.analytics().setUserId(id)
     global.firebase && global.firebase.analytics().logEvent(`Start_App`)
     makeCoreContext(this.props.contextCallbacks, pluginFactories).then(context => {
+      this.props.onContextCreated(context)
       const folder = makeReactNativeFolder()
 
       // Put the context into Redux:
