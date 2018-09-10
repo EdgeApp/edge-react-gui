@@ -219,7 +219,7 @@ export class SendConfirmation extends Component<Props, State> {
 
                   {(currencyCode === 'XMR' || currencyCode === 'XRP') && (
                     <Scene.Row style={{ paddingVertical: 10 }}>
-                      <PrimaryButton style={{ height: 40 }} onPress={this.props.uniqueIdentifierButtonPressed}>
+                      <PrimaryButton onPress={this.props.uniqueIdentifierButtonPressed}>
                         <PrimaryButton.Text ellipsizeMode={'tail'}>{uniqueIdentifierText(currencyCode, uniqueIdentifier)}</PrimaryButton.Text>
                       </PrimaryButton>
                     </Scene.Row>

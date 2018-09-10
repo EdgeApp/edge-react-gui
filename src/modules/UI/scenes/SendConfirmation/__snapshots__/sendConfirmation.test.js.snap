@@ -706,13 +706,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
                 }
               }
             >
-              <PrimaryButton
-                style={
-                  Object {
-                    "height": 40,
-                  }
-                }
-              >
+              <PrimaryButton>
                 <Text
                   ellipsizeMode="tail"
                 >
@@ -958,13 +952,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
                 }
               }
             >
-              <PrimaryButton
-                style={
-                  Object {
-                    "height": 40,
-                  }
-                }
-              >
+              <PrimaryButton>
                 <Text
                   ellipsizeMode="tail"
                 >
