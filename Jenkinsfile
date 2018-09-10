@@ -18,6 +18,9 @@ pipeline {
     timestamps()
     skipDefaultCheckout true
   }
+  triggers { 
+    pollSCM('H/5 * * * *')
+  }
   
   stages {
     stage("Setup the workspace and checkout source") {
