@@ -48,7 +48,6 @@ const ExpandableBoxStyle = {
   },
   bottomInner: {
     width: '100%',
-    height: 20,
     flexDirection: 'column',
     padding: 5
   }
