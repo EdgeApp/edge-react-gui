@@ -1,9 +1,6 @@
 // @flow
-import { moderateScale, verticalScale } from 'react-native-size-matters'
-
-import { isIphoneX } from './isIphoneX'
+import { moderateVScale } from 'react-native-size-matters'
 
 export const scale = (arg: number) => {
-  const iPhoneXScale = arg + arg * 0.1
-  return isIphoneX ? verticalScale(iPhoneXScale) : moderateScale(arg, 0.68)
+  return moderateVScale(arg, 0.9)
 }
