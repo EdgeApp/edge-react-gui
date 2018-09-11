@@ -86,7 +86,8 @@ export type State = {
       },
       sendConfirmation: SendConfirmationState,
       settings: {
-        isSetCustomNodesModalVisible: boolean
+        isSetCustomNodesModalVisible: boolean,
+        isSetCustomNodesProcessing: boolean
       },
       changeMiningFee: {
         isCustomFeeVisible: boolean

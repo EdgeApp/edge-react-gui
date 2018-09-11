@@ -26,7 +26,11 @@ exports[`CurrencySettings should render 1`] = `
       }
     >
       <SetCustomNodesModal
+        customNodesList={Array []}
+        isActive={false}
+        isSetCustomNodesProcessing={false}
         onExit={[Function]}
+        saveCustomNodesList={[MockFunction]}
       />
       <Gradient
         style={
@@ -54,20 +58,6 @@ exports[`CurrencySettings should render 1`] = `
               }
             }
           >
-            <Image
-              source={
-                Object {
-                  "uri": "THIS IS A LOGO",
-                }
-              }
-              style={
-                Object {
-                  "height": 25,
-                  "resizeMode": "contain",
-                  "width": 25,
-                }
-              }
-            />
             <FormattedText
               style={
                 Object {
@@ -214,20 +204,6 @@ exports[`CurrencySettings should render 1`] = `
               }
             }
           >
-            <Image
-              source={
-                Object {
-                  "uri": "THIS IS A LOGO",
-                }
-              }
-              style={
-                Object {
-                  "height": 25,
-                  "resizeMode": "contain",
-                  "width": 25,
-                }
-              }
-            />
             <FormattedText
               style={
                 Object {
@@ -237,13 +213,15 @@ exports[`CurrencySettings should render 1`] = `
                 }
               }
             >
-              Denominations
+              Custom Nodes
             </FormattedText>
           </Component>
         </Component>
       </Gradient>
       <RowSwitch
+        isActive={false}
         leftText="Enable Custom Nodes"
+        onSaveCustomNodesList={[MockFunction]}
         onToggle={[Function]}
         value={false}
       />

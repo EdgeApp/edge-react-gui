@@ -13,7 +13,8 @@ const mapStateToProps = (state: State, ownProps) => ({
   selectedDenominationKey: SETTINGS_SELECTORS.getDisplayDenominationKey(state, ownProps.currencyCode),
   isCustomNodesEnabled: state.ui.settings[ownProps.currencyCode].customNodes.isEnabled || false,
   customNodesList: state.ui.settings[ownProps.currencyCode].customNodes.nodesList || [],
-  isSetCustomNodesModalVisible: state.ui.scenes.settings.isSetCustomNodesModalVisible
+  isSetCustomNodesModalVisible: state.ui.scenes.settings.isSetCustomNodesModalVisible,
+  isSetCustomNodesProcessing: state.ui.scenes.settings.isSetCustomNodesProcessing
 })
 const mapDispatchToProps = (dispatch: Dispatch, ownProps) => ({
   selectDenomination: denominationKey => {

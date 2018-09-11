@@ -250,32 +250,30 @@ export const setDenominationKeyRequest = (account: EdgeAccount, currencyCode: st
     return setSyncedSettings(account, updatedSettings)
   })
 
-export const setIsCustomNodesEnabled = (account: EdgeAccount, currencyCode: string, isEnabled: boolean) => {
-  return getSyncedSettings(account).then(settings => {
-    const updatedCurrencySettings = {
-      ...settings,
-      customNodes: {
-        ...settings.customNodes,
-        isEnabled
-      }
+export const setIsCustomNodesEnabled = async (account: EdgeAccount, currencyCode: string, isEnabled: boolean) => {
+  const settings = await getSyncedSettings(account)
+  const updatedSettings = updateCurrencySettings(settings, currencyCode, {
+    ...settings[currencyCode],
+    customNodes: {
+      ...settings[currencyCode].customNodes,
+      isEnabled
     }
-    updateCurrencySettings(settings, currencyCode, updatedCurrencySettings)
-    return setSyncedSettings(account, updatedCurrencySettings)
   })
+  const newSyncedSettings = await setSyncedSettingsAsync(account, updatedSettings)
+  return newSyncedSettings
 }
 
-export const setCustomNodesList = (account: EdgeAccount, currencyCode: string, nodesList: Array<string>) => {
-  return getSyncedSettings(account).then(settings => {
-    const updatedCurrencySettings = {
-      ...settings,
-      customNodes: {
-        ...settings.customNodes,
-        nodesList
-      }
+export const setCustomNodesList = async (account: EdgeAccount, currencyCode: string, nodesList: Array<string>) => {
+  const settings = await getSyncedSettings(account)
+  const updatedSettings = updateCurrencySettings(settings, currencyCode, {
+    ...settings[currencyCode],
+    customNodes: {
+      ...settings[currencyCode].customNodes,
+      nodesList
     }
-    updateCurrencySettings(settings, currencyCode, updatedCurrencySettings)
-    return setSyncedSettings(account, updatedCurrencySettings)
   })
+  const newSyncedSettings = await setSyncedSettingsAsync(account, updatedSettings)
+  return newSyncedSettings
 }
 
 // Helper Functions

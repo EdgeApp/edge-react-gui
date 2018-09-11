@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Image, View } from 'react-native'
+import { View } from 'react-native'
 
 import s from '../../../../locales/strings.js'
 import type { GuiDenomination } from '../../../../types'
@@ -29,7 +29,8 @@ type Props = {
   setCustomNodesModalVisibility: (visibility: boolean | null) => void,
   enableCustomNodes: () => void,
   disableCustomNodes: () => void,
-  logo: string
+  logo: string,
+  isSetCustomNodesProcessing: boolean
 }
 
 export default class CurrencySettings extends Component<Props> {
@@ -38,8 +39,19 @@ export default class CurrencySettings extends Component<Props> {
       <Gradient style={[styles.headerRow]}>
         <View style={[styles.headerTextWrap]}>
           <View style={styles.leftArea}>
-            <Image style={{ height: 25, width: 25, resizeMode: 'contain' }} source={{ uri: this.props.logo }} />
             <T style={styles.headerText}>{SETTINGS_DENOMINATION_TEXT}</T>
+          </View>
+        </View>
+      </Gradient>
+    )
+  }
+
+  subHeader (title: string) {
+    return (
+      <Gradient style={[styles.headerRow]}>
+        <View style={[styles.headerTextWrap]}>
+          <View style={styles.leftArea}>
+            <T style={styles.headerText}>{title}</T>
           </View>
         </View>
       </Gradient>
@@ -81,6 +93,7 @@ export default class CurrencySettings extends Component<Props> {
               onExit={this.closeSetCustomNodesModal}
               customNodesList={this.props.customNodesList}
               saveCustomNodesList={this.props.saveCustomNodesList}
+              isSetCustomNodesProcessing={this.props.isSetCustomNodesProcessing}
             />
             {this.header(SETTINGS_DENOMINATION_TEXT)}
             <RadioRows style={{}}>
@@ -97,7 +110,7 @@ export default class CurrencySettings extends Component<Props> {
                 return <Row key={denomination.multiplier} denomination={denomination} left={left} isSelected={isSelected} onPress={onPress} />
               })}
             </RadioRows>
-            {this.header(CUSTOM_NODES_TEXT)}
+            {this.subHeader(CUSTOM_NODES_TEXT)}
             <SwitchRow
               leftText={s.strings.settings_enable_custom_nodes}
               onToggle={this.onChangeEnableCustomNodes}

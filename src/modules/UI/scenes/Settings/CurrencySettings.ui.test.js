@@ -24,7 +24,8 @@ describe('CurrencySettings', () => {
       isSetCustomNodesModalVisible: false,
       setCustomNodesModalVisibility: jest.fn(),
       enableCustomNodes: jest.fn(),
-      disableCustomNodes: jest.fn()
+      disableCustomNodes: jest.fn(),
+      isSetCustomNodesProcessing: false
     }
     const actual = renderer.render(<CurrencySettings {...props} />)
 

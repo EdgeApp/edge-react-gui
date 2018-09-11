@@ -658,7 +658,7 @@ export default class Main extends Component<Props, State> {
     for (const key in Constants.CURRENCY_SETTINGS) {
       console.log('currencySettings key: ', key)
       const { pluginName, currencyCode } = Constants.CURRENCY_SETTINGS[key]
-      console.log('pluginName is: ', pluginName )
+      console.log('pluginName is: ', pluginName)
       settings.push(
         <Scene
           currencyCode={currencyCode}

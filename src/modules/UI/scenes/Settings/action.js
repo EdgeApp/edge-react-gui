@@ -29,7 +29,7 @@ export const SET_BITCOIN_OVERRIDE_SERVER_START = PREFIX + 'SET_BITCOIN_OVERRIDE_
 export const SET_ENABLE_CUSTOM_NODES = 'SET_ENABLE_CUSTOM_NODES'
 export const UPDATE_CUSTOM_NODES_LIST = 'UPDATE_CUSTOM_NODES_LIST'
 export const SET_CUSTOM_NODES_MODAL_VISIBILITY = 'SET_CUSTOM_NODES_MODAL_VISIBILITY'
-
+export const UPDATE_CUSTOM_NODES_PROCESSING = 'UPDATE_CUSTOM_NODES_PROCESSING'
 export const SELECT_DEFAULT_FIAT = PREFIX + 'SELECT_DEFAULT_FIAT'
 
 export const setPINModeRequest = (pinMode: boolean) => (dispatch: Dispatch, getState: GetState) => {
@@ -206,21 +206,31 @@ export function setIsCustomNodesEnabled (currencyCode: string, isEnabled: boolea
 
 export const saveCustomNodesList = (currencyCode: string, nodesList: Array<string>) => (dispatch: Dispatch, getState: GetState) => {
   const state: State = getState()
+  dispatch(updateCustomNodesProcessing(true))
   const account = CORE_SELECTORS.getAccount(state)
 
-  const onError = e => console.log(e)
   // $FlowFixMe
   return ACCOUNT_SETTINGS.setCustomNodesList(account, currencyCode, nodesList)
     .then(() => {
       dispatch(updateCustomNodesList(currencyCode, nodesList))
     })
-    .catch(onError)
+    .catch(e => {
+      console.log(e)
+      dispatch(updateCustomNodesProcessing(false))
+    })
 }
 
 export function updateCustomNodesList (currencyCode: string, nodesList: Array<string>) {
   return {
     type: UPDATE_CUSTOM_NODES_LIST,
     data: { currencyCode, nodesList }
+  }
+}
+
+export const updateCustomNodesProcessing = (isSetCustomNodesProcessing: boolean) => {
+  return {
+    type: UPDATE_CUSTOM_NODES_PROCESSING,
+    data: { isSetCustomNodesProcessing }
   }
 }
 

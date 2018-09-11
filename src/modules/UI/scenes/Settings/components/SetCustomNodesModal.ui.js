@@ -5,9 +5,9 @@ import { ActivityIndicator, TextInput, View } from 'react-native'
 
 import * as Constants from '../../../../../constants/indexConstants.js'
 import s from '../../../../../locales/strings.js'
+import { PrimaryButton, SecondaryButton } from '../../../components/Buttons'
 import Text from '../../../components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../../../components/Icon/Icon.ui.js'
-import { PrimaryButton, SecondaryButton } from '../../../components/Buttons'
 import { InteractiveModal } from '../../../components/Modals/InteractiveModal/InteractiveModal.ui.js'
 import styles, { styles as rawStyle } from './styles.js'
 
@@ -15,7 +15,8 @@ export type SetCustomNodesModalOwnProps = {
   isActive: boolean,
   onExit: () => void,
   customNodesList: Array<string>,
-  saveCustomNodesList: (Array<string>) => void
+  saveCustomNodesList: (Array<string>) => void,
+  isSetCustomNodesProcessing: boolean
 }
 
 export type SetCustomNodesModalState = {
@@ -85,7 +86,7 @@ export class SetCustomNodesModal extends Component<SetCustomNodeModalProps, SetC
           <View style={styles.buttonsWrap}>
             <PrimaryButton onPress={this.handleSave} style={styles.primaryButton}>
               <PrimaryButton.Text style={styles.primaryButtonText}>
-                {this.props.isSetCustomNodesProcessing ? <ActivityIndicator /> : s.strings.string_save}
+                {this.props.isSetCustomNodesProcessing ? <ActivityIndicator style={{ height: 18 }} /> : s.strings.string_save}
               </PrimaryButton.Text>
             </PrimaryButton>
             <SecondaryButton onPress={this.props.onExit} style={styles.secondaryButton}>

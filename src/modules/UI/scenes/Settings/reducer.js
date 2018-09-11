@@ -22,8 +22,21 @@ export const isSetCustomNodesModalVisible = (state: boolean = false, action: Act
   }
 }
 
+export const isSetCustomNodesProcessing = (state: boolean = false, action: Action) => {
+  if (!action.data) return state
+  switch (action.type) {
+    case ACTION.UPDATE_CUSTOM_NODES_PROCESSING:
+      return action.data.isSetCustomNodesProcessing
+    case ACTION.UPDATE_CUSTOM_NODES_LIST:
+      return false
+    default:
+      return state
+  }
+}
+
 export const settings = combineReducers({
-  isSetCustomNodesModalVisible
+  isSetCustomNodesModalVisible,
+  isSetCustomNodesProcessing
 })
 
 export default settings

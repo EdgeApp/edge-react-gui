@@ -134,6 +134,12 @@ export const styles = {
     backgroundColor: THEME.COLORS.TRANSPARENT,
     fontSize: 22
   },
+  currencyHeaderIcon: {
+    height: 25,
+    width: 25,
+    resizeMode: 'contain',
+    marginRight: 12
+  },
   underlay: {
     color: 'rgba(0,0,0,0)'
   },
