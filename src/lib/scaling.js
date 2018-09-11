@@ -1,4 +1,5 @@
 // @flow
+
 import { Dimensions } from 'react-native'
 const { width, height } = Dimensions.get('window')
 
@@ -24,5 +25,6 @@ export const scaleH = (size: number, factor: number = 0.4) => {
 export const scaleV = (size: number, factor: number = 0.4) => {
   const out = size + (scaleVertical(size) - size) * factor
   return out
+}
 
 export { scaleV as scale }
