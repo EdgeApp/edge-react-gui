@@ -365,7 +365,10 @@ const strings = {
   onboarding_slide_3:
     'To receive cryptocurrency, [Copy] or [Share] your wallet address, or have the sender scan your QR code presented here at the Request Screen.',
   onboarding_slide_4: "To send cryptocurrency scan a friend's QR code here, or paste the code via the [Address] button.",
-  onboarding_slide_5: 'Exchange cryptocurrencies by choosing the Source Wallet and Receiving Wallet to trade between them.'
+  onboarding_slide_5: 'Exchange cryptocurrencies by choosing the Source Wallet and Receiving Wallet to trade between them.',
+  otp_out_of_sync_title: 'Warning',
+  otp_out_of_sync_body:
+    'This device does not have the proper 2-factor token. You can still access your funds with limited functionality, but cannot create wallets or change account options'
 }
 
 // export default strings
