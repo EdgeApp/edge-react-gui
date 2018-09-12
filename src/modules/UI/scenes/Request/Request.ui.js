@@ -135,7 +135,8 @@ export class Request extends Component<Props, State> {
       })
     }
     // old blank address to new
-    if (didWalletChange) {
+    if (didWalletChange || didAddressChange) {
+      // include 'didAddressChange' because didWalletChange returns false upon initial request scene load
       if (nextProps.currencyCode === 'XRP') {
         if (!this.state.hasXRPMinimumModalAlreadyShown) {
           if (bns.lt(nextProps.guiWallet.primaryNativeBalance, '20000000')) {
