@@ -71,12 +71,23 @@ export type State = {
 export class Request extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
+    let publicAddress = ''
+    let legacyAddress = ''
+    if (props.guiWallet && props.guiWallet.receiveAddress) {
+      publicAddress = props.guiWallet.receiveAddress.publicAddress ? props.guiWallet.receiveAddress.publicAddress : ''
+      legacyAddress = props.guiWallet.receiveAddress.legacyAddress ? props.guiWallet.receiveAddress.legacyAddress : ''
+    }    
     this.state = {
-      publicAddress: '',
-      legacyAddress: '',
+      publicAddress,
+      legacyAddress,
       encodedURI: '',
       isXRPMinimumModalVisible: false,
       hasXRPMinimumModalAlreadyShown: false
+    }
+    try {
+      this.generateEncodedUri()
+    } catch (e) {
+      console.log('error generating encodedURI: ', e)
     }
     slowlog(this, /.*/, global.slowlogOptions)
   }
@@ -99,6 +110,33 @@ export class Request extends Component<Props, State> {
       diffElement2 = getObjectDiff(this.state, nextState)
     }
     return !!diffElement || !!diffElement2
+  }
+
+  async generateEncodedUri () {
+    const { edgeWallet, useLegacyAddress } = this.props
+    let publicAddress = this.props.guiWallet.receiveAddress.publicAddress
+    let legacyAddress = this.props.guiWallet.receiveAddress.legacyAddress
+    const abcEncodeUri = useLegacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
+    let encodedURI = s.strings.loading
+    try {
+      encodedURI = edgeWallet ? await edgeWallet.encodeUri(abcEncodeUri) : s.strings.loading
+      this.setState({
+        encodedURI
+      })
+    } catch (e) {
+      console.log(e)
+      publicAddress = s.strings.loading
+      legacyAddress = s.strings.loading
+      this.setState({
+        publicAddress,
+        legacyAddress
+      })
+      setTimeout(() => {
+        if (edgeWallet && edgeWallet.id) {
+          this.props.refreshReceiveAddressRequest(edgeWallet.id)
+        }
+      }, PUBLIC_ADDRESS_REFRESH_MS)
+    }    
   }
 
   async UNSAFE_componentWillReceiveProps (nextProps: Props) {
