@@ -3,7 +3,6 @@
 import { ACCOUNT_INIT_COMPLETE } from '../../constants/indexConstants.js'
 import type { Action } from '../../modules/ReduxTypes.js'
 import { CHECK_PASSWORD_SUCCESS, REQUEST_CHANGE_PASSWORD } from '../../modules/UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
-import { UNLOCK as UNLOCK_WALLET_SEED } from '../../modules/UI/scenes/WalletList/components/GetSeedModal/GetSeedModalConnector.js'
 import { SET_SETTINGS_LOCK } from '../../modules/UI/Settings/action.js'
 import { MILLISECONDS_PER_DAY, daysBetween } from '../../modules/utils.js'
 import { PASSWORD_REMINDER_POSTPONED } from './indexPasswordReminder.js'
@@ -240,7 +239,7 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
       }
     }
   }
-  if (action.type === UNLOCK_WALLET_SEED) {
+  if (action.type === 'UNLOCK_WALLET_SEED') {
     translatedAction = {
       type: 'PASSWORD_USED',
       data: {

@@ -2,50 +2,35 @@
 
 import { combineReducers } from 'redux'
 
-import * as Constants from '../../../../../../constants/indexConstants'
 import type { Action } from '../../../../../ReduxTypes.js'
 import { privateSeedUnlocked } from '../GetSeedModal/reducer'
 import { renameWalletInput, walletName } from '../RenameModal/reducer'
 import { xPubSyntax } from '../XPubModal/reducer.js'
-import * as ACTION from './action'
-
-const reducers = {}
-const openVisible = {}
-const closeVisible = {}
-
-for (const walletOption in Constants.WALLET_OPTIONS) {
-  const option = Constants.WALLET_OPTIONS[walletOption]
-  const value = option.value
-  if (option.modalVisible) {
-    const open = ACTION.OPEN_MODAL_VALUE(value)
-    openVisible[open] = true
-    const close = ACTION.CLOSE_MODAL_VALUE(value)
-    closeVisible[close] = true
-    reducers[ACTION.VISIBLE_MODAL_NAME(value)] = (state: boolean = false, action: Action) => {
-      const type = action.type
-      switch (type) {
-        case open:
-          return true
-        case close:
-          return false
-        default:
-          return state
-      }
-    }
-  }
-}
 
 const walletId = (state: string = '', action: Action) => {
-  const { type } = action
-  if (openVisible[type]) {
-    if (action.data) {
+  switch (action.type) {
+    case 'OPEN_RESYNC_WALLET_MODAL':
+    case 'OPEN_RENAME_WALLET_MODAL':
+    case 'OPEN_VIEWXPUB_WALLET_MODAL':
+    case 'OPEN_GETSEED_WALLET_MODAL':
+    case 'OPEN_SPLIT_WALLET_MODAL':
+    case 'OPEN_DELETE_WALLET_MODAL': {
+      if (!action.data) throw new Error('Invalid action')
       return action.data.walletId
     }
-    return state
-  } else if (closeVisible[type]) {
-    return ''
+
+    case 'CLOSE_RESYNC_WALLET_MODAL':
+    case 'CLOSE_RENAME_WALLET_MODAL':
+    case 'CLOSE_VIEWXPUB_WALLET_MODAL':
+    case 'CLOSE_GETSEED_WALLET_MODAL':
+    case 'CLOSE_SPLIT_WALLET_MODAL':
+    case 'CLOSE_DELETE_WALLET_MODAL': {
+      return ''
+    }
+
+    default:
+      return state
   }
-  return state
 }
 
 const walletArchivesVisible = (state: boolean = false, action: Action) => {
@@ -59,15 +44,109 @@ const walletArchivesVisible = (state: boolean = false, action: Action) => {
   }
 }
 
-const walletList = combineReducers(
-  Object.assign(reducers, {
-    walletArchivesVisible,
-    renameWalletInput,
-    walletId,
-    walletName,
-    privateSeedUnlocked,
-    xPubSyntax
-  })
-)
+const deleteWalletModalVisible = (state: boolean = false, action: Action) => {
+  switch (action.type) {
+    case 'OPEN_DELETE_WALLET_MODAL': {
+      return true
+    }
+
+    case 'CLOSE_DELETE_WALLET_MODAL': {
+      return false
+    }
+
+    default:
+      return state
+  }
+}
+
+const renameWalletModalVisible = (state: boolean = false, action: Action) => {
+  switch (action.type) {
+    case 'OPEN_RENAME_WALLET_MODAL': {
+      return true
+    }
+
+    case 'CLOSE_RENAME_WALLET_MODAL': {
+      return false
+    }
+
+    default:
+      return state
+  }
+}
+
+const resyncWalletModalVisible = (state: boolean = false, action: Action) => {
+  switch (action.type) {
+    case 'OPEN_RESYNC_WALLET_MODAL': {
+      return true
+    }
+
+    case 'CLOSE_RESYNC_WALLET_MODAL': {
+      return false
+    }
+
+    default:
+      return state
+  }
+}
+
+const getSeedWalletModalVisible = (state: boolean = false, action: Action) => {
+  switch (action.type) {
+    case 'OPEN_GETSEED_WALLET_MODAL': {
+      return true
+    }
+
+    case 'CLOSE_GETSEED_WALLET_MODAL': {
+      return false
+    }
+
+    default:
+      return state
+  }
+}
+
+const viewXPubWalletModalVisible = (state: boolean = false, action: Action) => {
+  switch (action.type) {
+    case 'OPEN_VIEWXPUB_WALLET_MODAL': {
+      return true
+    }
+
+    case 'CLOSE_VIEWXPUB_WALLET_MODAL': {
+      return false
+    }
+
+    default:
+      return state
+  }
+}
+
+const splitWalletModalVisible = (state: boolean = false, action: Action) => {
+  switch (action.type) {
+    case 'OPEN_SPLIT_WALLET_MODAL': {
+      return true
+    }
+
+    case 'CLOSE_SPLIT_WALLET_MODAL': {
+      return false
+    }
+
+    default:
+      return state
+  }
+}
+
+export const walletList = combineReducers({
+  splitWalletModalVisible,
+  deleteWalletModalVisible,
+  renameWalletModalVisible,
+  resyncWalletModalVisible,
+  getSeedWalletModalVisible,
+  viewXPubWalletModalVisible,
+  walletArchivesVisible,
+  renameWalletInput,
+  walletId,
+  walletName,
+  privateSeedUnlocked,
+  xPubSyntax
+})
 
 export default walletList
