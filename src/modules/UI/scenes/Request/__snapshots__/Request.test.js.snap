@@ -63,7 +63,6 @@ exports[`Request should render with loaded props 1`] = `
       <RequestStatus
         amountReceivedInCrypto={0}
         amountRequestedInCrypto={0}
-        requestAddress=""
       />
     </Component>
     <Component

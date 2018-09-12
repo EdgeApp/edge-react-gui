@@ -11,7 +11,7 @@ import { sprintf } from 'sprintf-js'
 
 import * as Constants from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings.js'
-import type { GuiCurrencyInfo, GuiReceiveAddress, GuiWallet } from '../../../../types.js'
+import type { GuiCurrencyInfo, GuiWallet } from '../../../../types.js'
 import WalletListModal from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import { getObjectDiff } from '../../../utils'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
@@ -34,7 +34,8 @@ export type RequestStateProps = {
   guiWallet: GuiWallet,
   loading: false,
   primaryCurrencyInfo: GuiCurrencyInfo,
-  receiveAddress: GuiReceiveAddress,
+  publicAddress: string,
+  legacyAddress: string,
   secondaryCurrencyInfo: GuiCurrencyInfo,
   showToWalletModal: boolean,
   useLegacyAddress: boolean
@@ -46,7 +47,8 @@ export type RequestLoadingProps = {
   guiWallet: null,
   loading: true,
   primaryCurrencyInfo: null,
-  receiveAddress: null,
+  publicAddress: string,
+  legacyAddress: string,
   secondaryCurrencyInfo: null,
   showToWalletModal: null,
   useLegacyAddress: null
@@ -71,15 +73,9 @@ export type State = {
 export class Request extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
-    let publicAddress = ''
-    let legacyAddress = ''
-    if (props.guiWallet && props.guiWallet.receiveAddress) {
-      publicAddress = props.guiWallet.receiveAddress.publicAddress ? props.guiWallet.receiveAddress.publicAddress : ''
-      legacyAddress = props.guiWallet.receiveAddress.legacyAddress ? props.guiWallet.receiveAddress.legacyAddress : ''
-    }    
     this.state = {
-      publicAddress,
-      legacyAddress,
+      publicAddress: props.publicAddress,
+      legacyAddress: props.legacyAddress,
       encodedURI: '',
       isXRPMinimumModalVisible: false,
       hasXRPMinimumModalAlreadyShown: false
@@ -114,8 +110,8 @@ export class Request extends Component<Props, State> {
 
   async generateEncodedUri () {
     const { edgeWallet, useLegacyAddress } = this.props
-    let publicAddress = this.props.guiWallet.receiveAddress.publicAddress
-    let legacyAddress = this.props.guiWallet.receiveAddress.legacyAddress
+    let publicAddress = this.props.publicAddress
+    let legacyAddress = this.props.legacyAddress
     const abcEncodeUri = useLegacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
     let encodedURI = s.strings.loading
     try {
@@ -136,7 +132,7 @@ export class Request extends Component<Props, State> {
           this.props.refreshReceiveAddressRequest(edgeWallet.id)
         }
       }, PUBLIC_ADDRESS_REFRESH_MS)
-    }    
+    }
   }
 
   async UNSAFE_componentWillReceiveProps (nextProps: Props) {
