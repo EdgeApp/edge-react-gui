@@ -43,14 +43,15 @@ const ExpandableBoxStyle = {
     borderLeftWidth: 1,
     borderRightWidth: 1,
     borderBottomWidth: 1,
-    padding: 5,
+    paddingTop: 10,
+    paddingRight: 5,
+    paddingLeft: 5,
     borderColor: THEME.COLORS.GRAY_3
   },
   bottomInner: {
     width: '100%',
     height: 20,
-    flexDirection: 'column',
-    padding: 5
+    flexDirection: 'column'
   }
 }
 
