@@ -706,13 +706,28 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
                 }
               }
             >
-              <PrimaryButton>
-                <Text
+              <TouchableOpacity
+                activeOpacity={0.3}
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "backgroundColor": "transparent",
+                    "justifyContent": "center",
+                    "padding": 14,
+                  }
+                }
+              >
+                <FormattedText
                   ellipsizeMode="tail"
+                  style={
+                    Object {
+                      "color": "#FFFFFF",
+                    }
+                  }
                 >
                   Add Payment ID
-                </Text>
-              </PrimaryButton>
+                </FormattedText>
+              </TouchableOpacity>
             </Row>
           </Item>
         </Padding>
@@ -952,13 +967,28 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
                 }
               }
             >
-              <PrimaryButton>
-                <Text
+              <TouchableOpacity
+                activeOpacity={0.3}
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "backgroundColor": "transparent",
+                    "justifyContent": "center",
+                    "padding": 14,
+                  }
+                }
+              >
+                <FormattedText
                   ellipsizeMode="tail"
+                  style={
+                    Object {
+                      "color": "#FFFFFF",
+                    }
+                  }
                 >
                   Add Destination Tag
-                </Text>
-              </PrimaryButton>
+                </FormattedText>
+              </TouchableOpacity>
             </Row>
           </Item>
         </Padding>
