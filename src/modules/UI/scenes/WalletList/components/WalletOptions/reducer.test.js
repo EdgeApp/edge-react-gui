@@ -1,4 +1,5 @@
 // @flow
+
 /* globals describe it expect */
 
 import { default as reducer } from './reducer.js'

@@ -3,7 +3,6 @@
 import { combineReducers } from 'redux'
 
 // ACTIONS
-import { ACCOUNT_INIT_COMPLETE } from '../../../../constants/indexConstants.js'
 import type { Action } from '../../../ReduxTypes.js'
 
 export type SpendingLimits = {
@@ -13,10 +12,8 @@ export type SpendingLimits = {
   }
 }
 
-export const PREFIX = 'SPENDING_LIMITS/'
-export const NEW_SPENDING_LIMITS = PREFIX + 'NEW_SPENDING_LIMITS'
 export const newSpendingLimits = (spendingLimits: SpendingLimits) => ({
-  type: NEW_SPENDING_LIMITS,
+  type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS',
   data: { spendingLimits }
 })
 
@@ -31,8 +28,8 @@ export const initialState = {
 export const isEnabled = (state: boolean = initialState.transaction.isEnabled, action: Action) => {
   if (!action.data) return state
   switch (action.type) {
-    case ACCOUNT_INIT_COMPLETE:
-    case NEW_SPENDING_LIMITS: {
+    case 'accountInitComplete':
+    case 'SPENDING_LIMITS/NEW_SPENDING_LIMITS': {
       return action.data.spendingLimits.transaction.isEnabled
     }
     default:
@@ -43,8 +40,8 @@ export const isEnabled = (state: boolean = initialState.transaction.isEnabled, a
 export const amount = (state: number = initialState.transaction.amount, action: Action) => {
   if (!action.data) return state
   switch (action.type) {
-    case ACCOUNT_INIT_COMPLETE:
-    case NEW_SPENDING_LIMITS: {
+    case 'accountInitComplete':
+    case 'SPENDING_LIMITS/NEW_SPENDING_LIMITS': {
       return action.data.spendingLimits.transaction.amount
     }
     default:

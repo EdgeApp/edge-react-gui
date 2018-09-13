@@ -8,9 +8,26 @@ import { setPasswordRecoveryRemindersAsync } from '../../../Core/Account/setting
 import type { Dispatch, GetState } from '../../../ReduxTypes.js'
 import { getTotalFiatAmount } from '../../../utils.js'
 
-export const SHOW_PASSWORD_RECOVERY_MODAL = 'SHOW_PASSWORD_RECOVERY_MODAL'
-export const HIDE_PASSWORD_RECOVERY_MODAL = 'HIDE_PASSWORD_RECOVERY_MODAL'
-export const UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL = 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL'
+export const updateShowPasswordRecoveryReminderModal = (level: string, wasShown: boolean) => ({
+  type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL',
+  data: {
+    level,
+    wasShown
+  }
+})
+
+export const showPasswordRecoveryReminderModal = () => ({
+  type: 'SHOW_PASSWORD_RECOVERY_MODAL'
+})
+
+export const hidePasswordRecoveryReminderModal = () => ({
+  type: 'HIDE_PASSWORD_RECOVERY_MODAL'
+})
+
+export const onGoToPasswordRecoveryScene = () => (dispatch: Dispatch, getState: GetState) => {
+  dispatch(hidePasswordRecoveryReminderModal())
+  Actions[PASSWORD_RECOVERY_SCENE]()
+}
 
 export const checkPasswordRecovery = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -29,31 +46,4 @@ export const checkPasswordRecovery = () => async (dispatch: Dispatch, getState: 
     dispatch(updateShowPasswordRecoveryReminderModal(level, true))
     return
   }
-}
-
-export const updateShowPasswordRecoveryReminderModal = (level: string, wasShown: boolean) => {
-  return {
-    type: UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL,
-    data: {
-      level,
-      wasShown
-    }
-  }
-}
-
-export const showPasswordRecoveryReminderModal = () => {
-  return {
-    type: SHOW_PASSWORD_RECOVERY_MODAL
-  }
-}
-
-export const hidePasswordRecoveryReminderModal = () => {
-  return {
-    type: HIDE_PASSWORD_RECOVERY_MODAL
-  }
-}
-
-export const onGoToPasswordRecoveryScene = () => (dispatch: Dispatch, getState: GetState) => {
-  dispatch(hidePasswordRecoveryReminderModal())
-  Actions[PASSWORD_RECOVERY_SCENE]()
 }

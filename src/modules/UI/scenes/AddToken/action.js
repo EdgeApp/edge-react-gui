@@ -12,12 +12,28 @@ import { displayErrorAlert } from '../../components/ErrorAlert/actions'
 import * as UI_WALLET_SELECTORS from '../../selectors.js'
 import * as WALLET_ACTIONS from '../../Wallets/action.js'
 
-export const ADD_TOKEN = 'ADD_TOKEN'
-export const ADD_TOKEN_START = 'ADD_TOKEN_START'
-export const ADD_TOKEN_SUCCESS = 'ADD_TOKEN_SUCCESS'
-export const SET_TOKEN_SETTINGS = 'SET_TOKEN_SETTINGS'
-export const ADD_NEW_CUSTOM_TOKEN_SUCCESS = 'ADD_NEW_CUSTOM_TOKEN_SUCCESS'
-export const ADD_NEW_CUSTOM_TOKEN_FAILURE = 'ADD_NEW_CUSTOM_TOKEN_FAILURE'
+export const addTokenStart = () => ({
+  type: 'ADD_TOKEN_START'
+})
+
+export const addTokenSuccess = () => ({
+  type: 'ADD_TOKEN_SUCCESS'
+})
+
+export const addNewTokenSuccess = (walletId: string, tokenObj: CustomTokenInfo, settings: Object, enabledTokens: Array<string>) => ({
+  type: 'ADD_NEW_CUSTOM_TOKEN_SUCCESS',
+  data: { walletId, tokenObj, settings, enabledTokens, newCurrencyCode: tokenObj.currencyCode }
+})
+
+export const addNewTokenFailure = (errorMessage: string) => ({
+  type: 'ADD_NEW_CUSTOM_TOKEN_FAILURE',
+  data: { errorMessage }
+})
+
+export const setTokenSettings = (tokenObj: CustomTokenInfo) => ({
+  type: 'SET_TOKEN_SETTINGS',
+  data: tokenObj
+})
 
 export const addNewToken = (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string) => {
   return (dispatch: Dispatch, getState: GetState) => {
@@ -38,7 +54,14 @@ export const addNewToken = (walletId: string, currencyName: string, currencyCode
   }
 }
 
-export async function addTokenAsync (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, state: State) {
+export const addTokenAsync = async (
+  walletId: string,
+  currencyName: string,
+  currencyCode: string,
+  contractAddress: string,
+  denomination: string,
+  state: State
+) => {
   // create modified object structure to match metaTokens
   const newTokenObj: CustomTokenInfo = WALLET_ACTIONS.assembleCustomToken(currencyName, currencyCode, contractAddress, denomination)
   const account = CORE_SELECTORS.getAccount(state)
@@ -66,36 +89,4 @@ export async function addTokenAsync (walletId: string, currencyName: string, cur
   }
   await WALLET_API.setEnabledTokens(coreWallet, newEnabledTokens)
   return { walletId, newTokenObj, setSettings, enabledTokensOnWallet: newEnabledTokens }
-}
-
-export const addTokenStart = () => ({
-  type: ADD_TOKEN_START
-})
-
-export const addTokenSuccess = () => ({
-  type: ADD_TOKEN_SUCCESS
-})
-
-export function addNewTokenSuccess (walletId: string, tokenObj: CustomTokenInfo, settings: Object, enabledTokens: Array<string>) {
-  const data = { walletId, tokenObj, settings, enabledTokens, newCurrencyCode: tokenObj.currencyCode }
-  return {
-    type: ADD_NEW_CUSTOM_TOKEN_SUCCESS,
-    data
-  }
-}
-
-export function addNewTokenFailure (errorMessage: string) {
-  const data = { errorMessage }
-  return {
-    type: ADD_NEW_CUSTOM_TOKEN_FAILURE,
-    data
-  }
-}
-
-export function setTokenSettings (tokenObj: CustomTokenInfo) {
-  const data = tokenObj
-  return {
-    type: SET_TOKEN_SETTINGS,
-    data
-  }
 }

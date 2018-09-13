@@ -1,6 +1,9 @@
 // @flow
 
-export const UPDATE_EXCHANGE_RATES = 'UPDATE_EXCHANGE_RATES'
+export const updateExchangeRates = () => ({
+  type: 'UPDATE_EXCHANGE_RATES',
+  data: fakeExchangeRate
+})
 
 const randomSeed = Math.random() / 10 // produces random number between 0 and 1
 
@@ -36,8 +39,3 @@ const fakeExchangeRate = {
     value: (1 / 2000000000000000000) * randomSeed
   }
 }
-
-export const updateExchangeRates = () => ({
-  type: UPDATE_EXCHANGE_RATES,
-  data: fakeExchangeRate
-})

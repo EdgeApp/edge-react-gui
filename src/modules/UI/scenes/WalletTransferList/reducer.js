@@ -2,21 +2,25 @@
 
 import { combineReducers } from 'redux'
 
-import * as ACTION from './action'
+import type { Action } from '../../../ReduxTypes.js'
 
-const walletTransferList = (state = [], action) => {
+const walletTransferList = (state = [], action: Action) => {
   switch (action.type) {
-    case ACTION.UPDATE_WALLET_TRANSFER_LIST:
+    case 'UPDATE_WALLET_TRANSFER_LIST': {
       return action.data
+    }
+
     default:
       return state
   }
 }
 
-const walletListModalVisible = (state = false, action) => {
+const walletListModalVisible = (state = false, action: Action) => {
   switch (action.type) {
-    case ACTION.TOGGLE_WALLET_LIST_MODAL_VISIBILITY:
+    case 'TOGGLE_WALLET_LIST_MODAL_VISIBILITY': {
       return !state
+    }
+
     default:
       return state
   }

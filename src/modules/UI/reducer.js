@@ -2,7 +2,6 @@
 
 import { combineReducers } from 'redux'
 
-import * as Constants from '../../constants/indexConstants'
 import { passwordReminderReducer as passwordReminder } from '../../reducers/passwordReminder/indexPasswordReminder.js'
 import type { State } from '../ReduxTypes'
 import errorAlert from './components/ErrorAlert/reducer'
@@ -25,7 +24,7 @@ export const uiReducer = combineReducers({
 })
 
 export const ui = (state: $PropertyType<State, 'ui'>, action: any) => {
-  if (action.type === Constants.LOGOUT || action.type === Constants.DEEP_LINK_RECEIVED) {
+  if (action.type === 'LOGOUT' || action.type === 'deepLinkReceived') {
     return uiReducer(undefined, ({ type: 'DUMMY_ACTION_PLEASE_IGNORE' }: any))
   }
 
