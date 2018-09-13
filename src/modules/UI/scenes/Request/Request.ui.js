@@ -85,6 +85,12 @@ export class Request extends Component<Props, State> {
     } catch (e) {
       console.log('error generating encodedURI: ', e)
     }
+    if (props.currencyCode === 'XRP') {
+      if (bns.lt(props.guiWallet.primaryNativeBalance, '20000000')) {
+        this.state.isXRPMinimumModalVisible = true
+        this.state.hasXRPMinimumModalAlreadyShown = true
+      }
+    }
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
