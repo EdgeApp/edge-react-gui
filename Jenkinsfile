@@ -1,12 +1,17 @@
 def build (platform) {
   // Copy the previous build num
-  catchError {
+  try {
     sh "cp ./buildnum/${platform}.json ./${platform}/buildnum.json"
+  } catch(err) {
+    println err
   }
   sh "node ./deploy.js edge ${platform} ${BRANCH_NAME}"
   // Save the build num after a successful build
-  sh 'mkdir -p buildnum'
+  sh "mkdir -p buildnum"
   sh "cp ./${platform}/buildnum.json ./buildnum/${platform}.json"
+  // Add the build num and the platform to the description
+  def buildnum = readJSON file: "./buildnum/${platform}.json"
+  currentBuild.description += "\n${platform}-${buildnum.buildNum}"
 }
 
 pipeline {
@@ -19,34 +24,37 @@ pipeline {
     skipDefaultCheckout true
   }
   triggers { 
-    pollSCM('H/5 * * * *')
+    pollSCM("H/5 * * * *")
   }
   
   stages {
-    stage("Setup the workspace and checkout source") {
+    stage("Clean the workspace and checkout source") {
       steps {
         deleteDir()
         checkout scm
       }
     }
 
-    stage ("Set version") {
+    stage ("Get version and build number") {
       steps {
+        // Import the buildnums from previous build
+        copyArtifacts projectName: "${JOB_NAME}", selector: lastCompleted(), optional: true
+        // Fix version for branchs that are not "master" or "develop"
         script {
-          // The "master" and "develop" branches are handled in the deploy script so the rest are handled here
+          def packageJson = readJSON file: "./package.json"
           if (BRANCH_NAME != "master" && BRANCH_NAME != "develop") {
-            def packageJson = readJSON file: "./package.json"
             packageJson.version = "${package.version}-${BRANCH_NAME}"
             writeJSON file: "./package.json", json: packageJson
           }
+          def description = "[version] ${packageJson.version}"
+          if (BRANCH_NAME == "develop") description += "-d"
+          currentBuild.description = description
         }
       }
     }
 
-    stage ("Load configuration files") {
+    stage ("Load credentials") {
       steps {
-        // Import the buildnums from previous build
-        copyArtifacts projectName: "${JOB_NAME}", selector: lastCompleted(), optional: true
         // Import the settings files
         withCredentials([
           file(credentialsId: "bfcc847f-213a-4de5-86a5-29b62b34c79d", variable: "deploy_config"),
@@ -65,15 +73,15 @@ pipeline {
       }
     }
     
-    stage ("install dependencies") {
+    stage ("Install dependencies") {
       steps {
         sh "yarn"
       }
     }
 
-    stage ("test") {
+    stage ("Test") {
       steps {
-        sh "npm test"
+        sh "npm run cover"
       }
     }
 
@@ -95,6 +103,21 @@ pipeline {
   
   post {
     always {
+      echo 'Trying to publish the test report'
+      junit healthScaleFactor: 100.0, testResults: '**/coverage/junit.xml', allowEmptyResults: true
+      echo 'Trying to publish the code coverage report'
+      cobertura(
+        coberturaReportFile: '**/coverage/cobertura-coverage.xml',
+        failNoReports: false,
+        failUnstable: false,
+        onlyStable: false,
+        zoomCoverageChart: false,
+        conditionalCoverageTargets: '70, 0, 0',
+        lineCoverageTargets: '70, 0, 0',
+        methodCoverageTargets: '70, 0, 0',
+        maxNumberOfBuilds: 0,
+        sourceEncoding: 'ASCII'
+      )
       // Archiving the buildnums for future builds
       archiveArtifacts artifacts: "buildnum/", allowEmptyArchive: true
     }

@@ -177,6 +177,7 @@
     "import-sort-parser-babylon": "^5.0.0",
     "import-sort-style-module": "^5.0.0",
     "jest": "^23.5.0",
+    "jest-junit": "^5.1.0",
     "json-format": "^1.0.1",
     "jsonfile": "^4.0.0",
     "lint-staged": "^6.1.1",
@@ -216,6 +217,15 @@
     ],
     "setupFiles": [
       "./testSetup.js"
+    ],
+    "coverageReporters": [
+      "cobertura",
+      "html"
+    ],
+    "coverageDirectory": "./coverage",
+    "reporters": [
+      "default",
+      [ "jest-junit", { "output": "./coverage/junit.xml" } ]
     ]
   },
   "detox": {
