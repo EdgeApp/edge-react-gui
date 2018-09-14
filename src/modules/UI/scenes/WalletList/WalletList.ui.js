@@ -7,12 +7,10 @@ import slowlog from 'react-native-slowlog'
 import SortableListView from 'react-native-sortable-listview'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
-import iconImage from '../../../../assets/images/otp/OTP-badge_sm.png'
 import WalletIcon from '../../../../assets/images/walletlist/my-wallets.png'
-import { StaticModalComponent, TwoButtonTextModalComponent } from '../../../../components/indexComponents'
+import { StaticModalComponent } from '../../../../components/indexComponents'
 import * as Constants from '../../../../constants/indexConstants.js'
 import s from '../../../../locales/strings.js'
-import { TwoButtonModalStyle } from '../../../../styles/indexStyles.js'
 import * as UTILS from '../../../utils'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
@@ -39,7 +37,6 @@ type State = {
   fullListZIndex: number,
   fullListExists: boolean,
   balanceBoxVisible: boolean,
-  showOtpResetModal: boolean,
   showMessageModal: boolean,
   isWalletProgressVisible: boolean,
   messageModalMessage: ?string
@@ -75,7 +72,6 @@ export default class WalletList extends Component<Props, State> {
       fullListZIndex: new Animated.Value(100),
       fullListExists: true,
       balanceBoxVisible: true,
-      showOtpResetModal: this.props.otpResetPending,
       showMessageModal: false,
       messageModalMessage: null,
       isWalletProgressVisible: true
@@ -101,14 +97,6 @@ export default class WalletList extends Component<Props, State> {
       diffElement2 = UTILS.getObjectDiff(this.state, nextState)
     }
     return !!diffElement || !!diffElement2
-  }
-
-  UNSAFE_componentWillReceiveProps (nextProps: Props) {
-    if (nextProps.otpResetPending && nextProps.otpResetPending !== this.props.otpResetPending) {
-      this.setState({
-        showOtpResetModal: true
-      })
-    }
   }
 
   executeWalletRowOption = (walletId: string, option: string) => {
@@ -221,41 +209,11 @@ export default class WalletList extends Component<Props, State> {
   }
 
   showModal = () => {
-    if (this.state.showOtpResetModal) {
-      return (
-        <TwoButtonTextModalComponent
-          style={TwoButtonModalStyle}
-          headerText={s.strings.otp_modal_reset_headline}
-          showModal
-          middleText={s.strings.otp_modal_reset_description}
-          iconImage={iconImage}
-          cancelText={s.strings.otp_disable}
-          doneText={s.strings.otp_keep}
-          onCancel={this.disableOtp}
-          onDone={this.keepOtp}
-        />
-      )
-    }
     if (this.state.showMessageModal) {
       return <StaticModalComponent cancel={this.cancelStatic} body={this.state.messageModalMessage} modalDismissTimerSeconds={8} />
     }
 
     return null
-  }
-  disableOtp = () => {
-    this.props.disableOtp()
-    this.setState({
-      showMessageModal: true,
-      showOtpResetModal: false,
-      messageModalMessage: s.strings.otp_disabled_modal
-    })
-  }
-
-  keepOtp = () => {
-    this.props.keepOtp()
-    this.setState({
-      showOtpResetModal: false
-    })
   }
 
   cancelStatic = () => {

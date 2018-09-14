@@ -23,6 +23,24 @@ import { getReceiveAddresses } from '../utils.js'
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
+const getPendingResets = (currentAccount: EdgeAccount) => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const context = CORE_SELECTORS.getContext(state)
+  context
+    .fetchLoginMessages()
+    .then(async accounts => {
+      for (const key in accounts) {
+        const account = accounts[key]
+        if (account.otpResetPending && currentAccount.id === key) {
+          dispatch(actions.dispatchAction(Constants.ENABLE_OTP_RESET))
+        }
+      }
+    })
+    .catch(e => {
+      console.log('CH: error', e)
+      return {}
+    })
+}
 export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => async (dispatch: Dispatch, getState: GetState) => {
   dispatch(loggedIn(account))
 
@@ -32,17 +50,8 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
 
   const state = getState()
   const context = CORE_SELECTORS.getContext(state)
-  let otpResetPending = false
-  try {
-    const accounts = await context.fetchLoginMessages()
-    for (const key in accounts) {
-      if (key === account.username) {
-        otpResetPending = accounts[key].otpResetPending
-      }
-    }
-  } catch (e) {
-    console.log(e)
-  }
+  getPendingResets(account)
+
   const currencyCodes = {}
   if (Platform.OS === Constants.IOS) {
     PushNotification.configure({
@@ -57,7 +66,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     walletId: '',
     currencyCode: '',
     currencyPlugins: [],
-    otpInfo: { enabled: account.otpKey != null, otpKey: account.otpKey, otpResetPending },
+    otpInfo: { enabled: account.otpKey != null, otpKey: account.otpKey },
     autoLogoutTimeInSeconds: '',
     bluetoothMode: false,
     pinLoginEnabled: false,

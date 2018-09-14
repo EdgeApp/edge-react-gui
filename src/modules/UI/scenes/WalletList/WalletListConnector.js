@@ -2,7 +2,6 @@
 
 import { connect } from 'react-redux'
 
-import { disableOtp, keepOtp } from '../../../../actions/OtpActions'
 import type { Dispatch, State } from '../../../ReduxTypes'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors'
@@ -19,7 +18,6 @@ const mapStateToProps = (state: State) => {
   // $FlowFixMe
   const dimensions = state.ui.scenes.dimensions
   const customTokens = state.ui.settings.customTokens
-  const otpResetPending = SETTINGS_SELECTORS.getOtpResetPending(state)
   const isWalletFiatBalanceVisible = state.ui.settings.isWalletFiatBalanceVisible
   const defaultFiat = SETTINGS_SELECTORS.getDefaultFiat(state)
 
@@ -31,7 +29,6 @@ const mapStateToProps = (state: State) => {
     walletArchivesVisible,
     dimensions,
     customTokens,
-    otpResetPending,
     isWalletFiatBalanceVisible,
     defaultFiat
   }
@@ -42,8 +39,6 @@ const mapDispatchToProps = (dispatch: Dispatch, state: State) => ({
   updateArchivedWalletsOrder: archivedWalletIds => dispatch(updateArchivedWalletsOrder(archivedWalletIds)),
   // $FlowFixMe
   walletRowOption: (walletId, option, archived) => dispatch(walletRowOption(walletId, option, archived)),
-  disableOtp: () => dispatch(disableOtp()),
-  keepOtp: () => dispatch(keepOtp()),
   toggleAccountBalanceVisibility: () => dispatch(toggleAccountBalanceVisibility()),
   toggleWalletFiatBalanceVisibility: () => dispatch(toggleWalletFiatBalanceVisibility())
 })

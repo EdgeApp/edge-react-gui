@@ -389,6 +389,12 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         otpResetPending: false
       }
     }
+    case Constants.ENABLE_OTP_RESET: {
+      return {
+        ...state,
+        otpResetPending: true
+      }
+    }
     case ACTION.UPDATE_SETTINGS: {
       const { settings } = data
       return settings

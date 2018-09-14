@@ -51,6 +51,6 @@ export const ACCOUNT_INIT_COMPLETE = 'accountInitComplete'
 
 // OTP
 export const DISABLE_OTP_RESET = 'disableOTPReset'
-
+export const ENABLE_OTP_RESET = 'enableOTPReset'
 // Settings
 export const SET_CONFIRM_PASSWORD_ERROR = 'setConfirmPasswordError'

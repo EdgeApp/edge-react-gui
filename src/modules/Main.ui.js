@@ -44,6 +44,7 @@ import walletIconSelected from '../assets/images/tabbar/wallets_selected.png'
 import walletIcon from '../assets/images/tabbar/wallets.png'
 import ExchangeDropMenu from '../connectors/components/HeaderMenuExchangeConnector'
 import RequestDropMenu from '../connectors/components/HeaderMenuRequestConnector'
+import OTPResetModalConnector from '../connectors/components/OTPResetModalConnector'
 import ExchangeConnector from '../connectors/scene/CryptoExchangeSceneConnector'
 import EdgeLoginSceneConnector from '../connectors/scene/EdgeLoginSceneConnector'
 import OtpSettingsSceneConnector from '../connectors/scene/OtpSettingsSceneConnector.js'
@@ -649,7 +650,9 @@ export default class Main extends Component<Props, State> {
         <AutoLogout />
         <ContactsLoader />
         <PasswordReminderModal />
+        <PasswordReminderModal />
         <PasswordRecoveryReminderModalConnector />
+        <OTPResetModalConnector />
       </MenuProvider>
     )
   }
