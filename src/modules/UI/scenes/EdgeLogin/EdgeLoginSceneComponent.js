@@ -26,6 +26,9 @@ export default class EdgeLoginScene extends Component<EdgeLoginSceneProps> {
     if (!this.props.error) {
       message = s.strings.edge_description
     }
+    if (!this.props.lobby && !this.props.error) {
+      throw new Error('Not normal expected behavior')
+    }
     if (this.props.lobby && this.props.lobby.loginRequest && this.props.lobby.loginRequest.appId === '') {
       textStyle = style.bodyTextWarning
       message = sprintf(s.strings.edge_description_warning, this.props.lobby.loginRequest.displayName)
