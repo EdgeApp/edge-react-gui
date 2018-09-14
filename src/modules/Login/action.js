@@ -50,7 +50,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
 
   const state = getState()
   const context = CORE_SELECTORS.getContext(state)
-  getPendingResets(account)
+  dispatch(getPendingResets(account))
 
   const currencyCodes = {}
   if (Platform.OS === Constants.IOS) {
