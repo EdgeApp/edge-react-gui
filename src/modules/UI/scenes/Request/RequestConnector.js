@@ -24,9 +24,10 @@ const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps 
       guiWallet: null,
       loading: true,
       primaryCurrencyInfo: null,
-      receiveAddress: null,
       secondaryCurrencyInfo: null,
       showToWalletModal: null,
+      publicAddress: '',
+      legacyAddress: '',
       useLegacyAddress: null,
       currentScene: state.ui.scenes.currentScene
     }
@@ -61,9 +62,10 @@ const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps 
     edgeWallet,
     exchangeSecondaryToPrimaryRatio,
     guiWallet,
+    publicAddress: guiWallet.receiveAddress.publicAddress || '',
+    legacyAddress: guiWallet.receiveAddress.legacyAddress || '',
     loading: false,
     primaryCurrencyInfo,
-    receiveAddress: state.ui.scenes.request.receiveAddress,
     secondaryCurrencyInfo,
     showToWalletModal: state.ui.scenes.walletListModal.walletListModalVisible,
     useLegacyAddress: state.ui.scenes.requestType.useLegacyAddress,

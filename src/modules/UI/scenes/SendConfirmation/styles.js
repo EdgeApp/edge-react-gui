@@ -114,6 +114,16 @@ export const rawStyles = {
     height: 54,
     paddingVertical: 18
   },
+  addUniqueIDButton: {
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    padding: 14,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  addUniqueIDButtonText: {
+    color: THEME.COLORS.WHITE
+  },
+  activeOpacity: THEME.OPACITY.ACTIVE,
   footer: {},
   debug
 }

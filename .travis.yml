@@ -10,7 +10,6 @@ cache:
     - $HOME/.android/build-cache
 script:
   - npm i react-native-cli -g
-  - react-native bundle --dev false --entry-file index.ios.js --bundle-output ios/main.jsbundle --platform ios
 matrix:
   include:
     - language: android
@@ -33,7 +32,7 @@ matrix:
         - npm install -g yarn@1.5.1
       install:
         - travis_retry yarn install --network-concurrency 1 --child-concurrency 1
-        - npm t
+        - npm run precommit
       android:
         components:
           - tools
@@ -74,4 +73,4 @@ matrix:
       xcode_scheme: ios/edge
       script:
         - cd ios
-        - xcodebuild -derivedDataPath build clean build -scheme edge -configuration release -sdk iphonesimulator11.4 CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" | xcpretty && exit ${PIPESTATUS[0]}
+        - node ../execKeepAlive.js 'xcodebuild -workspace edge.xcworkspace -derivedDataPath build clean build -scheme edge -configuration release -sdk iphonesimulator11.4 CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""' 'xcpretty'

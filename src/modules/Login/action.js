@@ -26,6 +26,8 @@ const localeInfo = Locale.constants() // should likely be moved to login system 
 export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => async (dispatch: Dispatch, getState: GetState) => {
   dispatch(loggedIn(account))
 
+  account.activeWalletIds.length < 1 ? Actions[Constants.ONBOARDING]() : Actions[Constants.EDGE]()
+
   const walletInfos = account.allKeys
   const filteredWalletInfos = walletInfos.map(({ keys, id, ...info }) => info)
   console.log('Wallet Infos:', filteredWalletInfos)

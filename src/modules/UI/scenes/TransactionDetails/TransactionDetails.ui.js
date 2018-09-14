@@ -1,17 +1,19 @@
 // @flow
 
 import { bns } from 'biggystring'
+import dateformat from 'dateformat'
 import type { EdgeCurrencyInfo, EdgeDenomination, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Animated, Easing, Keyboard, ScrollView, TextInput, TouchableOpacity, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
+import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
 import THEME from '../../../../theme/variables/airbitz'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
 import type { GuiContact, GuiWallet } from '../../../../types.js'
-import * as UTILS from '../../../utils'
+import { autoCorrectDate, getFiatSymbol, getWalletDefaultDenomProps, inputBottomPadding, isCryptoParentCurrency } from '../../../utils'
 import FormattedText from '../../components/FormattedText/index'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import PayeeIcon from '../../components/PayeeIcon/PayeeIcon.ui.js'
@@ -57,7 +59,6 @@ export type TransactionDetailsOwnProps = {
   contacts: Array<GuiContact>,
   subcategoriesList: Array<string>,
   settings: Object, // TODO: This badly needs to get typed but it is a huge dynamically generated object with embedded maps -paulvp,
-  direction: string,
   thumbnailPath: string,
   currencyInfo: EdgeCurrencyInfo | null,
   currencyCode: string,
@@ -82,7 +83,7 @@ type State = {
   direction: string,
   bizId: number,
   miscJson: any, // core receives this as a string
-  dateTimeSyntax: string,
+  displayDate: string,
   subCategorySelectVisibility: boolean,
   categorySelectVisibility: boolean,
   subCategory: string,
@@ -104,31 +105,33 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
 
   constructor (props: TransactionDetailsProps) {
     super(props)
-    const dateTime = new Date(props.edgeTransaction.date * 1000)
-    const dateString = dateTime.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
-    const timeString = dateTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric' })
+    const edgeTransaction = {
+      ...props.edgeTransaction,
+      date: autoCorrectDate(props.edgeTransaction.date)
+    }
+    const displayDate = dateformat(edgeTransaction.date * 1000, 'mmm dS, yyyy, h:MM:ss TT')
     let type = ''
     let subCategory = ''
     let cat = ''
     let name = ''
-    let amountFiat = '0.00'
+    let amountFiat = intl.formatNumber('0.00')
     let notes = ''
-    const direction = parseInt(props.edgeTransaction.nativeAmount) >= 0 ? 'receive' : 'send'
-    if (props.edgeTransaction.wallet) {
-      this.guiWallet = props.wallets[props.edgeTransaction.wallet.id]
-      this.fiatSymbol = UTILS.getFiatSymbol(this.guiWallet.fiatCurrencyCode)
+    const direction = parseInt(edgeTransaction.nativeAmount) >= 0 ? 'receive' : 'send'
+    if (edgeTransaction.wallet) {
+      this.guiWallet = props.wallets[edgeTransaction.wallet.id]
+      this.fiatSymbol = getFiatSymbol(this.guiWallet.fiatCurrencyCode)
     } else {
       this.props.displayDropdownAlert(s.strings.transaction_detail_no_wallet, s.strings.transaction_detail_unable_to_load_transaction)
     }
 
-    if (props.edgeTransaction && props.edgeTransaction.metadata) {
-      cat = props.edgeTransaction.metadata.category ? props.edgeTransaction.metadata.category : ''
-      name = props.edgeTransaction.metadata.name ? props.edgeTransaction.metadata.name : '' // remove commenting once metaData in Redux
-      notes = props.edgeTransaction.metadata.notes ? props.edgeTransaction.metadata.notes : ''
-      if (props.edgeTransaction.metadata.amountFiat) {
-        const initial = props.edgeTransaction.metadata.amountFiat.toFixed(2)
-        amountFiat = bns.abs(initial)
-        amountFiat = bns.toFixed(amountFiat, 2, 2)
+    if (edgeTransaction && edgeTransaction.metadata) {
+      cat = edgeTransaction.metadata.category ? edgeTransaction.metadata.category : ''
+      name = edgeTransaction.metadata.name ? edgeTransaction.metadata.name : '' // remove commenting once metaData in Redux
+      notes = edgeTransaction.metadata.notes ? edgeTransaction.metadata.notes : ''
+      if (edgeTransaction.metadata.amountFiat) {
+        const initial = edgeTransaction.metadata.amountFiat.toFixed(2)
+        const absoluteAmountFiat = bns.abs(initial)
+        amountFiat = intl.formatNumber(bns.toFixed(absoluteAmountFiat, 2, 2))
       }
     }
 
@@ -161,8 +164,8 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
       amountFiat,
       bizId: 0,
       direction,
-      miscJson: props.edgeTransaction.metadata ? props.edgeTransaction.metadata.miscJson : '',
-      dateTimeSyntax: dateString + ' ' + timeString,
+      miscJson: edgeTransaction.metadata ? edgeTransaction.metadata.miscJson : '',
+      displayDate,
       subCategorySelectVisibility: false,
       categorySelectVisibility: false,
       subCategory: subCategory || '',
@@ -254,7 +257,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
       const absoluteAmountFiatOneDecimal = bns.abs(amountFiatOneDecimal)
       amountFiat = bns.toFixed(absoluteAmountFiatOneDecimal, 2, 2)
     } else {
-      amountFiat = '0.00'
+      amountFiat = intl.formatNumber('0.00')
     }
     this.setState({
       amountFiat
@@ -384,7 +387,8 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
   }
 
   onFocusFiatAmount = () => {
-    if (this.state.amountFiat === '0.00') {
+    const { amountFiat } = this.state
+    if (amountFiat === '0.00' || amountFiat === '0,00') {
       this.setState({
         amountFiat: ''
       })
@@ -409,18 +413,25 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
   }
 
   onSaveTxDetails = () => {
-    let category
-    if (this.state.type) {
-      category = this.state.type.charAt(0).toUpperCase() + this.state.type.slice(1) + ':' + this.state.subCategory
+    const { name, notes, bizId, miscJson, type, subCategory, amountFiat } = this.state
+    const { edgeTransaction } = this.props
+    let category, finalAmountFiat
+    if (type) {
+      category = type.charAt(0).toUpperCase() + type.slice(1) + ':' + subCategory
     } else {
       category = undefined
     }
-    const { name, notes, bizId, miscJson } = this.state
-    const txid = this.props.edgeTransaction.txid
-    const newAmountFiat = this.state.amountFiat
-    const amountFiat: number = !newAmountFiat ? 0.0 : Number.parseFloat(newAmountFiat)
-    const edgeMetadata: EdgeMetadata = { name, category, notes, amountFiat, bizId, miscJson }
-    this.props.setTransactionDetails(txid, this.props.edgeTransaction.currencyCode, edgeMetadata)
+    const txid = edgeTransaction.txid
+    const decimalAmountFiat = Number.parseFloat(amountFiat.replace(',', '.'))
+    if (isNaN(decimalAmountFiat)) {
+      // if invalid number set to previous saved amountFiat
+      finalAmountFiat = edgeTransaction.metadata ? edgeTransaction.metadata.amountFiat : 0.0
+    } else {
+      // if a valid number or empty string then set to zero (empty) or actual number
+      finalAmountFiat = !amountFiat ? 0.0 : decimalAmountFiat
+    }
+    const edgeMetadata: EdgeMetadata = { name, category, notes, amountFiat: finalAmountFiat, bizId, miscJson }
+    this.props.setTransactionDetails(txid, edgeTransaction.currencyCode, edgeMetadata)
   }
 
   componentDidMount () {
@@ -429,10 +440,10 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
 
   UNSAFE_componentWillMount () {
     // check if metaToken, is not then do not set walletDefaultProps to anything other than initial blank values
-    if (UTILS.isCryptoParentCurrency(this.guiWallet, this.props.edgeTransaction.currencyCode)) {
-      this.setState({ walletDefaultDenomProps: UTILS.getWalletDefaultDenomProps(this.guiWallet, this.props.settings) })
+    if (isCryptoParentCurrency(this.guiWallet, this.props.edgeTransaction.currencyCode)) {
+      this.setState({ walletDefaultDenomProps: getWalletDefaultDenomProps(this.guiWallet, this.props.settings) })
     } else {
-      this.setState({ walletDefaultDenomProps: UTILS.getWalletDefaultDenomProps(this.guiWallet, this.props.settings, this.props.edgeTransaction.currencyCode) })
+      this.setState({ walletDefaultDenomProps: getWalletDefaultDenomProps(this.guiWallet, this.props.settings, this.props.edgeTransaction.currencyCode) })
     }
   }
 
@@ -481,7 +492,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                       autoCapitalize="words"
                       autoCorrect={false}
                       onChangeText={this.onChangePayee}
-                      style={[styles.payeeNameInput, UTILS.inputBottomPadding()]}
+                      style={[styles.payeeNameInput, inputBottomPadding()]}
                       placeholder="Payee"
                       defaultValue={this.state.name}
                       placeholderTextColor={THEME.COLORS.GRAY_2}
@@ -527,7 +538,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                       autoCapitalize="words"
                       onBlur={this.onExitSubcategories}
                       onChangeText={this.onChangeSubcategory}
-                      style={[styles.categoryInput, UTILS.inputBottomPadding()]}
+                      style={[styles.categoryInput, inputBottomPadding()]}
                       defaultValue={this.state.subCategory || ''}
                       placeholder={s.strings.transaction_details_category_title}
                       autoCorrect={false}
@@ -561,7 +572,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                         autoCapitalize="words"
                         onFocus={this.onFocusPayee}
                         autoCorrect={false}
-                        style={[styles.payeeNameInput, UTILS.inputBottomPadding()]}
+                        style={[styles.payeeNameInput, inputBottomPadding()]}
                         placeholder={s.strings.transaction_details_payee}
                         defaultValue={this.state.name}
                         placeholderTextColor={THEME.COLORS.GRAY_2}
@@ -570,7 +581,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                   </View>
                   <View style={styles.payeeSeperator} />
                   <View style={[styles.dateWrap]}>
-                    <FormattedText style={[styles.date]}>{this.state.dateTimeSyntax}</FormattedText>
+                    <FormattedText style={[styles.date]}>{this.state.displayDate}</FormattedText>
                   </View>
                   <AmountArea
                     edgeTransaction={this.props.edgeTransaction}

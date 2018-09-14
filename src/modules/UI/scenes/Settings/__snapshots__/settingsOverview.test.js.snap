@@ -263,6 +263,10 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
       />
       <RowRoute
         disabled={false}
+        leftText="BitcoinGold"
+      />
+      <RowRoute
+        disabled={false}
         leftText="Ethereum"
       />
       <RowRoute
@@ -291,6 +295,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         leftText="Restore Wallets"
         onPress={[Function]}
         rightText=""
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Terms of Service"
+        scene="termsOfService"
       />
       <Component
         style={
@@ -673,6 +682,10 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
       />
       <RowRoute
         disabled={false}
+        leftText="BitcoinGold"
+      />
+      <RowRoute
+        disabled={false}
         leftText="Ethereum"
       />
       <RowRoute
@@ -701,6 +714,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         leftText="Restore Wallets"
         onPress={[Function]}
         rightText=""
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Terms of Service"
+        scene="termsOfService"
       />
       <Component
         style={

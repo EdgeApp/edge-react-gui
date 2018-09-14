@@ -76,6 +76,14 @@ const EdgeLoginScreen = {
     textAlign: 'center',
     fontFamily: THEME.FONTS.DEFAULT
   },
+  bodyTextWarning: {
+    marginRight: '5%',
+    marginLeft: '5%',
+    color: THEME.COLORS.ACCENT_RED,
+    fontSize: 18,
+    textAlign: 'center',
+    fontFamily: THEME.FONTS.DEFAULT
+  },
   cancel: {
     flex: 1,
     marginRight: '1.5%',

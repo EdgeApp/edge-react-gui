@@ -23,6 +23,12 @@ const OnBoardingSlideStyles = {
     height: '80%',
     padding: 5
   },
+  textBoxSlide2: {
+    width: '90%',
+    height: '80%',
+    padding: 5,
+    marginTop: 20
+  },
   text: {
     color: THEME.COLORS.WHITE,
     fontSize: 18,

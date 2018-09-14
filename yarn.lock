@@ -871,6 +871,10 @@ assert@^1.4.1:
   dependencies:
     util "0.10.3"
 
+assertion-error@^1.0.1:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/assertion-error/-/assertion-error-1.1.0.tgz#e60b6b0e8f301bd97e5375215bda406c85118c0b"
+
 assign-symbols@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/assign-symbols/-/assign-symbols-1.0.0.tgz#59667f41fadd4f20ccbc2bb96b8d4f7f78ec0367"
@@ -1944,9 +1948,16 @@ buffer@^4.9.1:
     ieee754 "^1.1.4"
     isarray "^1.0.0"
 
-buffer@^5.0.0, buffer@^5.0.6, buffer@^5.0.8, buffer@^5.2.0:
+buffer@^5.0.0, buffer@^5.0.6, buffer@^5.0.8:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/buffer/-/buffer-5.2.0.tgz#53cf98241100099e9eeae20ee6d51d21b16e541e"
+  dependencies:
+    base64-js "^1.0.2"
+    ieee754 "^1.1.4"
+
+buffer@^5.2.1:
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/buffer/-/buffer-5.2.1.tgz#dd57fa0f109ac59c602479044dca7b8b3d0b71d6"
   dependencies:
     base64-js "^1.0.2"
     ieee754 "^1.1.4"
@@ -2052,6 +2063,17 @@ center-align@^0.1.1:
     align-text "^0.1.3"
     lazy-cache "^1.0.3"
 
+chai@^4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/chai/-/chai-4.1.2.tgz#0f64584ba642f0f2ace2806279f4f06ca23ad73c"
+  dependencies:
+    assertion-error "^1.0.1"
+    check-error "^1.0.1"
+    deep-eql "^3.0.0"
+    get-func-name "^2.0.0"
+    pathval "^1.0.0"
+    type-detect "^4.0.0"
+
 chain-function@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/chain-function/-/chain-function-1.0.1.tgz#c63045e5b4b663fb86f1c6e186adaf1de402a1cc"
@@ -2099,6 +2121,10 @@ change-emitter@^0.1.2:
 chardet@^0.4.0:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/chardet/-/chardet-0.4.2.tgz#b5473b33dc97c424e5d98dc87d55d4d8a29c8bf2"
+
+check-error@^1.0.1:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/check-error/-/check-error-1.0.2.tgz#574d312edd88bb5dd8912e9286dd6c0aed4aac82"
 
 child-process-promise@^2.2.0:
   version "2.2.1"
@@ -2552,6 +2578,12 @@ dedent@^0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/dedent/-/dedent-0.7.0.tgz#2495ddbaf6eb874abb0e1be9df22d2e5a544326c"
 
+deep-eql@^3.0.0:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/deep-eql/-/deep-eql-3.0.1.tgz#dfc9404400ad1c8fe023e7da1df1c147c4b444df"
+  dependencies:
+    type-detect "^4.0.0"
+
 deep-equal@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/deep-equal/-/deep-equal-1.0.1.tgz#f5d260292b660e084eff4cdbc9f08ad3247448b5"
@@ -2709,9 +2741,9 @@ dir-glob@^2.0.0:
     arrify "^1.0.1"
     path-type "^3.0.0"
 
-disklet@^0.2.2:
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/disklet/-/disklet-0.2.5.tgz#bf96726e13be18ea99a693daac0ce0575715347c"
+disklet@^0.2.7:
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/disklet/-/disklet-0.2.7.tgz#03cf699df295043067b6a6215c9f11cb18f15fd0"
   dependencies:
     assert "^1.4.1"
     react "16.0.0-alpha.12"
@@ -2786,16 +2818,16 @@ edge-components@^0.0.5:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@0.10.2:
-  version "0.10.2"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.10.2.tgz#0b70b1acc56c9f693e86d7a8153c9b24a1196de1"
+edge-core-js@0.10.4:
+  version "0.10.4"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.10.4.tgz#1b4d5503859bf3f9414f24e45d50413b95789562"
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
     biggystring "^3.0.2"
     currency-codes "^1.1.2"
     detect-bundler "^1.0.0"
-    disklet "^0.2.2"
+    disklet "^0.2.7"
     elliptic "^6.4.0"
     hash.js "^1.0.3"
     hmac-drbg "^1.0.1"
@@ -2810,14 +2842,15 @@ edge-core-js@0.10.2:
     utf8 "^3.0.0"
     ws "^5.1.1"
 
-edge-currency-bitcoin@3.2.9:
-  version "3.2.9"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-3.2.9.tgz#8bbcd7e680363566a580143135bc22e40525d9bb"
+edge-currency-bitcoin@3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-3.3.0.tgz#1d6fbe73911b097ab9b770909063f00815a7f6f1"
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
     bn.js "^4.11.8"
-    buffer "^5.2.0"
+    buffer "^5.2.1"
+    chai "^4.1.2"
     coinselect "^3.1.11"
     eventemitter3 "^3.1.0"
     jsonschema "^1.2.4"
@@ -2871,9 +2904,9 @@ edge-exchange-plugins@^0.2.0:
   dependencies:
     iso4217 "^0.2.0"
 
-edge-login-ui-rn@^0.4.4:
-  version "0.4.4"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.4.4.tgz#812f9e8ba72b1604a30725e9dcb62957990b2ef9"
+edge-login-ui-rn@^0.4.6:
+  version "0.4.6"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.4.6.tgz#faa729a3aa69662a39bd65998558cae5e6a66b13"
   dependencies:
     material-ui "^0.20.0"
     moment "^2.19.3"
@@ -3927,6 +3960,10 @@ gauge@~2.7.3:
 get-caller-file@^1.0.1:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/get-caller-file/-/get-caller-file-1.0.3.tgz#f978fa4c90d1dfe7ff2d6beda2a515e713bdcf4a"
+
+get-func-name@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/get-func-name/-/get-func-name-2.0.0.tgz#ead774abee72e20409433a066366023dd6887a41"
 
 get-own-enumerable-property-symbols@^2.0.1:
   version "2.0.1"
@@ -5016,6 +5053,15 @@ jest-jasmine2@^23.5.0:
     jest-util "^23.4.0"
     pretty-format "^23.5.0"
 
+jest-junit@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/jest-junit/-/jest-junit-5.1.0.tgz#e8e497d810a829bf02783125aab74b5df6caa8fe"
+  dependencies:
+    jest-validate "^23.0.1"
+    mkdirp "^0.5.1"
+    strip-ansi "^4.0.0"
+    xml "^1.0.1"
+
 jest-leak-detector@^23.5.0:
   version "23.5.0"
   resolved "https://registry.yarnpkg.com/jest-leak-detector/-/jest-leak-detector-23.5.0.tgz#14ac2a785bd625160a2ea968fd5d98b7dcea3e64"
@@ -5155,6 +5201,15 @@ jest-validate@^21.1.0:
     jest-get-type "^21.2.0"
     leven "^2.1.0"
     pretty-format "^21.2.1"
+
+jest-validate@^23.0.1:
+  version "23.6.0"
+  resolved "https://registry.yarnpkg.com/jest-validate/-/jest-validate-23.6.0.tgz#36761f99d1ed33fcd425b4e4c5595d62b6597474"
+  dependencies:
+    chalk "^2.0.1"
+    jest-get-type "^22.1.0"
+    leven "^2.1.0"
+    pretty-format "^23.6.0"
 
 jest-validate@^23.5.0:
   version "23.5.0"
@@ -6702,6 +6757,10 @@ path-type@^3.0.0:
   dependencies:
     pify "^3.0.0"
 
+pathval@^1.0.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/pathval/-/pathval-1.1.0.tgz#b942e6d4bde653005ef6b71361def8727d0645e0"
+
 pause-stream@0.0.11:
   version "0.0.11"
   resolved "https://registry.yarnpkg.com/pause-stream/-/pause-stream-0.0.11.tgz#fe5a34b0cbce12b5aa6a2b403ee2e73b602f1445"
@@ -6902,6 +6961,13 @@ pretty-format@^21.2.1:
 pretty-format@^23.0.1, pretty-format@^23.5.0:
   version "23.5.0"
   resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-23.5.0.tgz#0f9601ad9da70fe690a269cd3efca732c210687c"
+  dependencies:
+    ansi-regex "^3.0.0"
+    ansi-styles "^3.2.0"
+
+pretty-format@^23.6.0:
+  version "23.6.0"
+  resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-23.6.0.tgz#5eaac8eeb6b33b987b7fe6097ea6a8a146ab5760"
   dependencies:
     ansi-regex "^3.0.0"
     ansi-styles "^3.2.0"
@@ -8900,6 +8966,10 @@ type-check@~0.3.2:
   dependencies:
     prelude-ls "~1.1.2"
 
+type-detect@^4.0.0:
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/type-detect/-/type-detect-4.0.8.tgz#7646fb5f18871cfbb7749e69bd39a6388eb7450c"
+
 type-is@~1.6.15, type-is@~1.6.16:
   version "1.6.16"
   resolved "https://registry.yarnpkg.com/type-is/-/type-is-1.6.16.tgz#f89ce341541c672b25ee7ae3c73dee3b2be50194"
@@ -9308,6 +9378,10 @@ xcode@^0.9.1:
 xml-name-validator@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/xml-name-validator/-/xml-name-validator-3.0.0.tgz#6ae73e06de4d8c6e47f9fb181f78d648ad457c6a"
+
+xml@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/xml/-/xml-1.0.1.tgz#78ba72020029c5bc87b8a81a3cfcd74b4a2fc1e5"
 
 xmlbuilder@4.0.0:
   version "4.0.0"

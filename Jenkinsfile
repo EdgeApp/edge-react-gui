@@ -1,116 +1,135 @@
-node {
-  stage ('Set Clean Environment') {
-    deleteDir()    
-  }
-  
-  stage ('checkout') {
-    checkout scm
-    sh 'rm ./package-lock.json'
-  }
-
-  stage ('Get env.json file') {
-    withCredentials([file(credentialsId: 'e8032027-1c74-4a4e-a4e0-26f0ff67fc1d', variable: 'file')]) {
-      sh 'cp ${file} ./env.json'
-    }
-  }
-  // General Settings
-  def repoBranch = env.BRANCH_NAME
-  def props = readJSON file: './package.json'
-  def version = props.version
-  def productName = 'Edge Wallet'
-
-  // Hockey App Settings
-  def hockeyAppToken = ''
-  def hockeyAppTags = ''
-  withCredentials([string(credentialsId: 'hockeyAppToken', variable: 'token')]) {
-    hockeyAppToken = token
-  }
-  withCredentials([string(credentialsId: 'hockeyAppTags', variable: 'token')]) {
-    hockeyAppTags = token
-  }
-  
-  // ios settings
-  def xcodeProject = 'edge.xcodeproj'
-  def xcodeScheme = 'edge'
-  def hockeyAppIdIos = ''
-  withCredentials([string(credentialsId: 'hockeyAppIdIos', variable: 'token')]) {
-    hockeyAppIdIos = token
-  }
-  def guiPlatformDirIos = './ios'
-
-  // android settings
-  def androidTask = 'assembleRelease'
-  def androidKeyStore = 'edge-release-keystore.jks'
-  def androidKeyStoreAlias = 'edge'
-  def androidKeyStorePassword = ''
-  withCredentials([string(credentialsId: 'androidKeyStorePassword', variable: 'token')]) {
-    androidKeyStorePassword = token
-  }
-  def hockeyAppIdAndroid = ''
-  withCredentials([string(credentialsId: 'hockeyAppIdAndroid', variable: 'token')]) {
-    hockeyAppIdAndroid = token
-  }
-  def guiPlatformDirAndroid = './android'
-  
-  // External modules directory settings
-  def coreBuildDir = '/../../airbitz-core-js-develop'
-  def pluginsDir = '/../../airbitz-plugins-develop'
-
-  // Change settings for develop branch
-  if (repoBranch == 'develop') {
-    androidTask = 'assembleDevelopRelease'
-    coreBuildDir = '/../../airbitz-core-js-develop'
-    pluginsDir = '/../../airbitz-plugins-develop'
-  }
-
-  try {    
-    stage ('install dependencies') {
-      sh 'npm i'
-    }
-
-    // stage ('test') {
-    //   sh 'npm test'
-    // }
-    
-    stage('build') {
-      parallel(
-        ios: {
-          echo 'Building IOS'
-          // echo 'Bug fixes for React Native 0.46'
-          // sh('mkdir -p node_modules/react-native/scripts/')
-          // sh('mkdir -p node_modules/react-native/packager/')
-          // sh('cp -a node_modules/react-native/scripts/* node_modules/react-native/packager/')
-          // sh('cp -a node_modules/react-native/packager/* node_modules/react-native/scripts/')
-          // sh('cp -a ../third-party node_modules/react-native/')
-          // chdir(buildObj.guiDir + '/node_modules/react-native/third-party/glog-0.3.4')
-          // sh('../../scripts/ios-configure-glog.sh')
-        },
-        android: {
-          echo 'Building Android'
-          sh 'react-native bundle --dev false --entry-file index.android.js --bundle-output android/main.jsbundle --platform android'
-          sh './android/gradlew clean'
-          // sh './gradlew signingReport'
-          sh "./android/gradlew ${androidTask}"
-        }
-      )
-    }
-
-    stage ('Cleanup') {
-      deleteDir()    
-      currentBuild.result = "SUCCESS"
-    }
-  }
-  catch(err) {
-    // Do not add a stage here.
-    // When 'stage' commands are run in a different order than the previous run
-    // the history is hidden since the rendering plugin assumes that the system has changed and
-    // that the old runs are irrelevant. As such adding a stage at this point will trigger a
-    // 'change of the system' each time a run fails.
-    println 'Something went wrong!'
+def build (platform) {
+  // Copy the previous build num
+  try {
+    sh "cp ./buildnum/${platform}.json ./${platform}/buildnum.json"
+  } catch(err) {
     println err
-    currentBuild.result = "FAILURE"
   }
-  finally {
-    println 'Fin'
+  sh "node ./deploy.js edge ${platform} ${BRANCH_NAME}"
+  // Save the build num after a successful build
+  sh "mkdir -p buildnum"
+  sh "cp ./${platform}/buildnum.json ./buildnum/${platform}.json"
+  // Add the build num and the platform to the description
+  def buildnum = readJSON file: "./buildnum/${platform}.json"
+  currentBuild.description += "\n${platform}-${buildnum.buildNum}"
+}
+
+pipeline {
+  agent any
+  tools {
+    nodejs "v8.9.3"
+  }
+  options {
+    timestamps()
+    skipDefaultCheckout true
+  }
+  triggers { 
+    pollSCM("H/5 * * * *")
+  }
+  
+  stages {
+    stage("Clean the workspace and checkout source") {
+      steps {
+        deleteDir()
+        checkout scm
+      }
+    }
+
+    stage ("Get version and build number") {
+      steps {
+        // Import the buildnums from previous build
+        copyArtifacts projectName: "${JOB_NAME}", selector: lastCompleted(), optional: true
+        // Fix version for branchs that are not "master" or "develop"
+        script {
+          def packageJson = readJSON file: "./package.json"
+          if (BRANCH_NAME != "master" && BRANCH_NAME != "develop") {
+            packageJson.version = "${package.version}-${BRANCH_NAME}"
+            writeJSON file: "./package.json", json: packageJson
+          }
+          def description = "[version] ${packageJson.version}"
+          if (BRANCH_NAME == "develop") description += "-d"
+          currentBuild.description = description
+        }
+      }
+    }
+
+    stage ("Load credentials") {
+      steps {
+        // Import the settings files
+        withCredentials([
+          file(credentialsId: "bfcc847f-213a-4de5-86a5-29b62b34c79d", variable: "deploy_config"),
+          file(credentialsId: "94c9f265-a991-432c-9bc4-b74a311f4063", variable: "GoogleService_Info"),
+          file(credentialsId: "f1ebd0b2-4e79-4bd4-a290-a3001604c1fc", variable: "google_services"),
+          file(credentialsId: "2b938625-9c20-4b64-8c24-ce27543402b6", variable: "edge_release_keystore"),
+          file(credentialsId: "05926db4-40f8-42ac-a761-be4e1186ec7a", variable: "env_json"),
+        ]) {
+          sh "cp ${deploy_config} ./deploy-config.json"
+          sh "cp ${GoogleService_Info} ./GoogleService-Info.plist"
+          sh "cp ${google_services} ./google-services.json"
+          sh "mkdir -p ./keystores"
+          sh "cp ${edge_release_keystore} ./keystores/edge-release-keystore.jks"
+          sh "cp ${env_json} ./env.json"
+        }
+      }
+    }
+    
+    stage ("Install dependencies") {
+      steps {
+        sh "yarn"
+      }
+    }
+
+    stage ("Test") {
+      steps {
+        sh "npm run cover"
+      }
+    }
+
+    stage ("Build") {
+      parallel {
+        stage("ios") {
+          steps {
+            build("ios")
+          }
+        }
+        stage("android") {
+          steps {
+            build("android")
+          }
+        }
+      }
+    }
+  }
+  
+  post {
+    always {
+      echo 'Trying to publish the test report'
+      junit healthScaleFactor: 100.0, testResults: '**/coverage/junit.xml', allowEmptyResults: true
+      echo 'Trying to publish the code coverage report'
+      cobertura(
+        coberturaReportFile: '**/coverage/cobertura-coverage.xml',
+        failNoReports: false,
+        failUnstable: false,
+        onlyStable: false,
+        zoomCoverageChart: false,
+        conditionalCoverageTargets: '70, 0, 0',
+        lineCoverageTargets: '70, 0, 0',
+        methodCoverageTargets: '70, 0, 0',
+        maxNumberOfBuilds: 0,
+        sourceEncoding: 'ASCII'
+      )
+      // Archiving the buildnums for future builds
+      archiveArtifacts artifacts: "buildnum/", allowEmptyArchive: true
+    }
+    success {
+      echo "The force is strong with this one"
+      deleteDir()
+    }
+    unstable {
+      echo "Do or do not there is no try"
+    } 
+    failure {
+      echo "The dark side I sense in you."
+    }
   }
 }

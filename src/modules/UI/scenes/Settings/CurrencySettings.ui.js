@@ -5,7 +5,6 @@ import { Image, View } from 'react-native'
 
 import s from '../../../../locales/strings.js'
 import type { GuiDenomination } from '../../../../types'
-import { border as b } from '../../../utils'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView'
@@ -25,8 +24,8 @@ type Props = {
 export default class CurrencySettings extends Component<Props> {
   header () {
     return (
-      <Gradient style={[styles.headerRow, b()]}>
-        <View style={[styles.headerTextWrap, b()]}>
+      <Gradient style={[styles.headerRow]}>
+        <View style={[styles.headerTextWrap]}>
           <View style={styles.leftArea}>
             <Image style={{ height: 25, width: 25, resizeMode: 'contain' }} source={{ uri: this.props.logo }} />
             <T style={styles.headerText}>{SETTINGS_DENOMINATION_TEXT}</T>
@@ -43,11 +42,11 @@ export default class CurrencySettings extends Component<Props> {
   render () {
     return (
       <SafeAreaView>
-        <View style={[styles.ethereumSettings, b()]}>
+        <View style={[styles.ethereumSettings]}>
           <Gradient style={styles.gradient} />
           <View style={styles.container}>
             {this.header()}
-            <RadioRows style={b()}>
+            <RadioRows style={{}}>
               {this.props.denominations.map(denomination => {
                 const key = denomination.multiplier
                 const left = (

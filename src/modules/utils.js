@@ -538,9 +538,9 @@ export const getReceiveAddresses = (currencyWallets: { [id: string]: EdgeCurrenc
 }
 
 export const MILLISECONDS_PER_DAY = 86400000
-export const daysBetween = (DateInMillisecondsA: number, dateInMillisecondsB: number) => {
-  const millisecondsBetween = dateInMillisecondsB - DateInMillisecondsA
-  const daysBetween = millisecondsBetween / MILLISECONDS_PER_DAY
+export const daysBetween = (DateInMsA: number, dateInMsB: number) => {
+  const msBetween = dateInMsB - DateInMsA
+  const daysBetween = msBetween / MILLISECONDS_PER_DAY
   return daysBetween
 }
 
@@ -608,7 +608,7 @@ export const isEdgeLogin = (data: string) => {
   return EDGE_LOGIN_REG_EXP.test(data)
 }
 
-export const tallyUpTotalCrypto = (state: State) => {
+export const getTotalFiatAmount = (state: State) => {
   const temporaryTotalCrypto = {}
   const wallets = state.ui.wallets.byId
   const settings = state.ui.settings
@@ -647,11 +647,11 @@ export const tallyUpTotalCrypto = (state: State) => {
       }
     }
   }
-  const balanceInfo = calculateTotalBalance(temporaryTotalCrypto, state)
+  const balanceInfo = calculateTotalFiatBalance(temporaryTotalCrypto, state)
   return balanceInfo
 }
 
-export const calculateTotalBalance = (values: any, state: State) => {
+export const calculateTotalFiatBalance = (values: any, state: State) => {
   let total = 0
   const currencyConverter = getCurrencyConverter(state)
   for (const currency in values) {
@@ -659,4 +659,32 @@ export const calculateTotalBalance = (values: any, state: State) => {
     total = total + addValue
   }
   return intl.formatNumber(total, { toFixed: 2 })
+}
+
+export const isTooFarAhead = (dateInSeconds: number, currentDateInSeconds: number) => {
+  const secondsPerDay = 86400
+  const daysPerMonth = 30
+  const monthInFuture = currentDateInSeconds + secondsPerDay * daysPerMonth
+  return dateInSeconds > monthInFuture
+}
+
+export const isTooFarBehind = (dateInSeconds: number) => {
+  const dateOfBitcoinGenesisInSeconds = 1230940800 // 2009-01-03T00:00:00.000Z
+  return dateInSeconds < dateOfBitcoinGenesisInSeconds
+}
+
+export const autoCorrectDate = (dateInSeconds: number, currentDateInSeconds: number = msToSeconds(Date.now())) => {
+  if (isTooFarAhead(dateInSeconds, currentDateInSeconds)) return dateInSeconds / 1000
+  if (isTooFarBehind(dateInSeconds)) return dateInSeconds * 1000
+  return dateInSeconds
+}
+
+export const secondsToMs = (dateInSeconds: number) => {
+  const msPerSecond = 1000
+  return dateInSeconds * msPerSecond
+}
+
+export const msToSeconds = (dateInMs: number) => {
+  const msPerSecond = 1000
+  return dateInMs / msPerSecond
 }
