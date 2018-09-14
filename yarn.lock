@@ -7386,7 +7386,7 @@ react-native-share@^1.1.1:
 
 "react-native-size-matters@git://github.com/EdgeApp/react-native-size-matters.git":
   version "0.1.3"
-  resolved "git://github.com/EdgeApp/react-native-size-matters.git#4a6a26827b0b7e562deb4d4260999c68db922fe5"
+  resolved "git://github.com/EdgeApp/react-native-size-matters.git#e3a03da3e6c97d901c26670e9d9d27934ad51d22"
 
 react-native-slider@^0.11.0:
   version "0.11.0"
