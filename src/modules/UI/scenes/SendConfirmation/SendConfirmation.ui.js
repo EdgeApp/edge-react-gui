@@ -4,7 +4,7 @@ import { bns } from 'biggystring'
 import { Scene } from 'edge-components'
 import type { EdgeDenomination } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, View } from 'react-native'
+import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
@@ -12,7 +12,6 @@ import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
 import type { CurrencyConverter, GuiCurrencyInfo, GuiDenomination } from '../../../../types'
 import { convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../../utils.js'
-import { PrimaryButton } from '../../components/Buttons/PrimaryButton.ui.js'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
 import type { ExchangedFlipInputAmounts } from '../../components/FlipInput/ExchangedFlipInput2.js'
 import { ExchangedFlipInput } from '../../components/FlipInput/ExchangedFlipInput2.js'
@@ -23,7 +22,7 @@ import Recipient from '../../components/Recipient/index.js'
 import SafeAreaView from '../../components/SafeAreaView'
 import ABSlider from '../../components/Slider/index.js'
 import { UniqueIdentifierModalConnect as UniqueIdentifierModal } from './components/UniqueIdentifierModal/UniqueIdentifierModalConnector.js'
-import styles from './styles.js'
+import styles, { rawStyles } from './styles.js'
 
 const DIVIDE_PRECISION = 18
 
@@ -219,9 +218,15 @@ export class SendConfirmation extends Component<Props, State> {
 
                   {(currencyCode === 'XMR' || currencyCode === 'XRP') && (
                     <Scene.Row style={{ paddingVertical: 10 }}>
-                      <PrimaryButton onPress={this.props.uniqueIdentifierButtonPressed}>
-                        <PrimaryButton.Text ellipsizeMode={'tail'}>{uniqueIdentifierText(currencyCode, uniqueIdentifier)}</PrimaryButton.Text>
-                      </PrimaryButton>
+                      <TouchableOpacity
+                        activeOpacity={rawStyles.activeOpacity}
+                        style={styles.addUniqueIDButton}
+                        onPress={this.props.uniqueIdentifierButtonPressed}
+                      >
+                        <Text style={styles.addUniqueIDButtonText} ellipsizeMode={'tail'}>
+                          {uniqueIdentifierText(currencyCode, uniqueIdentifier)}
+                        </Text>
+                      </TouchableOpacity>
                     </Scene.Row>
                   )}
 
