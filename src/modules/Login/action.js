@@ -34,17 +34,6 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
 
   const state = getState()
   const context = CORE_SELECTORS.getContext(state)
-  let otpResetPending = false
-  try {
-    const accounts = await context.fetchLoginMessages()
-    for (const key in accounts) {
-      if (key === account.username) {
-        otpResetPending = accounts[key].otpResetPending
-      }
-    }
-  } catch (e) {
-    console.log(e)
-  }
   const currencyCodes = {}
   if (Platform.OS === Constants.IOS) {
     PushNotification.configure({
@@ -59,7 +48,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     walletId: '',
     currencyCode: '',
     currencyPlugins: [],
-    otpInfo: { enabled: account.otpKey != null, otpKey: account.otpKey, otpResetPending },
+    otpInfo: { enabled: account.otpKey != null, otpKey: account.otpKey, otpResetPending: false },
     autoLogoutTimeInSeconds: '',
     bluetoothMode: false,
     pinLoginEnabled: false,

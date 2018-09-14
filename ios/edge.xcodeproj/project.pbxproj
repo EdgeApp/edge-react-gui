@@ -75,6 +75,7 @@
 		DA89DDF820F2CFD70012B4BD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DA89DDF720F2CFD70012B4BD /* GoogleService-Info.plist */; };
 		DA93C74E2128A90A00178601 /* RNBackgroundFetch+AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DA93C74D2128A90A00178601 /* RNBackgroundFetch+AppDelegate.m */; };
 		DABD013820086A3300C51EF3 /* TSBackgroundFetch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6240E2A20055A9300BA8177 /* TSBackgroundFetch.framework */; };
+		DAC215CF214C21FA00D17326 /* libRNMail.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E6CBD1ED2008075200A967E7 /* libRNMail.a */; };
 		DAF7C41220C505CC005B7898 /* plugins in Resources */ = {isa = PBXBuildFile; fileRef = DAF7C41120C505CC005B7898 /* plugins */; };
 		DFFE6C72345D4A3C8350CCFC /* SourceSansPro-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 842BCA6BE88D4CCDAAC176C5 /* SourceSansPro-BoldItalic.ttf */; };
 		E616C50E20F50FDB00F9252F /* iPadOnboarding2Horiz.png in Resources */ = {isa = PBXBuildFile; fileRef = E616C50120F50FDA00F9252F /* iPadOnboarding2Horiz.png */; };
@@ -696,6 +697,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DAC215CF214C21FA00D17326 /* libRNMail.a in Frameworks */,
 				DA6B705521276BCB009C72C9 /* libAbcCoreJsUi.a in Frameworks */,
 				DA22C7482125050600B2F007 /* libBVLinearGradient.a in Frameworks */,
 				DA22C74C212505E500B2F007 /* libRCTContactsWrapper.a in Frameworks */,

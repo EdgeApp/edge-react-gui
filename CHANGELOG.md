@@ -1,5 +1,19 @@
 # edge-react-gui
 
+## 1.3.3
+
+* Fix BIP70 support for Bitcoin Cash
+* Change warning text when doing Edge Login to full access application
+* Add XMR/XRP PaymentID/Destination Tag button to Send Confirmation screen
+* Show 2FA reset warning as soon as app launches for all accounts on device
+* Speed up logins by moving 2FA reset check to background
+* Add device size font/button scaling to create account screens
+* Show denomination when getting max amount error at exchange screen
+* Update to React Native 0.55
+* Fix crash when user taps on incoming funds dropdown
+* Fix editing of fiat amount in transaction details if using foreign locale
+* Add Terms of Service menu button
+
 ## 1.3.0
 
 * Add support for ERC20 Tether, Digibyte, Bitcoin Gold, and Vertcoin
