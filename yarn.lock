@@ -2871,9 +2871,9 @@ edge-exchange-plugins@^0.2.0:
   dependencies:
     iso4217 "^0.2.0"
 
-edge-login-ui-rn@^0.4.6:
-  version "0.4.6"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.4.6.tgz#faa729a3aa69662a39bd65998558cae5e6a66b13"
+edge-login-ui-rn@^0.4.7:
+  version "0.4.7"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.4.7.tgz#04bc70c1deac3d7b42a2ff6d050b7d9c57a13e2b"
   dependencies:
     material-ui "^0.20.0"
     moment "^2.19.3"
@@ -2882,10 +2882,10 @@ edge-login-ui-rn@^0.4.6:
     react-native-keyboard-aware-scroll-view "^0.4.1"
     react-native-linear-gradient "^2.0.0"
     react-native-mail "^3.0.5"
-    react-native-material-textfield "git://github.com/Airbitz/react-native-material-textfield.git"
+    react-native-material-textfield "git://github.com/EdgeApp/react-native-material-textfield.git"
     react-native-modal "^6.5.0"
     react-native-qrcode "^0.2.6"
-    react-native-size-matters "^0.1.2"
+    react-native-size-matters "git://github.com/EdgeApp/react-native-size-matters.git"
     react-native-vector-icons "^4.4.2"
     react-redux "^5.0.7"
     redux "~3.5.2"
@@ -7318,15 +7318,8 @@ react-native-mail@^3.0.5:
     prop-types "^15.5.10"
     ramda "^0.24.1"
 
-"react-native-material-textfield@git://github.com/Airbitz/react-native-material-textfield.git":
-  version "0.10.2"
-  resolved "git://github.com/Airbitz/react-native-material-textfield.git#c30320fd26e5619c1fe57b3043b8fd9ae2a0c57a"
-  dependencies:
-    prop-types "^15.5.9"
-
 "react-native-material-textfield@git://github.com/EdgeApp/react-native-material-textfield.git":
   version "0.10.2"
-  uid c30320fd26e5619c1fe57b3043b8fd9ae2a0c57a
   resolved "git://github.com/EdgeApp/react-native-material-textfield.git#c30320fd26e5619c1fe57b3043b8fd9ae2a0c57a"
   dependencies:
     prop-types "^15.5.9"
@@ -7391,9 +7384,9 @@ react-native-share@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-1.1.1.tgz#8c50c67c3fa519607f3352c03f56076c0481edeb"
 
-react-native-size-matters@^0.1.2:
+"react-native-size-matters@git://github.com/EdgeApp/react-native-size-matters.git":
   version "0.1.3"
-  resolved "https://registry.yarnpkg.com/react-native-size-matters/-/react-native-size-matters-0.1.3.tgz#1fe69603d04befe036b4fb9c4f57b9dafcbe59a6"
+  resolved "git://github.com/EdgeApp/react-native-size-matters.git#4a6a26827b0b7e562deb4d4260999c68db922fe5"
 
 react-native-slider@^0.11.0:
   version "0.11.0"
