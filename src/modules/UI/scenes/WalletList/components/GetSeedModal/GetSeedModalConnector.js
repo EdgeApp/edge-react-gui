@@ -9,14 +9,11 @@ import { CLOSE_MODAL_VALUE, VISIBLE_MODAL_NAME } from '../WalletOptions/action'
 import GetSeedModal from './GetSeedModal.ui'
 import type { GetSeedModalDispatchProps, GetSeedModalStateProps } from './GetSeedModal.ui'
 
-export const UNLOCK = 'UNLOCK_WALLET_SEED'
-export const LOCK = 'LOCK_WALLET_SEED'
-
 const checkCurrentPassword = (password: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
   const isPassword = await account.checkPassword(password)
-  dispatch({ type: isPassword ? UNLOCK : LOCK })
+  dispatch({ type: isPassword ? 'UNLOCK_WALLET_SEED' : 'LOCK_WALLET_SEED' })
 }
 
 const nullFunc = () => null
@@ -38,12 +35,12 @@ const mapStateToProps = (state: State): GetSeedModalStateProps => {
 const mapDispatchToProps = (dispatch: Dispatch): GetSeedModalDispatchProps => {
   const close = () => {
     dispatch({ type: CLOSE_MODAL_VALUE(Constants.GET_SEED_VALUE) })
-    dispatch({ type: LOCK })
+    dispatch({ type: 'UNLOCK_WALLET_SEED' })
   }
 
   return {
     onExitButtonFxn: close,
-    onNegative: () => dispatch({ type: LOCK }),
+    onNegative: () => dispatch({ type: 'UNLOCK_WALLET_SEED' }),
     onPositive: (password: string) => dispatch(checkCurrentPassword(password)),
     onDone: close
   }

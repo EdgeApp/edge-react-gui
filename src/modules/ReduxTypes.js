@@ -3,6 +3,7 @@
 import type { DiskletFolder, EdgeAccount, EdgeContext, EdgeCurrencyWallet, EdgeLobby, EdgeParsedUri, EdgeTransaction } from 'edge-core-js'
 import type { Dispatch as ReduxDispatch, Store as ReduxStore } from 'redux'
 
+import type { Action } from './Action.js'
 import type { ContactsState } from '../reducers/contacts/contactsReducer.js'
 import type { PasswordReminderState } from '../reducers/passwordReminder/indexPasswordReminder.js'
 import type { PermissionsState } from '../reducers/permissions/permissionsReducer.js'
@@ -13,8 +14,6 @@ import type { RequestState } from './UI/Request/reducer.js'
 import type { RequestSceneState } from './UI/scenes/Request/reducer.js'
 import type { SendConfirmationState } from './UI/scenes/SendConfirmation/selectors.js'
 import type { SettingsState } from './UI/Settings/reducer.js'
-
-export type Action = { type: string, data?: any }
 
 export type CurrencyCode = string
 export type Id = string
@@ -216,10 +215,9 @@ export type State = {
   contacts: ContactsState
 }
 
-type ThunkDispatch<A> = ((Dispatch, GetState) => Promise<void> | void) => A
-
+export type { Action }
+export type ThunkDispatch<A> = ((Dispatch, GetState) => Promise<void> | void) => A
 export type Reducer<S, A: Action> = (S, A) => S
-
 export type Store = ReduxStore<State, Action>
 export type Next = $PropertyType<Store, 'dispatch'>
 export type GetState = () => State
