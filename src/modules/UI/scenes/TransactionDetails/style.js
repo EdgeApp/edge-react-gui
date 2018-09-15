@@ -36,7 +36,7 @@ export const styles = {
   },
   dataArea: {
     position: 'relative',
-    top: scale(34),
+    top: scale(20),
     flexDirection: 'column'
   },
   payeeNameArea: {
@@ -79,7 +79,7 @@ export const styles = {
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingTop: scale(10),
-    paddingBottom: scale(20),
+    paddingBottom: scale(10),
     paddingLeft: scale(15),
     paddingRight: scale(15)
   },
