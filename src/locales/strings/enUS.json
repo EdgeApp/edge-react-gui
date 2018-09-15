@@ -15,7 +15,7 @@
   "drawer_wallets": "Wallets",
   "dropdown_exchange_max_amount": "Exchange Max Amount",
   "edge_description": "This application would like to create or access its wallet in your Edge account.\n\n It will not have access to any other wallets.",
-  "edge_description_warning": "WARNING: The following app %1$s is requesting full access to your account and all wallets. \n\nOnly accept this login request if you trust this application and where it was downloaded from.",
+  "edge_description_warning": "WARNING: The \"%1$s\" application is requesting full access to your account and all wallets. \n\nOnly accept this login request if you trust this application and where it was downloaded from.",
   "exchange_failed": "Exchange Failed",
   "exchange_succeeded": "Exchange Succeeded",
   "exchanges_may_take_minutes": "Exchanges may take several minutes to process. Please check your destination wallet after a few minutes",
