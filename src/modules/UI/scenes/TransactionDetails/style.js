@@ -2,10 +2,9 @@
 
 import { Platform, StyleSheet } from 'react-native'
 
-import { isIphoneX } from '../../../../lib/isIphoneX.js'
+import { scale } from '../../../../lib/scaling.js'
 import THEME from '../../../../theme/variables/airbitz'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
-import { scale } from '../../../../lib/scaling.js'
 
 export const activeOpacity = THEME.OPACITY.ACTIVE
 
@@ -37,7 +36,7 @@ export const styles = {
   },
   dataArea: {
     position: 'relative',
-    top: scale(34),
+    top: scale(20),
     flexDirection: 'column'
   },
   payeeNameArea: {
@@ -80,7 +79,7 @@ export const styles = {
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingTop: scale(10),
-    paddingBottom: scale(20),
+    paddingBottom: scale(10),
     paddingLeft: scale(15),
     paddingRight: scale(15)
   },
@@ -220,7 +219,7 @@ export const styles = {
     borderWidth: 1,
     borderColor: '#CCCCCC',
     borderRadius: 3,
-    height: PLATFORM.deviceHeight * 0.13 - (PLATFORM.platform === 'android' ? scale(23) : 0) + (isIphoneX ? scale(60) : 0),
+    height: PLATFORM.deviceHeight * 0.13 - (PLATFORM.platform === 'android' ? scale(20) : 0),
     padding: scale(3)
   },
   notesInput: {
@@ -232,7 +231,7 @@ export const styles = {
   footerArea: {
     backgroundColor: THEME.COLORS.GRAY_4,
     paddingTop: scale(20),
-    height: PLATFORM.deviceHeight * 1 / 3 + 40,
+    height: (PLATFORM.deviceHeight * 1) / 3 + 40,
     paddingLeft: scale(15),
     paddingRight: scale(15)
   },

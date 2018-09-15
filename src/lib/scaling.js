@@ -1,6 +1,6 @@
 // @flow
-import { moderateVScale } from 'react-native-size-matters'
+import { moderateScale } from 'react-native-size-matters'
 
 export const scale = (arg: number) => {
-  return moderateVScale(arg, 0.9)
+  return moderateScale(arg, 0.9)
 }
