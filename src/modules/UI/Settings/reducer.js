@@ -4,12 +4,13 @@ import type { EdgeCurrencyInfo } from 'edge-core-js'
 import _ from 'lodash'
 
 import * as Constants from '../../../constants/indexConstants.js'
-import type { CustomTokenInfo } from '../../../types'
+import type { CustomTokenInfo } from '../../../types.js'
 import { CORE_DEFAULTS, LOCAL_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_DEFAULTS } from '../../Core/Account/settings.js'
 import { SEND_LOGS_FAILURE, SEND_LOGS_PENDING, SEND_LOGS_REQUEST, SEND_LOGS_SUCCESS } from '../../Logs/action'
-import type { Action } from '../../ReduxTypes'
+import type { Action } from '../../ReduxTypes.js'
 import { UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL } from '../components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalActions.js'
 import * as ADD_TOKEN_ACTION from '../scenes/AddToken/action.js'
+import { SET_ENABLE_CUSTOM_NODES, UPDATE_CUSTOM_NODES_LIST } from '../scenes/Settings/action.js'
 import * as WALLET_ACTION from '../Wallets/action'
 import * as ACTION from './action.js'
 import { spendingLimits } from './spendingLimits/SpendingLimitsReducer.js'
@@ -44,34 +45,31 @@ export const initialState = {
   }
 }
 
+export type CurrencySetting = {
+  denomination: string,
+  customNodes?: {
+    nodesList?: Array<string>,
+    isEnabled?: boolean
+  }
+}
+
 export type SettingsState = {
-  BCH: {
-    denomination: string
-  },
-  BTC: {
-    denomination: string
-  },
-  DASH: {
-    denomination: string
-  },
-  FTC: {
-    denomination: string
-  },
-  ETH: {
-    denomination: string
-  },
-  LTC: {
-    denomination: string
-  },
-  UFO: {
-    denomination: string
-  },
-  REP: {
-    denomination: string
-  },
-  WINGS: {
-    denomination: string
-  },
+  BCH: CurrencySetting,
+  BTC: CurrencySetting,
+  DASH: CurrencySetting,
+  FTC: CurrencySetting,
+  ETH: CurrencySetting,
+  LTC: CurrencySetting,
+  VTC: CurrencySetting,
+  XZC: CurrencySetting,
+  QTUM: CurrencySetting,
+  UFO: CurrencySetting,
+  XMR: CurrencySetting,
+  XRP: CurrencySetting,
+  REP: CurrencySetting,
+  DOGE: CurrencySetting,
+  DGB: CurrencySetting,
+  WINGS: CurrencySetting,
   account: ?Object,
   autoLogoutTimeInSeconds: number,
   bluetoothMode: boolean,
@@ -520,6 +518,36 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         ...state,
         isTouchEnabled: data.isTouchEnabled
       }
+    }
+
+    case SET_ENABLE_CUSTOM_NODES: {
+      const { isEnabled } = data
+      const updatedSettings = {
+        ...state,
+        [data.currencyCode]: {
+          ...state[data.currencyCode],
+          customNodes: {
+            ...state[data.currencyCode].customNodes,
+            isEnabled
+          }
+        }
+      }
+      return updatedSettings
+    }
+
+    case UPDATE_CUSTOM_NODES_LIST: {
+      const nodesList = data.nodesList
+      const updatedSettings = {
+        ...state,
+        [data.currencyCode]: {
+          ...state[data.currencyCode],
+          customNodes: {
+            ...state[data.currencyCode].customNodes,
+            nodesList
+          }
+        }
+      }
+      return updatedSettings
     }
 
     case ACTION.ADD_CURRENCY_PLUGIN: {

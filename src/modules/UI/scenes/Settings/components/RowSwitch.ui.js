@@ -4,7 +4,6 @@ import React, { Component } from 'react'
 import { Switch, TouchableHighlight, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 
-import { border as b } from '../../../../utils'
 import T from '../../../components/FormattedText'
 import styles, { styles as styleRaw } from '../style'
 
@@ -35,9 +34,9 @@ export default class RowSwitch extends Component {
         disabled={false}
         onPress={() => this._onPressToggleSetting(this.props.property)}
       >
-        <View style={[styles.settingsRowTextRow, b('red')]}>
-          <View style={[styles.settingsRowLeftContainer, b('blue')]}>
-            <T style={[styles.settingsRowLeftText, b('green')]}>{this.props.leftText}</T>
+        <View style={[styles.settingsRowTextRow]}>
+          <View style={[styles.settingsRowLeftContainer]}>
+            <T style={[styles.settingsRowLeftText]}>{this.props.leftText}</T>
           </View>
           <Switch onValueChange={() => this._onPressToggleSetting(this.props.property)} value={this.props.value} />
         </View>

@@ -26,26 +26,116 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   defaultFiat: 'USD',
   defaultIsoFiat: 'iso:USD',
   merchantMode: false,
-  BTC: { denomination: '100' },
-  BTG: { denomination: '100000000' },
-  BCH: { denomination: '100' },
-  XRP: { denomination: '1000000' },
-  DASH: { denomination: '100000000' },
-  DOGE: { denomination: '100000000' },
-  DGB: { denomination: '100000000' },
-  LTC: { denomination: '100000000' },
-  FTC: { denomination: '100000000' },
-  XZC: { denomination: '100000000' },
-  QTUM: { denomination: '100000000' },
-  UFO: { denomination: '100000000' },
-  VTC: { denomination: '100000000' },
-  XMR: { denomination: '1000000000000' },
-  ETH: { denomination: '1000000000000000000' },
-  REP: { denomination: '1000000000000000000' },
-  WINGS: { denomination: '1000000000000000000' },
-  IND: { denomination: '1000000000000000000' },
-  HUR: { denomination: '1000000000000000000' },
-  USDT: { denomination: '1000000' },
+  BTC: {
+    denomination: '100',
+    customNodes: {
+      nodesList: [],
+      isEnabled: false
+    }
+  },
+  BCH: {
+    denomination: '100',
+    customNodes: {
+      nodesList: [],
+      isEnabled: false
+    }
+  },
+  XRP: {
+    denomination: '1000000',
+    customNodes: {
+      nodesList: [],
+      isEnabled: false
+    }
+  },
+  DASH: {
+    denomination: '100000000',
+    customNodes: {
+      nodesList: [],
+      isEnabled: false
+    }
+  },
+  DOGE: {
+    denomination: '100000000',
+    customNodes: {
+      nodesList: [],
+      isEnabled: false
+    }
+  },
+  DGB: {
+    denomination: '100000000',
+    customNodes: {
+      nodesList: [],
+      isEnabled: false
+    }
+  },
+  LTC: {
+    denomination: '100000000',
+    customNodes: {
+      nodesList: [],
+      isEnabled: false
+    }
+  },
+  FTC: {
+    denomination: '100000000',
+    customNodes: {
+      nodesList: [],
+      isEnabled: false
+    }
+  },
+  VTC: {
+    denomination: '100000000',
+    customNodes: {
+      nodesList: [],
+      isEnabled: false
+    }
+  },
+  XZC: {
+    denomination: '100000000',
+    customNodes: {
+      nodesList: [],
+      isEnabled: false
+    }
+  },
+  QTUM: {
+    denomination: '100000000',
+    customNodes: {
+      nodesList: [],
+      isEnabled: false
+    }
+  },
+  XMR: {
+    denomination: '1000000000000',
+    customNodes: {
+      nodesList: [],
+      isEnabled: false
+    }
+  },
+  ETH: {
+    denomination: '1000000000000000000',
+    customNodes: {
+      nodesList: [],
+      isEnabled: false
+    }
+  },
+  UFO: {
+    denomination: '100000000',
+    customNodes: {
+      nodesList: [],
+      isEnabled: false
+    }
+  },
+  REP: {
+    denomination: '1000000000000000000'
+  },
+  WINGS: {
+    denomination: '1000000000000000000'
+  },
+  IND: {
+    denomination: '1000000000000000000'
+  },
+  HUR: {
+    denomination: '1000000000000000000'
+  },
   customTokens: [],
   passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN
 }
@@ -70,7 +160,7 @@ export const LOCAL_ACCOUNT_DEFAULTS = {
   }
 }
 
-const SYNCHED_SETTINGS_FILENAME = 'Settings.json'
+const SYNCED_SETTINGS_FILENAME = 'Settings.json'
 const LOCAL_SETTINGS_FILENAME = 'Settings.json'
 const CATEGORIES_FILENAME = 'Categories.json'
 
@@ -159,6 +249,32 @@ export const setDenominationKeyRequest = (account: EdgeAccount, currencyCode: st
     const updatedSettings = updateCurrencySettings(settings, currencyCode, { denomination })
     return setSyncedSettings(account, updatedSettings)
   })
+
+export const setIsCustomNodesEnabled = async (account: EdgeAccount, currencyCode: string, isEnabled: boolean) => {
+  const settings = await getSyncedSettings(account)
+  const updatedSettings = updateCurrencySettings(settings, currencyCode, {
+    ...settings[currencyCode],
+    customNodes: {
+      ...settings[currencyCode].customNodes,
+      isEnabled
+    }
+  })
+  const newSyncedSettings = await setSyncedSettingsAsync(account, updatedSettings)
+  return newSyncedSettings
+}
+
+export const setCustomNodesList = async (account: EdgeAccount, currencyCode: string, nodesList: Array<string>) => {
+  const settings = await getSyncedSettings(account)
+  const updatedSettings = updateCurrencySettings(settings, currencyCode, {
+    ...settings[currencyCode],
+    customNodes: {
+      ...settings[currencyCode].customNodes,
+      nodesList
+    }
+  })
+  const newSyncedSettings = await setSyncedSettingsAsync(account, updatedSettings)
+  return newSyncedSettings
+}
 
 // Helper Functions
 export const getSyncedSettings = (account: EdgeAccount) =>
@@ -272,7 +388,7 @@ export const getCoreSettings = (account: EdgeAccount): Promise<{ otpMode: boolea
 export const getSyncedSettingsFile = (account: EdgeAccount) => {
   // $FlowFixMe folder not found on EdgeAccount type
   const folder = account.folder
-  return folder.file(SYNCHED_SETTINGS_FILENAME)
+  return folder.file(SYNCED_SETTINGS_FILENAME)
 }
 
 export const getLocalSettingsFile = (account: EdgeAccount) =>

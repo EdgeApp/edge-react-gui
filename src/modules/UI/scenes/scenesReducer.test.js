@@ -36,6 +36,9 @@ test('initialState', () => {
       useLegacyAddress: false,
       uniqueLegacyAddress: false
     },
+    settings: {
+      isSetCustomNodesModalVisible: false
+    },
     scan: {
       addressModalVisible: false,
       scanEnabled: false,

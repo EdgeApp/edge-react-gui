@@ -25,6 +25,13 @@ exports[`CurrencySettings should render 1`] = `
         }
       }
     >
+      <SetCustomNodesModal
+        customNodesList={Array []}
+        isActive={false}
+        isSetCustomNodesProcessing={false}
+        onExit={[Function]}
+        saveCustomNodesList={[MockFunction]}
+      />
       <Gradient
         style={
           Array [
@@ -51,27 +58,12 @@ exports[`CurrencySettings should render 1`] = `
               }
             }
           >
-            <Image
-              source={
-                Object {
-                  "uri": "THIS IS A LOGO",
-                }
-              }
-              style={
-                Object {
-                  "height": 25,
-                  "resizeMode": "contain",
-                  "width": 25,
-                }
-              }
-            />
             <FormattedText
               style={
                 Object {
                   "backgroundColor": "transparent",
                   "color": "#FFFFFF",
                   "fontSize": 18,
-                  "marginLeft": 16,
                 }
               }
             >
@@ -186,6 +178,59 @@ exports[`CurrencySettings should render 1`] = `
           onPress={[Function]}
         />
       </RadioRows>
+      <Gradient
+        style={
+          Array [
+            Object {
+              "flexDirection": "row",
+              "height": 50,
+              "justifyContent": "space-between",
+              "padding": 12,
+            },
+          ]
+        }
+      >
+        <Component
+          style={
+            Array [
+              undefined,
+            ]
+          }
+        >
+          <Component
+            style={
+              Object {
+                "flexDirection": "row",
+              }
+            }
+          >
+            <FormattedText
+              style={
+                Object {
+                  "backgroundColor": "transparent",
+                  "color": "#FFFFFF",
+                  "fontSize": 18,
+                }
+              }
+            >
+              Custom Nodes
+            </FormattedText>
+          </Component>
+        </Component>
+      </Gradient>
+      <RowSwitch
+        isActive={false}
+        leftText="Enable Custom Nodes"
+        onSaveCustomNodesList={[MockFunction]}
+        onToggle={[Function]}
+        value={false}
+      />
+      <RowModal
+        disabled={true}
+        leftText="Set Custom Nodes"
+        onPress={[Function]}
+        rightText=""
+      />
     </Component>
   </Component>
 </SafeAreaViewComponent>

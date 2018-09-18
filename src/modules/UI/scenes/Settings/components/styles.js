@@ -2,7 +2,9 @@
 
 import { StyleSheet } from 'react-native'
 
-import THEME from '../../../../../theme/variables/airbitz'
+import { isIphoneX } from '../../../../../lib/isIphoneX.js'
+import THEME from '../../../../../theme/variables/airbitz.js'
+import { PLATFORM } from '../../../../../theme/variables/platform.js'
 
 export const styles = {
   stylizedButtonText: {
@@ -83,6 +85,39 @@ export const styles = {
   autoLogoutPickerContainer: {
     flex: 1,
     margin: 4
+  },
+  txIDIcon: {},
+  customNodesInputWrap: {
+    borderWidth: 1,
+    borderColor: '#CCCCCC',
+    borderRadius: 3,
+    height: PLATFORM.deviceHeight * 0.13 - (PLATFORM.platform === 'android' ? 23 : 0) + (isIphoneX ? 60 : 0),
+    padding: 3
+  },
+  customNodesInput: {
+    height: 128,
+    color: THEME.COLORS.GRAY_1,
+    fontSize: 15,
+    fontFamily: THEME.FONTS.DEFAULT,
+    paddingVertical: 0
+  },
+  buttonsWrap: {
+    flexDirection: 'column'
+  },
+  primaryButton: {
+    marginBottom: 8
+  },
+  primaryButtonText: {
+    color: THEME.COLORS.WHITE
+  },
+  secondaryButtonText: {
+    color: THEME.COLORS.WHITE
+  },
+  placeholderText: {
+    color: THEME.COLORS.GRAY_2
+  },
+  placeholderUnderline: {
+    color: THEME.COLORS.TRANSPARENT
   }
 }
 

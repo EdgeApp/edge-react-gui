@@ -21,6 +21,7 @@ import request from './Request/reducer.js'
 import scan from './Scan/reducer'
 import { UniqueIdentifierModalReducer as uniqueIdentifierModal } from './SendConfirmation/components/UniqueIdentifierModal/UniqueIdentifierModalReducer.js'
 import sendConfirmation from './SendConfirmation/reducer'
+import settings from './Settings/reducer.js'
 import transactionDetails from './TransactionDetails/reducer'
 import transactionList from './TransactionList/reducer'
 import walletList from './WalletList/reducer'
@@ -39,6 +40,7 @@ export const currentScene = (state: string = '', action: Action) => {
 export const scenes = combineReducers({
   scan,
   sendConfirmation,
+  settings,
   changeMiningFee,
   transactionList,
   transactionDetails,

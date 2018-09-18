@@ -4,7 +4,7 @@ import type { EdgeAccount } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import { Actions } from 'react-native-router-flux'
 
-import type { Dispatch, GetState } from '../../../../../src/modules/ReduxTypes.js'
+import type { Dispatch, GetState, State } from '../../../../../src/modules/ReduxTypes.js'
 import * as actions from '../../../../actions/indexActions.js'
 import * as Constants from '../../../../constants/indexConstants.js'
 import s from '../../../../locales/strings.js'
@@ -15,17 +15,21 @@ import { displayErrorAlert } from '../../components/ErrorAlert/actions.js'
 import * as SETTINGS_ACTIONS from '../../Settings/action.js'
 import { newSpendingLimits } from '../../Settings/spendingLimits/SpendingLimitsReducer.js'
 
-const PREFIX = 'UI/Scenes/Settings/'
+export const PREFIX = 'UI/Scenes/Settings/'
 
-const SET_PIN_MODE_START = PREFIX + 'SET_PIN_MODE_START'
-const SET_PIN_START = PREFIX + 'SET_PIN_START'
+export const SET_PIN_MODE_START = PREFIX + 'SET_PIN_MODE_START'
+export const SET_PIN_START = PREFIX + 'SET_PIN_START'
 
-const SET_DEFAULT_FIAT_START = PREFIX + 'SET_DEFAULT_FIAT_START'
-const SET_MERCHANT_MODE_START = PREFIX + 'SET_MERCHANT_MODE_START'
+export const SET_DEFAULT_FIAT_START = PREFIX + 'SET_DEFAULT_FIAT_START'
+export const SET_MERCHANT_MODE_START = PREFIX + 'SET_MERCHANT_MODE_START'
 
-const SET_BLUETOOTH_MODE_START = PREFIX + 'SET_BLUETOOTH_MODE_START'
-const SET_BITCOIN_OVERRIDE_SERVER_START = PREFIX + 'SET_BITCOIN_OVERRIDE_SERVER_START'
+export const SET_BLUETOOTH_MODE_START = PREFIX + 'SET_BLUETOOTH_MODE_START'
+export const SET_BITCOIN_OVERRIDE_SERVER_START = PREFIX + 'SET_BITCOIN_OVERRIDE_SERVER_START'
 
+export const SET_ENABLE_CUSTOM_NODES = 'SET_ENABLE_CUSTOM_NODES'
+export const UPDATE_CUSTOM_NODES_LIST = 'UPDATE_CUSTOM_NODES_LIST'
+export const SET_CUSTOM_NODES_MODAL_VISIBILITY = 'SET_CUSTOM_NODES_MODAL_VISIBILITY'
+export const UPDATE_CUSTOM_NODES_PROCESSING = 'UPDATE_CUSTOM_NODES_PROCESSING'
 export const SELECT_DEFAULT_FIAT = PREFIX + 'SELECT_DEFAULT_FIAT'
 
 export const setPINModeRequest = (pinMode: boolean) => (dispatch: Dispatch, getState: GetState) => {
@@ -161,8 +165,73 @@ export const setDenominationKeyRequest = (currencyCode: string, denominationKey:
 
 export const setBitcoinOverrideServerRequest = (overrideServer: string) => (dispatch: Dispatch) => {
   dispatch(setBitcoinOverrideServerStart(overrideServer))
-
   dispatch(SETTINGS_ACTIONS.setBitcoinOverrideServer(overrideServer))
+}
+
+export function updateIsSetCustomNodesModalVisible (isSetCustomNodesModalVisible: boolean) {
+  return {
+    type: SET_CUSTOM_NODES_MODAL_VISIBILITY,
+    data: { isSetCustomNodesModalVisible }
+  }
+}
+
+export const enableCustomNodes = (currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
+  const state: State = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  const onError = e => console.log(e)
+  return ACCOUNT_SETTINGS.setIsCustomNodesEnabled(account, currencyCode, true)
+    .then(() => {
+      dispatch(setIsCustomNodesEnabled(currencyCode, true))
+    })
+    .catch(onError)
+}
+
+export const disableCustomNodes = (currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
+  const state: State = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  const onError = e => console.log(e)
+  return ACCOUNT_SETTINGS.setIsCustomNodesEnabled(account, currencyCode, false)
+    .then(() => {
+      dispatch(setIsCustomNodesEnabled(currencyCode, false))
+    })
+    .catch(onError)
+}
+
+export function setIsCustomNodesEnabled (currencyCode: string, isEnabled: boolean) {
+  return {
+    type: SET_ENABLE_CUSTOM_NODES,
+    data: { currencyCode, isEnabled }
+  }
+}
+
+export const saveCustomNodesList = (currencyCode: string, nodesList: Array<string>) => (dispatch: Dispatch, getState: GetState) => {
+  const state: State = getState()
+  dispatch(updateCustomNodesProcessing(true))
+  const account = CORE_SELECTORS.getAccount(state)
+
+  // $FlowFixMe
+  return ACCOUNT_SETTINGS.setCustomNodesList(account, currencyCode, nodesList)
+    .then(() => {
+      dispatch(updateCustomNodesList(currencyCode, nodesList))
+    })
+    .catch(e => {
+      console.log(e)
+      dispatch(updateCustomNodesProcessing(false))
+    })
+}
+
+export function updateCustomNodesList (currencyCode: string, nodesList: Array<string>) {
+  return {
+    type: UPDATE_CUSTOM_NODES_LIST,
+    data: { currencyCode, nodesList }
+  }
+}
+
+export const updateCustomNodesProcessing = (isSetCustomNodesProcessing: boolean) => {
+  return {
+    type: UPDATE_CUSTOM_NODES_PROCESSING,
+    data: { isSetCustomNodesProcessing }
+  }
 }
 
 // touch id interaction

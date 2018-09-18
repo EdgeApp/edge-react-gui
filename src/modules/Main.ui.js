@@ -90,6 +90,7 @@ import Scan from './UI/scenes/Scan/ScanConnector'
 import SendConfirmation from './UI/scenes/SendConfirmation/index'
 import SendConfirmationOptions from './UI/scenes/SendConfirmation/SendConfirmationOptionsConnector.js'
 import CurrencySettings from './UI/scenes/Settings/CurrencySettingsConnector'
+import CurrencySettingsTitleConnector from './UI/scenes/Settings/CurrencySettingsTitleConnector.js'
 import DefaultFiatSettingConnector from './UI/scenes/Settings/DefaultFiatSettingConnector'
 import SettingsOverview from './UI/scenes/Settings/SettingsOverviewConnector'
 import SpendingLimitsConnector from './UI/scenes/SpendingLimits/SpendingLimitsConnector.js'
@@ -655,18 +656,19 @@ export default class Main extends Component<Props, State> {
   renderCurrencySettings = () => {
     const settings = []
     for (const key in Constants.CURRENCY_SETTINGS) {
+      console.log('currencySettings key: ', key)
       const { pluginName, currencyCode } = Constants.CURRENCY_SETTINGS[key]
-      const title = s.strings[`title_${pluginName}_settings`]
+      console.log('pluginName is: ', pluginName)
       settings.push(
         <Scene
-          key={key}
-          pluginName={pluginName}
           currencyCode={currencyCode}
+          key={key}
           navTransparent={true}
           component={CurrencySettings}
-          renderTitle={this.renderTitle(title || pluginName)}
+          renderTitle={<CurrencySettingsTitleConnector key={key} cryptoKey={key} pluginName={pluginName} currencyCode={currencyCode} />}
           renderLeftButton={this.renderBackButton()}
           renderRightButton={this.renderEmptyButton()}
+          pluginName={pluginName}
         />
       )
     }
