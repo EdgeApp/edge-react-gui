@@ -2,6 +2,7 @@
 
 import { StyleSheet } from 'react-native'
 
+import { scale } from '../../../../lib/scaling.js'
 import THEME from '../../../../theme/variables/airbitz'
 import { PLATFORM } from '../../../../theme/variables/platform'
 
@@ -23,7 +24,7 @@ export const styles = {
   },
   visibleModal: {
     zIndex: 1,
-    paddingBottom: 14,
+    paddingBottom: scale(14),
     borderRadius: 3,
     backgroundColor: THEME.COLORS.WHITE,
     width: (PLATFORM.deviceWidth * 3) / 4
@@ -31,7 +32,7 @@ export const styles = {
   modalBox: {
     alignItems: 'stretch',
     // height: (screenDimensions.height) / 3,
-    paddingHorizontal: 15,
+    paddingHorizontal: scale(15),
     flexDirection: 'column',
     justifyContent: 'flex-start'
   },
@@ -43,44 +44,44 @@ export const styles = {
     zIndex: 200
   },
   exitRowEmpty: {
-    height: 30
+    height: scale(30)
   },
   exitButton: {
     backgroundColor: 'transparent',
-    width: 30,
-    height: 30,
+    width: scale(30),
+    height: scale(30),
     alignItems: 'center',
     justifyContent: 'center'
   },
   exitText: {
-    fontSize: 18,
+    fontSize: scale(18),
     backgroundColor: 'transparent',
     color: THEME.COLORS.GRAY_1
   },
   iconWrapper: {},
   modalHeaderIconWrapBottom: {
     position: 'relative',
-    top: 27,
+    top: scale(27),
     borderRadius: 27,
-    borderWidth: 2,
+    borderWidth: scale(2),
     borderColor: THEME.COLORS.SECONDARY,
     backgroundColor: THEME.COLORS.WHITE,
-    height: 54,
-    width: 54,
+    height: scale(54),
+    width: scale(54),
     zIndex: 2,
     alignItems: 'center',
     justifyContent: 'space-around'
   },
   modalHeaderIconWrapTop: {
     position: 'relative',
-    top: 3,
-    left: 3,
+    top: scale(3),
+    left: scale(3),
     borderRadius: 27,
     backgroundColor: THEME.COLORS.WHITE,
     zIndex: 100,
     elevation: 100,
-    height: 48,
-    width: 48,
+    height: scale(48),
+    width: scale(48),
     overflow: 'hidden'
   },
 
@@ -90,28 +91,28 @@ export const styles = {
     justifyContent: 'space-between'
   },
   modalTopTextWrap: {
-    padding: 10,
-    paddingBottom: 4
+    padding: scale(10),
+    paddingBottom: scale(4)
   },
   modalTopText: {
     textAlign: 'center',
     color: THEME.COLORS.PRIMARY,
-    fontSize: 16
+    fontSize: scale(16)
   },
   modalTopSubtext: {
-    fontSize: 14,
+    fontSize: scale(14),
     color: THEME.COLORS.GRAY_1,
     textAlign: 'center',
-    paddingTop: 4
+    paddingTop: scale(4)
   },
   modalMiddle: {
     flexDirection: 'column',
     alignItems: 'stretch',
     justifyContent: 'center',
-    paddingTop: 4
+    paddingTop: scale(4)
   },
   modalBottom: {
-    marginTop: 12,
+    marginTop: scale(12),
     flexDirection: 'row',
     alignSelf: 'flex-end',
     alignItems: 'flex-end'
@@ -124,7 +125,7 @@ export const styles = {
     alignSelf: 'flex-end'
   },
   stylizedButton: {
-    height: 44,
+    height: scale(44),
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
@@ -132,7 +133,7 @@ export const styles = {
   },
   stylizedButtonText: {
     color: THEME.COLORS.WHITE,
-    fontSize: 16
+    fontSize: scale(16)
   },
 
   cancelButtonWrap: {
@@ -143,7 +144,7 @@ export const styles = {
   doneButtonWrap: {
     backgroundColor: THEME.COLORS.SECONDARY,
     alignSelf: 'flex-end',
-    marginLeft: 4
+    marginLeft: scale(4)
   },
 
   cancelUnderlay: {

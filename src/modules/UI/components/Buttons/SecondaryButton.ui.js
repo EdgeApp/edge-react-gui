@@ -14,7 +14,7 @@ class Text extends Component<TextProps> {
   render () {
     const { children, style, ...props } = this.props
     return (
-      <RNText numberOfLines={1} ellipsizeMode={'middle'} style={[styles.buttonText, styles.secondaryButtonText, style]} {...props}>
+      <RNText numberOfLines={1} ellipsizeMode={'middle'} style={[styles.buttonTextScaled, styles.secondaryButtonText, style]} {...props}>
         {children}
       </RNText>
     )
