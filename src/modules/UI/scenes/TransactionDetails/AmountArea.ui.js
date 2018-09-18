@@ -10,7 +10,7 @@ import { sprintf } from 'sprintf-js'
 import s from '../../../../locales/strings.js'
 import THEME from '../../../../theme/variables/airbitz'
 import * as UTILS from '../../../utils'
-import { PrimaryButtonScaled } from '../../components/Buttons'
+import { PrimaryButton } from '../../components/Buttons'
 import FormattedText from '../../components/FormattedText'
 import styles from './style'
 
@@ -202,9 +202,9 @@ class AmountArea extends Component {
         </View>
         <View style={[styles.footerArea]}>
           <View style={[styles.buttonArea]}>
-            <PrimaryButtonScaled style={[styles.saveButton]} onPress={this.props.onPressFxn}>
-              <PrimaryButtonScaled.Text>{s.strings.string_save}</PrimaryButtonScaled.Text>
-            </PrimaryButtonScaled>
+            <PrimaryButton style={[styles.saveButton]} onPress={this.props.onPressFxn}>
+              <PrimaryButton.Text>{s.strings.string_save}</PrimaryButton.Text>
+            </PrimaryButton>
           </View>
           {this.props.txExplorerUrl ? (
             <TouchableWithoutFeedback onPress={this.props.onPressAdvancedDetailsButton} style={[styles.advancedTxArea]}>
