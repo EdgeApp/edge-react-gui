@@ -2,14 +2,16 @@
 
 import { combineReducers } from 'redux'
 
-import * as ACTION from './action'
-
 const usersView = (state = false, action) => {
   switch (action.type) {
-    case ACTION.OPEN_SELECT_USER:
+    case 'OPEN_SELECT_USER': {
       return true
-    case ACTION.CLOSE_SELECT_USER:
+    }
+
+    case 'CLOSE_SELECT_USER': {
       return false
+    }
+
     default:
       return state
   }
@@ -17,10 +19,14 @@ const usersView = (state = false, action) => {
 
 const selectedUser = (state = null, action) => {
   switch (action.type) {
-    case ACTION.LIST_USERS_SIDE_MENU:
+    case 'LIST_USER_USER_SIDE_MENU': {
       return action.data[0]
-    case ACTION.SELECT_USERS_SIDE_MENU:
+    }
+
+    case 'SELECT_USERS_SIDE_MENU': {
       return action.id
+    }
+
     default:
       return state
   }

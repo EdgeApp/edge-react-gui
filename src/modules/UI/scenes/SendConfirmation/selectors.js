@@ -22,7 +22,6 @@ export type GuiMakeSpendInfo = {
 }
 
 export type SendConfirmationState = {
-  isKeyboardVisible: boolean,
   forceUpdateGuiCounter: number,
   destination: string,
   address: string,

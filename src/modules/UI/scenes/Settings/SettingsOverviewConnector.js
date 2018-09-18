@@ -3,7 +3,6 @@
 import type { EdgeAccount } from 'edge-core-js'
 import { connect } from 'react-redux'
 
-import * as actions from '../../../../actions/indexActions.js'
 import * as Constants from '../../../../constants/indexConstants'
 import type { Dispatch, State } from '../../../../modules/ReduxTypes'
 import * as CORE_SELECTORS from '../../../Core/selectors'
@@ -45,7 +44,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   lockSettings: () => dispatch(lockSettings()),
   dispatchUpdateEnableTouchIdEnable: (arg: boolean, account: EdgeAccount) => dispatch(updateTouchIdEnabled(arg, account)),
   sendLogs: (text: string) => dispatch(sendLogs(text)),
-  resetConfirmPasswordError: (arg: Object) => dispatch(actions.dispatchActionObject(Constants.SET_CONFIRM_PASSWORD_ERROR, arg)),
+  resetConfirmPasswordError: (arg: Object) => dispatch({ type: 'setConfirmPasswordError', data: arg }),
   resetSendLogsStatus: () => dispatch(resetSendLogsStatus()),
   onTogglePinLoginEnabled: (enableLogin: boolean) => dispatch(togglePinLoginEnabled(enableLogin)),
   onConfirmRestoreWallets: () => dispatch(restoreWallets())

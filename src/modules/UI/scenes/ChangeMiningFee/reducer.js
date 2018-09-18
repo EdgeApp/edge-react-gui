@@ -2,16 +2,18 @@
 
 import { combineReducers } from 'redux'
 
-import * as Constants from '../../../../constants/indexConstants'
 import type { Action } from '../../../ReduxTypes.js'
-import * as ACTION from '../WalletList/components/WalletOptions/action'
 
 const isCustomFeeVisible = (state: boolean = false, action: Action) => {
   switch (action.type) {
-    case ACTION.OPEN_MODAL_VALUE(Constants.CUSTOM_FEES):
+    case 'OPEN_CUSTOM_FEES_MODAL': {
       return true
-    case ACTION.CLOSE_MODAL_VALUE(Constants.CUSTOM_FEES):
+    }
+
+    case 'CLOSE_CUSTOM_FEES_MODAL': {
       return false
+    }
+
     default:
       return state
   }

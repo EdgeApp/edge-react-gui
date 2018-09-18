@@ -1,7 +1,6 @@
 // @flow
 
 import type { Action } from '../../../../../ReduxTypes.js'
-import { ACTIVATED, DEACTIVATED, RESET, UNIQUE_IDENTIFIER_CHANGED } from './UniqueIdentifierModalActions.js'
 
 export type State = {
   isActive: boolean,
@@ -13,28 +12,32 @@ export const initialState = {
 }
 export const UniqueIdentifierModalReducer = (state: State = initialState, action: Action) => {
   switch (action.type) {
-    case ACTIVATED: {
+    case 'UNIQUE_IDENTIFIER_MODAL/ACTIVATED': {
       return {
         ...state,
         isActive: true
       }
     }
-    case DEACTIVATED: {
+
+    case 'UNIQUE_IDENTIFIER_MODAL/DEACTIVATED': {
       return {
         ...state,
         isActive: false
       }
     }
-    case UNIQUE_IDENTIFIER_CHANGED: {
+
+    case 'UNIQUE_IDENTIFIER_MODAL/UNIQUE_IDENTIFIER_CHANGED': {
       return {
         ...state,
         // $FlowFixMe
         uniqueIdentifier: action.data.uniqueIdentifier
       }
     }
-    case RESET: {
+
+    case 'UNIQUE_IDENTIFIER_MODAL/RESET': {
       return initialState
     }
+
     default:
       return state
   }

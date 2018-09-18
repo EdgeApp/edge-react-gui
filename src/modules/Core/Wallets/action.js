@@ -8,16 +8,13 @@ import * as SETTINGS_SELECTORS from '../../UI/Settings/selectors'
 import { getReceiveAddresses } from '../../utils.js'
 import * as CORE_SELECTORS from '../selectors'
 
-export const PREFIX = 'Core/Wallets/'
-export const UPDATE_WALLETS = PREFIX + 'UPDATE_WALLETS'
-
 export const updateWallets = (
   activeWalletIds: Array<string>,
   archivedWalletIds: Array<string>,
   currencyWallets: { [id: string]: EdgeCurrencyWallet },
   receiveAddresses: { [id: string]: EdgeReceiveAddress }
 ) => ({
-  type: UPDATE_WALLETS,
+  type: 'Core/Wallets/UPDATE_WALLETS',
   data: {
     activeWalletIds,
     archivedWalletIds,

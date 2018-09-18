@@ -1,11 +1,7 @@
 // @flow
 
-import { ACCOUNT_INIT_COMPLETE } from '../../constants/indexConstants.js'
 import type { Action } from '../../modules/ReduxTypes.js'
-import { CHECK_PASSWORD_SUCCESS, REQUEST_CHANGE_PASSWORD } from '../../modules/UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
-import { SET_SETTINGS_LOCK } from '../../modules/UI/Settings/action.js'
 import { MILLISECONDS_PER_DAY, daysBetween } from '../../modules/utils.js'
-import { PASSWORD_REMINDER_POSTPONED } from './indexPasswordReminder.js'
 
 export const INITIAL_NON_PASSWORD_DAYS_LIMIT = 2
 export const INITIAL_NON_PASSWORD_LOGINS_LIMIT = 2
@@ -194,7 +190,7 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
   }
 
   // $FlowFixMe
-  if ((action.type === 'LOGIN' || action.type === ACCOUNT_INIT_COMPLETE) && action.data.account.newAccount) {
+  if ((action.type === 'LOGIN' || action.type === 'accountInitComplete') && action.data.account.newAccount) {
     const now = Date.now()
     translatedAction = {
       type: 'NEW_ACCOUNT_LOGIN',
@@ -206,7 +202,7 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
   }
 
   // $FlowFixMe
-  if ((action.type === 'LOGIN' || action.type === ACCOUNT_INIT_COMPLETE) && action.data.account.passwordLogin) {
+  if ((action.type === 'LOGIN' || action.type === 'accountInitComplete') && action.data.account.passwordLogin) {
     const now = Date.now()
     translatedAction = {
       type: 'PASSWORD_LOGIN',
@@ -220,7 +216,7 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
   }
 
   // $FlowFixMe
-  if ((action.type === 'LOGIN' || action.type === ACCOUNT_INIT_COMPLETE) && !(action.data.account.passwordLogin || action.data.account.newAccount)) {
+  if ((action.type === 'LOGIN' || action.type === 'accountInitComplete') && !(action.data.account.passwordLogin || action.data.account.newAccount)) {
     translatedAction = {
       type: 'NON_PASSWORD_LOGIN',
       data: {
@@ -231,7 +227,7 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
     }
   }
 
-  if (action.type === SET_SETTINGS_LOCK && action.data === false) {
+  if (action.type === 'UI/Settings/SET_SETTINGS_LOCK' && action.data === false) {
     translatedAction = {
       type: 'PASSWORD_USED',
       data: {
@@ -247,7 +243,7 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
       }
     }
   }
-  if (action.type === CHECK_PASSWORD_SUCCESS) {
+  if (action.type === 'PasswordReminderModal/CHECK_PASSWORD_SUCCESS') {
     translatedAction = {
       type: 'PASSWORD_USED',
       data: {
@@ -256,14 +252,14 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
     }
   }
 
-  if (action.type === PASSWORD_REMINDER_POSTPONED) {
+  if (action.type === 'PASSWORD_REMINDER/PASSWORD_REMINDER_POSTPONED') {
     translatedAction = {
       type: 'PASSWORD_REMINDER_POSTPONED',
       data: {}
     }
   }
 
-  if (action.type === REQUEST_CHANGE_PASSWORD) {
+  if (action.type === 'PasswordReminderModal/REQUEST_CHANGE_PASSWORD') {
     translatedAction = {
       type: 'REQUEST_CHANGE_PASSWORD',
       data: {}

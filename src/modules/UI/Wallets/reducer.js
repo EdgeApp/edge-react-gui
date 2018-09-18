@@ -4,12 +4,8 @@ import type { EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeReceiveAd
 import _ from 'lodash'
 import { combineReducers } from 'redux'
 
-import * as Constants from '../../../constants/indexConstants.js'
 import type { GuiWallet } from '../../../types.js'
-import { UPDATE_WALLETS } from '../../Core/Wallets/action.js'
 import type { Action } from '../../ReduxTypes.js'
-import * as ADD_TOKEN_ACTION from '../scenes/AddToken/action.js'
-import * as ACTION from './action'
 
 export type WalletId = string
 export type WalletIds = Array<WalletId>
@@ -19,7 +15,7 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
   if (!action.data) return state
 
   switch (action.type) {
-    case Constants.ACCOUNT_INIT_COMPLETE: {
+    case 'accountInitComplete': {
       const wallets = action.data.currencyWallets
       const out = {}
 
@@ -37,7 +33,7 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
 
       return out
     }
-    case UPDATE_WALLETS: {
+    case 'Core/Wallets/UPDATE_WALLETS': {
       const wallets = action.data.currencyWallets
       const out = {}
       for (const walletId of Object.keys(wallets)) {
@@ -58,7 +54,7 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
       return out
     }
 
-    case ACTION.UPDATE_WALLET_ENABLED_TOKENS: {
+    case 'UPDATE_WALLET_ENABLED_TOKENS': {
       const { walletId, tokens } = action.data
       if (state[walletId] !== undefined) {
         return {
@@ -73,7 +69,7 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
       }
     }
 
-    case ADD_TOKEN_ACTION.ADD_NEW_CUSTOM_TOKEN_SUCCESS: {
+    case 'ADD_NEW_CUSTOM_TOKEN_SUCCESS': {
       const { enabledTokens, walletId } = action.data
       if (state[walletId] !== undefined) {
         return {
@@ -88,7 +84,7 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
       }
     }
 
-    case ACTION.ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS: {
+    case 'ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS': {
       const { coreWalletsToUpdate, oldCurrencyCode, tokenObj } = action.data
       // coreWalletsToUpdate are wallets with non-empty enabledTokens properties
       // receiving token will have to take on sending tokens enabledness
@@ -115,7 +111,7 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
       return state
     }
 
-    case ACTION.OVERWRITE_THEN_DELETE_TOKEN_SUCCESS: {
+    case 'OVERWRITE_THEN_DELETE_TOKEN_SUCCESS': {
       // adjust enabled tokens
       const { coreWalletsToUpdate, oldCurrencyCode } = action.data
       // coreWalletsToUpdate are wallets with non-empty enabledTokens properties
@@ -138,7 +134,7 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
       return state
     }
 
-    case ACTION.UPSERT_WALLETS: {
+    case 'UI/Wallets/UPSERT_WALLETS': {
       const { data } = action
       const wallets = data.wallets
       const out = { ...state }
@@ -160,7 +156,7 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
       return out
     }
 
-    case ACTION.REFRESH_RECEIVE_ADDRESS: {
+    case 'UI/Wallets/REFRESH_RECEIVE_ADDRESS': {
       const {
         data: { walletId, receiveAddress }
       } = action
@@ -179,10 +175,10 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
 }
 
 export const walletEnabledTokens = (state: any = {}, action: Action) => {
-  if (action.type === Constants.ACCOUNT_INIT_COMPLETE && action.data) {
+  if (action.type === 'accountInitComplete' && action.data) {
     return action.data.activeWalletIds
   }
-  if (action.type === UPDATE_WALLETS && action.data) {
+  if (action.type === 'Core/Wallets/UPDATE_WALLETS' && action.data) {
     return action.data.activeWalletIds
   }
 
@@ -193,14 +189,14 @@ export const walletLoadingProgress = (state: { [string]: Number } = {}, action: 
   if (!action.data) return state
   const { type, data } = action
   switch (type) {
-    case ACTION.INSERT_WALLET_IDS_FOR_PROGRESS:
+    case 'INSERT_WALLET_IDS_FOR_PROGRESS':
       const activeWalletIdList = data.activeWalletIds
       const activeWalletIdProgress = {}
       activeWalletIdList.map(item => {
         activeWalletIdProgress[item] = 0
       })
       return activeWalletIdProgress
-    case ACTION.UPDATE_WALLET_LOADING_PROGRESS:
+    case 'UPDATE_WALLET_LOADING_PROGRESS':
       // prevent backwards progress
       if (data.addressLoadingProgress < state[data.walletId]) return state
       return {
@@ -214,10 +210,10 @@ export const walletLoadingProgress = (state: { [string]: Number } = {}, action: 
 
 export const activeWalletIds = (state: WalletIds = [], action: Action) => {
   if (!action.data) return state
-  if (action.type === Constants.ACCOUNT_INIT_COMPLETE) {
+  if (action.type === 'accountInitComplete') {
     return action.data.activeWalletIds
   }
-  if (action.type === UPDATE_WALLETS) {
+  if (action.type === 'Core/Wallets/UPDATE_WALLETS') {
     return action.data.activeWalletIds
   }
 
@@ -226,10 +222,10 @@ export const activeWalletIds = (state: WalletIds = [], action: Action) => {
 
 export const archivedWalletIds = (state: WalletIds = [], action: Action) => {
   if (!action.data) return state
-  if (action.type === Constants.ACCOUNT_INIT_COMPLETE) {
+  if (action.type === 'accountInitComplete') {
     return action.data.archivedWalletIds
   }
-  if (action.type === UPDATE_WALLETS) {
+  if (action.type === 'Core/Wallets/UPDATE_WALLETS') {
     return action.data.archivedWalletIds
   }
 
@@ -239,13 +235,17 @@ export const archivedWalletIds = (state: WalletIds = [], action: Action) => {
 export const selectedWalletId = (state: WalletId = '', action: Action) => {
   if (!action.data) return state
   switch (action.type) {
-    case ACTION.SELECT_WALLET:
+    case 'UI/Wallets/SELECT_WALLET': {
       return action.data.walletId
-    case Constants.ACCOUNT_INIT_COMPLETE:
+    }
+
+    case 'accountInitComplete': {
       if (action.data.walletId) {
         return action.data.walletId
       }
       return state
+    }
+
     default:
       return state
   }
@@ -254,30 +254,40 @@ export const selectedWalletId = (state: WalletId = '', action: Action) => {
 export const selectedCurrencyCode = (state: string = '', action: Action) => {
   if (!action.data) return state
   switch (action.type) {
-    case ACTION.SELECT_WALLET:
+    case 'UI/Wallets/SELECT_WALLET': {
       return action.data.currencyCode
-    case Constants.ACCOUNT_INIT_COMPLETE:
+    }
+
+    case 'accountInitComplete': {
       if (action.data.currencyCode) {
         return action.data.currencyCode
       }
       return state
+    }
+
     default:
       return state
   }
 }
 
 export const addTokenPending = (state: boolean = false, action: Action) => {
-  // if (!action.data) return state
-  const type = action.type
-  switch (type) {
-    case ADD_TOKEN_ACTION.ADD_TOKEN_START:
+  switch (action.type) {
+    case 'ADD_TOKEN_START': {
       return true
-    case ADD_TOKEN_ACTION.ADD_TOKEN_SUCCESS:
+    }
+
+    case 'ADD_TOKEN_SUCCESS': {
       return false
-    case ADD_TOKEN_ACTION.ADD_NEW_CUSTOM_TOKEN_SUCCESS:
+    }
+
+    case 'ADD_NEW_CUSTOM_TOKEN_SUCCESS': {
       return false
-    case ADD_TOKEN_ACTION.ADD_NEW_CUSTOM_TOKEN_FAILURE:
+    }
+
+    case 'ADD_NEW_CUSTOM_TOKEN_FAILURE': {
       return false
+    }
+
     default:
       return state
   }
@@ -287,10 +297,14 @@ export const manageTokensPending = (state: boolean = false, action: Action) => {
   if (!action.data) return state
   const type = action.type
   switch (type) {
-    case ACTION.MANAGE_TOKENS_START:
+    case 'MANAGE_TOKENS_START': {
       return true
-    case ACTION.MANAGE_TOKENS_SUCCESS:
+    }
+
+    case 'MANAGE_TOKENS_SUCCESS': {
       return false
+    }
+
     default:
       return state
   }

@@ -6,12 +6,7 @@ import _ from 'lodash'
 import * as Constants from '../../../constants/indexConstants.js'
 import type { CustomTokenInfo } from '../../../types'
 import { CORE_DEFAULTS, LOCAL_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_DEFAULTS } from '../../Core/Account/settings.js'
-import { SEND_LOGS_FAILURE, SEND_LOGS_PENDING, SEND_LOGS_REQUEST, SEND_LOGS_SUCCESS } from '../../Logs/action'
 import type { Action } from '../../ReduxTypes'
-import { UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL } from '../components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalActions.js'
-import * as ADD_TOKEN_ACTION from '../scenes/AddToken/action.js'
-import * as WALLET_ACTION from '../Wallets/action'
-import * as ACTION from './action.js'
 import { spendingLimits } from './spendingLimits/SpendingLimitsReducer.js'
 
 export const initialState = {
@@ -172,7 +167,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
   const { type, data = {} } = action
 
   switch (type) {
-    case Constants.ACCOUNT_INIT_COMPLETE: {
+    case 'accountInitComplete': {
       const {
         touchIdInfo,
         account,
@@ -238,11 +233,16 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       })
       return newState
     }
-    case Constants.SET_CONFIRM_PASSWORD_ERROR: {
+
+    case 'setConfirmPasswordError': {
       const { confirmPasswordError } = data
-      return { ...state, confirmPasswordError: confirmPasswordError }
+      return {
+        ...state,
+        confirmPasswordError: confirmPasswordError
+      }
     }
-    case ACTION.SET_LOGIN_STATUS: {
+
+    case 'UI/Settings/SET_LOGIN_STATUS': {
       const { loginStatus } = data
       return {
         ...state,
@@ -250,7 +250,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case ACTION.TOGGLE_PIN_LOGIN_ENABLED: {
+    case 'UI/Settings/TOGGLE_PIN_LOGIN_ENABLED': {
       const { pinLoginEnabled } = data
       return {
         ...state,
@@ -258,7 +258,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case ACTION.SET_CUSTOM_TOKENS: {
+    case 'UI/Settings/SET_CUSTOM_TOKENS': {
       const { customTokens } = data
       return {
         ...state,
@@ -266,7 +266,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case WALLET_ACTION.UPDATE_EXISTING_TOKEN_SUCCESS: {
+    case 'UPDATE_EXISTING_TOKEN_SUCCESS': {
       const { tokenObj } = data
       const customTokenSettings = state.customTokens
       const newCustomTokenSettings = customTokenSettings.map(item => {
@@ -284,7 +284,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       return updatedSettings
     }
 
-    case WALLET_ACTION.OVERWRITE_THEN_DELETE_TOKEN_SUCCESS: {
+    case 'OVERWRITE_THEN_DELETE_TOKEN_SUCCESS': {
       // where oldCurrencyCode is the sender, and tokenObj.currencyCode is the receiver (new code)
       const receiverCode = data.tokenObj.currencyCode
       const senderCode = data.oldCurrencyCode
@@ -316,7 +316,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       return updatedSettings
     }
 
-    case WALLET_ACTION.DELETE_CUSTOM_TOKEN_SUCCESS: {
+    case 'DELETE_CUSTOM_TOKEN_SUCCESS': {
       const { currencyCode } = data
       const customTokenSettings = state.customTokens
       const newCustomTokenSettings = customTokenSettings.map(item => {
@@ -333,7 +333,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case ADD_TOKEN_ACTION.SET_TOKEN_SETTINGS: {
+    case 'SET_TOKEN_SETTINGS': {
       const { currencyCode } = data
       return {
         ...state,
@@ -341,7 +341,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case ADD_TOKEN_ACTION.ADD_NEW_CUSTOM_TOKEN_SUCCESS: {
+    case 'ADD_NEW_CUSTOM_TOKEN_SUCCESS': {
       const { tokenObj, newCurrencyCode, settings } = data
       const customTokens = settings.customTokens
       return {
@@ -351,7 +351,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case WALLET_ACTION.ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS: {
+    case 'ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS': {
       const { tokenObj, code, setSettings, oldCurrencyCode } = data
       const customTokens = setSettings.customTokens
       const oldCurrencyCodeIndex = _.findIndex(customTokens, item => item.currencyCode === oldCurrencyCode)
@@ -370,7 +370,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case ACTION.SET_DENOMINATION_KEY: {
+    case 'UI/Settings/SET_DENOMINATION_KEY': {
       const currencyCode = data.currencyCode
       const denomination = data.denominationKey
       const currencyState = state[currencyCode]
@@ -382,24 +382,26 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         }
       }
     }
-    case Constants.DISABLE_OTP_RESET: {
+
+    case 'disableOTPReset': {
       return {
         ...state,
         otpResetDate: null,
         otpResetPending: false
       }
     }
-    case ACTION.UPDATE_SETTINGS: {
+
+    case 'UI/Settings/UPDATE_SETTINGS': {
       const { settings } = data
       return settings
     }
 
-    case ACTION.LOAD_SETTINGS: {
+    case 'UI/Settings/LOAD_SETTINGS': {
       const { settings } = data
       return settings
     }
 
-    case ACTION.SET_PIN_MODE: {
+    case 'UI/Settings/SET_PIN_MODE': {
       const { pinMode } = data
       return {
         ...state,
@@ -407,7 +409,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case ACTION.SET_OTP_MODE: {
+    case 'UI/Settings/SET_OTP_MODE': {
       const { otpMode } = data
       return {
         ...state,
@@ -415,7 +417,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case ACTION.SET_AUTO_LOGOUT_TIME: {
+    case 'UI/Settings/SET_AUTO_LOGOUT_TIME': {
       const { autoLogoutTimeInSeconds } = data
       return {
         ...state,
@@ -423,30 +425,35 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case SEND_LOGS_REQUEST: {
+    case 'Logs/SEND_LOGS_REQUEST': {
       return {
         ...state,
         sendLogsStatus: Constants.REQUEST_STATUS.LOADING
       }
     }
-    case SEND_LOGS_FAILURE:
+
+    case 'Logs/SEND_LOGS_FAILURE': {
       return {
         ...state,
         sendLogsStatus: Constants.REQUEST_STATUS.FAILURE
       }
+    }
 
-    case SEND_LOGS_SUCCESS:
+    case 'Logs/SEND_LOGS_SUCCESS': {
       return {
         ...state,
         sendLogsStatus: Constants.REQUEST_STATUS.SUCCESS
       }
-    case SEND_LOGS_PENDING:
+    }
+
+    case 'Logs/SEND_LOGS_PENDING': {
       return {
         ...state,
         sendLogsStatus: Constants.REQUEST_STATUS.PENDING
       }
+    }
 
-    case ACTION.SET_DEFAULT_FIAT: {
+    case 'UI/Settings/SET_DEFAULT_FIAT': {
       const { defaultFiat } = data
       return {
         ...state,
@@ -455,7 +462,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case ACTION.SET_MERCHANT_MODE: {
+    case 'UI/Settings/SET_MERCHANT_MODE': {
       const { merchantMode } = data
       return {
         ...state,
@@ -463,7 +470,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case ACTION.SET_BLUETOOTH_MODE: {
+    case 'UI/Settings/SET_BLUETOOTH_MODE': {
       const { bluetoothMode } = data
       return {
         ...state,
@@ -471,7 +478,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case ACTION.SET_BITCOIN_OVERRIDE_SERVER: {
+    case 'UI/Settings/SET_BITCOIN_OVERRIDE_SERVER': {
       const { overrideServer } = data
       const BTC = state['BTC']
       return {
@@ -483,14 +490,14 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case ACTION.SET_SETTINGS_LOCK: {
+    case 'UI/Settings/SET_SETTINGS_LOCK': {
       return {
         ...state,
         changesLocked: data
       }
     }
 
-    case ACTION.OTP_SETTINGS: {
+    case 'UI/Settings/OTP_SETTINGS': {
       return {
         ...state,
         isOtpEnabled: data.enabled,
@@ -499,7 +506,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case ACTION.TOUCH_ID_SETTINGS: {
+    case 'UI/Settings/TOUCH_ID_SETTINGS': {
       if (data) {
         return {
           ...state,
@@ -515,32 +522,32 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case ACTION.CHANGE_TOUCH_ID_SETTINGS: {
+    case 'UI/Settings/CHANGE_TOUCH_ID_SETTINGS': {
       return {
         ...state,
         isTouchEnabled: data.isTouchEnabled
       }
     }
 
-    case ACTION.ADD_CURRENCY_PLUGIN: {
+    case 'UI/Settings/ADD_CURRENCY_PLUGIN': {
       return currencyPLuginUtil(state, data)
     }
 
-    case ACTION.SET_ACCOUNT_BALANCE_VISIBILITY: {
+    case 'UI/Settings/SET_ACCOUNT_BALANCE_VISIBILITY': {
       return {
         ...state,
         isAccountBalanceVisible: data.isAccountBalanceVisible
       }
     }
 
-    case ACTION.UPDATE_WALLET_FIAT_BALANCE_VISIBILITY: {
+    case 'UPDATE_WALLET_FIAT_BALANCE_VISIBILITY': {
       return {
         ...state,
         isWalletFiatBalanceVisible: data.isWalletFiatBalanceVisible
       }
     }
 
-    case UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL: {
+    case 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL': {
       const { level, wasShown } = data
       return {
         ...state,

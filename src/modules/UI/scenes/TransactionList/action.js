@@ -11,25 +11,44 @@ import * as UI_SELECTORS from '../../../UI/selectors.js'
 import * as UTILS from '../../../utils'
 import { displayTransactionAlert } from '../../components/TransactionAlert/actions'
 
-// import type { TransactionListTx } from './TransactionList.ui.js'
-const PREFIX = 'UI/Scenes/TransactionList/'
-export const UPDATE_TRANSACTIONS_LIST = PREFIX + 'UPDATE_TRANSACTIONS_LIST'
-export const DELETE_TRANSACTIONS_LIST = PREFIX + 'DELETE_TRANSACTIONS_LIST'
-export const UPDATE_WALLET_TRANSACTIONS = PREFIX + 'UPDATE_WALLET_TRANSACTIONS'
-export const TRANSACTIONS_SEARCH_VISIBLE = PREFIX + 'TRANSACTIONS_SEARCH_VISIBLE'
-export const TRANSACTIONS_SEARCH_HIDDEN = PREFIX + 'TRANSACTIONS_SEARCH_HIDDEN'
-export const UPDATE_CONTACTS_LIST = PREFIX + 'UPDATE_CONTACTS_LIST'
-export const UPDATE_SEARCH_RESULTS = PREFIX + 'UPDATE_SEARCH_RESULTS'
-export const ENABLE_UPDATING_BALANCE = PREFIX + 'ENABLE_UPDATING_BALANCE'
-export const DISABLE_UPDATING_BALANCE = PREFIX + 'DISABLE_UPDATING_BALANCE'
-export const TOGGLE_UPDATING_BALANCE = PREFIX + 'TOGGLE_UPDATING_BALANCE'
-export const TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL = PREFIX + 'TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL'
-export const UPDATE_TRANSACTIONS = PREFIX + 'UPDATE_TRANSACTIONS'
-export const GET_TRANSACTIONS = PREFIX + 'GET_TRANSACTIONS'
-export const START_TRANSACTIONS_LOADING = PREFIX + 'START_TRANSACTIONS_LOADING'
-export const END_TRANSACTIONS_LOADING = PREFIX + 'END_TRANSACTIONS_LOADING'
+export const updateTransactions = (transactionUpdate: {
+  numTransactions: number,
+  transactions: Array<TransactionListTx>,
+  currentCurrencyCode: string,
+  currentWalletId: string,
+  currentEndIndex: number
+}) => ({
+  type: 'UI/Scenes/TransactionList/UPDATE_TRANSACTIONS',
+  data: transactionUpdate
+})
 
-export const CHANGED_TRANSACTIONS = PREFIX + 'CHANGED_TRANSACTIONS'
+export const updateBalance = () => ({
+  type: 'noop'
+})
+
+export const deleteTransactionsList = () => ({
+  type: 'UI/Scenes/TransactionList/DELETE_TRANSACTIONS_LIST'
+})
+
+export const transactionsSearchVisible = () => ({
+  type: 'UI/Scenes/TransactionList/TRANSACTIONS_SEARCH_VISIBLE'
+})
+
+export const transactionsSearchHidden = () => ({
+  type: 'UI/Scenes/TransactionList/TRANSACTIONS_SEARCH_HIDDEN'
+})
+
+export const updateContactsList = (data: any) => ({
+  type: 'UI/Scenes/TransactionList/UPDATE_CONTACTS_LIST',
+  data
+})
+
+export const updateSearchResults = (data: any) => ({
+  type: 'UI/Scenes/TransactionList/UPDATE_SEARCH_RESULTS',
+  data
+})
+
+export const CHANGED_TRANSACTIONS = 'UI/Scenes/TransactionList/CHANGED_TRANSACTIONS'
 export const SUBSEQUENT_TRANSACTION_BATCH_NUMBER = 30
 export const INITIAL_TRANSACTION_BATCH_NUMBER = 10
 
@@ -172,53 +191,4 @@ export const newTransactionsRequest = (walletId: string, edgeTransactions: Array
   dispatch(fetchTransactions(walletId, selectedCurrencyCode, options))
   if (!UTILS.isReceivedTransaction(edgeTransaction)) return
   dispatch(displayTransactionAlert(edgeTransaction))
-}
-
-export const updateTransactions = (transactionUpdate: {
-  numTransactions: number,
-  transactions: Array<TransactionListTx>,
-  currentCurrencyCode: string,
-  currentWalletId: string,
-  currentEndIndex: number
-}) => ({
-  type: UPDATE_TRANSACTIONS,
-  data: transactionUpdate
-})
-
-export const updateBalance = () => ({
-  type: 'noop'
-})
-
-export function deleteTransactionsList () {
-  return {
-    type: DELETE_TRANSACTIONS_LIST
-  }
-}
-
-export function transactionsSearchVisible () {
-  return {
-    type: TRANSACTIONS_SEARCH_VISIBLE
-  }
-}
-
-export function transactionsSearchHidden () {
-  return {
-    type: TRANSACTIONS_SEARCH_HIDDEN
-  }
-}
-
-// $FlowFixMe
-export function updateContactsList (data) {
-  return {
-    type: UPDATE_CONTACTS_LIST,
-    data
-  }
-}
-
-// $FlowFixMe
-export function updateSearchResults (data) {
-  return {
-    type: UPDATE_SEARCH_RESULTS,
-    data
-  }
 }

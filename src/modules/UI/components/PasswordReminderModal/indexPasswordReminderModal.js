@@ -1,8 +1,6 @@
 // @flow
 
 import {
-  CHECK_PASSWORD_SUCCESS,
-  REQUEST_CHANGE_PASSWORD,
   checkPassword,
   checkPasswordFail,
   checkPasswordStart,
@@ -13,7 +11,7 @@ import {
 } from './actions.js'
 import { PasswordReminderModal } from './PasswordReminderModal.ui.js'
 import { passwordReminderModalConnector } from './passwordReminderModalConnector.js'
-import { INVALID, IS_CHECKING, VERIFIED, initialState, passwordReminderModalReducer } from './passwordReminderModalReducer.js'
+import { initialState, passwordReminderModalReducer } from './passwordReminderModalReducer.js'
 import type { PasswordReminderModalState } from './passwordReminderModalReducer.js'
 
 export {
@@ -27,12 +25,7 @@ export {
   passwordReminderModalConnector,
   PasswordReminderModal,
   passwordReminderModalReducer,
-  CHECK_PASSWORD_SUCCESS,
-  setPasswordReminder,
-  IS_CHECKING,
-  VERIFIED,
-  INVALID,
-  REQUEST_CHANGE_PASSWORD
+  setPasswordReminder
 }
 
 export type { PasswordReminderModalState }

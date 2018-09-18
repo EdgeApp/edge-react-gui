@@ -1,7 +1,6 @@
 // @flow
 
-const PREFIX = 'ExchangeRates/'
-export const UPDATE_EXCHANGE_RATES = PREFIX + 'UPDATE_EXCHANGE_RATES'
+export const UPDATE_EXCHANGE_RATES = 'ExchangeRates/UPDATE_EXCHANGE_RATES'
 export const updateExchangeRates = () => ({
-  type: UPDATE_EXCHANGE_RATES
+  type: 'ExchangeRates/UPDATE_EXCHANGE_RATES'
 })

@@ -4,10 +4,14 @@ import type { Action } from '../../../../../ReduxTypes.js'
 
 export const privateSeedUnlocked = (state: boolean = false, action: Action) => {
   switch (action.type) {
-    case 'LOCK_WALLET_SEED':
+    case 'LOCK_WALLET_SEED': {
       return false
-    case 'UNLOCK_WALLET_SEED':
+    }
+
+    case 'UNLOCK_WALLET_SEED': {
       return true
+    }
+
     default:
       return state
   }
