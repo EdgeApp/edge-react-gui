@@ -12,25 +12,25 @@ export type PasswordReminderModalState = {
 
 export const passwordReminderModalReducer = (state: PasswordReminderModalState = initialState, action: Action) => {
   switch (action.type) {
-    case 'PasswordReminderModal/CHECK_PASSWORD_START': {
+    case 'PASSWORD_REMINDER_MODAL/CHECK_PASSWORD_START': {
       return {
         ...state,
         status: 'IS_CHECKING'
       }
     }
-    case 'PasswordReminderModal/CHECK_PASSWORD_SUCCESS': {
+    case 'PASSWORD_REMINDER_MODAL/CHECK_PASSWORD_SUCCESS': {
       return {
         ...state,
         status: 'VERIFIED'
       }
     }
-    case 'PasswordReminderModal/CHECK_PASSWORD_FAIL': {
+    case 'PASSWORD_REMINDER_MODAL/CHECK_PASSWORD_FAIL': {
       return {
         ...state,
         status: 'INVALID'
       }
     }
-    case 'PasswordReminderModal/PASSWORD_REMINDER_POSTPONED': {
+    case 'PASSWORD_REMINDER_MODAL/PASSWORD_REMINDER_POSTPONED': {
       return {
         ...state,
         status: null

@@ -18,37 +18,37 @@ export const updateTransactions = (transactionUpdate: {
   currentWalletId: string,
   currentEndIndex: number
 }) => ({
-  type: 'UI/Scenes/TransactionList/UPDATE_TRANSACTIONS',
+  type: 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS',
   data: transactionUpdate
 })
 
 export const updateBalance = () => ({
-  type: 'noop'
+  type: 'NOOP'
 })
 
 export const deleteTransactionsList = () => ({
-  type: 'UI/Scenes/TransactionList/DELETE_TRANSACTIONS_LIST'
+  type: 'UI/SCENES/TRANSACTION_LIST/DELETE_TRANSACTIONS_LIST'
 })
 
 export const transactionsSearchVisible = () => ({
-  type: 'UI/Scenes/TransactionList/TRANSACTIONS_SEARCH_VISIBLE'
+  type: 'UI/SCENES/TRANSACTION_LIST/TRANSACTIONS_SEARCH_VISIBLE'
 })
 
 export const transactionsSearchHidden = () => ({
-  type: 'UI/Scenes/TransactionList/TRANSACTIONS_SEARCH_HIDDEN'
+  type: 'UI/SCENES/TRANSACTION_LIST/TRANSACTIONS_SEARCH_HIDDEN'
 })
 
 export const updateContactsList = (data: any) => ({
-  type: 'UI/Scenes/TransactionList/UPDATE_CONTACTS_LIST',
+  type: 'UI/SCENES/TRANSACTION_LIST/UPDATE_CONTACTS_LIST',
   data
 })
 
 export const updateSearchResults = (data: any) => ({
-  type: 'UI/Scenes/TransactionList/UPDATE_SEARCH_RESULTS',
+  type: 'UI/SCENES/TRANSACTION_LIST/UPDATE_SEARCH_RESULTS',
   data
 })
 
-export const CHANGED_TRANSACTIONS = 'UI/Scenes/TransactionList/CHANGED_TRANSACTIONS'
+export const CHANGED_TRANSACTIONS = 'UI/SCENES/TRANSACTION_LIST/CHANGED_TRANSACTIONS'
 export const SUBSEQUENT_TRANSACTION_BATCH_NUMBER = 30
 export const INITIAL_TRANSACTION_BATCH_NUMBER = 10
 

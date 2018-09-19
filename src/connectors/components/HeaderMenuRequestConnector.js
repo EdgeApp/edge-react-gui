@@ -50,12 +50,12 @@ export const mapDispatchToProps = (dispatch: Dispatch) => ({
   onSelect: (value: Object) => {
     switch (value.value) {
       case 'useRegularRequestAddress': {
-        dispatch({ type: 'useRegularRequestAddress' })
+        dispatch({ type: 'USE_REGULAR_REQUEST_ADDRESS' })
         break
       }
 
       case 'useLegacyRequestAddress': {
-        dispatch({ type: 'useLegacyRequestAddress' })
+        dispatch({ type: 'USE_LEGACY_REQUEST_ADDRESS' })
         break
       }
 

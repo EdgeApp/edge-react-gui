@@ -6,8 +6,8 @@ export const initialState = false
 export type State = boolean
 export const addressModalVisible = (state: State = initialState, action: Action) => {
   switch (action.type) {
-    case 'saveEdgeLobby':
-    case 'setLobbyError': {
+    case 'SAVE_EDGE_LOBBY':
+    case 'SET_LOBBY_ERROR': {
       return false
     }
 

@@ -58,7 +58,7 @@ type ChangePasswordAction = {
   data: {}
 }
 type DefaultAction = {
-  type: 'default',
+  type: 'DEFAULT',
   data: {}
 }
 
@@ -185,7 +185,7 @@ export const untranslatedReducer = (state: PasswordReminderState = initialState,
 
 export const translate = (reducer: typeof untranslatedReducer) => (state: PasswordReminderState, action: Action): PasswordReminderState => {
   let translatedAction = {
-    type: 'default',
+    type: 'DEFAULT',
     data: {}
   }
 
@@ -227,7 +227,7 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
     }
   }
 
-  if (action.type === 'UI/Settings/SET_SETTINGS_LOCK' && action.data === false) {
+  if (action.type === 'UI/SETTINGS/SET_SETTINGS_LOCK' && action.data === false) {
     translatedAction = {
       type: 'PASSWORD_USED',
       data: {
@@ -243,7 +243,7 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
       }
     }
   }
-  if (action.type === 'PasswordReminderModal/CHECK_PASSWORD_SUCCESS') {
+  if (action.type === 'PASSWORD_REMINDER_MODAL/CHECK_PASSWORD_SUCCESS') {
     translatedAction = {
       type: 'PASSWORD_USED',
       data: {
@@ -259,7 +259,7 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
     }
   }
 
-  if (action.type === 'PasswordReminderModal/REQUEST_CHANGE_PASSWORD') {
+  if (action.type === 'PASSWORD_REMINDER_MODAL/REQUEST_CHANGE_PASSWORD') {
     translatedAction = {
       type: 'REQUEST_CHANGE_PASSWORD',
       data: {}
