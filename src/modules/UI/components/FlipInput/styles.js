@@ -2,13 +2,14 @@
 
 import { StyleSheet } from 'react-native'
 
+import { scale } from '../../../../lib/scaling.js'
 import THEME from '../../../../theme/variables/airbitz'
 
 export const styles = StyleSheet.create({
   container: {
-    height: 110,
+    height: scale(110),
     marginVertical: 0,
-    marginHorizontal: 14,
+    marginHorizontal: scale(14),
     alignSelf: 'stretch',
     backgroundColor: THEME.COLORS.TRANSPARENT,
     flexDirection: 'row'
@@ -30,7 +31,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: THEME.COLORS.TRANSPARENT,
     alignItems: 'center',
-    marginRight: 10,
+    marginRight: scale(10),
     justifyContent: 'space-around'
   },
   flipIcon: {
@@ -57,11 +58,11 @@ export const top = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: THEME.COLORS.TRANSPARENT,
     borderBottomColor: THEME.COLORS.GRAY_4,
-    borderBottomWidth: 1
+    borderBottomWidth: scale(1)
   },
   symbol: {
     flex: 2,
-    fontSize: 15,
+    fontSize: scale(15),
     color: THEME.COLORS.WHITE,
     textAlign: 'left',
     backgroundColor: THEME.COLORS.TRANSPARENT,
@@ -76,8 +77,8 @@ export const top = StyleSheet.create({
   },
   currencyCode: {
     flex: 2,
-    fontSize: 10,
-    lineHeight: 20,
+    fontSize: scale(10),
+    lineHeight: scale(20),
     color: THEME.COLORS.WHITE,
     textAlign: 'right',
     backgroundColor: THEME.COLORS.TRANSPARENT
@@ -94,21 +95,21 @@ export const bottom = StyleSheet.create({
   },
   symbol: {
     flex: 3,
-    fontSize: 16,
+    fontSize: scale(16),
     color: THEME.COLORS.WHITE,
     textAlign: 'left',
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   amount: {
     flex: 6,
-    fontSize: 18,
+    fontSize: scale(18),
     color: THEME.COLORS.WHITE,
     textAlign: 'center',
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   currencyCode: {
     flex: 3,
-    fontSize: 10,
+    fontSize: scale(10),
     color: THEME.COLORS.WHITE,
     textAlign: 'right',
     backgroundColor: THEME.COLORS.TRANSPARENT
