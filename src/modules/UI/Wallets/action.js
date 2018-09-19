@@ -17,7 +17,7 @@ import { updateSettings } from '../Settings/action'
 import * as SETTINGS_SELECTORS from '../Settings/selectors'
 
 export const refreshReceiveAddress = (walletId: string, receiveAddress: EdgeReceiveAddress) => ({
-  type: 'UI/Wallets/REFRESH_RECEIVE_ADDRESS',
+  type: 'UI/WALLETS/REFRESH_RECEIVE_ADDRESS',
   data: {
     walletId,
     receiveAddress
@@ -125,13 +125,13 @@ export const selectWallet = (walletId: string, currencyCode: string) => (dispatc
   const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
   if (walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode) {
     dispatch({
-      type: 'UI/Wallets/SELECT_WALLET',
+      type: 'UI/WALLETS/SELECT_WALLET',
       data: { walletId, currencyCode }
     })
     const wallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
     WALLET_API.getReceiveAddress(wallet, currencyCode)
       .then(receiveAddress => {
-        dispatch({ type: 'newReceiveAddress', data: { receiveAddress } })
+        dispatch({ type: 'NEW_RECEIVE_ADDRESS', data: { receiveAddress } })
       })
       .catch(e => {
         console.log('error on getting wallet receive address')
@@ -199,7 +199,7 @@ export const upsertWallets = (wallets: Array<EdgeCurrencyWallet>) => (dispatch: 
     dispatch({ type: 'LOGGED_OUT' })
   }
   dispatch({
-    type: 'UI/Wallets/UPSERT_WALLETS',
+    type: 'UI/WALLETS/UPSERT_WALLETS',
     data: {
       wallets
     }

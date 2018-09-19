@@ -8,36 +8,36 @@ import * as SETTINGS_API from '../../../Core/Account/settings.js'
 import type { Dispatch, GetState } from '../../../ReduxTypes.js'
 
 export const checkPasswordStart = () => ({
-  type: 'PasswordReminderModal/CHECK_PASSWORD_START'
+  type: 'PASSWORD_REMINDER_MODAL/CHECK_PASSWORD_START'
 })
 
 export const checkPasswordSuccess = () => ({
-  type: 'PasswordReminderModal/CHECK_PASSWORD_SUCCESS'
+  type: 'PASSWORD_REMINDER_MODAL/CHECK_PASSWORD_SUCCESS'
 })
 
 export const checkPasswordFail = () => ({
-  type: 'PasswordReminderModal/CHECK_PASSWORD_FAIL'
+  type: 'PASSWORD_REMINDER_MODAL/CHECK_PASSWORD_FAIL'
 })
 
 export const requestChangePassword = () => ({
-  type: 'PasswordReminderModal/REQUEST_CHANGE_PASSWORD'
+  type: 'PASSWORD_REMINDER_MODAL/REQUEST_CHANGE_PASSWORD'
 })
 
 export const postponePasswordReminder = () => ({
-  type: 'PasswordReminderModal/PASSWORD_REMINDER_POSTPONED'
+  type: 'PASSWORD_REMINDER_MODAL/PASSWORD_REMINDER_POSTPONED'
 })
 
 // Loading data from account local folder
 export const setPasswordReminderStart = () => ({
-  type: 'PasswordReminderModal/SET_PASSWORD_REMINDER_START'
+  type: 'PASSWORD_REMINDER_MODAL/SET_PASSWORD_REMINDER_START'
 })
 
 export const setPasswordReminderSuccess = () => ({
-  type: 'PasswordReminderModal/SET_PASSWORD_REMINDER_SUCCESS'
+  type: 'PASSWORD_REMINDER_MODAL/SET_PASSWORD_REMINDER_SUCCESS'
 })
 
 export const setPasswordReminderFail = () => ({
-  type: 'PasswordReminderModal/SET_PASSWORD_REMINDER_FAIL'
+  type: 'PASSWORD_REMINDER_MODAL/SET_PASSWORD_REMINDER_FAIL'
 })
 
 export const checkPassword = (password: string) => (dispatch: Dispatch, getState: GetState) => {

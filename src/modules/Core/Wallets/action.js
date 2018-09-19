@@ -14,7 +14,7 @@ export const updateWallets = (
   currencyWallets: { [id: string]: EdgeCurrencyWallet },
   receiveAddresses: { [id: string]: EdgeReceiveAddress }
 ) => ({
-  type: 'Core/Wallets/UPDATE_WALLETS',
+  type: 'CORE/WALLETS/UPDATE_WALLETS',
   data: {
     activeWalletIds,
     archivedWalletIds,

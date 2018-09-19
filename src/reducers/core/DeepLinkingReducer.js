@@ -8,14 +8,14 @@ const initialState = {
 
 export default function (state: any = initialState, action: Action) {
   switch (action.type) {
-    case 'deepLinkReceived': {
+    case 'DEEP_LINK_RECEIVED': {
       return {
         ...state,
         passwordRecoveryLink: action.data
       }
     }
 
-    case 'accountInitComplete': {
+    case 'ACCOUNT_INIT_COMPLETE': {
       return {
         ...state,
         passwordRecoveryLink: null

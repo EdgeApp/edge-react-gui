@@ -12,7 +12,7 @@ const initialState: RequestType = {
 }
 const requestType = (state: RequestType = initialState, action: Action): RequestType => {
   switch (action.type) {
-    case 'newReceiveAddress':
+    case 'NEW_RECEIVE_ADDRESS':
     case 'UPDATE_RECEIVE_ADDRESS_SUCCESS': {
       if (!action.data) return state
       let uniqueLegacy = true
@@ -26,14 +26,14 @@ const requestType = (state: RequestType = initialState, action: Action): Request
       }
     }
 
-    case 'useRegularRequestAddress': {
+    case 'USE_REGULAR_REQUEST_ADDRESS': {
       return {
         ...state,
         useLegacyAddress: false
       }
     }
 
-    case 'useLegacyRequestAddress': {
+    case 'USE_LEGACY_REQUEST_ADDRESS': {
       return {
         ...state,
         useLegacyAddress: true

@@ -5,7 +5,7 @@ import s from '../../../../locales/strings.js'
 import type { Dispatch } from '../../../../modules/ReduxTypes'
 
 export const displayErrorAlertStore = (message: string) => ({
-  type: 'UI/components/ErrorAlert/DISPLAY_ERROR_ALERT',
+  type: 'UI/COMPONENTS/ERROR_ALERT/DISPLAY_ERROR_ALERT',
   data: { message }
 })
 
@@ -15,12 +15,12 @@ export const displayErrorAlert = (message: string) => (dispatch: Dispatch) => {
     return
   }
   dispatch({
-    type: 'UI/components/ErrorAlert/DISPLAY_ERROR_ALERT',
+    type: 'UI/COMPONENTS/ERROR_ALERT/DISPLAY_ERROR_ALERT',
     data: { message }
   })
 }
 
 export const dismissErrorAlert = () => ({
-  type: 'UI/components/ErrorAlert/DISMISS_ERROR_ALERT',
+  type: 'UI/COMPONENTS/ERROR_ALERT/DISMISS_ERROR_ALERT',
   data: { message: '' }
 })

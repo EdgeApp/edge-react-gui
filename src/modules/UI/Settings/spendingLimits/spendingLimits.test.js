@@ -13,7 +13,7 @@ describe('spendingLimits', () => {
   describe('when logging in', () => {
     it('should update', () => {
       const loginAction = {
-        type: 'accountInitComplete',
+        type: 'ACCOUNT_INIT_COMPLETE',
         data: {
           spendingLimits: {
             transaction: {
