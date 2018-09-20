@@ -2,6 +2,7 @@
 
 import { StyleSheet } from 'react-native'
 
+import { scale } from '../../../../lib/scaling.js'
 import THEME, { DEBUG as debug } from '../../../../theme/variables/airbitz'
 
 export const rawStyles = {
@@ -22,7 +23,7 @@ export const rawStyles = {
   },
   exchangeRateContainer: {
     alignItems: 'center',
-    marginVertical: 12
+    marginVertical: scale(12)
   },
 
   main: {
@@ -35,13 +36,13 @@ export const rawStyles = {
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   feeAreaText: {
-    fontSize: 16,
+    fontSize: scale(16),
     color: THEME.COLORS.WHITE,
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
 
   pendingSymbolArea: {
-    height: 12
+    height: scale(12)
   },
   slider: {
     backgroundColor: THEME.COLORS.TRANSPARENT
@@ -51,11 +52,11 @@ export const rawStyles = {
     justifyContent: 'center'
   },
   sliderStyle: {
-    width: 270
+    width: scale(270)
   },
   error: {
-    height: 20,
-    marginRight: 5,
+    height: scale(20),
+    marginRight: scale(5),
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   errorText: {
@@ -63,25 +64,25 @@ export const rawStyles = {
     color: THEME.COLORS.ACCENT_RED
   },
   menuTrigger: {
-    paddingHorizontal: 8,
-    paddingVertical: 4
+    paddingHorizontal: scale(8),
+    paddingVertical: scale(4)
   },
   trigger: {
-    fontSize: 25,
+    fontSize: scale(25),
     color: THEME.COLORS.WHITE,
     fontWeight: '700',
-    paddingHorizontal: 8
+    paddingHorizontal: scale(8)
   },
   optionContainer: {
-    width: 165
+    width: scale(165)
   },
   optionRow: {
-    paddingVertical: 7,
+    paddingVertical: scale(7),
     borderBottomColor: THEME.COLORS.GRAY_3,
-    borderBottomWidth: 1
+    borderBottomWidth: scale(1)
   },
   optionText: {
-    fontSize: 16,
+    fontSize: scale(16),
     color: THEME.COLORS.GRAY_1
   },
   maxSpend: {
@@ -89,11 +90,11 @@ export const rawStyles = {
   },
   balanceText: {
     color: THEME.COLORS.WHITE,
-    fontSize: 16
+    fontSize: scale(16)
   },
   balanceContainer: {
     alignItems: 'center',
-    marginTop: 10
+    marginTop: scale(10)
   },
   row: {
     alignItems: 'center',
@@ -104,19 +105,19 @@ export const rawStyles = {
     color: THEME.COLORS.WHITE
   },
   pinInputContainer: {
-    width: 60,
-    height: 50
+    width: scale(60),
+    height: scale(50)
   },
   pinInputSpacer: {
-    width: 10
+    width: scale(10)
   },
   activityIndicatorSpace: {
-    height: 54,
-    paddingVertical: 18
+    height: scale(54),
+    paddingVertical: scale(18)
   },
   addUniqueIDButton: {
     backgroundColor: THEME.COLORS.TRANSPARENT,
-    padding: 14,
+    padding: scale(14),
     alignItems: 'center',
     justifyContent: 'center'
   },

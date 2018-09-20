@@ -34,12 +34,12 @@ exports[`SendConfirmation should render with destination 1`] = `
           Array [
             Object {
               "alignItems": "center",
-              "marginTop": 10,
+              "marginTop": 18.655882352941177,
             },
             Object {
               "backgroundColor": "transparent",
-              "height": 20,
-              "marginRight": 5,
+              "height": 37.311764705882354,
+              "marginRight": 9.327941176470588,
             },
           ]
         }
@@ -48,7 +48,7 @@ exports[`SendConfirmation should render with destination 1`] = `
           style={
             Object {
               "color": "#FFFFFF",
-              "fontSize": 16,
+              "fontSize": 29.84941176470588,
             }
           }
         >
@@ -69,12 +69,12 @@ exports[`SendConfirmation should render with destination 1`] = `
           Array [
             Object {
               "alignItems": "center",
-              "marginVertical": 12,
+              "marginVertical": 22.387058823529408,
             },
             Object {
               "backgroundColor": "transparent",
-              "height": 20,
-              "marginRight": 5,
+              "height": 37.311764705882354,
+              "marginRight": 9.327941176470588,
             },
           ]
         }
@@ -191,7 +191,7 @@ exports[`SendConfirmation should render with destination 1`] = `
                     Object {
                       "backgroundColor": "transparent",
                       "color": "#FFFFFF",
-                      "fontSize": 16,
+                      "fontSize": 29.84941176470588,
                     },
                   ]
                 }
@@ -235,8 +235,8 @@ exports[`SendConfirmation should render with destination 1`] = `
       <Row
         style={
           Object {
-            "height": 54,
-            "paddingVertical": 18,
+            "height": 100.74176470588236,
+            "paddingVertical": 33.580588235294115,
           }
         }
       />
@@ -247,7 +247,7 @@ exports[`SendConfirmation should render with destination 1`] = `
           forceUpdateGuiCounter={0}
           parentStyle={
             Object {
-              "width": 270,
+              "width": 503.7088235294117,
             }
           }
           resetSlider={false}
@@ -293,12 +293,12 @@ exports[`SendConfirmation should render with standard props 1`] = `
           Array [
             Object {
               "alignItems": "center",
-              "marginTop": 10,
+              "marginTop": 18.655882352941177,
             },
             Object {
               "backgroundColor": "transparent",
-              "height": 20,
-              "marginRight": 5,
+              "height": 37.311764705882354,
+              "marginRight": 9.327941176470588,
             },
           ]
         }
@@ -307,7 +307,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
           style={
             Object {
               "color": "#FFFFFF",
-              "fontSize": 16,
+              "fontSize": 29.84941176470588,
             }
           }
         >
@@ -328,12 +328,12 @@ exports[`SendConfirmation should render with standard props 1`] = `
           Array [
             Object {
               "alignItems": "center",
-              "marginVertical": 12,
+              "marginVertical": 22.387058823529408,
             },
             Object {
               "backgroundColor": "transparent",
-              "height": 20,
-              "marginRight": 5,
+              "height": 37.311764705882354,
+              "marginRight": 9.327941176470588,
             },
           ]
         }
@@ -450,7 +450,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
                     Object {
                       "backgroundColor": "transparent",
                       "color": "#FFFFFF",
-                      "fontSize": 16,
+                      "fontSize": 29.84941176470588,
                     },
                   ]
                 }
@@ -479,8 +479,8 @@ exports[`SendConfirmation should render with standard props 1`] = `
       <Row
         style={
           Object {
-            "height": 54,
-            "paddingVertical": 18,
+            "height": 100.74176470588236,
+            "paddingVertical": 33.580588235294115,
           }
         }
       />
@@ -491,7 +491,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
           forceUpdateGuiCounter={0}
           parentStyle={
             Object {
-              "width": 270,
+              "width": 503.7088235294117,
             }
           }
           resetSlider={false}
@@ -537,12 +537,12 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           Array [
             Object {
               "alignItems": "center",
-              "marginTop": 10,
+              "marginTop": 18.655882352941177,
             },
             Object {
               "backgroundColor": "transparent",
-              "height": 20,
-              "marginRight": 5,
+              "height": 37.311764705882354,
+              "marginRight": 9.327941176470588,
             },
           ]
         }
@@ -551,7 +551,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           style={
             Object {
               "color": "#FFFFFF",
-              "fontSize": 16,
+              "fontSize": 29.84941176470588,
             }
           }
         >
@@ -572,12 +572,12 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           Array [
             Object {
               "alignItems": "center",
-              "marginVertical": 12,
+              "marginVertical": 22.387058823529408,
             },
             Object {
               "backgroundColor": "transparent",
-              "height": 20,
-              "marginRight": 5,
+              "height": 37.311764705882354,
+              "marginRight": 9.327941176470588,
             },
           ]
         }
@@ -694,7 +694,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
                     Object {
                       "backgroundColor": "transparent",
                       "color": "#FFFFFF",
-                      "fontSize": 16,
+                      "fontSize": 29.84941176470588,
                     },
                   ]
                 }
@@ -716,7 +716,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
                     "alignItems": "center",
                     "backgroundColor": "transparent",
                     "justifyContent": "center",
-                    "padding": 14,
+                    "padding": 26.118235294117646,
                   }
                 }
               >
@@ -738,8 +738,8 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
       <Row
         style={
           Object {
-            "height": 54,
-            "paddingVertical": 18,
+            "height": 100.74176470588236,
+            "paddingVertical": 33.580588235294115,
           }
         }
       />
@@ -750,7 +750,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           forceUpdateGuiCounter={0}
           parentStyle={
             Object {
-              "width": 270,
+              "width": 503.7088235294117,
             }
           }
           resetSlider={false}
@@ -799,12 +799,12 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           Array [
             Object {
               "alignItems": "center",
-              "marginTop": 10,
+              "marginTop": 18.655882352941177,
             },
             Object {
               "backgroundColor": "transparent",
-              "height": 20,
-              "marginRight": 5,
+              "height": 37.311764705882354,
+              "marginRight": 9.327941176470588,
             },
           ]
         }
@@ -813,7 +813,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           style={
             Object {
               "color": "#FFFFFF",
-              "fontSize": 16,
+              "fontSize": 29.84941176470588,
             }
           }
         >
@@ -834,12 +834,12 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           Array [
             Object {
               "alignItems": "center",
-              "marginVertical": 12,
+              "marginVertical": 22.387058823529408,
             },
             Object {
               "backgroundColor": "transparent",
-              "height": 20,
-              "marginRight": 5,
+              "height": 37.311764705882354,
+              "marginRight": 9.327941176470588,
             },
           ]
         }
@@ -956,7 +956,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
                     Object {
                       "backgroundColor": "transparent",
                       "color": "#FFFFFF",
-                      "fontSize": 16,
+                      "fontSize": 29.84941176470588,
                     },
                   ]
                 }
@@ -978,7 +978,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
                     "alignItems": "center",
                     "backgroundColor": "transparent",
                     "justifyContent": "center",
-                    "padding": 14,
+                    "padding": 26.118235294117646,
                   }
                 }
               >
@@ -1000,8 +1000,8 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
       <Row
         style={
           Object {
-            "height": 54,
-            "paddingVertical": 18,
+            "height": 100.74176470588236,
+            "paddingVertical": 33.580588235294115,
           }
         }
       />
@@ -1012,7 +1012,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           forceUpdateGuiCounter={0}
           parentStyle={
             Object {
-              "width": 270,
+              "width": 503.7088235294117,
             }
           }
           resetSlider={false}

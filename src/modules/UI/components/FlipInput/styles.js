@@ -70,7 +70,7 @@ export const top = StyleSheet.create({
   },
   amount: {
     flex: 6,
-    fontSize: 30,
+    fontSize: scale(30),
     color: THEME.COLORS.WHITE,
     textAlign: 'center',
     backgroundColor: THEME.COLORS.TRANSPARENT
