@@ -187,7 +187,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     const receiveAddresses = await getReceiveAddresses(currencyWallets)
 
     dispatch({
-      type: 'accountInitComplete',
+      type: 'ACCOUNT_INIT_COMPLETE',
       data: { ...accountInitObject, receiveAddresses }
     })
     // $FlowFixMe
@@ -217,7 +217,7 @@ export const deepLinkLogout = (backupKey: string) => (dispatch: Dispatch, getSta
   const account = CORE_SELECTORS.getAccount(state)
   const username = account.username
   Actions.popTo(Constants.LOGIN, { username })
-  dispatch({ type: 'deepLinkReceived', data: backupKey })
+  dispatch({ type: 'DEEP_LINK_RECEIVED', data: backupKey })
   // dispatch(logout('deepLinkReceived'))
   if (!account) {
     account.logout()

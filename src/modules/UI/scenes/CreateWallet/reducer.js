@@ -8,15 +8,15 @@ export type IsCreatingWallet = boolean
 
 const isCreatingWallet = (state = false, action: Action) => {
   switch (action.type) {
-    case 'UI/Wallets/CREATE_WALLET_START': {
+    case 'UI/WALLETS/CREATE_WALLET_START': {
       return true
     }
 
-    case 'UI/Wallets/CREATE_WALLET_SUCCESS': {
+    case 'UI/WALLETS/CREATE_WALLET_SUCCESS': {
       return false
     }
 
-    case 'UI/Wallets/CREATE_WALLET_FAILURE': {
+    case 'UI/WALLETS/CREATE_WALLET_FAILURE': {
       return false
     }
 

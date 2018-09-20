@@ -24,7 +24,7 @@ const accountReducer = (state = initialState, action: Action) => {
 }
 
 export const account = (state: AccountReducerState, action: Action) => {
-  if (action.type === 'LOGOUT' || action.type === 'deepLinkReceived') {
+  if (action.type === 'LOGOUT' || action.type === 'DEEP_LINK_RECEIVED') {
     state = undefined
   }
   return accountReducer(state, action)

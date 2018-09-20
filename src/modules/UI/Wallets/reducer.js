@@ -15,7 +15,7 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
   if (!action.data) return state
 
   switch (action.type) {
-    case 'accountInitComplete': {
+    case 'ACCOUNT_INIT_COMPLETE': {
       const wallets = action.data.currencyWallets
       const out = {}
 
@@ -33,7 +33,7 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
 
       return out
     }
-    case 'Core/Wallets/UPDATE_WALLETS': {
+    case 'CORE/WALLETS/UPDATE_WALLETS': {
       const wallets = action.data.currencyWallets
       const out = {}
       for (const walletId of Object.keys(wallets)) {
@@ -134,7 +134,7 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
       return state
     }
 
-    case 'UI/Wallets/UPSERT_WALLETS': {
+    case 'UI/WALLETS/UPSERT_WALLETS': {
       const { data } = action
       const wallets = data.wallets
       const out = { ...state }
@@ -156,7 +156,7 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
       return out
     }
 
-    case 'UI/Wallets/REFRESH_RECEIVE_ADDRESS': {
+    case 'UI/WALLETS/REFRESH_RECEIVE_ADDRESS': {
       const {
         data: { walletId, receiveAddress }
       } = action
@@ -175,10 +175,10 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
 }
 
 export const walletEnabledTokens = (state: any = {}, action: Action) => {
-  if (action.type === 'accountInitComplete' && action.data) {
+  if (action.type === 'ACCOUNT_INIT_COMPLETE' && action.data) {
     return action.data.activeWalletIds
   }
-  if (action.type === 'Core/Wallets/UPDATE_WALLETS' && action.data) {
+  if (action.type === 'CORE/WALLETS/UPDATE_WALLETS' && action.data) {
     return action.data.activeWalletIds
   }
 
@@ -210,10 +210,10 @@ export const walletLoadingProgress = (state: { [string]: Number } = {}, action: 
 
 export const activeWalletIds = (state: WalletIds = [], action: Action) => {
   if (!action.data) return state
-  if (action.type === 'accountInitComplete') {
+  if (action.type === 'ACCOUNT_INIT_COMPLETE') {
     return action.data.activeWalletIds
   }
-  if (action.type === 'Core/Wallets/UPDATE_WALLETS') {
+  if (action.type === 'CORE/WALLETS/UPDATE_WALLETS') {
     return action.data.activeWalletIds
   }
 
@@ -222,10 +222,10 @@ export const activeWalletIds = (state: WalletIds = [], action: Action) => {
 
 export const archivedWalletIds = (state: WalletIds = [], action: Action) => {
   if (!action.data) return state
-  if (action.type === 'accountInitComplete') {
+  if (action.type === 'ACCOUNT_INIT_COMPLETE') {
     return action.data.archivedWalletIds
   }
-  if (action.type === 'Core/Wallets/UPDATE_WALLETS') {
+  if (action.type === 'CORE/WALLETS/UPDATE_WALLETS') {
     return action.data.archivedWalletIds
   }
 
@@ -235,11 +235,11 @@ export const archivedWalletIds = (state: WalletIds = [], action: Action) => {
 export const selectedWalletId = (state: WalletId = '', action: Action) => {
   if (!action.data) return state
   switch (action.type) {
-    case 'UI/Wallets/SELECT_WALLET': {
+    case 'UI/WALLETS/SELECT_WALLET': {
       return action.data.walletId
     }
 
-    case 'accountInitComplete': {
+    case 'ACCOUNT_INIT_COMPLETE': {
       if (action.data.walletId) {
         return action.data.walletId
       }
@@ -254,11 +254,11 @@ export const selectedWalletId = (state: WalletId = '', action: Action) => {
 export const selectedCurrencyCode = (state: string = '', action: Action) => {
   if (!action.data) return state
   switch (action.type) {
-    case 'UI/Wallets/SELECT_WALLET': {
+    case 'UI/WALLETS/SELECT_WALLET': {
       return action.data.currencyCode
     }
 
-    case 'accountInitComplete': {
+    case 'ACCOUNT_INIT_COMPLETE': {
       if (action.data.currencyCode) {
         return action.data.currencyCode
       }
