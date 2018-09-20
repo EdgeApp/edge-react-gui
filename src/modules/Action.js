@@ -16,7 +16,6 @@ type ActionType =
   | 'CLOSE_VIEWXPUB_WALLET_MODAL'
   | 'UNLOCK_WALLET_SEED'
   | 'selectFromWalletCryptoExchange'
-  | 'selectToWalletCryptoExchange'
   | 'swapFromToCryptoWallets'
   | 'openWalletSelectorModal'
   | 'updateCryptoExchangeRate'
@@ -248,9 +247,13 @@ type ActionType =
   | 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL'
   | 'LOGGED_OUT'
   | 'deepLinkReceived'
-  | 'updateShiftTransactionFee'
-  | 'selectFromWalletCryptoExchange'
   | 'UPDATE_METADATA'
+  | 'DUMMY_ACTION_PLEASE_IGNORE'
+  | 'UI/Scenes/TransactionList/ENABLE_UPDATING_BALANCE'
+  | 'UI/Scenes/TransactionList/DISABLE_UPDATING_BALANCE'
+  | 'UI/Scenes/TransactionList/TOGGLE_UPDATING_BALANCE'
+  | 'UI/Scenes/TransactionList/START_TRANSACTIONS_LOADING'
+  | 'UI/Scenes/TransactionList/END_TRANSACTIONS_LOADING'
 // | 'selectToWalletCryptoExchange'
 // | string
 

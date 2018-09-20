@@ -11,7 +11,7 @@ export const loggedIn = (account: EdgeAccount) => ({
 
 export type AccountReducerState = EdgeAccount | {} | void
 export const initialState: AccountReducerState = {}
-const accountReducer = (state = initialState, action) => {
+const accountReducer = (state = initialState, action: Action) => {
   switch (action.type) {
     case 'ACCOUNT/LOGGED_IN': {
       if (!action.data) throw new Error('Invalid Action')

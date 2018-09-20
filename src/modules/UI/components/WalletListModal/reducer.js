@@ -2,7 +2,9 @@
 
 import { combineReducers } from 'redux'
 
-const walletListModalVisible = (state = false, action) => {
+import { type Action } from '../../../ReduxTypes.js'
+
+const walletListModalVisible = (state = false, action: Action) => {
   switch (action.type) {
     case 'TOGGLE_WALLET_LIST_MODAL_VISIBILITY': {
       return !state

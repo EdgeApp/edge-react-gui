@@ -2,7 +2,9 @@
 
 import { combineReducers } from 'redux'
 
-const view = (state = false, action) => {
+import { type Action } from '../../../ReduxTypes.js'
+
+const view = (state = false, action: Action) => {
   switch (action.type) {
     case 'OPEN_AB_ALERT': {
       return true
@@ -17,7 +19,7 @@ const view = (state = false, action) => {
   }
 }
 
-const syntax = (state = {}, action) => {
+const syntax = (state = {}, action: Action) => {
   switch (action.type) {
     case 'OPEN_AB_ALERT': {
       return action.data

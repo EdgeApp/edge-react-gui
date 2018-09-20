@@ -2,7 +2,9 @@
 
 import { combineReducers } from 'redux'
 
-const usersView = (state = false, action) => {
+import { type Action } from '../../../ReduxTypes.js'
+
+const usersView = (state = false, action: Action) => {
   switch (action.type) {
     case 'OPEN_SELECT_USER': {
       return true
@@ -17,13 +19,15 @@ const usersView = (state = false, action) => {
   }
 }
 
-const selectedUser = (state = null, action) => {
+const selectedUser = (state = null, action: Action) => {
   switch (action.type) {
     case 'LIST_USER_USER_SIDE_MENU': {
+      if (!action.data) throw new Error('Invalid action')
       return action.data[0]
     }
 
     case 'SELECT_USERS_SIDE_MENU': {
+      // $FlowFixMe
       return action.id
     }
 
