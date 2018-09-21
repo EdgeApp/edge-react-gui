@@ -86,7 +86,7 @@ const searchVisible = (state: boolean = false, action: Action) => {
   }
 }
 
-const updatingBalance = (state: boolean = true, action) => {
+const updatingBalance = (state: boolean = true, action: Action) => {
   switch (action.type) {
     case 'UI/Scenes/TransactionList/ENABLE_UPDATING_BALANCE': {
       return true
@@ -105,7 +105,7 @@ const updatingBalance = (state: boolean = true, action) => {
   }
 }
 
-const loadingTransactions = (state = false, action) => {
+const loadingTransactions = (state = false, action: Action) => {
   switch (action.type) {
     case 'UI/Scenes/TransactionList/START_TRANSACTIONS_LOADING': {
       return true

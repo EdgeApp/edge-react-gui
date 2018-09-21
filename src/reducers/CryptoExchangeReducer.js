@@ -2,7 +2,7 @@
 
 import * as Constants from '../constants/indexConstants'
 import s from '../locales/strings.js'
-import type { State } from '../modules/ReduxTypes.js'
+import { type Action, type State } from '../modules/ReduxTypes.js'
 import type { GuiCurrencyInfo } from '../types.js'
 
 const dummyCurrencyInfo: GuiCurrencyInfo = {
@@ -60,7 +60,7 @@ const initialState = {
   quoteExpireDate: null
 }
 
-function cryptoExchangerReducer (state = initialState, action) {
+function cryptoExchangerReducer (state = initialState, action: Action) {
   let forceUpdateGuiCounter
   switch (action.type) {
     case 'swapFromToCryptoWallets': {
@@ -68,12 +68,14 @@ function cryptoExchangerReducer (state = initialState, action) {
     }
 
     case 'selectFromWalletCryptoExchange': {
+      if (!action.data) throw new Error('Invalid action')
       return {
         ...state,
         fromWallet: action.data.wallet,
         fromWalletPrimaryInfo: action.data.primaryInfo,
         fromCurrencyCode: action.data.currencyCode,
         fromCurrencyIcon: getLogo(action.data.wallet, action.data.currencyCode),
+        // $FlowFixMe
         fromCurrencyIconDark: getLogoDark(action.data.wallet, action.data.currencyCode),
         changeWallet: Constants.NONE,
         fromNativeAmount: '0',
@@ -89,12 +91,14 @@ function cryptoExchangerReducer (state = initialState, action) {
     }
 
     case 'selectToWalletCryptoExchange': {
+      if (!action.data) throw new Error('Invalid action')
       return {
         ...state,
         toWallet: action.data.wallet,
         toCurrencyCode: action.data.currencyCode,
         toWalletPrimaryInfo: action.data.primaryInfo,
         toCurrencyIcon: getLogo(action.data.wallet, action.data.currencyCode),
+        // $FlowFixMe
         toCurrencyIconDark: getLogoDark(action.data.wallet, action.data.currencyCode),
         changeWallet: Constants.NONE,
         fromNativeAmount: '0',
@@ -125,6 +129,7 @@ function cryptoExchangerReducer (state = initialState, action) {
     }
 
     case 'updateCryptoExchangeInfo': {
+      if (!action.data) throw new Error('Invalid action')
       const result = {
         ...state,
         exchangeRate: action.data.rate,
@@ -136,6 +141,7 @@ function cryptoExchangerReducer (state = initialState, action) {
     }
 
     case 'updateCryptoReverseExchangeInfo': {
+      if (!action.data) throw new Error('Invalid action')
       const result = {
         ...state,
         reverseExchange: action.data.rate,
@@ -147,6 +153,7 @@ function cryptoExchangerReducer (state = initialState, action) {
     }
 
     case 'updateShiftTransactionFee': {
+      if (!action.data) throw new Error('Invalid action')
       return {
         ...state,
         transaction: action.data.edgeTransaction,
@@ -204,6 +211,7 @@ function cryptoExchangerReducer (state = initialState, action) {
     }
 
     case 'setCryptoExchangeAmounts': {
+      if (!action.data) throw new Error('Invalid action')
       forceUpdateGuiCounter = state.forceUpdateGuiCounter
       if (action.data.forceUpdateGui) {
         forceUpdateGuiCounter++
@@ -243,6 +251,7 @@ function cryptoExchangerReducer (state = initialState, action) {
     }
 
     case 'CHANGE_EXCHANGE_FEE': {
+      if (!action.data) throw new Error('Invalid action')
       return {
         ...state,
         feeSetting: action.data.feeSetting,
@@ -352,7 +361,7 @@ function deepCopyState (state) {
 }
 
 // Nuke the state on logout:
-export const cryptoExchanger = (state: $PropertyType<State, 'cryptoExchange'>, action: any): $PropertyType<State, 'cryptoExchange'> => {
+export const cryptoExchanger = (state: $PropertyType<State, 'cryptoExchange'>, action: Action): $PropertyType<State, 'cryptoExchange'> => {
   if (action.type === 'LOGOUT' || action.type === 'deepLinkReceived') {
     return cryptoExchangerReducer(undefined, { type: 'DUMMY_ACTION_PLEASE_IGNORE' })
   }

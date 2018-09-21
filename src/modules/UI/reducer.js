@@ -4,6 +4,7 @@ import { combineReducers } from 'redux'
 
 import { passwordReminderReducer as passwordReminder } from '../../reducers/passwordReminder/indexPasswordReminder.js'
 import type { State } from '../ReduxTypes'
+import { type Action } from '../ReduxTypes.js'
 import errorAlert from './components/ErrorAlert/reducer'
 import transactionAlert from './components/TransactionAlert/reducer'
 import { request } from './Request/reducer.js'
@@ -23,7 +24,7 @@ export const uiReducer = combineReducers({
   settings
 })
 
-export const ui = (state: $PropertyType<State, 'ui'>, action: any) => {
+export const ui = (state: $PropertyType<State, 'ui'>, action: Action) => {
   if (action.type === 'LOGOUT' || action.type === 'deepLinkReceived') {
     return uiReducer(undefined, ({ type: 'DUMMY_ACTION_PLEASE_IGNORE' }: any))
   }
