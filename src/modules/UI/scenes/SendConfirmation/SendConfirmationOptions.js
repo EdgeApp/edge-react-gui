@@ -13,8 +13,6 @@ import styles from './styles'
 const CHANGE_MINING_FEE_TEXT = s.strings.title_change_mining_fee
 const SEND_MAX_TEXT = s.strings.send_confirmation_max_button_title
 const HELP_TEXT = s.strings.string_help
-const ADD_DESTINATION_TAG_TEXT = s.strings.unique_identifier_dropdown_option_destination_tag
-const ADD_PAYMENT_ID_TEXT = s.strings.unique_identifier_dropdown_option_payment_id
 
 const CHANGE_MINING_FEE = 'CHANGE_MINING_FEE'
 const SEND_MAX = 'SEND_MAX'
@@ -76,10 +74,18 @@ export default class SendConfirmationOptions extends Component<Props> {
               </MenuOption>
             )}
 
+            {currencyCode === 'XLM' && (
+              <MenuOption value={ADD_UNIQUE_IDENTIFIER} style={defaultMenuStyle.menuOption}>
+                <View style={defaultMenuStyle.menuOptionItem}>
+                  <Text style={[defaultMenuStyle.optionText]}>{s.strings.unique_identifier_dropdown_option_memo_id}</Text>
+                </View>
+              </MenuOption>
+            )}
+
             {currencyCode === 'XMR' && (
               <MenuOption value={ADD_UNIQUE_IDENTIFIER} style={defaultMenuStyle.menuOption}>
                 <View style={defaultMenuStyle.menuOptionItem}>
-                  <Text style={[defaultMenuStyle.optionText]}>{ADD_PAYMENT_ID_TEXT}</Text>
+                  <Text style={[defaultMenuStyle.optionText]}>{s.strings.unique_identifier_dropdown_option_payment_id}</Text>
                 </View>
               </MenuOption>
             )}
@@ -87,7 +93,7 @@ export default class SendConfirmationOptions extends Component<Props> {
             {currencyCode === 'XRP' && (
               <MenuOption value={ADD_UNIQUE_IDENTIFIER} style={defaultMenuStyle.menuOption}>
                 <View style={defaultMenuStyle.menuOptionItem}>
-                  <Text style={[defaultMenuStyle.optionText]}>{ADD_DESTINATION_TAG_TEXT}</Text>
+                  <Text style={[defaultMenuStyle.optionText]}>{s.strings.unique_identifier_dropdown_option_destination_tag}</Text>
                 </View>
               </MenuOption>
             )}

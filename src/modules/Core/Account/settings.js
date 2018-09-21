@@ -30,6 +30,7 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   BTG: { denomination: '100000000' },
   BCH: { denomination: '100' },
   XRP: { denomination: '1000000' },
+  XLM: { denomination: '10000000' },
   DASH: { denomination: '100000000' },
   DOGE: { denomination: '100000000' },
   DGB: { denomination: '100000000' },
