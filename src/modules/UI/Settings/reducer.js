@@ -164,10 +164,9 @@ const currencyPLuginUtil = (state, payloadData) => {
 }
 
 export const settingsLegacy = (state: SettingsState = initialState, action: Action) => {
-  const { type, data = {} } = action
-
-  switch (type) {
+  switch (action.type) {
     case 'ACCOUNT_INIT_COMPLETE': {
+      if (!action.data) throw new Error('Invalid action')
       const {
         touchIdInfo,
         account,
@@ -186,7 +185,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         isAccountBalanceVisible,
         isWalletFiatBalanceVisible,
         passwordRecoveryRemindersShown
-      } = data
+      } = action.data
       let newState = {
         ...state,
         loginStatus: true,
@@ -235,7 +234,8 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'SET_CONFIRM_PASSWORD_ERROR': {
-      const { confirmPasswordError } = data
+      if (!action.data) throw new Error('Invalid action')
+      const { confirmPasswordError } = action.data
       return {
         ...state,
         confirmPasswordError: confirmPasswordError
@@ -243,7 +243,8 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/SET_LOGIN_STATUS': {
-      const { loginStatus } = data
+      if (!action.data) throw new Error('Invalid action')
+      const { loginStatus } = action.data
       return {
         ...state,
         loginStatus
@@ -251,7 +252,8 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED': {
-      const { pinLoginEnabled } = data
+      if (!action.data) throw new Error('Invalid action')
+      const { pinLoginEnabled } = action.data
       return {
         ...state,
         pinLoginEnabled
@@ -259,7 +261,8 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/SET_CUSTOM_TOKENS': {
-      const { customTokens } = data
+      if (!action.data) throw new Error('Invalid action')
+      const { customTokens } = action.data
       return {
         ...state,
         customTokens
@@ -267,7 +270,8 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UPDATE_EXISTING_TOKEN_SUCCESS': {
-      const { tokenObj } = data
+      if (!action.data) throw new Error('Invalid action')
+      const { tokenObj } = action.data
       const customTokenSettings = state.customTokens
       const newCustomTokenSettings = customTokenSettings.map(item => {
         if (item.currencyCode === tokenObj.currencyCode) return { ...item, ...tokenObj }
@@ -286,9 +290,10 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
 
     case 'OVERWRITE_THEN_DELETE_TOKEN_SUCCESS': {
       // where oldCurrencyCode is the sender, and tokenObj.currencyCode is the receiver (new code)
-      const receiverCode = data.tokenObj.currencyCode
-      const senderCode = data.oldCurrencyCode
-      const { tokenObj } = data
+      if (!action.data) throw new Error('Invalid action')
+      const receiverCode = action.data.tokenObj.currencyCode
+      const senderCode = action.data.oldCurrencyCode
+      const { tokenObj } = action.data
       const customTokenSettings = state.customTokens
       const tokenSettingsWithUpdatedToken = customTokenSettings.map(item => {
         // overwrite receiver token
@@ -317,7 +322,8 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'DELETE_CUSTOM_TOKEN_SUCCESS': {
-      const { currencyCode } = data
+      if (!action.data) throw new Error('Invalid action')
+      const { currencyCode } = action.data
       const customTokenSettings = state.customTokens
       const newCustomTokenSettings = customTokenSettings.map(item => {
         if (item.currencyCode === currencyCode) return { ...item, isVisible: false }
@@ -334,15 +340,17 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'SET_TOKEN_SETTINGS': {
-      const { currencyCode } = data
+      if (!action.data) throw new Error('Invalid action')
+      const { currencyCode } = action.data
       return {
         ...state,
-        [currencyCode]: data
+        [currencyCode]: action.data
       }
     }
 
     case 'ADD_NEW_CUSTOM_TOKEN_SUCCESS': {
-      const { tokenObj, newCurrencyCode, settings } = data
+      if (!action.data) throw new Error('Invalid action')
+      const { tokenObj, newCurrencyCode, settings } = action.data
       const customTokens = settings.customTokens
       return {
         ...state,
@@ -352,7 +360,8 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS': {
-      const { tokenObj, code, setSettings, oldCurrencyCode } = data
+      if (!action.data) throw new Error('Invalid action')
+      const { tokenObj, code, setSettings, oldCurrencyCode } = action.data
       const customTokens = setSettings.customTokens
       const oldCurrencyCodeIndex = _.findIndex(customTokens, item => item.currencyCode === oldCurrencyCode)
       customTokens[oldCurrencyCodeIndex] = {
@@ -371,8 +380,9 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/SET_DENOMINATION_KEY': {
-      const currencyCode = data.currencyCode
-      const denomination = data.denominationKey
+      if (!action.data) throw new Error('Invalid action')
+      const currencyCode = action.data.currencyCode
+      const denomination = action.data.denominationKey
       const currencyState = state[currencyCode]
       return {
         ...state,
@@ -392,17 +402,20 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/UPDATE_SETTINGS': {
-      const { settings } = data
+      if (!action.data) throw new Error('Invalid action')
+      const { settings } = action.data
       return settings
     }
 
     case 'UI/SETTINGS/LOAD_SETTINGS': {
-      const { settings } = data
+      if (!action.data) throw new Error('Invalid action')
+      const { settings } = action.data
       return settings
     }
 
     case 'UI/SETTINGS/SET_PIN_MODE': {
-      const { pinMode } = data
+      if (!action.data) throw new Error('Invalid action')
+      const { pinMode } = action.data
       return {
         ...state,
         pinMode
@@ -410,7 +423,8 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/SET_OTP_MODE': {
-      const { otpMode } = data
+      if (!action.data) throw new Error('Invalid action')
+      const { otpMode } = action.data
       return {
         ...state,
         otpMode
@@ -418,7 +432,8 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/SET_AUTO_LOGOUT_TIME': {
-      const { autoLogoutTimeInSeconds } = data
+      if (!action.data) throw new Error('Invalid action')
+      const { autoLogoutTimeInSeconds } = action.data
       return {
         ...state,
         autoLogoutTimeInSeconds
@@ -454,7 +469,8 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/SET_DEFAULT_FIAT': {
-      const { defaultFiat } = data
+      if (!action.data) throw new Error('Invalid action')
+      const { defaultFiat } = action.data
       return {
         ...state,
         defaultFiat,
@@ -463,7 +479,8 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/SET_MERCHANT_MODE': {
-      const { merchantMode } = data
+      if (!action.data) throw new Error('Invalid action')
+      const { merchantMode } = action.data
       return {
         ...state,
         merchantMode
@@ -471,7 +488,8 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/SET_BLUETOOTH_MODE': {
-      const { bluetoothMode } = data
+      if (!action.data) throw new Error('Invalid action')
+      const { bluetoothMode } = action.data
       return {
         ...state,
         bluetoothMode
@@ -479,7 +497,8 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/SET_BITCOIN_OVERRIDE_SERVER': {
-      const { overrideServer } = data
+      if (!action.data) throw new Error('Invalid action')
+      const { overrideServer } = action.data
       const BTC = state['BTC']
       return {
         ...state,
@@ -493,25 +512,26 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     case 'UI/SETTINGS/SET_SETTINGS_LOCK': {
       return {
         ...state,
-        changesLocked: data
+        changesLocked: action.data
       }
     }
 
     case 'UI/SETTINGS/OTP_SETTINGS': {
+      if (!action.data) throw new Error('Invalid action')
       return {
         ...state,
-        isOtpEnabled: data.enabled,
-        otpKey: data.otpKey,
-        otpResetPending: data.otpResetPending
+        isOtpEnabled: action.data.enabled,
+        otpKey: action.data.otpKey,
+        otpResetPending: action.data.otpResetPending
       }
     }
 
     case 'UI/SETTINGS/TOUCH_ID_SETTINGS': {
-      if (data) {
+      if (action.data) {
         return {
           ...state,
-          isTouchSupported: data.isTouchSupported,
-          isTouchEnabled: data.isTouchEnabled
+          isTouchSupported: action.data.isTouchSupported,
+          isTouchEnabled: action.data.isTouchEnabled
         }
       } else {
         return {
@@ -523,32 +543,37 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/CHANGE_TOUCH_ID_SETTINGS': {
+      if (!action.data) throw new Error('Invalid action')
       return {
         ...state,
-        isTouchEnabled: data.isTouchEnabled
+        isTouchEnabled: action.data.isTouchEnabled
       }
     }
 
     case 'UI/SETTINGS/ADD_CURRENCY_PLUGIN': {
-      return currencyPLuginUtil(state, data)
+      if (!action.data) throw new Error('Invalid action')
+      return currencyPLuginUtil(state, action.data)
     }
 
     case 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY': {
+      if (!action.data) throw new Error('Invalid action')
       return {
         ...state,
-        isAccountBalanceVisible: data.isAccountBalanceVisible
+        isAccountBalanceVisible: action.data.isAccountBalanceVisible
       }
     }
 
     case 'UPDATE_WALLET_FIAT_BALANCE_VISIBILITY': {
+      if (!action.data) throw new Error('Invalid action')
       return {
         ...state,
-        isWalletFiatBalanceVisible: data.isWalletFiatBalanceVisible
+        isWalletFiatBalanceVisible: action.data.isWalletFiatBalanceVisible
       }
     }
 
     case 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL': {
-      const { level, wasShown } = data
+      if (!action.data) throw new Error('Invalid action')
+      const { level, wasShown } = action.data
       return {
         ...state,
         passwordRecoveryRemindersShown: {

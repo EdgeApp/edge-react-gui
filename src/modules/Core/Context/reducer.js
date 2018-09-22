@@ -15,12 +15,11 @@ export type State = {
   nextUsername: string
 }
 export const context = (state: State = initialState, action: Action) => {
-  const { type, data = {} } = action
-
-  switch (type) {
-    case 'Core/Context/ADD_CONTEXT': {
-      const context: EdgeContext = data.context
-      const folder: DiskletFolder = data.folder
+  switch (action.type) {
+    case 'CORE/CONTEXT/ADD_CONTEXT': {
+      if (!action.data) throw new Error('Invalid action')
+      const context: EdgeContext = action.data.context
+      const folder: DiskletFolder = action.data.folder
       return {
         ...state,
         context,
@@ -28,28 +27,30 @@ export const context = (state: State = initialState, action: Action) => {
       }
     }
 
-    case 'Core/Context/ADD_USERNAMES': {
-      const { usernames } = data
+    case 'CORE/CONTEXT/ADD_USERNAMES': {
+      if (!action.data) throw new Error('Invalid action')
+      const { usernames } = action.data
       return {
         ...state,
         usernames
       }
     }
 
-    case 'Core/Context/DELETE_LOCAL_ACCOUNT_REQUEST': {
-      const { usernames } = data
+    case 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT_REQUEST': {
+      if (!action.data) throw new Error('Invalid action')
+      const { usernames } = action.data
       return {
         ...state,
         usernames
       }
     }
 
-    case 'deepLinkReceived':
+    case 'DEEP_LINK_RECEIVED':
     case 'LOGOUT': {
-      if (!data) {
+      if (!action.data) {
         return state
       }
-      const { username } = data
+      const { username } = action.data
       return {
         ...state,
         nextUsername: username || ''
