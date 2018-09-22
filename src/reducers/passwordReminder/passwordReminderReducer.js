@@ -190,7 +190,7 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
   }
 
   // $FlowFixMe
-  if ((action.type === 'LOGIN' || action.type === 'accountInitComplete') && action.data.account.newAccount) {
+  if ((action.type === 'LOGIN' || action.type === 'ACCOUNT_INIT_COMPLETE') && action.data.account.newAccount) {
     const now = Date.now()
     translatedAction = {
       type: 'NEW_ACCOUNT_LOGIN',
@@ -202,7 +202,7 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
   }
 
   // $FlowFixMe
-  if ((action.type === 'LOGIN' || action.type === 'accountInitComplete') && action.data.account.passwordLogin) {
+  if ((action.type === 'LOGIN' || action.type === 'ACCOUNT_INIT_COMPLETE') && action.data.account.passwordLogin) {
     const now = Date.now()
     translatedAction = {
       type: 'PASSWORD_LOGIN',
@@ -216,7 +216,7 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
   }
 
   // $FlowFixMe
-  if ((action.type === 'LOGIN' || action.type === 'accountInitComplete') && !(action.data.account.passwordLogin || action.data.account.newAccount)) {
+  if ((action.type === 'LOGIN' || action.type === 'ACCOUNT_INIT_COMPLETE') && !(action.data.account.passwordLogin || action.data.account.newAccount)) {
     translatedAction = {
       type: 'NON_PASSWORD_LOGIN',
       data: {
@@ -227,7 +227,7 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
     }
   }
 
-  if (action.type === 'UI/Settings/SET_SETTINGS_LOCK' && action.data === false) {
+  if (action.type === 'UI/SETTINGS/SET_SETTINGS_LOCK' && action.data === false) {
     translatedAction = {
       type: 'PASSWORD_USED',
       data: {
@@ -243,7 +243,7 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
       }
     }
   }
-  if (action.type === 'PasswordReminderModal/CHECK_PASSWORD_SUCCESS') {
+  if (action.type === 'PASSWORD_REMINDER_MODAL/CHECK_PASSWORD_SUCCESS') {
     translatedAction = {
       type: 'PASSWORD_USED',
       data: {
@@ -259,7 +259,7 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
     }
   }
 
-  if (action.type === 'PasswordReminderModal/REQUEST_CHANGE_PASSWORD') {
+  if (action.type === 'PASSWORD_REMINDER_MODAL/REQUEST_CHANGE_PASSWORD') {
     translatedAction = {
       type: 'REQUEST_CHANGE_PASSWORD',
       data: {}

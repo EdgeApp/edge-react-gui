@@ -16,14 +16,14 @@ export type InitialEdgeLoginState = {
 }
 export default function (state: InitialEdgeLoginState = initialState, action: Action) {
   switch (action.type) {
-    case 'processEdgeLogin': {
+    case 'PROCESS_EDGE_LOGIN': {
       return {
         ...state,
         isProcessing: true
       }
     }
 
-    case 'invalidateEdgeLobby': {
+    case 'INVALIDATE_EDGE_LOBBY': {
       return {
         ...state,
         lobby: null,
@@ -31,7 +31,7 @@ export default function (state: InitialEdgeLoginState = initialState, action: Ac
       }
     }
 
-    case 'setLobbyError': {
+    case 'SET_LOBBY_ERROR': {
       return {
         ...state,
         lobby: null,
@@ -39,7 +39,7 @@ export default function (state: InitialEdgeLoginState = initialState, action: Ac
       }
     }
 
-    case 'saveEdgeLobby': {
+    case 'SAVE_EDGE_LOBBY': {
       return {
         ...state,
         lobby: action.data,

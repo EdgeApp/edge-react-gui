@@ -14,32 +14,32 @@ import * as SETTINGS_ACTIONS from '../../Settings/action.js'
 import { newSpendingLimits } from '../../Settings/spendingLimits/SpendingLimitsReducer.js'
 
 const setPINModeStart = (pinMode: boolean) => ({
-  type: 'UI/Scenes/Settings/SET_PIN_MODE_START',
+  type: 'UI/SCENES/SETTINGS/SET_PIN_MODE_START',
   data: { pinMode }
 })
 
 const setPINStart = (pin: string) => ({
-  type: 'UI/Scenes/Settings/SET_PIN_START',
+  type: 'UI/SCENES/SETTINGS/SET_PIN_START',
   data: { pin }
 })
 
 const setDefaultFiatStart = (defaultFiat: string) => ({
-  type: 'UI/Scenes/Settings/SET_DEFAULT_FIAT_START',
+  type: 'UI/SCENES/SETTINGS/SET_DEFAULT_FIAT_START',
   data: { defaultFiat }
 })
 
 const setMerchantModeStart = (merchantMode: boolean) => ({
-  type: 'UI/Scenes/Settings/SET_MERCHANT_MODE_START',
+  type: 'UI/SCENES/SETTINGS/SET_MERCHANT_MODE_START',
   data: { merchantMode }
 })
 
 const setBluetoothModeStart = (bluetoothMode: boolean) => ({
-  type: 'UI/Scenes/Settings/SET_BLUETOOTH_MODE_START',
+  type: 'UI/SCENES/SETTINGS/SET_BLUETOOTH_MODE_START',
   data: { bluetoothMode }
 })
 
 const setBitcoinOverrideServerStart = (overrideServer: string) => ({
-  type: 'UI/Scenes/Settings/SET_BITCOIN_OVERRIDE_SERVER_START',
+  type: 'UI/SCENES/SETTINGS/SET_BITCOIN_OVERRIDE_SERVER_START',
   data: { overrideServer }
 })
 
@@ -148,13 +148,13 @@ export const setBluetoothModeRequest = (bluetoothMode: boolean) => (dispatch: Di
 
 export const checkCurrentPassword = (arg: string) => async (dispatch: Dispatch, getState: GetState) => {
   const clearPasswordError = { confirmPasswordError: '' }
-  dispatch({ type: 'setConfirmPasswordError', data: clearPasswordError })
+  dispatch({ type: 'SET_CONFIRM_PASSWORD_ERROR', data: clearPasswordError })
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
   const isPassword = await account.checkPassword(arg)
   dispatch(SETTINGS_ACTIONS.setSettingsLock(!isPassword))
   if (!isPassword) {
-    dispatch({ type: 'setConfirmPasswordError', data: { confirmPasswordError: s.strings.fragmet_invalid_password } })
+    dispatch({ type: 'SET_CONFIRM_PASSWORD_ERROR', data: { confirmPasswordError: s.strings.fragmet_invalid_password } })
   }
 }
 

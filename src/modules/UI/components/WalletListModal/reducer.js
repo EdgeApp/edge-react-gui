@@ -30,15 +30,15 @@ const walletListModalVisible = (state = false, action: Action) => {
       return false
     }
 
-    case 'openWalletSelectorModal': {
+    case 'OPEN_WALLET_SELECTOR_MODAL': {
       return true
     }
 
-    case 'selectToWalletCryptoExchange': {
+    case 'SELECT_TO_WALLET_CRYPTO_EXCHANGE': {
       return false
     }
 
-    case 'selectFromWalletCryptoExchange': {
+    case 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE': {
       return false
     }
 

@@ -28,7 +28,7 @@ export const keepOtp = () => async (dispatch: Dispatch, getState: GetState) => {
   const account = CORE_SELECTORS.getAccount(state)
   try {
     await account.cancelOtpReset()
-    dispatch({ type: 'disableOTPReset' })
+    dispatch({ type: 'DISABLE_OTP_RESET' })
   } catch (error) {
     console.log(error)
   }

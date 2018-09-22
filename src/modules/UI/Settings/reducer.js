@@ -167,7 +167,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
   const { type, data = {} } = action
 
   switch (type) {
-    case 'accountInitComplete': {
+    case 'ACCOUNT_INIT_COMPLETE': {
       const {
         touchIdInfo,
         account,
@@ -234,7 +234,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       return newState
     }
 
-    case 'setConfirmPasswordError': {
+    case 'SET_CONFIRM_PASSWORD_ERROR': {
       const { confirmPasswordError } = data
       return {
         ...state,
@@ -242,7 +242,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case 'UI/Settings/SET_LOGIN_STATUS': {
+    case 'UI/SETTINGS/SET_LOGIN_STATUS': {
       const { loginStatus } = data
       return {
         ...state,
@@ -250,7 +250,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case 'UI/Settings/TOGGLE_PIN_LOGIN_ENABLED': {
+    case 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED': {
       const { pinLoginEnabled } = data
       return {
         ...state,
@@ -258,7 +258,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case 'UI/Settings/SET_CUSTOM_TOKENS': {
+    case 'UI/SETTINGS/SET_CUSTOM_TOKENS': {
       const { customTokens } = data
       return {
         ...state,
@@ -370,7 +370,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case 'UI/Settings/SET_DENOMINATION_KEY': {
+    case 'UI/SETTINGS/SET_DENOMINATION_KEY': {
       const currencyCode = data.currencyCode
       const denomination = data.denominationKey
       const currencyState = state[currencyCode]
@@ -383,7 +383,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case 'disableOTPReset': {
+    case 'DISABLE_OTP_RESET': {
       return {
         ...state,
         otpResetDate: null,
@@ -391,17 +391,17 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case 'UI/Settings/UPDATE_SETTINGS': {
+    case 'UI/SETTINGS/UPDATE_SETTINGS': {
       const { settings } = data
       return settings
     }
 
-    case 'UI/Settings/LOAD_SETTINGS': {
+    case 'UI/SETTINGS/LOAD_SETTINGS': {
       const { settings } = data
       return settings
     }
 
-    case 'UI/Settings/SET_PIN_MODE': {
+    case 'UI/SETTINGS/SET_PIN_MODE': {
       const { pinMode } = data
       return {
         ...state,
@@ -409,7 +409,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case 'UI/Settings/SET_OTP_MODE': {
+    case 'UI/SETTINGS/SET_OTP_MODE': {
       const { otpMode } = data
       return {
         ...state,
@@ -417,7 +417,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case 'UI/Settings/SET_AUTO_LOGOUT_TIME': {
+    case 'UI/SETTINGS/SET_AUTO_LOGOUT_TIME': {
       const { autoLogoutTimeInSeconds } = data
       return {
         ...state,
@@ -425,35 +425,35 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case 'Logs/SEND_LOGS_REQUEST': {
+    case 'LOGS/SEND_LOGS_REQUEST': {
       return {
         ...state,
         sendLogsStatus: Constants.REQUEST_STATUS.LOADING
       }
     }
 
-    case 'Logs/SEND_LOGS_FAILURE': {
+    case 'LOGS/SEND_LOGS_FAILURE': {
       return {
         ...state,
         sendLogsStatus: Constants.REQUEST_STATUS.FAILURE
       }
     }
 
-    case 'Logs/SEND_LOGS_SUCCESS': {
+    case 'LOGS/SEND_LOGS_SUCCESS': {
       return {
         ...state,
         sendLogsStatus: Constants.REQUEST_STATUS.SUCCESS
       }
     }
 
-    case 'Logs/SEND_LOGS_PENDING': {
+    case 'LOGS/SEND_LOGS_PENDING': {
       return {
         ...state,
         sendLogsStatus: Constants.REQUEST_STATUS.PENDING
       }
     }
 
-    case 'UI/Settings/SET_DEFAULT_FIAT': {
+    case 'UI/SETTINGS/SET_DEFAULT_FIAT': {
       const { defaultFiat } = data
       return {
         ...state,
@@ -462,7 +462,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case 'UI/Settings/SET_MERCHANT_MODE': {
+    case 'UI/SETTINGS/SET_MERCHANT_MODE': {
       const { merchantMode } = data
       return {
         ...state,
@@ -470,7 +470,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case 'UI/Settings/SET_BLUETOOTH_MODE': {
+    case 'UI/SETTINGS/SET_BLUETOOTH_MODE': {
       const { bluetoothMode } = data
       return {
         ...state,
@@ -478,7 +478,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case 'UI/Settings/SET_BITCOIN_OVERRIDE_SERVER': {
+    case 'UI/SETTINGS/SET_BITCOIN_OVERRIDE_SERVER': {
       const { overrideServer } = data
       const BTC = state['BTC']
       return {
@@ -490,14 +490,14 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case 'UI/Settings/SET_SETTINGS_LOCK': {
+    case 'UI/SETTINGS/SET_SETTINGS_LOCK': {
       return {
         ...state,
         changesLocked: data
       }
     }
 
-    case 'UI/Settings/OTP_SETTINGS': {
+    case 'UI/SETTINGS/OTP_SETTINGS': {
       return {
         ...state,
         isOtpEnabled: data.enabled,
@@ -506,7 +506,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case 'UI/Settings/TOUCH_ID_SETTINGS': {
+    case 'UI/SETTINGS/TOUCH_ID_SETTINGS': {
       if (data) {
         return {
           ...state,
@@ -522,18 +522,18 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case 'UI/Settings/CHANGE_TOUCH_ID_SETTINGS': {
+    case 'UI/SETTINGS/CHANGE_TOUCH_ID_SETTINGS': {
       return {
         ...state,
         isTouchEnabled: data.isTouchEnabled
       }
     }
 
-    case 'UI/Settings/ADD_CURRENCY_PLUGIN': {
+    case 'UI/SETTINGS/ADD_CURRENCY_PLUGIN': {
       return currencyPLuginUtil(state, data)
     }
 
-    case 'UI/Settings/SET_ACCOUNT_BALANCE_VISIBILITY': {
+    case 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY': {
       return {
         ...state,
         isAccountBalanceVisible: data.isAccountBalanceVisible

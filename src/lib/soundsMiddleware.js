@@ -26,7 +26,7 @@ const playCb = audioName => success => {
 }
 
 export default () => (next: Function) => (action: Action) => {
-  if (action.type === 'UI/components/TransactionAlert/DISPLAY_TRANSACTION_ALERT') {
+  if (action.type === 'UI/COMPONENTS/TRANSACTION_ALERT/DISPLAY_TRANSACTION_ALERT') {
     audioReceived.play(playCb(AUDIO_RECEUVED_FILE))
   }
   if (action.type === 'OPEN_AB_ALERT' && action.data && action.data.success) {

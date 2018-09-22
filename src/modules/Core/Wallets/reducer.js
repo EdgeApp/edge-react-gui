@@ -11,8 +11,8 @@ export const initialState = {}
 
 const byId = (state = initialState, action: Action) => {
   switch (action.type) {
-    case 'accountInitComplete':
-    case 'Core/Wallets/UPDATE_WALLETS':
+    case 'ACCOUNT_INIT_COMPLETE':
+    case 'CORE/WALLETS/UPDATE_WALLETS':
       if (!action.data) throw new Error('Invalid action')
       const currencyWallets = action.data.currencyWallets
       return {
@@ -26,7 +26,7 @@ const byId = (state = initialState, action: Action) => {
 }
 
 export const wallets = (state: WalletState, action: Action) => {
-  if (action.type === 'LOGOUT' || action.type === 'deepLinkReceived') {
+  if (action.type === 'LOGOUT' || action.type === 'DEEP_LINK_RECEIVED') {
     state = undefined
   }
 

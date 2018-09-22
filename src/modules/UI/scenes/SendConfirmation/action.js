@@ -25,37 +25,37 @@ import type { AuthType, GuiMakeSpendInfo } from './selectors'
 
 // add empty string if there is an error but we don't need text feedback to the user
 export const makeSpendFailed = (error: Error | null) => ({
-  type: 'UI/SendConfimation/MAKE_SPEND_FAILED',
+  type: 'UI/SEND_CONFIMATION/MAKE_SPEND_FAILED',
   data: { error }
 })
 
 export const newSpendInfo = (spendInfo: EdgeSpendInfo, authRequired: AuthType) => ({
-  type: 'UI/SendConfimation/NEW_SPEND_INFO',
+  type: 'UI/SEND_CONFIMATION/NEW_SPEND_INFO',
   data: { spendInfo, authRequired }
 })
 
 export const reset = () => ({
-  type: 'UI/SendConfimation/RESET',
+  type: 'UI/SEND_CONFIMATION/RESET',
   data: {}
 })
 
 export const updatePaymentProtocolTransaction = (transaction: EdgeTransaction) => ({
-  type: 'UI/SendConfimation/UPDATE_PAYMENT_PROTOCOL_TRANSACTION',
+  type: 'UI/SEND_CONFIMATION/UPDATE_PAYMENT_PROTOCOL_TRANSACTION',
   data: { transaction }
 })
 
 export const updateTransaction = (transaction: ?EdgeTransaction, parsedUri: ?EdgeParsedUri, forceUpdateGui: ?boolean, error: ?Error) => ({
-  type: 'UI/SendConfimation/UPDATE_TRANSACTION',
+  type: 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION',
   data: { transaction, parsedUri, forceUpdateGui, error }
 })
 
 export const updateSpendPending = (pending: boolean) => ({
-  type: 'UI/SendConfimation/UPDATE_SPEND_PENDING',
+  type: 'UI/SEND_CONFIMATION/UPDATE_SPEND_PENDING',
   data: { pending }
 })
 
 export const newPin = (pin: string) => ({
-  type: 'UI/SendConfimation/NEW_PIN',
+  type: 'UI/SEND_CONFIMATION/NEW_PIN',
   data: { pin }
 })
 

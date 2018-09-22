@@ -8,11 +8,11 @@ import type { Action } from '../../../ReduxTypes.js'
 const displayAlert = (state: boolean = false, action: Action) => {
   const { type } = action
   switch (type) {
-    case 'UI/components/TransactionAlert/DISPLAY_TRANSACTION_ALERT': {
+    case 'UI/COMPONENTS/TRANSACTION_ALERT/DISPLAY_TRANSACTION_ALERT': {
       return true
     }
 
-    case 'UI/components/TransactionAlert/DISMISS_TRANSACTION_ALERT': {
+    case 'UI/COMPONENTS/TRANSACTION_ALERT/DISMISS_TRANSACTION_ALERT': {
       return false
     }
 
@@ -25,12 +25,12 @@ type EdgeTransactionState = EdgeTransaction | ''
 
 const edgeTransaction = (state: EdgeTransactionState = '', action: Action) => {
   switch (action.type) {
-    case 'UI/components/TransactionAlert/DISPLAY_TRANSACTION_ALERT': {
+    case 'UI/COMPONENTS/TRANSACTION_ALERT/DISPLAY_TRANSACTION_ALERT': {
       if (!action.data) throw new Error('Invalid action')
       return action.data.edgeTransaction
     }
 
-    case 'UI/components/TransactionAlert/DISMISS_TRANSACTION_ALERT': {
+    case 'UI/COMPONENTS/TRANSACTION_ALERT/DISMISS_TRANSACTION_ALERT': {
       return ''
     }
 
