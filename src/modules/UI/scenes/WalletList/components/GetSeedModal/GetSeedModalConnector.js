@@ -11,7 +11,12 @@ const checkCurrentPassword = (password: string) => async (dispatch: Dispatch, ge
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
   const isPassword = await account.checkPassword(password)
-  dispatch({ type: isPassword ? 'UNLOCK_WALLET_SEED' : 'LOCK_WALLET_SEED' })
+
+  if (isPassword) {
+    dispatch({ type: 'UNLOCK_WALLET_SEED' })
+  } else {
+    dispatch({ type: 'LOCK_WALLET_SEED' })
+  }
 }
 
 const nullFunc = () => null

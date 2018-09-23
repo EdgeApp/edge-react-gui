@@ -290,6 +290,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
 
     case 'OVERWRITE_THEN_DELETE_TOKEN_SUCCESS': {
       // where oldCurrencyCode is the sender, and tokenObj.currencyCode is the receiver (new code)
+
       if (!action.data) throw new Error('Invalid action')
       const receiverCode = action.data.tokenObj.currencyCode
       const senderCode = action.data.oldCurrencyCode

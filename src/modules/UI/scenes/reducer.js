@@ -29,6 +29,7 @@ export const currentScene = (state: string = '', action: Action) => {
   if (!action.data) return state
   switch (action.type) {
     case 'UPDATE_CURRENT_SCENE_KEY': {
+      // $FlowFixMe
       return action.data.sceneKey
     }
 
