@@ -4,6 +4,27 @@ import * as LOGGER from '../../util/logger'
 import type { Dispatch, GetState } from '../ReduxTypes.js'
 import * as LOGS_API from './api'
 
+export type SendLogsRequestAction = {
+  type: 'LOGS/SEND_LOGS_REQUEST',
+  text: string
+}
+
+export type SendLogsRequestSuccessAction = {
+  type: 'LOGS/SEND_LOGS_SUCCESS',
+  result: string
+}
+
+export type SendLogsRequestFailureAction = {
+  type: 'LOGS/SEND_LOGS_FAILURE',
+  error: Error
+}
+
+export type SendLogsRequestResetAction = {
+  type: 'LOGS/SEND_LOGS_PENDING'
+}
+
+export type SendLogsAction = SendLogsRequestAction | SendLogsRequestSuccessAction | SendLogsRequestFailureAction | SendLogsRequestResetAction
+
 export const sendLogs = (text: string) => async (dispatch: Dispatch, getState: GetState) => {
   dispatch({ type: 'LOGS/SEND_LOGS_REQUEST', text })
 
@@ -47,8 +68,6 @@ export const sendLogs = (text: string) => async (dispatch: Dispatch, getState: G
 
 export const resetSendLogsStatus = () => (dispatch: Dispatch) => {
   setTimeout(function () {
-    dispatch({
-      type: 'LOGS/SEND_LOGS_PENDING'
-    })
+    dispatch({ type: 'LOGS/SEND_LOGS_PENDING' })
   }, 100)
 }

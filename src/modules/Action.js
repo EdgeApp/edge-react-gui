@@ -1,6 +1,7 @@
 // @flow
 
 import { type CoreContextAction } from './Core/Context/action.js'
+import { type SendLogsAction } from './Logs/action.js'
 import { type DeleteWalletModalAction } from './UI/scenes/WalletList/components/DeleteModal/actions.js'
 import { type GetSeedModalAction } from './UI/scenes/WalletList/components/GetSeedModal/actions.js'
 import { type RenameWalletModalAction } from './UI/scenes/WalletList/components/RenameModal/actions.js'
@@ -70,10 +71,10 @@ type ActionType =
   // | 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT_ERROR'
   | 'CORE/WALLETS/UPDATE_WALLETS'
   | 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES'
-  | 'LOGS/SEND_LOGS_PENDING'
-  | 'LOGS/SEND_LOGS_REQUEST'
-  | 'LOGS/SEND_LOGS_SUCCESS'
-  | 'LOGS/SEND_LOGS_FAILURE'
+  // | 'LOGS/SEND_LOGS_PENDING'
+  // | 'LOGS/SEND_LOGS_REQUEST'
+  // | 'LOGS/SEND_LOGS_SUCCESS'
+  // | 'LOGS/SEND_LOGS_FAILURE'
   | 'OPEN_SELECT_USER'
   | 'CLOSE_SELECT_USER'
   | 'LIST_USER_USER_SIDE_MENU'
@@ -280,6 +281,7 @@ export type Action =
   | SplitWalletModalAction
   | XPubModalAction
   | CoreContextAction
+  | SendLogsAction
   | {
       type: 'SELECT_TO_WALLET_CRYPTO_EXCHANGE',
       data?: any
