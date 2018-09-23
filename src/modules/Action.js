@@ -1,5 +1,6 @@
 // @flow
 
+import { type CoreContextAction } from './Core/Context/action.js'
 import { type DeleteWalletModalAction } from './UI/scenes/WalletList/components/DeleteModal/actions.js'
 import { type GetSeedModalAction } from './UI/scenes/WalletList/components/GetSeedModal/actions.js'
 import { type RenameWalletModalAction } from './UI/scenes/WalletList/components/RenameModal/actions.js'
@@ -62,11 +63,11 @@ type ActionType =
   | 'SET_CONFIRM_PASSWORD_ERROR'
   | 'ACCOUNT/LOGGED_IN'
   | 'LOGOUT'
-  | 'CORE/CONTEXT/ADD_CONTEXT'
-  | 'CORE/CONTEXT/ADD_USERNAMES'
-  | 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT_REQUEST'
-  | 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT_SUCCESS'
-  | 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT_ERROR'
+  // | 'CORE/CONTEXT/ADD_CONTEXT'
+  // | 'CORE/CONTEXT/ADD_USERNAMES'
+  // | 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT_REQUEST'
+  // | 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT_SUCCESS'
+  // | 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT_ERROR'
   | 'CORE/WALLETS/UPDATE_WALLETS'
   | 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES'
   | 'LOGS/SEND_LOGS_PENDING'
@@ -278,6 +279,7 @@ export type Action =
   | ResyncWalletModalAction
   | SplitWalletModalAction
   | XPubModalAction
+  | CoreContextAction
   | {
       type: 'SELECT_TO_WALLET_CRYPTO_EXCHANGE',
       data?: any

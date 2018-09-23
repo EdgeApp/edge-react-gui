@@ -38,6 +38,7 @@ export const context = (state: State = initialState, action: Action) => {
 
     case 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT_REQUEST': {
       if (!action.data) throw new Error('Invalid action')
+      // $FlowFixMe
       const { usernames } = action.data
       return {
         ...state,
