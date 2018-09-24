@@ -24,6 +24,12 @@ export default StyleSheet.create({
     paddingTop: 3,
     color: THEME.COLORS.WHITE
   },
+  backIconAndroid: {
+    paddingTop: 15,
+    paddingBottom: 15,
+    paddingLeft: 15,
+    paddingRight: 15
+  },
   sideText: {
     color: THEME.COLORS.WHITE,
     fontSize: 18
