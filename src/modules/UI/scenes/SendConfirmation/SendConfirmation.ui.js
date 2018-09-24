@@ -10,17 +10,18 @@ import { sprintf } from 'sprintf-js'
 
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
-import type { CurrencyConverter, GuiCurrencyInfo, GuiDenomination } from '../../../../types'
+import type { GuiCurrencyInfo, GuiDenomination } from '../../../../types'
 import { convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../../utils.js'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
-import type { ExchangedFlipInputAmounts } from '../../components/FlipInput/ExchangedFlipInput2.js'
 import { ExchangedFlipInput } from '../../components/FlipInput/ExchangedFlipInput2.js'
+import type { ExchangedFlipInputAmounts } from '../../components/FlipInput/ExchangedFlipInput2.js'
 import Text from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import { PinInput } from '../../components/PinInput/PinInput.ui.js'
 import Recipient from '../../components/Recipient/index.js'
 import SafeAreaView from '../../components/SafeAreaView'
 import ABSlider from '../../components/Slider/index.js'
+import { convertCurrencyFromExchangeRates } from '../../selectors.js'
 import { UniqueIdentifierModalConnect as UniqueIdentifierModal } from './components/UniqueIdentifierModal/UniqueIdentifierModalConnector.js'
 import styles, { rawStyles } from './styles.js'
 
@@ -35,7 +36,7 @@ export type SendConfirmationStateProps = {
   pending: boolean,
   keyboardIsVisible: boolean,
   balanceInCrypto: string,
-  balanceInFiat: string,
+  balanceInFiat: number,
   parentDisplayDenomination: EdgeDenomination,
   parentExchangeDenomination: GuiDenomination,
   primaryDisplayDenomination: EdgeDenomination,
@@ -46,12 +47,12 @@ export type SendConfirmationStateProps = {
   sliderDisabled: boolean,
   resetSlider: boolean,
   forceUpdateGuiCounter: number,
-  currencyConverter: CurrencyConverter,
   uniqueIdentifier?: string,
   destination: string,
   isEditable: boolean,
   authRequired: 'pin' | 'none',
-  address: string
+  address: string,
+  exchangeRates: { [string]: number }
 }
 
 export type SendConfirmationDispatchProps = {
@@ -280,7 +281,7 @@ export class SendConfirmation extends Component<Props, State> {
   }
 
   networkFeeSyntax = () => {
-    const { networkFee, parentNetworkFee, parentDisplayDenomination } = this.props
+    const { networkFee, parentNetworkFee, parentDisplayDenomination, exchangeRates } = this.props
     if (!networkFee && !parentNetworkFee) return ''
 
     const primaryInfo: GuiCurrencyInfo = {
@@ -313,10 +314,11 @@ export class SendConfirmation extends Component<Props, State> {
       const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol ? secondaryInfo.displayDenomination.symbol : ''
       const exchangeConvertor = convertNativeToExchange(this.props.parentExchangeDenomination.multiplier)
       const cryptoFeeExchangeAmount = exchangeConvertor(parentNetworkFee)
-      const fiatFeeAmount = this.props.currencyConverter.convertCurrency(
+      const fiatFeeAmount = convertCurrencyFromExchangeRates(
+        exchangeRates,
         this.props.parentExchangeDenomination.name,
         secondaryInfo.exchangeCurrencyCode,
-        cryptoFeeExchangeAmount
+        parseFloat(cryptoFeeExchangeAmount)
       )
       const fiatFeeAmountString = fiatFeeAmount.toFixed(2)
       const fiatFeeAmountPretty = bns.toFixed(fiatFeeAmountString, 2, 2)
@@ -332,7 +334,12 @@ export class SendConfirmation extends Component<Props, State> {
       const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol ? secondaryInfo.displayDenomination.symbol : ''
       const exchangeConvertor = convertNativeToExchange(primaryInfo.exchangeDenomination.multiplier)
       const cryptoFeeExchangeAmount = exchangeConvertor(networkFee)
-      const fiatFeeAmount = this.props.currencyConverter.convertCurrency(this.props.currencyCode, secondaryInfo.exchangeCurrencyCode, cryptoFeeExchangeAmount)
+      const fiatFeeAmount = convertCurrencyFromExchangeRates(
+        exchangeRates,
+        this.props.currencyCode,
+        secondaryInfo.exchangeCurrencyCode,
+        parseFloat(cryptoFeeExchangeAmount)
+      )
       const fiatFeeAmountString = fiatFeeAmount.toFixed(2)
       const fiatFeeAmountPretty = bns.toFixed(fiatFeeAmountString, 2, 2)
       const fiatFeeString = `${fiatFeeSymbol} ${fiatFeeAmountPretty}`

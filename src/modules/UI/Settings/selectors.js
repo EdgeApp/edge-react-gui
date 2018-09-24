@@ -173,6 +173,12 @@ export const getDefaultFiat = (state: State) => {
   return defaultFiat
 }
 
+export const getDefaultIsoFiat = (state: State) => {
+  const settings = getSettings(state)
+  const defaultIsoFiat: string = settings.defaultIsoFiat
+  return defaultIsoFiat
+}
+
 export const getIsOtpEnabled = (state: State) => {
   const settings = getSettings(state)
   const enabled: boolean = settings.isOtpEnabled

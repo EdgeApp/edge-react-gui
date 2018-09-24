@@ -8,7 +8,7 @@ import { TouchableHighlight, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 
 import { intl } from '../../../../locales/intl.js'
-import type { CurrencyConverter, CustomTokenInfo, GuiDenomination, GuiWallet } from '../../../../types.js'
+import type { CustomTokenInfo, GuiDenomination, GuiWallet } from '../../../../types.js'
 import {
   DIVIDE_PRECISION,
   cutOffText,
@@ -31,8 +31,7 @@ export type WalletListRowOwnProps = {
 
 export type WalletListRowStateProps = {
   fiatBalance: string,
-  settings: Object,
-  currencyConverter: CurrencyConverter
+  settings: Object
 }
 
 export type WalletListRowDispatchProps = {}

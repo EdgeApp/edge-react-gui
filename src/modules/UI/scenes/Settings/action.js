@@ -6,9 +6,11 @@ import { Actions } from 'react-native-router-flux'
 
 import type { Dispatch, GetState } from '../../../../../src/modules/ReduxTypes.js'
 import s from '../../../../locales/strings.js'
-import { convertCurrency, restoreWalletsRequest } from '../../../Core/Account/api.js'
+import { restoreWalletsRequest } from '../../../Core/Account/api.js'
 import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'
 import * as CORE_SELECTORS from '../../../Core/selectors'
+import { updateExchangeRates } from '../../../ExchangeRates/action.js'
+import { convertCurrency } from '../../../UI/selectors.js'
 import { displayErrorAlert } from '../../components/ErrorAlert/actions.js'
 import * as SETTINGS_ACTIONS from '../../Settings/action.js'
 import { newSpendingLimits } from '../../Settings/spendingLimits/SpendingLimitsReducer.js'
@@ -104,7 +106,7 @@ export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatc
       dispatch(SETTINGS_ACTIONS.setDefaultFiat(defaultFiat))
       const nextDefaultIsoFiat = getState().ui.settings.defaultIsoFiat
       // convert from previous fiat to next fiat
-      return convertCurrency(account, previousDefaultIsoFiat, nextDefaultIsoFiat, transaction.amount)
+      return convertCurrency(state, previousDefaultIsoFiat, nextDefaultIsoFiat, transaction.amount)
     })
     .then(transactionAmount => {
       const nextSpendingLimits = {
@@ -118,6 +120,7 @@ export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatc
       ACCOUNT_SETTINGS.setSpendingLimits(account, nextSpendingLimits)
       // update spending limits in settings
       dispatch(newSpendingLimits(nextSpendingLimits))
+      dispatch(updateExchangeRates())
     })
     .catch(e => console.log(e))
 }

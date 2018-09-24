@@ -3,10 +3,9 @@
 import { errorNames } from 'edge-core-js'
 import { connect } from 'react-redux'
 
-import { getCurrencyConverter, getExchangeRate } from '../../../Core/selectors.js'
 import type { Dispatch, State } from '../../../ReduxTypes'
 import { convertNativeToExchange } from '../../../utils'
-import { getExchangeDenomination, getSelectedCurrencyCode, getSelectedWallet } from '../../selectors.js'
+import { getExchangeDenomination, getExchangeRate, getSelectedCurrencyCode, getSelectedWallet } from '../../selectors.js'
 import { getDisplayDenomination, getExchangeDenomination as settingsGetExchangeDenomination } from '../../Settings/selectors.js'
 import { newPin, reset, signBroadcastAndSave, uniqueIdentifierUpdated, updateAmount, updateSpendPending } from './action.js'
 import { activated as uniqueIdentifierModalActivated } from './components/UniqueIdentifierModal/UniqueIdentifierModalActions.js'
@@ -18,7 +17,6 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
   const sceneState = state.ui.scenes.sendConfirmation
   let fiatPerCrypto = 0
   let secondaryExchangeCurrencyCode = ''
-  const currencyConverter = getCurrencyConverter(state)
   const guiWallet = getSelectedWallet(state)
   const currencyCode = getSelectedCurrencyCode(state)
   const balanceInCrypto = guiWallet.nativeBalances[currencyCode]
@@ -26,11 +24,11 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
   const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
   const exchangeDenomination = settingsGetExchangeDenomination(state, currencyCode)
   const balanceInCryptoDisplay = convertNativeToExchange(exchangeDenomination.multiplier)(balanceInCrypto)
-  const balanceInFiat = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, balanceInCryptoDisplay)
+  fiatPerCrypto = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+  const balanceInFiat = fiatPerCrypto * parseFloat(balanceInCryptoDisplay)
 
   if (guiWallet) {
     const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
-    fiatPerCrypto = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
     secondaryExchangeCurrencyCode = isoFiatCurrencyCode
   }
 
@@ -53,14 +51,14 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
 
   const uniqueIdentifier = sceneState.parsedUri.uniqueIdentifier
   const destination = sceneState.destination
-
+  const exchangeRates = state.exchangeRates
   const out = {
     balanceInCrypto,
     balanceInFiat,
     currencyCode,
-    currencyConverter,
     destination,
     errorMsg,
+    exchangeRates,
     fiatCurrencyCode: guiWallet.fiatCurrencyCode,
     fiatPerCrypto,
     forceUpdateGuiCounter: getForceUpdateGuiCounter(state),
