@@ -16,7 +16,7 @@ const middleware = [errorAlert, loginStatusChecker, thunk, soundsMiddleware]
 if (ENV.ENABLE_REDUX_PERF_LOGGING) middleware.push(perfLogger)
 
 const composeEnhancers =
-  typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({ name: 'ui' }) : compose
+  typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({ name: 'ui', maxAge: 50 }) : compose
 
 export default function configureStore (initialState: Object) {
   // $FlowFixMe
