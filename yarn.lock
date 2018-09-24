@@ -452,6 +452,12 @@
     core-js "^2.5.3"
     regenerator-runtime "^0.11.1"
 
+"@babel/runtime@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.0.0.tgz#adeb78fedfc855aa05bc041640f3f6f98e85424c"
+  dependencies:
+    regenerator-runtime "^0.12.0"
+
 "@babel/template@7.0.0-beta.44":
   version "7.0.0-beta.44"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.0.0-beta.44.tgz#f8832f4fdcee5d59bf515e595fc5106c529b394f"
@@ -2818,10 +2824,11 @@ edge-components@^0.0.5:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@0.10.4:
-  version "0.10.4"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.10.4.tgz#1b4d5503859bf3f9414f24e45d50413b95789562"
+edge-core-js@0.11.3:
+  version "0.11.3"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.11.3.tgz#dcabe64729610a9321f5be05011627b3541ec1f2"
   dependencies:
+    "@babel/runtime" "^7.0.0"
     aes-js "^3.1.0"
     base-x "^1.0.4"
     biggystring "^3.0.2"
@@ -2829,6 +2836,8 @@ edge-core-js@0.10.4:
     detect-bundler "^1.0.0"
     disklet "^0.2.7"
     elliptic "^6.4.0"
+    ethereumjs-tx "^1.3.7"
+    ethereumjs-util "^5.2.0"
     hash.js "^1.0.3"
     hmac-drbg "^1.0.1"
     json-csv "^1.5.0"
@@ -2836,11 +2845,11 @@ edge-core-js@0.10.4:
     redux "^3.6.0"
     redux-keto "^0.3.2"
     redux-pixies "^0.3.5"
-    regenerator-runtime "^0.11.1"
     rfc4648 "^1.1.0"
     scrypt-js "^2.0.3"
     utf8 "^3.0.0"
     ws "^5.1.1"
+    yaob "^0.2.0"
 
 edge-currency-bitcoin@3.3.2:
   version "3.3.2"
@@ -3304,7 +3313,7 @@ ethereumjs-abi@^0.6.4:
     bn.js "^4.10.0"
     ethereumjs-util "^4.3.0"
 
-ethereumjs-tx@^1.3.3:
+ethereumjs-tx@^1.3.3, ethereumjs-tx@^1.3.7:
   version "1.3.7"
   resolved "https://registry.yarnpkg.com/ethereumjs-tx/-/ethereumjs-tx-1.3.7.tgz#88323a2d875b10549b8347e09f4862b546f3d89a"
   dependencies:
@@ -3321,7 +3330,7 @@ ethereumjs-util@^4.3.0, ethereumjs-util@^4.4.0:
     rlp "^2.0.0"
     secp256k1 "^3.0.1"
 
-ethereumjs-util@^5.0.0, ethereumjs-util@^5.1.2:
+ethereumjs-util@^5.0.0, ethereumjs-util@^5.1.2, ethereumjs-util@^5.2.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/ethereumjs-util/-/ethereumjs-util-5.2.0.tgz#3e0c0d1741471acf1036052d048623dee54ad642"
   dependencies:
@@ -7796,6 +7805,10 @@ regenerator-runtime@^0.11.0, regenerator-runtime@^0.11.1:
   version "0.11.1"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.11.1.tgz#be05ad7f9bf7d22e056f9726cee5017fbf19e2e9"
 
+regenerator-runtime@^0.12.0:
+  version "0.12.1"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.12.1.tgz#fa1a71544764c036f8c49b13a08b2594c9f8a0de"
+
 regenerator-transform@^0.10.0:
   version "0.10.1"
   resolved "https://registry.yarnpkg.com/regenerator-transform/-/regenerator-transform-0.10.1.tgz#1e4996837231da8b7f3cf4114d71b5691a0680dd"
@@ -9419,6 +9432,10 @@ yallist@^2.1.2:
 yallist@^3.0.0, yallist@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-3.0.2.tgz#8452b4bb7e83c7c188d8041c1a837c773d6d8bb9"
+
+yaob@^0.2.0:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/yaob/-/yaob-0.2.1.tgz#6a7838acec2a3379d7e8be7e6efcdec30057944a"
 
 yargs-parser@^5.0.0:
   version "5.0.0"
