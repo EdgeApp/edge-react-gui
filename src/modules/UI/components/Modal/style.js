@@ -62,7 +62,7 @@ export const styles = {
   modalHeaderIconWrapBottom: {
     position: 'relative',
     top: scale(27),
-    borderRadius: 27,
+    borderRadius: scale(27),
     borderWidth: scale(2),
     borderColor: THEME.COLORS.SECONDARY,
     backgroundColor: THEME.COLORS.WHITE,
