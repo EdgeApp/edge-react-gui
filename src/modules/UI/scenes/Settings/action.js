@@ -14,7 +14,6 @@ import { convertCurrency } from '../../../UI/selectors.js'
 import { displayErrorAlert } from '../../components/ErrorAlert/actions.js'
 import * as SETTINGS_ACTIONS from '../../Settings/action.js'
 import { newSpendingLimits } from '../../Settings/spendingLimits/SpendingLimitsReducer.js'
-import { convertCurrency } from '../../../UI/selectors.js'
 
 const setPINModeStart = (pinMode: boolean) => ({
   type: 'UI/SCENES/SETTINGS/SET_PIN_MODE_START',
