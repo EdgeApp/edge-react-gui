@@ -2,14 +2,15 @@
 
 /* globals describe it expect */
 
-import { default as reducer } from './reducer.js'
+import { walletList as reducer } from './reducer.js'
+
+const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
 
 describe('reducer', () => {
-  const initialState = reducer(undefined, {})
+  const initialState = reducer(undefined, dummyAction)
 
   it('initial state', () => {
-    // $FlowExpectedError
-    const actual = reducer(undefined, {})
+    const actual = reducer(undefined, dummyAction)
 
     expect(actual).toMatchSnapshot()
   })

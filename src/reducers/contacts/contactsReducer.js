@@ -3,10 +3,11 @@
 import type { Action } from '../../modules/ReduxTypes.js'
 import type { GuiContact } from '../../types.js'
 
-export const initialState = []
 export type ContactsState = Array<GuiContact>
 
-export const contactsReducer = (state: ContactsState = initialState, action: Action) => {
+export const initialState = []
+
+export const contacts = (state: ContactsState = initialState, action: Action): ContactsState => {
   switch (action.type) {
     case 'CONTACTS/LOAD_CONTACTS_SUCCESS': {
       if (!action.data) throw new Error('Invalid action')
@@ -17,5 +18,3 @@ export const contactsReducer = (state: ContactsState = initialState, action: Act
       return state
   }
 }
-
-export default contactsReducer

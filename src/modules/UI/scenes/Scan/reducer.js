@@ -1,18 +1,32 @@
 // @flow
 
-import { combineReducers } from 'redux'
+import type { EdgeParsedUri } from 'edge-core-js'
+import { type Reducer, combineReducers } from 'redux'
 
+import { type Action } from '../../../ReduxTypes.js'
 import { legacyAddressModal } from './LegacyAddressModal/LegacyAddressModalReducer.js'
-import { privateKeyModal } from './PrivateKeyModal/PrivateKeyModalReducer.js'
-import { addressModalVisible, parsedUri, scanEnabled, torchEnabled } from './reducers'
+import { type PrivateKeyModalState, privateKeyModal } from './PrivateKeyModal/PrivateKeyModalReducer.js'
+import { addressModalVisible } from './reducers/addressModalVisible.js'
+import { parsedUri } from './reducers/parsedUri.js'
+import { scanEnabled } from './reducers/scanEnabled.js'
+import { torchEnabled } from './reducers/torchEnabled.js'
 
-export const scan = combineReducers({
-  torchEnabled,
+export type ScanState = {
+  +parsedUri: EdgeParsedUri | null,
+  +torchEnabled: boolean,
+  +addressModalVisible: boolean,
+  +scanEnabled: boolean,
+  +legacyAddressModal: {
+    isActive: boolean
+  },
+  +privateKeyModal: PrivateKeyModalState
+}
+
+export const scan: Reducer<ScanState, Action> = combineReducers({
   addressModalVisible,
-  scanEnabled,
   legacyAddressModal,
+  parsedUri,
   privateKeyModal,
-  parsedUri
+  scanEnabled,
+  torchEnabled
 })
-
-export default scan

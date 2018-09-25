@@ -1,11 +1,16 @@
 // @flow
 
 import type { EdgeTransaction } from 'edge-core-js'
-import { combineReducers } from 'redux'
+import { type Reducer, combineReducers } from 'redux'
 
 import type { Action } from '../../../ReduxTypes.js'
 
-const displayAlert = (state: boolean = false, action: Action) => {
+export type TransactionAlertState = {
+  +displayAlert: boolean,
+  +edgeTransaction: EdgeTransaction // | ''
+}
+
+const displayAlert = (state = false, action: Action): boolean => {
   switch (action.type) {
     case 'UI/COMPONENTS/TRANSACTION_ALERT/DISPLAY_TRANSACTION_ALERT': {
       return true
@@ -20,9 +25,7 @@ const displayAlert = (state: boolean = false, action: Action) => {
   }
 }
 
-type EdgeTransactionState = EdgeTransaction | ''
-
-const edgeTransaction = (state: EdgeTransactionState = '', action: Action) => {
+const edgeTransaction = (state = '', action: Action): EdgeTransaction | '' => {
   switch (action.type) {
     case 'UI/COMPONENTS/TRANSACTION_ALERT/DISPLAY_TRANSACTION_ALERT': {
       if (!action.data) throw new Error('Invalid action')
@@ -38,9 +41,8 @@ const edgeTransaction = (state: EdgeTransactionState = '', action: Action) => {
   }
 }
 
-export const transactionAlert = combineReducers({
+// $FlowFixMe
+export const transactionAlert: Reducer<TransactionAlertState, Action> = combineReducers({
   displayAlert,
   edgeTransaction
 })
-
-export default transactionAlert

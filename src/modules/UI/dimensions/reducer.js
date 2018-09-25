@@ -1,5 +1,7 @@
 // @flow
 
+import { type Reducer } from 'redux'
+
 import type { Action } from '../../ReduxTypes'
 
 export type DimensionsState = {
@@ -10,7 +12,7 @@ const initialState = {
   keyboardHeight: 0
 }
 
-export const dimensions = (state: DimensionsState = initialState, action: Action) => {
+export const dimensions: Reducer<DimensionsState, Action> = (state = initialState, action: Action) => {
   switch (action.type) {
     case 'SET_KEYBOARD_HEIGHT':
       return {
@@ -22,5 +24,3 @@ export const dimensions = (state: DimensionsState = initialState, action: Action
       return state
   }
 }
-
-export default dimensions

@@ -1,5 +1,7 @@
 // @flow
 
+import { type Reducer } from 'redux'
+
 import type { Action } from '../../modules/ReduxTypes.js'
 import { MILLISECONDS_PER_DAY, daysBetween } from '../../modules/utils.js'
 
@@ -183,7 +185,7 @@ export const untranslatedReducer = (state: PasswordReminderState = initialState,
   }
 }
 
-export const translate = (reducer: typeof untranslatedReducer) => (state: PasswordReminderState, action: Action): PasswordReminderState => {
+export const translate = (reducer: typeof untranslatedReducer): Reducer<PasswordReminderState, Action> => (state, action: Action) => {
   let translatedAction = {
     type: 'default',
     data: {}
@@ -269,4 +271,4 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
   return reducer(state, translatedAction)
 }
 
-export const passwordReminderReducer = translate(untranslatedReducer)
+export const passwordReminder: Reducer<PasswordReminderState, Action> = translate(untranslatedReducer)

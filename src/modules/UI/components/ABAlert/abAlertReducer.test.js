@@ -1,15 +1,17 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 /* globals test expect */
 
-import { abAlertReducer } from './reducer.js'
+import { ABAlert } from './reducer.js'
+
+const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
 
 test('initialState', () => {
   const expected = {
     syntax: {},
     view: false
   }
-  const actual = abAlertReducer(undefined, {})
+  const actual = ABAlert(undefined, dummyAction)
 
   expect(actual).toEqual(expected)
 })

@@ -1,8 +1,10 @@
 // @flow
 
+import { type Reducer } from 'redux'
+
 import type { Action } from '../../../../../ReduxTypes.js'
 
-export type State = {
+export type UniqueIdentifierModalState = {
   isActive: boolean,
   uniqueIdentifier: string
 }
@@ -10,7 +12,7 @@ export const initialState = {
   isActive: false,
   uniqueIdentifier: ''
 }
-export const UniqueIdentifierModalReducer = (state: State = initialState, action: Action) => {
+export const uniqueIdentifierModal: Reducer<UniqueIdentifierModalState, Action> = (state = initialState, action) => {
   switch (action.type) {
     case 'UNIQUE_IDENTIFIER_MODAL/ACTIVATED': {
       return {

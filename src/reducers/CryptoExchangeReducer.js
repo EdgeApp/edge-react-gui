@@ -1,9 +1,51 @@
 // @flow
 
+import type { EdgeTransaction } from 'edge-core-js'
+import { type Reducer } from 'redux'
+
 import * as Constants from '../constants/indexConstants'
 import s from '../locales/strings.js'
-import { type Action, type State } from '../modules/ReduxTypes.js'
-import type { GuiCurrencyInfo } from '../types.js'
+import { type Action } from '../modules/ReduxTypes.js'
+import { type GuiCurrencyInfo, type GuiWallet } from '../types.js'
+
+export type CryptoExchangeState = {
+  exchangeRate: number,
+  nativeMax: string,
+  nativeMin: string,
+  minerFee: string,
+  reverseExchange: number,
+  reverseNativeMax: string,
+  reverseNativeMin: string,
+  reverseMinerFee: string,
+  fromWallet: GuiWallet | null,
+  fromCurrencyCode: string | null,
+  fromNativeAmount: string,
+  fromDisplayAmount: string,
+  fromWalletPrimaryInfo: GuiCurrencyInfo, // EdgeCurrencyInfo | null,
+  fromCurrencyIcon: string | null,
+  fromCurrencyIconDark: string | null,
+  toWallet: GuiWallet | null,
+  toCurrencyCode: string | null,
+  toNativeAmount: string,
+  toDisplayAmount: string,
+  toWalletPrimaryInfo: GuiCurrencyInfo, // EdgeCurrencyInfo | null,
+  toCurrencyIcon: string | null,
+  toCurrencyIconDark: string | null,
+  insufficientError: boolean,
+  feeSetting: 'low' | 'standard' | 'high' | 'custom',
+  walletListModalVisible: boolean,
+  confirmTransactionModalVisible: boolean,
+  forceUpdateGuiCounter: number,
+  shiftTransactionError: Error | null,
+  genericShapeShiftError: Error | null,
+  changeWallet: 'none',
+  transaction: EdgeTransaction | null,
+  fee: any,
+  gettingTransaction: boolean,
+  availableShapeShiftTokens: Array<any>,
+  shiftPendingTransaction: boolean,
+  quoteExpireDate: number | null
+}
 
 const dummyCurrencyInfo: GuiCurrencyInfo = {
   displayCurrencyCode: '',
@@ -60,7 +102,7 @@ const initialState = {
   quoteExpireDate: null
 }
 
-function cryptoExchangerReducer (state = initialState, action: Action) {
+function cryptoExchangeInner (state = initialState, action: Action) {
   let forceUpdateGuiCounter
   switch (action.type) {
     case 'SWAP_FROM_TO_CRYPTO_WALLETS': {
@@ -361,12 +403,10 @@ function deepCopyState (state) {
 }
 
 // Nuke the state on logout:
-export const cryptoExchanger = (state: $PropertyType<State, 'cryptoExchange'>, action: Action): $PropertyType<State, 'cryptoExchange'> => {
+export const cryptoExchange: Reducer<CryptoExchangeState, Action> = (state, action: Action) => {
   if (action.type === 'LOGOUT' || action.type === 'DEEP_LINK_RECEIVED') {
-    return cryptoExchangerReducer(undefined, { type: 'DUMMY_ACTION_PLEASE_IGNORE' })
+    return cryptoExchangeInner(undefined, { type: 'DUMMY_ACTION_PLEASE_IGNORE' })
   }
 
-  return cryptoExchangerReducer(state, action)
+  return cryptoExchangeInner(state, action)
 }
-
-export default cryptoExchanger

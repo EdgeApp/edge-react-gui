@@ -1,16 +1,20 @@
 // @flow
 
 import type { EdgeAccount } from 'edge-core-js'
+import { type Reducer } from 'redux'
 
 import type { Action } from '../../ReduxTypes.js'
+
+export type AccountState = EdgeAccount // | {}
+
+// $FlowFixMe
+export const initialState: AccountState = {}
 
 export const loggedIn = (account: EdgeAccount) => ({
   type: 'ACCOUNT/LOGGED_IN',
   data: { account }
 })
 
-export type AccountReducerState = EdgeAccount | {} | void
-export const initialState: AccountReducerState = {}
 const accountReducer = (state = initialState, action: Action) => {
   switch (action.type) {
     case 'ACCOUNT/LOGGED_IN': {
@@ -23,7 +27,7 @@ const accountReducer = (state = initialState, action: Action) => {
   }
 }
 
-export const account = (state: AccountReducerState, action: Action) => {
+export const account: Reducer<AccountState, Action> = (state, action: Action) => {
   if (action.type === 'LOGOUT' || action.type === 'DEEP_LINK_RECEIVED') {
     state = undefined
   }

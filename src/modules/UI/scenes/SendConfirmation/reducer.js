@@ -1,12 +1,43 @@
 // @flow
 
 import { add } from 'biggystring'
-import type { EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
+import type { EdgeSpendInfo, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
 import { isEqual } from 'lodash'
+import { type Reducer } from 'redux'
 
 import type { Action } from '../../../ReduxTypes.js'
 import { initialState } from './selectors'
-import type { SendConfirmationState } from './selectors.js'
+
+export type GuiMakeSpendInfo = {
+  currencyCode?: string,
+  customNetworkFee?: any,
+  metadata?: any,
+  nativeAmount?: string,
+  networkFeeOption?: string,
+  publicAddress?: string,
+  spendTargets?: Array<EdgeSpendTarget>,
+  uniqueIdentifier?: string
+}
+
+export type SendConfirmationState = {
+  forceUpdateGuiCounter: number,
+  destination: string,
+  address: string,
+
+  nativeAmount: string,
+
+  parsedUri: GuiMakeSpendInfo,
+  spendInfo: EdgeSpendInfo | null,
+
+  isEditable: boolean,
+
+  pending: boolean,
+  transaction: EdgeTransaction | null,
+  error: Error | null,
+
+  pin: string,
+  authRequired: 'pin' | 'none'
+}
 
 export const sendConfirmationLegacy = (state: SendConfirmationState = initialState, action: Action) => {
   switch (action.type) {
@@ -61,7 +92,7 @@ export const sendConfirmationLegacy = (state: SendConfirmationState = initialSta
   }
 }
 
-export const nativeAmount = (state: string = '0', action: Action) => {
+export const nativeAmount: Reducer<string, Action> = (state = '0', action) => {
   switch (action.type) {
     case 'UI/SEND_CONFIMATION/NEW_SPEND_INFO': {
       if (!action.data) throw new Error('Invalid Action')
@@ -206,7 +237,7 @@ export const transaction = (state: EdgeTransaction | null = null, action: Action
   }
 }
 
-export const sendConfirmation = (state: SendConfirmationState = initialState, action: Action) => {
+export const sendConfirmation: Reducer<SendConfirmationState, Action> = (state = initialState, action) => {
   if (action.type === 'UI/SEND_CONFIMATION/RESET') return initialState
 
   return {

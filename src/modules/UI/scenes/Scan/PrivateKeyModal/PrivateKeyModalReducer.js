@@ -1,14 +1,24 @@
 // @flow
 
-import { combineReducers } from 'redux'
+import { type Reducer, combineReducers } from 'redux'
 
 import type { Action } from '../../../../ReduxTypes.js'
 import { primaryModal } from './PrimaryModal/PrimaryModalReducer.js'
 import { secondaryModal } from './SecondaryModal/SecondaryModalReducer.js'
 
+export type PrivateKeyModalState = {
+  primaryModal: {
+    isActive: boolean
+  },
+  secondaryModal: {
+    isActive: boolean
+  },
+  error: Error | null,
+  isSweeping: boolean
+}
+
 const initialIsSweepingState = false
-type IsSweepingState = boolean
-export const isSweeping = (state: IsSweepingState = initialIsSweepingState, action: Action) => {
+const isSweeping = (state = false, action: Action): boolean => {
   switch (action.type) {
     case 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_START': {
       return true
@@ -29,8 +39,7 @@ export const isSweeping = (state: IsSweepingState = initialIsSweepingState, acti
 }
 
 const initialErrorState = null
-type ErrorState = Error | null
-export const error = (state: ErrorState = initialErrorState, action: Action) => {
+const error = (state = null, action: Action): Error | null => {
   switch (action.type) {
     case 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_FAIL': {
       // $FlowFixMe
@@ -46,11 +55,9 @@ export const error = (state: ErrorState = initialErrorState, action: Action) => 
   }
 }
 
-export const privateKeyModal = combineReducers({
+export const privateKeyModal: Reducer<PrivateKeyModalState, Action> = combineReducers({
   primaryModal,
   secondaryModal,
   error,
   isSweeping
 })
-
-export default privateKeyModal

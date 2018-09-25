@@ -1,14 +1,16 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 /* globals test expect */
 
 import { AUTHORIZED, DENIED, RESTRICTED } from '../../modules/UI/permissions.js'
 import { updatePermissions } from './actions.js'
-import { initialState, permissionsReducer } from './permissionsReducer.js'
+import { initialState, permissions as permissionsReducer } from './permissionsReducer.js'
+
+const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
 
 test('initialState', () => {
   const expected = initialState
-  const actual = permissionsReducer(undefined, { type: 'UNKNOWN' })
+  const actual = permissionsReducer(undefined, dummyAction)
 
   expect(actual).toEqual(expected)
 })

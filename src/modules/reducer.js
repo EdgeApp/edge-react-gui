@@ -1,24 +1,31 @@
 // @flow
 
-import { combineReducers } from 'redux'
+import { type Reducer, combineReducers } from 'redux'
 
-import { contactsReducer as contacts } from '../reducers/contacts/indexContacts.js'
-import cryptoExchange from '../reducers/CryptoExchangeReducer.js'
-import { permissionsReducer as permissions } from '../reducers/permissions/indexPermissions.js'
-import { core } from './Core/reducer.js'
-import { exchangeRates } from './ExchangeRates/reducer.js'
-import { ui } from './UI/reducer.js'
+import { type ContactsState, contacts } from '../reducers/contacts/contactsReducer.js'
+import { type CryptoExchangeState, cryptoExchange } from '../reducers/CryptoExchangeReducer.js'
+import { type PermissionsState, permissions } from '../reducers/permissions/permissionsReducer.js'
+import { type CoreState, core } from './Core/reducer.js'
+import { type ExchangeRatesState, exchangeRates } from './ExchangeRates/reducer.js'
+import { type Action } from './ReduxTypes.js'
+import { type UiState, ui } from './UI/reducer.js'
 
 export { core, ui, cryptoExchange, exchangeRates, permissions, contacts }
 
-export const rootReducer = combineReducers({
+export type RootState = {
+  +core: CoreState,
+  +ui: UiState,
+  +cryptoExchange: CryptoExchangeState,
+  +exchangeRates: ExchangeRatesState,
+  +permissions: PermissionsState,
+  +contacts: ContactsState
+}
+
+export const rootReducer: Reducer<RootState, Action> = combineReducers({
   core,
-  // $FlowFixMe
   ui,
   cryptoExchange,
   exchangeRates,
   permissions,
   contacts
 })
-
-export default rootReducer

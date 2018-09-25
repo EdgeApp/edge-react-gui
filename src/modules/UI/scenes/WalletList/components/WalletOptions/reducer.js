@@ -1,13 +1,28 @@
 // @flow
 
-import { combineReducers } from 'redux'
+import { type Reducer, combineReducers } from 'redux'
 
 import type { Action } from '../../../../../ReduxTypes.js'
 import { privateSeedUnlocked } from '../GetSeedModal/reducer'
-import { renameWalletInput, walletName } from '../RenameModal/reducer'
+import { renameWalletInput, walletName } from '../RenameModal/reducer.js'
 import { xPubSyntax } from '../XPubModal/reducer.js'
 
-const walletId = (state: string = '', action: Action) => {
+export type WalletListState = {
+  +deleteWalletModalVisible: boolean,
+  +getSeedWalletModalVisible: boolean,
+  +privateSeedUnlocked: boolean,
+  +renameWalletInput: string,
+  +renameWalletModalVisible: boolean,
+  +resyncWalletModalVisible: boolean,
+  +splitWalletWalletModalVisible: boolean, // MISSING!!!
+  +viewXPubWalletModalVisible: boolean,
+  +walletArchivesVisible: boolean,
+  +walletId: string,
+  +walletName: string,
+  +xPubSyntax: string
+}
+
+const walletId = (state = '', action: Action): string => {
   switch (action.type) {
     case 'OPEN_RESYNC_WALLET_MODAL':
     case 'OPEN_RENAME_WALLET_MODAL':
@@ -33,7 +48,7 @@ const walletId = (state: string = '', action: Action) => {
   }
 }
 
-const walletArchivesVisible = (state: boolean = false, action: Action) => {
+const walletArchivesVisible = (state = false, action: Action): boolean => {
   switch (action.type) {
     // case ACTION.OPEN_WALLET_ARCHIVES:
     //   return true
@@ -44,7 +59,7 @@ const walletArchivesVisible = (state: boolean = false, action: Action) => {
   }
 }
 
-const deleteWalletModalVisible = (state: boolean = false, action: Action) => {
+const deleteWalletModalVisible = (state = false, action: Action): boolean => {
   switch (action.type) {
     case 'OPEN_DELETE_WALLET_MODAL': {
       return true
@@ -59,7 +74,7 @@ const deleteWalletModalVisible = (state: boolean = false, action: Action) => {
   }
 }
 
-const renameWalletModalVisible = (state: boolean = false, action: Action) => {
+const renameWalletModalVisible = (state = false, action: Action): boolean => {
   switch (action.type) {
     case 'OPEN_RENAME_WALLET_MODAL': {
       return true
@@ -74,7 +89,7 @@ const renameWalletModalVisible = (state: boolean = false, action: Action) => {
   }
 }
 
-const resyncWalletModalVisible = (state: boolean = false, action: Action) => {
+const resyncWalletModalVisible = (state = false, action: Action): boolean => {
   switch (action.type) {
     case 'OPEN_RESYNC_WALLET_MODAL': {
       return true
@@ -89,7 +104,7 @@ const resyncWalletModalVisible = (state: boolean = false, action: Action) => {
   }
 }
 
-const getSeedWalletModalVisible = (state: boolean = false, action: Action) => {
+const getSeedWalletModalVisible = (state = false, action: Action): boolean => {
   switch (action.type) {
     case 'OPEN_GETSEED_WALLET_MODAL': {
       return true
@@ -104,7 +119,7 @@ const getSeedWalletModalVisible = (state: boolean = false, action: Action) => {
   }
 }
 
-const viewXPubWalletModalVisible = (state: boolean = false, action: Action) => {
+const viewXPubWalletModalVisible = (state = false, action: Action): boolean => {
   switch (action.type) {
     case 'OPEN_VIEWXPUB_WALLET_MODAL': {
       return true
@@ -119,7 +134,7 @@ const viewXPubWalletModalVisible = (state: boolean = false, action: Action) => {
   }
 }
 
-const splitWalletModalVisible = (state: boolean = false, action: Action) => {
+const splitWalletModalVisible = (state = false, action: Action): boolean => {
   switch (action.type) {
     case 'OPEN_SPLIT_WALLET_MODAL': {
       return true
@@ -134,19 +149,18 @@ const splitWalletModalVisible = (state: boolean = false, action: Action) => {
   }
 }
 
-export const walletList = combineReducers({
-  splitWalletModalVisible,
+// $FlowFixMe
+export const walletList: Reducer<WalletListState, Action> = combineReducers({
   deleteWalletModalVisible,
+  getSeedWalletModalVisible,
+  privateSeedUnlocked,
+  renameWalletInput,
   renameWalletModalVisible,
   resyncWalletModalVisible,
-  getSeedWalletModalVisible,
+  splitWalletModalVisible,
   viewXPubWalletModalVisible,
   walletArchivesVisible,
-  renameWalletInput,
   walletId,
   walletName,
-  privateSeedUnlocked,
   xPubSyntax
 })
-
-export default walletList

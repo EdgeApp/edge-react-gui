@@ -1,10 +1,15 @@
 // @flow
 
-import { combineReducers } from 'redux'
+import { type Reducer, combineReducers } from 'redux'
 
-import { type Action } from '../../../ReduxTypes.js'
+import { type Action, type Username } from '../../../ReduxTypes.js'
 
-const usersView = (state = false, action: Action) => {
+export type ControlPanelState = {
+  +usersView: boolean,
+  +selectedUser: Username | null
+}
+
+const usersView = (state = false, action: Action): boolean => {
   switch (action.type) {
     case 'OPEN_SELECT_USER': {
       return true
@@ -19,7 +24,7 @@ const usersView = (state = false, action: Action) => {
   }
 }
 
-const selectedUser = (state = null, action: Action) => {
+const selectedUser = (state = null, action: Action): Username | null => {
   switch (action.type) {
     case 'LIST_USER_USER_SIDE_MENU': {
       if (!action.data) throw new Error('Invalid action')
@@ -36,9 +41,7 @@ const selectedUser = (state = null, action: Action) => {
   }
 }
 
-export const controlPanel = combineReducers({
+export const controlPanel: Reducer<ControlPanelState, Action> = combineReducers({
   usersView,
   selectedUser
 })
-
-export default controlPanel

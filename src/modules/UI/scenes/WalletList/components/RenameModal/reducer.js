@@ -1,13 +1,12 @@
 // @flow
 
-import { combineReducers } from 'redux'
-
 import type { Action } from '../../../../../ReduxTypes.js'
 
-export const walletName = (state: string = '', action: Action) => {
+export const walletName = (state: string = '', action: Action): string => {
   switch (action.type) {
     case 'OPEN_RENAME_WALLET_MODAL': {
       if (!action.data) throw new Error('Invalid action')
+      // $FlowFixMe
       return action.data.walletName || 'Wallet Name'
     }
 
@@ -20,7 +19,7 @@ export const walletName = (state: string = '', action: Action) => {
   }
 }
 
-export const renameWalletInput = (state: string = '', action: Action) => {
+export const renameWalletInput = (state: string = '', action: Action): string => {
   switch (action.type) {
     case 'UPDATE_RENAME_WALLET_INPUT': {
       if (!action.data) throw new Error('Invalid action')
@@ -35,10 +34,3 @@ export const renameWalletInput = (state: string = '', action: Action) => {
       return state
   }
 }
-
-const walletList = combineReducers({
-  renameWalletInput,
-  walletName
-})
-
-export default walletList

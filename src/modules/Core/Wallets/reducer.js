@@ -1,15 +1,19 @@
 // @flow
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
-import { combineReducers } from 'redux'
+import { type Reducer, combineReducers } from 'redux'
 
-import { type Action } from '../../ReduxTypes.js'
+import { type Action, type Id } from '../../ReduxTypes.js'
 
-type WalletState = { [id: string]: EdgeCurrencyWallet } | void
+export type WalletsState = {
+  byId: {
+    [Id]: EdgeCurrencyWallet
+  }
+}
 
 export const initialState = {}
 
-const byId = (state = initialState, action: Action) => {
+const byId = (state = initialState, action: Action): $PropertyType<WalletsState, 'byId'> => {
   switch (action.type) {
     case 'ACCOUNT_INIT_COMPLETE':
     case 'CORE/WALLETS/UPDATE_WALLETS':
@@ -25,7 +29,7 @@ const byId = (state = initialState, action: Action) => {
   }
 }
 
-export const wallets = (state: WalletState, action: Action) => {
+export const wallets: Reducer<WalletsState, Action> = (state, action: Action) => {
   if (action.type === 'LOGOUT' || action.type === 'DEEP_LINK_RECEIVED') {
     state = undefined
   }

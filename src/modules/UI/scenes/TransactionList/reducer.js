@@ -1,13 +1,23 @@
 // @flow
 
 import type { EdgeTransaction } from 'edge-core-js'
-import { combineReducers } from 'redux'
+import { type Reducer, combineReducers } from 'redux'
 
+import type { GuiContact, TransactionListTx } from '../../../../types.js'
 import type { Action } from '../../../ReduxTypes.js'
 
-export type TransactionsState = Array<EdgeTransaction>
+export type TransactionListState = {
+  +contactsList: Array<GuiContact>, // MISSING!!!
+  +currentCurrencyCode: string,
+  +currentEndIndex: number,
+  +currentWalletId: string,
+  +numTransactions: number,
+  +searchVisible: boolean,
+  +transactions: Array<TransactionListTx>, // Array<EdgeTransaction> !?
+  +updatingBalance: boolean
+}
 
-const transactions = (state: TransactionsState = [], action: Action) => {
+const transactions = (state = [], action: Action): Array<EdgeTransaction> => {
   if (!action.data) return state
   switch (action.type) {
     case 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS': {
@@ -24,7 +34,7 @@ const transactions = (state: TransactionsState = [], action: Action) => {
   }
 }
 
-const currentCurrencyCode = (state: string = '', action: Action) => {
+const currentCurrencyCode = (state = '', action: Action): string => {
   if (!action.data) return state
   switch (action.type) {
     case 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS': {
@@ -37,7 +47,7 @@ const currentCurrencyCode = (state: string = '', action: Action) => {
   }
 }
 
-const numTransactions = (state: number = 0, action: Action) => {
+const numTransactions = (state = 0, action: Action): number => {
   if (!action.data) return state
   switch (action.type) {
     case 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS': {
@@ -50,7 +60,7 @@ const numTransactions = (state: number = 0, action: Action) => {
   }
 }
 
-const currentWalletId = (state: string = '', action: Action) => {
+const currentWalletId = (state = '', action: Action): string => {
   if (!action.data) return state
   switch (action.type) {
     case 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS': {
@@ -63,7 +73,7 @@ const currentWalletId = (state: string = '', action: Action) => {
   }
 }
 
-const currentEndIndex = (state: number = 0, action: Action) => {
+const currentEndIndex = (state = 0, action: Action): number => {
   if (!action.data) return state
   switch (action.type) {
     case 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS': {
@@ -76,7 +86,7 @@ const currentEndIndex = (state: number = 0, action: Action) => {
   }
 }
 
-const searchVisible = (state: boolean = false, action: Action) => {
+const searchVisible = (state = false, action: Action): boolean => {
   switch (action.type) {
     case 'UI/SCENES/TRANSACTION_LIST/TRANSACTIONS_SEARCH_VISIBLE': {
       return true
@@ -91,7 +101,7 @@ const searchVisible = (state: boolean = false, action: Action) => {
   }
 }
 
-const updatingBalance = (state: boolean = true, action: Action) => {
+const updatingBalance = (state = true, action: Action): boolean => {
   switch (action.type) {
     case 'UI/SCENES/TRANSACTION_LIST/ENABLE_UPDATING_BALANCE': {
       return true
@@ -125,15 +135,14 @@ const loadingTransactions = (state = false, action: Action) => {
   }
 }
 
-export const transactionList = combineReducers({
-  transactions,
+// $FlowFixMe
+export const transactionList: Reducer<TransactionListState, Action> = combineReducers({
   currentCurrencyCode,
-  currentWalletId,
-  numTransactions,
   currentEndIndex,
+  currentWalletId,
+  loadingTransactions,
+  numTransactions,
   searchVisible,
-  updatingBalance,
-  loadingTransactions
+  transactions,
+  updatingBalance
 })
-
-export default transactionList
