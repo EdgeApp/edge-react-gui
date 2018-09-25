@@ -13,6 +13,7 @@ export { core, ui, cryptoExchange, exchangeRates, permissions, contacts }
 
 export const rootReducer = combineReducers({
   core,
+  // $FlowFixMe
   ui,
   cryptoExchange,
   exchangeRates,
