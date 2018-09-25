@@ -72,7 +72,7 @@ export const nativeAmount = (state: string = '0', action: Action) => {
     case 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION': {
       if (!action.data) throw new Error('Invalid Action')
       if (!action.data.parsedUri) return state
-      return action.data.parsedUri.nativeAmount || state.nativeAmount || '0'
+      return action.data.parsedUri.nativeAmount || state || '0'
     }
 
     default:
