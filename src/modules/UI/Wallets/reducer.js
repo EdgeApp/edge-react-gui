@@ -186,23 +186,27 @@ export const walletEnabledTokens = (state: any = {}, action: Action) => {
 }
 
 export const walletLoadingProgress = (state: { [string]: Number } = {}, action: Action) => {
-  if (!action.data) return state
-  const { type, data } = action
-  switch (type) {
-    case 'INSERT_WALLET_IDS_FOR_PROGRESS':
-      const activeWalletIdList = data.activeWalletIds
+  switch (action.type) {
+    case 'INSERT_WALLET_IDS_FOR_PROGRESS': {
+      if (!action.data) throw new Error('Invalid action')
+      const activeWalletIdList = action.data.activeWalletIds
       const activeWalletIdProgress = {}
       activeWalletIdList.map(item => {
         activeWalletIdProgress[item] = 0
       })
       return activeWalletIdProgress
-    case 'UPDATE_WALLET_LOADING_PROGRESS':
+    }
+
+    case 'UPDATE_WALLET_LOADING_PROGRESS': {
+      if (!action.data) throw new Error('Invalid action')
       // prevent backwards progress
-      if (data.addressLoadingProgress < state[data.walletId]) return state
+      if (action.data.addressLoadingProgress < state[action.data.walletId]) return state
       return {
         ...state,
-        [data.walletId]: data.addressLoadingProgress
+        [action.data.walletId]: action.data.addressLoadingProgress
       }
+    }
+
     default:
       return state
   }
@@ -294,9 +298,7 @@ export const addTokenPending = (state: boolean = false, action: Action) => {
 }
 
 export const manageTokensPending = (state: boolean = false, action: Action) => {
-  if (!action.data) return state
-  const type = action.type
-  switch (type) {
+  switch (action.type) {
     case 'MANAGE_TOKENS_START': {
       return true
     }

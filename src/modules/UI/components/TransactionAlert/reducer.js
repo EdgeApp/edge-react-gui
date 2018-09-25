@@ -6,8 +6,7 @@ import { combineReducers } from 'redux'
 import type { Action } from '../../../ReduxTypes.js'
 
 const displayAlert = (state: boolean = false, action: Action) => {
-  const { type } = action
-  switch (type) {
+  switch (action.type) {
     case 'UI/COMPONENTS/TRANSACTION_ALERT/DISPLAY_TRANSACTION_ALERT': {
       return true
     }
