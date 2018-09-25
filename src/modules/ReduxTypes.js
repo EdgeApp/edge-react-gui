@@ -67,8 +67,6 @@ export type State = {
         torchEnabled: boolean,
         addressModalVisible: boolean,
         scanEnabled: boolean,
-        selectedWalletListModalVisibility: boolean,
-        scanToWalletListModalVisibility: boolean,
         legacyAddressModal: {
           isActive: boolean
         },
