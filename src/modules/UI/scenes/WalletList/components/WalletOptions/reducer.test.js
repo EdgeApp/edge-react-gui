@@ -19,6 +19,7 @@ describe('reducer', () => {
       type: 'OPEN_RENAME_WALLET_MODAL',
       data: { walletId: 'RENAME WALLET ID', walletName: 'THIS IS THE WALLET NAME' }
     }
+    // $FlowFixMe
     const actual = reducer(initialState, action)
 
     expect(actual).toMatchSnapshot()

@@ -11,6 +11,7 @@ const transactions = (state: TransactionsState = [], action: Action) => {
   if (!action.data) return state
   switch (action.type) {
     case 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS': {
+      // $FlowFixMe
       return action.data.transactions
     }
 
@@ -27,6 +28,7 @@ const currentCurrencyCode = (state: string = '', action: Action) => {
   if (!action.data) return state
   switch (action.type) {
     case 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS': {
+      // $FlowFixMe
       return action.data.currentCurrencyCode
     }
 
@@ -39,6 +41,7 @@ const numTransactions = (state: number = 0, action: Action) => {
   if (!action.data) return state
   switch (action.type) {
     case 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS': {
+      // $FlowFixMe
       return action.data.numTransactions
     }
 
@@ -51,6 +54,7 @@ const currentWalletId = (state: string = '', action: Action) => {
   if (!action.data) return state
   switch (action.type) {
     case 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS': {
+      // $FlowFixMe
       return action.data.currentWalletId
     }
 
@@ -63,6 +67,7 @@ const currentEndIndex = (state: number = 0, action: Action) => {
   if (!action.data) return state
   switch (action.type) {
     case 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS': {
+      // $FlowFixMe
       return action.data.currentEndIndex
     }
 

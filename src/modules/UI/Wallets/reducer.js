@@ -16,10 +16,12 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
 
   switch (action.type) {
     case 'ACCOUNT_INIT_COMPLETE': {
+      // $FlowFixMe
       const wallets = action.data.currencyWallets
       const out = {}
 
       for (const walletId of Object.keys(wallets)) {
+        // $FlowFixMe
         const tempWallet = schema(wallets[walletId], action.data.receiveAddresses[walletId])
         if (state[walletId]) {
           const enabledTokensOnWallet = state[walletId].enabledTokens
@@ -34,9 +36,11 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
       return out
     }
     case 'CORE/WALLETS/UPDATE_WALLETS': {
+      // $FlowFixMe
       const wallets = action.data.currencyWallets
       const out = {}
       for (const walletId of Object.keys(wallets)) {
+        // $FlowFixMe
         const tempWallet = schema(wallets[walletId], action.data.receiveAddresses[walletId])
         if (state[walletId]) {
           const enabledTokensOnWallet = state[walletId].enabledTokens
@@ -55,6 +59,7 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
     }
 
     case 'UPDATE_WALLET_ENABLED_TOKENS': {
+      // $FlowFixMe
       const { walletId, tokens } = action.data
       if (state[walletId] !== undefined) {
         return {
@@ -70,6 +75,7 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
     }
 
     case 'ADD_NEW_CUSTOM_TOKEN_SUCCESS': {
+      // $FlowFixMe
       const { enabledTokens, walletId } = action.data
       if (state[walletId] !== undefined) {
         return {
@@ -85,6 +91,7 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
     }
 
     case 'ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS': {
+      // $FlowFixMe
       const { coreWalletsToUpdate, oldCurrencyCode, tokenObj } = action.data
       // coreWalletsToUpdate are wallets with non-empty enabledTokens properties
       // receiving token will have to take on sending tokens enabledness
@@ -113,6 +120,7 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
 
     case 'OVERWRITE_THEN_DELETE_TOKEN_SUCCESS': {
       // adjust enabled tokens
+      // $FlowFixMe
       const { coreWalletsToUpdate, oldCurrencyCode } = action.data
       // coreWalletsToUpdate are wallets with non-empty enabledTokens properties
       // receiving token will have to take on sending tokens enabledness
@@ -136,6 +144,7 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
 
     case 'UI/WALLETS/UPSERT_WALLETS': {
       const { data } = action
+      // $FlowFixMe
       const wallets = data.wallets
       const out = { ...state }
       for (const wallet of wallets) {
@@ -158,6 +167,7 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
 
     case 'UI/WALLETS/REFRESH_RECEIVE_ADDRESS': {
       const {
+        // $FlowFixMe
         data: { walletId, receiveAddress }
       } = action
       return {
@@ -215,9 +225,11 @@ export const walletLoadingProgress = (state: { [string]: Number } = {}, action: 
 export const activeWalletIds = (state: WalletIds = [], action: Action) => {
   if (!action.data) return state
   if (action.type === 'ACCOUNT_INIT_COMPLETE') {
+    // $FlowFixMe
     return action.data.activeWalletIds
   }
   if (action.type === 'CORE/WALLETS/UPDATE_WALLETS') {
+    // $FlowFixMe
     return action.data.activeWalletIds
   }
 
@@ -227,9 +239,11 @@ export const activeWalletIds = (state: WalletIds = [], action: Action) => {
 export const archivedWalletIds = (state: WalletIds = [], action: Action) => {
   if (!action.data) return state
   if (action.type === 'ACCOUNT_INIT_COMPLETE') {
+    // $FlowFixMe
     return action.data.archivedWalletIds
   }
   if (action.type === 'CORE/WALLETS/UPDATE_WALLETS') {
+    // $FlowFixMe
     return action.data.archivedWalletIds
   }
 
@@ -240,6 +254,7 @@ export const selectedWalletId = (state: WalletId = '', action: Action) => {
   if (!action.data) return state
   switch (action.type) {
     case 'UI/WALLETS/SELECT_WALLET': {
+      // $FlowFixMe
       return action.data.walletId
     }
 
@@ -259,6 +274,7 @@ export const selectedCurrencyCode = (state: string = '', action: Action) => {
   if (!action.data) return state
   switch (action.type) {
     case 'UI/WALLETS/SELECT_WALLET': {
+      // $FlowFixMe
       return action.data.currencyCode
     }
 

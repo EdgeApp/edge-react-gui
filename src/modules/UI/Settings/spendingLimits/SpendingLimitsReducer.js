@@ -30,6 +30,7 @@ export const isEnabled = (state: boolean = initialState.transaction.isEnabled, a
   switch (action.type) {
     case 'ACCOUNT_INIT_COMPLETE':
     case 'SPENDING_LIMITS/NEW_SPENDING_LIMITS': {
+      // $FlowFixMe
       return action.data.spendingLimits.transaction.isEnabled
     }
     default:
@@ -42,6 +43,7 @@ export const amount = (state: number = initialState.transaction.amount, action: 
   switch (action.type) {
     case 'ACCOUNT_INIT_COMPLETE':
     case 'SPENDING_LIMITS/NEW_SPENDING_LIMITS': {
+      // $FlowFixMe
       return action.data.spendingLimits.transaction.amount
     }
     default:

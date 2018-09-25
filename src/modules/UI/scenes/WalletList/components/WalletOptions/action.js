@@ -62,7 +62,7 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
       return (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
         const walletName = CORE_SELECTORS.getWallet(state, walletId).name
-
+        // $FlowFixMe
         dispatch({ type: 'OPEN_RENAME_WALLET_MODAL', data: { walletId, walletName } })
       }
     }
