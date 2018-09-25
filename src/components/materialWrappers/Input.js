@@ -3,6 +3,8 @@
 import React, { Component } from 'react'
 import { TextField } from 'react-native-material-textfield'
 
+import { scale } from '../../lib/scaling.js'
+
 type Props = {
   value: string,
   label: string,
@@ -13,6 +15,9 @@ type Props = {
   forceFocus: boolean,
   returnKeyType: string,
   containerStyle: any,
+  fontSize: number,
+  titleFontSize: number,
+  labelFontSize: number,
   baseColor: string,
   tintColor: string,
   textColor: string,
@@ -77,7 +82,19 @@ class Input extends Component<Props, State> {
   render () {
     const value = this.props.value ? this.props.value : ''
     const error = this.props.error ? this.props.error : ''
-    const { containerStyle, baseColor, tintColor, textColor, errorColor, titleTextStyle, secureTextEntry, returnKeyType } = this.props
+    const {
+      containerStyle,
+      fontSize,
+      titleFontSize,
+      labelFontSize,
+      baseColor,
+      tintColor,
+      textColor,
+      errorColor,
+      titleTextStyle,
+      secureTextEntry,
+      returnKeyType
+    } = this.props
     return (
       <TextField
         ref={this.addRef}
@@ -86,6 +103,9 @@ class Input extends Component<Props, State> {
         onChangeText={this.onChange}
         error={error}
         containerStyle={containerStyle}
+        fontSize={scale(fontSize) || scale(16)}
+        titleFontSize={scale(titleFontSize) || scale(12)}
+        labelFontSize={scale(labelFontSize) || scale(12)}
         baseColor={baseColor}
         tintColor={tintColor}
         textColor={textColor}
