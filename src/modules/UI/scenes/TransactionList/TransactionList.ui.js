@@ -15,7 +15,7 @@ import * as Constants from '../../../../constants/indexConstants'
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
 import type { ContactsState } from '../../../../reducers/contacts/contactsReducer'
-import type { GuiContact, GuiWallet, TransactionListTx } from '../../../../types'
+import type { GuiWallet, TransactionListTx } from '../../../../types'
 import WalletListModal from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import * as UTILS from '../../../utils'
 import T from '../../components/FormattedText'
@@ -35,7 +35,6 @@ export type StateProps = {
   displayDenomination: EdgeDenomination,
   updatingBalance: boolean,
   transactions: Array<TransactionListTx>,
-  contactsList: Array<GuiContact>,
   selectedWalletId: string,
   selectedCurrencyCode: string,
   isoFiatCurrencyCode: string,

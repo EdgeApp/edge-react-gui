@@ -60,7 +60,7 @@ test('initialState', () => {
       isCustomFeeVisible: false
     },
     transactionAlert: {
-      edgeTransaction: '',
+      edgeTransaction: null,
       displayAlert: false
     },
     transactionDetails: {

@@ -5,7 +5,7 @@ import { type Reducer } from 'redux'
 
 import type { Action } from '../../ReduxTypes.js'
 
-export type AccountState = EdgeAccount // | {}
+export type AccountState = EdgeAccount | Object
 
 // $FlowFixMe
 export const initialState: AccountState = {}

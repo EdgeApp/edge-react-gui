@@ -14,7 +14,7 @@ export type WalletListState = {
   +renameWalletInput: string,
   +renameWalletModalVisible: boolean,
   +resyncWalletModalVisible: boolean,
-  +splitWalletWalletModalVisible: boolean, // MISSING!!!
+  +splitWalletModalVisible: boolean, // MISSING!!!
   +viewXPubWalletModalVisible: boolean,
   +walletArchivesVisible: boolean,
   +walletId: string,

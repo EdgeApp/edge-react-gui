@@ -1,23 +1,21 @@
 // @flow
 
-import type { EdgeTransaction } from 'edge-core-js'
 import { type Reducer, combineReducers } from 'redux'
 
-import type { GuiContact, TransactionListTx } from '../../../../types.js'
+import type { TransactionListTx } from '../../../../types.js'
 import type { Action } from '../../../ReduxTypes.js'
 
 export type TransactionListState = {
-  +contactsList: Array<GuiContact>, // MISSING!!!
   +currentCurrencyCode: string,
   +currentEndIndex: number,
   +currentWalletId: string,
   +numTransactions: number,
   +searchVisible: boolean,
-  +transactions: Array<TransactionListTx>, // Array<EdgeTransaction> !?
+  +transactions: Array<TransactionListTx>,
   +updatingBalance: boolean
 }
 
-const transactions = (state = [], action: Action): Array<EdgeTransaction> => {
+const transactions = (state = [], action: Action): Array<TransactionListTx> => {
   if (!action.data) return state
   switch (action.type) {
     case 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS': {

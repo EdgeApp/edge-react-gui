@@ -8,7 +8,7 @@ const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
 
 test('initialState', () => {
   const expected = {
-    edgeTransaction: '',
+    edgeTransaction: null,
     displayAlert: false
   }
   const actual = transactionAlert(undefined, dummyAction)
