@@ -2,7 +2,7 @@
   "app_name": "Edge Wallet",
   "bitcoin_received": "%1$s Received",
   "bitcoin_remaining": "%1$s Remaining…",
-  "calculator_done": "Done",
+  "calculator_done": "Hecho",
   "change_mining_fee_body": "Warning: Low Fees may cause long delays in transaction confirmation",
   "change_currency_fee": "Change Currency",
   "could_not_select": "Could Not Select Wallet",
