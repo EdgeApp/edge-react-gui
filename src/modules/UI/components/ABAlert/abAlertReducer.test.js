@@ -8,7 +8,11 @@ const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
 
 test('initialState', () => {
   const expected = {
-    syntax: {},
+    syntax: {
+      buttons: [],
+      message: '',
+      title: ''
+    },
     view: false
   }
   const actual = ABAlert(undefined, dummyAction)

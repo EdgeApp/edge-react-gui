@@ -1,14 +1,17 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 /* globals test expect */
 
 import { core as coreReducer } from './reducer.js'
+
+const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
 
 test('initialState', () => {
   const expected = {
     account: {},
     context: {
       context: {},
+      folder: {},
       nextUsername: '',
       usernames: []
     },
@@ -24,7 +27,7 @@ test('initialState', () => {
       byId: {}
     }
   }
-  const actual = coreReducer(undefined, {})
+  const actual = coreReducer(undefined, dummyAction)
 
   expect(actual).toEqual(expected)
 })

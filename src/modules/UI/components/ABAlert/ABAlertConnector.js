@@ -9,8 +9,7 @@ const mapStateToProps = (state: State) => ({
   view: state.ui.scenes.ABAlert.view,
   title: state.ui.scenes.ABAlert.syntax.title,
   message: state.ui.scenes.ABAlert.syntax.message,
-  buttons: state.ui.scenes.ABAlert.syntax.buttons,
-  route: state.ui.scenes.ABAlert.route
+  buttons: state.ui.scenes.ABAlert.syntax.buttons
 })
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({

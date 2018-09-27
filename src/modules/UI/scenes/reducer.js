@@ -29,28 +29,28 @@ import { type WalletListState, walletList } from './WalletList/reducer.js'
 import { type WalletTransferListState, walletTransferList } from './WalletTransferList/reducer.js'
 
 export type ScenesState = {
-  +passwordReminderModal: PasswordReminderModalState,
-  +uniqueIdentifierModal: UniqueIdentifierModalState,
+  +ABAlert: ABAlertState,
+  +changeMiningFee: ChangeMiningFeeState,
+  +controlPanel: ControlPanelState,
+  +createWallet: CreateWalletState,
+  +currentScene: string,
+  +dimensions: DimensionsState,
+  +editToken: EditTokenState,
+  +exchangeRate: ExchangeRateState,
+  +helpModal: HelpModalState,
   +passwordRecoveryReminderModal: PasswordRecoveryReminderModalState,
+  +passwordReminderModal: PasswordReminderModalState,
+  +request: RequestSceneState,
+  +requestType: RequestTypeState,
   +scan: ScanState,
   +sendConfirmation: SendConfirmationState,
-  +changeMiningFee: ChangeMiningFeeState,
-  +transactionList: TransactionListState,
-  +transactionDetails: TransactionDetailsState,
-  +controlPanel: ControlPanelState,
-  +walletList: WalletListState,
-  +walletTransferList: WalletTransferListState,
-  +walletListModal: WalletListModalState,
-  +createWallet: CreateWalletState,
-  +editToken: EditTokenState,
-  +request: RequestSceneState,
-  +dimensions: DimensionsState,
-  +helpModal: HelpModalState,
   +transactionAlert: TransactionAlertState,
-  exchangeRate: ExchangeRateState,
-  ABAlert: ABAlertState,
-  requestType: RequestTypeState,
-  currentScene: string
+  +transactionDetails: TransactionDetailsState,
+  +transactionList: TransactionListState,
+  +uniqueIdentifierModal: UniqueIdentifierModalState,
+  +walletList: WalletListState,
+  +walletListModal: WalletListModalState,
+  +walletTransferList: WalletTransferListState
 }
 
 const currentScene = (state = '', action: Action): string => {

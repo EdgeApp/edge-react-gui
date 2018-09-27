@@ -6,12 +6,17 @@ import { type Action } from '../../../ReduxTypes.js'
 
 export type ABAlertState = {
   view: boolean,
-  route: string, // MISSING!
   syntax: {
     title: string,
     message: string,
     buttons: Array<{ title: string, message: string }>
   }
+}
+
+const initialSyntax = {
+  title: '',
+  message: '',
+  buttons: []
 }
 
 const view = (state = false, action: Action): boolean => {
@@ -29,7 +34,7 @@ const view = (state = false, action: Action): boolean => {
   }
 }
 
-const syntax = (state = {}, action: Action): $PropertyType<ABAlertState, 'syntax'> => {
+const syntax = (state = initialSyntax, action: Action): $PropertyType<ABAlertState, 'syntax'> => {
   switch (action.type) {
     case 'OPEN_AB_ALERT': {
       if (action.data == null) throw new TypeError('Invalid action')
@@ -37,19 +42,15 @@ const syntax = (state = {}, action: Action): $PropertyType<ABAlertState, 'syntax
     }
 
     case 'CLOSE_AB_ALERT': {
-      // $FlowFixMe
-      return ''
+      return initialSyntax
     }
 
     default:
-      // $FlowFixMe
       return state
   }
 }
 
-// $FlowFixMe
 export const ABAlert: Reducer<ABAlertState, Action> = combineReducers({
-  // route,
   syntax,
   view
 })

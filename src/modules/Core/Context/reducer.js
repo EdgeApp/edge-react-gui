@@ -6,16 +6,17 @@ import { type Reducer } from 'redux'
 import { type Action, type Username } from '../../ReduxTypes.js'
 
 export type ContextState = {
-  context: EdgeContext,
-  folder: DiskletFolder,
+  context: EdgeContext | Object,
+  folder: DiskletFolder | Object,
   usernames: Array<Username>,
   nextUsername: Username
 }
 
 const initialState = {
   context: {},
-  usernames: [],
-  nextUsername: ''
+  folder: {},
+  nextUsername: '',
+  usernames: []
 }
 
 export const context: Reducer<ContextState, Action> = (state = initialState, action: Action) => {
@@ -24,7 +25,6 @@ export const context: Reducer<ContextState, Action> = (state = initialState, act
       if (!action.data) throw new Error('Invalid action')
       const context: EdgeContext = action.data.context
       const folder: DiskletFolder = action.data.folder
-      // $FlowFixMe
       return {
         ...state,
         context,
@@ -35,7 +35,6 @@ export const context: Reducer<ContextState, Action> = (state = initialState, act
     case 'CORE/CONTEXT/ADD_USERNAMES': {
       if (!action.data) throw new Error('Invalid action')
       const { usernames } = action.data
-      // $FlowFixMe
       return {
         ...state,
         usernames
@@ -44,12 +43,10 @@ export const context: Reducer<ContextState, Action> = (state = initialState, act
 
     case 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT_REQUEST': {
       if (!action.data) throw new Error('Invalid action')
-      // $FlowFixMe
-      const { usernames } = action.data
-      // $FlowFixMe
+      const { username } = action.data
       return {
         ...state,
-        usernames
+        usernames: state.usernames.filter(name => name !== username)
       }
     }
 
@@ -57,7 +54,6 @@ export const context: Reducer<ContextState, Action> = (state = initialState, act
     case 'LOGOUT': {
       if (!action.data) throw new TypeError('Invalid action')
       const { username } = action.data
-      // $FlowFixMe
       return {
         ...state,
         nextUsername: username || ''

@@ -13,19 +13,19 @@ import { type UiState, ui } from './UI/reducer.js'
 export { core, ui, cryptoExchange, exchangeRates, permissions, contacts }
 
 export type RootState = {
+  +contacts: ContactsState,
   +core: CoreState,
-  +ui: UiState,
   +cryptoExchange: CryptoExchangeState,
   +exchangeRates: ExchangeRatesState,
   +permissions: PermissionsState,
-  +contacts: ContactsState
+  +ui: UiState
 }
 
 export const rootReducer: Reducer<RootState, Action> = combineReducers({
+  contacts,
   core,
-  ui,
   cryptoExchange,
   exchangeRates,
   permissions,
-  contacts
+  ui
 })

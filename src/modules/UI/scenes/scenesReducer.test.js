@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 /* globals test expect */
 
@@ -6,10 +6,16 @@ import { scenes as scenesReducer } from './reducer.js'
 import { request } from './Request/reducer.js'
 import { initialState as SendConfirmationInitialState } from './SendConfirmation/selectors.js'
 
+const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
+
 test('initialState', () => {
   const expected = {
     ABAlert: {
-      syntax: {},
+      syntax: {
+        buttons: [],
+        message: '',
+        title: ''
+      },
       view: false
     },
     controlPanel: {
@@ -31,7 +37,7 @@ test('initialState', () => {
       exchangeRates: {}
     },
     helpModal: false,
-    request: request(undefined, {}),
+    request: request(undefined, dummyAction),
     requestType: {
       useLegacyAddress: false,
       uniqueLegacyAddress: false
@@ -109,7 +115,7 @@ test('initialState', () => {
       uniqueIdentifier: ''
     }
   }
-  const actual = scenesReducer(undefined, {})
+  const actual = scenesReducer(undefined, dummyAction)
 
   expect(actual).toEqual(expected)
 })
