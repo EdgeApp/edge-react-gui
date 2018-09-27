@@ -1,16 +1,20 @@
 // @flow
 
+import { type Reducer } from 'redux'
+
 import type { Action } from '../modules/ReduxTypes.js'
 
-type RequestType = {
+export type RequestTypeState = {
   useLegacyAddress: boolean,
   uniqueLegacyAddress: boolean
 }
-const initialState: RequestType = {
+
+const initialState: RequestTypeState = {
   useLegacyAddress: false,
   uniqueLegacyAddress: false
 }
-const requestType = (state: RequestType = initialState, action: Action): RequestType => {
+
+export const requestType: Reducer<RequestTypeState, Action> = (state = initialState, action: Action) => {
   switch (action.type) {
     case 'NEW_RECEIVE_ADDRESS':
     case 'UPDATE_RECEIVE_ADDRESS_SUCCESS': {
@@ -44,5 +48,3 @@ const requestType = (state: RequestType = initialState, action: Action): Request
       return state
   }
 }
-
-export { requestType }

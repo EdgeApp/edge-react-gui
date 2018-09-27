@@ -1,5 +1,7 @@
 // @flow
 
+import { type Reducer } from 'redux'
+
 import type { GuiReceiveAddress } from '../../../../types.js'
 import type { Action } from '../../../ReduxTypes.js'
 
@@ -19,7 +21,7 @@ const initialState: RequestSceneState = {
   receiveAddress
 }
 
-export const request = (state: RequestSceneState = initialState, action: Action): RequestSceneState => {
+export const request: Reducer<RequestSceneState, Action> = (state = initialState, action: Action) => {
   switch (action.type) {
     case 'UPDATE_RECEIVE_ADDRESS_SUCCESS': {
       if (!action.data) {
@@ -92,5 +94,3 @@ export const request = (state: RequestSceneState = initialState, action: Action)
       return state
   }
 }
-
-export default request

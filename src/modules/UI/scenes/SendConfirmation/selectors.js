@@ -1,43 +1,13 @@
 // @flow
 
-import type { AbcSpendTarget, EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
+import type { EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 
 import { STANDARD_FEE } from '../../../../constants/indexConstants'
 import type { State } from '../../../ReduxTypes'
 import { convertNativeToExchange } from '../../../utils.js'
 import { convertCurrency, getSceneState, getSelectedCurrencyCode } from '../../selectors.js'
 import { getExchangeDenomination } from '../../Settings/selectors.js'
-
-export type GuiMakeSpendInfo = {
-  currencyCode?: string,
-  customNetworkFee?: any,
-  metadata?: any,
-  nativeAmount?: string,
-  networkFeeOption?: string,
-  publicAddress?: string,
-  spendTargets?: Array<AbcSpendTarget>,
-  uniqueIdentifier?: string
-}
-
-export type SendConfirmationState = {
-  forceUpdateGuiCounter: number,
-  destination: string,
-  address: string,
-
-  nativeAmount: string,
-
-  parsedUri: GuiMakeSpendInfo,
-  spendInfo: EdgeSpendInfo | null,
-
-  isEditable: boolean,
-
-  pending: boolean,
-  transaction: EdgeTransaction | null,
-  error: Error | null,
-
-  pin: string,
-  authRequired: 'pin' | 'none'
-}
+import { type GuiMakeSpendInfo } from './reducer.js'
 
 export const initialState = {
   isKeyboardVisible: false,

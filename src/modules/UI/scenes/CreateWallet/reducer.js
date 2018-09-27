@@ -1,12 +1,14 @@
 // @flow
 
-import { combineReducers } from 'redux'
+import { type Reducer, combineReducers } from 'redux'
 
 import type { Action } from '../../../ReduxTypes.js'
 
-export type IsCreatingWallet = boolean
+export type CreateWalletState = {
+  isCreatingWallet: boolean
+}
 
-const isCreatingWallet = (state = false, action: Action) => {
+const isCreatingWallet = (state = false, action: Action): boolean => {
   switch (action.type) {
     case 'UI/WALLETS/CREATE_WALLET_START': {
       return true
@@ -25,8 +27,6 @@ const isCreatingWallet = (state = false, action: Action) => {
   }
 }
 
-export const createWallet = combineReducers({
+export const createWallet: Reducer<CreateWalletState, Action> = combineReducers({
   isCreatingWallet
 })
-
-export default createWallet

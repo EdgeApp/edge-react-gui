@@ -1,12 +1,14 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 /* globals test expect */
 
 import { exchangeRates } from './reducer.js'
 
+const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
+
 test('initialState', () => {
   const expected = {}
-  const actual = exchangeRates(undefined, {})
+  const actual = exchangeRates(undefined, dummyAction)
 
   expect(actual).toEqual(expected)
 })

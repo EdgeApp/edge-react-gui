@@ -24,7 +24,7 @@ export {
   postponePasswordReminder,
   passwordReminderModalConnector,
   PasswordReminderModal,
-  passwordReminderModalReducer,
+  passwordReminderModalReducer as passwordReminderModal,
   setPasswordReminder
 }
 

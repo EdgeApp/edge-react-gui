@@ -1,10 +1,25 @@
 // @flow
 
-import { combineReducers } from 'redux'
+import { type Reducer, combineReducers } from 'redux'
 
 import { type Action } from '../../../ReduxTypes.js'
 
-const view = (state = false, action: Action) => {
+export type ABAlertState = {
+  view: boolean,
+  syntax: {
+    title: string,
+    message: string,
+    buttons: Array<{ title: string, message: string }>
+  }
+}
+
+const initialSyntax = {
+  title: '',
+  message: '',
+  buttons: []
+}
+
+const view = (state = false, action: Action): boolean => {
   switch (action.type) {
     case 'OPEN_AB_ALERT': {
       return true
@@ -19,14 +34,15 @@ const view = (state = false, action: Action) => {
   }
 }
 
-const syntax = (state = {}, action: Action) => {
+const syntax = (state = initialSyntax, action: Action): $PropertyType<ABAlertState, 'syntax'> => {
   switch (action.type) {
     case 'OPEN_AB_ALERT': {
+      if (action.data == null) throw new TypeError('Invalid action')
       return action.data
     }
 
     case 'CLOSE_AB_ALERT': {
-      return ''
+      return initialSyntax
     }
 
     default:
@@ -34,9 +50,7 @@ const syntax = (state = {}, action: Action) => {
   }
 }
 
-export const abAlertReducer = combineReducers({
-  view,
-  syntax
+export const ABAlert: Reducer<ABAlertState, Action> = combineReducers({
+  syntax,
+  view
 })
-
-export default abAlertReducer

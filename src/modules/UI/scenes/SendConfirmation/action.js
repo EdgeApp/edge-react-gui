@@ -20,8 +20,9 @@ import {
 } from '../../../Core/Wallets/api.js'
 import type { Dispatch, GetState } from '../../../ReduxTypes'
 import { getSelectedWalletId } from '../../selectors.js'
+import { type GuiMakeSpendInfo } from './reducer.js'
 import { getAuthRequired, getSpendInfo, getTransaction } from './selectors'
-import type { AuthType, GuiMakeSpendInfo } from './selectors'
+import type { AuthType } from './selectors.js'
 
 // add empty string if there is an error but we don't need text feedback to the user
 export const makeSpendFailed = (error: Error | null) => ({

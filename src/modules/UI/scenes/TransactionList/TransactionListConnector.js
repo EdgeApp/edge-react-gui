@@ -64,7 +64,6 @@ const mapStateToProps = (state: State) => {
     updatingBalance: false,
     transactions,
     // searchVisible: state.ui.scenes.transactionList.searchVisible,
-    contactsList: state.ui.scenes.transactionList.contactsList,
     selectedWalletId,
     selectedCurrencyCode: currencyCode,
     isoFiatCurrencyCode,

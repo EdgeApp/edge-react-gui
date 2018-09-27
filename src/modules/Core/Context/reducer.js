@@ -1,20 +1,25 @@
 // @flow
 
 import type { DiskletFolder, EdgeContext } from 'edge-core-js'
+import { type Reducer } from 'redux'
 
-import type { Action } from '../../ReduxTypes'
+import { type Action, type Username } from '../../ReduxTypes.js'
+
+export type ContextState = {
+  context: EdgeContext | Object,
+  folder: DiskletFolder | Object,
+  usernames: Array<Username>,
+  nextUsername: Username
+}
 
 const initialState = {
   context: {},
-  usernames: [],
-  nextUsername: ''
+  folder: {},
+  nextUsername: '',
+  usernames: []
 }
-export type State = {
-  context: EdgeContext | {},
-  usernames: Array<string>,
-  nextUsername: string
-}
-export const context = (state: State = initialState, action: Action) => {
+
+export const context: Reducer<ContextState, Action> = (state = initialState, action: Action) => {
   switch (action.type) {
     case 'CORE/CONTEXT/ADD_CONTEXT': {
       if (!action.data) throw new Error('Invalid action')
@@ -38,19 +43,16 @@ export const context = (state: State = initialState, action: Action) => {
 
     case 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT_REQUEST': {
       if (!action.data) throw new Error('Invalid action')
-      // $FlowFixMe
-      const { usernames } = action.data
+      const { username } = action.data
       return {
         ...state,
-        usernames
+        usernames: state.usernames.filter(name => name !== username)
       }
     }
 
     case 'DEEP_LINK_RECEIVED':
     case 'LOGOUT': {
-      if (!action.data) {
-        return state
-      }
+      if (!action.data) throw new TypeError('Invalid action')
       const { username } = action.data
       return {
         ...state,
@@ -59,6 +61,7 @@ export const context = (state: State = initialState, action: Action) => {
     }
 
     default:
+      // $FlowFixMe
       return state
   }
 }

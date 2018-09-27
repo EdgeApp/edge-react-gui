@@ -1,8 +1,12 @@
 // @flow
 
-import { combineReducers } from 'redux'
+import { type Reducer, combineReducers } from 'redux'
 
-import type { Action } from '../../../ReduxTypes'
+import type { Action } from '../../../ReduxTypes.js'
+
+export type PasswordRecoveryReminderModalState = {
+  isVisible: boolean
+}
 
 export const isVisible = (state: boolean = false, action: Action) => {
   switch (action.type) {
@@ -19,6 +23,6 @@ export const isVisible = (state: boolean = false, action: Action) => {
   }
 }
 
-export const passwordRecoveryReminderModal = combineReducers({
+export const passwordRecoveryReminderModal: Reducer<PasswordRecoveryReminderModalState, Action> = combineReducers({
   isVisible
 })

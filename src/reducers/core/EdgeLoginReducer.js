@@ -1,20 +1,23 @@
 // @flow
 
 import type { EdgeLobby } from 'edge-core-js'
+import { type Reducer } from 'redux'
 
 import type { Action } from '../../modules/ReduxTypes.js'
+
+export type EdgeLoginState = {
+  lobby: EdgeLobby | null,
+  error: Error | null,
+  isProcessing: boolean
+}
 
 const initialState = {
   lobby: null,
   error: null,
   isProcessing: false
 }
-export type InitialEdgeLoginState = {
-  lobby: null | EdgeLobby,
-  error: null | Error,
-  isProcessing: boolean
-}
-export default function (state: InitialEdgeLoginState = initialState, action: Action) {
+
+export const edgeLogin: Reducer<EdgeLoginState, Action> = (state = initialState, action: Action) => {
   switch (action.type) {
     case 'PROCESS_EDGE_LOGIN': {
       return {

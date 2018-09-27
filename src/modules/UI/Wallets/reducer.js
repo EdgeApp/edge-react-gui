@@ -2,16 +2,23 @@
 
 import type { EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeReceiveAddress } from 'edge-core-js'
 import _ from 'lodash'
-import { combineReducers } from 'redux'
+import { type Reducer, combineReducers } from 'redux'
 
 import type { GuiWallet } from '../../../types.js'
-import type { Action } from '../../ReduxTypes.js'
+import type { Action, Id } from '../../ReduxTypes.js'
 
-export type WalletId = string
-export type WalletIds = Array<WalletId>
-export type WalletByIdState = { [walletId: WalletId]: GuiWallet }
+export type WalletsState = {
+  byId: { [walletId: Id]: GuiWallet },
+  activeWalletIds: Array<Id>,
+  archivedWalletIds: Array<Id>,
+  selectedWalletId: string,
+  selectedCurrencyCode: string,
+  addTokenPending: boolean,
+  manageTokensPending: boolean,
+  walletLoadingProgress: { [walletId: string]: number }
+}
 
-export const byId = (state: WalletByIdState = {}, action: Action) => {
+const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> => {
   if (!action.data) return state
 
   switch (action.type) {
@@ -184,18 +191,7 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
   }
 }
 
-export const walletEnabledTokens = (state: any = {}, action: Action) => {
-  if (action.type === 'ACCOUNT_INIT_COMPLETE' && action.data) {
-    return action.data.activeWalletIds
-  }
-  if (action.type === 'CORE/WALLETS/UPDATE_WALLETS' && action.data) {
-    return action.data.activeWalletIds
-  }
-
-  return state
-}
-
-export const walletLoadingProgress = (state: { [string]: Number } = {}, action: Action) => {
+const walletLoadingProgress = (state = {}, action: Action): $PropertyType<WalletsState, 'walletLoadingProgress'> => {
   switch (action.type) {
     case 'INSERT_WALLET_IDS_FOR_PROGRESS': {
       if (!action.data) throw new Error('Invalid action')
@@ -222,7 +218,7 @@ export const walletLoadingProgress = (state: { [string]: Number } = {}, action: 
   }
 }
 
-export const activeWalletIds = (state: WalletIds = [], action: Action) => {
+const activeWalletIds = (state = [], action: Action): Array<string> => {
   if (!action.data) return state
   if (action.type === 'ACCOUNT_INIT_COMPLETE') {
     // $FlowFixMe
@@ -236,7 +232,7 @@ export const activeWalletIds = (state: WalletIds = [], action: Action) => {
   return state
 }
 
-export const archivedWalletIds = (state: WalletIds = [], action: Action) => {
+const archivedWalletIds = (state = [], action: Action): Array<string> => {
   if (!action.data) return state
   if (action.type === 'ACCOUNT_INIT_COMPLETE') {
     // $FlowFixMe
@@ -250,19 +246,16 @@ export const archivedWalletIds = (state: WalletIds = [], action: Action) => {
   return state
 }
 
-export const selectedWalletId = (state: WalletId = '', action: Action) => {
-  if (!action.data) return state
+const selectedWalletId = (state = '', action: Action): string => {
   switch (action.type) {
     case 'UI/WALLETS/SELECT_WALLET': {
-      // $FlowFixMe
+      if (action.data == null) throw new TypeError('Invalid action')
       return action.data.walletId
     }
 
     case 'ACCOUNT_INIT_COMPLETE': {
-      if (action.data.walletId) {
-        return action.data.walletId
-      }
-      return state
+      if (action.data == null) throw new TypeError('Invalid action')
+      return action.data.walletId
     }
 
     default:
@@ -270,19 +263,17 @@ export const selectedWalletId = (state: WalletId = '', action: Action) => {
   }
 }
 
-export const selectedCurrencyCode = (state: string = '', action: Action) => {
-  if (!action.data) return state
+const selectedCurrencyCode = (state = '', action: Action): string => {
   switch (action.type) {
     case 'UI/WALLETS/SELECT_WALLET': {
+      if (action.data == null) throw new TypeError('Invalid action')
       // $FlowFixMe
       return action.data.currencyCode
     }
 
     case 'ACCOUNT_INIT_COMPLETE': {
-      if (action.data.currencyCode) {
-        return action.data.currencyCode
-      }
-      return state
+      if (action.data == null) throw new TypeError('Invalid action')
+      return action.data.currencyCode
     }
 
     default:
@@ -290,7 +281,7 @@ export const selectedCurrencyCode = (state: string = '', action: Action) => {
   }
 }
 
-export const addTokenPending = (state: boolean = false, action: Action) => {
+const addTokenPending = (state = false, action: Action): boolean => {
   switch (action.type) {
     case 'ADD_TOKEN_START': {
       return true
@@ -313,7 +304,7 @@ export const addTokenPending = (state: boolean = false, action: Action) => {
   }
 }
 
-export const manageTokensPending = (state: boolean = false, action: Action) => {
+const manageTokensPending = (state = false, action: Action): boolean => {
   switch (action.type) {
     case 'MANAGE_TOKENS_START': {
       return true
@@ -409,7 +400,7 @@ function schema (wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress)
   return newWallet
 }
 
-export const wallets = combineReducers({
+export const wallets: Reducer<WalletsState, Action> = combineReducers({
   byId,
   activeWalletIds,
   archivedWalletIds,

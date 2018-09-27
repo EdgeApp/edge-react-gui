@@ -1,34 +1,42 @@
 // @flow
 
-import { combineReducers } from 'redux'
+import { type Reducer, combineReducers } from 'redux'
 
-import { passwordReminderReducer as passwordReminder } from '../../reducers/passwordReminder/indexPasswordReminder.js'
-import type { State } from '../ReduxTypes'
+import { type PasswordReminderState, passwordReminder } from '../../reducers/passwordReminder/passwordReminderReducer.js'
 import { type Action } from '../ReduxTypes.js'
-import errorAlert from './components/ErrorAlert/reducer'
-import transactionAlert from './components/TransactionAlert/reducer'
-import { request } from './Request/reducer.js'
-import { scenes } from './scenes/reducer.js'
-import { settings } from './Settings/reducer.js'
-import { wallets } from './Wallets/reducer.js'
+import { type ErrorAlertState, errorAlert } from './components/ErrorAlert/reducer.js'
+import { type TransactionAlertState, transactionAlert } from './components/TransactionAlert/reducer.js'
+import { type RequestState, request } from './Request/reducer.js'
+import { type ScenesState, scenes } from './scenes/reducer.js'
+import { type SettingsState, settings } from './Settings/reducer.js'
+import { type WalletsState, wallets } from './Wallets/reducer.js'
 
 export { errorAlert, transactionAlert, passwordReminder, scenes, wallets, request, settings }
 
-export const uiReducer = combineReducers({
+export type UiState = {
+  +errorAlert: ErrorAlertState,
+  +passwordReminder: PasswordReminderState,
+  +request: RequestState,
+  +scenes: ScenesState,
+  +settings: SettingsState,
+  +transactionAlert: TransactionAlertState,
+  +wallets: WalletsState
+}
+
+const uiInner: Reducer<UiState, Action> = combineReducers({
   errorAlert,
-  transactionAlert,
   passwordReminder,
-  scenes,
-  wallets,
   request,
-  settings
+  scenes,
+  settings,
+  transactionAlert,
+  wallets
 })
 
-export const ui = (state: $PropertyType<State, 'ui'>, action: Action) => {
+export const ui: Reducer<UiState, Action> = (state, action: Action) => {
   if (action.type === 'LOGOUT' || action.type === 'DEEP_LINK_RECEIVED') {
-    return uiReducer(undefined, ({ type: 'DUMMY_ACTION_PLEASE_IGNORE' }: any))
+    return uiInner(undefined, { type: 'DUMMY_ACTION_PLEASE_IGNORE' })
   }
 
-  // $FlowFixMe
-  return uiReducer(state, action)
+  return uiInner(state, action)
 }

@@ -1,10 +1,16 @@
 // @flow
 
+import { type Reducer } from 'redux'
+
 import type { Action } from '../ReduxTypes.js'
+
+export type ExchangeRatesState = {
+  [string]: number
+}
+
 const initialState = {}
 
-type ExchangeRateState = Object
-const exchangeRatesReducer = (state = initialState, action) => {
+export const exchangeRates: Reducer<ExchangeRatesState, Action> = (state = initialState, action: Action) => {
   switch (action.type) {
     case 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES':
       if (!action.data) throw new Error('Invalid action')
@@ -16,8 +22,4 @@ const exchangeRatesReducer = (state = initialState, action) => {
     default:
       return state
   }
-}
-
-export const exchangeRates = (state: ExchangeRateState, action: Action) => {
-  return exchangeRatesReducer(state, action)
 }

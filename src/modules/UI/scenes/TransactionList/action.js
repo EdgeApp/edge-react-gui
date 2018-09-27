@@ -38,11 +38,6 @@ export const transactionsSearchHidden = () => ({
   type: 'UI/SCENES/TRANSACTION_LIST/TRANSACTIONS_SEARCH_HIDDEN'
 })
 
-export const updateContactsList = (data: any) => ({
-  type: 'UI/SCENES/TRANSACTION_LIST/UPDATE_CONTACTS_LIST',
-  data
-})
-
 export const updateSearchResults = (data: any) => ({
   type: 'UI/SCENES/TRANSACTION_LIST/UPDATE_SEARCH_RESULTS',
   data

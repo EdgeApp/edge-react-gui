@@ -1,10 +1,14 @@
 // @flow
 
-import { combineReducers } from 'redux'
+import { type Reducer, combineReducers } from 'redux'
 
 import type { Action } from '../../../ReduxTypes.js'
 
-export const subcategories = (state: Array<string> = [], action: Action) => {
+export type TransactionDetailsState = {
+  subcategories: Array<string>
+}
+
+const subcategories = (state = [], action: Action): Array<string> => {
   if (!action.data) return state
   switch (action.type) {
     case 'SET_TRANSACTION_SUBCATEGORIES': {
@@ -18,8 +22,6 @@ export const subcategories = (state: Array<string> = [], action: Action) => {
   }
 }
 
-export const transactionDetails = combineReducers({
+export const transactionDetails: Reducer<TransactionDetailsState, Action> = combineReducers({
   subcategories
 })
-
-export default transactionDetails

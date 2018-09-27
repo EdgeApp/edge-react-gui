@@ -94,6 +94,7 @@ const strings = {
   fragment_wallets_get_seed_wallet: 'Get Seed',
   fragment_wallets_seed_share_title: 'Edge Wallet (%s) Seed',
   fragment_wallets_view_xpub: 'View XPub Address',
+  fragment_wallets_no_xpub: 'This wallet type does not have a public key',
   fragment_wallets_pubkey_copied_title: 'XPub Address Copied',
   fragment_wallets_pubkey_copied_success: 'The XPub Address has been successfully copied to the clipboard.',
   fragment_wallets_pubkey_copied_error: 'There has been an error copying your XPub Address.',

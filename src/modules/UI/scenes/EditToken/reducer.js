@@ -1,10 +1,16 @@
 // @flow
 
-import { combineReducers } from 'redux'
+import { type Reducer, combineReducers } from 'redux'
 
 import type { Action } from '../../../ReduxTypes.js'
 
-export const deleteTokenModalVisible = (state: boolean = false, action: Action) => {
+export type EditTokenState = {
+  +deleteTokenModalVisible: boolean,
+  +deleteCustomTokenProcessing: boolean,
+  +editCustomTokenProcessing: boolean
+}
+
+const deleteTokenModalVisible = (state = false, action: Action): boolean => {
   switch (action.type) {
     case 'SHOW_DELETE_TOKEN_MODAL': {
       return true
@@ -23,7 +29,7 @@ export const deleteTokenModalVisible = (state: boolean = false, action: Action) 
   }
 }
 
-export const deleteCustomTokenProcessing = (state: boolean = false, action: Action) => {
+const deleteCustomTokenProcessing = (state = false, action: Action): boolean => {
   switch (action.type) {
     case 'DELETE_CUSTOM_TOKEN_START': {
       return true
@@ -42,7 +48,7 @@ export const deleteCustomTokenProcessing = (state: boolean = false, action: Acti
   }
 }
 
-export const editCustomTokenProcessing = (state: boolean = false, action: Action) => {
+const editCustomTokenProcessing = (state = false, action: Action): boolean => {
   switch (action.type) {
     case 'EDIT_CUSTOM_TOKEN_START': {
       return true
@@ -73,10 +79,8 @@ export const editCustomTokenProcessing = (state: boolean = false, action: Action
   }
 }
 
-export const editToken = combineReducers({
+export const editToken: Reducer<EditTokenState, Action> = combineReducers({
   deleteTokenModalVisible,
   deleteCustomTokenProcessing,
   editCustomTokenProcessing
 })
-
-export default editToken
