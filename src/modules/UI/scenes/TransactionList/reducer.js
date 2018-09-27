@@ -133,7 +133,6 @@ const loadingTransactions = (state = false, action: Action) => {
   }
 }
 
-// $FlowFixMe
 export const transactionList: Reducer<TransactionListState, Action> = combineReducers({
   currentCurrencyCode,
   currentEndIndex,

@@ -149,7 +149,6 @@ const splitWalletModalVisible = (state = false, action: Action): boolean => {
   }
 }
 
-// $FlowFixMe
 export const walletList: Reducer<WalletListState, Action> = combineReducers({
   deleteWalletModalVisible,
   getSeedWalletModalVisible,

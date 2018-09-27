@@ -7,7 +7,6 @@ import type { Action } from '../../ReduxTypes.js'
 
 export type AccountState = EdgeAccount | Object
 
-// $FlowFixMe
 export const initialState: AccountState = {}
 
 export const loggedIn = (account: EdgeAccount) => ({
