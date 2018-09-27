@@ -2,9 +2,9 @@
 
 import { Platform, StyleSheet } from 'react-native'
 
+import { scale } from '../../../../lib/scaling.js'
 import THEME from '../../../../theme/variables/airbitz'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
-import { scale } from '../../../../lib/scaling.js'
 
 export const styles = {
   gradient: {
@@ -33,6 +33,8 @@ export const styles = {
     flexDirection: 'row'
   },
   walletIcon: {
+    width: scale(22),
+    height: scale(22),
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   walletsBoxHeaderText: {
