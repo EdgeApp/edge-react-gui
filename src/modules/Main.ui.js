@@ -678,7 +678,11 @@ export default class Main extends Component<Props, State> {
   }
 
   renderWalletName = () => {
-    return <WalletName />
+    return (
+      <View style={styles.titleWrapper}>
+        <WalletName />
+      </View>
+    )
   }
 
   renderEmptyButton = () => {
