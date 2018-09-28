@@ -41,7 +41,6 @@ const edgeTransaction = (state = null, action: Action): EdgeTransaction | null =
   }
 }
 
-// $FlowFixMe
 export const transactionAlert: Reducer<TransactionAlertState, Action> = combineReducers({
   displayAlert,
   edgeTransaction

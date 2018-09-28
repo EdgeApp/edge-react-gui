@@ -47,9 +47,6 @@ emoji=true
 
 module.system=haste
 
-# TODO: Remove this once everybody switches to core-js:
-module.name_mapper='edge-login$' -> 'edge-core-js'
-
 munge_underscores=true
 
 module.name_mapper='^[./a-zA-Z0-9$_-]+\.\(bmp\|gif\|jpg\|jpeg\|png\|psd\|svg\|webp\|m4v\|mov\|mp4\|mpeg\|mpg\|webm\|aac\|aiff\|caf\|m4a\|mp3\|wav\|html\|pdf\)$' -> '<PROJECT_ROOT>/src/extension-resolver.js.flow'
