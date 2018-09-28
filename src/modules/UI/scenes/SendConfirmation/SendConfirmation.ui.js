@@ -169,7 +169,8 @@ export class SendConfirmation extends Component<Props, State> {
           <View style={styles.mainScrollView}>
             <View style={[styles.balanceContainer, styles.error]}>
               <Text style={styles.balanceText}>
-                Balance: {cryptoBalanceAmountString} {primaryInfo.displayDenomination.name} ({secondaryInfo.displayDenomination.symbol} {balanceInFiatString})
+                {s.strings.send_confirmation_balance} {cryptoBalanceAmountString} {primaryInfo.displayDenomination.name} (
+                {secondaryInfo.displayDenomination.symbol} {balanceInFiatString})
               </Text>
             </View>
 

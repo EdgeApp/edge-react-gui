@@ -132,6 +132,7 @@ const strings = {
   send_confirmation_fee_line: 'Fee: + %s (%s)',
   send_confirmation_max_button_title: 'Send Max Amount',
   send_confirmation_slide_to_confirm: 'Slide to Confirm',
+  send_confirmation_balance: 'Balance:',
   send_scan_header_text: 'Scan to Send, Import, or Edge Login',
   send_to_title: 'To: %s',
   send_confirmation_to: 'To: %s',
