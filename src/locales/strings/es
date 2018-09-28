@@ -341,9 +341,9 @@
   "onboarding_skip_button": "",
   "onboarding_slide_1": "Pulsa [+] para crear nuevas carteras para otras criptomonedas.\n\nPulsa en el nombre de una cartera para enviar o recibir fondos en esa cartera.",
   "onboarding_slide_2": "Pulsa los tres puntos a la derecha de una cartera Ethereum para añadir tokens.",
-  "onboarding_slide_3": "",
-  "onboarding_slide_4": "",
-  "onboarding_slide_5": "",
+  "onboarding_slide_3": "Para recibir criptomonedas,[Copy] or [Share] la dirección de tu cartera o haz que quien envía escanee tu código QR presentado en la pantalla de Solicitud.",
+  "onboarding_slide_4": "Para enviar criptomonedas escanea el código QR de un amigo aquí, o pega el código a través del botón [Address].",
+  "onboarding_slide_5": "Intercambia criptomonedas seleccionando la cartera de origen y de destino para hacer la transacción entre ellas.",
   "otp_out_of_sync_title": "",
-  "otp_out_of_sync_body": ""
+  "otp_out_of_sync_body": "Este dispositivo no tiene el token de autenticación de doble factor apropiado. Puedes acceder a tus fondos con funcionalidad limitada, pero no puedes crear carteras o cambiar las opciones de la cuenta"
 }
