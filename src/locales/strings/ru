@@ -126,6 +126,7 @@
   "send_confirmation_fee_line": "",
   "send_confirmation_max_button_title": "",
   "send_confirmation_slide_to_confirm": "",
+  "send_confirmation_balance": "",
   "send_scan_header_text": "",
   "send_to_title": "",
   "send_confirmation_to": "",
