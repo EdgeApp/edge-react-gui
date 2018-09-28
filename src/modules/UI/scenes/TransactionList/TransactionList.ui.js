@@ -15,6 +15,7 @@ import * as Constants from '../../../../constants/indexConstants'
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
 import type { ContactsState } from '../../../../reducers/contacts/contactsReducer'
+import { PLATFORM } from '../../../../theme/variables/platform.js'
 import type { GuiWallet, TransactionListTx } from '../../../../types'
 import WalletListModal from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import * as UTILS from '../../../utils'
@@ -148,13 +149,14 @@ export class TransactionList extends Component<Props, State> {
 
   render () {
     const txs = this.state.reset ? emptyArray : this.props.transactions
+    const isAndroid = PLATFORM.platform === 'android'
     return (
       <SafeAreaView>
         <View style={styles.scene}>
           <Gradient style={styles.gradient} />
           <View style={styles.scrollView}>
             <View style={styles.container}>
-              <View style={styles.transactionsWrap}>
+              <View style={[isAndroid ? styles.androidTransactionsWrap : styles.transactionsWrap]}>
                 <FlatList
                   ListEmptyComponent={this.renderBuyCrypto()}
                   ListHeaderComponent={this.currentRenderBalanceBox()}

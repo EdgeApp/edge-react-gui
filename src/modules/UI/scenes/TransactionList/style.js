@@ -1,9 +1,12 @@
 // @flow
 
 import { StyleSheet } from 'react-native'
+import ExtraDimensions from 'react-native-extra-dimensions-android'
 
 import THEME from '../../../../theme/variables/airbitz'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
+
+const SOFT_MENU_BAR_HEIGHT = ExtraDimensions.get('SOFT_MENU_BAR_HEIGHT')
 
 export const styles = {
   gradient: {
@@ -219,14 +222,15 @@ export const styles = {
   transactionsWrap: {
     flex: 1
   },
-
+  androidTransactionsWrap: {
+    height: PLATFORM.usableHeight - SOFT_MENU_BAR_HEIGHT + THEME.HEADER
+  },
   searchBarView: {
     paddingLeft: 12,
     paddingRight: 24,
     flexDirection: 'row',
     alignItems: 'center'
   },
-
   transactionsScrollWrap: {
     flex: 1,
     backgroundColor: THEME.COLORS.OFF_WHITE

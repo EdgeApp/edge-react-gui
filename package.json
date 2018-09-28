@@ -105,6 +105,7 @@
     "react-native-contacts": "git://github.com/EdgeApp/react-native-contacts.git",
     "react-native-contacts-wrapper": "git://github.com/EdgeApp/react-native-contacts-wrapper.git",
     "react-native-crypto": "^2.0.1",
+    "react-native-extra-dimensions-android": "git://github.com/EdgeApp/react-native-extra-dimensions-android.git",
     "react-native-device-info": "^0.22.4",
     "react-native-drawer": "^2.3.0",
     "react-native-dropdown": "git://github.com/g6ling/react-native-dropdown.git",
@@ -225,7 +226,12 @@
     "coverageDirectory": "./coverage",
     "reporters": [
       "default",
-      [ "jest-junit", { "output": "./coverage/junit.xml" } ]
+      [
+        "jest-junit",
+        {
+          "output": "./coverage/junit.xml"
+        }
+      ]
     ]
   },
   "detox": {
