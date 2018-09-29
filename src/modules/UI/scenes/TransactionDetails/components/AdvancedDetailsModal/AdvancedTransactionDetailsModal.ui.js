@@ -39,6 +39,7 @@ export class AdvancedTransactionDetailsModal extends Component<AdvancedTransacti
   render () {
     return (
       <InteractiveModal
+        legacy
         isActive={this.props.isActive}
         onBackButtonPress={this.props.onExit}
         onBackdropPress={this.props.onExit}

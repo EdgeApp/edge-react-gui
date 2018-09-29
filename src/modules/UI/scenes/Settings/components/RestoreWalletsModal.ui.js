@@ -9,18 +9,14 @@ import { Icon } from '../../../components/Icon/Icon.ui'
 import { InteractiveModal } from '../../../components/Modals'
 
 export type Props = {
-  isActive: boolean,
-  onConfirm: () => void,
-  onBackButtonPress: () => void,
-  onBackdropPress: () => void,
-  onCancel: () => void
+  onDone: boolean => mixed
 }
 export class RestoreWalletsModal extends Component<Props> {
   render () {
-    const { onBackButtonPress, onBackdropPress, isActive, onConfirm, onCancel } = this.props
+    const { onDone } = this.props
 
     return (
-      <InteractiveModal isActive={isActive} onBackdropPress={onBackdropPress} onBackButtonPress={onBackButtonPress}>
+      <InteractiveModal>
         <InteractiveModal.Icon>
           <Icon style={{}} type={'entypo'} name="wallet" size={30} />
         </InteractiveModal.Icon>
@@ -38,19 +34,19 @@ export class RestoreWalletsModal extends Component<Props> {
         <InteractiveModal.Footer>
           <InteractiveModal.Row>
             <InteractiveModal.Item>
-              <PrimaryButton onPress={onConfirm}>
-                <PrimaryButton.Text>
-                  <Text>{s.strings.restore_wallets_modal_confirm}</Text>
-                </PrimaryButton.Text>
-              </PrimaryButton>
-            </InteractiveModal.Item>
-
-            <InteractiveModal.Item>
-              <SecondaryButton onPress={onCancel}>
+              <SecondaryButton onPress={() => onDone(false)}>
                 <SecondaryButton.Text>
                   <Text>{s.strings.restore_wallets_modal_cancel}</Text>
                 </SecondaryButton.Text>
               </SecondaryButton>
+            </InteractiveModal.Item>
+
+            <InteractiveModal.Item>
+              <PrimaryButton onPress={() => onDone(true)}>
+                <PrimaryButton.Text>
+                  <Text>{s.strings.restore_wallets_modal_confirm}</Text>
+                </PrimaryButton.Text>
+              </PrimaryButton>
             </InteractiveModal.Item>
           </InteractiveModal.Row>
         </InteractiveModal.Footer>

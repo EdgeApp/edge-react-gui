@@ -45,7 +45,7 @@ export class PasswordReminderModal extends Component<Props, State> {
     const error = this.props.status === 'INVALID' ? s.strings.password_reminder_invalid : ''
     const isChecking = this.props.status === 'IS_CHECKING'
     return (
-      <InteractiveModal isActive={this.props.isVisible} onModalHide={this.reset}>
+      <InteractiveModal legacy isActive={this.props.isVisible} onModalHide={this.reset}>
         <InteractiveModal.Icon>
           <Icon style={styles.icon} name={Constants.LOCKED_ICON} type={Constants.ION_ICONS} />
         </InteractiveModal.Icon>

@@ -8,6 +8,7 @@ import { Actions } from 'react-native-router-flux'
 import * as Constants from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings'
 import { ConfirmPasswordModalStyle } from '../../../../styles/indexStyles'
+import { showModal } from '../../../ModalManager.js'
 import { getTimeWithMeasurement } from '../../../utils'
 import { PrimaryButton } from '../../components/Buttons'
 import T from '../../components/FormattedText'
@@ -50,7 +51,6 @@ type Props = {
 }
 type State = {
   showAutoLogoutModal: boolean,
-  restoreWalletsModalIsActive: boolean,
   showSendLogsModal: boolean,
   showConfirmPasswordModal: boolean,
   autoLogoutTimeInMinutes: number
@@ -64,7 +64,6 @@ export default class SettingsOverview extends Component<Props, State> {
     super(props)
     this.state = {
       showAutoLogoutModal: false,
-      restoreWalletsModalIsActive: false,
       showSendLogsModal: false,
       showConfirmPasswordModal: false,
       autoLogoutTimeInMinutes: props.autoLogoutTimeInMinutes
@@ -138,15 +137,6 @@ export default class SettingsOverview extends Component<Props, State> {
   }
 
   _onPressDebug = () => {}
-
-  onConfirmRestoreWallets = () => {
-    this.setState({ restoreWalletsModalIsActive: false })
-    this.props.onConfirmRestoreWallets()
-  }
-
-  onCancelRestoreWallets = () => {
-    this.setState({ restoreWalletsModalIsActive: false })
-  }
 
   onDoneAutoLogoutModal = (autoLogoutTimeInMinutes: number) => {
     this.setState({
@@ -281,13 +271,13 @@ export default class SettingsOverview extends Component<Props, State> {
             <View style={styles.emptyBottom} />
           </View>
         </ScrollView>
-        <RestoreWalletsModal
+        {/* <RestoreWalletsModal
           isActive={this.state.restoreWalletsModalIsActive}
           onConfirm={this.onConfirmRestoreWallets}
           onCancel={this.onCancelRestoreWallets}
           onBackButtonPress={this.onCancelRestoreWallets}
           onBackdropPress={this.onCancelRestoreWallets}
-        />
+        /> */}
 
         <AutoLogoutModal
           autoLogoutTimeInMinutes={this.state.autoLogoutTimeInMinutes}
@@ -328,10 +318,20 @@ export default class SettingsOverview extends Component<Props, State> {
     this.props.resetConfirmPasswordError({ confirmPasswordError: '' })
     this.setState({ showConfirmPasswordModal: false })
   }
-  showRestoreWalletModal = () => this.setState({ restoreWalletsModalIsActive: true })
+
+  showRestoreWalletModal = () => {
+    showModal(({ onDone }) => <RestoreWalletsModal onDone={onDone} />).then(confirmed => {
+      if (!confirmed) return
+      this.props.onConfirmRestoreWallets()
+    })
+  }
+
   showAutoLogoutModal = () => this.setState({ showAutoLogoutModal: true })
+
   showSendLogsModal = () => this.setState({ showSendLogsModal: true })
+
   renderRowRoute = (x: Object, i: number) => <RowRoute disabled={false} key={i} leftText={x.text} routeFunction={x.routeFunction} right={x.right} />
+
   renderRowSwitch = (x: string) => (
     <RowSwitch
       leftText={this.options[x] ? this.options[x].text : ''}
@@ -341,5 +341,6 @@ export default class SettingsOverview extends Component<Props, State> {
       value={this.options[x] ? this.options[x].value : false}
     />
   )
+
   renderRowModal = (x: Object) => <RowModal leftText={x.text} key={x.key} modal={x.key.toString()} />
 }
