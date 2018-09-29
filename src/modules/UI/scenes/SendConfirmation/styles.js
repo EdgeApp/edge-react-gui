@@ -68,7 +68,7 @@ export const rawStyles = {
     paddingVertical: scale(4)
   },
   trigger: {
-    fontSize: scale(25),
+    fontSize: scale(18),
     color: THEME.COLORS.WHITE,
     fontWeight: '700',
     paddingHorizontal: scale(8)

@@ -16,23 +16,23 @@ export const rawStyles = {
   slider: {
     backgroundColor: THEME.COLORS.OPACITY_WHITE,
     overflow: 'hidden',
-    borderRadius: scale(26),
-    height: scale(52)
+    borderRadius: 26,
+    height: 52
   },
   thumb: {
-    width: scale(52),
-    height: scale(52),
+    width: 52,
+    height: 52,
     position: 'absolute',
     backgroundColor: THEME.COLORS.ACCENT_MINT,
-    borderRadius: scale(52)
+    borderRadius: 52
   },
   textOverlay: {
     backgroundColor: THEME.COLORS.TRANSPARENT,
-    fontSize: PLATFORM.deviceWidth >= scale(320) ? scale(13) : scale(16),
+    fontSize: PLATFORM.deviceWidth >= 320 ? 13 : 16,
     position: 'absolute',
     color: THEME.COLORS.WHITE,
     alignSelf: 'center',
-    top: PLATFORM.deviceWidth >= scale(320) ? scale(19) : scale(16)
+    top: PLATFORM.deviceWidth >= 320 ? 19 : 16
   },
   debug
 }
