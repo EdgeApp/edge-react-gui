@@ -166,6 +166,7 @@ export class TransactionList extends Component<Props, State> {
                   initialNumToRender={INITIAL_TRANSACTION_BATCH_NUMBER}
                   onEndReached={this.handleScrollEnd}
                   onEndReachedThreshold={SCROLL_THRESHOLD}
+                  keyExtractor={item => item.key.toString()}
                 />
               </View>
             </View>
