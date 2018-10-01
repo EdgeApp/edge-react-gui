@@ -6,7 +6,7 @@ import { Alert, Clipboard, Linking, TouchableOpacity } from 'react-native'
 import * as Constants from '../../../../../../constants/indexConstants.js'
 import s from '../../../../../../locales/strings.js'
 import { PrimaryButton } from '../../../../components/Buttons/PrimaryButton.ui.js'
-import Text from '../../../../components/FormattedText/FormattedText.ui.js'
+import Text from '../../../../components/FormattedText'
 import { Icon } from '../../../../components/Icon/Icon.ui.js'
 import { InteractiveModal } from '../../../../components/Modals/InteractiveModal/InteractiveModal.ui.js'
 import styles, { activeOpacity } from '../../style.js'
@@ -53,7 +53,9 @@ export class AdvancedTransactionDetailsModal extends Component<AdvancedTransacti
         </InteractiveModal.Title>
 
         <InteractiveModal.Body>
-          <InteractiveModal.Description style={{ textAlign: 'center' }}>{this.props.txid}</InteractiveModal.Description>
+          <InteractiveModal.Description style={{ textAlign: 'center' }}>
+            <Text>{this.props.txid}</Text>
+          </InteractiveModal.Description>
         </InteractiveModal.Body>
 
         <InteractiveModal.Footer>

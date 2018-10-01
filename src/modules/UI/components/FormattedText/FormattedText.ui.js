@@ -3,6 +3,7 @@
 import React, { Component } from 'react'
 import { Text } from 'react-native'
 
+import { scale } from '../../../../lib/scaling.js'
 import { getObjectDiff } from '../../../utils.js'
 import styles from './style'
 
@@ -30,8 +31,9 @@ export default class FormattedText extends Component {
   }
 
   render () {
+    const fontSize = this.props.fontSize ? scale(this.props.fontSize) : scale(14)
     return (
-      <Text {...this.props} style={[this.style, this.props.style]} ref={'nativeForward'} allowFontScaling={false}>
+      <Text {...this.props} style={[this.style, this.props.style, { fontSize }]} ref={'nativeForward'} allowFontScaling={false}>
         {this.props.children}
       </Text>
     )
