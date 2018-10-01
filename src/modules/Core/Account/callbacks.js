@@ -19,7 +19,7 @@ const makeAccountCallbacks = (dispatch: Dispatch): EdgeAccountCallbacks => {
 
     onKeyListChanged: () => {
       // $FlowFixMe
-      dispatch(updateWalletsRequest())
+      setTimeout(() => dispatch(updateWalletsRequest()), 0)
     },
 
     onAddressesChecked (walletId: string, transactionCount: number) {
