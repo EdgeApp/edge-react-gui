@@ -271,13 +271,6 @@ export default class SettingsOverview extends Component<Props, State> {
             <View style={styles.emptyBottom} />
           </View>
         </ScrollView>
-        {/* <RestoreWalletsModal
-          isActive={this.state.restoreWalletsModalIsActive}
-          onConfirm={this.onConfirmRestoreWallets}
-          onCancel={this.onCancelRestoreWallets}
-          onBackButtonPress={this.onCancelRestoreWallets}
-          onBackdropPress={this.onCancelRestoreWallets}
-        /> */}
 
         <AutoLogoutModal
           autoLogoutTimeInMinutes={this.state.autoLogoutTimeInMinutes}

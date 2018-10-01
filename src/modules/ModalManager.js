@@ -1,11 +1,19 @@
 // @flow
 
-import React, { type ComponentType, type Element } from 'react'
+import React, { type ComponentType } from 'react'
 import { default as Modal } from 'react-native-modal'
 
 export type ModalProps<Result> = { onDone(result: Result): mixed }
 
-type State = { queue: Array<Element<any>>, isVisible: boolean }
+type QueueEntry = {
+  Component: ComponentType<any>,
+  onDone: (result: any) => mixed
+}
+
+type State = {
+  isHiding: boolean,
+  queue: Array<QueueEntry>
+}
 
 /**
  * Manages a queue of modal components to show to the user.
@@ -15,7 +23,7 @@ type State = { queue: Array<Element<any>>, isVisible: boolean }
 export class ModalManager extends React.Component<{}, State> {
   constructor (props: {}) {
     super(props)
-    this.state = { isVisible: false, queue: [] }
+    this.state = { isHiding: false, queue: [] }
 
     // Register as the global modal manager:
     if (globalModalManager != null) {
@@ -28,16 +36,17 @@ export class ModalManager extends React.Component<{}, State> {
     // If the queue is empty, render nothing:
     if (this.state.queue.length === 0) return null
 
+    const { Component, onDone } = this.state.queue[0]
     return (
       <Modal
         avoidKeyboard
         onModalHide={this.removeFromQueue}
-        onBackdropPress={this.onDismiss}
-        onBackButtonPress={this.onDismiss}
+        onBackdropPress={() => onDone(null)}
+        onBackButtonPress={() => onDone(null)}
         useNativeDriver
-        isVisible={this.state.isVisible}
+        isVisible={!this.state.isHiding}
       >
-        {this.state.queue[0]}
+        <Component onDone={onDone} />
       </Modal>
     )
   }
@@ -48,28 +57,23 @@ export class ModalManager extends React.Component<{}, State> {
   }
 
   // Removes a just-closed modal from the queue:
-  onDismiss = () => {
-    this.setState({ isVisible: false })
-  }
-
   removeFromQueue = () => {
-    this.setState({ queue: this.state.queue.slice(1) })
+    this.setState({ isHiding: false, queue: this.state.queue.slice(1) })
   }
 
   showModal<Result> (Component: ComponentType<ModalProps<Result>>): Promise<Result> {
     return new Promise(resolve =>
       // Push the component onto the end of the queue:
       this.setState({
-        isVisible: true,
         queue: [
           ...this.state.queue,
-          // eslint-disable-next-line react/jsx-key
-          <Component
-            onDone={result => {
-              this.onDismiss()
+          {
+            Component,
+            onDone: result => {
+              this.setState({ isHiding: true })
               resolve(result)
-            }}
-          />
+            }
+          }
         ]
       })
     )

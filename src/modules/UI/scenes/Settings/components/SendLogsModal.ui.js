@@ -116,7 +116,6 @@ export default class SendLogsModal extends Component {
     return (
       <StylizedModal
         visibilityBoolean={this.props.showModal}
-        // visibilityBoolean={this.props.showModal}
         featuredIcon={icon}
         headerText={this.getModalHeaderText()}
         modalMiddle={this.getModalMiddle()}
