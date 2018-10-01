@@ -21,6 +21,16 @@ sed "s/--reset-cache/--reset-cache --sourcemap-output ios-release.bundle.map/g" 
 mv temp/react-native-xcode.sh node_modules/react-native/scripts/react-native-xcode.sh
 chmod 755 node_modules/react-native/scripts/react-native-xcode.sh
 
+# Force rand to exist for miller-rabin library
+sed "s/function MillerRabin(rand)/function MillerRabin(rand = 'NoRandFunction')/g" node_modules/miller-rabin/lib/mr.js > temp/mr.js
+mv temp/mr.js node_modules/miller-rabin/lib/mr.js
+chmod 755 node_modules/miller-rabin/lib/mr.js
+
+# Remove fetch polyfill from eosjs-api
+sed "s/require('isomorphic-fetch');//g" node_modules/eosjs-api/lib/apigen.js > temp/apigen.js
+mv temp/apigen.js node_modules/eosjs-api/lib/apigen.js
+chmod 755 node_modules/eosjs-api/lib/apigen.js
+
 node ./copy-plugin.js
 
 # Disable minification

@@ -12,7 +12,7 @@ const fixModules = [
   'edge-currency-accountbased/node_modules/edge-ripple-lib'
 ]
 
-const falseModules = ['https-proxy-agent', 'tls']
+const falseModules = ['https-proxy-agent', 'tls', 'isomorphic-fetch']
 
 const jsonConfig = {
   type: 'space',
