@@ -3289,10 +3289,10 @@ edge-core-js@0.12.0:
     ws "^5.1.1"
     yaob "^0.3.0"
 
-edge-currency-bitcoin@3.3.2:
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-3.3.2.tgz#6d5c60d0968a84e9bd7609c577255f0025c66a67"
-  integrity sha512-6imppcF29Tae31ghgrAzrOWrdcY1rm4NuuQplW5XosfgAGr/I9E3RaedgLEhAXI8vI4V3B90s+Bxj1gpm7jV3w==
+edge-currency-bitcoin@3.4.0:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-3.4.0.tgz#f1199f01863270c199d473cad9d365d03f75c97e"
+  integrity sha512-VnLnHti7mHfuHkpaWzYwTr/0rpaC2ZIz5TKniHzSwmvYmUL4mcqSQ6T0jwMY1Oy+kfQZub68cv7Fhk0vI1a6rw==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
