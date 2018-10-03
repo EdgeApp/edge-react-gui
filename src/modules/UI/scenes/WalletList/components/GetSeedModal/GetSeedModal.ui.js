@@ -1,5 +1,6 @@
 // @flow
 
+import { type EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
 import { StyleSheet, View } from 'react-native'
 
@@ -17,29 +18,21 @@ import styles from '../../style'
 export const GET_SEED_WALLET_START = 'GET_SEED_WALLET_START'
 export const GET_SEED_WALLET_SUCCESS = 'GET_SEED_WALLET_SUCCESS'
 
-type GetSeedModalOwnProps = {
-  onPositive: (walletId: string) => void,
-  onNegative: () => void,
-  onDone: () => void,
-  walletId: string,
-  visibilityBoolean: boolean,
-  onExitButtonFxn: () => void,
-  privateSeedUnlocked: boolean
-}
-
 export type GetSeedModalStateProps = {
-  walletId: string,
-  getSeed: () => string | null,
-  walletName: string
+  privateSeedUnlocked: boolean,
+  wallet: EdgeCurrencyWallet,
+  walletName: string,
+  visibilityBoolean: boolean
 }
 
 export type GetSeedModalDispatchProps = {
+  onExitButtonFxn: () => void,
   onPositive: (password: string) => any,
   onNegative: () => any,
   onDone: () => any
 }
 
-type GetSeedModalComponentProps = GetSeedModalOwnProps & GetSeedModalStateProps & GetSeedModalDispatchProps
+type GetSeedModalComponentProps = GetSeedModalStateProps & GetSeedModalDispatchProps
 
 type State = {
   confimPassword: string,
@@ -128,8 +121,8 @@ export default class GetSeed extends Component<GetSeedModalComponentProps, State
     )
 
     let modalBottom = <OptionButtons positiveText={s.strings.string_get_seed} onPositive={this.onPositive} onNegative={this.onNegative} />
-    const seed = this.props.getSeed() || ''
-    if (this.props.privateSeedUnlocked) {
+    if (this.props.privateSeedUnlocked && this.props.wallet != null) {
+      const seed = this.props.wallet.getDisplayPrivateSeed() || ''
       modalBottom = null
       modalMiddle = this.renderRevealedSeedArea(seed)
     }
