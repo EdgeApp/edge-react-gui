@@ -112,7 +112,7 @@
   "create_wallet_crypto_type_label": "Wallet Type:",
   "create_wallet_fiat_type_label": "Wallet Fiat:",
   "help_build": "Build",
-  "help_modal_title": "Crypto Wallet and Directory",
+  "help_modal_title": "Crypto Wallet",
   "help_version": "Version",
   "loading": "Loading…",
   "mining_fee_high_label_choice": "High",
