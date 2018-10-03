@@ -4,12 +4,11 @@ import type { EdgeCurrencyWallet, EdgeReceiveAddress } from 'edge-core-js'
 import _ from 'lodash'
 import { Actions } from 'react-native-router-flux'
 
-import * as actions from '../../../actions/indexActions'
-import * as Constants from '../../../constants/indexConstants'
 import type { CustomTokenInfo } from '../../../types.js'
 import * as SETTINGS_API from '../../Core/Account/settings.js'
 import * as CORE_SELECTORS from '../../Core/selectors.js'
 import * as WALLET_API from '../../Core/Wallets/api.js'
+import { updateExchangeRates } from '../../ExchangeRates/action.js'
 import type { Dispatch, GetState } from '../../ReduxTypes'
 import { displayErrorAlert } from '../../UI/components/ErrorAlert/actions'
 import * as UTILS from '../../utils'
@@ -18,31 +17,96 @@ import * as UI_SELECTORS from '../selectors.js'
 import { updateSettings } from '../Settings/action'
 import * as SETTINGS_SELECTORS from '../Settings/selectors'
 
-export const PREFIX = 'UI/Wallets/'
+export const refreshReceiveAddress = (walletId: string, receiveAddress: EdgeReceiveAddress) => ({
+  type: 'UI/WALLETS/REFRESH_RECEIVE_ADDRESS',
+  data: {
+    walletId,
+    receiveAddress
+  }
+})
 
-export const UPSERT_WALLETS = PREFIX + 'UPSERT_WALLETS'
+export const closeAllWalletListModals = () => ({
+  type: 'CLOSE_ALL_WALLET_LIST_MODALS'
+})
 
-export const ACTIVATE_WALLET_ID = PREFIX + 'ACTIVATE_WALLET_ID'
-export const ARCHIVE_WALLET_ID = PREFIX + 'ARCHIVE_WALLET_ID'
+export const deleteCustomTokenStart = () => ({
+  type: 'DELETE_CUSTOM_TOKEN_START'
+})
 
-export const SELECT_WALLET = PREFIX + 'SELECT_WALLET'
+export const deleteCustomTokenSuccess = (currencyCode: string) => ({
+  type: 'DELETE_CUSTOM_TOKEN_SUCCESS',
+  data: { currencyCode }
+})
 
-export const MANAGE_TOKENS = 'MANAGE_TOKENS'
-export const MANAGE_TOKENS_START = 'MANAGE_TOKENS_START'
-export const MANAGE_TOKENS_SUCCESS = 'MANAGE_TOKENS_SUCCESS'
-export const DELETE_CUSTOM_TOKEN_START = 'DELETE_CUSTOM_TOKEN_START'
-export const DELETE_CUSTOM_TOKEN_SUCCESS = 'DELETE_CUSTOM_TOKEN_SUCCESS'
-export const DELETE_CUSTOM_TOKEN_FAILURE = 'DELETE_CUSTOM_TOKEN_FAILURE'
-export const UPDATE_WALLET_ENABLED_TOKENS = 'UPDATE_WALLET_ENABLED_TOKENS'
-export const EDIT_CUSTOM_TOKEN_START = 'EDIT_CUSTOM_TOKEN_START'
-export const EDIT_CUSTOM_TOKEN_SUCCESS = 'EDIT_CUSTOM_TOKEN_SUCCESS'
-export const EDIT_CUSTOM_TOKEN_FAILURE = 'EDIT_CUSTOM_TOKEN_FAILURE'
-export const UPDATE_EXISTING_TOKEN_SUCCESS = 'UPDATE_EXISTING_TOKEN_SUCCESS'
-export const OVERWRITE_THEN_DELETE_TOKEN_SUCCESS = 'OVERWRITE_THEN_DELETE_TOKEN_SUCCESS'
-export const ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS = 'ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS'
-export const UPDATE_WALLET_LOADING_PROGRESS = 'UPDATE_WALLET_LOADING_PROGRESS'
-export const INSERT_WALLET_IDS_FOR_PROGRESS = 'INSERT_WALLET_IDS_FOR_PROGRESS'
-export const CLOSE_ALL_WALLET_LIST_MODALS = 'CLOSE_ALL_WALLET_LIST_MODALS'
+export const deleteCustomTokenFailure = () => ({
+  type: 'DELETE_CUSTOM_TOKEN_FAILURE'
+})
+
+export const setTokensStart = () => ({
+  type: 'MANAGE_TOKENS_START'
+})
+
+export const setTokensSuccess = () => ({
+  type: 'MANAGE_TOKENS_SUCCESS'
+})
+
+export const updateWalletEnabledTokens = (walletId: string, tokens: Array<string>) => ({
+  type: 'UPDATE_WALLET_ENABLED_TOKENS',
+  data: { walletId, tokens }
+})
+
+export const editCustomTokenStart = () => ({
+  type: 'EDIT_CUSTOM_TOKEN_START'
+})
+
+export const editCustomTokenSuccess = (currencyCode: string) => ({
+  type: 'EDIT_CUSTOM_TOKEN_SUCCESS',
+  data: { currencyCode }
+})
+
+export const editCustomTokenFailure = () => ({
+  type: 'EDIT_CUSTOM_TOKEN_FAILURE'
+})
+
+export function updateExistingTokenSuccess (tokenObj: CustomTokenInfo) {
+  return {
+    type: 'UPDATE_EXISTING_TOKEN_SUCCESS',
+    data: { tokenObj }
+  }
+}
+
+export function overwriteThenDeleteTokenSuccess (tokenObj: CustomTokenInfo, oldCurrencyCode: string, coreWalletsToUpdate: Array<EdgeCurrencyWallet>) {
+  return {
+    type: 'OVERWRITE_THEN_DELETE_TOKEN_SUCCESS',
+    data: { tokenObj, oldCurrencyCode, coreWalletsToUpdate }
+  }
+}
+
+export function addNewTokenThenDeleteOldSuccess (data: any) {
+  return {
+    type: 'ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS',
+    data
+  }
+}
+
+export function insertWalletIdsForProgress (activeWalletIds: Array<string>) {
+  return {
+    type: 'INSERT_WALLET_IDS_FOR_PROGRESS',
+    data: { activeWalletIds }
+  }
+}
+
+export const createWalletStart = () => ({
+  type: 'CREATE_WALLET_START'
+})
+
+export const createWalletSuccess = () => ({
+  type: 'CREATE_WALLET_SUCCESS'
+})
+
+export const createWalletFailure = () => ({
+  type: 'CREATE_WALLET_FAILURE'
+})
 
 export const refreshReceiveAddressRequest = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -56,28 +120,19 @@ export const refreshReceiveAddressRequest = (walletId: string) => (dispatch: Dis
   }
 }
 
-export const REFRESH_RECEIVE_ADDRESS = PREFIX + 'REFRESH_RECEIVE_ADDRESS'
-export const refreshReceiveAddress = (walletId: string, receiveAddress: EdgeReceiveAddress) => ({
-  type: REFRESH_RECEIVE_ADDRESS,
-  data: {
-    walletId,
-    receiveAddress
-  }
-})
-
 export const selectWallet = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const currentWalletId = state.ui.wallets.selectedWalletId
   const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
   if (walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode) {
     dispatch({
-      type: SELECT_WALLET,
+      type: 'UI/WALLETS/SELECT_WALLET',
       data: { walletId, currencyCode }
     })
     const wallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
     WALLET_API.getReceiveAddress(wallet, currencyCode)
       .then(receiveAddress => {
-        dispatch(actions.dispatchActionObject(Constants.NEW_RECEIVE_ACCRESS, { receiveAddress }))
+        dispatch({ type: 'NEW_RECEIVE_ADDRESS', data: { receiveAddress } })
       })
       .catch(e => {
         console.log('error on getting wallet receive address')
@@ -90,10 +145,6 @@ export const selectWalletFromModal = (walletId: string, currencyCode: string) =>
   dispatch(closeAllWalletListModals())
   dispatch(refreshReceiveAddressRequest(walletId))
 }
-
-export const closeAllWalletListModals = () => ({
-  type: CLOSE_ALL_WALLET_LIST_MODALS
-})
 
 function dispatchUpsertWallets (dispatch, wallets: Array<EdgeCurrencyWallet>) {
   global.pcount('dispatchUpsertWallets')
@@ -148,8 +199,9 @@ export const upsertWallets = (wallets: Array<EdgeCurrencyWallet>) => (dispatch: 
   if (!loginStatus) {
     dispatch({ type: 'LOGGED_OUT' })
   }
+  dispatch(updateExchangeRates())
   dispatch({
-    type: UPSERT_WALLETS,
+    type: 'UI/WALLETS/UPSERT_WALLETS',
     data: {
       wallets
     }
@@ -412,66 +464,6 @@ export const deleteCustomToken = (walletId: string, currencyCode: string) => (di
     })
 }
 
-export const deleteCustomTokenStart = () => ({
-  type: DELETE_CUSTOM_TOKEN_START
-})
-
-export const deleteCustomTokenSuccess = (currencyCode: string) => ({
-  type: DELETE_CUSTOM_TOKEN_SUCCESS,
-  data: { currencyCode }
-})
-
-export const deleteCustomTokenFailure = () => ({
-  type: DELETE_CUSTOM_TOKEN_FAILURE
-})
-
-export const setTokensStart = () => ({
-  type: MANAGE_TOKENS_START
-})
-
-export const setTokensSuccess = () => ({
-  type: MANAGE_TOKENS_SUCCESS
-})
-
-export const updateWalletEnabledTokens = (walletId: string, tokens: Array<string>) => ({
-  type: UPDATE_WALLET_ENABLED_TOKENS,
-  data: { walletId, tokens }
-})
-
-export const editCustomTokenStart = () => ({
-  type: EDIT_CUSTOM_TOKEN_START
-})
-
-export const editCustomTokenSuccess = (currencyCode: string) => ({
-  type: EDIT_CUSTOM_TOKEN_SUCCESS,
-  data: { currencyCode }
-})
-
-export const editCustomTokenFailure = () => ({
-  type: EDIT_CUSTOM_TOKEN_FAILURE
-})
-
-export function updateExistingTokenSuccess (tokenObj: CustomTokenInfo) {
-  return {
-    type: UPDATE_EXISTING_TOKEN_SUCCESS,
-    data: { tokenObj }
-  }
-}
-
-export function overwriteThenDeleteTokenSuccess (tokenObj: CustomTokenInfo, oldCurrencyCode: string, coreWalletsToUpdate: Array<EdgeCurrencyWallet>) {
-  return {
-    type: OVERWRITE_THEN_DELETE_TOKEN_SUCCESS,
-    data: { tokenObj, oldCurrencyCode, coreWalletsToUpdate }
-  }
-}
-
-export function addNewTokenThenDeleteOldSuccess (data: any) {
-  return {
-    type: ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS,
-    data
-  }
-}
-
 export const updateWalletLoadingProgress = (walletId: string, newWalletProgress: number) => (dispatch: Dispatch, getState: GetState) => {
   const data = {
     walletId,
@@ -484,29 +476,7 @@ export const updateWalletLoadingProgress = (walletId: string, newWalletProgress:
   if (newWalletProgress !== 1 && marginalProgress < 0.1) return
 
   dispatch({
-    type: UPDATE_WALLET_LOADING_PROGRESS,
+    type: 'UPDATE_WALLET_LOADING_PROGRESS',
     data
   })
 }
-
-export function insertWalletIdsForProgress (activeWalletIds: Array<string>) {
-  return {
-    type: INSERT_WALLET_IDS_FOR_PROGRESS,
-    data: { activeWalletIds }
-  }
-}
-
-export const CREATE_WALLET_START = PREFIX + 'CREATE_WALLET_START'
-export const createWalletStart = () => ({
-  type: CREATE_WALLET_START
-})
-
-export const CREATE_WALLET_SUCCESS = PREFIX + 'CREATE_WALLET_SUCCESS'
-export const createWalletSuccess = () => ({
-  type: CREATE_WALLET_SUCCESS
-})
-
-export const CREATE_WALLET_FAILURE = PREFIX + 'CREATE_WALLET_FAILURE'
-export const createWalletFailure = () => ({
-  type: CREATE_WALLET_FAILURE
-})

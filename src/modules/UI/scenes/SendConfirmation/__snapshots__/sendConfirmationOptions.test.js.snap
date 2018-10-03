@@ -384,39 +384,6 @@ exports[`SendConfirmation not editable 1`] = `
             "justifyContent": "center",
           }
         }
-        value="CHANGE_MINING_FEE"
-      >
-        <Component
-          style={
-            Object {
-              "flexDirection": "row",
-              "paddingVertical": 4,
-            }
-          }
-        >
-          <FormattedText
-            style={
-              Object {
-                "color": "#4A5157",
-                "fontSize": 18,
-              }
-            }
-          >
-            Change Mining Fee
-          </FormattedText>
-        </Component>
-      </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
-      <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
-        customStyles={Object {}}
-        disableTouchable={false}
-        disabled={false}
-        style={
-          Object {
-            "borderBottomColor": "#D9E3ED",
-            "borderBottomWidth": 1,
-            "justifyContent": "center",
-          }
-        }
         value="HELP"
       >
         <Component

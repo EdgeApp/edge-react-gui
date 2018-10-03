@@ -5,27 +5,21 @@ import * as CONTEXT_API from '../../../Core/Context/api'
 import * as CORE_SELECTORS from '../../../Core/selectors'
 import type { Dispatch, GetState } from '../../../ReduxTypes'
 
-export const OPEN_SELECT_USER = 'OPEN_SELECT_USER'
-export const CLOSE_SELECT_USER = 'CLOSE_SELECT_USER'
-export const LIST_USERS_SIDE_MENU = 'LIST_USER_USER_SIDE_MENU'
-export const SELECT_USERS_SIDE_MENU = 'SELECT_USERS_SIDE_MENU'
-export const REMOVE_USERS_SIDE_MENU = 'REMOVE_USERS_SIDE_MENU'
-
 export const openSelectUser = () => ({
-  type: OPEN_SELECT_USER
+  type: 'OPEN_SELECT_USER'
 })
 
 export const closeSelectUser = () => ({
-  type: CLOSE_SELECT_USER
+  type: 'CLOSE_SELECT_USER'
 })
 
 export const selectUsersList = (name: string) => ({
-  type: SELECT_USERS_SIDE_MENU,
+  type: 'SELECT_USERS_SIDE_MENU',
   name
 })
 
 export const removeUsersList = (name: string) => ({
-  type: REMOVE_USERS_SIDE_MENU,
+  type: 'REMOVE_USERS_SIDE_MENU',
   name
 })
 

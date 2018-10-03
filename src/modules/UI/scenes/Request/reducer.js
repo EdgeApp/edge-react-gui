@@ -1,9 +1,9 @@
 // @flow
 
-import * as Constants from '../../../../constants/indexConstants.js'
+import { type Reducer } from 'redux'
+
 import type { GuiReceiveAddress } from '../../../../types.js'
 import type { Action } from '../../../ReduxTypes.js'
-import * as ACTION from './action'
 
 export type RequestSceneState = {
   inputCurrencySelected: string,
@@ -21,9 +21,9 @@ const initialState: RequestSceneState = {
   receiveAddress
 }
 
-export const request = (state: RequestSceneState = initialState, action: Action): RequestSceneState => {
+export const request: Reducer<RequestSceneState, Action> = (state = initialState, action: Action) => {
   switch (action.type) {
-    case Constants.UPDATE_RECEIVE_ADDRESS_SUCCESS: {
+    case 'UPDATE_RECEIVE_ADDRESS_SUCCESS': {
       if (!action.data) {
         return state
       }
@@ -33,7 +33,7 @@ export const request = (state: RequestSceneState = initialState, action: Action)
       }
     }
 
-    case ACTION.UPDATE_INPUT_CURRENCY_SELECTED: {
+    case 'UPDATE_INPUT_CURRENCY_SELECTED': {
       if (!action.data) {
         return state
       }
@@ -43,7 +43,7 @@ export const request = (state: RequestSceneState = initialState, action: Action)
       }
     }
 
-    case ACTION.UPDATE_AMOUNT_REQUESTED_IN_CRYPTO: {
+    case 'UPDATE_AMOUNT_REQUESTED_IN_CRYPTO': {
       const { receiveAddress } = state
       if (!action.data) {
         return state
@@ -57,7 +57,7 @@ export const request = (state: RequestSceneState = initialState, action: Action)
       }
     }
 
-    case ACTION.UPDATE_METADATA: {
+    case 'UPDATE_METADATA': {
       const { receiveAddress } = state
       const { metadata = {} } = receiveAddress
       return {
@@ -69,7 +69,7 @@ export const request = (state: RequestSceneState = initialState, action: Action)
       }
     }
 
-    case ACTION.UPDATE_AMOUNT_REQUESTED_IN_FIAT: {
+    case 'UPDATE_AMOUNT_REQUESTED_IN_FIAT': {
       const { receiveAddress } = state
       const { metadata = {} } = receiveAddress
       if (!action.data) {
@@ -94,5 +94,3 @@ export const request = (state: RequestSceneState = initialState, action: Action)
       return state
   }
 }
-
-export default request

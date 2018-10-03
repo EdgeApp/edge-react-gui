@@ -8,7 +8,6 @@ import * as Constants from '../../../../../../constants/indexConstants.js'
 import type { Dispatch, State } from '../../../../../ReduxTypes'
 import { updateMiningFees } from '../../../SendConfirmation/action'
 import { getCustomNetworkFee } from '../../../SendConfirmation/selectors.js'
-import { CLOSE_MODAL_VALUE } from '../../../WalletList/components/WalletOptions/action'
 import CustomFeesModal from './CustomFeesModal.ui'
 import type { CustomFees, CustomFeesModalDispatchProps, CustomFeesModalOwnProps, CustomFeesModalStateProps } from './CustomFeesModal.ui'
 
@@ -34,10 +33,10 @@ const mapDispatchToProps = (dispatch: Dispatch): CustomFeesModalDispatchProps =>
         customNetworkFee
       })
     )
-    dispatch({ type: CLOSE_MODAL_VALUE(Constants.CUSTOM_FEES) })
+    dispatch({ type: 'CLOSE_CUSTOM_FEES_MODAL' })
     Actions.pop()
   },
-  onDone: () => dispatch({ type: CLOSE_MODAL_VALUE(Constants.CUSTOM_FEES) })
+  onDone: () => dispatch({ type: 'CLOSE_CUSTOM_FEES_MODAL' })
 })
 
 export default connect(

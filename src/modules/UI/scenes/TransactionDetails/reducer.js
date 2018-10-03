@@ -1,23 +1,27 @@
 // @flow
 
-import { combineReducers } from 'redux'
+import { type Reducer, combineReducers } from 'redux'
 
 import type { Action } from '../../../ReduxTypes.js'
-import * as ACTION from './action.js'
 
-export const subcategories = (state: boolean = false, action: Action) => {
+export type TransactionDetailsState = {
+  subcategories: Array<string>
+}
+
+const subcategories = (state = [], action: Action): Array<string> => {
   if (!action.data) return state
   switch (action.type) {
-    case ACTION.SET_TRANSACTION_SUBCATEGORIES:
+    case 'SET_TRANSACTION_SUBCATEGORIES': {
       // console.log('in subcategories reducer, action is: ', action)
+      // $FlowFixMe
       return action.data.subcategories
+    }
+
     default:
       return state
   }
 }
 
-export const transactionDetails = combineReducers({
+export const transactionDetails: Reducer<TransactionDetailsState, Action> = combineReducers({
   subcategories
 })
-
-export default transactionDetails

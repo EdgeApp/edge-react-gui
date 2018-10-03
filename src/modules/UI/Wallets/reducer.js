@@ -2,28 +2,33 @@
 
 import type { EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeReceiveAddress } from 'edge-core-js'
 import _ from 'lodash'
-import { combineReducers } from 'redux'
+import { type Reducer, combineReducers } from 'redux'
 
-import * as Constants from '../../../constants/indexConstants.js'
 import type { GuiWallet } from '../../../types.js'
-import { UPDATE_WALLETS } from '../../Core/Wallets/action.js'
-import type { Action } from '../../ReduxTypes.js'
-import * as ADD_TOKEN_ACTION from '../scenes/AddToken/action.js'
-import * as ACTION from './action'
+import type { Action, Id } from '../../ReduxTypes.js'
 
-export type WalletId = string
-export type WalletIds = Array<WalletId>
-export type WalletByIdState = { [walletId: WalletId]: GuiWallet }
+export type WalletsState = {
+  byId: { [walletId: Id]: GuiWallet },
+  activeWalletIds: Array<Id>,
+  archivedWalletIds: Array<Id>,
+  selectedWalletId: string,
+  selectedCurrencyCode: string,
+  addTokenPending: boolean,
+  manageTokensPending: boolean,
+  walletLoadingProgress: { [walletId: string]: number }
+}
 
-export const byId = (state: WalletByIdState = {}, action: Action) => {
+const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> => {
   if (!action.data) return state
 
   switch (action.type) {
-    case Constants.ACCOUNT_INIT_COMPLETE: {
+    case 'ACCOUNT_INIT_COMPLETE': {
+      // $FlowFixMe
       const wallets = action.data.currencyWallets
       const out = {}
 
       for (const walletId of Object.keys(wallets)) {
+        // $FlowFixMe
         const tempWallet = schema(wallets[walletId], action.data.receiveAddresses[walletId])
         if (state[walletId]) {
           const enabledTokensOnWallet = state[walletId].enabledTokens
@@ -37,10 +42,12 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
 
       return out
     }
-    case UPDATE_WALLETS: {
+    case 'CORE/WALLETS/UPDATE_WALLETS': {
+      // $FlowFixMe
       const wallets = action.data.currencyWallets
       const out = {}
       for (const walletId of Object.keys(wallets)) {
+        // $FlowFixMe
         const tempWallet = schema(wallets[walletId], action.data.receiveAddresses[walletId])
         if (state[walletId]) {
           const enabledTokensOnWallet = state[walletId].enabledTokens
@@ -58,7 +65,8 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
       return out
     }
 
-    case ACTION.UPDATE_WALLET_ENABLED_TOKENS: {
+    case 'UPDATE_WALLET_ENABLED_TOKENS': {
+      // $FlowFixMe
       const { walletId, tokens } = action.data
       if (state[walletId] !== undefined) {
         return {
@@ -73,7 +81,8 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
       }
     }
 
-    case ADD_TOKEN_ACTION.ADD_NEW_CUSTOM_TOKEN_SUCCESS: {
+    case 'ADD_NEW_CUSTOM_TOKEN_SUCCESS': {
+      // $FlowFixMe
       const { enabledTokens, walletId } = action.data
       if (state[walletId] !== undefined) {
         return {
@@ -88,7 +97,8 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
       }
     }
 
-    case ACTION.ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS: {
+    case 'ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS': {
+      // $FlowFixMe
       const { coreWalletsToUpdate, oldCurrencyCode, tokenObj } = action.data
       // coreWalletsToUpdate are wallets with non-empty enabledTokens properties
       // receiving token will have to take on sending tokens enabledness
@@ -115,8 +125,9 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
       return state
     }
 
-    case ACTION.OVERWRITE_THEN_DELETE_TOKEN_SUCCESS: {
+    case 'OVERWRITE_THEN_DELETE_TOKEN_SUCCESS': {
       // adjust enabled tokens
+      // $FlowFixMe
       const { coreWalletsToUpdate, oldCurrencyCode } = action.data
       // coreWalletsToUpdate are wallets with non-empty enabledTokens properties
       // receiving token will have to take on sending tokens enabledness
@@ -138,8 +149,9 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
       return state
     }
 
-    case ACTION.UPSERT_WALLETS: {
+    case 'UI/WALLETS/UPSERT_WALLETS': {
       const { data } = action
+      // $FlowFixMe
       const wallets = data.wallets
       const out = { ...state }
       for (const wallet of wallets) {
@@ -160,8 +172,9 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
       return out
     }
 
-    case ACTION.REFRESH_RECEIVE_ADDRESS: {
+    case 'UI/WALLETS/REFRESH_RECEIVE_ADDRESS': {
       const {
+        // $FlowFixMe
         data: { walletId, receiveAddress }
       } = action
       return {
@@ -178,119 +191,129 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
   }
 }
 
-export const walletEnabledTokens = (state: any = {}, action: Action) => {
-  if (action.type === Constants.ACCOUNT_INIT_COMPLETE && action.data) {
-    return action.data.activeWalletIds
-  }
-  if (action.type === UPDATE_WALLETS && action.data) {
-    return action.data.activeWalletIds
-  }
-
-  return state
-}
-
-export const walletLoadingProgress = (state: { [string]: Number } = {}, action: Action) => {
-  if (!action.data) return state
-  const { type, data } = action
-  switch (type) {
-    case ACTION.INSERT_WALLET_IDS_FOR_PROGRESS:
-      const activeWalletIdList = data.activeWalletIds
+const walletLoadingProgress = (state = {}, action: Action): $PropertyType<WalletsState, 'walletLoadingProgress'> => {
+  switch (action.type) {
+    case 'INSERT_WALLET_IDS_FOR_PROGRESS': {
+      if (!action.data) throw new Error('Invalid action')
+      const activeWalletIdList = action.data.activeWalletIds
       const activeWalletIdProgress = {}
       activeWalletIdList.map(item => {
         activeWalletIdProgress[item] = 0
       })
       return activeWalletIdProgress
-    case ACTION.UPDATE_WALLET_LOADING_PROGRESS:
+    }
+
+    case 'UPDATE_WALLET_LOADING_PROGRESS': {
+      if (!action.data) throw new Error('Invalid action')
       // prevent backwards progress
-      if (data.addressLoadingProgress < state[data.walletId]) return state
+      if (action.data.addressLoadingProgress < state[action.data.walletId]) return state
       return {
         ...state,
-        [data.walletId]: data.addressLoadingProgress
+        [action.data.walletId]: action.data.addressLoadingProgress
       }
+    }
+
     default:
       return state
   }
 }
 
-export const activeWalletIds = (state: WalletIds = [], action: Action) => {
+const activeWalletIds = (state = [], action: Action): Array<string> => {
   if (!action.data) return state
-  if (action.type === Constants.ACCOUNT_INIT_COMPLETE) {
+  if (action.type === 'ACCOUNT_INIT_COMPLETE') {
+    // $FlowFixMe
     return action.data.activeWalletIds
   }
-  if (action.type === UPDATE_WALLETS) {
+  if (action.type === 'CORE/WALLETS/UPDATE_WALLETS') {
+    // $FlowFixMe
     return action.data.activeWalletIds
   }
 
   return state
 }
 
-export const archivedWalletIds = (state: WalletIds = [], action: Action) => {
+const archivedWalletIds = (state = [], action: Action): Array<string> => {
   if (!action.data) return state
-  if (action.type === Constants.ACCOUNT_INIT_COMPLETE) {
+  if (action.type === 'ACCOUNT_INIT_COMPLETE') {
+    // $FlowFixMe
     return action.data.archivedWalletIds
   }
-  if (action.type === UPDATE_WALLETS) {
+  if (action.type === 'CORE/WALLETS/UPDATE_WALLETS') {
+    // $FlowFixMe
     return action.data.archivedWalletIds
   }
 
   return state
 }
 
-export const selectedWalletId = (state: WalletId = '', action: Action) => {
-  if (!action.data) return state
+const selectedWalletId = (state = '', action: Action): string => {
   switch (action.type) {
-    case ACTION.SELECT_WALLET:
+    case 'UI/WALLETS/SELECT_WALLET': {
+      if (action.data == null) throw new TypeError('Invalid action')
       return action.data.walletId
-    case Constants.ACCOUNT_INIT_COMPLETE:
-      if (action.data.walletId) {
-        return action.data.walletId
-      }
-      return state
+    }
+
+    case 'ACCOUNT_INIT_COMPLETE': {
+      if (action.data == null) throw new TypeError('Invalid action')
+      return action.data.walletId
+    }
+
     default:
       return state
   }
 }
 
-export const selectedCurrencyCode = (state: string = '', action: Action) => {
-  if (!action.data) return state
+const selectedCurrencyCode = (state = '', action: Action): string => {
   switch (action.type) {
-    case ACTION.SELECT_WALLET:
+    case 'UI/WALLETS/SELECT_WALLET': {
+      if (action.data == null) throw new TypeError('Invalid action')
+      // $FlowFixMe
       return action.data.currencyCode
-    case Constants.ACCOUNT_INIT_COMPLETE:
-      if (action.data.currencyCode) {
-        return action.data.currencyCode
-      }
-      return state
+    }
+
+    case 'ACCOUNT_INIT_COMPLETE': {
+      if (action.data == null) throw new TypeError('Invalid action')
+      return action.data.currencyCode
+    }
+
     default:
       return state
   }
 }
 
-export const addTokenPending = (state: boolean = false, action: Action) => {
-  // if (!action.data) return state
-  const type = action.type
-  switch (type) {
-    case ADD_TOKEN_ACTION.ADD_TOKEN_START:
+const addTokenPending = (state = false, action: Action): boolean => {
+  switch (action.type) {
+    case 'ADD_TOKEN_START': {
       return true
-    case ADD_TOKEN_ACTION.ADD_TOKEN_SUCCESS:
+    }
+
+    case 'ADD_TOKEN_SUCCESS': {
       return false
-    case ADD_TOKEN_ACTION.ADD_NEW_CUSTOM_TOKEN_SUCCESS:
+    }
+
+    case 'ADD_NEW_CUSTOM_TOKEN_SUCCESS': {
       return false
-    case ADD_TOKEN_ACTION.ADD_NEW_CUSTOM_TOKEN_FAILURE:
+    }
+
+    case 'ADD_NEW_CUSTOM_TOKEN_FAILURE': {
       return false
+    }
+
     default:
       return state
   }
 }
 
-export const manageTokensPending = (state: boolean = false, action: Action) => {
-  if (!action.data) return state
-  const type = action.type
-  switch (type) {
-    case ACTION.MANAGE_TOKENS_START:
+const manageTokensPending = (state = false, action: Action): boolean => {
+  switch (action.type) {
+    case 'MANAGE_TOKENS_START': {
       return true
-    case ACTION.MANAGE_TOKENS_SUCCESS:
+    }
+
+    case 'MANAGE_TOKENS_SUCCESS': {
       return false
+    }
+
     default:
       return state
   }
@@ -377,7 +400,7 @@ function schema (wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress)
   return newWallet
 }
 
-export const wallets = combineReducers({
+export const wallets: Reducer<WalletsState, Action> = combineReducers({
   byId,
   activeWalletIds,
   archivedWalletIds,

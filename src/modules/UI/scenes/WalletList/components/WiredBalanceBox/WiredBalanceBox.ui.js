@@ -16,14 +16,14 @@ type BalanceBoxState = {}
 type BalanceBoxProps = {
   showBalance: boolean,
   fiatAmount: number,
-  fiatCurrencyCode: string,
+  isoFiatCurrencyCode: string,
   onPress: Function
 }
 
 type WiredBalanceBoxOwnProps = {
   showBalance: boolean | Function,
   fiatAmount: number | Function,
-  fiatCurrencyCode: string | Function,
+  isoFiatCurrencyCode: string | Function,
   onPress: Function
 }
 
@@ -34,8 +34,9 @@ class BalanceBox extends PureComponent<BalanceBoxProps, BalanceBoxState> {
   }
 
   render () {
-    const { fiatCurrencyCode, fiatAmount } = this.props
-    const fiatSymbol = fiatCurrencyCode ? getFiatSymbol(fiatCurrencyCode) : ''
+    const { isoFiatCurrencyCode, fiatAmount } = this.props
+    const fiatSymbol = isoFiatCurrencyCode ? getFiatSymbol(isoFiatCurrencyCode) : ''
+    const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
     let fiatBalanceString = ''
     if (fiatSymbol.length !== 1) {
       fiatBalanceString = fiatAmount + ' ' + fiatCurrencyCode
@@ -77,11 +78,14 @@ class BalanceBox extends PureComponent<BalanceBoxProps, BalanceBoxState> {
 }
 
 export const WiredBalanceBox = connect(
-  (state: State, ownProps: WiredBalanceBoxOwnProps): BalanceBoxProps => ({
-    showBalance: typeof ownProps.showBalance === 'function' ? ownProps.showBalance(state) : ownProps.showBalance,
-    fiatAmount: typeof ownProps.fiatAmount === 'function' ? ownProps.fiatAmount(state) : ownProps.fiatAmount,
-    fiatCurrencyCode: typeof ownProps.fiatCurrencyCode === 'function' ? ownProps.fiatCurrencyCode(state) : ownProps.fiatCurrencyCode,
-    onPress: ownProps.onPress
-  }),
+  (state: State, ownProps: WiredBalanceBoxOwnProps): BalanceBoxProps => {
+    const isoFiatCurrencyCode = typeof ownProps.isoFiatCurrencyCode === 'function' ? ownProps.isoFiatCurrencyCode(state) : ownProps.isoFiatCurrencyCode
+    return {
+      showBalance: typeof ownProps.showBalance === 'function' ? ownProps.showBalance(state) : ownProps.showBalance,
+      fiatAmount: typeof ownProps.fiatAmount === 'function' ? ownProps.fiatAmount(state, isoFiatCurrencyCode) : ownProps.fiatAmount,
+      onPress: ownProps.onPress,
+      isoFiatCurrencyCode
+    }
+  },
   null
 )(BalanceBox)

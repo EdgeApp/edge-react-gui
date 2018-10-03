@@ -1,11 +1,13 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 /* globals test expect */
 
-import { cryptoExchanger as cryptoExchangerReducer } from './CryptoExchangeReducer.js'
+import { cryptoExchange } from './CryptoExchangeReducer.js'
+
+const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
 
 test('initialState', () => {
-  const actual = cryptoExchangerReducer(undefined, {})
+  const actual = cryptoExchange(undefined, dummyAction)
 
   expect(actual).toMatchSnapshot()
 })

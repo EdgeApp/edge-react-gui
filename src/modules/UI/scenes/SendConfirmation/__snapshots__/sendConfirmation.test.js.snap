@@ -52,7 +52,8 @@ exports[`SendConfirmation should render with destination 1`] = `
             }
           }
         >
-          Balance: 
+          Balance:
+           
           0
            
           BTC
@@ -310,7 +311,8 @@ exports[`SendConfirmation should render with standard props 1`] = `
             }
           }
         >
-          Balance: 
+          Balance:
+           
           0
            
           BTC
@@ -553,7 +555,8 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
             }
           }
         >
-          Balance: 
+          Balance:
+           
           0
            
           XMR
@@ -706,19 +709,28 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
                 }
               }
             >
-              <PrimaryButton
+              <TouchableOpacity
+                activeOpacity={0.3}
                 style={
                   Object {
-                    "height": 40,
+                    "alignItems": "center",
+                    "backgroundColor": "transparent",
+                    "justifyContent": "center",
+                    "padding": 14,
                   }
                 }
               >
-                <Text
+                <FormattedText
                   ellipsizeMode="tail"
+                  style={
+                    Object {
+                      "color": "#FFFFFF",
+                    }
+                  }
                 >
                   Add Payment ID
-                </Text>
-              </PrimaryButton>
+                </FormattedText>
+              </TouchableOpacity>
             </Row>
           </Item>
         </Padding>
@@ -805,7 +817,8 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
             }
           }
         >
-          Balance: 
+          Balance:
+           
           0
            
           XRP
@@ -958,19 +971,28 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
                 }
               }
             >
-              <PrimaryButton
+              <TouchableOpacity
+                activeOpacity={0.3}
                 style={
                   Object {
-                    "height": 40,
+                    "alignItems": "center",
+                    "backgroundColor": "transparent",
+                    "justifyContent": "center",
+                    "padding": 14,
                   }
                 }
               >
-                <Text
+                <FormattedText
                   ellipsizeMode="tail"
+                  style={
+                    Object {
+                      "color": "#FFFFFF",
+                    }
+                  }
                 >
                   Add Destination Tag
-                </Text>
-              </PrimaryButton>
+                </FormattedText>
+              </TouchableOpacity>
             </Row>
           </Item>
         </Padding>

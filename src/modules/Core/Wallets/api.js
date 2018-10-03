@@ -69,7 +69,8 @@ export const makeSpendInfo = (paymentProtocolInfo: EdgePaymentProtocolInfo): Pro
       notes
     },
     nativeAmount,
-    spendTargets
+    spendTargets,
+    otherParams: { paymentProtocolInfo }
   })
 }
 

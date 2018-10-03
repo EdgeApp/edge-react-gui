@@ -16,15 +16,21 @@ const mapStateToProps = (state: State, ownProps) => ({
   isSetCustomNodesModalVisible: state.ui.scenes.settings.isSetCustomNodesModalVisible,
   isSetCustomNodesProcessing: state.ui.scenes.settings.isSetCustomNodesProcessing
 })
-const mapDispatchToProps = (dispatch: Dispatch, ownProps) => ({
-  selectDenomination: denominationKey => {
-    dispatch(setDenominationKeyRequest(ownProps.currencyCode, denominationKey))
-  },
-  enableCustomNodes: () => dispatch(enableCustomNodes(ownProps.currencyCode)),
-  disableCustomNodes: () => dispatch(disableCustomNodes(ownProps.currencyCode)),
-  setCustomNodesModalVisibility: (visibility: boolean) => dispatch(updateIsSetCustomNodesModalVisible(visibility)),
-  saveCustomNodesList: (nodesList: Array<string>) => dispatch(saveCustomNodesList(ownProps.currencyCode, nodesList))
-})
+const mapDispatchToProps = (dispatch: Dispatch, ownProps) => {
+  return {
+    selectDenomination: denominationKey => {
+      dispatch(setDenominationKeyRequest(ownProps.currencyCode, denominationKey))
+    },
+    enableCustomNodes: () => {
+      dispatch(enableCustomNodes(ownProps.currencyCode))
+    },
+    disableCustomNodes: () => {
+      dispatch(disableCustomNodes(ownProps.currencyCode))
+    },
+    setCustomNodesModalVisibility: (visibility: boolean) => dispatch(updateIsSetCustomNodesModalVisible(visibility)),
+    saveCustomNodesList: (nodesList: Array<string>) => dispatch(saveCustomNodesList(ownProps.currencyCode, nodesList))
+  }
+}
 export default connect(
   mapStateToProps,
   mapDispatchToProps

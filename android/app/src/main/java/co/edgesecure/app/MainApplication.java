@@ -35,6 +35,7 @@ import com.lynxit.contactswrapper.ContactsWrapperPackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import io.fixd.rctlocale.RCTLocalePackage;
 import com.oblongmana.webviewfileuploadandroid.AndroidWebViewPackage;
+import ca.jaysoo.extradimensions.ExtraDimensionsPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -77,8 +78,9 @@ public class MainApplication extends Application implements ReactApplication {
             new ReactNativeContacts(),
             new RNCameraPackage(),
             new RCTLocalePackage(),
-            new AndroidWebViewPackage()
-      );
+            new AndroidWebViewPackage(),
+            new ExtraDimensionsPackage()
+            );
     }
 
     @Override

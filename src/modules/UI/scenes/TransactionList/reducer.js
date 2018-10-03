@@ -1,109 +1,145 @@
 // @flow
 
-import type { EdgeTransaction } from 'edge-core-js'
-import { combineReducers } from 'redux'
+import { type Reducer, combineReducers } from 'redux'
 
+import type { TransactionListTx } from '../../../../types.js'
 import type { Action } from '../../../ReduxTypes.js'
-import * as WALLET_ACTION from '../../Wallets/action.js'
-import * as ACTION from './action'
 
-export type TransactionsState = Array<EdgeTransaction>
+export type TransactionListState = {
+  +currentCurrencyCode: string,
+  +currentEndIndex: number,
+  +currentWalletId: string,
+  +numTransactions: number,
+  +searchVisible: boolean,
+  +transactions: Array<TransactionListTx>,
+  +updatingBalance: boolean
+}
 
-const transactions = (state: TransactionsState = [], action: Action) => {
+const transactions = (state = [], action: Action): Array<TransactionListTx> => {
   if (!action.data) return state
   switch (action.type) {
-    case ACTION.UPDATE_TRANSACTIONS:
+    case 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS': {
+      // $FlowFixMe
       return action.data.transactions
-    case WALLET_ACTION.SELECT_WALLET:
+    }
+
+    case 'UI/WALLETS/SELECT_WALLET': {
       return []
+    }
+
     default:
       return state
   }
 }
 
-const currentCurrencyCode = (state: string = '', action: Action) => {
+const currentCurrencyCode = (state = '', action: Action): string => {
   if (!action.data) return state
   switch (action.type) {
-    case ACTION.UPDATE_TRANSACTIONS:
+    case 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS': {
+      // $FlowFixMe
       return action.data.currentCurrencyCode
+    }
+
     default:
       return state
   }
 }
 
-const numTransactions = (state: number = 0, action: Action) => {
+const numTransactions = (state = 0, action: Action): number => {
   if (!action.data) return state
   switch (action.type) {
-    case ACTION.UPDATE_TRANSACTIONS:
+    case 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS': {
+      // $FlowFixMe
       return action.data.numTransactions
+    }
+
     default:
       return state
   }
 }
 
-const currentWalletId = (state: string = '', action: Action) => {
+const currentWalletId = (state = '', action: Action): string => {
   if (!action.data) return state
   switch (action.type) {
-    case ACTION.UPDATE_TRANSACTIONS:
+    case 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS': {
+      // $FlowFixMe
       return action.data.currentWalletId
+    }
+
     default:
       return state
   }
 }
-const currentEndIndex = (state: number = 0, action: Action) => {
+
+const currentEndIndex = (state = 0, action: Action): number => {
   if (!action.data) return state
   switch (action.type) {
-    case ACTION.UPDATE_TRANSACTIONS:
+    case 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS': {
+      // $FlowFixMe
       return action.data.currentEndIndex
+    }
+
     default:
       return state
   }
 }
 
-const searchVisible = (state: boolean = false, action: Action) => {
+const searchVisible = (state = false, action: Action): boolean => {
   switch (action.type) {
-    case ACTION.TRANSACTIONS_SEARCH_VISIBLE:
+    case 'UI/SCENES/TRANSACTION_LIST/TRANSACTIONS_SEARCH_VISIBLE': {
       return true
-    case ACTION.TRANSACTIONS_SEARCH_HIDDEN:
+    }
+
+    case 'UI/SCENES/TRANSACTION_LIST/TRANSACTIONS_SEARCH_HIDDEN': {
       return false
+    }
+
     default:
       return state
   }
 }
 
-const updatingBalance = (state: boolean = true, action) => {
+const updatingBalance = (state = true, action: Action): boolean => {
   switch (action.type) {
-    case ACTION.ENABLE_UPDATING_BALANCE:
+    case 'UI/SCENES/TRANSACTION_LIST/ENABLE_UPDATING_BALANCE': {
       return true
-    case ACTION.DISABLE_UPDATING_BALANCE:
+    }
+
+    case 'UI/SCENES/TRANSACTION_LIST/DISABLE_UPDATING_BALANCE': {
       return false
-    case ACTION.TOGGLE_UPDATING_BALANCE:
+    }
+
+    case 'UI/SCENES/TRANSACTION_LIST/TOGGLE_UPDATING_BALANCE': {
       return !state
+    }
+
     default:
       return state
   }
 }
 
-const loadingTransactions = (state = false, action) => {
+const loadingTransactions = (state = false, action: Action) => {
   switch (action.type) {
-    case ACTION.START_TRANSACTIONS_LOADING:
+    case 'UI/SCENES/TRANSACTION_LIST/START_TRANSACTIONS_LOADING': {
       return true
-    case ACTION.END_TRANSACTIONS_LOADING:
+    }
+
+    case 'UI/SCENES/TRANSACTION_LIST/END_TRANSACTIONS_LOADING': {
       return false
+    }
+
     default:
       return state
   }
 }
 
-export const transactionList = combineReducers({
-  transactions,
+export const transactionList: Reducer<TransactionListState, Action> = combineReducers({
   currentCurrencyCode,
-  currentWalletId,
-  numTransactions,
   currentEndIndex,
+  currentWalletId,
+  loadingTransactions,
+  numTransactions,
   searchVisible,
-  updatingBalance,
-  loadingTransactions
+  transactions,
+  updatingBalance
 })
-
-export default transactionList

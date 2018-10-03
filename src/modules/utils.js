@@ -9,8 +9,8 @@ import { FIAT_CODES_SYMBOLS as currencySymbolMap, getSymbolFromCurrency } from '
 import { intl } from '../locales/intl.js'
 import borderColors from '../theme/variables/css3Colors'
 import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet } from '../types'
-import { getCurrencyConverter } from './Core/selectors.js'
 import type { State } from './ReduxTypes'
+import { convertCurrency } from './UI/selectors.js'
 
 export const DIVIDE_PRECISION = 18
 
@@ -215,8 +215,7 @@ export const getCurrencyAccountFiatBalanceFromWallet = (wallet: GuiWallet, curre
   if (!exchangeDenomination) return '0'
   const nativeToExchangeRatio: string = exchangeDenomination.multiplier
   const cryptoAmount = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
-  const currencyConverter = getCurrencyConverter(state)
-  const unformattedFiatValue = currencyConverter.convertCurrency(currencyCode, 'iso:' + settings.defaultFiat, cryptoAmount)
+  const unformattedFiatValue = convertCurrency(state, currencyCode, settings.defaultIsoFiat, cryptoAmount)
   const formattedFiatValue = intl.formatNumber(unformattedFiatValue, { toFixed: 2 })
   return formattedFiatValue || '0'
 }
@@ -240,44 +239,9 @@ export const getCurrencyWalletFiatBalanceFromWallet = (wallet: GuiWallet, curren
   if (!exchangeDenomination) return '0'
   const nativeToExchangeRatio: string = exchangeDenomination.multiplier
   const cryptoAmount = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
-  const currencyConverter = getCurrencyConverter(state)
-  const unformattedFiatValue = currencyConverter.convertCurrency(currencyCode, wallet.isoFiatCurrencyCode, cryptoAmount)
+  const unformattedFiatValue = convertCurrency(state, currencyCode, wallet.isoFiatCurrencyCode, cryptoAmount)
   const formattedFiatValue = intl.formatNumber(unformattedFiatValue, { toFixed: 2 })
   return formattedFiatValue || '0'
-}
-
-// not sure if this can be used with tokens
-export const calculateSettingsFiatFromCrypto = (wallet: GuiWallet, state: State): string => {
-  let fiatValue = 0 // default to zero if not calculable
-  const currencyCode = wallet.currencyCode
-  const nativeBalance = wallet.nativeBalances[currencyCode]
-  const settings = state.ui.settings
-  const currencyConverter = getCurrencyConverter(state)
-  if (!nativeBalance || nativeBalance === '0') return '0'
-  const denominations = settings[currencyCode].denominations
-  const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
-  if (!exchangeDenomination) return '0'
-  const nativeToExchangeRatio: string = exchangeDenomination.multiplier
-  const cryptoAmount: number = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
-  fiatValue = currencyConverter.convertCurrency(currencyCode, 'iso:' + settings.defaultFiat, cryptoAmount)
-  return intl.formatNumber(fiatValue, { toFixed: 2 }) || '0'
-}
-
-// not sure if this can be used with tokens
-export const calculateWalletFiatFromCrypto = (wallet: GuiWallet, state: State): string => {
-  let fiatValue = 0 // default to zero if not calculable
-  const currencyCode = wallet.currencyCode
-  const nativeBalance = wallet.nativeBalances[currencyCode]
-  const settings = state.ui.settings
-  const currencyConverter = getCurrencyConverter(state)
-  if (!nativeBalance || nativeBalance === '0') return '0'
-  const denominations = settings[currencyCode].denominations
-  const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
-  if (!exchangeDenomination) return '0'
-  const nativeToExchangeRatio: string = exchangeDenomination.multiplier
-  const cryptoAmount: number = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
-  fiatValue = currencyConverter.convertCurrency(currencyCode, wallet.isoFiatCurrencyCode, cryptoAmount)
-  return intl.formatNumber(fiatValue, { toFixed: 2 }) || '0'
 }
 
 // Used to convert outputs from core into other denominations (exchangeDenomination, displayDenomination)
@@ -608,7 +572,7 @@ export const isEdgeLogin = (data: string) => {
   return EDGE_LOGIN_REG_EXP.test(data)
 }
 
-export const getTotalFiatAmount = (state: State) => {
+export const getTotalFiatAmountFromExchangeRates = (state: State, isoFiatCurrencyCode: string) => {
   const temporaryTotalCrypto = {}
   const wallets = state.ui.wallets.byId
   const settings = state.ui.settings
@@ -647,15 +611,17 @@ export const getTotalFiatAmount = (state: State) => {
       }
     }
   }
-  const balanceInfo = calculateTotalFiatBalance(temporaryTotalCrypto, state)
+  const balanceInfo = calculateTotalFiatBalance(state, temporaryTotalCrypto, isoFiatCurrencyCode)
   return balanceInfo
 }
 
-export const calculateTotalFiatBalance = (values: any, state: State) => {
+export const calculateTotalFiatBalance = (state: State, values: { [string]: number }, isoFiatCurrencyCode: string) => {
   let total = 0
-  const currencyConverter = getCurrencyConverter(state)
+  // if calculating total balance for password recovery reminder, then use iso:USD that was passed in
+  // otherwise grab the default from the account
+  const isoFiat = isoFiatCurrencyCode
   for (const currency in values) {
-    const addValue = currencyConverter.convertCurrency(currency, 'iso:USD', values[currency])
+    const addValue = convertCurrency(state, currency, isoFiat, values[currency])
     total = total + addValue
   }
   return intl.formatNumber(total, { toFixed: 2 })

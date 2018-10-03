@@ -214,6 +214,9 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
         </PrimaryButton>
       )
     }
+    if (gettingTransaction) {
+      return <ActivityIndicator />
+    }
     return null
   }
   flipThis = () => {

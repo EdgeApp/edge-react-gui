@@ -5,10 +5,8 @@ import { connect } from 'react-redux'
 import type { Dispatch, State } from '../../../../../ReduxTypes'
 import WalletNameInput from './WalletNameInput.ui'
 
-export const UPDATE_RENAME_WALLET_INPUT = 'UPDATE_RENAME_WALLET_INPUT'
-
 const updateRenameWalletInput = (renameWalletInput: string) => ({
-  type: UPDATE_RENAME_WALLET_INPUT,
+  type: 'UPDATE_RENAME_WALLET_INPUT',
   data: { renameWalletInput }
 })
 

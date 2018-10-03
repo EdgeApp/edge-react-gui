@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Image, Text, View } from 'react-native'
+import { Image, ScrollView, Text, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import buysellIcon from '../../../../../assets/images/sidenav/buysell.png'
@@ -42,24 +42,27 @@ export default class Main extends Component<Props> {
       <UserList />
     ) : (
       <View style={{ flex: 1, justifyContent: 'space-between' }}>
-        <View>
-          <Separator />
-          <BuySellButton />
-          <Separator />
-          <WalletsButton />
-          <Separator />
-          <ScanButton />
-          <Separator />
-          <SweepPrivateKeyButton />
-          <Separator />
-          <RequestButton />
-          <Separator />
-          <ExchangeButton />
-          <Separator />
-          <TermsOfServiceButton />
-          <Separator />
-        </View>
-
+        <ScrollView>
+          <View>
+            <View>
+              <Separator />
+              <BuySellButton />
+              <Separator />
+              <WalletsButton />
+              <Separator />
+              <ScanButton />
+              <Separator />
+              <SweepPrivateKeyButton />
+              <Separator />
+              <RequestButton />
+              <Separator />
+              <ExchangeButton />
+              <Separator />
+              <TermsOfServiceButton />
+              <Separator />
+            </View>
+          </View>
+        </ScrollView>
         <View>
           <Separator />
           <LogoutButton onPress={this.handleLogout} />

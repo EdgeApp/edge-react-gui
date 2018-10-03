@@ -8,7 +8,6 @@ import PushNotification from 'react-native-push-notification'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
-import * as actions from '../../actions/indexActions'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import * as ACCOUNT_API from '../Core/Account/api'
@@ -26,23 +25,14 @@ const localeInfo = Locale.constants() // should likely be moved to login system 
 export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => async (dispatch: Dispatch, getState: GetState) => {
   dispatch(loggedIn(account))
 
+  account.activeWalletIds.length < 1 ? Actions[Constants.ONBOARDING]() : Actions[Constants.EDGE]()
+
   const walletInfos = account.allKeys
   const filteredWalletInfos = walletInfos.map(({ keys, id, ...info }) => info)
   console.log('Wallet Infos:', filteredWalletInfos)
 
   const state = getState()
   const context = CORE_SELECTORS.getContext(state)
-  let otpResetPending = false
-  try {
-    const accounts = await context.fetchLoginMessages()
-    for (const key in accounts) {
-      if (key === account.username) {
-        otpResetPending = accounts[key].otpResetPending
-      }
-    }
-  } catch (e) {
-    console.log(e)
-  }
   const currencyCodes = {}
   if (Platform.OS === Constants.IOS) {
     PushNotification.configure({
@@ -57,7 +47,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     walletId: '',
     currencyCode: '',
     currencyPlugins: [],
-    otpInfo: { enabled: account.otpKey != null, otpKey: account.otpKey, otpResetPending },
+    otpInfo: { enabled: account.otpKey != null, otpKey: account.otpKey, otpResetPending: false },
     autoLogoutTimeInSeconds: '',
     bluetoothMode: false,
     pinLoginEnabled: false,
@@ -196,16 +186,14 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
 
     const receiveAddresses = await getReceiveAddresses(currencyWallets)
 
-    dispatch(
-      actions.dispatchActionObject(Constants.ACCOUNT_INIT_COMPLETE, {
-        ...accountInitObject,
-        receiveAddresses
-      })
-    )
+    dispatch({
+      type: 'ACCOUNT_INIT_COMPLETE',
+      data: { ...accountInitObject, receiveAddresses }
+    })
     // $FlowFixMe
     dispatch(updateWalletsRequest())
-  } catch (e) {
-    console.log(e)
+  } catch (error) {
+    console.log(error)
   }
 }
 
@@ -229,14 +217,14 @@ export const deepLinkLogout = (backupKey: string) => (dispatch: Dispatch, getSta
   const account = CORE_SELECTORS.getAccount(state)
   const username = account.username
   Actions.popTo(Constants.LOGIN, { username })
-  dispatch(actions.dispatchActionString(Constants.DEEP_LINK_RECEIVED, backupKey))
-  // dispatch(logout(Constants.DEEP_LINK_RECEIVED))
+  dispatch({ type: 'DEEP_LINK_RECEIVED', data: backupKey })
+  // dispatch(logout('deepLinkReceived'))
   if (!account) {
     account.logout()
   }
 }
 
 export const logout = (username?: string) => ({
-  type: Constants.LOGOUT,
+  type: 'LOGOUT',
   data: { username }
 })

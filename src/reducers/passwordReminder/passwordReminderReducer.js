@@ -1,12 +1,9 @@
 // @flow
 
-import { ACCOUNT_INIT_COMPLETE } from '../../constants/indexConstants.js'
+import { type Reducer } from 'redux'
+
 import type { Action } from '../../modules/ReduxTypes.js'
-import { CHECK_PASSWORD_SUCCESS, REQUEST_CHANGE_PASSWORD } from '../../modules/UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
-import { UNLOCK as UNLOCK_WALLET_SEED } from '../../modules/UI/scenes/WalletList/components/GetSeedModal/GetSeedModalConnector.js'
-import { SET_SETTINGS_LOCK } from '../../modules/UI/Settings/action.js'
 import { MILLISECONDS_PER_DAY, daysBetween } from '../../modules/utils.js'
-import { PASSWORD_REMINDER_POSTPONED } from './indexPasswordReminder.js'
 
 export const INITIAL_NON_PASSWORD_DAYS_LIMIT = 2
 export const INITIAL_NON_PASSWORD_LOGINS_LIMIT = 2
@@ -188,14 +185,14 @@ export const untranslatedReducer = (state: PasswordReminderState = initialState,
   }
 }
 
-export const translate = (reducer: typeof untranslatedReducer) => (state: PasswordReminderState, action: Action): PasswordReminderState => {
+export const translate = (reducer: typeof untranslatedReducer): Reducer<PasswordReminderState, Action> => (state, action: Action) => {
   let translatedAction = {
     type: 'default',
     data: {}
   }
 
   // $FlowFixMe
-  if ((action.type === 'LOGIN' || action.type === ACCOUNT_INIT_COMPLETE) && action.data.account.newAccount) {
+  if ((action.type === 'LOGIN' || action.type === 'ACCOUNT_INIT_COMPLETE') && action.data.account.newAccount) {
     const now = Date.now()
     translatedAction = {
       type: 'NEW_ACCOUNT_LOGIN',
@@ -207,7 +204,7 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
   }
 
   // $FlowFixMe
-  if ((action.type === 'LOGIN' || action.type === ACCOUNT_INIT_COMPLETE) && action.data.account.passwordLogin) {
+  if ((action.type === 'LOGIN' || action.type === 'ACCOUNT_INIT_COMPLETE') && action.data.account.passwordLogin) {
     const now = Date.now()
     translatedAction = {
       type: 'PASSWORD_LOGIN',
@@ -221,7 +218,7 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
   }
 
   // $FlowFixMe
-  if ((action.type === 'LOGIN' || action.type === ACCOUNT_INIT_COMPLETE) && !(action.data.account.passwordLogin || action.data.account.newAccount)) {
+  if ((action.type === 'LOGIN' || action.type === 'ACCOUNT_INIT_COMPLETE') && !(action.data.account.passwordLogin || action.data.account.newAccount)) {
     translatedAction = {
       type: 'NON_PASSWORD_LOGIN',
       data: {
@@ -232,7 +229,7 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
     }
   }
 
-  if (action.type === SET_SETTINGS_LOCK && action.data === false) {
+  if (action.type === 'UI/SETTINGS/SET_SETTINGS_LOCK' && action.data === false) {
     translatedAction = {
       type: 'PASSWORD_USED',
       data: {
@@ -240,7 +237,7 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
       }
     }
   }
-  if (action.type === UNLOCK_WALLET_SEED) {
+  if (action.type === 'UNLOCK_WALLET_SEED') {
     translatedAction = {
       type: 'PASSWORD_USED',
       data: {
@@ -248,7 +245,7 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
       }
     }
   }
-  if (action.type === CHECK_PASSWORD_SUCCESS) {
+  if (action.type === 'PASSWORD_REMINDER_MODAL/CHECK_PASSWORD_SUCCESS') {
     translatedAction = {
       type: 'PASSWORD_USED',
       data: {
@@ -257,14 +254,14 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
     }
   }
 
-  if (action.type === PASSWORD_REMINDER_POSTPONED) {
+  if (action.type === 'PASSWORD_REMINDER/PASSWORD_REMINDER_POSTPONED') {
     translatedAction = {
       type: 'PASSWORD_REMINDER_POSTPONED',
       data: {}
     }
   }
 
-  if (action.type === REQUEST_CHANGE_PASSWORD) {
+  if (action.type === 'PASSWORD_REMINDER_MODAL/REQUEST_CHANGE_PASSWORD') {
     translatedAction = {
       type: 'REQUEST_CHANGE_PASSWORD',
       data: {}
@@ -274,4 +271,4 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
   return reducer(state, translatedAction)
 }
 
-export const passwordReminderReducer = translate(untranslatedReducer)
+export const passwordReminder: Reducer<PasswordReminderState, Action> = translate(untranslatedReducer)

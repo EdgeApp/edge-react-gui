@@ -89,7 +89,7 @@ export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, S
     }
     return (
       <PrimaryButton onPress={this.onPress}>
-        <PrimaryButton.Text>{s.strings.otp_disable}</PrimaryButton.Text>
+        <PrimaryButton.Text>{s.strings.otp_enable}</PrimaryButton.Text>
       </PrimaryButton>
     )
   }

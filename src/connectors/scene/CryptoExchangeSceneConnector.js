@@ -6,15 +6,14 @@ import { connect } from 'react-redux'
 import type { SetNativeAmountInfo } from '../../actions/CryptoExchangeActions'
 import { selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
 import * as actions from '../../actions/indexActions'
-import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import { getExchangeRate } from '../../modules/Core/selectors.js'
 import type { Dispatch, State } from '../../modules/ReduxTypes'
 import { CryptoExchangeSceneComponent } from '../../modules/UI/scenes/CryptoExchange/CryptoExchangeSceneComponent'
 import type {
   CryptoExchangeSceneComponentDispatchProps,
   CryptoExchangeSceneComponentStateProps
 } from '../../modules/UI/scenes/CryptoExchange/CryptoExchangeSceneComponent'
+import { getExchangeRate } from '../../modules/UI/selectors.js'
 import { emptyCurrencyInfo, emptyGuiWallet } from '../../types.js'
 import type { GuiCurrencyInfo } from '../../types.js'
 
@@ -93,11 +92,11 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
 }
 
 export const mapDispatchToProps = (dispatch: Dispatch): CryptoExchangeSceneComponentDispatchProps => ({
-  swapFromAndToWallets: () => dispatch(actions.dispatchAction(Constants.SWAP_FROM_TO_CRYPTO_WALLETS)),
-  openModal: (data: string) => dispatch(actions.dispatchActionString(Constants.OPEN_WALLET_SELECTOR_MODAL, data)),
+  swapFromAndToWallets: () => dispatch({ type: 'SWAP_FROM_TO_CRYPTO_WALLETS' }),
+  openModal: (data: string) => dispatch({ type: 'OPEN_WALLET_SELECTOR_MODAL', data }),
   shift: () => dispatch(actions.shiftCryptoCurrency()),
-  closeConfirmation: () => dispatch(actions.dispatchAction(Constants.CLOSE_CRYPTO_EXC_CONF_MODAL)),
-  openConfirmation: () => dispatch(actions.dispatchAction(Constants.OPEN_CRYPTO_EXC_CONF_MODAL)),
+  closeConfirmation: () => dispatch({ type: 'CLOSE_CRYPTO_EXEC_CONF_MODAL' }),
+  openConfirmation: () => dispatch({ type: 'OPEN_CRYPTO_EXEC_CONF_MODAL' }),
   setNativeAmount: (data: SetNativeAmountInfo) => dispatch(actions.setNativeAmount(data)),
   getShapeShiftTokens: () => dispatch(actions.getShapeShiftTokens()),
   onSelectWallet: (walletId: string, currencyCode: string) => {

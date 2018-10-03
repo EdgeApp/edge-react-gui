@@ -46,8 +46,12 @@ export default class WalletListModal extends Component<Props> {
     return (
       <Animatable.View style={[styles.topLevel, { position: 'absolute', top: top, height: PLATFORM.usableHeight }]} animation="fadeInUp" duration={250}>
         <View>
-          <WalletListModalHeader type={this.props.type} whichWallet={this.props.whichWallet} />
-          <FlatList style={{ width: '100%', height: 500 }} data={walletList} renderItem={this.renderWalletListRow} />
+          <FlatList
+            ListHeaderComponent={<WalletListModalHeader type={this.props.type} whichWallet={this.props.whichWallet} />}
+            style={{ width: '100%', height: '100%' }}
+            data={walletList}
+            renderItem={this.renderWalletListRow}
+          />
         </View>
       </Animatable.View>
     )

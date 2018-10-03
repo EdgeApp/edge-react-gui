@@ -200,6 +200,7 @@ dependencies {
     compile project(':react-native-camera')
     compile project(':react-native-push-notification')
     compile project(':react-native-webview-file-upload-android')
+    compile project(':ExtraDimensions')
     // From node_modules
 
     // Firebase dependencies

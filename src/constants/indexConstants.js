@@ -1,7 +1,6 @@
 // @flow
 
 export * from './SceneKeys'
-export * from './ActionConstants'
 export * from './IconConstants'
 export * from '../modules/UI/components/WalletListModal/action'
 export * from './DropDownValueConstants'

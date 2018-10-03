@@ -11,7 +11,7 @@ import { sprintf } from 'sprintf-js'
 
 import * as Constants from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings.js'
-import type { GuiCurrencyInfo, GuiReceiveAddress, GuiWallet } from '../../../../types.js'
+import type { GuiCurrencyInfo, GuiWallet } from '../../../../types.js'
 import WalletListModal from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import { getObjectDiff } from '../../../utils'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
@@ -34,7 +34,8 @@ export type RequestStateProps = {
   guiWallet: GuiWallet,
   loading: false,
   primaryCurrencyInfo: GuiCurrencyInfo,
-  receiveAddress: GuiReceiveAddress,
+  publicAddress: string,
+  legacyAddress: string,
   secondaryCurrencyInfo: GuiCurrencyInfo,
   showToWalletModal: boolean,
   useLegacyAddress: boolean
@@ -46,7 +47,8 @@ export type RequestLoadingProps = {
   guiWallet: null,
   loading: true,
   primaryCurrencyInfo: null,
-  receiveAddress: null,
+  publicAddress: string,
+  legacyAddress: string,
   secondaryCurrencyInfo: null,
   showToWalletModal: null,
   useLegacyAddress: null
@@ -72,11 +74,22 @@ export class Request extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {
-      publicAddress: '',
-      legacyAddress: '',
+      publicAddress: props.publicAddress,
+      legacyAddress: props.legacyAddress,
       encodedURI: '',
       isXRPMinimumModalVisible: false,
       hasXRPMinimumModalAlreadyShown: false
+    }
+    try {
+      this.generateEncodedUri()
+    } catch (e) {
+      console.log('error generating encodedURI: ', e)
+    }
+    if (props.currencyCode === 'XRP') {
+      if (bns.lt(props.guiWallet.primaryNativeBalance, '20000000')) {
+        this.state.isXRPMinimumModalVisible = true
+        this.state.hasXRPMinimumModalAlreadyShown = true
+      }
     }
     slowlog(this, /.*/, global.slowlogOptions)
   }
@@ -99,6 +112,33 @@ export class Request extends Component<Props, State> {
       diffElement2 = getObjectDiff(this.state, nextState)
     }
     return !!diffElement || !!diffElement2
+  }
+
+  async generateEncodedUri () {
+    const { edgeWallet, useLegacyAddress } = this.props
+    let publicAddress = this.props.publicAddress
+    let legacyAddress = this.props.legacyAddress
+    const abcEncodeUri = useLegacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
+    let encodedURI = s.strings.loading
+    try {
+      encodedURI = edgeWallet ? await edgeWallet.encodeUri(abcEncodeUri) : s.strings.loading
+      this.setState({
+        encodedURI
+      })
+    } catch (e) {
+      console.log(e)
+      publicAddress = s.strings.loading
+      legacyAddress = s.strings.loading
+      this.setState({
+        publicAddress,
+        legacyAddress
+      })
+      setTimeout(() => {
+        if (edgeWallet && edgeWallet.id) {
+          this.props.refreshReceiveAddressRequest(edgeWallet.id)
+        }
+      }, PUBLIC_ADDRESS_REFRESH_MS)
+    }
   }
 
   async UNSAFE_componentWillReceiveProps (nextProps: Props) {
@@ -135,7 +175,8 @@ export class Request extends Component<Props, State> {
       })
     }
     // old blank address to new
-    if (didWalletChange) {
+    if (didWalletChange || didAddressChange) {
+      // include 'didAddressChange' because didWalletChange returns false upon initial request scene load
       if (nextProps.currencyCode === 'XRP') {
         if (!this.state.hasXRPMinimumModalAlreadyShown) {
           if (bns.lt(nextProps.guiWallet.primaryNativeBalance, '20000000')) {

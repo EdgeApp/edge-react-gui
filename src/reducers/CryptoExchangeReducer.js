@@ -1,9 +1,51 @@
 // @flow
 
+import type { EdgeTransaction } from 'edge-core-js'
+import { type Reducer } from 'redux'
+
 import * as Constants from '../constants/indexConstants'
 import s from '../locales/strings.js'
-import type { State } from '../modules/ReduxTypes.js'
-import type { GuiCurrencyInfo } from '../types.js'
+import { type Action } from '../modules/ReduxTypes.js'
+import { type GuiCurrencyInfo, type GuiWallet } from '../types.js'
+
+export type CryptoExchangeState = {
+  exchangeRate: number,
+  nativeMax: string,
+  nativeMin: string,
+  minerFee: string,
+  reverseExchange: number,
+  reverseNativeMax: string,
+  reverseNativeMin: string,
+  reverseMinerFee: string,
+  fromWallet: GuiWallet | null,
+  fromCurrencyCode: string | null,
+  fromNativeAmount: string,
+  fromDisplayAmount: string,
+  fromWalletPrimaryInfo: GuiCurrencyInfo, // EdgeCurrencyInfo | null,
+  fromCurrencyIcon: string | null,
+  fromCurrencyIconDark: string | null,
+  toWallet: GuiWallet | null,
+  toCurrencyCode: string | null,
+  toNativeAmount: string,
+  toDisplayAmount: string,
+  toWalletPrimaryInfo: GuiCurrencyInfo, // EdgeCurrencyInfo | null,
+  toCurrencyIcon: string | null,
+  toCurrencyIconDark: string | null,
+  insufficientError: boolean,
+  feeSetting: 'low' | 'standard' | 'high' | 'custom',
+  walletListModalVisible: boolean,
+  confirmTransactionModalVisible: boolean,
+  forceUpdateGuiCounter: number,
+  shiftTransactionError: Error | null,
+  genericShapeShiftError: Error | null,
+  changeWallet: 'none',
+  transaction: EdgeTransaction | null,
+  fee: any,
+  gettingTransaction: boolean,
+  availableShapeShiftTokens: Array<any>,
+  shiftPendingTransaction: boolean,
+  quoteExpireDate: number | null
+}
 
 const dummyCurrencyInfo: GuiCurrencyInfo = {
   displayCurrencyCode: '',
@@ -60,18 +102,22 @@ const initialState = {
   quoteExpireDate: null
 }
 
-function cryptoExchangerReducer (state = initialState, action) {
+function cryptoExchangeInner (state = initialState, action: Action) {
   let forceUpdateGuiCounter
   switch (action.type) {
-    case Constants.SWAP_FROM_TO_CRYPTO_WALLETS:
+    case 'SWAP_FROM_TO_CRYPTO_WALLETS': {
       return deepCopyState(state)
-    case Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE:
+    }
+
+    case 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE': {
+      if (!action.data) throw new Error('Invalid action')
       return {
         ...state,
         fromWallet: action.data.wallet,
         fromWalletPrimaryInfo: action.data.primaryInfo,
         fromCurrencyCode: action.data.currencyCode,
         fromCurrencyIcon: getLogo(action.data.wallet, action.data.currencyCode),
+        // $FlowFixMe
         fromCurrencyIconDark: getLogoDark(action.data.wallet, action.data.currencyCode),
         changeWallet: Constants.NONE,
         fromNativeAmount: '0',
@@ -84,13 +130,17 @@ function cryptoExchangerReducer (state = initialState, action) {
         transaction: null,
         quoteExpireDate: null
       }
-    case Constants.SELECT_TO_WALLET_CRYPTO_EXCHANGE:
+    }
+
+    case 'SELECT_TO_WALLET_CRYPTO_EXCHANGE': {
+      if (!action.data) throw new Error('Invalid action')
       return {
         ...state,
         toWallet: action.data.wallet,
         toCurrencyCode: action.data.currencyCode,
         toWalletPrimaryInfo: action.data.primaryInfo,
         toCurrencyIcon: getLogo(action.data.wallet, action.data.currencyCode),
+        // $FlowFixMe
         toCurrencyIconDark: getLogoDark(action.data.wallet, action.data.currencyCode),
         changeWallet: Constants.NONE,
         fromNativeAmount: '0',
@@ -103,15 +153,25 @@ function cryptoExchangerReducer (state = initialState, action) {
         transaction: null,
         quoteExpireDate: null
       }
-    case Constants.DISABLE_WALLET_LIST_MODAL_VISIBILITY:
-      return { ...state, walletListModalVisible: false }
-    case Constants.OPEN_WALLET_SELECTOR_MODAL:
+    }
+
+    case 'DISABLE_WALLET_LIST_MODAL_VISIBILITY': {
+      return {
+        ...state,
+        walletListModalVisible: false
+      }
+    }
+
+    case 'OPEN_WALLET_SELECTOR_MODAL': {
       return {
         ...state,
         walletListModalVisible: true,
         changeWallet: action.data
       }
-    case Constants.UPDATE_CRYPTO_EXCHANGE_INFO: {
+    }
+
+    case 'UPDATE_CRYPTO_EXCHANGE_INFO': {
+      if (!action.data) throw new Error('Invalid action')
       const result = {
         ...state,
         exchangeRate: action.data.rate,
@@ -121,7 +181,9 @@ function cryptoExchangerReducer (state = initialState, action) {
       }
       return result
     }
-    case Constants.UPDATE_CRYPTO_REVERSE_EXCHANGE_INFO: {
+
+    case 'UPDATE_CRYPTO_REVERSE_EXCHANGE_INFO': {
+      if (!action.data) throw new Error('Invalid action')
       const result = {
         ...state,
         reverseExchange: action.data.rate,
@@ -131,7 +193,9 @@ function cryptoExchangerReducer (state = initialState, action) {
       }
       return result
     }
-    case Constants.UPDATE_SHIFT_TRANSACTION:
+
+    case 'UPDATE_SHIFT_TRANSACTION_FEE': {
+      if (!action.data) throw new Error('Invalid action')
       return {
         ...state,
         transaction: action.data.edgeTransaction,
@@ -147,7 +211,9 @@ function cryptoExchangerReducer (state = initialState, action) {
         insufficientError: false,
         genericShapeShiftError: null
       }
-    case Constants.INVALIDATE_SHIFT_TRANSACTION:
+    }
+
+    case 'INVALIDATE_SHIFT_TRANSACTION': {
       return {
         ...state,
         transaction: null,
@@ -155,19 +221,39 @@ function cryptoExchangerReducer (state = initialState, action) {
         genericShapeShiftError: null,
         quoteExpireDate: null
       }
-    case Constants.SHIFT_COMPLETE:
-      return { ...initialState, availableShapeShiftTokens: state.availableShapeShiftTokens }
-    case Constants.SHIFT_ERROR:
+    }
+
+    case 'SHIFT_COMPLETE': {
+      return {
+        ...initialState,
+        availableShapeShiftTokens: state.availableShapeShiftTokens
+      }
+    }
+
+    case 'SHIFT_ERROR': {
       return {
         ...state,
         confirmTransactionModalVisible: false,
         shiftTransactionError: action.data
       }
-    case Constants.CLOSE_CRYPTO_EXC_CONF_MODAL:
-      return { ...state, confirmTransactionModalVisible: false }
-    case Constants.OPEN_CRYPTO_EXC_CONF_MODAL:
-      return { ...state, confirmTransactionModalVisible: true }
-    case Constants.SET_CRYPTO_EXCHANGE_AMOUNTS:
+    }
+
+    case 'CLOSE_CRYPTO_EXEC_CONF_MODAL': {
+      return {
+        ...state,
+        confirmTransactionModalVisible: false
+      }
+    }
+
+    case 'OPEN_CRYPTO_EXEC_CONF_MODAL': {
+      return {
+        ...state,
+        confirmTransactionModalVisible: true
+      }
+    }
+
+    case 'SET_CRYPTO_EXCHANGE_AMOUNTS': {
+      if (!action.data) throw new Error('Invalid action')
       forceUpdateGuiCounter = state.forceUpdateGuiCounter
       if (action.data.forceUpdateGui) {
         forceUpdateGuiCounter++
@@ -185,7 +271,9 @@ function cryptoExchangerReducer (state = initialState, action) {
         fromDisplayAmount,
         forceUpdateGuiCounter
       }
-    case Constants.RECEIVED_INSUFFICIENT_FUNDS_ERROR:
+    }
+
+    case 'RECEIVED_INSUFFICENT_FUNDS_ERROR': {
       return {
         ...state,
         transaction: null,
@@ -193,20 +281,27 @@ function cryptoExchangerReducer (state = initialState, action) {
         genericShapeShiftError: null,
         shiftTransactionError: null
       }
-    case Constants.GENERIC_SHAPE_SHIFT_ERROR:
+    }
+
+    case 'GENERIC_SHAPE_SHIFT_ERROR': {
       return {
         ...state,
         transaction: null,
         genericShapeShiftError: action.data,
         shiftTransactionError: null
       }
-    case Constants.CHANGE_EXCHANGE_FEE:
+    }
+
+    case 'CHANGE_EXCHANGE_FEE': {
+      if (!action.data) throw new Error('Invalid action')
       return {
         ...state,
         feeSetting: action.data.feeSetting,
         forceUpdateGuiCounter: state.forceUpdateGuiCounter + 1
       }
-    case Constants.START_MAKE_SPEND:
+    }
+
+    case 'START_MAKE_SPEND_CRYPTO': {
       return {
         ...state,
         gettingTransaction: true,
@@ -215,14 +310,36 @@ function cryptoExchangerReducer (state = initialState, action) {
         shiftTransactionError: null,
         quoteExpireDate: null
       }
-    case Constants.ON_AVAILABLE_SHAPE_SHIFT_TOKENS:
-      return { ...state, availableShapeShiftTokens: action.data }
-    case Constants.DONE_MAKE_SPEND:
-      return { ...state, gettingTransaction: false }
-    case Constants.START_SHIFT_TRANSACTION:
-      return { ...state, shiftPendingTransaction: true }
-    case Constants.DONE_SHIFT_TRANSACTION:
-      return { ...state, shiftPendingTransaction: false }
+    }
+
+    case 'ON_AVAILABLE_SHAPE_SHIFT_TOKENS': {
+      return {
+        ...state,
+        availableShapeShiftTokens: action.data
+      }
+    }
+
+    case 'DONE_MAKE_SPEND_CRYPTO': {
+      return {
+        ...state,
+        gettingTransaction: false
+      }
+    }
+
+    case 'START_SHIFT_TRANSACTION': {
+      return {
+        ...state,
+        shiftPendingTransaction: true
+      }
+    }
+
+    case 'DONE_SHIFT_TRANSACTION': {
+      return {
+        ...state,
+        shiftPendingTransaction: false
+      }
+    }
+
     default:
       return state
   }
@@ -286,12 +403,10 @@ function deepCopyState (state) {
 }
 
 // Nuke the state on logout:
-export const cryptoExchanger = (state: $PropertyType<State, 'cryptoExchange'>, action: any): $PropertyType<State, 'cryptoExchange'> => {
-  if (action.type === Constants.LOGOUT || action.type === Constants.DEEP_LINK_RECEIVED) {
-    return cryptoExchangerReducer(undefined, { type: 'DUMMY_ACTION_PLEASE_IGNORE' })
+export const cryptoExchange: Reducer<CryptoExchangeState, Action> = (state, action: Action) => {
+  if (action.type === 'LOGOUT' || action.type === 'DEEP_LINK_RECEIVED') {
+    return cryptoExchangeInner(undefined, { type: 'DUMMY_ACTION_PLEASE_IGNORE' })
   }
 
-  return cryptoExchangerReducer(state, action)
+  return cryptoExchangeInner(state, action)
 }
-
-export default cryptoExchanger

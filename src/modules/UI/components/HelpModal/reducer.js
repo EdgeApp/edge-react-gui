@@ -1,14 +1,16 @@
 // @flow
 
-import type { Action } from '../../../ReduxTypes'
-import * as ACTION from './actions.js'
+import { type Reducer } from 'redux'
 
-type HelpModalState = boolean
-export const helpModal = (state: HelpModalState = false, action: Action) => {
+import type { Action } from '../../../ReduxTypes'
+
+export type HelpModalState = boolean
+
+export const helpModal: Reducer<HelpModalState, Action> = (state = false, action: Action) => {
   switch (action.type) {
-    case ACTION.OPEN_HELP_MODAL:
+    case 'OPEN_HELP_MODAL':
       return true
-    case ACTION.CLOSE_HELP_MODAL:
+    case 'CLOSE_HELP_MODAL':
       return false
     default:
       return state
