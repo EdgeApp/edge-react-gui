@@ -9,7 +9,6 @@ test('initialState', () => {
     searchVisible: false,
     transactions: [],
     updatingBalance: true,
-    loadingTransactions: false,
     currentCurrencyCode: '',
     currentEndIndex: 0,
     numTransactions: 0,

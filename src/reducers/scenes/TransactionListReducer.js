@@ -118,26 +118,10 @@ const updatingBalance = (state = true, action: Action): boolean => {
   }
 }
 
-const loadingTransactions = (state = false, action: Action) => {
-  switch (action.type) {
-    case 'UI/SCENES/TRANSACTION_LIST/START_TRANSACTIONS_LOADING': {
-      return true
-    }
-
-    case 'UI/SCENES/TRANSACTION_LIST/END_TRANSACTIONS_LOADING': {
-      return false
-    }
-
-    default:
-      return state
-  }
-}
-
 export const transactionList: Reducer<TransactionListState, Action> = combineReducers({
   currentCurrencyCode,
   currentEndIndex,
   currentWalletId,
-  loadingTransactions,
   numTransactions,
   searchVisible,
   transactions,
