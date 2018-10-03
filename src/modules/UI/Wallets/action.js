@@ -96,18 +96,6 @@ export function insertWalletIdsForProgress (activeWalletIds: Array<string>) {
   }
 }
 
-export const createWalletStart = () => ({
-  type: 'CREATE_WALLET_START'
-})
-
-export const createWalletSuccess = () => ({
-  type: 'CREATE_WALLET_SUCCESS'
-})
-
-export const createWalletFailure = () => ({
-  type: 'CREATE_WALLET_FAILURE'
-})
-
 export const refreshReceiveAddressRequest = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const currentWalletId = state.ui.wallets.selectedWalletId

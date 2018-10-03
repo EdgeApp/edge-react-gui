@@ -6,7 +6,7 @@ import * as Constants from '../../../../constants/indexConstants.js'
 import * as ACCOUNT_API from '../../../Core/Account/api.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import type { Dispatch, GetState } from '../../../ReduxTypes'
-import { createWalletStart, createWalletSuccess, selectWallet as selectWalletAction } from '../../Wallets/action'
+import { selectWallet as selectWalletAction } from '../../Wallets/action'
 
 export const updateWalletName = (walletName: string) => ({
   type: 'UPDATE_WALLET_NAME',
@@ -33,7 +33,7 @@ export const createCurrencyWallet = (
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
 
-  dispatch(createWalletStart())
+  dispatch({ type: 'UI/WALLETS/CREATE_WALLET_START' })
   // Try and get the new format param from the legacy walletType if it's mentioned
   const [type, format] = walletType.split('-')
   return ACCOUNT_API.createCurrencyWalletRequest(account, type, {
@@ -42,7 +42,7 @@ export const createCurrencyWallet = (
     keyOptions: format ? { format } : {}
   }).then(edgeWallet => {
     Actions.popTo(Constants.WALLET_LIST_SCENE)
-    dispatch(createWalletSuccess())
+    dispatch({ type: 'UI/WALLETS/CREATE_WALLET_SUCCESS' })
     if (selectWallet) {
       dispatch(selectWalletAction(edgeWallet.id, edgeWallet.currencyInfo.currencyCode))
     }
