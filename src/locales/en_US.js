@@ -117,6 +117,7 @@ const strings = {
   create_wallet_name_label: 'Wallet Name:',
   create_wallet_crypto_type_label: 'Wallet Type:',
   create_wallet_fiat_type_label: 'Wallet Fiat:',
+  create_wallet_failed: 'Failed to create wallet',
   help_build: 'Build',
   help_modal_title: 'Crypto Wallet',
   help_version: 'Version',
