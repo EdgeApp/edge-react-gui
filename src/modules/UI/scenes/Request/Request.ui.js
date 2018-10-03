@@ -90,7 +90,7 @@ export class Request extends Component<Props, State> {
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
-  UNSAFE_componentDidMount () {
+  componentDidMount () {
     try {
       this.generateEncodedUri()
     } catch (e) {
