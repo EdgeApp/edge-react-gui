@@ -6,6 +6,7 @@ import slowlog from 'react-native-slowlog'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import * as Constants from '../../../../../constants/indexConstants'
+import { scale } from '../../../../../lib/scaling.js'
 import s from '../../../../../locales/strings.js'
 import THEME from '../../../../../theme/variables/airbitz'
 import T from '../../../components/FormattedText'
@@ -34,7 +35,7 @@ export default class WalletListModalHeader extends Component<any> {
           </View>
 
           <TouchableHighlight style={[styles.modalCloseWrap]} onPress={this.onSearchExit}>
-            <Ionicon style={[styles.donebutton]} name="ios-close" size={26} color={THEME.COLORS.WHITE} />
+            <Ionicon style={[styles.donebutton]} name="ios-close" size={scale(26)} color={THEME.COLORS.WHITE} />
           </TouchableHighlight>
         </View>
       </View>
