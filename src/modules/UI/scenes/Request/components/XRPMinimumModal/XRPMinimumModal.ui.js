@@ -18,6 +18,7 @@ export default class XRPMinimumModal extends Component<XRPMinimumModalStateProps
   render () {
     return (
       <InteractiveModal
+        legacy
         isActive={this.props.visibilityBoolean}
         onBackButtonPress={this.props.onExit}
         onBackdropPress={this.props.onExit}

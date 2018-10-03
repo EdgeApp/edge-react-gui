@@ -37,7 +37,7 @@ export class LegacyAddressModal extends Component<Props> {
     const CANCEL = s.strings.legacy_address_modal_cancel
 
     return (
-      <InteractiveModal isActive={isActive} onBackButtonPress={backButtonPressed} onBackdropPress={backdropPressed} onModalHide={hidden}>
+      <InteractiveModal legacy isActive={isActive} onBackButtonPress={backButtonPressed} onBackdropPress={backdropPressed} onModalHide={hidden}>
         <InteractiveModal.Icon>
           <Icon style={{}} type={'ionIcons'} name={'ios-alert-outline'} size={30} />
         </InteractiveModal.Icon>

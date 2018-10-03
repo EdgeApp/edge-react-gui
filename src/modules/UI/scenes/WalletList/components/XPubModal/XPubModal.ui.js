@@ -44,6 +44,7 @@ export default class XPubModal extends Component<XPubModalComponentProps, XPubMo
     const osPrefix = Platform.OS === 'ios' ? 'ios-' : 'md-'
     return (
       <InteractiveModal
+        legacy
         isActive={this.props.visibilityBoolean}
         onBackButtonPress={this.props.onExit}
         onBackdropPress={this.props.onExit}
