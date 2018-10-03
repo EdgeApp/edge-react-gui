@@ -80,11 +80,7 @@ export class Request extends Component<Props, State> {
       isXRPMinimumModalVisible: false,
       hasXRPMinimumModalAlreadyShown: false
     }
-    try {
-      this.generateEncodedUri()
-    } catch (e) {
-      console.log('error generating encodedURI: ', e)
-    }
+
     if (props.currencyCode === 'XRP') {
       if (bns.lt(props.guiWallet.primaryNativeBalance, '20000000')) {
         this.state.isXRPMinimumModalVisible = true
@@ -92,6 +88,14 @@ export class Request extends Component<Props, State> {
       }
     }
     slowlog(this, /.*/, global.slowlogOptions)
+  }
+
+  UNSAFE_componentDidMount () {
+    try {
+      this.generateEncodedUri()
+    } catch (e) {
+      console.log('error generating encodedURI: ', e)
+    }
   }
 
   onCloseXRPMinimumModal = () => {
