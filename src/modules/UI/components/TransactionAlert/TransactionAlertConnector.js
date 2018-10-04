@@ -12,7 +12,12 @@ import TransactionAlert from './TransactionAlert.ui'
 const mapStateToProps = (state: State) => {
   const edgeTransaction = state.ui.transactionAlert.edgeTransaction
   const displayAlert = state.ui.transactionAlert.displayAlert
-  if (!displayAlert || !edgeTransaction) return {}
+  const loginStatus = state.ui.settings.loginStatus
+  if (!displayAlert || !edgeTransaction || !loginStatus) {
+    return {
+      displayAlert: false
+    }
+  }
 
   const { nativeAmount, currencyCode } = edgeTransaction
   const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode || 'ETH')
