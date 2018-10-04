@@ -1,14 +1,16 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 /* globals test describe expect */
 
 import { MILLISECONDS_PER_DAY, daysBetween } from '../../modules/utils.js'
-import { MAX_NON_PASSWORD_DAYS_LIMIT, MAX_NON_PASSWORD_LOGINS_LIMIT, initialState, untranslatedReducer as uut } from './indexPasswordReminder.js'
+import { MAX_NON_PASSWORD_DAYS_LIMIT, MAX_NON_PASSWORD_LOGINS_LIMIT, initialState, untranslatedReducer as uut } from './passwordReminderReducer.js'
+
+const dummyAction: any = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
 
 describe('PasswordReminder', () => {
   test('initialState', () => {
     const expected = initialState
-    const actual = uut(undefined, {})
+    const actual = uut(undefined, dummyAction)
 
     expect(actual).toEqual(expected)
   })

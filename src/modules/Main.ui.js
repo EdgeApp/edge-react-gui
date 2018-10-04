@@ -58,6 +58,7 @@ import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
 import { OnBoardingComponent } from '../modules/UI/scenes/OnBoarding/OnBoardingComponent.js'
 import { makeCoreContext } from '../util/makeContext.js'
 import * as CONTEXT_API from './Core/Context/api'
+import { ModalManager } from './ModalManager.js'
 import { styles } from './style.js'
 import AutoLogout from './UI/components/AutoLogout/AutoLogoutConnector'
 import { ContactsLoaderConnecter as ContactsLoader } from './UI/components/ContactsLoader/indexContactsLoader.js'
@@ -650,9 +651,9 @@ export default class Main extends Component<Props, State> {
         <AutoLogout />
         <ContactsLoader />
         <PasswordReminderModal />
-        <PasswordReminderModal />
         <PasswordRecoveryReminderModalConnector />
         <OTPResetModalConnector />
+        <ModalManager />
       </MenuProvider>
     )
   }
@@ -683,7 +684,11 @@ export default class Main extends Component<Props, State> {
   }
 
   renderWalletName = () => {
-    return <WalletName />
+    return (
+      <View style={styles.titleWrapper}>
+        <WalletName />
+      </View>
+    )
   }
 
   renderEmptyButton = () => {

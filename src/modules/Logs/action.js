@@ -4,15 +4,29 @@ import * as LOGGER from '../../util/logger'
 import type { Dispatch, GetState } from '../ReduxTypes.js'
 import * as LOGS_API from './api'
 
-const PREFIX = 'Logs/'
+export type SendLogsRequestAction = {
+  type: 'LOGS/SEND_LOGS_REQUEST',
+  text: string
+}
 
-export const SEND_LOGS_PENDING = PREFIX + 'SEND_LOGS_PENDING'
-export const SEND_LOGS_REQUEST = PREFIX + 'SEND_LOGS_REQUEST'
-export const SEND_LOGS_SUCCESS = PREFIX + 'SEND_LOGS_SUCCESS'
-export const SEND_LOGS_FAILURE = PREFIX + 'SEND_LOGS_FAILURE'
+export type SendLogsRequestSuccessAction = {
+  type: 'LOGS/SEND_LOGS_SUCCESS',
+  result: string
+}
+
+export type SendLogsRequestFailureAction = {
+  type: 'LOGS/SEND_LOGS_FAILURE',
+  error: Error
+}
+
+export type SendLogsRequestResetAction = {
+  type: 'LOGS/SEND_LOGS_PENDING'
+}
+
+export type SendLogsAction = SendLogsRequestAction | SendLogsRequestSuccessAction | SendLogsRequestFailureAction | SendLogsRequestResetAction
 
 export const sendLogs = (text: string) => async (dispatch: Dispatch, getState: GetState) => {
-  dispatch({ type: SEND_LOGS_REQUEST, text })
+  dispatch({ type: 'LOGS/SEND_LOGS_REQUEST', text })
 
   const core = getState().core
   let walletDump = ''
@@ -48,14 +62,12 @@ export const sendLogs = (text: string) => async (dispatch: Dispatch, getState: G
     .then(LOGGER.log(walletDump))
     .then(LOGGER.readLogs)
     .then(LOGS_API.sendLogs)
-    .then(result => dispatch({ type: SEND_LOGS_SUCCESS, result }))
-    .catch(error => dispatch({ type: SEND_LOGS_FAILURE, error }))
+    .then(result => dispatch({ type: 'LOGS/SEND_LOGS_SUCCESS', result }))
+    .catch(error => dispatch({ type: 'LOGS/SEND_LOGS_FAILURE', error }))
 }
 
 export const resetSendLogsStatus = () => (dispatch: Dispatch) => {
   setTimeout(function () {
-    dispatch({
-      type: SEND_LOGS_PENDING
-    })
+    dispatch({ type: 'LOGS/SEND_LOGS_PENDING' })
   }, 100)
 }

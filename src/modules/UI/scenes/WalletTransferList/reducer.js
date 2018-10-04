@@ -1,30 +1,38 @@
 // @flow
 
-import { combineReducers } from 'redux'
+import { type Reducer, combineReducers } from 'redux'
 
-import * as ACTION from './action'
+import type { Action } from '../../../ReduxTypes.js'
 
-const walletTransferList = (state = [], action) => {
+export type WalletTransferListState = {
+  +walletTransferList: Array<any>,
+  +walletListModalVisible: boolean
+}
+
+const walletTransferListReducer = (state = [], action: Action): Array<any> => {
   switch (action.type) {
-    case ACTION.UPDATE_WALLET_TRANSFER_LIST:
+    case 'UPDATE_WALLET_TRANSFER_LIST': {
+      if (action.data == null) throw new TypeError('Invalid action')
       return action.data
+    }
+
     default:
       return state
   }
 }
 
-const walletListModalVisible = (state = false, action) => {
+const walletListModalVisible = (state = false, action: Action): boolean => {
   switch (action.type) {
-    case ACTION.TOGGLE_WALLET_LIST_MODAL_VISIBILITY:
+    case 'TOGGLE_WALLET_LIST_MODAL_VISIBILITY': {
       return !state
+    }
+
     default:
       return state
   }
 }
 
-export const walletTransferListReducer = combineReducers({
-  walletTransferList,
+export const walletTransferList: Reducer<WalletTransferListState, Action> = combineReducers({
+  walletTransferList: walletTransferListReducer,
   walletListModalVisible
 })
-
-export default walletTransferListReducer

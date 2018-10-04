@@ -1,41 +1,60 @@
 // @flow
 
-import { combineReducers } from 'redux'
+import { type Reducer, combineReducers } from 'redux'
 
-import { OPEN_WALLET_SELECTOR_MODAL, SELECT_FROM_WALLET_CRYPTO_EXCHANGE, SELECT_TO_WALLET_CRYPTO_EXCHANGE } from '../../../../constants/indexConstants'
-import { UPDATE_CURRENT_SCENE_KEY } from '../../scenes/action.js'
-import { CLOSE_ALL_WALLET_LIST_MODALS } from '../../Wallets/action.js'
-import * as ACTION from './action'
+import { type Action } from '../../../ReduxTypes.js'
 
-const walletListModalVisible = (state = false, action) => {
+export type WalletListModalState = {
+  walletListModalVisible: boolean
+}
+
+const walletListModalVisible = (state = false, action: Action): boolean => {
   switch (action.type) {
-    case ACTION.TOGGLE_WALLET_LIST_MODAL_VISIBILITY:
+    case 'TOGGLE_WALLET_LIST_MODAL_VISIBILITY': {
       return !state
-    case ACTION.ENABLE_WALLET_LIST_MODAL_VISIBILITY:
+    }
+
+    case 'ENABLE_WALLET_LIST_MODAL_VISIBILITY': {
       return true
-    case ACTION.DISABLE_WALLET_LIST_MODAL_VISIBILITY:
+    }
+
+    case 'DISABLE_WALLET_LIST_MODAL_VISIBILITY': {
       return false
-    case ACTION.TOGGLE_SELECTED_WALLET_LIST_MODAL:
+    }
+
+    case 'TOGGLE_SELECTED_WALLET_LIST_MODAL': {
       return false
-    case ACTION.TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL:
+    }
+
+    case 'TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL': {
       return false
-    case CLOSE_ALL_WALLET_LIST_MODALS:
+    }
+
+    case 'CLOSE_ALL_WALLET_LIST_MODALS': {
       return false
-    case OPEN_WALLET_SELECTOR_MODAL:
+    }
+
+    case 'OPEN_WALLET_SELECTOR_MODAL': {
       return true
-    case SELECT_TO_WALLET_CRYPTO_EXCHANGE:
+    }
+
+    case 'SELECT_TO_WALLET_CRYPTO_EXCHANGE': {
       return false
-    case SELECT_FROM_WALLET_CRYPTO_EXCHANGE:
+    }
+
+    case 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE': {
       return false
-    case UPDATE_CURRENT_SCENE_KEY:
+    }
+
+    case 'UPDATE_CURRENT_SCENE_KEY': {
       return false
+    }
+
     default:
       return state
   }
 }
 
-export const walletListModal = combineReducers({
+export const walletListModal: Reducer<WalletListModalState, Action> = combineReducers({
   walletListModalVisible
 })
-
-export default walletListModal

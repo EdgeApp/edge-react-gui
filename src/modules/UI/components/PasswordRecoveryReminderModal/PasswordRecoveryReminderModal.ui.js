@@ -29,7 +29,7 @@ export class PasswordRecoveryReminderModalComponent extends Component<PasswordRe
   render () {
     const { isVisible, hidePasswordRecoveryReminderModal, onGoToPasswordRecoveryScene } = this.props
     return (
-      <InteractiveModal isActive={isVisible} onModalHide={hidePasswordRecoveryReminderModal}>
+      <InteractiveModal legacy isActive={isVisible} onModalHide={hidePasswordRecoveryReminderModal}>
         <InteractiveModal.Icon>
           <Icon style={styles.icon} name={Constants.LOCKED_ICON} type={Constants.ION_ICONS} />
         </InteractiveModal.Icon>

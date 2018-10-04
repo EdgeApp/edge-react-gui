@@ -16,7 +16,7 @@ function makeCoreContext (callbacks: EdgeContextCallbacks = {}, pluginFactories:
   }
 
   if (ENV.USE_FAKE_CORE) {
-    const [context] = makeFakeContexts({ ...opts, localFakeUser: true })
+    const [context] = makeFakeContexts({ ...opts, localFakeUser: true, tempNoBridge$: true })
     return Promise.resolve(context)
   }
 

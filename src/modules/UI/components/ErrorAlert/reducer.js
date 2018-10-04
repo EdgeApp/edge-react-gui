@@ -1,36 +1,37 @@
 // @flow
 
-import { combineReducers } from 'redux'
+import { type Reducer, combineReducers } from 'redux'
 
-import * as ACTIONS from './actions'
+import { type Action } from '../../../ReduxTypes.js'
 
-const displayAlert = (state = false, action = {}) => {
-  const { type } = action
-  switch (type) {
-    case ACTIONS.DISPLAY_ERROR_ALERT:
+export type ErrorAlertState = {
+  displayAlert: boolean,
+  message: string
+}
+
+const displayAlert = (state = false, action = {}): boolean => {
+  switch (action.type) {
+    case 'UI/COMPONENTS/ERROR_ALERT/DISPLAY_ERROR_ALERT':
       return true
-    case ACTIONS.DISMISS_ERROR_ALERT:
+    case 'UI/COMPONENTS/ERROR_ALERT/DISMISS_ERROR_ALERT':
       return false
     default:
       return state
   }
 }
 
-const message = (state = '', action = {}) => {
-  const { type, data = {} } = action
-  switch (type) {
-    case ACTIONS.DISPLAY_ERROR_ALERT:
-      return data.message
-    case ACTIONS.DISMISS_ERROR_ALERT:
+const message = (state = '', action = {}): string => {
+  switch (action.type) {
+    case 'UI/COMPONENTS/ERROR_ALERT/DISPLAY_ERROR_ALERT':
+      return action.data.message
+    case 'UI/COMPONENTS/ERROR_ALERT/DISMISS_ERROR_ALERT':
       return ''
     default:
       return state
   }
 }
 
-export const errorAlert = combineReducers({
+export const errorAlert: Reducer<ErrorAlertState, Action> = combineReducers({
   displayAlert,
   message
 })
-
-export default errorAlert

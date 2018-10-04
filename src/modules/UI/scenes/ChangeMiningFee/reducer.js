@@ -1,24 +1,28 @@
 // @flow
 
-import { combineReducers } from 'redux'
+import { type Reducer, combineReducers } from 'redux'
 
-import * as Constants from '../../../../constants/indexConstants'
 import type { Action } from '../../../ReduxTypes.js'
-import * as ACTION from '../WalletList/components/WalletOptions/action'
 
-const isCustomFeeVisible = (state: boolean = false, action: Action) => {
+export type ChangeMiningFeeState = {
+  isCustomFeeVisible: boolean
+}
+
+const isCustomFeeVisible = (state = false, action: Action): boolean => {
   switch (action.type) {
-    case ACTION.OPEN_MODAL_VALUE(Constants.CUSTOM_FEES):
+    case 'OPEN_CUSTOM_FEES_MODAL': {
       return true
-    case ACTION.CLOSE_MODAL_VALUE(Constants.CUSTOM_FEES):
+    }
+
+    case 'CLOSE_CUSTOM_FEES_MODAL': {
       return false
+    }
+
     default:
       return state
   }
 }
 
-export const changeMiningFee = combineReducers({
+export const changeMiningFee: Reducer<ChangeMiningFeeState, Action> = combineReducers({
   isCustomFeeVisible
 })
-
-export default changeMiningFee

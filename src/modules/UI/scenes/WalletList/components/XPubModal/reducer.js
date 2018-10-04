@@ -1,18 +1,19 @@
 // @flow
 
-import * as Constants from '../../../../../../constants/indexConstants'
+import s from '../../../../../../locales/strings.js'
 import type { Action } from '../../../../../ReduxTypes.js'
-import * as ACTION from '../WalletOptions/action.js'
 
-export const xPubSyntax = (state: string = '', action: Action) => {
+export const xPubSyntax = (state: string = '', action: Action): string => {
   switch (action.type) {
-    case ACTION.OPEN_MODAL_VALUE(Constants.VIEW_XPUB_VALUE):
-      if (action.data && action.data.xPub) {
-        return action.data.xPub
-      }
-      return state
-    case ACTION.CLOSE_MODAL_VALUE(Constants.VIEW_XPUB_VALUE):
+    case 'OPEN_VIEWXPUB_WALLET_MODAL': {
+      if (!action.data) throw new Error('Invalid action')
+      return action.data.xPub || s.strings.fragment_wallets_no_xpub
+    }
+
+    case 'CLOSE_VIEWXPUB_WALLET_MODAL': {
       return ''
+    }
+
     default:
       return state
   }

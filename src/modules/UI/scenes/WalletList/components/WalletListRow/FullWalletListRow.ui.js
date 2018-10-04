@@ -12,8 +12,9 @@ import { intl } from '../../../../../../locales/intl'
 import s from '../../../../../../locales/strings.js'
 import type { CustomTokenInfo, GuiDenomination } from '../../../../../../types'
 import type { State } from '../../../../../ReduxTypes.js'
-import { calculateSettingsFiatFromCrypto, cutOffText, decimalOrZero, getFiatSymbol, getObjectDiff, truncateDecimals } from '../../../../../utils.js'
+import { cutOffText, decimalOrZero, getFiatSymbol, getObjectDiff, truncateDecimals } from '../../../../../utils.js'
 import T from '../../../../components/FormattedText'
+import { calculateSettingsFiatBalance } from '../../../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
 import { getEnabledTokens, selectWallet } from '../../../../Wallets/action.js'
 import styles, { styles as styleRaw } from '../../style.js'
@@ -85,7 +86,7 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
   }
 
   render () {
-    const { data, fiatSymbol } = this.props
+    const { data, fiatSymbol, fiatBalance } = this.props
     const walletData = data.item
     const currencyCode = walletData.currencyCode
     const cryptocurrencyName = walletData.currencyNames[currencyCode]
@@ -118,7 +119,6 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
       }
     }
 
-    const fiatBalance = this.props.fiatBalance
     const fiatBalanceString = fiatSymbol + ' ' + fiatBalance
 
     return (
@@ -205,7 +205,7 @@ const mapStateToProps = (state: State, ownProps: FullWalletListRowLoadedOwnProps
   const fiatSymbol = getFiatSymbol(settings.defaultFiat) || ''
   const customTokens = state.ui.settings.customTokens
   const isWalletFiatBalanceVisible = state.ui.settings.isWalletFiatBalanceVisible
-  const fiatBalance = calculateSettingsFiatFromCrypto(ownProps.data.item, state)
+  const fiatBalance = calculateSettingsFiatBalance(ownProps.data.item, state)
   return {
     displayDenomination,
     exchangeDenomination,

@@ -19,6 +19,8 @@ const strings = {
 
   dropdown_exchange_max_amount: 'Exchange Max Amount',
   edge_description: 'This application would like to create or access its wallet in your Edge account.\n\n It will not have access to any other wallets.',
+  edge_description_warning:
+    'WARNING: The "%1$s" application is requesting full access to your account and all wallets. \n\nOnly accept this login request if you trust this application and where it was downloaded from.',
   exchange_failed: 'Exchange Failed',
   exchange_succeeded: 'Exchange Succeeded',
   exchanges_may_take_minutes: 'Exchanges may take several minutes to process. Please check your destination wallet after a few minutes',
@@ -92,6 +94,7 @@ const strings = {
   fragment_wallets_get_seed_wallet: 'Get Seed',
   fragment_wallets_seed_share_title: 'Edge Wallet (%s) Seed',
   fragment_wallets_view_xpub: 'View XPub Address',
+  fragment_wallets_no_xpub: 'This wallet type does not have a public key',
   fragment_wallets_pubkey_copied_title: 'XPub Address Copied',
   fragment_wallets_pubkey_copied_success: 'The XPub Address has been successfully copied to the clipboard.',
   fragment_wallets_pubkey_copied_error: 'There has been an error copying your XPub Address.',
@@ -114,8 +117,9 @@ const strings = {
   create_wallet_name_label: 'Wallet Name:',
   create_wallet_crypto_type_label: 'Wallet Type:',
   create_wallet_fiat_type_label: 'Wallet Fiat:',
+  create_wallet_failed: 'Failed to create wallet',
   help_build: 'Build',
-  help_modal_title: 'Crypto Wallet and Directory',
+  help_modal_title: 'Crypto Wallet',
   help_version: 'Version',
   loading: 'Loading…',
   mining_fee_high_label_choice: 'High',
@@ -129,6 +133,7 @@ const strings = {
   send_confirmation_fee_line: 'Fee: + %s (%s)',
   send_confirmation_max_button_title: 'Send Max Amount',
   send_confirmation_slide_to_confirm: 'Slide to Confirm',
+  send_confirmation_balance: 'Balance:',
   send_scan_header_text: 'Scan to Send, Import, or Edge Login',
   send_to_title: 'To: %s',
   send_confirmation_to: 'To: %s',
@@ -365,7 +370,10 @@ const strings = {
   onboarding_slide_3:
     'To receive cryptocurrency, [Copy] or [Share] your wallet address, or have the sender scan your QR code presented here at the Request Screen.',
   onboarding_slide_4: "To send cryptocurrency scan a friend's QR code here, or paste the code via the [Address] button.",
-  onboarding_slide_5: 'Exchange cryptocurrencies by choosing the Source Wallet and Receiving Wallet to trade between them.'
+  onboarding_slide_5: 'Exchange cryptocurrencies by choosing the Source Wallet and Receiving Wallet to trade between them.',
+  otp_out_of_sync_title: 'Warning',
+  otp_out_of_sync_body:
+    'This device does not have the proper 2-factor token. You can still access your funds with limited functionality, but cannot create wallets or change account options'
 }
 
 // export default strings

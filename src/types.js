@@ -2,6 +2,8 @@
 
 import type { EdgeDenomination, EdgeMetaToken, EdgeMetadata, EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
 
+import type { State } from './modules/ReduxTypes.js'
+
 export type GuiWallet = {
   id: string,
   type: string,
@@ -116,7 +118,7 @@ export type SubcategorySearchResultData = {
 }
 
 export type CurrencyConverter = {
-  convertCurrency: (currencyCode: string, isoFiatCurrencyCode: string, balanceInCryptoDisplay: string) => number
+  convertCurrency: (state: State, currencyCode: string, isoFiatCurrencyCode: string, balanceInCryptoDisplay: string) => number
 }
 
 export const emptyGuiWallet: GuiWallet = {

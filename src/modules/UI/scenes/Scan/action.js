@@ -14,49 +14,36 @@ import { paymentProtocolUriReceived, updateParsedURI } from '../SendConfirmation
 import { activated as legacyAddressModalActivated, deactivated as legacyAddressModalDeactivated } from './LegacyAddressModal/LegacyAddressModalActions.js'
 import { activated as privateKeyModalActivated } from './PrivateKeyModal/PrivateKeyModalActions.js'
 
-export const PREFIX = 'SCAN/'
-
 export const UPDATE_RECIPIENT_ADDRESS = 'UPDATE_RECIPIENT_ADDRESS'
 
-export const TOGGLE_ENABLE_TORCH = 'TOGGLE_ENABLE_TORCH'
 export const toggleEnableTorch = () => ({
-  type: TOGGLE_ENABLE_TORCH
+  type: 'TOGGLE_ENABLE_TORCH'
 })
 
-export const TOGGLE_ADDRESS_MODAL_VISIBILITY = 'TOGGLE_ADDRESS_MODAL_VISIBILITY'
 export const toggleAddressModal = () => ({
-  type: TOGGLE_ADDRESS_MODAL_VISIBILITY
+  type: 'TOGGLE_ADDRESS_MODAL_VISIBILITY'
 })
 
-export const ENABLE_SCAN = 'ENABLE_SCAN'
-export const enableScan = () => {
-  return {
-    type: ENABLE_SCAN
-  }
-}
+export const enableScan = () => ({
+  type: 'ENABLE_SCAN'
+})
 
-export const DISABLE_SCAN = 'DISABLE_SCAN'
-export const disableScan = () => {
-  return {
-    type: DISABLE_SCAN
-  }
-}
+export const disableScan = () => ({
+  type: 'DISABLE_SCAN'
+})
 
-export const PARSE_URI_SUCCEEDED = 'PARSE_URI_SUCCEEDED'
 export const parseUriSucceeded = (parsedUri: EdgeParsedUri) => ({
-  type: PARSE_URI_SUCCEEDED,
+  type: 'PARSE_URI_SUCCEEDED',
   data: { parsedUri }
 })
 
-export const PARSE_URI_FAILED = 'PARSE_URI_FAILED'
 export const parseUriFailed = (error: Error) => ({
-  type: PARSE_URI_FAILED,
+  type: 'PARSE_URI_FAILED',
   data: { error }
 })
 
-export const PARSE_URI_RESET = 'PARSE_URI_RESET'
 export const parseUriReset = () => ({
-  type: PARSE_URI_RESET
+  type: 'PARSE_URI_RESET'
 })
 
 export const parseUri = (data: string) => (dispatch: Dispatch, getState: GetState) => {

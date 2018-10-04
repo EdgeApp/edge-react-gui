@@ -6,7 +6,6 @@ import { Actions } from 'react-native-router-flux'
 import AndroidWebView from 'react-native-webview-file-upload-android'
 import { connect } from 'react-redux'
 
-import * as Constants from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import T from '../../../UI/components/FormattedText'
@@ -283,7 +282,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  showAlert: alertSyntax => dispatch(openABAlert(Constants.OPEN_AB_ALERT, alertSyntax))
+  showAlert: alertSyntax => dispatch(openABAlert('OPEN_AB_ALERT', alertSyntax))
 })
 
 const PluginViewConnect = connect(

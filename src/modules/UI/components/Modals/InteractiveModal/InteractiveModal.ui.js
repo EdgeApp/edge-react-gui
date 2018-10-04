@@ -172,7 +172,7 @@ export class Row extends Component<RowProps> {
 
 // INTERACTIVE_MODAL /////////////////////////////////////////////////////////////////////////////
 type Props = {
-  isActive: boolean,
+  isActive?: boolean,
   children: Node,
   style?: StyleSheet.Styles
 }
@@ -193,16 +193,26 @@ export class InteractiveModal extends Component<Props> {
     const body = children.find(child => child.type === InteractiveModal.Body)
     const footer = children.find(child => child.type === InteractiveModal.Footer)
 
-    return (
+    return this.props.legacy ? (
       <Modal useNativeDriver avoidKeyboard isVisible={isActive} style={[styles.modal, style]} {...props}>
         {icon}
-        <Container>
+        <Container style={style}>
           <Icon.AndroidHackSpacer />
           <Header style={styles.header}>{title}</Header>
           {body}
           {footer}
         </Container>
       </Modal>
+    ) : (
+      <View style={styles.modal} {...props}>
+        {icon}
+        <Container style={style}>
+          <Icon.AndroidHackSpacer />
+          <Header style={styles.header}>{title}</Header>
+          {body}
+          {footer}
+        </Container>
+      </View>
     )
   }
 }

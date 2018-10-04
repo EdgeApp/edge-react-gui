@@ -4,7 +4,10 @@ import type { Dispatch } from '../../modules/ReduxTypes'
 import type { Permission, PermissionStatus } from '../../modules/UI/permissions.js'
 import { request } from '../../modules/UI/permissions.js'
 
-export const PREFIX = 'PERMISSIONS/'
+export const updatePermissions = (permissions: { [Permission]: PermissionStatus }) => ({
+  type: 'PERMISSIONS/UPDATE',
+  data: { ...permissions }
+})
 
 export const requestPermission = (permission: Permission) => (dispatch: Dispatch, getState: any) => {
   const state = getState()
@@ -15,9 +18,3 @@ export const requestPermission = (permission: Permission) => (dispatch: Dispatch
     dispatch(updatePermissions({ [permission]: status }))
   })
 }
-
-export const UPDATE_PERMISSIONS = PREFIX + 'UPDATE'
-export const updatePermissions = (permissions: { [Permission]: PermissionStatus }) => ({
-  type: UPDATE_PERMISSIONS,
-  data: { ...permissions }
-})

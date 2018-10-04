@@ -1,25 +1,25 @@
 // @flow
 
-import * as Constants from '../../constants/indexConstants'
-import type { Action } from '../ReduxTypes'
-import * as ACTION from './action.js'
+import { type Reducer } from 'redux'
 
-const initialState = 0
+import type { Action } from '../ReduxTypes.js'
 
-type ExchangeRateState = ?number
-const exchangeRatesReducer = (state = initialState, action) => {
+export type ExchangeRatesState = {
+  [string]: number
+}
+
+const initialState = {}
+
+export const exchangeRates: Reducer<ExchangeRatesState, Action> = (state = initialState, action: Action) => {
   switch (action.type) {
-    case ACTION.UPDATE_EXCHANGE_RATES:
-      return state + 1
+    case 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES':
+      if (!action.data) throw new Error('Invalid action')
+      return action.data.exchangeRates
+    case 'LOGOUT':
+      return initialState
+    case 'DEEP_LINK_RECEIVED':
+      return initialState
     default:
       return state
   }
-}
-
-export const exchangeRates = (state: ExchangeRateState, action: Action) => {
-  if (action.type === Constants.LOGOUT || action.type === Constants.DEEP_LINK_RECEIVED) {
-    state = undefined
-  }
-
-  return exchangeRatesReducer(state, action)
 }
