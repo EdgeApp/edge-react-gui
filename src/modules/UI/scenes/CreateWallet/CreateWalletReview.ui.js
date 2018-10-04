@@ -44,10 +44,12 @@ export class CreateWalletReview extends Component<CreateWalletReviewProps> {
 
   render () {
     const { isCreatingWallet } = this.props
+
     return (
       <SafeAreaView>
         <View style={styles.scene}>
           <Gradient style={styles.gradient} />
+
           <View style={styles.view}>
             <View style={styles.instructionalArea}>
               <Text style={styles.instructionalText}>{s.strings.create_wallet_top_instructions}</Text>
@@ -63,12 +65,13 @@ export class CreateWalletReview extends Component<CreateWalletReviewProps> {
                 {s.strings.create_wallet_name_label} {this.props.walletName}
               </Text>
             </View>
+
             <View style={[styles.buttons]}>
               <SecondaryButton style={[styles.cancel]} onPress={this.onBack}>
                 <SecondaryButton.Text>{s.strings.title_back}</SecondaryButton.Text>
               </SecondaryButton>
 
-              <PrimaryButton style={[styles.create]} onPress={this.onSubmit}>
+              <PrimaryButton style={[styles.create]} onPress={this.onSubmit} disabled={isCreatingWallet}>
                 {isCreatingWallet ? <ActivityIndicator /> : <PrimaryButton.Text>{s.strings.fragment_create_wallet_create_wallet}</PrimaryButton.Text>}
               </PrimaryButton>
             </View>
