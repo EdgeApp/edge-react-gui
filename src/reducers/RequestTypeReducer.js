@@ -1,20 +1,23 @@
 // @flow
 
-import * as Constants from '../constants/indexConstants.js'
+import { type Reducer } from 'redux'
+
 import type { Action } from '../modules/ReduxTypes.js'
 
-type RequestType = {
+export type RequestTypeState = {
   useLegacyAddress: boolean,
   uniqueLegacyAddress: boolean
 }
-const initialState: RequestType = {
+
+const initialState: RequestTypeState = {
   useLegacyAddress: false,
   uniqueLegacyAddress: false
 }
-const requestType = (state: RequestType = initialState, action: Action): RequestType => {
+
+export const requestType: Reducer<RequestTypeState, Action> = (state = initialState, action: Action) => {
   switch (action.type) {
-    case Constants.NEW_RECEIVE_ACCRESS:
-    case Constants.UPDATE_RECEIVE_ADDRESS_SUCCESS:
+    case 'NEW_RECEIVE_ADDRESS':
+    case 'UPDATE_RECEIVE_ADDRESS_SUCCESS': {
       if (!action.data) return state
       let uniqueLegacy = true
       if (action.data.receiveAddress.legacyAddress) {
@@ -25,13 +28,23 @@ const requestType = (state: RequestType = initialState, action: Action): Request
         useLegacyAddress: false,
         uniqueLegacyAddress: !uniqueLegacy
       }
-    case Constants.USE_REGULAR_REQUEST_ADDRESS:
-      return { ...state, useLegacyAddress: false }
-    case Constants.USE_LEGACY_REQUEST_ADDRESS:
-      return { ...state, useLegacyAddress: true }
+    }
+
+    case 'USE_REGULAR_REQUEST_ADDRESS': {
+      return {
+        ...state,
+        useLegacyAddress: false
+      }
+    }
+
+    case 'USE_LEGACY_REQUEST_ADDRESS': {
+      return {
+        ...state,
+        useLegacyAddress: true
+      }
+    }
+
     default:
       return state
   }
 }
-
-export { requestType }

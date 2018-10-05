@@ -34,6 +34,7 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   DOGE: { denomination: '100000000' },
   DGB: { denomination: '100000000' },
   LTC: { denomination: '100000000' },
+  EBST: { denomination: '100000000' },
   FTC: { denomination: '100000000' },
   XZC: { denomination: '100000000' },
   QTUM: { denomination: '100000000' },

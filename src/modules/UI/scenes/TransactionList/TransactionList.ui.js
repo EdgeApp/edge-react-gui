@@ -15,7 +15,8 @@ import * as Constants from '../../../../constants/indexConstants'
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
 import type { ContactsState } from '../../../../reducers/contacts/contactsReducer'
-import type { GuiContact, GuiWallet, TransactionListTx } from '../../../../types'
+import { PLATFORM } from '../../../../theme/variables/platform.js'
+import type { GuiWallet, TransactionListTx } from '../../../../types'
 import WalletListModal from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import * as UTILS from '../../../utils'
 import T from '../../components/FormattedText'
@@ -35,7 +36,6 @@ export type StateProps = {
   displayDenomination: EdgeDenomination,
   updatingBalance: boolean,
   transactions: Array<TransactionListTx>,
-  contactsList: Array<GuiContact>,
   selectedWalletId: string,
   selectedCurrencyCode: string,
   isoFiatCurrencyCode: string,
@@ -44,7 +44,6 @@ export type StateProps = {
   settings: Object,
   balanceInCrypto: string,
   balanceInFiat: number,
-  currencyConverter: Object,
   multiplier: string,
   contacts: ContactsState,
   fiatSymbol: string,
@@ -150,13 +149,14 @@ export class TransactionList extends Component<Props, State> {
 
   render () {
     const txs = this.state.reset ? emptyArray : this.props.transactions
+    const isAndroid = PLATFORM.platform === 'android'
     return (
       <SafeAreaView>
         <View style={styles.scene}>
           <Gradient style={styles.gradient} />
           <View style={styles.scrollView}>
             <View style={styles.container}>
-              <View style={styles.transactionsWrap}>
+              <View style={[isAndroid ? styles.androidTransactionsWrap : styles.transactionsWrap]}>
                 <FlatList
                   ListEmptyComponent={this.renderBuyCrypto()}
                   ListHeaderComponent={this.currentRenderBalanceBox()}
@@ -166,6 +166,7 @@ export class TransactionList extends Component<Props, State> {
                   initialNumToRender={INITIAL_TRANSACTION_BATCH_NUMBER}
                   onEndReached={this.handleScrollEnd}
                   onEndReachedThreshold={SCROLL_THRESHOLD}
+                  keyExtractor={item => item.key.toString()}
                 />
               </View>
             </View>

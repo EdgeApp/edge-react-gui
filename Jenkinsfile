@@ -26,6 +26,10 @@ pipeline {
   triggers { 
     pollSCM("H/5 * * * *")
   }
+  parameters { 
+    booleanParam(name: 'ANDROID_BUILD', defaultValue: true, description: 'Build an Android version')
+    booleanParam(name: 'IOS_BUILD', defaultValue: true, description: 'Build an iOS version')
+  }
   
   stages {
     stage("Clean the workspace and checkout source") {
@@ -43,7 +47,7 @@ pipeline {
         script {
           def packageJson = readJSON file: "./package.json"
           if (BRANCH_NAME != "master" && BRANCH_NAME != "develop") {
-            packageJson.version = "${package.version}-${BRANCH_NAME}"
+            packageJson.version = "${packageJson.version}-${BRANCH_NAME}".inspect()
             writeJSON file: "./package.json", json: packageJson
           }
           def description = "[version] ${packageJson.version}"
@@ -88,11 +92,13 @@ pipeline {
     stage ("Build") {
       parallel {
         stage("ios") {
+          when { equals expected: true, actual: params.ANDROID_BUILD }
           steps {
             build("ios")
           }
         }
         stage("android") {
+          when { equals expected: true, actual: params.IOS_BUILD }
           steps {
             build("android")
           }

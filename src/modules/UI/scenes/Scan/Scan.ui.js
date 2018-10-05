@@ -134,10 +134,10 @@ export default class Scan extends Component<Props> {
 
   renderCamera = () => {
     if (this.props.cameraPermission === AUTHORIZED) {
-      const torchMode = this.props.torchEnabled ? RNCamera.Constants.FlashMode.on : RNCamera.Constants.FlashMode.off
+      const flashMode = this.props.torchEnabled ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off
 
       return (
-        <RNCamera style={styles.preview} type={RNCamera.Constants.Type.back} ref="cameraCapture" flashMode={torchMode} onBarCodeRead={this.onBarCodeRead} />
+        <RNCamera style={styles.preview} flashMode={flashMode} type={RNCamera.Constants.Type.back} ref="cameraCapture" onBarCodeRead={this.onBarCodeRead} />
       )
     } else if (this.props.cameraPermission === DENIED) {
       return (

@@ -13,13 +13,13 @@ import { StaticModalComponent, TwoButtonTextModalComponent } from '../../../../c
 import * as Constants from '../../../../constants/indexConstants.js'
 import s from '../../../../locales/strings.js'
 import { TwoButtonModalStyle } from '../../../../styles/indexStyles.js'
-import * as UTILS from '../../../utils'
+import { getFiatSymbol, getObjectDiff, getTotalFiatAmountFromExchangeRates } from '../../../utils'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView/index.js'
 import { WiredProgressBar } from '../../components/WiredProgressBar/WiredProgressBar.ui.js'
 import { getWalletLoadingPercent } from '../../selectors.js'
-import { getDefaultFiat, getIsAccountBalanceVisible } from '../../Settings/selectors.js'
+import { getDefaultIsoFiat, getIsAccountBalanceVisible } from '../../Settings/selectors.js'
 import FullWalletListRow from './components/WalletListRow/FullWalletListRow.ui.js'
 import SortableWalletListRow from './components/WalletListRow/SortableWalletListRow.ui.js'
 import WalletOptions from './components/WalletOptions/WalletOptionsConnector.ui.js'
@@ -93,12 +93,12 @@ export default class WalletList extends Component<Props, State> {
     }
 
     let diffElement2: string = ''
-    const diffElement = UTILS.getObjectDiff(this.props, nextProps, {
+    const diffElement = getObjectDiff(this.props, nextProps, {
       traverseObjects,
       ignoreObjects
     })
     if (!diffElement) {
-      diffElement2 = UTILS.getObjectDiff(this.state, nextState)
+      diffElement2 = getObjectDiff(this.state, nextState)
     }
     return !!diffElement || !!diffElement2
   }
@@ -148,7 +148,7 @@ export default class WalletList extends Component<Props, State> {
       const tempWalletObj = wallets[x] ? wallets[x] : { key: null }
       activeWalletsObject[x] = tempWalletObj
     })
-    const fiatSymbol = defaultFiat ? UTILS.getFiatSymbol(defaultFiat) : ''
+    const fiatSymbol = defaultFiat ? getFiatSymbol(defaultFiat) : ''
 
     return (
       <SafeAreaView>
@@ -158,8 +158,8 @@ export default class WalletList extends Component<Props, State> {
           <WiredProgressBar progress={getWalletLoadingPercent} />
           <WiredBalanceBox
             showBalance={getIsAccountBalanceVisible}
-            fiatAmount={UTILS.getTotalFiatAmount}
-            fiatCurrencyCode={getDefaultFiat}
+            fiatAmount={getTotalFiatAmountFromExchangeRates}
+            isoFiatCurrencyCode={getDefaultIsoFiat}
             onPress={this.props.toggleAccountBalanceVisibility}
           />
           <View style={[styles.walletsBox]}>

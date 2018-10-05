@@ -1,42 +1,47 @@
 // @flow
 
 import type { EdgeTransaction } from 'edge-core-js'
-import { combineReducers } from 'redux'
+import { type Reducer, combineReducers } from 'redux'
 
 import type { Action } from '../../../ReduxTypes.js'
-import * as ACTIONS from './actions'
 
-const displayAlert = (state: boolean = false, action: Action) => {
-  const { type } = action
-  switch (type) {
-    case ACTIONS.DISPLAY_TRANSACTION_ALERT:
-      return true
-    case ACTIONS.DISMISS_TRANSACTION_ALERT:
-      return false
-    default:
-      return state
-  }
+export type TransactionAlertState = {
+  +displayAlert: boolean,
+  +edgeTransaction: EdgeTransaction | null
 }
 
-type EdgeTransactionState = EdgeTransaction | ''
-
-const edgeTransaction = (state: EdgeTransactionState = '', action: Action) => {
+const displayAlert = (state = false, action: Action): boolean => {
   switch (action.type) {
-    case ACTIONS.DISPLAY_TRANSACTION_ALERT:
-      if (action.data) {
-        return action.data.edgeTransaction
-      }
-      return state
-    case ACTIONS.DISMISS_TRANSACTION_ALERT:
-      return ''
+    case 'UI/COMPONENTS/TRANSACTION_ALERT/DISPLAY_TRANSACTION_ALERT': {
+      return true
+    }
+
+    case 'UI/COMPONENTS/TRANSACTION_ALERT/DISMISS_TRANSACTION_ALERT': {
+      return false
+    }
+
     default:
       return state
   }
 }
 
-export const transactionAlert = combineReducers({
+const edgeTransaction = (state = null, action: Action): EdgeTransaction | null => {
+  switch (action.type) {
+    case 'UI/COMPONENTS/TRANSACTION_ALERT/DISPLAY_TRANSACTION_ALERT': {
+      if (!action.data) throw new Error('Invalid action')
+      return action.data.edgeTransaction
+    }
+
+    case 'UI/COMPONENTS/TRANSACTION_ALERT/DISMISS_TRANSACTION_ALERT': {
+      return null
+    }
+
+    default:
+      return state
+  }
+}
+
+export const transactionAlert: Reducer<TransactionAlertState, Action> = combineReducers({
   displayAlert,
   edgeTransaction
 })
-
-export default transactionAlert

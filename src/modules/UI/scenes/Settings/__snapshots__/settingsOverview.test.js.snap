@@ -330,13 +330,6 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
       />
     </Component>
   </ScrollView>
-  <RestoreWalletsModal
-    isActive={false}
-    onBackButtonPress={[Function]}
-    onBackdropPress={[Function]}
-    onCancel={[Function]}
-    onConfirm={[Function]}
-  />
   <AutoLogoutModal
     autoLogoutTimeInMinutes={0}
     onCancel={[Function]}
@@ -749,13 +742,6 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
       />
     </Component>
   </ScrollView>
-  <RestoreWalletsModal
-    isActive={false}
-    onBackButtonPress={[Function]}
-    onBackdropPress={[Function]}
-    onCancel={[Function]}
-    onConfirm={[Function]}
-  />
   <AutoLogoutModal
     autoLogoutTimeInMinutes={0}
     onCancel={[Function]}

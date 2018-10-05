@@ -55,7 +55,7 @@ const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps 
     exchangeDenomination: secondaryExchangeDenomination
   }
   const isoFiatCurrencyCode: string = guiWallet.isoFiatCurrencyCode
-  const exchangeSecondaryToPrimaryRatio = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+  const exchangeSecondaryToPrimaryRatio = UI_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
 
   return {
     currencyCode,

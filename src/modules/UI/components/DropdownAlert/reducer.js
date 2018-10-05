@@ -1,7 +1,6 @@
 // @flow
 
 import type { Action } from '../../../ReduxTypes.js'
-import * as ACTIONS from './actions'
 
 const initialState = {
   visible: false,
@@ -18,10 +17,10 @@ type DropdownAlertState = {
 }
 
 export const dropdownAlert = (state: DropdownAlertState = initialState, action: Action) => {
-  const { type, data = {} } = action
-  switch (type) {
-    case ACTIONS.DISPLAY_DROPDOWN_ALERT: {
-      const { type, title, message } = data
+  switch (action.type) {
+    case 'UI/COMPONENTS/DROPDOWN_ALERT/DISPLAY_DROPDOWN_ALERT': {
+      if (!action.data) throw new Error('Invalid action')
+      const { type, title, message } = action.data
 
       return {
         visible: true,
@@ -31,8 +30,9 @@ export const dropdownAlert = (state: DropdownAlertState = initialState, action: 
       }
     }
 
-    case ACTIONS.DISMISS_DROPDOWN_ALERT:
+    case 'UI/COMPONENTS/DROPDOWN_ALERT/DISMISS_DROPDOWN_ALERT': {
       return initialState
+    }
 
     default:
       return state

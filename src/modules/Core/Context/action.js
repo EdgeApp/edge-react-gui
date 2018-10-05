@@ -2,34 +2,59 @@
 
 import type { DiskletFolder, EdgeContext } from 'edge-core-js'
 
-const PREFIX = 'Core/Context/'
+export type AddContextAction = {
+  type: 'CORE/CONTEXT/ADD_CONTEXT',
+  data: { context: EdgeContext, folder: DiskletFolder }
+}
 
-export const ADD_CONTEXT = PREFIX + 'ADD_CONTEXT'
-export const addContext = (context: EdgeContext, folder: DiskletFolder) => ({
-  type: ADD_CONTEXT,
+export type AddUsernamesAction = {
+  type: 'CORE/CONTEXT/ADD_USERNAMES',
+  data: { usernames: Array<string> }
+}
+
+export type DeleteLocalAccountRequestAction = {
+  type: 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT_REQUEST',
+  data: { username: string }
+}
+
+export type DeleteLocalAccountSuccessAction = {
+  type: 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT_SUCCESS',
+  data: { usernames: Array<string> }
+}
+
+export type DeleteLocalAccountErrorAction = {
+  type: 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT_ERROR',
+  data: { username: string }
+}
+
+export type CoreContextAction =
+  | AddContextAction
+  | AddUsernamesAction
+  | DeleteLocalAccountRequestAction
+  | DeleteLocalAccountSuccessAction
+  | DeleteLocalAccountErrorAction
+
+export const addContext = (context: EdgeContext, folder: DiskletFolder): AddContextAction => ({
+  type: 'CORE/CONTEXT/ADD_CONTEXT',
   data: { context, folder }
 })
 
-export const ADD_USERNAMES = PREFIX + 'ADD_USERNAMES'
-export const addUsernames = (usernames: Array<string>) => ({
-  type: ADD_USERNAMES,
+export const addUsernames = (usernames: Array<string>): AddUsernamesAction => ({
+  type: 'CORE/CONTEXT/ADD_USERNAMES',
   data: { usernames }
 })
 
-export const DELETE_LOCAL_ACCOUNT_REQUEST = PREFIX + 'DELETE_LOCAL_ACCOUNT_REQUEST'
-export const deleteLocalAccountRequest = (username: string) => ({
-  type: DELETE_LOCAL_ACCOUNT_REQUEST,
+export const deleteLocalAccountRequest = (username: string): DeleteLocalAccountRequestAction => ({
+  type: 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT_REQUEST',
   data: { username }
 })
 
-export const DELETE_LOCAL_ACCOUNT_SUCCESS = PREFIX + 'DELETE_LOCAL_ACCOUNT_SUCCESS'
-export const deleteLocalAccountSuccess = (allUsernames: Array<string>) => ({
-  type: DELETE_LOCAL_ACCOUNT_SUCCESS,
+export const deleteLocalAccountSuccess = (allUsernames: Array<string>): DeleteLocalAccountSuccessAction => ({
+  type: 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT_SUCCESS',
   data: { usernames: allUsernames }
 })
 
-export const DELETE_LOCAL_ACCOUNT_ERROR = PREFIX + 'DELETE_LOCAL_ACCOUNT_ERROR'
-export const deleteLocalAccountError = (username: string) => ({
-  type: DELETE_LOCAL_ACCOUNT_ERROR,
+export const deleteLocalAccountError = (username: string): DeleteLocalAccountErrorAction => ({
+  type: 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT_ERROR',
   data: { username }
 })

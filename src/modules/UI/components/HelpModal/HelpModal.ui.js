@@ -1,12 +1,14 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Image, Linking, Platform, Text, View, WebView } from 'react-native'
+import { Dimensions, Image, Linking, Platform, Text, View, WebView } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
 import helpImage from '../../../../assets/images/modal/help.png'
+import { isIphoneX } from '../../../../lib/isIphoneX.js'
 import s from '../../../../locales/strings.js'
 import THEME from '../../../../theme/variables/airbitz.js'
+import { PLATFORM } from '../../../../theme/variables/platform.js'
 import StylizedModal from '../Modal/index.js'
 import styles from './style.js'
 
@@ -27,6 +29,10 @@ export default class HelpModal extends Component<Props> {
   }
 
   render () {
+    const deviceWidth = Dimensions.get('window').width
+    const deviceHeight = Dimensions.get('window').height
+    const width = PLATFORM.platform === 'ios' ? deviceWidth - 20 : '100%'
+    const height = isIphoneX ? deviceHeight - 120 : deviceHeight - 80
     return (
       <StylizedModal
         visibilityBoolean={this.props.modal}
@@ -52,7 +58,7 @@ export default class HelpModal extends Component<Props> {
         style={styles.stylizedModal}
         modalHeaderIcon={styles.modalHeaderIcon}
         modalBodyStyle={styles.modalBodyStyle}
-        modalVisibleStyle={styles.modalVisibleStyle}
+        modalVisibleStyle={[styles.modalVisibleStyle, { height, width }]}
         modalBoxStyle={styles.modalBoxStyle}
         modalContentStyle={styles.modalContentStyle}
         modalMiddleStyle={styles.modalMiddleWebView}

@@ -1,14 +1,17 @@
 // @flow
 
 import type { Action } from '../../../../../ReduxTypes.js'
-import { LOCK, UNLOCK } from './GetSeedModalConnector.js'
 
 export const privateSeedUnlocked = (state: boolean = false, action: Action) => {
   switch (action.type) {
-    case LOCK:
+    case 'LOCK_WALLET_SEED': {
       return false
-    case UNLOCK:
+    }
+
+    case 'UNLOCK_WALLET_SEED': {
       return true
+    }
+
     default:
       return state
   }

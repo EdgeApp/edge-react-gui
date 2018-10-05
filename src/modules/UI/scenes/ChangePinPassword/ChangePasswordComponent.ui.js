@@ -5,7 +5,7 @@ import { ChangePasswordScreen } from 'edge-login-ui-rn'
 import React, { Component } from 'react'
 import { ScrollView, View } from 'react-native'
 
-import Gradient from '../../components/Gradient/Gradient.ui'
+import Gradient from '../../components/Gradient/Gradient.ui.js'
 import SafeAreaView from '../../components/SafeAreaView'
 import styles from '../Settings/style.js'
 
@@ -27,7 +27,7 @@ export type ChangePasswordStateProps = {
 
 type ChangePasswordComponent = ChangePasswordOwnProps & ChangePasswordDispatchProps & ChangePasswordStateProps
 
-export default class ChangePassword extends Component<ChangePasswordComponent> {
+export class ChangePassword extends Component<ChangePasswordComponent> {
   onComplete = () => {
     this.props.onComplete()
   }
@@ -36,7 +36,7 @@ export default class ChangePassword extends Component<ChangePasswordComponent> {
     return (
       <SafeAreaView>
         <Gradient style={styles.gradient} />
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container} keyboardShouldPersistTaps={'always'}>
           <ChangePasswordScreen
             account={this.props.account}
             context={this.props.context}
@@ -50,3 +50,5 @@ export default class ChangePassword extends Component<ChangePasswordComponent> {
     )
   }
 }
+
+export default ChangePassword

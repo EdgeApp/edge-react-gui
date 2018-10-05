@@ -33,7 +33,7 @@ export class UniqueIdentifierModal extends Component<Props> {
     const keyboardType = 'numeric'
 
     return (
-      <InteractiveModal isActive={isActive} onBackdropPress={onBackdropPress} onBackButtonPress={onBackButtonPress} onModalHide={onModalHide}>
+      <InteractiveModal legacy isActive={isActive} onBackdropPress={onBackdropPress} onBackButtonPress={onBackButtonPress} onModalHide={onModalHide}>
         <InteractiveModal.Icon>
           <Icon style={{}} type={icon.type} name={icon.name} size={30} />
         </InteractiveModal.Icon>

@@ -1,7 +1,6 @@
 /* globals describe it expect */
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-import { ACCOUNT_INIT_COMPLETE } from '../../../../constants/indexConstants.js'
 import { initialState, newSpendingLimits, spendingLimits } from './SpendingLimitsReducer.js'
 
 describe('spendingLimits', () => {
@@ -14,7 +13,7 @@ describe('spendingLimits', () => {
   describe('when logging in', () => {
     it('should update', () => {
       const loginAction = {
-        type: ACCOUNT_INIT_COMPLETE,
+        type: 'ACCOUNT_INIT_COMPLETE',
         data: {
           spendingLimits: {
             transaction: {

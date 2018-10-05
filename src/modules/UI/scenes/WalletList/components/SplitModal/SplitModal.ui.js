@@ -10,11 +10,16 @@ import OptionSubtext from '../../../../components/OptionSubtext/OptionSubtextCon
 import SplitWalletButtons from './SplitWalletButtonsConnector'
 
 type SplitModalOwnProps = {
-  visibilityBoolean: boolean,
   onExitButtonFxn: () => void
 }
 
-export default class SplitModal extends Component<SplitModalOwnProps> {
+type SplitModalStateProps = {
+  visibilityBoolean: boolean
+}
+
+type SplitModalProps = SplitModalOwnProps & SplitModalStateProps
+
+export default class SplitModal extends Component<SplitModalProps> {
   render () {
     return (
       <StylizedModal

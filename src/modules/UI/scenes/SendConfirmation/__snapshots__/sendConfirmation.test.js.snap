@@ -52,7 +52,8 @@ exports[`SendConfirmation should render with destination 1`] = `
             }
           }
         >
-          Balance: 
+          Balance:
+           
           0
            
           BTC
@@ -310,7 +311,8 @@ exports[`SendConfirmation should render with standard props 1`] = `
             }
           }
         >
-          Balance: 
+          Balance:
+           
           0
            
           BTC
@@ -553,7 +555,8 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
             }
           }
         >
-          Balance: 
+          Balance:
+           
           0
            
           XMR
@@ -814,7 +817,8 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
             }
           }
         >
-          Balance: 
+          Balance:
+           
           0
            
           XRP

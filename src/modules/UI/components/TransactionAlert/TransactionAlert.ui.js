@@ -10,26 +10,28 @@ import { AlertBody, AlertContainer, AlertHeader } from '../DropdownAlert/compone
 import DropdownAlert from '../DropdownAlert/DropdownAlert.ui'
 import styles from './styles'
 
-export type Props = {
-  message: string,
-  displayAlert: boolean,
-  displayName: string,
-  displayAmount: string,
-  displaySymbol: string,
-  dismissAlert: Function,
-  viewTransaction: Function
-}
+export type Props =
+  | {
+      displayAlert: false,
+      dismissAlert: () => void,
+      viewTransaction: () => void
+    }
+  | {
+      message: string,
+      displayAlert: false,
+      displayName: string,
+      displayAmount: string,
+      displaySymbol: string,
+      dismissAlert: Function,
+      viewTransaction: Function
+    }
 
 export default class TransactionAlert extends Component<Props> {
   checkmarkIcon = <Icon style={styles.checkmarkIcon} name={'ios-checkmark-circle'} />
   message = () => {
+    if (!this.props.displayAlert) return ''
+
     const { displayAmount, displayName, displaySymbol } = this.props
-    // const amountFiat = metadata
-    //   ? metadata.amountFiat
-    //   : undefined
-    // const {
-    //   fiatCurrencyCode
-    // } = wallet
     const message = sprintf(s.strings.bitcoin_received, `${displaySymbol || displayName} ${displayAmount}`)
 
     return message

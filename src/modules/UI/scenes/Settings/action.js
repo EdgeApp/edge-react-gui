@@ -5,28 +5,45 @@ import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import { Actions } from 'react-native-router-flux'
 
 import type { Dispatch, GetState } from '../../../../../src/modules/ReduxTypes.js'
-import * as actions from '../../../../actions/indexActions.js'
-import * as Constants from '../../../../constants/indexConstants.js'
 import s from '../../../../locales/strings.js'
-import { convertCurrency, restoreWalletsRequest } from '../../../Core/Account/api.js'
+import { restoreWalletsRequest } from '../../../Core/Account/api.js'
 import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'
 import * as CORE_SELECTORS from '../../../Core/selectors'
+import { updateExchangeRates } from '../../../ExchangeRates/action.js'
+import { convertCurrency } from '../../../UI/selectors.js'
 import { displayErrorAlert } from '../../components/ErrorAlert/actions.js'
 import * as SETTINGS_ACTIONS from '../../Settings/action.js'
 import { newSpendingLimits } from '../../Settings/spendingLimits/SpendingLimitsReducer.js'
 
-const PREFIX = 'UI/Scenes/Settings/'
+const setPINModeStart = (pinMode: boolean) => ({
+  type: 'UI/SCENES/SETTINGS/SET_PIN_MODE_START',
+  data: { pinMode }
+})
 
-const SET_PIN_MODE_START = PREFIX + 'SET_PIN_MODE_START'
-const SET_PIN_START = PREFIX + 'SET_PIN_START'
+const setPINStart = (pin: string) => ({
+  type: 'UI/SCENES/SETTINGS/SET_PIN_START',
+  data: { pin }
+})
 
-const SET_DEFAULT_FIAT_START = PREFIX + 'SET_DEFAULT_FIAT_START'
-const SET_MERCHANT_MODE_START = PREFIX + 'SET_MERCHANT_MODE_START'
+const setDefaultFiatStart = (defaultFiat: string) => ({
+  type: 'UI/SCENES/SETTINGS/SET_DEFAULT_FIAT_START',
+  data: { defaultFiat }
+})
 
-const SET_BLUETOOTH_MODE_START = PREFIX + 'SET_BLUETOOTH_MODE_START'
-const SET_BITCOIN_OVERRIDE_SERVER_START = PREFIX + 'SET_BITCOIN_OVERRIDE_SERVER_START'
+const setMerchantModeStart = (merchantMode: boolean) => ({
+  type: 'UI/SCENES/SETTINGS/SET_MERCHANT_MODE_START',
+  data: { merchantMode }
+})
 
-export const SELECT_DEFAULT_FIAT = PREFIX + 'SELECT_DEFAULT_FIAT'
+const setBluetoothModeStart = (bluetoothMode: boolean) => ({
+  type: 'UI/SCENES/SETTINGS/SET_BLUETOOTH_MODE_START',
+  data: { bluetoothMode }
+})
+
+const setBitcoinOverrideServerStart = (overrideServer: string) => ({
+  type: 'UI/SCENES/SETTINGS/SET_BITCOIN_OVERRIDE_SERVER_START',
+  data: { overrideServer }
+})
 
 export const setPINModeRequest = (pinMode: boolean) => (dispatch: Dispatch, getState: GetState) => {
   dispatch(setPINModeStart(pinMode))
@@ -89,7 +106,7 @@ export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatc
       dispatch(SETTINGS_ACTIONS.setDefaultFiat(defaultFiat))
       const nextDefaultIsoFiat = getState().ui.settings.defaultIsoFiat
       // convert from previous fiat to next fiat
-      return convertCurrency(account, previousDefaultIsoFiat, nextDefaultIsoFiat, transaction.amount)
+      return convertCurrency(state, previousDefaultIsoFiat, nextDefaultIsoFiat, transaction.amount)
     })
     .then(transactionAmount => {
       const nextSpendingLimits = {
@@ -103,6 +120,7 @@ export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatc
       ACCOUNT_SETTINGS.setSpendingLimits(account, nextSpendingLimits)
       // update spending limits in settings
       dispatch(newSpendingLimits(nextSpendingLimits))
+      dispatch(updateExchangeRates())
     })
     .catch(e => console.log(e))
 }
@@ -133,13 +151,13 @@ export const setBluetoothModeRequest = (bluetoothMode: boolean) => (dispatch: Di
 
 export const checkCurrentPassword = (arg: string) => async (dispatch: Dispatch, getState: GetState) => {
   const clearPasswordError = { confirmPasswordError: '' }
-  dispatch(actions.dispatchActionObject(Constants.SET_CONFIRM_PASSWORD_ERROR, clearPasswordError))
+  dispatch({ type: 'SET_CONFIRM_PASSWORD_ERROR', data: clearPasswordError })
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
   const isPassword = await account.checkPassword(arg)
   dispatch(SETTINGS_ACTIONS.setSettingsLock(!isPassword))
   if (!isPassword) {
-    dispatch(actions.dispatchActionObject(Constants.SET_CONFIRM_PASSWORD_ERROR, { confirmPasswordError: s.strings.fragmet_invalid_password }))
+    dispatch({ type: 'SET_CONFIRM_PASSWORD_ERROR', data: { confirmPasswordError: s.strings.fragmet_invalid_password } })
   }
 }
 
@@ -183,36 +201,6 @@ export const restoreWallets = () => (dispatch: Dispatch, getState: GetState) => 
   restoreWalletsRequest(account).then(Actions.walletList)
 }
 
-const setPINModeStart = (pinMode: boolean) => ({
-  type: SET_PIN_MODE_START,
-  data: { pinMode }
-})
-
-const setPINStart = (pin: string) => ({
-  type: SET_PIN_START,
-  data: { pin }
-})
-
-const setDefaultFiatStart = (defaultFiat: string) => ({
-  type: SET_DEFAULT_FIAT_START,
-  data: { defaultFiat }
-})
-
-const setMerchantModeStart = (merchantMode: boolean) => ({
-  type: SET_MERCHANT_MODE_START,
-  data: { merchantMode }
-})
-
-const setBluetoothModeStart = (bluetoothMode: boolean) => ({
-  type: SET_BLUETOOTH_MODE_START,
-  data: { bluetoothMode }
-})
-
-const setBitcoinOverrideServerStart = (overrideServer: string) => ({
-  type: SET_BITCOIN_OVERRIDE_SERVER_START,
-  data: { overrideServer }
-})
-
 export function togglePinLoginEnabled (pinLoginEnabled: boolean) {
   return (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
@@ -230,34 +218,3 @@ export function togglePinLoginEnabled (pinLoginEnabled: boolean) {
     })
   }
 }
-
-// Settings
-
-// Account Settings
-// pinLoginEnabled         (boolean)
-// fingerprintLoginEnabled (boolean)
-// pinLoginCount           (integer)
-// minutesAutoLogout       (integer)
-// secondsAutoLogout       (integer)
-// recoveryReminderCount   (integer)
-
-// Requests Settings
-// nameOnPayments (boolean)
-// firstName      (string)
-// lastName       (string)
-// nickName       (string)
-
-// Spend Limits
-// spendRequirePinEnabled  (boolean)
-// spendRequirePinSatoshis (integer)
-// dailySpendLimitEnabled  (boolean)
-// dailySpendLimitSatoshi  (integer)
-
-// Currency Settings
-// advancedFeatures          (boolean)
-// bitcoinDenomination       (Value)?
-// exchangeRateSource        (string)
-// language                  (string)
-// numCurrency?              (integer)
-// overrideBitcoinServers    (boolean)
-// overrideBitcoinServerList (string)

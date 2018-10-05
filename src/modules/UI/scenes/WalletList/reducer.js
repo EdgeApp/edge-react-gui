@@ -1,5 +1,3 @@
 // @flow
 
-import walletOptions from './components/WalletOptions/reducer'
-
-export default walletOptions
+export * from './components/WalletOptions/reducer.js'

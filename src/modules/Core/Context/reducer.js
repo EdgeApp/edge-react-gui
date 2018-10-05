@@ -1,28 +1,30 @@
 // @flow
 
 import type { DiskletFolder, EdgeContext } from 'edge-core-js'
+import { type Reducer } from 'redux'
 
-import * as Constants from '../../../constants/indexConstants.js'
-import type { Action } from '../../ReduxTypes'
-import * as ACTION from './action.js'
+import { type Action, type Username } from '../../ReduxTypes.js'
+
+export type ContextState = {
+  context: EdgeContext | Object,
+  folder: DiskletFolder | Object,
+  usernames: Array<Username>,
+  nextUsername: Username
+}
 
 const initialState = {
   context: {},
-  usernames: [],
-  nextUsername: ''
+  folder: {},
+  nextUsername: '',
+  usernames: []
 }
-export type State = {
-  context: EdgeContext | {},
-  usernames: Array<string>,
-  nextUsername: string
-}
-export const context = (state: State = initialState, action: Action) => {
-  const { type, data = {} } = action
 
-  switch (type) {
-    case ACTION.ADD_CONTEXT: {
-      const context: EdgeContext = data.context
-      const folder: DiskletFolder = data.folder
+export const context: Reducer<ContextState, Action> = (state = initialState, action: Action) => {
+  switch (action.type) {
+    case 'CORE/CONTEXT/ADD_CONTEXT': {
+      if (!action.data) throw new Error('Invalid action')
+      const context: EdgeContext = action.data.context
+      const folder: DiskletFolder = action.data.folder
       return {
         ...state,
         context,
@@ -30,27 +32,28 @@ export const context = (state: State = initialState, action: Action) => {
       }
     }
 
-    case ACTION.ADD_USERNAMES: {
-      const { usernames } = data
+    case 'CORE/CONTEXT/ADD_USERNAMES': {
+      if (!action.data) throw new Error('Invalid action')
+      const { usernames } = action.data
       return {
         ...state,
         usernames
       }
     }
 
-    case ACTION.DELETE_LOCAL_ACCOUNT_SUCCESS: {
-      const { usernames } = data
+    case 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT_REQUEST': {
+      if (!action.data) throw new Error('Invalid action')
+      const { username } = action.data
       return {
         ...state,
-        usernames
+        usernames: state.usernames.filter(name => name !== username)
       }
     }
-    case Constants.DEEP_LINK_RECEIVED:
-    case Constants.LOGOUT: {
-      if (!data) {
-        return state
-      }
-      const { username } = data
+
+    case 'DEEP_LINK_RECEIVED':
+    case 'LOGOUT': {
+      if (!action.data) throw new TypeError('Invalid action')
+      const { username } = action.data
       return {
         ...state,
         nextUsername: username || ''
@@ -58,6 +61,7 @@ export const context = (state: State = initialState, action: Action) => {
     }
 
     default:
+      // $FlowFixMe
       return state
   }
 }
