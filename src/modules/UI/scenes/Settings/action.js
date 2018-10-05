@@ -1,15 +1,21 @@
 // @flow
 
+import { showInteractiveModal } from 'edge-components'
 import type { EdgeAccount } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
+import React from 'react'
+import { Image } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import type { Dispatch, GetState } from '../../../../../src/modules/ReduxTypes.js'
+import { keepOtp } from '../../../../actions/OtpActions.js'
+import iconImage from '../../../../assets/images/otp/OTP-badge_sm.png'
 import s from '../../../../locales/strings.js'
 import { restoreWalletsRequest } from '../../../Core/Account/api.js'
 import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'
 import * as CORE_SELECTORS from '../../../Core/selectors'
 import { updateExchangeRates } from '../../../ExchangeRates/action.js'
+import { showModal } from '../../../ModalManager.js'
 import { convertCurrency } from '../../../UI/selectors.js'
 import { displayErrorAlert } from '../../components/ErrorAlert/actions.js'
 import * as SETTINGS_ACTIONS from '../../Settings/action.js'
@@ -216,5 +222,22 @@ export function togglePinLoginEnabled (pinLoginEnabled: boolean) {
       console.log(error)
       dispatch(displayErrorAlert(error.message))
     })
+  }
+}
+
+export const showReEnableOtpModal = () => async (dispatch: Dispatch) => {
+  // Use `showModal` to put the modal component on screen:
+  const modal = showInteractiveModal({
+    title: s.strings.title_otp_keep_modal,
+    message: s.strings.otp_modal_reset_description,
+    icon: <Image source={iconImage} />,
+    positiveButtonText: s.strings.otp_keep,
+    negativeButtonText: s.strings.otp_disable
+  })
+  const resolveValue = await showModal(modal)
+  if (resolveValue) {
+    // true on positive, false on negative
+    // let 2FA expire
+    dispatch(keepOtp())
   }
 }
