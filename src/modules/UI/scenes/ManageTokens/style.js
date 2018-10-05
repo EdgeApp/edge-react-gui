@@ -2,6 +2,7 @@
 
 import { StyleSheet } from 'react-native'
 
+import { scale } from '../../../../lib/scaling.js'
 import THEME from '../../../../theme/variables/airbitz'
 
 export const styles = {
@@ -15,38 +16,38 @@ export const styles = {
     position: 'relative',
     flex: 1,
     backgroundColor: THEME.COLORS.WHITE,
-    paddingBottom: 50
+    paddingBottom: scale(50)
   },
   leftArea: {
     flexDirection: 'row'
   },
   icon: {
     backgroundColor: THEME.COLORS.TRANSPARENT,
-    fontSize: 22,
+    fontSize: scale(22),
     color: THEME.COLORS.WHITE
   },
   headerRow: {
-    padding: 12,
+    padding: scale(12),
     flexDirection: 'row',
     justifyContent: 'space-between',
-    height: 50
+    height: scale(50)
   },
   headerText: {
-    fontSize: 18,
+    fontSize: scale(18),
     color: THEME.COLORS.WHITE,
     backgroundColor: THEME.COLORS.TRANSPARENT,
-    marginLeft: 16
+    marginLeft: scale(16)
   },
   headerIcon: {
     backgroundColor: THEME.COLORS.TRANSPARENT,
-    fontSize: 22
+    fontSize: scale(22)
   },
   instructionalArea: {
-    paddingVertical: 16,
-    paddingHorizontal: 20
+    paddingVertical: scale(16),
+    paddingHorizontal: scale(20)
   },
   instructionalText: {
-    fontSize: 16,
+    fontSize: scale(16),
     textAlign: 'center'
   },
   metaTokenListArea: {
@@ -63,12 +64,12 @@ export const styles = {
 
   /// //// start of token row styling ///////
   manageTokenRow: {
-    height: 44,
+    height: scale(44),
     flexDirection: 'row',
     borderBottomWidth: 1,
     borderBottomColor: THEME.COLORS.GRAY_3,
-    paddingLeft: 20,
-    paddingRight: 20
+    paddingLeft: scale(20),
+    paddingRight: scale(20)
   },
   rowLeftArea: {
     flexDirection: 'row'
@@ -80,7 +81,7 @@ export const styles = {
     alignItems: 'center'
   },
   touchableCheckboxInterior: {
-    paddingHorizontal: 8,
+    paddingHorizontal: scale(8),
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -92,7 +93,7 @@ export const styles = {
   },
   tokenNameText: {
     color: THEME.COLORS.GRAY_1,
-    fontSize: 16
+    fontSize: scale(16)
   },
   tokenCheckboxArea: {
     alignSelf: 'center'
@@ -101,33 +102,33 @@ export const styles = {
     color: THEME.COLORS.PRIMARY_BUTTON_TOUCHED
   },
   rowRightArrow: {
-    fontSize: 18,
+    fontSize: scale(18),
     color: THEME.COLORS.GRAY_1
   },
   /// //// end of token row styling /////////
 
   buttonsArea: {
-    height: 52,
+    height: scale(52),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     alignSelf: 'flex-end',
-    paddingVertical: 4,
-    paddingHorizontal: 20
+    paddingVertical: scale(4),
+    paddingHorizontal: scale(20)
   },
   addButton: {
     flex: 1,
-    marginRight: 2,
+    marginRight: scale(2),
     backgroundColor: THEME.COLORS.GRAY_2,
     borderRadius: 3
   },
   buttonText: {
     color: THEME.COLORS.WHITE,
-    fontSize: 18
+    fontSize: scale(18)
   },
   saveButton: {
     flex: 1,
-    marginLeft: 2,
+    marginLeft: scale(2),
     backgroundColor: THEME.COLORS.SECONDARY,
     borderRadius: 3
   }

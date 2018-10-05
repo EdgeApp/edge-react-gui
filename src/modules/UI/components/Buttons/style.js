@@ -44,7 +44,7 @@ export const rawStyles = {
   //  TERTIARY BUTTON
   tertiaryButton: {
     backgroundColor: THEME.COLORS.WHITE,
-    borderWidth: scale(2),
+    borderWidth: 2,
     borderColor: THEME.COLORS.SECONDARY,
     padding: scale(12)
   },
@@ -63,7 +63,7 @@ export const rawStyles = {
 
   debug: {
     borderColor: 'red',
-    borderWidth: scale(1)
+    borderWidth: 1
   }
 }
 

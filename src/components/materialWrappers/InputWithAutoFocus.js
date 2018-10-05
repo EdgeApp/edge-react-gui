@@ -103,7 +103,7 @@ class InputWithAutoFocus extends Component<Props, State> {
         onBlur={this.onBlur}
         onFocus={this.onFocus}
         onSubmitEditing={this.onSubmitEditing}
-        labelHeight={26}
+        labelHeight={scale(26)}
         keyboardType={this.props.keyboardType}
         placeholder={this.props.placeholder}
         maxLength={this.props.maxLength}
