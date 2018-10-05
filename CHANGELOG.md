@@ -1,5 +1,29 @@
 # edge-react-gui
 
+## 1.3.4
+
+* Fix Payment Protocol support on Android
+* Add support for eboost
+* Change DGB P2SH address to "S" address
+* Prevent TouchID button from being tapped after login
+* Prevent create wallet button Done button from being tapped multiple times
+* Fix white screen hang upon login if an incoming transaction happens
+* Implement new modal manager
+* Fix React error that FlatList key is not a string
+* Fix address wrapping in Simplex plugin
+* Fix horizontal gap in Android transaction list
+* Fix horizontal gap in Android wallet list
+* Fix double tap bug on Change Password modal
+* Change Redux actions to use Flow types instead of action creators
+
+edge-login-ui:
+* Add scaling to login screen
+* Add popup of 2FA reset request warning for all accounts on device
+
+edge-currency-bitcoin:
+* Add eboost
+* Fix Payment Protocol support on Android
+
 ## 1.3.3
 
 * Fix BIP70 support for Bitcoin Cash
