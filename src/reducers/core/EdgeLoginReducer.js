@@ -38,7 +38,8 @@ export const edgeLogin: Reducer<EdgeLoginState, Action> = (state = initialState,
       return {
         ...state,
         lobby: null,
-        error: action.data
+        error: action.data,
+        isProcessing: false
       }
     }
 
@@ -46,7 +47,8 @@ export const edgeLogin: Reducer<EdgeLoginState, Action> = (state = initialState,
       return {
         ...state,
         lobby: action.data,
-        error: null
+        error: null,
+        isProcessing: false
       }
     }
 
