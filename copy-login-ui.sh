@@ -8,3 +8,5 @@ mkdir -p $dest
 
 cp    $src/package.json $dest/package.json
 cp -r $src/src/ $dest/src/
+cp -r $src/android/ $dest/android/
+cp -r $src/ios/ $dest/ios/
