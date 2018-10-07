@@ -78,8 +78,8 @@ export const styles = {
   amountAreaCryptoRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingTop: scale(10),
-    paddingBottom: scale(10),
+    paddingTop: 10,
+    paddingBottom: 10,
     paddingLeft: scale(15),
     paddingRight: scale(15)
   },
@@ -92,7 +92,7 @@ export const styles = {
     fontSize: scale(14)
   },
   amountAreaMiddle: {
-    paddingTop: scale(10),
+    paddingTop: 10,
     flex: 3,
     alignSelf: 'center',
     justifyContent: 'center',
@@ -156,15 +156,15 @@ export const styles = {
     fontSize: scale(14)
   },
   categoryRow: {
-    paddingTop: scale(15),
-    marginTop: scale(10),
+    paddingTop: 15,
+    marginTop: 10,
     flexDirection: 'row',
     paddingLeft: scale(15),
     paddingRight: scale(15),
     height: scale(44)
   },
   modalCategoryRow: {
-    paddingTop: scale(8),
+    paddingTop: 8,
     flexDirection: 'row',
     paddingLeft: scale(15),
     paddingRight: scale(15),
@@ -210,8 +210,8 @@ export const styles = {
     fontFamily: THEME.FONTS.DEFAULT
   },
   notesRow: {
-    paddingBottom: scale(20),
-    paddingTop: scale(14),
+    paddingBottom: 20,
+    paddingTop: 14,
     paddingLeft: scale(15),
     paddingRight: scale(15)
   },
@@ -230,7 +230,7 @@ export const styles = {
   },
   footerArea: {
     backgroundColor: THEME.COLORS.GRAY_4,
-    paddingTop: scale(20),
+    paddingTop: 20,
     height: (PLATFORM.deviceHeight * 1) / 3 + 40,
     paddingLeft: scale(15),
     paddingRight: scale(15)
@@ -243,7 +243,7 @@ export const styles = {
   },
   advancedTxArea: {
     padding: scale(12),
-    paddingBottom: scale(12),
+    paddingBottom: 12,
     justifyContent: 'center',
     alignItems: 'center',
     height: scale(50)
@@ -251,8 +251,8 @@ export const styles = {
   advancedTxText: {
     color: THEME.COLORS.SECONDARY,
     fontSize: scale(14),
-    paddingTop: scale(12),
-    paddingBottom: scale(12),
+    paddingTop: 12,
+    paddingBottom: 12,
     alignSelf: 'center'
   },
 
