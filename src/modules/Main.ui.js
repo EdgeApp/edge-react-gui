@@ -8,7 +8,6 @@ import {
   bitcoingoldCurrencyPluginFactory,
   dashCurrencyPluginFactory,
   digibyteCurrencyPluginFactory,
-  eboostCurrencyPluginFactory,
   feathercoinCurrencyPluginFactory,
   litecoinCurrencyPluginFactory,
   qtumCurrencyPluginFactory,
@@ -121,7 +120,6 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   vertcoinCurrencyPluginFactory,
   zcoinCurrencyPluginFactory,
   feathercoinCurrencyPluginFactory,
-  eboostCurrencyPluginFactory,
   ufoCurrencyPluginFactory
 ]
 

@@ -3,7 +3,6 @@
 ## 1.3.4
 
 * Fix Payment Protocol support on Android
-* Add support for eboost
 * Change DGB P2SH address to "S" address
 * Prevent TouchID button from being tapped after login
 * Prevent create wallet button Done button from being tapped multiple times
