@@ -3378,16 +3378,16 @@ edge-core-js@0.12.1:
     ws "^5.1.1"
     yaob "^0.3.0"
 
-edge-currency-accountbased@^0.0.9-beta.2:
-  version "0.0.9-beta.2"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.0.9-beta.2.tgz#f6d4b88634927fa324c0b8b03f0d12e689e9ebdc"
-  integrity sha512-yDF3LfMrXmIF29mZabGbFrD+BBSYZ+6CdEuk2E+P5J7uaI0n7VOdugHUL7NRY076JkIce7bh1ZCNvtvNyhxn6A==
+edge-currency-accountbased@^0.0.9-beta.3:
+  version "0.0.9-beta.3"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.0.9-beta.3.tgz#60f2c47018ba44437539503f4d9bd29eb18eab13"
+  integrity sha512-z5y83VkeUej5fI9PtJ9h+9bUnr2yFtEUMIDKVsQq9HchaP1FiCNQ6QIQI2b2I261oQyCThj+0RVuDjDL+i0RXQ==
   dependencies:
     base-x "^1.0.4"
     biggystring "^3.0.0"
     bip39 "^2.5.0"
     edge-ripple-lib "^1.0.0-beta.1"
-    eosjs "^16.0.0"
+    eosjs "^16.0.9"
     jsonschema "^1.1.1"
     sprintf-js "^1.1.1"
     stellar-sdk "^0.11.0"
@@ -3637,17 +3637,17 @@ eosjs-ecc@4.0.4:
     ecurve "^1.0.5"
     randombytes "^2.0.5"
 
-eosjs@^16.0.0:
-  version "16.0.8"
-  resolved "https://registry.yarnpkg.com/eosjs/-/eosjs-16.0.8.tgz#3cc9484ba33056306acd5aec828e3692838b30e8"
-  integrity sha512-1U0ojoIVSSX2u41tncnDXAaD6RCG6pWSoi9vpHhxUIOldHKdejzYE1UMDd0bIShJMZykyhWDrkYd+Vwi/WHGaw==
+eosjs@^16.0.9:
+  version "16.0.9"
+  resolved "https://registry.yarnpkg.com/eosjs/-/eosjs-16.0.9.tgz#ee3790f2f038079e71981f20354be8d1d98de873"
+  integrity sha512-aYgzbgH2RhnmYVzEmK4AD6UIboJI54PGYQUesv2i8rCqYhWij+xQx7PtALJ481cxZnQgmFn8s2KMkgG07P5/Ug==
   dependencies:
     babel-runtime "6.26.0"
     binaryen "^37.0.0"
     create-hash "^1.1.3"
     eosjs-api "7.0.4"
     eosjs-ecc "4.0.4"
-    fcbuffer "2.2.1"
+    fcbuffer "2.2.2"
 
 error-ex@^1.2.0, error-ex@^1.3.1:
   version "1.3.2"
@@ -4314,10 +4314,10 @@ fbjs@^0.8.1, fbjs@^0.8.14, fbjs@^0.8.16, fbjs@^0.8.9:
     setimmediate "^1.0.5"
     ua-parser-js "^0.7.18"
 
-fcbuffer@2.2.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/fcbuffer/-/fcbuffer-2.2.1.tgz#183efde2b2c8382e58ca34929d39bf147e9402e0"
-  integrity sha512-yR9nAeOghj2GUTUbjLQHMFM2AkxiX/jhrxWQiP6GaxJVxJlgugCnZd19eF2ooSZw6w0tCxEBU8plOFhsOBRJcQ==
+fcbuffer@2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/fcbuffer/-/fcbuffer-2.2.2.tgz#987d10062c46a8bfea27da77c964f43e9e25a014"
+  integrity sha512-4OhDYe3F3iToKkqao6aj72XcvEjCB4p06U8Wy30lYcLQTp2ispBf2cCyeymKPJQGnbG5wpBa2PraaWWJuZVnUg==
   dependencies:
     bn.js "^4.11.8"
     bytebuffer "^5.0.1"

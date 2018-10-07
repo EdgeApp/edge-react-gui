@@ -59,7 +59,6 @@
   "request_minimum_notification_title": "Minimum Balance Required",
   "request_xrp_minimum_notification_body": "Ripple (XRP) wallets require a 20 XRP minimum balance. You must deposit at least 20 XRP to this address before this wallet will show a balance or transactions. 20 XRP will be unspendable for the lifetime of this wallet address.",
   "request_xlm_minimum_notification_body": "Stellar (XLM) wallets require a 1 XLM minimum balance. You must deposit at least 1 XLM to this address before this wallet will show a balance or transactions. 1 XLM will be unspendable for the lifetime of this wallet address.",
-  "request_eos_minimum_notification_body": "EOS wallets require activation before used. Please go to https://zeos.co and active your wallet using the following keys\nOwner public key\n%s\n\nActive public key\n%s",
   "fragment_send_address_dialog_title": "Send to Public Address",
   "fragment_send_address": "Address",
   "fragment_send_flash": "Flash",
