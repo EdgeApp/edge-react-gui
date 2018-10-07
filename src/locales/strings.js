@@ -3,12 +3,26 @@
 import DeviceInfo from 'react-native-device-info'
 
 import en from './en_US'
+import es from './strings/es.json'
+import it from './strings/it.json'
+import ru from './strings/ru.json'
 
-const allLocales = { en }
+const allLocales = { en, ru, es, it }
 
-// Set default of US English
-const out = { strings: en }
+const strings: { [stringCode: string]: string } = {}
+const out = { strings }
+
 selectLocale(DeviceInfo.getDeviceLocale())
+
+function mergeStrings (primary: Object, secondary: Object) {
+  for (const str in secondary) {
+    if (secondary.hasOwnProperty(str)) {
+      if (secondary[str]) {
+        primary[str] = secondary[str]
+      }
+    }
+  }
+}
 
 // Locale formats can be in the form 'en', 'en-US', 'en_US', or 'enUS'
 export function selectLocale (locale: string = 'en'): boolean {
@@ -17,49 +31,28 @@ export function selectLocale (locale: string = 'en'): boolean {
     .replace('-', '')
     .replace('-', '')
     .replace('_', '')
-  let choice = null
 
-  // Find exact match
+  let found = false
+  const lang = normalizedLocale.slice(0, 2)
+
+  // Set default of US English
+  mergeStrings(out.strings, en)
+
+  if (locale === 'en') return true
+
+  // Find pure language match first (ie. find 'es' when 'esMX' is chosen)
+  if (allLocales[lang] !== undefined) {
+    found = true
+    mergeStrings(out.strings, allLocales[lang])
+  }
+
+  // Find an exact match
   if (allLocales[normalizedLocale] !== undefined) {
-    choice = allLocales[normalizedLocale]
-  } else {
-    // Match a match to a language with no dialect
-    const language = normalizedLocale.substr(0, 2)
-
-    choice = findLocale(language, false)
-
-    if (!choice) {
-      choice = findLocale(language, true)
-    }
+    found = true
+    mergeStrings(out.strings, allLocales[normalizedLocale])
   }
 
-  if (choice) {
-    out.strings = Object.assign(en, choice)
-  }
-
-  return !!choice
-}
-
-// If region === false, then only match if locale has no region
-// Otherwise match the first matching language
-function findLocale (language: string, region: boolean) {
-  console.log('Device: findLocale')
-  for (const locale in allLocales) {
-    if (allLocales.hasOwnProperty(locale)) {
-      const localeLang = locale.substr(0, 2)
-      const localeRegion = locale.substr(2)
-      if (localeLang === language) {
-        if (region === true) {
-          return allLocales[locale]
-        } else {
-          if (!localeRegion) {
-            return allLocales[locale]
-          }
-        }
-      }
-    }
-  }
-  return null
+  return found
 }
 
 export default out
