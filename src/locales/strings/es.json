@@ -171,7 +171,7 @@
   "string_fee_with_colon": "Comisión: ",
   "string_first_ethereum_wallet_name": "Mi Ether",
   "string_first_bitcoin_wallet_name": "Mi Bitcoin",
-  "string_first_bitcoincash_wallet_name": "",
+  "string_first_bitcoincash_wallet_name": "Mi BitcoinCash",
   "my_crypto_wallet_name": "Mi %s",
   "string_from_exchange_info": "Estás a punto de cambiar %1$s%2$s(%3$s) desde %4$s",
   "string_help": "Ayuda",
