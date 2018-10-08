@@ -213,15 +213,20 @@ export const enableCustomNodes = (currencyCode: string) => (dispatch: Dispatch, 
     .catch(onError)
 }
 
-export const disableCustomNodes = (currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
+export const disableCustomNodes = (currencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state: State = getState()
   const account = CORE_SELECTORS.getAccount(state)
-  const onError = e => console.log(e)
-  return ACCOUNT_SETTINGS.setIsCustomNodesEnabled(account, currencyCode, false)
-    .then(() => {
-      dispatch(setIsCustomNodesEnabled(currencyCode, false))
-    })
-    .catch(onError)
+  const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
+  const currencyPlugin = account.currencyTools[currencyPluginName]
+  try {
+    const settingsSavePromise = ACCOUNT_SETTINGS.setIsCustomNodesEnabled(account, currencyCode, false)
+    const pluginSavePromise = currencyPlugin.changePluginSettings({ disableFetchingServers: false })
+    await Promise.all([settingsSavePromise, pluginSavePromise])
+    dispatch(setIsCustomNodesEnabled(currencyCode, false))
+  } catch (e) {
+    console.log(e)
+    throw new Error(e)
+  }
 }
 
 export function setIsCustomNodesEnabled (currencyCode: string, isEnabled: boolean) {
@@ -238,7 +243,7 @@ export const saveCustomNodesList = (currencyCode: string, nodesList: Array<strin
   const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
   const currencyPlugin = account.currencyTools[currencyPluginName]
   try {
-    const pluginSave = currencyPlugin.changePluginSettings({ nodesList })
+    const pluginSave = currencyPlugin.changePluginSettings({ electrumServers: nodesList, disableFetchingServers: true })
     const settingsSave = ACCOUNT_SETTINGS.setCustomNodesList(account, currencyCode, nodesList)
     await Promise.all([pluginSave, settingsSave])
     dispatch(updateCustomNodesList(currencyCode, nodesList))
