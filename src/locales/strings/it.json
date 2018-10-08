@@ -171,7 +171,7 @@
   "string_fee_with_colon": "Commissione: ",
   "string_first_ethereum_wallet_name": "Il mio portafoglio Ethereum",
   "string_first_bitcoin_wallet_name": "Il mio portafoglio Bitcoin",
-  "string_first_bitcoincash_wallet_name": "Il mio portafoglio BitcoinCash",
+  "string_first_bitcoincash_wallet_name": "",
   "my_crypto_wallet_name": "Il mio %s",
   "string_from_exchange_info": "Stai per scambiare %1$s %2$s\n (%3$s)\n da %4$s",
   "string_help": "Aiuto",
