@@ -53,11 +53,6 @@ const setBluetoothModeStart = (bluetoothMode: boolean) => ({
   data: { bluetoothMode }
 })
 
-const setBitcoinOverrideServerStart = (overrideServer: string) => ({
-  type: 'UI/SCENES/SETTINGS/SET_BITCOIN_OVERRIDE_SERVER_START',
-  data: { overrideServer }
-})
-
 export const setPINModeRequest = (pinMode: boolean) => (dispatch: Dispatch, getState: GetState) => {
   dispatch(setPINModeStart(pinMode))
 
@@ -190,11 +185,6 @@ export const setDenominationKeyRequest = (currencyCode: string, denominationKey:
     .catch(onError)
 }
 
-export const setBitcoinOverrideServerRequest = (overrideServer: string) => (dispatch: Dispatch) => {
-  dispatch(setBitcoinOverrideServerStart(overrideServer))
-  dispatch(SETTINGS_ACTIONS.setBitcoinOverrideServer(overrideServer))
-}
-
 export const updateIsSetCustomNodesModalVisible = (isSetCustomNodesModalVisible: boolean): UpdateIsSetCustomNodesModalVisibleAction => {
   return {
     type: 'SET_CUSTOM_NODES_MODAL_VISIBILITY',
@@ -202,15 +192,20 @@ export const updateIsSetCustomNodesModalVisible = (isSetCustomNodesModalVisible:
   }
 }
 
-export const enableCustomNodes = (currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
+export const enableCustomNodes = (currencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state: State = getState()
   const account = CORE_SELECTORS.getAccount(state)
-  const onError = e => console.log(e)
-  return ACCOUNT_SETTINGS.setIsCustomNodesEnabled(account, currencyCode, true)
-    .then(() => {
-      dispatch(setIsCustomNodesEnabled(currencyCode, true))
-    })
-    .catch(onError)
+  const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
+  const currencyPlugin = account.currencyTools[currencyPluginName]
+  try {
+    const settingsSavePromise = ACCOUNT_SETTINGS.setIsCustomNodesEnabled(account, currencyCode, true)
+    const pluginSavePromise = currencyPlugin.changePluginSettings({ disableFetchingServers: true })
+    await Promise.all([settingsSavePromise, pluginSavePromise])
+    dispatch(setIsCustomNodesEnabled(currencyCode, true))
+  } catch (e) {
+    console.log(e)
+    throw new Error(e)
+  }
 }
 
 export const disableCustomNodes = (currencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
