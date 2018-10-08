@@ -177,7 +177,7 @@ const strings = {
   string_fee_with_colon: 'Fee: ',
   string_first_ethereum_wallet_name: 'My Ether',
   string_first_bitcoin_wallet_name: 'My Bitcoin',
-  string_first_bitcoincash_wallet_name: 'My BitcoinCash',
+  string_first_bitcoincash_wallet_name: 'My Bitcoin Cash',
   my_crypto_wallet_name: 'My %s',
   string_from_exchange_info: 'You are about to exchange\n %1$s %2$s\n (%3$s)\n from %4$s',
   string_help: 'Help',
