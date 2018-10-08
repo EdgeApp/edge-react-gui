@@ -24,7 +24,6 @@ const localeInfo = Locale.constants() // should likely be moved to login system 
 
 export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => async (dispatch: Dispatch, getState: GetState) => {
   dispatch(loggedIn(account))
-
   account.activeWalletIds.length < 1 ? Actions[Constants.ONBOARDING]() : Actions[Constants.EDGE]()
 
   const walletInfos = account.allKeys
@@ -146,7 +145,6 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
         }
       }
     }
-
     const settings = await SETTINGS_API.getSyncedSettings(account)
     const syncDefaults = SETTINGS_API.SYNCED_ACCOUNT_DEFAULTS
     const syncFinal = { ...syncDefaults, ...settings }
@@ -156,7 +154,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     accountInitObject.merchantMode = syncFinal.merchantMode
     accountInitObject.customTokens = syncFinal.customTokens
     accountInitObject.passwordRecoveryRemindersShown = syncFinal.passwordRecoveryRemindersShown
-    accountInitObject.denominationKeys.push({ currencyCode: 'BTC', denominationKey: syncFinal.BTC.denomination })
+    accountInitObject.denominationKeys.push({ currencyCode: 'BTC', denominationKey: syncFinal.BTC.denomination, customNodes: syncFinal.BTC.customNodes })
     accountInitObject.denominationKeys.push({ currencyCode: 'BCH', denominationKey: syncFinal.BCH.denomination })
     accountInitObject.denominationKeys.push({ currencyCode: 'ETH', denominationKey: syncFinal.ETH.denomination })
     if (customTokens) {
@@ -185,7 +183,6 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     accountInitObject.otpMode = coreFinal.otpMode
 
     const receiveAddresses = await getReceiveAddresses(currencyWallets)
-
     dispatch({
       type: 'ACCOUNT_INIT_COMPLETE',
       data: { ...accountInitObject, receiveAddresses }

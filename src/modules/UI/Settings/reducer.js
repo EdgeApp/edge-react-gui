@@ -207,12 +207,14 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       denominationKeys.forEach(key => {
         const currencyCode = key.currencyCode
         const denomination = key.denominationKey
+        const customNodes = key.customNodes
         const currencyState = newState[currencyCode]
         newState = {
           ...newState,
           [currencyCode]: {
             ...currencyState,
-            denomination
+            denomination,
+            customNodes
           }
         }
       })
