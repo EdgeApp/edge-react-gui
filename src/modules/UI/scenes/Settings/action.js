@@ -5,6 +5,7 @@ import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import { Actions } from 'react-native-router-flux'
 
 import type { Dispatch, GetState, State } from '../../../../../src/modules/ReduxTypes.js'
+import { CURRENCY_PLUGIN_NAMES } from '../../../../constants/indexConstants.js'
 import s from '../../../../locales/strings.js'
 import { restoreWalletsRequest } from '../../../Core/Account/api.js'
 import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'
@@ -230,20 +231,22 @@ export function setIsCustomNodesEnabled (currencyCode: string, isEnabled: boolea
   }
 }
 
-export const saveCustomNodesList = (currencyCode: string, nodesList: Array<string>) => (dispatch: Dispatch, getState: GetState) => {
+export const saveCustomNodesList = (currencyCode: string, nodesList: Array<string>) => async (dispatch: Dispatch, getState: GetState) => {
   const state: State = getState()
   dispatch(updateCustomNodesProcessing(true))
   const account = CORE_SELECTORS.getAccount(state)
-
-  // $FlowFixMe
-  return ACCOUNT_SETTINGS.setCustomNodesList(account, currencyCode, nodesList)
-    .then(() => {
-      dispatch(updateCustomNodesList(currencyCode, nodesList))
-    })
-    .catch(e => {
-      console.log(e)
-      dispatch(updateCustomNodesProcessing(false))
-    })
+  const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
+  const currencyPlugin = account.currencyTools[currencyPluginName]
+  try {
+    const pluginSave = currencyPlugin.changePluginSettings({ nodesList })
+    const settingsSave = ACCOUNT_SETTINGS.setCustomNodesList(account, currencyCode, nodesList)
+    await Promise.all([pluginSave, settingsSave])
+    dispatch(updateCustomNodesList(currencyCode, nodesList))
+  } catch (e) {
+    console.log(e)
+    dispatch(updateCustomNodesProcessing(false))
+    throw new Error('Unable to save plugin setting')
+  }
 }
 
 export function updateCustomNodesList (currencyCode: string, nodesList: Array<string>) {
