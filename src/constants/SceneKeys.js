@@ -74,5 +74,21 @@ export const CURRENCY_SETTINGS = {
   ufoSettings: {
     pluginName: 'ufo',
     currencyCode: 'UFO'
+  },
+  dgbSettings: {
+    pluginName: 'digibyte',
+    currencyCode: 'DGB'
+  },
+  qtumSettings: {
+    pluginName: 'qtum',
+    currencyCode: 'QTUM'
+  },
+  vtcSettings: {
+    pluginName: 'vertcoin',
+    currencyCode: 'VTC'
+  },
+  zcoinSettings: {
+    pluginName: 'zcoin',
+    currencyCode: 'XZC'
   }
 }
