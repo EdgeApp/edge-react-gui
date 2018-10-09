@@ -44,6 +44,8 @@ import walletIconSelected from '../assets/images/tabbar/wallets_selected.png'
 import walletIcon from '../assets/images/tabbar/wallets.png'
 import ExchangeDropMenu from '../connectors/components/HeaderMenuExchangeConnector'
 import RequestDropMenu from '../connectors/components/HeaderMenuRequestConnector'
+import ExchangeProcessingQuoteConnector from '../connectors/scene/CryptoExchangeProcessingQuoteConnector'
+import ExchangeQuoteConnector from '../connectors/scene/CryptoExchangeQuoteConnector'
 import ExchangeConnector from '../connectors/scene/CryptoExchangeSceneConnector'
 import EdgeLoginSceneConnector from '../connectors/scene/EdgeLoginSceneConnector'
 import OtpSettingsSceneConnector from '../connectors/scene/OtpSettingsSceneConnector.js'
@@ -482,6 +484,23 @@ export default class Main extends Component<Props, State> {
                           renderLeftButton={this.renderBackButton()}
                           renderRightButton={this.renderHelpButton()}
                         />
+                        <Scene
+                          key={Constants.EXCHANGE_QUOTE_PROCESSING_SCENE}
+                          navTransparent={true}
+                          hideTabBar
+                          component={ExchangeProcessingQuoteConnector}
+                          renderTitle={this.renderTitle(EXCHANGE)}
+                          renderLeftButton={this.renderEmptyButton()}
+                          renderRightButton={this.renderEmptyButton()}
+                        />
+                        <Scene
+                          key={Constants.EXCHANGE_QUOTE_SCENE}
+                          navTransparent={true}
+                          component={ExchangeQuoteConnector}
+                          renderTitle={this.renderTitle(EXCHANGE)}
+                          renderLeftButton={this.renderBackButton()}
+                          renderRightButton={this.renderMenuButton()}
+                        />
                       </Stack>
                     </Tabs>
 
@@ -761,6 +780,9 @@ export default class Main extends Component<Props, State> {
     }
     if (this.isCurrentScene(Constants.WALLET_LIST_SCENE)) {
       return HwBackButtonHandler()
+    }
+    if (this.isCurrentScene(Constants.EXCHANGE_QUOTE_SCENE)) {
+      return Actions.popTo(Constants.EXCHANGE_SCENE)
     }
     Actions.pop()
     return true
