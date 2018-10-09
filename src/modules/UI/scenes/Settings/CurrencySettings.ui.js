@@ -30,7 +30,8 @@ type Props = {
   enableCustomNodes: () => void,
   disableCustomNodes: () => void,
   logo: string,
-  isSetCustomNodesProcessing: boolean
+  isSetCustomNodesProcessing: boolean,
+  defaultElectrumServer: string
 }
 
 export default class CurrencySettings extends Component<Props> {
@@ -88,13 +89,16 @@ export default class CurrencySettings extends Component<Props> {
         <View style={[styles.ethereumSettings]}>
           <Gradient style={styles.gradient} />
           <View style={styles.container}>
-            <SetCustomNodesModal
-              isActive={this.props.isSetCustomNodesModalVisible}
-              onExit={this.closeSetCustomNodesModal}
-              customNodesList={this.props.customNodesList}
-              saveCustomNodesList={this.props.saveCustomNodesList}
-              isSetCustomNodesProcessing={this.props.isSetCustomNodesProcessing}
-            />
+            {this.props.defaultElectrumServer && (
+              <SetCustomNodesModal
+                isActive={this.props.isSetCustomNodesModalVisible}
+                onExit={this.closeSetCustomNodesModal}
+                customNodesList={this.props.customNodesList}
+                saveCustomNodesList={this.props.saveCustomNodesList}
+                isSetCustomNodesProcessing={this.props.isSetCustomNodesProcessing}
+                defaultElectrumServer={this.props.defaultElectrumServer}
+              />
+            )}
             {this.header(SETTINGS_DENOMINATION_TEXT)}
             <RadioRows style={{}}>
               {this.props.denominations.map(denomination => {
@@ -110,19 +114,23 @@ export default class CurrencySettings extends Component<Props> {
                 return <Row key={denomination.multiplier} denomination={denomination} left={left} isSelected={isSelected} onPress={onPress} />
               })}
             </RadioRows>
-            {this.subHeader(CUSTOM_NODES_TEXT)}
-            <SwitchRow
-              leftText={s.strings.settings_enable_custom_nodes}
-              onToggle={this.onChangeEnableCustomNodes}
-              value={this.props.isCustomNodesEnabled}
-              isActive={this.props.isSetCustomNodesModalVisible}
-              onSaveCustomNodesList={this.props.saveCustomNodesList}
-            />
-            <ModalRow
-              onPress={() => this.props.setCustomNodesModalVisibility(true)}
-              leftText={s.strings.settings_set_custom_nodes_modal_title}
-              disabled={!this.props.isCustomNodesEnabled}
-            />
+            {this.props.defaultElectrumServer && (
+              <View>
+                {this.subHeader(CUSTOM_NODES_TEXT)}
+                <SwitchRow
+                  leftText={s.strings.settings_enable_custom_nodes}
+                  onToggle={this.onChangeEnableCustomNodes}
+                  value={this.props.isCustomNodesEnabled}
+                  isActive={this.props.isSetCustomNodesModalVisible}
+                  onSaveCustomNodesList={this.props.saveCustomNodesList}
+                />
+                <ModalRow
+                  onPress={() => this.props.setCustomNodesModalVisibility(true)}
+                  leftText={s.strings.settings_set_custom_nodes_modal_title}
+                  disabled={!this.props.isCustomNodesEnabled}
+                />
+              </View>
+            )}
           </View>
         </View>
       </SafeAreaView>

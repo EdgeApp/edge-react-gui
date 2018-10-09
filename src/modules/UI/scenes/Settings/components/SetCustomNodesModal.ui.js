@@ -16,7 +16,8 @@ export type SetCustomNodesModalOwnProps = {
   onExit: () => void,
   customNodesList: Array<string>,
   saveCustomNodesList: (Array<string>) => void,
-  isSetCustomNodesProcessing: boolean
+  isSetCustomNodesProcessing: boolean,
+  defaultElectrumServer: string
 }
 
 export type SetCustomNodesModalState = {
@@ -74,7 +75,7 @@ export class SetCustomNodesModal extends Component<SetCustomNodeModalProps, SetC
               onChangeText={this.onChangeText}
               editable={true}
               multiline
-              placeholder={s.strings.settings_set_custom_nodes_placeholder}
+              placeholder={this.props.defaultElectrumServer}
               placeholderTextColor={rawStyle.placeholderText.color}
               underlineColorAndroid={rawStyle.placeholderUnderline.color}
               autoCorrect={false}
