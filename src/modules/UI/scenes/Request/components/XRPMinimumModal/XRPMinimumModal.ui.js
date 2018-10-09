@@ -11,7 +11,8 @@ import { InteractiveModal } from '../../../../components/Modals/InteractiveModal
 
 type XRPMinimumModalStateProps = {
   onExit(): void,
-  visibilityBoolean: boolean
+  visibilityBoolean: boolean,
+  modalMessage: string
 }
 
 export default class XRPMinimumModal extends Component<XRPMinimumModalStateProps> {
@@ -29,11 +30,11 @@ export default class XRPMinimumModal extends Component<XRPMinimumModalStateProps
         </InteractiveModal.Icon>
 
         <InteractiveModal.Title>
-          <Text style={{ textAlign: 'center' }}>{s.strings.request_xrp_minimum_notification_title}</Text>
+          <Text style={{ textAlign: 'center' }}>{s.strings.request_minimum_notification_title}</Text>
         </InteractiveModal.Title>
 
         <InteractiveModal.Body>
-          <InteractiveModal.Description style={{ textAlign: 'center' }}>{s.strings.request_xrp_minimum_notification_body}</InteractiveModal.Description>
+          <InteractiveModal.Description style={{ textAlign: 'center' }}>{this.props.modalMessage}</InteractiveModal.Description>
         </InteractiveModal.Body>
 
         <InteractiveModal.Footer>

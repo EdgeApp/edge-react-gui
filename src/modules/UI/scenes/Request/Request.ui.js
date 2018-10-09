@@ -58,6 +58,13 @@ export type RequestDispatchProps = {
   refreshReceiveAddressRequest(string): void,
   onSelectWallet: (string, string) => void
 }
+type ModalState = 'NOT_YET_SHOWN' | 'VISIBLE' | 'SHOWN'
+type ModalConfig = {
+  modalState: ModalState,
+  minimumNativeBalance: string,
+  modalMessage: string
+}
+type CurrencyMinimumPopupState = { [currencyCode: string]: ModalConfig }
 
 export type LoadingProps = RequestLoadingProps & RequestDispatchProps
 export type LoadedProps = RequestStateProps & RequestDispatchProps
@@ -66,26 +73,33 @@ export type State = {
   publicAddress: string,
   legacyAddress: string,
   encodedURI: string,
-  isXRPMinimumModalVisible: boolean,
-  hasXRPMinimumModalAlreadyShown: boolean
+  minimumPopupModals: CurrencyMinimumPopupState
 }
 
 export class Request extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
+    const minimumPopupModals: CurrencyMinimumPopupState = {
+      XRP: {
+        modalState: 'NOT_YET_SHOWN',
+        minimumNativeBalance: '20000000',
+        modalMessage: s.strings.request_xrp_minimum_notification_body
+      },
+      XLM: {
+        modalState: 'NOT_YET_SHOWN',
+        minimumNativeBalance: '10000000',
+        modalMessage: s.strings.request_xlm_minimum_notification_body
+      }
+    }
     this.state = {
       publicAddress: props.publicAddress,
       legacyAddress: props.legacyAddress,
       encodedURI: '',
-      isXRPMinimumModalVisible: false,
-      hasXRPMinimumModalAlreadyShown: false
+      minimumPopupModals
     }
-
-    if (props.currencyCode === 'XRP') {
-      if (bns.lt(props.guiWallet.primaryNativeBalance, '20000000')) {
-        this.state.isXRPMinimumModalVisible = true
-        this.state.hasXRPMinimumModalAlreadyShown = true
-      }
+    if (this.shouldShowMinimumModal(props)) {
+      if (!props.currencyCode) return
+      this.state.minimumPopupModals[props.currencyCode].modalState = 'VISIBLE'
     }
     slowlog(this, /.*/, global.slowlogOptions)
   }
@@ -99,9 +113,10 @@ export class Request extends Component<Props, State> {
   }
 
   onCloseXRPMinimumModal = () => {
-    this.setState({
-      isXRPMinimumModalVisible: false
-    })
+    const minimumPopupModals: CurrencyMinimumPopupState = Object.assign({}, this.state.minimumPopupModals)
+    if (!this.props.currencyCode) return
+    minimumPopupModals[this.props.currencyCode].modalState = 'SHOWN'
+    this.setState({ minimumPopupModals })
   }
 
   shouldComponentUpdate (nextProps: Props, nextState: State) {
@@ -179,17 +194,12 @@ export class Request extends Component<Props, State> {
       })
     }
     // old blank address to new
+    // include 'didAddressChange' because didWalletChange returns false upon initial request scene load
     if (didWalletChange || didAddressChange) {
-      // include 'didAddressChange' because didWalletChange returns false upon initial request scene load
-      if (nextProps.currencyCode === 'XRP') {
-        if (!this.state.hasXRPMinimumModalAlreadyShown) {
-          if (bns.lt(nextProps.guiWallet.primaryNativeBalance, '20000000')) {
-            this.setState({
-              isXRPMinimumModalVisible: true,
-              hasXRPMinimumModalAlreadyShown: true
-            })
-          }
-        }
+      if (this.shouldShowMinimumModal(nextProps)) {
+        const minimumPopupModals: CurrencyMinimumPopupState = Object.assign({}, this.state.minimumPopupModals)
+        minimumPopupModals[nextProps.currencyCode].modalState = 'VISIBLE'
+        this.setState({ minimumPopupModals })
       }
     }
   }
@@ -202,11 +212,16 @@ export class Request extends Component<Props, State> {
     const color = 'white'
     const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio, onSelectWallet } = this.props
     const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
-
+    let modalMessage = ''
+    let showMinimumModal = false
+    if (this.state.minimumPopupModals[this.props.currencyCode] && this.state.minimumPopupModals[this.props.currencyCode].modalState === 'VISIBLE') {
+      showMinimumModal = true
+      modalMessage = this.state.minimumPopupModals[this.props.currencyCode].modalMessage
+    }
     return (
       <SafeAreaView>
         <Gradient style={styles.view}>
-          <XRPMinimumModal visibilityBoolean={this.state.isXRPMinimumModalVisible} onExit={this.onCloseXRPMinimumModal} />
+          <XRPMinimumModal visibilityBoolean={showMinimumModal} modalMessage={modalMessage} onExit={this.onCloseXRPMinimumModal} />
           <Gradient style={styles.gradient} />
 
           <View style={styles.exchangeRateContainer}>
@@ -272,6 +287,19 @@ export class Request extends Component<Props, State> {
     const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
     Clipboard.setString(requestAddress)
     Alert.alert(s.strings.fragment_request_address_copied)
+  }
+
+  shouldShowMinimumModal = (props: Props): boolean => {
+    if (!props.currencyCode) return false
+    if (this.state.minimumPopupModals[props.currencyCode]) {
+      if (this.state.minimumPopupModals[props.currencyCode].modalState === 'NOT_YET_SHOWN') {
+        const minBalance = this.state.minimumPopupModals[props.currencyCode].minimumNativeBalance
+        if (bns.lt(props.guiWallet.primaryNativeBalance, minBalance)) {
+          return true
+        }
+      }
+    }
+    return false
   }
 
   shareMessage = () => {

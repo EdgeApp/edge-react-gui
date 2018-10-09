@@ -218,7 +218,7 @@ export class SendConfirmation extends Component<Props, State> {
                     </Scene.Row>
                   )}
 
-                  {(currencyCode === 'XMR' || currencyCode === 'XRP') && (
+                  {(currencyCode === 'XMR' || currencyCode === 'XRP' || currencyCode === 'XLM') && (
                     <Scene.Row style={{ paddingVertical: 10 }}>
                       <TouchableOpacity
                         activeOpacity={rawStyles.activeOpacity}
@@ -263,7 +263,7 @@ export class SendConfirmation extends Component<Props, State> {
           </View>
         </Gradient>
 
-        {(currencyCode === 'XRP' || currencyCode === 'XMR') && (
+        {(currencyCode === 'XRP' || currencyCode === 'XMR' || currencyCode === 'XLM') && (
           <UniqueIdentifierModal onConfirm={this.props.uniqueIdentifierUpdated} currencyCode={currencyCode} />
         )}
       </SafeAreaView>
@@ -352,10 +352,12 @@ export class SendConfirmation extends Component<Props, State> {
 
 export const uniqueIdentifierText = (currencyCode: string, uniqueIdentifier?: string): string => {
   if (!uniqueIdentifier) {
+    if (currencyCode === 'XLM') return sprintf(s.strings.unique_identifier_add, s.strings.unique_identifier_memo_id)
     if (currencyCode === 'XRP') return sprintf(s.strings.unique_identifier_add, s.strings.unique_identifier_destination_tag)
     if (currencyCode === 'XMR') return sprintf(s.strings.unique_identifier_add, s.strings.unique_identifier_payment_id)
   }
 
+  if (currencyCode === 'XLM') return sprintf(s.strings.unique_identifier_display_text, s.strings.unique_identifier_memo_id, uniqueIdentifier)
   if (currencyCode === 'XRP') return sprintf(s.strings.unique_identifier_display_text, s.strings.unique_identifier_destination_tag, uniqueIdentifier)
   if (currencyCode === 'XMR') return sprintf(s.strings.unique_identifier_display_text, s.strings.unique_identifier_payment_id, uniqueIdentifier)
 
