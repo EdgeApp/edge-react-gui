@@ -2,7 +2,7 @@
 
 import { Platform, StyleSheet } from 'react-native'
 
-import { isIphoneX } from '../../../../lib/isIphoneX.js'
+import { scale } from '../../../../lib/scaling.js'
 import THEME from '../../../../theme/variables/airbitz'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
 
@@ -17,26 +17,26 @@ export const styles = {
     backgroundColor: THEME.COLORS.WHITE
   },
   expandedHeader: {
-    height: 32,
+    height: scale(32),
     flexDirection: 'row',
     justifyContent: 'center'
   },
   headerGradient: {
-    height: 66,
+    height: scale(66),
     width: '100%',
     position: 'absolute'
   },
   modalHeaderIconWrapBottom: {
     borderRadius: 24,
     backgroundColor: THEME.COLORS.TRANSPARENT,
-    height: 48,
-    width: 48,
+    height: scale(48),
+    width: scale(48),
     position: 'relative',
-    top: 10
+    top: scale(10)
   },
   dataArea: {
     position: 'relative',
-    top: 34,
+    top: scale(20),
     flexDirection: 'column'
   },
   payeeNameArea: {
@@ -45,13 +45,13 @@ export const styles = {
   },
   payeeNameWrap: {
     width: '80%',
-    padding: 4,
+    padding: scale(4),
     alignItems: 'center'
   },
   payeeNameInput: {
     color: THEME.COLORS.GRAY_1,
-    fontSize: 17,
-    height: Platform.OS === 'ios' ? 24 : 33,
+    fontSize: scale(17),
+    height: Platform.OS === 'ios' ? scale(24) : scale(33),
     textAlign: 'center',
     width: '100%',
     fontFamily: THEME.FONTS.DEFAULT
@@ -60,17 +60,17 @@ export const styles = {
     borderBottomWidth: 1,
     borderBottomColor: '#CCCCCC',
     width: '38%',
-    height: 1,
+    height: scale(1),
     alignSelf: 'center'
   },
   dateWrap: {
-    padding: 4,
+    padding: scale(4),
     alignItems: 'center',
     flexDirection: 'column'
   },
   date: {
     color: THEME.COLORS.GRAY_2,
-    fontSize: 14
+    fontSize: scale(14)
   },
   amountAreaContainer: {
     flexDirection: 'column'
@@ -79,9 +79,9 @@ export const styles = {
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingTop: 10,
-    paddingBottom: 20,
-    paddingLeft: 15,
-    paddingRight: 15
+    paddingBottom: 10,
+    paddingLeft: scale(15),
+    paddingRight: scale(15)
   },
   amountAreaLeft: {
     flex: 1,
@@ -89,7 +89,7 @@ export const styles = {
     alignItems: 'flex-start'
   },
   amountAreaLeftText: {
-    fontSize: 14
+    fontSize: scale(14)
   },
   amountAreaMiddle: {
     paddingTop: 10,
@@ -99,15 +99,15 @@ export const styles = {
     alignItems: 'center'
   },
   amountAreaMiddleTop: {
-    paddingBottom: 4
+    paddingBottom: scale(4)
   },
   amountAreaMiddleTopText: {
-    fontSize: 26,
+    fontSize: scale(26),
     color: THEME.COLORS.GRAY_1
   },
   amountAreaMiddleBottom: {},
   amountAreaMiddleBottomText: {
-    fontSize: 14,
+    fontSize: scale(14),
     color: THEME.COLORS.GRAY_2
   },
   amountAreaRight: {
@@ -117,12 +117,12 @@ export const styles = {
   },
   amountAreaRightText: {
     color: THEME.COLORS.GRAY_2,
-    fontSize: 14
+    fontSize: scale(14)
   },
   editableFiatRow: {
     flexDirection: 'row',
-    paddingLeft: 15,
-    paddingRight: 15
+    paddingLeft: scale(15),
+    paddingRight: scale(15)
   },
   editableFiatLeft: {
     flex: 1
@@ -140,9 +140,9 @@ export const styles = {
   },
   editableFiat: {
     color: THEME.COLORS.GRAY_1,
-    fontSize: 17,
+    fontSize: scale(17),
     textAlign: 'center',
-    height: PLATFORM.OS === 'ios' ? 26 : 34,
+    height: PLATFORM.OS === 'ios' ? scale(26) : scale(34),
     flex: 1,
     fontFamily: THEME.FONTS.DEFAULT
   },
@@ -153,41 +153,41 @@ export const styles = {
   },
   editableFiatRightText: {
     color: THEME.COLORS.GRAY_2,
-    fontSize: 14
+    fontSize: scale(14)
   },
   categoryRow: {
     paddingTop: 15,
     marginTop: 10,
     flexDirection: 'row',
-    paddingLeft: 15,
-    paddingRight: 15,
-    height: 44
+    paddingLeft: scale(15),
+    paddingRight: scale(15),
+    height: scale(44)
   },
   modalCategoryRow: {
     paddingTop: 8,
     flexDirection: 'row',
-    paddingLeft: 15,
-    paddingRight: 15,
-    height: 38
+    paddingLeft: scale(15),
+    paddingRight: scale(15),
+    height: scale(38)
   },
   categoryLeft: {
     borderRadius: 3,
     borderWidth: 1,
-    paddingLeft: 5,
-    paddingRight: 5,
-    paddingTop: 4,
-    paddingBottom: 6,
-    height: 29
+    paddingLeft: scale(5),
+    paddingRight: scale(5),
+    paddingTop: scale(4),
+    paddingBottom: scale(6),
+    height: scale(29)
   },
   categoryLeftText: {
-    fontSize: 15
+    fontSize: scale(15)
   },
   categoryInputArea: {
     flex: 1,
     borderBottomWidth: 1,
     borderBottomColor: '#CCCCCC',
-    marginLeft: 11,
-    height: 27,
+    marginLeft: scale(11),
+    height: scale(27),
     justifyContent: 'center',
     alignItems: 'flex-start',
     flexDirection: 'row'
@@ -196,15 +196,15 @@ export const styles = {
     flex: 1,
     borderBottomWidth: 1,
     borderBottomColor: '#CCCCCC',
-    marginLeft: 11,
+    marginLeft: scale(11),
     justifyContent: 'center',
     alignItems: 'flex-start',
     flexDirection: 'row'
   },
   categoryInput: {
-    paddingTop: 4,
-    height: PLATFORM.OS === 'ios' ? 22 : 26,
-    fontSize: 13,
+    paddingTop: scale(4),
+    height: PLATFORM.OS === 'ios' ? scale(22) : scale(26),
+    fontSize: scale(13),
     flex: 1,
     color: THEME.COLORS.GRAY_1,
     fontFamily: THEME.FONTS.DEFAULT
@@ -212,19 +212,19 @@ export const styles = {
   notesRow: {
     paddingBottom: 20,
     paddingTop: 14,
-    paddingLeft: 15,
-    paddingRight: 15
+    paddingLeft: scale(15),
+    paddingRight: scale(15)
   },
   notesInputWrap: {
     borderWidth: 1,
     borderColor: '#CCCCCC',
     borderRadius: 3,
-    height: PLATFORM.deviceHeight * 0.13 - (PLATFORM.platform === 'android' ? 23 : 0) + (isIphoneX ? 60 : 0),
-    padding: 3
+    height: PLATFORM.deviceHeight * 0.13 - (PLATFORM.platform === 'android' ? scale(20) : 0),
+    padding: scale(3)
   },
   notesInput: {
-    color: THEME.COLORS.GRAY_1,
-    fontSize: 15,
+    color: THEME.COLORS.GRAY_2,
+    fontSize: scale(15),
     fontFamily: THEME.FONTS.DEFAULT,
     paddingVertical: 0
   },
@@ -232,35 +232,42 @@ export const styles = {
     backgroundColor: THEME.COLORS.GRAY_4,
     paddingTop: 20,
     height: (PLATFORM.deviceHeight * 1) / 3 + 40,
-    paddingLeft: 15,
-    paddingRight: 15
+    paddingLeft: scale(15),
+    paddingRight: scale(15)
+  },
+  buttonArea: {
+    height: scale(50)
+  },
+  saveButton: {
+    height: scale(50)
   },
   advancedTxArea: {
-    padding: 12,
-    paddingVertical: 16,
+    padding: scale(12),
+    paddingBottom: 12,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    height: scale(50)
   },
   advancedTxText: {
     color: THEME.COLORS.SECONDARY,
-    fontSize: 14,
-    paddingTop: 30,
+    fontSize: scale(14),
+    paddingTop: 12,
     paddingBottom: 12,
     alignSelf: 'center'
   },
 
   // subcategory selector
   subCategoryContainer: {
-    paddingLeft: 15,
-    paddingRight: 15,
-    marginTop: 15,
+    paddingLeft: scale(15),
+    paddingRight: scale(15),
+    marginTop: scale(15),
     borderTopWidth: 1,
     borderTopColor: THEME.COLORS.GRAY_3
   },
   rowContainer: {
     flex: 1,
-    height: 50,
-    paddingLeft: 16,
+    height: scale(50),
+    paddingLeft: scale(16),
     flexDirection: 'row',
     justifyContent: 'space-between',
     backgroundColor: THEME.COLORS.WHITE,
@@ -270,22 +277,22 @@ export const styles = {
   rowContent: {
     flex: 1,
     flexDirection: 'row',
-    paddingRight: 20
+    paddingRight: scale(20)
   },
   rowCategoryTextWrap: {
     flex: 1,
     justifyContent: 'center',
-    marginRight: 5
+    marginRight: scale(5)
   },
   rowCategoryText: {
-    fontSize: 18,
+    fontSize: scale(18),
     color: '#58595C'
   },
   rowPlusWrap: {
     justifyContent: 'center'
   },
   rowPlus: {
-    fontSize: 16,
+    fontSize: scale(16),
     color: '#58595C'
   },
 
@@ -295,12 +302,12 @@ export const styles = {
     backgroundColor: THEME.COLORS.WHITE
   },
   singleContact: {
-    height: 60,
+    height: scale(60),
     borderBottomWidth: 1,
     borderBottomColor: '#D8D6D6',
-    padding: 10,
-    paddingRight: 15,
-    paddingLeft: 15
+    padding: scale(10),
+    paddingRight: scale(15),
+    paddingLeft: scale(15)
   },
   singleContactWrap: {
     flexDirection: 'column',
@@ -309,17 +316,17 @@ export const styles = {
   singleDateArea: {
     backgroundColor: '#f6f6f6',
     flex: 3,
-    padding: 8,
-    paddingLeft: 15,
+    padding: scale(8),
+    paddingLeft: scale(15),
     flexDirection: 'row',
-    paddingRight: 24
+    paddingRight: scale(24)
   },
   leftDateArea: {
     flex: 1
   },
   contactInfoWrap: {
     flexDirection: 'row',
-    height: 40,
+    height: scale(40),
     flex: 1,
     justifyContent: 'space-between'
   },
@@ -327,20 +334,20 @@ export const styles = {
     flexDirection: 'row'
   },
   contactLogo: {
-    width: 40,
-    height: 40,
-    marginRight: 10
+    width: scale(40),
+    height: scale(40),
+    marginRight: scale(10)
   },
   contactLeftTextWrap: {
     justifyContent: 'center'
   },
   contactName: {
-    fontSize: 16,
+    fontSize: scale(16),
     color: '#58595C',
     textAlignVertical: 'center'
   },
   contactBitAmount: {
-    fontSize: 16,
+    fontSize: scale(16),
     color: '#000000',
     textAlignVertical: 'center'
   },
@@ -368,11 +375,11 @@ export const styles = {
   },
   blockExplorerButton: {
     borderWidth: 0,
-    height: 44,
+    height: scale(44),
     justifyContent: 'center'
   },
   blockExplorerButtonText: {
-    fontSize: 18,
+    fontSize: scale(18),
     color: THEME.COLORS.ACCENT_BLUE,
     alignSelf: 'center'
   }

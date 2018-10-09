@@ -8,13 +8,14 @@ import { Animated, Easing, Keyboard, ScrollView, TextInput, TouchableOpacity, Vi
 import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
+import { scale } from '../../../../lib/scaling.js'
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
 import THEME from '../../../../theme/variables/airbitz'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
 import type { GuiContact, GuiWallet } from '../../../../types.js'
 import { autoCorrectDate, getFiatSymbol, getWalletDefaultDenomProps, inputBottomPadding, isCryptoParentCurrency } from '../../../utils'
-import FormattedText from '../../components/FormattedText/index'
+import FormattedText from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import PayeeIcon from '../../components/PayeeIcon/PayeeIcon.ui.js'
 import SafeAreaView from '../../components/SafeAreaView'
@@ -460,7 +461,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
       <SafeAreaView>
         <View style={[{ width: '100%', height: PLATFORM.usableHeight + PLATFORM.toolbarHeight }]}>
           <Gradient style={styles.headerGradient} />
-          <View style={{ position: 'relative', top: 66 }}>
+          <View style={{ position: 'relative', top: scale(66) }}>
             <AdvancedTransactionDetailsModal
               onExit={this.onExitAdvancedDetailsModal}
               isActive={this.state.isAdvancedTransactionDetailsModalVisible}
@@ -476,8 +477,8 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                     width: '100%',
                     backgroundColor: THEME.COLORS.WHITE,
                     position: 'absolute',
-                    top: 4,
-                    height: PLATFORM.usableHeight,
+                    top: scale(4),
+                    height: scale(PLATFORM.usableHeight),
                     zIndex: 99999
                   }
                 ]}
