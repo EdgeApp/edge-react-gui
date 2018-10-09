@@ -50,13 +50,13 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
   const parentNetworkFee = transaction && transaction.parentNetworkFee ? transaction.parentNetworkFee : null
 
   const uniqueIdentifier = sceneState.parsedUri.uniqueIdentifier
-  const destination = sceneState.destination
+  const transactionMetadata = sceneState.transactionMetadata
   const exchangeRates = state.exchangeRates
   const out = {
     balanceInCrypto,
     balanceInFiat,
     currencyCode,
-    destination,
+    transactionMetadata,
     errorMsg,
     exchangeRates,
     fiatCurrencyCode: guiWallet.fiatCurrencyCode,
