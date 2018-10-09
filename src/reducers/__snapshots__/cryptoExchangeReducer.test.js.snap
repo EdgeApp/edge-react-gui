@@ -2,7 +2,7 @@
 
 exports[`initialState 1`] = `
 Object {
-  "availableShapeShiftTokens": Array [],
+  "availableShapeShiftTokens": Object {},
   "changeWallet": "none",
   "confirmTransactionModalVisible": false,
   "exchangeRate": 1,
@@ -28,11 +28,11 @@ Object {
     },
   },
   "genericShapeShiftError": null,
-  "gettingTransaction": false,
   "insufficientError": false,
   "minerFee": "0",
   "nativeMax": "0",
   "nativeMin": "0",
+  "quote": null,
   "quoteExpireDate": null,
   "reverseExchange": 1,
   "reverseMinerFee": "0",
@@ -58,7 +58,6 @@ Object {
       "name": "",
     },
   },
-  "transaction": null,
   "walletListModalVisible": false,
 }
 `;

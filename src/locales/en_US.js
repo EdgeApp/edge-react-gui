@@ -384,7 +384,13 @@ const strings = {
   onboarding_slide_5: 'Exchange cryptocurrencies by choosing the Source Wallet and Receiving Wallet to trade between them.',
   otp_out_of_sync_title: 'Warning',
   otp_out_of_sync_body:
-    'This device does not have the proper 2-factor token. You can still access your funds with limited functionality, but cannot create wallets or change account options'
+    'This device does not have the proper 2-factor token. You can still access your funds with limited functionality, but cannot create wallets or change account options',
+  just_a_moment: 'Just a moment',
+  trying_to_find: 'We are finding available exchange\nproviders for you...',
+  exchange_will_be_sent: '%1$s %2$s will be sent',
+  exchange_will_be_received: '%1$s %2$s will be received',
+  mining_fee: 'Mining Fee',
+  confirm_with_shapeshift: 'Confirm to complete your exchange through Shapeshift.'
 }
 
 // export default strings

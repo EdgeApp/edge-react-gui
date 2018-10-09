@@ -29,14 +29,6 @@ export const mapStateToProps = (state: State) => {
 
   const data = [
     {
-      label: s.strings.title_change_mining_fee, // tie into,
-      key: s.strings.title_change_mining_fee,
-      value: {
-        title: Constants.CHANGE_MINING_FEE_VALUE,
-        sourceWallet
-      }
-    },
-    {
       label: s.strings.dropdown_exchange_max_amount,
       key: s.strings.dropdown_exchange_max_amount,
       value: {

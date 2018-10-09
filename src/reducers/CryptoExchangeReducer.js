@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeTransaction } from 'edge-core-js'
+import type { EdgeExchangeQuote } from 'edge-core-js'
 import { type Reducer } from 'redux'
 
 import * as Constants from '../constants/indexConstants'
@@ -39,12 +39,11 @@ export type CryptoExchangeState = {
   shiftTransactionError: Error | null,
   genericShapeShiftError: Error | null,
   changeWallet: 'none',
-  transaction: EdgeTransaction | null,
   fee: any,
-  gettingTransaction: boolean,
-  availableShapeShiftTokens: Array<any>,
+  availableShapeShiftTokens: Object,
   shiftPendingTransaction: boolean,
-  quoteExpireDate: number | null
+  quoteExpireDate: number | null,
+  quote: EdgeExchangeQuote | null
 }
 
 const dummyCurrencyInfo: GuiCurrencyInfo = {
@@ -95,11 +94,10 @@ const initialState = {
   genericShapeShiftError: null,
   changeWallet: Constants.NONE,
   forceUpdateGuiCounter: 0,
-  transaction: null,
-  gettingTransaction: false,
-  availableShapeShiftTokens: [],
+  availableShapeShiftTokens: {},
   shiftPendingTransaction: false,
-  quoteExpireDate: null
+  quoteExpireDate: null,
+  quote: null
 }
 
 function cryptoExchangeInner (state = initialState, action: Action) {
@@ -127,8 +125,8 @@ function cryptoExchangeInner (state = initialState, action: Action) {
         minerFee: '0',
         fee: '',
         exchangeRate: 1,
-        transaction: null,
-        quoteExpireDate: null
+        quoteExpireDate: null,
+        quote: null
       }
     }
 
@@ -150,7 +148,7 @@ function cryptoExchangeInner (state = initialState, action: Action) {
         minerFee: '0',
         fee: '',
         exchangeRate: 1,
-        transaction: null,
+        quote: null,
         quoteExpireDate: null
       }
     }
@@ -198,7 +196,7 @@ function cryptoExchangeInner (state = initialState, action: Action) {
       if (!action.data) throw new Error('Invalid action')
       return {
         ...state,
-        transaction: action.data.edgeTransaction,
+        quote: action.data.quote,
         toNativeAmount: action.data.toNativeAmount,
         toDisplayAmount: action.data.toDisplayAmount,
         fromNativeAmount: action.data.fromNativeAmount,
@@ -216,7 +214,7 @@ function cryptoExchangeInner (state = initialState, action: Action) {
     case 'INVALIDATE_SHIFT_TRANSACTION': {
       return {
         ...state,
-        transaction: null,
+        quote: null,
         insufficientError: false,
         genericShapeShiftError: null,
         quoteExpireDate: null
@@ -276,7 +274,7 @@ function cryptoExchangeInner (state = initialState, action: Action) {
     case 'RECEIVED_INSUFFICENT_FUNDS_ERROR': {
       return {
         ...state,
-        transaction: null,
+        quote: null,
         insufficientError: true,
         genericShapeShiftError: null,
         shiftTransactionError: null
@@ -286,7 +284,7 @@ function cryptoExchangeInner (state = initialState, action: Action) {
     case 'GENERIC_SHAPE_SHIFT_ERROR': {
       return {
         ...state,
-        transaction: null,
+        quote: null,
         genericShapeShiftError: action.data,
         shiftTransactionError: null
       }
@@ -301,28 +299,10 @@ function cryptoExchangeInner (state = initialState, action: Action) {
       }
     }
 
-    case 'START_MAKE_SPEND_CRYPTO': {
-      return {
-        ...state,
-        gettingTransaction: true,
-        insufficientError: false,
-        genericShapeShiftError: null,
-        shiftTransactionError: null,
-        quoteExpireDate: null
-      }
-    }
-
     case 'ON_AVAILABLE_SHAPE_SHIFT_TOKENS': {
       return {
         ...state,
         availableShapeShiftTokens: action.data
-      }
-    }
-
-    case 'DONE_MAKE_SPEND_CRYPTO': {
-      return {
-        ...state,
-        gettingTransaction: false
       }
     }
 

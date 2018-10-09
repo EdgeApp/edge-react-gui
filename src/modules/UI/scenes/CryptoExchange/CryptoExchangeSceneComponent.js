@@ -1,13 +1,13 @@
 // @flow
 
 import React, { Component } from 'react'
-import { ActivityIndicator, View } from 'react-native'
+import { View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import slowlog from 'react-native-slowlog'
 
 import type { SetNativeAmountInfo } from '../../../../actions/CryptoExchangeActions.js'
+import CryptoExchangeMessageConnector from '../../../../connectors/components/CryptoExchangeMessageConnector'
 import CryptoExchangeQuoteTimerConnector from '../../../../connectors/components/CryptoExchangeQuoteTimerConnector'
-import CryptoExchangeConnector from '../../../../connectors/components/CryptoExchangeRateConnector'
 import * as Constants from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings.js'
 import { CryptoExchangeSceneStyle } from '../../../../styles/indexStyles'
@@ -21,7 +21,6 @@ import { PrimaryButton } from '../../components/Buttons/index'
 import { CryptoExchangeFlipInputWrapperComponent } from '../../components/FlipInput/CryptoExchangeFlipInputWrapperComponent.js'
 import type { ExchangedFlipInputAmounts } from '../../components/FlipInput/ExchangedFlipInput2'
 import SafeAreaView from '../../components/SafeAreaView'
-import CryptoExchangeConfirmTransactionModalComponent from './CryptoExchangeConfirmTransactionModalComponent'
 
 export type CryptoExchangeSceneComponentStateProps = {
   // The following props are used to populate the CryptoExchangeFlipInputs
@@ -53,25 +52,16 @@ export type CryptoExchangeSceneComponentStateProps = {
 
   // Number of times To and From wallets were flipped
   forceUpdateGuiCounter: number,
-
-  showNextButton: boolean,
   showWalletSelectModal: boolean,
   showConfirmShiftModal: boolean,
-  gettingTransaction: boolean,
   shiftPendingTransaction: boolean
 }
 
 export type CryptoExchangeSceneComponentDispatchProps = {
-  swapFromAndToWallets: () => any,
-
-  // Opens the wallet selector
+  onSelectWallet(string, string): void,
+  getShapeShiftTokens(): void,
   openModal: (data: string) => any,
-  shift: () => any,
-  closeConfirmation: () => any,
-  openConfirmation: () => any,
-  getShapeShiftTokens: () => any,
-  setNativeAmount: (data: SetNativeAmountInfo) => any,
-  onSelectWallet: (string, string) => any
+  getQuoteForTransaction(SetNativeAmountInfo): void
 }
 
 type Props = CryptoExchangeSceneComponentStateProps & CryptoExchangeSceneComponentDispatchProps
@@ -85,6 +75,10 @@ type State = {
 }
 
 export class CryptoExchangeSceneComponent extends Component<Props, State> {
+  fromAmountNative: string
+  fromAmountDisplay: string
+  toAmountNative: string
+  toAmountDisplay: string
   constructor (props: Props) {
     super(props)
     const newState: State = {
@@ -96,14 +90,7 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
     }
     this.state = newState
     slowlog(this, /.*/, global.slowlogOptions)
-  }
-  UNSAFE_componentWillMount () {
     this.props.getShapeShiftTokens()
-  }
-
-  componentDidMount () {
-    // const overridePrimaryExchangeAmount = bns.div(this.props.nativeAmount, this.props.primaryCurrencyInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
-    // this.setState({overridePrimaryExchangeAmount})
   }
 
   UNSAFE_componentWillReceiveProps (nextProps: Props) {
@@ -149,8 +136,8 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
     } else {
       toSecondaryInfo = emptyCurrencyInfo
     }
-
-    console.log(this.props.shiftPendingTransaction)
+    const isFromFocused = this.state.whichWalletFocus === Constants.FROM
+    const isToFocused = this.state.whichWalletFocus === Constants.TO
     return (
       <SafeAreaView>
         <Gradient style={style.scene}>
@@ -160,7 +147,7 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
             keyboardShouldPersistTaps={Constants.ALWAYS}
             contentContainerStyle={style.scrollViewContentContainer}
           >
-            <CryptoExchangeConnector style={style.exchangeRateBanner} />
+            <CryptoExchangeMessageConnector style={style.exchangeRateBanner} />
             <View style={style.shim} />
             <CryptoExchangeFlipInputWrapperComponent
               style={style.flipWrapper}
@@ -175,6 +162,8 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
               forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
               launchWalletSelector={this.launchFromWalletSelector}
               onCryptoExchangeAmountChanged={this.fromAmountChanged}
+              isFocused={isFromFocused}
+              focusMe={this.focusFromWallet}
             />
             <View style={style.shim} />
             <IconButton style={style.flipButton} icon={Constants.SWAP_VERT} onPress={this.flipThis} />
@@ -192,6 +181,8 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
               forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
               launchWalletSelector={this.launchToWalletSelector}
               onCryptoExchangeAmountChanged={this.toAmountChanged}
+              isFocused={isToFocused}
+              focusMe={this.focusToWallet}
             />
             <View style={style.shim} />
             <View style={style.actionButtonContainer}>{this.renderButton()}</View>
@@ -199,28 +190,33 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
             <CryptoExchangeQuoteTimerConnector style={style.timerContainer} />
           </KeyboardAwareScrollView>
           {this.renderDropUp()}
-          {this.renderConfirmation(style.confirmModal)}
         </Gradient>
       </SafeAreaView>
     )
   }
-
+  getQuote = () => {
+    const data: SetNativeAmountInfo = {
+      whichWallet: this.state.whichWalletFocus,
+      primaryExchangeAmount: this.state.whichWalletFocus === Constants.FROM ? this.fromAmountDisplay : this.toAmountDisplay,
+      primaryNativeAmount: this.state.whichWalletFocus === Constants.FROM ? this.fromAmountNative : this.toAmountNative
+    }
+    if (data.primaryNativeAmount && data.primaryNativeAmount !== '0') {
+      this.props.getQuoteForTransaction(data)
+    }
+    // this.props.getQuoteForTransaction(data)
+  }
   renderButton = () => {
-    const { showNextButton, gettingTransaction } = this.props
-    if (showNextButton) {
+    if (this.props.fromCurrencyCode !== '' && this.props.toCurrencyCode !== '') {
       return (
-        <PrimaryButton onPress={this.props.openConfirmation} disabled={gettingTransaction}>
-          {gettingTransaction ? <ActivityIndicator /> : <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>}
+        <PrimaryButton onPress={this.getQuote}>
+          <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>
         </PrimaryButton>
       )
-    }
-    if (gettingTransaction) {
-      return <ActivityIndicator />
     }
     return null
   }
   flipThis = () => {
-    this.props.swapFromAndToWallets()
+    // this.props.swapFromAndToWallets()
   }
 
   launchFromWalletSelector = () => {
@@ -236,25 +232,27 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
       whichWallet: Constants.TO
     })
   }
+  focusFromWallet = () => {
+    this.setState({
+      whichWallet: Constants.FROM,
+      whichWalletFocus: Constants.FROM
+    })
+  }
+  focusToWallet = () => {
+    this.setState({
+      whichWallet: Constants.TO,
+      whichWalletFocus: Constants.TO
+    })
+  }
 
   fromAmountChanged = (amounts: ExchangedFlipInputAmounts) => {
-    const data: SetNativeAmountInfo = {
-      whichWallet: Constants.FROM,
-      primaryExchangeAmount: amounts.exchangeAmount,
-      primaryNativeAmount: amounts.nativeAmount
-    }
-    this.setState({ whichWalletFocus: Constants.FROM })
-    this.props.setNativeAmount(data)
+    this.fromAmountNative = amounts.nativeAmount
+    this.fromAmountDisplay = amounts.exchangeAmount
   }
 
   toAmountChanged = (amounts: ExchangedFlipInputAmounts) => {
-    const data: SetNativeAmountInfo = {
-      whichWallet: Constants.TO,
-      primaryExchangeAmount: amounts.exchangeAmount,
-      primaryNativeAmount: amounts.nativeAmount
-    }
-    this.setState({ whichWalletFocus: Constants.TO })
-    this.props.setNativeAmount(data)
+    this.fromAmountNative = amounts.nativeAmount
+    this.fromAmountDisplay = amounts.exchangeAmount
   }
 
   renderDropUp = () => {
@@ -290,29 +288,6 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
           type={Constants.CRYPTO_EXCHANGE}
           whichWallet={whichWallet}
           excludedCurrencyCode={excludedCurrencyCode}
-        />
-      )
-    }
-    return null
-  }
-
-  renderConfirmation = (style: Object) => {
-    if (this.props.showConfirmShiftModal) {
-      return (
-        <CryptoExchangeConfirmTransactionModalComponent
-          style={style}
-          fromWallet={this.props.fromWallet}
-          toWallet={this.props.toWallet}
-          closeFunction={this.props.closeConfirmation}
-          fromCurrencyIconDark={this.props.fromCurrencyIconDark}
-          fromCurrencyAmount={this.props.fromDisplayAmount}
-          fromCurrencyCode={this.props.fromCurrencyCode}
-          toCurrencyIconDark={this.props.toCurrencyIconDark}
-          toCurrencyAmount={this.props.toDisplayAmount}
-          toCurrencyCode={this.props.toCurrencyCode}
-          fee={this.props.fee}
-          confirmFunction={this.props.shift}
-          pending={this.props.shiftPendingTransaction}
         />
       )
     }
