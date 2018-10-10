@@ -17,14 +17,14 @@ export const rawStyles = {
     backgroundColor: THEME.COLORS.OPACITY_WHITE,
     overflow: 'hidden',
     borderRadius: 26,
-    height: scale(52)
+    height: 52
   },
   thumb: {
     width: scale(52),
     height: scale(52),
     position: 'absolute',
     backgroundColor: THEME.COLORS.ACCENT_MINT,
-    borderRadius: scale(52)
+    borderRadius: 52
   },
   textOverlay: {
     backgroundColor: THEME.COLORS.TRANSPARENT,
