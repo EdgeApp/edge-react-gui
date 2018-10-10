@@ -3,7 +3,7 @@
 // import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import { shiftCryptoCurrency } from '../../actions/indexActions.js'
+import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/indexActions.js'
 import { intl } from '../../locales/intl'
 import { getCurrencyConverter } from '../../modules/Core/selectors.js'
 // import {EXCHANGE_QUOTE_PROCESSING_SCENE} from '../../constants/indexConstants.js'
@@ -36,6 +36,7 @@ export const mapStateToProps = (state: State) => {
     : '0.00'
   const toBalanceInFiat = intl.formatNumber(toBalanceInFiatRaw || 0, { toFixed: 2 })
   const fee = state.cryptoExchange.fee
+  const quoteExpireDate = state.cryptoExchange.quoteExpireDate
   return {
     fromWallet,
     fromNativeAmount,
@@ -50,12 +51,14 @@ export const mapStateToProps = (state: State) => {
     toDisplayAmount: state.cryptoExchange.toDisplayAmount,
     toCurrencyIcon: state.cryptoExchange.toCurrencyIcon || '',
     pending: state.cryptoExchange.shiftPendingTransaction,
-    fee
+    fee,
+    quoteExpireDate
   }
 }
 
 export const mapDispatchToProps = (dispatch: Dispatch) => ({
-  shift: () => dispatch(shiftCryptoCurrency())
+  shift: () => dispatch(shiftCryptoCurrency()),
+  timeExpired: () => dispatch(exchangeTimerExpired())
 })
 
 const CryptoExchangeQuoteConnector = connect(

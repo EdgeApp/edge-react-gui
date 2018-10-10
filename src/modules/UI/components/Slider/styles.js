@@ -20,8 +20,8 @@ export const rawStyles = {
     height: 52
   },
   thumb: {
-    width: scale(52),
-    height: scale(52),
+    width: 52,
+    height: 52,
     position: 'absolute',
     backgroundColor: THEME.COLORS.ACCENT_MINT,
     borderRadius: 52

@@ -41,7 +41,7 @@ export type CryptoExchangeState = {
   fee: any,
   availableShapeShiftTokens: Object,
   shiftPendingTransaction: boolean,
-  quoteExpireDate: number | null,
+  quoteExpireDate: Date | null,
   quote: EdgeExchangeQuote | null
 }
 
