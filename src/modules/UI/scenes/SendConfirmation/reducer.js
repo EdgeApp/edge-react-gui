@@ -1,7 +1,7 @@
 // @flow
 
 import { add } from 'biggystring'
-import type { EdgeSpendInfo, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
+import type { EdgeMetadata, EdgeSpendInfo, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
 import { isEqual } from 'lodash'
 import { type Reducer } from 'redux'
 
@@ -21,7 +21,7 @@ export type GuiMakeSpendInfo = {
 
 export type SendConfirmationState = {
   forceUpdateGuiCounter: number,
-  destination: string,
+  transactionMetadata: EdgeMetadata | null,
   address: string,
 
   nativeAmount: string,
@@ -147,18 +147,18 @@ export const authRequired = (state: 'none' | 'pin' = 'none', action: Action) => 
   }
 }
 
-export const destination = (state: string = '', action: Action) => {
+export const transactionMetadata = (state: EdgeMetadata | null = null, action: Action) => {
   switch (action.type) {
     case 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION': {
       if (!action.data) throw new Error('Invalid Action')
       if (!action.data.parsedUri || !action.data.parsedUri.metadata || !action.data.parsedUri.metadata.name) return state
 
-      return action.data.parsedUri.metadata.name
+      return action.data.parsedUri.metadata || null
     }
 
     case 'UI/SEND_CONFIMATION/NEW_SPEND_INFO': {
       if (!action.data) throw new Error('Invalid Action')
-      return action.data.spendInfo.metadata.name || ''
+      return action.data.spendInfo.metadata || null
     }
 
     default:
@@ -247,7 +247,7 @@ export const sendConfirmation: Reducer<SendConfirmationState, Action> = (state =
     pin: pin(state.pin, action),
     pending: pending(state.pending, action),
     transaction: transaction(state.transaction, action),
-    destination: destination(state.destination, action),
+    transactionMetadata: transactionMetadata(state.transactionMetadata, action),
     spendInfo: spendInfo(state.spendInfo, action),
     nativeAmount: nativeAmount(state.nativeAmount, action),
     address: address(state.address, action),
