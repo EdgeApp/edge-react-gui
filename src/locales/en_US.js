@@ -260,6 +260,7 @@ const strings = {
   string_search: 'Search',
   confirm_password_text: 'Confirm Password',
 
+  title_otp_keep_modal: 'Two-Factor Authentication (2FA)',
   title_otp_enabled: '2FA is enabled',
   title_otp_disabled: 'Protect your account with 2FA',
   otp_description:
@@ -268,7 +269,7 @@ const strings = {
   otp_show_code: 'Show authentication code',
   otp_hide_code: 'Hide authentication code',
   otp_disable: 'Disable 2FA',
-  otp_keep: 'KEEP 2FA',
+  otp_keep: 'Keep 2FA',
   otp_enable: 'Enable 2FA',
   otp_enabled_modal_part_one: '2FA has been enabled. A unique authentication code will be generated.',
   otp_enabled_modal_part_two:

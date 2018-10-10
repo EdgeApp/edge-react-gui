@@ -8,7 +8,15 @@ import type { Dispatch, State } from '../../../../modules/ReduxTypes'
 import * as CORE_SELECTORS from '../../../Core/selectors'
 import { resetSendLogsStatus, sendLogs } from '../../../Logs/action'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors'
-import { checkCurrentPassword, lockSettings, restoreWallets, setAutoLogoutTimeInMinutesRequest, togglePinLoginEnabled, updateTouchIdEnabled } from './action'
+import {
+  checkCurrentPassword,
+  lockSettings,
+  restoreWallets,
+  setAutoLogoutTimeInMinutesRequest,
+  showReEnableOtpModal,
+  togglePinLoginEnabled,
+  updateTouchIdEnabled
+} from './action'
 import SettingsOverview from './SettingsOverview.ui'
 
 // settings_button_lock_settings, or //settings_button_unlock_settings
@@ -23,6 +31,7 @@ const mapStateToProps = (state: State) => {
   const confirmPasswordError = SETTINGS_SELECTORS.getConfirmPasswordErrorMessage(state)
   const sendLogsStatus = SETTINGS_SELECTORS.getSendLogsStatus(state)
   const pinLoginEnabled = SETTINGS_SELECTORS.getPinLoginEnabled(state)
+  const otpResetDate = account.otpResetDate
   return {
     defaultFiat: SETTINGS_SELECTORS.getDefaultFiat(state),
     autoLogoutTimeInMinutes: SETTINGS_SELECTORS.getAutoLogoutTimeInMinutes(state),
@@ -35,7 +44,8 @@ const mapStateToProps = (state: State) => {
     isLocked,
     confirmPasswordError,
     sendLogsStatus,
-    pinLoginEnabled
+    pinLoginEnabled,
+    otpResetDate
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -47,7 +57,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   resetConfirmPasswordError: (arg: Object) => dispatch({ type: 'SET_CONFIRM_PASSWORD_ERROR', data: arg }),
   resetSendLogsStatus: () => dispatch(resetSendLogsStatus()),
   onTogglePinLoginEnabled: (enableLogin: boolean) => dispatch(togglePinLoginEnabled(enableLogin)),
-  onConfirmRestoreWallets: () => dispatch(restoreWallets())
+  onConfirmRestoreWallets: () => dispatch(restoreWallets()),
+  showReEnableOtpModal: () => dispatch(showReEnableOtpModal())
 })
 
 export default connect(

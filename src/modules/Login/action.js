@@ -146,7 +146,6 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
         }
       }
     }
-
     const settings = await SETTINGS_API.getSyncedSettings(account)
     const syncDefaults = SETTINGS_API.SYNCED_ACCOUNT_DEFAULTS
     const syncFinal = { ...syncDefaults, ...settings }
@@ -185,7 +184,6 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     accountInitObject.otpMode = coreFinal.otpMode
 
     const receiveAddresses = await getReceiveAddresses(currencyWallets)
-
     dispatch({
       type: 'ACCOUNT_INIT_COMPLETE',
       data: { ...accountInitObject, receiveAddresses }
