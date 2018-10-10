@@ -2,7 +2,6 @@
 
 import { StyleSheet } from 'react-native'
 
-import { scale } from '../../../../lib/scaling.js'
 import * as Styles from '../../../../styles/indexStyles'
 import THEME from '../../../../theme/variables/airbitz'
 
@@ -11,18 +10,18 @@ export default StyleSheet.create({
     zIndex: 1006
   },
   sideTextWrap: {
-    paddingTop: scale(3),
-    paddingBottom: scale(3),
-    paddingHorizontal: scale(10)
+    paddingTop: 3,
+    paddingBottom: 3,
+    paddingHorizontal: 10
   },
   backButton: {
     flexDirection: 'row',
     alignItems: 'center'
   },
   backIconStyle: {
-    paddingLeft: scale(10),
-    paddingRight: scale(5),
-    paddingTop: scale(3),
+    paddingLeft: 10,
+    paddingRight: 5,
+    paddingTop: 3,
     color: THEME.COLORS.WHITE
   },
   backIconAndroid: {
@@ -33,11 +32,11 @@ export default StyleSheet.create({
   },
   sideText: {
     color: THEME.COLORS.WHITE,
-    fontSize: scale(18)
+    fontSize: 18
   },
   icon: {
     color: THEME.COLORS.WHITE,
-    fontSize: scale(25)
+    fontSize: 25
   },
   default: {
     backgroundColor: THEME.COLORS.TRANSPARENT,

@@ -14,6 +14,7 @@ import sweepIcon from '../../../../../assets/images/sidenav/sweep.png'
 import termsIcon from '../../../../../assets/images/sidenav/terms.png'
 import walletIcon from '../../../../../assets/images/sidenav/wallets.png'
 import * as Constants from '../../../../../constants/indexConstants.js'
+import { scale } from '../../../../../lib/scaling.js'
 import s from '../../../../../locales/strings.js'
 import styles from '../style'
 import { Button } from './Button/Button.ui.js'
@@ -214,7 +215,7 @@ const SettingsButton = () => {
     <Button onPress={Actions.settingsOverviewTab}>
       <Button.Row>
         <Button.Left>
-          <Image style={[styles.iconImage, { height: 20, width: 20 }]} source={settings} />
+          <Image style={[styles.iconImage, { height: scale(20), width: scale(20) }]} source={settings} />
         </Button.Left>
 
         <Button.Center>
@@ -232,7 +233,7 @@ const LogoutButton = ({ onPress }) => {
     <Button onPress={onPress}>
       <Button.Row>
         <Button.Left>
-          <Image style={[styles.iconImage, { height: 20, width: 20 }]} source={logoutImage} />
+          <Image style={[styles.iconImage, { height: scale(20), width: scale(20) }]} source={logoutImage} />
         </Button.Left>
 
         <Button.Center>

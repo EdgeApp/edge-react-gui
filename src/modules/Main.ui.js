@@ -50,6 +50,7 @@ import OtpSettingsSceneConnector from '../connectors/scene/OtpSettingsSceneConne
 import PasswordRecoveryConnector from '../connectors/scene/PasswordRecoveryConnector.js'
 import TransactionsExportSceneConnector from '../connectors/scene/TransactionsExportSceneConnector'
 import * as Constants from '../constants/indexConstants'
+import { scale } from '../lib/scaling.js'
 import { setIntlLocale } from '../locales/intl'
 import s, { selectLocale } from '../locales/strings.js'
 import { LoadingScene } from '../modules/UI/components/Loading/LoadingScene.ui.js'
@@ -323,7 +324,7 @@ export default class Main extends Component<Props, State> {
                   renderRightButton={this.renderMenuButton()}
                 />
 
-                <Drawer key={Constants.EDGE} hideNavBar contentComponent={ControlPanel} hideDrawerButton={true} drawerPosition="right">
+                <Drawer key={Constants.EDGE} hideNavBar contentComponent={ControlPanel} hideDrawerButton={true} drawerPosition="right" drawerWidth={scale(280)}>
                   {/* Wrapper Scene needed to fix a bug where the tabs would reload as a modal ontop of itself */}
                   <Scene hideNavBar>
                     <Tabs

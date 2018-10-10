@@ -1,30 +1,31 @@
 // @flow
 
+import { scale } from '../../../../lib/scaling.js'
 import THEME from '../../../../theme/variables/airbitz'
 
 export default {
   header: {
     backgroundColor: THEME.COLORS.ACCENT_BLUE,
-    height: 48,
+    height: scale(48),
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingHorizontal: 12
+    paddingHorizontal: scale(12)
   },
   logoIcon: {
-    width: 25,
-    height: 25
+    width: scale(25),
+    height: scale(25)
   },
   exchangeContainer: {
-    paddingHorizontal: 20
+    paddingHorizontal: scale(20)
   },
   toggleIcon: {
-    fontSize: 18,
+    fontSize: scale(18),
     color: THEME.COLORS.GRAY_4
   },
   toggleButton: {
     backgroundColor: THEME.COLORS.PRIMARY,
-    height: 58,
+    height: scale(58),
     justifyContent: 'flex-start',
     alignItems: 'center'
   },
@@ -34,8 +35,8 @@ export default {
     alignItems: 'stretch'
   },
   iconImage: {
-    width: 22,
-    height: 22
+    width: scale(22),
+    height: scale(22)
   },
 
   /// ///////////////////////////////////////////////////
@@ -54,14 +55,14 @@ export default {
     },
     textContainer: {
       flex: 1,
-      paddingVertical: 13,
-      marginLeft: 20
+      paddingVertical: scale(13),
+      marginLeft: scale(20)
     },
     text: {
-      fontSize: 16
+      fontSize: scale(16)
     },
     icon: {
-      padding: 13
+      padding: scale(13)
     }
   },
   underlay: {
