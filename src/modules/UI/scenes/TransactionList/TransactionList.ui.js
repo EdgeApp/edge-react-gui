@@ -241,10 +241,14 @@ export class TransactionList extends Component<Props, State> {
                 <View style={[styles.currentBalanceBoxBitsWrap]}>
                   <View style={{ flexDirection: 'row' }}>
                     {displayDenomination.symbol ? (
-                      <T numberOfLines={1} style={[styles.currentBalanceBoxBits, styles.symbol]}>
-                        {displayDenomination.symbol + ' '}
-                        <T numberOfLines={1}>{cryptoAmountString}</T>
-                      </T>
+                      <View style={{ flexDirection: 'row' }}>
+                        <T numberOfLines={1} style={[styles.currentBalanceBoxBits, styles.symbol]}>
+                          {displayDenomination.symbol + ' '}
+                        </T>
+                        <T numberOfLines={1} style={[styles.currentBalanceBoxBits]}>
+                          {cryptoAmountString}
+                        </T>
+                      </View>
                     ) : (
                       <T numberOfLines={1} style={styles.currentBalanceBoxBits}>
                         {cryptoAmountString}
