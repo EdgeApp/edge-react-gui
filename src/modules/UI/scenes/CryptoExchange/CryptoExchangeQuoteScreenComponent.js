@@ -5,6 +5,7 @@ import { ActivityIndicator, Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import shapeShiftLogo from '../../../../assets/images/shapeShiftLogo.png'
+import { CircleTimer } from '../../../../components/CircleTimer'
 import s from '../../../../locales/strings.js'
 import { ExchangeQuoteComponent } from '../../../../modules/UI/components/ExchangeQuote/ExchangeQuoteComponent.js'
 import { CryptoExchangeQuoteSceneStyles as styles } from '../../../../styles/indexStyles'
@@ -30,8 +31,10 @@ type Props = {
   toCurrencyIcon: string,
   toNativeAmount: string,
   toBalanceInFiat: string,
+  quoteExpireDate: Date | null,
   fee: string,
-  shift(): void
+  shift(): void,
+  timeExpired(): void
 }
 type State = {}
 
@@ -42,6 +45,13 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
     }
     return <Slider onSlidingComplete={this.props.shift} sliderDisabled={this.props.pending} parentStyle={styles.slideContainer} />
   }
+  renderTimer = () => {
+    if (this.props.quoteExpireDate) {
+      return <CircleTimer style={styles.timerContainer} timeExpired={this.props.timeExpired} expiration={this.props.quoteExpireDate} />
+    }
+    return null
+  }
+
   render () {
     if (!this.props.fromWallet) {
       return null
@@ -81,6 +91,7 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
           <View style={styles.bottomRow}>
             <FormattedText style={styles.confirmText}>{s.strings.confirm_with_shapeshift}</FormattedText>
             {this.renderSlider()}
+            {this.renderTimer()}
           </View>
         </Gradient>
       </SafeAreaView>

@@ -59,12 +59,6 @@ const CryptoExchangeSceneStyle = {
     width: '90%',
     height: THEME.BUTTONS.HEIGHT
   },
-  timerContainer: {
-    container: {
-      width: 1,
-      height: 1
-    }
-  },
   flipWrapper: {
     container: {
       width: '90%',

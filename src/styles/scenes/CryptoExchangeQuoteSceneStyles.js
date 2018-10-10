@@ -37,6 +37,12 @@ const CryptoExchangeQuoteSceneStyles = {
     width: '100%',
     textAlign: 'center'
   },
+  timerContainer: {
+    container: {
+      width: 1,
+      height: 1
+    }
+  },
   quoteDetailContainer: {
     container: {
       width: '90%',
