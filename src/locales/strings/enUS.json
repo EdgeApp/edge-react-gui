@@ -18,6 +18,8 @@
   "edge_description_warning": "WARNING: The \"%1$s\" application is requesting full access to your account and all wallets. \n\nOnly accept this login request if you trust this application and where it was downloaded from.",
   "exchange_failed": "Exchange Failed",
   "exchange_succeeded": "Exchange Succeeded",
+  "no_exchange_amount": "No Amount Selected",
+  "select_exchange_amount": "Please enter an amount to exchange",
   "exchanges_may_take_minutes": "Exchanges may take several minutes to process. Please check your destination wallet after a few minutes",
   "fragment_wallets_addwallet_blockchain_hint": "Choose a blockchain",
   "fragment_wallets_addwallet_fiat_hint": "Choose a fiat currency",

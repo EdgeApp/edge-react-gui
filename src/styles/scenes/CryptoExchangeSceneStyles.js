@@ -51,6 +51,10 @@ const CryptoExchangeSceneStyle = {
   },
 
   flipButton: Styles.IconButtonStyle,
+  downArrow: {
+    color: THEME.COLORS.WHITE
+  },
+  downArrowSize: scale(36),
   actionButtonContainer: {
     width: '90%',
     height: THEME.BUTTONS.HEIGHT
@@ -60,83 +64,6 @@ const CryptoExchangeSceneStyle = {
       width: 1,
       height: 1
     }
-  },
-  confirmModal: {
-    middle: {
-      container: {
-        width: '100%'
-      },
-      sliderParent: {
-        position: 'relative',
-        backgroundColor: THEME.COLORS.SECONDARY,
-        borderRadius: 40,
-        marginBottom: scale(10),
-        marginLeft: 0,
-        marginRight: 0,
-        width: '100%',
-        maxWidth: 270,
-        alignSelf: 'center'
-      },
-      currencyIcon: {
-        height: scale(25),
-        width: scale(25),
-        resizeMode: 'contain'
-      },
-      altCurrencyText: {
-        color: THEME.COLORS.PRIMARY,
-        fontSize: scale(14)
-      },
-      top: {
-        flex: 4,
-        flexDirection: 'row',
-        marginBottom: scale(20)
-      },
-      topRight: {
-        flex: 8
-      },
-      topLeft: {
-        flex: 2,
-        flexDirection: 'column',
-        alignItems: 'center'
-      },
-      shim: {
-        height: scale(10),
-        backgroundColor: THEME.COLORS.WHITE
-      },
-      bottom: {
-        flex: 4,
-        flexDirection: 'row',
-        marginBottom: scale(20)
-      },
-      bottomRight: {
-        flex: 8
-      },
-      bottomLeft: {
-        flex: 2,
-        flexDirection: 'column',
-        alignItems: 'center'
-      },
-      text: {
-        color: THEME.COLORS.GRAY_1
-      }
-    },
-    bottom: {
-      justifyContent: 'center',
-      alignSelf: 'center',
-      height: scale(35)
-    },
-    bottomButton: {
-      color: THEME.COLORS.GRAY_2,
-      fontSize: scale(17),
-      marginBottom: scale(10)
-    },
-    icon: {
-      color: THEME.COLORS.SECONDARY,
-      backgroundColor: THEME.COLORS.TRANSPARENT,
-      width: 26,
-      height: scale(26)
-    },
-    iconSize: scale(26)
   },
   flipWrapper: {
     container: {

@@ -58,7 +58,9 @@ export const mapDispatchToProps = (dispatch: Dispatch) => ({
   shift: () => dispatch(shiftCryptoCurrency())
 })
 
-export default connect(
+const CryptoExchangeQuoteConnector = connect(
   mapStateToProps,
   mapDispatchToProps
 )(CryptoExchangeQuoteScreenComponent)
+
+export { CryptoExchangeQuoteConnector }

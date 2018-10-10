@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import { View } from 'react-native'
+import { Alert, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import slowlog from 'react-native-slowlog'
 
@@ -16,10 +16,10 @@ import { emptyCurrencyInfo } from '../../../../types'
 import Gradient from '../../../UI/components/Gradient/Gradient.ui'
 import WalletListModal from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import { getDenomFromIsoCode } from '../../../utils.js'
-import { IconButton } from '../../components/Buttons/IconButton.ui'
 import { PrimaryButton } from '../../components/Buttons/index'
 import { CryptoExchangeFlipInputWrapperComponent } from '../../components/FlipInput/CryptoExchangeFlipInputWrapperComponent.js'
 import type { ExchangedFlipInputAmounts } from '../../components/FlipInput/ExchangedFlipInput2'
+import { Icon } from '../../components/Icon/Icon.ui.js'
 import SafeAreaView from '../../components/SafeAreaView'
 
 export type CryptoExchangeSceneComponentStateProps = {
@@ -53,7 +53,6 @@ export type CryptoExchangeSceneComponentStateProps = {
   // Number of times To and From wallets were flipped
   forceUpdateGuiCounter: number,
   showWalletSelectModal: boolean,
-  showConfirmShiftModal: boolean,
   shiftPendingTransaction: boolean
 }
 
@@ -90,6 +89,9 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
     }
     this.state = newState
     slowlog(this, /.*/, global.slowlogOptions)
+  }
+
+  componentDidMount () {
     this.props.getShapeShiftTokens()
   }
 
@@ -166,7 +168,7 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
               focusMe={this.focusFromWallet}
             />
             <View style={style.shim} />
-            <IconButton style={style.flipButton} icon={Constants.SWAP_VERT} onPress={this.flipThis} />
+            <Icon style={style.downArrow} name={Constants.ARROW_DOWN_BOLD} size={style.downArrowSize} type={Constants.MATERIAL_COMMUNITY} />
             <View style={style.shim} />
             <CryptoExchangeFlipInputWrapperComponent
               style={style.flipWrapper}
@@ -202,8 +204,9 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
     }
     if (data.primaryNativeAmount && data.primaryNativeAmount !== '0') {
       this.props.getQuoteForTransaction(data)
+      return
     }
-    // this.props.getQuoteForTransaction(data)
+    Alert.alert(s.strings.no_exchange_amount, s.strings.select_exchange_amount)
   }
   renderButton = () => {
     if (this.props.fromCurrencyCode !== '' && this.props.toCurrencyCode !== '') {
@@ -214,9 +217,6 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
       )
     }
     return null
-  }
-  flipThis = () => {
-    // this.props.swapFromAndToWallets()
   }
 
   launchFromWalletSelector = () => {

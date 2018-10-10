@@ -34,7 +34,6 @@ export type CryptoExchangeState = {
   insufficientError: boolean,
   feeSetting: 'low' | 'standard' | 'high' | 'custom',
   walletListModalVisible: boolean,
-  confirmTransactionModalVisible: boolean,
   forceUpdateGuiCounter: number,
   shiftTransactionError: Error | null,
   genericShapeShiftError: Error | null,
@@ -89,7 +88,6 @@ const initialState = {
   insufficientError: false,
   feeSetting: Constants.STANDARD_FEE,
   walletListModalVisible: false,
-  confirmTransactionModalVisible: false,
   shiftTransactionError: null,
   genericShapeShiftError: null,
   changeWallet: Constants.NONE,
@@ -243,34 +241,6 @@ function cryptoExchangeInner (state = initialState, action: Action) {
       }
     }
 
-    case 'OPEN_CRYPTO_EXEC_CONF_MODAL': {
-      return {
-        ...state,
-        confirmTransactionModalVisible: true
-      }
-    }
-
-    case 'SET_CRYPTO_EXCHANGE_AMOUNTS': {
-      if (!action.data) throw new Error('Invalid action')
-      forceUpdateGuiCounter = state.forceUpdateGuiCounter
-      if (action.data.forceUpdateGui) {
-        forceUpdateGuiCounter++
-      }
-      const toNativeAmount = action.data.toNativeAmount || undefined
-      const toDisplayAmount = action.data.toDisplayAmount || undefined
-      const fromNativeAmount = action.data.fromNativeAmount || undefined
-      const fromDisplayAmount = action.data.fromDisplayAmount || undefined
-
-      return {
-        ...state,
-        toNativeAmount,
-        toDisplayAmount,
-        fromNativeAmount,
-        fromDisplayAmount,
-        forceUpdateGuiCounter
-      }
-    }
-
     case 'RECEIVED_INSUFFICENT_FUNDS_ERROR': {
       return {
         ...state,
@@ -287,15 +257,6 @@ function cryptoExchangeInner (state = initialState, action: Action) {
         quote: null,
         genericShapeShiftError: action.data,
         shiftTransactionError: null
-      }
-    }
-
-    case 'CHANGE_EXCHANGE_FEE': {
-      if (!action.data) throw new Error('Invalid action')
-      return {
-        ...state,
-        feeSetting: action.data.feeSetting,
-        forceUpdateGuiCounter: state.forceUpdateGuiCounter + 1
       }
     }
 
@@ -317,6 +278,16 @@ function cryptoExchangeInner (state = initialState, action: Action) {
       return {
         ...state,
         shiftPendingTransaction: false
+      }
+    }
+
+    case 'SET_FROM_WALLET_MAX': {
+      forceUpdateGuiCounter = state.forceUpdateGuiCounter
+      forceUpdateGuiCounter++
+      return {
+        ...state,
+        fromNativeAmount: action.data,
+        forceUpdateGuiCounter
       }
     }
 

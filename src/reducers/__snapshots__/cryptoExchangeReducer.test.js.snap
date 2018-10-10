@@ -4,7 +4,6 @@ exports[`initialState 1`] = `
 Object {
   "availableShapeShiftTokens": Object {},
   "changeWallet": "none",
-  "confirmTransactionModalVisible": false,
   "exchangeRate": 1,
   "fee": 0,
   "feeSetting": "standard",

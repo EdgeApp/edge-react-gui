@@ -9,11 +9,7 @@ import Gradient from '../../../UI/components/Gradient/Gradient.ui'
 import FormattedText from '../../components/FormattedText'
 import SafeAreaView from '../../components/SafeAreaView'
 
-type Props = {
-  shiftPendingTransaction: boolean,
-  processingComplete(): void,
-  processingError(): void
-}
+type Props = {}
 type State = {}
 
 class CryptoExchangeQuoteProcessingScreenComponent extends Component<Props, State> {

@@ -31,7 +31,7 @@ const CryptoExchangeQuoteSceneStyles = {
   },
   confirmText: {
     color: THEME.COLORS.WHITE,
-    fontSize: 14,
+    fontSize: scale(14),
     paddingTop: scale(10),
     paddingBottom: scale(10),
     width: '100%',

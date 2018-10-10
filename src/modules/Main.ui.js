@@ -44,9 +44,8 @@ import walletIconSelected from '../assets/images/tabbar/wallets_selected.png'
 import walletIcon from '../assets/images/tabbar/wallets.png'
 import ExchangeDropMenu from '../connectors/components/HeaderMenuExchangeConnector'
 import RequestDropMenu from '../connectors/components/HeaderMenuRequestConnector'
-import ExchangeProcessingQuoteConnector from '../connectors/scene/CryptoExchangeProcessingQuoteConnector'
-import ExchangeQuoteConnector from '../connectors/scene/CryptoExchangeQuoteConnector'
-import ExchangeConnector from '../connectors/scene/CryptoExchangeSceneConnector'
+import { CryptoExchangeQuoteConnector } from '../connectors/scene/CryptoExchangeQuoteConnector.js'
+import { CryptoExchangeSceneConnector as ExchangeConnector } from '../connectors/scene/CryptoExchangeSceneConnector'
 import EdgeLoginSceneConnector from '../connectors/scene/EdgeLoginSceneConnector'
 import OtpSettingsSceneConnector from '../connectors/scene/OtpSettingsSceneConnector.js'
 import PasswordRecoveryConnector from '../connectors/scene/PasswordRecoveryConnector.js'
@@ -76,7 +75,6 @@ import { passwordReminderModalConnector as PasswordReminderModal } from './UI/co
 import TransactionAlert from './UI/components/TransactionAlert/TransactionAlertConnector'
 import { CAMERA, CONTACTS, type Permission } from './UI/permissions.js'
 import AddToken from './UI/scenes/AddToken/AddTokenConnector.js'
-import ChangeMiningFeeExchange from './UI/scenes/ChangeMiningFee/ChangeMiningFeeExchangeConnector.ui'
 import ChangeMiningFeeSendConfirmation from './UI/scenes/ChangeMiningFee/ChangeMiningFeeSendConfirmationConnector.ui'
 import ChangePasswordConnector from './UI/scenes/ChangePinPassword/ChangePasswordConnector.ui'
 import ChangePinConnector from './UI/scenes/ChangePinPassword/ChangePinConnector.ui'
@@ -84,6 +82,7 @@ import { CreateWalletName } from './UI/scenes/CreateWallet/CreateWalletName.ui.j
 import { CreateWalletReview } from './UI/scenes/CreateWallet/CreateWalletReviewConnector'
 import { CreateWalletSelectCrypto } from './UI/scenes/CreateWallet/CreateWalletSelectCryptoConnector'
 import { CreateWalletSelectFiat } from './UI/scenes/CreateWallet/CreateWalletSelectFiatConnector'
+import { CryptoExchangeQuoteProcessingScreenComponent } from './UI/scenes/CryptoExchange/CryptoExchangeQuoteProcessingScreenComponent.js'
 import EditToken from './UI/scenes/EditToken'
 import LoginConnector from './UI/scenes/Login/LoginConnector'
 import ManageTokens from './UI/scenes/ManageTokens'
@@ -477,18 +476,10 @@ export default class Main extends Component<Props, State> {
                           renderRightButton={this.renderMenuButton()}
                         />
                         <Scene
-                          key={Constants.CHANGE_MINING_FEE_EXCHANGE}
-                          navTransparent={true}
-                          component={ChangeMiningFeeExchange}
-                          renderTitle={this.renderTitle(CHANGE_MINING_FEE)}
-                          renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderHelpButton()}
-                        />
-                        <Scene
                           key={Constants.EXCHANGE_QUOTE_PROCESSING_SCENE}
                           navTransparent={true}
                           hideTabBar
-                          component={ExchangeProcessingQuoteConnector}
+                          component={CryptoExchangeQuoteProcessingScreenComponent}
                           renderTitle={this.renderTitle(EXCHANGE)}
                           renderLeftButton={this.renderEmptyButton()}
                           renderRightButton={this.renderEmptyButton()}
@@ -496,7 +487,7 @@ export default class Main extends Component<Props, State> {
                         <Scene
                           key={Constants.EXCHANGE_QUOTE_SCENE}
                           navTransparent={true}
-                          component={ExchangeQuoteConnector}
+                          component={CryptoExchangeQuoteConnector}
                           renderTitle={this.renderTitle(EXCHANGE)}
                           renderLeftButton={this.renderBackButton()}
                           renderRightButton={this.renderMenuButton()}

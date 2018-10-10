@@ -82,7 +82,6 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
     fee: state.cryptoExchange.fee,
     forceUpdateGuiCounter: state.cryptoExchange.forceUpdateGuiCounter,
     showWalletSelectModal: state.ui.scenes.walletListModal.walletListModalVisible,
-    showConfirmShiftModal: state.cryptoExchange.confirmTransactionModalVisible,
     shiftPendingTransaction: state.cryptoExchange.shiftPendingTransaction
   }
 }
@@ -100,7 +99,9 @@ export const mapDispatchToProps = (dispatch: Dispatch): CryptoExchangeSceneCompo
   openModal: (data: string) => dispatch({ type: 'OPEN_WALLET_SELECTOR_MODAL', data })
 })
 
-export default connect(
+const CryptoExchangeSceneConnector = connect(
   mapStateToProps,
   mapDispatchToProps
 )(CryptoExchangeSceneComponent)
+
+export { CryptoExchangeSceneConnector }

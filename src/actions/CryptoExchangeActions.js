@@ -17,7 +17,6 @@ import * as UI_SELECTORS from '../modules/UI/selectors'
 import * as SETTINGS_SELECTORS from '../modules/UI/Settings/selectors.js'
 import * as UTILS from '../modules/utils'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../types'
-import * as actions from './indexActions'
 
 const DIVIDE_PRECISION = 18
 
@@ -29,18 +28,10 @@ export type SetNativeAmountInfo = {
   toPrimaryInfo?: GuiCurrencyInfo
 }
 
-type SetCryptoExchangeAmounts = {
-  toNativeAmount?: string,
-  toDisplayAmount?: string,
-  fromNativeAmount?: string,
-  fromDisplayAmount?: string,
-  forceUpdateGui: boolean
-}
-
-function setCryptoExchangeAmounts (setAmounts: SetCryptoExchangeAmounts) {
+function setFromWalletMax (amount: string) {
   return {
-    type: 'SET_CRYPTO_EXCHANGE_AMOUNTS',
-    data: setAmounts
+    type: 'SET_FROM_WALLET_MAX',
+    data: amount
   }
 }
 
@@ -63,19 +54,11 @@ function setShapeTransaction (
 
 export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (dispatch: Dispatch, getState: GetState) => {
   Actions[Constants.EXCHANGE_QUOTE_PROCESSING_SCENE]()
-  dispatch(actions.setNativeAmount(info, false))
-}
-export const changeFee = (feeSetting: string) => async (dispatch: Dispatch, getState: GetState) => {
-  const data = { feeSetting }
-  dispatch({
-    type: 'CHANGE_EXCHANGE_FEE',
-    data
-  })
   const state = getState()
   const fromWallet: GuiWallet | null = state.cryptoExchange.fromWallet
   const toWallet: GuiWallet | null = state.cryptoExchange.toWallet
-
-  makeShiftTransaction(dispatch, fromWallet, toWallet, Constants.FROM)
+  // dispatch(actions.setNativeAmount(info, false))
+  makeShiftTransaction(dispatch, fromWallet, toWallet, info.whichWallet, info)
 }
 
 export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) => {
@@ -87,7 +70,6 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
   const wallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
   const receiveAddress = await wallet.getReceiveAddress()
   const currencyCode = state.cryptoExchange.fromCurrencyCode ? state.cryptoExchange.fromCurrencyCode : undefined
-  const primaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
 
   const edgeSpendInfo: EdgeSpendInfo = {
     networkFeeOption: state.cryptoExchange.feeSetting,
@@ -99,78 +81,19 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
     ]
   }
   const primaryNativeAmount = await wallet.getMaxSpendable(edgeSpendInfo)
-  const primaryExchangeAmount = bns.div(primaryNativeAmount, primaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
-  const setNativeAmountInfo: SetNativeAmountInfo = {
-    whichWallet: Constants.FROM,
-    primaryNativeAmount,
-    primaryExchangeAmount,
-    fromPrimaryInfo: primaryInfo,
-    toPrimaryInfo: state.cryptoExchange.toWalletPrimaryInfo
-  }
-  dispatch(actions.setNativeAmount(setNativeAmountInfo, true))
+  dispatch(setFromWalletMax(primaryNativeAmount))
 }
 
-export const setNativeAmount = (info: SetNativeAmountInfo, forceUpdateGui?: boolean = false) => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const fromWallet: GuiWallet | null = state.cryptoExchange.fromWallet
-  const toWallet: GuiWallet | null = state.cryptoExchange.toWallet
-  const { whichWallet, primaryExchangeAmount, primaryNativeAmount } = info
-
-  const toPrimaryInfo: GuiCurrencyInfo = state.cryptoExchange.toWalletPrimaryInfo
-  const fromPrimaryInfo: GuiCurrencyInfo = state.cryptoExchange.fromWalletPrimaryInfo
-
-  const setAmounts: SetCryptoExchangeAmounts = {
-    forceUpdateGui
-  }
-  if (whichWallet === Constants.FROM) {
-    const fromDisplayAmount = bns.div(primaryNativeAmount, fromPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
-    setAmounts.fromNativeAmount = primaryNativeAmount
-    setAmounts.fromDisplayAmount = fromDisplayAmount
-    // dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT, {native: primaryNativeAmount, display: fromDisplayAmount, forceUpdateGui}))
-    if (toWallet) {
-      const toExchangeAmount = bns.mul(primaryExchangeAmount, state.cryptoExchange.exchangeRate.toFixed(3))
-      const toNativeAmountNoFee = bns.mul(toExchangeAmount, toPrimaryInfo.exchangeDenomination.multiplier)
-      const toNativeAmountWithFee = bns.sub(toNativeAmountNoFee, state.cryptoExchange.minerFee)
-      let toNativeAmount
-      if (bns.lt(toNativeAmountWithFee, '0')) {
-        toNativeAmount = '0'
-      } else {
-        toNativeAmount = toNativeAmountWithFee
-      }
-      const toDisplayAmountTemp = bns.div(toNativeAmount, toPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
-      const toDisplayAmount = bns.toFixed(toDisplayAmountTemp, 0, 8)
-      setAmounts.toNativeAmount = toNativeAmount
-      setAmounts.toDisplayAmount = toDisplayAmount
-    }
-  } else {
-    const toDisplayAmount = bns.div(primaryNativeAmount, toPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
-    setAmounts.toNativeAmount = primaryNativeAmount
-    setAmounts.toDisplayAmount = toDisplayAmount
-    const toNativeAmountWithFee = bns.add(primaryNativeAmount, state.cryptoExchange.minerFee)
-    const toExchangeAmount = bns.div(toNativeAmountWithFee, toPrimaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
-    if (fromWallet) {
-      const fromExchangeAmount = bns.div(toExchangeAmount, state.cryptoExchange.exchangeRate.toFixed(3), DIVIDE_PRECISION)
-      const fromNativeAmount = bns.mul(fromExchangeAmount, fromPrimaryInfo.exchangeDenomination.multiplier)
-      const fromDisplayAmountTemp = bns.div(fromNativeAmount, fromPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
-      const fromDisplayAmount = bns.toFixed(fromDisplayAmountTemp, 0, 8)
-
-      setAmounts.fromNativeAmount = fromNativeAmount
-      setAmounts.fromDisplayAmount = fromDisplayAmount
-      if (fromNativeAmount === '0' && primaryNativeAmount === '0') {
-        setAmounts.forceUpdateGui = true
-      }
-    }
-  }
-  dispatch(setCryptoExchangeAmounts(setAmounts))
-
-  // make spend
-  makeShiftTransaction(dispatch, fromWallet, toWallet, info.whichWallet)
-}
-
-async function makeShiftTransaction (dispatch: Dispatch, fromWallet: GuiWallet | null, toWallet: GuiWallet | null, whichWallet: string) {
+async function makeShiftTransaction (
+  dispatch: Dispatch,
+  fromWallet: GuiWallet | null,
+  toWallet: GuiWallet | null,
+  whichWallet: string,
+  info: SetNativeAmountInfo
+) {
   if (fromWallet && toWallet) {
     try {
-      await dispatch(getShiftTransaction(fromWallet, toWallet, whichWallet))
+      await dispatch(getShiftTransaction(fromWallet, toWallet, whichWallet, info))
     } catch (e) {
       dispatch(processMakeSpendError(e))
     }
@@ -178,7 +101,7 @@ async function makeShiftTransaction (dispatch: Dispatch, fromWallet: GuiWallet |
 }
 const processMakeSpendError = e => (dispatch: Dispatch, getState: GetState) => {
   console.log(e)
-  Actions[Constants.EXCHANGE_SCENE]()
+  Actions.popTo(Constants.EXCHANGE_SCENE)
   if (e.name === errorNames.InsufficientFundsError || e.message === Constants.INSUFFICIENT_FUNDS) {
     dispatch({ type: 'RECEIVED_INSUFFICENT_FUNDS_ERROR' })
     return
@@ -251,7 +174,7 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
   }
 }
 
-const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWallet: string = Constants.FROM, reQuote: boolean = false) => async (
+const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWallet: string = Constants.FROM, info: SetNativeAmountInfo) => async (
   dispatch: Dispatch,
   getState: GetState
 ) => {
@@ -259,21 +182,15 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
   const account = CORE_SELECTORS.getAccount(state)
   const destWallet = CORE_SELECTORS.getWallet(state, toWallet.id)
   const srcWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
-  const { fromNativeAmount, toNativeAmount, nativeMax, nativeMin } = state.cryptoExchange
+  const fromNativeAmount = info.primaryNativeAmount
+  const { nativeMax, nativeMin } = state.cryptoExchange
   const fromCurrencyCode = state.cryptoExchange.fromCurrencyCode ? state.cryptoExchange.fromCurrencyCode : undefined
   const toCurrencyCode = state.cryptoExchange.toCurrencyCode ? state.cryptoExchange.toCurrencyCode : undefined
+
   if (!fromCurrencyCode || !toCurrencyCode) {
+    // this funciton is solely for flow
     return
   }
-  if (toCurrencyCode === fromCurrencyCode) {
-    return
-  }
-
-  if (fromNativeAmount === '0' && toNativeAmount === '0') {
-    // there is no reason to get a transaction when the amount is 0
-    return
-  }
-
   const isAboveLimit = bns.gt(fromNativeAmount, nativeMax)
   const isBelowLimit = bns.lt(fromNativeAmount, nativeMin)
 
@@ -288,6 +205,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
     const errorMessage = sprintf(s.strings.amount_above_limit, displayMax, currentCurrencyDenomination.name)
     console.log(`getShiftTransaction:above limit`)
     dispatch({ type: 'GENERIC_SHAPE_SHIFT_ERROR', data: errorMessage })
+    Actions.popTo(Constants.EXCHANGE_SCENE)
     return
   }
   if (isBelowLimit) {
@@ -301,10 +219,11 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
     const errorMessage = sprintf(s.strings.amount_below_limit, displayMin, currentCurrencyDenomination.name)
     console.log(`getShiftTransaction:below limit`)
     dispatch({ type: 'GENERIC_SHAPE_SHIFT_ERROR', data: errorMessage })
+    Actions.popTo(Constants.EXCHANGE_SCENE)
     return
   }
 
-  const quoteNativeAmount = whichWallet === Constants.TO ? toNativeAmount : fromNativeAmount
+  const quoteNativeAmount = fromNativeAmount
   const whichWalletLiteral = whichWallet === Constants.TO ? 'to' : 'from'
   const quoteData: EdgeExchangeQuoteOptions = {
     fromCurrencyCode,
@@ -328,6 +247,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
   }
 
   if (error || !edgeCoinExchangeQuote) {
+    console.log('stop')
     throw error
   }
 
@@ -456,7 +376,12 @@ export const exchangeTimerExpired = () => (dispatch: Dispatch, getState: GetStat
   const state = getState()
   const hasFrom = state.cryptoExchange.fromWallet ? state.cryptoExchange.fromWallet : null
   const hasTo = state.cryptoExchange.toWallet ? state.cryptoExchange.toWallet : null
+  const info = {
+    whichWallet: Constants.FROM,
+    primaryExchangeAmount: state.cryptoExchange.fromDisplayAmount,
+    primaryNativeAmount: state.cryptoExchange.fromNativeAmount
+  }
   if (hasFrom && hasTo) {
-    dispatch(getShiftTransaction(hasFrom, hasTo, Constants.FROM, true))
+    dispatch(getShiftTransaction(hasFrom, hasTo, Constants.FROM, info))
   }
 }
