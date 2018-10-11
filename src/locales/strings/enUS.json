@@ -96,7 +96,7 @@
   "fragment_wallets_export_transactions": "Export Transactions",
   "fragment_wallets_header": "My Wallets",
   "fragment_wallets_rename_wallet": "Rename Wallet",
-  "fragment_wallets_resync_wallet_first_confirm_message_mobile": "Are you sure you want to resync ",
+  "fragment_wallets_resync_wallet_first_confirm_message_mobile": "Are you sure you want to resync \n",
   "fragment_wallets_split_wallet_first_confirm_message_mobile": "Are you sure you want to split ",
   "fragment_wallets_get_seed_wallet_first_confirm_message_mobile": "Are you sure you want to reveal the private seed for the following wallet?",
   "fragmet_wallets_delete_wallet_first_confirm_message_mobile": "Are you sure you want to delete \n",

@@ -8,6 +8,7 @@ import * as CORE_SELECTORS from '../../../../../Core/selectors.js'
 import type { Dispatch, GetState } from '../../../../../ReduxTypes'
 import * as WALLET_SELECTORS from '../../../../selectors.js'
 import { showDeleteWalletModal } from '../DeleteModal/actions'
+import { showResyncWalletModal } from '../ResyncModal/actions'
 
 export const walletRowOption = (walletId: string, option: string, archived: boolean) => {
   if (option === 'archive' && archived) {
@@ -76,7 +77,7 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
 
     case 'resync': {
       return (dispatch: Dispatch) => {
-        dispatch({ type: 'OPEN_RESYNC_WALLET_MODAL', data: { walletId } })
+        dispatch(showResyncWalletModal(walletId))
       }
     }
 

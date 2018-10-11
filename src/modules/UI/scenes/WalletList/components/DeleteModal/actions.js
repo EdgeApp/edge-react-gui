@@ -3,7 +3,7 @@
 import { createYesNoModal } from 'edge-components'
 import React from 'react'
 
-import * as Constants from '../../../../../../constants/indexConstants.js'
+import { DELETE } from '../../../../../../constants/indexConstants.js'
 import s from '../../../../../../locales/strings.js'
 import { deleteWalletRequest } from '../../../../../Core/Account/api.js'
 import { getAccount, getWalletName } from '../../../../../Core/selectors.js'
@@ -26,7 +26,7 @@ export const showDeleteWalletModal = (walletId: string) => async (dispatch: Disp
         <Text style={{ fontWeight: 'bold', textAlign: 'center' }}>{`${walletName}?`}</Text>
       </Text>
     ),
-    icon: <OptionIcon iconName={Constants.DELETE} />,
+    icon: <OptionIcon iconName={DELETE} />,
     noButtonText: s.strings.string_cancel_cap,
     yesButtonText: s.strings.string_delete
   })
