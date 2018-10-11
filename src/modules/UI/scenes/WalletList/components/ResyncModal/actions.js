@@ -42,6 +42,11 @@ export const showResyncWalletModal = (walletId: string) => async (dispatch: Disp
   }
 }
 
+export type OpenResyncWalletModalAction = {
+  type: 'OPEN_RESYNC_WALLET_MODAL',
+  data: { walletId: string }
+}
+
 export type CloseResyncWalletModalAction = {
   type: 'CLOSE_RESYNC_WALLET_MODAL'
 }

@@ -7,8 +7,9 @@ import * as ACCOUNT_API from '../../../../../Core/Account/api.js'
 import * as CORE_SELECTORS from '../../../../../Core/selectors.js'
 import type { Dispatch, GetState } from '../../../../../ReduxTypes'
 import * as WALLET_SELECTORS from '../../../../selectors.js'
-import { showDeleteWalletModal } from '../DeleteModal/actions'
-import { showResyncWalletModal } from '../ResyncModal/actions'
+import { showDeleteWalletModal } from '../DeleteModal/actions.js'
+import { showResyncWalletModal } from '../ResyncModal/actions.js'
+import { showSplitWalletModal } from '../SplitModal/actions.js'
 
 export const walletRowOption = (walletId: string, option: string, archived: boolean) => {
   if (option === 'archive' && archived) {
@@ -83,7 +84,7 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
 
     case 'split': {
       return (dispatch: Dispatch) => {
-        dispatch({ type: 'OPEN_SPLIT_WALLET_MODAL', data: { walletId } })
+        dispatch(showSplitWalletModal(walletId))
       }
     }
 
