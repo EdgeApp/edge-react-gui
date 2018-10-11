@@ -7,7 +7,7 @@ import { colors } from '../../../../theme/variables/airbitz'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
 import type { SubcategorySearchResultData } from '../../../../types.js'
 import FormattedText from '../../components/FormattedText'
-import SearchResults from '../../components/SearchResults/index'
+import SearchResults from '../../components/SearchResultsScaled'
 import styles from './style'
 
 const categories = ['income', 'expense', 'exchange', 'transfer']

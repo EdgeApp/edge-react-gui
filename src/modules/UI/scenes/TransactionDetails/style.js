@@ -36,7 +36,7 @@ export const styles = {
   },
   dataArea: {
     position: 'relative',
-    top: scale(20),
+    top: scale(34),
     flexDirection: 'column'
   },
   payeeNameArea: {
@@ -78,8 +78,8 @@ export const styles = {
   amountAreaCryptoRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingTop: 10,
-    paddingBottom: 10,
+    paddingTop: scale(10),
+    paddingBottom: scale(20),
     paddingLeft: scale(15),
     paddingRight: scale(15)
   },
@@ -92,7 +92,7 @@ export const styles = {
     fontSize: scale(14)
   },
   amountAreaMiddle: {
-    paddingTop: 10,
+    paddingTop: scale(10),
     flex: 3,
     alignSelf: 'center',
     justifyContent: 'center',
@@ -156,15 +156,15 @@ export const styles = {
     fontSize: scale(14)
   },
   categoryRow: {
-    paddingTop: 15,
-    marginTop: 10,
+    paddingTop: scale(15),
+    marginTop: scale(10),
     flexDirection: 'row',
     paddingLeft: scale(15),
     paddingRight: scale(15),
     height: scale(44)
   },
   modalCategoryRow: {
-    paddingTop: 8,
+    paddingTop: scale(8),
     flexDirection: 'row',
     paddingLeft: scale(15),
     paddingRight: scale(15),
@@ -210,8 +210,8 @@ export const styles = {
     fontFamily: THEME.FONTS.DEFAULT
   },
   notesRow: {
-    paddingBottom: 20,
-    paddingTop: 14,
+    paddingBottom: scale(20),
+    paddingTop: scale(14),
     paddingLeft: scale(15),
     paddingRight: scale(15)
   },
@@ -230,7 +230,7 @@ export const styles = {
   },
   footerArea: {
     backgroundColor: THEME.COLORS.GRAY_4,
-    paddingTop: 20,
+    paddingTop: scale(20),
     height: (PLATFORM.deviceHeight * 1) / 3 + 40,
     paddingLeft: scale(15),
     paddingRight: scale(15)
@@ -243,7 +243,7 @@ export const styles = {
   },
   advancedTxArea: {
     padding: scale(12),
-    paddingBottom: 12,
+    paddingBottom: scale(12),
     justifyContent: 'center',
     alignItems: 'center',
     height: scale(50)
@@ -251,8 +251,8 @@ export const styles = {
   advancedTxText: {
     color: THEME.COLORS.SECONDARY,
     fontSize: scale(14),
-    paddingTop: 12,
-    paddingBottom: 12,
+    paddingTop: scale(12),
+    paddingBottom: scale(12),
     alignSelf: 'center'
   },
 
