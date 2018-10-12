@@ -35,9 +35,6 @@ export type CryptoExchangeSceneComponentStateProps = {
   toFiatToCrypto: number,
   showWalletSelectModal: boolean,
 
-  // Exchange rate between crypto to crypto
-  exchangeRate: number,
-
   // The following props are used to populate the confirmation modal
   fromCurrencyCode: string,
   fromCurrencyIcon: string,
