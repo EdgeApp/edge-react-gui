@@ -7,15 +7,17 @@ import slowlog from 'react-native-slowlog'
 
 import * as Constants from '../../../../constants/indexConstants'
 import { getObjectDiff } from '../../../utils'
-import { Icon } from '../Icon/Icon.ui'
 
-type Props = {
+export type StateProps = {
   style: StyleSheet.Styles,
-  data: any,
-  icon: string,
-  iconType: string,
+  data: Array<Object>
+}
+
+export type DispatchProps = {
   onSelect: Function
 }
+
+type Props = StateProps & DispatchProps
 
 type State = {
   height: number,
@@ -75,20 +77,11 @@ class MenuDropDown extends Component<Props, State> {
     return (
       <View style={style.container}>
         <Menu style={style.menuButton} onSelect={this.props.onSelect}>
-          <MenuTrigger customStyles={style.menuTrigger}>{this.renderMenuIcon(style)}</MenuTrigger>
+          <MenuTrigger customStyles={style.menuTrigger} />
           <MenuOptions customStyles={style.menuOptions}>{this.renderMenuOptions(style)}</MenuOptions>
         </Menu>
       </View>
     )
-  }
-  renderMenuIcon = (style: StyleSheet.Styles) => {
-    if (this.props.icon) {
-      return (
-        <View style={style.menuIconWrap}>
-          <Icon style={style.icon} name={this.props.icon} size={style.icon.fontSize} type={this.props.iconType} />
-        </View>
-      )
-    }
   }
 }
 export { MenuDropDown }

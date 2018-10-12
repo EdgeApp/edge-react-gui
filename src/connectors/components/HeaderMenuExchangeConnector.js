@@ -6,10 +6,9 @@ import { connect } from 'react-redux'
 import { exchangeMax } from '../../actions/indexActions'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
 import type { Dispatch, State } from '../../modules/ReduxTypes.js'
 import { openHelpModal } from '../../modules/UI/components/HelpModal/actions'
-import { MenuDropDown } from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui.js'
+import { type DispatchProps, MenuDropDown, type StateProps } from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui.js'
 import * as Styles from '../../styles/indexStyles'
 import THEME from '../../theme/variables/airbitz'
 
@@ -17,16 +16,7 @@ export const dropDownStyle = {
   ...Styles.MenuDropDownStyleHeader,
   icon: { ...Styles.MenuDropDownStyle.icon, color: THEME.COLORS.WHITE }
 }
-export const mapStateToProps = (state: State) => {
-  let sourceWalletId, sourceWallet
-  if (state.cryptoExchange && state.cryptoExchange.fromWallet) {
-    sourceWalletId = state.cryptoExchange.fromWallet.id
-    sourceWallet = CORE_SELECTORS.getWallet(state, sourceWalletId)
-  } else {
-    sourceWalletId = ''
-    sourceWallet = null
-  }
-
+export const mapStateToProps = (state: State): StateProps => {
   const data = [
     {
       label: s.strings.dropdown_exchange_max_amount,
@@ -45,14 +35,11 @@ export const mapStateToProps = (state: State) => {
   ]
   return {
     style: dropDownStyle,
-    exchangeRate: state.cryptoExchange.exchangeRate,
-    data,
-    rightSide: true,
-    sourceWallet
+    data
   }
 }
 
-export const mapDispatchToProps = (dispatch: Dispatch) => ({
+export const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   onSelect: (value: Object) => {
     switch (value.title) {
       case Constants.HELP_VALUE:
