@@ -22,7 +22,6 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
   const fromWallet = state.cryptoExchange.fromWallet
   const toWallet = state.cryptoExchange.toWallet
 
-  let exchangeRate = 1
   let fromCurrencyCode, fromPrimaryInfo: GuiCurrencyInfo, fromButtonText: string, fromNativeAmount: string, fromExchangeAmount: string, fromFiatToCrypto: number
   if (fromWallet) {
     fromCurrencyCode = state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name
@@ -55,10 +54,6 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
     toFiatToCrypto = 1
   }
 
-  if (fromWallet && toWallet) {
-    exchangeRate = state.cryptoExchange.exchangeRate
-  }
-
   return {
     fromWallet: fromWallet || emptyGuiWallet,
     fromExchangeAmount,
@@ -72,7 +67,6 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
     toPrimaryInfo,
     toButtonText,
     toFiatToCrypto,
-    exchangeRate,
     fromDisplayAmount: state.cryptoExchange.fromDisplayAmount,
     toDisplayAmount: state.cryptoExchange.toDisplayAmount,
     fromCurrencyIcon: state.cryptoExchange.fromCurrencyIcon || '',

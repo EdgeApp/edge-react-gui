@@ -9,14 +9,10 @@ import { type Action } from '../modules/ReduxTypes.js'
 import { type GuiCurrencyInfo, type GuiWallet } from '../types.js'
 
 export type CryptoExchangeState = {
-  exchangeRate: number,
   nativeMax: string,
   nativeMin: string,
-  minerFee: string,
-  reverseExchange: number,
   reverseNativeMax: string,
   reverseNativeMin: string,
-  reverseMinerFee: string,
   fromWallet: GuiWallet | null,
   fromCurrencyCode: string | null,
   fromNativeAmount: string,
@@ -59,14 +55,10 @@ const dummyCurrencyInfo: GuiCurrencyInfo = {
 }
 
 const initialState = {
-  exchangeRate: 1,
   nativeMax: '0',
   nativeMin: '0',
-  minerFee: '0',
-  reverseExchange: 1,
   reverseNativeMax: '0',
   reverseNativeMin: '0',
-  reverseMinerFee: '0',
 
   fromWallet: null,
   fromCurrencyCode: null,
@@ -170,10 +162,8 @@ function cryptoExchangeInner (state = initialState, action: Action) {
       if (!action.data) throw new Error('Invalid action')
       const result = {
         ...state,
-        exchangeRate: action.data.rate,
         nativeMin: action.data.nativeMin,
-        nativeMax: action.data.nativeMax,
-        minerFee: action.data.minerFee
+        nativeMax: action.data.nativeMax
       }
       return result
     }
@@ -182,10 +172,8 @@ function cryptoExchangeInner (state = initialState, action: Action) {
       if (!action.data) throw new Error('Invalid action')
       const result = {
         ...state,
-        reverseExchange: action.data.rate,
         reverseNativeMin: action.data.nativeMin,
-        reverseNativeMax: action.data.nativeMax,
-        reverseMinerFee: action.data.minerFee
+        reverseNativeMax: action.data.nativeMax
       }
       return result
     }
@@ -335,17 +323,12 @@ function deepCopyState (state) {
   deepCopy.fromCurrencyIcon = state.toCurrencyIcon
   deepCopy.fromCurrencyIconDark = state.toCurrencyIconDark
 
-  deepCopy.exchangeRate = state.reverseExchange
-  deepCopy.reverseExchange = state.exchangeRate
-
   deepCopy.nativeMin = state.reverseNativeMin
   deepCopy.reverseNativeMin = state.nativeMin
 
   deepCopy.nativeMax = state.reverseNativeMax
   deepCopy.reverseNativeMax = state.nativeMax
 
-  deepCopy.minerFee = state.reverseMinerFee
-  deepCopy.reverseMinerFee = state.minerFee
   deepCopy.forceUpdateGuiCounter = state.forceUpdateGuiCounter + 1
 
   deepCopy.insufficientError = false
