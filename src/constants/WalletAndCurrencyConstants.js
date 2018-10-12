@@ -5,6 +5,23 @@ export const BITCOIN_WALLET = 'wallet:bitcoin'
 export const BITCOINCASH_WALLET = 'wallet:bitcoincash'
 export const MAX_TOKEN_CODE_CHARACTERS = 6
 
+export const CURRENCY_PLUGIN_NAMES = {
+  BTC: 'bitcoin',
+  BCH: 'bitcoincash',
+  BTG: 'bitcoingold',
+  DASH: 'dash',
+  DGB: 'digibyte',
+  ETH: 'ethereum',
+  FTC: 'feathercoin',
+  LTC: 'litecoin',
+  XMR: 'monero',
+  QTUM: 'qtum',
+  XRP: 'ripple',
+  UFO: 'ufo',
+  VTC: 'vertcoin',
+  XZC: 'zcoin'
+}
+
 export const USD_FIAT = 'iso:USD'
 export const getSymbolFromCurrency = (currencyCode: string) => {
   if (typeof currencyCode !== 'string') return ''

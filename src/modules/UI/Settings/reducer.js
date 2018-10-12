@@ -39,34 +39,28 @@ export const initialState = {
   }
 }
 
+export type CurrencySetting = {
+  denomination: string
+}
+
 export type SettingsState = {
-  BCH: {
-    denomination: string
-  },
-  BTC: {
-    denomination: string
-  },
-  DASH: {
-    denomination: string
-  },
-  FTC: {
-    denomination: string
-  },
-  ETH: {
-    denomination: string
-  },
-  LTC: {
-    denomination: string
-  },
-  UFO: {
-    denomination: string
-  },
-  REP: {
-    denomination: string
-  },
-  WINGS: {
-    denomination: string
-  },
+  BCH: CurrencySetting,
+  BTC: CurrencySetting,
+  DASH: CurrencySetting,
+  FTC: CurrencySetting,
+  ETH: CurrencySetting,
+  LTC: CurrencySetting,
+  VTC: CurrencySetting,
+  XZC: CurrencySetting,
+  QTUM: CurrencySetting,
+  UFO: CurrencySetting,
+  XMR: CurrencySetting,
+  XRP: CurrencySetting,
+  REP: CurrencySetting,
+  DOGE: CurrencySetting,
+  DGB: CurrencySetting,
+  WINGS: CurrencySetting,
+
   account: ?Object,
   autoLogoutTimeInSeconds: number,
   bluetoothMode: boolean,
@@ -494,19 +488,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       return {
         ...state,
         bluetoothMode
-      }
-    }
-
-    case 'UI/SETTINGS/SET_BITCOIN_OVERRIDE_SERVER': {
-      if (!action.data) throw new Error('Invalid action')
-      const { overrideServer } = action.data
-      const BTC = state['BTC']
-      return {
-        ...state,
-        BTC: {
-          ...BTC,
-          overrideServer
-        }
       }
     }
 

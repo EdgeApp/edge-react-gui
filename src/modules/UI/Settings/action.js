@@ -65,12 +65,6 @@ export const setSettingsLock = (bool: boolean) => ({
   data: bool
 })
 
-// BTC Settings
-export const setBitcoinOverrideServer = (overrideServer: string) => ({
-  type: 'UI/SETTINGS/SET_BITCOIN_OVERRIDE_SERVER',
-  data: { overrideServer }
-})
-
 // Denomination
 export const setDenominationKey = (currencyCode: string, denominationKey: string) => ({
   type: 'UI/SETTINGS/SET_DENOMINATION_KEY',

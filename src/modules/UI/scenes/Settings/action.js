@@ -1,15 +1,16 @@
 // @flow
 
-import { showYesNoModal } from 'edge-components'
+import { createYesNoModal } from 'edge-components'
 import type { EdgeAccount } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import React from 'react'
 import { Image } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
-import type { Dispatch, GetState } from '../../../../../src/modules/ReduxTypes.js'
+import type { Dispatch, GetState, State } from '../../../../../src/modules/ReduxTypes.js'
 import { keepOtp } from '../../../../actions/OtpActions.js'
 import iconImage from '../../../../assets/images/otp/OTP-badge_sm.png'
+import { CURRENCY_PLUGIN_NAMES } from '../../../../constants/indexConstants.js'
 import s from '../../../../locales/strings.js'
 import { restoreWalletsRequest } from '../../../Core/Account/api.js'
 import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'
@@ -44,11 +45,6 @@ const setMerchantModeStart = (merchantMode: boolean) => ({
 const setBluetoothModeStart = (bluetoothMode: boolean) => ({
   type: 'UI/SCENES/SETTINGS/SET_BLUETOOTH_MODE_START',
   data: { bluetoothMode }
-})
-
-const setBitcoinOverrideServerStart = (overrideServer: string) => ({
-  type: 'UI/SCENES/SETTINGS/SET_BITCOIN_OVERRIDE_SERVER_START',
-  data: { overrideServer }
 })
 
 export const setPINModeRequest = (pinMode: boolean) => (dispatch: Dispatch, getState: GetState) => {
@@ -183,12 +179,6 @@ export const setDenominationKeyRequest = (currencyCode: string, denominationKey:
     .catch(onError)
 }
 
-export const setBitcoinOverrideServerRequest = (overrideServer: string) => (dispatch: Dispatch) => {
-  dispatch(setBitcoinOverrideServerStart(overrideServer))
-
-  dispatch(SETTINGS_ACTIONS.setBitcoinOverrideServer(overrideServer))
-}
-
 // touch id interaction
 export const updateTouchIdEnabled = (arg: boolean, account: EdgeAccount) => async (dispatch: Dispatch, getState: GetState) => {
   const folder = CORE_SELECTORS.getFolder(getState())
@@ -227,7 +217,7 @@ export function togglePinLoginEnabled (pinLoginEnabled: boolean) {
 
 export const showReEnableOtpModal = () => async (dispatch: Dispatch) => {
   // Use `showModal` to put the modal component on screen:
-  const modal = showYesNoModal({
+  const modal = createYesNoModal({
     title: s.strings.title_otp_keep_modal,
     message: s.strings.otp_modal_reset_description,
     icon: <Image source={iconImage} />,
@@ -239,5 +229,44 @@ export const showReEnableOtpModal = () => async (dispatch: Dispatch) => {
     // true on positive, false on negative
     // let 2FA expire
     dispatch(keepOtp())
+  }
+}
+
+export const enableCustomNodes = (currencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
+  const state: State = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
+  const currencyPlugin = account.currencyTools[currencyPluginName]
+  try {
+    await currencyPlugin.changePluginSettings({ disableFetchingServers: true })
+  } catch (e) {
+    console.log(e)
+    throw new Error(e)
+  }
+}
+
+export const disableCustomNodes = (currencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
+  const state: State = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
+  const currencyPlugin = account.currencyTools[currencyPluginName]
+  try {
+    await currencyPlugin.changePluginSettings({ disableFetchingServers: false })
+  } catch (e) {
+    console.log(e)
+    throw new Error(e)
+  }
+}
+
+export const saveCustomNodesList = (currencyCode: string, nodesList: Array<string>) => async (dispatch: Dispatch, getState: GetState) => {
+  const state: State = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
+  const currencyPlugin = account.currencyTools[currencyPluginName]
+  try {
+    await currencyPlugin.changePluginSettings({ electrumServers: nodesList, disableFetchingServers: true })
+  } catch (e) {
+    console.log(e)
+    throw new Error('Unable to save plugin setting')
   }
 }

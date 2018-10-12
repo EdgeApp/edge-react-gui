@@ -2894,9 +2894,9 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-components@^0.0.6:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/edge-components/-/edge-components-0.0.6.tgz#5fa9b9eb6204638e7d2c85db0729895473dee45f"
+edge-components@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/edge-components/-/edge-components-0.0.7.tgz#664c4a43597b3493347c958d1c67a3e862eb71a7"
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
