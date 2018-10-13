@@ -118,6 +118,8 @@ function makeCommonPost (buildObj) {
   buildObj.version = packageJson.version
   if (buildObj.repoBranch === 'develop') {
     buildObj.version = packageJson.version + '-d'
+  } else if (buildObj.repoBranch === 'test') {
+    buildObj.version = packageJson.version + '-t'
   } else {
     buildObj.version = packageJson.version
   }
@@ -196,11 +198,11 @@ function buildIos (buildObj) {
   cmdStr = `security unlock-keychain -p '${process.env.KEYCHAIN_PASSWORD || ''}' "${process.env.HOME || ''}/Library/Keychains/login.keychain"`
   call(cmdStr)
 
-  call(`security set-keychain-settings -t 7200 -l ${process.env.HOME || ''}/Library/Keychains/login.keychain`)
+  call(`security set-keychain-settings -l ${process.env.HOME || ''}/Library/Keychains/login.keychain`)
 
   call('agvtool new-marketing-version ' + buildObj.version)
   call('agvtool new-version -all ' + buildObj.buildNum)
-  cmdStr = `xcodebuild -workspace ${buildObj.xcodeWorkspace} -scheme ${buildObj.xcodeScheme} archive`
+  cmdStr = `xcodebuild -allowProvisioningUpdates -workspace ${buildObj.xcodeWorkspace} -scheme ${buildObj.xcodeScheme} archive`
   cmdStr = cmdStr + ' | xcpretty && exit ${PIPE' + 'STATUS[0]}'
   call(cmdStr)
 
@@ -236,7 +238,7 @@ function buildIos (buildObj) {
   cmdStr = `security unlock-keychain -p '${process.env.KEYCHAIN_PASSWORD || ''}'  "${process.env.HOME || ''}/Library/Keychains/login.keychain"`
   call(cmdStr)
 
-  call(`security set-keychain-settings -t 7200 -l ${process.env.HOME || ''}/Library/Keychains/login.keychain`)
+  call(`security set-keychain-settings -l ${process.env.HOME || ''}/Library/Keychains/login.keychain`)
 
   cmdStr = `xcodebuild -exportArchive -allowProvisioningUpdates -archivePath "${buildDir}/${archiveDir}" -exportPath ${
     buildObj.tmpDir
