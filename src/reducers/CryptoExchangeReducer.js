@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeExchangeQuote } from 'edge-core-js'
+import type { EdgeExchangeQuote, EdgeSwapCurrencies } from 'edge-core-js'
 import { type Reducer } from 'redux'
 
 import * as Constants from '../constants/indexConstants'
@@ -35,7 +35,7 @@ export type CryptoExchangeState = {
   genericShapeShiftError: Error | null,
   changeWallet: 'none',
   fee: any,
-  availableShapeShiftTokens: Object,
+  availableShapeShiftTokens: EdgeSwapCurrencies,
   shiftPendingTransaction: boolean,
   quoteExpireDate: Date | null,
   quote: EdgeExchangeQuote | null

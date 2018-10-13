@@ -237,7 +237,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
   let error
   let edgeCoinExchangeQuote
   try {
-    edgeCoinExchangeQuote = await account.getExchangeQuote(quoteData)
+    edgeCoinExchangeQuote = await account.fetchSwapQuote(quoteData)
   } catch (e) {
     if (e.message === 'InsufficientFundsError') {
       dispatch(processMakeSpendError(e))
@@ -341,7 +341,7 @@ export const getShapeShiftTokens = () => async (dispatch: Dispatch, getState: Ge
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
   try {
-    const response = await account.getExchangeCurrencies() // await fetch('https://shapeshift.io/getcoins',
+    const response = await account.fetchSwapCurrencies() // await fetch('https://shapeshift.io/getcoins',
     dispatch({ type: 'ON_AVAILABLE_SHAPE_SHIFT_TOKENS', data: response })
   } catch (error) {
     dispatch({ type: 'ON_AVAILABLE_SHAPE_SHIFT_TOKENS', data: [] })
