@@ -9,10 +9,6 @@ import { type Action } from '../modules/ReduxTypes.js'
 import { type GuiCurrencyInfo, type GuiWallet } from '../types.js'
 
 export type CryptoExchangeState = {
-  nativeMax: string,
-  nativeMin: string,
-  reverseNativeMax: string,
-  reverseNativeMin: string,
   fromWallet: GuiWallet | null,
   fromCurrencyCode: string | null,
   fromNativeAmount: string,
@@ -55,11 +51,6 @@ const dummyCurrencyInfo: GuiCurrencyInfo = {
 }
 
 const initialState = {
-  nativeMax: '0',
-  nativeMin: '0',
-  reverseNativeMax: '0',
-  reverseNativeMin: '0',
-
   fromWallet: null,
   fromCurrencyCode: null,
   fromNativeAmount: '0',
@@ -156,26 +147,6 @@ function cryptoExchangeInner (state = initialState, action: Action) {
         walletListModalVisible: true,
         changeWallet: action.data
       }
-    }
-
-    case 'UPDATE_CRYPTO_EXCHANGE_INFO': {
-      if (!action.data) throw new Error('Invalid action')
-      const result = {
-        ...state,
-        nativeMin: action.data.nativeMin,
-        nativeMax: action.data.nativeMax
-      }
-      return result
-    }
-
-    case 'UPDATE_CRYPTO_REVERSE_EXCHANGE_INFO': {
-      if (!action.data) throw new Error('Invalid action')
-      const result = {
-        ...state,
-        reverseNativeMin: action.data.nativeMin,
-        reverseNativeMax: action.data.nativeMax
-      }
-      return result
     }
 
     case 'UPDATE_SHIFT_TRANSACTION_FEE': {
@@ -322,12 +293,6 @@ function deepCopyState (state) {
   deepCopy.fromWalletPrimaryInfo = state.toWalletPrimaryInfo
   deepCopy.fromCurrencyIcon = state.toCurrencyIcon
   deepCopy.fromCurrencyIconDark = state.toCurrencyIconDark
-
-  deepCopy.nativeMin = state.reverseNativeMin
-  deepCopy.reverseNativeMin = state.nativeMin
-
-  deepCopy.nativeMax = state.reverseNativeMax
-  deepCopy.reverseNativeMax = state.nativeMax
 
   deepCopy.forceUpdateGuiCounter = state.forceUpdateGuiCounter + 1
 

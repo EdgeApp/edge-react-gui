@@ -9,7 +9,6 @@ import { sprintf } from 'sprintf-js'
 
 import * as Constants from '../constants/indexConstants'
 import s from '../locales/strings.js'
-import * as CONTEXT_API from '../modules/Core/Context/api'
 import * as CORE_SELECTORS from '../modules/Core/selectors'
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
 import type { Dispatch, GetState } from '../modules/ReduxTypes'
@@ -183,43 +182,11 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
   const destWallet = CORE_SELECTORS.getWallet(state, toWallet.id)
   const srcWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
   const fromNativeAmount = info.primaryNativeAmount
-  const { nativeMax, nativeMin } = state.cryptoExchange
   const fromCurrencyCode = state.cryptoExchange.fromCurrencyCode ? state.cryptoExchange.fromCurrencyCode : undefined
   const toCurrencyCode = state.cryptoExchange.toCurrencyCode ? state.cryptoExchange.toCurrencyCode : undefined
 
   if (!fromCurrencyCode || !toCurrencyCode) {
     // this funciton is solely for flow
-    return
-  }
-  const isAboveLimit = bns.gt(fromNativeAmount, nativeMax)
-  const isBelowLimit = bns.lt(fromNativeAmount, nativeMin)
-
-  if (isAboveLimit) {
-    const settings = SETTINGS_SELECTORS.getSettings(state)
-    const currentCurrencyDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, fromCurrencyCode)
-
-    const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, fromCurrencyCode)
-    // $FlowFixMe
-    const nativeToDisplayRatio = displayDenomination.multiplier
-    const displayMax = UTILS.convertNativeToDisplay(nativeToDisplayRatio)(nativeMax)
-    const errorMessage = sprintf(s.strings.amount_above_limit, displayMax, currentCurrencyDenomination.name)
-    console.log(`getShiftTransaction:above limit`)
-    dispatch({ type: 'GENERIC_SHAPE_SHIFT_ERROR', data: errorMessage })
-    Actions.popTo(Constants.EXCHANGE_SCENE)
-    return
-  }
-  if (isBelowLimit) {
-    const settings = SETTINGS_SELECTORS.getSettings(state)
-    const currentCurrencyDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, fromCurrencyCode)
-
-    const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, fromCurrencyCode)
-    // $FlowFixMe
-    const nativeToDisplayRatio = displayDenomination.multiplier
-    const displayMin = UTILS.convertNativeToDisplay(nativeToDisplayRatio)(nativeMin)
-    const errorMessage = sprintf(s.strings.amount_below_limit, displayMin, currentCurrencyDenomination.name)
-    console.log(`getShiftTransaction:below limit`)
-    dispatch({ type: 'GENERIC_SHAPE_SHIFT_ERROR', data: errorMessage })
-    Actions.popTo(Constants.EXCHANGE_SCENE)
     return
   }
 
@@ -241,6 +208,38 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
   } catch (e) {
     if (e.message === 'InsufficientFundsError') {
       dispatch(processMakeSpendError(e))
+      return
+    }
+    if (e.name === errorNames.SwapAboveLimitError) {
+      const nativeMax: string = e.nativeMax
+
+      const settings = SETTINGS_SELECTORS.getSettings(state)
+      const currentCurrencyDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, fromCurrencyCode)
+
+      const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, fromCurrencyCode)
+      // $FlowFixMe
+      const nativeToDisplayRatio = displayDenomination.multiplier
+      const displayMax = UTILS.convertNativeToDisplay(nativeToDisplayRatio)(nativeMax)
+      const errorMessage = sprintf(s.strings.amount_above_limit, displayMax, currentCurrencyDenomination.name)
+      console.log(`getShiftTransaction:above limit`)
+      dispatch({ type: 'GENERIC_SHAPE_SHIFT_ERROR', data: errorMessage })
+      Actions.popTo(Constants.EXCHANGE_SCENE)
+      return
+    }
+    if (e.name === errorNames.SwapBelowLimitError) {
+      const nativeMin: string = e.nativeMin
+
+      const settings = SETTINGS_SELECTORS.getSettings(state)
+      const currentCurrencyDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, fromCurrencyCode)
+
+      const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, fromCurrencyCode)
+      // $FlowFixMe
+      const nativeToDisplayRatio = displayDenomination.multiplier
+      const displayMin = UTILS.convertNativeToDisplay(nativeToDisplayRatio)(nativeMin)
+      const errorMessage = sprintf(s.strings.amount_below_limit, displayMin, currentCurrencyDenomination.name)
+      console.log(`getShiftTransaction:below limit`)
+      dispatch({ type: 'GENERIC_SHAPE_SHIFT_ERROR', data: errorMessage })
+      Actions.popTo(Constants.EXCHANGE_SCENE)
       return
     }
     error = e
@@ -290,51 +289,11 @@ export const selectToFromWallet = (type: string, wallet: GuiWallet, currencyCode
     primaryInfo
   }
 
-  let fromCurrencyCode = state.cryptoExchange.fromCurrencyCode
-  let toCurrencyCode = state.cryptoExchange.toCurrencyCode
   if (type === 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE') {
     dispatch({ type: 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE', data })
-    fromCurrencyCode = cc
   } else {
     dispatch({ type: 'SELECT_TO_WALLET_CRYPTO_EXCHANGE', data })
-    toCurrencyCode = cc
   }
-
-  if (fromCurrencyCode && toCurrencyCode) {
-    dispatch(getCryptoExchangeRate(fromCurrencyCode, toCurrencyCode))
-  }
-}
-
-export const getCryptoExchangeRate = (fromCurrencyCode: string, toCurrencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
-  if (fromCurrencyCode === toCurrencyCode) {
-    dispatch({ type: 'UPDATE_CRYPTO_EXCHANGE_RATE', data: 1 })
-    return
-  }
-
-  if (!fromCurrencyCode || !toCurrencyCode) {
-    dispatch({ type: 'UPDATE_CRYPTO_EXCHANGE_RATE', data: 1 })
-    return
-  }
-
-  const state = getState()
-  const context = CORE_SELECTORS.getContext(state)
-  CONTEXT_API.getExchangeSwapInfo(context, fromCurrencyCode, toCurrencyCode)
-    .then(response => {
-      dispatch({ type: 'UPDATE_CRYPTO_EXCHANGE_INFO', data: response })
-      return response
-    })
-    .catch(error => {
-      console.log(error)
-    })
-
-  CONTEXT_API.getExchangeSwapInfo(context, toCurrencyCode, fromCurrencyCode)
-    .then(response => {
-      dispatch({ type: 'UPDATE_CRYPTO_REVERSE_EXCHANGE_INFO', data: response })
-      return response
-    })
-    .catch(error => {
-      console.log(error)
-    })
 }
 
 export const getShapeShiftTokens = () => async (dispatch: Dispatch, getState: GetState) => {
