@@ -12,8 +12,8 @@ Edge also provides a cryptocurrency exchange. Easily swap your currencies for ot
 
 • Zero-knowledge & zero-access to user funds, keys, or transaction data by Edge or 3rd parties
 • Simple account creation using just a login & password (no printing of PDFs, writing down pass phrases, or adding encryption settings)
-* Biometric TouchID and FaceID login
-• Hierarchical Deterministic wallets with changing addresses per transaction
+* Inicio de sesión biométrico con TouchID y FaceID
+• Carteras jerárquicas deterministas con cambio de direcciones para cada transacción
 • Decentralized server architecture. Wallets work even if Edge servers are down.
 • Open-source code. Available at https://github.com/EdgeApp
 
