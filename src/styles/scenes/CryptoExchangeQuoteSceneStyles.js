@@ -20,13 +20,17 @@ const CryptoExchangeQuoteSceneStyles = {
   },
   bottomRow: {
     flex: 1,
-    padding: '5%'
+    padding: '5%',
+    alignItems: 'center'
   },
   slideContainer: {
-    height: scale(35)
+    height: scale(35),
+    width: 270
   },
   logoImage: {
+    position: 'relative',
     width: '80%',
+    height: '100%',
     resizeMode: 'contain'
   },
   confirmText: {

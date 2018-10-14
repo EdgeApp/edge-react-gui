@@ -32,7 +32,7 @@ export const rawStyles = {
     position: 'absolute',
     color: THEME.COLORS.WHITE,
     alignSelf: 'center',
-    top: PLATFORM.deviceWidth >= 320 ? scale(19) : scale(16)
+    top: PLATFORM.deviceWidth >= 320 ? 19 : 16
   },
   debug
 }
