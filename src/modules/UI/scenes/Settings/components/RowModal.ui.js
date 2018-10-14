@@ -11,7 +11,8 @@ import styles, { styles as styleRaw } from '../style'
 export type Props = {
   leftText: string,
   rightText: string,
-  onPress: () => void
+  onPress: () => void,
+  disabled?: boolean
 }
 export default class RowModal extends Component<Props> {
   constructor (props: any) {
@@ -25,7 +26,12 @@ export default class RowModal extends Component<Props> {
   }
   render () {
     return (
-      <TouchableHighlight style={[styles.settingsRowContainer]} disabled={false} underlayColor={styleRaw.underlay.color} onPress={this.props.onPress}>
+      <TouchableHighlight
+        style={[styles.settingsRowContainer]}
+        disabled={this.props.disabled || false}
+        underlayColor={styleRaw.underlay.color}
+        onPress={this.props.onPress}
+      >
         <View style={[styles.settingsRowTextRow, b('red')]}>
           <View style={[styles.settingsRowLeftContainer, b('blue')]}>
             <T style={[styles.settingsRowLeftText, b('green')]}>{this.props.leftText}</T>

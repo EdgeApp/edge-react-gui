@@ -20,6 +20,13 @@ export const styles = {
     height: '100%',
     backgroundColor: THEME.COLORS.WHITE
   },
+  titleStyle: {
+    alignSelf: 'center',
+    fontSize: 20,
+    color: THEME.COLORS.WHITE,
+    fontFamily: THEME.FONTS.DEFAULT,
+    marginLeft: 8
+  },
   listStyle: {
     height: 100
   },
@@ -121,12 +128,17 @@ export const styles = {
   headerText: {
     fontSize: 18,
     color: THEME.COLORS.WHITE,
-    backgroundColor: THEME.COLORS.TRANSPARENT,
-    marginLeft: 16
+    backgroundColor: THEME.COLORS.TRANSPARENT
   },
   headerIcon: {
     backgroundColor: THEME.COLORS.TRANSPARENT,
     fontSize: 22
+  },
+  currencyHeaderIcon: {
+    height: 25,
+    width: 25,
+    resizeMode: 'contain',
+    marginRight: 12
   },
   underlay: {
     color: 'rgba(0,0,0,0)'

@@ -25,6 +25,7 @@ exports[`CurrencySettings should render 1`] = `
         }
       }
     >
+      
       <Gradient
         style={
           Array [
@@ -51,27 +52,12 @@ exports[`CurrencySettings should render 1`] = `
               }
             }
           >
-            <Image
-              source={
-                Object {
-                  "uri": "THIS IS A LOGO",
-                }
-              }
-              style={
-                Object {
-                  "height": 25,
-                  "resizeMode": "contain",
-                  "width": 25,
-                }
-              }
-            />
             <FormattedText
               style={
                 Object {
                   "backgroundColor": "transparent",
                   "color": "#FFFFFF",
                   "fontSize": 18,
-                  "marginLeft": 16,
                 }
               }
             >
@@ -186,6 +172,7 @@ exports[`CurrencySettings should render 1`] = `
           onPress={[Function]}
         />
       </RadioRows>
+      
     </Component>
   </Component>
 </SafeAreaViewComponent>

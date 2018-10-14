@@ -37,6 +37,12 @@ export const getCurrencySettings = (state: State, currencyCode: string) => {
   return currencySettings
 }
 
+export const getCryptocurrencySettings = (state: State, currencyCode: string) => {
+  const settings = getSettings(state)
+  const currencySettings = settings[currencyCode]
+  return currencySettings
+}
+
 export const getDenominations = (state: State, currencyCode: string): Array<EdgeDenomination> => {
   const currencySettings = getCurrencySettings(state, currencyCode)
   const denominations = currencySettings.denominations
