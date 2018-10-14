@@ -2900,9 +2900,9 @@ edge-components@^0.0.7:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@0.12.1:
-  version "0.12.1"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.12.1.tgz#70740b6a7055983120cc0c4c7fd85815b3ae57fc"
+edge-core-js@0.12.5:
+  version "0.12.5"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.12.5.tgz#79499f1b3a7ae5bc1ddc03088158162cfa027d64"
   dependencies:
     "@babel/runtime" "^7.0.0"
     aes-js "^3.1.0"
@@ -2925,7 +2925,7 @@ edge-core-js@0.12.1:
     scrypt-js "^2.0.3"
     utf8 "^3.0.0"
     ws "^5.1.1"
-    yaob "^0.3.0"
+    yaob "^0.3.1"
 
 edge-currency-accountbased@^0.0.9-beta.3:
   version "0.0.9-beta.3"
@@ -9658,9 +9658,9 @@ yallist@^3.0.0, yallist@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-3.0.2.tgz#8452b4bb7e83c7c188d8041c1a837c773d6d8bb9"
 
-yaob@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/yaob/-/yaob-0.3.0.tgz#1a98b3e00d71ae5e09092a80fe9b027f7000d4ca"
+yaob@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/yaob/-/yaob-0.3.1.tgz#fb59c4ed7cd79877e850ca1bcf42d0e0ebff11b0"
 
 yargs-parser@^5.0.0:
   version "5.0.0"
