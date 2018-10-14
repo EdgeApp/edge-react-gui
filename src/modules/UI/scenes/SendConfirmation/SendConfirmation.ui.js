@@ -65,11 +65,11 @@ export type SendConfirmationDispatchProps = {
   uniqueIdentifierButtonPressed: () => void
 }
 
-type routerParam = {
+type SendConfirmationRouterParams = {
   data: string // This is passed by the react-native-router-flux when you put a parameter on Action.route()
 }
 
-type Props = SendConfirmationStateProps & SendConfirmationDispatchProps & routerParam
+type Props = SendConfirmationStateProps & SendConfirmationDispatchProps & SendConfirmationRouterParams
 
 type State = {|
   secondaryDisplayDenomination: GuiDenomination,
