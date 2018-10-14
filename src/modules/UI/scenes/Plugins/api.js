@@ -97,7 +97,7 @@ export class PluginBridge {
     return new Promise((resolve, reject) => {
       reject(new Error('not implemented'))
       /*
-      Actions.sendConfirmation({
+      Actions[SEND_CONFIRMATION]({
         abcSpendInfo: {spendTargets},
         finishCallback: (error, abcTransaction) => {
           (error) ? reject(error) : resolve(abcTransaction)

@@ -8,7 +8,7 @@ import type { Dispatch, State } from '../modules/ReduxTypes.js'
 
 export const mapStateToProps = (state: State) => ({
   isActive: state.ui.scenes.uniqueIdentifierModal.isActive,
-  uniqueIdentifier: state.ui.scenes.uniqueIdentifierModal.uniqueIdentifier || state.ui.scenes.sendConfirmation.parsedUri.uniqueIdentifier
+  uniqueIdentifier: state.ui.scenes.uniqueIdentifierModal.uniqueIdentifier || state.ui.scenes.sendConfirmation.guiMakeSpendInfo.uniqueIdentifier
 })
 export const mapDispatchToProps = (dispatch: Dispatch, ownProps: Object) => ({
   uniqueIdentifierChanged: (uniqueIdentifier: string) => dispatch(uniqueIdentifierChanged(uniqueIdentifier)),

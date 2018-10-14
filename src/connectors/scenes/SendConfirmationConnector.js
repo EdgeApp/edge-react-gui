@@ -56,7 +56,7 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
   const networkFee = transaction ? transaction.networkFee : null
   const parentNetworkFee = transaction && transaction.parentNetworkFee ? transaction.parentNetworkFee : null
 
-  const uniqueIdentifier = sceneState.parsedUri.uniqueIdentifier
+  const uniqueIdentifier = sceneState.guiMakeSpendInfo.uniqueIdentifier
   const transactionMetadata = sceneState.transactionMetadata
   const exchangeRates = state.exchangeRates
   const out = {

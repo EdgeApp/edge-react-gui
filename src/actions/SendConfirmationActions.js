@@ -48,9 +48,9 @@ export const updatePaymentProtocolTransaction = (transaction: EdgeTransaction) =
   data: { transaction }
 })
 
-export const updateTransaction = (transaction: ?EdgeTransaction, parsedUri: ?EdgeParsedUri, forceUpdateGui: ?boolean, error: ?Error) => ({
+export const updateTransaction = (transaction: ?EdgeTransaction, guiMakeSpendInfo: ?GuiMakeSpendInfo, forceUpdateGui: ?boolean, error: ?Error) => ({
   type: 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION',
-  data: { transaction, parsedUri, forceUpdateGui, error }
+  data: { transaction, guiMakeSpendInfo, forceUpdateGui, error }
 })
 
 export const updateSpendPending = (pending: boolean) => ({
@@ -107,19 +107,19 @@ export const paymentProtocolUriReceived = ({ paymentProtocolURL }: EdgePaymentPr
     })
 }
 
-export const createTX = (parsedUri: GuiMakeSpendInfo | EdgeParsedUri, forceUpdateGui?: boolean = true) => (dispatch: Dispatch, getState: GetState) => {
+export const createTX = (guiMakeSpendInfo: GuiMakeSpendInfo | EdgeParsedUri, forceUpdateGui?: boolean = true) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const walletId = getSelectedWalletId(state)
   const edgeWallet = getWallet(state, walletId)
-  const parsedUriClone = { ...parsedUri }
-  const spendInfo = getSpendInfo(state, parsedUriClone)
+  const guiMakeSpendInfoClone = { ...guiMakeSpendInfo }
+  const spendInfo = getSpendInfo(state, guiMakeSpendInfoClone)
 
   const authRequired = getAuthRequired(state, spendInfo)
   dispatch(newSpendInfo(spendInfo, authRequired))
 
   makeSpend(edgeWallet, spendInfo)
-    .then(edgeTransaction => dispatch(updateTransaction(edgeTransaction, parsedUriClone, forceUpdateGui, null)))
-    .catch(e => dispatch(updateTransaction(null, parsedUriClone, forceUpdateGui, e)))
+    .then(edgeTransaction => dispatch(updateTransaction(edgeTransaction, guiMakeSpendInfoClone, forceUpdateGui, null)))
+    .catch(e => dispatch(updateTransaction(null, guiMakeSpendInfoClone, forceUpdateGui, e)))
 }
 
 export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => {

@@ -13,7 +13,7 @@ export const initialState = {
   isKeyboardVisible: false,
   forceUpdateGuiCounter: 0,
 
-  parsedUri: {
+  guiMakeSpendInfo: {
     networkFeeOption: (STANDARD_FEE: string),
     customNetworkFee: {},
     publicAddress: '',
@@ -60,17 +60,17 @@ export const getError = (state: State): Error => getScene(state).error
 export const getKeyboardIsVisible = (state: State): boolean => getScene(state).keyboardIsVisible
 
 export const getTransaction = (state: State): EdgeTransaction => getScene(state).transaction || initialState.transaction
-export const getParsedUri = (state: State): GuiMakeSpendInfo => getScene(state).parsedUri || initialState.parsedUri
+export const getGuiMakeSpendInfo = (state: State): GuiMakeSpendInfo => getScene(state).guiMakeSpendInfo || initialState.guiMakeSpendInfo
 export const getForceUpdateGuiCounter = (state: State): number => getScene(state).forceUpdateGuiCounter
 
-export const getNetworkFeeOption = (state: State): string => getParsedUri(state).networkFeeOption || initialState.parsedUri.networkFeeOption || ''
-export const getCustomNetworkFee = (state: State): any => getParsedUri(state).customNetworkFee || initialState.parsedUri.customNetworkFee || {}
-export const getMetadata = (state: State): EdgeMetadata => getParsedUri(state).metadata || initialState.parsedUri.metadata || {}
+export const getNetworkFeeOption = (state: State): string => getGuiMakeSpendInfo(state).networkFeeOption || initialState.guiMakeSpendInfo.networkFeeOption || ''
+export const getCustomNetworkFee = (state: State): any => getGuiMakeSpendInfo(state).customNetworkFee || initialState.guiMakeSpendInfo.customNetworkFee || {}
+export const getMetadata = (state: State): EdgeMetadata => getGuiMakeSpendInfo(state).metadata || initialState.guiMakeSpendInfo.metadata || {}
 export const getPublicAddress = (state: State): string => {
   try {
     return (
-      getParsedUri(state).publicAddress ||
-      initialState.parsedUri.publicAddress ||
+      getGuiMakeSpendInfo(state).publicAddress ||
+      initialState.guiMakeSpendInfo.publicAddress ||
       // $FlowFixMe
       state.ui.scenes.sendConfirmation.spendInfo.spendTargets[0].publicAddress ||
       ''
@@ -82,8 +82,8 @@ export const getPublicAddress = (state: State): string => {
 export const getNativeAmount = (state: State): string | void => state.ui.scenes.sendConfirmation.nativeAmount
 
 export const getUniqueIdentifier = (state: State): string => {
-  const parsedUri = getParsedUri(state)
-  const uniqueIdentifier = parsedUri.uniqueIdentifier
+  const guiMakeSpendInfo = getGuiMakeSpendInfo(state)
+  const uniqueIdentifier = guiMakeSpendInfo.uniqueIdentifier
   return uniqueIdentifier || ''
 }
 
