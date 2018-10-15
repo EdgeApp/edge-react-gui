@@ -246,8 +246,8 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
   }
 
   toAmountChanged = (amounts: ExchangedFlipInputAmounts) => {
-    this.fromAmountNative = amounts.nativeAmount
-    this.fromAmountDisplay = amounts.exchangeAmount
+    this.toAmountNative = amounts.nativeAmount
+    this.toAmountDisplay = amounts.exchangeAmount
   }
 
   renderDropUp = () => {

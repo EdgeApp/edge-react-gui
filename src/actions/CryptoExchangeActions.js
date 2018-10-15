@@ -8,6 +8,7 @@ import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import * as Constants from '../constants/indexConstants'
+import { intl } from '../locales/intl'
 import s from '../locales/strings.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors'
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
@@ -257,15 +258,36 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
   const fromDisplayAmount = bns.toFixed(fromDisplayAmountTemp, 0, 8)
   const toDisplayAmountTemp = bns.div(edgeCoinExchangeQuote.toNativeAmount, toPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
   const toDisplayAmount = bns.toFixed(toDisplayAmountTemp, 0, 8)
+  const feeNativeAmount = edgeCoinExchangeQuote.networkFee.nativeAmount
+  const feeTempAmount = bns.div(feeNativeAmount, fromPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
+  const feeDisplayAmouhnt = bns.toFixed(feeTempAmount, 0, 8)
+  const fee = feeDisplayAmouhnt + ' ' + edgeCoinExchangeQuote.networkFee.currencyCode
+
+  const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
+  const fromBalanceInFiatRaw = currencyConverter.convertCurrency(fromCurrencyCode, fromWallet.isoFiatCurrencyCode, Number(fromDisplayAmount))
+  const fromBalanceInFiat = intl.formatNumber(fromBalanceInFiatRaw || 0, { toFixed: 2 })
+
+  const toBalanceInFiatRaw = currencyConverter.convertCurrency(toCurrencyCode, toWallet.isoFiatCurrencyCode, Number(toDisplayAmount))
+  const toBalanceInFiat = intl.formatNumber(toBalanceInFiatRaw || 0, { toFixed: 2 })
+
   const returnObject = {
     quote: edgeCoinExchangeQuote,
-    fromNativeAmount: edgeCoinExchangeQuote.fromNativeAmount, // This needs to be calculated
+    fromNativeAmount: edgeCoinExchangeQuote.fromNativeAmount,
     fromDisplayAmount: fromDisplayAmount,
+    fromWalletName: fromWallet.name,
+    fromWalletCurrencyName: fromWallet.currencyNames[fromCurrencyCode],
+    fromFiat: fromBalanceInFiat,
     toNativeAmount: edgeCoinExchangeQuote.toNativeAmount,
     toDisplayAmount: toDisplayAmount,
-    quoteExpireDate: edgeCoinExchangeQuote.expirationDate
+    toWalletName: toWallet.name,
+    toWalletCurrencyName: toWallet.currencyNames[toCurrencyCode],
+    toFiat: toBalanceInFiat,
+    quoteExpireDate: edgeCoinExchangeQuote.expirationDate,
+    fee,
+    fromCurrencyCode,
+    toCurrencyCode
   }
-  Actions[Constants.EXCHANGE_QUOTE_SCENE]()
+  Actions[Constants.EXCHANGE_QUOTE_SCENE]({ quote: returnObject })
   dispatch(setShapeTransaction('UPDATE_SHIFT_TRANSACTION_FEE', returnObject))
 }
 

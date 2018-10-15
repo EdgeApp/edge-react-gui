@@ -4,7 +4,6 @@ import type { EdgeExchangeQuote, EdgeSwapCurrencies } from 'edge-core-js'
 import { type Reducer } from 'redux'
 
 import * as Constants from '../constants/indexConstants'
-import s from '../locales/strings.js'
 import { type Action } from '../modules/ReduxTypes.js'
 import { type GuiCurrencyInfo, type GuiWallet } from '../types.js'
 
@@ -159,10 +158,7 @@ function cryptoExchangeInner (state = initialState, action: Action) {
         fromNativeAmount: action.data.fromNativeAmount,
         fromDisplayAmount: action.data.fromDisplayAmount,
         quoteExpireDate: action.data.quoteExpireDate,
-        fee:
-          action.data.networkFee && state.fromCurrencyCode
-            ? s.strings.string_fee_with_colon + ' ' + action.data.networkFee + ' ' + state.fromWalletPrimaryInfo.displayDenomination.name
-            : ' ',
+        fee: action.data.fee,
         insufficientError: false,
         genericShapeShiftError: null
       }

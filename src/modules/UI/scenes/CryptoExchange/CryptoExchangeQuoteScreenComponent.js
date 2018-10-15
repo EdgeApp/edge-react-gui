@@ -1,5 +1,6 @@
 // @flow
 
+import type { EdgeSwapQuote } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -16,7 +17,28 @@ import FormattedText from '../../components/FormattedText'
 import SafeAreaView from '../../components/SafeAreaView'
 import Slider from '../../components/Slider'
 
-type Props = {
+export type QuoteObject = {
+  quote: EdgeSwapQuote,
+  fromNativeAmount: string,
+  fromDisplayAmount: string,
+  fromWalletName: string,
+  fromWalletCurrencyName: string,
+  fromFiat: string,
+  toNativeAmount: string,
+  toDisplayAmount: string,
+  toWalletName: string,
+  toWalletCurrencyName: string,
+  toFiat: string,
+  quoteExpireDate: Date | null,
+  fee: string,
+  fromCurrencyCode: string,
+  toCurrencyCode: string
+}
+export type OwnProps = {
+  quote: QuoteObject
+}
+
+type StateProps = {
   pending: boolean,
   fromWallet: GuiWallet,
   toWallet: GuiWallet,
@@ -36,6 +58,7 @@ type Props = {
   shift(): void,
   timeExpired(): void
 }
+type Props = OwnProps & StateProps
 type State = {}
 
 class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
@@ -66,26 +89,26 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
           </View>
           <View style={styles.centerRow}>
             <ExchangeQuoteComponent
-              headline={sprintf(s.strings.exchange_will_be_sent, this.props.fromDisplayAmount, this.props.fromCurrencyCode)}
+              headline={sprintf(s.strings.exchange_will_be_sent, this.props.quote.fromDisplayAmount, this.props.quote.fromCurrencyCode)}
               walletIcon={this.props.fromCurrencyIcon}
-              walletName={this.props.fromWallet.name}
+              walletName={this.props.quote.fromWalletName}
               cryptoAmount={this.props.fromDisplayAmount}
-              currencyCode={this.props.fromCurrencyCode}
+              currencyCode={this.props.quote.fromCurrencyCode}
               fiatCurrencyCode={this.props.fromWallet.fiatCurrencyCode}
               fiatCurrencyAmount={this.props.fromBalanceInFiat}
-              currency={this.props.fromWallet.currencyNames[this.props.fromWallet.currencyCode]}
+              currency={this.props.quote.fromWalletCurrencyName}
               miningFee={this.props.fee}
               isTop
             />
             <ExchangeQuoteComponent
-              headline={sprintf(s.strings.exchange_will_be_received, this.props.toDisplayAmount, this.props.toCurrencyCode)}
+              headline={sprintf(s.strings.exchange_will_be_received, this.props.quote.toDisplayAmount, this.props.quote.toCurrencyCode)}
               walletIcon={this.props.toCurrencyIcon}
-              walletName={this.props.toWallet.name}
-              currencyCode={this.props.toCurrencyCode}
+              walletName={this.props.quote.toWalletName}
+              currencyCode={this.props.quote.toCurrencyCode}
               fiatCurrencyCode={this.props.toWallet.fiatCurrencyCode}
               fiatCurrencyAmount={this.props.toBalanceInFiat}
               cryptoAmount={this.props.toDisplayAmount}
-              currency={this.props.toWallet.currencyNames[this.props.toWallet.currencyCode]}
+              currency={this.props.quote.toWalletCurrencyName}
             />
           </View>
           <View style={styles.bottomRow}>

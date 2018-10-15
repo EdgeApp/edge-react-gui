@@ -1,58 +1,33 @@
 // @flow
-// import { bns } from 'biggystring'
-// import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/indexActions.js'
-import { intl } from '../../locales/intl'
-import { getCurrencyConverter } from '../../modules/Core/selectors.js'
-// import {EXCHANGE_QUOTE_PROCESSING_SCENE} from '../../constants/indexConstants.js'
 import type { Dispatch, State } from '../../modules/ReduxTypes'
 import { CryptoExchangeQuoteScreenComponent } from '../../modules/UI/scenes/CryptoExchange/CryptoExchangeQuoteScreenComponent'
-import { getExchangeDenomination as settingsGetExchangeDenomination } from '../../modules/UI/Settings/selectors.js'
-import { convertNativeToExchange } from '../../modules/utils'
+import type { OwnProps } from '../../modules/UI/scenes/CryptoExchange/CryptoExchangeQuoteScreenComponent'
 
 /* import type { GuiWallet } from '../../types.js' */
 
-export const mapStateToProps = (state: State) => {
+export const mapStateToProps = (state: State, ownProps: OwnProps) => {
   const fromWallet = state.cryptoExchange.fromWallet
-  const fromCurrencyCode = state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name
-  const fromNativeAmount = state.cryptoExchange.fromNativeAmount
-  const currencyConverter = getCurrencyConverter(state)
-  const fromeExchangeDenomination = fromWallet ? settingsGetExchangeDenomination(state, fromWallet.currencyCode) : ''
-  const fromBalanceInCryptoDisplay = fromeExchangeDenomination ? convertNativeToExchange(fromeExchangeDenomination.multiplier)(fromNativeAmount) : ''
-  const fromBalanceInFiatRaw = fromWallet
-    ? currencyConverter.convertCurrency(fromWallet.currencyCode, fromWallet.isoFiatCurrencyCode, Number(fromBalanceInCryptoDisplay))
-    : '0.00'
-  const fromBalanceInFiat = intl.formatNumber(fromBalanceInFiatRaw || 0, { toFixed: 2 })
-
   const toWallet = state.cryptoExchange.toWallet
-  const toCurrencyCode = state.cryptoExchange.toWalletPrimaryInfo.displayDenomination.name
-  const toNativeAmount = state.cryptoExchange.toNativeAmount
-  const toExchangeDenomination = toWallet ? settingsGetExchangeDenomination(state, toWallet.currencyCode) : ''
-  const toBalanceInCryptoDisplay = toExchangeDenomination ? convertNativeToExchange(toExchangeDenomination.multiplier)(toNativeAmount) : ''
-  const toBalanceInFiatRaw = toWallet
-    ? currencyConverter.convertCurrency(toWallet.currencyCode, toWallet.isoFiatCurrencyCode, Number(toBalanceInCryptoDisplay))
-    : '0.00'
-  const toBalanceInFiat = intl.formatNumber(toBalanceInFiatRaw || 0, { toFixed: 2 })
-  const fee = state.cryptoExchange.fee
-  const quoteExpireDate = state.cryptoExchange.quoteExpireDate
+  const quote = ownProps.quote
   return {
     fromWallet,
-    fromNativeAmount,
-    fromCurrencyCode,
-    fromBalanceInFiat,
+    fromNativeAmount: quote.fromNativeAmount,
+    fromCurrencyCode: quote.fromCurrencyCode,
+    fromBalanceInFiat: quote.fromFiat,
     fromCurrencyIcon: state.cryptoExchange.fromCurrencyIcon || '',
-    fromDisplayAmount: state.cryptoExchange.fromDisplayAmount,
+    fromDisplayAmount: quote.fromDisplayAmount,
     toWallet,
-    toCurrencyCode,
-    toNativeAmount,
-    toBalanceInFiat,
-    toDisplayAmount: state.cryptoExchange.toDisplayAmount,
+    toCurrencyCode: quote.toCurrencyCode,
+    toNativeAmount: quote.toNativeAmount,
+    toBalanceInFiat: quote.toFiat,
+    toDisplayAmount: quote.toDisplayAmount,
     toCurrencyIcon: state.cryptoExchange.toCurrencyIcon || '',
     pending: state.cryptoExchange.shiftPendingTransaction,
-    fee,
-    quoteExpireDate
+    fee: quote.fee,
+    quoteExpireDate: quote.quoteExpireDate
   }
 }
 
