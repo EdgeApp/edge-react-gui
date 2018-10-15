@@ -3,7 +3,7 @@
 import { connect } from 'react-redux'
 
 import type { Dispatch, State } from '../../../ReduxTypes'
-import { updateMiningFees } from '../SendConfirmation/action'
+import { sendConfirmationUpdateTx } from '../SendConfirmation/action'
 import { getNetworkFeeOption } from '../SendConfirmation/selectors'
 import ChangeMiningFee from './ChangeMiningFee.ui.js'
 import type { ChangeMiningFeeDispatchProps, ChangeMiningFeeStateProps } from './ChangeMiningFee.ui.js'
@@ -14,7 +14,7 @@ export const mapStateToProps = (state: State): ChangeMiningFeeStateProps => ({
 })
 
 export const mapDispatchToProps = (dispatch: Dispatch): ChangeMiningFeeDispatchProps => ({
-  onSubmit: (networkFeeOption: string) => dispatch(updateMiningFees({ networkFeeOption }))
+  onSubmit: (networkFeeOption: string) => dispatch(sendConfirmationUpdateTx({ networkFeeOption }))
 })
 
 export default connect(

@@ -10,7 +10,7 @@ import s from '../../../../locales/strings.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import type { Dispatch, GetState } from '../../../ReduxTypes.js'
 import { denominationToDecimalPlaces, isEdgeLogin, noOp } from '../../../utils.js'
-import { paymentProtocolUriReceived, updateParsedURI } from '../SendConfirmation/action.js'
+import { paymentProtocolUriReceived, sendConfirmationUpdateTx } from '../SendConfirmation/action.js'
 import { activated as legacyAddressModalActivated, deactivated as legacyAddressModalDeactivated } from './LegacyAddressModal/LegacyAddressModalActions.js'
 import { activated as privateKeyModalActivated } from './PrivateKeyModal/PrivateKeyModalActions.js'
 
@@ -102,7 +102,7 @@ export const parseUri = (data: string) => (dispatch: Dispatch, getState: GetStat
 
       // PUBLIC ADDRESS URI
       Actions[SEND_CONFIRMATION]('fromScan')
-      dispatch(updateParsedURI(parsedUri))
+      dispatch(sendConfirmationUpdateTx(parsedUri))
     },
     () => {
       // INVALID URI
@@ -129,7 +129,7 @@ export const legacyAddressModalContinueButtonPressed = () => (dispatch: Dispatch
     }
 
     Actions[SEND_CONFIRMATION]('fromScan')
-    dispatch(updateParsedURI(parsedUri))
+    dispatch(sendConfirmationUpdateTx(parsedUri))
   })
 }
 

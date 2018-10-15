@@ -21,7 +21,7 @@ type Props = {
   currencyCode: string,
   addressModalVisible: boolean,
   toggleAddressModal(): void,
-  updateParsedURI(EdgeParsedUri): void,
+  sendConfirmationUpdateTx(EdgeParsedUri): void,
   loginWithEdge(string): void,
   doneButtonPressed(string): void,
   onExitButtonFxn: void

@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 
 import * as Constants from '../../../../../../constants/indexConstants.js'
 import type { Dispatch, State } from '../../../../../ReduxTypes'
-import { updateMiningFees } from '../../../SendConfirmation/action'
+import { sendConfirmationUpdateTx } from '../../../SendConfirmation/action'
 import { getCustomNetworkFee } from '../../../SendConfirmation/selectors.js'
 import CustomFeesModal from './CustomFeesModal.ui'
 import type { CustomFees, CustomFeesModalDispatchProps, CustomFeesModalOwnProps, CustomFeesModalStateProps } from './CustomFeesModal.ui'
@@ -28,7 +28,7 @@ const mapStateToProps = (state: State, ownProps: CustomFeesModalOwnProps): Custo
 const mapDispatchToProps = (dispatch: Dispatch): CustomFeesModalDispatchProps => ({
   onPositive: (customNetworkFee: CustomFees) => {
     dispatch(
-      updateMiningFees({
+      sendConfirmationUpdateTx({
         networkFeeOption: Constants.CUSTOM_FEES,
         customNetworkFee
       })
