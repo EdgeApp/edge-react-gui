@@ -68,8 +68,8 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     passwordRecoveryRemindersShown: SETTINGS_API.PASSWORD_RECOVERY_REMINDERS_SHOWN
   }
   try {
-    for (const pluginName in account.currencyTools) {
-      const { currencyInfo } = account.currencyTools[pluginName]
+    for (const pluginName in account.currencyConfig) {
+      const { currencyInfo } = account.currencyConfig[pluginName]
       const { currencyCode } = currencyInfo
       currencyInfo.walletTypes.forEach(type => {
         currencyCodes[type] = currencyCode
@@ -95,8 +95,8 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       if (global.currencyCode) {
         let walletType, walletName
         // We got installed via a currencyCode referral. Only create one wallet of that type
-        for (const pluginName in account.currencyTools) {
-          const { currencyInfo } = account.currencyTools[pluginName]
+        for (const pluginName in account.currencyConfig) {
+          const { currencyInfo } = account.currencyConfig[pluginName]
           if (currencyInfo.currencyCode.toLowerCase() === global.currencyCode.toLowerCase()) {
             walletType = currencyInfo.walletTypes[0]
             walletName = sprintf(s.strings.my_crypto_wallet_name, currencyInfo.currencyName)

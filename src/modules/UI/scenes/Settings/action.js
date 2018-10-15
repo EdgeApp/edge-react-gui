@@ -236,9 +236,9 @@ export const enableCustomNodes = (currencyCode: string) => async (dispatch: Disp
   const state: State = getState()
   const account = CORE_SELECTORS.getAccount(state)
   const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
-  const currencyPlugin = account.currencyTools[currencyPluginName]
+  const currencyPlugin = account.currencyConfig[currencyPluginName]
   try {
-    await currencyPlugin.changePluginSettings({ disableFetchingServers: true })
+    await currencyPlugin.changeUserSettings({ disableFetchingServers: true })
   } catch (e) {
     console.log(e)
     throw new Error(e)
@@ -249,9 +249,9 @@ export const disableCustomNodes = (currencyCode: string) => async (dispatch: Dis
   const state: State = getState()
   const account = CORE_SELECTORS.getAccount(state)
   const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
-  const currencyPlugin = account.currencyTools[currencyPluginName]
+  const currencyPlugin = account.currencyConfig[currencyPluginName]
   try {
-    await currencyPlugin.changePluginSettings({ disableFetchingServers: false })
+    await currencyPlugin.changeUserSettings({ disableFetchingServers: false })
   } catch (e) {
     console.log(e)
     throw new Error(e)
@@ -262,9 +262,9 @@ export const saveCustomNodesList = (currencyCode: string, nodesList: Array<strin
   const state: State = getState()
   const account = CORE_SELECTORS.getAccount(state)
   const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
-  const currencyPlugin = account.currencyTools[currencyPluginName]
+  const currencyPlugin = account.currencyConfig[currencyPluginName]
   try {
-    await currencyPlugin.changePluginSettings({ electrumServers: nodesList, disableFetchingServers: true })
+    await currencyPlugin.changeUserSettings({ electrumServers: nodesList, disableFetchingServers: true })
   } catch (e) {
     console.log(e)
     throw new Error('Unable to save plugin setting')
