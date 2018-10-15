@@ -12,12 +12,12 @@ import CurrencySettings from './CurrencySettings.ui'
 const mapStateToProps = (state: State, ownProps) => {
   const account = getAccount(state)
   const currencyPluginName = CURRENCY_PLUGIN_NAMES[ownProps.currencyCode]
-  const currencyPlugin = account.currencyTools[currencyPluginName]
+  const currencyPlugin = account.currencyConfig[currencyPluginName]
   const defaultCurrencySettings = currencyPlugin.currencyInfo.defaultSettings
   const defaultElectrumServer = defaultCurrencySettings.electrumServers ? defaultCurrencySettings.electrumServers[0] : ''
-  const pluginSettings = currencyPlugin.pluginSettings
-  const electrumServers = pluginSettings ? pluginSettings.electrumServers : []
-  const disableFetchingServers = pluginSettings ? pluginSettings.disableFetchingServers : false
+  const userSettings = currencyPlugin.userSettings
+  const electrumServers = userSettings ? userSettings.electrumServers : []
+  const disableFetchingServers = userSettings ? userSettings.disableFetchingServers : false
   return {
     logo: SETTINGS_SELECTORS.getPluginInfo(state, ownProps.pluginName).symbolImage,
     denominations: SETTINGS_SELECTORS.getDenominations(state, ownProps.currencyCode),
