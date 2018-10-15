@@ -238,7 +238,7 @@ export const enableCustomNodes = (currencyCode: string) => async (dispatch: Disp
   const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
   const currencyPlugin = account.currencyConfig[currencyPluginName]
   try {
-    await currencyPlugin.changeUserSettings({ disableFetchingServers: true })
+    await currencyPlugin.changeUserSettings({ ...currencyPlugin.userSettings, disableFetchingServers: true })
   } catch (e) {
     console.log(e)
     throw new Error(e)
@@ -251,7 +251,7 @@ export const disableCustomNodes = (currencyCode: string) => async (dispatch: Dis
   const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
   const currencyPlugin = account.currencyConfig[currencyPluginName]
   try {
-    await currencyPlugin.changeUserSettings({ disableFetchingServers: false })
+    await currencyPlugin.changeUserSettings({ ...currencyPlugin.userSettings, disableFetchingServers: false })
   } catch (e) {
     console.log(e)
     throw new Error(e)
@@ -264,7 +264,7 @@ export const saveCustomNodesList = (currencyCode: string, nodesList: Array<strin
   const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
   const currencyPlugin = account.currencyConfig[currencyPluginName]
   try {
-    await currencyPlugin.changeUserSettings({ electrumServers: nodesList, disableFetchingServers: true })
+    await currencyPlugin.changeUserSettings({ ...currencyPlugin.userSettings, electrumServers: nodesList })
   } catch (e) {
     console.log(e)
     throw new Error('Unable to save plugin setting')
