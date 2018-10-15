@@ -312,7 +312,7 @@ Object {
     "networkFeeOption": "standard",
     "publicAddress": "",
   },
-  "isEditable": false,
+  "isEditable": true,
   "isKeyboardVisible": false,
   "nativeAmount": "0",
   "pending": false,
@@ -429,7 +429,7 @@ Object {
     "networkFeeOption": "standard",
     "publicAddress": "",
   },
-  "isEditable": false,
+  "isEditable": true,
   "isKeyboardVisible": false,
   "nativeAmount": "0",
   "pending": false,
@@ -447,40 +447,6 @@ Object {
     "parentNetworkFee": "",
     "signedTx": "",
     "txid": "",
-  },
-  "transactionMetadata": null,
-}
-`;
-
-exports[`sendConfirmation reducer isEditable UPDATE_PAYMENT_PROTOCOL_TRANSACTION 1`] = `
-Object {
-  "address": "",
-  "authRequired": "none",
-  "error": null,
-  "forceUpdateGuiCounter": 0,
-  "guiMakeSpendInfo": Object {
-    "customNetworkFee": Object {},
-    "metadata": Object {
-      "amountFiat": 0,
-      "bizId": 0,
-      "category": "",
-      "miscJson": "",
-      "name": "",
-      "notes": "",
-    },
-    "nativeAmount": "0",
-    "networkFeeOption": "standard",
-    "publicAddress": "",
-  },
-  "isEditable": false,
-  "isKeyboardVisible": false,
-  "nativeAmount": "0",
-  "pending": false,
-  "pin": "",
-  "spendInfo": null,
-  "transaction": Object {
-    "id": "123",
-    "nativeAmount": "123",
   },
   "transactionMetadata": null,
 }

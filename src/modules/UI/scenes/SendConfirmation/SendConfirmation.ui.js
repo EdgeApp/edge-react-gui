@@ -23,6 +23,7 @@ import SafeAreaView from '../../components/SafeAreaView'
 import ABSlider from '../../components/Slider/index.js'
 import { convertCurrencyFromExchangeRates } from '../../selectors.js'
 import { UniqueIdentifierModalConnect as UniqueIdentifierModal } from './components/UniqueIdentifierModal/UniqueIdentifierModalConnector.js'
+import { type GuiMakeSpendInfo } from './reducer.js'
 import styles, { rawStyles } from './styles.js'
 
 const DIVIDE_PRECISION = 18
@@ -60,13 +61,13 @@ export type SendConfirmationDispatchProps = {
   signBroadcastAndSave: () => any,
   reset: () => any,
   updateAmount: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) => any,
-  sendConfirmationUpdateTx: (uniqueIdentifier: string) => any,
+  sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo) => any,
   onChangePin: (pin: string) => mixed,
   uniqueIdentifierButtonPressed: () => void
 }
 
 type SendConfirmationRouterParams = {
-  data: string // This is passed by the react-native-router-flux when you put a parameter on Action.route()
+  guiMakeSpendInfo: GuiMakeSpendInfo
 }
 
 type Props = SendConfirmationStateProps & SendConfirmationDispatchProps & SendConfirmationRouterParams
@@ -101,7 +102,19 @@ export class SendConfirmation extends Component<Props, State> {
   componentDidMount () {
     const secondaryDisplayDenomination = getDenomFromIsoCode(this.props.fiatCurrencyCode)
     const overridePrimaryExchangeAmount = bns.div(this.props.nativeAmount, this.props.primaryExchangeDenomination.multiplier, DIVIDE_PRECISION)
-    const keyboardVisible = this.props.data === 'fromScan'
+    const guiMakeSpendInfo = this.props.guiMakeSpendInfo
+    let keyboardVisible = true
+    // Do not show the keyboard if the caller passed in an amount
+    if (guiMakeSpendInfo.nativeAmount) {
+      if (!bns.eq(guiMakeSpendInfo.nativeAmount, '0')) {
+        keyboardVisible = false
+      }
+    } else if (guiMakeSpendInfo.spendTargets && guiMakeSpendInfo.spendTargets.length) {
+      keyboardVisible = false
+    }
+
+    this.props.sendConfirmationUpdateTx(this.props.guiMakeSpendInfo)
+
     this.setState({ secondaryDisplayDenomination, overridePrimaryExchangeAmount, keyboardVisible })
   }
 
@@ -263,7 +276,7 @@ export class SendConfirmation extends Component<Props, State> {
         </Gradient>
 
         {(currencyCode === 'XRP' || currencyCode === 'XMR' || currencyCode === 'XLM') && (
-          <UniqueIdentifierModal onConfirm={this.props.sendConfirmationUpdateTx} currencyCode={currencyCode} />
+          <UniqueIdentifierModal onConfirm={uniqueIdentifier => this.props.sendConfirmationUpdateTx({ uniqueIdentifier })} currencyCode={currencyCode} />
         )}
       </SafeAreaView>
     )

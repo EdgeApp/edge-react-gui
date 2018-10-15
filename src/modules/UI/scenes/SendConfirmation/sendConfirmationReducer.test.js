@@ -3,7 +3,7 @@
 
 import { clone } from 'ramda'
 
-import { makeSpendFailed, newPin, newSpendInfo, reset, updatePaymentProtocolTransaction, updateSpendPending, updateTransaction } from './action.js'
+import { makeSpendFailed, newPin, newSpendInfo, reset, updateSpendPending, updateTransaction } from './action.js'
 import { sendConfirmation } from './reducer.js'
 import { initialState } from './selectors.js'
 
@@ -162,14 +162,14 @@ describe('sendConfirmation reducer', () => {
   })
 
   describe('isEditable', () => {
-    test('UPDATE_PAYMENT_PROTOCOL_TRANSACTION', () => {
-      const edgeTransaction = { id: '123', nativeAmount: '123' }
-      const action = updatePaymentProtocolTransaction(edgeTransaction)
-      const initialStateClone = clone(initialState)
-      const actual = sendConfirmation(initialStateClone, action)
+    // test('UPDATE_PAYMENT_PROTOCOL_TRANSACTION', () => {
+    //   const edgeTransaction = { id: '123', nativeAmount: '123' }
+    //   const action = updatePaymentProtocolTransaction(edgeTransaction)
+    //   const initialStateClone = clone(initialState)
+    //   const actual = sendConfirmation(initialStateClone, action)
 
-      expect(actual).toMatchSnapshot()
-    })
+    //   expect(actual).toMatchSnapshot()
+    // })
 
     test('MAKE_PAYMENT_PROTOCOL_TRANSACTION_FAILED', () => {
       const error = new Error()

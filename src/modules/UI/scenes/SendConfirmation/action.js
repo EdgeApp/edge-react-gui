@@ -41,11 +41,6 @@ export const reset = () => ({
   data: {}
 })
 
-export const updatePaymentProtocolTransaction = (transaction: EdgeTransaction) => ({
-  type: 'UI/SEND_CONFIMATION/UPDATE_PAYMENT_PROTOCOL_TRANSACTION',
-  data: { transaction }
-})
-
 export const updateTransaction = (transaction: ?EdgeTransaction, guiMakeSpendInfo: ?GuiMakeSpendInfo, forceUpdateGui: ?boolean, error: ?Error) => ({
   type: 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION',
   data: { transaction, guiMakeSpendInfo, forceUpdateGui, error }
@@ -79,19 +74,22 @@ export const paymentProtocolUriReceived = ({ paymentProtocolURL }: EdgePaymentPr
     .then(paymentProtocolURL => getPaymentProtocolInfo(edgeWallet, paymentProtocolURL))
     .then(makeSpendInfo)
     .then(spendInfo => {
-      const authRequired = getAuthRequired(state, spendInfo)
-      dispatch(newSpendInfo(spendInfo, authRequired))
+      // const authRequired = getAuthRequired(state, spendInfo)
+      // dispatch(newSpendInfo(spendInfo, authRequired))
 
-      return makeSpend(edgeWallet, spendInfo).then(
-        edgeTransaction => {
-          dispatch(updatePaymentProtocolTransaction(edgeTransaction))
-          Actions[SEND_CONFIRMATION]('fromScan')
-        },
-        error => {
-          dispatch(makeSpendFailed(error))
-          Actions[SEND_CONFIRMATION]('fromScan')
-        }
-      )
+      const guiMakeSpendInfo: GuiMakeSpendInfo = { ...spendInfo }
+      guiMakeSpendInfo.lockInputs = true
+      Actions[SEND_CONFIRMATION]({ guiMakeSpendInfo })
+      // return makeSpend(edgeWallet, spendInfo).then(
+      //   edgeTransaction => {
+      //     dispatch(updatePaymentProtocolTransaction(edgeTransaction))
+      //     // Actions[SEND_CONFIRMATION]('fromScan')
+      //   },
+      //   error => {
+      //     dispatch(makeSpendFailed(error))
+      //     // Actions[SEND_CONFIRMATION]('fromScan')
+      //   }
+      // )
     })
     .catch((error: Error) => {
       console.log(error)
@@ -147,6 +145,7 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
   const wallet = getWallet(state, selectedWalletId)
   const edgeUnsignedTransaction = getTransaction(state)
   const spendInfo = state.ui.scenes.sendConfirmation.spendInfo
+  const guiMakeSpendInfo = state.ui.scenes.sendConfirmation.guiMakeSpendInfo
   if (!spendInfo) throw new Error('Invalid Spend Request')
   const authRequired = getAuthRequired(state, spendInfo)
   const pin = state.ui.scenes.sendConfirmation.pin
@@ -175,6 +174,9 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
       message: 'Your transaction has been successfully sent.'
     }
     dispatch({ type: 'OPEN_AB_ALERT', data: successInfo })
+    if (guiMakeSpendInfo.onDone) {
+      guiMakeSpendInfo.onDone(null, edgeSignedTransaction)
+    }
   } catch (e) {
     dispatch(updateSpendPending(false))
     const errorInfo = {
@@ -184,6 +186,10 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
     }
     dispatch(updateTransaction(edgeSignedTransaction, null, true, new Error('broadcastError')))
     dispatch({ type: 'OPEN_AB_ALERT', data: errorInfo })
+    if (guiMakeSpendInfo.onDone) {
+      guiMakeSpendInfo.onDone(e)
+      Actions.pop()
+    }
   }
 }
 
