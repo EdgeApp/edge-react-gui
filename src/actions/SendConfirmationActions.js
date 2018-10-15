@@ -70,7 +70,7 @@ export const updateAmount = (nativeAmount: string, exchangeAmount: string, fiatP
   const amountFiatString: string = bns.mul(exchangeAmount, fiatPerCrypto)
   const amountFiat: number = parseFloat(amountFiatString)
   const metadata: EdgeMetadata = { amountFiat }
-  dispatch(createTX({ nativeAmount, metadata }, forceUpdateGui))
+  dispatch(sendConfirmationUpdateTx({ nativeAmount, metadata }, forceUpdateGui))
 }
 
 type EdgePaymentProtocolUri = EdgeParsedUri & { paymentProtocolURL: string }
@@ -107,7 +107,10 @@ export const paymentProtocolUriReceived = ({ paymentProtocolURL }: EdgePaymentPr
     })
 }
 
-export const createTX = (guiMakeSpendInfo: GuiMakeSpendInfo | EdgeParsedUri, forceUpdateGui?: boolean = true) => (dispatch: Dispatch, getState: GetState) => {
+export const sendConfirmationUpdateTx = (guiMakeSpendInfo: GuiMakeSpendInfo | EdgeParsedUri, forceUpdateGui?: boolean = true) => (
+  dispatch: Dispatch,
+  getState: GetState
+) => {
   const state = getState()
   const walletId = getSelectedWalletId(state)
   const edgeWallet = getWallet(state, walletId)
@@ -202,8 +205,6 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
     dispatch({ type: 'OPEN_AB_ALERT', data: errorInfo })
   }
 }
-
-export { createTX as updateMiningFees, createTX as updateParsedURI, createTX as uniqueIdentifierUpdated }
 
 const errorNames = {
   IncorrectPinError: 'IncorrectPinError'

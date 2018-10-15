@@ -60,7 +60,7 @@ export type SendConfirmationDispatchProps = {
   signBroadcastAndSave: () => any,
   reset: () => any,
   updateAmount: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) => any,
-  uniqueIdentifierUpdated: (uniqueIdentifier: string) => any,
+  sendConfirmationUpdateTx: (uniqueIdentifier: string) => any,
   onChangePin: (pin: string) => mixed,
   uniqueIdentifierButtonPressed: () => void
 }
@@ -100,13 +100,11 @@ export class SendConfirmation extends Component<Props, State> {
     }
   }
 
-  UNSAFE_componentWillMount () {
-    this.setState({ keyboardVisible: this.props.data === 'fromScan' })
-  }
   componentDidMount () {
     const secondaryDisplayDenomination = getDenomFromIsoCode(this.props.fiatCurrencyCode)
     const overridePrimaryExchangeAmount = bns.div(this.props.nativeAmount, this.props.primaryExchangeDenomination.multiplier, DIVIDE_PRECISION)
-    this.setState({ secondaryDisplayDenomination, overridePrimaryExchangeAmount })
+    const keyboardVisible = this.props.data === 'fromScan'
+    this.setState({ secondaryDisplayDenomination, overridePrimaryExchangeAmount, keyboardVisible })
   }
 
   componentDidUpdate (prevProps: Props) {
@@ -275,7 +273,7 @@ export class SendConfirmation extends Component<Props, State> {
           </View>
         </Gradient>
 
-        {isTaggableCurrency && <UniqueIdentifierModal onConfirm={this.props.uniqueIdentifierUpdated} currencyCode={currencyCode} />}
+        {isTaggableCurrency && <UniqueIdentifierModal onConfirm={this.props.sendConfirmationUpdateTx} currencyCode={currencyCode} />}
       </SafeAreaView>
     )
   }

@@ -12,7 +12,7 @@ import { denominationToDecimalPlaces, isEdgeLogin, noOp } from '../util/utils.js
 import { loginWithEdge } from './EdgeLoginActions.js'
 import { activated as legacyAddressModalActivated, deactivated as legacyAddressModalDeactivated } from './LegacyAddressModalActions.js'
 import { activated as privateKeyModalActivated } from './PrivateKeyModalActions.js'
-import { paymentProtocolUriReceived, updateParsedURI } from './SendConfirmationActions.js'
+import { paymentProtocolUriReceived, sendConfirmationUpdateTx } from './SendConfirmationActions.js'
 
 export const UPDATE_RECIPIENT_ADDRESS = 'UPDATE_RECIPIENT_ADDRESS'
 
@@ -102,7 +102,7 @@ export const parseUri = (data: string) => (dispatch: Dispatch, getState: GetStat
 
       // PUBLIC ADDRESS URI
       Actions[SEND_CONFIRMATION]('fromScan')
-      dispatch(updateParsedURI(parsedUri))
+      dispatch(sendConfirmationUpdateTx(parsedUri))
     },
     () => {
       // INVALID URI
@@ -129,7 +129,7 @@ export const legacyAddressModalContinueButtonPressed = () => (dispatch: Dispatch
     }
 
     Actions[SEND_CONFIRMATION]('fromScan')
-    dispatch(updateParsedURI(parsedUri))
+    dispatch(sendConfirmationUpdateTx(parsedUri))
   })
 }
 
