@@ -3472,7 +3472,7 @@ edge-login-ui-rn@^0.5.4:
 
 "edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git":
   version "0.0.3"
-  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#a0df994290d31a20131fa69ea0c9570c1336230c"
+  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#18889249be17778005127c98fde810a4c992ba35"
   dependencies:
     moment "^2.22.2"
 
