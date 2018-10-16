@@ -2,8 +2,8 @@ files:
   - source: /src/locales/strings/enUS.json
     translation: /src/locales/strings/%two_letters_code%.json
   - source: /localization/AppStoreDescription.txt
-    translation: /localization/AppStoreDescription.%two_letters_code%.json
+    translation: /localization/AppStoreDescription.%two_letters_code%.txt
   - source: /localization/PlayStoreDescription.txt
-    translation: /localization/PlayStoreDescription.%two_letters_code%.json
+    translation: /localization/PlayStoreDescription.%two_letters_code%.txt
   - source: /localization/ReleaseNotes.txt
-    translation: /localization/ReleaseNotes.%two_letters_code%.json
+    translation: /localization/ReleaseNotes.%two_letters_code%.txt
