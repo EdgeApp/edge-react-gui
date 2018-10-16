@@ -4,6 +4,7 @@ import React, { Component } from 'react'
 import { Alert, Clipboard, Platform, Text } from 'react-native'
 
 import { EYE_ICON, ION_ICONS } from '../../../../../../constants/IconConstants.js'
+import { scale } from '../../../../../../lib/scaling.js'
 import s from '../../../../../../locales/strings.js'
 import { PrimaryButton } from '../../../../components/Buttons'
 import { Icon } from '../../../../components/Icon/Icon.ui.js'
@@ -51,7 +52,7 @@ export default class XPubModal extends Component<XPubModalComponentProps, XPubMo
         onModalHide={this.props.onExit}
       >
         <InteractiveModal.Icon>
-          <Icon style={{}} type={ION_ICONS} name={`${osPrefix}${EYE_ICON}`} size={30} />
+          <Icon style={{}} type={ION_ICONS} name={`${osPrefix}${EYE_ICON}`} size={scale(30)} />
         </InteractiveModal.Icon>
 
         <InteractiveModal.Title>

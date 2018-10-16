@@ -1,7 +1,6 @@
 // @flow
 
 import { StyleSheet } from 'react-native'
-
 import { scale } from '../../../../lib/scaling'
 import THEME from '../../../../theme/variables/airbitz'
 

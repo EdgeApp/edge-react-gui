@@ -1,5 +1,6 @@
 // @flow
 import { isIphoneX } from '../../lib/isIphoneX.js'
+import { scale } from '../../lib/scaling.js'
 import THEME from '../../theme/variables/airbitz'
 import { PLATFORM } from '../../theme/variables/platform'
 import * as Styles from '../indexStyles'
@@ -16,10 +17,10 @@ const TransactionExportSceneStyle = {
   },
   actionButtonContainer: {
     width: '90%',
-    height: THEME.BUTTONS.HEIGHT
+    height: scale(THEME.BUTTONS.HEIGHT)
   },
   shim: {
-    height: 20
+    height: scale(20)
   },
   emailModal: Styles.TwoButtonModalStyle,
   inputModal: {

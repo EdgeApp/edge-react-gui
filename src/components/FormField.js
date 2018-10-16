@@ -8,6 +8,9 @@ import { Input, InputWithAutoFocus } from './materialWrappers/indexMaterial'
 /*
 type Props = {
 
+ fontSize: number,
+ titleFontSize: number,
+ labelFontSize: number,
  style: StyleSheet.Styles,
  label?: string,
  value?: string,
@@ -61,6 +64,9 @@ class FormField extends Component {
           containerStyle={container}
           secureTextEntry={this.state.secure}
           returnKeyType={this.props.returnKeyType}
+          fontSize={this.props.fontSize}
+          titleFontSize={this.props.titleFontSize}
+          labelFontSize={this.props.labelFontSize}
           baseColor={baseColor}
           tintColor={tintColor}
           textColor={textColor}
@@ -87,6 +93,9 @@ class FormField extends Component {
           containerStyle={container}
           secureTextEntry={this.state.secure}
           returnKeyType={this.props.returnKeyType}
+          fontSize={this.props.fontSize}
+          titleFontSize={this.props.titleFontSize}
+          labelFontSize={this.props.labelFontSize}
           baseColor={baseColor}
           tintColor={tintColor}
           textColor={textColor}

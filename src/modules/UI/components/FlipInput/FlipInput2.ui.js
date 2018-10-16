@@ -7,6 +7,7 @@ import slowlog from 'react-native-slowlog'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 
 import * as Constants from '../../../../constants/indexConstants'
+import { scale } from '../../../../lib/scaling.js'
 import { intl } from '../../../../locales/intl'
 import * as UTILS from '../../../utils.js'
 import { bottom, styles, top } from './styles.js'
@@ -326,7 +327,7 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
           pointerEvents={isToggled ? 'none' : 'auto'}
         >
           <View style={styles.flipButton}>
-            <FAIcon style={[styles.flipIcon]} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={36} />
+            <FAIcon style={[styles.flipIcon]} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={scale(36)} />
           </View>
           <View style={[styles.rows]}>
             {this.topRowFront(primaryInfo, this.onPrimaryAmountChange, this.state.primaryDisplayAmount)}
@@ -339,7 +340,7 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
           pointerEvents={isToggled ? 'auto' : 'none'}
         >
           <View style={styles.flipButton}>
-            <FAIcon style={[styles.flipIcon]} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={36} />
+            <FAIcon style={[styles.flipIcon]} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={scale(36)} />
           </View>
           <View style={[styles.rows]}>
             {this.topRowBack(secondaryInfo, this.onSecondaryAmountChange, this.state.secondaryDisplayAmount)}

@@ -2,6 +2,7 @@
 
 import { StyleSheet } from 'react-native'
 
+import { scale } from '../../../../lib/scaling.js'
 import THEME from '../../../../theme/variables/airbitz'
 
 const styles = {
@@ -16,23 +17,23 @@ const styles = {
   },
   content: {
     position: 'relative',
-    top: 66,
-    paddingHorizontal: 20,
-    paddingVertical: 20
+    top: scale(66),
+    paddingHorizontal: scale(20),
+    paddingVertical: scale(20)
   },
   column: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 10
+    paddingTop: scale(10)
   },
   row: {
-    height: 44
+    height: scale(44)
   },
   radio: {
-    borderRadius: 9,
-    width: 18,
-    height: 18,
-    borderWidth: 1,
+    borderRadius: scale(9),
+    width: scale(18),
+    height: scale(18),
+    borderWidth: scale(1),
     borderColor: THEME.COLORS.GRAY_2
   },
   selected: {
@@ -40,15 +41,15 @@ const styles = {
     backgroundColor: THEME.COLORS.ACCENT_BLUE
   },
   label: {
-    fontSize: 16,
-    paddingLeft: 10,
+    fontSize: scale(16),
+    paddingLeft: scale(10),
     color: THEME.COLORS.GRAY_1,
-    lineHeight: 16
+    lineHeight: scale(16)
   },
   input: {
-    marginTop: 10,
-    marginLeft: 30,
-    padding: 2,
+    marginTop: scale(10),
+    marginLeft: scale(30),
+    padding: scale(2),
     color: THEME.COLORS.GRAY_2
   }
 }

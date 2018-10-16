@@ -2,11 +2,12 @@
 
 import { StyleSheet } from 'react-native'
 
+import { scale } from '../../../../lib/scaling.js'
 import THEME from '../../../../theme/variables/airbitz'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
 
 const debug = {
-  borderWidth: 1,
+  borderWidth: scale(1),
   borderColor: 'red'
 }
 

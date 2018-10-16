@@ -2,11 +2,12 @@
 import { StyleSheet } from 'react-native'
 
 import { THEME } from '../../../../../../theme/variables/airbitz.js'
+import { scale } from '../../../../../../lib/scaling.js'
 
 export const rawStyles = {
   totalBalanceBox: {
     // one
-    height: 111,
+    height: scale(111),
     justifyContent: 'center'
   },
   totalBalanceWrap: {
@@ -20,7 +21,7 @@ export const rawStyles = {
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   totalBalanceText: {
-    fontSize: 18,
+    fontSize: scale(18),
     color: THEME.COLORS.PRIMARY
   },
   currentBalanceBoxDollarsWrap: {
@@ -37,7 +38,7 @@ export const rawStyles = {
   },
   currentBalanceBoxDollars: {
     color: THEME.COLORS.PRIMARY,
-    fontSize: 44
+    fontSize: scale(44)
   }
 }
 

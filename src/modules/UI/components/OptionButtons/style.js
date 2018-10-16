@@ -2,6 +2,7 @@
 
 import { StyleSheet } from 'react-native'
 
+import { scale } from '../../../../lib/scaling.js'
 import THEME from '../../../../theme/variables/airbitz'
 
 export const styles = {
@@ -20,7 +21,7 @@ export const styles = {
   },
   doneButtonWrap: {
     alignSelf: 'flex-end',
-    marginLeft: 4
+    marginLeft: scale(4)
   }
 }
 

@@ -2,6 +2,7 @@
 
 import { StyleSheet } from 'react-native'
 
+import { scale } from '../../../../lib/scaling.js'
 import THEME from '../../../../theme/variables/airbitz'
 
 const styles = StyleSheet.create({
@@ -10,7 +11,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: THEME.COLORS.WHITE,
-    fontSize: 16
+    fontSize: scale(16)
   }
 })
 

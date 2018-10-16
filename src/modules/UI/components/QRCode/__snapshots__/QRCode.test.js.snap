@@ -5,8 +5,8 @@ exports[`QRCode should render 1`] = `
   style={
     Object {
       "backgroundColor": "#FFFFFF",
-      "borderRadius": 4,
-      "padding": 10,
+      "borderRadius": 7.46235294117647,
+      "padding": 18.655882352941177,
     }
   }
 >
