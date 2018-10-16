@@ -99,7 +99,7 @@
   "fragment_wallets_resync_wallet_first_confirm_message_mobile": "",
   "fragment_wallets_split_wallet_first_confirm_message_mobile": "",
   "fragment_wallets_get_seed_wallet_first_confirm_message_mobile": "",
-  "fragmet_wallets_delete_wallet_first_confirm_message_mobile": "Você tem certeza que deseja excluir ",
+  "fragmet_wallets_delete_wallet_first_confirm_message_mobile": "",
   "fragmet_wallets_list_archive_title_capitalized": "Arquivo",
   "fragment_wallets_syncing_wallet_txs": "",
   "create_wallet_select_valid_crypto": "",
