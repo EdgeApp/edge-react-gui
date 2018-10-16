@@ -3,29 +3,29 @@
 
 Управление вашими криптоактивами никогда не была проще. Edge кошелек обеспечивает максимальную безопасность при сохранении простоты, позволяя всем типам пользователей легко управлять, переводить и обменивать криптоактивы.
 
-<b>Edge крипто кошелек на данный момент поддерживает:</b> Bitcoin (BTC), Bitcoin Cash (BCH), Litecoin (LTC), Qtum (QTUM), Dash (DASH), Ethereum (ETH), Monero (XMR), Ripple (XRP), and Feathercoin (FTC). Хотите увидеть другие криптовалюты в вашем кошелек? Send us a request!
+<b>Edge крипто кошелек на данный момент поддерживает:</b> Bitcoin (BTC), Bitcoin Cash (BCH), Litecoin (LTC), Qtum (QTUM), Dash (DASH), Ethereum (ETH), Monero (XMR), Ripple (XRP), and Feathercoin (FTC). Хотите увидеть другие криптовалюты в вашем кошелек? Отправьте нам запрос!
 
 Edge мощный и простой в использовании криптовалютный кошелек, позволяющий пользователям контролировать собственные приватные ключи с простотой, как в мобильном банке. 
 
-Take control of your funds! With Edge, only YOU have access to your funds or transaction data. Neither Edge or any 3rd party can access your money or data. Вы получите тайну финансовых операций и автономность, для которых криптовалюты и создавались, с легкостью использования, доступной даже бабушкам.
+Получите контроль над своими средствами! С Edge доступ к Вашим средства и информация о переводах будут только у ВАС. Ни Edge, ни какая-либо третья сторона не смогут получить доступ к Вашим средствам или данным. Вы получите тайну финансовых операций и автономность, для которых криптовалюты и создавались, с легкостью использования, доступной даже бабушкам.
 
 Edge также предоставляет возможность обмена криптовалют. Легко обмениваться криптовалютами с другими в несколько касаний. Обменивать BTC на Ethereum, ETH на BCH и многое другое.
 
-<b>Features</b>
+<b>Возможности</b>
 • Безопасный криптовалютный кошелек и блокчеин приложение
 • Легкий в использовании криптовалютный кошелек с поддержкой наиболее популярных монет: Bitcoin, Bitcoin Cash, Litecoin, Ripple (XRP) и т.д.
-• Zero-knowledge & zero-access to user funds, keys, or transaction data by Edge or 3rd parties
+• Невозможность доступа к средствам пользователя, его ключам или данным о переводах как со стороны Edge, так и с любой третьей стороны
 • Простое создание учетной записи, использующей только имя пользователя и пароль (не требует печати PDF-файлов, заполнения от руки кодовых фраз или настройки шифрования)
 * Вход в учетную запись по TouchID и FaceID
-• Hierarchical Deterministic wallets with changing addresses per transaction
-• Decentralized server architecture. Wallets work even if Edge servers are down.
-• Open-source code. Доступен по адресу https://github.com/Airbitz
+• Иерархически определенные кошельки, изменяющие адрес для каждого перевода
+• Децентрализованная архитектура сервера. Кошельки работают даже если сервера Edge недоступны.
+• Открытый исходный код. Доступен по адресу https://github.com/Airbitz
 • Встроенная обменная площадка для покупки и продажи криптовалют
 
-Privacy Notice
-The Edge Wallet application requests access to the device contact list, and personal information. This information is used on the device to provide an improved user experience in the following ways:
+Уведомление о конфиденциальности
+Приложение Edge запрашивает доступ к списку контактов на устройстве и личной информации. Эта информация используется, чтобы обеспечить пользователю наиболее удобные условия работы следующим образом:
 
 1. Автозаполнение контактов из списка контактов пользователя после перевода
 2. Автозаполнение контактов из адресной книги пользователя для отправления запросов на платеж по электронной почте или посредством SMS-сообщений
 
-No personal info or contact list info ever leaves the device without first being encrypted by the user's credentials (username/password). Neither Edge nor any 3rd party can access the information requested by the application.
+Ни личная информация, ни список контактов никогда не передаются без шифрования с использованием регистрационных данных пользователя (имя пользователя и пароль). Ни Edge, ни какая-либо третья сторона не имеют доступа к передаваемой приложением информации.
