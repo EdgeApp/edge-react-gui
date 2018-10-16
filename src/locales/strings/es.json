@@ -164,7 +164,7 @@
   "settings_enable_custom_nodes": "",
   "settings_set_custom_nodes_modal_title": "",
   "settings_set_custom_nodes_modal_instructions": "",
-  "settings_set_custom_nodes_placeholder": "",
+  "settings_set_custom_nodes_placeholder": "https://MyNode.example:18081",
   "string_cancel_cap": "Cancelar",
   "string_cancel": "CANCELAR",
   "string_delete": "Borrar",
