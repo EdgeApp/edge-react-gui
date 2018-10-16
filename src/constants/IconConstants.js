@@ -41,3 +41,6 @@ export const EXCLAMATION = 'exclamation'
 // MaterialCommunity
 export const MATERIAL_COMMUNITY = 'materialCommunity'
 export const ALERT = 'alert-circle-outline'
+export const ARROW_DOWN_THICK = 'arrow-down-thick'
+export const ARROW_DOWN_BOLD = 'arrow-down-bold'
+export const ARROW_DOWN = 'arrow-down'

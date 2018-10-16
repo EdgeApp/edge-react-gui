@@ -1,22 +1,13 @@
 // @flow
 
-import type { EdgeTransaction } from 'edge-core-js'
+import type { EdgeExchangeQuote, EdgeSwapCurrencies } from 'edge-core-js'
 import { type Reducer } from 'redux'
 
 import * as Constants from '../constants/indexConstants'
-import s from '../locales/strings.js'
 import { type Action } from '../modules/ReduxTypes.js'
 import { type GuiCurrencyInfo, type GuiWallet } from '../types.js'
 
 export type CryptoExchangeState = {
-  exchangeRate: number,
-  nativeMax: string,
-  nativeMin: string,
-  minerFee: string,
-  reverseExchange: number,
-  reverseNativeMax: string,
-  reverseNativeMin: string,
-  reverseMinerFee: string,
   fromWallet: GuiWallet | null,
   fromCurrencyCode: string | null,
   fromNativeAmount: string,
@@ -34,17 +25,15 @@ export type CryptoExchangeState = {
   insufficientError: boolean,
   feeSetting: 'low' | 'standard' | 'high' | 'custom',
   walletListModalVisible: boolean,
-  confirmTransactionModalVisible: boolean,
   forceUpdateGuiCounter: number,
   shiftTransactionError: Error | null,
   genericShapeShiftError: Error | null,
   changeWallet: 'none',
-  transaction: EdgeTransaction | null,
   fee: any,
-  gettingTransaction: boolean,
-  availableShapeShiftTokens: Array<any>,
+  availableShapeShiftTokens: EdgeSwapCurrencies,
   shiftPendingTransaction: boolean,
-  quoteExpireDate: number | null
+  quoteExpireDate: Date | null,
+  quote: EdgeExchangeQuote | null
 }
 
 const dummyCurrencyInfo: GuiCurrencyInfo = {
@@ -61,15 +50,6 @@ const dummyCurrencyInfo: GuiCurrencyInfo = {
 }
 
 const initialState = {
-  exchangeRate: 1,
-  nativeMax: '0',
-  nativeMin: '0',
-  minerFee: '0',
-  reverseExchange: 1,
-  reverseNativeMax: '0',
-  reverseNativeMin: '0',
-  reverseMinerFee: '0',
-
   fromWallet: null,
   fromCurrencyCode: null,
   fromNativeAmount: '0',
@@ -90,16 +70,14 @@ const initialState = {
   insufficientError: false,
   feeSetting: Constants.STANDARD_FEE,
   walletListModalVisible: false,
-  confirmTransactionModalVisible: false,
   shiftTransactionError: null,
   genericShapeShiftError: null,
   changeWallet: Constants.NONE,
   forceUpdateGuiCounter: 0,
-  transaction: null,
-  gettingTransaction: false,
-  availableShapeShiftTokens: [],
+  availableShapeShiftTokens: {},
   shiftPendingTransaction: false,
-  quoteExpireDate: null
+  quoteExpireDate: null,
+  quote: null
 }
 
 function cryptoExchangeInner (state = initialState, action: Action) {
@@ -127,8 +105,8 @@ function cryptoExchangeInner (state = initialState, action: Action) {
         minerFee: '0',
         fee: '',
         exchangeRate: 1,
-        transaction: null,
-        quoteExpireDate: null
+        quoteExpireDate: null,
+        quote: null
       }
     }
 
@@ -150,7 +128,7 @@ function cryptoExchangeInner (state = initialState, action: Action) {
         minerFee: '0',
         fee: '',
         exchangeRate: 1,
-        transaction: null,
+        quote: null,
         quoteExpireDate: null
       }
     }
@@ -170,44 +148,17 @@ function cryptoExchangeInner (state = initialState, action: Action) {
       }
     }
 
-    case 'UPDATE_CRYPTO_EXCHANGE_INFO': {
-      if (!action.data) throw new Error('Invalid action')
-      const result = {
-        ...state,
-        exchangeRate: action.data.rate,
-        nativeMin: action.data.nativeMin,
-        nativeMax: action.data.nativeMax,
-        minerFee: action.data.minerFee
-      }
-      return result
-    }
-
-    case 'UPDATE_CRYPTO_REVERSE_EXCHANGE_INFO': {
-      if (!action.data) throw new Error('Invalid action')
-      const result = {
-        ...state,
-        reverseExchange: action.data.rate,
-        reverseNativeMin: action.data.nativeMin,
-        reverseNativeMax: action.data.nativeMax,
-        reverseMinerFee: action.data.minerFee
-      }
-      return result
-    }
-
     case 'UPDATE_SHIFT_TRANSACTION_FEE': {
       if (!action.data) throw new Error('Invalid action')
       return {
         ...state,
-        transaction: action.data.edgeTransaction,
+        quote: action.data.quote,
         toNativeAmount: action.data.toNativeAmount,
         toDisplayAmount: action.data.toDisplayAmount,
         fromNativeAmount: action.data.fromNativeAmount,
         fromDisplayAmount: action.data.fromDisplayAmount,
         quoteExpireDate: action.data.quoteExpireDate,
-        fee:
-          action.data.networkFee && state.fromCurrencyCode
-            ? s.strings.string_fee_with_colon + ' ' + action.data.networkFee + ' ' + state.fromWalletPrimaryInfo.displayDenomination.name
-            : ' ',
+        fee: action.data.fee,
         insufficientError: false,
         genericShapeShiftError: null
       }
@@ -216,7 +167,7 @@ function cryptoExchangeInner (state = initialState, action: Action) {
     case 'INVALIDATE_SHIFT_TRANSACTION': {
       return {
         ...state,
-        transaction: null,
+        quote: null,
         insufficientError: false,
         genericShapeShiftError: null,
         quoteExpireDate: null
@@ -245,38 +196,10 @@ function cryptoExchangeInner (state = initialState, action: Action) {
       }
     }
 
-    case 'OPEN_CRYPTO_EXEC_CONF_MODAL': {
-      return {
-        ...state,
-        confirmTransactionModalVisible: true
-      }
-    }
-
-    case 'SET_CRYPTO_EXCHANGE_AMOUNTS': {
-      if (!action.data) throw new Error('Invalid action')
-      forceUpdateGuiCounter = state.forceUpdateGuiCounter
-      if (action.data.forceUpdateGui) {
-        forceUpdateGuiCounter++
-      }
-      const toNativeAmount = action.data.toNativeAmount || undefined
-      const toDisplayAmount = action.data.toDisplayAmount || undefined
-      const fromNativeAmount = action.data.fromNativeAmount || undefined
-      const fromDisplayAmount = action.data.fromDisplayAmount || undefined
-
-      return {
-        ...state,
-        toNativeAmount,
-        toDisplayAmount,
-        fromNativeAmount,
-        fromDisplayAmount,
-        forceUpdateGuiCounter
-      }
-    }
-
     case 'RECEIVED_INSUFFICENT_FUNDS_ERROR': {
       return {
         ...state,
-        transaction: null,
+        quote: null,
         insufficientError: true,
         genericShapeShiftError: null,
         shiftTransactionError: null
@@ -286,29 +209,9 @@ function cryptoExchangeInner (state = initialState, action: Action) {
     case 'GENERIC_SHAPE_SHIFT_ERROR': {
       return {
         ...state,
-        transaction: null,
+        quote: null,
         genericShapeShiftError: action.data,
         shiftTransactionError: null
-      }
-    }
-
-    case 'CHANGE_EXCHANGE_FEE': {
-      if (!action.data) throw new Error('Invalid action')
-      return {
-        ...state,
-        feeSetting: action.data.feeSetting,
-        forceUpdateGuiCounter: state.forceUpdateGuiCounter + 1
-      }
-    }
-
-    case 'START_MAKE_SPEND_CRYPTO': {
-      return {
-        ...state,
-        gettingTransaction: true,
-        insufficientError: false,
-        genericShapeShiftError: null,
-        shiftTransactionError: null,
-        quoteExpireDate: null
       }
     }
 
@@ -316,13 +219,6 @@ function cryptoExchangeInner (state = initialState, action: Action) {
       return {
         ...state,
         availableShapeShiftTokens: action.data
-      }
-    }
-
-    case 'DONE_MAKE_SPEND_CRYPTO': {
-      return {
-        ...state,
-        gettingTransaction: false
       }
     }
 
@@ -337,6 +233,16 @@ function cryptoExchangeInner (state = initialState, action: Action) {
       return {
         ...state,
         shiftPendingTransaction: false
+      }
+    }
+
+    case 'SET_FROM_WALLET_MAX': {
+      forceUpdateGuiCounter = state.forceUpdateGuiCounter
+      forceUpdateGuiCounter++
+      return {
+        ...state,
+        fromNativeAmount: action.data,
+        forceUpdateGuiCounter
       }
     }
 
@@ -384,17 +290,6 @@ function deepCopyState (state) {
   deepCopy.fromCurrencyIcon = state.toCurrencyIcon
   deepCopy.fromCurrencyIconDark = state.toCurrencyIconDark
 
-  deepCopy.exchangeRate = state.reverseExchange
-  deepCopy.reverseExchange = state.exchangeRate
-
-  deepCopy.nativeMin = state.reverseNativeMin
-  deepCopy.reverseNativeMin = state.nativeMin
-
-  deepCopy.nativeMax = state.reverseNativeMax
-  deepCopy.reverseNativeMax = state.nativeMax
-
-  deepCopy.minerFee = state.reverseMinerFee
-  deepCopy.reverseMinerFee = state.minerFee
   deepCopy.forceUpdateGuiCounter = state.forceUpdateGuiCounter + 1
 
   deepCopy.insufficientError = false

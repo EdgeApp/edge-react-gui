@@ -18,6 +18,8 @@
   "edge_description_warning": "WARNING: The \"%1$s\" application is requesting full access to your account and all wallets. \n\nOnly accept this login request if you trust this application and where it was downloaded from.",
   "exchange_failed": "Exchange Failed",
   "exchange_succeeded": "Exchange Succeeded",
+  "no_exchange_amount": "No Amount Selected",
+  "select_exchange_amount": "Please enter an amount to exchange",
   "exchanges_may_take_minutes": "Exchanges may take several minutes to process. Please check your destination wallet after a few minutes",
   "fragment_wallets_addwallet_blockchain_hint": "Choose a blockchain",
   "fragment_wallets_addwallet_fiat_hint": "Choose a fiat currency",
@@ -357,5 +359,11 @@
   "onboarding_slide_4": "To send cryptocurrency scan a friend's QR code here, or paste the code via the [Address] button.",
   "onboarding_slide_5": "Exchange cryptocurrencies by choosing the Source Wallet and Receiving Wallet to trade between them.",
   "otp_out_of_sync_title": "Warning",
-  "otp_out_of_sync_body": "This device does not have the proper 2-factor token. You can still access your funds with limited functionality, but cannot create wallets or change account options"
+  "otp_out_of_sync_body": "This device does not have the proper 2-factor token. You can still access your funds with limited functionality, but cannot create wallets or change account options",
+  "just_a_moment": "Just a moment",
+  "trying_to_find": "We are finding available exchange\nproviders for you...",
+  "exchange_will_be_sent": "%1$s %2$s will be sent",
+  "exchange_will_be_received": "%1$s %2$s will be received",
+  "mining_fee": "Mining Fee",
+  "confirm_with_shapeshift": "Confirm to complete your exchange through Shapeshift."
 }

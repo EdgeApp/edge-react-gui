@@ -30,6 +30,8 @@
 .*/node_modules/react-static-container/.*
 .*/node_modules/react-native-fs/.*
 .*/node_modules/metro-bundler/.*
+.*/node_modules/metro/.*
+.*/node_modules/metro-cache/.*
 .*/node_modules/react-native-keyboard-aware-scroll-view/.*
 .*/node_modules/react-native-dropdownalert/.*
 .*/node_modules/react-native-dropdown/.*

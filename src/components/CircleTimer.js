@@ -4,17 +4,21 @@ import React, { Component } from 'react'
 import { View } from 'react-native'
 type Props = {
   style: Object,
-  expiration?: number,
+  expiration: Date,
   timeExpired(): void
 }
 
 export const TEN_MINUTES = 600
 
 class CircleTimer extends Component<Props> {
+  componentDidMount () {
+    setTimeout(this.timerTick, 1000)
+  }
   timerTick = () => {
     const now = new Date()
     const nowMilli = now.getTime()
-    if (this.props.expiration && nowMilli > this.props.expiration) {
+    const expMil = this.props.expiration.getTime()
+    if (this.props.expiration && nowMilli >= expMil) {
       this.props.timeExpired()
       return
     }

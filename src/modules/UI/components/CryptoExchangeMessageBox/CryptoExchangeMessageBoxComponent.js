@@ -5,11 +5,11 @@ import { StyleSheet, Text, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 
 type Props = {
-  exchangeRate: string,
+  message: string,
   style: StyleSheet.Styles
 }
 
-export default class CryptoExchageRate extends Component<Props> {
+class CryptoExchangeMessageBoxComponent extends Component<Props> {
   constructor (props: any) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
@@ -22,8 +22,9 @@ export default class CryptoExchageRate extends Component<Props> {
 
     return (
       <View style={viewStyle}>
-        <Text style={textStyle}>{this.props.exchangeRate}</Text>
+        <Text style={textStyle}>{this.props.message}</Text>
       </View>
     )
   }
 }
+export { CryptoExchangeMessageBoxComponent }

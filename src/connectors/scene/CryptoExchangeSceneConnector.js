@@ -4,8 +4,7 @@ import { bns } from 'biggystring'
 import { connect } from 'react-redux'
 
 import type { SetNativeAmountInfo } from '../../actions/CryptoExchangeActions'
-import { selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
-import * as actions from '../../actions/indexActions'
+import { getQuoteForTransaction, getShapeShiftTokens, selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
 import s from '../../locales/strings.js'
 import type { Dispatch, State } from '../../modules/ReduxTypes'
 import { CryptoExchangeSceneComponent } from '../../modules/UI/scenes/CryptoExchange/CryptoExchangeSceneComponent'
@@ -23,7 +22,6 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
   const fromWallet = state.cryptoExchange.fromWallet
   const toWallet = state.cryptoExchange.toWallet
 
-  let exchangeRate = 1
   let fromCurrencyCode, fromPrimaryInfo: GuiCurrencyInfo, fromButtonText: string, fromNativeAmount: string, fromExchangeAmount: string, fromFiatToCrypto: number
   if (fromWallet) {
     fromCurrencyCode = state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name
@@ -56,11 +54,6 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
     toFiatToCrypto = 1
   }
 
-  if (fromWallet && toWallet) {
-    exchangeRate = state.cryptoExchange.exchangeRate
-  }
-
-  const showNextButton: boolean = !!state.cryptoExchange.transaction && state.cryptoExchange.transaction.nativeAmount !== '0'
   return {
     fromWallet: fromWallet || emptyGuiWallet,
     fromExchangeAmount,
@@ -74,7 +67,6 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
     toPrimaryInfo,
     toButtonText,
     toFiatToCrypto,
-    exchangeRate,
     fromDisplayAmount: state.cryptoExchange.fromDisplayAmount,
     toDisplayAmount: state.cryptoExchange.toDisplayAmount,
     fromCurrencyIcon: state.cryptoExchange.fromCurrencyIcon || '',
@@ -84,27 +76,26 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
     fee: state.cryptoExchange.fee,
     forceUpdateGuiCounter: state.cryptoExchange.forceUpdateGuiCounter,
     showWalletSelectModal: state.ui.scenes.walletListModal.walletListModalVisible,
-    showConfirmShiftModal: state.cryptoExchange.confirmTransactionModalVisible,
-    showNextButton,
-    gettingTransaction: state.cryptoExchange.gettingTransaction,
     shiftPendingTransaction: state.cryptoExchange.shiftPendingTransaction
   }
 }
 
 export const mapDispatchToProps = (dispatch: Dispatch): CryptoExchangeSceneComponentDispatchProps => ({
-  swapFromAndToWallets: () => dispatch({ type: 'SWAP_FROM_TO_CRYPTO_WALLETS' }),
-  openModal: (data: string) => dispatch({ type: 'OPEN_WALLET_SELECTOR_MODAL', data }),
-  shift: () => dispatch(actions.shiftCryptoCurrency()),
-  closeConfirmation: () => dispatch({ type: 'CLOSE_CRYPTO_EXEC_CONF_MODAL' }),
-  openConfirmation: () => dispatch({ type: 'OPEN_CRYPTO_EXEC_CONF_MODAL' }),
-  setNativeAmount: (data: SetNativeAmountInfo) => dispatch(actions.setNativeAmount(data)),
-  getShapeShiftTokens: () => dispatch(actions.getShapeShiftTokens()),
+  getQuoteForTransaction: (fromWalletNativeAmount: SetNativeAmountInfo) => {
+    dispatch(getQuoteForTransaction(fromWalletNativeAmount))
+  },
+  getShapeShiftTokens: () => {
+    dispatch(getShapeShiftTokens())
+  },
   onSelectWallet: (walletId: string, currencyCode: string) => {
     dispatch(selectWalletForExchange(walletId, currencyCode))
-  }
+  },
+  openModal: (data: string) => dispatch({ type: 'OPEN_WALLET_SELECTOR_MODAL', data })
 })
 
-export default connect(
+const CryptoExchangeSceneConnector = connect(
   mapStateToProps,
   mapDispatchToProps
 )(CryptoExchangeSceneComponent)
+
+export { CryptoExchangeSceneConnector }
