@@ -15,15 +15,10 @@ export const rawStyles = {
   },
   buttonText: {
     fontFamily: THEME.FONTS.DEFAULT,
-    fontSize: 18,
-    lineHeight: 18,
+    fontSize: scale(18),
+    lineHeight: scale(18),
     position: 'relative',
     top: 1
-  },
-  buttonTextScaled: {
-    fontFamily: THEME.FONTS.DEFAULT,
-    fontSize: scale(18),
-    lineHeight: scale(18)
   },
   text: {
     fontFamily: THEME.FONTS.DEFAULT
@@ -51,7 +46,7 @@ export const rawStyles = {
     backgroundColor: THEME.COLORS.WHITE,
     borderWidth: 2,
     borderColor: THEME.COLORS.SECONDARY,
-    padding: 12
+    padding: scale(12)
   },
   tertiaryButtonUnderlay: { color: THEME.COLORS.GRAY_3 },
   tertiaryButtonText: {

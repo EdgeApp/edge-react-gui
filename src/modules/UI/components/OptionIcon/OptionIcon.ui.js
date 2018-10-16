@@ -3,6 +3,7 @@
 import React, { Component } from 'react'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 
+import { scale } from '../../../../lib/scaling.js'
 import THEME from '../../../../theme/variables/airbitz.js'
 
 type Props = {
@@ -14,7 +15,7 @@ export default class OptionIcon extends Component<Props> {
     return (
       <FAIcon
         name={this.props.iconName}
-        size={24}
+        size={scale(24)}
         color={THEME.COLORS.PRIMARY}
         style={[
           {
