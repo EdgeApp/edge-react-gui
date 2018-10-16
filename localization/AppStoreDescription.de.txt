@@ -1,0 +1,26 @@
+Total privacy and security in our easy to use blockchain wallet.
+
+Managing your cryptocurrency assets has never been easier. Edge Wallet provides maximum security while keeping simplicity, allowing all types of users to easily manage, transfer & exchange their currencies.
+
+Edge Crypto Wallet currently supports: Bitcoin, Bitcoin Cash, Litecoin, Dash, Ethereum, Monero, and Ripple.
+
+Edge is a powerful and easy to use cryptocurrency wallet that allows users to easily control their own private keys with the familiarity and ease of mobile banking. 
+
+Take control of your funds! With Edge, only YOU have access to your funds or transaction data. Neither Edge or any 3rd party can access your money or data. You get the financial privacy and autonomy that blockchain was designed for, with the ease of use even grandma could handle.
+
+Edge also provides a cryptocurrency exchange. Easily swap your currencies for others with a few taps. 
+
+• Zero-knowledge & zero-access to user funds, keys, or transaction data by Edge or 3rd parties
+• Simple account creation using just a login & password (no printing of PDFs, writing down pass phrases, or adding encryption settings)
+* Biometric TouchID and FaceID login
+• Hierarchical Deterministic wallets with changing addresses per transaction
+• Decentralized server architecture. Wallets work even if Edge servers are down.
+• Open-source code. Available at https://github.com/EdgeApp
+
+Privacy Notice
+The Edge Wallet application requests access to the device contact list, and personal information. This information is used on the device to provide an improved user experience in the following ways:
+
+1. Autocomplete contacts from the user's address book after a transaction
+2. Autocomplete contacts from the user's address book to send Email or SMS payment requests
+
+No personal info or contact list info ever leaves the device. Neither Edge nor any 3rd party can access the information requested by the application.
