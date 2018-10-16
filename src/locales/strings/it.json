@@ -18,6 +18,8 @@
   "edge_description_warning": "ATTENZIONE: l'applicazione \"%1$s\" sta richiedendo pieno accesso al tuo account e ai tuoi portafogli elettronici.\n\nAccetta questa richiesta di login solo se ti fidi di questa applicazione e del luogo da cui l'hai scaricata.",
   "exchange_failed": "Cambio fallito",
   "exchange_succeeded": "Il cambio ha avuto successo",
+  "no_exchange_amount": "",
+  "select_exchange_amount": "",
   "exchanges_may_take_minutes": "I cambi possono impiegare diversi minuti per essere processati. Controlla il tuo portafoglio di destinazione dopo qualche minuto",
   "fragment_wallets_addwallet_blockchain_hint": "Scegli una blockchain",
   "fragment_wallets_addwallet_fiat_hint": "Scegli una valuta fiat",
@@ -357,5 +359,11 @@
   "onboarding_slide_4": "Per spedire cryptovalute scansiona il codice QR di un amico o incolla l'indirizzo tramite il tasto [Address].",
   "onboarding_slide_5": "Scambia cryptovalute tra di loro scegliendo il portafoglio di invio e quello di ricezione.",
   "otp_out_of_sync_title": "Attenzione",
-  "otp_out_of_sync_body": "Questo dispositivo non ha il corretto token a 2 fattori. Puoi ancora accedere ai tuoi fondi con funzionalità limitate ma non puoi creare portafogli o modificare le impostazioni dell'account"
+  "otp_out_of_sync_body": "Questo dispositivo non ha il corretto token a 2 fattori. Puoi ancora accedere ai tuoi fondi con funzionalità limitate ma non puoi creare portafogli o modificare le impostazioni dell'account",
+  "just_a_moment": "",
+  "trying_to_find": "",
+  "exchange_will_be_sent": "",
+  "exchange_will_be_received": "",
+  "mining_fee": "",
+  "confirm_with_shapeshift": ""
 }
