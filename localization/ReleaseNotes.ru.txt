@@ -1,16 +1,16 @@
 v1.4.0
-* Support for Stellar
+* Поддержка Stellar
 * Добавьте возможность задавать пользовательские узлы для Биткоина и аналогичных криптовалют
 * Поддержка для пользователей ShapeShift
-* Support Changelly.com in Exchange functionality
-* Add Spanish, Italian, and Russian translations
+* Поддержка Changelly.com в функции обменной площадки
+* Добавлены испанский, итальянский и русский переводы
 
 v1.3.4
 
-* Prevent create wallet button Done button from being tapped multiple times
-* Fix white screen hang upon login if an incoming transaction happens
-* Fix address wrapping in Simplex plugin
-* Fix double tap bug on Change Password modal
-* Fix Fiat amounts when using other country currencies
-* Additional scaling and visual improvements
-* Other minor bug fixes
+* Предотвращение многократного нажатия на кнопку создать кошелек
+* Исправление ошибки с появлением белого экрана после входа в систему, если поступил входящий платеж
+* Исправлено оборачивание адреса в Simplex плагине
+* Исправлена ошибка с двойным нажатием в окне смены пароля
+* Исправлено отображение сумм официальных валют других стран
+* Дополнительное масштабирование и визуальные улучшения
+* Другие мелкие исправления ошибок
