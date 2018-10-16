@@ -1,16 +1,19 @@
 // @flow
 
+import { createStaticModal, createYesNoModal } from 'edge-components'
 import React, { Component } from 'react'
-import { Text, View } from 'react-native'
+import { Image, Text, View } from 'react-native'
 
 import iconImage from '../../../../assets/images/otp/OTP-badge_sm.png'
-import { ExpandableBoxComponent, StaticModalComponent, TwoButtonTextModalComponent } from '../../../../components/indexComponents.js'
+import { ExpandableBoxComponent, StaticModalComponent } from '../../../../components/indexComponents.js'
 import * as Constants from '../../../../constants/indexConstants.js'
 import s from '../../../../locales/strings.js'
 import { OtpSettingsScreenStyles } from '../../../../styles/indexStyles.js'
+import { showModal } from '../../../ModalManager.js'
 import { PrimaryButton, TertiaryButton } from '../../components/Buttons/index'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui.js'
+import { Icon } from '../../components/Icon/Icon.ui'
 import SafeAreaView from '../../components/SafeAreaView'
 import OtpHeroComponent from './OtpHeroComponent.js'
 
@@ -25,74 +28,87 @@ type OtpSettingsSceneProps = {
 type State = {
   showMessageModal: boolean,
   messageModalMessage: string | null,
-  messageModalComponent?: any,
-  showConfirmationModal: boolean
+  messageModalComponent?: any
 }
 
 export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, State> {
   UNSAFE_componentWillMount () {
     this.setState({
       showMessageModal: false,
-      messageModalMessage: '',
-      showConfirmationModal: false
+      messageModalMessage: ''
     })
   }
+
   cancelStatic = () => {
     this.setState({
       showMessageModal: false,
       messageModalMessage: ''
     })
   }
-  cancelConfirmModal = () => {
-    this.setState({
-      showConfirmationModal: false
+
+  onPressDisable = async () => {
+    // Use `showModal` to put the modal component on screen:
+    const confirmDisableModal = createYesNoModal({
+      title: s.strings.otp_modal_headline,
+      message: s.strings.otp_modal_body,
+      icon: <Image source={iconImage} />,
+      yesButtonText: s.strings.otp_disable,
+      noButtonText: s.strings.string_cancel_cap
     })
-  }
-  onPress = () => {
-    if (this.props.isOtpEnabled) {
-      this.setState({
-        showConfirmationModal: true
-      })
-      return
+
+    const resolveValue = await showModal(confirmDisableModal)
+    if (resolveValue) {
+      this.props.disableOtp()
+      this.onConfirmDisable()
     }
-    this.setState({
-      showMessageModal: true,
-      messageModalMessage: null,
-      messageModalComponent: (
-        <Text style={{ textAlign: 'center' }}>
-          <T>
-            {s.strings.otp_enabled_modal_part_one} <T isBold>{s.strings.otp_enabled_modal_part_two}</T>
-          </T>
-        </Text>
-      )
-    })
-    this.props.enableOtp()
   }
 
-  disableOtp = () => {
-    this.setState({
-      showMessageModal: true,
-      messageModalMessage: s.strings.otp_disabled_modal,
-      showConfirmationModal: false,
-      messageModalComponent: null
+  onConfirmDisable = async () => {
+    const styles = OtpSettingsScreenStyles
+    const afterDisableModal = createStaticModal({
+      message: s.strings.otp_disabled_modal,
+      icon: <Icon style={styles.icon} name={Constants.CHECK_CIRCLE} size={styles.iconSize} type={Constants.SIMPLE_ICONS} />,
+      modalDismissTimerSeconds: 8
     })
-    this.props.disableOtp()
+
+    const resolveValue = await showModal(afterDisableModal)
+    if (resolveValue) {
+      console.log('hello')
+    }
+  }
+
+  onPressEnable = () => {
+    this.setState(
+      {
+        showMessageModal: true,
+        messageModalMessage: null,
+        messageModalComponent: (
+          <Text style={{ textAlign: 'center' }}>
+            <T>
+              {s.strings.otp_enabled_modal_part_one} <T isBold>{s.strings.otp_enabled_modal_part_two}</T>
+            </T>
+          </Text>
+        )
+      },
+      this.props.enableOtp
+    )
   }
 
   renderButton = () => {
     if (this.props.isOtpEnabled) {
       return (
-        <TertiaryButton onPress={this.onPress}>
+        <TertiaryButton onPress={this.onPressDisable}>
           <TertiaryButton.Text>{s.strings.otp_disable}</TertiaryButton.Text>
         </TertiaryButton>
       )
     }
     return (
-      <PrimaryButton onPress={this.onPress}>
+      <PrimaryButton onPress={this.onPressEnable}>
         <PrimaryButton.Text>{s.strings.otp_enable}</PrimaryButton.Text>
       </PrimaryButton>
     )
   }
+
   renderKeyBox = (styles: Object) => {
     if (this.props.isOtpEnabled) {
       return (
@@ -103,6 +119,7 @@ export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, S
     }
     return null
   }
+
   renderMiddle (styles: Object) {
     const message = this.props.isOtpEnabled ? s.strings.otp_enabled_description : s.strings.otp_description
     return (
@@ -113,27 +130,10 @@ export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, S
       </View>
     )
   }
-  renderModals (styles: Object) {
-    if (this.state.showConfirmationModal) {
-      return (
-        <TwoButtonTextModalComponent
-          style={styles.showConfirmationModal}
-          headerText={s.strings.otp_modal_headline}
-          showModal
-          middleText={s.strings.otp_modal_body}
-          icon={Constants.SWAP_HORIZ}
-          iconImage={iconImage}
-          cancelText={s.strings.string_cancel_cap}
-          doneText={s.strings.otp_disable}
-          onCancel={this.cancelConfirmModal}
-          onDone={this.disableOtp}
-        />
-      )
-    }
-    return null
-  }
+
   render () {
     const styles = OtpSettingsScreenStyles
+    console.log('this.state.showMessageModal: ', this.state.showMessageModal)
     return (
       <SafeAreaView>
         <View style={styles.container}>
@@ -143,14 +143,13 @@ export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, S
             {this.renderMiddle(styles)}
             <View style={styles.buttonContainer}>{this.renderButton()}</View>
           </View>
-          {this.renderModals(styles)}
         </View>
         <StaticModalComponent
           cancel={this.cancelStatic}
           body={this.state.messageModalMessage}
           bodyComponent={this.state.messageModalComponent}
           isVisible={this.state.showMessageModal}
-          modalDismissTimerSeconds={8}
+          modalDismissTimerSeconds={10}
         />
       </SafeAreaView>
     )

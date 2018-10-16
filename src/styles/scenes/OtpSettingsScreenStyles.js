@@ -61,7 +61,11 @@ const OtpSettingsScreenStyles = {
     height: THEME.BUTTONS.HEIGHT
   },
   keyBox: Styles.ExpandableBoxStyle,
-  showConfirmationModal: Styles.TwoButtonModalStyle
+  showConfirmationModal: Styles.TwoButtonModalStyle,
+  icon: {
+    color: THEME.COLORS.WHITE
+  },
+  iconSize: 36
 }
 
 export { OtpSettingsScreenStyles }

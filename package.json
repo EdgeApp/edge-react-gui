@@ -81,7 +81,7 @@
     "dateformat": "^3.0.3",
     "dns.js": "^1.0.1",
     "domain-browser": "^1.1.7",
-    "edge-components": "^0.0.7",
+    "edge-components": "^0.0.8",
     "edge-core-js": "0.12.5",
     "edge-currency-accountbased": "^0.0.9-beta.3",
     "edge-currency-bitcoin": "3.5.0",
