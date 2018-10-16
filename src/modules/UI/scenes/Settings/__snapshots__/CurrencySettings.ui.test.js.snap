@@ -31,9 +31,9 @@ exports[`CurrencySettings should render 1`] = `
           Array [
             Object {
               "flexDirection": "row",
-              "height": 50,
+              "height": 76.97183098591549,
               "justifyContent": "space-between",
-              "padding": 12,
+              "padding": 18.473239436619718,
             },
           ]
         }
@@ -57,7 +57,8 @@ exports[`CurrencySettings should render 1`] = `
                 Object {
                   "backgroundColor": "transparent",
                   "color": "#FFFFFF",
-                  "fontSize": 18,
+                  "fontSize": 27.70985915492958,
+                  "marginLeft": 24.630985915492957,
                 }
               }
             >
