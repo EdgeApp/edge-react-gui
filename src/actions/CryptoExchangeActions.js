@@ -363,6 +363,10 @@ export const selectWalletForExchange = (walletId: string, currencyCode: string) 
 }
 
 export const exchangeTimerExpired = () => (dispatch: Dispatch, getState: GetState) => {
+  const currentScene = Actions.currentScene
+  if (currentScene !== Constants.EXCHANGE_QUOTE_SCENE) {
+    return
+  }
   Actions[Constants.EXCHANGE_QUOTE_PROCESSING_SCENE]()
   const state = getState()
   const hasFrom = state.cryptoExchange.fromWallet ? state.cryptoExchange.fromWallet : null
