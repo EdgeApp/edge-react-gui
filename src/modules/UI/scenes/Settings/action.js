@@ -229,13 +229,13 @@ export const showReEnableOtpModal = () => async (dispatch: Dispatch, getState: G
     noButtonText: s.strings.otp_disable
   })
   const resolveValue = await showModal(modal)
-  if (resolveValue) {
+  if (resolveValue === true) {
     // true on positive, false on negative
     // let 2FA expire
     dispatch(keepOtp())
-  } else {
+  } else if (resolveValue === false) {
     dispatch(disableOtp())
-  }
+  } // if default of null (press backdrop) do not change anything and keep reminding
 }
 
 export const enableCustomNodes = (currencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
