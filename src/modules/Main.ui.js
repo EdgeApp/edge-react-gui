@@ -188,7 +188,8 @@ type Props = {
   dispatchDisableScan: () => void,
   urlReceived: string => void,
   updateCurrentSceneKey: string => void,
-  contextCallbacks: EdgeContextCallbacks
+  contextCallbacks: EdgeContextCallbacks,
+  showReEnableOtpModal: () => void
 }
 type State = {
   context: ?EdgeContext
@@ -532,6 +533,7 @@ export default class Main extends Component<Props, State> {
                       <Scene
                         key={Constants.SETTINGS_OVERVIEW}
                         navTransparent={true}
+                        onEnter={() => this.props.showReEnableOtpModal()}
                         component={SettingsOverview}
                         renderTitle={this.renderTitle(SETTINGS)}
                         renderLeftButton={this.renderBackButton()}

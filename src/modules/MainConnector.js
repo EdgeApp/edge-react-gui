@@ -11,6 +11,7 @@ import type { Dispatch } from './ReduxTypes'
 import { setKeyboardHeight } from './UI/dimensions/action'
 import { updateCurrentSceneKey } from './UI/scenes/action.js'
 import { disableScan, enableScan } from './UI/scenes/Scan/action'
+import { showReEnableOtpModal } from './UI/scenes/Settings/action.js'
 import { addCurrencyPlugin } from './UI/Settings/action'
 import { selectWallet } from './UI/Wallets/action.js'
 
@@ -48,7 +49,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     return dispatch(actions.deepLinkLogout(backupKey))
   },
   contextCallbacks: makeContextCallbacks(dispatch),
-  onSelectWallet: (walletId, currencyCode) => dispatch(selectWallet(walletId, currencyCode))
+  onSelectWallet: (walletId, currencyCode) => dispatch(selectWallet(walletId, currencyCode)),
+  showReEnableOtpModal: () => dispatch(showReEnableOtpModal())
 })
 export default connect(
   mapStateToProps,

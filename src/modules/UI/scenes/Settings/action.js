@@ -8,7 +8,7 @@ import { Image } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import type { Dispatch, GetState, State } from '../../../../../src/modules/ReduxTypes.js'
-import { keepOtp } from '../../../../actions/OtpActions.js'
+import { disableOtp, keepOtp } from '../../../../actions/OtpActions.js'
 import iconImage from '../../../../assets/images/otp/OTP-badge_sm.png'
 import { CURRENCY_PLUGIN_NAMES } from '../../../../constants/indexConstants.js'
 import s from '../../../../locales/strings.js'
@@ -215,7 +215,11 @@ export function togglePinLoginEnabled (pinLoginEnabled: boolean) {
   }
 }
 
-export const showReEnableOtpModal = () => async (dispatch: Dispatch) => {
+export const showReEnableOtpModal = () => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  const otpResetDate = account.otpResetDate
+  if (!otpResetDate) return
   // Use `showModal` to put the modal component on screen:
   const modal = createYesNoModal({
     title: s.strings.title_otp_keep_modal,
@@ -229,6 +233,8 @@ export const showReEnableOtpModal = () => async (dispatch: Dispatch) => {
     // true on positive, false on negative
     // let 2FA expire
     dispatch(keepOtp())
+  } else {
+    dispatch(disableOtp())
   }
 }
 
