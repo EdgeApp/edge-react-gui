@@ -1,7 +1,7 @@
 v1.4.0
 * Support for Stellar
-* Add ability to select custom nodes for Bitcoin and similar currencies
-* Support for ShapeShift membership
+* Добавьте возможность задавать пользовательские узлы для Биткоина и аналогичных криптовалют
+* Поддержка для пользователей ShapeShift
 * Support Changelly.com in Exchange functionality
 * Add Spanish, Italian, and Russian translations
 
