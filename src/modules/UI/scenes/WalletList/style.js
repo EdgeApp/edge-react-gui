@@ -2,6 +2,7 @@
 
 import { Platform, StyleSheet } from 'react-native'
 
+import { scale } from '../../../../lib/scaling.js'
 import THEME from '../../../../theme/variables/airbitz'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
 
@@ -19,44 +20,46 @@ export const styles = {
     flex: 1
   },
   walletsBoxHeaderWrap: {
-    paddingLeft: 12,
-    paddingRight: 6,
+    paddingLeft: scale(12),
+    paddingRight: scale(6),
     flexDirection: 'row',
     justifyContent: 'space-between',
-    height: 50
+    height: scale(50)
   },
   walletsBoxHeaderTextWrap: {
-    paddingVertical: 12
+    paddingVertical: scale(12)
   },
   leftArea: {
     flexDirection: 'row'
   },
   walletIcon: {
+    width: scale(22),
+    height: scale(22),
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   walletsBoxHeaderText: {
-    fontSize: 18,
+    fontSize: scale(18),
     color: THEME.COLORS.WHITE,
     backgroundColor: THEME.COLORS.TRANSPARENT,
-    marginLeft: 16
+    marginLeft: scale(16)
   },
   donePlusContainer: {
-    minWidth: 132,
-    height: 50
+    minWidth: scale(132),
+    height: scale(50)
   },
   donePlusSortable: {
     alignItems: 'flex-end',
-    marginRight: 30
+    marginRight: scale(30)
   },
   plusContainer: {
     position: 'absolute',
     justifyContent: 'space-between',
     alignItems: 'center',
-    height: 50,
+    height: scale(50),
     flexDirection: 'row'
   },
   fiatToggleWrap: {
-    width: 92,
+    width: scale(92),
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center'
@@ -68,26 +71,26 @@ export const styles = {
     top: 0,
     left: 0,
     height: '100%',
-    paddingVertical: 12,
-    width: 82
+    paddingVertical: scale(12),
+    width: scale(82)
   },
   toggleFiatText: {
     color: THEME.COLORS.WHITE,
     backgroundColor: THEME.COLORS.TRANSPARENT,
-    fontSize: 18,
+    fontSize: scale(18),
     textAlign: 'center'
   },
   doneContainer: {
     position: 'absolute',
     justifyContent: 'center',
     alignItems: 'center',
-    height: 50
+    height: scale(50)
   },
   walletsBoxDoneTextWrap: {
-    paddingVertical: 12
+    paddingVertical: scale(12)
   },
   walletsBoxDoneText: {
-    fontSize: 18,
+    fontSize: scale(18),
     color: THEME.COLORS.WHITE,
     backgroundColor: THEME.COLORS.TRANSPARENT,
     top: 0,
@@ -99,23 +102,23 @@ export const styles = {
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   archiveBoxHeaderWrap: {
-    padding: 12,
-    borderBottomWidth: 1,
+    padding: scale(12),
+    borderBottomWidth: scale(1),
     borderColor: THEME.COLORS.GRAY_2,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    height: 50
+    height: scale(50)
   },
   archiveBoxHeaderTextWrap: {},
   archiveIcon: {
     backgroundColor: THEME.COLORS.TRANSPARENT,
-    fontSize: 28
+    fontSize: scale(28)
   },
   archiveBoxHeaderText: {
-    fontSize: 18,
+    fontSize: scale(18),
     backgroundColor: THEME.COLORS.TRANSPARENT,
     color: THEME.COLORS.WHITE,
-    marginLeft: 14
+    marginLeft: scale(14)
   },
   archiveBoxHeaderDropdown: {
     flexDirection: 'row',
@@ -136,29 +139,29 @@ export const styles = {
   sortableList: {
     flex: 1,
     position: 'absolute',
-    height: PLATFORM.usableHeight - 130 - 50
+    height: PLATFORM.usableHeight - scale(130) - scale(50)
   },
   sortableWalletListRow: {
     width: PLATFORM.deviceWidth,
-    height: 50,
+    height: scale(50),
     backgroundColor: THEME.COLORS.WHITE,
-    paddingVertical: 6,
-    paddingHorizontal: 20,
+    paddingVertical: scale(6),
+    paddingHorizontal: scale(20),
     justifyContent: 'space-between',
-    borderBottomWidth: 1,
+    borderBottomWidth: scale(1),
     borderColor: THEME.COLORS.WHITE
   },
   fullList: {
     flex: 1,
     // position: 'absolute',
-    height: PLATFORM.usableHeight - 130 - 50
+    height: PLATFORM.usableHeight - scale(130) - scale(50)
   },
   rowContainer: {
-    padding: 6,
-    paddingLeft: 16,
+    padding: scale(6),
+    paddingLeft: scale(16),
     flexDirection: 'column',
     backgroundColor: THEME.COLORS.WHITE,
-    borderBottomWidth: 1,
+    borderBottomWidth: scale(1),
     borderBottomColor: THEME.COLORS.GRAY_3
   },
   rowContent: {
@@ -166,73 +169,73 @@ export const styles = {
     flexDirection: 'row'
   },
   sortableRowContent: {
-    paddingRight: 32
+    paddingRight: scale(32)
   },
   rowNameTextWrap: {
     flex: 1,
     justifyContent: 'center',
-    marginRight: 5
+    marginRight: scale(5)
   },
   rowNameTextWrapIOS: {
     flex: 1,
     justifyContent: 'center',
-    marginRight: 5
+    marginRight: scale(5)
   },
   rowNameTextWrapAndroid: {
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    marginRight: 5,
+    marginRight: scale(5),
     flexDirection: 'row'
   },
   rowCurrencyLogoAndroid: {
-    height: 22,
-    width: 22,
-    marginRight: 5,
+    height: scale(22),
+    width: scale(22),
+    marginRight: scale(5),
     resizeMode: 'contain',
     alignSelf: 'center'
   },
   rowCurrencyLogoIOS: {
-    height: 22,
-    width: 26,
+    height: scale(22),
+    width: scale(26),
     resizeMode: 'contain',
     alignSelf: 'flex-start'
   },
   rowNameText: {
-    fontSize: 18,
+    fontSize: scale(18),
     color: THEME.COLORS.GRAY_1
   },
   rowBalanceTextWrap: {
     justifyContent: 'center',
-    height: 38
+    height: scale(38)
   },
   rowBalanceText: {
     flexDirection: 'row',
     justifyContent: 'flex-end'
   },
   rowBalanceAmountText: {
-    fontSize: 16,
+    fontSize: scale(16),
     color: THEME.COLORS.GRAY_1,
     textAlign: 'right'
   },
   rowBalanceDenominationText: {
-    fontSize: 14,
-    lineHeight: 18,
+    fontSize: scale(14),
+    lineHeight: scale(18),
     color: THEME.COLORS.GRAY_1,
     textAlign: 'right'
   },
 
   rowDragArea: {
     justifyContent: 'center',
-    marginRight: 20,
-    marginLeft: 4
+    marginRight: scale(20),
+    marginLeft: scale(4)
   },
   rowDragIcon: {
     position: 'relative',
-    top: 16
+    top: scale(16)
   },
   rowMenuTrigger: {
-    width: 46
+    width: scale(46)
   },
 
   symbol: {
@@ -245,7 +248,7 @@ export const styles = {
     textAlignVertical: 'center'
   },
   trashIcon: {
-    marginRight: 13,
+    marginRight: scale(13),
     justifyContent: 'center',
     alignItems: 'center',
     textAlignVertical: 'center'
@@ -261,12 +264,12 @@ export const styles = {
     marginTop: 0,
     marginBottom: 0,
     borderBottomColor: THEME.COLORS.GRAY_4,
-    borderBottomWidth: Platform.OS === 'ios' ? 1 : 0
+    borderBottomWidth: Platform.OS === 'ios' ? scale(1) : 0
   },
   nameInput: {
-    height: Platform.OS === 'ios' ? 26 : 46,
+    height: Platform.OS === 'ios' ? scale(26) : scale(46),
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: scale(20),
     color: THEME.COLORS.GRAY_1
   },
   emptyBottom: {
@@ -275,7 +278,7 @@ export const styles = {
   subHeaderSyntax: {
     color: THEME.COLORS.GRAY_1,
     textAlign: 'center',
-    fontSize: 14
+    fontSize: scale(14)
   },
   // buttons
   buttonsWrap: {
@@ -284,7 +287,7 @@ export const styles = {
     alignSelf: 'flex-end'
   },
   stylizedButton: {
-    height: 44,
+    height: scale(44),
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
@@ -293,7 +296,7 @@ export const styles = {
   stylizedButtonTextWrap: {},
   stylizedButtonText: {
     color: THEME.COLORS.WHITE,
-    fontSize: 16
+    fontSize: scale(16)
   },
   cancelButtonWrap: {
     backgroundColor: THEME.COLORS.GRAY_2,
@@ -305,16 +308,16 @@ export const styles = {
   doneButtonWrap: {
     backgroundColor: THEME.COLORS.PRIMARY,
     alignSelf: 'flex-end',
-    marginLeft: 4
+    marginLeft: scale(4)
   },
   doneButton: {
     color: THEME.COLORS.PRIMARY
   },
   // beginning of token rows //
   tokenRowContainer: {
-    padding: 16,
-    paddingLeft: 30,
-    paddingRight: 44,
+    padding: scale(16),
+    paddingLeft: scale(30),
+    paddingRight: scale(44),
     backgroundColor: THEME.COLORS.GRAY_4,
     borderBottomWidth: 1,
     borderColor: THEME.COLORS.GRAY_3
@@ -327,7 +330,7 @@ export const styles = {
     justifyContent: 'center'
   },
   tokenRowText: {
-    fontSize: 16,
+    fontSize: scale(16),
     color: THEME.COLORS.GRAY_1
   },
   // end of token rows //,,
@@ -342,11 +345,11 @@ export const styles = {
     color: THEME.COLORS.ROW_PRESSED
   },
   emptyRow: {
-    height: 50,
+    height: scale(50),
     backgroundColor: THEME.COLORS.WHITE,
-    padding: 16,
-    paddingLeft: 20,
-    paddingRight: 20,
+    padding: scale(16),
+    paddingLeft: scale(20),
+    paddingRight: scale(20),
     justifyContent: 'space-between',
     borderBottomWidth: 1,
     borderColor: THEME.COLORS.GRAY_4
@@ -378,7 +381,7 @@ export const styles = {
   },
 
   progressBarSpacer: {
-    height: 3,
+    height: scale(3),
     backgroundColor: '#E9E9EF'
   }
 }

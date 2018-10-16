@@ -2,6 +2,7 @@
 
 import { StyleSheet } from 'react-native'
 
+import { scale } from '../../../../lib/scaling.js'
 import THEME from '../../../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
 
@@ -12,9 +13,9 @@ export const stylesRaw = {
   },
   rowContainer: {
     justifyContent: 'space-between',
-    paddingVertical: 8,
-    paddingHorizontal: 20,
-    borderBottomWidth: 1,
+    paddingVertical: scale(8),
+    paddingHorizontal: scale(20),
+    borderBottomWidth: scale(1),
     borderBottomColor: THEME.COLORS.GRAY_3
   },
   rowInfo: {
@@ -35,7 +36,7 @@ export const stylesRaw = {
     alignSelf: 'stretch'
   },
   modalRoot: {
-    paddingTop: 50
+    paddingTop: scale(50)
   },
   headerContainer: {
     backgroundColor: THEME.COLORS.GRAY_1
@@ -46,21 +47,21 @@ export const stylesRaw = {
   },
 
   rowNameText: {
-    fontSize: 18,
+    fontSize: scale(18),
     fontFamily: THEME.FONTS.DEFAULT,
     color: THEME.COLORS.GRAY_1
   },
   rowRightCryptoText: {
     textAlign: 'right',
     color: THEME.COLORS.GRAY_1,
-    fontSize: 14,
-    lineHeight: 18
+    fontSize: scale(14),
+    lineHeight: scale(18)
   },
   rowRightFiatText: {
     textAlign: 'right',
     color: THEME.COLORS.GRAY_1,
-    fontSize: 14,
-    lineHeight: 18
+    fontSize: scale(14),
+    lineHeight: scale(18)
   },
   headerContent: {
     justifyContent: 'space-between',
@@ -71,31 +72,31 @@ export const stylesRaw = {
   },
   headerText: {
     color: THEME.COLORS.WHITE,
-    fontSize: 14,
+    fontSize: scale(14),
     fontFamily: THEME.FONTS.DEFAULT
   },
   headerCloseWrap: {
     alignSelf: 'flex-end'
   },
   modalCloseWrap: {
-    height: 34,
-    width: 34,
+    height: scale(34),
+    width: scale(34),
     justifyContent: 'center',
     alignItems: 'center'
   },
   doneButton: {
     position: 'relative',
-    top: 6
+    top: scale(6)
   },
 
   // beginning of token rows //
 
   tokenRowContainer: {
-    paddingVertical: 8,
-    paddingLeft: 30,
-    paddingRight: 20,
+    paddingVertical: scale(8),
+    paddingLeft: scale(30),
+    paddingRight: scale(20),
     backgroundColor: THEME.COLORS.GRAY_4,
-    borderBottomWidth: 1,
+    borderBottomWidth: scale(1),
     borderColor: THEME.COLORS.GRAY_3
   },
   currencyRowContent: {
@@ -107,7 +108,7 @@ export const stylesRaw = {
   },
   currencyRowText: {
     color: THEME.COLORS.GRAY_1,
-    fontSize: 14,
+    fontSize: scale(14),
     fontFamily: THEME.FONTS.DEFAULT
   },
   underlay: {

@@ -11,6 +11,7 @@ import FAIcon from 'react-native-vector-icons/FontAwesome'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import * as Constants from '../../../../constants/indexConstants'
+import { scale } from '../../../../lib/scaling.js'
 import s from '../../../../locales/strings.js'
 import type { PermissionStatus } from '../../../ReduxTypes'
 import WalletListModal from '../../../UI/components/WalletListModal/WalletListModalConnector'
@@ -77,14 +78,14 @@ export default class Scan extends Component<Props> {
               <Gradient style={[styles.overlayButtonAreaWrap]}>
                 <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleAddressModal} underlayColor={styleRaw.underlay.color}>
                   <View style={styles.bottomButtonTextWrap}>
-                    <FAIcon style={[styles.addressBookIcon]} name="address-book-o" size={18} />
+                    <FAIcon style={[styles.addressBookIcon]} name="address-book-o" size={scale(18)} />
                     <T style={[styles.addressButtonText, styles.bottomButtonText]}>{ADDRESS_TEXT}</T>
                   </View>
                 </TouchableHighlight>
 
                 <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleTorch} underlayColor={styleRaw.underlay.color}>
                   <View style={styles.bottomButtonTextWrap}>
-                    <Ionicon style={[styles.flashIcon]} name="ios-flash-outline" size={24} />
+                    <Ionicon style={[styles.flashIcon]} name="ios-flash-outline" size={scale(24)} />
                     <T style={[styles.flashButtonText, styles.bottomButtonText]}>{FLASH_TEXT}</T>
                   </View>
                 </TouchableHighlight>

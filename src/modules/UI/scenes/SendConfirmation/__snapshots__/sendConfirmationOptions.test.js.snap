@@ -15,8 +15,8 @@ exports[`SendConfirmation XMR 1`] = `
       disabled={false}
       style={
         Object {
-          "paddingHorizontal": 8,
-          "paddingVertical": 4,
+          "paddingHorizontal": 12.315492957746478,
+          "paddingVertical": 6.157746478873239,
         }
       }
     >
@@ -24,9 +24,9 @@ exports[`SendConfirmation XMR 1`] = `
         style={
           Object {
             "color": "#FFFFFF",
-            "fontSize": 25,
+            "fontSize": 27.70985915492958,
             "fontWeight": "700",
-            "paddingHorizontal": 8,
+            "paddingHorizontal": 12.315492957746478,
           }
         }
       >
@@ -37,7 +37,7 @@ exports[`SendConfirmation XMR 1`] = `
       customStyles={Object {}}
       optionsContainerStyle={
         Object {
-          "width": 165,
+          "width": 254.00704225352115,
         }
       }
     >
@@ -58,7 +58,7 @@ exports[`SendConfirmation XMR 1`] = `
           style={
             Object {
               "flexDirection": "row",
-              "paddingVertical": 4,
+              "paddingVertical": 6.157746478873239,
             }
           }
         >
@@ -66,7 +66,7 @@ exports[`SendConfirmation XMR 1`] = `
             style={
               Object {
                 "color": "#4A5157",
-                "fontSize": 18,
+                "fontSize": 27.70985915492958,
               }
             }
           >
@@ -91,7 +91,7 @@ exports[`SendConfirmation XMR 1`] = `
           style={
             Object {
               "flexDirection": "row",
-              "paddingVertical": 4,
+              "paddingVertical": 6.157746478873239,
             }
           }
         >
@@ -100,7 +100,7 @@ exports[`SendConfirmation XMR 1`] = `
               Array [
                 Object {
                   "color": "#4A5157",
-                  "fontSize": 18,
+                  "fontSize": 27.70985915492958,
                 },
               ]
             }
@@ -126,7 +126,7 @@ exports[`SendConfirmation XMR 1`] = `
           style={
             Object {
               "flexDirection": "row",
-              "paddingVertical": 4,
+              "paddingVertical": 6.157746478873239,
             }
           }
         >
@@ -134,7 +134,7 @@ exports[`SendConfirmation XMR 1`] = `
             style={
               Object {
                 "color": "#4A5157",
-                "fontSize": 18,
+                "fontSize": 27.70985915492958,
               }
             }
           >
@@ -162,8 +162,8 @@ exports[`SendConfirmation XRP 1`] = `
       disabled={false}
       style={
         Object {
-          "paddingHorizontal": 8,
-          "paddingVertical": 4,
+          "paddingHorizontal": 12.315492957746478,
+          "paddingVertical": 6.157746478873239,
         }
       }
     >
@@ -171,9 +171,9 @@ exports[`SendConfirmation XRP 1`] = `
         style={
           Object {
             "color": "#FFFFFF",
-            "fontSize": 25,
+            "fontSize": 27.70985915492958,
             "fontWeight": "700",
-            "paddingHorizontal": 8,
+            "paddingHorizontal": 12.315492957746478,
           }
         }
       >
@@ -184,7 +184,7 @@ exports[`SendConfirmation XRP 1`] = `
       customStyles={Object {}}
       optionsContainerStyle={
         Object {
-          "width": 165,
+          "width": 254.00704225352115,
         }
       }
     >
@@ -205,7 +205,7 @@ exports[`SendConfirmation XRP 1`] = `
           style={
             Object {
               "flexDirection": "row",
-              "paddingVertical": 4,
+              "paddingVertical": 6.157746478873239,
             }
           }
         >
@@ -213,7 +213,7 @@ exports[`SendConfirmation XRP 1`] = `
             style={
               Object {
                 "color": "#4A5157",
-                "fontSize": 18,
+                "fontSize": 27.70985915492958,
               }
             }
           >
@@ -238,7 +238,7 @@ exports[`SendConfirmation XRP 1`] = `
           style={
             Object {
               "flexDirection": "row",
-              "paddingVertical": 4,
+              "paddingVertical": 6.157746478873239,
             }
           }
         >
@@ -247,7 +247,7 @@ exports[`SendConfirmation XRP 1`] = `
               Array [
                 Object {
                   "color": "#4A5157",
-                  "fontSize": 18,
+                  "fontSize": 27.70985915492958,
                 },
                 Object {
                   "color": "#F1AA19",
@@ -276,7 +276,7 @@ exports[`SendConfirmation XRP 1`] = `
           style={
             Object {
               "flexDirection": "row",
-              "paddingVertical": 4,
+              "paddingVertical": 6.157746478873239,
             }
           }
         >
@@ -285,7 +285,7 @@ exports[`SendConfirmation XRP 1`] = `
               Array [
                 Object {
                   "color": "#4A5157",
-                  "fontSize": 18,
+                  "fontSize": 27.70985915492958,
                 },
               ]
             }
@@ -311,7 +311,7 @@ exports[`SendConfirmation XRP 1`] = `
           style={
             Object {
               "flexDirection": "row",
-              "paddingVertical": 4,
+              "paddingVertical": 6.157746478873239,
             }
           }
         >
@@ -319,7 +319,7 @@ exports[`SendConfirmation XRP 1`] = `
             style={
               Object {
                 "color": "#4A5157",
-                "fontSize": 18,
+                "fontSize": 27.70985915492958,
               }
             }
           >
@@ -347,8 +347,8 @@ exports[`SendConfirmation not editable 1`] = `
       disabled={false}
       style={
         Object {
-          "paddingHorizontal": 8,
-          "paddingVertical": 4,
+          "paddingHorizontal": 12.315492957746478,
+          "paddingVertical": 6.157746478873239,
         }
       }
     >
@@ -356,9 +356,9 @@ exports[`SendConfirmation not editable 1`] = `
         style={
           Object {
             "color": "#FFFFFF",
-            "fontSize": 25,
+            "fontSize": 27.70985915492958,
             "fontWeight": "700",
-            "paddingHorizontal": 8,
+            "paddingHorizontal": 12.315492957746478,
           }
         }
       >
@@ -369,7 +369,7 @@ exports[`SendConfirmation not editable 1`] = `
       customStyles={Object {}}
       optionsContainerStyle={
         Object {
-          "width": 165,
+          "width": 254.00704225352115,
         }
       }
     >
@@ -390,7 +390,7 @@ exports[`SendConfirmation not editable 1`] = `
           style={
             Object {
               "flexDirection": "row",
-              "paddingVertical": 4,
+              "paddingVertical": 6.157746478873239,
             }
           }
         >
@@ -398,7 +398,7 @@ exports[`SendConfirmation not editable 1`] = `
             style={
               Object {
                 "color": "#4A5157",
-                "fontSize": 18,
+                "fontSize": 27.70985915492958,
               }
             }
           >
@@ -426,8 +426,8 @@ exports[`SendConfirmation should render with standard props 1`] = `
       disabled={false}
       style={
         Object {
-          "paddingHorizontal": 8,
-          "paddingVertical": 4,
+          "paddingHorizontal": 12.315492957746478,
+          "paddingVertical": 6.157746478873239,
         }
       }
     >
@@ -435,9 +435,9 @@ exports[`SendConfirmation should render with standard props 1`] = `
         style={
           Object {
             "color": "#FFFFFF",
-            "fontSize": 25,
+            "fontSize": 27.70985915492958,
             "fontWeight": "700",
-            "paddingHorizontal": 8,
+            "paddingHorizontal": 12.315492957746478,
           }
         }
       >
@@ -448,7 +448,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
       customStyles={Object {}}
       optionsContainerStyle={
         Object {
-          "width": 165,
+          "width": 254.00704225352115,
         }
       }
     >
@@ -469,7 +469,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
           style={
             Object {
               "flexDirection": "row",
-              "paddingVertical": 4,
+              "paddingVertical": 6.157746478873239,
             }
           }
         >
@@ -477,7 +477,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
             style={
               Object {
                 "color": "#4A5157",
-                "fontSize": 18,
+                "fontSize": 27.70985915492958,
               }
             }
           >
@@ -502,7 +502,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
           style={
             Object {
               "flexDirection": "row",
-              "paddingVertical": 4,
+              "paddingVertical": 6.157746478873239,
             }
           }
         >
@@ -511,7 +511,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
               Array [
                 Object {
                   "color": "#4A5157",
-                  "fontSize": 18,
+                  "fontSize": 27.70985915492958,
                 },
                 Object {
                   "color": "#F1AA19",
@@ -540,7 +540,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
           style={
             Object {
               "flexDirection": "row",
-              "paddingVertical": 4,
+              "paddingVertical": 6.157746478873239,
             }
           }
         >
@@ -548,7 +548,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
             style={
               Object {
                 "color": "#4A5157",
-                "fontSize": 18,
+                "fontSize": 27.70985915492958,
               }
             }
           >

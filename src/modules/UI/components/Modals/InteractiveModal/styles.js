@@ -2,69 +2,70 @@
 
 import { StyleSheet } from 'react-native'
 
+import { scale } from '../../../../../lib/scaling.js'
 import THEME from '../../../../../theme/variables/airbitz.js'
 
 export const rawStyles = {
   modal: {},
   container: {
-    padding: 12,
+    padding: scale(12),
     backgroundColor: THEME.COLORS.WHITE,
-    borderRadius: 4,
+    borderRadius: scale(4),
     shadowOffset: {
       width: 0,
-      height: 5
+      height: scale(5)
     },
     shadowOpacity: 1,
-    shadowRadius: 4
+    shadowRadius: scale(4)
   },
   header: {
     alignItems: 'center',
-    paddingHorizontal: 22
+    paddingHorizontal: scale(22)
   },
   body: {
-    padding: 6
+    padding: scale(6)
   },
   footer: {
-    padding: 6
+    padding: scale(6)
   },
   icon: {
-    height: 65,
-    width: 65,
-    borderRadius: 65,
-    borderWidth: 4,
+    height: scale(65),
+    width: scale(65),
+    borderRadius: scale(65),
+    borderWidth: scale(4),
     borderColor: THEME.COLORS.SECONDARY,
     backgroundColor: THEME.COLORS.WHITE,
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
-    marginBottom: -32,
+    marginBottom: scale(-32),
     zIndex: 1
   },
   androidHackSpacer: {
-    paddingTop: 26
+    paddingTop: scale(26)
   },
   item: {
     flex: 1,
-    padding: 4
+    padding: scale(4)
   },
   row: {
     flexDirection: 'row'
   },
   title: {
-    fontSize: 22,
+    fontSize: scale(22),
     fontFamily: THEME.FONTS.DEFAULT,
     color: THEME.COLORS.PRIMARY
   },
   description: {
-    paddingVertical: 6,
-    fontSize: 16,
+    paddingVertical: scale(6),
+    fontSize: scale(16),
     color: THEME.COLORS.GRAY_1,
     fontFamily: THEME.FONTS.DEFAULT,
     alignSelf: 'center'
   },
   debug: {
     borderColor: 'red',
-    borderWidth: 1
+    borderWidth: scale(1)
   }
 }
 

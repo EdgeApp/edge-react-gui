@@ -2,6 +2,7 @@
 
 import { StyleSheet } from 'react-native'
 
+import { scale } from '../../../../lib/scaling.js'
 import THEME from '../../../../theme/variables/airbitz'
 
 export const styles = {
@@ -10,14 +11,14 @@ export const styles = {
     backgroundColor: `${THEME.COLORS.WHITE}${THEME.ALPHA.LOW}`,
     alignItems: 'stretch',
     justifyContent: 'center',
-    paddingVertical: 7,
+    paddingVertical: scale(7),
     flexDirection: 'row',
     borderColor: THEME.COLORS.GRAY_4
   },
   outerView: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 7,
+    paddingVertical: scale(7),
     flex: 1
   },
   view: {
@@ -25,10 +26,10 @@ export const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    paddingVertical: 2
+    paddingVertical: scale(2)
   },
   text: {
-    fontSize: 17,
+    fontSize: scale(17),
     color: THEME.COLORS.WHITE
   },
   underlay: {

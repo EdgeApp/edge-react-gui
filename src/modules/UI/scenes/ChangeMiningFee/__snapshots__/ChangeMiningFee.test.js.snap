@@ -15,17 +15,17 @@ exports[`Change Mining Fees should render with custom props 1`] = `
     <Component
       style={
         Object {
-          "paddingHorizontal": 20,
-          "paddingVertical": 20,
+          "paddingHorizontal": 30.788732394366196,
+          "paddingVertical": 30.788732394366196,
           "position": "relative",
-          "top": 66,
+          "top": 101.60281690140846,
         }
       }
     >
       <Component
         style={
           Object {
-            "height": 44,
+            "height": 67.73521126760564,
           }
         }
       >
@@ -39,7 +39,7 @@ exports[`Change Mining Fees should render with custom props 1`] = `
       <Component
         style={
           Object {
-            "height": 44,
+            "height": 67.73521126760564,
           }
         }
       >
@@ -53,7 +53,7 @@ exports[`Change Mining Fees should render with custom props 1`] = `
       <Component
         style={
           Object {
-            "height": 44,
+            "height": 67.73521126760564,
           }
         }
       >
@@ -88,17 +88,17 @@ exports[`Change Mining Fees should render with high props 1`] = `
     <Component
       style={
         Object {
-          "paddingHorizontal": 20,
-          "paddingVertical": 20,
+          "paddingHorizontal": 30.788732394366196,
+          "paddingVertical": 30.788732394366196,
           "position": "relative",
-          "top": 66,
+          "top": 101.60281690140846,
         }
       }
     >
       <Component
         style={
           Object {
-            "height": 44,
+            "height": 67.73521126760564,
           }
         }
       >
@@ -112,7 +112,7 @@ exports[`Change Mining Fees should render with high props 1`] = `
       <Component
         style={
           Object {
-            "height": 44,
+            "height": 67.73521126760564,
           }
         }
       >
@@ -126,7 +126,7 @@ exports[`Change Mining Fees should render with high props 1`] = `
       <Component
         style={
           Object {
-            "height": 44,
+            "height": 67.73521126760564,
           }
         }
       >
@@ -161,17 +161,17 @@ exports[`Change Mining Fees should render with low props 1`] = `
     <Component
       style={
         Object {
-          "paddingHorizontal": 20,
-          "paddingVertical": 20,
+          "paddingHorizontal": 30.788732394366196,
+          "paddingVertical": 30.788732394366196,
           "position": "relative",
-          "top": 66,
+          "top": 101.60281690140846,
         }
       }
     >
       <Component
         style={
           Object {
-            "height": 44,
+            "height": 67.73521126760564,
           }
         }
       >
@@ -185,7 +185,7 @@ exports[`Change Mining Fees should render with low props 1`] = `
       <Component
         style={
           Object {
-            "height": 44,
+            "height": 67.73521126760564,
           }
         }
       >
@@ -199,7 +199,7 @@ exports[`Change Mining Fees should render with low props 1`] = `
       <Component
         style={
           Object {
-            "height": 44,
+            "height": 67.73521126760564,
           }
         }
       >
@@ -234,17 +234,17 @@ exports[`Change Mining Fees should render with standard props 1`] = `
     <Component
       style={
         Object {
-          "paddingHorizontal": 20,
-          "paddingVertical": 20,
+          "paddingHorizontal": 30.788732394366196,
+          "paddingVertical": 30.788732394366196,
           "position": "relative",
-          "top": 66,
+          "top": 101.60281690140846,
         }
       }
     >
       <Component
         style={
           Object {
-            "height": 44,
+            "height": 67.73521126760564,
           }
         }
       >
@@ -258,7 +258,7 @@ exports[`Change Mining Fees should render with standard props 1`] = `
       <Component
         style={
           Object {
-            "height": 44,
+            "height": 67.73521126760564,
           }
         }
       >
@@ -272,7 +272,7 @@ exports[`Change Mining Fees should render with standard props 1`] = `
       <Component
         style={
           Object {
-            "height": 44,
+            "height": 67.73521126760564,
           }
         }
       >

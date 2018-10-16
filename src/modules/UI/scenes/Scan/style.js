@@ -2,6 +2,7 @@
 
 import { Platform, StyleSheet } from 'react-native'
 
+import { scale } from '../../../../lib/scaling.js'
 import THEME from '../../../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
 
@@ -10,7 +11,7 @@ export const styles = {
     height: THEME.HEADER
   },
   container: {
-    height: PLATFORM.deviceHeight - 66 - PLATFORM.footerHeight,
+    height: PLATFORM.deviceHeight - scale(66) - PLATFORM.footerHeight,
     flex: 1,
     flexDirection: 'row',
     position: 'relative'
@@ -27,7 +28,7 @@ export const styles = {
     bottom: 0
   },
   overlayTop: {
-    height: 37,
+    height: scale(37),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: THEME.COLORS.GRAY_1,
@@ -35,18 +36,18 @@ export const styles = {
   },
   overlayTopText: {
     color: THEME.COLORS.WHITE,
-    fontSize: 14
+    fontSize: scale(14)
   },
   overlayBlank: {
     flex: 10
   },
   overlayButtonAreaWrap: {
-    height: 72,
+    height: scale(72),
     flexDirection: 'row',
-    paddingTop: 11,
-    paddingBottom: 11,
-    paddingRight: 8,
-    paddingLeft: 8
+    paddingTop: scale(11),
+    paddingBottom: scale(11),
+    paddingRight: scale(8),
+    paddingLeft: scale(8)
   },
   overLayButtonArea: {
     flex: 1,
@@ -60,10 +61,10 @@ export const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: `${THEME.COLORS.WHITE}${THEME.ALPHA.LOW}`,
-    borderRadius: 3,
-    height: 50,
-    marginLeft: 1,
-    marginRight: 1
+    borderRadius: scale(3),
+    height: scale(50),
+    marginLeft: scale(1),
+    marginRight: scale(1)
   },
   bottomButtonTextWrap: {
     flexDirection: 'column',
@@ -73,13 +74,13 @@ export const styles = {
   bottomButtonText: {
     opacity: 1,
     color: THEME.COLORS.WHITE,
-    fontSize: 14,
+    fontSize: scale(14),
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   transferArrowIcon: {
     color: THEME.COLORS.WHITE,
-    fontSize: 22,
-    height: 18,
+    fontSize: scale(22),
+    height: scale(18),
     transform: [{ scaleX: 1.2 }]
   },
   buttonWrap: {
@@ -89,19 +90,19 @@ export const styles = {
   },
   addressBookIcon: {
     color: THEME.COLORS.WHITE,
-    fontSize: 16,
-    height: 16,
+    fontSize: scale(16),
+    height: scale(16),
     transform: [{ scaleX: -1.0 }]
   },
   cameraIcon: {
     color: THEME.COLORS.WHITE,
-    fontSize: 22,
-    height: 18
+    fontSize: scale(22),
+    height: scale(18)
   },
   flashIcon: {
     color: THEME.COLORS.WHITE,
-    fontSize: 22,
-    height: 18
+    fontSize: scale(22),
+    height: scale(18)
   },
   modalContainer: {
     flex: 1,
@@ -109,7 +110,7 @@ export const styles = {
   },
   modalOverlay: {
     flex: 1,
-    padding: 10
+    padding: scale(10)
   },
   withAddressCopied: {
     top: 0
@@ -129,7 +130,7 @@ export const styles = {
     justifyContent: 'center'
   },
   addressInputWrap: {
-    marginTop: 8,
+    marginTop: scale(8),
     justifyContent: 'flex-end',
     alignItems: 'stretch',
     borderBottomColor: THEME.COLORS.GRAY_4,
@@ -138,16 +139,16 @@ export const styles = {
   addressInput: {
     borderBottomColor: THEME.COLORS.GRAY_2,
     borderBottomWidth: 1,
-    height: 26,
+    height: scale(26),
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: scale(20),
     color: THEME.COLORS.GRAY_1
   },
   addressInputButton: {
-    paddingHorizontal: 10
+    paddingHorizontal: scale(10)
   },
   pasteButtonRow: {
-    paddingTop: 12
+    paddingTop: scale(12)
   },
   modalBottom: {
     flex: 1,
@@ -166,7 +167,7 @@ export const styles = {
     justifyContent: 'flex-end'
   },
   cancelButton: {
-    fontSize: 12,
+    fontSize: scale(12),
     color: THEME.COLORS.PRIMARY
   },
   doneButtonWrap: {
@@ -175,7 +176,7 @@ export const styles = {
     justifyContent: 'flex-end'
   },
   doneButton: {
-    fontSize: 28,
+    fontSize: scale(28),
     color: THEME.COLORS.PRIMARY
   },
   icon: {

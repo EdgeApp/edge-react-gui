@@ -6,6 +6,7 @@ import Slider from 'react-native-slider'
 import slowlog from 'react-native-slowlog'
 
 import leftArrowImg from '../../../../assets/images/slider/keyboard-arrow-left.png'
+import { scale } from '../../../../lib/scaling.js'
 import s from '../../../../locales/strings.js'
 import styles from './styles.js'
 
@@ -76,7 +77,7 @@ export default class ABSlider extends Component<Props, State> {
           thumbImage={leftArrowImg}
           minimumTrackTintColor="transparent"
           maximumTrackTintColor="transparent"
-          thumbTouchSize={{ width: 160, height: 160 }}
+          thumbTouchSize={{ width: scale(160), height: scale(160) }}
         />
         <Text style={styles.textOverlay}>{SLIDE_TO_COMPLETE_TEXT}</Text>
       </View>

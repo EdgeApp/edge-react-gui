@@ -2,13 +2,14 @@
 
 import { StyleSheet } from 'react-native'
 
+import { scale } from '../../../../../../lib/scaling.js'
 import { THEME } from '../../../../../../theme/variables/airbitz.js'
 
 export const rawStyles = {
   button: {
-    height: 50,
+    height: scale(50),
     backgroundColor: THEME.COLORS.TRANSPARENT,
-    paddingHorizontal: 6
+    paddingHorizontal: scale(6)
   },
   row: {
     flexDirection: 'row',
@@ -25,7 +26,7 @@ export const rawStyles = {
     backgroundColor: THEME.COLORS.TRANSPARENT,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 6
+    paddingHorizontal: scale(6)
   },
   center: {
     flex: 1,
@@ -33,17 +34,17 @@ export const rawStyles = {
     backgroundColor: THEME.COLORS.TRANSPARENT,
     alignItems: 'flex-start',
     justifyContent: 'center',
-    paddingHorizontal: 6
+    paddingHorizontal: scale(6)
   },
   right: {
     height: '100%',
     backgroundColor: THEME.COLORS.TRANSPARENT,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 6
+    paddingHorizontal: scale(6)
   },
   text: {
-    fontSize: 16,
+    fontSize: scale(16),
     fontFamily: THEME.FONTS.DEFAULT,
     color: THEME.COLORS.WHITE,
     backgroundColor: THEME.COLORS.TRANSPARENT,
