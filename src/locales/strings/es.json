@@ -18,6 +18,8 @@
   "edge_description_warning": "Advertencia: La aplicación \"%1$s\" esta solicitando acceso completo a tu cuenta y todas las carteras.\n\nNo aceptes esta petición de login a no ser que confíes en esta aplicación y en el lugar donde fue descargada.",
   "exchange_failed": "No se pudo completar el cambio",
   "exchange_succeeded": "Cambio realizado",
+  "no_exchange_amount": "",
+  "select_exchange_amount": "",
   "exchanges_may_take_minutes": "Las casas de cambio pueden tardar varios minutos en procesar las transacciones. Por favor comprueba tu cartera de destino despues de unos minutos",
   "fragment_wallets_addwallet_blockchain_hint": "Elije una cadena de bloques",
   "fragment_wallets_addwallet_fiat_hint": "Elije una moneda fiat",
@@ -357,5 +359,11 @@
   "onboarding_slide_4": "Para enviar criptomonedas escanea el código QR de un amigo aquí, o pega el código a través del botón [Address].",
   "onboarding_slide_5": "Intercambia criptomonedas seleccionando la cartera de origen y de destino para hacer la transacción entre ellas.",
   "otp_out_of_sync_title": "Advertencia",
-  "otp_out_of_sync_body": "Este dispositivo no tiene el token de autenticación de doble factor apropiado. Puedes acceder a tus fondos con funcionalidad limitada, pero no puedes crear carteras o cambiar las opciones de la cuenta"
+  "otp_out_of_sync_body": "Este dispositivo no tiene el token de autenticación de doble factor apropiado. Puedes acceder a tus fondos con funcionalidad limitada, pero no puedes crear carteras o cambiar las opciones de la cuenta",
+  "just_a_moment": "",
+  "trying_to_find": "",
+  "exchange_will_be_sent": "",
+  "exchange_will_be_received": "",
+  "mining_fee": "",
+  "confirm_with_shapeshift": ""
 }
