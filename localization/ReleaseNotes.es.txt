@@ -11,6 +11,6 @@ v1.3.4
 * Fix white screen hang upon login if an incoming transaction happens
 * Fix address wrapping in Simplex plugin
 * Fix double tap bug on Change Password modal
-* Fix Fiat amounts when using other country currencies
+*Corregir las cantidades fiat cuando se usan monedas de otros países
 * Additional scaling and visual improvements
 * Other minor bug fixes
