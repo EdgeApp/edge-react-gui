@@ -2,6 +2,7 @@
 
 import { StyleSheet } from 'react-native'
 
+import { scale } from '../../../../lib/scaling.js'
 import THEME from '../../../../theme/variables/airbitz'
 import { PLATFORM } from '../../../../theme/variables/platform'
 
@@ -11,8 +12,8 @@ export const styles = {
     height: THEME.HEADER
   },
   body: {
-    paddingHorizontal: 20,
-    paddingVertical: 5,
+    paddingHorizontal: scale(20),
+    paddingVertical: scale(5),
     backgroundColor: THEME.COLORS.WHITE
   },
   container: {
@@ -20,52 +21,45 @@ export const styles = {
     height: '100%',
     backgroundColor: THEME.COLORS.WHITE
   },
-  titleStyle: {
-    alignSelf: 'center',
-    fontSize: 20,
-    color: THEME.COLORS.WHITE,
-    fontFamily: THEME.FONTS.DEFAULT,
-    marginLeft: 8
-  },
   listStyle: {
-    height: 100
+    height: scale(100)
   },
   unlockRow: {
-    padding: 12,
+    padding: scale(12),
     flexDirection: 'row',
     justifyContent: 'space-between',
-    height: 50
+    height: scale(50)
   },
   leftArea: {
     flexDirection: 'row'
   },
   icon: {
     backgroundColor: THEME.COLORS.TRANSPARENT,
-    fontSize: 22,
+    fontSize: scale(22),
     color: THEME.COLORS.WHITE
   },
   accountBoxHeaderText: {
-    fontSize: 18,
+    fontSize: scale(18),
     color: THEME.COLORS.WHITE,
     backgroundColor: THEME.COLORS.TRANSPARENT,
-    marginLeft: 16
+    marginLeft: scale(16)
   },
   dropdownIcon: {
     textAlignVertical: 'center',
     alignSelf: 'center',
-    height: 24,
-    fontSize: 24,
+    height: scale(24),
+    fontSize: scale(24),
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
 
   // //// Beginning of Settings Row ///////
   settingsRowContainer: {
-    height: 44,
+    height: scale(44),
     backgroundColor: THEME.COLORS.GRAY_4,
     borderBottomWidth: 1,
     borderBottomColor: THEME.COLORS.GRAY_3,
-    paddingLeft: 20,
-    paddingRight: 20,
+    paddingLeft: scale(20),
+    paddingRight: scale(20),
     justifyContent: 'space-around'
   },
   settingsRowTextRow: {
@@ -80,14 +74,14 @@ export const styles = {
   },
   settingsRowLeftText: {
     color: THEME.COLORS.GRAY_1,
-    fontSize: 16
+    fontSize: scale(16)
   },
   settingsRowLeftTextDisabled: {
     color: THEME.COLORS.GRAY_2,
-    fontSize: 16
+    fontSize: scale(16)
   },
   settingsRowRightArrow: {
-    fontSize: 18,
+    fontSize: scale(18),
     color: THEME.COLORS.GRAY_1
   },
   settingsLocks: {
@@ -105,12 +99,12 @@ export const styles = {
   // /////// End of Settings Row /////////
   debugArea: {
     backgroundColor: THEME.COLORS.GRAY_4,
-    padding: 20,
+    padding: scale(20),
     flex: 1
   },
 
   emptyBottom: {
-    height: 51,
+    height: scale(51),
     flex: 1
   },
 
@@ -120,25 +114,20 @@ export const styles = {
   },
 
   headerRow: {
-    padding: 12,
+    padding: scale(12),
     flexDirection: 'row',
     justifyContent: 'space-between',
-    height: 50
+    height: scale(50)
   },
   headerText: {
-    fontSize: 18,
+    fontSize: scale(18),
     color: THEME.COLORS.WHITE,
-    backgroundColor: THEME.COLORS.TRANSPARENT
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    marginLeft: scale(16)
   },
   headerIcon: {
     backgroundColor: THEME.COLORS.TRANSPARENT,
-    fontSize: 22
-  },
-  currencyHeaderIcon: {
-    height: 25,
-    width: 25,
-    resizeMode: 'contain',
-    marginRight: 12
+    fontSize: scale(22)
   },
   underlay: {
     color: 'rgba(0,0,0,0)'
@@ -149,7 +138,7 @@ export const styles = {
 
   /// //// beginning of default fiat area ////////
   searchContainer: {
-    marginTop: 8,
+    marginTop: scale(8),
     position: 'relative',
     backgroundColor: THEME.COLORS.TRANSPARENT,
     borderBottomWidth: 1,
@@ -158,11 +147,11 @@ export const styles = {
   },
 
   singleFiatType: {
-    height: 60,
+    height: scale(60),
     borderBottomWidth: 1,
     borderBottomColor: THEME.COLORS.GRAY_3,
-    paddingVertical: 10,
-    paddingHorizontal: 15
+    paddingVertical: scale(10),
+    paddingHorizontal: scale(15)
   },
   singleFiatTypeWrap: {
     flexDirection: 'column',
@@ -170,7 +159,7 @@ export const styles = {
   },
   fiatTypeInfoWrap: {
     flexDirection: 'row',
-    height: 40,
+    height: scale(40),
     flex: 1,
     justifyContent: 'space-between'
   },
@@ -178,15 +167,15 @@ export const styles = {
     flexDirection: 'row'
   },
   fiatTypeLogo: {
-    width: 40,
-    height: 40,
-    marginRight: 10
+    width: scale(40),
+    height: scale(40),
+    marginRight: scale(10)
   },
   fiatTypeLeftTextWrap: {
     justifyContent: 'center'
   },
   fiatTypeName: {
-    fontSize: 16,
+    fontSize: scale(16),
     color: THEME.COLORS.GRAY_1,
     textAlignVertical: 'center'
   },

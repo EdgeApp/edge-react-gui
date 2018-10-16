@@ -2,6 +2,7 @@
 
 import { StyleSheet } from 'react-native'
 
+import { scale } from '../../../../lib/scaling.js'
 import THEME from '../../../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../../../theme/variables/platform'
 
@@ -15,7 +16,7 @@ export const stylesRaw = {
     width: '100%'
   },
   scrollView: {
-    height: 716 - 10 - THEME.HEADER
+    height: scale(716 - 10 - THEME.HEADER)
   },
   webView: {
     justifyContent: 'center',
@@ -23,9 +24,9 @@ export const stylesRaw = {
     flex: 1
   },
   scrollViewContent: {
-    paddingHorizontal: 20,
-    paddingVertical: 5,
-    paddingBottom: 30
+    paddingHorizontal: scale(20),
+    paddingVertical: scale(5),
+    paddingBottom: scale(30)
   }
 }
 
