@@ -1,5 +1,4 @@
 // @flow
-
 import { bns } from 'biggystring'
 import type { EdgeCurrencyWallet, EdgeExchangeQuote, EdgeExchangeQuoteOptions, EdgeMetadata, EdgeSpendInfo } from 'edge-core-js'
 import { errorNames } from 'edge-core-js'
@@ -17,6 +16,8 @@ import * as UI_SELECTORS from '../modules/UI/selectors'
 import * as SETTINGS_SELECTORS from '../modules/UI/Settings/selectors.js'
 import * as UTILS from '../modules/utils'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../types'
+
+// import { getExchangeDenomination as settingsGetExchangeDenomination } from '../../modules/UI/Settings/selectors.js'
 
 const DIVIDE_PRECISION = 18
 
@@ -204,6 +205,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
 
   let error
   let edgeCoinExchangeQuote
+  const settings = SETTINGS_SELECTORS.getSettings(state)
   try {
     edgeCoinExchangeQuote = await account.fetchSwapQuote(quoteData)
   } catch (e) {
@@ -254,6 +256,10 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
   const fromPrimaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
   const toPrimaryInfo = state.cryptoExchange.toWalletPrimaryInfo
 
+  const currentFromCurrencyDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, fromCurrencyCode)
+  const currentToCurrencyDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, toCurrencyCode)
+  const feeDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, edgeCoinExchangeQuote.networkFee.currencyCode)
+
   const fromDisplayAmountTemp = bns.div(edgeCoinExchangeQuote.fromNativeAmount, fromPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
   const fromDisplayAmount = bns.toFixed(fromDisplayAmountTemp, 0, 8)
   const toDisplayAmountTemp = bns.div(edgeCoinExchangeQuote.toNativeAmount, toPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
@@ -261,13 +267,17 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
   const feeNativeAmount = edgeCoinExchangeQuote.networkFee.nativeAmount
   const feeTempAmount = bns.div(feeNativeAmount, fromPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
   const feeDisplayAmouhnt = bns.toFixed(feeTempAmount, 0, 8)
-  const fee = feeDisplayAmouhnt + ' ' + edgeCoinExchangeQuote.networkFee.currencyCode
+  const fee = feeDisplayAmouhnt + ' ' + feeDenomination.name
 
   const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
-  const fromBalanceInFiatRaw = currencyConverter.convertCurrency(fromCurrencyCode, fromWallet.isoFiatCurrencyCode, Number(fromDisplayAmount))
+  const fromExchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, fromWallet.currencyCode)
+  const fromBalanceInCryptoDisplay = UTILS.convertNativeToExchange(fromExchangeDenomination.multiplier)(edgeCoinExchangeQuote.fromNativeAmount)
+  const fromBalanceInFiatRaw = currencyConverter.convertCurrency(fromWallet.currencyCode, fromWallet.isoFiatCurrencyCode, Number(fromBalanceInCryptoDisplay))
   const fromBalanceInFiat = intl.formatNumber(fromBalanceInFiatRaw || 0, { toFixed: 2 })
 
-  const toBalanceInFiatRaw = currencyConverter.convertCurrency(toCurrencyCode, toWallet.isoFiatCurrencyCode, Number(toDisplayAmount))
+  const toExchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, toWallet.currencyCode)
+  const toBalanceInCryptoDisplay = UTILS.convertNativeToExchange(toExchangeDenomination.multiplier)(edgeCoinExchangeQuote.toNativeAmount)
+  const toBalanceInFiatRaw = currencyConverter.convertCurrency(toWallet.currencyCode, toWallet.isoFiatCurrencyCode, Number(toBalanceInCryptoDisplay))
   const toBalanceInFiat = intl.formatNumber(toBalanceInFiatRaw || 0, { toFixed: 2 })
 
   const returnObject = {
@@ -284,8 +294,8 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
     toFiat: toBalanceInFiat,
     quoteExpireDate: edgeCoinExchangeQuote.expirationDate,
     fee,
-    fromCurrencyCode,
-    toCurrencyCode
+    fromCurrencyCode: currentFromCurrencyDenomination.name,
+    toCurrencyCode: currentToCurrencyDenomination.name
   }
   Actions[Constants.EXCHANGE_QUOTE_SCENE]({ quote: returnObject })
   dispatch(setShapeTransaction('UPDATE_SHIFT_TRANSACTION_FEE', returnObject))
