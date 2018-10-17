@@ -1,25 +1,25 @@
 
-<b>Total privacy and security in our easy to use blockchain wallet.</b> Buy, sell, send and receive Bitcoin (BTC), Bitcoin Cash (BCH), Litecoin (LTC), Ethereum (ETH) and other top crypto assets.
+<b>Totale privacy e sicurezza nel nostro portafoglio blockchain.</b> Compra, vendi, invia e ricevi Bitcoin (BTC), Bitcoin Cash (BCH), Litecoin (LTC), Ethereum (ETH) e molte altre criptovalute.
 
-Managing your cryptocurrency has never been easier. Edge Wallet provides maximum security while keeping simplicity, allowing all types of users to easily manage, transfer & exchange their currencies.
+Gestire le tue criptovalute non è mai stato così facile. Edge Wallet fornisce la massima sicurezza mantenendo la semplicità d'uso e permettendo a qualunque tipo di utente di gestire, trasferire e scambiare le loro criptovalute con estrema facilità.
 
-<b>Edge Crypto Wallet currently supports:</b> Bitcoin (BTC), Bitcoin Cash (BCH), Litecoin (LTC), Qtum (QTUM), Dash (DASH), Ethereum (ETH), Monero (XMR), Ripple (XRP), and Feathercoin (FTC). Want to see other cryptos in our wallet? Send us a request!
+<b>Edge Wallet supporta attualmente:</b> Bitcoin (BTC), Bitcoin Cash (BCH), Litecoin (LTC), Qtum (QTUM), Dash (DASH), Ethereum (ETH), Monero (XMR), Ripple (XRP), e Feathercoin (FTC). Vuoi vedere altre crypto nel nostro portafoglio? Send us a request!
 
-Edge is a powerful and easy to use cryptocurrency wallet that allows users to easily control their own private keys with the familiarity and ease of mobile banking. 
+Edge è un portafoglio di criptovalute potente e di semplice utilizzo che permette agli utenti di controllare con facilità le loro chiavi private con la familiarità del mobile banking. 
 
-Take control of your funds! With Edge, only YOU have access to your funds or transaction data. Neither Edge or any 3rd party can access your money or data. You get the financial privacy and autonomy that blockchain was designed for, with the ease of use even grandma could handle.
+Take control of your funds! With Edge, only YOU have access to your funds or transaction data. Neither Edge or any 3rd party can access your money or data. Ottieni la privacy e l'autonomia per le quali la blockchain è stata creata, con una facilità d'uso a prova di nonna.
 
-Edge also provides a cryptocurrency exchange. Easily swap your currencies for others with a few taps. Exchange BTC for Ethereum, ETH for BCH and many more.
+Edge fornisce al suo interno anche un cambio valuta (exchange). Easily swap your currencies for others with a few taps. Scambia BTC per Ethereum, ETH per BCH e molti altri.
 
 <b>Features</b>
-• Secure crypto wallet and blockchain app
-• Easy to use Bitcoin wallet app with support for top crypto like Bitcoin Cash, Litecoin, Ripple (XRP)
+• Portafoglio criptovalute sicuro e app blockchain
+• Portafoglio Bitcoin con in più il supporto alle criptovalute più utilizzate, come ad esempio Bitcoin Cash, Litecoin e Ripple (XRP)
 • Zero-knowledge & zero-access to user funds, keys, or transaction data by Edge or 3rd parties
-• Simple account creation using just a login & password (no printing of PDFs, writing down pass phrases, or adding encryption settings)
-* Biometric TouchID and FaceID login for another layer of security
+• Creazione dell'account semplificata, usando solo un nome utente e una password (niente documenti da stampare, passphrase da scrivere o altre impostazioni di criptaggio)
+* Login tramite TouchID e FaceID
 • Hierarchical Deterministic wallets with changing addresses per transaction
-• Decentralized server architecture. Wallets work even if Edge servers are down.
-• Open-source code. Available at https://github.com/Airbitz
+• Decentralized server architecture. I portafogli funzionano anche quando i sever di Edge sono offline.
+• Open-source code. Disponibile su https://github.com/Airbitz
 • Built-in crypto exchange to buy & sell cryptocurrency
 
 Privacy Notice
