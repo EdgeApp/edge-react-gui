@@ -166,7 +166,7 @@
   "settings_enable_custom_nodes": "",
   "settings_set_custom_nodes_modal_title": "",
   "settings_set_custom_nodes_modal_instructions": "",
-  "settings_set_custom_nodes_placeholder": "",
+  "settings_set_custom_nodes_placeholder": "https://MyNode.Example:18081",
   "string_cancel_cap": "Annulla",
   "string_cancel": "ANNULLA",
   "string_delete": "Cancella",
@@ -365,5 +365,5 @@
   "exchange_will_be_sent": "",
   "exchange_will_be_received": "",
   "mining_fee": "",
-  "confirm_with_shapeshift": ""
+  "confirm_with_shapeshift": "Conferma per completare il tuo scambio attraverso Shapeshift."
 }
