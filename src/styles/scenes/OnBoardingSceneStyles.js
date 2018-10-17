@@ -59,7 +59,8 @@ const OnBoardingSceneStyles = {
   },
   buttonText: {
     color: THEME.COLORS.WHITE,
-    fontSize: 16
+    fontSize: 16,
+    lineHeight: 16
   },
   button: {
     width: '30%'
