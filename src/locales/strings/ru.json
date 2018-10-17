@@ -18,8 +18,8 @@
   "edge_description_warning": "Внимание: приложение %1$s запрашивает полный доступ к вашей учетной записи и кошелькам.\n\nПримите запрос, если вы доверяете данному приложению и источнику его скачивания.",
   "exchange_failed": "Обмен не удался",
   "exchange_succeeded": "Успешный обмен",
-  "no_exchange_amount": "",
-  "select_exchange_amount": "",
+  "no_exchange_amount": "Сумма не выбрана",
+  "select_exchange_amount": "Пожалуйста, введите сумму для обмена",
   "exchanges_may_take_minutes": "Обмен может занять несколько минут. Пожалуйста, проверьте ваш кошелек получения монет через несколько минут",
   "fragment_wallets_addwallet_blockchain_hint": "Выбрать [blockchain]",
   "fragment_wallets_addwallet_fiat_hint": "Выберите официальную валюту",
@@ -360,10 +360,10 @@
   "onboarding_slide_5": "Произвести обмен между криптовалютами. Для этого необходимо указать кошельки отправления и получения монет.",
   "otp_out_of_sync_title": "Внимание",
   "otp_out_of_sync_body": "Это устройство не имеет соответствующего 2-факторного токена. Вы по прежнему имеете доступ к средствам с ограниченным функционалом, и не можете создавать новые кошельки и менять информацию учетной записи",
-  "just_a_moment": "",
-  "trying_to_find": "",
-  "exchange_will_be_sent": "",
-  "exchange_will_be_received": "",
-  "mining_fee": "",
-  "confirm_with_shapeshift": ""
+  "just_a_moment": "Один момент",
+  "trying_to_find": "Мы ищем для Вас доступных поставщиков обмена...",
+  "exchange_will_be_sent": "%1$s %2$s будут отправлены",
+  "exchange_will_be_received": "%1$s %2$s будут получены",
+  "mining_fee": "Комиссия майнера",
+  "confirm_with_shapeshift": "Подтвердите для завершения Вашего обмена через Shapeshift."
 }
