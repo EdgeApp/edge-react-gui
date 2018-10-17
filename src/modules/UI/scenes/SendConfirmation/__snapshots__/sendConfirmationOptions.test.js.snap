@@ -58,7 +58,7 @@ exports[`SendConfirmation XMR 1`] = `
           style={
             Object {
               "flexDirection": "row",
-              "paddingVertical": 6.157746478873239,
+              "padding": 6.157746478873239,
             }
           }
         >
@@ -91,7 +91,7 @@ exports[`SendConfirmation XMR 1`] = `
           style={
             Object {
               "flexDirection": "row",
-              "paddingVertical": 6.157746478873239,
+              "padding": 6.157746478873239,
             }
           }
         >
@@ -126,7 +126,7 @@ exports[`SendConfirmation XMR 1`] = `
           style={
             Object {
               "flexDirection": "row",
-              "paddingVertical": 6.157746478873239,
+              "padding": 6.157746478873239,
             }
           }
         >
@@ -205,7 +205,7 @@ exports[`SendConfirmation XRP 1`] = `
           style={
             Object {
               "flexDirection": "row",
-              "paddingVertical": 6.157746478873239,
+              "padding": 6.157746478873239,
             }
           }
         >
@@ -238,7 +238,7 @@ exports[`SendConfirmation XRP 1`] = `
           style={
             Object {
               "flexDirection": "row",
-              "paddingVertical": 6.157746478873239,
+              "padding": 6.157746478873239,
             }
           }
         >
@@ -276,7 +276,7 @@ exports[`SendConfirmation XRP 1`] = `
           style={
             Object {
               "flexDirection": "row",
-              "paddingVertical": 6.157746478873239,
+              "padding": 6.157746478873239,
             }
           }
         >
@@ -311,7 +311,7 @@ exports[`SendConfirmation XRP 1`] = `
           style={
             Object {
               "flexDirection": "row",
-              "paddingVertical": 6.157746478873239,
+              "padding": 6.157746478873239,
             }
           }
         >
@@ -390,7 +390,7 @@ exports[`SendConfirmation not editable 1`] = `
           style={
             Object {
               "flexDirection": "row",
-              "paddingVertical": 6.157746478873239,
+              "padding": 6.157746478873239,
             }
           }
         >
@@ -469,7 +469,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
           style={
             Object {
               "flexDirection": "row",
-              "paddingVertical": 6.157746478873239,
+              "padding": 6.157746478873239,
             }
           }
         >
@@ -502,7 +502,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
           style={
             Object {
               "flexDirection": "row",
-              "paddingVertical": 6.157746478873239,
+              "padding": 6.157746478873239,
             }
           }
         >
@@ -540,7 +540,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
           style={
             Object {
               "flexDirection": "row",
-              "paddingVertical": 6.157746478873239,
+              "padding": 6.157746478873239,
             }
           }
         >
