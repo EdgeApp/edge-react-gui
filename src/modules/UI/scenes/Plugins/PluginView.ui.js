@@ -173,7 +173,11 @@ class PluginView extends React.Component<PluginProps, PluginState> {
 
   _renderTitle = title => {
     Actions.refresh({
-      renderTitle: <T style={styles.titleStyle}>{title}</T>
+      renderTitle: (
+        <View style={styles.titleWrapper}>
+          <T style={styles.titleStyle}>{title}</T>
+        </View>
+      )
     })
   }
 
