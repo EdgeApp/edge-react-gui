@@ -32,8 +32,14 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   BCH: {
     denomination: '100'
   },
+  EOS: {
+    denomination: '1000'
+  },
   XRP: {
     denomination: '1000000'
+  },
+  XLM: {
+    denomination: '10000000'
   },
   DASH: {
     denomination: '100000000'
