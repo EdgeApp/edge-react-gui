@@ -10,16 +10,16 @@ const CryptoExchangeQuoteSceneStyles = {
     height: THEME.SPACER.HEADER
   },
   topRow: {
-    flex: 1,
+    flex: 2,
     alignItems: 'center',
     justifyContent: 'space-around'
   },
   centerRow: {
-    flex: 2,
+    flex: 6,
     alignItems: 'center'
   },
   bottomRow: {
-    flex: 1,
+    flex: 3,
     padding: '5%',
     alignItems: 'center'
   },
