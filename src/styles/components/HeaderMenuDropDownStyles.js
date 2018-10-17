@@ -59,10 +59,12 @@ const MenuDropDownStyle = {
     alignItems: 'center',
     justifyContent: 'center'
   },
-  menuOptions: {},
+  menuOptions: {
+    marginTop: 18
+  },
   menuOptionItem: {
     flexDirection: 'row',
-    paddingVertical: scale(4)
+    padding: scale(4)
   },
   optionText: {
     color: THEME.COLORS.GRAY_1,
