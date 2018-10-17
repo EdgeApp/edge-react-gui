@@ -1,5 +1,6 @@
 // @flow
 
+import { scale } from '../../lib/scaling'
 import THEME from '../../theme/variables/airbitz'
 import { PagingWithDotStyles } from '../components/PagingWithDotStyles'
 
@@ -28,7 +29,7 @@ const OnBoardingSceneStyles = {
       top: '77%',
       left: 0,
       right: 0,
-      height: 20
+      height: scale(20)
     }
   },
   wrapper: {},
@@ -50,17 +51,17 @@ const OnBoardingSceneStyles = {
     justifyContent: 'space-around',
     flexDirection: 'column',
     width: '100%',
-    height: THEME.BUTTONS.HEIGHT,
+    height: scale(THEME.BUTTONS.HEIGHT),
     top: '82%'
   },
   buttonContainer: {
     width: '50%',
-    height: THEME.BUTTONS.HEIGHT
+    height: scale(THEME.BUTTONS.HEIGHT)
   },
   buttonText: {
     color: THEME.COLORS.WHITE,
-    fontSize: 16,
-    lineHeight: 16
+    fontSize: scale(16),
+    lineHeight: scale(16)
   },
   button: {
     width: '30%'
@@ -73,7 +74,7 @@ const OnBoardingSceneStyles = {
     alignItems: 'flex-end',
     flexDirection: 'column',
     width: '100%',
-    height: THEME.BUTTONS.HEIGHT,
+    height: scale(THEME.BUTTONS.HEIGHT),
     top: '3%'
   }
 }
