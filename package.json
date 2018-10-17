@@ -83,7 +83,7 @@
     "domain-browser": "^1.1.7",
     "edge-components": "^0.0.8",
     "edge-core-js": "0.12.5",
-    "edge-currency-accountbased": "^0.0.9-beta.3",
+    "edge-currency-accountbased": "^0.0.9-beta.4",
     "edge-currency-bitcoin": "3.5.0",
     "edge-currency-ethereum": "0.11.0",
     "edge-currency-monero": "^0.0.9",
