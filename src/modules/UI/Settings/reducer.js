@@ -159,6 +159,32 @@ const currencyPLuginUtil = (state, payloadData) => {
 
 export const settingsLegacy = (state: SettingsState = initialState, action: Action) => {
   switch (action.type) {
+    case 'ACCOUNT/LOGGED_IN': {
+      if (!action.data) throw new Error('Invalid Action')
+
+      // Setup default denominations for settings based on currencyInfo
+      if (!action.data.currencyPlugins) return state
+      const newState = { ...state }
+      for (const plugin of action.data.currencyPlugins) {
+        const currencyCode = plugin.currencyInfo.currencyCode
+        if (!newState[currencyCode]) newState[currencyCode] = {}
+        if (!newState[currencyCode].denomination) {
+          newState[currencyCode].denomination = plugin.currencyInfo.denominations[0].multiplier
+        }
+        if (!newState[currencyCode].denominations) {
+          newState[currencyCode].denominations = plugin.currencyInfo.denominations
+        }
+        for (const token of plugin.currencyInfo.metaTokens) {
+          const tokenCode = token.currencyCode
+          newState[tokenCode] = {
+            denomination: token.denominations[0].multiplier,
+            denominations: token.denominations
+          }
+        }
+      }
+      return newState
+    }
+
     case 'ACCOUNT_INIT_COMPLETE': {
       if (!action.data) throw new Error('Invalid action')
       const {
