@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Alert, View } from 'react-native'
+import { Alert, Keyboard, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import slowlog from 'react-native-slowlog'
 
@@ -199,6 +199,7 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
     }
     if (data.primaryNativeAmount && data.primaryNativeAmount !== '0') {
       this.props.getQuoteForTransaction(data)
+      Keyboard.dismiss()
       return
     }
     Alert.alert(s.strings.no_exchange_amount, s.strings.select_exchange_amount)
