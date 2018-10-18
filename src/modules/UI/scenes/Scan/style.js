@@ -28,7 +28,7 @@ export const styles = {
     bottom: 0
   },
   overlayTop: {
-    height: scale(37),
+    padding: scale(7),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: THEME.COLORS.GRAY_1,
@@ -36,6 +36,7 @@ export const styles = {
   },
   overlayTopText: {
     color: THEME.COLORS.WHITE,
+    textAlign: 'center',
     fontSize: scale(14)
   },
   overlayBlank: {
