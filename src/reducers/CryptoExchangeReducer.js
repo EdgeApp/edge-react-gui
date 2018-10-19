@@ -30,10 +30,13 @@ export type CryptoExchangeState = {
   genericShapeShiftError: Error | null,
   changeWallet: 'none',
   fee: any,
-  availableShapeShiftTokens: EdgeSwapCurrencies,
+  availableShapeShiftTokens: EdgeSwapCurrencies | Object,
   shiftPendingTransaction: boolean,
   quoteExpireDate: Date | null,
-  quote: EdgeExchangeQuote | null
+  quote: EdgeExchangeQuote | null,
+  swapKYC: Object,
+  totalSwaps: number,
+  showKYCAlert: boolean
 }
 
 const dummyCurrencyInfo: GuiCurrencyInfo = {
@@ -48,7 +51,11 @@ const dummyCurrencyInfo: GuiCurrencyInfo = {
     multiplier: '1'
   }
 }
-
+type AvailableSwapDetails = {
+  response: EdgeSwapCurrencies | Object,
+  swapKYC: Object,
+  totalSwaps: number
+}
 const initialState = {
   fromWallet: null,
   fromCurrencyCode: null,
@@ -77,7 +84,10 @@ const initialState = {
   availableShapeShiftTokens: {},
   shiftPendingTransaction: false,
   quoteExpireDate: null,
-  quote: null
+  quote: null,
+  swapKYC: {},
+  totalSwaps: 0,
+  showKYCAlert: false
 }
 
 function cryptoExchangeInner (state = initialState, action: Action) {
@@ -85,6 +95,9 @@ function cryptoExchangeInner (state = initialState, action: Action) {
   switch (action.type) {
     case 'SWAP_FROM_TO_CRYPTO_WALLETS': {
       return deepCopyState(state)
+    }
+    case 'ON_KYC_TOKEN_SET': {
+      return { ...state, showKYCAlert: false }
     }
 
     case 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE': {
@@ -106,7 +119,8 @@ function cryptoExchangeInner (state = initialState, action: Action) {
         fee: '',
         exchangeRate: 1,
         quoteExpireDate: null,
-        quote: null
+        quote: null,
+        showKYCAlert: true // action.data.showKYCAlert
       }
     }
 
@@ -129,7 +143,8 @@ function cryptoExchangeInner (state = initialState, action: Action) {
         fee: '',
         exchangeRate: 1,
         quote: null,
-        quoteExpireDate: null
+        quoteExpireDate: null,
+        showKYCAlert: true // action.data.showKYCAlert
       }
     }
 
@@ -216,9 +231,12 @@ function cryptoExchangeInner (state = initialState, action: Action) {
     }
 
     case 'ON_AVAILABLE_SHAPE_SHIFT_TOKENS': {
+      const data: AvailableSwapDetails = action.data ? action.data : { response: {}, swapKYC: {}, totalSwaps: 0 }
       return {
         ...state,
-        availableShapeShiftTokens: action.data
+        availableShapeShiftTokens: data.response,
+        swapKYC: data.swapKYC,
+        totalSwaps: data.totalSwaps
       }
     }
 
@@ -296,7 +314,6 @@ function deepCopyState (state) {
 
   return deepCopy
 }
-
 // Nuke the state on logout:
 export const cryptoExchange: Reducer<CryptoExchangeState, Action> = (state, action: Action) => {
   if (action.type === 'LOGOUT' || action.type === 'DEEP_LINK_RECEIVED') {

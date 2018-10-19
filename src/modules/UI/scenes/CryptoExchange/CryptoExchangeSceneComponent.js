@@ -7,11 +7,14 @@ import slowlog from 'react-native-slowlog'
 
 import type { SetNativeAmountInfo } from '../../../../actions/CryptoExchangeActions.js'
 import CryptoExchangeMessageConnector from '../../../../connectors/components/CryptoExchangeMessageConnector'
+// /Volumes/work/SourceCode/AirbitzFresh/edge-react-gui/src/modules/UI/scenes/Settings/components/RestoreWalletsModal.ui
+import { SwapKYCModalConnector } from '../../../../connectors/components/SwapKYCModalConnector.js'
 import * as Constants from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings.js'
 import { CryptoExchangeSceneStyle } from '../../../../styles/indexStyles'
 import type { GuiCurrencyInfo, GuiWallet } from '../../../../types'
 import { emptyCurrencyInfo } from '../../../../types'
+import { showModal } from '../../../ModalManager.js'
 import Gradient from '../../../UI/components/Gradient/Gradient.ui'
 import WalletListModal from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import { getDenomFromIsoCode } from '../../../utils.js'
@@ -49,7 +52,8 @@ export type CryptoExchangeSceneComponentStateProps = {
   // Number of times To and From wallets were flipped
   forceUpdateGuiCounter: number,
   showWalletSelectModal: boolean,
-  shiftPendingTransaction: boolean
+  shiftPendingTransaction: boolean,
+  showKYCAlert: boolean
 }
 
 export type CryptoExchangeSceneComponentDispatchProps = {
@@ -191,11 +195,23 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
       </SafeAreaView>
     )
   }
+  getKYCToken = () => {
+    showModal(SwapKYCModalConnector).then((response: null | { accessToken: string, refreshToken: string }) => {
+      console.log('nav: ', response)
+    })
+  }
   getQuote = () => {
     const data: SetNativeAmountInfo = {
       whichWallet: this.state.whichWalletFocus,
       primaryExchangeAmount: this.state.whichWalletFocus === Constants.FROM ? this.fromAmountDisplay : this.toAmountDisplay,
       primaryNativeAmount: this.state.whichWalletFocus === Constants.FROM ? this.fromAmountNative : this.toAmountNative
+    }
+    if (this.props.showKYCAlert) {
+      Alert.alert('NEED KYC', 's.strings.select_exchange_amount', [
+        { text: s.strings.string_cancel_cap },
+        { text: s.strings.string_ok, onPress: this.getKYCToken }
+      ])
+      return
     }
     if (data.primaryNativeAmount && data.primaryNativeAmount !== '0') {
       this.props.getQuoteForTransaction(data)

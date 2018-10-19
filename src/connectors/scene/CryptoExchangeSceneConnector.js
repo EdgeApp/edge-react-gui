@@ -53,7 +53,7 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
     toButtonText = s.strings.select_recv_wallet
     toFiatToCrypto = 1
   }
-
+  const showKYCAlert = state.cryptoExchange.showKYCAlert
   return {
     fromWallet: fromWallet || emptyGuiWallet,
     fromExchangeAmount,
@@ -76,7 +76,8 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
     fee: state.cryptoExchange.fee,
     forceUpdateGuiCounter: state.cryptoExchange.forceUpdateGuiCounter,
     showWalletSelectModal: state.ui.scenes.walletListModal.walletListModalVisible,
-    shiftPendingTransaction: state.cryptoExchange.shiftPendingTransaction
+    shiftPendingTransaction: state.cryptoExchange.shiftPendingTransaction,
+    showKYCAlert
   }
 }
 
@@ -91,6 +92,10 @@ export const mapDispatchToProps = (dispatch: Dispatch): CryptoExchangeSceneCompo
     dispatch(selectWalletForExchange(walletId, currencyCode))
   },
   openModal: (data: string) => dispatch({ type: 'OPEN_WALLET_SELECTOR_MODAL', data })
+  /*   addKYCToken: (data: {
+    accessToken: string,
+    refreshToken: string
+  }) =>  */
 })
 
 const CryptoExchangeSceneConnector = connect(

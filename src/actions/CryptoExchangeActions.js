@@ -53,12 +53,20 @@ function setShapeTransaction (
   }
 }
 
+export const setKycToken = (tokenInfo: { accessToken: string, refreshToken: string }) => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  await account.swapConfig['shapeshift'].changeUserSettings(tokenInfo)
+  dispatch({ type: 'ON_KYC_TOKEN_SET' })
+}
+
 export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (dispatch: Dispatch, getState: GetState) => {
-  Actions[Constants.EXCHANGE_QUOTE_PROCESSING_SCENE]()
   const state = getState()
   const fromWallet: GuiWallet | null = state.cryptoExchange.fromWallet
   const toWallet: GuiWallet | null = state.cryptoExchange.toWallet
+
   // dispatch(actions.setNativeAmount(info, false))
+  Actions[Constants.EXCHANGE_QUOTE_PROCESSING_SCENE]()
   makeShiftTransaction(dispatch, fromWallet, toWallet, info.whichWallet, info)
 }
 
@@ -300,7 +308,10 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
   dispatch(setShapeTransaction('UPDATE_SHIFT_TRANSACTION_FEE', returnObject))
 }
 
-export const selectToFromWallet = (type: string, wallet: GuiWallet, currencyCode?: string) => async (dispatch: Dispatch, getState: GetState) => {
+export const selectToFromWallet = (type: string, wallet: GuiWallet, currencyCode?: string, showKYCAlert: boolean) => async (
+  dispatch: Dispatch,
+  getState: GetState
+) => {
   const state = getState()
   const cc = currencyCode || wallet.currencyCode
 
@@ -317,7 +328,8 @@ export const selectToFromWallet = (type: string, wallet: GuiWallet, currencyCode
   const data = {
     wallet,
     currencyCode: cc,
-    primaryInfo
+    primaryInfo,
+    showKYCAlert
   }
 
   if (type === 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE') {
@@ -330,11 +342,22 @@ export const selectToFromWallet = (type: string, wallet: GuiWallet, currencyCode
 export const getShapeShiftTokens = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
+  console.log('ss: ', account.swapConfig['shapeshift'])
+  console.log('ss: ', Object.keys(account.swapConfig))
+  const swapKeys = Object.keys(account.swapConfig)
+  const totalSwaps = swapKeys.length
+  const swapKYC = {}
+  for (const key in account.swapConfig) {
+    const detail = account.swapConfig[key]
+    if (detail.needsActivation) {
+      swapKYC[key].needsActivation = true
+    }
+  }
   try {
     const response = await account.fetchSwapCurrencies() // await fetch('https://shapeshift.io/getcoins',
-    dispatch({ type: 'ON_AVAILABLE_SHAPE_SHIFT_TOKENS', data: response })
+    dispatch({ type: 'ON_AVAILABLE_SHAPE_SHIFT_TOKENS', data: { response, swapKYC, totalSwaps } })
   } catch (error) {
-    dispatch({ type: 'ON_AVAILABLE_SHAPE_SHIFT_TOKENS', data: [] })
+    dispatch({ type: 'ON_AVAILABLE_SHAPE_SHIFT_TOKENS', data: { response: {}, swapKYC, totalSwaps } })
   }
 }
 
@@ -350,12 +373,14 @@ export const selectWalletForExchange = (walletId: string, currencyCode: string) 
   }
   dispatch(getShapeShiftTokens())
   const wallet = state.ui.wallets.byId[walletId]
+
+  const showKYCAlert = UTILS.showKYCAlert(state, currencyCode, state.cryptoExchange.changeWallet)
   switch (state.cryptoExchange.changeWallet) {
     case Constants.TO:
-      dispatch(selectToFromWallet('SELECT_TO_WALLET_CRYPTO_EXCHANGE', wallet, currencyCode))
+      dispatch(selectToFromWallet('SELECT_TO_WALLET_CRYPTO_EXCHANGE', wallet, currencyCode, showKYCAlert))
       break
     case Constants.FROM:
-      dispatch(selectToFromWallet('SELECT_FROM_WALLET_CRYPTO_EXCHANGE', wallet, currencyCode))
+      dispatch(selectToFromWallet('SELECT_FROM_WALLET_CRYPTO_EXCHANGE', wallet, currencyCode, showKYCAlert))
       break
     default:
   }

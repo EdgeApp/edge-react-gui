@@ -31,6 +31,8 @@ Object {
   "quoteExpireDate": null,
   "shiftPendingTransaction": false,
   "shiftTransactionError": null,
+  "showKYCAlert": false,
+  "swapKYC": Object {},
   "toCurrencyCode": null,
   "toCurrencyIcon": null,
   "toCurrencyIconDark": null,
@@ -49,6 +51,7 @@ Object {
       "name": "",
     },
   },
+  "totalSwaps": 0,
   "walletListModalVisible": false,
 }
 `;
