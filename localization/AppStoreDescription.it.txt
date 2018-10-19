@@ -6,21 +6,21 @@ Edge Wallet supporta al momento: Bitcoin, Bitcoin Cash, Litecoin, Dash, Ethereum
 
 Edge è un portafoglio di criptovalute potente e di facile utilizzo che permette agli utenti di controllare le loro chiavi private con la familiarità e semplicità del mobile banking. 
 
-Take control of your funds! With Edge, only YOU have access to your funds or transaction data. Neither Edge or any 3rd party can access your money or data. Ottieni la privacy e l'autonomia per le quali la blockchain è stata creata, con una facilità d'uso a prova di nonna.
+Prendi il controllo dei tuoi fondi! Con Edge solo TU hai accesso ai tuoi fondi o alle tue transazioni. Edge e terze parti non possono accedere al tuo denaro o ai tuoi dati. Ottieni la privacy e l'autonomia per le quali la blockchain è stata creata, con una facilità d'uso a prova di nonna.
 
-Edge fornisce al suo interno anche un cambio valuta (exchange). Easily swap your currencies for others with a few taps. 
+Edge fornisce al suo interno anche un cambio valuta (exchange). Scambia facilmente le tue valute con altre in pochi click. 
 
-• Zero-knowledge & zero-access to user funds, keys, or transaction data by Edge or 3rd parties
+• Zero-knowledge & zero-access ai fondi degli utenti, chiavi private o dati sulle transazioni da parte di Edge o di terze parti
 • Creazione dell'account semplificata, usando solo un nome utente e una password (niente documenti da stampare, passphrase da scrivere o altre impostazioni di criptaggio)
 * Login tramite TouchID e FaceID
-• Hierarchical Deterministic wallets with changing addresses per transaction
-• Decentralized server architecture. I portafogli funzionano anche quando i sever di Edge sono offline.
-• Open-source code. Disponibile su https://github.com/EdgeApp
+• Portafogli gerarchici deterministici con cambio automatico degli indirizzi a ogni transazione
+• Architettura server decentralizzata. I portafogli funzionano anche quando i sever di Edge sono offline.
+• Codice open-source. Disponibile su https://github.com/EdgeApp
 
-Privacy Notice
-The Edge Wallet application requests access to the device contact list, and personal information. This information is used on the device to provide an improved user experience in the following ways:
+Informativa sulla privacy
+L'applicazione Edge Wallet richiede l'accesso alla lista contatti del dispositivo e alle informazioni personali. Queste informazioni sono usate sul dispositivo per fornire un esperienza d'uso migliore nei seguenti modi:
 
-1. Autocomplete contacts from the user's address book after a transaction
-2. Autocomplete contacts from the user's address book to send Email or SMS payment requests
+1. Completamento automatico dei contatti dalla rubrica dell'utente dopo una transazione
+2. Completamento automatico dei contatti dalla rubrica dell'utente per inviare richieste di pagamento tramite email o SMS
 
-No personal info or contact list info ever leaves the device. Neither Edge nor any 3rd party can access the information requested by the application.
+Nessuna informazione personale o lista contatti lascerà mai questo dispositivo. Edge e terze parti non possono accedere alle informazioni richieste dall'applicazione.
