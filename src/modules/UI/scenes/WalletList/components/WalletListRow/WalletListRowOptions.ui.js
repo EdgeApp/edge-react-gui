@@ -19,11 +19,11 @@ const modifiedMenuDropDownStyle = {
   ...MenuDropDownStyle,
   menuIconWrap: {
     ...MenuDropDownStyle.menuIconWrap,
-    width: scale(46)
+    width: '100%'
   },
   icon: {
     ...MenuDropDownStyle.icon,
-    fontSize: scale(26),
+    fontSize: scale(30),
     position: 'relative',
     top: 2
   }

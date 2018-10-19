@@ -130,25 +130,13 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
             onPress={() => this._onPressSelectWallet(id, currencyCode)}
           >
             <View style={[styles.rowContent]}>
-              <View style={[styles.rowNameTextWrap]}>
-                {Platform.OS === 'ios' && (
-                  <View style={[styles.rowNameTextWrapIOS]}>
-                    <T style={[styles.rowNameText]} numberOfLines={1}>
-                      {symbolImageDarkMono && (
-                        <Image style={[styles.rowCurrencyLogoIOS]} transform={[{ translateY: 3 }]} source={{ uri: symbolImageDarkMono }} />
-                      )}{' '}
-                      {cutOffText(name, 34)}
-                    </T>
-                  </View>
-                )}
-                {Platform.OS === 'android' && (
-                  <View style={[styles.rowNameTextWrapAndroid]}>
-                    {symbolImageDarkMono && <Image style={[styles.rowCurrencyLogoAndroid]} source={{ uri: symbolImageDarkMono }} resizeMode="cover" />}
-                    <T style={[styles.rowNameText]} numberOfLines={1}>
-                      {cutOffText(name, 34)}
-                    </T>
-                  </View>
-                )}
+              <View style={styles.rowIconWrap}>
+                {symbolImageDarkMono && <Image style={[styles.rowCurrencyLogoAndroid]} source={{ uri: symbolImageDarkMono }} resizeMode="cover" />}
+              </View>
+              <View style={[styles.rowNameTextWrapAndroidIos]}>
+                <T style={[styles.rowNameText]} numberOfLines={2} adjustsFontSizeToFit={true} minimumFontScale={0.6}>
+                  {Platform.OS === 'ios' ? name : cutOffText(name, 34)}
+                </T>
               </View>
               {this.props.isWalletFiatBalanceVisible ? (
                 <View style={[styles.rowBalanceTextWrap]}>
@@ -169,7 +157,9 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
                   </View>
                 </View>
               )}
-              <WalletListRowOptions currencyCode={walletData.currencyCode} executeWalletRowOption={walletData.executeWalletRowOption} walletKey={id} />
+              <View style={styles.rowOptionsWrap}>
+                <WalletListRowOptions currencyCode={walletData.currencyCode} executeWalletRowOption={walletData.executeWalletRowOption} walletKey={id} />
+              </View>
             </View>
           </TouchableHighlight>
           {this.renderTokenRow(id, enabledNativeBalances)}

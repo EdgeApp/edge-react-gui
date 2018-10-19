@@ -7,7 +7,7 @@ exports[`MenuDropDown component should render with standard props 1`] = `
       "alignItems": "center",
       "flexDirection": "column",
       "justifyContent": "center",
-      "width": 70.81408450704225,
+      "width": 64.61056338028169,
     }
   }
 >
@@ -23,7 +23,7 @@ exports[`MenuDropDown component should render with standard props 1`] = `
         "alignItems": "center",
         "height": "100%",
         "justifyContent": "center",
-        "width": 70.81408450704225,
+        "width": 64.61056338028169,
       }
     }
   >
@@ -38,7 +38,7 @@ exports[`MenuDropDown component should render with standard props 1`] = `
               "alignSelf": "center",
               "height": "100%",
               "justifyContent": "center",
-              "width": 70.81408450704225,
+              "width": 64.61056338028169,
             },
             "underlayColor": "transparent",
           },
@@ -63,7 +63,7 @@ exports[`MenuDropDown component should render with standard props 1`] = `
           style={
             Object {
               "color": "#4A5157",
-              "fontSize": 30.788732394366196,
+              "fontSize": 28.091549295774648,
             }
           }
         >
@@ -91,7 +91,7 @@ exports[`MenuDropDown component should render with standard props 1`] = `
           style={
             Object {
               "flexDirection": "row",
-              "paddingVertical": 6.157746478873239,
+              "paddingVertical": 5.618309859154929,
             }
           }
         >
@@ -102,7 +102,7 @@ exports[`MenuDropDown component should render with standard props 1`] = `
             style={
               Object {
                 "color": "#4A5157",
-                "fontSize": 27.70985915492958,
+                "fontSize": 25.28239436619718,
               }
             }
           >
