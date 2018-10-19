@@ -1,0 +1,26 @@
+Privacy totale e sicurezza nel nostro portafoglio blockchain semplice da utilizzare.
+
+Gestire le tue criptovalute non è mai stato così semplice. Edge Wallet fornisce la massima sicurezza mantenendo le cose semplici: permette a qualunque tipo di utente di gestire con facilità le proprie criptovalute, trasferirle e scambiarle.
+
+Edge Wallet supporta al momento: Bitcoin, Bitcoin Cash, Litecoin, Dash, Ethereum, Monero e Ripple.
+
+Edge è un portafoglio di criptovalute potente e di facile utilizzo che permette agli utenti di controllare le loro chiavi private con la familiarità e semplicità del mobile banking. 
+
+Prendi il controllo dei tuoi fondi! Con Edge solo TU hai accesso ai tuoi fondi o alle tue transazioni. Edge e terze parti non possono accedere al tuo denaro o ai tuoi dati. Ottieni la privacy e l'autonomia per le quali la blockchain è stata creata, con una facilità d'uso a prova di nonna.
+
+Edge fornisce al suo interno anche un cambio valuta (exchange). Scambia facilmente le tue valute con altre in pochi click. 
+
+• Zero-knowledge & zero-access ai fondi degli utenti, chiavi private o dati sulle transazioni da parte di Edge o di terze parti
+• Creazione dell'account semplificata, usando solo un nome utente e una password (niente documenti da stampare, passphrase da scrivere o altre impostazioni di criptaggio)
+* Login tramite TouchID e FaceID
+• Portafogli gerarchici deterministici con cambio automatico degli indirizzi a ogni transazione
+• Architettura server decentralizzata. I portafogli funzionano anche quando i sever di Edge sono offline.
+• Codice open-source. Disponibile su https://github.com/EdgeApp
+
+Informativa sulla privacy
+L'applicazione Edge Wallet richiede l'accesso alla lista contatti del dispositivo e alle informazioni personali. Queste informazioni sono usate sul dispositivo per fornire un esperienza d'uso migliore nei seguenti modi:
+
+1. Completamento automatico dei contatti dalla rubrica dell'utente dopo una transazione
+2. Completamento automatico dei contatti dalla rubrica dell'utente per inviare richieste di pagamento tramite email o SMS
+
+Nessuna informazione personale o lista contatti lascerà mai questo dispositivo. Edge e terze parti non possono accedere alle informazioni richieste dall'applicazione.
