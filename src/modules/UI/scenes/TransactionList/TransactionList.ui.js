@@ -121,6 +121,7 @@ export class TransactionList extends Component<Props, State> {
 
   renderBuyCrypto = () => {
     const wallet = this.props.uiWallet
+    const { selectedCurrencyCode } = this.props
     if (this.props.numTransactions) {
       return (
         <View style={styles.emptyListLoader}>
@@ -129,11 +130,7 @@ export class TransactionList extends Component<Props, State> {
       )
     }
 
-    let currencyCode = ''
-    if (wallet && wallet.currencyCode) {
-      currencyCode = wallet.currencyCode
-    }
-    switch (currencyCode) {
+    switch (selectedCurrencyCode) {
       case 'BTC':
         return <BuyCrypto wallet={wallet} />
       case 'BCH':
@@ -141,6 +138,8 @@ export class TransactionList extends Component<Props, State> {
       case 'ETH':
         return <BuyCrypto wallet={wallet} />
       case 'LTC':
+        return <BuyCrypto wallet={wallet} />
+      case 'XRP':
         return <BuyCrypto wallet={wallet} />
       default:
         return null
