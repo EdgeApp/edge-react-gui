@@ -1,16 +1,16 @@
 v1.4.0
-* Support for Stellar
-* Add ability to select custom nodes for Bitcoin and similar currencies
-* Support for ShapeShift membership
-* Support Changelly.com in Exchange functionality
-* Add Spanish, Italian, and Russian translations
+* Soporta Stellar
+* Añadida capacidad de seleccionar nodos propios para Bitcoin y monedas similares
+* Soporte para membresía Shapeshift
+Soporta Changelly.com en la funcionalidad de cambio de monedas
+* Añadidas traducciones al Español, Italiano y Ruso
 
 v1.3.4
 
-* Prevent create wallet button Done button from being tapped multiple times
-* Fix white screen hang upon login if an incoming transaction happens
-* Fix address wrapping in Simplex plugin
-* Fix double tap bug on Change Password modal
+* Evitar que se pueda hacer click varias veces en el botón Hecho de la opción crear cartera
+* Arreglo de que la pantalla quede en blanco en el login si se recibe una transacción en ese momento
+* Corregido ajuste de direcciones en el plugin Simplex
+*Corregido un bug al hacer doble click en el modo de cambio de contraseña
 *Corregir las cantidades fiat cuando se usan monedas de otros países
-* Additional scaling and visual improvements
-* Other minor bug fixes
+* Mejoras visuales adicionales
+* Bugs menores corregidos
