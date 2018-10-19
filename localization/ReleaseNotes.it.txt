@@ -1,0 +1,16 @@
+v1.4.0
+* Supporto per Stellar
+* Aggiunta la possibilità di selezionare nodi personalizzati per Bitcoin e valute simili
+* Supporto per membership ShapeShift
+* Supporto per Changelly.com nelle funzionalità cambio valuta (exchange)
+* Aggiunto il supporto allo spagnolo, all'italiano e al russo
+
+v1.3.4
+
+* Prevenuta la possibilità di cliccare multiple volte sul pulsante Fatto durante la creazione del portafoglio
+* Rimossa la schermata bianca che compariva durante il login quando stava arrivando una transazione in entrata
+* Corretto l'address wrapping nel plugin Simplex
+* Corretto il budget del doppio tap nella modalità Cambia password
+* Corretto l'importo delle fiat quando si usano valute di altri paesi
+* Altri miglioramenti visivi
+* Altre correzioni minori
