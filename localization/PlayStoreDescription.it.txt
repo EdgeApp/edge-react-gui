@@ -1,0 +1,31 @@
+
+<b>Totale privacy e sicurezza nel nostro portafoglio blockchain.</b> Compra, vendi, invia e ricevi Bitcoin (BTC), Bitcoin Cash (BCH), Litecoin (LTC), Ethereum (ETH) e molte altre criptovalute.
+
+Gestire le tue criptovalute non è mai stato così facile. Edge Wallet fornisce la massima sicurezza mantenendo la semplicità d'uso e permettendo a qualunque tipo di utente di gestire, trasferire e scambiare le loro criptovalute con estrema facilità.
+
+<b>Edge Wallet supporta attualmente:</b> Bitcoin (BTC), Bitcoin Cash (BCH), Litecoin (LTC), Qtum (QTUM), Dash (DASH), Ethereum (ETH), Monero (XMR), Ripple (XRP), e Feathercoin (FTC). Vuoi vedere altre crypto nel nostro portafoglio? Inviaci una richiesta!
+
+Edge è un portafoglio di criptovalute potente e di semplice utilizzo che permette agli utenti di controllare con facilità le loro chiavi private con la familiarità del mobile banking. 
+
+Mantieni il controllo dei tuoi fondi! Con Edge solo TU hai accesso ai tuoi fondi o ai dati delle transazioni. Edge e terze parti non possono accedere al tuo denaro o ai tuoi dati. Ottieni la privacy e l'autonomia per le quali la blockchain è stata creata, con una facilità d'uso a prova di nonna.
+
+Edge fornisce al suo interno anche un cambio valuta (exchange). Scambia facilmente le tue valute con altre in pochi click. Scambia BTC per Ethereum, ETH per BCH e molti altri.
+
+<b>Caratteristiche</b>
+• Portafoglio criptovalute sicuro e app blockchain
+• Portafoglio Bitcoin con in più il supporto alle criptovalute più utilizzate, come ad esempio Bitcoin Cash, Litecoin e Ripple (XRP)
+• Zero-knowledge & zero-access ai fondi degli utenti, chiavi private o dati sulle transazioni da parte di Edge o di terze parti
+• Creazione dell'account semplificata, usando solo un nome utente e una password (niente documenti da stampare, passphrase da scrivere o altre impostazioni di criptaggio)
+* Login tramite TouchID e FaceID
+• Portafogli gerarchici deterministici con cambio automatico degli indirizzi a ogni transazione
+• Architettura server decentralizzata. I portafogli funzionano anche quando i sever di Edge sono offline.
+• Codice open-source. Disponibile su https://github.com/Airbitz
+• Cambio (exchange) integrato, per comprare e vendere criptovalute
+
+Informativa sulla privacy
+L'applicazione Edge Wallet richiede l'accesso alla lista contatti del dispositivo e alle informazioni personali. Queste informazioni sono usate sul dispositivo per fornire un esperienza d'uso migliore nei seguenti modi:
+
+1. Completamento automatico dei contatti dalla rubrica dell'utente dopo una transazione
+2. Completamento automatico dei contatti dalla rubrica dell'utente per inviare richieste di pagamento tramite email o SMS
+
+Nessuna informazione personale o lista contatti lascerà mai questo dispositivo senza essere prima criptata tramite le credenziali dell'utente (nome utente/password). Edge e terze parti non possono accedere alle informazioni richieste dall'applicazione.
