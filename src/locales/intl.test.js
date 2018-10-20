@@ -336,6 +336,34 @@ describe('formatNumber', function () {
       const actual = intl.formatNumber(input, options)
       expect(actual).toBe(expected)
     })
+    test('noGrouping toFixed=2 1234 => 1234.00', function () {
+      const input = '1234'
+      const options = { toFixed: 2, noGrouping: true }
+      const expected = '1234.00'
+      const actual = intl.formatNumber(input, options)
+      expect(actual).toBe(expected)
+    })
+    test('noGrouping toFixed=2 123456 => 123456.00', function () {
+      const input = '123456'
+      const options = { toFixed: 2, noGrouping: true }
+      const expected = '123456.00'
+      const actual = intl.formatNumber(input, options)
+      expect(actual).toBe(expected)
+    })
+    test('noGrouping toFixed=2 123456.12 => 123456.12', function () {
+      const input = '123456.12'
+      const options = { toFixed: 2, noGrouping: true }
+      const expected = '123456.12'
+      const actual = intl.formatNumber(input, options)
+      expect(actual).toBe(expected)
+    })
+    test('noGrouping 123456 => 123456', function () {
+      const input = '123456'
+      const options = { noGrouping: true }
+      const expected = '123456'
+      const actual = intl.formatNumber(input, options)
+      expect(actual).toBe(expected)
+    })
   })
 })
 
@@ -367,6 +395,34 @@ describe('formatNumber de_DE locale', function () {
       const input = '1234.56'
       const expected = '1.234,56'
       const actual = intl.formatNumber(input)
+      expect(actual).toBe(expected)
+    })
+    test('noGrouping toFixed=2 1234 => 1234,00', function () {
+      const input = '1234'
+      const options = { toFixed: 2, noGrouping: true }
+      const expected = '1234,00'
+      const actual = intl.formatNumber(input, options)
+      expect(actual).toBe(expected)
+    })
+    test('noGrouping toFixed=2 123456 => 123456,00', function () {
+      const input = '123456'
+      const options = { toFixed: 2, noGrouping: true }
+      const expected = '123456,00'
+      const actual = intl.formatNumber(input, options)
+      expect(actual).toBe(expected)
+    })
+    test('noGrouping toFixed=2 123456.12 => 123456,12', function () {
+      const input = '123456.12'
+      const options = { toFixed: 2, noGrouping: true }
+      const expected = '123456,12'
+      const actual = intl.formatNumber(input, options)
+      expect(actual).toBe(expected)
+    })
+    test('noGrouping 123456 => 123456', function () {
+      const input = '123456'
+      const options = { noGrouping: true }
+      const expected = '123456'
+      const actual = intl.formatNumber(input, options)
       expect(actual).toBe(expected)
     })
   })

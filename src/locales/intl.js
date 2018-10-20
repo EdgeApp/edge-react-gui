@@ -15,7 +15,8 @@ let locale = EN_US_LOCALE
 
 type IntlLocaleType = any
 type IntlNumberFormatOptionsType = {
-  toFixed?: number
+  toFixed?: number,
+  noGrouping?: boolean
 }
 
 const intlHandler = {
@@ -57,10 +58,14 @@ const intlHandler = {
     }
     const [integers, decimals] = stringify.split(NATIVE_DECIMAL_SEPARATOR)
     const len = integers.length
-    i = len % NUMBER_GROUP_SIZE || NUMBER_GROUP_SIZE
-    intPart = integers.substr(0, i)
-    for (; i < len; i += NUMBER_GROUP_SIZE) {
-      intPart += locale.groupingSeparator + integers.substr(i, NUMBER_GROUP_SIZE)
+    if (!options || !options.noGrouping) {
+      i = len % NUMBER_GROUP_SIZE || NUMBER_GROUP_SIZE
+      intPart = integers.substr(0, i)
+      for (; i < len; i += NUMBER_GROUP_SIZE) {
+        intPart += locale.groupingSeparator + integers.substr(i, NUMBER_GROUP_SIZE)
+      }
+    } else {
+      intPart = integers.substr(0, len)
     }
     stringify = decimals ? intPart + locale.decimalSeparator + decimals : intPart
     return stringify
