@@ -681,7 +681,11 @@ export default class Main extends Component<Props, State> {
           currencyCode={currencyCode}
           navTransparent={true}
           component={CurrencySettings}
-          renderTitle={<CurrencySettingsTitleConnector key={key} cryptoKey={key} pluginName={pluginName} currencyCode={currencyCode} />}
+          renderTitle={
+            <View style={styles.titleWrapper}>
+              <CurrencySettingsTitleConnector key={key} cryptoKey={key} pluginName={pluginName} currencyCode={currencyCode} />
+            </View>
+          }
           renderLeftButton={this.renderBackButton()}
           renderRightButton={this.renderEmptyButton()}
         />
