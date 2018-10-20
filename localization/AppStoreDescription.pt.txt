@@ -1,26 +1,26 @@
-Total privacy and security in our easy to use blockchain wallet.
+Privacidade total e segurança em nossa carteira fácil de usar.
 
-Managing your cryptocurrency assets has never been easier. Edge Wallet provides maximum security while keeping simplicity, allowing all types of users to easily manage, transfer & exchange their currencies.
+Nunca foi tão fácil gerenciar seus criptoativos. A Carteira Edge fornece segurança máxima mesmo mantendo a simplicidade, permitindo que todos os tipos de usuários a utilizem com facilidade, façam transferências e troquem suas moedas.
 
-Edge Crypto Wallet currently supports: Bitcoin, Bitcoin Cash, Litecoin, Dash, Ethereum, Monero, and Ripple.
+A Carteira Edge atualmente suporta: Bitcoin, Bitcoin Cash, Litecoin, Dash, Ethereum, Monero e Ripple.
 
-Edge is a powerful and easy to use cryptocurrency wallet that allows users to easily control their own private keys with the familiarity and ease of mobile banking. 
+A Edge é uma Carteira de Criptomoeda poderosa e fácil de usar, que permite aos usuários controlar suas próprias chaves privadas com a familiaridade e a tranquilidade de um serviço bancário no celular. 
 
-Take control of your funds! With Edge, only YOU have access to your funds or transaction data. Neither Edge or any 3rd party can access your money or data. You get the financial privacy and autonomy that blockchain was designed for, with the ease of use even grandma could handle.
+Tenha o controla dos seus fundos! Com a Edge, só você tem acesso aos seus fundos ou dados de transação. Nem a Edge nem quaisquer terceiros podem acessar seu dinheiro ou dados. Você terá privacidade financeira e autonomia para as quais a Blockchain foi criada, com a facilidade de uso que até sua avó poderia utilizar.
 
-Edge also provides a cryptocurrency exchange. Easily swap your currencies for others with a few taps. 
+A Edge também disponibiliza a troca de criptomoedas. Troque facilmente suas moedas por outras com poucos comandos. 
 
-• Zero-knowledge & zero-access to user funds, keys, or transaction data by Edge or 3rd parties
-• Simple account creation using just a login & password (no printing of PDFs, writing down pass phrases, or adding encryption settings)
-* Biometric TouchID and FaceID login
-• Hierarchical Deterministic wallets with changing addresses per transaction
-• Decentralized server architecture. Wallets work even if Edge servers are down.
-• Open-source code. Available at https://github.com/EdgeApp
+• Zero-conhecimento e zero-acesso aos fundos, chaves, ou dados de transação do usuário da parte da Edge ou de terceiros
+• Criação de conta simplificada usando apenas login e senha (sem impressão de PDFs, sem escrever frases de recuperação, e sem precisar fazer configurações criptografadas)
+* TouchID biométrico e login por FaceID
+• Carteiras hierárquicas determinísticas com mudança de endereço para cada transação
+• Arquitetura de servidor descentralizada. As carteiras funcionam mesmo se os servidores da Edge estiverem fora do ar.
+• Código aberto. Disponível em https://github.com/EdgeApp
 
-Privacy Notice
-The Edge Wallet application requests access to the device contact list, and personal information. This information is used on the device to provide an improved user experience in the following ways:
+Aviso de Privacidade
+O aplicativo da Carteira Edge solicita acesso à lista de contatos do dispositivo, localização e informações pessoais. Esta informação é utilizada no dispositivo para fornecer uma melhor experiência ao usuário das seguintes formas:
 
-1. Autocomplete contacts from the user's address book after a transaction
-2. Autocomplete contacts from the user's address book to send Email or SMS payment requests
+1. Completar automaticamente contatos da lista de endereços do usuário depois de uma transação
+2. Auto-completar contatos da lista de endereços do usuário para enviar pedidos de pagamentos por Email ou SMS
 
-No personal info or contact list info ever leaves the device. Neither Edge nor any 3rd party can access the information requested by the application.
+Nenhuma informação pessoal ou da lista de contato deixa o dispositivo. Nem a Edge nem qualquer terceiro têm conhecimento da informação requerida pelo aplicativo.
