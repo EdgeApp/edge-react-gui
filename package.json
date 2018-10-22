@@ -100,6 +100,7 @@
     "react": "16.4.1",
     "react-native": "0.55.3",
     "react-native-animatable": "^1.1.0",
+    "react-native-app-settings": "^2.0.0",
     "react-native-background-fetch": "^2.4.3",
     "react-native-camera": "git://github.com/EdgeApp/react-native-camera.git#97e0b9a",
     "react-native-contacts": "git://github.com/EdgeApp/react-native-contacts.git",
