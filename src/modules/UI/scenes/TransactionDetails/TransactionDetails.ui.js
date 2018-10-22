@@ -147,7 +147,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     }
 
     // if type is still not defined then figure out if send or receive (expense vs income)
-    if (!type) {
+    if (!type || !types[type]) {
       if (direction === 'receive') {
         type = types.income.key
       } else {

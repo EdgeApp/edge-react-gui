@@ -133,8 +133,7 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
       await WALLET_API.saveTransaction(srcWallet, broadcastedTransaction)
 
       const category = sprintf(
-        '%s:%s %s %s',
-        s.strings.fragment_transaction_exchange,
+        'exchange:%s %s %s',
         state.cryptoExchange.fromCurrencyCode,
         s.strings.word_to_in_convert_from_to_string,
         state.cryptoExchange.toCurrencyCode
