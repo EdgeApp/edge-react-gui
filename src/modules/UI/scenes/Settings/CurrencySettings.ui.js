@@ -119,7 +119,7 @@ export default class CurrencySettings extends Component<Props, State> {
         <View style={[styles.ethereumSettings]}>
           <Gradient style={styles.gradient} />
           <View style={styles.container}>
-            {this.props.defaultElectrumServer && (
+            {this.props.defaultElectrumServer.length !== 0 && (
               <SetCustomNodesModal
                 isActive={this.state.isSetCustomNodesModalVisible}
                 onExit={this.closeSetCustomNodesModal}
@@ -136,8 +136,9 @@ export default class CurrencySettings extends Component<Props, State> {
                 const key = denomination.multiplier
                 const left = (
                   <View style={{ flexDirection: 'row' }}>
-                    <T style={styles.symbol}>{denomination.symbol}</T>
-                    <T> - {denomination.name}</T>
+                    <T style={styles.symbol}>
+                      {denomination.symbol} - {denomination.name}
+                    </T>
                   </View>
                 )
                 const isSelected = key === this.props.selectedDenominationKey
@@ -145,7 +146,7 @@ export default class CurrencySettings extends Component<Props, State> {
                 return <Row key={denomination.multiplier} denomination={denomination} left={left} isSelected={isSelected} onPress={onPress} />
               })}
             </RadioRows>
-            {this.props.defaultElectrumServer && (
+            {this.props.defaultElectrumServer.length !== 0 && (
               <View>
                 {this.subHeader(CUSTOM_NODES_TEXT)}
                 <SwitchRow
