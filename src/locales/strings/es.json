@@ -1,7 +1,7 @@
 {
   "app_name": "Edge Wallet",
-  "bitcoin_received": "¡Has recibido %1$s!",
-  "bitcoin_remaining": "Tu saldo es de %1$s",
+  "bitcoin_received": "¡Has recibido %1$s",
+  "bitcoin_remaining": "Tu saldo es de %1$s…",
   "calculator_done": "Hecho",
   "change_mining_fee_body": "Advertencia: Comisiones bajas pueden causar largos retrasos en la confirmación de la transacción",
   "change_currency_fee": "Cambiar moneda",
@@ -11,7 +11,7 @@
   "drawer_exchange": "Exchange",
   "drawer_request": "Solicitud",
   "drawer_scan_qr_send": "Escanear QR (Enviar)",
-  "drawer_sweep_private_key": "Barrer clave privada (Sweep PK)",
+  "drawer_sweep_private_key": "Barrer clave privada (Sweep Pk)",
   "drawer_wallets": "Carteras",
   "dropdown_exchange_max_amount": "Cambiar la cantidad máxima",
   "edge_description": "Esta aplicación quiere crear o acceder a su cartera en tu cuenta Edge.\n\nNo tendrá acceso a ninguna otra cartera.",
