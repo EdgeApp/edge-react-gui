@@ -136,9 +136,8 @@ export default class CurrencySettings extends Component<Props, State> {
                 const key = denomination.multiplier
                 const left = (
                   <View style={{ flexDirection: 'row' }}>
-                    <T style={styles.symbol}>
-                      {denomination.symbol} - {denomination.name}
-                    </T>
+                    <T style={styles.symbol}>{denomination.symbol}</T>
+                    <T> - {denomination.name}</T>
                   </View>
                 )
                 const isSelected = key === this.props.selectedDenominationKey

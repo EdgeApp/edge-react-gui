@@ -94,6 +94,8 @@ exports[`CurrencySettings should render 1`] = `
                 }
               >
                 ₿
+              </FormattedText>
+              <FormattedText>
                  - 
                 BTG
               </FormattedText>
@@ -126,6 +128,8 @@ exports[`CurrencySettings should render 1`] = `
                 }
               >
                 m₿
+              </FormattedText>
+              <FormattedText>
                  - 
                 mBTG
               </FormattedText>
@@ -158,6 +162,8 @@ exports[`CurrencySettings should render 1`] = `
                 }
               >
                 ƀ
+              </FormattedText>
+              <FormattedText>
                  - 
                 bits
               </FormattedText>
