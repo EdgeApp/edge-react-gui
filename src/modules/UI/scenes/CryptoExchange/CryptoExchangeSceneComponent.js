@@ -196,7 +196,7 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
     )
   }
   getKYCToken = () => {
-    showModal(SwapKYCModalConnector).then((response: null | { accessToken: string, refreshToken: string }) => {
+    showModal(SwapKYCModalConnector, { style: { margin: 0 } }).then((response: null | { accessToken: string, refreshToken: string }) => {
       console.log('nav: ', response)
     })
   }

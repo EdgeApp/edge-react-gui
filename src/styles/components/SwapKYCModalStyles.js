@@ -9,11 +9,20 @@ const SwapKYCModalStyles = {
     alignItems: 'center',
     width: '100%'
   },
+  gradient: {
+    height: THEME.SPACER.HEADER,
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 10
+  },
   topLevel: {
     zIndex: 10,
     width: '100%',
     backgroundColor: THEME.COLORS.WHITE,
-    alignSelf: 'stretch'
+    alignSelf: 'stretch',
+    position: 'absolute',
+    height: '100%'
   },
   webview: {
     flex: 1,

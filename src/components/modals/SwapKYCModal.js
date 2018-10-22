@@ -1,9 +1,12 @@
 // @flow
 
 import React, { Component } from 'react'
-import { ActivityIndicator, Button, Text, View, WebView } from 'react-native'
+import { ActivityIndicator, View, WebView } from 'react-native'
 import * as Animatable from 'react-native-animatable'
 
+import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
+import BackButton from '../../modules/UI/components/Header/Component/BackButton.ui.js'
+import SafeAreaView from '../../modules/UI/components/SafeAreaView'
 import { SwapKYCModalStyles as styles } from '../../styles/components/SwapKYCModalStyles'
 
 export type Props = {
@@ -21,14 +24,6 @@ class SwapKYCModal extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = { code: null }
-  }
-  goBack = () => {
-    console.log('BACK')
-    // The ref allows us to call methods on the WebView component:
-    const webView = this.ref.current
-    if (webView != null) {
-      webView.goBack()
-    }
   }
   onNavigate = (navstate: Object) => {
     if (navstate.url.startsWith('https://developer.airbitz.co/shapeshift-auth')) {
@@ -71,21 +66,24 @@ class SwapKYCModal extends Component<Props, State> {
     // const { onDone } = this.props
     if (this.state.code === null) {
       return (
-        <Animatable.View style={[styles.topLevel, { position: 'absolute', top: 0, height: '100%' }]} animation="fadeInUp" duration={250}>
-          <View style={styles.container}>
-            <Text>{'\nTesting Shapeshift React Native'}</Text>
-            <Button onPress={this.goBack} title="back" />
-            <View style={styles.webview}>
-              <WebView
-                ref={this.setRef}
-                source={{
-                  uri:
-                    'https://auth.shapeshift.io/oauth/authorize?response_type=code&scope=users%3Aread&client_id=3a49c306-8c52-42a2-b7cf-bda4e4aa6d7d&redirect_uri=https%3A%2F%2Fdeveloper.airbitz.co%2Fshapeshift-auth'
-                }}
-                onNavigationStateChange={this.onNavigate}
-              />
+        <Animatable.View style={styles.topLevel} animation="fadeInUp" duration={250}>
+          <SafeAreaView>
+            <View style={styles.container}>
+              <Gradient style={styles.gradient}>
+                <BackButton onPress={this.props.onDone} label="back" />
+              </Gradient>
+              <View style={styles.webview}>
+                <WebView
+                  ref={this.setRef}
+                  source={{
+                    uri:
+                      'https://auth.shapeshift.io/oauth/authorize?response_type=code&scope=users%3Aread&client_id=3a49c306-8c52-42a2-b7cf-bda4e4aa6d7d&redirect_uri=https%3A%2F%2Fdeveloper.airbitz.co%2Fshapeshift-auth'
+                  }}
+                  onNavigationStateChange={this.onNavigate}
+                />
+              </View>
             </View>
-          </View>
+          </SafeAreaView>
         </Animatable.View>
       )
     }
