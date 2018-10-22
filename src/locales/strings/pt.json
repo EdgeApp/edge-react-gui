@@ -360,7 +360,7 @@
   "onboarding_slide_5": "Troque criptomoedas escolhendo a carteira de envio e de recebimento para negociar entre elas.",
   "otp_out_of_sync_title": "Alerta",
   "otp_out_of_sync_body": "Esse dispositivo não tem o token próprio para 2-fatores. Você ainda pode acessar seus fundos com funcionalidade limitada, mas não pode criar carteiras ou mudar opções de conta",
-  "just_a_moment": "Só um momento",
+  "just_a_moment": "",
   "trying_to_find": "Nós estamos encontrando fornecedores de\ntroca disponível para você...",
   "exchange_will_be_sent": "%1$s %2$s serão enviados",
   "exchange_will_be_received": "%1$s %2$s serão recebidos",
