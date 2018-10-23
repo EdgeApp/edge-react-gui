@@ -5,7 +5,7 @@ import { makeEdgeContext, makeFakeContexts } from 'edge-core-js'
 
 import ENV from '../../env.json'
 
-const { AIRBITZ_API_KEY, SHAPESHIFT_API_KEY, CAHNGELLY_INIT } = ENV
+const { AIRBITZ_API_KEY, SHAPESHIFT_API_KEY, CHANGELLY_INIT } = ENV
 
 function makeCoreContext (callbacks: EdgeContextCallbacks = {}, pluginFactories: Array<EdgeCorePluginFactory> = []): Promise<EdgeContext> {
   const opts: EdgeContextOptions = {
@@ -13,7 +13,7 @@ function makeCoreContext (callbacks: EdgeContextCallbacks = {}, pluginFactories:
     callbacks,
     plugins: pluginFactories,
     shapeshiftKey: SHAPESHIFT_API_KEY,
-    changellyInit: CAHNGELLY_INIT
+    changellyInit: CHANGELLY_INIT
   }
 
   if (ENV.USE_FAKE_CORE) {
