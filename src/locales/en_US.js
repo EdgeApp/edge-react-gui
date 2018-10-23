@@ -392,7 +392,9 @@ const strings = {
   exchange_will_be_sent: '%1$s %2$s will be sent',
   exchange_will_be_received: '%1$s %2$s will be received',
   mining_fee: 'Mining Fee',
-  confirm_with_shapeshift: 'Confirm to complete your exchange through Shapeshift.'
+  confirm_with_shapeshift: 'Confirm to complete your exchange through Shapeshift.',
+  kyc_title: 'Customer Information Needed',
+  kyc_message: 'The available exchange for this transaction requires you to login to your account'
 }
 
 // export default strings

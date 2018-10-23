@@ -207,10 +207,7 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
       primaryNativeAmount: this.state.whichWalletFocus === Constants.FROM ? this.fromAmountNative : this.toAmountNative
     }
     if (this.props.showKYCAlert) {
-      Alert.alert('NEED KYC', 's.strings.select_exchange_amount', [
-        { text: s.strings.string_cancel_cap },
-        { text: s.strings.string_ok, onPress: this.getKYCToken }
-      ])
+      Alert.alert(s.strings.kyc_title, s.strings.kyc_message, [{ text: s.strings.string_cancel_cap }, { text: s.strings.string_ok, onPress: this.getKYCToken }])
       return
     }
     if (data.primaryNativeAmount && data.primaryNativeAmount !== '0') {
