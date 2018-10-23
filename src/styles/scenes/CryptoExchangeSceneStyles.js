@@ -56,8 +56,7 @@ const CryptoExchangeSceneStyle = {
   },
   downArrowSize: scale(36),
   actionButtonContainer: {
-    width: '90%',
-    height: THEME.BUTTONS.HEIGHT
+    width: '90%'
   },
   flipWrapper: {
     container: {
