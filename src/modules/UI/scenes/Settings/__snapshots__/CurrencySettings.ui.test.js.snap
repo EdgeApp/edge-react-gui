@@ -25,7 +25,6 @@ exports[`CurrencySettings should render 1`] = `
         }
       }
     >
-      
       <Gradient
         style={
           Array [
@@ -173,7 +172,6 @@ exports[`CurrencySettings should render 1`] = `
           onPress={[Function]}
         />
       </RadioRows>
-      
     </Component>
   </Component>
 </SafeAreaViewComponent>
