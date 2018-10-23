@@ -13,7 +13,7 @@ export const mapStateToProps = (state: State) => {
 }
 
 export const mapDispatchToProps = (dispatch: Dispatch) => ({
-  setToken: (tokenInfo: { accessToken: string, refreshToken: string }) => dispatch(setKycToken(tokenInfo))
+  setToken: (tokenInfo: { access_token: string, refresh_token: string }) => dispatch(setKycToken(tokenInfo))
 })
 
 const SwapKYCModalConnector = connect(

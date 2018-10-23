@@ -102,14 +102,16 @@ function cryptoExchangeInner (state = initialState, action: Action) {
 
     case 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE': {
       if (!action.data) throw new Error('Invalid action')
+      const hack: any = action.data
       return {
         ...state,
+        showKYCAlert: action.data.showKYCAlert,
+        swapKYC: action.data.swapKYC,
         fromWallet: action.data.wallet,
         fromWalletPrimaryInfo: action.data.primaryInfo,
         fromCurrencyCode: action.data.currencyCode,
         fromCurrencyIcon: getLogo(action.data.wallet, action.data.currencyCode),
-        // $FlowFixMe
-        fromCurrencyIconDark: getLogoDark(action.data.wallet, action.data.currencyCode),
+        fromCurrencyIconDark: getLogoDark(hack.wallet, hack.currencyCode),
         changeWallet: Constants.NONE,
         fromNativeAmount: '0',
         toNativeAmount: '0',
@@ -119,21 +121,21 @@ function cryptoExchangeInner (state = initialState, action: Action) {
         fee: '',
         exchangeRate: 1,
         quoteExpireDate: null,
-        quote: null,
-        showKYCAlert: true // action.data.showKYCAlert
+        quote: null
       }
     }
 
     case 'SELECT_TO_WALLET_CRYPTO_EXCHANGE': {
       if (!action.data) throw new Error('Invalid action')
+      const hack: any = action.data
       return {
         ...state,
+        showKYCAlert: action.data.showKYCAlert,
         toWallet: action.data.wallet,
         toCurrencyCode: action.data.currencyCode,
         toWalletPrimaryInfo: action.data.primaryInfo,
         toCurrencyIcon: getLogo(action.data.wallet, action.data.currencyCode),
-        // $FlowFixMe
-        toCurrencyIconDark: getLogoDark(action.data.wallet, action.data.currencyCode),
+        toCurrencyIconDark: getLogoDark(hack.wallet, hack.currencyCode),
         changeWallet: Constants.NONE,
         fromNativeAmount: '0',
         toNativeAmount: '0',
@@ -143,8 +145,7 @@ function cryptoExchangeInner (state = initialState, action: Action) {
         fee: '',
         exchangeRate: 1,
         quote: null,
-        quoteExpireDate: null,
-        showKYCAlert: true // action.data.showKYCAlert
+        quoteExpireDate: null
       }
     }
 

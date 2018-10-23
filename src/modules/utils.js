@@ -681,7 +681,7 @@ export const showKYCAlert = (state: State, currencyCode: string, wallet: string)
     if (config.needsActivation) {
       requireToken = true
     }
-    return true // requireToken
+    return requireToken
   }
   let totalRequiredTokens = 0
   for (let i = 0; i < intersectingSwaps.length; i++) {

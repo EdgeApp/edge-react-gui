@@ -1,6 +1,6 @@
 // @flow
 import { bns } from 'biggystring'
-import type { EdgeCurrencyWallet, EdgeExchangeQuote, EdgeExchangeQuoteOptions, EdgeMetadata, EdgeSpendInfo } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeExchangeQuote, EdgeExchangeQuoteOptions, EdgeMetadata, EdgeSpendInfo, EdgeSwapQuote } from 'edge-core-js'
 import { errorNames } from 'edge-core-js'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -44,7 +44,7 @@ function setShapeTransaction (
     fromDisplayAmount: string,
     toNativeAmount: string,
     toDisplayAmount: string,
-    quoteExpireDate: number
+    quoteExpireDate: Date | null
   }
 ) {
   return {
@@ -53,10 +53,10 @@ function setShapeTransaction (
   }
 }
 
-export const setKycToken = (tokenInfo: { accessToken: string, refreshToken: string }) => async (dispatch: Dispatch, getState: GetState) => {
+export const setKycToken = (tokenInfo: { access_token: string, refresh_token: string }) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
-  await account.swapConfig['shapeshift'].changeUserSettings(tokenInfo)
+  await account.swapConfig['shapeshift'].changeUserSettings({ accessToken: tokenInfo.access_token, refreshToken: tokenInfo.refresh_token })
   dispatch({ type: 'ON_KYC_TOKEN_SET' })
 }
 
@@ -211,7 +211,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
   }
 
   let error
-  let edgeCoinExchangeQuote
+  let edgeCoinExchangeQuote: EdgeSwapQuote
   const settings = SETTINGS_SELECTORS.getSettings(state)
   try {
     edgeCoinExchangeQuote = await account.fetchSwapQuote(quoteData)
@@ -299,7 +299,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
     toWalletName: toWallet.name,
     toWalletCurrencyName: toWallet.currencyNames[toCurrencyCode],
     toFiat: toBalanceInFiat,
-    quoteExpireDate: edgeCoinExchangeQuote.expirationDate,
+    quoteExpireDate: edgeCoinExchangeQuote.expirationDate || null,
     fee,
     fromCurrencyCode: currentFromCurrencyDenomination.name,
     toCurrencyCode: currentToCurrencyDenomination.name
@@ -349,11 +349,14 @@ export const getShapeShiftTokens = () => async (dispatch: Dispatch, getState: Ge
   const swapKYC = {}
   for (const key in account.swapConfig) {
     const detail = account.swapConfig[key]
+    console.log('detail ', detail)
     if (detail.needsActivation) {
-      swapKYC[key].needsActivation = true
+      swapKYC[key] = { needsActivation: true }
     }
   }
+  console.log('stop')
   try {
+    console.log('stop')
     const response = await account.fetchSwapCurrencies() // await fetch('https://shapeshift.io/getcoins',
     dispatch({ type: 'ON_AVAILABLE_SHAPE_SHIFT_TOKENS', data: { response, swapKYC, totalSwaps } })
   } catch (error) {
