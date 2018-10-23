@@ -17,10 +17,6 @@ type Props = {
 const modifiedMenuDropDownStyle = {
   // manually overwrite width
   ...MenuDropDownStyle,
-  menuIconWrap: {
-    ...MenuDropDownStyle.menuIconWrap,
-    width: scale(46)
-  },
   icon: {
     ...MenuDropDownStyle.icon,
     fontSize: scale(26),
