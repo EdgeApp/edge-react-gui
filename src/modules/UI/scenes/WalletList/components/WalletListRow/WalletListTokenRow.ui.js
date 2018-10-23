@@ -46,20 +46,24 @@ export class WalletListTokenRow extends PureComponent<Props> {
         onPress={this.selectWallet}
         {...this.props.sortHandlers}
       >
-        <View style={[styles.tokenRowContent]}>
-          <View style={[styles.tokenRowNameTextWrap]}>
+        <View style={[styles.rowContent]}>
+          <View style={styles.rowIconWrap} />
+          <View style={[styles.rowNameTextWrapAndroidIos]}>
             <T style={[styles.tokenRowText]}>{this.props.currencyCode}</T>
           </View>
 
-          <View style={[styles.tokenRowBalanceTextWrap]}>
-            {this.props.isWalletFiatBalanceVisible ? (
-              <T style={[styles.tokenRowText]}>{this.props.fiatSymbol + ' ' + this.props.fiatBalance}</T>
-            ) : (
-              <T style={[styles.tokenRowText]}>
-                {intl.formatNumber(UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(this.props.balance) || '0')}
-              </T>
-            )}
+          <View style={[styles.rowBalanceTextWrap]}>
+            <View style={styles.rowBalanceText}>
+              {this.props.isWalletFiatBalanceVisible ? (
+                <T style={[styles.rowBalanceAmountText]}>{this.props.fiatSymbol + ' ' + this.props.fiatBalance}</T>
+              ) : (
+                <T style={[styles.rowBalanceAmountText]}>
+                  {intl.formatNumber(UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(this.props.balance) || '0')}
+                </T>
+              )}
+            </View>
           </View>
+          <View style={styles.rowOptionsWrap} />
         </View>
       </TouchableHighlight>
     )

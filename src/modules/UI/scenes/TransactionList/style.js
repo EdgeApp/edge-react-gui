@@ -237,11 +237,11 @@ export const styles = {
     backgroundColor: THEME.COLORS.OFF_WHITE
   },
   singleTransaction: {
-    height: scale(60),
+    height: scale(80),
     borderBottomWidth: 1,
     borderBottomColor: THEME.COLORS.GRAY_3,
-    padding: scale(10),
-    paddingRight: scale(30),
+    padding: scale(15),
+    paddingRight: scale(15),
     paddingLeft: scale(15)
   },
   singleTransactionWrap: {
@@ -252,7 +252,7 @@ export const styles = {
   singleDateArea: {
     backgroundColor: THEME.COLORS.GRAY_4,
     flex: 3,
-    padding: scale(8),
+    padding: scale(3),
     paddingLeft: scale(15),
     flexDirection: 'row',
     paddingRight: scale(24)
@@ -275,7 +275,8 @@ export const styles = {
     justifyContent: 'space-between'
   },
   transactionLeft: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    flex: 25
   },
   transactionLogo: {
     width: scale(40),
@@ -283,7 +284,11 @@ export const styles = {
     borderRadius: scale(20),
     marginRight: scale(10)
   },
+  transactionLeftLogoWrap: {
+    justifyContent: 'center'
+  },
   transactionLeftTextWrap: {
+    flex: 10,
     justifyContent: 'center'
   },
   transactionPartner: {
@@ -296,6 +301,7 @@ export const styles = {
     textAlignVertical: 'center'
   },
   transactionRight: {
+    flex: 10,
     alignItems: 'flex-end',
     justifyContent: 'center'
   },

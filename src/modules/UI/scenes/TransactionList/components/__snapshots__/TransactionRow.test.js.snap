@@ -1,0 +1,209 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MenuDropDown component should render without props 1`] = `
+<Component
+  style={
+    Array [
+      Object {
+        "backgroundColor": "#FFFFFF",
+        "flex": 1,
+        "flexDirection": "column",
+      },
+    ]
+  }
+>
+  <Component
+    style={
+      Object {
+        "backgroundColor": "#F4F5F6",
+        "flex": 3,
+        "flexDirection": "row",
+        "padding": 4.213732394366197,
+        "paddingLeft": 21.068661971830984,
+        "paddingRight": 33.709859154929575,
+      }
+    }
+  >
+    <Component
+      style={
+        Object {
+          "flex": 1,
+        }
+      }
+    >
+      <FormattedText
+        style={
+          Object {
+            "color": "#87939E",
+            "fontSize": 19.66408450704225,
+          }
+        }
+      >
+        Oct 14, 2018
+      </FormattedText>
+    </Component>
+  </Component>
+  <TouchableHighlight
+    activeOpacity={0.85}
+    delayPressOut={100}
+    onPress={[Function]}
+    style={
+      Array [
+        Object {
+          "borderBottomColor": "#D9E3ED",
+          "borderBottomWidth": 1,
+          "height": 112.36619718309859,
+          "padding": 21.068661971830984,
+          "paddingLeft": 21.068661971830984,
+          "paddingRight": 21.068661971830984,
+        },
+        Object {
+          "borderBottomWidth": 1,
+        },
+      ]
+    }
+    underlayColor="#D9E3ED"
+  >
+    <Component
+      style={
+        Array [
+          Object {
+            "flex": 1,
+            "flexDirection": "row",
+            "height": 56.183098591549296,
+            "justifyContent": "space-between",
+          },
+        ]
+      }
+    >
+      <Component
+        style={
+          Object {
+            "flex": 25,
+            "flexDirection": "row",
+          }
+        }
+      >
+        <Component
+          style={
+            Array [
+              Object {
+                "justifyContent": "center",
+              },
+            ]
+          }
+        >
+          <Image
+            source={
+              Object {
+                "testUri": "../../../src/assets/images/transactions/transaction-type-sent.png",
+              }
+            }
+            style={
+              Object {
+                "borderRadius": 28.091549295774648,
+                "height": 56.183098591549296,
+                "marginRight": 14.045774647887324,
+                "width": 56.183098591549296,
+              }
+            }
+          />
+        </Component>
+        <Component
+          style={
+            Array [
+              Object {
+                "flex": 10,
+                "justifyContent": "center",
+              },
+            ]
+          }
+        >
+          <FormattedText
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.6}
+            style={
+              Array [
+                Object {
+                  "color": "#4A5157",
+                  "fontSize": 22.473239436619718,
+                  "textAlignVertical": "center",
+                },
+              ]
+            }
+          >
+            Sent Monero
+          </FormattedText>
+          <FormattedText
+            style={
+              Array [
+                Object {
+                  "fontSize": 16.854929577464787,
+                  "position": "relative",
+                  "textAlignVertical": "bottom",
+                  "top": 5.618309859154929,
+                },
+                Object {
+                  "color": "#4A5157",
+                },
+              ]
+            }
+          >
+            3:16 PM
+          </FormattedText>
+        </Component>
+      </Component>
+      <Component
+        style={
+          Array [
+            Object {
+              "alignItems": "flex-end",
+              "flex": 10,
+              "justifyContent": "center",
+            },
+          ]
+        }
+      >
+        <FormattedText
+          style={
+            Array [
+              Object {
+                "fontSize": 22.473239436619718,
+                "textAlignVertical": "center",
+              },
+              Object {
+                "color": "#E85466",
+              },
+              Object {
+                "fontFamily": "SourceSansPro-Black",
+              },
+            ]
+          }
+        >
+          ‎ɱ
+           
+          32.295514
+        </FormattedText>
+        <FormattedText
+          style={
+            Array [
+              Object {
+                "color": "#87939E",
+                "fontSize": 16.854929577464787,
+                "position": "relative",
+                "textAlignVertical": "center",
+                "top": 5.618309859154929,
+              },
+              Object {
+                "color": "#E85466",
+              },
+            ]
+          }
+        >
+          $ 0.00
+        </FormattedText>
+      </Component>
+    </Component>
+  </TouchableHighlight>
+</Component>
+`;

@@ -2,7 +2,7 @@
 
 import { Platform, StyleSheet } from 'react-native'
 
-import { scale } from '../../../../lib/scaling.js'
+import { scale, scaleH } from '../../../../lib/scaling.js'
 import THEME from '../../../../theme/variables/airbitz'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
 
@@ -143,7 +143,7 @@ export const styles = {
   },
   sortableWalletListRow: {
     width: PLATFORM.deviceWidth,
-    height: scale(50),
+    height: scale(70),
     backgroundColor: THEME.COLORS.WHITE,
     paddingVertical: scale(6),
     paddingHorizontal: scale(20),
@@ -158,8 +158,8 @@ export const styles = {
   },
   rowContainer: {
     padding: scale(6),
-    paddingLeft: scale(16),
-    flexDirection: 'column',
+    paddingLeft: scale(8),
+    height: scale(60),
     backgroundColor: THEME.COLORS.WHITE,
     borderBottomWidth: scale(1),
     borderBottomColor: THEME.COLORS.GRAY_3
@@ -171,17 +171,16 @@ export const styles = {
   sortableRowContent: {
     paddingRight: scale(32)
   },
+  rowIconWrap: {
+    justifyContent: 'center',
+    width: scale(36)
+  },
   rowNameTextWrap: {
     flex: 1,
     justifyContent: 'center',
     marginRight: scale(5)
   },
-  rowNameTextWrapIOS: {
-    flex: 1,
-    justifyContent: 'center',
-    marginRight: scale(5)
-  },
-  rowNameTextWrapAndroid: {
+  rowNameTextWrapAndroidIos: {
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
@@ -191,7 +190,8 @@ export const styles = {
   rowCurrencyLogoAndroid: {
     height: scale(22),
     width: scale(22),
-    marginRight: scale(5),
+    marginRight: scale(10),
+    marginLeft: scale(5),
     resizeMode: 'contain',
     alignSelf: 'center'
   },
@@ -206,8 +206,8 @@ export const styles = {
     color: THEME.COLORS.GRAY_1
   },
   rowBalanceTextWrap: {
-    justifyContent: 'center',
-    height: scale(38)
+    flex: 1,
+    justifyContent: 'center'
   },
   rowBalanceText: {
     flexDirection: 'row',
@@ -218,13 +218,15 @@ export const styles = {
     color: THEME.COLORS.GRAY_1,
     textAlign: 'right'
   },
+  rowOptionsWrap: {
+    width: scaleH(37)
+  },
   rowBalanceDenominationText: {
     fontSize: scale(14),
     lineHeight: scale(18),
     color: THEME.COLORS.GRAY_1,
     textAlign: 'right'
   },
-
   rowDragArea: {
     justifyContent: 'center',
     marginRight: scale(20),
@@ -315,9 +317,9 @@ export const styles = {
   },
   // beginning of token rows //
   tokenRowContainer: {
-    padding: scale(16),
-    paddingLeft: scale(30),
-    paddingRight: scale(44),
+    padding: scale(6),
+    paddingLeft: scale(8),
+    height: scale(50),
     backgroundColor: THEME.COLORS.GRAY_4,
     borderBottomWidth: 1,
     borderColor: THEME.COLORS.GRAY_3
