@@ -54,7 +54,7 @@ const MenuDropDownStyle = {
     menuTriggerUnderlay: {}
   },
   menuIconWrap: {
-    width: '100%',
+    width: scale(46),
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center'

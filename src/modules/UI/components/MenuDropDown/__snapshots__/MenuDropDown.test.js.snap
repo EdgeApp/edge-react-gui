@@ -52,7 +52,7 @@ exports[`MenuDropDown component should render with standard props 1`] = `
             "alignItems": "center",
             "height": "100%",
             "justifyContent": "center",
-            "width": "100%",
+            "width": 70.81408450704225,
           }
         }
       >
