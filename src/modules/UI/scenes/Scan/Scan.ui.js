@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react'
 import { ActivityIndicator, Text, TouchableHighlight, View } from 'react-native'
+import OpenAppSettings from 'react-native-app-settings'
 import { RNCamera } from 'react-native-camera'
 // $FlowFixMe
 import ImagePicker from 'react-native-image-picker'
@@ -42,7 +43,8 @@ type Props = {
 
 const HEADER_TEXT = s.strings.send_scan_header_text
 
-const DENIED_PERMISSION_TEXT = '' // blank string because way off-centered (not sure reason why)
+const DENIED_PERMISSION_TEXT = 'To scan a QR Code, please enable Camera access in Settings' // blank string because way off-centered (not sure reason why)
+const OPEN_SETTINGS_TEXT = 'Open Settings'
 // const TRANSFER_TEXT = s.strings.fragment_send_transfer
 const ADDRESS_TEXT = s.strings.fragment_send_address
 // const PHOTOS_TEXT   = s.strings.fragment_send_photos
@@ -73,7 +75,16 @@ export default class Scan extends Component<Props> {
                 <T style={[styles.overlayTopText]}>{HEADER_TEXT}</T>
               </View>
 
-              <View style={[styles.overlayBlank]} />
+              <View style={[styles.overlayBlank]}>
+                {this.props.cameraPermission === DENIED && (
+                  <View style={[styles.preview, { justifyContent: 'center', alignItems: 'center' }]}>
+                    <Text style={styles.cameraPermissionDeniedText}>{DENIED_PERMISSION_TEXT}</Text>
+                    <TouchableHighlight style={styles.settingsButton} onPress={this.openSettingsTapped}>
+                      <Text style={styles.settingsButtonText}>{OPEN_SETTINGS_TEXT}</Text>
+                    </TouchableHighlight>
+                  </View>
+                )}
+              </View>
 
               <Gradient style={[styles.overlayButtonAreaWrap]}>
                 <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleAddressModal} underlayColor={styleRaw.underlay.color}>
@@ -129,6 +140,10 @@ export default class Scan extends Component<Props> {
     })
   }
 
+  openSettingsTapped = () => {
+    OpenAppSettings.open()
+  }
+
   onBarCodeRead = (result: { data: string }) => {
     return this.props.qrCodeScanned(result.data)
   }
@@ -141,11 +156,7 @@ export default class Scan extends Component<Props> {
         <RNCamera style={styles.preview} flashMode={flashMode} type={RNCamera.Constants.Type.back} ref="cameraCapture" onBarCodeRead={this.onBarCodeRead} />
       )
     } else if (this.props.cameraPermission === DENIED) {
-      return (
-        <View style={[styles.preview, { justifyContent: 'center', alignItems: 'center' }]}>
-          <Text>{DENIED_PERMISSION_TEXT}</Text>
-        </View>
-      )
+      return <View />
     } else {
       return (
         <View style={[{ flex: 1, justifyContent: 'center', alignItems: 'center' }]}>
