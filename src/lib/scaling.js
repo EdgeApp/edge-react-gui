@@ -17,12 +17,12 @@ const scaleHorizontal = size => {
   return out
 }
 
-export const scaleH = (size: number, factor: number = 0.4) => {
+export const scaleH = (size: number, factor: number = 0.3) => {
   const out = size + (scaleHorizontal(size) - size) * factor
   return out
 }
 
-export const scaleV = (size: number, factor: number = 0.4) => {
+export const scaleV = (size: number, factor: number = 0.3) => {
   const out = size + (scaleVertical(size) - size) * factor
   return out
 }

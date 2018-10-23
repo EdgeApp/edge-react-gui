@@ -11,7 +11,6 @@ import { intl } from '../../../../locales/intl.js'
 import type { CustomTokenInfo, GuiDenomination, GuiWallet } from '../../../../types.js'
 import {
   DIVIDE_PRECISION,
-  cutOffText,
   decimalOrZero,
   getFiatSymbol,
   getSettingsCurrencyMultiplier,
@@ -121,7 +120,7 @@ export class WalletListRowComponent extends Component<WalletListRowProps, Wallet
           <View style={styles.rowInfo}>
             <View style={[styles.rowLeft]}>
               <Text style={[styles.rowNameText]} numberOfLines={1}>
-                {cutOffText(name, 34)}
+                {name}
               </Text>
             </View>
             <View style={[styles.rowRight]}>

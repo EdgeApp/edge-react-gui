@@ -149,7 +149,7 @@ Tap on a wallet name to send or receive funds for that wallet.",
           "container": Object {
             "alignItems": "center",
             "flexDirection": "row",
-            "height": 30.788732394366196,
+            "height": 28.091549295774648,
             "justifyContent": "center",
             "left": 0,
             "position": "absolute",
@@ -165,7 +165,7 @@ Tap on a wallet name to send or receive funds for that wallet.",
         Object {
           "alignItems": "center",
           "flexDirection": "column",
-          "height": 67.73521126760564,
+          "height": 61.80140845070422,
           "justifyContent": "space-around",
           "position": "absolute",
           "top": "82%",
@@ -185,8 +185,8 @@ Tap on a wallet name to send or receive funds for that wallet.",
           style={
             Object {
               "color": "#FFFFFF",
-              "fontSize": 24.630985915492957,
-              "lineHeight": 24.630985915492957,
+              "fontSize": 22.473239436619718,
+              "lineHeight": 22.473239436619718,
             }
           }
         >
@@ -199,7 +199,7 @@ Tap on a wallet name to send or receive funds for that wallet.",
         Object {
           "alignItems": "flex-end",
           "flexDirection": "column",
-          "height": 67.73521126760564,
+          "height": 61.80140845070422,
           "position": "absolute",
           "top": "3%",
           "width": "100%",
@@ -218,8 +218,8 @@ Tap on a wallet name to send or receive funds for that wallet.",
           style={
             Object {
               "color": "#FFFFFF",
-              "fontSize": 24.630985915492957,
-              "lineHeight": 24.630985915492957,
+              "fontSize": 22.473239436619718,
+              "lineHeight": 22.473239436619718,
             }
           }
         >
