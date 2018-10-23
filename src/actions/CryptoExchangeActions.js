@@ -53,10 +53,13 @@ function setShapeTransaction (
   }
 }
 
-export const setKycToken = (tokenInfo: { access_token: string, refresh_token: string }) => async (dispatch: Dispatch, getState: GetState) => {
+export const setKycToken = (tokenInfo: { access_token: string, refresh_token: string }, pluginName: string) => async (
+  dispatch: Dispatch,
+  getState: GetState
+) => {
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
-  await account.swapConfig['shapeshift'].changeUserSettings({ accessToken: tokenInfo.access_token, refreshToken: tokenInfo.refresh_token })
+  await account.swapConfig[pluginName].changeUserSettings({ accessToken: tokenInfo.access_token, refreshToken: tokenInfo.refresh_token })
   dispatch({ type: 'ON_KYC_TOKEN_SET' })
 }
 
@@ -308,7 +311,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
   dispatch(setShapeTransaction('UPDATE_SHIFT_TRANSACTION_FEE', returnObject))
 }
 
-export const selectToFromWallet = (type: string, wallet: GuiWallet, currencyCode?: string, showKYCAlert: boolean) => async (
+export const selectToFromWallet = (type: string, wallet: GuiWallet, currencyCode?: string, showKYCAlert: boolean, requireKYCPlugins: Array<string>) => async (
   dispatch: Dispatch,
   getState: GetState
 ) => {
@@ -329,7 +332,8 @@ export const selectToFromWallet = (type: string, wallet: GuiWallet, currencyCode
     wallet,
     currencyCode: cc,
     primaryInfo,
-    showKYCAlert
+    showKYCAlert,
+    requireKYCPlugins
   }
 
   if (type === 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE') {
@@ -342,25 +346,14 @@ export const selectToFromWallet = (type: string, wallet: GuiWallet, currencyCode
 export const getShapeShiftTokens = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
-  console.log('ss: ', account.swapConfig['shapeshift'])
-  console.log('ss: ', Object.keys(account.swapConfig))
   const swapKeys = Object.keys(account.swapConfig)
   const totalSwaps = swapKeys.length
-  const swapKYC = {}
-  for (const key in account.swapConfig) {
-    const detail = account.swapConfig[key]
-    console.log('detail ', detail)
-    if (detail.needsActivation) {
-      swapKYC[key] = { needsActivation: true }
-    }
-  }
-  console.log('stop')
+
   try {
-    console.log('stop')
-    const response = await account.fetchSwapCurrencies() // await fetch('https://shapeshift.io/getcoins',
-    dispatch({ type: 'ON_AVAILABLE_SHAPE_SHIFT_TOKENS', data: { response, swapKYC, totalSwaps } })
+    const response = await account.fetchSwapCurrencies()
+    dispatch({ type: 'ON_AVAILABLE_SHAPE_SHIFT_TOKENS', data: { response, totalSwaps } })
   } catch (error) {
-    dispatch({ type: 'ON_AVAILABLE_SHAPE_SHIFT_TOKENS', data: { response: {}, swapKYC, totalSwaps } })
+    dispatch({ type: 'ON_AVAILABLE_SHAPE_SHIFT_TOKENS', data: { response: {}, totalSwaps } })
   }
 }
 
@@ -377,13 +370,14 @@ export const selectWalletForExchange = (walletId: string, currencyCode: string) 
   dispatch(getShapeShiftTokens())
   const wallet = state.ui.wallets.byId[walletId]
 
-  const showKYCAlert = UTILS.showKYCAlert(state, currencyCode, state.cryptoExchange.changeWallet)
+  const requireKYCPlugins = UTILS.showKYCAlert(state, currencyCode, state.cryptoExchange.changeWallet)
+  const showKYCAlert = requireKYCPlugins.length > 0
   switch (state.cryptoExchange.changeWallet) {
     case Constants.TO:
-      dispatch(selectToFromWallet('SELECT_TO_WALLET_CRYPTO_EXCHANGE', wallet, currencyCode, showKYCAlert))
+      dispatch(selectToFromWallet('SELECT_TO_WALLET_CRYPTO_EXCHANGE', wallet, currencyCode, showKYCAlert, requireKYCPlugins))
       break
     case Constants.FROM:
-      dispatch(selectToFromWallet('SELECT_FROM_WALLET_CRYPTO_EXCHANGE', wallet, currencyCode, showKYCAlert))
+      dispatch(selectToFromWallet('SELECT_FROM_WALLET_CRYPTO_EXCHANGE', wallet, currencyCode, showKYCAlert, requireKYCPlugins))
       break
     default:
   }

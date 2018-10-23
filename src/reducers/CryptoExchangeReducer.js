@@ -34,9 +34,9 @@ export type CryptoExchangeState = {
   shiftPendingTransaction: boolean,
   quoteExpireDate: Date | null,
   quote: EdgeExchangeQuote | null,
-  swapKYC: Object,
   totalSwaps: number,
-  showKYCAlert: boolean
+  showKYCAlert: boolean,
+  requireKYCPlugins: Array<string>
 }
 
 const dummyCurrencyInfo: GuiCurrencyInfo = {
@@ -53,7 +53,6 @@ const dummyCurrencyInfo: GuiCurrencyInfo = {
 }
 type AvailableSwapDetails = {
   response: EdgeSwapCurrencies | Object,
-  swapKYC: Object,
   totalSwaps: number
 }
 const initialState = {
@@ -85,9 +84,9 @@ const initialState = {
   shiftPendingTransaction: false,
   quoteExpireDate: null,
   quote: null,
-  swapKYC: {},
   totalSwaps: 0,
-  showKYCAlert: false
+  showKYCAlert: false,
+  requireKYCPlugins: []
 }
 
 function cryptoExchangeInner (state = initialState, action: Action) {
@@ -106,7 +105,7 @@ function cryptoExchangeInner (state = initialState, action: Action) {
       return {
         ...state,
         showKYCAlert: action.data.showKYCAlert,
-        swapKYC: action.data.swapKYC,
+        requireKYCPlugins: action.data.requireKYCPlugins,
         fromWallet: action.data.wallet,
         fromWalletPrimaryInfo: action.data.primaryInfo,
         fromCurrencyCode: action.data.currencyCode,
@@ -131,6 +130,7 @@ function cryptoExchangeInner (state = initialState, action: Action) {
       return {
         ...state,
         showKYCAlert: action.data.showKYCAlert,
+        requireKYCPlugins: action.data.requireKYCPlugins,
         toWallet: action.data.wallet,
         toCurrencyCode: action.data.currencyCode,
         toWalletPrimaryInfo: action.data.primaryInfo,
@@ -232,11 +232,10 @@ function cryptoExchangeInner (state = initialState, action: Action) {
     }
 
     case 'ON_AVAILABLE_SHAPE_SHIFT_TOKENS': {
-      const data: AvailableSwapDetails = action.data ? action.data : { response: {}, swapKYC: {}, totalSwaps: 0 }
+      const data: AvailableSwapDetails = action.data ? action.data : { response: {}, totalSwaps: 0 }
       return {
         ...state,
         availableShapeShiftTokens: data.response,
-        swapKYC: data.swapKYC,
         totalSwaps: data.totalSwaps
       }
     }

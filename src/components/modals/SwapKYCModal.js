@@ -11,11 +11,15 @@ import { SwapKYCModalStyles as styles } from '../../styles/components/SwapKYCMod
 
 export type Props = {
   showKYCAlert: boolean,
+  pluginName: string,
   onDone(): mixed,
-  setToken({
-    accessToken: string,
-    refreshToken: string
-  }): void
+  setToken(
+    {
+      accessToken: string,
+      refreshToken: string
+    },
+    string
+  ): void
 }
 type State = { code: string | null }
 class SwapKYCModal extends Component<Props, State> {
@@ -49,7 +53,7 @@ class SwapKYCModal extends Component<Props, State> {
         })
       })
       const parsed = JSON.parse(response._bodyText)
-      this.props.setToken(parsed)
+      this.props.setToken(parsed, this.props.pluginName)
     } catch (error) {
       console.error(error)
     }

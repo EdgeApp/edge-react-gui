@@ -662,7 +662,7 @@ export const showKYCAlert = (state: State, currencyCode: string, wallet: string)
   const availableShapeShiftTokens = state.cryptoExchange.availableShapeShiftTokens
   const fromWalletCurrencyCode = wallet === TO ? currencyCode : state.cryptoExchange.toCurrencyCode
   const toWalletCurrencyCode = wallet === FROM ? currencyCode : state.cryptoExchange.fromCurrencyCode
-  let requireToken = false
+  const requiredTokens = []
   if (
     !fromWalletCurrencyCode ||
     !toWalletCurrencyCode ||
@@ -670,30 +670,24 @@ export const showKYCAlert = (state: State, currencyCode: string, wallet: string)
     !availableShapeShiftTokens[toWalletCurrencyCode] ||
     totalSwapOptions === 0
   ) {
-    return false
+    return requiredTokens
   }
 
-  const availFromSwaps = availableShapeShiftTokens[fromWalletCurrencyCode].exchanges
-  const availToSwaps = availableShapeShiftTokens[fromWalletCurrencyCode].exchanges
+  const availFromSwaps = availableShapeShiftTokens[fromWalletCurrencyCode].pluginNames
+  const availToSwaps = availableShapeShiftTokens[toWalletCurrencyCode].pluginNames
   const intersectingSwaps = intersect(availFromSwaps, availToSwaps)
-  if (totalSwapOptions === 1) {
-    const config = account.swapConfig[intersectingSwaps[0]]
-    if (config.needsActivation) {
-      requireToken = true
-    }
-    return requireToken
-  }
   let totalRequiredTokens = 0
   for (let i = 0; i < intersectingSwaps.length; i++) {
     const config = account.swapConfig[intersectingSwaps[i]]
     if (config.needsActivation) {
       totalRequiredTokens++
+      requiredTokens.push(intersectingSwaps[i])
     }
   }
   if (totalRequiredTokens === intersectingSwaps.length) {
-    requireToken = true
+    return requiredTokens
   }
-  return requireToken
+  return []
 }
 
 function intersect (arr1, arr2) {
