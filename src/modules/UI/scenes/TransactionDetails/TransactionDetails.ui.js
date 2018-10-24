@@ -132,7 +132,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
       if (edgeTransaction.metadata.amountFiat) {
         const initial = edgeTransaction.metadata.amountFiat.toFixed(2)
         const absoluteAmountFiat = bns.abs(initial)
-        amountFiat = intl.formatNumber(bns.toFixed(absoluteAmountFiat, 2, 2))
+        amountFiat = intl.formatNumber(bns.toFixed(absoluteAmountFiat, 2, 2), { noGrouping: true })
       }
     }
 

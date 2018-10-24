@@ -478,7 +478,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
                   },
                 }
               }
-              fiatAmount="6,392.93"
+              fiatAmount="6392.93"
               fiatCurrencyCode="iso:USD"
               fiatCurrencySymbol="$"
               guiWallet={
