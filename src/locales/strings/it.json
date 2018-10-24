@@ -360,7 +360,7 @@
   "onboarding_slide_5": "Scambia cryptovalute tra di loro scegliendo il portafoglio di invio e quello di ricezione.",
   "otp_out_of_sync_title": "Attenzione",
   "otp_out_of_sync_body": "Questo dispositivo non ha il corretto token a 2 fattori. Puoi ancora accedere ai tuoi fondi con funzionalità limitate ma non puoi creare portafogli o modificare le impostazioni dell'account",
-  "just_a_moment": "",
+  "just_a_moment": "Solo un attimo",
   "trying_to_find": "",
   "exchange_will_be_sent": "%1$s %2$s saranno inviati",
   "exchange_will_be_received": "%1$s %2$s verranno ricevuti",
