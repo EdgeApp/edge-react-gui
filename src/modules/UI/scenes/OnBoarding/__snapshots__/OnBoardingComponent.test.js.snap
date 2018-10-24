@@ -1,0 +1,232 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`On-Boarding Component should render without props 1`] = `
+<Component
+  style={
+    Object {
+      "alignItems": "center",
+      "backgroundColor": "#0D2145",
+      "height": "100%",
+      "left": 0,
+      "position": "absolute",
+      "right": 0,
+      "top": 0,
+      "width": "100%",
+    }
+  }
+>
+  <Component
+    style={
+      Object {
+        "backgroundColor": "transparent",
+        "flexDirection": "row",
+        "height": "100%",
+        "width": "100%",
+      }
+    }
+  >
+    <AnimatedComponent
+      style={
+        Array [
+          Object {
+            "backgroundColor": "transparent",
+            "flexDirection": "row",
+            "height": "100%",
+            "width": 3750,
+          },
+          Object {
+            "left": 0,
+          },
+        ]
+      }
+    >
+      <OnBoardingSlideComponent
+        index={1}
+        slide={
+          Object {
+            "androidImage": "onboard1",
+            "androidTabletHorizontalImage": "onboarding_horiz_tab1",
+            "androidTabletVerticalImage": "onboarding_vert_tab1",
+            "iOSImage": "onboard1",
+            "iPadImage": "iPadOnboarding1Vert",
+            "iPadImageHoriz": "iPadOnboarding1Horiz",
+            "iPhoneX": "onboardX1",
+            "text": "Tap [+] to create new wallets for other cryptocurrencies.
+
+Tap on a wallet name to send or receive funds for that wallet.",
+          }
+        }
+        swipeLeft={[Function]}
+        swipeRight={[Function]}
+      />
+      <OnBoardingSlideComponent
+        index={2}
+        slide={
+          Object {
+            "androidImage": "onboard2",
+            "androidTabletHorizontalImage": "onboarding_horiz_tab2",
+            "androidTabletVerticalImage": "onboarding_vert_tab2",
+            "iOSImage": "onboard2",
+            "iPadImage": "iPadOnboarding2Vert",
+            "iPadImageHoriz": "iPadOnboarding2Horiz",
+            "iPhoneX": "onboardX2",
+            "text": "Tap the 3 dots to the right of an Ethereum wallet to add token support.",
+          }
+        }
+        swipeLeft={[Function]}
+        swipeRight={[Function]}
+      />
+      <OnBoardingSlideComponent
+        index={3}
+        slide={
+          Object {
+            "androidImage": "onboard3",
+            "androidTabletHorizontalImage": "onboarding_horiz_tab3",
+            "androidTabletVerticalImage": "onboarding_vert_tab3",
+            "iOSImage": "onboard3",
+            "iPadImage": "iPadOnboarding3Vert",
+            "iPadImageHoriz": "iPadOnboarding3Horiz",
+            "iPhoneX": "onboardX3",
+            "text": "To receive cryptocurrency, [Copy] or [Share] your wallet address, or have the sender scan your QR code presented here at the Request Screen.",
+          }
+        }
+        swipeLeft={[Function]}
+        swipeRight={[Function]}
+      />
+      <OnBoardingSlideComponent
+        index={4}
+        slide={
+          Object {
+            "androidImage": "onboard4",
+            "androidTabletHorizontalImage": "onboarding_horiz_tab4",
+            "androidTabletVerticalImage": "onboarding_vert_tab4",
+            "iOSImage": "onboard4",
+            "iPadImage": "iPadOnboarding4Vert",
+            "iPadImageHoriz": "iPadOnboarding4Horiz",
+            "iPhoneX": "onboardX4",
+            "text": "To send cryptocurrency scan a friend's QR code here, or paste the code via the [Address] button.",
+          }
+        }
+        swipeLeft={[Function]}
+        swipeRight={[Function]}
+      />
+      <OnBoardingSlideComponent
+        index={5}
+        slide={
+          Object {
+            "androidImage": "onboard5",
+            "androidTabletHorizontalImage": "onboarding_horiz_tab5",
+            "androidTabletVerticalImage": "onboarding_vert_tab5",
+            "iOSImage": "onboard5",
+            "iPadImage": "iPadOnboarding5Vert",
+            "iPadImageHoriz": "iPadOnboarding5Horiz",
+            "iPhoneX": "onboardX5",
+            "text": "Exchange cryptocurrencies by choosing the Source Wallet and Receiving Wallet to trade between them.",
+          }
+        }
+        swipeLeft={[Function]}
+        swipeRight={[Function]}
+      />
+    </AnimatedComponent>
+    <PagingDotsComponent
+      currentIndex={0}
+      styles={
+        Object {
+          "circle": Object {
+            "backgroundColor": "#87939E",
+            "borderRadius": 8,
+            "height": 15,
+            "marginRight": 5,
+            "width": 15,
+          },
+          "circleSected": Object {
+            "backgroundColor": "#66EDA8",
+            "borderRadius": 8,
+            "height": 15,
+            "marginRight": 5,
+            "width": 15,
+          },
+          "container": Object {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "height": 28.091549295774648,
+            "justifyContent": "center",
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": "77%",
+          },
+        }
+      }
+      totalItems={5}
+    />
+    <Component
+      style={
+        Object {
+          "alignItems": "center",
+          "flexDirection": "column",
+          "height": 61.80140845070422,
+          "justifyContent": "space-around",
+          "position": "absolute",
+          "top": "82%",
+          "width": "100%",
+        }
+      }
+    >
+      <PrimaryButton
+        onPress={[Function]}
+        style={
+          Object {
+            "width": "30%",
+          }
+        }
+      >
+        <Text
+          style={
+            Object {
+              "color": "#FFFFFF",
+              "fontSize": 22.473239436619718,
+              "lineHeight": 22.473239436619718,
+            }
+          }
+        >
+          Next
+        </Text>
+      </PrimaryButton>
+    </Component>
+    <Component
+      style={
+        Object {
+          "alignItems": "flex-end",
+          "flexDirection": "column",
+          "height": 61.80140845070422,
+          "position": "absolute",
+          "top": "3%",
+          "width": "100%",
+        }
+      }
+    >
+      <TextButton
+        onPress={[Function]}
+        style={
+          Object {
+            "width": "20%",
+          }
+        }
+      >
+        <Text
+          style={
+            Object {
+              "color": "#FFFFFF",
+              "fontSize": 22.473239436619718,
+              "lineHeight": 22.473239436619718,
+            }
+          }
+        >
+          Skip
+        </Text>
+      </TextButton>
+    </Component>
+  </Component>
+</Component>
+`;

@@ -50,12 +50,12 @@ export class PasswordReminderModal extends Component<Props, State> {
           <Icon style={styles.icon} name={Constants.LOCKED_ICON} type={Constants.ION_ICONS} />
         </InteractiveModal.Icon>
 
-        <InteractiveModal.Title>
+        <InteractiveModal.Title style={{ textAlign: 'center' }}>
           <Text>{s.strings.password_reminder_remember_your_password}</Text>
         </InteractiveModal.Title>
 
         <InteractiveModal.Body>
-          <InteractiveModal.Description>{s.strings.password_reminder_you_will_need_your_password}</InteractiveModal.Description>
+          <InteractiveModal.Description style={{ textAlign: 'center' }}>{s.strings.password_reminder_you_will_need_your_password}</InteractiveModal.Description>
           <InteractiveModal.Description>{s.strings.password_reminder_enter_password_below}</InteractiveModal.Description>
 
           <InteractiveModal.Row>

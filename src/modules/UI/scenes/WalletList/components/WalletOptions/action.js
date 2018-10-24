@@ -7,6 +7,9 @@ import * as ACCOUNT_API from '../../../../../Core/Account/api.js'
 import * as CORE_SELECTORS from '../../../../../Core/selectors.js'
 import type { Dispatch, GetState } from '../../../../../ReduxTypes'
 import * as WALLET_SELECTORS from '../../../../selectors.js'
+import { showDeleteWalletModal } from '../DeleteModal/actions.js'
+import { showResyncWalletModal } from '../ResyncModal/actions.js'
+import { showSplitWalletModal } from '../SplitModal/actions.js'
 
 export const walletRowOption = (walletId: string, option: string, archived: boolean) => {
   if (option === 'archive' && archived) {
@@ -69,19 +72,19 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
 
     case 'delete': {
       return (dispatch: Dispatch) => {
-        dispatch({ type: 'OPEN_DELETE_WALLET_MODAL', data: { walletId } })
+        dispatch(showDeleteWalletModal(walletId))
       }
     }
 
     case 'resync': {
       return (dispatch: Dispatch) => {
-        dispatch({ type: 'OPEN_RESYNC_WALLET_MODAL', data: { walletId } })
+        dispatch(showResyncWalletModal(walletId))
       }
     }
 
     case 'split': {
       return (dispatch: Dispatch) => {
-        dispatch({ type: 'OPEN_SPLIT_WALLET_MODAL', data: { walletId } })
+        dispatch(showSplitWalletModal(walletId))
       }
     }
 

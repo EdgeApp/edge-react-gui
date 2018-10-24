@@ -35,6 +35,8 @@ export const SETTINGS_OVERVIEW = 'settingsOverview'
 export const SETTINGS_OVERVIEW_TAB = 'settingsOverviewTab'
 export const DEFAULT_FIAT_SETTING = 'defaultFiatSetting'
 export const EXCHANGE_SCENE = 'exchangeScene'
+export const EXCHANGE_QUOTE_PROCESSING_SCENE = 'exchangeQuoteProcessing'
+export const EXCHANGE_QUOTE_SCENE = 'exchangeQuote'
 export const CREATE_WALLET = 'createWallet'
 export const BUYSELL = 'buysell'
 export const SPEND = 'spend'
@@ -74,5 +76,21 @@ export const CURRENCY_SETTINGS = {
   ufoSettings: {
     pluginName: 'ufo',
     currencyCode: 'UFO'
+  },
+  dgbSettings: {
+    pluginName: 'digibyte',
+    currencyCode: 'DGB'
+  },
+  qtumSettings: {
+    pluginName: 'qtum',
+    currencyCode: 'QTUM'
+  },
+  vtcSettings: {
+    pluginName: 'vertcoin',
+    currencyCode: 'VTC'
+  },
+  zcoinSettings: {
+    pluginName: 'zcoin',
+    currencyCode: 'XZC'
   }
 }

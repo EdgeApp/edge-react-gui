@@ -16,6 +16,7 @@ import {
   makeSpend,
   makeSpendInfo,
   saveTransaction,
+  setTransactionDetailsRequest,
   signTransaction
 } from '../../../Core/Wallets/api.js'
 import type { Dispatch, GetState } from '../../../ReduxTypes'
@@ -159,6 +160,10 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
     edgeSignedTransaction = await signTransaction(wallet, edgeUnsignedTransaction)
     edgeSignedTransaction = await broadcastTransaction(wallet, edgeSignedTransaction)
     await saveTransaction(wallet, edgeSignedTransaction)
+    if (state.ui.scenes.sendConfirmation.transactionMetadata) {
+      const edgeMetaData: EdgeMetadata = state.ui.scenes.sendConfirmation.transactionMetadata
+      await setTransactionDetailsRequest(wallet, edgeSignedTransaction.txid, edgeSignedTransaction.currencyCode, edgeMetaData)
+    }
     dispatch(updateSpendPending(false))
     Actions.pop()
     const successInfo = {

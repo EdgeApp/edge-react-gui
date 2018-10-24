@@ -23,9 +23,9 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         Array [
           Object {
             "flexDirection": "row",
-            "height": 50,
+            "height": 70.22887323943661,
             "justifyContent": "space-between",
-            "padding": 12,
+            "padding": 16.854929577464787,
           },
         ]
       }
@@ -51,7 +51,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 Object {
                   "backgroundColor": "transparent",
                   "color": "#FFFFFF",
-                  "fontSize": 22,
+                  "fontSize": 30.90070422535211,
                 },
               ]
             }
@@ -62,8 +62,8 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Object {
                 "backgroundColor": "transparent",
                 "color": "#FFFFFF",
-                "fontSize": 18,
-                "marginLeft": 16,
+                "fontSize": 25.28239436619718,
+                "marginLeft": 22.473239436619718,
               }
             }
           >
@@ -99,7 +99,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           style={
             Object {
               "color": "#4A5157",
-              "fontSize": 18,
+              "fontSize": 25.28239436619718,
             }
           }
           type="simpleIcons"
@@ -116,7 +116,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           style={
             Object {
               "color": "#4A5157",
-              "fontSize": 18,
+              "fontSize": 25.28239436619718,
             }
           }
           type="simpleIcons"
@@ -133,7 +133,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           style={
             Object {
               "color": "#4A5157",
-              "fontSize": 18,
+              "fontSize": 25.28239436619718,
             }
           }
           type="simpleIcons"
@@ -150,7 +150,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           style={
             Object {
               "color": "#4A5157",
-              "fontSize": 18,
+              "fontSize": 25.28239436619718,
             }
           }
           type="simpleIcons"
@@ -163,9 +163,9 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         Array [
           Object {
             "flexDirection": "row",
-            "height": 50,
+            "height": 70.22887323943661,
             "justifyContent": "space-between",
-            "padding": 12,
+            "padding": 16.854929577464787,
           },
         ]
       }
@@ -191,7 +191,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 Object {
                   "backgroundColor": "transparent",
                   "color": "#FFFFFF",
-                  "fontSize": 22,
+                  "fontSize": 30.90070422535211,
                 },
               ]
             }
@@ -202,8 +202,8 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Object {
                 "backgroundColor": "transparent",
                 "color": "#FFFFFF",
-                "fontSize": 18,
-                "marginLeft": 16,
+                "fontSize": 25.28239436619718,
+                "marginLeft": 22.473239436619718,
               }
             }
           >
@@ -222,7 +222,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             style={
               Object {
                 "color": "#4A5157",
-                "fontSize": 18,
+                "fontSize": 25.28239436619718,
               }
             }
             type="simpleIcons"
@@ -287,6 +287,22 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
       />
       <RowRoute
         disabled={false}
+        leftText="Digibyte"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Qtum"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Vertcoin"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Zcoin"
+      />
+      <RowRoute
+        disabled={false}
         leftText="Send Logs"
         routeFunction={[Function]}
         scene="changePassword"
@@ -307,7 +323,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             Object {
               "backgroundColor": "#F4F5F6",
               "flex": 1,
-              "padding": 20,
+              "padding": 28.091549295774648,
             },
           ]
         }
@@ -324,7 +340,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         style={
           Object {
             "flex": 1,
-            "height": 51,
+            "height": 71.63345070422535,
           }
         }
       />
@@ -435,9 +451,9 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         Array [
           Object {
             "flexDirection": "row",
-            "height": 50,
+            "height": 70.22887323943661,
             "justifyContent": "space-between",
-            "padding": 12,
+            "padding": 16.854929577464787,
           },
         ]
       }
@@ -463,7 +479,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 Object {
                   "backgroundColor": "transparent",
                   "color": "#FFFFFF",
-                  "fontSize": 22,
+                  "fontSize": 30.90070422535211,
                 },
               ]
             }
@@ -474,8 +490,8 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Object {
                 "backgroundColor": "transparent",
                 "color": "#FFFFFF",
-                "fontSize": 18,
-                "marginLeft": 16,
+                "fontSize": 25.28239436619718,
+                "marginLeft": 22.473239436619718,
               }
             }
           >
@@ -511,7 +527,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           style={
             Object {
               "color": "#4A5157",
-              "fontSize": 18,
+              "fontSize": 25.28239436619718,
             }
           }
           type="simpleIcons"
@@ -528,7 +544,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           style={
             Object {
               "color": "#4A5157",
-              "fontSize": 18,
+              "fontSize": 25.28239436619718,
             }
           }
           type="simpleIcons"
@@ -545,7 +561,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           style={
             Object {
               "color": "#4A5157",
-              "fontSize": 18,
+              "fontSize": 25.28239436619718,
             }
           }
           type="simpleIcons"
@@ -562,7 +578,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           style={
             Object {
               "color": "#4A5157",
-              "fontSize": 18,
+              "fontSize": 25.28239436619718,
             }
           }
           type="simpleIcons"
@@ -575,9 +591,9 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         Array [
           Object {
             "flexDirection": "row",
-            "height": 50,
+            "height": 70.22887323943661,
             "justifyContent": "space-between",
-            "padding": 12,
+            "padding": 16.854929577464787,
           },
         ]
       }
@@ -603,7 +619,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 Object {
                   "backgroundColor": "transparent",
                   "color": "#FFFFFF",
-                  "fontSize": 22,
+                  "fontSize": 30.90070422535211,
                 },
               ]
             }
@@ -614,8 +630,8 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Object {
                 "backgroundColor": "transparent",
                 "color": "#FFFFFF",
-                "fontSize": 18,
-                "marginLeft": 16,
+                "fontSize": 25.28239436619718,
+                "marginLeft": 22.473239436619718,
               }
             }
           >
@@ -634,7 +650,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             style={
               Object {
                 "color": "#4A5157",
-                "fontSize": 18,
+                "fontSize": 25.28239436619718,
               }
             }
             type="simpleIcons"
@@ -699,6 +715,22 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
       />
       <RowRoute
         disabled={false}
+        leftText="Digibyte"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Qtum"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Vertcoin"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Zcoin"
+      />
+      <RowRoute
+        disabled={false}
         leftText="Send Logs"
         routeFunction={[Function]}
         scene="changePassword"
@@ -719,7 +751,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             Object {
               "backgroundColor": "#F4F5F6",
               "flex": 1,
-              "padding": 20,
+              "padding": 28.091549295774648,
             },
           ]
         }
@@ -736,7 +768,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         style={
           Object {
             "flex": 1,
-            "height": 51,
+            "height": 71.63345070422535,
           }
         }
       />

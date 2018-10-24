@@ -2,6 +2,7 @@
 
 import { StyleSheet } from 'react-native'
 
+import { scale } from '../../../../lib/scaling.js'
 import THEME from '../../../../theme/variables/airbitz'
 import { PLATFORM } from '../../../../theme/variables/platform'
 
@@ -18,46 +19,46 @@ export const styles = {
   },
   view: {
     position: 'relative',
-    top: THEME.HEADER,
+    top: scale(THEME.HEADER),
     paddingHorizontal: 20,
     paddingVertical: 5
   },
   walletNameInputView: {
-    height: 50,
-    marginBottom: 10
+    height: scale(50),
+    marginBottom: scale(10)
   },
   walletNameInput: {
     flex: 1,
-    padding: 5
+    padding: scale(5)
   },
   pickerView: {
-    marginBottom: 15
+    marginBottom: scale(15)
   },
   picker: {
     fontFamily: THEME.FONTS.DEFAULT,
-    height: 50,
-    padding: 5
+    height: scale(50),
+    padding: scale(5)
   },
   selectedItem: {
     backgroundColor: THEME.COLORS.GRAY_4,
-    borderLeftWidth: 1,
+    borderLeftWidth: scale(1),
     borderLeftColor: THEME.COLORS.GRAY_3,
-    borderRightWidth: 1,
+    borderRightWidth: scale(1),
     borderRightColor: THEME.COLORS.GRAY_3
   },
   searchContainer: {
     position: 'relative',
     backgroundColor: THEME.COLORS.TRANSPARENT,
-    borderBottomWidth: 1,
+    borderBottomWidth: scale(1),
     borderBottomColor: THEME.COLORS.GRAY_3,
     width: '100%'
   },
   singleCryptoType: {
-    height: 60,
-    borderBottomWidth: 1,
+    height: scale(60),
+    borderBottomWidth: scale(1),
     borderBottomColor: THEME.COLORS.GRAY_3,
-    paddingVertical: 10,
-    paddingHorizontal: 15
+    paddingVertical: scale(10),
+    paddingHorizontal: scale(15)
   },
   singleCryptoTypeWrap: {
     flexDirection: 'column',
@@ -65,7 +66,7 @@ export const styles = {
   },
   cryptoTypeInfoWrap: {
     flexDirection: 'row',
-    height: 40,
+    height: scale(40),
     flex: 1,
     justifyContent: 'space-between'
   },
@@ -73,15 +74,15 @@ export const styles = {
     flexDirection: 'row'
   },
   cryptoTypeLogo: {
-    width: 40,
-    height: 40,
-    marginRight: 10
+    width: scale(40),
+    height: scale(40),
+    marginRight: scale(10)
   },
   cryptoTypeLeftTextWrap: {
     justifyContent: 'center'
   },
   cryptoTypeName: {
-    fontSize: 16,
+    fontSize: scale(16),
     color: THEME.COLORS.GRAY_1,
     textAlignVertical: 'center'
   },
@@ -89,62 +90,62 @@ export const styles = {
     color: THEME.COLORS.GRAY_4
   },
   fiatPicker: {
-    height: 100
+    height: scale(100)
   },
   listView: {
-    maxHeight: 100
+    maxHeight: scale(100)
   },
   listItem: {
     margin: 0,
-    padding: 5,
+    padding: scale(5),
     borderColor: THEME.COLORS.GRAY_3,
     borderBottomWidth: 1,
-    fontSize: 20
+    fontSize: scale(20)
   },
   textInput: {
     flex: 1
   },
   instructionalArea: {
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    height: 80
+    paddingVertical: scale(16),
+    paddingHorizontal: scale(20),
+    height: scale(80)
   },
   instructionalText: {
-    fontSize: 16,
+    fontSize: scale(16),
     textAlign: 'center'
   },
   reviewArea: {
-    paddingVertical: 18
+    paddingVertical: scale(18)
   },
   reviewAreaText: {
-    fontSize: 16,
-    lineHeight: 24
+    fontSize: scale(16),
+    lineHeight: scale(24)
   },
   text: {
     color: THEME.COLORS.WHITE
   },
   buttons: {
-    marginTop: 24,
+    marginTop: scale(24),
     flexDirection: 'row'
   },
   create: {
     flex: 1
   },
   next: {
-    marginLeft: 1,
+    marginLeft: scale(1),
     flex: 1
   },
   back: {
-    marginRight: 1,
+    marginRight: scale(1),
     flex: 1
   },
   buttonText: {
     color: THEME.COLORS.WHITE,
-    fontSize: 18
+    fontSize: scale(18)
   },
   cancel: {
     flex: 1,
-    marginRight: 2,
+    marginRight: scale(2),
     backgroundColor: THEME.COLORS.GRAY_2,
     justifyContent: 'center',
     alignItems: 'center',

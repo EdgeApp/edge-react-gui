@@ -9,11 +9,6 @@ export type AccountState = EdgeAccount | Object
 
 export const initialState: AccountState = {}
 
-export const loggedIn = (account: EdgeAccount) => ({
-  type: 'ACCOUNT/LOGGED_IN',
-  data: { account }
-})
-
 const accountReducer = (state = initialState, action: Action) => {
   switch (action.type) {
     case 'ACCOUNT/LOGGED_IN': {

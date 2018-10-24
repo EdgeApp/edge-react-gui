@@ -28,7 +28,7 @@ export const initialState = {
     }
   },
   spendInfo: null,
-  destination: '',
+  transactionMetadata: null,
   nativeAmount: '0',
 
   isEditable: true,

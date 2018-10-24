@@ -1,5 +1,6 @@
 // @flow
 
+import { scale } from '../../lib/scaling.js'
 import THEME from '../../theme/variables/airbitz'
 import { PLATFORM } from '../../theme/variables/platform'
 import * as Styles from '../indexStyles'
@@ -23,12 +24,12 @@ const dropdownTriggerWidth = 46
 const MenuDropDownStyle = {
   container: {
     flexDirection: 'column',
-    width: dropdownTriggerWidth,
+    width: scale(dropdownTriggerWidth),
     justifyContent: 'center',
     alignItems: 'center'
   },
   menuButton: {
-    width: dropdownTriggerWidth,
+    width: scale(dropdownTriggerWidth),
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center'
@@ -43,7 +44,7 @@ const MenuDropDownStyle = {
       underlayColor: THEME.COLORS.TRANSPARENT,
       activeOpacity: 1,
       style: {
-        width: dropdownTriggerWidth,
+        width: scale(dropdownTriggerWidth),
         justifyContent: 'center',
         alignSelf: 'center',
         height: '100%',
@@ -53,7 +54,7 @@ const MenuDropDownStyle = {
     menuTriggerUnderlay: {}
   },
   menuIconWrap: {
-    width: '100%',
+    width: scale(46),
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center'
@@ -61,18 +62,18 @@ const MenuDropDownStyle = {
   menuOptions: {},
   menuOptionItem: {
     flexDirection: 'row',
-    paddingVertical: 4
+    paddingVertical: scale(4)
   },
   optionText: {
     color: THEME.COLORS.GRAY_1,
-    fontSize: 18
+    fontSize: scale(18)
   },
   icon: {
-    fontSize: 20,
+    fontSize: scale(20),
     color: THEME.COLORS.GRAY_1
   },
   altIconText: {
-    fontSize: 20
+    fontSize: scale(20)
   }
 }
 

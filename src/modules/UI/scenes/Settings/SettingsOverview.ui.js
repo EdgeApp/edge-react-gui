@@ -9,6 +9,7 @@ import * as Constants from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings'
 import { ConfirmPasswordModalStyle } from '../../../../styles/indexStyles'
 import { showModal } from '../../../ModalManager.js'
+import { type Action } from '../../../ReduxTypes.js'
 import { getTimeWithMeasurement } from '../../../utils'
 import { PrimaryButton } from '../../components/Buttons'
 import T from '../../components/FormattedText'
@@ -47,7 +48,9 @@ type Props = {
   resetConfirmPasswordError(Object): void,
   resetSendLogsStatus(): void,
   onTogglePinLoginEnabled(enableLogin: boolean): void,
-  onConfirmRestoreWallets: () => void
+  onConfirmRestoreWallets: () => void,
+  otpResetDate: string,
+  showReEnableOtpModal: () => Promise<Action>
 }
 type State = {
   showAutoLogoutModal: boolean,
@@ -105,6 +108,7 @@ export default class SettingsOverview extends Component<Props, State> {
       this.props.resetConfirmPasswordError({ confirmPasswordError: '' })
     }
   }
+
   _onPressDummyRouting = () => {}
 
   unlockSettingsAlert = () => Alert.alert(null, s.strings.settings_alert_unlock, [{ text: s.strings.string_ok }])

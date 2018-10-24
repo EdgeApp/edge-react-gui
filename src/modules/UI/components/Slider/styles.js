@@ -2,11 +2,12 @@
 
 import { StyleSheet } from 'react-native'
 
+import { scale } from '../../../../lib/scaling.js'
 import THEME from '../../../../theme/variables/airbitz'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
 
 const debug = {
-  borderWidth: 1,
+  borderWidth: scale(1),
   borderColor: 'red'
 }
 
@@ -27,7 +28,7 @@ export const rawStyles = {
   },
   textOverlay: {
     backgroundColor: THEME.COLORS.TRANSPARENT,
-    fontSize: PLATFORM.deviceWidth >= 320 ? 13 : 16,
+    fontSize: PLATFORM.deviceWidth >= 320 ? scale(13) : scale(16),
     position: 'absolute',
     color: THEME.COLORS.WHITE,
     alignSelf: 'center',

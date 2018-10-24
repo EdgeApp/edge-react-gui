@@ -2,6 +2,7 @@
 
 import { makeReactNativeFolder } from 'disklet'
 import type { DiskletFolder, EdgeContext, EdgeContextCallbacks, EdgeCorePluginFactory, EdgeCurrencyPlugin } from 'edge-core-js'
+import { rippleCurrencyPluginFactory, stellarCurrencyPluginFactory } from 'edge-currency-accountbased'
 import {
   bitcoinCurrencyPluginFactory,
   bitcoincashCurrencyPluginFactory,
@@ -17,7 +18,6 @@ import {
 } from 'edge-currency-bitcoin'
 import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
 import { moneroCurrencyPluginFactory } from 'edge-currency-monero'
-import { rippleCurrencyPluginFactory } from 'edge-currency-ripple'
 import { coinbasePlugin, coincapPlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
 import React, { Component } from 'react'
 import { Image, Keyboard, Linking, StatusBar, TouchableWithoutFeedback, View } from 'react-native'
@@ -44,12 +44,14 @@ import walletIconSelected from '../assets/images/tabbar/wallets_selected.png'
 import walletIcon from '../assets/images/tabbar/wallets.png'
 import ExchangeDropMenu from '../connectors/components/HeaderMenuExchangeConnector'
 import RequestDropMenu from '../connectors/components/HeaderMenuRequestConnector'
-import ExchangeConnector from '../connectors/scene/CryptoExchangeSceneConnector'
+import { CryptoExchangeQuoteConnector } from '../connectors/scene/CryptoExchangeQuoteConnector.js'
+import { CryptoExchangeSceneConnector as ExchangeConnector } from '../connectors/scene/CryptoExchangeSceneConnector'
 import EdgeLoginSceneConnector from '../connectors/scene/EdgeLoginSceneConnector'
 import OtpSettingsSceneConnector from '../connectors/scene/OtpSettingsSceneConnector.js'
 import PasswordRecoveryConnector from '../connectors/scene/PasswordRecoveryConnector.js'
 import TransactionsExportSceneConnector from '../connectors/scene/TransactionsExportSceneConnector'
 import * as Constants from '../constants/indexConstants'
+import { scale } from '../lib/scaling.js'
 import { setIntlLocale } from '../locales/intl'
 import s, { selectLocale } from '../locales/strings.js'
 import { LoadingScene } from '../modules/UI/components/Loading/LoadingScene.ui.js'
@@ -74,7 +76,6 @@ import { passwordReminderModalConnector as PasswordReminderModal } from './UI/co
 import TransactionAlert from './UI/components/TransactionAlert/TransactionAlertConnector'
 import { CAMERA, CONTACTS, type Permission } from './UI/permissions.js'
 import AddToken from './UI/scenes/AddToken/AddTokenConnector.js'
-import ChangeMiningFeeExchange from './UI/scenes/ChangeMiningFee/ChangeMiningFeeExchangeConnector.ui'
 import ChangeMiningFeeSendConfirmation from './UI/scenes/ChangeMiningFee/ChangeMiningFeeSendConfirmationConnector.ui'
 import ChangePasswordConnector from './UI/scenes/ChangePinPassword/ChangePasswordConnector.ui'
 import ChangePinConnector from './UI/scenes/ChangePinPassword/ChangePinConnector.ui'
@@ -82,6 +83,7 @@ import { CreateWalletName } from './UI/scenes/CreateWallet/CreateWalletName.ui.j
 import { CreateWalletReview } from './UI/scenes/CreateWallet/CreateWalletReviewConnector'
 import { CreateWalletSelectCrypto } from './UI/scenes/CreateWallet/CreateWalletSelectCryptoConnector'
 import { CreateWalletSelectFiat } from './UI/scenes/CreateWallet/CreateWalletSelectFiatConnector'
+import { CryptoExchangeQuoteProcessingScreenComponent } from './UI/scenes/CryptoExchange/CryptoExchangeQuoteProcessingScreenComponent.js'
 import EditToken from './UI/scenes/EditToken'
 import LoginConnector from './UI/scenes/Login/LoginConnector'
 import ManageTokens from './UI/scenes/ManageTokens'
@@ -91,6 +93,7 @@ import Scan from './UI/scenes/Scan/ScanConnector'
 import SendConfirmation from './UI/scenes/SendConfirmation/index'
 import SendConfirmationOptions from './UI/scenes/SendConfirmation/SendConfirmationOptionsConnector.js'
 import CurrencySettings from './UI/scenes/Settings/CurrencySettingsConnector'
+import CurrencySettingsTitleConnector from './UI/scenes/Settings/CurrencySettingsTitleConnector.js'
 import DefaultFiatSettingConnector from './UI/scenes/Settings/DefaultFiatSettingConnector'
 import SettingsOverview from './UI/scenes/Settings/SettingsOverviewConnector'
 import SpendingLimitsConnector from './UI/scenes/SpendingLimits/SpendingLimitsConnector.js'
@@ -109,6 +112,7 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   bitcoincashCurrencyPluginFactory,
   bitcoinCurrencyPluginFactory,
   ethereumCurrencyPluginFactory,
+  stellarCurrencyPluginFactory,
   rippleCurrencyPluginFactory,
   moneroCurrencyPluginFactory,
   dashCurrencyPluginFactory,
@@ -184,7 +188,8 @@ type Props = {
   dispatchDisableScan: () => void,
   urlReceived: string => void,
   updateCurrentSceneKey: string => void,
-  contextCallbacks: EdgeContextCallbacks
+  contextCallbacks: EdgeContextCallbacks,
+  showReEnableOtpModal: () => void
 }
 type State = {
   context: ?EdgeContext
@@ -320,7 +325,7 @@ export default class Main extends Component<Props, State> {
                   renderRightButton={this.renderMenuButton()}
                 />
 
-                <Drawer key={Constants.EDGE} hideNavBar contentComponent={ControlPanel} hideDrawerButton={true} drawerPosition="right">
+                <Drawer key={Constants.EDGE} hideNavBar contentComponent={ControlPanel} hideDrawerButton={true} drawerPosition="right" drawerWidth={scale(280)}>
                   {/* Wrapper Scene needed to fix a bug where the tabs would reload as a modal ontop of itself */}
                   <Scene hideNavBar>
                     <Tabs
@@ -473,12 +478,21 @@ export default class Main extends Component<Props, State> {
                           renderRightButton={this.renderMenuButton()}
                         />
                         <Scene
-                          key={Constants.CHANGE_MINING_FEE_EXCHANGE}
+                          key={Constants.EXCHANGE_QUOTE_PROCESSING_SCENE}
                           navTransparent={true}
-                          component={ChangeMiningFeeExchange}
-                          renderTitle={this.renderTitle(CHANGE_MINING_FEE)}
+                          hideTabBar
+                          component={CryptoExchangeQuoteProcessingScreenComponent}
+                          renderTitle={this.renderTitle(EXCHANGE)}
+                          renderLeftButton={this.renderEmptyButton()}
+                          renderRightButton={this.renderEmptyButton()}
+                        />
+                        <Scene
+                          key={Constants.EXCHANGE_QUOTE_SCENE}
+                          navTransparent={true}
+                          component={CryptoExchangeQuoteConnector}
+                          renderTitle={this.renderTitle(EXCHANGE)}
                           renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderHelpButton()}
+                          renderRightButton={this.renderMenuButton()}
                         />
                       </Stack>
                     </Tabs>
@@ -528,6 +542,7 @@ export default class Main extends Component<Props, State> {
                       <Scene
                         key={Constants.SETTINGS_OVERVIEW}
                         navTransparent={true}
+                        onEnter={() => this.props.showReEnableOtpModal()}
                         component={SettingsOverview}
                         renderTitle={this.renderTitle(SETTINGS)}
                         renderLeftButton={this.renderBackButton()}
@@ -658,7 +673,6 @@ export default class Main extends Component<Props, State> {
     const settings = []
     for (const key in Constants.CURRENCY_SETTINGS) {
       const { pluginName, currencyCode } = Constants.CURRENCY_SETTINGS[key]
-      const title = s.strings[`title_${pluginName}_settings`]
       settings.push(
         <Scene
           key={key}
@@ -666,7 +680,11 @@ export default class Main extends Component<Props, State> {
           currencyCode={currencyCode}
           navTransparent={true}
           component={CurrencySettings}
-          renderTitle={this.renderTitle(title || pluginName)}
+          renderTitle={
+            <View style={styles.titleWrapper}>
+              <CurrencySettingsTitleConnector key={key} cryptoKey={key} pluginName={pluginName} currencyCode={currencyCode} />
+            </View>
+          }
           renderLeftButton={this.renderBackButton()}
           renderRightButton={this.renderEmptyButton()}
         />
@@ -759,6 +777,9 @@ export default class Main extends Component<Props, State> {
     }
     if (this.isCurrentScene(Constants.WALLET_LIST_SCENE)) {
       return HwBackButtonHandler()
+    }
+    if (this.isCurrentScene(Constants.EXCHANGE_QUOTE_SCENE)) {
+      return Actions.popTo(Constants.EXCHANGE_SCENE)
     }
     Actions.pop()
     return true

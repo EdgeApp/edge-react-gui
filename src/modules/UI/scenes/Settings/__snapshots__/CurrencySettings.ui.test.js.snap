@@ -30,9 +30,9 @@ exports[`CurrencySettings should render 1`] = `
           Array [
             Object {
               "flexDirection": "row",
-              "height": 50,
+              "height": 70.22887323943661,
               "justifyContent": "space-between",
-              "padding": 12,
+              "padding": 16.854929577464787,
             },
           ]
         }
@@ -51,27 +51,13 @@ exports[`CurrencySettings should render 1`] = `
               }
             }
           >
-            <Image
-              source={
-                Object {
-                  "uri": "THIS IS A LOGO",
-                }
-              }
-              style={
-                Object {
-                  "height": 25,
-                  "resizeMode": "contain",
-                  "width": 25,
-                }
-              }
-            />
             <FormattedText
               style={
                 Object {
                   "backgroundColor": "transparent",
                   "color": "#FFFFFF",
-                  "fontSize": 18,
-                  "marginLeft": 16,
+                  "fontSize": 25.28239436619718,
+                  "marginLeft": 22.473239436619718,
                 }
               }
             >

@@ -4,7 +4,6 @@ exports[`sendConfirmation reducer address NEW_SPEND_INFO 1`] = `
 Object {
   "address": "123123123",
   "authRequired": "none",
-  "destination": "",
   "error": null,
   "forceUpdateGuiCounter": 0,
   "isEditable": true,
@@ -36,6 +35,7 @@ Object {
     ],
   },
   "transaction": null,
+  "transactionMetadata": Object {},
 }
 `;
 
@@ -43,7 +43,6 @@ exports[`sendConfirmation reducer destination newSpendInfo with name 1`] = `
 Object {
   "address": "123123123",
   "authRequired": "none",
-  "destination": "airbitz",
   "error": null,
   "forceUpdateGuiCounter": 0,
   "isEditable": true,
@@ -80,6 +79,9 @@ Object {
     ],
   },
   "transaction": null,
+  "transactionMetadata": Object {
+    "name": "airbitz",
+  },
 }
 `;
 
@@ -87,7 +89,6 @@ exports[`sendConfirmation reducer destination newSpendInfo without name 1`] = `
 Object {
   "address": "123123123",
   "authRequired": "none",
-  "destination": "",
   "error": null,
   "forceUpdateGuiCounter": 0,
   "isEditable": true,
@@ -122,6 +123,7 @@ Object {
     ],
   },
   "transaction": null,
+  "transactionMetadata": Object {},
 }
 `;
 
@@ -129,7 +131,6 @@ exports[`sendConfirmation reducer destination updateTransaction with error 1`] =
 Object {
   "address": "",
   "authRequired": "none",
-  "destination": "",
   "error": [Error],
   "forceUpdateGuiCounter": 1,
   "isEditable": true,
@@ -153,6 +154,7 @@ Object {
   "pin": "",
   "spendInfo": null,
   "transaction": null,
+  "transactionMetadata": null,
 }
 `;
 
@@ -160,7 +162,6 @@ exports[`sendConfirmation reducer destination updateTransaction with pin error 1
 Object {
   "address": "",
   "authRequired": "none",
-  "destination": "",
   "error": [Error: Incorrect Pin],
   "forceUpdateGuiCounter": 1,
   "isEditable": true,
@@ -196,6 +197,7 @@ Object {
     "signedTx": "",
     "txid": "",
   },
+  "transactionMetadata": null,
 }
 `;
 
@@ -203,7 +205,6 @@ exports[`sendConfirmation reducer destination updateTransaction with transaction
 Object {
   "address": "",
   "authRequired": "none",
-  "destination": "",
   "error": null,
   "forceUpdateGuiCounter": 1,
   "isEditable": true,
@@ -241,6 +242,7 @@ Object {
     "signedTx": "",
     "txid": "",
   },
+  "transactionMetadata": null,
 }
 `;
 
@@ -248,7 +250,6 @@ exports[`sendConfirmation reducer destination updateTransaction with transaction
 Object {
   "address": "",
   "authRequired": "none",
-  "destination": "airbitz",
   "error": null,
   "forceUpdateGuiCounter": 1,
   "isEditable": true,
@@ -285,6 +286,9 @@ Object {
     "signedTx": "",
     "txid": "",
   },
+  "transactionMetadata": Object {
+    "name": "airbitz",
+  },
 }
 `;
 
@@ -292,7 +296,6 @@ exports[`sendConfirmation reducer error MAKE_PAYMENT_PROTOCOL_TRANSACTION_FAILED
 Object {
   "address": "",
   "authRequired": "none",
-  "destination": "",
   "error": [Error],
   "forceUpdateGuiCounter": 0,
   "isEditable": false,
@@ -328,6 +331,7 @@ Object {
     "signedTx": "",
     "txid": "",
   },
+  "transactionMetadata": null,
 }
 `;
 
@@ -335,7 +339,6 @@ exports[`sendConfirmation reducer error UPDATE_TRANSACTION 1`] = `
 Object {
   "address": "",
   "authRequired": "none",
-  "destination": "",
   "error": [Error],
   "forceUpdateGuiCounter": 0,
   "isEditable": true,
@@ -359,6 +362,7 @@ Object {
   "pin": "",
   "spendInfo": null,
   "transaction": null,
+  "transactionMetadata": null,
 }
 `;
 
@@ -366,7 +370,6 @@ exports[`sendConfirmation reducer initialState 1`] = `
 Object {
   "address": "",
   "authRequired": "none",
-  "destination": "",
   "error": null,
   "forceUpdateGuiCounter": 0,
   "isEditable": true,
@@ -402,6 +405,7 @@ Object {
     "signedTx": "",
     "txid": "",
   },
+  "transactionMetadata": null,
 }
 `;
 
@@ -409,7 +413,6 @@ exports[`sendConfirmation reducer isEditable MAKE_PAYMENT_PROTOCOL_TRANSACTION_F
 Object {
   "address": "",
   "authRequired": "none",
-  "destination": "",
   "error": [Error],
   "forceUpdateGuiCounter": 0,
   "isEditable": false,
@@ -445,6 +448,7 @@ Object {
     "signedTx": "",
     "txid": "",
   },
+  "transactionMetadata": null,
 }
 `;
 
@@ -452,7 +456,6 @@ exports[`sendConfirmation reducer isEditable UPDATE_PAYMENT_PROTOCOL_TRANSACTION
 Object {
   "address": "",
   "authRequired": "none",
-  "destination": "",
   "error": null,
   "forceUpdateGuiCounter": 0,
   "isEditable": false,
@@ -479,6 +482,7 @@ Object {
     "id": "123",
     "nativeAmount": "123",
   },
+  "transactionMetadata": null,
 }
 `;
 
@@ -486,7 +490,6 @@ exports[`sendConfirmation reducer pending 1`] = `
 Object {
   "address": "",
   "authRequired": "none",
-  "destination": "",
   "error": null,
   "forceUpdateGuiCounter": 0,
   "isEditable": true,
@@ -522,6 +525,7 @@ Object {
     "signedTx": "",
     "txid": "",
   },
+  "transactionMetadata": null,
 }
 `;
 
@@ -529,7 +533,6 @@ exports[`sendConfirmation reducer pin 1`] = `
 Object {
   "address": "",
   "authRequired": "none",
-  "destination": "",
   "error": null,
   "forceUpdateGuiCounter": 0,
   "isEditable": true,
@@ -565,6 +568,7 @@ Object {
     "signedTx": "",
     "txid": "",
   },
+  "transactionMetadata": null,
 }
 `;
 
@@ -572,7 +576,6 @@ exports[`sendConfirmation reducer reset 1`] = `
 Object {
   "address": "",
   "authRequired": "none",
-  "destination": "",
   "error": null,
   "forceUpdateGuiCounter": 0,
   "isEditable": true,
@@ -608,5 +611,6 @@ Object {
     "signedTx": "",
     "txid": "",
   },
+  "transactionMetadata": null,
 }
 `;

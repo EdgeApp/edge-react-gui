@@ -3,6 +3,7 @@
 import React, { Component } from 'react'
 import { FlatList, View } from 'react-native'
 
+import { scale } from '../../../../lib/scaling'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
 import type { DeviceDimensions } from '../../../../types.js'
 import style from './styles'
@@ -51,7 +52,7 @@ export default class SearchResults extends Component<Props, State> {
           {
             height: searchResultsHeight,
             width: PLATFORM.deviceWidth,
-            top: PLATFORM.toolbarHeight + this.props.extraTopSpace,
+            top: scale(PLATFORM.toolbarHeight + this.props.extraTopSpace),
             zIndex: 999
           },
           this.props.containerStyle

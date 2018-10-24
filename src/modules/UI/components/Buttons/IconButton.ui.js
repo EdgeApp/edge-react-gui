@@ -1,6 +1,5 @@
 // @flow
 
-import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { StyleSheet, TouchableHighlight, View } from 'react-native'
 
@@ -20,12 +19,6 @@ type State = {
 class IconButton extends Component<Props, State> {
   static defaultProps = {
     iconType: Constants.MATERIAL_ICONS
-  }
-  static propsTypes = {
-    icon: PropTypes.string.isRequired,
-    style: PropTypes.object.isRequired,
-    onPress: PropTypes.func.isRequired,
-    iconType: PropTypes.string.isRequired
   }
   UNSAFE_componentWillMount () {
     this.setState({

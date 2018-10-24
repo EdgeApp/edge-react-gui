@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import { Scene } from 'edge-components'
-import type { EdgeDenomination } from 'edge-core-js'
+import type { EdgeDenomination, EdgeMetadata } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
@@ -48,7 +48,7 @@ export type SendConfirmationStateProps = {
   resetSlider: boolean,
   forceUpdateGuiCounter: number,
   uniqueIdentifier?: string,
-  destination: string,
+  transactionMetadata: EdgeMetadata | null,
   isEditable: boolean,
   authRequired: 'pin' | 'none',
   address: string,
@@ -108,7 +108,7 @@ export class SendConfirmation extends Component<Props, State> {
   }
 
   componentDidUpdate (prevProps: Props) {
-    if (prevProps.destination === '' && this.props.destination !== '' && this.props.authRequired !== 'none' && this.props.nativeAmount !== '0') {
+    if (!prevProps.transactionMetadata && this.props.transactionMetadata && this.props.authRequired !== 'none' && this.props.nativeAmount !== '0') {
       this.pinInput.focus()
     }
   }
@@ -157,7 +157,8 @@ export class SendConfirmation extends Component<Props, State> {
     const cryptoBalanceAmountString = cryptoBalanceAmount ? intl.formatNumber(decimalOrZero(bns.toFixed(cryptoBalanceAmount, 0, 6), 6)) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)
     const balanceInFiatString = intl.formatNumber(this.props.balanceInFiat || 0, { toFixed: 2 })
 
-    const { address, authRequired, currencyCode, destination, uniqueIdentifier } = this.props
+    const { address, authRequired, currencyCode, transactionMetadata, uniqueIdentifier } = this.props
+    const destination = transactionMetadata ? transactionMetadata.name : ''
     const DESTINATION_TEXT = sprintf(s.strings.send_confirmation_to, destination)
     const ADDRESS_TEXT = sprintf(s.strings.send_confirmation_address, address)
 
@@ -218,7 +219,7 @@ export class SendConfirmation extends Component<Props, State> {
                     </Scene.Row>
                   )}
 
-                  {(currencyCode === 'XMR' || currencyCode === 'XRP') && (
+                  {(currencyCode === 'XMR' || currencyCode === 'XRP' || currencyCode === 'XLM') && (
                     <Scene.Row style={{ paddingVertical: 10 }}>
                       <TouchableOpacity
                         activeOpacity={rawStyles.activeOpacity}
@@ -263,7 +264,7 @@ export class SendConfirmation extends Component<Props, State> {
           </View>
         </Gradient>
 
-        {(currencyCode === 'XRP' || currencyCode === 'XMR') && (
+        {(currencyCode === 'XRP' || currencyCode === 'XMR' || currencyCode === 'XLM') && (
           <UniqueIdentifierModal onConfirm={this.props.uniqueIdentifierUpdated} currencyCode={currencyCode} />
         )}
       </SafeAreaView>
@@ -352,10 +353,12 @@ export class SendConfirmation extends Component<Props, State> {
 
 export const uniqueIdentifierText = (currencyCode: string, uniqueIdentifier?: string): string => {
   if (!uniqueIdentifier) {
+    if (currencyCode === 'XLM') return sprintf(s.strings.unique_identifier_add, s.strings.unique_identifier_memo_id)
     if (currencyCode === 'XRP') return sprintf(s.strings.unique_identifier_add, s.strings.unique_identifier_destination_tag)
     if (currencyCode === 'XMR') return sprintf(s.strings.unique_identifier_add, s.strings.unique_identifier_payment_id)
   }
 
+  if (currencyCode === 'XLM') return sprintf(s.strings.unique_identifier_display_text, s.strings.unique_identifier_memo_id, uniqueIdentifier)
   if (currencyCode === 'XRP') return sprintf(s.strings.unique_identifier_display_text, s.strings.unique_identifier_destination_tag, uniqueIdentifier)
   if (currencyCode === 'XMR') return sprintf(s.strings.unique_identifier_display_text, s.strings.unique_identifier_payment_id, uniqueIdentifier)
 

@@ -2,7 +2,7 @@
 
 /* globals describe test expect */
 
-import { account as accountReducer, initialState, loggedIn } from './reducer.js'
+import { account as accountReducer, initialState } from './reducer.js'
 
 describe('account', () => {
   test('initialState', () => {
@@ -14,7 +14,7 @@ describe('account', () => {
 
   test('LOGGED_IN', () => {
     const account = { id: '123123', activeWalletIds: ['1', '2', '3'] }
-    const action = loggedIn(account)
+    const action = { type: 'ACCOUNT/LOGGED_IN', data: { account } }
     const actual = accountReducer(initialState, action)
 
     expect(actual).toMatchSnapshot()

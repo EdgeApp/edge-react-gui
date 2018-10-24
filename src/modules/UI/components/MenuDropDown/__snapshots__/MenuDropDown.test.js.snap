@@ -1,0 +1,116 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MenuDropDown component should render with standard props 1`] = `
+<Component
+  style={
+    Object {
+      "alignItems": "center",
+      "flexDirection": "column",
+      "justifyContent": "center",
+      "width": 64.61056338028169,
+    }
+  }
+>
+  <ForwardRef(enhanceContext-Context.Consumer(Menu))
+    onBackdropPress={[Function]}
+    onClose={[Function]}
+    onOpen={[Function]}
+    onSelect={[Function]}
+    renderer={[Function]}
+    rendererProps={Object {}}
+    style={
+      Object {
+        "alignItems": "center",
+        "height": "100%",
+        "justifyContent": "center",
+        "width": 64.61056338028169,
+      }
+    }
+  >
+    <ForwardRef(enhanceContext-Context.Consumer(MenuTrigger))
+      customStyles={
+        Object {
+          "menuTriggerUnderlay": Object {},
+          "triggerTouchable": Object {
+            "activeOpacity": 1,
+            "style": Object {
+              "alignItems": "center",
+              "alignSelf": "center",
+              "height": "100%",
+              "justifyContent": "center",
+              "width": 64.61056338028169,
+            },
+            "underlayColor": "transparent",
+          },
+        }
+      }
+      disabled={false}
+    >
+      <Component
+        style={
+          Object {
+            "alignItems": "center",
+            "height": "100%",
+            "justifyContent": "center",
+            "width": 64.61056338028169,
+          }
+        }
+      >
+        <Text
+          accessible={true}
+          allowFontScaling={true}
+          ellipsizeMode="tail"
+          style={
+            Object {
+              "color": "#4A5157",
+              "fontSize": 28.091549295774648,
+            }
+          }
+        >
+          ⋮
+        </Text>
+      </Component>
+    </ForwardRef(enhanceContext-Context.Consumer(MenuTrigger))>
+    <ForwardRef(enhanceContext-Context.Consumer(MenuOptions))
+      customStyles={Object {}}
+    >
+      <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
+        customStyles={Object {}}
+        disableTouchable={false}
+        disabled={false}
+        style={
+          Object {
+            "borderBottomColor": "#D9E3ED",
+            "borderBottomWidth": 1,
+            "justifyContent": "center",
+          }
+        }
+        value="Value1"
+      >
+        <Component
+          style={
+            Object {
+              "flexDirection": "row",
+              "paddingVertical": 5.618309859154929,
+            }
+          }
+        >
+          <Text
+            accessible={true}
+            allowFontScaling={true}
+            ellipsizeMode="tail"
+            style={
+              Object {
+                "color": "#4A5157",
+                "fontSize": 25.28239436619718,
+              }
+            }
+          >
+            Label1
+          </Text>
+        </Component>
+      </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
+    </ForwardRef(enhanceContext-Context.Consumer(MenuOptions))>
+  </ForwardRef(enhanceContext-Context.Consumer(Menu))>
+</Component>
+`;

@@ -71,6 +71,13 @@ export type GuiWalletType = {
   symbolImageDarkMono?: string,
   currencyCode: string
 }
+export type CustomNodeSetting = {
+  isEnabled: boolean,
+  nodesList: Array<string>
+}
+export type CurrencySetting = {
+  denomination: string
+}
 
 export type GuiFiatType = {
   label: string,

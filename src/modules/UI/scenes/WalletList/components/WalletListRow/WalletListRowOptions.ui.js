@@ -4,6 +4,7 @@ import React, { Component } from 'react'
 import slowlog from 'react-native-slowlog'
 
 import * as Constants from '../../../../../../constants/indexConstants'
+import { scale } from '../../../../../../lib/scaling.js'
 import { MenuDropDownStyle } from '../../../../../../styles/indexStyles'
 import { MenuDropDown } from '../../../../components/MenuDropDown/MenuDropDown.ui.js'
 
@@ -18,7 +19,13 @@ const modifiedMenuDropDownStyle = {
   ...MenuDropDownStyle,
   menuIconWrap: {
     ...MenuDropDownStyle.menuIconWrap,
-    width: 46
+    width: '100%'
+  },
+  icon: {
+    ...MenuDropDownStyle.icon,
+    fontSize: scale(30),
+    position: 'relative',
+    top: 2
   }
 }
 

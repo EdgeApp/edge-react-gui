@@ -17,7 +17,15 @@ describe('CurrencySettings', () => {
       ],
       logo: 'THIS IS A LOGO',
       selectDenomination: jest.fn(),
-      selectedDenominationKey: '100'
+      selectedDenominationKey: '100',
+      saveCustomNodesList: jest.fn(),
+      isSetCustomNodesModalVisible: false,
+      setCustomNodesModalVisibility: jest.fn(),
+      enableCustomNodes: jest.fn(),
+      disableCustomNodes: jest.fn(),
+      defaultElectrumServer: '',
+      electrumServers: [],
+      disableFetchingServers: false
     }
     const actual = renderer.render(<CurrencySettings {...props} />)
 

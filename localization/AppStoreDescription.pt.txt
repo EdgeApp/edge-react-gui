@@ -1,0 +1,26 @@
+Privacidade total e segurança em nossa carteira fácil de usar.
+
+Nunca foi tão fácil gerenciar seus criptoativos. A Carteira Edge fornece segurança máxima mesmo mantendo a simplicidade, permitindo que todos os tipos de usuários a utilizem com facilidade, façam transferências e troquem suas moedas.
+
+A Carteira Edge atualmente suporta: Bitcoin, Bitcoin Cash, Litecoin, Dash, Ethereum, Monero e Ripple.
+
+A Edge é uma Carteira de Criptomoeda poderosa e fácil de usar, que permite aos usuários controlar suas próprias chaves privadas com a familiaridade e a tranquilidade de um serviço bancário no celular. 
+
+Tenha o controla dos seus fundos! Com a Edge, só você tem acesso aos seus fundos ou dados de transação. Nem a Edge nem quaisquer terceiros podem acessar seu dinheiro ou dados. Você terá privacidade financeira e autonomia para as quais a Blockchain foi criada, com a facilidade de uso que até sua avó poderia utilizar.
+
+A Edge também disponibiliza a troca de criptomoedas. Troque facilmente suas moedas por outras com poucos comandos. 
+
+• Zero-conhecimento e zero-acesso aos fundos, chaves, ou dados de transação do usuário da parte da Edge ou de terceiros
+• Criação de conta simplificada usando apenas login e senha (sem impressão de PDFs, sem escrever frases de recuperação, e sem precisar fazer configurações criptografadas)
+* TouchID biométrico e login por FaceID
+• Carteiras hierárquicas determinísticas com mudança de endereço para cada transação
+• Arquitetura de servidor descentralizada. As carteiras funcionam mesmo se os servidores da Edge estiverem fora do ar.
+• Código aberto. Disponível em https://github.com/EdgeApp
+
+Aviso de Privacidade
+O aplicativo da Carteira Edge solicita acesso à lista de contatos do dispositivo, localização e informações pessoais. Esta informação é utilizada no dispositivo para fornecer uma melhor experiência ao usuário das seguintes formas:
+
+1. Completar automaticamente contatos da lista de endereços do usuário depois de uma transação
+2. Auto-completar contatos da lista de endereços do usuário para enviar pedidos de pagamentos por Email ou SMS
+
+Nenhuma informação pessoal ou da lista de contato deixa o dispositivo. Nem a Edge nem qualquer terceiro têm conhecimento da informação requerida pelo aplicativo.

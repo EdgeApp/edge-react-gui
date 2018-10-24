@@ -121,6 +121,7 @@ export class TransactionList extends Component<Props, State> {
 
   renderBuyCrypto = () => {
     const wallet = this.props.uiWallet
+    const { selectedCurrencyCode } = this.props
     if (this.props.numTransactions) {
       return (
         <View style={styles.emptyListLoader}>
@@ -129,11 +130,7 @@ export class TransactionList extends Component<Props, State> {
       )
     }
 
-    let currencyCode = ''
-    if (wallet && wallet.currencyCode) {
-      currencyCode = wallet.currencyCode
-    }
-    switch (currencyCode) {
+    switch (selectedCurrencyCode) {
       case 'BTC':
         return <BuyCrypto wallet={wallet} />
       case 'BCH':
@@ -141,6 +138,8 @@ export class TransactionList extends Component<Props, State> {
       case 'ETH':
         return <BuyCrypto wallet={wallet} />
       case 'LTC':
+        return <BuyCrypto wallet={wallet} />
+      case 'XRP':
         return <BuyCrypto wallet={wallet} />
       default:
         return null
@@ -241,10 +240,14 @@ export class TransactionList extends Component<Props, State> {
                 <View style={[styles.currentBalanceBoxBitsWrap]}>
                   <View style={{ flexDirection: 'row' }}>
                     {displayDenomination.symbol ? (
-                      <T numberOfLines={1} style={[styles.currentBalanceBoxBits, styles.symbol]}>
-                        {displayDenomination.symbol + ' '}
-                        <T numberOfLines={1}>{cryptoAmountString}</T>
-                      </T>
+                      <View style={{ flexDirection: 'row' }}>
+                        <T numberOfLines={1} style={[styles.currentBalanceBoxBits, styles.symbol]}>
+                          {displayDenomination.symbol + ' '}
+                        </T>
+                        <T numberOfLines={1} style={[styles.currentBalanceBoxBits]}>
+                          {cryptoAmountString}
+                        </T>
+                      </View>
                     ) : (
                       <T numberOfLines={1} style={styles.currentBalanceBoxBits}>
                         {cryptoAmountString}

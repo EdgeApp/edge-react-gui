@@ -2,10 +2,8 @@
 
 exports[`initialState 1`] = `
 Object {
-  "availableShapeShiftTokens": Array [],
+  "availableShapeShiftTokens": Object {},
   "changeWallet": "none",
-  "confirmTransactionModalVisible": false,
-  "exchangeRate": 1,
   "fee": 0,
   "feeSetting": "standard",
   "forceUpdateGuiCounter": 0,
@@ -28,18 +26,13 @@ Object {
     },
   },
   "genericShapeShiftError": null,
-  "gettingTransaction": false,
   "insufficientError": false,
-  "minerFee": "0",
-  "nativeMax": "0",
-  "nativeMin": "0",
+  "quote": null,
   "quoteExpireDate": null,
-  "reverseExchange": 1,
-  "reverseMinerFee": "0",
-  "reverseNativeMax": "0",
-  "reverseNativeMin": "0",
+  "requireKYCPlugins": Array [],
   "shiftPendingTransaction": false,
   "shiftTransactionError": null,
+  "showKYCAlert": false,
   "toCurrencyCode": null,
   "toCurrencyIcon": null,
   "toCurrencyIconDark": null,
@@ -58,7 +51,7 @@ Object {
       "name": "",
     },
   },
-  "transaction": null,
+  "totalSwaps": 0,
   "walletListModalVisible": false,
 }
 `;

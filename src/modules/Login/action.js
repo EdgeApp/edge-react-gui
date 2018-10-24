@@ -11,7 +11,6 @@ import { sprintf } from 'sprintf-js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import * as ACCOUNT_API from '../Core/Account/api'
-import { loggedIn } from '../Core/Account/reducer.js'
 import * as SETTINGS_API from '../Core/Account/settings.js'
 // Login/action.js
 import * as CORE_SELECTORS from '../Core/selectors'
@@ -23,7 +22,18 @@ import { getReceiveAddresses } from '../utils.js'
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
 export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => async (dispatch: Dispatch, getState: GetState) => {
-  dispatch(loggedIn(account))
+  const currencyPlugins = []
+  const currencyCodes = {}
+
+  for (const pluginName in account.currencyConfig) {
+    const { currencyInfo } = account.currencyConfig[pluginName]
+    const { currencyCode } = currencyInfo
+    currencyInfo.walletTypes.forEach(type => {
+      currencyCodes[type] = currencyCode
+    })
+    currencyPlugins.push({ pluginName, currencyInfo })
+  }
+  dispatch({ type: 'ACCOUNT/LOGGED_IN', data: { account, currencyPlugins } })
 
   account.activeWalletIds.length < 1 ? Actions[Constants.ONBOARDING]() : Actions[Constants.EDGE]()
 
@@ -33,7 +43,6 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
 
   const state = getState()
   const context = CORE_SELECTORS.getContext(state)
-  const currencyCodes = {}
   if (Platform.OS === Constants.IOS) {
     PushNotification.configure({
       onNotification: notification => {
@@ -46,7 +55,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     touchIdInfo: touchIdInfo,
     walletId: '',
     currencyCode: '',
-    currencyPlugins: [],
+    currencyPlugins,
     otpInfo: { enabled: account.otpKey != null, otpKey: account.otpKey, otpResetPending: false },
     autoLogoutTimeInSeconds: '',
     bluetoothMode: false,
@@ -68,14 +77,6 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     passwordRecoveryRemindersShown: SETTINGS_API.PASSWORD_RECOVERY_REMINDERS_SHOWN
   }
   try {
-    for (const pluginName in account.currencyTools) {
-      const { currencyInfo } = account.currencyTools[pluginName]
-      const { currencyCode } = currencyInfo
-      currencyInfo.walletTypes.forEach(type => {
-        currencyCodes[type] = currencyCode
-      })
-      accountInitObject.currencyPlugins.push({ pluginName, currencyInfo })
-    }
     if (account.activeWalletIds.length < 1) {
       // we are going to assume that since there is no wallets, this is a first time user
       Actions[Constants.ONBOARDING]()
@@ -95,8 +96,8 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       if (global.currencyCode) {
         let walletType, walletName
         // We got installed via a currencyCode referral. Only create one wallet of that type
-        for (const pluginName in account.currencyTools) {
-          const { currencyInfo } = account.currencyTools[pluginName]
+        for (const pluginName in account.currencyConfig) {
+          const { currencyInfo } = account.currencyConfig[pluginName]
           if (currencyInfo.currencyCode.toLowerCase() === global.currencyCode.toLowerCase()) {
             walletType = currencyInfo.walletTypes[0]
             walletName = sprintf(s.strings.my_crypto_wallet_name, currencyInfo.currencyName)
@@ -146,7 +147,6 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
         }
       }
     }
-
     const settings = await SETTINGS_API.getSyncedSettings(account)
     const syncDefaults = SETTINGS_API.SYNCED_ACCOUNT_DEFAULTS
     const syncFinal = { ...syncDefaults, ...settings }
@@ -185,7 +185,6 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     accountInitObject.otpMode = coreFinal.otpMode
 
     const receiveAddresses = await getReceiveAddresses(currencyWallets)
-
     dispatch({
       type: 'ACCOUNT_INIT_COMPLETE',
       data: { ...accountInitObject, receiveAddresses }

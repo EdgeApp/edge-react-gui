@@ -1,15 +1,22 @@
 // @flow
 
+import { createYesNoModal } from 'edge-components'
 import type { EdgeAccount } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
+import React from 'react'
+import { Image } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
-import type { Dispatch, GetState } from '../../../../../src/modules/ReduxTypes.js'
+import type { Dispatch, GetState, State } from '../../../../../src/modules/ReduxTypes.js'
+import { disableOtp, keepOtp } from '../../../../actions/OtpActions.js'
+import iconImage from '../../../../assets/images/otp/OTP-badge_sm.png'
+import { CURRENCY_PLUGIN_NAMES } from '../../../../constants/indexConstants.js'
 import s from '../../../../locales/strings.js'
 import { restoreWalletsRequest } from '../../../Core/Account/api.js'
 import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'
 import * as CORE_SELECTORS from '../../../Core/selectors'
 import { updateExchangeRates } from '../../../ExchangeRates/action.js'
+import { showModal } from '../../../ModalManager.js'
 import { convertCurrency } from '../../../UI/selectors.js'
 import { displayErrorAlert } from '../../components/ErrorAlert/actions.js'
 import * as SETTINGS_ACTIONS from '../../Settings/action.js'
@@ -38,11 +45,6 @@ const setMerchantModeStart = (merchantMode: boolean) => ({
 const setBluetoothModeStart = (bluetoothMode: boolean) => ({
   type: 'UI/SCENES/SETTINGS/SET_BLUETOOTH_MODE_START',
   data: { bluetoothMode }
-})
-
-const setBitcoinOverrideServerStart = (overrideServer: string) => ({
-  type: 'UI/SCENES/SETTINGS/SET_BITCOIN_OVERRIDE_SERVER_START',
-  data: { overrideServer }
 })
 
 export const setPINModeRequest = (pinMode: boolean) => (dispatch: Dispatch, getState: GetState) => {
@@ -177,12 +179,6 @@ export const setDenominationKeyRequest = (currencyCode: string, denominationKey:
     .catch(onError)
 }
 
-export const setBitcoinOverrideServerRequest = (overrideServer: string) => (dispatch: Dispatch) => {
-  dispatch(setBitcoinOverrideServerStart(overrideServer))
-
-  dispatch(SETTINGS_ACTIONS.setBitcoinOverrideServer(overrideServer))
-}
-
 // touch id interaction
 export const updateTouchIdEnabled = (arg: boolean, account: EdgeAccount) => async (dispatch: Dispatch, getState: GetState) => {
   const folder = CORE_SELECTORS.getFolder(getState())
@@ -216,5 +212,67 @@ export function togglePinLoginEnabled (pinLoginEnabled: boolean) {
       console.log(error)
       dispatch(displayErrorAlert(error.message))
     })
+  }
+}
+
+export const showReEnableOtpModal = () => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  const otpResetDate = account.otpResetDate
+  if (!otpResetDate) return
+  // Use `showModal` to put the modal component on screen:
+  const modal = createYesNoModal({
+    title: s.strings.title_otp_keep_modal,
+    message: s.strings.otp_modal_reset_description,
+    icon: <Image source={iconImage} />,
+    yesButtonText: s.strings.otp_keep,
+    noButtonText: s.strings.otp_disable
+  })
+  const resolveValue = await showModal(modal)
+  if (resolveValue === true) {
+    // true on positive, false on negative
+    // let 2FA expire
+    dispatch(keepOtp())
+  } else if (resolveValue === false) {
+    dispatch(disableOtp())
+  } // if default of null (press backdrop) do not change anything and keep reminding
+}
+
+export const enableCustomNodes = (currencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
+  const state: State = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
+  const currencyPlugin = account.currencyConfig[currencyPluginName]
+  try {
+    await currencyPlugin.changeUserSettings({ ...currencyPlugin.userSettings, disableFetchingServers: true })
+  } catch (e) {
+    console.log(e)
+    throw new Error(e)
+  }
+}
+
+export const disableCustomNodes = (currencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
+  const state: State = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
+  const currencyPlugin = account.currencyConfig[currencyPluginName]
+  try {
+    await currencyPlugin.changeUserSettings({ ...currencyPlugin.userSettings, disableFetchingServers: false })
+  } catch (e) {
+    console.log(e)
+    throw new Error(e)
+  }
+}
+
+export const saveCustomNodesList = (currencyCode: string, nodesList: Array<string>) => async (dispatch: Dispatch, getState: GetState) => {
+  const state: State = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
+  const currencyPlugin = account.currencyConfig[currencyPluginName]
+  try {
+    await currencyPlugin.changeUserSettings({ ...currencyPlugin.userSettings, electrumServers: nodesList })
+  } catch (e) {
+    console.log(e)
+    throw new Error('Unable to save plugin setting')
   }
 }

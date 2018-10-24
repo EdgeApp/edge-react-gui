@@ -23,6 +23,8 @@ const strings = {
     'WARNING: The "%1$s" application is requesting full access to your account and all wallets. \n\nOnly accept this login request if you trust this application and where it was downloaded from.',
   exchange_failed: 'Exchange Failed',
   exchange_succeeded: 'Exchange Succeeded',
+  no_exchange_amount: 'No Amount Selected',
+  select_exchange_amount: 'Please enter an amount to exchange',
   exchanges_may_take_minutes: 'Exchanges may take several minutes to process. Please check your destination wallet after a few minutes',
   fragment_wallets_addwallet_blockchain_hint: 'Choose a blockchain',
   fragment_wallets_addwallet_fiat_hint: 'Choose a fiat currency',
@@ -61,9 +63,11 @@ const strings = {
   fragment_request_copy_title: 'Copy',
   fragment_request_subtitle: 'Request',
   fragment_request_address_copied: 'Request address successfully copied to clipboard',
-  request_xrp_minimum_notification_title: 'Minimum XRP Required',
+  request_minimum_notification_title: 'Minimum Balance Required',
   request_xrp_minimum_notification_body:
     'Ripple (XRP) wallets require a 20 XRP minimum balance. You must deposit at least 20 XRP to this address before this wallet will show a balance or transactions. 20 XRP will be unspendable for the lifetime of this wallet address.',
+  request_xlm_minimum_notification_body:
+    'Stellar (XLM) wallets require a 1 XLM minimum balance. You must deposit at least 1 XLM to this address before this wallet will show a balance or transactions. 1 XLM will be unspendable for the lifetime of this wallet address.',
   fragment_send_address_dialog_title: 'Send to Public Address',
   fragment_send_address: 'Address',
   fragment_send_flash: 'Flash',
@@ -101,10 +105,10 @@ const strings = {
   fragment_wallets_export_transactions: 'Export Transactions',
   fragment_wallets_header: 'My Wallets',
   fragment_wallets_rename_wallet: 'Rename Wallet',
-  fragment_wallets_resync_wallet_first_confirm_message_mobile: 'Are you sure you want to resync ',
-  fragment_wallets_split_wallet_first_confirm_message_mobile: 'Are you sure you want to split ',
+  fragment_wallets_resync_wallet_first_confirm_message_mobile: 'Are you sure you want to resync \n',
+  fragment_wallets_split_wallet_first_confirm_message_mobile: 'Are you sure you want to split \n',
   fragment_wallets_get_seed_wallet_first_confirm_message_mobile: 'Are you sure you want to reveal the private seed for the following wallet?',
-  fragmet_wallets_delete_wallet_first_confirm_message_mobile: 'Are you sure you want to delete ',
+  fragmet_wallets_delete_wallet_first_confirm_message_mobile: 'Are you sure you want to delete \n',
   fragmet_wallets_list_archive_title_capitalized: 'Archive',
   fragment_wallets_syncing_wallet_txs: 'Synchronizing wallet transactions...',
   create_wallet_select_valid_crypto: 'Please select a valid wallet type',
@@ -151,6 +155,7 @@ const strings = {
   settings_button_use_touchID: 'Use TouchID',
   settings_days: 'Day(s)',
   settings_denominations_title: 'Denominations',
+  settings_custom_nodes_title: 'Custom Nodes',
   settings_hours: 'Hour(s)',
   settings_minutes: 'Minute(s)',
   settings_modal_send_logs_title: 'Send logs?',
@@ -165,6 +170,10 @@ const strings = {
   settings_title_pin_login: 'PIN Re-login',
   settings_title: 'Settings',
   settings_alert_unlock: 'Please unlock your account settings',
+  settings_enable_custom_nodes: 'Enable Custom Nodes',
+  settings_set_custom_nodes_modal_title: 'Set Custom Nodes',
+  settings_set_custom_nodes_modal_instructions: 'Please enter the custom nodes you wish to use below (one per row):',
+  settings_set_custom_nodes_placeholder: 'https://MyNode.Example:18081',
   string_cancel_cap: 'Cancel',
   string_cancel: 'CANCEL',
   string_delete: 'Delete',
@@ -177,7 +186,7 @@ const strings = {
   string_fee_with_colon: 'Fee: ',
   string_first_ethereum_wallet_name: 'My Ether',
   string_first_bitcoin_wallet_name: 'My Bitcoin',
-  string_first_bitcoincash_wallet_name: 'My BitcoinCash',
+  string_first_bitcoincash_wallet_name: 'My Bitcoin Cash',
   my_crypto_wallet_name: 'My %s',
   string_from_exchange_info: 'You are about to exchange\n %1$s %2$s\n (%3$s)\n from %4$s',
   string_help: 'Help',
@@ -198,6 +207,7 @@ const strings = {
   string_split_bitcoin_cash: 'Split Bitcoin Cash',
   string_add_edit_tokens: 'Add / Edit Tokens',
   exchange_notes_metadata: 'Exchanged %1$s %2$s from %3$s to %4$s %5$s in %6$s. \nOrder: %7$s. \nFor assistance, please contact support@shapeshift.io.',
+  title_crypto_settings: '%s Settings',
   title_add_tokens: 'Add Tokens',
   title_create_wallet_select_crypto: 'Select Type',
   title_create_wallet_select_fiat: 'Select Fiat',
@@ -258,6 +268,7 @@ const strings = {
   string_search: 'Search',
   confirm_password_text: 'Confirm Password',
 
+  title_otp_keep_modal: 'Two-Factor Authentication (2FA)',
   title_otp_enabled: '2FA is enabled',
   title_otp_disabled: 'Protect your account with 2FA',
   otp_description:
@@ -266,7 +277,7 @@ const strings = {
   otp_show_code: 'Show authentication code',
   otp_hide_code: 'Hide authentication code',
   otp_disable: 'Disable 2FA',
-  otp_keep: 'KEEP 2FA',
+  otp_keep: 'Keep 2FA',
   otp_enable: 'Enable 2FA',
   otp_enabled_modal_part_one: '2FA has been enabled. A unique authentication code will be generated.',
   otp_enabled_modal_part_two:
@@ -338,8 +349,10 @@ const strings = {
 
   unique_identifier: 'Unique Identifier',
   unique_identifier_dropdown_option: 'Add %s',
+  unique_identifier_memo_id: 'Memo ID',
   unique_identifier_destination_tag: 'Destination Tag',
   unique_identifier_payment_id: 'Payment ID',
+  unique_identifier_dropdown_option_memo_id: 'Add Memo ID',
   unique_identifier_dropdown_option_destination_tag: 'Add Destination Tag',
   unique_identifier_dropdown_option_payment_id: 'Add Payment ID',
   unique_identifier_modal_title_destination_tag: 'Destination Tag',
@@ -373,7 +386,15 @@ const strings = {
   onboarding_slide_5: 'Exchange cryptocurrencies by choosing the Source Wallet and Receiving Wallet to trade between them.',
   otp_out_of_sync_title: 'Warning',
   otp_out_of_sync_body:
-    'This device does not have the proper 2-factor token. You can still access your funds with limited functionality, but cannot create wallets or change account options'
+    'This device does not have the proper 2-factor token. You can still access your funds with limited functionality, but cannot create wallets or change account options',
+  just_a_moment: 'Just a moment',
+  trying_to_find: 'Searching for the best exchange rate...',
+  exchange_will_be_sent: '%1$s %2$s will be sent',
+  exchange_will_be_received: '%1$s %2$s will be received',
+  mining_fee: 'Mining Fee',
+  confirm_with_shapeshift: 'Confirm to complete your exchange through Shapeshift.',
+  kyc_title: 'Customer Information Needed',
+  kyc_message: 'The available exchange for this transaction requires you to login to your account'
 }
 
 // export default strings

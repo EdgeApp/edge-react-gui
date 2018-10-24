@@ -13,6 +13,7 @@ exports[`Request should render with loaded props 1`] = `
     }
   >
     <XRPMinimumModal
+      modalMessage=""
       onExit={[Function]}
       visibilityBoolean={false}
     />

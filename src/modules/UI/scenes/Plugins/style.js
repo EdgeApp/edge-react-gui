@@ -2,6 +2,7 @@
 
 import { StyleSheet } from 'react-native'
 
+import { scale } from '../../../../lib/scaling.js'
 import THEME from '../../../../theme/variables/airbitz'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
 
@@ -13,22 +14,33 @@ export const styles = {
     width: '100%',
     height: PLATFORM.usableHeight + PLATFORM.toolbarHeight
   },
+  titleStyle: {
+    alignSelf: 'center',
+    fontSize: 20,
+    color: THEME.COLORS.WHITE,
+    fontFamily: THEME.FONTS.DEFAULT
+  },
+  titleWrapper: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%'
+  },
   container: {
     flex: 1,
     alignItems: 'stretch'
   },
   pluginRow: {
-    height: 60,
+    height: scale(60),
     borderBottomWidth: 1,
     borderBottomColor: THEME.COLORS.GRAY_3,
-    padding: 10,
-    paddingRight: 30,
-    paddingLeft: 15,
+    padding: scale(10),
+    paddingRight: scale(30),
+    paddingLeft: scale(15),
     backgroundColor: THEME.COLORS.WHITE
   },
   pluginBox: {
     flexDirection: 'row',
-    height: 40,
+    height: scale(40),
     flex: 1,
     justifyContent: 'space-between'
   },
@@ -36,24 +48,24 @@ export const styles = {
     flexDirection: 'row'
   },
   logo: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    marginRight: 10
+    width: scale(40),
+    height: scale(40),
+    borderRadius: scale(20),
+    marginRight: scale(10)
   },
   textBoxWrap: {
     /* justifyContent: 'center' */
   },
   titleBox: {
-    fontSize: 16,
+    fontSize: scale(16),
     color: THEME.COLORS.GRAY_1,
     textAlignVertical: 'center'
   },
   subtitleBox: {
-    fontSize: 12,
+    fontSize: scale(12),
     textAlignVertical: 'bottom',
     position: 'relative',
-    top: 4
+    top: scale(4)
   }
 }
 

@@ -21,6 +21,8 @@ export type Props = {
   fiatPerCrypto: number,
   forceUpdateGuiCounter: number,
   overridePrimaryExchangeAmount: string,
+  isFocused: boolean,
+  focusMe(): void,
   launchWalletSelector: () => void,
   onCryptoExchangeAmountChanged: ExchangedFlipInputAmounts => void
 }
@@ -81,6 +83,17 @@ export class CryptoExchangeFlipInputWrapperComponent extends Component<Props> {
     const displayDenomination = this.props.primaryCurrencyInfo.displayCurrencyCode
     const titleComp = function (styles) {
       return <WalletNameHeader name={guiWalletName} denomination={displayDenomination} styles={styles} />
+    }
+
+    if (!this.props.isFocused) {
+      return (
+        <View style={[style.containerNoFee, style.containerNoWalletSelected, this.props.fee && style.container]}>
+          <View style={style.topRow}>
+            <TextAndIconButton style={style.walletSelector} onPress={this.props.focusMe} icon={Constants.KEYBOARD_ARROW_DOWN} title={titleComp} />
+          </View>
+          {this.renderLogo(style, this.props.currencyLogo)}
+        </View>
+      )
     }
 
     return (

@@ -2,6 +2,7 @@
 
 import { StyleSheet } from 'react-native'
 
+import { scale } from '../../../../lib/scaling.js'
 import THEME from '../../../../theme/variables/airbitz'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
 
@@ -13,11 +14,11 @@ export const styles = {
     alignSelf: 'stretch'
   },
   modalRoot: {
-    paddingTop: 50
+    paddingTop: scale(50)
   },
   headerContainer: {
     backgroundColor: THEME.COLORS.GRAY_1,
-    paddingVertical: 8
+    paddingVertical: scale(8)
   },
   modalBody: {
     width: PLATFORM.deviceWidth,
@@ -25,13 +26,13 @@ export const styles = {
   },
   rowContainer: {
     backgroundColor: THEME.COLORS.WHITE,
-    padding: 16,
-    paddingLeft: 20,
-    paddingRight: 20,
+    padding: scale(16),
+    paddingLeft: scale(20),
+    paddingRight: scale(20),
     justifyContent: 'space-between'
   },
   rowNameText: {
-    fontSize: 18,
+    fontSize: scale(18),
     fontFamily: THEME.FONTS.DEFAULT
   },
   headerContent: {
@@ -43,31 +44,31 @@ export const styles = {
   },
   headerText: {
     color: THEME.COLORS.WHITE,
-    fontSize: 14,
+    fontSize: scale(14),
     fontFamily: THEME.FONTS.DEFAULT
   },
   headerCloseWrap: {
     alignSelf: 'flex-end'
   },
   modalCloseWrap: {
-    height: 34,
-    width: 34,
+    height: scale(34),
+    width: scale(34),
     justifyContent: 'center',
     alignItems: 'center'
   },
   doneButton: {
     position: 'relative',
-    top: 6
+    top: scale(6)
   },
 
   // beginning of token rows //
 
   tokenRowContainer: {
-    padding: 16,
-    paddingLeft: 30,
-    paddingRight: 20,
+    padding: scale(16),
+    paddingLeft: scale(30),
+    paddingRight: scale(20),
     backgroundColor: THEME.COLORS.GRAY_4,
-    borderBottomWidth: 1,
+    borderBottomWidth: scale(1),
     borderColor: THEME.COLORS.GRAY_3
   },
   currencyRowContent: {
@@ -79,7 +80,7 @@ export const styles = {
   },
   currencyRowText: {
     color: THEME.COLORS.GRAY_1,
-    fontSize: 14,
+    fontSize: scale(14),
     fontFamily: THEME.FONTS.DEFAULT
   },
   underlay: {

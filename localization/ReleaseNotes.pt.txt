@@ -1,0 +1,16 @@
+v1.4.0
+* Suporte para Stellar
+* Adicionar habilidade de selecionar nós para Bitcoin e moedas similares
+* Suporte para membros ShapeShift
+* Suporte para Changelly.com na funcionalidade Exchange
+* Adicione tradução em Espanhol, Italiano e Russo
+
+v1.3.4
+
+* Prevenir que o botão de criação de carteira seja clicado várias vezes
+* Consertar tela branca sobre a área do login se ocorrer o recebimento de uma transação
+* Consertar quebra de endereço no plugin Simplex
+Consertar o erro de toque duplo no modo Alterar Senha
+* Consertar os valores da moeda fiduciária ao usar moedas de outros países
+* Adicionar melhorias na escalabilidade e no visual
+* Consertar bugs menores

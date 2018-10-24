@@ -60,7 +60,7 @@ export class TransactionRowComponent extends Component<Props, State> {
   }
 
   render () {
-    global.pcount('TransactionRow:render')
+    global.pcount && global.pcount('TransactionRow:render')
     const completedTxList: Array<TransactionListTx> = this.props.transactions
     // $FlowFixMe
     const tx = this.props.transaction.item
@@ -138,7 +138,6 @@ export class TransactionRowComponent extends Component<Props, State> {
     } else {
       transactionPartner = txName
     }
-
     const out = (
       <View style={[styles.singleTransactionWrap]}>
         {(tx.key === 0 || tx.dateString !== completedTxList[tx.key - 1].dateString) && (
@@ -155,14 +154,18 @@ export class TransactionRowComponent extends Component<Props, State> {
         >
           <View style={[styles.transactionInfoWrap]}>
             <View style={styles.transactionLeft}>
-              {thumbnailPath ? (
-                <Image style={[styles.transactionLogo]} source={{ uri: thumbnailPath }} />
-              ) : (
-                <Image style={styles.transactionLogo} source={txImage} />
-              )}
+              <View style={[styles.transactionLeftLogoWrap]}>
+                {thumbnailPath ? (
+                  <Image style={[styles.transactionLogo]} source={{ uri: thumbnailPath }} />
+                ) : (
+                  <Image style={styles.transactionLogo} source={txImage} />
+                )}
+              </View>
 
               <View style={[styles.transactionLeftTextWrap]}>
-                <T style={[styles.transactionPartner]}>{transactionPartner}</T>
+                <T style={[styles.transactionPartner]} adjustsFontSizeToFit={true} minimumFontScale={0.6}>
+                  {transactionPartner}
+                </T>
                 <T style={[styles.transactionTimePendingArea, pendingTimeStyle]}>{pendingTimeSyntax}</T>
               </View>
             </View>
