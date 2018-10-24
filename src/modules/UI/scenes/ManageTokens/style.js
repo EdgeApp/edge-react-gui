@@ -124,7 +124,7 @@ export const styles = {
   },
   buttonText: {
     color: THEME.COLORS.WHITE,
-    fontSize: scale(18)
+    fontSize: scale(17.5)
   },
   saveButton: {
     flex: 1,

@@ -149,20 +149,41 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
         s.strings.word_to_in_convert_from_to_string,
         state.cryptoExchange.toCurrencyCode
       )
-      const shapeShiftOrderId = quote && quote.quoteUri ? quote.quoteUri : ''
+
+      let name = ''
+      let supportEmail = ''
+      let orderId = ''
+      if (quote) {
+        switch (quote.pluginName) {
+          case 'shapeshift':
+            name = 'ShapeShift'
+            supportEmail = 'support@shapeshift.io'
+            orderId = quote.quoteUri
+            break
+          case 'changelly':
+            name = 'Changelly'
+            supportEmail = 'support@changelly.com'
+            break
+        }
+      }
+      if (!orderId) {
+        orderId = broadcastedTransaction.txid
+      }
+
       const notes = sprintf(
-        s.strings.exchange_notes_metadata,
+        s.strings.exchange_notes_metadata_generic,
         state.cryptoExchange.fromDisplayAmount,
         state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name,
         fromWallet.name,
         state.cryptoExchange.toDisplayAmount,
         state.cryptoExchange.toWalletPrimaryInfo.displayDenomination.name,
         toWallet.name,
-        shapeShiftOrderId
+        orderId,
+        supportEmail
       )
 
       const edgeMetaData: EdgeMetadata = {
-        name: 'ShapeShift',
+        name,
         category,
         notes
       }
