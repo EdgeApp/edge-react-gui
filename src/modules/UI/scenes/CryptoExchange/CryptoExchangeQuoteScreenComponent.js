@@ -61,6 +61,10 @@ type Props = OwnProps & StateProps
 type State = {}
 
 class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
+  componentDidMount = () => {
+    global.firebase && global.firebase.analytics().logEvent(`Exchange_Shift_Quote`)
+  }
+
   renderSlider = () => {
     if (this.props.pending) {
       return <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size={'small'} />

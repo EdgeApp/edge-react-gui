@@ -206,7 +206,7 @@ const strings = {
   string_master_private_key: 'Master Private Key',
   string_split_bitcoin_cash: 'Split Bitcoin Cash',
   string_add_edit_tokens: 'Add / Edit Tokens',
-  exchange_notes_metadata: 'Exchanged %1$s %2$s from %3$s to %4$s %5$s in %6$s. \nOrder: %7$s. \nFor assistance, please contact support@shapeshift.io.',
+  exchange_notes_metadata_generic: 'Exchanged %1$s %2$s from %3$s to %4$s %5$s in %6$s. \nOrder: %7$s. \nFor assistance, please contact %8$s.',
   title_crypto_settings: '%s Settings',
   title_add_tokens: 'Add Tokens',
   title_create_wallet_select_crypto: 'Select Type',
