@@ -3350,10 +3350,10 @@ edge-components@^0.0.8:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@0.12.5:
-  version "0.12.5"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.12.5.tgz#79499f1b3a7ae5bc1ddc03088158162cfa027d64"
-  integrity sha512-fFVPhMnnM/6k/q3vSSoBrpxyDboCjkIp0O/cQSYGkRGp2mpVhUmZPW/NGDvej9YJ8lU6IkKTdlbwd0gXyAdLAg==
+edge-core-js@0.12.6:
+  version "0.12.6"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.12.6.tgz#d82f2f4f4350359cc62cbc663365106792ed90b0"
+  integrity sha512-34oV6ki35TAM8bJrIXrm5i8uIJAtEqH4D/9bH6Cu+OEJmQphIHjpqp78bWJJe0ks60RYrqa94DsZMR8W2D7cnA==
   dependencies:
     "@babel/runtime" "^7.0.0"
     aes-js "^3.1.0"
@@ -3448,10 +3448,10 @@ edge-exchange-plugins@^0.2.0:
   dependencies:
     iso4217 "^0.2.0"
 
-edge-login-ui-rn@^0.5.6:
-  version "0.5.6"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.5.6.tgz#dfb1b972361208084c4050bf6e368dee8c5d2123"
-  integrity sha512-Ifwh/dyRe/y8bHD/02P5KfuANKn4OMT8lcr2BkET/N9JdQNHSmCLpkkLA0XPeURuoxt8NkNgH7ifdUKkRKoJWQ==
+edge-login-ui-rn@^0.5.7:
+  version "0.5.7"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.5.7.tgz#44046bb5a187ffa26cddcdc9585daf0bab5e5d6c"
+  integrity sha512-2SXdUUfAf83udG6Vt0Xr0WNzwNpQCHBs9e0LUbws5ouqNuu4XXn0zreDR5S1i9afxOqRJXPAiTgO/nnEDt+N6Q==
   dependencies:
     material-ui "^0.20.0"
     moment "^2.19.3"
