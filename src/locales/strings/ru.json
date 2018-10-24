@@ -199,7 +199,7 @@
   "string_master_private_key": "Master Private Key",
   "string_split_bitcoin_cash": "Разделить Bitcoin Cash",
   "string_add_edit_tokens": "Добавить / редактировать токены",
-  "exchange_notes_metadata": "Обменялись %1$s %2$s с %3$s на %4$s %5$s в %6$s. \nпорядок: %7$s. \nдля помощи, пожалуйста свяжитесь с support@shapeshift.io.",
+  "exchange_notes_metadata_generic": "",
   "title_crypto_settings": "%s Настройки",
   "title_add_tokens": "Добавить токены",
   "title_create_wallet_select_crypto": "Выберите тип",
@@ -365,7 +365,7 @@
   "exchange_will_be_sent": "%1$s %2$s будут отправлены",
   "exchange_will_be_received": "%1$s %2$s будут получены",
   "mining_fee": "Комиссия майнера",
-  "confirm_with_shapeshift": "Подтвердите для завершения Вашего обмена через Shapeshift.",
+  "confirm_to_complete_exchange": "",
   "kyc_title": "",
   "kyc_message": ""
 }
