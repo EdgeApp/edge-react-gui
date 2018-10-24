@@ -1,5 +1,14 @@
 # edge-react-gui
 
+## 1.4.0
+
+* Support Changelly.com in Exchange functionality
+* Support for Stellar (XLM)
+* Add ability to select custom nodes for Bitcoin and similar currencies
+* Support for ShapeShift membership
+* Add Spanish, Italian, and Russian translations
+* Implement device size based UI scaling
+
 ## 1.3.4
 
 * Fix Payment Protocol support on Android
