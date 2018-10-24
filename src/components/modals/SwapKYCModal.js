@@ -1,9 +1,10 @@
 // @flow
 
 import React, { Component } from 'react'
-import { ActivityIndicator, View, WebView } from 'react-native'
+import { ActivityIndicator, Alert, View, WebView } from 'react-native'
 import * as Animatable from 'react-native-animatable'
 
+import s from '../../locales/strings'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import BackButton from '../../modules/UI/components/Header/Component/BackButton.ui.js'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView'
@@ -35,27 +36,45 @@ class SwapKYCModal extends Component<Props, State> {
       this.setState({ code })
       this.getToken(code)
     }
-    console.log(navstate)
   }
   getToken = async (code: string) => {
-    console.log(code)
     try {
-      const response = await fetch('https://auth.shapeshift.io/oauth/token', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: 'Basic M2E0OWMzMDYtOGM1Mi00MmEyLWI3Y2YtYmRhNGU0YWE2ZDdkOkNXbW0xMWpLb2F5RUdQcHRmTHpreXJybXlWSEFHMXNrelJRdUtKWllCcmh5'
-        },
-        body: JSON.stringify({
-          code: code,
-          grant_type: 'authorization_code'
+      let response
+      if (global.androidFetch) {
+        response = await global.androidFetch('https://auth.shapeshift.io/oauth/token', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: 'Basic M2E0OWMzMDYtOGM1Mi00MmEyLWI3Y2YtYmRhNGU0YWE2ZDdkOkNXbW0xMWpLb2F5RUdQcHRmTHpreXJybXlWSEFHMXNrelJRdUtKWllCcmh5'
+          },
+          body: JSON.stringify({
+            code: code,
+            grant_type: 'authorization_code'
+          })
         })
-      })
+      } else {
+        response = await fetch('https://auth.shapeshift.io/oauth/token', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: 'Basic M2E0OWMzMDYtOGM1Mi00MmEyLWI3Y2YtYmRhNGU0YWE2ZDdkOkNXbW0xMWpLb2F5RUdQcHRmTHpreXJybXlWSEFHMXNrelJRdUtKWllCcmh5'
+          },
+          body: JSON.stringify({
+            code: code,
+            grant_type: 'authorization_code'
+          })
+        })
+      }
+      if (response.status !== 200) {
+        Alert.alert(s.strings.kyc_something_wrong, s.strings.kyc_something_wrong_message, [{ text: 's.strings.string_ok', onPress: this.props.onDone }])
+        return
+      }
       const parsed = JSON.parse(response._bodyText)
       this.props.setToken(parsed, this.props.pluginName)
     } catch (error) {
-      console.error(error)
+      Alert.alert(s.strings.kyc_something_wrong, s.strings.kyc_something_wrong_message, [{ text: 's.strings.string_ok', onPress: this.props.onDone }])
     }
   }
   setRef = (ref: WebView = null) => {
@@ -84,6 +103,9 @@ class SwapKYCModal extends Component<Props, State> {
                       'https://auth.shapeshift.io/oauth/authorize?response_type=code&scope=users%3Aread&client_id=3a49c306-8c52-42a2-b7cf-bda4e4aa6d7d&redirect_uri=https%3A%2F%2Fdeveloper.airbitz.co%2Fshapeshift-auth'
                   }}
                   onNavigationStateChange={this.onNavigate}
+                  userAgent={
+                    'Mozilla/5.0 (Linux; Android 6.0.1; SM-G532G Build/MMB29T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.83 Mobile Safari/537.36'
+                  }
                 />
               </View>
             </View>
