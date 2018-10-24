@@ -3,6 +3,7 @@
 
 import { clone } from 'ramda'
 
+import s from '../../../../locales/strings.js'
 import { makeSpendFailed, newPin, newSpendInfo, reset, updatePaymentProtocolTransaction, updateSpendPending, updateTransaction } from './action.js'
 import { sendConfirmation } from './reducer.js'
 import { initialState } from './selectors.js'
@@ -105,7 +106,7 @@ describe('sendConfirmation reducer', () => {
           signedTx: '',
           txid: ''
         }
-        const error = new Error('Incorrect Pin')
+        const error = new Error(s.strings.incorrect_pin)
         const forceUpdateGui = true
         const initialStateClone = clone(initialState)
         const action = updateTransaction(transaction, parsedUri, forceUpdateGui, error)
