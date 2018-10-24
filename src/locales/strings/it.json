@@ -365,5 +365,7 @@
   "exchange_will_be_sent": "%1$s %2$s saranno inviati",
   "exchange_will_be_received": "%1$s %2$s verranno ricevuti",
   "mining_fee": "Commissione di mining",
-  "confirm_with_shapeshift": "Conferma per completare il tuo scambio attraverso Shapeshift."
+  "confirm_with_shapeshift": "Conferma per completare il tuo scambio attraverso Shapeshift.",
+  "kyc_title": "",
+  "kyc_message": ""
 }
