@@ -93,6 +93,18 @@
 		E638432E20EFE33B00EA9FE9 /* onboard3.png in Resources */ = {isa = PBXBuildFile; fileRef = E638432220EFE33A00EA9FE9 /* onboard3.png */; };
 		E638433020EFE33B00EA9FE9 /* onboard4.png in Resources */ = {isa = PBXBuildFile; fileRef = E638432420EFE33A00EA9FE9 /* onboard4.png */; };
 		E63A3C47200DF09A00142D79 /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E63A3C1C200DF08400142D79 /* libRCTPushNotification.a */; };
+		E6C089A6217E7ADB003DE9B9 /* exchange_logo_bitaccess.png in Resources */ = {isa = PBXBuildFile; fileRef = E6C08958217E7AD6003DE9B9 /* exchange_logo_bitaccess.png */; };
+		E6C089A7217E7ADB003DE9B9 /* exchange_logo_changelly.png in Resources */ = {isa = PBXBuildFile; fileRef = E6C0899B217E7AD7003DE9B9 /* exchange_logo_changelly.png */; };
+		E6C089A8217E7ADB003DE9B9 /* exchange_logo_bitaccess@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E6C0899C217E7AD7003DE9B9 /* exchange_logo_bitaccess@3x.png */; };
+		E6C089A9217E7ADB003DE9B9 /* exchange_logo_changenow.png in Resources */ = {isa = PBXBuildFile; fileRef = E6C0899D217E7AD8003DE9B9 /* exchange_logo_changenow.png */; };
+		E6C089AA217E7ADB003DE9B9 /* exchange_logo_changenow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E6C0899E217E7AD9003DE9B9 /* exchange_logo_changenow@2x.png */; };
+		E6C089AB217E7ADB003DE9B9 /* exchange_logo_changenow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E6C0899F217E7AD9003DE9B9 /* exchange_logo_changenow@3x.png */; };
+		E6C089AC217E7ADB003DE9B9 /* exchange_logo_shapeshift.png in Resources */ = {isa = PBXBuildFile; fileRef = E6C089A0217E7AD9003DE9B9 /* exchange_logo_shapeshift.png */; };
+		E6C089AD217E7ADB003DE9B9 /* exchange_logo_shapeshift@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E6C089A1217E7AD9003DE9B9 /* exchange_logo_shapeshift@2x.png */; };
+		E6C089AE217E7ADB003DE9B9 /* exchange_logo_shapeshift@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E6C089A2217E7ADA003DE9B9 /* exchange_logo_shapeshift@3x.png */; };
+		E6C089AF217E7ADB003DE9B9 /* exchange_logo_bitaccess@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E6C089A3217E7ADA003DE9B9 /* exchange_logo_bitaccess@2x.png */; };
+		E6C089B0217E7ADB003DE9B9 /* exchange_logo_changelly@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E6C089A4217E7ADA003DE9B9 /* exchange_logo_changelly@3x.png */; };
+		E6C089B1217E7ADB003DE9B9 /* exchange_logo_changelly@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E6C089A5217E7ADB003DE9B9 /* exchange_logo_changelly@2x.png */; };
 		E6DBE8AE210C937200C52ABE /* onboardX2.png in Resources */ = {isa = PBXBuildFile; fileRef = E6DBE8A7210C937100C52ABE /* onboardX2.png */; };
 		E6DBE8AF210C937200C52ABE /* iPadOnboarding5Horiz.png in Resources */ = {isa = PBXBuildFile; fileRef = E6DBE8A8210C937100C52ABE /* iPadOnboarding5Horiz.png */; };
 		E6DBE8B0210C937200C52ABE /* iPadOnboarding5Vert.png in Resources */ = {isa = PBXBuildFile; fileRef = E6DBE8A9210C937100C52ABE /* iPadOnboarding5Vert.png */; };
@@ -678,6 +690,18 @@
 		E638432420EFE33A00EA9FE9 /* onboard4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboard4.png; sourceTree = "<group>"; };
 		E63A3C01200DF08400142D79 /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
 		E682D9AD200DF9A70042F9BA /* edge.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = edge.entitlements; path = edge/edge.entitlements; sourceTree = "<group>"; };
+		E6C08958217E7AD6003DE9B9 /* exchange_logo_bitaccess.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = exchange_logo_bitaccess.png; sourceTree = "<group>"; };
+		E6C0899B217E7AD7003DE9B9 /* exchange_logo_changelly.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = exchange_logo_changelly.png; sourceTree = "<group>"; };
+		E6C0899C217E7AD7003DE9B9 /* exchange_logo_bitaccess@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "exchange_logo_bitaccess@3x.png"; sourceTree = "<group>"; };
+		E6C0899D217E7AD8003DE9B9 /* exchange_logo_changenow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = exchange_logo_changenow.png; sourceTree = "<group>"; };
+		E6C0899E217E7AD9003DE9B9 /* exchange_logo_changenow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "exchange_logo_changenow@2x.png"; sourceTree = "<group>"; };
+		E6C0899F217E7AD9003DE9B9 /* exchange_logo_changenow@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "exchange_logo_changenow@3x.png"; sourceTree = "<group>"; };
+		E6C089A0217E7AD9003DE9B9 /* exchange_logo_shapeshift.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = exchange_logo_shapeshift.png; sourceTree = "<group>"; };
+		E6C089A1217E7AD9003DE9B9 /* exchange_logo_shapeshift@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "exchange_logo_shapeshift@2x.png"; sourceTree = "<group>"; };
+		E6C089A2217E7ADA003DE9B9 /* exchange_logo_shapeshift@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "exchange_logo_shapeshift@3x.png"; sourceTree = "<group>"; };
+		E6C089A3217E7ADA003DE9B9 /* exchange_logo_bitaccess@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "exchange_logo_bitaccess@2x.png"; sourceTree = "<group>"; };
+		E6C089A4217E7ADA003DE9B9 /* exchange_logo_changelly@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "exchange_logo_changelly@3x.png"; sourceTree = "<group>"; };
+		E6C089A5217E7ADB003DE9B9 /* exchange_logo_changelly@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "exchange_logo_changelly@2x.png"; sourceTree = "<group>"; };
 		E6DBE8A7210C937100C52ABE /* onboardX2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onboardX2.png; sourceTree = "<group>"; };
 		E6DBE8A8210C937100C52ABE /* iPadOnboarding5Horiz.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iPadOnboarding5Horiz.png; sourceTree = "<group>"; };
 		E6DBE8A9210C937100C52ABE /* iPadOnboarding5Vert.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iPadOnboarding5Vert.png; sourceTree = "<group>"; };
@@ -1214,6 +1238,18 @@
 		FD982BC41FABFA020057F035 /* SplashScreenResource */ = {
 			isa = PBXGroup;
 			children = (
+				E6C08958217E7AD6003DE9B9 /* exchange_logo_bitaccess.png */,
+				E6C089A3217E7ADA003DE9B9 /* exchange_logo_bitaccess@2x.png */,
+				E6C0899C217E7AD7003DE9B9 /* exchange_logo_bitaccess@3x.png */,
+				E6C0899B217E7AD7003DE9B9 /* exchange_logo_changelly.png */,
+				E6C089A5217E7ADB003DE9B9 /* exchange_logo_changelly@2x.png */,
+				E6C089A4217E7ADA003DE9B9 /* exchange_logo_changelly@3x.png */,
+				E6C0899D217E7AD8003DE9B9 /* exchange_logo_changenow.png */,
+				E6C0899E217E7AD9003DE9B9 /* exchange_logo_changenow@2x.png */,
+				E6C0899F217E7AD9003DE9B9 /* exchange_logo_changenow@3x.png */,
+				E6C089A0217E7AD9003DE9B9 /* exchange_logo_shapeshift.png */,
+				E6C089A1217E7AD9003DE9B9 /* exchange_logo_shapeshift@2x.png */,
+				E6C089A2217E7ADA003DE9B9 /* exchange_logo_shapeshift@3x.png */,
 				E6DBE8A8210C937100C52ABE /* iPadOnboarding5Horiz.png */,
 				E6DBE8A9210C937100C52ABE /* iPadOnboarding5Vert.png */,
 				E6DBE8AA210C937200C52ABE /* onboardX1.png */,
@@ -1919,8 +1955,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6C089AF217E7ADB003DE9B9 /* exchange_logo_bitaccess@2x.png in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				E6C089AA217E7ADB003DE9B9 /* exchange_logo_changenow@2x.png in Resources */,
 				E616C52D20F51B1A00F9252F /* iPadOnboarding3Vert.png in Resources */,
+				E6C089AC217E7ADB003DE9B9 /* exchange_logo_shapeshift.png in Resources */,
 				E62A1697210BBD3D002D2665 /* onboard5.png in Resources */,
 				E62A1695210BBBA7002D2665 /* onboard1.png in Resources */,
 				52C52276F2F94D9BB9320EBA /* MaterialCommunityIcons.ttf in Resources */,
@@ -1938,12 +1977,15 @@
 				DA89DDF820F2CFD70012B4BD /* GoogleService-Info.plist in Resources */,
 				C87C995B7DD04A7184195CAA /* SourceSansPro-Light.ttf in Resources */,
 				182BD69D20D94D4BAEB40D43 /* SourceSansPro-LightItalic.ttf in Resources */,
+				E6C089AB217E7ADB003DE9B9 /* exchange_logo_changenow@3x.png in Resources */,
 				2425AB9EBD224B2CB72EB5A9 /* SourceSansPro-Semibold.ttf in Resources */,
 				E616C52C20F51B1A00F9252F /* iPadOnboarding2Vert.png in Resources */,
 				F17017B55F6C4821845FE684 /* SourceSansPro-SemiboldItalic.ttf in Resources */,
+				E6C089A9217E7ADB003DE9B9 /* exchange_logo_changenow.png in Resources */,
 				E638432E20EFE33B00EA9FE9 /* onboard3.png in Resources */,
 				85B89D30F0DB45F7B93DB2C1 /* SourceSansPro-Black.ttf in Resources */,
 				E6DBE8B3210C937200C52ABE /* onboardX5.png in Resources */,
+				E6C089AE217E7ADB003DE9B9 /* exchange_logo_shapeshift@3x.png in Resources */,
 				93D657C1D1194E61B95E8E49 /* Entypo.ttf in Resources */,
 				AF0E365272B24E1C89BB7452 /* EvilIcons.ttf in Resources */,
 				E616C52820F51B1A00F9252F /* iPadOnboarding4Vert.png in Resources */,
@@ -1954,8 +1996,11 @@
 				CFC169ACDFF24F3B8D8A38D6 /* Ionicons.ttf in Resources */,
 				E616C51420F50FDB00F9252F /* iPadOnboarding3Horiz.png in Resources */,
 				8E503D0B1DA74158AA730B37 /* MaterialIcons.ttf in Resources */,
+				E6C089B0217E7ADB003DE9B9 /* exchange_logo_changelly@3x.png in Resources */,
 				DAF7C41220C505CC005B7898 /* plugins in Resources */,
+				E6C089A8217E7ADB003DE9B9 /* exchange_logo_bitaccess@3x.png in Resources */,
 				79D627E0AF47498FB03B5D40 /* Octicons.ttf in Resources */,
+				E6C089A7217E7ADB003DE9B9 /* exchange_logo_changelly.png in Resources */,
 				E616C51120F50FDB00F9252F /* iPadOnboarding1Horiz.png in Resources */,
 				B524052E4B614E5DB1524555 /* Roboto_medium.ttf in Resources */,
 				98AF3B3C1F99F7D20083E087 /* audio_received.mp3 in Resources */,
@@ -1966,6 +2011,7 @@
 				E6DBE8B2210C937200C52ABE /* onboardX3.png in Resources */,
 				9054AE0B96DA43BE8F84812E /* SimpleLineIcons.ttf in Resources */,
 				E616C52320F51B1A00F9252F /* iPadOnboarding1Vert.png in Resources */,
+				E6C089AD217E7ADB003DE9B9 /* exchange_logo_shapeshift@2x.png in Resources */,
 				FD982BCC1FACDEF00057F035 /* LaunchScreen.xib in Resources */,
 				1DADC5E648C2487D9786E11A /* Zocial.ttf in Resources */,
 				E616C50E20F50FDB00F9252F /* iPadOnboarding2Horiz.png in Resources */,
@@ -1974,8 +2020,10 @@
 				E638432C20EFE33B00EA9FE9 /* onboard2.png in Resources */,
 				98AF3B3B1F99F7D20083E087 /* audio_sent.mp3 in Resources */,
 				DA4A13F911E04BB99D3B3B8E /* FontAwesome.ttf in Resources */,
+				E6C089A6217E7ADB003DE9B9 /* exchange_logo_bitaccess.png in Resources */,
 				4739EE2C3B5B44ED8FFE1DBC /* Foundation.ttf in Resources */,
 				E638433020EFE33B00EA9FE9 /* onboard4.png in Resources */,
+				E6C089B1217E7ADB003DE9B9 /* exchange_logo_changelly@2x.png in Resources */,
 				C0B8DCFF972C447AA62321BF /* Ionicons.ttf in Resources */,
 				349FD63F8F054B2AAA775162 /* MaterialIcons.ttf in Resources */,
 				409217C1E0564E669BF105DF /* Octicons.ttf in Resources */,

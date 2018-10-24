@@ -5,7 +5,6 @@ import React, { Component } from 'react'
 import { ActivityIndicator, Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import shapeShiftLogo from '../../../../assets/images/shapeShiftLogo.png'
 import { CircleTimer } from '../../../../components/CircleTimer'
 import s from '../../../../locales/strings.js'
 import { ExchangeQuoteComponent } from '../../../../modules/UI/components/ExchangeQuote/ExchangeQuoteComponent.js'
@@ -74,7 +73,22 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
     }
     return null
   }
+  renderImage = (arg: string) => {
+    switch (arg) {
+      case 'shapeshift':
+        return { uri: 'exchange_logo_shapeshift' }
 
+      case 'bitaccess':
+        return { uri: 'exchange_logo_bitaccess' }
+
+      case 'changenow':
+        return { uri: 'exchange_logo_changenow' }
+
+      case 'changelly':
+      default:
+        return { uri: 'exchange_logo_changelly' }
+    }
+  }
   render () {
     if (!this.props.fromWallet) {
       return null
@@ -85,7 +99,7 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
         <Gradient style={styles.scene}>
           <Gradient style={styles.gradient} />
           <View style={styles.topRow}>
-            <Image source={shapeShiftLogo} style={styles.logoImage} />
+            <Image source={this.renderImage(this.props.quote.quote.pluginName)} style={styles.logoImage} />
           </View>
           <View style={styles.centerRow}>
             <ExchangeQuoteComponent

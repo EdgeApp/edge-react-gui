@@ -29,8 +29,10 @@ Object {
   "insufficientError": false,
   "quote": null,
   "quoteExpireDate": null,
+  "requireKYCPlugins": Array [],
   "shiftPendingTransaction": false,
   "shiftTransactionError": null,
+  "showKYCAlert": false,
   "toCurrencyCode": null,
   "toCurrencyIcon": null,
   "toCurrencyIconDark": null,
@@ -49,6 +51,7 @@ Object {
       "name": "",
     },
   },
+  "totalSwaps": 0,
   "walletListModalVisible": false,
 }
 `;

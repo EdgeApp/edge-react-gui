@@ -30,10 +30,13 @@ export type CryptoExchangeState = {
   genericShapeShiftError: Error | null,
   changeWallet: 'none',
   fee: any,
-  availableShapeShiftTokens: EdgeSwapCurrencies,
+  availableShapeShiftTokens: EdgeSwapCurrencies | Object,
   shiftPendingTransaction: boolean,
   quoteExpireDate: Date | null,
-  quote: EdgeExchangeQuote | null
+  quote: EdgeExchangeQuote | null,
+  totalSwaps: number,
+  showKYCAlert: boolean,
+  requireKYCPlugins: Array<string>
 }
 
 const dummyCurrencyInfo: GuiCurrencyInfo = {
@@ -48,7 +51,10 @@ const dummyCurrencyInfo: GuiCurrencyInfo = {
     multiplier: '1'
   }
 }
-
+type AvailableSwapDetails = {
+  response: EdgeSwapCurrencies | Object,
+  totalSwaps: number
+}
 const initialState = {
   fromWallet: null,
   fromCurrencyCode: null,
@@ -77,7 +83,10 @@ const initialState = {
   availableShapeShiftTokens: {},
   shiftPendingTransaction: false,
   quoteExpireDate: null,
-  quote: null
+  quote: null,
+  totalSwaps: 0,
+  showKYCAlert: false,
+  requireKYCPlugins: []
 }
 
 function cryptoExchangeInner (state = initialState, action: Action) {
@@ -86,17 +95,22 @@ function cryptoExchangeInner (state = initialState, action: Action) {
     case 'SWAP_FROM_TO_CRYPTO_WALLETS': {
       return deepCopyState(state)
     }
+    case 'ON_KYC_TOKEN_SET': {
+      return { ...state, showKYCAlert: false }
+    }
 
     case 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE': {
       if (!action.data) throw new Error('Invalid action')
+      const hack: any = action.data
       return {
         ...state,
+        showKYCAlert: action.data.showKYCAlert,
+        requireKYCPlugins: action.data.requireKYCPlugins,
         fromWallet: action.data.wallet,
         fromWalletPrimaryInfo: action.data.primaryInfo,
         fromCurrencyCode: action.data.currencyCode,
         fromCurrencyIcon: getLogo(action.data.wallet, action.data.currencyCode),
-        // $FlowFixMe
-        fromCurrencyIconDark: getLogoDark(action.data.wallet, action.data.currencyCode),
+        fromCurrencyIconDark: getLogoDark(hack.wallet, hack.currencyCode),
         changeWallet: Constants.NONE,
         fromNativeAmount: '0',
         toNativeAmount: '0',
@@ -112,14 +126,16 @@ function cryptoExchangeInner (state = initialState, action: Action) {
 
     case 'SELECT_TO_WALLET_CRYPTO_EXCHANGE': {
       if (!action.data) throw new Error('Invalid action')
+      const hack: any = action.data
       return {
         ...state,
+        showKYCAlert: action.data.showKYCAlert,
+        requireKYCPlugins: action.data.requireKYCPlugins,
         toWallet: action.data.wallet,
         toCurrencyCode: action.data.currencyCode,
         toWalletPrimaryInfo: action.data.primaryInfo,
         toCurrencyIcon: getLogo(action.data.wallet, action.data.currencyCode),
-        // $FlowFixMe
-        toCurrencyIconDark: getLogoDark(action.data.wallet, action.data.currencyCode),
+        toCurrencyIconDark: getLogoDark(hack.wallet, hack.currencyCode),
         changeWallet: Constants.NONE,
         fromNativeAmount: '0',
         toNativeAmount: '0',
@@ -216,9 +232,11 @@ function cryptoExchangeInner (state = initialState, action: Action) {
     }
 
     case 'ON_AVAILABLE_SHAPE_SHIFT_TOKENS': {
+      const data: AvailableSwapDetails = action.data ? action.data : { response: {}, totalSwaps: 0 }
       return {
         ...state,
-        availableShapeShiftTokens: action.data
+        availableShapeShiftTokens: data.response,
+        totalSwaps: data.totalSwaps
       }
     }
 
@@ -296,7 +314,6 @@ function deepCopyState (state) {
 
   return deepCopy
 }
-
 // Nuke the state on logout:
 export const cryptoExchange: Reducer<CryptoExchangeState, Action> = (state, action: Action) => {
   if (action.type === 'LOGOUT' || action.type === 'DEEP_LINK_RECEIVED') {
