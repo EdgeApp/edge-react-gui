@@ -12,7 +12,6 @@ export const AppStates = {
 }
 export const Permissions = {
   CAMERA: 'camera',
-  BLUETOOTH: 'bluetooth',
   CONTACTS: 'contacts',
   PHOTOS: 'photo'
 }
@@ -58,6 +57,7 @@ export class AppStateManager extends React.Component<Props> {
         }
 
         this.props.updatePermissions(permissions)
+        console.log('Permissions updated')
       })
       .catch(error => {
         console.log(error)

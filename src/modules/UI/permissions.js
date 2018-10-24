@@ -2,11 +2,10 @@
 
 import RNPermissions from 'react-native-permissions'
 
-export type Permission = 'bluetooth' | 'camera' | 'contacts' | 'photos'
+export type Permission = 'camera' | 'contacts' | 'photo'
 export type PermissionStatus = 'authorized' | 'denied' | 'restricted' | 'undetermined'
 
 export const CAMERA = 'camera'
-export const BLUETOOTH = 'bluetooth'
 export const CONTACTS = 'contacts'
 export const PHOTOS = 'photo'
 

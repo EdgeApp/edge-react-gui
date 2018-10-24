@@ -51,12 +51,10 @@ test('updatePermissions => RESTRICTED', () => {
 test('updatePermissions => MULTI', () => {
   const expected = {
     ...initialState,
-    bluetooth: AUTHORIZED,
     camera: RESTRICTED,
     contacts: AUTHORIZED
   }
   const action = updatePermissions({
-    bluetooth: AUTHORIZED,
     camera: RESTRICTED,
     contacts: AUTHORIZED
   })

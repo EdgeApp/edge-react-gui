@@ -14,5 +14,5 @@ export const requestPermission = (permission: Permission) => (dispatch: Dispatch
   if (state.permissions[permission] === 'authorized') {
     return
   }
-  return request(permission)
+  request(permission)
 }

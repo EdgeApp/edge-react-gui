@@ -2,10 +2,6 @@
 
 import type { Permission, State } from '../../modules/ReduxTypes'
 
-export const getBluetoothPermission = (state: State) => {
-  return state.permissions.bluetooth
-}
-
 export const getCameraPermission = (state: State) => {
   return state.permissions.camera
 }

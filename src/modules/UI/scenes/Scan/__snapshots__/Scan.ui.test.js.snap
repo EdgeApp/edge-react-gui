@@ -22,7 +22,7 @@ exports[`Scan component should render with AUTHORIZED props 1`] = `
         Object {
           "flex": 1,
           "flexDirection": "row",
-          "height": 1182.3971830985915,
+          "height": 1191.2978873239438,
           "position": "relative",
         }
       }
@@ -63,7 +63,7 @@ exports[`Scan component should render with AUTHORIZED props 1`] = `
                 "backgroundColor": "#4A5157",
                 "justifyContent": "center",
                 "opacity": 0.95,
-                "padding": 10.776056338028168,
+                "padding": 9.832042253521125,
               },
             ]
           }
@@ -73,7 +73,7 @@ exports[`Scan component should render with AUTHORIZED props 1`] = `
               Array [
                 Object {
                   "color": "#FFFFFF",
-                  "fontSize": 21.552112676056336,
+                  "fontSize": 19.66408450704225,
                   "textAlign": "center",
                 },
               ]
@@ -96,11 +96,11 @@ exports[`Scan component should render with AUTHORIZED props 1`] = `
             Array [
               Object {
                 "flexDirection": "row",
-                "height": 110.83943661971831,
-                "paddingBottom": 16.93380281690141,
-                "paddingLeft": 12.315492957746478,
-                "paddingRight": 12.315492957746478,
-                "paddingTop": 16.93380281690141,
+                "height": 101.12957746478872,
+                "paddingBottom": 15.450352112676056,
+                "paddingLeft": 11.236619718309859,
+                "paddingRight": 11.236619718309859,
+                "paddingTop": 15.450352112676056,
               },
             ]
           }
@@ -113,12 +113,12 @@ exports[`Scan component should render with AUTHORIZED props 1`] = `
               Object {
                 "alignItems": "center",
                 "backgroundColor": "#FFFFFF10",
-                "borderRadius": 4.618309859154929,
+                "borderRadius": 4.213732394366197,
                 "flex": 1,
-                "height": 76.97183098591549,
+                "height": 70.22887323943661,
                 "justifyContent": "center",
-                "marginLeft": 1.5394366197183098,
-                "marginRight": 1.5394366197183098,
+                "marginLeft": 1.4045774647887324,
+                "marginRight": 1.4045774647887324,
               }
             }
             underlayColor="#0E4B75"
@@ -135,13 +135,13 @@ exports[`Scan component should render with AUTHORIZED props 1`] = `
               <Icon
                 allowFontScaling={false}
                 name="address-book-o"
-                size={27.70985915492958}
+                size={25.28239436619718}
                 style={
                   Array [
                     Object {
                       "color": "#FFFFFF",
-                      "fontSize": 24.630985915492957,
-                      "height": 24.630985915492957,
+                      "fontSize": 22.473239436619718,
+                      "height": 22.473239436619718,
                       "transform": Array [
                         Object {
                           "scaleX": -1,
@@ -158,7 +158,7 @@ exports[`Scan component should render with AUTHORIZED props 1`] = `
                     Object {
                       "backgroundColor": "transparent",
                       "color": "#FFFFFF",
-                      "fontSize": 21.552112676056336,
+                      "fontSize": 19.66408450704225,
                       "opacity": 1,
                     },
                   ]
@@ -176,12 +176,12 @@ exports[`Scan component should render with AUTHORIZED props 1`] = `
               Object {
                 "alignItems": "center",
                 "backgroundColor": "#FFFFFF10",
-                "borderRadius": 4.618309859154929,
+                "borderRadius": 4.213732394366197,
                 "flex": 1,
-                "height": 76.97183098591549,
+                "height": 70.22887323943661,
                 "justifyContent": "center",
-                "marginLeft": 1.5394366197183098,
-                "marginRight": 1.5394366197183098,
+                "marginLeft": 1.4045774647887324,
+                "marginRight": 1.4045774647887324,
               }
             }
             underlayColor="#0E4B75"
@@ -198,13 +198,13 @@ exports[`Scan component should render with AUTHORIZED props 1`] = `
               <Icon
                 allowFontScaling={false}
                 name="ios-flash-outline"
-                size={36.946478873239435}
+                size={33.709859154929575}
                 style={
                   Array [
                     Object {
                       "color": "#FFFFFF",
-                      "fontSize": 33.86760563380282,
-                      "height": 27.70985915492958,
+                      "fontSize": 30.90070422535211,
+                      "height": 25.28239436619718,
                     },
                   ]
                 }
@@ -216,7 +216,7 @@ exports[`Scan component should render with AUTHORIZED props 1`] = `
                     Object {
                       "backgroundColor": "transparent",
                       "color": "#FFFFFF",
-                      "fontSize": 21.552112676056336,
+                      "fontSize": 19.66408450704225,
                       "opacity": 1,
                     },
                   ]
@@ -261,7 +261,7 @@ exports[`Scan component should render with DENIED props 1`] = `
         Object {
           "flex": 1,
           "flexDirection": "row",
-          "height": 1182.3971830985915,
+          "height": 1191.2978873239438,
           "position": "relative",
         }
       }
@@ -292,7 +292,7 @@ exports[`Scan component should render with DENIED props 1`] = `
                 "backgroundColor": "#4A5157",
                 "justifyContent": "center",
                 "opacity": 0.95,
-                "padding": 10.776056338028168,
+                "padding": 9.832042253521125,
               },
             ]
           }
@@ -302,7 +302,7 @@ exports[`Scan component should render with DENIED props 1`] = `
               Array [
                 Object {
                   "color": "#FFFFFF",
-                  "fontSize": 21.552112676056336,
+                  "fontSize": 19.66408450704225,
                   "textAlign": "center",
                 },
               ]
@@ -340,7 +340,7 @@ exports[`Scan component should render with DENIED props 1`] = `
               ellipsizeMode="tail"
               style={
                 Object {
-                  "fontSize": 21.552112676056336,
+                  "fontSize": 19.66408450704225,
                   "padding": 20,
                   "textAlign": "center",
                 }
@@ -381,11 +381,11 @@ exports[`Scan component should render with DENIED props 1`] = `
             Array [
               Object {
                 "flexDirection": "row",
-                "height": 110.83943661971831,
-                "paddingBottom": 16.93380281690141,
-                "paddingLeft": 12.315492957746478,
-                "paddingRight": 12.315492957746478,
-                "paddingTop": 16.93380281690141,
+                "height": 101.12957746478872,
+                "paddingBottom": 15.450352112676056,
+                "paddingLeft": 11.236619718309859,
+                "paddingRight": 11.236619718309859,
+                "paddingTop": 15.450352112676056,
               },
             ]
           }
@@ -398,12 +398,12 @@ exports[`Scan component should render with DENIED props 1`] = `
               Object {
                 "alignItems": "center",
                 "backgroundColor": "#FFFFFF10",
-                "borderRadius": 4.618309859154929,
+                "borderRadius": 4.213732394366197,
                 "flex": 1,
-                "height": 76.97183098591549,
+                "height": 70.22887323943661,
                 "justifyContent": "center",
-                "marginLeft": 1.5394366197183098,
-                "marginRight": 1.5394366197183098,
+                "marginLeft": 1.4045774647887324,
+                "marginRight": 1.4045774647887324,
               }
             }
             underlayColor="#0E4B75"
@@ -420,13 +420,13 @@ exports[`Scan component should render with DENIED props 1`] = `
               <Icon
                 allowFontScaling={false}
                 name="address-book-o"
-                size={27.70985915492958}
+                size={25.28239436619718}
                 style={
                   Array [
                     Object {
                       "color": "#FFFFFF",
-                      "fontSize": 24.630985915492957,
-                      "height": 24.630985915492957,
+                      "fontSize": 22.473239436619718,
+                      "height": 22.473239436619718,
                       "transform": Array [
                         Object {
                           "scaleX": -1,
@@ -443,7 +443,7 @@ exports[`Scan component should render with DENIED props 1`] = `
                     Object {
                       "backgroundColor": "transparent",
                       "color": "#FFFFFF",
-                      "fontSize": 21.552112676056336,
+                      "fontSize": 19.66408450704225,
                       "opacity": 1,
                     },
                   ]
@@ -461,12 +461,12 @@ exports[`Scan component should render with DENIED props 1`] = `
               Object {
                 "alignItems": "center",
                 "backgroundColor": "#FFFFFF10",
-                "borderRadius": 4.618309859154929,
+                "borderRadius": 4.213732394366197,
                 "flex": 1,
-                "height": 76.97183098591549,
+                "height": 70.22887323943661,
                 "justifyContent": "center",
-                "marginLeft": 1.5394366197183098,
-                "marginRight": 1.5394366197183098,
+                "marginLeft": 1.4045774647887324,
+                "marginRight": 1.4045774647887324,
               }
             }
             underlayColor="#0E4B75"
@@ -483,13 +483,13 @@ exports[`Scan component should render with DENIED props 1`] = `
               <Icon
                 allowFontScaling={false}
                 name="ios-flash-outline"
-                size={36.946478873239435}
+                size={33.709859154929575}
                 style={
                   Array [
                     Object {
                       "color": "#FFFFFF",
-                      "fontSize": 33.86760563380282,
-                      "height": 27.70985915492958,
+                      "fontSize": 30.90070422535211,
+                      "height": 25.28239436619718,
                     },
                   ]
                 }
@@ -501,7 +501,7 @@ exports[`Scan component should render with DENIED props 1`] = `
                     Object {
                       "backgroundColor": "transparent",
                       "color": "#FFFFFF",
-                      "fontSize": 21.552112676056336,
+                      "fontSize": 19.66408450704225,
                       "opacity": 1,
                     },
                   ]

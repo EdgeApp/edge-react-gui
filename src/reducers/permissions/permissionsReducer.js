@@ -6,7 +6,6 @@ import type { Permission, PermissionStatus } from '../../modules/UI/permissions'
 export type PermissionsState = { [Permission]: PermissionStatus }
 
 export const initialState = {
-  bluetooth: 'undetermined',
   camera: 'undetermined',
   contacts: 'undetermined',
   photo: 'undetermined'
