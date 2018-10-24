@@ -126,7 +126,7 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
             />
           </View>
           <View style={styles.bottomRow}>
-            <FormattedText style={styles.confirmText}>{s.strings.confirm_with_shapeshift}</FormattedText>
+            <FormattedText style={styles.confirmText}>{s.strings.confirm_to_complete_exchange}</FormattedText>
             {this.renderSlider()}
             {this.renderTimer()}
           </View>
