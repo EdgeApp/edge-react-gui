@@ -199,7 +199,7 @@
   "string_master_private_key": "Chiave privata principale",
   "string_split_bitcoin_cash": "Dividi Bitcoin Cash",
   "string_add_edit_tokens": "Aggiungi / modifica token",
-  "exchange_notes_metadata": "Scambia %1$s %2$s da %3$s a %4$s %5$s in %6$s. \nOrdine: %7$s. \nPer assistenza contatta\nsupport@shapeshift.io.",
+  "exchange_notes_metadata_generic": "",
   "title_crypto_settings": "%s Impostazioni",
   "title_add_tokens": "Aggiungi token",
   "title_create_wallet_select_crypto": "Seleziona il tipo",
@@ -365,7 +365,7 @@
   "exchange_will_be_sent": "%1$s %2$s saranno inviati",
   "exchange_will_be_received": "%1$s %2$s verranno ricevuti",
   "mining_fee": "Commissione di mining",
-  "confirm_with_shapeshift": "Conferma per completare il tuo scambio attraverso Shapeshift.",
+  "confirm_to_complete_exchange": "",
   "kyc_title": "",
   "kyc_message": ""
 }
