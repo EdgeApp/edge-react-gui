@@ -199,7 +199,7 @@
   "string_master_private_key": "",
   "string_split_bitcoin_cash": "",
   "string_add_edit_tokens": "",
-  "exchange_notes_metadata": "",
+  "exchange_notes_metadata_generic": "",
   "title_crypto_settings": "",
   "title_add_tokens": "",
   "title_create_wallet_select_crypto": "",
@@ -365,7 +365,7 @@
   "exchange_will_be_sent": "",
   "exchange_will_be_received": "",
   "mining_fee": "",
-  "confirm_with_shapeshift": "",
+  "confirm_to_complete_exchange": "",
   "kyc_title": "",
   "kyc_message": ""
 }
