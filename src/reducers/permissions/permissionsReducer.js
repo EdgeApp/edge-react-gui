@@ -9,7 +9,7 @@ export const initialState = {
   bluetooth: 'undetermined',
   camera: 'undetermined',
   contacts: 'undetermined',
-  photos: 'undetermined'
+  photo: 'undetermined'
 }
 
 export const permissions = (state: PermissionsState = initialState, action: Action) => {

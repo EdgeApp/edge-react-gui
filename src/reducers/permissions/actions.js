@@ -14,7 +14,5 @@ export const requestPermission = (permission: Permission) => (dispatch: Dispatch
   if (state.permissions[permission] === 'authorized') {
     return
   }
-  return request(permission).then(status => {
-    dispatch(updatePermissions({ [permission]: status }))
-  })
+  return request(permission)
 }

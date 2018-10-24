@@ -15,7 +15,7 @@ export const getContactsPermission = (state: State) => {
 }
 
 export const getPhotosPermission = (state: State) => {
-  return state.permissions.photos
+  return state.permissions.photo
 }
 
 export const getPermissionStatus = (state: State, permission: Permission) => {

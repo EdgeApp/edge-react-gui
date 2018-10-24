@@ -8,7 +8,7 @@ export type PermissionStatus = 'authorized' | 'denied' | 'restricted' | 'undeter
 export const CAMERA = 'camera'
 export const BLUETOOTH = 'bluetooth'
 export const CONTACTS = 'contacts'
-export const PHOTOS = 'photos'
+export const PHOTOS = 'photo'
 
 export const AUTHORIZED = 'authorized'
 export const DENIED = 'denied'

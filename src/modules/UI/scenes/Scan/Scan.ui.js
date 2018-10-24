@@ -43,14 +43,14 @@ type Props = {
 
 const HEADER_TEXT = s.strings.send_scan_header_text
 
-const DENIED_PERMISSION_TEXT = 'To scan a QR Code, please enable Camera access in Settings' // blank string because way off-centered (not sure reason why)
-const OPEN_SETTINGS_TEXT = 'Open Settings'
+const DENIED_PERMISSION_TEXT = s.strings.scan_camera_permission_denied // blank string because way off-centered (not sure reason why)
+const OPEN_SETTINGS_TEXT = s.strings.open_settings
 // const TRANSFER_TEXT = s.strings.fragment_send_transfer
 const ADDRESS_TEXT = s.strings.fragment_send_address
 // const PHOTOS_TEXT   = s.strings.fragment_send_photos
 const FLASH_TEXT = s.strings.fragment_send_flash
 
-export default class Scan extends Component<Props> {
+export class Scan extends Component<Props> {
   constructor (props: Props) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
@@ -166,3 +166,5 @@ export default class Scan extends Component<Props> {
     }
   }
 }
+
+export default Scan

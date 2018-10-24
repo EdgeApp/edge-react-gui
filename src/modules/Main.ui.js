@@ -58,6 +58,7 @@ import { LoadingScene } from '../modules/UI/components/Loading/LoadingScene.ui.j
 import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
 import { OnBoardingComponent } from '../modules/UI/scenes/OnBoarding/OnBoardingComponent.js'
 import { makeCoreContext } from '../util/makeContext.js'
+import AppStateManager from './AppStateManager.js'
 import * as CONTEXT_API from './Core/Context/api'
 import { ModalManager } from './ModalManager.js'
 import { styles } from './style.js'
@@ -665,6 +666,7 @@ export default class Main extends Component<Props, State> {
         <PasswordReminderModal />
         <PasswordRecoveryReminderModalConnector />
         <ModalManager />
+        <AppStateManager />
       </MenuProvider>
     )
   }
