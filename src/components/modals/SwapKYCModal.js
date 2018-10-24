@@ -39,9 +39,9 @@ class SwapKYCModal extends Component<Props, State> {
   }
   getToken = async (code: string) => {
     try {
-      let response
+      let parsed: string
       if (global.androidFetch) {
-        response = await global.androidFetch('https://auth.shapeshift.io/oauth/token', {
+        const response = await global.androidFetch('https://auth.shapeshift.io/oauth/token', {
           method: 'POST',
           headers: {
             Accept: 'application/json',
@@ -53,8 +53,9 @@ class SwapKYCModal extends Component<Props, State> {
             grant_type: 'authorization_code'
           })
         })
+        parsed = JSON.parse(response)
       } else {
-        response = await fetch('https://auth.shapeshift.io/oauth/token', {
+        const response = await fetch('https://auth.shapeshift.io/oauth/token', {
           method: 'POST',
           headers: {
             Accept: 'application/json',
@@ -66,12 +67,12 @@ class SwapKYCModal extends Component<Props, State> {
             grant_type: 'authorization_code'
           })
         })
+        if (response.status !== 200) {
+          Alert.alert(s.strings.kyc_something_wrong, s.strings.kyc_something_wrong_message, [{ text: 's.strings.string_ok', onPress: this.props.onDone }])
+          return
+        }
+        parsed = await response.json()
       }
-      if (response.status !== 200) {
-        Alert.alert(s.strings.kyc_something_wrong, s.strings.kyc_something_wrong_message, [{ text: 's.strings.string_ok', onPress: this.props.onDone }])
-        return
-      }
-      const parsed = JSON.parse(response._bodyText)
       this.props.setToken(parsed, this.props.pluginName)
     } catch (error) {
       Alert.alert(s.strings.kyc_something_wrong, s.strings.kyc_something_wrong_message, [{ text: 's.strings.string_ok', onPress: this.props.onDone }])
