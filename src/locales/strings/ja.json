@@ -365,5 +365,7 @@
   "exchange_will_be_sent": "",
   "exchange_will_be_received": "",
   "mining_fee": "",
-  "confirm_with_shapeshift": ""
+  "confirm_with_shapeshift": "",
+  "kyc_title": "",
+  "kyc_message": ""
 }
