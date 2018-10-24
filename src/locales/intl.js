@@ -65,7 +65,7 @@ const intlHandler = {
         intPart += locale.groupingSeparator + integers.substr(i, NUMBER_GROUP_SIZE)
       }
     } else {
-      intPart = integers.substr(0, len)
+      intPart = integers
     }
     stringify = decimals ? intPart + locale.decimalSeparator + decimals : intPart
     return stringify
