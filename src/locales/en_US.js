@@ -206,7 +206,7 @@ const strings = {
   string_master_private_key: 'Master Private Key',
   string_split_bitcoin_cash: 'Split Bitcoin Cash',
   string_add_edit_tokens: 'Add / Edit Tokens',
-  exchange_notes_metadata: 'Exchanged %1$s %2$s from %3$s to %4$s %5$s in %6$s. \nOrder: %7$s. \nFor assistance, please contact support@shapeshift.io.',
+  exchange_notes_metadata_generic: 'Exchanged %1$s %2$s from %3$s to %4$s %5$s in %6$s. \nOrder: %7$s. \nFor assistance, please contact %8$s.',
   title_crypto_settings: '%s Settings',
   title_add_tokens: 'Add Tokens',
   title_create_wallet_select_crypto: 'Select Type',
@@ -392,9 +392,9 @@ const strings = {
   exchange_will_be_sent: '%1$s %2$s will be sent',
   exchange_will_be_received: '%1$s %2$s will be received',
   mining_fee: 'Mining Fee',
-  confirm_with_shapeshift: 'Confirm to complete your exchange through Shapeshift.',
+  confirm_to_complete_exchange: 'Confirm to complete your exchange.',
   kyc_title: 'Customer Information Needed',
-  kyc_message: 'The available exchange for this transaction requires you to login to your account'
+  kyc_message: 'The available exchange for this transaction requires a ShapeShift account. Please create an account to continue.'
 }
 
 // export default strings

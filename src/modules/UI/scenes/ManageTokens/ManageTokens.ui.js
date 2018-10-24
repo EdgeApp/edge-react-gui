@@ -111,10 +111,10 @@ export default class ManageTokens extends Component<ManageTokensProps, State> {
               </View>
               <View style={[styles.buttonsArea]}>
                 <SecondaryButton style={[styles.addButton]} onPress={this.goToAddTokenScene}>
-                  <SecondaryButton.Text>{s.strings.addtoken_add}</SecondaryButton.Text>
+                  <SecondaryButton.Text style={[styles.buttonText]}>{s.strings.addtoken_add}</SecondaryButton.Text>
                 </SecondaryButton>
                 <PrimaryButton style={[styles.saveButton]} onPress={this.saveEnabledTokenList}>
-                  {manageTokensPending ? <ActivityIndicator /> : <PrimaryButton.Text>{s.strings.string_save}</PrimaryButton.Text>}
+                  {manageTokensPending ? <ActivityIndicator /> : <PrimaryButton.Text style={[styles.buttonText]}>{s.strings.string_save}</PrimaryButton.Text>}
                 </PrimaryButton>
               </View>
             </View>
