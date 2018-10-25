@@ -87,7 +87,7 @@ export class PermissionsManager extends React.Component<Props> {
 
 export const requestPermission = (permission: Permission): Promise<PermissionStatus> => {
   return RNPermissions.check(permission).then(status => {
-    if (status === PermissionStatusStrings.AUTHORIZED) {
+    if (status === PermissionStatusStrings.UNDETERMINED) {
       return RNPermissions.request(permission)
     }
 
