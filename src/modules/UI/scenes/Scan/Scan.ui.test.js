@@ -4,14 +4,14 @@
 import React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
-import { AUTHORIZED, DENIED } from '../../permissions'
+import { PermissionStatusStrings } from '../../../PermissionsManager.js'
 import { Scan } from './Scan.ui.js'
 
 describe('Scan component', () => {
   it('should render with DENIED props', () => {
     const renderer = new ShallowRenderer()
     const props = {
-      cameraPermission: DENIED,
+      cameraPermission: PermissionStatusStrings.DENIED,
       torchEnabled: false,
       scanEnabled: false,
       showToWalletModal: false,
@@ -32,7 +32,7 @@ describe('Scan component', () => {
   it('should render with AUTHORIZED props', () => {
     const renderer = new ShallowRenderer()
     const props = {
-      cameraPermission: AUTHORIZED,
+      cameraPermission: PermissionStatusStrings.AUTHORIZED,
       torchEnabled: false,
       scanEnabled: false,
       showToWalletModal: false,

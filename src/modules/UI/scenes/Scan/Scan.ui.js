@@ -14,13 +14,13 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import * as Constants from '../../../../constants/indexConstants'
 import { scale } from '../../../../lib/scaling.js'
 import s from '../../../../locales/strings.js'
+import { PermissionStatusStrings } from '../../../PermissionsManager.js'
 import type { PermissionStatus } from '../../../ReduxTypes'
 import WalletListModal from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import ABAlert from '../../components/ABAlert/indexABAlert'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView'
-import { AUTHORIZED, DENIED } from '../../permissions'
 import AddressModal from './components/AddressModalConnector'
 import LegacyAddressModal from './LegacyAddressModal/LegacyAddressModalConnector.js'
 import PrivateKeyModal from './PrivateKeyModal/PrivateKeyModalConnector.js'
@@ -47,7 +47,6 @@ const DENIED_PERMISSION_TEXT = s.strings.scan_camera_permission_denied // blank 
 const OPEN_SETTINGS_TEXT = s.strings.open_settings
 // const TRANSFER_TEXT = s.strings.fragment_send_transfer
 const ADDRESS_TEXT = s.strings.fragment_send_address
-// const PHOTOS_TEXT   = s.strings.fragment_send_photos
 const FLASH_TEXT = s.strings.fragment_send_flash
 
 export class Scan extends Component<Props> {
@@ -76,7 +75,7 @@ export class Scan extends Component<Props> {
               </View>
 
               <View style={[styles.overlayBlank]}>
-                {this.props.cameraPermission === DENIED && (
+                {this.props.cameraPermission === PermissionStatusStrings.DENIED && (
                   <View style={[styles.preview, { justifyContent: 'center', alignItems: 'center' }]}>
                     <Text style={styles.cameraPermissionDeniedText}>{DENIED_PERMISSION_TEXT}</Text>
                     <TouchableHighlight style={styles.settingsButton} onPress={this.openSettingsTapped}>
@@ -149,13 +148,13 @@ export class Scan extends Component<Props> {
   }
 
   renderCamera = () => {
-    if (this.props.cameraPermission === AUTHORIZED) {
+    if (this.props.cameraPermission === PermissionStatusStrings.AUTHORIZED) {
       const flashMode = this.props.torchEnabled ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off
 
       return (
         <RNCamera style={styles.preview} flashMode={flashMode} type={RNCamera.Constants.Type.back} ref="cameraCapture" onBarCodeRead={this.onBarCodeRead} />
       )
-    } else if (this.props.cameraPermission === DENIED) {
+    } else if (this.props.cameraPermission === PermissionStatusStrings.DENIED) {
       return <View />
     } else {
       return (
