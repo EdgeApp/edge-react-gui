@@ -1,5 +1,11 @@
 # edge-react-gui
 
+## 1.4.1
+
+* Fix Shapeshift activation when using Google Login
+* Fix incorrect fiat amounts when exchange ERC20 tokens
+* Fix query to Shapeshift authentication on Android devices
+
 ## 1.4.0
 
 * Support Changelly.com in Exchange functionality
