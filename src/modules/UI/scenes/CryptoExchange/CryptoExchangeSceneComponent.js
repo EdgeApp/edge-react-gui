@@ -154,7 +154,7 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
             <CryptoExchangeFlipInputWrapperComponent
               style={style.flipWrapper}
               guiWallet={this.props.fromWallet}
-              fee={this.props.fee}
+              fee={null}
               buttonText={this.props.fromButtonText}
               currencyLogo={this.props.fromCurrencyIcon}
               primaryCurrencyInfo={this.props.fromPrimaryInfo}
