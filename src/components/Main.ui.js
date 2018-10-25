@@ -2,7 +2,7 @@
 
 import { makeReactNativeFolder } from 'disklet'
 import { ModalManager } from 'edge-components'
-import type { DiskletFolder, EdgeContext, EdgeContextCallbacks, EdgeCorePluginFactory, EdgeCurrencyPlugin } from 'edge-core-js'
+import type { DiskletFolder, EdgeContext, EdgeCorePluginFactory, EdgeCurrencyPlugin } from 'edge-core-js'
 import { rippleCurrencyPluginFactory, stellarCurrencyPluginFactory } from 'edge-currency-accountbased'
 import {
   bitcoinCurrencyPluginFactory,
@@ -103,6 +103,9 @@ import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
 import { CryptoExchangeQuoteProcessingScreenComponent } from './scenes/CryptoExchangeQuoteProcessingScene.js'
 import { OnBoardingComponent } from './scenes/OnBoardingScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
+import EdgeAccountCallbackManager from './Core/Account/EdgeAccountCallbackManager.js'
+import EdgeContextCallbackManager from './Core/Context/EdgeContextCallbackManager.js'
+import EdgeWalletsCallbackManager from './Core/Wallets/EdgeWalletsCallbackManager.js'
 
 const pluginFactories: Array<EdgeCorePluginFactory> = [
   // Exchanges:
@@ -190,7 +193,6 @@ type Props = {
   dispatchDisableScan: () => void,
   urlReceived: string => void,
   updateCurrentSceneKey: string => void,
-  contextCallbacks: EdgeContextCallbacks,
   showReEnableOtpModal: () => void,
   checkEnabledExchanges: () => void
 }
@@ -258,7 +260,7 @@ export default class Main extends Component<Props, State> {
     const id = DeviceInfo.getUniqueID()
     global.firebase && global.firebase.analytics().setUserId(id)
     global.firebase && global.firebase.analytics().logEvent(`Start_App`)
-    makeCoreContext(this.props.contextCallbacks, pluginFactories).then(context => {
+    makeCoreContext(pluginFactories).then(context => {
       const folder = makeReactNativeFolder()
 
       // Put the context into Redux:
@@ -678,6 +680,10 @@ export default class Main extends Component<Props, State> {
         <PasswordRecoveryReminderModalConnector />
         <ModalManager />
         <PermissionsManager />
+
+        <EdgeContextCallbackManager />
+        <EdgeAccountCallbackManager />
+        <EdgeWalletsCallbackManager />
       </MenuProvider>
     )
   }

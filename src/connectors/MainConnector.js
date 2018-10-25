@@ -11,7 +11,6 @@ import { showReEnableOtpModal } from '../actions/SettingsActions.js'
 import { selectWallet } from '../actions/WalletActions.js'
 import Main from '../components/Main.ui'
 import { addContext, addUsernames } from '../modules/Core/Context/action.js'
-import makeContextCallbacks from '../modules/Core/Context/callbacks'
 import { requestPermission } from '../modules/PermissionsManager.js'
 import type { Dispatch } from '../modules/ReduxTypes'
 import { addCurrencyPlugin } from '../modules/Settings/SettingsActions'
@@ -49,7 +48,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   urlReceived: backupKey => {
     return dispatch(actions.deepLinkLogout(backupKey))
   },
-  contextCallbacks: makeContextCallbacks(dispatch),
   onSelectWallet: (walletId, currencyCode) => dispatch(selectWallet(walletId, currencyCode)),
   showReEnableOtpModal: () => dispatch(showReEnableOtpModal()),
   checkEnabledExchanges: () => {
