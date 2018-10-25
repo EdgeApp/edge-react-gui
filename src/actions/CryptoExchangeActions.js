@@ -303,12 +303,12 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
   const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
   const fromExchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, fromWallet.currencyCode)
   const fromBalanceInCryptoDisplay = UTILS.convertNativeToExchange(fromExchangeDenomination.multiplier)(edgeCoinExchangeQuote.fromNativeAmount)
-  const fromBalanceInFiatRaw = currencyConverter.convertCurrency(fromWallet.currencyCode, fromWallet.isoFiatCurrencyCode, Number(fromBalanceInCryptoDisplay))
+  const fromBalanceInFiatRaw = currencyConverter.convertCurrency(fromCurrencyCode, fromWallet.isoFiatCurrencyCode, Number(fromBalanceInCryptoDisplay))
   const fromBalanceInFiat = intl.formatNumber(fromBalanceInFiatRaw || 0, { toFixed: 2 })
 
   const toExchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, toWallet.currencyCode)
   const toBalanceInCryptoDisplay = UTILS.convertNativeToExchange(toExchangeDenomination.multiplier)(edgeCoinExchangeQuote.toNativeAmount)
-  const toBalanceInFiatRaw = currencyConverter.convertCurrency(toWallet.currencyCode, toWallet.isoFiatCurrencyCode, Number(toBalanceInCryptoDisplay))
+  const toBalanceInFiatRaw = currencyConverter.convertCurrency(toCurrencyCode, toWallet.isoFiatCurrencyCode, Number(toBalanceInCryptoDisplay))
   const toBalanceInFiat = intl.formatNumber(toBalanceInFiatRaw || 0, { toFixed: 2 })
 
   const returnObject = {
