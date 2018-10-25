@@ -13,7 +13,6 @@ import type { ExchangedFlipInputAmounts } from './ExchangedFlipInput2.js'
 export type Props = {
   style: StyleSheet.Styles,
   guiWallet: GuiWallet,
-  fee: string | null,
   buttonText: string,
   currencyLogo: string,
   primaryCurrencyInfo: GuiCurrencyInfo,
@@ -27,17 +26,6 @@ export type Props = {
   onCryptoExchangeAmountChanged: ExchangedFlipInputAmounts => void
 }
 export class CryptoExchangeFlipInputWrapperComponent extends Component<Props> {
-  renderFee (style: StyleSheet.Styles) {
-    if (this.props.fee) {
-      return (
-        <View style={style.fee}>
-          <Text style={style.feeText}>{this.props.fee}</Text>
-        </View>
-      )
-    }
-    return null
-  }
-
   launchSelector = () => {
     this.props.launchWalletSelector()
   }
@@ -67,7 +55,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends Component<Props> {
 
     if (!this.props.guiWallet || this.props.guiWallet.id === '' || !primaryCurrencyInfo || !secondaryCurrencyInfo) {
       return (
-        <View style={[style.containerNoFee, style.containerNoWalletSelected, this.props.fee && style.container]}>
+        <View style={[style.containerNoFee, style.containerNoWalletSelected]}>
           <View style={style.topRow}>
             <TextAndIconButton
               style={style.noWalletSelected}
@@ -87,7 +75,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends Component<Props> {
 
     if (!this.props.isFocused) {
       return (
-        <View style={[style.containerNoFee, style.containerNoWalletSelected, this.props.fee && style.container]}>
+        <View style={[style.containerNoFee, style.containerNoWalletSelected]}>
           <View style={style.topRow}>
             <TextAndIconButton style={style.walletSelector} onPress={this.props.focusMe} icon={Constants.KEYBOARD_ARROW_DOWN} title={titleComp} />
           </View>
@@ -97,7 +85,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends Component<Props> {
     }
 
     return (
-      <View style={[style.containerNoFee, this.props.fee && style.container]}>
+      <View style={style.containerNoFee}>
         <View style={style.topRow}>
           <TextAndIconButton style={style.walletSelector} onPress={this.launchSelector} icon={Constants.KEYBOARD_ARROW_DOWN} title={titleComp} />
         </View>
@@ -114,7 +102,6 @@ export class CryptoExchangeFlipInputWrapperComponent extends Component<Props> {
             keyboardVisible={false}
           />
         </View>
-        {this.renderFee(style)}
       </View>
     )
   }

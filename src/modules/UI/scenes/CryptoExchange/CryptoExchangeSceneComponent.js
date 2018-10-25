@@ -47,7 +47,6 @@ export type CryptoExchangeSceneComponentStateProps = {
   toCurrencyIconDark: string,
   toCurrencyCode: string,
   toDisplayAmount: string,
-  fee: string,
 
   // Number of times To and From wallets were flipped
   forceUpdateGuiCounter: number,
@@ -154,7 +153,6 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
             <CryptoExchangeFlipInputWrapperComponent
               style={style.flipWrapper}
               guiWallet={this.props.fromWallet}
-              fee={this.props.fee}
               buttonText={this.props.fromButtonText}
               currencyLogo={this.props.fromCurrencyIcon}
               primaryCurrencyInfo={this.props.fromPrimaryInfo}
@@ -173,7 +171,6 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
             <CryptoExchangeFlipInputWrapperComponent
               style={style.flipWrapper}
               guiWallet={this.props.toWallet}
-              fee={null}
               buttonText={this.props.toButtonText}
               currencyLogo={this.props.toCurrencyIcon}
               primaryCurrencyInfo={this.props.toPrimaryInfo}
