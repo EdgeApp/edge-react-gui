@@ -1,13 +1,12 @@
 // @flow
 
-import { createYesNoModal } from 'edge-components'
+import { createYesNoModal, showModal } from 'edge-components'
 import React from 'react'
 
 import { RESYNC } from '../../../../../../constants/indexConstants.js'
 import s from '../../../../../../locales/strings.js'
 import { getWallet, getWalletName } from '../../../../../Core/selectors.js'
 import { resyncWallet } from '../../../../../Core/Wallets/api.js'
-import { showModal } from '../../../../../ModalManager.js'
 import type { Dispatch, GetState } from '../../../../../ReduxTypes.js'
 import Text from '../../../../components/FormattedText'
 import OptionIcon from '../../../../components/OptionIcon/OptionIcon.ui'

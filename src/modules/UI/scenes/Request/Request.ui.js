@@ -1,6 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
+import { createSimpleConfirmModal, showModal } from 'edge-components'
 import type { EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, Clipboard, View } from 'react-native'
@@ -18,11 +19,11 @@ import ExchangeRate from '../../components/ExchangeRate/index.js'
 import { ExchangedFlipInput } from '../../components/FlipInput/ExchangedFlipInput2.js'
 import type { ExchangedFlipInputAmounts } from '../../components/FlipInput/ExchangedFlipInput2.js'
 import Gradient from '../../components/Gradient/Gradient.ui'
+import { Icon } from '../../components/Icon/Icon.ui.js'
 import QRCode from '../../components/QRCode/index.js'
 import RequestStatus from '../../components/RequestStatus/index.js'
 import SafeAreaView from '../../components/SafeAreaView/index.js'
 import ShareButtons from '../../components/ShareButtons/index.js'
-import XRPMinimumModal from './components/XRPMinimumModal/XRPMinimumModal.ui.js'
 import styles from './styles.js'
 
 const PUBLIC_ADDRESS_REFRESH_MS = 2000
@@ -100,6 +101,8 @@ export class Request extends Component<Props, State> {
     if (this.shouldShowMinimumModal(props)) {
       if (!props.currencyCode) return
       this.state.minimumPopupModals[props.currencyCode].modalState = 'VISIBLE'
+      console.log('stop, in constructor')
+      this.enqueueMinimumAmountModal()
     }
     slowlog(this, /.*/, global.slowlogOptions)
   }
@@ -198,10 +201,27 @@ export class Request extends Component<Props, State> {
     if (didWalletChange || didAddressChange) {
       if (this.shouldShowMinimumModal(nextProps)) {
         const minimumPopupModals: CurrencyMinimumPopupState = Object.assign({}, this.state.minimumPopupModals)
+        if (minimumPopupModals[nextProps.currencyCode].modalState === 'NOT_YET_SHOWN') {
+          this.enqueueMinimumAmountModal()
+        }
         minimumPopupModals[nextProps.currencyCode].modalState = 'VISIBLE'
         this.setState({ minimumPopupModals })
       }
     }
+  }
+
+  enqueueMinimumAmountModal = async () => {
+    if (!this.props.currencyCode) return
+    const modal = createSimpleConfirmModal({
+      title: s.strings.request_minimum_notification_title,
+      message: this.state.minimumPopupModals[this.props.currencyCode].modalMessage,
+      icon: <Icon type={Constants.MATERIAL_COMMUNITY} name={Constants.EXCLAMATION} size={30} />,
+      buttonText: s.strings.string_ok
+    })
+
+    await showModal(modal)
+    // resolve value doesn't really matter here
+    this.onCloseXRPMinimumModal()
   }
 
   render () {
@@ -212,16 +232,10 @@ export class Request extends Component<Props, State> {
     const color = 'white'
     const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio, onSelectWallet } = this.props
     const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
-    let modalMessage = ''
-    let showMinimumModal = false
-    if (this.state.minimumPopupModals[this.props.currencyCode] && this.state.minimumPopupModals[this.props.currencyCode].modalState === 'VISIBLE') {
-      showMinimumModal = true
-      modalMessage = this.state.minimumPopupModals[this.props.currencyCode].modalMessage
-    }
+
     return (
       <SafeAreaView>
         <Gradient style={styles.view}>
-          <XRPMinimumModal visibilityBoolean={showMinimumModal} modalMessage={modalMessage} onExit={this.onCloseXRPMinimumModal} />
           <Gradient style={styles.gradient} />
 
           <View style={styles.exchangeRateContainer}>

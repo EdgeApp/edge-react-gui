@@ -1,6 +1,6 @@
 // @flow
 
-import { createStaticModal, createYesNoModal } from 'edge-components'
+import { createStaticModal, createYesNoModal, showModal } from 'edge-components'
 import React, { Component } from 'react'
 import { Image, Text, View } from 'react-native'
 
@@ -9,7 +9,6 @@ import { ExpandableBoxComponent, StaticModalComponent } from '../../../../compon
 import * as Constants from '../../../../constants/indexConstants.js'
 import s from '../../../../locales/strings.js'
 import { OtpSettingsScreenStyles } from '../../../../styles/indexStyles.js'
-import { showModal } from '../../../ModalManager.js'
 import { PrimaryButton, TertiaryButton } from '../../components/Buttons/index'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui.js'
@@ -71,10 +70,7 @@ export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, S
       modalDismissTimerSeconds: 8
     })
 
-    const resolveValue = await showModal(afterDisableModal)
-    if (resolveValue) {
-      console.log('hello')
-    }
+    await showModal(afterDisableModal)
   }
 
   onPressEnable = () => {

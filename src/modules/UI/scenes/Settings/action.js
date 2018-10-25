@@ -1,6 +1,6 @@
 // @flow
 
-import { createYesNoModal } from 'edge-components'
+import { createYesNoModal, showModal } from 'edge-components'
 import type { EdgeAccount } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import React from 'react'
@@ -16,7 +16,6 @@ import { restoreWalletsRequest } from '../../../Core/Account/api.js'
 import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'
 import * as CORE_SELECTORS from '../../../Core/selectors'
 import { updateExchangeRates } from '../../../ExchangeRates/action.js'
-import { showModal } from '../../../ModalManager.js'
 import { convertCurrency } from '../../../UI/selectors.js'
 import { displayErrorAlert } from '../../components/ErrorAlert/actions.js'
 import * as SETTINGS_ACTIONS from '../../Settings/action.js'

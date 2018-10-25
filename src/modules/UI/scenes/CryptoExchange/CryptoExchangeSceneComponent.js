@@ -1,5 +1,6 @@
 // @flow
 
+import { showModal } from 'edge-components'
 import React, { Component } from 'react'
 import { Alert, Keyboard, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -14,7 +15,6 @@ import s from '../../../../locales/strings.js'
 import { CryptoExchangeSceneStyle } from '../../../../styles/indexStyles'
 import type { GuiCurrencyInfo, GuiWallet } from '../../../../types'
 import { emptyCurrencyInfo } from '../../../../types'
-import { showModal } from '../../../ModalManager.js'
 import Gradient from '../../../UI/components/Gradient/Gradient.ui'
 import WalletListModal from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import { getDenomFromIsoCode } from '../../../utils.js'

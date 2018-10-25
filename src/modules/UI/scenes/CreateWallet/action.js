@@ -1,12 +1,12 @@
 // @flow
 
+import { showModal } from 'edge-components'
 import { Actions } from 'react-native-router-flux'
 
 import * as Constants from '../../../../constants/indexConstants.js'
 import s from '../../../../locales/strings.js'
 import * as ACCOUNT_API from '../../../Core/Account/api.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
-import { showModal } from '../../../ModalManager.js'
 import type { Dispatch, GetState } from '../../../ReduxTypes.js'
 import { errorModal } from '../../components/Modals/ErrorModal.js'
 import { selectWallet as selectWalletAction } from '../../Wallets/action.js'
