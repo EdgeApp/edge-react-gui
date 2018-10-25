@@ -368,6 +368,8 @@
   "confirm_to_complete_exchange": "",
   "kyc_title": "",
   "kyc_message": "Il cambio disponibile per questa transazione richiede un account ShapeShift. Si prega di creare un account per continuare.",
+  "scan_camera_permission_denied": "",
+  "open_settings": "",
   "kyc_something_wrong": "",
   "kyc_something_wrong_message": ""
 }
