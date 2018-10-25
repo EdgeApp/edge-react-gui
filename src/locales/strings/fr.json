@@ -367,5 +367,7 @@
   "mining_fee": "",
   "confirm_to_complete_exchange": "",
   "kyc_title": "",
-  "kyc_message": ""
+  "kyc_message": "",
+  "kyc_something_wrong": "",
+  "kyc_something_wrong_message": ""
 }
