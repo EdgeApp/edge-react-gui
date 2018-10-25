@@ -6,7 +6,7 @@ import './util/polyfills'
 
 import { Client } from 'bugsnag-react-native'
 import React, { Component } from 'react'
-import { AppState, AsyncStorage, Platform, Text, TextInput } from 'react-native'
+import { AsyncStorage, Platform, Text, TextInput } from 'react-native'
 import BackgroundFetch from 'react-native-background-fetch'
 import firebase from 'react-native-firebase'
 import RNFS from 'react-native-fs'
@@ -188,24 +188,7 @@ BackgroundFetch.configure(
   }
 )
 
-function _handleAppStateChange () {
-  console.log('appStateLog: ', AppState.currentState)
-}
-function _handleSingleAppStateChange () {
-  if (AppState.currentState === 'background') {
-    AppState.removeEventListener('change', _handleSingleAppStateChange)
-  }
-}
 export default class App extends Component<{}> {
-  componentDidMount () {
-    console.log('appStateLog: Component Mounted', AppState.currentState)
-    AppState.addEventListener('change', _handleAppStateChange)
-    if (Platform.OS === Constants.IOS) {
-    } else {
-      AppState.addEventListener('change', _handleSingleAppStateChange)
-    }
-  }
-
   render () {
     return (
       <Provider store={store}>

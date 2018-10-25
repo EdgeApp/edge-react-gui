@@ -27,6 +27,7 @@
 		357C0DB2C7AC476D8CE815FF /* SourceSansPro-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A3DA0EB68E294A3591B2AEEB /* SourceSansPro-ExtraLightItalic.ttf */; };
 		409217C1E0564E669BF105DF /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 532AA7D1068248558C022CEF /* Octicons.ttf */; };
 		4739EE2C3B5B44ED8FFE1DBC /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E23DFF92A0149B1816FA4F2 /* Foundation.ttf */; };
+		4E198631156B46B4B3639242 /* libRNOpenAppSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FE827F7FBEC849DABA8C4BB5 /* libRNOpenAppSettings.a */; };
 		4F81D22B9DB543B0AE7F2FFD /* SourceSansPro-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DB5F067BAB54454803A6B66 /* SourceSansPro-BlackItalic.ttf */; };
 		52C52276F2F94D9BB9320EBA /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BC960AB014EF4BF1AA8168B3 /* MaterialCommunityIcons.ttf */; };
 		5753E201C6234F3D898201B7 /* rubicon-icon-font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CB5F84A172E9414BB03C915D /* rubicon-icon-font.ttf */; };
@@ -376,6 +377,13 @@
 			remoteGlobalIDString = 2B58405A1D10DE8700235F31;
 			remoteInfo = RCTContactsWrapper;
 		};
+		6EDA1047217E76BC0084C5DD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E08A0470E99A412CB00E7140 /* RNOpenAppSettings.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNOpenAppSettings;
+		};
 		78C398B81ACF4ADC00677621 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */;
@@ -673,6 +681,7 @@
 		DA93C74D2128A90A00178601 /* RNBackgroundFetch+AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "RNBackgroundFetch+AppDelegate.m"; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/RNBackgroundFetch+AppDelegate.m"; sourceTree = "<group>"; };
 		DAF7C41120C505CC005B7898 /* plugins */ = {isa = PBXFileReference; lastKnownFileType = folder; path = plugins; sourceTree = "<group>"; };
 		DCFC9E062F0D18DD4E39B5C5 /* libPods-edge.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-edge.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E08A0470E99A412CB00E7140 /* RNOpenAppSettings.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNOpenAppSettings.xcodeproj; path = "../node_modules/react-native-app-settings/ios/RNOpenAppSettings.xcodeproj"; sourceTree = "<group>"; };
 		E616C50120F50FDA00F9252F /* iPadOnboarding2Horiz.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iPadOnboarding2Horiz.png; sourceTree = "<group>"; };
 		E616C50320F50FDA00F9252F /* iPadOnboarding4Horiz.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iPadOnboarding4Horiz.png; sourceTree = "<group>"; };
 		E616C50420F50FDA00F9252F /* iPadOnboarding1Horiz.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iPadOnboarding1Horiz.png; sourceTree = "<group>"; };
@@ -714,6 +723,7 @@
 		FD6D9EE51FABEF3A00D4998E /* RCTSplashScreen.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSplashScreen.xcodeproj; path = "../node_modules/react-native-smart-splash-screen/ios/RCTSplashScreen/RCTSplashScreen.xcodeproj"; sourceTree = "<group>"; };
 		FD982BC91FABFDF40057F035 /* splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash.png; sourceTree = "<group>"; };
 		FD982BCB1FACDEF00057F035 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
+		FE827F7FBEC849DABA8C4BB5 /* libRNOpenAppSettings.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNOpenAppSettings.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -756,6 +766,7 @@
 				FD6D9F211FABEF8300D4998E /* libRCTSplashScreen.a in Frameworks */,
 				E6DE0C2820054CCC0004097A /* libRNBackgroundFetch.a in Frameworks */,
 				D6181FED10025926C9F176BD /* libPods-edge.a in Frameworks */,
+				4E198631156B46B4B3639242 /* libRNOpenAppSettings.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1026,6 +1037,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		6EDA1044217E76BC0084C5DD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6EDA1048217E76BC0084C5DD /* libRNOpenAppSettings.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		78C398B11ACF4ADC00677621 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -1084,6 +1103,7 @@
 				892B05950477468DB932A014 /* RNVectorIcons.xcodeproj */,
 				F4D44BFC0C7E41B4BEBA4B07 /* TcpSockets.xcodeproj */,
 				140335BE384C400688DF5C1C /* UdpSockets.xcodeproj */,
+				E08A0470E99A412CB00E7140 /* RNOpenAppSettings.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1165,6 +1185,7 @@
 		DA600D001F8F1D57001F3096 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
+				FE827F7FBEC849DABA8C4BB5 /* libRNOpenAppSettings.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -1454,6 +1475,10 @@
 					ProjectRef = D8A4F000025E4FB6B7D895BB /* RNMail.xcodeproj */;
 				},
 				{
+					ProductGroup = 6EDA1044217E76BC0084C5DD /* Products */;
+					ProjectRef = E08A0470E99A412CB00E7140 /* RNOpenAppSettings.xcodeproj */;
+				},
+				{
 					ProductGroup = 5A815B291F84B4AA003D8190 /* Products */;
 					ProjectRef = 9FAF874E8B104A9B88AD9E6C /* RNRandomBytes.xcodeproj */;
 				},
@@ -1736,6 +1761,13 @@
 			fileType = archive.ar;
 			path = libRCTContactsWrapper.a;
 			remoteRef = 6E10914A1EB0512200947A0B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6EDA1048217E76BC0084C5DD /* libRNOpenAppSettings.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNOpenAppSettings.a;
+			remoteRef = 6EDA1047217E76BC0084C5DD /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		78C398B91ACF4ADC00677621 /* libRCTLinking.a */ = {
@@ -2125,10 +2157,15 @@
 					"$(SRCROOT)/../node_modules/react-native-background-fetch/ios/RNBackgroundFetch",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/bugsnag-react-native/cocoa",
+					"$(SRCROOT)/../node_modules/react-native-app-settings/ios",
 				);
 				INFOPLIST_FILE = edge/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/edge\"",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2181,10 +2218,15 @@
 					"$(SRCROOT)/../node_modules/react-native-background-fetch/ios/RNBackgroundFetch",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/bugsnag-react-native/cocoa",
+					"$(SRCROOT)/../node_modules/react-native-app-settings/ios",
 				);
 				INFOPLIST_FILE = edge/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/edge\"",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

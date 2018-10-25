@@ -3,10 +3,10 @@
 import { connect } from 'react-redux'
 
 import * as actions from '../actions/indexActions'
-import { requestPermission } from '../reducers/permissions/actions.js'
 import { addContext, addUsernames } from './Core/Context/action.js'
 import makeContextCallbacks from './Core/Context/callbacks'
 import Main from './Main.ui'
+import { requestPermission } from './PermissionsManager.js'
 import type { Dispatch } from './ReduxTypes'
 import { setKeyboardHeight } from './UI/dimensions/action'
 import { updateCurrentSceneKey } from './UI/scenes/action.js'
@@ -18,7 +18,7 @@ import { selectWallet } from './UI/Wallets/action.js'
 const mapStateToProps = () => ({})
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   requestPermission: permission => {
-    return dispatch(requestPermission(permission))
+    return requestPermission(permission)
   },
   dispatchEnableScan: () => {
     return dispatch(enableScan())

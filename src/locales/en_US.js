@@ -395,6 +395,8 @@ const strings = {
   confirm_to_complete_exchange: 'Confirm to complete your exchange.',
   kyc_title: 'Customer Information Needed',
   kyc_message: 'The available exchange for this transaction requires a ShapeShift account. Please create an account to continue.',
+  scan_camera_permission_denied: 'To scan a QR Code, please enable Camera access in Settings',
+  open_settings: 'Open Settings',
   kyc_something_wrong: 'Something went wrong',
   kyc_something_wrong_message: 'Please try again later'
 }
