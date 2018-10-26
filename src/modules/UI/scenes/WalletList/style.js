@@ -181,7 +181,7 @@ export const styles = {
     marginRight: scale(5)
   },
   rowNameTextWrapAndroidIos: {
-    flex: 1,
+    flex: 2,
     justifyContent: 'flex-start',
     alignItems: 'center',
     marginRight: scale(5),
@@ -206,7 +206,7 @@ export const styles = {
     color: THEME.COLORS.GRAY_1
   },
   rowBalanceTextWrap: {
-    flex: 1,
+    flex: 3,
     justifyContent: 'center'
   },
   rowBalanceText: {
