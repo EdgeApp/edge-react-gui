@@ -1,5 +1,12 @@
 # edge-react-gui
 
+## 1.4.2
+
+* Fix Shapeshift account error dropdown
+* Fix oversized exchange button when going back from confirmation
+* Fix missing email text field for password recovery setup
+* Fix tappability of wallet list option button
+
 ## 1.4.1
 
 * Fix Shapeshift activation when using Google Login
