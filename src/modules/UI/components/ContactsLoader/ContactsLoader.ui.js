@@ -3,8 +3,7 @@
 import { Component } from 'react'
 
 import type { GuiContact } from '../../../../types.js'
-import { isAuthorized } from '../../permissions.js'
-import type { PermissionStatus } from '../../permissions.js'
+import { type PermissionStatus, PermissionStatusStrings } from '../../../PermissionsManager.js'
 
 export type Props = {
   contactsPermission: PermissionStatus,
@@ -18,7 +17,7 @@ export class ContactsLoader extends Component<Props> {
   UNSAFE_componentWillReceiveProps (nextProps: Props) {
     const { contactsPermission } = nextProps
 
-    if (!isAuthorized(this.props.contactsPermission) && isAuthorized(contactsPermission)) {
+    if (this.props.contactsPermission !== PermissionStatusStrings.AUTHORIZED && contactsPermission === PermissionStatusStrings.AUTHORIZED) {
       this.loadContacts()
     }
   }

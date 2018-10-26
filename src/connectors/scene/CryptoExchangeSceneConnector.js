@@ -73,7 +73,6 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
     fromCurrencyIconDark: state.cryptoExchange.fromCurrencyIconDark || '',
     toCurrencyIcon: state.cryptoExchange.toCurrencyIcon || '',
     toCurrencyIconDark: state.cryptoExchange.toCurrencyIconDark || '',
-    fee: state.cryptoExchange.fee,
     forceUpdateGuiCounter: state.cryptoExchange.forceUpdateGuiCounter,
     showWalletSelectModal: state.ui.scenes.walletListModal.walletListModalVisible,
     shiftPendingTransaction: state.cryptoExchange.shiftPendingTransaction,

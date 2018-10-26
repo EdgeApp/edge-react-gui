@@ -1,15 +1,13 @@
 // @flow
 
+import type { Permission, PermissionStatus } from '../../modules/PermissionsManager.js'
 import type { Action } from '../../modules/ReduxTypes'
-import type { Permission, PermissionStatus } from '../../modules/UI/permissions'
 
 export type PermissionsState = { [Permission]: PermissionStatus }
 
 export const initialState = {
-  bluetooth: 'undetermined',
   camera: 'undetermined',
-  contacts: 'undetermined',
-  photos: 'undetermined'
+  contacts: 'undetermined'
 }
 
 export const permissions = (state: PermissionsState = initialState, action: Action) => {

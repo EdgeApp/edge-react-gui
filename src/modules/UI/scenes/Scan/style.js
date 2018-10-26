@@ -197,6 +197,19 @@ export const styles = {
   privateKeyIcon: {
     color: THEME.COLORS.WHITE,
     transform: [{ rotate: '270deg' }]
+  },
+  cameraPermissionDeniedText: {
+    textAlign: 'center',
+    fontSize: scale(14),
+    padding: 20
+  },
+  settingsButton: {
+    backgroundColor: THEME.COLORS.SECONDARY,
+    alignItems: 'center',
+    padding: 10
+  },
+  settingsButtonText: {
+    color: THEME.COLORS.WHITE
   }
 }
 export default StyleSheet.create(styles)

@@ -60,6 +60,7 @@ import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
 import { OnBoardingComponent } from '../modules/UI/scenes/OnBoarding/OnBoardingComponent.js'
 import { makeCoreContext } from '../util/makeContext.js'
 import * as CONTEXT_API from './Core/Context/api'
+import PermissionsManager, { type Permission, PermissionStrings } from './PermissionsManager.js'
 import { styles } from './style.js'
 import AutoLogout from './UI/components/AutoLogout/AutoLogoutConnector'
 import { ContactsLoaderConnecter as ContactsLoader } from './UI/components/ContactsLoader/indexContactsLoader.js'
@@ -74,7 +75,6 @@ import HelpModal from './UI/components/HelpModal'
 import { PasswordRecoveryReminderModalConnector } from './UI/components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalConnector.js'
 import { passwordReminderModalConnector as PasswordReminderModal } from './UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
 import TransactionAlert from './UI/components/TransactionAlert/TransactionAlertConnector'
-import { CAMERA, CONTACTS, type Permission } from './UI/permissions.js'
 import AddToken from './UI/scenes/AddToken/AddTokenConnector.js'
 import ChangeMiningFeeSendConfirmation from './UI/scenes/ChangeMiningFee/ChangeMiningFeeSendConfirmationConnector.ui'
 import ChangePasswordConnector from './UI/scenes/ChangePinPassword/ChangePasswordConnector.ui'
@@ -317,7 +317,7 @@ export default class Main extends Component<Props, State> {
                 <Scene
                   key={Constants.TRANSACTION_DETAILS}
                   navTransparent={true}
-                  onEnter={() => this.props.requestPermission(CONTACTS)}
+                  onEnter={() => this.props.requestPermission(PermissionStrings.CONTACTS)}
                   clone
                   component={TransactionDetails}
                   renderTitle={this.renderTitle(TRANSACTION_DETAILS)}
@@ -385,7 +385,7 @@ export default class Main extends Component<Props, State> {
                         <Scene
                           key={Constants.TRANSACTION_LIST}
                           onEnter={() => {
-                            this.props.requestPermission(CONTACTS)
+                            this.props.requestPermission(PermissionStrings.CONTACTS)
                             this.props.updateCurrentSceneKey(Constants.TRANSACTION_LIST)
                           }}
                           navTransparent={true}
@@ -449,7 +449,7 @@ export default class Main extends Component<Props, State> {
                           key={Constants.SCAN_NOT_USED}
                           navTransparent={true}
                           onEnter={() => {
-                            this.props.requestPermission(CAMERA)
+                            this.props.requestPermission(PermissionStrings.CAMERA)
                             this.props.dispatchEnableScan()
                           }}
                           onExit={this.props.dispatchDisableScan}
@@ -665,6 +665,7 @@ export default class Main extends Component<Props, State> {
         <PasswordReminderModal />
         <PasswordRecoveryReminderModalConnector />
         <ModalManager />
+        <PermissionsManager />
       </MenuProvider>
     )
   }
