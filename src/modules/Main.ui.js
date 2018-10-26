@@ -1,6 +1,7 @@
 // @flow
 
 import { makeReactNativeFolder } from 'disklet'
+import { ModalManager } from 'edge-components'
 import type { DiskletFolder, EdgeContext, EdgeContextCallbacks, EdgeCorePluginFactory, EdgeCurrencyPlugin } from 'edge-core-js'
 import { rippleCurrencyPluginFactory, stellarCurrencyPluginFactory } from 'edge-currency-accountbased'
 import {
@@ -59,7 +60,6 @@ import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
 import { OnBoardingComponent } from '../modules/UI/scenes/OnBoarding/OnBoardingComponent.js'
 import { makeCoreContext } from '../util/makeContext.js'
 import * as CONTEXT_API from './Core/Context/api'
-import { ModalManager } from './ModalManager.js'
 import PermissionsManager, { type Permission, PermissionStrings } from './PermissionsManager.js'
 import { styles } from './style.js'
 import AutoLogout from './UI/components/AutoLogout/AutoLogoutConnector'

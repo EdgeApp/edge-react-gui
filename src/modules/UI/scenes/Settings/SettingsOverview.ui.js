@@ -1,5 +1,6 @@
 // @flow
 
+import { showModal } from 'edge-components'
 import type { EdgeAccount } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Alert, ScrollView, Text, View } from 'react-native'
@@ -8,7 +9,6 @@ import { Actions } from 'react-native-router-flux'
 import * as Constants from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings'
 import { ConfirmPasswordModalStyle } from '../../../../styles/indexStyles'
-import { showModal } from '../../../ModalManager.js'
 import { type Action } from '../../../ReduxTypes.js'
 import { getTimeWithMeasurement } from '../../../utils'
 import { PrimaryButton } from '../../components/Buttons'
