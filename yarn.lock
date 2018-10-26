@@ -8519,6 +8519,11 @@ react-native-animatable@^1.1.0, react-native-animatable@^1.2.4:
   dependencies:
     prop-types "^15.5.10"
 
+react-native-app-settings@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-app-settings/-/react-native-app-settings-2.0.0.tgz#d2dbcf88dbb40d7261599fc373b35bd0f9fd886e"
+  integrity sha1-0tvPiNu0DXJhWZ/Dc7Nb0Pn9iG4=
+
 react-native-background-fetch@^2.4.3:
   version "2.4.3"
   resolved "https://registry.yarnpkg.com/react-native-background-fetch/-/react-native-background-fetch-2.4.3.tgz#4621cca2a8f9e96edbf0556afcd04873bd698f37"
