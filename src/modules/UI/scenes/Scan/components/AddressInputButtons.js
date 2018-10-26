@@ -1,12 +1,10 @@
 // @flow
 
 import React, { Component } from 'react'
-import { View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 
 import s from '../../../../../locales/strings.js'
 import { PrimaryButton, SecondaryButton } from '../../../components/Buttons'
-import ModalStyle from '../../../components/Modal/style'
 import { InteractiveModal } from '../../../components/Modals'
 
 const CANCEL_TEXT = s.strings.string_cancel_cap
@@ -24,7 +22,7 @@ export class AddressInputButtons extends Component<Props> {
 
   render () {
     return (
-      <View style={ModalStyle.buttonsWrap}>
+      <InteractiveModal.Row>
         <InteractiveModal.Item>
           <SecondaryButton onPress={this.props.onCancel}>
             <SecondaryButton.Text>{CANCEL_TEXT}</SecondaryButton.Text>
@@ -36,7 +34,7 @@ export class AddressInputButtons extends Component<Props> {
             <PrimaryButton.Text>{DONE_TEXT}</PrimaryButton.Text>
           </PrimaryButton>
         </InteractiveModal.Item>
-      </View>
+      </InteractiveModal.Row>
     )
   }
 }
