@@ -91,6 +91,7 @@ exports[`MenuDropDown component should render with standard props 1`] = `
           style={
             Object {
               "flexDirection": "row",
+              "paddingHorizontal": 5.618309859154929,
               "paddingVertical": 5.618309859154929,
             }
           }
