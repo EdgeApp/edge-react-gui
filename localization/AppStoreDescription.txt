@@ -1,3 +1,8 @@
+Title: Edge - Bitcoin, Ethereum, Monero, Ripple Wallet
+-----
+Short description: Private, secure & easy to use. Buy, sell, send & receive Bitcoin & other crypto.
+-----
+
 Total privacy and security in our easy to use blockchain wallet.
 
 Managing your cryptocurrency assets has never been easier. Edge Wallet provides maximum security while keeping simplicity, allowing all types of users to easily manage, transfer & exchange their currencies.
