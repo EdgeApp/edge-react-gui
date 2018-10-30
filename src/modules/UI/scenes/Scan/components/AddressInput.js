@@ -26,27 +26,29 @@ export class AddressInput extends Component<Props> {
   render () {
     return (
       <View>
-        <View style={[styles.addressInputWrap]}>
-          <FormField
-            style={[styles.addressInput]}
-            value={this.props.uri}
-            onChangeText={this.props.onChangeText}
-            autoCapitalize={'none'}
-            autoFocus
-            label={s.strings.fragment_send_send_to_hint}
-            returnKeyType={'done'}
-            autoCorrect={false}
-            onSubmitEditing={this.props.onSubmit}
-          />
-        </View>
+        <InteractiveModal.Row>
+          <InteractiveModal.Item>
+            <FormField
+              style={[styles.addressInput]}
+              value={this.props.uri}
+              onChangeText={this.props.onChangeText}
+              autoCapitalize={'none'}
+              autoFocus
+              label={s.strings.fragment_send_send_to_hint}
+              returnKeyType={'done'}
+              autoCorrect={false}
+              onSubmitEditing={this.props.onSubmit}
+            />
+          </InteractiveModal.Item>
+        </InteractiveModal.Row>
         {this.props.copyMessage && (
-          <View style={styles.pasteButtonRow}>
+          <InteractiveModal.Row>
             <InteractiveModal.Item>
               <TertiaryButton ellipsizeMode={'middle'} onPress={this.props.onPaste} numberOfLines={1} style={styles.addressInputButton}>
                 <TertiaryButton.Text>{this.props.copyMessage}</TertiaryButton.Text>
               </TertiaryButton>
             </InteractiveModal.Item>
-          </View>
+          </InteractiveModal.Row>
         )}
       </View>
     )
