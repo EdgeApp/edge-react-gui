@@ -232,7 +232,7 @@ const strings = {
   title_password_recovery: 'Password Recovery',
   title_plugin_buysell: 'Buy Cryptocurrency',
   title_plugin_spend: 'Spend',
-  title_otp: '2 Factor Authentication',
+  title_otp: '2FA',
   title_request: 'Request',
   title_send_confirmation: 'Send Confirmation',
   title_send: 'Send',
@@ -272,7 +272,7 @@ const strings = {
   title_otp_enabled: '2FA is enabled',
   title_otp_disabled: 'Protect your account with 2FA',
   otp_description:
-    '2FA prevents unauthorized access from other devices, even if your username and password is compromised. You can scan a QR code or type in an authentication code to seamlessly authorize other devices',
+    'Two factor authentication (2FA) prevents unauthorized access from other devices, even if your username and password is compromised. You can scan a QR code or type in an authentication code to seamlessly authorize other devices.',
   otp_enabled_description: 'You can scan a QR code or type in the authentication code to seamlessly authorize other devices.',
   otp_show_code: 'Show authentication code',
   otp_hide_code: 'Hide authentication code',
