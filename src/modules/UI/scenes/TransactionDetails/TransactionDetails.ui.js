@@ -477,7 +477,6 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                     width: '100%',
                     backgroundColor: THEME.COLORS.WHITE,
                     position: 'absolute',
-                    top: scale(4),
                     height: scale(PLATFORM.usableHeight),
                     zIndex: 99999
                   }
