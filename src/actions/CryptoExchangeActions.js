@@ -376,6 +376,13 @@ export const getShapeShiftTokens = () => async (dispatch: Dispatch, getState: Ge
   } catch (error) {
     dispatch({ type: 'ON_AVAILABLE_SHAPE_SHIFT_TOKENS', data: { response: {}, totalSwaps } })
   }
+  setTimeout(() => {
+    const currentScene = Actions.currentScene
+    if (currentScene !== Constants.EXCHANGE_QUOTE_SCENE) {
+      return
+    }
+    dispatch(getShapeShiftTokens())
+  })
 }
 
 export const selectWalletForExchange = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
@@ -383,8 +390,11 @@ export const selectWalletForExchange = (walletId: string, currencyCode: string) 
   const state = getState()
   const availableShapeShiftTokens = state.cryptoExchange.availableShapeShiftTokens
   if (!availableShapeShiftTokens[currencyCode]) {
+    dispatch(getShapeShiftTokens())
+    const message =
+      Object.keys(availableShapeShiftTokens).length > 0 ? currencyCode + ' ' + s.strings.token_not_supported : s.strings.loading_supported_currencies
     setTimeout(() => {
-      Alert.alert(s.strings.could_not_select, currencyCode + ' ' + s.strings.token_not_supported)
+      Alert.alert(s.strings.could_not_select, message)
     }, 1)
     return
   }
