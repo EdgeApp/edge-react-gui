@@ -1,0 +1,293 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Change Mining Fees should render with custom props 1`] = `
+<SafeAreaViewComponent>
+  <Component>
+    <Gradient
+      style={
+        Object {
+          "height": 44,
+          "position": "absolute",
+          "width": "100%",
+        }
+      }
+    />
+    <Component
+      style={
+        Object {
+          "paddingHorizontal": 28.091549295774648,
+          "paddingVertical": 28.091549295774648,
+          "position": "relative",
+          "top": 92.70211267605633,
+        }
+      }
+    >
+      <Component
+        style={
+          Object {
+            "height": 61.80140845070422,
+          }
+        }
+      >
+        <RadioButton
+          isSelected={false}
+          label="High"
+          onPress={[Function]}
+          value="high"
+        />
+      </Component>
+      <Component
+        style={
+          Object {
+            "height": 61.80140845070422,
+          }
+        }
+      >
+        <RadioButton
+          isSelected={false}
+          label="Standard"
+          onPress={[Function]}
+          value="standard"
+        />
+      </Component>
+      <Component
+        style={
+          Object {
+            "height": 61.80140845070422,
+          }
+        }
+      >
+        <RadioButton
+          isSelected={false}
+          label="Low"
+          onPress={[Function]}
+          value="low"
+        />
+      </Component>
+      <Connect(CustomFees)
+        handlePress={[Function]}
+        sourceWallet={Object {}}
+      />
+    </Component>
+  </Component>
+</SafeAreaViewComponent>
+`;
+
+exports[`Change Mining Fees should render with high props 1`] = `
+<SafeAreaViewComponent>
+  <Component>
+    <Gradient
+      style={
+        Object {
+          "height": 44,
+          "position": "absolute",
+          "width": "100%",
+        }
+      }
+    />
+    <Component
+      style={
+        Object {
+          "paddingHorizontal": 28.091549295774648,
+          "paddingVertical": 28.091549295774648,
+          "position": "relative",
+          "top": 92.70211267605633,
+        }
+      }
+    >
+      <Component
+        style={
+          Object {
+            "height": 61.80140845070422,
+          }
+        }
+      >
+        <RadioButton
+          isSelected={true}
+          label="High"
+          onPress={[Function]}
+          value="high"
+        />
+      </Component>
+      <Component
+        style={
+          Object {
+            "height": 61.80140845070422,
+          }
+        }
+      >
+        <RadioButton
+          isSelected={false}
+          label="Standard"
+          onPress={[Function]}
+          value="standard"
+        />
+      </Component>
+      <Component
+        style={
+          Object {
+            "height": 61.80140845070422,
+          }
+        }
+      >
+        <RadioButton
+          isSelected={false}
+          label="Low"
+          onPress={[Function]}
+          value="low"
+        />
+      </Component>
+      <Connect(CustomFees)
+        handlePress={[Function]}
+        sourceWallet={Object {}}
+      />
+    </Component>
+  </Component>
+</SafeAreaViewComponent>
+`;
+
+exports[`Change Mining Fees should render with low props 1`] = `
+<SafeAreaViewComponent>
+  <Component>
+    <Gradient
+      style={
+        Object {
+          "height": 44,
+          "position": "absolute",
+          "width": "100%",
+        }
+      }
+    />
+    <Component
+      style={
+        Object {
+          "paddingHorizontal": 28.091549295774648,
+          "paddingVertical": 28.091549295774648,
+          "position": "relative",
+          "top": 92.70211267605633,
+        }
+      }
+    >
+      <Component
+        style={
+          Object {
+            "height": 61.80140845070422,
+          }
+        }
+      >
+        <RadioButton
+          isSelected={false}
+          label="High"
+          onPress={[Function]}
+          value="high"
+        />
+      </Component>
+      <Component
+        style={
+          Object {
+            "height": 61.80140845070422,
+          }
+        }
+      >
+        <RadioButton
+          isSelected={false}
+          label="Standard"
+          onPress={[Function]}
+          value="standard"
+        />
+      </Component>
+      <Component
+        style={
+          Object {
+            "height": 61.80140845070422,
+          }
+        }
+      >
+        <RadioButton
+          isSelected={true}
+          label="Low"
+          onPress={[Function]}
+          value="low"
+        />
+      </Component>
+      <Connect(CustomFees)
+        handlePress={[Function]}
+        sourceWallet={Object {}}
+      />
+    </Component>
+  </Component>
+</SafeAreaViewComponent>
+`;
+
+exports[`Change Mining Fees should render with standard props 1`] = `
+<SafeAreaViewComponent>
+  <Component>
+    <Gradient
+      style={
+        Object {
+          "height": 44,
+          "position": "absolute",
+          "width": "100%",
+        }
+      }
+    />
+    <Component
+      style={
+        Object {
+          "paddingHorizontal": 28.091549295774648,
+          "paddingVertical": 28.091549295774648,
+          "position": "relative",
+          "top": 92.70211267605633,
+        }
+      }
+    >
+      <Component
+        style={
+          Object {
+            "height": 61.80140845070422,
+          }
+        }
+      >
+        <RadioButton
+          isSelected={false}
+          label="High"
+          onPress={[Function]}
+          value="high"
+        />
+      </Component>
+      <Component
+        style={
+          Object {
+            "height": 61.80140845070422,
+          }
+        }
+      >
+        <RadioButton
+          isSelected={true}
+          label="Standard"
+          onPress={[Function]}
+          value="standard"
+        />
+      </Component>
+      <Component
+        style={
+          Object {
+            "height": 61.80140845070422,
+          }
+        }
+      >
+        <RadioButton
+          isSelected={false}
+          label="Low"
+          onPress={[Function]}
+          value="low"
+        />
+      </Component>
+      <Connect(CustomFees)
+        handlePress={[Function]}
+        sourceWallet={Object {}}
+      />
+    </Component>
+  </Component>
+</SafeAreaViewComponent>
+`;

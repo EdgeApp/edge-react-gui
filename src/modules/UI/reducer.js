@@ -2,14 +2,14 @@
 
 import { type Reducer, combineReducers } from 'redux'
 
-import { type PasswordReminderState, passwordReminder } from '../../reducers/passwordReminder/passwordReminderReducer.js'
+import { type PasswordReminderState, passwordReminder } from '../../reducers/PasswordReminderReducer.js'
+import { type ScenesState, scenes } from '../../reducers/scenes/ScenesReducer.js'
+import { type SettingsState, settings } from '../../reducers/scenes/SettingsReducer.js'
+import { type WalletsState, wallets } from '../../reducers/scenes/WalletsReducer.js'
 import { type Action } from '../ReduxTypes.js'
+import { type RequestState, request } from '../Request/reducer.js'
 import { type ErrorAlertState, errorAlert } from './components/ErrorAlert/reducer.js'
 import { type TransactionAlertState, transactionAlert } from './components/TransactionAlert/reducer.js'
-import { type RequestState, request } from './Request/reducer.js'
-import { type ScenesState, scenes } from './scenes/reducer.js'
-import { type SettingsState, settings } from './Settings/reducer.js'
-import { type WalletsState, wallets } from './Wallets/reducer.js'
 
 export { errorAlert, transactionAlert, passwordReminder, scenes, wallets, request, settings }
 

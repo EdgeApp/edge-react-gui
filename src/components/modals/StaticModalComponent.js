@@ -7,9 +7,9 @@ import Modal from 'react-native-modal'
 
 import * as Constants from '../../constants/indexConstants.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
-import { getObjectDiff } from '../../modules/utils'
 import { StaticModalStyle } from '../../styles/indexStyles.js'
 import THEME from '../../theme/variables/airbitz'
+import { getObjectDiff } from '../../util/utils'
 
 type Props = {
   modalDismissTimerSeconds: number,

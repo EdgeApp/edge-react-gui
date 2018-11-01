@@ -1,0 +1,1116 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TransactionDetails.ui should render 1`] = `
+<SafeAreaViewComponent>
+  <Component
+    style={
+      Array [
+        Object {
+          "height": 1265,
+          "width": "100%",
+        },
+      ]
+    }
+  >
+    <Gradient
+      style={
+        Object {
+          "height": 92.70211267605633,
+          "position": "absolute",
+          "width": "100%",
+        }
+      }
+    />
+    <Component
+      style={
+        Object {
+          "position": "relative",
+          "top": 92.70211267605633,
+        }
+      }
+    >
+      <AdvancedTransactionDetailsModal
+        isActive={false}
+        onExit={[Function]}
+        txExplorerUrl={null}
+        txid="this is the txid"
+      />
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        overScrollMode="never"
+        scrollEnabled={true}
+      >
+        <Component
+          style={
+            Array [
+              Object {
+                "alignItems": "stretch",
+                "backgroundColor": "#FFFFFF",
+                "flex": 1,
+                "flexDirection": "column",
+                "zIndex": 1,
+              },
+            ]
+          }
+        >
+          <Component>
+            <Gradient
+              style={
+                Array [
+                  Object {
+                    "flexDirection": "row",
+                    "height": 44.946478873239435,
+                    "justifyContent": "center",
+                  },
+                ]
+              }
+            >
+              <PayeeIcon
+                direction="receive"
+                thumbnailPath="thumb/nail/path"
+              />
+            </Gradient>
+          </Component>
+          <Component
+            style={
+              Array [
+                Object {
+                  "flexDirection": "column",
+                  "position": "relative",
+                  "top": 28.091549295774648,
+                },
+              ]
+            }
+          >
+            <Component
+              style={
+                Array [
+                  Object {
+                    "alignItems": "center",
+                    "flexDirection": "column",
+                  },
+                ]
+              }
+            >
+              <Component
+                style={
+                  Array [
+                    Object {
+                      "alignItems": "center",
+                      "padding": 5.618309859154929,
+                      "width": "80%",
+                    },
+                  ]
+                }
+              >
+                <TextInput
+                  allowFontScaling={true}
+                  autoCapitalize="words"
+                  autoCorrect={false}
+                  defaultValue=""
+                  onFocus={[Function]}
+                  placeholder="Payee"
+                  placeholderTextColor="#87939E"
+                  style={
+                    Array [
+                      Object {
+                        "color": "#4A5157",
+                        "fontFamily": "SourceSansPro-Black",
+                        "fontSize": 23.87781690140845,
+                        "height": 33.709859154929575,
+                        "textAlign": "center",
+                        "width": "100%",
+                      },
+                      undefined,
+                    ]
+                  }
+                  underlineColorAndroid="transparent"
+                />
+              </Component>
+            </Component>
+            <Component
+              style={
+                Object {
+                  "alignSelf": "center",
+                  "borderBottomColor": "#CCCCCC",
+                  "borderBottomWidth": 1,
+                  "height": 1.4045774647887324,
+                  "width": "38%",
+                }
+              }
+            />
+            <Component
+              style={
+                Array [
+                  Object {
+                    "alignItems": "center",
+                    "flexDirection": "column",
+                    "padding": 5.618309859154929,
+                  },
+                ]
+              }
+            >
+              <FormattedText
+                style={
+                  Array [
+                    Object {
+                      "color": "#87939E",
+                      "fontSize": 19.66408450704225,
+                    },
+                  ]
+                }
+              >
+                Aug 31st, 2018, 9:59:40 PM
+              </FormattedText>
+            </Component>
+            <AmountArea
+              categorySelectVisibility={false}
+              color="#0073D9"
+              cryptoCurrencyCode="BTC"
+              direction="receive"
+              edgeTransaction={
+                Object {
+                  "blockHeight": 0,
+                  "currencyCode": "BTC",
+                  "date": 1535752780.947,
+                  "nativeAmount": "123",
+                  "networkFee": "1",
+                  "otherParams": Object {},
+                  "ourReceiveAddresses": Array [
+                    "this is an address",
+                  ],
+                  "signedTx": "this is a signed tx",
+                  "txid": "this is the txid",
+                  "wallet": Object {
+                    "allDenominations": Object {},
+                    "balances": Object {
+                      "BTC": "123123",
+                    },
+                    "blockHeight": 12345,
+                    "currencyCode": "BTC",
+                    "currencyInfo": Object {},
+                    "displayPrivateSeed": "private seed",
+                    "displayPublicSeed": "public seed",
+                    "fiatCurrencyCode": "iso:USD",
+                    "id": "123",
+                    "name": "wallet name",
+                  },
+                }
+              }
+              fiatAmount="0.00"
+              fiatCurrencyCode="iso:USD"
+              fiatCurrencySymbol="$"
+              guiWallet={
+                Object {
+                  "allDenominations": Object {},
+                  "balances": Object {
+                    "BTC": "123123",
+                  },
+                  "blockHeight": 12345,
+                  "currencyCode": "BTC",
+                  "currencyInfo": Object {},
+                  "displayPrivateSeed": "private seed",
+                  "displayPublicSeed": "public seed",
+                  "fiatCurrencyCode": "iso:USD",
+                  "id": "123",
+                  "name": "wallet name",
+                }
+              }
+              onBlurFiatFxn={[Function]}
+              onBlurNotes={[Function]}
+              onChangeCategoryFxn={[Function]}
+              onChangeFiatFxn={[Function]}
+              onChangeNotesFxn={[Function]}
+              onEnterCategories={[Function]}
+              onEnterSubcategories={[Function]}
+              onExitCategories={[Function]}
+              onFocusFiatAmount={[Function]}
+              onFocusNotes={[Function]}
+              onNotesKeyboardReturn={[Function]}
+              onPressAdvancedDetailsButton={[Function]}
+              onPressFxn={[Function]}
+              onSelectCategory={[Function]}
+              onSelectSubCategory={[Function]}
+              onSubcategoryKeyboardReturn={[Function]}
+              openModalFxn={[Function]}
+              subCategory=""
+              subCategorySelectVisibility={false}
+              txExplorerUrl={null}
+              type="income"
+              types={
+                Object {
+                  "exchange": Object {
+                    "color": "#F1AA19",
+                    "key": "exchange",
+                    "syntax": "Exchange",
+                  },
+                  "expense": Object {
+                    "color": "#E85466",
+                    "key": "expense",
+                    "syntax": "Expense",
+                  },
+                  "income": Object {
+                    "color": "#0073D9",
+                    "key": "income",
+                    "syntax": "Income",
+                  },
+                  "transfer": Object {
+                    "color": "#0D2145",
+                    "key": "transfer",
+                    "syntax": "Transfer",
+                  },
+                }
+              }
+              usableHeight={1221}
+            />
+          </Component>
+        </Component>
+        <Component
+          style={
+            Object {
+              "height": 300,
+            }
+          }
+        />
+      </ScrollView>
+    </Component>
+  </Component>
+</SafeAreaViewComponent>
+`;
+
+exports[`TransactionDetails.ui should render with negative nativeAmount and fiatAmount 1`] = `
+<SafeAreaViewComponent>
+  <Component
+    style={
+      Array [
+        Object {
+          "height": 1265,
+          "width": "100%",
+        },
+      ]
+    }
+  >
+    <Gradient
+      style={
+        Object {
+          "height": 92.70211267605633,
+          "position": "absolute",
+          "width": "100%",
+        }
+      }
+    />
+    <Component
+      style={
+        Object {
+          "position": "relative",
+          "top": 92.70211267605633,
+        }
+      }
+    >
+      <AdvancedTransactionDetailsModal
+        isActive={false}
+        onExit={[Function]}
+        txExplorerUrl={null}
+        txid="this is the txid"
+      />
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        overScrollMode="never"
+        scrollEnabled={true}
+      >
+        <Component
+          style={
+            Array [
+              Object {
+                "alignItems": "stretch",
+                "backgroundColor": "#FFFFFF",
+                "flex": 1,
+                "flexDirection": "column",
+                "zIndex": 1,
+              },
+            ]
+          }
+        >
+          <Component>
+            <Gradient
+              style={
+                Array [
+                  Object {
+                    "flexDirection": "row",
+                    "height": 44.946478873239435,
+                    "justifyContent": "center",
+                  },
+                ]
+              }
+            >
+              <PayeeIcon
+                direction="send"
+                thumbnailPath="thumb/nail/path"
+              />
+            </Gradient>
+          </Component>
+          <Component
+            style={
+              Array [
+                Object {
+                  "flexDirection": "column",
+                  "position": "relative",
+                  "top": 28.091549295774648,
+                },
+              ]
+            }
+          >
+            <Component
+              style={
+                Array [
+                  Object {
+                    "alignItems": "center",
+                    "flexDirection": "column",
+                  },
+                ]
+              }
+            >
+              <Component
+                style={
+                  Array [
+                    Object {
+                      "alignItems": "center",
+                      "padding": 5.618309859154929,
+                      "width": "80%",
+                    },
+                  ]
+                }
+              >
+                <TextInput
+                  allowFontScaling={true}
+                  autoCapitalize="words"
+                  autoCorrect={false}
+                  defaultValue=""
+                  onFocus={[Function]}
+                  placeholder="Payee"
+                  placeholderTextColor="#87939E"
+                  style={
+                    Array [
+                      Object {
+                        "color": "#4A5157",
+                        "fontFamily": "SourceSansPro-Black",
+                        "fontSize": 23.87781690140845,
+                        "height": 33.709859154929575,
+                        "textAlign": "center",
+                        "width": "100%",
+                      },
+                      undefined,
+                    ]
+                  }
+                  underlineColorAndroid="transparent"
+                />
+              </Component>
+            </Component>
+            <Component
+              style={
+                Object {
+                  "alignSelf": "center",
+                  "borderBottomColor": "#CCCCCC",
+                  "borderBottomWidth": 1,
+                  "height": 1.4045774647887324,
+                  "width": "38%",
+                }
+              }
+            />
+            <Component
+              style={
+                Array [
+                  Object {
+                    "alignItems": "center",
+                    "flexDirection": "column",
+                    "padding": 5.618309859154929,
+                  },
+                ]
+              }
+            >
+              <FormattedText
+                style={
+                  Array [
+                    Object {
+                      "color": "#87939E",
+                      "fontSize": 19.66408450704225,
+                    },
+                  ]
+                }
+              >
+                Aug 31st, 2018, 9:59:40 PM
+              </FormattedText>
+            </Component>
+            <AmountArea
+              categorySelectVisibility={false}
+              color="#E85466"
+              cryptoCurrencyCode="BTC"
+              direction="send"
+              edgeTransaction={
+                Object {
+                  "blockHeight": 0,
+                  "currencyCode": "BTC",
+                  "date": 1535752780.947,
+                  "metadata": Object {
+                    "amountFiat": -6392.93,
+                  },
+                  "nativeAmount": "-123",
+                  "networkFee": "1",
+                  "otherParams": Object {},
+                  "ourReceiveAddresses": Array [
+                    "this is an address",
+                  ],
+                  "signedTx": "this is a signed tx",
+                  "txid": "this is the txid",
+                  "wallet": Object {
+                    "allDenominations": Object {},
+                    "balances": Object {
+                      "BTC": "123123",
+                    },
+                    "blockHeight": 12345,
+                    "currencyCode": "BTC",
+                    "currencyInfo": Object {},
+                    "displayPrivateSeed": "private seed",
+                    "displayPublicSeed": "public seed",
+                    "fiatCurrencyCode": "iso:USD",
+                    "id": "123",
+                    "name": "wallet name",
+                  },
+                }
+              }
+              fiatAmount="6392.93"
+              fiatCurrencyCode="iso:USD"
+              fiatCurrencySymbol="$"
+              guiWallet={
+                Object {
+                  "allDenominations": Object {},
+                  "balances": Object {
+                    "BTC": "123123",
+                  },
+                  "blockHeight": 12345,
+                  "currencyCode": "BTC",
+                  "currencyInfo": Object {},
+                  "displayPrivateSeed": "private seed",
+                  "displayPublicSeed": "public seed",
+                  "fiatCurrencyCode": "iso:USD",
+                  "id": "123",
+                  "name": "wallet name",
+                }
+              }
+              onBlurFiatFxn={[Function]}
+              onBlurNotes={[Function]}
+              onChangeCategoryFxn={[Function]}
+              onChangeFiatFxn={[Function]}
+              onChangeNotesFxn={[Function]}
+              onEnterCategories={[Function]}
+              onEnterSubcategories={[Function]}
+              onExitCategories={[Function]}
+              onFocusFiatAmount={[Function]}
+              onFocusNotes={[Function]}
+              onNotesKeyboardReturn={[Function]}
+              onPressAdvancedDetailsButton={[Function]}
+              onPressFxn={[Function]}
+              onSelectCategory={[Function]}
+              onSelectSubCategory={[Function]}
+              onSubcategoryKeyboardReturn={[Function]}
+              openModalFxn={[Function]}
+              subCategory=""
+              subCategorySelectVisibility={false}
+              txExplorerUrl={null}
+              type="expense"
+              types={
+                Object {
+                  "exchange": Object {
+                    "color": "#F1AA19",
+                    "key": "exchange",
+                    "syntax": "Exchange",
+                  },
+                  "expense": Object {
+                    "color": "#E85466",
+                    "key": "expense",
+                    "syntax": "Expense",
+                  },
+                  "income": Object {
+                    "color": "#0073D9",
+                    "key": "income",
+                    "syntax": "Income",
+                  },
+                  "transfer": Object {
+                    "color": "#0D2145",
+                    "key": "transfer",
+                    "syntax": "Transfer",
+                  },
+                }
+              }
+              usableHeight={1221}
+            />
+          </Component>
+        </Component>
+        <Component
+          style={
+            Object {
+              "height": 300,
+            }
+          }
+        />
+      </ScrollView>
+    </Component>
+  </Component>
+</SafeAreaViewComponent>
+`;
+
+exports[`TransactionDetails.ui should render with tx date off by 1000x in future 1`] = `
+<SafeAreaViewComponent>
+  <Component
+    style={
+      Array [
+        Object {
+          "height": 1265,
+          "width": "100%",
+        },
+      ]
+    }
+  >
+    <Gradient
+      style={
+        Object {
+          "height": 92.70211267605633,
+          "position": "absolute",
+          "width": "100%",
+        }
+      }
+    />
+    <Component
+      style={
+        Object {
+          "position": "relative",
+          "top": 92.70211267605633,
+        }
+      }
+    >
+      <AdvancedTransactionDetailsModal
+        isActive={false}
+        onExit={[Function]}
+        txExplorerUrl={null}
+        txid="this is the txid"
+      />
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        overScrollMode="never"
+        scrollEnabled={true}
+      >
+        <Component
+          style={
+            Array [
+              Object {
+                "alignItems": "stretch",
+                "backgroundColor": "#FFFFFF",
+                "flex": 1,
+                "flexDirection": "column",
+                "zIndex": 1,
+              },
+            ]
+          }
+        >
+          <Component>
+            <Gradient
+              style={
+                Array [
+                  Object {
+                    "flexDirection": "row",
+                    "height": 44.946478873239435,
+                    "justifyContent": "center",
+                  },
+                ]
+              }
+            >
+              <PayeeIcon
+                direction="receive"
+                thumbnailPath="thumb/nail/path"
+              />
+            </Gradient>
+          </Component>
+          <Component
+            style={
+              Array [
+                Object {
+                  "flexDirection": "column",
+                  "position": "relative",
+                  "top": 28.091549295774648,
+                },
+              ]
+            }
+          >
+            <Component
+              style={
+                Array [
+                  Object {
+                    "alignItems": "center",
+                    "flexDirection": "column",
+                  },
+                ]
+              }
+            >
+              <Component
+                style={
+                  Array [
+                    Object {
+                      "alignItems": "center",
+                      "padding": 5.618309859154929,
+                      "width": "80%",
+                    },
+                  ]
+                }
+              >
+                <TextInput
+                  allowFontScaling={true}
+                  autoCapitalize="words"
+                  autoCorrect={false}
+                  defaultValue=""
+                  onFocus={[Function]}
+                  placeholder="Payee"
+                  placeholderTextColor="#87939E"
+                  style={
+                    Array [
+                      Object {
+                        "color": "#4A5157",
+                        "fontFamily": "SourceSansPro-Black",
+                        "fontSize": 23.87781690140845,
+                        "height": 33.709859154929575,
+                        "textAlign": "center",
+                        "width": "100%",
+                      },
+                      undefined,
+                    ]
+                  }
+                  underlineColorAndroid="transparent"
+                />
+              </Component>
+            </Component>
+            <Component
+              style={
+                Object {
+                  "alignSelf": "center",
+                  "borderBottomColor": "#CCCCCC",
+                  "borderBottomWidth": 1,
+                  "height": 1.4045774647887324,
+                  "width": "38%",
+                }
+              }
+            />
+            <Component
+              style={
+                Array [
+                  Object {
+                    "alignItems": "center",
+                    "flexDirection": "column",
+                    "padding": 5.618309859154929,
+                  },
+                ]
+              }
+            >
+              <FormattedText
+                style={
+                  Array [
+                    Object {
+                      "color": "#87939E",
+                      "fontSize": 19.66408450704225,
+                    },
+                  ]
+                }
+              >
+                Aug 31st, 2018, 9:59:40 PM
+              </FormattedText>
+            </Component>
+            <AmountArea
+              categorySelectVisibility={false}
+              color="#0073D9"
+              cryptoCurrencyCode="BTC"
+              direction="receive"
+              edgeTransaction={
+                Object {
+                  "blockHeight": 0,
+                  "currencyCode": "BTC",
+                  "date": 1535752780947,
+                  "nativeAmount": "123",
+                  "networkFee": "1",
+                  "otherParams": Object {},
+                  "ourReceiveAddresses": Array [
+                    "this is an address",
+                  ],
+                  "signedTx": "this is a signed tx",
+                  "txid": "this is the txid",
+                  "wallet": Object {
+                    "allDenominations": Object {},
+                    "balances": Object {
+                      "BTC": "123123",
+                    },
+                    "blockHeight": 12345,
+                    "currencyCode": "BTC",
+                    "currencyInfo": Object {},
+                    "displayPrivateSeed": "private seed",
+                    "displayPublicSeed": "public seed",
+                    "fiatCurrencyCode": "iso:USD",
+                    "id": "123",
+                    "name": "wallet name",
+                  },
+                }
+              }
+              fiatAmount="0.00"
+              fiatCurrencyCode="iso:USD"
+              fiatCurrencySymbol="$"
+              guiWallet={
+                Object {
+                  "allDenominations": Object {},
+                  "balances": Object {
+                    "BTC": "123123",
+                  },
+                  "blockHeight": 12345,
+                  "currencyCode": "BTC",
+                  "currencyInfo": Object {},
+                  "displayPrivateSeed": "private seed",
+                  "displayPublicSeed": "public seed",
+                  "fiatCurrencyCode": "iso:USD",
+                  "id": "123",
+                  "name": "wallet name",
+                }
+              }
+              onBlurFiatFxn={[Function]}
+              onBlurNotes={[Function]}
+              onChangeCategoryFxn={[Function]}
+              onChangeFiatFxn={[Function]}
+              onChangeNotesFxn={[Function]}
+              onEnterCategories={[Function]}
+              onEnterSubcategories={[Function]}
+              onExitCategories={[Function]}
+              onFocusFiatAmount={[Function]}
+              onFocusNotes={[Function]}
+              onNotesKeyboardReturn={[Function]}
+              onPressAdvancedDetailsButton={[Function]}
+              onPressFxn={[Function]}
+              onSelectCategory={[Function]}
+              onSelectSubCategory={[Function]}
+              onSubcategoryKeyboardReturn={[Function]}
+              openModalFxn={[Function]}
+              subCategory=""
+              subCategorySelectVisibility={false}
+              txExplorerUrl={null}
+              type="income"
+              types={
+                Object {
+                  "exchange": Object {
+                    "color": "#F1AA19",
+                    "key": "exchange",
+                    "syntax": "Exchange",
+                  },
+                  "expense": Object {
+                    "color": "#E85466",
+                    "key": "expense",
+                    "syntax": "Expense",
+                  },
+                  "income": Object {
+                    "color": "#0073D9",
+                    "key": "income",
+                    "syntax": "Income",
+                  },
+                  "transfer": Object {
+                    "color": "#0D2145",
+                    "key": "transfer",
+                    "syntax": "Transfer",
+                  },
+                }
+              }
+              usableHeight={1221}
+            />
+          </Component>
+        </Component>
+        <Component
+          style={
+            Object {
+              "height": 300,
+            }
+          }
+        />
+      </ScrollView>
+    </Component>
+  </Component>
+</SafeAreaViewComponent>
+`;
+
+exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1`] = `
+<SafeAreaViewComponent>
+  <Component
+    style={
+      Array [
+        Object {
+          "height": 1265,
+          "width": "100%",
+        },
+      ]
+    }
+  >
+    <Gradient
+      style={
+        Object {
+          "height": 92.70211267605633,
+          "position": "absolute",
+          "width": "100%",
+        }
+      }
+    />
+    <Component
+      style={
+        Object {
+          "position": "relative",
+          "top": 92.70211267605633,
+        }
+      }
+    >
+      <AdvancedTransactionDetailsModal
+        isActive={false}
+        onExit={[Function]}
+        txExplorerUrl={null}
+        txid="this is the txid"
+      />
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        overScrollMode="never"
+        scrollEnabled={true}
+      >
+        <Component
+          style={
+            Array [
+              Object {
+                "alignItems": "stretch",
+                "backgroundColor": "#FFFFFF",
+                "flex": 1,
+                "flexDirection": "column",
+                "zIndex": 1,
+              },
+            ]
+          }
+        >
+          <Component>
+            <Gradient
+              style={
+                Array [
+                  Object {
+                    "flexDirection": "row",
+                    "height": 44.946478873239435,
+                    "justifyContent": "center",
+                  },
+                ]
+              }
+            >
+              <PayeeIcon
+                direction="receive"
+                thumbnailPath="thumb/nail/path"
+              />
+            </Gradient>
+          </Component>
+          <Component
+            style={
+              Array [
+                Object {
+                  "flexDirection": "column",
+                  "position": "relative",
+                  "top": 28.091549295774648,
+                },
+              ]
+            }
+          >
+            <Component
+              style={
+                Array [
+                  Object {
+                    "alignItems": "center",
+                    "flexDirection": "column",
+                  },
+                ]
+              }
+            >
+              <Component
+                style={
+                  Array [
+                    Object {
+                      "alignItems": "center",
+                      "padding": 5.618309859154929,
+                      "width": "80%",
+                    },
+                  ]
+                }
+              >
+                <TextInput
+                  allowFontScaling={true}
+                  autoCapitalize="words"
+                  autoCorrect={false}
+                  defaultValue=""
+                  onFocus={[Function]}
+                  placeholder="Payee"
+                  placeholderTextColor="#87939E"
+                  style={
+                    Array [
+                      Object {
+                        "color": "#4A5157",
+                        "fontFamily": "SourceSansPro-Black",
+                        "fontSize": 23.87781690140845,
+                        "height": 33.709859154929575,
+                        "textAlign": "center",
+                        "width": "100%",
+                      },
+                      undefined,
+                    ]
+                  }
+                  underlineColorAndroid="transparent"
+                />
+              </Component>
+            </Component>
+            <Component
+              style={
+                Object {
+                  "alignSelf": "center",
+                  "borderBottomColor": "#CCCCCC",
+                  "borderBottomWidth": 1,
+                  "height": 1.4045774647887324,
+                  "width": "38%",
+                }
+              }
+            />
+            <Component
+              style={
+                Array [
+                  Object {
+                    "alignItems": "center",
+                    "flexDirection": "column",
+                    "padding": 5.618309859154929,
+                  },
+                ]
+              }
+            >
+              <FormattedText
+                style={
+                  Array [
+                    Object {
+                      "color": "#87939E",
+                      "fontSize": 19.66408450704225,
+                    },
+                  ]
+                }
+              >
+                Aug 31st, 2018, 9:59:40 PM
+              </FormattedText>
+            </Component>
+            <AmountArea
+              categorySelectVisibility={false}
+              color="#0073D9"
+              cryptoCurrencyCode="BTC"
+              direction="receive"
+              edgeTransaction={
+                Object {
+                  "blockHeight": 0,
+                  "currencyCode": "BTC",
+                  "date": 1535752.780947,
+                  "nativeAmount": "123",
+                  "networkFee": "1",
+                  "otherParams": Object {},
+                  "ourReceiveAddresses": Array [
+                    "this is an address",
+                  ],
+                  "signedTx": "this is a signed tx",
+                  "txid": "this is the txid",
+                  "wallet": Object {
+                    "allDenominations": Object {},
+                    "balances": Object {
+                      "BTC": "123123",
+                    },
+                    "blockHeight": 12345,
+                    "currencyCode": "BTC",
+                    "currencyInfo": Object {},
+                    "displayPrivateSeed": "private seed",
+                    "displayPublicSeed": "public seed",
+                    "fiatCurrencyCode": "iso:USD",
+                    "id": "123",
+                    "name": "wallet name",
+                  },
+                }
+              }
+              fiatAmount="0.00"
+              fiatCurrencyCode="iso:USD"
+              fiatCurrencySymbol="$"
+              guiWallet={
+                Object {
+                  "allDenominations": Object {},
+                  "balances": Object {
+                    "BTC": "123123",
+                  },
+                  "blockHeight": 12345,
+                  "currencyCode": "BTC",
+                  "currencyInfo": Object {},
+                  "displayPrivateSeed": "private seed",
+                  "displayPublicSeed": "public seed",
+                  "fiatCurrencyCode": "iso:USD",
+                  "id": "123",
+                  "name": "wallet name",
+                }
+              }
+              onBlurFiatFxn={[Function]}
+              onBlurNotes={[Function]}
+              onChangeCategoryFxn={[Function]}
+              onChangeFiatFxn={[Function]}
+              onChangeNotesFxn={[Function]}
+              onEnterCategories={[Function]}
+              onEnterSubcategories={[Function]}
+              onExitCategories={[Function]}
+              onFocusFiatAmount={[Function]}
+              onFocusNotes={[Function]}
+              onNotesKeyboardReturn={[Function]}
+              onPressAdvancedDetailsButton={[Function]}
+              onPressFxn={[Function]}
+              onSelectCategory={[Function]}
+              onSelectSubCategory={[Function]}
+              onSubcategoryKeyboardReturn={[Function]}
+              openModalFxn={[Function]}
+              subCategory=""
+              subCategorySelectVisibility={false}
+              txExplorerUrl={null}
+              type="income"
+              types={
+                Object {
+                  "exchange": Object {
+                    "color": "#F1AA19",
+                    "key": "exchange",
+                    "syntax": "Exchange",
+                  },
+                  "expense": Object {
+                    "color": "#E85466",
+                    "key": "expense",
+                    "syntax": "Expense",
+                  },
+                  "income": Object {
+                    "color": "#0073D9",
+                    "key": "income",
+                    "syntax": "Income",
+                  },
+                  "transfer": Object {
+                    "color": "#0D2145",
+                    "key": "transfer",
+                    "syntax": "Transfer",
+                  },
+                }
+              }
+              usableHeight={1221}
+            />
+          </Component>
+        </Component>
+        <Component
+          style={
+            Object {
+              "height": 300,
+            }
+          }
+        />
+      </ScrollView>
+    </Component>
+  </Component>
+</SafeAreaViewComponent>
+`;

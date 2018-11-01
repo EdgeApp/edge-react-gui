@@ -2,7 +2,7 @@
 
 import { connect } from 'react-redux'
 
-import { loadContactsStart, loadContactsSuccess } from '../../../../reducers/contacts/actions.js'
+import { loadContactsStart, loadContactsSuccess } from '../../../../actions/ContactsActions.js'
 import type { GuiContact } from '../../../../types.js'
 import type { Dispatch, State } from '../../../ReduxTypes.js'
 import { displayErrorAlert } from '../ErrorAlert/actions.js'

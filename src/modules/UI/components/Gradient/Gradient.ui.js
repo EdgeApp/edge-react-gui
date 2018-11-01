@@ -6,7 +6,7 @@ import { StyleSheet } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import THEME from '../../../../theme/variables/airbitz'
-import { getObjectDiff } from '../../../utils'
+import { getObjectDiff } from '../../../../util/utils'
 
 const REVERSE_COLORS = [THEME.COLORS.GRADIENT.DARK, THEME.COLORS.GRADIENT.LIGHT]
 const COLORS = [THEME.COLORS.GRADIENT.LIGHT, THEME.COLORS.GRADIENT.DARK]

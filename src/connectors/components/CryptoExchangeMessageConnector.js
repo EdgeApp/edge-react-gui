@@ -7,11 +7,11 @@ import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import { getCurrencyConverter } from '../../modules/Core/selectors.js'
 import type { State } from '../../modules/ReduxTypes'
+import { getDisplayDenomination, getExchangeDenomination as settingsGetExchangeDenomination } from '../../modules/Settings/selectors.js'
 import { CryptoExchangeMessageBoxComponent } from '../../modules/UI/components/CryptoExchangeMessageBox/CryptoExchangeMessageBoxComponent'
 import { getExchangeDenomination } from '../../modules/UI/selectors.js'
-import { getDisplayDenomination, getExchangeDenomination as settingsGetExchangeDenomination } from '../../modules/UI/Settings/selectors.js'
-import { convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../modules/utils'
 import type { GuiCurrencyInfo } from '../../types'
+import { convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../util/utils'
 
 export const mapStateToProps = (state: State, ownProps: Object) => {
   const insufficient = state.cryptoExchange.insufficientError

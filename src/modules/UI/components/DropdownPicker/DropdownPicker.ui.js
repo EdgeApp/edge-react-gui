@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import { KeyboardAvoidingView, ListView, TouchableOpacity, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 
-import { FormField } from '../../../../components/FormField.js'
+import { FormField } from '../../../../components/common/FormField.js'
 import T from '../../components/FormattedText'
 import styles from './styles.js'
 

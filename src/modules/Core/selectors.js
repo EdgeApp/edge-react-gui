@@ -3,8 +3,8 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 
 import type { State } from '../ReduxTypes'
+import { getDefaultIsoFiat } from '../Settings/selectors.js'
 import { convertCurrency } from '../UI/selectors.js'
-import { getDefaultIsoFiat } from '../UI/Settings/selectors.js'
 
 export const getCore = (state: State) => state.core
 

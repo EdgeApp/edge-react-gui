@@ -1,0 +1,178 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CurrencySettings should render 1`] = `
+<SafeAreaViewComponent>
+  <Component
+    style={
+      Array [
+        undefined,
+      ]
+    }
+  >
+    <Gradient
+      style={
+        Object {
+          "height": 44,
+        }
+      }
+    />
+    <Component
+      style={
+        Object {
+          "backgroundColor": "#FFFFFF",
+          "height": "100%",
+          "position": "relative",
+        }
+      }
+    >
+      <Gradient
+        style={
+          Array [
+            Object {
+              "flexDirection": "row",
+              "height": 70.22887323943661,
+              "justifyContent": "space-between",
+              "padding": 16.854929577464787,
+            },
+          ]
+        }
+      >
+        <Component
+          style={
+            Array [
+              undefined,
+            ]
+          }
+        >
+          <Component
+            style={
+              Object {
+                "flexDirection": "row",
+              }
+            }
+          >
+            <FormattedText
+              style={
+                Object {
+                  "backgroundColor": "transparent",
+                  "color": "#FFFFFF",
+                  "fontSize": 25.28239436619718,
+                  "marginLeft": 22.473239436619718,
+                }
+              }
+            >
+              Denominations
+            </FormattedText>
+          </Component>
+        </Component>
+      </Gradient>
+      <RadioRows
+        style={Object {}}
+      >
+        <Row
+          denomination={
+            Object {
+              "multiplier": "100000000",
+              "name": "BTG",
+              "symbol": "₿",
+            }
+          }
+          isSelected={false}
+          left={
+            <Component
+              style={
+                Object {
+                  "flexDirection": "row",
+                }
+              }
+            >
+              <FormattedText
+                style={
+                  Object {
+                    "fontFamily": "SourceSansPro-Black",
+                  }
+                }
+              >
+                ₿
+              </FormattedText>
+              <FormattedText>
+                 - 
+                BTG
+              </FormattedText>
+            </Component>
+          }
+          onPress={[Function]}
+        />
+        <Row
+          denomination={
+            Object {
+              "multiplier": "100000",
+              "name": "mBTG",
+              "symbol": "m₿",
+            }
+          }
+          isSelected={false}
+          left={
+            <Component
+              style={
+                Object {
+                  "flexDirection": "row",
+                }
+              }
+            >
+              <FormattedText
+                style={
+                  Object {
+                    "fontFamily": "SourceSansPro-Black",
+                  }
+                }
+              >
+                m₿
+              </FormattedText>
+              <FormattedText>
+                 - 
+                mBTG
+              </FormattedText>
+            </Component>
+          }
+          onPress={[Function]}
+        />
+        <Row
+          denomination={
+            Object {
+              "multiplier": "100",
+              "name": "bits",
+              "symbol": "ƀ",
+            }
+          }
+          isSelected={true}
+          left={
+            <Component
+              style={
+                Object {
+                  "flexDirection": "row",
+                }
+              }
+            >
+              <FormattedText
+                style={
+                  Object {
+                    "fontFamily": "SourceSansPro-Black",
+                  }
+                }
+              >
+                ƀ
+              </FormattedText>
+              <FormattedText>
+                 - 
+                bits
+              </FormattedText>
+            </Component>
+          }
+          onPress={[Function]}
+        />
+      </RadioRows>
+    </Component>
+  </Component>
+</SafeAreaViewComponent>
+`;

@@ -1,0 +1,616 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`sendConfirmation reducer address NEW_SPEND_INFO 1`] = `
+Object {
+  "address": "123123123",
+  "authRequired": "none",
+  "error": null,
+  "forceUpdateGuiCounter": 0,
+  "isEditable": true,
+  "isKeyboardVisible": false,
+  "nativeAmount": "0",
+  "parsedUri": Object {
+    "customNetworkFee": Object {},
+    "metadata": Object {
+      "amountFiat": 0,
+      "bizId": 0,
+      "category": "",
+      "miscJson": "",
+      "name": "",
+      "notes": "",
+    },
+    "nativeAmount": "0",
+    "networkFeeOption": "standard",
+    "publicAddress": "123123123",
+  },
+  "pending": false,
+  "pin": "",
+  "spendInfo": Object {
+    "metadata": Object {},
+    "spendTargets": Array [
+      Object {
+        "nativeAmount": "0",
+        "publicAddress": "123123123",
+      },
+    ],
+  },
+  "transaction": null,
+  "transactionMetadata": Object {},
+}
+`;
+
+exports[`sendConfirmation reducer destination newSpendInfo with name 1`] = `
+Object {
+  "address": "123123123",
+  "authRequired": "none",
+  "error": null,
+  "forceUpdateGuiCounter": 0,
+  "isEditable": true,
+  "isKeyboardVisible": false,
+  "nativeAmount": "1000",
+  "parsedUri": Object {
+    "customNetworkFee": Object {},
+    "metadata": Object {
+      "amountFiat": 0,
+      "bizId": 0,
+      "category": "",
+      "miscJson": "",
+      "name": "airbitz",
+      "notes": "",
+    },
+    "nativeAmount": "1000",
+    "networkFeeOption": "standard",
+    "publicAddress": "123123123",
+  },
+  "pending": false,
+  "pin": "",
+  "spendInfo": Object {
+    "currencyCode": "BTC",
+    "metadata": Object {
+      "name": "airbitz",
+    },
+    "nativeAmount": "1000",
+    "spendTargets": Array [
+      Object {
+        "currencyCode": "BTC",
+        "nativeAmount": "1000",
+        "publicAddress": "123123123",
+      },
+    ],
+  },
+  "transaction": null,
+  "transactionMetadata": Object {
+    "name": "airbitz",
+  },
+}
+`;
+
+exports[`sendConfirmation reducer destination newSpendInfo without name 1`] = `
+Object {
+  "address": "123123123",
+  "authRequired": "none",
+  "error": null,
+  "forceUpdateGuiCounter": 0,
+  "isEditable": true,
+  "isKeyboardVisible": false,
+  "nativeAmount": "1000",
+  "parsedUri": Object {
+    "customNetworkFee": Object {},
+    "metadata": Object {
+      "amountFiat": 0,
+      "bizId": 0,
+      "category": "",
+      "miscJson": "",
+      "name": "",
+      "notes": "",
+    },
+    "nativeAmount": "1000",
+    "networkFeeOption": "standard",
+    "publicAddress": "123123123",
+  },
+  "pending": false,
+  "pin": "",
+  "spendInfo": Object {
+    "currencyCode": "BTC",
+    "metadata": Object {},
+    "nativeAmount": "1000",
+    "spendTargets": Array [
+      Object {
+        "currencyCode": "BTC",
+        "nativeAmount": "1000",
+        "publicAddress": "123123123",
+      },
+    ],
+  },
+  "transaction": null,
+  "transactionMetadata": Object {},
+}
+`;
+
+exports[`sendConfirmation reducer destination updateTransaction with error 1`] = `
+Object {
+  "address": "",
+  "authRequired": "none",
+  "error": [Error],
+  "forceUpdateGuiCounter": 1,
+  "isEditable": true,
+  "isKeyboardVisible": false,
+  "nativeAmount": "100000",
+  "parsedUri": Object {
+    "customNetworkFee": Object {},
+    "metadata": Object {
+      "amountFiat": 0,
+      "bizId": 0,
+      "category": "",
+      "miscJson": "",
+      "name": "",
+      "notes": "",
+    },
+    "nativeAmount": "100000",
+    "networkFeeOption": "standard",
+    "publicAddress": "",
+  },
+  "pending": false,
+  "pin": "",
+  "spendInfo": null,
+  "transaction": null,
+  "transactionMetadata": null,
+}
+`;
+
+exports[`sendConfirmation reducer destination updateTransaction with pin error 1`] = `
+Object {
+  "address": "",
+  "authRequired": "none",
+  "error": [Error: Incorrect Pin],
+  "forceUpdateGuiCounter": 1,
+  "isEditable": true,
+  "isKeyboardVisible": false,
+  "nativeAmount": "0",
+  "parsedUri": Object {
+    "customNetworkFee": Object {},
+    "metadata": Object {
+      "amountFiat": 0,
+      "bizId": 0,
+      "category": "",
+      "miscJson": "",
+      "name": "",
+      "notes": "",
+    },
+    "nativeAmount": "0",
+    "networkFeeOption": "standard",
+    "publicAddress": "",
+  },
+  "pending": false,
+  "pin": "",
+  "spendInfo": null,
+  "transaction": Object {
+    "blockHeight": 0,
+    "currencyCode": "BCH",
+    "date": 0,
+    "nativeAmount": "-681",
+    "networkFee": "681",
+    "otherParams": Object {},
+    "ourReceiveAddresses": Array [
+      "123123123",
+    ],
+    "signedTx": "",
+    "txid": "",
+  },
+  "transactionMetadata": null,
+}
+`;
+
+exports[`sendConfirmation reducer destination updateTransaction with transaction and legacyAddress 1`] = `
+Object {
+  "address": "",
+  "authRequired": "none",
+  "error": null,
+  "forceUpdateGuiCounter": 1,
+  "isEditable": true,
+  "isKeyboardVisible": false,
+  "nativeAmount": "100000",
+  "parsedUri": Object {
+    "currencyCode": "BCH",
+    "customNetworkFee": Object {},
+    "legacyAddress": "123412341234",
+    "metadata": Object {
+      "amountFiat": 0,
+      "bizId": 0,
+      "category": "",
+      "miscJson": "",
+      "name": "",
+      "notes": "",
+    },
+    "nativeAmount": "100000",
+    "networkFeeOption": "standard",
+    "publicAddress": "bitcoincash:qpltjkre069mp80ylcj87832ju3zt2gr6gercn9j2z",
+  },
+  "pending": false,
+  "pin": "",
+  "spendInfo": null,
+  "transaction": Object {
+    "blockHeight": 0,
+    "currencyCode": "BCH",
+    "date": 0,
+    "nativeAmount": "-681",
+    "networkFee": "681",
+    "otherParams": Object {},
+    "ourReceiveAddresses": Array [
+      "123123123",
+    ],
+    "signedTx": "",
+    "txid": "",
+  },
+  "transactionMetadata": null,
+}
+`;
+
+exports[`sendConfirmation reducer destination updateTransaction with transaction and name 1`] = `
+Object {
+  "address": "",
+  "authRequired": "none",
+  "error": null,
+  "forceUpdateGuiCounter": 1,
+  "isEditable": true,
+  "isKeyboardVisible": false,
+  "nativeAmount": "100000",
+  "parsedUri": Object {
+    "currencyCode": "BCH",
+    "customNetworkFee": Object {},
+    "metadata": Object {
+      "amountFiat": 0,
+      "bizId": 0,
+      "category": "",
+      "miscJson": "",
+      "name": "airbitz",
+      "notes": "",
+    },
+    "nativeAmount": "100000",
+    "networkFeeOption": "standard",
+    "publicAddress": "bitcoincash:qpltjkre069mp80ylcj87832ju3zt2gr6gercn9j2z",
+  },
+  "pending": false,
+  "pin": "",
+  "spendInfo": null,
+  "transaction": Object {
+    "blockHeight": 0,
+    "currencyCode": "BCH",
+    "date": 0,
+    "nativeAmount": "-681",
+    "networkFee": "681",
+    "otherParams": Object {},
+    "ourReceiveAddresses": Array [
+      "123123123",
+    ],
+    "signedTx": "",
+    "txid": "",
+  },
+  "transactionMetadata": Object {
+    "name": "airbitz",
+  },
+}
+`;
+
+exports[`sendConfirmation reducer error MAKE_PAYMENT_PROTOCOL_TRANSACTION_FAILED 1`] = `
+Object {
+  "address": "",
+  "authRequired": "none",
+  "error": [Error],
+  "forceUpdateGuiCounter": 0,
+  "isEditable": false,
+  "isKeyboardVisible": false,
+  "nativeAmount": "0",
+  "parsedUri": Object {
+    "customNetworkFee": Object {},
+    "metadata": Object {
+      "amountFiat": 0,
+      "bizId": 0,
+      "category": "",
+      "miscJson": "",
+      "name": "",
+      "notes": "",
+    },
+    "nativeAmount": "0",
+    "networkFeeOption": "standard",
+    "publicAddress": "",
+  },
+  "pending": false,
+  "pin": "",
+  "spendInfo": null,
+  "transaction": Object {
+    "blockHeight": -1,
+    "currencyCode": "",
+    "date": 0,
+    "metadata": Object {},
+    "nativeAmount": "0",
+    "networkFee": "",
+    "otherParams": Object {},
+    "ourReceiveAddresses": Array [],
+    "parentNetworkFee": "",
+    "signedTx": "",
+    "txid": "",
+  },
+  "transactionMetadata": null,
+}
+`;
+
+exports[`sendConfirmation reducer error UPDATE_TRANSACTION 1`] = `
+Object {
+  "address": "",
+  "authRequired": "none",
+  "error": [Error],
+  "forceUpdateGuiCounter": 0,
+  "isEditable": true,
+  "isKeyboardVisible": false,
+  "nativeAmount": "0",
+  "parsedUri": Object {
+    "customNetworkFee": Object {},
+    "metadata": Object {
+      "amountFiat": 0,
+      "bizId": 0,
+      "category": "",
+      "miscJson": "",
+      "name": "",
+      "notes": "",
+    },
+    "nativeAmount": "0",
+    "networkFeeOption": "standard",
+    "publicAddress": "",
+  },
+  "pending": false,
+  "pin": "",
+  "spendInfo": null,
+  "transaction": null,
+  "transactionMetadata": null,
+}
+`;
+
+exports[`sendConfirmation reducer initialState 1`] = `
+Object {
+  "address": "",
+  "authRequired": "none",
+  "error": null,
+  "forceUpdateGuiCounter": 0,
+  "isEditable": true,
+  "isKeyboardVisible": false,
+  "nativeAmount": "0",
+  "parsedUri": Object {
+    "customNetworkFee": Object {},
+    "metadata": Object {
+      "amountFiat": 0,
+      "bizId": 0,
+      "category": "",
+      "miscJson": "",
+      "name": "",
+      "notes": "",
+    },
+    "nativeAmount": "0",
+    "networkFeeOption": "standard",
+    "publicAddress": "",
+  },
+  "pending": false,
+  "pin": "",
+  "spendInfo": null,
+  "transaction": Object {
+    "blockHeight": -1,
+    "currencyCode": "",
+    "date": 0,
+    "metadata": Object {},
+    "nativeAmount": "0",
+    "networkFee": "",
+    "otherParams": Object {},
+    "ourReceiveAddresses": Array [],
+    "parentNetworkFee": "",
+    "signedTx": "",
+    "txid": "",
+  },
+  "transactionMetadata": null,
+}
+`;
+
+exports[`sendConfirmation reducer isEditable MAKE_PAYMENT_PROTOCOL_TRANSACTION_FAILED 1`] = `
+Object {
+  "address": "",
+  "authRequired": "none",
+  "error": [Error],
+  "forceUpdateGuiCounter": 0,
+  "isEditable": false,
+  "isKeyboardVisible": false,
+  "nativeAmount": "0",
+  "parsedUri": Object {
+    "customNetworkFee": Object {},
+    "metadata": Object {
+      "amountFiat": 0,
+      "bizId": 0,
+      "category": "",
+      "miscJson": "",
+      "name": "",
+      "notes": "",
+    },
+    "nativeAmount": "0",
+    "networkFeeOption": "standard",
+    "publicAddress": "",
+  },
+  "pending": false,
+  "pin": "",
+  "spendInfo": null,
+  "transaction": Object {
+    "blockHeight": -1,
+    "currencyCode": "",
+    "date": 0,
+    "metadata": Object {},
+    "nativeAmount": "0",
+    "networkFee": "",
+    "otherParams": Object {},
+    "ourReceiveAddresses": Array [],
+    "parentNetworkFee": "",
+    "signedTx": "",
+    "txid": "",
+  },
+  "transactionMetadata": null,
+}
+`;
+
+exports[`sendConfirmation reducer isEditable UPDATE_PAYMENT_PROTOCOL_TRANSACTION 1`] = `
+Object {
+  "address": "",
+  "authRequired": "none",
+  "error": null,
+  "forceUpdateGuiCounter": 0,
+  "isEditable": false,
+  "isKeyboardVisible": false,
+  "nativeAmount": "0",
+  "parsedUri": Object {
+    "customNetworkFee": Object {},
+    "metadata": Object {
+      "amountFiat": 0,
+      "bizId": 0,
+      "category": "",
+      "miscJson": "",
+      "name": "",
+      "notes": "",
+    },
+    "nativeAmount": "0",
+    "networkFeeOption": "standard",
+    "publicAddress": "",
+  },
+  "pending": false,
+  "pin": "",
+  "spendInfo": null,
+  "transaction": Object {
+    "id": "123",
+    "nativeAmount": "123",
+  },
+  "transactionMetadata": null,
+}
+`;
+
+exports[`sendConfirmation reducer pending 1`] = `
+Object {
+  "address": "",
+  "authRequired": "none",
+  "error": null,
+  "forceUpdateGuiCounter": 0,
+  "isEditable": true,
+  "isKeyboardVisible": false,
+  "nativeAmount": "0",
+  "parsedUri": Object {
+    "customNetworkFee": Object {},
+    "metadata": Object {
+      "amountFiat": 0,
+      "bizId": 0,
+      "category": "",
+      "miscJson": "",
+      "name": "",
+      "notes": "",
+    },
+    "nativeAmount": "0",
+    "networkFeeOption": "standard",
+    "publicAddress": "",
+  },
+  "pending": true,
+  "pin": "",
+  "spendInfo": null,
+  "transaction": Object {
+    "blockHeight": -1,
+    "currencyCode": "",
+    "date": 0,
+    "metadata": Object {},
+    "nativeAmount": "0",
+    "networkFee": "",
+    "otherParams": Object {},
+    "ourReceiveAddresses": Array [],
+    "parentNetworkFee": "",
+    "signedTx": "",
+    "txid": "",
+  },
+  "transactionMetadata": null,
+}
+`;
+
+exports[`sendConfirmation reducer pin 1`] = `
+Object {
+  "address": "",
+  "authRequired": "none",
+  "error": null,
+  "forceUpdateGuiCounter": 0,
+  "isEditable": true,
+  "isKeyboardVisible": false,
+  "nativeAmount": "0",
+  "parsedUri": Object {
+    "customNetworkFee": Object {},
+    "metadata": Object {
+      "amountFiat": 0,
+      "bizId": 0,
+      "category": "",
+      "miscJson": "",
+      "name": "",
+      "notes": "",
+    },
+    "nativeAmount": "0",
+    "networkFeeOption": "standard",
+    "publicAddress": "",
+  },
+  "pending": false,
+  "pin": "1234",
+  "spendInfo": null,
+  "transaction": Object {
+    "blockHeight": -1,
+    "currencyCode": "",
+    "date": 0,
+    "metadata": Object {},
+    "nativeAmount": "0",
+    "networkFee": "",
+    "otherParams": Object {},
+    "ourReceiveAddresses": Array [],
+    "parentNetworkFee": "",
+    "signedTx": "",
+    "txid": "",
+  },
+  "transactionMetadata": null,
+}
+`;
+
+exports[`sendConfirmation reducer reset 1`] = `
+Object {
+  "address": "",
+  "authRequired": "none",
+  "error": null,
+  "forceUpdateGuiCounter": 0,
+  "isEditable": true,
+  "isKeyboardVisible": false,
+  "nativeAmount": "0",
+  "parsedUri": Object {
+    "customNetworkFee": Object {},
+    "metadata": Object {
+      "amountFiat": 0,
+      "bizId": 0,
+      "category": "",
+      "miscJson": "",
+      "name": "",
+      "notes": "",
+    },
+    "nativeAmount": "0",
+    "networkFeeOption": "standard",
+    "publicAddress": "",
+  },
+  "pending": false,
+  "pin": "",
+  "spendInfo": null,
+  "transaction": Object {
+    "blockHeight": -1,
+    "currencyCode": "",
+    "date": 0,
+    "metadata": Object {},
+    "nativeAmount": "0",
+    "networkFee": "",
+    "otherParams": Object {},
+    "ourReceiveAddresses": Array [],
+    "parentNetworkFee": "",
+    "signedTx": "",
+    "txid": "",
+  },
+  "transactionMetadata": null,
+}
+`;
