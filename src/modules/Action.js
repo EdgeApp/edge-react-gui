@@ -1,13 +1,13 @@
 // @flow
 
+import { type DeleteWalletModalAction } from '../actions/DeleteWalletModalActions.js'
+import { type GetSeedModalAction } from '../actions/GetSeedModalActions.js'
+import { type RenameWalletModalAction } from '../actions/RenameWalletModalActions.js'
+import { type ResyncWalletModalAction } from '../actions/ResyncWalletModalActions.js'
+import { type SplitWalletModalAction } from '../actions/SplitWalletModalActions.js'
+import { type XPubModalAction } from '../actions/XPubModalActions.js'
 import { type CoreContextAction } from './Core/Context/action.js'
 import { type SendLogsAction } from './Logs/action.js'
-import { type DeleteWalletModalAction } from './UI/scenes/WalletList/components/DeleteModal/actions.js'
-import { type GetSeedModalAction } from './UI/scenes/WalletList/components/GetSeedModal/actions.js'
-import { type RenameWalletModalAction } from './UI/scenes/WalletList/components/RenameModal/actions.js'
-import { type ResyncWalletModalAction } from './UI/scenes/WalletList/components/ResyncModal/actions.js'
-import { type SplitWalletModalAction } from './UI/scenes/WalletList/components/SplitModal/actions.js'
-import { type XPubModalAction } from './UI/scenes/WalletList/components/XPubModal/actions.js'
 
 type ActionType =
   // | 'CLOSE_DELETE_WALLET_MODAL'

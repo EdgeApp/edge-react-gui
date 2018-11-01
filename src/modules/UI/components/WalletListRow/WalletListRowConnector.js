@@ -2,8 +2,8 @@
 import { connect } from 'react-redux'
 
 import type { Dispatch, State } from '../../../ReduxTypes'
+import { getDisplayDenomination, getExchangeDenomination } from '../../../Settings/selectors.js'
 import { calculateWalletFiatBalance } from '../../selectors.js'
-import { getDisplayDenomination, getExchangeDenomination } from '../../Settings/selectors.js'
 import { WalletListRowComponent } from './WalletListRow.ui.js'
 import type { WalletListRowDispatchProps, WalletListRowOwnProps, WalletListRowStateProps } from './WalletListRow.ui.js'
 

@@ -12,10 +12,10 @@ import s from '../locales/strings.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors'
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
 import type { Dispatch, GetState } from '../modules/ReduxTypes'
+import * as SETTINGS_SELECTORS from '../modules/Settings/selectors.js'
 import * as UI_SELECTORS from '../modules/UI/selectors'
-import * as SETTINGS_SELECTORS from '../modules/UI/Settings/selectors.js'
-import * as UTILS from '../modules/utils'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../types'
+import * as UTILS from '../util/utils'
 
 // import { getExchangeDenomination as settingsGetExchangeDenomination } from '../../modules/UI/Settings/selectors.js'
 

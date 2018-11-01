@@ -15,10 +15,10 @@ import { Provider } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import ENV from '../env.json'
+import Main from './connectors/MainConnector'
 import * as Constants from './constants/indexConstants.js'
 import configureStore from './lib/configureStore'
 import s from './locales/strings.js'
-import Main from './modules/MainConnector'
 import { log, logToServer } from './util/logger'
 import { makeCoreContext } from './util/makeContext.js'
 

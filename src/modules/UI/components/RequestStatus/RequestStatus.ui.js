@@ -4,7 +4,7 @@ import React from 'react'
 import { Text, View } from 'react-native'
 
 import s from '../../../../locales/strings.js'
-import { border as b } from '../../../utils.js'
+import { border as b } from '../../../../util/utils.js'
 import T from '../FormattedText/'
 import styles from './styles'
 

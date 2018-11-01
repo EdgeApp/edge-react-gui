@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import { border as b } from '../../../utils'
+import { border as b } from '../../../../util/utils'
 import T from '../../components/FormattedText'
 import s from './style'
 

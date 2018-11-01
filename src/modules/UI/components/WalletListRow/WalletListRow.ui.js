@@ -17,7 +17,7 @@ import {
   getWalletDefaultDenomProps,
   mergeTokensRemoveInvisible,
   truncateDecimals
-} from '../../../utils.js'
+} from '../../../../util/utils.js'
 import Text from '../FormattedText'
 import { styles, stylesRaw } from './WalletListRowStyle.js'
 import { WalletListTokenRowConnector } from './WalletListTokenRowConnector.js'

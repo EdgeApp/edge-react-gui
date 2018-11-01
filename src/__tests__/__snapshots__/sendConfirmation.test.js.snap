@@ -1,0 +1,1028 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SendConfirmation should render with destination 1`] = `
+<SafeAreaViewComponent>
+  <Gradient
+    style={
+      Object {
+        "alignItems": "stretch",
+        "flex": 1,
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+        "width": "100%",
+      }
+    }
+  >
+    <Gradient
+      style={
+        Object {
+          "height": 44,
+        }
+      }
+    />
+    <Component
+      style={
+        Object {
+          "alignItems": "center",
+          "flex": 1,
+          "width": "100%",
+        }
+      }
+    >
+      <Component
+        style={
+          Array [
+            Object {
+              "alignItems": "center",
+              "marginTop": 14.045774647887324,
+            },
+            Object {
+              "backgroundColor": "transparent",
+              "height": 28.091549295774648,
+              "marginRight": 7.022887323943662,
+            },
+          ]
+        }
+      >
+        <FormattedText
+          style={
+            Object {
+              "color": "#FFFFFF",
+              "fontSize": 22.473239436619718,
+            }
+          }
+        >
+          Balance:
+           
+          0
+           
+          BTC
+           (
+          
+           
+          0.00
+          )
+        </FormattedText>
+      </Component>
+      <Component
+        style={
+          Array [
+            Object {
+              "alignItems": "center",
+              "marginVertical": 16.854929577464787,
+            },
+            Object {
+              "backgroundColor": "transparent",
+              "height": 28.091549295774648,
+              "marginRight": 7.022887323943662,
+            },
+          ]
+        }
+      >
+        <ExchangeRate
+          primaryInfo={
+            Object {
+              "displayCurrencyCode": "BTC",
+              "displayDenomination": Object {
+                "multiplier": "100000000",
+                "name": "BTC",
+                "symbol": "₿",
+              },
+              "exchangeCurrencyCode": "BTC",
+              "exchangeDenomination": Object {
+                "multiplier": "100000000",
+                "name": "BTC",
+                "symbol": "₿",
+              },
+            }
+          }
+          secondaryDisplayAmount={8000}
+          secondaryInfo={
+            Object {
+              "displayCurrencyCode": "USD",
+              "displayDenomination": Object {
+                "multiplier": "1",
+                "name": "",
+                "symbol": "",
+              },
+              "exchangeCurrencyCode": "iso:USD",
+              "exchangeDenomination": Object {
+                "multiplier": "1",
+                "name": "",
+                "symbol": "",
+              },
+            }
+          }
+        />
+      </Component>
+      <Component
+        style={
+          Object {
+            "alignItems": "center",
+            "width": "100%",
+          }
+        }
+      >
+        <ExchangedFlipInput
+          exchangeSecondaryToPrimaryRatio={8000}
+          forceUpdateGuiCounter={0}
+          isEditable={true}
+          keyboardVisible={false}
+          onExchangeAmountChanged={[Function]}
+          overridePrimaryExchangeAmount=""
+          primaryCurrencyInfo={
+            Object {
+              "displayCurrencyCode": "BTC",
+              "displayDenomination": Object {
+                "multiplier": "100000000",
+                "name": "BTC",
+                "symbol": "₿",
+              },
+              "exchangeCurrencyCode": "BTC",
+              "exchangeDenomination": Object {
+                "multiplier": "100000000",
+                "name": "BTC",
+                "symbol": "₿",
+              },
+            }
+          }
+          secondaryCurrencyInfo={
+            Object {
+              "displayCurrencyCode": "USD",
+              "displayDenomination": Object {
+                "multiplier": "1",
+                "name": "",
+                "symbol": "",
+              },
+              "exchangeCurrencyCode": "iso:USD",
+              "exchangeDenomination": Object {
+                "multiplier": "1",
+                "name": "",
+                "symbol": "",
+              },
+            }
+          }
+        />
+        <Padding
+          style={
+            Object {
+              "paddingHorizontal": 54,
+            }
+          }
+        >
+          <Item
+            style={
+              Object {
+                "alignItems": "center",
+                "flex": -1,
+              }
+            }
+          >
+            <Row
+              style={
+                Object {
+                  "paddingVertical": 4,
+                }
+              }
+            >
+              <FormattedText
+                style={
+                  Array [
+                    Object {
+                      "backgroundColor": "transparent",
+                      "color": "#FFFFFF",
+                      "fontSize": 22.473239436619718,
+                    },
+                  ]
+                }
+              >
+                
+              </FormattedText>
+            </Row>
+            <Row
+              style={
+                Object {
+                  "paddingVertical": 10,
+                }
+              }
+            >
+              <Text
+                style={Object {}}
+              >
+                <FormattedText>
+                  To: airbitz
+                </FormattedText>
+              </Text>
+            </Row>
+            <Row
+              style={
+                Object {
+                  "paddingVertical": 4,
+                }
+              }
+            >
+              <Text
+                style={Object {}}
+              >
+                <FormattedText>
+                  Address: 123123123
+                </FormattedText>
+              </Text>
+            </Row>
+          </Item>
+        </Padding>
+      </Component>
+      <Row
+        style={
+          Object {
+            "height": 75.84718309859154,
+            "paddingVertical": 25.28239436619718,
+          }
+        }
+      />
+      <Footer
+        style={Object {}}
+      >
+        <ABSlider
+          forceUpdateGuiCounter={0}
+          parentStyle={
+            Object {
+              "width": 379.2359154929577,
+            }
+          }
+          resetSlider={false}
+          sliderDisabled={true}
+        />
+      </Footer>
+    </Component>
+  </Gradient>
+</SafeAreaViewComponent>
+`;
+
+exports[`SendConfirmation should render with standard props 1`] = `
+<SafeAreaViewComponent>
+  <Gradient
+    style={
+      Object {
+        "alignItems": "stretch",
+        "flex": 1,
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+        "width": "100%",
+      }
+    }
+  >
+    <Gradient
+      style={
+        Object {
+          "height": 44,
+        }
+      }
+    />
+    <Component
+      style={
+        Object {
+          "alignItems": "center",
+          "flex": 1,
+          "width": "100%",
+        }
+      }
+    >
+      <Component
+        style={
+          Array [
+            Object {
+              "alignItems": "center",
+              "marginTop": 14.045774647887324,
+            },
+            Object {
+              "backgroundColor": "transparent",
+              "height": 28.091549295774648,
+              "marginRight": 7.022887323943662,
+            },
+          ]
+        }
+      >
+        <FormattedText
+          style={
+            Object {
+              "color": "#FFFFFF",
+              "fontSize": 22.473239436619718,
+            }
+          }
+        >
+          Balance:
+           
+          0
+           
+          BTC
+           (
+          
+           
+          0.00
+          )
+        </FormattedText>
+      </Component>
+      <Component
+        style={
+          Array [
+            Object {
+              "alignItems": "center",
+              "marginVertical": 16.854929577464787,
+            },
+            Object {
+              "backgroundColor": "transparent",
+              "height": 28.091549295774648,
+              "marginRight": 7.022887323943662,
+            },
+          ]
+        }
+      >
+        <ExchangeRate
+          primaryInfo={
+            Object {
+              "displayCurrencyCode": "BTC",
+              "displayDenomination": Object {
+                "multiplier": "100000000",
+                "name": "BTC",
+                "symbol": "₿",
+              },
+              "exchangeCurrencyCode": "BTC",
+              "exchangeDenomination": Object {
+                "multiplier": "100000000",
+                "name": "BTC",
+                "symbol": "₿",
+              },
+            }
+          }
+          secondaryDisplayAmount={8000}
+          secondaryInfo={
+            Object {
+              "displayCurrencyCode": "USD",
+              "displayDenomination": Object {
+                "multiplier": "1",
+                "name": "",
+                "symbol": "",
+              },
+              "exchangeCurrencyCode": "iso:USD",
+              "exchangeDenomination": Object {
+                "multiplier": "1",
+                "name": "",
+                "symbol": "",
+              },
+            }
+          }
+        />
+      </Component>
+      <Component
+        style={
+          Object {
+            "alignItems": "center",
+            "width": "100%",
+          }
+        }
+      >
+        <ExchangedFlipInput
+          exchangeSecondaryToPrimaryRatio={8000}
+          forceUpdateGuiCounter={0}
+          isEditable={true}
+          keyboardVisible={false}
+          onExchangeAmountChanged={[Function]}
+          overridePrimaryExchangeAmount=""
+          primaryCurrencyInfo={
+            Object {
+              "displayCurrencyCode": "BTC",
+              "displayDenomination": Object {
+                "multiplier": "100000000",
+                "name": "BTC",
+                "symbol": "₿",
+              },
+              "exchangeCurrencyCode": "BTC",
+              "exchangeDenomination": Object {
+                "multiplier": "100000000",
+                "name": "BTC",
+                "symbol": "₿",
+              },
+            }
+          }
+          secondaryCurrencyInfo={
+            Object {
+              "displayCurrencyCode": "USD",
+              "displayDenomination": Object {
+                "multiplier": "1",
+                "name": "",
+                "symbol": "",
+              },
+              "exchangeCurrencyCode": "iso:USD",
+              "exchangeDenomination": Object {
+                "multiplier": "1",
+                "name": "",
+                "symbol": "",
+              },
+            }
+          }
+        />
+        <Padding
+          style={
+            Object {
+              "paddingHorizontal": 54,
+            }
+          }
+        >
+          <Item
+            style={
+              Object {
+                "alignItems": "center",
+                "flex": -1,
+              }
+            }
+          >
+            <Row
+              style={
+                Object {
+                  "paddingVertical": 4,
+                }
+              }
+            >
+              <FormattedText
+                style={
+                  Array [
+                    Object {
+                      "backgroundColor": "transparent",
+                      "color": "#FFFFFF",
+                      "fontSize": 22.473239436619718,
+                    },
+                  ]
+                }
+              >
+                
+              </FormattedText>
+            </Row>
+            <Row
+              style={
+                Object {
+                  "paddingVertical": 4,
+                }
+              }
+            >
+              <Text
+                style={Object {}}
+              >
+                <FormattedText>
+                  Address: 123123123
+                </FormattedText>
+              </Text>
+            </Row>
+          </Item>
+        </Padding>
+      </Component>
+      <Row
+        style={
+          Object {
+            "height": 75.84718309859154,
+            "paddingVertical": 25.28239436619718,
+          }
+        }
+      />
+      <Footer
+        style={Object {}}
+      >
+        <ABSlider
+          forceUpdateGuiCounter={0}
+          parentStyle={
+            Object {
+              "width": 379.2359154929577,
+            }
+          }
+          resetSlider={false}
+          sliderDisabled={true}
+        />
+      </Footer>
+    </Component>
+  </Gradient>
+</SafeAreaViewComponent>
+`;
+
+exports[`SendConfirmation should render with unique identifier button with "ADD" text (XMR) 1`] = `
+<SafeAreaViewComponent>
+  <Gradient
+    style={
+      Object {
+        "alignItems": "stretch",
+        "flex": 1,
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+        "width": "100%",
+      }
+    }
+  >
+    <Gradient
+      style={
+        Object {
+          "height": 44,
+        }
+      }
+    />
+    <Component
+      style={
+        Object {
+          "alignItems": "center",
+          "flex": 1,
+          "width": "100%",
+        }
+      }
+    >
+      <Component
+        style={
+          Array [
+            Object {
+              "alignItems": "center",
+              "marginTop": 14.045774647887324,
+            },
+            Object {
+              "backgroundColor": "transparent",
+              "height": 28.091549295774648,
+              "marginRight": 7.022887323943662,
+            },
+          ]
+        }
+      >
+        <FormattedText
+          style={
+            Object {
+              "color": "#FFFFFF",
+              "fontSize": 22.473239436619718,
+            }
+          }
+        >
+          Balance:
+           
+          0
+           
+          XMR
+           (
+          
+           
+          0.00
+          )
+        </FormattedText>
+      </Component>
+      <Component
+        style={
+          Array [
+            Object {
+              "alignItems": "center",
+              "marginVertical": 16.854929577464787,
+            },
+            Object {
+              "backgroundColor": "transparent",
+              "height": 28.091549295774648,
+              "marginRight": 7.022887323943662,
+            },
+          ]
+        }
+      >
+        <ExchangeRate
+          primaryInfo={
+            Object {
+              "displayCurrencyCode": "XMR",
+              "displayDenomination": Object {
+                "multiplier": "1000000000000",
+                "name": "XMR",
+                "symbol": "ɱ",
+              },
+              "exchangeCurrencyCode": "XMR",
+              "exchangeDenomination": Object {
+                "multiplier": "1000000000000",
+                "name": "XMR",
+                "symbol": "ɱ",
+              },
+            }
+          }
+          secondaryDisplayAmount={8000}
+          secondaryInfo={
+            Object {
+              "displayCurrencyCode": "USD",
+              "displayDenomination": Object {
+                "multiplier": "1",
+                "name": "",
+                "symbol": "",
+              },
+              "exchangeCurrencyCode": "iso:USD",
+              "exchangeDenomination": Object {
+                "multiplier": "1",
+                "name": "",
+                "symbol": "",
+              },
+            }
+          }
+        />
+      </Component>
+      <Component
+        style={
+          Object {
+            "alignItems": "center",
+            "width": "100%",
+          }
+        }
+      >
+        <ExchangedFlipInput
+          exchangeSecondaryToPrimaryRatio={8000}
+          forceUpdateGuiCounter={0}
+          isEditable={true}
+          keyboardVisible={false}
+          onExchangeAmountChanged={[Function]}
+          overridePrimaryExchangeAmount=""
+          primaryCurrencyInfo={
+            Object {
+              "displayCurrencyCode": "XMR",
+              "displayDenomination": Object {
+                "multiplier": "1000000000000",
+                "name": "XMR",
+                "symbol": "ɱ",
+              },
+              "exchangeCurrencyCode": "XMR",
+              "exchangeDenomination": Object {
+                "multiplier": "1000000000000",
+                "name": "XMR",
+                "symbol": "ɱ",
+              },
+            }
+          }
+          secondaryCurrencyInfo={
+            Object {
+              "displayCurrencyCode": "USD",
+              "displayDenomination": Object {
+                "multiplier": "1",
+                "name": "",
+                "symbol": "",
+              },
+              "exchangeCurrencyCode": "iso:USD",
+              "exchangeDenomination": Object {
+                "multiplier": "1",
+                "name": "",
+                "symbol": "",
+              },
+            }
+          }
+        />
+        <Padding
+          style={
+            Object {
+              "paddingHorizontal": 54,
+            }
+          }
+        >
+          <Item
+            style={
+              Object {
+                "alignItems": "center",
+                "flex": -1,
+              }
+            }
+          >
+            <Row
+              style={
+                Object {
+                  "paddingVertical": 4,
+                }
+              }
+            >
+              <FormattedText
+                style={
+                  Array [
+                    Object {
+                      "backgroundColor": "transparent",
+                      "color": "#FFFFFF",
+                      "fontSize": 22.473239436619718,
+                    },
+                  ]
+                }
+              >
+                
+              </FormattedText>
+            </Row>
+            <Row
+              style={
+                Object {
+                  "paddingVertical": 10,
+                }
+              }
+            >
+              <TouchableOpacity
+                activeOpacity={0.3}
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "backgroundColor": "transparent",
+                    "justifyContent": "center",
+                    "padding": 19.66408450704225,
+                  }
+                }
+              >
+                <FormattedText
+                  ellipsizeMode="tail"
+                  style={
+                    Object {
+                      "color": "#FFFFFF",
+                    }
+                  }
+                >
+                  Add Payment ID
+                </FormattedText>
+              </TouchableOpacity>
+            </Row>
+          </Item>
+        </Padding>
+      </Component>
+      <Row
+        style={
+          Object {
+            "height": 75.84718309859154,
+            "paddingVertical": 25.28239436619718,
+          }
+        }
+      />
+      <Footer
+        style={Object {}}
+      >
+        <ABSlider
+          forceUpdateGuiCounter={0}
+          parentStyle={
+            Object {
+              "width": 379.2359154929577,
+            }
+          }
+          resetSlider={false}
+          sliderDisabled={true}
+        />
+      </Footer>
+    </Component>
+  </Gradient>
+  <Connect(UniqueIdentifierModal)
+    currencyCode="XMR"
+  />
+</SafeAreaViewComponent>
+`;
+
+exports[`SendConfirmation should render with unique identifier button with "ADD" text (XRP) 1`] = `
+<SafeAreaViewComponent>
+  <Gradient
+    style={
+      Object {
+        "alignItems": "stretch",
+        "flex": 1,
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+        "width": "100%",
+      }
+    }
+  >
+    <Gradient
+      style={
+        Object {
+          "height": 44,
+        }
+      }
+    />
+    <Component
+      style={
+        Object {
+          "alignItems": "center",
+          "flex": 1,
+          "width": "100%",
+        }
+      }
+    >
+      <Component
+        style={
+          Array [
+            Object {
+              "alignItems": "center",
+              "marginTop": 14.045774647887324,
+            },
+            Object {
+              "backgroundColor": "transparent",
+              "height": 28.091549295774648,
+              "marginRight": 7.022887323943662,
+            },
+          ]
+        }
+      >
+        <FormattedText
+          style={
+            Object {
+              "color": "#FFFFFF",
+              "fontSize": 22.473239436619718,
+            }
+          }
+        >
+          Balance:
+           
+          0
+           
+          XRP
+           (
+          
+           
+          0.00
+          )
+        </FormattedText>
+      </Component>
+      <Component
+        style={
+          Array [
+            Object {
+              "alignItems": "center",
+              "marginVertical": 16.854929577464787,
+            },
+            Object {
+              "backgroundColor": "transparent",
+              "height": 28.091549295774648,
+              "marginRight": 7.022887323943662,
+            },
+          ]
+        }
+      >
+        <ExchangeRate
+          primaryInfo={
+            Object {
+              "displayCurrencyCode": "XRP",
+              "displayDenomination": Object {
+                "multiplier": "1000000",
+                "name": "XRP",
+                "symbol": "X",
+              },
+              "exchangeCurrencyCode": "XRP",
+              "exchangeDenomination": Object {
+                "multiplier": "1000000",
+                "name": "XRP",
+                "symbol": "X",
+              },
+            }
+          }
+          secondaryDisplayAmount={8000}
+          secondaryInfo={
+            Object {
+              "displayCurrencyCode": "USD",
+              "displayDenomination": Object {
+                "multiplier": "1",
+                "name": "",
+                "symbol": "",
+              },
+              "exchangeCurrencyCode": "iso:USD",
+              "exchangeDenomination": Object {
+                "multiplier": "1",
+                "name": "",
+                "symbol": "",
+              },
+            }
+          }
+        />
+      </Component>
+      <Component
+        style={
+          Object {
+            "alignItems": "center",
+            "width": "100%",
+          }
+        }
+      >
+        <ExchangedFlipInput
+          exchangeSecondaryToPrimaryRatio={8000}
+          forceUpdateGuiCounter={0}
+          isEditable={true}
+          keyboardVisible={false}
+          onExchangeAmountChanged={[Function]}
+          overridePrimaryExchangeAmount=""
+          primaryCurrencyInfo={
+            Object {
+              "displayCurrencyCode": "XRP",
+              "displayDenomination": Object {
+                "multiplier": "1000000",
+                "name": "XRP",
+                "symbol": "X",
+              },
+              "exchangeCurrencyCode": "XRP",
+              "exchangeDenomination": Object {
+                "multiplier": "1000000",
+                "name": "XRP",
+                "symbol": "X",
+              },
+            }
+          }
+          secondaryCurrencyInfo={
+            Object {
+              "displayCurrencyCode": "USD",
+              "displayDenomination": Object {
+                "multiplier": "1",
+                "name": "",
+                "symbol": "",
+              },
+              "exchangeCurrencyCode": "iso:USD",
+              "exchangeDenomination": Object {
+                "multiplier": "1",
+                "name": "",
+                "symbol": "",
+              },
+            }
+          }
+        />
+        <Padding
+          style={
+            Object {
+              "paddingHorizontal": 54,
+            }
+          }
+        >
+          <Item
+            style={
+              Object {
+                "alignItems": "center",
+                "flex": -1,
+              }
+            }
+          >
+            <Row
+              style={
+                Object {
+                  "paddingVertical": 4,
+                }
+              }
+            >
+              <FormattedText
+                style={
+                  Array [
+                    Object {
+                      "backgroundColor": "transparent",
+                      "color": "#FFFFFF",
+                      "fontSize": 22.473239436619718,
+                    },
+                  ]
+                }
+              >
+                
+              </FormattedText>
+            </Row>
+            <Row
+              style={
+                Object {
+                  "paddingVertical": 10,
+                }
+              }
+            >
+              <TouchableOpacity
+                activeOpacity={0.3}
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "backgroundColor": "transparent",
+                    "justifyContent": "center",
+                    "padding": 19.66408450704225,
+                  }
+                }
+              >
+                <FormattedText
+                  ellipsizeMode="tail"
+                  style={
+                    Object {
+                      "color": "#FFFFFF",
+                    }
+                  }
+                >
+                  Add Destination Tag
+                </FormattedText>
+              </TouchableOpacity>
+            </Row>
+          </Item>
+        </Padding>
+      </Component>
+      <Row
+        style={
+          Object {
+            "height": 75.84718309859154,
+            "paddingVertical": 25.28239436619718,
+          }
+        }
+      />
+      <Footer
+        style={Object {}}
+      >
+        <ABSlider
+          forceUpdateGuiCounter={0}
+          parentStyle={
+            Object {
+              "width": 379.2359154929577,
+            }
+          }
+          resetSlider={false}
+          sliderDisabled={true}
+        />
+      </Footer>
+    </Component>
+  </Gradient>
+  <Connect(UniqueIdentifierModal)
+    currencyCode="XRP"
+  />
+</SafeAreaViewComponent>
+`;

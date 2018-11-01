@@ -1,6 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-import { truncateDecimals } from '../../src/modules/utils'
+import { truncateDecimals } from '../util/utils'
 /* globals describe test expect beforeEach */
 /* eslint-disable import/first */
 import { intl, setIntlLocale } from './intl'

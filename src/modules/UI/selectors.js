@@ -4,9 +4,9 @@ import _ from 'lodash'
 
 import { intl } from '../../locales/intl.js'
 import type { GuiDenomination, GuiWallet, TransactionListTx } from '../../types'
+import { convertNativeToExchange } from '../../util/utils.js'
 import type { State } from '../ReduxTypes'
-import { convertNativeToExchange } from '../utils.js'
-import * as SETTINGS_SELECTORS from './Settings/selectors'
+import * as SETTINGS_SELECTORS from '../Settings/selectors'
 
 export const getWallets = (state: State) => {
   // returns an object with GUI Wallets as Keys Not sure how to tpye that

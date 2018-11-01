@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`spendingLimits from spending limits scene should disable 1`] = `
+Object {
+  "transaction": Object {
+    "amount": 234,
+    "isEnabled": false,
+  },
+}
+`;
+
+exports[`spendingLimits from spending limits scene should enable 1`] = `
+Object {
+  "transaction": Object {
+    "amount": 234,
+    "isEnabled": true,
+  },
+}
+`;
+
+exports[`spendingLimits should render initialState 1`] = `
+Object {
+  "transaction": Object {
+    "amount": 0,
+    "isEnabled": false,
+  },
+}
+`;
+
+exports[`spendingLimits when logging in should update 1`] = `
+Object {
+  "transaction": Object {
+    "amount": 150,
+    "isEnabled": false,
+  },
+}
+`;

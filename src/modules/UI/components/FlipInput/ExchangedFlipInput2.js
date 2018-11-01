@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import slowlog from 'react-native-slowlog'
 
 import type { GuiCurrencyInfo } from '../../../../types'
-import { getObjectDiff, precisionAdjust } from '../../../utils.js'
+import { getObjectDiff, precisionAdjust } from '../../../../util/utils.js'
 import { FlipInput } from './FlipInput2.ui.js'
 import type { FlipInputFieldInfo } from './FlipInput2.ui.js'
 

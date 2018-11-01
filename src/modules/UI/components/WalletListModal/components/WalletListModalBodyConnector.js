@@ -3,12 +3,12 @@
 import { connect } from 'react-redux'
 
 import * as actions from '../../../../../actions/indexActions'
+import { updateReceiveAddress } from '../../../../../actions/RequestActions.js'
+import * as UI_ACTIONS from '../../../../../actions/WalletActions.js'
 import * as Constants from '../../../../../constants/indexConstants'
 import type { Dispatch, State } from '../../../../ReduxTypes'
-import { updateReceiveAddress } from '../../../scenes/Request/action.js'
+import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
 import * as UI_SELECTORS from '../../../selectors'
-import * as SETTINGS_SELECTORS from '../../../Settings/selectors'
-import * as UI_ACTIONS from '../../../Wallets/action.js'
 import { disableWalletListModalVisibility, toggleScanToWalletListModal } from '../action'
 import WalletListModalBody from './WalletListModalBody.ui'
 

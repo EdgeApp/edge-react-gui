@@ -1,0 +1,857 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MyComponent should render Locked SettingsOverview 1`] = `
+<SafeAreaViewComponent>
+  <Gradient
+    style={
+      Object {
+        "height": 44,
+      }
+    }
+  />
+  <ScrollView
+    style={
+      Object {
+        "backgroundColor": "#FFFFFF",
+        "height": "100%",
+        "position": "relative",
+      }
+    }
+  >
+    <Gradient
+      style={
+        Array [
+          Object {
+            "flexDirection": "row",
+            "height": 70.22887323943661,
+            "justifyContent": "space-between",
+            "padding": 16.854929577464787,
+          },
+        ]
+      }
+    >
+      <Component
+        style={
+          Array [
+            undefined,
+          ]
+        }
+      >
+        <Component
+          style={
+            Object {
+              "flexDirection": "row",
+            }
+          }
+        >
+          <Icon
+            name="user-o"
+            style={
+              Array [
+                Object {
+                  "backgroundColor": "transparent",
+                  "color": "#FFFFFF",
+                  "fontSize": 30.90070422535211,
+                },
+              ]
+            }
+            type="fontAwesome"
+          />
+          <FormattedText
+            style={
+              Object {
+                "backgroundColor": "transparent",
+                "color": "#FFFFFF",
+                "fontSize": 25.28239436619718,
+                "marginLeft": 22.473239436619718,
+              }
+            }
+          >
+            Account
+            : 
+            
+          </FormattedText>
+        </Component>
+      </Component>
+    </Gradient>
+    <RowRoute
+      disabled={false}
+      right={
+        <Icon
+          name="ios-lock-outline"
+          size={24}
+          style={
+            Object {
+              "color": "#4A5157",
+            }
+          }
+          type="ionIcons"
+        />
+      }
+      routeFunction={[Function]}
+    />
+    <RowRoute
+      disabled={true}
+      leftText="Change Password"
+      right={
+        <Icon
+          name="arrow-right"
+          style={
+            Object {
+              "color": "#4A5157",
+              "fontSize": 25.28239436619718,
+            }
+          }
+          type="simpleIcons"
+        />
+      }
+      routeFunction={[Function]}
+    />
+    <RowRoute
+      disabled={true}
+      leftText="Change PIN"
+      right={
+        <Icon
+          name="arrow-right"
+          style={
+            Object {
+              "color": "#4A5157",
+              "fontSize": 25.28239436619718,
+            }
+          }
+          type="simpleIcons"
+        />
+      }
+      routeFunction={[Function]}
+    />
+    <RowRoute
+      disabled={true}
+      leftText="Setup 2 Factor"
+      right={
+        <Icon
+          name="arrow-right"
+          style={
+            Object {
+              "color": "#4A5157",
+              "fontSize": 25.28239436619718,
+            }
+          }
+          type="simpleIcons"
+        />
+      }
+      routeFunction={[Function]}
+    />
+    <RowRoute
+      disabled={true}
+      leftText="Set Up Password Recovery"
+      right={
+        <Icon
+          name="arrow-right"
+          style={
+            Object {
+              "color": "#4A5157",
+              "fontSize": 25.28239436619718,
+            }
+          }
+          type="simpleIcons"
+        />
+      }
+      routeFunction={[Function]}
+    />
+    <Gradient
+      style={
+        Array [
+          Object {
+            "flexDirection": "row",
+            "height": 70.22887323943661,
+            "justifyContent": "space-between",
+            "padding": 16.854929577464787,
+          },
+        ]
+      }
+    >
+      <Component
+        style={
+          Array [
+            undefined,
+          ]
+        }
+      >
+        <Component
+          style={
+            Object {
+              "flexDirection": "row",
+            }
+          }
+        >
+          <Icon
+            name="ios-options"
+            style={
+              Array [
+                Object {
+                  "backgroundColor": "transparent",
+                  "color": "#FFFFFF",
+                  "fontSize": 30.90070422535211,
+                },
+              ]
+            }
+            type="ionIcons"
+          />
+          <FormattedText
+            style={
+              Object {
+                "backgroundColor": "transparent",
+                "color": "#FFFFFF",
+                "fontSize": 25.28239436619718,
+                "marginLeft": 22.473239436619718,
+              }
+            }
+          >
+            Options
+          </FormattedText>
+        </Component>
+      </Component>
+    </Gradient>
+    <Component>
+      <RowRoute
+        disabled={false}
+        leftText="Spending Limits"
+        right={
+          <Icon
+            name="arrow-right"
+            style={
+              Object {
+                "color": "#4A5157",
+                "fontSize": 25.28239436619718,
+              }
+            }
+            type="simpleIcons"
+          />
+        }
+        routeFunction={[Function]}
+      />
+      <RowModal
+        leftText="Auto Log Off After"
+        onPress={[Function]}
+        rightText="DISABLE"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Default Currency"
+        right={
+          <Text
+            accessible={true}
+            allowFontScaling={true}
+            ellipsizeMode="tail"
+          >
+            
+          </Text>
+        }
+      />
+      <RowSwitch
+        leftText="PIN Re-login"
+        onToggle={[Function]}
+        value={false}
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Bitcoin"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="BitcoinCash"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="BitcoinGold"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Ethereum"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Litecoin"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Dash"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Feathercoin"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Ufo"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Digibyte"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Qtum"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Vertcoin"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Zcoin"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Send Logs"
+        routeFunction={[Function]}
+        scene="changePassword"
+      />
+      <RowModal
+        leftText="Restore Wallets"
+        onPress={[Function]}
+        rightText=""
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Terms of Service"
+        scene="termsOfService"
+      />
+      <Component
+        style={
+          Array [
+            Object {
+              "backgroundColor": "#F4F5F6",
+              "flex": 1,
+              "padding": 28.091549295774648,
+            },
+          ]
+        }
+      >
+        <PrimaryButton
+          onPress={[Function]}
+        >
+          <Text>
+            Debug
+          </Text>
+        </PrimaryButton>
+      </Component>
+      <Component
+        style={
+          Object {
+            "flex": 1,
+            "height": 71.63345070422535,
+          }
+        }
+      />
+    </Component>
+  </ScrollView>
+  <AutoLogoutModal
+    autoLogoutTimeInMinutes={0}
+    onCancel={[Function]}
+    onDone={[Function]}
+    showModal={false}
+  />
+  <SendLogsModal
+    onCancel={[Function]}
+    onDone={[Function]}
+    sendLogsStatus=""
+    showModal={false}
+  />
+  <ConfirmPasswordModal
+    error=""
+    headerText=""
+    onCancel={[Function]}
+    onDone={[Function]}
+    showModal={false}
+    style={
+      Object {
+        "bottom": Object {
+          "width": "100%",
+        },
+        "bottomActivity": Object {
+          "alignItems": "center",
+          "justifyContent": "space-around",
+          "width": "100%",
+        },
+        "icon": Object {
+          "alignItems": "center",
+          "backgroundColor": "transparent",
+          "color": "#0E4B75",
+          "justifyContent": "center",
+          "position": "relative",
+          "textAlign": "center",
+        },
+        "iconSize": 48,
+        "middle": Object {
+          "bottom": Object {
+            "flex": 4,
+            "flexDirection": "row",
+          },
+          "bottomLeft": Object {
+            "alignItems": "center",
+            "flex": 2,
+            "flexDirection": "column",
+          },
+          "bottomRight": Object {
+            "flex": 8,
+          },
+          "clearShim": Object {
+            "height": 20,
+          },
+          "container": Object {
+            "width": "100%",
+          },
+          "shim": Object {
+            "backgroundColor": "#FFFFFF",
+            "height": 10,
+          },
+          "text": Object {
+            "color": "#4A5157",
+          },
+          "top": Object {
+            "flex": 4,
+            "flexDirection": "row",
+          },
+          "topLeft": Object {
+            "alignItems": "center",
+            "flex": 2,
+            "flexDirection": "column",
+          },
+          "topRight": Object {
+            "flex": 8,
+          },
+        },
+      }
+    }
+  />
+</SafeAreaViewComponent>
+`;
+
+exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
+<SafeAreaViewComponent>
+  <Gradient
+    style={
+      Object {
+        "height": 44,
+      }
+    }
+  />
+  <ScrollView
+    style={
+      Object {
+        "backgroundColor": "#FFFFFF",
+        "height": "100%",
+        "position": "relative",
+      }
+    }
+  >
+    <Gradient
+      style={
+        Array [
+          Object {
+            "flexDirection": "row",
+            "height": 70.22887323943661,
+            "justifyContent": "space-between",
+            "padding": 16.854929577464787,
+          },
+        ]
+      }
+    >
+      <Component
+        style={
+          Array [
+            undefined,
+          ]
+        }
+      >
+        <Component
+          style={
+            Object {
+              "flexDirection": "row",
+            }
+          }
+        >
+          <Icon
+            name="user-o"
+            style={
+              Array [
+                Object {
+                  "backgroundColor": "transparent",
+                  "color": "#FFFFFF",
+                  "fontSize": 30.90070422535211,
+                },
+              ]
+            }
+            type="fontAwesome"
+          />
+          <FormattedText
+            style={
+              Object {
+                "backgroundColor": "transparent",
+                "color": "#FFFFFF",
+                "fontSize": 25.28239436619718,
+                "marginLeft": 22.473239436619718,
+              }
+            }
+          >
+            Account
+            : 
+            
+          </FormattedText>
+        </Component>
+      </Component>
+    </Gradient>
+    <RowRoute
+      disabled={false}
+      right={
+        <Icon
+          name="ios-unlock-outline"
+          size={24}
+          style={
+            Object {
+              "color": "#4A5157",
+            }
+          }
+          type="ionIcons"
+        />
+      }
+      routeFunction={[Function]}
+    />
+    <RowRoute
+      disabled={false}
+      leftText="Change Password"
+      right={
+        <Icon
+          name="arrow-right"
+          style={
+            Object {
+              "color": "#4A5157",
+              "fontSize": 25.28239436619718,
+            }
+          }
+          type="simpleIcons"
+        />
+      }
+      routeFunction={[Function]}
+    />
+    <RowRoute
+      disabled={false}
+      leftText="Change PIN"
+      right={
+        <Icon
+          name="arrow-right"
+          style={
+            Object {
+              "color": "#4A5157",
+              "fontSize": 25.28239436619718,
+            }
+          }
+          type="simpleIcons"
+        />
+      }
+      routeFunction={[Function]}
+    />
+    <RowRoute
+      disabled={false}
+      leftText="Setup 2 Factor"
+      right={
+        <Icon
+          name="arrow-right"
+          style={
+            Object {
+              "color": "#4A5157",
+              "fontSize": 25.28239436619718,
+            }
+          }
+          type="simpleIcons"
+        />
+      }
+      routeFunction={[Function]}
+    />
+    <RowRoute
+      disabled={false}
+      leftText="Set Up Password Recovery"
+      right={
+        <Icon
+          name="arrow-right"
+          style={
+            Object {
+              "color": "#4A5157",
+              "fontSize": 25.28239436619718,
+            }
+          }
+          type="simpleIcons"
+        />
+      }
+      routeFunction={[Function]}
+    />
+    <Gradient
+      style={
+        Array [
+          Object {
+            "flexDirection": "row",
+            "height": 70.22887323943661,
+            "justifyContent": "space-between",
+            "padding": 16.854929577464787,
+          },
+        ]
+      }
+    >
+      <Component
+        style={
+          Array [
+            undefined,
+          ]
+        }
+      >
+        <Component
+          style={
+            Object {
+              "flexDirection": "row",
+            }
+          }
+        >
+          <Icon
+            name="ios-options"
+            style={
+              Array [
+                Object {
+                  "backgroundColor": "transparent",
+                  "color": "#FFFFFF",
+                  "fontSize": 30.90070422535211,
+                },
+              ]
+            }
+            type="ionIcons"
+          />
+          <FormattedText
+            style={
+              Object {
+                "backgroundColor": "transparent",
+                "color": "#FFFFFF",
+                "fontSize": 25.28239436619718,
+                "marginLeft": 22.473239436619718,
+              }
+            }
+          >
+            Options
+          </FormattedText>
+        </Component>
+      </Component>
+    </Gradient>
+    <Component>
+      <RowRoute
+        disabled={false}
+        leftText="Spending Limits"
+        right={
+          <Icon
+            name="arrow-right"
+            style={
+              Object {
+                "color": "#4A5157",
+                "fontSize": 25.28239436619718,
+              }
+            }
+            type="simpleIcons"
+          />
+        }
+        routeFunction={[Function]}
+      />
+      <RowModal
+        leftText="Auto Log Off After"
+        onPress={[Function]}
+        rightText="DISABLE"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Default Currency"
+        right={
+          <Text
+            accessible={true}
+            allowFontScaling={true}
+            ellipsizeMode="tail"
+          >
+            
+          </Text>
+        }
+      />
+      <RowSwitch
+        leftText="PIN Re-login"
+        onToggle={[Function]}
+        value={false}
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Bitcoin"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="BitcoinCash"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="BitcoinGold"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Ethereum"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Litecoin"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Dash"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Feathercoin"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Ufo"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Digibyte"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Qtum"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Vertcoin"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Zcoin"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Send Logs"
+        routeFunction={[Function]}
+        scene="changePassword"
+      />
+      <RowModal
+        leftText="Restore Wallets"
+        onPress={[Function]}
+        rightText=""
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Terms of Service"
+        scene="termsOfService"
+      />
+      <Component
+        style={
+          Array [
+            Object {
+              "backgroundColor": "#F4F5F6",
+              "flex": 1,
+              "padding": 28.091549295774648,
+            },
+          ]
+        }
+      >
+        <PrimaryButton
+          onPress={[Function]}
+        >
+          <Text>
+            Debug
+          </Text>
+        </PrimaryButton>
+      </Component>
+      <Component
+        style={
+          Object {
+            "flex": 1,
+            "height": 71.63345070422535,
+          }
+        }
+      />
+    </Component>
+  </ScrollView>
+  <AutoLogoutModal
+    autoLogoutTimeInMinutes={0}
+    onCancel={[Function]}
+    onDone={[Function]}
+    showModal={false}
+  />
+  <SendLogsModal
+    onCancel={[Function]}
+    onDone={[Function]}
+    sendLogsStatus=""
+    showModal={false}
+  />
+  <ConfirmPasswordModal
+    error=""
+    headerText=""
+    onCancel={[Function]}
+    onDone={[Function]}
+    showModal={false}
+    style={
+      Object {
+        "bottom": Object {
+          "width": "100%",
+        },
+        "bottomActivity": Object {
+          "alignItems": "center",
+          "justifyContent": "space-around",
+          "width": "100%",
+        },
+        "icon": Object {
+          "alignItems": "center",
+          "backgroundColor": "transparent",
+          "color": "#0E4B75",
+          "justifyContent": "center",
+          "position": "relative",
+          "textAlign": "center",
+        },
+        "iconSize": 48,
+        "middle": Object {
+          "bottom": Object {
+            "flex": 4,
+            "flexDirection": "row",
+          },
+          "bottomLeft": Object {
+            "alignItems": "center",
+            "flex": 2,
+            "flexDirection": "column",
+          },
+          "bottomRight": Object {
+            "flex": 8,
+          },
+          "clearShim": Object {
+            "height": 20,
+          },
+          "container": Object {
+            "width": "100%",
+          },
+          "shim": Object {
+            "backgroundColor": "#FFFFFF",
+            "height": 10,
+          },
+          "text": Object {
+            "color": "#4A5157",
+          },
+          "top": Object {
+            "flex": 4,
+            "flexDirection": "row",
+          },
+          "topLeft": Object {
+            "alignItems": "center",
+            "flex": 2,
+            "flexDirection": "column",
+          },
+          "topRight": Object {
+            "flex": 8,
+          },
+        },
+      }
+    }
+  />
+</SafeAreaViewComponent>
+`;

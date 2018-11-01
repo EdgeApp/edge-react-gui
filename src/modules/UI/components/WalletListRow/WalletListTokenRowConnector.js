@@ -3,8 +3,8 @@
 import { bns } from 'biggystring'
 import { connect } from 'react-redux'
 
+import { DIVIDE_PRECISION, getSettingsTokenMultiplier } from '../../../../util/utils.js'
 import type { Dispatch, State } from '../../../ReduxTypes'
-import { DIVIDE_PRECISION, getSettingsTokenMultiplier } from '../../../utils.js'
 import { convertCurrency } from '../../selectors.js'
 import { WalletListTokenRowComponent } from './WalletListTokenRow.ui.js'
 import type { WalletListTokenRowDispatchProps, WalletListTokenRowOwnProps, WalletListTokenRowStateProps } from './WalletListTokenRow.ui.js'

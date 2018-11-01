@@ -8,7 +8,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { scale } from '../../../../lib/scaling.js'
 import s from '../../../../locales/strings.js'
-import { border as b } from '../../../utils'
+import { border as b } from '../../../../util/utils'
 import T from '../FormattedText'
 import styles, { exitColor } from './style'
 

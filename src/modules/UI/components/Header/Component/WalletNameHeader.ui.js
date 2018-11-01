@@ -3,7 +3,7 @@
 import React from 'react'
 import { Text, View } from 'react-native'
 
-import { getObjectDiff } from '../../../../utils'
+import { getObjectDiff } from '../../../../../util/utils'
 import style from '../style'
 
 type Props = {

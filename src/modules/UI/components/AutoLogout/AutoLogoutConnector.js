@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import { logoutRequest } from '../../../Login/action'
 import type { Dispatch, State } from '../../../ReduxTypes'
-import * as SETTINGS_SELECTORS from '../../Settings/selectors'
+import * as SETTINGS_SELECTORS from '../../../Settings/selectors'
 import AutoLogout from './AutoLogout.ui.js'
 
 const mapStateToProps = (state: State) => ({

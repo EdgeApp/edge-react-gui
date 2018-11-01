@@ -1,0 +1,562 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SendConfirmation XMR 1`] = `
+<Component>
+  <ForwardRef(enhanceContext-Context.Consumer(Menu))
+    onBackdropPress={[Function]}
+    onClose={[Function]}
+    onOpen={[Function]}
+    onSelect={[Function]}
+    renderer={[Function]}
+    rendererProps={Object {}}
+  >
+    <ForwardRef(enhanceContext-Context.Consumer(MenuTrigger))
+      customStyles={Object {}}
+      disabled={false}
+      style={
+        Object {
+          "paddingHorizontal": 11.236619718309859,
+          "paddingVertical": 5.618309859154929,
+        }
+      }
+    >
+      <FormattedText
+        style={
+          Object {
+            "color": "#FFFFFF",
+            "fontSize": 25.28239436619718,
+            "fontWeight": "700",
+            "paddingHorizontal": 11.236619718309859,
+          }
+        }
+      >
+        ⋮
+      </FormattedText>
+    </ForwardRef(enhanceContext-Context.Consumer(MenuTrigger))>
+    <ForwardRef(enhanceContext-Context.Consumer(MenuOptions))
+      customStyles={Object {}}
+      optionsContainerStyle={
+        Object {
+          "width": 231.75528169014086,
+        }
+      }
+    >
+      <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
+        customStyles={Object {}}
+        disableTouchable={false}
+        disabled={false}
+        style={
+          Object {
+            "borderBottomColor": "#D9E3ED",
+            "borderBottomWidth": 1,
+            "justifyContent": "center",
+          }
+        }
+        value="CHANGE_MINING_FEE"
+      >
+        <Component
+          style={
+            Object {
+              "flexDirection": "row",
+              "paddingVertical": 5.618309859154929,
+            }
+          }
+        >
+          <FormattedText
+            style={
+              Object {
+                "color": "#4A5157",
+                "fontSize": 25.28239436619718,
+              }
+            }
+          >
+            Change Mining Fee
+          </FormattedText>
+        </Component>
+      </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
+      <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
+        customStyles={Object {}}
+        disableTouchable={false}
+        disabled={false}
+        style={
+          Object {
+            "borderBottomColor": "#D9E3ED",
+            "borderBottomWidth": 1,
+            "justifyContent": "center",
+          }
+        }
+        value="ADD_UNIQUE_IDENTIFIER"
+      >
+        <Component
+          style={
+            Object {
+              "flexDirection": "row",
+              "paddingVertical": 5.618309859154929,
+            }
+          }
+        >
+          <FormattedText
+            style={
+              Array [
+                Object {
+                  "color": "#4A5157",
+                  "fontSize": 25.28239436619718,
+                },
+              ]
+            }
+          >
+            Add Payment ID
+          </FormattedText>
+        </Component>
+      </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
+      <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
+        customStyles={Object {}}
+        disableTouchable={false}
+        disabled={false}
+        style={
+          Object {
+            "borderBottomColor": "#D9E3ED",
+            "borderBottomWidth": 1,
+            "justifyContent": "center",
+          }
+        }
+        value="HELP"
+      >
+        <Component
+          style={
+            Object {
+              "flexDirection": "row",
+              "paddingVertical": 5.618309859154929,
+            }
+          }
+        >
+          <FormattedText
+            style={
+              Object {
+                "color": "#4A5157",
+                "fontSize": 25.28239436619718,
+              }
+            }
+          >
+            Help
+          </FormattedText>
+        </Component>
+      </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
+    </ForwardRef(enhanceContext-Context.Consumer(MenuOptions))>
+  </ForwardRef(enhanceContext-Context.Consumer(Menu))>
+</Component>
+`;
+
+exports[`SendConfirmation XRP 1`] = `
+<Component>
+  <ForwardRef(enhanceContext-Context.Consumer(Menu))
+    onBackdropPress={[Function]}
+    onClose={[Function]}
+    onOpen={[Function]}
+    onSelect={[Function]}
+    renderer={[Function]}
+    rendererProps={Object {}}
+  >
+    <ForwardRef(enhanceContext-Context.Consumer(MenuTrigger))
+      customStyles={Object {}}
+      disabled={false}
+      style={
+        Object {
+          "paddingHorizontal": 11.236619718309859,
+          "paddingVertical": 5.618309859154929,
+        }
+      }
+    >
+      <FormattedText
+        style={
+          Object {
+            "color": "#FFFFFF",
+            "fontSize": 25.28239436619718,
+            "fontWeight": "700",
+            "paddingHorizontal": 11.236619718309859,
+          }
+        }
+      >
+        ⋮
+      </FormattedText>
+    </ForwardRef(enhanceContext-Context.Consumer(MenuTrigger))>
+    <ForwardRef(enhanceContext-Context.Consumer(MenuOptions))
+      customStyles={Object {}}
+      optionsContainerStyle={
+        Object {
+          "width": 231.75528169014086,
+        }
+      }
+    >
+      <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
+        customStyles={Object {}}
+        disableTouchable={false}
+        disabled={false}
+        style={
+          Object {
+            "borderBottomColor": "#D9E3ED",
+            "borderBottomWidth": 1,
+            "justifyContent": "center",
+          }
+        }
+        value="CHANGE_MINING_FEE"
+      >
+        <Component
+          style={
+            Object {
+              "flexDirection": "row",
+              "paddingVertical": 5.618309859154929,
+            }
+          }
+        >
+          <FormattedText
+            style={
+              Object {
+                "color": "#4A5157",
+                "fontSize": 25.28239436619718,
+              }
+            }
+          >
+            Change Mining Fee
+          </FormattedText>
+        </Component>
+      </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
+      <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
+        customStyles={Object {}}
+        disableTouchable={false}
+        disabled={false}
+        style={
+          Object {
+            "borderBottomColor": "#D9E3ED",
+            "borderBottomWidth": 1,
+            "justifyContent": "center",
+          }
+        }
+        value="SEND_MAX"
+      >
+        <Component
+          style={
+            Object {
+              "flexDirection": "row",
+              "paddingVertical": 5.618309859154929,
+            }
+          }
+        >
+          <FormattedText
+            style={
+              Array [
+                Object {
+                  "color": "#4A5157",
+                  "fontSize": 25.28239436619718,
+                },
+                Object {
+                  "color": "#F1AA19",
+                },
+              ]
+            }
+          >
+            Send Max Amount
+          </FormattedText>
+        </Component>
+      </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
+      <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
+        customStyles={Object {}}
+        disableTouchable={false}
+        disabled={false}
+        style={
+          Object {
+            "borderBottomColor": "#D9E3ED",
+            "borderBottomWidth": 1,
+            "justifyContent": "center",
+          }
+        }
+        value="ADD_UNIQUE_IDENTIFIER"
+      >
+        <Component
+          style={
+            Object {
+              "flexDirection": "row",
+              "paddingVertical": 5.618309859154929,
+            }
+          }
+        >
+          <FormattedText
+            style={
+              Array [
+                Object {
+                  "color": "#4A5157",
+                  "fontSize": 25.28239436619718,
+                },
+              ]
+            }
+          >
+            Add Destination Tag
+          </FormattedText>
+        </Component>
+      </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
+      <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
+        customStyles={Object {}}
+        disableTouchable={false}
+        disabled={false}
+        style={
+          Object {
+            "borderBottomColor": "#D9E3ED",
+            "borderBottomWidth": 1,
+            "justifyContent": "center",
+          }
+        }
+        value="HELP"
+      >
+        <Component
+          style={
+            Object {
+              "flexDirection": "row",
+              "paddingVertical": 5.618309859154929,
+            }
+          }
+        >
+          <FormattedText
+            style={
+              Object {
+                "color": "#4A5157",
+                "fontSize": 25.28239436619718,
+              }
+            }
+          >
+            Help
+          </FormattedText>
+        </Component>
+      </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
+    </ForwardRef(enhanceContext-Context.Consumer(MenuOptions))>
+  </ForwardRef(enhanceContext-Context.Consumer(Menu))>
+</Component>
+`;
+
+exports[`SendConfirmation not editable 1`] = `
+<Component>
+  <ForwardRef(enhanceContext-Context.Consumer(Menu))
+    onBackdropPress={[Function]}
+    onClose={[Function]}
+    onOpen={[Function]}
+    onSelect={[Function]}
+    renderer={[Function]}
+    rendererProps={Object {}}
+  >
+    <ForwardRef(enhanceContext-Context.Consumer(MenuTrigger))
+      customStyles={Object {}}
+      disabled={false}
+      style={
+        Object {
+          "paddingHorizontal": 11.236619718309859,
+          "paddingVertical": 5.618309859154929,
+        }
+      }
+    >
+      <FormattedText
+        style={
+          Object {
+            "color": "#FFFFFF",
+            "fontSize": 25.28239436619718,
+            "fontWeight": "700",
+            "paddingHorizontal": 11.236619718309859,
+          }
+        }
+      >
+        ⋮
+      </FormattedText>
+    </ForwardRef(enhanceContext-Context.Consumer(MenuTrigger))>
+    <ForwardRef(enhanceContext-Context.Consumer(MenuOptions))
+      customStyles={Object {}}
+      optionsContainerStyle={
+        Object {
+          "width": 231.75528169014086,
+        }
+      }
+    >
+      <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
+        customStyles={Object {}}
+        disableTouchable={false}
+        disabled={false}
+        style={
+          Object {
+            "borderBottomColor": "#D9E3ED",
+            "borderBottomWidth": 1,
+            "justifyContent": "center",
+          }
+        }
+        value="HELP"
+      >
+        <Component
+          style={
+            Object {
+              "flexDirection": "row",
+              "paddingVertical": 5.618309859154929,
+            }
+          }
+        >
+          <FormattedText
+            style={
+              Object {
+                "color": "#4A5157",
+                "fontSize": 25.28239436619718,
+              }
+            }
+          >
+            Help
+          </FormattedText>
+        </Component>
+      </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
+    </ForwardRef(enhanceContext-Context.Consumer(MenuOptions))>
+  </ForwardRef(enhanceContext-Context.Consumer(Menu))>
+</Component>
+`;
+
+exports[`SendConfirmation should render with standard props 1`] = `
+<Component>
+  <ForwardRef(enhanceContext-Context.Consumer(Menu))
+    onBackdropPress={[Function]}
+    onClose={[Function]}
+    onOpen={[Function]}
+    onSelect={[Function]}
+    renderer={[Function]}
+    rendererProps={Object {}}
+  >
+    <ForwardRef(enhanceContext-Context.Consumer(MenuTrigger))
+      customStyles={Object {}}
+      disabled={false}
+      style={
+        Object {
+          "paddingHorizontal": 11.236619718309859,
+          "paddingVertical": 5.618309859154929,
+        }
+      }
+    >
+      <FormattedText
+        style={
+          Object {
+            "color": "#FFFFFF",
+            "fontSize": 25.28239436619718,
+            "fontWeight": "700",
+            "paddingHorizontal": 11.236619718309859,
+          }
+        }
+      >
+        ⋮
+      </FormattedText>
+    </ForwardRef(enhanceContext-Context.Consumer(MenuTrigger))>
+    <ForwardRef(enhanceContext-Context.Consumer(MenuOptions))
+      customStyles={Object {}}
+      optionsContainerStyle={
+        Object {
+          "width": 231.75528169014086,
+        }
+      }
+    >
+      <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
+        customStyles={Object {}}
+        disableTouchable={false}
+        disabled={false}
+        style={
+          Object {
+            "borderBottomColor": "#D9E3ED",
+            "borderBottomWidth": 1,
+            "justifyContent": "center",
+          }
+        }
+        value="CHANGE_MINING_FEE"
+      >
+        <Component
+          style={
+            Object {
+              "flexDirection": "row",
+              "paddingVertical": 5.618309859154929,
+            }
+          }
+        >
+          <FormattedText
+            style={
+              Object {
+                "color": "#4A5157",
+                "fontSize": 25.28239436619718,
+              }
+            }
+          >
+            Change Mining Fee
+          </FormattedText>
+        </Component>
+      </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
+      <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
+        customStyles={Object {}}
+        disableTouchable={false}
+        disabled={false}
+        style={
+          Object {
+            "borderBottomColor": "#D9E3ED",
+            "borderBottomWidth": 1,
+            "justifyContent": "center",
+          }
+        }
+        value="SEND_MAX"
+      >
+        <Component
+          style={
+            Object {
+              "flexDirection": "row",
+              "paddingVertical": 5.618309859154929,
+            }
+          }
+        >
+          <FormattedText
+            style={
+              Array [
+                Object {
+                  "color": "#4A5157",
+                  "fontSize": 25.28239436619718,
+                },
+                Object {
+                  "color": "#F1AA19",
+                },
+              ]
+            }
+          >
+            Send Max Amount
+          </FormattedText>
+        </Component>
+      </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
+      <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
+        customStyles={Object {}}
+        disableTouchable={false}
+        disabled={false}
+        style={
+          Object {
+            "borderBottomColor": "#D9E3ED",
+            "borderBottomWidth": 1,
+            "justifyContent": "center",
+          }
+        }
+        value="HELP"
+      >
+        <Component
+          style={
+            Object {
+              "flexDirection": "row",
+              "paddingVertical": 5.618309859154929,
+            }
+          }
+        >
+          <FormattedText
+            style={
+              Object {
+                "color": "#4A5157",
+                "fontSize": 25.28239436619718,
+              }
+            }
+          >
+            Help
+          </FormattedText>
+        </Component>
+      </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
+    </ForwardRef(enhanceContext-Context.Consumer(MenuOptions))>
+  </ForwardRef(enhanceContext-Context.Consumer(Menu))>
+</Component>
+`;
