@@ -382,7 +382,7 @@ export const getShapeShiftTokens = () => async (dispatch: Dispatch, getState: Ge
       return
     }
     dispatch(getShapeShiftTokens())
-  })
+  }, 15000)
 }
 
 export const selectWalletForExchange = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
