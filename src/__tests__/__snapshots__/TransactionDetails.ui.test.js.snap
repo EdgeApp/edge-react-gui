@@ -218,7 +218,7 @@ exports[`TransactionDetails.ui should render 1`] = `
               }
               onBlurFiatFxn={[Function]}
               onBlurNotes={[Function]}
-              onChangeCategoryFxn={[Function]}
+              onChangeCategory={[Function]}
               onChangeFiatFxn={[Function]}
               onChangeNotesFxn={[Function]}
               onEnterCategories={[Function]}
@@ -229,7 +229,6 @@ exports[`TransactionDetails.ui should render 1`] = `
               onNotesKeyboardReturn={[Function]}
               onPressAdvancedDetailsButton={[Function]}
               onPressFxn={[Function]}
-              onSelectCategory={[Function]}
               onSelectSubCategory={[Function]}
               onSubcategoryKeyboardReturn={[Function]}
               openModalFxn={[Function]}
@@ -499,7 +498,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
               }
               onBlurFiatFxn={[Function]}
               onBlurNotes={[Function]}
-              onChangeCategoryFxn={[Function]}
+              onChangeCategory={[Function]}
               onChangeFiatFxn={[Function]}
               onChangeNotesFxn={[Function]}
               onEnterCategories={[Function]}
@@ -510,7 +509,6 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
               onNotesKeyboardReturn={[Function]}
               onPressAdvancedDetailsButton={[Function]}
               onPressFxn={[Function]}
-              onSelectCategory={[Function]}
               onSelectSubCategory={[Function]}
               onSubcategoryKeyboardReturn={[Function]}
               openModalFxn={[Function]}
@@ -777,7 +775,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
               }
               onBlurFiatFxn={[Function]}
               onBlurNotes={[Function]}
-              onChangeCategoryFxn={[Function]}
+              onChangeCategory={[Function]}
               onChangeFiatFxn={[Function]}
               onChangeNotesFxn={[Function]}
               onEnterCategories={[Function]}
@@ -788,7 +786,6 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
               onNotesKeyboardReturn={[Function]}
               onPressAdvancedDetailsButton={[Function]}
               onPressFxn={[Function]}
-              onSelectCategory={[Function]}
               onSelectSubCategory={[Function]}
               onSubcategoryKeyboardReturn={[Function]}
               openModalFxn={[Function]}
@@ -1055,7 +1052,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
               }
               onBlurFiatFxn={[Function]}
               onBlurNotes={[Function]}
-              onChangeCategoryFxn={[Function]}
+              onChangeCategory={[Function]}
               onChangeFiatFxn={[Function]}
               onChangeNotesFxn={[Function]}
               onEnterCategories={[Function]}
@@ -1066,7 +1063,6 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
               onNotesKeyboardReturn={[Function]}
               onPressAdvancedDetailsButton={[Function]}
               onPressFxn={[Function]}
-              onSelectCategory={[Function]}
               onSelectSubCategory={[Function]}
               onSubcategoryKeyboardReturn={[Function]}
               openModalFxn={[Function]}

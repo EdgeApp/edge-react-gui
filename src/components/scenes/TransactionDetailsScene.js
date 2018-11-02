@@ -25,8 +25,6 @@ import AmountArea from '../common/TransactionDetailAmountArea.js'
 import SubCategorySelect from '../common/TransactionSubCategorySelect.js'
 import { AdvancedTransactionDetailsModal } from '../modals/AdvancedTransactionDetailsModal.js'
 
-const categories = ['income', 'expense', 'exchange', 'transfer']
-
 const EXCHANGE_TEXT = s.strings.fragment_transaction_exchange
 const EXPENSE_TEXT = s.strings.fragment_transaction_expense
 const TRANSFER_TEXT = s.strings.fragment_transaction_transfer
@@ -296,6 +294,14 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     this.onBlurNotes()
   }
 
+  onEnterCategories = () => {
+    this.setState({ categorySelectVisibility: true })
+  }
+
+  onExitCategories = () => {
+    this.setState({ categorySelectVisibility: false })
+  }
+
   onEnterSubcategories = () => {
     this.refs._scrollView.scrollTo({ x: 0, y: 260, animated: true })
     this.enableSubcategoryVisibility()
@@ -303,63 +309,6 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
 
   onExitSubcategories = () => {
     // this.disableSubcategoryVisibility()
-  }
-
-  onSubcategoriesKeyboardReturn = () => {
-    this.disableSubcategoryVisibility()
-    this.refs._scrollView.scrollTo({ x: 0, y: 0, animated: true })
-  }
-
-  onSelectSubCategory = (input: string) => {
-    let stringArray
-    // check if there is a colon that delineates category and subcategory
-    if (!input) {
-      this.setState({
-        subCategory: ''
-      })
-    } else {
-      // if input *does* exist
-      const colonOccurrence = input.indexOf(':')
-      if (colonOccurrence) {
-        // if it *does* have a colon in it
-        stringArray = [input.substring(0, colonOccurrence), input.substring(colonOccurrence + 1, input.length)]
-        // console.log('stringArray is: ', stringArray)
-        if (categories.indexOf(stringArray[0].toLowerCase()) >= 0) {
-          // if the type is of the 4 options
-          this.setState({
-            type: stringArray[0].toLowerCase(),
-            subCategory: stringArray[1]
-          })
-          if (this.props.subcategoriesList.indexOf(input) === -1 && categories.indexOf(stringArray[0].toLowerCase()) >= 0) {
-            // if this is a new subcategory and the parent category is an accepted type
-            this.addNewSubcategory(input)
-          }
-        } else {
-          this.setState({
-            subCategory: stringArray[1]
-          })
-        }
-      } else {
-        this.setState({
-          subCategory: ''
-        })
-      }
-    }
-    this.disableSubcategoryVisibility()
-    Keyboard.dismiss()
-    this.refs._scrollView.scrollTo({ x: 0, y: 0, animated: true })
-  }
-
-  addNewSubcategory = (newSubcategory: string) => {
-    this.props.setNewSubcategory(newSubcategory, this.props.subcategoriesList)
-  }
-
-  onEnterCategories = () => {
-    this.setState({ categorySelectVisibility: true })
-  }
-
-  onExitCategories = () => {
-    this.setState({ categorySelectVisibility: false })
   }
 
   enableSubcategoryVisibility = () => {
@@ -383,8 +332,54 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     })
   }
 
-  onSelectCategory = (type: string) => {
-    this.setState({ type })
+  onSubcategoriesKeyboardReturn = () => {
+    this.disableSubcategoryVisibility()
+    this.refs._scrollView.scrollTo({ x: 0, y: 0, animated: true })
+  }
+
+  onSelectSubCategory = (input: string) => {
+    let stringArray
+    // check if there is a colon that delineates category and subcategory
+    if (!input) {
+      this.setState({
+        subCategory: ''
+      })
+    } else {
+      // if input *does* exist
+      const colonOccurrence = input.indexOf(':')
+      if (colonOccurrence) {
+        // if it *does* have a colon in it
+        stringArray = [input.substring(0, colonOccurrence), input.substring(colonOccurrence + 1, input.length)]
+        // console.log('stringArray is: ', stringArray)
+        if (Object.keys(types).indexOf(stringArray[0].toLowerCase()) >= 0) {
+          // if the type is of the 4 options
+          this.setState({
+            type: stringArray[0].toLowerCase(),
+            subCategory: stringArray[1]
+          })
+
+          if (this.props.subcategoriesList.indexOf(input) === -1) {
+            // if this is a new subcategory
+            this.addNewSubcategory(input)
+          }
+        } else {
+          this.setState({
+            subCategory: stringArray[1]
+          })
+        }
+      } else {
+        this.setState({
+          subCategory: ''
+        })
+      }
+    }
+    this.disableSubcategoryVisibility()
+    Keyboard.dismiss()
+    this.refs._scrollView.scrollTo({ x: 0, y: 0, animated: true })
+  }
+
+  addNewSubcategory = (newSubcategory: string) => {
+    this.props.setNewSubcategory(newSubcategory, this.props.subcategoriesList)
   }
 
   onFocusFiatAmount = () => {
@@ -586,7 +581,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                   <AmountArea
                     edgeTransaction={this.props.edgeTransaction}
                     onChangeNotesFxn={this.onChangeNotes}
-                    onChangeCategoryFxn={this.onChangeCategory}
+                    onChangeCategory={this.onChangeCategory}
                     onChangeFiatFxn={this.onChangeFiat}
                     onBlurFiatFxn={this.onBlurFiat}
                     onPressFxn={this.onSaveTxDetails}
@@ -614,7 +609,6 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                     walletDefaultDenomProps={this.state.walletDefaultDenomProps}
                     openModalFxn={this.amountAreaOpenModal}
                     guiWallet={this.guiWallet}
-                    onSelectCategory={this.onSelectCategory}
                     onPressAdvancedDetailsButton={this.onPressAdvancedDetailsButton}
                     txExplorerUrl={txExplorerLink}
                   />

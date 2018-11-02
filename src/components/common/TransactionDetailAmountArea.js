@@ -28,33 +28,47 @@ class AmountArea extends Component {
     this.state = {
       color: ''
     }
+
+    slowlog(this, /.*/, global.slowlogOptions)
+  }
+
+  initPicker = () => {
     Picker.init({
       pickerData: pickerValues,
       onPickerConfirm: data => {
         const categoryIndex = pickerValues.indexOf(data[0])
         const categoryKey = categories[categoryIndex]
-        this.props.onSelectCategory(categoryKey)
+        this.props.onChangeCategory(categoryKey)
+        this.props.onExitCategories()
         this.Picker.hide()
       },
       onPickerCancel: () => {
+        this.props.onExitCategories()
         this.Picker.hide()
       },
       pickerTitleText: s.strings.tx_detail_picker_title,
       pickerConfirmBtnText: s.strings.string_confirm,
       pickerCancelBtnText: s.strings.string_cancel_cap,
-      pickerFontSize: 22
+      pickerFontSize: 22,
+      selectedValue: [this.props.types[this.props.type].syntax]
     })
     this.Picker = Picker
-    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   onEnterCategories = () => {
     this.props.onEnterCategories()
+
+    this.initPicker()
     this.Picker.show()
   }
 
-  onPickerSelect = input => {
-    this.props.selectCategory(input)
+  onEnterSubcategories = () => {
+    if (this.Picker && this.Picker.isPickerShow) {
+      this.props.onExitCategories()
+      this.Picker.hide()
+    }
+
+    this.props.onEnterSubcategories()
   }
 
   render () {
@@ -157,7 +171,7 @@ class AmountArea extends Component {
           <TouchableOpacity
             style={[styles.categoryLeft, { borderColor: this.props.color }]}
             onPress={this.onEnterCategories}
-            disabled={this.props.subCategorySelectVisibility}
+            disabled={this.props.subCategorySelectVisibility || this.props.categorySelectVisibility}
           >
             <FormattedText style={[{ color: this.props.color }, styles.categoryLeftText]}>{typeInfo.syntax}</FormattedText>
           </TouchableOpacity>
@@ -167,7 +181,7 @@ class AmountArea extends Component {
               blurOnSubmit
               autoCapitalize="words"
               placeholderTextColor={THEME.COLORS.GRAY_}
-              onFocus={this.props.onEnterSubcategories}
+              onFocus={this.onEnterSubcategories}
               onChangeText={this.props.onChangeSubcategoryFxn}
               onSubmitEditing={this.props.onSubcategoryKeyboardReturn}
               style={[styles.categoryInput, UTILS.inputBottomPadding()]}
