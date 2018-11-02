@@ -2917,7 +2917,7 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4, create-hmac@^1.1.6:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-create-react-class@^15.5.2, create-react-class@^15.6.0, create-react-class@^15.6.3:
+create-react-class@^15.6.0, create-react-class@^15.6.3:
   version "15.6.3"
   resolved "https://registry.yarnpkg.com/create-react-class/-/create-react-class-15.6.3.tgz#2d73237fb3f970ae6ebe011a9e66f46dbca80036"
   integrity sha512-M+/3Q6E6DLO6Yx3OwrWjwHBnvfXXYA7W+dFjt/ZDBemHO1DDZhsalX/NUtnTYclN6GfnBDRh4qRHjcDHmlJBJg==
@@ -3243,14 +3243,11 @@ dir-glob@^2.0.0:
     arrify "^1.0.1"
     path-type "^3.0.0"
 
-disklet@^0.2.7:
-  version "0.2.7"
-  resolved "https://registry.yarnpkg.com/disklet/-/disklet-0.2.7.tgz#03cf699df295043067b6a6215c9f11cb18f15fd0"
-  integrity sha512-VaBAzlwQ+BZJPI4v6Tz4fux7O5EbfeBR3bLgKMWgSj2dCb3UK7sWtP7456px57RPAHe/6TU3YYPKIibWi97Tcg==
+disklet@^0.2.8:
+  version "0.2.8"
+  resolved "https://registry.yarnpkg.com/disklet/-/disklet-0.2.8.tgz#725d700bcd1970bc7be87a2b9388c50d591e0f0a"
+  integrity sha512-CYhtxPszSN5dP3rCBVKfYohqOoZgDxaruLp8zDpuJk+C6AwdlHPfnXqAnhtFvkm4dXYftuEWB7pvf40jYhfVyA==
   dependencies:
-    assert "^1.4.1"
-    react "16.0.0-alpha.12"
-    react-native-fs "^2.5.1"
     rfc4648 "^0.9.1"
 
 dlv@^1.1.0:
@@ -3350,10 +3347,10 @@ edge-components@^0.0.9:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@0.12.9:
-  version "0.12.9"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.12.9.tgz#fd82361cb71727dba20951b3a0f455d0388242c3"
-  integrity sha512-ELPtBBOOjOrE7b6XksAhtlAcz6UekQ6JyLPfOZRCX1BJv1bRx06LKuw+34Hwd+7ktlhZsbZmXFIKKXiGUL9lag==
+edge-core-js@0.12.10:
+  version "0.12.10"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.12.10.tgz#fc289bd57fdb869dd8a981e5541bcc5b8f7cfeb5"
+  integrity sha512-9y/WjqKl6p7xzBzTr0YhaG0yb5JpHf/QFCR7lhAOJyPpoLTUd4Qun0ZY9jPOU52Ulv3c1vDjhaon7/hYSTB5aw==
   dependencies:
     "@babel/runtime" "^7.0.0"
     aes-js "^3.1.0"
@@ -3361,7 +3358,7 @@ edge-core-js@0.12.9:
     biggystring "^3.0.2"
     currency-codes "^1.1.2"
     detect-bundler "^1.0.0"
-    disklet "^0.2.7"
+    disklet "^0.2.8"
     elliptic "^6.4.0"
     ethereumjs-tx "^1.3.7"
     ethereumjs-util "^5.2.0"
@@ -8642,7 +8639,7 @@ react-native-firebase@4.3.8:
   version "1.0.5"
   resolved "git://github.com/EdgeApp/react-native-flip-view.git#9796c6469385559da6689a4f56f540fc6f3d003a"
 
-react-native-fs@^2.11.15, react-native-fs@^2.5.1:
+react-native-fs@^2.11.15:
   version "2.11.15"
   resolved "https://registry.yarnpkg.com/react-native-fs/-/react-native-fs-2.11.15.tgz#b80ac78edf124137624697b4864f834c1caf4f43"
   integrity sha512-JDcpYOBYWHHZqaqxG9c17uGapTQQLvVic0GewQWxhad3ftPVodBQ6qMZxyR1h6U8SN2eaJhFqAfenUKl1UtVJg==
@@ -9014,17 +9011,6 @@ react@15.5.4:
     loose-envify "^1.1.0"
     object-assign "^4.1.0"
     prop-types "^15.5.7"
-
-react@16.0.0-alpha.12:
-  version "16.0.0-alpha.12"
-  resolved "https://registry.yarnpkg.com/react/-/react-16.0.0-alpha.12.tgz#8c59485281485df319b6f77682d8dd0621c08194"
-  integrity sha1-jFlIUoFIXfMZtvd2gtjdBiHAgZQ=
-  dependencies:
-    create-react-class "^15.5.2"
-    fbjs "^0.8.9"
-    loose-envify "^1.1.0"
-    object-assign "^4.1.0"
-    prop-types "^15.5.6"
 
 react@16.4.1:
   version "16.4.1"

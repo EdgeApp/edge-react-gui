@@ -19,7 +19,7 @@ exports[`CurrencySettings should render 1`] = `
     <Component
       style={
         Object {
-          "backgroundColor": "#FFFFFF",
+          "backgroundColor": "#F4F5F6",
           "height": "100%",
           "position": "relative",
         }

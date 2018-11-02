@@ -19,7 +19,7 @@ export const styles = {
   container: {
     position: 'relative',
     height: '100%',
-    backgroundColor: THEME.COLORS.WHITE
+    backgroundColor: THEME.COLORS.GRAY_4
   },
   titleStyle: {
     alignSelf: 'center',
@@ -27,6 +27,16 @@ export const styles = {
     color: THEME.COLORS.WHITE,
     fontFamily: THEME.FONTS.DEFAULT,
     marginLeft: 8
+  },
+  instructionArea: {
+    paddingVertical: scale(16),
+    paddingHorizontal: scale(20),
+    backgroundColor: THEME.COLORS.GRAY_4
+  },
+  instructionText: {
+    textAlign: 'center',
+    fontSize: scale(16),
+    color: THEME.COLORS.GRAY_1
   },
   listStyle: {
     height: scale(100)
@@ -62,7 +72,7 @@ export const styles = {
   // //// Beginning of Settings Row ///////
   settingsRowContainer: {
     height: scale(44),
-    backgroundColor: THEME.COLORS.GRAY_4,
+    backgroundColor: THEME.COLORS.WHITE,
     borderBottomWidth: 1,
     borderBottomColor: THEME.COLORS.GRAY_3,
     paddingLeft: scale(20),
@@ -71,10 +81,12 @@ export const styles = {
   },
   settingsRowTextRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    alignItems: 'center'
   },
   settingsRowLeftContainer: {
-    justifyContent: 'center'
+    justifyContent: 'center',
+    flexDirection: 'row'
   },
   settingsRowRightContainer: {
     justifyContent: 'center'
@@ -86,6 +98,11 @@ export const styles = {
   settingsRowLeftTextDisabled: {
     color: THEME.COLORS.GRAY_2,
     fontSize: scale(16)
+  },
+  settingsRowLeftLogo: {
+    height: scale(22),
+    width: scale(22), // logos are square shaped,
+    marginRight: 16
   },
   settingsRowRightArrow: {
     fontSize: scale(18),

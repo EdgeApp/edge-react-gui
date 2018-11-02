@@ -422,3 +422,20 @@ export const exchangeTimerExpired = () => (dispatch: Dispatch, getState: GetStat
     dispatch(getShiftTransaction(hasFrom, hasTo, Constants.FROM, info))
   }
 }
+
+export const checkEnabledExchanges = () => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  // make sure exchanges are enabled
+  let isAnyExchangeEnabled = false
+  const exchanges = account.swapConfig
+  for (const exchange in exchanges) {
+    if (exchanges[exchange].enabled === true) {
+      isAnyExchangeEnabled = true
+    }
+  }
+
+  if (!isAnyExchangeEnabled) {
+    Alert.alert(s.strings.no_exchanges_available, s.strings.check_exchange_settings)
+  }
+}

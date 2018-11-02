@@ -46,6 +46,7 @@ import walletIcon from '../assets/images/tabbar/wallets.png'
 import ExchangeDropMenu from '../connectors/components/HeaderMenuExchangeConnector'
 import RequestDropMenu from '../connectors/components/HeaderMenuRequestConnector'
 import CurrencySettingsTitleConnector from '../connectors/CurrencySettingsTitleConnector.js'
+import { ExchangeSettingsConnector } from '../connectors/ExchangeSettingsConnector.js'
 import AddToken from '../connectors/scenes/AddTokenConnector.js'
 import ChangeMiningFeeSendConfirmation from '../connectors/scenes/ChangeMiningFeeSendConfirmationConnector.ui'
 import ChangePasswordConnector from '../connectors/scenes/ChangePasswordConnector.ui'
@@ -166,6 +167,7 @@ const MANAGE_TOKENS = s.strings.title_manage_tokens
 const ADD_TOKEN = s.strings.title_add_token
 const EDIT_TOKEN = s.strings.title_edit_token
 const SETTINGS = s.strings.title_settings
+const EXCHANGE_SETTINGS = s.strings.settings_exchange_settings
 const CHANGE_PASSWORD = s.strings.title_change_password
 const CHANGE_PIN = s.strings.title_change_pin
 const SPENDING_LIMITS = s.strings.spending_limits
@@ -189,7 +191,8 @@ type Props = {
   urlReceived: string => void,
   updateCurrentSceneKey: string => void,
   contextCallbacks: EdgeContextCallbacks,
-  showReEnableOtpModal: () => void
+  showReEnableOtpModal: () => void,
+  checkEnabledExchanges: () => void
 }
 type State = {
   context: ?EdgeContext
@@ -476,6 +479,7 @@ export default class Main extends Component<Props, State> {
                           renderTitle={this.renderTitle(EXCHANGE)}
                           renderLeftButton={this.renderExchangeButton()}
                           renderRightButton={this.renderMenuButton()}
+                          onEnter={() => this.props.checkEnabledExchanges()}
                         />
                         <Scene
                           key={Constants.EXCHANGE_QUOTE_PROCESSING_SCENE}
@@ -585,6 +589,14 @@ export default class Main extends Component<Props, State> {
                         navTransparent={true}
                         component={SpendingLimitsConnector}
                         renderTitle={this.renderTitle(SPENDING_LIMITS)}
+                        renderLeftButton={this.renderBackButton()}
+                        renderRightButton={this.renderEmptyButton()}
+                      />
+                      <Scene
+                        key={Constants.EXCHANGE_SETTINGS}
+                        navTransparent={true}
+                        component={ExchangeSettingsConnector}
+                        renderTitle={this.renderTitle(EXCHANGE_SETTINGS)}
                         renderLeftButton={this.renderBackButton()}
                         renderRightButton={this.renderEmptyButton()}
                       />
