@@ -1,4 +1,5 @@
 /* globals test expect */
+/* eslint-disable flowtype/require-valid-file-annotation */
 
 // This is an example test file
 
