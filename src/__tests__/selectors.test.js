@@ -1,8 +1,10 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+/* eslint-disable flowtype/require-valid-file-annotation */
 /* globals describe test expect */
 
 import * as CORE_SELECTORS from '../modules/Core/selectors'
-import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import * as SETTINGS_SELECTORS from '../modules/Settings/selectors'
+import * as UI_SELECTORS from '../modules/UI/selectors.js'
 
 describe('getSupportedWalletTypes', function () {
   describe('when multiple supported wallet types', function () {
