@@ -98,7 +98,7 @@ const CryptoExchangeQuoteSceneStyles = {
     walletNameText: {
       color: THEME.COLORS.WHITE,
       fontSize: scale(16),
-      paddingLeft: 10
+      paddingLeft: scale(10)
     },
     fiatAmountText: {
       color: THEME.COLORS.WHITE,
