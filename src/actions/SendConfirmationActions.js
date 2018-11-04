@@ -144,7 +144,7 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
   const wallet = getWallet(state, selectedWalletId)
   const edgeUnsignedTransaction = getTransaction(state)
   const spendInfo = state.ui.scenes.sendConfirmation.spendInfo
-  if (!spendInfo) throw new Error('Invalid Spend Request')
+  if (!spendInfo) throw new Error(s.strings.invalid_spend_request)
   const authRequired = getAuthRequired(state, spendInfo)
   const pin = state.ui.scenes.sendConfirmation.pin
 
@@ -168,15 +168,15 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
     Actions.pop()
     const successInfo = {
       success: true,
-      title: 'Transaction Sent',
-      message: 'Your transaction has been successfully sent.'
+      title: s.strings.transaction_success,
+      message: s.strings.transaction_success_message
     }
     dispatch({ type: 'OPEN_AB_ALERT', data: successInfo })
   } catch (e) {
     dispatch(updateSpendPending(false))
     const errorInfo = {
       success: false,
-      title: 'Transaction Failure',
+      title: s.strings.transaction_failure,
       message: e.message
     }
     dispatch(updateTransaction(edgeSignedTransaction, null, true, new Error('broadcastError')))
@@ -189,7 +189,7 @@ export { createTX as updateMiningFees, createTX as updateParsedURI, createTX as 
 const errorNames = {
   IncorrectPinError: 'IncorrectPinError'
 }
-export function IncorrectPinError (message: ?string = 'Incorrect Pin') {
+export function IncorrectPinError (message: ?string = s.strings.incorrect_pin) {
   const error = new Error(message)
   error.name = errorNames.IncorrectPinError
   return error
