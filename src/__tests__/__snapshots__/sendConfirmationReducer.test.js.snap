@@ -162,7 +162,7 @@ exports[`sendConfirmation reducer destination updateTransaction with pin error 1
 Object {
   "address": "",
   "authRequired": "none",
-  "error": [Error: Incorrect Pin],
+  "error": [Error: Incorrect PIN],
   "forceUpdateGuiCounter": 1,
   "isEditable": true,
   "isKeyboardVisible": false,
