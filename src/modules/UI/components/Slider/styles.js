@@ -28,7 +28,7 @@ export const rawStyles = {
   },
   textOverlay: {
     backgroundColor: THEME.COLORS.TRANSPARENT,
-    fontSize: PLATFORM.deviceWidth >= 320 ? scale(13) : scale(16),
+    fontSize: PLATFORM.deviceWidth >= 320 ? 13 : 16,
     position: 'absolute',
     color: THEME.COLORS.WHITE,
     alignSelf: 'center',
