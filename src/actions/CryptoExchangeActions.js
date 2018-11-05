@@ -365,10 +365,16 @@ export const selectToFromWallet = (type: string, wallet: GuiWallet, currencyCode
 }
 
 export const getShapeShiftTokens = () => async (dispatch: Dispatch, getState: GetState) => {
+  const currentScene = Actions.currentScene
+  if (currentScene !== Constants.EXCHANGE_SCENE) {
+    // this ensures that the function dies if the setTimeout called this after a logout or scene change.
+    return
+  }
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
   const swapKeys = Object.keys(account.swapConfig)
   const totalSwaps = swapKeys.length
+  const availableShapeShiftTokens = state.cryptoExchange.availableShapeShiftTokens
 
   try {
     const response = await account.fetchSwapCurrencies()
@@ -376,6 +382,10 @@ export const getShapeShiftTokens = () => async (dispatch: Dispatch, getState: Ge
   } catch (error) {
     dispatch({ type: 'ON_AVAILABLE_SHAPE_SHIFT_TOKENS', data: { response: {}, totalSwaps } })
   }
+  const duration = Object.keys(availableShapeShiftTokens).length > 0 ? 15000 : 3000
+  setTimeout(() => {
+    dispatch(getShapeShiftTokens())
+  }, duration)
 }
 
 export const selectWalletForExchange = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
@@ -383,8 +393,10 @@ export const selectWalletForExchange = (walletId: string, currencyCode: string) 
   const state = getState()
   const availableShapeShiftTokens = state.cryptoExchange.availableShapeShiftTokens
   if (!availableShapeShiftTokens[currencyCode]) {
+    const message =
+      Object.keys(availableShapeShiftTokens).length > 0 ? currencyCode + ' ' + s.strings.token_not_supported : s.strings.loading_supported_currencies
     setTimeout(() => {
-      Alert.alert(s.strings.could_not_select, currencyCode + ' ' + s.strings.token_not_supported)
+      Alert.alert(s.strings.could_not_select, message)
     }, 1)
     return
   }

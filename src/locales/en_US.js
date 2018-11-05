@@ -254,6 +254,7 @@ const strings = {
   title_use_legacy_address: 'Use Legacy Address',
   title_use_regular_address: 'Use Regular Address',
   token_not_supported: 'Token is not supported by exchange',
+  loading_supported_currencies: 'Loading supported currencies',
   no_exchanges_available: 'No Exchanges Enabled',
   check_exchange_settings: 'Please enable them in your Exchange Settings.',
   amount_above_limit: 'Transaction amount is above the max limit of %1$s %2$s',
