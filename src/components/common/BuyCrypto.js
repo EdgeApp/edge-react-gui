@@ -17,8 +17,11 @@ export type Props = {
 export default class BuyCrypto extends Component<Props> {
   getLogo = () => {
     const { wallet } = this.props
+    console.log(wallet)
     switch (wallet.currencyCode) {
       case 'ETH':
+        return wallet.symbolImageDarkMono
+      case 'XRP':
         return wallet.symbolImageDarkMono
       default:
         return wallet.symbolImage
