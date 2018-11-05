@@ -247,6 +247,7 @@
   "title_use_legacy_address": "Использовать старый тип адреса",
   "title_use_regular_address": "Использовать общепринятый тип адреса",
   "token_not_supported": "Токен не поддерживается сервисом",
+  "loading_supported_currencies": "",
   "no_exchanges_available": "",
   "check_exchange_settings": "",
   "amount_above_limit": "Сумма транзакции превышает максимальный лимит %1$s %2$s",
