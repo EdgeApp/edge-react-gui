@@ -14,13 +14,7 @@ import styles from '../../styles/scenes/TransactionDetailsStyle'
 import THEME from '../../theme/variables/airbitz'
 import * as UTILS from '../../util/utils'
 
-const categories = ['income', 'expense', 'exchange', 'transfer']
-
 const pickerValues = []
-
-categories.map(key => {
-  return pickerValues.push(s.strings['fragment_transaction_' + key])
-})
 
 class AmountArea extends Component {
   constructor (props) {
@@ -29,6 +23,10 @@ class AmountArea extends Component {
       color: ''
     }
 
+    Object.keys(this.props.categories).map(key => {
+      return pickerValues.push(s.strings['fragment_transaction_' + key])
+    })
+
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
@@ -36,8 +34,7 @@ class AmountArea extends Component {
     Picker.init({
       pickerData: pickerValues,
       onPickerConfirm: data => {
-        const categoryIndex = pickerValues.indexOf(data[0])
-        const categoryKey = categories[categoryIndex]
+        const categoryKey = Object.keys(this.props.categories)[pickerValues.indexOf(data[0])]
         this.props.onChangeCategory(categoryKey)
         this.props.onExitCategories()
         this.Picker.hide()
@@ -50,7 +47,7 @@ class AmountArea extends Component {
       pickerConfirmBtnText: s.strings.string_confirm,
       pickerCancelBtnText: s.strings.string_cancel_cap,
       pickerFontSize: 22,
-      selectedValue: [this.props.types[this.props.type].syntax]
+      selectedValue: [this.props.categories[this.props.category].syntax]
     })
     this.Picker = Picker
   }
@@ -119,7 +116,7 @@ class AmountArea extends Component {
     }
 
     if (!notes) notes = ''
-    const typeInfo = this.props.types[this.props.type]
+    const categoryInfo = this.props.categories[this.props.category]
     return (
       <View style={[styles.amountAreaContainer]}>
         <View style={[styles.amountAreaCryptoRow]}>
@@ -173,7 +170,7 @@ class AmountArea extends Component {
             onPress={this.onEnterCategories}
             disabled={this.props.subCategorySelectVisibility || this.props.categorySelectVisibility}
           >
-            <FormattedText style={[{ color: this.props.color }, styles.categoryLeftText]}>{typeInfo.syntax}</FormattedText>
+            <FormattedText style={[{ color: this.props.color }, styles.categoryLeftText]}>{categoryInfo.syntax}</FormattedText>
           </TouchableOpacity>
           <View style={[styles.categoryInputArea]}>
             <TextInput
