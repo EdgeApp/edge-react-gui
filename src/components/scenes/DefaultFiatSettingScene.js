@@ -61,7 +61,7 @@ export default class DefaultFiatSetting extends Component<Props, State> {
             onChangeText={this.handleSearchTermChange}
             value={this.state.searchTerm}
             label={DEFAULT_FIAT_PICKER_PLACEHOLDER}
-            style={MaterialInputOnWhite}
+            style={[MaterialInputOnWhite, { width: '100%' }]}
           />
           <SearchResults
             renderRegularResultFxn={this.renderFiatTypeResult}
