@@ -125,6 +125,10 @@ export default class SettingsOverview extends Component<Props, State> {
     return this.props.isLocked ? this.unlockSettingsAlert() : Actions[Constants.RECOVER_PASSWORD]()
   }
 
+  _onPressExchangeSettings = () => {
+    Actions[Constants.EXCHANGE_SETTINGS]()
+  }
+
   _onPressSpendingLimits = () => {
     return Actions[Constants.SPENDING_LIMITS]()
   }
@@ -222,6 +226,13 @@ export default class SettingsOverview extends Component<Props, State> {
           </Gradient>
 
           <View>
+            <RowRoute
+              disabled={false}
+              leftText={s.strings.settings_exchange_settings}
+              routeFunction={this._onPressExchangeSettings}
+              right={<Icon type={Constants.SIMPLE_ICONS} style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
+            />
+
             <RowRoute
               disabled={false}
               leftText={s.strings.spending_limits}

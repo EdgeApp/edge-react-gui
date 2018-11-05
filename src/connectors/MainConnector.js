@@ -2,6 +2,7 @@
 
 import { connect } from 'react-redux'
 
+import { checkEnabledExchanges, getShapeShiftTokens } from '../actions/CryptoExchangeActions.js'
 import { setKeyboardHeight } from '../actions/DimensionsActions.js'
 import * as actions from '../actions/indexActions'
 import { disableScan, enableScan } from '../actions/ScanActions'
@@ -50,7 +51,11 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   },
   contextCallbacks: makeContextCallbacks(dispatch),
   onSelectWallet: (walletId, currencyCode) => dispatch(selectWallet(walletId, currencyCode)),
-  showReEnableOtpModal: () => dispatch(showReEnableOtpModal())
+  showReEnableOtpModal: () => dispatch(showReEnableOtpModal()),
+  checkEnabledExchanges: () => {
+    dispatch(checkEnabledExchanges())
+    dispatch(getShapeShiftTokens())
+  }
 })
 export default connect(
   mapStateToProps,
