@@ -247,6 +247,7 @@
   "title_use_legacy_address": "",
   "title_use_regular_address": "",
   "token_not_supported": "",
+  "loading_supported_currencies": "",
   "no_exchanges_available": "",
   "check_exchange_settings": "",
   "amount_above_limit": "",
