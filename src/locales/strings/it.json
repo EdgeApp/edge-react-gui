@@ -247,6 +247,7 @@
   "title_use_legacy_address": "Usa l'indirizzo Legacy",
   "title_use_regular_address": "Usa l'indirizzo regolare",
   "token_not_supported": "Il token non è supportato dal cambio valuta",
+  "loading_supported_currencies": "",
   "no_exchanges_available": "",
   "check_exchange_settings": "",
   "amount_above_limit": "La transazione è oltre il limite massimo di %1$s %2$s",
