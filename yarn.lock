@@ -3425,15 +3425,15 @@ edge-currency-ethereum@0.11.0:
     sprintf-js "^1.1.1"
     uri-js "^3.0.2"
 
-edge-currency-monero@^0.0.9:
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.0.9.tgz#7e852c19d1080a79754a68d85798110c6d827790"
-  integrity sha512-SEjhLHpRLRpvs8dXyGOBTdtphW0go23sDY6AxHUH0znTsbCVM5RfjcCce9ZddQzGBnuoMmFa5HQEX9pLY/L4Yw==
+edge-currency-monero@^0.0.10:
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.0.10.tgz#d60c70f23cb36a949eabbafd0b0b20d06401e728"
+  integrity sha512-AdzgvqC5Zslp4Z9imFUu9DOlq51j2SHDAZiSTS4IZ/uSypsaLSlu0dGqyRLjQeqrXbM1iwRGvvXvu/LoJb3p+g==
   dependencies:
     biggystring "^3.0.0"
     buffer "^5.0.6"
     jsonschema "^1.1.1"
-    mymonero-core-js "git://github.com/Airbitz/mymonero-core-js.git#00e49ad"
+    mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#00e49ad"
     node-xhr "^1.0.5"
     sprintf-js "^1.1.1"
     uri-js "^3.0.2"
@@ -7269,9 +7269,9 @@ mute-stream@0.0.7:
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.7.tgz#3075ce93bc21b8fab43e1bc4da7e8115ed1e7bab"
   integrity sha1-MHXOk7whuPq0PhvE2n6BFe0ee6s=
 
-"mymonero-core-js@git://github.com/Airbitz/mymonero-core-js.git#00e49ad":
+"mymonero-core-js@git://github.com/EdgeApp/mymonero-core-js.git#00e49ad":
   version "0.9.0"
-  resolved "git://github.com/Airbitz/mymonero-core-js.git#00e49ada11866f44f7c22ffb0edfb05853b0e074"
+  resolved "git://github.com/EdgeApp/mymonero-core-js.git#00e49ada11866f44f7c22ffb0edfb05853b0e074"
   dependencies:
     async "^2.6.0"
 
