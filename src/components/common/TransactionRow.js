@@ -124,9 +124,10 @@ export class TransactionRowComponent extends Component<Props, State> {
       // if partial confirmation (less than currency threshold)
       // subtract 1 from requiredConfirmations because one confirmation is when wallet and tx block heights match (difference is zero)
     } else if (walletBlockHeight - tx.blockHeight < requiredConfirmations - 1) {
+      const currentConfirmations = walletBlockHeight - tx.blockHeight + 1
       pendingTimeStyle = styles.transactionPartialConfirmation
       // keep in mind that if the tx.blockHeight is not -1 the that means it must have had at least one confirmation
-      pendingTimeSyntax = sprintf(CONFIRMATION_PROGRESS_TEXT, walletBlockHeight - tx.blockHeight + 1, requiredConfirmations)
+      pendingTimeSyntax = sprintf(CONFIRMATION_PROGRESS_TEXT, currentConfirmations > 0 ? currentConfirmations : 0, requiredConfirmations)
       // if confirmed past threshold
     } else {
       pendingTimeStyle = styles.transactionTime
