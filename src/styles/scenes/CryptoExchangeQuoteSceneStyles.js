@@ -54,7 +54,7 @@ const CryptoExchangeQuoteSceneStyles = {
     },
     containerCollapsed: {
       width: '100%',
-      height: scale(65),
+      minHeight: scale(65),
       backgroundColor: THEME.COLORS.OPACITY_WHITE,
       borderRadius: 3
     },
@@ -93,7 +93,8 @@ const CryptoExchangeQuoteSceneStyles = {
       color: THEME.COLORS.WHITE,
       fontSize: scale(16),
       paddingTop: scale(10),
-      paddingRight: scale(10)
+      paddingRight: scale(10),
+      textAlign: 'right'
     },
     walletNameText: {
       color: THEME.COLORS.WHITE,
@@ -103,7 +104,8 @@ const CryptoExchangeQuoteSceneStyles = {
     fiatAmountText: {
       color: THEME.COLORS.WHITE,
       fontSize: scale(16),
-      paddingRight: 10
+      paddingRight: 10,
+      textAlign: 'right'
     },
     topRow: {
       height: scale(65),
@@ -127,15 +129,15 @@ const CryptoExchangeQuoteSceneStyles = {
       justifyContent: 'flex-end'
     },
     walletInfoContainer: {
-      flex: 5,
+      flex: 8,
       alignItems: 'flex-start'
     },
     amountInfoContainer: {
-      flex: 4,
+      flex: 11,
       alignItems: 'flex-end'
     },
     logoContainer: {
-      flex: 1,
+      flex: 2,
       alignItems: 'center',
       paddingTop: scale(10),
       paddingLeft: 5
