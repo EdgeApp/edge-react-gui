@@ -3,7 +3,9 @@
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, View, WebView } from 'react-native'
 import * as Animatable from 'react-native-animatable'
+import { base64 } from 'rfc4648'
 
+import ENV from '../../../env.json'
 import s from '../../locales/strings'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import BackButton from '../../modules/UI/components/Header/Component/BackButton.ui.js'
@@ -38,34 +40,35 @@ class SwapKYCModal extends Component<Props, State> {
     }
   }
   getToken = async (code: string) => {
+    const text = ENV.SHAPESHIFT_CLIENT_ID + ':' + ENV.SHAPESHIFT_SECRET
+    const data = new Uint8Array(text.length)
+    for (let i = 0; i < text.length; ++i) data[i] = text.charCodeAt(i)
+    const basic = 'Basic ' + base64.stringify(data)
+    const method = 'POST'
+    const headers = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: basic
+    }
+    const body = JSON.stringify({
+      code: code,
+      grant_type: 'authorization_code'
+    })
+
     try {
       let parsed: string
       if (global.androidFetch) {
         const response = await global.androidFetch('https://auth.shapeshift.io/oauth/token', {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            Authorization: 'Basic M2E0OWMzMDYtOGM1Mi00MmEyLWI3Y2YtYmRhNGU0YWE2ZDdkOkNXbW0xMWpLb2F5RUdQcHRmTHpreXJybXlWSEFHMXNrelJRdUtKWllCcmh5'
-          },
-          body: JSON.stringify({
-            code: code,
-            grant_type: 'authorization_code'
-          })
+          method,
+          headers,
+          body
         })
         parsed = JSON.parse(response)
       } else {
         const response = await fetch('https://auth.shapeshift.io/oauth/token', {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            Authorization: 'Basic M2E0OWMzMDYtOGM1Mi00MmEyLWI3Y2YtYmRhNGU0YWE2ZDdkOkNXbW0xMWpLb2F5RUdQcHRmTHpreXJybXlWSEFHMXNrelJRdUtKWllCcmh5'
-          },
-          body: JSON.stringify({
-            code: code,
-            grant_type: 'authorization_code'
-          })
+          method,
+          headers,
+          body
         })
         if (response.status !== 200) {
           Alert.alert(s.strings.kyc_something_wrong, s.strings.kyc_something_wrong_message, [{ text: 's.strings.string_ok', onPress: this.props.onDone }])
@@ -94,7 +97,7 @@ class SwapKYCModal extends Component<Props, State> {
           <SafeAreaView>
             <View style={styles.container}>
               <Gradient style={styles.gradient}>
-                <BackButton onPress={this.props.onDone} label="back" />
+                <BackButton onPress={this.props.onDone} label={s.strings.title_back} />
               </Gradient>
               <View style={styles.webview}>
                 <WebView
