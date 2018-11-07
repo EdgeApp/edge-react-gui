@@ -17,7 +17,8 @@ export const rawStyles = {
     backgroundColor: THEME.COLORS.OPACITY_WHITE,
     overflow: 'hidden',
     borderRadius: 26,
-    height: 52
+    height: 52,
+    zIndex: 2
   },
   thumb: {
     width: 52,
@@ -32,7 +33,8 @@ export const rawStyles = {
     position: 'absolute',
     color: THEME.COLORS.WHITE,
     alignSelf: 'center',
-    top: PLATFORM.deviceWidth >= 320 ? 19 : 16
+    top: PLATFORM.deviceWidth >= 320 ? 19 : 16,
+    zIndex: 1
   },
   debug
 }
