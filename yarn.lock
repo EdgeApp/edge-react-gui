@@ -1047,7 +1047,7 @@ async@^1.4.0:
   resolved "https://registry.yarnpkg.com/async/-/async-1.5.2.tgz#ec6a61ae56480c0c3cb241c95618e20892f9672a"
   integrity sha1-7GphrlZIDAw8skHJVhjiCJL5Zyo=
 
-async@^2.1.4, async@^2.4.0, async@^2.6.0:
+async@^2.1.4, async@^2.4.0:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/async/-/async-2.6.1.tgz#b245a23ca71930044ec53fa46aa00a3e87c6a610"
   integrity sha512-fNEiL2+AZt6AlAw/29Cr0UDe4sRAHCpEHh54WMz+Bb7QfNcFw4h3loofyJpLeQs4Yx7yuqu/2dLgM5hKOs6HlQ==
@@ -3347,10 +3347,10 @@ edge-components@^0.0.9:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@0.12.10:
-  version "0.12.10"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.12.10.tgz#fc289bd57fdb869dd8a981e5541bcc5b8f7cfeb5"
-  integrity sha512-9y/WjqKl6p7xzBzTr0YhaG0yb5JpHf/QFCR7lhAOJyPpoLTUd4Qun0ZY9jPOU52Ulv3c1vDjhaon7/hYSTB5aw==
+edge-core-js@0.12.11:
+  version "0.12.11"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.12.11.tgz#9f73574d64d7183e32f64b3c8983d3e0655f3b50"
+  integrity sha512-4HkCBfMz16f3vz1ijuRfcaZpquBFP9nZWDjBjKj9ESyM5uK+Cx12vxMnutRObM5seqfI/RVE7Uz5/X9yN6Rfkg==
   dependencies:
     "@babel/runtime" "^7.0.0"
     aes-js "^3.1.0"
@@ -3425,15 +3425,15 @@ edge-currency-ethereum@0.11.0:
     sprintf-js "^1.1.1"
     uri-js "^3.0.2"
 
-edge-currency-monero@^0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.0.10.tgz#d60c70f23cb36a949eabbafd0b0b20d06401e728"
-  integrity sha512-AdzgvqC5Zslp4Z9imFUu9DOlq51j2SHDAZiSTS4IZ/uSypsaLSlu0dGqyRLjQeqrXbM1iwRGvvXvu/LoJb3p+g==
+edge-currency-monero@0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.1.0.tgz#9a59a69116369f8864447517ea7b095554c8bd90"
+  integrity sha512-+rOzOfd33WhlP9PpsIotO8PYJTu5al8foLb/LZrxncZG9YCtB0DS4mG5cLg6Jh2DL+WgsiujOVhA/dVGIoj+Ww==
   dependencies:
     biggystring "^3.0.0"
     buffer "^5.0.6"
     jsonschema "^1.1.1"
-    mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#00e49ad"
+    mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#1a815ca"
     node-xhr "^1.0.5"
     sprintf-js "^1.1.1"
     uri-js "^3.0.2"
@@ -7269,11 +7269,11 @@ mute-stream@0.0.7:
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.7.tgz#3075ce93bc21b8fab43e1bc4da7e8115ed1e7bab"
   integrity sha1-MHXOk7whuPq0PhvE2n6BFe0ee6s=
 
-"mymonero-core-js@git://github.com/EdgeApp/mymonero-core-js.git#00e49ad":
-  version "0.9.0"
-  resolved "git://github.com/EdgeApp/mymonero-core-js.git#00e49ada11866f44f7c22ffb0edfb05853b0e074"
+"mymonero-core-js@git://github.com/EdgeApp/mymonero-core-js.git#1a815ca":
+  version "1.1.0"
+  resolved "git://github.com/EdgeApp/mymonero-core-js.git#1a815ca75cc712c67170985294a4d6f8ba9d5430"
   dependencies:
-    async "^2.6.0"
+    node-fetch "^2.2.0"
 
 n64@0.0.18:
   version "0.0.18"
@@ -7390,7 +7390,7 @@ node-fetch@^1.0.1, node-fetch@^1.3.3:
     encoding "^0.1.11"
     is-stream "^1.0.1"
 
-node-fetch@^2.0.0:
+node-fetch@^2.0.0, node-fetch@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.2.0.tgz#4ee79bde909262f9775f731e3656d0db55ced5b5"
   integrity sha512-OayFWziIxiHY8bCUyLX6sTpDH8Jsbp4FfYd1j1f7vZyfgkcOnAyM4oQR16f8a0s7Gl/viMGRey8eScYk4V4EZA==
@@ -8618,10 +8618,10 @@ react-native-easy-grid@0.2.0:
   version "0.17.0"
   resolved "git://github.com/EdgeApp/react-native-extra-dimensions-android.git#4e1c03f0c5ee3dc26d820d3980796ac41eb51528"
 
-react-native-fast-crypto@^1.5.6:
-  version "1.5.6"
-  resolved "https://registry.yarnpkg.com/react-native-fast-crypto/-/react-native-fast-crypto-1.5.6.tgz#17c6d1517d9732d18a63ba6238b54a00643ff605"
-  integrity sha512-lOT7ao1XItyYjq9adb6+X5R4Fj5QL7+xqZrum5LQ2qaNIv2gkrQzWvmgkEOwbrDIIO+davwkkxl/KPq6ISmuBg==
+react-native-fast-crypto@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/react-native-fast-crypto/-/react-native-fast-crypto-1.6.0.tgz#63bb9b38df7882dc4c5e442e758dd4c183c64058"
+  integrity sha512-oRRWEh6XQFBnVm28HYEYZoOr0Nfh07yUhVeXgvcDn9NRydqGYIpVyx10yDn5e26KQpRZ4YBrEP5maRMFwjNqwA==
   dependencies:
     buffer "^5.0.8"
     rfc4648 "^1.0.0"
