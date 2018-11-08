@@ -192,7 +192,8 @@ type Props = {
   updateCurrentSceneKey: string => void,
   contextCallbacks: EdgeContextCallbacks,
   showReEnableOtpModal: () => void,
-  checkEnabledExchanges: () => void
+  checkEnabledExchanges: () => void,
+  openDrawer: () => void
 }
 type State = {
   context: ?EdgeContext
@@ -740,7 +741,7 @@ export default class Main extends Component<Props, State> {
 
   renderMenuButton = () => {
     return (
-      <TouchableWithoutFeedback onPress={Actions.drawerOpen}>
+      <TouchableWithoutFeedback onPress={this.props.openDrawer}>
         <Image source={MenuIcon} />
       </TouchableWithoutFeedback>
     )
