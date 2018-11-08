@@ -33,7 +33,7 @@ export const rawStyles = {
     position: 'absolute',
     color: THEME.COLORS.WHITE,
     alignSelf: 'center',
-    top: PLATFORM.deviceWidth >= 320 ? 19 : 16,
+    top: 17,
     zIndex: 1
   },
   debug

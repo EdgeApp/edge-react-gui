@@ -155,7 +155,7 @@ const strings = {
   settings_button_logout: 'Logout',
   settings_button_pin: 'Change PIN',
   settings_exchange_settings: 'Exchange Settings',
-  settings_exchange_instruction: 'Enable or disable the exchange providers avilable to you',
+  settings_exchange_instruction: 'Enable or disable the exchange providers available to you',
   settings_exchange_enable: 'Enable Exchanges',
   string_enable: 'Enable',
   settings_button_send_logs: 'Send Logs',
