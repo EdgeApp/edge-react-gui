@@ -1,8 +1,11 @@
 // @flow
 
+import { Icon, InputAndButtons, createInputModal, showModal } from 'edge-components'
+import React from 'react'
 import { Actions } from 'react-native-router-flux'
 
 import * as Constants from '../constants/indexConstants'
+import s from '../locales/strings.js'
 import * as ACCOUNT_API from '../modules/Core/Account/api.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import type { Dispatch, GetState } from '../modules/ReduxTypes'
@@ -61,15 +64,6 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
       }
     }
 
-    case 'rename': {
-      return (dispatch: Dispatch, getState: GetState) => {
-        const state = getState()
-        const walletName = CORE_SELECTORS.getWallet(state, walletId).name
-        // $FlowFixMe
-        dispatch({ type: 'OPEN_RENAME_WALLET_MODAL', data: { walletId, walletName } })
-      }
-    }
-
     case 'delete': {
       return (dispatch: Dispatch) => {
         dispatch(showDeleteWalletModal(walletId))
@@ -108,6 +102,48 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
         const state = getState()
         const wallet = state.core.wallets.byId[walletId]
         Actions[Constants.TRANSACTIONS_EXPORT]({ sourceWallet: wallet })
+      }
+    }
+
+    case 'rename': {
+      return async (dispatch: Dispatch, getState: GetState) => {
+        try {
+          const state = getState()
+          const walletName = CORE_SELECTORS.getWalletName(state, walletId)
+          const input = {
+            label: s.strings.fragment_wallets_rename_wallet,
+            autoCorrect: false,
+            error: '',
+            returnKeyType: 'go',
+            initialValue: walletName
+          }
+          const yesButton = {
+            title: s.strings.string_next_capitalized
+          }
+          const noButton = {
+            title: s.strings.string_cancel_cap
+          }
+          const renameWalletModal = createInputModal({
+            icon: <Icon type={Constants.FONT_AWESOME} name={Constants.RENAME} size={30} />,
+            title: s.strings.fragment_wallets_rename_wallet,
+            input,
+            yesButton,
+            noButton
+          })
+          const resolveValue = await showModal(renameWalletModal)
+          if (resolveValue) {
+            console.log('Positive button pressed')
+          }
+          dispatch(actions.dispatchActionWitString(Constants.ON_RECOVERY_KEY, recoveryKey))
+        } catch (e) {
+          console.log(e)
+          console.log(e.title)
+          console.log(e.message)
+        }
+        /* const state = getState()
+        const walletName = CORE_SELECTORS.getWallet(state, walletId).name
+        // $FlowFixMe
+        dispatch({ type: 'OPEN_RENAME_WALLET_MODAL', data: { walletId, walletName } }) */
       }
     }
   }
