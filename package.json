@@ -83,7 +83,7 @@
     "dns.js": "^1.0.1",
     "domain-browser": "^1.1.7",
     "edge-components": "^0.0.9",
-    "edge-core-js": "0.12.11",
+    "edge-core-js": "0.12.12",
     "edge-currency-accountbased": "^0.0.11",
     "edge-currency-bitcoin": "3.5.1",
     "edge-currency-ethereum": "0.11.0",
