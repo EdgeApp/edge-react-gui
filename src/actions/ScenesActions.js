@@ -9,7 +9,7 @@ export const updateCurrentSceneKey = (sceneKey: string) => ({
   data: { sceneKey }
 })
 
-export const openDawer = () => (dispatch: Dispatch, getState: GetState) => {
+export const openDrawer = () => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const selectedWallet = getSelectedWalletId(state)
   if (selectedWallet.length > 0 && Actions.currentScene !== 'DrawerOpen') {
