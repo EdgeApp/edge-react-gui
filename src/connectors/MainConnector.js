@@ -6,7 +6,7 @@ import { checkEnabledExchanges, getShapeShiftTokens } from '../actions/CryptoExc
 import { setKeyboardHeight } from '../actions/DimensionsActions.js'
 import * as actions from '../actions/indexActions'
 import { disableScan, enableScan } from '../actions/ScanActions'
-import { updateCurrentSceneKey } from '../actions/ScenesActions.js'
+import { openDrawer, updateCurrentSceneKey } from '../actions/ScenesActions.js'
 import { showReEnableOtpModal } from '../actions/SettingsActions.js'
 import { selectWallet } from '../actions/WalletActions.js'
 import Main from '../components/Main.ui'
@@ -52,6 +52,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   contextCallbacks: makeContextCallbacks(dispatch),
   onSelectWallet: (walletId, currencyCode) => dispatch(selectWallet(walletId, currencyCode)),
   showReEnableOtpModal: () => dispatch(showReEnableOtpModal()),
+  openDrawer: () => dispatch(openDrawer()),
   checkEnabledExchanges: () => {
     dispatch(checkEnabledExchanges())
     dispatch(getShapeShiftTokens())
