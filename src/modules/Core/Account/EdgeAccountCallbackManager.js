@@ -31,13 +31,14 @@ class EdgeAccountCallbackManager extends React.Component<Props> {
   subscribeToAccount = () => {
     const { account } = this.props
 
-    account.watch('allKeys', () => {
-      // $FlowFixMe
-      setTimeout(() => this.props.updateWalletsRequest(), 0)
+    account.watch('currencyWallets', () => {
+      this.props.updateWalletsRequest()
     })
 
     account.watch('loggedIn', () => {
-      console.log('onLoggedOut')
+      if (account.loggedIn === false) {
+        console.log('onLoggedOut')
+      }
     })
 
     account.exchangeCache.on('update', () => {
