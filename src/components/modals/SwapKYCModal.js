@@ -40,7 +40,9 @@ class SwapKYCModal extends Component<Props, State> {
     }
   }
   getToken = async (code: string) => {
-    const text = ENV.SHAPESHIFT_CLIENT_ID + ':' + ENV.SHAPESHIFT_SECRET
+    const id = ENV.SHAPESHIFT_CLIENT_ID ? ENV.SHAPESHIFT_CLIENT_ID : '3a49c306-8c52-42a2-b7cf-bda4e4aa6d7d'
+    const secret = ENV.SHAPESHIFT_SECRET ? ENV.SHAPESHIFT_SECRET : 'CWmm11jKoayEGPptfLzkyrrmyVHAG1skzRQuKJZYBrhy'
+    const text = id + ':' + secret
     const data = new Uint8Array(text.length)
     for (let i = 0; i < text.length; ++i) data[i] = text.charCodeAt(i)
     const basic = 'Basic ' + base64.stringify(data)
@@ -71,14 +73,14 @@ class SwapKYCModal extends Component<Props, State> {
           body
         })
         if (response.status !== 200) {
-          Alert.alert(s.strings.kyc_something_wrong, s.strings.kyc_something_wrong_message, [{ text: 's.strings.string_ok', onPress: this.props.onDone }])
+          Alert.alert(s.strings.kyc_something_wrong, s.strings.kyc_something_wrong_message, [{ text: s.strings.string_ok, onPress: this.props.onDone }])
           return
         }
         parsed = await response.json()
       }
       this.props.setToken(parsed, this.props.pluginName)
     } catch (error) {
-      Alert.alert(s.strings.kyc_something_wrong, s.strings.kyc_something_wrong_message, [{ text: 's.strings.string_ok', onPress: this.props.onDone }])
+      Alert.alert(s.strings.kyc_something_wrong, s.strings.kyc_something_wrong_message, [{ text: s.strings.string_ok, onPress: this.props.onDone }])
     }
   }
   setRef = (ref: WebView = null) => {
