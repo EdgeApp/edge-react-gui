@@ -4,7 +4,7 @@ import { type EdgeSwapConfig } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Image, View } from 'react-native'
 
-import { defaultLogo, shapeshiftLogo } from '../../assets/images/exchange'
+import { changellyLogo, defaultLogo, shapeshiftLogo } from '../../assets/images/exchange'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/index'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
@@ -26,6 +26,9 @@ type GuiExchangeSetting = {
 const exchangeInfo = {
   shapeshift: {
     logo: shapeshiftLogo
+  },
+  changelly: {
+    logo: changellyLogo
   },
   default: {
     logo: defaultLogo
