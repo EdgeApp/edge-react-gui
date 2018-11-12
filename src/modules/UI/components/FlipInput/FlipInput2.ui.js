@@ -119,8 +119,8 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
     super(props)
     this.state = getInitialState(props)
     slowlog(this, /.*/, global.slowlogOptions)
-  }
-  UNSAFE_componentWillMount () {
+
+    // Mounting Animation
     this.animatedValue = new Animated.Value(0)
     this.frontInterpolate = this.animatedValue.interpolate({
       inputRange: [0, 1],
@@ -147,6 +147,24 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
         this.textInputFront.focus()
       }
     }, 400)
+
+    if(this.props.fromScene === 'fromScan') {
+      this.setState({
+        isToggled: !this.state.isToggled
+      })
+      Animated.timing(this.animatedValue, {
+        toValue: 1,
+        duration: 0
+      }).start();
+      setTimeout(() => {
+        this.setState({
+          secondaryDisplayAmount: null
+        })
+      }, 10)
+      setTimeout(() => {
+        this.textInputBack.focus()
+      }, 1500)
+    }
   }
 
   UNSAFE_componentWillReceiveProps (nextProps: Props) {
@@ -276,7 +294,7 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
         <Text style={[top.symbol]}>{fieldInfo.currencySymbol}</Text>
         <TextInput
           style={[top.amount, Platform.OS === 'ios' ? {} : { paddingBottom: 2 }]}
-          placeholder={'0'}
+          placeholder={this.props.fromScene === 'fromScan' ? 'Amount' : '0'}
           placeholderTextColor={'rgba(255, 255, 255, 0.60)'}
           value={amount}
           onChangeText={onChangeText}

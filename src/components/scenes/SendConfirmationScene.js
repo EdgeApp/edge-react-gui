@@ -98,9 +98,6 @@ export class SendConfirmation extends Component<Props, State> {
     }
   }
 
-  UNSAFE_componentWillMount () {
-    this.setState({ keyboardVisible: this.props.data === 'fromScan' })
-  }
   componentDidMount () {
     const secondaryDisplayDenomination = getDenomFromIsoCode(this.props.fiatCurrencyCode)
     const overridePrimaryExchangeAmount = bns.div(this.props.nativeAmount, this.props.primaryExchangeDenomination.multiplier, DIVIDE_PRECISION)
@@ -162,6 +159,7 @@ export class SendConfirmation extends Component<Props, State> {
     const DESTINATION_TEXT = sprintf(s.strings.send_confirmation_to, destination)
     const ADDRESS_TEXT = sprintf(s.strings.send_confirmation_address, address)
 
+    console.log(this.props)
     return (
       <SafeAreaView>
         <Gradient style={styles.view}>
@@ -193,6 +191,7 @@ export class SendConfirmation extends Component<Props, State> {
                 onExchangeAmountChanged={this.onExchangeAmountChanged}
                 keyboardVisible={this.state.keyboardVisible}
                 isEditable={this.props.isEditable}
+                fromScene={this.props.data}
               />
 
               <Scene.Padding style={{ paddingHorizontal: 54 }}>

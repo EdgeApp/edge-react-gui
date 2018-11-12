@@ -155,6 +155,7 @@ export class ExchangedFlipInput extends Component<Props, State> {
         onAmountChanged={this.onAmountChanged}
         keyboardVisible={this.props.keyboardVisible}
         isEditable={this.props.isEditable}
+        fromScene={this.props.fromScene}
       />
     )
   }
