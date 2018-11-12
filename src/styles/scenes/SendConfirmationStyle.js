@@ -55,12 +55,11 @@ export const rawStyles = {
     width: scale(270)
   },
   error: {
-    height: scale(20),
-    marginRight: scale(5),
+    marginHorizontal: scale(10),
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   errorText: {
-    textAlign: 'left',
+    textAlign: 'center',
     color: THEME.COLORS.ACCENT_RED
   },
   menuTrigger: {
