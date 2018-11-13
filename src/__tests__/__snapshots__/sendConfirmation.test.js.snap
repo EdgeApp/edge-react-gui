@@ -251,6 +251,7 @@ exports[`SendConfirmation should render with destination 1`] = `
             }
           }
           resetSlider={false}
+          showSpinner={false}
           sliderDisabled={true}
         />
       </Footer>
@@ -495,6 +496,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
             }
           }
           resetSlider={false}
+          showSpinner={false}
           sliderDisabled={true}
         />
       </Footer>
@@ -754,6 +756,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
             }
           }
           resetSlider={false}
+          showSpinner={false}
           sliderDisabled={true}
         />
       </Footer>
@@ -1016,6 +1019,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
             }
           }
           resetSlider={false}
+          showSpinner={false}
           sliderDisabled={true}
         />
       </Footer>

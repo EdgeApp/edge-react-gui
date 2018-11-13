@@ -76,7 +76,8 @@ type State = {|
   nativeAmount: string,
   overridePrimaryExchangeAmount: string,
   forceUpdateGuiCounter: number,
-  keyboardVisible: boolean
+  keyboardVisible: boolean,
+  showSpinner: boolean
 |}
 
 export class SendConfirmation extends Component<Props, State> {
@@ -94,7 +95,8 @@ export class SendConfirmation extends Component<Props, State> {
       overridePrimaryExchangeAmount: '',
       keyboardVisible: false,
       forceUpdateGuiCounter: 0,
-      nativeAmount: props.nativeAmount
+      nativeAmount: props.nativeAmount,
+      showSpinner: false
     }
   }
 
@@ -123,6 +125,12 @@ export class SendConfirmation extends Component<Props, State> {
     if (nextProps.fiatCurrencyCode !== this.props.fiatCurrencyCode) {
       newState.secondaryDisplayDenomination = getDenomFromIsoCode(nextProps.fiatCurrencyCode)
     }
+
+    const feeCalculated = !!nextProps.networkFee || !!nextProps.parentNetworkFee
+    if (feeCalculated || nextProps.errorMsg || nextProps.nativeAmount === '0') {
+      newState.showSpinner = false
+    }
+
     this.setState(newState)
   }
 
@@ -162,6 +170,9 @@ export class SendConfirmation extends Component<Props, State> {
     const DESTINATION_TEXT = sprintf(s.strings.send_confirmation_to, destination)
     const ADDRESS_TEXT = sprintf(s.strings.send_confirmation_address, address)
 
+    const feeCalculated = !!this.props.networkFee || !!this.props.parentNetworkFee
+    const sliderDisabled = this.props.sliderDisabled || !feeCalculated || this.props.nativeAmount === '0'
+
     return (
       <SafeAreaView>
         <Gradient style={styles.view}>
@@ -197,7 +208,7 @@ export class SendConfirmation extends Component<Props, State> {
 
               <Scene.Padding style={{ paddingHorizontal: 54 }}>
                 <Scene.Item style={{ alignItems: 'center', flex: -1 }}>
-                  {(!!this.props.networkFee || !!this.props.parentNetworkFee) && (
+                  {feeCalculated && (
                     <Scene.Row style={{ paddingVertical: 4 }}>
                       <Text style={[styles.feeAreaText]}>{this.networkFeeSyntax()}</Text>
                     </Scene.Row>
@@ -258,7 +269,8 @@ export class SendConfirmation extends Component<Props, State> {
                 resetSlider={this.props.resetSlider}
                 parentStyle={styles.sliderStyle}
                 onSlidingComplete={this.props.signBroadcastAndSave}
-                sliderDisabled={this.props.sliderDisabled}
+                sliderDisabled={sliderDisabled}
+                showSpinner={this.state.showSpinner}
               />
             </Scene.Footer>
           </View>
@@ -279,6 +291,10 @@ export class SendConfirmation extends Component<Props, State> {
   }
 
   onExchangeAmountChanged = ({ nativeAmount, exchangeAmount }: ExchangedFlipInputAmounts) => {
+    this.setState({
+      showSpinner: true
+    })
+
     this.props.updateAmount(nativeAmount, exchangeAmount, this.props.fiatPerCrypto.toString())
   }
 
