@@ -20,6 +20,7 @@
   "exchange_succeeded": "",
   "no_exchange_amount": "",
   "select_exchange_amount": "",
+  "select_exchange_amount_short": "",
   "exchanges_may_take_minutes": "",
   "fragment_wallets_addwallet_blockchain_hint": "",
   "fragment_wallets_addwallet_fiat_hint": "",
