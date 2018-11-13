@@ -241,7 +241,7 @@ export class TransactionList extends Component<Props, State> {
                   <View style={{ flexDirection: 'row' }}>
                     {displayDenomination.symbol ? (
                       <View style={{ flexDirection: 'row' }}>
-                        <T numberOfLines={1} style={[styles.currentBalanceBoxBits, styles.symbol]}>
+                        <T numberOfLines={1} style={[styles.currentBalanceBoxBits]}>
                           {displayDenomination.symbol + ' '}
                         </T>
                         <T numberOfLines={1} style={[styles.currentBalanceBoxBits]}>
