@@ -20,6 +20,7 @@
   "exchange_succeeded": "Cambio realizado",
   "no_exchange_amount": "",
   "select_exchange_amount": "",
+  "select_exchange_amount_short": "",
   "exchanges_may_take_minutes": "Las casas de cambio pueden tardar varios minutos en procesar las transacciones. Por favor comprueba tu cartera de destino despues de unos minutos",
   "fragment_wallets_addwallet_blockchain_hint": "Elije una cadena de bloques",
   "fragment_wallets_addwallet_fiat_hint": "Elije una moneda fiat",
