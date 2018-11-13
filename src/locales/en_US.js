@@ -451,7 +451,12 @@ const strings = {
     'You have an active ShapeShift account linked to this Edge account. However, it still requires verification before ShapeShift can process this exchange request. Please proceed to ShapeShift.io, login with your ShapeShift account credentials, and complete your verification.',
   ss_login: 'Create / Sign In',
   ss_logout: 'Sign Out',
-  account: 'Account'
+  account: 'Account',
+  delete_account_header: 'Delete Account',
+  delete_username_account:
+    'Delete %1$s on this device? This will disable access via PIN. If 2FA is enabled on this account, this device will not be able to login without a 2FA reset which takes 7 days.',
+  no: 'No',
+  yes: 'Yes'
 }
 
 // export default strings
