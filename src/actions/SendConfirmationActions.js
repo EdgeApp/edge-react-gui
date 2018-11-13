@@ -20,10 +20,12 @@ import {
   signTransaction
 } from '../modules/Core/Wallets/api.js'
 import type { Dispatch, GetState } from '../modules/ReduxTypes'
+import { getExchangeDenomination as settingsGetExchangeDenomination } from '../modules/Settings/selectors.js'
 import { getAuthRequired, getSpendInfo, getTransaction } from '../modules/UI/scenes/SendConfirmation/selectors'
 import type { AuthType } from '../modules/UI/scenes/SendConfirmation/selectors.js'
-import { getSelectedWalletId } from '../modules/UI/selectors.js'
+import { getExchangeRate, getSelectedCurrencyCode, getSelectedWallet, getSelectedWalletId } from '../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
+import { convertNativeToExchange } from '../util/utils'
 
 // add empty string if there is an error but we don't need text feedback to the user
 export const makeSpendFailed = (error: Error | null) => ({
@@ -61,11 +63,14 @@ export const newPin = (pin: string) => ({
   data: { pin }
 })
 
-export const updateAmount = (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) => (dispatch: Dispatch, getState: GetState) => {
+export const updateAmount = (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string, forceUpdateGui?: boolean = false) => (
+  dispatch: Dispatch,
+  getState: GetState
+) => {
   const amountFiatString: string = bns.mul(exchangeAmount, fiatPerCrypto)
   const amountFiat: number = parseFloat(amountFiatString)
   const metadata: EdgeMetadata = { amountFiat }
-  dispatch(createTX({ nativeAmount, metadata }, false))
+  dispatch(createTX({ nativeAmount, metadata }, forceUpdateGui))
 }
 
 type EdgePaymentProtocolUri = EdgeParsedUri & { paymentProtocolURL: string }
@@ -129,10 +134,19 @@ export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => 
       const spendInfo = getSpendInfo(state, { nativeAmount })
       const authRequired = getAuthRequired(state, spendInfo)
 
+      const guiWallet = getSelectedWallet(state)
+      const currencyCode = getSelectedCurrencyCode(state)
+      const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
+      const exchangeDenomination = settingsGetExchangeDenomination(state, currencyCode)
+
+      const exchangeAmount = convertNativeToExchange(exchangeDenomination.multiplier)(nativeAmount)
+      const fiatPerCrypto = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+
       dispatch(reset())
 
       dispatch(newSpendInfo(spendInfo, authRequired))
-      dispatch(createTX({ nativeAmount }, true))
+
+      dispatch(updateAmount(nativeAmount, exchangeAmount, fiatPerCrypto.toString(), true))
     })
     .catch(e => console.log(e))
 }
