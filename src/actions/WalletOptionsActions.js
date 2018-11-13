@@ -1,7 +1,6 @@
 // @flow
 
 import { Icon, createInputModal, showModal } from 'edge-components'
-import { type EdgeCurrencyWallet } from 'edge-core-js'
 import React from 'react'
 import { Actions } from 'react-native-router-flux'
 
@@ -11,6 +10,7 @@ import s from '../locales/strings.js'
 import * as ACCOUNT_API from '../modules/Core/Account/api.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import type { Dispatch, GetState } from '../modules/ReduxTypes'
+import { displayErrorAlert } from '../modules/UI/components/ErrorAlert/actions'
 import * as WALLET_SELECTORS from '../modules/UI/selectors.js'
 import { showDeleteWalletModal } from './DeleteWalletModalActions.js'
 import { showResyncWalletModal } from './ResyncWalletModalActions.js'
@@ -141,13 +141,9 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
         } catch (e) {
           console.log(e)
           console.log(e.title)
-          console.log(e.message)
+          dispatch(displayErrorAlert(e.message))
         }
       }
     }
   }
-}
-
-export const renameWallet = (wallet: EdgeCurrencyWallet, name: string) => {
-  wallet.renameWallet(name)
 }
