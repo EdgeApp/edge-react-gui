@@ -20,6 +20,7 @@
   "exchange_succeeded": "Успешный обмен",
   "no_exchange_amount": "Сумма не выбрана",
   "select_exchange_amount": "Пожалуйста, введите сумму для обмена",
+  "select_exchange_amount_short": "",
   "exchanges_may_take_minutes": "Обмен может занять несколько минут. Пожалуйста, проверьте ваш кошелек получения монет через несколько минут",
   "fragment_wallets_addwallet_blockchain_hint": "Выбрать [blockchain]",
   "fragment_wallets_addwallet_fiat_hint": "Выберите официальную валюту",
