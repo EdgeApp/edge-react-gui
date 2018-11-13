@@ -1,9 +1,11 @@
 // @flow
 
-import { Icon, InputAndButtons, createInputModal, showModal } from 'edge-components'
+import { Icon, createInputModal, showModal } from 'edge-components'
+import { type EdgeCurrencyWallet } from 'edge-core-js'
 import React from 'react'
 import { Actions } from 'react-native-router-flux'
 
+import { refreshWallet } from '../actions/WalletActions.js'
 import * as Constants from '../constants/indexConstants'
 import s from '../locales/strings.js'
 import * as ACCOUNT_API from '../modules/Core/Account/api.js'
@@ -109,16 +111,17 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
       return async (dispatch: Dispatch, getState: GetState) => {
         try {
           const state = getState()
-          const walletName = CORE_SELECTORS.getWalletName(state, walletId)
+          const wallet = CORE_SELECTORS.getWallet(state, walletId)
+          const walletName = wallet.name
           const input = {
             label: s.strings.fragment_wallets_rename_wallet,
             autoCorrect: false,
-            error: '',
             returnKeyType: 'go',
-            initialValue: walletName
+            initialValue: walletName,
+            autoFocus: true
           }
           const yesButton = {
-            title: s.strings.string_next_capitalized
+            title: s.strings.string_done_cap
           }
           const noButton = {
             title: s.strings.string_cancel_cap
@@ -132,19 +135,19 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
           })
           const resolveValue = await showModal(renameWalletModal)
           if (resolveValue) {
-            console.log('Positive button pressed')
+            await wallet.renameWallet(resolveValue)
+            dispatch(refreshWallet(walletId))
           }
-          dispatch(actions.dispatchActionWitString(Constants.ON_RECOVERY_KEY, recoveryKey))
         } catch (e) {
           console.log(e)
           console.log(e.title)
           console.log(e.message)
         }
-        /* const state = getState()
-        const walletName = CORE_SELECTORS.getWallet(state, walletId).name
-        // $FlowFixMe
-        dispatch({ type: 'OPEN_RENAME_WALLET_MODAL', data: { walletId, walletName } }) */
       }
     }
   }
+}
+
+export const renameWallet = (wallet: EdgeCurrencyWallet, name: string) => {
+  wallet.renameWallet(name)
 }

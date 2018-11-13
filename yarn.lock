@@ -3340,10 +3340,10 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-components@^0.0.9:
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/edge-components/-/edge-components-0.0.9.tgz#8297f624acbc9a46f9467db97ca82d4baa3559a3"
-  integrity sha512-2gMbxkb+ktfJiQ2DLIYzpiCC99LfkA32BGPFMLgYnaKJ5o4ec0FeRSkjKuNBdyzK5/7uGQYXD5/FijEiwFz2rg==
+edge-components@^0.0.111:
+  version "0.0.111"
+  resolved "https://registry.yarnpkg.com/edge-components/-/edge-components-0.0.111.tgz#980d25802733f8acf53b404c8a16cb1fd31f6fe9"
+  integrity sha512-wNG1NksX92HgxSF8ZSX5Ge09M5abWPFuctu6EHMMBHriCPNebh59b9UazhzqfwTObpmg5EwtSpf1tn58nnd+OA==
   dependencies:
     react-native-linear-gradient "^2.4.0"
 

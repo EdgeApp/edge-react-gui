@@ -5,14 +5,11 @@ Object {
   "deleteWalletModalVisible": false,
   "getSeedWalletModalVisible": false,
   "privateSeedUnlocked": false,
-  "renameWalletInput": "",
-  "renameWalletModalVisible": false,
   "resyncWalletModalVisible": false,
   "splitWalletModalVisible": false,
   "viewXPubWalletModalVisible": false,
   "walletArchivesVisible": false,
   "walletId": "",
-  "walletName": "",
   "xPubSyntax": "",
 }
 `;
@@ -22,14 +19,11 @@ Object {
   "deleteWalletModalVisible": true,
   "getSeedWalletModalVisible": false,
   "privateSeedUnlocked": false,
-  "renameWalletInput": "",
-  "renameWalletModalVisible": false,
   "resyncWalletModalVisible": false,
   "splitWalletModalVisible": false,
   "viewXPubWalletModalVisible": false,
   "walletArchivesVisible": false,
   "walletId": "DELETE WALLET ID",
-  "walletName": "",
   "xPubSyntax": "",
 }
 `;
@@ -39,31 +33,11 @@ Object {
   "deleteWalletModalVisible": false,
   "getSeedWalletModalVisible": true,
   "privateSeedUnlocked": false,
-  "renameWalletInput": "",
-  "renameWalletModalVisible": false,
   "resyncWalletModalVisible": false,
   "splitWalletModalVisible": false,
   "viewXPubWalletModalVisible": false,
   "walletArchivesVisible": false,
   "walletId": "GETSEED WALLET ID",
-  "walletName": "",
-  "xPubSyntax": "",
-}
-`;
-
-exports[`reducer open rename wallet modal 1`] = `
-Object {
-  "deleteWalletModalVisible": false,
-  "getSeedWalletModalVisible": false,
-  "privateSeedUnlocked": false,
-  "renameWalletInput": "",
-  "renameWalletModalVisible": true,
-  "resyncWalletModalVisible": false,
-  "splitWalletModalVisible": false,
-  "viewXPubWalletModalVisible": false,
-  "walletArchivesVisible": false,
-  "walletId": "RENAME WALLET ID",
-  "walletName": "THIS IS THE WALLET NAME",
   "xPubSyntax": "",
 }
 `;
@@ -73,14 +47,11 @@ Object {
   "deleteWalletModalVisible": false,
   "getSeedWalletModalVisible": false,
   "privateSeedUnlocked": false,
-  "renameWalletInput": "",
-  "renameWalletModalVisible": false,
   "resyncWalletModalVisible": true,
   "splitWalletModalVisible": false,
   "viewXPubWalletModalVisible": false,
   "walletArchivesVisible": false,
   "walletId": "RESYNC WALLET ID",
-  "walletName": "",
   "xPubSyntax": "",
 }
 `;
@@ -90,14 +61,11 @@ Object {
   "deleteWalletModalVisible": false,
   "getSeedWalletModalVisible": false,
   "privateSeedUnlocked": false,
-  "renameWalletInput": "",
-  "renameWalletModalVisible": false,
   "resyncWalletModalVisible": false,
   "splitWalletModalVisible": false,
   "viewXPubWalletModalVisible": true,
   "walletArchivesVisible": false,
   "walletId": "VIEWXPUB WALLET ID",
-  "walletName": "",
   "xPubSyntax": "VIEWXPUB xpub1892736451987263r",
 }
 `;

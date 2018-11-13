@@ -15,17 +15,6 @@ describe('reducer', () => {
     expect(actual).toMatchSnapshot()
   })
 
-  it('open rename wallet modal', () => {
-    const action = {
-      type: 'OPEN_RENAME_WALLET_MODAL',
-      data: { walletId: 'RENAME WALLET ID', walletName: 'THIS IS THE WALLET NAME' }
-    }
-    // $FlowFixMe
-    const actual = reducer(initialState, action)
-
-    expect(actual).toMatchSnapshot()
-  })
-
   it('open delete wallet modal', () => {
     const action = {
       type: 'OPEN_DELETE_WALLET_MODAL',

@@ -4,28 +4,23 @@ import { type Reducer, combineReducers } from 'redux'
 
 import type { Action } from '../modules/ReduxTypes.js'
 import { privateSeedUnlocked } from './GetSeedModalReducer'
-import { renameWalletInput, walletName } from './WalletRenameModalReducer.js'
 import { xPubSyntax } from './XPubModalReducer.js'
 
 export type WalletListState = {
   +deleteWalletModalVisible: boolean,
   +getSeedWalletModalVisible: boolean,
   +privateSeedUnlocked: boolean,
-  +renameWalletInput: string,
-  +renameWalletModalVisible: boolean,
   +resyncWalletModalVisible: boolean,
   +splitWalletModalVisible: boolean, // MISSING!!!
   +viewXPubWalletModalVisible: boolean,
   +walletArchivesVisible: boolean,
   +walletId: string,
-  +walletName: string,
   +xPubSyntax: string
 }
 
 const walletId = (state = '', action: Action): string => {
   switch (action.type) {
     case 'OPEN_RESYNC_WALLET_MODAL':
-    case 'OPEN_RENAME_WALLET_MODAL':
     case 'OPEN_VIEWXPUB_WALLET_MODAL':
     case 'OPEN_GETSEED_WALLET_MODAL':
     case 'OPEN_SPLIT_WALLET_MODAL':
@@ -35,7 +30,6 @@ const walletId = (state = '', action: Action): string => {
     }
 
     case 'CLOSE_RESYNC_WALLET_MODAL':
-    case 'CLOSE_RENAME_WALLET_MODAL':
     case 'CLOSE_VIEWXPUB_WALLET_MODAL':
     case 'CLOSE_GETSEED_WALLET_MODAL':
     case 'CLOSE_SPLIT_WALLET_MODAL':
@@ -66,21 +60,6 @@ const deleteWalletModalVisible = (state = false, action: Action): boolean => {
     }
 
     case 'CLOSE_DELETE_WALLET_MODAL': {
-      return false
-    }
-
-    default:
-      return state
-  }
-}
-
-const renameWalletModalVisible = (state = false, action: Action): boolean => {
-  switch (action.type) {
-    case 'OPEN_RENAME_WALLET_MODAL': {
-      return true
-    }
-
-    case 'CLOSE_RENAME_WALLET_MODAL': {
       return false
     }
 
@@ -153,13 +132,10 @@ export const walletList: Reducer<WalletListState, Action> = combineReducers({
   deleteWalletModalVisible,
   getSeedWalletModalVisible,
   privateSeedUnlocked,
-  renameWalletInput,
-  renameWalletModalVisible,
   resyncWalletModalVisible,
   splitWalletModalVisible,
   viewXPubWalletModalVisible,
   walletArchivesVisible,
   walletId,
-  walletName,
   xPubSyntax
 })
