@@ -20,6 +20,7 @@
   "exchange_succeeded": "Troca feita com Sucesso",
   "no_exchange_amount": "Nenhuma quantia selecionada",
   "select_exchange_amount": "Por favor, digite uma quantia para trocar",
+  "select_exchange_amount_short": "",
   "exchanges_may_take_minutes": "Trocas podem levar alguns minutos para serem processadas. Por favor, verifique sua carteira de destino depois de alguns minutos",
   "fragment_wallets_addwallet_blockchain_hint": "Escolha uma blockchain",
   "fragment_wallets_addwallet_fiat_hint": "Escolha uma moeda fiduciária",
