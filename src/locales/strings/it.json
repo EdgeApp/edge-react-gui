@@ -20,6 +20,7 @@
   "exchange_succeeded": "Il cambio ha avuto successo",
   "no_exchange_amount": "Nessun importo selezionato",
   "select_exchange_amount": "Inserisci un importo da scambiare",
+  "select_exchange_amount_short": "",
   "exchanges_may_take_minutes": "I cambi possono impiegare diversi minuti per essere processati. Controlla il tuo portafoglio di destinazione dopo qualche minuto",
   "fragment_wallets_addwallet_blockchain_hint": "Scegli una blockchain",
   "fragment_wallets_addwallet_fiat_hint": "Scegli una valuta fiat",
