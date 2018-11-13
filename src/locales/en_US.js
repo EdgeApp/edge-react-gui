@@ -25,6 +25,7 @@ const strings = {
   exchange_succeeded: 'Exchange Succeeded',
   no_exchange_amount: 'No Amount Selected',
   select_exchange_amount: 'Please enter an amount to exchange',
+  select_exchange_amount_short: 'Enter an Amount',
   exchanges_may_take_minutes: 'Exchanges may take several minutes to process. Please check your destination wallet after a few minutes',
   fragment_wallets_addwallet_blockchain_hint: 'Choose a blockchain',
   fragment_wallets_addwallet_fiat_hint: 'Choose a fiat currency',

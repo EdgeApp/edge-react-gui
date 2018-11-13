@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Text, View } from 'react-native'
+import { ActivityIndicator, Text, View } from 'react-native'
 import Slider from 'react-native-slider'
 import slowlog from 'react-native-slowlog'
 
@@ -11,13 +11,15 @@ import s from '../../../../locales/strings.js'
 import styles from './styles.js'
 
 const SLIDE_TO_COMPLETE_TEXT = s.strings.send_confirmation_slide_to_confirm
+const ENTER_AN_AMOUNT_TEXT = s.strings.select_exchange_amount_short
 
 type Props = {
   resetSlider?: boolean,
   sliderDisabled: boolean,
   forceUpdateGuiCounter: number,
   onSlidingComplete: () => {},
-  parentStyle: any
+  parentStyle: any,
+  showSpinner: boolean
 }
 
 type State = {
@@ -62,6 +64,9 @@ export default class ABSlider extends Component<Props, State> {
   }
 
   render () {
+    const thumbStyle = !this.props.sliderDisabled ? styles.thumb : styles.disabledThumb
+    const sliderText = !this.props.sliderDisabled ? SLIDE_TO_COMPLETE_TEXT : ENTER_AN_AMOUNT_TEXT
+
     return (
       <View style={[styles.container, this.props.parentStyle]}>
         <Slider
@@ -73,13 +78,14 @@ export default class ABSlider extends Component<Props, State> {
           value={this.state.value}
           style={styles.slider}
           trackStyle={styles.track}
-          thumbStyle={styles.thumb}
+          thumbStyle={thumbStyle}
           thumbImage={leftArrowImg}
           minimumTrackTintColor="transparent"
           maximumTrackTintColor="transparent"
           thumbTouchSize={{ width: scale(160), height: scale(160) }}
         />
-        <Text style={styles.textOverlay}>{SLIDE_TO_COMPLETE_TEXT}</Text>
+
+        {this.props.showSpinner ? <ActivityIndicator style={styles.activityIndicator} /> : <Text style={styles.textOverlay}>{sliderText}</Text>}
       </View>
     )
   }
