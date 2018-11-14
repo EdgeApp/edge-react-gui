@@ -2,7 +2,6 @@
 
 import { type DeleteWalletModalAction } from '../actions/DeleteWalletModalActions.js'
 import { type GetSeedModalAction } from '../actions/GetSeedModalActions.js'
-import { type RenameWalletModalAction } from '../actions/RenameWalletModalActions.js'
 import { type ResyncWalletModalAction } from '../actions/ResyncWalletModalActions.js'
 import { type SplitWalletModalAction } from '../actions/SplitWalletModalActions.js'
 import { type XPubModalAction } from '../actions/XPubModalActions.js'
@@ -12,13 +11,11 @@ import { type SendLogsAction } from './Logs/action.js'
 type ActionType =
   // | 'CLOSE_DELETE_WALLET_MODAL'
   // | 'CLOSE_GETSEED_WALLET_MODAL'
-  // | 'CLOSE_RENAME_WALLET_MODAL'
   // | 'CLOSE_RESYNC_WALLET_MODAL'
   // | 'CLOSE_SPLIT_WALLET_MODAL'
   // | 'LOCK_WALLET_SEED'
   // | 'OPEN_DELETE_WALLET_MODAL'
   // | 'OPEN_GETSEED_WALLET_MODAL'
-  // | 'OPEN_RENAME_WALLET_MODAL'
   // | 'OPEN_RESYNC_WALLET_MODAL'
   // | 'OPEN_SPLIT_WALLET_MODAL'
   // | 'OPEN_VIEWXPUB_WALLET_MODAL'
@@ -220,9 +217,6 @@ type ActionType =
   | 'SPLIT_WALLET_START'
   | 'CLOSE_SPLIT_WALLET_SUCCESS'
   | 'CLOSE_SPLIT_WALLET_MODAL'
-  | 'CLOSE_RENAME_WALLET_SUCCESS'
-  | 'CLOSE_RENAME_WALLET_MODAL'
-  | 'UPDATE_RENAME_WALLET_INPUT'
   | 'ARCHIVE_WALLET_START'
   | 'ARCHIVE_WALLET_SUCCESS'
   | 'ACTIVATE_WALLET_START'
@@ -240,7 +234,6 @@ type ActionType =
   | 'CONTACTS/LOAD_CONTACTS_START'
   | 'CONTACTS/LOAD_CONTACTS_SUCCESS'
   | 'PERMISSIONS/UPDATE'
-  | 'RENAME_WALLET_START'
   | 'SPENDING_LIMITS/NEW_SPENDING_LIMITS'
   | 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL'
   | 'LOGGED_OUT'
@@ -266,7 +259,6 @@ export type Action =
   | LegacyAction
   | DeleteWalletModalAction
   | GetSeedModalAction
-  | RenameWalletModalAction
   | ResyncWalletModalAction
   | SplitWalletModalAction
   | XPubModalAction

@@ -15,10 +15,6 @@ const BITPAY = {
   }
 }
 
-export const renameWalletRequest = (wallet: EdgeCurrencyWallet, name: string) => {
-  return wallet.renameWallet(name).then(() => wallet)
-}
-
 export const getNumTransactions = (wallet: EdgeCurrencyWallet, currencyCode: string): Promise<number> => {
   return Promise.resolve(wallet.getNumTransactions ? wallet.getNumTransactions({ currencyCode }) : 0)
 }

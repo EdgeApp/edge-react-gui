@@ -86,15 +86,12 @@ test('initialState', () => {
       deleteWalletModalVisible: false,
       getSeedWalletModalVisible: false,
       privateSeedUnlocked: false,
-      renameWalletInput: '',
       viewXPubWalletModalVisible: false,
       xPubSyntax: '',
-      renameWalletModalVisible: false,
       resyncWalletModalVisible: false,
       splitWalletModalVisible: false,
       walletArchivesVisible: false,
-      walletId: '',
-      walletName: ''
+      walletId: ''
     },
     walletListModal: {
       walletListModalVisible: false
