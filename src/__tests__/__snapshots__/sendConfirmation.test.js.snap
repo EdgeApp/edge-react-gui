@@ -20,14 +20,19 @@ exports[`SendConfirmation should render with destination 1`] = `
         }
       }
     />
-    <Component
-      style={
+    <KeyboardAwareScrollView
+      contentContainerStyle={
         Object {
           "alignItems": "center",
-          "flex": 1,
-          "width": "100%",
         }
       }
+      enableAutomaticScroll={true}
+      enableOnAndroid={true}
+      enableResetScrollToCoords={true}
+      extraHeight={100}
+      extraScrollHeight={100}
+      keyboardOpeningTime={250}
+      viewIsInsideTabBar={false}
     >
       <Component
         style={
@@ -255,7 +260,7 @@ exports[`SendConfirmation should render with destination 1`] = `
           sliderDisabled={true}
         />
       </Footer>
-    </Component>
+    </KeyboardAwareScrollView>
   </Gradient>
 </SafeAreaViewComponent>
 `;
@@ -280,14 +285,19 @@ exports[`SendConfirmation should render with standard props 1`] = `
         }
       }
     />
-    <Component
-      style={
+    <KeyboardAwareScrollView
+      contentContainerStyle={
         Object {
           "alignItems": "center",
-          "flex": 1,
-          "width": "100%",
         }
       }
+      enableAutomaticScroll={true}
+      enableOnAndroid={true}
+      enableResetScrollToCoords={true}
+      extraHeight={100}
+      extraScrollHeight={100}
+      keyboardOpeningTime={250}
+      viewIsInsideTabBar={false}
     >
       <Component
         style={
@@ -500,7 +510,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
           sliderDisabled={true}
         />
       </Footer>
-    </Component>
+    </KeyboardAwareScrollView>
   </Gradient>
 </SafeAreaViewComponent>
 `;
@@ -525,14 +535,19 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
         }
       }
     />
-    <Component
-      style={
+    <KeyboardAwareScrollView
+      contentContainerStyle={
         Object {
           "alignItems": "center",
-          "flex": 1,
-          "width": "100%",
         }
       }
+      enableAutomaticScroll={true}
+      enableOnAndroid={true}
+      enableResetScrollToCoords={true}
+      extraHeight={100}
+      extraScrollHeight={100}
+      keyboardOpeningTime={250}
+      viewIsInsideTabBar={false}
     >
       <Component
         style={
@@ -760,7 +775,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           sliderDisabled={true}
         />
       </Footer>
-    </Component>
+    </KeyboardAwareScrollView>
   </Gradient>
   <Connect(UniqueIdentifierModal)
     currencyCode="XMR"
@@ -788,14 +803,19 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
         }
       }
     />
-    <Component
-      style={
+    <KeyboardAwareScrollView
+      contentContainerStyle={
         Object {
           "alignItems": "center",
-          "flex": 1,
-          "width": "100%",
         }
       }
+      enableAutomaticScroll={true}
+      enableOnAndroid={true}
+      enableResetScrollToCoords={true}
+      extraHeight={100}
+      extraScrollHeight={100}
+      keyboardOpeningTime={250}
+      viewIsInsideTabBar={false}
     >
       <Component
         style={
@@ -1023,7 +1043,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           sliderDisabled={true}
         />
       </Footer>
-    </Component>
+    </KeyboardAwareScrollView>
   </Gradient>
   <Connect(UniqueIdentifierModal)
     currencyCode="XRP"
