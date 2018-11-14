@@ -20,14 +20,18 @@ exports[`SendConfirmation should render with destination 1`] = `
         }
       }
     />
-    <Component
-      style={
+    <_class
+      contentContainerStyle={
         Object {
           "alignItems": "center",
-          "flex": 1,
-          "width": "100%",
         }
       }
+      enableAutomaticScroll={true}
+      enableResetScrollToCoords={true}
+      extraHeight={75}
+      extraScrollHeight={0}
+      keyboardOpeningTime={250}
+      viewIsInsideTabBar={false}
     >
       <Component
         style={
@@ -255,7 +259,7 @@ exports[`SendConfirmation should render with destination 1`] = `
           sliderDisabled={true}
         />
       </Footer>
-    </Component>
+    </_class>
   </Gradient>
 </SafeAreaViewComponent>
 `;
@@ -280,14 +284,18 @@ exports[`SendConfirmation should render with standard props 1`] = `
         }
       }
     />
-    <Component
-      style={
+    <_class
+      contentContainerStyle={
         Object {
           "alignItems": "center",
-          "flex": 1,
-          "width": "100%",
         }
       }
+      enableAutomaticScroll={true}
+      enableResetScrollToCoords={true}
+      extraHeight={75}
+      extraScrollHeight={0}
+      keyboardOpeningTime={250}
+      viewIsInsideTabBar={false}
     >
       <Component
         style={
@@ -500,7 +508,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
           sliderDisabled={true}
         />
       </Footer>
-    </Component>
+    </_class>
   </Gradient>
 </SafeAreaViewComponent>
 `;
@@ -525,14 +533,18 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
         }
       }
     />
-    <Component
-      style={
+    <_class
+      contentContainerStyle={
         Object {
           "alignItems": "center",
-          "flex": 1,
-          "width": "100%",
         }
       }
+      enableAutomaticScroll={true}
+      enableResetScrollToCoords={true}
+      extraHeight={75}
+      extraScrollHeight={0}
+      keyboardOpeningTime={250}
+      viewIsInsideTabBar={false}
     >
       <Component
         style={
@@ -760,7 +772,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           sliderDisabled={true}
         />
       </Footer>
-    </Component>
+    </_class>
   </Gradient>
   <Connect(UniqueIdentifierModal)
     currencyCode="XMR"
@@ -788,14 +800,18 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
         }
       }
     />
-    <Component
-      style={
+    <_class
+      contentContainerStyle={
         Object {
           "alignItems": "center",
-          "flex": 1,
-          "width": "100%",
         }
       }
+      enableAutomaticScroll={true}
+      enableResetScrollToCoords={true}
+      extraHeight={75}
+      extraScrollHeight={0}
+      keyboardOpeningTime={250}
+      viewIsInsideTabBar={false}
     >
       <Component
         style={
@@ -1023,7 +1039,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           sliderDisabled={true}
         />
       </Footer>
-    </Component>
+    </_class>
   </Gradient>
   <Connect(UniqueIdentifierModal)
     currencyCode="XRP"

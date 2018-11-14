@@ -5,6 +5,7 @@ import { Scene } from 'edge-components'
 import type { EdgeDenomination, EdgeMetadata } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
@@ -178,7 +179,7 @@ export class SendConfirmation extends Component<Props, State> {
         <Gradient style={styles.view}>
           <Gradient style={styles.gradient} />
 
-          <View style={styles.mainScrollView}>
+          <KeyboardAwareScrollView contentContainerStyle={styles.scrollViewContentContainer}>
             <View style={[styles.balanceContainer, styles.error]}>
               <Text style={styles.balanceText}>
                 {s.strings.send_confirmation_balance} {cryptoBalanceAmountString} {primaryInfo.displayDenomination.name} (
@@ -273,7 +274,7 @@ export class SendConfirmation extends Component<Props, State> {
                 showSpinner={this.state.showSpinner}
               />
             </Scene.Footer>
-          </View>
+          </KeyboardAwareScrollView>
         </Gradient>
 
         {(currencyCode === 'XRP' || currencyCode === 'XMR' || currencyCode === 'XLM') && (

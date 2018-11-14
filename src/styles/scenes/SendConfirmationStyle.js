@@ -16,9 +16,7 @@ export const rawStyles = {
     justifyContent: 'flex-start',
     alignItems: 'stretch'
   },
-  mainScrollView: {
-    flex: 1,
-    width: '100%',
+  scrollViewContentContainer: {
     alignItems: 'center'
   },
   exchangeRateContainer: {
