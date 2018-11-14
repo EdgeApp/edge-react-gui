@@ -179,7 +179,7 @@ export class SendConfirmation extends Component<Props, State> {
         <Gradient style={styles.view}>
           <Gradient style={styles.gradient} />
 
-          <KeyboardAwareScrollView contentContainerStyle={styles.scrollViewContentContainer}>
+          <KeyboardAwareScrollView contentContainerStyle={styles.scrollViewContentContainer} extraHeight={100} extraScrollHeight={100} enableOnAndroid>
             <View style={[styles.balanceContainer, styles.error]}>
               <Text style={styles.balanceText}>
                 {s.strings.send_confirmation_balance} {cryptoBalanceAmountString} {primaryInfo.displayDenomination.name} (
