@@ -244,7 +244,7 @@ export class TransactionList extends Component<Props, State> {
                         <T numberOfLines={1} style={[styles.currentBalanceBoxBits, styles.symbol]}>
                           {displayDenomination.symbol + ' '}
                         </T>
-                        <T numberOfLines={1} style={[styles.currentBalanceBoxBits]}>
+                        <T numberOfLines={1} style={[styles.currentBalanceBoxBits, styles.symbol]}>
                           {cryptoAmountString}
                         </T>
                       </View>
