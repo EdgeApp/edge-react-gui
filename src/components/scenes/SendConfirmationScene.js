@@ -4,7 +4,7 @@ import { bns } from 'biggystring'
 import { Scene } from 'edge-components'
 import type { EdgeDenomination, EdgeMetadata } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
@@ -259,11 +259,6 @@ export class SendConfirmation extends Component<Props, State> {
                 </Scene.Item>
               </Scene.Padding>
             </View>
-
-            <Scene.Row style={styles.activityIndicatorSpace}>
-              {this.props.pending && <ActivityIndicator style={[{ flex: 1, alignSelf: 'center' }]} size={'small'} />}
-            </Scene.Row>
-
             <Scene.Footer style={styles.footer}>
               <ABSlider
                 forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
@@ -271,7 +266,7 @@ export class SendConfirmation extends Component<Props, State> {
                 parentStyle={styles.sliderStyle}
                 onSlidingComplete={this.props.signBroadcastAndSave}
                 sliderDisabled={sliderDisabled}
-                showSpinner={this.state.showSpinner}
+                showSpinner={this.state.showSpinner || this.props.pending}
               />
             </Scene.Footer>
           </KeyboardAwareScrollView>

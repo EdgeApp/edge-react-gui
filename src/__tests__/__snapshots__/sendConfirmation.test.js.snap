@@ -237,14 +237,6 @@ exports[`SendConfirmation should render with destination 1`] = `
           </Item>
         </Padding>
       </Component>
-      <Row
-        style={
-          Object {
-            "height": 75.84718309859154,
-            "paddingVertical": 25.28239436619718,
-          }
-        }
-      />
       <Footer
         style={Object {}}
       >
@@ -487,14 +479,6 @@ exports[`SendConfirmation should render with standard props 1`] = `
           </Item>
         </Padding>
       </Component>
-      <Row
-        style={
-          Object {
-            "height": 75.84718309859154,
-            "paddingVertical": 25.28239436619718,
-          }
-        }
-      />
       <Footer
         style={Object {}}
       >
@@ -752,14 +736,6 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           </Item>
         </Padding>
       </Component>
-      <Row
-        style={
-          Object {
-            "height": 75.84718309859154,
-            "paddingVertical": 25.28239436619718,
-          }
-        }
-      />
       <Footer
         style={Object {}}
       >
@@ -1020,14 +996,6 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           </Item>
         </Padding>
       </Component>
-      <Row
-        style={
-          Object {
-            "height": 75.84718309859154,
-            "paddingVertical": 25.28239436619718,
-          }
-        }
-      />
       <Footer
         style={Object {}}
       >
