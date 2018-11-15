@@ -189,7 +189,9 @@ export class SendConfirmation extends Component<Props, State> {
 
             <View style={[styles.exchangeRateContainer, styles.error]}>
               {this.props.errorMsg ? (
-                <Text style={[styles.error, styles.errorText]}>{this.props.errorMsg}</Text>
+                <Text style={[styles.error, styles.errorText]} numberOfLines={3}>
+                  {this.props.errorMsg}
+                </Text>
               ) : (
                 <ExchangeRate secondaryDisplayAmount={this.props.fiatPerCrypto} primaryInfo={primaryInfo} secondaryInfo={secondaryInfo} />
               )}

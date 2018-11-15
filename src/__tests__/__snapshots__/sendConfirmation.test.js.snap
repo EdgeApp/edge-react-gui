@@ -43,8 +43,7 @@ exports[`SendConfirmation should render with destination 1`] = `
             },
             Object {
               "backgroundColor": "transparent",
-              "height": 28.091549295774648,
-              "marginRight": 7.022887323943662,
+              "marginHorizontal": 14.045774647887324,
             },
           ]
         }
@@ -78,8 +77,7 @@ exports[`SendConfirmation should render with destination 1`] = `
             },
             Object {
               "backgroundColor": "transparent",
-              "height": 28.091549295774648,
-              "marginRight": 7.022887323943662,
+              "marginHorizontal": 14.045774647887324,
             },
           ]
         }
@@ -308,8 +306,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
             },
             Object {
               "backgroundColor": "transparent",
-              "height": 28.091549295774648,
-              "marginRight": 7.022887323943662,
+              "marginHorizontal": 14.045774647887324,
             },
           ]
         }
@@ -343,8 +340,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
             },
             Object {
               "backgroundColor": "transparent",
-              "height": 28.091549295774648,
-              "marginRight": 7.022887323943662,
+              "marginHorizontal": 14.045774647887324,
             },
           ]
         }
@@ -558,8 +554,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
             },
             Object {
               "backgroundColor": "transparent",
-              "height": 28.091549295774648,
-              "marginRight": 7.022887323943662,
+              "marginHorizontal": 14.045774647887324,
             },
           ]
         }
@@ -593,8 +588,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
             },
             Object {
               "backgroundColor": "transparent",
-              "height": 28.091549295774648,
-              "marginRight": 7.022887323943662,
+              "marginHorizontal": 14.045774647887324,
             },
           ]
         }
@@ -826,8 +820,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
             },
             Object {
               "backgroundColor": "transparent",
-              "height": 28.091549295774648,
-              "marginRight": 7.022887323943662,
+              "marginHorizontal": 14.045774647887324,
             },
           ]
         }
@@ -861,8 +854,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
             },
             Object {
               "backgroundColor": "transparent",
-              "height": 28.091549295774648,
-              "marginRight": 7.022887323943662,
+              "marginHorizontal": 14.045774647887324,
             },
           ]
         }
