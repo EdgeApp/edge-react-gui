@@ -5,7 +5,6 @@ import { Scene } from 'edge-components'
 import type { EdgeDenomination, EdgeMetadata } from 'edge-core-js'
 import React, { Component } from 'react'
 import { TouchableOpacity, View } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
@@ -174,12 +173,14 @@ export class SendConfirmation extends Component<Props, State> {
     const feeCalculated = !!this.props.networkFee || !!this.props.parentNetworkFee
     const sliderDisabled = this.props.sliderDisabled || !feeCalculated || this.props.nativeAmount === '0'
 
+    const isTaggableCurrency = !!(currencyCode === 'XRP' || currencyCode === 'XMR' || currencyCode === 'XLM')
+
     return (
       <SafeAreaView>
         <Gradient style={styles.view}>
           <Gradient style={styles.gradient} />
 
-          <KeyboardAwareScrollView contentContainerStyle={styles.scrollViewContentContainer} extraHeight={100} extraScrollHeight={100} enableOnAndroid>
+          <View style={styles.mainScrollView}>
             <View style={[styles.balanceContainer, styles.error]}>
               <Text style={styles.balanceText}>
                 {s.strings.send_confirmation_balance} {cryptoBalanceAmountString} {primaryInfo.displayDenomination.name} (
@@ -231,7 +232,7 @@ export class SendConfirmation extends Component<Props, State> {
                     </Scene.Row>
                   )}
 
-                  {(currencyCode === 'XMR' || currencyCode === 'XRP' || currencyCode === 'XLM') && (
+                  {isTaggableCurrency && (
                     <Scene.Row style={{ paddingVertical: 10 }}>
                       <TouchableOpacity
                         activeOpacity={rawStyles.activeOpacity}
@@ -259,7 +260,7 @@ export class SendConfirmation extends Component<Props, State> {
                 </Scene.Item>
               </Scene.Padding>
             </View>
-            <Scene.Footer style={styles.footer}>
+            <Scene.Footer style={[styles.footer, isTaggableCurrency && styles.footerWithPaymentId]}>
               <ABSlider
                 forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
                 resetSlider={this.props.resetSlider}
@@ -269,12 +270,10 @@ export class SendConfirmation extends Component<Props, State> {
                 showSpinner={this.state.showSpinner || this.props.pending}
               />
             </Scene.Footer>
-          </KeyboardAwareScrollView>
+          </View>
         </Gradient>
 
-        {(currencyCode === 'XRP' || currencyCode === 'XMR' || currencyCode === 'XLM') && (
-          <UniqueIdentifierModal onConfirm={this.props.uniqueIdentifierUpdated} currencyCode={currencyCode} />
-        )}
+        {isTaggableCurrency && <UniqueIdentifierModal onConfirm={this.props.uniqueIdentifierUpdated} currencyCode={currencyCode} />}
       </SafeAreaView>
     )
   }

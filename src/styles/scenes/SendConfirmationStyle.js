@@ -16,7 +16,9 @@ export const rawStyles = {
     justifyContent: 'flex-start',
     alignItems: 'stretch'
   },
-  scrollViewContentContainer: {
+  mainScrollView: {
+    flex: 1,
+    width: '100%',
     alignItems: 'center'
   },
   exchangeRateContainer: {
@@ -123,7 +125,12 @@ export const rawStyles = {
     color: THEME.COLORS.WHITE
   },
   activeOpacity: THEME.OPACITY.ACTIVE,
-  footer: {},
+  footer: {
+    marginTop: scale(12)
+  },
+  footerWithPaymentId: {
+    marginTop: scale(0)
+  },
   debug
 }
 
