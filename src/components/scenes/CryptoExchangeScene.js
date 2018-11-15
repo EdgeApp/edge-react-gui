@@ -103,7 +103,6 @@ export class CryptoExchangeScene extends Component<Props, State> {
       })
       this.fromAmountNative = bns.mul(nextProps.fromExchangeAmount, nextProps.fromPrimaryInfo.exchangeDenomination.multiplier)
       this.fromAmountDisplay = nextProps.fromExchangeAmount
-      console.log('Stop')
     } else {
       // Check which wallet we are currently editing.
       // Only change the exchangeAmount of the opposite wallet to prevent feedback loops
