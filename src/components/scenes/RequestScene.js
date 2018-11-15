@@ -4,8 +4,9 @@ import { bns } from 'biggystring'
 import { createSimpleConfirmModal, showModal } from 'edge-components'
 import type { EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, Alert, Clipboard, View } from 'react-native'
+import { ActivityIndicator, Alert, Clipboard, Platform, View } from 'react-native'
 import ContactsWrapper from 'react-native-contacts-wrapper'
+import RNFS from 'react-native-fs'
 import Share from 'react-native-share'
 import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
@@ -317,14 +318,23 @@ export class Request extends Component<Props, State> {
   }
 
   shareMessage = () => {
-    const shareOptions = {
-      url: '',
-      title: sprintf(s.strings.request_qr_email_title, s.strings.app_name, this.props.currencyCode),
-      message: sprintf(s.strings.request_qr_email_title, s.strings.app_name, this.props.currencyCode) + ': ' + this.state.encodedURI,
-      subject: sprintf(s.strings.request_qr_email_title, s.strings.app_name, this.props.currencyCode) //  for email
-    }
-
-    Share.open(shareOptions).catch(e => console.log(e))
+    const title = sprintf(s.strings.request_qr_email_title, s.strings.app_name, this.props.currencyCode)
+    const message = sprintf(s.strings.request_qr_email_title, s.strings.app_name, this.props.currencyCode) + ': ' + this.state.encodedURI
+    const path = Platform.OS === Constants.IOS ? RNFS.DocumentDirectoryPath + '/' + title + '.txt' : RNFS.ExternalDirectoryPath + '/' + title + '.txt'
+    RNFS.writeFile(path, message, 'utf8')
+      .then(success => {
+        console.log('FILE WRITTEN!')
+        const shareOptions = {
+          url: 'file://' + path,
+          title,
+          message,
+          subject: sprintf(s.strings.request_qr_email_title, s.strings.app_name, this.props.currencyCode) //  for email,
+        }
+        Share.open(shareOptions).catch(e => console.log(e))
+      })
+      .catch(err => {
+        console.log(err.message)
+      })
   }
 
   shareViaEmail = () => {
