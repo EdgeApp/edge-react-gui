@@ -116,8 +116,8 @@ class AmountArea extends Component {
           </View>
           <View style={[styles.amountAreaMiddle]}>
             <View style={[styles.amountAreaMiddleTop, { flexDirection: 'row' }]}>
-              <FormattedText style={[styles.amountAreaMiddleTopText]}>{symbolString}</FormattedText>
-              <FormattedText style={[styles.amountAreaMiddleTopText]}>{amountString}</FormattedText>
+              <FormattedText style={[styles.amountAreaMiddleTopText, styles.symbol]}>{symbolString}</FormattedText>
+              <FormattedText style={[styles.amountAreaMiddleTopText, styles.symbol]}>{amountString}</FormattedText>
             </View>
             <View style={[styles.amountAreaMiddleBottom]}>
               <FormattedText style={[styles.amountAreaMiddleBottomText]}>{feeSyntax}</FormattedText>
