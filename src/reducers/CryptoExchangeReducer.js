@@ -30,13 +30,11 @@ export type CryptoExchangeState = {
   genericShapeShiftError: Error | null,
   changeWallet: 'none',
   fee: any,
-  availableShapeShiftTokens: EdgeSwapCurrencies | Object,
   shiftPendingTransaction: boolean,
   quoteExpireDate: Date | null,
   quote: EdgeExchangeQuote | null,
   totalSwaps: number,
-  showKYCAlert: boolean,
-  requireKYCPlugins: Array<string>
+  showKYCAlert: boolean
 }
 
 const dummyCurrencyInfo: GuiCurrencyInfo = {
@@ -80,13 +78,11 @@ const initialState = {
   genericShapeShiftError: null,
   changeWallet: Constants.NONE,
   forceUpdateGuiCounter: 0,
-  availableShapeShiftTokens: {},
   shiftPendingTransaction: false,
   quoteExpireDate: null,
   quote: null,
   totalSwaps: 0,
-  showKYCAlert: false,
-  requireKYCPlugins: []
+  showKYCAlert: false
 }
 
 function cryptoExchangeInner (state = initialState, action: Action) {
@@ -99,13 +95,15 @@ function cryptoExchangeInner (state = initialState, action: Action) {
       return { ...state, showKYCAlert: false }
     }
 
+    case 'NEED_KYC': {
+      return { ...state, showKYCAlert: true }
+    }
+
     case 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE': {
       if (!action.data) throw new Error('Invalid action')
       const hack: any = action.data
       return {
         ...state,
-        showKYCAlert: action.data.showKYCAlert,
-        requireKYCPlugins: action.data.requireKYCPlugins,
         fromWallet: action.data.wallet,
         fromWalletPrimaryInfo: action.data.primaryInfo,
         fromCurrencyCode: action.data.currencyCode,
@@ -120,7 +118,8 @@ function cryptoExchangeInner (state = initialState, action: Action) {
         fee: '',
         exchangeRate: 1,
         quoteExpireDate: null,
-        quote: null
+        quote: null,
+        genericShapeShiftError: null
       }
     }
 
@@ -129,8 +128,6 @@ function cryptoExchangeInner (state = initialState, action: Action) {
       const hack: any = action.data
       return {
         ...state,
-        showKYCAlert: action.data.showKYCAlert,
-        requireKYCPlugins: action.data.requireKYCPlugins,
         toWallet: action.data.wallet,
         toCurrencyCode: action.data.currencyCode,
         toWalletPrimaryInfo: action.data.primaryInfo,
@@ -145,7 +142,8 @@ function cryptoExchangeInner (state = initialState, action: Action) {
         fee: '',
         exchangeRate: 1,
         quote: null,
-        quoteExpireDate: null
+        quoteExpireDate: null,
+        genericShapeShiftError: null
       }
     }
 
@@ -187,13 +185,6 @@ function cryptoExchangeInner (state = initialState, action: Action) {
         insufficientError: false,
         genericShapeShiftError: null,
         quoteExpireDate: null
-      }
-    }
-
-    case 'SHIFT_COMPLETE': {
-      return {
-        ...initialState,
-        availableShapeShiftTokens: state.availableShapeShiftTokens
       }
     }
 
@@ -262,6 +253,10 @@ function cryptoExchangeInner (state = initialState, action: Action) {
         fromNativeAmount: action.data,
         forceUpdateGuiCounter
       }
+    }
+
+    case 'SHIFT_COMPLETE': {
+      return { ...initialState }
     }
 
     default:

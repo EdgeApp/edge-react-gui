@@ -2,7 +2,7 @@
 
 import { connect } from 'react-redux'
 
-import { checkEnabledExchanges, getShapeShiftTokens } from '../actions/CryptoExchangeActions.js'
+import { checkEnabledExchanges } from '../actions/CryptoExchangeActions.js'
 import { setKeyboardHeight } from '../actions/DimensionsActions.js'
 import * as actions from '../actions/indexActions'
 import { disableScan, enableScan } from '../actions/ScanActions'
@@ -55,7 +55,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   openDrawer: () => dispatch(openDrawer()),
   checkEnabledExchanges: () => {
     dispatch(checkEnabledExchanges())
-    dispatch(getShapeShiftTokens())
   }
 })
 export default connect(

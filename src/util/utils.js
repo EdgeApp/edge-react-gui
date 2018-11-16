@@ -5,9 +5,8 @@ import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeMetaTo
 import _ from 'lodash'
 import { Platform } from 'react-native'
 
-import { FROM, TO, FIAT_CODES_SYMBOLS as currencySymbolMap, getSymbolFromCurrency } from '../constants/indexConstants.js'
+import { FIAT_CODES_SYMBOLS as currencySymbolMap, getSymbolFromCurrency } from '../constants/indexConstants.js'
 import { intl } from '../locales/intl.js'
-import * as CORE_SELECTORS from '../modules/Core/selectors'
 import type { State } from '../modules/ReduxTypes'
 import { convertCurrency } from '../modules/UI/selectors.js'
 import borderColors from '../theme/variables/css3Colors'
@@ -654,50 +653,4 @@ export const secondsToMs = (dateInSeconds: number) => {
 export const msToSeconds = (dateInMs: number) => {
   const msPerSecond = 1000
   return dateInMs / msPerSecond
-}
-
-export const showKYCAlert = (state: State, currencyCode: string, wallet: string) => {
-  const account = CORE_SELECTORS.getAccount(state)
-  const totalSwapOptions = state.cryptoExchange.totalSwaps
-  const availableShapeShiftTokens = state.cryptoExchange.availableShapeShiftTokens
-  const fromWalletCurrencyCode = wallet === TO ? currencyCode : state.cryptoExchange.toCurrencyCode
-  const toWalletCurrencyCode = wallet === FROM ? currencyCode : state.cryptoExchange.fromCurrencyCode
-  const requiredTokens = []
-  if (
-    !fromWalletCurrencyCode ||
-    !toWalletCurrencyCode ||
-    !availableShapeShiftTokens[fromWalletCurrencyCode] ||
-    !availableShapeShiftTokens[toWalletCurrencyCode] ||
-    totalSwapOptions === 0
-  ) {
-    return requiredTokens
-  }
-
-  const availFromSwaps = availableShapeShiftTokens[fromWalletCurrencyCode].pluginNames
-  const availToSwaps = availableShapeShiftTokens[toWalletCurrencyCode].pluginNames
-  const intersectingSwaps = intersect(availFromSwaps, availToSwaps)
-  let totalRequiredTokens = 0
-  for (let i = 0; i < intersectingSwaps.length; i++) {
-    const config = account.swapConfig[intersectingSwaps[i]]
-    if (config.needsActivation) {
-      totalRequiredTokens++
-      requiredTokens.push(intersectingSwaps[i])
-    }
-  }
-  if (totalRequiredTokens === intersectingSwaps.length) {
-    return requiredTokens
-  }
-  return []
-}
-
-function intersect (arr1, arr2) {
-  const result = []
-  const len = arr1.length
-  for (let i = 0; i < len; i++) {
-    const elem = arr1[i]
-    if (arr2.indexOf(elem) > -1 && result.indexOf(elem) === -1) {
-      result.push(elem)
-    }
-  }
-  return result
 }

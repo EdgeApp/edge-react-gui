@@ -57,7 +57,6 @@ export type CryptoExchangeSceneComponentStateProps = {
 
 export type CryptoExchangeSceneComponentDispatchProps = {
   onSelectWallet(string, string): void,
-  getShapeShiftTokens(): void,
   openModal: (data: string) => any,
   getQuoteForTransaction(SetNativeAmountInfo): void
 }
@@ -90,11 +89,10 @@ export class CryptoExchangeScene extends Component<Props, State> {
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
-  componentDidMount () {
-    this.props.getShapeShiftTokens()
-  }
-
   UNSAFE_componentWillReceiveProps (nextProps: Props) {
+    if (!this.props.showKYCAlert && nextProps.showKYCAlert) {
+      Alert.alert(s.strings.kyc_title, s.strings.kyc_message, [{ text: s.strings.string_cancel_cap }, { text: s.strings.string_ok, onPress: this.getKYCToken }])
+    }
     if (this.state.forceUpdateGuiCounter !== nextProps.forceUpdateGuiCounter) {
       this.setState({
         fromExchangeAmount: nextProps.fromExchangeAmount,
@@ -202,10 +200,6 @@ export class CryptoExchangeScene extends Component<Props, State> {
       whichWallet: this.state.whichWalletFocus,
       primaryExchangeAmount: this.state.whichWalletFocus === Constants.FROM ? this.fromAmountDisplay : this.toAmountDisplay,
       primaryNativeAmount: this.state.whichWalletFocus === Constants.FROM ? this.fromAmountNative : this.toAmountNative
-    }
-    if (this.props.showKYCAlert) {
-      Alert.alert(s.strings.kyc_title, s.strings.kyc_message, [{ text: s.strings.string_cancel_cap }, { text: s.strings.string_ok, onPress: this.getKYCToken }])
-      return
     }
     if (data.primaryNativeAmount && data.primaryNativeAmount !== '0') {
       this.props.getQuoteForTransaction(data)

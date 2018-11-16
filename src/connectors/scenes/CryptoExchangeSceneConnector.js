@@ -4,7 +4,7 @@ import { bns } from 'biggystring'
 import { connect } from 'react-redux'
 
 import type { SetNativeAmountInfo } from '../../actions/CryptoExchangeActions'
-import { getQuoteForTransaction, getShapeShiftTokens, selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
+import { getQuoteForTransaction, selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
 import { CryptoExchangeScene } from '../../components/scenes/CryptoExchangeScene'
 import type { CryptoExchangeSceneComponentDispatchProps, CryptoExchangeSceneComponentStateProps } from '../../components/scenes/CryptoExchangeScene'
 import s from '../../locales/strings.js'
@@ -80,9 +80,6 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
 export const mapDispatchToProps = (dispatch: Dispatch): CryptoExchangeSceneComponentDispatchProps => ({
   getQuoteForTransaction: (fromWalletNativeAmount: SetNativeAmountInfo) => {
     dispatch(getQuoteForTransaction(fromWalletNativeAmount))
-  },
-  getShapeShiftTokens: () => {
-    dispatch(getShapeShiftTokens())
   },
   onSelectWallet: (walletId: string, currencyCode: string) => {
     dispatch(selectWalletForExchange(walletId, currencyCode))
