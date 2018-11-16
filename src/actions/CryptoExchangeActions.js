@@ -292,7 +292,8 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
         return
       }
       if (error.message === 'noVerification') {
-        dispatch(processMakeSpendError(error))
+        dispatch({ type: 'GENERIC_SHAPE_SHIFT_ERROR', data: s.strings.kyc_ss_finish })
+        Actions.popTo(Constants.EXCHANGE_SCENE)
         return
       }
     }
