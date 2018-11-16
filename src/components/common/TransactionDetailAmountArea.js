@@ -14,27 +14,29 @@ import styles from '../../styles/scenes/TransactionDetailsStyle'
 import THEME from '../../theme/variables/airbitz'
 import * as UTILS from '../../util/utils'
 
-const pickerValues = []
-
 class AmountArea extends Component {
   constructor (props) {
     super(props)
-    this.state = {
-      color: ''
-    }
+
+    const pickerValues = []
 
     Object.keys(this.props.categories).map(key => {
       return pickerValues.push(s.strings['fragment_transaction_' + key])
     })
+
+    this.state = {
+      color: '',
+      pickerValues: pickerValues
+    }
 
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
   initPicker = () => {
     Picker.init({
-      pickerData: pickerValues,
+      pickerData: this.state.pickerValues,
       onPickerConfirm: data => {
-        const categoryKey = Object.keys(this.props.categories)[pickerValues.indexOf(data[0])]
+        const categoryKey = Object.keys(this.props.categories)[this.state.pickerValues.indexOf(data[0])]
         this.props.onChangeCategory(categoryKey)
         this.props.onExitCategories()
         this.Picker.hide()
@@ -66,6 +68,13 @@ class AmountArea extends Component {
     }
 
     this.props.onEnterSubcategories()
+  }
+
+  componentWillUnmount () {
+    if (this.Picker && this.Picker.isPickerShow) {
+      this.props.onExitCategories()
+      this.Picker.hide()
+    }
   }
 
   render () {
