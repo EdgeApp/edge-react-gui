@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeExchangeQuote, EdgeSwapCurrencies } from 'edge-core-js'
+import type { EdgeExchangeQuote } from 'edge-core-js'
 import { type Reducer } from 'redux'
 
 import * as Constants from '../constants/indexConstants'
@@ -49,10 +49,7 @@ const dummyCurrencyInfo: GuiCurrencyInfo = {
     multiplier: '1'
   }
 }
-type AvailableSwapDetails = {
-  response: EdgeSwapCurrencies | Object,
-  totalSwaps: number
-}
+
 const initialState = {
   fromWallet: null,
   fromCurrencyCode: null,
@@ -219,15 +216,6 @@ function cryptoExchangeInner (state = initialState, action: Action) {
         quote: null,
         genericShapeShiftError: action.data,
         shiftTransactionError: null
-      }
-    }
-
-    case 'ON_AVAILABLE_SHAPE_SHIFT_TOKENS': {
-      const data: AvailableSwapDetails = action.data ? action.data : { response: {}, totalSwaps: 0 }
-      return {
-        ...state,
-        availableShapeShiftTokens: data.response,
-        totalSwaps: data.totalSwaps
       }
     }
 
