@@ -20,19 +20,14 @@ exports[`SendConfirmation should render with destination 1`] = `
         }
       }
     />
-    <KeyboardAwareScrollView
-      contentContainerStyle={
+    <Component
+      style={
         Object {
           "alignItems": "center",
+          "flex": 1,
+          "width": "100%",
         }
       }
-      enableAutomaticScroll={true}
-      enableOnAndroid={true}
-      enableResetScrollToCoords={true}
-      extraHeight={100}
-      extraScrollHeight={100}
-      keyboardOpeningTime={250}
-      viewIsInsideTabBar={false}
     >
       <Component
         style={
@@ -235,16 +230,15 @@ exports[`SendConfirmation should render with destination 1`] = `
           </Item>
         </Padding>
       </Component>
-      <Row
-        style={
-          Object {
-            "height": 75.84718309859154,
-            "paddingVertical": 25.28239436619718,
-          }
-        }
-      />
       <Footer
-        style={Object {}}
+        style={
+          Array [
+            Object {
+              "marginTop": 16.854929577464787,
+            },
+            false,
+          ]
+        }
       >
         <ABSlider
           forceUpdateGuiCounter={0}
@@ -258,7 +252,7 @@ exports[`SendConfirmation should render with destination 1`] = `
           sliderDisabled={true}
         />
       </Footer>
-    </KeyboardAwareScrollView>
+    </Component>
   </Gradient>
 </SafeAreaViewComponent>
 `;
@@ -283,19 +277,14 @@ exports[`SendConfirmation should render with standard props 1`] = `
         }
       }
     />
-    <KeyboardAwareScrollView
-      contentContainerStyle={
+    <Component
+      style={
         Object {
           "alignItems": "center",
+          "flex": 1,
+          "width": "100%",
         }
       }
-      enableAutomaticScroll={true}
-      enableOnAndroid={true}
-      enableResetScrollToCoords={true}
-      extraHeight={100}
-      extraScrollHeight={100}
-      keyboardOpeningTime={250}
-      viewIsInsideTabBar={false}
     >
       <Component
         style={
@@ -483,16 +472,15 @@ exports[`SendConfirmation should render with standard props 1`] = `
           </Item>
         </Padding>
       </Component>
-      <Row
-        style={
-          Object {
-            "height": 75.84718309859154,
-            "paddingVertical": 25.28239436619718,
-          }
-        }
-      />
       <Footer
-        style={Object {}}
+        style={
+          Array [
+            Object {
+              "marginTop": 16.854929577464787,
+            },
+            false,
+          ]
+        }
       >
         <ABSlider
           forceUpdateGuiCounter={0}
@@ -506,7 +494,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
           sliderDisabled={true}
         />
       </Footer>
-    </KeyboardAwareScrollView>
+    </Component>
   </Gradient>
 </SafeAreaViewComponent>
 `;
@@ -531,19 +519,14 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
         }
       }
     />
-    <KeyboardAwareScrollView
-      contentContainerStyle={
+    <Component
+      style={
         Object {
           "alignItems": "center",
+          "flex": 1,
+          "width": "100%",
         }
       }
-      enableAutomaticScroll={true}
-      enableOnAndroid={true}
-      enableResetScrollToCoords={true}
-      extraHeight={100}
-      extraScrollHeight={100}
-      keyboardOpeningTime={250}
-      viewIsInsideTabBar={false}
     >
       <Component
         style={
@@ -746,16 +729,17 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           </Item>
         </Padding>
       </Component>
-      <Row
-        style={
-          Object {
-            "height": 75.84718309859154,
-            "paddingVertical": 25.28239436619718,
-          }
-        }
-      />
       <Footer
-        style={Object {}}
+        style={
+          Array [
+            Object {
+              "marginTop": 16.854929577464787,
+            },
+            Object {
+              "marginTop": 0,
+            },
+          ]
+        }
       >
         <ABSlider
           forceUpdateGuiCounter={0}
@@ -769,7 +753,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           sliderDisabled={true}
         />
       </Footer>
-    </KeyboardAwareScrollView>
+    </Component>
   </Gradient>
   <Connect(UniqueIdentifierModal)
     currencyCode="XMR"
@@ -797,19 +781,14 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
         }
       }
     />
-    <KeyboardAwareScrollView
-      contentContainerStyle={
+    <Component
+      style={
         Object {
           "alignItems": "center",
+          "flex": 1,
+          "width": "100%",
         }
       }
-      enableAutomaticScroll={true}
-      enableOnAndroid={true}
-      enableResetScrollToCoords={true}
-      extraHeight={100}
-      extraScrollHeight={100}
-      keyboardOpeningTime={250}
-      viewIsInsideTabBar={false}
     >
       <Component
         style={
@@ -1012,16 +991,17 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           </Item>
         </Padding>
       </Component>
-      <Row
-        style={
-          Object {
-            "height": 75.84718309859154,
-            "paddingVertical": 25.28239436619718,
-          }
-        }
-      />
       <Footer
-        style={Object {}}
+        style={
+          Array [
+            Object {
+              "marginTop": 16.854929577464787,
+            },
+            Object {
+              "marginTop": 0,
+            },
+          ]
+        }
       >
         <ABSlider
           forceUpdateGuiCounter={0}
@@ -1035,7 +1015,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           sliderDisabled={true}
         />
       </Footer>
-    </KeyboardAwareScrollView>
+    </Component>
   </Gradient>
   <Connect(UniqueIdentifierModal)
     currencyCode="XRP"
