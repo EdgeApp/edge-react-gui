@@ -385,5 +385,7 @@
   "open_settings": "Open Settings",
   "kyc_something_wrong": "Something went wrong",
   "kyc_something_wrong_message": "Please try again later",
-  "kyc_ss_finish": "Please complete KYC ShapeShift"
+  "kyc_ss_finish": "Please complete KYC ShapeShift",
+  "ss_geolock": "Unable to complete based on location",
+  "ss_unable": "Shapeshift can't shift %1$s to %2$s"
 }

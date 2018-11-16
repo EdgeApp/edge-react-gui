@@ -244,11 +244,6 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
       dispatch(processMakeSpendError(error))
       return
     }
-    if (error.message === 'No swap providers enabled') {
-      dispatch({ type: 'NEED_KYC' })
-      dispatch(processMakeSpendError(error))
-      return
-    }
     if (error.name === errorNames.SwapAboveLimitError) {
       const nativeMax: string = error.nativeMax
 
@@ -288,7 +283,8 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
         return
       }
       if (error.message === 'geoRestriction') {
-        dispatch(processMakeSpendError(error))
+        dispatch({ type: 'GENERIC_SHAPE_SHIFT_ERROR', data: s.strings.ss_geolock })
+        Actions.popTo(Constants.EXCHANGE_SCENE)
         return
       }
       if (error.message === 'noVerification') {
@@ -298,7 +294,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
       }
     }
     if (error.name === errorNames.SwapCurrencyError) {
-      dispatch({ type: 'GENERIC_SHAPE_SHIFT_ERROR', data: error.message })
+      dispatch({ type: 'GENERIC_SHAPE_SHIFT_ERROR', data: sprintf(s.strings.ss_unable, fromCurrencyCode, toCurrencyCode) })
       Actions.popTo(Constants.EXCHANGE_SCENE)
       return
     }
