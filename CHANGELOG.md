@@ -1,5 +1,14 @@
 # edge-react-gui
 
+## 1.4.3
+
+* Big performance boost when logging in and syncing wallets
+* Add support for Monero bulletproofs which fixes Monero spending
+* Allow users to enable/disable exchange providers
+* Fix occasional "Token is not supported" error in Exchange screen
+* Enable viewing xpub for more currencies
+* Fix crash on large accounts when tapping top right menu button immediately after login
+
 ## 1.4.2
 
 * Fix Shapeshift account error dropdown
