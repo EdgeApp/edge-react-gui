@@ -139,5 +139,7 @@ export async function logToServer (...info: Array<any>) {
       logs = logs + (' ' + item)
     }
   }
-  request(logs)
+  request(logs).catch(e => {
+    console.log('Failed logToServer')
+  })
 }
