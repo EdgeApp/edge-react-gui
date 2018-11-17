@@ -2,7 +2,6 @@
 
 exports[`initialState 1`] = `
 Object {
-  "availableShapeShiftTokens": Object {},
   "changeWallet": "none",
   "fee": 0,
   "feeSetting": "standard",
@@ -29,7 +28,6 @@ Object {
   "insufficientError": false,
   "quote": null,
   "quoteExpireDate": null,
-  "requireKYCPlugins": Array [],
   "shiftPendingTransaction": false,
   "shiftTransactionError": null,
   "showKYCAlert": false,
