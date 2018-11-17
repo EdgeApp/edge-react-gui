@@ -265,7 +265,7 @@
   "back_button_text": "Назад",
   "back_button_tap_again_to_exit": "Пожалуйста, нажмите ОБРАТНО для выхода из приложения",
   "send_confirmation_enter_send_password": "Пароль",
-  "tx_detail_picker_title": "Пожалуйста, выберите категорию:",
+  "tx_detail_picker_title": "",
   "transaction_detail_no_wallet": "Не указаны кошелек или ...",
   "transaction_detail_unable_to_load_transaction": "Не удается загрузить транзакцию",
   "string_confirm": "Подтвердить",
