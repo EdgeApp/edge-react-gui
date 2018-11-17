@@ -12,10 +12,10 @@ import s from '../locales/strings.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors'
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
 import type { Dispatch, GetState } from '../modules/ReduxTypes'
+import * as SETTINGS_SELECTORS from '../modules/Settings/selectors.js'
 import * as UI_SELECTORS from '../modules/UI/selectors'
-import * as SETTINGS_SELECTORS from '../modules/UI/Settings/selectors.js'
-import * as UTILS from '../modules/utils'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../types'
+import * as UTILS from '../util/utils'
 
 // import { getExchangeDenomination as settingsGetExchangeDenomination } from '../../modules/UI/Settings/selectors.js'
 
@@ -234,18 +234,18 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
     toWallet: destWallet
   }
 
-  let error
+  let quoteError
   let edgeCoinExchangeQuote: EdgeSwapQuote
   const settings = SETTINGS_SELECTORS.getSettings(state)
   try {
     edgeCoinExchangeQuote = await account.fetchSwapQuote(quoteData)
-  } catch (e) {
-    if (e.message === 'InsufficientFundsError') {
-      dispatch(processMakeSpendError(e))
+  } catch (error) {
+    if (error.message === 'InsufficientFundsError') {
+      dispatch(processMakeSpendError(error))
       return
     }
-    if (e.name === errorNames.SwapAboveLimitError) {
-      const nativeMax: string = e.nativeMax
+    if (error.name === errorNames.SwapAboveLimitError) {
+      const nativeMax: string = error.nativeMax
 
       const settings = SETTINGS_SELECTORS.getSettings(state)
       const currentCurrencyDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, fromCurrencyCode)
@@ -260,8 +260,8 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
       Actions.popTo(Constants.EXCHANGE_SCENE)
       return
     }
-    if (e.name === errorNames.SwapBelowLimitError) {
-      const nativeMin: string = e.nativeMin
+    if (error.name === errorNames.SwapBelowLimitError) {
+      const nativeMin: string = error.nativeMin
 
       const settings = SETTINGS_SELECTORS.getSettings(state)
       const currentCurrencyDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, fromCurrencyCode)
@@ -276,12 +276,35 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
       Actions.popTo(Constants.EXCHANGE_SCENE)
       return
     }
-    error = e
+    if (error.name === errorNames.SwapPermissionError) {
+      if (error.message === 'needsActivation') {
+        dispatch({ type: 'NEED_KYC' })
+        Actions.popTo(Constants.EXCHANGE_SCENE)
+        return
+      }
+      if (error.message === 'geoRestriction') {
+        dispatch({ type: 'GENERIC_SHAPE_SHIFT_ERROR', data: s.strings.ss_geolock })
+        Actions.popTo(Constants.EXCHANGE_SCENE)
+        return
+      }
+      if (error.message === 'noVerification') {
+        dispatch({ type: 'GENERIC_SHAPE_SHIFT_ERROR', data: s.strings.kyc_ss_finish })
+        Actions.popTo(Constants.EXCHANGE_SCENE)
+        return
+      }
+    }
+    if (error.name === errorNames.SwapCurrencyError) {
+      dispatch({ type: 'GENERIC_SHAPE_SHIFT_ERROR', data: sprintf(s.strings.ss_unable, fromCurrencyCode, toCurrencyCode) })
+      Actions.popTo(Constants.EXCHANGE_SCENE)
+      return
+    }
+    // console.log('Got the error ', error.name)
+    quoteError = error
   }
 
-  if (error || !edgeCoinExchangeQuote) {
+  if (quoteError || !edgeCoinExchangeQuote) {
     console.log('stop')
-    throw error
+    throw quoteError
   }
 
   const fromPrimaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
@@ -332,10 +355,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
   dispatch(setShapeTransaction('UPDATE_SHIFT_TRANSACTION_FEE', returnObject))
 }
 
-export const selectToFromWallet = (type: string, wallet: GuiWallet, currencyCode?: string, showKYCAlert: boolean, requireKYCPlugins: Array<string>) => async (
-  dispatch: Dispatch,
-  getState: GetState
-) => {
+export const selectToFromWallet = (type: string, wallet: GuiWallet, currencyCode?: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const cc = currencyCode || wallet.currencyCode
 
@@ -352,9 +372,7 @@ export const selectToFromWallet = (type: string, wallet: GuiWallet, currencyCode
   const data = {
     wallet,
     currencyCode: cc,
-    primaryInfo,
-    showKYCAlert,
-    requireKYCPlugins
+    primaryInfo
   }
 
   if (type === 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE') {
@@ -364,41 +382,17 @@ export const selectToFromWallet = (type: string, wallet: GuiWallet, currencyCode
   }
 }
 
-export const getShapeShiftTokens = () => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
-  const swapKeys = Object.keys(account.swapConfig)
-  const totalSwaps = swapKeys.length
-
-  try {
-    const response = await account.fetchSwapCurrencies()
-    dispatch({ type: 'ON_AVAILABLE_SHAPE_SHIFT_TOKENS', data: { response, totalSwaps } })
-  } catch (error) {
-    dispatch({ type: 'ON_AVAILABLE_SHAPE_SHIFT_TOKENS', data: { response: {}, totalSwaps } })
-  }
-}
-
 export const selectWalletForExchange = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
   // This is a hack .. if the currecy code is not supported then we cant do the exchange
   const state = getState()
-  const availableShapeShiftTokens = state.cryptoExchange.availableShapeShiftTokens
-  if (!availableShapeShiftTokens[currencyCode]) {
-    setTimeout(() => {
-      Alert.alert(s.strings.could_not_select, currencyCode + ' ' + s.strings.token_not_supported)
-    }, 1)
-    return
-  }
-  dispatch(getShapeShiftTokens())
   const wallet = state.ui.wallets.byId[walletId]
 
-  const requireKYCPlugins = UTILS.showKYCAlert(state, currencyCode, state.cryptoExchange.changeWallet)
-  const showKYCAlert = requireKYCPlugins.length > 0
   switch (state.cryptoExchange.changeWallet) {
     case Constants.TO:
-      dispatch(selectToFromWallet('SELECT_TO_WALLET_CRYPTO_EXCHANGE', wallet, currencyCode, showKYCAlert, requireKYCPlugins))
+      dispatch(selectToFromWallet('SELECT_TO_WALLET_CRYPTO_EXCHANGE', wallet, currencyCode))
       break
     case Constants.FROM:
-      dispatch(selectToFromWallet('SELECT_FROM_WALLET_CRYPTO_EXCHANGE', wallet, currencyCode, showKYCAlert, requireKYCPlugins))
+      dispatch(selectToFromWallet('SELECT_FROM_WALLET_CRYPTO_EXCHANGE', wallet, currencyCode))
       break
     default:
   }
@@ -420,5 +414,22 @@ export const exchangeTimerExpired = () => (dispatch: Dispatch, getState: GetStat
   }
   if (hasFrom && hasTo) {
     dispatch(getShiftTransaction(hasFrom, hasTo, Constants.FROM, info))
+  }
+}
+
+export const checkEnabledExchanges = () => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  // make sure exchanges are enabled
+  let isAnyExchangeEnabled = false
+  const exchanges = account.swapConfig
+  for (const exchange in exchanges) {
+    if (exchanges[exchange].enabled === true) {
+      isAnyExchangeEnabled = true
+    }
+  }
+
+  if (!isAnyExchangeEnabled) {
+    Alert.alert(s.strings.no_exchanges_available, s.strings.check_exchange_settings)
   }
 }

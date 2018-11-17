@@ -3,6 +3,7 @@ package co.edgesecure.app;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.krazylabs.OpenAppSettingsPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -36,6 +37,7 @@ import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import io.fixd.rctlocale.RCTLocalePackage;
 import com.oblongmana.webviewfileuploadandroid.AndroidWebViewPackage;
 import ca.jaysoo.extradimensions.ExtraDimensionsPackage;
+import com.facebook.react.modules.i18nmanager.I18nUtil;
 
 import java.util.Arrays;
 import java.util.List;
@@ -52,6 +54,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new OpenAppSettingsPackage(),
             new RNBackgroundFetchPackage(),
             BugsnagReactNative.getPackage(),
             new RNFirebasePackage(),
@@ -97,6 +100,11 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public void onCreate() {
     super.onCreate();
+
+    //Disable RTL
+    I18nUtil sharedI18nUtilInstance = I18nUtil.getInstance();
+    sharedI18nUtilInstance.allowRTL(getApplicationContext(), false);
+
     BugsnagReactNative.start(this);
     SoLoader.init(this, /* native exopackage */ false);
   }

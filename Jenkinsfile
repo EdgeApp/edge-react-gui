@@ -90,15 +90,21 @@ pipeline {
     }
 
     stage ("Build") {
+      when {
+        anyOf {
+          branch 'master'
+          branch 'develop'
+        }
+      }
       parallel {
         stage("ios") {
-          when { equals expected: true, actual: params.ANDROID_BUILD }
+          when { equals expected: true, actual: params.IOS_BUILD }
           steps {
             build("ios")
           }
         }
         stage("android") {
-          when { equals expected: true, actual: params.IOS_BUILD }
+          when { equals expected: true, actual: params.ANDROID_BUILD }
           steps {
             build("android")
           }

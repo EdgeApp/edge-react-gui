@@ -3,9 +3,9 @@
 import type { EdgeCurrencyWallet, EdgeReceiveAddress } from 'edge-core-js'
 import _ from 'lodash'
 
+import { getReceiveAddresses } from '../../../util/utils.js'
 import type { Dispatch, GetState } from '../../ReduxTypes'
-import * as SETTINGS_SELECTORS from '../../UI/Settings/selectors'
-import { getReceiveAddresses } from '../../utils.js'
+import * as SETTINGS_SELECTORS from '../../Settings/selectors'
 import * as CORE_SELECTORS from '../selectors'
 
 export const updateWallets = (

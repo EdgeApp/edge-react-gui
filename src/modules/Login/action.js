@@ -8,16 +8,16 @@ import PushNotification from 'react-native-push-notification'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
+import { insertWalletIdsForProgress } from '../../actions/WalletActions.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
+import { getReceiveAddresses } from '../../util/utils.js'
 import * as ACCOUNT_API from '../Core/Account/api'
 import * as SETTINGS_API from '../Core/Account/settings.js'
 // Login/action.js
 import * as CORE_SELECTORS from '../Core/selectors'
 import { updateWalletsRequest } from '../Core/Wallets/action.js'
 import type { Dispatch, GetState } from '../ReduxTypes'
-import { insertWalletIdsForProgress } from '../UI/Wallets/action.js'
-import { getReceiveAddresses } from '../utils.js'
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 

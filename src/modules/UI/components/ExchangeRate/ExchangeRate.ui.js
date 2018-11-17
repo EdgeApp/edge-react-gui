@@ -6,7 +6,7 @@ import { View } from 'react-native'
 
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
-import * as UTILS from '../../../utils'
+import * as UTILS from '../../../../util/utils'
 import T from '../../components/FormattedText'
 import styles from './styles'
 

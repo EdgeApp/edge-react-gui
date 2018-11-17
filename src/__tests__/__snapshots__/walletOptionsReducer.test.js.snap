@@ -1,0 +1,71 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`reducer initial state 1`] = `
+Object {
+  "deleteWalletModalVisible": false,
+  "getSeedWalletModalVisible": false,
+  "privateSeedUnlocked": false,
+  "resyncWalletModalVisible": false,
+  "splitWalletModalVisible": false,
+  "viewXPubWalletModalVisible": false,
+  "walletArchivesVisible": false,
+  "walletId": "",
+  "xPubSyntax": "",
+}
+`;
+
+exports[`reducer open delete wallet modal 1`] = `
+Object {
+  "deleteWalletModalVisible": true,
+  "getSeedWalletModalVisible": false,
+  "privateSeedUnlocked": false,
+  "resyncWalletModalVisible": false,
+  "splitWalletModalVisible": false,
+  "viewXPubWalletModalVisible": false,
+  "walletArchivesVisible": false,
+  "walletId": "DELETE WALLET ID",
+  "xPubSyntax": "",
+}
+`;
+
+exports[`reducer open getseed wallet modal 1`] = `
+Object {
+  "deleteWalletModalVisible": false,
+  "getSeedWalletModalVisible": true,
+  "privateSeedUnlocked": false,
+  "resyncWalletModalVisible": false,
+  "splitWalletModalVisible": false,
+  "viewXPubWalletModalVisible": false,
+  "walletArchivesVisible": false,
+  "walletId": "GETSEED WALLET ID",
+  "xPubSyntax": "",
+}
+`;
+
+exports[`reducer open resync wallet modal 1`] = `
+Object {
+  "deleteWalletModalVisible": false,
+  "getSeedWalletModalVisible": false,
+  "privateSeedUnlocked": false,
+  "resyncWalletModalVisible": true,
+  "splitWalletModalVisible": false,
+  "viewXPubWalletModalVisible": false,
+  "walletArchivesVisible": false,
+  "walletId": "RESYNC WALLET ID",
+  "xPubSyntax": "",
+}
+`;
+
+exports[`reducer open viewxpub wallet modal 1`] = `
+Object {
+  "deleteWalletModalVisible": false,
+  "getSeedWalletModalVisible": false,
+  "privateSeedUnlocked": false,
+  "resyncWalletModalVisible": false,
+  "splitWalletModalVisible": false,
+  "viewXPubWalletModalVisible": true,
+  "walletArchivesVisible": false,
+  "walletId": "VIEWXPUB WALLET ID",
+  "xPubSyntax": "VIEWXPUB xpub1892736451987263r",
+}
+`;

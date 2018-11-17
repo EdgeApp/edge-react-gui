@@ -5,7 +5,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import Menu, { MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu'
 import slowlog from 'react-native-slowlog'
 
-import { getObjectDiff } from '../../../utils'
+import { getObjectDiff } from '../../../../util/utils'
 
 export type StateProps = {
   style: StyleSheet.Styles,

@@ -1,0 +1,96 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Request should render with loaded props 1`] = `
+<SafeAreaViewComponent>
+  <Gradient
+    style={
+      Object {
+        "alignItems": "stretch",
+        "flex": 1,
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      }
+    }
+  >
+    <Gradient
+      style={
+        Object {
+          "height": 44,
+        }
+      }
+    />
+    <Component
+      style={
+        Object {
+          "alignItems": "center",
+          "marginVertical": 5,
+        }
+      }
+    >
+      <ExchangeRate
+        primaryInfo={Object {}}
+        secondaryDisplayAmount={Object {}}
+        secondaryInfo={Object {}}
+      />
+    </Component>
+    <Component
+      style={
+        Object {
+          "alignItems": "center",
+          "flex": 1,
+          "justifyContent": "flex-start",
+        }
+      }
+    >
+      <ExchangedFlipInput
+        color="white"
+        exchangeSecondaryToPrimaryRatio={Object {}}
+        forceUpdateGuiCounter={0}
+        isEditable={true}
+        keyboardVisible={false}
+        onExchangeAmountChanged={[Function]}
+        overridePrimaryExchangeAmount=""
+        primaryCurrencyInfo={Object {}}
+        secondaryCurrencyInfo={Object {}}
+      />
+      <QRCode
+        value=""
+      />
+      <RequestStatus
+        amountReceivedInCrypto={0}
+        amountRequestedInCrypto={0}
+      />
+    </Component>
+    <Component
+      style={
+        Object {
+          "alignItems": "stretch",
+          "justifyContent": "center",
+        }
+      }
+    >
+      <ShareButtons
+        copyToClipboard={[Function]}
+        shareViaEmail={[Function]}
+        shareViaSMS={[Function]}
+        shareViaShare={[Function]}
+      />
+    </Component>
+  </Gradient>
+</SafeAreaViewComponent>
+`;
+
+exports[`Request should render with loading props 1`] = `
+<ActivityIndicator
+  animating={true}
+  color="#999999"
+  hidesWhenStopped={true}
+  size="large"
+  style={
+    Object {
+      "alignSelf": "center",
+      "flex": 1,
+    }
+  }
+/>
+`;

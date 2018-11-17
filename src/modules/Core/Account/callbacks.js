@@ -2,11 +2,11 @@
 
 import type { EdgeAccountCallbacks, EdgeTransaction } from 'edge-core-js'
 
+import { newTransactionsRequest, refreshTransactionsRequest } from '../../../actions/TransactionListActions.js'
+import { refreshReceiveAddressRequest, refreshWallet, updateWalletLoadingProgress } from '../../../actions/WalletActions.js'
+import { isReceivedTransaction } from '../../../util/utils.js'
 import type { Dispatch } from '../../ReduxTypes'
 import { checkPasswordRecovery } from '../../UI/components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalActions.js'
-import { newTransactionsRequest, refreshTransactionsRequest } from '../../UI/scenes/TransactionList/action.js'
-import { refreshReceiveAddressRequest, refreshWallet, updateWalletLoadingProgress } from '../../UI/Wallets/action.js'
-import { isReceivedTransaction } from '../../utils.js'
 import { updateWalletsRequest } from '../Wallets/action.js'
 
 const makeAccountCallbacks = (dispatch: Dispatch): EdgeAccountCallbacks => {

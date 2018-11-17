@@ -8,7 +8,7 @@ import FAIcon from 'react-native-vector-icons/MaterialIcons'
 import * as Constants from '../../../../constants/indexConstants'
 import { intl } from '../../../../locales/intl'
 import type { FlipInputFieldInfo } from '../../../../types'
-import * as UTILS from '../../../utils.js'
+import * as UTILS from '../../../../util/utils.js'
 import { bottom, styles, top } from './styles.js'
 
 type State = {

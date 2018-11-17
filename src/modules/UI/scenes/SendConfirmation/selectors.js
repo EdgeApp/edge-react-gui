@@ -3,11 +3,11 @@
 import type { EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 
 import { STANDARD_FEE } from '../../../../constants/indexConstants'
+import { type GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
+import { convertNativeToExchange } from '../../../../util/utils.js'
 import type { State } from '../../../ReduxTypes'
-import { convertNativeToExchange } from '../../../utils.js'
+import { getExchangeDenomination } from '../../../Settings/selectors.js'
 import { convertCurrency, getSceneState, getSelectedCurrencyCode } from '../../selectors.js'
-import { getExchangeDenomination } from '../../Settings/selectors.js'
-import { type GuiMakeSpendInfo } from './reducer.js'
 
 export const initialState = {
   isKeyboardVisible: false,

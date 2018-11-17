@@ -3,10 +3,10 @@
 export * from './CryptoExchangeActions.js'
 export * from './EdgeLoginActions.js'
 export * from './OtpActions.js'
-export * from '../modules/UI/scenes/CreateWallet/action.js'
-export * from '../modules/UI/scenes/Scan/action.js'
+export * from './CreateWalletActions.js'
+export * from './ScanActions.js'
 export * from '../modules/UI/components/ABAlert/action.js'
-export * from '../modules/UI/Settings/action.js'
+export * from '../modules/Settings/SettingsActions.js'
 export * from '../modules/Login/action.js'
 
 export function dispatchAction (type: string) {

@@ -7,7 +7,7 @@ import { LayoutAnimation, TouchableHighlight, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 
 import type { GuiWallet } from '../../../../../types'
-import * as UTILS from '../../../../utils'
+import * as UTILS from '../../../../../util/utils'
 import T from '../../../components/FormattedText'
 import styles, { styles as styleRaw } from '../style'
 

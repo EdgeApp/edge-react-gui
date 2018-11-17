@@ -3,9 +3,17 @@
 const fs = require('fs')
 const jsonFormat = require('json-format')
 
-const fixModules = ['eosjs', 'eosjs-ecc', 'eosjs-api', 'fcbuffer', 'edge-ripple-lib', 'edge-currency-accountbased/node_modules/edge-ripple-lib']
+const fixModules = [
+  'eosjs',
+  'eosjs-ecc',
+  'edge-currency-monero',
+  'eosjs-api',
+  'fcbuffer',
+  'edge-ripple-lib',
+  'edge-currency-accountbased/node_modules/edge-ripple-lib'
+]
 
-const falseModules = ['https-proxy-agent', 'tls', 'isomorphic-fetch']
+const falseModules = ['https-proxy-agent', 'tls', 'isomorphic-fetch', 'request']
 
 const jsonConfig = {
   type: 'space',

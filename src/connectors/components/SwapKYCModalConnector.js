@@ -9,7 +9,7 @@ import type { Dispatch, State } from '../../modules/ReduxTypes'
 export const mapStateToProps = (state: State) => {
   return {
     showKYCAlert: state.cryptoExchange.showKYCAlert,
-    pluginName: state.cryptoExchange.requireKYCPlugins.length > 0 ? state.cryptoExchange.requireKYCPlugins[0] : ''
+    pluginName: 'shpaeshift'
   }
 }
 
