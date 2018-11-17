@@ -265,7 +265,7 @@
   "back_button_text": "Volver",
   "back_button_tap_again_to_exit": "Pulse \"Volver\" de nuevo para salir de la aplicación por favor",
   "send_confirmation_enter_send_password": "Contraseña",
-  "tx_detail_picker_title": "Seleccione una categoría por favor:",
+  "tx_detail_picker_title": "",
   "transaction_detail_no_wallet": "Ninguna cartera en el objeto de la transacción",
   "transaction_detail_unable_to_load_transaction": "No es posible cargar la transacción",
   "string_confirm": "Confirmar",
