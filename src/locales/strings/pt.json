@@ -384,5 +384,8 @@
   "scan_camera_permission_denied": "",
   "open_settings": "",
   "kyc_something_wrong": "",
-  "kyc_something_wrong_message": ""
+  "kyc_something_wrong_message": "",
+  "kyc_ss_finish": "",
+  "ss_geolock": "",
+  "ss_unable": ""
 }
