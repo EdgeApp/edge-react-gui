@@ -424,7 +424,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
       // if a valid number or empty string then set to zero (empty) or actual number
       finalAmountFiat = !amountFiat ? 0.0 : decimalAmountFiat
     }
-    const edgeMetadata: EdgeMetadata = { name, fullCategory, notes, amountFiat: finalAmountFiat, bizId, miscJson }
+    const edgeMetadata: EdgeMetadata = { name, category: fullCategory, notes, amountFiat: finalAmountFiat, bizId, miscJson }
     this.props.setTransactionDetails(txid, edgeTransaction.currencyCode, edgeMetadata)
   }
 
