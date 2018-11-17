@@ -265,7 +265,7 @@
   "back_button_text": "Back",
   "back_button_tap_again_to_exit": "Please tap BACK again to exit app",
   "send_confirmation_enter_send_password": "Password",
-  "tx_detail_picker_title": "Please choose a category:",
+  "tx_detail_picker_title": "Choose a category:",
   "transaction_detail_no_wallet": "No wallet on transaction object",
   "transaction_detail_unable_to_load_transaction": "Unable to load transaction",
   "string_confirm": "Confirm",

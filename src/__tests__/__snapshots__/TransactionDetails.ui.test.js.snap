@@ -164,6 +164,31 @@ exports[`TransactionDetails.ui should render 1`] = `
               </FormattedText>
             </Component>
             <AmountArea
+              categories={
+                Object {
+                  "exchange": Object {
+                    "color": "#F1AA19",
+                    "key": "exchange",
+                    "syntax": "Exchange",
+                  },
+                  "expense": Object {
+                    "color": "#E85466",
+                    "key": "expense",
+                    "syntax": "Expense",
+                  },
+                  "income": Object {
+                    "color": "#0073D9",
+                    "key": "income",
+                    "syntax": "Income",
+                  },
+                  "transfer": Object {
+                    "color": "#0D2145",
+                    "key": "transfer",
+                    "syntax": "Transfer",
+                  },
+                }
+              }
+              category="income"
               categorySelectVisibility={false}
               color="#0073D9"
               cryptoCurrencyCode="BTC"
@@ -218,7 +243,7 @@ exports[`TransactionDetails.ui should render 1`] = `
               }
               onBlurFiatFxn={[Function]}
               onBlurNotes={[Function]}
-              onChangeCategoryFxn={[Function]}
+              onChangeCategory={[Function]}
               onChangeFiatFxn={[Function]}
               onChangeNotesFxn={[Function]}
               onEnterCategories={[Function]}
@@ -229,38 +254,12 @@ exports[`TransactionDetails.ui should render 1`] = `
               onNotesKeyboardReturn={[Function]}
               onPressAdvancedDetailsButton={[Function]}
               onPressFxn={[Function]}
-              onSelectCategory={[Function]}
               onSelectSubCategory={[Function]}
               onSubcategoryKeyboardReturn={[Function]}
               openModalFxn={[Function]}
               subCategory=""
               subCategorySelectVisibility={false}
               txExplorerUrl={null}
-              type="income"
-              types={
-                Object {
-                  "exchange": Object {
-                    "color": "#F1AA19",
-                    "key": "exchange",
-                    "syntax": "Exchange",
-                  },
-                  "expense": Object {
-                    "color": "#E85466",
-                    "key": "expense",
-                    "syntax": "Expense",
-                  },
-                  "income": Object {
-                    "color": "#0073D9",
-                    "key": "income",
-                    "syntax": "Income",
-                  },
-                  "transfer": Object {
-                    "color": "#0D2145",
-                    "key": "transfer",
-                    "syntax": "Transfer",
-                  },
-                }
-              }
               usableHeight={1221}
             />
           </Component>
@@ -442,6 +441,31 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
               </FormattedText>
             </Component>
             <AmountArea
+              categories={
+                Object {
+                  "exchange": Object {
+                    "color": "#F1AA19",
+                    "key": "exchange",
+                    "syntax": "Exchange",
+                  },
+                  "expense": Object {
+                    "color": "#E85466",
+                    "key": "expense",
+                    "syntax": "Expense",
+                  },
+                  "income": Object {
+                    "color": "#0073D9",
+                    "key": "income",
+                    "syntax": "Income",
+                  },
+                  "transfer": Object {
+                    "color": "#0D2145",
+                    "key": "transfer",
+                    "syntax": "Transfer",
+                  },
+                }
+              }
+              category="expense"
               categorySelectVisibility={false}
               color="#E85466"
               cryptoCurrencyCode="BTC"
@@ -499,7 +523,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
               }
               onBlurFiatFxn={[Function]}
               onBlurNotes={[Function]}
-              onChangeCategoryFxn={[Function]}
+              onChangeCategory={[Function]}
               onChangeFiatFxn={[Function]}
               onChangeNotesFxn={[Function]}
               onEnterCategories={[Function]}
@@ -510,38 +534,12 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
               onNotesKeyboardReturn={[Function]}
               onPressAdvancedDetailsButton={[Function]}
               onPressFxn={[Function]}
-              onSelectCategory={[Function]}
               onSelectSubCategory={[Function]}
               onSubcategoryKeyboardReturn={[Function]}
               openModalFxn={[Function]}
               subCategory=""
               subCategorySelectVisibility={false}
               txExplorerUrl={null}
-              type="expense"
-              types={
-                Object {
-                  "exchange": Object {
-                    "color": "#F1AA19",
-                    "key": "exchange",
-                    "syntax": "Exchange",
-                  },
-                  "expense": Object {
-                    "color": "#E85466",
-                    "key": "expense",
-                    "syntax": "Expense",
-                  },
-                  "income": Object {
-                    "color": "#0073D9",
-                    "key": "income",
-                    "syntax": "Income",
-                  },
-                  "transfer": Object {
-                    "color": "#0D2145",
-                    "key": "transfer",
-                    "syntax": "Transfer",
-                  },
-                }
-              }
               usableHeight={1221}
             />
           </Component>
@@ -723,6 +721,31 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
               </FormattedText>
             </Component>
             <AmountArea
+              categories={
+                Object {
+                  "exchange": Object {
+                    "color": "#F1AA19",
+                    "key": "exchange",
+                    "syntax": "Exchange",
+                  },
+                  "expense": Object {
+                    "color": "#E85466",
+                    "key": "expense",
+                    "syntax": "Expense",
+                  },
+                  "income": Object {
+                    "color": "#0073D9",
+                    "key": "income",
+                    "syntax": "Income",
+                  },
+                  "transfer": Object {
+                    "color": "#0D2145",
+                    "key": "transfer",
+                    "syntax": "Transfer",
+                  },
+                }
+              }
+              category="income"
               categorySelectVisibility={false}
               color="#0073D9"
               cryptoCurrencyCode="BTC"
@@ -777,7 +800,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
               }
               onBlurFiatFxn={[Function]}
               onBlurNotes={[Function]}
-              onChangeCategoryFxn={[Function]}
+              onChangeCategory={[Function]}
               onChangeFiatFxn={[Function]}
               onChangeNotesFxn={[Function]}
               onEnterCategories={[Function]}
@@ -788,38 +811,12 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
               onNotesKeyboardReturn={[Function]}
               onPressAdvancedDetailsButton={[Function]}
               onPressFxn={[Function]}
-              onSelectCategory={[Function]}
               onSelectSubCategory={[Function]}
               onSubcategoryKeyboardReturn={[Function]}
               openModalFxn={[Function]}
               subCategory=""
               subCategorySelectVisibility={false}
               txExplorerUrl={null}
-              type="income"
-              types={
-                Object {
-                  "exchange": Object {
-                    "color": "#F1AA19",
-                    "key": "exchange",
-                    "syntax": "Exchange",
-                  },
-                  "expense": Object {
-                    "color": "#E85466",
-                    "key": "expense",
-                    "syntax": "Expense",
-                  },
-                  "income": Object {
-                    "color": "#0073D9",
-                    "key": "income",
-                    "syntax": "Income",
-                  },
-                  "transfer": Object {
-                    "color": "#0D2145",
-                    "key": "transfer",
-                    "syntax": "Transfer",
-                  },
-                }
-              }
               usableHeight={1221}
             />
           </Component>
@@ -1001,6 +998,31 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
               </FormattedText>
             </Component>
             <AmountArea
+              categories={
+                Object {
+                  "exchange": Object {
+                    "color": "#F1AA19",
+                    "key": "exchange",
+                    "syntax": "Exchange",
+                  },
+                  "expense": Object {
+                    "color": "#E85466",
+                    "key": "expense",
+                    "syntax": "Expense",
+                  },
+                  "income": Object {
+                    "color": "#0073D9",
+                    "key": "income",
+                    "syntax": "Income",
+                  },
+                  "transfer": Object {
+                    "color": "#0D2145",
+                    "key": "transfer",
+                    "syntax": "Transfer",
+                  },
+                }
+              }
+              category="income"
               categorySelectVisibility={false}
               color="#0073D9"
               cryptoCurrencyCode="BTC"
@@ -1055,7 +1077,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
               }
               onBlurFiatFxn={[Function]}
               onBlurNotes={[Function]}
-              onChangeCategoryFxn={[Function]}
+              onChangeCategory={[Function]}
               onChangeFiatFxn={[Function]}
               onChangeNotesFxn={[Function]}
               onEnterCategories={[Function]}
@@ -1066,38 +1088,12 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
               onNotesKeyboardReturn={[Function]}
               onPressAdvancedDetailsButton={[Function]}
               onPressFxn={[Function]}
-              onSelectCategory={[Function]}
               onSelectSubCategory={[Function]}
               onSubcategoryKeyboardReturn={[Function]}
               openModalFxn={[Function]}
               subCategory=""
               subCategorySelectVisibility={false}
               txExplorerUrl={null}
-              type="income"
-              types={
-                Object {
-                  "exchange": Object {
-                    "color": "#F1AA19",
-                    "key": "exchange",
-                    "syntax": "Exchange",
-                  },
-                  "expense": Object {
-                    "color": "#E85466",
-                    "key": "expense",
-                    "syntax": "Expense",
-                  },
-                  "income": Object {
-                    "color": "#0073D9",
-                    "key": "income",
-                    "syntax": "Income",
-                  },
-                  "transfer": Object {
-                    "color": "#0D2145",
-                    "key": "transfer",
-                    "syntax": "Transfer",
-                  },
-                }
-              }
               usableHeight={1221}
             />
           </Component>

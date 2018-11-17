@@ -252,7 +252,7 @@
   "back_button_text": "Voltar",
   "back_button_tap_again_to_exit": "Por favor, clique novamente para sair do aplicativo",
   "send_confirmation_enter_send_password": "Senha",
-  "tx_detail_picker_title": "Por favor escolha uma categoria:",
+  "tx_detail_picker_title": "Escolha uma categoria:",
   "transaction_detail_no_wallet": "Sem carteira no objeto transação",
   "transaction_detail_unable_to_load_transaction": "Não é possível carregar a transação",
   "string_confirm": "Confirmar",

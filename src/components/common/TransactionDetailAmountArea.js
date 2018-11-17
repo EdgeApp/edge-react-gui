@@ -14,47 +14,67 @@ import styles from '../../styles/scenes/TransactionDetailsStyle'
 import THEME from '../../theme/variables/airbitz'
 import * as UTILS from '../../util/utils'
 
-const categories = ['income', 'expense', 'exchange', 'transfer']
-
-const pickerValues = []
-
-categories.map(key => {
-  return pickerValues.push(s.strings['fragment_transaction_' + key])
-})
-
 class AmountArea extends Component {
   constructor (props) {
     super(props)
+
+    const pickerValues = []
+
+    Object.keys(this.props.categories).map(key => {
+      return pickerValues.push(s.strings['fragment_transaction_' + key])
+    })
+
     this.state = {
-      color: ''
+      color: '',
+      pickerValues: pickerValues
     }
+
+    slowlog(this, /.*/, global.slowlogOptions)
+  }
+
+  initPicker = () => {
     Picker.init({
-      pickerData: pickerValues,
+      pickerData: this.state.pickerValues,
       onPickerConfirm: data => {
-        const categoryIndex = pickerValues.indexOf(data[0])
-        const categoryKey = categories[categoryIndex]
-        this.props.onSelectCategory(categoryKey)
+        const categoryKey = Object.keys(this.props.categories)[this.state.pickerValues.indexOf(data[0])]
+        this.props.onChangeCategory(categoryKey)
+        this.props.onExitCategories()
         this.Picker.hide()
       },
       onPickerCancel: () => {
+        this.props.onExitCategories()
         this.Picker.hide()
       },
       pickerTitleText: s.strings.tx_detail_picker_title,
       pickerConfirmBtnText: s.strings.string_confirm,
       pickerCancelBtnText: s.strings.string_cancel_cap,
-      pickerFontSize: 22
+      pickerFontSize: 22,
+      selectedValue: [this.props.categories[this.props.category].syntax]
     })
     this.Picker = Picker
-    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   onEnterCategories = () => {
     this.props.onEnterCategories()
+
+    this.initPicker()
     this.Picker.show()
   }
 
-  onPickerSelect = input => {
-    this.props.selectCategory(input)
+  onEnterSubcategories = () => {
+    if (this.Picker && this.Picker.isPickerShow) {
+      this.props.onExitCategories()
+      this.Picker.hide()
+    }
+
+    this.props.onEnterSubcategories()
+  }
+
+  componentWillUnmount () {
+    if (this.Picker && this.Picker.isPickerShow) {
+      this.props.onExitCategories()
+      this.Picker.hide()
+    }
   }
 
   render () {
@@ -105,7 +125,7 @@ class AmountArea extends Component {
     }
 
     if (!notes) notes = ''
-    const typeInfo = this.props.types[this.props.type]
+    const categoryInfo = this.props.categories[this.props.category]
     return (
       <View style={[styles.amountAreaContainer]}>
         <View style={[styles.amountAreaCryptoRow]}>
@@ -157,9 +177,9 @@ class AmountArea extends Component {
           <TouchableOpacity
             style={[styles.categoryLeft, { borderColor: this.props.color }]}
             onPress={this.onEnterCategories}
-            disabled={this.props.subCategorySelectVisibility}
+            disabled={this.props.subCategorySelectVisibility || this.props.categorySelectVisibility}
           >
-            <FormattedText style={[{ color: this.props.color }, styles.categoryLeftText]}>{typeInfo.syntax}</FormattedText>
+            <FormattedText style={[{ color: this.props.color }, styles.categoryLeftText]}>{categoryInfo.syntax}</FormattedText>
           </TouchableOpacity>
           <View style={[styles.categoryInputArea]}>
             <TextInput
@@ -167,7 +187,7 @@ class AmountArea extends Component {
               blurOnSubmit
               autoCapitalize="words"
               placeholderTextColor={THEME.COLORS.GRAY_}
-              onFocus={this.props.onEnterSubcategories}
+              onFocus={this.onEnterSubcategories}
               onChangeText={this.props.onChangeSubcategoryFxn}
               onSubmitEditing={this.props.onSubcategoryKeyboardReturn}
               style={[styles.categoryInput, UTILS.inputBottomPadding()]}

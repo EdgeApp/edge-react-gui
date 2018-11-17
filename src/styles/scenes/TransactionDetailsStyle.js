@@ -160,8 +160,7 @@ export const styles = {
     marginTop: scale(10),
     flexDirection: 'row',
     paddingLeft: scale(15),
-    paddingRight: scale(15),
-    height: scale(44)
+    paddingRight: scale(15)
   },
   modalCategoryRow: {
     paddingTop: scale(8),
@@ -176,8 +175,7 @@ export const styles = {
     paddingLeft: scale(5),
     paddingRight: scale(5),
     paddingTop: scale(4),
-    paddingBottom: scale(6),
-    height: scale(29)
+    paddingBottom: scale(6)
   },
   categoryLeftText: {
     fontSize: scale(15)

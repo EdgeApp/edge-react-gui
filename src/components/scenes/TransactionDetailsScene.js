@@ -25,14 +25,12 @@ import AmountArea from '../common/TransactionDetailAmountArea.js'
 import SubCategorySelect from '../common/TransactionSubCategorySelect.js'
 import { AdvancedTransactionDetailsModal } from '../modals/AdvancedTransactionDetailsModal.js'
 
-const categories = ['income', 'expense', 'exchange', 'transfer']
-
 const EXCHANGE_TEXT = s.strings.fragment_transaction_exchange
 const EXPENSE_TEXT = s.strings.fragment_transaction_expense
 const TRANSFER_TEXT = s.strings.fragment_transaction_transfer
 const INCOME_TEXT = s.strings.fragment_transaction_income
 
-const types = {
+const categories = {
   exchange: {
     color: styleRaw.typeExchange.color,
     syntax: EXCHANGE_TEXT,
@@ -78,7 +76,6 @@ type State = {
   name: string, // remove commenting once metaData in Redux
   thumbnailPath: string,
   // hasThumbnail: boolean,
-  category: string,
   notes: string,
   amountFiat: string,
   direction: string,
@@ -87,13 +84,13 @@ type State = {
   displayDate: string,
   subCategorySelectVisibility: boolean,
   categorySelectVisibility: boolean,
+  category: string,
   subCategory: string,
   contactSearchVisibility: boolean,
   payeeOpacity: any, // AnimatedValue
   subcategoryOpacity: any, // AnimatedValue
   payeeZIndex: number,
   subcatZIndex: number,
-  type: string,
   walletDefaultDenomProps: EdgeDenomination,
   isAdvancedTransactionDetailsModalVisible: boolean
 }
@@ -111,9 +108,9 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
       date: autoCorrectDate(props.edgeTransaction.date)
     }
     const displayDate = dateformat(edgeTransaction.date * 1000, 'mmm dS, yyyy, h:MM:ss TT')
-    let type = ''
+    let category = ''
     let subCategory = ''
-    let cat = ''
+    let fullCategory = ''
     let name = ''
     let amountFiat = intl.formatNumber('0.00')
     let notes = ''
@@ -126,7 +123,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     }
 
     if (edgeTransaction && edgeTransaction.metadata) {
-      cat = edgeTransaction.metadata.category ? edgeTransaction.metadata.category : ''
+      fullCategory = edgeTransaction.metadata.category ? edgeTransaction.metadata.category : ''
       name = edgeTransaction.metadata.name ? edgeTransaction.metadata.name : '' // remove commenting once metaData in Redux
       notes = edgeTransaction.metadata.notes ? edgeTransaction.metadata.notes : ''
       if (edgeTransaction.metadata.amountFiat) {
@@ -137,31 +134,31 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     }
 
     // if there is a user-entered category (type:subcategory)
-    if (cat) {
-      const colonOccurrence = cat.indexOf(':')
-      if (cat && colonOccurrence) {
-        type = cat.substring(0, colonOccurrence)
-        type = type.charAt(0).toLowerCase() + type.slice(1)
-        subCategory = cat.substring(colonOccurrence + 1, cat.length)
+    if (fullCategory) {
+      const colonOccurrence = fullCategory.indexOf(':')
+      if (fullCategory && colonOccurrence) {
+        category = fullCategory.substring(0, colonOccurrence)
+        category = category.charAt(0).toLowerCase() + category.slice(1)
+        subCategory = fullCategory.substring(colonOccurrence + 1, fullCategory.length)
       }
     }
 
     // if type is still not defined then figure out if send or receive (expense vs income)
-    if (!type || !types[type]) {
+    if (!category || !categories[category]) {
       if (direction === 'receive') {
-        type = types.income.key
+        category = categories.income.key
       } else {
-        type = types.expense.key
+        category = categories.expense.key
       }
     } else {
-      type = types[type].key
+      category = categories[category].key
     }
 
     this.state = {
       name,
       notes,
       thumbnailPath: props.thumbnailPath,
-      category: cat,
+      category: category,
       amountFiat,
       bizId: 0,
       direction,
@@ -175,7 +172,6 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
       subcategoryOpacity: new Animated.Value(0),
       payeeZIndex: 0,
       subcatZIndex: 0,
-      type,
       walletDefaultDenomProps: {
         name: '',
         multiplier: '',
@@ -267,7 +263,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
 
   onChangeCategory = (input: string) => {
     this.setState({
-      type: input
+      category: input
     })
   }
 
@@ -296,6 +292,14 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     this.onBlurNotes()
   }
 
+  onEnterCategories = () => {
+    this.setState({ categorySelectVisibility: true })
+  }
+
+  onExitCategories = () => {
+    this.setState({ categorySelectVisibility: false })
+  }
+
   onEnterSubcategories = () => {
     this.refs._scrollView.scrollTo({ x: 0, y: 260, animated: true })
     this.enableSubcategoryVisibility()
@@ -303,63 +307,6 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
 
   onExitSubcategories = () => {
     // this.disableSubcategoryVisibility()
-  }
-
-  onSubcategoriesKeyboardReturn = () => {
-    this.disableSubcategoryVisibility()
-    this.refs._scrollView.scrollTo({ x: 0, y: 0, animated: true })
-  }
-
-  onSelectSubCategory = (input: string) => {
-    let stringArray
-    // check if there is a colon that delineates category and subcategory
-    if (!input) {
-      this.setState({
-        subCategory: ''
-      })
-    } else {
-      // if input *does* exist
-      const colonOccurrence = input.indexOf(':')
-      if (colonOccurrence) {
-        // if it *does* have a colon in it
-        stringArray = [input.substring(0, colonOccurrence), input.substring(colonOccurrence + 1, input.length)]
-        // console.log('stringArray is: ', stringArray)
-        if (categories.indexOf(stringArray[0].toLowerCase()) >= 0) {
-          // if the type is of the 4 options
-          this.setState({
-            type: stringArray[0].toLowerCase(),
-            subCategory: stringArray[1]
-          })
-          if (this.props.subcategoriesList.indexOf(input) === -1 && categories.indexOf(stringArray[0].toLowerCase()) >= 0) {
-            // if this is a new subcategory and the parent category is an accepted type
-            this.addNewSubcategory(input)
-          }
-        } else {
-          this.setState({
-            subCategory: stringArray[1]
-          })
-        }
-      } else {
-        this.setState({
-          subCategory: ''
-        })
-      }
-    }
-    this.disableSubcategoryVisibility()
-    Keyboard.dismiss()
-    this.refs._scrollView.scrollTo({ x: 0, y: 0, animated: true })
-  }
-
-  addNewSubcategory = (newSubcategory: string) => {
-    this.props.setNewSubcategory(newSubcategory, this.props.subcategoriesList)
-  }
-
-  onEnterCategories = () => {
-    this.setState({ categorySelectVisibility: true })
-  }
-
-  onExitCategories = () => {
-    this.setState({ categorySelectVisibility: false })
   }
 
   enableSubcategoryVisibility = () => {
@@ -383,8 +330,54 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     })
   }
 
-  onSelectCategory = (type: string) => {
-    this.setState({ type })
+  onSubcategoriesKeyboardReturn = () => {
+    this.disableSubcategoryVisibility()
+    this.refs._scrollView.scrollTo({ x: 0, y: 0, animated: true })
+  }
+
+  onSelectSubCategory = (input: string) => {
+    let stringArray
+    // check if there is a colon that delineates category and subcategory
+    if (!input) {
+      this.setState({
+        subCategory: ''
+      })
+    } else {
+      // if input *does* exist
+      const colonOccurrence = input.indexOf(':')
+      if (colonOccurrence) {
+        // if it *does* have a colon in it
+        stringArray = [input.substring(0, colonOccurrence), input.substring(colonOccurrence + 1, input.length)]
+        // console.log('stringArray is: ', stringArray)
+        if (Object.keys(categories).indexOf(stringArray[0].toLowerCase()) >= 0) {
+          // if the type is of the 4 options
+          this.setState({
+            category: stringArray[0].toLowerCase(),
+            subCategory: stringArray[1]
+          })
+
+          if (this.props.subcategoriesList.indexOf(input) === -1) {
+            // if this is a new subcategory
+            this.addNewSubcategory(input)
+          }
+        } else {
+          this.setState({
+            subCategory: stringArray[1]
+          })
+        }
+      } else {
+        this.setState({
+          subCategory: ''
+        })
+      }
+    }
+    this.disableSubcategoryVisibility()
+    Keyboard.dismiss()
+    this.refs._scrollView.scrollTo({ x: 0, y: 0, animated: true })
+  }
+
+  addNewSubcategory = (newSubcategory: string) => {
+    this.props.setNewSubcategory(newSubcategory, this.props.subcategoriesList)
   }
 
   onFocusFiatAmount = () => {
@@ -414,13 +407,13 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
   }
 
   onSaveTxDetails = () => {
-    const { name, notes, bizId, miscJson, type, subCategory, amountFiat } = this.state
+    const { name, notes, bizId, miscJson, category, subCategory, amountFiat } = this.state
     const { edgeTransaction } = this.props
-    let category, finalAmountFiat
-    if (type) {
-      category = type.charAt(0).toUpperCase() + type.slice(1) + ':' + subCategory
+    let fullCategory, finalAmountFiat
+    if (category) {
+      fullCategory = category.charAt(0).toUpperCase() + category.slice(1) + ':' + subCategory
     } else {
-      category = undefined
+      fullCategory = undefined
     }
     const txid = edgeTransaction.txid
     const decimalAmountFiat = Number.parseFloat(amountFiat.replace(',', '.'))
@@ -431,7 +424,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
       // if a valid number or empty string then set to zero (empty) or actual number
       finalAmountFiat = !amountFiat ? 0.0 : decimalAmountFiat
     }
-    const edgeMetadata: EdgeMetadata = { name, category, notes, amountFiat: finalAmountFiat, bizId, miscJson }
+    const edgeMetadata: EdgeMetadata = { name, fullCategory, notes, amountFiat: finalAmountFiat, bizId, miscJson }
     this.props.setTransactionDetails(txid, edgeTransaction.currencyCode, edgeMetadata)
   }
 
@@ -455,7 +448,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
       txExplorerLink = sprintf(this.props.currencyInfo.transactionExplorer, this.props.edgeTransaction.txid)
     }
 
-    const categoryColor = types[this.state.type].color
+    const categoryColor = categories[this.state.category].color
 
     return (
       <SafeAreaView>
@@ -528,7 +521,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
               >
                 <View style={[styles.modalCategoryRow]}>
                   <TouchableOpacity style={[styles.categoryLeft, { borderColor: categoryColor }]} disabled>
-                    <FormattedText style={[{ color: categoryColor }, styles.categoryLeftText]}>{types[this.state.type].syntax}</FormattedText>
+                    <FormattedText style={[{ color: categoryColor }, styles.categoryLeftText]}>{categories[this.state.category].syntax}</FormattedText>
                   </TouchableOpacity>
                   <View style={[styles.modalCategoryInputArea]}>
                     <TextInput
@@ -586,7 +579,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                   <AmountArea
                     edgeTransaction={this.props.edgeTransaction}
                     onChangeNotesFxn={this.onChangeNotes}
-                    onChangeCategoryFxn={this.onChangeCategory}
+                    onChangeCategory={this.onChangeCategory}
                     onChangeFiatFxn={this.onChangeFiat}
                     onBlurFiatFxn={this.onBlurFiat}
                     onPressFxn={this.onSaveTxDetails}
@@ -598,8 +591,9 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                     subCategorySelectVisibility={this.state.subCategorySelectVisibility}
                     categorySelectVisibility={this.state.categorySelectVisibility}
                     onSelectSubCategory={this.onSelectSubCategory}
+                    category={this.state.category}
                     subCategory={this.state.subCategory}
-                    type={this.state.type}
+                    categories={categories}
                     onEnterCategories={this.onEnterCategories}
                     onExitCategories={this.onExitCategories}
                     usableHeight={PLATFORM.usableHeight}
@@ -609,12 +603,10 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                     onBlurNotes={this.onBlurNotes}
                     direction={this.state.direction}
                     color={categoryColor}
-                    types={types}
                     onFocusFiatAmount={this.onFocusFiatAmount}
                     walletDefaultDenomProps={this.state.walletDefaultDenomProps}
                     openModalFxn={this.amountAreaOpenModal}
                     guiWallet={this.guiWallet}
-                    onSelectCategory={this.onSelectCategory}
                     onPressAdvancedDetailsButton={this.onPressAdvancedDetailsButton}
                     txExplorerUrl={txExplorerLink}
                   />
