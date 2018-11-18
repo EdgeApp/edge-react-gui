@@ -385,7 +385,7 @@
   "open_settings": "Open Settings",
   "kyc_something_wrong": "Something went wrong",
   "kyc_something_wrong_message": "Please try again later",
-  "kyc_ss_finish": "Please complete id verification first”",
-  "ss_geolock": "Unable to complete based on location",
+  "kyc_ss_finish": "Please complete ID verification for %s",
+  "ss_geolock": "Location restricted. Unable to complete exchange.",
   "ss_unable": "No enabled exchanges support %1$s to %2$s."
 }

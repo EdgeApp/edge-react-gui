@@ -29,6 +29,11 @@ export type SetNativeAmountInfo = {
   toPrimaryInfo?: GuiCurrencyInfo
 }
 
+const pluginToName = {
+  shapeshift: 'ShapeShift',
+  changelly: 'Changelly'
+}
+
 function setFromWalletMax (amount: string) {
   return {
     type: 'SET_FROM_WALLET_MAX',
@@ -240,6 +245,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
   try {
     edgeCoinExchangeQuote = await account.fetchSwapQuote(quoteData)
   } catch (error) {
+    console.log(JSON.stringify(error))
     if (error.message === 'InsufficientFundsError') {
       dispatch(processMakeSpendError(error))
       return
@@ -288,7 +294,12 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
         return
       }
       if (error.message === 'noVerification') {
-        dispatch({ type: 'GENERIC_SHAPE_SHIFT_ERROR', data: s.strings.kyc_ss_finish })
+        let pluginName = ''
+        if (typeof error.pluginName === 'string') {
+          pluginName = pluginToName[error.pluginName]
+        }
+        const data = sprintf(s.strings.kyc_ss_finish, pluginName)
+        dispatch({ type: 'GENERIC_SHAPE_SHIFT_ERROR', data })
         Actions.popTo(Constants.EXCHANGE_SCENE)
         return
       }
