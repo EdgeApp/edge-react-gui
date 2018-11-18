@@ -6,7 +6,7 @@ Privacy totale e sicurezza nel nostro portafoglio blockchain semplice da utilizz
 
 Gestire le tue criptovalute non è mai stato così semplice. Edge Wallet fornisce la massima sicurezza mantenendo le cose semplici: permette a qualunque tipo di utente di gestire con facilità le proprie criptovalute, trasferirle e scambiarle.
 
-Edge Crypto Wallet currently supports: Bitcoin, Bitcoin Cash, Litecoin, Dash, Ethereum, Stellar, Monero, and Ripple/XRP.
+Edge Crypto Wallet attualmente supporta: Bitcoin, Bitcoin Cash, Litecoin, Dash, Ethereum, Stellar, Monero e Ripple/XRP.
 
 Edge è un portafoglio di criptovalute potente e di facile utilizzo che permette agli utenti di controllare le loro chiavi private con la familiarità e semplicità del mobile banking. 
 
@@ -16,7 +16,7 @@ Edge fornisce al suo interno anche un cambio valuta (exchange). Scambia facilmen
 
 • Zero-knowledge & zero-access ai fondi degli utenti, chiavi private o dati sulle transazioni da parte di Edge o di terze parti
 • Creazione dell'account semplificata, usando solo un nome utente e una password (niente documenti da stampare, passphrase da scrivere o altre impostazioni di criptaggio)
-• Biometric TouchID and FaceID login
+• Accesso biometrico tramite TouchID e FaceID
 • Portafogli gerarchici deterministici con cambio automatico degli indirizzi a ogni transazione
 • Architettura server decentralizzata. I portafogli funzionano anche quando i sever di Edge sono offline.
 • Codice open-source. Disponibile su https://github.com/EdgeApp
