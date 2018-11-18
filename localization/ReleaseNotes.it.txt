@@ -1,10 +1,10 @@
 v1.4.3
 
 * Big performance boost when logging in and syncing wallets
-* Add support for Monero bulletproofs which fixes Monero spending
+* Aggiunto il supporto a bulletproof di Monero che corregge la spesa e riduce il costo per transazione
 * Allow users to enable/disable exchange providers
 * Fix occasional "Token is not supported" error in Exchange screen
-* Enable viewing xpub for more currencies
+* Abilitata la possibilità di vedere xpub per un numero superiore di cripto
 * Fix crash on large accounts when tapping top right menu button immediately after login
 * Fix hang when using Simplex from some Android devices
 
