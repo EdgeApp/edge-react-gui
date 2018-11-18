@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import React, { Component } from 'react'
-import { Animated, Platform, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
+import { Animated, Keyboard, Platform, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 
@@ -148,22 +148,25 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
       }
     }, 400)
 
-    if(this.props.fromScene === 'fromScan') {
+    if (this.props.fromScene === 'fromScan') {
+      const keyboardDidHide = () => {
+        this.textInputBack.focus()
+        keyboardDidHideListener.remove()
+      }
+      const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', keyboardDidHide)
       this.setState({
         isToggled: !this.state.isToggled
       })
       Animated.timing(this.animatedValue, {
         toValue: 1,
         duration: 0
-      }).start();
+      }).start()
       setTimeout(() => {
         this.setState({
-          secondaryDisplayAmount: null
+          secondaryDisplayAmount: ''
         })
-      }, 10)
-      setTimeout(() => {
         this.textInputBack.focus()
-      }, 1500)
+      }, 10)
     }
   }
 

@@ -251,6 +251,7 @@ export class Request extends Component<Props, State> {
               forceUpdateGuiCounter={0}
               onExchangeAmountChanged={this.onExchangeAmountChanged}
               keyboardVisible={false}
+              fromScene={''}
               color={color}
             />
 
