@@ -49,7 +49,6 @@ Object {
       "name": "",
     },
   },
-  "totalSwaps": 0,
   "walletListModalVisible": false,
 }
 `;
