@@ -1,4 +1,15 @@
-v1.4.0
+v1.4.3
+
+* Big performance boost when logging in and syncing wallets
+* Add support for Monero bulletproofs which fixes Monero spending
+* Allow users to enable/disable exchange providers
+* Fix occasional "Token is not supported" error in Exchange screen
+* Enable viewing xpub for more currencies
+* Fix crash on large accounts when tapping top right menu button immediately after login
+* Fix hang when using Simplex from some Android devices
+
+v1.4.2
+
 * Поддержка Stellar
 * Добавьте возможность задавать пользовательские узлы для Биткоина и аналогичных криптовалют
 * Поддержка для пользователей ShapeShift
