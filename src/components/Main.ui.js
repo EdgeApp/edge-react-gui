@@ -2,7 +2,7 @@
 
 import { makeReactNativeFolder } from 'disklet'
 import { ModalManager } from 'edge-components'
-import type { DiskletFolder, EdgeContext, EdgeContextCallbacks, EdgeCorePluginFactory, EdgeCurrencyPlugin } from 'edge-core-js'
+import type { DiskletFolder, EdgeContext, EdgeCorePluginFactory, EdgeCurrencyPlugin } from 'edge-core-js'
 import { rippleCurrencyPluginFactory, stellarCurrencyPluginFactory } from 'edge-currency-accountbased'
 import {
   bitcoinCurrencyPluginFactory,
@@ -78,7 +78,10 @@ import * as Constants from '../constants/indexConstants'
 import { scale } from '../lib/scaling.js'
 import { setIntlLocale } from '../locales/intl'
 import s, { selectLocale } from '../locales/strings.js'
+import EdgeAccountCallbackManager from '../modules/Core/Account/EdgeAccountCallbackManager.js'
 import * as CONTEXT_API from '../modules/Core/Context/api'
+import EdgeContextCallbackManager from '../modules/Core/Context/EdgeContextCallbackManager.js'
+import EdgeWalletsCallbackManager from '../modules/Core/Wallets/EdgeWalletsCallbackManager.js'
 import PermissionsManager, { type Permission, PermissionStrings } from '../modules/PermissionsManager.js'
 import AutoLogout from '../modules/UI/components/AutoLogout/AutoLogoutConnector'
 import { ContactsLoaderConnecter as ContactsLoader } from '../modules/UI/components/ContactsLoader/indexContactsLoader.js'
@@ -190,7 +193,6 @@ type Props = {
   dispatchDisableScan: () => void,
   urlReceived: string => void,
   updateCurrentSceneKey: string => void,
-  contextCallbacks: EdgeContextCallbacks,
   showReEnableOtpModal: () => void,
   checkEnabledExchanges: () => void,
   openDrawer: () => void
@@ -259,7 +261,7 @@ export default class Main extends Component<Props, State> {
     const id = DeviceInfo.getUniqueID()
     global.firebase && global.firebase.analytics().setUserId(id)
     global.firebase && global.firebase.analytics().logEvent(`Start_App`)
-    makeCoreContext(this.props.contextCallbacks, pluginFactories).then(context => {
+    makeCoreContext(pluginFactories).then(context => {
       const folder = makeReactNativeFolder()
 
       // Put the context into Redux:
@@ -679,6 +681,10 @@ export default class Main extends Component<Props, State> {
         <PasswordRecoveryReminderModalConnector />
         <ModalManager />
         <PermissionsManager />
+
+        <EdgeContextCallbackManager />
+        <EdgeAccountCallbackManager />
+        <EdgeWalletsCallbackManager />
       </MenuProvider>
     )
   }
