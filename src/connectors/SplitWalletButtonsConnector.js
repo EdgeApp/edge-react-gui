@@ -7,8 +7,7 @@ import SplitWalletButtons from '../components/common/SplitWalletButtons'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import type { Dispatch, GetState, State } from '../modules/ReduxTypes'
 
-const getSplitType = (currencyCode: string) =>
-  currencyCode === 'BCH' ? 'wallet:bitcoinsv' : 'wallet:bitcoincash'
+const getSplitType = (currencyCode: string) => (currencyCode === 'BCH' ? 'wallet:bitcoinsv' : 'wallet:bitcoincash')
 
 const splitWallet = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
