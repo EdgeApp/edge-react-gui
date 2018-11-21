@@ -1,25 +1,25 @@
 v1.5.0
 
-* EOS support
-* Bech32 address support
-* Add Changenow as an exchange provider
-* Implementing deep linking of bitcoin, ethereum, bitcoincash, dash, and edge URIs
-* Move Edge Core to independent process to boost performance and GUI responsiveness
+* Supporto a EOS
+* Supporto agli indirizzi Bech32
+* Aggiunto Changenow come cambio valuta
+* Implementazione deep link di bitcoin, ethereum, bitcoincash, dash e edge URIs
+* Spostato Edge Core su un processo indipendente per incrementare le performance e la reattività della GUI
 
 v1.4.4
 
-* Split BCH wallets into BSV wallets
-* Add replay protection to BCH transactions
+* Portafogli BCH e BSV divisi e indipendenti
+* Aggiunta replay protection alle transazioni BCH
 
 v1.4.3
 
-* Big performance boost when logging in and syncing wallets
+* Incremento notevole delle performance al login e nel sincronizzare i portafogli
 * Aggiunto il supporto a bulletproof di Monero che corregge la spesa e riduce il costo per transazione
-* Allow users to enable/disable exchange providers
-* Fix occasional "Token is not supported" error in Exchange screen
+* Gli utenti possono abilitare/disabilitare i diversi cambi valuta
+* Corretto l'occasionale errore "Token non supportato" nella sezione Cambio valuta
 * Abilitata la possibilità di vedere xpub per un numero superiore di cripto
-* Fix crash on large accounts when tapping top right menu button immediately after login
-* Fix hang when using Simplex from some Android devices
+* Corretto il crash in alcuni account dovuto al tap nel menù in alto a destra subito dopo il login
+* Corretto il blocco che avviene su alcuni dispositivi Android quando si usa Simplex
 
 v1.4.2
 
