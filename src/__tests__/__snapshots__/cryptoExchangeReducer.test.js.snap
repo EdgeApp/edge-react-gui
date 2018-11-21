@@ -26,6 +26,7 @@ Object {
   },
   "genericShapeShiftError": null,
   "insufficientError": false,
+  "pluginCompleteKYC": null,
   "quote": null,
   "quoteExpireDate": null,
   "shiftPendingTransaction": false,

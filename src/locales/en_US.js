@@ -414,7 +414,10 @@ const strings = {
   kyc_something_wrong_message: 'Please try again later',
   kyc_ss_finish: 'Please complete ID verification for %s',
   ss_geolock: 'Location restricted. Unable to complete exchange.',
-  ss_unable: 'No enabled exchanges support %1$s to %2$s.'
+  ss_unable: 'No enabled exchanges support %1$s to %2$s.',
+  ss_visit_website: 'Go to ShapeShift.io',
+  ss_need_more_kyc:
+    'You have an active ShapeShift account linked to this Edge account. However, it still requires verification before ShapeShift can process this exchange request. Please proceed to ShapeShift.io, login with your ShapeShift account credentials, and complete your verification.'
 }
 
 // export default strings

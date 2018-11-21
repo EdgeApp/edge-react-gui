@@ -34,7 +34,8 @@ export type CryptoExchangeState = {
   quoteExpireDate: Date | null,
   quote: EdgeExchangeQuote | null,
   totalSwaps: number,
-  showKYCAlert: boolean
+  showKYCAlert: boolean,
+  pluginCompleteKYC: string | null
 }
 
 const dummyCurrencyInfo: GuiCurrencyInfo = {
@@ -79,7 +80,8 @@ const initialState = {
   quoteExpireDate: null,
   quote: null,
   totalSwaps: 0,
-  showKYCAlert: false
+  showKYCAlert: false,
+  pluginCompleteKYC: null
 }
 
 function cryptoExchangeInner (state = initialState, action: Action) {
@@ -90,6 +92,13 @@ function cryptoExchangeInner (state = initialState, action: Action) {
     }
     case 'ON_KYC_TOKEN_SET': {
       return { ...state, showKYCAlert: false }
+    }
+    case 'NEED_FINISH_KYC_OFF': {
+      return { ...state, pluginCompleteKYC: null }
+    }
+
+    case 'NEED_FINISH_KYC': {
+      return { ...state, pluginCompleteKYC: action.data.pluginName }
     }
 
     case 'NEED_KYC': {

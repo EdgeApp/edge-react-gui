@@ -298,8 +298,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
         if (typeof error.pluginName === 'string') {
           pluginName = pluginToName[error.pluginName]
         }
-        const data = sprintf(s.strings.kyc_ss_finish, pluginName)
-        dispatch({ type: 'GENERIC_SHAPE_SHIFT_ERROR', data })
+        dispatch({ type: 'NEED_FINISH_KYC', data: { pluginName } })
         Actions.popTo(Constants.EXCHANGE_SCENE)
         return
       }
