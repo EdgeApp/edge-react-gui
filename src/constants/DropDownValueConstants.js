@@ -58,7 +58,7 @@ export const WALLET_OPTIONS = {
   },
   SPLIT: {
     value: SPLIT_VALUE,
-    currencyCode: ['BTC'],
+    currencyCode: ['BTC', 'BCH'],
     label: s.strings.string_split_bitcoin_cash,
     modalVisible: true
   },
