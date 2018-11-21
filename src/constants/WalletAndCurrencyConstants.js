@@ -8,6 +8,7 @@ export const MAX_TOKEN_CODE_CHARACTERS = 6
 export const CURRENCY_PLUGIN_NAMES = {
   BTC: 'bitcoin',
   BCH: 'bitcoincash',
+  BSV: 'bitcoinsv',
   BTG: 'bitcoingold',
   DASH: 'dash',
   DGB: 'digibyte',
