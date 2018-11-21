@@ -11,8 +11,7 @@ import Text from '../modules/UI/components/FormattedText/index'
 import OptionIcon from '../modules/UI/components/OptionIcon/OptionIcon.ui'
 import { refreshWallet } from './WalletActions.js'
 
-const getSplitType = (currencyCode: string) =>
-  currencyCode === 'BCH' ? 'wallet:bitcoinsv' : 'wallet:bitcoincash'
+const getSplitType = (currencyCode: string) => (currencyCode === 'BCH' ? 'wallet:bitcoinsv' : 'wallet:bitcoincash')
 
 export const showSplitWalletModal = (walletId: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
