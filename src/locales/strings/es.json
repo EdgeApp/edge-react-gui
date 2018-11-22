@@ -207,7 +207,7 @@
   "string_show_balance": "Mostrar saldo",
   "string_to_exchange_info": "y depositar %1$s%2$s en %3$s",
   "string_master_private_key": "Clave privada maestra",
-  "string_split_bitcoin_cash": "Dividir Bitcoin Cash",
+  "string_split_wallet": "",
   "string_add_edit_tokens": "Añadir /Editar Tokens",
   "exchange_notes_metadata_generic": "Cambiados %1$s %2$s de %3$s a %4$s %5$s en %6$s\nPedido: %7$s\nPara asistencia por favor contacta con %8$s.",
   "title_crypto_settings": "%s Ajustes",
