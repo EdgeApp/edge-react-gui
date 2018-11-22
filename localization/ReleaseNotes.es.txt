@@ -1,25 +1,25 @@
 v1.5.0
 
-* EOS support
-* Bech32 address support
-* Add Changenow as an exchange provider
-* Implementing deep linking of bitcoin, ethereum, bitcoincash, dash, and edge URIs
-* Move Edge Core to independent process to boost performance and GUI responsiveness
+* Soporte EOS
+Soporte para direcciones Bech32
+* Añadir Changenow como casa de cambio
+* Implementa vínculos profundos (deep linking) de URIs de bitcoin, ethereum, bitcoin cash, dash y Edge
+Traslada Edge Core a un proceso independiente para aumentar el rendimiento y respuesta de la interfaz gráfica
 
 v1.4.4
 
-* Split BCH wallets into BSV wallets
-* Add replay protection to BCH transactions
+* Separar carteras BCH a carteras BSV
+* Añadir protección de repetición (replay protection) a transacciones BCH
 
 v1.4.3
 
-* Big performance boost when logging in and syncing wallets
-* Add support for Monero bulletproofs which fixes Monero spending
-* Allow users to enable/disable exchange providers
-* Fix occasional "Token is not supported" error in Exchange screen
-* Enable viewing xpub for more currencies
-* Fix crash on large accounts when tapping top right menu button immediately after login
-* Fix hang when using Simplex from some Android devices
+* Gran incremento de rendimiento al registrarse y sincronizar carteras
+* Añadido soporte para "Bulletproofs" que arregla el gasto de Monero
+* Permite a los usuarios activar/desactivar casas de cambio
+* Arregla el error ocasional " El token no está soportado" en la pantalla de casa de cambio
+* Activar la vista de xpub para más monedas
+* Arregla el fallo en cuentas grandes cuando se hace click en el boton superior derecho inmediatamente después de acceder
+* Arregla el bloqueo cuando se usa Simplex desde dispositivos Android
 
 v1.4.2
 
@@ -34,7 +34,7 @@ v1.3.4
 * Evitar que se pueda hacer click varias veces en el botón Hecho de la opción crear cartera
 * Arreglo de que la pantalla quede en blanco en el login si se recibe una transacción en ese momento
 * Corregido ajuste de direcciones en el plugin Simplex
-*Corregido un bug al hacer doble click en el modo de cambio de contraseña
+* Corregido un bug al hacer doble click en el modo de cambio de contraseña
 *Corregir las cantidades fiat cuando se usan monedas de otros países
 * Mejoras visuales adicionales
 * Bugs menores corregidos
