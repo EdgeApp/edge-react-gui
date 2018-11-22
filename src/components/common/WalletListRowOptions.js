@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react'
 import slowlog from 'react-native-slowlog'
-import sprintf from 'sprintf-js'
+import { sprintf } from 'sprintf-js'
 
 import * as Constants from '../../constants/indexConstants'
 import { scale } from '../../lib/scaling.js'
@@ -40,9 +40,10 @@ export default class WalletListRowOptions extends Component<Props> {
           value: option.value,
           label: option.label
         }
-        if (option.value === Constants.SPLIT) {
-          temp.label =
-            option.currencyCode === 'BTC' ? sprintf(s.strings.string_split_wallet, 'Bitcoin Cash') : sprintf(s.strings.string_split_wallet, 'Bitcoin SV')
+        if (option.value === Constants.SPLIT_VALUE) {
+          const splitString = s.strings.string_split_wallet
+          const currencyName = this.props.currencyCode === 'BTC' ? 'Bitcoin Cash' : 'Bitcoin SV'
+          temp.label = sprintf(splitString, currencyName)
         }
         this.options.push(temp)
       }
