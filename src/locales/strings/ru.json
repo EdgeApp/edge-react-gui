@@ -207,7 +207,7 @@
   "string_show_balance": "Показать баланс",
   "string_to_exchange_info": "и депозит %1$s %2$s на \n %3$s",
   "string_master_private_key": "Master Private Key",
-  "string_split_bitcoin_cash": "Разделить Bitcoin Cash",
+  "string_split_wallet": "",
   "string_add_edit_tokens": "Добавить / редактировать токены",
   "exchange_notes_metadata_generic": "",
   "title_crypto_settings": "%s Настройки",
