@@ -8,6 +8,7 @@ import {
   bitcoinCurrencyPluginFactory,
   bitcoincashCurrencyPluginFactory,
   bitcoingoldCurrencyPluginFactory,
+  bitcoinsvCurrencyPluginFactory,
   dashCurrencyPluginFactory,
   digibyteCurrencyPluginFactory,
   feathercoinCurrencyPluginFactory,
@@ -114,6 +115,7 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   coincapPlugin,
   // Currencies:
   bitcoincashCurrencyPluginFactory,
+  bitcoinsvCurrencyPluginFactory,
   bitcoinCurrencyPluginFactory,
   ethereumCurrencyPluginFactory,
   stellarCurrencyPluginFactory,

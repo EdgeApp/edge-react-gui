@@ -5,13 +5,13 @@ import React from 'react'
 
 import { SPLIT } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
-import { getAccount, getWalletName } from '../modules/Core/selectors.js'
+import { getAccount, getWallet, getWalletName } from '../modules/Core/selectors.js'
 import type { Dispatch, GetState } from '../modules/ReduxTypes.js'
 import Text from '../modules/UI/components/FormattedText/index'
 import OptionIcon from '../modules/UI/components/OptionIcon/OptionIcon.ui'
 import { refreshWallet } from './WalletActions.js'
 
-const getSplitType = () => 'wallet:bitcoincash'
+const getSplitType = (currencyCode: string) => (currencyCode === 'BCH' ? 'wallet:bitcoinsv' : 'wallet:bitcoincash')
 
 export const showSplitWalletModal = (walletId: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -36,7 +36,9 @@ export const showSplitWalletModal = (walletId: string) => async (dispatch: Dispa
 
   if (resolveValue) {
     try {
-      await account.splitWalletInfo(walletId, getSplitType())
+      const wallet = getWallet(state, walletId)
+      const splitType = getSplitType(wallet.currencyInfo.currencyCode)
+      await account.splitWalletInfo(walletId, splitType)
       dispatch(refreshWallet(walletId))
     } catch (e) {
       throw new Error(e)

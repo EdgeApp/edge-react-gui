@@ -7,7 +7,7 @@ import SplitWalletButtons from '../components/common/SplitWalletButtons'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import type { Dispatch, GetState, State } from '../modules/ReduxTypes'
 
-const getSplitType = () => 'wallet:bitcoincash'
+const getSplitType = (currencyCode: string) => (currencyCode === 'BCH' ? 'wallet:bitcoinsv' : 'wallet:bitcoincash')
 
 const splitWallet = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -15,7 +15,9 @@ const splitWallet = (walletId: string) => (dispatch: Dispatch, getState: GetStat
 
   dispatch({ type: 'SPLIT_WALLET_START', data: { walletId } })
 
-  return account.splitWalletInfo(walletId, getSplitType()).then(() => {
+  const wallet = CORE_SELECTORS.getWallet(state, walletId)
+  const splitType = getSplitType(wallet.currencyInfo.currencyCode)
+  return account.splitWalletInfo(walletId, splitType).then(() => {
     dispatch({ type: 'CLOSE_SPLIT_WALLET_SUCCESS', data: { walletId } })
     dispatch(UI_ACTIONS.refreshWallet(walletId))
   })
