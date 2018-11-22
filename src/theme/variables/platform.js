@@ -5,11 +5,11 @@ import ExtraDimensions from 'react-native-extra-dimensions-android'
 
 import { isIphoneX } from '../../lib/isIphoneX.js'
 
-const ANDROID_REAL_WINDOW_HEIGHT = ExtraDimensions.get('REAL_WINDOW_HEIGHT')
-
 const platform = Platform.OS
 const deviceWidth = Dimensions.get('window').width
-const deviceHeight = platform === 'ios' ? Dimensions.get('window').height : ANDROID_REAL_WINDOW_HEIGHT
+const deviceHeight = platform === 'ios'
+  ? Dimensions.get('window').height
+  : ExtraDimensions.get('REAL_WINDOW_HEIGHT')
 
 const PLATFORM = {
   platform,
