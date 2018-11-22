@@ -1,12 +1,15 @@
 // @flow
 
 import { Dimensions, Platform } from 'react-native'
+import ExtraDimensions from 'react-native-extra-dimensions-android'
 
 import { isIphoneX } from '../../lib/isIphoneX.js'
 
-const deviceHeight = Dimensions.get('window').height
-const deviceWidth = Dimensions.get('window').width
 const platform = Platform.OS
+const deviceWidth = Dimensions.get('window').width
+const deviceHeight = platform === 'ios'
+  ? Dimensions.get('window').height
+  : ExtraDimensions.get('REAL_WINDOW_HEIGHT')
 
 const PLATFORM = {
   platform,
