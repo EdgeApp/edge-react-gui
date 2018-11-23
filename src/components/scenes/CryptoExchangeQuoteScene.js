@@ -129,8 +129,8 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
               currency={this.props.quote.toWalletCurrencyName}
             />
           </View>
+          <FormattedText style={styles.confirmText}>{s.strings.confirm_to_complete_exchange}</FormattedText>
           <View style={styles.bottomRow}>
-            <FormattedText style={styles.confirmText}>{s.strings.confirm_to_complete_exchange}</FormattedText>
             {this.renderSlider()}
             {this.renderTimer()}
           </View>

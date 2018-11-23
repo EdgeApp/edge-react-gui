@@ -20,7 +20,7 @@ const CryptoExchangeQuoteSceneStyles = {
   },
   bottomRow: {
     flex: 3,
-    padding: '5%',
+    padding: scale(5),
     alignItems: 'center'
   },
   slideContainer: {
