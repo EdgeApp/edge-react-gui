@@ -62,7 +62,8 @@ const MenuDropDownStyle = {
   menuOptions: {},
   menuOptionItem: {
     flexDirection: 'row',
-    paddingVertical: scale(4)
+    paddingVertical: scale(4),
+    paddingHorizontal: scale(6)
   },
   optionText: {
     color: THEME.COLORS.GRAY_1,
