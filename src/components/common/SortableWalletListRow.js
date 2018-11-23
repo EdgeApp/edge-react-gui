@@ -40,7 +40,7 @@ class SortableWalletListRow extends Component<Props, State> {
         {...this.props.sortHandlers}
       >
         {walletData.currencyCode ? (
-          <View style={[styles.rowContent, styles.sortableRowContent]}>
+          <View style={[styles.rowContent]}>
             <View style={[styles.rowDragArea]}>
               <Image source={sort} style={{ height: 15, width: 15 }} />
             </View>
