@@ -100,6 +100,7 @@
   "fragment_wallets_header": "Мои кошельки",
   "fragment_wallets_rename_wallet": "Переименовать кошелек",
   "fragment_wallets_resync_wallet_first_confirm_message_mobile": "Вы уверены, что хотите повторно синхронизировать\n",
+  "fragment_wallets_split_wallet_bch_to_bsv": "",
   "fragment_wallets_split_wallet_first_confirm_message_mobile": "Вы уверены, что хотите разделить\n",
   "fragment_wallets_get_seed_wallet_first_confirm_message_mobile": "Вы уверены, что хотите раскрыть приватный [seed]  для следующего кошелька?",
   "fragmet_wallets_delete_wallet_first_confirm_message_mobile": "Вы уверены, что хотите удалить\n",
