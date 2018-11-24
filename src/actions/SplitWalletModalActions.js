@@ -16,14 +16,19 @@ const getSplitType = (currencyCode: string) => (currencyCode === 'BCH' ? 'wallet
 export const showSplitWalletModal = (walletId: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const walletName = getWalletName(state, walletId)
+  const edgeWallet = getWallet(state, walletId)
   const account = getAccount(state)
 
+  let bodyText = s.strings.fragment_wallets_split_wallet_first_confirm_message_mobile
+  if (edgeWallet.currencyInfo.currencyCode === 'BCH') {
+    bodyText = s.strings.fragment_wallets_split_wallet_bch_to_bsv
+  }
   // Use `showModal` to put the modal component on screen:
   const modal = createYesNoModal({
     title: s.strings.fragment_wallets_split_wallet,
     message: (
       <Text style={{ textAlign: 'center' }}>
-        {s.strings.fragment_wallets_split_wallet_first_confirm_message_mobile}
+        {bodyText}
         <Text style={{ fontWeight: 'bold', textAlign: 'center' }}>{`${walletName}?`}</Text>
       </Text>
     ),
