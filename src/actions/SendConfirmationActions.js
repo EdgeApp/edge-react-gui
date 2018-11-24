@@ -179,7 +179,11 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
       await setTransactionDetailsRequest(wallet, edgeSignedTransaction.txid, edgeSignedTransaction.currencyCode, edgeMetaData)
     }
     dispatch(updateSpendPending(false))
+
+    edgeSignedTransaction.wallet = wallet
     Actions.pop()
+    Actions.transactionDetails({ edgeTransaction: edgeSignedTransaction })
+
     const successInfo = {
       success: true,
       title: s.strings.transaction_success,
