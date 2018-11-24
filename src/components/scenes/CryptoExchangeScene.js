@@ -1,5 +1,5 @@
 // @flow
-
+import { bns } from 'biggystring'
 import { showModal } from 'edge-components'
 import React, { Component } from 'react'
 import { Alert, Keyboard, View } from 'react-native'
@@ -99,6 +99,8 @@ export class CryptoExchangeScene extends Component<Props, State> {
         toExchangeAmount: nextProps.toExchangeAmount,
         forceUpdateGuiCounter: nextProps.forceUpdateGuiCounter
       })
+      this.fromAmountNative = bns.mul(nextProps.fromExchangeAmount, nextProps.fromPrimaryInfo.exchangeDenomination.multiplier)
+      this.fromAmountDisplay = nextProps.fromExchangeAmount
     } else {
       // Check which wallet we are currently editing.
       // Only change the exchangeAmount of the opposite wallet to prevent feedback loops
