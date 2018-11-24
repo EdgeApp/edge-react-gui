@@ -100,6 +100,7 @@
   "fragment_wallets_header": "Minhas Carteiras",
   "fragment_wallets_rename_wallet": "Renomear Carteira",
   "fragment_wallets_resync_wallet_first_confirm_message_mobile": "Tem certeza de que deseja re-sincronizar\n",
+  "fragment_wallets_split_wallet_bch_to_bsv": "",
   "fragment_wallets_split_wallet_first_confirm_message_mobile": "Tem certeza que deseja dividir\n",
   "fragment_wallets_get_seed_wallet_first_confirm_message_mobile": "Tem certeza que deseja revelar a seed privada para a carteira seguinte?",
   "fragmet_wallets_delete_wallet_first_confirm_message_mobile": "Você tem certeza que deseja excluir\n",
