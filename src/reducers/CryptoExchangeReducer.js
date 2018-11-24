@@ -33,7 +33,6 @@ export type CryptoExchangeState = {
   shiftPendingTransaction: boolean,
   quoteExpireDate: Date | null,
   quote: EdgeExchangeQuote | null,
-  totalSwaps: number,
   showKYCAlert: boolean
 }
 
@@ -78,7 +77,6 @@ const initialState = {
   shiftPendingTransaction: false,
   quoteExpireDate: null,
   quote: null,
-  totalSwaps: 0,
   showKYCAlert: false
 }
 
