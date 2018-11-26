@@ -124,12 +124,11 @@ export class ExchangeSettingsComponent extends Component<ExchangeSettingsProps, 
                       value={this.state[exchange.name].enabled}
                     />
                     <RowWithButton
-                      logo={logo}
+                      logo={logoSource}
                       key={exchange.name}
                       leftText={exchangeName + ' ' + s.strings.account}
                       rightText={ssLoginText}
                       onToggle={this.shapeShiftSignInToggle}
-                      value={this.props.shapeShiftNeedsKYC}
                     />
                   </View>
                 )
