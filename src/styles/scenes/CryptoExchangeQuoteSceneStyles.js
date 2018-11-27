@@ -10,17 +10,18 @@ const CryptoExchangeQuoteSceneStyles = {
     height: THEME.SPACER.HEADER
   },
   topRow: {
-    flex: 2,
     alignItems: 'center',
     justifyContent: 'space-around'
   },
   centerRow: {
-    flex: 6,
     alignItems: 'center'
   },
+  confirmTextRow: {
+    paddingVertical: scale(20),
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   bottomRow: {
-    flex: 3,
-    padding: '5%',
     alignItems: 'center'
   },
   slideContainer: {
@@ -29,15 +30,13 @@ const CryptoExchangeQuoteSceneStyles = {
   },
   logoImage: {
     position: 'relative',
-    width: '80%',
-    height: '100%',
+    width: '100%',
+    height: scale(90),
     resizeMode: 'contain'
   },
   confirmText: {
     color: THEME.COLORS.WHITE,
     fontSize: scale(14),
-    paddingTop: scale(10),
-    paddingBottom: scale(10),
     width: '100%',
     textAlign: 'center'
   },
