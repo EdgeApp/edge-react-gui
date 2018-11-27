@@ -1,5 +1,12 @@
 module.exports = {
   extends: ['standard', 'plugin:flowtype/recommended', 'plugin:react/recommended', 'plugin:react-native/all'],
+  settings: {
+    react: {
+      pragma: 'React', // Pragma to use, default to 'React'
+      version: '16.4.1', // React version, default to the latest React stable release
+      flowVersion: '0.66' // Flow version
+    }
+  },
   globals: {
     fetch: true
   },
