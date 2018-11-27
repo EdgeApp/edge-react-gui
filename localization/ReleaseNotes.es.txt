@@ -8,8 +8,11 @@ Traslada Edge Core a un proceso independiente para aumentar el rendimiento y res
 
 v1.4.4
 
-* Separar carteras BCH a carteras BSV
-* Añadir protección de repetición (replay protection) a transacciones BCH
+* Add ability to split BCH wallets into BSV wallets
+* Add replay protection to BCH/BSV wallets
+* Improve login performance
+* Fix bug that caused XRP and XLM to re-query all transactions at each login
+* Improve connectivity to nodes for bitcoin related currencies (BTC, BCH, LTC, DASH, etc)
 
 v1.4.3
 
