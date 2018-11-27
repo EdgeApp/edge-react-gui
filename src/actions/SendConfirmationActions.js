@@ -181,6 +181,7 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
     dispatch(updateSpendPending(false))
 
     edgeSignedTransaction.wallet = wallet
+    edgeSignedTransaction.metadata = spendInfo.metadata
     Actions.pop()
     Actions.transactionDetails({ edgeTransaction: edgeSignedTransaction })
 
