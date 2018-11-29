@@ -15,8 +15,8 @@ Take control of your funds! With Edge, only YOU have access to your funds or tra
 Edge also provides a cryptocurrency exchange. Easily swap your currencies for others with a few taps. Exchange BTC for Ethereum, ETH for BCH and many more.
 
 <b>Funktionen</b>
-• Secure crypto wallet and blockchain app
-• Easy to use Bitcoin wallet app with support for top crypto like Bitcoin Cash, Litecoin, Ripple (XRP)
+• Sichere Krypto-Wallet und Blockchain-App
+• Leicht zu nutzende Bitcoin-Wallet-App mit der Unterstützung für die beliebtesten Kryptowährungen wie Bitcoin Cash, Litecoin, Ripple (XRP)
 • Zero-knowledge & zero-access to user funds, keys, or transaction data by Edge or 3rd parties
 • Simple account creation using just a login & password (no printing of PDFs, writing down pass phrases, or adding encryption settings)
 * Biometric TouchID and FaceID login for another layer of security
