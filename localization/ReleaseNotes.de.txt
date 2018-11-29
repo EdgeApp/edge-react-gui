@@ -27,7 +27,7 @@ v1.4.3
 v1.4.2
 
 * Unterstützung für Stellar
-* Add ability to select custom nodes for Bitcoin and similar currencies
+* Füge die Fähigkeit um benutzerdefinierte Nodes für Bitcoin und ähnliche Währungen auszuwählen hinzu
 * Support for ShapeShift membership
 * Unterstütze Changelly.com bei der Tauschbörsenfunktion
 * Füge spanische, italienische und russische Übersetzungen hinzu
