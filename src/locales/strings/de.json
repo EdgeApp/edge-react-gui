@@ -30,7 +30,7 @@
   "manage_tokens_duplicate_currency_code": "",
   "addtoken_top_instructions": "",
   "accept_button_text": "Akzeptieren",
-  "addtoken_contract_address_input_text": "",
+  "addtoken_contract_address_input_text": "Kontrakt-Adresse",
   "addtoken_currency_code_input_text": "Token-Code",
   "addtoken_default_error_message": "Token kann nicht bearbeitet werden",
   "addtoken_invalid_information": "",
