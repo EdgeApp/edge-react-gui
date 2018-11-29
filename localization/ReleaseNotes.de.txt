@@ -34,10 +34,10 @@ v1.4.2
 
 v1.3.4
 
-* Prevent create wallet button Done button from being tapped multiple times
+* Verhindere, dass der Wallet erstellen Knopf und der Fertig Knopf mehrmals hintereinander betätigt werden kann
 * Fix white screen hang upon login if an incoming transaction happens
-*Behebe das Adress-Wrapping im Simplex-Plugin
-* Fix double tap bug on Change Password modal
-*Fixiere die Fiat-Beträge bei der Benutzung von Währungen anderer Länder
+* Behebe das Adress-Wrapping im Simplex-Plugin
+* Den Doppeltipp-Fehler im Passwort-Änderungsvorgang beheben
+* Fixiere die Fiat-Beträge bei der Benutzung von Währungen anderer Länder
 * Zusätzliche skalierbare und visuelle Verbesserungen
 * Andere kleine Bug-fixes
