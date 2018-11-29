@@ -35,9 +35,9 @@ v1.4.2
 v1.3.4
 
 * Verhindere, dass der Wallet erstellen Knopf und der Fertig Knopf mehrmals hintereinander betätigt werden kann
-* Fix white screen hang upon login if an incoming transaction happens
+* Behebe den Fehler, dass nach dem Einloggen die App bei einer eingehenden Transaktion mit einem weißem Bildschirm hängt
 * Behebe das Adress-Wrapping im Simplex-Plugin
-* Den Doppeltipp-Fehler im Passwort-Änderungsvorgang beheben
+* Behebe den Doppeltipp-Fehler im Passwort-Änderungsvorgang
 * Fixiere die Fiat-Beträge bei der Benutzung von Währungen anderer Länder
 * Zusätzliche skalierbare und visuelle Verbesserungen
 * Andere kleine Bug-fixes
