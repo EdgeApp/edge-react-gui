@@ -1,14 +1,20 @@
+import { createSimpleConfirmModal, showModal } from 'edge-components'
 // @flow
-
-import { showModal } from 'edge-components'
+import React from 'react'
+import { Image } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
+import walletIcon from '../assets/images/tabbar/wallets.png'
 import * as Constants from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import * as ACCOUNT_API from '../modules/Core/Account/api.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
+import { makeSpend } from '../modules/Core/Wallets/api.js'
 import type { Dispatch, GetState } from '../modules/ReduxTypes.js'
 import { errorModal } from '../modules/UI/components/Modals/ErrorModal.js'
+import { getAuthRequired, getSpendInfo } from '../modules/UI/scenes/SendConfirmation/selectors.js'
+import * as UI_SELECTORS from '../modules/UI/selectors.js'
+import { newSpendInfo, updateTransaction } from './SendConfirmationActions.js'
 import { selectWallet as selectWalletAction } from './WalletActions.js'
 
 export const updateWalletName = (walletName: string) => ({
@@ -72,4 +78,34 @@ export const checkHandleAvailability = (handle: string) => (dispatch: Dispatch, 
       dispatch({ type: 'IS_HANDLE_AVAILABLE', data: isAvailable })
     }, 2000 * Math.random())
   } catch (e) {}
+}
+
+export const createAccountTransaction = (walletId: string, data: string) => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  // check available funds
+  const guiWallet = UI_SELECTORS.getWallet(state, walletId)
+  const currencyCode = data.currencyCode || 'BTC'
+  const requiredAmount = data.nativeAmount || '100000'
+  // if insufficient funds, cancel and showModal
+  if (guiWallet.nativeBalances[currencyCode] < requiredAmount) {
+    const insufficientFundsModal = createSimpleConfirmModal({
+      title: s.strings.fragment_insufficient_funds,
+      message: s.strings.create_wallet_account_insufficient_funds,
+      icon: <Image source={walletIcon} size={30} />,
+      buttonText: s.strings.string_ok
+    })
+
+    await showModal(insufficientFundsModal)
+  }
+  dispatch({ type: 'UI/WALLETS/SELECT_WALLET', data: { walletId, currencyCode } })
+  const edgeWallet = CORE_SELECTORS.getWallet(state, walletId)
+  const parsedUriClone = { ...data }
+  const spendInfo = getSpendInfo(state, parsedUriClone)
+
+  const authRequired = getAuthRequired(state, spendInfo)
+  dispatch(newSpendInfo(spendInfo, authRequired))
+
+  makeSpend(edgeWallet, spendInfo)
+    .then(edgeTransaction => dispatch(updateTransaction(edgeTransaction, parsedUriClone, null, null)))
+    .catch(e => dispatch(updateTransaction(null, parsedUriClone, null, e)))
 }

@@ -1,8 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Image, View } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { Image, ScrollView, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
@@ -21,6 +20,10 @@ import type { GuiFiatType, GuiWalletType } from '../../types.js'
 const logos = {
   eos: eosLogo,
   steem: steemLogo
+}
+
+export type CreateWalletAccountSelectStateProps = {
+
 }
 
 export type CreateWalletAccountSelectOwnProps = {
@@ -62,9 +65,14 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
   onSelectWallet = (walletId: string, currencyCode: string) => {
     if (true) {
       this.setState({
-        isModalVisible: false,
-        walletId
+        isModalVisible: false
       })
+      const txData = {
+        currencyCode,
+        publicAddress: '12q4wQJfkATzBYwTCf71aPHsxNc81qkVzu',
+        nativeAmount: '100000'
+      }
+      this.props.createAccountTransaction(walletId, txData)
     } else {
       this.setState({
         isModalVisible: false,
@@ -90,12 +98,17 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
   }
 
   renderPaymentReview = () => {
-    const walletName = 'My Wallet'
+    const { wallets } = this.props
+    const wallet = wallets[this.state.walletId]
+    const name = wallet.name
+    const currencyCode = wallet.currencyCode
+    const fiat = wallet.fiatCurrencyCode
+
     return (
       <View>
         <View style={styles.selectPaymentLower}>
           <View style={styles.accountReviewWalletNameArea}>
-            <Text style={styles.accountReviewWalletNameText}>{walletName}</Text>
+            <Text style={styles.accountReviewWalletNameText}>{name}:{currencyCode}</Text>
           </View>
           <View style={styles.paymentArea}>
             <Text style={styles.paymentLeft}>Amount due:</Text>
@@ -103,18 +116,10 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
           </View>
         </View>
         <View style={styles.accountReviewInfoArea}>
-          <Text style={styles.accountReviewInfoText}>
-            {s.strings.create_wallet_account_payment_source} {walletName}
-          </Text>
-          <Text style={styles.accountReviewInfoText}>
-            {s.strings.create_wallet_crypto_type_label} {walletName}
-          </Text>
-          <Text style={styles.accountReviewInfoText}>
-            {s.strings.create_wallet_fiat_type_label} {walletName}
-          </Text>
-          <Text style={styles.accountReviewInfoText}>
-            {s.strings.create_wallet_name_label} {walletName}
-          </Text>
+          <Text style={styles.accountReviewInfoText}>{s.strings.create_wallet_account_payment_source} {name}</Text>
+          <Text style={styles.accountReviewInfoText}>{s.strings.create_wallet_crypto_type_label} {currencyCode}</Text>
+          <Text style={styles.accountReviewInfoText}>{s.strings.create_wallet_fiat_type_label} {fiat}</Text>
+          <Text style={styles.accountReviewInfoText}>{s.strings.create_wallet_name_label} @FakeUser</Text>
         </View>
         <View style={styles.accountReviewConfirmArea}>
           <Text style={styles.accountReviewConfirmText}>{s.strings.create_wallet_account_confirm}</Text>
@@ -136,15 +141,15 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
       <SafeAreaView>
         <View style={styles.scene}>
           <Gradient style={styles.gradient} />
-          <KeyboardAwareScrollView>
+          <ScrollView>
             <View style={styles.view}>
               <Image source={logos['eos']} style={styles.currencyLogo} resizeMode={'cover'} />
               <View style={styles.createWalletPromptArea}>
                 <Text style={styles.instructionalText}>{this.state.walletId ? confirmMessageSyntax : instructionSyntax}</Text>
               </View>
             </View>
-            {this.state.walletId ? this.renderSelectWallet() : this.renderPaymentReview()}
-          </KeyboardAwareScrollView>
+            {this.state.walletId ? this.renderPaymentReview() : this.renderSelectWallet()}
+          </ScrollView>
           {this.state.isModalVisible && (
             <WalletListModal topDisplacement={Constants.TRANSACTIONLIST_WALLET_DIALOG_TOP} type={Constants.FROM} onSelectWallet={this.onSelectWallet} />
           )}

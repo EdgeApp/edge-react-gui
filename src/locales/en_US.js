@@ -138,6 +138,7 @@ const strings = {
   create_wallet_account_review_instructions: 'Create a unique account handle, this will also be the name of your %s wallet:',
   create_wallet_account_payment_source: 'Payment Source:',
   create_wallet_account_confirm: 'Double-check your wallet and payment info before submitting.',
+  create_wallet_account_insufficient_funds: 'You will need one existing wallet with enough funds for this payment to continue.',
 
   submit: 'Submit',
   login: 'Login',
