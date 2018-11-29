@@ -1,10 +1,11 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Image, ScrollView, View } from 'react-native'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
+import { Image, ScrollView, View, ActivityIndicator } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
-
+import { fixFiatCurrencyCode } from '../../util/utils.js'
 import eosLogo from '../../assets/images/currencies/fa_logo_eos.png'
 import steemLogo from '../../assets/images/currencies/fa_logo_steem.png'
 import * as Constants from '../../constants/indexConstants'
@@ -40,17 +41,23 @@ export type CreateWalletAccountSelectOwnProps = {
 type Props = CreateWalletAccountSelectOwnProps
 type State = {
   walletName: string,
-  walletId: string
+  walletId: string,
+  isModalVisisble: boolean,
+  error: string,
+  createdWallet: Promise<EdgeCurrencyWallet>
 }
 
 export class CreateWalletAccountSelect extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
+    const { selectedFiat, selectedWalletType, createAccountBasedWallet, accountName } = props
+    const createdWallet = createAccountBasedWallet(accountName, selectedWalletType.value, fixFiatCurrencyCode(selectedFiat.value), false, true)
     this.state = {
       isModalVisible: false,
       error: '',
       walletId: '',
-      walletName: ''
+      walletName: '',
+      createdWallet
     }
     const currencyCode = props.selectedWalletType.currencyCode
     props.fetchAccountActivationInfo(currencyCode)
@@ -72,16 +79,19 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
     this.setState({
       isModalVisible: true
     })
-    /* const txData = {
-      currencyCode,
-      publicAddress: '12q4wQJfkATzBYwTCf71aPHsxNc81qkVzu',
-      nativeAmount: '100000'
-    }
-    this.props.createAccountTransaction(walletId, txData) */
   }
 
-  onSelectWallet = (walletId: string, paymentCurrencyCode: string) => {
-    const { wallets, accountName, selectedWalletType } = this.props
+  onPressSubmit = async () => {
+    const { createAccountTransaction, accountName } = this.props
+    const { walletId } = this.state
+    const createdWallet = await this.state.createdWallet
+    const createdWalletId = createdWallet.id
+    // will grab data from state in actions
+    createAccountTransaction(createdWalletId, accountName, walletId)
+  }
+
+  onSelectWallet = async (walletId: string, paymentCurrencyCode: string) => {
+    const { wallets, accountName, selectedWalletType, fetchWalletAccountActivationPaymentInfo } = this.props
     const paymentWallet = wallets[walletId]
     const walletName = paymentWallet.name
     this.setState({
@@ -94,7 +104,8 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
       accountName,
       paymentCurrencyCode
     }
-    this.props.fetchAccountActivationPaymentInfo(paymentInfo)
+    await this.state.createdWallet
+    fetchWalletAccountActivationPaymentInfo(paymentInfo)
   }
 
   renderSelectWallet = () => {
@@ -116,11 +127,20 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
   }
 
   renderPaymentReview = () => {
-    const { wallets, paymentCurrencyCode, accountName } = this.props
+    const {
+      wallets,
+      paymentCurrencyCode,
+      accountName,
+      isCreatingWallet,
+      exchangeAmount,
+      selectedWalletType,
+      selectedFiat,
+      activationCost,
+      paymentDenominationSymbol
+    } = this.props
     const { walletId } = this.state
     const wallet = wallets[walletId]
-    const name = wallet.name
-    const paymentFiat = wallet.fiatCurrencyCode
+    const { name, symbolImageDarkMono } = wallet
 
     return (
       <View>
@@ -128,23 +148,26 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
           <View style={styles.accountReviewWalletNameArea}>
             <Text style={styles.accountReviewWalletNameText}>{name}:{paymentCurrencyCode}</Text>
           </View>
-          <View style={styles.paymentArea}>
-            <Text style={styles.paymentLeft}>Amount due:</Text>
-            <Text style={styles.paymentRight}>5.00 EOS</Text>
+          <View style={styles.paymentAndIconArea}>
+            <View style={styles.paymentLeftIconWrap}>{symbolImageDarkMono && <Image style={styles.paymentLeftIcon} source={{ uri: symbolImageDarkMono }} resizeMode="cover" />}</View>
+            <View style={styles.paymentArea}>
+              <Text style={styles.paymentLeft}>{paymentDenominationSymbol} {exchangeAmount} {paymentCurrencyCode}</Text>
+              <Text style={styles.paymentRight}>{activationCost} {selectedWalletType.currencyCode}</Text>
+            </View>
           </View>
         </View>
         <View style={styles.accountReviewInfoArea}>
           <Text style={styles.accountReviewInfoText}>{s.strings.create_wallet_account_payment_source} {name}</Text>
           <Text style={styles.accountReviewInfoText}>{s.strings.create_wallet_crypto_type_label} {paymentCurrencyCode}</Text>
-          <Text style={styles.accountReviewInfoText}>{s.strings.create_wallet_fiat_type_label} {paymentFiat}</Text>
+          <Text style={styles.accountReviewInfoText}>{s.strings.create_wallet_fiat_type_label} {selectedFiat.label}</Text>
           <Text style={styles.accountReviewInfoText}>{s.strings.create_wallet_name_label} {accountName}</Text>
         </View>
         <View style={styles.accountReviewConfirmArea}>
           <Text style={styles.accountReviewConfirmText}>{s.strings.create_wallet_account_confirm}</Text>
         </View>
         <View style={styles.confirmButtonArea}>
-          <PrimaryButton style={[styles.confirmButton]} onPress={this.onPressSubmit}>
-            <PrimaryButton.Text>{s.strings.submit}</PrimaryButton.Text>
+          <PrimaryButton disabled={isCreatingWallet} style={[styles.confirmButton]} onPress={this.onPressSubmit}>
+            <PrimaryButton.Text>{isCreatingWallet ? <ActivityIndicator /> : s.strings.submit}</PrimaryButton.Text>
           </PrimaryButton>
         </View>
       </View>
@@ -153,8 +176,8 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
 
   render () {
     const { supportedCurrencies, selectedWalletType, activationCost } = this.props
-    const instructionSyntax = sprintf(s.strings.create_wallet_account_select_instructions, `${activationCost} ${selectedWalletType}`)
-    const confirmMessageSyntax = sprintf(s.strings.create_wallet_account_make_payment, 'BTC')
+    const instructionSyntax = sprintf(s.strings.create_wallet_account_select_instructions, `${activationCost} ${selectedWalletType.currencyCode}`)
+    const confirmMessageSyntax = sprintf(s.strings.create_wallet_account_make_payment, selectedWalletType.currencyCode)
     // only included supported types of payment in WalletListModal
     const supportedCurrenciesList = []
     for (const currency in supportedCurrencies) {

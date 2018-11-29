@@ -52,14 +52,12 @@ import AddToken from '../connectors/scenes/AddTokenConnector.js'
 import ChangeMiningFeeSendConfirmation from '../connectors/scenes/ChangeMiningFeeSendConfirmationConnector.ui'
 import ChangePasswordConnector from '../connectors/scenes/ChangePasswordConnector.ui'
 import ChangePinConnector from '../connectors/scenes/ChangePinConnector.ui'
-import { CreateWalletAccountConnector } from '../connectors/scenes/CreateWalletAccountConnector.js'
-import { CreateWalletAccountLoginConnector } from '../connectors/scenes/CreateWalletAccountLoginConnector.js'
-import { CreateWalletAccountReviewConnector } from '../connectors/scenes/CreateWalletAccountReviewConnector.js'
-import { CreateWalletAccountSelectConnector } from '../connectors/scenes/CreateWalletAccountSelectConnector.js'
-import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWalletAccountSetupConnector.js'
 import { CreateWalletReview } from '../connectors/scenes/CreateWalletReviewConnector'
 import { CreateWalletSelectCrypto } from '../connectors/scenes/CreateWalletSelectCryptoConnector'
 import { CreateWalletSelectFiat } from '../connectors/scenes/CreateWalletSelectFiatConnector'
+import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWalletAccountSetupConnector.js'
+import { CreateWalletAccountSelectConnector } from '../connectors/scenes/CreateWalletAccountSelectConnector.js'
+import { CreateWalletAccountReviewConnector } from '../connectors/scenes/CreateWalletAccountReviewConnector.js'
 import { CryptoExchangeQuoteConnector } from '../connectors/scenes/CryptoExchangeQuoteConnector.js'
 import { CryptoExchangeSceneConnector as ExchangeConnector } from '../connectors/scenes/CryptoExchangeSceneConnector'
 import CurrencySettings from '../connectors/scenes/CurrencySettingsConnector'
@@ -167,9 +165,8 @@ const WALLETS = s.strings.title_wallets
 const CREATE_WALLET_SELECT_CRYPTO = s.strings.title_create_wallet_select_crypto
 const CREATE_WALLET_SELECT_FIAT = s.strings.title_create_wallet_select_fiat
 const CREATE_WALLET = s.strings.title_create_wallet
-const CREATE_WALLET_ACCOUNT = s.strings.create_wallet_create_account
 const CREATE_WALLET_ACCOUNT_SETUP = s.strings.create_wallet_create_account
-const CREATE_WALLET_ACCOUNT_SELECT = s.strings.create_wallet_account_select_payment
+const CREATE_WALLET_ACCOUNT_ACTIVATE = s.strings.create_wallet_account_activate
 const CREATE_WALLET_ACCOUNT_REVIEW = s.strings.title_create_wallet
 const TRANSACTIONS_EXPORT = s.strings.title_export_transactions
 const REQUEST = s.strings.title_request
@@ -401,24 +398,6 @@ export default class Main extends Component<Props, State> {
                         />
 
                         <Scene
-                          key={Constants.CREATE_WALLET_ACCOUNT}
-                          navTransparent={true}
-                          component={CreateWalletAccountConnector}
-                          renderTitle={this.renderTitle(CREATE_WALLET_ACCOUNT)}
-                          renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderHelpButton()}
-                        />
-
-                        <Scene
-                          key={Constants.CREATE_WALLET_ACCOUNT_LOGIN}
-                          navTransparent={true}
-                          component={CreateWalletAccountLoginConnector}
-                          renderTitle={this.renderTitle(CREATE_WALLET_ACCOUNT_SETUP)}
-                          renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderHelpButton()}
-                        />
-
-                        <Scene
                           key={Constants.CREATE_WALLET_ACCOUNT_SETUP}
                           navTransparent={true}
                           component={CreateWalletAccountSetupConnector}
@@ -431,7 +410,7 @@ export default class Main extends Component<Props, State> {
                           key={Constants.CREATE_WALLET_ACCOUNT_SELECT}
                           navTransparent={true}
                           component={CreateWalletAccountSelectConnector}
-                          renderTitle={this.renderTitle(CREATE_WALLET_ACCOUNT_SELECT)}
+                          renderTitle={this.renderTitle(CREATE_WALLET_ACCOUNT_ACTIVATE)}
                           renderLeftButton={this.renderBackButton()}
                           renderRightButton={this.renderHelpButton()}
                         />

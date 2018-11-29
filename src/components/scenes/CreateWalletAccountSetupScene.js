@@ -70,7 +70,7 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
   onSetup = () => {
     Actions[Constants.CREATE_WALLET_ACCOUNT_SELECT]({
       ...this.props,
-      accountHandle: this.state.accountHandle
+      accountName: this.state.accountHandle
     })
   }
 

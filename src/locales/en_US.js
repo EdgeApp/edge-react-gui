@@ -126,7 +126,7 @@ const strings = {
   create_wallet_fiat_type_label: 'Wallet Fiat:',
   create_wallet_failed: 'Failed to create wallet',
   create_wallet_create_account: 'Create Account',
-  create_wallet_account_login: 'Account Login',
+  create_wallet_account_activate: 'Activate Account',
   create_wallet_account_instructions: 'To proceed you will be asked to log in to your existing %s account:',
   create_wallet_new_account: 'No %s account yet? Create your new account below:',
   create_wallet_account_handle_instruction: '',
@@ -140,6 +140,8 @@ const strings = {
   create_wallet_account_confirm: 'Double-check your wallet and payment info before submitting.',
   create_wallet_account_insufficient_funds: 'You will need one existing wallet with enough funds for this payment to continue.',
   create_wallet_account_amount_due: 'Amount due:',
+  create_wallet_account_handle_unavailable_modal_title: 'Account Handle Unavailable',
+  create_wallet_account_handle_unavailable_modal_message: 'Your chosen account handle, %s, is unavailable now. Please use a different one to continue.',
 
   submit: 'Submit',
   login: 'Login',

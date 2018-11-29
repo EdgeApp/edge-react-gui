@@ -168,15 +168,26 @@ export const styles = {
     marginVertical: scale(18),
     paddingHorizontal: scale(20)
   },
+  paymentAndIconArea: {
+    flexDirection: 'row'
+  },
   paymentArea: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingTop: scale(12),
-    paddingBottom: scale(12)
+    paddingVertical: scale(12),
+    flex: 1
   },
   paymentLeft: {
     fontSize: scale(16),
     color: THEME.COLORS.GRAY_2
+  },
+  paymentLeftIconWrap: {
+    paddingVertical: scale(12),
+    marginRight: 6
+  },
+  paymentLeftIcon: {
+    width: scale(22),
+    height: scale(22)
   },
   paymentRight: {
     fontSize: scale(16),
@@ -192,7 +203,8 @@ export const styles = {
   },
   accountReviewWalletNameText: {
     fontSize: scale(16),
-    color: THEME.COLORS.PRIMARY
+    color: THEME.COLORS.SECONDARY,
+    fontWeight: 'bold'
   },
   accountReviewInfoArea: {
     width: '100%',

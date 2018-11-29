@@ -65,7 +65,7 @@ const handleActivationInfo = (state: {supportedCurrencies: {[string]: boolean}, 
   }
 }
 
-const accountActivationPaymentInfo = (state = {}, action: Action) => {
+const walletAccountActivationPaymentInfo = (state = {}, action: Action) => {
   switch (action.type) {
     case 'ACCOUNT_ACTIVATION_PAYMENT_INFO':
       return action.data
@@ -79,5 +79,5 @@ export const createWallet: Reducer<CreateWalletState, Action> = combineReducers(
   isCheckingHandleAvailability,
   isHandleAvailable,
   handleActivationInfo,
-  accountActivationPaymentInfo
+  walletAccountActivationPaymentInfo
 })
