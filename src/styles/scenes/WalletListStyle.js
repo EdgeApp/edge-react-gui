@@ -229,12 +229,20 @@ export const styles = {
   },
   rowDragArea: {
     justifyContent: 'center',
-    marginRight: scale(20),
+    marginRight: scale(10),
     marginLeft: scale(4)
   },
+  rowDragCurrencyLogo: {
+    height: scale(22),
+    width: scale(22),
+    marginRight: scale(5),
+    resizeMode: 'contain',
+    alignSelf: 'center'
+  },
   rowDragIcon: {
-    position: 'relative',
-    top: scale(16)
+    top: scale(2),
+    height: scale(15),
+    width: scale(15)
   },
   rowMenuTrigger: {
     width: scale(46)
