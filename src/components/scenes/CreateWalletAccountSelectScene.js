@@ -72,6 +72,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
         publicAddress: '12q4wQJfkATzBYwTCf71aPHsxNc81qkVzu',
         nativeAmount: '100000'
       }
+      console.log('txData is: ', txData)
       this.props.createAccountTransaction(walletId, txData)
     } else {
       this.setState({

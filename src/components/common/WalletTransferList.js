@@ -19,6 +19,7 @@ export default class WalletTransferList extends Component<Props> {
 
   _selectWalletToSendConfirmation () {
     this.props.toggleWalletListModal()
+    console.log('in WalletTransferList')
     Actions[SEND_CONFIRMATION]()
   }
 
@@ -51,6 +52,7 @@ export default class WalletTransferList extends Component<Props> {
       <TouchableHighlight style={styles.individualRowWrap} onPress={this._selectWalletToSendConfirmation.bind(this)}>
         <Text style={styles.individualRowText}>
           {walletData.walletName}
+          {/* fix me */}
           ($ {walletData.amount})
         </Text>
       </TouchableHighlight>

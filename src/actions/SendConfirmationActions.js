@@ -184,9 +184,8 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
 
     edgeSignedTransaction.wallet = wallet
     edgeSignedTransaction.metadata = spendInfo.metadata
-    Actions.pop()
-    Actions.transactionDetails({ edgeTransaction: edgeSignedTransaction })
 
+    guiMakeSpendInfo.onSuccess ? guiMakeSpendInfo.onSuccess() : Actions.pop()
     const successInfo = {
       success: true,
       title: s.strings.transaction_success,

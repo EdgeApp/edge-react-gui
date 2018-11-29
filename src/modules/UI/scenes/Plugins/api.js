@@ -2,7 +2,7 @@
 
 import type { EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
 import { SEND_CONFIRMATION } from '../../../../constants/SceneKeys.js'
-import { type GuiMakeSpendInfo } from '../SendConfirmation/reducer.js'
+import { type GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
 import { Linking } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
@@ -104,7 +104,7 @@ export class PluginBridge {
         error ? reject(error) : resolve(edgeTransaction)
       }
       guiMakeSpendInfo.lockInputs = true
-      Actions[SEND_CONFIRMATION](guiMakeSpendInfo)
+      Actions[SEND_CONFIRMATION]({guiMakeSpendInfo})
     })
   }
 

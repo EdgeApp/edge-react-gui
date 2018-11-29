@@ -20,7 +20,7 @@ import {
 import { getExchangeDenomination, getExchangeRate, getSelectedCurrencyCode, getSelectedWallet } from '../../modules/UI/selectors.js'
 import { convertNativeToExchange } from '../../util/utils'
 
-const mapStateToProps = (state: State): SendConfirmationStateProps => {
+const mapStateToProps = (state: State, ownProps): SendConfirmationStateProps => {
   const sceneState = state.ui.scenes.sendConfirmation
   let fiatPerCrypto = 0
   let secondaryExchangeCurrencyCode = ''
