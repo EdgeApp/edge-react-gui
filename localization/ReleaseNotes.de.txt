@@ -1,10 +1,10 @@
 v1.5.0
 
-* EOS support
-* Bech32 address support
-* Add Changenow as an exchange provider
-* Implementing deep linking of bitcoin, ethereum, bitcoincash, dash, and edge URIs
-* Move Edge Core to independent process to boost performance and GUI responsiveness
+* EOS Support
+* Bech32 Adressen Support
+* Changenow als Tauschbörse hinzufügen
+* Deep-Linking für Bitcoin, Ethereum, Bitcoincash, Dash und Edge-URI's implementieren
+* Den Edge Core zum eigenständigen Prozess machen, um die Leistung und die GUI-Antwortzeit zu verbessern
 
 v1.4.4
 
@@ -20,17 +20,17 @@ v1.4.3
 * Monero's Bulletproofs hinzugefügt um Monero-Ausgaben zu beheben
 * Nutzern erlauben Wechselstuben zu aktivieren/deaktivieren
 * Behebe gelegentlicher "Token wird nicht unterstützt"-Fehler im Tauschbörsen-Fenster
-* Enable viewing xpub for more currencies
-* Fix crash on large accounts when tapping top right menu button immediately after login
-* Fix hang when using Simplex from some Android devices
+* Xpub-Anzeige für mehrere Währungen aktivieren
+* Behebe den Absturz großer Benutzerkonten, indem du direkt nach dem Einloggen oben rechts die Menüschaltfläche betätigst
+* Absturz bei der Nutzung von Simplex für einige Android-Geräte beheben
 
 v1.4.2
 
-* Support for Stellar
+* Unterstützung für Stellar
 * Add ability to select custom nodes for Bitcoin and similar currencies
 * Support for ShapeShift membership
-* Support Changelly.com in Exchange functionality
-* Add Spanish, Italian, and Russian translations
+* Unterstütze Changelly.com bei der Tauschbörsenfunktion
+* Füge spanische, italienische und russische Übersetzungen hinzu
 
 v1.3.4
 
