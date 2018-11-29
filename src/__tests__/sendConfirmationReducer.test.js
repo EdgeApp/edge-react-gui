@@ -8,7 +8,6 @@ import {
   newPin,
   newSpendInfo,
   reset,
-  updatePaymentProtocolTransaction,
   updateSpendPending,
   updateTransaction
 } from '../actions/SendConfirmationActions.js'
@@ -33,7 +32,7 @@ describe('sendConfirmation reducer', () => {
   describe('destination', () => {
     describe('updateTransaction', () => {
       test('with transaction and legacyAddress', () => {
-        const parsedUri = {
+        const guiMakeSpendInfo = {
           publicAddress: 'bitcoincash:qpltjkre069mp80ylcj87832ju3zt2gr6gercn9j2z',
           legacyAddress: '123412341234',
           nativeAmount: '100000',
@@ -54,14 +53,14 @@ describe('sendConfirmation reducer', () => {
         const error = null
         const forceUpdateGui = true
         const initialStateClone = clone(initialState)
-        const action = updateTransaction(transaction, parsedUri, forceUpdateGui, error)
+        const action = updateTransaction(transaction, guiMakeSpendInfo, forceUpdateGui, error)
         const actual = sendConfirmation(initialStateClone, action) // use initialState after sendConfirmation reducer not longer mutates state
 
         expect(actual).toMatchSnapshot()
       })
 
       test('with transaction and name', () => {
-        const parsedUri = {
+        const guiMakeSpendInfo = {
           publicAddress: 'bitcoincash:qpltjkre069mp80ylcj87832ju3zt2gr6gercn9j2z',
           nativeAmount: '100000',
           currencyCode: 'BCH',
@@ -83,7 +82,7 @@ describe('sendConfirmation reducer', () => {
         const error = null
         const forceUpdateGui = true
         const initialStateClone = clone(initialState)
-        const action = updateTransaction(transaction, parsedUri, forceUpdateGui, error)
+        const action = updateTransaction(transaction, guiMakeSpendInfo, forceUpdateGui, error)
         const actual = sendConfirmation(initialStateClone, action) // use initialState after sendConfirmation reducer not longer mutates state
 
         expect(actual).toMatchSnapshot()
@@ -91,18 +90,18 @@ describe('sendConfirmation reducer', () => {
 
       test('with error', () => {
         const transaction = null
-        const parsedUri = { nativeAmount: '100000' }
+        const guiMakeSpendInfo = { nativeAmount: '100000' }
         const forceUpdateGui = true
         const error = new Error()
         const initialStateClone = clone(initialState)
-        const action = updateTransaction(transaction, parsedUri, forceUpdateGui, error)
+        const action = updateTransaction(transaction, guiMakeSpendInfo, forceUpdateGui, error)
         const actual = sendConfirmation(initialStateClone, action) // use initialState after sendConfirmation reducer not longer mutates state
 
         expect(actual).toMatchSnapshot()
       })
 
       test('with pin error', () => {
-        const parsedUri = null
+        const guiMakeSpendInfo = null
         const transaction = {
           blockHeight: 0,
           currencyCode: 'BCH',
@@ -117,7 +116,7 @@ describe('sendConfirmation reducer', () => {
         const error = new Error(s.strings.incorrect_pin)
         const forceUpdateGui = true
         const initialStateClone = clone(initialState)
-        const action = updateTransaction(transaction, parsedUri, forceUpdateGui, error)
+        const action = updateTransaction(transaction, guiMakeSpendInfo, forceUpdateGui, error)
         const actual = sendConfirmation(initialStateClone, action) // use initialState after sendConfirmation reducer not longer mutates state
 
         expect(actual).toMatchSnapshot()
@@ -171,14 +170,14 @@ describe('sendConfirmation reducer', () => {
   })
 
   describe('isEditable', () => {
-    test('UPDATE_PAYMENT_PROTOCOL_TRANSACTION', () => {
+    /* test('UPDATE_PAYMENT_PROTOCOL_TRANSACTION', () => {
       const edgeTransaction = { id: '123', nativeAmount: '123' }
       const action = updatePaymentProtocolTransaction(edgeTransaction)
       const initialStateClone = clone(initialState)
       const actual = sendConfirmation(initialStateClone, action)
 
       expect(actual).toMatchSnapshot()
-    })
+    }) */
 
     test('MAKE_PAYMENT_PROTOCOL_TRANSACTION_FAILED', () => {
       const error = new Error()
