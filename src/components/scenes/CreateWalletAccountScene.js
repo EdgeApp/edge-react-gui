@@ -1,20 +1,21 @@
 // @flow
 
+import { PrimaryButton, SecondaryButton } from 'edge-components'
 import React, { Component } from 'react'
-import { View, Image } from 'react-native'
+import { Image, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
-import Text from '../../modules/UI/components/FormattedText'
+
+import eosLogo from '../../assets/images/currencies/fa_logo_eos.png'
+import steemLogo from '../../assets/images/currencies/fa_logo_steem.png'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import { PrimaryButton, SecondaryButton } from 'edge-components'
+import Text from '../../modules/UI/components/FormattedText'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import { MaterialInputOnWhite } from '../../styles/components/FormFieldStyles.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
 import type { GuiFiatType, GuiWalletType } from '../../types.js'
-import eosLogo from '../../assets/images/currencies/fa_logo_eos.png'
-import steemLogo from '../../assets/images/currencies/fa_logo_steem.png'
 
 export type CreateWalletAccountOwnProps = {
   selectedWalletType: string,
@@ -22,9 +23,7 @@ export type CreateWalletAccountOwnProps = {
 }
 type Props = CreateWalletAccountOwnProps
 
-type State = {
-
-}
+type State = {}
 
 const logos = {
   eos: eosLogo,
@@ -34,7 +33,6 @@ const logos = {
 export class CreateWalletAccount extends Component<Props> {
   constructor (props: Props) {
     super(props)
-
   }
 
   onCreateAccount = () => {

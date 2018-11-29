@@ -2,7 +2,7 @@
 
 import { makeReactNativeFolder } from 'disklet'
 import { ModalManager } from 'edge-components'
-import type { DiskletFolder, EdgeContext, EdgeCorePluginFactory, EdgeCurrencyPlugin } from 'edge-core-js'
+import type { DiskletFolder, EdgeContext, EdgeContextCallbacks, EdgeCorePluginFactory, EdgeCurrencyPlugin } from 'edge-core-js'
 import { rippleCurrencyPluginFactory, stellarCurrencyPluginFactory } from 'edge-currency-accountbased'
 import {
   bitcoinCurrencyPluginFactory,
@@ -52,14 +52,14 @@ import AddToken from '../connectors/scenes/AddTokenConnector.js'
 import ChangeMiningFeeSendConfirmation from '../connectors/scenes/ChangeMiningFeeSendConfirmationConnector.ui'
 import ChangePasswordConnector from '../connectors/scenes/ChangePasswordConnector.ui'
 import ChangePinConnector from '../connectors/scenes/ChangePinConnector.ui'
+import { CreateWalletAccountConnector } from '../connectors/scenes/CreateWalletAccountConnector.js'
+import { CreateWalletAccountLoginConnector } from '../connectors/scenes/CreateWalletAccountLoginConnector.js'
+import { CreateWalletAccountReviewConnector } from '../connectors/scenes/CreateWalletAccountReviewConnector.js'
+import { CreateWalletAccountSelectConnector } from '../connectors/scenes/CreateWalletAccountSelectConnector.js'
+import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWalletAccountSetupConnector.js'
 import { CreateWalletReview } from '../connectors/scenes/CreateWalletReviewConnector'
 import { CreateWalletSelectCrypto } from '../connectors/scenes/CreateWalletSelectCryptoConnector'
 import { CreateWalletSelectFiat } from '../connectors/scenes/CreateWalletSelectFiatConnector'
-import { CreateWalletAccountConnector } from '../connectors/scenes/CreateWalletAccountConnector.js'
-import { CreateWalletAccountLoginConnector } from '../connectors/scenes/CreateWalletAccountLoginConnector.js'
-import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWalletAccountSetupConnector.js'
-import { CreateWalletAccountSelectConnector } from '../connectors/scenes/CreateWalletAccountSelectConnector.js'
-import { CreateWalletAccountReviewConnector } from '../connectors/scenes/CreateWalletAccountReviewConnector.js'
 import { CryptoExchangeQuoteConnector } from '../connectors/scenes/CryptoExchangeQuoteConnector.js'
 import { CryptoExchangeSceneConnector as ExchangeConnector } from '../connectors/scenes/CryptoExchangeSceneConnector'
 import CurrencySettings from '../connectors/scenes/CurrencySettingsConnector'
@@ -135,7 +135,8 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   vertcoinCurrencyPluginFactory,
   zcoinCurrencyPluginFactory,
   feathercoinCurrencyPluginFactory,
-  ufoCurrencyPluginFactory
+  ufoCurrencyPluginFactory,
+  eosCurrencyPluginFactory
 ]
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
@@ -398,7 +399,7 @@ export default class Main extends Component<Props, State> {
                           renderLeftButton={this.renderBackButton()}
                           renderRightButton={this.renderEmptyButton()}
                         />
-                        
+
                         <Scene
                           key={Constants.CREATE_WALLET_ACCOUNT}
                           navTransparent={true}

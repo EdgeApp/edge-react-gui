@@ -1,12 +1,15 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Image, Alert, View } from 'react-native'
+import { Alert, Image, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
-import { scale } from '../../lib/scaling.js'
+
+import eosLogo from '../../assets/images/currencies/fa_logo_eos.png'
+import steemLogo from '../../assets/images/currencies/fa_logo_steem.png'
 import * as Constants from '../../constants/indexConstants'
+import { scale } from '../../lib/scaling.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
@@ -15,8 +18,6 @@ import { MaterialInputOnWhite } from '../../styles/components/FormFieldStyles.js
 import styles from '../../styles/scenes/CreateWalletStyle.js'
 import type { GuiFiatType, GuiWalletType } from '../../types.js'
 import { FormField } from '../common/FormField.js'
-import eosLogo from '../../assets/images/currencies/fa_logo_eos.png'
-import steemLogo from '../../assets/images/currencies/fa_logo_steem.png'
 
 const logos = {
   eos: eosLogo,
@@ -62,9 +63,7 @@ export class CreateWalletAccountLogin extends Component<Props, State> {
     this.setState({ password })
   }
 
-  onLogin = () => {
-
-  }
+  onLogin = () => {}
 
   render () {
     return (

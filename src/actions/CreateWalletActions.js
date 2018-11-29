@@ -57,3 +57,19 @@ export const createCurrencyWallet = (
       dispatch({ type: 'UI/WALLETS/CREATE_WALLET_FAILURE' })
     })
 }
+
+export const checkHandleAvailability = (handle: string) => (dispatch: Dispatch, getState: GetState) => {
+  dispatch({ type: 'IS_CHECKING_HANDLE_AVAILABILITY', data: true })
+  try {
+    let isAvailable = false
+    const random = Math.random()
+    if (random > 0.5) {
+      isAvailable = true
+    } else {
+      isAvailable = false
+    }
+    setTimeout(() => {
+      dispatch({ type: 'IS_HANDLE_AVAILABLE', data: isAvailable })
+    }, 2000 * Math.random())
+  } catch (e) {}
+}

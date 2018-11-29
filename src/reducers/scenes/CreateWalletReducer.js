@@ -27,6 +27,37 @@ const isCreatingWallet = (state = false, action: Action): boolean => {
   }
 }
 
+const isCheckingHandleAvailability = (state = false, action: Action): boolean => {
+  switch (action.type) {
+    case 'IS_CHECKING_HANDLE_AVAILABILITY': {
+      return action.data
+    }
+    case 'IS_HANDLE_AVAILABLE': {
+      return false
+    }
+    default:
+      return state
+  }
+}
+
+const isHandleAvailable = (state = false, action: Action): boolean => {
+  switch (action.type) {
+    case 'IS_CHECKING_HANDLE_AVAILABILITY': {
+      if (action.data === true) {
+        return false
+      }
+      return state
+    }
+    case 'IS_HANDLE_AVAILABLE': {
+      return action.data
+    }
+    default:
+      return state
+  }
+}
+
 export const createWallet: Reducer<CreateWalletState, Action> = combineReducers({
-  isCreatingWallet
+  isCreatingWallet,
+  isCheckingHandleAvailability,
+  isHandleAvailable
 })

@@ -5,17 +5,18 @@ import { Image, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
+
+import eosLogo from '../../assets/images/currencies/fa_logo_eos.png'
+import steemLogo from '../../assets/images/currencies/fa_logo_steem.png'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
+import Text from '../../modules/UI/components/FormattedText'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
+import WalletListModal from '../../modules/UI/components/WalletListModal/WalletListModalConnector.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
 import type { GuiFiatType, GuiWalletType } from '../../types.js'
-import Text from '../../modules/UI/components/FormattedText'
-import eosLogo from '../../assets/images/currencies/fa_logo_eos.png'
-import steemLogo from '../../assets/images/currencies/fa_logo_steem.png'
-import WalletListModal from '../../modules/UI/components/WalletListModal/WalletListModalConnector.js'
 
 const logos = {
   eos: eosLogo,
@@ -102,10 +103,18 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
           </View>
         </View>
         <View style={styles.accountReviewInfoArea}>
-          <Text style={styles.accountReviewInfoText}>{s.strings.create_wallet_account_payment_source} {walletName}</Text>
-          <Text style={styles.accountReviewInfoText}>{s.strings.create_wallet_crypto_type_label} {walletName}</Text>
-          <Text style={styles.accountReviewInfoText}>{s.strings.create_wallet_fiat_type_label} {walletName}</Text>
-          <Text style={styles.accountReviewInfoText}>{s.strings.create_wallet_name_label} {walletName}</Text>
+          <Text style={styles.accountReviewInfoText}>
+            {s.strings.create_wallet_account_payment_source} {walletName}
+          </Text>
+          <Text style={styles.accountReviewInfoText}>
+            {s.strings.create_wallet_crypto_type_label} {walletName}
+          </Text>
+          <Text style={styles.accountReviewInfoText}>
+            {s.strings.create_wallet_fiat_type_label} {walletName}
+          </Text>
+          <Text style={styles.accountReviewInfoText}>
+            {s.strings.create_wallet_name_label} {walletName}
+          </Text>
         </View>
         <View style={styles.accountReviewConfirmArea}>
           <Text style={styles.accountReviewConfirmText}>{s.strings.create_wallet_account_confirm}</Text>
@@ -137,11 +146,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
             {this.state.walletId ? this.renderSelectWallet() : this.renderPaymentReview()}
           </KeyboardAwareScrollView>
           {this.state.isModalVisible && (
-            <WalletListModal
-              topDisplacement={Constants.TRANSACTIONLIST_WALLET_DIALOG_TOP}
-              type={Constants.FROM}
-              onSelectWallet={this.onSelectWallet}
-            />
+            <WalletListModal topDisplacement={Constants.TRANSACTIONLIST_WALLET_DIALOG_TOP} type={Constants.FROM} onSelectWallet={this.onSelectWallet} />
           )}
         </View>
       </SafeAreaView>

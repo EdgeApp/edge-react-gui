@@ -105,9 +105,7 @@ export const styles = {
   textInput: {
     flex: 1
   },
-  currencyLogoWrapper: {
-
-  },
+  currencyLogoWrapper: {},
   currencyLogo: {
     alignSelf: 'center',
     marginTop: scale(24),
@@ -217,8 +215,12 @@ export const styles = {
   confirmButtonArea: {
     marginHorizontal: scale(30)
   },
-  confirmButton: {
-
+  confirmButton: {},
+  feedbackIcon: {
+    alignSelf: 'flex-end',
+    marginTop: scale(43),
+    width: scale(25),
+    height: scale(25)
   }
 }
 

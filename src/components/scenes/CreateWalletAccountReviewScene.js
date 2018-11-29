@@ -5,17 +5,18 @@ import { Image, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
+
+import eosLogo from '../../assets/images/currencies/fa_logo_eos.png'
+import steemLogo from '../../assets/images/currencies/fa_logo_steem.png'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
+import Text from '../../modules/UI/components/FormattedText'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
+import WalletListModal from '../../modules/UI/components/WalletListModal/WalletListModalConnector.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
 import type { GuiFiatType, GuiWalletType } from '../../types.js'
-import Text from '../../modules/UI/components/FormattedText'
-import eosLogo from '../../assets/images/currencies/fa_logo_eos.png'
-import steemLogo from '../../assets/images/currencies/fa_logo_steem.png'
-import WalletListModal from '../../modules/UI/components/WalletListModal/WalletListModalConnector.js'
 
 const logos = {
   eos: eosLogo,
@@ -34,9 +35,7 @@ type State = {
 export class CreateWalletAccountReview extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
-    this.state = {
-
-    }
+    this.state = {}
   }
 
   onBack = () => {
@@ -52,8 +51,7 @@ export class CreateWalletAccountReview extends Component<Props, State> {
   }
 
   onPressSelect = () => {
-    this.setState({
-    })
+    this.setState({})
   }
 
   render () {
@@ -83,11 +81,7 @@ export class CreateWalletAccountReview extends Component<Props, State> {
             </View>
           </KeyboardAwareScrollView>
           {this.state.isModalVisible && (
-            <WalletListModal
-              topDisplacement={Constants.TRANSACTIONLIST_WALLET_DIALOG_TOP}
-              type={Constants.FROM}
-              onSelectWallet={this.onSelectWallet}
-            />
+            <WalletListModal topDisplacement={Constants.TRANSACTIONLIST_WALLET_DIALOG_TOP} type={Constants.FROM} onSelectWallet={this.onSelectWallet} />
           )}
         </View>
       </SafeAreaView>
