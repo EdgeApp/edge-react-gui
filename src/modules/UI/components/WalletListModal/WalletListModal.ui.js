@@ -18,7 +18,8 @@ type Props = {
   currentScene: string,
   wallets: Object,
   onSelectWallet: (string, string) => void,
-  excludedCurrencyCode?: string
+  excludedCurrencyCode?: string,
+  includedCurrencyCodes?: Array<string>
 }
 export default class WalletListModal extends Component<Props> {
   constructor (props: any) {
@@ -27,9 +28,9 @@ export default class WalletListModal extends Component<Props> {
   }
 
   renderWalletListRow = (walletItem: { item: GuiWallet, index: number, separators: any }) => {
-    const { onSelectWallet, excludedCurrencyCode } = this.props
+    const { onSelectWallet, excludedCurrencyCode, includedCurrencyCodes } = this.props
     const wallet = walletItem.item
-    return <WalletListRowConnector onSelectWallet={onSelectWallet} wallet={wallet} excludedCurrencyCode={excludedCurrencyCode} />
+    return <WalletListRowConnector onSelectWallet={onSelectWallet} wallet={wallet} includedCurrencyCodes={includedCurrencyCodes} excludedCurrencyCode={excludedCurrencyCode} />
   }
 
   keyExtractor = (item: { item: GuiWallet, index: number, separators: any }, index: number): number => {
@@ -37,11 +38,17 @@ export default class WalletListModal extends Component<Props> {
   }
 
   render () {
-    const { wallets, topDisplacement } = this.props
+    const { wallets, topDisplacement, includedCurrencyCodes } = this.props
     const walletList = []
     const top = topDisplacement || 38
     for (const id in wallets) {
-      walletList.push(wallets[id])
+      if (includedCurrencyCodes) {
+        if (includedCurrencyCodes.indexOf(wallets[id].currencyCode) > -1) {
+          walletList.push(wallets[id])
+        }
+      } else { // still need to implement exclusion list
+        walletList.push(wallets[id])
+      }
     }
     return (
       <Animatable.View style={[styles.topLevel, { position: 'absolute', top: top, height: PLATFORM.usableHeight }]} animation="fadeInUp" duration={250}>

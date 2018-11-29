@@ -11,8 +11,8 @@ const mapStateToProps = (state: State) => ({
   isHandleAvailable: state.ui.scenes.createWallet.isHandleAvailable
 })
 
-const mapDispatchToProps = (dispatch: Dispatch): CreateWalletAccountSetupDispatchProps => ({
-  checkHandleAvailability: (handle: string) => dispatch(checkHandleAvailability(handle))
+const mapDispatchToProps = (dispatch: Dispatch, ownProps): CreateWalletAccountSetupDispatchProps => ({
+  checkHandleAvailability: (handle: string) => dispatch(checkHandleAvailability(ownProps.selectedWalletType.currencyCode, handle))
 })
 
 export const CreateWalletAccountSetupConnector = connect(

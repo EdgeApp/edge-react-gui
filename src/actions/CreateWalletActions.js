@@ -3,7 +3,6 @@ import { createSimpleConfirmModal, showModal } from 'edge-components'
 import React from 'react'
 import { Image } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-
 import walletIcon from '../assets/images/tabbar/wallets.png'
 import * as Constants from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
@@ -17,6 +16,7 @@ import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import { newSpendInfo, updateTransaction } from './SendConfirmationActions.js'
 import { selectWallet as selectWalletAction } from './WalletActions.js'
 import { PluginBridge } from '../modules/UI/scenes/Plugins/api.js'
+import { type AccountPaymentParams } from '../components/scenes/CreateWalletAccountSelectScene.js'
 
 export const updateWalletName = (walletName: string) => ({
   type: 'UPDATE_WALLET_NAME',
@@ -65,21 +65,58 @@ export const createCurrencyWallet = (
     })
 }
 
-export const checkHandleAvailability = (handle: string) => (dispatch: Dispatch, getState: GetState) => {
+export const checkHandleAvailability = (currencyCode: string, accountName: string) => async (dispatch: Dispatch, getState: GetState) => {
   dispatch({ type: 'IS_CHECKING_HANDLE_AVAILABILITY', data: true })
+  const state: State = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[currencyCode]
+  const currencyPlugin = account.currencyConfig[currencyPluginName]
   try {
-    let isAvailable = false
-    const random = Math.random()
-    if (random > 0.3) {
-      isAvailable = true
-    } else {
-      isAvailable = false
-    }
-    setTimeout(() => {
-      dispatch({ type: 'IS_HANDLE_AVAILABLE', data: isAvailable })
-    }, 1000 * Math.random())
+    const data = await currencyPlugin.otherMethods.validateAccount(accountName)
+    dispatch({ type: 'IS_HANDLE_AVAILABLE', data })
   } catch (e) {
+    console.log(e)
+    dispatch({ type: 'IS_HANDLE_AVAILABLE', data: false })
+  }
+}
 
+export const fetchAccountActivationInfo = (currencyCode: string) => async (dispatch, getState) => {
+  const state: State = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[currencyCode]
+  const currencyPlugin = account.currencyConfig[currencyPluginName]
+  try {
+    const supportedCurrencies = currencyPlugin.otherMethods.getActivationSupportedCurrencies()
+    const activationCost = currencyPlugin.otherMethods.getActivationCost()
+    const activationInfo = await Promise.all([supportedCurrencies, activationCost])
+    dispatch({
+      type: 'ACCOUNT_ACTIVATION_INFO',
+      data: {
+        supportedCurrencies: activationInfo[0],
+        activationCost: activationInfo[1]
+      }
+    })
+  } catch (e) {
+    console.log('fetchAccountActivationInfo error: ', e)
+  }
+}
+
+export const fetchAccountActivationPaymentInfo = (paymentParams: AccountPaymentParams) => async (dispatch: Dispatch, getState: GetState) => {
+  const state: State = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[paymentParams.accountCurrencyCode]
+  const currencyPlugin = account.currencyConfig[currencyPluginName]
+  try {
+    const activationQuote = await currencyPlugin.otherMethods.getAccountActivationQuote(paymentParams)
+    dispatch({
+      type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO',
+      data: {
+        ...activationQuote,
+        currencyCode: paymentParams.paymentCurrencyCode
+      }
+    })
+  } catch (e) {
+    console.log(e)
   }
 }
 

@@ -53,7 +53,7 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
       ...MaterialInputOnWhite.container,
       marginTop: scale(16),
       marginBottom: scale(24),
-      width: deviceWidth - scale(25) - scale(40)
+      width: deviceWidth - scale(25) - scale(40) // substract padding and validation icon
     }
   }
 
@@ -62,13 +62,15 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
   }
 
   handleChangeHandle = (accountHandle: string) => {
+    const { checkHandleAvailability } = this.props
     this.setState({ accountHandle })
-    this.props.checkHandleAvailability(accountHandle)
+    checkHandleAvailability(accountHandle)
   }
 
   onSetup = () => {
     Actions[Constants.CREATE_WALLET_ACCOUNT_SELECT]({
-      ...this.props
+      ...this.props,
+      accountHandle: this.state.accountHandle
     })
   }
 
