@@ -38,6 +38,6 @@ v1.3.4
 * Fix white screen hang upon login if an incoming transaction happens
 *Behebe das Adress-Wrapping im Simplex-Plugin
 * Fix double tap bug on Change Password modal
-* Fix Fiat amounts when using other country currencies
+*Fixiere die Fiat-Beträge bei der Benutzung von Währungen anderer Länder
 * Zusätzliche skalierbare und visuelle Verbesserungen
 * Andere kleine Bug-fixes
