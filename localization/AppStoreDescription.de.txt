@@ -1,6 +1,6 @@
 Titel: Edge - Bitcoin-, Ethereum-, Monero-, Ripple-Wallet
 -----
-Short description: Private, secure & easy to use. Buy, sell, send & receive Bitcoin & other crypto.
+Kurze Beschreibung: Privat, sicher & einfach zu nutzen. Bitcoin & andere Kryptowährungen kaufen, verkaufen, senden & empfangen.
 -----
 Total privacy and security in our easy to use blockchain wallet.
 
