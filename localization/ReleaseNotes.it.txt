@@ -8,11 +8,11 @@ v1.5.0
 
 v1.4.4
 
-* Add ability to split BCH wallets into BSV wallets
-* Add replay protection to BCH/BSV wallets
-* Improve login performance
-* Fix bug that caused XRP and XLM to re-query all transactions at each login
-* Improve connectivity to nodes for bitcoin related currencies (BTC, BCH, LTC, DASH, etc)
+* Aggiunta la possibilità di dividere il portafoglio BCH da quello BSV
+* Aggiunta la replay protection ai portafogli BCH/BSV
+* Migliorate le performance di login
+* Corretto un bug che costringeva i portafogli XRP e XLM a scansionare tutte le transazioni a ogni login
+* Migliorata la connettività ai nodi per Bitcoin e altre monete (BTC, BCH, LTC, DASH, ecc.)
 
 v1.4.3
 
