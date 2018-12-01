@@ -1,14 +1,16 @@
 // @flow
 
-import { createYesNoModal, showModal } from 'edge-components'
+import { createYesNoModal, showModal, createSecureTextModal } from 'edge-components'
 import type { EdgeAccount } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import React from 'react'
 import { Image } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import FAIcon from 'react-native-vector-icons/FontAwesome'
+import { THEME } from '../theme/variables/airbitz.js'
 
 import iconImage from '../assets/images/otp/OTP-badge_sm.png'
-import { CURRENCY_PLUGIN_NAMES } from '../constants/indexConstants.js'
+import { CURRENCY_PLUGIN_NAMES, FONT_AWESOME, GET_SEED } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import { restoreWalletsRequest } from '../modules/Core/Account/api.js'
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
@@ -273,5 +275,62 @@ export const saveCustomNodesList = (currencyCode: string, nodesList: Array<strin
   } catch (e) {
     console.log(e)
     throw new Error('Unable to save plugin setting')
+  }
+}
+
+export const showUnlockSettingsModal = () => async (dispatch: Dispatch, getState: GetState) => {
+  try {
+    const input = {
+      label: s.strings.confirm_password_text,
+      autoCorrect: false,
+      returnKeyType: 'go',
+      initialValue: '',
+      autoFocus: true
+    }
+    const yesButton = {
+      title: s.strings.string_done_cap
+    }
+    const noButton = {
+      title: s.strings.string_cancel_cap
+    }
+    const validateInput = async input => {
+      const state = getState()
+      const account = CORE_SELECTORS.getAccount(state)
+      const isPassword = await account.checkPassword(input)
+      if (isPassword) {
+        dispatch({ type: 'PASSWORD_USED' })
+        return {
+          success: true,
+          message: ''
+        }
+      } else {
+        return {
+          success: false,
+          message: s.strings.password_reminder_invalid
+        }
+      }
+    }
+    const unlockSettingsModal = createSecureTextModal({
+      icon: (
+        <FAIcon
+          style={{ position: 'relative', left: 1 }}
+          type={FONT_AWESOME}
+          name={GET_SEED}
+          color={THEME.COLORS.PRIMARY}
+          size={30}
+        />
+      ),
+      title: s.strings.fragment_wallets_get_seed_wallet,
+      input,
+      yesButton,
+      noButton,
+      validateInput
+    })
+    const resolveValue = await showModal(unlockSettingsModal)
+    if (resolveValue) {
+      dispatch(SETTINGS_ACTIONS.setSettingsLock(false))
+    }
+  } catch (e) {
+    throw new Error('Unable to unlock settings')
   }
 }

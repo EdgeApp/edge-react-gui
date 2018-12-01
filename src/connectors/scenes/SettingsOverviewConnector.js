@@ -9,7 +9,8 @@ import {
   restoreWallets,
   setAutoLogoutTimeInMinutesRequest,
   togglePinLoginEnabled,
-  updateTouchIdEnabled
+  updateTouchIdEnabled,
+  showUnlockSettingsModal
 } from '../../actions/SettingsActions'
 import SettingsOverview from '../../components/scenes/SettingsOverviewScene'
 import * as Constants from '../../constants/indexConstants'
@@ -54,7 +55,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   resetConfirmPasswordError: (arg: Object) => dispatch({ type: 'SET_CONFIRM_PASSWORD_ERROR', data: arg }),
   resetSendLogsStatus: () => dispatch(resetSendLogsStatus()),
   onTogglePinLoginEnabled: (enableLogin: boolean) => dispatch(togglePinLoginEnabled(enableLogin)),
-  onConfirmRestoreWallets: () => dispatch(restoreWallets())
+  onConfirmRestoreWallets: () => dispatch(restoreWallets()),
+  showUnlockSettingsModal: (bool: boolean) => dispatch(showUnlockSettingsModal(bool))
 })
 
 export default connect(

@@ -14,14 +14,12 @@ import T from '../../modules/UI/components/FormattedText/index'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
-import { ConfirmPasswordModalStyle } from '../../styles/indexStyles'
 import styles from '../../styles/scenes/SettingsStyle'
 import { getTimeWithMeasurement } from '../../util/utils'
 import RowModal from '../common/RowModal'
 import RowRoute from '../common/RowRoute'
 import RowSwitch from '../common/RowSwitch'
 import AutoLogoutModal from '../modals/AutoLogoutModal.ui'
-import ConfirmPasswordModal from '../modals/ConfirmPasswordModal.ui'
 import { RestoreWalletsModal } from '../modals/RestoreWalletsModal.ui'
 import SendLogsModal from '../modals/SendLogsModal.ui'
 
@@ -55,7 +53,6 @@ type Props = {
 type State = {
   showAutoLogoutModal: boolean,
   showSendLogsModal: boolean,
-  showConfirmPasswordModal: boolean,
   autoLogoutTimeInMinutes: number
 }
 
@@ -68,7 +65,6 @@ export default class SettingsOverview extends Component<Props, State> {
     this.state = {
       showAutoLogoutModal: false,
       showSendLogsModal: false,
-      showConfirmPasswordModal: false,
       autoLogoutTimeInMinutes: props.autoLogoutTimeInMinutes
     }
 
@@ -100,12 +96,6 @@ export default class SettingsOverview extends Component<Props, State> {
         text: pluginName.charAt(0).toUpperCase() + pluginName.slice(1),
         routeFunction: Actions[currencyKey]
       })
-    }
-  }
-  UNSAFE_componentWillReceiveProps (nextProps: Props) {
-    if (nextProps.isLocked !== this.props.isLocked && this.state.showConfirmPasswordModal) {
-      this.setState({ showConfirmPasswordModal: false })
-      this.props.resetConfirmPasswordError({ confirmPasswordError: '' })
     }
   }
 
@@ -299,32 +289,16 @@ export default class SettingsOverview extends Component<Props, State> {
           onDone={this.onDoneSendLogsModal}
           onCancel={this.onCancelSendLogsModal}
         />
-        <ConfirmPasswordModal
-          style={ConfirmPasswordModalStyle}
-          headerText={''}
-          error={this.props.confirmPasswordError}
-          showModal={this.state.showConfirmPasswordModal}
-          onDone={this.confirmPassword}
-          onCancel={this.hideConfirmPasswordModal}
-        />
       </SafeAreaView>
     )
   }
-  confirmPassword = (arg: string) => {
-    // this.setState({showConfirmPasswordModal: false})
-    this.props.confirmPassword(arg)
-  }
+
   showConfirmPasswordModal = () => {
     if (!this.props.isLocked) {
       this.props.lockSettings()
-      return
+    } else {
+      this.props.showUnlockSettingsModal()
     }
-    this.setState({ showConfirmPasswordModal: true })
-  }
-
-  hideConfirmPasswordModal = () => {
-    this.props.resetConfirmPasswordError({ confirmPasswordError: '' })
-    this.setState({ showConfirmPasswordModal: false })
   }
 
   showRestoreWalletModal = () => {
