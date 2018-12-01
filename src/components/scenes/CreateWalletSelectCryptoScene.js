@@ -163,7 +163,7 @@ export class CreateWalletSelectCrypto extends Component<Props, State> {
     )
   }
 
-  keyExtractor = (item: GuiWalletType, index: number): number => {
+  keyExtractor = (item: GuiWalletType, index: number): string => {
     return item.value
   }
 }

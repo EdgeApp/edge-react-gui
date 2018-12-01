@@ -133,7 +133,7 @@ const loadingTransactions = (state = false, action: Action) => {
   }
 }
 
-export const transactionList: Reducer<TransactionListState, Action> = combineReducers({
+export const transactionList = combineReducers({
   currentCurrencyCode,
   currentEndIndex,
   currentWalletId,

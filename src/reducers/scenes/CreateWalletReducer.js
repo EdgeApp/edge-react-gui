@@ -2,10 +2,29 @@
 
 import { type Reducer, combineReducers } from 'redux'
 
-import type { Action } from '../../modules/ReduxTypes.js'
+import type { Action } from '../../modules/Action.js'
+
+type HandleActivationInfo = {
+  supportedCurrencies: {
+    [string]: boolean
+  },
+  activationCost: string
+}
+
+type AccountActivationPaymentInfo = {
+  paymentAddress: string,
+  nativeAmount: string,
+  currencyCode: string,
+  exchangeAmount: string,
+  expirationDate: number
+}
 
 export type CreateWalletState = {
-  isCreatingWallet: boolean
+  isCreatingWallet: boolean,
+  isCheckingHandleAvailability: false,
+  isHandleAvailable: false,
+  handleActivationInfo: HandleActivationInfo,
+  walletAccountActivationPaymentInfo: AccountActivationPaymentInfo
 }
 
 const isCreatingWallet = (state = false, action: Action): boolean => {
@@ -56,7 +75,14 @@ const isHandleAvailable = (state = false, action: Action): boolean => {
   }
 }
 
-const handleActivationInfo = (state: {supportedCurrencies: {[string]: boolean}, activationCost: string} = {}, action: Action) => {
+const initialHandleActivationInfo = {
+  supportedCurrencies: {
+
+  },
+  activationCost: ''
+}
+
+const handleActivationInfo = (state = initialHandleActivationInfo, action: Action): HandleActivationInfo => {
   switch (action.type) {
     case 'ACCOUNT_ACTIVATION_INFO':
       return action.data
@@ -65,7 +91,15 @@ const handleActivationInfo = (state: {supportedCurrencies: {[string]: boolean}, 
   }
 }
 
-const walletAccountActivationPaymentInfo = (state = {}, action: Action) => {
+const initialActivationPaymentState = {
+  paymentAddress: '',
+  nativeAmount: '',
+  currencyCode: '',
+  exchangeAmount: '',
+  expirationDate: 0
+}
+
+const walletAccountActivationPaymentInfo = (state = initialActivationPaymentState, action: Action): AccountActivationPaymentInfo => {
   switch (action.type) {
     case 'ACCOUNT_ACTIVATION_PAYMENT_INFO':
       return action.data

@@ -8,7 +8,7 @@ import { type XPubModalAction } from '../actions/XPubModalActions.js'
 import { type CoreContextAction } from './Core/Context/action.js'
 import { type SendLogsAction } from './Logs/action.js'
 
-type ActionType =
+export type ActionType =
   // | 'CLOSE_DELETE_WALLET_MODAL'
   // | 'CLOSE_GETSEED_WALLET_MODAL'
   // | 'CLOSE_RESYNC_WALLET_MODAL'
@@ -129,6 +129,11 @@ type ActionType =
   // | 'UI/WALLETS/CREATE_WALLET_START'
   // | 'UI/WALLETS/CREATE_WALLET_SUCCESS'
   // | 'UI/WALLETS/CREATE_WALLET_FAILURE'
+  | 'IS_CHECKING_HANDLE_AVAILABILITY'
+  | 'ACCOUNT_ACTIVATION_INFO'
+  | 'ACCOUNT_ACTIVATION_PAYMENT_INFO'
+  | 'IS_CHECKING_HANDLE_AVAILABILITY'
+  | 'IS_HANDLE_AVAILABLE'
   | 'UI/WALLETS/REFRESH_RECEIVE_ADDRESS'
   | 'UPDATE_CURRENT_SCENE_KEY'
   | 'UI/SETTINGS/SET_LOGIN_STATUS'

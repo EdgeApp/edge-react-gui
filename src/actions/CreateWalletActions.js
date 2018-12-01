@@ -63,32 +63,18 @@ export const createCurrencyWallet = (
     })
 }
 
-export const checkHandleAvailability = (currencyCode: string, accountName: string) => async (dispatch: Dispatch, getState: GetState) => {
-  dispatch({ type: 'IS_CHECKING_HANDLE_AVAILABILITY', data: true })
-  const state: State = getState()
+export const fetchAccountActivationInfo = (currencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
   const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[currencyCode]
   const currencyPlugin = account.currencyConfig[currencyPluginName]
   try {
-    const data = await currencyPlugin.otherMethods.validateAccount(accountName)
-    dispatch({ type: 'IS_HANDLE_AVAILABLE', data })
-    return true
-  } catch (e) {
-    console.log(e)
-    dispatch({ type: 'IS_HANDLE_AVAILABLE', data: false })
-    return false
-  }
-}
-
-export const fetchAccountActivationInfo = (currencyCode: string) => async (dispatch, getState) => {
-  const state: State = getState()
-  const account = CORE_SELECTORS.getAccount(state)
-  const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[currencyCode]
-  const currencyPlugin = account.currencyConfig[currencyPluginName]
-  try {
+    // $FlowFixMe
     const supportedCurrencies = currencyPlugin.otherMethods.getActivationSupportedCurrencies()
+    // $FlowFixMe
     const activationCost = currencyPlugin.otherMethods.getActivationCost()
     const activationInfo = await Promise.all([supportedCurrencies, activationCost])
+    // $FlowFixMe
     dispatch({
       type: 'ACCOUNT_ACTIVATION_INFO',
       data: {
@@ -102,10 +88,11 @@ export const fetchAccountActivationInfo = (currencyCode: string) => async (dispa
 }
 
 export const fetchWalletAccountActivationPaymentInfo = (paymentParams: AccountPaymentParams) => async (dispatch: Dispatch, getState: GetState) => {
-  const state: State = getState()
+  const state = getState()
   const walletId = UI_SELECTORS.getSelectedWalletId(state)
   const coreWallet = CORE_SELECTORS.getWallet(state, walletId)
   try {
+    // $FlowFixMe
     const activationQuote = await coreWallet.otherMethods.getAccountActivationQuote(paymentParams)
     dispatch({
       type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO',
@@ -119,13 +106,33 @@ export const fetchWalletAccountActivationPaymentInfo = (paymentParams: AccountPa
   }
 }
 
+export const checkHandleAvailability = (currencyCode: string, accountName: string) => async (dispatch: Dispatch, getState: GetState) => {
+  dispatch({ type: 'IS_CHECKING_HANDLE_AVAILABILITY', data: true })
+  const state = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[currencyCode]
+  const currencyPlugin = account.currencyConfig[currencyPluginName]
+  try {
+    // $FlowFixMe
+    const data = await currencyPlugin.otherMethods.validateAccount(accountName)
+    dispatch({ type: 'IS_HANDLE_AVAILABLE', data })
+  } catch (e) {
+    console.log(e)
+    dispatch({ type: 'IS_HANDLE_AVAILABLE', data: true })
+  }
+}
+
 export const createAccountTransaction = (createdWalletId: string, accountName: string, paymentWalletId: string) => async (dispatch: Dispatch, getState: GetState) => {
   // check available funds
   const state = getState()
+  const account = CORE_SELECTORS.getAccount(state)
   const createdWallet = UI_SELECTORS.getWallet(state, createdWalletId)
   const createdWalletCurrencyCode = createdWallet.currencyCode
+  const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[createdWalletCurrencyCode]
+  const currencyPlugin = account.currencyConfig[currencyPluginName]
   const { paymentAddress, nativeAmount, currencyCode } = state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
-  const handleAvailability = await dispatch(checkHandleAvailability(createdWalletCurrencyCode, accountName))
+  // $FlowFixMe
+  const handleAvailability = await currencyPlugin.otherMethods.validateAccount(accountName)
   if (handleAvailability) {
     const makeSpendInfo = {
       currencyCode,

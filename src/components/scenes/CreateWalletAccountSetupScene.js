@@ -34,7 +34,17 @@ export type CreateWalletAccountSetupOwnProps = {
   selectedFiat: GuiFiatType,
   selectedWalletType: GuiWalletType
 }
-type Props = CreateWalletAccountSetupOwnProps
+
+export type CreateWalletAccountSetupStateProps = {
+  isHandleAvailable: boolean,
+  isCheckingHandleAvailability: boolean
+}
+
+export type CreateWalletAccountSetupDispatchProps = {
+  checkHandleAvailability: (string) => void
+}
+
+type Props = CreateWalletAccountSetupOwnProps & CreateWalletAccountSetupDispatchProps & CreateWalletAccountSetupStateProps
 type State = {
   accountHandle: string
 }
@@ -98,7 +108,7 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
                   label={s.strings.create_wallet_account_handle}
                   value={this.state.accountHandle}
                   returnKeyType={'next'}
-                  onSubmitEditing={this.onNext}
+                  onSubmitEditing={this.onSetup}
                   error={''}
                 />
                 <View style={{ width: scale(25), height: scale(25) }}>

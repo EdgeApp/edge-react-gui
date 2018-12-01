@@ -16,7 +16,7 @@ import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import WalletListModal from '../../modules/UI/components/WalletListModal/WalletListModalConnector.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
-import type { GuiFiatType, GuiWalletType } from '../../types.js'
+import type { GuiFiatType, GuiWallet, GuiWalletType } from '../../types.js'
 
 const logos = {
   eos: eosLogo,
@@ -30,19 +30,37 @@ export type AccountPaymentParams = {
 }
 
 export type CreateWalletAccountSelectStateProps = {
-
+  wallets: {[string]: GuiWallet},
+  paymentCurrencyCode: string,
+  paymentAddress: string,
+  exchangeAmount: string,
+  nativeAmount: string,
+  expirationDate: string,
+  supportedCurrencies: {[string]: boolean},
+  activationCost: string,
+  isCreatingWallet: boolean,
+  paymentDenominationSymbol: string
 }
 
-export type CreateWalletAccountSelectOwnProps = {
+type CreateWalletAccountSelectOwnProps = {
   selectedFiat: GuiFiatType,
   selectedWalletType: GuiWalletType,
   accountName: string
 }
-type Props = CreateWalletAccountSelectOwnProps
+
+export type CreateWalletAccountSelectDispatchProps = {
+  createAccountBasedWallet: (string, string, string, boolean, boolean) => any,
+  fetchAccountActivationInfo: (string) => void,
+  createAccountTransaction: (string, string, string) => void,
+  fetchWalletAccountActivationPaymentInfo: (AccountPaymentParams) => void
+}
+
+type Props = CreateWalletAccountSelectOwnProps & CreateWalletAccountSelectDispatchProps & CreateWalletAccountSelectStateProps
+
 type State = {
   walletName: string,
   walletId: string,
-  isModalVisisble: boolean,
+  isModalVisible: boolean,
   error: string,
   createdWallet: Promise<EdgeCurrencyWallet>
 }
@@ -65,14 +83,6 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
 
   onBack = () => {
     Actions.pop()
-  }
-
-  handleChangeHandle = (accountHandle: string) => {
-    this.setState({ accountHandle })
-  }
-
-  handleChangePassword = (password: string) => {
-    this.setState({ password })
   }
 
   onPressSelect = () => {
@@ -199,16 +209,12 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
             {this.state.walletId ? this.renderPaymentReview() : this.renderSelectWallet()}
           </ScrollView>
           {this.state.isModalVisible && (
-<<<<<<< HEAD
-            <WalletListModal topDisplacement={Constants.TRANSACTIONLIST_WALLET_DIALOG_TOP} type={Constants.FROM} onSelectWallet={this.onSelectWallet} />
-=======
             <WalletListModal
               topDisplacement={Constants.TRANSACTIONLIST_WALLET_DIALOG_TOP}
               type={Constants.FROM}
               onSelectWallet={this.onSelectWallet}
               includedCurrencyCodes={supportedCurrenciesList}
             />
->>>>>>> 7712064e... Implement getAccountActivationQuote
           )}
         </View>
       </SafeAreaView>

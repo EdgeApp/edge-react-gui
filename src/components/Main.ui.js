@@ -3,7 +3,7 @@
 import { makeReactNativeFolder } from 'disklet'
 import { ModalManager } from 'edge-components'
 import type { DiskletFolder, EdgeContext, EdgeContextCallbacks, EdgeCorePluginFactory, EdgeCurrencyPlugin } from 'edge-core-js'
-import { rippleCurrencyPluginFactory, stellarCurrencyPluginFactory } from 'edge-currency-accountbased'
+import { rippleCurrencyPluginFactory, eosCurrencyPluginFactory, stellarCurrencyPluginFactory } from 'edge-currency-accountbased'
 import {
   bitcoinCurrencyPluginFactory,
   bitcoincashCurrencyPluginFactory,
@@ -57,7 +57,6 @@ import { CreateWalletSelectCrypto } from '../connectors/scenes/CreateWalletSelec
 import { CreateWalletSelectFiat } from '../connectors/scenes/CreateWalletSelectFiatConnector'
 import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWalletAccountSetupConnector.js'
 import { CreateWalletAccountSelectConnector } from '../connectors/scenes/CreateWalletAccountSelectConnector.js'
-import { CreateWalletAccountReviewConnector } from '../connectors/scenes/CreateWalletAccountReviewConnector.js'
 import { CryptoExchangeQuoteConnector } from '../connectors/scenes/CryptoExchangeQuoteConnector.js'
 import { CryptoExchangeSceneConnector as ExchangeConnector } from '../connectors/scenes/CryptoExchangeSceneConnector'
 import CurrencySettings from '../connectors/scenes/CurrencySettingsConnector'
@@ -411,15 +410,6 @@ export default class Main extends Component<Props, State> {
                           navTransparent={true}
                           component={CreateWalletAccountSelectConnector}
                           renderTitle={this.renderTitle(CREATE_WALLET_ACCOUNT_ACTIVATE)}
-                          renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderHelpButton()}
-                        />
-
-                        <Scene
-                          key={Constants.CREATE_WALLET_ACCOUNT_REVIEW}
-                          navTransparent={true}
-                          component={CreateWalletAccountReviewConnector}
-                          renderTitle={this.renderTitle(CREATE_WALLET_ACCOUNT_REVIEW)}
                           renderLeftButton={this.renderBackButton()}
                           renderRightButton={this.renderHelpButton()}
                         />

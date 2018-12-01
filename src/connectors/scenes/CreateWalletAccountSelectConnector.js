@@ -1,6 +1,5 @@
 // @flow
 
-import { type EdgeParsedUri } from 'edge-core-js'
 import { connect } from 'react-redux'
 
 import {
@@ -19,8 +18,14 @@ const mapStateToProps = (state: State) => {
   const { supportedCurrencies, activationCost } = handleActivationInfo
   const { currencyCode, paymentAddress, exchangeAmount, nativeAmount, expirationDate } = walletAccountActivationPaymentInfo
   const isCreatingWallet = state.ui.scenes.createWallet.isCreatingWallet
-  const paymentDenomination = currencyCode ? getDefaultDenomination(state, currencyCode) : ''
-  const paymentDenominationSymbol = paymentDenomination.symbol
+  const paymentDenomination = currencyCode ? getDefaultDenomination(state, currencyCode) : {}
+  let paymentDenominationSymbol
+  if (paymentDenomination) {
+    paymentDenominationSymbol = paymentDenomination.symbol ? paymentDenomination.symbol : ''
+  } else {
+    paymentDenominationSymbol = ''
+  }
+
   return {
     paymentCurrencyCode: currencyCode,
     paymentAddress,
@@ -35,7 +40,7 @@ const mapStateToProps = (state: State) => {
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch): CreateWalletAccountSelectDispatchProps => ({
+const mapDispatchToProps = (dispatch: Dispatch) => ({
   createAccountTransaction: (createdWalletId: string, accountName: string, paymentWalletId: string) => dispatch(createAccountTransaction(createdWalletId, accountName, paymentWalletId)),
   fetchAccountActivationInfo: (currencyCode: string) => dispatch(fetchAccountActivationInfo(currencyCode)),
   fetchWalletAccountActivationPaymentInfo: (paymentInfo: AccountPaymentParams) => dispatch(fetchWalletAccountActivationPaymentInfo(paymentInfo)),
