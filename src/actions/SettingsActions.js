@@ -1,13 +1,15 @@
 // @flow
 
-import { createYesNoModal, showModal, createSecureTextModal } from 'edge-components'
+import { createYesNoModal, showModal, createInputModal, createSecureTextModal } from 'edge-components'
 import type { EdgeAccount } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import React from 'react'
 import { Image } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
-import { THEME } from '../theme/variables/airbitz.js'
+import IonIcon from 'react-native-vector-icons/Ionicons'
+import { THEME, colors } from '../theme/variables/airbitz.js'
+import { sendLogs } from '../modules/Logs/action.js'
 
 import iconImage from '../assets/images/otp/OTP-badge_sm.png'
 import { CURRENCY_PLUGIN_NAMES, FONT_AWESOME, GET_SEED } from '../constants/indexConstants.js'
@@ -320,7 +322,7 @@ export const showUnlockSettingsModal = () => async (dispatch: Dispatch, getState
           size={30}
         />
       ),
-      title: s.strings.fragment_wallets_get_seed_wallet,
+      title: s.strings.confirm_password_text,
       input,
       yesButton,
       noButton,
@@ -332,5 +334,50 @@ export const showUnlockSettingsModal = () => async (dispatch: Dispatch, getState
     }
   } catch (e) {
     throw new Error('Unable to unlock settings')
+  }
+}
+
+export const showSendLogsModal = () => async (dispatch: Dispatch, getState: GetState) => {
+  try {
+    const input = {
+      label: s.strings.settings_modal_text_entry_notes,
+      autoCorrect: false,
+      returnKeyType: 'go',
+      initialValue: '',
+      autoFocus: true
+    }
+    const yesButton = {
+      title: s.strings.string_done_cap
+    }
+    const noButton = {
+      title: s.strings.string_cancel_cap
+    }
+    // use standard icon instead?
+    const unlockSettingsModal = createInputModal({
+      icon: (
+        <IonIcon
+          name='ios-paper-plane-outline'
+          size={24}
+          color={colors.primary}
+          style={[
+            {
+              backgroundColor: THEME.COLORS.TRANSPARENT,
+              zIndex: 1015,
+              elevation: 1015
+            }
+          ]}
+        />
+      ),
+      title: s.strings.settings_button_send_logs,
+      input,
+      yesButton,
+      noButton
+    })
+    const notes = await showModal(unlockSettingsModal)
+    if (notes) {
+      dispatch(sendLogs(notes))
+    }
+  } catch (e) {
+    throw new Error('Send logs failed, please contact support')
   }
 }

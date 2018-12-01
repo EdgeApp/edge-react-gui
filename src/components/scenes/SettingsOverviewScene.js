@@ -21,7 +21,6 @@ import RowRoute from '../common/RowRoute'
 import RowSwitch from '../common/RowSwitch'
 import AutoLogoutModal from '../modals/AutoLogoutModal.ui'
 import { RestoreWalletsModal } from '../modals/RestoreWalletsModal.ui'
-import SendLogsModal from '../modals/SendLogsModal.ui'
 
 const DISABLE_TEXT = s.strings.string_disable
 
@@ -37,14 +36,11 @@ type Props = {
   lockButtonIcon: string,
   isLocked: boolean,
   confirmPasswordError: string,
-  sendLogsStatus: string,
   setAutoLogoutTimeInMinutes(number): void,
   confirmPassword(string): void,
   lockSettings(): void,
   dispatchUpdateEnableTouchIdEnable(boolean, EdgeAccount): void,
-  sendLogs(string): void,
   resetConfirmPasswordError(Object): void,
-  resetSendLogsStatus(): void,
   onTogglePinLoginEnabled(enableLogin: boolean): void,
   onConfirmRestoreWallets: () => void,
   otpResetDate: string,
@@ -52,7 +48,6 @@ type Props = {
 }
 type State = {
   showAutoLogoutModal: boolean,
-  showSendLogsModal: boolean,
   autoLogoutTimeInMinutes: number
 }
 
@@ -64,7 +59,6 @@ export default class SettingsOverview extends Component<Props, State> {
     super(props)
     this.state = {
       showAutoLogoutModal: false,
-      showSendLogsModal: false,
       autoLogoutTimeInMinutes: props.autoLogoutTimeInMinutes
     }
 
@@ -146,15 +140,6 @@ export default class SettingsOverview extends Component<Props, State> {
 
   onCancelAutoLogoutModal = () => {
     this.setState({ showAutoLogoutModal: false })
-  }
-
-  onDoneSendLogsModal = (text: string) => {
-    this.props.sendLogs(text)
-  }
-
-  onCancelSendLogsModal = () => {
-    this.setState({ showSendLogsModal: false })
-    this.props.resetSendLogsStatus()
   }
 
   render () {
@@ -256,7 +241,7 @@ export default class SettingsOverview extends Component<Props, State> {
 
             {this.currencies.map(this.renderRowRoute)}
 
-            <RowRoute disabled={false} leftText={s.strings.settings_button_send_logs} scene={'changePassword'} routeFunction={this.showSendLogsModal} />
+            <RowRoute disabled={false} leftText={s.strings.settings_button_send_logs} routeFunction={this.showSendLogsModal} />
 
             <RowModal onPress={this.showRestoreWalletModal} leftText={s.strings.restore_wallets_modal_title} />
 
@@ -283,12 +268,6 @@ export default class SettingsOverview extends Component<Props, State> {
           onDone={this.onDoneAutoLogoutModal}
           onCancel={this.onCancelAutoLogoutModal}
         />
-        <SendLogsModal
-          showModal={this.state.showSendLogsModal}
-          sendLogsStatus={this.props.sendLogsStatus}
-          onDone={this.onDoneSendLogsModal}
-          onCancel={this.onCancelSendLogsModal}
-        />
       </SafeAreaView>
     )
   }
@@ -301,6 +280,10 @@ export default class SettingsOverview extends Component<Props, State> {
     }
   }
 
+  showSendLogsModal = () => {
+    this.props.showSendLogsModal()
+  }
+
   showRestoreWalletModal = () => {
     showModal(({ onDone }) => <RestoreWalletsModal onDone={onDone} />).then(confirmed => {
       if (!confirmed) return
@@ -309,8 +292,6 @@ export default class SettingsOverview extends Component<Props, State> {
   }
 
   showAutoLogoutModal = () => this.setState({ showAutoLogoutModal: true })
-
-  showSendLogsModal = () => this.setState({ showSendLogsModal: true })
 
   renderRowRoute = (x: Object, i: number) => <RowRoute disabled={false} key={i} leftText={x.text} routeFunction={x.routeFunction} right={x.right} />
 
