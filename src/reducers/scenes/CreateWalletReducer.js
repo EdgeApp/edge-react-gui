@@ -21,8 +21,8 @@ type AccountActivationPaymentInfo = {
 
 export type CreateWalletState = {
   isCreatingWallet: boolean,
-  isCheckingHandleAvailability: false,
-  isHandleAvailable: false,
+  isCheckingHandleAvailability: boolean,
+  isHandleAvailable: boolean,
   handleActivationInfo: HandleActivationInfo,
   walletAccountActivationPaymentInfo: AccountActivationPaymentInfo
 }
@@ -49,7 +49,11 @@ const isCreatingWallet = (state = false, action: Action): boolean => {
 const isCheckingHandleAvailability = (state = false, action: Action): boolean => {
   switch (action.type) {
     case 'IS_CHECKING_HANDLE_AVAILABILITY': {
-      return action.data
+      if (action.data === true) {
+        return true
+      } else {
+        return false
+      }
     }
     case 'IS_HANDLE_AVAILABLE': {
       return false
@@ -68,7 +72,11 @@ const isHandleAvailable = (state = false, action: Action): boolean => {
       return state
     }
     case 'IS_HANDLE_AVAILABLE': {
-      return action.data
+      if (action.data === true) {
+        return true
+      } else {
+        return false
+      }
     }
     default:
       return state
@@ -85,7 +93,11 @@ const initialHandleActivationInfo = {
 const handleActivationInfo = (state = initialHandleActivationInfo, action: Action): HandleActivationInfo => {
   switch (action.type) {
     case 'ACCOUNT_ACTIVATION_INFO':
-      return action.data
+      if (action.data) {
+        return action.data
+      } else {
+        return state
+      }
     default:
       return state
   }
@@ -102,7 +114,11 @@ const initialActivationPaymentState = {
 const walletAccountActivationPaymentInfo = (state = initialActivationPaymentState, action: Action): AccountActivationPaymentInfo => {
   switch (action.type) {
     case 'ACCOUNT_ACTIVATION_PAYMENT_INFO':
-      return action.data
+      if (action.data) {
+        return action.data
+      } else {
+        return state
+      }
     default:
       return state
   }

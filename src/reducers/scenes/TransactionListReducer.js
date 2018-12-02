@@ -1,18 +1,18 @@
 // @flow
 
-import { type Reducer, combineReducers } from 'redux'
+import { combineReducers } from 'redux'
 
 import type { Action } from '../../modules/ReduxTypes.js'
 import type { TransactionListTx } from '../../types.js'
 
 export type TransactionListState = {
-  +currentCurrencyCode: string,
-  +currentEndIndex: number,
-  +currentWalletId: string,
-  +numTransactions: number,
-  +searchVisible: boolean,
-  +transactions: Array<TransactionListTx>,
-  +updatingBalance: boolean
+  currentCurrencyCode: string,
+  currentEndIndex: number,
+  currentWalletId: string,
+  numTransactions: number,
+  searchVisible: boolean,
+  transactions: Array<TransactionListTx>,
+  updatingBalance: boolean
 }
 
 const transactions = (state = [], action: Action): Array<TransactionListTx> => {
@@ -118,26 +118,10 @@ const updatingBalance = (state = true, action: Action): boolean => {
   }
 }
 
-const loadingTransactions = (state = false, action: Action) => {
-  switch (action.type) {
-    case 'UI/SCENES/TRANSACTION_LIST/START_TRANSACTIONS_LOADING': {
-      return true
-    }
-
-    case 'UI/SCENES/TRANSACTION_LIST/END_TRANSACTIONS_LOADING': {
-      return false
-    }
-
-    default:
-      return state
-  }
-}
-
 export const transactionList = combineReducers({
   currentCurrencyCode,
   currentEndIndex,
   currentWalletId,
-  loadingTransactions,
   numTransactions,
   searchVisible,
   transactions,
