@@ -16,7 +16,9 @@ export type GuiMakeSpendInfo = {
   networkFeeOption?: string,
   publicAddress?: string,
   spendTargets?: Array<EdgeSpendTarget>,
-  uniqueIdentifier?: string
+  lockInputs?: boolean,
+  uniqueIdentifier?: string,
+  onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void
 }
 
 export type SendConfirmationState = {
@@ -26,7 +28,7 @@ export type SendConfirmationState = {
 
   nativeAmount: string,
 
-  parsedUri: GuiMakeSpendInfo,
+  guiMakeSpendInfo: GuiMakeSpendInfo,
   spendInfo: EdgeSpendInfo | null,
 
   isEditable: boolean,
@@ -43,27 +45,27 @@ export const sendConfirmationLegacy = (state: SendConfirmationState = initialSta
   switch (action.type) {
     case 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION': {
       if (!action.data) throw new Error('Invalid Action')
-      const { parsedUri, forceUpdateGui } = action.data
+      const { guiMakeSpendInfo, forceUpdateGui } = action.data
       let forceUpdateGuiCounter = state.forceUpdateGuiCounter
       if (forceUpdateGui) {
         forceUpdateGuiCounter++
       }
-      if (!parsedUri) return { ...state, forceUpdateGuiCounter }
+      if (!guiMakeSpendInfo) return { ...state, forceUpdateGuiCounter }
 
-      const { metadata = {}, customNetworkFee, ...others } = parsedUri
-      if (!isEqual(state.parsedUri.metadata, metadata)) {
-        state.parsedUri.metadata = { ...state.parsedUri.metadata, ...metadata }
+      const { metadata = {}, customNetworkFee, ...others } = guiMakeSpendInfo
+      if (!isEqual(state.guiMakeSpendInfo.metadata, metadata)) {
+        state.guiMakeSpendInfo.metadata = { ...state.guiMakeSpendInfo.metadata, ...metadata }
       }
 
-      if (customNetworkFee && !isEqual(state.parsedUri.customNetworkFee, customNetworkFee)) {
-        state.parsedUri.customNetworkFee = customNetworkFee
+      if (customNetworkFee && !isEqual(state.guiMakeSpendInfo.customNetworkFee, customNetworkFee)) {
+        state.guiMakeSpendInfo.customNetworkFee = customNetworkFee
       }
 
       return {
         ...state,
         forceUpdateGuiCounter,
-        parsedUri: {
-          ...state.parsedUri,
+        guiMakeSpendInfo: {
+          ...state.guiMakeSpendInfo,
           ...others
         }
       }
@@ -72,18 +74,18 @@ export const sendConfirmationLegacy = (state: SendConfirmationState = initialSta
     case 'UI/SEND_CONFIMATION/NEW_SPEND_INFO': {
       if (!action.data) throw new Error('Invalid Action')
       const { spendInfo } = action.data
-      const parsedUri = {
-        ...state.parsedUri,
-        networkFeeOption: spendInfo.networkFeeOption || state.parsedUri.networkFeeOption,
-        customNetworkFee: spendInfo.customNetworkFee || state.parsedUri.customNetworkFee,
-        publicAddress: spendInfo.spendTargets[0].publicAddress || state.parsedUri.publicAddress,
-        nativeAmount: spendInfo.spendTargets[0].nativeAmount || state.parsedUri.nativeAmount,
-        metadata: { ...state.parsedUri.metadata, ...spendInfo.metadata }
+      const guiMakeSpendInfo = {
+        ...state.guiMakeSpendInfo,
+        networkFeeOption: spendInfo.networkFeeOption || state.guiMakeSpendInfo.networkFeeOption,
+        customNetworkFee: spendInfo.customNetworkFee || state.guiMakeSpendInfo.customNetworkFee,
+        publicAddress: spendInfo.spendTargets[0].publicAddress || state.guiMakeSpendInfo.publicAddress,
+        nativeAmount: spendInfo.spendTargets[0].nativeAmount || state.guiMakeSpendInfo.nativeAmount,
+        metadata: { ...state.guiMakeSpendInfo.metadata, ...spendInfo.metadata }
       }
 
       return {
         ...state,
-        parsedUri
+        guiMakeSpendInfo
       }
     }
 
@@ -102,8 +104,8 @@ export const nativeAmount: Reducer<string, Action> = (state = '0', action) => {
 
     case 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION': {
       if (!action.data) throw new Error('Invalid Action')
-      if (!action.data.parsedUri) return state
-      return action.data.parsedUri.nativeAmount || state || '0'
+      if (!action.data.guiMakeSpendInfo) return state
+      return action.data.guiMakeSpendInfo.nativeAmount || state || '0'
     }
 
     default:
@@ -151,9 +153,9 @@ export const transactionMetadata = (state: EdgeMetadata | null = null, action: A
   switch (action.type) {
     case 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION': {
       if (!action.data) throw new Error('Invalid Action')
-      if (!action.data.parsedUri || !action.data.parsedUri.metadata || !action.data.parsedUri.metadata.name) return state
+      if (!action.data.guiMakeSpendInfo || !action.data.guiMakeSpendInfo.metadata || !action.data.guiMakeSpendInfo.metadata.name) return state
 
-      return action.data.parsedUri.metadata || null
+      return action.data.guiMakeSpendInfo.metadata || null
     }
 
     case 'UI/SEND_CONFIMATION/NEW_SPEND_INFO': {
@@ -185,12 +187,13 @@ export const error = (state: Error | null = null, action: Action) => {
 
 export const isEditable = (state: boolean = true, action: Action) => {
   switch (action.type) {
-    case 'UI/SEND_CONFIMATION/UPDATE_PAYMENT_PROTOCOL_TRANSACTION':
-    case 'UI/SEND_CONFIMATION/MAKE_SPEND_FAILED': {
+    case 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION':
       if (!action.data) throw new Error('Invalid Action')
-      return false
-    }
-
+      const { guiMakeSpendInfo } = action.data
+      if (guiMakeSpendInfo && guiMakeSpendInfo.lockInputs) {
+        return false
+      }
+      return state
     default:
       return state
   }
@@ -222,7 +225,6 @@ export const pending = (state: boolean = false, action: Action) => {
 
 export const transaction = (state: EdgeTransaction | null = null, action: Action) => {
   switch (action.type) {
-    case 'UI/SEND_CONFIMATION/UPDATE_PAYMENT_PROTOCOL_TRANSACTION':
     case 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION': {
       if (!action.data) throw new Error('Invalid Action')
       return action.data.transaction

@@ -21,6 +21,7 @@ import Recipient from '../../modules/UI/components/Recipient/index.js'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import ABSlider from '../../modules/UI/components/Slider/index.js'
 import { convertCurrencyFromExchangeRates } from '../../modules/UI/selectors.js'
+import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import styles, { rawStyles } from '../../styles/scenes/SendConfirmationStyle.js'
 import type { GuiCurrencyInfo, GuiDenomination } from '../../types'
 import { convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../util/utils.js'
@@ -60,16 +61,16 @@ export type SendConfirmationDispatchProps = {
   signBroadcastAndSave: () => any,
   reset: () => any,
   updateAmount: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) => any,
-  uniqueIdentifierUpdated: (uniqueIdentifier: string) => any,
+  sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo) => any,
   onChangePin: (pin: string) => mixed,
   uniqueIdentifierButtonPressed: () => void
 }
 
-type routerParam = {
-  data: string // This is passed by the react-native-router-flux when you put a parameter on Action.route()
+type SendConfirmationRouterParams = {
+  guiMakeSpendInfo: GuiMakeSpendInfo
 }
 
-type Props = SendConfirmationStateProps & SendConfirmationDispatchProps & routerParam
+type Props = SendConfirmationStateProps & SendConfirmationDispatchProps & SendConfirmationRouterParams
 
 type State = {|
   secondaryDisplayDenomination: GuiDenomination,
@@ -100,13 +101,21 @@ export class SendConfirmation extends Component<Props, State> {
     }
   }
 
-  UNSAFE_componentWillMount () {
-    this.setState({ keyboardVisible: this.props.data === 'fromScan' })
-  }
   componentDidMount () {
     const secondaryDisplayDenomination = getDenomFromIsoCode(this.props.fiatCurrencyCode)
     const overridePrimaryExchangeAmount = bns.div(this.props.nativeAmount, this.props.primaryExchangeDenomination.multiplier, DIVIDE_PRECISION)
-    this.setState({ secondaryDisplayDenomination, overridePrimaryExchangeAmount })
+    const guiMakeSpendInfo = this.props.guiMakeSpendInfo
+    let keyboardVisible = true
+    // Do not show the keyboard if the caller passed in an amount
+    if (guiMakeSpendInfo.nativeAmount) {
+      if (!bns.eq(guiMakeSpendInfo.nativeAmount, '0')) {
+        keyboardVisible = false
+      }
+    } else if (guiMakeSpendInfo.spendTargets && guiMakeSpendInfo.spendTargets.length) {
+      keyboardVisible = false
+    }
+    this.props.sendConfirmationUpdateTx(this.props.guiMakeSpendInfo)
+    this.setState({ secondaryDisplayDenomination, overridePrimaryExchangeAmount, keyboardVisible })
   }
 
   componentDidUpdate (prevProps: Props) {
@@ -275,7 +284,7 @@ export class SendConfirmation extends Component<Props, State> {
           </View>
         </Gradient>
 
-        {isTaggableCurrency && <UniqueIdentifierModal onConfirm={this.props.uniqueIdentifierUpdated} currencyCode={currencyCode} />}
+        <UniqueIdentifierModal onConfirm={uniqueIdentifier => this.props.sendConfirmationUpdateTx({ uniqueIdentifier })} currencyCode={currencyCode} />
       </SafeAreaView>
     )
   }

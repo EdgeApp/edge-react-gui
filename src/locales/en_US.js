@@ -137,6 +137,7 @@ const strings = {
   request_share_edge_request: 'Share Edge Request',
   select_recv_wallet: 'Select Receiving Wallet',
   select_src_wallet: 'Select Source Wallet',
+  select_destination_wallet: 'Select destination wallet:',
   send_confirmation_fee_line: 'Fee: + %s (%s)',
   send_confirmation_max_button_title: 'Send Max Amount',
   send_confirmation_slide_to_confirm: 'Slide to Confirm',
