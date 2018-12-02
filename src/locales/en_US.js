@@ -412,6 +412,12 @@ const strings = {
   kyc_message: 'The available exchange for this transaction requires a ShapeShift account. Please create an account to continue.',
   scan_camera_permission_denied: 'To scan a QR Code, please enable Camera access in Settings',
   open_settings: 'Open Settings',
+  currency_mismatch_popup_title: 'Currency Mismatch',
+  currency_mismatch_popup_body: 'You scanned a QR code requesting an address for %s. Please switch to a %s wallet first and re-scan the QR code.',
+  request_crypto_address_modal_title: 'Request Address',
+  request_crypto_address_modal_body:
+    'The service "%s" is requesting an address from your %s wallet to send you money. The address will be sent to the following URL:',
+  request_crypto_address_modal_send_address_button: 'Send Address',
   kyc_something_wrong: 'Something went wrong',
   kyc_something_wrong_message: 'Please try again later',
   kyc_ss_finish: 'Please complete ID verification for %s',
