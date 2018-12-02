@@ -24,10 +24,19 @@ test('initialState', () => {
     },
     createWallet: {
       isCreatingWallet: false,
-      walletAccountActivationPaymentInfo: {},
+      walletAccountActivationPaymentInfo: {
+        paymentAddress: '',
+        nativeAmount: '',
+        currencyCode: '',
+        exchangeAmount: '',
+        expirationDate: 0
+      },
       isCheckingHandleAvailability: false,
       isHandleAvailable: false,
-      handleActivationInfo: {}
+      handleActivationInfo: {
+        supportedCurrencies: {},
+        activationCost: ''
+      }
     },
     dimensions: {
       keyboardHeight: 0
@@ -80,7 +89,6 @@ test('initialState', () => {
       searchVisible: false,
       transactions: [],
       updatingBalance: true,
-      loadingTransactions: false,
       currentCurrencyCode: '',
       currentEndIndex: 0,
       numTransactions: 0,

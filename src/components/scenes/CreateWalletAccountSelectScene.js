@@ -1,11 +1,11 @@
 // @flow
 
-import React, { Component } from 'react'
 import type { EdgeCurrencyWallet } from 'edge-core-js'
-import { Image, ScrollView, View, ActivityIndicator } from 'react-native'
+import React, { Component } from 'react'
+import { ActivityIndicator, Image, ScrollView, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
-import { fixFiatCurrencyCode } from '../../util/utils.js'
+
 import eosLogo from '../../assets/images/currencies/fa_logo_eos.png'
 import steemLogo from '../../assets/images/currencies/fa_logo_steem.png'
 import * as Constants from '../../constants/indexConstants'
@@ -17,6 +17,7 @@ import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import WalletListModal from '../../modules/UI/components/WalletListModal/WalletListModalConnector.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
 import type { GuiFiatType, GuiWallet, GuiWalletType } from '../../types.js'
+import { fixFiatCurrencyCode } from '../../util/utils.js'
 
 const logos = {
   eos: eosLogo,
@@ -30,13 +31,13 @@ export type AccountPaymentParams = {
 }
 
 export type CreateWalletAccountSelectStateProps = {
-  wallets: {[string]: GuiWallet},
+  wallets: { [string]: GuiWallet },
   paymentCurrencyCode: string,
   paymentAddress: string,
   exchangeAmount: string,
   nativeAmount: string,
   expirationDate: string,
-  supportedCurrencies: {[string]: boolean},
+  supportedCurrencies: { [string]: boolean },
   activationCost: string,
   isCreatingWallet: boolean,
   paymentDenominationSymbol: string
@@ -50,9 +51,9 @@ type CreateWalletAccountSelectOwnProps = {
 
 export type CreateWalletAccountSelectDispatchProps = {
   createAccountBasedWallet: (string, string, string, boolean, boolean) => any,
-  fetchAccountActivationInfo: (string) => void,
+  fetchAccountActivationInfo: string => void,
   createAccountTransaction: (string, string, string) => void,
-  fetchWalletAccountActivationPaymentInfo: (AccountPaymentParams) => void
+  fetchWalletAccountActivationPaymentInfo: AccountPaymentParams => void
 }
 
 type Props = CreateWalletAccountSelectOwnProps & CreateWalletAccountSelectDispatchProps & CreateWalletAccountSelectStateProps
@@ -130,7 +131,9 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
         </View>
         <View style={styles.paymentArea}>
           <Text style={styles.paymentLeft}>{s.strings.create_wallet_account_amount_due}</Text>
-          <Text style={styles.paymentRight}>{activationCost} {currencyCode}</Text>
+          <Text style={styles.paymentRight}>
+            {activationCost} {currencyCode}
+          </Text>
         </View>
       </View>
     )
@@ -156,21 +159,37 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
       <View>
         <View style={styles.selectPaymentLower}>
           <View style={styles.accountReviewWalletNameArea}>
-            <Text style={styles.accountReviewWalletNameText}>{name}:{paymentCurrencyCode}</Text>
+            <Text style={styles.accountReviewWalletNameText}>
+              {name}:{paymentCurrencyCode}
+            </Text>
           </View>
           <View style={styles.paymentAndIconArea}>
-            <View style={styles.paymentLeftIconWrap}>{symbolImageDarkMono && <Image style={styles.paymentLeftIcon} source={{ uri: symbolImageDarkMono }} resizeMode="cover" />}</View>
+            <View style={styles.paymentLeftIconWrap}>
+              {symbolImageDarkMono && <Image style={styles.paymentLeftIcon} source={{ uri: symbolImageDarkMono }} resizeMode="cover" />}
+            </View>
             <View style={styles.paymentArea}>
-              <Text style={styles.paymentLeft}>{paymentDenominationSymbol} {exchangeAmount} {paymentCurrencyCode}</Text>
-              <Text style={styles.paymentRight}>{activationCost} {selectedWalletType.currencyCode}</Text>
+              <Text style={styles.paymentLeft}>
+                {paymentDenominationSymbol} {exchangeAmount} {paymentCurrencyCode}
+              </Text>
+              <Text style={styles.paymentRight}>
+                {activationCost} {selectedWalletType.currencyCode}
+              </Text>
             </View>
           </View>
         </View>
         <View style={styles.accountReviewInfoArea}>
-          <Text style={styles.accountReviewInfoText}>{s.strings.create_wallet_account_payment_source} {name}</Text>
-          <Text style={styles.accountReviewInfoText}>{s.strings.create_wallet_crypto_type_label} {paymentCurrencyCode}</Text>
-          <Text style={styles.accountReviewInfoText}>{s.strings.create_wallet_fiat_type_label} {selectedFiat.label}</Text>
-          <Text style={styles.accountReviewInfoText}>{s.strings.create_wallet_name_label} {accountName}</Text>
+          <Text style={styles.accountReviewInfoText}>
+            {s.strings.create_wallet_account_payment_source} {name}
+          </Text>
+          <Text style={styles.accountReviewInfoText}>
+            {s.strings.create_wallet_crypto_type_label} {paymentCurrencyCode}
+          </Text>
+          <Text style={styles.accountReviewInfoText}>
+            {s.strings.create_wallet_fiat_type_label} {selectedFiat.label}
+          </Text>
+          <Text style={styles.accountReviewInfoText}>
+            {s.strings.create_wallet_name_label} {accountName}
+          </Text>
         </View>
         <View style={styles.accountReviewConfirmArea}>
           <Text style={styles.accountReviewConfirmText}>{s.strings.create_wallet_account_confirm}</Text>

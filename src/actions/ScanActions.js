@@ -9,12 +9,12 @@ import { ADD_TOKEN, EDGE_LOGIN, SEND_CONFIRMATION } from '../constants/indexCons
 import s from '../locales/strings.js'
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
 import type { Dispatch, GetState } from '../modules/ReduxTypes.js'
+import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
 import { denominationToDecimalPlaces, isEdgeLogin, noOp } from '../util/utils.js'
 import { loginWithEdge } from './EdgeLoginActions.js'
 import { activated as legacyAddressModalActivated, deactivated as legacyAddressModalDeactivated } from './LegacyAddressModalActions.js'
 import { activated as privateKeyModalActivated } from './PrivateKeyModalActions.js'
 import { paymentProtocolUriReceived } from './SendConfirmationActions.js'
-import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
 
 export const UPDATE_RECIPIENT_ADDRESS = 'UPDATE_RECIPIENT_ADDRESS'
 

@@ -4,11 +4,11 @@ import { connect } from 'react-redux'
 
 import {
   createAccountTransaction,
+  createCurrencyWallet,
   fetchAccountActivationInfo,
-  fetchWalletAccountActivationPaymentInfo,
-  createCurrencyWallet
+  fetchWalletAccountActivationPaymentInfo
 } from '../../actions/CreateWalletActions.js'
-import { CreateWalletAccountSelect, type AccountPaymentParams } from '../../components/scenes/CreateWalletAccountSelectScene'
+import { type AccountPaymentParams, CreateWalletAccountSelect } from '../../components/scenes/CreateWalletAccountSelectScene'
 import type { Dispatch, State } from '../../modules/ReduxTypes'
 import { getDefaultDenomination } from '../../modules/UI/selectors.js'
 
@@ -41,10 +41,12 @@ const mapStateToProps = (state: State) => {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  createAccountTransaction: (createdWalletId: string, accountName: string, paymentWalletId: string) => dispatch(createAccountTransaction(createdWalletId, accountName, paymentWalletId)),
+  createAccountTransaction: (createdWalletId: string, accountName: string, paymentWalletId: string) =>
+    dispatch(createAccountTransaction(createdWalletId, accountName, paymentWalletId)),
   fetchAccountActivationInfo: (currencyCode: string) => dispatch(fetchAccountActivationInfo(currencyCode)),
   fetchWalletAccountActivationPaymentInfo: (paymentInfo: AccountPaymentParams) => dispatch(fetchWalletAccountActivationPaymentInfo(paymentInfo)),
-  createAccountBasedWallet: (walletName: string, walletType: string, fiatCurrencyCode: string, popScene: boolean, selectWallet: boolean) => dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode, popScene, selectWallet))
+  createAccountBasedWallet: (walletName: string, walletType: string, fiatCurrencyCode: string, popScene: boolean, selectWallet: boolean) =>
+    dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode, popScene, selectWallet))
 })
 
 export const CreateWalletAccountSelectConnector = connect(

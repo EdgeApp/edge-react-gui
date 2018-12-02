@@ -21,9 +21,9 @@ import Recipient from '../../modules/UI/components/Recipient/index.js'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import ABSlider from '../../modules/UI/components/Slider/index.js'
 import { convertCurrencyFromExchangeRates } from '../../modules/UI/selectors.js'
+import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import styles, { rawStyles } from '../../styles/scenes/SendConfirmationStyle.js'
 import type { GuiCurrencyInfo, GuiDenomination } from '../../types'
-import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import { convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../util/utils.js'
 
 const DIVIDE_PRECISION = 18

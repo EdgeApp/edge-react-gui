@@ -41,7 +41,7 @@ export type CreateWalletAccountSetupStateProps = {
 }
 
 export type CreateWalletAccountSetupDispatchProps = {
-  checkHandleAvailability: (string) => void
+  checkHandleAvailability: string => void
 }
 
 type Props = CreateWalletAccountSetupOwnProps & CreateWalletAccountSetupDispatchProps & CreateWalletAccountSetupStateProps

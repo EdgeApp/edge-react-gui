@@ -30,7 +30,14 @@ export default class WalletListModal extends Component<Props> {
   renderWalletListRow = (walletItem: { item: GuiWallet, index: number, separators: any }) => {
     const { onSelectWallet, excludedCurrencyCode, includedCurrencyCodes } = this.props
     const wallet = walletItem.item
-    return <WalletListRowConnector onSelectWallet={onSelectWallet} wallet={wallet} includedCurrencyCodes={includedCurrencyCodes} excludedCurrencyCode={excludedCurrencyCode} />
+    return (
+      <WalletListRowConnector
+        onSelectWallet={onSelectWallet}
+        wallet={wallet}
+        includedCurrencyCodes={includedCurrencyCodes}
+        excludedCurrencyCode={excludedCurrencyCode}
+      />
+    )
   }
 
   keyExtractor = (item: { item: GuiWallet, index: number, separators: any }, index: number): number => {
@@ -46,7 +53,8 @@ export default class WalletListModal extends Component<Props> {
         if (includedCurrencyCodes.indexOf(wallets[id].currencyCode) > -1) {
           walletList.push(wallets[id])
         }
-      } else { // still need to implement exclusion list
+      } else {
+        // still need to implement exclusion list
         walletList.push(wallets[id])
       }
     }

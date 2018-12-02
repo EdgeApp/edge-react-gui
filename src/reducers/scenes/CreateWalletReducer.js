@@ -84,9 +84,7 @@ const isHandleAvailable = (state = false, action: Action): boolean => {
 }
 
 const initialHandleActivationInfo = {
-  supportedCurrencies: {
-
-  },
+  supportedCurrencies: {},
   activationCost: ''
 }
 

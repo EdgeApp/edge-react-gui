@@ -1,19 +1,20 @@
 // @flow
 import { createSimpleConfirmModal, showModal } from 'edge-components'
 import React from 'react'
-import { sprintf } from 'sprintf-js'
-import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import { Actions } from 'react-native-router-flux'
+import { sprintf } from 'sprintf-js'
+
+import { type AccountPaymentParams } from '../components/scenes/CreateWalletAccountSelectScene.js'
 import * as Constants from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import * as ACCOUNT_API from '../modules/Core/Account/api.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import type { Dispatch, GetState } from '../modules/ReduxTypes.js'
+import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import { errorModal } from '../modules/UI/components/Modals/ErrorModal.js'
+import { PluginBridge } from '../modules/UI/scenes/Plugins/api.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import { selectWallet as selectWalletAction } from './WalletActions.js'
-import { PluginBridge } from '../modules/UI/scenes/Plugins/api.js'
-import { type AccountPaymentParams } from '../components/scenes/CreateWalletAccountSelectScene.js'
 
 export const updateWalletName = (walletName: string) => ({
   type: 'UPDATE_WALLET_NAME',
@@ -122,7 +123,10 @@ export const checkHandleAvailability = (currencyCode: string, accountName: strin
   }
 }
 
-export const createAccountTransaction = (createdWalletId: string, accountName: string, paymentWalletId: string) => async (dispatch: Dispatch, getState: GetState) => {
+export const createAccountTransaction = (createdWalletId: string, accountName: string, paymentWalletId: string) => async (
+  dispatch: Dispatch,
+  getState: GetState
+) => {
   // check available funds
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
@@ -141,10 +145,11 @@ export const createAccountTransaction = (createdWalletId: string, accountName: s
       lockInputs: true,
       onSuccess: () => Actions[Constants.WALLET_LIST_SCENE]()
     }
-    dispatch({type: 'UI/WALLETS/SELECT_WALLET', data: {currencyCode, walletId: paymentWalletId}})
+    dispatch({ type: 'UI/WALLETS/SELECT_WALLET', data: { currencyCode, walletId: paymentWalletId } })
     const pluginBridge = new PluginBridge()
     pluginBridge.makeSpendRequest(makeSpendInfo)
-  } else { // if handle is now unavailable
+  } else {
+    // if handle is now unavailable
     dispatch(createHandleUnavailableModal(createdWalletId, accountName))
   }
 }

@@ -3,14 +3,7 @@
 
 import { clone } from 'ramda'
 
-import {
-  makeSpendFailed,
-  newPin,
-  newSpendInfo,
-  reset,
-  updateSpendPending,
-  updateTransaction
-} from '../actions/SendConfirmationActions.js'
+import { makeSpendFailed, newPin, newSpendInfo, reset, updateSpendPending, updateTransaction } from '../actions/SendConfirmationActions.js'
 import s from '../locales/strings.js'
 import { initialState } from '../modules/UI/scenes/SendConfirmation/selectors.js'
 import { sendConfirmation } from '../reducers/scenes/SendConfirmationReducer.js'

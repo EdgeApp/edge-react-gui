@@ -81,7 +81,7 @@ export const getDefaultDenomination = (state: State, currencyCode: string) => {
   const settings = state.ui.settings
   const currencySettings = settings[currencyCode]
   const defaultMultiplier = currencySettings.denomination
-  const denomination = _.find((currencySettings.denominations), denom => denom.multiplier === defaultMultiplier)
+  const denomination = _.find(currencySettings.denominations, denom => denom.multiplier === defaultMultiplier)
   return denomination
 }
 

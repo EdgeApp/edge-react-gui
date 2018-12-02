@@ -2,8 +2,8 @@
 
 import { makeReactNativeFolder } from 'disklet'
 import { ModalManager } from 'edge-components'
-import type { DiskletFolder, EdgeContext, EdgeContextCallbacks, EdgeCorePluginFactory, EdgeCurrencyPlugin } from 'edge-core-js'
-import { rippleCurrencyPluginFactory, eosCurrencyPluginFactory, stellarCurrencyPluginFactory } from 'edge-currency-accountbased'
+import type { DiskletFolder, EdgeContext, EdgeCorePluginFactory, EdgeCurrencyPlugin } from 'edge-core-js'
+import { rippleCurrencyPluginFactory, stellarCurrencyPluginFactory } from 'edge-currency-accountbased'
 import {
   bitcoinCurrencyPluginFactory,
   bitcoincashCurrencyPluginFactory,
@@ -52,11 +52,11 @@ import AddToken from '../connectors/scenes/AddTokenConnector.js'
 import ChangeMiningFeeSendConfirmation from '../connectors/scenes/ChangeMiningFeeSendConfirmationConnector.ui'
 import ChangePasswordConnector from '../connectors/scenes/ChangePasswordConnector.ui'
 import ChangePinConnector from '../connectors/scenes/ChangePinConnector.ui'
+import { CreateWalletAccountSelectConnector } from '../connectors/scenes/CreateWalletAccountSelectConnector.js'
+import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWalletAccountSetupConnector.js'
 import { CreateWalletReview } from '../connectors/scenes/CreateWalletReviewConnector'
 import { CreateWalletSelectCrypto } from '../connectors/scenes/CreateWalletSelectCryptoConnector'
 import { CreateWalletSelectFiat } from '../connectors/scenes/CreateWalletSelectFiatConnector'
-import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWalletAccountSetupConnector.js'
-import { CreateWalletAccountSelectConnector } from '../connectors/scenes/CreateWalletAccountSelectConnector.js'
 import { CryptoExchangeQuoteConnector } from '../connectors/scenes/CryptoExchangeQuoteConnector.js'
 import { CryptoExchangeSceneConnector as ExchangeConnector } from '../connectors/scenes/CryptoExchangeSceneConnector'
 import CurrencySettings from '../connectors/scenes/CurrencySettingsConnector'
@@ -132,8 +132,8 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   vertcoinCurrencyPluginFactory,
   zcoinCurrencyPluginFactory,
   feathercoinCurrencyPluginFactory,
-  ufoCurrencyPluginFactory,
-  eosCurrencyPluginFactory
+  ufoCurrencyPluginFactory /*,
+  eosCurrencyPluginFactory */
 ]
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
@@ -166,7 +166,6 @@ const CREATE_WALLET_SELECT_FIAT = s.strings.title_create_wallet_select_fiat
 const CREATE_WALLET = s.strings.title_create_wallet
 const CREATE_WALLET_ACCOUNT_SETUP = s.strings.create_wallet_create_account
 const CREATE_WALLET_ACCOUNT_ACTIVATE = s.strings.create_wallet_account_activate
-const CREATE_WALLET_ACCOUNT_REVIEW = s.strings.title_create_wallet
 const TRANSACTIONS_EXPORT = s.strings.title_export_transactions
 const REQUEST = s.strings.title_request
 const SCAN = s.strings.title_scan
