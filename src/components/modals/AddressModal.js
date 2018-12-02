@@ -93,8 +93,8 @@ export class AddressModal extends Component<AddressModalProps, AddressModalState
                 value={uri}
                 onChangeText={this.updateUri}
                 error={''}
-                placeholder={'Addreass'}
-                label={'Address'}
+                placeholder={s.strings.fragment_send_send_to_hint}
+                label={s.strings.fragment_send_send_to_hint}
                 onSubmit={() => this.props.onDone(uri)}
               />
             </View>
