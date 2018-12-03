@@ -92,11 +92,11 @@ export const getParentNetworkFee = (state: State): string | void => getTransacti
 
 export const getSpendInfo = (state: State, newSpendInfo?: GuiMakeSpendInfo = {}): EdgeSpendInfo => {
   const uniqueIdentifier = newSpendInfo.uniqueIdentifier || getUniqueIdentifier(state)
-
-  return {
-    currencyCode: newSpendInfo.currencyCode || getSelectedCurrencyCode(state),
-    metadata: newSpendInfo.metadata ? { ...getMetadata(state), ...newSpendInfo.metadata } : getMetadata(state),
-    spendTargets: [
+  let spendTargets = []
+  if (newSpendInfo.spendTargets) {
+    spendTargets = newSpendInfo.spendTargets
+  } else {
+    spendTargets = [
       {
         nativeAmount: newSpendInfo.nativeAmount || getNativeAmount(state),
         publicAddress: newSpendInfo.publicAddress || getPublicAddress(state),
@@ -104,7 +104,13 @@ export const getSpendInfo = (state: State, newSpendInfo?: GuiMakeSpendInfo = {})
           uniqueIdentifier
         }
       }
-    ],
+    ]
+  }
+
+  return {
+    currencyCode: newSpendInfo.currencyCode || getSelectedCurrencyCode(state),
+    metadata: newSpendInfo.metadata ? { ...getMetadata(state), ...newSpendInfo.metadata } : getMetadata(state),
+    spendTargets,
     networkFeeOption: newSpendInfo.networkFeeOption || getNetworkFeeOption(state),
     customNetworkFee: newSpendInfo.customNetworkFee ? { ...getCustomNetworkFee(state), ...newSpendInfo.customNetworkFee } : getCustomNetworkFee(state)
   }

@@ -16,7 +16,9 @@ export type GuiMakeSpendInfo = {
   networkFeeOption?: string,
   publicAddress?: string,
   spendTargets?: Array<EdgeSpendTarget>,
-  uniqueIdentifier?: string
+  lockInputs?: boolean,
+  uniqueIdentifier?: string,
+  onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void
 }
 
 export type SendConfirmationState = {
@@ -185,11 +187,13 @@ export const error = (state: Error | null = null, action: Action) => {
 
 export const isEditable = (state: boolean = true, action: Action) => {
   switch (action.type) {
-    case 'UI/SEND_CONFIMATION/UPDATE_PAYMENT_PROTOCOL_TRANSACTION':
-    case 'UI/SEND_CONFIMATION/MAKE_SPEND_FAILED': {
+    case 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION':
       if (!action.data) throw new Error('Invalid Action')
-      return false
-    }
+      const { guiMakeSpendInfo } = action.data
+      if (guiMakeSpendInfo && guiMakeSpendInfo.lockInputs) {
+        return false
+      }
+      return state
 
     default:
       return state
@@ -222,7 +226,6 @@ export const pending = (state: boolean = false, action: Action) => {
 
 export const transaction = (state: EdgeTransaction | null = null, action: Action) => {
   switch (action.type) {
-    case 'UI/SEND_CONFIMATION/UPDATE_PAYMENT_PROTOCOL_TRANSACTION':
     case 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION': {
       if (!action.data) throw new Error('Invalid Action')
       return action.data.transaction

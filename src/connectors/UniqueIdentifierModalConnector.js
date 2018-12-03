@@ -14,7 +14,7 @@ export const mapDispatchToProps = (dispatch: Dispatch, ownProps: Object) => ({
   uniqueIdentifierChanged: (uniqueIdentifier: string) => dispatch(uniqueIdentifierChanged(uniqueIdentifier)),
   onConfirm: (uniqueIdentifier: string) => {
     dispatch(deactivated())
-    ownProps.onConfirm(uniqueIdentifier)
+    ownProps.onConfirm({ uniqueIdentifier })
   },
   onCancel: () => dispatch(deactivated()),
   onBackdropPress: () => dispatch(deactivated()),

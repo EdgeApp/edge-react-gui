@@ -3,7 +3,7 @@
 import { errorNames } from 'edge-core-js'
 import { connect } from 'react-redux'
 
-import { newPin, reset, signBroadcastAndSave, sendConfirmationUpdateTx, updateAmount, updateSpendPending } from '../../actions/SendConfirmationActions.js'
+import { newPin, reset, sendConfirmationUpdateTx, signBroadcastAndSave, updateAmount, updateSpendPending } from '../../actions/SendConfirmationActions.js'
 import { activated as uniqueIdentifierModalActivated } from '../../actions/UniqueIdentifierModalActions.js'
 import { SendConfirmation } from '../../components/scenes/SendConfirmationScene'
 import type { SendConfirmationDispatchProps, SendConfirmationStateProps } from '../../components/scenes/SendConfirmationScene'
@@ -94,7 +94,7 @@ const mapDispatchToProps = (dispatch: Dispatch): SendConfirmationDispatchProps =
   updateAmount: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) => {
     return dispatch(updateAmount(nativeAmount, exchangeAmount, fiatPerCrypto))
   },
-  sendConfirmationUpdateTx: uniqueIdentifier => dispatch(sendConfirmationUpdateTx({ uniqueIdentifier })),
+  sendConfirmationUpdateTx: guiMakeSpendInfo => dispatch(sendConfirmationUpdateTx(guiMakeSpendInfo)),
   reset: () => dispatch(reset()),
   updateSpendPending: (pending: boolean): any => dispatch(updateSpendPending(pending)),
   signBroadcastAndSave: (): any => dispatch(signBroadcastAndSave()),
