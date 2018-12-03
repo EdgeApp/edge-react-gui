@@ -11,7 +11,6 @@ import slowlog from 'react-native-slowlog'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
-import PrivateKeyModal from '../../connectors/PrivateKeyModalConnector.js'
 import * as Constants from '../../constants/indexConstants'
 import { scale } from '../../lib/scaling.js'
 import s from '../../locales/strings.js'
@@ -100,7 +99,6 @@ export class Scan extends Component<Props> {
             <WalletListModal topDisplacement={Constants.SCAN_WALLET_DIALOG_TOP} type={Constants.FROM} onSelectWallet={onSelectWallet} />
           )}
         </View>
-        <PrivateKeyModal />
       </SafeAreaView>
     )
   }

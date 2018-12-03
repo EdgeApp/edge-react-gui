@@ -9,9 +9,6 @@ test('initialState', () => {
     scanEnabled: false,
     torchEnabled: false,
     privateKeyModal: {
-      primaryModal: {
-        isActive: false
-      },
       secondaryModal: {
         isActive: false
       },

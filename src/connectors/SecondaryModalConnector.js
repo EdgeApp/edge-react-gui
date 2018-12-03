@@ -2,7 +2,7 @@
 
 import { connect } from 'react-redux'
 
-import { deactivated } from '../actions/SecondaryModalActions.js'
+import { secondaryModalDeactivated } from '../actions/SecondaryModalActions.js'
 import { SecondaryModal } from '../components/modals/SecondaryModal.js'
 import type { Dispatch, State } from '../modules/ReduxTypes.js'
 
@@ -13,10 +13,10 @@ export const mapStateToProps = (state: State) => ({
 })
 export const mapDispatchToProps = (dispatch: Dispatch) => ({
   onBackButtonPress: () => {
-    dispatch(deactivated())
+    dispatch(secondaryModalDeactivated())
   },
   onBackdropPress: () => {
-    dispatch(deactivated())
+    dispatch(secondaryModalDeactivated())
   }
 })
 

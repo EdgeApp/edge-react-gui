@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import { createYesNoModal, showModal } from 'edge-components'
-import type { EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendTarget } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendInfo, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
 import React from 'react'
 import { Alert, Linking, Text } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -21,7 +21,8 @@ import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReduce
 import type { GuiWallet } from '../types.js'
 import { type RequestPaymentAddress, denominationToDecimalPlaces, getRequestForAddress, isEdgeLogin, noOp } from '../util/utils.js'
 import { loginWithEdge } from './EdgeLoginActions.js'
-import { activated as privateKeyModalActivated } from './PrivateKeyModalActions.js'
+import { sweepPrivateKeyFail, sweepPrivateKeyStart, sweepPrivateKeySuccess } from './PrivateKeyModalActions.js'
+import { secondaryModalActivated } from './SecondaryModalActions.js'
 import { paymentProtocolUriReceived } from './SendConfirmationActions.js'
 
 const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWallet, guiWallet: GuiWallet, requestAddress: RequestPaymentAddress) => {
@@ -126,12 +127,12 @@ export const parseScannedUri = (data: string) => (dispatch: Dispatch, getState: 
 
       if (isLegacyAddressUri(parsedUri)) {
         // LEGACY ADDRESS URI
-        return setTimeout(() => dispatch(showLegacyAddressModal()), 500)
+        return dispatch(showLegacyAddressModal())
       }
 
       if (isPrivateKeyUri(parsedUri)) {
         // PRIVATE KEY URI
-        return setTimeout(() => dispatch(privateKeyModalActivated()), 500)
+        return dispatch(privateKeyModalActivated())
       }
 
       if (isPaymentProtocolUri(parsedUri)) {
@@ -246,4 +247,44 @@ export const showLegacyAddressModal = () => async (dispatch: Dispatch, getState:
   } else {
     dispatch({ type: 'ENABLE_SCAN' })
   }
+}
+
+export const privateKeyModalActivated = () => async (dispatch: Dispatch, getState: GetState) => {
+  const privateKeyModal = createYesNoModal({
+    title: s.strings.private_key_modal_sweep_from_private_address,
+    icon: <Icon style={{ transform: [{ rotate: '270deg' }] }} type={'ionIcons'} name="ios-key" size={30} />,
+    message: s.strings.private_key_modal_sweep_from_private_address,
+    noButtonText: s.strings.private_key_modal_cancel,
+    yesButtonText: s.strings.private_key_modal_import
+  })
+
+  const firstResponse = await showModal(privateKeyModal)
+  if (!firstResponse) return
+  setTimeout(() => {
+    dispatch(sweepPrivateKeyStart())
+    dispatch(secondaryModalActivated())
+
+    const state = getState()
+    const parsedUri = state.ui.scenes.scan.parsedUri
+    if (!parsedUri) return
+    const selectedWalletId = state.ui.wallets.selectedWalletId
+    const edgeWallet = state.core.wallets.byId[selectedWalletId]
+
+    const spendInfo: EdgeSpendInfo = {
+      privateKeys: parsedUri.privateKeys,
+      spendTargets: []
+    }
+
+    edgeWallet.sweepPrivateKeys(spendInfo).then(
+      (unsignedTx: EdgeTransaction) => {
+        edgeWallet
+          .signTx(unsignedTx)
+          .then(signedTx => edgeWallet.broadcastTx(signedTx))
+          .then(() => dispatch(sweepPrivateKeySuccess()))
+      },
+      (error: Error) => {
+        dispatch(sweepPrivateKeyFail(error))
+      }
+    )
+  }, 1000)
 }
