@@ -393,5 +393,7 @@
   "kyc_something_wrong_message": "Riprova più tardi",
   "kyc_ss_finish": "Completa la verifica dei documenti d'identità per %s",
   "ss_geolock": "Posizione geografica limitata. Impossibile completare lo scambio.",
-  "ss_unable": "Nessun cambio valuta abilitato supporta da %1$s a %2$s."
+  "ss_unable": "Nessun cambio valuta abilitato supporta da %1$s a %2$s.",
+  "ss_visit_website": "",
+  "ss_need_more_kyc": ""
 }
