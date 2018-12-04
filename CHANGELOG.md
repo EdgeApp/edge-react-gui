@@ -1,5 +1,9 @@
 # edge-react-gui
 
+## 1.4.5
+
+* Update to v2 of Coinbase API
+
 ## 1.4.3
 
 * Big performance boost when logging in and syncing wallets
