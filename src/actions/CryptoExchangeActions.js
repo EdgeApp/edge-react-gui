@@ -289,13 +289,12 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
         return
       }
       if (error.message === 'noVerification') {
-        let displayName = ''
+        let pluginName = ''
         if (typeof error.pluginName === 'string') {
           const { swapInfo } = account.swapConfig[error.pluginName]
-          displayName = swapInfo.displayName
+          pluginName = swapInfo.displayName
         }
-        const data = sprintf(s.strings.kyc_ss_finish, displayName)
-        dispatch({ type: 'GENERIC_SHAPE_SHIFT_ERROR', data })
+        dispatch({ type: 'NEED_FINISH_KYC', data: { pluginName } })
         Actions.popTo(Constants.EXCHANGE_SCENE)
         return
       }
