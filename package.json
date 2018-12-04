@@ -1,6 +1,6 @@
 {
   "name": "edge-react-gui",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "Edge Wallet React GUI",
   "homepage": "https://edge.app",
   "license": "SEE LICENSE IN LICENSE",
@@ -89,7 +89,7 @@
     "edge-currency-bitcoin": "3.7.3",
     "edge-currency-ethereum": "0.11.0",
     "edge-currency-monero": "0.1.0",
-    "edge-exchange-plugins": "^0.2.0",
+    "edge-exchange-plugins": "^0.2.1",
     "edge-login-ui-rn": "^0.5.11",
     "https-browserify": "0.0.1",
     "jsc-android": "216113.0.3",
