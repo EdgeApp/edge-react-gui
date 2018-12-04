@@ -393,5 +393,7 @@
   "kyc_something_wrong_message": "Por favor inténtalo de nuevo más tarde",
   "kyc_ss_finish": "Completa la verificación de documento de identidad para %s",
   "ss_geolock": "Ubicación restringida. Imposible completar el cambio.",
-  "ss_unable": "No hay casas de cambio activas que soporten %1$s a %2$s."
+  "ss_unable": "No hay casas de cambio activas que soporten %1$s a %2$s.",
+  "ss_visit_website": "",
+  "ss_need_more_kyc": ""
 }
