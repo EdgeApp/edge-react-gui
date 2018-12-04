@@ -393,5 +393,7 @@
   "kyc_something_wrong_message": "",
   "kyc_ss_finish": "",
   "ss_geolock": "",
-  "ss_unable": ""
+  "ss_unable": "",
+  "ss_visit_website": "",
+  "ss_need_more_kyc": ""
 }
