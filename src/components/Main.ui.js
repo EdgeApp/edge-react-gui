@@ -24,7 +24,7 @@ import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
 import { moneroCurrencyPluginFactory } from 'edge-currency-monero'
 import { coinbasePlugin, coincapPlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
 import React, { Component } from 'react'
-import { Image, Keyboard, Linking, StatusBar, TouchableWithoutFeedback, View } from 'react-native'
+import { Image, Keyboard, Linking, StatusBar, TouchableWithoutFeedback, View, YellowBox } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import Locale from 'react-native-locale'
 import { MenuProvider } from 'react-native-popup-menu'
@@ -255,6 +255,9 @@ export default class Main extends Component<Props, State> {
 
     this.state = {
       context: undefined
+    }
+    if (ENV.HIDE_IS_MOUNTED) {
+      YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader'])
     }
   }
 

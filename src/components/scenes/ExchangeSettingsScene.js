@@ -125,7 +125,7 @@ export class ExchangeSettingsComponent extends Component<ExchangeSettingsProps, 
                     />
                     <RowWithButton
                       logo={logoSource}
-                      key={exchange.name}
+                      key={exchange.name + '1'}
                       leftText={exchangeName + ' ' + s.strings.account}
                       rightText={ssLoginText}
                       onToggle={this.shapeShiftSignInToggle}

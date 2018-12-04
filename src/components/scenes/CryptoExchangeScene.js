@@ -4,6 +4,7 @@ import { showModal } from 'edge-components'
 import React, { Component } from 'react'
 import { Alert, Keyboard, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 
 import type { SetNativeAmountInfo } from '../../actions/CryptoExchangeActions.js'
@@ -92,7 +93,7 @@ export class CryptoExchangeScene extends Component<Props, State> {
   }
 
   UNSAFE_componentWillReceiveProps (nextProps: Props) {
-    if (!this.props.showKYCAlert && nextProps.showKYCAlert) {
+    if (!this.props.showKYCAlert && nextProps.showKYCAlert && Actions.currentScene !== Constants.EXCHANGE_SETTINGS) {
       Alert.alert(s.strings.kyc_title, s.strings.kyc_message, [{ text: s.strings.string_cancel_cap }, { text: s.strings.string_ok, onPress: this.getKYCToken }])
     }
     if (!this.props.pluginCompleteKYC && nextProps.pluginCompleteKYC) {
