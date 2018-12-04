@@ -7,9 +7,7 @@ import { isIphoneX } from '../../lib/isIphoneX.js'
 
 const platform = Platform.OS
 const deviceWidth = Dimensions.get('window').width
-const deviceHeight = platform === 'ios'
-  ? Dimensions.get('window').height
-  : ExtraDimensions.get('REAL_WINDOW_HEIGHT')
+const deviceHeight = platform === 'ios' ? Dimensions.get('window').height : ExtraDimensions.get('REAL_WINDOW_HEIGHT')
 
 const PLATFORM = {
   platform,
