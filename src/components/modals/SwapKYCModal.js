@@ -79,6 +79,7 @@ class SwapKYCModal extends Component<Props, State> {
         parsed = await response.json()
       }
       this.props.setToken(parsed, this.props.pluginName)
+      this.props.onDone()
     } catch (error) {
       Alert.alert(s.strings.kyc_something_wrong, s.strings.kyc_something_wrong_message, [{ text: s.strings.string_ok, onPress: this.props.onDone }])
     }
@@ -86,11 +87,7 @@ class SwapKYCModal extends Component<Props, State> {
   setRef = (ref: WebView = null) => {
     this.ref = ref
   }
-  UNSAFE_componentWillReceiveProps (nextProps: Props) {
-    if (!nextProps.showKYCAlert) {
-      this.props.onDone()
-    }
-  }
+
   render () {
     // const { onDone } = this.props
     if (this.state.code === null) {

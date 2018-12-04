@@ -255,7 +255,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       })
       return newState
     }
-    case 'NEED_KYC': {
+    case 'NEED_KYC_SETTING': {
       return { ...state, shapeShiftNeedsKYC: true }
     }
     case 'ON_KYC_TOKEN_SET': {

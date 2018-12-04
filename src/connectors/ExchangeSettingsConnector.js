@@ -19,7 +19,7 @@ const mapDispatchToProps = (dispatch: Dispatch, ownProps) => {
   return {
     shapeShiftLogOut: (account: EdgeAccount) => {
       account.swapConfig['shapeshift'].changeUserSettings({})
-      dispatch({ type: 'NEED_KYC' })
+      dispatch({ type: 'NEED_KYC_SETTING' })
     }
   }
 }

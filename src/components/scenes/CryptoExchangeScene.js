@@ -61,7 +61,8 @@ export type CryptoExchangeSceneComponentStateProps = {
 export type CryptoExchangeSceneComponentDispatchProps = {
   onSelectWallet(string, string): void,
   openModal(data: 'from' | 'to'): mixed,
-  getQuoteForTransaction(SetNativeAmountInfo): void
+  getQuoteForTransaction(SetNativeAmountInfo): void,
+  wipeKYCFlag: () => any
 }
 
 type Props = CryptoExchangeSceneComponentStateProps & CryptoExchangeSceneComponentDispatchProps
@@ -93,8 +94,11 @@ export class CryptoExchangeScene extends Component<Props, State> {
   }
 
   UNSAFE_componentWillReceiveProps (nextProps: Props) {
-    if (!this.props.showKYCAlert && nextProps.showKYCAlert && Actions.currentScene !== Constants.EXCHANGE_SETTINGS) {
-      Alert.alert(s.strings.kyc_title, s.strings.kyc_message, [{ text: s.strings.string_cancel_cap }, { text: s.strings.string_ok, onPress: this.getKYCToken }])
+    if (nextProps.showKYCAlert && Actions.currentScene !== Constants.EXCHANGE_SETTINGS) {
+      Alert.alert(s.strings.kyc_title, s.strings.kyc_message, [
+        { text: s.strings.string_cancel_cap, onPress: this.wipeKYCFlag },
+        { text: s.strings.string_ok, onPress: this.getKYCToken }
+      ])
     }
     if (!this.props.pluginCompleteKYC && nextProps.pluginCompleteKYC) {
       // show modal.   closeFinishKYCModal
@@ -201,7 +205,11 @@ export class CryptoExchangeScene extends Component<Props, State> {
       </SafeAreaView>
     )
   }
+  wipeKYCFlag = () => {
+    this.props.wipeKYCFlag()
+  }
   getKYCToken = () => {
+    this.wipeKYCFlag()
     showModal(SwapKYCModalConnector, { style: { margin: 0 } }).then((response: null | { accessToken: string, refreshToken: string }) => {
       console.log('nav: ', response)
     })
