@@ -49,14 +49,12 @@ export class SwapKYCInfoNeededModal extends Component<Props, State> {
     switch (this.props.pluginName) {
       case 'ShapeShift':
       case 'shapeshift':
-        url = ''
+        url = 'https://ShapeShift.io'
         break
       default:
-        url = ''
+        url = 'https://ShapeShift.io'
     }
-    if (url !== 'https://ShapeShift.io') {
-      Linking.openURL(url)
-    }
+    Linking.openURL(url)
   }
 
   renderText = () => {
