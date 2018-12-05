@@ -77,7 +77,9 @@ type State = {|
   overridePrimaryExchangeAmount: string,
   forceUpdateGuiCounter: number,
   keyboardVisible: boolean,
-  showSpinner: boolean
+  showSpinner: boolean,
+  isFiatOnTop: boolean,
+  isFocus: boolean
 |}
 
 export class SendConfirmation extends Component<Props, State> {
@@ -96,13 +98,12 @@ export class SendConfirmation extends Component<Props, State> {
       keyboardVisible: false,
       forceUpdateGuiCounter: 0,
       nativeAmount: props.nativeAmount,
-      showSpinner: false
+      showSpinner: false,
+      isFiatOnTop: props.data === 'fromScan',
+      isFocus: props.data === 'fromScan'
     }
   }
 
-  UNSAFE_componentWillMount () {
-    this.setState({ keyboardVisible: this.props.data === 'fromScan' })
-  }
   componentDidMount () {
     const secondaryDisplayDenomination = getDenomFromIsoCode(this.props.fiatCurrencyCode)
     const overridePrimaryExchangeAmount = bns.div(this.props.nativeAmount, this.props.primaryExchangeDenomination.multiplier, DIVIDE_PRECISION)
@@ -208,6 +209,8 @@ export class SendConfirmation extends Component<Props, State> {
                 onExchangeAmountChanged={this.onExchangeAmountChanged}
                 keyboardVisible={this.state.keyboardVisible}
                 isEditable={this.props.isEditable}
+                isFiatOnTop={this.state.isFiatOnTop}
+                isFocus={this.state.isFocus}
               />
 
               <Scene.Padding style={{ paddingHorizontal: 54 }}>
