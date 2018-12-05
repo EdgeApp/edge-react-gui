@@ -8792,9 +8792,9 @@ react-native-safe-area-view@^0.7.0:
     hoist-non-react-statics "^2.3.1"
 
 react-native-share@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-1.1.1.tgz#8c50c67c3fa519607f3352c03f56076c0481edeb"
-  integrity sha512-HCeCHWC0KsJQh2Y8LWqPbkI+H1gbjF2F844aMB1xlHqvnCzSsWPJERWEqzMVRSYprB0h1FFWg04KB7flSHggWw==
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-1.1.3.tgz#513ea61075e2bb945d33cfda120e12592916299e"
+  integrity sha512-vKAJqgkEt7HjsF0HUwgom+E0FbmFNVZNncHwby1+O8/mXlKugh+Ym6rvv+A2ASHmD5TXKohJMYT2+jYofzPORA==
 
 react-native-slider@^0.11.0:
   version "0.11.0"
