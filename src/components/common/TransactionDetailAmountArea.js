@@ -81,6 +81,12 @@ class AmountArea extends Component {
     let feeSyntax, leftData, convertedAmount, amountString, symbolString, feeDenomination
 
     const absoluteAmount = abs(this.props.edgeTransaction.nativeAmount)
+    if (UTILS.isCryptoParentCurrency(this.props.guiWallet, this.props.edgeTransaction.currencyCode)) {
+      // if it is the parent crypto
+      symbolString = this.props.walletDefaultDenomProps.symbol ? this.props.walletDefaultDenomProps.symbol + ' ' : ''
+    } else {
+      symbolString = ''
+    }
 
     if (this.props.direction === 'receive') {
       convertedAmount = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(absoluteAmount) // convert to correct denomiation
@@ -101,7 +107,9 @@ class AmountArea extends Component {
         const amountTruncatedDecimals = UTILS.truncateDecimals(amountMinusFee.toString(), 6) // limit to 6 decimals, at most
         amountString = UTILS.decimalOrZero(amountTruncatedDecimals, 6) // change infinitesimal values to zero, otherwise cut off insignificant zeroes (at end of decimal)
         const feeString = abs(UTILS.truncateDecimals(convertedFee, 6)) // fee should never be negative
-        feeSyntax = sprintf(s.strings.fragment_tx_detail_mining_fee, feeString, feeDenomination)
+        feeSyntax = symbolString
+          ? sprintf(s.strings.fragment_tx_detail_mining_fee_with_symbol, symbolString, feeString)
+          : sprintf(s.strings.fragment_tx_detail_mining_fee_with_denom, feeString, feeDenomination)
         leftData = {
           color: THEME.COLORS.ACCENT_RED,
           syntax: s.strings.fragment_transaction_expense
@@ -118,12 +126,6 @@ class AmountArea extends Component {
     }
 
     let notes = this.props.edgeTransaction.metadata ? this.props.edgeTransaction.metadata.notes : ''
-    if (UTILS.isCryptoParentCurrency(this.props.guiWallet, this.props.edgeTransaction.currencyCode)) {
-      // if it is the parent crypto
-      symbolString = this.props.walletDefaultDenomProps.symbol ? this.props.walletDefaultDenomProps.symbol + ' ' : ''
-    } else {
-      symbolString = ''
-    }
 
     if (!notes) notes = ''
     const categoryInfo = this.props.categories[this.props.category]
