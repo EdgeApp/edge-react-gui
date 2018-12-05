@@ -13,7 +13,7 @@ import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import styles from '../../styles/scenes/SettingsStyle'
 import SwitchRow from '../common/RowSwitch.js'
-import RowWithButton from '../common/RowWithButton.js'
+import { RowWithButton } from '../common/RowWithButton.js'
 
 type ExchangeSettingsProps = {
   exchanges: {
@@ -57,7 +57,6 @@ export class ExchangeSettingsComponent extends Component<ExchangeSettingsProps, 
     super(props)
     this.state = {}
     const { exchanges } = props
-    console.log('exchange: : ', exchanges)
     this.exchangeList = []
     for (const exchange in exchanges) {
       const exchangeData = { enabled: exchanges[exchange].enabled, name: exchange }

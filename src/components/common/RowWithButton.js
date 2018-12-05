@@ -13,7 +13,7 @@ type Props = {
   rightText: string,
   onToggle(): void
 }
-export default class RowWithButton extends Component<Props> {
+class RowWithButton extends Component<Props> {
   constructor (props: Props) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
@@ -44,3 +44,5 @@ export default class RowWithButton extends Component<Props> {
     )
   }
 }
+
+export { RowWithButton }
