@@ -1,15 +1,20 @@
 // @flow
 
-import type { EdgeParsedUri, EdgeSpendTarget } from 'edge-core-js'
-import { Alert } from 'react-native'
+import { createYesNoModal, showModal } from 'edge-components'
+import type { EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendTarget } from 'edge-core-js'
+import React from 'react'
+import { Alert, Linking, Text } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import { sprintf } from 'sprintf-js'
 
-import { ADD_TOKEN, EDGE_LOGIN, SEND_CONFIRMATION } from '../constants/indexConstants.js'
+import { ADD_TOKEN, EDGE_LOGIN, FA_MONEY_ICON, SEND_CONFIRMATION } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
 import type { Dispatch, GetState } from '../modules/ReduxTypes.js'
+import OptionIcon from '../modules/UI/components/OptionIcon/OptionIcon.ui.js'
 import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
-import { denominationToDecimalPlaces, isEdgeLogin, noOp } from '../util/utils.js'
+import type { GuiWallet } from '../types.js'
+import { type RequestPaymentAddress, denominationToDecimalPlaces, getRequestForAddress, isEdgeLogin, noOp } from '../util/utils.js'
 import { loginWithEdge } from './EdgeLoginActions.js'
 import { activated as legacyAddressModalActivated, deactivated as legacyAddressModalDeactivated } from './LegacyAddressModalActions.js'
 import { activated as privateKeyModalActivated } from './PrivateKeyModalActions.js'
@@ -47,6 +52,52 @@ export const parseUriReset = () => ({
   type: 'PARSE_URI_RESET'
 })
 
+const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWallet, guiWallet: GuiWallet, requestAddress: RequestPaymentAddress) => {
+  dispatch(disableScan())
+  if (requestAddress.currencyName !== edgeWallet.currencyInfo.pluginName) {
+    // Mismatching currency
+    const body = sprintf(s.strings.currency_mismatch_popup_body, requestAddress.currencyName, requestAddress.currencyName)
+    setTimeout(() => Alert.alert(s.strings.currency_mismatch_popup_title, body, [{ text: s.strings.string_ok, onPress: () => dispatch(enableScan()) }]), 500)
+  } else {
+    // Currencies match. Ask user to confirm sending an address
+    const bodyString = sprintf(s.strings.request_crypto_address_modal_body, requestAddress.sourceName, requestAddress.currencyName) + '\n\n'
+
+    const modal = createYesNoModal({
+      title: s.strings.request_crypto_address_modal_title,
+      message: (
+        <Text style={{ textAlign: 'center' }}>
+          {bodyString}
+          <Text style={{ fontWeight: 'bold', textAlign: 'center' }}>{`${requestAddress.callbackDomain}`}</Text>
+        </Text>
+      ),
+      icon: <OptionIcon iconName={FA_MONEY_ICON} />,
+      noButtonText: s.strings.string_cancel_cap,
+      yesButtonText: s.strings.request_crypto_address_modal_send_address_button
+    })
+
+    setTimeout(() => {
+      showModal(modal)
+        .then(resolveValue => {
+          dispatch(enableScan())
+          if (resolveValue) {
+            // Build the URL
+            const addr = guiWallet.receiveAddress.publicAddress
+            const url = decodeURIComponent(requestAddress.callbackUrl)
+            const finalUrl = url + '?address=' + encodeURIComponent(addr)
+            try {
+              Linking.openURL(finalUrl)
+            } catch (e) {
+              throw new Error(e)
+            }
+          }
+        })
+        .catch(e => {
+          dispatch(enableScan())
+        })
+    }, 1000)
+  }
+}
+
 export const parseScannedUri = (data: string) => (dispatch: Dispatch, getState: GetState) => {
   if (!data) return
   const state = getState()
@@ -58,6 +109,13 @@ export const parseScannedUri = (data: string) => (dispatch: Dispatch, getState: 
     dispatch(loginWithEdge(data))
     Actions[EDGE_LOGIN]()
     return
+  }
+
+  try {
+    const requestAddress: RequestPaymentAddress = getRequestForAddress(data)
+    return doRequestAddress(dispatch, edgeWallet, guiWallet, requestAddress)
+  } catch (e) {
+    console.log(e)
   }
 
   WALLET_API.parseUri(edgeWallet, data).then(

@@ -8,6 +8,7 @@ import slowlog from 'react-native-slowlog'
 
 import type { SetNativeAmountInfo } from '../../actions/CryptoExchangeActions.js'
 import CryptoExchangeMessageConnector from '../../connectors/components/CryptoExchangeMessageConnector'
+import { SwapKYCInfoNeededModalConnector } from '../../connectors/components/SwapKYCInfoNeededModalConnector'
 // /Volumes/work/SourceCode/AirbitzFresh/edge-react-gui/src/modules/UI/scenes/Settings/components/RestoreWalletsModal.ui
 import { SwapKYCModalConnector } from '../../connectors/components/SwapKYCModalConnector.js'
 import * as Constants from '../../constants/indexConstants'
@@ -52,7 +53,8 @@ export type CryptoExchangeSceneComponentStateProps = {
   forceUpdateGuiCounter: number,
   showWalletSelectModal: boolean,
   shiftPendingTransaction: boolean,
-  showKYCAlert: boolean
+  showKYCAlert: boolean,
+  pluginCompleteKYC: string | null
 }
 
 export type CryptoExchangeSceneComponentDispatchProps = {
@@ -92,6 +94,12 @@ export class CryptoExchangeScene extends Component<Props, State> {
   UNSAFE_componentWillReceiveProps (nextProps: Props) {
     if (!this.props.showKYCAlert && nextProps.showKYCAlert) {
       Alert.alert(s.strings.kyc_title, s.strings.kyc_message, [{ text: s.strings.string_cancel_cap }, { text: s.strings.string_ok, onPress: this.getKYCToken }])
+    }
+    if (!this.props.pluginCompleteKYC && nextProps.pluginCompleteKYC) {
+      // show modal.   closeFinishKYCModal
+      showModal(SwapKYCInfoNeededModalConnector, { style: { margin: 0 } }).then((response: null) => {
+        console.log('nav: ', response)
+      })
     }
     if (this.state.forceUpdateGuiCounter !== nextProps.forceUpdateGuiCounter) {
       this.setState({

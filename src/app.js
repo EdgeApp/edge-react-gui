@@ -89,6 +89,9 @@ if (PERF_LOGGING_ONLY) {
 }
 
 if (ENABLE_PERF_LOGGING) {
+  if (!global.nativePerformanceNow && window && window.performance) {
+    global.nativePerformanceNow = () => window.performance.now()
+  }
   const makeDate = () => {
     const d = new Date(Date.now())
     const h = ('0' + d.getHours().toString()).slice(-2)

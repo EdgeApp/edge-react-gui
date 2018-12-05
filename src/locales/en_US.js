@@ -278,7 +278,8 @@ const strings = {
   transaction_detail_no_wallet: 'No wallet on transaction object',
   transaction_detail_unable_to_load_transaction: 'Unable to load transaction',
   string_confirm: 'Confirm',
-  fragment_tx_detail_mining_fee: '+ %f (Fee)',
+  fragment_tx_detail_mining_fee_with_symbol: '+ %1s %2f (Fee)',
+  fragment_tx_detail_mining_fee_with_denom: '+ %1f %2s (Fee)',
   transaction_details_notes_title: 'Notes',
   string_search: 'Search',
   confirm_password_text: 'Confirm Password',
@@ -412,11 +413,20 @@ const strings = {
   kyc_message: 'The available exchange for this transaction requires a ShapeShift account. Please create an account to continue.',
   scan_camera_permission_denied: 'To scan a QR Code, please enable Camera access in Settings',
   open_settings: 'Open Settings',
+  currency_mismatch_popup_title: 'Currency Mismatch',
+  currency_mismatch_popup_body: 'You scanned a QR code requesting an address for %s. Please switch to a %s wallet first and re-scan the QR code.',
+  request_crypto_address_modal_title: 'Request Address',
+  request_crypto_address_modal_body:
+    'The service "%s" is requesting an address from your %s wallet to send you money. The address will be sent to the following URL:',
+  request_crypto_address_modal_send_address_button: 'Send Address',
   kyc_something_wrong: 'Something went wrong',
   kyc_something_wrong_message: 'Please try again later',
   kyc_ss_finish: 'Please complete ID verification for %s',
   ss_geolock: 'Location restricted. Unable to complete exchange.',
-  ss_unable: 'No enabled exchanges support %1$s to %2$s.'
+  ss_unable: 'No enabled exchanges support %1$s to %2$s.',
+  ss_visit_website: 'Go to ShapeShift.io',
+  ss_need_more_kyc:
+    'You have an active ShapeShift account linked to this Edge account. However, it still requires verification before ShapeShift can process this exchange request. Please proceed to ShapeShift.io, login with your ShapeShift account credentials, and complete your verification.'
 }
 
 // export default strings

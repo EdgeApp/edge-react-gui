@@ -3347,10 +3347,10 @@ edge-components@^0.0.12:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@0.12.20:
-  version "0.12.20"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.12.20.tgz#c6786f517fb3df72d2bd8a61c538bc0fb0404727"
-  integrity sha512-BaHC/b2kO8yxMPt5wJCHPk5gaPvZJsukn5Jw2vWY2pPHPE2hkhxZe2aSWdFEpmQ64IJbrVUDQtxm0OdjzLtXkw==
+edge-core-js@0.12.21:
+  version "0.12.21"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.12.21.tgz#87c4070d69db1aab94fe318ca4a1305c9e612eea"
+  integrity sha512-lMzEOzYHcbNAdJT2j9N/vPKn6KMaVv59SHMxWjmgluKCyu2iT3MBaTxTlKDTbe/GqiOAk/WUu7MFm0bcJpmgXg==
   dependencies:
     "@babel/runtime" "^7.0.0"
     aes-js "^3.1.0"
@@ -10703,6 +10703,14 @@ url-parse@^1.4.1, url-parse@^1.4.3:
   version "1.4.3"
   resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.4.3.tgz#bfaee455c889023219d757e045fa6a684ec36c15"
   integrity sha512-rh+KuAW36YKo0vClhQzLLveoj8FwPJNu65xLb7Mrt+eZht0IPT0IXgSv8gcMegZ6NvjJUALf6Mf25POlMwD1Fw==
+  dependencies:
+    querystringify "^2.0.0"
+    requires-port "^1.0.0"
+
+url-parse@^1.4.4:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.4.4.tgz#cac1556e95faa0303691fec5cf9d5a1bc34648f8"
+  integrity sha512-/92DTTorg4JjktLNLe6GPS2/RvAd/RGr6LuktmWSMLEOa6rjnlrFXNgSbSmkNvCoL2T028A0a1JaJLzRMlFoHg==
   dependencies:
     querystringify "^2.0.0"
     requires-port "^1.0.0"
