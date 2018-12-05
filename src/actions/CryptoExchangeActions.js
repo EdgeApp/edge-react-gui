@@ -164,6 +164,10 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
             name = 'Changelly'
             supportEmail = 'support@changelly.com'
             break
+          case 'faast':
+            name = 'Faa.st'
+            supportEmail = 'support@faa.st'
+            break
         }
       }
       if (!orderId) {

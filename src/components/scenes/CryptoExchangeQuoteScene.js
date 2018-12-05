@@ -88,6 +88,9 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
       case 'changenow':
         return { uri: 'exchange_logo_changenow' }
 
+      case 'faast':
+        return { uri: 'exchange_logo_faast' }
+
       case 'changelly':
       default:
         return { uri: 'exchange_logo_changelly' }
