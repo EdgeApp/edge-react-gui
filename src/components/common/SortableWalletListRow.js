@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import React, { Component } from 'react'
-import { ActivityIndicator, Image, Platform, TouchableHighlight, View } from 'react-native'
+import { ActivityIndicator, Image, TouchableHighlight, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import sort from '../../assets/images/walletlist/sort.png'
@@ -11,7 +11,7 @@ import s from '../../locales/strings.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import T from '../../modules/UI/components/FormattedText/index'
 import styles, { styles as styleRaw } from '../../styles/scenes/WalletListStyle.js'
-import { cutOffText, decimalOrZero, findDenominationSymbol, truncateDecimals } from '../../util/utils'
+import { decimalOrZero, findDenominationSymbol, truncateDecimals } from '../../util/utils'
 
 const DIVIDE_PRECISION = 18
 
@@ -55,7 +55,7 @@ class SortableWalletListRow extends Component<Props, State> {
             </View>
             <View style={[styles.rowNameTextWrapAndroidIos]}>
               <T style={[styles.rowNameText]} numberOfLines={2} adjustsFontSizeToFit={true} minimumFontScale={0.6}>
-                {Platform.OS === 'ios' ? name : cutOffText(name, 34)}
+                {name}
               </T>
             </View>
             <View style={[styles.rowBalanceTextWrap]}>
