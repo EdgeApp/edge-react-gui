@@ -134,7 +134,7 @@ export class Scan extends Component<Props> {
         /* if (/^airbitz:\/\/edge\//.test(uri)) {
           return
         } */
-        Actions.sendConfirmation()
+        Actions[Constants.SEND_CONFIRMATION]()
       }
     })
   }

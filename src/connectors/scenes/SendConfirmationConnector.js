@@ -3,7 +3,7 @@
 import { errorNames } from 'edge-core-js'
 import { connect } from 'react-redux'
 
-import { newPin, reset, signBroadcastAndSave, uniqueIdentifierUpdated, updateAmount, updateSpendPending } from '../../actions/SendConfirmationActions.js'
+import { newPin, reset, sendConfirmationUpdateTx, signBroadcastAndSave, updateAmount, updateSpendPending } from '../../actions/SendConfirmationActions.js'
 import { activated as uniqueIdentifierModalActivated } from '../../actions/UniqueIdentifierModalActions.js'
 import { SendConfirmation } from '../../components/scenes/SendConfirmationScene'
 import type { SendConfirmationDispatchProps, SendConfirmationStateProps } from '../../components/scenes/SendConfirmationScene'
@@ -56,7 +56,7 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
   const networkFee = transaction ? transaction.networkFee : null
   const parentNetworkFee = transaction && transaction.parentNetworkFee ? transaction.parentNetworkFee : null
 
-  const uniqueIdentifier = sceneState.parsedUri.uniqueIdentifier
+  const uniqueIdentifier = sceneState.guiMakeSpendInfo.uniqueIdentifier
   const transactionMetadata = sceneState.transactionMetadata
   const exchangeRates = state.exchangeRates
   const out = {
@@ -94,7 +94,7 @@ const mapDispatchToProps = (dispatch: Dispatch): SendConfirmationDispatchProps =
   updateAmount: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) => {
     return dispatch(updateAmount(nativeAmount, exchangeAmount, fiatPerCrypto))
   },
-  uniqueIdentifierUpdated: uniqueIdentifier => dispatch(uniqueIdentifierUpdated({ uniqueIdentifier })),
+  sendConfirmationUpdateTx: guiMakeSpendInfo => dispatch(sendConfirmationUpdateTx(guiMakeSpendInfo)),
   reset: () => dispatch(reset()),
   updateSpendPending: (pending: boolean): any => dispatch(updateSpendPending(pending)),
   signBroadcastAndSave: (): any => dispatch(signBroadcastAndSave()),

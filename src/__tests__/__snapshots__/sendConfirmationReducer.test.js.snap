@@ -6,10 +6,7 @@ Object {
   "authRequired": "none",
   "error": null,
   "forceUpdateGuiCounter": 0,
-  "isEditable": true,
-  "isKeyboardVisible": false,
-  "nativeAmount": "0",
-  "parsedUri": Object {
+  "guiMakeSpendInfo": Object {
     "customNetworkFee": Object {},
     "metadata": Object {
       "amountFiat": 0,
@@ -23,6 +20,9 @@ Object {
     "networkFeeOption": "standard",
     "publicAddress": "123123123",
   },
+  "isEditable": true,
+  "isKeyboardVisible": false,
+  "nativeAmount": "0",
   "pending": false,
   "pin": "",
   "spendInfo": Object {
@@ -45,10 +45,7 @@ Object {
   "authRequired": "none",
   "error": null,
   "forceUpdateGuiCounter": 0,
-  "isEditable": true,
-  "isKeyboardVisible": false,
-  "nativeAmount": "1000",
-  "parsedUri": Object {
+  "guiMakeSpendInfo": Object {
     "customNetworkFee": Object {},
     "metadata": Object {
       "amountFiat": 0,
@@ -62,6 +59,9 @@ Object {
     "networkFeeOption": "standard",
     "publicAddress": "123123123",
   },
+  "isEditable": true,
+  "isKeyboardVisible": false,
+  "nativeAmount": "1000",
   "pending": false,
   "pin": "",
   "spendInfo": Object {
@@ -91,10 +91,7 @@ Object {
   "authRequired": "none",
   "error": null,
   "forceUpdateGuiCounter": 0,
-  "isEditable": true,
-  "isKeyboardVisible": false,
-  "nativeAmount": "1000",
-  "parsedUri": Object {
+  "guiMakeSpendInfo": Object {
     "customNetworkFee": Object {},
     "metadata": Object {
       "amountFiat": 0,
@@ -108,6 +105,9 @@ Object {
     "networkFeeOption": "standard",
     "publicAddress": "123123123",
   },
+  "isEditable": true,
+  "isKeyboardVisible": false,
+  "nativeAmount": "1000",
   "pending": false,
   "pin": "",
   "spendInfo": Object {
@@ -133,10 +133,7 @@ Object {
   "authRequired": "none",
   "error": [Error],
   "forceUpdateGuiCounter": 1,
-  "isEditable": true,
-  "isKeyboardVisible": false,
-  "nativeAmount": "100000",
-  "parsedUri": Object {
+  "guiMakeSpendInfo": Object {
     "customNetworkFee": Object {},
     "metadata": Object {
       "amountFiat": 0,
@@ -150,6 +147,9 @@ Object {
     "networkFeeOption": "standard",
     "publicAddress": "",
   },
+  "isEditable": true,
+  "isKeyboardVisible": false,
+  "nativeAmount": "100000",
   "pending": false,
   "pin": "",
   "spendInfo": null,
@@ -164,10 +164,7 @@ Object {
   "authRequired": "none",
   "error": [Error: Incorrect PIN],
   "forceUpdateGuiCounter": 1,
-  "isEditable": true,
-  "isKeyboardVisible": false,
-  "nativeAmount": "0",
-  "parsedUri": Object {
+  "guiMakeSpendInfo": Object {
     "customNetworkFee": Object {},
     "metadata": Object {
       "amountFiat": 0,
@@ -181,6 +178,9 @@ Object {
     "networkFeeOption": "standard",
     "publicAddress": "",
   },
+  "isEditable": true,
+  "isKeyboardVisible": false,
+  "nativeAmount": "0",
   "pending": false,
   "pin": "",
   "spendInfo": null,
@@ -207,10 +207,7 @@ Object {
   "authRequired": "none",
   "error": null,
   "forceUpdateGuiCounter": 1,
-  "isEditable": true,
-  "isKeyboardVisible": false,
-  "nativeAmount": "100000",
-  "parsedUri": Object {
+  "guiMakeSpendInfo": Object {
     "currencyCode": "BCH",
     "customNetworkFee": Object {},
     "legacyAddress": "123412341234",
@@ -226,6 +223,9 @@ Object {
     "networkFeeOption": "standard",
     "publicAddress": "bitcoincash:qpltjkre069mp80ylcj87832ju3zt2gr6gercn9j2z",
   },
+  "isEditable": true,
+  "isKeyboardVisible": false,
+  "nativeAmount": "100000",
   "pending": false,
   "pin": "",
   "spendInfo": null,
@@ -252,10 +252,7 @@ Object {
   "authRequired": "none",
   "error": null,
   "forceUpdateGuiCounter": 1,
-  "isEditable": true,
-  "isKeyboardVisible": false,
-  "nativeAmount": "100000",
-  "parsedUri": Object {
+  "guiMakeSpendInfo": Object {
     "currencyCode": "BCH",
     "customNetworkFee": Object {},
     "metadata": Object {
@@ -270,6 +267,9 @@ Object {
     "networkFeeOption": "standard",
     "publicAddress": "bitcoincash:qpltjkre069mp80ylcj87832ju3zt2gr6gercn9j2z",
   },
+  "isEditable": true,
+  "isKeyboardVisible": false,
+  "nativeAmount": "100000",
   "pending": false,
   "pin": "",
   "spendInfo": null,
@@ -298,10 +298,7 @@ Object {
   "authRequired": "none",
   "error": [Error],
   "forceUpdateGuiCounter": 0,
-  "isEditable": false,
-  "isKeyboardVisible": false,
-  "nativeAmount": "0",
-  "parsedUri": Object {
+  "guiMakeSpendInfo": Object {
     "customNetworkFee": Object {},
     "metadata": Object {
       "amountFiat": 0,
@@ -315,6 +312,9 @@ Object {
     "networkFeeOption": "standard",
     "publicAddress": "",
   },
+  "isEditable": true,
+  "isKeyboardVisible": false,
+  "nativeAmount": "0",
   "pending": false,
   "pin": "",
   "spendInfo": null,
@@ -341,10 +341,7 @@ Object {
   "authRequired": "none",
   "error": [Error],
   "forceUpdateGuiCounter": 0,
-  "isEditable": true,
-  "isKeyboardVisible": false,
-  "nativeAmount": "0",
-  "parsedUri": Object {
+  "guiMakeSpendInfo": Object {
     "customNetworkFee": Object {},
     "metadata": Object {
       "amountFiat": 0,
@@ -358,6 +355,9 @@ Object {
     "networkFeeOption": "standard",
     "publicAddress": "",
   },
+  "isEditable": true,
+  "isKeyboardVisible": false,
+  "nativeAmount": "0",
   "pending": false,
   "pin": "",
   "spendInfo": null,
@@ -372,10 +372,7 @@ Object {
   "authRequired": "none",
   "error": null,
   "forceUpdateGuiCounter": 0,
-  "isEditable": true,
-  "isKeyboardVisible": false,
-  "nativeAmount": "0",
-  "parsedUri": Object {
+  "guiMakeSpendInfo": Object {
     "customNetworkFee": Object {},
     "metadata": Object {
       "amountFiat": 0,
@@ -389,6 +386,9 @@ Object {
     "networkFeeOption": "standard",
     "publicAddress": "",
   },
+  "isEditable": true,
+  "isKeyboardVisible": false,
+  "nativeAmount": "0",
   "pending": false,
   "pin": "",
   "spendInfo": null,
@@ -415,10 +415,7 @@ Object {
   "authRequired": "none",
   "error": [Error],
   "forceUpdateGuiCounter": 0,
-  "isEditable": false,
-  "isKeyboardVisible": false,
-  "nativeAmount": "0",
-  "parsedUri": Object {
+  "guiMakeSpendInfo": Object {
     "customNetworkFee": Object {},
     "metadata": Object {
       "amountFiat": 0,
@@ -432,6 +429,9 @@ Object {
     "networkFeeOption": "standard",
     "publicAddress": "",
   },
+  "isEditable": true,
+  "isKeyboardVisible": false,
+  "nativeAmount": "0",
   "pending": false,
   "pin": "",
   "spendInfo": null,
@@ -452,50 +452,13 @@ Object {
 }
 `;
 
-exports[`sendConfirmation reducer isEditable UPDATE_PAYMENT_PROTOCOL_TRANSACTION 1`] = `
-Object {
-  "address": "",
-  "authRequired": "none",
-  "error": null,
-  "forceUpdateGuiCounter": 0,
-  "isEditable": false,
-  "isKeyboardVisible": false,
-  "nativeAmount": "0",
-  "parsedUri": Object {
-    "customNetworkFee": Object {},
-    "metadata": Object {
-      "amountFiat": 0,
-      "bizId": 0,
-      "category": "",
-      "miscJson": "",
-      "name": "",
-      "notes": "",
-    },
-    "nativeAmount": "0",
-    "networkFeeOption": "standard",
-    "publicAddress": "",
-  },
-  "pending": false,
-  "pin": "",
-  "spendInfo": null,
-  "transaction": Object {
-    "id": "123",
-    "nativeAmount": "123",
-  },
-  "transactionMetadata": null,
-}
-`;
-
 exports[`sendConfirmation reducer pending 1`] = `
 Object {
   "address": "",
   "authRequired": "none",
   "error": null,
   "forceUpdateGuiCounter": 0,
-  "isEditable": true,
-  "isKeyboardVisible": false,
-  "nativeAmount": "0",
-  "parsedUri": Object {
+  "guiMakeSpendInfo": Object {
     "customNetworkFee": Object {},
     "metadata": Object {
       "amountFiat": 0,
@@ -509,6 +472,9 @@ Object {
     "networkFeeOption": "standard",
     "publicAddress": "",
   },
+  "isEditable": true,
+  "isKeyboardVisible": false,
+  "nativeAmount": "0",
   "pending": true,
   "pin": "",
   "spendInfo": null,
@@ -535,10 +501,7 @@ Object {
   "authRequired": "none",
   "error": null,
   "forceUpdateGuiCounter": 0,
-  "isEditable": true,
-  "isKeyboardVisible": false,
-  "nativeAmount": "0",
-  "parsedUri": Object {
+  "guiMakeSpendInfo": Object {
     "customNetworkFee": Object {},
     "metadata": Object {
       "amountFiat": 0,
@@ -552,6 +515,9 @@ Object {
     "networkFeeOption": "standard",
     "publicAddress": "",
   },
+  "isEditable": true,
+  "isKeyboardVisible": false,
+  "nativeAmount": "0",
   "pending": false,
   "pin": "1234",
   "spendInfo": null,
@@ -578,10 +544,7 @@ Object {
   "authRequired": "none",
   "error": null,
   "forceUpdateGuiCounter": 0,
-  "isEditable": true,
-  "isKeyboardVisible": false,
-  "nativeAmount": "0",
-  "parsedUri": Object {
+  "guiMakeSpendInfo": Object {
     "customNetworkFee": Object {},
     "metadata": Object {
       "amountFiat": 0,
@@ -595,6 +558,9 @@ Object {
     "networkFeeOption": "standard",
     "publicAddress": "",
   },
+  "isEditable": true,
+  "isKeyboardVisible": false,
+  "nativeAmount": "0",
   "pending": false,
   "pin": "",
   "spendInfo": null,

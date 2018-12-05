@@ -1,7 +1,7 @@
 // @flow
 
 import { createYesNoModal, showModal } from 'edge-components'
-import type { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendTarget } from 'edge-core-js'
 import React from 'react'
 import { Alert, Linking, Text } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -12,12 +12,13 @@ import s from '../locales/strings.js'
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
 import type { Dispatch, GetState } from '../modules/ReduxTypes.js'
 import OptionIcon from '../modules/UI/components/OptionIcon/OptionIcon.ui.js'
+import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
 import type { GuiWallet } from '../types.js'
 import { type RequestPaymentAddress, denominationToDecimalPlaces, getRequestForAddress, isEdgeLogin, noOp } from '../util/utils.js'
 import { loginWithEdge } from './EdgeLoginActions.js'
 import { activated as legacyAddressModalActivated, deactivated as legacyAddressModalDeactivated } from './LegacyAddressModalActions.js'
 import { activated as privateKeyModalActivated } from './PrivateKeyModalActions.js'
-import { paymentProtocolUriReceived, updateParsedURI } from './SendConfirmationActions.js'
+import { paymentProtocolUriReceived } from './SendConfirmationActions.js'
 
 export const UPDATE_RECIPIENT_ADDRESS = 'UPDATE_RECIPIENT_ADDRESS'
 
@@ -97,7 +98,7 @@ const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWallet, gu
   }
 }
 
-export const parseUri = (data: string) => (dispatch: Dispatch, getState: GetState) => {
+export const parseScannedUri = (data: string) => (dispatch: Dispatch, getState: GetState) => {
   if (!data) return
   const state = getState()
   const selectedWalletId = state.ui.wallets.selectedWalletId
@@ -159,8 +160,21 @@ export const parseUri = (data: string) => (dispatch: Dispatch, getState: GetStat
       }
 
       // PUBLIC ADDRESS URI
-      Actions[SEND_CONFIRMATION]('fromScan')
-      dispatch(updateParsedURI(parsedUri))
+      const spendTargets: Array<EdgeSpendTarget> = [
+        {
+          publicAddress: parsedUri.publicAddress,
+          nativeAmount: parsedUri.nativeAmount || '0'
+        }
+      ]
+
+      const guiMakeSpendInfo: GuiMakeSpendInfo = {
+        spendTargets,
+        lockInputs: false,
+        metadata: parsedUri.metadata,
+        uniqueIdentifier: parsedUri.uniqueIdentifier
+      }
+      Actions[SEND_CONFIRMATION]({ guiMakeSpendInfo })
+      // dispatch(sendConfirmationUpdateTx(parsedUri))
     },
     () => {
       // INVALID URI
@@ -186,8 +200,9 @@ export const legacyAddressModalContinueButtonPressed = () => (dispatch: Dispatch
       return
     }
 
-    Actions[SEND_CONFIRMATION]('fromScan')
-    dispatch(updateParsedURI(parsedUri))
+    // Actions[SEND_CONFIRMATION]('fromScan')
+    Actions[SEND_CONFIRMATION]({ guiMakeSpendInfo: parsedUri })
+    // dispatch(sendConfirmationUpdateTx(parsedUri))
   })
 }
 
@@ -197,11 +212,11 @@ export const qrCodeScanned = (data: string) => (dispatch: Dispatch, getState: Ge
   if (!isScanEnabled) return
 
   dispatch(disableScan())
-  dispatch(parseUri(data))
+  dispatch(parseScannedUri(data))
 }
 
 export const addressModalDoneButtonPressed = (data: string) => (dispatch: Dispatch, getState: GetState) => {
-  dispatch(parseUri(data))
+  dispatch(parseScannedUri(data))
 }
 
 export const addressModalCancelButtonPressed = () => (dispatch: Dispatch, getState: GetState) => {
