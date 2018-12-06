@@ -3,7 +3,6 @@
 import type { EdgeSwapQuote } from 'edge-core-js'
 import { type Reducer } from 'redux'
 
-import * as Constants from '../constants/indexConstants'
 import { type Action } from '../modules/ReduxTypes.js'
 import { type GuiCurrencyInfo, type GuiWallet } from '../types.js'
 
@@ -27,7 +26,6 @@ export type CryptoExchangeState = {
   toBalanceMessage: string,
 
   insufficientError: boolean,
-  feeSetting: 'low' | 'standard' | 'high' | 'custom',
   walletListModalVisible: boolean,
   forceUpdateGuiCounter: number,
   genericShapeShiftError: string | null,
@@ -36,7 +34,6 @@ export type CryptoExchangeState = {
   shiftPendingTransaction: boolean,
   quoteExpireDate: Date | null,
   quote: EdgeSwapQuote | null,
-  totalSwaps: number,
   showKYCAlert: boolean,
   pluginCompleteKYC: string | null
 }
@@ -75,7 +72,6 @@ const initialState = {
 
   fee: 0,
   insufficientError: false,
-  feeSetting: Constants.STANDARD_FEE,
   walletListModalVisible: false,
   genericShapeShiftError: null,
   changeWallet: 'none',
@@ -83,7 +79,6 @@ const initialState = {
   shiftPendingTransaction: false,
   quoteExpireDate: null,
   quote: null,
-  totalSwaps: 0,
   showKYCAlert: false,
   pluginCompleteKYC: null
 }

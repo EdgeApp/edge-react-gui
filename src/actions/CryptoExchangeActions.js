@@ -67,7 +67,7 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
   const currencyCode = state.cryptoExchange.fromCurrencyCode ? state.cryptoExchange.fromCurrencyCode : undefined
 
   const edgeSpendInfo: EdgeSpendInfo = {
-    networkFeeOption: state.cryptoExchange.feeSetting,
+    networkFeeOption: Constants.STANDARD_FEE,
     currencyCode,
     spendTargets: [
       {
