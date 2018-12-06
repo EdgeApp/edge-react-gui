@@ -29,30 +29,6 @@ export type SetNativeAmountInfo = {
   toPrimaryInfo?: GuiCurrencyInfo
 }
 
-function setFromWalletMax (amount: string) {
-  return {
-    type: 'SET_FROM_WALLET_MAX',
-    data: amount
-  }
-}
-
-function setShapeTransaction (
-  type: 'UPDATE_SHIFT_TRANSACTION_FEE',
-  data: {
-    quote: EdgeSwapQuote,
-    fromNativeAmount: string, // This needs to be calculated
-    fromDisplayAmount: string,
-    toNativeAmount: string,
-    toDisplayAmount: string,
-    quoteExpireDate: Date | null
-  }
-) {
-  return {
-    type,
-    data
-  }
-}
-
 export const setKycToken = (tokenInfo: { access_token: string, refresh_token: string }, pluginName: string) => async (
   dispatch: Dispatch,
   getState: GetState
@@ -93,7 +69,7 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
     ]
   }
   const primaryNativeAmount = await wallet.getMaxSpendable(edgeSpendInfo)
-  dispatch(setFromWalletMax(primaryNativeAmount))
+  dispatch({ type: 'SET_FROM_WALLET_MAX', data: primaryNativeAmount })
 }
 
 async function makeShiftTransaction (
@@ -197,7 +173,7 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
       global.firebase && global.firebase.analytics().logEvent(`Exchange_Shift_Success`)
     } catch (error) {
       global.firebase && global.firebase.analytics().logEvent(`Exchange_Shift_Failed`)
-      dispatch({ type: 'SHIFT_ERROR', data: error.message })
+      dispatch({ type: 'SHIFT_ERROR' }) // TODO: error.message was never used anywhere
       dispatch({ type: 'DONE_SHIFT_TRANSACTION' })
       setTimeout(() => {
         Alert.alert(s.strings.exchange_failed, error.message)
@@ -358,7 +334,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
     toCurrencyCode: currentToCurrencyDenomination.name
   }
   Actions[Constants.EXCHANGE_QUOTE_SCENE]({ quote: returnObject })
-  dispatch(setShapeTransaction('UPDATE_SHIFT_TRANSACTION_FEE', returnObject))
+  dispatch({ type: 'UPDATE_SHIFT_TRANSACTION_FEE', data: returnObject })
 }
 
 export const selectToFromWallet = (type: string, wallet: GuiWallet, currencyCode?: string) => async (dispatch: Dispatch, getState: GetState) => {

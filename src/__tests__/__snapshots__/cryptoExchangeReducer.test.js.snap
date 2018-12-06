@@ -30,7 +30,6 @@ Object {
   "quote": null,
   "quoteExpireDate": null,
   "shiftPendingTransaction": false,
-  "shiftTransactionError": null,
   "showKYCAlert": false,
   "toCurrencyCode": null,
   "toCurrencyIcon": null,

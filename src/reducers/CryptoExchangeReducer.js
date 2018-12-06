@@ -26,9 +26,8 @@ export type CryptoExchangeState = {
   feeSetting: 'low' | 'standard' | 'high' | 'custom',
   walletListModalVisible: boolean,
   forceUpdateGuiCounter: number,
-  shiftTransactionError: Error | null,
-  genericShapeShiftError: Error | null,
-  changeWallet: 'none',
+  genericShapeShiftError: string | null,
+  changeWallet: 'none' | 'from' | 'to',
   fee: any,
   shiftPendingTransaction: boolean,
   quoteExpireDate: Date | null,
@@ -72,9 +71,8 @@ const initialState = {
   insufficientError: false,
   feeSetting: Constants.STANDARD_FEE,
   walletListModalVisible: false,
-  shiftTransactionError: null,
   genericShapeShiftError: null,
-  changeWallet: Constants.NONE,
+  changeWallet: 'none',
   forceUpdateGuiCounter: 0,
   shiftPendingTransaction: false,
   quoteExpireDate: null,
@@ -84,7 +82,7 @@ const initialState = {
   pluginCompleteKYC: null
 }
 
-function cryptoExchangeInner (state = initialState, action: Action) {
+function cryptoExchangeInner (state = initialState, action: Action): CryptoExchangeState {
   let forceUpdateGuiCounter
   switch (action.type) {
     case 'SWAP_FROM_TO_CRYPTO_WALLETS': {
@@ -107,22 +105,20 @@ function cryptoExchangeInner (state = initialState, action: Action) {
 
     case 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE': {
       if (!action.data) throw new Error('Invalid action')
-      const hack: any = action.data
       return {
         ...state,
         fromWallet: action.data.wallet,
         fromWalletPrimaryInfo: action.data.primaryInfo,
         fromCurrencyCode: action.data.currencyCode,
         fromCurrencyIcon: getLogo(action.data.wallet, action.data.currencyCode),
-        fromCurrencyIconDark: getLogoDark(hack.wallet, hack.currencyCode),
-        changeWallet: Constants.NONE,
+        fromCurrencyIconDark: getLogoDark(action.data.wallet, action.data.currencyCode),
+        changeWallet: 'none',
         fromNativeAmount: '0',
         toNativeAmount: '0',
         fromDisplayAmount: '0',
         toDisplayAmount: '0',
         minerFee: '0',
         fee: '',
-        exchangeRate: 1,
         quoteExpireDate: null,
         quote: null,
         genericShapeShiftError: null
@@ -131,22 +127,20 @@ function cryptoExchangeInner (state = initialState, action: Action) {
 
     case 'SELECT_TO_WALLET_CRYPTO_EXCHANGE': {
       if (!action.data) throw new Error('Invalid action')
-      const hack: any = action.data
       return {
         ...state,
         toWallet: action.data.wallet,
         toCurrencyCode: action.data.currencyCode,
         toWalletPrimaryInfo: action.data.primaryInfo,
         toCurrencyIcon: getLogo(action.data.wallet, action.data.currencyCode),
-        toCurrencyIconDark: getLogoDark(hack.wallet, hack.currencyCode),
-        changeWallet: Constants.NONE,
+        toCurrencyIconDark: getLogoDark(action.data.wallet, action.data.currencyCode),
+        changeWallet: 'none',
         fromNativeAmount: '0',
         toNativeAmount: '0',
         fromDisplayAmount: '0',
         toDisplayAmount: '0',
         minerFee: '0',
         fee: '',
-        exchangeRate: 1,
         quote: null,
         quoteExpireDate: null,
         genericShapeShiftError: null
@@ -197,8 +191,7 @@ function cryptoExchangeInner (state = initialState, action: Action) {
     case 'SHIFT_ERROR': {
       return {
         ...state,
-        confirmTransactionModalVisible: false,
-        shiftTransactionError: action.data
+        confirmTransactionModalVisible: false
       }
     }
 
@@ -214,8 +207,7 @@ function cryptoExchangeInner (state = initialState, action: Action) {
         ...state,
         quote: null,
         insufficientError: true,
-        genericShapeShiftError: null,
-        shiftTransactionError: null
+        genericShapeShiftError: null
       }
     }
 
@@ -223,8 +215,7 @@ function cryptoExchangeInner (state = initialState, action: Action) {
       return {
         ...state,
         quote: null,
-        genericShapeShiftError: action.data,
-        shiftTransactionError: null
+        genericShapeShiftError: action.data
       }
     }
 

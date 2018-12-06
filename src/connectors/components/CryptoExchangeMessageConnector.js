@@ -1,6 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
+import { StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
 
 import { intl } from '../../locales/intl'
@@ -8,23 +9,28 @@ import s from '../../locales/strings.js'
 import { getCurrencyConverter } from '../../modules/Core/selectors.js'
 import type { State } from '../../modules/ReduxTypes'
 import { getDisplayDenomination, getExchangeDenomination as settingsGetExchangeDenomination } from '../../modules/Settings/selectors.js'
-import { CryptoExchangeMessageBoxComponent } from '../../modules/UI/components/CryptoExchangeMessageBox/CryptoExchangeMessageBoxComponent'
+import { CryptoExchangeMessageBoxComponent, type Props } from '../../modules/UI/components/CryptoExchangeMessageBox/CryptoExchangeMessageBoxComponent'
 import { getExchangeDenomination } from '../../modules/UI/selectors.js'
 import type { GuiCurrencyInfo } from '../../types'
 import { convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../util/utils'
 
-export const mapStateToProps = (state: State, ownProps: Object) => {
+type OwnProps = {
+  style: StyleSheet.Styles
+}
+
+const mapStateToProps = (state: State, ownProps: OwnProps): Props => {
   const insufficient = state.cryptoExchange.insufficientError
   const genericError = state.cryptoExchange.genericShapeShiftError
   const fromWallet = state.cryptoExchange.fromWallet
   const fromCurrencyCode = state.cryptoExchange.fromCurrencyCode
   let message = ''
+
+  const useErrorStyle = !!(insufficient || genericError)
   if (!fromWallet || !fromCurrencyCode) {
     return {
       style: ownProps.style,
       message,
-      insufficient,
-      genericError
+      useErrorStyle
     }
   }
   const currencyConverter = getCurrencyConverter(state)
@@ -62,14 +68,11 @@ export const mapStateToProps = (state: State, ownProps: Object) => {
   return {
     style: ownProps.style,
     message,
-    insufficient,
-    genericError
+    useErrorStyle
   }
 }
 
-export const mapDispatchToProps = () => ({})
-
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  null
 )(CryptoExchangeMessageBoxComponent)

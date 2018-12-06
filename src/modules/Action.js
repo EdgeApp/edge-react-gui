@@ -1,14 +1,17 @@
 // @flow
 
+import type { EdgeSwapQuote } from 'edge-core-js'
+
 import { type DeleteWalletModalAction } from '../actions/DeleteWalletModalActions.js'
 import { type GetSeedModalAction } from '../actions/GetSeedModalActions.js'
 import { type ResyncWalletModalAction } from '../actions/ResyncWalletModalActions.js'
 import { type SplitWalletModalAction } from '../actions/SplitWalletModalActions.js'
 import { type XPubModalAction } from '../actions/XPubModalActions.js'
+import { type GuiCurrencyInfo, type GuiWallet } from '../types.js'
 import { type CoreContextAction } from './Core/Context/action.js'
 import { type SendLogsAction } from './Logs/action.js'
 
-type ActionType =
+type LegacyActionName =
   // | 'CLOSE_DELETE_WALLET_MODAL'
   // | 'CLOSE_GETSEED_WALLET_MODAL'
   // | 'CLOSE_RESYNC_WALLET_MODAL'
@@ -21,20 +24,6 @@ type ActionType =
   // | 'OPEN_VIEWXPUB_WALLET_MODAL'
   // | 'CLOSE_VIEWXPUB_WALLET_MODAL'
   // | 'UNLOCK_WALLET_SEED'
-  | 'SWAP_FROM_TO_CRYPTO_WALLETS'
-  | 'OPEN_WALLET_SELECTOR_MODAL'
-  | 'UPDATE_SHIFT_TRANSACTION_FEE'
-  | 'INVALIDATE_SHIFT_TRANSACTION'
-  | 'SHIFT_CRYPTO_CURRENCY'
-  | 'SHIFT_COMPLETE'
-  | 'SHIFT_ERROR'
-  | 'CLOSE_CRYPTO_EXEC_CONF_MODAL'
-  | 'SET_FROM_WALLET_MAX'
-  | 'RECEIVED_T_RANSACTION_ERROR'
-  | 'RECEIVED_INSUFFICENT_FUNDS_ERROR'
-  | 'GENERIC_SHAPE_SHIFT_ERROR'
-  | 'START_SHIFT_TRANSACTION'
-  | 'DONE_SHIFT_TRANSACTION'
   | 'OPEN_AB_ALERT'
   | 'CLOSE_AB_ALERT'
   | 'USE_LEGACY_REQUEST_ADDRESS'
@@ -94,7 +83,6 @@ type ActionType =
   | 'DISABLE_SCAN_TO_WALLET_LIST_MODAL'
   | 'TOGGLE_WALLET_LIST_MODAL_VISIBILITY'
   | 'ENABLE_WALLET_LIST_MODAL_VISIBILITY'
-  | 'DISABLE_WALLET_LIST_MODAL_VISIBILITY'
   | 'TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL'
   | 'ENABLE_TRANSACTIONS_WALLET_LIST_MODAL'
   | 'DISABLE_TRANSACTIONS_WALLET_LIST_MODAL'
@@ -245,18 +233,24 @@ type ActionType =
   | 'UI/SCENES/TRANSACTION_LIST/END_TRANSACTIONS_LOADING'
   | 'SET_TOKEN_SETTINGS'
   | 'ON_KYC_TOKEN_SET'
-  | 'NEED_KYC'
-  | 'NEED_FINISH_KYC_OFF'
-// | 'SELECT_TO_WALLET_CRYPTO_EXCHANGE'
-// | string
 
-type LegacyAction = {
-  type: ActionType,
-  data?: any
-}
+// Actions with no payload:
+type NoDataActionName =
+  | 'CLOSE_CRYPTO_EXEC_CONF_MODAL'
+  | 'DISABLE_WALLET_LIST_MODAL_VISIBILITY'
+  | 'DONE_SHIFT_TRANSACTION'
+  | 'INVALIDATE_SHIFT_TRANSACTION'
+  | 'NEED_FINISH_KYC_OFF'
+  | 'NEED_KYC'
+  | 'RECEIVED_INSUFFICENT_FUNDS_ERROR'
+  | 'SHIFT_COMPLETE'
+  | 'SHIFT_ERROR'
+  | 'START_SHIFT_TRANSACTION'
+  | 'SWAP_FROM_TO_CRYPTO_WALLETS'
 
 export type Action =
-  | LegacyAction
+  | { type: LegacyActionName, data?: any }
+  | { type: NoDataActionName }
   | DeleteWalletModalAction
   | GetSeedModalAction
   | ResyncWalletModalAction
@@ -264,13 +258,14 @@ export type Action =
   | XPubModalAction
   | CoreContextAction
   | SendLogsAction
+  // Actions with known payloads:
   | {
-      type: 'SELECT_TO_WALLET_CRYPTO_EXCHANGE',
-      data?: any
-    }
-  | {
-      type: 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE',
-      data?: any
+      type: 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE' | 'SELECT_TO_WALLET_CRYPTO_EXCHANGE',
+      data: {
+        currencyCode: string,
+        primaryInfo: GuiCurrencyInfo,
+        wallet: GuiWallet
+      }
     }
   | {
       type: 'UI/SCENES/TRANSACTION_LIST/END_TRANSACTIONS_LOADING',
@@ -280,3 +275,18 @@ export type Action =
   | { type: 'UI/WALLETS/CREATE_WALLET_SUCCESS' }
   | { type: 'UI/WALLETS/CREATE_WALLET_FAILURE' }
   | { type: 'NEED_FINISH_KYC', data: { pluginName: string } }
+  | { type: 'GENERIC_SHAPE_SHIFT_ERROR', data: string }
+  | { type: 'OPEN_WALLET_SELECTOR_MODAL', data: 'from' | 'to' }
+  | { type: 'SET_FROM_WALLET_MAX', data: string }
+  | {
+      type: 'UPDATE_SHIFT_TRANSACTION_FEE',
+      data: {
+        quote: EdgeSwapQuote,
+        toNativeAmount: string,
+        toDisplayAmount: string,
+        fromNativeAmount: string,
+        fromDisplayAmount: string,
+        quoteExpireDate: Date | null,
+        fee: string
+      }
+    }
