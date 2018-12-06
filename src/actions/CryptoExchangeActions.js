@@ -11,7 +11,7 @@ import { intl } from '../locales/intl'
 import s from '../locales/strings.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors'
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
-import type { Dispatch, GetState } from '../modules/ReduxTypes'
+import type { Dispatch, GetState, State } from '../modules/ReduxTypes'
 import * as SETTINGS_SELECTORS from '../modules/Settings/selectors.js'
 import * as UI_SELECTORS from '../modules/UI/selectors'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../types'
@@ -342,6 +342,7 @@ export const selectWalletForExchange = (walletId: string, currencyCode: string) 
 
   const data = {
     wallet,
+    balanceMessage: getBalanceMessage(state, wallet, cc),
     currencyCode: cc,
     primaryInfo
   }
@@ -387,4 +388,26 @@ export const checkEnabledExchanges = () => (dispatch: Dispatch, getState: GetSta
   if (!isAnyExchangeEnabled) {
     Alert.alert(s.strings.no_exchanges_available, s.strings.check_exchange_settings)
   }
+}
+
+function getBalanceMessage (state: State, wallet: GuiWallet, currencyCode: string) {
+  const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
+  const balanceInCrypto = wallet.nativeBalances[currencyCode]
+  const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
+  const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, currencyCode)
+  const balanceInCryptoDisplay = UTILS.convertNativeToExchange(exchangeDenomination.multiplier)(balanceInCrypto)
+  const balanceInFiat = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, Number(balanceInCryptoDisplay))
+
+  const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
+
+  const cryptoBalanceAmount: string = UTILS.convertNativeToDisplay(displayDenomination.multiplier)(balanceInCrypto) // convert to correct denomination
+  const cryptoBalanceAmountString = cryptoBalanceAmount ? intl.formatNumber(UTILS.decimalOrZero(bns.toFixed(cryptoBalanceAmount, 0, 6), 6)) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)
+  const balanceInFiatString = intl.formatNumber(balanceInFiat || 0, { toFixed: 2 })
+
+  const fiatCurrencyCode = UTILS.getDenomFromIsoCode(wallet.fiatCurrencyCode)
+  const fiatDisplayCode = fiatCurrencyCode.symbol
+
+  if (fiatDisplayCode == null) return ''
+
+  return 'Balance: ' + cryptoBalanceAmountString + ' ' + displayDenomination.name + ' (' + fiatDisplayCode + ' ' + balanceInFiatString + ')'
 }

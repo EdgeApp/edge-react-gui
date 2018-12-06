@@ -15,6 +15,8 @@ export type CryptoExchangeState = {
   fromWalletPrimaryInfo: GuiCurrencyInfo, // EdgeCurrencyInfo | null,
   fromCurrencyIcon: string | null,
   fromCurrencyIconDark: string | null,
+  fromBalanceMessage: string,
+
   toWallet: GuiWallet | null,
   toCurrencyCode: string | null,
   toNativeAmount: string,
@@ -22,6 +24,8 @@ export type CryptoExchangeState = {
   toWalletPrimaryInfo: GuiCurrencyInfo, // EdgeCurrencyInfo | null,
   toCurrencyIcon: string | null,
   toCurrencyIconDark: string | null,
+  toBalanceMessage: string,
+
   insufficientError: boolean,
   feeSetting: 'low' | 'standard' | 'high' | 'custom',
   walletListModalVisible: boolean,
@@ -58,6 +62,7 @@ const initialState = {
   fromWalletPrimaryInfo: dummyCurrencyInfo,
   fromCurrencyIcon: null,
   fromCurrencyIconDark: null,
+  fromBalanceMessage: '',
 
   toWallet: null,
   toCurrencyCode: null,
@@ -66,6 +71,7 @@ const initialState = {
   toWalletPrimaryInfo: dummyCurrencyInfo,
   toCurrencyIcon: null,
   toCurrencyIconDark: null,
+  toBalanceMessage: '',
 
   fee: 0,
   insufficientError: false,
@@ -112,6 +118,7 @@ function cryptoExchangeInner (state = initialState, action: Action): CryptoExcha
         fromCurrencyCode: action.data.currencyCode,
         fromCurrencyIcon: getLogo(action.data.wallet, action.data.currencyCode),
         fromCurrencyIconDark: getLogoDark(action.data.wallet, action.data.currencyCode),
+        fromBalanceMessage: action.data.balanceMessage,
         changeWallet: 'none',
         fromNativeAmount: '0',
         toNativeAmount: '0',
@@ -134,6 +141,7 @@ function cryptoExchangeInner (state = initialState, action: Action): CryptoExcha
         toWalletPrimaryInfo: action.data.primaryInfo,
         toCurrencyIcon: getLogo(action.data.wallet, action.data.currencyCode),
         toCurrencyIconDark: getLogoDark(action.data.wallet, action.data.currencyCode),
+        toBalanceMessage: action.data.balanceMessage,
         changeWallet: 'none',
         fromNativeAmount: '0',
         toNativeAmount: '0',
@@ -283,6 +291,7 @@ function deepCopyState (state) {
   deepCopy.toWalletPrimaryInfo = state.fromWalletPrimaryInfo
   deepCopy.toCurrencyIcon = state.fromCurrencyIcon
   deepCopy.toCurrencyIconDark = state.fromCurrencyIconDark
+  deepCopy.toBalanceMessage = state.fromBalanceMessage
   deepCopy.fromWallet = state.toWallet
   deepCopy.fromCurrencyCode = state.toCurrencyCode
   deepCopy.fromNativeAmount = '0'
@@ -290,6 +299,7 @@ function deepCopyState (state) {
   deepCopy.fromWalletPrimaryInfo = state.toWalletPrimaryInfo
   deepCopy.fromCurrencyIcon = state.toCurrencyIcon
   deepCopy.fromCurrencyIconDark = state.toCurrencyIconDark
+  deepCopy.fromBalanceMessage = state.toBalanceMessage
 
   deepCopy.forceUpdateGuiCounter = state.forceUpdateGuiCounter + 1
 
