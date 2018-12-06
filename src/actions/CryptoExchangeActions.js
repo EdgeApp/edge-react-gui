@@ -297,12 +297,12 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, info: S
   const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
   const fromExchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, fromWallet.currencyCode)
   const fromBalanceInCryptoDisplay = UTILS.convertNativeToExchange(fromExchangeDenomination.multiplier)(edgeCoinExchangeQuote.fromNativeAmount)
-  const fromBalanceInFiatRaw = currencyConverter.convertCurrency(fromCurrencyCode, fromWallet.isoFiatCurrencyCode, Number(fromBalanceInCryptoDisplay))
+  const fromBalanceInFiatRaw = await currencyConverter.convertCurrency(fromCurrencyCode, fromWallet.isoFiatCurrencyCode, Number(fromBalanceInCryptoDisplay))
   const fromBalanceInFiat = intl.formatNumber(fromBalanceInFiatRaw || 0, { toFixed: 2 })
 
   const toExchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, toWallet.currencyCode)
   const toBalanceInCryptoDisplay = UTILS.convertNativeToExchange(toExchangeDenomination.multiplier)(edgeCoinExchangeQuote.toNativeAmount)
-  const toBalanceInFiatRaw = currencyConverter.convertCurrency(toCurrencyCode, toWallet.isoFiatCurrencyCode, Number(toBalanceInCryptoDisplay))
+  const toBalanceInFiatRaw = await currencyConverter.convertCurrency(toCurrencyCode, toWallet.isoFiatCurrencyCode, Number(toBalanceInCryptoDisplay))
   const toBalanceInFiat = intl.formatNumber(toBalanceInFiatRaw || 0, { toFixed: 2 })
 
   const returnObject = {
@@ -326,7 +326,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, info: S
   dispatch({ type: 'UPDATE_SHIFT_TRANSACTION_FEE', data: returnObject })
 }
 
-export const selectWalletForExchange = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
+export const selectWalletForExchange = (walletId: string, currencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const wallet = state.ui.wallets.byId[walletId]
   const cc = currencyCode || wallet.currencyCode
@@ -342,7 +342,7 @@ export const selectWalletForExchange = (walletId: string, currencyCode: string) 
 
   const data = {
     wallet,
-    balanceMessage: getBalanceMessage(state, wallet, cc),
+    balanceMessage: await getBalanceMessage(state, wallet, cc),
     currencyCode: cc,
     primaryInfo
   }
@@ -390,13 +390,13 @@ export const checkEnabledExchanges = () => (dispatch: Dispatch, getState: GetSta
   }
 }
 
-function getBalanceMessage (state: State, wallet: GuiWallet, currencyCode: string) {
+async function getBalanceMessage (state: State, wallet: GuiWallet, currencyCode: string) {
   const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
   const balanceInCrypto = wallet.nativeBalances[currencyCode]
   const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
   const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, currencyCode)
   const balanceInCryptoDisplay = UTILS.convertNativeToExchange(exchangeDenomination.multiplier)(balanceInCrypto)
-  const balanceInFiat = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, Number(balanceInCryptoDisplay))
+  const balanceInFiat = await currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, Number(balanceInCryptoDisplay))
 
   const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
 
