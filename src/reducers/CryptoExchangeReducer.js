@@ -86,9 +86,6 @@ const initialState = {
 function cryptoExchangeInner (state = initialState, action: Action): CryptoExchangeState {
   let forceUpdateGuiCounter
   switch (action.type) {
-    case 'SWAP_FROM_TO_CRYPTO_WALLETS': {
-      return deepCopyState(state)
-    }
     case 'ON_KYC_TOKEN_SET': {
       return { ...state, showKYCAlert: false }
     }
@@ -277,31 +274,6 @@ function getLogoDark (wallet, currencyCode) {
   return null
 }
 
-function deepCopyState (state) {
-  const deepCopy = JSON.parse(JSON.stringify(state))
-  deepCopy.toWallet = state.fromWallet
-  deepCopy.toCurrencyCode = state.fromCurrencyCode
-  deepCopy.toNativeAmount = '0'
-  deepCopy.toDisplayAmount = '0'
-  deepCopy.toWalletPrimaryInfo = state.fromWalletPrimaryInfo
-  deepCopy.toCurrencyIcon = state.fromCurrencyIcon
-  deepCopy.toCurrencyIconDark = state.fromCurrencyIconDark
-  deepCopy.toBalanceMessage = state.fromBalanceMessage
-  deepCopy.fromWallet = state.toWallet
-  deepCopy.fromCurrencyCode = state.toCurrencyCode
-  deepCopy.fromNativeAmount = '0'
-  deepCopy.fromDisplayAmount = '0'
-  deepCopy.fromWalletPrimaryInfo = state.toWalletPrimaryInfo
-  deepCopy.fromCurrencyIcon = state.toCurrencyIcon
-  deepCopy.fromCurrencyIconDark = state.toCurrencyIconDark
-  deepCopy.fromBalanceMessage = state.toBalanceMessage
-
-  deepCopy.forceUpdateGuiCounter = state.forceUpdateGuiCounter + 1
-
-  deepCopy.insufficientError = false
-
-  return deepCopy
-}
 // Nuke the state on logout:
 export const cryptoExchange: Reducer<CryptoExchangeState, Action> = (state, action: Action) => {
   if (action.type === 'LOGOUT' || action.type === 'DEEP_LINK_RECEIVED') {

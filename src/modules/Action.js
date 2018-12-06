@@ -246,7 +246,6 @@ type NoDataActionName =
   | 'SHIFT_COMPLETE'
   | 'SHIFT_ERROR'
   | 'START_SHIFT_TRANSACTION'
-  | 'SWAP_FROM_TO_CRYPTO_WALLETS'
 
 export type Action =
   | { type: LegacyActionName, data?: any }
