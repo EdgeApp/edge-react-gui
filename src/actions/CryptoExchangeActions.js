@@ -1,6 +1,6 @@
 // @flow
 import { bns } from 'biggystring'
-import type { EdgeCurrencyWallet, EdgeExchangeQuote, EdgeExchangeQuoteOptions, EdgeMetadata, EdgeSpendInfo, EdgeSwapQuote } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeMetadata, EdgeSpendInfo, EdgeSwapQuote, EdgeSwapQuoteOptions } from 'edge-core-js'
 import { errorNames } from 'edge-core-js'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -39,7 +39,7 @@ function setFromWalletMax (amount: string) {
 function setShapeTransaction (
   type: 'UPDATE_SHIFT_TRANSACTION_FEE',
   data: {
-    quote: EdgeExchangeQuote,
+    quote: EdgeSwapQuote,
     fromNativeAmount: string, // This needs to be calculated
     fromDisplayAmount: string,
     toNativeAmount: string,
@@ -225,7 +225,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
 
   const quoteNativeAmount = fromNativeAmount
   const whichWalletLiteral = whichWallet === Constants.TO ? 'to' : 'from'
-  const quoteData: EdgeExchangeQuoteOptions = {
+  const quoteData: EdgeSwapQuoteOptions = {
     fromCurrencyCode,
     fromWallet: srcWallet,
     nativeAmount: quoteNativeAmount,
