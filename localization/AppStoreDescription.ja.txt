@@ -19,12 +19,12 @@
 ・生体認証 TouchID、FaceID ログイン。
 トランザクションごとにアドレスが更新される階層的決定性ウォレット
 ・非中央集権的サーバー設計 たとえエッジサーバーがダウンしてもウォレットは動作可能。
-・オープンソースコード Available at https://github.com/EdgeApp
+・オープンソースコード https://github.com/EdgeApp でご覧いただけます。
 
-Privacy Notice
-The Edge Wallet application requests access to the device contact list, and personal information. This information is used on the device to provide an improved user experience in the following ways:
+プライバシーについて
+エッジウォレットアプリケーションはデバイスのアドレス帳と個人情報にアクセスします。 この情報はユーザーエクスペリエンス向上のために以下の用途でデバイス上でのみ使われます。
 
-1. Autocomplete contacts from the user's address book after a transaction
-2. Autocomplete contacts from the user's address book to send Email or SMS payment requests
+1. トランザクション後にユーザーのアドレス帳から連絡先を自動補完します。
+2. EメールやSMSで支払いリクエストを送るためにアドレス帳から連絡先を自動補完します。
 
-No personal info or contact list info ever leaves the device. Neither Edge nor any 3rd party can access the information requested by the application.
+個人情報や連絡先情報は一切デバイスの外に送信されることはありません。 エッジや他のどの第三者も、アプリケーションによってリクエストされた情報にアクセスすることはできません。
