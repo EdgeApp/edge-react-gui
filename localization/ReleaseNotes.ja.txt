@@ -1,43 +1,43 @@
-v1.5.0
+バージョン1.5.0
 
-* EOS support
-* Bech32 address support
-* Add Changenow as an exchange provider
-* Implementing deep linking of bitcoin, ethereum, bitcoincash, dash, and edge URIs
-* Move Edge Core to independent process to boost performance and GUI responsiveness
+*EOSサポート
+*Bech32アドレス対応
+*交換所提携先としてChangeNOWを追加
+*ビットコイン、イーサリアム、ビットコインキャッシュ、ダッシュとエッジURIのディープリンクを実装
+*エッジの中核を独立プロセスに移しグラフィカルユーザインタフェースの反応性パフォーマンスを向上
 
-v1.4.4
+バージョン1.4.4
 
-* Add ability to split BCH wallets into BSV wallets
-* Add replay protection to BCH/BSV wallets
-* Improve login performance
-* Fix bug that caused XRP and XLM to re-query all transactions at each login
-* Improve connectivity to nodes for bitcoin related currencies (BTC, BCH, LTC, DASH, etc)
+*BCHとBSVのスプリットがウォレット内で可能になりました
+*BCHとBSVウォレットにリプレイプロテクションを追加
+*ログインパフォーマンスの向上
+*再ログインするたびにXRPとXLMの全てのトランザクションを照会する原因となったバグの修正
+*ビットコイン関連の通貨 (BTC、BCH、LTC、DASHなど) のノードへの接続性を向上
 
-v1.4.3
+バージョン1.4.3
 
-* Big performance boost when logging in and syncing wallets
-* Add support for Monero bulletproofs which fixes Monero spending
-* Allow users to enable/disable exchange providers
-* Fix occasional "Token is not supported" error in Exchange screen
-* Enable viewing xpub for more currencies
-* Fix crash on large accounts when tapping top right menu button immediately after login
-* Fix hang when using Simplex from some Android devices
+*ログインとウォレット同期時の大きなパフォーマンス向上
+*モネロのビュレットプルーフスを追加しモネロの送金を改善
+*ユーザーが交換所プロバイダの有効化と無効化の選択可能になりました
+*交換所画面でたまに起こるエラー「トークンはサポートされていません」を改善
+*より多くの通貨でXpubを見れるようになりました
+*多くのアカウントで発生した、ログイン後すぐに右上のメニューボタンをタップした際にクラッシュするバグを改善
+*いくつかのアンドロイドデバイスでSimplexを利用した際のフリーズを改善
 
-v1.4.2
+バージョン1.4.2
 
-* Support for Stellar
-* Add ability to select custom nodes for Bitcoin and similar currencies
-* Support for ShapeShift membership
-* Support Changelly.com in Exchange functionality
-* Add Spanish, Italian, and Russian translations
+*ステラのサポート
+*ビットコインや類似通貨のためのカスタムノードを選択できるようになりました
+*ShapeShift メンバーシップのサポートを追加
+*交換機能にChangelly.comのサポートを追加
+*スペイン語、イタリア語、ロシア語の翻訳を追加
 
-v1.3.4
+バージョン1.3.4
 
-* Prevent create wallet button Done button from being tapped multiple times
-* Fix white screen hang upon login if an incoming transaction happens
-* Fix address wrapping in Simplex plugin
-* Fix double tap bug on Change Password modal
-* Fix Fiat amounts when using other country currencies
-* Additional scaling and visual improvements
-* Other minor bug fixes
+*ウォレットを作成ボタンと完了ボタンが数回タップされるのを防止
+*ログイン時に送金を受信した場合に起こる白い画面でのフリーズを改善
+*Simplex機能にアドレスを含むプロセスの改善
+*パスワード変更におけるダブルタップのバグを改善
+*他の国の通貨を利用する際の法定通貨の数量に関して改善
+*スケーリングの拡大とビジュアルの改善
+*その他、細かなバグ修正
