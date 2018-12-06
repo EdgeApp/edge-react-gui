@@ -1,25 +1,25 @@
-Title: Edge - Bitcoin, Ethereum, Monero, Ripple Wallet
+タイトル：エッジ - ビットコイン、イーサリアム、モネロ、リップルウォレット
 -----
-Short description: Private, secure & easy to use. Buy, sell, send & receive Bitcoin & other crypto.
+短い説明：プライベート・安全・使いやすい。 ビットコインや他の仮想通貨の購入、売却、送金、受取。
 -----
-Total privacy and security in our easy to use blockchain wallet.
+完全なプライバシーとセキュリティーを兼ね備えた使いやすいブロックチェーンウォレット。
 
-Managing your cryptocurrency assets has never been easier. Edge Wallet provides maximum security while keeping simplicity, allowing all types of users to easily manage, transfer & exchange their currencies.
+仮想通貨の資産を管理することは今まで決して簡単ではありませんでした。 エッジウォレットはどんなタイプのユーザーにも、通貨を簡単に管理、送金、両替できます。シンプルさを維持しながら最大限のセキュリティーを提供します。
 
-Edge Crypto Wallet currently supports: Bitcoin, Bitcoin Cash, Litecoin, Dash, Ethereum, Stellar, Monero, and Ripple/XRP.
+エッジ仮想通貨ウォレットは現在、ビットコイン、ビットコインキャッシュ、ライトコイン、ダッシュ、イーサリアム、ステラ、モネロ、リップル(XRP) をサポートしています。
 
-Edge is a powerful and easy to use cryptocurrency wallet that allows users to easily control their own private keys with the familiarity and ease of mobile banking. 
+馴染みのあるモバイルバンキングを使うように簡単に自分の秘密鍵を管理できるパワフルで使いやすい仮想通貨ウォレットです。 
 
-Take control of your funds! With Edge, only YOU have access to your funds or transaction data. Neither Edge or any 3rd party can access your money or data. You get the financial privacy and autonomy that blockchain was designed for, with the ease of use even grandma could handle.
+自分の手で資産管理を始めましょう！ エッジウォレットでは、自分の資産や取引データにアクセスできるのは、唯一あなただけです。 エッジでも、他の第三者もあなたのお金やデータにアクセスすることはできません。 おばあちゃんでも使うことができるような操作性でありながら、本来ブロックチェーンが生まれた理由であるファイナンシャルプライバシーと自律性を得ることができます。
 
-Edge also provides a cryptocurrency exchange. Easily swap your currencies for others with a few taps. 
+エッジは通貨の交換も提供します。 数タップするだけで、あなたの通貨を他の通貨と簡単に交換することができます。 
 
-• Zero-knowledge & zero-access to user funds, keys, or transaction data by Edge or 3rd parties
-• Simple account creation using just a login & password (no printing of PDFs, writing down pass phrases, or adding encryption settings)
-• Biometric TouchID and FaceID login
-• Hierarchical Deterministic wallets with changing addresses per transaction
-• Decentralized server architecture. Wallets work even if Edge servers are down.
-• Open-source code. Available at https://github.com/EdgeApp
+・エッジまたは他のどの第三者もユーザーの資金や鍵、取引データに関しての情報へアクセスできない設計。
+ログインとパスワードだけを使用したシンプルなアカウント作成 (PDFのプリントアウト、パスフレーズの書きとめ、暗号化設定を必要としません)
+・生体認証 TouchID、FaceID ログイン。
+トランザクションごとにアドレスが更新される階層的決定性ウォレット
+・非中央集権的サーバー設計 たとえエッジサーバーがダウンしてもウォレットは動作可能。
+・オープンソースコード Available at https://github.com/EdgeApp
 
 Privacy Notice
 The Edge Wallet application requests access to the device contact list, and personal information. This information is used on the device to provide an improved user experience in the following ways:
