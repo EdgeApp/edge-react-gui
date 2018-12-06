@@ -251,6 +251,7 @@ export type ActionType =
   | 'SET_TOKEN_SETTINGS'
   | 'ON_KYC_TOKEN_SET'
   | 'NEED_KYC'
+  | 'NEED_FINISH_KYC_OFF'
 // | 'SELECT_TO_WALLET_CRYPTO_EXCHANGE'
 // | string
 
@@ -283,3 +284,4 @@ export type Action =
   | { type: 'UI/WALLETS/CREATE_WALLET_START' }
   | { type: 'UI/WALLETS/CREATE_WALLET_SUCCESS' }
   | { type: 'UI/WALLETS/CREATE_WALLET_FAILURE' }
+  | { type: 'NEED_FINISH_KYC', data: { pluginName: string } }

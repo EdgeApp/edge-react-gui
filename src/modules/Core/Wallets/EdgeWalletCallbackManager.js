@@ -4,7 +4,7 @@ import type { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { refreshTransactionsRequest } from '../../../actions/TransactionListActions.js'
+import { newTransactionsRequest, refreshTransactionsRequest } from '../../../actions/TransactionListActions.js'
 import { refreshReceiveAddressRequest, refreshWallet, updateWalletLoadingProgress } from '../../../actions/WalletActions.js'
 import { isReceivedTransaction } from '../../../util/utils.js'
 import { checkPasswordRecovery } from '../../UI/components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalActions.js'
@@ -19,7 +19,8 @@ type EdgeWalletCallbackManagerDispatchProps = {
   refreshTransactionsRequest: (id: string, transactions: Array<EdgeTransaction>) => void,
   refreshWallet: (id: string) => void,
   checkPasswordRecovery: () => void,
-  updateWalletLoadingProgress: (id: string, transactionCount: number) => void
+  updateWalletLoadingProgress: (id: string, transactionCount: number) => void,
+  newTransactionsRequest: (id: string, transactions: Array<EdgeTransaction>) => void
 }
 
 type Props = EdgeWalletCallbackManagerStateProps & EdgeWalletCallbackManagerDispatchProps
@@ -45,7 +46,7 @@ class EdgeWalletCallbackManager extends React.Component<Props> {
       this.props.refreshReceiveAddressRequest(this.props.id)
       this.props.refreshTransactionsRequest(this.props.id, transactions)
       this.props.refreshWallet(this.props.id)
-
+      this.props.newTransactionsRequest(this.props.id, transactions)
       // now check if password recovery is set up
       const finalTxIndex = transactions.length - 1
       if (isReceivedTransaction(transactions[finalTxIndex])) this.props.checkPasswordRecovery()
@@ -103,7 +104,8 @@ const mapDispatchToProps = (dispatch: Dispatch): EdgeWalletCallbackManagerDispat
     refreshTransactionsRequest: (transactions, id) => dispatch(refreshTransactionsRequest(transactions, id)),
     refreshWallet: id => dispatch(refreshWallet(id)),
     checkPasswordRecovery: () => dispatch(checkPasswordRecovery()),
-    updateWalletLoadingProgress: (id, transactionCount) => dispatch(updateWalletLoadingProgress(id, transactionCount))
+    updateWalletLoadingProgress: (id, transactionCount) => dispatch(updateWalletLoadingProgress(id, transactionCount)),
+    newTransactionsRequest: (walletId: string, transactions: Array<EdgeTransaction>) => dispatch(newTransactionsRequest(walletId, transactions))
   }
 }
 

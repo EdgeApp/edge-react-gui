@@ -1,22 +1,23 @@
 {
   "name": "edge-react-gui",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "Edge Wallet React GUI",
   "homepage": "https://edge.app",
   "license": "SEE LICENSE IN LICENSE",
   "author": "Edge, Inc.",
   "contributors": [
-    "Paul Puey <paul@edge.app>",
-    "William Swanson <william@edge.app>",
+    "Allen Hujsak <allen@edge.app>",
+    "Eliran Zack <eliran@edge.app>",
     "Kevin Sullivan <kevin@edge.app>",
     "Kylan Hurt <kylan@edge.app>",
-    "Allen Hujsak <allen@edge.app>",
-    "Tim Horton <tim@edge.app>",
-    "Eliran Zack <eliran@edge.app>"
+    "James Risberg <james@edge.app>",
+    "Paul Puey <paul@edge.app>",
+    "William Swanson <william@edge.app>",
+    "Tim Horton <tim@edge.app>"
   ],
   "repository": {
     "type": "git",
-    "url": "git@github.com:Airbitz/edge-react-gui.git"
+    "url": "git@github.com:EdgeApp/edge-react-gui.git"
   },
   "scripts": {
     "android:clean": "cd android && ./gradlew clean && rm -rf build && cd ../",
@@ -83,9 +84,9 @@
     "dns.js": "^1.0.1",
     "domain-browser": "^1.1.7",
     "edge-components": "^0.0.12",
-    "edge-core-js": "0.12.20",
+    "edge-core-js": "0.12.21",
     "edge-currency-accountbased": "^0.0.13",
-    "edge-currency-bitcoin": "3.7.0",
+    "edge-currency-bitcoin": "3.7.2",
     "edge-currency-ethereum": "0.11.0",
     "edge-currency-monero": "0.1.0",
     "edge-exchange-plugins": "^0.2.0",
@@ -153,6 +154,7 @@
     "timers-browserify": "^1.4.2",
     "tty-browserify": "0.0.0",
     "url": "^0.10.3",
+    "url-parse": "^1.4.4",
     "vm-browserify": "0.0.4",
     "why-did-you-update": "^0.1.1"
   },

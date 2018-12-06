@@ -106,6 +106,7 @@ export const getSpendInfo = (state: State, newSpendInfo?: GuiMakeSpendInfo = {})
       }
     ]
   }
+
   return {
     currencyCode: newSpendInfo.currencyCode || getSelectedCurrencyCode(state),
     metadata: newSpendInfo.metadata ? { ...getMetadata(state), ...newSpendInfo.metadata } : getMetadata(state),

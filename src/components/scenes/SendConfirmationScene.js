@@ -114,6 +114,7 @@ export class SendConfirmation extends Component<Props, State> {
     } else if (guiMakeSpendInfo.spendTargets && guiMakeSpendInfo.spendTargets.length) {
       keyboardVisible = false
     }
+
     this.props.sendConfirmationUpdateTx(this.props.guiMakeSpendInfo)
     this.setState({ secondaryDisplayDenomination, overridePrimaryExchangeAmount, keyboardVisible })
   }
@@ -284,7 +285,7 @@ export class SendConfirmation extends Component<Props, State> {
           </View>
         </Gradient>
 
-        <UniqueIdentifierModal onConfirm={uniqueIdentifier => this.props.sendConfirmationUpdateTx({ uniqueIdentifier })} currencyCode={currencyCode} />
+        {isTaggableCurrency && <UniqueIdentifierModal onConfirm={this.props.sendConfirmationUpdateTx} currencyCode={currencyCode} />}
       </SafeAreaView>
     )
   }

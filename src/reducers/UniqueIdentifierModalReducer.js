@@ -6,11 +6,11 @@ import type { Action } from '../modules/ReduxTypes.js'
 
 export type UniqueIdentifierModalState = {
   isActive: boolean,
-  uniqueIdentifier: string
+  uniqueIdentifier?: string
 }
 export const initialState = {
   isActive: false,
-  uniqueIdentifier: ''
+  uniqueIdentifier: undefined
 }
 export const uniqueIdentifierModal: Reducer<UniqueIdentifierModalState, Action> = (state = initialState, action) => {
   switch (action.type) {

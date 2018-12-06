@@ -3347,10 +3347,10 @@ edge-components@^0.0.12:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@0.12.20:
-  version "0.12.20"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.12.20.tgz#c6786f517fb3df72d2bd8a61c538bc0fb0404727"
-  integrity sha512-BaHC/b2kO8yxMPt5wJCHPk5gaPvZJsukn5Jw2vWY2pPHPE2hkhxZe2aSWdFEpmQ64IJbrVUDQtxm0OdjzLtXkw==
+edge-core-js@0.12.21:
+  version "0.12.21"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.12.21.tgz#87c4070d69db1aab94fe318ca4a1305c9e612eea"
+  integrity sha512-lMzEOzYHcbNAdJT2j9N/vPKn6KMaVv59SHMxWjmgluKCyu2iT3MBaTxTlKDTbe/GqiOAk/WUu7MFm0bcJpmgXg==
   dependencies:
     "@babel/runtime" "^7.0.0"
     aes-js "^3.1.0"
@@ -3391,10 +3391,10 @@ edge-currency-accountbased@^0.0.13:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@3.7.0:
-  version "3.7.0"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-3.7.0.tgz#3feecad2e8e6a3683d36e8147ef804b0a6748f1c"
-  integrity sha512-O/IytDr9meN74G2v5fdI8JRsiOgb9rAJVHWQu/pjhpZzdvYnzzAP254IDYU/8DyNTV70tafOpGkrPJXn9omxIQ==
+edge-currency-bitcoin@3.7.2:
+  version "3.7.2"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-3.7.2.tgz#9a343b3de6cb66f3e4a3d63bc1933f4525c68345"
+  integrity sha512-k5WVi/mpHuitBFtCZMogqjTAVwPv/1F/eaPfh1dnH1lxG0Jt3VkY/bDurfZK/BhXEcPX9zQdoHSeJwtdeVgJfw==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -10703,6 +10703,14 @@ url-parse@^1.4.1, url-parse@^1.4.3:
   version "1.4.3"
   resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.4.3.tgz#bfaee455c889023219d757e045fa6a684ec36c15"
   integrity sha512-rh+KuAW36YKo0vClhQzLLveoj8FwPJNu65xLb7Mrt+eZht0IPT0IXgSv8gcMegZ6NvjJUALf6Mf25POlMwD1Fw==
+  dependencies:
+    querystringify "^2.0.0"
+    requires-port "^1.0.0"
+
+url-parse@^1.4.4:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.4.4.tgz#cac1556e95faa0303691fec5cf9d5a1bc34648f8"
+  integrity sha512-/92DTTorg4JjktLNLe6GPS2/RvAd/RGr6LuktmWSMLEOa6rjnlrFXNgSbSmkNvCoL2T028A0a1JaJLzRMlFoHg==
   dependencies:
     querystringify "^2.0.0"
     requires-port "^1.0.0"

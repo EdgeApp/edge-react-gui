@@ -99,7 +99,7 @@ class SwapKYCModal extends Component<Props, State> {
           <SafeAreaView>
             <View style={styles.container}>
               <Gradient style={styles.gradient}>
-                <BackButton onPress={this.props.onDone} label={s.strings.title_back} />
+                <BackButton onPress={this.props.onDone} label={s.strings.title_back} withArrow />
               </Gradient>
               <View style={styles.webview}>
                 <WebView

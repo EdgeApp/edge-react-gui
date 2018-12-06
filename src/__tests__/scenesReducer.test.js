@@ -121,7 +121,7 @@ test('initialState', () => {
     },
     uniqueIdentifierModal: {
       isActive: false,
-      uniqueIdentifier: ''
+      uniqueIdentifier: undefined
     }
   }
   const actual = scenesReducer(undefined, dummyAction)
