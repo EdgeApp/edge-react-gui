@@ -228,7 +228,6 @@ type LegacyActionName =
   | 'UI/SCENES/TRANSACTION_LIST/DISABLE_UPDATING_BALANCE'
   | 'UI/SCENES/TRANSACTION_LIST/TOGGLE_UPDATING_BALANCE'
   | 'SET_TOKEN_SETTINGS'
-  | 'ON_KYC_TOKEN_SET'
 
 // Actions with no payload:
 type NoDataActionName =
@@ -239,10 +238,14 @@ type NoDataActionName =
   | 'INVALIDATE_SHIFT_TRANSACTION'
   | 'NEED_FINISH_KYC_OFF'
   | 'NEED_KYC'
+  | 'ON_KYC_TOKEN_SET'
   | 'RECEIVED_INSUFFICENT_FUNDS_ERROR'
   | 'SHIFT_COMPLETE'
   | 'SHIFT_ERROR'
   | 'START_SHIFT_TRANSACTION'
+  | 'UI/WALLETS/CREATE_WALLET_FAILURE'
+  | 'UI/WALLETS/CREATE_WALLET_START'
+  | 'UI/WALLETS/CREATE_WALLET_SUCCESS'
 
 export type Action =
   | { type: LegacyActionName, data?: any }
@@ -264,9 +267,6 @@ export type Action =
         wallet: GuiWallet
       }
     }
-  | { type: 'UI/WALLETS/CREATE_WALLET_START' }
-  | { type: 'UI/WALLETS/CREATE_WALLET_SUCCESS' }
-  | { type: 'UI/WALLETS/CREATE_WALLET_FAILURE' }
   | { type: 'NEED_FINISH_KYC', data: { pluginName: string } }
   | { type: 'GENERIC_SHAPE_SHIFT_ERROR', data: string }
   | { type: 'OPEN_WALLET_SELECTOR_MODAL', data: 'from' | 'to' }
