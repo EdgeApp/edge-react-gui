@@ -11,7 +11,7 @@ type Props = {
   logo: string,
   leftText: string,
   rightText: string,
-  onToggle(): void
+  onPress(): void
 }
 class RowWithButton extends Component<Props> {
   constructor (props: Props) {
@@ -19,18 +19,13 @@ class RowWithButton extends Component<Props> {
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
-  _onPressToggleSetting = () => {
-    this.props.onToggle()
+  onPress = () => {
+    this.props.onPress()
   }
 
   render () {
     return (
-      <TouchableHighlight
-        style={[styles.settingsRowContainer]}
-        underlayColor={styleRaw.underlay.color}
-        disabled={false}
-        onPress={() => this._onPressToggleSetting()}
-      >
+      <TouchableHighlight style={[styles.settingsRowContainer]} underlayColor={styleRaw.underlay.color} disabled={false} onPress={() => this.onPress()}>
         <View style={[styles.settingsRowTextRow]}>
           <View style={[styles.settingsRowLeftContainer]}>
             <Image resizeMode={'contain'} style={styles.settingsRowLeftLogo} source={this.props.logo} />

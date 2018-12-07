@@ -71,7 +71,6 @@ export const styles = {
 
   // /////// Double Row
   doubleRowContainer: {
-    height: scale(88),
     backgroundColor: THEME.COLORS.WHITE
   },
   // //// Beginning of Settings Row ///////

@@ -127,7 +127,7 @@ export class ExchangeSettingsComponent extends Component<ExchangeSettingsProps, 
                       key={exchange.name + '1'}
                       leftText={exchangeName + ' ' + s.strings.account}
                       rightText={ssLoginText}
-                      onToggle={this.shapeShiftSignInToggle}
+                      onPress={this.shapeShiftSignInToggle}
                     />
                   </View>
                 )
