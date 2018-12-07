@@ -4,8 +4,8 @@ exports[`initialState 1`] = `
 Object {
   "changeWallet": "none",
   "fee": 0,
-  "feeSetting": "standard",
   "forceUpdateGuiCounter": 0,
+  "fromBalanceMessage": "",
   "fromCurrencyCode": null,
   "fromCurrencyIcon": null,
   "fromCurrencyIconDark": null,
@@ -30,8 +30,8 @@ Object {
   "quote": null,
   "quoteExpireDate": null,
   "shiftPendingTransaction": false,
-  "shiftTransactionError": null,
   "showKYCAlert": false,
+  "toBalanceMessage": "",
   "toCurrencyCode": null,
   "toCurrencyIcon": null,
   "toCurrencyIconDark": null,
@@ -50,7 +50,6 @@ Object {
       "name": "",
     },
   },
-  "totalSwaps": 0,
   "walletListModalVisible": false,
 }
 `;
