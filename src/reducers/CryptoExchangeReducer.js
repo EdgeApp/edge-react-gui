@@ -1,9 +1,8 @@
 // @flow
 
-import type { EdgeExchangeQuote } from 'edge-core-js'
+import type { EdgeSwapQuote } from 'edge-core-js'
 import { type Reducer } from 'redux'
 
-import * as Constants from '../constants/indexConstants'
 import { type Action } from '../modules/ReduxTypes.js'
 import { type GuiCurrencyInfo, type GuiWallet } from '../types.js'
 
@@ -15,6 +14,8 @@ export type CryptoExchangeState = {
   fromWalletPrimaryInfo: GuiCurrencyInfo, // EdgeCurrencyInfo | null,
   fromCurrencyIcon: string | null,
   fromCurrencyIconDark: string | null,
+  fromBalanceMessage: string,
+
   toWallet: GuiWallet | null,
   toCurrencyCode: string | null,
   toNativeAmount: string,
@@ -22,18 +23,17 @@ export type CryptoExchangeState = {
   toWalletPrimaryInfo: GuiCurrencyInfo, // EdgeCurrencyInfo | null,
   toCurrencyIcon: string | null,
   toCurrencyIconDark: string | null,
+  toBalanceMessage: string,
+
   insufficientError: boolean,
-  feeSetting: 'low' | 'standard' | 'high' | 'custom',
   walletListModalVisible: boolean,
   forceUpdateGuiCounter: number,
-  shiftTransactionError: Error | null,
-  genericShapeShiftError: Error | null,
-  changeWallet: 'none',
+  genericShapeShiftError: string | null,
+  changeWallet: 'none' | 'from' | 'to',
   fee: any,
   shiftPendingTransaction: boolean,
   quoteExpireDate: Date | null,
-  quote: EdgeExchangeQuote | null,
-  totalSwaps: number,
+  quote: EdgeSwapQuote | null,
   showKYCAlert: boolean,
   pluginCompleteKYC: string | null
 }
@@ -59,6 +59,7 @@ const initialState = {
   fromWalletPrimaryInfo: dummyCurrencyInfo,
   fromCurrencyIcon: null,
   fromCurrencyIconDark: null,
+  fromBalanceMessage: '',
 
   toWallet: null,
   toCurrencyCode: null,
@@ -67,29 +68,24 @@ const initialState = {
   toWalletPrimaryInfo: dummyCurrencyInfo,
   toCurrencyIcon: null,
   toCurrencyIconDark: null,
+  toBalanceMessage: '',
 
   fee: 0,
   insufficientError: false,
-  feeSetting: Constants.STANDARD_FEE,
   walletListModalVisible: false,
-  shiftTransactionError: null,
   genericShapeShiftError: null,
-  changeWallet: Constants.NONE,
+  changeWallet: 'none',
   forceUpdateGuiCounter: 0,
   shiftPendingTransaction: false,
   quoteExpireDate: null,
   quote: null,
-  totalSwaps: 0,
   showKYCAlert: false,
   pluginCompleteKYC: null
 }
 
-function cryptoExchangeInner (state = initialState, action: Action) {
+function cryptoExchangeInner (state = initialState, action: Action): CryptoExchangeState {
   let forceUpdateGuiCounter
   switch (action.type) {
-    case 'SWAP_FROM_TO_CRYPTO_WALLETS': {
-      return deepCopyState(state)
-    }
     case 'ON_KYC_TOKEN_SET': {
       return { ...state, showKYCAlert: false }
     }
@@ -107,22 +103,21 @@ function cryptoExchangeInner (state = initialState, action: Action) {
 
     case 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE': {
       if (!action.data) throw new Error('Invalid action')
-      const hack: any = action.data
       return {
         ...state,
         fromWallet: action.data.wallet,
         fromWalletPrimaryInfo: action.data.primaryInfo,
         fromCurrencyCode: action.data.currencyCode,
         fromCurrencyIcon: getLogo(action.data.wallet, action.data.currencyCode),
-        fromCurrencyIconDark: getLogoDark(hack.wallet, hack.currencyCode),
-        changeWallet: Constants.NONE,
+        fromCurrencyIconDark: getLogoDark(action.data.wallet, action.data.currencyCode),
+        fromBalanceMessage: action.data.balanceMessage,
+        changeWallet: 'none',
         fromNativeAmount: '0',
         toNativeAmount: '0',
         fromDisplayAmount: '0',
         toDisplayAmount: '0',
         minerFee: '0',
         fee: '',
-        exchangeRate: 1,
         quoteExpireDate: null,
         quote: null,
         genericShapeShiftError: null
@@ -131,22 +126,21 @@ function cryptoExchangeInner (state = initialState, action: Action) {
 
     case 'SELECT_TO_WALLET_CRYPTO_EXCHANGE': {
       if (!action.data) throw new Error('Invalid action')
-      const hack: any = action.data
       return {
         ...state,
         toWallet: action.data.wallet,
         toCurrencyCode: action.data.currencyCode,
         toWalletPrimaryInfo: action.data.primaryInfo,
         toCurrencyIcon: getLogo(action.data.wallet, action.data.currencyCode),
-        toCurrencyIconDark: getLogoDark(hack.wallet, hack.currencyCode),
-        changeWallet: Constants.NONE,
+        toCurrencyIconDark: getLogoDark(action.data.wallet, action.data.currencyCode),
+        toBalanceMessage: action.data.balanceMessage,
+        changeWallet: 'none',
         fromNativeAmount: '0',
         toNativeAmount: '0',
         fromDisplayAmount: '0',
         toDisplayAmount: '0',
         minerFee: '0',
         fee: '',
-        exchangeRate: 1,
         quote: null,
         quoteExpireDate: null,
         genericShapeShiftError: null
@@ -197,8 +191,7 @@ function cryptoExchangeInner (state = initialState, action: Action) {
     case 'SHIFT_ERROR': {
       return {
         ...state,
-        confirmTransactionModalVisible: false,
-        shiftTransactionError: action.data
+        confirmTransactionModalVisible: false
       }
     }
 
@@ -214,8 +207,7 @@ function cryptoExchangeInner (state = initialState, action: Action) {
         ...state,
         quote: null,
         insufficientError: true,
-        genericShapeShiftError: null,
-        shiftTransactionError: null
+        genericShapeShiftError: null
       }
     }
 
@@ -223,8 +215,7 @@ function cryptoExchangeInner (state = initialState, action: Action) {
       return {
         ...state,
         quote: null,
-        genericShapeShiftError: action.data,
-        shiftTransactionError: null
+        genericShapeShiftError: action.data
       }
     }
 
@@ -283,29 +274,6 @@ function getLogoDark (wallet, currencyCode) {
   return null
 }
 
-function deepCopyState (state) {
-  const deepCopy = JSON.parse(JSON.stringify(state))
-  deepCopy.toWallet = state.fromWallet
-  deepCopy.toCurrencyCode = state.fromCurrencyCode
-  deepCopy.toNativeAmount = '0'
-  deepCopy.toDisplayAmount = '0'
-  deepCopy.toWalletPrimaryInfo = state.fromWalletPrimaryInfo
-  deepCopy.toCurrencyIcon = state.fromCurrencyIcon
-  deepCopy.toCurrencyIconDark = state.fromCurrencyIconDark
-  deepCopy.fromWallet = state.toWallet
-  deepCopy.fromCurrencyCode = state.toCurrencyCode
-  deepCopy.fromNativeAmount = '0'
-  deepCopy.fromDisplayAmount = '0'
-  deepCopy.fromWalletPrimaryInfo = state.toWalletPrimaryInfo
-  deepCopy.fromCurrencyIcon = state.toCurrencyIcon
-  deepCopy.fromCurrencyIconDark = state.toCurrencyIconDark
-
-  deepCopy.forceUpdateGuiCounter = state.forceUpdateGuiCounter + 1
-
-  deepCopy.insufficientError = false
-
-  return deepCopy
-}
 // Nuke the state on logout:
 export const cryptoExchange: Reducer<CryptoExchangeState, Action> = (state, action: Action) => {
   if (action.type === 'LOGOUT' || action.type === 'DEEP_LINK_RECEIVED') {

@@ -59,7 +59,7 @@ export type CryptoExchangeSceneComponentStateProps = {
 
 export type CryptoExchangeSceneComponentDispatchProps = {
   onSelectWallet(string, string): void,
-  openModal: (data: string) => any,
+  openModal(data: 'from' | 'to'): mixed,
   getQuoteForTransaction(SetNativeAmountInfo): void
 }
 
@@ -230,14 +230,14 @@ export class CryptoExchangeScene extends Component<Props, State> {
   }
 
   launchFromWalletSelector = () => {
-    this.props.openModal(Constants.FROM)
+    this.props.openModal('from')
     this.setState({
       whichWallet: Constants.FROM
     })
   }
 
   launchToWalletSelector = () => {
-    this.props.openModal(Constants.TO)
+    this.props.openModal('to')
     this.setState({
       whichWallet: Constants.TO
     })

@@ -1,40 +1,17 @@
 // @flow
 
+import type { EdgeSwapQuote } from 'edge-core-js'
+
 import { type DeleteWalletModalAction } from '../actions/DeleteWalletModalActions.js'
 import { type GetSeedModalAction } from '../actions/GetSeedModalActions.js'
 import { type ResyncWalletModalAction } from '../actions/ResyncWalletModalActions.js'
 import { type SplitWalletModalAction } from '../actions/SplitWalletModalActions.js'
 import { type XPubModalAction } from '../actions/XPubModalActions.js'
+import { type GuiCurrencyInfo, type GuiWallet } from '../types.js'
 import { type CoreContextAction } from './Core/Context/action.js'
 import { type SendLogsAction } from './Logs/action.js'
 
-export type ActionType =
-  // | 'CLOSE_DELETE_WALLET_MODAL'
-  // | 'CLOSE_GETSEED_WALLET_MODAL'
-  // | 'CLOSE_RESYNC_WALLET_MODAL'
-  // | 'CLOSE_SPLIT_WALLET_MODAL'
-  // | 'LOCK_WALLET_SEED'
-  // | 'OPEN_DELETE_WALLET_MODAL'
-  // | 'OPEN_GETSEED_WALLET_MODAL'
-  // | 'OPEN_RESYNC_WALLET_MODAL'
-  // | 'OPEN_SPLIT_WALLET_MODAL'
-  // | 'OPEN_VIEWXPUB_WALLET_MODAL'
-  // | 'CLOSE_VIEWXPUB_WALLET_MODAL'
-  // | 'UNLOCK_WALLET_SEED'
-  | 'SWAP_FROM_TO_CRYPTO_WALLETS'
-  | 'OPEN_WALLET_SELECTOR_MODAL'
-  | 'UPDATE_SHIFT_TRANSACTION_FEE'
-  | 'INVALIDATE_SHIFT_TRANSACTION'
-  | 'SHIFT_CRYPTO_CURRENCY'
-  | 'SHIFT_COMPLETE'
-  | 'SHIFT_ERROR'
-  | 'CLOSE_CRYPTO_EXEC_CONF_MODAL'
-  | 'SET_FROM_WALLET_MAX'
-  | 'RECEIVED_T_RANSACTION_ERROR'
-  | 'RECEIVED_INSUFFICENT_FUNDS_ERROR'
-  | 'GENERIC_SHAPE_SHIFT_ERROR'
-  | 'START_SHIFT_TRANSACTION'
-  | 'DONE_SHIFT_TRANSACTION'
+type LegacyActionName =
   | 'OPEN_AB_ALERT'
   | 'CLOSE_AB_ALERT'
   | 'USE_LEGACY_REQUEST_ADDRESS'
@@ -51,17 +28,8 @@ export type ActionType =
   | 'SET_CONFIRM_PASSWORD_ERROR'
   | 'ACCOUNT/LOGGED_IN'
   | 'LOGOUT'
-  // | 'CORE/CONTEXT/ADD_CONTEXT'
-  // | 'CORE/CONTEXT/ADD_USERNAMES'
-  // | 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT_REQUEST'
-  // | 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT_SUCCESS'
-  // | 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT_ERROR'
   | 'CORE/WALLETS/UPDATE_WALLETS'
   | 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES'
-  // | 'LOGS/SEND_LOGS_PENDING'
-  // | 'LOGS/SEND_LOGS_REQUEST'
-  // | 'LOGS/SEND_LOGS_SUCCESS'
-  // | 'LOGS/SEND_LOGS_FAILURE'
   | 'OPEN_SELECT_USER'
   | 'CLOSE_SELECT_USER'
   | 'LIST_USER_USER_SIDE_MENU'
@@ -94,7 +62,6 @@ export type ActionType =
   | 'DISABLE_SCAN_TO_WALLET_LIST_MODAL'
   | 'TOGGLE_WALLET_LIST_MODAL_VISIBILITY'
   | 'ENABLE_WALLET_LIST_MODAL_VISIBILITY'
-  | 'DISABLE_WALLET_LIST_MODAL_VISIBILITY'
   | 'TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL'
   | 'ENABLE_TRANSACTIONS_WALLET_LIST_MODAL'
   | 'DISABLE_TRANSACTIONS_WALLET_LIST_MODAL'
@@ -126,10 +93,6 @@ export type ActionType =
   | 'UPDATE_WALLET_LOADING_PROGRESS'
   | 'INSERT_WALLET_IDS_FOR_PROGRESS'
   | 'CLOSE_ALL_WALLET_LIST_MODALS'
-  // | 'UI/WALLETS/CREATE_WALLET_START'
-  // | 'UI/WALLETS/CREATE_WALLET_SUCCESS'
-  // | 'UI/WALLETS/CREATE_WALLET_FAILURE'
-  | 'IS_CHECKING_HANDLE_AVAILABILITY'
   | 'ACCOUNT_ACTIVATION_INFO'
   | 'ACCOUNT_ACTIVATION_PAYMENT_INFO'
   | 'IS_CHECKING_HANDLE_AVAILABILITY'
@@ -204,7 +167,6 @@ export type ActionType =
   | 'UI/SCENES/SETTINGS/SELECT_DEFAULT_FIAT'
   | 'SET_TRANSACTION_SUBCATEGORIES'
   | 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS'
-  | 'NOOP'
   | 'UI/SCENES/TRANSACTION_LIST/DELETE_TRANSACTIONS_LIST'
   | 'UI/SCENES/TRANSACTION_LIST/TRANSACTIONS_SEARCH_VISIBLE'
   | 'UI/SCENES/TRANSACTION_LIST/TRANSACTIONS_SEARCH_HIDDEN'
@@ -242,26 +204,32 @@ export type ActionType =
   | 'LOGGED_OUT'
   | 'DEEP_LINK_RECEIVED'
   | 'UPDATE_METADATA'
-  | 'DUMMY_ACTION_PLEASE_IGNORE'
   | 'UI/SCENES/TRANSACTION_LIST/ENABLE_UPDATING_BALANCE'
   | 'UI/SCENES/TRANSACTION_LIST/DISABLE_UPDATING_BALANCE'
   | 'UI/SCENES/TRANSACTION_LIST/TOGGLE_UPDATING_BALANCE'
-  | 'UI/SCENES/TRANSACTION_LIST/START_TRANSACTIONS_LOADING'
-  | 'UI/SCENES/TRANSACTION_LIST/END_TRANSACTIONS_LOADING'
   | 'SET_TOKEN_SETTINGS'
-  | 'ON_KYC_TOKEN_SET'
-  | 'NEED_KYC'
-  | 'NEED_FINISH_KYC_OFF'
-// | 'SELECT_TO_WALLET_CRYPTO_EXCHANGE'
-// | string
 
-type LegacyAction = {
-  type: ActionType,
-  data?: any
-}
+// Actions with no payload:
+type NoDataActionName =
+  | 'CLOSE_CRYPTO_EXEC_CONF_MODAL'
+  | 'DISABLE_WALLET_LIST_MODAL_VISIBILITY'
+  | 'DONE_SHIFT_TRANSACTION'
+  | 'DUMMY_ACTION_PLEASE_IGNORE'
+  | 'INVALIDATE_SHIFT_TRANSACTION'
+  | 'NEED_FINISH_KYC_OFF'
+  | 'NEED_KYC'
+  | 'ON_KYC_TOKEN_SET'
+  | 'RECEIVED_INSUFFICENT_FUNDS_ERROR'
+  | 'SHIFT_COMPLETE'
+  | 'SHIFT_ERROR'
+  | 'START_SHIFT_TRANSACTION'
+  | 'UI/WALLETS/CREATE_WALLET_FAILURE'
+  | 'UI/WALLETS/CREATE_WALLET_START'
+  | 'UI/WALLETS/CREATE_WALLET_SUCCESS'
 
 export type Action =
-  | LegacyAction
+  | { type: LegacyActionName, data?: any }
+  | { type: NoDataActionName }
   | DeleteWalletModalAction
   | GetSeedModalAction
   | ResyncWalletModalAction
@@ -269,19 +237,29 @@ export type Action =
   | XPubModalAction
   | CoreContextAction
   | SendLogsAction
+  // Actions with known payloads:
   | {
-      type: 'SELECT_TO_WALLET_CRYPTO_EXCHANGE',
-      data?: any
+      type: 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE' | 'SELECT_TO_WALLET_CRYPTO_EXCHANGE',
+      data: {
+        balanceMessage: string,
+        currencyCode: string,
+        primaryInfo: GuiCurrencyInfo,
+        wallet: GuiWallet
+      }
     }
-  | {
-      type: 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE',
-      data?: any
-    }
-  | {
-      type: 'UI/SCENES/TRANSACTION_LIST/END_TRANSACTIONS_LOADING',
-      data?: any
-    }
-  | { type: 'UI/WALLETS/CREATE_WALLET_START' }
-  | { type: 'UI/WALLETS/CREATE_WALLET_SUCCESS' }
-  | { type: 'UI/WALLETS/CREATE_WALLET_FAILURE' }
   | { type: 'NEED_FINISH_KYC', data: { pluginName: string } }
+  | { type: 'GENERIC_SHAPE_SHIFT_ERROR', data: string }
+  | { type: 'OPEN_WALLET_SELECTOR_MODAL', data: 'from' | 'to' }
+  | { type: 'SET_FROM_WALLET_MAX', data: string }
+  | {
+      type: 'UPDATE_SHIFT_TRANSACTION_FEE',
+      data: {
+        quote: EdgeSwapQuote,
+        toNativeAmount: string,
+        toDisplayAmount: string,
+        fromNativeAmount: string,
+        fromDisplayAmount: string,
+        quoteExpireDate: Date | null,
+        fee: string
+      }
+    }

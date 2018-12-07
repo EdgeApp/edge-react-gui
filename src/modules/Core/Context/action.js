@@ -1,6 +1,7 @@
 // @flow
 
-import type { DiskletFolder, EdgeContext } from 'edge-core-js'
+import type { DiskletFolder } from 'disklet'
+import type { EdgeContext } from 'edge-core-js'
 
 export type AddContextAction = {
   type: 'CORE/CONTEXT/ADD_CONTEXT',

@@ -118,7 +118,7 @@ const updatingBalance = (state = true, action: Action): boolean => {
   }
 }
 
-export const transactionList = combineReducers({
+export const transactionList: Reducer<TransactionListState, Action> = combineReducers({
   currentCurrencyCode,
   currentEndIndex,
   currentWalletId,
