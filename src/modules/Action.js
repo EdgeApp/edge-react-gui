@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeSwapQuote } from 'edge-core-js'
+import type { EdgeLobby, EdgeSwapQuote } from 'edge-core-js'
 
 import { type GetSeedModalAction } from '../actions/GetSeedModalActions.js'
 import { type ResyncWalletModalAction } from '../actions/ResyncWalletModalActions.js'
@@ -13,14 +13,8 @@ import { type SendLogsAction } from './Logs/action.js'
 type LegacyActionName =
   | 'OPEN_AB_ALERT'
   | 'CLOSE_AB_ALERT'
-  | 'USE_LEGACY_REQUEST_ADDRESS'
-  | 'USE_REGULAR_REQUEST_ADDRESS'
   | 'UPDATE_RECEIVE_ADDRESS_SUCCESS'
   | 'NEW_RECEIVE_ADDRESS'
-  | 'PROCESS_EDGE_LOGIN'
-  | 'SAVE_EDGE_LOBBY'
-  | 'INVALIDATE_EDGE_LOBBY'
-  | 'SET_LOBBY_ERROR'
   | 'ERASE_DEEP_LINK'
   | 'ACCOUNT_INIT_COMPLETE'
   | 'DISABLE_OTP_RESET'
@@ -199,7 +193,6 @@ type LegacyActionName =
   | 'PERMISSIONS/UPDATE'
   | 'SPENDING_LIMITS/NEW_SPENDING_LIMITS'
   | 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL'
-  | 'LOGGED_OUT'
   | 'DEEP_LINK_RECEIVED'
   | 'UPDATE_METADATA'
   | 'SET_TOKEN_SETTINGS'
@@ -210,10 +203,13 @@ type NoDataActionName =
   | 'DISABLE_WALLET_LIST_MODAL_VISIBILITY'
   | 'DONE_SHIFT_TRANSACTION'
   | 'DUMMY_ACTION_PLEASE_IGNORE'
+  | 'INVALIDATE_EDGE_LOBBY'
   | 'INVALIDATE_SHIFT_TRANSACTION'
+  | 'LOGGED_OUT'
   | 'NEED_FINISH_KYC_OFF'
   | 'NEED_KYC'
   | 'ON_KYC_TOKEN_SET'
+  | 'PROCESS_EDGE_LOGIN'
   | 'RECEIVED_INSUFFICENT_FUNDS_ERROR'
   | 'SHIFT_COMPLETE'
   | 'SHIFT_ERROR'
@@ -221,6 +217,8 @@ type NoDataActionName =
   | 'UI/WALLETS/CREATE_WALLET_FAILURE'
   | 'UI/WALLETS/CREATE_WALLET_START'
   | 'UI/WALLETS/CREATE_WALLET_SUCCESS'
+  | 'USE_LEGACY_REQUEST_ADDRESS'
+  | 'USE_REGULAR_REQUEST_ADDRESS'
 
 export type Action =
   | { type: LegacyActionName, data?: any }
@@ -244,6 +242,8 @@ export type Action =
   | { type: 'NEED_FINISH_KYC', data: { pluginName: string } }
   | { type: 'GENERIC_SHAPE_SHIFT_ERROR', data: string }
   | { type: 'OPEN_WALLET_SELECTOR_MODAL', data: 'from' | 'to' }
+  | { type: 'SAVE_EDGE_LOBBY', data: EdgeLobby }
+  | { type: 'SET_LOBBY_ERROR', data: string }
   | { type: 'SET_FROM_WALLET_MAX', data: string }
   | {
       type: 'UPDATE_SHIFT_TRANSACTION_FEE',
