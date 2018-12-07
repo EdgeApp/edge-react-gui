@@ -6,7 +6,7 @@ import { type GetSeedModalAction } from '../actions/GetSeedModalActions.js'
 import { type ResyncWalletModalAction } from '../actions/ResyncWalletModalActions.js'
 import { type SplitWalletModalAction } from '../actions/SplitWalletModalActions.js'
 import { type XPubModalAction } from '../actions/XPubModalActions.js'
-import { type GuiCurrencyInfo, type GuiWallet } from '../types.js'
+import { type GuiContact, type GuiCurrencyInfo, type GuiWallet } from '../types.js'
 import { type CoreContextAction } from './Core/Context/action.js'
 import { type SendLogsAction } from './Logs/action.js'
 
@@ -171,8 +171,6 @@ type LegacyActionName =
   | 'CLOSE_CUSTOM_FEES_MODAL'
   | 'OPEN_CUSTOM_FEES_MODAL'
   | 'UPDATE_WALLET_TRANSFER_LIST'
-  | 'CONTACTS/LOAD_CONTACTS_START'
-  | 'CONTACTS/LOAD_CONTACTS_SUCCESS'
   | 'PERMISSIONS/UPDATE'
   | 'SPENDING_LIMITS/NEW_SPENDING_LIMITS'
   | 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL'
@@ -185,6 +183,7 @@ type NoDataActionName =
   | 'CLOSE_ALL_WALLET_LIST_MODALS'
   | 'CLOSE_CRYPTO_EXEC_CONF_MODAL'
   | 'CLOSE_SELECT_USER'
+  | 'CONTACTS/LOAD_CONTACTS_START'
   | 'DISABLE_WALLET_LIST_MODAL_VISIBILITY'
   | 'DONE_SHIFT_TRANSACTION'
   | 'DUMMY_ACTION_PLEASE_IGNORE'
@@ -227,6 +226,7 @@ export type Action =
         wallet: GuiWallet
       }
     }
+  | { type: 'CONTACTS/LOAD_CONTACTS_SUCCESS', data: { contacts: Array<GuiContact> } }
   | { type: 'NEED_FINISH_KYC', data: { pluginName: string } }
   | { type: 'GENERIC_SHAPE_SHIFT_ERROR', data: string }
   | { type: 'OPEN_WALLET_SELECTOR_MODAL', data: 'from' | 'to' }
