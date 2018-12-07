@@ -70,12 +70,9 @@ export const fetchAccountActivationInfo = (currencyCode: string) => async (dispa
   const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[currencyCode]
   const currencyPlugin = account.currencyConfig[currencyPluginName]
   try {
-    // $FlowFixMe
     const supportedCurrencies = currencyPlugin.otherMethods.getActivationSupportedCurrencies()
-    // $FlowFixMe
     const activationCost = currencyPlugin.otherMethods.getActivationCost()
     const activationInfo = await Promise.all([supportedCurrencies, activationCost])
-    // $FlowFixMe
     dispatch({
       type: 'ACCOUNT_ACTIVATION_INFO',
       data: {
@@ -93,7 +90,6 @@ export const fetchWalletAccountActivationPaymentInfo = (paymentParams: AccountPa
   const walletId = UI_SELECTORS.getSelectedWalletId(state)
   const coreWallet = CORE_SELECTORS.getWallet(state, walletId)
   try {
-    // $FlowFixMe
     const activationQuote = await coreWallet.otherMethods.getAccountActivationQuote(paymentParams)
     dispatch({
       type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO',
@@ -114,7 +110,6 @@ export const checkHandleAvailability = (currencyCode: string, accountName: strin
   const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[currencyCode]
   const currencyPlugin = account.currencyConfig[currencyPluginName]
   try {
-    // $FlowFixMe
     const data = await currencyPlugin.otherMethods.validateAccount(accountName)
     dispatch({ type: 'IS_HANDLE_AVAILABLE', data })
   } catch (e) {
@@ -135,7 +130,6 @@ export const createAccountTransaction = (createdWalletId: string, accountName: s
   const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[createdWalletCurrencyCode]
   const currencyPlugin = account.currencyConfig[currencyPluginName]
   const { paymentAddress, nativeAmount, currencyCode } = state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
-  // $FlowFixMe
   const handleAvailability = await currencyPlugin.otherMethods.validateAccount(accountName)
   if (handleAvailability) {
     const makeSpendInfo = {

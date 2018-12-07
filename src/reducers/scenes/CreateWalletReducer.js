@@ -46,14 +46,11 @@ const isCreatingWallet = (state = false, action: Action): boolean => {
   }
 }
 
-const isCheckingHandleAvailability = (state = false, action: Action): boolean => {
+const isCheckingHandleAvailability: Reducer<boolean, Action> = (state = false, action: Action): boolean => {
   switch (action.type) {
     case 'IS_CHECKING_HANDLE_AVAILABILITY': {
-      if (action.data === true) {
-        return true
-      } else {
-        return false
-      }
+      if (!action.data) return state
+      return action.data
     }
     case 'IS_HANDLE_AVAILABLE': {
       return false
@@ -63,20 +60,18 @@ const isCheckingHandleAvailability = (state = false, action: Action): boolean =>
   }
 }
 
-const isHandleAvailable = (state = false, action: Action): boolean => {
+const isHandleAvailable: Reducer<boolean, Action> = (state = false, action: Action): boolean => {
   switch (action.type) {
     case 'IS_CHECKING_HANDLE_AVAILABILITY': {
+      if (!action.data) return state
       if (action.data === true) {
         return false
       }
       return state
     }
     case 'IS_HANDLE_AVAILABLE': {
-      if (action.data === true) {
-        return true
-      } else {
-        return false
-      }
+      if (!action.data) return state
+      return action.data
     }
     default:
       return state

@@ -20,7 +20,6 @@ export default class WalletTransferList extends Component<Props> {
 
   _selectWalletToSendConfirmation () {
     this.props.toggleWalletListModal()
-    console.log('in WalletTransferList')
     Actions[SEND_CONFIRMATION]()
   }
 
