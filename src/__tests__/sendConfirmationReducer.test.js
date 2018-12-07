@@ -163,7 +163,6 @@ describe('sendConfirmation reducer', () => {
   })
 
   describe('isEditable', () => {
-    
     // test('UPDATE_PAYMENT_PROTOCOL_TRANSACTION', () => {
     //   const edgeTransaction = { id: '123', nativeAmount: '123' }
     //   const action = updatePaymentProtocolTransaction(edgeTransaction)

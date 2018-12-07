@@ -254,10 +254,6 @@ exports[`SendConfirmation should render with destination 1`] = `
       </Footer>
     </Component>
   </Gradient>
-  <Connect(UniqueIdentifierModal)
-    currencyCode="BTC"
-    onConfirm={[Function]}
-  />
 </SafeAreaViewComponent>
 `;
 
@@ -500,10 +496,6 @@ exports[`SendConfirmation should render with standard props 1`] = `
       </Footer>
     </Component>
   </Gradient>
-  <Connect(UniqueIdentifierModal)
-    currencyCode="BTC"
-    onConfirm={[Function]}
-  />
 </SafeAreaViewComponent>
 `;
 
@@ -765,7 +757,6 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
   </Gradient>
   <Connect(UniqueIdentifierModal)
     currencyCode="XMR"
-    onConfirm={[Function]}
   />
 </SafeAreaViewComponent>
 `;
@@ -1028,7 +1019,6 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
   </Gradient>
   <Connect(UniqueIdentifierModal)
     currencyCode="XRP"
-    onConfirm={[Function]}
   />
 </SafeAreaViewComponent>
 `;

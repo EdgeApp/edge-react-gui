@@ -174,7 +174,7 @@ export const parseScannedUri = (data: string) => (dispatch: Dispatch, getState: 
       }
       const guiMakeSpendInfo: GuiMakeSpendInfo = {
         spendTargets,
-        lockInputs
+        lockInputs,
         metadata: parsedUri.metadata,
         uniqueIdentifier: parsedUri.uniqueIdentifier
       }
