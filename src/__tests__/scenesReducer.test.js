@@ -88,7 +88,6 @@ test('initialState', () => {
     transactionList: {
       searchVisible: false,
       transactions: [],
-      updatingBalance: true,
       currentCurrencyCode: '',
       currentEndIndex: 0,
       numTransactions: 0,
