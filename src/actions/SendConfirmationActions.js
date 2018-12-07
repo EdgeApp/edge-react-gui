@@ -5,7 +5,7 @@ import type { EdgeMetadata, EdgeParsedUri, EdgeSpendInfo, EdgeTransaction } from
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
-import { SEND_CONFIRMATION } from '../constants/indexConstants'
+import { SEND_CONFIRMATION, TRANSACTION_DETAILS } from '../constants/indexConstants'
 import s from '../locales/strings.js'
 import { checkPin } from '../modules/Core/Account/api.js'
 import { getAccount, getWallet } from '../modules/Core/selectors.js'
@@ -185,9 +185,13 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
 
     edgeSignedTransaction.wallet = wallet
     edgeSignedTransaction.metadata = spendInfo.metadata
-    Actions.pop()
-    Actions.transactionDetails({ edgeTransaction: edgeSignedTransaction })
 
+    if (guiMakeSpendInfo.onSuccess) {
+      guiMakeSpendInfo.onSuccess()
+    } else {
+      Actions.pop()
+      Actions[TRANSACTION_DETAILS]({ edgeTransaction: edgeSignedTransaction })
+    }
     const successInfo = {
       success: true,
       title: s.strings.transaction_success,

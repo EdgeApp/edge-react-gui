@@ -52,6 +52,8 @@ import AddToken from '../connectors/scenes/AddTokenConnector.js'
 import ChangeMiningFeeSendConfirmation from '../connectors/scenes/ChangeMiningFeeSendConfirmationConnector.ui'
 import ChangePasswordConnector from '../connectors/scenes/ChangePasswordConnector.ui'
 import ChangePinConnector from '../connectors/scenes/ChangePinConnector.ui'
+import { CreateWalletAccountSelectConnector } from '../connectors/scenes/CreateWalletAccountSelectConnector.js'
+import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWalletAccountSetupConnector.js'
 import { CreateWalletReview } from '../connectors/scenes/CreateWalletReviewConnector'
 import { CreateWalletSelectCrypto } from '../connectors/scenes/CreateWalletSelectCryptoConnector'
 import { CreateWalletSelectFiat } from '../connectors/scenes/CreateWalletSelectFiatConnector'
@@ -130,7 +132,8 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   vertcoinCurrencyPluginFactory,
   zcoinCurrencyPluginFactory,
   feathercoinCurrencyPluginFactory,
-  ufoCurrencyPluginFactory
+  ufoCurrencyPluginFactory /*,
+  eosCurrencyPluginFactory */
 ]
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
@@ -161,6 +164,8 @@ const WALLETS = s.strings.title_wallets
 const CREATE_WALLET_SELECT_CRYPTO = s.strings.title_create_wallet_select_crypto
 const CREATE_WALLET_SELECT_FIAT = s.strings.title_create_wallet_select_fiat
 const CREATE_WALLET = s.strings.title_create_wallet
+const CREATE_WALLET_ACCOUNT_SETUP = s.strings.create_wallet_create_account
+const CREATE_WALLET_ACCOUNT_ACTIVATE = s.strings.create_wallet_account_activate
 const TRANSACTIONS_EXPORT = s.strings.title_export_transactions
 const REQUEST = s.strings.title_request
 const SCAN = s.strings.title_scan
@@ -388,6 +393,24 @@ export default class Main extends Component<Props, State> {
                           renderTitle={this.renderTitle(CREATE_WALLET)}
                           renderLeftButton={this.renderBackButton()}
                           renderRightButton={this.renderEmptyButton()}
+                        />
+
+                        <Scene
+                          key={Constants.CREATE_WALLET_ACCOUNT_SETUP}
+                          navTransparent={true}
+                          component={CreateWalletAccountSetupConnector}
+                          renderTitle={this.renderTitle(CREATE_WALLET_ACCOUNT_SETUP)}
+                          renderLeftButton={this.renderBackButton()}
+                          renderRightButton={this.renderHelpButton()}
+                        />
+
+                        <Scene
+                          key={Constants.CREATE_WALLET_ACCOUNT_SELECT}
+                          navTransparent={true}
+                          component={CreateWalletAccountSelectConnector}
+                          renderTitle={this.renderTitle(CREATE_WALLET_ACCOUNT_ACTIVATE)}
+                          renderLeftButton={this.renderBackButton()}
+                          renderRightButton={this.renderHelpButton()}
                         />
 
                         <Scene

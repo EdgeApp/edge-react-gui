@@ -105,14 +105,25 @@ export const styles = {
   textInput: {
     flex: 1
   },
+  currencyLogoWrapper: {},
+  currencyLogo: {
+    alignSelf: 'center',
+    marginTop: scale(24),
+    height: scale(64)
+  },
   instructionalArea: {
     paddingVertical: scale(16),
-    paddingHorizontal: scale(20),
-    height: scale(80)
+    paddingHorizontal: scale(20)
+  },
+  createWalletPromptArea: {
+    paddingTop: scale(16),
+    paddingBottom: scale(32),
+    paddingHorizontal: scale(20)
   },
   instructionalText: {
     fontSize: scale(16),
-    textAlign: 'center'
+    textAlign: 'center',
+    color: THEME.COLORS.GRAY_1
   },
   reviewArea: {
     paddingVertical: scale(18)
@@ -150,6 +161,78 @@ export const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 3
+  },
+  selectPaymentLower: {
+    backgroundColor: THEME.COLORS.GRAY_4,
+    width: '100%',
+    marginVertical: scale(18),
+    paddingHorizontal: scale(20)
+  },
+  paymentAndIconArea: {
+    flexDirection: 'row'
+  },
+  paymentArea: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: scale(12),
+    flex: 1
+  },
+  paymentLeft: {
+    fontSize: scale(16),
+    color: THEME.COLORS.GRAY_2
+  },
+  paymentLeftIconWrap: {
+    paddingVertical: scale(12),
+    marginRight: 6
+  },
+  paymentLeftIcon: {
+    width: scale(22),
+    height: scale(22)
+  },
+  paymentRight: {
+    fontSize: scale(16),
+    color: THEME.COLORS.GRAY_2,
+    fontWeight: '500'
+  },
+  accountReviewWalletNameArea: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingTop: scale(18),
+    paddingBottom: scale(12),
+    alignItems: 'center'
+  },
+  accountReviewWalletNameText: {
+    fontSize: scale(16),
+    color: THEME.COLORS.SECONDARY,
+    fontWeight: 'bold'
+  },
+  accountReviewInfoArea: {
+    width: '100%',
+    marginVertical: scale(14),
+    paddingHorizontal: scale(20)
+  },
+  accountReviewInfoText: {
+    color: THEME.COLORS.GRAY_2
+  },
+  accountReviewConfirmArea: {
+    width: '100%',
+    marginTop: scale(12),
+    marginBottom: scale(18),
+    paddingHorizontal: scale(30)
+  },
+  accountReviewConfirmText: {
+    color: THEME.COLORS.GRAY_2,
+    textAlign: 'center'
+  },
+  confirmButtonArea: {
+    marginHorizontal: scale(30)
+  },
+  confirmButton: {},
+  feedbackIcon: {
+    alignSelf: 'flex-end',
+    marginTop: scale(43),
+    width: scale(25),
+    height: scale(25)
   }
 }
 

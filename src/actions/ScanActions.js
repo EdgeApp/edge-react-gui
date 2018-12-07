@@ -1,5 +1,6 @@
 // @flow
 
+import { bns } from 'biggystring'
 import { createYesNoModal, showModal } from 'edge-components'
 import type { EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendTarget } from 'edge-core-js'
 import React from 'react'
@@ -167,9 +168,13 @@ export const parseScannedUri = (data: string) => (dispatch: Dispatch, getState: 
         }
       ]
 
+      let lockInputs = false
+      if (spendTargets[0].nativeAmount && !bns.eq(spendTargets[0].nativeAmount, '0')) {
+        lockInputs = true
+      }
       const guiMakeSpendInfo: GuiMakeSpendInfo = {
         spendTargets,
-        lockInputs: false,
+        lockInputs,
         metadata: parsedUri.metadata,
         uniqueIdentifier: parsedUri.uniqueIdentifier
       }
@@ -200,7 +205,6 @@ export const legacyAddressModalContinueButtonPressed = () => (dispatch: Dispatch
       return
     }
 
-    // Actions[SEND_CONFIRMATION]('fromScan')
     Actions[SEND_CONFIRMATION]({ guiMakeSpendInfo: parsedUri })
     // dispatch(sendConfirmationUpdateTx(parsedUri))
   })

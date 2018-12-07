@@ -54,7 +54,9 @@ export class CreateWalletSelectFiat extends Component<Props, State> {
 
   onNext = () => {
     if (this.isValidFiatType()) {
-      Actions[Constants.CREATE_WALLET_NAME]({
+      // check if account-based or not
+      const nextSceneKey = this.props.selectedWalletType.currencyCode === 'EOS' ? Constants.CREATE_WALLET_ACCOUNT_SETUP : Constants.CREATE_WALLET_NAME
+      Actions[nextSceneKey]({
         selectedWalletType: this.props.selectedWalletType,
         selectedFiat: this.getFiatType(this.state.selectedFiat)
       })
@@ -147,5 +149,7 @@ export class CreateWalletSelectFiat extends Component<Props, State> {
     )
   }
 
-  keyExtractor = (item: GuiFiatType, index: string) => index
+  keyExtractor = (item: GuiFiatType, index: string) => {
+    return item.value
+  }
 }

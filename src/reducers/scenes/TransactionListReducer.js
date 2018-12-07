@@ -1,18 +1,18 @@
 // @flow
 
-import { type Reducer, combineReducers } from 'redux'
+import { combineReducers } from 'redux'
 
 import type { Action } from '../../modules/ReduxTypes.js'
 import type { TransactionListTx } from '../../types.js'
 
 export type TransactionListState = {
-  +currentCurrencyCode: string,
-  +currentEndIndex: number,
-  +currentWalletId: string,
-  +numTransactions: number,
-  +searchVisible: boolean,
-  +transactions: Array<TransactionListTx>,
-  +updatingBalance: boolean
+  currentCurrencyCode: string,
+  currentEndIndex: number,
+  currentWalletId: string,
+  numTransactions: number,
+  searchVisible: boolean,
+  transactions: Array<TransactionListTx>,
+  updatingBalance: boolean
 }
 
 const transactions = (state = [], action: Action): Array<TransactionListTx> => {

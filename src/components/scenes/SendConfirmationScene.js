@@ -116,7 +116,6 @@ export class SendConfirmation extends Component<Props, State> {
     }
 
     this.props.sendConfirmationUpdateTx(this.props.guiMakeSpendInfo)
-
     this.setState({ secondaryDisplayDenomination, overridePrimaryExchangeAmount, keyboardVisible })
   }
 

@@ -23,7 +23,20 @@ test('initialState', () => {
       usersView: false
     },
     createWallet: {
-      isCreatingWallet: false
+      isCreatingWallet: false,
+      walletAccountActivationPaymentInfo: {
+        paymentAddress: '',
+        nativeAmount: '',
+        currencyCode: '',
+        exchangeAmount: '',
+        expirationDate: 0
+      },
+      isCheckingHandleAvailability: false,
+      isHandleAvailable: false,
+      handleActivationInfo: {
+        supportedCurrencies: {},
+        activationCost: ''
+      }
     },
     dimensions: {
       keyboardHeight: 0
