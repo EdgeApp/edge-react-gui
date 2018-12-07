@@ -202,8 +202,8 @@ export const setDenominationKeyRequest = (account: EdgeAccount, currencyCode: st
 
 // Helper Functions
 export const getSyncedSettings = (account: EdgeAccount) =>
-  getSyncedSettingsFile(account)
-    .getText()
+  account.disklet
+    .getText(SYNCED_SETTINGS_FILENAME)
     .then(text => {
       const settingsFromFile = JSON.parse(text)
       return settingsFromFile
@@ -216,8 +216,7 @@ export const getSyncedSettings = (account: EdgeAccount) =>
 
 export async function getSyncedSettingsAsync (account: EdgeAccount): Promise<any> {
   try {
-    const file = getSyncedSettingsFile(account)
-    const text = await file.getText()
+    const text = await account.disklet.getText(SYNCED_SETTINGS_FILENAME)
     const settingsFromFile = JSON.parse(text)
     return settingsFromFile
   } catch (e) {
@@ -229,14 +228,12 @@ export async function getSyncedSettingsAsync (account: EdgeAccount): Promise<any
 
 export const setSyncedSettings = (account: EdgeAccount, settings: Object) => {
   const text = JSON.stringify(settings)
-  const SettingsFile = getSyncedSettingsFile(account)
-  SettingsFile.setText(text)
+  account.disklet.setText(SYNCED_SETTINGS_FILENAME, text)
 }
 
 export async function setSyncedSettingsAsync (account: EdgeAccount, settings: Object) {
   const text = JSON.stringify(settings)
-  const SettingsFile = getSyncedSettingsFile(account)
-  await SettingsFile.setText(text)
+  await account.disklet.setText(SYNCED_SETTINGS_FILENAME, text)
 }
 
 export type CategoriesFile = { categories: Array<string> }
@@ -253,18 +250,17 @@ export async function setSyncedSubcategories (account: EdgeAccount, subcategorie
   } else {
     finalText = subcategories
   }
-  const SubcategoriesFile = getSyncedSubcategoriesFile(account)
   const stringifiedSubcategories = JSON.stringify(finalText)
   try {
-    await SubcategoriesFile.setText(stringifiedSubcategories)
+    await account.disklet.setText(CATEGORIES_FILENAME, stringifiedSubcategories)
   } catch (e) {
     console.log(e)
   }
 }
 
 export const getSyncedSubcategories = (account: EdgeAccount) =>
-  getSyncedSubcategoriesFile(account)
-    .getText()
+  account.disklet
+    .getText(CATEGORIES_FILENAME)
     .then(text => {
       const categoriesText = JSON.parse(text)
       return categoriesText.categories
@@ -274,13 +270,9 @@ export const getSyncedSubcategories = (account: EdgeAccount) =>
       setSyncedSubcategories(account, SYNCED_SUBCATEGORIES_DEFAULTS).then(() => SYNCED_SUBCATEGORIES_DEFAULTS.categories)
     )
 
-export const getSyncedSubcategoriesFile = (account: EdgeAccount) =>
-  // $FlowFixMe folder not found on EdgeAccount type
-  account.folder.file(CATEGORIES_FILENAME)
-
 export const getLocalSettings = (account: EdgeAccount) => {
-  return getLocalSettingsFile(account)
-    .getText()
+  return account.localDisklet
+    .getText(LOCAL_SETTINGS_FILENAME)
     .then(JSON.parse)
     .catch(() => {
       // If Settings.json doesn't exist yet, create it, and return it
@@ -296,8 +288,7 @@ export const getLocalSettings = (account: EdgeAccount) => {
 
 export const setLocalSettings = (account: EdgeAccount, settings: Object) => {
   const text = JSON.stringify(settings)
-  const localSettingsFile = getLocalSettingsFile(account)
-  return localSettingsFile.setText(text)
+  return account.localDisklet.setText(LOCAL_SETTINGS_FILENAME, text)
 }
 
 export const getCoreSettings = (account: EdgeAccount): Promise<{ otpMode: boolean, pinMode: boolean }> => {
@@ -308,16 +299,6 @@ export const getCoreSettings = (account: EdgeAccount): Promise<{ otpMode: boolea
   // return settings object
   return Promise.resolve(coreSettings)
 }
-
-export const getSyncedSettingsFile = (account: EdgeAccount) => {
-  // $FlowFixMe folder not found on EdgeAccount type
-  const folder = account.folder
-  return folder.file(SYNCED_SETTINGS_FILENAME)
-}
-
-export const getLocalSettingsFile = (account: EdgeAccount) =>
-  // $FlowFixMe localFolder not found on EdgeAccount type
-  account.localFolder.file(LOCAL_SETTINGS_FILENAME)
 
 export const updateCurrencySettings = (currentSettings: Object, currencyCode: string, newSettings: Object) => {
   const currencySettings = currentSettings[currencyCode]
