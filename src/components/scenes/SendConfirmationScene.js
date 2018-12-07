@@ -334,9 +334,15 @@ export class SendConfirmation extends Component<Props, State> {
 
     if (parentNetworkFee && bns.gt(parentNetworkFee, '0')) {
       const cryptoFeeSymbol = parentDisplayDenomination.symbol ? parentDisplayDenomination.symbol : ''
+      // multiplier for display denomination
+      const displayDenomMultiplier = parentDisplayDenomination.multiplier
+      // multiplier for exchange denomination
       const cryptoFeeMultiplier = this.props.parentExchangeDenomination.multiplier
-      const cryptoFeeAmount = parentNetworkFee ? convertNativeToDisplay(cryptoFeeMultiplier)(parentNetworkFee) : ''
-      const cryptoFeeString = `${cryptoFeeSymbol} ${cryptoFeeAmount}`
+      // fee amount in exchange denomination
+      const cryptoFeeExchangeDenomAmount = parentNetworkFee ? convertNativeToDisplay(cryptoFeeMultiplier)(parentNetworkFee) : ''
+      const exchangeToDisplayMultiplierRatio = bns.div(cryptoFeeMultiplier, displayDenomMultiplier, DIVIDE_PRECISION)
+      const cryptoFeeDisplayDenomAmount = bns.mul(cryptoFeeExchangeDenomAmount, exchangeToDisplayMultiplierRatio)
+      const cryptoFeeString = `${cryptoFeeSymbol} ${cryptoFeeDisplayDenomAmount}`
       const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol ? secondaryInfo.displayDenomination.symbol : ''
       const exchangeConvertor = convertNativeToExchange(this.props.parentExchangeDenomination.multiplier)
       const cryptoFeeExchangeAmount = exchangeConvertor(parentNetworkFee)
@@ -354,11 +360,18 @@ export class SendConfirmation extends Component<Props, State> {
 
     if (networkFee && bns.gt(networkFee, '0')) {
       const cryptoFeeSymbol = primaryInfo.displayDenomination.symbol ? primaryInfo.displayDenomination.symbol : ''
+      // multiplier for display denomination
+      const displayDenomMultiplier = primaryInfo.displayDenomination.multiplier
+      // multiplier for EXCHANGE denomination
       const cryptoFeeMultiplier = this.props.primaryExchangeDenomination.multiplier
-      const cryptoFeeAmount = networkFee ? convertNativeToDisplay(cryptoFeeMultiplier)(networkFee) : ''
-      const cryptoFeeString = `${cryptoFeeSymbol} ${cryptoFeeAmount}`
+      // fee amount in exchange denomination
+      const cryptoFeeExchangeDenomAmount = networkFee ? convertNativeToDisplay(cryptoFeeMultiplier)(networkFee) : ''
+      const exchangeToDisplayMultiplierRatio = bns.div(cryptoFeeMultiplier, displayDenomMultiplier, DIVIDE_PRECISION)
+      const cryptoFeeDisplayDenomAmount = bns.mul(cryptoFeeExchangeDenomAmount, exchangeToDisplayMultiplierRatio)
+      const cryptoFeeString = `${cryptoFeeSymbol} ${cryptoFeeDisplayDenomAmount}`
       const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol ? secondaryInfo.displayDenomination.symbol : ''
       const exchangeConvertor = convertNativeToExchange(primaryInfo.exchangeDenomination.multiplier)
+      // amount in EXCHANGE denomination
       const cryptoFeeExchangeAmount = exchangeConvertor(networkFee)
       const fiatFeeAmount = convertCurrencyFromExchangeRates(
         exchangeRates,
