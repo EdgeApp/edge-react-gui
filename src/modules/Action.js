@@ -2,7 +2,6 @@
 
 import type { EdgeSwapQuote } from 'edge-core-js'
 
-import { type DeleteWalletModalAction } from '../actions/DeleteWalletModalActions.js'
 import { type GetSeedModalAction } from '../actions/GetSeedModalActions.js'
 import { type ResyncWalletModalAction } from '../actions/ResyncWalletModalActions.js'
 import { type SplitWalletModalAction } from '../actions/SplitWalletModalActions.js'
@@ -172,7 +171,6 @@ type LegacyActionName =
   | 'UI/SCENES/TRANSACTION_LIST/TRANSACTIONS_SEARCH_HIDDEN'
   | 'UI/SCENES/TRANSACTION_LIST/UPDATE_CONTACTS_LIST'
   | 'UI/SCENES/TRANSACTION_LIST/UPDATE_SEARCH_RESULTS'
-  | 'CLOSE_DELETE_WALLET_MODAL'
   | 'DELETE_WALLET_START'
   | 'CLOSE_DELETE_WALLET_SUCCESS'
   | 'CLOSE_GETSEED_WALLET_MODAL'
@@ -227,7 +225,6 @@ type NoDataActionName =
 export type Action =
   | { type: LegacyActionName, data?: any }
   | { type: NoDataActionName }
-  | DeleteWalletModalAction
   | GetSeedModalAction
   | ResyncWalletModalAction
   | SplitWalletModalAction

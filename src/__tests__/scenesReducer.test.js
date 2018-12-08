@@ -94,7 +94,6 @@ test('initialState', () => {
       currentWalletId: ''
     },
     walletList: {
-      deleteWalletModalVisible: false,
       getSeedWalletModalVisible: false,
       privateSeedUnlocked: false,
       viewXPubWalletModalVisible: false,
