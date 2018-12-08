@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import React, { Component } from 'react'
-import { Animated, Keyboard, Platform, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
+import { Animated, Platform, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 
@@ -54,9 +54,7 @@ export type FlipInputOwnProps = {
   // Callback when primaryDecimalAmount changes. **This is only called when the user types into a field or if
   // exchangeSecondaryToPrimaryRatio changes. This does NOT get called when overridePrimaryDecimalAmount is changed by the parent
   onAmountChanged(decimalAmount: string): void,
-  isEditable: boolean,
-  isFiatOnTop: boolean,
-  isFocus: boolean
+  isEditable: boolean
 }
 
 type Props = FlipInputOwnProps
@@ -121,8 +119,8 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
     super(props)
     this.state = getInitialState(props)
     slowlog(this, /.*/, global.slowlogOptions)
-
-    // Mounting Animation
+  }
+  UNSAFE_componentWillMount () {
     this.animatedValue = new Animated.Value(0)
     this.frontInterpolate = this.animatedValue.interpolate({
       inputRange: [0, 1],
@@ -149,32 +147,6 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
         this.textInputFront.focus()
       }
     }, 400)
-
-    if (this.props.isFiatOnTop) {
-      this.setState({
-        isToggled: !this.state.isToggled
-      })
-      Animated.timing(this.animatedValue, {
-        toValue: 1,
-        duration: 0
-      }).start()
-      setTimeout(() => {
-        this.setState({
-          secondaryDisplayAmount: ''
-        })
-      }, 10)
-    }
-
-    if (this.props.isFocus) {
-      const textInputBack = this.textInputBack
-      const keyboardDidHide = () => {
-        keyboardDidHideListener.remove()
-        setTimeout(() => textInputBack.focus(), 200)
-      }
-      const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', keyboardDidHide)
-      setTimeout(() => keyboardDidHideListener.remove(), 500)
-      setTimeout(() => textInputBack.focus(), 10)
-    }
   }
 
   UNSAFE_componentWillReceiveProps (nextProps: Props) {
@@ -304,7 +276,7 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
         <Text style={[top.symbol]}>{fieldInfo.currencySymbol}</Text>
         <TextInput
           style={[top.amount, Platform.OS === 'ios' ? {} : { paddingBottom: 2 }]}
-          placeholder={this.props.isFiatOnTop ? 'Amount' : '0'}
+          placeholder={'0'}
           placeholderTextColor={'rgba(255, 255, 255, 0.60)'}
           value={amount}
           onChangeText={onChangeText}

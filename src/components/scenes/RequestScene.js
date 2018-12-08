@@ -253,8 +253,6 @@ export class Request extends Component<Props, State> {
               onExchangeAmountChanged={this.onExchangeAmountChanged}
               keyboardVisible={false}
               color={color}
-              isFiatOnTop={false}
-              isFocus={false}
             />
 
             <QRCode value={this.state.encodedURI} />

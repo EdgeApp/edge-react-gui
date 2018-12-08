@@ -160,12 +160,6 @@ export const parseScannedUri = (data: string) => (dispatch: Dispatch, getState: 
         return dispatch(paymentProtocolUriReceived(parsedUri))
       }
 
-      // Check if scan has data
-      if (parsedUri.nativeAmount) {
-        Actions[SEND_CONFIRMATION]()
-        return dispatch(updateParsedURI(parsedUri))
-      }
-
       // PUBLIC ADDRESS URI
       const spendTargets: Array<EdgeSpendTarget> = [
         {
