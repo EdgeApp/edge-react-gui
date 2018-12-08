@@ -2,7 +2,6 @@
 
 import { connect } from 'react-redux'
 
-import { loadContactsStart, loadContactsSuccess } from '../../../../actions/ContactsActions.js'
 import type { GuiContact } from '../../../../types.js'
 import type { Dispatch, State } from '../../../ReduxTypes.js'
 import { displayErrorAlert } from '../ErrorAlert/actions.js'
@@ -14,8 +13,12 @@ export const mapStateToProps = (state: State) => ({
 })
 export const mapDispatchToProps = (dispatch: Dispatch) => ({
   fetchContacts,
-  loadContactsStart: () => dispatch(loadContactsStart()),
-  loadContactsSuccess: (contacts: Array<GuiContact>) => dispatch(loadContactsSuccess(contacts)),
+  loadContactsStart: () => dispatch({ type: 'CONTACTS/LOAD_CONTACTS_START' }),
+  loadContactsSuccess: (contacts: Array<GuiContact>) =>
+    dispatch({
+      type: 'CONTACTS/LOAD_CONTACTS_SUCCESS',
+      data: { contacts }
+    }),
   loadContactsFail: (error: Error) => {
     console.log(error)
     dispatch(displayErrorAlert(error.message))

@@ -88,14 +88,12 @@ test('initialState', () => {
     transactionList: {
       searchVisible: false,
       transactions: [],
-      updatingBalance: true,
       currentCurrencyCode: '',
       currentEndIndex: 0,
       numTransactions: 0,
       currentWalletId: ''
     },
     walletList: {
-      deleteWalletModalVisible: false,
       getSeedWalletModalVisible: false,
       privateSeedUnlocked: false,
       viewXPubWalletModalVisible: false,

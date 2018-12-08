@@ -7,7 +7,6 @@ import { privateSeedUnlocked } from './GetSeedModalReducer'
 import { xPubSyntax } from './XPubModalReducer.js'
 
 export type WalletListState = {
-  +deleteWalletModalVisible: boolean,
   +getSeedWalletModalVisible: boolean,
   +privateSeedUnlocked: boolean,
   +resyncWalletModalVisible: boolean,
@@ -23,8 +22,7 @@ const walletId = (state = '', action: Action): string => {
     case 'OPEN_RESYNC_WALLET_MODAL':
     case 'OPEN_VIEWXPUB_WALLET_MODAL':
     case 'OPEN_GETSEED_WALLET_MODAL':
-    case 'OPEN_SPLIT_WALLET_MODAL':
-    case 'OPEN_DELETE_WALLET_MODAL': {
+    case 'OPEN_SPLIT_WALLET_MODAL': {
       if (!action.data) throw new Error('Invalid action')
       return action.data.walletId
     }
@@ -32,8 +30,7 @@ const walletId = (state = '', action: Action): string => {
     case 'CLOSE_RESYNC_WALLET_MODAL':
     case 'CLOSE_VIEWXPUB_WALLET_MODAL':
     case 'CLOSE_GETSEED_WALLET_MODAL':
-    case 'CLOSE_SPLIT_WALLET_MODAL':
-    case 'CLOSE_DELETE_WALLET_MODAL': {
+    case 'CLOSE_SPLIT_WALLET_MODAL': {
       return ''
     }
 
@@ -48,21 +45,6 @@ const walletArchivesVisible = (state = false, action: Action): boolean => {
     //   return true
     // case ACTION.CLOSE_WALLET_ARCHIVES:
     //   return false
-    default:
-      return state
-  }
-}
-
-const deleteWalletModalVisible = (state = false, action: Action): boolean => {
-  switch (action.type) {
-    case 'OPEN_DELETE_WALLET_MODAL': {
-      return true
-    }
-
-    case 'CLOSE_DELETE_WALLET_MODAL': {
-      return false
-    }
-
     default:
       return state
   }
@@ -129,7 +111,6 @@ const splitWalletModalVisible = (state = false, action: Action): boolean => {
 }
 
 export const walletList: Reducer<WalletListState, Action> = combineReducers({
-  deleteWalletModalVisible,
   getSeedWalletModalVisible,
   privateSeedUnlocked,
   resyncWalletModalVisible,

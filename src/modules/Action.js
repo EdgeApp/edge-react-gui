@@ -1,27 +1,21 @@
 // @flow
 
-import type { EdgeSwapQuote } from 'edge-core-js'
+import type { EdgeLobby, EdgeParsedUri, EdgeSwapQuote } from 'edge-core-js'
 
-import { type DeleteWalletModalAction } from '../actions/DeleteWalletModalActions.js'
 import { type GetSeedModalAction } from '../actions/GetSeedModalActions.js'
 import { type ResyncWalletModalAction } from '../actions/ResyncWalletModalActions.js'
 import { type SplitWalletModalAction } from '../actions/SplitWalletModalActions.js'
 import { type XPubModalAction } from '../actions/XPubModalActions.js'
-import { type GuiCurrencyInfo, type GuiWallet } from '../types.js'
+import type { AccountActivationPaymentInfo, HandleActivationInfo } from '../reducers/scenes/CreateWalletReducer.js'
+import { type GuiContact, type GuiCurrencyInfo, type GuiWallet } from '../types.js'
 import { type CoreContextAction } from './Core/Context/action.js'
 import { type SendLogsAction } from './Logs/action.js'
 
 type LegacyActionName =
   | 'OPEN_AB_ALERT'
   | 'CLOSE_AB_ALERT'
-  | 'USE_LEGACY_REQUEST_ADDRESS'
-  | 'USE_REGULAR_REQUEST_ADDRESS'
   | 'UPDATE_RECEIVE_ADDRESS_SUCCESS'
   | 'NEW_RECEIVE_ADDRESS'
-  | 'PROCESS_EDGE_LOGIN'
-  | 'SAVE_EDGE_LOBBY'
-  | 'INVALIDATE_EDGE_LOBBY'
-  | 'SET_LOBBY_ERROR'
   | 'ERASE_DEEP_LINK'
   | 'ACCOUNT_INIT_COMPLETE'
   | 'DISABLE_OTP_RESET'
@@ -30,11 +24,7 @@ type LegacyActionName =
   | 'LOGOUT'
   | 'CORE/WALLETS/UPDATE_WALLETS'
   | 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES'
-  | 'OPEN_SELECT_USER'
-  | 'CLOSE_SELECT_USER'
   | 'LIST_USER_USER_SIDE_MENU'
-  | 'SELECT_USERS_SIDE_MENU'
-  | 'REMOVE_USERS_SIDE_MENU'
   | 'UI/COMPONENTS/DROPDOWN_ALERT/DISPLAY_DROPDOWN_ALERT'
   | 'UI/COMPONENTS/DROPDOWN_ALERT/DISMISS_DROPDOWN_ALERT'
   | 'UI/COMPONENTS/ERROR_ALERT/DISPLAY_ERROR_ALERT'
@@ -54,17 +44,6 @@ type LegacyActionName =
   | 'PASSWORD_REMINDER_MODAL/SET_PASSWORD_REMINDER_FAIL'
   | 'UI/COMPONENTS/TRANSACTION_ALERT/DISPLAY_TRANSACTION_ALERT'
   | 'UI/COMPONENTS/TRANSACTION_ALERT/DISMISS_TRANSACTION_ALERT'
-  | 'TOGGLE_SELECTED_WALLET_LIST_MODAL'
-  | 'ENABLE_SELECTED_WALLET_LIST_MODAL'
-  | 'DISABLE_SELECTED_WALLET_LIST_MODAL'
-  | 'TOGGLE_SCAN_TO_WALLET_LIST_MODAL'
-  | 'ENABLE_SCAN_TO_WALLET_LIST_MODAL'
-  | 'DISABLE_SCAN_TO_WALLET_LIST_MODAL'
-  | 'TOGGLE_WALLET_LIST_MODAL_VISIBILITY'
-  | 'ENABLE_WALLET_LIST_MODAL_VISIBILITY'
-  | 'TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL'
-  | 'ENABLE_TRANSACTIONS_WALLET_LIST_MODAL'
-  | 'DISABLE_TRANSACTIONS_WALLET_LIST_MODAL'
   | 'SET_KEYBOARD_HEIGHT'
   | 'ADD_TOKEN_START'
   | 'ADD_TOKEN_SUCCESS'
@@ -92,11 +71,6 @@ type LegacyActionName =
   | 'ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS'
   | 'UPDATE_WALLET_LOADING_PROGRESS'
   | 'INSERT_WALLET_IDS_FOR_PROGRESS'
-  | 'CLOSE_ALL_WALLET_LIST_MODALS'
-  | 'ACCOUNT_ACTIVATION_INFO'
-  | 'ACCOUNT_ACTIVATION_PAYMENT_INFO'
-  | 'IS_CHECKING_HANDLE_AVAILABILITY'
-  | 'IS_HANDLE_AVAILABLE'
   | 'UI/WALLETS/REFRESH_RECEIVE_ADDRESS'
   | 'UPDATE_CURRENT_SCENE_KEY'
   | 'UI/SETTINGS/SET_LOGIN_STATUS'
@@ -141,13 +115,6 @@ type LegacyActionName =
   | 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_SUCCESS'
   | 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_FAIL'
   | 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_RESET'
-  | 'TOGGLE_ENABLE_TORCH'
-  | 'TOGGLE_ADDRESS_MODAL_VISIBILITY'
-  | 'ENABLE_SCAN'
-  | 'DISABLE_SCAN'
-  | 'PARSE_URI_SUCCEEDED'
-  | 'PARSE_URI_FAILED'
-  | 'PARSE_URI_RESET'
   | 'UNIQUE_IDENTIFIER_MODAL/ACTIVATED'
   | 'UNIQUE_IDENTIFIER_MODAL/DEACTIVATED'
   | 'UNIQUE_IDENTIFIER_MODAL/RESET'
@@ -172,7 +139,6 @@ type LegacyActionName =
   | 'UI/SCENES/TRANSACTION_LIST/TRANSACTIONS_SEARCH_HIDDEN'
   | 'UI/SCENES/TRANSACTION_LIST/UPDATE_CONTACTS_LIST'
   | 'UI/SCENES/TRANSACTION_LIST/UPDATE_SEARCH_RESULTS'
-  | 'CLOSE_DELETE_WALLET_MODAL'
   | 'DELETE_WALLET_START'
   | 'CLOSE_DELETE_WALLET_SUCCESS'
   | 'CLOSE_GETSEED_WALLET_MODAL'
@@ -195,42 +161,49 @@ type LegacyActionName =
   | 'CLOSE_CUSTOM_FEES_MODAL'
   | 'OPEN_CUSTOM_FEES_MODAL'
   | 'UPDATE_WALLET_TRANSFER_LIST'
-  | 'TOGGLE_WALLET_LIST_MODAL_VISIBILITY'
-  | 'CONTACTS/LOAD_CONTACTS_START'
-  | 'CONTACTS/LOAD_CONTACTS_SUCCESS'
   | 'PERMISSIONS/UPDATE'
   | 'SPENDING_LIMITS/NEW_SPENDING_LIMITS'
   | 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL'
-  | 'LOGGED_OUT'
   | 'DEEP_LINK_RECEIVED'
   | 'UPDATE_METADATA'
-  | 'UI/SCENES/TRANSACTION_LIST/ENABLE_UPDATING_BALANCE'
-  | 'UI/SCENES/TRANSACTION_LIST/DISABLE_UPDATING_BALANCE'
-  | 'UI/SCENES/TRANSACTION_LIST/TOGGLE_UPDATING_BALANCE'
   | 'SET_TOKEN_SETTINGS'
 
 // Actions with no payload:
 type NoDataActionName =
+  | 'CLOSE_ALL_WALLET_LIST_MODALS'
   | 'CLOSE_CRYPTO_EXEC_CONF_MODAL'
+  | 'CLOSE_SELECT_USER'
+  | 'CONTACTS/LOAD_CONTACTS_START'
+  | 'DISABLE_SCAN'
   | 'DISABLE_WALLET_LIST_MODAL_VISIBILITY'
   | 'DONE_SHIFT_TRANSACTION'
   | 'DUMMY_ACTION_PLEASE_IGNORE'
+  | 'ENABLE_SCAN'
+  | 'INVALIDATE_EDGE_LOBBY'
   | 'INVALIDATE_SHIFT_TRANSACTION'
+  | 'LOGGED_OUT'
   | 'NEED_FINISH_KYC_OFF'
   | 'NEED_KYC'
   | 'ON_KYC_TOKEN_SET'
+  | 'OPEN_SELECT_USER'
+  | 'PROCESS_EDGE_LOGIN'
   | 'RECEIVED_INSUFFICENT_FUNDS_ERROR'
   | 'SHIFT_COMPLETE'
   | 'SHIFT_ERROR'
   | 'START_SHIFT_TRANSACTION'
+  | 'TOGGLE_ADDRESS_MODAL_VISIBILITY'
+  | 'TOGGLE_ENABLE_TORCH'
+  | 'TOGGLE_SCAN_TO_WALLET_LIST_MODAL'
+  | 'TOGGLE_WALLET_LIST_MODAL_VISIBILITY'
   | 'UI/WALLETS/CREATE_WALLET_FAILURE'
   | 'UI/WALLETS/CREATE_WALLET_START'
   | 'UI/WALLETS/CREATE_WALLET_SUCCESS'
+  | 'USE_LEGACY_REQUEST_ADDRESS'
+  | 'USE_REGULAR_REQUEST_ADDRESS'
 
 export type Action =
   | { type: LegacyActionName, data?: any }
   | { type: NoDataActionName }
-  | DeleteWalletModalAction
   | GetSeedModalAction
   | ResyncWalletModalAction
   | SplitWalletModalAction
@@ -238,6 +211,10 @@ export type Action =
   | CoreContextAction
   | SendLogsAction
   // Actions with known payloads:
+  | { type: 'ACCOUNT_ACTIVATION_INFO', data: HandleActivationInfo }
+  | { type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO', data: AccountActivationPaymentInfo }
+  | { type: 'IS_CHECKING_HANDLE_AVAILABILITY', data: boolean }
+  | { type: 'IS_HANDLE_AVAILABLE', data: boolean }
   | {
       type: 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE' | 'SELECT_TO_WALLET_CRYPTO_EXCHANGE',
       data: {
@@ -247,9 +224,13 @@ export type Action =
         wallet: GuiWallet
       }
     }
+  | { type: 'CONTACTS/LOAD_CONTACTS_SUCCESS', data: { contacts: Array<GuiContact> } }
   | { type: 'NEED_FINISH_KYC', data: { pluginName: string } }
   | { type: 'GENERIC_SHAPE_SHIFT_ERROR', data: string }
   | { type: 'OPEN_WALLET_SELECTOR_MODAL', data: 'from' | 'to' }
+  | { type: 'PARSE_URI_SUCCEEDED', data: { parsedUri: EdgeParsedUri } }
+  | { type: 'SAVE_EDGE_LOBBY', data: EdgeLobby }
+  | { type: 'SET_LOBBY_ERROR', data: string }
   | { type: 'SET_FROM_WALLET_MAX', data: string }
   | {
       type: 'UPDATE_SHIFT_TRANSACTION_FEE',

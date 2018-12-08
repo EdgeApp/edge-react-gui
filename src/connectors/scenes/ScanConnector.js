@@ -7,9 +7,7 @@ import {
   addressModalDoneButtonPressed,
   legacyAddressModalCancelButtonPressed,
   legacyAddressModalContinueButtonPressed,
-  qrCodeScanned,
-  toggleAddressModal,
-  toggleEnableTorch
+  qrCodeScanned
 } from '../../actions/ScanActions'
 import { selectWalletFromModal } from '../../actions/WalletActions.js'
 import Scan from '../../components/scenes/ScanScene'
@@ -25,8 +23,8 @@ const mapStateToProps = (state: State) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   qrCodeScanned: data => dispatch(qrCodeScanned(data)),
-  toggleEnableTorch: () => dispatch(toggleEnableTorch()),
-  toggleAddressModal: () => dispatch(toggleAddressModal()),
+  toggleEnableTorch: () => dispatch({ type: 'TOGGLE_ENABLE_TORCH' }),
+  toggleAddressModal: () => dispatch({ type: 'TOGGLE_ADDRESS_MODAL_VISIBILITY' }),
   legacyAddressModalContinueButtonPressed: () => dispatch(legacyAddressModalContinueButtonPressed()),
   legacyAddressModalCancelButtonPressed: () => dispatch(legacyAddressModalCancelButtonPressed()),
   addressModalDoneButtonPressed: data => dispatch(addressModalDoneButtonPressed(data)),

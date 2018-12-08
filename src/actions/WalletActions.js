@@ -25,10 +25,6 @@ export const refreshReceiveAddress = (walletId: string, receiveAddress: EdgeRece
   }
 })
 
-export const closeAllWalletListModals = () => ({
-  type: 'CLOSE_ALL_WALLET_LIST_MODALS'
-})
-
 export const deleteCustomTokenStart = () => ({
   type: 'DELETE_CUSTOM_TOKEN_START'
 })
@@ -130,7 +126,7 @@ export const selectWallet = (walletId: string, currencyCode: string) => (dispatc
 
 export const selectWalletFromModal = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
   dispatch(selectWallet(walletId, currencyCode))
-  dispatch(closeAllWalletListModals())
+  dispatch({ type: 'CLOSE_ALL_WALLET_LIST_MODALS' })
   dispatch(refreshReceiveAddressRequest(walletId))
 }
 

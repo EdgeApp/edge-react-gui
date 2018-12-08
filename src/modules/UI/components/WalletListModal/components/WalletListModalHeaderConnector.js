@@ -3,7 +3,6 @@
 import { connect } from 'react-redux'
 
 import * as Constants from '../../../../../constants/indexConstants'
-import { disableWalletListModalVisibility } from '../action'
 import WalletListModalHeader from './WalletListModalHeader.ui'
 
 const mapStateToProps = (state?: any, ownProps: any): { type: string, whichWallet: string } => {
@@ -15,7 +14,7 @@ const mapStateToProps = (state?: any, ownProps: any): { type: string, whichWalle
   }
 }
 const mapDispatchToProps = (dispatch: Function): {} => ({
-  disableWalletListModalVisibility: () => dispatch(disableWalletListModalVisibility())
+  disableWalletListModalVisibility: () => dispatch({ type: 'DISABLE_WALLET_LIST_MODAL_VISIBILITY' })
 })
 
 export default connect(

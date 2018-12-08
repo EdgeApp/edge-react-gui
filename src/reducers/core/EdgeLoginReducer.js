@@ -7,7 +7,7 @@ import type { Action } from '../../modules/ReduxTypes.js'
 
 export type EdgeLoginState = {
   lobby: EdgeLobby | null,
-  error: Error | null,
+  error: string | null,
   isProcessing: boolean
 }
 
