@@ -6,6 +6,7 @@ import { type GetSeedModalAction } from '../actions/GetSeedModalActions.js'
 import { type ResyncWalletModalAction } from '../actions/ResyncWalletModalActions.js'
 import { type SplitWalletModalAction } from '../actions/SplitWalletModalActions.js'
 import { type XPubModalAction } from '../actions/XPubModalActions.js'
+import type { AccountActivationPaymentInfo, HandleActivationInfo } from '../reducers/scenes/CreateWalletReducer.js'
 import { type GuiContact, type GuiCurrencyInfo, type GuiWallet } from '../types.js'
 import { type CoreContextAction } from './Core/Context/action.js'
 import { type SendLogsAction } from './Logs/action.js'
@@ -70,10 +71,6 @@ type LegacyActionName =
   | 'ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS'
   | 'UPDATE_WALLET_LOADING_PROGRESS'
   | 'INSERT_WALLET_IDS_FOR_PROGRESS'
-  | 'ACCOUNT_ACTIVATION_INFO'
-  | 'ACCOUNT_ACTIVATION_PAYMENT_INFO'
-  | 'IS_CHECKING_HANDLE_AVAILABILITY'
-  | 'IS_HANDLE_AVAILABLE'
   | 'UI/WALLETS/REFRESH_RECEIVE_ADDRESS'
   | 'UPDATE_CURRENT_SCENE_KEY'
   | 'UI/SETTINGS/SET_LOGIN_STATUS'
@@ -214,6 +211,10 @@ export type Action =
   | CoreContextAction
   | SendLogsAction
   // Actions with known payloads:
+  | { type: 'ACCOUNT_ACTIVATION_INFO', data: HandleActivationInfo }
+  | { type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO', data: AccountActivationPaymentInfo }
+  | { type: 'IS_CHECKING_HANDLE_AVAILABILITY', data: boolean }
+  | { type: 'IS_HANDLE_AVAILABLE', data: boolean }
   | {
       type: 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE' | 'SELECT_TO_WALLET_CRYPTO_EXCHANGE',
       data: {
