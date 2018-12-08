@@ -1,6 +1,6 @@
 // @flow
 
-import { combineReducers } from 'redux'
+import { type Reducer, combineReducers } from 'redux'
 
 import type { Action } from '../../modules/ReduxTypes.js'
 import type { TransactionListTx } from '../../types.js'
