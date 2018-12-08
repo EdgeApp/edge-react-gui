@@ -32,7 +32,7 @@
 		52C52276F2F94D9BB9320EBA /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BC960AB014EF4BF1AA8168B3 /* MaterialCommunityIcons.ttf */; };
 		5753E201C6234F3D898201B7 /* rubicon-icon-font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CB5F84A172E9414BB03C915D /* rubicon-icon-font.ttf */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
-		6E14648621AD104500FFF62E /* launch_750x1334.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6E14648121AD104500FFF62E /* launch_750x1334.jpg */; };
+		6ED8C12021BB685C00CC03C7 /* splash.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ED8C11F21BB685C00CC03C7 /* splash.png */; };
 		715ACAB2685D48069807A4D5 /* SourceSansPro-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3B43774D8E1D41F0A625BA1B /* SourceSansPro-Italic.ttf */; };
 		72F8DA229BCB44F6905F658B /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6F375984341A4E6F997CF0A2 /* Zocial.ttf */; };
 		79D627E0AF47498FB03B5D40 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 581BD78CAE5D4A1ABFD0B441 /* Octicons.ttf */; };
@@ -646,7 +646,7 @@
 		622C7E72CA724FB2B1F8DCD8 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		64A64A9CD69342B3A6354C43 /* SourceSansPro-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-Regular.ttf"; path = "../src/assets/fonts/SourceSansPro-Regular.ttf"; sourceTree = "<group>"; };
 		6A599ED42678408CB213F9CB /* SourceSansPro-Semibold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-Semibold.ttf"; path = "../src/assets/fonts/SourceSansPro-Semibold.ttf"; sourceTree = "<group>"; };
-		6E14648121AD104500FFF62E /* launch_750x1334.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = launch_750x1334.jpg; sourceTree = "<group>"; };
+		6ED8C11F21BB685C00CC03C7 /* splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash.png; sourceTree = "<group>"; };
 		6F375984341A4E6F997CF0A2 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
@@ -1293,7 +1293,7 @@
 				E638432420EFE33A00EA9FE9 /* onboard4.png */,
 				E63842DA20EFE23300EA9FE9 /* alt_splash.png */,
 				FD982BCB1FACDEF00057F035 /* LaunchScreen.xib */,
-				6E14648121AD104500FFF62E /* launch_750x1334.jpg */,
+				6ED8C11F21BB685C00CC03C7 /* splash.png */,
 			);
 			path = SplashScreenResource;
 			sourceTree = "<group>";
@@ -2023,6 +2023,7 @@
 				F340EA8A354D45F9B7E8A5FE /* FontAwesome.ttf in Resources */,
 				B316E8323117440B901AE33D /* Foundation.ttf in Resources */,
 				E638431C20EFE23300EA9FE9 /* alt_splash.png in Resources */,
+				6ED8C12021BB685C00CC03C7 /* splash.png in Resources */,
 				E6DBE8AF210C937200C52ABE /* iPadOnboarding5Horiz.png in Resources */,
 				CFC169ACDFF24F3B8D8A38D6 /* Ionicons.ttf in Resources */,
 				E616C51420F50FDB00F9252F /* iPadOnboarding3Horiz.png in Resources */,
@@ -2059,7 +2060,6 @@
 				349FD63F8F054B2AAA775162 /* MaterialIcons.ttf in Resources */,
 				409217C1E0564E669BF105DF /* Octicons.ttf in Resources */,
 				B1E9C434242946E08D4599B2 /* SimpleLineIcons.ttf in Resources */,
-				6E14648621AD104500FFF62E /* launch_750x1334.jpg in Resources */,
 				72F8DA229BCB44F6905F658B /* Zocial.ttf in Resources */,
 				E7EED819FAD546EC8B171EBC /* Feather.ttf in Resources */,
 				AC40390740E9458CBD92E01B /* SF-UI-Text-Regular.otf in Resources */,

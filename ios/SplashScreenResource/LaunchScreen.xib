@@ -13,7 +13,7 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" image="launch_750x1334.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="ZkI-RL-69Z">
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" image="splash.png" translatesAutoresizingMaskIntoConstraints="NO" id="ZkI-RL-69Z">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                 </imageView>
             </subviews>
@@ -28,6 +28,6 @@
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
     </objects>
     <resources>
-        <image name="launch_750x1334.jpg" width="750" height="1334"/>
+        <image name="splash.png" width="750" height="1334"/>
     </resources>
 </document>
