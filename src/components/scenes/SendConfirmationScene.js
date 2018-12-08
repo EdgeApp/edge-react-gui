@@ -78,7 +78,9 @@ type State = {|
   overridePrimaryExchangeAmount: string,
   forceUpdateGuiCounter: number,
   keyboardVisible: boolean,
-  showSpinner: boolean
+  showSpinner: boolean,
+  isFiatOnTop: boolean,
+  isFocus: boolean
 |}
 
 export class SendConfirmation extends Component<Props, State> {
@@ -97,7 +99,9 @@ export class SendConfirmation extends Component<Props, State> {
       keyboardVisible: false,
       forceUpdateGuiCounter: 0,
       nativeAmount: props.nativeAmount,
-      showSpinner: false
+      showSpinner: false,
+      isFiatOnTop: props.data === 'fromScan',
+      isFocus: props.data === 'fromScan'
     }
   }
 
@@ -218,6 +222,8 @@ export class SendConfirmation extends Component<Props, State> {
                 onExchangeAmountChanged={this.onExchangeAmountChanged}
                 keyboardVisible={this.state.keyboardVisible}
                 isEditable={this.props.isEditable}
+                isFiatOnTop={this.state.isFiatOnTop}
+                isFocus={this.state.isFocus}
               />
 
               <Scene.Padding style={{ paddingHorizontal: 54 }}>
