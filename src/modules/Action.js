@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeLobby, EdgeSwapQuote } from 'edge-core-js'
+import type { EdgeLobby, EdgeParsedUri, EdgeSwapQuote } from 'edge-core-js'
 
 import { type GetSeedModalAction } from '../actions/GetSeedModalActions.js'
 import { type ResyncWalletModalAction } from '../actions/ResyncWalletModalActions.js'
@@ -118,13 +118,6 @@ type LegacyActionName =
   | 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_SUCCESS'
   | 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_FAIL'
   | 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_RESET'
-  | 'TOGGLE_ENABLE_TORCH'
-  | 'TOGGLE_ADDRESS_MODAL_VISIBILITY'
-  | 'ENABLE_SCAN'
-  | 'DISABLE_SCAN'
-  | 'PARSE_URI_SUCCEEDED'
-  | 'PARSE_URI_FAILED'
-  | 'PARSE_URI_RESET'
   | 'UNIQUE_IDENTIFIER_MODAL/ACTIVATED'
   | 'UNIQUE_IDENTIFIER_MODAL/DEACTIVATED'
   | 'UNIQUE_IDENTIFIER_MODAL/RESET'
@@ -184,9 +177,11 @@ type NoDataActionName =
   | 'CLOSE_CRYPTO_EXEC_CONF_MODAL'
   | 'CLOSE_SELECT_USER'
   | 'CONTACTS/LOAD_CONTACTS_START'
+  | 'DISABLE_SCAN'
   | 'DISABLE_WALLET_LIST_MODAL_VISIBILITY'
   | 'DONE_SHIFT_TRANSACTION'
   | 'DUMMY_ACTION_PLEASE_IGNORE'
+  | 'ENABLE_SCAN'
   | 'INVALIDATE_EDGE_LOBBY'
   | 'INVALIDATE_SHIFT_TRANSACTION'
   | 'LOGGED_OUT'
@@ -199,6 +194,8 @@ type NoDataActionName =
   | 'SHIFT_COMPLETE'
   | 'SHIFT_ERROR'
   | 'START_SHIFT_TRANSACTION'
+  | 'TOGGLE_ADDRESS_MODAL_VISIBILITY'
+  | 'TOGGLE_ENABLE_TORCH'
   | 'TOGGLE_SCAN_TO_WALLET_LIST_MODAL'
   | 'TOGGLE_WALLET_LIST_MODAL_VISIBILITY'
   | 'UI/WALLETS/CREATE_WALLET_FAILURE'
@@ -230,6 +227,7 @@ export type Action =
   | { type: 'NEED_FINISH_KYC', data: { pluginName: string } }
   | { type: 'GENERIC_SHAPE_SHIFT_ERROR', data: string }
   | { type: 'OPEN_WALLET_SELECTOR_MODAL', data: 'from' | 'to' }
+  | { type: 'PARSE_URI_SUCCEEDED', data: { parsedUri: EdgeParsedUri } }
   | { type: 'SAVE_EDGE_LOBBY', data: EdgeLobby }
   | { type: 'SET_LOBBY_ERROR', data: string }
   | { type: 'SET_FROM_WALLET_MAX', data: string }

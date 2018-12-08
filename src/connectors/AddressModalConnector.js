@@ -5,7 +5,6 @@ import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import { loginWithEdge } from '../actions/indexActions'
-import { toggleAddressModal } from '../actions/ScanActions'
 import { sendConfirmationUpdateTx } from '../actions/SendConfirmationActions.js'
 import AddressModal from '../components/modals/AddressModal'
 import * as Constants from '../constants/indexConstants'
@@ -26,7 +25,7 @@ const mapStateToProps = (state: State) => {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  toggleAddressModal: () => dispatch(toggleAddressModal()),
+  toggleAddressModal: () => dispatch({ type: 'TOGGLE_ADDRESS_MODAL_VISIBILITY' }),
   sendConfirmationUpdateTx: (parsedURI: EdgeParsedUri) => dispatch(sendConfirmationUpdateTx(parsedURI)),
   loginWithEdge: (url: string) => {
     Actions[Constants.EDGE_LOGIN]()
