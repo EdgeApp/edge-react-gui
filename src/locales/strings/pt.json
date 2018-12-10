@@ -158,6 +158,7 @@
   "send_confirmation_to": "Para: %s",
   "send_confirmation_address": "Endereço: %s",
   "transaction_failure": "",
+  "transaction_failure_message": "",
   "transaction_success": "",
   "transaction_success_message": "",
   "incorrect_pin": "",
