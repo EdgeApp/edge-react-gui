@@ -8,10 +8,10 @@ import {
   lockSettings,
   restoreWallets,
   setAutoLogoutTimeInMinutesRequest,
-  togglePinLoginEnabled,
-  updateTouchIdEnabled,
+  showSendLogsModal,
   showUnlockSettingsModal,
-  showSendLogsModal
+  togglePinLoginEnabled,
+  updateTouchIdEnabled
 } from '../../actions/SettingsActions'
 import SettingsOverview from '../../components/scenes/SettingsOverviewScene'
 import * as Constants from '../../constants/indexConstants'
@@ -57,7 +57,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   resetSendLogsStatus: () => dispatch(resetSendLogsStatus()),
   onTogglePinLoginEnabled: (enableLogin: boolean) => dispatch(togglePinLoginEnabled(enableLogin)),
   onConfirmRestoreWallets: () => dispatch(restoreWallets()),
-  showUnlockSettingsModal: (bool: boolean) => dispatch(showUnlockSettingsModal(bool)),
+  showUnlockSettingsModal: () => dispatch(showUnlockSettingsModal()),
   showSendLogsModal: () => dispatch(showSendLogsModal())
 })
 

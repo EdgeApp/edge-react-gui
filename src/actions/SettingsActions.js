@@ -1,6 +1,6 @@
 // @flow
 
-import { createYesNoModal, showModal, createInputModal, createSecureTextModal } from 'edge-components'
+import { createInputModal, createSecureTextModal, createYesNoModal, showModal } from 'edge-components'
 import type { EdgeAccount } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import React from 'react'
@@ -8,8 +8,6 @@ import { Image } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
-import { THEME, colors } from '../theme/variables/airbitz.js'
-import { sendLogs } from '../modules/Logs/action.js'
 
 import iconImage from '../assets/images/otp/OTP-badge_sm.png'
 import { CURRENCY_PLUGIN_NAMES, FONT_AWESOME, GET_SEED } from '../constants/indexConstants.js'
@@ -18,11 +16,13 @@ import { restoreWalletsRequest } from '../modules/Core/Account/api.js'
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors'
 import { updateExchangeRates } from '../modules/ExchangeRates/action.js'
+import { sendLogs } from '../modules/Logs/action.js'
 import type { Dispatch, GetState, State } from '../modules/ReduxTypes.js'
 import * as SETTINGS_ACTIONS from '../modules/Settings/SettingsActions.js'
 import { displayErrorAlert } from '../modules/UI/components/ErrorAlert/actions.js'
 import { convertCurrency } from '../modules/UI/selectors.js'
 import { newSpendingLimits } from '../reducers/SpendingLimitsReducer.js'
+import { THEME, colors } from '../theme/variables/airbitz.js'
 import { disableOtp, keepOtp } from './OtpActions.js'
 
 const setPINModeStart = (pinMode: boolean) => ({
@@ -295,7 +295,7 @@ export const showUnlockSettingsModal = () => async (dispatch: Dispatch, getState
     const noButton = {
       title: s.strings.string_cancel_cap
     }
-    const validateInput = async input => {
+    const validateInput = async (input): Promise<{ success: boolean, message: string }> => {
       const state = getState()
       const account = CORE_SELECTORS.getAccount(state)
       const isPassword = await account.checkPassword(input)
@@ -313,15 +313,7 @@ export const showUnlockSettingsModal = () => async (dispatch: Dispatch, getState
       }
     }
     const unlockSettingsModal = createSecureTextModal({
-      icon: (
-        <FAIcon
-          style={{ position: 'relative', left: 1 }}
-          type={FONT_AWESOME}
-          name={GET_SEED}
-          color={THEME.COLORS.PRIMARY}
-          size={30}
-        />
-      ),
+      icon: <FAIcon style={{ position: 'relative', left: 1 }} type={FONT_AWESOME} name={GET_SEED} color={THEME.COLORS.PRIMARY} size={30} />,
       title: s.strings.confirm_password_text,
       input,
       yesButton,
@@ -356,7 +348,7 @@ export const showSendLogsModal = () => async (dispatch: Dispatch, getState: GetS
     const unlockSettingsModal = createInputModal({
       icon: (
         <IonIcon
-          name='ios-paper-plane-outline'
+          name="ios-paper-plane-outline"
           size={24}
           color={colors.primary}
           style={[

@@ -334,7 +334,6 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         disabled={false}
         leftText="Send Logs"
         routeFunction={[Function]}
-        scene="changePassword"
       />
       <RowModal
         leftText="Restore Wallets"
@@ -379,12 +378,6 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
     autoLogoutTimeInMinutes={0}
     onCancel={[Function]}
     onDone={[Function]}
-    showModal={false}
-  />
-  <SendLogsModal
-    onCancel={[Function]}
-    onDone={[Function]}
-    sendLogsStatus=""
     showModal={false}
   />
 </SafeAreaViewComponent>
@@ -724,7 +717,6 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         disabled={false}
         leftText="Send Logs"
         routeFunction={[Function]}
-        scene="changePassword"
       />
       <RowModal
         leftText="Restore Wallets"
@@ -769,12 +761,6 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
     autoLogoutTimeInMinutes={0}
     onCancel={[Function]}
     onDone={[Function]}
-    showModal={false}
-  />
-  <SendLogsModal
-    onCancel={[Function]}
-    onDone={[Function]}
-    sendLogsStatus=""
     showModal={false}
   />
 </SafeAreaViewComponent>

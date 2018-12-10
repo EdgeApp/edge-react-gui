@@ -44,7 +44,9 @@ type Props = {
   onTogglePinLoginEnabled(enableLogin: boolean): void,
   onConfirmRestoreWallets: () => void,
   otpResetDate: string,
-  showReEnableOtpModal: () => Promise<Action>
+  showReEnableOtpModal: () => Promise<Action>,
+  showUnlockSettingsModal: () => void,
+  showSendLogsModal: () => void
 }
 type State = {
   showAutoLogoutModal: boolean,
