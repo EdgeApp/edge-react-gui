@@ -417,5 +417,8 @@
   "ss_geolock": "Ubicación restringida. Imposible completar el cambio.",
   "ss_unable": "No hay casas de cambio activas que soporten %1$s a %2$s.",
   "ss_visit_website": "",
-  "ss_need_more_kyc": ""
+  "ss_need_more_kyc": "",
+  "ss_login": "",
+  "ss_logout": "",
+  "account": ""
 }
