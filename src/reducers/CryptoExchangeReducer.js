@@ -89,6 +89,7 @@ function cryptoExchangeInner (state = initialState, action: Action): CryptoExcha
     case 'ON_KYC_TOKEN_SET': {
       return { ...state, showKYCAlert: false }
     }
+
     case 'NEED_FINISH_KYC_OFF': {
       return { ...state, pluginCompleteKYC: null }
     }
@@ -97,6 +98,9 @@ function cryptoExchangeInner (state = initialState, action: Action): CryptoExcha
       return { ...state, pluginCompleteKYC: action.data.pluginName }
     }
 
+    case 'WIPE_KYC_NEED': {
+      return { ...state, showKYCAlert: false }
+    }
     case 'NEED_KYC': {
       return { ...state, showKYCAlert: true }
     }

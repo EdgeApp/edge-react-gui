@@ -85,11 +85,8 @@ export const mapDispatchToProps = (dispatch: Dispatch): CryptoExchangeSceneCompo
   onSelectWallet: (walletId: string, currencyCode: string) => {
     dispatch(selectWalletForExchange(walletId, currencyCode))
   },
-  openModal: (data: 'from' | 'to') => dispatch({ type: 'OPEN_WALLET_SELECTOR_MODAL', data })
-  /*   addKYCToken: (data: {
-    accessToken: string,
-    refreshToken: string
-  }) =>  */
+  openModal: (data: 'from' | 'to') => dispatch({ type: 'OPEN_WALLET_SELECTOR_MODAL', data }),
+  wipeKYCFlag: () => dispatch({ type: 'WIPE_KYC_NEED' })
 })
 
 const CryptoExchangeSceneConnector = connect(

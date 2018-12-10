@@ -3,6 +3,7 @@ package co.edgesecure.app;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.psykar.cookiemanager.CookieManagerPackage;
 import com.krazylabs.OpenAppSettingsPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -54,6 +55,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new CookieManagerPackage(),
             new OpenAppSettingsPackage(),
             new RNBackgroundFetchPackage(),
             BugsnagReactNative.getPackage(),

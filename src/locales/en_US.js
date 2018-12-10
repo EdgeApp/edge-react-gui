@@ -448,7 +448,10 @@ const strings = {
   ss_unable: 'No enabled exchanges support %1$s to %2$s.',
   ss_visit_website: 'Go to ShapeShift.io',
   ss_need_more_kyc:
-    'You have an active ShapeShift account linked to this Edge account. However, it still requires verification before ShapeShift can process this exchange request. Please proceed to ShapeShift.io, login with your ShapeShift account credentials, and complete your verification.'
+    'You have an active ShapeShift account linked to this Edge account. However, it still requires verification before ShapeShift can process this exchange request. Please proceed to ShapeShift.io, login with your ShapeShift account credentials, and complete your verification.',
+  ss_login: 'Create / Sign In',
+  ss_logout: 'Sign Out',
+  account: 'Account'
 }
 
 // export default strings
