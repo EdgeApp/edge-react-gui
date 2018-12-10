@@ -127,7 +127,6 @@ export const styles = {
   },
   currentBalanceBoxBitsWrap: {
     // two
-    height: scale(44),
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: THEME.COLORS.TRANSPARENT
