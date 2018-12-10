@@ -32,6 +32,8 @@ class SwapKYCModal extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = { code: null }
+  }
+  componentDidMount () {
     CookieManager.clearAll().then(res => {
       console.log('CookieManager.clearAll =>', res)
     })
