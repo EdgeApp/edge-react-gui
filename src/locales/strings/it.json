@@ -417,5 +417,8 @@
   "ss_geolock": "Posizione geografica limitata. Impossibile completare lo scambio.",
   "ss_unable": "Nessun cambio valuta abilitato supporta da %1$s a %2$s.",
   "ss_visit_website": "Vai su ShapeShift.io",
-  "ss_need_more_kyc": "Hai un account ShapeShift attivo collegato al tuo account. È richiesta comunque una verifica prima che ShapeShift possa processare questo cambio di valuta. Vai su ShapeShift.io, loggati con le tue credenziali ShapeShift e completa la verifica."
+  "ss_need_more_kyc": "Hai un account ShapeShift attivo collegato al tuo account. È richiesta comunque una verifica prima che ShapeShift possa processare questo cambio di valuta. Vai su ShapeShift.io, loggati con le tue credenziali ShapeShift e completa la verifica.",
+  "ss_login": "",
+  "ss_logout": "",
+  "account": ""
 }
