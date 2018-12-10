@@ -103,5 +103,9 @@ export const CURRENCY_SETTINGS = {
   smartSettings: {
     pluginName: 'smartcash',
     currencyCode: 'SMART'
+  },
+  grsSettings: {
+    pluginName: 'groestlcoin',
+    currencyCode: 'GRS'
   }
 }

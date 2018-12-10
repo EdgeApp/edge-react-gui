@@ -17,7 +17,8 @@ import {
   ufoCurrencyPluginFactory,
   vertcoinCurrencyPluginFactory,
   zcoinCurrencyPluginFactory,
-  smartcashCurrencyPluginFactory
+  smartcashCurrencyPluginFactory,
+  groestlcoinCurrencyPluginFactory
 } from 'edge-currency-bitcoin'
 import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
 import { moneroCurrencyPluginFactory } from 'edge-currency-monero'
@@ -135,7 +136,8 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   feathercoinCurrencyPluginFactory,
   /* ,eosCurrencyPluginFactory */
   ufoCurrencyPluginFactory,
-  smartcashCurrencyPluginFactory
+  smartcashCurrencyPluginFactory,
+  groestlcoinCurrencyPluginFactory
 ]
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
