@@ -21,7 +21,8 @@ export const CURRENCY_PLUGIN_NAMES = {
   XRP: 'ripple',
   UFO: 'ufo',
   VTC: 'vertcoin',
-  XZC: 'zcoin'
+  XZC: 'zcoin',
+  SMART: 'smartcash'
 }
 
 export const USD_FIAT = 'iso:USD'

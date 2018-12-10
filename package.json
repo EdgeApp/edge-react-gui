@@ -75,6 +75,7 @@
     "async-lock": "^1.1.2",
     "biggystring": "^3.0.2",
     "browserify-zlib": "^0.1.4",
+    "bs58smartcheck": "^2.0.4",
     "buffer": "^5.0.8",
     "bugsnag-react-native": "^2.10.2",
     "console-browserify": "^1.1.0",
