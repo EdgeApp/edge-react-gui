@@ -417,5 +417,8 @@
   "ss_geolock": "",
   "ss_unable": "",
   "ss_visit_website": "",
-  "ss_need_more_kyc": ""
+  "ss_need_more_kyc": "",
+  "ss_login": "",
+  "ss_logout": "",
+  "account": ""
 }
