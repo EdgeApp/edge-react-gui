@@ -13,17 +13,18 @@ export const CURRENCY_PLUGIN_NAMES = {
   DASH: 'dash',
   DGB: 'digibyte',
   EOS: 'eos',
+  EBST: 'eboost',
   ETH: 'ethereum',
   FTC: 'feathercoin',
+  GRS: 'groestlcoin',
   LTC: 'litecoin',
   XMR: 'monero',
   QTUM: 'qtum',
   XRP: 'ripple',
+  SMART: 'smartcash',
   UFO: 'ufo',
   VTC: 'vertcoin',
-  XZC: 'zcoin',
-  SMART: 'smartcash',
-  GRS: 'groestlcoin'
+  XZC: 'zcoin'
 }
 
 export const USD_FIAT = 'iso:USD'

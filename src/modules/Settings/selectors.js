@@ -128,9 +128,6 @@ export const getSupportedWalletTypes = (state: State) => {
 
   const supportedWalletTypes = []
   for (const currencyInfo of allCurrencyInfos) {
-    if (currencyInfo.pluginName === 'bitcoinsv') {
-      continue
-    }
     if (currencyInfo.pluginName === 'bitcoin') {
       supportedWalletTypes.push({
         label: 'Bitcoin (Segwit)',
