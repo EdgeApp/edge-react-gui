@@ -158,6 +158,7 @@
   "send_confirmation_to": "Кому: %s",
   "send_confirmation_address": "Адрес: %s",
   "transaction_failure": "Ошибка транзакции",
+  "transaction_failure_message": "",
   "transaction_success": "Успешная транзакция",
   "transaction_success_message": "Ваша транзакция успешно отправлена.",
   "incorrect_pin": "Неверный PIN-код",
