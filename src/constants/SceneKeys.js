@@ -99,5 +99,13 @@ export const CURRENCY_SETTINGS = {
   zcoinSettings: {
     pluginName: 'zcoin',
     currencyCode: 'XZC'
+  },
+  smartSettings: {
+    pluginName: 'smartcash',
+    currencyCode: 'SMART'
+  },
+  grsSettings: {
+    pluginName: 'groestlcoin',
+    currencyCode: 'GRS'
   }
 }
