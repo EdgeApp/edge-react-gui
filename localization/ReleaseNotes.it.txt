@@ -1,4 +1,31 @@
-v1.4.0
+v1.5.0
+
+* Supporto a EOS
+* Supporto agli indirizzi Bech32
+* Aggiunto Changenow come cambio valuta
+* Implementazione deep link di bitcoin, ethereum, bitcoincash, dash e edge URIs
+* Spostato Edge Core su un processo indipendente per incrementare le performance e la reattività della GUI
+
+v1.4.4
+
+* Aggiunta la possibilità di dividere il portafoglio BCH da quello BSV
+* Aggiunta la replay protection ai portafogli BCH/BSV
+* Migliorate le performance di login
+* Corretto un bug che costringeva i portafogli XRP e XLM a scansionare tutte le transazioni a ogni login
+* Migliorata la connettività ai nodi per Bitcoin e altre monete (BTC, BCH, LTC, DASH, ecc.)
+
+v1.4.3
+
+* Incremento notevole delle performance al login e nel sincronizzare i portafogli
+* Aggiunto il supporto a bulletproof di Monero che corregge la spesa e riduce il costo per transazione
+* Gli utenti possono abilitare/disabilitare i diversi cambi valuta
+* Corretto l'occasionale errore "Token non supportato" nella sezione Cambio valuta
+* Abilitata la possibilità di vedere xpub per un numero superiore di cripto
+* Corretto il crash in alcuni account dovuto al tap nel menù in alto a destra subito dopo il login
+* Corretto il blocco che avviene su alcuni dispositivi Android quando si usa Simplex
+
+v1.4.2
+
 * Supporto per Stellar
 * Aggiunta la possibilità di selezionare nodi personalizzati per Bitcoin e valute simili
 * Supporto per membership ShapeShift
