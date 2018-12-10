@@ -2,9 +2,6 @@
 
 import type { EdgeLobby, EdgeParsedUri, EdgeSwapQuote } from 'edge-core-js'
 
-import { type GetSeedModalAction } from '../actions/GetSeedModalActions.js'
-import { type ResyncWalletModalAction } from '../actions/ResyncWalletModalActions.js'
-import { type SplitWalletModalAction } from '../actions/SplitWalletModalActions.js'
 import { type XPubModalAction } from '../actions/XPubModalActions.js'
 import type { AccountActivationPaymentInfo, HandleActivationInfo } from '../reducers/scenes/CreateWalletReducer.js'
 import { type GuiContact, type GuiCurrencyInfo, type GuiWallet } from '../types.js'
@@ -189,6 +186,7 @@ type NoDataActionName =
   | 'NEED_KYC'
   | 'ON_KYC_TOKEN_SET'
   | 'OPEN_SELECT_USER'
+  | 'PASSWORD_USED'
   | 'PROCESS_EDGE_LOGIN'
   | 'WIPE_KYC_NEED'
   | 'RECEIVED_INSUFFICENT_FUNDS_ERROR'
@@ -208,9 +206,6 @@ type NoDataActionName =
 export type Action =
   | { type: LegacyActionName, data?: any }
   | { type: NoDataActionName }
-  | GetSeedModalAction
-  | ResyncWalletModalAction
-  | SplitWalletModalAction
   | XPubModalAction
   | CoreContextAction
   | SendLogsAction

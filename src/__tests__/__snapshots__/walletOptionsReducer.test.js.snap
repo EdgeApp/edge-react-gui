@@ -2,10 +2,6 @@
 
 exports[`reducer initial state 1`] = `
 Object {
-  "getSeedWalletModalVisible": false,
-  "privateSeedUnlocked": false,
-  "resyncWalletModalVisible": false,
-  "splitWalletModalVisible": false,
   "viewXPubWalletModalVisible": false,
   "walletArchivesVisible": false,
   "walletId": "",
@@ -13,38 +9,8 @@ Object {
 }
 `;
 
-exports[`reducer open getseed wallet modal 1`] = `
-Object {
-  "getSeedWalletModalVisible": true,
-  "privateSeedUnlocked": false,
-  "resyncWalletModalVisible": false,
-  "splitWalletModalVisible": false,
-  "viewXPubWalletModalVisible": false,
-  "walletArchivesVisible": false,
-  "walletId": "GETSEED WALLET ID",
-  "xPubSyntax": "",
-}
-`;
-
-exports[`reducer open resync wallet modal 1`] = `
-Object {
-  "getSeedWalletModalVisible": false,
-  "privateSeedUnlocked": false,
-  "resyncWalletModalVisible": true,
-  "splitWalletModalVisible": false,
-  "viewXPubWalletModalVisible": false,
-  "walletArchivesVisible": false,
-  "walletId": "RESYNC WALLET ID",
-  "xPubSyntax": "",
-}
-`;
-
 exports[`reducer open viewxpub wallet modal 1`] = `
 Object {
-  "getSeedWalletModalVisible": false,
-  "privateSeedUnlocked": false,
-  "resyncWalletModalVisible": false,
-  "splitWalletModalVisible": false,
   "viewXPubWalletModalVisible": true,
   "walletArchivesVisible": false,
   "walletId": "VIEWXPUB WALLET ID",
