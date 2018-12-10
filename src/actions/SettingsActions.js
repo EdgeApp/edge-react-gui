@@ -10,7 +10,7 @@ import FAIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import iconImage from '../assets/images/otp/OTP-badge_sm.png'
-import { CURRENCY_PLUGIN_NAMES, FONT_AWESOME, GET_SEED } from '../constants/indexConstants.js'
+import { CURRENCY_PLUGIN_NAMES, FONT_AWESOME, GET_SEED, WALLET_LIST } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import { restoreWalletsRequest } from '../modules/Core/Account/api.js'
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
@@ -20,6 +20,7 @@ import { sendLogs } from '../modules/Logs/action.js'
 import type { Dispatch, GetState, State } from '../modules/ReduxTypes.js'
 import * as SETTINGS_ACTIONS from '../modules/Settings/SettingsActions.js'
 import { displayErrorAlert } from '../modules/UI/components/ErrorAlert/actions.js'
+import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import { convertCurrency } from '../modules/UI/selectors.js'
 import { newSpendingLimits } from '../reducers/SpendingLimitsReducer.js'
 import { THEME, colors } from '../theme/variables/airbitz.js'
@@ -194,12 +195,6 @@ export const updateTouchIdEnabled = (arg: boolean, account: EdgeAccount) => asyn
   }
 }
 
-export const restoreWallets = () => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const account = state.core.account
-  restoreWalletsRequest(account).then(Actions.walletList)
-}
-
 export function togglePinLoginEnabled (pinLoginEnabled: boolean) {
   return (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
@@ -371,5 +366,22 @@ export const showSendLogsModal = () => async (dispatch: Dispatch, getState: GetS
     }
   } catch (e) {
     throw new Error('Send logs failed, please contact support')
+  }
+}
+
+export const showRestoreWalletsModal = () => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const account = state.core.account
+  const restoreWalletsModal = createYesNoModal({
+    title: s.strings.restore_wallets_modal_title,
+    icon: <Icon type={'entypo'} name="wallet" size={30} />,
+    message: s.strings.restore_wallets_modal_description,
+    noButtonText: s.strings.restore_wallets_modal_cancel,
+    yesButtonText: s.strings.restore_wallets_modal_confirm
+  })
+  const response = await showModal(restoreWalletsModal)
+  if (response) {
+    await restoreWalletsRequest(account)
+    Actions[WALLET_LIST]()
   }
 }

@@ -1,6 +1,5 @@
 // @flow
 
-import { showModal } from 'edge-components'
 import type { EdgeAccount } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Alert, ScrollView, Text, View } from 'react-native'
@@ -20,7 +19,6 @@ import RowModal from '../common/RowModal'
 import RowRoute from '../common/RowRoute'
 import RowSwitch from '../common/RowSwitch'
 import AutoLogoutModal from '../modals/AutoLogoutModal.ui'
-import { RestoreWalletsModal } from '../modals/RestoreWalletsModal.ui'
 
 const DISABLE_TEXT = s.strings.string_disable
 
@@ -42,11 +40,11 @@ type Props = {
   dispatchUpdateEnableTouchIdEnable(boolean, EdgeAccount): void,
   resetConfirmPasswordError(Object): void,
   onTogglePinLoginEnabled(enableLogin: boolean): void,
-  onConfirmRestoreWallets: () => void,
   otpResetDate: string,
   showReEnableOtpModal: () => Promise<Action>,
   showUnlockSettingsModal: () => void,
-  showSendLogsModal: () => void
+  showSendLogsModal: () => void,
+  showRestoreWalletsModal: () => void
 }
 type State = {
   showAutoLogoutModal: boolean,
@@ -287,10 +285,7 @@ export default class SettingsOverview extends Component<Props, State> {
   }
 
   showRestoreWalletModal = () => {
-    showModal(({ onDone }) => <RestoreWalletsModal onDone={onDone} />).then(confirmed => {
-      if (!confirmed) return
-      this.props.onConfirmRestoreWallets()
-    })
+    this.props.showRestoreWalletsModal()
   }
 
   showAutoLogoutModal = () => this.setState({ showAutoLogoutModal: true })

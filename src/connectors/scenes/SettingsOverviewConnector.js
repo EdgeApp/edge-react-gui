@@ -6,8 +6,8 @@ import { connect } from 'react-redux'
 import {
   checkCurrentPassword,
   lockSettings,
-  restoreWallets,
   setAutoLogoutTimeInMinutesRequest,
+  showRestoreWalletsModal,
   showSendLogsModal,
   showUnlockSettingsModal,
   togglePinLoginEnabled,
@@ -56,9 +56,9 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   resetConfirmPasswordError: (arg: Object) => dispatch({ type: 'SET_CONFIRM_PASSWORD_ERROR', data: arg }),
   resetSendLogsStatus: () => dispatch(resetSendLogsStatus()),
   onTogglePinLoginEnabled: (enableLogin: boolean) => dispatch(togglePinLoginEnabled(enableLogin)),
-  onConfirmRestoreWallets: () => dispatch(restoreWallets()),
   showUnlockSettingsModal: () => dispatch(showUnlockSettingsModal()),
-  showSendLogsModal: () => dispatch(showSendLogsModal())
+  showSendLogsModal: () => dispatch(showSendLogsModal()),
+  showRestoreWalletsModal: () => dispatch(showRestoreWalletsModal())
 })
 
 export default connect(
