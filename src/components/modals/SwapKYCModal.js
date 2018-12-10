@@ -3,6 +3,7 @@
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, View, WebView } from 'react-native'
 import * as Animatable from 'react-native-animatable'
+import CookieManager from 'react-native-cookies'
 import { base64 } from 'rfc4648'
 
 import ENV from '../../../env.json'
@@ -31,6 +32,9 @@ class SwapKYCModal extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = { code: null }
+    CookieManager.clearAll().then(res => {
+      console.log('CookieManager.clearAll =>', res)
+    })
   }
   onNavigate = (navstate: Object) => {
     if (navstate.url.startsWith('https://developer.airbitz.co/shapeshift-auth')) {
