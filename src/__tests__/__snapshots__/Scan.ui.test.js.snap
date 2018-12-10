@@ -227,10 +227,6 @@ exports[`Scan component should render with AUTHORIZED props 1`] = `
       <Connect(ABAlert) />
     </Component>
   </Component>
-  <Connect(LegacyAddressModal)
-    cancelButtonPressed={[MockFunction]}
-    continueButtonPressed={[MockFunction]}
-  />
   <Connect(PrivateKeyModal) />
 </SafeAreaViewComponent>
 `;
@@ -508,10 +504,6 @@ exports[`Scan component should render with DENIED props 1`] = `
       <Connect(ABAlert) />
     </Component>
   </Component>
-  <Connect(LegacyAddressModal)
-    cancelButtonPressed={[MockFunction]}
-    continueButtonPressed={[MockFunction]}
-  />
   <Connect(PrivateKeyModal) />
 </SafeAreaViewComponent>
 `;

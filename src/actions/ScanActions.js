@@ -14,13 +14,13 @@ import s from '../locales/strings.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
 import type { Dispatch, GetState } from '../modules/ReduxTypes.js'
+import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import OptionIcon from '../modules/UI/components/OptionIcon/OptionIcon.ui.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
 import type { GuiWallet } from '../types.js'
 import { type RequestPaymentAddress, denominationToDecimalPlaces, getRequestForAddress, isEdgeLogin, noOp } from '../util/utils.js'
 import { loginWithEdge } from './EdgeLoginActions.js'
-import { activated as legacyAddressModalActivated, deactivated as legacyAddressModalDeactivated } from './LegacyAddressModalActions.js'
 import { activated as privateKeyModalActivated } from './PrivateKeyModalActions.js'
 import { paymentProtocolUriReceived } from './SendConfirmationActions.js'
 
@@ -126,7 +126,7 @@ export const parseScannedUri = (data: string) => (dispatch: Dispatch, getState: 
 
       if (isLegacyAddressUri(parsedUri)) {
         // LEGACY ADDRESS URI
-        return setTimeout(() => dispatch(legacyAddressModalActivated()), 500)
+        return setTimeout(() => dispatch(showLegacyAddressModal()), 500)
       }
 
       if (isPrivateKeyUri(parsedUri)) {
@@ -178,21 +178,6 @@ export const parseScannedUri = (data: string) => (dispatch: Dispatch, getState: 
   )
 }
 
-export const legacyAddressModalContinueButtonPressed = () => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  dispatch(legacyAddressModalDeactivated())
-  const parsedUri = state.ui.scenes.scan.parsedUri
-  setImmediate(() => {
-    if (!parsedUri) {
-      dispatch({ type: 'ENABLE_SCAN' })
-      return
-    }
-
-    Actions[SEND_CONFIRMATION]({ guiMakeSpendInfo: parsedUri })
-    // dispatch(sendConfirmationUpdateTx(parsedUri))
-  })
-}
-
 export const qrCodeScanned = (data: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const isScanEnabled = state.ui.scenes.scan.scanEnabled
@@ -200,15 +185,6 @@ export const qrCodeScanned = (data: string) => (dispatch: Dispatch, getState: Ge
 
   dispatch({ type: 'DISABLE_SCAN' })
   dispatch(parseScannedUri(data))
-}
-
-export const addressModalCancelButtonPressed = () => (dispatch: Dispatch, getState: GetState) => {
-  // dispatch(addressModalDeactivated())
-}
-
-export const legacyAddressModalCancelButtonPressed = () => (dispatch: Dispatch) => {
-  dispatch(legacyAddressModalDeactivated())
-  dispatch({ type: 'ENABLE_SCAN' })
 }
 
 export const isTokenUri = (parsedUri: EdgeParsedUri): boolean => {
@@ -240,5 +216,34 @@ export const toggleAddressModal = () => async (dispatch: Dispatch, getState: Get
   const uri = await showModal(addressModal)
   if (uri) {
     dispatch(parseScannedUri(uri))
+  }
+}
+
+export const legacyAddressModalContinueButtonPressed = () => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const parsedUri = state.ui.scenes.scan.parsedUri
+  setImmediate(() => {
+    if (!parsedUri) {
+      dispatch({ type: 'ENABLE_SCAN' })
+      return
+    }
+
+    Actions[SEND_CONFIRMATION]({ guiMakeSpendInfo: parsedUri })
+  })
+}
+
+export const showLegacyAddressModal = () => async (dispatch: Dispatch, getState: GetState) => {
+  const legacyAddressModal = createYesNoModal({
+    title: s.strings.legacy_address_modal_title,
+    icon: <Icon style={{}} type={'ionIcons'} name={'ios-alert-outline'} size={30} />,
+    message: s.strings.legacy_address_modal_warning,
+    noButtonText: s.strings.legacy_address_modal_cancel,
+    yesButtonText: s.strings.legacy_address_modal_continue
+  })
+  const response = await showModal(legacyAddressModal)
+  if (response) {
+    dispatch(legacyAddressModalContinueButtonPressed())
+  } else {
+    dispatch({ type: 'ENABLE_SCAN' })
   }
 }

@@ -8,9 +8,6 @@ test('initialState', () => {
   const expected = {
     scanEnabled: false,
     torchEnabled: false,
-    legacyAddressModal: {
-      isActive: false
-    },
     privateKeyModal: {
       primaryModal: {
         isActive: false

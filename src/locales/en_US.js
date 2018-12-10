@@ -333,7 +333,7 @@ const strings = {
 
   legacy_address_modal_title: 'Legacy Address Detected',
   legacy_address_modal_warning:
-    'Warning: You have scanned a legacy format address that may not be for %1$s as it is indistinguishable from other currency addresses.\n\nDo you want to continue sending to this address?',
+    'Warning: You have scanned a legacy format address that may not be for the intended currency as it is indistinguishable from other currency addresses.\n\nDo you want to continue sending to this address?',
   legacy_address_modal_continue: 'Continue',
   legacy_address_modal_cancel: 'Cancel',
 
