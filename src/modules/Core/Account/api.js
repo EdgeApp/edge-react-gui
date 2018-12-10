@@ -31,11 +31,13 @@ export const activateWalletRequest = (account: EdgeAccount, walletId: string) =>
 export const restoreWalletsRequest = (account: EdgeAccount) => {
   const restoreKeys = account.allKeys.filter(key => key.archived || key.deleted)
   return Promise.all(
-    restoreKeys.map(key => key.id).map(walletId =>
-      account.changeWalletStates({
-        [walletId]: { archived: false, deleted: false }
-      })
-    )
+    restoreKeys
+      .map(key => key.id)
+      .map(walletId =>
+        account.changeWalletStates({
+          [walletId]: { archived: false, deleted: false }
+        })
+      )
   )
 }
 

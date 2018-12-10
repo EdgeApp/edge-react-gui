@@ -12,13 +12,13 @@ import {
   dashCurrencyPluginFactory,
   digibyteCurrencyPluginFactory,
   feathercoinCurrencyPluginFactory,
+  groestlcoinCurrencyPluginFactory,
   litecoinCurrencyPluginFactory,
   qtumCurrencyPluginFactory,
+  smartcashCurrencyPluginFactory,
   ufoCurrencyPluginFactory,
   vertcoinCurrencyPluginFactory,
-  zcoinCurrencyPluginFactory,
-  smartcashCurrencyPluginFactory,
-  groestlcoinCurrencyPluginFactory
+  zcoinCurrencyPluginFactory
 } from 'edge-currency-bitcoin'
 import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
 import { moneroCurrencyPluginFactory } from 'edge-currency-monero'
