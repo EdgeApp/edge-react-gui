@@ -51,10 +51,6 @@ exports[`Scan component should render with AUTHORIZED props 1`] = `
           ]
         }
       >
-        <Connect(AddressModal)
-          doneButtonPressed={[MockFunction]}
-          onExitButtonFxn={[Function]}
-        />
         <Component
           style={
             Array [
@@ -280,10 +276,6 @@ exports[`Scan component should render with DENIED props 1`] = `
           ]
         }
       >
-        <Connect(AddressModal)
-          doneButtonPressed={[MockFunction]}
-          onExitButtonFxn={[Function]}
-        />
         <Component
           style={
             Array [

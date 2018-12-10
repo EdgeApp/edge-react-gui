@@ -19,7 +19,6 @@ describe('Scan component', () => {
       toggleEnableTorch: jest.fn(),
       toggleAddressModal: jest.fn(),
       toggleScanToWalletListModal: jest.fn(),
-      addressModalDoneButtonPressed: jest.fn(),
       legacyAddressModalContinueButtonPressed: jest.fn(),
       legacyAddressModalCancelButtonPressed: jest.fn(),
       onSelectWallet: jest.fn()
@@ -40,7 +39,6 @@ describe('Scan component', () => {
       toggleEnableTorch: jest.fn(),
       toggleAddressModal: jest.fn(),
       toggleScanToWalletListModal: jest.fn(),
-      addressModalDoneButtonPressed: jest.fn(),
       legacyAddressModalContinueButtonPressed: jest.fn(),
       legacyAddressModalCancelButtonPressed: jest.fn(),
       onSelectWallet: jest.fn()

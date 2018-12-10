@@ -6,7 +6,6 @@ import { scan as scanReducer } from '../reducers/scenes/ScanReducer.js'
 
 test('initialState', () => {
   const expected = {
-    addressModalVisible: false,
     scanEnabled: false,
     torchEnabled: false,
     legacyAddressModal: {

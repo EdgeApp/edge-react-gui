@@ -8,11 +8,14 @@ import { Alert, Linking, Text } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
+import { createAddressModal } from '../components/modals/AddressModal.js'
 import { ADD_TOKEN, EDGE_LOGIN, FA_MONEY_ICON, SEND_CONFIRMATION } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
+import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
 import type { Dispatch, GetState } from '../modules/ReduxTypes.js'
 import OptionIcon from '../modules/UI/components/OptionIcon/OptionIcon.ui.js'
+import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
 import type { GuiWallet } from '../types.js'
 import { type RequestPaymentAddress, denominationToDecimalPlaces, getRequestForAddress, isEdgeLogin, noOp } from '../util/utils.js'
@@ -199,10 +202,6 @@ export const qrCodeScanned = (data: string) => (dispatch: Dispatch, getState: Ge
   dispatch(parseScannedUri(data))
 }
 
-export const addressModalDoneButtonPressed = (data: string) => (dispatch: Dispatch, getState: GetState) => {
-  dispatch(parseScannedUri(data))
-}
-
 export const addressModalCancelButtonPressed = () => (dispatch: Dispatch, getState: GetState) => {
   // dispatch(addressModalDeactivated())
 }
@@ -226,4 +225,20 @@ export const isPrivateKeyUri = (parsedUri: EdgeParsedUri): boolean => {
 
 export const isPaymentProtocolUri = (parsedUri: EdgeParsedUri): boolean => {
   return !!parsedUri.paymentProtocolURL && !parsedUri.publicAddress
+}
+
+export const toggleAddressModal = () => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const walletId: string = UI_SELECTORS.getSelectedWalletId(state)
+  const coreWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
+  const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
+  const addressModal = createAddressModal({
+    walletId,
+    coreWallet,
+    currencyCode
+  })
+  const uri = await showModal(addressModal)
+  if (uri) {
+    dispatch(parseScannedUri(uri))
+  }
 }

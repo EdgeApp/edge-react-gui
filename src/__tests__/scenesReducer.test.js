@@ -56,7 +56,6 @@ test('initialState', () => {
       uniqueLegacyAddress: false
     },
     scan: {
-      addressModalVisible: false,
       scanEnabled: false,
       torchEnabled: false,
       legacyAddressModal: {

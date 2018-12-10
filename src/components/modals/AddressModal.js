@@ -1,47 +1,49 @@
 // @flow
 
-import type { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
+import { FormField, InputAndButtonStyle, MaterialInputStyle, Modal, ModalStyle, PrimaryButton, SecondaryButton, TertiaryButton } from 'edge-components'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
-import { Clipboard } from 'react-native'
-import slowlog from 'react-native-slowlog'
+import { Clipboard, Text, View } from 'react-native'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import * as WALLET_API from '../../modules/Core/Wallets/api.js'
-import StylizedModal from '../../modules/UI/components/Modal/Modal.ui'
-import styles from '../../styles/scenes/ScaneStyle'
-import { colors } from '../../theme/variables/airbitz.js'
-import { AddressInput } from '../common/AddressInput.js'
-import { AddressInputButtons } from '../common/AddressInputButtons.js'
+import { colors as COLORS } from '../../theme/variables/airbitz.js'
 
-type Props = {
-  coreWallet: EdgeCurrencyWallet,
-  currencyCode: string,
-  addressModalVisible: boolean,
-  toggleAddressModal(): void,
-  sendConfirmationUpdateTx(EdgeParsedUri): void,
-  loginWithEdge(string): void,
-  doneButtonPressed(string): void,
-  onExitButtonFxn: void
-}
-type State = {
-  uri: string,
-  clipboard: string
+// INTERACTIVE_MODAL /////////////////////////////////////////////////////////////////////////////
+type AddressModalProps = {
+  onDone: any => void,
+  coreWallet: EdgeCurrencyWallet
 }
 
-export default class AddressModal extends Component<Props, State> {
-  constructor (props: Props) {
+type AddressModalState = {
+  clipboard: string,
+  uri: string
+}
+export class AddressModal extends Component<AddressModalProps, AddressModalState> {
+  /* static Icon = Icon
+  static Title = Title
+  static Description = Description
+  static Body = Body
+  static Footer = Footer
+  static Item = Item
+  static Row = Row */
+
+  constructor (props: AddressModalProps) {
     super(props)
     this.state = {
-      uri: '',
-      clipboard: ''
+      clipboard: '',
+      uri: ''
     }
-    slowlog(this, /.*/, global.slowlogOptions)
   }
 
-  async _setClipboard (props: Props) {
+  componentDidMount () {
+    this._setClipboard(this.props)
+  }
+
+  _setClipboard = async props => {
     const coreWallet = props.coreWallet
 
     try {
@@ -60,68 +62,75 @@ export default class AddressModal extends Component<Props, State> {
     }
   }
 
-  _flushUri () {
+  updateUri = (uri: string) => {
     this.setState({
-      uri: ''
+      uri
     })
   }
 
-  componentDidMount () {
-    this._setClipboard(this.props)
-  }
-
-  UNSAFE_componentWillReceiveProps (nextProps: Props) {
-    this._setClipboard(nextProps)
-    const uriShouldBeCleaned = !this.props.addressModalVisible && !!this.state.uri.length
-    if (uriShouldBeCleaned) {
-      this._flushUri()
-    }
+  onPasteFromClipboard = () => {
+    const { clipboard } = this.state
+    this.props.onDone(clipboard)
   }
 
   render () {
-    const icon = <FAIcon name={Constants.ADDRESS_BOOK_O} size={24} color={colors.primary} style={styles.icon} />
-
     const copyMessage = this.state.clipboard ? sprintf(s.strings.string_paste_address, this.state.clipboard) : null
-    const middle = (
-      <AddressInput
-        copyMessage={copyMessage}
-        onChangeText={this.onChangeText}
-        onSubmit={this.onSubmit}
-        onPaste={this.onPasteFromClipboard}
-        uri={this.state.uri}
-      />
-    )
-
-    const bottom = <AddressInputButtons onSubmit={this.onSubmit} onCancel={this.onCancel} />
-
+    const { uri } = this.state
     return (
-      <StylizedModal
-        featuredIcon={icon}
-        headerText={s.strings.fragment_send_address_dialog_title}
-        modalMiddle={middle}
-        modalBottom={bottom}
-        visibilityBoolean={this.props.addressModalVisible}
-        onExitButtonFxn={this.props.onExitButtonFxn}
-        style={copyMessage && styles.withAddressCopied}
-        modalBottomStyle={{ marginTop: 0 }}
-      />
+      <View style={ModalStyle.modal}>
+        <Modal.Icon>
+          <FAIcon name={Constants.ADDRESS_BOOK_O} size={24} color={COLORS.primary} />
+        </Modal.Icon>
+        <Modal.Container>
+          <Modal.Icon.AndroidHackSpacer />
+          <Modal.Title style={{ textAlign: 'center' }}>
+            <Text>{s.strings.fragment_send_address_dialog_title}</Text>
+          </Modal.Title>
+          <Modal.Body>
+            <View>
+              <FormField
+                style={MaterialInputStyle}
+                value={uri}
+                onChangeText={this.updateUri}
+                error={''}
+                placeholder={'Addreass'}
+                label={'Address'}
+                onSubmit={() => this.props.onDone(uri)}
+              />
+            </View>
+          </Modal.Body>
+          <Modal.Footer>
+            {copyMessage && (
+              <Modal.Row style={InputAndButtonStyle.tertiaryButtonRow}>
+                <TertiaryButton ellipsizeMode={'middle'} onPress={this.onPasteFromClipboard} numberOfLines={1}>
+                  <TertiaryButton.Text>{copyMessage}</TertiaryButton.Text>
+                </TertiaryButton>
+              </Modal.Row>
+            )}
+            <Modal.Row style={[InputAndButtonStyle.row]}>
+              <SecondaryButton onPress={() => this.props.onDone(null)} style={[InputAndButtonStyle.noButton]}>
+                <SecondaryButton.Text style={[InputAndButtonStyle.buttonText]}>{s.strings.string_cancel_cap}</SecondaryButton.Text>
+              </SecondaryButton>
+              <PrimaryButton onPress={() => this.props.onDone(this.state.uri)} style={[InputAndButtonStyle.yesButton]}>
+                <PrimaryButton.Text style={[InputAndButtonStyle.buttonText]}>{s.strings.string_done_cap}</PrimaryButton.Text>
+              </PrimaryButton>
+            </Modal.Row>
+          </Modal.Footer>
+        </Modal.Container>
+      </View>
     )
   }
+}
 
-  onPasteFromClipboard = () => {
-    this.setState({ uri: this.state.clipboard }, this.onSubmit)
-  }
+export type AddressModalOpts = {
+  walletId: string,
+  coreWallet: EdgeCurrencyWallet,
+  currencyCode: string
+}
 
-  onSubmit = () => {
-    const uri = this.state.uri
-    this.props.toggleAddressModal()
-    this.props.doneButtonPressed(uri)
+export const createAddressModal = (opts: AddressModalOpts) => {
+  function AddressModalWrapped (props: { +onDone: Function }) {
+    return <AddressModal {...opts} {...props} />
   }
-  onCancel = () => {
-    this.props.toggleAddressModal()
-  }
-
-  onChangeText = (uri: string) => {
-    this.setState({ uri })
-  }
+  return AddressModalWrapped
 }

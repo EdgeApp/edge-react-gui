@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 
 import {
   addressModalCancelButtonPressed,
-  addressModalDoneButtonPressed,
   legacyAddressModalCancelButtonPressed,
   legacyAddressModalContinueButtonPressed,
   qrCodeScanned
@@ -27,7 +26,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   toggleAddressModal: () => dispatch({ type: 'TOGGLE_ADDRESS_MODAL_VISIBILITY' }),
   legacyAddressModalContinueButtonPressed: () => dispatch(legacyAddressModalContinueButtonPressed()),
   legacyAddressModalCancelButtonPressed: () => dispatch(legacyAddressModalCancelButtonPressed()),
-  addressModalDoneButtonPressed: data => dispatch(addressModalDoneButtonPressed(data)),
   addressModalCancelButtonPressed: () => dispatch(addressModalCancelButtonPressed()),
   onSelectWallet: (walletId: string, currencyCode: string) => dispatch(selectWalletFromModal(walletId, currencyCode))
 })

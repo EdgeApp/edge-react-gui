@@ -11,7 +11,6 @@ import slowlog from 'react-native-slowlog'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
-import AddressModal from '../../connectors/AddressModalConnector'
 import LegacyAddressModal from '../../connectors/LegacyAddressModalConnector.js'
 import PrivateKeyModal from '../../connectors/PrivateKeyModalConnector.js'
 import * as Constants from '../../constants/indexConstants'
@@ -35,7 +34,6 @@ type Props = {
   toggleEnableTorch: () => void,
   toggleAddressModal: () => void,
   toggleScanToWalletListModal: () => void,
-  addressModalDoneButtonPressed: () => void,
   legacyAddressModalContinueButtonPressed: () => void,
   legacyAddressModalCancelButtonPressed: () => void,
   onSelectWallet: (string, string) => void
@@ -56,7 +54,7 @@ export class Scan extends Component<Props> {
   }
 
   render () {
-    const { addressModalDoneButtonPressed, legacyAddressModalContinueButtonPressed, legacyAddressModalCancelButtonPressed, onSelectWallet } = this.props
+    const { legacyAddressModalContinueButtonPressed, legacyAddressModalCancelButtonPressed, onSelectWallet } = this.props
 
     return (
       <SafeAreaView>
@@ -68,8 +66,6 @@ export class Scan extends Component<Props> {
             {this.renderCamera()}
 
             <View style={[styles.overlay]}>
-              <AddressModal onExitButtonFxn={this._onToggleAddressModal} doneButtonPressed={addressModalDoneButtonPressed} />
-
               <View style={[styles.overlayTop]}>
                 <T style={[styles.overlayTopText]}>{HEADER_TEXT}</T>
               </View>
