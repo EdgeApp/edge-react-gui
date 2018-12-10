@@ -158,6 +158,7 @@
   "send_confirmation_to": "An: %s",
   "send_confirmation_address": "Adresse: %s",
   "transaction_failure": "Transaktion fehlgeschlagen",
+  "transaction_failure_message": "",
   "transaction_success": "Transaktion erfolgreich",
   "transaction_success_message": "Ihre Transaktion wurde erfolgreich verschickt.",
   "incorrect_pin": "Falscher PIN",
