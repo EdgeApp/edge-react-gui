@@ -4,6 +4,7 @@ import { bns } from 'biggystring'
 import type { EdgeMetadata, EdgeParsedUri, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import { sprintf } from 'sprintf-js'
 
 import { SEND_CONFIRMATION, TRANSACTION_DETAILS } from '../constants/indexConstants'
 import s from '../locales/strings.js'
@@ -206,7 +207,7 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
     const errorInfo = {
       success: false,
       title: s.strings.transaction_failure,
-      message: e.message
+      message: sprintf(s.strings.transaction_failure_message, e.message)
     }
     dispatch(updateTransaction(edgeSignedTransaction, null, true, new Error('broadcastError')))
     dispatch({ type: 'OPEN_AB_ALERT', data: errorInfo })
