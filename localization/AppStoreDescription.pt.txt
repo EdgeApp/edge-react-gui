@@ -1,8 +1,12 @@
+Title: Edge - Bitcoin, Ethereum, Monero, Ripple Wallet
+-----
+Short description: Private, secure & easy to use. Buy, sell, send & receive Bitcoin & other crypto.
+-----
 Privacidade total e segurança em nossa carteira fácil de usar.
 
 Nunca foi tão fácil gerenciar seus criptoativos. A Carteira Edge fornece segurança máxima mesmo mantendo a simplicidade, permitindo que todos os tipos de usuários a utilizem com facilidade, façam transferências e troquem suas moedas.
 
-A Carteira Edge atualmente suporta: Bitcoin, Bitcoin Cash, Litecoin, Dash, Ethereum, Monero e Ripple.
+Edge Crypto Wallet currently supports: Bitcoin, Bitcoin Cash, Litecoin, Dash, Ethereum, Stellar, Monero, and Ripple/XRP.
 
 A Edge é uma Carteira de Criptomoeda poderosa e fácil de usar, que permite aos usuários controlar suas próprias chaves privadas com a familiaridade e a tranquilidade de um serviço bancário no celular. 
 
@@ -12,7 +16,7 @@ A Edge também disponibiliza a troca de criptomoedas. Troque facilmente suas moe
 
 • Zero-conhecimento e zero-acesso aos fundos, chaves, ou dados de transação do usuário da parte da Edge ou de terceiros
 • Criação de conta simplificada usando apenas login e senha (sem impressão de PDFs, sem escrever frases de recuperação, e sem precisar fazer configurações criptografadas)
-* TouchID biométrico e login por FaceID
+• Biometric TouchID and FaceID login
 • Carteiras hierárquicas determinísticas com mudança de endereço para cada transação
 • Arquitetura de servidor descentralizada. As carteiras funcionam mesmo se os servidores da Edge estiverem fora do ar.
 • Código aberto. Disponível em https://github.com/EdgeApp

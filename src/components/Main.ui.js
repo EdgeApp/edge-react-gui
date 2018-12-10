@@ -19,7 +19,9 @@ import {
   smartcashCurrencyPluginFactory,
   ufoCurrencyPluginFactory,
   vertcoinCurrencyPluginFactory,
-  zcoinCurrencyPluginFactory
+  zcoinCurrencyPluginFactory,
+  smartcashCurrencyPluginFactory,
+  groestlcoinCurrencyPluginFactory
 } from 'edge-currency-bitcoin'
 import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
 import { moneroCurrencyPluginFactory } from 'edge-currency-monero'

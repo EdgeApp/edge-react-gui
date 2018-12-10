@@ -1,16 +1,43 @@
-v1.4.0
-* Support for Stellar
-* Add ability to select custom nodes for Bitcoin and similar currencies
+v1.5.0
+
+* EOS Support
+* Bech32 Adressen Support
+* Changenow als Tauschbörse hinzufügen
+* Deep-Linking für Bitcoin, Ethereum, Bitcoincash, Dash und Edge-URI's implementieren
+* Den Edge Core zum eigenständigen Prozess machen, um die Leistung und die GUI-Antwortzeit zu verbessern
+
+v1.4.4
+
+* Add ability to split BCH wallets into BSV wallets
+* Add replay protection to BCH/BSV wallets
+* Improve login performance
+* Fix bug that caused XRP and XLM to re-query all transactions at each login
+* Improve connectivity to nodes for bitcoin related currencies (BTC, BCH, LTC, DASH, etc)
+
+v1.4.3
+
+* Große Leistungsverbesserung nach Einloggen und Synchronisation der Wallet's
+* Monero's Bulletproofs hinzugefügt um Monero-Ausgaben zu beheben
+* Nutzern erlauben Wechselstuben zu aktivieren/deaktivieren
+* Behebe gelegentlicher "Token wird nicht unterstützt"-Fehler im Tauschbörsen-Fenster
+* Xpub-Anzeige für mehrere Währungen aktivieren
+* Behebe den Absturz großer Benutzerkonten, indem du direkt nach dem Einloggen oben rechts die Menüschaltfläche betätigst
+* Absturz bei der Nutzung von Simplex für einige Android-Geräte beheben
+
+v1.4.2
+
+* Unterstützung für Stellar
+* Füge die Fähigkeit um benutzerdefinierte Nodes für Bitcoin und ähnliche Währungen auszuwählen hinzu
 * Support for ShapeShift membership
-* Support Changelly.com in Exchange functionality
-* Add Spanish, Italian, and Russian translations
+* Unterstütze Changelly.com bei der Tauschbörsenfunktion
+* Füge spanische, italienische und russische Übersetzungen hinzu
 
 v1.3.4
 
-* Prevent create wallet button Done button from being tapped multiple times
-* Fix white screen hang upon login if an incoming transaction happens
-* Fix address wrapping in Simplex plugin
-* Fix double tap bug on Change Password modal
-* Fix Fiat amounts when using other country currencies
-* Additional scaling and visual improvements
-* Other minor bug fixes
+* Verhindere, dass der Wallet erstellen Knopf und der Fertig Knopf mehrmals hintereinander betätigt werden kann
+* Behebe den Fehler, dass nach dem Einloggen die App bei einer eingehenden Transaktion mit einem weißem Bildschirm hängt
+* Behebe das Adress-Wrapping im Simplex-Plugin
+* Behebe den Doppeltipp-Fehler im Passwort-Änderungsvorgang
+* Fixiere die Fiat-Beträge bei der Benutzung von Währungen anderer Länder
+* Zusätzliche skalierbare und visuelle Verbesserungen
+* Andere kleine Bug-fixes

@@ -96,7 +96,11 @@ export const CURRENCY_SETTINGS = {
     pluginName: 'bitcoinGold',
     currencyCode: 'BTG'
   },
-  smartcashSettings: {
+  zcoinSettings: {
+    pluginName: 'zcoin',
+    currencyCode: 'XZC'
+  },
+  smartSettings: {
     pluginName: 'smartcash',
     currencyCode: 'SMART'
   },
