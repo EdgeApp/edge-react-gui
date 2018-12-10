@@ -8,6 +8,7 @@ import s from '../../../../../locales/strings'
 import T from '../../../components/FormattedText'
 import { Icon } from '../../Icon/Icon.ui.js'
 import styles from '../style'
+import { sprintf } from 'sprintf-js'
 
 type Props = {
   usernames: Array<string>,
@@ -48,7 +49,7 @@ export default class UserList extends Component<Props> {
     return this.props.deleteLocalAccount(username)
   }
   handlePressDeleteLocalAccount = (username: string) => () => {
-    return Alert.alert(s.strings.delete_account_header, s.strings.delete_username_account, [
+    return Alert.alert(s.strings.delete_account_header, sprintf(s.strings.delete_username_account, username), [
       { text: s.strings.no, style: 'cancel' },
       { text: s.strings.yes, onPress: () => this.handleDeleteLocalAccount(username)() }
     ])
