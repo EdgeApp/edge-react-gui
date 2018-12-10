@@ -1,4 +1,31 @@
-v1.4.0
+v1.5.0
+
+* Soporte EOS
+Soporte para direcciones Bech32
+* Añadir Changenow como casa de cambio
+* Implementa vínculos profundos (deep linking) de URIs de bitcoin, ethereum, bitcoin cash, dash y Edge
+Traslada Edge Core a un proceso independiente para aumentar el rendimiento y respuesta de la interfaz gráfica
+
+v1.4.4
+
+* Add ability to split BCH wallets into BSV wallets
+* Add replay protection to BCH/BSV wallets
+* Improve login performance
+* Fix bug that caused XRP and XLM to re-query all transactions at each login
+* Improve connectivity to nodes for bitcoin related currencies (BTC, BCH, LTC, DASH, etc)
+
+v1.4.3
+
+* Gran incremento de rendimiento al registrarse y sincronizar carteras
+* Añadido soporte para "Bulletproofs" que arregla el gasto de Monero
+* Permite a los usuarios activar/desactivar casas de cambio
+* Arregla el error ocasional " El token no está soportado" en la pantalla de casa de cambio
+* Activar la vista de xpub para más monedas
+* Arregla el fallo en cuentas grandes cuando se hace click en el boton superior derecho inmediatamente después de acceder
+* Arregla el bloqueo cuando se usa Simplex desde dispositivos Android
+
+v1.4.2
+
 * Soporta Stellar
 * Añadida capacidad de seleccionar nodos propios para Bitcoin y monedas similares
 * Soporte para membresía Shapeshift
@@ -10,7 +37,7 @@ v1.3.4
 * Evitar que se pueda hacer click varias veces en el botón Hecho de la opción crear cartera
 * Arreglo de que la pantalla quede en blanco en el login si se recibe una transacción en ese momento
 * Corregido ajuste de direcciones en el plugin Simplex
-*Corregido un bug al hacer doble click en el modo de cambio de contraseña
+* Corregido un bug al hacer doble click en el modo de cambio de contraseña
 *Corregir las cantidades fiat cuando se usan monedas de otros países
 * Mejoras visuales adicionales
 * Bugs menores corregidos
