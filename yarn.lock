@@ -4103,7 +4103,7 @@ fbjs-scripts@^0.8.1:
     semver "^5.1.0"
     through2 "^2.0.0"
 
-fbjs@^0.8.1, fbjs@^0.8.14, fbjs@^0.8.16, fbjs@^0.8.9:
+fbjs@^0.8.1, fbjs@^0.8.14, fbjs@^0.8.16, fbjs@^0.8.17, fbjs@^0.8.9:
   version "0.8.17"
   resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.17.tgz#c4d598ead6949112653d6588b01a5cdcd9f90fdd"
   integrity sha1-xNWY6taUkRJlPWWIsBpc3Nn5D90=
@@ -6150,11 +6150,6 @@ keycode@^2.1.8:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/keycode/-/keycode-2.2.0.tgz#3d0af56dc7b8b8e5cba8d0a97f107204eec22b04"
   integrity sha1-PQr1bce4uOXLqNCpfxByBO7CKwQ=
-
-keymirror@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/keymirror/-/keymirror-0.1.1.tgz#918889ea13f8d0a42e7c557250eee713adc95c35"
-  integrity sha1-kYiJ6hP40KQufFVyUO7nE63JXDU=
 
 kind-of@^1.1.0:
   version "1.1.0"
@@ -8520,13 +8515,12 @@ react-native-vector-icons@^6.1.0:
     prop-types "^15.6.2"
     yargs "^8.0.2"
 
-"react-native-webview-file-upload-android@https://github.com/rhinogram/react-native-webview-file-upload-android.git#feature/support-file-downloading":
-  version "0.4.2"
-  resolved "https://github.com/rhinogram/react-native-webview-file-upload-android.git#80e71a1a96e3c95bb56906e0f30afab3b2c0a3e0"
+"react-native-webview@https://github.com/react-native-community/react-native-webview#1f11f10":
+  version "2.14.0"
+  resolved "https://github.com/react-native-community/react-native-webview#1f11f10a6968f859d8ad84c5d9d46b1d6731a0a8"
   dependencies:
-    keymirror "^0.1.1"
-    prop-types "^15.6.0"
-    warning "^3.0.0"
+    escape-string-regexp "^1.0.5"
+    fbjs "^0.8.17"
 
 react-native@0.55.3:
   version "0.55.3"

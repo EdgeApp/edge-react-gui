@@ -1,7 +1,8 @@
 // @flow
 
 import React, { Component } from 'react'
-import { View, WebView } from 'react-native'
+import { View } from 'react-native'
+import { WebView } from 'react-native-webview'
 
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'

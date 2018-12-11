@@ -1,8 +1,9 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Dimensions, Image, Linking, Platform, Text, View, WebView } from 'react-native'
+import { Dimensions, Image, Linking, Platform, Text, View } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
+import { WebView } from 'react-native-webview'
 
 import helpImage from '../../../../assets/images/modal/help.png'
 import { isIphoneX } from '../../../../lib/isIphoneX.js'
