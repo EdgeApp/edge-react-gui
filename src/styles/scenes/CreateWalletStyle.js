@@ -19,9 +19,9 @@ export const styles = {
   },
   view: {
     position: 'relative',
-    top: scale(THEME.HEADER),
+    top: THEME.HEADER,
     paddingHorizontal: 20,
-    paddingVertical: 5
+    height: PLATFORM.usableHeight
   },
   walletNameInputView: {
     height: scale(50),
@@ -35,9 +35,7 @@ export const styles = {
     marginBottom: scale(15)
   },
   picker: {
-    fontFamily: THEME.FONTS.DEFAULT,
-    height: scale(50),
-    padding: scale(5)
+    fontFamily: THEME.FONTS.DEFAULT
   },
   selectedItem: {
     backgroundColor: THEME.COLORS.GRAY_4,
