@@ -80,7 +80,7 @@ export default class AutoLogoutModal extends Component {
       <ModalButtons onDone={() => this.onDone({ timeMeasurement: this.state.timeMeasurement, timeNumber: this.state.timeNumber })} onCancel={this.onCancel} />
     )
 
-    const icon = <IonIcon name="ios-time-outline" size={24} style={styles.icon} />
+    const icon = <IonIcon name="ios-time" size={24} style={styles.icon} />
 
     return (
       <StylizedModal
