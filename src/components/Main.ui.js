@@ -11,6 +11,7 @@ import {
   bitcoinsvCurrencyPluginFactory,
   dashCurrencyPluginFactory,
   digibyteCurrencyPluginFactory,
+  eboostCurrencyPluginFactory,
   feathercoinCurrencyPluginFactory,
   groestlcoinCurrencyPluginFactory,
   litecoinCurrencyPluginFactory,
@@ -119,7 +120,6 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   coincapPlugin,
   // Currencies:
   bitcoincashCurrencyPluginFactory,
-  bitcoinsvCurrencyPluginFactory,
   bitcoinCurrencyPluginFactory,
   ethereumCurrencyPluginFactory,
   stellarCurrencyPluginFactory,
@@ -127,17 +127,19 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   moneroCurrencyPluginFactory,
   dashCurrencyPluginFactory,
   litecoinCurrencyPluginFactory,
+  bitcoinsvCurrencyPluginFactory,
+  eboostCurrencyPluginFactory,
   // dogecoinCurrencyPluginFactory,
   qtumCurrencyPluginFactory,
   digibyteCurrencyPluginFactory,
+  zcoinCurrencyPluginFactory,
   bitcoingoldCurrencyPluginFactory,
   vertcoinCurrencyPluginFactory,
-  zcoinCurrencyPluginFactory,
   feathercoinCurrencyPluginFactory,
-  /* ,eosCurrencyPluginFactory */
-  ufoCurrencyPluginFactory,
   smartcashCurrencyPluginFactory,
-  groestlcoinCurrencyPluginFactory
+  groestlcoinCurrencyPluginFactory,
+  ufoCurrencyPluginFactory /*,
+  eosCurrencyPluginFactory */
 ]
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
