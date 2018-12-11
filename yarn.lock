@@ -3442,9 +3442,9 @@ edge-login-ui-rn@^0.5.12:
     sprintf-js "^1.0.3"
     zxcvbn "^4.4.2"
 
-"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#28c9385":
+"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#fb2eb83":
   version "0.0.3"
-  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#28c93851f6d2cb039623a07ea231129a705a3705"
+  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#fb2eb83ad153f397fd71f94fa0e38fac4e06fca8"
   dependencies:
     moment "^2.22.2"
 
