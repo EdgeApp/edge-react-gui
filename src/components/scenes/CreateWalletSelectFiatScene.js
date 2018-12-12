@@ -2,18 +2,23 @@
 
 import React, { Component } from 'react'
 import { Alert, TouchableHighlight, View } from 'react-native'
+import ExtraDimensions from 'react-native-extra-dimensions-android'
 import { Actions } from 'react-native-router-flux'
 
 import * as Constants from '../../constants/indexConstants.js'
+import { scale } from '../../lib/scaling.js'
 import s from '../../locales/strings.js'
 import Text from '../../modules/UI/components/FormattedText/index'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import SearchResults from '../../modules/UI/components/SearchResults/index'
 import styles, { styles as stylesRaw } from '../../styles/scenes/CreateWalletStyle.js'
+import { PLATFORM } from '../../theme/variables/platform'
 import type { DeviceDimensions, FlatListItem, GuiFiatType } from '../../types'
 import * as UTILS from '../../util/utils'
 import { FormField } from '../common/FormField.js'
+
+const SOFT_MENU_BAR_HEIGHT = ExtraDimensions.get('SOFT_MENU_BAR_HEIGHT')
 
 export type CreateWalletSelectFiatOwnProps = {
   selectedWalletType: string,
@@ -97,8 +102,10 @@ export class CreateWalletSelectFiat extends Component<Props, State> {
     const filteredArray = this.props.supportedFiats.filter(entry => {
       return entry.label.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0
     })
+    const formFieldHeight = scale(50)
     const keyboardHeight = this.props.dimensions.keyboardHeight || 0
-    const searchResultsHeight = stylesRaw.usableHeight - keyboardHeight - 58 // substract button area height and FormField height
+    const footerHeight = PLATFORM.footerHeight
+
     return (
       <SafeAreaView>
         <View style={styles.scene}>
@@ -107,6 +114,7 @@ export class CreateWalletSelectFiat extends Component<Props, State> {
             <FormField
               style={styles.picker}
               autoFocus
+              containerStyle={{ height: formFieldHeight }}
               clearButtonMode={'while-editing'}
               onFocus={this.handleOnFocus}
               onBlur={this.handleOnBlur}
@@ -122,7 +130,7 @@ export class CreateWalletSelectFiat extends Component<Props, State> {
               onRegularSelectFxn={this.handleSelectFiatType}
               regularArray={filteredArray}
               style={[styles.SearchResults]}
-              containerStyle={[styles.searchContainer, { height: searchResultsHeight }]}
+              containerStyle={[styles.searchContainer, { flex: 1, marginBottom: keyboardHeight - footerHeight + SOFT_MENU_BAR_HEIGHT }]}
               keyExtractor={this.keyExtractor}
               initialNumToRender={30}
               scrollRenderAheadDistance={1600}

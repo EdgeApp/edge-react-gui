@@ -2,18 +2,23 @@
 
 import React, { Component } from 'react'
 import { Alert, Image, Keyboard, TouchableHighlight, View } from 'react-native'
+import ExtraDimensions from 'react-native-extra-dimensions-android'
 import { Actions } from 'react-native-router-flux'
 
 import * as Constants from '../../constants/indexConstants.js'
+import { scale } from '../../lib/scaling.js'
 import s from '../../locales/strings.js'
 import Text from '../../modules/UI/components/FormattedText/index'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import SearchResults from '../../modules/UI/components/SearchResults/index'
 import styles, { styles as stylesRaw } from '../../styles/scenes/CreateWalletStyle.js'
+import { PLATFORM } from '../../theme/variables/platform'
 import type { DeviceDimensions, FlatListItem, GuiWalletType } from '../../types'
 import * as UTILS from '../../util/utils'
 import { FormField } from '../common/FormField.js'
+
+const SOFT_MENU_BAR_HEIGHT = ExtraDimensions.get('SOFT_MENU_BAR_HEIGHT')
 
 export type CreateWalletSelectCryptoOwnProps = {
   dimensions: DeviceDimensions,
@@ -105,7 +110,9 @@ export class CreateWalletSelectCrypto extends Component<Props, State> {
       )
     })
     const keyboardHeight = this.props.dimensions.keyboardHeight || 0
-    const searchResultsHeight = stylesRaw.usableHeight - keyboardHeight - 58 // substract button area height and FormField height
+    const formFieldHeight = scale(50)
+    const footerHeight = PLATFORM.footerHeight
+
     return (
       <SafeAreaView>
         <View style={styles.scene}>
@@ -113,6 +120,7 @@ export class CreateWalletSelectCrypto extends Component<Props, State> {
           <View style={styles.view}>
             <FormField
               autoFocus
+              containerStyle={{ height: formFieldHeight }}
               style={styles.picker}
               clearButtonMode={'while-editing'}
               onFocus={this.handleOnFocus}
@@ -123,13 +131,14 @@ export class CreateWalletSelectCrypto extends Component<Props, State> {
               value={this.state.searchTerm}
               label={s.strings.create_wallet_choose_crypto}
               returnKeyType={'search'}
+              autpCorrect={false}
             />
             <SearchResults
               renderRegularResultFxn={this.renderWalletTypeResult}
               onRegularSelectFxn={this.handleSelectWalletType}
               regularArray={filteredArray}
               style={[styles.SearchResults]}
-              containerStyle={[styles.searchContainer, { height: searchResultsHeight }]}
+              containerStyle={[styles.searchContainer, { flex: 1, marginBottom: keyboardHeight - footerHeight + SOFT_MENU_BAR_HEIGHT }]}
               keyExtractor={this.keyExtractor}
             />
           </View>
