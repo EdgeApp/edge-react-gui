@@ -336,14 +336,6 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
       />
       <RowRoute
         disabled={false}
-        leftText="Smartcash"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Groestlcoin"
-      />
-      <RowRoute
-        disabled={false}
         leftText="Send Logs"
         routeFunction={[Function]}
         scene="changePassword"
@@ -802,14 +794,6 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
       <RowRoute
         disabled={false}
         leftText="Ufo"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Smartcash"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Groestlcoin"
       />
       <RowRoute
         disabled={false}
