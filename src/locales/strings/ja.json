@@ -420,5 +420,9 @@
   "ss_need_more_kyc": "あなたの ShapeShift のアクティブアカウントはこのエッジアカウントに接続されています。それでも ShapeShift がこの両替リクエストを処理するには認証が必要です。ShapeShift.io へ進み、あなたの ShapeShift アカウント認証情報でログインし、認証を完了してください。",
   "ss_login": "",
   "ss_logout": "",
-  "account": ""
+  "account": "",
+  "delete_account_header": "",
+  "delete_username_account": "",
+  "no": "",
+  "yes": ""
 }
