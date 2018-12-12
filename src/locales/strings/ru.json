@@ -420,5 +420,9 @@
   "ss_need_more_kyc": "У вас есть активный аккаунт ShapeShift, связанный с этой учетной записью Edge. Однако он по-прежнему требует проверки, прежде чем ShapeShift сможет обрабатывать запросы обмена. Пожалуйста продолжите в ShapeShift.io, войдя с вашей учетной записью ShapeShift, и пройдите верификацию.",
   "ss_login": "",
   "ss_logout": "",
-  "account": ""
+  "account": "",
+  "delete_account_header": "",
+  "delete_username_account": "",
+  "no": "",
+  "yes": ""
 }
