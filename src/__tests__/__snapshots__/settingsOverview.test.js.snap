@@ -78,7 +78,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
       disabled={false}
       right={
         <Icon
-          name="ios-lock-outline"
+          name="ios-lock"
           size={24}
           style={
             Object {
@@ -539,7 +539,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
       disabled={false}
       right={
         <Icon
-          name="ios-unlock-outline"
+          name="ios-unlock"
           size={24}
           style={
             Object {
