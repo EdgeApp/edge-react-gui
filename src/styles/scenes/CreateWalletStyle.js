@@ -35,7 +35,9 @@ export const styles = {
     marginBottom: scale(15)
   },
   picker: {
-    fontFamily: THEME.FONTS.DEFAULT
+    fontFamily: THEME.FONTS.DEFAULT,
+    height: scale(50),
+    padding: scale(5)
   },
   selectedItem: {
     backgroundColor: THEME.COLORS.GRAY_4,
