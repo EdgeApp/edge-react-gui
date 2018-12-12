@@ -2223,9 +2223,9 @@ bs58check@^1.0.8:
     bs58 "^3.1.0"
     create-hash "^1.1.0"
 
-"bs58grscheck@https://github.com/Groestlcoin/bs58grscheck":
+"bs58grscheck@git+https://github.com/Groestlcoin/bs58grscheck.git":
   version "2.1.2"
-  resolved "https://github.com/Groestlcoin/bs58grscheck#020feec2b3153aeb278596ea70ce3579a37f4e21"
+  resolved "git+https://github.com/Groestlcoin/bs58grscheck.git#020feec2b3153aeb278596ea70ce3579a37f4e21"
   dependencies:
     bs58 "^4.0.0"
     create-hash "^1.1.0"
@@ -3320,10 +3320,10 @@ edge-components@^0.0.15:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@0.13.1:
-  version "0.13.1"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.13.1.tgz#96996b16104a40faa38930e02bb85417af117a41"
-  integrity sha512-1wn24DZnbNa9SzbYqWMMd4Kf2sIB/gC44z869tXAam5kJIizXp/vPHo9oCUiRUatrvyTBnAgmvwqvCx3o+vzsA==
+edge-core-js@0.13.2:
+  version "0.13.2"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.13.2.tgz#d67935617820c0ef8e3a10beee30c4e1f662a53e"
+  integrity sha512-rWDWseMcoGu1+mDdncYPylAKSFBLlKQKJ4/I/mTBmYLaSGS5yPomcj7DfeJ5cPmuDYJOaXEvRq4gN3bnW421jw==
   dependencies:
     "@babel/runtime" "^7.0.0"
     aes-js "^3.1.0"
@@ -3364,10 +3364,10 @@ edge-currency-accountbased@^0.0.13:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@3.7.4:
-  version "3.7.4"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-3.7.4.tgz#79a446f903711c57df431c524b9ad5e955d71097"
-  integrity sha512-aT8g5iTzEdtoLorAuzwxnc+C4bWqJoyhbBaVXqdubU7W/PlKhKgDMIkxmF7IP/UYAQvmGzGgiK67pU4hnP6x3A==
+edge-currency-bitcoin@3.7.5:
+  version "3.7.5"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-3.7.5.tgz#5fca7d45869eef7b6ac343740b63b176ba403382"
+  integrity sha512-gSoDD57eEM2pGT7Q7T2mfhKWRXpZeau2x+V7PsnM4Ev+e3fECPakyYKoRNfU/xpfbNNcy2HUhzD+8udKKYR+Jw==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -3420,10 +3420,10 @@ edge-exchange-plugins@^0.2.1:
   dependencies:
     iso4217 "^0.2.0"
 
-edge-login-ui-rn@^0.5.11:
-  version "0.5.11"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.5.11.tgz#e0a749267d9598e72c8419b42431d6c9856a9347"
-  integrity sha512-kApJLbctz0OmftlK2KtvF4DmPzov0rgDhJyuqXsQnT7YSIXevAb9lxcj+10f038G+opGrOIrlg10MrZAFlPAaA==
+edge-login-ui-rn@^0.5.12:
+  version "0.5.12"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.5.12.tgz#fac55d47b850d929c5451829243535ef661c2081"
+  integrity sha512-UfYyzgrpPjjdPIZzgjEs2Nf/LOM9V50/wPPrwPKkTSPEbiTiFNoDYM3GJrqxCUVQGUl5A4hqTsKXWp8JQ/kmaA==
   dependencies:
     material-ui "^0.20.0"
     moment "^2.19.3"

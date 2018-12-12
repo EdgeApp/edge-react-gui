@@ -56,33 +56,25 @@ export const CURRENCY_SETTINGS = {
     pluginName: 'bitcoinCash',
     currencyCode: 'BCH'
   },
-  bsvSettings: {
-    pluginName: 'bitcoinsv',
-    currencyCode: 'BSV'
-  },
-  btgSettings: {
-    pluginName: 'bitcoinGold',
-    currencyCode: 'BTG'
-  },
   ethSettings: {
     pluginName: 'ethereum',
     currencyCode: 'ETH'
-  },
-  ltcSettings: {
-    pluginName: 'litecoin',
-    currencyCode: 'LTC'
   },
   dashSettings: {
     pluginName: 'dash',
     currencyCode: 'DASH'
   },
-  ftcSettings: {
-    pluginName: 'feathercoin',
-    currencyCode: 'FTC'
+  ltcSettings: {
+    pluginName: 'litecoin',
+    currencyCode: 'LTC'
   },
-  ufoSettings: {
-    pluginName: 'ufo',
-    currencyCode: 'UFO'
+  bsvSettings: {
+    pluginName: 'bitcoinsv',
+    currencyCode: 'BSV'
+  },
+  zcoinSettings: {
+    pluginName: 'zcoin',
+    currencyCode: 'XZC'
   },
   dgbSettings: {
     pluginName: 'digibyte',
@@ -96,16 +88,28 @@ export const CURRENCY_SETTINGS = {
     pluginName: 'vertcoin',
     currencyCode: 'VTC'
   },
-  zcoinSettings: {
-    pluginName: 'zcoin',
-    currencyCode: 'XZC'
+  ftcSettings: {
+    pluginName: 'feathercoin',
+    currencyCode: 'FTC'
   },
-  smartSettings: {
+  btgSettings: {
+    pluginName: 'bitcoinGold',
+    currencyCode: 'BTG'
+  },
+  smartcashSettings: {
     pluginName: 'smartcash',
     currencyCode: 'SMART'
   },
   grsSettings: {
     pluginName: 'groestlcoin',
     currencyCode: 'GRS'
+  },
+  ebstSettings: {
+    pluginName: 'eboost',
+    currencyCode: 'EBST'
+  },
+  ufoSettings: {
+    pluginName: 'ufo',
+    currencyCode: 'UFO'
   }
 }
