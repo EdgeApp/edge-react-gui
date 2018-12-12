@@ -420,5 +420,9 @@
   "ss_need_more_kyc": "Hai un account ShapeShift attivo collegato al tuo account. È richiesta comunque una verifica prima che ShapeShift possa processare questo cambio di valuta. Vai su ShapeShift.io, loggati con le tue credenziali ShapeShift e completa la verifica.",
   "ss_login": "",
   "ss_logout": "",
-  "account": ""
+  "account": "",
+  "delete_account_header": "",
+  "delete_username_account": "",
+  "no": "",
+  "yes": ""
 }
