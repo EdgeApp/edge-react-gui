@@ -4,9 +4,11 @@ import React, { Component } from 'react'
 import { Alert, ScrollView, TouchableHighlight, View } from 'react-native'
 
 import * as Constants from '../../../../../constants/indexConstants.js'
+import s from '../../../../../locales/strings'
 import T from '../../../components/FormattedText'
 import { Icon } from '../../Icon/Icon.ui.js'
 import styles from '../style'
+import { sprintf } from 'sprintf-js'
 
 type Props = {
   usernames: Array<string>,
@@ -47,12 +49,9 @@ export default class UserList extends Component<Props> {
     return this.props.deleteLocalAccount(username)
   }
   handlePressDeleteLocalAccount = (username: string) => () => {
-    return Alert.alert(
-      'Delete Account',
-      "Delete '" +
-        username +
-        "' on this device? This will disable access via PIN. If 2FA is enabled on this account, this device will not be able to login without 2FA reset which takes 7 days",
-      [{ text: 'No', style: 'cancel' }, { text: 'Yes', onPress: () => this.handleDeleteLocalAccount(username)() }]
-    )
+    return Alert.alert(s.strings.delete_account_header, sprintf(s.strings.delete_username_account, username), [
+      { text: s.strings.no, style: 'cancel' },
+      { text: s.strings.yes, onPress: () => this.handleDeleteLocalAccount(username)() }
+    ])
   }
 }
