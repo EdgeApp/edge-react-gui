@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react'
 import { Alert, TouchableHighlight, View } from 'react-native'
+import ExtraDimensions from 'react-native-extra-dimensions-android'
 import { Actions } from 'react-native-router-flux'
 
 import * as Constants from '../../constants/indexConstants.js'
@@ -16,6 +17,8 @@ import { PLATFORM } from '../../theme/variables/platform'
 import type { DeviceDimensions, FlatListItem, GuiFiatType } from '../../types'
 import * as UTILS from '../../util/utils'
 import { FormField } from '../common/FormField.js'
+
+const SOFT_MENU_BAR_HEIGHT = ExtraDimensions.get('SOFT_MENU_BAR_HEIGHT')
 
 export type CreateWalletSelectFiatOwnProps = {
   selectedWalletType: string,
@@ -127,7 +130,7 @@ export class CreateWalletSelectFiat extends Component<Props, State> {
               onRegularSelectFxn={this.handleSelectFiatType}
               regularArray={filteredArray}
               style={[styles.SearchResults]}
-              containerStyle={[styles.searchContainer, { flex: 1, marginBottom: keyboardHeight - footerHeight }]}
+              containerStyle={[styles.searchContainer, { flex: 1, marginBottom: keyboardHeight - footerHeight + SOFT_MENU_BAR_HEIGHT }]}
               keyExtractor={this.keyExtractor}
               initialNumToRender={30}
               scrollRenderAheadDistance={1600}
