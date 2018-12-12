@@ -420,5 +420,9 @@
   "ss_need_more_kyc": "",
   "ss_login": "",
   "ss_logout": "",
-  "account": ""
+  "account": "",
+  "delete_account_header": "",
+  "delete_username_account": "",
+  "no": "",
+  "yes": ""
 }
