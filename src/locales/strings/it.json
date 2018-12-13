@@ -158,7 +158,7 @@
   "send_confirmation_to": "A: %s",
   "send_confirmation_address": "Indirizzo: %s",
   "transaction_failure": "Transazione fallita",
-  "transaction_failure_message": "",
+  "transaction_failure_message": "%s.",
   "transaction_success": "Transazione riuscita",
   "transaction_success_message": "La transazione è avvenuta con successo.",
   "incorrect_pin": "PIN non corretto",
@@ -418,11 +418,11 @@
   "ss_unable": "Nessun cambio valuta abilitato supporta da %1$s a %2$s.",
   "ss_visit_website": "Vai su ShapeShift.io",
   "ss_need_more_kyc": "Hai un account ShapeShift attivo collegato al tuo account. È richiesta comunque una verifica prima che ShapeShift possa processare questo cambio di valuta. Vai su ShapeShift.io, loggati con le tue credenziali ShapeShift e completa la verifica.",
-  "ss_login": "",
-  "ss_logout": "",
-  "account": "",
-  "delete_account_header": "",
-  "delete_username_account": "",
-  "no": "",
-  "yes": ""
+  "ss_login": "Crea / Accedi",
+  "ss_logout": "Esci",
+  "account": "Account",
+  "delete_account_header": "Elimina Account",
+  "delete_username_account": "Eliminare %1$s su questo dispositivo? Questo disabiliterà l'accesso tramite PIN. Se 2FA è abilitato su questo account, questo dispositivo non sarà in grado di accedere senza un reset 2FA che richiede 7 giorni.",
+  "no": "No",
+  "yes": "Sì"
 }
