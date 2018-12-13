@@ -240,7 +240,7 @@ const strings = {
   string_master_private_key: 'Master Private Key',
   string_split_wallet: 'Split %s',
   string_add_edit_tokens: 'Add / Edit Tokens',
-  exchange_notes_metadata_generic: 'Exchanged %1$s %2$s from %3$s to %4$s %5$s in %6$s. \nOrder: %7$s. \nFor assistance, please contact %8$s.',
+  exchange_notes_metadata_generic: 'Exchanged %1$s %2$s from %3$s to %4$s %5$s in %6$s to address %7$s \nOrder: %8$s. \nFor assistance, please contact %9$s.',
   title_crypto_settings: '%s Settings',
   title_add_tokens: 'Add Tokens',
   title_create_wallet_select_crypto: 'Select Type',
