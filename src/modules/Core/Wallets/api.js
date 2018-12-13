@@ -103,7 +103,7 @@ export const addCoreCustomToken = (wallet: EdgeCurrencyWallet, tokenObj: any) =>
 
 export const getEnabledTokensFromFile = async (wallet: EdgeCurrencyWallet): Promise<Array<any>> => {
   try {
-    const tokensText = await getEnabledTokensFile(wallet).getText()
+    const tokensText = await wallet.disklet.getText(ENABLED_TOKENS_FILENAME)
     const tokens = JSON.parse(tokensText)
     return tokens
   } catch (e) {
@@ -112,20 +112,13 @@ export const getEnabledTokensFromFile = async (wallet: EdgeCurrencyWallet): Prom
   }
 }
 
-export const getEnabledTokensFile = (wallet: EdgeCurrencyWallet) => {
-  const folder = wallet.folder
-  const file = folder.file(ENABLED_TOKENS_FILENAME)
-  return file
-}
-
 export async function setEnabledTokens (wallet: EdgeCurrencyWallet, tokens: Array<string>, tokensToDisable?: Array<string>) {
   // initialize array for eventual setting of file
   const finalTextArray = [...tokens]
   // now stringify the new tokens
   const stringifiedTokens = JSON.stringify(finalTextArray)
   // grab the enabledTokensFile
-  const tokensFile = getEnabledTokensFile(wallet)
-  await tokensFile.setText(stringifiedTokens)
+  await wallet.disklet.setText(ENABLED_TOKENS_FILENAME, stringifiedTokens)
   enableTokens(wallet, tokens)
   if (tokensToDisable && tokensToDisable.length > 0) {
     disableTokens(wallet, tokensToDisable)
@@ -134,15 +127,14 @@ export async function setEnabledTokens (wallet: EdgeCurrencyWallet, tokens: Arra
 }
 
 export async function updateEnabledTokens (wallet: EdgeCurrencyWallet, tokensToEnable: Array<string>, tokensToDisable: Array<string>) {
-  const tokensFile = getEnabledTokensFile(wallet)
   try {
-    const tokensText = await tokensFile.getText()
+    const tokensText = await wallet.disklet.getText(ENABLED_TOKENS_FILENAME)
     const enabledTokens = JSON.parse(tokensText)
     const tokensWithNewTokens = _.union(tokensToEnable, enabledTokens)
     const finalTokensToEnable = _.difference(tokensWithNewTokens, tokensToDisable)
     await enableTokens(wallet, finalTokensToEnable)
     await disableTokens(wallet, tokensToDisable)
-    await tokensFile.setText(JSON.stringify(finalTokensToEnable))
+    await wallet.disklet.setText(ENABLED_TOKENS_FILENAME, JSON.stringify(finalTokensToEnable))
   } catch (e) {
     console.log(e)
   }

@@ -16,6 +16,7 @@ export const mapStateToProps = (state: State) => {
     uniqueIdentifier
   }
 }
+
 export const mapDispatchToProps = (dispatch: Dispatch, ownProps: Object) => ({
   uniqueIdentifierChanged: (uniqueIdentifier: string) => dispatch(uniqueIdentifierChanged(uniqueIdentifier)),
   onConfirm: (uniqueIdentifier: string) => {

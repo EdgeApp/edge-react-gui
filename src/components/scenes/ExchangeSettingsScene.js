@@ -1,21 +1,27 @@
 // @flow
 
-import { type EdgeSwapConfig } from 'edge-core-js'
+import { showModal } from 'edge-components'
+import type { EdgeAccount, EdgeSwapConfig } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Image, View } from 'react-native'
 
-import { changellyLogo, defaultLogo, faastLogo, shapeshiftLogo } from '../../assets/images/exchange'
+import { changellyLogo, changenowLogo, defaultLogo, faastLogo, shapeshiftLogo } from '../../assets/images/exchange'
+import { SwapKYCModalConnector } from '../../connectors/components/SwapKYCModalConnector.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/index'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import styles from '../../styles/scenes/SettingsStyle'
 import SwitchRow from '../common/RowSwitch.js'
+import { RowWithButton } from '../common/RowWithButton.js'
 
 type ExchangeSettingsProps = {
   exchanges: {
     [string]: EdgeSwapConfig
-  }
+  },
+  shapeShiftNeedsKYC: boolean,
+  account: EdgeAccount,
+  shapeShiftLogOut(EdgeAccount): void
 }
 
 type GuiExchangeSetting = {
@@ -32,6 +38,9 @@ const exchangeInfo = {
   },
   faast: {
     logo: faastLogo
+  },
+  changenow: {
+    logo: changenowLogo
   },
   default: {
     logo: defaultLogo
@@ -83,8 +92,17 @@ export class ExchangeSettingsComponent extends Component<ExchangeSettingsProps, 
       }
     })
   }
-
+  shapeShiftSignInToggle = () => {
+    if (this.props.shapeShiftNeedsKYC) {
+      showModal(SwapKYCModalConnector, { style: { margin: 0 } }).then((response: null | { accessToken: string, refreshToken: string }) => {
+        console.log('exchange: ', response)
+      })
+      return
+    }
+    this.props.shapeShiftLogOut(this.props.account)
+  }
   render () {
+    const ssLoginText = this.props.shapeShiftNeedsKYC ? s.strings.ss_login : s.strings.ss_logout
     return (
       <SafeAreaView>
         <View style={[styles.ethereumSettings]}>
@@ -97,6 +115,26 @@ export class ExchangeSettingsComponent extends Component<ExchangeSettingsProps, 
               const logoSource = exchangeInfo[exchange.name] ? exchangeInfo[exchange.name].logo : exchangeInfo.default.logo
               const logo = <Image resizeMode={'contain'} style={styles.settingsRowLeftLogo} source={logoSource} />
               const exchangeName = exchange.name.charAt(0).toUpperCase() + exchange.name.substr(1)
+              if (exchangeName === 'Shapeshift') {
+                return (
+                  <View style={styles.doubleRowContainer} key={exchange.name}>
+                    <SwitchRow
+                      logo={logo}
+                      key={exchange.name}
+                      leftText={exchangeName}
+                      onToggle={() => this._onToggleEnableExchange(exchange.name)}
+                      value={this.state[exchange.name].enabled}
+                    />
+                    <RowWithButton
+                      logo={logoSource}
+                      key={exchange.name + '1'}
+                      leftText={exchangeName + ' ' + s.strings.account}
+                      rightText={ssLoginText}
+                      onPress={this.shapeShiftSignInToggle}
+                    />
+                  </View>
+                )
+              }
               return (
                 <SwitchRow
                   logo={logo}

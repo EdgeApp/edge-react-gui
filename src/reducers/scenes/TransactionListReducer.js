@@ -11,8 +11,7 @@ export type TransactionListState = {
   +currentWalletId: string,
   +numTransactions: number,
   +searchVisible: boolean,
-  +transactions: Array<TransactionListTx>,
-  +updatingBalance: boolean
+  +transactions: Array<TransactionListTx>
 }
 
 const transactions = (state = [], action: Action): Array<TransactionListTx> => {
@@ -99,47 +98,11 @@ const searchVisible = (state = false, action: Action): boolean => {
   }
 }
 
-const updatingBalance = (state = true, action: Action): boolean => {
-  switch (action.type) {
-    case 'UI/SCENES/TRANSACTION_LIST/ENABLE_UPDATING_BALANCE': {
-      return true
-    }
-
-    case 'UI/SCENES/TRANSACTION_LIST/DISABLE_UPDATING_BALANCE': {
-      return false
-    }
-
-    case 'UI/SCENES/TRANSACTION_LIST/TOGGLE_UPDATING_BALANCE': {
-      return !state
-    }
-
-    default:
-      return state
-  }
-}
-
-const loadingTransactions = (state = false, action: Action) => {
-  switch (action.type) {
-    case 'UI/SCENES/TRANSACTION_LIST/START_TRANSACTIONS_LOADING': {
-      return true
-    }
-
-    case 'UI/SCENES/TRANSACTION_LIST/END_TRANSACTIONS_LOADING': {
-      return false
-    }
-
-    default:
-      return state
-  }
-}
-
 export const transactionList: Reducer<TransactionListState, Action> = combineReducers({
   currentCurrencyCode,
   currentEndIndex,
   currentWalletId,
-  loadingTransactions,
   numTransactions,
   searchVisible,
-  transactions,
-  updatingBalance
+  transactions
 })

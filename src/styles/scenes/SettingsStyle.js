@@ -69,6 +69,10 @@ export const styles = {
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
 
+  // /////// Double Row
+  doubleRowContainer: {
+    backgroundColor: THEME.COLORS.WHITE
+  },
   // //// Beginning of Settings Row ///////
   settingsRowContainer: {
     height: scale(44),

@@ -31,11 +31,6 @@ const selectedUser = (state = null, action: Action): Username | null => {
       return action.data[0]
     }
 
-    case 'SELECT_USERS_SIDE_MENU': {
-      // $FlowFixMe
-      return action.id
-    }
-
     default:
       return state
   }

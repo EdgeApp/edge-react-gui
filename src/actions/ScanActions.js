@@ -1,5 +1,6 @@
 // @flow
 
+import { bns } from 'biggystring'
 import { createYesNoModal, showModal } from 'edge-components'
 import type { EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendTarget } from 'edge-core-js'
 import React from 'react'
@@ -20,44 +21,21 @@ import { activated as legacyAddressModalActivated, deactivated as legacyAddressM
 import { activated as privateKeyModalActivated } from './PrivateKeyModalActions.js'
 import { paymentProtocolUriReceived } from './SendConfirmationActions.js'
 
-export const UPDATE_RECIPIENT_ADDRESS = 'UPDATE_RECIPIENT_ADDRESS'
-
-export const toggleEnableTorch = () => ({
-  type: 'TOGGLE_ENABLE_TORCH'
-})
-
-export const toggleAddressModal = () => ({
-  type: 'TOGGLE_ADDRESS_MODAL_VISIBILITY'
-})
-
-export const enableScan = () => ({
-  type: 'ENABLE_SCAN'
-})
-
-export const disableScan = () => ({
-  type: 'DISABLE_SCAN'
-})
-
-export const parseUriSucceeded = (parsedUri: EdgeParsedUri) => ({
-  type: 'PARSE_URI_SUCCEEDED',
-  data: { parsedUri }
-})
-
-export const parseUriFailed = (error: Error) => ({
-  type: 'PARSE_URI_FAILED',
-  data: { error }
-})
-
-export const parseUriReset = () => ({
-  type: 'PARSE_URI_RESET'
-})
-
 const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWallet, guiWallet: GuiWallet, requestAddress: RequestPaymentAddress) => {
-  dispatch(disableScan())
+  dispatch({ type: 'DISABLE_SCAN' })
   if (requestAddress.currencyName !== edgeWallet.currencyInfo.pluginName) {
     // Mismatching currency
     const body = sprintf(s.strings.currency_mismatch_popup_body, requestAddress.currencyName, requestAddress.currencyName)
-    setTimeout(() => Alert.alert(s.strings.currency_mismatch_popup_title, body, [{ text: s.strings.string_ok, onPress: () => dispatch(enableScan()) }]), 500)
+    setTimeout(
+      () =>
+        Alert.alert(s.strings.currency_mismatch_popup_title, body, [
+          {
+            text: s.strings.string_ok,
+            onPress: () => dispatch({ type: 'ENABLE_SCAN' })
+          }
+        ]),
+      500
+    )
   } else {
     // Currencies match. Ask user to confirm sending an address
     const bodyString = sprintf(s.strings.request_crypto_address_modal_body, requestAddress.sourceName, requestAddress.currencyName) + '\n\n'
@@ -78,7 +56,7 @@ const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWallet, gu
     setTimeout(() => {
       showModal(modal)
         .then(resolveValue => {
-          dispatch(enableScan())
+          dispatch({ type: 'ENABLE_SCAN' })
           if (resolveValue) {
             // Build the URL
             const addr = guiWallet.receiveAddress.publicAddress
@@ -92,7 +70,7 @@ const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWallet, gu
           }
         })
         .catch(e => {
-          dispatch(enableScan())
+          dispatch({ type: 'ENABLE_SCAN' })
         })
     }, 1000)
   }
@@ -120,7 +98,7 @@ export const parseScannedUri = (data: string) => (dispatch: Dispatch, getState: 
 
   WALLET_API.parseUri(edgeWallet, data).then(
     (parsedUri: EdgeParsedUri) => {
-      dispatch(parseUriSucceeded(parsedUri))
+      dispatch({ type: 'PARSE_URI_SUCCEEDED', data: { parsedUri } })
 
       if (parsedUri.token) {
         // TOKEN URI
@@ -167,9 +145,13 @@ export const parseScannedUri = (data: string) => (dispatch: Dispatch, getState: 
         }
       ]
 
+      let lockInputs = false
+      if (spendTargets[0].nativeAmount && !bns.eq(spendTargets[0].nativeAmount, '0')) {
+        lockInputs = true
+      }
       const guiMakeSpendInfo: GuiMakeSpendInfo = {
         spendTargets,
-        lockInputs: false,
+        lockInputs,
         metadata: parsedUri.metadata,
         uniqueIdentifier: parsedUri.uniqueIdentifier
       }
@@ -178,11 +160,14 @@ export const parseScannedUri = (data: string) => (dispatch: Dispatch, getState: 
     },
     () => {
       // INVALID URI
-      dispatch(disableScan())
+      dispatch({ type: 'DISABLE_SCAN' })
       setTimeout(
         () =>
           Alert.alert(s.strings.scan_invalid_address_error_title, s.strings.scan_invalid_address_error_description, [
-            { text: s.strings.string_ok, onPress: () => dispatch(enableScan()) }
+            {
+              text: s.strings.string_ok,
+              onPress: () => dispatch({ type: 'ENABLE_SCAN' })
+            }
           ]),
         500
       )
@@ -196,11 +181,10 @@ export const legacyAddressModalContinueButtonPressed = () => (dispatch: Dispatch
   const parsedUri = state.ui.scenes.scan.parsedUri
   setImmediate(() => {
     if (!parsedUri) {
-      dispatch(enableScan())
+      dispatch({ type: 'ENABLE_SCAN' })
       return
     }
 
-    // Actions[SEND_CONFIRMATION]('fromScan')
     Actions[SEND_CONFIRMATION]({ guiMakeSpendInfo: parsedUri })
     // dispatch(sendConfirmationUpdateTx(parsedUri))
   })
@@ -211,7 +195,7 @@ export const qrCodeScanned = (data: string) => (dispatch: Dispatch, getState: Ge
   const isScanEnabled = state.ui.scenes.scan.scanEnabled
   if (!isScanEnabled) return
 
-  dispatch(disableScan())
+  dispatch({ type: 'DISABLE_SCAN' })
   dispatch(parseScannedUri(data))
 }
 
@@ -225,7 +209,7 @@ export const addressModalCancelButtonPressed = () => (dispatch: Dispatch, getSta
 
 export const legacyAddressModalCancelButtonPressed = () => (dispatch: Dispatch) => {
   dispatch(legacyAddressModalDeactivated())
-  dispatch(enableScan())
+  dispatch({ type: 'ENABLE_SCAN' })
 }
 
 export const isTokenUri = (parsedUri: EdgeParsedUri): boolean => {

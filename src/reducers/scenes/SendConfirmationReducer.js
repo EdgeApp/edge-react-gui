@@ -18,7 +18,8 @@ export type GuiMakeSpendInfo = {
   spendTargets?: Array<EdgeSpendTarget>,
   lockInputs?: boolean,
   uniqueIdentifier?: string,
-  onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void
+  onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void,
+  onSuccess?: () => any
 }
 
 export type SendConfirmationState = {
@@ -194,7 +195,6 @@ export const isEditable = (state: boolean = true, action: Action) => {
         return false
       }
       return state
-
     default:
       return state
   }

@@ -1,5 +1,8 @@
+Titel: Edge - Bitcoin-, Ethereum-, Monero-, Ripple-Wallet
+-----
+Kurze Beschreibung: Privat, sicher & einfach zu nutzen. Bitcoin & andere Kryptowährungen kaufen, verkaufen, senden & empfangen.
 
-<b>Total privacy and security in our easy to use blockchain wallet.</b> Buy, sell, send and receive Bitcoin (BTC), Bitcoin Cash (BCH), Litecoin (LTC), Ethereum (ETH) and other top crypto assets.
+<b>Absolute Privatsphäre und Sicherheit mit unserer benutzerfreundlichen Blockchain-Wallet.</b> Kaufe, verkaufe, sende und erhalte Bitcoin (BTC), Bitcoin Cash (BCH), Litecoin (LTC), Ethereum (ETH) und weitere führende Kryptowährungen.
 
 Managing your cryptocurrency has never been easier. Edge Wallet provides maximum security while keeping simplicity, allowing all types of users to easily manage, transfer & exchange their currencies.
 
@@ -11,18 +14,18 @@ Take control of your funds! With Edge, only YOU have access to your funds or tra
 
 Edge also provides a cryptocurrency exchange. Easily swap your currencies for others with a few taps. Exchange BTC for Ethereum, ETH for BCH and many more.
 
-<b>Features</b>
-• Secure crypto wallet and blockchain app
-• Easy to use Bitcoin wallet app with support for top crypto like Bitcoin Cash, Litecoin, Ripple (XRP)
+<b>Funktionen</b>
+• Sichere Krypto-Wallet und Blockchain-App
+• Leicht zu nutzende Bitcoin-Wallet-App mit der Unterstützung für die beliebtesten Kryptowährungen wie Bitcoin Cash, Litecoin, Ripple (XRP)
 • Zero-knowledge & zero-access to user funds, keys, or transaction data by Edge or 3rd parties
 • Simple account creation using just a login & password (no printing of PDFs, writing down pass phrases, or adding encryption settings)
 * Biometric TouchID and FaceID login for another layer of security
 • Hierarchical Deterministic wallets with changing addresses per transaction
 • Decentralized server architecture. Wallets work even if Edge servers are down.
-• Open-source code. Available at https://github.com/Airbitz
+• Quelloffener Code. Verfügbar auf https://github.com/Airbitz
 • Built-in crypto exchange to buy & sell cryptocurrency
 
-Privacy Notice
+Datenschutz
 The Edge Wallet application requests access to the device contact list, and personal information. This information is used on the device to provide an improved user experience in the following ways:
 
 1. Autocomplete contacts from the user's address book after a transaction

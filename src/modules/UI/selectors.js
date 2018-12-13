@@ -77,6 +77,14 @@ export const getDenominations = (state: State, currencyCode: string) => {
   return denominations
 }
 
+export const getDefaultDenomination = (state: State, currencyCode: string) => {
+  const settings = state.ui.settings
+  const currencySettings = settings[currencyCode]
+  const defaultMultiplier = currencySettings.denomination
+  const denomination = _.find(currencySettings.denominations, denom => denom.multiplier === defaultMultiplier)
+  return denomination
+}
+
 // $FlowFixMe
 export const getExchangeDenomination = (state: State, currencyCode: string, specificWallet?: GuiWallet): GuiDenomination => {
   let wallet = getSelectedWallet(state)

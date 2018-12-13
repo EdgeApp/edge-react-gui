@@ -9,18 +9,6 @@ export * from '../modules/UI/components/ABAlert/action.js'
 export * from '../modules/Settings/SettingsActions.js'
 export * from '../modules/Login/action.js'
 
-export function dispatchAction (type: string) {
-  return {
-    type
-  }
-}
-
-export function dispatchActionOnly (type: string) {
-  return {
-    type
-  }
-}
-
 export function dispatchActionObject (type: string, data: Object) {
   return {
     type,

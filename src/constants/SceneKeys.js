@@ -17,6 +17,8 @@ export const CREATE_WALLET_NAME = 'createWalletName'
 export const CREATE_WALLET_SELECT_CRYPTO = 'createWalletSelectCrypto'
 export const CREATE_WALLET_SELECT_FIAT = 'createWalletSelectFiat'
 export const CREATE_WALLET_REVIEW = 'createWalletReview'
+export const CREATE_WALLET_ACCOUNT_SETUP = 'createWalletAccountSetup'
+export const CREATE_WALLET_ACCOUNT_SELECT = 'createWalletAccountSelect'
 export const MANAGE_TOKENS = 'manageTokens'
 export const MANAGE_TOKENS_NOT_USED = 'manageTokens_notused'
 export const ADD_TOKEN = 'addToken'
@@ -54,33 +56,25 @@ export const CURRENCY_SETTINGS = {
     pluginName: 'bitcoinCash',
     currencyCode: 'BCH'
   },
-  bsvSettings: {
-    pluginName: 'bitcoinsv',
-    currencyCode: 'BSV'
-  },
-  btgSettings: {
-    pluginName: 'bitcoinGold',
-    currencyCode: 'BTG'
-  },
   ethSettings: {
     pluginName: 'ethereum',
     currencyCode: 'ETH'
-  },
-  ltcSettings: {
-    pluginName: 'litecoin',
-    currencyCode: 'LTC'
   },
   dashSettings: {
     pluginName: 'dash',
     currencyCode: 'DASH'
   },
-  ftcSettings: {
-    pluginName: 'feathercoin',
-    currencyCode: 'FTC'
+  ltcSettings: {
+    pluginName: 'litecoin',
+    currencyCode: 'LTC'
   },
-  ufoSettings: {
-    pluginName: 'ufo',
-    currencyCode: 'UFO'
+  bsvSettings: {
+    pluginName: 'bitcoinsv',
+    currencyCode: 'BSV'
+  },
+  zcoinSettings: {
+    pluginName: 'zcoin',
+    currencyCode: 'XZC'
   },
   dgbSettings: {
     pluginName: 'digibyte',
@@ -94,8 +88,28 @@ export const CURRENCY_SETTINGS = {
     pluginName: 'vertcoin',
     currencyCode: 'VTC'
   },
-  zcoinSettings: {
-    pluginName: 'zcoin',
-    currencyCode: 'XZC'
+  ftcSettings: {
+    pluginName: 'feathercoin',
+    currencyCode: 'FTC'
+  },
+  btgSettings: {
+    pluginName: 'bitcoinGold',
+    currencyCode: 'BTG'
+  },
+  smartcashSettings: {
+    pluginName: 'smartcash',
+    currencyCode: 'SMART'
+  },
+  grsSettings: {
+    pluginName: 'groestlcoin',
+    currencyCode: 'GRS'
+  },
+  ebstSettings: {
+    pluginName: 'eboost',
+    currencyCode: 'EBST'
+  },
+  ufoSettings: {
+    pluginName: 'ufo',
+    currencyCode: 'UFO'
   }
 }

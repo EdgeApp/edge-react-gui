@@ -100,7 +100,7 @@ export default class SendLogsModal extends Component {
   render () {
     const icon = (
       <IonIcon
-        name="ios-paper-plane-outline"
+        name="ios-paper-plane"
         size={24}
         color={colors.primary}
         style={[

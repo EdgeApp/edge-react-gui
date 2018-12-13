@@ -23,7 +23,20 @@ test('initialState', () => {
       usersView: false
     },
     createWallet: {
-      isCreatingWallet: false
+      isCreatingWallet: false,
+      walletAccountActivationPaymentInfo: {
+        paymentAddress: '',
+        nativeAmount: '',
+        currencyCode: '',
+        exchangeAmount: '',
+        expirationDate: 0
+      },
+      isCheckingHandleAvailability: false,
+      isHandleAvailable: false,
+      handleActivationInfo: {
+        supportedCurrencies: {},
+        activationCost: ''
+      }
     },
     dimensions: {
       keyboardHeight: 0
@@ -75,15 +88,12 @@ test('initialState', () => {
     transactionList: {
       searchVisible: false,
       transactions: [],
-      updatingBalance: true,
-      loadingTransactions: false,
       currentCurrencyCode: '',
       currentEndIndex: 0,
       numTransactions: 0,
       currentWalletId: ''
     },
     walletList: {
-      deleteWalletModalVisible: false,
       getSeedWalletModalVisible: false,
       privateSeedUnlocked: false,
       viewXPubWalletModalVisible: false,

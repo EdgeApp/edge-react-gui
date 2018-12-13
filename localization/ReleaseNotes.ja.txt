@@ -1,16 +1,43 @@
-v1.4.0
-* Support for Stellar
-* Add ability to select custom nodes for Bitcoin and similar currencies
-* Support for ShapeShift membership
-* Support Changelly.com in Exchange functionality
-* Add Spanish, Italian, and Russian translations
+バージョン1.5.0
 
-v1.3.4
+*EOSサポート
+*Bech32アドレス対応
+*交換所提携先としてChangeNOWを追加
+*ビットコイン、イーサリアム、ビットコインキャッシュ、ダッシュとエッジURIのディープリンクを実装
+*エッジの中核を独立プロセスに移しグラフィカルユーザインタフェースの反応性パフォーマンスを向上
 
-* Prevent create wallet button Done button from being tapped multiple times
-* Fix white screen hang upon login if an incoming transaction happens
-* Fix address wrapping in Simplex plugin
-* Fix double tap bug on Change Password modal
-* Fix Fiat amounts when using other country currencies
-* Additional scaling and visual improvements
-* Other minor bug fixes
+バージョン1.4.4
+
+*BCHとBSVのスプリットがウォレット内で可能になりました
+*BCHとBSVウォレットにリプレイプロテクションを追加
+*ログインパフォーマンスの向上
+*再ログインするたびにXRPとXLMの全てのトランザクションを照会する原因となったバグの修正
+*ビットコイン関連の通貨 (BTC、BCH、LTC、DASHなど) のノードへの接続性を向上
+
+バージョン1.4.3
+
+*ログインとウォレット同期時の大きなパフォーマンス向上
+*モネロのビュレットプルーフスを追加しモネロの送金を改善
+*ユーザーが交換所プロバイダの有効化と無効化の選択可能になりました
+*交換所画面でたまに起こるエラー「トークンはサポートされていません」を改善
+*より多くの通貨でXpubを見れるようになりました
+*多くのアカウントで発生した、ログイン後すぐに右上のメニューボタンをタップした際にクラッシュするバグを改善
+*いくつかのアンドロイドデバイスでSimplexを利用した際のフリーズを改善
+
+バージョン1.4.2
+
+*ステラのサポート
+*ビットコインや類似通貨のためのカスタムノードを選択できるようになりました
+*ShapeShift メンバーシップのサポートを追加
+*交換機能にChangelly.comのサポートを追加
+*スペイン語、イタリア語、ロシア語の翻訳を追加
+
+バージョン1.3.4
+
+*ウォレットを作成ボタンと完了ボタンが数回タップされるのを防止
+*ログイン時に送金を受信した場合に起こる白い画面でのフリーズを改善
+*Simplex機能にアドレスを含むプロセスの改善
+*パスワード変更におけるダブルタップのバグを改善
+*他の国の通貨を利用する際の法定通貨の数量に関して改善
+*スケーリングの拡大とビジュアルの改善
+*その他、細かなバグ修正

@@ -125,6 +125,26 @@ const strings = {
   create_wallet_crypto_type_label: 'Wallet Type:',
   create_wallet_fiat_type_label: 'Wallet Fiat:',
   create_wallet_failed: 'Failed to create wallet',
+  create_wallet_create_account: 'Create Account',
+  create_wallet_account_activate: 'Activate Account',
+  create_wallet_account_instructions: 'To proceed you will be asked to log in to your existing %s account:',
+  create_wallet_new_account: 'No %s account yet? Create your new account below:',
+  create_wallet_account_handle_instruction: '',
+  create_wallet_account_handle: 'Account Handle',
+  create_wallet_account_select_payment: 'Select Payment',
+  create_wallet_account_select_instructions: 'All new accounts requires a one time payment equivalent of %s. Select a wallet to pay from:',
+  create_wallet_account_make_payment: 'You are about to make the following payment to activate your %s account:',
+  create_wallet_account_select_wallet: 'Select Wallet',
+  create_wallet_account_review_instructions: 'Create a unique account handle, this will also be the name of your %s wallet:',
+  create_wallet_account_payment_source: 'Payment Source:',
+  create_wallet_account_confirm: 'Double-check your wallet and payment info before submitting.',
+  create_wallet_account_insufficient_funds: 'You will need one existing wallet with enough funds for this payment to continue.',
+  create_wallet_account_amount_due: 'Amount due:',
+  create_wallet_account_handle_unavailable_modal_title: 'Account Handle Unavailable',
+  create_wallet_account_handle_unavailable_modal_message: 'Your chosen account handle, %s, is unavailable now. Please use a different one to continue.',
+
+  submit: 'Submit',
+  login: 'Login',
   help_build: 'Build',
   help_modal_title: 'Crypto Wallet',
   help_version: 'Version',
@@ -137,6 +157,7 @@ const strings = {
   request_share_edge_request: 'Share Edge Request',
   select_recv_wallet: 'Select Receiving Wallet',
   select_src_wallet: 'Select Source Wallet',
+  select_destination_wallet: 'Select destination wallet:',
   send_confirmation_fee_line: 'Fee: + %s (%s)',
   send_confirmation_max_button_title: 'Send Max Amount',
   send_confirmation_slide_to_confirm: 'Slide to Confirm',
@@ -146,6 +167,7 @@ const strings = {
   send_confirmation_to: 'To: %s',
   send_confirmation_address: 'Address: %s',
   transaction_failure: 'Transaction Failure',
+  transaction_failure_message: '%s.',
   transaction_success: 'Transaction Success',
   transaction_success_message: 'Your transaction has been successfully sent.',
   incorrect_pin: 'Incorrect PIN',
@@ -218,7 +240,7 @@ const strings = {
   string_master_private_key: 'Master Private Key',
   string_split_wallet: 'Split %s',
   string_add_edit_tokens: 'Add / Edit Tokens',
-  exchange_notes_metadata_generic: 'Exchanged %1$s %2$s from %3$s to %4$s %5$s in %6$s. \nOrder: %7$s. \nFor assistance, please contact %8$s.',
+  exchange_notes_metadata_generic: 'Exchanged %1$s %2$s from %3$s to %4$s %5$s in %6$s to address %7$s \nOrder: %8$s. \nFor assistance, please contact %9$s.',
   title_crypto_settings: '%s Settings',
   title_add_tokens: 'Add Tokens',
   title_create_wallet_select_crypto: 'Select Type',
@@ -426,7 +448,15 @@ const strings = {
   ss_unable: 'No enabled exchanges support %1$s to %2$s.',
   ss_visit_website: 'Go to ShapeShift.io',
   ss_need_more_kyc:
-    'You have an active ShapeShift account linked to this Edge account. However, it still requires verification before ShapeShift can process this exchange request. Please proceed to ShapeShift.io, login with your ShapeShift account credentials, and complete your verification.'
+    'You have an active ShapeShift account linked to this Edge account. However, it still requires verification before ShapeShift can process this exchange request. Please proceed to ShapeShift.io, login with your ShapeShift account credentials, and complete your verification.',
+  ss_login: 'Create / Sign In',
+  ss_logout: 'Sign Out',
+  account: 'Account',
+  delete_account_header: 'Delete Account',
+  delete_username_account:
+    'Delete %1$s on this device? This will disable access via PIN. If 2FA is enabled on this account, this device will not be able to login without a 2FA reset which takes 7 days.',
+  no: 'No',
+  yes: 'Yes'
 }
 
 // export default strings

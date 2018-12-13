@@ -23,7 +23,7 @@ export default class BackButton extends Component<Props> {
 
   render () {
     const { withArrow } = this.props
-    const icon = isIos ? 'ios-arrow-back-outline' : 'md-arrow-back'
+    const icon = isIos ? 'ios-arrow-back' : 'md-arrow-back'
 
     return (
       <TouchableOpacity style={styles.backButton} onPress={this.props.onPress}>
