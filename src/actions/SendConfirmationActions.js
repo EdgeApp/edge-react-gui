@@ -190,7 +190,6 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
     if (guiMakeSpendInfo.onSuccess) {
       guiMakeSpendInfo.onSuccess()
     } else {
-      // Actions.pop()
       Actions.replace(TRANSACTION_DETAILS, { edgeTransaction: edgeSignedTransaction })
     }
     const successInfo = {
