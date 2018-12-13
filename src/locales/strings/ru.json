@@ -231,7 +231,7 @@
   "string_master_private_key": "Master Private Key",
   "string_split_wallet": "Разделить %s",
   "string_add_edit_tokens": "Добавить / редактировать токены",
-  "exchange_notes_metadata_generic": "Обменено %1$s %2$s с %3$s в %4$s %5$s за %6$s. \nЗаказ: %7$s. \nДля помощи, пожалуйста свяжитесь %8$s.",
+  "exchange_notes_metadata_generic": "",
   "title_crypto_settings": "%s Настройки",
   "title_add_tokens": "Добавить токены",
   "title_create_wallet_select_crypto": "Выберите тип",
