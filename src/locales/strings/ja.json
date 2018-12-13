@@ -231,7 +231,7 @@
   "string_master_private_key": "マスタープライベートキー",
   "string_split_wallet": "%sをスプリットさせる",
   "string_add_edit_tokens": "トークンを追加 / 編集する",
-  "exchange_notes_metadata_generic": "%3$s の %1$s %2$s を %6$s の %4$s %5$s に交換しました。\n注文：%7$s \nご不明な点がございましたら、%8$s までお問い合わせください。",
+  "exchange_notes_metadata_generic": "",
   "title_crypto_settings": "%s設定",
   "title_add_tokens": "トークンを追加",
   "title_create_wallet_select_crypto": "タイプを選択",
