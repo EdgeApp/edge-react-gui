@@ -98,7 +98,6 @@ export const FIAT_CODES_SYMBOLS = {
   ILS: '₪',
   INR: '₹',
   IQD: 'ع.د',
-  IRR: '﷼',
   ISK: 'kr',
   JEP: '£',
   JMD: '$',
