@@ -64,6 +64,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     otpMode: false,
     customTokens: '',
     defaultFiat: '',
+    defaultIsoFiat: '',
     merchantMode: '',
     denominationKeys: [],
     customTokensSettings: [],
@@ -153,6 +154,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     const customTokens = settings ? settings.customTokens : []
     accountInitObject.autoLogoutTimeInSeconds = syncFinal.autoLogoutTimeInSeconds
     accountInitObject.defaultFiat = syncFinal.defaultFiat
+    accountInitObject.defaultIsoFiat = syncFinal.defaultIsoFiat
     accountInitObject.merchantMode = syncFinal.merchantMode
     accountInitObject.customTokens = syncFinal.customTokens
     accountInitObject.passwordRecoveryRemindersShown = syncFinal.passwordRecoveryRemindersShown
