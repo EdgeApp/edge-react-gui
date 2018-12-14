@@ -3209,10 +3209,10 @@ edge-components@^0.0.12:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@0.13.4:
-  version "0.13.4"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.13.4.tgz#05b76f81db4a61975cd90c03fb336beb38c57b0d"
-  integrity sha512-hrldF2axLuu9ZAIUQC8mbNq0U/4hi1Axf6aCcn7eakpQf7MWbJxXPn/XW+mS6160TybzI5nuGuK7DCEsZ5rajA==
+edge-core-js@0.13.5:
+  version "0.13.5"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.13.5.tgz#a40f7d201aacca22f9cd88a6a80b0cbf07dda0a2"
+  integrity sha512-Qo47oFEWw6mR9w8e5cVGAVTu2tRx4Le5voM/DahuXaN8/wMnrTmfbeFJOchL6FAasREN4LoroYmmmq1SDW9IjA==
   dependencies:
     "@babel/runtime" "^7.0.0"
     aes-js "^3.1.0"
@@ -3230,7 +3230,7 @@ edge-core-js@0.13.4:
     node-fetch "^2.0.0"
     redux "^3.6.0"
     redux-keto "^0.3.2"
-    redux-pixies "^0.3.5"
+    redux-pixies "^0.3.6"
     rfc4648 "^1.1.0"
     scrypt-js "^2.0.3"
     utf8 "^3.0.0"
@@ -8769,10 +8769,10 @@ redux-keto@^0.3.2:
   resolved "https://registry.yarnpkg.com/redux-keto/-/redux-keto-0.3.2.tgz#15c18d61fec5e76e3d0d3f02767a996fee4ff622"
   integrity sha512-ZSCnq/8bHW/LmXLKn0v770av4lQG2S56LMpeW8ebQHY3LwHuVyilSd0XewCwYl37ZIN11t7AxHWFj+Fso9l7NA==
 
-redux-pixies@^0.3.5:
-  version "0.3.5"
-  resolved "https://registry.yarnpkg.com/redux-pixies/-/redux-pixies-0.3.5.tgz#6ff1d83334d73925202d73d72a45e3d652ee4634"
-  integrity sha512-LbJzV7DDiL4Iyy9pjp4DjC+0zHeLfPnS6iR9M75Ikr9AU+GyJcUDHQsQG7Vz0pXCiGNuIUYCBHn32sbpduyy5g==
+redux-pixies@^0.3.6:
+  version "0.3.6"
+  resolved "https://registry.yarnpkg.com/redux-pixies/-/redux-pixies-0.3.6.tgz#b2ea20a559ba9238a020f0f329afe7e6abf18e4c"
+  integrity sha512-RXOEaCKEWa2/qTnUX3GZdziVkgCK1CgzPb739Un/fl2Tam+fJo0MOmyqhxewsz+bj0GaqzYfxIJaaNvEKGL/Yg==
 
 redux-thunk@^2.2.0:
   version "2.3.0"
