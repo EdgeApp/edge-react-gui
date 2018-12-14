@@ -88,6 +88,7 @@ test('initialState', () => {
     transactionList: {
       searchVisible: false,
       transactions: [],
+      transactionIdMap: {},
       currentCurrencyCode: '',
       currentEndIndex: 0,
       numTransactions: 0,

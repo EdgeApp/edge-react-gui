@@ -8,6 +8,7 @@ test('initialState', () => {
   const expected = {
     searchVisible: false,
     transactions: [],
+    transactionIdMap: {},
     currentCurrencyCode: '',
     currentEndIndex: 0,
     numTransactions: 0,
