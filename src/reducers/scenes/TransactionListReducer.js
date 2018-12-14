@@ -11,6 +11,7 @@ export type TransactionListState = {
   +currentWalletId: string,
   +numTransactions: number,
   +searchVisible: boolean,
+  +transactionIdMap: { [txid: string]: TransactionListTx },
   +transactions: Array<TransactionListTx>
 }
 
@@ -24,6 +25,23 @@ const transactions = (state = [], action: Action): Array<TransactionListTx> => {
 
     case 'UI/WALLETS/SELECT_WALLET': {
       return []
+    }
+
+    default:
+      return state
+  }
+}
+
+const transactionIdMap = (state = {}, action: Action): { [txid: string]: TransactionListTx } => {
+  if (!action.data) return state
+  switch (action.type) {
+    case 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS': {
+      // $FlowFixMe
+      return action.data.transactionIdMap
+    }
+
+    case 'UI/WALLETS/SELECT_WALLET': {
+      return {}
     }
 
     default:
@@ -104,5 +122,6 @@ export const transactionList: Reducer<TransactionListState, Action> = combineRed
   currentWalletId,
   numTransactions,
   searchVisible,
+  transactionIdMap,
   transactions
 })
