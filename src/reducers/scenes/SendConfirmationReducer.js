@@ -18,6 +18,7 @@ export type GuiMakeSpendInfo = {
   spendTargets?: Array<EdgeSpendTarget>,
   lockInputs?: boolean,
   uniqueIdentifier?: string,
+  otherParams?: Object,
   onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void,
   onSuccess?: () => any
 }
