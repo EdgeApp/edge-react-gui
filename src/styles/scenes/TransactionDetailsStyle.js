@@ -380,6 +380,12 @@ export const styles = {
     fontSize: scale(18),
     color: THEME.COLORS.ACCENT_BLUE,
     alignSelf: 'center'
+  },
+  PayeeIconWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    position: 'relative',
+    height: 0
   }
 }
 

@@ -553,9 +553,10 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
             <ScrollView keyboardShouldPersistTaps="handled" ref="_scrollView" scrollEnabled={!this.state.subCategorySelectVisibility} overScrollMode="never">
               <View style={[styles.container]}>
                 <View>
-                  <Gradient style={[styles.expandedHeader]}>
+                  <Gradient style={[styles.expandedHeader]} />
+                  <View style={styles.PayeeIconWrapper}>
                     <PayeeIcon direction={this.state.direction} thumbnailPath={this.state.thumbnailPath} />
-                  </Gradient>
+                  </View>
                 </View>
                 <View style={[styles.dataArea]}>
                   <View style={[styles.payeeNameArea]}>
