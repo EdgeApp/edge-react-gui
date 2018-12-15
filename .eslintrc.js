@@ -13,6 +13,7 @@ module.exports = {
   parser: 'babel-eslint',
   plugins: ['flowtype', 'standard', 'react', 'react-native'],
   rules: {
+    camelcase: 'warn',
     'flowtype/generic-spacing': 'off',
     'flowtype/require-valid-file-annotation': [2, 'always'],
     'flowtype/semi': [2, 'never'],
@@ -29,6 +30,6 @@ module.exports = {
     'react/no-typos': 'error',
     'react/prop-types': 0,
     'react/self-closing-comp': ['error', { component: true }],
-    camelcase: 'warn'
+    'react-native/no-raw-text': ['error', { skip: ['FormattedText', 'T'] }]
   }
 }

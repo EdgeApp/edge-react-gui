@@ -1,13 +1,15 @@
 // @flow
-
+import { bns } from 'biggystring'
 import { showModal } from 'edge-components'
 import React, { Component } from 'react'
 import { Alert, Keyboard, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 
 import type { SetNativeAmountInfo } from '../../actions/CryptoExchangeActions.js'
 import CryptoExchangeMessageConnector from '../../connectors/components/CryptoExchangeMessageConnector'
+import { SwapKYCInfoNeededModalConnector } from '../../connectors/components/SwapKYCInfoNeededModalConnector'
 // /Volumes/work/SourceCode/AirbitzFresh/edge-react-gui/src/modules/UI/scenes/Settings/components/RestoreWalletsModal.ui
 import { SwapKYCModalConnector } from '../../connectors/components/SwapKYCModalConnector.js'
 import * as Constants from '../../constants/indexConstants'
@@ -52,13 +54,15 @@ export type CryptoExchangeSceneComponentStateProps = {
   forceUpdateGuiCounter: number,
   showWalletSelectModal: boolean,
   shiftPendingTransaction: boolean,
-  showKYCAlert: boolean
+  showKYCAlert: boolean,
+  pluginCompleteKYC: string | null
 }
 
 export type CryptoExchangeSceneComponentDispatchProps = {
   onSelectWallet(string, string): void,
-  openModal: (data: string) => any,
-  getQuoteForTransaction(SetNativeAmountInfo): void
+  openModal(data: 'from' | 'to'): mixed,
+  getQuoteForTransaction(SetNativeAmountInfo): void,
+  wipeKYCFlag: () => any
 }
 
 type Props = CryptoExchangeSceneComponentStateProps & CryptoExchangeSceneComponentDispatchProps
@@ -90,8 +94,17 @@ export class CryptoExchangeScene extends Component<Props, State> {
   }
 
   UNSAFE_componentWillReceiveProps (nextProps: Props) {
-    if (!this.props.showKYCAlert && nextProps.showKYCAlert) {
-      Alert.alert(s.strings.kyc_title, s.strings.kyc_message, [{ text: s.strings.string_cancel_cap }, { text: s.strings.string_ok, onPress: this.getKYCToken }])
+    if (nextProps.showKYCAlert && Actions.currentScene !== Constants.EXCHANGE_SETTINGS) {
+      Alert.alert(s.strings.kyc_title, s.strings.kyc_message, [
+        { text: s.strings.string_cancel_cap, onPress: this.wipeKYCFlag },
+        { text: s.strings.string_ok, onPress: this.getKYCToken }
+      ])
+    }
+    if (!this.props.pluginCompleteKYC && nextProps.pluginCompleteKYC) {
+      // show modal.   closeFinishKYCModal
+      showModal(SwapKYCInfoNeededModalConnector, { style: { margin: 0 } }).then((response: null) => {
+        console.log('nav: ', response)
+      })
     }
     if (this.state.forceUpdateGuiCounter !== nextProps.forceUpdateGuiCounter) {
       this.setState({
@@ -99,6 +112,8 @@ export class CryptoExchangeScene extends Component<Props, State> {
         toExchangeAmount: nextProps.toExchangeAmount,
         forceUpdateGuiCounter: nextProps.forceUpdateGuiCounter
       })
+      this.fromAmountNative = bns.mul(nextProps.fromExchangeAmount, nextProps.fromPrimaryInfo.exchangeDenomination.multiplier)
+      this.fromAmountDisplay = nextProps.fromExchangeAmount
     } else {
       // Check which wallet we are currently editing.
       // Only change the exchangeAmount of the opposite wallet to prevent feedback loops
@@ -190,7 +205,11 @@ export class CryptoExchangeScene extends Component<Props, State> {
       </SafeAreaView>
     )
   }
+  wipeKYCFlag = () => {
+    this.props.wipeKYCFlag()
+  }
   getKYCToken = () => {
+    this.wipeKYCFlag()
     showModal(SwapKYCModalConnector, { style: { margin: 0 } }).then((response: null | { accessToken: string, refreshToken: string }) => {
       console.log('nav: ', response)
     })
@@ -220,14 +239,14 @@ export class CryptoExchangeScene extends Component<Props, State> {
   }
 
   launchFromWalletSelector = () => {
-    this.props.openModal(Constants.FROM)
+    this.props.openModal('from')
     this.setState({
       whichWallet: Constants.FROM
     })
   }
 
   launchToWalletSelector = () => {
-    this.props.openModal(Constants.TO)
+    this.props.openModal('to')
     this.setState({
       whichWallet: Constants.TO
     })

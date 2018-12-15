@@ -3,7 +3,7 @@
 import { bns } from 'biggystring'
 import _ from 'lodash'
 import React, { Component } from 'react'
-import { ActivityIndicator, Image, Platform, TouchableHighlight, View } from 'react-native'
+import { ActivityIndicator, Image, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import { connect } from 'react-redux'
@@ -18,7 +18,7 @@ import T from '../../modules/UI/components/FormattedText/index'
 import { calculateSettingsFiatBalance } from '../../modules/UI/selectors.js'
 import styles, { styles as styleRaw } from '../../styles/scenes/WalletListStyle.js'
 import type { CustomTokenInfo, GuiDenomination } from '../../types'
-import { cutOffText, decimalOrZero, getFiatSymbol, getObjectDiff, truncateDecimals } from '../../util/utils.js'
+import { decimalOrZero, getFiatSymbol, getObjectDiff, truncateDecimals } from '../../util/utils.js'
 import WalletListRowOptions from './WalletListRowOptions'
 
 const DIVIDE_PRECISION = 18
@@ -135,7 +135,7 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
               </View>
               <View style={[styles.rowNameTextWrapAndroidIos]}>
                 <T style={[styles.rowNameText]} numberOfLines={2} adjustsFontSizeToFit={true} minimumFontScale={0.6}>
-                  {Platform.OS === 'ios' ? name : cutOffText(name, 34)}
+                  {name}
                 </T>
               </View>
               {this.props.isWalletFiatBalanceVisible ? (

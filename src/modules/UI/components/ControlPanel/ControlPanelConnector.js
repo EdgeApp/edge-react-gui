@@ -6,7 +6,6 @@ import { getUsername } from '../../../Core/selectors.js'
 import type { Dispatch, State } from '../../../ReduxTypes.js'
 import { getDisplayDenominationFull } from '../../../Settings/selectors.js'
 import { getExchangeDenomination, getExchangeRate, getSelectedCurrencyCode, getSelectedWallet } from '../../../UI/selectors.js'
-import { closeSelectUser, openSelectUser } from './action'
 import ControlPanel from './ControlPanel.ui'
 
 const mapStateToProps = (state: State) => {
@@ -48,8 +47,8 @@ const mapStateToProps = (state: State) => {
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  openSelectUser: () => dispatch(openSelectUser()),
-  closeSelectUser: () => dispatch(closeSelectUser())
+  openSelectUser: () => dispatch({ type: 'OPEN_SELECT_USER' }),
+  closeSelectUser: () => dispatch({ type: 'CLOSE_SELECT_USER' })
 })
 export default connect(
   mapStateToProps,

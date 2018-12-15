@@ -4,6 +4,8 @@ import type { EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
 import { Linking } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
+import { SEND_CONFIRMATION } from '../../../../constants/SceneKeys.js'
+import { type GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
 import * as WALLET_API from '../../../Core/Wallets/api'
 
 const formatWallet = w => ({
@@ -93,76 +95,71 @@ export class PluginBridge {
     return Promise.reject(new Error('not implemented'))
   }
 
-  _spend (spendTargets, lockInputs, broadcast): Promise<boolean> {
+  _spend (guiMakeSpendInfo: GuiMakeSpendInfo, lockInputs: boolean = true, signOnly: boolean = false): Promise<EdgeTransaction> {
     return new Promise((resolve, reject) => {
-      reject(new Error('not implemented'))
-      /*
-      Actions.sendConfirmation({
-        abcSpendInfo: {spendTargets},
-        finishCallback: (error, abcTransaction) => {
-          (error) ? reject(error) : resolve(abcTransaction)
-        },
-        lockInputs,
-        broadcast
-      })
-      */
+      if (signOnly) {
+        reject(new Error('not implemented'))
+      }
+      guiMakeSpendInfo.onDone = (error: Error | null, edgeTransaction?: EdgeTransaction) => {
+        error ? reject(error) : resolve(edgeTransaction)
+      }
+      guiMakeSpendInfo.lockInputs = true
+      Actions[SEND_CONFIRMATION](guiMakeSpendInfo)
     })
   }
 
-  createSpendRequest (data: any): Promise<boolean> {
-    const { toAddress, nativeAmount } = data
-    return this._spend(
-      [
-        {
-          publicAddress: toAddress,
-          nativeAmount: nativeAmount
-        }
-      ],
-      true,
-      true
-    )
+  //
+  // // Example use of makeSpendRequest
+  //
+  // const guiMakeSpendInfo: GuiMakeSpendInfo = {
+  //   spendTargets: [
+  //     {
+  //       publicAddress: '1xfoi24t98uaweifuha4t98aweifuy',
+  //       nativeAmount: '123456789'
+  //     },
+  //     {
+  //       publicAddress: '3f0923498t7euiyf982398r7fiuyrr',
+  //       nativeAmount: '345678912'
+  //     }
+  //   ],
+  //   signOnly: false, // Default is false. True is unimplemented
+  //   lockInputs: true
+  // }
+
+  // try {
+  //   const edgeTransaction = await makeSpendRequest(guiMakeSpendInfo)
+  // } catch (e) {
+  //   console.log(e)
+  // }
+
+  async makeSpendRequest (guiMakeSpendInfo: GuiMakeSpendInfo): Promise<EdgeTransaction> {
+    const edgeTransaction = await this._spend(guiMakeSpendInfo)
+    console.log('Plugin successfully sent transaction')
+    console.log(edgeTransaction)
+    return edgeTransaction
   }
 
-  createSpendRequest2 (data: any): Promise<boolean> {
-    const { toAddress, toAddress2, nativeAmount, nativeAmount2 } = data
-    return this._spend(
-      [
-        {
-          publicAddress: toAddress,
-          nativeAmount: nativeAmount
-        },
-        {
-          publicAddress: toAddress2,
-          nativeAmount: nativeAmount2
-        }
-      ],
-      true,
-      true
-    )
-  }
-
-  requestSign (data: any): Promise<boolean> {
-    const { toAddress, nativeAmount } = data
-    return this._spend(
-      [
-        {
-          publicAddress: toAddress,
-          nativeAmount: nativeAmount
-        }
-      ],
-      true,
-      false
-    )
-  }
+  // async requestSign (guiMakeSpendInfo: GuiMakeSpendInfo): Promise<EdgeTransaction> {
+  //   const guiMakeSpendInfo: GuiMakeSpendInfo = {
+  //     spendTargets,
+  //     signOnly: true
+  //   }
+  //   const edgeTransaction = await this._spend(guiMakeSpendInfo)
+  //   console.log('Plugin successfully signed transaction')
+  //   console.log(edgeTransaction)
+  //   return edgeTransaction
+  // }
 
   broadcastTx (data: any): Promise<EdgeTransaction> {
-    const { coreWallet, rawtx } = data
-    return WALLET_API.broadcastTransaction(coreWallet, rawtx)
+    throw new Error('ErrorUnimplemented')
+    // const { coreWallet, rawtx } = data
+    // return WALLET_API.broadcastTransaction(coreWallet, rawtx)
   }
 
   saveTx (data: any): Promise<EdgeTransaction> {
-    const { coreWallet, signedTransaction } = data
-    return WALLET_API.signTransaction(coreWallet, signedTransaction)
+    throw new Error('ErrorUnimplemented')
+    // const { coreWallet, signedTransaction } = data
+    // return WALLET_API.signTransaction(coreWallet, signedTransaction)
   }
 
   requestFile (): Promise<string> {

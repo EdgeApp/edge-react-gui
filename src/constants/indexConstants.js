@@ -2,7 +2,6 @@
 
 export * from './SceneKeys'
 export * from './IconConstants'
-export * from '../modules/UI/components/WalletListModal/action'
 export * from './DropDownValueConstants'
 export * from './FeeConstants'
 export * from './ErrorConstants'

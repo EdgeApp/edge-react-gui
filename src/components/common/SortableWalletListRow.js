@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import React, { Component } from 'react'
-import { ActivityIndicator, Image, Platform, TouchableHighlight, View } from 'react-native'
+import { ActivityIndicator, Image, TouchableHighlight, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import sort from '../../assets/images/walletlist/sort.png'
@@ -11,7 +11,7 @@ import s from '../../locales/strings.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import T from '../../modules/UI/components/FormattedText/index'
 import styles, { styles as styleRaw } from '../../styles/scenes/WalletListStyle.js'
-import { cutOffText, decimalOrZero, findDenominationSymbol, truncateDecimals } from '../../util/utils'
+import { decimalOrZero, findDenominationSymbol, truncateDecimals } from '../../util/utils'
 
 const DIVIDE_PRECISION = 18
 
@@ -40,27 +40,23 @@ class SortableWalletListRow extends Component<Props, State> {
         {...this.props.sortHandlers}
       >
         {walletData.currencyCode ? (
-          <View style={[styles.rowContent, styles.sortableRowContent]}>
+          <View style={[styles.rowContent]}>
             <View style={[styles.rowDragArea]}>
-              <Image source={sort} style={{ height: 15, width: 15 }} />
+              <Image source={sort} style={styles.rowDragIcon} />
             </View>
-            <View style={[styles.rowNameTextWrap]}>
-              {Platform.OS === 'ios' && (
-                <View style={[styles.rowNameTextWrapIOS]}>
-                  <T style={[styles.rowNameText]} numberOfLines={1}>
-                    {symbolImageDarkMono && <Image style={[styles.rowCurrencyLogoIOS]} transform={[{ translateY: 3 }]} source={{ uri: symbolImageDarkMono }} />}{' '}
-                    {cutOffText(name, 34)}
-                  </T>
-                </View>
+            <View style={styles.rowIconWrap}>
+              {symbolImageDarkMono && (
+                <Image
+                  style={[styles.rowDragCurrencyLogo, { marginLeft: 0, marginRight: 5 }]}
+                  transform={[{ translateY: 3 }]}
+                  source={{ uri: symbolImageDarkMono }}
+                />
               )}
-              {Platform.OS === 'android' && (
-                <View style={[styles.rowNameTextWrapAndroid]}>
-                  {symbolImageDarkMono && <Image style={[styles.rowCurrencyLogoAndroid]} source={{ uri: symbolImageDarkMono }} />}
-                  <T style={[styles.rowNameText]} numberOfLines={1}>
-                    {cutOffText(name, 34)}
-                  </T>
-                </View>
-              )}
+            </View>
+            <View style={[styles.rowNameTextWrapAndroidIos]}>
+              <T style={[styles.rowNameText]} numberOfLines={2} adjustsFontSizeToFit={true} minimumFontScale={0.6}>
+                {name}
+              </T>
             </View>
             <View style={[styles.rowBalanceTextWrap]}>
               <T style={[styles.rowBalanceAmountText]}>{finalCryptoAmount}</T>

@@ -2,7 +2,6 @@
 
 /* globals test expect */
 
-import { loadContactsSuccess } from '../actions/ContactsActions.js'
 import { contacts, initialState } from '../reducers/ContactsReducer.js'
 
 const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
@@ -28,8 +27,10 @@ test('contacts loaded', () => {
     givenName: 'John'
   }
   const expected = [contact]
-  const action = loadContactsSuccess([contact])
-  const actual = contacts(undefined, action)
+  const actual = contacts(undefined, {
+    type: 'CONTACTS/LOAD_CONTACTS_SUCCESS',
+    data: { contacts: [contact] }
+  })
 
   expect(actual).toEqual(expected)
 })

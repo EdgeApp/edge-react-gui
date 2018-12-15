@@ -3,6 +3,7 @@
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, View, WebView } from 'react-native'
 import * as Animatable from 'react-native-animatable'
+import CookieManager from 'react-native-cookies'
 import { base64 } from 'rfc4648'
 
 import ENV from '../../../env.json'
@@ -31,6 +32,11 @@ class SwapKYCModal extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = { code: null }
+  }
+  componentDidMount () {
+    CookieManager.clearAll().then(res => {
+      console.log('CookieManager.clearAll =>', res)
+    })
   }
   onNavigate = (navstate: Object) => {
     if (navstate.url.startsWith('https://developer.airbitz.co/shapeshift-auth')) {
@@ -79,6 +85,7 @@ class SwapKYCModal extends Component<Props, State> {
         parsed = await response.json()
       }
       this.props.setToken(parsed, this.props.pluginName)
+      this.props.onDone()
     } catch (error) {
       Alert.alert(s.strings.kyc_something_wrong, s.strings.kyc_something_wrong_message, [{ text: s.strings.string_ok, onPress: this.props.onDone }])
     }
@@ -86,11 +93,7 @@ class SwapKYCModal extends Component<Props, State> {
   setRef = (ref: WebView = null) => {
     this.ref = ref
   }
-  UNSAFE_componentWillReceiveProps (nextProps: Props) {
-    if (!nextProps.showKYCAlert) {
-      this.props.onDone()
-    }
-  }
+
   render () {
     // const { onDone } = this.props
     if (this.state.code === null) {
@@ -99,7 +102,7 @@ class SwapKYCModal extends Component<Props, State> {
           <SafeAreaView>
             <View style={styles.container}>
               <Gradient style={styles.gradient}>
-                <BackButton onPress={this.props.onDone} label={s.strings.title_back} />
+                <BackButton onPress={this.props.onDone} label={s.strings.title_back} withArrow />
               </Gradient>
               <View style={styles.webview}>
                 <WebView

@@ -6,7 +6,6 @@ import React, { Component } from 'react'
 import { View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 
-import makeAccountCallbacks from '../../modules/Core/Account/callbacks'
 import * as CONTEXT_API from '../../modules/Core/Context/api'
 import type { Dispatch } from '../../modules/ReduxTypes'
 import THEME from '../../theme/variables/airbitz'
@@ -48,12 +47,11 @@ export default class Login extends Component<Props, State> {
   }
 
   render () {
-    const callbacks = makeAccountCallbacks(this.props.dispatch)
     return !this.props.context.listUsernames ? null : (
       <View style={{ flex: 1 }} testID={'edge: login-scene'}>
         <LoginScreen
           username={this.props.username}
-          accountOptions={{ callbacks }}
+          accountOptions={null}
           context={this.props.context}
           recoveryLogin={this.props.recoveryLogin}
           onLogin={this.onLogin}

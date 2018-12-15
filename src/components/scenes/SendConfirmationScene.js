@@ -21,6 +21,7 @@ import Recipient from '../../modules/UI/components/Recipient/index.js'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import ABSlider from '../../modules/UI/components/Slider/index.js'
 import { convertCurrencyFromExchangeRates } from '../../modules/UI/selectors.js'
+import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import styles, { rawStyles } from '../../styles/scenes/SendConfirmationStyle.js'
 import type { GuiCurrencyInfo, GuiDenomination } from '../../types'
 import { convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../util/utils.js'
@@ -60,16 +61,16 @@ export type SendConfirmationDispatchProps = {
   signBroadcastAndSave: () => any,
   reset: () => any,
   updateAmount: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) => any,
-  uniqueIdentifierUpdated: (uniqueIdentifier: string) => any,
+  sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo) => any,
   onChangePin: (pin: string) => mixed,
   uniqueIdentifierButtonPressed: () => void
 }
 
-type routerParam = {
-  data: string // This is passed by the react-native-router-flux when you put a parameter on Action.route()
+type SendConfirmationRouterParams = {
+  guiMakeSpendInfo: GuiMakeSpendInfo
 }
 
-type Props = SendConfirmationStateProps & SendConfirmationDispatchProps & routerParam
+type Props = SendConfirmationStateProps & SendConfirmationDispatchProps & SendConfirmationRouterParams
 
 type State = {|
   secondaryDisplayDenomination: GuiDenomination,
@@ -100,13 +101,22 @@ export class SendConfirmation extends Component<Props, State> {
     }
   }
 
-  UNSAFE_componentWillMount () {
-    this.setState({ keyboardVisible: this.props.data === 'fromScan' })
-  }
   componentDidMount () {
     const secondaryDisplayDenomination = getDenomFromIsoCode(this.props.fiatCurrencyCode)
     const overridePrimaryExchangeAmount = bns.div(this.props.nativeAmount, this.props.primaryExchangeDenomination.multiplier, DIVIDE_PRECISION)
-    this.setState({ secondaryDisplayDenomination, overridePrimaryExchangeAmount })
+    const guiMakeSpendInfo = this.props.guiMakeSpendInfo
+    let keyboardVisible = true
+    // Do not show the keyboard if the caller passed in an amount
+    if (guiMakeSpendInfo.nativeAmount) {
+      if (!bns.eq(guiMakeSpendInfo.nativeAmount, '0')) {
+        keyboardVisible = false
+      }
+    } else if (guiMakeSpendInfo.spendTargets && guiMakeSpendInfo.spendTargets.length) {
+      keyboardVisible = false
+    }
+
+    this.props.sendConfirmationUpdateTx(this.props.guiMakeSpendInfo)
+    this.setState({ secondaryDisplayDenomination, overridePrimaryExchangeAmount, keyboardVisible })
   }
 
   componentDidUpdate (prevProps: Props) {
@@ -275,7 +285,7 @@ export class SendConfirmation extends Component<Props, State> {
           </View>
         </Gradient>
 
-        {isTaggableCurrency && <UniqueIdentifierModal onConfirm={this.props.uniqueIdentifierUpdated} currencyCode={currencyCode} />}
+        {isTaggableCurrency && <UniqueIdentifierModal onConfirm={this.props.sendConfirmationUpdateTx} currencyCode={currencyCode} />}
       </SafeAreaView>
     )
   }
@@ -323,9 +333,15 @@ export class SendConfirmation extends Component<Props, State> {
 
     if (parentNetworkFee && bns.gt(parentNetworkFee, '0')) {
       const cryptoFeeSymbol = parentDisplayDenomination.symbol ? parentDisplayDenomination.symbol : ''
+      // multiplier for display denomination
+      const displayDenomMultiplier = parentDisplayDenomination.multiplier
+      // multiplier for exchange denomination
       const cryptoFeeMultiplier = this.props.parentExchangeDenomination.multiplier
-      const cryptoFeeAmount = parentNetworkFee ? convertNativeToDisplay(cryptoFeeMultiplier)(parentNetworkFee) : ''
-      const cryptoFeeString = `${cryptoFeeSymbol} ${cryptoFeeAmount}`
+      // fee amount in exchange denomination
+      const cryptoFeeExchangeDenomAmount = parentNetworkFee ? convertNativeToDisplay(cryptoFeeMultiplier)(parentNetworkFee) : ''
+      const exchangeToDisplayMultiplierRatio = bns.div(cryptoFeeMultiplier, displayDenomMultiplier, DIVIDE_PRECISION)
+      const cryptoFeeDisplayDenomAmount = bns.mul(cryptoFeeExchangeDenomAmount, exchangeToDisplayMultiplierRatio)
+      const cryptoFeeString = `${cryptoFeeSymbol} ${cryptoFeeDisplayDenomAmount}`
       const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol ? secondaryInfo.displayDenomination.symbol : ''
       const exchangeConvertor = convertNativeToExchange(this.props.parentExchangeDenomination.multiplier)
       const cryptoFeeExchangeAmount = exchangeConvertor(parentNetworkFee)
@@ -343,11 +359,18 @@ export class SendConfirmation extends Component<Props, State> {
 
     if (networkFee && bns.gt(networkFee, '0')) {
       const cryptoFeeSymbol = primaryInfo.displayDenomination.symbol ? primaryInfo.displayDenomination.symbol : ''
+      // multiplier for display denomination
+      const displayDenomMultiplier = primaryInfo.displayDenomination.multiplier
+      // multiplier for EXCHANGE denomination
       const cryptoFeeMultiplier = this.props.primaryExchangeDenomination.multiplier
-      const cryptoFeeAmount = networkFee ? convertNativeToDisplay(cryptoFeeMultiplier)(networkFee) : ''
-      const cryptoFeeString = `${cryptoFeeSymbol} ${cryptoFeeAmount}`
+      // fee amount in exchange denomination
+      const cryptoFeeExchangeDenomAmount = networkFee ? convertNativeToDisplay(cryptoFeeMultiplier)(networkFee) : ''
+      const exchangeToDisplayMultiplierRatio = bns.div(cryptoFeeMultiplier, displayDenomMultiplier, DIVIDE_PRECISION)
+      const cryptoFeeDisplayDenomAmount = bns.mul(cryptoFeeExchangeDenomAmount, exchangeToDisplayMultiplierRatio)
+      const cryptoFeeString = `${cryptoFeeSymbol} ${cryptoFeeDisplayDenomAmount}`
       const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol ? secondaryInfo.displayDenomination.symbol : ''
       const exchangeConvertor = convertNativeToExchange(primaryInfo.exchangeDenomination.multiplier)
+      // amount in EXCHANGE denomination
       const cryptoFeeExchangeAmount = exchangeConvertor(networkFee)
       const fiatFeeAmount = convertCurrencyFromExchangeRates(
         exchangeRates,

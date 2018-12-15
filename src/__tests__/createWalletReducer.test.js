@@ -8,7 +8,20 @@ const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
 
 test('initialState', () => {
   const expected = {
-    isCreatingWallet: false
+    isCreatingWallet: false,
+    walletAccountActivationPaymentInfo: {
+      paymentAddress: '',
+      nativeAmount: '',
+      currencyCode: '',
+      exchangeAmount: '',
+      expirationDate: 0
+    },
+    isCheckingHandleAvailability: false,
+    isHandleAvailable: false,
+    handleActivationInfo: {
+      supportedCurrencies: {},
+      activationCost: ''
+    }
   }
   const actual = createWalletReducer(undefined, dummyAction)
 

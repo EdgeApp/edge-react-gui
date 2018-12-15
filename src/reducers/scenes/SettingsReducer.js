@@ -36,7 +36,8 @@ export const initialState = {
       isEnabled: false,
       amount: 0
     }
-  }
+  },
+  shapeShiftNeedsKYC: true
 }
 
 export type CurrencySetting = {
@@ -94,6 +95,7 @@ export type SettingsState = {
       amount: number
     }
   },
+  shapeShiftNeedsKYC: boolean,
   passwordRecoveryRemindersShown: {
     '20': boolean,
     '200': boolean,
@@ -194,6 +196,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         currencyPlugins,
         autoLogoutTimeInSeconds,
         defaultFiat,
+        defaultIsoFiat,
         merchantMode,
         customTokens,
         bluetoothMode,
@@ -216,6 +219,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         isTouchEnabled: touchIdInfo ? touchIdInfo.isTouchEnabled : false,
         isTouchSupported: touchIdInfo ? touchIdInfo.isTouchSupported : false,
         defaultFiat,
+        defaultIsoFiat,
         merchantMode,
         customTokens,
         bluetoothMode,
@@ -225,7 +229,8 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         otpResetDate: account.otpResetDate,
         isAccountBalanceVisible,
         isWalletFiatBalanceVisible,
-        passwordRecoveryRemindersShown
+        passwordRecoveryRemindersShown,
+        shapeShiftNeedsKYC: account.swapConfig['shapeshift'].needsActivation
       }
       denominationKeys.forEach(key => {
         const currencyCode = key.currencyCode
@@ -252,7 +257,12 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       })
       return newState
     }
-
+    case 'NEED_KYC_SETTING': {
+      return { ...state, shapeShiftNeedsKYC: true }
+    }
+    case 'ON_KYC_TOKEN_SET': {
+      return { ...state, shapeShiftNeedsKYC: false }
+    }
     case 'SET_CONFIRM_PASSWORD_ERROR': {
       if (!action.data) throw new Error('Invalid action')
       const { confirmPasswordError } = action.data

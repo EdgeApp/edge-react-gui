@@ -4,7 +4,7 @@ import _ from 'lodash'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import { updateMiningFees } from '../actions/SendConfirmationActions'
+import { sendConfirmationUpdateTx } from '../actions/SendConfirmationActions'
 import CustomFeesModal from '../components/modals/CustomFeesModal'
 import type { CustomFees, CustomFeesModalDispatchProps, CustomFeesModalOwnProps, CustomFeesModalStateProps } from '../components/modals/CustomFeesModal'
 import * as Constants from '../constants/indexConstants.js'
@@ -28,7 +28,7 @@ const mapStateToProps = (state: State, ownProps: CustomFeesModalOwnProps): Custo
 const mapDispatchToProps = (dispatch: Dispatch): CustomFeesModalDispatchProps => ({
   onPositive: (customNetworkFee: CustomFees) => {
     dispatch(
-      updateMiningFees({
+      sendConfirmationUpdateTx({
         networkFeeOption: Constants.CUSTOM_FEES,
         customNetworkFee
       })

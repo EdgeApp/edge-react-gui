@@ -12,6 +12,7 @@
 * Fix occasional "Token is not supported" error in Exchange screen
 * Enable viewing xpub for more currencies
 * Fix crash on large accounts when tapping top right menu button immediately after login
+* Fix hang when using Simplex from some Android devices
 
 ## 1.4.2
 

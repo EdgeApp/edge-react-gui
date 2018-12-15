@@ -4,8 +4,9 @@ import { bns } from 'biggystring'
 import type { EdgeMetadata, EdgeParsedUri, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import { sprintf } from 'sprintf-js'
 
-import { SEND_CONFIRMATION } from '../constants/indexConstants'
+import { SEND_CONFIRMATION, TRANSACTION_DETAILS } from '../constants/indexConstants'
 import s from '../locales/strings.js'
 import { checkPin } from '../modules/Core/Account/api.js'
 import { getAccount, getWallet } from '../modules/Core/selectors.js'
@@ -43,14 +44,9 @@ export const reset = () => ({
   data: {}
 })
 
-export const updatePaymentProtocolTransaction = (transaction: EdgeTransaction) => ({
-  type: 'UI/SEND_CONFIMATION/UPDATE_PAYMENT_PROTOCOL_TRANSACTION',
-  data: { transaction }
-})
-
-export const updateTransaction = (transaction: ?EdgeTransaction, parsedUri: ?EdgeParsedUri, forceUpdateGui: ?boolean, error: ?Error) => ({
+export const updateTransaction = (transaction: ?EdgeTransaction, guiMakeSpendInfo: ?GuiMakeSpendInfo, forceUpdateGui: ?boolean, error: ?Error) => ({
   type: 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION',
-  data: { transaction, parsedUri, forceUpdateGui, error }
+  data: { transaction, guiMakeSpendInfo, forceUpdateGui, error }
 })
 
 export const updateSpendPending = (pending: boolean) => ({
@@ -70,7 +66,7 @@ export const updateAmount = (nativeAmount: string, exchangeAmount: string, fiatP
   const amountFiatString: string = bns.mul(exchangeAmount, fiatPerCrypto)
   const amountFiat: number = parseFloat(amountFiatString)
   const metadata: EdgeMetadata = { amountFiat }
-  dispatch(createTX({ nativeAmount, metadata }, forceUpdateGui))
+  dispatch(sendConfirmationUpdateTx({ nativeAmount, metadata }, forceUpdateGui))
 }
 
 type EdgePaymentProtocolUri = EdgeParsedUri & { paymentProtocolURL: string }
@@ -84,19 +80,22 @@ export const paymentProtocolUriReceived = ({ paymentProtocolURL }: EdgePaymentPr
     .then(paymentProtocolURL => getPaymentProtocolInfo(edgeWallet, paymentProtocolURL))
     .then(makeSpendInfo)
     .then(spendInfo => {
-      const authRequired = getAuthRequired(state, spendInfo)
-      dispatch(newSpendInfo(spendInfo, authRequired))
+      // const authRequired = getAuthRequired(state, spendInfo)
+      // dispatch(newSpendInfo(spendInfo, authRequired))
 
-      return makeSpend(edgeWallet, spendInfo).then(
-        edgeTransaction => {
-          dispatch(updatePaymentProtocolTransaction(edgeTransaction))
-          Actions[SEND_CONFIRMATION]('fromScan')
-        },
-        error => {
-          dispatch(makeSpendFailed(error))
-          Actions[SEND_CONFIRMATION]('fromScan')
-        }
-      )
+      const guiMakeSpendInfo: GuiMakeSpendInfo = { ...spendInfo }
+      guiMakeSpendInfo.lockInputs = true
+      Actions[SEND_CONFIRMATION]({ guiMakeSpendInfo })
+      // return makeSpend(edgeWallet, spendInfo).then(
+      //   edgeTransaction => {
+      //     dispatch(updatePaymentProtocolTransaction(edgeTransaction))
+      //     // Actions[SEND_CONFIRMATION]('fromScan')
+      //   },
+      //   error => {
+      //     dispatch(makeSpendFailed(error))
+      //     // Actions[SEND_CONFIRMATION]('fromScan')
+      //   }
+      // )
     })
     .catch((error: Error) => {
       console.log(error)
@@ -107,19 +106,22 @@ export const paymentProtocolUriReceived = ({ paymentProtocolURL }: EdgePaymentPr
     })
 }
 
-export const createTX = (parsedUri: GuiMakeSpendInfo | EdgeParsedUri, forceUpdateGui?: boolean = true) => (dispatch: Dispatch, getState: GetState) => {
+export const sendConfirmationUpdateTx = (guiMakeSpendInfo: GuiMakeSpendInfo | EdgeParsedUri, forceUpdateGui?: boolean = true) => (
+  dispatch: Dispatch,
+  getState: GetState
+) => {
   const state = getState()
   const walletId = getSelectedWalletId(state)
   const edgeWallet = getWallet(state, walletId)
-  const parsedUriClone = { ...parsedUri }
-  const spendInfo = getSpendInfo(state, parsedUriClone)
+  const guiMakeSpendInfoClone = { ...guiMakeSpendInfo }
+  const spendInfo = getSpendInfo(state, guiMakeSpendInfoClone)
 
   const authRequired = getAuthRequired(state, spendInfo)
   dispatch(newSpendInfo(spendInfo, authRequired))
 
   makeSpend(edgeWallet, spendInfo)
-    .then(edgeTransaction => dispatch(updateTransaction(edgeTransaction, parsedUriClone, forceUpdateGui, null)))
-    .catch(e => dispatch(updateTransaction(null, parsedUriClone, forceUpdateGui, e)))
+    .then(edgeTransaction => dispatch(updateTransaction(edgeTransaction, guiMakeSpendInfoClone, forceUpdateGui, null)))
+    .catch(e => dispatch(updateTransaction(null, guiMakeSpendInfoClone, forceUpdateGui, e)))
 }
 
 export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => {
@@ -158,6 +160,8 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
   const wallet = getWallet(state, selectedWalletId)
   const edgeUnsignedTransaction = getTransaction(state)
   const spendInfo = state.ui.scenes.sendConfirmation.spendInfo
+  const guiMakeSpendInfo = state.ui.scenes.sendConfirmation.guiMakeSpendInfo
+
   if (!spendInfo) throw new Error(s.strings.invalid_spend_request)
   const authRequired = getAuthRequired(state, spendInfo)
   const pin = state.ui.scenes.sendConfirmation.pin
@@ -179,26 +183,39 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
       await setTransactionDetailsRequest(wallet, edgeSignedTransaction.txid, edgeSignedTransaction.currencyCode, edgeMetaData)
     }
     dispatch(updateSpendPending(false))
-    Actions.pop()
+
+    edgeSignedTransaction.wallet = wallet
+    edgeSignedTransaction.metadata = spendInfo.metadata
+
+    if (guiMakeSpendInfo.onSuccess) {
+      guiMakeSpendInfo.onSuccess()
+    } else {
+      Actions.replace(TRANSACTION_DETAILS, { edgeTransaction: edgeSignedTransaction })
+    }
     const successInfo = {
       success: true,
       title: s.strings.transaction_success,
       message: s.strings.transaction_success_message
     }
     dispatch({ type: 'OPEN_AB_ALERT', data: successInfo })
+    if (guiMakeSpendInfo.onDone) {
+      guiMakeSpendInfo.onDone(null, edgeSignedTransaction)
+    }
   } catch (e) {
     dispatch(updateSpendPending(false))
     const errorInfo = {
       success: false,
       title: s.strings.transaction_failure,
-      message: e.message
+      message: sprintf(s.strings.transaction_failure_message, e.message)
     }
     dispatch(updateTransaction(edgeSignedTransaction, null, true, new Error('broadcastError')))
     dispatch({ type: 'OPEN_AB_ALERT', data: errorInfo })
+    if (guiMakeSpendInfo.onDone) {
+      guiMakeSpendInfo.onDone(e)
+      Actions.pop()
+    }
   }
 }
-
-export { createTX as updateMiningFees, createTX as updateParsedURI, createTX as uniqueIdentifierUpdated }
 
 const errorNames = {
   IncorrectPinError: 'IncorrectPinError'

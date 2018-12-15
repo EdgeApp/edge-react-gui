@@ -61,7 +61,6 @@ const mapStateToProps = (state: State) => {
   const out: StateProps = {
     loading: false,
     displayDenomination,
-    updatingBalance: false,
     transactions,
     // searchVisible: state.ui.scenes.transactionList.searchVisible,
     selectedWalletId,

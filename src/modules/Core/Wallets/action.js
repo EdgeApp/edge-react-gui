@@ -27,9 +27,9 @@ export const updateWalletsRequest = () => (dispatch: Dispatch, getState: GetStat
   const state = getState()
   const loginStatus = SETTINGS_SELECTORS.getLoginStatus(state)
   if (!loginStatus) {
-    return {
+    dispatch({
       type: 'LOGGED_OUT'
-    }
+    })
   }
 
   const account = CORE_SELECTORS.getAccount(state)
@@ -54,6 +54,6 @@ export const updateWalletsRequest = () => (dispatch: Dispatch, getState: GetStat
       }
     }
 
-    return dispatch(updateWallets(activeWalletIds, archivedWalletIds, currencyWallets, receiveAddresses))
+    dispatch(updateWallets(activeWalletIds, archivedWalletIds, currencyWallets, receiveAddresses))
   })
 }

@@ -1,8 +1,8 @@
 // @flow
 
-import { makeReactNativeFolder } from 'disklet'
+import { type DiskletFolder, makeReactNativeFolder } from 'disklet'
 import { ModalManager } from 'edge-components'
-import type { DiskletFolder, EdgeContext, EdgeContextCallbacks, EdgeCorePluginFactory, EdgeCurrencyPlugin } from 'edge-core-js'
+import type { EdgeContext, EdgeCorePluginFactory, EdgeCurrencyPlugin } from 'edge-core-js'
 import { rippleCurrencyPluginFactory, stellarCurrencyPluginFactory } from 'edge-currency-accountbased'
 import {
   bitcoinCurrencyPluginFactory,
@@ -12,8 +12,10 @@ import {
   dashCurrencyPluginFactory,
   digibyteCurrencyPluginFactory,
   feathercoinCurrencyPluginFactory,
+  groestlcoinCurrencyPluginFactory,
   litecoinCurrencyPluginFactory,
   qtumCurrencyPluginFactory,
+  smartcashCurrencyPluginFactory,
   ufoCurrencyPluginFactory,
   vertcoinCurrencyPluginFactory,
   zcoinCurrencyPluginFactory
@@ -22,7 +24,7 @@ import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
 import { moneroCurrencyPluginFactory } from 'edge-currency-monero'
 import { coinbasePlugin, coincapPlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
 import React, { Component } from 'react'
-import { Image, Keyboard, Linking, StatusBar, TouchableWithoutFeedback, View } from 'react-native'
+import { Image, Keyboard, Linking, StatusBar, TouchableWithoutFeedback, View, YellowBox } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import Locale from 'react-native-locale'
 import { MenuProvider } from 'react-native-popup-menu'
@@ -52,6 +54,8 @@ import AddToken from '../connectors/scenes/AddTokenConnector.js'
 import ChangeMiningFeeSendConfirmation from '../connectors/scenes/ChangeMiningFeeSendConfirmationConnector.ui'
 import ChangePasswordConnector from '../connectors/scenes/ChangePasswordConnector.ui'
 import ChangePinConnector from '../connectors/scenes/ChangePinConnector.ui'
+import { CreateWalletAccountSelectConnector } from '../connectors/scenes/CreateWalletAccountSelectConnector.js'
+import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWalletAccountSetupConnector.js'
 import { CreateWalletReview } from '../connectors/scenes/CreateWalletReviewConnector'
 import { CreateWalletSelectCrypto } from '../connectors/scenes/CreateWalletSelectCryptoConnector'
 import { CreateWalletSelectFiat } from '../connectors/scenes/CreateWalletSelectFiatConnector'
@@ -79,7 +83,10 @@ import * as Constants from '../constants/indexConstants'
 import { scale } from '../lib/scaling.js'
 import { setIntlLocale } from '../locales/intl'
 import s, { selectLocale } from '../locales/strings.js'
+import EdgeAccountCallbackManager from '../modules/Core/Account/EdgeAccountCallbackManager.js'
 import * as CONTEXT_API from '../modules/Core/Context/api'
+import EdgeContextCallbackManager from '../modules/Core/Context/EdgeContextCallbackManager.js'
+import EdgeWalletsCallbackManager from '../modules/Core/Wallets/EdgeWalletsCallbackManager.js'
 import PermissionsManager, { type Permission, PermissionStrings } from '../modules/PermissionsManager.js'
 import AutoLogout from '../modules/UI/components/AutoLogout/AutoLogoutConnector'
 import { ContactsLoaderConnecter as ContactsLoader } from '../modules/UI/components/ContactsLoader/indexContactsLoader.js'
@@ -112,7 +119,6 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   coincapPlugin,
   // Currencies:
   bitcoincashCurrencyPluginFactory,
-  bitcoinsvCurrencyPluginFactory,
   bitcoinCurrencyPluginFactory,
   ethereumCurrencyPluginFactory,
   stellarCurrencyPluginFactory,
@@ -120,14 +126,19 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   moneroCurrencyPluginFactory,
   dashCurrencyPluginFactory,
   litecoinCurrencyPluginFactory,
+  bitcoinsvCurrencyPluginFactory,
+  // eboostCurrencyPluginFactory,
   // dogecoinCurrencyPluginFactory,
   qtumCurrencyPluginFactory,
   digibyteCurrencyPluginFactory,
+  zcoinCurrencyPluginFactory,
   bitcoingoldCurrencyPluginFactory,
   vertcoinCurrencyPluginFactory,
-  zcoinCurrencyPluginFactory,
   feathercoinCurrencyPluginFactory,
-  ufoCurrencyPluginFactory
+  smartcashCurrencyPluginFactory,
+  groestlcoinCurrencyPluginFactory,
+  ufoCurrencyPluginFactory /*,
+  eosCurrencyPluginFactory */
 ]
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
@@ -158,6 +169,8 @@ const WALLETS = s.strings.title_wallets
 const CREATE_WALLET_SELECT_CRYPTO = s.strings.title_create_wallet_select_crypto
 const CREATE_WALLET_SELECT_FIAT = s.strings.title_create_wallet_select_fiat
 const CREATE_WALLET = s.strings.title_create_wallet
+const CREATE_WALLET_ACCOUNT_SETUP = s.strings.create_wallet_create_account
+const CREATE_WALLET_ACCOUNT_ACTIVATE = s.strings.create_wallet_account_activate
 const TRANSACTIONS_EXPORT = s.strings.title_export_transactions
 const REQUEST = s.strings.title_request
 const SCAN = s.strings.title_scan
@@ -192,7 +205,6 @@ type Props = {
   dispatchDisableScan: () => void,
   urlReceived: string => void,
   updateCurrentSceneKey: string => void,
-  contextCallbacks: EdgeContextCallbacks,
   showReEnableOtpModal: () => void,
   checkEnabledExchanges: () => void,
   openDrawer: () => void
@@ -245,6 +257,9 @@ export default class Main extends Component<Props, State> {
     this.state = {
       context: undefined
     }
+    if (ENV.HIDE_IS_MOUNTED) {
+      YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader'])
+    }
   }
 
   UNSAFE_componentWillMount () {
@@ -261,7 +276,7 @@ export default class Main extends Component<Props, State> {
     const id = DeviceInfo.getUniqueID()
     global.firebase && global.firebase.analytics().setUserId(id)
     global.firebase && global.firebase.analytics().logEvent(`Start_App`)
-    makeCoreContext(this.props.contextCallbacks, pluginFactories).then(context => {
+    makeCoreContext(pluginFactories).then(context => {
       const folder = makeReactNativeFolder()
 
       // Put the context into Redux:
@@ -386,6 +401,24 @@ export default class Main extends Component<Props, State> {
                           renderTitle={this.renderTitle(CREATE_WALLET)}
                           renderLeftButton={this.renderBackButton()}
                           renderRightButton={this.renderEmptyButton()}
+                        />
+
+                        <Scene
+                          key={Constants.CREATE_WALLET_ACCOUNT_SETUP}
+                          navTransparent={true}
+                          component={CreateWalletAccountSetupConnector}
+                          renderTitle={this.renderTitle(CREATE_WALLET_ACCOUNT_SETUP)}
+                          renderLeftButton={this.renderBackButton()}
+                          renderRightButton={this.renderHelpButton()}
+                        />
+
+                        <Scene
+                          key={Constants.CREATE_WALLET_ACCOUNT_SELECT}
+                          navTransparent={true}
+                          component={CreateWalletAccountSelectConnector}
+                          renderTitle={this.renderTitle(CREATE_WALLET_ACCOUNT_ACTIVATE)}
+                          renderLeftButton={this.renderBackButton()}
+                          renderRightButton={this.renderHelpButton()}
                         />
 
                         <Scene
@@ -681,6 +714,10 @@ export default class Main extends Component<Props, State> {
         <PasswordRecoveryReminderModalConnector />
         <ModalManager />
         <PermissionsManager />
+
+        <EdgeContextCallbackManager />
+        <EdgeAccountCallbackManager />
+        <EdgeWalletsCallbackManager />
       </MenuProvider>
     )
   }

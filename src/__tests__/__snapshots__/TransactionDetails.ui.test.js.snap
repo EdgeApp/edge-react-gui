@@ -64,12 +64,22 @@ exports[`TransactionDetails.ui should render 1`] = `
                   },
                 ]
               }
+            />
+            <Component
+              style={
+                Object {
+                  "flexDirection": "row",
+                  "height": 0,
+                  "justifyContent": "center",
+                  "position": "relative",
+                }
+              }
             >
               <PayeeIcon
                 direction="receive"
                 thumbnailPath="thumb/nail/path"
               />
-            </Gradient>
+            </Component>
           </Component>
           <Component
             style={
@@ -341,12 +351,22 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
                   },
                 ]
               }
+            />
+            <Component
+              style={
+                Object {
+                  "flexDirection": "row",
+                  "height": 0,
+                  "justifyContent": "center",
+                  "position": "relative",
+                }
+              }
             >
               <PayeeIcon
                 direction="send"
                 thumbnailPath="thumb/nail/path"
               />
-            </Gradient>
+            </Component>
           </Component>
           <Component
             style={
@@ -621,12 +641,22 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
                   },
                 ]
               }
+            />
+            <Component
+              style={
+                Object {
+                  "flexDirection": "row",
+                  "height": 0,
+                  "justifyContent": "center",
+                  "position": "relative",
+                }
+              }
             >
               <PayeeIcon
                 direction="receive"
                 thumbnailPath="thumb/nail/path"
               />
-            </Gradient>
+            </Component>
           </Component>
           <Component
             style={
@@ -898,12 +928,22 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
                   },
                 ]
               }
+            />
+            <Component
+              style={
+                Object {
+                  "flexDirection": "row",
+                  "height": 0,
+                  "justifyContent": "center",
+                  "position": "relative",
+                }
+              }
             >
               <PayeeIcon
                 direction="receive"
                 thumbnailPath="thumb/nail/path"
               />
-            </Gradient>
+            </Component>
           </Component>
           <Component
             style={

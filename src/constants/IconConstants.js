@@ -21,14 +21,15 @@ export const GET_SEED = 'user-secret'
 export const CUSTOM_FEES_ICON = 'wpexplorer'
 export const EXCHANGE_ICON = 'exchange'
 export const QUESTION_ICON = 'question'
+export const FA_MONEY_ICON = 'money'
 
 // Ionic
 export const ION_ICONS = 'ionIcons'
 export const CLOSE_ICON = 'close'
-export const UNLOCKED_ICON = 'ios-unlock-outline'
-export const LOCKED_ICON = 'ios-lock-outline'
+export const UNLOCKED_ICON = 'ios-unlock'
+export const LOCKED_ICON = 'ios-lock'
 export const EYE_ICON = 'eye'
-export const MAIL = 'ios-mail-outline'
+export const MAIL = 'ios-mail'
 
 // Material
 export const MATERIAL_ICONS = 'material'

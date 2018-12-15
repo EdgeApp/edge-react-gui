@@ -14,19 +14,7 @@ const walletListModalVisible = (state = false, action: Action): boolean => {
       return !state
     }
 
-    case 'ENABLE_WALLET_LIST_MODAL_VISIBILITY': {
-      return true
-    }
-
     case 'DISABLE_WALLET_LIST_MODAL_VISIBILITY': {
-      return false
-    }
-
-    case 'TOGGLE_SELECTED_WALLET_LIST_MODAL': {
-      return false
-    }
-
-    case 'TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL': {
       return false
     }
 

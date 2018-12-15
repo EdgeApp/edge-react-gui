@@ -11,6 +11,6 @@ export default StyleSheet.create({
     height: scale(48),
     borderRadius: 24,
     backgroundColor: THEME.COLORS.TRANSPARENT,
-    position: 'relative'
+    top: scale(-32)
   }
 })

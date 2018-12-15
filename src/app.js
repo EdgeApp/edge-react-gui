@@ -89,6 +89,9 @@ if (PERF_LOGGING_ONLY) {
 }
 
 if (ENABLE_PERF_LOGGING) {
+  if (!global.nativePerformanceNow && window && window.performance) {
+    global.nativePerformanceNow = () => window.performance.now()
+  }
   const makeDate = () => {
     const d = new Date(Date.now())
     const h = ('0' + d.getHours().toString()).slice(-2)
@@ -101,7 +104,7 @@ if (ENABLE_PERF_LOGGING) {
   // $FlowFixMe: suppressing this error until we can find a workaround
   global.pnow = function (label: string) {
     const d = makeDate()
-    clog(`PTIMER PNOW ${d}: ${label}`)
+    clog(`${d} PTIMER PNOW: ${label}`)
   }
 
   // $FlowFixMe: suppressing this error until we can find a workaround
@@ -113,7 +116,7 @@ if (ENABLE_PERF_LOGGING) {
       perfCounters[label] = 0
     }
     if (typeof perfTimers[label] === 'undefined') {
-      perfTimers[label] = Date.now()
+      perfTimers[label] = global.nativePerformanceNow()
     } else {
       clog(`${d}: PTIMER Error: PTimer already started: ${label}`)
     }
@@ -124,7 +127,7 @@ if (ENABLE_PERF_LOGGING) {
     // $FlowFixMe: suppressing this error until we can find a workaround
     const d = makeDate()
     if (typeof perfTimers[label] === 'number') {
-      const elapsed = Date.now() - perfTimers[label]
+      const elapsed = global.nativePerformanceNow() - perfTimers[label]
       perfTotals[label] += elapsed
       perfCounters[label]++
       clog(`${d}: PTIMER ${label}:${elapsed}ms total:${perfTotals[label]}ms count:${perfCounters[label]}`)

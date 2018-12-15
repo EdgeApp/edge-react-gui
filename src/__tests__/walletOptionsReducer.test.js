@@ -15,16 +15,6 @@ describe('reducer', () => {
     expect(actual).toMatchSnapshot()
   })
 
-  it('open delete wallet modal', () => {
-    const action = {
-      type: 'OPEN_DELETE_WALLET_MODAL',
-      data: { walletId: 'DELETE WALLET ID' }
-    }
-    const actual = reducer(initialState, action)
-
-    expect(actual).toMatchSnapshot()
-  })
-
   it('open resync wallet modal', () => {
     const action = {
       type: 'OPEN_RESYNC_WALLET_MODAL',

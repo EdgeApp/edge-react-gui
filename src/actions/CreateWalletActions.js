@@ -1,14 +1,19 @@
 // @flow
-
-import { showModal } from 'edge-components'
+import { createSimpleConfirmModal, showModal } from 'edge-components'
+import React from 'react'
 import { Actions } from 'react-native-router-flux'
+import { sprintf } from 'sprintf-js'
 
+import { type AccountPaymentParams } from '../components/scenes/CreateWalletAccountSelectScene.js'
 import * as Constants from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import * as ACCOUNT_API from '../modules/Core/Account/api.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import type { Dispatch, GetState } from '../modules/ReduxTypes.js'
+import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import { errorModal } from '../modules/UI/components/Modals/ErrorModal.js'
+import { PluginBridge } from '../modules/UI/scenes/Plugins/api.js'
+import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import { selectWallet as selectWalletAction } from './WalletActions.js'
 
 export const updateWalletName = (walletName: string) => ({
@@ -45,15 +50,118 @@ export const createCurrencyWallet = (
     keyOptions: format ? { format } : {}
   })
     .then(edgeWallet => {
-      Actions.popTo(Constants.WALLET_LIST_SCENE)
+      if (popScene) Actions.popTo(Constants.WALLET_LIST_SCENE)
       dispatch({ type: 'UI/WALLETS/CREATE_WALLET_SUCCESS' })
       if (selectWallet) {
         dispatch(selectWalletAction(edgeWallet.id, edgeWallet.currencyInfo.currencyCode))
       }
+      return edgeWallet
     })
     .catch(async error => {
       await showModal(errorModal(s.strings.create_wallet_failed, error))
       Actions.popTo(Constants.WALLET_LIST_SCENE)
       dispatch({ type: 'UI/WALLETS/CREATE_WALLET_FAILURE' })
     })
+}
+
+export const fetchAccountActivationInfo = (currencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[currencyCode]
+  const currencyPlugin = account.currencyConfig[currencyPluginName]
+  try {
+    const supportedCurrencies = currencyPlugin.otherMethods.getActivationSupportedCurrencies()
+    const activationCost = currencyPlugin.otherMethods.getActivationCost()
+    const activationInfo = await Promise.all([supportedCurrencies, activationCost])
+    dispatch({
+      type: 'ACCOUNT_ACTIVATION_INFO',
+      data: {
+        supportedCurrencies: activationInfo[0],
+        activationCost: activationInfo[1]
+      }
+    })
+  } catch (e) {
+    console.log('fetchAccountActivationInfo error: ', e)
+  }
+}
+
+export const fetchWalletAccountActivationPaymentInfo = (paymentParams: AccountPaymentParams) => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const walletId = UI_SELECTORS.getSelectedWalletId(state)
+  const coreWallet = CORE_SELECTORS.getWallet(state, walletId)
+  try {
+    const activationQuote = await coreWallet.otherMethods.getAccountActivationQuote(paymentParams)
+    dispatch({
+      type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO',
+      data: {
+        ...activationQuote,
+        currencyCode: paymentParams.paymentCurrencyCode
+      }
+    })
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+export const checkHandleAvailability = (currencyCode: string, accountName: string) => async (dispatch: Dispatch, getState: GetState) => {
+  dispatch({ type: 'IS_CHECKING_HANDLE_AVAILABILITY', data: true })
+  const state = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[currencyCode]
+  const currencyPlugin = account.currencyConfig[currencyPluginName]
+  try {
+    const data = await currencyPlugin.otherMethods.validateAccount(accountName)
+    dispatch({ type: 'IS_HANDLE_AVAILABLE', data })
+  } catch (e) {
+    console.log(e)
+    dispatch({ type: 'IS_HANDLE_AVAILABLE', data: true })
+  }
+}
+
+export const createAccountTransaction = (createdWalletId: string, accountName: string, paymentWalletId: string) => async (
+  dispatch: Dispatch,
+  getState: GetState
+) => {
+  // check available funds
+  const state = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  const createdWallet = UI_SELECTORS.getWallet(state, createdWalletId)
+  const createdWalletCurrencyCode = createdWallet.currencyCode
+  const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[createdWalletCurrencyCode]
+  const currencyPlugin = account.currencyConfig[currencyPluginName]
+  const { paymentAddress, nativeAmount, currencyCode } = state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
+  const handleAvailability = await currencyPlugin.otherMethods.validateAccount(accountName)
+  if (handleAvailability) {
+    const makeSpendInfo = {
+      currencyCode,
+      nativeAmount,
+      publicAddress: paymentAddress,
+      lockInputs: true,
+      onSuccess: () => Actions[Constants.WALLET_LIST_SCENE]()
+    }
+    dispatch({ type: 'UI/WALLETS/SELECT_WALLET', data: { currencyCode, walletId: paymentWalletId } })
+    const pluginBridge = new PluginBridge()
+    pluginBridge.makeSpendRequest(makeSpendInfo)
+  } else {
+    // if handle is now unavailable
+    dispatch(createHandleUnavailableModal(createdWalletId, accountName))
+  }
+}
+
+export const createHandleUnavailableModal = (newWalletId: string, accountName: string) => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  account.changeWalletStates({
+    [newWalletId]: {
+      deleted: true
+    }
+  })
+  const modal = createSimpleConfirmModal({
+    title: s.strings.create_wallet_account_handle_unavailable_modal_title,
+    message: sprintf(s.strings.create_wallet_account_handle_unavailable_modal_message, accountName),
+    icon: <Icon type={Constants.MATERIAL_COMMUNITY} name={Constants.CLOSE_ICON} size={30} />,
+    buttonText: s.strings.string_ok
+  })
+  await showModal(modal)
+  Actions.pop()
 }
