@@ -1,10 +1,15 @@
-v1.5.0
+1.6.0
 
 * Supporto a EOS
 * Supporto agli indirizzi Bech32
-* Aggiunto Changenow come cambio valuta
 * Implementazione deep link di bitcoin, ethereum, bitcoincash, dash e edge URIs
 * Spostato Edge Core su un processo indipendente per incrementare le performance e la reattività della GUI
+
+v1.5.0
+
+* Aggiunto Changenow come cambio valuta
+* Use new colored currency icons
+* Allow signin/singout of ShapeShift via Settings screen
 
 v1.4.4
 
