@@ -13,6 +13,45 @@ export type Props = {
   loadContactsFail: (error: Error) => void
 }
 
+const merchantPartners = [
+  {
+    givenName: 'ShapeShift',
+    hasThumbnail: true,
+    thumbnailPath: 'https://developer.edge.app/content/shapeshift.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
+    givenName: 'Changelly',
+    hasThumbnail: true,
+    thumbnailPath: 'https://developer.edge.app/content/changelly.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
+    givenName: 'Change NOW',
+    hasThumbnail: true,
+    thumbnailPath: 'https://developer.edge.app/content/changenow.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  }
+]
+
 export class ContactsLoader extends Component<Props> {
   UNSAFE_componentWillReceiveProps (nextProps: Props) {
     const { contactsPermission } = nextProps
@@ -32,7 +71,7 @@ export class ContactsLoader extends Component<Props> {
   }
 
   filterContacts = (contacts: Array<GuiContact>) => {
-    return contacts.filter(item => item.givenName)
+    return contacts.filter(item => item.givenName).concat(merchantPartners)
   }
 
   sortContacts = (contacts: Array<GuiContact>): Array<GuiContact> => {
