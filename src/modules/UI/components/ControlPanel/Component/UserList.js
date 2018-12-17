@@ -2,13 +2,13 @@
 
 import React, { Component } from 'react'
 import { Alert, ScrollView, TouchableHighlight, View } from 'react-native'
+import { sprintf } from 'sprintf-js'
 
 import * as Constants from '../../../../../constants/indexConstants.js'
 import s from '../../../../../locales/strings'
 import T from '../../../components/FormattedText'
 import { Icon } from '../../Icon/Icon.ui.js'
 import styles from '../style'
-import { sprintf } from 'sprintf-js'
 
 type Props = {
   usernames: Array<string>,

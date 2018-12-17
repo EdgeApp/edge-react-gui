@@ -2,13 +2,7 @@
 
 import { connect } from 'react-redux'
 
-import {
-  addressModalCancelButtonPressed,
-  addressModalDoneButtonPressed,
-  legacyAddressModalCancelButtonPressed,
-  legacyAddressModalContinueButtonPressed,
-  qrCodeScanned
-} from '../../actions/ScanActions'
+import { qrCodeScanned, toggleAddressModal } from '../../actions/ScanActions'
 import { selectWalletFromModal } from '../../actions/WalletActions.js'
 import Scan from '../../components/scenes/ScanScene'
 import { getCameraPermission } from '../../modules/permissions/PermissionsSelectors'
@@ -24,11 +18,7 @@ const mapStateToProps = (state: State) => ({
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   qrCodeScanned: data => dispatch(qrCodeScanned(data)),
   toggleEnableTorch: () => dispatch({ type: 'TOGGLE_ENABLE_TORCH' }),
-  toggleAddressModal: () => dispatch({ type: 'TOGGLE_ADDRESS_MODAL_VISIBILITY' }),
-  legacyAddressModalContinueButtonPressed: () => dispatch(legacyAddressModalContinueButtonPressed()),
-  legacyAddressModalCancelButtonPressed: () => dispatch(legacyAddressModalCancelButtonPressed()),
-  addressModalDoneButtonPressed: data => dispatch(addressModalDoneButtonPressed(data)),
-  addressModalCancelButtonPressed: () => dispatch(addressModalCancelButtonPressed()),
+  toggleAddressModal: () => dispatch(toggleAddressModal()),
   onSelectWallet: (walletId: string, currencyCode: string) => dispatch(selectWalletFromModal(walletId, currencyCode))
 })
 

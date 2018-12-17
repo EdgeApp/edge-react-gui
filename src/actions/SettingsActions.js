@@ -1,24 +1,29 @@
 // @flow
 
-import { createYesNoModal, showModal } from 'edge-components'
+import { createInputModal, createSecureTextModal, createYesNoModal, showModal } from 'edge-components'
 import type { EdgeAccount } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import React from 'react'
 import { Image } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import FAIcon from 'react-native-vector-icons/FontAwesome'
+import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import iconImage from '../assets/images/otp/OTP-badge_sm.png'
-import { CURRENCY_PLUGIN_NAMES } from '../constants/indexConstants.js'
+import { CURRENCY_PLUGIN_NAMES, FONT_AWESOME, GET_SEED, WALLET_LIST } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import { restoreWalletsRequest } from '../modules/Core/Account/api.js'
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors'
 import { updateExchangeRates } from '../modules/ExchangeRates/action.js'
+import { sendLogs } from '../modules/Logs/action.js'
 import type { Dispatch, GetState, State } from '../modules/ReduxTypes.js'
 import * as SETTINGS_ACTIONS from '../modules/Settings/SettingsActions.js'
 import { displayErrorAlert } from '../modules/UI/components/ErrorAlert/actions.js'
+import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import { convertCurrency } from '../modules/UI/selectors.js'
 import { newSpendingLimits } from '../reducers/SpendingLimitsReducer.js'
+import { THEME, colors } from '../theme/variables/airbitz.js'
 import { disableOtp, keepOtp } from './OtpActions.js'
 
 const setPINModeStart = (pinMode: boolean) => ({
@@ -190,12 +195,6 @@ export const updateTouchIdEnabled = (arg: boolean, account: EdgeAccount) => asyn
   }
 }
 
-export const restoreWallets = () => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const account = state.core.account
-  restoreWalletsRequest(account).then(Actions.walletList)
-}
-
 export function togglePinLoginEnabled (pinLoginEnabled: boolean) {
   return (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
@@ -273,5 +272,116 @@ export const saveCustomNodesList = (currencyCode: string, nodesList: Array<strin
   } catch (e) {
     console.log(e)
     throw new Error('Unable to save plugin setting')
+  }
+}
+
+export const showUnlockSettingsModal = () => async (dispatch: Dispatch, getState: GetState) => {
+  try {
+    const input = {
+      label: s.strings.confirm_password_text,
+      autoCorrect: false,
+      returnKeyType: 'go',
+      initialValue: '',
+      autoFocus: true
+    }
+    const yesButton = {
+      title: s.strings.string_done_cap
+    }
+    const noButton = {
+      title: s.strings.string_cancel_cap
+    }
+    const validateInput = async (input): Promise<{ success: boolean, message: string }> => {
+      const state = getState()
+      const account = CORE_SELECTORS.getAccount(state)
+      const isPassword = await account.checkPassword(input)
+      if (isPassword) {
+        dispatch({ type: 'PASSWORD_USED' })
+        return {
+          success: true,
+          message: ''
+        }
+      } else {
+        return {
+          success: false,
+          message: s.strings.password_reminder_invalid
+        }
+      }
+    }
+    const unlockSettingsModal = createSecureTextModal({
+      icon: <FAIcon style={{ position: 'relative', left: 1 }} type={FONT_AWESOME} name={GET_SEED} color={THEME.COLORS.PRIMARY} size={30} />,
+      title: s.strings.confirm_password_text,
+      input,
+      yesButton,
+      noButton,
+      validateInput
+    })
+    const resolveValue = await showModal(unlockSettingsModal)
+    if (resolveValue) {
+      dispatch(SETTINGS_ACTIONS.setSettingsLock(false))
+    }
+  } catch (e) {
+    throw new Error('Unable to unlock settings')
+  }
+}
+
+export const showSendLogsModal = () => async (dispatch: Dispatch, getState: GetState) => {
+  try {
+    const input = {
+      label: s.strings.settings_modal_text_entry_notes,
+      autoCorrect: false,
+      returnKeyType: 'go',
+      initialValue: '',
+      autoFocus: true
+    }
+    const yesButton = {
+      title: s.strings.string_done_cap
+    }
+    const noButton = {
+      title: s.strings.string_cancel_cap
+    }
+    // use standard icon instead?
+    const unlockSettingsModal = createInputModal({
+      icon: (
+        <IonIcon
+          name="ios-paper-plane-outline"
+          size={24}
+          color={colors.primary}
+          style={[
+            {
+              backgroundColor: THEME.COLORS.TRANSPARENT,
+              zIndex: 1015,
+              elevation: 1015
+            }
+          ]}
+        />
+      ),
+      title: s.strings.settings_button_send_logs,
+      input,
+      yesButton,
+      noButton
+    })
+    const notes = await showModal(unlockSettingsModal)
+    if (notes) {
+      dispatch(sendLogs(notes))
+    }
+  } catch (e) {
+    throw new Error('Send logs failed, please contact support')
+  }
+}
+
+export const showRestoreWalletsModal = () => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const account = state.core.account
+  const restoreWalletsModal = createYesNoModal({
+    title: s.strings.restore_wallets_modal_title,
+    icon: <Icon type={'entypo'} name="wallet" size={30} />,
+    message: s.strings.restore_wallets_modal_description,
+    noButtonText: s.strings.restore_wallets_modal_cancel,
+    yesButtonText: s.strings.restore_wallets_modal_confirm
+  })
+  const response = await showModal(restoreWalletsModal)
+  if (response) {
+    await restoreWalletsRequest(account)
+    Actions[WALLET_LIST]()
   }
 }

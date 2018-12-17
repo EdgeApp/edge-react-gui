@@ -367,9 +367,6 @@ export const styles = {
   emptyRowUnderlay: {
     color: THEME.COLORS.ROW_PRESSED
   },
-  getSeedModal: {
-    top: PLATFORM.deviceHeight / 18
-  },
   seedText: {
     textAlign: 'center'
   },

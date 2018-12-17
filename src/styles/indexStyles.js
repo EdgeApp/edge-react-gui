@@ -3,7 +3,6 @@
 export * from './components/ButtonStyles.js'
 export * from './components/HeaderMenuDropDownStyles.js'
 export * from './components/FormFieldStyles.js'
-export * from './components/ConfirmPasswordModalStyle.js'
 export * from './components/ExpandableBoxStyle.js'
 export * from './components/TwoButtonModalStyle.js'
 export * from './components/StaticModalStyle.js'

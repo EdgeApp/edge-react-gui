@@ -3,13 +3,9 @@
 import { type Reducer, combineReducers } from 'redux'
 
 import type { Action } from '../modules/ReduxTypes.js'
-import { primaryModal } from './PrimaryModalReducer.js'
 import { secondaryModal } from './SecondaryModalReducer.js'
 
 export type PrivateKeyModalState = {
-  primaryModal: {
-    isActive: boolean
-  },
   secondaryModal: {
     isActive: boolean
   },
@@ -56,7 +52,6 @@ const error = (state = null, action: Action): Error | null => {
 }
 
 export const privateKeyModal: Reducer<PrivateKeyModalState, Action> = combineReducers({
-  primaryModal,
   secondaryModal,
   error,
   isSweeping

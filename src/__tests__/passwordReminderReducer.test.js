@@ -81,7 +81,7 @@ describe('PasswordReminder', () => {
       })
 
       test('PASSWORD_USED', () => {
-        const testDate = new Date()
+        const testDate = Date.now()
         const needsPasswordCheck = false
         const lastPasswordUseDate = testDate
         const passwordUseCount = 1
