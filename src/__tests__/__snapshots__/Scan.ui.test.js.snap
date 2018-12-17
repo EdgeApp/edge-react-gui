@@ -193,7 +193,7 @@ exports[`Scan component should render with AUTHORIZED props 1`] = `
             >
               <Icon
                 allowFontScaling={false}
-                name="ios-flash-outline"
+                name="ios-flash"
                 size={33.709859154929575}
                 style={
                   Array [
@@ -470,7 +470,7 @@ exports[`Scan component should render with DENIED props 1`] = `
             >
               <Icon
                 allowFontScaling={false}
-                name="ios-flash-outline"
+                name="ios-flash"
                 size={33.709859154929575}
                 style={
                   Array [

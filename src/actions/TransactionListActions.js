@@ -14,6 +14,7 @@ import * as UTILS from '../util/utils'
 export const updateTransactions = (transactionUpdate: {
   numTransactions: number,
   transactions: Array<TransactionListTx>,
+  transactionIdMap: { [txid: string]: TransactionListTx },
   currentCurrencyCode: string,
   currentWalletId: string,
   currentEndIndex: number
@@ -68,7 +69,7 @@ export const fetchMoreTransactions = (walletId: string, currencyCode: string, re
   } else if (txLength < numTransactions) {
     newEndIndex += SUBSEQUENT_TRANSACTION_BATCH_NUMBER
     if (newEndIndex >= numTransactions) {
-      newEndIndex = numTransactions - 1
+      newEndIndex = undefined
     }
   }
 
@@ -77,8 +78,13 @@ export const fetchMoreTransactions = (walletId: string, currencyCode: string, re
     (currentWalletId !== '' && currentWalletId !== walletId) ||
     (currentCurrencyCode !== '' && currentCurrencyCode !== currencyCode)
   ) {
+    let startEntries
+    if (newEndIndex) {
+      startEntries = newEndIndex - newStartIndex + 1
+    }
+    // If startEntries is undefined, this means query until the end of the transaction list
     getAndMergeTransactions(state, dispatch, walletId, currencyCode, {
-      startEntries: newEndIndex - newStartIndex + 1,
+      startEntries,
       startIndex: newStartIndex
     })
   }
@@ -102,16 +108,17 @@ export const fetchTransactions = (walletId: string, currencyCode: string, option
 
 const getAndMergeTransactions = async (state: State, dispatch: Dispatch, walletId: string, currencyCode: string, options: Object) => {
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
-  const currentEndIndex = options.startIndex + options.startEntries - 1
   if (wallet) {
     // initialize the master array of transactions that will eventually go into Redux
     let transactionsWithKeys = []
+    let transactionIdMap = {}
     // assume counter starts at zero (eg this is the first fetch)
     let key = 0
     // if there are any options and the starting index is non-zero (eg this is a subsequent fetch)
     if (options && options.startIndex > 0) {
       // then insert the already-loaded transactions into the master array of transactions
       transactionsWithKeys = transactionsWithKeys.concat(state.ui.scenes.transactionList.transactions)
+      transactionIdMap = Object.assign({}, state.ui.scenes.transactionList.transactionIdMap)
       // and fast forward the counter
       key = transactionsWithKeys.length
     }
@@ -123,21 +130,27 @@ const getAndMergeTransactions = async (state: State, dispatch: Dispatch, walletI
         const txDate = new Date(tx.date * 1000)
         const dateString = txDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
         const time = txDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' })
-        transactionsWithKeys.push({
-          ...tx,
-          dateString,
-          time,
-          key
-        })
-        key++
+        if (!transactionIdMap[tx.txid]) {
+          transactionIdMap[tx.txid] = key
+          transactionsWithKeys.push({
+            ...tx,
+            dateString,
+            time,
+            key
+          })
+          key++
+        } else {
+          console.log('Duplicate txid found')
+        }
       }
       dispatch(
         updateTransactions({
           numTransactions,
+          transactionIdMap,
           transactions: transactionsWithKeys,
           currentCurrencyCode: currencyCode,
           currentWalletId: walletId,
-          currentEndIndex
+          currentEndIndex: key - 1
         })
       )
     } catch (e) {

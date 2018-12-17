@@ -88,7 +88,7 @@ export class Scan extends Component<Props> {
 
                 <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleTorch} underlayColor={styleRaw.underlay.color}>
                   <View style={styles.bottomButtonTextWrap}>
-                    <Ionicon style={[styles.flashIcon]} name="ios-flash-outline" size={scale(24)} />
+                    <Ionicon style={[styles.flashIcon]} name="ios-flash" size={scale(24)} />
                     <T style={[styles.flashButtonText, styles.bottomButtonText]}>{FLASH_TEXT}</T>
                   </View>
                 </TouchableHighlight>

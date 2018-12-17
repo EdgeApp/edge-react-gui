@@ -112,7 +112,8 @@ export const getSpendInfo = (state: State, newSpendInfo?: GuiMakeSpendInfo = {})
     metadata: newSpendInfo.metadata ? { ...getMetadata(state), ...newSpendInfo.metadata } : getMetadata(state),
     spendTargets,
     networkFeeOption: newSpendInfo.networkFeeOption || getNetworkFeeOption(state),
-    customNetworkFee: newSpendInfo.customNetworkFee ? { ...getCustomNetworkFee(state), ...newSpendInfo.customNetworkFee } : getCustomNetworkFee(state)
+    customNetworkFee: newSpendInfo.customNetworkFee ? { ...getCustomNetworkFee(state), ...newSpendInfo.customNetworkFee } : getCustomNetworkFee(state),
+    otherParams: newSpendInfo.otherParams || {}
   }
 }
 

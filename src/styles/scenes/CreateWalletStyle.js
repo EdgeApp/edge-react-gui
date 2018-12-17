@@ -19,9 +19,9 @@ export const styles = {
   },
   view: {
     position: 'relative',
-    top: scale(THEME.HEADER),
+    top: THEME.HEADER,
     paddingHorizontal: 20,
-    paddingVertical: 5
+    height: PLATFORM.usableHeight
   },
   walletNameInputView: {
     height: scale(50),

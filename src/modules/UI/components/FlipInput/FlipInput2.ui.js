@@ -80,7 +80,7 @@ function setPrimaryToSecondary (props: Props, primaryDecimalAmount: string) {
 // Pretty much the same as setPrimaryToSecondary
 function setSecondaryToPrimary (props: Props, secondaryDecimalAmount: string) {
   const secondaryDisplayAmount = intl.formatNumberInput(secondaryDecimalAmount)
-  let primaryDecimalAmount = bns.div(secondaryDecimalAmount, props.exchangeSecondaryToPrimaryRatio, 18)
+  let primaryDecimalAmount = props.exchangeSecondaryToPrimaryRatio === '0' ? '0' : bns.div(secondaryDecimalAmount, props.exchangeSecondaryToPrimaryRatio, 18)
   primaryDecimalAmount = UTILS.truncateDecimals(primaryDecimalAmount, props.primaryInfo.maxConversionDecimals)
   const primaryDisplayAmount = intl.formatNumberInput(primaryDecimalAmount)
   return { secondaryDisplayAmount, primaryDisplayAmount, primaryDecimalAmount }

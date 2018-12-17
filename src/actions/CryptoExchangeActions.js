@@ -92,13 +92,14 @@ const processMakeSpendError = e => (dispatch: Dispatch, getState: GetState) => {
 export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: GetState) => {
   dispatch({ type: 'START_SHIFT_TRANSACTION' })
   const state = getState()
-  const quote = state.cryptoExchange.quote
+  const quote: EdgeSwapQuote | null = state.cryptoExchange.quote
   const fromWallet = state.cryptoExchange.fromWallet
   const toWallet = state.cryptoExchange.toWallet
   if (!quote || !fromWallet || !toWallet) {
     dispatch({ type: 'DONE_SHIFT_TRANSACTION' })
     return
   }
+
   const srcWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
 
   if (!srcWallet) {
@@ -117,26 +118,12 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
         s.strings.word_to_in_convert_from_to_string,
         state.cryptoExchange.toCurrencyCode
       )
-
-      let name = ''
-      let supportEmail = ''
-      let orderId = ''
-      if (quote) {
-        switch (quote.pluginName) {
-          case 'shapeshift':
-            name = 'ShapeShift'
-            supportEmail = 'support@shapeshift.io'
-            orderId = quote.quoteUri
-            break
-          case 'changelly':
-            name = 'Changelly'
-            supportEmail = 'support@changelly.com'
-            break
-        }
-      }
-      if (!orderId) {
-        orderId = broadcastedTransaction.txid
-      }
+      const account = CORE_SELECTORS.getAccount(state)
+      const pn = quote.pluginName
+      const si = account.swapConfig[pn].swapInfo
+      const name = si.displayName
+      const supportEmail = si.supportEmail
+      const quoteIdUri = si.quoteUri && quote.quoteId ? si.quoteUri + quote.quoteId : broadcastedTransaction.txid
 
       const notes = sprintf(
         s.strings.exchange_notes_metadata_generic,
@@ -146,7 +133,8 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
         state.cryptoExchange.toDisplayAmount,
         state.cryptoExchange.toWalletPrimaryInfo.displayDenomination.name,
         toWallet.name,
-        orderId,
+        quote.destinationAddress,
+        quoteIdUri,
         supportEmail
       )
 
