@@ -1,5 +1,6 @@
 // @flow
 
+import { showModal } from 'edge-components'
 import type { EdgeAccount } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Alert, ScrollView, Text, View } from 'react-native'
@@ -18,7 +19,7 @@ import { getTimeWithMeasurement } from '../../util/utils'
 import RowModal from '../common/RowModal'
 import RowRoute from '../common/RowRoute'
 import RowSwitch from '../common/RowSwitch'
-import AutoLogoutModal from '../modals/AutoLogoutModal.ui'
+import { createAutoLogoutModal } from '../modals/AutoLogoutModal.ui'
 
 const DISABLE_TEXT = s.strings.string_disable
 
@@ -130,16 +131,18 @@ export default class SettingsOverview extends Component<Props, State> {
 
   _onPressDebug = () => {}
 
-  onDoneAutoLogoutModal = (autoLogoutTimeInMinutes: number) => {
-    this.setState({
-      showAutoLogoutModal: false,
-      autoLogoutTimeInMinutes
+  showAutoLogoutModal = async () => {
+    const modal = createAutoLogoutModal({
+      autoLogoutTimeInMinutes: this.state.autoLogoutTimeInMinutes
     })
-    this.props.setAutoLogoutTimeInMinutes(autoLogoutTimeInMinutes)
-  }
 
-  onCancelAutoLogoutModal = () => {
-    this.setState({ showAutoLogoutModal: false })
+    const autoLogoutTimeInMinutes = await showModal(modal)
+    if (autoLogoutTimeInMinutes) {
+      this.setState({
+        autoLogoutTimeInMinutes
+      })
+      this.props.setAutoLogoutTimeInMinutes(autoLogoutTimeInMinutes)
+    }
   }
 
   render () {
@@ -261,13 +264,6 @@ export default class SettingsOverview extends Component<Props, State> {
             <View style={styles.emptyBottom} />
           </View>
         </ScrollView>
-
-        <AutoLogoutModal
-          autoLogoutTimeInMinutes={this.state.autoLogoutTimeInMinutes}
-          showModal={this.state.showAutoLogoutModal}
-          onDone={this.onDoneAutoLogoutModal}
-          onCancel={this.onCancelAutoLogoutModal}
-        />
       </SafeAreaView>
     )
   }
@@ -287,8 +283,6 @@ export default class SettingsOverview extends Component<Props, State> {
   showRestoreWalletModal = () => {
     this.props.showRestoreWalletsModal()
   }
-
-  showAutoLogoutModal = () => this.setState({ showAutoLogoutModal: true })
 
   renderRowRoute = (x: Object, i: number) => <RowRoute disabled={false} key={i} leftText={x.text} routeFunction={x.routeFunction} right={x.right} />
 

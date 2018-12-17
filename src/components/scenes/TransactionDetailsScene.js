@@ -2,6 +2,7 @@
 
 import { bns } from 'biggystring'
 import dateformat from 'dateformat'
+import { showModal } from 'edge-components'
 import type { EdgeCurrencyInfo, EdgeDenomination, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Animated, Easing, Keyboard, ScrollView, TextInput, TouchableOpacity, View } from 'react-native'
@@ -23,7 +24,7 @@ import { autoCorrectDate, getFiatSymbol, getWalletDefaultDenomProps, inputBottom
 import ContactSearchResults from '../common/ContactSearchResults.js'
 import AmountArea from '../common/TransactionDetailAmountArea.js'
 import SubCategorySelect from '../common/TransactionSubCategorySelect.js'
-import { AdvancedTransactionDetailsModal } from '../modals/AdvancedTransactionDetailsModal.js'
+import { createAdvancedTransactionDetailsModal } from '../modals/AdvancedTransactionDetailsModal.js'
 
 const EXCHANGE_TEXT = s.strings.fragment_transaction_exchange
 const EXPENSE_TEXT = s.strings.fragment_transaction_expense
@@ -91,8 +92,7 @@ type State = {
   subcategoryOpacity: any, // AnimatedValue
   payeeZIndex: number,
   subcatZIndex: number,
-  walletDefaultDenomProps: EdgeDenomination,
-  isAdvancedTransactionDetailsModalVisible: boolean
+  walletDefaultDenomProps: EdgeDenomination
 }
 
 type TransactionDetailsProps = TransactionDetailsOwnProps & TransactionDetailsDispatchProps
@@ -394,16 +394,17 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     this.props.openHelpModal()
   }
 
-  onPressAdvancedDetailsButton = () => {
-    this.setState({
-      isAdvancedTransactionDetailsModalVisible: true
-    })
-  }
+  onPressAdvancedDetailsButton = async () => {
+    let txExplorerLink = null
+    if (this.props.currencyInfo) {
+      txExplorerLink = sprintf(this.props.currencyInfo.transactionExplorer, this.props.edgeTransaction.txid)
+    }
 
-  onExitAdvancedDetailsModal = () => {
-    this.setState({
-      isAdvancedTransactionDetailsModalVisible: false
+    const modal = createAdvancedTransactionDetailsModal({
+      txExplorerUrl: txExplorerLink,
+      txId: this.props.edgeTransaction.txid
     })
+    await showModal(modal)
   }
 
   onSaveTxDetails = () => {
@@ -443,24 +444,17 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
 
   render () {
     const sortedSubcategories = this.props.subcategoriesList.length > 0 ? this.props.subcategoriesList.sort() : []
+    const categoryColor = categories[this.state.category].color
     let txExplorerLink = null
     if (this.props.currencyInfo) {
       txExplorerLink = sprintf(this.props.currencyInfo.transactionExplorer, this.props.edgeTransaction.txid)
     }
-
-    const categoryColor = categories[this.state.category].color
 
     return (
       <SafeAreaView>
         <View style={[{ width: '100%', height: PLATFORM.usableHeight + PLATFORM.toolbarHeight }]}>
           <Gradient style={styles.headerGradient} />
           <View style={{ position: 'relative', top: scale(66) }}>
-            <AdvancedTransactionDetailsModal
-              onExit={this.onExitAdvancedDetailsModal}
-              isActive={this.state.isAdvancedTransactionDetailsModalVisible}
-              txExplorerUrl={txExplorerLink}
-              txid={this.props.edgeTransaction.txid}
-            />
             {this.state.contactSearchVisibility && (
               <Animated.View
                 id="payeeSearchResults"

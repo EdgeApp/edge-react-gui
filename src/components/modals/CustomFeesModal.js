@@ -1,5 +1,6 @@
 // @flow
 
+import { InputAndButtonStyle, Modal, ModalStyle, PrimaryButton, SecondaryButton } from 'edge-components'
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
 import { View } from 'react-native'
@@ -7,8 +8,6 @@ import slowlog from 'react-native-slowlog'
 
 import * as Constants from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
-import StylizedModal from '../../modules/UI/components/Modal/Modal.ui'
-import OptionButtons from '../../modules/UI/components/OptionButtons/OptionButtons.ui.js'
 import OptionIcon from '../../modules/UI/components/OptionIcon/OptionIcon.ui'
 import styles from '../../styles/scenes/CustomFeesStyles'
 import { FormField } from '../common/FormField.js'
@@ -17,24 +16,17 @@ export type CustomFees = {
   [feeSetting: string]: string
 }
 
-export type CustomFeesModalStateProps = {
+export type CustomFeesModalOwnProps = {
+  sourceWallet: EdgeCurrencyWallet,
   customFeeSettings: Array<string>,
   customNetworkFee: Object,
-  visibilityBoolean: boolean
-}
-export type CustomFeesModalDispatchProps = {
-  onPositive: (customFees: CustomFees) => any,
-  onDone: () => any
-}
-export type CustomFeesModalOwnProps = {
-  handlePress: Function,
-  sourceWallet: EdgeCurrencyWallet
+  onDone: any => any
 }
 
-type Props = CustomFeesModalOwnProps & CustomFeesModalDispatchProps & CustomFeesModalStateProps
+type Props = CustomFeesModalOwnProps
 type State = CustomFees
 
-export default class CustomFeesModal extends Component<Props, State> {
+export class CustomFeesModal extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {}
@@ -76,29 +68,45 @@ export default class CustomFeesModal extends Component<Props, State> {
     ))
 
   render () {
-    const modalMiddle = this.renderModalMiddle()
-    const height = 75 + (modalMiddle.length - 1) * 83
     return (
-      <StylizedModal
-        featuredIcon={<OptionIcon iconName={Constants.CUSTOM_FEES_ICON} />}
-        headerText={s.strings.fragment_wallets_set_custom_fees}
-        style={styles.modalBoxStyle}
-        modalMiddle={modalMiddle}
-        modalMiddleStyle={{ height, marginBottom: 10 }}
-        modalBottom={
-          <OptionButtons
-            positiveText={s.strings.string_custom_fee}
-            onPositive={() => {
-              this.props.handlePress(Constants.CUSTOM_FEES, () => {
-                this.props.onPositive(this.state)
-              })
-            }}
-            onNegative={this.props.onDone}
-          />
-        }
-        visibilityBoolean={this.props.visibilityBoolean}
-        onExitButtonFxn={this.props.onDone}
-      />
+      <View style={ModalStyle.modal}>
+        <Modal.Icon>
+          <OptionIcon iconName={Constants.CUSTOM_FEES_ICON} />
+        </Modal.Icon>
+        <Modal.Container>
+          <Modal.Icon.AndroidHackSpacer />
+          <Modal.Title style={{ textAlign: 'center' }}>{s.strings.fragment_wallets_set_custom_fees}</Modal.Title>
+          <Modal.Body>{this.renderModalMiddle()}</Modal.Body>
+          <Modal.Footer>
+            <Modal.Row style={[InputAndButtonStyle.row]}>
+              <SecondaryButton style={[InputAndButtonStyle.noButton]} onPress={() => this.props.onDone(false)}>
+                <SecondaryButton.Text style={[InputAndButtonStyle.buttonText]}>{s.strings.string_cancel_cap}</SecondaryButton.Text>
+              </SecondaryButton>
+              <PrimaryButton
+                style={[InputAndButtonStyle.yesButton]}
+                onPress={() => {
+                  this.props.onDone({ networkFeeOption: Constants.CUSTOM_FEES, ...this.state })
+                }}
+              >
+                <PrimaryButton.Text style={[InputAndButtonStyle.buttonText]}>{s.strings.string_custom_fee}</PrimaryButton.Text>
+              </PrimaryButton>
+            </Modal.Row>
+          </Modal.Footer>
+        </Modal.Container>
+      </View>
     )
   }
+}
+
+export type CustomFeesModalOpts = {
+  sourceWallet: EdgeCurrencyWallet,
+  customFeeSettings: Array<string>,
+  customNetworkFee: Object
+}
+
+export const createCustomFeesModal = (opts: CustomFeesModalOpts) => {
+  function CustomFeesModalWrapped (props: { +onDone: Function }) {
+    return <CustomFeesModal {...opts} {...props} />
+  }
+  return CustomFeesModalWrapped
 }
