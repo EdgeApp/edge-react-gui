@@ -3337,6 +3337,10 @@ edge-login-ui-rn@^0.5.12:
   dependencies:
     moment "^2.22.2"
 
+"edge-plugin-wyre@https://github.com/EdgeApp/edge-plugin-skeleton.git#b667c6f":
+  version "0.0.1"
+  resolved "https://github.com/EdgeApp/edge-plugin-skeleton.git#b667c6fd917baddd75c43e9263480ba28784ee11"
+
 edge-ripple-keypairs@^0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/edge-ripple-keypairs/-/edge-ripple-keypairs-0.0.1.tgz#734f39733132a11098a70b93c58f27740e15740c"
