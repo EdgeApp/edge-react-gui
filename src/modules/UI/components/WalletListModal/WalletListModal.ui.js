@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import { FlatList, View } from 'react-native'
+import { FlatList } from 'react-native'
 import * as Animatable from 'react-native-animatable'
 import slowlog from 'react-native-slowlog'
 
@@ -59,15 +59,17 @@ export default class WalletListModal extends Component<Props> {
       }
     }
     return (
-      <Animatable.View style={[styles.topLevel, { position: 'absolute', top: top, height: PLATFORM.usableHeight }]} animation="fadeInUp" duration={250}>
-        <View>
-          <FlatList
-            ListHeaderComponent={<WalletListModalHeader type={this.props.type} whichWallet={this.props.whichWallet} />}
-            style={{ width: '100%', height: '100%' }}
-            data={walletList}
-            renderItem={this.renderWalletListRow}
-          />
-        </View>
+      <Animatable.View
+        style={[styles.topLevel, { position: 'absolute', top: top, height: PLATFORM.usableDimensionHeight }]}
+        animation="fadeInUp"
+        duration={250}
+      >
+        <FlatList
+          ListHeaderComponent={<WalletListModalHeader type={this.props.type} whichWallet={this.props.whichWallet} />}
+          style={{ width: '100%' }}
+          data={walletList}
+          renderItem={this.renderWalletListRow}
+        />
       </Animatable.View>
     )
   }
