@@ -8,8 +8,8 @@
 v1.5.0
 
 * Aggiunto Changenow come cambio valuta
-* Use new colored currency icons
-* Allow signin/singout of ShapeShift via Settings screen
+* Usa le nuove icone di valuta colorate
+* Consentire l'accesso/disconnessione di ShapeShift tramite la schermata Impostazioni
 
 v1.4.4
 
