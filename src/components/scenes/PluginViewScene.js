@@ -1,9 +1,9 @@
 // @flow
 
 import React from 'react'
-import { BackHandler, FlatList, Image, Platform, Text, TouchableWithoutFeedback, View, WebView } from 'react-native'
+import { BackHandler, FlatList, Image, Platform, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import AndroidWebView from 'react-native-webview-file-upload-android'
+import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
 
 import s from '../../locales/strings.js'
@@ -241,26 +241,16 @@ class PluginView extends React.Component<PluginProps, PluginState> {
     return (
       <SafeAreaView>
         <Gradient style={styles.gradient} />
-        {Platform.select({
-          android: () => (
-            <AndroidWebView
-              ref={this._setWebview}
-              onMessage={this._onMessage}
-              source={this._renderWebView()}
-              scalesPageToFit={contentScaling}
-              onNavigationStateChange={this._onNavigationStateChange}
-            />
-          ),
-          ios: () => (
-            <WebView
-              ref={this._setWebview}
-              onMessage={this._onMessage}
-              source={this._renderWebView()}
-              scalesPageToFit={contentScaling}
-              onNavigationStateChange={this._onNavigationStateChange}
-            />
-          )
-        })()}
+        <WebView
+          allowFileAccess
+          allowUniversalAccessFromFileURLs
+          onMessage={this._onMessage}
+          onNavigationStateChange={this._onNavigationStateChange}
+          originWhitelist={['file://', 'https://']}
+          ref={this._setWebview}
+          scalesPageToFit={contentScaling}
+          source={this._renderWebView()}
+        />
       </SafeAreaView>
     )
   }
