@@ -2,6 +2,7 @@
 
 import type { EdgeContext, EdgeContextOptions, EdgeCorePluginFactory } from 'edge-core-js'
 import { makeEdgeContext, makeFakeContexts } from 'edge-core-js'
+import { makeLocalBridge } from 'yaob'
 
 import ENV from '../../env.json'
 
@@ -22,5 +23,10 @@ export async function makeCoreContext (pluginFactories: Array<EdgeCorePluginFact
     return context
   }
 
-  return makeEdgeContext(opts)
+  const context = await makeEdgeContext(opts)
+  return makeLocalBridge(context, {
+    cloneMessage (message) {
+      return JSON.parse(JSON.stringify(message))
+    }
+  })
 }
