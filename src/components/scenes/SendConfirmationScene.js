@@ -285,7 +285,13 @@ export class SendConfirmation extends Component<Props, State> {
           </View>
         </Gradient>
 
-        {isTaggableCurrency && <UniqueIdentifierModal onConfirm={this.props.sendConfirmationUpdateTx} currencyCode={currencyCode} />}
+        {isTaggableCurrency && (
+          <UniqueIdentifierModal
+            onConfirm={this.props.sendConfirmationUpdateTx}
+            currencyCode={currencyCode}
+            keyboardType={this.keyboardTypeOnPaymentId(currencyCode)}
+          />
+        )}
       </SafeAreaView>
     )
   }
@@ -294,6 +300,19 @@ export class SendConfirmation extends Component<Props, State> {
     this.props.onChangePin(pin)
     if (pin.length >= 4) {
       this.pinInput.blur()
+    }
+  }
+
+  keyboardTypeOnPaymentId = (currencyCode: string) => {
+    switch (currencyCode) {
+      case 'XRP':
+        return 'numeric'
+      case 'XLM':
+        return 'numeric'
+      case 'XMR':
+        return 'default'
+      default:
+        return 'numeric'
     }
   }
 
