@@ -2152,9 +2152,9 @@ bs58check@^1.0.8:
     bs58 "^3.1.0"
     create-hash "^1.1.0"
 
-"bs58grscheck@https://github.com/Groestlcoin/bs58grscheck":
+"bs58grscheck@git+https://github.com/Groestlcoin/bs58grscheck.git":
   version "2.1.2"
-  resolved "https://github.com/Groestlcoin/bs58grscheck#020feec2b3153aeb278596ea70ce3579a37f4e21"
+  resolved "git+https://github.com/Groestlcoin/bs58grscheck.git#020feec2b3153aeb278596ea70ce3579a37f4e21"
   dependencies:
     bs58 "^4.0.0"
     create-hash "^1.1.0"
@@ -3253,10 +3253,10 @@ edge-currency-accountbased@^0.0.16:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@3.7.8:
-  version "3.7.8"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-3.7.8.tgz#da402783af23c50abdfbe2f6b903763023432e05"
-  integrity sha512-TfdnbArHeyWs8bqO5UHXMRYRfH39BKXsEdyk8h8JZPVQsKqneA2/3BzWJuBfjpVKaXX8UqAWR4gEN8Ozv3iVOQ==
+edge-currency-bitcoin@3.7.9:
+  version "3.7.9"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-3.7.9.tgz#d7a1f739128b014d151d73fbb0d6b6fb03bb7b55"
+  integrity sha512-GqMbATaz1jl7WW8n/51dbTfTwjRKSwFBY2ZcbDrOQ4/ua4nmjgXTo/XHFtPC+N2aQ2XEMovD8bN7ClfUZjV0pw==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -3289,10 +3289,10 @@ edge-currency-ethereum@0.11.2:
     sprintf-js "^1.1.1"
     uri-js "^3.0.2"
 
-edge-currency-monero@0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.1.1.tgz#ed57999357a091acddf2b7d4f7564c30e045ace0"
-  integrity sha512-8qoKIDVaNe2dM6mKsHjV/m9jfTilpjKfWUnC63YFSiLLOA/mJlOVBQ+wVMDHK1EUA+sZXmLMBtoC5e4N7oFwUQ==
+edge-currency-monero@0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.1.2.tgz#44268048aa8fc7b92168051dcdeae8ab5016d362"
+  integrity sha512-mcENB8vRcFc+abD8h+Dh6O3vK94DMqs+eyiuGzInXsnNjMGmJFlBEABIGXeTT8ITJzA37JQ+O9ipKS/i8v1c7g==
   dependencies:
     biggystring "^3.0.0"
     buffer "^5.0.6"
