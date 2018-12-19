@@ -29,12 +29,6 @@ exports[`TransactionDetails.ui should render 1`] = `
         }
       }
     >
-      <AdvancedTransactionDetailsModal
-        isActive={false}
-        onExit={[Function]}
-        txExplorerUrl={null}
-        txid="this is the txid"
-      />
       <ScrollView
         keyboardShouldPersistTaps="handled"
         overScrollMode="never"
@@ -316,12 +310,6 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
         }
       }
     >
-      <AdvancedTransactionDetailsModal
-        isActive={false}
-        onExit={[Function]}
-        txExplorerUrl={null}
-        txid="this is the txid"
-      />
       <ScrollView
         keyboardShouldPersistTaps="handled"
         overScrollMode="never"
@@ -606,12 +594,6 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
         }
       }
     >
-      <AdvancedTransactionDetailsModal
-        isActive={false}
-        onExit={[Function]}
-        txExplorerUrl={null}
-        txid="this is the txid"
-      />
       <ScrollView
         keyboardShouldPersistTaps="handled"
         overScrollMode="never"
@@ -893,12 +875,6 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
         }
       }
     >
-      <AdvancedTransactionDetailsModal
-        isActive={false}
-        onExit={[Function]}
-        txExplorerUrl={null}
-        txid="this is the txid"
-      />
       <ScrollView
         keyboardShouldPersistTaps="handled"
         overScrollMode="never"

@@ -12,10 +12,9 @@ import { InteractiveModal } from '../../modules/UI/components/Modals/Interactive
 import styles, { activeOpacity } from '../../styles/scenes/TransactionDetailsStyle.js'
 
 export type AdvancedTransactionDetailsModalOwnProps = {
-  isActive: boolean,
-  onExit: () => void,
-  txid: string,
-  txExplorerUrl: string | null
+  txId: string,
+  txExplorerUrl: string | null,
+  onDone: () => void
 }
 
 export class AdvancedTransactionDetailsModal extends Component<AdvancedTransactionDetailsModalOwnProps> {
@@ -30,21 +29,15 @@ export class AdvancedTransactionDetailsModal extends Component<AdvancedTransacti
   }
 
   copyToClipboard = () => {
-    Clipboard.setString(this.props.txid)
+    Clipboard.setString(this.props.txId)
     Alert.alert(s.strings.transaction_details_copy_txid_title, s.strings.transaction_details_copy_txid_message, [
-      { text: s.strings.string_ok, onPress: this.props.onExit }
+      { text: s.strings.string_ok, onPress: this.props.onDone }
     ])
   }
 
   render () {
     return (
-      <InteractiveModal
-        legacy
-        isActive={this.props.isActive}
-        onBackButtonPress={this.props.onExit}
-        onBackdropPress={this.props.onExit}
-        onModalHide={this.props.onExit}
-      >
+      <InteractiveModal>
         <InteractiveModal.Icon>
           <Icon style={styles.txIDIcon} name={Constants.QUESTION_ICON} type={Constants.FONT_AWESOME} size={22} />
         </InteractiveModal.Icon>
@@ -55,7 +48,7 @@ export class AdvancedTransactionDetailsModal extends Component<AdvancedTransacti
 
         <InteractiveModal.Body>
           <InteractiveModal.Description style={{ textAlign: 'center' }}>
-            <Text>{this.props.txid}</Text>
+            <Text>{this.props.txId}</Text>
           </InteractiveModal.Description>
         </InteractiveModal.Body>
 
@@ -78,4 +71,16 @@ export class AdvancedTransactionDetailsModal extends Component<AdvancedTransacti
       </InteractiveModal>
     )
   }
+}
+
+export type AdvancedTransactionDetailsOpts = {
+  txId: string,
+  txExplorerUrl: string | null
+}
+
+export const createAdvancedTransactionDetailsModal = (opts: AdvancedTransactionDetailsOpts) => {
+  function AdvancedTransactionDetailsWrapped (props: { +onDone: Function }) {
+    return <AdvancedTransactionDetailsModal {...opts} {...props} />
+  }
+  return AdvancedTransactionDetailsWrapped
 }

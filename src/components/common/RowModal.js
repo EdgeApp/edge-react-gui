@@ -11,7 +11,7 @@ import { border as b } from '../../util/utils'
 export type Props = {
   leftText: string,
   rightText: string,
-  onPress: () => void,
+  onPress: () => mixed,
   disabled?: boolean
 }
 export default class RowModal extends Component<Props> {

@@ -374,12 +374,6 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
       />
     </Component>
   </ScrollView>
-  <AutoLogoutModal
-    autoLogoutTimeInMinutes={0}
-    onCancel={[Function]}
-    onDone={[Function]}
-    showModal={false}
-  />
 </SafeAreaViewComponent>
 `;
 
@@ -757,11 +751,5 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
       />
     </Component>
   </ScrollView>
-  <AutoLogoutModal
-    autoLogoutTimeInMinutes={0}
-    onCancel={[Function]}
-    onDone={[Function]}
-    showModal={false}
-  />
 </SafeAreaViewComponent>
 `;
