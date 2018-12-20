@@ -1,34 +1,34 @@
-Title: Edge - Bitcoin, Ethereum, Monero, Ripple Wallet
+주제: 엣지 - 비트코인, 이더리움, 모네로, 리플 월렛
 -----
-Short description: Private, secure & easy to use. Buy, sell, send & receive Bitcoin & other crypto.
+짧은 설명: 프라이빗, 안전하고 간편한 월렛. 비트코인이나 다른 가상화패의 구입, 매각, 송금, 입금.
 
-<b>Total privacy and security in our easy to use blockchain wallet.</b> Buy, sell, send and receive Bitcoin (BTC), Bitcoin Cash (BCH), Litecoin (LTC), Ethereum (ETH) and other top crypto assets.
+<b> 완벽한 프라이버시와 보안이 제공되는 간편한 블록체인 월렛. </b> 비트코인 (BTC), 비트코인캐시 (BCH), 라이트코인 (LTC), 이더리움 (ETH), 그리고 그 외에 가상화폐들을 구매, 매각, 송금, 입금.
 
-Managing your cryptocurrency has never been easier. 엣지 월렛은 어떤 유형의 유저들에게도 통화를 간편하게 관리, 송금, 환전할 수 있도록 간소함을 유지하면서도 최고의 보안을 제공합니다.
+지금까지 가상화폐를 관리하는 것은 결코 쉬운 일이 아니었습니다. 엣지 월렛은 어떤 유형의 유저들에게도 통화를 간편하게 관리, 송금, 환전할 수 있도록 간소함을 유지하면서도 최고의 보안을 제공합니다.
 
-<b>Edge Crypto Wallet currently supports:</b> Bitcoin (BTC), Bitcoin Cash (BCH), Litecoin (LTC), Qtum (QTUM), Dash (DASH), Ethereum (ETH), Monero (XMR), Ripple (XRP), and Feathercoin (FTC). Want to see other cryptos in our wallet? Send us a request!
+<b> 엣지 가상화폐 월렛이 현재 지원하는 화폐들:</b> 비트코인 (BTC), 비트코인캐시 (BCH), 라이트코인 (LTC), 퀀텀(QTUM), 대시 (DASH), 이더리움 (ETH), 모네로 (XMR), 리플 (XRP), 패더코인 (FTC). 다른 가상화폐들도 엣지 월렛에서 관리하고 싶으십니까? 요청을 보내주세요!
 
-Edge is a powerful and easy to use cryptocurrency wallet that allows users to easily control their own private keys with the familiarity and ease of mobile banking. 
+엣지는 모바일뱅킹을 사용하는것과 동일하게 자신의 개인 키를 관리할 수 있게 만들어주는 간편한 가상화폐 월렛입니다. 
 
-Take control of your funds! With Edge, only YOU have access to your funds or transaction data. Neither Edge or any 3rd party can access your money or data. You get the financial privacy and autonomy that blockchain was designed for, with the ease of use even grandma could handle.
+자신의 손으로 자산관리를 시작하세요! 엣지에서는 오직 당신만이 자산과 거래 데이터에 접속할 수 있습니다. 엣지 관계자나 어떤 제 3자도 당신의 돈이나 데이터에 접속할 수 없습니다. 연로자들도 사용할 수 있을만큼 간편하고 블록체인 본래의 이상인 재정적인 프라이버시와 자율성이 보장됩니다.
 
-Edge also provides a cryptocurrency exchange. Easily swap your currencies for others with a few taps. Exchange BTC for Ethereum, ETH for BCH and many more.
+엣지는 가상화폐 거래소도 제공하고 있습니다. 화면을 몇번 탭하는것 만으로 당신의 통화를 다른 통화로 간단히 환전할 수 있습니다. BTC를 이더리움으로 교환, 이더리움을 BCH로 교환 등 여러 종류의 통화를 교환할 수 있습니다.
 
-<b>Features</b>
-• Secure crypto wallet and blockchain app
-• Easy to use Bitcoin wallet app with support for top crypto like Bitcoin Cash, Litecoin, Ripple (XRP)
-• Zero-knowledge & zero-access to user funds, keys, or transaction data by Edge or 3rd parties
-• Simple account creation using just a login & password (no printing of PDFs, writing down pass phrases, or adding encryption settings)
-* Biometric TouchID and FaceID login for another layer of security
-• Hierarchical Deterministic wallets with changing addresses per transaction
-• Decentralized server architecture. Wallets work even if Edge servers are down.
-• Open-source code. Available at https://github.com/Airbitz
-• Built-in crypto exchange to buy & sell cryptocurrency
+<b>기능</b>
+• 안전한 가상화폐 월렛과 블록체인 어플리케이션
+• 비트코인 캐시. 라이트코인, 리플 (XRP) 등 탑 가상화폐들을 지원하는 간편한 비트코인 월렛 어플리케이션
+• 엣지나 어떤 제3자도 유저의 자산, 키, 그리고 거래 데이터에 접속할 수 없는 시스템
+• 로그인과 암호만을 사용하는 간단한 계정 만들기 (PDF파일의 인쇄, 암호문 적기, 또는 암호화설정 불필요)
+* 지문인식과 얼굴인식으로 인한 보다 높은 단계의 보안 시스템
+• 거래마다 주소가 변경되는 계층적 결정성 월렛
+• 분산형 서버 설계 엣지 서버가 다운되어도 월렛은 사용가능함.
+• 오픈 소스 코드. https://github.com/Airbitz 에서 열람 가능.
+• 어플리케이션 내에서 이루어지는 가상화폐 거래 (구매 & 매각)
 
-Privacy Notice
-The Edge Wallet application requests access to the device contact list, and personal information. This information is used on the device to provide an improved user experience in the following ways:
+프라이버시에 관하여
+엣지 월렛 어플리케이션은 설치된 장치의 연락처와 개인정보에 접속합니다. 이 정보들은 사용자 경험을 향상하기위해 다음과 같은 용도로 사용됩니다.
 
-1. Autocomplete contacts from the user's address book after a transaction
-2. Autocomplete contacts from the user's address book to send Email or SMS payment requests
+1. 거래후에 유저의 장치의 연락처를 사용하여 자동적으로 거래 연락처를 보완합니다.
+2. 이메일이나 SMS 결제요청을 보낼 시 장치의 연라처를 사용하여 자동적으로 거래 연락처를 보완합니다.
 
-No personal info or contact list info ever leaves the device without first being encrypted by the user's credentials (username/password). Neither Edge nor any 3rd party can access the information requested by the application.
+어떠한 개인정보나 연락처 정보도 유저 자격 증명 (유저명/암호) 으로 인해 암호화되기 전에는 장치에서 빠져나가지 않습니다. 엣지나 어떤 제3자도 어플리케이션으로부터 요청된 정보에 접속할 수 없습니다.
