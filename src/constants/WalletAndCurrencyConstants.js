@@ -13,7 +13,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   DASH: 'dash',
   DGB: 'digibyte',
   EOS: 'eos',
-  // EBST: 'eboost',
+  EBST: 'eboost',
   ETH: 'ethereum',
   FTC: 'feathercoin',
   GRS: 'groestlcoin',
