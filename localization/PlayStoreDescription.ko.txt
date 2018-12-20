@@ -4,7 +4,7 @@ Short description: Private, secure & easy to use. Buy, sell, send & receive Bitc
 
 <b>Total privacy and security in our easy to use blockchain wallet.</b> Buy, sell, send and receive Bitcoin (BTC), Bitcoin Cash (BCH), Litecoin (LTC), Ethereum (ETH) and other top crypto assets.
 
-Managing your cryptocurrency has never been easier. Edge Wallet provides maximum security while keeping simplicity, allowing all types of users to easily manage, transfer & exchange their currencies.
+Managing your cryptocurrency has never been easier. 엣지 월렛은 어떤 유형의 유저들에게도 통화를 간편하게 관리, 송금, 환전할 수 있도록 간소함을 유지하면서도 최고의 보안을 제공합니다.
 
 <b>Edge Crypto Wallet currently supports:</b> Bitcoin (BTC), Bitcoin Cash (BCH), Litecoin (LTC), Qtum (QTUM), Dash (DASH), Ethereum (ETH), Monero (XMR), Ripple (XRP), and Feathercoin (FTC). Want to see other cryptos in our wallet? Send us a request!
 
