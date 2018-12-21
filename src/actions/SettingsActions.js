@@ -343,7 +343,7 @@ export const showSendLogsModal = () => async (dispatch: Dispatch, getState: GetS
     const unlockSettingsModal = createInputModal({
       icon: (
         <IonIcon
-          name="ios-paper-plane-outline"
+          name="ios-paper-plane"
           size={24}
           color={colors.primary}
           style={[

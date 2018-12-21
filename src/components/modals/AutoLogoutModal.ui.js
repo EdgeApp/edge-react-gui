@@ -78,7 +78,7 @@ export default class AutoLogoutModal extends Component<AutoLogoutModalProps, Aut
     return (
       <View style={ModalStyle.modal}>
         <Modal.Icon>
-          <IonIcon name={'ios-time-outline'} size={24} color={COLORS.primary} />
+          <IonIcon name={'ios-time'} size={24} color={COLORS.primary} />
         </Modal.Icon>
         <Modal.Container>
           <Modal.Icon.AndroidHackSpacer />
