@@ -16,6 +16,8 @@ test('initialState', () => {
       usernames: []
     },
     deepLinking: {
+      addressDeepLinkData: {},
+      deepLinkPending: false,
       passwordRecoveryLink: null
     },
     edgeLogin: {
