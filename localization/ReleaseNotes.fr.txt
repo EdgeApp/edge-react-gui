@@ -1,23 +1,23 @@
 1.6.0
 
-* EOS support
-* Bech32 address support
-* Implementing deep linking of bitcoin, ethereum, bitcoincash, dash, and edge URIs
-* Move Edge Core to independent process to boost performance and GUI responsiveness
+* Assistance d'EOS
+* L'assistance pour Bech32 adresse
+* Implémentation des liens de Bitcoin, ethereum, bitcoincash, dash et edge URIs
+* Déplacer Edge Core au processus indépendant afin de booster les performances et la réactivité de GUI
 
 v1.5.0
 
-* Add Changenow as an exchange provider
-* Use new colored currency icons
-* Allow signin/singout of ShapeShift via Settings screen
+* Ajouter "Changer tout de suite" comme un fournisseur d'échange
+* Utiliser les nouvelles monnaies d'Icôns coulerées
+* Permettre la connexion et la déconnexion de ShapeShift via votre écran de réglage
 
 v1.4.4
 
-* Add ability to split BCH wallets into BSV wallets
-* Add replay protection to BCH/BSV wallets
-* Improve login performance
-* Fix bug that caused XRP and XLM to re-query all transactions at each login
-* Improve connectivity to nodes for bitcoin related currencies (BTC, BCH, LTC, DASH, etc)
+* Ajouter la fonction pour séparer BCH Wallets dans BSV Wallets
+* Ajouter une réponse pour sécuriser BCH/BSV wallets
+*Améliorer la sécurité et la performance de la connexion
+* Corréction du bug qui obligeait XRP et XLM à ré-interroger toutes les transactions à chaque connexion
+* Amélioration des connectivités aux nœuds pour bitcoin relatifs des monnaies (BTC, BCH, FLC, DQSH, etc.)
 
 v1.4.3
 
