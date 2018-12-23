@@ -21,17 +21,17 @@ v1.4.4
 
 v1.4.3
 
-* Big performance boost when logging in and syncing wallets
-* Add support for Monero bulletproofs which fixes Monero spending
-* Allow users to enable/disable exchange providers
-* Fix occasional "Token is not supported" error in Exchange screen
+* Booste les performances lors de la connexion et de la synchronisation des portefeuilles de cryptomonnaies
+* Ajouter l'assistance pour Monero pare-balles qui fixe la dépense de Monero 
+*Permettre les utilisateurs à activer/ déactvier les fournisseurs d'échanges
+*Fixer l'erreur qui s'affichie "Token n'est pas assisté " occasionnellement dans le fond d'échange
 * Enable viewing xpub for more currencies
-* Fix crash on large accounts when tapping top right menu button immediately after login
-* Fix hang when using Simplex from some Android devices
+* Réparer le chute dans les comptes en volume quand vous cliquez dans le menue à droite immédiatement après la connexion
+* Réparer le hang quand vous utilisez Simplex depuis certains appareils Androids
 
 v1.4.2
 
-* Support for Stellar
+* Assitance pour Stellar
 * Add ability to select custom nodes for Bitcoin and similar currencies
 * Support for ShapeShift membership
 * Support Changelly.com in Exchange functionality
