@@ -25,17 +25,17 @@ v1.4.3
 * Ajouter l'assistance pour Monero pare-balles qui fixe la dépense de Monero 
 *Permettre les utilisateurs à activer/ déactvier les fournisseurs d'échanges
 *Fixer l'erreur qui s'affichie "Token n'est pas assisté " occasionnellement dans le fond d'échange
-* Enable viewing xpub for more currencies
+* Activer l'image xpub pour plus de monnaies
 * Réparer le chute dans les comptes en volume quand vous cliquez dans le menue à droite immédiatement après la connexion
 * Réparer le hang quand vous utilisez Simplex depuis certains appareils Androids
 
 v1.4.2
 
 * Assitance pour Stellar
-* Add ability to select custom nodes for Bitcoin and similar currencies
-* Support for ShapeShift membership
-* Support Changelly.com in Exchange functionality
-* Add Spanish, Italian, and Russian translations
+* Ajouter la fonctionne à sélectionner des nodes personalisés pour Bitcoin ou des monnaies similaires
+* Aide pour l'adésion de ShapeShift
+* Assitance Changelly.com avec la fonctionne d'échange
+*Ajouter en espagnole, italian et la tranduction en russe
 
 v1.3.4
 
