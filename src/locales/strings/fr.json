@@ -386,7 +386,7 @@
   "save": "Enregistrer",
   "four_digit_pin": "4 Chiffres Code PIN",
   "pin": "PIN",
-  "spending_limits_warning": "",
+  "spending_limits_warning": "** Attention**\\n\\n Réglage du mot de passe, une dépense limité peut vous empêcher d'accéder aux fonds, si vous oubliez votre mot de passe. Veuillez vérifier que vous avez correctment réglé au moyen de récupere votre mot de passe. ",
   "onboarding_button": "J'ai compris",
   "onboarding_skip_button": "Passer",
   "onboarding_slide_1": "Cliquer [+] à créer un nouvea portefeuille pour les autres cryptomonnaies. Cliquer sur le nom de portefeuille pour envoyer ou reçevoir les fonds pour ce portefeuille. ",
