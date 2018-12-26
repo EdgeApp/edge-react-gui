@@ -63,6 +63,36 @@
         <category android:name="android.intent.category.BROWSABLE" />
         <data android:scheme="edge-ret"></data>
       </intent-filter>
+      <intent-filter android:label="Bitcoin">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="bitcoin"></data>
+      </intent-filter>
+      <intent-filter android:label="Bitcoin Cash">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="bitcoincash"></data>
+      </intent-filter>
+      <intent-filter android:label="Ethereum">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="ethereum"></data>
+      </intent-filter>
+      <intent-filter android:label="Dash">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="dash"></data>
+      </intent-filter>
+      <intent-filter android:label="Litecoin">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="litecoin"></data>
+      </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
     <receiver

@@ -52,7 +52,12 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   openDrawer: () => dispatch(openDrawer()),
   checkEnabledExchanges: () => {
     dispatch(checkEnabledExchanges())
-  }
+  },
+  dispatchAddressDeepLinkReceived: addressDeepLinkData =>
+    dispatch({
+      type: 'ADDRESS_DEEP_LINK_RECEIVED',
+      data: addressDeepLinkData
+    })
 })
 export default connect(
   mapStateToProps,
