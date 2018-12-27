@@ -799,11 +799,26 @@ describe('getObjectDiff', () => {
 })
 
 describe('isEdgeLogin', () => {
-  test('Edge Login', () => {
-    expect(isEdgeLogin('airbitz://edge/')).toBe(true)
+  test('Edge Login airbitz:', () => {
+    expect(isEdgeLogin('airbitz://edge/1234567890a')).toBe(true)
   })
-  test('Non Edge Login', () => {
-    expect(isEdgeLogin('not an edge login')).toBe(false)
+  test('Edge Login airbitz-ret', () => {
+    expect(isEdgeLogin('airbitz-ret://edge/1234567890a')).toBe(true)
+  })
+  test('Edge Login edge', () => {
+    expect(isEdgeLogin('edge://edge/1234567890a')).toBe(true)
+  })
+  test('Edge Login edge-ret', () => {
+    expect(isEdgeLogin('edge-ret://edge/1234567890a')).toBe(true)
+  })
+  test('Non Edge Login bad protocol', () => {
+    expect(isEdgeLogin('edge-re://edge/1234567890a')).toBe(false)
+  })
+  test('Non Edge Login bad host', () => {
+    expect(isEdgeLogin('edge-ret://edgey/1234567890a')).toBe(false)
+  })
+  test('Non Edge Login bad path', () => {
+    expect(isEdgeLogin('edge-ret://edge/1234567890')).toBe(false)
   })
 })
 

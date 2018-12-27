@@ -61,6 +61,24 @@
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="airbitz"></data>
+      </intent-filter>
+      <intent-filter android:label="Edge">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="airbitz-ret"></data>
+      </intent-filter>
+      <intent-filter android:label="Edge">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="edge"></data>
+      </intent-filter>
+      <intent-filter android:label="Edge">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
         <data android:scheme="edge-ret"></data>
       </intent-filter>
       <intent-filter android:label="Bitcoin">
