@@ -39,6 +39,8 @@
 			<array>
 				<string>edge</string>
 				<string>airbitz</string>
+				<string>edge-ret</string>
+				<string>airbitz-ret</string>
 			</array>
 		</dict>
 		<dict>

@@ -567,10 +567,25 @@ export function snooze (ms: number): Promise<void> {
   return new Promise((resolve: any) => setTimeout(resolve, ms))
 }
 
-export const isEdgeLogin = (data: string) => {
-  const EDGE_LOGIN_REG_EXP = /^airbitz:\/\/edge\//
+const MyEdgeLoginProtocols = {
+  'edge:': true,
+  'edge-ret:': true,
+  'airbitz:': true,
+  'airbitz-ret:': true
+}
 
-  return EDGE_LOGIN_REG_EXP.test(data)
+export const isEdgeLogin = (data: string) => {
+  const parsedUrl = parse(data, {}, false)
+  if (MyEdgeLoginProtocols[parsedUrl.protocol]) {
+    if (parsedUrl.host === 'edge') {
+      if (typeof parsedUrl.pathname === 'string') {
+        if (parsedUrl.pathname.length > 11) {
+          return true
+        }
+      }
+    }
+  }
+  return false
 }
 
 const REQUEST_CURRENCIES = {
