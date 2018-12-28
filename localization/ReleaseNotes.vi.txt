@@ -1,48 +1,48 @@
 1.6.0
 
-* EOS support
-* Bech32 address support
-* Implementing deep linking of bitcoin, ethereum, bitcoincash, dash, and edge URIs
-* Move Edge Core to independent process to boost performance and GUI responsiveness
+* Hỗ trợ EOS
+* Hỗ trợ địa chỉ Bech32
+* Triển khai liên kết sâu của các bitcoin bitcoin, ethereum, bitcoincash, dash và edge
+* Di chuyển Edge Core sang quy trình độc lập để tăng hiệu suất và khả năng phản hồi GUI
 
 v1.5.0
 
-* Add Changenow as an exchange provider
-* Use new colored currency icons
-* Allow signin/singout of ShapeShift via Settings screen
+* Thêm Changenow như một nhà cung cấp trao đổi
+* Sử dụng biểu tượng tiền tệ màu mới
+* Cho phép đăng nhập / thát ra khỏi ShapeShift thông qua màn hình Cài đặt
 
 v1.4.4
 
-* Add ability to split BCH wallets into BSV wallets
-* Add replay protection to BCH/BSV wallets
-* Improve login performance
-* Fix bug that caused XRP and XLM to re-query all transactions at each login
-* Improve connectivity to nodes for bitcoin related currencies (BTC, BCH, LTC, DASH, etc)
+* Thêm khả năng chia ví BCH thành ví BSV
+* Thêm bảo vệ lập lại vào ví BCH / BSV
+* Cải thiện hiệu suất đăng nhập
+* Khắc phục lỗi khiến XRP và XLM truy vấn lại tất cả các giao dịch tại mỗi lần đăng nhập
+* Cải thiện kết nối với các nút cho các loại tiền tệ liên quan đến bitcoin (BTC, BCH, LTC, DASH, v. v.)
 
 v1.4.3
 
-* Big performance boost when logging in and syncing wallets
-* Add support for Monero bulletproofs which fixes Monero spending
-* Allow users to enable/disable exchange providers
-* Fix occasional "Token is not supported" error in Exchange screen
-* Enable viewing xpub for more currencies
-* Fix crash on large accounts when tapping top right menu button immediately after login
-* Fix hang when using Simplex from some Android devices
+* Tăng hiệu suất lớn khi đăng nhập và đồng bộ hóa ví
+* Thêm hỗ trợ cho Monero giúp khắc phục chi tiêu của Monero
+* Cho phép người dùng kích hoạt / vô hiệu hóa nhà cung cấp giao dịch
+* Khắc phục lỗi "Mã thông báo không được hỗ trợ" thường hiện trong màn hình khi trao đổi
+* Cho phép xem xpub để biết thêm các loại tiền tệ
+* Khắc phục sự cố trên các tài khoản lớn khi bấm vào menu nút trên cùng bên phải ngay sau khi đăng nhập
+* Khắc phục lỗi treo khi sử dụng Simplex từ một số thiết bị Android
 
 v1.4.2
 
-* Support for Stellar
-* Add ability to select custom nodes for Bitcoin and similar currencies
-* Support for ShapeShift membership
-* Support Changelly.com in Exchange functionality
-* Add Spanish, Italian, and Russian translations
+* Hỗ trợ cho Stellar
+* Thêm khả năng chọn các nút tùy chỉnh cho Bitcoin và các loại tiền tệ tương tự
+* Hỗ trợ cho thành viên ShapeShift
+* Hỗ trợ Changelly.com trong trao đổi chức năng
+* Thêm bản dịch tiếng Tây Ban Nha, tiếng Ý và tiếng Nga
 
 v1.3.4
 
-* Prevent create wallet button Done button from being tapped multiple times
-* Fix white screen hang upon login if an incoming transaction happens
-* Fix address wrapping in Simplex plugin
-* Fix double tap bug on Change Password modal
-* Fix Fiat amounts when using other country currencies
-* Additional scaling and visual improvements
-* Other minor bug fixes
+* Ngăn nút tạo nút hoàn thành sao cho nút không bị gõ nhiều lần
+* Khắc phục lỗi treo màn hình trắng khi đăng nhập nếu giao dịch đến xảy ra
+* Sửa một số địa chỉ trong plugin đặt vào Simplex
+* Khắc phục lỗi chạm hai lần vào chế độ thay đổi Mật khẩu
+* Khắc phục số tiền Fiat khi sử dụng các loại tiền tệ quốc gia khác
+* Cải thiện tỷ lệ và hình ảnh bổ sung
+* Sửa lỗi nhỏ khác
