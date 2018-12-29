@@ -78,7 +78,9 @@ type State = {|
   overridePrimaryExchangeAmount: string,
   forceUpdateGuiCounter: number,
   keyboardVisible: boolean,
-  showSpinner: boolean
+  showSpinner: boolean,
+  isFiatOnTop: boolean,
+  isFocus: boolean
 |}
 
 export class SendConfirmation extends Component<Props, State> {
@@ -87,6 +89,25 @@ export class SendConfirmation extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
+
+    const { guiMakeSpendInfo } = props
+    // Flow Errors when checking the index - muted the flow error
+    // Test errors also on guiMakeSpendInfo
+    const spendTarget = guiMakeSpendInfo.spendTargets[0]
+    const nativeAmount = spendTarget.nativeAmount
+
+    // Checks for native amount
+    const checkNativeAmount = () => {
+      if (nativeAmount) {
+        if (!bns.eq(nativeAmount, '0')) {
+          return false
+        }
+        return true
+      }
+      return true
+    }
+
+    // State init
     this.state = {
       secondaryDisplayDenomination: {
         name: '',
@@ -97,7 +118,9 @@ export class SendConfirmation extends Component<Props, State> {
       keyboardVisible: false,
       forceUpdateGuiCounter: 0,
       nativeAmount: props.nativeAmount,
-      showSpinner: false
+      showSpinner: false,
+      isFiatOnTop: checkNativeAmount(),
+      isFocus: checkNativeAmount()
     }
   }
 
@@ -106,6 +129,7 @@ export class SendConfirmation extends Component<Props, State> {
     const overridePrimaryExchangeAmount = bns.div(this.props.nativeAmount, this.props.primaryExchangeDenomination.multiplier, DIVIDE_PRECISION)
     const guiMakeSpendInfo = this.props.guiMakeSpendInfo
     let keyboardVisible = true
+    //
     // Do not show the keyboard if the caller passed in an amount
     if (guiMakeSpendInfo.nativeAmount) {
       if (!bns.eq(guiMakeSpendInfo.nativeAmount, '0')) {
@@ -218,6 +242,8 @@ export class SendConfirmation extends Component<Props, State> {
                 onExchangeAmountChanged={this.onExchangeAmountChanged}
                 keyboardVisible={this.state.keyboardVisible}
                 isEditable={this.props.isEditable}
+                isFiatOnTop={this.state.isFiatOnTop}
+                isFocus={this.state.isFocus}
               />
 
               <Scene.Padding style={{ paddingHorizontal: 54 }}>
