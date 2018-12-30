@@ -31,9 +31,10 @@ class DeepLinkingManager extends React.Component<Props> {
 
   checkForWallet () {
     const { addressDeepLinkData } = this.props
-    const { currencyCode, uri } = addressDeepLinkData
+    const { currencyCode } = addressDeepLinkData
 
-    if (currencyCode === undefined) {
+    if (!currencyCode) {
+      Actions[SCAN]()
       return
     }
 
@@ -41,7 +42,7 @@ class DeepLinkingManager extends React.Component<Props> {
       if (this.props.wallets[wallet].currencyCode === currencyCode) {
         this.props.selectWallet(this.props.wallets[wallet].id, currencyCode)
 
-        Actions[SCAN]({ deepLinkUri: uri })
+        Actions[SCAN]()
 
         break
       }
