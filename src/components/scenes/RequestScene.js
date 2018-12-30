@@ -323,9 +323,9 @@ export class Request extends Component<Props, State> {
     const path = Platform.OS === Constants.IOS ? RNFS.DocumentDirectoryPath + '/' + title + '.txt' : RNFS.ExternalDirectoryPath + '/' + title + '.txt'
     RNFS.writeFile(path, message, 'utf8')
       .then(success => {
-        console.log('FILE WRITTEN!')
+        const url = Platform.OS === Constants.IOS ? 'file://' + path : ''
         const shareOptions = {
-          url: 'file://' + path,
+          url,
           title,
           message,
           subject: sprintf(s.strings.request_qr_email_title, s.strings.app_name, this.props.currencyCode) //  for email,
