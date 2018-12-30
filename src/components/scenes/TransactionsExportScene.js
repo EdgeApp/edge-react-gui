@@ -45,7 +45,8 @@ export class TransactionsExportSceneComponent extends Component<Props> {
       </SafeAreaView>
     )
   }
-  exportQBO = async () => {
+
+  filenameDateString = () => {
     const date = new Date()
     const fileNameAppend =
       date.getFullYear().toString() +
@@ -54,42 +55,54 @@ export class TransactionsExportSceneComponent extends Component<Props> {
       date.getHours().toString() +
       date.getMinutes().toString() +
       date.getSeconds().toString()
+
+    return fileNameAppend
+  }
+
+  filePath = (prefix: string, format: string) => {
+    const directory = Platform.OS === IOS ? RNFS.DocumentDirectoryPath : RNFS.ExternalDirectoryPath
+    return directory + prefix + this.filenameDateString() + '.' + format.toLowerCase()
+  }
+
+  exportQBO = async () => {
     const transactionOptions: EdgeGetTransactionsOptions = {
       denomination: this.props.denomination
     }
     const file = await this.props.sourceWallet.exportTransactionsToQBO(transactionOptions)
-    const path =
-      Platform.OS === IOS
-        ? RNFS.DocumentDirectoryPath + '/MyWallet' + fileNameAppend + '.QBO'
-        : RNFS.ExternalDirectoryPath + '/MyWallet' + fileNameAppend + '.QBO'
-    RNFS.writeFile(path, file, 'utf8')
-      .then(success => {
-        if (Platform.OS === IOS) {
-          this.openShareApp(path, 'Share Transactions QBO')
-          return
-        }
-        this.openMailApp(path, 'Share Transactions QBO', 'QBO', 'MyWallet' + fileNameAppend + '.QBO')
-      })
-      .catch(err => {
-        console.log('file creation erro: ', err.message)
-      })
+
+    const prefix = '/MyWallet'
+    const format = 'QBO'
+
+    this.write(file, prefix, format)
   }
+
   exportCSV = async () => {
     const transactionOptions: EdgeGetTransactionsOptions = {
       denomination: this.props.denomination
     }
     const file = await this.props.sourceWallet.exportTransactionsToCSV(transactionOptions)
-    const path = Platform.OS === IOS ? RNFS.DocumentDirectoryPath + '/MyWallet.csv' : RNFS.ExternalDirectoryPath + '/MyWallet.csv'
+
+    const prefix = '/MyWallet'
+    const format = 'CSV'
+
+    this.write(file, prefix, format)
+  }
+
+  write = (file: string, prefix: string, format: string) => {
+    const path = this.filePath(prefix, format)
+
+    const fileName = prefix + this.filenameDateString() + '.' + format.toLowerCase()
+
     RNFS.writeFile(path, file, 'utf8')
       .then(success => {
         if (Platform.OS === IOS) {
-          this.openShareApp(path, 'Share Transactions CSV')
+          this.openShareApp(path, 'Share Transactions ' + format)
           return
         }
-        this.openMailApp(path, 'Share Transactions CSV', 'csv', 'My Wallet.csv')
+        this.openMailApp(path, 'Share Transactions ' + format, format, fileName)
       })
       .catch(err => {
-        console.log('file creation error: ', err.message)
+        console.log('Error creating : ' + fileName, err.message)
       })
   }
 
