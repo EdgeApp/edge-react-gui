@@ -10,7 +10,6 @@ import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import Ionicon from 'react-native-vector-icons/Ionicons'
-import * as URI from 'uri-js'
 
 import SecondaryModal from '../../connectors/SecondaryModalConnector.js'
 import * as Constants from '../../constants/indexConstants'
@@ -31,7 +30,7 @@ type Props = {
   scanEnabled: boolean,
   showToWalletModal: boolean,
   deepLinkPending: boolean,
-  deepLinkUri: URI,
+  deepLinkUri: string | null,
   qrCodeScanned: (data: string) => void,
   parseScannedUri: (data: string) => void,
   toggleEnableTorch: () => void,
@@ -64,10 +63,9 @@ export class Scan extends Component<Props> {
 
   checkForDeepLink () {
     if (this.props.deepLinkUri && this.props.deepLinkPending) {
+      const deepLinkUri = this.props.deepLinkUri
       this.props.markAddressDeepLinkDone()
-
-      const uriString: string = this.props.deepLinkUri.scheme + ':' + this.props.deepLinkUri.path
-      this.props.parseScannedUri(uriString)
+      this.props.parseScannedUri(deepLinkUri)
     }
   }
 

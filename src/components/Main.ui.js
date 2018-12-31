@@ -319,14 +319,24 @@ export default class Main extends Component<Props, State> {
     switch (parsedUri.scheme) {
       case 'edge':
       case 'airbitz':
-        this.handleRecoveryToken(parsedUri)
+      case 'edge-ret':
+      case 'airbitz-ret':
+      case 'https':
+        if (
+          parsedUri.host === 'recovery' ||
+          parsedUri.host === 'recovery.edgesecure.co'
+        ) {
+          this.handleRecoveryToken(parsedUri)
+        } else {
+          this.handleAddress(parsedUri, url)
+        }
         break
       case 'bitcoin':
       case 'bitcoincash':
       case 'ethereum':
       case 'dash':
       case 'litecoin':
-        this.handleAddress(parsedUri)
+        this.handleAddress(parsedUri, url)
         break
     }
   }
@@ -343,17 +353,13 @@ export default class Main extends Component<Props, State> {
     this.props.urlReceived(token)
   }
 
-  handleAddress (parsedUri: URI) {
+  handleAddress (parsedUri: URI, url: string) {
     const addressDeepLinkData = {}
 
     const currencyCode = this.convertCurrencyCodeFromScheme(parsedUri.scheme)
-    if (currencyCode === 'unrecognized') {
-      console.log('QWEQWE Unrecognized currency code')
-      return
-    }
 
     addressDeepLinkData.currencyCode = currencyCode
-    addressDeepLinkData.uri = parsedUri
+    addressDeepLinkData.uri = url
 
     this.props.dispatchAddressDeepLinkReceived(addressDeepLinkData)
   }
@@ -372,7 +378,7 @@ export default class Main extends Component<Props, State> {
         return 'DASH'
       default:
         console.log('Unrecognized currency URI scheme')
-        return 'unrecognized'
+        return null
     }
   }
 

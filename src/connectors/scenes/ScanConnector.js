@@ -13,7 +13,8 @@ const mapStateToProps = (state: State) => ({
   torchEnabled: state.ui.scenes.scan.torchEnabled,
   scanEnabled: state.ui.scenes.scan.scanEnabled,
   showToWalletModal: state.ui.scenes.walletListModal.walletListModalVisible,
-  deepLinkPending: state.core.deepLinking.deepLinkPending
+  deepLinkPending: state.core.deepLinking.deepLinkPending,
+  deepLinkUri: state.core.deepLinking.addressDeepLinkData.uri
 })
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
