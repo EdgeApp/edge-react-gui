@@ -107,19 +107,19 @@ export type SettingsState = {
   }
 }
 
-const currencyPLuginUtil = (state, payloadData) => {
+const currencyPLuginUtil = (state, payloadData): SettingsState => {
   const { plugins } = state
   const { supportedWalletTypes } = plugins
   const { allCurrencyInfos } = plugins
   const { currencyInfo } = payloadData
-  const { pluginName, walletTypes } = currencyInfo
+  const { pluginName, walletType } = currencyInfo
 
   // Build up object with all the information for the parent currency, accesible by the currencyCode
   const defaultParentCurrencyInfo = state[currencyInfo.currencyCode]
   const parentCurrencyInfo = {
     [currencyInfo.currencyCode]: {
       ...defaultParentCurrencyInfo,
-      currencyName: currencyInfo.currencyName,
+      displayName: currencyInfo.displayName,
       currencyCode: currencyInfo.currencyCode,
       denominations: currencyInfo.denominations,
       symbolImage: currencyInfo.symbolImage,
@@ -134,7 +134,7 @@ const currencyPLuginUtil = (state, payloadData) => {
       ...acc,
       [metatoken.currencyCode]: {
         ...defaultMetatokenInfo,
-        currencyName: metatoken.currencyName,
+        displayName: metatoken.currencyName,
         currencyCode: metatoken.currencyCode,
         denominations: metatoken.denominations,
         symbolImage: metatoken.symbolImage,
@@ -156,7 +156,7 @@ const currencyPLuginUtil = (state, payloadData) => {
       ...plugins,
       [pluginName]: currencyInfo,
       allCurrencyInfos: [...allCurrencyInfos, currencyInfo],
-      supportedWalletTypes: [...supportedWalletTypes, ...walletTypes]
+      supportedWalletTypes: [...supportedWalletTypes, walletType]
     }
   }
 }

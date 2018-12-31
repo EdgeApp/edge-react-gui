@@ -93,8 +93,6 @@ import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
 const UTILITY_SERVER_FILE = 'utilityServer.json'
-global.etherscanApiKey = ENV.ETHERSCAN_API_KEY
-global.infuraProjectId = ENV.INFURA_PROJECT_ID
 
 const RouterWithRedux = connect()(Router)
 

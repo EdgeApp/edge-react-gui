@@ -94,4 +94,9 @@ buck-out/
 # Yaob bridge
 src/lib/bridge/rolledUp.js
 src/lib/bridge/injectThisInWebView.js
+
+## Edge core
+/android/app/src/main/assets/edge-core/
+/ios/edge-core/
+
 *.swp

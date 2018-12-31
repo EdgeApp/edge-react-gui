@@ -39,9 +39,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
   for (const pluginName in account.currencyConfig) {
     const { currencyInfo } = account.currencyConfig[pluginName]
     const { currencyCode } = currencyInfo
-    currencyInfo.walletTypes.forEach(type => {
-      currencyCodes[type] = currencyCode
-    })
+    currencyCodes[currencyInfo.walletType] = currencyCode
     currencyPlugins.push({ pluginName, currencyInfo })
   }
   dispatch({ type: 'ACCOUNT/LOGGED_IN', data: { account, currencyPlugins } })
@@ -110,8 +108,8 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
         for (const pluginName in account.currencyConfig) {
           const { currencyInfo } = account.currencyConfig[pluginName]
           if (currencyInfo.currencyCode.toLowerCase() === global.currencyCode.toLowerCase()) {
-            walletType = currencyInfo.walletTypes[0]
-            walletName = sprintf(s.strings.my_crypto_wallet_name, currencyInfo.currencyName)
+            walletType = currencyInfo.walletType
+            walletName = sprintf(s.strings.my_crypto_wallet_name, currencyInfo.displayName)
             edgeWallet = await ACCOUNT_API.createCurrencyWalletRequest(account, walletType, { name: walletName, fiatCurrencyCode })
             global.firebase && global.firebase.analytics().logEvent(`Signup_Wallets_Created`)
           }

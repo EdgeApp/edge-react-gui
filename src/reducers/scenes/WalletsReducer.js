@@ -338,7 +338,7 @@ function schema (wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress)
 
   // Add parent currency currencyCode
   const currencyNames: { [currencyCode: string]: string } = {}
-  currencyNames[currencyCode] = wallet.currencyInfo.currencyName
+  currencyNames[currencyCode] = wallet.currencyInfo.displayName
 
   metaTokens.forEach(metaToken => {
     const currencyCode: string = metaToken.currencyCode
