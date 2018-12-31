@@ -22,26 +22,6 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
   if (!action.data) return state
 
   switch (action.type) {
-    case 'ACCOUNT_INIT_COMPLETE': {
-      // $FlowFixMe
-      const wallets = action.data.currencyWallets
-      const out = {}
-
-      for (const walletId of Object.keys(wallets)) {
-        // $FlowFixMe
-        const tempWallet = schema(wallets[walletId], action.data.receiveAddresses[walletId])
-        if (state[walletId]) {
-          const enabledTokensOnWallet = state[walletId].enabledTokens
-          tempWallet.enabledTokens = enabledTokensOnWallet
-          enabledTokensOnWallet.forEach(customToken => {
-            tempWallet.nativeBalances[customToken] = wallets[walletId].getBalance({ currencyCode: customToken })
-          })
-        }
-        out[walletId] = tempWallet
-      }
-
-      return out
-    }
     case 'CORE/WALLETS/UPDATE_WALLETS': {
       // $FlowFixMe
       const wallets = action.data.currencyWallets

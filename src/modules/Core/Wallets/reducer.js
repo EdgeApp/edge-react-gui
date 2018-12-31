@@ -15,7 +15,6 @@ export const initialState = {}
 
 const byId = (state = initialState, action: Action): $PropertyType<WalletsState, 'byId'> => {
   switch (action.type) {
-    case 'ACCOUNT_INIT_COMPLETE':
     case 'CORE/WALLETS/UPDATE_WALLETS':
       if (!action.data) throw new Error('Invalid action')
       const currencyWallets = action.data.currencyWallets

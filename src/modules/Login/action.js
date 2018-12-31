@@ -1,7 +1,6 @@
 // @flow
 
-import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
-import _ from 'lodash'
+import type { EdgeAccount } from 'edge-core-js'
 import { Platform } from 'react-native'
 import Locale from 'react-native-locale'
 import PushNotification from 'react-native-push-notification'
@@ -11,7 +10,6 @@ import { sprintf } from 'sprintf-js'
 import { insertWalletIdsForProgress } from '../../actions/WalletActions.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import { getReceiveAddresses } from '../../util/utils.js'
 import * as ACCOUNT_API from '../Core/Account/api'
 import * as SETTINGS_API from '../Core/Account/settings.js'
 // Login/action.js
@@ -70,7 +68,6 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     customTokensSettings: [],
     activeWalletIds: [],
     archivedWalletIds: [],
-    currencyWallets: {},
     passwordReminder: {},
     isAccountBalanceVisible: false,
     isWalletFiatBalanceVisible: false,
@@ -125,29 +122,9 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     const activeWalletIds = account.activeWalletIds
     dispatch(insertWalletIdsForProgress(activeWalletIds))
     const archivedWalletIds = account.archivedWalletIds
-    const currencyWallets = account.currencyWallets
 
     accountInitObject.activeWalletIds = activeWalletIds
     accountInitObject.archivedWalletIds = archivedWalletIds
-    accountInitObject.currencyWallets = currencyWallets
-
-    for (const walletId of Object.keys(currencyWallets)) {
-      const edgeWallet: EdgeCurrencyWallet = currencyWallets[walletId]
-      if (edgeWallet.type === 'wallet:ethereum') {
-        if (state.ui.wallets && state.ui.wallets.byId && state.ui.wallets.byId[walletId]) {
-          const enabledTokens = state.ui.wallets.byId[walletId].enabledTokens
-          const customTokens = state.ui.settings.customTokens
-          const enabledNotHiddenTokens = enabledTokens.filter(token => {
-            let isVisible = true // assume we will enable token
-            const tokenIndex = _.findIndex(customTokens, item => item.currencyCode === token)
-            // if token is not supposed to be visible, not point in enabling it
-            if (tokenIndex > -1 && customTokens[tokenIndex].isVisible === false) isVisible = false
-            return isVisible
-          })
-          edgeWallet.enableTokens(enabledNotHiddenTokens)
-        }
-      }
-    }
     const settings = await SETTINGS_API.getSyncedSettings(account)
     const syncDefaults = SETTINGS_API.SYNCED_ACCOUNT_DEFAULTS
     const syncFinal = { ...syncDefaults, ...settings }
@@ -186,10 +163,9 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     accountInitObject.pinMode = coreFinal.pinMode
     accountInitObject.otpMode = coreFinal.otpMode
 
-    const receiveAddresses = await getReceiveAddresses(currencyWallets)
     dispatch({
       type: 'ACCOUNT_INIT_COMPLETE',
-      data: { ...accountInitObject, receiveAddresses }
+      data: { ...accountInitObject }
     })
     // $FlowFixMe
     dispatch(updateWalletsRequest())
