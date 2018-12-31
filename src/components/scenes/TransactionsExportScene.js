@@ -59,9 +59,14 @@ export class TransactionsExportSceneComponent extends Component<Props> {
     return fileNameAppend
   }
 
-  filePath = (prefix: string, format: string) => {
+  fileName = (format: string) => {
+    const walletName = this.props.sourceWallet.name ? this.props.sourceWallet.name : 'MyWallet'
+    return walletName + this.filenameDateString() + '.' + format.toLowerCase()
+  }
+
+  filePath = (format: string) => {
     const directory = Platform.OS === IOS ? RNFS.DocumentDirectoryPath : RNFS.ExternalDirectoryPath
-    return directory + prefix + this.filenameDateString() + '.' + format.toLowerCase()
+    return directory + '/' + this.fileName(format)
   }
 
   exportQBO = async () => {
@@ -70,10 +75,9 @@ export class TransactionsExportSceneComponent extends Component<Props> {
     }
     const file = await this.props.sourceWallet.exportTransactionsToQBO(transactionOptions)
 
-    const prefix = '/MyWallet'
     const format = 'QBO'
 
-    this.write(file, prefix, format)
+    this.write(file, format)
   }
 
   exportCSV = async () => {
@@ -82,16 +86,15 @@ export class TransactionsExportSceneComponent extends Component<Props> {
     }
     const file = await this.props.sourceWallet.exportTransactionsToCSV(transactionOptions)
 
-    const prefix = '/MyWallet'
     const format = 'CSV'
 
-    this.write(file, prefix, format)
+    this.write(file, format)
   }
 
-  write = (file: string, prefix: string, format: string) => {
-    const path = this.filePath(prefix, format)
+  write = (file: string, format: string) => {
+    const path = this.filePath(format)
 
-    const fileName = prefix + this.filenameDateString() + '.' + format.toLowerCase()
+    const fileName = this.fileName(format)
 
     RNFS.writeFile(path, file, 'utf8')
       .then(success => {
