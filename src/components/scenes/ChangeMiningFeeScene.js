@@ -29,7 +29,8 @@ export type ChangeMiningFeeOwnProps = {
 export type ChangeMiningFeeStateProps = {
   feeSetting: string,
   customFeeSettings: Array<string>,
-  customNetworkFee: Object
+  customNetworkFee: Object,
+  hideCustomFeeOption?: boolean
 }
 
 export type ChangeMiningFeeDispatchProps = {}
@@ -72,6 +73,16 @@ export default class ChangeMiningFee extends Component<ChangeMiningFeeProps, Sta
       })
     }
   }
+  renderCustomFeeButton = () => {
+    if (!this.props.hideCustomFeeOption) {
+      return (
+        <PrimaryButton style={styles.customFeeButton} onPress={this.showCustomFeesModal}>
+          <PrimaryButton.Text>{s.strings.fragment_wallets_set_custom_fees}</PrimaryButton.Text>
+        </PrimaryButton>
+      )
+    }
+    return null
+  }
 
   render () {
     const { feeSetting } = this.state
@@ -93,11 +104,7 @@ export default class ChangeMiningFee extends Component<ChangeMiningFeeProps, Sta
             <View style={styles.row}>
               <RadioButton value={FEE.LOW_FEE} label={LOW_FEE_TEXT} onPress={this.handlePress} isSelected={FEE.LOW_FEE === feeSetting} />
             </View>
-            <View style={{ marginTop: 18 }}>
-              <PrimaryButton style={styles.customFeeButton} onPress={this.showCustomFeesModal}>
-                <PrimaryButton.Text>{s.strings.fragment_wallets_set_custom_fees}</PrimaryButton.Text>
-              </PrimaryButton>
-            </View>
+            <View style={{ marginTop: 18 }}>{this.renderCustomFeeButton()}</View>
           </View>
         </View>
       </SafeAreaView>
