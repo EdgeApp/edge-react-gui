@@ -4,6 +4,9 @@
 * Bech32 address support
 * Implementing deep linking of bitcoin, ethereum, bitcoincash, dash, and edge URIs
 * Move Edge Core to independent process to boost performance and GUI responsiveness
+* Buy crypto with bank using Wyre
+* Sell crypto to credit card using Simplex
+* Add LibertyX support
 
 v1.5.0
 
