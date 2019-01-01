@@ -1,0 +1,48 @@
+1.6.0
+
+* Hỗ trợ EOS
+* Hỗ trợ địa chỉ Bech32
+* Triển khai liên kết sâu của các bitcoin bitcoin, ethereum, bitcoincash, dash và edge
+* Di chuyển Edge Core sang quy trình độc lập để tăng hiệu suất và khả năng phản hồi GUI
+
+v1.5.0
+
+* Thêm Changenow như một nhà cung cấp trao đổi
+* Sử dụng biểu tượng tiền tệ màu mới
+* Cho phép đăng nhập / thát ra khỏi ShapeShift thông qua màn hình Cài đặt
+
+v1.4.4
+
+* Thêm khả năng chia ví BCH thành ví BSV
+* Thêm bảo vệ lập lại vào ví BCH / BSV
+* Cải thiện hiệu suất đăng nhập
+* Khắc phục lỗi khiến XRP và XLM truy vấn lại tất cả các giao dịch tại mỗi lần đăng nhập
+* Cải thiện kết nối với các nút cho các loại tiền tệ liên quan đến bitcoin (BTC, BCH, LTC, DASH, v. v.)
+
+v1.4.3
+
+* Tăng hiệu suất lớn khi đăng nhập và đồng bộ hóa ví
+* Thêm hỗ trợ cho Monero giúp khắc phục chi tiêu của Monero
+* Cho phép người dùng kích hoạt / vô hiệu hóa nhà cung cấp giao dịch
+* Khắc phục lỗi "Mã thông báo không được hỗ trợ" thường hiện trong màn hình khi trao đổi
+* Cho phép xem xpub để biết thêm các loại tiền tệ
+* Khắc phục sự cố trên các tài khoản lớn khi bấm vào menu nút trên cùng bên phải ngay sau khi đăng nhập
+* Khắc phục lỗi treo khi sử dụng Simplex từ một số thiết bị Android
+
+v1.4.2
+
+* Hỗ trợ cho Stellar
+* Thêm khả năng chọn các nút tùy chỉnh cho Bitcoin và các loại tiền tệ tương tự
+* Hỗ trợ cho thành viên ShapeShift
+* Hỗ trợ Changelly.com trong trao đổi chức năng
+* Thêm bản dịch tiếng Tây Ban Nha, tiếng Ý và tiếng Nga
+
+v1.3.4
+
+* Ngăn nút tạo nút hoàn thành sao cho nút không bị gõ nhiều lần
+* Khắc phục lỗi treo màn hình trắng khi đăng nhập nếu giao dịch đến xảy ra
+* Sửa một số địa chỉ trong plugin đặt vào Simplex
+* Khắc phục lỗi chạm hai lần vào chế độ thay đổi Mật khẩu
+* Khắc phục số tiền Fiat khi sử dụng các loại tiền tệ quốc gia khác
+* Cải thiện tỷ lệ và hình ảnh bổ sung
+* Sửa lỗi nhỏ khác
