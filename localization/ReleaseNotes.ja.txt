@@ -1,10 +1,15 @@
-バージョン1.5.0
+1.6.0
 
 *EOSサポート
 *Bech32アドレス対応
-*交換所提携先としてChangeNOWを追加
 *ビットコイン、イーサリアム、ビットコインキャッシュ、ダッシュとエッジURIのディープリンクを実装
 *エッジの中核を独立プロセスに移しグラフィカルユーザインタフェースの反応性パフォーマンスを向上
+
+バージョン1.5.0
+
+*交換所提携先としてChangeNOWを追加
+* Use new colored currency icons
+* Allow signin/singout of ShapeShift via Settings screen
 
 バージョン1.4.4
 
