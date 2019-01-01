@@ -1,10 +1,15 @@
-v1.5.0
+1.6.0
 
 * Soporte EOS
 Soporte para direcciones Bech32
-* Añadir Changenow como casa de cambio
 * Implementa vínculos profundos (deep linking) de URIs de bitcoin, ethereum, bitcoin cash, dash y Edge
 Traslada Edge Core a un proceso independiente para aumentar el rendimiento y respuesta de la interfaz gráfica
+
+v1.5.0
+
+* Añadir Changenow como casa de cambio
+* Use new colored currency icons
+* Allow signin/singout of ShapeShift via Settings screen
 
 v1.4.4
 
