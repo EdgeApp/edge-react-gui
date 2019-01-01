@@ -1,10 +1,15 @@
-v1.5.0
+1.6.0
 
 * EOS Support
 * Bech32 Adressen Support
-* Changenow als Tauschbörse hinzufügen
 * Deep-Linking für Bitcoin, Ethereum, Bitcoincash, Dash und Edge-URI's implementieren
 * Den Edge Core zum eigenständigen Prozess machen, um die Leistung und die GUI-Antwortzeit zu verbessern
+
+v1.5.0
+
+* Changenow als Tauschbörse hinzufügen
+* Use new colored currency icons
+* Allow signin/singout of ShapeShift via Settings screen
 
 v1.4.4
 

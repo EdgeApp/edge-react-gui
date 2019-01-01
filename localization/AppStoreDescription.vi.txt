@@ -1,0 +1,30 @@
+Tiêu đề: Ví Edge - Bitcoin, Ethereum, Monero, Ripple
+-----
+Mô tả ngắn: Riêng tư, an toàn & dễ sử dụng. Mua, bán, gửi và nhận Bitcoin và các loại tiền điện tử khác.
+-----
+Tổng quyền riêng tư và bảo mật trong ví blockchain dễ sử dụng của chúng tôi.
+
+Quản lý tài sản tiền điện tử của bạn chưa bao giờ dễ dàng hơn thế. Edge Wallet cung cấp bảo mật tối đa trong khi vẫn giữ được sự đơn giản, cho phép tất cả người dùng dễ dàng quản lý, chuyển và trao đổi tiền tệ của họ.
+
+Ví tiền điện tử hiện được Edge hỗ trợ: Bitcoin, Bitcoin Cash, Litecoin, Dash, Ethereum, Stellar, Monero và Ripple / XRP.
+
+Edge sử dụng một ví tiền điện tử lớn mạnh và dễ sử dụng, người dùng có thể dễ dàng kiểm soát các khóa riêng của họ với sự quen thuộc và dễ dàng của ngân hàng di động. 
+
+Kiểm soát quỹ tiền của bạn! Với Edge, chỉ BẠN mới có quyền truy cập vào quỹ tiền hoặc dữ liệu giao dịch của bạn. Cả Edge và bất kỳ bên thứ 3 nào đều không thể truy cập vào quỹ tiền hoặc dữ liệu của bạn. Bạn có được sự riêng tư và tự chủ về tài chính mà blockchain đã thiết kế, với sự dễ sử dụng thậm chí có thể tự xử lý.
+
+Edge cũng cung cấp trao đổi tiền điện tử. Dễ dàng trao đổi tiền tệ của bạn cho người khác với một vài thao tác. 
+
+• Không có kiến ​​thức & không có quyền truy cập vào tiền của người dùng, khóa hoặc dữ liệu giao dịch của Edge hoặc bên thứ 3
+• Tạo tài khoản đơn giản chỉ bằng thông tin đăng nhập & mật khẩu (không in PDF, viết cụm từ thông qua hoặc thêm cài đặt mã hóa)
+• Đăng nhập bằng dấu vân tay và nhận diện khuôn mặt
+• Ví xác định phân cấp với địa chỉ thay đổi trên mỗi giao dịch
+• Kết cấu máy chủ không tập trung vào một. Ví tiền hoạt động ngay cả khi máy chủ Edge không hoạt động.
+• Mã nguồn mở. Bật tại https://github.com/EdgeApp
+
+Thông báo bảo mật
+Ứng dụng Edge Wallet yêu cầu quyền truy cập vào danh sách liên lạc của thiết bị và thông tin cá nhân. Thông tin này được sử dụng trên thiết bị để cung cấp cho người dùng trải nghiệm được cải thiện theo các cách sau:
+
+1. Tự động điền danh bạ từ sổ địa chỉ của người dùng sau khi giao dịch
+2. Tự động điền danh bạ từ sổ địa chỉ của người dùng để gửi yêu cầu thanh toán qua Email hoặc SMS
+
+Không bao giờ có thông tin cá nhân hoặc thông tin danh sách liên lạc bị xóa khỏi thiết bị. Cả Edge và bất kỳ bên thứ 3 nào cũng không thể truy cập thông tin mà ứng dụng yêu cầu.
