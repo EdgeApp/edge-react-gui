@@ -168,15 +168,19 @@ export class PluginBridge {
     return Promise.reject(new Error('not implemented'))
   }
 
-  readData (data: any): Promise<string> {
+  readData = async (data: any): Promise<string> => {
     return this.context.folder.getItem(this.context.pluginId, data.key)
   }
 
-  writeData (data: any): Promise<boolean> {
+  writeData = async (data: any): Promise<boolean> => {
     const { key, value } = data
-    return this.context.folder.setItem(this.context.pluginId, key, value).then(() => {
+    try {
+      await this.context.folder.setItem(this.context.pluginId, key, value)
       return true
-    })
+    } catch (e) {
+      console.log('LOGGING writeData error: ', e)
+      return false
+    }
   }
 
   clearData (): Promise<boolean> {
