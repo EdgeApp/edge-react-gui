@@ -12,6 +12,7 @@ import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index.js'
 import { TransactionExportSceneStyle } from '../../styles/indexStyles'
+import { sanitizeForFilename } from '../../util/utils.js'
 
 export type PassedProps = {
   sourceWallet: EdgeCurrencyWallet
@@ -50,7 +51,7 @@ export class TransactionsExportSceneComponent extends Component<Props> {
     const date = new Date()
     const fileNameAppend =
       date.getFullYear().toString() +
-      date.getMonth().toString() +
+      (date.getMonth() + 1).toString() +
       date.getDate().toString() +
       date.getHours().toString() +
       date.getMinutes().toString() +
@@ -61,7 +62,7 @@ export class TransactionsExportSceneComponent extends Component<Props> {
 
   fileName = (format: string) => {
     const walletName = this.props.sourceWallet.name ? this.props.sourceWallet.name : 'MyWallet'
-    return walletName + this.filenameDateString() + '.' + format.toLowerCase()
+    return sanitizeForFilename(walletName) + this.filenameDateString() + '.' + format.toLowerCase()
   }
 
   filePath = (format: string) => {
