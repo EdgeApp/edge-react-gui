@@ -169,13 +169,22 @@ export class PluginBridge {
   }
 
   readData = async (data: any): Promise<string> => {
-    return this.context.folder.getItem(this.context.pluginId, data.key)
+    try {
+      const response = await this.context.folder.getItem(this.context.pluginId, data.key)
+      console.log('LOGGING readData response is: ', response)
+      return response
+    } catch (e) {
+      console.log('LOGGING error with readData: ', e)
+      throw new Error(e)
+    }
   }
 
   writeData = async (data: any): Promise<boolean> => {
     const { key, value } = data
     try {
+      console.log('LOGGING about to write data with key: ', key, ' and value: ', value)
       await this.context.folder.setItem(this.context.pluginId, key, value)
+      console.log('LOGGING successfully written data and returning true')
       return true
     } catch (e) {
       console.log('LOGGING writeData error: ', e)
