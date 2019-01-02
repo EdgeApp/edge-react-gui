@@ -221,10 +221,16 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   }
 
   _onNavigationStateChange = navState => {
+    console.log('PVS: returning state. ', navState)
     if (navState.loading) {
       return
     }
     // TODO: improve handling of edge-ret URIs
+    if (navState.url.match(/edge:\/\/x-callback-url\/paymentURI/)) {
+      console.log('stop: evaluate')
+      return
+    }
+
     if (navState.url.match(/edge-ret:\/\/plugins/)) {
       Actions.pop()
       return
@@ -246,10 +252,11 @@ class PluginView extends React.Component<PluginProps, PluginState> {
           allowUniversalAccessFromFileURLs
           onMessage={this._onMessage}
           onNavigationStateChange={this._onNavigationStateChange}
-          originWhitelist={['file://', 'https://']}
+          originWhitelist={['file://', 'https://', 'http://', 'edge://']}
           ref={this._setWebview}
           scalesPageToFit={contentScaling}
           source={this._renderWebView()}
+          setWebContentsDebuggingEnabled={true}
         />
       </SafeAreaView>
     )
