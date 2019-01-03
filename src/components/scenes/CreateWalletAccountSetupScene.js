@@ -17,6 +17,7 @@ import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
 import Text from '../../modules/UI/components/FormattedText'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
+import type { HandleAvailableStatus } from '../../reducers/scenes/CreateWalletReducer.js'
 import { MaterialInputOnWhite } from '../../styles/components/FormFieldStyles.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
@@ -36,7 +37,7 @@ export type CreateWalletAccountSetupOwnProps = {
 }
 
 export type CreateWalletAccountSetupStateProps = {
-  isHandleAvailable: boolean,
+  handleAvailableStatus: HandleAvailableStatus,
   isCheckingHandleAvailability: boolean
 }
 
@@ -55,6 +56,10 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
     this.state = {
       accountHandle: ''
     }
+  }
+
+  componentDidMount () {
+    global.firebase && global.firebase.analytics().logEvent(`CreateWalletAccountSetup_EOS`)
   }
 
   modifiedStyle = {
@@ -78,15 +83,27 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
   }
 
   onSetup = () => {
-    Actions[Constants.CREATE_WALLET_ACCOUNT_SELECT]({
-      ...this.props,
-      accountName: this.state.accountHandle
-    })
+    if (this.props.handleAvailableStatus === 'AVAILABLE') {
+      Actions[Constants.CREATE_WALLET_ACCOUNT_SELECT]({
+        ...this.props,
+        accountName: this.state.accountHandle
+      })
+    }
   }
 
   render () {
-    const { isCheckingHandleAvailability, isHandleAvailable } = this.props
+    const { isCheckingHandleAvailability, handleAvailableStatus } = this.props
+    const isHandleAvailable = handleAvailableStatus === 'AVAILABLE'
     const validityIcon = isHandleAvailable ? validIcon : invalidIcon
+    const showButton = isHandleAvailable && !isCheckingHandleAvailability
+    let chooseHandleErrorMessage = ''
+    if (handleAvailableStatus === 'INVALID') {
+      chooseHandleErrorMessage = s.strings.create_wallet_account_invalid_account_name
+    } else if (handleAvailableStatus === 'UNAVAILABLE') {
+      chooseHandleErrorMessage = s.strings.create_wallet_account_account_name_unavailable
+    } else if (handleAvailableStatus === 'UNKNOWN_ERROR') {
+      chooseHandleErrorMessage = s.strings.create_wallet_account_unknown_error
+    }
 
     return (
       <SafeAreaView>
@@ -95,9 +112,13 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
           <KeyboardAwareScrollView>
             <View style={styles.view}>
               <Image source={logos['eos']} style={styles.currencyLogo} resizeMode={'cover'} />
-              <View style={[styles.createWalletPromptArea, { paddingTop: 24, paddingBottom: 16 }]}>
+              <View style={[styles.createWalletPromptArea, { paddingTop: 24, paddingBottom: 8 }]}>
                 <Text style={styles.instructionalText}>{sprintf(s.strings.create_wallet_account_review_instructions, 'EOS')}</Text>
               </View>
+              <View style={[styles.createWalletPromptArea, { paddingTop: 8, paddingBottom: 8 }]}>
+                <Text style={styles.handleRequirementsText}>{s.strings.create_wallet_account_requirements_eos}</Text>
+              </View>
+
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <FormField
                   style={this.modifiedStyle}
@@ -109,7 +130,7 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
                   value={this.state.accountHandle}
                   returnKeyType={'next'}
                   onSubmitEditing={this.onSetup}
-                  error={''}
+                  error={chooseHandleErrorMessage}
                 />
                 <View style={{ width: scale(25), height: scale(25) }}>
                   {isCheckingHandleAvailability ? (
@@ -119,11 +140,13 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
                   )}
                 </View>
               </View>
-              <View style={styles.buttons}>
-                <PrimaryButton style={[styles.next]} onPress={this.onSetup} disabled={isCheckingHandleAvailability || !isHandleAvailable}>
-                  <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>
-                </PrimaryButton>
-              </View>
+              {showButton && (
+                <View style={styles.buttons}>
+                  <PrimaryButton style={[styles.next]} onPress={this.onSetup} disabled={isCheckingHandleAvailability || handleAvailableStatus !== 'AVAILABLE'}>
+                    <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>
+                  </PrimaryButton>
+                </View>
+              )}
             </View>
           </KeyboardAwareScrollView>
         </View>

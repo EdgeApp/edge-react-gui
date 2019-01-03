@@ -25,18 +25,18 @@ const logos = {
 }
 
 export type AccountPaymentParams = {
-  accountCurrencyCode: string,
-  accountName: string,
-  paymentCurrencyCode: string
+  requestedAccountName: string,
+  currencyCode: string,
+  ownerPublicKey: string,
+  activePublicKey: string
 }
 
 export type CreateWalletAccountSelectStateProps = {
   wallets: { [string]: GuiWallet },
   paymentCurrencyCode: string,
   paymentAddress: string,
-  exchangeAmount: string,
-  nativeAmount: string,
-  expirationDate: string,
+  amount: string,
+  expireTime: string,
   supportedCurrencies: { [string]: boolean },
   activationCost: string,
   isCreatingWallet: boolean,
@@ -53,7 +53,7 @@ export type CreateWalletAccountSelectDispatchProps = {
   createAccountBasedWallet: (string, string, string, boolean, boolean) => any,
   fetchAccountActivationInfo: string => void,
   createAccountTransaction: (string, string, string) => void,
-  fetchWalletAccountActivationPaymentInfo: AccountPaymentParams => void
+  fetchWalletAccountActivationPaymentInfo: (AccountPaymentParams, EdgeCurrencyWallet) => void
 }
 
 type Props = CreateWalletAccountSelectOwnProps & CreateWalletAccountSelectDispatchProps & CreateWalletAccountSelectStateProps
@@ -70,7 +70,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     const { selectedFiat, selectedWalletType, createAccountBasedWallet, accountName } = props
-    const createdWallet = createAccountBasedWallet(accountName, selectedWalletType.value, fixFiatCurrencyCode(selectedFiat.value), false, true)
+    const createdWallet = createAccountBasedWallet(accountName, selectedWalletType.value, fixFiatCurrencyCode(selectedFiat.value), false, false)
     this.state = {
       isModalVisible: false,
       error: '',
@@ -80,6 +80,10 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
     }
     const currencyCode = props.selectedWalletType.currencyCode
     props.fetchAccountActivationInfo(currencyCode)
+  }
+
+  componentDidMount () {
+    global.firebase && global.firebase.analytics().logEvent(`CreateWalletAccountSelect_EOS`)
   }
 
   onBack = () => {
@@ -102,7 +106,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
   }
 
   onSelectWallet = async (walletId: string, paymentCurrencyCode: string) => {
-    const { wallets, accountName, selectedWalletType, fetchWalletAccountActivationPaymentInfo } = this.props
+    const { wallets, accountName, fetchWalletAccountActivationPaymentInfo } = this.props
     const paymentWallet = wallets[walletId]
     const walletName = paymentWallet.name
     this.setState({
@@ -110,13 +114,15 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
       walletId,
       walletName
     })
+    const createdWallet = await this.state.createdWallet
     const paymentInfo: AccountPaymentParams = {
-      accountCurrencyCode: selectedWalletType.currencyCode,
-      accountName,
-      paymentCurrencyCode
+      requestedAccountName: accountName,
+      currencyCode: paymentCurrencyCode,
+      ownerPublicKey: createdWallet.keys.ownerPublicKey,
+      activePublicKey: createdWallet.keys.publicKey
     }
-    await this.state.createdWallet
-    fetchWalletAccountActivationPaymentInfo(paymentInfo)
+
+    fetchWalletAccountActivationPaymentInfo(paymentInfo, createdWallet)
   }
 
   renderSelectWallet = () => {
@@ -145,7 +151,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
       paymentCurrencyCode,
       accountName,
       isCreatingWallet,
-      exchangeAmount,
+      amount,
       selectedWalletType,
       selectedFiat,
       activationCost,
@@ -169,7 +175,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
             </View>
             <View style={styles.paymentArea}>
               <Text style={styles.paymentLeft}>
-                {paymentDenominationSymbol} {exchangeAmount} {paymentCurrencyCode}
+                {paymentDenominationSymbol} {amount} {paymentCurrencyCode}
               </Text>
               <Text style={styles.paymentRight}>
                 {activationCost} {selectedWalletType.currencyCode}
@@ -224,8 +230,8 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
               <View style={styles.createWalletPromptArea}>
                 <Text style={styles.instructionalText}>{this.state.walletId ? confirmMessageSyntax : instructionSyntax}</Text>
               </View>
+              {this.state.walletId ? this.renderPaymentReview() : this.renderSelectWallet()}
             </View>
-            {this.state.walletId ? this.renderPaymentReview() : this.renderSelectWallet()}
           </ScrollView>
           {this.state.isModalVisible && (
             <WalletListModal
