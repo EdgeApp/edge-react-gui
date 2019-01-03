@@ -4,6 +4,9 @@
 * Hỗ trợ địa chỉ Bech32
 * Triển khai liên kết sâu của các bitcoin bitcoin, ethereum, bitcoincash, dash và edge
 * Di chuyển Edge Core sang quy trình độc lập để tăng hiệu suất và khả năng phản hồi GUI
+* Sell crypto to credit card using Simplex
+* Add Wyre plugin to support buy/sell of Bitcoin and Ethereum from US bank account
+* Add LibertyX to support buying Bitcoin from physical merchants in US
 
 v1.5.0
 
