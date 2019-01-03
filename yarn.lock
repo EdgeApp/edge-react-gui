@@ -3330,9 +3330,9 @@ edge-login-ui-rn@^0.5.14:
     sprintf-js "^1.0.3"
     zxcvbn "^4.4.2"
 
-"edge-plugin-bitrefill@https://github.com/EdgeApp/edge-plugin-bitrefill.git#dfbffc1":
+"edge-plugin-bitrefill@https://github.com/EdgeApp/edge-plugin-bitrefill.git#f102fdc":
   version "0.0.1"
-  resolved "https://github.com/EdgeApp/edge-plugin-bitrefill.git#dfbffc1dd90d19485e9d01ecf18e14902d0fa3d5"
+  resolved "https://github.com/EdgeApp/edge-plugin-bitrefill.git#f102fdca6c82c82c9fef1922df247ebe2dbf2eb4"
   dependencies:
     moment "^2.22.2"
 
