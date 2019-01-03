@@ -41,7 +41,6 @@ export class UniqueIdentifierModal extends Component<Props> {
     const confirm = s.strings.unique_identifier_modal_confirm
     const cancel = s.strings.unique_identifier_modal_cancel
     const icon = { type: 'ionIcons', name: 'ios-key' }
-    console.log(keyboardType)
 
     return (
       <InteractiveModal legacy isActive={isActive} onBackdropPress={onBackdropPress} onBackButtonPress={onBackButtonPress} onModalHide={onModalHide}>
