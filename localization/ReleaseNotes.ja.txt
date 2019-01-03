@@ -7,6 +7,7 @@
 * Sell crypto to credit card using Simplex
 * Add Wyre plugin to support buy/sell of Bitcoin and Ethereum from US bank account
 * Add LibertyX to support buying Bitcoin from physical merchants in US
+* Add Bitrefill plugin to support buying gift cards and mobile top ups
 
 バージョン1.5.0
 
