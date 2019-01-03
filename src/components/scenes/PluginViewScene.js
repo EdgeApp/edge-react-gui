@@ -6,6 +6,7 @@ import { Actions } from 'react-native-router-flux'
 import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
 
+import { selectWallet } from '../../actions/WalletActions'
 import s from '../../locales/strings.js'
 import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
 import { openABAlert } from '../../modules/UI/components/ABAlert/action'
@@ -92,7 +93,8 @@ type PluginProps = {
   coreWallets: any,
   wallets: any,
   walletName: any,
-  walletId: any
+  walletId: any,
+  selectWallet(string, string): void
 }
 
 type PluginState = {
@@ -120,6 +122,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   }
 
   updateBridge (props) {
+    console.log('Props ', this.props)
     this.bridge = new PluginBridge({
       plugin: props.plugin,
       account: props.account,
@@ -131,12 +134,16 @@ class PluginView extends React.Component<PluginProps, PluginState> {
       folder: props.account.pluginData,
       pluginId: this.plugin.pluginId,
       toggleWalletList: this.toggleWalletList,
+      chooseWallet: this.chooseWallet,
       showAlert: this.props.showAlert,
       back: this._webviewBack,
       renderTitle: this._renderTitle
     })
   }
 
+  chooseWallet = (walletId: string, currencyCode: string) => {
+    this.props.selectWallet(walletId, currencyCode)
+  }
   toggleWalletList = () => {
     this.setState({ showWalletList: !this.state.showWalletList })
   }
@@ -151,7 +158,8 @@ class PluginView extends React.Component<PluginProps, PluginState> {
     this.bridge.context.coreWallets = this.props.coreWallets
     this.bridge.context.wallets = this.props.wallets
     this.bridge.context.walletName = this.props.walletName
-    this.bridge.context.walletId = this.props.walletId
+    this.bridge.context.walletId = this.props.abcWallet.id
+    this.bridge.context.wallet = this.props.abcWallet
   }
 
   componentDidMount () {
@@ -227,7 +235,10 @@ class PluginView extends React.Component<PluginProps, PluginState> {
     }
     // TODO: improve handling of edge-ret URIs
     if (navState.url.match(/edge:\/\/x-callback-url\/paymentURI/)) {
+      // ski[p this and use the url parse.
       console.log('stop: evaluate')
+      // send full UIR into scan actions. -> possibly to the scanner.. url.parse
+      // look at scan scene parse -> anstract it. - makeSpendInfo can add onDone
       return
     }
 
@@ -269,8 +280,9 @@ const mapStateToProps = state => {
   const abcWallet = CORE_SELECTORS.getWallet(state, guiWallet.id)
   const coreWallets = state.core.wallets.byId
   const wallets = state.ui.wallets.byId
-  const walletName = state.ui.scenes.walletList.walletName
-  const walletId = state.ui.scenes.walletList.walletId
+  const walletName = abcWallet.name
+  const walletId = abcWallet.id
+  console.log('Stop')
   return {
     account,
     guiWallet,
@@ -283,7 +295,8 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  showAlert: alertSyntax => dispatch(openABAlert('OPEN_AB_ALERT', alertSyntax))
+  showAlert: alertSyntax => dispatch(openABAlert('OPEN_AB_ALERT', alertSyntax)),
+  selectWallet: (walletId: string, currencyCode: string) => dispatch(selectWallet(walletId, currencyCode))
 })
 
 const PluginViewConnect = connect(

@@ -8,14 +8,17 @@ import { SEND_CONFIRMATION } from '../../../../constants/SceneKeys.js'
 import { type GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
 import * as WALLET_API from '../../../Core/Wallets/api'
 
-const formatWallet = w => ({
-  id: w.id,
-  name: w.name,
-  type: w.type,
-  currencyCode: w.currencyCode,
-  primaryNativeBalance: w.currencyCode,
-  fiatCurrencyCode: w.fiatCurrencyCode
-})
+const formatWallet = w => {
+  console.log(w)
+  return {
+    id: w.id,
+    name: w.name,
+    type: w.type,
+    currencyCode: w.currencyCode ? w.currencyCode : w.currencyInfo.currencyCode,
+    primaryNativeBalance: w.currencyCode,
+    fiatCurrencyCode: w.fiatCurrencyCode
+  }
+}
 
 type Context = any
 type Wallet = any
@@ -66,13 +69,18 @@ export class PluginBridge {
     return Promise.reject(new Error('not implemented'))
   }
 
-  chooseWallet (): Promise<any> {
+  chooseWallet (obj: { cbid: string, func: string, id: string, currencyCode: string }): Promise<any> {
+    this.context.chooseWallet(obj.id, obj.currencyCode)
+    return Promise.resolve(null)
+  }
+
+  changeWallet (): Promise<any> {
     this.context.toggleWalletList()
     return Promise.resolve(null)
   }
 
   selectedWallet (): Promise<Wallet> {
-    return Promise.resolve(formatWallet(this.context.walletId))
+    return Promise.resolve(formatWallet(this.context.wallet))
   }
 
   wallets (): Promise<Wallets> {
