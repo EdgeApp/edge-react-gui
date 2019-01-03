@@ -9,18 +9,20 @@ export type HandleActivationInfo = {
   activationCost: string
 }
 
+export type HandleAvailableStatus = 'AVAILABLE' | 'INVALID' | 'UNAVAILABLE' | 'UNKNOWN_ERROR' | ''
+
 export type AccountActivationPaymentInfo = {
   paymentAddress: string,
-  nativeAmount: string,
+  amount: string,
   currencyCode: string,
   exchangeAmount: string,
-  expirationDate: number
+  expireTime: number
 }
 
 export type CreateWalletState = {
   isCreatingWallet: boolean,
   isCheckingHandleAvailability: boolean,
-  isHandleAvailable: boolean,
+  handleAvailableStatus: HandleAvailableStatus,
   handleActivationInfo: HandleActivationInfo,
   walletAccountActivationPaymentInfo: AccountActivationPaymentInfo
 }
@@ -49,7 +51,7 @@ const isCheckingHandleAvailability: Reducer<boolean, Action> = (state = false, a
     case 'IS_CHECKING_HANDLE_AVAILABILITY': {
       return action.data
     }
-    case 'IS_HANDLE_AVAILABLE': {
+    case 'HANDLE_AVAILABLE_STATUS': {
       return false
     }
     default:
@@ -57,15 +59,9 @@ const isCheckingHandleAvailability: Reducer<boolean, Action> = (state = false, a
   }
 }
 
-const isHandleAvailable: Reducer<boolean, Action> = (state = false, action: Action): boolean => {
+const handleAvailableStatus: Reducer<HandleAvailableStatus, Action> = (state = '', action: Action): HandleAvailableStatus => {
   switch (action.type) {
-    case 'IS_CHECKING_HANDLE_AVAILABILITY': {
-      if (action.data === true) {
-        return false
-      }
-      return state
-    }
-    case 'IS_HANDLE_AVAILABLE': {
+    case 'HANDLE_AVAILABLE_STATUS': {
       if (!action.data) return state
       return action.data
     }
@@ -90,10 +86,10 @@ const handleActivationInfo = (state = initialHandleActivationInfo, action: Actio
 
 const initialActivationPaymentState = {
   paymentAddress: '',
-  nativeAmount: '',
+  amount: '',
   currencyCode: '',
   exchangeAmount: '',
-  expirationDate: 0
+  expireTime: 0
 }
 
 const walletAccountActivationPaymentInfo = (state = initialActivationPaymentState, action: Action): AccountActivationPaymentInfo => {
@@ -108,7 +104,7 @@ const walletAccountActivationPaymentInfo = (state = initialActivationPaymentStat
 export const createWallet: Reducer<CreateWalletState, Action> = combineReducers({
   isCreatingWallet,
   isCheckingHandleAvailability,
-  isHandleAvailable,
+  handleAvailableStatus,
   handleActivationInfo,
   walletAccountActivationPaymentInfo
 })

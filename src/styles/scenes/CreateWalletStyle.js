@@ -125,6 +125,11 @@ export const styles = {
     textAlign: 'center',
     color: THEME.COLORS.GRAY_1
   },
+  handleRequirementsText: {
+    fontSize: scale(16),
+    textAlign: 'left',
+    color: THEME.COLORS.GRAY_1
+  },
   reviewArea: {
     paddingVertical: scale(18)
   },

@@ -11,13 +11,13 @@ test('initialState', () => {
     isCreatingWallet: false,
     walletAccountActivationPaymentInfo: {
       paymentAddress: '',
-      nativeAmount: '',
+      amount: '',
       currencyCode: '',
       exchangeAmount: '',
-      expirationDate: 0
+      expireTime: 0
     },
     isCheckingHandleAvailability: false,
-    isHandleAvailable: false,
+    handleAvailableStatus: '',
     handleActivationInfo: {
       supportedCurrencies: {},
       activationCost: ''

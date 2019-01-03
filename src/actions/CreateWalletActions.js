@@ -1,6 +1,9 @@
 // @flow
+import { bns } from 'biggystring'
 import { createSimpleConfirmModal, showModal } from 'edge-components'
+import { type EdgeCurrencyWallet, type EdgeTransaction } from 'edge-core-js'
 import React from 'react'
+import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
@@ -10,9 +13,9 @@ import s from '../locales/strings.js'
 import * as ACCOUNT_API from '../modules/Core/Account/api.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import type { Dispatch, GetState } from '../modules/ReduxTypes.js'
+import { getExchangeDenomination } from '../modules/Settings/selectors.js'
 import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import { errorModal } from '../modules/UI/components/Modals/ErrorModal.js'
-import { PluginBridge } from '../modules/UI/scenes/Plugins/api.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import { selectWallet as selectWalletAction } from './WalletActions.js'
 
@@ -85,17 +88,17 @@ export const fetchAccountActivationInfo = (currencyCode: string) => async (dispa
   }
 }
 
-export const fetchWalletAccountActivationPaymentInfo = (paymentParams: AccountPaymentParams) => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const walletId = UI_SELECTORS.getSelectedWalletId(state)
-  const coreWallet = CORE_SELECTORS.getWallet(state, walletId)
+export const fetchWalletAccountActivationPaymentInfo = (paymentParams: AccountPaymentParams, createdCoreWallet: EdgeCurrencyWallet) => async (
+  dispatch: Dispatch,
+  getState: GetState
+) => {
   try {
-    const activationQuote = await coreWallet.otherMethods.getAccountActivationQuote(paymentParams)
+    const activationQuote = await createdCoreWallet.otherMethods.getAccountActivationQuote(paymentParams)
     dispatch({
       type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO',
       data: {
         ...activationQuote,
-        currencyCode: paymentParams.paymentCurrencyCode
+        currencyCode: paymentParams.currencyCode
       }
     })
   } catch (e) {
@@ -111,10 +114,17 @@ export const checkHandleAvailability = (currencyCode: string, accountName: strin
   const currencyPlugin = account.currencyConfig[currencyPluginName]
   try {
     const data = await currencyPlugin.otherMethods.validateAccount(accountName)
-    dispatch({ type: 'IS_HANDLE_AVAILABLE', data })
+    if (data.result === 'AccountAvailable') {
+      dispatch({ type: 'HANDLE_AVAILABLE_STATUS', data: 'AVAILABLE' })
+    }
   } catch (e) {
-    console.log(e)
-    dispatch({ type: 'IS_HANDLE_AVAILABLE', data: true })
+    let data = 'UNKNOWN_ERROR'
+    if (e.name === 'ErrorAccountUnavailable') {
+      data = 'UNAVAILABLE'
+    } else if (e.name === 'ErrorInvalidAccountName') {
+      data = 'INVALID'
+    }
+    dispatch({ type: 'HANDLE_AVAILABLE_STATUS', data })
   }
 }
 
@@ -129,19 +139,38 @@ export const createAccountTransaction = (createdWalletId: string, accountName: s
   const createdWalletCurrencyCode = createdWallet.currencyCode
   const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[createdWalletCurrencyCode]
   const currencyPlugin = account.currencyConfig[currencyPluginName]
-  const { paymentAddress, nativeAmount, currencyCode } = state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
+  const { paymentAddress, amount, currencyCode } = state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
   const handleAvailability = await currencyPlugin.otherMethods.validateAccount(accountName)
-  if (handleAvailability) {
-    const makeSpendInfo = {
+  const paymentDenom = getExchangeDenomination(state, currencyCode)
+  let nativeAmount = bns.mul(amount, paymentDenom.multiplier)
+  nativeAmount = bns.toFixed(nativeAmount, 0, 0)
+  if (handleAvailability.result === 'AccountAvailable') {
+    const guiMakeSpendInfo = {
       currencyCode,
       nativeAmount,
       publicAddress: paymentAddress,
       lockInputs: true,
-      onSuccess: () => Actions[Constants.WALLET_LIST_SCENE]()
+      onBack: () => {
+        // Hack. Keyboard pops up for some reason. Close it
+        global.firebase && global.firebase.analytics().logEvent(`CreateWalletAccountSendBack_EOS`)
+      },
+      onDone: (error: Error | null, edgeTransaction?: EdgeTransaction) => {
+        if (error) {
+          console.log(error)
+          setTimeout(() => {
+            Alert.alert(s.strings.create_wallet_account_error_sending_transaction)
+          }, 750)
+        } else {
+          global.firebase && global.firebase.analytics().logEvent(`CreateWalletAccountDone_EOS`)
+          Actions[Constants.WALLET_LIST_SCENE]()
+          setTimeout(() => {
+            Alert.alert(s.strings.create_wallet_account_payment_sent)
+          }, 750)
+        }
+      }
     }
     dispatch({ type: 'UI/WALLETS/SELECT_WALLET', data: { currencyCode, walletId: paymentWalletId } })
-    const pluginBridge = new PluginBridge()
-    pluginBridge.makeSpendRequest(makeSpendInfo)
+    Actions[Constants.SEND_CONFIRMATION]({ guiMakeSpendInfo })
   } else {
     // if handle is now unavailable
     dispatch(createHandleUnavailableModal(createdWalletId, accountName))

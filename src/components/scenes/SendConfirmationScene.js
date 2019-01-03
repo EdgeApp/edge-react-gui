@@ -146,6 +146,9 @@ export class SendConfirmation extends Component<Props, State> {
 
   componentWillUnmount () {
     this.props.reset()
+    if (this.props.guiMakeSpendInfo && this.props.guiMakeSpendInfo.onBack) {
+      this.props.guiMakeSpendInfo.onBack()
+    }
   }
 
   render () {

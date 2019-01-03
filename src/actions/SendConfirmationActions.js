@@ -187,11 +187,6 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
     edgeSignedTransaction.wallet = wallet
     edgeSignedTransaction.metadata = spendInfo.metadata
 
-    if (guiMakeSpendInfo.onSuccess) {
-      guiMakeSpendInfo.onSuccess()
-    } else {
-      Actions.replace(TRANSACTION_DETAILS, { edgeTransaction: edgeSignedTransaction })
-    }
     const successInfo = {
       success: true,
       title: s.strings.transaction_success,
@@ -200,6 +195,8 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
     dispatch({ type: 'OPEN_AB_ALERT', data: successInfo })
     if (guiMakeSpendInfo.onDone) {
       guiMakeSpendInfo.onDone(null, edgeSignedTransaction)
+    } else {
+      Actions.replace(TRANSACTION_DETAILS, { edgeTransaction: edgeSignedTransaction })
     }
   } catch (e) {
     dispatch(updateSpendPending(false))

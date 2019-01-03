@@ -3,7 +3,7 @@
 import type { EdgeLobby, EdgeParsedUri, EdgeSwapQuote } from 'edge-core-js'
 
 import { type XPubModalAction } from '../actions/XPubModalActions.js'
-import type { AccountActivationPaymentInfo, HandleActivationInfo } from '../reducers/scenes/CreateWalletReducer.js'
+import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
 import { type GuiContact, type GuiCurrencyInfo, type GuiWallet } from '../types.js'
 import { type CoreContextAction } from './Core/Context/action.js'
 import { type SendLogsAction } from './Logs/action.js'
@@ -215,7 +215,7 @@ export type Action =
   | { type: 'ACCOUNT_ACTIVATION_INFO', data: HandleActivationInfo }
   | { type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO', data: AccountActivationPaymentInfo }
   | { type: 'IS_CHECKING_HANDLE_AVAILABILITY', data: boolean }
-  | { type: 'IS_HANDLE_AVAILABLE', data: boolean }
+  | { type: 'HANDLE_AVAILABLE_STATUS', data: HandleAvailableStatus }
   | {
       type: 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE' | 'SELECT_TO_WALLET_CRYPTO_EXCHANGE',
       data: {

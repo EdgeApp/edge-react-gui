@@ -3,7 +3,7 @@
 import { type DiskletFolder, makeReactNativeFolder } from 'disklet'
 import { ModalManager } from 'edge-components'
 import type { EdgeContext, EdgeCorePluginFactory, EdgeCurrencyPlugin } from 'edge-core-js'
-import { rippleCurrencyPluginFactory, stellarCurrencyPluginFactory } from 'edge-currency-accountbased'
+import { eosCurrencyPluginFactory, rippleCurrencyPluginFactory, stellarCurrencyPluginFactory } from 'edge-currency-accountbased'
 import {
   bitcoinCurrencyPluginFactory,
   bitcoincashCurrencyPluginFactory,
@@ -123,6 +123,7 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   bitcoincashCurrencyPluginFactory,
   bitcoinCurrencyPluginFactory,
   ethereumCurrencyPluginFactory,
+  eosCurrencyPluginFactory,
   stellarCurrencyPluginFactory,
   rippleCurrencyPluginFactory,
   moneroCurrencyPluginFactory,
@@ -139,8 +140,7 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   feathercoinCurrencyPluginFactory,
   smartcashCurrencyPluginFactory,
   groestlcoinCurrencyPluginFactory,
-  ufoCurrencyPluginFactory /*,
-  eosCurrencyPluginFactory */
+  ufoCurrencyPluginFactory
 ]
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
@@ -322,10 +322,7 @@ export default class Main extends Component<Props, State> {
       case 'edge-ret':
       case 'airbitz-ret':
       case 'https':
-        if (
-          parsedUri.host === 'recovery' ||
-          parsedUri.host === 'recovery.edgesecure.co'
-        ) {
+        if (parsedUri.host === 'recovery' || parsedUri.host === 'recovery.edgesecure.co') {
           this.handleRecoveryToken(parsedUri)
         } else {
           this.handleAddress(parsedUri, url)
