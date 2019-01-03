@@ -757,6 +757,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
   </Gradient>
   <Connect(UniqueIdentifierModal)
     currencyCode="XMR"
+    keyboardType="default"
   />
 </SafeAreaViewComponent>
 `;
@@ -1019,6 +1020,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
   </Gradient>
   <Connect(UniqueIdentifierModal)
     currencyCode="XRP"
+    keyboardType="numeric"
   />
 </SafeAreaViewComponent>
 `;

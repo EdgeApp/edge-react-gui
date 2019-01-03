@@ -18,11 +18,22 @@ export type Props = {
   onCancel: () => any,
   currencyCode: string,
   uniqueIdentifier: string,
-  uniqueIdentifierChanged: (uniqueIdentifier: string) => void
+  uniqueIdentifierChanged: (uniqueIdentifier: string) => void,
+  keyboardType: ?string
 }
 export class UniqueIdentifierModal extends Component<Props> {
   render () {
-    const { currencyCode, isActive, onBackButtonPress, onBackdropPress, onCancel, onModalHide, uniqueIdentifier, uniqueIdentifierChanged } = this.props
+    const {
+      currencyCode,
+      isActive,
+      onBackButtonPress,
+      onBackdropPress,
+      onCancel,
+      onModalHide,
+      uniqueIdentifier,
+      uniqueIdentifierChanged,
+      keyboardType
+    } = this.props
     const type = getUniqueIdentifierType(currencyCode)
     const description = getUniqueIdentifierDescription(type)
     const title = type
@@ -30,7 +41,6 @@ export class UniqueIdentifierModal extends Component<Props> {
     const confirm = s.strings.unique_identifier_modal_confirm
     const cancel = s.strings.unique_identifier_modal_cancel
     const icon = { type: 'ionIcons', name: 'ios-key' }
-    const keyboardType = 'numeric'
 
     return (
       <InteractiveModal legacy isActive={isActive} onBackdropPress={onBackdropPress} onBackButtonPress={onBackButtonPress} onModalHide={onModalHide}>
