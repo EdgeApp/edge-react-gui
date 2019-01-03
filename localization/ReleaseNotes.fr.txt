@@ -4,6 +4,9 @@
 * L'assistance pour Bech32 adresse
 * Implémentation des liens de Bitcoin, ethereum, bitcoincash, dash et edge URIs
 * Déplacer Edge Core au processus indépendant afin de booster les performances et la réactivité de GUI
+* Sell crypto to credit card using Simplex
+* Add Wyre plugin to support buy/sell of Bitcoin and Ethereum from US bank account
+* Add LibertyX to support buying Bitcoin from physical merchants in US
 
 v1.5.0
 
