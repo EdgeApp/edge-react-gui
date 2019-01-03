@@ -1,7 +1,7 @@
 // @flow
 import { bns } from 'biggystring'
 import { createSimpleConfirmModal, showModal } from 'edge-components'
-import { type EdgeCurrencyWallet, type EdgeTransaction } from 'edge-core-js'
+import { type EdgeCurrencyWallet, type EdgeMetadata, type EdgeTransaction } from 'edge-core-js'
 import React from 'react'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -136,6 +136,7 @@ export const createAccountTransaction = (createdWalletId: string, accountName: s
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
   const createdWallet = UI_SELECTORS.getWallet(state, createdWalletId)
+  const paymentWallet = CORE_SELECTORS.getWallet(state, paymentWalletId)
   const createdWalletCurrencyCode = createdWallet.currencyCode
   const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[createdWalletCurrencyCode]
   const currencyPlugin = account.currencyConfig[currencyPluginName]
@@ -152,7 +153,7 @@ export const createAccountTransaction = (createdWalletId: string, accountName: s
       lockInputs: true,
       onBack: () => {
         // Hack. Keyboard pops up for some reason. Close it
-        global.firebase && global.firebase.analytics().logEvent(`CreateWalletAccountSendBack_EOS`)
+        global.firebase && global.firebase.analytics().logEvent(`CreateWalletAccountSendBack_${createdWalletCurrencyCode}`)
       },
       onDone: (error: Error | null, edgeTransaction?: EdgeTransaction) => {
         if (error) {
@@ -160,12 +161,19 @@ export const createAccountTransaction = (createdWalletId: string, accountName: s
           setTimeout(() => {
             Alert.alert(s.strings.create_wallet_account_error_sending_transaction)
           }, 750)
-        } else {
-          global.firebase && global.firebase.analytics().logEvent(`CreateWalletAccountDone_EOS`)
-          Actions[Constants.WALLET_LIST_SCENE]()
-          setTimeout(() => {
-            Alert.alert(s.strings.create_wallet_account_payment_sent)
-          }, 750)
+        } else if (edgeTransaction) {
+          global.firebase && global.firebase.analytics().logEvent(`CreateWalletAccountDone_${createdWalletCurrencyCode}`)
+          const edgeMetadata: EdgeMetadata = {
+            name: sprintf(s.strings.create_wallet_account_metadata_name, createdWalletCurrencyCode),
+            category: 'Expense:' + sprintf(s.strings.create_wallet_account_metadata_category, createdWalletCurrencyCode),
+            notes: sprintf(s.strings.create_wallet_account_metadata_notes, createdWalletCurrencyCode, createdWalletCurrencyCode, 'support@edge.app')
+          }
+          paymentWallet.saveTxMetadata(edgeTransaction.txid, currencyCode, edgeMetadata).then(() => {
+            Actions[Constants.WALLET_LIST_SCENE]()
+            setTimeout(() => {
+              Alert.alert(s.strings.create_wallet_account_payment_sent)
+            }, 750)
+          })
         }
       }
     }
