@@ -33,7 +33,7 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
     denomination: '100'
   },
   EOS: {
-    denomination: '1000'
+    denomination: '10000'
   },
   XRP: {
     denomination: '1000000'
