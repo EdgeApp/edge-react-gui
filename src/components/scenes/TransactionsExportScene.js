@@ -12,6 +12,7 @@ import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index.js'
 import { TransactionExportSceneStyle } from '../../styles/indexStyles'
+import { sanitizeForFilename } from '../../util/utils.js'
 
 export type PassedProps = {
   sourceWallet: EdgeCurrencyWallet
@@ -45,51 +46,67 @@ export class TransactionsExportSceneComponent extends Component<Props> {
       </SafeAreaView>
     )
   }
-  exportQBO = async () => {
+
+  filenameDateString = () => {
     const date = new Date()
     const fileNameAppend =
       date.getFullYear().toString() +
-      date.getMonth().toString() +
+      (date.getMonth() + 1).toString() +
       date.getDate().toString() +
       date.getHours().toString() +
       date.getMinutes().toString() +
       date.getSeconds().toString()
+
+    return fileNameAppend
+  }
+
+  fileName = (format: string) => {
+    const walletName = this.props.sourceWallet.name ? this.props.sourceWallet.name : 'MyWallet'
+    return sanitizeForFilename(walletName) + this.filenameDateString() + '.' + format.toLowerCase()
+  }
+
+  filePath = (format: string) => {
+    const directory = Platform.OS === IOS ? RNFS.DocumentDirectoryPath : RNFS.ExternalDirectoryPath
+    return directory + '/' + this.fileName(format)
+  }
+
+  exportQBO = async () => {
     const transactionOptions: EdgeGetTransactionsOptions = {
       denomination: this.props.denomination
     }
     const file = await this.props.sourceWallet.exportTransactionsToQBO(transactionOptions)
-    const path =
-      Platform.OS === IOS
-        ? RNFS.DocumentDirectoryPath + '/MyWallet' + fileNameAppend + '.QBO'
-        : RNFS.ExternalDirectoryPath + '/MyWallet' + fileNameAppend + '.QBO'
-    RNFS.writeFile(path, file, 'utf8')
-      .then(success => {
-        if (Platform.OS === IOS) {
-          this.openShareApp(path, 'Share Transactions QBO')
-          return
-        }
-        this.openMailApp(path, 'Share Transactions QBO', 'QBO', 'MyWallet' + fileNameAppend + '.QBO')
-      })
-      .catch(err => {
-        console.log('file creation erro: ', err.message)
-      })
+
+    const format = 'QBO'
+
+    this.write(file, format)
   }
+
   exportCSV = async () => {
     const transactionOptions: EdgeGetTransactionsOptions = {
       denomination: this.props.denomination
     }
     const file = await this.props.sourceWallet.exportTransactionsToCSV(transactionOptions)
-    const path = Platform.OS === IOS ? RNFS.DocumentDirectoryPath + '/MyWallet.csv' : RNFS.ExternalDirectoryPath + '/MyWallet.csv'
+
+    const format = 'CSV'
+
+    this.write(file, format)
+  }
+
+  write = (file: string, format: string) => {
+    const path = this.filePath(format)
+
+    const fileName = this.fileName(format)
+
     RNFS.writeFile(path, file, 'utf8')
       .then(success => {
         if (Platform.OS === IOS) {
-          this.openShareApp(path, 'Share Transactions CSV')
+          this.openShareApp(path, 'Share Transactions ' + format)
           return
         }
-        this.openMailApp(path, 'Share Transactions CSV', 'csv', 'My Wallet.csv')
+        this.openMailApp(path, 'Share Transactions ' + format, format, fileName)
       })
       .catch(err => {
-        console.log('file creation error: ', err.message)
+        console.log('Error creating : ' + fileName, err.message)
       })
   }
 

@@ -158,6 +158,7 @@
   "send_confirmation_to": "",
   "send_confirmation_address": "",
   "transaction_failure": "",
+  "transaction_failure_message": "",
   "transaction_success": "",
   "transaction_success_message": "",
   "incorrect_pin": "",
@@ -182,10 +183,10 @@
   "settings_custom_nodes_title": "",
   "settings_hours": "",
   "settings_minutes": "",
-  "settings_modal_send_logs_title": "",
   "settings_modal_send_logs_loading": "",
   "settings_modal_send_logs_success": "",
   "settings_modal_send_logs_failure": "",
+  "settings_modal_text_entry_notes": "",
   "settings_options_title_cap": "",
   "settings_seconds": "",
   "settings_select_currency": "",
@@ -416,5 +417,12 @@
   "ss_geolock": "",
   "ss_unable": "",
   "ss_visit_website": "",
-  "ss_need_more_kyc": ""
+  "ss_need_more_kyc": "",
+  "ss_login": "",
+  "ss_logout": "",
+  "account": "",
+  "delete_account_header": "",
+  "delete_username_account": "",
+  "no": "",
+  "yes": ""
 }

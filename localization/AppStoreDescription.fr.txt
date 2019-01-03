@@ -1,30 +1,30 @@
-Title: Edge - Bitcoin, Ethereum, Monero, Ripple Wallet
+Titre: Edge - Bitcoin, Ethereum, Monero, Ripple Wallet
 -----
-Short description: Private, secure & easy to use. Buy, sell, send & receive Bitcoin & other crypto.
+Description courte : Privée, sécurisé & facile à utiliser. Acheter, vendre, envoyer & recevoir Bitcoin & les autres crypotos. 
 -----
-Total privacy and security in our easy to use blockchain wallet.
+Il est complétement privée et sécurisé d'utiliser notre Wallet de Blockchain.
 
-Managing your cryptocurrency assets has never been easier. Edge Wallet provides maximum security while keeping simplicity, allowing all types of users to easily manage, transfer & exchange their currencies.
+Gérer votre cryptomonnaies qui ont été jamais facile à utiliser. Edge Wallet offert la sécurité maximum avec la simplicité, cela permet au tous les utilisateurs à gérer, transfer, faire l'échange leurs monnaies facilement.
 
-Edge Crypto Wallet currently supports: Bitcoin, Bitcoin Cash, Litecoin, Dash, Ethereum, Stellar, Monero, and Ripple/XRP.
+Edge Crypto Wallet monnaies actuellement assite, Bitcoin, Bitcoin Cash, Litecoin, Dash, Ethereum, Stellar, Monero, et Ripple/XRP.
 
-Edge is a powerful and easy to use cryptocurrency wallet that allows users to easily control their own private keys with the familiarity and ease of mobile banking. 
+Edge est un portefeuille de crypto monnaies puissance et facile à utiliser qui permet aux utilisateurs de contrôler facilement leurs clés privées avec la familiarité et l’aisance d’une banque en ligne mobile.  
 
-Take control of your funds! With Edge, only YOU have access to your funds or transaction data. Neither Edge or any 3rd party can access your money or data. You get the financial privacy and autonomy that blockchain was designed for, with the ease of use even grandma could handle.
+Prennez tous le contrôl sur vos fonds! Ni Edge ni une tierce personne ne pourra accéder à votre porte monnaie ou à vos données. Ni Edge ni une tierce personne ne pourra accéder à votre porte monnaie ou à vos données. Grâce à la politique Bitcoin, vous bénéficierez d’une confidentialité et d’une autonomie financière ainsi qu’une facilité d’utilisation telle que même une personne âgée est capable de s’y retrouver
 
-Edge also provides a cryptocurrency exchange. Easily swap your currencies for others with a few taps. 
+Edge offer les échanges de cryptomonnaies. Il est facile d'effacer vos monnaies complétement en quelques clics.  
 
-• Zero-knowledge & zero-access to user funds, keys, or transaction data by Edge or 3rd parties
-• Simple account creation using just a login & password (no printing of PDFs, writing down pass phrases, or adding encryption settings)
-• Biometric TouchID and FaceID login
-• Hierarchical Deterministic wallets with changing addresses per transaction
-• Decentralized server architecture. Wallets work even if Edge servers are down.
-• Open-source code. Available at https://github.com/EdgeApp
+• Zéro connaissance de cryptomonnaies ou zéro accès aux fonds, clés ou données de transaction de l’utilisateur par Edge ou des parties tierces
+• Il est facile de créer un compte en utilisant son identifiant & le mot de passee ( pas de papier à imprimer PDFs, aucun remplissage ou aucune configurations d'encryptions) 
+• La connexion biométrique TouchID et FaceID
+• Portefeuilles déterministes hiérarchiques avec adresses changeantes par transaction
+• Architecture de serveur décentralisé. Les Walletes fonctionnent même si les serveurs Edge sont indisponibles.
+Code Source ouvert. Disponible sur https://github.com/EdgeApp
 
-Privacy Notice
-The Edge Wallet application requests access to the device contact list, and personal information. This information is used on the device to provide an improved user experience in the following ways:
+Notification de confidentialité
+L’application Edge Wallet vous demande l’accès à la liste de contacts de l'appareil, la localisation et aux infos personnelles. Ces informations seront utilisées sur l’appareil pour vous fournir une meilleure expérience et contribueront aussi à l’améliorer en suivant le processus :
 
-1. Autocomplete contacts from the user's address book after a transaction
-2. Autocomplete contacts from the user's address book to send Email or SMS payment requests
+1. Remplissage automatique des coordonnées des contacts de l’utilisateur après une transaction.
+2. Remplissage automatique des coordonnées des contacts de l’utilisateur pour une demande de paiement par e-mail ou sms
 
-No personal info or contact list info ever leaves the device. Neither Edge nor any 3rd party can access the information requested by the application.
+Aucune information personenelle ou le list du contrat restera dans l'appareil  Ni Edge ni une tierce personne ne pourra accéder à votre porte monnaie ou à vos données.

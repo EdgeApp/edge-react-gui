@@ -718,3 +718,14 @@ export const msToSeconds = (dateInMs: number) => {
   const msPerSecond = 1000
   return dateInMs / msPerSecond
 }
+
+// Strips special characters and replaces spaces with hyphens
+export const sanitizeForFilename = (s: string) => {
+  const charRegex = /[^\w\s-]/g
+  const hyphenRegex = /[-\s]+/g
+
+  s = s.replace(charRegex, '').trim()
+  s = s.replace(hyphenRegex, '-')
+
+  return s
+}

@@ -3337,6 +3337,13 @@ edge-login-ui-rn@^0.5.14:
   dependencies:
     moment "^2.22.2"
 
+"edge-plugin-wyre@https://github.com/EdgeApp/edge-plugin-wyre.git#bf5ae37":
+  version "0.0.3"
+  resolved "https://github.com/EdgeApp/edge-plugin-wyre.git#bf5ae37c27cccb54efb0354103bc9f3e701b9979"
+  dependencies:
+    js-sha256 "^0.9.0"
+    moment "^2.22.2"
+
 edge-ripple-keypairs@^0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/edge-ripple-keypairs/-/edge-ripple-keypairs-0.0.1.tgz#734f39733132a11098a70b93c58f27740e15740c"
@@ -5919,6 +5926,11 @@ jest@^23.5.0:
   dependencies:
     import-local "^1.0.0"
     jest-cli "^23.6.0"
+
+js-sha256@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/js-sha256/-/js-sha256-0.9.0.tgz#0b89ac166583e91ef9123644bd3c5334ce9d0966"
+  integrity sha512-sga3MHh9sgQN2+pJ9VYZ+1LPwXOxuBJBA5nrR5/ofPfuiJBE2hnjsaN8se8JznOmGLN2p49Pe5U/ttafcs/apA==
 
 js-sha3@^0.3.1:
   version "0.3.1"
