@@ -134,19 +134,21 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
         }
         break
     }
-    const modal = createKYCAlertModal({
-      logo: this.renderImage(pluginName),
-      aboutText: componentProps.aboutText,
-      acceptText: componentProps.acceptText,
-      termsText: componentProps.termsText,
-      privacyText: componentProps.privacyText,
-      amlText: componentProps.amlText,
-      onAccept: this.acceptKYCWarning,
-      termsClick: this.viewTerms,
-      privacyClick: this.viewPrivacy,
-      amlClick: this.viewAML
-    })
-    showModal(modal).then((response: null) => {})
+    if (componentProps.aboutText !== '') {
+      const modal = createKYCAlertModal({
+        logo: this.renderImage(pluginName),
+        aboutText: componentProps.aboutText,
+        acceptText: componentProps.acceptText,
+        termsText: componentProps.termsText,
+        privacyText: componentProps.privacyText,
+        amlText: componentProps.amlText,
+        onAccept: this.acceptKYCWarning,
+        termsClick: this.viewTerms,
+        privacyClick: this.viewPrivacy,
+        amlClick: this.viewAML
+      })
+      showModal(modal).then((response: null) => {})
+    }
   }
   viewPrivacy = () => {
     const pluginName = this.props.quote.quote.pluginName
