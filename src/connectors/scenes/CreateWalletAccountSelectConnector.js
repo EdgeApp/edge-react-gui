@@ -9,16 +9,22 @@ import {
   fetchAccountActivationInfo,
   fetchWalletAccountActivationPaymentInfo
 } from '../../actions/CreateWalletActions.js'
-import { type AccountPaymentParams, CreateWalletAccountSelect } from '../../components/scenes/CreateWalletAccountSelectScene'
+import {
+  type AccountPaymentParams,
+  CreateWalletAccountSelect,
+  type CreateWalletAccountSelectOwnProps
+} from '../../components/scenes/CreateWalletAccountSelectScene'
+import { getWallet } from '../../modules/Core/selectors.js'
 import type { Dispatch, State } from '../../modules/ReduxTypes'
 import { getDefaultDenomination } from '../../modules/UI/selectors.js'
 
-const mapStateToProps = (state: State) => {
+const mapStateToProps = (state: State, ownProps: CreateWalletAccountSelectOwnProps) => {
   const handleActivationInfo = state.ui.scenes.createWallet.handleActivationInfo
   const walletAccountActivationPaymentInfo = state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
   const { supportedCurrencies, activationCost } = handleActivationInfo
   const { currencyCode, paymentAddress, amount, expireTime } = walletAccountActivationPaymentInfo
   const isCreatingWallet = state.ui.scenes.createWallet.isCreatingWallet
+  const existingCoreWallet = ownProps.existingWalletId ? getWallet(state, ownProps.existingWalletId) : null
   const paymentDenomination = currencyCode ? getDefaultDenomination(state, currencyCode) : {}
   let paymentDenominationSymbol
   if (paymentDenomination) {
@@ -36,7 +42,8 @@ const mapStateToProps = (state: State) => {
     activationCost,
     wallets: state.ui.wallets.byId,
     isCreatingWallet,
-    paymentDenominationSymbol
+    paymentDenominationSymbol,
+    existingCoreWallet
   }
 }
 

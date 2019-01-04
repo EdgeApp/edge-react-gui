@@ -40,13 +40,16 @@ export type CreateWalletAccountSelectStateProps = {
   supportedCurrencies: { [string]: boolean },
   activationCost: string,
   isCreatingWallet: boolean,
-  paymentDenominationSymbol: string
+  paymentDenominationSymbol: string,
+  existingCoreWallet: EdgeCurrencyWallet
 }
 
-type CreateWalletAccountSelectOwnProps = {
+export type CreateWalletAccountSelectOwnProps = {
   selectedFiat: GuiFiatType,
   selectedWalletType: GuiWalletType,
-  accountName: string
+  accountName: string,
+  isReactivation?: boolean,
+  existingWalletId?: string
 }
 
 export type CreateWalletAccountSelectDispatchProps = {
@@ -70,7 +73,12 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     const { selectedFiat, selectedWalletType, createAccountBasedWallet, accountName } = props
-    const createdWallet = createAccountBasedWallet(accountName, selectedWalletType.value, fixFiatCurrencyCode(selectedFiat.value), false, false)
+    let createdWallet
+    if (props.existingWalletId) {
+      createdWallet = this.renameAndReturnWallet(props.existingCoreWallet)
+    } else {
+      createdWallet = createAccountBasedWallet(accountName, selectedWalletType.value, fixFiatCurrencyCode(selectedFiat.value), false, false)
+    }
     this.state = {
       isModalVisible: false,
       error: '',
@@ -80,6 +88,12 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
     }
     const currencyCode = props.selectedWalletType.currencyCode
     props.fetchAccountActivationInfo(currencyCode)
+  }
+
+  renameAndReturnWallet = async (wallet: EdgeCurrencyWallet) => {
+    const { accountName } = this.props
+    await wallet.renameWallet(accountName)
+    return wallet
   }
 
   componentDidMount () {

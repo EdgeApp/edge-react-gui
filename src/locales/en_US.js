@@ -152,6 +152,9 @@ const strings = {
   create_wallet_account_metadata_category: '%s Activation',
   create_wallet_account_metadata_notes:
     'This transaction paid for activation of your %s wallet. Please wait for a confirmation of this transaction before using your %s wallet. For issues with wallet activation, please email %s',
+  create_wallet_account_unfinished_activation_title: 'Incomplete Activation',
+  create_wallet_account_unfinished_activation_message:
+    'In order to complete activation of this %s account, a check for handle availability and activation payment must be completed.',
 
   submit: 'Submit',
   login: 'Login',

@@ -33,7 +33,10 @@ const logos = {
 
 export type CreateWalletAccountSetupOwnProps = {
   selectedFiat: GuiFiatType,
-  selectedWalletType: GuiWalletType
+  selectedWalletType: GuiWalletType,
+  accountHandle?: string,
+  isReactivation?: boolean,
+  existingWalletId?: string
 }
 
 export type CreateWalletAccountSetupStateProps = {
@@ -54,7 +57,7 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {
-      accountHandle: ''
+      accountHandle: props.accountHandle || ''
     }
   }
 
