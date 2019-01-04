@@ -112,7 +112,7 @@ export class PluginBridge {
         error ? reject(error) : resolve(edgeTransaction)
       }
       guiMakeSpendInfo.lockInputs = true
-      Actions[SEND_CONFIRMATION](guiMakeSpendInfo)
+      Actions[SEND_CONFIRMATION]({ guiMakeSpendInfo })
     })
   }
 
