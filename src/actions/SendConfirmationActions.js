@@ -213,6 +213,7 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
       Actions.replace(TRANSACTION_DETAILS, { edgeTransaction: edgeSignedTransaction })
     }
   } catch (e) {
+    console.log(e)
     dispatch(updateSpendPending(false))
     const errorInfo = {
       success: false,

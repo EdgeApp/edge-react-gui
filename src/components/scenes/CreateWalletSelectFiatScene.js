@@ -14,14 +14,14 @@ import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import SearchResults from '../../modules/UI/components/SearchResults/index'
 import styles, { styles as stylesRaw } from '../../styles/scenes/CreateWalletStyle.js'
 import { PLATFORM } from '../../theme/variables/platform'
-import type { DeviceDimensions, FlatListItem, GuiFiatType } from '../../types'
+import type { DeviceDimensions, FlatListItem, GuiFiatType, GuiWalletType } from '../../types'
 import * as UTILS from '../../util/utils'
 import { FormField } from '../common/FormField.js'
 
 const SOFT_MENU_BAR_HEIGHT = ExtraDimensions.get('SOFT_MENU_BAR_HEIGHT')
 
 export type CreateWalletSelectFiatOwnProps = {
-  selectedWalletType: string,
+  selectedWalletType: GuiWalletType,
   supportedFiats: Array<GuiFiatType>,
   dimensions: DeviceDimensions
 }
@@ -60,7 +60,8 @@ export class CreateWalletSelectFiat extends Component<Props, State> {
   onNext = () => {
     if (this.isValidFiatType()) {
       // check if account-based or not
-      const nextSceneKey = this.props.selectedWalletType.currencyCode === 'EOS' ? Constants.CREATE_WALLET_ACCOUNT_SETUP : Constants.CREATE_WALLET_NAME
+      const specialCurrencyInfo = Constants.getSpecialCurrencyInfo(this.props.selectedWalletType.currencyCode)
+      const nextSceneKey = specialCurrencyInfo.needsAccountNameSetup ? Constants.CREATE_WALLET_ACCOUNT_SETUP : Constants.CREATE_WALLET_NAME
       Actions[nextSceneKey]({
         selectedWalletType: this.props.selectedWalletType,
         selectedFiat: this.getFiatType(this.state.selectedFiat)

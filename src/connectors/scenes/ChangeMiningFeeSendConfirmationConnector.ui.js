@@ -18,8 +18,7 @@ export const mapStateToProps = (state: State, ownProps: ChangeMiningFeeOwnProps)
   if (_.has(wallet, 'currencyInfo.defaultSettings.customFeeSettings')) {
     customFeeSettings = wallet.currencyInfo.defaultSettings.customFeeSettings
   }
-  const noCustomFeeCurrencies = ['XRP', 'XMR', 'XLM']
-  const hideCustomFeeOption = noCustomFeeCurrencies.includes(wallet.currencyInfo.currencyCode)
+  const hideCustomFeeOption = !!Constants.getSpecialCurrencyInfo(wallet.currencyInfo.currencyCode).noChangeMiningFee
   return {
     customNetworkFee: getCustomNetworkFee(state),
     customFeeSettings: customFeeSettings,

@@ -9,6 +9,7 @@ import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
 import { UniqueIdentifierModalConnect as UniqueIdentifierModal } from '../../connectors/UniqueIdentifierModalConnector.js'
+import { getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import ExchangeRate from '../../modules/UI/components/ExchangeRate/index.js'
@@ -186,7 +187,7 @@ export class SendConfirmation extends Component<Props, State> {
     const feeCalculated = !!this.props.networkFee || !!this.props.parentNetworkFee
     const sliderDisabled = this.props.sliderDisabled || !feeCalculated || this.props.nativeAmount === '0'
 
-    const isTaggableCurrency = !!(currencyCode === 'XRP' || currencyCode === 'XMR' || currencyCode === 'XLM')
+    const isTaggableCurrency = !!getSpecialCurrencyInfo(currencyCode).uniqueIdentifier
 
     return (
       <SafeAreaView>
@@ -292,7 +293,7 @@ export class SendConfirmation extends Component<Props, State> {
           <UniqueIdentifierModal
             onConfirm={this.props.sendConfirmationUpdateTx}
             currencyCode={currencyCode}
-            keyboardType={this.keyboardTypeOnPaymentId(currencyCode)}
+            keyboardType={getSpecialCurrencyInfo(currencyCode).uniqueIdentifier.identifierKeyboardType}
           />
         )}
       </SafeAreaView>
@@ -303,19 +304,6 @@ export class SendConfirmation extends Component<Props, State> {
     this.props.onChangePin(pin)
     if (pin.length >= 4) {
       this.pinInput.blur()
-    }
-  }
-
-  keyboardTypeOnPaymentId = (currencyCode: string) => {
-    switch (currencyCode) {
-      case 'XRP':
-        return 'numeric'
-      case 'XLM':
-        return 'numeric'
-      case 'XMR':
-        return 'default'
-      default:
-        return 'numeric'
     }
   }
 
@@ -410,15 +398,13 @@ export class SendConfirmation extends Component<Props, State> {
 }
 
 export const uniqueIdentifierText = (currencyCode: string, uniqueIdentifier?: string): string => {
-  if (!uniqueIdentifier) {
-    if (currencyCode === 'XLM') return sprintf(s.strings.unique_identifier_add, s.strings.unique_identifier_memo_id)
-    if (currencyCode === 'XRP') return sprintf(s.strings.unique_identifier_add, s.strings.unique_identifier_destination_tag)
-    if (currencyCode === 'XMR') return sprintf(s.strings.unique_identifier_add, s.strings.unique_identifier_payment_id)
+  if (!getSpecialCurrencyInfo(currencyCode).uniqueIdentifier) {
+    throw new Error('Invalid currency code')
   }
-
-  if (currencyCode === 'XLM') return sprintf(s.strings.unique_identifier_display_text, s.strings.unique_identifier_memo_id, uniqueIdentifier)
-  if (currencyCode === 'XRP') return sprintf(s.strings.unique_identifier_display_text, s.strings.unique_identifier_destination_tag, uniqueIdentifier)
-  if (currencyCode === 'XMR') return sprintf(s.strings.unique_identifier_display_text, s.strings.unique_identifier_payment_id, uniqueIdentifier)
-
-  throw new Error('Invalid currency code')
+  const uniqueIdentifierInfo = getSpecialCurrencyInfo(currencyCode).uniqueIdentifier
+  if (!uniqueIdentifier) {
+    return uniqueIdentifierInfo.addButtonText
+  } else {
+    return sprintf(`${uniqueIdentifierInfo.identifierName}: %s`, uniqueIdentifier)
+  }
 }
