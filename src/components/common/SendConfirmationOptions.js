@@ -5,6 +5,7 @@ import React, { Component } from 'react'
 import { Keyboard, View } from 'react-native'
 import Menu, { MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu'
 
+import { getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import Text from '../../modules/UI/components/FormattedText/index'
 import { MenuDropDownStyle } from '../../styles/indexStyles'
@@ -57,7 +58,7 @@ export default class SendConfirmationOptions extends Component<Props> {
           </MenuTrigger>
 
           <MenuOptions optionsContainerStyle={styles.optionContainer}>
-            {isEditable && (
+            {isEditable && !getSpecialCurrencyInfo(currencyCode).noChangeMiningFee && (
               <MenuOption value={CHANGE_MINING_FEE} style={defaultMenuStyle.menuOption}>
                 <View style={defaultMenuStyle.menuOptionItem}>
                   <Text style={defaultMenuStyle.optionText}>{CHANGE_MINING_FEE_TEXT}</Text>
@@ -65,7 +66,7 @@ export default class SendConfirmationOptions extends Component<Props> {
               </MenuOption>
             )}
 
-            {isEditable && currencyCode !== 'XMR' && (
+            {isEditable && !getSpecialCurrencyInfo(currencyCode).noMaxSpend && (
               <MenuOption value={SEND_MAX} style={defaultMenuStyle.menuOption}>
                 <View style={defaultMenuStyle.menuOptionItem}>
                   <Text style={[defaultMenuStyle.optionText, styles.maxSpend]}>{SEND_MAX_TEXT}</Text>
@@ -73,26 +74,10 @@ export default class SendConfirmationOptions extends Component<Props> {
               </MenuOption>
             )}
 
-            {currencyCode === 'XLM' && (
+            {!!getSpecialCurrencyInfo(currencyCode).uniqueIdentifier && (
               <MenuOption value={ADD_UNIQUE_IDENTIFIER} style={defaultMenuStyle.menuOption}>
                 <View style={defaultMenuStyle.menuOptionItem}>
-                  <Text style={[defaultMenuStyle.optionText]}>{s.strings.unique_identifier_dropdown_option_memo_id}</Text>
-                </View>
-              </MenuOption>
-            )}
-
-            {currencyCode === 'XMR' && (
-              <MenuOption value={ADD_UNIQUE_IDENTIFIER} style={defaultMenuStyle.menuOption}>
-                <View style={defaultMenuStyle.menuOptionItem}>
-                  <Text style={[defaultMenuStyle.optionText]}>{s.strings.unique_identifier_dropdown_option_payment_id}</Text>
-                </View>
-              </MenuOption>
-            )}
-
-            {currencyCode === 'XRP' && (
-              <MenuOption value={ADD_UNIQUE_IDENTIFIER} style={defaultMenuStyle.menuOption}>
-                <View style={defaultMenuStyle.menuOptionItem}>
-                  <Text style={[defaultMenuStyle.optionText]}>{s.strings.unique_identifier_dropdown_option_destination_tag}</Text>
+                  <Text style={[defaultMenuStyle.optionText]}>{getSpecialCurrencyInfo(currencyCode).uniqueIdentifier.addButtonText}</Text>
                 </View>
               </MenuOption>
             )}
