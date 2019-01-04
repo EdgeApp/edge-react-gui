@@ -143,6 +143,8 @@
   "create_wallet_account_metadata_name": "",
   "create_wallet_account_metadata_category": "",
   "create_wallet_account_metadata_notes": "",
+  "create_wallet_account_unfinished_activation_title": "",
+  "create_wallet_account_unfinished_activation_message": "",
   "submit": "제출",
   "login": "로그인",
   "help_build": "빌드",
