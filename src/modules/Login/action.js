@@ -135,9 +135,11 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     accountInitObject.merchantMode = syncFinal.merchantMode
     accountInitObject.customTokens = syncFinal.customTokens
     accountInitObject.passwordRecoveryRemindersShown = syncFinal.passwordRecoveryRemindersShown
-    accountInitObject.denominationKeys.push({ currencyCode: 'BTC', denominationKey: syncFinal.BTC.denomination })
-    accountInitObject.denominationKeys.push({ currencyCode: 'BCH', denominationKey: syncFinal.BCH.denomination })
-    accountInitObject.denominationKeys.push({ currencyCode: 'ETH', denominationKey: syncFinal.ETH.denomination })
+    Object.keys(syncFinal).forEach(currencyCode => {
+      if (typeof syncFinal[currencyCode].denomination === 'string') {
+        accountInitObject.denominationKeys.push({ currencyCode: currencyCode, denominationKey: syncFinal[currencyCode].denomination })
+      }
+    })
     if (customTokens) {
       customTokens.forEach(token => {
         // dispatch(ADD_TOKEN_ACTIONS.setTokenSettings(token))
