@@ -143,6 +143,8 @@
   "create_wallet_account_metadata_name": "",
   "create_wallet_account_metadata_category": "",
   "create_wallet_account_metadata_notes": "",
+  "create_wallet_account_unfinished_activation_title": "",
+  "create_wallet_account_unfinished_activation_message": "",
   "submit": "",
   "login": "",
   "help_build": "Construir",
