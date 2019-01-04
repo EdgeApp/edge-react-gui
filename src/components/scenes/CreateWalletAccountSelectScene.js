@@ -199,10 +199,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
         </View>
         <View style={styles.accountReviewInfoArea}>
           <Text style={styles.accountReviewInfoText}>
-            {s.strings.create_wallet_account_payment_source} {name}
-          </Text>
-          <Text style={styles.accountReviewInfoText}>
-            {s.strings.create_wallet_crypto_type_label} {paymentCurrencyCode}
+            {s.strings.create_wallet_crypto_type_label} {selectedWalletType.currencyCode}
           </Text>
           <Text style={styles.accountReviewInfoText}>
             {s.strings.create_wallet_fiat_type_label} {selectedFiat.label}
@@ -216,7 +213,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
         </View>
         <View style={styles.confirmButtonArea}>
           <PrimaryButton disabled={isCreatingWallet} style={[styles.confirmButton]} onPress={this.onPressSubmit}>
-            <PrimaryButton.Text>{isCreatingWallet ? <ActivityIndicator /> : s.strings.submit}</PrimaryButton.Text>
+            {isCreatingWallet ? <ActivityIndicator /> : <PrimaryButton.Text>{s.strings.legacy_address_modal_continue}</PrimaryButton.Text>}
           </PrimaryButton>
         </View>
       </View>
@@ -225,7 +222,13 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
 
   render () {
     const { supportedCurrencies, selectedWalletType, activationCost } = this.props
-    const instructionSyntax = sprintf(s.strings.create_wallet_account_select_instructions, `${activationCost} ${selectedWalletType.currencyCode}`)
+    const instructionSyntax = sprintf(
+      s.strings.create_wallet_account_select_instructions_with_cost,
+      selectedWalletType.currencyCode,
+      selectedWalletType.currencyCode,
+      'Edge',
+      `${activationCost} ${selectedWalletType.currencyCode}`
+    )
     const confirmMessageSyntax = sprintf(s.strings.create_wallet_account_make_payment, selectedWalletType.currencyCode)
     // only included supported types of payment in WalletListModal
     const supportedCurrenciesList = []
