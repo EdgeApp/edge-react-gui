@@ -5,7 +5,9 @@ import { BackHandler, FlatList, Image, Platform, Text, TouchableWithoutFeedback,
 import { Actions } from 'react-native-router-flux'
 import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
+import parse from 'url-parse'
 
+import {sendConfirmationUpdateTx} from '../../actions/SendConfirmationActions'
 import { selectWallet } from '../../actions/WalletActions'
 import s from '../../locales/strings.js'
 import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
@@ -17,6 +19,7 @@ import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import { PluginBridge, pop as pluginPop } from '../../modules/UI/scenes/Plugins/api'
 import { buySellPlugins, spendPlugins } from '../../modules/UI/scenes/Plugins/plugins'
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
+import type { GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import styles from '../../styles/scenes/PluginsStyle.js'
 
 const BACK = s.strings.title_back
@@ -94,7 +97,8 @@ type PluginProps = {
   wallets: any,
   walletName: any,
   walletId: any,
-  selectWallet(string, string): void
+  selectWallet(string, string): void,
+  sendConfirmationUpdateTx(GuiMakeSpendInfo): void
 }
 
 type PluginState = {
@@ -110,7 +114,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   plugin: any
   updateBridge: Function
   webview: any
-
+  successUrl: string | null
   constructor (props) {
     super(props)
     this.state = {
@@ -122,7 +126,6 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   }
 
   updateBridge (props) {
-    console.log('Props ', this.props)
     this.bridge = new PluginBridge({
       plugin: props.plugin,
       account: props.account,
@@ -178,6 +181,9 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   _webviewBack = () => {
     this.webview.injectJavaScript('window.history.back()')
   }
+  _webviewOpenUrl = (url: string) => {
+    this.webview.injectJavaScript("window.open('" + url + "', '_self')")
+  }
 
   _renderTitle = title => {
     Actions.refresh({
@@ -229,27 +235,52 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   }
 
   _onNavigationStateChange = navState => {
-    console.log('PVS: returning state. ', navState)
     if (navState.loading) {
       return
     }
-    // TODO: improve handling of edge-ret URIs
-    if (navState.url.match(/edge:\/\/x-callback-url\/paymentURI/)) {
-      // ski[p this and use the url parse.
-      console.log('stop: evaluate')
-      // send full UIR into scan actions. -> possibly to the scanner.. url.parse
-      // look at scan scene parse -> anstract it. - makeSpendInfo can add onDone
+    const parsedUrl = parse(navState.url, {}, true)
+    if (parsedUrl.protocol === 'edge:' && parsedUrl.hostname === 'x-callback-url') {
+      switch (parsedUrl.pathname) {
+        case '/paymentUri':
+          this.props.abcWallet.parseUri(parsedUrl.query.uri)
+            .then(result => {
+              const info: GuiMakeSpendInfo = {
+                currencyCode: result.currencyCode,
+                nativeAmount: result.nativeAmount,
+                publicAddress: result.publicAddress
+              }
+              this.successUrl = parsedUrl.query['x-success']
+              this.bridge.makeSpendRequest(info)
+                .then(tr => {
+                  if (this.successUrl) {
+                    this._webviewOpenUrl(this.successUrl)
+                  }
+                })
+                .catch(e => {
+                  console.log(e)
+                })
+            })
+          break
+        default:
+          console.log('nothing yet')
+      }
+
       return
     }
-
-    if (navState.url.match(/edge-ret:\/\/plugins/)) {
+    if (parsedUrl.protocol === 'edge-ret:') {
       Actions.pop()
       return
     }
+    if (parsedUrl.origin === this.successUrl) {
+      this.bridge.navStackClear()
+      return
+    }
+
     if (!navState.canGoForward) {
       this.bridge.navStackPush(navState.url)
     } else if (!navState.canGoBack) {
       this.bridge.navStackClear()
+    } else {
     }
   }
 
@@ -268,6 +299,9 @@ class PluginView extends React.Component<PluginProps, PluginState> {
           scalesPageToFit={contentScaling}
           source={this._renderWebView()}
           setWebContentsDebuggingEnabled={true}
+          userAgent={
+            'Mozilla/5.0 (Linux; Android 6.0.1; SM-G532G Build/MMB29T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.83 Mobile Safari/537.36'
+          }
         />
       </SafeAreaView>
     )
@@ -282,7 +316,6 @@ const mapStateToProps = state => {
   const wallets = state.ui.wallets.byId
   const walletName = abcWallet.name
   const walletId = abcWallet.id
-  console.log('Stop')
   return {
     account,
     guiWallet,
@@ -296,7 +329,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   showAlert: alertSyntax => dispatch(openABAlert('OPEN_AB_ALERT', alertSyntax)),
-  selectWallet: (walletId: string, currencyCode: string) => dispatch(selectWallet(walletId, currencyCode))
+  selectWallet: (walletId: string, currencyCode: string) => dispatch(selectWallet(walletId, currencyCode)),
+  sendConfirmationUpdateTx: (info: GuiMakeSpendInfo) => dispatch(sendConfirmationUpdateTx(info))
 })
 
 const PluginViewConnect = connect(
