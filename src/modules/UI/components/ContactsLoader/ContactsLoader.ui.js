@@ -39,6 +39,18 @@ const merchantPartners = [
     recordID: ''
   },
   {
+    givenName: 'EOS Network',
+    hasThumbnail: true,
+    thumbnailPath: 'https://developer.edge.app/content/eos-logo-solo-64.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
     givenName: 'Change NOW',
     hasThumbnail: true,
     thumbnailPath: 'https://developer.edge.app/content/changenow.png',
