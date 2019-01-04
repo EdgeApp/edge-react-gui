@@ -1,9 +1,14 @@
 // @flow
 
+import { createSimpleConfirmModal, showModal } from 'edge-components'
 import type { EdgeCurrencyWallet, EdgeReceiveAddress } from 'edge-core-js'
 import _ from 'lodash'
+import React from 'react'
 import { Actions } from 'react-native-router-flux'
+import { sprintf } from 'sprintf-js'
 
+import * as Constants from '../constants/indexConstants.js'
+import s from '../locales/strings.js'
 import * as SETTINGS_API from '../modules/Core/Account/settings.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
@@ -12,6 +17,7 @@ import type { Dispatch, GetState } from '../modules/ReduxTypes'
 import * as SETTINGS_SELECTORS from '../modules/Settings/selectors'
 import { updateSettings } from '../modules/Settings/SettingsActions'
 import { displayErrorAlert } from '../modules/UI/components/ErrorAlert/actions'
+import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import type { CustomTokenInfo } from '../types.js'
 import * as UTILS from '../util/utils'
@@ -105,9 +111,15 @@ export const refreshReceiveAddressRequest = (walletId: string) => (dispatch: Dis
 }
 
 export const selectWallet = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
+  if (currencyCode === 'EOS') {
+    // EOS needs different path in case not activated yet
+    dispatch(selectEOSWallet(walletId, currencyCode))
+    return
+  }
   const state = getState()
   const currentWalletId = state.ui.wallets.selectedWalletId
   const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
+  Actions[Constants.TRANSACTION_LIST]({ params: 'walletList' })
   if (walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode) {
     dispatch({
       type: 'UI/WALLETS/SELECT_WALLET',
@@ -121,6 +133,50 @@ export const selectWallet = (walletId: string, currencyCode: string) => (dispatc
       .catch(e => {
         console.log('error on getting wallet receive address')
       })
+  }
+}
+
+// check if the EOS wallet is activated (via public address blank string check) and route to activation scene(s)
+export const selectEOSWallet = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const currentWalletId = state.ui.wallets.selectedWalletId
+  const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
+  const guiWallet = UI_SELECTORS.getWallet(state, walletId)
+  if (walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode) {
+    const { publicAddress } = guiWallet.receiveAddress
+    if (publicAddress) {
+      // already activated
+      dispatch({
+        type: 'UI/WALLETS/SELECT_WALLET',
+        data: { walletId, currencyCode }
+      })
+      Actions[Constants.TRANSACTION_LIST]({ params: 'walletList' })
+    } else {
+      // not activated yet
+      // find fiat and crypto (EOS) types and populate scene props
+      const supportedFiats = UTILS.getSupportedFiats()
+      const fiatTypeIndex = supportedFiats.findIndex(fiatType => fiatType.value === guiWallet.fiatCurrencyCode)
+      const selectedFiat = supportedFiats[fiatTypeIndex]
+      const supportedWalletTypes = SETTINGS_SELECTORS.getSupportedWalletTypes(state)
+      const selectedWalletType = supportedWalletTypes.find(type => {
+        return type.currencyCode === 'EOS'
+      })
+      const createWalletAccountSetupSceneProps = {
+        accountHandle: guiWallet.name,
+        selectedWalletType,
+        selectedFiat,
+        isReactivation: true,
+        existingWalletId: walletId
+      }
+      Actions[Constants.CREATE_WALLET_ACCOUNT_SETUP](createWalletAccountSetupSceneProps)
+      const modal = createSimpleConfirmModal({
+        title: s.strings.create_wallet_account_unfinished_activation_title,
+        message: sprintf(s.strings.create_wallet_account_unfinished_activation_message, 'EOS'),
+        icon: <Icon type={Constants.MATERIAL_COMMUNITY} name={Constants.EXCLAMATION} size={30} />,
+        buttonText: s.strings.string_ok
+      })
+      showModal(modal)
+    }
   }
 }
 

@@ -143,6 +143,8 @@
   "create_wallet_account_metadata_name": "%s Network",
   "create_wallet_account_metadata_category": "%s Activation",
   "create_wallet_account_metadata_notes": "This transaction paid for activation of your %s wallet. Please wait for a confirmation of this transaction before using your %s wallet. For issues with wallet activation, please email %s",
+  "create_wallet_account_unfinished_activation_title": "Wallet Not Activated",
+  "create_wallet_account_unfinished_activation_message": "In order to complete activation of this %s wallet, please choose a unique account name and complete the activation payment. If you already made an activation payment, please wait for that payment to confirm before attempting to use this wallet.",
   "submit": "Submit",
   "login": "Login",
   "help_build": "Build",

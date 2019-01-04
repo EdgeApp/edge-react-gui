@@ -4,7 +4,6 @@ import { bns } from 'biggystring'
 import _ from 'lodash'
 import React, { Component } from 'react'
 import { ActivityIndicator, Image, TouchableHighlight, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import { connect } from 'react-redux'
 
@@ -69,7 +68,6 @@ export type FullWalletListRowLoadedComponentProps = FullWalletListRowLoadedState
 class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoadedComponentProps> {
   _onPressSelectWallet = (walletId, currencyCode) => {
     this.props.selectWallet(walletId, currencyCode)
-    Actions.transactionList({ params: 'walletList' })
   }
 
   shouldComponentUpdate (nextProps) {
