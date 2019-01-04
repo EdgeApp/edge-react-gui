@@ -431,5 +431,10 @@
   "delete_account_header": "계정 삭제",
   "delete_username_account": "이 장치에서 정말로 %1$s를 삭제하시겠습니까? 이걸로 인해 PIN으로 인한 로그인이 불가능해집니다. 이 계정의 2단계 인증이 등록되어있는 경우, 다시 로그인을 하려면 2단계 인증을 재등록 할 필요가 있으며 재등록에는 7일이 소요됩니다.",
   "no": "아니오",
-  "yes": "예"
+  "yes": "예",
+  "changelly_about": "",
+  "changelly_kyc_statement": "",
+  "terms_of_use": "",
+  "privacy_policy": "",
+  "changelly_aml_kyc": ""
 }
