@@ -431,5 +431,10 @@
   "delete_account_header": "Supprimer le compte",
   "delete_username_account": "Supprimer '%1$s' sur cet appareil ? Cela désactivera l’accès par le code PIN. Si le multi facteur d'authentification est activé sur ce compte, cet appareil ne pourra se connecter sans une réinitialisation du multi facteur d'authentificaion qui dure 7 jours.",
   "no": "Non",
-  "yes": "Oui"
+  "yes": "Oui",
+  "changelly_about": "",
+  "changelly_kyc_statement": "",
+  "terms_of_use": "",
+  "privacy_policy": "",
+  "changelly_aml_kyc": ""
 }
