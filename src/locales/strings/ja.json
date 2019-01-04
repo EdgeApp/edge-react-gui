@@ -431,5 +431,10 @@
   "delete_account_header": "",
   "delete_username_account": "",
   "no": "",
-  "yes": ""
+  "yes": "",
+  "changelly_about": "",
+  "changelly_kyc_statement": "",
+  "terms_of_use": "",
+  "privacy_policy": "",
+  "changelly_aml_kyc": ""
 }
