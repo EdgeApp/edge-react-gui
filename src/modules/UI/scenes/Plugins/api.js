@@ -80,7 +80,8 @@ export class PluginBridge {
   }
 
   getAPIKey (): Promise<string> {
-    return Promise.resolve(ENV.BIT_REFILL_API_KEY)
+    const key: string = ENV.BIT_REFILL_API_KEY
+    return Promise.resolve(key)
   }
   selectedWallet (): Promise<Wallet> {
     return Promise.resolve(formatWallet(this.context.wallet))
