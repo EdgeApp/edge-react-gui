@@ -431,5 +431,10 @@
   "delete_account_header": "Delete Account",
   "delete_username_account": "Delete %1$s on this device? This will disable access via PIN. If 2FA is enabled on this account, this device will not be able to login without a 2FA reset which takes 7 days.",
   "no": "No",
-  "yes": "Yes"
+  "yes": "Yes",
+  "changelly_about": "Changelly exchange option empowers you to seamlessly exchange one crypto into another with maximum comfort!",
+  "changelly_kyc_statement": "I have read and I agree to the Changelly terms of use and privacy policy.  By clicking Accept, I acknowledge and understand that my transaction may trigger an AML/KYC verification according to Changelly AML/KYC",
+  "terms_of_use": "Terms of Use",
+  "privacy_policy": "Privacy Policy",
+  "changelly_aml_kyc": "AML/KYC"
 }
