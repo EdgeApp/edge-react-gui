@@ -167,7 +167,7 @@
     "detox": "^7.4.3",
     "edge-plugin-simplex": "https://github.com/Airbitz/edge-plugin-simplex.git#fb2eb83",
     "edge-plugin-wyre": "https://github.com/EdgeApp/edge-plugin-wyre.git#bf5ae37",
-    "edge-plugin-bitrefill": "https://github.com/EdgeApp/edge-plugin-bitrefill.git#f102fdc",
+    "edge-plugin-bitrefill": "https://github.com/EdgeApp/edge-plugin-bitrefill.git#9140ade",
     "eslint": "^4.17.0",
     "eslint-config-standard": "^11.0.0-beta.0",
     "eslint-plugin-flowtype": "^2.35.0",
