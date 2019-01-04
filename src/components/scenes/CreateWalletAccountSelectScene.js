@@ -199,9 +199,6 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
         </View>
         <View style={styles.accountReviewInfoArea}>
           <Text style={styles.accountReviewInfoText}>
-            {s.strings.create_wallet_account_payment_source} {name}
-          </Text>
-          <Text style={styles.accountReviewInfoText}>
             {s.strings.create_wallet_crypto_type_label} {selectedWalletType.currencyCode}
           </Text>
           <Text style={styles.accountReviewInfoText}>
@@ -216,8 +213,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
         </View>
         <View style={styles.confirmButtonArea}>
           <PrimaryButton disabled={isCreatingWallet} style={[styles.confirmButton]} onPress={this.onPressSubmit}>
-            {isCreatingWallet ? <ActivityIndicator />
-              : <PrimaryButton.Text>{s.strings.legacy_address_modal_continue}</PrimaryButton.Text> }
+            {isCreatingWallet ? <ActivityIndicator /> : <PrimaryButton.Text>{s.strings.legacy_address_modal_continue}</PrimaryButton.Text>}
           </PrimaryButton>
         </View>
       </View>

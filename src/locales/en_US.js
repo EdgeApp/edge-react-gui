@@ -141,7 +141,6 @@ const strings = {
   create_wallet_account_invalid_account_name: 'Invalid account name. Does not fit requirements',
   create_wallet_account_account_name_unavailable: 'Account name unavailable. Please choose another',
   create_wallet_account_unknown_error: 'Unknown error checking account name. Please try again later',
-  create_wallet_account_payment_source: 'Payment Source:',
   create_wallet_account_confirm: 'Double-check your wallet and payment info before submitting.',
   create_wallet_account_insufficient_funds: 'You will need one existing wallet with enough funds for this payment to continue.',
   create_wallet_account_amount_due: 'Amount due:',
