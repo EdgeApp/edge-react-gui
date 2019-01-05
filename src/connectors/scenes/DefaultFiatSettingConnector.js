@@ -6,14 +6,20 @@ import { connect } from 'react-redux'
 import { setDefaultFiatRequest } from '../../actions/SettingsActions'
 import DefaultFiatSetting from '../../components/scenes/DefaultFiatSettingScene'
 import type { Dispatch, State } from '../../modules/ReduxTypes.js'
-import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
-import * as UTILS from '../../util/utils'
+import { getDefaultFiat } from '../../modules/Settings/selectors'
+import { getSupportedFiats } from '../../util/utils'
 
-const mapStateToProps = (state: State) => ({
-  defaultFiat: SETTINGS_SELECTORS.getDefaultFiat(state),
-  supportedFiats: UTILS.getSupportedFiats(),
-  dimensions: state.ui.scenes.dimensions
-})
+const mapStateToProps = (state: State) => {
+  const defaultFiat = getDefaultFiat(state)
+  const supportedFiats = getSupportedFiats(defaultFiat)
+  const out = {
+    defaultFiat,
+    supportedFiats,
+    dimensions: state.ui.scenes.dimensions
+  }
+  return out
+}
+
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   onSelectFiat: selectedDefaultFiat => {
     dispatch(setDefaultFiatRequest(selectedDefaultFiat))
