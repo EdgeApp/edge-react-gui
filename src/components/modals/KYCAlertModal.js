@@ -77,10 +77,10 @@ export const createKYCAlertModal = (opts: Object) => (props: { +onDone: Function
       termsText={opts.termsText}
       privacyText={opts.privacyText}
       amlText={opts.amlText}
-      onAccept={opts.acceptKYCWarning}
-      termsClick={opts.viewTerms}
-      privacyClick={opts.viewPrivacy}
-      amlClick={opts.viewAML}
+      onAccept={opts.onAccept}
+      termsClick={opts.termsClick}
+      privacyClick={opts.privacyClick}
+      amlClick={opts.amlClick}
     />
   )
 }
