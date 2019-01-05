@@ -15,7 +15,7 @@ const formatWallet = w => {
     name: w.name,
     type: w.type,
     currencyCode: w.currencyCode ? w.currencyCode : w.currencyInfo.currencyCode,
-    primaryNativeBalance: w.currencyCode,
+    primaryNativeBalance: w.primaryNativeBalance,
     fiatCurrencyCode: w.fiatCurrencyCode
   }
 }
@@ -80,7 +80,7 @@ export class PluginBridge {
   }
 
   getAPIKey (): Promise<string> {
-    const key: string = ENV.BIT_REFILL_API_KEY
+    const key: string = ENV.PLUGIN_API_KEYS[this.context.plugin.name]
     return Promise.resolve(key)
   }
   selectedWallet (): Promise<Wallet> {

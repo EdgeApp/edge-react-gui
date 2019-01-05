@@ -7,7 +7,7 @@ import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
 import parse from 'url-parse'
 
-import {sendConfirmationUpdateTx} from '../../actions/SendConfirmationActions'
+import { sendConfirmationUpdateTx } from '../../actions/SendConfirmationActions'
 import { selectWallet } from '../../actions/WalletActions'
 import s from '../../locales/strings.js'
 import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
@@ -92,7 +92,7 @@ type PluginProps = {
   showAlert: Function,
   account: any,
   guiWallet: any,
-  abcWallet: any,
+  coreWallet: any,
   coreWallets: any,
   wallets: any,
   walletName: any,
@@ -161,8 +161,8 @@ class PluginView extends React.Component<PluginProps, PluginState> {
     this.bridge.context.coreWallets = this.props.coreWallets
     this.bridge.context.wallets = this.props.wallets
     this.bridge.context.walletName = this.props.walletName
-    this.bridge.context.walletId = this.props.abcWallet.id
-    this.bridge.context.wallet = this.props.abcWallet
+    this.bridge.context.walletId = this.props.coreWallet.id
+    this.bridge.context.wallet = this.props.coreWallet
   }
 
   componentDidMount () {
@@ -242,24 +242,24 @@ class PluginView extends React.Component<PluginProps, PluginState> {
     if (parsedUrl.protocol === 'edge:' && parsedUrl.hostname === 'x-callback-url') {
       switch (parsedUrl.pathname) {
         case '/paymentUri':
-          this.props.abcWallet.parseUri(parsedUrl.query.uri)
-            .then(result => {
-              const info: GuiMakeSpendInfo = {
-                currencyCode: result.currencyCode,
-                nativeAmount: result.nativeAmount,
-                publicAddress: result.publicAddress
-              }
-              this.successUrl = parsedUrl.query['x-success']
-              this.bridge.makeSpendRequest(info)
-                .then(tr => {
-                  if (this.successUrl) {
-                    this._webviewOpenUrl(this.successUrl)
-                  }
-                })
-                .catch(e => {
-                  console.log(e)
-                })
-            })
+          this.props.coreWallet.parseUri(parsedUrl.query.uri).then(result => {
+            const info: GuiMakeSpendInfo = {
+              currencyCode: result.currencyCode,
+              nativeAmount: result.nativeAmount,
+              publicAddress: result.publicAddress
+            }
+            this.successUrl = parsedUrl.query['x-success']
+            this.bridge
+              .makeSpendRequest(info)
+              .then(tr => {
+                if (this.successUrl) {
+                  this._webviewOpenUrl(this.successUrl)
+                }
+              })
+              .catch(e => {
+                console.log(e)
+              })
+          })
           break
         default:
           console.log('nothing yet')
@@ -280,7 +280,6 @@ class PluginView extends React.Component<PluginProps, PluginState> {
       this.bridge.navStackPush(navState.url)
     } else if (!navState.canGoBack) {
       this.bridge.navStackClear()
-    } else {
     }
   }
 
@@ -298,7 +297,6 @@ class PluginView extends React.Component<PluginProps, PluginState> {
           ref={this._setWebview}
           scalesPageToFit={contentScaling}
           source={this._renderWebView()}
-          setWebContentsDebuggingEnabled={true}
           userAgent={
             'Mozilla/5.0 (Linux; Android 6.0.1; SM-G532G Build/MMB29T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.83 Mobile Safari/537.36'
           }
@@ -311,15 +309,15 @@ class PluginView extends React.Component<PluginProps, PluginState> {
 const mapStateToProps = state => {
   const account = CORE_SELECTORS.getAccount(state)
   const guiWallet = UI_SELECTORS.getSelectedWallet(state)
-  const abcWallet = CORE_SELECTORS.getWallet(state, guiWallet.id)
+  const coreWallet = CORE_SELECTORS.getWallet(state, guiWallet.id)
   const coreWallets = state.core.wallets.byId
   const wallets = state.ui.wallets.byId
-  const walletName = abcWallet.name
-  const walletId = abcWallet.id
+  const walletName = coreWallet.name
+  const walletId = coreWallet.id
   return {
     account,
     guiWallet,
-    abcWallet,
+    coreWallet,
     coreWallets,
     wallets,
     walletName,
