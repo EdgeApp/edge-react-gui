@@ -16,6 +16,7 @@
 .*/Libraries/react-native/ReactNative.js
 
 .*/node_modules/react-native/.*
+.*/node_modules/react-native-camera/.*
 .*/node_modules/react-native-device-info/.*
 .*/node_modules/react-native-dropdown/.*
 .*/node_modules/react-native-dropdownalert/.*

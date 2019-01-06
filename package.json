@@ -104,7 +104,7 @@
     "react-native-animatable": "^1.1.0",
     "react-native-app-settings": "^2.0.0",
     "react-native-background-fetch": "^2.4.3",
-    "react-native-camera": "git://github.com/EdgeApp/react-native-camera.git#97e0b9a",
+    "react-native-camera": "git://github.com/EdgeApp/react-native-camera.git#a31ea429d77",
     "react-native-contacts": "git://github.com/EdgeApp/react-native-contacts.git",
     "react-native-contacts-wrapper": "git://github.com/EdgeApp/react-native-contacts-wrapper.git",
     "react-native-cookies": "3.3.0",
