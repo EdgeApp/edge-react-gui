@@ -185,7 +185,8 @@ export class SendConfirmation extends Component<Props, State> {
     const ADDRESS_TEXT = sprintf(s.strings.send_confirmation_address, address)
 
     const feeCalculated = !!this.props.networkFee || !!this.props.parentNetworkFee
-    const sliderDisabled = this.props.sliderDisabled || !feeCalculated || this.props.nativeAmount === '0'
+    const sliderDisabled =
+      this.props.sliderDisabled || !feeCalculated || (!getSpecialCurrencyInfo(this.props.currencyCode).allowZeroTx && this.props.nativeAmount === '0')
 
     const isTaggableCurrency = !!getSpecialCurrencyInfo(currencyCode).uniqueIdentifier
 
