@@ -79,7 +79,7 @@
   "fragment_transaction_transfer": "Transferir",
   "fragment_wallet_unconfirmed": "Pendiente",
   "fragment_transaction_list_confirmation_progress": "%s de %s confirmaciones",
-  "transaction_list_buy_crypto_message": "Compra %s con tarjeta de crédito",
+  "transaction_list_buy_crypto_message": "",
   "transaction_list_no_tx_yet": "¡Todavía no hay transacciones!",
   "fragment_wallets_addwallet_name_hint": "Nombre de la nueva cartera",
   "fragment_wallets_balance_text": "Balance total",
