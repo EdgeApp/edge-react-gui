@@ -79,7 +79,7 @@
   "fragment_transaction_transfer": "送る",
   "fragment_wallet_unconfirmed": "保留中",
   "fragment_transaction_list_confirmation_progress": "%s/%s確認",
-  "transaction_list_buy_crypto_message": "%sをクレジットカードで買う",
+  "transaction_list_buy_crypto_message": "",
   "transaction_list_no_tx_yet": "トランザクションは未完了です！",
   "fragment_wallets_addwallet_name_hint": "新しいウォレット名",
   "fragment_wallets_balance_text": "合計残高",
