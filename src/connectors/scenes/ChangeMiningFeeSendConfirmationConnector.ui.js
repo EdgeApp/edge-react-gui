@@ -18,7 +18,7 @@ export const mapStateToProps = (state: State, ownProps: ChangeMiningFeeOwnProps)
   if (_.has(wallet, 'currencyInfo.defaultSettings.customFeeSettings')) {
     customFeeSettings = wallet.currencyInfo.defaultSettings.customFeeSettings
   }
-  const hideCustomFeeOption = !!Constants.getSpecialCurrencyInfo(wallet.currencyInfo.currencyCode).noChangeMiningFee
+  const hideCustomFeeOption = !!Constants.getSpecialCurrencyInfo(wallet.currencyInfo.currencyCode).noCustomMiningFee
   return {
     customNetworkFee: getCustomNetworkFee(state),
     customFeeSettings: customFeeSettings,
