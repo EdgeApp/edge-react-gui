@@ -79,7 +79,7 @@
   "fragment_transaction_transfer": "Chuyển giao",
   "fragment_wallet_unconfirmed": "Đang chờ xử lý",
   "fragment_transaction_list_confirmation_progress": "%s của %s sự xác nhận",
-  "transaction_list_buy_crypto_message": "Mua %s bằng thẻ tín dụng",
+  "transaction_list_buy_crypto_message": "",
   "transaction_list_no_tx_yet": "Không có giao dịch nào!",
   "fragment_wallets_addwallet_name_hint": "Tên ví mới",
   "fragment_wallets_balance_text": "Tổng số dư",
