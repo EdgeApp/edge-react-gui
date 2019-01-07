@@ -7,12 +7,10 @@ import { CreateWalletReview as CreateWalletReviewConnector } from '../../compone
 import type { CreateWalletReviewDispatchProps } from '../../components/scenes/CreateWalletReviewScene'
 import type { Dispatch, State } from '../../modules/ReduxTypes'
 import { getSupportedWalletTypes } from '../../modules/Settings/selectors.js'
-import { getSupportedFiats } from '../../util/utils.js'
 
 const mapStateToProps = (state: State) => ({
   isCreatingWallet: state.ui.scenes.createWallet.isCreatingWallet,
-  supportedWalletTypes: getSupportedWalletTypes(state),
-  supportedFiats: getSupportedFiats()
+  supportedWalletTypes: getSupportedWalletTypes(state)
 })
 
 const mapDispatchToProps = (dispatch: Dispatch): CreateWalletReviewDispatchProps => ({

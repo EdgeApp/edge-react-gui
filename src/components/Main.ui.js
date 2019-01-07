@@ -23,7 +23,7 @@ import {
 } from 'edge-currency-bitcoin'
 import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
 import { moneroCurrencyPluginFactory } from 'edge-currency-monero'
-import { coinbasePlugin, coincapPlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
+import { coinbasePlugin, coincapPlugin, shapeshiftPlugin, currencyconverterapiPlugin } from 'edge-exchange-plugins'
 import React, { Component } from 'react'
 import { Image, Keyboard, Linking, StatusBar, TouchableWithoutFeedback, View, YellowBox } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
@@ -119,6 +119,7 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   coinbasePlugin,
   shapeshiftPlugin,
   coincapPlugin,
+  currencyconverterapiPlugin,
   // Currencies:
   bitcoincashCurrencyPluginFactory,
   bitcoinCurrencyPluginFactory,
