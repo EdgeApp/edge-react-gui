@@ -7,6 +7,7 @@ import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
 import parse from 'url-parse'
 
+import ENV from '../../../env.json'
 import { sendConfirmationUpdateTx } from '../../actions/SendConfirmationActions'
 import { selectWallet } from '../../actions/WalletActions'
 import s from '../../locales/strings.js'
@@ -122,6 +123,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
     }
     this.webview = null
     this.plugin = this.props.plugin
+    this.plugin.environment.apiKey = ENV.PLUGIN_API_KEYS[this.plugin.name]
     this.updateBridge(this.props)
   }
 
@@ -157,7 +159,6 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   }
 
   componentDidUpdate () {
-    this.bridge.context.account = this.props.account
     this.bridge.context.coreWallets = this.props.coreWallets
     this.bridge.context.wallets = this.props.wallets
     this.bridge.context.walletName = this.props.walletName

@@ -4,7 +4,6 @@ import type { EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
 import { Linking } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
-import ENV from '../../../../../env.json'
 import { SEND_CONFIRMATION } from '../../../../constants/SceneKeys.js'
 import { type GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
 import * as WALLET_API from '../../../Core/Wallets/api'
@@ -79,10 +78,6 @@ export class PluginBridge {
     return Promise.resolve(null)
   }
 
-  getAPIKey (): Promise<string> {
-    const key: string = ENV.PLUGIN_API_KEYS[this.context.plugin.name]
-    return Promise.resolve(key)
-  }
   selectedWallet (): Promise<Wallet> {
     return Promise.resolve(formatWallet(this.context.wallet))
   }
