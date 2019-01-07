@@ -79,7 +79,7 @@
   "fragment_transaction_transfer": "Transférer",
   "fragment_wallet_unconfirmed": "En cours",
   "fragment_transaction_list_confirmation_progress": "%s sur %s Confirmations",
-  "transaction_list_buy_crypto_message": "Acheter %s avec la carte crédit ",
+  "transaction_list_buy_crypto_message": "",
   "transaction_list_no_tx_yet": "Aucune transaction a été éffectuée ",
   "fragment_wallets_addwallet_name_hint": "Nouveau nom de Wallet ",
   "fragment_wallets_balance_text": "Solde total",
