@@ -79,7 +79,7 @@
   "fragment_transaction_transfer": "Перевести",
   "fragment_wallet_unconfirmed": "Ожидающие",
   "fragment_transaction_list_confirmation_progress": "%s из %s подтверждений",
-  "transaction_list_buy_crypto_message": "Купить %s с помощью кредитной карты",
+  "transaction_list_buy_crypto_message": "",
   "transaction_list_no_tx_yet": "Нет переводов!",
   "fragment_wallets_addwallet_name_hint": "Новое имя кошелька",
   "fragment_wallets_balance_text": "Общий баланс",
