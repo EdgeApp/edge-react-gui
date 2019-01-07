@@ -44,6 +44,7 @@ type SpecialCurrencyInfo = {
 
 export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   XLM: {
+    noCustomMiningFee: true,
     uniqueIdentifier: {
       addButtonText: s.strings.unique_identifier_dropdown_option_memo_id,
       identifierName: s.strings.unique_identifier_memo_id,
@@ -55,6 +56,7 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     }
   },
   XRP: {
+    noCustomMiningFee: true,
     uniqueIdentifier: {
       addButtonText: s.strings.unique_identifier_dropdown_option_destination_tag,
       identifierName: s.strings.unique_identifier_destination_tag,
@@ -66,6 +68,7 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     }
   },
   XMR: {
+    noCustomMiningFee: true,
     noMaxSpend: true,
     uniqueIdentifier: {
       addButtonText: s.strings.unique_identifier_dropdown_option_payment_id,
