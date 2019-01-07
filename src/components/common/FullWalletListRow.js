@@ -4,11 +4,13 @@ import { bns } from 'biggystring'
 import _ from 'lodash'
 import React, { Component } from 'react'
 import { ActivityIndicator, Image, TouchableHighlight, View } from 'react-native'
+import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import { connect } from 'react-redux'
 
 import { getEnabledTokens, selectWallet } from '../../actions/WalletActions.js'
 import WalletListTokenRow from '../../connectors/WalletListTokenRowConnector.js'
+import * as Constants from '../../constants/indexConstants.js'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import type { State } from '../../modules/ReduxTypes.js'
@@ -66,8 +68,13 @@ export type FullWalletListRowLoadedDispatchProps = {
 export type FullWalletListRowLoadedComponentProps = FullWalletListRowLoadedStateProps & FullWalletListRowLoadedOwnProps & FullWalletListRowLoadedDispatchProps
 
 class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoadedComponentProps> {
-  _onPressSelectWallet = (walletId, currencyCode) => {
+  _onPressSelectWallet = (walletId, currencyCode, publicAddress) => {
     this.props.selectWallet(walletId, currencyCode)
+    // if it's EOS then we need to see if activated, if not then it will get routed somewhere else
+    // if it's not EOS then go to txList, if it's EOS and activated with publicAddress then go to txList
+    if (currencyCode !== 'EOS' || (currencyCode === 'EOS' && publicAddress)) {
+      Actions[Constants.TRANSACTION_LIST]({ params: 'walletList' })
+    }
   }
 
   shouldComponentUpdate (nextProps) {
@@ -125,7 +132,7 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
           <TouchableHighlight
             style={[styles.rowContainer]}
             underlayColor={styleRaw.walletRowUnderlay.color}
-            onPress={() => this._onPressSelectWallet(id, currencyCode)}
+            onPress={() => this._onPressSelectWallet(id, currencyCode, walletData.receiveAddress.publicAddress)}
           >
             <View style={[styles.rowContent]}>
               <View style={styles.rowIconWrap}>
