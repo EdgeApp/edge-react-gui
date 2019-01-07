@@ -79,7 +79,7 @@
   "fragment_transaction_transfer": "Überweisen",
   "fragment_wallet_unconfirmed": "Ausstehend",
   "fragment_transaction_list_confirmation_progress": "%s von %s Bestätigungen",
-  "transaction_list_buy_crypto_message": "%s mit Kreditkarte kaufen",
+  "transaction_list_buy_crypto_message": "",
   "transaction_list_no_tx_yet": "Noch keine Transaktionen!",
   "fragment_wallets_addwallet_name_hint": "Neuer Wallet-Name",
   "fragment_wallets_balance_text": "Gesamtguthaben",
