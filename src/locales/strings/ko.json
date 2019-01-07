@@ -79,7 +79,7 @@
   "fragment_transaction_transfer": "송금",
   "fragment_wallet_unconfirmed": "보류 중",
   "fragment_transaction_list_confirmation_progress": "%s / %s 확인",
-  "transaction_list_buy_crypto_message": "신용카드로 %s 를 결제",
+  "transaction_list_buy_crypto_message": "",
   "transaction_list_no_tx_yet": "아직 거래 내역이 없습니다.",
   "fragment_wallets_addwallet_name_hint": "새로운 월렛 이름",
   "fragment_wallets_balance_text": "총 잔고",
