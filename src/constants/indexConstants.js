@@ -24,7 +24,25 @@ export const ANDROID = 'android'
 export const PUSH_DELAY_SECONDS = 86400
 export const LOCAL_STORAGE_BACKGROUND_PUSH_KEY = 'EdgeWalletLastPushNotification'
 
-export const SPECIAL_CURRENCY_INFO = {
+type SpecialCurrencyInfo = {
+  [currencyCode: string]: {
+    noMaxSpend?: boolean,
+    needsAccountNameSetup?: boolean,
+    noChangeMiningFee?: boolean,
+    allowZeroTx?: boolean,
+    uniqueIdentifier?: {
+      addButtonText: string,
+      identifierName: string,
+      identifierKeyboardType: string
+    },
+    minimumPopupModals?: {
+      minimumNativeBalance: string,
+      modalMessage: string
+    }
+  }
+}
+
+export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   XLM: {
     uniqueIdentifier: {
       addButtonText: s.strings.unique_identifier_dropdown_option_memo_id,
@@ -63,6 +81,9 @@ export const SPECIAL_CURRENCY_INFO = {
       identifierName: s.strings.unique_identifier_memo,
       identifierKeyboardType: 'default'
     }
+  },
+  ETH: {
+    allowZeroTx: true
   }
 }
 
