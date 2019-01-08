@@ -30,6 +30,7 @@ type SpecialCurrencyInfo = {
     needsAccountNameSetup?: boolean,
     noChangeMiningFee?: boolean,
     allowZeroTx?: boolean,
+    dummyPublicAddress?: string,
     uniqueIdentifier?: {
       addButtonText: string,
       identifierName: string,
@@ -44,6 +45,7 @@ type SpecialCurrencyInfo = {
 
 export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   XLM: {
+    dummyPublicAddress: 'GBEVGJYAUKJ2TVPMC3GEPI2GGZQLMWZDRWJCVNBXCJ3ELYTDPHVQQM74',
     noCustomMiningFee: true,
     uniqueIdentifier: {
       addButtonText: s.strings.unique_identifier_dropdown_option_memo_id,
@@ -56,6 +58,7 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     }
   },
   XRP: {
+    dummyPublicAddress: 'rfuESo7eHUnvebxgaFjfYxfwXhM2uBPAj3',
     noCustomMiningFee: true,
     uniqueIdentifier: {
       addButtonText: s.strings.unique_identifier_dropdown_option_destination_tag,
@@ -68,6 +71,7 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     }
   },
   XMR: {
+    dummyPublicAddress: '46qxvuS78CNBoiiKmDjvjd5pMAZrTBbDNNHDoP52jKj9j5mk6m4R5nU6BDrWQURiWV9a2n5Sy8Qo4aJskKa92FX1GpZFiYA',
     noCustomMiningFee: true,
     noMaxSpend: true,
     uniqueIdentifier: {
@@ -77,6 +81,7 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     }
   },
   EOS: {
+    dummyPublicAddress: 'edgecreator2',
     needsAccountNameSetup: true,
     noChangeMiningFee: true,
     uniqueIdentifier: {
@@ -86,6 +91,7 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     }
   },
   ETH: {
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true
   }
 }
