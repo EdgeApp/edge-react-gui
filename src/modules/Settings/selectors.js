@@ -74,7 +74,8 @@ export const getDisplayDenominationFull = (state: State, currencyCode: string): 
   const currencySettings = settings[currencyCode]
   const selectedDenominationKey = currencySettings.denomination
   const denominations = currencySettings.denominations
-  let selectedDenomination: EdgeDenomination = emptyEdgeDenomination
+
+  let selectedDenomination: EdgeDenomination = denominations[0]
   for (const d of denominations) {
     if (d.multiplier === selectedDenominationKey) {
       selectedDenomination = d
@@ -86,7 +87,8 @@ export const getDisplayDenominationFull = (state: State, currencyCode: string): 
 export const getDisplayDenomination = (state: State, currencyCode: string): EdgeDenomination => {
   const selectedDenominationKey = getDisplayDenominationKey(state, currencyCode)
   const denominations = getDenominations(state, currencyCode)
-  let selectedDenomination: EdgeDenomination = emptyEdgeDenomination
+
+  let selectedDenomination: EdgeDenomination = denominations[0]
   for (const d of denominations) {
     if (d.multiplier === selectedDenominationKey) {
       selectedDenomination = d
