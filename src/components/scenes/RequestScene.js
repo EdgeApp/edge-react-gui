@@ -37,6 +37,7 @@ export type RequestStateProps = {
   loading: false,
   primaryCurrencyInfo: GuiCurrencyInfo,
   publicAddress: string,
+  segwitAddress: string,
   legacyAddress: string,
   secondaryCurrencyInfo: GuiCurrencyInfo,
   showToWalletModal: boolean,
@@ -50,6 +51,7 @@ export type RequestLoadingProps = {
   loading: true,
   primaryCurrencyInfo: null,
   publicAddress: string,
+  segwitAddress: string,
   legacyAddress: string,
   secondaryCurrencyInfo: null,
   showToWalletModal: null,
@@ -69,6 +71,7 @@ export type Props = LoadingProps | LoadedProps
 export type State = {
   publicAddress: string,
   legacyAddress: string,
+  segwitAddress: string,
   encodedURI: string,
   minimumPopupModalState: CurrencyMinimumPopupState
 }
@@ -85,6 +88,7 @@ export class Request extends Component<Props, State> {
     this.state = {
       publicAddress: props.publicAddress,
       legacyAddress: props.legacyAddress,
+      segwitAddress: props.segwitAddress,
       encodedURI: '',
       minimumPopupModalState
     }
@@ -130,7 +134,8 @@ export class Request extends Component<Props, State> {
     const { edgeWallet, useLegacyAddress } = this.props
     let publicAddress = this.props.publicAddress
     let legacyAddress = this.props.legacyAddress
-    const abcEncodeUri = useLegacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
+    let segwitAddress = this.props.segwitAddress
+    const abcEncodeUri = segwitAddress ? { segwitAddress, publicAddress } : useLegacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
     let encodedURI = s.strings.loading
     try {
       encodedURI = edgeWallet ? await edgeWallet.encodeUri(abcEncodeUri) : s.strings.loading
@@ -141,9 +146,11 @@ export class Request extends Component<Props, State> {
       console.log(e)
       publicAddress = s.strings.loading
       legacyAddress = s.strings.loading
+      segwitAddress = s.strings.loading
       this.setState({
         publicAddress,
-        legacyAddress
+        legacyAddress,
+        segwitAddress
       })
       setTimeout(() => {
         if (edgeWallet && edgeWallet.id) {
@@ -162,6 +169,7 @@ export class Request extends Component<Props, State> {
 
     if (didAddressChange || changeLegacyPublic || didWalletChange) {
       let publicAddress = nextProps.guiWallet.receiveAddress.publicAddress
+      let segwitAddress = nextProps.guiWallet.receiveAddress.segwitAddress
       let legacyAddress = nextProps.guiWallet.receiveAddress.legacyAddress
 
       const abcEncodeUri = nextProps.useLegacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
@@ -172,6 +180,7 @@ export class Request extends Component<Props, State> {
       } catch (e) {
         console.log(e)
         publicAddress = s.strings.loading
+        segwitAddress = s.strings.loading
         legacyAddress = s.strings.loading
         setTimeout(() => {
           if (nextProps.edgeWallet && nextProps.edgeWallet.id) {
@@ -183,6 +192,7 @@ export class Request extends Component<Props, State> {
       this.setState({
         encodedURI,
         publicAddress: publicAddress,
+        segwitAddress: segwitAddress,
         legacyAddress: legacyAddress
       })
     }
@@ -226,7 +236,11 @@ export class Request extends Component<Props, State> {
 
     const color = 'white'
     const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio, onSelectWallet } = this.props
-    const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
+    const requestAddress = this.props.useLegacyAddress
+      ? this.state.legacyAddress
+      : this.state.segwitAddress
+        ? this.state.segwitAddress
+        : this.state.publicAddress
 
     return (
       <SafeAreaView>
@@ -272,8 +286,9 @@ export class Request extends Component<Props, State> {
   }
 
   onExchangeAmountChanged = async (amounts: ExchangedFlipInputAmounts) => {
-    const { publicAddress, legacyAddress } = this.state
-    const edgeEncodeUri: EdgeEncodeUri = this.props.useLegacyAddress && legacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
+    const { segwitAddress, publicAddress, legacyAddress } = this.state
+    const edgeEncodeUri: EdgeEncodeUri =
+      this.props.useLegacyAddress && legacyAddress ? { publicAddress, legacyAddress } : segwitAddress ? { segwitAddress, publicAddress } : { publicAddress }
     if (bns.gt(amounts.nativeAmount, '0')) {
       edgeEncodeUri.nativeAmount = amounts.nativeAmount
     }
@@ -293,7 +308,11 @@ export class Request extends Component<Props, State> {
   }
 
   copyToClipboard = () => {
-    const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
+    const requestAddress = this.props.useLegacyAddress
+      ? this.state.legacyAddress
+      : this.state.segwitAddress
+        ? this.state.segwitAddress
+        : this.state.publicAddress
     Clipboard.setString(requestAddress)
     Alert.alert(s.strings.fragment_request_address_copied)
   }
