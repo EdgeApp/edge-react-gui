@@ -6,6 +6,7 @@ import { Actions } from 'react-native-router-flux'
 
 import buysellIcon from '../../../../../assets/images/sidenav/buysell.png'
 import exchangeIcon from '../../../../../assets/images/sidenav/exchange.png'
+import giftIcon from '../../../../../assets/images/sidenav/ic_gift.png'
 import logoutImage from '../../../../../assets/images/sidenav/logout.png'
 import receiveIcon from '../../../../../assets/images/sidenav/receive.png'
 import scanIcon from '../../../../../assets/images/sidenav/scan.png'
@@ -28,7 +29,8 @@ const REQUEST_TEXT = s.strings.drawer_request
 const EXCHANGE_TEXT = s.strings.drawer_exchange
 const LOGOUT_TEXT = s.strings.settings_button_logout
 const SETTINGS_TEXT = s.strings.settings_title
-const PLUGIN_BUYSELL_TEXT = s.strings.title_plugin_buysell
+const PLUGIN_BUY_SELL_TEXT = s.strings.title_plugin_buysell
+const PLUGIN_SPEND_TEXT = s.strings.title_plugin_spend_cryptocurrency
 const TERMS_OF_SERVICE_TEXT = s.strings.title_terms_of_service
 
 export type Props = {
@@ -48,6 +50,8 @@ export default class Main extends Component<Props> {
             <View>
               <Separator />
               <BuySellButton />
+              <Separator />
+              <SpendButton />
               <Separator />
               <WalletsButton />
               <Separator />
@@ -81,7 +85,7 @@ export default class Main extends Component<Props> {
 
 const BuySellButton = () => {
   return (
-    <Button onPress={Actions.buysell}>
+    <Button onPress={Actions[Constants.BUY_SELL]}>
       <Button.Row>
         <Button.Row>
           <Button.Left>
@@ -90,7 +94,7 @@ const BuySellButton = () => {
 
           <Button.Center>
             <Button.Text>
-              <Text>{PLUGIN_BUYSELL_TEXT}</Text>
+              <Text>{PLUGIN_BUY_SELL_TEXT}</Text>
             </Button.Text>
           </Button.Center>
         </Button.Row>
@@ -99,7 +103,27 @@ const BuySellButton = () => {
   )
 }
 
-const popToWalletListScene = () => Actions.popTo('walletListScene')
+const SpendButton = () => {
+  return (
+    <Button onPress={Actions[Constants.SPEND]}>
+      <Button.Row>
+        <Button.Row>
+          <Button.Left>
+            <Image source={giftIcon} style={styles.iconImage} />
+          </Button.Left>
+
+          <Button.Center>
+            <Button.Text>
+              <Text>{PLUGIN_SPEND_TEXT}</Text>
+            </Button.Text>
+          </Button.Center>
+        </Button.Row>
+      </Button.Row>
+    </Button>
+  )
+}
+
+const popToWalletListScene = () => Actions.popTo(Constants.WALLET_LIST_SCENE)
 const WalletsButton = () => {
   return (
     <Button onPress={popToWalletListScene}>

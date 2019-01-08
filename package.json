@@ -310,10 +310,10 @@
   "plugins": {
     "buysell": [
       "edge-plugin-simplex",
-      "edge-plugin-wyre"
+      "edge-plugin-wyre"    
     ],
     "spend": [
-      "edge-plugin-bitrefill"
+      "edge-plugin-bitrefill"        
     ]
   },
   "lint-staged": {
