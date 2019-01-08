@@ -266,6 +266,7 @@
   "title_add_token": "Добавить токен",
   "title_password_recovery": "Восстановление пароля",
   "title_plugin_buysell": "Купить криптовалюту",
+  "title_plugin_spend_cryptocurrency": "",
   "title_plugin_spend": "Потратить",
   "title_otp": "Двухфакторная аутентификация",
   "title_request": "Запрос",
