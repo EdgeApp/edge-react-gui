@@ -167,6 +167,7 @@
     "detox": "^7.4.3",
     "edge-plugin-simplex": "https://github.com/Airbitz/edge-plugin-simplex.git#fb2eb83",
     "edge-plugin-wyre": "https://github.com/EdgeApp/edge-plugin-wyre.git#3494d71",
+    "edge-plugin-bitrefill": "https://github.com/EdgeApp/edge-plugin-bitrefill.git#a7a664e",
     "eslint": "^4.17.0",
     "eslint-config-standard": "^11.0.0-beta.0",
     "eslint-plugin-flowtype": "^2.35.0",
@@ -311,7 +312,9 @@
       "edge-plugin-simplex",
       "edge-plugin-wyre"
     ],
-    "spend": []
+    "spend": [
+      "edge-plugin-bitrefill"
+    ]
   },
   "lint-staged": {
     "*.js": [
