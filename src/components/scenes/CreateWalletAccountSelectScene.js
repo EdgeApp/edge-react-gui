@@ -175,6 +175,8 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
     const wallet = wallets[walletId]
     const { name, symbolImageDarkMono } = wallet
 
+    const isContinueButtonDisabled = isCreatingWallet || (createdWallet && !amount)
+
     return (
       <View>
         <View style={styles.selectPaymentLower}>
@@ -212,13 +214,9 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
           <Text style={styles.accountReviewConfirmText}>{s.strings.create_wallet_account_confirm}</Text>
         </View>
         <View style={styles.confirmButtonArea}>
-          <PrimaryButton disabled={isCreatingWallet || (createdWallet && !amount)} style={[styles.confirmButton]} onPress={this.onPressSubmit}>
+          <PrimaryButton disabled={isContinueButtonDisabled} style={[styles.confirmButton]} onPress={this.onPressSubmit}>
             {/* we want it disabled with activity indicator if creating wallet, or wallet is created and pending quote */}
-            {isCreatingWallet || (createdWallet && !amount) ? (
-              <ActivityIndicator />
-            ) : (
-              <PrimaryButton.Text>{s.strings.legacy_address_modal_continue}</PrimaryButton.Text>
-            )}
+            {isContinueButtonDisabled ? <ActivityIndicator /> : <PrimaryButton.Text>{s.strings.legacy_address_modal_continue}</PrimaryButton.Text>}
           </PrimaryButton>
         </View>
       </View>
