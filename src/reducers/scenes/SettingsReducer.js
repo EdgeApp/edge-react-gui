@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyInfo } from 'edge-core-js'
+import type { EdgeCurrencyInfo, EdgeDenomination } from 'edge-core-js'
 import _ from 'lodash'
 
 import * as Constants from '../../constants/indexConstants.js'
@@ -41,7 +41,8 @@ export const initialState = {
 }
 
 export type CurrencySetting = {
-  denomination: string
+  denomination: string,
+  denominations?: Array<EdgeDenomination>
 }
 
 export type SettingsState = {
