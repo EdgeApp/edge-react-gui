@@ -2,51 +2,51 @@
 
 * Soporte para EOS
 * Soporte para direcciones Bech32
-* Implementing deep linking of bitcoin, ethereum, bitcoincash, dash, and edge URIs
-* Move Edge Core to independent process to boost performance and GUI responsiveness
-* Sell crypto to credit card using Simplex
-* Add Wyre plugin to support buy/sell of Bitcoin and Ethereum from US bank account
-* Add LibertyX to support buying Bitcoin from physical merchants in US
-* Add Bitrefill plugin to support buying gift cards and mobile top ups
+* Implementa vínculos profundos (deep linking) de URIs de bitcoin, ethereum, bitcoin cash, dash y Edge
+Traslada Edge Core a un proceso independiente para aumentar el rendimiento y respuesta de la interfaz gráfica
+* Vende criptomonedas hacia tu tarjeta de crédito usando Simplex
+* Incluye soporte para el plugin de Wyre para comprar y vender Bitcoin y Ethereum desde una cuenta bancaria en EE. UU
+* Incluye LibertyX para comprar Bitcoin de comercios físicos en EE. UU
+*Incluye el plugin de Bitrefill para comprar tarjetas regalo y realizar recargas móviles
 
 v1.5.0
 
 * Incluye Changenow como casa de cambio
-* Use new colored currency icons
-* Allow signin/singout of ShapeShift via Settings screen
+* Uso de nuevos iconos a color para monedas
+* Permite acceder / salir de Shapeshift a través de la pantalla de Ajustes
 
 v1.4.4
 
-* Add ability to split BCH wallets into BSV wallets
-* Add replay protection to BCH/BSV wallets
-* Improve login performance
-* Fix bug that caused XRP and XLM to re-query all transactions at each login
-* Improve connectivity to nodes for bitcoin related currencies (BTC, BCH, LTC, DASH, etc)
+* Incluye la capacidad de dividir carteras BCH en carteras BSV
+* Incluye protección de repetición a carteras BCH/BSV
+* Mejora el rendimiento del acceso
+* Arreglado error que causaba que las carteras XRP y XLM volvieran a requerir todas las transacciones en cada acceso
+* Mejorada la conectividad a nodos para monedas relacionadas con Bitcoin (BTC, BCH, LTC, DASH, etc)
 
 v1.4.3
 
-* Big performance boost when logging in and syncing wallets
-* Add support for Monero bulletproofs which fixes Monero spending
-* Allow users to enable/disable exchange providers
-* Fix occasional "Token is not supported" error in Exchange screen
-* Enable viewing xpub for more currencies
-* Fix crash on large accounts when tapping top right menu button immediately after login
-* Fix hang when using Simplex from some Android devices
+* Gran incremento de rendimiento al registrarse y sincronizar carteras
+* Añadido soporte para "Bulletproofs" que arregla el gasto de Monero
+* Permite a los usuarios activar/desactivar casas de cambio
+* Arregla el error ocasional " El token no está soportado" en la pantalla de casa de cambio
+* Activar la vista de xpub para más monedas
+* Arregla el fallo en cuentas grandes cuando se hace click en el botón superior derecho inmediatamente después de acceder
+* Arregla el bloqueo cuando se usa Simplex desde dispositivos Android
 
 v1.4.2
 
-* Support for Stellar
-* Add ability to select custom nodes for Bitcoin and similar currencies
-* Support for ShapeShift membership
-* Support Changelly.com in Exchange functionality
-* Add Spanish, Italian, and Russian translations
+* Soporta Stellar
+* Añadida capacidad de seleccionar nodos propios para Bitcoin y monedas similares
+* Soporte para membresía Shapeshift
+Soporta Changelly.com en la funcionalidad de cambio de monedas
+* Añadidas traducciones al Español, Italiano y Ruso
 
 v1.3.4
 
-* Prevent create wallet button Done button from being tapped multiple times
-* Fix white screen hang upon login if an incoming transaction happens
-* Fix address wrapping in Simplex plugin
-* Fix double tap bug on Change Password modal
-* Fix Fiat amounts when using other country currencies
-* Additional scaling and visual improvements
-* Other minor bug fixes
+* Evitar que se pueda hacer click varias veces en el botón Hecho de la opción crear cartera
+* Arreglo de que la pantalla quede en blanco en el login si se recibe una transacción en ese momento
+* Corregido ajuste de direcciones en el plugin Simplex
+* Corregido un bug al hacer doble click en el modo de cambio de contraseña
+*Corregir las cantidades fiat cuando se usan monedas de otros países
+* Mejoras visuales adicionales
+* Bugs menores corregidos
