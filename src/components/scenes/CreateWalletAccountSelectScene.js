@@ -171,7 +171,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
       activationCost,
       paymentDenominationSymbol
     } = this.props
-    const { walletId } = this.state
+    const { walletId, createdWallet } = this.state
     const wallet = wallets[walletId]
     const { name, symbolImageDarkMono } = wallet
 
@@ -212,8 +212,13 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
           <Text style={styles.accountReviewConfirmText}>{s.strings.create_wallet_account_confirm}</Text>
         </View>
         <View style={styles.confirmButtonArea}>
-          <PrimaryButton disabled={isCreatingWallet} style={[styles.confirmButton]} onPress={this.onPressSubmit}>
-            {isCreatingWallet ? <ActivityIndicator /> : <PrimaryButton.Text>{s.strings.legacy_address_modal_continue}</PrimaryButton.Text>}
+          <PrimaryButton disabled={isCreatingWallet || (createdWallet && !amount)} style={[styles.confirmButton]} onPress={this.onPressSubmit}>
+            {/* we want it disabled with activity indicator if creating wallet, or wallet is created and pending quote */}
+            {isCreatingWallet || (createdWallet && !amount) ? (
+              <ActivityIndicator />
+            ) : (
+              <PrimaryButton.Text>{s.strings.legacy_address_modal_continue}</PrimaryButton.Text>
+            )}
           </PrimaryButton>
         </View>
       </View>
