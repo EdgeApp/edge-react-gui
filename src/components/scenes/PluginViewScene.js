@@ -123,7 +123,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
     }
     this.webview = null
     this.plugin = this.props.plugin
-    this.plugin.environment.apiKey = ENV.PLUGIN_API_KEYS[this.plugin.name]
+    this.plugin.environment.apiKey = ENV.PLUGIN_API_KEYS ? ENV.PLUGIN_API_KEYS[this.plugin.name] : 'edgeWallet' // latter is dummy code
     this.updateBridge(this.props)
   }
 
