@@ -23,7 +23,7 @@ import {
 } from 'edge-currency-bitcoin'
 import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
 import { moneroCurrencyPluginFactory } from 'edge-currency-monero'
-import { coinbasePlugin, coincapPlugin, shapeshiftPlugin, currencyconverterapiPlugin } from 'edge-exchange-plugins'
+import { coinbasePlugin, coincapPlugin, currencyconverterapiPlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
 import React, { Component } from 'react'
 import { Image, Keyboard, Linking, StatusBar, TouchableWithoutFeedback, View, YellowBox } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
@@ -711,9 +711,9 @@ export default class Main extends Component<Props, State> {
                       />
                     </Stack>
 
-                    <Stack key={Constants.BUYSELL} hideDrawerButton={true}>
+                    <Stack key={Constants.BUY_SELL} hideDrawerButton={true}>
                       <Scene
-                        key={Constants.BUYSELL}
+                        key={Constants.BUY_SELL}
                         navTransparent={true}
                         component={PluginBuySell}
                         renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
