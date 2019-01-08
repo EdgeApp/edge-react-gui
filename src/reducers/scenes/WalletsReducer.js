@@ -235,6 +235,7 @@ const selectedWalletId = (state = '', action: Action): string => {
 
     case 'ACCOUNT_INIT_COMPLETE': {
       if (action.data == null) throw new TypeError('Invalid action')
+      if (action.data.walletId === '') return state
       return action.data.walletId
     }
 
@@ -253,6 +254,7 @@ const selectedCurrencyCode = (state = '', action: Action): string => {
 
     case 'ACCOUNT_INIT_COMPLETE': {
       if (action.data == null) throw new TypeError('Invalid action')
+      if (action.data.currencyCode === '') return state
       return action.data.currencyCode
     }
 
