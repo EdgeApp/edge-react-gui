@@ -2,12 +2,13 @@
 
 import type { EdgeCurrencyInfo, EdgeDenomination } from 'edge-core-js'
 
+import { type CurrencySetting } from '../../reducers/scenes/SettingsReducer.js'
 import type { State } from '../ReduxTypes'
 import isoFiatDenominations from './ISOFiatDenominations'
 
 const emptyEdgeDenomination: EdgeDenomination = {
   name: '',
-  multiplier: '',
+  multiplier: '1',
   symbol: ''
 }
 
@@ -31,7 +32,7 @@ export const getLoginStatus = (state: State): boolean | null => {
   return loginStatus
 }
 
-export const getCurrencySettings = (state: State, currencyCode: string) => {
+export const getCurrencySettings = (state: State, currencyCode: string): CurrencySetting => {
   const settings = getSettings(state)
   const currencySettings = settings[currencyCode] || isoFiatDenominations[currencyCode]
   return currencySettings
@@ -45,6 +46,7 @@ export const getCryptocurrencySettings = (state: State, currencyCode: string) =>
 
 export const getDenominations = (state: State, currencyCode: string): Array<EdgeDenomination> => {
   const currencySettings = getCurrencySettings(state, currencyCode)
+  if (currencySettings == null || currencySettings.denominations == null) return [emptyEdgeDenomination]
   const denominations = currencySettings.denominations
   return denominations
 }
