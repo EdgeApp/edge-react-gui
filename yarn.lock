@@ -3237,9 +3237,9 @@ edge-core-js@0.13.5:
     ws "^5.1.1"
     yaob "^0.3.1"
 
-"edge-currency-accountbased@git://github.com/EdgeApp/edge-currency-accountbased#1de082c50b8":
+"edge-currency-accountbased@git://github.com/EdgeApp/edge-currency-accountbased#7a601690ff7782":
   version "0.0.16"
-  resolved "git://github.com/EdgeApp/edge-currency-accountbased#1de082c50b87e888561cfc966ca18a0d3a76c8a3"
+  resolved "git://github.com/EdgeApp/edge-currency-accountbased#7a601690ff778249e43df1694b1fd1d780ceef98"
   dependencies:
     base-x "^1.0.4"
     biggystring "^3.0.0"
@@ -3301,10 +3301,10 @@ edge-currency-monero@0.1.2:
     sprintf-js "^1.1.1"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.2.1.tgz#b9450bca704ca4aa75cedee3acd9db1947e9e41c"
-  integrity sha512-OSai+tn6pU4UI32HuPEBQKJHVBS4mReuhzlcdVVfKpMUSn5T5I4ywVAYx3q+hxJh6VeZW1vEjP2Vl+JJQ0+IqQ==
+edge-exchange-plugins@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.3.0.tgz#2ff0c665aa2559ce0c20e1e8c217efcb6c1b0b0c"
+  integrity sha512-GNcqhWzl2VzwT1Y6si/PUv3qVrEYOXVzb2GZ3z0MeH6CaPMnTbqUC+1YKxFFGAmq0KMz7omNkDYtjiCac1l0dw==
   dependencies:
     iso4217 "^0.2.0"
 
@@ -3342,9 +3342,9 @@ edge-login-ui-rn@^0.5.14:
   dependencies:
     moment "^2.22.2"
 
-"edge-plugin-wyre@https://github.com/EdgeApp/edge-plugin-wyre.git#bf5ae37":
+"edge-plugin-wyre@https://github.com/EdgeApp/edge-plugin-wyre.git#3494d71":
   version "0.0.3"
-  resolved "https://github.com/EdgeApp/edge-plugin-wyre.git#bf5ae37c27cccb54efb0354103bc9f3e701b9979"
+  resolved "https://github.com/EdgeApp/edge-plugin-wyre.git#3494d71118ade575cdb8bffac20854be30509cca"
   dependencies:
     js-sha256 "^0.9.0"
     moment "^2.22.2"

@@ -119,7 +119,6 @@ export const selectWallet = (walletId: string, currencyCode: string) => (dispatc
   const state = getState()
   const currentWalletId = state.ui.wallets.selectedWalletId
   const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
-  Actions[Constants.TRANSACTION_LIST]({ params: 'walletList' })
   if (walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode) {
     dispatch({
       type: 'UI/WALLETS/SELECT_WALLET',
@@ -150,7 +149,6 @@ export const selectEOSWallet = (walletId: string, currencyCode: string) => (disp
         type: 'UI/WALLETS/SELECT_WALLET',
         data: { walletId, currencyCode }
       })
-      Actions[Constants.TRANSACTION_LIST]({ params: 'walletList' })
     } else {
       // not activated yet
       // find fiat and crypto (EOS) types and populate scene props

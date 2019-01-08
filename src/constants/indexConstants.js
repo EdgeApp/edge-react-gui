@@ -24,8 +24,27 @@ export const ANDROID = 'android'
 export const PUSH_DELAY_SECONDS = 86400
 export const LOCAL_STORAGE_BACKGROUND_PUSH_KEY = 'EdgeWalletLastPushNotification'
 
-export const SPECIAL_CURRENCY_INFO = {
+type SpecialCurrencyInfo = {
+  [currencyCode: string]: {
+    noMaxSpend?: boolean,
+    needsAccountNameSetup?: boolean,
+    noChangeMiningFee?: boolean,
+    allowZeroTx?: boolean,
+    uniqueIdentifier?: {
+      addButtonText: string,
+      identifierName: string,
+      identifierKeyboardType: string
+    },
+    minimumPopupModals?: {
+      minimumNativeBalance: string,
+      modalMessage: string
+    }
+  }
+}
+
+export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   XLM: {
+    noCustomMiningFee: true,
     uniqueIdentifier: {
       addButtonText: s.strings.unique_identifier_dropdown_option_memo_id,
       identifierName: s.strings.unique_identifier_memo_id,
@@ -37,6 +56,7 @@ export const SPECIAL_CURRENCY_INFO = {
     }
   },
   XRP: {
+    noCustomMiningFee: true,
     uniqueIdentifier: {
       addButtonText: s.strings.unique_identifier_dropdown_option_destination_tag,
       identifierName: s.strings.unique_identifier_destination_tag,
@@ -48,6 +68,7 @@ export const SPECIAL_CURRENCY_INFO = {
     }
   },
   XMR: {
+    noCustomMiningFee: true,
     noMaxSpend: true,
     uniqueIdentifier: {
       addButtonText: s.strings.unique_identifier_dropdown_option_payment_id,
@@ -63,6 +84,9 @@ export const SPECIAL_CURRENCY_INFO = {
       identifierName: s.strings.unique_identifier_memo,
       identifierKeyboardType: 'default'
     }
+  },
+  ETH: {
+    allowZeroTx: true
   }
 }
 
