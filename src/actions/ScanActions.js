@@ -141,10 +141,11 @@ export const parseScannedUri = (data: string) => (dispatch: Dispatch, getState: 
       }
 
       // PUBLIC ADDRESS URI
+      const nativeAmount = parsedUri.nativeAmount || '0'
       const spendTargets: Array<EdgeSpendTarget> = [
         {
           publicAddress: parsedUri.publicAddress,
-          nativeAmount: parsedUri.nativeAmount || '0'
+          nativeAmount
         }
       ]
 
@@ -152,7 +153,8 @@ export const parseScannedUri = (data: string) => (dispatch: Dispatch, getState: 
         spendTargets,
         lockInputs: false,
         metadata: parsedUri.metadata,
-        uniqueIdentifier: parsedUri.uniqueIdentifier
+        uniqueIdentifier: parsedUri.uniqueIdentifier,
+        nativeAmount
       }
       Actions[SEND_CONFIRMATION]({ guiMakeSpendInfo })
       // dispatch(sendConfirmationUpdateTx(parsedUri))
