@@ -192,7 +192,7 @@ export const isEditable = (state: boolean = true, action: Action) => {
     case 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION':
       if (!action.data) throw new Error('Invalid Action')
       const { guiMakeSpendInfo } = action.data
-      if (!guiMakeSpendInfo) {
+      if (!guiMakeSpendInfo || guiMakeSpendInfo.lockInputs) {
         return false
       }
       return state
