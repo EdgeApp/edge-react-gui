@@ -9,6 +9,7 @@ import { type GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmat
 import * as WALLET_API from '../../../Core/Wallets/api'
 
 const formatWallet = w => {
+  if (!w) return
   return {
     id: w.id,
     name: w.name,
