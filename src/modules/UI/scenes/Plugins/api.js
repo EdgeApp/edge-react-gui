@@ -79,11 +79,13 @@ export class PluginBridge {
   }
 
   selectedWallet (): Promise<Wallet> {
+    if (!this.context.wallet) {
+      return Promise.reject(new Error('wallet not initialized yet'))
+    }
     return Promise.resolve(formatWallet(this.context.wallet))
   }
 
   wallets (): Promise<Wallets> {
-    console.log(this.context.wallets)
     const wallets = Object.keys(this.context.wallets).map(key => formatWallet(this.context.wallets[key]))
     return Promise.resolve(wallets)
   }

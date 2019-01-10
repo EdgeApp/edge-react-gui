@@ -116,6 +116,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   updateBridge: Function
   webview: any
   successUrl: string | null
+  openingSendConfirmation: boolean
   constructor (props) {
     super(props)
     this.state = {
@@ -240,6 +241,38 @@ class PluginView extends React.Component<PluginProps, PluginState> {
       return
     }
     const parsedUrl = parse(navState.url, {}, true)
+    if (parsedUrl.query['edge-callback']) {
+      switch (parsedUrl.query['edge-callback']) {
+        case 'paymentUri':
+          if (this.openingSendConfirmation) {
+            return
+          }
+          this.openingSendConfirmation = true
+          this.props.coreWallet.parseUri(parsedUrl.query['edge-uri']).then(result => {
+            const info: GuiMakeSpendInfo = {
+              currencyCode: result.currencyCode,
+              nativeAmount: result.nativeAmount,
+              publicAddress: result.publicAddress
+            }
+            this.successUrl = parsedUrl.query['x-success'] ? parsedUrl.query['x-success'] : null
+            this.bridge
+              .makeSpendRequest(info)
+              .then(tr => {
+                this.openingSendConfirmation = false
+                Actions.pop()
+                if (this.successUrl) {
+                  this._webviewOpenUrl(this.successUrl)
+                }
+              })
+              .catch(e => {
+                console.log(e)
+              })
+          })
+          break
+      }
+      return
+    }
+    // embed/dash?edge-callback=paymentUri&edge-source=Bitrefill&edge-uri=dash%3AXssJVcdjqKbkXg3hRD4kDxgsL3rtWkAxD9%3Famount%3D0.352965%26IS%3D1
     if (parsedUrl.protocol === 'edge:' && parsedUrl.hostname === 'x-callback-url') {
       switch (parsedUrl.pathname) {
         case '/paymentUri':
@@ -301,6 +334,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
           userAgent={
             'Mozilla/5.0 (Linux; Android 6.0.1; SM-G532G Build/MMB29T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.83 Mobile Safari/537.36'
           }
+          setWebContentsDebuggingEnabled={true}
         />
       </SafeAreaView>
     )
