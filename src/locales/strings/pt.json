@@ -102,7 +102,7 @@
   "fragment_wallets_resync_wallet_first_confirm_message_mobile": "Tem certeza de que deseja re-sincronizar\n",
   "fragment_wallets_split_wallet_bch_to_bsv": "",
   "fragment_wallets_split_wallet_first_confirm_message_mobile": "Tem certeza que deseja dividir\n",
-  "fragment_wallets_get_seed_wallet_first_confirm_message_mobile": "Tem certeza que deseja revelar a seed privada para a carteira seguinte?",
+  "fragment_wallets_get_seed_wallet_first_confirm_message_mobile": "",
   "fragmet_wallets_delete_wallet_first_confirm_message_mobile": "Você tem certeza que deseja excluir\n",
   "fragmet_wallets_list_archive_title_capitalized": "Arquivo",
   "fragment_wallets_syncing_wallet_txs": "Sincronizando as transações da carteira...",
