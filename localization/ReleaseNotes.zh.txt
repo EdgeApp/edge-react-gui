@@ -1,52 +1,55 @@
-1.6.0
+v1.7.0
 
-* EOS support
-* Bech32 address support
-* Implementing deep linking of bitcoin, ethereum, bitcoincash, dash, and edge URIs
-* Move Edge Core to independent process to boost performance and GUI responsiveness
-* Sell crypto to credit card using Simplex
-* Add Wyre plugin to support buy/sell of Bitcoin and Ethereum from US bank account
-* Add LibertyX to support buying Bitcoin from physical merchants in US
-* Add Bitrefill plugin to support buying gift cards and mobile top ups
+* Bech32 地址支持
+* 将Edge核心移动到独立的流程, 以提高性能和 对图形用户界面 响应能力
+* 使用 simplex 销售加密货币到信用卡
+* 添加 libertyx 以支持从美国的实体商购买比特币
+
+v1.6.0
+
+* eos 支持
+* 实现比特币、以太币、比特币现金、达世币和 Edge 统一资源标识符 的深度连接
+* Add Wyre plugin to support buy/sell of Bitcoin from US bank account
+* 添加 bitrefill 插件, 以支持购买礼品卡和手机充值
 
 v1.5.0
 
-* Add Changenow as an exchange provider
-* Use new colored currency icons
-* Allow signin/singout of ShapeShift via Settings screen
+* 将 Changenow 加为交易所提供商
+* 使用新的彩色货币图标
+*允许通过“设置”屏幕登入/登出 ShapeShift
 
 v1.4.4
 
-* Add ability to split BCH wallets into BSV wallets
-* Add replay protection to BCH/BSV wallets
-* Improve login performance
-* Fix bug that caused XRP and XLM to re-query all transactions at each login
-* Improve connectivity to nodes for bitcoin related currencies (BTC, BCH, LTC, DASH, etc)
+* 添加将 比特現金（BCH） 钱包拆分为 bsv 钱包的能力
+* 在 BCH/BSV 钱包中添加重放保护
+* 提高登录性能
+* 修复导致 瑞波幣 和 恒星币 在每次登录时重新查询所有事务的错误
+* 改善与比特币相关货币 (比特币 BTC, 比特現金 BCH, 莱特币LTC, 达世币DASH 等) 节点的连接
 
 v1.4.3
 
-* Big performance boost when logging in and syncing wallets
-* Add support for Monero bulletproofs which fixes Monero spending
-* Allow users to enable/disable exchange providers
-* Fix occasional "Token is not supported" error in Exchange screen
-* Enable viewing xpub for more currencies
-* Fix crash on large accounts when tapping top right menu button immediately after login
-* Fix hang when using Simplex from some Android devices
+* 登录和同步钱包时, 性能大大提升
+* 添加对门罗币防弹的支持, 以解决门罗币的支出
+* 允许用户启用/禁用交易所提供者
+* 修复交易所屏幕中偶尔出现的 "代币不支持" 错误
+* 启用查看更多货币的xpub
+* 修复登录后立即点击右上角菜单按钮时大型账户崩溃的问题
+* 修复从某些 android 设备使用Simplex时的挂起
 
 v1.4.2
 
-* Support for Stellar
-* Add ability to select custom nodes for Bitcoin and similar currencies
-* Support for ShapeShift membership
-* Support Changelly.com in Exchange functionality
-* Add Spanish, Italian, and Russian translations
+* 对恒星币的支持
+* 增加选择比特币和类似货币的自定义节点的能力
+* 支持 ShapeShift会员资格
+* 在交易所功能中支持 Changelly.com
+* 添加西班牙语、意大利语和俄语翻译
 
 v1.3.4
 
-* Prevent create wallet button Done button from being tapped multiple times
-* Fix white screen hang upon login if an incoming transaction happens
-* Fix address wrapping in Simplex plugin
-* Fix double tap bug on Change Password modal
-* Fix Fiat amounts when using other country currencies
-* Additional scaling and visual improvements
-* Other minor bug fixes
+* 防止创建钱包按钮和完成按钮被多次点击
+* 修复交易进行中有机会发生的白屏挂起
+* 修复Simplex插件中的地址包装
+* 修复更改密码模式上的双击错误
+* 使用其他国家/地区货币时修复法定金额
+* 额外的缩放和视觉改进
+* 其他小错误修复
