@@ -9,10 +9,10 @@ v1.6.0
 
 * Soporte para EOS
 * Implementa vínculos profundos (deep linking) de URIs de bitcoin, ethereum, bitcoin cash, dash y Edge
-* Add Wyre plugin to support buy/sell of Bitcoin from US bank account
+* Incluye soporte al plugin de Wyre para comprar/vender Bitcoin desde una cuenta bancaria USA
 *Incluye el plugin de Bitrefill para comprar tarjetas regalo y realizar recargas móviles
-* Add Chinese, Korean, French, and Vietnamese translations
-* Add support for IMP and IRR fiat currencies
+Incluye traducciones al chino, coreano, francés y vietnamita
+* Incluye soporte para las monedas fiat IMP e IRR
 
 v1.5.0
 
