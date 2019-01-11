@@ -4,9 +4,11 @@ import React from 'react'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
+import { sprintf } from 'sprintf-js'
 
 import { selectWallet } from '../actions/WalletActions.js'
 import { SCAN } from '../constants/indexConstants.js'
+import s from '../locales/strings.js'
 import type { Dispatch } from './ReduxTypes.js'
 
 type DeepLinkingManagerStateProps = {
@@ -56,8 +58,7 @@ class DeepLinkingManager extends React.Component<Props> {
 
       const currency = this.convertCurrencyStringFromCurrencyCode(currencyCode)
       const article = currency === 'Ethereum' ? 'an ' : 'a '
-      const noWalletMessage =
-        'No wallets exist that support ' + currency + '. You can create ' + article + currency + ' wallet by tapping + on the Wallet List screen.'
+      const noWalletMessage = sprintf(s.strings.alert_deep_link_no_wallet, currency, article + currency)
       Alert.alert(noWalletMessage)
     }
   }
