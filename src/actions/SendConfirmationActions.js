@@ -220,6 +220,14 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
       title: s.strings.transaction_failure,
       message: sprintf(s.strings.transaction_failure_message, e.message)
     }
+    if (e.name === 'ErrorEosInsufficientCpu') {
+      errorInfo.message = s.strings.send_confirmation_eos_error_cpu
+    } else if (e.name === 'ErrorEosInsufficientNet') {
+      errorInfo.message = s.strings.send_confirmation_eos_error_net
+    } else if (e.name === 'ErrorEosInsufficientRam') {
+      errorInfo.message = s.strings.send_confirmation_eos_error_ram
+    }
+
     dispatch(updateTransaction(edgeSignedTransaction, null, true, new Error('broadcastError')))
     dispatch({ type: 'OPEN_AB_ALERT', data: errorInfo })
     if (guiMakeSpendInfo.onDone) {
