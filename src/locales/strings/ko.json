@@ -102,7 +102,7 @@
   "fragment_wallets_resync_wallet_first_confirm_message_mobile": "정말로 재동기화 하시겠습니까?\n",
   "fragment_wallets_split_wallet_bch_to_bsv": "BCH 개인 키를 사용하여 BCH월렛을 분할 함으로써 새로운 BSV월렛을 생성합니다. 잘못된 체인에 지출이 발생하는것을 방지하기위해 BCH거래가 필요합니다. 이 거래에서 소액의 수수료가 BCH월렛에서 발생합니다. 이 BCH거래가 승인되는것을 확인하고 다른 거래를 시도하십시오. 정말로 월렛을 분할 하시겠습니까?\n",
   "fragment_wallets_split_wallet_first_confirm_message_mobile": "정말로 월렛을 분할 하시겠습니까?\n",
-  "fragment_wallets_get_seed_wallet_first_confirm_message_mobile": "다음 월렛에 개인 시드를 공개하시겠습니까?",
+  "fragment_wallets_get_seed_wallet_first_confirm_message_mobile": "",
   "fragmet_wallets_delete_wallet_first_confirm_message_mobile": "정말로 삭제 하시겠습니까?\n",
   "fragmet_wallets_list_archive_title_capitalized": "아카이브",
   "fragment_wallets_syncing_wallet_txs": "월렛 거래내역을 동기화중...",
