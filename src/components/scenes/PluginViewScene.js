@@ -116,6 +116,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   updateBridge: Function
   webview: any
   successUrl: string | null
+  openingSendConfirmation: boolean
   constructor (props) {
     super(props)
     this.state = {
@@ -142,7 +143,8 @@ class PluginView extends React.Component<PluginProps, PluginState> {
       chooseWallet: this.chooseWallet,
       showAlert: this.props.showAlert,
       back: this._webviewBack,
-      renderTitle: this._renderTitle
+      renderTitle: this._renderTitle,
+      edgeCallBack: this.edgeCallBack
     })
   }
 
@@ -217,7 +219,6 @@ class PluginView extends React.Component<PluginProps, PluginState> {
     }
     const { cbid, func } = data
     this._nextMessage(cbid)
-
     if (this.bridge[func]) {
       this.bridge[func](data)
         .then(res => {
@@ -226,6 +227,9 @@ class PluginView extends React.Component<PluginProps, PluginState> {
         .catch(err => {
           this._pluginReturn({ cbid, func, err, res: null })
         })
+    } else if (func === 'edgeCallBack') {
+      // this is if we are taking what used to be a callback url. There is no promise to return.
+      this.edgeCallBack(data)
     } else {
       this._pluginReturn({ cbid, func, err: 'invalid function' })
     }
@@ -234,25 +238,65 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   _setWebview = webview => {
     this.webview = webview
   }
+  // This is the preferred method for calling back . it does not return any promise like other brindge calls.
+  edgeCallBack = data => {
+    switch (data['edge-callback']) {
+      case 'paymentUri':
+        if (this.openingSendConfirmation) {
+          return
+        }
+        this.openingSendConfirmation = true
+        this.props.coreWallet.parseUri(data['edge-uri']).then(result => {
+          const info: GuiMakeSpendInfo = {
+            currencyCode: result.currencyCode,
+            nativeAmount: result.nativeAmount,
+            publicAddress: result.publicAddress
+          }
+          this.successUrl = data['x-success'] ? data['x-success'] : null
+          this.bridge
+            .makeSpendRequest(info)
+            .then(tr => {
+              this.openingSendConfirmation = false
+              Actions.pop()
+              if (this.successUrl) {
+                this._webviewOpenUrl(this.successUrl)
+              }
+            })
+            .catch(e => {
+              console.log(e)
+            })
+        })
+        break
+    }
+  }
 
   _onNavigationStateChange = navState => {
     if (navState.loading) {
       return
     }
     const parsedUrl = parse(navState.url, {}, true)
+
+    // TODO: if no partners are using this we should delete
     if (parsedUrl.protocol === 'edge:' && parsedUrl.hostname === 'x-callback-url') {
       switch (parsedUrl.pathname) {
         case '/paymentUri':
+          if (this.openingSendConfirmation) {
+            return
+          }
+          this.openingSendConfirmation = true
           this.props.coreWallet.parseUri(parsedUrl.query.uri).then(result => {
             const info: GuiMakeSpendInfo = {
               currencyCode: result.currencyCode,
               nativeAmount: result.nativeAmount,
               publicAddress: result.publicAddress
             }
-            this.successUrl = parsedUrl.query['x-success']
+
+            this.successUrl = parsedUrl.query['x-success'] ? parsedUrl.query['x-success'] : null
             this.bridge
               .makeSpendRequest(info)
               .then(tr => {
+                this.openingSendConfirmation = false
+                Actions.pop()
                 if (this.successUrl) {
                   this._webviewOpenUrl(this.successUrl)
                 }
@@ -301,6 +345,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
           userAgent={
             'Mozilla/5.0 (Linux; Android 6.0.1; SM-G532G Build/MMB29T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.83 Mobile Safari/537.36'
           }
+          setWebContentsDebuggingEnabled={true}
         />
       </SafeAreaView>
     )
