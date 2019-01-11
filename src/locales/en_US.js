@@ -110,7 +110,7 @@ const strings = {
   fragment_wallets_split_wallet_bch_to_bsv:
     'You are about to split this BCH wallet and create a new BSV wallet from your BCH private keys. This requires a BCH transaction to protect your funds from unintentionally being spent on the wrong chain. This will incur a small network transaction fee on the BCH wallet. Please make sure this transaction confirms before making any further BCH transactions. Are you sure you want to split \n',
   fragment_wallets_split_wallet_first_confirm_message_mobile: 'Are you sure you want to split \n',
-  fragment_wallets_get_seed_wallet_first_confirm_message_mobile: 'Are you sure you want to reveal the private seed for the following wallet?',
+  fragment_wallets_get_seed_wallet_first_confirm_message_mobile: 'Are you sure you want to reveal the private seed for the following wallet?\n',
   fragmet_wallets_delete_wallet_first_confirm_message_mobile: 'Are you sure you want to delete \n',
   fragmet_wallets_list_archive_title_capitalized: 'Archive',
   fragment_wallets_syncing_wallet_txs: 'Synchronizing wallet transactions...',

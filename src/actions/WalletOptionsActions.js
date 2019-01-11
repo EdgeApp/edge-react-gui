@@ -12,6 +12,7 @@ import * as ACCOUNT_API from '../modules/Core/Account/api.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import type { Dispatch, GetState } from '../modules/ReduxTypes'
 import { displayErrorAlert } from '../modules/UI/components/ErrorAlert/actions'
+import Text from '../modules/UI/components/FormattedText'
 import * as WALLET_SELECTORS from '../modules/UI/selectors.js'
 import { THEME } from '../theme/variables/airbitz.js'
 import { showDeleteWalletModal } from './DeleteWalletModalActions.js'
@@ -106,6 +107,7 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
     case 'getSeed': {
       return async (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
+        const walletName = CORE_SELECTORS.getWalletName(state, walletId)
         try {
           const input = {
             label: s.strings.confirm_password_text,
@@ -149,6 +151,12 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
               />
             ),
             title: s.strings.fragment_wallets_get_seed_wallet,
+            message: (
+              <Text>
+                {s.strings.fragment_wallets_get_seed_wallet_first_confirm_message_mobile}
+                <Text style={{ fontWeight: 'bold' }}>{walletName}</Text>
+              </Text>
+            ),
             input,
             yesButton,
             noButton,
@@ -161,6 +169,7 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
             const modal = createSimpleConfirmModal({
               title: s.strings.fragment_wallets_get_seed_wallet,
               message: seed,
+              buttonText: s.strings.string_ok,
               icon: (
                 <FAIcon
                   style={{ position: 'relative', left: 1 }}
@@ -169,8 +178,7 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
                   color={THEME.COLORS.PRIMARY}
                   size={30}
                 />
-              ),
-              buttonText: s.strings.string_ok
+              )
             })
             await showModal(modal)
           }

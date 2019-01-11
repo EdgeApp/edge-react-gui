@@ -10,6 +10,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import SimpleIcon from 'react-native-vector-icons/SimpleLineIcons'
 
 import * as Constants from '../../../../constants/indexConstants'
+import THEME from '../../../../theme/variables/airbitz.js'
 
 type Props = {
   style?: StyleSheet.Styles,
@@ -21,19 +22,19 @@ type Props = {
 const Icon = ({ style, name, size, type }: Props) => {
   switch (type) {
     case Constants.ENTYPO:
-      return <Entypo style={style} name={name} size={size} />
+      return <Entypo style={style} color={THEME.COLORS.SECONDARY} name={name} size={size} />
     case Constants.MATERIAL_ICONS:
-      return <MaterialIcon style={style} name={name} size={size} />
+      return <MaterialIcon style={style} color={THEME.COLORS.SECONDARY} name={name} size={size} />
     case Constants.FONT_AWESOME:
-      return <FAIcon style={style} name={name} size={size} />
+      return <FAIcon style={style} color={THEME.COLORS.SECONDARY} name={name} size={size} />
     case Constants.ION_ICONS:
-      return <IonIcon style={style} name={name} size={size} />
+      return <IonIcon style={style} color={THEME.COLORS.SECONDARY} name={name} size={size} />
     case Constants.SIMPLE_ICONS:
-      return <SimpleIcon style={style} name={name} size={size} />
+      return <SimpleIcon style={style} color={THEME.COLORS.SECONDARY} name={name} size={size} />
     case Constants.MATERIAL_COMMUNITY:
-      return <MCIcon style={style} name={name} size={size} />
+      return <MCIcon style={style} color={THEME.COLORS.SECONDARY} name={name} size={size} />
     default:
-      return <FAIcon name={'question'} style={style} />
+      return <FAIcon name={'question'} color={THEME.COLORS.SECONDARY} style={style} />
   }
 }
 

@@ -125,7 +125,6 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
     }
 
     const fiatBalanceString = fiatSymbol + ' ' + fiatBalance
-
     return (
       <View style={[{ width: '100%' }]}>
         <View>

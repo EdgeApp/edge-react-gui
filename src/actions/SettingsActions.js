@@ -6,11 +6,10 @@ import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import React from 'react'
 import { Image } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import FAIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import iconImage from '../assets/images/otp/OTP-badge_sm.png'
-import { CURRENCY_PLUGIN_NAMES, FONT_AWESOME, GET_SEED, WALLET_LIST } from '../constants/indexConstants.js'
+import { CURRENCY_PLUGIN_NAMES, ION_ICONS, LOCKED_ICON, WALLET_LIST } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import { restoreWalletsRequest } from '../modules/Core/Account/api.js'
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
@@ -308,8 +307,8 @@ export const showUnlockSettingsModal = () => async (dispatch: Dispatch, getState
       }
     }
     const unlockSettingsModal = createSecureTextModal({
-      icon: <FAIcon style={{ position: 'relative', left: 1 }} type={FONT_AWESOME} name={GET_SEED} color={THEME.COLORS.PRIMARY} size={30} />,
-      title: s.strings.confirm_password_text,
+      icon: <Icon style={{ position: 'relative', left: 1 }} type={ION_ICONS} name={LOCKED_ICON} color={THEME.COLORS.PRIMARY} size={30} />,
+      title: s.strings.enter_your_password,
       input,
       yesButton,
       noButton,

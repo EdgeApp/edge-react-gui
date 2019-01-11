@@ -3,16 +3,17 @@
 import { createYesNoModal, showModal } from 'edge-components'
 import type { EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendInfo, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
 import React from 'react'
-import { Alert, Linking, Text } from 'react-native'
+import { Alert, Linking } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { createAddressModal } from '../components/modals/AddressModal.js'
-import { ADD_TOKEN, EDGE_LOGIN, FA_MONEY_ICON, SEND_CONFIRMATION } from '../constants/indexConstants.js'
+import { ADD_TOKEN, EDGE_LOGIN, EXCLAMATION, FA_MONEY_ICON, ION_ICONS, KEY_ICON, MATERIAL_COMMUNITY, SEND_CONFIRMATION } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
 import type { Dispatch, GetState } from '../modules/ReduxTypes.js'
+import Text from '../modules/UI/components/FormattedText'
 import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import OptionIcon from '../modules/UI/components/OptionIcon/OptionIcon.ui.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
@@ -233,8 +234,9 @@ export const legacyAddressModalContinueButtonPressed = () => (dispatch: Dispatch
 export const showLegacyAddressModal = () => async (dispatch: Dispatch, getState: GetState) => {
   const legacyAddressModal = createYesNoModal({
     title: s.strings.legacy_address_modal_title,
-    icon: <Icon style={{}} type={'ionIcons'} name={'ios-alert-outline'} size={30} />,
+    icon: <Icon style={{}} type={MATERIAL_COMMUNITY} name={EXCLAMATION} size={30} />,
     message: s.strings.legacy_address_modal_warning,
+    textAlign: 'left',
     noButtonText: s.strings.legacy_address_modal_cancel,
     yesButtonText: s.strings.legacy_address_modal_continue
   })
@@ -249,8 +251,7 @@ export const showLegacyAddressModal = () => async (dispatch: Dispatch, getState:
 export const privateKeyModalActivated = () => async (dispatch: Dispatch, getState: GetState) => {
   const privateKeyModal = createYesNoModal({
     title: s.strings.private_key_modal_sweep_from_private_address,
-    icon: <Icon style={{ transform: [{ rotate: '270deg' }] }} type={'ionIcons'} name="ios-key" size={30} />,
-    message: s.strings.private_key_modal_sweep_from_private_address,
+    icon: <Icon style={{ transform: [{ rotate: '270deg' }] }} type={ION_ICONS} name={KEY_ICON} size={30} />,
     noButtonText: s.strings.private_key_modal_cancel,
     yesButtonText: s.strings.private_key_modal_import
   })
