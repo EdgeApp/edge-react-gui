@@ -30,6 +30,8 @@ export const UNLOCKED_ICON = 'ios-unlock'
 export const LOCKED_ICON = 'ios-lock'
 export const EYE_ICON = 'eye'
 export const MAIL = 'ios-mail'
+export const ALERT_OUTLINE = 'ios-alert-outline'
+export const KEY_ICON = 'ios-key'
 
 // Material
 export const MATERIAL_ICONS = 'material'
