@@ -1,12 +1,15 @@
-1.6.0
+v1.7.0
 
-*EOSサポート
 *Bech32アドレス対応
-*ビットコイン、イーサリアム、ビットコインキャッシュ、ダッシュとエッジURIのディープリンクを実装
 *エッジの中核を独立プロセスに移しグラフィカルユーザインタフェースの反応性パフォーマンスを向上
 * Sell crypto to credit card using Simplex
-* Add Wyre plugin to support buy/sell of Bitcoin and Ethereum from US bank account
 * Add LibertyX to support buying Bitcoin from physical merchants in US
+
+v1.6.0
+
+*EOSサポート
+*ビットコイン、イーサリアム、ビットコインキャッシュ、ダッシュとエッジURIのディープリンクを実装
+* Add Wyre plugin to support buy/sell of Bitcoin from US bank account
 * Add Bitrefill plugin to support buying gift cards and mobile top ups
 
 バージョン1.5.0
