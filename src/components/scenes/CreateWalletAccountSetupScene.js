@@ -59,6 +59,9 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
     this.state = {
       accountHandle: props.accountHandle || ''
     }
+    if (this.state.accountHandle) {
+      props.checkHandleAvailability(this.state.accountHandle)
+    }
   }
 
   componentDidMount () {
@@ -95,10 +98,11 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
   }
 
   render () {
+    const { accountHandle } = this.state
     const { isCheckingHandleAvailability, handleAvailableStatus } = this.props
     const isHandleAvailable = handleAvailableStatus === 'AVAILABLE'
     const validityIcon = isHandleAvailable ? validIcon : invalidIcon
-    const showButton = isHandleAvailable && !isCheckingHandleAvailability
+    const showButton = accountHandle && isHandleAvailable && !isCheckingHandleAvailability
     let chooseHandleErrorMessage = ''
     if (handleAvailableStatus === 'INVALID') {
       chooseHandleErrorMessage = s.strings.create_wallet_account_invalid_account_name
