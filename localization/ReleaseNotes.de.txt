@@ -11,6 +11,8 @@ v1.6.0
 * Deep-Linking für Bitcoin, Ethereum, Bitcoincash, Dash und Edge-URI's implementieren
 * Add Wyre plugin to support buy/sell of Bitcoin from US bank account
 * Add Bitrefill plugin to support buying gift cards and mobile top ups
+* Add Chinese, Korean, French, and Vietnamese translations
+* Add support for IMP and IRR fiat currencies
 
 v1.5.0
 
