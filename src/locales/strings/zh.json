@@ -102,7 +102,7 @@
   "fragment_wallets_resync_wallet_first_confirm_message_mobile": "您确认要重新同步吗 \n",
   "fragment_wallets_split_wallet_bch_to_bsv": "您即将拆分此 BCH 钱包, 并从您的 BCH 私钥创建一个新的 BSV 钱包。这需要 进行一次BCH 交易, 以保护您的资金不被无意中花在错误的链上。这将在 BCH 钱包上产生少量的网络交易费用。进行任何进一步的 bch 交易前， 请先确保此交易确认。是否确实要拆分\n",
   "fragment_wallets_split_wallet_first_confirm_message_mobile": "你确实希望拆分吗 \n",
-  "fragment_wallets_get_seed_wallet_first_confirm_message_mobile": "您确定要公开以下钱包的私有种子吗？",
+  "fragment_wallets_get_seed_wallet_first_confirm_message_mobile": "",
   "fragmet_wallets_delete_wallet_first_confirm_message_mobile": "您是否确定要删除\n",
   "fragmet_wallets_list_archive_title_capitalized": "存档",
   "fragment_wallets_syncing_wallet_txs": "正在同步钱包交易记录..。",
