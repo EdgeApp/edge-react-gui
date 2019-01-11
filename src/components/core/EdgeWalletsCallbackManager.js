@@ -3,7 +3,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import type { State } from '../../ReduxTypes.js'
+import type { State } from '../../modules/ReduxTypes.js'
 import EdgeWalletCallbackManager from './EdgeWalletCallbackManager'
 
 type Props = {
