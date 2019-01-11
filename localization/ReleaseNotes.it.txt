@@ -11,6 +11,8 @@ v1.6.0
 * Implementazione deep link di bitcoin, ethereum, bitcoincash, dash e edge URIs
 * Add Wyre plugin to support buy/sell of Bitcoin from US bank account
 * Aggiunto il plugin Bitrefill per supportare l'acquisto di gift card e ricariche dei cellulari
+* Add Chinese, Korean, French, and Vietnamese translations
+* Add support for IMP and IRR fiat currencies
 
 v1.5.0
 
