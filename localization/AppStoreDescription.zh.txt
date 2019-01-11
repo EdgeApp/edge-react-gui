@@ -1,30 +1,30 @@
-Title: Edge - Bitcoin, Ethereum, Monero, Ripple Wallet
+标题: Edge - 比特币, 以太币, 门罗币, 瑞波幣 钱包
 -----
-Short description: Private, secure & easy to use. Buy, sell, send & receive Bitcoin & other crypto.
+简短描述: 私密、安全 和 易于使用。 购买、出售、发送 和 接收比特币和其他加密货币。
 -----
-Total privacy and security in our easy to use blockchain wallet.
+我们易于使用的区块链钱包为您提供全面的隐私和安全。
 
-Managing your cryptocurrency assets has never been easier. Edge Wallet provides maximum security while keeping simplicity, allowing all types of users to easily manage, transfer & exchange their currencies.
+管理您的加密货币资产从未如此简单。 Edge 钱包为您提供最大的安全性，同时保持简洁，允许所有类型的用户轻松管理，转移和交换他们的货币。
 
-Edge Crypto Wallet currently supports: Bitcoin, Bitcoin Cash, Litecoin, Dash, Ethereum, Stellar, Monero, and Ripple/XRP.
+Edge 的加密钱包目前支持：比特币，比特币现金，莱特币，达世币，以太坊，恒星币，门罗币 和门罗币。
 
-Edge is a powerful and easy to use cryptocurrency wallet that allows users to easily control their own private keys with the familiarity and ease of mobile banking. 
+Edge 是一个功能强大且易于使用的加密货币钱包, 它允许用户利用便利的手机银行模式，轻松地控制自己的私钥。 
 
-Take control of your funds! With Edge, only YOU have access to your funds or transaction data. Neither Edge or any 3rd party can access your money or data. You get the financial privacy and autonomy that blockchain was designed for, with the ease of use even grandma could handle.
+控制您的资金! 在 Edge 中，唯有您能够掌握您的资金或交易信息。 Edge 或 任何第三方都无法获取您的资金或数据。 您将得到专为比特币设计的财务隐私权和自主权，它极为简易，就连老人家都能应付自如。
 
-Edge also provides a cryptocurrency exchange. Easily swap your currencies for others with a few taps. 
+Edge还提供加密货币交易服务。 只需轻点几下, 即可轻松交易加密货币。 
 
-• Zero-knowledge & zero-access to user funds, keys, or transaction data by Edge or 3rd parties
-• Simple account creation using just a login & password (no printing of PDFs, writing down pass phrases, or adding encryption settings)
-• Biometric TouchID and FaceID login
-• Hierarchical Deterministic wallets with changing addresses per transaction
-• Decentralized server architecture. Wallets work even if Edge servers are down.
-• Open-source code. Available at https://github.com/EdgeApp
+• Edge 或第三方对用户的资金，密匙或交易数据完全没有任何的使用权
+• 轻松创建帐户，只需使用登入名和密码 (无需打印 pdf 文件，抄写密码或添加任何加密设置）
+• 使用生物识别（触控ID 和 面容ID） 登入
+• 分层确定性钱包随每笔交易更换地址
+• 分散式服务器架构。 即使 Edge 服务器发生故障，钱包依然可以运作。
+• 开源代码。 可到 https://github.com/EdgeApp 下载
 
-Privacy Notice
-The Edge Wallet application requests access to the device contact list, and personal information. This information is used on the device to provide an improved user experience in the following ways:
+隐私声明
+Edge钱包应用程序要求应用装置中的联系人列表、位置和个人信息。 这些资讯将应用在装置中以便提升使用者的体验，例如：
 
-1. Autocomplete contacts from the user's address book after a transaction
-2. Autocomplete contacts from the user's address book to send Email or SMS payment requests
+1. 在进行交易后，在使用者的通讯录当中自动完成联系人资料的填写
+2. 自动完成使用者通讯录中的联系人资料，以便通过电邮或短信发送付款请求
 
-No personal info or contact list info ever leaves the device. Neither Edge nor any 3rd party can access the information requested by the application.
+任何个人信息或联系人列表信息都不会离开设备。 Edge或任何第三方都无权获知应用程序所使用的信息。
