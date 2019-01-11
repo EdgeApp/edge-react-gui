@@ -1,9 +1,18 @@
-1.6.0
+v1.7.0
+
+* Hỗ trợ địa chỉ Bech32
+* Di chuyển Edge Core sang quy trình độc lập để tăng hiệu suất và khả năng phản hồi GUI
+* Sell crypto to credit card using Simplex
+* Add LibertyX to support buying Bitcoin from physical merchants in US
+
+v1.6.0
 
 * Hỗ trợ EOS
-* Hỗ trợ địa chỉ Bech32
 * Triển khai liên kết sâu của các bitcoin bitcoin, ethereum, bitcoincash, dash và edge
-* Di chuyển Edge Core sang quy trình độc lập để tăng hiệu suất và khả năng phản hồi GUI
+* Add Wyre plugin to support buy/sell of Bitcoin from US bank account
+* Add Bitrefill plugin to support buying gift cards and mobile top ups
+* Add Chinese, Korean, French, and Vietnamese translations
+* Add support for IMP and IRR fiat currencies
 
 v1.5.0
 
