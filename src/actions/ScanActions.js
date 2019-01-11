@@ -1,6 +1,5 @@
 // @flow
 
-import { bns } from 'biggystring'
 import { createYesNoModal, showModal } from 'edge-components'
 import type { EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendInfo, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
 import React from 'react'
@@ -149,13 +148,9 @@ export const parseScannedUri = (data: string) => (dispatch: Dispatch, getState: 
         }
       ]
 
-      let lockInputs = false
-      if (spendTargets[0].nativeAmount && !bns.eq(spendTargets[0].nativeAmount, '0')) {
-        lockInputs = true
-      }
       const guiMakeSpendInfo: GuiMakeSpendInfo = {
         spendTargets,
-        lockInputs,
+        lockInputs: false,
         metadata: parsedUri.metadata,
         uniqueIdentifier: parsedUri.uniqueIdentifier
       }
