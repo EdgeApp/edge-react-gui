@@ -11,6 +11,8 @@ v1.6.0
 * 实现比特币、以太币、比特币现金、达世币和 Edge 统一资源标识符 的深度连接
 * Add Wyre plugin to support buy/sell of Bitcoin from US bank account
 * 添加 bitrefill 插件, 以支持购买礼品卡和手机充值
+* Add Chinese, Korean, French, and Vietnamese translations
+* Add support for IMP and IRR fiat currencies
 
 v1.5.0
 
