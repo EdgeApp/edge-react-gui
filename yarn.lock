@@ -3237,9 +3237,9 @@ edge-core-js@0.13.5:
     ws "^5.1.1"
     yaob "^0.3.1"
 
-"edge-currency-accountbased@git://github.com/EdgeApp/edge-currency-accountbased#7a601690ff7782":
+"edge-currency-accountbased@git://github.com/EdgeApp/edge-currency-accountbased#4e149e9063":
   version "0.0.16"
-  resolved "git://github.com/EdgeApp/edge-currency-accountbased#7a601690ff778249e43df1694b1fd1d780ceef98"
+  resolved "git://github.com/EdgeApp/edge-currency-accountbased#4e149e9063e69a2647f8c8c8b8891f1605c715dc"
   dependencies:
     base-x "^1.0.4"
     biggystring "^3.0.0"
