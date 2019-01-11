@@ -1,9 +1,18 @@
-1.6.0
+v1.7.0
+
+* Bech32 주소 지원
+* 엣지 코어를 독립 프로세스로 옮김으로써 퍼포먼스와 그래픽 유저 인터페이스의 반응성을 향상
+* Sell crypto to credit card using Simplex
+* Add LibertyX to support buying Bitcoin from physical merchants in US
+
+v1.6.0
 
 * EOS 지원
-* Bech32 주소 지원
 * 비트코인, 이더리움, 비트코인 캐시, 대시, 그리고 엣지 URI의 딥 링크를 구현
-* 엣지 코어를 독립 프로세스로 옮김으로써 퍼포먼스와 그래픽 유저 인터페이스의 반응성을 향상
+* Add Wyre plugin to support buy/sell of Bitcoin from US bank account
+* Add Bitrefill plugin to support buying gift cards and mobile top ups
+* Add Chinese, Korean, French, and Vietnamese translations
+* Add support for IMP and IRR fiat currencies
 
 v1.5.0
 
