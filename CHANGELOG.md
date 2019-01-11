@@ -5,6 +5,8 @@
 * EOS support
 * Implementing deep linking of bitcoin, ethereum, bitcoincash, dash, and edge URIs
 * Add Wyre plugin to support buy/sell of Bitcoin and Ethereum from US bank account
+* Add Chinese, Korean, French, and Vietnamese translations
+* Add support for IMP and IRR fiat currencies
 
 ## 1.5.0
 
