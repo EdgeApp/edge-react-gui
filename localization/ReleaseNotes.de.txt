@@ -1,12 +1,15 @@
-1.6.0
+v1.7.0
 
-* EOS Support
 * Bech32 Adressen Support
-* Deep-Linking für Bitcoin, Ethereum, Bitcoincash, Dash und Edge-URI's implementieren
 * Den Edge Core zum eigenständigen Prozess machen, um die Leistung und die GUI-Antwortzeit zu verbessern
 * Sell crypto to credit card using Simplex
-* Add Wyre plugin to support buy/sell of Bitcoin and Ethereum from US bank account
 * Add LibertyX to support buying Bitcoin from physical merchants in US
+
+v1.6.0
+
+* EOS Support
+* Deep-Linking für Bitcoin, Ethereum, Bitcoincash, Dash und Edge-URI's implementieren
+* Add Wyre plugin to support buy/sell of Bitcoin from US bank account
 * Add Bitrefill plugin to support buying gift cards and mobile top ups
 
 v1.5.0
