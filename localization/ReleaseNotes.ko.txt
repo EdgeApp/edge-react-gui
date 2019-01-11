@@ -11,6 +11,8 @@ v1.6.0
 * 비트코인, 이더리움, 비트코인 캐시, 대시, 그리고 엣지 URI의 딥 링크를 구현
 * Add Wyre plugin to support buy/sell of Bitcoin from US bank account
 * Add Bitrefill plugin to support buying gift cards and mobile top ups
+* Add Chinese, Korean, French, and Vietnamese translations
+* Add support for IMP and IRR fiat currencies
 
 v1.5.0
 
