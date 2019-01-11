@@ -143,7 +143,8 @@ class PluginView extends React.Component<PluginProps, PluginState> {
       chooseWallet: this.chooseWallet,
       showAlert: this.props.showAlert,
       back: this._webviewBack,
-      renderTitle: this._renderTitle
+      renderTitle: this._renderTitle,
+      edgeCallBack: this.edgeCallBack
     })
   }
 
@@ -218,7 +219,6 @@ class PluginView extends React.Component<PluginProps, PluginState> {
     }
     const { cbid, func } = data
     this._nextMessage(cbid)
-
     if (this.bridge[func]) {
       this.bridge[func](data)
         .then(res => {
@@ -227,6 +227,9 @@ class PluginView extends React.Component<PluginProps, PluginState> {
         .catch(err => {
           this._pluginReturn({ cbid, func, err, res: null })
         })
+    } else if (func === 'edgeCallBack') {
+      // this is if we are taking what used to be a callback url. There is no promise to return.
+      this.edgeCallBack(data)
     } else {
       this._pluginReturn({ cbid, func, err: 'invalid function' })
     }
@@ -235,57 +238,65 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   _setWebview = webview => {
     this.webview = webview
   }
+  // This is the preferred method for calling back . it does not return any promise like other brindge calls.
+  edgeCallBack = data => {
+    switch (data['edge-callback']) {
+      case 'paymentUri':
+        if (this.openingSendConfirmation) {
+          return
+        }
+        this.openingSendConfirmation = true
+        this.props.coreWallet.parseUri(data['edge-uri']).then(result => {
+          const info: GuiMakeSpendInfo = {
+            currencyCode: result.currencyCode,
+            nativeAmount: result.nativeAmount,
+            publicAddress: result.publicAddress
+          }
+          this.successUrl = data['x-success'] ? data['x-success'] : null
+          this.bridge
+            .makeSpendRequest(info)
+            .then(tr => {
+              this.openingSendConfirmation = false
+              Actions.pop()
+              if (this.successUrl) {
+                this._webviewOpenUrl(this.successUrl)
+              }
+            })
+            .catch(e => {
+              console.log(e)
+            })
+        })
+        break
+    }
+  }
 
   _onNavigationStateChange = navState => {
     if (navState.loading) {
       return
     }
     const parsedUrl = parse(navState.url, {}, true)
-    if (parsedUrl.query['edge-callback']) {
-      switch (parsedUrl.query['edge-callback']) {
-        case 'paymentUri':
+
+    // TODO: if no partners are using this we should delete
+    if (parsedUrl.protocol === 'edge:' && parsedUrl.hostname === 'x-callback-url') {
+      switch (parsedUrl.pathname) {
+        case '/paymentUri':
           if (this.openingSendConfirmation) {
             return
           }
           this.openingSendConfirmation = true
-          this.props.coreWallet.parseUri(parsedUrl.query['edge-uri']).then(result => {
-            const info: GuiMakeSpendInfo = {
-              currencyCode: result.currencyCode,
-              nativeAmount: result.nativeAmount,
-              publicAddress: result.publicAddress
-            }
-            this.successUrl = parsedUrl.query['x-success'] ? parsedUrl.query['x-success'] : null
-            this.bridge
-              .makeSpendRequest(info)
-              .then(tr => {
-                this.openingSendConfirmation = false
-                Actions.pop()
-                if (this.successUrl) {
-                  this._webviewOpenUrl(this.successUrl)
-                }
-              })
-              .catch(e => {
-                console.log(e)
-              })
-          })
-          break
-      }
-      return
-    }
-    // embed/dash?edge-callback=paymentUri&edge-source=Bitrefill&edge-uri=dash%3AXssJVcdjqKbkXg3hRD4kDxgsL3rtWkAxD9%3Famount%3D0.352965%26IS%3D1
-    if (parsedUrl.protocol === 'edge:' && parsedUrl.hostname === 'x-callback-url') {
-      switch (parsedUrl.pathname) {
-        case '/paymentUri':
           this.props.coreWallet.parseUri(parsedUrl.query.uri).then(result => {
             const info: GuiMakeSpendInfo = {
               currencyCode: result.currencyCode,
               nativeAmount: result.nativeAmount,
               publicAddress: result.publicAddress
             }
-            this.successUrl = parsedUrl.query['x-success']
+
+            this.successUrl = parsedUrl.query['x-success'] ? parsedUrl.query['x-success'] : null
             this.bridge
               .makeSpendRequest(info)
               .then(tr => {
+                this.openingSendConfirmation = false
+                Actions.pop()
                 if (this.successUrl) {
                   this._webviewOpenUrl(this.successUrl)
                 }
