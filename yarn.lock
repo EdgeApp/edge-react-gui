@@ -3330,21 +3330,21 @@ edge-login-ui-rn@^0.5.16:
     sprintf-js "^1.0.3"
     zxcvbn "^4.4.2"
 
-"edge-plugin-bitrefill@https://github.com/EdgeApp/edge-plugin-bitrefill.git#f3df6e1":
+"edge-plugin-bitrefill@https://github.com/EdgeApp/edge-plugin-bitrefill.git#3d9068d":
   version "0.0.1"
-  resolved "https://github.com/EdgeApp/edge-plugin-bitrefill.git#f3df6e1d91e6e486d601e52a0584daa508cdfc34"
+  resolved "https://github.com/EdgeApp/edge-plugin-bitrefill.git#3d9068d7f013561da6907526e1b753f948d3c1df"
   dependencies:
     moment "^2.22.2"
 
-"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#fb2eb83":
+"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#5155b5fa":
   version "0.0.3"
-  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#fb2eb83ad153f397fd71f94fa0e38fac4e06fca8"
+  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#5155b5fadf0a9af519a78b5cdc655bd018748e47"
   dependencies:
     moment "^2.22.2"
 
-"edge-plugin-wyre@https://github.com/EdgeApp/edge-plugin-wyre.git#d38ecb2":
+"edge-plugin-wyre@https://github.com/EdgeApp/edge-plugin-wyre.git#31b260d":
   version "0.0.3"
-  resolved "https://github.com/EdgeApp/edge-plugin-wyre.git#d38ecb2bfb6cedfdfffd392352ab949537378d92"
+  resolved "https://github.com/EdgeApp/edge-plugin-wyre.git#31b260d031aa72b23945e05b09499c3e0ad3f200"
   dependencies:
     js-sha256 "^0.9.0"
     moment "^2.22.2"
