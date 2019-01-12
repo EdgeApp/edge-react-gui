@@ -440,5 +440,6 @@
   "changelly_kyc_statement": "He leído y estoy de acuerdo con los términos de uso y política de privacidad de Changelly. Haciendo click en aceptar reconozco y acepto que mi transacción puede generar una verificación AML/KYC de acuerdo a la política AML/KYC de Changelly",
   "terms_of_use": "Condiciones de uso",
   "privacy_policy": "Política de privacidad",
-  "changelly_aml_kyc": "AML/KYC"
+  "changelly_aml_kyc": "AML/KYC",
+  "alert_deep_link_no_wallet": ""
 }
