@@ -475,7 +475,8 @@ const strings = {
     'I have read and I agree to the Changelly terms of use and privacy policy.  By clicking Accept, I acknowledge and understand that my transaction may trigger an AML/KYC verification according to Changelly AML/KYC',
   terms_of_use: 'Terms of Use',
   privacy_policy: 'Privacy Policy',
-  changelly_aml_kyc: 'AML/KYC'
+  changelly_aml_kyc: 'AML/KYC',
+  alert_deep_link_no_wallet: 'No wallets exist that support %1$s. You can create a wallet for %2$s by tapping + on the Wallet List screen.'
 }
 
 // export default strings
