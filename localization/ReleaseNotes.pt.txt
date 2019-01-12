@@ -1,10 +1,24 @@
-v1.5.0
+v1.7.0
+
+* Bech32 address support
+* Move Edge Core to independent process to boost performance and GUI responsiveness
+* Sell crypto to credit card using Simplex
+* Add LibertyX to support buying Bitcoin from physical merchants in US
+
+v1.6.0
 
 * EOS support
-* Bech32 address support
-* Add Changenow as an exchange provider
 * Implementing deep linking of bitcoin, ethereum, bitcoincash, dash, and edge URIs
-* Move Edge Core to independent process to boost performance and GUI responsiveness
+* Add Wyre plugin to support buy/sell of Bitcoin from US bank account
+* Add Bitrefill plugin to support buying gift cards and mobile top ups
+* Add Chinese, Korean, French, and Vietnamese translations
+* Add support for IMP and IRR fiat currencies
+
+v1.5.0
+
+* Add Changenow as an exchange provider
+* Use new colored currency icons
+* Allow signin/singout of ShapeShift via Settings screen
 
 v1.4.4
 

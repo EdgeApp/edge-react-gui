@@ -1,14 +1,15 @@
+// @flow
 /* eslint-disable flowtype/require-valid-file-annotation */
 
+import { InputAndButtonStyle, Modal, ModalStyle, PrimaryButton, SecondaryButton } from 'edge-components'
 import React, { Component } from 'react'
 import { Picker, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import s from '../../locales/strings.js'
-import StylizedModal from '../../modules/UI/components/Modal/Modal.ui'
 import styles from '../../styles/SettingsComponentsStyle'
+import { colors as COLORS } from '../../theme/variables/airbitz.js'
 import * as UTILS from '../../util/utils'
-import ModalButtons from '../common/ModalButtons'
 
 const DISABLE_TEXT = s.strings.string_disable
 const DAYS_TEXT = s.strings.settings_days
@@ -16,8 +17,18 @@ const HOURS_TEXT = s.strings.settings_hours
 const MINUTEST_TEXT = s.strings.settings_minutes
 const SECONDS_TEXT = s.strings.settings_seconds
 
-export default class AutoLogoutModal extends Component {
-  constructor (props) {
+type AutoLogoutModalProps = {
+  onDone: any => void,
+  autoLogoutTimeInMinutes: number
+}
+
+type AutoLogoutModalState = {
+  timeNumber: number,
+  timeMeasurement: string
+}
+
+export default class AutoLogoutModal extends Component<AutoLogoutModalProps, AutoLogoutModalState> {
+  constructor (props: AutoLogoutModalProps) {
     super(props)
     const { value, measurement } = UTILS.getTimeWithMeasurement(this.props.autoLogoutTimeInMinutes)
     this.state = {
@@ -26,15 +37,10 @@ export default class AutoLogoutModal extends Component {
     }
   }
 
-  onDone = props => {
+  onDone = (props: AutoLogoutModalState) => {
     const { timeNumber, timeMeasurement } = props
     const minutes = UTILS.getTimeInMinutes({ value: timeNumber, measurement: timeMeasurement })
     this.props.onDone(minutes)
-  }
-
-  onCancel = () => {
-    this.setState({ showModal: false })
-    this.props.onCancel()
   }
 
   render () {
@@ -69,28 +75,46 @@ export default class AutoLogoutModal extends Component {
       </Picker>
     )
 
-    const modalMiddle = (
-      <View style={{ flexDirection: 'row' }}>
-        {numberPicker}
-        {measurementPicker}
+    return (
+      <View style={ModalStyle.modal}>
+        <Modal.Icon>
+          <IonIcon name={'ios-time'} size={24} color={COLORS.primary} />
+        </Modal.Icon>
+        <Modal.Container>
+          <Modal.Icon.AndroidHackSpacer />
+          <Modal.Title style={{ textAlign: 'center' }}>{s.strings.dialog_title}</Modal.Title>
+          <Modal.Body>
+            <View style={{ flexDirection: 'row' }}>
+              {numberPicker}
+              {measurementPicker}
+            </View>
+          </Modal.Body>
+          <Modal.Footer>
+            <Modal.Row style={[InputAndButtonStyle.row]}>
+              <SecondaryButton style={[InputAndButtonStyle.noButton]} onPress={() => this.props.onDone(false)}>
+                <SecondaryButton.Text style={[InputAndButtonStyle.buttonText]}>{s.strings.string_cancel_cap}</SecondaryButton.Text>
+              </SecondaryButton>
+              <PrimaryButton
+                style={[InputAndButtonStyle.yesButton]}
+                onPress={() => this.onDone({ timeMeasurement: this.state.timeMeasurement, timeNumber: this.state.timeNumber })}
+              >
+                <PrimaryButton.Text style={[InputAndButtonStyle.buttonText]}>{s.strings.string_save}</PrimaryButton.Text>
+              </PrimaryButton>
+            </Modal.Row>
+          </Modal.Footer>
+        </Modal.Container>
       </View>
     )
-
-    const modalBottom = (
-      <ModalButtons onDone={() => this.onDone({ timeMeasurement: this.state.timeMeasurement, timeNumber: this.state.timeNumber })} onCancel={this.onCancel} />
-    )
-
-    const icon = <IonIcon name="ios-time" size={24} style={styles.icon} />
-
-    return (
-      <StylizedModal
-        visibilityBoolean={this.props.showModal}
-        featuredIcon={icon}
-        headerText={s.strings.dialog_title}
-        modalMiddle={modalMiddle}
-        modalBottom={modalBottom}
-        onExitButtonFxn={this.onCancel}
-      />
-    )
   }
+}
+
+export type AutoLogoutModalOpts = {
+  autoLogoutTimeInMinutes: number
+}
+
+export const createAutoLogoutModal = (opts: AutoLogoutModalOpts) => {
+  function AutoLogoutModalWrapped (props: { +onDone: Function }) {
+    return <AutoLogoutModal {...opts} {...props} />
+  }
+  return AutoLogoutModalWrapped
 }

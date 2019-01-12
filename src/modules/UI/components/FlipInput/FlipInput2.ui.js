@@ -54,7 +54,9 @@ export type FlipInputOwnProps = {
   // Callback when primaryDecimalAmount changes. **This is only called when the user types into a field or if
   // exchangeSecondaryToPrimaryRatio changes. This does NOT get called when overridePrimaryDecimalAmount is changed by the parent
   onAmountChanged(decimalAmount: string): void,
-  isEditable: boolean
+  isEditable: boolean,
+  isFiatOnTop: boolean,
+  isFocus: boolean
 }
 
 type Props = FlipInputOwnProps
@@ -80,7 +82,7 @@ function setPrimaryToSecondary (props: Props, primaryDecimalAmount: string) {
 // Pretty much the same as setPrimaryToSecondary
 function setSecondaryToPrimary (props: Props, secondaryDecimalAmount: string) {
   const secondaryDisplayAmount = intl.formatNumberInput(secondaryDecimalAmount)
-  let primaryDecimalAmount = bns.div(secondaryDecimalAmount, props.exchangeSecondaryToPrimaryRatio, 18)
+  let primaryDecimalAmount = props.exchangeSecondaryToPrimaryRatio === '0' ? '0' : bns.div(secondaryDecimalAmount, props.exchangeSecondaryToPrimaryRatio, 18)
   primaryDecimalAmount = UTILS.truncateDecimals(primaryDecimalAmount, props.primaryInfo.maxConversionDecimals)
   const primaryDisplayAmount = intl.formatNumberInput(primaryDecimalAmount)
   return { secondaryDisplayAmount, primaryDisplayAmount, primaryDecimalAmount }
@@ -119,8 +121,8 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
     super(props)
     this.state = getInitialState(props)
     slowlog(this, /.*/, global.slowlogOptions)
-  }
-  UNSAFE_componentWillMount () {
+
+    // Mounting Animation
     this.animatedValue = new Animated.Value(0)
     this.frontInterpolate = this.animatedValue.interpolate({
       inputRange: [0, 1],
@@ -147,6 +149,26 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
         this.textInputFront.focus()
       }
     }, 400)
+
+    if (this.props.isFiatOnTop) {
+      this.setState({
+        isToggled: !this.state.isToggled
+      })
+      Animated.timing(this.animatedValue, {
+        toValue: 1,
+        duration: 0
+      }).start()
+      setTimeout(() => {
+        this.setState({
+          secondaryDisplayAmount: ''
+        })
+      }, 10)
+    }
+
+    if (this.props.isFocus) {
+      const { textInputBack } = this
+      setTimeout(() => textInputBack.focus(), 650)
+    }
   }
 
   UNSAFE_componentWillReceiveProps (nextProps: Props) {
@@ -276,7 +298,7 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
         <Text style={[top.symbol]}>{fieldInfo.currencySymbol}</Text>
         <TextInput
           style={[top.amount, Platform.OS === 'ios' ? {} : { paddingBottom: 2 }]}
-          placeholder={'0'}
+          placeholder={this.props.isFiatOnTop ? 'Amount' : '0'}
           placeholderTextColor={'rgba(255, 255, 255, 0.60)'}
           value={amount}
           onChangeText={onChangeText}

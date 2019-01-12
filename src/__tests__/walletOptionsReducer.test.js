@@ -15,26 +15,6 @@ describe('reducer', () => {
     expect(actual).toMatchSnapshot()
   })
 
-  it('open resync wallet modal', () => {
-    const action = {
-      type: 'OPEN_RESYNC_WALLET_MODAL',
-      data: { walletId: 'RESYNC WALLET ID' }
-    }
-    const actual = reducer(initialState, action)
-
-    expect(actual).toMatchSnapshot()
-  })
-
-  it('open getseed wallet modal', () => {
-    const action = {
-      type: 'OPEN_GETSEED_WALLET_MODAL',
-      data: { walletId: 'GETSEED WALLET ID' }
-    }
-    const actual = reducer(initialState, action)
-
-    expect(actual).toMatchSnapshot()
-  })
-
   it('open viewxpub wallet modal', () => {
     const action = {
       type: 'OPEN_VIEWXPUB_WALLET_MODAL',

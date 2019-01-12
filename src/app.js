@@ -43,7 +43,8 @@ if (ENV.USE_FIREBASE) {
   global.firebase = firebase
 }
 
-const IGNORED_WARNINGS = ['slowlog', 'Setting a timer for a long period of time']
+// TODO: Remove isMounted from IGNORED_WARNINGS once we upgrade to RN 0.57
+const IGNORED_WARNINGS = ['slowlog', 'Setting a timer for a long period of time', 'Warning: isMounted(...) is deprecated']
 // $FlowExpectedError
 console.ignoredYellowBox = IGNORED_WARNINGS
 

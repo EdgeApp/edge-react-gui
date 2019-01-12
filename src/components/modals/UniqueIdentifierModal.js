@@ -3,6 +3,7 @@
 import React, { Component } from 'react'
 import { sprintf } from 'sprintf-js'
 
+import { getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
 import s from '../../locales/strings'
 import { PrimaryButton, SecondaryButton } from '../../modules/UI/components/Buttons/index'
 import Text from '../../modules/UI/components/FormattedText/index'
@@ -18,19 +19,32 @@ export type Props = {
   onCancel: () => any,
   currencyCode: string,
   uniqueIdentifier: string,
-  uniqueIdentifierChanged: (uniqueIdentifier: string) => void
+  uniqueIdentifierChanged: (uniqueIdentifier: string) => void,
+  keyboardType: ?string
 }
 export class UniqueIdentifierModal extends Component<Props> {
   render () {
-    const { currencyCode, isActive, onBackButtonPress, onBackdropPress, onCancel, onModalHide, uniqueIdentifier, uniqueIdentifierChanged } = this.props
-    const type = getUniqueIdentifierType(currencyCode)
-    const description = getUniqueIdentifierDescription(type)
+    const {
+      currencyCode,
+      isActive,
+      onBackButtonPress,
+      onBackdropPress,
+      onCancel,
+      onModalHide,
+      uniqueIdentifier,
+      uniqueIdentifierChanged,
+      keyboardType
+    } = this.props
+    let type = ''
+    if (getSpecialCurrencyInfo(currencyCode).uniqueIdentifier) {
+      type = getSpecialCurrencyInfo(currencyCode).uniqueIdentifier.identifierName
+    }
+    const description = sprintf(s.strings.unique_identifier_modal_description, type)
     const title = type
     const label = type
     const confirm = s.strings.unique_identifier_modal_confirm
     const cancel = s.strings.unique_identifier_modal_cancel
     const icon = { type: 'ionIcons', name: 'ios-key' }
-    const keyboardType = 'numeric'
 
     return (
       <InteractiveModal legacy isActive={isActive} onBackdropPress={onBackdropPress} onBackButtonPress={onBackButtonPress} onModalHide={onModalHide}>
@@ -91,17 +105,4 @@ export class UniqueIdentifierModal extends Component<Props> {
     const { uniqueIdentifier } = this.props
     this.props.onConfirm(uniqueIdentifier)
   }
-}
-
-const getUniqueIdentifierType = (currencyCode: string): string => {
-  const types = {
-    XRP: s.strings.unique_identifier_destination_tag,
-    XMR: s.strings.unique_identifier_payment_id,
-    default: s.strings.unique_identifier
-  }
-
-  return types[currencyCode] || types['default']
-}
-const getUniqueIdentifierDescription = (type: string): string => {
-  return sprintf(s.strings.unique_identifier_modal_description, type)
 }

@@ -1,9 +1,10 @@
 // @flow
 
 import React, { Component } from 'react'
-import { ActivityIndicator, Alert, View, WebView } from 'react-native'
+import { ActivityIndicator, Alert, View } from 'react-native'
 import * as Animatable from 'react-native-animatable'
 import CookieManager from 'react-native-cookies'
+import { WebView } from 'react-native-webview'
 import { base64 } from 'rfc4648'
 
 import ENV from '../../../env.json'

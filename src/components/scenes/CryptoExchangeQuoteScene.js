@@ -1,8 +1,9 @@
 // @flow
 
-import type { EdgeSwapQuote } from 'edge-core-js'
+import { showModal } from 'edge-components'
+import type { EdgeAccount, EdgeSwapQuote } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, Image, View } from 'react-native'
+import { ActivityIndicator, Image, Linking, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../locales/strings.js'
@@ -15,6 +16,7 @@ import Slider from '../../modules/UI/components/Slider/index'
 import { CryptoExchangeQuoteSceneStyles as styles } from '../../styles/indexStyles'
 import type { GuiWallet } from '../../types'
 import { CircleTimer } from '../common/CircleTimer'
+import { createKYCAlertModal } from '../modals/KYCAlertModal'
 
 export type QuoteObject = {
   quote: EdgeSwapQuote,
@@ -54,6 +56,7 @@ type StateProps = {
   toBalanceInFiat: string,
   quoteExpireDate: Date | null,
   fee: string,
+  account: EdgeAccount,
   shift(): void,
   timeExpired(): void
 }
@@ -62,6 +65,7 @@ type State = {}
 
 class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
   componentDidMount = () => {
+    this.checkForKYC()
     global.firebase && global.firebase.analytics().logEvent(`Exchange_Shift_Quote`)
   }
 
@@ -93,11 +97,105 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
         return { uri: 'exchange_logo_changelly' }
     }
   }
+  renderDisclaimer = (arg: string) => {
+    switch (arg) {
+      case 'shapeshift':
+        return { uri: 'exchange_logo_shapeshift' }
+
+      case 'bitaccess':
+        return { uri: 'exchange_logo_bitaccess' }
+
+      case 'changenow':
+        return { uri: 'exchange_logo_changenow' }
+
+      case 'changelly':
+      default:
+        return { uri: 'exchange_logo_changelly' }
+    }
+  }
+  checkForKYC = () => {
+    const pluginName = this.props.quote.quote.pluginName
+    const componentProps = {
+      aboutText: '',
+      acceptText: '',
+      termsText: '',
+      privacyText: '',
+      amlText: ''
+    }
+    switch (pluginName) {
+      case 'changelly':
+        console.log('KYC: settings', this.props.account.swapConfig[pluginName])
+        if (!this.props.account.swapConfig[pluginName].userSettings || !this.props.account.swapConfig[pluginName].userSettings.agreedToTerms) {
+          componentProps.aboutText = s.strings.changelly_about
+          componentProps.acceptText = s.strings.changelly_kyc_statement
+          componentProps.termsText = s.strings.terms_of_use
+          componentProps.privacyText = s.strings.privacy_policy
+          componentProps.amlText = s.strings.changelly_aml_kyc
+        }
+        break
+    }
+    if (componentProps.aboutText !== '') {
+      const modal = createKYCAlertModal({
+        logo: this.renderImage(pluginName),
+        aboutText: componentProps.aboutText,
+        acceptText: componentProps.acceptText,
+        termsText: componentProps.termsText,
+        privacyText: componentProps.privacyText,
+        amlText: componentProps.amlText,
+        onAccept: this.acceptKYCWarning,
+        termsClick: this.viewTerms,
+        privacyClick: this.viewPrivacy,
+        amlClick: this.viewAML
+      })
+      showModal(modal).then((response: null) => {})
+    }
+  }
+  viewPrivacy = () => {
+    const pluginName = this.props.quote.quote.pluginName
+    let url = null
+    switch (pluginName) {
+      case 'changelly':
+        url = 'https://changelly.com/privacy-policy'
+        break
+    }
+    if (url) {
+      Linking.openURL(url)
+    }
+  }
+  viewAML = () => {
+    const pluginName = this.props.quote.quote.pluginName
+    let url = null
+    switch (pluginName) {
+      case 'changelly':
+        url = 'https://changelly.com/aml-kyc'
+        break
+    }
+    if (url) {
+      Linking.openURL(url)
+    }
+  }
+  viewTerms = () => {
+    const pluginName = this.props.quote.quote.pluginName
+    let url = null
+    switch (pluginName) {
+      case 'changelly':
+        url = 'https://changelly.com/terms-of-use'
+        break
+    }
+    if (url) {
+      Linking.openURL(url)
+    }
+  }
+  acceptKYCWarning = async () => {
+    const pluginName = this.props.quote.quote.pluginName
+    await this.props.account.swapConfig[pluginName].changeUserSettings({ agreedToTerms: true })
+  }
+
   render () {
     if (!this.props.fromWallet) {
       return null
     }
-    console.log('stop')
+
     return (
       <SafeAreaView>
         <Gradient style={styles.scene}>

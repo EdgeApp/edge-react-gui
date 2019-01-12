@@ -1,6 +1,6 @@
 {
   "name": "edge-react-gui",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Edge Wallet React GUI",
   "homepage": "https://edge.app",
   "license": "SEE LICENSE IN LICENSE",
@@ -83,14 +83,14 @@
     "dateformat": "^3.0.3",
     "dns.js": "^1.0.1",
     "domain-browser": "^1.1.7",
-    "edge-components": "^0.0.17",
+    "edge-components": "^0.0.18",
     "edge-core-js": "0.13.5",
-    "edge-currency-accountbased": "^0.0.16",
-    "edge-currency-bitcoin": "3.7.8",
+    "edge-currency-accountbased": "git://github.com/EdgeApp/edge-currency-accountbased#4e149e9063",
+    "edge-currency-bitcoin": "3.7.9",
     "edge-currency-ethereum": "0.11.2",
-    "edge-currency-monero": "0.1.1",
-    "edge-exchange-plugins": "^0.2.1",
-    "edge-login-ui-rn": "^0.5.12",
+    "edge-currency-monero": "0.1.2",
+    "edge-exchange-plugins": "^0.3.0",
+    "edge-login-ui-rn": "^0.5.16",
     "https-browserify": "0.0.1",
     "jsc-android": "216113.0.3",
     "lodash": "^4.17.2",
@@ -104,7 +104,7 @@
     "react-native-animatable": "^1.1.0",
     "react-native-app-settings": "^2.0.0",
     "react-native-background-fetch": "^2.4.3",
-    "react-native-camera": "git://github.com/EdgeApp/react-native-camera.git#97e0b9a",
+    "react-native-camera": "git://github.com/EdgeApp/react-native-camera.git#a31ea429d77",
     "react-native-contacts": "git://github.com/EdgeApp/react-native-contacts.git",
     "react-native-contacts-wrapper": "git://github.com/EdgeApp/react-native-contacts-wrapper.git",
     "react-native-cookies": "3.3.0",
@@ -144,7 +144,7 @@
     "react-native-tcp": "git://github.com/Airbitz/react-native-tcp.git#c6af8f728fcbbae23d20c0211fd5b6c322f7a446",
     "react-native-udp": "^2.0.0",
     "react-native-vector-icons": "^6.1.0",
-    "react-native-webview-file-upload-android": "https://github.com/rhinogram/react-native-webview-file-upload-android.git#feature/support-file-downloading",
+    "react-native-webview": "https://github.com/react-native-community/react-native-webview#1f11f10",
     "react-redux": "^5.0.5",
     "react-test-renderer": "^16.4.1",
     "readable-stream": "^1.0.33",
@@ -165,7 +165,9 @@
     "babel-preset-react-native": "^1.9.0",
     "body-parser": "^1.18.2",
     "detox": "^7.4.3",
-    "edge-plugin-simplex": "https://github.com/Airbitz/edge-plugin-simplex.git#fb2eb83",
+    "edge-plugin-simplex": "https://github.com/Airbitz/edge-plugin-simplex.git#5155b5fa",
+    "edge-plugin-wyre": "https://github.com/EdgeApp/edge-plugin-wyre.git#31b260d",
+    "edge-plugin-bitrefill": "https://github.com/EdgeApp/edge-plugin-bitrefill.git#3d9068d",
     "eslint": "^4.17.0",
     "eslint-config-standard": "^11.0.0-beta.0",
     "eslint-plugin-flowtype": "^2.35.0",
@@ -307,9 +309,12 @@
   },
   "plugins": {
     "buysell": [
-      "edge-plugin-simplex"
+      "edge-plugin-simplex",
+      "edge-plugin-wyre"
     ],
-    "spend": []
+    "spend": [
+      "edge-plugin-bitrefill"
+    ]
   },
   "lint-staged": {
     "*.js": [

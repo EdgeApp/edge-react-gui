@@ -93,7 +93,7 @@ export const initialState = {
   passwordUseCount: 0
 }
 
-export const untranslatedReducer = (state: PasswordReminderState = initialState, action: PasswordReminderReducerAction) => {
+export const untranslatedReducer = (state: PasswordReminderState = initialState, action: PasswordReminderReducerAction): PasswordReminderState => {
   switch (action.type) {
     case 'NEW_ACCOUNT_LOGIN': {
       const lastPasswordUseDate = action.data.lastLoginDate
@@ -150,7 +150,6 @@ export const untranslatedReducer = (state: PasswordReminderState = initialState,
 
       return {
         ...state,
-        ...action.data,
         passwordUseCount,
         lastPasswordUseDate,
         needsPasswordCheck,
@@ -229,7 +228,7 @@ export const translate = (reducer: typeof untranslatedReducer): Reducer<Password
     }
   }
 
-  if (action.type === 'UI/SETTINGS/SET_SETTINGS_LOCK' && action.data === false) {
+  if (action.type === 'PASSWORD_USED') {
     translatedAction = {
       type: 'PASSWORD_USED',
       data: {
@@ -237,7 +236,7 @@ export const translate = (reducer: typeof untranslatedReducer): Reducer<Password
       }
     }
   }
-  if (action.type === 'UNLOCK_WALLET_SEED') {
+  if (action.type === 'UI/SETTINGS/SET_SETTINGS_LOCK' && action.data === false) {
     translatedAction = {
       type: 'PASSWORD_USED',
       data: {

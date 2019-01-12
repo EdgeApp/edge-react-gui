@@ -3,6 +3,7 @@ package co.edgesecure.app;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.reactnativecommunity.webview.RNCWebViewPackage;
 import com.psykar.cookiemanager.CookieManagerPackage;
 import com.krazylabs.OpenAppSettingsPackage;
 import com.facebook.react.ReactNativeHost;
@@ -36,7 +37,6 @@ import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.lynxit.contactswrapper.ContactsWrapperPackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import io.fixd.rctlocale.RCTLocalePackage;
-import com.oblongmana.webviewfileuploadandroid.AndroidWebViewPackage;
 import ca.jaysoo.extradimensions.ExtraDimensionsPackage;
 import com.facebook.react.modules.i18nmanager.I18nUtil;
 
@@ -55,6 +55,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new RNCWebViewPackage(),
             new CookieManagerPackage(),
             new OpenAppSettingsPackage(),
             new RNBackgroundFetchPackage(),
@@ -83,7 +84,6 @@ public class MainApplication extends Application implements ReactApplication {
             new ReactNativeContacts(),
             new RNCameraPackage(),
             new RCTLocalePackage(),
-            new AndroidWebViewPackage(),
             new ExtraDimensionsPackage()
             );
     }

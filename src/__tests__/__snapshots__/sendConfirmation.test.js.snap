@@ -125,6 +125,8 @@ exports[`SendConfirmation should render with destination 1`] = `
           exchangeSecondaryToPrimaryRatio={8000}
           forceUpdateGuiCounter={0}
           isEditable={true}
+          isFiatOnTop={false}
+          isFocus={false}
           keyboardVisible={false}
           onExchangeAmountChanged={[Function]}
           overridePrimaryExchangeAmount=""
@@ -382,6 +384,8 @@ exports[`SendConfirmation should render with standard props 1`] = `
           exchangeSecondaryToPrimaryRatio={8000}
           forceUpdateGuiCounter={0}
           isEditable={true}
+          isFiatOnTop={false}
+          isFocus={false}
           keyboardVisible={false}
           onExchangeAmountChanged={[Function]}
           overridePrimaryExchangeAmount=""
@@ -624,6 +628,8 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           exchangeSecondaryToPrimaryRatio={8000}
           forceUpdateGuiCounter={0}
           isEditable={true}
+          isFiatOnTop={false}
+          isFocus={false}
           keyboardVisible={false}
           onExchangeAmountChanged={[Function]}
           overridePrimaryExchangeAmount=""
@@ -757,6 +763,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
   </Gradient>
   <Connect(UniqueIdentifierModal)
     currencyCode="XMR"
+    keyboardType="default"
   />
 </SafeAreaViewComponent>
 `;
@@ -886,6 +893,8 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           exchangeSecondaryToPrimaryRatio={8000}
           forceUpdateGuiCounter={0}
           isEditable={true}
+          isFiatOnTop={false}
+          isFocus={false}
           keyboardVisible={false}
           onExchangeAmountChanged={[Function]}
           overridePrimaryExchangeAmount=""
@@ -1019,6 +1028,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
   </Gradient>
   <Connect(UniqueIdentifierModal)
     currencyCode="XRP"
+    keyboardType="numeric"
   />
 </SafeAreaViewComponent>
 `;

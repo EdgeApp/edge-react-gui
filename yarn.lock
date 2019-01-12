@@ -3202,10 +3202,10 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-components@^0.0.17:
-  version "0.0.17"
-  resolved "https://registry.yarnpkg.com/edge-components/-/edge-components-0.0.17.tgz#2daf32f86c05edd3b41bbf195f7ccd5f015931b0"
-  integrity sha512-0R9Nppihp2ShP4vaHpmgubqT95lfmXeHtHIaty7dQtrYzktid7wy8hF88mtf1SAHVD8PQxa4cBCS/O23i9A0Bw==
+edge-components@^0.0.18:
+  version "0.0.18"
+  resolved "https://registry.yarnpkg.com/edge-components/-/edge-components-0.0.18.tgz#d05467d1a909333bb1a9c738d0f189e1ab67c02a"
+  integrity sha512-iwEBbYG47AFkl1i2iccsYwVRCdQUJTOUmTuSvJ6sxBEM+/tbkeM7yM214IscyfnAvSBouqRGRJfnGxBz+LxLrg==
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
@@ -3237,10 +3237,9 @@ edge-core-js@0.13.5:
     ws "^5.1.1"
     yaob "^0.3.1"
 
-edge-currency-accountbased@^0.0.16:
+"edge-currency-accountbased@git://github.com/EdgeApp/edge-currency-accountbased#4e149e9063":
   version "0.0.16"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.0.16.tgz#9f78ba1704ab755cc7606b3321843142b289f1c6"
-  integrity sha512-qkX0MTCCWOfDG/h9n+30w25VW4Y8voM+dfg8psvUzBlzioDsLRANUhoq4f96jDIQgBNTtpKvEJVtfmqxxMT/zw==
+  resolved "git://github.com/EdgeApp/edge-currency-accountbased#4e149e9063e69a2647f8c8c8b8891f1605c715dc"
   dependencies:
     base-x "^1.0.4"
     biggystring "^3.0.0"
@@ -3253,10 +3252,10 @@ edge-currency-accountbased@^0.0.16:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@3.7.8:
-  version "3.7.8"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-3.7.8.tgz#da402783af23c50abdfbe2f6b903763023432e05"
-  integrity sha512-TfdnbArHeyWs8bqO5UHXMRYRfH39BKXsEdyk8h8JZPVQsKqneA2/3BzWJuBfjpVKaXX8UqAWR4gEN8Ozv3iVOQ==
+edge-currency-bitcoin@3.7.9:
+  version "3.7.9"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-3.7.9.tgz#d7a1f739128b014d151d73fbb0d6b6fb03bb7b55"
+  integrity sha512-GqMbATaz1jl7WW8n/51dbTfTwjRKSwFBY2ZcbDrOQ4/ua4nmjgXTo/XHFtPC+N2aQ2XEMovD8bN7ClfUZjV0pw==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -3289,10 +3288,10 @@ edge-currency-ethereum@0.11.2:
     sprintf-js "^1.1.1"
     uri-js "^3.0.2"
 
-edge-currency-monero@0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.1.1.tgz#ed57999357a091acddf2b7d4f7564c30e045ace0"
-  integrity sha512-8qoKIDVaNe2dM6mKsHjV/m9jfTilpjKfWUnC63YFSiLLOA/mJlOVBQ+wVMDHK1EUA+sZXmLMBtoC5e4N7oFwUQ==
+edge-currency-monero@0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.1.2.tgz#44268048aa8fc7b92168051dcdeae8ab5016d362"
+  integrity sha512-mcENB8vRcFc+abD8h+Dh6O3vK94DMqs+eyiuGzInXsnNjMGmJFlBEABIGXeTT8ITJzA37JQ+O9ipKS/i8v1c7g==
   dependencies:
     biggystring "^3.0.0"
     buffer "^5.0.6"
@@ -3302,17 +3301,17 @@ edge-currency-monero@0.1.1:
     sprintf-js "^1.1.1"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.2.1.tgz#b9450bca704ca4aa75cedee3acd9db1947e9e41c"
-  integrity sha512-OSai+tn6pU4UI32HuPEBQKJHVBS4mReuhzlcdVVfKpMUSn5T5I4ywVAYx3q+hxJh6VeZW1vEjP2Vl+JJQ0+IqQ==
+edge-exchange-plugins@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.3.0.tgz#2ff0c665aa2559ce0c20e1e8c217efcb6c1b0b0c"
+  integrity sha512-GNcqhWzl2VzwT1Y6si/PUv3qVrEYOXVzb2GZ3z0MeH6CaPMnTbqUC+1YKxFFGAmq0KMz7omNkDYtjiCac1l0dw==
   dependencies:
     iso4217 "^0.2.0"
 
-edge-login-ui-rn@^0.5.12:
-  version "0.5.12"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.5.12.tgz#fac55d47b850d929c5451829243535ef661c2081"
-  integrity sha512-UfYyzgrpPjjdPIZzgjEs2Nf/LOM9V50/wPPrwPKkTSPEbiTiFNoDYM3GJrqxCUVQGUl5A4hqTsKXWp8JQ/kmaA==
+edge-login-ui-rn@^0.5.16:
+  version "0.5.16"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.5.16.tgz#c838a9073dfa85d60699a05dd82e9b4b7f2e8ba0"
+  integrity sha512-FJWqnQba8zgA32v2EYvi9GW5A9KAvh2t+Y2o+quMr9Qq9itZNr2GC0R5b3EdGafMZNFKp2Bl+klNxg3zvIVZSQ==
   dependencies:
     material-ui "^0.20.0"
     moment "^2.19.3"
@@ -3331,10 +3330,23 @@ edge-login-ui-rn@^0.5.12:
     sprintf-js "^1.0.3"
     zxcvbn "^4.4.2"
 
-"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#fb2eb83":
-  version "0.0.3"
-  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#fb2eb83ad153f397fd71f94fa0e38fac4e06fca8"
+"edge-plugin-bitrefill@https://github.com/EdgeApp/edge-plugin-bitrefill.git#3d9068d":
+  version "0.0.1"
+  resolved "https://github.com/EdgeApp/edge-plugin-bitrefill.git#3d9068d7f013561da6907526e1b753f948d3c1df"
   dependencies:
+    moment "^2.22.2"
+
+"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#5155b5fa":
+  version "0.0.3"
+  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#5155b5fadf0a9af519a78b5cdc655bd018748e47"
+  dependencies:
+    moment "^2.22.2"
+
+"edge-plugin-wyre@https://github.com/EdgeApp/edge-plugin-wyre.git#31b260d":
+  version "0.0.3"
+  resolved "https://github.com/EdgeApp/edge-plugin-wyre.git#31b260d031aa72b23945e05b09499c3e0ad3f200"
+  dependencies:
+    js-sha256 "^0.9.0"
     moment "^2.22.2"
 
 edge-ripple-keypairs@^0.0.1:
@@ -4103,7 +4115,7 @@ fbjs-scripts@^0.8.1:
     semver "^5.1.0"
     through2 "^2.0.0"
 
-fbjs@^0.8.1, fbjs@^0.8.14, fbjs@^0.8.16, fbjs@^0.8.9:
+fbjs@^0.8.1, fbjs@^0.8.14, fbjs@^0.8.16, fbjs@^0.8.17, fbjs@^0.8.9:
   version "0.8.17"
   resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.17.tgz#c4d598ead6949112653d6588b01a5cdcd9f90fdd"
   integrity sha1-xNWY6taUkRJlPWWIsBpc3Nn5D90=
@@ -5920,6 +5932,11 @@ jest@^23.5.0:
     import-local "^1.0.0"
     jest-cli "^23.6.0"
 
+js-sha256@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/js-sha256/-/js-sha256-0.9.0.tgz#0b89ac166583e91ef9123644bd3c5334ce9d0966"
+  integrity sha512-sga3MHh9sgQN2+pJ9VYZ+1LPwXOxuBJBA5nrR5/ofPfuiJBE2hnjsaN8se8JznOmGLN2p49Pe5U/ttafcs/apA==
+
 js-sha3@^0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/js-sha3/-/js-sha3-0.3.1.tgz#86122802142f0828502a0d1dee1d95e253bb0243"
@@ -6150,11 +6167,6 @@ keycode@^2.1.8:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/keycode/-/keycode-2.2.0.tgz#3d0af56dc7b8b8e5cba8d0a97f107204eec22b04"
   integrity sha1-PQr1bce4uOXLqNCpfxByBO7CKwQ=
-
-keymirror@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/keymirror/-/keymirror-0.1.1.tgz#918889ea13f8d0a42e7c557250eee713adc95c35"
-  integrity sha1-kYiJ6hP40KQufFVyUO7nE63JXDU=
 
 kind-of@^1.1.0:
   version "1.1.0"
@@ -8167,12 +8179,11 @@ react-native-background-fetch@^2.4.3:
     plist "^2.0.1"
     xcode "^0.9.1"
 
-"react-native-camera@git://github.com/EdgeApp/react-native-camera.git#97e0b9a":
-  version "1.2.0"
-  resolved "git://github.com/EdgeApp/react-native-camera.git#97e0b9a2adfee27a9485ac0a698a75015a425323"
+"react-native-camera@git://github.com/EdgeApp/react-native-camera.git#a31ea429d77":
+  version "1.6.4"
+  resolved "git://github.com/EdgeApp/react-native-camera.git#a31ea429d7790c02ce78138e56141dc854360b33"
   dependencies:
-    lodash "^4.17.4"
-    prop-types "^15.5.10"
+    prop-types "^15.6.2"
 
 "react-native-contacts-wrapper@git://github.com/EdgeApp/react-native-contacts-wrapper.git":
   version "0.2.4"
@@ -8520,13 +8531,12 @@ react-native-vector-icons@^6.1.0:
     prop-types "^15.6.2"
     yargs "^8.0.2"
 
-"react-native-webview-file-upload-android@https://github.com/rhinogram/react-native-webview-file-upload-android.git#feature/support-file-downloading":
-  version "0.4.2"
-  resolved "https://github.com/rhinogram/react-native-webview-file-upload-android.git#80e71a1a96e3c95bb56906e0f30afab3b2c0a3e0"
+"react-native-webview@https://github.com/react-native-community/react-native-webview#1f11f10":
+  version "2.14.0"
+  resolved "https://github.com/react-native-community/react-native-webview#1f11f10a6968f859d8ad84c5d9d46b1d6731a0a8"
   dependencies:
-    keymirror "^0.1.1"
-    prop-types "^15.6.0"
-    warning "^3.0.0"
+    escape-string-regexp "^1.0.5"
+    fbjs "^0.8.17"
 
 react-native@0.55.3:
   version "0.55.3"

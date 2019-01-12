@@ -18,8 +18,7 @@ export type CreateWalletReviewOwnProps = {
   selectedFiat: GuiFiatType,
   selectedWalletType: GuiWalletType,
   isCreatingWallet: boolean,
-  supportedWalletTypes: Array<GuiWalletType>,
-  supportedFiats: Array<GuiFiatType>
+  supportedWalletTypes: Array<GuiWalletType>
 }
 
 export type CreateWalletReviewDispatchProps = {

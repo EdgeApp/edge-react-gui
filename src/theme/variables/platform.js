@@ -17,6 +17,7 @@ const PLATFORM = {
   toolbarHeight: platform === 'ios' ? 44 : 56,
 
   // based on footerHeight, toolbarHeight, and deviceHeight
+  usableDimensionHeight: Dimensions.get('window').height - (platform === 'ios' ? 44 : 62) - 69 - (isIphoneX ? 57 : 0), // device - toolbar - footer
   usableHeight: deviceHeight - (platform === 'ios' ? 44 : 62) - 69 - (isIphoneX ? 57 : 0), // device - toolbar - footer
   isIphoneX,
   deviceWidth,

@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/indexActions.js'
 import { CryptoExchangeQuoteScreenComponent } from '../../components/scenes/CryptoExchangeQuoteScene'
 import type { OwnProps } from '../../components/scenes/CryptoExchangeQuoteScene'
+import * as CORE_SELECTORS from '../../modules/Core/selectors'
 import type { Dispatch, State } from '../../modules/ReduxTypes'
 
 /* import type { GuiWallet } from '../../types.js' */
@@ -12,6 +13,7 @@ export const mapStateToProps = (state: State, ownProps: OwnProps) => {
   const fromWallet = state.cryptoExchange.fromWallet
   const toWallet = state.cryptoExchange.toWallet
   const quote = ownProps.quote
+  const account = CORE_SELECTORS.getAccount(state)
   return {
     fromWallet,
     fromNativeAmount: quote.fromNativeAmount,
@@ -27,7 +29,8 @@ export const mapStateToProps = (state: State, ownProps: OwnProps) => {
     toCurrencyIcon: state.cryptoExchange.toCurrencyIcon || '',
     pending: state.cryptoExchange.shiftPendingTransaction,
     fee: quote.fee,
-    quoteExpireDate: quote.quoteExpireDate
+    quoteExpireDate: quote.quoteExpireDate,
+    account
   }
 }
 

@@ -1,24 +1,28 @@
 // @flow
 
-import { bns } from 'biggystring'
 import { createYesNoModal, showModal } from 'edge-components'
-import type { EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendTarget } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendInfo, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
 import React from 'react'
-import { Alert, Linking, Text } from 'react-native'
+import { Alert, Linking } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
-import { ADD_TOKEN, EDGE_LOGIN, FA_MONEY_ICON, SEND_CONFIRMATION } from '../constants/indexConstants.js'
+import { createAddressModal } from '../components/modals/AddressModal.js'
+import { ADD_TOKEN, EDGE_LOGIN, EXCLAMATION, FA_MONEY_ICON, ION_ICONS, KEY_ICON, MATERIAL_COMMUNITY, SEND_CONFIRMATION } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
+import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
 import type { Dispatch, GetState } from '../modules/ReduxTypes.js'
+import Text from '../modules/UI/components/FormattedText'
+import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import OptionIcon from '../modules/UI/components/OptionIcon/OptionIcon.ui.js'
+import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
 import type { GuiWallet } from '../types.js'
 import { type RequestPaymentAddress, denominationToDecimalPlaces, getRequestForAddress, isEdgeLogin, noOp } from '../util/utils.js'
 import { loginWithEdge } from './EdgeLoginActions.js'
-import { activated as legacyAddressModalActivated, deactivated as legacyAddressModalDeactivated } from './LegacyAddressModalActions.js'
-import { activated as privateKeyModalActivated } from './PrivateKeyModalActions.js'
+import { sweepPrivateKeyFail, sweepPrivateKeyStart, sweepPrivateKeySuccess } from './PrivateKeyModalActions.js'
+import { secondaryModalActivated } from './SecondaryModalActions.js'
 import { paymentProtocolUriReceived } from './SendConfirmationActions.js'
 
 const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWallet, guiWallet: GuiWallet, requestAddress: RequestPaymentAddress) => {
@@ -123,12 +127,12 @@ export const parseScannedUri = (data: string) => (dispatch: Dispatch, getState: 
 
       if (isLegacyAddressUri(parsedUri)) {
         // LEGACY ADDRESS URI
-        return setTimeout(() => dispatch(legacyAddressModalActivated()), 500)
+        return dispatch(showLegacyAddressModal())
       }
 
       if (isPrivateKeyUri(parsedUri)) {
         // PRIVATE KEY URI
-        return setTimeout(() => dispatch(privateKeyModalActivated()), 500)
+        return dispatch(privateKeyModalActivated())
       }
 
       if (isPaymentProtocolUri(parsedUri)) {
@@ -138,22 +142,20 @@ export const parseScannedUri = (data: string) => (dispatch: Dispatch, getState: 
       }
 
       // PUBLIC ADDRESS URI
+      const nativeAmount = parsedUri.nativeAmount || '0'
       const spendTargets: Array<EdgeSpendTarget> = [
         {
           publicAddress: parsedUri.publicAddress,
-          nativeAmount: parsedUri.nativeAmount || '0'
+          nativeAmount
         }
       ]
 
-      let lockInputs = false
-      if (spendTargets[0].nativeAmount && !bns.eq(spendTargets[0].nativeAmount, '0')) {
-        lockInputs = true
-      }
       const guiMakeSpendInfo: GuiMakeSpendInfo = {
         spendTargets,
-        lockInputs,
+        lockInputs: false,
         metadata: parsedUri.metadata,
-        uniqueIdentifier: parsedUri.uniqueIdentifier
+        uniqueIdentifier: parsedUri.uniqueIdentifier,
+        nativeAmount
       }
       Actions[SEND_CONFIRMATION]({ guiMakeSpendInfo })
       // dispatch(sendConfirmationUpdateTx(parsedUri))
@@ -175,21 +177,6 @@ export const parseScannedUri = (data: string) => (dispatch: Dispatch, getState: 
   )
 }
 
-export const legacyAddressModalContinueButtonPressed = () => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  dispatch(legacyAddressModalDeactivated())
-  const parsedUri = state.ui.scenes.scan.parsedUri
-  setImmediate(() => {
-    if (!parsedUri) {
-      dispatch({ type: 'ENABLE_SCAN' })
-      return
-    }
-
-    Actions[SEND_CONFIRMATION]({ guiMakeSpendInfo: parsedUri })
-    // dispatch(sendConfirmationUpdateTx(parsedUri))
-  })
-}
-
 export const qrCodeScanned = (data: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const isScanEnabled = state.ui.scenes.scan.scanEnabled
@@ -197,19 +184,6 @@ export const qrCodeScanned = (data: string) => (dispatch: Dispatch, getState: Ge
 
   dispatch({ type: 'DISABLE_SCAN' })
   dispatch(parseScannedUri(data))
-}
-
-export const addressModalDoneButtonPressed = (data: string) => (dispatch: Dispatch, getState: GetState) => {
-  dispatch(parseScannedUri(data))
-}
-
-export const addressModalCancelButtonPressed = () => (dispatch: Dispatch, getState: GetState) => {
-  // dispatch(addressModalDeactivated())
-}
-
-export const legacyAddressModalCancelButtonPressed = () => (dispatch: Dispatch) => {
-  dispatch(legacyAddressModalDeactivated())
-  dispatch({ type: 'ENABLE_SCAN' })
 }
 
 export const isTokenUri = (parsedUri: EdgeParsedUri): boolean => {
@@ -226,4 +200,89 @@ export const isPrivateKeyUri = (parsedUri: EdgeParsedUri): boolean => {
 
 export const isPaymentProtocolUri = (parsedUri: EdgeParsedUri): boolean => {
   return !!parsedUri.paymentProtocolURL && !parsedUri.publicAddress
+}
+
+export const toggleAddressModal = () => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const walletId: string = UI_SELECTORS.getSelectedWalletId(state)
+  const coreWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
+  const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
+  const addressModal = createAddressModal({
+    walletId,
+    coreWallet,
+    currencyCode
+  })
+  const uri = await showModal(addressModal)
+  if (uri) {
+    dispatch(parseScannedUri(uri))
+  }
+}
+
+export const legacyAddressModalContinueButtonPressed = () => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const parsedUri = state.ui.scenes.scan.parsedUri
+  setImmediate(() => {
+    if (!parsedUri) {
+      dispatch({ type: 'ENABLE_SCAN' })
+      return
+    }
+
+    Actions[SEND_CONFIRMATION]({ guiMakeSpendInfo: parsedUri })
+  })
+}
+
+export const showLegacyAddressModal = () => async (dispatch: Dispatch, getState: GetState) => {
+  const legacyAddressModal = createYesNoModal({
+    title: s.strings.legacy_address_modal_title,
+    icon: <Icon style={{}} type={MATERIAL_COMMUNITY} name={EXCLAMATION} size={30} />,
+    message: s.strings.legacy_address_modal_warning,
+    textAlign: 'left',
+    noButtonText: s.strings.legacy_address_modal_cancel,
+    yesButtonText: s.strings.legacy_address_modal_continue
+  })
+  const response = await showModal(legacyAddressModal)
+  if (response) {
+    dispatch(legacyAddressModalContinueButtonPressed())
+  } else {
+    dispatch({ type: 'ENABLE_SCAN' })
+  }
+}
+
+export const privateKeyModalActivated = () => async (dispatch: Dispatch, getState: GetState) => {
+  const privateKeyModal = createYesNoModal({
+    title: s.strings.private_key_modal_sweep_from_private_address,
+    icon: <Icon style={{ transform: [{ rotate: '270deg' }] }} type={ION_ICONS} name={KEY_ICON} size={30} />,
+    noButtonText: s.strings.private_key_modal_cancel,
+    yesButtonText: s.strings.private_key_modal_import
+  })
+
+  const firstResponse = await showModal(privateKeyModal)
+  if (!firstResponse) return
+  setTimeout(() => {
+    dispatch(sweepPrivateKeyStart())
+    dispatch(secondaryModalActivated())
+
+    const state = getState()
+    const parsedUri = state.ui.scenes.scan.parsedUri
+    if (!parsedUri) return
+    const selectedWalletId = state.ui.wallets.selectedWalletId
+    const edgeWallet = state.core.wallets.byId[selectedWalletId]
+
+    const spendInfo: EdgeSpendInfo = {
+      privateKeys: parsedUri.privateKeys,
+      spendTargets: []
+    }
+
+    edgeWallet.sweepPrivateKeys(spendInfo).then(
+      (unsignedTx: EdgeTransaction) => {
+        edgeWallet
+          .signTx(unsignedTx)
+          .then(signedTx => edgeWallet.broadcastTx(signedTx))
+          .then(() => dispatch(sweepPrivateKeySuccess()))
+      },
+      (error: Error) => {
+        dispatch(sweepPrivateKeyFail(error))
+      }
+    )
+  }, 1000)
 }

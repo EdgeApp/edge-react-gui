@@ -1,5 +1,19 @@
 # edge-react-gui
 
+## 1.6.0
+
+* EOS support
+* Implementing deep linking of bitcoin, ethereum, bitcoincash, dash, and edge URIs
+* Add Wyre plugin to support buy/sell of Bitcoin and Ethereum from US bank account
+* Add Chinese, Korean, French, and Vietnamese translations
+* Add support for IMP and IRR fiat currencies
+
+## 1.5.0
+
+* Add Changenow as an exchange provider
+* Use new colored currency icons
+* Allow signin/singout of ShapeShift via Settings screen
+
 ## 1.4.5
 
 * Update to v2 of Coinbase API

@@ -41,7 +41,7 @@ export const EXCHANGE_SCENE = 'exchangeScene'
 export const EXCHANGE_QUOTE_PROCESSING_SCENE = 'exchangeQuoteProcessing'
 export const EXCHANGE_QUOTE_SCENE = 'exchangeQuote'
 export const CREATE_WALLET = 'createWallet'
-export const BUYSELL = 'buysell'
+export const BUY_SELL = 'buysell'
 export const SPEND = 'spend'
 export const TERMS_OF_SERVICE = 'termsOfService'
 export const PLUGIN = 'plugin'
@@ -63,6 +63,10 @@ export const CURRENCY_SETTINGS = {
   dashSettings: {
     pluginName: 'dash',
     currencyCode: 'DASH'
+  },
+  eosSettings: {
+    pluginName: 'eos',
+    currencyCode: 'EOS'
   },
   ltcSettings: {
     pluginName: 'litecoin',

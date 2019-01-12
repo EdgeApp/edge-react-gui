@@ -8,14 +8,16 @@ import { SEND_CONFIRMATION } from '../../../../constants/SceneKeys.js'
 import { type GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
 import * as WALLET_API from '../../../Core/Wallets/api'
 
-const formatWallet = w => ({
-  id: w.id,
-  name: w.name,
-  type: w.type,
-  currencyCode: w.currencyCode,
-  primaryNativeBalance: w.currencyCode,
-  fiatCurrencyCode: w.fiatCurrencyCode
-})
+const formatWallet = w => {
+  return {
+    id: w.id,
+    name: w.name,
+    type: w.type,
+    currencyCode: w.currencyCode ? w.currencyCode : w.currencyInfo.currencyCode,
+    primaryNativeBalance: w.primaryNativeBalance,
+    fiatCurrencyCode: w.fiatCurrencyCode
+  }
+}
 
 type Context = any
 type Wallet = any
@@ -66,17 +68,24 @@ export class PluginBridge {
     return Promise.reject(new Error('not implemented'))
   }
 
-  chooseWallet (): Promise<any> {
+  chooseWallet (obj: { cbid: string, func: string, id: string, currencyCode: string }): Promise<any> {
+    this.context.chooseWallet(obj.id, obj.currencyCode)
+    return Promise.resolve(null)
+  }
+
+  changeWallet (): Promise<any> {
     this.context.toggleWalletList()
     return Promise.resolve(null)
   }
 
   selectedWallet (): Promise<Wallet> {
-    return Promise.resolve(formatWallet(this.context.walletId))
+    if (!this.context.wallet) {
+      return Promise.reject(new Error('wallet not initialized yet'))
+    }
+    return Promise.resolve(formatWallet(this.context.wallet))
   }
 
   wallets (): Promise<Wallets> {
-    console.log(this.context.wallets)
     const wallets = Object.keys(this.context.wallets).map(key => formatWallet(this.context.wallets[key]))
     return Promise.resolve(wallets)
   }
@@ -104,7 +113,7 @@ export class PluginBridge {
         error ? reject(error) : resolve(edgeTransaction)
       }
       guiMakeSpendInfo.lockInputs = true
-      Actions[SEND_CONFIRMATION](guiMakeSpendInfo)
+      Actions[SEND_CONFIRMATION]({ guiMakeSpendInfo })
     })
   }
 
@@ -168,15 +177,28 @@ export class PluginBridge {
     return Promise.reject(new Error('not implemented'))
   }
 
-  readData (data: any): Promise<string> {
-    return this.context.folder.getItem(this.context.pluginId, data.key)
+  readData = async (data: any): Promise<string> => {
+    try {
+      const response = await this.context.folder.getItem(this.context.pluginId, data.key)
+      console.log('LOGGING readData response is: ', response)
+      return response
+    } catch (e) {
+      console.log('LOGGING error with readData: ', e)
+      throw new Error(e)
+    }
   }
 
-  writeData (data: any): Promise<boolean> {
+  writeData = async (data: any): Promise<boolean> => {
     const { key, value } = data
-    return this.context.folder.setItem(this.context.pluginId, key, value).then(() => {
+    try {
+      console.log('LOGGING about to write data with key: ', key, ' and value: ', value)
+      await this.context.folder.setItem(this.context.pluginId, key, value)
+      console.log('LOGGING successfully written data and returning true')
       return true
-    })
+    } catch (e) {
+      console.log('LOGGING writeData error: ', e)
+      return false
+    }
   }
 
   clearData (): Promise<boolean> {

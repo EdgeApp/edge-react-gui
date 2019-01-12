@@ -31,12 +31,30 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string/>
+			<string>co.edgesecure.app</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>edge</string>
 				<string>airbitz</string>
+				<string>edge-ret</string>
+				<string>airbitz-ret</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>CFBundleURLName</key>
+			<string>co.edgesecure.app</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>dash</string>
+				<string>litecoin</string>
+				<string>ethereum</string>
+				<string>bitcoincash</string>
+				<string>bitcoin</string>
 			</array>
 		</dict>
 	</array>

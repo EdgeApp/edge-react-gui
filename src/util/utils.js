@@ -6,7 +6,7 @@ import _ from 'lodash'
 import { Platform } from 'react-native'
 import parse from 'url-parse'
 
-import { FIAT_CODES_SYMBOLS as currencySymbolMap, getSymbolFromCurrency } from '../constants/indexConstants.js'
+import { FIAT_CODES_SYMBOLS, getSymbolFromCurrency } from '../constants/indexConstants.js'
 import { intl } from '../locales/intl.js'
 import type { State } from '../modules/ReduxTypes'
 import { convertCurrency } from '../modules/UI/selectors.js'
@@ -291,8 +291,8 @@ export function getAllDenomsOfIsoCurrencies (): Array<GuiDenomination> {
   // Convert map to an array
   const denomArray = []
 
-  for (const currencyCode in currencySymbolMap) {
-    if (currencySymbolMap.hasOwnProperty(currencyCode)) {
+  for (const currencyCode in FIAT_CODES_SYMBOLS) {
+    if (FIAT_CODES_SYMBOLS.hasOwnProperty(currencyCode)) {
       const item = getDenomFromIsoCode(currencyCode)
       if (item.name.length) {
         denomArray.push(item)
@@ -302,20 +302,26 @@ export function getAllDenomsOfIsoCurrencies (): Array<GuiDenomination> {
   return denomArray
 }
 
-export const getSupportedFiats = (): Array<{ label: string, value: string }> => {
-  const currencySymbolsFromCurrencyCode = currencySymbolMap
-  const entries = Object.entries(currencySymbolsFromCurrencyCode)
-  const objectFromArrayPair = entry => {
-    const entry1 = typeof entry[1] === 'string' ? entry[1] : ''
-
-    return {
-      label: `${entry[0]} - ${entry1}`,
-      value: entry[0]
+export const getSupportedFiats = (defaultCurrencyCode?: string): Array<{ label: string, value: string }> => {
+  const out = []
+  if (defaultCurrencyCode && FIAT_CODES_SYMBOLS[defaultCurrencyCode]) {
+    out.push({
+      label: `${defaultCurrencyCode} - ${FIAT_CODES_SYMBOLS[defaultCurrencyCode]}`,
+      value: defaultCurrencyCode
+    })
+  }
+  for (const currencyCode in FIAT_CODES_SYMBOLS) {
+    if (defaultCurrencyCode === currencyCode) {
+      continue
+    }
+    if (FIAT_CODES_SYMBOLS.hasOwnProperty(currencyCode)) {
+      out.push({
+        label: `${currencyCode} - ${FIAT_CODES_SYMBOLS[currencyCode]}`,
+        value: currencyCode
+      })
     }
   }
-
-  const supportedFiats = entries.map(objectFromArrayPair)
-  return supportedFiats
+  return out
 }
 
 /**
@@ -567,10 +573,25 @@ export function snooze (ms: number): Promise<void> {
   return new Promise((resolve: any) => setTimeout(resolve, ms))
 }
 
-export const isEdgeLogin = (data: string) => {
-  const EDGE_LOGIN_REG_EXP = /^airbitz:\/\/edge\//
+const MyEdgeLoginProtocols = {
+  'edge:': true,
+  'edge-ret:': true,
+  'airbitz:': true,
+  'airbitz-ret:': true
+}
 
-  return EDGE_LOGIN_REG_EXP.test(data)
+export const isEdgeLogin = (data: string) => {
+  const parsedUrl = parse(data, {}, false)
+  if (MyEdgeLoginProtocols[parsedUrl.protocol]) {
+    if (parsedUrl.host === 'edge') {
+      if (typeof parsedUrl.pathname === 'string') {
+        if (parsedUrl.pathname.length > 11) {
+          return true
+        }
+      }
+    }
+  }
+  return false
 }
 
 const REQUEST_CURRENCIES = {
@@ -702,4 +723,15 @@ export const secondsToMs = (dateInSeconds: number) => {
 export const msToSeconds = (dateInMs: number) => {
   const msPerSecond = 1000
   return dateInMs / msPerSecond
+}
+
+// Strips special characters and replaces spaces with hyphens
+export const sanitizeForFilename = (s: string) => {
+  const charRegex = /[^\w\s-]/g
+  const hyphenRegex = /[-\s]+/g
+
+  s = s.replace(charRegex, '').trim()
+  s = s.replace(hyphenRegex, '-')
+
+  return s
 }

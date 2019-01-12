@@ -85,12 +85,15 @@ export class TransactionRowComponent extends Component<Props, State> {
 
     if (tx.metadata && tx.metadata.name) {
       if (this.props.contacts) {
-        const contact = this.props.contacts.find(element => {
+        let contact
+        for (const element of this.props.contacts) {
           const fullName = element.givenName && element.familyName ? element.givenName + ' ' + element.familyName : element.givenName
           const found = element.thumbnailPath && UTILS.unspacedLowercase(fullName) === UTILS.unspacedLowercase(tx.metadata.name)
-          // if (found) console.log('element is: ', element)
-          return found
-        })
+          if (found) {
+            contact = element
+            break
+          }
+        }
         if (contact) {
           thumbnailPath = contact.thumbnailPath
         }

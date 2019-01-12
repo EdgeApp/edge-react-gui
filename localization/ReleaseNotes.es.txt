@@ -1,18 +1,32 @@
+v1.7.0
+
+* Soporte para direcciones Bech32
+Traslada Edge Core a un proceso independiente para aumentar el rendimiento y respuesta de la interfaz gráfica
+* Vende criptomonedas hacia tu tarjeta de crédito usando Simplex
+* Incluye LibertyX para comprar Bitcoin de comercios físicos en EE. UU
+
+v1.6.0
+
+* Soporte para EOS
+* Implementa vínculos profundos (deep linking) de URIs de bitcoin, ethereum, bitcoin cash, dash y Edge
+* Add Wyre plugin to support buy/sell of Bitcoin from US bank account
+*Incluye el plugin de Bitrefill para comprar tarjetas regalo y realizar recargas móviles
+* Add Chinese, Korean, French, and Vietnamese translations
+* Add support for IMP and IRR fiat currencies
+
 v1.5.0
 
-* Soporte EOS
-Soporte para direcciones Bech32
-* Añadir Changenow como casa de cambio
-* Implementa vínculos profundos (deep linking) de URIs de bitcoin, ethereum, bitcoin cash, dash y Edge
-Traslada Edge Core a un proceso independiente para aumentar el rendimiento y respuesta de la interfaz gráfica
+* Incluye Changenow como casa de cambio
+* Uso de nuevos iconos a color para monedas
+* Permite acceder / salir de Shapeshift a través de la pantalla de Ajustes
 
 v1.4.4
 
-* Add ability to split BCH wallets into BSV wallets
-* Add replay protection to BCH/BSV wallets
-* Improve login performance
-* Fix bug that caused XRP and XLM to re-query all transactions at each login
-* Improve connectivity to nodes for bitcoin related currencies (BTC, BCH, LTC, DASH, etc)
+* Incluye la capacidad de dividir carteras BCH en carteras BSV
+* Incluye protección de repetición a carteras BCH/BSV
+* Mejora el rendimiento del acceso
+* Arreglado error que causaba que las carteras XRP y XLM volvieran a requerir todas las transacciones en cada acceso
+* Mejorada la conectividad a nodos para monedas relacionadas con Bitcoin (BTC, BCH, LTC, DASH, etc)
 
 v1.4.3
 
@@ -21,7 +35,7 @@ v1.4.3
 * Permite a los usuarios activar/desactivar casas de cambio
 * Arregla el error ocasional " El token no está soportado" en la pantalla de casa de cambio
 * Activar la vista de xpub para más monedas
-* Arregla el fallo en cuentas grandes cuando se hace click en el boton superior derecho inmediatamente después de acceder
+* Arregla el fallo en cuentas grandes cuando se hace click en el botón superior derecho inmediatamente después de acceder
 * Arregla el bloqueo cuando se usa Simplex desde dispositivos Android
 
 v1.4.2

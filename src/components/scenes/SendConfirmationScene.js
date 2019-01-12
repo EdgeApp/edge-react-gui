@@ -9,6 +9,7 @@ import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
 import { UniqueIdentifierModalConnect as UniqueIdentifierModal } from '../../connectors/UniqueIdentifierModalConnector.js'
+import { getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import ExchangeRate from '../../modules/UI/components/ExchangeRate/index.js'
@@ -78,7 +79,9 @@ type State = {|
   overridePrimaryExchangeAmount: string,
   forceUpdateGuiCounter: number,
   keyboardVisible: boolean,
-  showSpinner: boolean
+  showSpinner: boolean,
+  isFiatOnTop: boolean,
+  isFocus: boolean
 |}
 
 export class SendConfirmation extends Component<Props, State> {
@@ -97,7 +100,9 @@ export class SendConfirmation extends Component<Props, State> {
       keyboardVisible: false,
       forceUpdateGuiCounter: 0,
       nativeAmount: props.nativeAmount,
-      showSpinner: false
+      showSpinner: false,
+      isFiatOnTop: !!(props.guiMakeSpendInfo && props.guiMakeSpendInfo.nativeAmount && bns.eq(props.guiMakeSpendInfo.nativeAmount, '0')),
+      isFocus: !!(props.guiMakeSpendInfo && props.guiMakeSpendInfo.nativeAmount && bns.eq(props.guiMakeSpendInfo.nativeAmount, '0'))
     }
   }
 
@@ -146,6 +151,9 @@ export class SendConfirmation extends Component<Props, State> {
 
   componentWillUnmount () {
     this.props.reset()
+    if (this.props.guiMakeSpendInfo && this.props.guiMakeSpendInfo.onBack) {
+      this.props.guiMakeSpendInfo.onBack()
+    }
   }
 
   render () {
@@ -181,9 +189,10 @@ export class SendConfirmation extends Component<Props, State> {
     const ADDRESS_TEXT = sprintf(s.strings.send_confirmation_address, address)
 
     const feeCalculated = !!this.props.networkFee || !!this.props.parentNetworkFee
-    const sliderDisabled = this.props.sliderDisabled || !feeCalculated || this.props.nativeAmount === '0'
+    const sliderDisabled =
+      this.props.sliderDisabled || !feeCalculated || (!getSpecialCurrencyInfo(this.props.currencyCode).allowZeroTx && this.props.nativeAmount === '0')
 
-    const isTaggableCurrency = !!(currencyCode === 'XRP' || currencyCode === 'XMR' || currencyCode === 'XLM')
+    const isTaggableCurrency = !!getSpecialCurrencyInfo(currencyCode).uniqueIdentifier
 
     return (
       <SafeAreaView>
@@ -218,6 +227,8 @@ export class SendConfirmation extends Component<Props, State> {
                 onExchangeAmountChanged={this.onExchangeAmountChanged}
                 keyboardVisible={this.state.keyboardVisible}
                 isEditable={this.props.isEditable}
+                isFiatOnTop={this.state.isFiatOnTop}
+                isFocus={this.state.isFocus}
               />
 
               <Scene.Padding style={{ paddingHorizontal: 54 }}>
@@ -285,7 +296,13 @@ export class SendConfirmation extends Component<Props, State> {
           </View>
         </Gradient>
 
-        {isTaggableCurrency && <UniqueIdentifierModal onConfirm={this.props.sendConfirmationUpdateTx} currencyCode={currencyCode} />}
+        {isTaggableCurrency && (
+          <UniqueIdentifierModal
+            onConfirm={this.props.sendConfirmationUpdateTx}
+            currencyCode={currencyCode}
+            keyboardType={getSpecialCurrencyInfo(currencyCode).uniqueIdentifier.identifierKeyboardType}
+          />
+        )}
       </SafeAreaView>
     )
   }
@@ -388,15 +405,13 @@ export class SendConfirmation extends Component<Props, State> {
 }
 
 export const uniqueIdentifierText = (currencyCode: string, uniqueIdentifier?: string): string => {
-  if (!uniqueIdentifier) {
-    if (currencyCode === 'XLM') return sprintf(s.strings.unique_identifier_add, s.strings.unique_identifier_memo_id)
-    if (currencyCode === 'XRP') return sprintf(s.strings.unique_identifier_add, s.strings.unique_identifier_destination_tag)
-    if (currencyCode === 'XMR') return sprintf(s.strings.unique_identifier_add, s.strings.unique_identifier_payment_id)
+  if (!getSpecialCurrencyInfo(currencyCode).uniqueIdentifier) {
+    throw new Error('Invalid currency code')
   }
-
-  if (currencyCode === 'XLM') return sprintf(s.strings.unique_identifier_display_text, s.strings.unique_identifier_memo_id, uniqueIdentifier)
-  if (currencyCode === 'XRP') return sprintf(s.strings.unique_identifier_display_text, s.strings.unique_identifier_destination_tag, uniqueIdentifier)
-  if (currencyCode === 'XMR') return sprintf(s.strings.unique_identifier_display_text, s.strings.unique_identifier_payment_id, uniqueIdentifier)
-
-  throw new Error('Invalid currency code')
+  const uniqueIdentifierInfo = getSpecialCurrencyInfo(currencyCode).uniqueIdentifier
+  if (!uniqueIdentifier) {
+    return uniqueIdentifierInfo.addButtonText
+  } else {
+    return sprintf(`${uniqueIdentifierInfo.identifierName}: %s`, uniqueIdentifier)
+  }
 }

@@ -1,10 +1,24 @@
-v1.5.0
+v1.7.0
+
+* Supporto agli indirizzi Bech32
+* Spostato Edge Core su un processo indipendente per incrementare le performance e la reattività della GUI
+* Vendi le crypto e ottieni fiat sulla carta di credito usando Simplex
+* Aggiunto LibertyX per supportare l'acquisto di Bitcoin da venditori fisici in USA
+
+v1.6.0
 
 * Supporto a EOS
-* Supporto agli indirizzi Bech32
-* Aggiunto Changenow come cambio valuta
 * Implementazione deep link di bitcoin, ethereum, bitcoincash, dash e edge URIs
-* Spostato Edge Core su un processo indipendente per incrementare le performance e la reattività della GUI
+* Add Wyre plugin to support buy/sell of Bitcoin from US bank account
+* Aggiunto il plugin Bitrefill per supportare l'acquisto di gift card e ricariche dei cellulari
+* Add Chinese, Korean, French, and Vietnamese translations
+* Add support for IMP and IRR fiat currencies
+
+v1.5.0
+
+* Aggiunto Changenow come cambio valuta
+* Usa le nuove icone di valuta colorate
+* Consentire l'accesso/disconnessione di ShapeShift tramite la schermata Impostazioni
 
 v1.4.4
 

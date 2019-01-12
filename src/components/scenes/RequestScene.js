@@ -61,12 +61,7 @@ export type RequestDispatchProps = {
   onSelectWallet: (string, string) => void
 }
 type ModalState = 'NOT_YET_SHOWN' | 'VISIBLE' | 'SHOWN'
-type ModalConfig = {
-  modalState: ModalState,
-  minimumNativeBalance: string,
-  modalMessage: string
-}
-type CurrencyMinimumPopupState = { [currencyCode: string]: ModalConfig }
+type CurrencyMinimumPopupState = { [currencyCode: string]: ModalState }
 
 export type LoadingProps = RequestLoadingProps & RequestDispatchProps
 export type LoadedProps = RequestStateProps & RequestDispatchProps
@@ -75,33 +70,27 @@ export type State = {
   publicAddress: string,
   legacyAddress: string,
   encodedURI: string,
-  minimumPopupModals: CurrencyMinimumPopupState
+  minimumPopupModalState: CurrencyMinimumPopupState
 }
 
 export class Request extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
-    const minimumPopupModals: CurrencyMinimumPopupState = {
-      XRP: {
-        modalState: 'NOT_YET_SHOWN',
-        minimumNativeBalance: '20000000',
-        modalMessage: s.strings.request_xrp_minimum_notification_body
-      },
-      XLM: {
-        modalState: 'NOT_YET_SHOWN',
-        minimumNativeBalance: '10000000',
-        modalMessage: s.strings.request_xlm_minimum_notification_body
+    const minimumPopupModalState: CurrencyMinimumPopupState = {}
+    Object.keys(Constants.SPECIAL_CURRENCY_INFO).forEach(currencyCode => {
+      if (Constants.getSpecialCurrencyInfo(currencyCode).minimumPopupModals) {
+        minimumPopupModalState[currencyCode] = 'NOT_YET_SHOWN'
       }
-    }
+    })
     this.state = {
       publicAddress: props.publicAddress,
       legacyAddress: props.legacyAddress,
       encodedURI: '',
-      minimumPopupModals
+      minimumPopupModalState
     }
     if (this.shouldShowMinimumModal(props)) {
       if (!props.currencyCode) return
-      this.state.minimumPopupModals[props.currencyCode].modalState = 'VISIBLE'
+      this.state.minimumPopupModalState[props.currencyCode] = 'VISIBLE'
       console.log('stop, in constructor')
       this.enqueueMinimumAmountModal()
     }
@@ -117,10 +106,10 @@ export class Request extends Component<Props, State> {
   }
 
   onCloseXRPMinimumModal = () => {
-    const minimumPopupModals: CurrencyMinimumPopupState = Object.assign({}, this.state.minimumPopupModals)
+    const minimumPopupModalState: CurrencyMinimumPopupState = Object.assign({}, this.state.minimumPopupModalState)
     if (!this.props.currencyCode) return
-    minimumPopupModals[this.props.currencyCode].modalState = 'SHOWN'
-    this.setState({ minimumPopupModals })
+    minimumPopupModalState[this.props.currencyCode] = 'SHOWN'
+    this.setState({ minimumPopupModalState })
   }
 
   shouldComponentUpdate (nextProps: Props, nextState: State) {
@@ -201,21 +190,26 @@ export class Request extends Component<Props, State> {
     // include 'didAddressChange' because didWalletChange returns false upon initial request scene load
     if (didWalletChange || didAddressChange) {
       if (this.shouldShowMinimumModal(nextProps)) {
-        const minimumPopupModals: CurrencyMinimumPopupState = Object.assign({}, this.state.minimumPopupModals)
-        if (minimumPopupModals[nextProps.currencyCode].modalState === 'NOT_YET_SHOWN') {
+        const minimumPopupModalState: CurrencyMinimumPopupState = Object.assign({}, this.state.minimumPopupModalState)
+        if (minimumPopupModalState[nextProps.currencyCode] === 'NOT_YET_SHOWN') {
           this.enqueueMinimumAmountModal()
         }
-        minimumPopupModals[nextProps.currencyCode].modalState = 'VISIBLE'
-        this.setState({ minimumPopupModals })
+        minimumPopupModalState[nextProps.currencyCode] = 'VISIBLE'
+        this.setState({ minimumPopupModalState })
       }
     }
   }
 
   enqueueMinimumAmountModal = async () => {
-    if (!this.props.currencyCode) return
+    let message = ''
+    if (this.props.currencyCode && Constants.getSpecialCurrencyInfo(this.props.currencyCode).minimumPopupModals) {
+      message = Constants.getSpecialCurrencyInfo(this.props.currencyCode).minimumPopupModals.modalMessage
+    } else {
+      return
+    }
     const modal = createSimpleConfirmModal({
       title: s.strings.request_minimum_notification_title,
-      message: this.state.minimumPopupModals[this.props.currencyCode].modalMessage,
+      message,
       icon: <Icon type={Constants.MATERIAL_COMMUNITY} name={Constants.EXCLAMATION} size={30} />,
       buttonText: s.strings.string_ok
     })
@@ -253,6 +247,8 @@ export class Request extends Component<Props, State> {
               onExchangeAmountChanged={this.onExchangeAmountChanged}
               keyboardVisible={false}
               color={color}
+              isFiatOnTop={false}
+              isFocus={false}
             />
 
             <QRCode value={this.state.encodedURI} />
@@ -306,9 +302,12 @@ export class Request extends Component<Props, State> {
 
   shouldShowMinimumModal = (props: Props): boolean => {
     if (!props.currencyCode) return false
-    if (this.state.minimumPopupModals[props.currencyCode]) {
-      if (this.state.minimumPopupModals[props.currencyCode].modalState === 'NOT_YET_SHOWN') {
-        const minBalance = this.state.minimumPopupModals[props.currencyCode].minimumNativeBalance
+    if (this.state.minimumPopupModalState[props.currencyCode]) {
+      if (this.state.minimumPopupModalState[props.currencyCode] === 'NOT_YET_SHOWN') {
+        let minBalance = '0'
+        if (Constants.getSpecialCurrencyInfo(props.currencyCode).minimumPopupModals) {
+          minBalance = Constants.getSpecialCurrencyInfo(props.currencyCode).minimumPopupModals.minimumNativeBalance
+        }
         if (bns.lt(props.guiWallet.primaryNativeBalance, minBalance)) {
           return true
         }
@@ -323,9 +322,9 @@ export class Request extends Component<Props, State> {
     const path = Platform.OS === Constants.IOS ? RNFS.DocumentDirectoryPath + '/' + title + '.txt' : RNFS.ExternalDirectoryPath + '/' + title + '.txt'
     RNFS.writeFile(path, message, 'utf8')
       .then(success => {
-        console.log('FILE WRITTEN!')
+        const url = Platform.OS === Constants.IOS ? 'file://' + path : ''
         const shareOptions = {
-          url: 'file://' + path,
+          url,
           title,
           message,
           subject: sprintf(s.strings.request_qr_email_title, s.strings.app_name, this.props.currencyCode) //  for email,

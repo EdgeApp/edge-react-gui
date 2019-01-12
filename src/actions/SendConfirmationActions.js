@@ -17,7 +17,6 @@ import {
   makeSpend,
   makeSpendInfo,
   saveTransaction,
-  setTransactionDetailsRequest,
   signTransaction
 } from '../modules/Core/Wallets/api.js'
 import type { Dispatch, GetState } from '../modules/ReduxTypes'
@@ -159,6 +158,17 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
   const selectedWalletId = getSelectedWalletId(state)
   const wallet = getWallet(state, selectedWalletId)
   const edgeUnsignedTransaction = getTransaction(state)
+
+  const guiWallet = getSelectedWallet(state)
+  const currencyCode = getSelectedCurrencyCode(state)
+  const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
+  const exchangeDenomination = settingsGetExchangeDenomination(state, currencyCode)
+
+  const exchangeAmount = convertNativeToExchange(exchangeDenomination.multiplier)(edgeUnsignedTransaction.nativeAmount)
+  const fiatPerCrypto = getExchangeRate(state, currencyCode, isoFiatCurrencyCode).toString()
+  const amountFiatString = bns.abs(bns.mul(exchangeAmount, fiatPerCrypto))
+  const amountFiat = parseFloat(amountFiatString)
+
   const spendInfo = state.ui.scenes.sendConfirmation.spendInfo
   const guiMakeSpendInfo = state.ui.scenes.sendConfirmation.guiMakeSpendInfo
 
@@ -178,20 +188,19 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
     edgeSignedTransaction = await signTransaction(wallet, edgeUnsignedTransaction)
     edgeSignedTransaction = await broadcastTransaction(wallet, edgeSignedTransaction)
     await saveTransaction(wallet, edgeSignedTransaction)
+    let edgeMetadata = { ...spendInfo.metadata }
     if (state.ui.scenes.sendConfirmation.transactionMetadata) {
-      const edgeMetaData: EdgeMetadata = state.ui.scenes.sendConfirmation.transactionMetadata
-      await setTransactionDetailsRequest(wallet, edgeSignedTransaction.txid, edgeSignedTransaction.currencyCode, edgeMetaData)
+      edgeMetadata = { ...edgeMetadata, ...state.ui.scenes.sendConfirmation.transactionMetadata }
     }
+    if (!edgeMetadata.amountFiat) {
+      edgeMetadata.amountFiat = amountFiat
+    }
+    await wallet.saveTxMetadata(edgeSignedTransaction.txid, edgeSignedTransaction.currencyCode, edgeMetadata)
     dispatch(updateSpendPending(false))
 
+    edgeSignedTransaction.metadata = edgeMetadata
     edgeSignedTransaction.wallet = wallet
-    edgeSignedTransaction.metadata = spendInfo.metadata
 
-    if (guiMakeSpendInfo.onSuccess) {
-      guiMakeSpendInfo.onSuccess()
-    } else {
-      Actions.replace(TRANSACTION_DETAILS, { edgeTransaction: edgeSignedTransaction })
-    }
     const successInfo = {
       success: true,
       title: s.strings.transaction_success,
@@ -200,14 +209,25 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
     dispatch({ type: 'OPEN_AB_ALERT', data: successInfo })
     if (guiMakeSpendInfo.onDone) {
       guiMakeSpendInfo.onDone(null, edgeSignedTransaction)
+    } else {
+      Actions.replace(TRANSACTION_DETAILS, { edgeTransaction: edgeSignedTransaction })
     }
   } catch (e) {
+    console.log(e)
     dispatch(updateSpendPending(false))
     const errorInfo = {
       success: false,
       title: s.strings.transaction_failure,
       message: sprintf(s.strings.transaction_failure_message, e.message)
     }
+    if (e.name === 'ErrorEosInsufficientCpu') {
+      errorInfo.message = s.strings.send_confirmation_eos_error_cpu
+    } else if (e.name === 'ErrorEosInsufficientNet') {
+      errorInfo.message = s.strings.send_confirmation_eos_error_net
+    } else if (e.name === 'ErrorEosInsufficientRam') {
+      errorInfo.message = s.strings.send_confirmation_eos_error_ram
+    }
+
     dispatch(updateTransaction(edgeSignedTransaction, null, true, new Error('broadcastError')))
     dispatch({ type: 'OPEN_AB_ALERT', data: errorInfo })
     if (guiMakeSpendInfo.onDone) {

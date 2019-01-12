@@ -19,8 +19,8 @@ export type GuiMakeSpendInfo = {
   lockInputs?: boolean,
   uniqueIdentifier?: string,
   otherParams?: Object,
-  onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void,
-  onSuccess?: () => any
+  onBack?: () => void,
+  onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void
 }
 
 export type SendConfirmationState = {
@@ -192,7 +192,7 @@ export const isEditable = (state: boolean = true, action: Action) => {
     case 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION':
       if (!action.data) throw new Error('Invalid Action')
       const { guiMakeSpendInfo } = action.data
-      if (guiMakeSpendInfo && guiMakeSpendInfo.lockInputs) {
+      if (!guiMakeSpendInfo || guiMakeSpendInfo.lockInputs) {
         return false
       }
       return state

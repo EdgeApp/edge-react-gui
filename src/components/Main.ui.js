@@ -3,7 +3,7 @@
 import { type DiskletFolder, makeReactNativeFolder } from 'disklet'
 import { ModalManager } from 'edge-components'
 import type { EdgeContext, EdgeCorePluginFactory, EdgeCurrencyPlugin } from 'edge-core-js'
-import { rippleCurrencyPluginFactory, stellarCurrencyPluginFactory } from 'edge-currency-accountbased'
+import { eosCurrencyPluginFactory, rippleCurrencyPluginFactory, stellarCurrencyPluginFactory } from 'edge-currency-accountbased'
 import {
   bitcoinCurrencyPluginFactory,
   bitcoincashCurrencyPluginFactory,
@@ -22,7 +22,7 @@ import {
 } from 'edge-currency-bitcoin'
 import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
 import { moneroCurrencyPluginFactory } from 'edge-currency-monero'
-import { coinbasePlugin, coincapPlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
+import { coinbasePlugin, coincapPlugin, currencyconverterapiPlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
 import React, { Component } from 'react'
 import { Image, Keyboard, Linking, StatusBar, TouchableWithoutFeedback, View, YellowBox } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
@@ -87,6 +87,7 @@ import EdgeAccountCallbackManager from '../modules/Core/Account/EdgeAccountCallb
 import * as CONTEXT_API from '../modules/Core/Context/api'
 import EdgeContextCallbackManager from '../modules/Core/Context/EdgeContextCallbackManager.js'
 import EdgeWalletsCallbackManager from '../modules/Core/Wallets/EdgeWalletsCallbackManager.js'
+import DeepLinkingManager from '../modules/DeepLinkingManager.js'
 import PermissionsManager, { type Permission, PermissionStrings } from '../modules/PermissionsManager.js'
 import AutoLogout from '../modules/UI/components/AutoLogout/AutoLogoutConnector'
 import { ContactsLoaderConnecter as ContactsLoader } from '../modules/UI/components/ContactsLoader/indexContactsLoader.js'
@@ -117,10 +118,12 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   coinbasePlugin,
   shapeshiftPlugin,
   coincapPlugin,
+  currencyconverterapiPlugin,
   // Currencies:
   bitcoincashCurrencyPluginFactory,
   bitcoinCurrencyPluginFactory,
   ethereumCurrencyPluginFactory,
+  eosCurrencyPluginFactory,
   stellarCurrencyPluginFactory,
   rippleCurrencyPluginFactory,
   moneroCurrencyPluginFactory,
@@ -137,8 +140,7 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   feathercoinCurrencyPluginFactory,
   smartcashCurrencyPluginFactory,
   groestlcoinCurrencyPluginFactory,
-  ufoCurrencyPluginFactory /*,
-  eosCurrencyPluginFactory */
+  ufoCurrencyPluginFactory
 ]
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
@@ -207,7 +209,9 @@ type Props = {
   updateCurrentSceneKey: string => void,
   showReEnableOtpModal: () => void,
   checkEnabledExchanges: () => void,
-  openDrawer: () => void
+  openDrawer: () => void,
+  dispatchAddressDeepLinkReceived: (addressDeepLinkData: Object) => any,
+  deepLinkPending: boolean
 }
 type State = {
   context: ?EdgeContext
@@ -258,7 +262,11 @@ export default class Main extends Component<Props, State> {
       context: undefined
     }
     if (ENV.HIDE_IS_MOUNTED) {
-      YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader'])
+      YellowBox.ignoreWarnings([
+        'Warning: isMounted(...) is deprecated',
+        'Module RCTImageLoader',
+        'The scalesPageToFit property is not supported when useWebKit = true'
+      ])
     }
   }
 
@@ -304,8 +312,37 @@ export default class Main extends Component<Props, State> {
       .catch(e => console.log(e))
     Linking.addEventListener('url', this.handleOpenURL)
   }
+
+  handleOpenURL = (event: Object) => {
+    this.doDeepLink(event.url)
+  }
+
   doDeepLink (url: string) {
     const parsedUri = URI.parse(url)
+
+    switch (parsedUri.scheme) {
+      case 'edge':
+      case 'airbitz':
+      case 'edge-ret':
+      case 'airbitz-ret':
+      case 'https':
+        if (parsedUri.host === 'recovery' || parsedUri.host === 'recovery.edgesecure.co') {
+          this.handleRecoveryToken(parsedUri)
+        } else {
+          this.handleAddress(parsedUri, url)
+        }
+        break
+      case 'bitcoin':
+      case 'bitcoincash':
+      case 'ethereum':
+      case 'dash':
+      case 'litecoin':
+        this.handleAddress(parsedUri, url)
+        break
+    }
+  }
+
+  handleRecoveryToken (parsedUri: URI) {
     const query = parsedUri.query
     if (!query || !query.includes('token=')) {
       return
@@ -316,8 +353,34 @@ export default class Main extends Component<Props, State> {
     const token = finalArray[0]
     this.props.urlReceived(token)
   }
-  handleOpenURL = (event: Object) => {
-    this.doDeepLink(event.url)
+
+  handleAddress (parsedUri: URI, url: string) {
+    const addressDeepLinkData = {}
+
+    const currencyCode = this.convertCurrencyCodeFromScheme(parsedUri.scheme)
+
+    addressDeepLinkData.currencyCode = currencyCode
+    addressDeepLinkData.uri = url
+
+    this.props.dispatchAddressDeepLinkReceived(addressDeepLinkData)
+  }
+
+  convertCurrencyCodeFromScheme (scheme: string) {
+    switch (scheme) {
+      case 'bitcoin':
+        return 'BTC'
+      case 'bitcoincash':
+        return 'BCH'
+      case 'ethereum':
+        return 'ETH'
+      case 'litecoin':
+        return 'LTC'
+      case 'dash':
+        return 'DASH'
+      default:
+        console.log('Unrecognized currency URI scheme')
+        return null
+    }
   }
 
   updateSceneKeyRequest = () => {
@@ -647,9 +710,9 @@ export default class Main extends Component<Props, State> {
                       />
                     </Stack>
 
-                    <Stack key={Constants.BUYSELL} hideDrawerButton={true}>
+                    <Stack key={Constants.BUY_SELL} hideDrawerButton={true}>
                       <Scene
-                        key={Constants.BUYSELL}
+                        key={Constants.BUY_SELL}
                         navTransparent={true}
                         component={PluginBuySell}
                         renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
@@ -677,16 +740,14 @@ export default class Main extends Component<Props, State> {
                         renderRightButton={this.renderEmptyButton()}
                         onLeft={Actions.pop}
                       />
-                      {/*
-                        <Scene
-                          key={Constants.PLUGIN}
-                          navTransparent={true}
-                          component={PluginView}
-                          renderTitle={this.renderTitle(PLUGIN_SPEND)}
-                          renderLeftButton={this.renderBackButton(BACK)}
-                          renderRightButton={this.renderEmptyButton()}
-                        />
-                      ) */}
+                      <Scene
+                        key={Constants.PLUGIN}
+                        navTransparent={true}
+                        component={PluginView}
+                        renderTitle={this.renderTitle(PLUGIN_SPEND)}
+                        renderLeftButton={this.renderBackButton(BACK)}
+                        renderRightButton={this.renderEmptyButton()}
+                      />
                     </Stack>
                     <Stack key={Constants.TERMS_OF_SERVICE}>
                       <Scene
@@ -718,6 +779,8 @@ export default class Main extends Component<Props, State> {
         <EdgeContextCallbackManager />
         <EdgeAccountCallbackManager />
         <EdgeWalletsCallbackManager />
+
+        <DeepLinkingManager />
       </MenuProvider>
     )
   }

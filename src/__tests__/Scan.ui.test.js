@@ -15,13 +15,14 @@ describe('Scan component', () => {
       torchEnabled: false,
       scanEnabled: false,
       showToWalletModal: false,
+      deepLinkPending: false,
+      deepLinkUri: null,
       qrCodeScanned: jest.fn(),
+      parseScannedUri: jest.fn(),
+      markAddressDeepLinkDone: jest.fn(),
       toggleEnableTorch: jest.fn(),
       toggleAddressModal: jest.fn(),
       toggleScanToWalletListModal: jest.fn(),
-      addressModalDoneButtonPressed: jest.fn(),
-      legacyAddressModalContinueButtonPressed: jest.fn(),
-      legacyAddressModalCancelButtonPressed: jest.fn(),
       onSelectWallet: jest.fn()
     }
     const actual = renderer.render(<Scan {...props} />)
@@ -36,13 +37,14 @@ describe('Scan component', () => {
       torchEnabled: false,
       scanEnabled: false,
       showToWalletModal: false,
+      deepLinkPending: false,
+      deepLinkUri: null,
       qrCodeScanned: jest.fn(),
+      parseScannedUri: jest.fn(),
+      markAddressDeepLinkDone: jest.fn(),
       toggleEnableTorch: jest.fn(),
       toggleAddressModal: jest.fn(),
       toggleScanToWalletListModal: jest.fn(),
-      addressModalDoneButtonPressed: jest.fn(),
-      legacyAddressModalContinueButtonPressed: jest.fn(),
-      legacyAddressModalCancelButtonPressed: jest.fn(),
       onSelectWallet: jest.fn()
     }
     const actual = renderer.render(<Scan {...props} />)

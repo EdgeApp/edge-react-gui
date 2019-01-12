@@ -8,7 +8,7 @@ import type { Dispatch, State } from '../../modules/ReduxTypes'
 
 const mapStateToProps = (state: State) => ({
   isCheckingHandleAvailability: state.ui.scenes.createWallet.isCheckingHandleAvailability,
-  isHandleAvailable: state.ui.scenes.createWallet.isHandleAvailable
+  handleAvailableStatus: state.ui.scenes.createWallet.handleAvailableStatus
 })
 
 const mapDispatchToProps = (dispatch: Dispatch, ownProps) => ({

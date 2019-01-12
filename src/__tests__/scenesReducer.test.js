@@ -26,13 +26,13 @@ test('initialState', () => {
       isCreatingWallet: false,
       walletAccountActivationPaymentInfo: {
         paymentAddress: '',
-        nativeAmount: '',
+        amount: '',
         currencyCode: '',
         exchangeAmount: '',
-        expirationDate: 0
+        expireTime: 0
       },
       isCheckingHandleAvailability: false,
-      isHandleAvailable: false,
+      handleAvailableStatus: '',
       handleActivationInfo: {
         supportedCurrencies: {},
         activationCost: ''
@@ -56,18 +56,11 @@ test('initialState', () => {
       uniqueLegacyAddress: false
     },
     scan: {
-      addressModalVisible: false,
       scanEnabled: false,
       torchEnabled: false,
-      legacyAddressModal: {
-        isActive: false
-      },
       privateKeyModal: {
         error: null,
         isSweeping: false,
-        primaryModal: {
-          isActive: false
-        },
         secondaryModal: {
           isActive: false
         }
@@ -95,12 +88,8 @@ test('initialState', () => {
       currentWalletId: ''
     },
     walletList: {
-      getSeedWalletModalVisible: false,
-      privateSeedUnlocked: false,
       viewXPubWalletModalVisible: false,
       xPubSyntax: '',
-      resyncWalletModalVisible: false,
-      splitWalletModalVisible: false,
       walletArchivesVisible: false,
       walletId: ''
     },

@@ -1,8 +1,9 @@
 // @flow
 
-import { Icon, createInputModal, showModal } from 'edge-components'
+import { Icon, createInputModal, createSecureTextModal, createSimpleConfirmModal, showModal } from 'edge-components'
 import React from 'react'
 import { Actions } from 'react-native-router-flux'
+import FAIcon from 'react-native-vector-icons/FontAwesome'
 
 import { refreshWallet } from '../actions/WalletActions.js'
 import * as Constants from '../constants/indexConstants'
@@ -11,7 +12,9 @@ import * as ACCOUNT_API from '../modules/Core/Account/api.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import type { Dispatch, GetState } from '../modules/ReduxTypes'
 import { displayErrorAlert } from '../modules/UI/components/ErrorAlert/actions'
+import Text from '../modules/UI/components/FormattedText'
 import * as WALLET_SELECTORS from '../modules/UI/selectors.js'
+import { THEME } from '../theme/variables/airbitz.js'
 import { showDeleteWalletModal } from './DeleteWalletModalActions.js'
 import { showResyncWalletModal } from './ResyncWalletModalActions.js'
 import { showSplitWalletModal } from './SplitWalletModalActions.js'
@@ -84,12 +87,6 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
       }
     }
 
-    case 'getSeed': {
-      return (dispatch: Dispatch) => {
-        dispatch({ type: 'OPEN_GETSEED_WALLET_MODAL', data: { walletId } })
-      }
-    }
-
     case 'viewXPub': {
       return (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
@@ -104,6 +101,88 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
         const state = getState()
         const wallet = state.core.wallets.byId[walletId]
         Actions[Constants.TRANSACTIONS_EXPORT]({ sourceWallet: wallet })
+      }
+    }
+
+    case 'getSeed': {
+      return async (dispatch: Dispatch, getState: GetState) => {
+        const state = getState()
+        const walletName = CORE_SELECTORS.getWalletName(state, walletId)
+        try {
+          const input = {
+            label: s.strings.confirm_password_text,
+            autoCorrect: false,
+            returnKeyType: 'go',
+            initialValue: '',
+            autoFocus: true
+          }
+          const yesButton = {
+            title: s.strings.fragment_wallets_get_seed_wallet
+          }
+          const noButton = {
+            title: s.strings.string_cancel_cap
+          }
+
+          const validateInput = async input => {
+            const account = CORE_SELECTORS.getAccount(state)
+            const isPassword = await account.checkPassword(input)
+            if (isPassword) {
+              dispatch({ type: 'PASSWORD_USED' })
+              return {
+                success: true,
+                message: ''
+              }
+            } else {
+              return {
+                success: false,
+                message: s.strings.password_reminder_invalid
+              }
+            }
+          }
+
+          const getSeedModal = createSecureTextModal({
+            icon: (
+              <FAIcon
+                style={{ position: 'relative', left: 1 }}
+                type={Constants.FONT_AWESOME}
+                name={Constants.GET_SEED}
+                color={THEME.COLORS.PRIMARY}
+                size={30}
+              />
+            ),
+            title: s.strings.fragment_wallets_get_seed_wallet,
+            message: (
+              <Text>
+                {s.strings.fragment_wallets_get_seed_wallet_first_confirm_message_mobile}
+                <Text style={{ fontWeight: 'bold' }}>{walletName}</Text>
+              </Text>
+            ),
+            input,
+            yesButton,
+            noButton,
+            validateInput
+          })
+          const resolveValue = await showModal(getSeedModal)
+          if (resolveValue) {
+            const wallet = CORE_SELECTORS.getWallet(state, walletId)
+            const seed = wallet.getDisplayPrivateSeed()
+            const modal = createSimpleConfirmModal({
+              title: s.strings.fragment_wallets_get_seed_wallet,
+              message: seed,
+              buttonText: s.strings.string_ok,
+              icon: (
+                <FAIcon
+                  style={{ position: 'relative', left: 1 }}
+                  type={Constants.FONT_AWESOME}
+                  name={Constants.GET_SEED}
+                  color={THEME.COLORS.PRIMARY}
+                  size={30}
+                />
+              )
+            })
+            await showModal(modal)
+          }
+        } catch (e) {}
       }
     }
 

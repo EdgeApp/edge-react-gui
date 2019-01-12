@@ -11,9 +11,7 @@ import slowlog from 'react-native-slowlog'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
-import AddressModal from '../../connectors/AddressModalConnector'
-import LegacyAddressModal from '../../connectors/LegacyAddressModalConnector.js'
-import PrivateKeyModal from '../../connectors/PrivateKeyModalConnector.js'
+import SecondaryModal from '../../connectors/SecondaryModalConnector.js'
 import * as Constants from '../../constants/indexConstants'
 import { scale } from '../../lib/scaling.js'
 import s from '../../locales/strings.js'
@@ -31,14 +29,15 @@ type Props = {
   torchEnabled: boolean,
   scanEnabled: boolean,
   showToWalletModal: boolean,
+  deepLinkPending: boolean,
+  deepLinkUri: string | null,
   qrCodeScanned: (data: string) => void,
+  parseScannedUri: (data: string) => void,
   toggleEnableTorch: () => void,
   toggleAddressModal: () => void,
   toggleScanToWalletListModal: () => void,
-  addressModalDoneButtonPressed: () => void,
-  legacyAddressModalContinueButtonPressed: () => void,
-  legacyAddressModalCancelButtonPressed: () => void,
-  onSelectWallet: (string, string) => void
+  onSelectWallet: (string, string) => void,
+  markAddressDeepLinkDone: () => any
 }
 
 const HEADER_TEXT = s.strings.send_scan_header_text
@@ -52,11 +51,26 @@ const FLASH_TEXT = s.strings.fragment_send_flash
 export class Scan extends Component<Props> {
   constructor (props: Props) {
     super(props)
+
+    this.checkForDeepLink()
+
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
+  componentDidUpdate () {
+    this.checkForDeepLink()
+  }
+
+  checkForDeepLink () {
+    if (this.props.deepLinkUri && this.props.deepLinkPending) {
+      const deepLinkUri = this.props.deepLinkUri
+      this.props.markAddressDeepLinkDone()
+      this.props.parseScannedUri(deepLinkUri)
+    }
+  }
+
   render () {
-    const { addressModalDoneButtonPressed, legacyAddressModalContinueButtonPressed, legacyAddressModalCancelButtonPressed, onSelectWallet } = this.props
+    const { onSelectWallet } = this.props
 
     return (
       <SafeAreaView>
@@ -68,8 +82,6 @@ export class Scan extends Component<Props> {
             {this.renderCamera()}
 
             <View style={[styles.overlay]}>
-              <AddressModal onExitButtonFxn={this._onToggleAddressModal} doneButtonPressed={addressModalDoneButtonPressed} />
-
               <View style={[styles.overlayTop]}>
                 <T style={[styles.overlayTopText]}>{HEADER_TEXT}</T>
               </View>
@@ -107,9 +119,7 @@ export class Scan extends Component<Props> {
             <WalletListModal topDisplacement={Constants.SCAN_WALLET_DIALOG_TOP} type={Constants.FROM} onSelectWallet={onSelectWallet} />
           )}
         </View>
-
-        <LegacyAddressModal continueButtonPressed={legacyAddressModalContinueButtonPressed} cancelButtonPressed={legacyAddressModalCancelButtonPressed} />
-        <PrivateKeyModal />
+        <SecondaryModal />
       </SafeAreaView>
     )
   }

@@ -1,11 +1,16 @@
 // @flow
 
+import { type EdgeMetadata } from 'edge-core-js'
 import React from 'react'
-import { BackHandler, FlatList, Image, Platform, Text, TouchableWithoutFeedback, View, WebView } from 'react-native'
+import { BackHandler, FlatList, Image, Platform, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import AndroidWebView from 'react-native-webview-file-upload-android'
+import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
+import parse from 'url-parse'
 
+import ENV from '../../../env.json'
+import { sendConfirmationUpdateTx } from '../../actions/SendConfirmationActions'
+import { selectWallet } from '../../actions/WalletActions'
 import s from '../../locales/strings.js'
 import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
 import { openABAlert } from '../../modules/UI/components/ABAlert/action'
@@ -16,6 +21,7 @@ import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import { PluginBridge, pop as pluginPop } from '../../modules/UI/scenes/Plugins/api'
 import { buySellPlugins, spendPlugins } from '../../modules/UI/scenes/Plugins/plugins'
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
+import type { GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import styles from '../../styles/scenes/PluginsStyle.js'
 
 const BACK = s.strings.title_back
@@ -88,11 +94,13 @@ type PluginProps = {
   showAlert: Function,
   account: any,
   guiWallet: any,
-  abcWallet: any,
+  coreWallet: any,
   coreWallets: any,
   wallets: any,
   walletName: any,
-  walletId: any
+  walletId: any,
+  selectWallet(string, string): void,
+  sendConfirmationUpdateTx(GuiMakeSpendInfo): void
 }
 
 type PluginState = {
@@ -108,7 +116,8 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   plugin: any
   updateBridge: Function
   webview: any
-
+  successUrl: ?string
+  openingSendConfirmation: boolean
   constructor (props) {
     super(props)
     this.state = {
@@ -116,6 +125,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
     }
     this.webview = null
     this.plugin = this.props.plugin
+    this.plugin.environment.apiKey = ENV.PLUGIN_API_KEYS ? ENV.PLUGIN_API_KEYS[this.plugin.name] : 'edgeWallet' // latter is dummy code
     this.updateBridge(this.props)
   }
 
@@ -131,12 +141,17 @@ class PluginView extends React.Component<PluginProps, PluginState> {
       folder: props.account.pluginData,
       pluginId: this.plugin.pluginId,
       toggleWalletList: this.toggleWalletList,
+      chooseWallet: this.chooseWallet,
       showAlert: this.props.showAlert,
       back: this._webviewBack,
-      renderTitle: this._renderTitle
+      renderTitle: this._renderTitle,
+      edgeCallBack: this.edgeCallBack
     })
   }
 
+  chooseWallet = (walletId: string, currencyCode: string) => {
+    this.props.selectWallet(walletId, currencyCode)
+  }
   toggleWalletList = () => {
     this.setState({ showWalletList: !this.state.showWalletList })
   }
@@ -147,11 +162,11 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   }
 
   componentDidUpdate () {
-    this.bridge.context.account = this.props.account
     this.bridge.context.coreWallets = this.props.coreWallets
     this.bridge.context.wallets = this.props.wallets
     this.bridge.context.walletName = this.props.walletName
-    this.bridge.context.walletId = this.props.walletId
+    this.bridge.context.walletId = this.props.coreWallet.id
+    this.bridge.context.wallet = this.props.coreWallet
   }
 
   componentDidMount () {
@@ -169,6 +184,9 @@ class PluginView extends React.Component<PluginProps, PluginState> {
 
   _webviewBack = () => {
     this.webview.injectJavaScript('window.history.back()')
+  }
+  _webviewOpenUrl = (url: string) => {
+    this.webview.injectJavaScript("window.open('" + url + "', '_self')")
   }
 
   _renderTitle = title => {
@@ -202,7 +220,6 @@ class PluginView extends React.Component<PluginProps, PluginState> {
     }
     const { cbid, func } = data
     this._nextMessage(cbid)
-
     if (this.bridge[func]) {
       this.bridge[func](data)
         .then(res => {
@@ -211,6 +228,9 @@ class PluginView extends React.Component<PluginProps, PluginState> {
         .catch(err => {
           this._pluginReturn({ cbid, func, err, res: null })
         })
+    } else if (func === 'edgeCallBack') {
+      // this is if we are taking what used to be a callback url. There is no promise to return.
+      this.edgeCallBack(data)
     } else {
       this._pluginReturn({ cbid, func, err: 'invalid function' })
     }
@@ -219,16 +239,105 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   _setWebview = webview => {
     this.webview = webview
   }
+  // This is the preferred method for calling back . it does not return any promise like other bridge calls.
+  edgeCallBack = data => {
+    switch (data['edge-callback']) {
+      case 'paymentUri':
+        if (this.openingSendConfirmation) {
+          return
+        }
+        this.openingSendConfirmation = true
+        this.props.coreWallet.parseUri(data['edge-uri']).then(result => {
+          if (
+            typeof result.currencyCode === 'string' &&
+            typeof result.nativeAmount === 'string' &&
+            typeof result.publicAddress === 'string'
+          ) {
+            let metadata: ?EdgeMetadata = {
+              name: data['edge-source'] || (result.metadata ? result.metadata.name : undefined),
+              category: result.metadata ? result.metadata.category : undefined,
+              notes: result.metadata ? result.metadata.notes : undefined
+            }
+            if (metadata && !metadata.name && !metadata.category && !metadata.notes) {
+              metadata = undefined
+            }
+            const info: GuiMakeSpendInfo = {
+              currencyCode: result.currencyCode,
+              nativeAmount: result.nativeAmount,
+              publicAddress: result.publicAddress,
+              metadata
+            }
+
+            this.successUrl = data['x-success']
+            this.bridge
+              .makeSpendRequest(info)
+              .then(tr => {
+                this.openingSendConfirmation = false
+                Actions.pop()
+                if (this.successUrl) {
+                  this._webviewOpenUrl(this.successUrl)
+                }
+              })
+              .catch(e => {
+                console.log(e)
+              })
+          }
+        })
+        break
+    }
+  }
 
   _onNavigationStateChange = navState => {
     if (navState.loading) {
       return
     }
-    // TODO: improve handling of edge-ret URIs
-    if (navState.url.match(/edge-ret:\/\/plugins/)) {
+    const parsedUrl = parse(navState.url, {}, true)
+
+    // TODO: if no partners are using this we should delete
+    if (parsedUrl.protocol === 'edge:' && parsedUrl.hostname === 'x-callback-url') {
+      switch (parsedUrl.pathname) {
+        case '/paymentUri':
+          if (this.openingSendConfirmation) {
+            return
+          }
+          this.openingSendConfirmation = true
+          this.props.coreWallet.parseUri(parsedUrl.query.uri).then(result => {
+            const info: GuiMakeSpendInfo = {
+              currencyCode: result.currencyCode,
+              nativeAmount: result.nativeAmount,
+              publicAddress: result.publicAddress
+            }
+
+            this.successUrl = parsedUrl.query['x-success'] ? parsedUrl.query['x-success'] : null
+            this.bridge
+              .makeSpendRequest(info)
+              .then(tr => {
+                this.openingSendConfirmation = false
+                Actions.pop()
+                if (this.successUrl) {
+                  this._webviewOpenUrl(this.successUrl)
+                }
+              })
+              .catch(e => {
+                console.log(e)
+              })
+          })
+          break
+        default:
+          console.log('nothing yet')
+      }
+
+      return
+    }
+    if (parsedUrl.protocol === 'edge-ret:') {
       Actions.pop()
       return
     }
+    if (parsedUrl.origin === this.successUrl) {
+      this.bridge.navStackClear()
+      return
+    }
+
     if (!navState.canGoForward) {
       this.bridge.navStackPush(navState.url)
     } else if (!navState.canGoBack) {
@@ -241,26 +350,20 @@ class PluginView extends React.Component<PluginProps, PluginState> {
     return (
       <SafeAreaView>
         <Gradient style={styles.gradient} />
-        {Platform.select({
-          android: () => (
-            <AndroidWebView
-              ref={this._setWebview}
-              onMessage={this._onMessage}
-              source={this._renderWebView()}
-              scalesPageToFit={contentScaling}
-              onNavigationStateChange={this._onNavigationStateChange}
-            />
-          ),
-          ios: () => (
-            <WebView
-              ref={this._setWebview}
-              onMessage={this._onMessage}
-              source={this._renderWebView()}
-              scalesPageToFit={contentScaling}
-              onNavigationStateChange={this._onNavigationStateChange}
-            />
-          )
-        })()}
+        <WebView
+          allowFileAccess
+          allowUniversalAccessFromFileURLs
+          onMessage={this._onMessage}
+          onNavigationStateChange={this._onNavigationStateChange}
+          originWhitelist={['file://', 'https://', 'http://', 'edge://']}
+          ref={this._setWebview}
+          scalesPageToFit={contentScaling}
+          source={this._renderWebView()}
+          userAgent={
+            'Mozilla/5.0 (Linux; Android 6.0.1; SM-G532G Build/MMB29T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.83 Mobile Safari/537.36'
+          }
+          setWebContentsDebuggingEnabled={true}
+        />
       </SafeAreaView>
     )
   }
@@ -269,15 +372,15 @@ class PluginView extends React.Component<PluginProps, PluginState> {
 const mapStateToProps = state => {
   const account = CORE_SELECTORS.getAccount(state)
   const guiWallet = UI_SELECTORS.getSelectedWallet(state)
-  const abcWallet = CORE_SELECTORS.getWallet(state, guiWallet.id)
+  const coreWallet = CORE_SELECTORS.getWallet(state, guiWallet.id)
   const coreWallets = state.core.wallets.byId
   const wallets = state.ui.wallets.byId
-  const walletName = state.ui.scenes.walletList.walletName
-  const walletId = state.ui.scenes.walletList.walletId
+  const walletName = coreWallet.name
+  const walletId = coreWallet.id
   return {
     account,
     guiWallet,
-    abcWallet,
+    coreWallet,
     coreWallets,
     wallets,
     walletName,
@@ -286,7 +389,9 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  showAlert: alertSyntax => dispatch(openABAlert('OPEN_AB_ALERT', alertSyntax))
+  showAlert: alertSyntax => dispatch(openABAlert('OPEN_AB_ALERT', alertSyntax)),
+  selectWallet: (walletId: string, currencyCode: string) => dispatch(selectWallet(walletId, currencyCode)),
+  sendConfirmationUpdateTx: (info: GuiMakeSpendInfo) => dispatch(sendConfirmationUpdateTx(info))
 })
 
 const PluginViewConnect = connect(

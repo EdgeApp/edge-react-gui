@@ -10,7 +10,6 @@ import slowlog from 'react-native-slowlog'
 import type { SetNativeAmountInfo } from '../../actions/CryptoExchangeActions.js'
 import CryptoExchangeMessageConnector from '../../connectors/components/CryptoExchangeMessageConnector'
 import { SwapKYCInfoNeededModalConnector } from '../../connectors/components/SwapKYCInfoNeededModalConnector'
-// /Volumes/work/SourceCode/AirbitzFresh/edge-react-gui/src/modules/UI/scenes/Settings/components/RestoreWalletsModal.ui
 import { SwapKYCModalConnector } from '../../connectors/components/SwapKYCModalConnector.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'

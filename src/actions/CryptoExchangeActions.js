@@ -63,17 +63,15 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
     return
   }
   const wallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
-  const receiveAddress = await wallet.getReceiveAddress()
   const currencyCode = state.cryptoExchange.fromCurrencyCode ? state.cryptoExchange.fromCurrencyCode : undefined
+  const parentCurrencyCode = wallet.currencyInfo.currencyCode
+  const dummyPublicAddress = Constants.getSpecialCurrencyInfo(parentCurrencyCode).dummyPublicAddress
 
+  const publicAddress = dummyPublicAddress || (await wallet.getReceiveAddress()).publicAddress
   const edgeSpendInfo: EdgeSpendInfo = {
     networkFeeOption: Constants.STANDARD_FEE,
     currencyCode,
-    spendTargets: [
-      {
-        publicAddress: receiveAddress.publicAddress
-      }
-    ]
+    spendTargets: [{ publicAddress }]
   }
   const primaryNativeAmount = await wallet.getMaxSpendable(edgeSpendInfo)
   dispatch({ type: 'SET_FROM_WALLET_MAX', data: primaryNativeAmount })

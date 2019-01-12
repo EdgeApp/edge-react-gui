@@ -2,11 +2,8 @@
 
 import type { EdgeLobby, EdgeParsedUri, EdgeSwapQuote } from 'edge-core-js'
 
-import { type GetSeedModalAction } from '../actions/GetSeedModalActions.js'
-import { type ResyncWalletModalAction } from '../actions/ResyncWalletModalActions.js'
-import { type SplitWalletModalAction } from '../actions/SplitWalletModalActions.js'
 import { type XPubModalAction } from '../actions/XPubModalActions.js'
-import type { AccountActivationPaymentInfo, HandleActivationInfo } from '../reducers/scenes/CreateWalletReducer.js'
+import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
 import { type GuiContact, type GuiCurrencyInfo, type GuiWallet } from '../types.js'
 import { type CoreContextAction } from './Core/Context/action.js'
 import { type SendLogsAction } from './Logs/action.js'
@@ -165,6 +162,8 @@ type LegacyActionName =
   | 'SPENDING_LIMITS/NEW_SPENDING_LIMITS'
   | 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL'
   | 'DEEP_LINK_RECEIVED'
+  | 'ADDRESS_DEEP_LINK_RECEIVED'
+  | 'ADDRESS_DEEP_LINK_COMPLETE'
   | 'UPDATE_METADATA'
   | 'SET_TOKEN_SETTINGS'
 
@@ -189,6 +188,7 @@ type NoDataActionName =
   | 'NEED_KYC'
   | 'ON_KYC_TOKEN_SET'
   | 'OPEN_SELECT_USER'
+  | 'PASSWORD_USED'
   | 'PROCESS_EDGE_LOGIN'
   | 'WIPE_KYC_NEED'
   | 'RECEIVED_INSUFFICENT_FUNDS_ERROR'
@@ -208,9 +208,6 @@ type NoDataActionName =
 export type Action =
   | { type: LegacyActionName, data?: any }
   | { type: NoDataActionName }
-  | GetSeedModalAction
-  | ResyncWalletModalAction
-  | SplitWalletModalAction
   | XPubModalAction
   | CoreContextAction
   | SendLogsAction
@@ -218,7 +215,7 @@ export type Action =
   | { type: 'ACCOUNT_ACTIVATION_INFO', data: HandleActivationInfo }
   | { type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO', data: AccountActivationPaymentInfo }
   | { type: 'IS_CHECKING_HANDLE_AVAILABILITY', data: boolean }
-  | { type: 'IS_HANDLE_AVAILABLE', data: boolean }
+  | { type: 'HANDLE_AVAILABLE_STATUS', data: HandleAvailableStatus }
   | {
       type: 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE' | 'SELECT_TO_WALLET_CRYPTO_EXCHANGE',
       data: {
