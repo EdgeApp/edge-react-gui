@@ -473,7 +473,7 @@ const strings = {
   terms_of_use: 'Terms of Use',
   privacy_policy: 'Privacy Policy',
   changelly_aml_kyc: 'AML/KYC',
-  alert_deep_link_no_wallet: 'No wallets exist that support %1$s. You can create %2$s wallet by tapping + on the Wallet List screen.'
+  alert_deep_link_no_wallet: 'No wallets exist that support %1$s. You can create a wallet for %2$s by tapping + on the Wallet List screen.'
 }
 
 // export default strings

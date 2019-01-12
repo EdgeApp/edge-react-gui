@@ -57,8 +57,7 @@ class DeepLinkingManager extends React.Component<Props> {
       this.props.markAddressDeepLinkDone()
 
       const currency = this.convertCurrencyStringFromCurrencyCode(currencyCode)
-      const article = currency === 'Ethereum' ? 'an ' : 'a '
-      const noWalletMessage = sprintf(s.strings.alert_deep_link_no_wallet, currency, article + currency)
+      const noWalletMessage = sprintf(s.strings.alert_deep_link_no_wallet, currency, currency)
       Alert.alert(noWalletMessage)
     }
   }
