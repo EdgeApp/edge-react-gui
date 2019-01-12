@@ -1,5 +1,6 @@
 // @flow
 
+import { type EdgeMetadata } from 'edge-core-js'
 import React from 'react'
 import { BackHandler, FlatList, Image, Platform, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -115,7 +116,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   plugin: any
   updateBridge: Function
   webview: any
-  successUrl: string | null
+  successUrl: ?string
   openingSendConfirmation: boolean
   constructor (props) {
     super(props)
@@ -238,7 +239,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   _setWebview = webview => {
     this.webview = webview
   }
-  // This is the preferred method for calling back . it does not return any promise like other brindge calls.
+  // This is the preferred method for calling back . it does not return any promise like other bridge calls.
   edgeCallBack = data => {
     switch (data['edge-callback']) {
       case 'paymentUri':
@@ -247,24 +248,40 @@ class PluginView extends React.Component<PluginProps, PluginState> {
         }
         this.openingSendConfirmation = true
         this.props.coreWallet.parseUri(data['edge-uri']).then(result => {
-          const info: GuiMakeSpendInfo = {
-            currencyCode: result.currencyCode,
-            nativeAmount: result.nativeAmount,
-            publicAddress: result.publicAddress
+          if (
+            typeof result.currencyCode === 'string' &&
+            typeof result.nativeAmount === 'string' &&
+            typeof result.publicAddress === 'string'
+          ) {
+            let metadata: ?EdgeMetadata = {
+              name: data['edge-source'] || (result.metadata ? result.metadata.name : undefined),
+              category: result.metadata ? result.metadata.category : undefined,
+              notes: result.metadata ? result.metadata.notes : undefined
+            }
+            if (metadata && !metadata.name && !metadata.category && !metadata.notes) {
+              metadata = undefined
+            }
+            const info: GuiMakeSpendInfo = {
+              currencyCode: result.currencyCode,
+              nativeAmount: result.nativeAmount,
+              publicAddress: result.publicAddress,
+              metadata
+            }
+
+            this.successUrl = data['x-success']
+            this.bridge
+              .makeSpendRequest(info)
+              .then(tr => {
+                this.openingSendConfirmation = false
+                Actions.pop()
+                if (this.successUrl) {
+                  this._webviewOpenUrl(this.successUrl)
+                }
+              })
+              .catch(e => {
+                console.log(e)
+              })
           }
-          this.successUrl = data['x-success'] ? data['x-success'] : null
-          this.bridge
-            .makeSpendRequest(info)
-            .then(tr => {
-              this.openingSendConfirmation = false
-              Actions.pop()
-              if (this.successUrl) {
-                this._webviewOpenUrl(this.successUrl)
-              }
-            })
-            .catch(e => {
-              console.log(e)
-            })
         })
         break
     }
