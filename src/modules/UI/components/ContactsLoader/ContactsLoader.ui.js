@@ -61,6 +61,18 @@ const merchantPartners = [
     jobTitle: '',
     familyName: '',
     recordID: ''
+  },
+  {
+    givenName: 'Bitrefill',
+    hasThumbnail: true,
+    thumbnailPath: 'https://developer.edge.app/content/bitrefill.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
   }
 ]
 
