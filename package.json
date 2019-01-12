@@ -83,7 +83,7 @@
     "dateformat": "^3.0.3",
     "dns.js": "^1.0.1",
     "domain-browser": "^1.1.7",
-    "edge-components": "^0.0.17",
+    "edge-components": "^0.0.18",
     "edge-core-js": "0.13.5",
     "edge-currency-accountbased": "git://github.com/EdgeApp/edge-currency-accountbased#4e149e9063",
     "edge-currency-bitcoin": "3.7.9",

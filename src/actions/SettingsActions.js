@@ -277,7 +277,7 @@ export const saveCustomNodesList = (currencyCode: string, nodesList: Array<strin
 export const showUnlockSettingsModal = () => async (dispatch: Dispatch, getState: GetState) => {
   try {
     const input = {
-      label: s.strings.confirm_password_text,
+      label: s.strings.enter_your_password,
       autoCorrect: false,
       returnKeyType: 'go',
       initialValue: '',
@@ -308,7 +308,7 @@ export const showUnlockSettingsModal = () => async (dispatch: Dispatch, getState
     }
     const unlockSettingsModal = createSecureTextModal({
       icon: <Icon style={{ position: 'relative', left: 1 }} type={ION_ICONS} name={LOCKED_ICON} color={THEME.COLORS.PRIMARY} size={30} />,
-      title: s.strings.enter_your_password,
+      title: s.strings.confirm_password_text,
       input,
       yesButton,
       noButton,
