@@ -1,6 +1,7 @@
 package co.edgesecure.app;
 
 import android.app.Application;
+import android.webkit.WebView;
 
 import com.facebook.react.ReactApplication;
 import com.reactnativecommunity.webview.RNCWebViewPackage;
@@ -109,5 +110,7 @@ public class MainApplication extends Application implements ReactApplication {
 
     BugsnagReactNative.start(this);
     SoLoader.init(this, /* native exopackage */ false);
+
+    WebView.setWebContentsDebuggingEnabled(true);
   }
 }
