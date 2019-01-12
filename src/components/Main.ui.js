@@ -740,16 +740,14 @@ export default class Main extends Component<Props, State> {
                         renderRightButton={this.renderEmptyButton()}
                         onLeft={Actions.pop}
                       />
-                      {/*
-                        <Scene
-                          key={Constants.PLUGIN}
-                          navTransparent={true}
-                          component={PluginView}
-                          renderTitle={this.renderTitle(PLUGIN_SPEND)}
-                          renderLeftButton={this.renderBackButton(BACK)}
-                          renderRightButton={this.renderEmptyButton()}
-                        />
-                      ) */}
+                      <Scene
+                        key={Constants.PLUGIN}
+                        navTransparent={true}
+                        component={PluginView}
+                        renderTitle={this.renderTitle(PLUGIN_SPEND)}
+                        renderLeftButton={this.renderBackButton(BACK)}
+                        renderRightButton={this.renderEmptyButton()}
+                      />
                     </Stack>
                     <Stack key={Constants.TERMS_OF_SERVICE}>
                       <Scene
