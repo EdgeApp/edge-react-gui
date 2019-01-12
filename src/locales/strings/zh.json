@@ -440,5 +440,6 @@
   "changelly_kyc_statement": "我已经阅读了和同意Changelly的使用条款和隐私政策。 通过单击 \"接受\", 我承认并理解我的交易可能会触发 打擊洗錢/認識你的客戶验证",
   "terms_of_use": "使用条款",
   "privacy_policy": "隐私条款",
-  "changelly_aml_kyc": "打擊洗錢/認識你的客戶"
+  "changelly_aml_kyc": "打擊洗錢/認識你的客戶",
+  "alert_deep_link_no_wallet": ""
 }
