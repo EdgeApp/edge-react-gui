@@ -10,6 +10,7 @@ import { sprintf } from 'sprintf-js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import * as WALLET_API from '../../modules/Core/Wallets/api.js'
+import styles from '../../styles/scenes/ScaneStyle'
 import { colors as COLORS } from '../../theme/variables/airbitz.js'
 
 // INTERACTIVE_MODAL /////////////////////////////////////////////////////////////////////////////
@@ -102,7 +103,7 @@ export class AddressModal extends Component<AddressModalProps, AddressModalState
           <Modal.Footer>
             {copyMessage && (
               <Modal.Row style={InputAndButtonStyle.tertiaryButtonRow}>
-                <TertiaryButton ellipsizeMode={'middle'} onPress={this.onPasteFromClipboard} numberOfLines={1}>
+                <TertiaryButton ellipsizeMode={'middle'} onPress={this.onPasteFromClipboard} numberOfLines={1} style={styles.addressModalButton}>
                   <TertiaryButton.Text>{copyMessage}</TertiaryButton.Text>
                 </TertiaryButton>
               </Modal.Row>
