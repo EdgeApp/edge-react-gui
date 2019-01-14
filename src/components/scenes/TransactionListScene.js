@@ -212,7 +212,7 @@ export class TransactionList extends Component<Props, State> {
     // beginning of fiat balance
     let fiatBalanceString
     const receivedFiatSymbol = fiatSymbol ? UTILS.getFiatSymbol(isoFiatCurrencyCode) : ''
-    const fiatBalanceFormat = `${intl.formatNumber(balanceInFiat && balanceInFiat > 0 ? balanceInFiat : 0, { toFixed: 2 })} ${fiatCurrencyCode}`
+    const fiatBalanceFormat = `${intl.formatNumber(balanceInFiat && balanceInFiat > 0.000001 ? balanceInFiat : 0, { toFixed: 2 })} ${fiatCurrencyCode}`
     if (receivedFiatSymbol.length !== 1) {
       fiatBalanceString = fiatBalanceFormat
     } else {
