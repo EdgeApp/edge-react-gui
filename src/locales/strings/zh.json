@@ -102,7 +102,7 @@
   "fragment_wallets_resync_wallet_first_confirm_message_mobile": "您确认要重新同步吗 \n",
   "fragment_wallets_split_wallet_bch_to_bsv": "您即将拆分此 BCH 钱包, 并从您的 BCH 私钥创建一个新的 BSV 钱包。这需要 进行一次BCH 交易, 以保护您的资金不被无意中花在错误的链上。这将在 BCH 钱包上产生少量的网络交易费用。进行任何进一步的 bch 交易前， 请先确保此交易确认。是否确实要拆分\n",
   "fragment_wallets_split_wallet_first_confirm_message_mobile": "你确实希望拆分吗 \n",
-  "fragment_wallets_get_seed_wallet_first_confirm_message_mobile": "",
+  "fragment_wallets_get_seed_wallet_first_confirm_message_mobile": "您确定要公开以下钱包的私有种子吗？\n",
   "fragmet_wallets_delete_wallet_first_confirm_message_mobile": "您是否确定要删除\n",
   "fragmet_wallets_list_archive_title_capitalized": "存档",
   "fragment_wallets_syncing_wallet_txs": "正在同步钱包交易记录..。",
@@ -163,9 +163,9 @@
   "send_confirmation_max_button_title": "发送最大金额",
   "send_confirmation_slide_to_confirm": "滑动以确认",
   "send_confirmation_balance": "余额:",
-  "send_confirmation_eos_error_cpu": "",
-  "send_confirmation_eos_error_net": "",
-  "send_confirmation_eos_error_ram": "",
+  "send_confirmation_eos_error_cpu": "可用于发送 EOS 交易的CPU不足。请等待1-3天让CPU充值。",
+  "send_confirmation_eos_error_net": "可用于发送 EOS 交易的NET不足。请等待1-3天让NET充值。",
+  "send_confirmation_eos_error_ram": "可用于发送 EOS 交易的 RAM 不足。有关如何解决的详细信息, 请参阅 edge.app/eos。",
   "send_scan_header_text": "扫描发送，导入或 Edge 登录",
   "send_to_title": "至: %s",
   "send_confirmation_to": "至: %s",
@@ -268,7 +268,7 @@
   "title_edit_token": "编辑代币",
   "title_add_token": "添加代币",
   "title_password_recovery": "密码复原",
-  "title_plugin_buysell": "",
+  "title_plugin_buysell": "购买加密货币",
   "title_plugin_spend_cryptocurrency": "花费加密货币",
   "title_plugin_spend": "花费",
   "title_otp": "双重身份验证",
@@ -441,5 +441,5 @@
   "terms_of_use": "使用条款",
   "privacy_policy": "隐私条款",
   "changelly_aml_kyc": "打擊洗錢/認識你的客戶",
-  "alert_deep_link_no_wallet": ""
+  "alert_deep_link_no_wallet": "不存在支持 %1$s的钱包。您可以通过点击 \"钱包列表\" 屏幕上的 + 来创建 %2$s 的钱包。"
 }
