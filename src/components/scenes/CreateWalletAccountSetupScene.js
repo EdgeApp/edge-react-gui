@@ -96,13 +96,25 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
       })
     }
   }
-
-  render () {
+  renderButton = () => {
     const { accountHandle } = this.state
     const { isCheckingHandleAvailability, handleAvailableStatus } = this.props
     const isHandleAvailable = handleAvailableStatus === 'AVAILABLE'
-    const validityIcon = isHandleAvailable ? validIcon : invalidIcon
     const showButton = accountHandle && isHandleAvailable && !isCheckingHandleAvailability
+    if (!showButton) {
+      return null
+    }
+    return <View style={styles.buttons}>
+      <PrimaryButton style={[styles.next]} onPress={this.onSetup} disabled={isCheckingHandleAvailability || handleAvailableStatus !== 'AVAILABLE'}>
+        <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>
+      </PrimaryButton>
+    </View>
+  }
+
+  render () {
+    const { isCheckingHandleAvailability, handleAvailableStatus } = this.props
+    const isHandleAvailable: boolean = handleAvailableStatus === 'AVAILABLE'
+    const validityIcon = isHandleAvailable ? validIcon : invalidIcon
     let chooseHandleErrorMessage = ''
     if (handleAvailableStatus === 'INVALID') {
       chooseHandleErrorMessage = s.strings.create_wallet_account_invalid_account_name
@@ -147,13 +159,7 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
                   )}
                 </View>
               </View>
-              {showButton && (
-                <View style={styles.buttons}>
-                  <PrimaryButton style={[styles.next]} onPress={this.onSetup} disabled={isCheckingHandleAvailability || handleAvailableStatus !== 'AVAILABLE'}>
-                    <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>
-                  </PrimaryButton>
-                </View>
-              )}
+              {this.renderButton()}
             </View>
           </KeyboardAwareScrollView>
         </View>
