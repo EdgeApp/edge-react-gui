@@ -171,7 +171,7 @@ export const createAccountTransaction = (createdWalletId: string, accountName: s
           paymentWallet.saveTxMetadata(edgeTransaction.txid, currencyCode, edgeMetadata).then(() => {
             Actions[Constants.WALLET_LIST_SCENE]()
             setTimeout(() => {
-              Alert.alert(s.strings.create_wallet_account_payment_sent)
+              Alert.alert(s.strings.create_wallet_account_payment_sent_title, s.strings.create_wallet_account_payment_sent_message)
             }, 750)
           })
         }
