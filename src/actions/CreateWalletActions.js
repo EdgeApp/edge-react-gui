@@ -170,9 +170,13 @@ export const createAccountTransaction = (createdWalletId: string, accountName: s
           }
           paymentWallet.saveTxMetadata(edgeTransaction.txid, currencyCode, edgeMetadata).then(() => {
             Actions[Constants.WALLET_LIST_SCENE]()
-            setTimeout(() => {
-              Alert.alert(s.strings.create_wallet_account_payment_sent)
-            }, 750)
+            const accountActivationModal = createSimpleConfirmModal({
+              title: s.strings.create_wallet_account_payment_sent_title,
+              message: s.strings.create_wallet_account_payment_sent_message,
+              icon: <Icon type={Constants.MATERIAL_COMMUNITY} name={Constants.EXCLAMATION} size={30} />,
+              buttonText: s.strings.string_ok
+            })
+            showModal(accountActivationModal)
           })
         }
       }
