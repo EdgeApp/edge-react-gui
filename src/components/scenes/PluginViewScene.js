@@ -265,7 +265,10 @@ class PluginView extends React.Component<PluginProps, PluginState> {
               currencyCode: result.currencyCode,
               nativeAmount: result.nativeAmount,
               publicAddress: result.publicAddress,
-              metadata
+              metadata,
+              onBack: () => {
+                this.openingSendConfirmation = false
+              }
             }
 
             this.successUrl = data['x-success']
