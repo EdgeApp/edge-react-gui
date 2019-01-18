@@ -104,11 +104,13 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
     if (!showButton) {
       return null
     }
-    return <View style={styles.buttons}>
-      <PrimaryButton style={[styles.next]} onPress={this.onSetup} disabled={isCheckingHandleAvailability || handleAvailableStatus !== 'AVAILABLE'}>
-        <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>
-      </PrimaryButton>
-    </View>
+    return (
+      <View style={styles.buttons}>
+        <PrimaryButton style={[styles.next]} onPress={this.onSetup} disabled={isCheckingHandleAvailability || handleAvailableStatus !== 'AVAILABLE'}>
+          <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>
+        </PrimaryButton>
+      </View>
+    )
   }
 
   render () {

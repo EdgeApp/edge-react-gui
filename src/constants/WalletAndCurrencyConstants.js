@@ -5,6 +5,12 @@ export const BITCOIN_WALLET = 'wallet:bitcoin'
 export const BITCOINCASH_WALLET = 'wallet:bitcoincash'
 export const MAX_TOKEN_CODE_CHARACTERS = 6
 
+export const CURRENCY_SYMBOL_IMAGES = {
+  BTC: 'https://developer.airbitz.co/content/bitcoin-logo-solo-64.png',
+  ETH: 'https://developer.airbitz.co/content/ethereum-logo-solo-64.png',
+  BCH: 'https://developer.airbitz.co/content/bitcoincash-logo-solo-64.png'
+}
+
 export const CURRENCY_PLUGIN_NAMES = {
   BTC: 'bitcoin',
   BCH: 'bitcoincash',

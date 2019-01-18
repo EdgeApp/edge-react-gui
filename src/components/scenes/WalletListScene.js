@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import { ActivityIndicator, Animated, FlatList, Image, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Animated, FlatList, Image, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import SortableListView from 'react-native-sortable-listview'
@@ -18,6 +18,7 @@ import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index.js'
 import { WiredProgressBar } from '../../modules/UI/components/WiredProgressBar/WiredProgressBar.ui.js'
 import { getWalletLoadingPercent } from '../../modules/UI/selectors.js'
+import buyMultipleCryptoStyle from '../../styles/components/BuyCryptoStyle.js'
 import { TwoButtonModalStyle } from '../../styles/indexStyles.js'
 import styles from '../../styles/scenes/WalletListStyle'
 import { getFiatSymbol, getObjectDiff, getTotalFiatAmountFromExchangeRates } from '../../util/utils'
@@ -304,6 +305,7 @@ export default class WalletList extends Component<Props, State> {
               renderItem={this.renderItem}
               sortableMode={this.state.sortableMode}
               executeWalletRowOption={this.executeWalletRowOption}
+              ListFooterComponent={this.renderFooter()}
             />
           </Animated.View>
         )}
@@ -429,5 +431,22 @@ export default class WalletList extends Component<Props, State> {
     newOrder.splice(to, 0, newOrder.splice(from, 1)[0])
 
     return newOrder
+  }
+
+  renderFooter = () => {
+    return (
+      <TouchableWithoutFeedback onPress={Actions[Constants.BUY_SELL]}>
+        <View style={buyMultipleCryptoStyle.buyMultipleCryptoContainer}>
+          <View style={buyMultipleCryptoStyle.buyMultipleCryptoBox}>
+            <View style={{ flexDirection: 'row' }}>
+              <Image style={buyMultipleCryptoStyle.buyMultipleCryptoBoxImage} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES['BTC'] }} resizeMode={'cover'} />
+              <Image style={buyMultipleCryptoStyle.buyMultipleCryptoBoxImage} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES['ETH'] }} resizeMode={'cover'} />
+              <Image style={buyMultipleCryptoStyle.buyMultipleCryptoBoxImage} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES['BCH'] }} resizeMode={'cover'} />
+            </View>
+            <T style={buyMultipleCryptoStyle.buyMultipleCryptoBoxText}>{s.strings.title_plugin_buysell}</T>
+          </View>
+        </View>
+      </TouchableWithoutFeedback>
+    )
   }
 }
