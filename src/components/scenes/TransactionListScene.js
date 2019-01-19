@@ -19,6 +19,8 @@ import T from '../../modules/UI/components/FormattedText/index'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import WalletListModal from '../../modules/UI/components/WalletListModal/WalletListModalConnector'
+import { WiredProgressBar } from '../../modules/UI/components/WiredProgressBar/WiredProgressBar.ui.js'
+import { getSelectedWalletLoadingPercent } from '../../modules/UI/selectors.js'
 import type { ContactsState } from '../../reducers/ContactsReducer'
 import styles, { styles as styleRaw } from '../../styles/scenes/TransactionListStyle'
 import { PLATFORM } from '../../theme/variables/platform.js'
@@ -283,6 +285,7 @@ export class TransactionList extends Component<Props, State> {
             </View>
           </View>
         </Gradient>
+        <WiredProgressBar progress={getSelectedWalletLoadingPercent} />
       </TouchableOpacity>
     )
   }

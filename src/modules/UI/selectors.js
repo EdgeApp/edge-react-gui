@@ -66,6 +66,12 @@ export const getWalletLoadingPercent = (state: State) => {
   return progressPercentage
 }
 
+export const getSelectedWalletLoadingPercent = (state: State) => {
+  const wallet = getSelectedWallet(state)
+  const walletsProgress = state.ui.wallets.walletLoadingProgress
+  return walletsProgress[wallet.id] ? walletsProgress[wallet.id] * 100 : 0
+}
+
 export const getTransactions = (state: State): Array<TransactionListTx> => {
   const transactions = state.ui.scenes.transactionList.transactions
   return transactions
