@@ -7,7 +7,7 @@ import THEME from '../../theme/variables/airbitz'
 
 export const styles = {
   buyMultipleCryptoContainer: {
-    height: scale(140),
+    height: scale(180),
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
@@ -22,9 +22,9 @@ export const styles = {
     backgroundColor: THEME.COLORS.WHITE
   },
   buyMultipleCryptoBoxImage: {
-    width: scale(40),
-    height: scale(40),
-    marginHorizontal: scale(3)
+    width: scale(32),
+    height: scale(32),
+    marginHorizontal: scale(4)
   },
   buyMultipleCryptoBoxText: {
     marginTop: scale(10),
