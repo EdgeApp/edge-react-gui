@@ -22,7 +22,7 @@ import {
   MATERIAL_ICONS,
   SEND_CONFIRMATION,
   SHOPPING_CART,
-  SPECIAL_CURRENCY_INFO
+  getSpecialCurrencyInfo
 } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
@@ -315,7 +315,8 @@ export const checkAndShowGetCryptoModal = () => async (dispatch: Dispatch, getSt
     if (balance !== '0' || shownWalletGetCryptoModals.includes(wallet.id)) return // if there's a balance then early exit
     shownWalletGetCryptoModals.push(wallet.id) // add to list of wallets with modal shown this session
     let threeButtonModal
-    if (SPECIAL_CURRENCY_INFO[currencyCode].displayBuyCrypto) {
+    const SPECIAL_CURRENCY_INFO = getSpecialCurrencyInfo(currencyCode)
+    if (SPECIAL_CURRENCY_INFO.displayBuyCrypto) {
       const messageSyntax = sprintf(s.strings.buy_crypto_modal_message, currencyCode, currencyCode, currencyCode)
       threeButtonModal = createThreeButtonModal({
         title: s.strings.buy_crypto_modal_title,
