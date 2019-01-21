@@ -248,11 +248,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
         }
         this.openingSendConfirmation = true
         this.props.coreWallet.parseUri(data['edge-uri']).then(result => {
-          if (
-            typeof result.currencyCode === 'string' &&
-            typeof result.nativeAmount === 'string' &&
-            typeof result.publicAddress === 'string'
-          ) {
+          if (typeof result.currencyCode === 'string' && typeof result.nativeAmount === 'string' && typeof result.publicAddress === 'string') {
             let metadata: ?EdgeMetadata = {
               name: data['edge-source'] || (result.metadata ? result.metadata.name : undefined),
               category: result.metadata ? result.metadata.category : undefined,
