@@ -2,13 +2,10 @@
 
 import { isIphoneX } from '../../lib/isIphoneX.js'
 import THEME from '../../theme/variables/airbitz'
-import { PLATFORM } from '../../theme/variables/platform'
-import * as Styles from '../indexStyles'
 
 const EdgeLoginScreen = {
   container: {
-    ...Styles.SceneContainer,
-    height: PLATFORM.deviceHeight - THEME.HEADER - THEME.FOOTER_TABS_HEIGHT * 2 - (isIphoneX ? 68 : 0)
+    flex: 1
   },
   gradient: {
     height: THEME.HEADER,
@@ -58,7 +55,8 @@ const EdgeLoginScreen = {
     marginRight: '5%',
     marginLeft: '5%',
     flexDirection: 'row',
-    alignSelf: 'flex-end'
+    alignSelf: 'flex-end',
+    paddingBottom: isIphoneX ? 30 : 20
   },
   buttonsProcessing: {
     flex: 1,
