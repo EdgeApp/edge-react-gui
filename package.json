@@ -164,7 +164,6 @@
     "babel-jest": "23.4.2",
     "babel-preset-react-native": "^1.9.0",
     "body-parser": "^1.18.2",
-    "detox": "^7.4.3",
     "edge-plugin-simplex": "https://github.com/Airbitz/edge-plugin-simplex.git#5155b5fa",
     "edge-plugin-wyre": "https://github.com/EdgeApp/edge-plugin-wyre.git#31b260d",
     "edge-plugin-bitrefill": "https://github.com/EdgeApp/edge-plugin-bitrefill.git#6d99caf",
