@@ -33,4 +33,4 @@ export const styles = {
   }
 }
 
-export default StyleSheet.create(styles)
+export const buyMultipleCryptoStyle = StyleSheet.create(styles)
