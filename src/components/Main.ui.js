@@ -192,7 +192,7 @@ const PASSWORD_RECOVERY = s.strings.title_password_recovery
 const OTP = s.strings.title_otp
 const DEFAULT_FIAT = s.strings.title_default_fiat
 const PLUGIN_BUYSELL = s.strings.title_plugin_buysell
-const PLUGIN_SPEND = s.strings.title_plugin_spend
+const PLUGIN_SPEND = s.strings.title_plugin_spend_cryptocurrency
 const TERMS_OF_SERVICE = s.strings.title_terms_of_service
 
 type Props = {
@@ -741,9 +741,9 @@ export default class Main extends Component<Props, State> {
                         onLeft={Actions.pop}
                       />
                       <Scene
-                        key={Constants.PLUGIN}
+                        key={Constants.PLUGIN_SPEND}
                         navTransparent={true}
-                        component={PluginView}
+                        component={ifLoggedIn(PluginView, LoadingScene)}
                         renderTitle={this.renderTitle(PLUGIN_SPEND)}
                         renderLeftButton={this.renderBackButton(BACK)}
                         renderRightButton={this.renderEmptyButton()}
@@ -837,6 +837,13 @@ export default class Main extends Component<Props, State> {
     return (
       <View style={styles.titleWrapper}>
         <T style={styles.titleStyle}>{title}</T>
+      </View>
+    )
+  }
+  renderSpendTitle = (title: string) => {
+    return (
+      <View style={styles.titleWrapper}>
+        <T style={styles.titleStyle}>{'title'}</T>
       </View>
     )
   }
