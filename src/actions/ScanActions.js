@@ -1,14 +1,29 @@
 // @flow
 
-import { createYesNoModal, showModal } from 'edge-components'
+import { createThreeButtonModal, createYesNoModal, showModal } from 'edge-components'
 import type { EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendInfo, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
 import React from 'react'
 import { Alert, Linking } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
+import { selectWalletForExchange } from '../actions/CryptoExchangeActions.js'
 import { createAddressModal } from '../components/modals/AddressModal.js'
-import { ADD_TOKEN, EDGE_LOGIN, EXCLAMATION, FA_MONEY_ICON, ION_ICONS, KEY_ICON, MATERIAL_COMMUNITY, SEND_CONFIRMATION } from '../constants/indexConstants.js'
+import {
+  ADD_TOKEN,
+  BUY_SELL,
+  EDGE_LOGIN,
+  EXCHANGE_SCENE,
+  EXCLAMATION,
+  FA_MONEY_ICON,
+  ION_ICONS,
+  KEY_ICON,
+  MATERIAL_COMMUNITY,
+  MATERIAL_ICONS,
+  SEND_CONFIRMATION,
+  SHOPPING_CART,
+  SPECIAL_CURRENCY_INFO
+} from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
@@ -18,6 +33,7 @@ import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import OptionIcon from '../modules/UI/components/OptionIcon/OptionIcon.ui.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
+import { colors as COLORS } from '../theme/variables/airbitz.js'
 import type { GuiWallet } from '../types.js'
 import { type RequestPaymentAddress, denominationToDecimalPlaces, getRequestForAddress, isEdgeLogin, noOp } from '../util/utils.js'
 import { loginWithEdge } from './EdgeLoginActions.js'
@@ -285,4 +301,64 @@ export const privateKeyModalActivated = () => async (dispatch: Dispatch, getStat
       }
     )
   }, 1000)
+}
+
+const shownWalletGetCryptoModals = []
+
+export const checkAndShowGetCryptoModal = () => async (dispatch: Dispatch, getState: GetState) => {
+  try {
+    const state = getState()
+    const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+    const wallet = UI_SELECTORS.getSelectedWallet(state)
+    // check if balance is zero
+    const balance = wallet.nativeBalances[currencyCode]
+    if (balance !== '0' || shownWalletGetCryptoModals.includes(wallet.id)) return // if there's a balance then early exit
+    shownWalletGetCryptoModals.push(wallet.id) // add to list of wallets with modal shown this session
+    let threeButtonModal
+    if (SPECIAL_CURRENCY_INFO[currencyCode].displayBuyCrypto) {
+      const messageSyntax = sprintf(s.strings.buy_crypto_modal_message, currencyCode, currencyCode, currencyCode)
+      threeButtonModal = createThreeButtonModal({
+        title: s.strings.buy_crypto_modal_title,
+        message: messageSyntax,
+        icon: <Icon name={SHOPPING_CART} type={MATERIAL_ICONS} size={32} color={COLORS.primary} />,
+        primaryButton: {
+          text: sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode),
+          returnValue: 'buy'
+        },
+        secondaryButton: {
+          text: s.strings.buy_crypto_modal_exchange,
+          returnValue: 'exchange'
+        },
+        tertiaryButton: {
+          text: s.strings.buy_crypto_decline,
+          returnValue: 'decline'
+        }
+      })
+    } else {
+      // if we're not targetting for buying, but rather exchange
+      const messageSyntax = sprintf(s.strings.exchange_crypto_modal_message, currencyCode, currencyCode, currencyCode)
+      threeButtonModal = createThreeButtonModal({
+        title: s.strings.buy_crypto_modal_title,
+        message: messageSyntax,
+        icon: <Icon name={SHOPPING_CART} type={MATERIAL_ICONS} size={32} color={COLORS.primary} />,
+        primaryButton: {
+          text: sprintf(s.strings.buy_crypto_modal_exchange),
+          returnValue: 'exchange'
+        },
+        secondaryButton: {
+          text: s.strings.buy_crypto_decline,
+          returnValue: 'decline'
+        }
+      })
+    }
+    const value = await showModal(threeButtonModal)
+    if (value === 'buy') {
+      Actions[BUY_SELL]()
+    } else if (value === 'exchange') {
+      dispatch(selectWalletForExchange(wallet.id, currencyCode, 'to'))
+      Actions[EXCHANGE_SCENE]()
+    }
+  } catch (e) {
+    console.log('error generating encodedURI: ', e)
+  }
 }

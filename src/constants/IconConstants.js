@@ -23,6 +23,10 @@ export const EXCHANGE_ICON = 'exchange'
 export const QUESTION_ICON = 'question'
 export const FA_MONEY_ICON = 'money'
 
+// Feather
+export const FEATHER_ICONS = 'featherIcons'
+export const SHOPPING_CART = 'shopping-cart'
+
 // Ionic
 export const ION_ICONS = 'ionIcons'
 export const CLOSE_ICON = 'close'

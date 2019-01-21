@@ -43,7 +43,24 @@ type SpecialCurrencyInfo = {
   }
 }
 
+export const getSpecialCurrencyInfo = (currencyCode: string): Object => {
+  if (SPECIAL_CURRENCY_INFO[currencyCode]) {
+    return SPECIAL_CURRENCY_INFO[currencyCode]
+  } else {
+    return {}
+  }
+}
+
 export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
+  BTC: {
+    displayBuyCrypto: true
+  },
+  BCH: {
+    displayBuyCrypto: true
+  },
+  LTC: {
+    displayBuyCrypto: true
+  },
   XLM: {
     dummyPublicAddress: 'GBEVGJYAUKJ2TVPMC3GEPI2GGZQLMWZDRWJCVNBXCJ3ELYTDPHVQQM74',
     noCustomMiningFee: true,
@@ -55,7 +72,8 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     minimumPopupModals: {
       minimumNativeBalance: '10000000',
       modalMessage: s.strings.request_xlm_minimum_notification_body
-    }
+    },
+    displayBuyCrypto: false
   },
   XRP: {
     dummyPublicAddress: 'rfuESo7eHUnvebxgaFjfYxfwXhM2uBPAj3',
@@ -68,7 +86,8 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     minimumPopupModals: {
       minimumNativeBalance: '20000000',
       modalMessage: s.strings.request_xrp_minimum_notification_body
-    }
+    },
+    displayBuyCrypto: true
   },
   XMR: {
     dummyPublicAddress: '46qxvuS78CNBoiiKmDjvjd5pMAZrTBbDNNHDoP52jKj9j5mk6m4R5nU6BDrWQURiWV9a2n5Sy8Qo4aJskKa92FX1GpZFiYA',
@@ -92,14 +111,7 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   },
   ETH: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
-    allowZeroTx: true
-  }
-}
-
-export const getSpecialCurrencyInfo = (currencyCode: string): Object => {
-  if (SPECIAL_CURRENCY_INFO[currencyCode]) {
-    return SPECIAL_CURRENCY_INFO[currencyCode]
-  } else {
-    return {}
+    allowZeroTx: true,
+    displayBuyCrypto: true
   }
 }
