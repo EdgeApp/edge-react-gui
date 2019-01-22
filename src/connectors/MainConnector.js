@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { checkEnabledExchanges } from '../actions/CryptoExchangeActions.js'
 import { setKeyboardHeight } from '../actions/DimensionsActions.js'
 import * as actions from '../actions/indexActions'
+import { checkAndShowGetCryptoModal } from '../actions/ScanActions.js'
 import { openDrawer, updateCurrentSceneKey } from '../actions/ScenesActions.js'
 import { showReEnableOtpModal } from '../actions/SettingsActions.js'
 import { selectWallet } from '../actions/WalletActions.js'
@@ -57,7 +58,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch({
       type: 'ADDRESS_DEEP_LINK_RECEIVED',
       data: addressDeepLinkData
-    })
+    }),
+  checkAndShowGetCryptoModal: () => dispatch(checkAndShowGetCryptoModal())
 })
 export default connect(
   mapStateToProps,

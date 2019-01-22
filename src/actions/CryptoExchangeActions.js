@@ -312,7 +312,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, info: S
   dispatch({ type: 'UPDATE_SHIFT_TRANSACTION_FEE', data: returnObject })
 }
 
-export const selectWalletForExchange = (walletId: string, currencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
+export const selectWalletForExchange = (walletId: string, currencyCode: string, direction?: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const wallet = state.ui.wallets.byId[walletId]
   const cc = currencyCode || wallet.currencyCode
@@ -333,7 +333,16 @@ export const selectWalletForExchange = (walletId: string, currencyCode: string) 
     primaryInfo
   }
 
-  if (state.cryptoExchange.changeWallet === 'from') {
+  let walletDirection = 'from'
+  if (direction) {
+    // if optional parameter set in function call
+    walletDirection = direction
+  } else {
+    // otherwise check state of exchange scene to decide
+    walletDirection = state.cryptoExchange.changeWallet === 'from' ? 'from' : 'to'
+  }
+
+  if (walletDirection === 'from') {
     dispatch({ type: 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE', data })
   } else {
     dispatch({ type: 'SELECT_TO_WALLET_CRYPTO_EXCHANGE', data })
