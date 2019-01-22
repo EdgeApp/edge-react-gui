@@ -11,6 +11,7 @@ import parse from 'url-parse'
 import ENV from '../../../env.json'
 import { sendConfirmationUpdateTx } from '../../actions/SendConfirmationActions'
 import { selectWallet } from '../../actions/WalletActions'
+import { PLUGIN_SPEND, SPEND } from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
 import { openABAlert } from '../../modules/UI/components/ABAlert/action'
@@ -41,6 +42,10 @@ class PluginList extends React.Component<PluginListProps, PluginListState> {
   }
 
   _onPress = plugin => {
+    if (Actions.currentScene === SPEND) {
+      Actions[PLUGIN_SPEND]({ plugin: plugin })
+      return
+    }
     Actions.plugin({ plugin: plugin })
   }
 
