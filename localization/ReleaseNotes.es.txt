@@ -5,6 +5,14 @@ Traslada Edge Core a un proceso independiente para aumentar el rendimiento y res
 * Vende criptomonedas hacia tu tarjeta de crédito usando Simplex
 * Incluye LibertyX para comprar Bitcoin de comercios físicos en EE. UU
 
+v1.6.1
+
+* Improved BTC fee calculations
+* Add buy crypto button at Wallets List screen
+* Add new button to buy and exchange crypto for empty wallets
+* Fix several UI display bugs
+* Improved plugin functionality
+
 v1.6.0
 
 * Soporte para EOS
