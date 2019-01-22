@@ -6,7 +6,7 @@ Il est complétement privée et sécurisé d'utiliser notre Wallet de Blockchain
 
 Gérer votre cryptomonnaies qui ont été jamais facile à utiliser. Edge Wallet offert la sécurité maximum avec la simplicité, cela permet au tous les utilisateurs à gérer, transfer, faire l'échange leurs monnaies facilement.
 
-Edge Crypto Wallet monnaies actuellement assite, Bitcoin, Bitcoin Cash, Litecoin, Dash, Ethereum, Stellar, Monero, et Ripple/XRP.
+Edge Crypto Wallet currently supports: Bitcoin, Bitcoin Cash, Bitcoin SV, Litecoin, Dash, Ethereum, Stellar, Monero, Digibyte, EOS, and Ripple/XRP.
 
 Edge est un portefeuille de crypto monnaies puissance et facile à utiliser qui permet aux utilisateurs de contrôler facilement leurs clés privées avec la familiarité et l’aisance d’une banque en ligne mobile.  
 
