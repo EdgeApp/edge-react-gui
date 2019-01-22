@@ -7,11 +7,11 @@ v1.7.0
 
 v1.6.1
 
-* Improved BTC fee calculations
-* Add buy crypto button at Wallets List screen
-* Add new button to buy and exchange crypto for empty wallets
-* Fix several UI display bugs
-* Improved plugin functionality
+* Migliorato il calcolo delle commissioni BTC
+* Aggiunto il tasto compra crypto nella schermata con la lista dei portafogli
+* Aggiunto il pulsante per acquistare e scambiare crypto per portafogli vuoti
+* Corretti numerosi bug all'UI
+* Migliorato il funzionamento dei plugin
 
 v1.6.0
 
