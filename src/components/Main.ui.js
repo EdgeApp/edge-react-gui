@@ -211,7 +211,8 @@ type Props = {
   checkEnabledExchanges: () => void,
   openDrawer: () => void,
   dispatchAddressDeepLinkReceived: (addressDeepLinkData: Object) => any,
-  deepLinkPending: boolean
+  deepLinkPending: boolean,
+  checkAndShowGetCryptoModal: () => void
 }
 type State = {
   context: ?EdgeContext
@@ -553,6 +554,7 @@ export default class Main extends Component<Props, State> {
                           onEnter={() => {
                             this.props.requestPermission(PermissionStrings.CAMERA)
                             this.props.dispatchEnableScan()
+                            this.props.checkAndShowGetCryptoModal()
                           }}
                           onExit={this.props.dispatchDisableScan}
                           component={Scan}

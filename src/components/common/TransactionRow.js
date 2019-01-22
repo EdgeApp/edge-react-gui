@@ -64,6 +64,12 @@ export class TransactionRowComponent extends Component<Props, State> {
     const completedTxList: Array<TransactionListTx> = this.props.transactions
     // $FlowFixMe
     const tx = this.props.transaction.item
+
+    // Work around corrupted metadata from another GUI bug:
+    if (tx.metadata != null && tx.metadata.name != null && typeof tx.metadata.name !== 'string') {
+      tx.metadata.name = ''
+    }
+
     let txColorStyle, lastOfDate, txImage, pendingTimeStyle, pendingTimeSyntax, transactionPartner
     let txName = ''
     let thumbnailPath = ''

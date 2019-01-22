@@ -210,6 +210,9 @@ export const styles = {
   },
   settingsButtonText: {
     color: THEME.COLORS.WHITE
+  },
+  addressModalButton: {
+    width: '100%'
   }
 }
 export default StyleSheet.create(styles)
