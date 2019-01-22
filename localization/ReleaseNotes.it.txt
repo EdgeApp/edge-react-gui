@@ -5,6 +5,14 @@ v1.7.0
 * Vendi le crypto e ottieni fiat sulla carta di credito usando Simplex
 * Aggiunto LibertyX per supportare l'acquisto di Bitcoin da venditori fisici in USA
 
+v1.6.1
+
+* Improved BTC fee calculations
+* Add buy crypto button at Wallets List screen
+* Add new button to buy and exchange crypto for empty wallets
+* Fix several UI display bugs
+* Improved plugin functionality
+
 v1.6.0
 
 * Supporto a EOS
