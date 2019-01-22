@@ -5,6 +5,14 @@ v1.7.0
 * 使用 simplex 销售加密货币到信用卡
 * 添加 libertyx 以支持从美国的实体商购买比特币
 
+v1.6.1
+
+* Improved BTC fee calculations
+* Add buy crypto button at Wallets List screen
+* Add new button to buy and exchange crypto for empty wallets
+* Fix several UI display bugs
+* Improved plugin functionality
+
 v1.6.0
 
 * eos 支持
