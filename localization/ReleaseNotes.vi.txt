@@ -5,6 +5,14 @@ v1.7.0
 * Sell crypto to credit card using Simplex
 * Add LibertyX to support buying Bitcoin from physical merchants in US
 
+v1.6.1
+
+* Improved BTC fee calculations
+* Add buy crypto button at Wallets List screen
+* Add new button to buy and exchange crypto for empty wallets
+* Fix several UI display bugs
+* Improved plugin functionality
+
 v1.6.0
 
 * Hỗ trợ EOS
