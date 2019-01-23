@@ -1,9 +1,11 @@
 // @flow
 
+import { createInputModal, showModal } from 'edge-components'
 import { type EdgeMetadata } from 'edge-core-js'
 import React from 'react'
 import { BackHandler, FlatList, Image, Platform, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import IonIcon from 'react-native-vector-icons/Ionicons'
 import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
 import parse from 'url-parse'
@@ -24,6 +26,7 @@ import { buySellPlugins, spendPlugins } from '../../modules/UI/scenes/Plugins/pl
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
 import type { GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import styles from '../../styles/scenes/PluginsStyle.js'
+import { THEME, colors } from '../../theme/variables/airbitz.js'
 
 const BACK = s.strings.title_back
 
@@ -46,6 +49,49 @@ class PluginList extends React.Component<PluginListProps, PluginListState> {
       Actions[PLUGIN_SPEND]({ plugin: plugin })
       return
     }
+    if (plugin.pluginId === 'custom') {
+      const yesButton = {
+        title: s.strings.load_plugin
+      }
+      const noButton = {
+        title: s.strings.string_cancel_cap
+      }
+      const input = {
+        label: s.strings.plugin_url,
+        autoCorrect: false,
+        returnKeyType: 'go',
+        initialValue: '',
+        autoFocus: true
+      }
+      const modal = createInputModal({
+        icon: (
+          <IonIcon
+            name="md-globe"
+            size={42}
+            color={colors.primary}
+            style={[
+              {
+                backgroundColor: THEME.COLORS.TRANSPARENT,
+                zIndex: 1015,
+                elevation: 1015
+              }
+            ]}
+          />
+        ),
+        title: s.strings.load_plugin,
+        input,
+        yesButton,
+        noButton
+      })
+      showModal(modal).then(response => {
+        if (response) {
+          plugin.sourceFile = { uri: response }
+        }
+        Actions.plugin({ plugin: plugin })
+      })
+      return
+    }
+    console.log('Plugin: ', plugin)
     Actions.plugin({ plugin: plugin })
   }
 
