@@ -11,33 +11,34 @@ import { WalletListRowConnector } from '../WalletListRow/WalletListRowConnector.
 import WalletListModalHeader from './components/WalletListModalHeaderConnector'
 import styles from './style'
 
-type Props = {
+type WalletListModalOwnProps = {
+  wallets?: Object,
   topDisplacement: number,
-  type: string,
   whichWallet?: string,
-  currentScene: string,
-  wallets: Object,
-  onSelectWallet: (string, string) => void,
-  excludedCurrencyCode?: string,
-  includedCurrencyCodes?: Array<string>
+  type: string,
+  excludedCurrencyCode?: string
 }
-export default class WalletListModal extends Component<Props> {
+
+type WalletListModalStateProps = {
+  wallets: Object,
+  currentScene: string
+}
+
+type WalletListModalDispatchProps = {
+  onSelectWallet: (string, string) => void
+}
+
+type WalletListModalProps = WalletListModalOwnProps & WalletListModalStateProps & WalletListModalDispatchProps
+export default class WalletListModal extends Component<WalletListModalProps> {
   constructor (props: any) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
   renderWalletListRow = (walletItem: { item: GuiWallet, index: number, separators: any }) => {
-    const { onSelectWallet, excludedCurrencyCode, includedCurrencyCodes } = this.props
+    const { onSelectWallet, excludedCurrencyCode } = this.props
     const wallet = walletItem.item
-    return (
-      <WalletListRowConnector
-        onSelectWallet={onSelectWallet}
-        wallet={wallet}
-        includedCurrencyCodes={includedCurrencyCodes}
-        excludedCurrencyCode={excludedCurrencyCode}
-      />
-    )
+    return <WalletListRowConnector onSelectWallet={onSelectWallet} wallet={wallet} excludedCurrencyCode={excludedCurrencyCode} />
   }
 
   keyExtractor = (item: { item: GuiWallet, index: number, separators: any }, index: number): number => {
@@ -45,18 +46,13 @@ export default class WalletListModal extends Component<Props> {
   }
 
   render () {
-    const { wallets, topDisplacement, includedCurrencyCodes } = this.props
+    const { wallets, topDisplacement } = this.props
     const walletList = []
     const top = topDisplacement || 38
     for (const id in wallets) {
-      if (includedCurrencyCodes) {
-        if (includedCurrencyCodes.indexOf(wallets[id].currencyCode) > -1) {
-          walletList.push(wallets[id])
-        }
-      } else {
-        // still need to implement exclusion list
-        walletList.push(wallets[id])
-      }
+      const wallet = wallets[id]
+      // perhaps it'd be best to filter the list of valid wallets rather than arbitrary criteria
+      walletList.push(wallet)
     }
     return (
       <Animatable.View
