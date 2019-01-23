@@ -11,17 +11,26 @@ import { WalletListRowConnector } from '../WalletListRow/WalletListRowConnector.
 import WalletListModalHeader from './components/WalletListModalHeaderConnector'
 import styles from './style'
 
-type Props = {
+type WalletListModalOwnProps = {
+  wallets?: Object,
   topDisplacement: number,
-  type: string,
   whichWallet?: string,
-  currentScene: string,
-  wallets: Object,
-  onSelectWallet: (string, string) => void,
+  type: string,
   excludedCurrencyCode?: string,
   includedCurrencyCodes?: Array<string>
 }
-export default class WalletListModal extends Component<Props> {
+
+type WalletListModalStateProps = {
+  wallets: Object,
+  currentScene: string
+}
+
+type WalletListModalDispatchProps = {
+  onSelectWallet: (string, string) => void
+}
+
+type WalletListModalProps = WalletListModalOwnProps & WalletListModalStateProps & WalletListModalDispatchProps
+export default class WalletListModal extends Component<WalletListModalProps> {
   constructor (props: any) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
@@ -49,13 +58,14 @@ export default class WalletListModal extends Component<Props> {
     const walletList = []
     const top = topDisplacement || 38
     for (const id in wallets) {
+      const wallet = wallets[id]
+      // perhaps it'd be best to filter the list of valid wallets rather than arbitrary criteria
       if (includedCurrencyCodes) {
-        if (includedCurrencyCodes.indexOf(wallets[id].currencyCode) > -1) {
-          walletList.push(wallets[id])
+        if (includedCurrencyCodes.indexOf(wallet.currencyCode) > -1) {
+          walletList.push(wallet)
         }
       } else {
-        // still need to implement exclusion list
-        walletList.push(wallets[id])
+        walletList.push(wallet)
       }
     }
     return (
