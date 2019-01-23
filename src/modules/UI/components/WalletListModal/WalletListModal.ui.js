@@ -16,8 +16,7 @@ type WalletListModalOwnProps = {
   topDisplacement: number,
   whichWallet?: string,
   type: string,
-  excludedCurrencyCode?: string,
-  includedCurrencyCodes?: Array<string>
+  excludedCurrencyCode?: string
 }
 
 type WalletListModalStateProps = {
@@ -37,16 +36,9 @@ export default class WalletListModal extends Component<WalletListModalProps> {
   }
 
   renderWalletListRow = (walletItem: { item: GuiWallet, index: number, separators: any }) => {
-    const { onSelectWallet, excludedCurrencyCode, includedCurrencyCodes } = this.props
+    const { onSelectWallet, excludedCurrencyCode } = this.props
     const wallet = walletItem.item
-    return (
-      <WalletListRowConnector
-        onSelectWallet={onSelectWallet}
-        wallet={wallet}
-        includedCurrencyCodes={includedCurrencyCodes}
-        excludedCurrencyCode={excludedCurrencyCode}
-      />
-    )
+    return <WalletListRowConnector onSelectWallet={onSelectWallet} wallet={wallet} excludedCurrencyCode={excludedCurrencyCode} />
   }
 
   keyExtractor = (item: { item: GuiWallet, index: number, separators: any }, index: number): number => {
@@ -54,19 +46,13 @@ export default class WalletListModal extends Component<WalletListModalProps> {
   }
 
   render () {
-    const { wallets, topDisplacement, includedCurrencyCodes } = this.props
+    const { wallets, topDisplacement } = this.props
     const walletList = []
     const top = topDisplacement || 38
     for (const id in wallets) {
       const wallet = wallets[id]
       // perhaps it'd be best to filter the list of valid wallets rather than arbitrary criteria
-      if (includedCurrencyCodes) {
-        if (includedCurrencyCodes.indexOf(wallet.currencyCode) > -1) {
-          walletList.push(wallet)
-        }
-      } else {
-        walletList.push(wallet)
-      }
+      walletList.push(wallet)
     }
     return (
       <Animatable.View

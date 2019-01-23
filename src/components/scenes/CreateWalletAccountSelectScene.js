@@ -224,7 +224,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
   }
 
   render () {
-    const { supportedCurrencies, selectedWalletType, activationCost } = this.props
+    const { supportedCurrencies, selectedWalletType, activationCost, wallets } = this.props
     const instructionSyntax = sprintf(
       s.strings.create_wallet_account_select_instructions_with_cost,
       selectedWalletType.currencyCode,
@@ -240,6 +240,14 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
         supportedCurrenciesList.push(currency)
       }
     }
+
+    const walletsCopy = { ...wallets }
+    for (const id in walletsCopy) {
+      if (!supportedCurrenciesList.includes(walletsCopy[id].currencyCode)) {
+        delete walletsCopy[id]
+      }
+    }
+
     return (
       <SafeAreaView>
         <View style={styles.scene}>
@@ -258,7 +266,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
               topDisplacement={Constants.TRANSACTIONLIST_WALLET_DIALOG_TOP}
               type={Constants.FROM}
               onSelectWallet={this.onSelectWallet}
-              includedCurrencyCodes={supportedCurrenciesList}
+              wallets={walletsCopy}
             />
           )}
         </View>
