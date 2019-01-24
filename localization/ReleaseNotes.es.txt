@@ -1,17 +1,17 @@
 v1.7.0
 
-* Bech32 address support
-* Move Edge Core to independent process to boost performance and GUI responsiveness
-* Sell crypto to credit card using Simplex
-* Add LibertyX to support buying Bitcoin from physical merchants in US
+* Soporte para direcciones Bech32
+Traslada Edge Core a un proceso independiente para aumentar el rendimiento y respuesta de la interfaz gráfica
+* Vende criptomonedas hacia tu tarjeta de crédito usando Simplex
+* Incluye LibertyX para comprar Bitcoin de comercios físicos en EE. UU
 
 v1.6.1
 
-* Improved BTC fee calculations
-* Add buy crypto button at Wallets List screen
-* Add new button to buy and exchange crypto for empty wallets
-* Fix several UI display bugs
-* Improved plugin functionality
+* Mejora del cálculo de comisiones en BTC
+* Añade botón para comprar criptos en la vista de listado de carteras
+* Añade nuevo botón para comprar y cambiar cripto en carteras vacías
+* Arreglados varios errores en la interface de usuario
+* Funcionalidad de plugins mejorada
 
 v1.6.0
 
