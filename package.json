@@ -157,7 +157,8 @@
     "url": "^0.10.3",
     "url-parse": "^1.4.4",
     "vm-browserify": "0.0.4",
-    "why-did-you-update": "^0.1.1"
+    "why-did-you-update": "^0.1.1",
+    "yaob":"0.3.2"
   },
   "devDependencies": {
     "babel-eslint": "^8.1.0",
@@ -191,6 +192,7 @@
     "nyc": "^10.0.0",
     "prettier-eslint-cli": "^4.7.0",
     "rn-nodeify": "^7.0.1",
+    "rollup-plugin-node-resolve":"4.0.0",
     "updot": "^1.1.7"
   },
   "flow-coverage-report": {
