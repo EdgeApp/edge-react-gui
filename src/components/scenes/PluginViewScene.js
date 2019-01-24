@@ -54,7 +54,9 @@ class PluginList extends React.Component<PluginListProps, PluginListState> {
       <View style={styles.pluginRow}>
         <View style={styles.pluginBox}>
           <View style={styles.pluginLeft}>
-            <View style={[styles.logo]}>{item.imageUrl && <Image style={{ height: '100%' }} source={{ uri: item.imageUrl }} />}</View>
+            <View style={styles.logoWrap}>
+              <View style={[styles.logo]}>{item.imageUrl && <Image style={{ height: '100%' }} source={{ uri: item.imageUrl }} />}</View>
+            </View>
             <View style={styles.textBoxWrap}>
               <Text style={styles.titleBox}>{item.name}</Text>
               <Text style={styles.subtitleBox}>{item.subtitle}</Text>
