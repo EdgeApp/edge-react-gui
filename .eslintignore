@@ -1,2 +1,3 @@
 node_modules
 **/scratch.*
+src/lib/bridge/rolledUp.js

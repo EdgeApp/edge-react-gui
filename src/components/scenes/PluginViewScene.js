@@ -14,6 +14,7 @@ import ENV from '../../../env.json'
 import { sendConfirmationUpdateTx } from '../../actions/SendConfirmationActions'
 import { selectWallet } from '../../actions/WalletActions'
 import { PLUGIN_SPEND, SPEND } from '../../constants/indexConstants'
+import { javascript } from '../../lib/bridge/injectThisInWebView.js'
 import s from '../../locales/strings.js'
 import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
 import { openABAlert } from '../../modules/UI/components/ABAlert/action'
@@ -404,6 +405,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
           allowFileAccess
           allowUniversalAccessFromFileURLs
           onMessage={this._onMessage}
+          injectedJavascript={javascript}
           onNavigationStateChange={this._onNavigationStateChange}
           originWhitelist={['file://', 'https://', 'http://', 'edge://']}
           ref={this._setWebview}
