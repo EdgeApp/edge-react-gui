@@ -68,13 +68,13 @@ export type TransactionDetailsOwnProps = {
 export type TransactionDetailsDispatchProps = {
   setNewSubcategory: (string, Array<string>) => void,
   openHelpModal: () => void,
-  setTransactionDetails: (txid: string, currencyCode: string, edgeMetadata: EdgeMetadata) => void,
+  setTransactionDetails: (transaction: EdgeTransaction, edgeMetadata: EdgeMetadata) => void,
   getSubcategories: () => void,
   displayDropdownAlert: (message: string, title: string) => void
 }
 
 type State = {
-  name: string, // remove commenting once metaData in Redux
+  payeeName: string, // remove commenting once metaData in Redux
   thumbnailPath: string,
   // hasThumbnail: boolean,
   notes: string,
@@ -111,7 +111,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     let category = ''
     let subCategory = ''
     let fullCategory = ''
-    let name = ''
+    let payeeName = ''
     let amountFiat = intl.formatNumber('0.00')
     let notes = ''
     const direction = parseInt(edgeTransaction.nativeAmount) >= 0 ? 'receive' : 'send'
@@ -124,7 +124,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
 
     if (edgeTransaction && edgeTransaction.metadata) {
       fullCategory = edgeTransaction.metadata.category ? edgeTransaction.metadata.category : ''
-      name = edgeTransaction.metadata.name ? edgeTransaction.metadata.name : '' // remove commenting once metaData in Redux
+      payeeName = edgeTransaction.metadata.name ? edgeTransaction.metadata.name : '' // remove commenting once metaData in Redux
       notes = edgeTransaction.metadata.notes ? edgeTransaction.metadata.notes : ''
       if (edgeTransaction.metadata.amountFiat) {
         const initial = edgeTransaction.metadata.amountFiat.toFixed(2)
@@ -155,7 +155,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     }
 
     this.state = {
-      name,
+      payeeName,
       notes,
       thumbnailPath: props.thumbnailPath,
       category: category,
@@ -216,13 +216,13 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
 
   onChangePayee = (contactName: string, thumbnailPath: string) => {
     this.setState({
-      name: contactName,
+      payeeName: contactName,
       thumbnailPath: thumbnailPath
     })
   }
 
-  onSelectPayee = (name: string, thumbnail: string) => {
-    this.onChangePayee(name, thumbnail)
+  onSelectPayee = (payeeName: string, thumbnail: string) => {
+    this.onChangePayee(payeeName, thumbnail)
     this.onBlurPayee()
     this.refs._scrollView.scrollTo({ x: 0, y: 0, animated: true })
   }
@@ -408,7 +408,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
   }
 
   onSaveTxDetails = () => {
-    const { name, notes, bizId, miscJson, category, subCategory, amountFiat } = this.state
+    const { payeeName, notes, bizId, miscJson, category, subCategory, amountFiat } = this.state
     const { edgeTransaction } = this.props
     let fullCategory, finalAmountFiat
     if (category) {
@@ -416,7 +416,6 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     } else {
       fullCategory = undefined
     }
-    const txid = edgeTransaction.txid
     const decimalAmountFiat = Number.parseFloat(amountFiat.replace(',', '.'))
     if (isNaN(decimalAmountFiat)) {
       // if invalid number set to previous saved amountFiat
@@ -425,8 +424,9 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
       // if a valid number or empty string then set to zero (empty) or actual number
       finalAmountFiat = !amountFiat ? 0.0 : decimalAmountFiat
     }
-    const edgeMetadata: EdgeMetadata = { name, category: fullCategory, notes, amountFiat: finalAmountFiat, bizId, miscJson }
-    this.props.setTransactionDetails(txid, edgeTransaction.currencyCode, edgeMetadata)
+    const edgeMetadata: EdgeMetadata = { name: payeeName, category: fullCategory, notes, amountFiat: finalAmountFiat, bizId, miscJson }
+    edgeTransaction.metadata = edgeMetadata
+    this.props.setTransactionDetails(edgeTransaction, edgeMetadata)
   }
 
   componentDidMount () {
@@ -481,7 +481,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                       onChangeText={this.onChangePayee}
                       style={[styles.payeeNameInput, inputBottomPadding()]}
                       placeholder="Payee"
-                      defaultValue={this.state.name}
+                      defaultValue={this.state.payeeName}
                       placeholderTextColor={THEME.COLORS.GRAY_2}
                       returnKeyType={'done'}
                     />
@@ -492,7 +492,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                   contacts={this.props.contacts}
                   style={[{ width: '100%' }]}
                   usableHeight={PLATFORM.usableHeight}
-                  currentPayeeText={this.state.name || ''}
+                  currentPayeeText={this.state.payeeName || ''}
                   onSelectPayee={this.onSelectPayee}
                   blurOnSubmit
                   onBlur={this.onBlurPayee}
@@ -562,7 +562,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                         autoCorrect={false}
                         style={[styles.payeeNameInput, inputBottomPadding()]}
                         placeholder={s.strings.transaction_details_payee}
-                        defaultValue={this.state.name}
+                        defaultValue={this.state.payeeName}
                         placeholderTextColor={THEME.COLORS.GRAY_2}
                       />
                     </View>

@@ -1,25 +1,27 @@
 // @flow
 
-import type { EdgeMetadata } from 'edge-core-js'
+import type { EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import { Actions } from 'react-native-router-flux'
 
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
 import type { Dispatch, GetState, State } from '../modules/ReduxTypes'
+import { refreshTransactionsRequest } from './TransactionListActions.js'
 
 export const setSubcategories = (subcategories: Array<string>) => ({
   type: 'SET_TRANSACTION_SUBCATEGORIES',
   data: { subcategories }
 })
 
-export const setTransactionDetails = (txid: string, currencyCode: string, edgeMetadata: EdgeMetadata) => (dispatch: Dispatch, getState: GetState) => {
+export const setTransactionDetails = (transaction: EdgeTransaction, edgeMetadata: EdgeMetadata) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const wallet = getSelectedWallet(state)
   const onSuccess = () => {
+    dispatch(refreshTransactionsRequest(wallet.id, [transaction]))
     Actions.pop()
   }
   const onError = () => {}
-  WALLET_API.setTransactionDetailsRequest(wallet, txid, currencyCode, edgeMetadata)
+  WALLET_API.setTransactionDetailsRequest(wallet, transaction.txid, transaction.currencyCode, edgeMetadata)
     .then(onSuccess)
     .catch(onError)
 }
