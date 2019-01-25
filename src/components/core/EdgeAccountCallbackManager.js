@@ -4,9 +4,9 @@ import type { EdgeAccount } from 'edge-core-js'
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { updateExchangeRates } from '../../ExchangeRates/action'
-import type { Dispatch, State } from '../../ReduxTypes.js'
-import { updateWalletsRequest } from '../Wallets/action.js'
+import { updateWalletsRequest } from '../../modules/Core/Wallets/action.js'
+import { updateExchangeRates } from '../../modules/ExchangeRates/action.js'
+import type { Dispatch, State } from '../../modules/ReduxTypes.js'
 
 type EdgeAccountCallbackManagerStateProps = {
   account: EdgeAccount
