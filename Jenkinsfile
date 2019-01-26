@@ -23,14 +23,17 @@ pipeline {
     timestamps()
     skipDefaultCheckout true
   }
-  triggers { 
+  triggers {
     pollSCM("H/5 * * * *")
   }
-  parameters { 
+  parameters {
     booleanParam(name: 'ANDROID_BUILD', defaultValue: true, description: 'Build an Android version')
     booleanParam(name: 'IOS_BUILD', defaultValue: true, description: 'Build an iOS version')
   }
-  
+  environment {
+    LC_CTYPE = 'en_US.UTF-8'
+  }
+
   stages {
     stage("Clean the workspace and checkout source") {
       steps {
@@ -76,7 +79,7 @@ pipeline {
         }
       }
     }
-    
+
     stage ("Install dependencies") {
       steps {
         sh "yarn"
@@ -112,7 +115,7 @@ pipeline {
       }
     }
   }
-  
+
   post {
     always {
       echo 'Trying to publish the test report'
@@ -139,7 +142,7 @@ pipeline {
     }
     unstable {
       echo "Do or do not there is no try"
-    } 
+    }
     failure {
       echo "The dark side I sense in you."
     }
