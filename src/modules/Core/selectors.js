@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyInfo, EdgeCurrencyWallet } from 'edge-core-js'
 
 import type { State } from '../ReduxTypes'
 import { getDefaultIsoFiat } from '../Settings/selectors.js'
@@ -38,6 +38,13 @@ export const getAccount = (state: State) => {
   const core = getCore(state)
   const account = core.account
   return account
+}
+
+export const getCurrencyInfo = (state: State, type: string): EdgeCurrencyInfo => {
+  const account = getAccount(state)
+  const currencyConfig = account.currencyConfig[type]
+  const currencyInfo = currencyConfig.currencyInfo
+  return currencyInfo
 }
 
 export const getUsername = (state: State) => {

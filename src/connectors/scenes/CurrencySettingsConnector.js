@@ -1,11 +1,12 @@
 // @flow
 
+import type { EdgeCurrencyInfo } from 'edge-core-js'
 import { connect } from 'react-redux'
 
 import { disableCustomNodes, enableCustomNodes, saveCustomNodesList, setDenominationKeyRequest } from '../../actions/SettingsActions'
 import CurrencySettings from '../../components/scenes/CurrencySettingsScene'
 import { CURRENCY_PLUGIN_NAMES } from '../../constants/indexConstants.js'
-import { getAccount } from '../../modules/Core/selectors.js'
+import { getAccount, getCurrencyInfo } from '../../modules/Core/selectors.js'
 import type { Dispatch, State } from '../../modules/ReduxTypes.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 
@@ -18,8 +19,9 @@ const mapStateToProps = (state: State, ownProps) => {
   const userSettings = currencyPlugin.userSettings
   const electrumServers = userSettings ? userSettings.electrumServers : []
   const disableFetchingServers = userSettings ? userSettings.disableFetchingServers : false
+  const currencyInfo: EdgeCurrencyInfo = getCurrencyInfo(state, currencyPluginName)
   return {
-    logo: SETTINGS_SELECTORS.getPluginInfo(state, ownProps.pluginName).symbolImage,
+    logo: currencyInfo.symbolImage,
     denominations: SETTINGS_SELECTORS.getDenominations(state, ownProps.currencyCode),
     selectedDenominationKey: SETTINGS_SELECTORS.getDisplayDenominationKey(state, ownProps.currencyCode),
     electrumServers,
