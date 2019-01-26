@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyInfo, EdgeDenomination } from 'edge-core-js'
+import type { EdgeDenomination } from 'edge-core-js'
 
 import { type CurrencySetting } from '../../reducers/scenes/SettingsReducer.js'
 import type { State } from '../ReduxTypes'
@@ -117,12 +117,6 @@ export const getPlugins = (state: State) => {
   const settings = getSettings(state)
   const plugins = settings.plugins
   return plugins
-}
-
-export const getPluginInfo = (state: State, type: string): EdgeCurrencyInfo => {
-  const plugins = getPlugins(state)
-  const currencyInfo: EdgeCurrencyInfo = plugins[type.toLowerCase()]
-  return currencyInfo
 }
 
 export const getSupportedWalletTypes = (state: State) => {
