@@ -24,13 +24,10 @@ export class ProgressBar extends PureComponent<ProgressBarProps, ProgressBarStat
 
   constructor (props: ProgressBarProps) {
     super(props)
+    this.animation = new Animated.Value(props.progress)
     this.state = {
-      isWalletProgressVisible: true
+      isWalletProgressVisible: props.progress !== 100
     }
-  }
-
-  UNSAFE_componentWillMount () {
-    this.animation = new Animated.Value(this.props.progress)
   }
 
   componentDidUpdate (prevProps: ProgressBarProps) {
