@@ -67,6 +67,7 @@ export default class SearchResults extends Component<Props, State> {
           keyExtractor={this.props.keyExtractor}
           overScrollMode="never"
           keyboardShouldPersistTaps="handled"
+          ListFooterComponent={<View style={{ height: 50 }} />}
         />
       </View>
     )
