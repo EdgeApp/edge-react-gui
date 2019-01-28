@@ -7,11 +7,11 @@ v1.7.0
 
 v1.6.1
 
-* Improved BTC fee calculations
-* Add buy crypto button at Wallets List screen
-* Add new button to buy and exchange crypto for empty wallets
-* Fix several UI display bugs
-* Improved plugin functionality
+* 改进了 btc 费用计算
+* 在钱包列表屏幕上添加购买加密按钮
+* 添加新按钮：在空的钱包上 购买和交易加密货币
+* 修复几个用户界面显示错误
+* 改进了插件功能
 
 v1.6.0
 
