@@ -190,7 +190,11 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
   }
 }
 
-export const mergeSettings = (loadedSettings: Object, defaults: Object, types: Object): { finalSettings: Object } => {
+export const mergeSettings = (
+  loadedSettings: Object,
+  defaults: Object,
+  types: Object
+): { finalSettings: Object, isOverwriteNeeded: boolean, isDefaultTypeIncorrect: boolean } => {
   const finalSettings = {}
   // begin process for repairing damaged settings data
   let isOverwriteNeeded = false
