@@ -9,6 +9,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
 import parse from 'url-parse'
+import { Bridge, bridgifyObject } from 'yaob'
 
 import ENV from '../../../env.json'
 import { sendConfirmationUpdateTx } from '../../actions/SendConfirmationActions'
@@ -170,6 +171,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   webview: any
   successUrl: ?string
   openingSendConfirmation: boolean
+  yaobBridge: Bridge
   constructor (props) {
     super(props)
     this.state = {
@@ -179,6 +181,9 @@ class PluginView extends React.Component<PluginProps, PluginState> {
     this.plugin = this.props.plugin
     this.plugin.environment.apiKey = ENV.PLUGIN_API_KEYS ? ENV.PLUGIN_API_KEYS[this.plugin.name] : 'edgeWallet' // latter is dummy code
     this.updateBridge(this.props)
+    this.yaobBridge = new Bridge({
+      sendMessage: message => this.webview.injectJavaScript(`window.bridge.handleMessage(${JSON.stringify(message)})`)
+    })
   }
 
   updateBridge (props) {
@@ -396,6 +401,16 @@ class PluginView extends React.Component<PluginProps, PluginState> {
     }
   }
 
+  webviewLoaded = () => {
+    console.log('Stop')
+    const rootObject = {
+      async getColor () {
+        return 'ff00ff'
+      }
+    }
+    bridgifyObject(rootObject)
+    this.yaobBridge.sendRoot(rootObject)
+  }
   render () {
     const contentScaling = Platform.OS !== 'ios'
     return (
@@ -405,7 +420,9 @@ class PluginView extends React.Component<PluginProps, PluginState> {
           allowFileAccess
           allowUniversalAccessFromFileURLs
           onMessage={this._onMessage}
-          injectedJavascript={javascript}
+          onLoadEnd={this.webviewLoaded}
+          javaScriptEnabled={true}
+          injectedJavaScript={javascript}
           onNavigationStateChange={this._onNavigationStateChange}
           originWhitelist={['file://', 'https://', 'http://', 'edge://']}
           ref={this._setWebview}
