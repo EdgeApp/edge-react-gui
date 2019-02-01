@@ -226,7 +226,7 @@
   "string_first_ethereum_wallet_name": "I miei Ethereum",
   "string_first_bitcoin_wallet_name": "I miei Bitcoin",
   "string_first_bitcoincash_wallet_name": "I miei Bitcoin Cash",
-  "my_crypto_wallet_name": "Il mio %s",
+  "my_crypto_wallet_name": "I miei %s",
   "string_from_exchange_info": "Stai per scambiare %1$s %2$s\n (%3$s)\n da %4$s",
   "string_help": "Aiuto",
   "string_next": "PROSSIMO",
