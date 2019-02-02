@@ -208,9 +208,7 @@ export const mergeSettings = (
     }
     // if the type of the loaded setting does not meet the enforced type
     // eslint-disable-next-line valid-typeof
-    // console.log('finalSettings is: ', finalSettings)
-    // console.log('defaults are: ', defaults)
-    const loadedSettingType = typeof finalSettings[key]
+    const loadedSettingType = typeof loadedSettings[key]
     if (loadedSettingType !== types[key]) {
       isOverwriteNeeded = true
       console.warn(
