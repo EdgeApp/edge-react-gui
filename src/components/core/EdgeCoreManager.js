@@ -1,7 +1,7 @@
 // @flow
 
 import type { EdgeContext, EdgeCorePluginFactory } from 'edge-core-js'
-import { eosCurrencyPluginFactory, rippleCurrencyPluginFactory, stellarCurrencyPluginFactory } from 'edge-currency-accountbased'
+import { eosCurrencyPluginFactory, ethereumCurrencyPluginFactory, rippleCurrencyPluginFactory, stellarCurrencyPluginFactory } from 'edge-currency-accountbased'
 import {
   bitcoinCurrencyPluginFactory,
   bitcoincashCurrencyPluginFactory,
@@ -9,7 +9,6 @@ import {
   bitcoinsvCurrencyPluginFactory,
   dashCurrencyPluginFactory,
   digibyteCurrencyPluginFactory,
-  // eboostCurrencyPluginFactory,
   feathercoinCurrencyPluginFactory,
   groestlcoinCurrencyPluginFactory,
   litecoinCurrencyPluginFactory,
@@ -19,7 +18,6 @@ import {
   vertcoinCurrencyPluginFactory,
   zcoinCurrencyPluginFactory
 } from 'edge-currency-bitcoin'
-import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
 import { moneroCurrencyPluginFactory } from 'edge-currency-monero'
 import { coinbasePlugin, coincapPlugin, currencyconverterapiPlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
 import React, { PureComponent } from 'react'
