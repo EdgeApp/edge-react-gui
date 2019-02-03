@@ -250,26 +250,25 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
 
     return (
       <SafeAreaView>
-        <View style={styles.scene}>
-          <Gradient style={styles.gradient} />
-          <ScrollView>
-            <View style={styles.view}>
-              <Image source={logos['eos']} style={styles.currencyLogo} resizeMode={'cover'} />
-              <View style={styles.createWalletPromptArea}>
-                <Text style={styles.instructionalText}>{this.state.walletId ? confirmMessageSyntax : instructionSyntax}</Text>
-              </View>
-              {this.state.walletId ? this.renderPaymentReview() : this.renderSelectWallet()}
+        <Gradient style={styles.scrollableGradient} />
+        <ScrollView>
+          <View style={styles.scrollableView}>
+            <Image source={logos['eos']} style={styles.currencyLogo} resizeMode={'cover'} />
+            <View style={styles.createWalletPromptArea}>
+              <Text style={styles.instructionalText}>{this.state.walletId ? confirmMessageSyntax : instructionSyntax}</Text>
             </View>
-          </ScrollView>
-          {this.state.isModalVisible && (
-            <WalletListModal
-              topDisplacement={Constants.TRANSACTIONLIST_WALLET_DIALOG_TOP}
-              type={Constants.FROM}
-              onSelectWallet={this.onSelectWallet}
-              wallets={walletsCopy}
-            />
-          )}
-        </View>
+            {this.state.walletId ? this.renderPaymentReview() : this.renderSelectWallet()}
+          </View>
+          <View style={{ paddingBottom: 200 }} />
+        </ScrollView>
+        {this.state.isModalVisible && (
+          <WalletListModal
+            topDisplacement={Constants.TRANSACTIONLIST_WALLET_DIALOG_TOP}
+            type={Constants.FROM}
+            onSelectWallet={this.onSelectWallet}
+            wallets={walletsCopy}
+          />
+        )}
       </SafeAreaView>
     )
   }
