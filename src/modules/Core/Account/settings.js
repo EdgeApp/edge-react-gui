@@ -92,9 +92,6 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   HERC: {
     denomination: '1000000000000000000'
   },
-  SMART: {
-    denomination: '100000000'
-  },
   customTokens: [],
   passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN
 }
