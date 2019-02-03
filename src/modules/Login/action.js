@@ -153,8 +153,9 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
         accountInitObject.denominationKeys.push({ currencyCode: token.currencyCode, denominationKey: token.multiplier })
       })
     }
-
-    for (const key of accountInitObject) {
+    console.log('in between loops')
+    for (const key in accountInitObject) {
+      console.log('inside key of accountInitObject with key: ', key)
       if (accountInitObject[key]) {
         // avoid trying to look at property 'denomination' of undefined
         const typeofDenomination = typeof accountInitObject[key].denomination
@@ -163,7 +164,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
         }
       }
     }
-
+    console.log('past accountInitObject loop')
     const loadedLocalSettings = await getLocalSettings(account)
     const mergedLocalSettings = mergeSettings(loadedLocalSettings, LOCAL_ACCOUNT_DEFAULTS, LOCAL_ACCOUNT_TYPES)
     if (mergedLocalSettings.isOverWriteNeeded) {
