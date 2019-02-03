@@ -3246,10 +3246,9 @@ edge-currency-monero@0.1.2:
     sprintf-js "^1.1.1"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.3.0.tgz#2ff0c665aa2559ce0c20e1e8c217efcb6c1b0b0c"
-  integrity sha512-GNcqhWzl2VzwT1Y6si/PUv3qVrEYOXVzb2GZ3z0MeH6CaPMnTbqUC+1YKxFFGAmq0KMz7omNkDYtjiCac1l0dw==
+"edge-exchange-plugins@git://github.com/EdgeApp/edge-exchange-plugins#v0.4.0":
+  version "0.4.0"
+  resolved "git://github.com/EdgeApp/edge-exchange-plugins#d2476c3d159a5a7d6d931e899773ba4a06c9d6eb"
   dependencies:
     iso4217 "^0.2.0"
 
