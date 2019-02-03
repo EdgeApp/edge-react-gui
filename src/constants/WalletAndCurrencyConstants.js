@@ -23,6 +23,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   ETH: 'ethereum',
   FTC: 'feathercoin',
   GRS: 'groestlcoin',
+  HERC: 'hercules',
   LTC: 'litecoin',
   XMR: 'monero',
   QTUM: 'qtum',
@@ -125,6 +126,9 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   },
   DAI: {
     displayBuyCrypto: true
+  },
+  HERC: {
+    displayBuyCrypto: false
   }
 }
 

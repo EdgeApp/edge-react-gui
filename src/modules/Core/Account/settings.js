@@ -89,6 +89,9 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   SMART: {
     denomination: '100000000'
   },
+  HERC: {
+    denomination: '1000000000000000000'
+  },
   customTokens: [],
   passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN
 }
@@ -118,6 +121,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   WINGS: 'object',
   IND: 'object',
   HUR: 'object',
+  HERC: 'object',
   SMART: 'object',
   customTokens: 'object', // arrays return 'object' to typeof
   passwordRecoveryRemindersShown: 'object'

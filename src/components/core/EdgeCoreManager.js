@@ -19,7 +19,7 @@ import {
   zcoinCurrencyPluginFactory
 } from 'edge-currency-bitcoin'
 import { moneroCurrencyPluginFactory } from 'edge-currency-monero'
-import { coinbasePlugin, coincapPlugin, currencyconverterapiPlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
+import { coinbasePlugin, coincapPlugin, currencyconverterapiPlugin, hercPlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
 import React, { PureComponent } from 'react'
 import { View } from 'react-native'
 
@@ -38,6 +38,7 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   coinbasePlugin,
   shapeshiftPlugin,
   coincapPlugin,
+  hercPlugin,
   currencyconverterapiPlugin,
   // Currencies:
   bitcoincashCurrencyPluginFactory,
