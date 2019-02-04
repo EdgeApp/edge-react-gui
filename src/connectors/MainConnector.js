@@ -13,7 +13,6 @@ import Main from '../components/Main.ui'
 import { addContext, addUsernames } from '../modules/Core/Context/action.js'
 import { requestPermission } from '../modules/PermissionsManager.js'
 import type { Dispatch } from '../modules/ReduxTypes'
-import { addCurrencyPlugin } from '../modules/Settings/SettingsActions'
 
 const mapStateToProps = () => ({})
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -25,9 +24,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   },
   dispatchDisableScan: () => {
     return dispatch({ type: 'DISABLE_SCAN' })
-  },
-  addCurrencyPlugin: plugin => {
-    return dispatch(addCurrencyPlugin(plugin))
   },
   setKeyboardHeight: keyboardHeight => {
     return dispatch(setKeyboardHeight(keyboardHeight))

@@ -1,6 +1,7 @@
 // @flow
 
-import type { Permission, State } from '../../modules/ReduxTypes'
+import type { Permission } from '../../modules/PermissionsManager.js'
+import type { State } from '../../modules/ReduxTypes'
 
 export const getCameraPermission = (state: State) => {
   return state.permissions.camera
