@@ -2,7 +2,7 @@
 
 import { type DiskletFolder, makeReactNativeFolder } from 'disklet'
 import { ModalManager } from 'edge-components'
-import type { EdgeContext, EdgeCurrencyPlugin } from 'edge-core-js'
+import type { EdgeContext } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Alert, Image, Keyboard, Linking, StatusBar, TouchableWithoutFeedback, View, YellowBox } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
@@ -145,7 +145,6 @@ const TERMS_OF_SERVICE = s.strings.title_terms_of_service
 type Props = {
   requestPermission: (permission: Permission) => void,
   username?: string,
-  addCurrencyPlugin: EdgeCurrencyPlugin => void,
   setKeyboardHeight: number => void,
   addContext: (EdgeContext, DiskletFolder) => void,
   addUsernames: (Array<string>) => void,

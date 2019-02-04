@@ -570,11 +570,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case 'UI/SETTINGS/ADD_CURRENCY_PLUGIN': {
-      if (!action.data) throw new Error('Invalid action')
-      return currencyPLuginUtil(state, action.data)
-    }
-
     case 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY': {
       if (!action.data) throw new Error('Invalid action')
       return {
