@@ -10,6 +10,7 @@ import { sprintf } from 'sprintf-js'
 import { insertWalletIdsForProgress } from '../../actions/WalletActions.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
+import { displayErrorAlert } from '../../modules/UI/components/ErrorAlert/actions'
 import * as ACCOUNT_API from '../Core/Account/api'
 import {
   CORE_DEFAULTS,
@@ -139,7 +140,8 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     accountInitObject.archivedWalletIds = archivedWalletIds
 
     const loadedSyncedSettings = await getSyncedSettings(account)
-    const mergedSyncedSettings = mergeSettings(loadedSyncedSettings, SYNCED_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_TYPES)
+    const syncedSettings = { ...loadedSyncedSettings } // will prevent mergeSettings trying to find prop of undefined
+    const mergedSyncedSettings = mergeSettings(syncedSettings, SYNCED_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_TYPES)
     if (mergedSyncedSettings.isOverWriteNeeded) {
       setSyncedSettings(account, mergedSyncedSettings)
     }
@@ -163,7 +165,8 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       }
     }
     const loadedLocalSettings = await getLocalSettings(account)
-    const mergedLocalSettings = mergeSettings(loadedLocalSettings, LOCAL_ACCOUNT_DEFAULTS, LOCAL_ACCOUNT_TYPES)
+    const localSettings = { ...loadedLocalSettings }
+    const mergedLocalSettings = mergeSettings(localSettings, LOCAL_ACCOUNT_DEFAULTS, LOCAL_ACCOUNT_TYPES)
     if (mergedLocalSettings.isOverWriteNeeded) {
       setLocalSettings(account, mergedSyncedSettings)
     }
@@ -184,7 +187,8 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     // $FlowFixMe
     dispatch(updateWalletsRequest())
   } catch (error) {
-    console.log(error)
+    console.log('initializeAccount error: ', error)
+    dispatch(displayErrorAlert(error.message))
   }
 }
 
