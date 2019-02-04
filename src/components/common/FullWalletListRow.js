@@ -210,7 +210,7 @@ const mapStateToProps = (state: State, ownProps: FullWalletListRowLoadedOwnProps
   }
 }
 const mapDispatchToProps = dispatch => ({
-  selectWallet: (walletId: string, currencyCode): string => dispatch(selectWallet(walletId, currencyCode)),
+  selectWallet: (walletId: string, currencyCode): string => dispatch(selectWallet(walletId, currencyCode, Constants.WALLET_LIST_SCENE)),
   getEnabledTokensList: (walletId: string) => dispatch(getEnabledTokens(walletId))
 })
 

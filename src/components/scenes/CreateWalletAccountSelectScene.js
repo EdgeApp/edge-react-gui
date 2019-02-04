@@ -41,7 +41,8 @@ export type CreateWalletAccountSelectStateProps = {
   activationCost: string,
   isCreatingWallet: boolean,
   paymentDenominationSymbol: string,
-  existingCoreWallet: EdgeCurrencyWallet
+  existingCoreWallet: EdgeCurrencyWallet,
+  walletAccountActivationQuoteError: string
 }
 
 export type CreateWalletAccountSelectOwnProps = {
@@ -56,7 +57,8 @@ export type CreateWalletAccountSelectDispatchProps = {
   createAccountBasedWallet: (string, string, string, boolean, boolean) => any,
   fetchAccountActivationInfo: string => void,
   createAccountTransaction: (string, string, string) => void,
-  fetchWalletAccountActivationPaymentInfo: (AccountPaymentParams, EdgeCurrencyWallet) => void
+  fetchWalletAccountActivationPaymentInfo: (AccountPaymentParams, EdgeCurrencyWallet) => void,
+  setWalletAccountActivationQuoteError: string => void
 }
 
 type Props = CreateWalletAccountSelectOwnProps & CreateWalletAccountSelectDispatchProps & CreateWalletAccountSelectStateProps
@@ -120,7 +122,8 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
   }
 
   onSelectWallet = async (walletId: string, paymentCurrencyCode: string) => {
-    const { wallets, accountName, fetchWalletAccountActivationPaymentInfo } = this.props
+    const { wallets, accountName, fetchWalletAccountActivationPaymentInfo, setWalletAccountActivationQuoteError } = this.props
+    setWalletAccountActivationQuoteError('') // reset fetching quote error to falsy
     const paymentWallet = wallets[walletId]
     const walletName = paymentWallet.name
     this.setState({
@@ -224,7 +227,8 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
   }
 
   render () {
-    const { supportedCurrencies, selectedWalletType, activationCost, wallets } = this.props
+    const { supportedCurrencies, selectedWalletType, activationCost, wallets, walletAccountActivationQuoteError } = this.props
+    const { walletId } = this.state
     const instructionSyntax = sprintf(
       s.strings.create_wallet_account_select_instructions_with_cost,
       selectedWalletType.currencyCode,
@@ -250,25 +254,27 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
 
     return (
       <SafeAreaView>
-        <Gradient style={styles.scrollableGradient} />
-        <ScrollView>
-          <View style={styles.scrollableView}>
-            <Image source={logos['eos']} style={styles.currencyLogo} resizeMode={'cover'} />
-            <View style={styles.createWalletPromptArea}>
-              <Text style={styles.instructionalText}>{this.state.walletId ? confirmMessageSyntax : instructionSyntax}</Text>
+        <View style={styles.scene}>
+          <Gradient style={styles.scrollableGradient} />
+          <ScrollView>
+            <View style={styles.scrollableView}>
+              <Image source={logos['eos']} style={styles.currencyLogo} resizeMode={'cover'} />
+              <View style={styles.createWalletPromptArea}>
+                <Text style={styles.instructionalText}>{!walletId || walletAccountActivationQuoteError ? instructionSyntax : confirmMessageSyntax}</Text>
+              </View>
+              {!walletId || walletAccountActivationQuoteError ? this.renderSelectWallet() : this.renderPaymentReview()}
             </View>
-            {this.state.walletId ? this.renderPaymentReview() : this.renderSelectWallet()}
-          </View>
-          <View style={{ paddingBottom: 200 }} />
-        </ScrollView>
-        {this.state.isModalVisible && (
-          <WalletListModal
-            topDisplacement={Constants.TRANSACTIONLIST_WALLET_DIALOG_TOP}
-            type={Constants.FROM}
-            onSelectWallet={this.onSelectWallet}
-            wallets={walletsCopy}
-          />
-        )}
+            <View style={{ paddingBottom: 200 }} />
+          </ScrollView>
+          {this.state.isModalVisible && (
+            <WalletListModal
+              topDisplacement={Constants.TRANSACTIONLIST_WALLET_DIALOG_TOP}
+              type={Constants.FROM}
+              onSelectWallet={this.onSelectWallet}
+              wallets={walletsCopy}
+            />
+          )}
+        </View>
       </SafeAreaView>
     )
   }

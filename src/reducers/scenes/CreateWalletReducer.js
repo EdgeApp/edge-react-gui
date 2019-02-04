@@ -24,7 +24,8 @@ export type CreateWalletState = {
   isCheckingHandleAvailability: boolean,
   handleAvailableStatus: HandleAvailableStatus,
   handleActivationInfo: HandleActivationInfo,
-  walletAccountActivationPaymentInfo: AccountActivationPaymentInfo
+  walletAccountActivationPaymentInfo: AccountActivationPaymentInfo,
+  walletAccountActivationQuoteError: string
 }
 
 const isCreatingWallet = (state = false, action: Action): boolean => {
@@ -101,10 +102,20 @@ const walletAccountActivationPaymentInfo = (state = initialActivationPaymentStat
   }
 }
 
+const walletAccountActivationQuoteError = (state: string = '', action: Action): string => {
+  switch (action.type) {
+    case 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR':
+      return action.data
+    default:
+      return state
+  }
+}
+
 export const createWallet: Reducer<CreateWalletState, Action> = combineReducers({
   isCreatingWallet,
   isCheckingHandleAvailability,
   handleAvailableStatus,
   handleActivationInfo,
-  walletAccountActivationPaymentInfo
+  walletAccountActivationPaymentInfo,
+  walletAccountActivationQuoteError
 })

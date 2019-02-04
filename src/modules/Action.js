@@ -245,3 +245,4 @@ export type Action =
         fee: string
       }
     }
+  | { type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR', data: string }

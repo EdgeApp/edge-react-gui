@@ -32,7 +32,7 @@ const mapStateToProps = (state: State, ownProps: CreateWalletAccountSelectOwnPro
   } else {
     paymentDenominationSymbol = ''
   }
-
+  const walletAccountActivationQuoteError = state.ui.scenes.createWallet.walletAccountActivationQuoteError
   return {
     paymentCurrencyCode: currencyCode,
     paymentAddress,
@@ -43,7 +43,8 @@ const mapStateToProps = (state: State, ownProps: CreateWalletAccountSelectOwnPro
     wallets: state.ui.wallets.byId,
     isCreatingWallet,
     paymentDenominationSymbol,
-    existingCoreWallet
+    existingCoreWallet,
+    walletAccountActivationQuoteError
   }
 }
 
@@ -54,7 +55,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   fetchWalletAccountActivationPaymentInfo: (paymentInfo: AccountPaymentParams, createdCoreWallet: EdgeCurrencyWallet) =>
     dispatch(fetchWalletAccountActivationPaymentInfo(paymentInfo, createdCoreWallet)),
   createAccountBasedWallet: (walletName: string, walletType: string, fiatCurrencyCode: string, popScene: boolean, selectWallet: boolean) =>
-    dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode, popScene, selectWallet))
+    dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode, popScene, selectWallet)),
+  setWalletAccountActivationQuoteError: message => dispatch({ type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR', data: message })
 })
 
 export const CreateWalletAccountSelectConnector = connect(
