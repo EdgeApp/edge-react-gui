@@ -197,47 +197,43 @@ export const mergeSettings = (
   defaults: Object,
   types: Object
 ): { finalSettings: Object, isOverwriteNeeded: boolean, isDefaultTypeIncorrect: boolean } => {
-  try {
-    const finalSettings = {}
-    // begin process for repairing damaged settings data
-    let isOverwriteNeeded = false
-    let isDefaultTypeIncorrect = false
-    for (const key in defaults) {
-      // if the type of the setting default does not meet the enforced type
-      const defaultSettingType = typeof defaults[key]
-      if (defaultSettingType !== types[key]) {
-        isDefaultTypeIncorrect = true
-        console.error('MismatchedDefaultSettingType key: ', key, ' with defaultSettingType: ', defaultSettingType, ' and necessary type: ', types[key])
-      }
-      // if the type of the loaded setting does not meet the enforced type
-      // eslint-disable-next-line valid-typeof
-      const loadedSettingType = typeof loadedSettings[key]
-      if (loadedSettingType !== types[key]) {
-        isOverwriteNeeded = true
-        console.warn(
-          'Settings overwrite was needed for: ',
-          key,
-          ' with loaded value: ',
-          loadedSettings[key],
-          ', but needed type: ',
-          types[key],
-          ' so replace with: ',
-          defaults[key]
-        )
-        // change that erroneous value to something that works (default)
-        finalSettings[key] = defaults[key]
-      } else {
-        finalSettings[key] = loadedSettings[key]
-      }
+  const finalSettings = {}
+  // begin process for repairing damaged settings data
+  let isOverwriteNeeded = false
+  let isDefaultTypeIncorrect = false
+  for (const key in defaults) {
+    // if the type of the setting default does not meet the enforced type
+    const defaultSettingType = typeof defaults[key]
+    if (defaultSettingType !== types[key]) {
+      isDefaultTypeIncorrect = true
+      console.error('MismatchedDefaultSettingType key: ', key, ' with defaultSettingType: ', defaultSettingType, ' and necessary type: ', types[key])
     }
+    // if the type of the loaded setting does not meet the enforced type
+    // eslint-disable-next-line valid-typeof
+    const loadedSettingType = typeof loadedSettings[key]
+    if (loadedSettingType !== types[key]) {
+      isOverwriteNeeded = true
+      console.warn(
+        'Settings overwrite was needed for: ',
+        key,
+        ' with loaded value: ',
+        loadedSettings[key],
+        ', but needed type: ',
+        types[key],
+        ' so replace with: ',
+        defaults[key]
+      )
+      // change that erroneous value to something that works (default)
+      finalSettings[key] = defaults[key]
+    } else {
+      finalSettings[key] = loadedSettings[key]
+    }
+  }
 
-    return {
-      finalSettings,
-      isOverwriteNeeded,
-      isDefaultTypeIncorrect
-    }
-  } catch (e) {
-    throw new Error(e)
+  return {
+    finalSettings,
+    isOverwriteNeeded,
+    isDefaultTypeIncorrect
   }
 }
 
