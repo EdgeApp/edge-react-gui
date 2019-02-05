@@ -14,6 +14,7 @@ import * as ACCOUNT_API from '../modules/Core/Account/api.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import type { Dispatch, GetState } from '../modules/ReduxTypes.js'
 import { getExchangeDenomination } from '../modules/Settings/selectors.js'
+import { displayErrorAlert } from '../modules/UI/components/ErrorAlert/actions.js'
 import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import { errorModal } from '../modules/UI/components/Modals/ErrorModal.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
@@ -76,33 +77,48 @@ export const fetchAccountActivationInfo = (currencyCode: string) => async (dispa
     const supportedCurrencies = currencyPlugin.otherMethods.getActivationSupportedCurrencies()
     const activationCost = currencyPlugin.otherMethods.getActivationCost()
     const activationInfo = await Promise.all([supportedCurrencies, activationCost])
+    const modifiedSupportedCurrencies = { ...activationInfo[0], FTC: false }
     dispatch({
       type: 'ACCOUNT_ACTIVATION_INFO',
       data: {
-        supportedCurrencies: activationInfo[0],
+        supportedCurrencies: modifiedSupportedCurrencies,
         activationCost: activationInfo[1]
       }
     })
   } catch (e) {
-    console.log('fetchAccountActivationInfo error: ', e)
+    dispatch(displayErrorAlert(e.message))
   }
 }
 
-export const fetchWalletAccountActivationPaymentInfo = (paymentParams: AccountPaymentParams, createdCoreWallet: EdgeCurrencyWallet) => async (
+export const fetchWalletAccountActivationPaymentInfo = (paymentParams: AccountPaymentParams, createdCoreWallet: EdgeCurrencyWallet) => (
   dispatch: Dispatch,
   getState: GetState
 ) => {
   try {
-    const activationQuote = await createdCoreWallet.otherMethods.getAccountActivationQuote(paymentParams)
-    dispatch({
-      type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO',
-      data: {
-        ...activationQuote,
-        currencyCode: paymentParams.currencyCode
-      }
-    })
+    const networkTimeout = setTimeout(() => {
+      dispatch(displayErrorAlert('Network Timeout'))
+      dispatch({
+        type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR',
+        data: 'Network Timeout'
+      })
+    }, 12000)
+    createdCoreWallet.otherMethods
+      .getAccountActivationQuote(paymentParams)
+      .then(activationQuote => {
+        dispatch({
+          type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO',
+          data: {
+            ...activationQuote,
+            currencyCode: paymentParams.currencyCode
+          }
+        })
+        clearTimeout(networkTimeout)
+      })
+      .catch(error => {
+        dispatch(displayErrorAlert(error.message))
+      })
   } catch (e) {
-    console.log(e)
+    dispatch(displayErrorAlert(e.message))
   }
 }
 
