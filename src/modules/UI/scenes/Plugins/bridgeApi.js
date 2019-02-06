@@ -11,69 +11,6 @@ import type { GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmat
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 
-/* const type EdgeProvider = {
-
-  // Sign a message using a public address from the current wallet
-  async signMessage: (options: EdgeSignMessageOptions) => EdgeSignedMessage,
-}
-
-const type EdgeReceiveAddress = {
-  publicAddress: string,
-  segwitAddress?: string,
-  legacyAddress?: string
-}
-
-const
-
-const type EdgeMetadata = {
-  name?: string,
-  category?: string,
-  notes?: string,
-}
-
-const type EdgeRequestSpendOptions = {
-  // Specify the currencyCode to spend to this URI. Required for spending tokens
-  currencyCode?: string,
-
-  // This overrides any parameters specified in a URI such as label or message
-  metadata?: EdgeMetadata,
-  networkFeeOption?: 'low' | 'standard' | 'high',
-
-  // If true, do not allow the user to change the amount to spend
-  lockInputs?: boolean,
-
-  // Do not broadcast transaction
-  signOnly?: boolean,
-
-  // Additional identifier such as a payment ID for Monero or destination tag for Ripple/XRP
-  // This overrides any parameters specified in a URI
-  uniqueIdentifier?: string,
-}
-
-const type EdgeSignMessageOptions = {
-  // Public address from the current wallet to use to sign the message
-  publicAddress: string,
-
-  // Hex encoded message to sign
-  messageHex: string
-}
-
-const type EdgeSignedMessage = {
-  // Public key used to sign message
-  publicKey: string,
-
-  // Hex encoded signature
-  signedMessage: string
-}
-    */
-
-/* type EdgeSignedMessage = {
-  // Public key used to sign message
-  publicKey: string,
-  // Hex encoded signature
-  signedMessage: string
-} */
-
 type EdgeReceiveAddress = {
   publicAddress?: string,
   segwitAddress?: string,
