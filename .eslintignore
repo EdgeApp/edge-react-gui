@@ -2,3 +2,4 @@ node_modules
 **/scratch.*
 src/lib/bridge/rolledUp.js
 src/lib/bridge/bridge.js
+src/lib/bridge/injectThisInWebView.js
