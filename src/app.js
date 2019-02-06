@@ -28,7 +28,7 @@ const PERF_LOGGING_ONLY = false
 
 global.bugsnag = new Client(ENV.BUGSNAG_API_KEY)
 
-const store: {} = configureStore({})
+export const store: {} = configureStore({})
 
 const perfTimers = {}
 const perfCounters = {}

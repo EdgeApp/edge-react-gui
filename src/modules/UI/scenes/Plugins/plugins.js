@@ -11,7 +11,7 @@ function loadPlugins (plugins: any): Array<Object> {
     const devPlugin = {
       pluginId: 'custom',
       name: 'Custom Dev',
-      subtitle: 'This is where greatness happens',
+      subtitle: 'Development Testing',
       provider: 'Edge Wallet',
       iconUrl: 'http://edge.app/wp-content/uploads/2019/01/wyre-logo-square-small.png',
       environment: {}

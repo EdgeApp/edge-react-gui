@@ -1177,6 +1177,6 @@ setTimeout(function () {
   });
   window.bridge.getRoot()
     .then(api => {
-      window.edgeApi = api;
+      window.edgeProvider = api;
     });
-}, 1000);
+}, 1);

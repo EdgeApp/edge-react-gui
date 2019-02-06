@@ -450,5 +450,6 @@
   "changelly_aml_kyc": "AML/KYC",
   "alert_deep_link_no_wallet": "No wallets exist that support %1$s. You can create a wallet for %2$s by tapping + on the Wallet List screen.",
   "load_plugin": "Load Plugin",
-  "plugin_url": "Plugin URL"
+  "plugin_url": "Plugin URL",
+  "choose_your_wallet": "Choose Your Wallet"
 }

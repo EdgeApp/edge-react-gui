@@ -24,6 +24,7 @@ import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import BackButton from '../../modules/UI/components/Header/Component/BackButton.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import { PluginBridge, pop as pluginPop } from '../../modules/UI/scenes/Plugins/api'
+import { EdgeProvider } from '../../modules/UI/scenes/Plugins/bridgeApi'
 import { buySellPlugins, spendPlugins } from '../../modules/UI/scenes/Plugins/plugins'
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
 import type { GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
@@ -152,6 +153,8 @@ type PluginProps = {
   wallets: any,
   walletName: any,
   walletId: any,
+  currentState: any,
+  thisDispatch: Function,
   selectWallet(string, string): void,
   sendConfirmationUpdateTx(GuiMakeSpendInfo): void
 }
@@ -263,11 +266,24 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   _nextMessage = datastr => {
     this.webview.injectJavaScript(`window.PLUGIN_NEXT('${datastr}')`)
   }
+  bridgeMessageProcessing = (data: any) => {
+    this.yaobBridge.handleMessage(data)
+    /* let args
+    switch (data.calls[0].name) {
+      case 'chooseCurrencyWallet':
+        args = data.calls[0].raw[0]
+        console.log('bridge: ', this.yaobBridge)
+        return new Promise(function (resolve, reject) {
+          resolve('BTC')
+        })// Promise.resolve('BTC') // this.yaobBridge.chooseCurrencyWallet(args)
+    } */
+  }
 
   _onMessage = event => {
     if (!this.webview) {
       return
     }
+    console.log('Event: ', event)
     let data = null
     try {
       data = JSON.parse(event.nativeEvent.data)
@@ -276,6 +292,10 @@ class PluginView extends React.Component<PluginProps, PluginState> {
       return
     }
     const { cbid, func } = data
+    if (!cbid && !func) {
+      this.bridgeMessageProcessing(data)
+      return
+    }
     this._nextMessage(cbid)
     if (this.bridge[func]) {
       this.bridge[func](data)
@@ -304,6 +324,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
           return
         }
         this.openingSendConfirmation = true
+        console.log('a1: parsed uri ', data['edge-uri'])
         this.props.coreWallet.parseUri(data['edge-uri']).then(result => {
           if (typeof result.currencyCode === 'string' && typeof result.nativeAmount === 'string' && typeof result.publicAddress === 'string') {
             let metadata: ?EdgeMetadata = {
@@ -323,6 +344,8 @@ class PluginView extends React.Component<PluginProps, PluginState> {
                 this.openingSendConfirmation = false
               }
             }
+            console.log('a1: info', info)
+            console.log('a1: info', info)
 
             this.successUrl = data['x-success']
             this.bridge
@@ -356,14 +379,15 @@ class PluginView extends React.Component<PluginProps, PluginState> {
           if (this.openingSendConfirmation) {
             return
           }
+
           this.openingSendConfirmation = true
+          // console.log('a1: data ', data)
           this.props.coreWallet.parseUri(parsedUrl.query.uri).then(result => {
             const info: GuiMakeSpendInfo = {
               currencyCode: result.currencyCode,
               nativeAmount: result.nativeAmount,
               publicAddress: result.publicAddress
             }
-
             this.successUrl = parsedUrl.query['x-success'] ? parsedUrl.query['x-success'] : null
             this.bridge
               .makeSpendRequest(info)
@@ -402,14 +426,9 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   }
 
   webviewLoaded = () => {
-    console.log('Stop')
-    const rootObject = {
-      async getColor () {
-        return 'ff00ff'
-      }
-    }
-    bridgifyObject(rootObject)
-    this.yaobBridge.sendRoot(rootObject)
+    const edgeProvider = new EdgeProvider(this.props.plugin, this.props.currentState, this.props.thisDispatch)
+    bridgifyObject(edgeProvider)
+    this.yaobBridge.sendRoot(edgeProvider)
   }
   render () {
     const contentScaling = Platform.OS !== 'ios'
@@ -446,6 +465,7 @@ const mapStateToProps = state => {
   const wallets = state.ui.wallets.byId
   const walletName = coreWallet.name
   const walletId = coreWallet.id
+  const currentState = state
   return {
     account,
     guiWallet,
@@ -453,14 +473,16 @@ const mapStateToProps = state => {
     coreWallets,
     wallets,
     walletName,
-    walletId
+    walletId,
+    currentState
   }
 }
 
 const mapDispatchToProps = dispatch => ({
   showAlert: alertSyntax => dispatch(openABAlert('OPEN_AB_ALERT', alertSyntax)),
   selectWallet: (walletId: string, currencyCode: string) => dispatch(selectWallet(walletId, currencyCode)),
-  sendConfirmationUpdateTx: (info: GuiMakeSpendInfo) => dispatch(sendConfirmationUpdateTx(info))
+  sendConfirmationUpdateTx: (info: GuiMakeSpendInfo) => dispatch(sendConfirmationUpdateTx(info)),
+  thisDispatch: dispatch
 })
 
 const PluginViewConnect = connect(
