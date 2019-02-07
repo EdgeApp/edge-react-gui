@@ -142,8 +142,8 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     const loadedSyncedSettings = await getSyncedSettings(account)
     const syncedSettings = { ...loadedSyncedSettings } // will prevent mergeSettings trying to find prop of undefined
     const mergedSyncedSettings = mergeSettings(syncedSettings, SYNCED_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_TYPES)
-    if (mergedSyncedSettings.isOverWriteNeeded) {
-      setSyncedSettings(account, mergedSyncedSettings)
+    if (mergedSyncedSettings.isOverwriteNeeded) {
+      setSyncedSettings(account, { ...mergedSyncedSettings.finalSettings })
     }
     accountInitObject = { ...accountInitObject, ...mergedSyncedSettings.finalSettings }
 
@@ -167,8 +167,8 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     const loadedLocalSettings = await getLocalSettings(account)
     const localSettings = { ...loadedLocalSettings }
     const mergedLocalSettings = mergeSettings(localSettings, LOCAL_ACCOUNT_DEFAULTS, LOCAL_ACCOUNT_TYPES)
-    if (mergedLocalSettings.isOverWriteNeeded) {
-      setLocalSettings(account, mergedSyncedSettings)
+    if (mergedLocalSettings.isOverwriteNeeded) {
+      setLocalSettings(account, { ...mergedSyncedSettings.finalSettings })
     }
     accountInitObject = { ...accountInitObject, ...mergedLocalSettings.finalSettings }
 
