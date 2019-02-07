@@ -168,6 +168,8 @@
   "send_confirmation_eos_error_net": "Red disponible insuficiente para enviar una transacción EOS. Por favor espera 1-3 días a que la red se recargue.",
   "send_confirmation_eos_error_ram": "RAM disponible insuficiente para enviar la transacción de EOS. Consulte edge.app/eos para obtener más información sobre la resolución.",
   "send_scan_header_text": "Escanear para enviar, importar o Edge Login",
+  "send_scan_edge_login_success_title": "",
+  "send_scan_edge_login_success_message": "",
   "send_to_title": "Para: %s",
   "send_confirmation_to": "Para: %s",
   "send_confirmation_address": "Dirección %s",
