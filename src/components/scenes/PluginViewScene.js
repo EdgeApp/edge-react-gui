@@ -94,7 +94,6 @@ class PluginList extends React.Component<PluginListProps, PluginListState> {
       })
       return
     }
-    console.log('Plugin: ', plugin)
     Actions.plugin({ plugin: plugin })
   }
 
@@ -283,7 +282,6 @@ class PluginView extends React.Component<PluginProps, PluginState> {
     if (!this.webview) {
       return
     }
-    console.log('Event: ', event)
     let data = null
     try {
       data = JSON.parse(event.nativeEvent.data)
@@ -324,7 +322,6 @@ class PluginView extends React.Component<PluginProps, PluginState> {
           return
         }
         this.openingSendConfirmation = true
-        console.log('a1: parsed uri ', data['edge-uri'])
         this.props.coreWallet.parseUri(data['edge-uri']).then(result => {
           if (typeof result.currencyCode === 'string' && typeof result.nativeAmount === 'string' && typeof result.publicAddress === 'string') {
             let metadata: ?EdgeMetadata = {
@@ -344,9 +341,6 @@ class PluginView extends React.Component<PluginProps, PluginState> {
                 this.openingSendConfirmation = false
               }
             }
-            console.log('a1: info', info)
-            console.log('a1: info', info)
-
             this.successUrl = data['x-success']
             this.bridge
               .makeSpendRequest(info)
@@ -381,7 +375,6 @@ class PluginView extends React.Component<PluginProps, PluginState> {
           }
 
           this.openingSendConfirmation = true
-          // console.log('a1: data ', data)
           this.props.coreWallet.parseUri(parsedUrl.query.uri).then(result => {
             const info: GuiMakeSpendInfo = {
               currencyCode: result.currencyCode,
