@@ -168,6 +168,8 @@
   "send_confirmation_eos_error_net": "",
   "send_confirmation_eos_error_ram": "",
   "send_scan_header_text": "",
+  "send_scan_edge_login_success_title": "",
+  "send_scan_edge_login_success_message": "",
   "send_to_title": "An: %s",
   "send_confirmation_to": "An: %s",
   "send_confirmation_address": "Adresse: %s",
