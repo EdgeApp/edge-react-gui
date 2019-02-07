@@ -168,6 +168,8 @@
   "send_confirmation_eos_error_net": "",
   "send_confirmation_eos_error_ram": "",
   "send_scan_header_text": "스캔하여 송신, 임포트, 또는 엣지 로그인",
+  "send_scan_edge_login_success_title": "",
+  "send_scan_edge_login_success_message": "",
   "send_to_title": "받는 곳: %s",
   "send_confirmation_to": "받는 곳: %s",
   "send_confirmation_address": "주소: %s",
