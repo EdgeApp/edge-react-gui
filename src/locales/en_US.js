@@ -179,6 +179,8 @@ const strings = {
   send_confirmation_eos_error_net: 'Insufficient NET available to send EOS transaction. Please wait 1-3 days for NET to recharge.',
   send_confirmation_eos_error_ram: 'Insufficient RAM available to send EOS transaction. Please see edge.app/eos for details on how to resolve.',
   send_scan_header_text: 'Scan to Send, Import, or Edge Login',
+  send_scan_edge_login_success_title: 'Edge Login Successful',
+  send_scan_edge_login_success_message: 'To continue, please return to the browser or application that requested the Edge Login.',
   send_to_title: 'To: %s',
   send_confirmation_to: 'To: %s',
   send_confirmation_address: 'Address: %s',
