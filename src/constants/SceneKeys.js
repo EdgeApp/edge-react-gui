@@ -116,5 +116,9 @@ export const CURRENCY_SETTINGS = {
   ufoSettings: {
     pluginName: 'ufo',
     currencyCode: 'UFO'
+  },
+  argSettings: {
+    pluginName: 'argentum',
+    currencyCode: 'ARG'
   }
 }

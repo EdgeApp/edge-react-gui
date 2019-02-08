@@ -31,7 +31,8 @@ export const CURRENCY_PLUGIN_NAMES = {
   SMART: 'smartcash',
   UFO: 'ufo',
   VTC: 'vertcoin',
-  XZC: 'zcoin'
+  XZC: 'zcoin',
+  ARG: 'argentum'
 }
 
 export const getSpecialCurrencyInfo = (currencyCode: string): Object => {
