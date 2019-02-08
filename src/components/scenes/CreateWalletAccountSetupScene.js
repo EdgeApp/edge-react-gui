@@ -119,7 +119,7 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
       chooseHandleErrorMessage = s.strings.create_wallet_account_unknown_error
     }
     const { accountHandle } = this.state
-    const showButton = accountHandle && isHandleAvailable && !isCheckingHandleAvailability
+    const showButton = !!accountHandle && isHandleAvailable && !isCheckingHandleAvailability
     return (
       <SafeAreaView>
         <Gradient style={styles.scrollableGradient} />
