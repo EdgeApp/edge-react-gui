@@ -248,6 +248,7 @@
   "string_split_wallet": "Phân chia %s",
   "string_add_edit_tokens": "Thêm / chỉnh sửa thẻ",
   "exchange_notes_metadata_generic": "Trao đổi %1$s %2$s %3$s %4$s %5$s %6$s đến địa chỉ %7$s \nđặt hàng: %8$s. \nđể hỗ trợ, xin vui lòng liên hệ với %9$s.",
+  "exchange_notes_metadata_generic2": "",
   "title_crypto_settings": "%s cài đặt",
   "title_add_tokens": "Thêm mã thông báo",
   "title_create_wallet_select_crypto": "Chọn Kiểu",
