@@ -86,27 +86,11 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
       case 'shapeshift':
         return { uri: 'exchange_logo_shapeshift' }
 
-      case 'bitaccess':
-        return { uri: 'exchange_logo_bitaccess' }
-
       case 'changenow':
         return { uri: 'exchange_logo_changenow' }
 
-      case 'changelly':
-      default:
-        return { uri: 'exchange_logo_changelly' }
-    }
-  }
-  renderDisclaimer = (arg: string) => {
-    switch (arg) {
-      case 'shapeshift':
-        return { uri: 'exchange_logo_shapeshift' }
-
-      case 'bitaccess':
-        return { uri: 'exchange_logo_bitaccess' }
-
-      case 'changenow':
-        return { uri: 'exchange_logo_changenow' }
+      case 'faast':
+        return { uri: 'exchange_logo_faast' }
 
       case 'changelly':
       default:
