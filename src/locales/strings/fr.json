@@ -248,6 +248,7 @@
   "string_split_wallet": "Diviser %s",
   "string_add_edit_tokens": "Ajouter/ Modifier les Tokens",
   "exchange_notes_metadata_generic": "Échangées %1$s %2$s %3$s %4$s %5$s %6$s à l’adresse  Commandez %7$s \n: %8$s. \nPour l’assistance, veuillez communiquer avec %9$s.",
+  "exchange_notes_metadata_generic2": "",
   "title_crypto_settings": "%s Paramètres",
   "title_add_tokens": "Ajouter les tokens",
   "title_create_wallet_select_crypto": "Sélectionner un Type",
