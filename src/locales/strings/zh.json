@@ -248,6 +248,7 @@
   "string_split_wallet": "拆分：%s",
   "string_add_edit_tokens": "添加/编辑代币",
   "exchange_notes_metadata_generic": "已交易 %1$s %2$s 从 %3$s 到 %4$s %5$s 在 %6$s 到地址%7$s \n订单：%8$s。 \n如需帮助，请联系%9$s。",
+  "exchange_notes_metadata_generic2": "",
   "title_crypto_settings": "%s 设置",
   "title_add_tokens": "添加代币",
   "title_create_wallet_select_crypto": "选择类型",
