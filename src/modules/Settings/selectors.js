@@ -178,7 +178,7 @@ export const getAutoLogoutTimeInMinutes = (state: State) => {
 export const getDefaultFiat = (state: State) => {
   const settings = getSettings(state)
   const defaultFiat: string = settings.defaultFiat
-  return defaultFiat
+  return `iso:${defaultFiat}`
 }
 
 export const getDefaultIsoFiat = (state: State) => {
