@@ -21,7 +21,8 @@ describe('Request', () => {
       receiveAddress: null,
       secondaryCurrencyInfo: null,
       showToWalletModal: null,
-      useLegacyAddress: null
+      useLegacyAddress: null,
+      wallets: {}
     }
     const actual = renderer.render(<Request {...props} />)
 
@@ -42,7 +43,8 @@ describe('Request', () => {
       secondaryCurrencyInfo: {},
       showToWalletModal: false,
       useLegacyAddress: false,
-      currentScene: 'request'
+      currentScene: 'request',
+      wallets: {}
     }
     const actual = renderer.render(<Request {...props} />)
 
