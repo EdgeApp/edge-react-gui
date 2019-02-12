@@ -9,7 +9,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
 import parse from 'url-parse'
-import { Bridge, bridgifyObject } from 'yaob'
+import { Bridge } from 'yaob'
 
 import ENV from '../../../env.json'
 import { sendConfirmationUpdateTx } from '../../actions/SendConfirmationActions'
@@ -183,9 +183,6 @@ class PluginView extends React.Component<PluginProps, PluginState> {
     this.plugin = this.props.plugin
     this.plugin.environment.apiKey = ENV.PLUGIN_API_KEYS ? ENV.PLUGIN_API_KEYS[this.plugin.name] : 'edgeWallet' // latter is dummy code
     this.updateBridge(this.props)
-    this.yaobBridge = new Bridge({
-      sendMessage: message => this.webview.injectJavaScript(`window.bridge.handleMessage(${JSON.stringify(message)})`)
-    })
   }
 
   updateBridge (props) {
@@ -265,18 +262,6 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   _nextMessage = datastr => {
     this.webview.injectJavaScript(`window.PLUGIN_NEXT('${datastr}')`)
   }
-  bridgeMessageProcessing = (data: any) => {
-    this.yaobBridge.handleMessage(data)
-    /* let args
-    switch (data.calls[0].name) {
-      case 'chooseCurrencyWallet':
-        args = data.calls[0].raw[0]
-        console.log('bridge: ', this.yaobBridge)
-        return new Promise(function (resolve, reject) {
-          resolve('BTC')
-        })// Promise.resolve('BTC') // this.yaobBridge.chooseCurrencyWallet(args)
-    } */
-  }
 
   _onMessage = event => {
     if (!this.webview) {
@@ -291,7 +276,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
     }
     const { cbid, func } = data
     if (!cbid && !func) {
-      this.bridgeMessageProcessing(data)
+      this.yaobBridge.handleMessage(data)
       return
     }
     this._nextMessage(cbid)
@@ -419,8 +404,10 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   }
 
   webviewLoaded = () => {
+    this.yaobBridge = new Bridge({
+      sendMessage: message => this.webview.injectJavaScript(`window.bridge.handleMessage(${JSON.stringify(message)})`)
+    })
     const edgeProvider = new EdgeProvider(this.props.plugin, this.props.currentState, this.props.thisDispatch)
-    bridgifyObject(edgeProvider)
     this.yaobBridge.sendRoot(edgeProvider)
   }
   render () {

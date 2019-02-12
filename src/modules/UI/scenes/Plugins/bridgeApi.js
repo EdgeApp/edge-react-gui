@@ -2,6 +2,7 @@
 import { showModal } from 'edge-components'
 import type { EdgeMetadata, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
 import { Actions } from 'react-native-router-flux'
+import { Bridgeable } from 'yaob'
 
 import { selectWallet } from '../../../../actions/WalletActions'
 // import { store } from '../../../../app.js'
@@ -40,12 +41,13 @@ type EdgeGetReceiveAddressOptions = {
   metadata?: EdgeMetadata
 }
 
-class EdgeProvider {
+class EdgeProvider extends Bridgeable {
   _plugin: any
   _state: any
   _dispatch: Function
 
   constructor (plugin: any, state: any, dispatch: Function) {
+    super()
     this._plugin = plugin
     this._state = state
     this._dispatch = dispatch
@@ -87,14 +89,8 @@ class EdgeProvider {
   async writeData (data: { [key: string]: string }) {
     const account = CORE_SELECTORS.getAccount(this._state)
     const folder = account.pluginData
-    try {
-      for (const key in data) {
-        await folder.setItem(this._plugin, key, data[key])
-      }
-      return Promise.resolve({ success: true })
-    } catch (e) {
-      return Promise.reject(e)
-    }
+    await Promise.all(Object.keys(data).map(key => folder.setItem(this._plugin, key, data[key])))
+    return { success: true }
   }
   // Read data back from the user's account. This can only access data written by this same plugin
   // 'keys' is an array of strings with keys to lookup.
