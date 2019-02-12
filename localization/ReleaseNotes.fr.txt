@@ -39,7 +39,7 @@ v1.4.4
 v1.4.3
 
 * Booste les performances lors de la connexion et de la synchronisation des portefeuilles de cryptomonnaies
-* Ajouter l'assistance pour Monero pare-balles qui fixe la dépense de Monero 
+* Ajouter l'assistance pour Monero pare-balles qui fixe la dépense de Monero
 *Permettre les utilisateurs à activer/ déactvier les fournisseurs d'échanges
 *Fixer l'erreur qui s'affichie "Token n'est pas assisté " occasionnellement dans le fond d'échange
 * Activer l'image xpub pour plus de monnaies
@@ -56,10 +56,10 @@ v1.4.2
 
 v1.3.4
 
-* Empêcher que le bouton de création de Wallet ne soit pas exploité 
+* Empêcher que le bouton de création de Wallet ne soit pas exploité
 *Répare le fond blanc qui s'affiche qand vous êtes connecté si la transaction entrant arrive
 * Répare l'address qui est couverte en Simplex plugin
-* Réparer les bugs casués par les doubles clics dans le gestionnaire de mots de passe.   
-* Réparer le montant Fiat quand vous utilisez les autres monnaies 
+* Réparer les bugs casués par les doubles clics dans le gestionnaire de mots de passe
+* Réparer le montant Fiat quand vous utilisez les autres monnaies
 * Mise à l’échelle supplémentaires et améliorations visuelles
-* Réparation des autres bugs mineurs 
+* Réparation des autres bugs mineurs
