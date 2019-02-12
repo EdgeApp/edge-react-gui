@@ -178,7 +178,7 @@ export const setAutoLogoutTimeInSecondsRequest = (account: EdgeAccount, autoLogo
 
 export const setDefaultFiatRequest = (account: EdgeAccount, defaultFiat: string) =>
   getSyncedSettings(account).then(settings => {
-    const updatedSettings = updateSettings(settings, { defaultFiat })
+    const updatedSettings = updateSettings(settings, { defaultFiat, defaultIsoFiat: `iso:${defaultFiat}` })
     return setSyncedSettings(account, updatedSettings)
   })
 
