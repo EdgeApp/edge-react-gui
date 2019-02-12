@@ -40,7 +40,8 @@ export type RequestStateProps = {
   legacyAddress: string,
   secondaryCurrencyInfo: GuiCurrencyInfo,
   showToWalletModal: boolean,
-  useLegacyAddress: boolean
+  useLegacyAddress: boolean,
+  wallets: { [string]: GuiWallet }
 }
 export type RequestLoadingProps = {
   edgeWallet: null,
@@ -225,8 +226,15 @@ export class Request extends Component<Props, State> {
     }
 
     const color = 'white'
-    const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio, onSelectWallet } = this.props
+    const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio, onSelectWallet, wallets } = this.props
     const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
+    const allowedWallets = {}
+    for (const id in wallets) {
+      const wallet = wallets[id]
+      if (wallet.receiveAddress && wallet.receiveAddress.publicAddress) {
+        allowedWallets[id] = wallets[id]
+      }
+    }
 
     return (
       <SafeAreaView>
@@ -266,7 +274,12 @@ export class Request extends Component<Props, State> {
           </View>
 
           {this.props.showToWalletModal && (
-            <WalletListModal topDisplacement={Constants.REQUEST_WALLET_DIALOG_TOP} type={Constants.TO} onSelectWallet={onSelectWallet} />
+            <WalletListModal
+              wallets={allowedWallets}
+              topDisplacement={Constants.REQUEST_WALLET_DIALOG_TOP}
+              type={Constants.TO}
+              onSelectWallet={onSelectWallet}
+            />
           )}
         </Gradient>
       </SafeAreaView>

@@ -300,11 +300,11 @@ export class CryptoExchangeScene extends Component<Props, State> {
       }
     }
 
-    const walletsCopy = { ...wallets }
-    for (const id in walletsCopy) {
-      const wallet = walletsCopy[id]
-      if (!wallet.receiveAddress || !wallet.receiveAddress.publicAddress) {
-        delete walletsCopy[id]
+    const allowedWallets = {}
+    for (const id in wallets) {
+      const wallet = wallets[id]
+      if (wallet.receiveAddress && wallet.receiveAddress.publicAddress) {
+        allowedWallets[id] = wallets[id]
       }
     }
     if (this.props.showWalletSelectModal) {
@@ -315,7 +315,7 @@ export class CryptoExchangeScene extends Component<Props, State> {
           type={Constants.CRYPTO_EXCHANGE}
           whichWallet={whichWallet}
           excludedCurrencyCode={excludedCurrencyCode}
-          wallets={walletsCopy}
+          wallets={allowedWallets}
         />
       )
     }
