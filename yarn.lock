@@ -3060,10 +3060,10 @@ dir-glob@^2.0.0:
     arrify "^1.0.1"
     path-type "^3.0.0"
 
-disklet@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/disklet/-/disklet-0.3.0.tgz#53a9e6af7e8c780050b292e7da79022b0b2e555a"
-  integrity sha512-ZpV1wcs+tqbZWv/etoOhLQ44Ln+21Q+f/adZh1+HNZ9aew5IgVgbQlgqzECKM04WSjgWkjdXT/rwjJOVYqMe0g==
+disklet@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/disklet/-/disklet-0.3.1.tgz#ad2a1399ac959480c47f3e3aa06f7cfdaa7e0af7"
+  integrity sha512-TkE2dRJLAot/YTxxSLo5BWqGcolDv6tuvVJOjd0LGO0Qru4R5jjp/55WrI15UOYOlFXLhqVBf54RT9nKsdQ/jQ==
   dependencies:
     rfc4648 "^0.9.1"
 
@@ -3166,10 +3166,10 @@ edge-components@^0.0.19:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@0.13.5:
-  version "0.13.5"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.13.5.tgz#a40f7d201aacca22f9cd88a6a80b0cbf07dda0a2"
-  integrity sha512-Qo47oFEWw6mR9w8e5cVGAVTu2tRx4Le5voM/DahuXaN8/wMnrTmfbeFJOchL6FAasREN4LoroYmmmq1SDW9IjA==
+edge-core-js@0.13.8:
+  version "0.13.8"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.13.8.tgz#cd6d50d8c6377cd3fb8b0124ff8f95e209765a89"
+  integrity sha512-BrGvS/dG2mbrYjQbqFH98jhclOZ3S6/HMfhfF8QS6mnXAq9/tmBeODSapNHvrQG7B9pp6klGY2n4AJu/pzM7Og==
   dependencies:
     "@babel/runtime" "^7.0.0"
     aes-js "^3.1.0"
@@ -3177,7 +3177,7 @@ edge-core-js@0.13.5:
     biggystring "^3.0.2"
     currency-codes "^1.1.2"
     detect-bundler "^1.0.0"
-    disklet "^0.3.0"
+    disklet "^0.3.1"
     elliptic "^6.4.0"
     ethereumjs-tx "^1.3.7"
     ethereumjs-util "^5.2.0"
@@ -3194,25 +3194,29 @@ edge-core-js@0.13.5:
     ws "^5.1.1"
     yaob "^0.3.1"
 
-"edge-currency-accountbased@git://github.com/EdgeApp/edge-currency-accountbased#4e149e9063":
-  version "0.0.16"
-  resolved "git://github.com/EdgeApp/edge-currency-accountbased#4e149e9063e69a2647f8c8c8b8891f1605c715dc"
+edge-currency-accountbased@0.0.22:
+  version "0.0.22"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.0.22.tgz#f80e09e0d2801b24e00ed63ebfe750435bc28cc2"
+  integrity sha512-WDjdOY+yYhdSOKa9IX+RKx4t/XHCyAaULhKv60vpdZPaLYVdYfj/TfcniPPPLWDg4QGQE6adCm8t6iJMoNHc4w==
   dependencies:
     base-x "^1.0.4"
     biggystring "^3.0.0"
     bip39 "^2.5.0"
     edge-ripple-lib "^1.0.0-beta.2"
     eosjs "^16.0.9"
+    ethereumjs-abi "^0.6.4"
+    ethereumjs-tx "^1.3.3"
+    ethereumjs-util "^5.1.2"
+    ethereumjs-wallet "git://github.com/EdgeApp/ethereumjs-wallet.git#6157e11ea10a734fbe55f4c7ea542780975b60ef"
     jsonschema "^1.1.1"
-    sprintf-js "^1.1.1"
     stellar-sdk "^0.11.0"
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@3.7.10:
-  version "3.7.10"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-3.7.10.tgz#572f6b5ae4b5199f7d25487afcccb1c9d4accc38"
-  integrity sha512-R0OzGWb+qoeBphGeyjSKwTZQkpnxbWsTf9yUpZug9NqEsM2HJTSfzTa4aEtq8XLpwCGDSd93bdK6r38IUB4loQ==
+edge-currency-bitcoin@3.7.11:
+  version "3.7.11"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-3.7.11.tgz#dad984571181e613e76c5bf2e6573ec357dfa9ec"
+  integrity sha512-FrSQqKWHJ2+3F69VY3kh20qMwMj0NCjHAEOocKuFORbB+ACz4Ywn6MGZA/vGbWOEO09Tt8uVxCoHprEtFGgb5g==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -3229,26 +3233,10 @@ edge-currency-bitcoin@3.7.10:
     uri-js "^4.2.2"
     url-parse "^1.4.3"
 
-edge-currency-ethereum@0.11.2:
-  version "0.11.2"
-  resolved "https://registry.yarnpkg.com/edge-currency-ethereum/-/edge-currency-ethereum-0.11.2.tgz#74d2e9d977d3d5997aa0a34b5f10e69c7488db3c"
-  integrity sha512-poqZf1AysN6WwKHv7ctHH2qzxW3UaUqd+VvfBfrpETzF80V1de8nUK+CEHhyHhXSoW9j3CvOR57KRXV1gE0jbA==
-  dependencies:
-    biggystring "^3.0.0"
-    bn.js "^4.11.7"
-    buffer "^5.0.6"
-    ethereumjs-abi "^0.6.4"
-    ethereumjs-tx "^1.3.3"
-    ethereumjs-util "^5.1.2"
-    ethereumjs-wallet "git://github.com/Airbitz/ethereumjs-wallet.git#6157e11ea10a734fbe55f4c7ea542780975b60ef"
-    jsonschema "^1.1.1"
-    sprintf-js "^1.1.1"
-    uri-js "^3.0.2"
-
-edge-currency-monero@0.1.2:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.1.2.tgz#44268048aa8fc7b92168051dcdeae8ab5016d362"
-  integrity sha512-mcENB8vRcFc+abD8h+Dh6O3vK94DMqs+eyiuGzInXsnNjMGmJFlBEABIGXeTT8ITJzA37JQ+O9ipKS/i8v1c7g==
+edge-currency-monero@0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.1.3.tgz#f436f46903fcc2abf181b34099ecbaae1053fc18"
+  integrity sha512-xORL+KaN60WoO5ZU+QGS30pZYXKMZmAASv6tc2L0NzVwJmgRf5nYkQu5OVh7uTo4Yhp9uCPO020gmFbX5ytOqA==
   dependencies:
     biggystring "^3.0.0"
     buffer "^5.0.6"
@@ -3258,10 +3246,10 @@ edge-currency-monero@0.1.2:
     sprintf-js "^1.1.1"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.3.0.tgz#2ff0c665aa2559ce0c20e1e8c217efcb6c1b0b0c"
-  integrity sha512-GNcqhWzl2VzwT1Y6si/PUv3qVrEYOXVzb2GZ3z0MeH6CaPMnTbqUC+1YKxFFGAmq0KMz7omNkDYtjiCac1l0dw==
+edge-exchange-plugins@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.4.0.tgz#12a6d338fe0015b7f3d2664f9ed9b2d449fe9c10"
+  integrity sha512-CBNl6OBjqCA/cW+XTImuUHs3VgKHsi1H9rW83ht9NojkYalYOaoUgcSWXTeBO9UJklTPflYIqaGpx8O+QT69Ag==
   dependencies:
     iso4217 "^0.2.0"
 
@@ -3287,21 +3275,21 @@ edge-login-ui-rn@^0.5.16:
     sprintf-js "^1.0.3"
     zxcvbn "^4.4.2"
 
-"edge-plugin-bitrefill@https://github.com/EdgeApp/edge-plugin-bitrefill.git#a3bf29d":
+"edge-plugin-bitrefill@https://github.com/EdgeApp/edge-plugin-bitrefill.git#a3bc380":
   version "0.0.1"
-  resolved "https://github.com/EdgeApp/edge-plugin-bitrefill.git#a3bf29d756a0de30cfeb34dd3dd8d0f60178bd37"
+  resolved "https://github.com/EdgeApp/edge-plugin-bitrefill.git#a3bc380fed0aa34560d5878b364925e5bccead6f"
   dependencies:
     moment "^2.22.2"
 
-"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#5155b5fa":
+"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#61f5f67":
   version "0.0.3"
-  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#5155b5fadf0a9af519a78b5cdc655bd018748e47"
+  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#61f5f6711f689c57c739e5e5744174b1f9236e29"
   dependencies:
     moment "^2.22.2"
 
-"edge-plugin-wyre@https://github.com/EdgeApp/edge-plugin-wyre.git#c6dca735":
-  version "0.0.3"
-  resolved "https://github.com/EdgeApp/edge-plugin-wyre.git#c6dca735bb2703ec0fce5baaa36ff370db452fd5"
+"edge-plugin-wyre@https://github.com/EdgeApp/edge-plugin-wyre.git#911de81":
+  version "0.1.1"
+  resolved "https://github.com/EdgeApp/edge-plugin-wyre.git#911de8104c5d77d7beff85aaedf103632c86063d"
   dependencies:
     js-sha256 "^0.9.0"
     moment "^2.22.2"
@@ -3742,9 +3730,9 @@ ethereumjs-util@^5.0.0, ethereumjs-util@^5.1.2, ethereumjs-util@^5.2.0:
     safe-buffer "^5.1.1"
     secp256k1 "^3.0.1"
 
-"ethereumjs-wallet@git://github.com/Airbitz/ethereumjs-wallet.git#6157e11ea10a734fbe55f4c7ea542780975b60ef":
+"ethereumjs-wallet@git://github.com/EdgeApp/ethereumjs-wallet.git#6157e11ea10a734fbe55f4c7ea542780975b60ef":
   version "0.6.0"
-  resolved "git://github.com/Airbitz/ethereumjs-wallet.git#6157e11ea10a734fbe55f4c7ea542780975b60ef"
+  resolved "git://github.com/EdgeApp/ethereumjs-wallet.git#6157e11ea10a734fbe55f4c7ea542780975b60ef"
   dependencies:
     aes-js "^0.2.3"
     bs58check "^1.0.8"
@@ -8453,9 +8441,10 @@ react-native-vector-icons@^6.1.0:
     prop-types "^15.6.2"
     yargs "^8.0.2"
 
-"react-native-webview@https://github.com/react-native-community/react-native-webview#1f11f10":
-  version "2.14.0"
-  resolved "https://github.com/react-native-community/react-native-webview#1f11f10a6968f859d8ad84c5d9d46b1d6731a0a8"
+react-native-webview@^3.1.3:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-3.2.1.tgz#a51843699f700c8c02a9c7fb33f9db96bc401237"
+  integrity sha512-pVLYK8zI2YD66FoMD90yFC2l/jhQjpknv6Bs0ezYrXmyWxhUdoCLMqAWjbrVbyR/w4P0pCE1YtVvMadozfGe0w==
   dependencies:
     escape-string-regexp "^1.0.5"
     fbjs "^0.8.17"

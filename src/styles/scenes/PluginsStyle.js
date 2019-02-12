@@ -30,28 +30,29 @@ export const styles = {
     alignItems: 'stretch'
   },
   pluginRow: {
-    height: scale(60),
     borderBottomWidth: 1,
     borderBottomColor: THEME.COLORS.GRAY_3,
-    padding: scale(10),
+    padding: scale(14),
     paddingRight: scale(30),
     paddingLeft: scale(15),
     backgroundColor: THEME.COLORS.WHITE
   },
   pluginBox: {
     flexDirection: 'row',
-    height: scale(40),
     flex: 1,
     justifyContent: 'space-between'
   },
   pluginLeft: {
     flexDirection: 'row'
   },
+  logoWrap: {
+    justifyContent: 'center'
+  },
   logo: {
-    width: scale(40),
-    height: scale(40),
+    width: scale(50),
+    height: scale(50),
     borderRadius: scale(20),
-    marginRight: scale(10)
+    marginRight: scale(16)
   },
   textBoxWrap: {
     /* justifyContent: 'center' */
@@ -63,6 +64,7 @@ export const styles = {
   },
   subtitleBox: {
     fontSize: scale(12),
+    lineHeight: scale(18),
     textAlignVertical: 'bottom',
     position: 'relative',
     top: scale(4)

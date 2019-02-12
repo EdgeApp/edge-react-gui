@@ -54,7 +54,8 @@ export type CryptoExchangeSceneComponentStateProps = {
   showWalletSelectModal: boolean,
   shiftPendingTransaction: boolean,
   showKYCAlert: boolean,
-  pluginCompleteKYC: string | null
+  pluginCompleteKYC: string | null,
+  wallets: { [string]: GuiWallet }
 }
 
 export type CryptoExchangeSceneComponentDispatchProps = {
@@ -274,9 +275,9 @@ export class CryptoExchangeScene extends Component<Props, State> {
   }
 
   renderDropUp = () => {
-    const { onSelectWallet, fromCurrencyCode, fromWallet, toCurrencyCode, toWallet } = this.props
+    const { onSelectWallet, fromCurrencyCode, fromWallet, toCurrencyCode, toWallet, wallets } = this.props
     const { whichWallet } = this.state
-    let excludedCurrencyCode = ''
+    let excludedCurrencyCode = '' // should allow for multiple excluded currencyCodes
     // some complex logic because 'toCurrencyCode/fromCurrencyCode'
     // can be denomination (needs to change to actual currencyCode)
     if (whichWallet === Constants.TO) {
@@ -298,6 +299,14 @@ export class CryptoExchangeScene extends Component<Props, State> {
         }
       }
     }
+
+    const allowedWallets = {}
+    for (const id in wallets) {
+      const wallet = wallets[id]
+      if (wallet.receiveAddress && wallet.receiveAddress.publicAddress) {
+        allowedWallets[id] = wallets[id]
+      }
+    }
     if (this.props.showWalletSelectModal) {
       return (
         <WalletListModal
@@ -306,6 +315,7 @@ export class CryptoExchangeScene extends Component<Props, State> {
           type={Constants.CRYPTO_EXCHANGE}
           whichWallet={whichWallet}
           excludedCurrencyCode={excludedCurrencyCode}
+          wallets={allowedWallets}
         />
       )
     }

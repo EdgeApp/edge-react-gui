@@ -17,11 +17,18 @@ export const styles = {
     width: '100%',
     position: 'absolute'
   },
+  scrollableGradient: {
+    height: THEME.HEADER
+  },
   view: {
     position: 'relative',
     top: THEME.HEADER,
     paddingHorizontal: 20,
     height: PLATFORM.usableHeight
+  },
+  scrollableView: {
+    position: 'relative',
+    paddingHorizontal: 20
   },
   walletNameInputView: {
     height: scale(50),

@@ -17,6 +17,7 @@ describe('Scan component', () => {
       showToWalletModal: false,
       deepLinkPending: false,
       deepLinkUri: null,
+      wallets: {},
       qrCodeScanned: jest.fn(),
       parseScannedUri: jest.fn(),
       markAddressDeepLinkDone: jest.fn(),
@@ -45,7 +46,8 @@ describe('Scan component', () => {
       toggleEnableTorch: jest.fn(),
       toggleAddressModal: jest.fn(),
       toggleScanToWalletListModal: jest.fn(),
-      onSelectWallet: jest.fn()
+      onSelectWallet: jest.fn(),
+      wallets: {}
     }
     const actual = renderer.render(<Scan {...props} />)
 

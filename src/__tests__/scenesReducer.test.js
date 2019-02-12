@@ -36,7 +36,8 @@ test('initialState', () => {
       handleActivationInfo: {
         supportedCurrencies: {},
         activationCost: ''
-      }
+      },
+      walletAccountActivationQuoteError: ''
     },
     dimensions: {
       keyboardHeight: 0

@@ -1,8 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import { ActivityIndicator, Image, View } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { ActivityIndicator, Image, ScrollView, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
@@ -97,13 +96,7 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
     }
   }
   renderButton = () => {
-    const { accountHandle } = this.state
     const { isCheckingHandleAvailability, handleAvailableStatus } = this.props
-    const isHandleAvailable = handleAvailableStatus === 'AVAILABLE'
-    const showButton = accountHandle && isHandleAvailable && !isCheckingHandleAvailability
-    if (!showButton) {
-      return null
-    }
     return (
       <View style={styles.buttons}>
         <PrimaryButton style={[styles.next]} onPress={this.onSetup} disabled={isCheckingHandleAvailability || handleAvailableStatus !== 'AVAILABLE'}>
@@ -125,46 +118,42 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
     } else if (handleAvailableStatus === 'UNKNOWN_ERROR') {
       chooseHandleErrorMessage = s.strings.create_wallet_account_unknown_error
     }
-
+    const { accountHandle } = this.state
+    const showButton = !!accountHandle && isHandleAvailable && !isCheckingHandleAvailability
     return (
       <SafeAreaView>
-        <View style={styles.scene}>
-          <Gradient style={styles.gradient} />
-          <KeyboardAwareScrollView>
-            <View style={styles.view}>
-              <Image source={logos['eos']} style={styles.currencyLogo} resizeMode={'cover'} />
-              <View style={[styles.createWalletPromptArea, { paddingTop: 24, paddingBottom: 8 }]}>
-                <Text style={styles.instructionalText}>{sprintf(s.strings.create_wallet_account_review_instructions, 'EOS')}</Text>
-              </View>
-              <View style={[styles.createWalletPromptArea, { paddingTop: 8, paddingBottom: 8 }]}>
-                <Text style={styles.handleRequirementsText}>{s.strings.create_wallet_account_requirements_eos}</Text>
-              </View>
-
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <FormField
-                  style={this.modifiedStyle}
-                  autoFocus
-                  clearButtonMode={'while-editing'}
-                  autoCorrect={false}
-                  onChangeText={this.handleChangeHandle}
-                  label={s.strings.create_wallet_account_handle}
-                  value={this.state.accountHandle}
-                  returnKeyType={'next'}
-                  onSubmitEditing={this.onSetup}
-                  error={chooseHandleErrorMessage}
-                />
-                <View style={{ width: scale(25), height: scale(25) }}>
-                  {isCheckingHandleAvailability ? (
-                    <ActivityIndicator style={styles.feedbackIcon} />
-                  ) : (
-                    <Image source={validityIcon} style={styles.feedbackIcon} />
-                  )}
-                </View>
-              </View>
-              {this.renderButton()}
+        <Gradient style={styles.scrollableGradient} />
+        <ScrollView>
+          <View style={[styles.scrollableView]}>
+            <Image source={logos['eos']} style={styles.currencyLogo} resizeMode={'cover'} />
+            <View style={[styles.createWalletPromptArea, { paddingTop: 24, paddingBottom: 8 }]}>
+              <Text style={styles.instructionalText}>{sprintf(s.strings.create_wallet_account_review_instructions, 'EOS')}</Text>
             </View>
-          </KeyboardAwareScrollView>
-        </View>
+            <View style={[styles.createWalletPromptArea, { paddingTop: 8, paddingBottom: 8 }]}>
+              <Text style={styles.handleRequirementsText}>{s.strings.create_wallet_account_requirements_eos}</Text>
+            </View>
+
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <FormField
+                style={this.modifiedStyle}
+                autoFocus
+                clearButtonMode={'while-editing'}
+                autoCorrect={false}
+                onChangeText={this.handleChangeHandle}
+                label={s.strings.create_wallet_account_handle}
+                value={this.state.accountHandle}
+                returnKeyType={'next'}
+                onSubmitEditing={this.onSetup}
+                error={chooseHandleErrorMessage}
+              />
+              <View style={{ width: scale(25), height: scale(25) }}>
+                {isCheckingHandleAvailability ? <ActivityIndicator style={styles.feedbackIcon} /> : <Image source={validityIcon} style={styles.feedbackIcon} />}
+              </View>
+            </View>
+            {showButton && this.renderButton()}
+            <View style={{ paddingBottom: 400 }} />
+          </View>
+        </ScrollView>
       </SafeAreaView>
     )
   }

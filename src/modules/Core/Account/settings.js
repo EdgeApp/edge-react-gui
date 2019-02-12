@@ -86,8 +86,45 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   HUR: {
     denomination: '1000000000000000000'
   },
+  SMART: {
+    denomination: '100000000'
+  },
+  HERC: {
+    denomination: '1000000000000000000'
+  },
   customTokens: [],
   passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN
+}
+
+export const SYNCED_ACCOUNT_TYPES = {
+  autoLogoutTimeInSeconds: 'number',
+  defaultFiat: 'string',
+  defaultIsoFiat: 'string',
+  merchantMode: 'boolean',
+  BTC: 'object',
+  BCH: 'object',
+  EOS: 'object',
+  XRP: 'object',
+  XLM: 'object',
+  DASH: 'object',
+  DOGE: 'object',
+  DGB: 'object',
+  LTC: 'object',
+  FTC: 'object',
+  VTC: 'object',
+  XZC: 'object',
+  QTUM: 'object',
+  XMR: 'object',
+  ETH: 'object',
+  UFO: 'object',
+  REP: 'object',
+  WINGS: 'object',
+  IND: 'object',
+  HUR: 'object',
+  HERC: 'object',
+  SMART: 'object',
+  customTokens: 'object', // arrays return 'object' to typeof
+  passwordRecoveryRemindersShown: 'object'
 }
 
 export const LOCAL_ACCOUNT_DEFAULTS = {
@@ -108,6 +145,14 @@ export const LOCAL_ACCOUNT_DEFAULTS = {
       isEnabled: false
     }
   }
+}
+
+export const LOCAL_ACCOUNT_TYPES = {
+  bluetoothMode: 'boolean',
+  passwordReminder: 'object',
+  isAccountBalanceVisible: 'boolean',
+  isWalletFiatBalanceVisible: 'boolean',
+  spendingLimits: 'object'
 }
 
 const SYNCED_SETTINGS_FILENAME = 'Settings.json'
@@ -133,7 +178,7 @@ export const setAutoLogoutTimeInSecondsRequest = (account: EdgeAccount, autoLogo
 
 export const setDefaultFiatRequest = (account: EdgeAccount, defaultFiat: string) =>
   getSyncedSettings(account).then(settings => {
-    const updatedSettings = updateSettings(settings, { defaultFiat })
+    const updatedSettings = updateSettings(settings, { defaultFiat, defaultIsoFiat: `iso:${defaultFiat}` })
     return setSyncedSettings(account, updatedSettings)
   })
 

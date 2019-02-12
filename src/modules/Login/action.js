@@ -10,8 +10,21 @@ import { sprintf } from 'sprintf-js'
 import { insertWalletIdsForProgress } from '../../actions/WalletActions.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
+import { displayErrorAlert } from '../../modules/UI/components/ErrorAlert/actions'
 import * as ACCOUNT_API from '../Core/Account/api'
-import * as SETTINGS_API from '../Core/Account/settings.js'
+import {
+  CORE_DEFAULTS,
+  LOCAL_ACCOUNT_DEFAULTS,
+  LOCAL_ACCOUNT_TYPES,
+  PASSWORD_RECOVERY_REMINDERS_SHOWN,
+  SYNCED_ACCOUNT_DEFAULTS,
+  SYNCED_ACCOUNT_TYPES,
+  getCoreSettings,
+  getLocalSettings,
+  getSyncedSettings,
+  setLocalSettings,
+  setSyncedSettings
+} from '../Core/Account/settings.js'
 // Login/action.js
 import * as CORE_SELECTORS from '../Core/selectors'
 import { updateWalletsRequest } from '../Core/Wallets/action.js'
@@ -48,19 +61,19 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       }
     })
   }
-  const accountInitObject = {
+  let accountInitObject = {
     account: account,
     touchIdInfo: touchIdInfo,
     walletId: '',
     currencyCode: '',
     currencyPlugins,
     otpInfo: { enabled: account.otpKey != null, otpKey: account.otpKey, otpResetPending: false },
-    autoLogoutTimeInSeconds: '',
+    autoLogoutTimeInSeconds: 3600,
     bluetoothMode: false,
     pinLoginEnabled: false,
     pinMode: false,
     otpMode: false,
-    customTokens: '',
+    customTokens: [],
     defaultFiat: '',
     defaultIsoFiat: '',
     merchantMode: '',
@@ -72,7 +85,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     isAccountBalanceVisible: false,
     isWalletFiatBalanceVisible: false,
     spendingLimits: {},
-    passwordRecoveryRemindersShown: SETTINGS_API.PASSWORD_RECOVERY_REMINDERS_SHOWN
+    passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN
   }
   try {
     if (account.activeWalletIds.length < 1) {
@@ -125,42 +138,44 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
 
     accountInitObject.activeWalletIds = activeWalletIds
     accountInitObject.archivedWalletIds = archivedWalletIds
-    const settings = await SETTINGS_API.getSyncedSettings(account)
-    const syncDefaults = SETTINGS_API.SYNCED_ACCOUNT_DEFAULTS
-    const syncFinal = { ...syncDefaults, ...settings }
-    const customTokens = settings ? settings.customTokens : []
-    accountInitObject.autoLogoutTimeInSeconds = syncFinal.autoLogoutTimeInSeconds
-    accountInitObject.defaultFiat = syncFinal.defaultFiat
-    accountInitObject.defaultIsoFiat = `iso:${syncFinal.defaultFiat}`
-    accountInitObject.merchantMode = syncFinal.merchantMode
-    accountInitObject.customTokens = syncFinal.customTokens
-    accountInitObject.passwordRecoveryRemindersShown = syncFinal.passwordRecoveryRemindersShown
-    Object.keys(syncFinal).forEach(currencyCode => {
-      if (typeof syncFinal[currencyCode].denomination === 'string') {
-        accountInitObject.denominationKeys.push({ currencyCode: currencyCode, denominationKey: syncFinal[currencyCode].denomination })
-      }
-    })
-    if (customTokens) {
-      customTokens.forEach(token => {
+
+    const loadedSyncedSettings = await getSyncedSettings(account)
+    const syncedSettings = { ...loadedSyncedSettings } // will prevent mergeSettings trying to find prop of undefined
+    const mergedSyncedSettings = mergeSettings(syncedSettings, SYNCED_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_TYPES)
+    if (mergedSyncedSettings.isOverwriteNeeded) {
+      setSyncedSettings(account, { ...mergedSyncedSettings.finalSettings })
+    }
+    accountInitObject = { ...accountInitObject, ...mergedSyncedSettings.finalSettings }
+
+    if (accountInitObject.customTokens) {
+      accountInitObject.customTokens.forEach(token => {
         // dispatch(ADD_TOKEN_ACTIONS.setTokenSettings(token))
         accountInitObject.customTokensSettings.push(token)
         // this second dispatch will be redundant if we set 'denomination' property upon customToken creation
         accountInitObject.denominationKeys.push({ currencyCode: token.currencyCode, denominationKey: token.multiplier })
       })
     }
-    const localSettings = await SETTINGS_API.getLocalSettings(account)
-    const localDefaults = SETTINGS_API.LOCAL_ACCOUNT_DEFAULTS
-    const localFinal = { ...localDefaults, ...localSettings }
-    accountInitObject.bluetoothMode = localFinal.bluetoothMode
-    accountInitObject.passwordReminder = localFinal.passwordReminder
-    accountInitObject.isAccountBalanceVisible = localFinal.isAccountBalanceVisible
-    accountInitObject.isWalletFiatBalanceVisible = localFinal.isWalletFiatBalanceVisible
-    accountInitObject.spendingLimits = localFinal.spendingLimits
+    for (const key in accountInitObject) {
+      if (accountInitObject[key]) {
+        // avoid trying to look at property 'denomination' of undefined
+        const typeofDenomination = typeof accountInitObject[key].denomination
+        if (typeofDenomination === 'string') {
+          accountInitObject.denominationKeys.push({ currencyCode: key, denominationKey: accountInitObject[key].denomination })
+        }
+      }
+    }
+    const loadedLocalSettings = await getLocalSettings(account)
+    const localSettings = { ...loadedLocalSettings }
+    const mergedLocalSettings = mergeSettings(localSettings, LOCAL_ACCOUNT_DEFAULTS, LOCAL_ACCOUNT_TYPES)
+    if (mergedLocalSettings.isOverwriteNeeded) {
+      setLocalSettings(account, { ...mergedSyncedSettings.finalSettings })
+    }
+    accountInitObject = { ...accountInitObject, ...mergedLocalSettings.finalSettings }
 
     accountInitObject.pinLoginEnabled = await context.pinLoginEnabled(account.username)
 
-    const coreSettings = await SETTINGS_API.getCoreSettings(account)
-    const coreDefaults = SETTINGS_API.CORE_DEFAULTS
+    const coreSettings = await getCoreSettings(account)
+    const coreDefaults = CORE_DEFAULTS
     const coreFinal = { ...coreDefaults, ...coreSettings }
     accountInitObject.pinMode = coreFinal.pinMode
     accountInitObject.otpMode = coreFinal.otpMode
@@ -172,7 +187,53 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     // $FlowFixMe
     dispatch(updateWalletsRequest())
   } catch (error) {
-    console.log(error)
+    console.log('initializeAccount error: ', error)
+    dispatch(displayErrorAlert(error.message))
+  }
+}
+
+export const mergeSettings = (
+  loadedSettings: Object,
+  defaults: Object,
+  types: Object
+): { finalSettings: Object, isOverwriteNeeded: boolean, isDefaultTypeIncorrect: boolean } => {
+  const finalSettings = {}
+  // begin process for repairing damaged settings data
+  let isOverwriteNeeded = false
+  let isDefaultTypeIncorrect = false
+  for (const key in defaults) {
+    // if the type of the setting default does not meet the enforced type
+    const defaultSettingType = typeof defaults[key]
+    if (defaultSettingType !== types[key]) {
+      isDefaultTypeIncorrect = true
+      console.error('MismatchedDefaultSettingType key: ', key, ' with defaultSettingType: ', defaultSettingType, ' and necessary type: ', types[key])
+    }
+    // if the type of the loaded setting does not meet the enforced type
+    // eslint-disable-next-line valid-typeof
+    const loadedSettingType = typeof loadedSettings[key]
+    if (loadedSettingType !== types[key]) {
+      isOverwriteNeeded = true
+      console.warn(
+        'Settings overwrite was needed for: ',
+        key,
+        ' with loaded value: ',
+        loadedSettings[key],
+        ', but needed type: ',
+        types[key],
+        ' so replace with: ',
+        defaults[key]
+      )
+      // change that erroneous value to something that works (default)
+      finalSettings[key] = defaults[key]
+    } else {
+      finalSettings[key] = loadedSettings[key]
+    }
+  }
+
+  return {
+    finalSettings,
+    isOverwriteNeeded,
+    isDefaultTypeIncorrect
   }
 }
 

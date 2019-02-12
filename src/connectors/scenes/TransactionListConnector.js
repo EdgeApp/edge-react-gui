@@ -36,7 +36,13 @@ const mapStateToProps = (state: State) => {
   const denominationsOnWallet = wallet.allDenominations[currencyCode]
   let denomination
   if (denominationsOnWallet) {
-    denomination = denominationsOnWallet[index]
+    const denominationKeys = Object.keys(denominationsOnWallet)
+    if (denominationsOnWallet[index]) {
+      denomination = denominationsOnWallet[index]
+    } else {
+      const firstValidDenomination = denominationKeys[0]
+      denomination = denominationsOnWallet[firstValidDenomination]
+    }
   } else {
     // if it is a token
     const customTokens = getCustomTokens(state)

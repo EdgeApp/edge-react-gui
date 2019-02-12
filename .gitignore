@@ -55,6 +55,9 @@ build/
 .gradle
 local.properties
 *.iml
+copy-bitrefill.sh
+copy-wyre.sh
+copy-simplex.sh
 
 # node.js
 #

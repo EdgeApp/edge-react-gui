@@ -62,6 +62,7 @@ export type SettingsState = {
   DOGE: CurrencySetting,
   DGB: CurrencySetting,
   WINGS: CurrencySetting,
+  HERC: CurrencySetting,
 
   account: ?Object,
   autoLogoutTimeInSeconds: number,
@@ -567,11 +568,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         ...state,
         isTouchEnabled: action.data.isTouchEnabled
       }
-    }
-
-    case 'UI/SETTINGS/ADD_CURRENCY_PLUGIN': {
-      if (!action.data) throw new Error('Invalid action')
-      return currencyPLuginUtil(state, action.data)
     }
 
     case 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY': {

@@ -179,6 +179,8 @@ const strings = {
   send_confirmation_eos_error_net: 'Insufficient NET available to send EOS transaction. Please wait 1-3 days for NET to recharge.',
   send_confirmation_eos_error_ram: 'Insufficient RAM available to send EOS transaction. Please see edge.app/eos for details on how to resolve.',
   send_scan_header_text: 'Scan to Send, Import, or Edge Login',
+  send_scan_edge_login_success_title: 'Edge Login Successful',
+  send_scan_edge_login_success_message: 'To continue, please return to the browser or application that requested the Edge Login.',
   send_to_title: 'To: %s',
   send_confirmation_to: 'To: %s',
   send_confirmation_address: 'Address: %s',
@@ -257,6 +259,8 @@ const strings = {
   string_split_wallet: 'Split %s',
   string_add_edit_tokens: 'Add / Edit Tokens',
   exchange_notes_metadata_generic: 'Exchanged %1$s %2$s from %3$s to %4$s %5$s in %6$s to address %7$s \nOrder: %8$s. \nFor assistance, please contact %9$s.',
+  exchange_notes_metadata_generic2:
+    'Exchanged %1$s %2$s from %3$s to %4$s %5$s in %6$s to address %7$s \nOrder: %8$s. \nExchange payment address: %9$s. \nExchange unique identifier: %10$s \n\nFor assistance, please contact %11$s.',
   title_crypto_settings: '%s Settings',
   title_add_tokens: 'Add Tokens',
   title_create_wallet_select_crypto: 'Select Type',

@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyInfo, EdgeMetadata } from 'edge-core-js'
+import type { EdgeCurrencyInfo, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import { connect } from 'react-redux'
 
 import { getSubcategories, setNewSubcategory, setTransactionDetails } from '../../actions/TransactionDetailsActions.js'
@@ -36,8 +36,8 @@ const mapStateToProps = (state: State, ownProps: TransactionDetailsOwnProps) => 
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  setTransactionDetails: (txid: string, currencyCode: string, edgeMetadata: EdgeMetadata) => {
-    dispatch(setTransactionDetails(txid, currencyCode, edgeMetadata))
+  setTransactionDetails: (transaction: EdgeTransaction, edgeMetadata: EdgeMetadata) => {
+    dispatch(setTransactionDetails(transaction, edgeMetadata))
   },
   getSubcategories: () => dispatch(getSubcategories()),
   displayDropdownAlert: (message: string, title: string) => dispatch(displayDropdownAlert({ message, title })),

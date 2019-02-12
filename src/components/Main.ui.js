@@ -2,29 +2,9 @@
 
 import { type DiskletFolder, makeReactNativeFolder } from 'disklet'
 import { ModalManager } from 'edge-components'
-import type { EdgeContext, EdgeCorePluginFactory, EdgeCurrencyPlugin } from 'edge-core-js'
-import { eosCurrencyPluginFactory, rippleCurrencyPluginFactory, stellarCurrencyPluginFactory } from 'edge-currency-accountbased'
-import {
-  bitcoinCurrencyPluginFactory,
-  bitcoincashCurrencyPluginFactory,
-  bitcoingoldCurrencyPluginFactory,
-  bitcoinsvCurrencyPluginFactory,
-  dashCurrencyPluginFactory,
-  digibyteCurrencyPluginFactory,
-  feathercoinCurrencyPluginFactory,
-  groestlcoinCurrencyPluginFactory,
-  litecoinCurrencyPluginFactory,
-  qtumCurrencyPluginFactory,
-  smartcashCurrencyPluginFactory,
-  ufoCurrencyPluginFactory,
-  vertcoinCurrencyPluginFactory,
-  zcoinCurrencyPluginFactory
-} from 'edge-currency-bitcoin'
-import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
-import { moneroCurrencyPluginFactory } from 'edge-currency-monero'
-import { coinbasePlugin, coincapPlugin, currencyconverterapiPlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
+import type { EdgeContext } from 'edge-core-js'
 import React, { Component } from 'react'
-import { Image, Keyboard, Linking, StatusBar, TouchableWithoutFeedback, View, YellowBox } from 'react-native'
+import { Alert, Image, Keyboard, Linking, StatusBar, TouchableWithoutFeedback, View, YellowBox } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import Locale from 'react-native-locale'
 import { MenuProvider } from 'react-native-popup-menu'
@@ -83,10 +63,7 @@ import * as Constants from '../constants/indexConstants'
 import { scale } from '../lib/scaling.js'
 import { setIntlLocale } from '../locales/intl'
 import s, { selectLocale } from '../locales/strings.js'
-import EdgeAccountCallbackManager from '../modules/Core/Account/EdgeAccountCallbackManager.js'
 import * as CONTEXT_API from '../modules/Core/Context/api'
-import EdgeContextCallbackManager from '../modules/Core/Context/EdgeContextCallbackManager.js'
-import EdgeWalletsCallbackManager from '../modules/Core/Wallets/EdgeWalletsCallbackManager.js'
 import DeepLinkingManager from '../modules/DeepLinkingManager.js'
 import PermissionsManager, { type Permission, PermissionStrings } from '../modules/PermissionsManager.js'
 import AutoLogout from '../modules/UI/components/AutoLogout/AutoLogoutConnector'
@@ -107,46 +84,17 @@ import TransactionAlert from '../modules/UI/components/TransactionAlert/Transact
 import { PluginBuySell, PluginSpend, PluginView, renderPluginBackButton } from '../modules/UI/scenes/Plugins/index'
 import { HwBackButtonHandler } from '../modules/UI/scenes/WalletList/components/HwBackButtonHandler/index'
 import { styles } from '../styles/MainStyle.js'
-import { makeCoreContext } from '../util/makeContext.js'
+import { EdgeCoreManager } from './core/EdgeCoreManager.js'
 import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
 import { CryptoExchangeQuoteProcessingScreenComponent } from './scenes/CryptoExchangeQuoteProcessingScene.js'
 import { OnBoardingComponent } from './scenes/OnBoardingScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
 
-const pluginFactories: Array<EdgeCorePluginFactory> = [
-  // Exchanges:
-  coinbasePlugin,
-  shapeshiftPlugin,
-  coincapPlugin,
-  currencyconverterapiPlugin,
-  // Currencies:
-  bitcoincashCurrencyPluginFactory,
-  bitcoinCurrencyPluginFactory,
-  ethereumCurrencyPluginFactory,
-  eosCurrencyPluginFactory,
-  stellarCurrencyPluginFactory,
-  rippleCurrencyPluginFactory,
-  moneroCurrencyPluginFactory,
-  dashCurrencyPluginFactory,
-  litecoinCurrencyPluginFactory,
-  bitcoinsvCurrencyPluginFactory,
-  // eboostCurrencyPluginFactory,
-  // dogecoinCurrencyPluginFactory,
-  qtumCurrencyPluginFactory,
-  digibyteCurrencyPluginFactory,
-  zcoinCurrencyPluginFactory,
-  bitcoingoldCurrencyPluginFactory,
-  vertcoinCurrencyPluginFactory,
-  feathercoinCurrencyPluginFactory,
-  smartcashCurrencyPluginFactory,
-  groestlcoinCurrencyPluginFactory,
-  ufoCurrencyPluginFactory
-]
-
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
 const UTILITY_SERVER_FILE = 'utilityServer.json'
 global.etherscanApiKey = ENV.ETHERSCAN_API_KEY
+global.infuraProjectId = ENV.INFURA_PROJECT_ID
 
 const RouterWithRedux = connect()(Router)
 
@@ -192,13 +140,12 @@ const PASSWORD_RECOVERY = s.strings.title_password_recovery
 const OTP = s.strings.title_otp
 const DEFAULT_FIAT = s.strings.title_default_fiat
 const PLUGIN_BUYSELL = s.strings.title_plugin_buysell
-const PLUGIN_SPEND = s.strings.title_plugin_spend
+const PLUGIN_SPEND = s.strings.title_plugin_spend_cryptocurrency
 const TERMS_OF_SERVICE = s.strings.title_terms_of_service
 
 type Props = {
   requestPermission: (permission: Permission) => void,
   username?: string,
-  addCurrencyPlugin: EdgeCurrencyPlugin => void,
   setKeyboardHeight: number => void,
   addContext: (EdgeContext, DiskletFolder) => void,
   addUsernames: (Array<string>) => void,
@@ -213,9 +160,6 @@ type Props = {
   dispatchAddressDeepLinkReceived: (addressDeepLinkData: Object) => any,
   deepLinkPending: boolean,
   checkAndShowGetCryptoModal: () => void
-}
-type State = {
-  context: ?EdgeContext
 }
 
 async function queryUtilServer (context: EdgeContext, folder: DiskletFolder, usernames: Array<string>) {
@@ -251,7 +195,7 @@ async function queryUtilServer (context: EdgeContext, folder: DiskletFolder, use
   }
 }
 
-export default class Main extends Component<Props, State> {
+export default class Main extends Component<Props> {
   keyboardDidShowListener: any
   keyboardDidHideListener: any
 
@@ -259,9 +203,6 @@ export default class Main extends Component<Props, State> {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
 
-    this.state = {
-      context: undefined
-    }
     if (ENV.HIDE_IS_MOUNTED) {
       YellowBox.ignoreWarnings([
         'Warning: isMounted(...) is deprecated',
@@ -285,24 +226,7 @@ export default class Main extends Component<Props, State> {
     const id = DeviceInfo.getUniqueID()
     global.firebase && global.firebase.analytics().setUserId(id)
     global.firebase && global.firebase.analytics().logEvent(`Start_App`)
-    makeCoreContext(pluginFactories).then(context => {
-      const folder = makeReactNativeFolder()
 
-      // Put the context into Redux:
-      this.props.addContext(context, folder)
-
-      CONTEXT_API.listUsernames(context).then(usernames => {
-        this.props.addUsernames(usernames)
-        queryUtilServer(context, folder, usernames)
-      })
-      setIntlLocale(localeInfo)
-      selectLocale(DeviceInfo.getDeviceLocale())
-      SplashScreen.close({
-        animationType: SplashScreen.animationType.fade,
-        duration: 850,
-        delay: 500
-      })
-    })
     Linking.getInitialURL()
       .then(url => {
         if (url) {
@@ -312,6 +236,34 @@ export default class Main extends Component<Props, State> {
       })
       .catch(e => console.log(e))
     Linking.addEventListener('url', this.handleOpenURL)
+  }
+
+  onCoreLoad = (context: EdgeContext) => {
+    const folder = makeReactNativeFolder()
+
+    // Put the context into Redux:
+    this.props.addContext(context, folder)
+
+    CONTEXT_API.listUsernames(context).then(usernames => {
+      this.props.addUsernames(usernames)
+      queryUtilServer(context, folder, usernames)
+    })
+    setIntlLocale(localeInfo)
+    selectLocale(DeviceInfo.getDeviceLocale())
+    SplashScreen.close({
+      animationType: SplashScreen.animationType.fade,
+      duration: 850,
+      delay: 500
+    })
+  }
+
+  onCoreError = (error: any) => {
+    SplashScreen.close({
+      animationType: SplashScreen.animationType.fade,
+      duration: 850,
+      delay: 500
+    })
+    Alert.alert('Edge core failed to load', String(error))
   }
 
   handleOpenURL = (event: Object) => {
@@ -743,9 +695,9 @@ export default class Main extends Component<Props, State> {
                         onLeft={Actions.pop}
                       />
                       <Scene
-                        key={Constants.PLUGIN}
+                        key={Constants.PLUGIN_SPEND}
                         navTransparent={true}
-                        component={PluginView}
+                        component={ifLoggedIn(PluginView, LoadingScene)}
                         renderTitle={this.renderTitle(PLUGIN_SPEND)}
                         renderLeftButton={this.renderBackButton(BACK)}
                         renderRightButton={this.renderEmptyButton()}
@@ -778,9 +730,7 @@ export default class Main extends Component<Props, State> {
         <ModalManager />
         <PermissionsManager />
 
-        <EdgeContextCallbackManager />
-        <EdgeAccountCallbackManager />
-        <EdgeWalletsCallbackManager />
+        <EdgeCoreManager onLoad={this.onCoreLoad} onError={this.onCoreError} />
 
         <DeepLinkingManager />
       </MenuProvider>
@@ -839,6 +789,13 @@ export default class Main extends Component<Props, State> {
     return (
       <View style={styles.titleWrapper}>
         <T style={styles.titleStyle}>{title}</T>
+      </View>
+    )
+  }
+  renderSpendTitle = (title: string) => {
+    return (
+      <View style={styles.titleWrapper}>
+        <T style={styles.titleStyle}>{'title'}</T>
       </View>
     )
   }

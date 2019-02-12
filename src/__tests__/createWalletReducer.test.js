@@ -21,7 +21,8 @@ test('initialState', () => {
     handleActivationInfo: {
       supportedCurrencies: {},
       activationCost: ''
-    }
+    },
+    walletAccountActivationQuoteError: ''
   }
   const actual = createWalletReducer(undefined, dummyAction)
 

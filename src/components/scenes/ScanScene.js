@@ -16,13 +16,14 @@ import * as Constants from '../../constants/indexConstants'
 import { scale } from '../../lib/scaling.js'
 import s from '../../locales/strings.js'
 import { PermissionStatusStrings } from '../../modules/PermissionsManager.js'
-import type { PermissionStatus } from '../../modules/ReduxTypes'
+import type { PermissionStatus } from '../../modules/PermissionsManager.js'
 import ABAlert from '../../modules/UI/components/ABAlert/indexABAlert'
 import T from '../../modules/UI/components/FormattedText/index'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import WalletListModal from '../../modules/UI/components/WalletListModal/WalletListModalConnector'
 import styles, { styles as styleRaw } from '../../styles/scenes/ScaneStyle'
+import { type GuiWallet } from '../../types.js'
 
 type Props = {
   cameraPermission: PermissionStatus,
@@ -37,7 +38,8 @@ type Props = {
   toggleAddressModal: () => void,
   toggleScanToWalletListModal: () => void,
   onSelectWallet: (string, string) => void,
-  markAddressDeepLinkDone: () => any
+  markAddressDeepLinkDone: () => any,
+  wallets: { [string]: GuiWallet }
 }
 
 const HEADER_TEXT = s.strings.send_scan_header_text
@@ -70,8 +72,14 @@ export class Scan extends Component<Props> {
   }
 
   render () {
-    const { onSelectWallet } = this.props
-
+    const { onSelectWallet, wallets } = this.props
+    const allowedWallets = {}
+    for (const id in wallets) {
+      const wallet = wallets[id]
+      if (wallet.receiveAddress && wallet.receiveAddress.publicAddress) {
+        allowedWallets[id] = wallets[id]
+      }
+    }
     return (
       <SafeAreaView>
         <View style={{ flex: 1 }}>
@@ -116,7 +124,12 @@ export class Scan extends Component<Props> {
             <ABAlert />
           </View>
           {this.props.showToWalletModal && (
-            <WalletListModal topDisplacement={Constants.SCAN_WALLET_DIALOG_TOP} type={Constants.FROM} onSelectWallet={onSelectWallet} />
+            <WalletListModal
+              wallets={allowedWallets}
+              topDisplacement={Constants.SCAN_WALLET_DIALOG_TOP}
+              type={Constants.FROM}
+              onSelectWallet={onSelectWallet}
+            />
           )}
         </View>
         <SecondaryModal />

@@ -11,6 +11,7 @@ import * as Constants from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import * as SETTINGS_API from '../modules/Core/Account/settings.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
+import { updateWalletsRequest } from '../modules/Core/Wallets/action.js'
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
 import { updateExchangeRates } from '../modules/ExchangeRates/action.js'
 import type { Dispatch, GetState } from '../modules/ReduxTypes'
@@ -110,10 +111,10 @@ export const refreshReceiveAddressRequest = (walletId: string) => (dispatch: Dis
   }
 }
 
-export const selectWallet = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
+export const selectWallet = (walletId: string, currencyCode: string, from?: string) => (dispatch: Dispatch, getState: GetState) => {
   if (currencyCode === 'EOS') {
     // EOS needs different path in case not activated yet
-    dispatch(selectEOSWallet(walletId, currencyCode))
+    dispatch(selectEOSWallet(walletId, currencyCode, from))
     return
   }
   const state = getState()
@@ -136,13 +137,19 @@ export const selectWallet = (walletId: string, currencyCode: string) => (dispatc
 }
 
 // check if the EOS wallet is activated (via public address blank string check) and route to activation scene(s)
-export const selectEOSWallet = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
+export const selectEOSWallet = (walletId: string, currencyCode: string, from?: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const currentWalletId = state.ui.wallets.selectedWalletId
   const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
   const guiWallet = UI_SELECTORS.getWallet(state, walletId)
-  if (walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode) {
+  if (walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode || from === Constants.WALLET_LIST_SCENE) {
     const { publicAddress } = guiWallet.receiveAddress
+    if (!publicAddress) {
+      // Update all wallets' addresses. Hopefully gets the updated address for the next time
+      // We enter the EOS wallet
+      dispatch(updateWalletsRequest())
+    }
+
     if (publicAddress) {
       // already activated
       dispatch({

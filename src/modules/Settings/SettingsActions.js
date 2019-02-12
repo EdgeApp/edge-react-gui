@@ -1,7 +1,5 @@
 // @flow
 
-import type { EdgeCurrencyPlugin } from 'edge-core-js'
-
 import type { CustomTokenInfo, GuiTouchIdInfo } from '../../types.js'
 
 export const updateSettings = (settings: Object) => ({
@@ -69,16 +67,6 @@ export const setSettingsLock = (bool: boolean) => ({
 export const setDenominationKey = (currencyCode: string, denominationKey: string) => ({
   type: 'UI/SETTINGS/SET_DENOMINATION_KEY',
   data: { currencyCode, denominationKey }
-})
-
-// Plugins
-export const addCurrencyPlugin = (plugin: EdgeCurrencyPlugin) => ({
-  type: 'UI/SETTINGS/ADD_CURRENCY_PLUGIN',
-  data: {
-    pluginName: plugin.pluginName,
-    plugin,
-    walletTypes: plugin.currencyInfo.walletTypes
-  }
 })
 
 // tokens

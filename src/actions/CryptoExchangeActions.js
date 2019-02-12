@@ -122,9 +122,11 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
       const name = si.displayName
       const supportEmail = si.supportEmail
       const quoteIdUri = si.quoteUri && quote.quoteId ? si.quoteUri + quote.quoteId : broadcastedTransaction.txid
+      const payinAddress = broadcastedTransaction.otherParams.payinAddress
+      const uniqueIdentifier = broadcastedTransaction.otherParams.uniqueIdentifier
 
       const notes = sprintf(
-        s.strings.exchange_notes_metadata_generic,
+        s.strings.exchange_notes_metadata_generic2,
         state.cryptoExchange.fromDisplayAmount,
         state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name,
         fromWallet.name,
@@ -133,6 +135,8 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
         toWallet.name,
         quote.destinationAddress,
         quoteIdUri,
+        payinAddress,
+        uniqueIdentifier,
         supportEmail
       )
 
