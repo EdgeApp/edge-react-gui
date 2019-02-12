@@ -5,6 +5,15 @@ v1.7.0
 * Sell crypto to credit card using Simplex
 * Add LibertyX to support buying Bitcoin from physical merchants in US
 
+v.1.6.2
+* Fix fiat denomination of wallets from Airbitz to Edge
+* Fix EOS Crash issues
+* Fix various UI display bugs
+* Fix metadata tagging of transactions to update immediately after saving
+* Improved syncing of XRP and ETH
+* Use multiple services to broadcast XRP and ETH transactions
+* Add Faa.st instant exchange provider
+
 v1.6.1
 
 * Improved BTC fee calculations
