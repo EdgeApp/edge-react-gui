@@ -3031,11 +3031,6 @@ destroy@~1.0.4:
   resolved "https://registry.yarnpkg.com/destroy/-/destroy-1.0.4.tgz#978857442c44749e4206613e37946205826abd80"
   integrity sha1-l4hXRCxEdJ5CBmE+N5RiBYJqvYA=
 
-detect-bundler@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/detect-bundler/-/detect-bundler-1.0.0.tgz#b1445d25baf2e71fa5cf9a61b293e0f49abd63c9"
-  integrity sha1-sURdJbry5x+lz5phspPg9Jq9Y8k=
-
 detect-indent@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/detect-indent/-/detect-indent-4.0.0.tgz#f76d064352cdf43a1cb6ce619c4ee3a9475de208"
@@ -3181,19 +3176,19 @@ edge-components@^0.0.19:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@0.13.8:
-  version "0.13.8"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.13.8.tgz#cd6d50d8c6377cd3fb8b0124ff8f95e209765a89"
-  integrity sha512-BrGvS/dG2mbrYjQbqFH98jhclOZ3S6/HMfhfF8QS6mnXAq9/tmBeODSapNHvrQG7B9pp6klGY2n4AJu/pzM7Og==
+edge-core-js@0.14.0:
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.14.0.tgz#9630efbc4819e4b96b2cea6adcf7d45dcd2f678c"
+  integrity sha512-dYRkFgcnXzh6+xPhn8Wppa8yuM6LKfF7fVJeCi/JhG+zAv9o7NunD7KNqLFewbWitLsB4CZOKd40K0m/hQONvQ==
   dependencies:
     "@babel/runtime" "^7.0.0"
     aes-js "^3.1.0"
     base-x "^1.0.4"
     biggystring "^3.0.2"
     currency-codes "^1.1.2"
-    detect-bundler "^1.0.0"
     disklet "^0.3.1"
     elliptic "^6.4.0"
+    esm "^3.2.4"
     ethereumjs-tx "^1.3.7"
     ethereumjs-util "^5.2.0"
     hash.js "^1.0.3"
@@ -3207,7 +3202,7 @@ edge-core-js@0.13.8:
     scrypt-js "^2.0.3"
     utf8 "^3.0.0"
     ws "^5.1.1"
-    yaob "^0.3.1"
+    yaob "^0.3.3"
 
 edge-currency-accountbased@0.0.22:
   version "0.0.22"
@@ -3652,6 +3647,11 @@ eslint@^4.0.0, eslint@^4.17.0, eslint@^4.5.0:
     strip-json-comments "~2.0.1"
     table "4.0.2"
     text-table "~0.2.0"
+
+esm@^3.2.4:
+  version "3.2.4"
+  resolved "https://registry.yarnpkg.com/esm/-/esm-3.2.4.tgz#0b728b5d6043061bf552197407bf2c630717812b"
+  integrity sha512-wOuWtQCkkwD1WKQN/k3RsyGSSN+AmiUzdKftn8vaC+uV9JesYmQlODJxgXaaRz0LaaFIlUxZaUu5NPiUAjKAAA==
 
 espree@^3.5.2, espree@^3.5.4:
   version "3.5.4"
@@ -10553,10 +10553,17 @@ yallist@^3.0.0, yallist@^3.0.2:
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-3.0.3.tgz#b4b049e314be545e3ce802236d6cd22cd91c3de9"
   integrity sha512-S+Zk8DEWE6oKpV+vI3qWkaK+jSbIK86pCwe2IF/xwIpQ8jEuxpw9NyaGjmp9+BoJv5FV2piqCDcoCtStppiq2A==
 
-yaob@0.3.2, yaob@^0.3.1:
+yaob@0.3.2:
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/yaob/-/yaob-0.3.2.tgz#142d14f921030192ede8255d61107617ec2fe615"
   integrity sha512-FYAFrHmQD9bQCDVGVXHmV6qHY3/fryRrtlj84IVZx+PLo2WZY9KfbH/E8qoXzJwSoVRFleZ1+IQ1w3e6yI2h4w==
+
+yaob@^0.3.3:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/yaob/-/yaob-0.3.3.tgz#39f6190d1109207f340d5cf7e9e63efedf67ccee"
+  integrity sha512-qNCO9MbgsaweqGGOJG30TFpvnlmXx7BwQacqI2LtMRQhx/WaDDqp6NzGwkWCkoYwbzfXIR1pMCAEZwX3MEnPJg==
+  dependencies:
+    rfc4648 "^1.1.0"
 
 yargs-parser@^5.0.0:
   version "5.0.0"
