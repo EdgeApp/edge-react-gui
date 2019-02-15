@@ -451,5 +451,8 @@
   "terms_of_use": "Termini d'uso",
   "privacy_policy": "Privacy Policy",
   "changelly_aml_kyc": "AML/KYC",
-  "alert_deep_link_no_wallet": "Non esiste nessun portafoglio che supporti %1$s. Puoi crearne uno cliccando su + in cima alla lista dei portafogli."
+  "alert_deep_link_no_wallet": "Non esiste nessun portafoglio che supporti %1$s. Puoi crearne uno cliccando su + in cima alla lista dei portafogli.",
+  "load_plugin": "",
+  "plugin_url": "",
+  "choose_your_wallet": ""
 }
