@@ -106,6 +106,7 @@
   "fragmet_wallets_delete_wallet_first_confirm_message_mobile": "Souhaitez-vous vraiment l'effacer\n",
   "fragmet_wallets_list_archive_title_capitalized": "Archiver",
   "fragment_wallets_syncing_wallet_txs": "Synchronisation de transactions de portefeuilles est en cours ",
+  "wallet_list_add_wallet": "",
   "create_wallet_select_valid_crypto": "Veuillez choisir un type de Wallet valide.",
   "create_wallet_invalid_input": "Entrée invalide",
   "create_wallet_select_valid_fiat": "Veuillez sélectionner les fiat valides",
