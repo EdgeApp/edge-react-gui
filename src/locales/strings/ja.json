@@ -106,6 +106,7 @@
   "fragmet_wallets_delete_wallet_first_confirm_message_mobile": "削除してもよろしですか？ ",
   "fragmet_wallets_list_archive_title_capitalized": "アーカイブ",
   "fragment_wallets_syncing_wallet_txs": "ウォレットトランザクションを同期中...",
+  "wallet_list_add_wallet": "",
   "create_wallet_select_valid_crypto": "有効なウォレットタイプを選択してください",
   "create_wallet_invalid_input": "無効なインプットです",
   "create_wallet_select_valid_fiat": "有効な法定通貨を選択してください",
