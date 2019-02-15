@@ -106,6 +106,7 @@
   "fragmet_wallets_delete_wallet_first_confirm_message_mobile": "Bạn có chắc chắn muốn xóa? ",
   "fragmet_wallets_list_archive_title_capitalized": "Lưu trữ",
   "fragment_wallets_syncing_wallet_txs": "Đồng bộ hóa các giao dịch chi tiêu...",
+  "wallet_list_add_wallet": "",
   "create_wallet_select_valid_crypto": "Vui lòng chọn loại ví hợp lệ",
   "create_wallet_invalid_input": "Dữ liệu nhập không hợp lệ",
   "create_wallet_select_valid_fiat": "Vui lòng chọn một loại tiền tệ fiat hợp lệ",
