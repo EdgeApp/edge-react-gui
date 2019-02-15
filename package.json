@@ -89,7 +89,7 @@
     "edge-currency-accountbased": "0.0.22",
     "edge-currency-bitcoin": "3.7.11",
     "edge-currency-monero": "0.1.3",
-    "edge-exchange-plugins": "^0.4.0",
+    "edge-exchange-plugins": "^0.4.1",
     "edge-login-ui-rn": "^0.5.16",
     "https-browserify": "0.0.1",
     "jsc-android": "216113.0.3",
