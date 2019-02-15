@@ -90,5 +90,7 @@ buck-out/
 /src/assets/plugins.json
 /android/app/src/main/assets/plugins/
 /ios/plugins/
-
+# Yaob bridge
+src/lib/bridge/rolledUp.js
+src/lib/bridge/injectThisInWebView.js
 *.swp
