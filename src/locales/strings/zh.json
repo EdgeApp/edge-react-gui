@@ -106,6 +106,7 @@
   "fragmet_wallets_delete_wallet_first_confirm_message_mobile": "您是否确定要删除\n",
   "fragmet_wallets_list_archive_title_capitalized": "存档",
   "fragment_wallets_syncing_wallet_txs": "正在同步钱包交易记录..。",
+  "wallet_list_add_wallet": "",
   "create_wallet_select_valid_crypto": "请选择有效的钱包类型",
   "create_wallet_invalid_input": "无效的输入",
   "create_wallet_select_valid_fiat": "请选择有效的法定货币",
