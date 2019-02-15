@@ -193,6 +193,8 @@ const strings = {
   settings_account_title_cap: 'Account',
   settings_button_change_password: 'Change Password',
   settings_button_debug: 'Debug',
+  settings_turn_on_developer_mode: 'Turn On Developer',
+  settings_turn_off_developer_mode: 'Turn Off Developer',
   settings_button_lock_settings: 'Tap to Lock Account Settings',
   settings_button_password_recovery: 'Set Up Password Recovery',
   settings_button_logout: 'Logout',

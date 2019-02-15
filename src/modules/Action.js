@@ -203,6 +203,8 @@ type NoDataActionName =
   | 'UI/WALLETS/CREATE_WALLET_SUCCESS'
   | 'USE_LEGACY_REQUEST_ADDRESS'
   | 'USE_REGULAR_REQUEST_ADDRESS'
+  | 'DEVELOPER_MODE_ON'
+  | 'DEVELOPER_MODE_OFF'
 
 export type Action =
   | { type: LegacyActionName, data?: any }

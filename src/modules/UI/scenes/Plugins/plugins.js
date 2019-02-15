@@ -3,11 +3,10 @@
 import { Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 
-import ENV from '../../../../../env.json'
 import plugins from '../../../../assets/plugins.json'
 
-function loadPlugins (plugins: any): Array<Object> {
-  if (ENV.PLUGIN_DEV) {
+function loadPlugins (plugins: any, developerModeOn: boolean): Array<Object> {
+  if (developerModeOn) {
     const devPlugin = {
       pluginId: 'custom',
       name: 'Custom Dev',
@@ -34,10 +33,10 @@ function loadPlugins (plugins: any): Array<Object> {
   })
 }
 
-export function buySellPlugins () {
-  return loadPlugins(plugins.buysell)
+export function buySellPlugins (developerModeOn: boolean) {
+  return loadPlugins(plugins.buysell, developerModeOn)
 }
 
-export function spendPlugins () {
-  return loadPlugins(plugins.spend)
+export function spendPlugins (developerModeOn: boolean) {
+  return loadPlugins(plugins.spend, developerModeOn)
 }
