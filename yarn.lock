@@ -3243,17 +3243,15 @@ edge-currency-bitcoin@3.7.11:
     uri-js "^4.2.2"
     url-parse "^1.4.3"
 
-edge-currency-monero@0.1.3:
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.1.3.tgz#f436f46903fcc2abf181b34099ecbaae1053fc18"
-  integrity sha512-xORL+KaN60WoO5ZU+QGS30pZYXKMZmAASv6tc2L0NzVwJmgRf5nYkQu5OVh7uTo4Yhp9uCPO020gmFbX5ytOqA==
+edge-currency-monero@0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.1.4.tgz#12283bf933e10672aa672a23cce1e885cc0638e4"
+  integrity sha512-04TEZxXUr4vvNP4ZGswQKrJL/xZftr0AqesZVqwYHn6tNXWYPylINSyACsx8KdIeAkwZAG8Sf+EWV4tQn/TPDQ==
   dependencies:
     biggystring "^3.0.0"
     buffer "^5.0.6"
     jsonschema "^1.1.1"
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#1a815ca"
-    node-xhr "^1.0.5"
-    sprintf-js "^1.1.1"
     uri-js "^3.0.2"
 
 edge-exchange-plugins@^0.4.1:
@@ -7101,11 +7099,6 @@ node-pre-gyp@^0.10.0:
     rimraf "^2.6.1"
     semver "^5.3.0"
     tar "^4"
-
-node-xhr@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/node-xhr/-/node-xhr-1.0.5.tgz#ce95b84c19b0a29f79aa277c5e9076297e27f2e9"
-  integrity sha1-zpW4TBmwop95qid8XpB2KX4n8uk=
 
 nopt@^4.0.1:
   version "4.0.1"
