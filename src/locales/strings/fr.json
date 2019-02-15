@@ -451,5 +451,8 @@
   "terms_of_use": "",
   "privacy_policy": "",
   "changelly_aml_kyc": "",
-  "alert_deep_link_no_wallet": ""
+  "alert_deep_link_no_wallet": "",
+  "load_plugin": "",
+  "plugin_url": "",
+  "choose_your_wallet": ""
 }
