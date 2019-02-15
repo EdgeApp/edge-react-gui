@@ -451,5 +451,8 @@
   "terms_of_use": "Condiciones de uso",
   "privacy_policy": "Política de privacidad",
   "changelly_aml_kyc": "AML/KYC",
-  "alert_deep_link_no_wallet": "No existen carteras de %1$s. Puedes crear una cartera de %2$s pulsando + en la lista de carteras."
+  "alert_deep_link_no_wallet": "No existen carteras de %1$s. Puedes crear una cartera de %2$s pulsando + en la lista de carteras.",
+  "load_plugin": "",
+  "plugin_url": "",
+  "choose_your_wallet": ""
 }
