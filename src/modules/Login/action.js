@@ -1,12 +1,15 @@
 // @flow
 
+import { createSimpleConfirmModal, showModal } from 'edge-components'
 import type { EdgeAccount } from 'edge-core-js'
+import React from 'react'
 import { Platform } from 'react-native'
 import Locale from 'react-native-locale'
 import PushNotification from 'react-native-push-notification'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
+import { name as appName } from '../../../app.json'
 import { insertWalletIdsForProgress } from '../../actions/WalletActions.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
@@ -29,6 +32,7 @@ import {
 import * as CORE_SELECTORS from '../Core/selectors'
 import { updateWalletsRequest } from '../Core/Wallets/action.js'
 import type { Dispatch, GetState } from '../ReduxTypes'
+import { Icon } from '../UI/components/Icon/Icon.ui.js'
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
@@ -179,6 +183,21 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     const coreFinal = { ...coreDefaults, ...coreSettings }
     accountInitObject.pinMode = coreFinal.pinMode
     accountInitObject.otpMode = coreFinal.otpMode
+
+    PushNotification.checkPermissions(permissions => {
+      if (!permissions.alert) {
+        const name = appName[0].toUpperCase() + appName.slice(1)
+
+        const modal = createSimpleConfirmModal({
+          title: s.strings.security_warning,
+          message: sprintf(s.strings.enable_notifications_modal, name),
+          icon: <Icon type={Constants.MATERIAL_COMMUNITY} name={Constants.EXCLAMATION} size={30} />,
+          buttonText: s.strings.string_ok
+        })
+
+        showModal(modal)
+      }
+    })
 
     dispatch({
       type: 'ACCOUNT_INIT_COMPLETE',

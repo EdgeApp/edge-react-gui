@@ -490,7 +490,10 @@ const strings = {
   alert_deep_link_no_wallet: 'No wallets exist that support %1$s. You can create a wallet for %2$s by tapping + on the Wallet List screen.',
   load_plugin: 'Load Plugin',
   plugin_url: 'Plugin URL',
-  choose_your_wallet: 'Choose Your Wallet'
+  choose_your_wallet: 'Choose Your Wallet',
+  security_warning: 'Security Warning',
+  enable_notifications_modal:
+    '%s needs notification permission to warn you in the event of unauthorized attempts to access your account. Please enable notification permissions to maximize your security.'
 }
 
 // export default strings
