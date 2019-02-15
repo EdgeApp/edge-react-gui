@@ -106,6 +106,7 @@
   "fragmet_wallets_delete_wallet_first_confirm_message_mobile": "Are you sure you want to delete \n",
   "fragmet_wallets_list_archive_title_capitalized": "Archive",
   "fragment_wallets_syncing_wallet_txs": "Synchronizing wallet transactions...",
+  "wallet_list_add_wallet": "Add Wallet",
   "create_wallet_select_valid_crypto": "Please select a valid wallet type",
   "create_wallet_invalid_input": "Invalid input",
   "create_wallet_select_valid_fiat": "Please select a valid fiat currency",
