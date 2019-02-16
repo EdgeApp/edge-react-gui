@@ -158,7 +158,7 @@
     "url-parse": "^1.4.4",
     "vm-browserify": "0.0.4",
     "why-did-you-update": "^0.1.1",
-    "yaob":"0.3.2"
+    "yaob":"0.3.3"
   },
   "devDependencies": {
     "babel-eslint": "^8.1.0",
