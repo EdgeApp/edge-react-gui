@@ -106,7 +106,7 @@
   "fragmet_wallets_delete_wallet_first_confirm_message_mobile": "Sei sicuro di voler cancellare\n",
   "fragmet_wallets_list_archive_title_capitalized": "Archivio",
   "fragment_wallets_syncing_wallet_txs": "Sto sincronizzando le transazioni del portafoglio...",
-  "wallet_list_add_wallet": "",
+  "wallet_list_add_wallet": "Aggiungi Portafoglio",
   "create_wallet_select_valid_crypto": "Seleziona un tipo di portafoglio valido",
   "create_wallet_invalid_input": "Importo non valido",
   "create_wallet_select_valid_fiat": "Seleziona una valuta fiat valida",
@@ -453,7 +453,7 @@
   "privacy_policy": "Privacy Policy",
   "changelly_aml_kyc": "AML/KYC",
   "alert_deep_link_no_wallet": "Non esiste nessun portafoglio che supporti %1$s. Puoi crearne uno cliccando su + in cima alla lista dei portafogli.",
-  "load_plugin": "",
-  "plugin_url": "",
-  "choose_your_wallet": ""
+  "load_plugin": "Caricamento del plugin",
+  "plugin_url": "URL del plugin",
+  "choose_your_wallet": "Scegli il tuo portafoglio"
 }
