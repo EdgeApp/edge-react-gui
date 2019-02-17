@@ -22,6 +22,7 @@ export const CUSTOM_FEES_ICON = 'wpexplorer'
 export const EXCHANGE_ICON = 'exchange'
 export const QUESTION_ICON = 'question'
 export const FA_MONEY_ICON = 'money'
+export const CLOCK = 'clock-o'
 
 // Feather
 export const FEATHER_ICONS = 'featherIcons'

@@ -1,6 +1,8 @@
 // @flow
 
+import { createSimpleConfirmModal, showModal } from 'edge-components'
 import type { EdgeAccount } from 'edge-core-js'
+import React from 'react'
 import { Platform } from 'react-native'
 import Locale from 'react-native-locale'
 import PushNotification from 'react-native-push-notification'
@@ -29,6 +31,7 @@ import {
 import * as CORE_SELECTORS from '../Core/selectors'
 import { updateWalletsRequest } from '../Core/Wallets/action.js'
 import type { Dispatch, GetState } from '../ReduxTypes'
+import { Icon } from '../UI/components/Icon/Icon.ui.js'
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
@@ -179,6 +182,30 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     const coreFinal = { ...coreDefaults, ...coreSettings }
     accountInitObject.pinMode = coreFinal.pinMode
     accountInitObject.otpMode = coreFinal.otpMode
+
+    // Check clock skew against atomic time
+    try {
+      const remoteTime = await fetch('http://worldtimeapi.org/api/timezone/Etc/GMT')
+      const body = await remoteTime.json()
+      const remoteSecondsSinceEpoch = body.unixtime
+
+      const localSecondsSinceEpoch = Date.now() / 1000
+
+      const clockSkew = Math.abs(localSecondsSinceEpoch - remoteSecondsSinceEpoch)
+
+      if (clockSkew > 30) {
+        const modal = createSimpleConfirmModal({
+          title: s.strings.clock_skew_modal_title,
+          message: s.strings.clock_skew_modal_message,
+          icon: <Icon type={Constants.FONT_AWESOME} name={Constants.CLOCK} size={35} />,
+          buttonText: s.strings.string_ok
+        })
+
+        showModal(modal)
+      }
+    } catch (e) {
+      console.log('Time check error: ', e)
+    }
 
     dispatch({
       type: 'ACCOUNT_INIT_COMPLETE',
