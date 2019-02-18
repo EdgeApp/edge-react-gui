@@ -106,7 +106,7 @@
   "fragmet_wallets_delete_wallet_first_confirm_message_mobile": "정말로 삭제 하시겠습니까?\n",
   "fragmet_wallets_list_archive_title_capitalized": "아카이브",
   "fragment_wallets_syncing_wallet_txs": "월렛 거래내역을 동기화중...",
-  "wallet_list_add_wallet": "",
+  "wallet_list_add_wallet": "월렛 추가",
   "create_wallet_select_valid_crypto": "유효한 월렛 종류를 선택하십시오.",
   "create_wallet_invalid_input": "입력이 잘못되었습니다",
   "create_wallet_select_valid_fiat": "유효한 피아트 통화를 선택하십시오.",
@@ -453,7 +453,7 @@
   "privacy_policy": "개인정보 취급 방침",
   "changelly_aml_kyc": "AML/KYC",
   "alert_deep_link_no_wallet": "%1$s 를 지원하는 월렛이 없습니다. 월렛 리스트 화면에 있는 + 를 누르면 %2$s 를 지원하는 월릿을 생성할 수 있습니다.",
-  "load_plugin": "",
-  "plugin_url": "",
-  "choose_your_wallet": ""
+  "load_plugin": "플러그인을 로딩",
+  "plugin_url": "플러그인 URL",
+  "choose_your_wallet": "월렛 선택"
 }
