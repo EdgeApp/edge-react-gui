@@ -3204,10 +3204,10 @@ edge-core-js@0.14.0:
     ws "^5.1.1"
     yaob "^0.3.3"
 
-edge-currency-accountbased@0.0.23:
-  version "0.0.23"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.0.23.tgz#9e33e16c1c4b54873c3e920e64264e1aef3b7b0a"
-  integrity sha512-VtvssK7ZoDqKf3H8v+QT9wLxitQT3qfvxf5wK6YSSzLZ/eeVxZDyXtgmjYASn6esyHfwBBSehlX1qVQx8sJfxQ==
+edge-currency-accountbased@0.0.24:
+  version "0.0.24"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.0.24.tgz#8f26510642b39748e795749d6f78c9e48cf89314"
+  integrity sha512-uafAq9v7MFDnIjsHT4UYNyLz3Ih633eG9w67/R8/6aibxhdmurEvsSvIh0sMWl81oqSct80SwbAZH1U/3+vlnw==
   dependencies:
     base-x "^1.0.4"
     biggystring "^3.0.0"
