@@ -6,7 +6,7 @@ Mô tả ngắn: Riêng tư, an toàn & dễ sử dụng. Mua, bán, gửi và n
 
 Quản lý tiền điện tử của bạn chưa bao giờ dễ dàng hơn thế. Edge Wallet cung cấp bảo mật tối đa trong khi vẫn giữ sự đơn giản, cho phép tất cả người dùng dễ dàng quản lý, chuyển và trao đổi tiền tệ của họ.
 
-<b>Edge Crypto Wallet currently supports:</b> Bitcoin (BTC), Bitcoin Cash (BCH), Bitcoin SV (BSV), Litecoin (LTC), Qtum (QTUM), Dash (DASH), Ethereum (ETH), Monero (XMR), Ripple (XRP), Digibyte (DGB), EOS, and Feathercoin (FTC). Bạn muốn xem các loại tiền điện tử khác trong ví của chúng tôi không? Hãy gửi cho chúng tôi một yêu cầu!
+<b> Ví tiền điện tử hiện được Edge hỗ trợ: </ b> Bitcoin (BTC), Bitcoin Cash (BCH), Litecoin (LTC), Qtum (QTUM), Dash (DASH), Ethereum (ETH), Monero (XMR), Ripple (XRP) và Feathercoin (FTC). Bạn muốn xem các loại tiền điện tử khác trong ví của chúng tôi không? Hãy gửi cho chúng tôi một yêu cầu!
 
 Edge sử dụng một ví tiền điện tử lớn mạnh và dễ sử dụng, người dùng có thể dễ dàng kiểm soát các khóa riêng của họ với sự quen thuộc và dễ dàng của ngân hàng di động. 
 
