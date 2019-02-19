@@ -6,7 +6,7 @@ Tổng quyền riêng tư và bảo mật trong ví blockchain dễ sử dụng 
 
 Quản lý tài sản tiền điện tử của bạn chưa bao giờ dễ dàng hơn thế. Edge Wallet cung cấp bảo mật tối đa trong khi vẫn giữ được sự đơn giản, cho phép tất cả người dùng dễ dàng quản lý, chuyển và trao đổi tiền tệ của họ.
 
-Edge Crypto Wallet currently supports: Bitcoin, Bitcoin Cash, Bitcoin SV, Litecoin, Dash, Ethereum, Stellar, Monero, Digibyte, EOS, and Ripple/XRP.
+Ví tiền điện tử hiện được Edge hỗ trợ: Bitcoin, Bitcoin Cash, Litecoin, Dash, Ethereum, Stellar, Monero và Ripple / XRP.
 
 Edge sử dụng một ví tiền điện tử lớn mạnh và dễ sử dụng, người dùng có thể dễ dàng kiểm soát các khóa riêng của họ với sự quen thuộc và dễ dàng của ngân hàng di động. 
 
