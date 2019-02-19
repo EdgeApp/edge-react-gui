@@ -73,6 +73,7 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
     forceUpdateGuiCounter: state.cryptoExchange.forceUpdateGuiCounter,
     showWalletSelectModal: state.ui.scenes.walletListModal.walletListModalVisible,
     shiftPendingTransaction: state.cryptoExchange.shiftPendingTransaction,
+    calculatingMax: state.cryptoExchange.calculatingMax,
     showKYCAlert,
     pluginCompleteKYC: state.cryptoExchange.pluginCompleteKYC,
     wallets: state.ui.wallets.byId
