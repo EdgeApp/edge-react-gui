@@ -2,25 +2,27 @@ v1.7.0
 
 * Hỗ trợ địa chỉ Bech32
 * Di chuyển Edge Core sang quy trình độc lập để tăng hiệu suất và khả năng phản hồi GUI
-* Sell crypto to credit card using Simplex
-* Add LibertyX to support buying Bitcoin from physical merchants in US
+Bán tiền điện tử vào thẻ tín dụng bằng Simplex
+
+* Thêm Liberty X để hỗ trợ mua Bitcoin từ các người bán thực tế ở Hoa Kỳ
 
 v1.6.1
 
-* Improved BTC fee calculations
-* Add buy crypto button at Wallets List screen
-* Add new button to buy and exchange crypto for empty wallets
-* Fix several UI display bugs
-* Improved plugin functionality
+* Cải thiện tính toán phí BTC
+* Thêm nút mua tiền điện tử tại màn hình danh sách Ví
+* Thêm nút mới để mua và trao đổi tiền điện tử cho ví trống
+* Khắc phục một số lỗi hiển thị UI
+
+* Cải thiện chức năng plugin
 
 v1.6.0
 
 * Hỗ trợ EOS
 * Triển khai liên kết sâu của các bitcoin bitcoin, ethereum, bitcoincash, dash và edge
-* Add Wyre plugin to support buy/sell of Bitcoin from US bank account
-* Add Bitrefill plugin to support buying gift cards and mobile top ups
-* Add Chinese, Korean, French, and Vietnamese translations
-* Add support for IMP and IRR fiat currencies
+* Thêm plugin Wyre để hỗ trợ mua / bán Bitcoin từ tài khoản ngân hàng Hoa Kỳ
+* Thêm plugin Bitrefill để hỗ trợ mua thẻ quà tặng và nạp tiền điện thoại di động
+* Thêm bản dịch tiếng Trung, tiếng Hàn, tiếng Pháp và tiếng Việt
+* Thêm hỗ trợ cho các loại tiền tệ fiat của IMP và IRR
 
 v1.5.0
 
