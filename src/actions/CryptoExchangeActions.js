@@ -1,6 +1,6 @@
 // @flow
 import { bns } from 'biggystring'
-import type { EdgeCurrencyWallet, EdgeMetadata, EdgeSpendInfo, EdgeSwapQuote, EdgeSwapQuoteOptions } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeMetadata, EdgeSpendInfo, EdgeSwapQuote, EdgeSwapRequest } from 'edge-core-js'
 import { errorNames } from 'edge-core-js'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -180,7 +180,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, info: S
 
   const quoteNativeAmount = fromNativeAmount
   const whichWalletLiteral = info.whichWallet === Constants.TO ? 'to' : 'from'
-  const quoteData: EdgeSwapQuoteOptions = {
+  const quoteData: EdgeSwapRequest = {
     fromCurrencyCode,
     fromWallet: srcWallet,
     nativeAmount: quoteNativeAmount,

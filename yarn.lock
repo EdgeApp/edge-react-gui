@@ -510,7 +510,7 @@
   dependencies:
     regenerator-runtime "^0.12.0"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2":
+"@babel/runtime@^7.1.2":
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.2.0.tgz#b03e42eeddf5898e00646e4c840fa07ba8dcad7f"
   integrity sha512-oouEibCbHMVdZSDlJBO6bZmID/zA/G/Qx3H1d3rSNPTD+L8UNKvCat7aKWSJ74zYbm5zWGh0GQN0hKj8zYFTCg==
@@ -3176,12 +3176,11 @@ edge-components@^0.0.19:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@0.14.0:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.14.0.tgz#9630efbc4819e4b96b2cea6adcf7d45dcd2f678c"
-  integrity sha512-dYRkFgcnXzh6+xPhn8Wppa8yuM6LKfF7fVJeCi/JhG+zAv9o7NunD7KNqLFewbWitLsB4CZOKd40K0m/hQONvQ==
+edge-core-js@0.15.0:
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.15.0.tgz#097d1f4a40baff5f1c5f09abf1da5858593c16bf"
+  integrity sha512-ggxvnQCdKdSi3nH7+VUPuWr1psFKfK+2VJ0UFVXZqJiYo8iDPOwGqLHUIkdxIs97RvBnrOdbCf4EZAlF8HiE4w==
   dependencies:
-    "@babel/runtime" "^7.0.0"
     aes-js "^3.1.0"
     base-x "^1.0.4"
     biggystring "^3.0.2"
@@ -3204,10 +3203,10 @@ edge-core-js@0.14.0:
     ws "^5.1.1"
     yaob "^0.3.3"
 
-edge-currency-accountbased@0.0.24:
-  version "0.0.24"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.0.24.tgz#8f26510642b39748e795749d6f78c9e48cf89314"
-  integrity sha512-uafAq9v7MFDnIjsHT4UYNyLz3Ih633eG9w67/R8/6aibxhdmurEvsSvIh0sMWl81oqSct80SwbAZH1U/3+vlnw==
+edge-currency-accountbased@0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.1.0.tgz#e39f6c49009f37081f9e38b3f749c132591d2582"
+  integrity sha512-2cPapkjzb2jZp6Hve6lUgnMOdte6Ohf6xhRWBe9XICsAp16GP+xL8cU1tJJzveXpsxdexquZCnSY/O7OaHqqeA==
   dependencies:
     base-x "^1.0.4"
     biggystring "^3.0.0"
@@ -3224,10 +3223,10 @@ edge-currency-accountbased@0.0.24:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@3.8.0:
-  version "3.8.0"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-3.8.0.tgz#0d6bd99da5d861086637d36c1adebe17e2898e5c"
-  integrity sha512-A0aFUPySj3UR/XRFQlCQ3tA7JlrFK+b/wSVW4gRgPVoXLGLKLX36pLwZ58dxWe0kKrasukH6BOPZIfIlx+b2uQ==
+edge-currency-bitcoin@4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.0.0.tgz#c3d755ed2aa110b34d6fb446eaad39fa481bbfdd"
+  integrity sha512-iA/oso4IZmWO6ydompDRO9+fQQwzHheaSFmoYVKx4EjLbSvb7fcnyTE34/ZffNx7jS/yZ1gLoPZhafyPv6mFJg==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -3245,10 +3244,10 @@ edge-currency-bitcoin@3.8.0:
     uri-js "^4.2.2"
     url-parse "^1.4.3"
 
-edge-currency-monero@0.1.4:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.1.4.tgz#12283bf933e10672aa672a23cce1e885cc0638e4"
-  integrity sha512-04TEZxXUr4vvNP4ZGswQKrJL/xZftr0AqesZVqwYHn6tNXWYPylINSyACsx8KdIeAkwZAG8Sf+EWV4tQn/TPDQ==
+edge-currency-monero@0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.2.0.tgz#a1b7698c1527026e79252d44be0a3036859ea77e"
+  integrity sha512-aqKJf8sygGgyaVL7yg6qB9ybN/fH2tCIQCPDz/LpCi3f/M6feS34Io7gYMis7vK4VTlI8U9jdS6voCaAfGbwmg==
   dependencies:
     biggystring "^3.0.0"
     buffer "^5.0.6"
@@ -3256,10 +3255,10 @@ edge-currency-monero@0.1.4:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#1a815ca"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.4.1:
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.4.1.tgz#236cef3d99bfc37183bce369a7d7e8495887631d"
-  integrity sha512-GdPevSgcNcV+3+4XLGTSJIrSXH5HupE0CpkRGi8GgToDZtyc8maA0Taw30goym4ptr0HNqmi5b7HEorSbEXF9Q==
+edge-exchange-plugins@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.5.0.tgz#254bdc63880dcd53457d0f8f7edf87538bfb635f"
+  integrity sha512-SkaL61iN1rDEz8Xj934Kdibl5h1E2Lr5FXXcrlS7BPBfdSi895LXl1qG8LBx+GoPCKJUwhesuDoh6uPc/OHNyA==
   dependencies:
     esm "^3.2.4"
     iso4217 "^0.2.0"
