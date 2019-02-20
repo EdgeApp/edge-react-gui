@@ -14,6 +14,8 @@
   "drawer_sweep_private_key": "Barrer clave privada (Sweep Pk)",
   "drawer_wallets": "Carteras",
   "dropdown_exchange_max_amount": "Cambiar la cantidad máxima",
+  "max_spend_unavailable_modal_title": "",
+  "max_spend_unavailable_modal_message": "",
   "edge_description": "Esta aplicación quiere crear o acceder a su cartera en tu cuenta Edge.\n\nNo tendrá acceso a ninguna otra cartera.",
   "edge_description_warning": "Advertencia: La aplicación \"%1$s\" esta solicitando acceso completo a tu cuenta y todas las carteras.\n\nNo aceptes esta petición de login a no ser que confíes en esta aplicación y en el lugar donde fue descargada.",
   "exchange_failed": "No se pudo completar el cambio",
