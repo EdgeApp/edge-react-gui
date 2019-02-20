@@ -18,6 +18,8 @@ const strings = {
   drawer_wallets: 'Wallets',
 
   dropdown_exchange_max_amount: 'Exchange Max Amount',
+  max_spend_unavailable_modal_title: 'Max Spend Unavailable',
+  max_spend_unavailable_modal_message: 'Unable to calculate maximum spendable amount for currency %s. Please enter amount.',
   edge_description: 'This application would like to create or access its wallet in your Edge account.\n\n It will not have access to any other wallets.',
   edge_description_warning:
     'WARNING: The "%1$s" application is requesting full access to your account and all wallets. \n\nOnly accept this login request if you trust this application and where it was downloaded from.',

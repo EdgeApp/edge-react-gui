@@ -32,6 +32,7 @@ export type CryptoExchangeState = {
   changeWallet: 'none' | 'from' | 'to',
   fee: any,
   shiftPendingTransaction: boolean,
+  calculatingMax: boolean,
   quoteExpireDate: Date | null,
   quote: EdgeSwapQuote | null,
   showKYCAlert: boolean,
@@ -77,6 +78,7 @@ const initialState = {
   changeWallet: 'none',
   forceUpdateGuiCounter: 0,
   shiftPendingTransaction: false,
+  calculatingMax: false,
   quoteExpireDate: null,
   quote: null,
   showKYCAlert: false,
@@ -237,12 +239,20 @@ function cryptoExchangeInner (state = initialState, action: Action): CryptoExcha
       }
     }
 
+    case 'START_CALC_MAX': {
+      return {
+        ...state,
+        calculatingMax: true
+      }
+    }
+
     case 'SET_FROM_WALLET_MAX': {
       forceUpdateGuiCounter = state.forceUpdateGuiCounter
       forceUpdateGuiCounter++
       return {
         ...state,
         fromNativeAmount: action.data,
+        calculatingMax: false,
         forceUpdateGuiCounter
       }
     }
