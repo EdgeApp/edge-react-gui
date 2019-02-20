@@ -60,7 +60,7 @@ const contextOptions = {
     // swap plugins:
     changelly: ENV.CHANGELLY_INIT,
     changenow: { apiKey: ENV.CHANGE_NOW_API_KEY },
-    faast: true,
+    faast: ENV.FAAST_INIT,
     shapeshift: { apiKey: ENV.SHAPESHIFT_API_KEY }
   }
 }
