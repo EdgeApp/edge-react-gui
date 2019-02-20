@@ -3,24 +3,24 @@ v1.7.0
 * L'assistance pour Bech32 adresse
 * Déplacer Edge Core au processus indépendant afin de booster les performances et la réactivité de GUI
 *Vendre crypto au cartes de crédit en utilisant Simplex
-* Add LibertyX to support buying Bitcoin from physical merchants in US
+* Ajouter LibertyX afin d'acheter des Bitcoins auprès de commercants aux États-Unis
 
 v1.6.1
 
-* Improved BTC fee calculations
-* Add buy crypto button at Wallets List screen
+* Amélioration de la calculation des frais des BTC
+* Ajouter bouton d'achat de crypto à la list de portefeuilles
 * Ajouter le nouveau bouton d'achat et d'echange cryptos pour portefeuilles vides
-* Fix several UI display bugs
-* Improved plugin functionality
+* Régler plusieurs bugs d'affichages de l'interface d'utilisateurs
+* Amélioration des fonctionalités des plugin
 
 v1.6.0
 
 * Assistance d'EOS
 * Implémentation des liens de Bitcoin, ethereum, bitcoincash, dash et edge URIs
-* Add Wyre plugin to support buy/sell of Bitcoin from US bank account
-* Add Bitrefill plugin to support buying gift cards and mobile top ups
-* Add Chinese, Korean, French, and Vietnamese translations
-* Add support for IMP and IRR fiat currencies
+* Ajouter Wyre plugin afin de supporter les achats/vents Bitcoin depuis le compte de la banque aux Étas-Unis
+* Ajouter Bitrefill plugin afin de supporter les achats de cartes cadeaux et recharger des monnaies dans votre portable
+* Ajouter la traduction en Chinois, Coréen, Français, Vietnamien
+* Ajouter la prise en charge pour IMP et IRR monnaies fiduciaires
 
 v1.5.0
 
