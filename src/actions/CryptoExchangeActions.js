@@ -66,7 +66,7 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
   const currencyCode = state.cryptoExchange.fromCurrencyCode ? state.cryptoExchange.fromCurrencyCode : undefined
   const parentCurrencyCode = wallet.currencyInfo.currencyCode
   if (Constants.getSpecialCurrencyInfo(parentCurrencyCode).noMaxSpend) {
-    const message = sprintf(s.strings.max_spend_unavailable_modal_message, wallet.currencyInfo.currencyName)
+    const message = sprintf(s.strings.max_spend_unavailable_modal_message, wallet.currencyInfo.displayName)
     Alert.alert(s.strings.max_spend_unavailable_modal_title, message)
     return
   }
