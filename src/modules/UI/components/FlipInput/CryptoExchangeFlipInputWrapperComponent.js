@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native'
 
 import * as Constants from '../../../../constants/indexConstants'
 import type { GuiCurrencyInfo, GuiWallet } from '../../../../types'
@@ -21,6 +21,7 @@ export type Props = {
   forceUpdateGuiCounter: number,
   overridePrimaryExchangeAmount: string,
   isFocused: boolean,
+  isThinking?: boolean,
   focusMe(): void,
   launchWalletSelector: () => void,
   onCryptoExchangeAmountChanged: ExchangedFlipInputAmounts => void
@@ -52,6 +53,16 @@ export class CryptoExchangeFlipInputWrapperComponent extends Component<Props> {
   render () {
     const style: StyleSheet.Styles = this.props.style
     const { primaryCurrencyInfo, secondaryCurrencyInfo, fiatPerCrypto, forceUpdateGuiCounter, overridePrimaryExchangeAmount } = this.props
+
+    if (this.props.isThinking) {
+      return (
+        <View style={[style.containerNoFee, style.containerNoWalletSelected]}>
+          <View style={style.topRow}>
+            <ActivityIndicator />
+          </View>
+        </View>
+      )
+    }
 
     if (!this.props.guiWallet || this.props.guiWallet.id === '' || !primaryCurrencyInfo || !secondaryCurrencyInfo) {
       return (

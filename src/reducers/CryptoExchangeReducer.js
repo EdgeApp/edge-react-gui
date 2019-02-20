@@ -150,14 +150,6 @@ function cryptoExchangeInner (state = initialState, action: Action): CryptoExcha
         genericShapeShiftError: null
       }
     }
-
-    case 'DISABLE_WALLET_LIST_MODAL_VISIBILITY': {
-      return {
-        ...state,
-        walletListModalVisible: false
-      }
-    }
-
     case 'OPEN_WALLET_SELECTOR_MODAL': {
       return {
         ...state,
