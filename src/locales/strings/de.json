@@ -14,6 +14,8 @@
   "drawer_sweep_private_key": "",
   "drawer_wallets": "Wallets",
   "dropdown_exchange_max_amount": "Maximalen Betrag wechseln",
+  "max_spend_unavailable_modal_title": "",
+  "max_spend_unavailable_modal_message": "",
   "edge_description": "",
   "edge_description_warning": "Achtung: Die \"%1$s\" Anwendung verlangt vollen Zugriff auf Ihr Konto und alle Geldbörsen.  \n\nAkzeptieren Sie dieser Anmeldeanforderung nur, wenn Sie Vertrauen in diese Anwendung und deren Ursprung haben.",
   "exchange_failed": "Austausch fehlgeschlagen",
