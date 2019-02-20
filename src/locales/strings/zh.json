@@ -14,6 +14,8 @@
   "drawer_sweep_private_key": "扫描私钥",
   "drawer_wallets": "钱包",
   "dropdown_exchange_max_amount": "兑换最大金额",
+  "max_spend_unavailable_modal_title": "",
+  "max_spend_unavailable_modal_message": "",
   "edge_description": "此应用程序希望在您的Edge帐户中创建或存取其钱包。\n 它将无法连接任何其他钱包。",
   "edge_description_warning": "警告: %1$s 应用程序要求您的帐户和所有钱包的完全存取权限。 \n 只有在您信任此应用程序下载来源的情况下, 才接受此登录请求。",
   "exchange_failed": "兑换失败",
