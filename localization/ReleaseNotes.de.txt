@@ -25,7 +25,7 @@ v1.6.0
 v1.5.0
 
 * Changenow als Tauschbörse hinzufügen
-* Use new colored currency icons
+* Benutze neue farbige Währungssymbole
 * Allow signin/singout of ShapeShift via Settings screen
 
 v1.4.4
@@ -34,7 +34,7 @@ v1.4.4
 * Add replay protection to BCH/BSV wallets
 * Improve login performance
 * Fix bug that caused XRP and XLM to re-query all transactions at each login
-* Improve connectivity to nodes for bitcoin related currencies (BTC, BCH, LTC, DASH, etc)
+* Verbesserung der Konnektivität zu Knoten bei Bitcoin verwandten Währungen (BTC, BCH, LTC, DASH, etc.)
 
 v1.4.3
 
@@ -50,7 +50,7 @@ v1.4.2
 
 * Unterstützung für Stellar
 * Füge die Fähigkeit um benutzerdefinierte Nodes für Bitcoin und ähnliche Währungen auszuwählen hinzu
-* Support for ShapeShift membership
+* Unterstützung für ShapeShift-Mitgliedschaft
 * Unterstütze Changelly.com bei der Tauschbörsenfunktion
 * Füge spanische, italienische und russische Übersetzungen hinzu
 
