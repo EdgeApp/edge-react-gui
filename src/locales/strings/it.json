@@ -14,6 +14,8 @@
   "drawer_sweep_private_key": "Scansiona la Private Key",
   "drawer_wallets": "Portafogli",
   "dropdown_exchange_max_amount": "Scambia l'importo massimo",
+  "max_spend_unavailable_modal_title": "",
+  "max_spend_unavailable_modal_message": "",
   "edge_description": "Questa applicazione vorrebbe creare il suo portafoglio nel tuo account Edge o accedervi.\n\nNon avrà accesso a nessun altro portafoglio elettronico.",
   "edge_description_warning": "ATTENZIONE: l'applicazione \"%1$s\" sta richiedendo pieno accesso al tuo account e ai tuoi portafogli elettronici.\n\nAccetta questa richiesta di login solo se ti fidi di questa applicazione e del luogo da cui l'hai scaricata.",
   "exchange_failed": "Cambio fallito",
