@@ -14,6 +14,8 @@
   "drawer_sweep_private_key": "Effacer complétement la Clé Privée ",
   "drawer_wallets": "Portefeuilles",
   "dropdown_exchange_max_amount": "Echanger le montant maximum ",
+  "max_spend_unavailable_modal_title": "",
+  "max_spend_unavailable_modal_message": "",
   "edge_description": "Cette application souhaite créer ou accéder à Wallet dans votre Edge compte.\n\n Il n'aura aucune accès à n’importe quel autres Wallet.",
   "edge_description_warning": "Alerte: :  \"%1$s\" de ce application vous demande d'avoir l'acess à votre compte et tous vos Wallet.  La connexion serait uniquement authorisé si vous faites confiance et où l’application a été téléchargé ",
   "exchange_failed": "L'échec de faire une echange  ",
