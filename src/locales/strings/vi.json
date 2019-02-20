@@ -14,6 +14,8 @@
   "drawer_sweep_private_key": "Quét từ khóa riêng",
   "drawer_wallets": "Ví",
   "dropdown_exchange_max_amount": "Trao đổi số tiền tối đa",
+  "max_spend_unavailable_modal_title": "",
+  "max_spend_unavailable_modal_message": "",
   "edge_description": "Ứng dụng này muốn tạo hoặc truy cập vào ví của mình với tài khoản Edge.\n\nSẽ không có quyền truy cập vào bất kỳ ví nào khác.",
   "edge_description_warning": "Cảnh báo: Ứng dụng \"%1$s\" đang yêu cầu quyền truy cập đầy đủ vào tài khoản của bạn và tất cả ví. \n\nChỉ chấp nhận yêu cầu đăng nhập này nếu bạn tin tưởng ứng dụng này và nơi nó được tải về từ.",
   "exchange_failed": "Trao đổi không thành công",
