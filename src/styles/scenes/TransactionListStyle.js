@@ -223,7 +223,7 @@ export const styles = {
     flex: 1
   },
   androidTransactionsWrap: {
-    height: PLATFORM.usableHeight - SOFT_MENU_BAR_HEIGHT + THEME.HEADER
+    height: PLATFORM.usableHeight - SOFT_MENU_BAR_HEIGHT
   },
   searchBarView: {
     paddingLeft: scale(12),
