@@ -14,6 +14,8 @@
   "drawer_sweep_private_key": "개인 키를 스윕(Sweep) 하기",
   "drawer_wallets": "월렛",
   "dropdown_exchange_max_amount": "최대 금액으로 거래",
+  "max_spend_unavailable_modal_title": "",
+  "max_spend_unavailable_modal_message": "",
   "edge_description": "이 어플리케이션은 고객님의 엣지계정내의 월렛의 생성 또는 접속을 요구하고 있습니다. 다른 월렛에는 접속하지 않습니다.",
   "edge_description_warning": "경고: %1$s 어플리케이션이 고객님의 계정과 모든 월렛으로의 접속을 요청하고 있습니다. \n\n이 어플리케이션과 다운로드 소스를 신뢰 할 수 있는 경우만 접속을 허가하십시오.",
   "exchange_failed": "거래가 실패하였습니다.",
