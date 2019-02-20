@@ -14,6 +14,8 @@
   "drawer_sweep_private_key": "プライベートキーをスウィープする",
   "drawer_wallets": "ウォレット",
   "dropdown_exchange_max_amount": "上限額を交換",
+  "max_spend_unavailable_modal_title": "",
+  "max_spend_unavailable_modal_message": "",
   "edge_description": "このアプリはエッジアカウント内のウォレットの作成またはアクセスを求めています。\n他のウォレットには一切アクセスしません。",
   "edge_description_warning": "注意：”%1$s”アプリはあなたのアカウントと全てのウォレットへのフルアクセスを求めています。\nもしこのアプリとそのダウンロード元を信頼する場合は、このログインリクエストのみ許可してください。",
   "exchange_failed": "取引が成立しませんでした",
