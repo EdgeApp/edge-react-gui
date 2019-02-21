@@ -22,7 +22,7 @@ Edge also provides a cryptocurrency exchange. Easily swap your currencies for ot
 * Biometric TouchID and FaceID login for another layer of security
 • Hierarchical Deterministic wallets with changing addresses per transaction
 • Decentralized server architecture. Wallets work even if Edge servers are down.
-• Quelloffener Code. Verfügbar auf https://github.com/Airbitz
+• Quelloffener Code. Available at https://github.com/Airbitz
 • Built-in crypto exchange to buy & sell cryptocurrency
 
 Datenschutz
