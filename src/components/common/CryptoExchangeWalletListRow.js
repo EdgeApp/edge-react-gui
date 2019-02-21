@@ -18,7 +18,7 @@ import { CryptoExchangeWalletListTokenRow } from './CryptoExchangeWalletListToke
 type Props = {
   wallet: GuiWallet,
   onPress(GuiWallet): void,
-  onTokenPress(Object): void,
+  onTokenPress({ id: string, currencyCode: string }): void,
   state: State
 }
 type LocalState = {

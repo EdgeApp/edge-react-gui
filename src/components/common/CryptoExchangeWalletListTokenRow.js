@@ -12,7 +12,7 @@ type Props = {
   fiatBalance: string,
   cryptoBalance: string,
   isWalletFiatBalanceVisible: boolean,
-  onPress(Object): void
+  onPress({ id: string, currencyCode: string }): void
 }
 type LocalState = {}
 
