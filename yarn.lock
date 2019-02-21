@@ -3255,13 +3255,15 @@ edge-currency-monero@0.2.0:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#1a815ca"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.5.0.tgz#254bdc63880dcd53457d0f8f7edf87538bfb635f"
-  integrity sha512-SkaL61iN1rDEz8Xj934Kdibl5h1E2Lr5FXXcrlS7BPBfdSi895LXl1qG8LBx+GoPCKJUwhesuDoh6uPc/OHNyA==
+edge-exchange-plugins@^0.5.2:
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.5.2.tgz#e97d65150095c3a59bfc988a116060e7098c710f"
+  integrity sha512-LU0rkn62nriL5DC/2KEBD0rOPLFLxoL9oNZdN7clhC+S3APbASbrkMOAg7arxIMznNK92mlEVLWs7Q/4fZ+10w==
   dependencies:
     esm "^3.2.4"
+    hashjs "^1.2.0"
     iso4217 "^0.2.0"
+    utf8 "^3.0.0"
 
 edge-login-ui-rn@^0.5.16:
   version "0.5.16"
@@ -4733,6 +4735,11 @@ hash.js@^1.0.0, hash.js@^1.0.3:
   dependencies:
     inherits "^2.0.3"
     minimalistic-assert "^1.0.1"
+
+hashjs@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/hashjs/-/hashjs-1.2.0.tgz#a40e2d69de57826774643029c7b1bb4f2390baaa"
+  integrity sha1-pA4tad5Xgmd0ZDApx7G7TyOQuqo=
 
 hdkey@^0.7.0:
   version "0.7.1"

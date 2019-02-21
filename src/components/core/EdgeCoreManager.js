@@ -3,6 +3,7 @@
 import { type EdgeContext, MakeEdgeContext, MakeFakeEdgeWorld } from 'edge-core-js'
 import makeBitcoinIo from 'edge-currency-bitcoin/lib/react-native-io.js'
 import makeMoneroIo from 'edge-currency-monero/lib/react-native-io.js'
+import makeExchangeIo from 'edge-exchange-plugins/lib/react-native-io.js'
 import React, { PureComponent } from 'react'
 import { View } from 'react-native'
 
@@ -55,7 +56,7 @@ const contextOptions = {
     'shapeshift-rate': true,
     coinbase: true,
     coincap: true,
-    currencyconverterapi: true,
+    currencyconverterapi: ENV.CURRENCYCONVERTERAPI_INIT,
     herc: true,
     // swap plugins:
     changelly: ENV.CHANGELLY_INIT,
@@ -67,7 +68,8 @@ const contextOptions = {
 
 const nativeIo = {
   'edge-currency-bitcoin': makeBitcoinIo(),
-  'edge-currency-monero': makeMoneroIo()
+  'edge-currency-monero': makeMoneroIo(),
+  'edge-exchange-plugins': makeExchangeIo()
 }
 
 export class EdgeCoreManager extends PureComponent<Props> {
