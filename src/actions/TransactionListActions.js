@@ -86,9 +86,13 @@ export const fetchMoreTransactions = (walletId: string, currencyCode: string, re
     (currentWalletId !== '' && currentWalletId !== walletId) || // if the wallet has change
     (currentCurrencyCode !== '' && currentCurrencyCode !== currencyCode) // maybe you've switched to a token wallet
   ) {
+    let startEntries
+    if (nextEndIndex) {
+      startEntries = nextEndIndex - nextStartIndex + 1
+    }
     // If startEntries is undefined / null, this means query until the end of the transaction list
     getAndMergeTransactions(state, dispatch, walletId, currencyCode, {
-      startEntries: null,
+      startEntries,
       startIndex: nextStartIndex
     })
   }
@@ -121,6 +125,7 @@ const getAndMergeTransactions = async (state: State, dispatch: Dispatch, walletI
       if (!transactionIdMap[tx.txid]) {
         // if the transaction is not already in the list
         transactionIdMap[tx.txid] = key
+        // $FlowFixMe
         transactionsWithKeys.push({
           // then add it
           ...tx,
@@ -129,22 +134,24 @@ const getAndMergeTransactions = async (state: State, dispatch: Dispatch, walletI
           key
         })
         key++
-      } else {
-        console.log('Duplicate txid found')
       }
     }
+    const transactionCount = transactionsWithKeys.length
+    // $FlowFixMe
+    const lastUnfilteredIndex = transactionsWithKeys[transactionCount - 1].otherParams.unfilteredIndex
     dispatch(
+      // $FlowFixMe
       updateTransactions({
         numTransactions,
         transactionIdMap,
         transactions: transactionsWithKeys,
         currentCurrencyCode: currencyCode,
         currentWalletId: walletId,
-        currentEndIndex: key - 1
+        currentEndIndex: lastUnfilteredIndex
       })
     )
   } catch (e) {
-    console.warn('Issue with getTransactions: ', e.message)
+    console.log('Issue with getTransactions: ', e.message)
   }
 }
 
