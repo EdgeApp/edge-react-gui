@@ -333,7 +333,7 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
     const supportedWalletTypes = []
     for (let i = 0; i < this.props.supportedWalletTypes.length; i++) {
       const swt = this.props.supportedWalletTypes[i]
-      if (!walletCurrencyCodes.includes(swt.currencyCode) && swt.currencyCode !== 'EOS') {
+      if (!walletCurrencyCodes.includes(swt.currencyCode) && swt.currencyCode !== 'EOS' && excludedCurrencyCode !== swt.currencyCode) {
         supportedWalletTypes.push(swt)
       }
     }

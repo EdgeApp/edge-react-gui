@@ -24,10 +24,10 @@ type Props = {
 type LocalState = {
   fiatBalance: string,
   fiatSymbol: string,
-  isWalletFiatBalanceVisible: boolean,
   cryptoBalance: string,
   cryptoSymbol: string,
-  enabledNativeBalances: Object
+  enabledNativeBalances: Object,
+  denomination?: EdgeDenomination
 }
 
 const DIVIDE_PRECISION = 18
@@ -37,7 +37,6 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
     super(props)
     this.state = {
       fiatBalance: '',
-      isWalletFiatBalanceVisible: true,
       cryptoBalance: '',
       cryptoSymbol: '',
       enabledNativeBalances: {},
@@ -70,9 +69,9 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
       }
     }
     this.setState({
+      denomination,
       fiatBalance: calculateSettingsFiatBalance(this.props.wallet, this.props.state),
       fiatSymbol: getFiatSymbol(settings.defaultFiat) || '',
-      isWalletFiatBalanceVisible: this.props.state.ui.settings.isWalletFiatBalanceVisible,
       cryptoBalance,
       cryptoSymbol: denomination.symbol,
       enabledNativeBalances
@@ -82,23 +81,6 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
   onPress = () => {
     this.props.onPress(this.props.wallet)
   }
-  renderBalances = () => {
-    if (this.state.isWalletFiatBalanceVisible) {
-      return (
-        <View style={styles.containerRight}>
-          <View style={styles.holderView}>
-            <Text style={styles.balanceTextStyle}>
-              {this.state.cryptoBalance} {this.state.cryptoSymbol}
-            </Text>
-            <Text style={styles.balanceTextStyle}>
-              {this.state.fiatSymbol} {this.state.fiatBalance}
-            </Text>
-          </View>
-        </View>
-      )
-    }
-    return <View style={styles.containerRight} />
-  }
   renderTokens = () => {
     if (this.props.wallet.enabledTokens.length > 0) {
       const tokens = []
@@ -107,6 +89,12 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
         if (metaTokenBalances.hasOwnProperty(property)) {
           if (property !== this.props.wallet.currencyCode) {
             const formattedFiatBalance = getCurrencyAccountFiatBalanceFromWallet(this.props.wallet, property, this.props.state)
+            if (!this.state.denomination || !this.state.denomination.multiplier) {
+              return []
+            }
+            const multiplier = this.state.denomination.multiplier
+            const preliminaryCryptoAmount = truncateDecimals(bns.div(metaTokenBalances[property], multiplier, DIVIDE_PRECISION), 6)
+            const cryptoBalance = intl.formatNumber(decimalOrZero(preliminaryCryptoAmount, 6))
             tokens.push(
               <CryptoExchangeWalletListTokenRow
                 key={property}
@@ -115,8 +103,7 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
                 currencyCode={property}
                 fiatSymbol={this.state.fiatSymbol}
                 fiatBalance={formattedFiatBalance}
-                cryptoBalance={metaTokenBalances[property]}
-                isWalletFiatBalanceVisible={this.state.isWalletFiatBalanceVisible}
+                cryptoBalance={cryptoBalance}
               />
             )
           }
@@ -140,12 +127,20 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
                 {wallet.name} ({wallet.currencyCode})
               </FormattedText>
             </View>
-            {this.renderBalances()}
+            <View style={styles.containerRight}>
+              <View style={styles.holderView}>
+                <Text style={styles.balanceTextStyle}>
+                  {this.state.cryptoBalance} {this.state.cryptoSymbol}
+                </Text>
+                <Text style={styles.balanceTextStyle}>
+                  {this.state.fiatSymbol} {this.state.fiatBalance}
+                </Text>
+              </View>
+            </View>
           </View>
         </TouchableHighlight>
         <View styles={styles.rowContainerBottom}>{this.renderTokens()}</View>
       </View>
-      // enabledTokens
     )
   }
 }

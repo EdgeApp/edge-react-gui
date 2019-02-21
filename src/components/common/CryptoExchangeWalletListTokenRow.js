@@ -11,27 +11,11 @@ type Props = {
   fiatSymbol: string,
   fiatBalance: string,
   cryptoBalance: string,
-  isWalletFiatBalanceVisible: boolean,
   onPress({ id: string, currencyCode: string }): void
 }
 type LocalState = {}
 
 class CryptoExchangeWalletListTokenRow extends Component<Props, LocalState> {
-  renderBalances = () => {
-    if (this.props.isWalletFiatBalanceVisible) {
-      return (
-        <View style={styles.containerRight}>
-          <View style={styles.holderView}>
-            <Text style={styles.balanceTextStyle}>{this.props.cryptoBalance}</Text>
-            <Text style={styles.balanceTextStyle}>
-              {this.props.fiatSymbol} {this.props.fiatBalance}
-            </Text>
-          </View>
-        </View>
-      )
-    }
-    return <View style={styles.containerRight} />
-  }
   onPress = () => {
     this.props.onPress({
       id: this.props.parentId,
@@ -46,7 +30,14 @@ class CryptoExchangeWalletListTokenRow extends Component<Props, LocalState> {
           <View style={styles.containerCenter}>
             <FormattedText>{this.props.currencyCode}</FormattedText>
           </View>
-          {this.renderBalances()}
+          <View style={styles.containerRight}>
+            <View style={styles.holderView}>
+              <Text style={styles.balanceTextStyle}>{this.props.cryptoBalance}</Text>
+              <Text style={styles.balanceTextStyle}>
+                {this.props.fiatSymbol} {this.props.fiatBalance}
+              </Text>
+            </View>
+          </View>
         </View>
       </TouchableHighlight>
     )
