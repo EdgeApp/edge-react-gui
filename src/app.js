@@ -5,6 +5,7 @@
 import './util/polyfills'
 
 import { Client } from 'bugsnag-react-native'
+import { fetchLoginMessages } from 'edge-core-js'
 import React, { Component } from 'react'
 import { AsyncStorage, Platform, Text, TextInput } from 'react-native'
 import BackgroundFetch from 'react-native-background-fetch'
@@ -20,7 +21,6 @@ import * as Constants from './constants/indexConstants.js'
 import configureStore from './lib/configureStore'
 import s from './locales/strings.js'
 import { log, logToServer } from './util/logger'
-import { makeCoreContext } from './util/makeContext.js'
 
 const ENABLE_WHY_DID_YOU_UPDATE = false
 const ENABLE_PERF_LOGGING = false
@@ -170,9 +170,8 @@ async function backgroundWorker () {
       return
     }
   }
-  const context = await makeCoreContext()
   try {
-    const result = await context.fetchLoginMessages()
+    const result = await fetchLoginMessages(ENV.AIRBITZ_API_KEY)
     const date = new Date(Date.now() + 1000)
     // for each key
     for (const key in result) {
