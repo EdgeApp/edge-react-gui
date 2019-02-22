@@ -97,7 +97,8 @@ const mapDispatchToProps = (dispatch: Dispatch): SendConfirmationDispatchProps =
   sendConfirmationUpdateTx: guiMakeSpendInfo => dispatch(sendConfirmationUpdateTx(guiMakeSpendInfo)),
   reset: () => dispatch(reset()),
   updateSpendPending: (pending: boolean): any => dispatch(updateSpendPending(pending)),
-  signBroadcastAndSave: (): any => dispatch(signBroadcastAndSave()),
+  signBroadcastAndSave: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string): any =>
+    dispatch(signBroadcastAndSave(nativeAmount, exchangeAmount, fiatPerCrypto)),
   onChangePin: (pin: string) => dispatch(newPin(pin)),
   uniqueIdentifierButtonPressed: () => {
     dispatch(uniqueIdentifierModalActivated())

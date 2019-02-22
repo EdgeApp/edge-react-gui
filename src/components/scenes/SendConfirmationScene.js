@@ -59,7 +59,7 @@ export type SendConfirmationStateProps = {
 
 export type SendConfirmationDispatchProps = {
   updateSpendPending: boolean => any,
-  signBroadcastAndSave: () => any,
+  signBroadcastAndSave: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) => any,
   reset: () => any,
   updateAmount: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) => any,
   sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo) => any,
@@ -76,6 +76,7 @@ type Props = SendConfirmationStateProps & SendConfirmationDispatchProps & SendCo
 type State = {|
   secondaryDisplayDenomination: GuiDenomination,
   nativeAmount: string,
+  exchangeAmount: string,
   overridePrimaryExchangeAmount: string,
   forceUpdateGuiCounter: number,
   keyboardVisible: boolean,
@@ -96,6 +97,7 @@ export class SendConfirmation extends Component<Props, State> {
         multiplier: '1',
         symbol: ''
       },
+      exchangeAmount: '',
       overridePrimaryExchangeAmount: '',
       keyboardVisible: false,
       forceUpdateGuiCounter: 0,
@@ -288,7 +290,7 @@ export class SendConfirmation extends Component<Props, State> {
                 forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
                 resetSlider={this.props.resetSlider}
                 parentStyle={styles.sliderStyle}
-                onSlidingComplete={this.props.signBroadcastAndSave}
+                onSlidingComplete={this.onSlideToConfirm}
                 sliderDisabled={sliderDisabled}
                 showSpinner={this.state.showSpinner || this.props.pending}
               />
@@ -316,10 +318,16 @@ export class SendConfirmation extends Component<Props, State> {
 
   onExchangeAmountChanged = ({ nativeAmount, exchangeAmount }: ExchangedFlipInputAmounts) => {
     this.setState({
-      showSpinner: true
+      showSpinner: true,
+      nativeAmount,
+      exchangeAmount
     })
 
     this.props.updateAmount(nativeAmount, exchangeAmount, this.props.fiatPerCrypto.toString())
+  }
+
+  onSlideToConfirm = () => {
+    this.props.signBroadcastAndSave(this.state.nativeAmount, this.state.exchangeAmount, this.props.fiatPerCrypto.toString())
   }
 
   networkFeeSyntax = () => {

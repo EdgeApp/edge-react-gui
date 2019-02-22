@@ -58,14 +58,14 @@ export const newPin = (pin: string) => ({
   data: { pin }
 })
 
-export const updateAmount = (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string, forceUpdateGui?: boolean = false) => (
+export const updateAmount = (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string, forceUpdateGui?: boolean = false) => async (
   dispatch: Dispatch,
   getState: GetState
 ) => {
   const amountFiatString: string = bns.mul(exchangeAmount, fiatPerCrypto)
   const amountFiat: number = parseFloat(amountFiatString)
   const metadata: EdgeMetadata = { amountFiat }
-  dispatch(sendConfirmationUpdateTx({ nativeAmount, metadata }, forceUpdateGui))
+  await dispatch(sendConfirmationUpdateTx({ nativeAmount, metadata }, forceUpdateGui))
 }
 
 type EdgePaymentProtocolUri = EdgeParsedUri & { paymentProtocolURL: string }
@@ -105,7 +105,7 @@ export const paymentProtocolUriReceived = ({ paymentProtocolURL }: EdgePaymentPr
     })
 }
 
-export const sendConfirmationUpdateTx = (guiMakeSpendInfo: GuiMakeSpendInfo | EdgeParsedUri, forceUpdateGui?: boolean = true) => (
+export const sendConfirmationUpdateTx = (guiMakeSpendInfo: GuiMakeSpendInfo | EdgeParsedUri, forceUpdateGui?: boolean = true) => async (
   dispatch: Dispatch,
   getState: GetState
 ) => {
@@ -118,7 +118,7 @@ export const sendConfirmationUpdateTx = (guiMakeSpendInfo: GuiMakeSpendInfo | Ed
   const authRequired = getAuthRequired(state, spendInfo)
   dispatch(newSpendInfo(spendInfo, authRequired))
 
-  makeSpend(edgeWallet, spendInfo)
+  await makeSpend(edgeWallet, spendInfo)
     .then(edgeTransaction => dispatch(updateTransaction(edgeTransaction, guiMakeSpendInfoClone, forceUpdateGui, null)))
     .catch(e => dispatch(updateTransaction(null, guiMakeSpendInfoClone, forceUpdateGui, e)))
 }
@@ -152,7 +152,11 @@ export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => 
     .catch(e => console.log(e))
 }
 
-export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: GetState) => {
+export const signBroadcastAndSave = (nativeAmount: string, exchangeAmountArg: string, fiatPerCryptoArg: string) => async (
+  dispatch: Dispatch,
+  getState: GetState
+) => {
+  await dispatch(updateAmount(nativeAmount, exchangeAmountArg, fiatPerCryptoArg))
   const state = getState()
   const account = getAccount(state)
   const selectedWalletId = getSelectedWalletId(state)
