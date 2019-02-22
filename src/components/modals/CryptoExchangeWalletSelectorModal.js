@@ -5,7 +5,6 @@ import { Dimensions, FlatList, View } from 'react-native'
 import { CryptoExchangeCreateWalletRow } from '../../components/common/CryptoExchangeCreateWalletRow.js'
 import { CryptoExchangeWalletListRow } from '../../components/common/CryptoExchangeWalletListRow.js'
 import { CLOSE_ICON, ION_ICONS } from '../../constants/indexConstants'
-import s from '../../locales/strings'
 import type { State } from '../../modules/ReduxTypes'
 import { IconButton } from '../../modules/UI/components/Buttons/IconButton.ui'
 import FormattedText from '../../modules/UI/components/FormattedText/index'
@@ -14,6 +13,7 @@ import type { GuiWallet } from '../../types'
 
 type Props = {
   onDone(GuiWallet | Object): mixed,
+  headerTitle: string,
   wallets: Array<GuiWallet>,
   supportedWalletTypes: Array<Object>,
   showWalletCreators: boolean,
@@ -114,7 +114,7 @@ class CryptoExchangeWalletSelectorModal extends Component<Props, LocalState> {
         <View style={styles.activeArea}>
           <View style={styles.header}>
             <View style={styles.headerLeft}>
-              <FormattedText>{s.strings.choose_your_wallet}</FormattedText>
+              <FormattedText>{this.props.headerTitle}</FormattedText>
             </View>
             <View style={styles.headerRight}>
               <IconButton style={styles.iconButton} onPress={this.props.onDone} icon={CLOSE_ICON} iconType={ION_ICONS} />
@@ -140,6 +140,7 @@ export const createCryptoExchangeWalletSelectorModal = (opts: Object) => (props:
       showWalletCreators={opts.showWalletCreators || false}
       onDone={props.onDone}
       state={opts.state}
+      headerTitle={opts.headerTitle}
     />
   )
 }

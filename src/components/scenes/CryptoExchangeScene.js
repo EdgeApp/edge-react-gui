@@ -243,7 +243,7 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
     if (this.props.calculatingMax) {
       return (
         <PrimaryButton>
-          <ActivityIndicator/>
+          <ActivityIndicator />
         </PrimaryButton>
       )
     } else if (this.props.fromCurrencyCode !== '' && this.props.toCurrencyCode !== '') {
@@ -341,7 +341,8 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
       wallets: allowedWallets,
       supportedWalletTypes,
       showWalletCreators: whichWallet === Constants.TO,
-      state: this.props.state
+      state: this.props.state,
+      headerTitle: whichWallet === Constants.TO ? s.strings.select_recv_wallet : s.strings.select_src_wallet
     }
     const modal = createCryptoExchangeWalletSelectorModal(props)
     showModal(modal, { style: { margin: 0 } }).then(response => {
