@@ -52,12 +52,33 @@ cat >ios/edge-core/index.html <<HTML
   </head>
   <body>
     <script src="edge-core.js"></script>
-    <script src="edge-currency-accountbased.js"></script>
-    <script src="edge-currency-bitcoin.js"></script>
-    <script src="edge-currency-monero.js"></script>
-    <script src="edge-exchange-plugins.js"></script>
     <script>
-      window.lockEdgeCorePlugins();
+      let loading = 0
+
+      function load (path) {
+        ++loading
+
+        const script = document.createElement('script')
+        script.charset = 'utf-8'
+        script.async = true
+        function scriptDone () {
+          document.head.removeChild(script)
+          if (--loading === 0) {
+            window.lockEdgeCorePlugins()
+          }
+        }
+        script.addEventListener('error', scriptDone)
+        script.addEventListener('load', scriptDone)
+        script.src = path
+        document.head.appendChild(script)
+      }
+
+      setTimeout(function () {
+        load('edge-currency-accountbased.js')
+        load('edge-currency-bitcoin.js')
+        load('edge-currency-monero.js')
+        load('edge-exchange-plugins.js')
+      }, 200)
     </script>
   </body>
 </html>
