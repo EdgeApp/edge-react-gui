@@ -1,6 +1,7 @@
 // @flow
 
 import { type EdgeContext, MakeEdgeContext, MakeFakeEdgeWorld } from 'edge-core-js'
+import makeAccountbasedIo from 'edge-currency-accountbased/lib/react-native-io.js'
 import makeBitcoinIo from 'edge-currency-bitcoin/lib/react-native-io.js'
 import makeMoneroIo from 'edge-currency-monero/lib/react-native-io.js'
 import React, { PureComponent } from 'react'
@@ -66,6 +67,7 @@ const contextOptions = {
 }
 
 const nativeIo = {
+  'edge-currency-accountbased': makeAccountbasedIo(),
   'edge-currency-bitcoin': makeBitcoinIo(),
   'edge-currency-monero': makeMoneroIo()
 }

@@ -3203,10 +3203,9 @@ edge-core-js@0.15.1:
     ws "^5.1.1"
     yaob "^0.3.3"
 
-edge-currency-accountbased@0.1.0:
+"edge-currency-accountbased@git://github.com/EdgeApp/edge-currency-accountbased.git#william/fix-eos-cors":
   version "0.1.0"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.1.0.tgz#e39f6c49009f37081f9e38b3f749c132591d2582"
-  integrity sha512-2cPapkjzb2jZp6Hve6lUgnMOdte6Ohf6xhRWBe9XICsAp16GP+xL8cU1tJJzveXpsxdexquZCnSY/O7OaHqqeA==
+  resolved "git://github.com/EdgeApp/edge-currency-accountbased.git#57ac05403d592de2431b9ebd027b3feb4973e11e"
   dependencies:
     base-x "^1.0.4"
     biggystring "^3.0.0"
