@@ -185,6 +185,8 @@
   "settings_account_title_cap": "Учетная запись",
   "settings_button_change_password": "Сменить пароль",
   "settings_button_debug": "Отладка",
+  "settings_turn_on_developer_mode": "",
+  "settings_turn_off_developer_mode": "",
   "settings_button_lock_settings": "Нажмите, чтобы заблокировать настройки учетной записи",
   "settings_button_password_recovery": "Настройка восстановления пароля",
   "settings_button_logout": "Выход",
