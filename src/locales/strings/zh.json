@@ -185,6 +185,8 @@
   "settings_account_title_cap": "账号",
   "settings_button_change_password": "更改密码",
   "settings_button_debug": "调试",
+  "settings_turn_on_developer_mode": "",
+  "settings_turn_off_developer_mode": "",
   "settings_button_lock_settings": "点击 \"锁定帐户设置\"",
   "settings_button_password_recovery": "设置密码恢复",
   "settings_button_logout": "登出",
