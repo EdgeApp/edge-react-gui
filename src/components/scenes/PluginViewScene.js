@@ -33,7 +33,9 @@ import { THEME, colors } from '../../theme/variables/airbitz.js'
 
 const BACK = s.strings.title_back
 
-type PluginListProps = {}
+type PluginListProps = {
+  developerModeOn: boolean,
+}
 
 type PluginListState = {
   data: Array<Object>
@@ -127,21 +129,41 @@ class PluginList extends React.Component<PluginListProps, PluginListState> {
   }
 }
 
-class PluginBuySell extends PluginList {
+class PluginBuySellComponent extends PluginList {
   componentDidMount () {
+    console.log('pl: ', this.props.developerModeOn)
     this.setState({
-      data: buySellPlugins()
+      data: buySellPlugins(this.props.developerModeOn)
     })
   }
 }
 
-class PluginSpend extends PluginList {
+class PluginSpendComponent extends PluginList {
   componentDidMount () {
     this.setState({
-      data: spendPlugins()
+      data: spendPlugins(this.props.developerModeOn)
     })
   }
 }
+
+const listMapStateToProps = state => {
+  const developerModeOn = state.ui.settings.developerModeOn
+  return {
+    developerModeOn
+  }
+}
+
+const listMapDispatchToProps = dispatch => ({})
+
+const PluginBuySell = connect(
+  listMapStateToProps,
+  listMapDispatchToProps
+)(PluginBuySellComponent)
+
+const PluginSpend = connect(
+  listMapStateToProps,
+  listMapDispatchToProps
+)(PluginSpendComponent)
 
 type PluginProps = {
   plugin: any,

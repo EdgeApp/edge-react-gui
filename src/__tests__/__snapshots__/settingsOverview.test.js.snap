@@ -364,7 +364,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           onPress={[Function]}
         >
           <Text>
-            Debug
+            Turn On Developer
           </Text>
         </PrimaryButton>
       </Component>
@@ -745,7 +745,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           onPress={[Function]}
         >
           <Text>
-            Debug
+            Turn On Developer
           </Text>
         </PrimaryButton>
       </Component>

@@ -37,7 +37,8 @@ export const initialState = {
       amount: 0
     }
   },
-  shapeShiftNeedsKYC: true
+  shapeShiftNeedsKYC: true,
+  developerModeOn: false
 }
 
 export type CurrencySetting = {
@@ -98,6 +99,7 @@ export type SettingsState = {
     }
   },
   shapeShiftNeedsKYC: boolean,
+  developerModeOn: boolean,
   passwordRecoveryRemindersShown: {
     '20': boolean,
     '200': boolean,
@@ -261,6 +263,12 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
     case 'NEED_KYC_SETTING': {
       return { ...state, shapeShiftNeedsKYC: true }
+    }
+    case 'DEVELOPER_MODE_ON': {
+      return { ...state, developerModeOn: true }
+    }
+    case 'DEVELOPER_MODE_OFF': {
+      return { ...state, developerModeOn: false }
     }
     case 'ON_KYC_TOKEN_SET': {
       return { ...state, shapeShiftNeedsKYC: false }

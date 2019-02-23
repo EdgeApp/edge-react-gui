@@ -32,6 +32,7 @@ const mapStateToProps = (state: State) => {
   const confirmPasswordError = SETTINGS_SELECTORS.getConfirmPasswordErrorMessage(state)
   const sendLogsStatus = SETTINGS_SELECTORS.getSendLogsStatus(state)
   const pinLoginEnabled = SETTINGS_SELECTORS.getPinLoginEnabled(state)
+  const developerModeOn = state.ui.settings.developerModeOn
   return {
     defaultFiat: SETTINGS_SELECTORS.getDefaultFiat(state),
     autoLogoutTimeInMinutes: SETTINGS_SELECTORS.getAutoLogoutTimeInMinutes(state),
@@ -44,7 +45,8 @@ const mapStateToProps = (state: State) => {
     isLocked,
     confirmPasswordError,
     sendLogsStatus,
-    pinLoginEnabled
+    pinLoginEnabled,
+    developerModeOn
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -58,7 +60,9 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   onTogglePinLoginEnabled: (enableLogin: boolean) => dispatch(togglePinLoginEnabled(enableLogin)),
   showUnlockSettingsModal: () => dispatch(showUnlockSettingsModal()),
   showSendLogsModal: () => dispatch(showSendLogsModal()),
-  showRestoreWalletsModal: () => dispatch(showRestoreWalletsModal())
+  showRestoreWalletsModal: () => dispatch(showRestoreWalletsModal()),
+  turnOnDeveloperMode: () => dispatch({ type: 'DEVELOPER_MODE_ON' }),
+  turnOffDeveloperMode: () => dispatch({ type: 'DEVELOPER_MODE_OFF' })
 })
 
 export default connect(
