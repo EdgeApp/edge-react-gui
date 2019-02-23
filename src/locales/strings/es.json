@@ -185,6 +185,8 @@
   "settings_account_title_cap": "Cuenta",
   "settings_button_change_password": "Cambiar contraseña",
   "settings_button_debug": "Depurar",
+  "settings_turn_on_developer_mode": "",
+  "settings_turn_off_developer_mode": "",
   "settings_button_lock_settings": "Pulsar para bloquear la configuración de la cuenta",
   "settings_button_password_recovery": "Configurar recuperación de contraseña",
   "settings_button_logout": "Salir",
