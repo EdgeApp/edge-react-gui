@@ -185,6 +185,8 @@
   "settings_account_title_cap": "アカウント",
   "settings_button_change_password": "パスワードを変更",
   "settings_button_debug": "バグ修正",
+  "settings_turn_on_developer_mode": "",
+  "settings_turn_off_developer_mode": "",
   "settings_button_lock_settings": "アカウント設定をロックするためにタップしてください",
   "settings_button_password_recovery": "パスワード復元をセットアップ",
   "settings_button_logout": "ログアウト",
