@@ -185,6 +185,8 @@
   "settings_account_title_cap": "Conta",
   "settings_button_change_password": "Alterar Senha",
   "settings_button_debug": "Depurar",
+  "settings_turn_on_developer_mode": "",
+  "settings_turn_off_developer_mode": "",
   "settings_button_lock_settings": "Clique para Definir as Configurações da Conta",
   "settings_button_password_recovery": "Ajuste a Recuperação de Senha",
   "settings_button_logout": "Sair",
