@@ -59,7 +59,8 @@ export type CryptoExchangeSceneComponentStateProps = {
   wallets: { [string]: GuiWallet },
   totalWallets: number,
   supportedWalletTypes: Array<Object>,
-  state: State
+  state: State,
+  creatingWallet: boolean
 }
 
 export type CryptoExchangeSceneComponentDispatchProps = {
@@ -77,8 +78,7 @@ type LocalState = {
   whichWalletFocus: string, // Which wallet FlipInput was last focused and edited
   fromExchangeAmount: string,
   forceUpdateGuiCounter: number,
-  toExchangeAmount: string,
-  isCreatingWallet: boolean
+  toExchangeAmount: string
 }
 
 export class CryptoExchangeScene extends Component<Props, LocalState> {
@@ -93,8 +93,7 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
       whichWalletFocus: Constants.FROM,
       forceUpdateGuiCounter: 0,
       fromExchangeAmount: '',
-      toExchangeAmount: '',
-      isCreatingWallet: false
+      toExchangeAmount: ''
     }
     this.state = newState
     slowlog(this, /.*/, global.slowlogOptions)
@@ -113,11 +112,7 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
         console.log('nav: ', response)
       })
     }
-    if (nextProps.totalWallets > this.props.totalWallets) {
-      this.setState({
-        isCreatingWallet: false
-      })
-    }
+
     if (this.state.forceUpdateGuiCounter !== nextProps.forceUpdateGuiCounter) {
       this.setState({
         fromExchangeAmount: nextProps.fromExchangeAmount,
@@ -206,7 +201,7 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
               launchWalletSelector={this.launchToWalletSelector}
               onCryptoExchangeAmountChanged={this.toAmountChanged}
               isFocused={isToFocused}
-              isThinking={this.state.isCreatingWallet}
+              isThinking={this.props.creatingWallet}
               focusMe={this.focusToWallet}
             />
             <View style={style.shim} />
@@ -351,9 +346,6 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
           onSelectWallet(response.id, response.currencyCode)
           return
         }
-        this.setState({
-          isCreatingWallet: true
-        })
         this.props.createCurrencyWallet(response.value, response.currencyCode)
       }
     })
