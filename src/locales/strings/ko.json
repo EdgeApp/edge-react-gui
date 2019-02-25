@@ -41,7 +41,7 @@
   "addtoken_invalid_contract_address": "QR 코드에 유효한 계약 주소가 존재하지 않습니다.",
   "addtoken_denomination_input_text": "소수 자릿수",
   "addtoken_name_input_text": "토큰 이름",
-  "addtoken_add": "추가",
+  "addtoken_add": "",
   "edittoken_top_instructions": "토큰 정보를 입력하고 저장을 눌러 토큰 편집을 하십시오.",
   "edittoken_delete_token": "토큰 삭제",
   "edittoken_delete_prompt": "정말로 이 토큰을 삭제 하시겠습니까?",
