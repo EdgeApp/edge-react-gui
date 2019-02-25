@@ -10,10 +10,20 @@ export const styles = {
     marginBottom: scale(15)
   },
   addWalletContentWrap: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     backgroundColor: 'white',
-    padding: scale(15)
+    padding: scale(15),
+    marginRight: scale(5)
+  },
+  addTokenContentWrap: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    backgroundColor: 'white',
+    padding: scale(15),
+    marginLeft: scale(5)
   },
   addWalletIcon: {
     justifyContent: 'center',

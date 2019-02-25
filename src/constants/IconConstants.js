@@ -36,6 +36,7 @@ export const EYE_ICON = 'eye'
 export const MAIL = 'ios-mail'
 export const ALERT_OUTLINE = 'ios-alert-outline'
 export const KEY_ICON = 'ios-key'
+export const WALLET_ICON = 'ios-wallet'
 
 // Material
 export const MATERIAL_ICONS = 'material'
