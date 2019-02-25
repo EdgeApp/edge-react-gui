@@ -41,7 +41,7 @@
   "addtoken_invalid_contract_address": "Il codice QR non contiene un valido indirizzo di contratto",
   "addtoken_denomination_input_text": "Numero di decimali",
   "addtoken_name_input_text": "Nome del token",
-  "addtoken_add": "Aggiungi",
+  "addtoken_add": "",
   "edittoken_top_instructions": "Completa le informazioni del token e premi \"Salva\":",
   "edittoken_delete_token": "Cancella il token",
   "edittoken_delete_prompt": "Sei sicuro di voler cancellare questo token?",
