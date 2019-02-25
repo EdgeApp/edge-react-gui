@@ -41,7 +41,7 @@
   "addtoken_invalid_contract_address": "二维码没有有效的合同地址",
   "addtoken_denomination_input_text": "小数位数:",
   "addtoken_name_input_text": "代币名称",
-  "addtoken_add": "新增",
+  "addtoken_add": "",
   "edittoken_top_instructions": "填写代币信息, 然后点击 \"保存\" 编辑代币:",
   "edittoken_delete_token": "删除代币",
   "edittoken_delete_prompt": "您确定要删除此代币吗？",
