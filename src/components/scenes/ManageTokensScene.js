@@ -16,6 +16,9 @@ import type { CustomTokenInfo, GuiWallet } from '../../types'
 import * as UTILS from '../../util/utils'
 import ManageTokenRow from '../common/ManageTokenRow.js'
 
+// Put these in reverse order of preference
+const PREFERRED_TOKENS = ['WINGS', 'HERC', 'REP']
+
 export type ManageTokensOwnProps = {
   guiWallet: GuiWallet
 }
@@ -81,6 +84,13 @@ export default class ManageTokens extends Component<ManageTokensProps, State> {
       return 1
     })
 
+    for (const cc of PREFERRED_TOKENS) {
+      const idx = sortedTokenInfo.findIndex(e => e.currencyCode === cc)
+      const tokenInfo = sortedTokenInfo[idx]
+      sortedTokenInfo.splice(idx, 1)
+      sortedTokenInfo.unshift(tokenInfo)
+    }
+
     return (
       <SafeAreaView>
         <View style={[styles.manageTokens]}>
@@ -110,12 +120,12 @@ export default class ManageTokens extends Component<ManageTokensProps, State> {
                 />
               </View>
               <View style={[styles.buttonsArea]}>
-                <SecondaryButton style={[styles.addButton]} onPress={this.goToAddTokenScene}>
-                  <SecondaryButton.Text style={[styles.buttonText]}>{s.strings.addtoken_add}</SecondaryButton.Text>
-                </SecondaryButton>
                 <PrimaryButton style={[styles.saveButton]} onPress={this.saveEnabledTokenList}>
                   {manageTokensPending ? <ActivityIndicator /> : <PrimaryButton.Text style={[styles.buttonText]}>{s.strings.string_save}</PrimaryButton.Text>}
                 </PrimaryButton>
+                <SecondaryButton style={[styles.addButton]} onPress={this.goToAddTokenScene}>
+                  <SecondaryButton.Text style={[styles.buttonText]}>{s.strings.addtoken_add}</SecondaryButton.Text>
+                </SecondaryButton>
               </View>
             </View>
           </View>
