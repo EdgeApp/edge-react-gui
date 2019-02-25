@@ -57,7 +57,7 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
   const showKYCAlert = state.cryptoExchange.showKYCAlert
   const wallets = state.ui.wallets.byId
   const totalWallets = Object.keys(wallets).length
-
+  const creatingWallet = state.cryptoExchange.creatingWallet
   return {
     fromWallet: fromWallet || emptyGuiWallet,
     fromExchangeAmount,
@@ -86,7 +86,8 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
     wallets,
     totalWallets,
     supportedWalletTypes,
-    state
+    state,
+    creatingWallet
   }
 }
 

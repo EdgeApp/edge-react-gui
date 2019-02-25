@@ -36,7 +36,8 @@ export type CryptoExchangeState = {
   quoteExpireDate: Date | null,
   quote: EdgeSwapQuote | null,
   showKYCAlert: boolean,
-  pluginCompleteKYC: string | null
+  pluginCompleteKYC: string | null,
+  creatingWallet: boolean
 }
 
 const dummyCurrencyInfo: GuiCurrencyInfo = {
@@ -82,12 +83,22 @@ const initialState = {
   quoteExpireDate: null,
   quote: null,
   showKYCAlert: false,
-  pluginCompleteKYC: null
+  pluginCompleteKYC: null,
+  creatingWallet: false
 }
 
 function cryptoExchangeInner (state = initialState, action: Action): CryptoExchangeState {
   let forceUpdateGuiCounter
   switch (action.type) {
+    case 'UI/WALLETS/CREATE_WALLET_START': {
+      return { ...state, creatingWallet: true }
+    }
+    case 'UI/WALLETS/CREATE_WALLET_SUCCESS': {
+      return { ...state, creatingWallet: false }
+    }
+    case 'UI/WALLETS/CREATE_WALLET_FAILURE': {
+      return { ...state, creatingWallet: false }
+    }
     case 'ON_KYC_TOKEN_SET': {
       return { ...state, showKYCAlert: false }
     }
