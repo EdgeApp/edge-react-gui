@@ -41,7 +41,7 @@
   "addtoken_invalid_contract_address": "Mã QR không chứa một địa chỉ hợp lệ với địa chỉ đã liên kết",
   "addtoken_denomination_input_text": "Số lượng các chữ số thập phân",
   "addtoken_name_input_text": "Tên mã thông báo",
-  "addtoken_add": "Thêm",
+  "addtoken_add": "",
   "edittoken_top_instructions": "Điền thông tin mã số và bấm vào \"Lưu\" để chỉnh sửa mã thông báo:",
   "edittoken_delete_token": "Xóa mã thông báo",
   "edittoken_delete_prompt": "Bạn có chắc bạn muốn xóa mã thông báo này không?",
