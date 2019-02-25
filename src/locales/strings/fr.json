@@ -41,7 +41,7 @@
   "addtoken_invalid_contract_address": "Le cod QR n'arrive pas à comporter l'adresse du contrat invalid ",
   "addtoken_denomination_input_text": "Chiffres de décimales ",
   "addtoken_name_input_text": "Nom du Token",
-  "addtoken_add": "Ajouter",
+  "addtoken_add": "",
   "edittoken_top_instructions": "Remplir l'informations d'un Token et cliquez sur « Enregistrer » pour modifier le Token :",
   "edittoken_delete_token": "Supprimer le Token",
   "edittoken_delete_prompt": "Souhaitez-vous vraiment effacer cet Token? ",
