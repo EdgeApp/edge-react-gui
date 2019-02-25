@@ -137,8 +137,11 @@ const getAndMergeTransactions = async (state: State, dispatch: Dispatch, walletI
       }
     }
     const transactionCount = transactionsWithKeys.length
-    // $FlowFixMe
-    const lastUnfilteredIndex = transactionsWithKeys[transactionCount - 1].otherParams.unfilteredIndex
+    let lastUnfilteredIndex = 0
+    if (transactionCount) {
+      // $FlowFixMe
+      lastUnfilteredIndex = transactionsWithKeys[transactionCount - 1].otherParams.unfilteredIndex
+    }
     dispatch(
       // $FlowFixMe
       updateTransactions({
