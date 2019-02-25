@@ -41,7 +41,7 @@
   "addtoken_invalid_contract_address": "Dieser QR-Code enthielt keine gültige Kontrakt-Adresse",
   "addtoken_denomination_input_text": "Anzahl der Nachkommastellen",
   "addtoken_name_input_text": "Token-Name",
-  "addtoken_add": "Hinzufügen",
+  "addtoken_add": "",
   "edittoken_top_instructions": "Füllen Sie Token-Info aus und tippen Sie auf \"Speichern\", um die Token-Info zu ändern:",
   "edittoken_delete_token": "Token löschen",
   "edittoken_delete_prompt": "Sind Sie sicher, dass Sie den Token löschen wollen?",
