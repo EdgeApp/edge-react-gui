@@ -318,7 +318,7 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
     const allowedWallets = []
     for (const id in wallets) {
       const wallet = wallets[id]
-      if (excludedCurrencyCode !== wallet.currencyCode && wallet.currencyCode !== 'ETH') {
+      if (excludedCurrencyCode !== wallet.currencyCode) {
         walletCurrencyCodes.push(wallet.currencyCode)
         if (wallet.receiveAddress && wallet.receiveAddress.publicAddress) {
           allowedWallets.push(wallets[id])
