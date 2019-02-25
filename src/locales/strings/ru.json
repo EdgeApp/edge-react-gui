@@ -41,7 +41,7 @@
   "addtoken_invalid_contract_address": "[QR code] не содержит допустимый адрес контракта",
   "addtoken_denomination_input_text": "Количество десятичных разрядов",
   "addtoken_name_input_text": "Имя токена",
-  "addtoken_add": "Добавить",
+  "addtoken_add": "",
   "edittoken_top_instructions": "Заполните информацию о токене и нажмите «Сохранить» чтобы изменить токен:",
   "edittoken_delete_token": "Удалить токен",
   "edittoken_delete_prompt": "Вы уверены, что хотите удалить этот токен?",
