@@ -41,7 +41,7 @@
   "addtoken_invalid_contract_address": "QRコードは有効なコントラクトアドレスを含んでいません。",
   "addtoken_denomination_input_text": "少数点以下の桁数",
   "addtoken_name_input_text": "トークン名",
-  "addtoken_add": "追加",
+  "addtoken_add": "",
   "edittoken_top_instructions": "トークンの編集をするには、トークン情報を入力後「保存」をタップ：",
   "edittoken_delete_token": "トークンを削除",
   "edittoken_delete_prompt": "このトークンを削除してもよろしいですか？",
