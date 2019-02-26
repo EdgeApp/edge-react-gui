@@ -14,6 +14,7 @@ import type { GuiWallet } from '../../types'
 type Props = {
   onDone(GuiWallet | Object): mixed,
   headerTitle: string,
+  excludedCurrencyCode: string,
   wallets: Array<GuiWallet>,
   supportedWalletTypes: Array<Object>,
   showWalletCreators: boolean,
@@ -97,6 +98,7 @@ class CryptoExchangeWalletSelectorModal extends Component<Props, LocalState> {
         <CryptoExchangeWalletListRow
           wallet={item.walletItem}
           onPress={this.selectWallet}
+          excludedCurrencyCode={this.props.excludedCurrencyCode}
           onTokenPress={this.selectTokenWallet}
           state={this.props.state}
           isWalletFiatBalanceVisible
@@ -140,6 +142,7 @@ export const createCryptoExchangeWalletSelectorModal = (opts: Object) => (props:
       showWalletCreators={opts.showWalletCreators || false}
       onDone={props.onDone}
       state={opts.state}
+      excludedCurrencyCode={opts.excludedCurrencyCode}
       headerTitle={opts.headerTitle}
     />
   )

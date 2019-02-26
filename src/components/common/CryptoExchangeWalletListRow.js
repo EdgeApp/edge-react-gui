@@ -18,6 +18,7 @@ import { CryptoExchangeWalletListTokenRow } from './CryptoExchangeWalletListToke
 type Props = {
   wallet: GuiWallet,
   onPress(GuiWallet): void,
+  excludedCurrencyCode: string,
   onTokenPress({ id: string, currencyCode: string }): void,
   state: State
 }
@@ -79,7 +80,9 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
   }
 
   onPress = () => {
-    this.props.onPress(this.props.wallet)
+    if (this.props.excludedCurrencyCode !== this.props.wallet.currencyCode) {
+      this.props.onPress(this.props.wallet)
+    }
   }
   renderTokens = () => {
     if (this.props.wallet.enabledTokens.length > 0) {
@@ -95,17 +98,19 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
             const multiplier = this.state.denomination.multiplier
             const preliminaryCryptoAmount = truncateDecimals(bns.div(metaTokenBalances[property], multiplier, DIVIDE_PRECISION), 6)
             const cryptoBalance = intl.formatNumber(decimalOrZero(preliminaryCryptoAmount, 6))
-            tokens.push(
-              <CryptoExchangeWalletListTokenRow
-                key={property}
-                parentId={this.props.wallet.id}
-                onPress={this.props.onTokenPress}
-                currencyCode={property}
-                fiatSymbol={this.state.fiatSymbol}
-                fiatBalance={formattedFiatBalance}
-                cryptoBalance={cryptoBalance}
-              />
-            )
+            if (property !== this.props.excludedCurrencyCode) {
+              tokens.push(
+                <CryptoExchangeWalletListTokenRow
+                  key={property}
+                  parentId={this.props.wallet.id}
+                  onPress={this.props.onTokenPress}
+                  currencyCode={property}
+                  fiatSymbol={this.state.fiatSymbol}
+                  fiatBalance={formattedFiatBalance}
+                  cryptoBalance={cryptoBalance}
+                />
+              )
+            }
           }
         }
       }
