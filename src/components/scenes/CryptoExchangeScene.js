@@ -323,6 +323,12 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
     const allowedWallets = []
     for (const id in wallets) {
       const wallet = wallets[id]
+      if (excludedCurrencyCode === wallet.currencyCode && excludedCurrencyCode === 'ETH' && wallet.enabledTokens.length > 0) {
+        walletCurrencyCodes.push(wallet.currencyCode)
+        if (wallet.receiveAddress && wallet.receiveAddress.publicAddress) {
+          allowedWallets.push(wallets[id])
+        }
+      }
       if (excludedCurrencyCode !== wallet.currencyCode) {
         walletCurrencyCodes.push(wallet.currencyCode)
         if (wallet.receiveAddress && wallet.receiveAddress.publicAddress) {
@@ -340,6 +346,7 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
     const props = {
       wallets: allowedWallets,
       supportedWalletTypes,
+      excludedCurrencyCode,
       showWalletCreators: whichWallet === Constants.TO,
       state: this.props.state,
       headerTitle: whichWallet === Constants.TO ? s.strings.select_recv_wallet : s.strings.select_src_wallet
