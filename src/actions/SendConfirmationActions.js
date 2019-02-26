@@ -119,8 +119,12 @@ export const sendConfirmationUpdateTx = (guiMakeSpendInfo: GuiMakeSpendInfo | Ed
   dispatch(newSpendInfo(spendInfo, authRequired))
 
   await makeSpend(edgeWallet, spendInfo)
-    .then(edgeTransaction => dispatch(updateTransaction(edgeTransaction, guiMakeSpendInfoClone, forceUpdateGui, null)))
-    .catch(e => dispatch(updateTransaction(null, guiMakeSpendInfoClone, forceUpdateGui, e)))
+    .then(edgeTransaction => {
+      return dispatch(updateTransaction(edgeTransaction, guiMakeSpendInfoClone, forceUpdateGui, null))
+    })
+    .catch(e => {
+      return dispatch(updateTransaction(null, guiMakeSpendInfoClone, forceUpdateGui, e))
+    })
 }
 
 export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => {

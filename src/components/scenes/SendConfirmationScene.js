@@ -327,7 +327,9 @@ export class SendConfirmation extends Component<Props, State> {
   }
 
   onSlideToConfirm = () => {
-    this.props.signBroadcastAndSave(this.state.nativeAmount, this.state.exchangeAmount, this.props.fiatPerCrypto.toString())
+    const { nativeAmount, signBroadcastAndSave, fiatPerCrypto } = this.props
+    const { exchangeAmount } = this.state
+    signBroadcastAndSave(nativeAmount, exchangeAmount, fiatPerCrypto.toString())
   }
 
   networkFeeSyntax = () => {
