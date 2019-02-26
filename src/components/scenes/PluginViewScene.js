@@ -34,7 +34,7 @@ import { THEME, colors } from '../../theme/variables/airbitz.js'
 const BACK = s.strings.title_back
 
 type PluginListProps = {
-  developerModeOn: boolean,
+  developerModeOn: boolean
 }
 
 type PluginListState = {
