@@ -77,7 +77,13 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
   const nativeToExchangeRatio = getExchangeDenomination(state, currencyCode).multiplier
   const exchangeAmount = convertNativeToExchange(nativeToExchangeRatio)(nativeAmount)
   const fiatAmount = convertCurrency(state, currencyCode, defaultIsoFiatCurrencyCode, parseFloat(exchangeAmount))
-  const exceedsLimit = fiatAmount >= spendingLimits.transaction.amount
+
+  let authType
+  if (spendingLimits.transaction.isEnabled) {
+    authType = fiatAmount >= spendingLimits.transaction.amount ? 'pin' : 'none'
+  } else {
+    authType = 'none'
+  }
 
   const out = {
     balanceInCrypto,
@@ -106,7 +112,7 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
     uniqueIdentifier,
     authRequired: state.ui.scenes.sendConfirmation.authRequired,
     address: state.ui.scenes.sendConfirmation.address,
-    isLimitExceeded: exceedsLimit ? 'pin' : 'none',
+    authType,
     sceneState,
     coreWallet
   }
@@ -120,8 +126,7 @@ const mapDispatchToProps = (dispatch: Dispatch): SendConfirmationDispatchProps =
   sendConfirmationUpdateTx: guiMakeSpendInfo => dispatch(sendConfirmationUpdateTx(guiMakeSpendInfo)),
   reset: () => dispatch(reset()),
   updateSpendPending: (pending: boolean): any => dispatch(updateSpendPending(pending)),
-  signBroadcastAndSave: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string): any =>
-    dispatch(signBroadcastAndSave(nativeAmount, exchangeAmount, fiatPerCrypto)),
+  signBroadcastAndSave: (): any => dispatch(signBroadcastAndSave()),
   onChangePin: (pin: string) => dispatch(newPin(pin)),
   uniqueIdentifierButtonPressed: () => {
     dispatch(uniqueIdentifierModalActivated())

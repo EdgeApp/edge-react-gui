@@ -59,12 +59,12 @@ export type SendConfirmationStateProps = {
   exchangeRates: { [string]: number },
   coreWallet: EdgeCurrencyWallet,
   sceneState: SendConfirmationState,
-  isLimitExceeded: AuthType
+  authType: AuthType
 }
 
 export type SendConfirmationDispatchProps = {
   updateSpendPending: boolean => any,
-  signBroadcastAndSave: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) => any,
+  signBroadcastAndSave: () => any,
   reset: () => any,
   updateAmount: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) => any,
   sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo) => any,
@@ -83,7 +83,6 @@ type Props = SendConfirmationStateProps & SendConfirmationDispatchProps & SendCo
 type State = {|
   secondaryDisplayDenomination: GuiDenomination,
   nativeAmount: string,
-  exchangeAmount: string,
   overridePrimaryExchangeAmount: string,
   forceUpdateGuiCounter: number,
   keyboardVisible: boolean,
@@ -105,7 +104,6 @@ export class SendConfirmation extends Component<Props, State> {
         multiplier: '1',
         symbol: ''
       },
-      exchangeAmount: '',
       overridePrimaryExchangeAmount: '',
       keyboardVisible: false,
       forceUpdateGuiCounter: 0,
@@ -300,7 +298,7 @@ export class SendConfirmation extends Component<Props, State> {
                 forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
                 resetSlider={this.props.resetSlider}
                 parentStyle={styles.sliderStyle}
-                onSlidingComplete={this.onSlideToConfirm}
+                onSlidingComplete={this.props.signBroadcastAndSave}
                 sliderDisabled={sliderDisabled}
                 showSpinner={this.state.showSpinner || this.props.pending}
               />
@@ -327,11 +325,9 @@ export class SendConfirmation extends Component<Props, State> {
   }
 
   onExchangeAmountChanged = async ({ nativeAmount, exchangeAmount }: ExchangedFlipInputAmounts) => {
-    const { fiatPerCrypto, coreWallet, sceneState, currencyCode, isLimitExceeded, newSpendInfo, updateTransaction } = this.props
+    const { fiatPerCrypto, coreWallet, sceneState, currencyCode, authType, newSpendInfo, updateTransaction } = this.props
     this.setState({
-      showSpinner: true,
-      nativeAmount,
-      exchangeAmount
+      showSpinner: true
     })
     const count = ++this.count
     const amountFiatString: string = bns.mul(exchangeAmount, fiatPerCrypto.toString())
@@ -343,7 +339,7 @@ export class SendConfirmation extends Component<Props, State> {
     const spendInfo = getSpendInfoWithoutState(guiMakeSpendInfoClone, sceneState, currencyCode)
 
     try {
-      newSpendInfo(spendInfo, isLimitExceeded)
+      newSpendInfo(spendInfo, authType)
       const edgeTransaction = await makeSpend(coreWallet, spendInfo)
       if (count === this.count) {
         this.lastSeenCount = count
@@ -355,12 +351,6 @@ export class SendConfirmation extends Component<Props, State> {
     } catch (e) {
       updateTransaction(null, guiMakeSpendInfoClone, false, e)
     }
-  }
-
-  onSlideToConfirm = () => {
-    const { nativeAmount, signBroadcastAndSave, fiatPerCrypto } = this.props
-    const { exchangeAmount } = this.state
-    signBroadcastAndSave(nativeAmount, exchangeAmount, fiatPerCrypto.toString())
   }
 
   networkFeeSyntax = () => {

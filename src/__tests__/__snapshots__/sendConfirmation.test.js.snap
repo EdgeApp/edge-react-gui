@@ -244,7 +244,6 @@ exports[`SendConfirmation should render with destination 1`] = `
       >
         <ABSlider
           forceUpdateGuiCounter={0}
-          onSlidingComplete={[Function]}
           parentStyle={
             Object {
               "width": 379.2359154929577,
@@ -489,7 +488,6 @@ exports[`SendConfirmation should render with standard props 1`] = `
       >
         <ABSlider
           forceUpdateGuiCounter={0}
-          onSlidingComplete={[Function]}
           parentStyle={
             Object {
               "width": 379.2359154929577,
@@ -751,7 +749,6 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
       >
         <ABSlider
           forceUpdateGuiCounter={0}
-          onSlidingComplete={[Function]}
           parentStyle={
             Object {
               "width": 379.2359154929577,
@@ -1017,7 +1014,6 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
       >
         <ABSlider
           forceUpdateGuiCounter={0}
-          onSlidingComplete={[Function]}
           parentStyle={
             Object {
               "width": 379.2359154929577,
