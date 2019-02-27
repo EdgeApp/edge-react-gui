@@ -6,7 +6,14 @@ import RNFS from 'react-native-fs'
 import plugins from '../../../../assets/plugins.json'
 
 function loadPlugins (plugins: any, developerModeOn: boolean): Array<Object> {
-  if (developerModeOn) {
+  let addCustom = true
+  for (let i = 0; i < plugins.length; i++) {
+    const plugin = plugins[i]
+    if (plugin.pluginId === 'custom') {
+      addCustom = false
+    }
+  }
+  if (developerModeOn && addCustom) {
     const devPlugin = {
       pluginId: 'custom',
       name: 'Custom Dev',
