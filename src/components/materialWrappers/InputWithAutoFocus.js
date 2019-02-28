@@ -81,7 +81,8 @@ class InputWithAutoFocus extends Component<Props, State> {
       errorColor,
       titleTextStyle,
       secureTextEntry,
-      returnKeyType
+      returnKeyType,
+      autoCorrect
     } = this.props
     return (
       <TextField
@@ -112,6 +113,7 @@ class InputWithAutoFocus extends Component<Props, State> {
         autoFocus={this.props.autoFocus}
         numberOfLines={this.props.numberOfLines}
         multiline={true}
+        autoCorrect={autoCorrect}
       />
     )
   }

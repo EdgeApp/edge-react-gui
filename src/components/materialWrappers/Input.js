@@ -95,7 +95,8 @@ class Input extends Component<Props, State> {
       errorColor,
       titleTextStyle,
       secureTextEntry,
-      returnKeyType
+      returnKeyType,
+      autoCorrect
     } = this.props
     return (
       <TextField
@@ -125,6 +126,7 @@ class Input extends Component<Props, State> {
         maxLength={this.props.maxLength}
         numberOfLines={this.props.numberOfLines}
         multiline={true}
+        autoCorrect={autoCorrect}
       />
     )
   }

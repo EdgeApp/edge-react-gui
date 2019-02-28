@@ -14,9 +14,8 @@ const mapStateToProps = (state: State) => ({
 })
 
 const mapDispatchToProps = (dispatch: Dispatch): CreateWalletReviewDispatchProps => ({
-  createCurrencyWallet: (walletName: string, walletType: string, fiatCurrencyCode: string) => {
-    dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode))
-  }
+  createCurrencyWallet: (walletName: string, walletType: string, fiatCurrencyCode: string, isScenePop: boolean, selectWallet: boolean, importText?: string) =>
+    dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode, isScenePop, false, importText))
 })
 
 export const CreateWalletReview = connect(
