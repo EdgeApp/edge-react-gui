@@ -58,14 +58,14 @@ export const newPin = (pin: string) => ({
   data: { pin }
 })
 
-export const updateAmount = (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string, forceUpdateGui?: boolean = false) => async (
+export const updateAmount = (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string, forceUpdateGui?: boolean = false) => (
   dispatch: Dispatch,
   getState: GetState
 ) => {
   const amountFiatString: string = bns.mul(exchangeAmount, fiatPerCrypto)
   const amountFiat: number = parseFloat(amountFiatString)
   const metadata: EdgeMetadata = { amountFiat }
-  await dispatch(sendConfirmationUpdateTx({ nativeAmount, metadata }, forceUpdateGui))
+  dispatch(sendConfirmationUpdateTx({ nativeAmount, metadata }, forceUpdateGui))
 }
 
 type EdgePaymentProtocolUri = EdgeParsedUri & { paymentProtocolURL: string }
@@ -156,11 +156,7 @@ export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => 
     .catch(e => console.log(e))
 }
 
-export const signBroadcastAndSave = (nativeAmount: string, exchangeAmountArg: string, fiatPerCryptoArg: string) => async (
-  dispatch: Dispatch,
-  getState: GetState
-) => {
-  await dispatch(updateAmount(nativeAmount, exchangeAmountArg, fiatPerCryptoArg))
+export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const account = getAccount(state)
   const selectedWalletId = getSelectedWalletId(state)

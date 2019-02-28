@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import { Scene } from 'edge-components'
-import type { EdgeDenomination, EdgeMetadata } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeDenomination, EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
@@ -12,6 +12,7 @@ import { UniqueIdentifierModalConnect as UniqueIdentifierModal } from '../../con
 import { getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
+import { makeSpend } from '../../modules/Core/Wallets/api.js'
 import ExchangeRate from '../../modules/UI/components/ExchangeRate/index.js'
 import { ExchangedFlipInput } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
@@ -21,8 +22,9 @@ import { PinInput } from '../../modules/UI/components/PinInput/PinInput.ui.js'
 import Recipient from '../../modules/UI/components/Recipient/index.js'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import ABSlider from '../../modules/UI/components/Slider/index.js'
+import { type AuthType, getSpendInfoWithoutState } from '../../modules/UI/scenes/SendConfirmation/selectors'
 import { convertCurrencyFromExchangeRates } from '../../modules/UI/selectors.js'
-import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
+import { type GuiMakeSpendInfo, type SendConfirmationState } from '../../reducers/scenes/SendConfirmationReducer.js'
 import styles, { rawStyles } from '../../styles/scenes/SendConfirmationStyle.js'
 import type { GuiCurrencyInfo, GuiDenomination } from '../../types'
 import { convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../util/utils.js'
@@ -54,17 +56,22 @@ export type SendConfirmationStateProps = {
   isEditable: boolean,
   authRequired: 'pin' | 'none',
   address: string,
-  exchangeRates: { [string]: number }
+  exchangeRates: { [string]: number },
+  coreWallet: EdgeCurrencyWallet,
+  sceneState: SendConfirmationState,
+  authType: AuthType
 }
 
 export type SendConfirmationDispatchProps = {
   updateSpendPending: boolean => any,
-  signBroadcastAndSave: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) => any,
+  signBroadcastAndSave: () => any,
   reset: () => any,
   updateAmount: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) => any,
   sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo) => any,
   onChangePin: (pin: string) => mixed,
-  uniqueIdentifierButtonPressed: () => void
+  uniqueIdentifierButtonPressed: () => void,
+  newSpendInfo: (EdgeSpendInfo, AuthType) => mixed,
+  updateTransaction: (?EdgeTransaction, ?GuiMakeSpendInfo, ?boolean, ?Error) => void
 }
 
 type SendConfirmationRouterParams = {
@@ -76,7 +83,6 @@ type Props = SendConfirmationStateProps & SendConfirmationDispatchProps & SendCo
 type State = {|
   secondaryDisplayDenomination: GuiDenomination,
   nativeAmount: string,
-  exchangeAmount: string,
   overridePrimaryExchangeAmount: string,
   forceUpdateGuiCounter: number,
   keyboardVisible: boolean,
@@ -87,7 +93,8 @@ type State = {|
 
 export class SendConfirmation extends Component<Props, State> {
   pinInput: any
-
+  count: number
+  lastSeenCount: number
   constructor (props: Props) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
@@ -97,7 +104,6 @@ export class SendConfirmation extends Component<Props, State> {
         multiplier: '1',
         symbol: ''
       },
-      exchangeAmount: '',
       overridePrimaryExchangeAmount: '',
       keyboardVisible: false,
       forceUpdateGuiCounter: 0,
@@ -106,6 +112,8 @@ export class SendConfirmation extends Component<Props, State> {
       isFiatOnTop: !!(props.guiMakeSpendInfo && props.guiMakeSpendInfo.nativeAmount && bns.eq(props.guiMakeSpendInfo.nativeAmount, '0')),
       isFocus: !!(props.guiMakeSpendInfo && props.guiMakeSpendInfo.nativeAmount && bns.eq(props.guiMakeSpendInfo.nativeAmount, '0'))
     }
+    this.count = 0
+    this.lastSeenCount = 0
   }
 
   componentDidMount () {
@@ -290,7 +298,7 @@ export class SendConfirmation extends Component<Props, State> {
                 forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
                 resetSlider={this.props.resetSlider}
                 parentStyle={styles.sliderStyle}
-                onSlidingComplete={this.onSlideToConfirm}
+                onSlidingComplete={this.props.signBroadcastAndSave}
                 sliderDisabled={sliderDisabled}
                 showSpinner={this.state.showSpinner || this.props.pending}
               />
@@ -316,20 +324,33 @@ export class SendConfirmation extends Component<Props, State> {
     }
   }
 
-  onExchangeAmountChanged = ({ nativeAmount, exchangeAmount }: ExchangedFlipInputAmounts) => {
+  onExchangeAmountChanged = async ({ nativeAmount, exchangeAmount }: ExchangedFlipInputAmounts) => {
+    const { fiatPerCrypto, coreWallet, sceneState, currencyCode, authType, newSpendInfo, updateTransaction } = this.props
     this.setState({
-      showSpinner: true,
-      nativeAmount,
-      exchangeAmount
+      showSpinner: true
     })
+    const count = ++this.count
+    const amountFiatString: string = bns.mul(exchangeAmount, fiatPerCrypto.toString())
+    const amountFiat: number = parseFloat(amountFiatString)
+    const metadata: EdgeMetadata = { amountFiat }
+    const guiMakeSpendInfo = { nativeAmount, metadata }
 
-    this.props.updateAmount(nativeAmount, exchangeAmount, this.props.fiatPerCrypto.toString())
-  }
+    const guiMakeSpendInfoClone = { ...guiMakeSpendInfo }
+    const spendInfo = getSpendInfoWithoutState(guiMakeSpendInfoClone, sceneState, currencyCode)
 
-  onSlideToConfirm = () => {
-    const { nativeAmount, signBroadcastAndSave, fiatPerCrypto } = this.props
-    const { exchangeAmount } = this.state
-    signBroadcastAndSave(nativeAmount, exchangeAmount, fiatPerCrypto.toString())
+    try {
+      newSpendInfo(spendInfo, authType)
+      const edgeTransaction = await makeSpend(coreWallet, spendInfo)
+      if (count === this.count) {
+        this.lastSeenCount = count
+        updateTransaction(edgeTransaction, guiMakeSpendInfoClone, false, null)
+        this.setState({ showSpinner: false })
+      } else if (count > this.lastSeenCount) {
+        this.lastSeenCount = count
+      }
+    } catch (e) {
+      updateTransaction(null, guiMakeSpendInfoClone, false, e)
+    }
   }
 
   networkFeeSyntax = () => {
