@@ -26,7 +26,7 @@ import { type AuthType, getSpendInfoWithoutState } from '../../modules/UI/scenes
 import { convertCurrencyFromExchangeRates } from '../../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo, type SendConfirmationState } from '../../reducers/scenes/SendConfirmationReducer.js'
 import styles, { rawStyles } from '../../styles/scenes/SendConfirmationStyle.js'
-import type { GuiCurrencyInfo, GuiDenomination } from '../../types'
+import type { GuiCurrencyInfo, GuiDenomination, SpendingLimits } from '../../types'
 import { convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../util/utils.js'
 
 const DIVIDE_PRECISION = 18
@@ -59,7 +59,7 @@ export type SendConfirmationStateProps = {
   exchangeRates: { [string]: number },
   coreWallet: EdgeCurrencyWallet,
   sceneState: SendConfirmationState,
-  authType: AuthType
+  spendingLimits: SpendingLimits
 }
 
 export type SendConfirmationDispatchProps = {
@@ -325,7 +325,7 @@ export class SendConfirmation extends Component<Props, State> {
   }
 
   onExchangeAmountChanged = async ({ nativeAmount, exchangeAmount }: ExchangedFlipInputAmounts) => {
-    const { fiatPerCrypto, coreWallet, sceneState, currencyCode, authType, newSpendInfo, updateTransaction } = this.props
+    const { spendingLimits, fiatPerCrypto, coreWallet, sceneState, currencyCode, newSpendInfo, updateTransaction } = this.props
     this.setState({
       showSpinner: true
     })
@@ -337,7 +337,12 @@ export class SendConfirmation extends Component<Props, State> {
 
     const guiMakeSpendInfoClone = { ...guiMakeSpendInfo }
     const spendInfo = getSpendInfoWithoutState(guiMakeSpendInfoClone, sceneState, currencyCode)
-
+    let authType
+    if (spendingLimits.transaction.isEnabled) {
+      authType = amountFiat > spendingLimits.transaction.amount ? 'pin' : 'none'
+    } else {
+      authType = 'none'
+    }
     try {
       newSpendInfo(spendInfo, authType)
       const edgeTransaction = await makeSpend(coreWallet, spendInfo)
