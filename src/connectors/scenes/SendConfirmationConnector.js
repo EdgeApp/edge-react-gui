@@ -28,7 +28,7 @@ import {
   getTransaction
 } from '../../modules/UI/scenes/SendConfirmation/selectors'
 import type { AuthType } from '../../modules/UI/scenes/SendConfirmation/selectors.js'
-import { convertCurrency, getExchangeDenomination, getExchangeRate, getSelectedCurrencyCode, getSelectedWallet } from '../../modules/UI/selectors.js'
+import { getExchangeDenomination, getExchangeRate, getSelectedCurrencyCode, getSelectedWallet } from '../../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import { convertNativeToExchange } from '../../util/utils'
 
@@ -73,17 +73,6 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
   const exchangeRates = state.exchangeRates
 
   const { spendingLimits } = state.ui.settings
-  const defaultIsoFiatCurrencyCode = state.ui.settings.defaultIsoFiat
-  const nativeToExchangeRatio = getExchangeDenomination(state, currencyCode).multiplier
-  const exchangeAmount = convertNativeToExchange(nativeToExchangeRatio)(nativeAmount)
-  const fiatAmount = convertCurrency(state, currencyCode, defaultIsoFiatCurrencyCode, parseFloat(exchangeAmount))
-
-  let authType
-  if (spendingLimits.transaction.isEnabled) {
-    authType = fiatAmount >= spendingLimits.transaction.amount ? 'pin' : 'none'
-  } else {
-    authType = 'none'
-  }
 
   const out = {
     balanceInCrypto,
@@ -112,9 +101,9 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
     uniqueIdentifier,
     authRequired: state.ui.scenes.sendConfirmation.authRequired,
     address: state.ui.scenes.sendConfirmation.address,
-    authType,
     sceneState,
-    coreWallet
+    coreWallet,
+    spendingLimits
   }
   return out
 }
@@ -131,7 +120,9 @@ const mapDispatchToProps = (dispatch: Dispatch): SendConfirmationDispatchProps =
   uniqueIdentifierButtonPressed: () => {
     dispatch(uniqueIdentifierModalActivated())
   },
-  newSpendInfo: (spendInfo: EdgeSpendInfo, isLimitExceeded: AuthType) => dispatch(newSpendInfo(spendInfo, isLimitExceeded)),
+  newSpendInfo: (spendInfo: EdgeSpendInfo, isLimitExceeded: AuthType) => {
+    return dispatch(newSpendInfo(spendInfo, isLimitExceeded))
+  },
   updateTransaction: (transaction: ?EdgeTransaction, guiMakeSpendInfo: ?GuiMakeSpendInfo, forceUpdateGui: ?boolean, error: ?Error) => {
     dispatch(updateTransaction(transaction, guiMakeSpendInfo, forceUpdateGui, error))
   }
