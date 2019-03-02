@@ -5,8 +5,27 @@ import RNFS from 'react-native-fs'
 
 import plugins from '../../../../assets/plugins.json'
 
-function loadPlugins (plugins: any): Array<Object> {
+function loadPlugins (plugins: any, developerModeOn: boolean): Array<Object> {
+  let addCustom = true
+  for (let i = 0; i < plugins.length; i++) {
+    const plugin = plugins[i]
+    if (plugin.pluginId === 'custom') {
+      addCustom = false
+    }
+  }
+  if (developerModeOn && addCustom) {
+    const devPlugin = {
+      pluginId: 'custom',
+      name: 'Custom Dev',
+      subtitle: 'Development Testing',
+      provider: 'Edge Wallet',
+      iconUrl: 'http://edge.app/wp-content/uploads/2019/01/wyre-logo-square-small.png',
+      environment: {}
+    }
+    plugins.push(devPlugin)
+  }
   return plugins.map(plugin => {
+    console.log('Lodaing plugin ', plugin)
     const baseDir = Platform.OS === 'android' ? 'android_asset' : RNFS.MainBundlePath
     const pluginPath = `file:///${baseDir}/plugins/${plugin.pluginId}/index.html`
     return {
@@ -21,10 +40,10 @@ function loadPlugins (plugins: any): Array<Object> {
   })
 }
 
-export function buySellPlugins () {
-  return loadPlugins(plugins.buysell)
+export function buySellPlugins (developerModeOn: boolean) {
+  return loadPlugins(plugins.buysell, developerModeOn)
 }
 
-export function spendPlugins () {
-  return loadPlugins(plugins.spend)
+export function spendPlugins (developerModeOn: boolean) {
+  return loadPlugins(plugins.spend, developerModeOn)
 }

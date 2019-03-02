@@ -2,7 +2,9 @@
 
 exports[`initialState 1`] = `
 Object {
+  "calculatingMax": false,
   "changeWallet": "none",
+  "creatingWallet": false,
   "fee": 0,
   "forceUpdateGuiCounter": 0,
   "fromBalanceMessage": "",

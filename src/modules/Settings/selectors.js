@@ -147,8 +147,8 @@ export const getSupportedWalletTypes = (state: State) => {
       })
     } else {
       supportedWalletTypes.push({
-        label: currencyInfo.currencyName,
-        value: currencyInfo.walletTypes[0],
+        label: currencyInfo.displayName,
+        value: currencyInfo.walletType,
         symbolImage: currencyInfo.symbolImage,
         symbolImageDarkMono: currencyInfo.symbolImageDarkMono,
         currencyCode: currencyInfo.currencyCode
@@ -177,7 +177,8 @@ export const getAutoLogoutTimeInMinutes = (state: State) => {
 
 export const getDefaultFiat = (state: State) => {
   const settings = getSettings(state)
-  const defaultFiat: string = settings.defaultFiat
+  const defaultIsoFiat: string = settings.defaultIsoFiat
+  const defaultFiat = defaultIsoFiat.replace('iso:', '')
   return defaultFiat
 }
 

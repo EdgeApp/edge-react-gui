@@ -1,17 +1,21 @@
 // @flow
 
+import { createInputModal, showModal } from 'edge-components'
 import { type EdgeMetadata } from 'edge-core-js'
 import React from 'react'
 import { BackHandler, FlatList, Image, Platform, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import IonIcon from 'react-native-vector-icons/Ionicons'
 import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
 import parse from 'url-parse'
+import { Bridge } from 'yaob'
 
 import ENV from '../../../env.json'
 import { sendConfirmationUpdateTx } from '../../actions/SendConfirmationActions'
 import { selectWallet } from '../../actions/WalletActions'
 import { PLUGIN_SPEND, SPEND } from '../../constants/indexConstants'
+import { javascript } from '../../lib/bridge/injectThisInWebView.js'
 import s from '../../locales/strings.js'
 import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
 import { openABAlert } from '../../modules/UI/components/ABAlert/action'
@@ -20,14 +24,18 @@ import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import BackButton from '../../modules/UI/components/Header/Component/BackButton.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import { PluginBridge, pop as pluginPop } from '../../modules/UI/scenes/Plugins/api'
+import { EdgeProvider } from '../../modules/UI/scenes/Plugins/bridgeApi'
 import { buySellPlugins, spendPlugins } from '../../modules/UI/scenes/Plugins/plugins'
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
 import type { GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import styles from '../../styles/scenes/PluginsStyle.js'
+import { THEME, colors } from '../../theme/variables/airbitz.js'
 
 const BACK = s.strings.title_back
 
-type PluginListProps = {}
+type PluginListProps = {
+  developerModeOn: boolean
+}
 
 type PluginListState = {
   data: Array<Object>
@@ -44,6 +52,48 @@ class PluginList extends React.Component<PluginListProps, PluginListState> {
   _onPress = plugin => {
     if (Actions.currentScene === SPEND) {
       Actions[PLUGIN_SPEND]({ plugin: plugin })
+      return
+    }
+    if (plugin.pluginId === 'custom') {
+      const yesButton = {
+        title: s.strings.load_plugin
+      }
+      const noButton = {
+        title: s.strings.string_cancel_cap
+      }
+      const input = {
+        label: s.strings.plugin_url,
+        autoCorrect: false,
+        returnKeyType: 'go',
+        initialValue: '',
+        autoFocus: true
+      }
+      const modal = createInputModal({
+        icon: (
+          <IonIcon
+            name="md-globe"
+            size={42}
+            color={colors.primary}
+            style={[
+              {
+                backgroundColor: THEME.COLORS.TRANSPARENT,
+                zIndex: 1015,
+                elevation: 1015
+              }
+            ]}
+          />
+        ),
+        title: s.strings.load_plugin,
+        input,
+        yesButton,
+        noButton
+      })
+      showModal(modal).then(response => {
+        if (response) {
+          plugin.sourceFile = { uri: response }
+        }
+        Actions.plugin({ plugin: plugin })
+      })
       return
     }
     Actions.plugin({ plugin: plugin })
@@ -79,21 +129,41 @@ class PluginList extends React.Component<PluginListProps, PluginListState> {
   }
 }
 
-class PluginBuySell extends PluginList {
+class PluginBuySellComponent extends PluginList {
   componentDidMount () {
+    console.log('pl: ', this.props.developerModeOn)
     this.setState({
-      data: buySellPlugins()
+      data: buySellPlugins(this.props.developerModeOn)
     })
   }
 }
 
-class PluginSpend extends PluginList {
+class PluginSpendComponent extends PluginList {
   componentDidMount () {
     this.setState({
-      data: spendPlugins()
+      data: spendPlugins(this.props.developerModeOn)
     })
   }
 }
+
+const listMapStateToProps = state => {
+  const developerModeOn = state.ui.settings.developerModeOn
+  return {
+    developerModeOn
+  }
+}
+
+const listMapDispatchToProps = dispatch => ({})
+
+const PluginBuySell = connect(
+  listMapStateToProps,
+  listMapDispatchToProps
+)(PluginBuySellComponent)
+
+const PluginSpend = connect(
+  listMapStateToProps,
+  listMapDispatchToProps
+)(PluginSpendComponent)
 
 type PluginProps = {
   plugin: any,
@@ -106,6 +176,8 @@ type PluginProps = {
   wallets: any,
   walletName: any,
   walletId: any,
+  currentState: any,
+  thisDispatch: Function,
   selectWallet(string, string): void,
   sendConfirmationUpdateTx(GuiMakeSpendInfo): void
 }
@@ -125,6 +197,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   webview: any
   successUrl: ?string
   openingSendConfirmation: boolean
+  yaobBridge: Bridge
   constructor (props) {
     super(props)
     this.state = {
@@ -226,6 +299,10 @@ class PluginView extends React.Component<PluginProps, PluginState> {
       return
     }
     const { cbid, func } = data
+    if (!cbid && !func) {
+      this.yaobBridge.handleMessage(data)
+      return
+    }
     this._nextMessage(cbid)
     if (this.bridge[func]) {
       this.bridge[func](data)
@@ -273,7 +350,6 @@ class PluginView extends React.Component<PluginProps, PluginState> {
                 this.openingSendConfirmation = false
               }
             }
-
             this.successUrl = data['x-success']
             this.bridge
               .makeSpendRequest(info)
@@ -306,6 +382,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
           if (this.openingSendConfirmation) {
             return
           }
+
           this.openingSendConfirmation = true
           this.props.coreWallet.parseUri(parsedUrl.query.uri).then(result => {
             const info: GuiMakeSpendInfo = {
@@ -313,7 +390,6 @@ class PluginView extends React.Component<PluginProps, PluginState> {
               nativeAmount: result.nativeAmount,
               publicAddress: result.publicAddress
             }
-
             this.successUrl = parsedUrl.query['x-success'] ? parsedUrl.query['x-success'] : null
             this.bridge
               .makeSpendRequest(info)
@@ -351,6 +427,13 @@ class PluginView extends React.Component<PluginProps, PluginState> {
     }
   }
 
+  webviewLoaded = () => {
+    this.yaobBridge = new Bridge({
+      sendMessage: message => this.webview.injectJavaScript(`window.bridge.handleMessage(${JSON.stringify(message)})`)
+    })
+    const edgeProvider = new EdgeProvider(this.props.plugin, this.props.currentState, this.props.thisDispatch)
+    this.yaobBridge.sendRoot(edgeProvider)
+  }
   render () {
     const contentScaling = Platform.OS !== 'ios'
     return (
@@ -360,6 +443,9 @@ class PluginView extends React.Component<PluginProps, PluginState> {
           allowFileAccess
           allowUniversalAccessFromFileURLs
           onMessage={this._onMessage}
+          onLoadEnd={this.webviewLoaded}
+          javaScriptEnabled={true}
+          injectedJavaScript={javascript}
           onNavigationStateChange={this._onNavigationStateChange}
           originWhitelist={['file://', 'https://', 'http://', 'edge://']}
           ref={this._setWebview}
@@ -383,6 +469,7 @@ const mapStateToProps = state => {
   const wallets = state.ui.wallets.byId
   const walletName = coreWallet.name
   const walletId = coreWallet.id
+  const currentState = state
   return {
     account,
     guiWallet,
@@ -390,14 +477,16 @@ const mapStateToProps = state => {
     coreWallets,
     wallets,
     walletName,
-    walletId
+    walletId,
+    currentState
   }
 }
 
 const mapDispatchToProps = dispatch => ({
   showAlert: alertSyntax => dispatch(openABAlert('OPEN_AB_ALERT', alertSyntax)),
   selectWallet: (walletId: string, currencyCode: string) => dispatch(selectWallet(walletId, currencyCode)),
-  sendConfirmationUpdateTx: (info: GuiMakeSpendInfo) => dispatch(sendConfirmationUpdateTx(info))
+  sendConfirmationUpdateTx: (info: GuiMakeSpendInfo) => dispatch(sendConfirmationUpdateTx(info)),
+  thisDispatch: dispatch
 })
 
 const PluginViewConnect = connect(

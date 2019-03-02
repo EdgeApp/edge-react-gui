@@ -1,29 +1,14 @@
 // @flow
 
-import type { EdgeContext, EdgeCorePluginFactory } from 'edge-core-js'
-import { eosCurrencyPluginFactory, ethereumCurrencyPluginFactory, rippleCurrencyPluginFactory, stellarCurrencyPluginFactory } from 'edge-currency-accountbased'
-import {
-  bitcoinCurrencyPluginFactory,
-  bitcoincashCurrencyPluginFactory,
-  bitcoingoldCurrencyPluginFactory,
-  bitcoinsvCurrencyPluginFactory,
-  dashCurrencyPluginFactory,
-  digibyteCurrencyPluginFactory,
-  feathercoinCurrencyPluginFactory,
-  groestlcoinCurrencyPluginFactory,
-  litecoinCurrencyPluginFactory,
-  qtumCurrencyPluginFactory,
-  smartcashCurrencyPluginFactory,
-  ufoCurrencyPluginFactory,
-  vertcoinCurrencyPluginFactory,
-  zcoinCurrencyPluginFactory
-} from 'edge-currency-bitcoin'
-import { moneroCurrencyPluginFactory } from 'edge-currency-monero'
-import { coinbasePlugin, coincapPlugin, currencyconverterapiPlugin, hercPlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
+import { type EdgeContext, MakeEdgeContext, MakeFakeEdgeWorld } from 'edge-core-js'
+import makeAccountbasedIo from 'edge-currency-accountbased/lib/react-native-io.js'
+import makeBitcoinIo from 'edge-currency-bitcoin/lib/react-native-io.js'
+import makeMoneroIo from 'edge-currency-monero/lib/react-native-io.js'
+import makeExchangeIo from 'edge-exchange-plugins/lib/react-native-io.js'
 import React, { PureComponent } from 'react'
 import { View } from 'react-native'
 
-import { makeCoreContext } from '../../util/makeContext.js'
+import ENV from '../../../env.json'
 import EdgeAccountCallbackManager from './EdgeAccountCallbackManager.js'
 import EdgeContextCallbackManager from './EdgeContextCallbackManager.js'
 import EdgeWalletsCallbackManager from './EdgeWalletsCallbackManager.js'
@@ -33,47 +18,77 @@ type Props = {
   onError: (error: any) => mixed
 }
 
-const pluginFactories: Array<EdgeCorePluginFactory> = [
-  // Exchanges:
-  coinbasePlugin,
-  shapeshiftPlugin,
-  coincapPlugin,
-  hercPlugin,
-  currencyconverterapiPlugin,
-  // Currencies:
-  bitcoincashCurrencyPluginFactory,
-  bitcoinCurrencyPluginFactory,
-  ethereumCurrencyPluginFactory,
-  eosCurrencyPluginFactory,
-  stellarCurrencyPluginFactory,
-  rippleCurrencyPluginFactory,
-  moneroCurrencyPluginFactory,
-  dashCurrencyPluginFactory,
-  litecoinCurrencyPluginFactory,
-  bitcoinsvCurrencyPluginFactory,
-  // eboostCurrencyPluginFactory,
-  // dogecoinCurrencyPluginFactory,
-  qtumCurrencyPluginFactory,
-  digibyteCurrencyPluginFactory,
-  zcoinCurrencyPluginFactory,
-  bitcoingoldCurrencyPluginFactory,
-  vertcoinCurrencyPluginFactory,
-  feathercoinCurrencyPluginFactory,
-  smartcashCurrencyPluginFactory,
-  groestlcoinCurrencyPluginFactory,
-  ufoCurrencyPluginFactory
-]
+const contextOptions = {
+  apiKey: ENV.AIRBITZ_API_KEY,
+  appId: '',
+  plugins: {
+    // edge-currency-accountbased:
+    eos: true,
+    ethereum: {
+      // blockcypherApiKey: '...',
+      etherscanApiKey: ENV.ETHERSCAN_API_KEY,
+      infuraProjectId: ENV.INFURA_PROJECT_ID
+    },
+    stellar: true,
+    ripple: true,
+    // edge-currency-bitcoin:
+    bitcoin: true,
+    bitcoincash: true,
+    bitcoincashtestnet: false,
+    bitcoingold: true,
+    bitcoingoldtestnet: false,
+    bitcoinsv: true,
+    bitcointestnet: false,
+    dash: true,
+    digibyte: true,
+    dogecoin: false,
+    eboost: false,
+    feathercoin: true,
+    groestlcoin: true,
+    litecoin: true,
+    qtum: true,
+    smartcash: true,
+    ufo: true,
+    vertcoin: true,
+    zcoin: true,
+    // edge-currency-monero:
+    monero: true, // { apiKey: '...' }
+    // edge-exchange-plugins:
+    'shapeshift-rate': true,
+    coinbase: true,
+    coincap: true,
+    currencyconverterapi: ENV.CURRENCYCONVERTERAPI_INIT,
+    herc: true,
+    // swap plugins:
+    changelly: ENV.CHANGELLY_INIT,
+    changenow: { apiKey: ENV.CHANGE_NOW_API_KEY },
+    faast: ENV.FAAST_INIT,
+    shapeshift: { apiKey: ENV.SHAPESHIFT_API_KEY }
+  }
+}
+
+const nativeIo = {
+  'edge-currency-accountbased': makeAccountbasedIo(),
+  'edge-currency-bitcoin': makeBitcoinIo(),
+  'edge-currency-monero': makeMoneroIo(),
+  'edge-exchange-plugins': makeExchangeIo()
+}
 
 export class EdgeCoreManager extends PureComponent<Props> {
-  componentDidMount () {
-    makeCoreContext(pluginFactories)
-      .then(this.props.onLoad)
-      .catch(this.props.onError)
-  }
-
   render () {
     return (
       <View>
+        {ENV.USE_FAKE_CORE ? (
+          <MakeFakeEdgeWorld
+            debug={ENV.DEBUG_CORE_BRIDGE}
+            users={[]}
+            onLoad={world => world.makeEdgeContext(contextOptions).then(this.props.onLoad)}
+            onError={this.props.onError}
+            nativeIo={nativeIo}
+          />
+        ) : (
+          <MakeEdgeContext debug={ENV.DEBUG_CORE_BRIDGE} options={contextOptions} onLoad={this.props.onLoad} onError={this.props.onError} nativeIo={nativeIo} />
+        )}
         <EdgeContextCallbackManager />
         <EdgeAccountCallbackManager />
         <EdgeWalletsCallbackManager />

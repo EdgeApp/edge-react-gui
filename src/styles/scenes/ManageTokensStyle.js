@@ -118,7 +118,7 @@ export const styles = {
   },
   addButton: {
     flex: 1,
-    marginRight: scale(2),
+    marginLeft: scale(2),
     backgroundColor: THEME.COLORS.GRAY_2,
     borderRadius: 3
   },
@@ -128,7 +128,7 @@ export const styles = {
   },
   saveButton: {
     flex: 1,
-    marginLeft: scale(2),
+    marginRight: scale(2),
     backgroundColor: THEME.COLORS.SECONDARY,
     borderRadius: 3
   }

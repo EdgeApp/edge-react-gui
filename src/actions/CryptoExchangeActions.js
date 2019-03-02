@@ -1,6 +1,6 @@
 // @flow
 import { bns } from 'biggystring'
-import type { EdgeCurrencyWallet, EdgeMetadata, EdgeSpendInfo, EdgeSwapQuote, EdgeSwapQuoteOptions } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeMetadata, EdgeSpendInfo, EdgeSwapQuote, EdgeSwapRequest } from 'edge-core-js'
 import { errorNames } from 'edge-core-js'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -65,15 +65,26 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
   const wallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
   const currencyCode = state.cryptoExchange.fromCurrencyCode ? state.cryptoExchange.fromCurrencyCode : undefined
   const parentCurrencyCode = wallet.currencyInfo.currencyCode
-  const dummyPublicAddress = Constants.getSpecialCurrencyInfo(parentCurrencyCode).dummyPublicAddress
-
-  const publicAddress = dummyPublicAddress || (await wallet.getReceiveAddress()).publicAddress
-  const edgeSpendInfo: EdgeSpendInfo = {
-    networkFeeOption: Constants.STANDARD_FEE,
-    currencyCode,
-    spendTargets: [{ publicAddress }]
+  if (Constants.getSpecialCurrencyInfo(parentCurrencyCode).noMaxSpend) {
+    const message = sprintf(s.strings.max_spend_unavailable_modal_message, wallet.currencyInfo.displayName)
+    Alert.alert(s.strings.max_spend_unavailable_modal_title, message)
+    return
   }
-  const primaryNativeAmount = await wallet.getMaxSpendable(edgeSpendInfo)
+  const dummyPublicAddress = Constants.getSpecialCurrencyInfo(parentCurrencyCode).dummyPublicAddress
+  dispatch({ type: 'START_CALC_MAX' })
+  let primaryNativeAmount = '0'
+
+  try {
+    const publicAddress = dummyPublicAddress || (await wallet.getReceiveAddress()).publicAddress
+    const edgeSpendInfo: EdgeSpendInfo = {
+      networkFeeOption: Constants.STANDARD_FEE,
+      currencyCode,
+      spendTargets: [{ publicAddress }]
+    }
+    primaryNativeAmount = await wallet.getMaxSpendable(edgeSpendInfo)
+  } catch (e) {
+    console.log(e.name, e.message)
+  }
   dispatch({ type: 'SET_FROM_WALLET_MAX', data: primaryNativeAmount })
 }
 
@@ -122,9 +133,11 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
       const name = si.displayName
       const supportEmail = si.supportEmail
       const quoteIdUri = si.quoteUri && quote.quoteId ? si.quoteUri + quote.quoteId : broadcastedTransaction.txid
+      const payinAddress = broadcastedTransaction.otherParams.payinAddress
+      const uniqueIdentifier = broadcastedTransaction.otherParams.uniqueIdentifier
 
       const notes = sprintf(
-        s.strings.exchange_notes_metadata_generic,
+        s.strings.exchange_notes_metadata_generic2,
         state.cryptoExchange.fromDisplayAmount,
         state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name,
         fromWallet.name,
@@ -133,6 +146,8 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
         toWallet.name,
         quote.destinationAddress,
         quoteIdUri,
+        payinAddress,
+        uniqueIdentifier,
         supportEmail
       )
 
@@ -176,7 +191,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, info: S
 
   const quoteNativeAmount = fromNativeAmount
   const whichWalletLiteral = info.whichWallet === Constants.TO ? 'to' : 'from'
-  const quoteData: EdgeSwapQuoteOptions = {
+  const quoteData: EdgeSwapRequest = {
     fromCurrencyCode,
     fromWallet: srcWallet,
     nativeAmount: quoteNativeAmount,

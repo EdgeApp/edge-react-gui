@@ -41,6 +41,55 @@ node ./copy-plugin.js
 # TODO: Remove the minification hack once the CLI accepts a --minify parameter.
 # See: https://github.com/facebook/react-native/pull/16456
 
+# Copy edge-core-js WebView contents:
+mkdir -p ios/edge-core
+cat >ios/edge-core/index.html <<HTML
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body>
+    <script src="edge-core.js"></script>
+    <script>
+      let loading = 0
+
+      function load (path) {
+        ++loading
+
+        const script = document.createElement('script')
+        script.charset = 'utf-8'
+        script.async = true
+        function scriptDone () {
+          document.head.removeChild(script)
+          if (--loading === 0) {
+            window.lockEdgeCorePlugins()
+          }
+        }
+        script.addEventListener('error', scriptDone)
+        script.addEventListener('load', scriptDone)
+        script.src = path
+        document.head.appendChild(script)
+      }
+
+      setTimeout(function () {
+        load('edge-currency-accountbased.js')
+        load('edge-currency-bitcoin.js')
+        load('edge-currency-monero.js')
+        load('edge-exchange-plugins.js')
+      }, 200)
+    </script>
+  </body>
+</html>
+HTML
+cp ./node_modules/edge-core-js/lib/react-native/edge-core.js ./ios/edge-core
+cp ./node_modules/edge-currency-accountbased/lib/react-native/edge-currency-accountbased.js ./ios/edge-core
+cp ./node_modules/edge-currency-bitcoin/lib/react-native/edge-currency-bitcoin.js ./ios/edge-core
+cp ./node_modules/edge-currency-monero/lib/react-native/edge-currency-monero.js ./ios/edge-core
+cp ./node_modules/edge-exchange-plugins/lib/react-native/edge-exchange-plugins.js ./ios/edge-core
+cp -r ./ios/edge-core ./android/app/src/main/assets/
+
 unamestr=`uname`
 if [[ "$unamestr" == 'Darwin' ]]; then
     cd ios

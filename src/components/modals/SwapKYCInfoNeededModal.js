@@ -32,9 +32,6 @@ export class SwapKYCInfoNeededModal extends Component<Props, State> {
       case 'shapeshift':
         return { uri: 'exchange_logo_shapeshift' }
 
-      case 'bitaccess':
-        return { uri: 'exchange_logo_bitaccess' }
-
       case 'changenow':
         return { uri: 'exchange_logo_changenow' }
 

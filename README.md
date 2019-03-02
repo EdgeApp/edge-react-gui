@@ -22,18 +22,18 @@ Edge Wallet is:
 Edge is known to build with this exact tool set. Updated versions of these toolsets may break the build or app. If you have issues, try mirroring these exact versions.
 
 * MacOS High Sierra 10.13.3
-* Xcode 9.4.1
+* Xcode 10.1
 * Android Studio 3.1.3
 * CocoaPods 1.5.3
 * Android NDK r15c *This is a must have. Version r17 is known to break native code builds*
-* NodeJS 8.9.3
-* NPM 5.5.1
-* Yarn 1.5.1
+* NodeJS 10.15.1
+* NPM 6.4.1
+* Yarn 1.10.1
 * Java 1.8.0_152
 
 ## Getting Started
 
-### Install nodejs (v 8.9.3 and npm (v 5.5.1)
+### Install nodejs (v 10.15.1 and npm (v 6.4.1)
 
     https://nodejs.org/en/download/
 
@@ -53,6 +53,12 @@ Edge is known to build with this exact tool set. Updated versions of these tools
 
     cd edge-react-gui
     yarn
+
+### XCode Setup - Use Legacy Build System
+
+    Open edge-react-gui/ios/edge.xcworkspace in Xcode
+    File -> Workspace Settings
+    Set `Build System` to `Legacy Build System`
 
 ### Android NDK Setup
 
@@ -82,7 +88,37 @@ Copy the env.example.json to env.json and change the `AIRBITZ_API_KEY` to the AP
 
 ### Run the app in debug mode
 
-`react-native run-ios` or `react-native run-android`
+#### iOS
+
+* Open `edge-react-gui/ios/edge.xcworkspace` in Xcode
+* Choose a target device or simulator and tap the Play button on the top nav bar
+
+#### Android
+
+    cd android
+    ./gradlew assembleDebug
+
+* The resulting APK will be in `./app/build/outputs/apk/debug/app-debug.apk`
+* Copy the APK to a simulator like Genymotion or a real device via Email or messaging app
+
+### Build release version of app
+
+#### iOS
+
+* Open `edge-react-gui/ios/edge.xcworkspace` in Xcode
+* Hold [ option/alt ] and click on the Edge button on the top bar to the right of the Play and Stop icons.
+* Change 'Build Configuration' to Release
+* Uncheck 'Debug Executable'
+* Close window
+* Choose a device and hit Play
+
+#### Android
+
+    cd android
+    ./gradlew assembleRelease
+
+* The resulting APK will be in `./app/build/outputs/apk/release/app-release.apk`
+* Copy the APK to a simulator like Genymotion or a real device via Email or messaging app
 
 ---
 

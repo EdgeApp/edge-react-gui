@@ -17,7 +17,7 @@ def build (platform) {
 pipeline {
   agent any
   tools {
-    nodejs "v8.9.3"
+    nodejs "v10.15.1"
   }
   options {
     timestamps()

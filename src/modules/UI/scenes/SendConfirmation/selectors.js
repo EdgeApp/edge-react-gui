@@ -60,8 +60,8 @@ export const getError = (state: State): Error => getScene(state).error
 export const getKeyboardIsVisible = (state: State): boolean => getScene(state).keyboardIsVisible
 
 export const getTransaction = (state: State): EdgeTransaction => getScene(state).transaction || initialState.transaction
-export const getGuiMakeSpendInfo = (state: State): GuiMakeSpendInfo => getScene(state).guiMakeSpendInfo || initialState.guiMakeSpendInfo
-export const getForceUpdateGuiCounter = (state: State): number => getScene(state).forceUpdateGuiCounter
+export const getGuiMakeSpendInfo = (state: State): GuiMakeSpendInfo => state.ui.scenes.sendConfirmation.guiMakeSpendInfo || initialState.guiMakeSpendInfo
+export const getForceUpdateGuiCounter = (state: State): number => state.ui.scenes.sendConfirmation.forceUpdateGuiCounter
 
 export const getNetworkFeeOption = (state: State): string => getGuiMakeSpendInfo(state).networkFeeOption || initialState.guiMakeSpendInfo.networkFeeOption || ''
 export const getCustomNetworkFee = (state: State): any => getGuiMakeSpendInfo(state).customNetworkFee || initialState.guiMakeSpendInfo.customNetworkFee || {}
@@ -82,8 +82,8 @@ export const getPublicAddress = (state: State): string => {
 export const getNativeAmount = (state: State): string | void => state.ui.scenes.sendConfirmation.nativeAmount
 
 export const getUniqueIdentifier = (state: State): string => {
-  const guiMakeSpendInfo = getGuiMakeSpendInfo(state)
-  const uniqueIdentifier = guiMakeSpendInfo.uniqueIdentifier
+  const guiMakeSpendInfo = state.ui.scenes.sendConfirmation.guiMakeSpendInfo || initialState.guiMakeSpendInfo
+  const uniqueIdentifier = guiMakeSpendInfo.uniqueIdentifier || ''
   return uniqueIdentifier || ''
 }
 
@@ -113,6 +113,34 @@ export const getSpendInfo = (state: State, newSpendInfo?: GuiMakeSpendInfo = {})
     spendTargets,
     networkFeeOption: newSpendInfo.networkFeeOption || getNetworkFeeOption(state),
     customNetworkFee: newSpendInfo.customNetworkFee ? { ...getCustomNetworkFee(state), ...newSpendInfo.customNetworkFee } : getCustomNetworkFee(state),
+    otherParams: newSpendInfo.otherParams || {}
+  }
+}
+
+export const getSpendInfoWithoutState = (newSpendInfo?: GuiMakeSpendInfo = {}, sceneState: Object, selectedCurrencyCode: string): EdgeSpendInfo => {
+  const uniqueIdentifier = newSpendInfo.uniqueIdentifier || sceneState.guiMakeSpendInfo.uniqueIdentifier || ''
+  let spendTargets = []
+  if (newSpendInfo.spendTargets) {
+    spendTargets = newSpendInfo.spendTargets
+  } else {
+    spendTargets = [
+      {
+        nativeAmount: newSpendInfo.nativeAmount || sceneState.nativeAmount,
+        publicAddress: newSpendInfo.publicAddress || initialState.guiMakeSpendInfo.publicAddress || sceneState.spendInfo.spendTargets[0].publicAddress,
+        otherParams: {
+          uniqueIdentifier
+        }
+      }
+    ]
+  }
+  const metaData = sceneState.metadata || initialState.guiMakeSpendInfo.metadata
+  const customNetworkFee = sceneState.customNetworkFee || initialState.guiMakeSpendInfo.customNetworkFee
+  return {
+    currencyCode: newSpendInfo.currencyCode || selectedCurrencyCode,
+    metadata: newSpendInfo.metadata ? { ...metaData, ...newSpendInfo.metadata } : metaData,
+    spendTargets,
+    networkFeeOption: newSpendInfo.networkFeeOption || sceneState.guiMakeSpendInfo.networkFeeOption || initialState.guiMakeSpendInfo.networkFeeOption,
+    customNetworkFee: newSpendInfo.customNetworkFee ? { ...customNetworkFee, ...newSpendInfo.customNetworkFee } : customNetworkFee,
     otherParams: newSpendInfo.otherParams || {}
   }
 }

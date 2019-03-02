@@ -37,7 +37,8 @@ export const initialState = {
       amount: 0
     }
   },
-  shapeShiftNeedsKYC: true
+  shapeShiftNeedsKYC: true,
+  developerModeOn: false
 }
 
 export type CurrencySetting = {
@@ -98,6 +99,7 @@ export type SettingsState = {
     }
   },
   shapeShiftNeedsKYC: boolean,
+  developerModeOn: boolean,
   passwordRecoveryRemindersShown: {
     '20': boolean,
     '200': boolean,
@@ -107,19 +109,19 @@ export type SettingsState = {
   }
 }
 
-const currencyPLuginUtil = (state, payloadData) => {
+const currencyPLuginUtil = (state, payloadData): SettingsState => {
   const { plugins } = state
   const { supportedWalletTypes } = plugins
   const { allCurrencyInfos } = plugins
   const { currencyInfo } = payloadData
-  const { pluginName, walletTypes } = currencyInfo
+  const { pluginName, walletType } = currencyInfo
 
   // Build up object with all the information for the parent currency, accesible by the currencyCode
   const defaultParentCurrencyInfo = state[currencyInfo.currencyCode]
   const parentCurrencyInfo = {
     [currencyInfo.currencyCode]: {
       ...defaultParentCurrencyInfo,
-      currencyName: currencyInfo.currencyName,
+      displayName: currencyInfo.displayName,
       currencyCode: currencyInfo.currencyCode,
       denominations: currencyInfo.denominations,
       symbolImage: currencyInfo.symbolImage,
@@ -134,7 +136,7 @@ const currencyPLuginUtil = (state, payloadData) => {
       ...acc,
       [metatoken.currencyCode]: {
         ...defaultMetatokenInfo,
-        currencyName: metatoken.currencyName,
+        displayName: metatoken.currencyName,
         currencyCode: metatoken.currencyCode,
         denominations: metatoken.denominations,
         symbolImage: metatoken.symbolImage,
@@ -156,7 +158,7 @@ const currencyPLuginUtil = (state, payloadData) => {
       ...plugins,
       [pluginName]: currencyInfo,
       allCurrencyInfos: [...allCurrencyInfos, currencyInfo],
-      supportedWalletTypes: [...supportedWalletTypes, ...walletTypes]
+      supportedWalletTypes: [...supportedWalletTypes, walletType]
     }
   }
 }
@@ -261,6 +263,12 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
     case 'NEED_KYC_SETTING': {
       return { ...state, shapeShiftNeedsKYC: true }
+    }
+    case 'DEVELOPER_MODE_ON': {
+      return { ...state, developerModeOn: true }
+    }
+    case 'DEVELOPER_MODE_OFF': {
+      return { ...state, developerModeOn: false }
     }
     case 'ON_KYC_TOKEN_SET': {
       return { ...state, shapeShiftNeedsKYC: false }

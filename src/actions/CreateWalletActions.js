@@ -7,10 +7,10 @@ import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
+import { selectWalletForExchange } from '../actions/indexActions'
 import { type AccountPaymentParams } from '../components/scenes/CreateWalletAccountSelectScene.js'
 import * as Constants from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
-import * as ACCOUNT_API from '../modules/Core/Account/api.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import type { Dispatch, GetState } from '../modules/ReduxTypes.js'
 import { getExchangeDenomination } from '../modules/Settings/selectors.js'
@@ -34,6 +34,32 @@ export const selectFiat = (fiat: string) => ({
   type: 'SELECT_FIAT',
   data: { fiat }
 })
+export const createCurrencyWalletAndAddToSwap = (walletName: string, walletType: string, fiatCurrencyCode: string) => (
+  dispatch: Dispatch,
+  getState: GetState
+) => {
+  const state = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+
+  dispatch({ type: 'UI/WALLETS/CREATE_WALLET_START' })
+  // Try and get the new format param from the legacy walletType if it's mentioned
+  const [type, format] = walletType.split('-')
+  return account
+    .createCurrencyWallet(type, {
+      name: walletName,
+      fiatCurrencyCode,
+      keyOptions: format ? { format } : {}
+    })
+    .then(edgeWallet => {
+      dispatch({ type: 'UI/WALLETS/CREATE_WALLET_SUCCESS' })
+      dispatch(selectWalletForExchange(edgeWallet.id, edgeWallet.currencyInfo.currencyCode))
+    })
+    .catch(async error => {
+      await showModal(errorModal(s.strings.create_wallet_failed, error))
+      Actions.popTo(Constants.WALLET_LIST_SCENE)
+      dispatch({ type: 'UI/WALLETS/CREATE_WALLET_FAILURE' })
+    })
+}
 
 export const createCurrencyWallet = (
   walletName: string,
@@ -48,11 +74,12 @@ export const createCurrencyWallet = (
   dispatch({ type: 'UI/WALLETS/CREATE_WALLET_START' })
   // Try and get the new format param from the legacy walletType if it's mentioned
   const [type, format] = walletType.split('-')
-  return ACCOUNT_API.createCurrencyWalletRequest(account, type, {
-    name: walletName,
-    fiatCurrencyCode,
-    keyOptions: format ? { format } : {}
-  })
+  return account
+    .createCurrencyWallet(type, {
+      name: walletName,
+      fiatCurrencyCode,
+      keyOptions: format ? { format } : {}
+    })
     .then(edgeWallet => {
       if (popScene) Actions.popTo(Constants.WALLET_LIST_SCENE)
       dispatch({ type: 'UI/WALLETS/CREATE_WALLET_SUCCESS' })

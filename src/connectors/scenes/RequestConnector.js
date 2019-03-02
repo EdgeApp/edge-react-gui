@@ -16,6 +16,7 @@ import { getDenomFromIsoCode } from '../../util/utils'
 const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps => {
   const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
   const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
+
   if (!guiWallet || !currencyCode) {
     return {
       currencyCode: null,
@@ -29,7 +30,8 @@ const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps 
       publicAddress: '',
       legacyAddress: '',
       useLegacyAddress: null,
-      currentScene: state.ui.scenes.currentScene
+      currentScene: state.ui.scenes.currentScene,
+      wallets: state.ui.wallets.byId
     }
   }
 
@@ -69,7 +71,8 @@ const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps 
     secondaryCurrencyInfo,
     showToWalletModal: state.ui.scenes.walletListModal.walletListModalVisible,
     useLegacyAddress: state.ui.scenes.requestType.useLegacyAddress,
-    currentScene: state.ui.scenes.currentScene
+    currentScene: state.ui.scenes.currentScene,
+    wallets: state.ui.wallets.byId
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch): RequestDispatchProps => ({
