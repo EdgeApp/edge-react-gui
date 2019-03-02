@@ -32,6 +32,7 @@ const contextOptions = {
     stellar: true,
     ripple: true,
     // edge-currency-bitcoin:
+    argentum: false,
     bitcoin: true,
     bitcoincash: true,
     bitcoincashtestnet: false,
