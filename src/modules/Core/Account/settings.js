@@ -92,6 +92,81 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   HERC: {
     denomination: '1000000000000000000'
   },
+  ANT: {
+    denomination: '1000000000000000000'
+  },
+  BAT: {
+    denomination: '1000000000000000000'
+  },
+  BNT: {
+    denomination: '1000000000000000000'
+  },
+  GNT: {
+    denomination: '1000000000000000000'
+  },
+  KNC: {
+    denomination: '1000000000000000000'
+  },
+  POLY: {
+    denomination: '1000000000000000000'
+  },
+  STORJ: {
+    denomination: '100000000'
+  },
+  USDC: {
+    denomination: '1000000'
+  },
+  USDS: {
+    denomination: '1000000'
+  },
+  TUSD: {
+    denomination: '1000000000000000000'
+  },
+  ZRX: {
+    denomination: '1000000000000000000'
+  },
+  GNO: {
+    denomination: '1000000000000000000'
+  },
+  OMG: {
+    denomination: '1000000000000000000'
+  },
+  NMR: {
+    denomination: '1000000000000000000'
+  },
+  BNB: {
+    denomination: '1000000000000000000'
+  },
+  MKR: {
+    denomination: '1000000000000000000'
+  },
+  GUSD: {
+    denomination: '100'
+  },
+  PAX: {
+    denomination: '1000000000000000000'
+  },
+  SALT: {
+    denomination: '100000000'
+  },
+  MANA: {
+    denomination: '1000000000000000000'
+  },
+  NEXO: {
+    denomination: '1000000000000000000'
+  },
+  FUN: {
+    denomination: '100000000'
+  },
+  KIN: {
+    denomination: '1000000000000000000'
+  },
+  USDT: {
+    denomination: '1000000'
+  },
+  DAI: {
+    denomination: '1000000000000000000'
+  },
   customTokens: [],
   passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN
 }
@@ -123,6 +198,31 @@ export const SYNCED_ACCOUNT_TYPES = {
   HUR: 'object',
   HERC: 'object',
   SMART: 'object',
+  ANT: 'object',
+  BAT: 'object',
+  BNT: 'object',
+  GNT: 'object',
+  KNC: 'object',
+  POLY: 'object',
+  STORJ: 'object',
+  USDC: 'object',
+  USDS: 'object',
+  TUSD: 'object',
+  ZRX: 'object',
+  GNO: 'object',
+  OMG: 'object',
+  NMR: 'object',
+  BNB: 'object',
+  MKR: 'object',
+  GUSD: 'object',
+  PAX: 'object',
+  SALT: 'object',
+  MANA: 'object',
+  NEXO: 'object',
+  FUN: 'object',
+  KIN: 'object',
+  USDT: 'object',
+  DAI: 'object',
   customTokens: 'object', // arrays return 'object' to typeof
   passwordRecoveryRemindersShown: 'object'
 }
