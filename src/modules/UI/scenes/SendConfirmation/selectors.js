@@ -133,8 +133,8 @@ export const getSpendInfoWithoutState = (newSpendInfo?: GuiMakeSpendInfo = {}, s
       }
     ]
   }
-  const metaData = sceneState.metadata || initialState.guiMakeSpendInfo.metadata
-  const customNetworkFee = sceneState.customNetworkFee || initialState.guiMakeSpendInfo.customNetworkFee
+  const metaData = sceneState.guiMakeSpendInfo.metadata || initialState.guiMakeSpendInfo.metadata
+  const customNetworkFee = sceneState.guiMakeSpendInfo.customNetworkFee || initialState.guiMakeSpendInfo.customNetworkFee
   return {
     currencyCode: newSpendInfo.currencyCode || selectedCurrencyCode,
     metadata: newSpendInfo.metadata ? { ...metaData, ...newSpendInfo.metadata } : metaData,
