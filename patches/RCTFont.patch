@@ -1,0 +1,26 @@
+--- RCTFont.mm	2018-11-09 01:14:13.000000000 -0800
++++ RCTFont.new.mm	2019-03-04 00:13:43.000000000 -0800
+@@ -145,12 +145,12 @@
+ static UIFont *cachedSystemFont(CGFloat size, RCTFontWeight weight)
+ {
+   static NSCache *fontCache;
+-  static std::mutex fontCacheMutex;
++  static std::mutex *fontCacheMutex = new std::mutex;
+ 
+   NSString *cacheKey = [NSString stringWithFormat:@"%.1f/%.2f", size, weight];
+   UIFont *font;
+   {
+-    std::lock_guard<std::mutex> lock(fontCacheMutex);
++    std::lock_guard<std::mutex> lock(*fontCacheMutex);
+     if (!fontCache) {
+       fontCache = [NSCache new];
+     }
+@@ -177,7 +177,7 @@
+     }
+ 
+     {
+-      std::lock_guard<std::mutex> lock(fontCacheMutex);
++      std::lock_guard<std::mutex> lock(*fontCacheMutex);
+       [fontCache setObject:font forKey:cacheKey];
+     }
+   }

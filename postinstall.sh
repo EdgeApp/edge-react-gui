@@ -94,4 +94,8 @@ unamestr=`uname`
 if [[ "$unamestr" == 'Darwin' ]]; then
     cd ios
     pod install
+    cd ..
 fi
+
+# Apply patches
+patch ./node_modules/react-native/React/Views/RCTFont.mm ./patches/RCTFont.patch
