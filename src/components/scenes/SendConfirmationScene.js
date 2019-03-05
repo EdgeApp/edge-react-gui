@@ -280,7 +280,7 @@ export class SendConfirmation extends Component<Props, State> {
                   )}
 
                   {authRequired === 'pin' && (
-                    <Scene.Row style={{ paddingVertical: 10, width: '100%', justifyContent: 'flex-start', alignItems: 'center' }}>
+                    <Scene.Row style={{ paddingBottom: 10, width: '100%', justifyContent: 'flex-start', alignItems: 'center' }}>
                       <Text style={styles.rowText}>{s.strings.four_digit_pin}</Text>
 
                       <View style={styles.pinInputSpacer} />
