@@ -362,7 +362,7 @@ export default class Main extends Component<Props> {
 
                 <Drawer key={Constants.EDGE} hideNavBar contentComponent={ControlPanel} hideDrawerButton={true} drawerPosition="right" drawerWidth={scale(280)}>
                   {/* Wrapper Scene needed to fix a bug where the tabs would reload as a modal ontop of itself */}
-                  <Scene hideNavBar>
+                  <Scene key={'AllMyTabs'} hideNavBar>
                     <Tabs
                       key={Constants.EDGE}
                       swipeEnabled={false}

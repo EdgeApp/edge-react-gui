@@ -51,7 +51,7 @@ export class SpendingLimitsComponent extends Component<SpendingLimitsOwnProps, S
       <SafeAreaView style={{}}>
         <Gradient style={styles.gradient} />
 
-        <Scene style={styles.scene}>
+        <Scene key={'SpendingLimitsSceneKey'} style={styles.scene}>
           <KeyboardAwareScrollView>
             <Scene.Header>
               <PasswordInput label={ENTER_YOUR_PASSWORD} onChangeText={onPasswordChanged} />
