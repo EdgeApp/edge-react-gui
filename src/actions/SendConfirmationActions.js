@@ -201,12 +201,17 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
       edgeMetadata.amountFiat = amountFiat
     }
     if (getSpecialCurrencyInfo(currencyCode).uniqueIdentifierToNotes) {
-      edgeMetadata.notes = sprintf(
+      const newNotesSyntax = sprintf(
         s.strings.tx_notes_metadata,
         s.strings.unique_identifier_payment_id,
         edgeSignedTransaction.otherParams.sendParams.paymentId,
         edgeSignedTransaction.otherParams.sendParams.targetAddress
       )
+      if (edgeMetadata.notes) {
+        edgeMetadata.notes += `\n${newNotesSyntax}`
+      } else {
+        edgeMetadata.notes = newNotesSyntax
+      }
     }
     await wallet.saveTxMetadata(edgeSignedTransaction.txid, edgeSignedTransaction.currencyCode, edgeMetadata)
     dispatch(updateSpendPending(false))
