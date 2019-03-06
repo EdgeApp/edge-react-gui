@@ -151,7 +151,7 @@ export class CreateWalletSelectCrypto extends Component<Props, State> {
     }
     if (unloadedWalletCount) {
       if (!errorShown) {
-        displayErrorAlert('Error missing wallet type. Unloaded plugins.')
+        displayErrorAlert(s.strings.create_wallet_selcet_crypto_unloaded_plugins_error)
         errorShown = true
       }
     }
