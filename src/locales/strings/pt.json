@@ -113,6 +113,7 @@
   "wallet_list_add_token_modal_title": "",
   "wallet_list_add_token_modal_message": "",
   "create_wallet_select_valid_crypto": "Por favor, selecione um tipo válido de carteira",
+  "create_wallet_selcet_crypto_unloaded_plugins_error": "",
   "create_wallet_invalid_input": "Entrada inválida",
   "create_wallet_select_valid_fiat": "Por favor, selecione uma moeda fiduciária válida",
   "create_wallet_choose_crypto": "Escolha um tipo de carteira",
