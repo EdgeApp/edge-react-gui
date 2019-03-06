@@ -113,6 +113,7 @@
   "wallet_list_add_token_modal_title": "Ethereum Portefeuille Demandé",
   "wallet_list_add_token_modal_message": "Veuillez créer un portefeuille d'Ethereum afin de conserver vos tokens",
   "create_wallet_select_valid_crypto": "Veuillez choisir un type de Wallet valide.",
+  "create_wallet_selcet_crypto_unloaded_plugins_error": "",
   "create_wallet_invalid_input": "Entrée invalide",
   "create_wallet_select_valid_fiat": "Veuillez sélectionner les fiat valides",
   "create_wallet_choose_crypto": "Choisissez le type d'un portefeuille",
