@@ -50,11 +50,17 @@ export type CreateWalletSelectCryptoStateProps = {
   supportedWalletTypes: Array<GuiWalletType>,
   dimensions: DeviceDimensions
 }
-type Props = CreateWalletSelectCryptoOwnProps & CreateWalletSelectCryptoStateProps
+
+type CreateWalletSelectCryptoDispatchProps = {
+  displayErrorAlert: string => void
+}
+
+type Props = CreateWalletSelectCryptoOwnProps & CreateWalletSelectCryptoStateProps & CreateWalletSelectCryptoDispatchProps
 type State = {
   selectedWalletType: string,
   sortedWalletTypes: Array<GuiWalletType>,
-  searchTerm: string
+  searchTerm: string,
+  errorShown: boolean
 }
 
 export class CreateWalletSelectCrypto extends Component<Props, State> {
@@ -63,7 +69,8 @@ export class CreateWalletSelectCrypto extends Component<Props, State> {
     this.state = {
       selectedWalletType: '',
       sortedWalletTypes: [],
-      searchTerm: ''
+      searchTerm: '',
+      errorShown: false
     }
   }
 
@@ -127,21 +134,29 @@ export class CreateWalletSelectCrypto extends Component<Props, State> {
   }
 
   static getDerivedStateFromProps (nextProps: Props, prevState: State) {
+    const { displayErrorAlert } = nextProps
+    let { errorShown } = prevState
     // Sort the wallet types
     const sortedWalletTypes: Array<GuiWalletType> = []
     const walletTypesCopy: Array<GuiWalletType> = [].concat(nextProps.supportedWalletTypes)
-
+    let unloadedWalletCount = 0
     for (const wt of WALLET_TYPE_ORDER) {
       const idx = walletTypesCopy.findIndex(gwt => gwt.value === wt)
       if (idx >= 0) {
         sortedWalletTypes.push(walletTypesCopy[idx])
         walletTypesCopy.splice(idx, 1)
       } else {
-        throw new Error('Error missing wallet type. Ensure all plugins are loaded')
+        unloadedWalletCount++
+      }
+    }
+    if (unloadedWalletCount) {
+      if (!errorShown) {
+        displayErrorAlert('Error missing wallet type. Unloaded plugins.')
+        errorShown = true
       }
     }
     sortedWalletTypes.push(...walletTypesCopy)
-    return { sortedWalletTypes }
+    return { sortedWalletTypes, errorShown }
   }
 
   render () {
