@@ -3,6 +3,7 @@
 import React from 'react'
 import { Text, View } from 'react-native'
 
+import { AddressTextWithBlockExplorerModal } from '../../../../components/common/AddressTextWithBlockExplorerModal'
 import s from '../../../../locales/strings.js'
 import { border as b } from '../../../../util/utils.js'
 import T from '../FormattedText/'
@@ -13,13 +14,15 @@ const RECEIVED_TEXT = s.strings.bitcoin_received
 
 type RequestStateProps = {
   amountSatoshi: number,
-  requestAddress: string
+  requestAddress: string,
+  addressExplorer: string
 }
 
 const RequestStatus = (props: RequestStateProps) => {
   const amountRequestedInCrypto = props.amountSatoshi
   const amountReceivedInCrypto = props.amountSatoshi
   const requestAddress = props.requestAddress
+  const addressExplorer = props.addressExplorer
 
   const hasReceivedPartialPayment = () => {
     const hasReceivedPartialPayment = hasReceivedPayment() && !isPaymentSufficient()
@@ -50,9 +53,11 @@ const RequestStatus = (props: RequestStateProps) => {
       <View style={styles.view}>
         <Text style={styles.text}>{s.strings.request_qr_your_receiving_wallet_address}</Text>
 
-        <T numberOfLines={1} ellipsizeMode="middle" style={[b(), styles.text]}>
-          {requestAddress}
-        </T>
+        <AddressTextWithBlockExplorerModal address={requestAddress} addressExplorer={addressExplorer}>
+          <T numberOfLines={1} ellipsizeMode="middle" style={[b(), styles.text]}>
+            {requestAddress}
+          </T>
+        </AddressTextWithBlockExplorerModal>
       </View>
     )
 

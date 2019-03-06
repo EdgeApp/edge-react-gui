@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyInfo, EdgeCurrencyWallet } from 'edge-core-js'
 import { connect } from 'react-redux'
 
 import { refreshReceiveAddressRequest, selectWalletFromModal } from '../../actions/WalletActions'
@@ -11,15 +11,20 @@ import type { Dispatch, State } from '../../modules/ReduxTypes'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types'
-import { getDenomFromIsoCode } from '../../util/utils'
+import { getCurrencyInfo, getDenomFromIsoCode } from '../../util/utils'
 
 const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps => {
   const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
   const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
 
+  const plugins: Object = SETTINGS_SELECTORS.getPlugins(state)
+  const allCurrencyInfos: Array<EdgeCurrencyInfo> = plugins.allCurrencyInfos
+  const currencyInfo: EdgeCurrencyInfo | void = getCurrencyInfo(allCurrencyInfos, currencyCode)
+
   if (!guiWallet || !currencyCode) {
     return {
       currencyCode: null,
+      currencyInfo: null,
       edgeWallet: null,
       exchangeSecondaryToPrimaryRatio: null,
       guiWallet: null,
@@ -61,6 +66,7 @@ const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps 
 
   return {
     currencyCode,
+    currencyInfo: currencyInfo || null,
     edgeWallet,
     exchangeSecondaryToPrimaryRatio,
     guiWallet,
