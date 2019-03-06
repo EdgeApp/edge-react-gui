@@ -113,6 +113,7 @@
   "wallet_list_add_token_modal_title": "",
   "wallet_list_add_token_modal_message": "",
   "create_wallet_select_valid_crypto": "Vui lòng chọn loại ví hợp lệ",
+  "create_wallet_selcet_crypto_unloaded_plugins_error": "",
   "create_wallet_invalid_input": "Dữ liệu nhập không hợp lệ",
   "create_wallet_select_valid_fiat": "Vui lòng chọn một loại tiền tệ fiat hợp lệ",
   "create_wallet_choose_crypto": "Chọn loại ví",
