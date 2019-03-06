@@ -852,7 +852,8 @@ export default class Main extends Component<Props> {
       return HwBackButtonHandler()
     }
     if (this.isCurrentScene(Constants.EXCHANGE_QUOTE_SCENE)) {
-      return Actions.popTo(Constants.EXCHANGE_SCENE)
+      Actions.popTo(Constants.EXCHANGE_SCENE)
+      return true
     }
     Actions.pop()
     return true
