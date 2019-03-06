@@ -113,6 +113,7 @@
   "wallet_list_add_token_modal_title": "",
   "wallet_list_add_token_modal_message": "",
   "create_wallet_select_valid_crypto": "Пожалуйста, выберите допустимый тип кошелька",
+  "create_wallet_selcet_crypto_unloaded_plugins_error": "",
   "create_wallet_invalid_input": "Неверный ввод",
   "create_wallet_select_valid_fiat": "Пожалуйста, выберите допустимую фиатную валюту",
   "create_wallet_choose_crypto": "Выберите тип кошелька",
