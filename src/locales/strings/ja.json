@@ -113,6 +113,7 @@
   "wallet_list_add_token_modal_title": "",
   "wallet_list_add_token_modal_message": "",
   "create_wallet_select_valid_crypto": "有効なウォレットタイプを選択してください",
+  "create_wallet_selcet_crypto_unloaded_plugins_error": "",
   "create_wallet_invalid_input": "無効なインプットです",
   "create_wallet_select_valid_fiat": "有効な法定通貨を選択してください",
   "create_wallet_choose_crypto": "ウォレットタイプを選択",
