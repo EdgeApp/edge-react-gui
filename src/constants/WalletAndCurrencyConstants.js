@@ -129,7 +129,8 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
       addButtonText: s.strings.unique_identifier_dropdown_option_payment_id,
       identifierName: s.strings.unique_identifier_payment_id,
       identifierKeyboardType: 'default'
-    }
+    },
+    uniqueIdentifierToNotes: true
   },
   EOS: {
     dummyPublicAddress: 'edgecreator2',

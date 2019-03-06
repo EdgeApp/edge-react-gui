@@ -7,6 +7,7 @@ import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { SEND_CONFIRMATION, TRANSACTION_DETAILS } from '../constants/indexConstants'
+import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import { checkPin } from '../modules/Core/Account/api.js'
 import { getAccount, getWallet } from '../modules/Core/selectors.js'
@@ -198,6 +199,14 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
     }
     if (!edgeMetadata.amountFiat) {
       edgeMetadata.amountFiat = amountFiat
+    }
+    if (getSpecialCurrencyInfo(currencyCode).uniqueIdentifierToNotes) {
+      edgeMetadata.notes = sprintf(
+        s.strings.tx_notes_metadata,
+        s.strings.unique_identifier_payment_id,
+        edgeSignedTransaction.otherParams.sendParams.paymentId,
+        edgeSignedTransaction.otherParams.sendParams.targetAddress
+      )
     }
     await wallet.saveTxMetadata(edgeSignedTransaction.txid, edgeSignedTransaction.currencyCode, edgeMetadata)
     dispatch(updateSpendPending(false))
