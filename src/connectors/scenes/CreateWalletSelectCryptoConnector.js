@@ -6,6 +6,7 @@ import { CreateWalletSelectCrypto as CreateWalletSelectCryptoComponent } from '.
 import type { CreateWalletSelectCryptoStateProps } from '../../components/scenes/CreateWalletSelectCryptoScene.js'
 import type { State } from '../../modules/ReduxTypes'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
+import { displayErrorAlert } from '../../modules/UI/components/ErrorAlert/actions'
 
 const mapStateToProps = (state: State): CreateWalletSelectCryptoStateProps => {
   const supportedWalletTypes = SETTINGS_SELECTORS.getSupportedWalletTypes(state)
@@ -22,7 +23,11 @@ const mapStateToProps = (state: State): CreateWalletSelectCryptoStateProps => {
     dimensions: state.ui.scenes.dimensions
   }
 }
-const mapDispatchToProps = () => ({})
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return {
+    displayErrorAlert: (message: string) => dispatch(displayErrorAlert(message))
+  }
+}
 export const CreateWalletSelectCrypto = connect(
   mapStateToProps,
   mapDispatchToProps

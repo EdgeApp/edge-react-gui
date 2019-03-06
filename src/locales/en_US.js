@@ -121,6 +121,7 @@ const strings = {
   wallet_list_add_token_modal_title: 'Ethereum Wallet Needed',
   wallet_list_add_token_modal_message: 'Please create an Ethereum wallet first to hold your tokens',
   create_wallet_select_valid_crypto: 'Please select a valid wallet type',
+  create_wallet_selcet_crypto_unloaded_plugins_error: 'Some wallet types unavailable. Please wait for account to fully load to access all wallet types.',
   create_wallet_invalid_input: 'Invalid input',
   create_wallet_select_valid_fiat: 'Please select a valid fiat currency',
   create_wallet_choose_crypto: 'Choose a wallet type',
