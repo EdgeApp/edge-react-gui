@@ -273,6 +273,7 @@
   "string_master_private_key": "Master Private Key",
   "string_split_wallet": "Разделить %s",
   "string_add_edit_tokens": "Добавить / редактировать токены",
+  "tx_notes_metadata": "",
   "exchange_notes_metadata_generic": "",
   "exchange_notes_metadata_generic2": "",
   "title_crypto_settings": "%s Настройки",
