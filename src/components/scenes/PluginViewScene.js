@@ -1,11 +1,9 @@
 // @flow
 
-import { createInputModal, showModal } from 'edge-components'
 import { type EdgeMetadata } from 'edge-core-js'
 import React from 'react'
-import { BackHandler, FlatList, Image, Platform, Text, TouchableWithoutFeedback, View } from 'react-native'
+import { BackHandler, Platform, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
 import parse from 'url-parse'
@@ -14,7 +12,6 @@ import { Bridge } from 'yaob'
 import ENV from '../../../env.json'
 import { sendConfirmationUpdateTx } from '../../actions/SendConfirmationActions'
 import { selectWallet } from '../../actions/WalletActions'
-import { PLUGIN_SPEND, SPEND } from '../../constants/indexConstants'
 import { javascript } from '../../lib/bridge/injectThisInWebView.js'
 import s from '../../locales/strings.js'
 import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
@@ -25,145 +22,11 @@ import BackButton from '../../modules/UI/components/Header/Component/BackButton.
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import { PluginBridge, pop as pluginPop } from '../../modules/UI/scenes/Plugins/api'
 import { EdgeProvider } from '../../modules/UI/scenes/Plugins/bridgeApi'
-import { buySellPlugins, spendPlugins } from '../../modules/UI/scenes/Plugins/plugins'
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
 import type { GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import styles from '../../styles/scenes/PluginsStyle.js'
-import { THEME, colors } from '../../theme/variables/airbitz.js'
 
 const BACK = s.strings.title_back
-
-type PluginListProps = {
-  developerModeOn: boolean
-}
-
-type PluginListState = {
-  data: Array<Object>
-}
-
-class PluginList extends React.Component<PluginListProps, PluginListState> {
-  constructor (props) {
-    super(props)
-    this.state = {
-      data: []
-    }
-  }
-
-  _onPress = plugin => {
-    if (Actions.currentScene === SPEND) {
-      Actions[PLUGIN_SPEND]({ plugin: plugin })
-      return
-    }
-    if (plugin.pluginId === 'custom') {
-      const yesButton = {
-        title: s.strings.load_plugin
-      }
-      const noButton = {
-        title: s.strings.string_cancel_cap
-      }
-      const input = {
-        label: s.strings.plugin_url,
-        autoCorrect: false,
-        returnKeyType: 'go',
-        initialValue: '',
-        autoFocus: true
-      }
-      const modal = createInputModal({
-        icon: (
-          <IonIcon
-            name="md-globe"
-            size={42}
-            color={colors.primary}
-            style={[
-              {
-                backgroundColor: THEME.COLORS.TRANSPARENT,
-                zIndex: 1015,
-                elevation: 1015
-              }
-            ]}
-          />
-        ),
-        title: s.strings.load_plugin,
-        input,
-        yesButton,
-        noButton
-      })
-      showModal(modal).then(response => {
-        if (response) {
-          plugin.sourceFile = { uri: response }
-        }
-        Actions.plugin({ plugin: plugin })
-      })
-      return
-    }
-    Actions.plugin({ plugin: plugin })
-  }
-
-  _renderPlugin = ({ item }) => (
-    <TouchableWithoutFeedback onPress={() => this._onPress(item)}>
-      <View style={styles.pluginRow}>
-        <View style={styles.pluginBox}>
-          <View style={styles.pluginLeft}>
-            <View style={styles.logoWrap}>
-              <View style={[styles.logo]}>{item.imageUrl && <Image style={{ height: '100%' }} source={{ uri: item.imageUrl }} />}</View>
-            </View>
-            <View style={styles.textBoxWrap}>
-              <Text style={styles.titleBox}>{item.name}</Text>
-              <Text style={styles.subtitleBox}>{item.subtitle}</Text>
-            </View>
-          </View>
-        </View>
-      </View>
-    </TouchableWithoutFeedback>
-  )
-
-  render () {
-    return (
-      <SafeAreaView>
-        <Gradient style={styles.gradient} />
-        <View style={styles.container}>
-          <FlatList data={this.state.data} renderItem={this._renderPlugin} keyExtractor={item => item.name} />
-        </View>
-      </SafeAreaView>
-    )
-  }
-}
-
-class PluginBuySellComponent extends PluginList {
-  componentDidMount () {
-    console.log('pl: ', this.props.developerModeOn)
-    this.setState({
-      data: buySellPlugins(this.props.developerModeOn)
-    })
-  }
-}
-
-class PluginSpendComponent extends PluginList {
-  componentDidMount () {
-    this.setState({
-      data: spendPlugins(this.props.developerModeOn)
-    })
-  }
-}
-
-const listMapStateToProps = state => {
-  const developerModeOn = state.ui.settings.developerModeOn
-  return {
-    developerModeOn
-  }
-}
-
-const listMapDispatchToProps = dispatch => ({})
-
-const PluginBuySell = connect(
-  listMapStateToProps,
-  listMapDispatchToProps
-)(PluginBuySellComponent)
-
-const PluginSpend = connect(
-  listMapStateToProps,
-  listMapDispatchToProps
-)(PluginSpendComponent)
 
 type PluginProps = {
   plugin: any,
@@ -493,4 +356,4 @@ const PluginViewConnect = connect(
   mapStateToProps,
   mapDispatchToProps
 )(PluginView)
-export { PluginViewConnect, PluginBuySell, PluginSpend }
+export { PluginViewConnect }
