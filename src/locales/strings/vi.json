@@ -273,6 +273,7 @@
   "string_master_private_key": "Quét từ khóa riêng",
   "string_split_wallet": "Phân chia %s",
   "string_add_edit_tokens": "Thêm / chỉnh sửa thẻ",
+  "tx_notes_metadata": "",
   "exchange_notes_metadata_generic": "Trao đổi %1$s %2$s %3$s %4$s %5$s %6$s đến địa chỉ %7$s \nđặt hàng: %8$s. \nđể hỗ trợ, xin vui lòng liên hệ với %9$s.",
   "exchange_notes_metadata_generic2": "Trao đổi %1$s %2$s %3$s %4$s %5$s %6$s để địa chỉ %7$s \nđặt hàng: %8$s. \ntrao đổi địa chỉ thanh toán: %9$s. \ntrao đổi định danh duy nhất: %10$s \n\nđể được trợ giúp, xin vui lòng liên hệ với %11$s.",
   "title_crypto_settings": "%s cài đặt",
