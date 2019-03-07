@@ -273,6 +273,7 @@
   "string_master_private_key": "Chave Privada Mestra",
   "string_split_wallet": "",
   "string_add_edit_tokens": "Adicionar / Editar Tokens",
+  "tx_notes_metadata": "",
   "exchange_notes_metadata_generic": "",
   "exchange_notes_metadata_generic2": "",
   "title_crypto_settings": "configurações de %s",
