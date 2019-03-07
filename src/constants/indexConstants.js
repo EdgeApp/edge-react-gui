@@ -7,6 +7,7 @@ export * from './FeeConstants'
 export * from './ErrorConstants'
 export { REQUEST_STATUS } from './RequestStatusConstants'
 export * from './WalletAndCurrencyConstants.js'
+export * from './PluginKeys.js'
 
 export const LEFT_TO_RIGHT = 'leftToRight'
 export const RIGHT_TO_LEFT = 'rightToLeft'

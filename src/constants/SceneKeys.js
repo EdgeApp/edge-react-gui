@@ -46,6 +46,9 @@ export const SPEND = 'spend'
 export const TERMS_OF_SERVICE = 'termsOfService'
 export const PLUGIN = 'plugin'
 export const PLUGIN_SPEND = 'pluginSpend'
+export const PLUGIN_SPEND_LEGACY = 'pluginSpend'
+export const PLUGIN_BUY = 'pluginSpend'
+export const PLUGIN_BUY_LEGACY = 'pluginSpend'
 export const SPENDING_LIMITS = 'spendingLimits'
 
 export const CURRENCY_SETTINGS = {

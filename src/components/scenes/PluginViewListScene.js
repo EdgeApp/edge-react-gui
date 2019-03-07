@@ -6,13 +6,14 @@ import { Actions } from 'react-native-router-flux'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
-import { PLUGIN_SPEND, SPEND } from '../../constants/indexConstants'
+import { PLUGIN_BUY, PLUGIN_BUY_LEGACY, PLUGIN_SPEND, PLUGIN_SPEND_LEGACY, SPEND } from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import { buySellPlugins, spendPlugins } from '../../modules/UI/scenes/Plugins/plugins'
 import styles from '../../styles/scenes/PluginsStyle.js'
 import { THEME, colors } from '../../theme/variables/airbitz.js'
+import type { BuySellPlugin } from '../../types'
 
 type Props = {
   developerModeOn: boolean
@@ -30,11 +31,7 @@ class PluginList extends Component<Props, State> {
     }
   }
 
-  _onPress = plugin => {
-    if (Actions.currentScene === SPEND) {
-      Actions[PLUGIN_SPEND]({ plugin: plugin })
-      return
-    }
+  _onPress = (plugin: BuySellPlugin) => {
     if (plugin.pluginId === 'custom') {
       const yesButton = {
         title: s.strings.load_plugin
@@ -73,11 +70,21 @@ class PluginList extends Component<Props, State> {
         if (response) {
           plugin.sourceFile = { uri: response }
         }
-        Actions.plugin({ plugin: plugin })
+        const key = Actions.currentScene === SPEND ? PLUGIN_SPEND : PLUGIN_BUY
+        Actions[key]({ plugin: plugin })
       })
       return
     }
-    Actions.plugin({ plugin: plugin })
+    if (plugin.isLegacy) {
+      console.log('pluginStuff: legacy')
+    }
+    if (Actions.currentScene === SPEND) {
+      const key = plugin.isLegacy ? PLUGIN_SPEND_LEGACY : PLUGIN_SPEND
+      Actions[key]({ plugin: plugin })
+      return
+    }
+    const key = plugin.isLegacy ? PLUGIN_BUY_LEGACY : PLUGIN_BUY
+    Actions[key]({ plugin: plugin })
   }
 
   _renderPlugin = ({ item }) => (
