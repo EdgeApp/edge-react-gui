@@ -352,8 +352,8 @@ const mapDispatchToProps = dispatch => ({
   thisDispatch: dispatch
 })
 
-const PluginViewConnect = connect(
+const LegacyPluginViewConnect = connect(
   mapStateToProps,
   mapDispatchToProps
 )(PluginView)
-export { PluginViewConnect }
+export { LegacyPluginViewConnect }
