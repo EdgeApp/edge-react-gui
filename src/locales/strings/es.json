@@ -273,6 +273,7 @@
   "string_master_private_key": "Clave privada maestra",
   "string_split_wallet": "Dividir %s",
   "string_add_edit_tokens": "Añadir /Editar Tokens",
+  "tx_notes_metadata": "",
   "exchange_notes_metadata_generic": "Cambiados %1$s %2$s de %3$s a %4$s %5$s en %6$s a la dirección %7$s\nPedido:%8$s\nPara asistencia, por favor contactar %9$s.",
   "exchange_notes_metadata_generic2": "",
   "title_crypto_settings": "%s Ajustes",
