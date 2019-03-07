@@ -273,6 +273,7 @@
   "string_master_private_key": "Privater Hauptschlüssel",
   "string_split_wallet": "%s aufsplitten",
   "string_add_edit_tokens": "Hinzufügen / Bearbeiten von Token",
+  "tx_notes_metadata": "",
   "exchange_notes_metadata_generic": "",
   "exchange_notes_metadata_generic2": "",
   "title_crypto_settings": "%s Einstellungen",
