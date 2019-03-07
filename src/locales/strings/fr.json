@@ -273,6 +273,7 @@
   "string_master_private_key": "Clés privées maîtresses",
   "string_split_wallet": "Diviser %s",
   "string_add_edit_tokens": "Ajouter/ Modifier les Tokens",
+  "tx_notes_metadata": "",
   "exchange_notes_metadata_generic": "Échangées %1$s %2$s %3$s %4$s %5$s %6$s à l’adresse  Commandez %7$s \n: %8$s. \nPour l’assistance, veuillez communiquer avec %9$s.",
   "exchange_notes_metadata_generic2": "Échange %1$s %2$s de %3$s à %4$s %5$s dans %6$s à l'adresse %7$s \nOrdre : %8$s. \nAdresse de paiement d'éhange : %9$s. \nIdentifiant unique d'échange : %10$s \n\nPour assistance, veuillez contacter %11$s.",
   "title_crypto_settings": "%s Paramètres",
