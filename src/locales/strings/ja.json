@@ -273,6 +273,7 @@
   "string_master_private_key": "マスタープライベートキー",
   "string_split_wallet": "%sをスプリットさせる",
   "string_add_edit_tokens": "トークンを追加 / 編集する",
+  "tx_notes_metadata": "",
   "exchange_notes_metadata_generic": "",
   "exchange_notes_metadata_generic2": "",
   "title_crypto_settings": "%s設定",
