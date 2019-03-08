@@ -4,13 +4,13 @@ Kurze Beschreibung: Privat, sicher & einfach zu nutzen. Bitcoin & andere Kryptow
 
 <b>Absolute Privatsphäre und Sicherheit mit unserer benutzerfreundlichen Blockchain-Wallet.</b> Kaufe, verkaufe, sende und erhalte Bitcoin (BTC), Bitcoin Cash (BCH), Litecoin (LTC), Ethereum (ETH) und weitere führende Kryptowährungen.
 
-Die Verwaltung Ihrer Kryptowährung war nie einfacher. Edge Wallet provides maximum security while keeping simplicity, allowing all types of users to easily manage, transfer & exchange their currencies.
+Die Verwaltung Ihrer Kryptowährung war nie einfacher. Die Edge-Wallet bietet maximale Sicherheit bei gleichzeitiger Einfachheit und ermöglicht es allen Nutzern, ihre Währungen einfach zu verwalten, zu transferieren und zu tauschen.
 
-<b>Edge Crypto Wallet currently supports:</b> Bitcoin (BTC), Bitcoin Cash (BCH), Bitcoin SV (BSV), Litecoin (LTC), Qtum (QTUM), Dash (DASH), Ethereum (ETH), Monero (XMR), Ripple (XRP), Digibyte (DGB), EOS, and Feathercoin (FTC). Want to see other cryptos in our wallet? Send us a request!
+<b>Die Edge-Krypto-Wallet unterstützt derzeit:</b> Bitcoin (BTC), Bitcoin Cash (BCH), Bitcoin SV (BSV), Litecoin (LTC), Qtum (QTUM), Dash (DASH), Ethereum (ETH), Monero (XMR), Ripple (XRP), Digibyte (DGB), EOS und Feathercoin (FTC). Du willst andere Kryptowährungen in unserer Wallet sehen? Senden Sie uns eine Anfrage!
 
-Edge is a powerful and easy to use cryptocurrency wallet that allows users to easily control their own private keys with the familiarity and ease of mobile banking. 
+Edge ist eine leistungsstarke und einfach zu bedienende Wallet für Kryptowährungen, die es Benutzern erlaubt, ihre eigenen privaten Schlüssel mit der Vertrautheit und Leichtigkeit des mobilen Banking's zu kontrollieren. 
 
-Take control of your funds! With Edge, only YOU have access to your funds or transaction data. Neither Edge or any 3rd party can access your money or data. You get the financial privacy and autonomy that blockchain was designed for, with the ease of use even grandma could handle.
+Übernehmen Sie die Kontrolle über Ihr Geld! Mit Edge haben nur SIE Zugriff auf Ihr Geld oder die Transaktionsdaten. Neither Edge or any 3rd party can access your money or data. You get the financial privacy and autonomy that blockchain was designed for, with the ease of use even grandma could handle.
 
 Edge also provides a cryptocurrency exchange. Easily swap your currencies for others with a few taps. Exchange BTC for Ethereum, ETH for BCH and many more.
 
