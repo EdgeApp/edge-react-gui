@@ -98,4 +98,4 @@ if [[ "$unamestr" == 'Darwin' ]]; then
 fi
 
 # Apply patches
-patch ./node_modules/react-native/React/Views/RCTFont.mm ./patches/RCTFont.patch
+patch -f ./node_modules/react-native/React/Views/RCTFont.mm ./patches/RCTFont.patch || true
