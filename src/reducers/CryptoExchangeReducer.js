@@ -32,10 +32,12 @@ export type CryptoExchangeState = {
   changeWallet: 'none' | 'from' | 'to',
   fee: any,
   shiftPendingTransaction: boolean,
+  calculatingMax: boolean,
   quoteExpireDate: Date | null,
   quote: EdgeSwapQuote | null,
   showKYCAlert: boolean,
-  pluginCompleteKYC: string | null
+  pluginCompleteKYC: string | null,
+  creatingWallet: boolean
 }
 
 const dummyCurrencyInfo: GuiCurrencyInfo = {
@@ -77,15 +79,26 @@ const initialState = {
   changeWallet: 'none',
   forceUpdateGuiCounter: 0,
   shiftPendingTransaction: false,
+  calculatingMax: false,
   quoteExpireDate: null,
   quote: null,
   showKYCAlert: false,
-  pluginCompleteKYC: null
+  pluginCompleteKYC: null,
+  creatingWallet: false
 }
 
 function cryptoExchangeInner (state = initialState, action: Action): CryptoExchangeState {
   let forceUpdateGuiCounter
   switch (action.type) {
+    case 'UI/WALLETS/CREATE_WALLET_START': {
+      return { ...state, creatingWallet: true }
+    }
+    case 'UI/WALLETS/CREATE_WALLET_SUCCESS': {
+      return { ...state, creatingWallet: false }
+    }
+    case 'UI/WALLETS/CREATE_WALLET_FAILURE': {
+      return { ...state, creatingWallet: false }
+    }
     case 'ON_KYC_TOKEN_SET': {
       return { ...state, showKYCAlert: false }
     }
@@ -150,14 +163,6 @@ function cryptoExchangeInner (state = initialState, action: Action): CryptoExcha
         genericShapeShiftError: null
       }
     }
-
-    case 'DISABLE_WALLET_LIST_MODAL_VISIBILITY': {
-      return {
-        ...state,
-        walletListModalVisible: false
-      }
-    }
-
     case 'OPEN_WALLET_SELECTOR_MODAL': {
       return {
         ...state,
@@ -237,12 +242,20 @@ function cryptoExchangeInner (state = initialState, action: Action): CryptoExcha
       }
     }
 
+    case 'START_CALC_MAX': {
+      return {
+        ...state,
+        calculatingMax: true
+      }
+    }
+
     case 'SET_FROM_WALLET_MAX': {
       forceUpdateGuiCounter = state.forceUpdateGuiCounter
       forceUpdateGuiCounter++
       return {
         ...state,
         fromNativeAmount: action.data,
+        calculatingMax: false,
         forceUpdateGuiCounter
       }
     }

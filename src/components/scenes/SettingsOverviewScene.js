@@ -35,6 +35,7 @@ type Props = {
   lockButtonIcon: string,
   isLocked: boolean,
   confirmPasswordError: string,
+  developerModeOn: boolean,
   setAutoLogoutTimeInMinutes(number): void,
   confirmPassword(string): void,
   lockSettings(): void,
@@ -45,7 +46,9 @@ type Props = {
   showReEnableOtpModal: () => Promise<Action>,
   showUnlockSettingsModal: () => void,
   showSendLogsModal: () => void,
-  showRestoreWalletsModal: () => void
+  showRestoreWalletsModal: () => void,
+  turnOnDeveloperMode(): void,
+  turnOffDeveloperMode(): void
 }
 type State = {
   showAutoLogoutModal: boolean,
@@ -129,7 +132,13 @@ export default class SettingsOverview extends Component<Props, State> {
     this.options.useTouchID.value = bool
   }
 
-  _onPressDebug = () => {}
+  onDeveloperPress = () => {
+    if (this.props.developerModeOn) {
+      this.props.turnOffDeveloperMode()
+      return
+    }
+    this.props.turnOnDeveloperMode()
+  }
 
   showAutoLogoutModal = async () => {
     const modal = createAutoLogoutModal({
@@ -148,7 +157,7 @@ export default class SettingsOverview extends Component<Props, State> {
   render () {
     const { measurement: autoLogoutMeasurement, value: autoLogoutValue } = getTimeWithMeasurement(this.state.autoLogoutTimeInMinutes)
     const autoLogoutRightText = autoLogoutValue === 0 ? DISABLE_TEXT : `${autoLogoutValue} ${s.strings['settings_' + autoLogoutMeasurement]}`
-
+    const developerModeText = this.props.developerModeOn ? s.strings.settings_turn_off_developer_mode : s.strings.settings_turn_on_developer_mode
     return (
       <SafeAreaView>
         <Gradient style={styles.gradient} />
@@ -256,8 +265,8 @@ export default class SettingsOverview extends Component<Props, State> {
             />
 
             <View style={[styles.debugArea]}>
-              <PrimaryButton onPress={this._onPressDebug}>
-                <PrimaryButton.Text>{s.strings.settings_button_debug}</PrimaryButton.Text>
+              <PrimaryButton onPress={this.onDeveloperPress}>
+                <PrimaryButton.Text>{developerModeText}</PrimaryButton.Text>
               </PrimaryButton>
             </View>
 

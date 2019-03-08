@@ -147,8 +147,8 @@ export const getSupportedWalletTypes = (state: State) => {
       })
     } else {
       supportedWalletTypes.push({
-        label: currencyInfo.currencyName,
-        value: currencyInfo.walletTypes[0],
+        label: currencyInfo.displayName,
+        value: currencyInfo.walletType,
         symbolImage: currencyInfo.symbolImage,
         symbolImageDarkMono: currencyInfo.symbolImageDarkMono,
         currencyCode: currencyInfo.currencyCode

@@ -19,6 +19,28 @@ import * as UTILS from '../../util/utils'
 import { FormField } from '../common/FormField.js'
 
 const SOFT_MENU_BAR_HEIGHT = ExtraDimensions.get('SOFT_MENU_BAR_HEIGHT')
+const WALLET_TYPE_ORDER = [
+  'wallet:bitcoin-bip44',
+  'wallet:bitcoin-bip49',
+  'wallet:bitcoincash',
+  'wallet:monero',
+  'wallet:ethereum',
+  'wallet:bitcoinsv',
+  'wallet:litecoin',
+  'wallet:eos',
+  'wallet:ripple',
+  'wallet:stellar',
+  'wallet:dash',
+  'wallet:digibyte',
+  'wallet:vertcoin',
+  'wallet:qtum',
+  'wallet:feathercoin',
+  'wallet:bitcoingold',
+  'wallet:smartcash',
+  'wallet:groestlcoin',
+  'wallet:zcoin',
+  'wallet:ufo'
+]
 
 export type CreateWalletSelectCryptoOwnProps = {
   dimensions: DeviceDimensions,
@@ -28,10 +50,17 @@ export type CreateWalletSelectCryptoStateProps = {
   supportedWalletTypes: Array<GuiWalletType>,
   dimensions: DeviceDimensions
 }
-type Props = CreateWalletSelectCryptoOwnProps & CreateWalletSelectCryptoStateProps
+
+type CreateWalletSelectCryptoDispatchProps = {
+  displayErrorAlert: string => void
+}
+
+type Props = CreateWalletSelectCryptoOwnProps & CreateWalletSelectCryptoStateProps & CreateWalletSelectCryptoDispatchProps
 type State = {
   selectedWalletType: string,
-  searchTerm: string
+  sortedWalletTypes: Array<GuiWalletType>,
+  searchTerm: string,
+  errorShown: boolean
 }
 
 export class CreateWalletSelectCrypto extends Component<Props, State> {
@@ -39,23 +68,25 @@ export class CreateWalletSelectCrypto extends Component<Props, State> {
     super(props)
     this.state = {
       selectedWalletType: '',
-      searchTerm: ''
+      sortedWalletTypes: [],
+      searchTerm: '',
+      errorShown: false
     }
   }
 
   isValidWalletType = () => {
     const { selectedWalletType } = this.state
-    const { supportedWalletTypes } = this.props
-    const walletTypeValue = supportedWalletTypes.findIndex(walletType => walletType.value === selectedWalletType)
+    const { sortedWalletTypes } = this.state
+    const walletTypeValue = sortedWalletTypes.findIndex(walletType => walletType.value === selectedWalletType)
 
     const isValid: boolean = walletTypeValue >= 0
     return isValid
   }
 
   getWalletType = (walletTypeValue: string): GuiWalletType => {
-    const { supportedWalletTypes } = this.props
-    const foundValueIndex = supportedWalletTypes.findIndex(walletType => walletType.value === walletTypeValue)
-    const foundValue = supportedWalletTypes[foundValueIndex]
+    const { sortedWalletTypes } = this.state
+    const foundValueIndex = sortedWalletTypes.findIndex(walletType => walletType.value === walletTypeValue)
+    const foundValue = sortedWalletTypes[foundValueIndex]
 
     return foundValue
   }
@@ -82,7 +113,7 @@ export class CreateWalletSelectCrypto extends Component<Props, State> {
   }
 
   handleSelectWalletType = (item: GuiWalletType): void => {
-    const selectedWalletType = this.props.supportedWalletTypes.find(type => type.value === item.value)
+    const selectedWalletType = this.state.sortedWalletTypes.find(type => type.value === item.value)
     if (selectedWalletType) {
       this.setState(
         {
@@ -102,8 +133,34 @@ export class CreateWalletSelectCrypto extends Component<Props, State> {
     UTILS.noOp()
   }
 
+  static getDerivedStateFromProps (nextProps: Props, prevState: State) {
+    const { displayErrorAlert } = nextProps
+    let { errorShown } = prevState
+    // Sort the wallet types
+    const sortedWalletTypes: Array<GuiWalletType> = []
+    const walletTypesCopy: Array<GuiWalletType> = [].concat(nextProps.supportedWalletTypes)
+    let unloadedWalletCount = 0
+    for (const wt of WALLET_TYPE_ORDER) {
+      const idx = walletTypesCopy.findIndex(gwt => gwt.value === wt)
+      if (idx >= 0) {
+        sortedWalletTypes.push(walletTypesCopy[idx])
+        walletTypesCopy.splice(idx, 1)
+      } else {
+        unloadedWalletCount++
+      }
+    }
+    if (unloadedWalletCount) {
+      if (!errorShown) {
+        displayErrorAlert(s.strings.create_wallet_selcet_crypto_unloaded_plugins_error)
+        errorShown = true
+      }
+    }
+    sortedWalletTypes.push(...walletTypesCopy)
+    return { sortedWalletTypes, errorShown }
+  }
+
   render () {
-    const filteredArray = this.props.supportedWalletTypes.filter(entry => {
+    const filteredArray = this.state.sortedWalletTypes.filter(entry => {
       return (
         entry.label.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0 ||
         entry.currencyCode.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0

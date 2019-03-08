@@ -114,8 +114,8 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
   backInterpolate: Animated.Value
   androidFrontOpacityInterpolate: Animated.Value
   androidBackOpacityInterpolate: Animated.Value
-  textInputFront: TextInput
-  textInputBack: TextInput
+  textInputFront: TextInput | null
+  textInputBack: TextInput | null
 
   constructor (props: Props) {
     super(props)
@@ -166,8 +166,9 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
     }
 
     if (this.props.isFocus) {
-      const { textInputBack } = this
-      setTimeout(() => textInputBack.focus(), 650)
+      setTimeout(() => {
+        this.textInputBack && this.textInputBack.focus()
+      }, 650)
     }
   }
 
@@ -216,7 +217,7 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
       }).start()
     }
     if (!this.state.isToggled) {
-      if (this.state.textInputFrontFocus && this.textInputFront) {
+      if (this.state.textInputFrontFocus && this.textInputBack) {
         this.textInputBack.focus()
       }
       Animated.spring(this.animatedValue, {
@@ -265,6 +266,17 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
     )
   }
 
+  getTextInputFrontRef = (ref: TextInput | null) => {
+    this.textInputFront = ref
+  }
+
+  textInputFrontFocusTrue = () => {
+    this.setState({ textInputFrontFocus: true })
+  }
+  textInputFrontFocusFalse = () => {
+    this.setState({ textInputFrontFocus: false })
+  }
+
   topRowFront = (fieldInfo: FlipInputFieldInfo, onChangeText: string => void, amount: string) => {
     return (
       <View style={top.row} key={'top'}>
@@ -280,16 +292,26 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
           selectionColor="white"
           returnKeyType="done"
           underlineColorAndroid={'transparent'}
-          ref={ref => {
-            this.textInputFront = ref
-          }}
-          onFocus={() => this.setState({ textInputFrontFocus: true })}
-          onBlur={() => this.setState({ textInputFrontFocus: false })}
+          ref={this.getTextInputFrontRef}
+          onFocus={this.textInputFrontFocusTrue}
+          onBlur={this.textInputFrontFocusFalse}
           editable={this.props.isEditable}
         />
         <Text style={[top.currencyCode]}>{fieldInfo.currencyName}</Text>
       </View>
     )
+  }
+
+  getTextInputBackRef = (ref: TextInput | null) => {
+    this.textInputBack = ref
+  }
+
+  textInputBackFocusTrue = () => {
+    this.setState({ textInputBackFocus: true })
+  }
+
+  textInputBackFocusFalse = () => {
+    this.setState({ textInputBackFocus: false })
   }
 
   topRowBack = (fieldInfo: FlipInputFieldInfo, onChangeText: string => void, amount: string) => {
@@ -307,11 +329,9 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
           selectionColor="white"
           returnKeyType="done"
           underlineColorAndroid={'transparent'}
-          ref={ref => {
-            this.textInputBack = ref
-          }}
-          onFocus={() => this.setState({ textInputBackFocus: true })}
-          onBlur={() => this.setState({ textInputBackFocus: false })}
+          ref={this.getTextInputBackRef}
+          onFocus={this.textInputBackFocusTrue}
+          onBlur={this.textInputBackFocusFalse}
           editable={this.props.isEditable}
         />
         <Text style={[top.currencyCode]}>{fieldInfo.currencyName}</Text>

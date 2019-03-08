@@ -135,8 +135,8 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
     const paymentInfo: AccountPaymentParams = {
       requestedAccountName: accountName,
       currencyCode: paymentCurrencyCode,
-      ownerPublicKey: createdWallet.keys.ownerPublicKey,
-      activePublicKey: createdWallet.keys.publicKey
+      ownerPublicKey: createdWallet.publicWalletInfo.keys.ownerPublicKey,
+      activePublicKey: createdWallet.publicWalletInfo.keys.publicKey
     }
 
     fetchWalletAccountActivationPaymentInfo(paymentInfo, createdWallet)
@@ -176,6 +176,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
     } = this.props
     const { walletId, createdWallet } = this.state
     const wallet = wallets[walletId]
+    if (!wallet) return null
     const { name, symbolImageDarkMono } = wallet
 
     const isContinueButtonDisabled = isCreatingWallet || (createdWallet && !amount)

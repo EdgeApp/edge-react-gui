@@ -1,14 +1,18 @@
 // @flow
 
 import { bns } from 'biggystring'
+import Locale from 'react-native-locale'
 import { connect } from 'react-redux'
 
 import type { SetNativeAmountInfo } from '../../actions/CryptoExchangeActions'
 import { getQuoteForTransaction, selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
+import { createCurrencyWalletAndAddToSwap } from '../../actions/indexActions'
 import { CryptoExchangeScene } from '../../components/scenes/CryptoExchangeScene'
 import type { CryptoExchangeSceneComponentDispatchProps, CryptoExchangeSceneComponentStateProps } from '../../components/scenes/CryptoExchangeScene'
+import { DEFAULT_STARTER_WALLET_NAMES, USD_FIAT } from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import type { Dispatch, State } from '../../modules/ReduxTypes'
+import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import { getExchangeRate } from '../../modules/UI/selectors.js'
 import { emptyCurrencyInfo, emptyGuiWallet } from '../../types.js'
 import type { GuiCurrencyInfo } from '../../types.js'
@@ -18,7 +22,7 @@ const DIVIDE_PRECISION = 18
 export const mapStateToProps = (state: State): CryptoExchangeSceneComponentStateProps => {
   const fromWallet = state.cryptoExchange.fromWallet
   const toWallet = state.cryptoExchange.toWallet
-
+  const supportedWalletTypes = SETTINGS_SELECTORS.getSupportedWalletTypes(state)
   let fromCurrencyCode, fromPrimaryInfo: GuiCurrencyInfo, fromButtonText: string, fromNativeAmount: string, fromExchangeAmount: string, fromFiatToCrypto: number
   if (fromWallet) {
     fromCurrencyCode = state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name
@@ -51,6 +55,9 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
     toFiatToCrypto = 1
   }
   const showKYCAlert = state.cryptoExchange.showKYCAlert
+  const wallets = state.ui.wallets.byId
+  const totalWallets = Object.keys(wallets).length
+  const creatingWallet = state.cryptoExchange.creatingWallet
   return {
     fromWallet: fromWallet || emptyGuiWallet,
     fromExchangeAmount,
@@ -71,11 +78,16 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
     toCurrencyIcon: state.cryptoExchange.toCurrencyIcon || '',
     toCurrencyIconDark: state.cryptoExchange.toCurrencyIconDark || '',
     forceUpdateGuiCounter: state.cryptoExchange.forceUpdateGuiCounter,
-    showWalletSelectModal: state.ui.scenes.walletListModal.walletListModalVisible,
+    // showWalletSelectModal: state.ui.scenes.walletListModal.walletListModalVisible,
     shiftPendingTransaction: state.cryptoExchange.shiftPendingTransaction,
+    calculatingMax: state.cryptoExchange.calculatingMax,
     showKYCAlert,
     pluginCompleteKYC: state.cryptoExchange.pluginCompleteKYC,
-    wallets: state.ui.wallets.byId
+    wallets,
+    totalWallets,
+    supportedWalletTypes,
+    state,
+    creatingWallet
   }
 }
 
@@ -87,7 +99,16 @@ export const mapDispatchToProps = (dispatch: Dispatch): CryptoExchangeSceneCompo
     dispatch(selectWalletForExchange(walletId, currencyCode))
   },
   openModal: (data: 'from' | 'to') => dispatch({ type: 'OPEN_WALLET_SELECTOR_MODAL', data }),
-  wipeKYCFlag: () => dispatch({ type: 'WIPE_KYC_NEED' })
+  wipeKYCFlag: () => dispatch({ type: 'WIPE_KYC_NEED' }),
+  createCurrencyWallet: (walletType: string, currencyCode: string) => {
+    const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
+    let fiatCurrencyCode = USD_FIAT
+    if (localeInfo.currencyCode && typeof localeInfo.currencyCode === 'string' && localeInfo.currencyCode.length >= 3) {
+      fiatCurrencyCode = 'iso:' + localeInfo.currencyCode
+    }
+    const walletName = DEFAULT_STARTER_WALLET_NAMES[currencyCode]
+    dispatch(createCurrencyWalletAndAddToSwap(walletName, walletType, fiatCurrencyCode))
+  }
 })
 
 const CryptoExchangeSceneConnector = connect(

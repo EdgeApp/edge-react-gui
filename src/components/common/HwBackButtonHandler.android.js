@@ -1,7 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
 import { ToastAndroid } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 
 import s from '../../locales/strings'
 
@@ -10,7 +9,6 @@ let BACK_BUTTON_PRESSED_ONCE_TO_EXIT = false
 
 const hwBackButtonHandler = () => {
   if (BACK_BUTTON_PRESSED_ONCE_TO_EXIT) {
-    Actions.pop()
     return false
   }
 

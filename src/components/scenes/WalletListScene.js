@@ -1,5 +1,6 @@
 // @flow
 
+import { createYesNoModal, showModal } from 'edge-components'
 import React, { Component } from 'react'
 import { ActivityIndicator, Animated, FlatList, Image, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -11,16 +12,20 @@ import iconImage from '../../assets/images/otp/OTP-badge_sm.png'
 import WalletIcon from '../../assets/images/walletlist/my-wallets.png'
 import WalletOptions from '../../connectors/WalletOptionsConnector.js'
 import * as Constants from '../../constants/indexConstants.js'
+import { scale } from '../../lib/scaling.js'
 import s from '../../locales/strings.js'
 import { getDefaultIsoFiat, getIsAccountBalanceVisible } from '../../modules/Settings/selectors.js'
 import T from '../../modules/UI/components/FormattedText/index'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
+import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index.js'
 import { WiredProgressBar } from '../../modules/UI/components/WiredProgressBar/WiredProgressBar.ui.js'
 import { getWalletLoadingPercent } from '../../modules/UI/selectors.js'
+import { addWalletStyle } from '../../styles/components/AddWalletStyle.js'
 import { buyMultipleCryptoStyle } from '../../styles/components/BuyCryptoStyle.js'
 import { TwoButtonModalStyle } from '../../styles/indexStyles.js'
 import styles from '../../styles/scenes/WalletListStyle'
+import THEME from '../../theme/variables/airbitz'
 import { getFiatSymbol, getObjectDiff, getTotalFiatAmountFromExchangeRates } from '../../util/utils'
 import FullWalletListRow from '../common/FullWalletListRow.js'
 import SortableWalletListRow from '../common/SortableWalletListRow.js'
@@ -433,20 +438,65 @@ export default class WalletList extends Component<Props, State> {
     return newOrder
   }
 
+  addToken = async () => {
+    const { wallets } = this.props
+    let ethereumWallets = 0
+
+    for (const key in wallets) {
+      if (wallets[key].currencyCode === 'ETH') {
+        ethereumWallets++
+      }
+    }
+
+    if (ethereumWallets > 0) {
+      for (const key in wallets) {
+        const wallet = wallets[key]
+        if (wallet.currencyCode === 'ETH') {
+          return this.props.walletRowOption(wallet.id, 'manageTokens', wallet.archived)
+        }
+      }
+    }
+
+    if (ethereumWallets === 0) {
+      const modal = createYesNoModal({
+        title: s.strings.wallet_list_add_token_modal_title,
+        message: s.strings.wallet_list_add_token_modal_message,
+        icon: <Icon type={Constants.ION_ICONS} name={Constants.WALLET_ICON} size={30} />,
+        noButtonText: s.strings.string_cancel_cap,
+        yesButtonText: s.strings.title_create_wallet
+      })
+      return (await showModal(modal)) ? Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]() : null
+    }
+  }
+
   renderFooter = () => {
     return (
-      <TouchableWithoutFeedback onPress={Actions[Constants.BUY_SELL]}>
-        <View style={buyMultipleCryptoStyle.buyMultipleCryptoContainer}>
+      <View style={buyMultipleCryptoStyle.multipleCallToActionWrap}>
+        <View style={{ flexDirection: 'row', alignItems: 'stretch' }}>
+          <TouchableWithoutFeedback onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]} style={addWalletStyle.addWalletButton}>
+            <View style={addWalletStyle.addWalletContentWrap}>
+              <Ionicon name="md-add-circle" style={addWalletStyle.addWalletIcon} size={scale(24)} color={THEME.COLORS.GRAY_2} />
+              <T style={addWalletStyle.addWalletText}>{s.strings.wallet_list_add_wallet}</T>
+            </View>
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback onPress={this.addToken} style={addWalletStyle.addWalletButton}>
+            <View style={addWalletStyle.addTokenContentWrap}>
+              <Ionicon name="md-add-circle" style={addWalletStyle.addWalletIcon} size={scale(24)} color={THEME.COLORS.GRAY_2} />
+              <T style={addWalletStyle.addWalletText}>{s.strings.wallet_list_add_token}</T>
+            </View>
+          </TouchableWithoutFeedback>
+        </View>
+        <TouchableWithoutFeedback onPress={Actions[Constants.BUY_SELL]} style={buyMultipleCryptoStyle.buyMultipleCryptoContainer}>
           <View style={buyMultipleCryptoStyle.buyMultipleCryptoBox}>
-            <View style={{ flexDirection: 'row' }}>
+            <View style={buyMultipleCryptoStyle.buyMultipleCryptoContentWrap}>
               <Image style={buyMultipleCryptoStyle.buyMultipleCryptoBoxImage} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES['BTC'] }} resizeMode={'cover'} />
               <Image style={buyMultipleCryptoStyle.buyMultipleCryptoBoxImage} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES['ETH'] }} resizeMode={'cover'} />
               <Image style={buyMultipleCryptoStyle.buyMultipleCryptoBoxImage} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES['BCH'] }} resizeMode={'cover'} />
             </View>
             <T style={buyMultipleCryptoStyle.buyMultipleCryptoBoxText}>{s.strings.title_plugin_buysell}</T>
           </View>
-        </View>
-      </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
+      </View>
     )
   }
 }

@@ -88,7 +88,8 @@ export type TransactionListTx = {
   ...EdgeTransaction,
   dateString?: string,
   key: number,
-  time: string
+  time: string,
+  unfilteredIndex: number
 }
 
 export type FlatListItem = {

@@ -93,8 +93,6 @@ import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
 const UTILITY_SERVER_FILE = 'utilityServer.json'
-global.etherscanApiKey = ENV.ETHERSCAN_API_KEY
-global.infuraProjectId = ENV.INFURA_PROJECT_ID
 
 const RouterWithRedux = connect()(Router)
 
@@ -364,7 +362,7 @@ export default class Main extends Component<Props> {
 
                 <Drawer key={Constants.EDGE} hideNavBar contentComponent={ControlPanel} hideDrawerButton={true} drawerPosition="right" drawerWidth={scale(280)}>
                   {/* Wrapper Scene needed to fix a bug where the tabs would reload as a modal ontop of itself */}
-                  <Scene hideNavBar>
+                  <Scene key={'AllMyTabs'} hideNavBar>
                     <Tabs
                       key={Constants.EDGE}
                       swipeEnabled={false}
@@ -854,7 +852,8 @@ export default class Main extends Component<Props> {
       return HwBackButtonHandler()
     }
     if (this.isCurrentScene(Constants.EXCHANGE_QUOTE_SCENE)) {
-      return Actions.popTo(Constants.EXCHANGE_SCENE)
+      Actions.popTo(Constants.EXCHANGE_SCENE)
+      return true
     }
     Actions.pop()
     return true

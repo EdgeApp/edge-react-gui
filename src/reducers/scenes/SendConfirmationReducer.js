@@ -76,12 +76,14 @@ export const sendConfirmationLegacy = (state: SendConfirmationState = initialSta
     case 'UI/SEND_CONFIMATION/NEW_SPEND_INFO': {
       if (!action.data) throw new Error('Invalid Action')
       const { spendInfo } = action.data
+      const firstSpendTarget = spendInfo.spendTargets[0]
       const guiMakeSpendInfo = {
         ...state.guiMakeSpendInfo,
         networkFeeOption: spendInfo.networkFeeOption || state.guiMakeSpendInfo.networkFeeOption,
         customNetworkFee: spendInfo.customNetworkFee || state.guiMakeSpendInfo.customNetworkFee,
-        publicAddress: spendInfo.spendTargets[0].publicAddress || state.guiMakeSpendInfo.publicAddress,
-        nativeAmount: spendInfo.spendTargets[0].nativeAmount || state.guiMakeSpendInfo.nativeAmount,
+        publicAddress: firstSpendTarget.publicAddress || state.guiMakeSpendInfo.publicAddress,
+        nativeAmount: firstSpendTarget.nativeAmount || state.guiMakeSpendInfo.nativeAmount,
+        uniqueIdentifier: (firstSpendTarget.otherParams && firstSpendTarget.otherParams.uniqueIdentifier) || state.guiMakeSpendInfo.uniqueIdentifier,
         metadata: { ...state.guiMakeSpendInfo.metadata, ...spendInfo.metadata }
       }
 
@@ -244,8 +246,10 @@ export const transaction = (state: EdgeTransaction | null = null, action: Action
 export const sendConfirmation: Reducer<SendConfirmationState, Action> = (state = initialState, action) => {
   if (action.type === 'UI/SEND_CONFIMATION/RESET') return initialState
 
+  // make easier to debug legacySendConfirmation return value with breakpoint
+  const legacySendConfirmation = sendConfirmationLegacy(state, action)
   return {
-    ...sendConfirmationLegacy(state, action),
+    ...legacySendConfirmation,
     isEditable: isEditable(state.isEditable, action),
     error: error(state.error, action),
     pin: pin(state.pin, action),

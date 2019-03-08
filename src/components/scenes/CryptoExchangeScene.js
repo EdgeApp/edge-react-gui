@@ -2,24 +2,26 @@
 import { bns } from 'biggystring'
 import { showModal } from 'edge-components'
 import React, { Component } from 'react'
-import { Alert, Keyboard, View } from 'react-native'
+import { ActivityIndicator, Alert, Keyboard, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 
 import type { SetNativeAmountInfo } from '../../actions/CryptoExchangeActions.js'
+import { createCryptoExchangeWalletSelectorModal } from '../../components/modals/CryptoExchangeWalletSelectorModal'
 import CryptoExchangeMessageConnector from '../../connectors/components/CryptoExchangeMessageConnector'
 import { SwapKYCInfoNeededModalConnector } from '../../connectors/components/SwapKYCInfoNeededModalConnector'
 import { SwapKYCModalConnector } from '../../connectors/components/SwapKYCModalConnector.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
+import type { State } from '../../modules/ReduxTypes'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
 import { CryptoExchangeFlipInputWrapperComponent } from '../../modules/UI/components/FlipInput/CryptoExchangeFlipInputWrapperComponent.js'
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
-import WalletListModal from '../../modules/UI/components/WalletListModal/WalletListModalConnector'
+// import WalletListModal from '../../modules/UI/components/WalletListModal/WalletListModalConnector'
 import { CryptoExchangeSceneStyle } from '../../styles/indexStyles'
 import { emptyCurrencyInfo } from '../../types'
 import type { GuiCurrencyInfo, GuiWallet } from '../../types'
@@ -37,7 +39,6 @@ export type CryptoExchangeSceneComponentStateProps = {
   toPrimaryInfo: GuiCurrencyInfo,
   toButtonText: string,
   toFiatToCrypto: number,
-  showWalletSelectModal: boolean,
 
   // The following props are used to populate the confirmation modal
   fromCurrencyCode: string,
@@ -51,23 +52,28 @@ export type CryptoExchangeSceneComponentStateProps = {
 
   // Number of times To and From wallets were flipped
   forceUpdateGuiCounter: number,
-  showWalletSelectModal: boolean,
   shiftPendingTransaction: boolean,
+  calculatingMax: boolean,
   showKYCAlert: boolean,
   pluginCompleteKYC: string | null,
-  wallets: { [string]: GuiWallet }
+  wallets: { [string]: GuiWallet },
+  totalWallets: number,
+  supportedWalletTypes: Array<Object>,
+  state: State,
+  creatingWallet: boolean
 }
 
 export type CryptoExchangeSceneComponentDispatchProps = {
   onSelectWallet(string, string): void,
   openModal(data: 'from' | 'to'): mixed,
   getQuoteForTransaction(SetNativeAmountInfo): void,
-  wipeKYCFlag: () => any
+  wipeKYCFlag: () => any,
+  createCurrencyWallet(string, string): void
 }
 
 type Props = CryptoExchangeSceneComponentStateProps & CryptoExchangeSceneComponentDispatchProps
 
-type State = {
+type LocalState = {
   whichWallet: string, // Which wallet selector dropdown was tapped
   whichWalletFocus: string, // Which wallet FlipInput was last focused and edited
   fromExchangeAmount: string,
@@ -75,14 +81,14 @@ type State = {
   toExchangeAmount: string
 }
 
-export class CryptoExchangeScene extends Component<Props, State> {
+export class CryptoExchangeScene extends Component<Props, LocalState> {
   fromAmountNative: string
   fromAmountDisplay: string
   toAmountNative: string
   toAmountDisplay: string
   constructor (props: Props) {
     super(props)
-    const newState: State = {
+    const newState: LocalState = {
       whichWallet: Constants.FROM,
       whichWalletFocus: Constants.FROM,
       forceUpdateGuiCounter: 0,
@@ -106,6 +112,7 @@ export class CryptoExchangeScene extends Component<Props, State> {
         console.log('nav: ', response)
       })
     }
+
     if (this.state.forceUpdateGuiCounter !== nextProps.forceUpdateGuiCounter) {
       this.setState({
         fromExchangeAmount: nextProps.fromExchangeAmount,
@@ -194,13 +201,13 @@ export class CryptoExchangeScene extends Component<Props, State> {
               launchWalletSelector={this.launchToWalletSelector}
               onCryptoExchangeAmountChanged={this.toAmountChanged}
               isFocused={isToFocused}
+              isThinking={this.props.creatingWallet}
               focusMe={this.focusToWallet}
             />
             <View style={style.shim} />
             <View style={style.actionButtonContainer}>{this.renderButton()}</View>
             <View style={style.shim} />
           </KeyboardAwareScrollView>
-          {this.renderDropUp()}
         </Gradient>
       </SafeAreaView>
     )
@@ -228,7 +235,13 @@ export class CryptoExchangeScene extends Component<Props, State> {
     Alert.alert(s.strings.no_exchange_amount, s.strings.select_exchange_amount)
   }
   renderButton = () => {
-    if (this.props.fromCurrencyCode !== '' && this.props.toCurrencyCode !== '') {
+    if (this.props.calculatingMax) {
+      return (
+        <PrimaryButton>
+          <ActivityIndicator />
+        </PrimaryButton>
+      )
+    } else if (this.props.fromCurrencyCode !== '' && this.props.toCurrencyCode !== '') {
       return (
         <PrimaryButton onPress={this.getQuote}>
           <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>
@@ -240,6 +253,7 @@ export class CryptoExchangeScene extends Component<Props, State> {
 
   launchFromWalletSelector = () => {
     this.props.openModal('from')
+    this.renderDropUp(Constants.FROM)
     this.setState({
       whichWallet: Constants.FROM
     })
@@ -247,6 +261,7 @@ export class CryptoExchangeScene extends Component<Props, State> {
 
   launchToWalletSelector = () => {
     this.props.openModal('to')
+    this.renderDropUp(Constants.TO)
     this.setState({
       whichWallet: Constants.TO
     })
@@ -274,9 +289,9 @@ export class CryptoExchangeScene extends Component<Props, State> {
     this.toAmountDisplay = amounts.exchangeAmount
   }
 
-  renderDropUp = () => {
+  renderDropUp = (whichWallet: string) => {
     const { onSelectWallet, fromCurrencyCode, fromWallet, toCurrencyCode, toWallet, wallets } = this.props
-    const { whichWallet } = this.state
+
     let excludedCurrencyCode = '' // should allow for multiple excluded currencyCodes
     // some complex logic because 'toCurrencyCode/fromCurrencyCode'
     // can be denomination (needs to change to actual currencyCode)
@@ -299,26 +314,48 @@ export class CryptoExchangeScene extends Component<Props, State> {
         }
       }
     }
-
-    const allowedWallets = {}
+    const walletCurrencyCodes = []
+    const allowedWallets = []
     for (const id in wallets) {
       const wallet = wallets[id]
-      if (wallet.receiveAddress && wallet.receiveAddress.publicAddress) {
-        allowedWallets[id] = wallets[id]
+      if (excludedCurrencyCode === wallet.currencyCode && excludedCurrencyCode === 'ETH' && wallet.enabledTokens.length > 0) {
+        walletCurrencyCodes.push(wallet.currencyCode)
+        if (wallet.receiveAddress && wallet.receiveAddress.publicAddress) {
+          allowedWallets.push(wallets[id])
+        }
+      }
+      if (excludedCurrencyCode !== wallet.currencyCode) {
+        walletCurrencyCodes.push(wallet.currencyCode)
+        if (wallet.receiveAddress && wallet.receiveAddress.publicAddress) {
+          allowedWallets.push(wallets[id])
+        }
       }
     }
-    if (this.props.showWalletSelectModal) {
-      return (
-        <WalletListModal
-          onSelectWallet={onSelectWallet}
-          topDisplacement={Constants.CRYPTO_EXCHANGE_WALLET_DIALOG_TOP}
-          type={Constants.CRYPTO_EXCHANGE}
-          whichWallet={whichWallet}
-          excludedCurrencyCode={excludedCurrencyCode}
-          wallets={allowedWallets}
-        />
-      )
+    const supportedWalletTypes = []
+    for (let i = 0; i < this.props.supportedWalletTypes.length; i++) {
+      const swt = this.props.supportedWalletTypes[i]
+      if (!walletCurrencyCodes.includes(swt.currencyCode) && swt.currencyCode !== 'EOS' && excludedCurrencyCode !== swt.currencyCode) {
+        supportedWalletTypes.push(swt)
+      }
     }
+    const props = {
+      wallets: allowedWallets,
+      supportedWalletTypes,
+      excludedCurrencyCode,
+      showWalletCreators: whichWallet === Constants.TO,
+      state: this.props.state,
+      headerTitle: whichWallet === Constants.TO ? s.strings.select_recv_wallet : s.strings.select_src_wallet
+    }
+    const modal = createCryptoExchangeWalletSelectorModal(props)
+    showModal(modal, { style: { margin: 0 } }).then(response => {
+      if (response) {
+        if (response.id) {
+          onSelectWallet(response.id, response.currencyCode)
+          return
+        }
+        this.props.createCurrencyWallet(response.value, response.currencyCode)
+      }
+    })
     return null
   }
 }

@@ -22,18 +22,6 @@ const walletListModalVisible = (state = false, action: Action): boolean => {
       return false
     }
 
-    case 'OPEN_WALLET_SELECTOR_MODAL': {
-      return true
-    }
-
-    case 'SELECT_TO_WALLET_CRYPTO_EXCHANGE': {
-      return false
-    }
-
-    case 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE': {
-      return false
-    }
-
     case 'UPDATE_CURRENT_SCENE_KEY': {
       return false
     }
