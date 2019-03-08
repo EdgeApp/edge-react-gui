@@ -88,7 +88,7 @@
     "edge-core-js": "0.15.4",
     "edge-currency-accountbased": "^0.1.5",
     "edge-currency-bitcoin": "4.0.1",
-    "edge-currency-monero": "0.2.0",
+    "edge-currency-monero": "0.2.1",
     "edge-exchange-plugins": "^0.5.3",
     "edge-login-ui-rn": "^0.5.17",
     "https-browserify": "0.0.1",
