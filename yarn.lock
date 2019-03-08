@@ -8213,10 +8213,10 @@ react-native-easy-grid@0.2.0:
   version "0.17.0"
   resolved "git://github.com/EdgeApp/react-native-extra-dimensions-android.git#4e1c03f0c5ee3dc26d820d3980796ac41eb51528"
 
-react-native-fast-crypto@^1.6.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/react-native-fast-crypto/-/react-native-fast-crypto-1.6.0.tgz#63bb9b38df7882dc4c5e442e758dd4c183c64058"
-  integrity sha512-oRRWEh6XQFBnVm28HYEYZoOr0Nfh07yUhVeXgvcDn9NRydqGYIpVyx10yDn5e26KQpRZ4YBrEP5maRMFwjNqwA==
+react-native-fast-crypto@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/react-native-fast-crypto/-/react-native-fast-crypto-1.7.0.tgz#41cea5b037216c22b44b82227934cc7ea4105f1b"
+  integrity sha512-3K3c4L8IJ/gtYG5mVje5a9fL9nqGxImvipNj2BvnY1ErXEKADb7VYzy3G795GxFoVwYr6X3sMcunIZjj/xrB/w==
   dependencies:
     buffer "^5.0.8"
     rfc4648 "^1.0.0"
