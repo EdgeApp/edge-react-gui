@@ -11,7 +11,7 @@
   "drawer_exchange": "Tauschbörse",
   "drawer_request": "Angefordert",
   "drawer_scan_qr_send": "QR-Code scannen (Senden)",
-  "drawer_sweep_private_key": "",
+  "drawer_sweep_private_key": "Private Schlüssel verwerfen",
   "drawer_wallets": "Wallets",
   "dropdown_exchange_max_amount": "Maximalen Betrag wechseln",
   "max_spend_unavailable_modal_title": "",
