@@ -80,6 +80,8 @@
   "fragment_transaction_list_sent_prefix": "已发送 ",
   "fragment_transaction_transfer": "转账",
   "fragment_wallet_unconfirmed": "待处理",
+  "fragment_transaction_list_tx_dropped": "",
+  "fragment_transaction_list_tx_synchronizing": "",
   "fragment_transaction_list_confirmation_progress": "%s / %s 确认",
   "transaction_list_buy_crypto_message": "买%s",
   "transaction_list_no_tx_yet": "没有交易记录！",
