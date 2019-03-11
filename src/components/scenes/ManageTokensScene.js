@@ -112,7 +112,6 @@ export default class ManageTokens extends Component<ManageTokensProps, State> {
                       walletId={this.props.guiWallet.id}
                       toggleToken={this.toggleToken}
                       enabledList={this.state.enabledList}
-                      customTokensList={this.props.settingsCustomTokens}
                       metaTokens={this.props.guiWallet.metaTokens}
                     />
                   )}
