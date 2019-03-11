@@ -144,12 +144,12 @@ exports[`MenuDropDown component should render without props 1`] = `
                   "top": 5.618309859154929,
                 },
                 Object {
-                  "color": "#4A5157",
+                  "color": "#F1AA19",
                 },
               ]
             }
           >
-            3:16 PM
+            Synchronizing
           </FormattedText>
         </Component>
       </Component>

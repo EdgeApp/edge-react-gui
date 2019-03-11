@@ -87,6 +87,8 @@ const strings = {
   fragment_transaction_list_sent_prefix: 'Sent ',
   fragment_transaction_transfer: 'Transfer',
   fragment_wallet_unconfirmed: 'Pending',
+  fragment_transaction_list_tx_dropped: 'Dropped',
+  fragment_transaction_list_tx_synchronizing: 'Synchronizing',
   fragment_transaction_list_confirmation_progress: '%s of %s Confirmations',
   transaction_list_buy_crypto_message: 'Buy %s',
   transaction_list_no_tx_yet: 'No transactions yet!',
