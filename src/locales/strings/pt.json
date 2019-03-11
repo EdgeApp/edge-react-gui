@@ -80,6 +80,8 @@
   "fragment_transaction_list_sent_prefix": "Enviado ",
   "fragment_transaction_transfer": "Transferir",
   "fragment_wallet_unconfirmed": "Pendente",
+  "fragment_transaction_list_tx_dropped": "",
+  "fragment_transaction_list_tx_synchronizing": "",
   "fragment_transaction_list_confirmation_progress": "%s de %s confirmações",
   "transaction_list_buy_crypto_message": "",
   "transaction_list_no_tx_yet": "Nenhuma transação ainda!",
