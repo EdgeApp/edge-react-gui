@@ -80,6 +80,8 @@
   "fragment_transaction_list_sent_prefix": "송신 완료 ",
   "fragment_transaction_transfer": "송금",
   "fragment_wallet_unconfirmed": "보류 중",
+  "fragment_transaction_list_tx_dropped": "",
+  "fragment_transaction_list_tx_synchronizing": "",
   "fragment_transaction_list_confirmation_progress": "%s / %s 확인",
   "transaction_list_buy_crypto_message": "%s 구매",
   "transaction_list_no_tx_yet": "아직 거래 내역이 없습니다.",
