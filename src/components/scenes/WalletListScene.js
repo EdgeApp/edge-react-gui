@@ -2,7 +2,7 @@
 
 import { createYesNoModal, showModal } from 'edge-components'
 import React, { Component } from 'react'
-import { ActivityIndicator, Animated, FlatList, Image, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, Alert, Animated, FlatList, Image, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import SortableListView from 'react-native-sortable-listview'
@@ -26,6 +26,7 @@ import { buyMultipleCryptoStyle } from '../../styles/components/BuyCryptoStyle.j
 import { TwoButtonModalStyle } from '../../styles/indexStyles.js'
 import styles from '../../styles/scenes/WalletListStyle'
 import THEME from '../../theme/variables/airbitz'
+import type { GuiWalletType } from '../../types'
 import { getFiatSymbol, getObjectDiff, getTotalFiatAmountFromExchangeRates } from '../../util/utils'
 import FullWalletListRow from '../common/FullWalletListRow.js'
 import SortableWalletListRow from '../common/SortableWalletListRow.js'
@@ -66,7 +67,8 @@ type Props = {
   toggleWalletFiatBalanceVisibility: () => void,
   isAccountBalanceVisible: boolean,
   isWalletFiatBalanceVisible: boolean,
-  defaultFiat: string
+  defaultFiat: string,
+  ethereumWalletType?: GuiWalletType
 }
 export default class WalletList extends Component<Props, State> {
   constructor (props: Props) {
@@ -465,7 +467,12 @@ export default class WalletList extends Component<Props, State> {
         noButtonText: s.strings.string_cancel_cap,
         yesButtonText: s.strings.title_create_wallet
       })
-      return (await showModal(modal)) ? Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]() : null
+
+      if (this.props.ethereumWalletType) {
+        return (await showModal(modal)) ? Actions[Constants.CREATE_WALLET_SELECT_FIAT]({ selectedWalletType: this.props.ethereumWalletType }) : null
+      } else {
+        return Alert.alert(s.strings.create_wallet_invalid_input, s.strings.create_wallet_select_valid_crypto)
+      }
     }
   }
 
