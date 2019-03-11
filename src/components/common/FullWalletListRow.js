@@ -1,7 +1,6 @@
 // @flow
 
 import { bns } from 'biggystring'
-import _ from 'lodash'
 import React, { Component } from 'react'
 import { ActivityIndicator, Image, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -13,6 +12,7 @@ import WalletListTokenRow from '../../connectors/WalletListTokenRowConnector.js'
 import * as Constants from '../../constants/indexConstants.js'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
+import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
 import type { State } from '../../modules/ReduxTypes.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import T from '../../modules/UI/components/FormattedText/index'
@@ -110,9 +110,14 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
     const customTokens = this.props.customTokens
     const enabledNotHiddenTokens = enabledTokens.filter(token => {
       let isVisible = true // assume we will enable token
-      const tokenIndex = _.findIndex(customTokens, item => item.currencyCode === token)
+
+      const tokenIndex = customTokens.findIndex(item => item.currencyCode === token)
       // if token is not supposed to be visible, not point in enabling it
       if (tokenIndex > -1 && customTokens[tokenIndex].isVisible === false) isVisible = false
+      if (SYNCED_ACCOUNT_DEFAULTS[token] && walletData.enabledTokens.includes(token)) {
+        // if hardcoded token
+        isVisible = true // and enabled then make visible (overwrite customToken isVisible flag)
+      }
       return isVisible
     })
 
