@@ -125,19 +125,26 @@ export class TransactionRowComponent extends Component<Props, State> {
       fiatAmountString = intl.formatNumber('0.00', { toFixed: 2 })
     }
 
-    const { walletBlockHeight, requiredConfirmations } = this.props
-    if (tx.blockHeight <= 0 || walletBlockHeight === null) {
+    const walletBlockHeight = this.props.walletBlockHeight || 0
+    const requiredConfirmations = this.props.requiredConfirmations
+    let currentConfirmations = 0
+    if (walletBlockHeight && tx.blockHeight > 0) {
+      currentConfirmations = walletBlockHeight - tx.blockHeight + 1
+    }
+
+    if (walletBlockHeight === 0) {
+      pendingTimeSyntax = s.strings.fragment_transaction_list_tx_synchronizing
+      pendingTimeStyle = styles.transactionPartialConfirmation
+    } else if (tx.blockHeight < 0) {
+      pendingTimeSyntax = s.strings.fragment_transaction_list_tx_dropped
+      pendingTimeStyle = styles.transactionPartialConfirmation
+    } else if (currentConfirmations === 0) {
       // if completely unconfirmed or wallet uninitialized
       pendingTimeStyle = styles.transactionPending
       pendingTimeSyntax = UNCONFIRMED_TRANSACTION
-      // if partial confirmation (less than currency threshold)
-      // subtract 1 from requiredConfirmations because one confirmation is when wallet and tx block heights match (difference is zero)
-    } else if (walletBlockHeight - tx.blockHeight < requiredConfirmations - 1) {
-      const currentConfirmations = walletBlockHeight - tx.blockHeight + 1
+    } else if (currentConfirmations < requiredConfirmations) {
       pendingTimeStyle = styles.transactionPartialConfirmation
-      // keep in mind that if the tx.blockHeight is not -1 the that means it must have had at least one confirmation
-      pendingTimeSyntax = sprintf(CONFIRMATION_PROGRESS_TEXT, currentConfirmations > 0 ? currentConfirmations : 0, requiredConfirmations)
-      // if confirmed past threshold
+      pendingTimeSyntax = sprintf(CONFIRMATION_PROGRESS_TEXT, currentConfirmations, requiredConfirmations)
     } else {
       pendingTimeStyle = styles.transactionTime
       pendingTimeSyntax = tx.time
