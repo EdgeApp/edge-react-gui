@@ -9,6 +9,7 @@ import React, { PureComponent } from 'react'
 import { View } from 'react-native'
 
 import ENV from '../../../env.json'
+import { fakeUser } from '../../fake-user.js'
 import EdgeAccountCallbackManager from './EdgeAccountCallbackManager.js'
 import EdgeContextCallbackManager from './EdgeContextCallbackManager.js'
 import EdgeWalletsCallbackManager from './EdgeWalletsCallbackManager.js'
@@ -81,7 +82,7 @@ export class EdgeCoreManager extends PureComponent<Props> {
         {ENV.USE_FAKE_CORE ? (
           <MakeFakeEdgeWorld
             debug={ENV.DEBUG_CORE_BRIDGE}
-            users={[]}
+            users={[fakeUser]}
             onLoad={world => world.makeEdgeContext(contextOptions).then(this.props.onLoad)}
             onError={this.props.onError}
             nativeIo={nativeIo}
