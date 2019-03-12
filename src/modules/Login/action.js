@@ -139,7 +139,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
 
     const loadedSyncedSettings = await getSyncedSettings(account)
     const syncedSettings = { ...loadedSyncedSettings } // will prevent mergeSettings trying to find prop of undefined
-    const mergedSyncedSettings = mergeSettings(syncedSettings, SYNCED_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_TYPES)
+    const mergedSyncedSettings = mergeSettings(syncedSettings, SYNCED_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_TYPES, account)
     if (mergedSyncedSettings.isOverwriteNeeded) {
       setSyncedSettings(account, { ...mergedSyncedSettings.finalSettings })
     }
@@ -193,8 +193,9 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
 export const mergeSettings = (
   loadedSettings: Object,
   defaults: Object,
-  types: Object
-): { finalSettings: Object, isOverwriteNeeded: boolean, isDefaultTypeIncorrect: boolean } => {
+  types: Object,
+  account?: Object
+): { finalSettings: Object, isOverwriteNeeded: boolean, isDefaultTypeIncorrect: boolean, account?: Object } => {
   const finalSettings = {}
   // begin process for repairing damaged settings data
   let isOverwriteNeeded = false
@@ -206,6 +207,7 @@ export const mergeSettings = (
       isDefaultTypeIncorrect = true
       console.error('MismatchedDefaultSettingType key: ', key, ' with defaultSettingType: ', defaultSettingType, ' and necessary type: ', types[key])
     }
+
     // if the type of the loaded setting does not meet the enforced type
     // eslint-disable-next-line valid-typeof
     const loadedSettingType = typeof loadedSettings[key]
@@ -225,6 +227,22 @@ export const mergeSettings = (
       finalSettings[key] = defaults[key]
     } else {
       finalSettings[key] = loadedSettings[key]
+    }
+
+    if (account) {
+      // if currency (not token)
+      if (loadedSettings[key].denominations) {
+        const currencyName = Constants.CURRENCY_PLUGIN_NAMES[key]
+        // for each currency info (each native currency)
+        const pluginDenominations = account.currencyConfig[currencyName].currencyInfo.denominations // get denominations for that plugin
+        const settingDenominationIndex = pluginDenominations.findIndex(pluginDenom => pluginDenom.multiplier === loadedSettings[key].denomination) // find settings denom in plugin denoms
+        if (settingDenominationIndex === -1) {
+          // setting denomination is not present in plugin (and on wallet)
+          finalSettings[key].denomination = pluginDenominations[0].multiplier // grab the first denom multiplier from plugin
+          console.warn(`${key} denomination ${loadedSettings[key].denomination} invalid, overwriting with plugin denom`)
+          isOverwriteNeeded = true // make sure synced settings get overwritten
+        }
+      }
     }
   }
 

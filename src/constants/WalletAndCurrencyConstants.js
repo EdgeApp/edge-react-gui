@@ -53,6 +53,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   SMART: 'smartcash',
   UFO: 'ufo',
   VTC: 'vertcoin',
+  XLM: 'stellar',
   XZC: 'zcoin'
 }
 
