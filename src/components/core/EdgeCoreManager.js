@@ -80,7 +80,6 @@ const contextOptions = {
 }
 
 const isReactNative = detectBundler.isReactNative
-console.log('isReactNative: ', isReactNative)
 const nativeIo = isReactNative ? {
   'edge-currency-accountbased': makeAccountbasedIo(),
   'edge-currency-bitcoin': makeBitcoinIo(),
