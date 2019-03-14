@@ -7,6 +7,7 @@ import makeMoneroIo from 'edge-currency-monero/lib/react-native-io.js'
 import makeExchangeIo from 'edge-exchange-plugins/lib/react-native-io.js'
 import React, { PureComponent } from 'react'
 import { View } from 'react-native'
+import detectBundler from 'detect-bundler'
 
 import ENV from '../../../env.json'
 import { fakeUser } from '../../fake-user.js'
@@ -19,61 +20,73 @@ type Props = {
   onError: (error: any) => mixed
 }
 
+export const currencyPlugins = {
+  // edge-currency-accountbased:
+  eos: true,
+  ethereum: {
+    // blockcypherApiKey: '...',
+    etherscanApiKey: ENV.ETHERSCAN_API_KEY,
+    infuraProjectId: ENV.INFURA_PROJECT_ID
+  },
+  stellar: true,
+  ripple: true,
+  // edge-currency-bitcoin:
+  bitcoin: true,
+  bitcoincash: true,
+  bitcoincashtestnet: false,
+  bitcoingold: true,
+  bitcoingoldtestnet: false,
+  bitcoinsv: true,
+  bitcointestnet: false,
+  dash: true,
+  digibyte: true,
+  dogecoin: false,
+  eboost: false,
+  feathercoin: true,
+  groestlcoin: true,
+  litecoin: true,
+  qtum: true,
+  smartcash: true,
+  ufo: true,
+  vertcoin: true,
+  zcoin: true,
+  // edge-currency-monero:
+  monero: true, // { apiKey: '...' }
+}
+
+export const ratePlugins = {
+  'shapeshift-rate': true,
+  coinbase: true,
+  coincap: true,
+  currencyconverterapi: ENV.CURRENCYCONVERTERAPI_INIT,
+  herc: true
+}
+
+export const swapPlugins = {
+  changelly: ENV.CHANGELLY_INIT,
+  changenow: { apiKey: ENV.CHANGE_NOW_API_KEY },
+  faast: ENV.FAAST_INIT,
+  shapeshift: { apiKey: ENV.SHAPESHIFT_API_KEY }
+}
+
 const contextOptions = {
   apiKey: ENV.AIRBITZ_API_KEY,
   appId: '',
   plugins: {
-    // edge-currency-accountbased:
-    eos: true,
-    ethereum: {
-      // blockcypherApiKey: '...',
-      etherscanApiKey: ENV.ETHERSCAN_API_KEY,
-      infuraProjectId: ENV.INFURA_PROJECT_ID
-    },
-    stellar: true,
-    ripple: true,
-    // edge-currency-bitcoin:
-    bitcoin: true,
-    bitcoincash: true,
-    bitcoincashtestnet: false,
-    bitcoingold: true,
-    bitcoingoldtestnet: false,
-    bitcoinsv: true,
-    bitcointestnet: false,
-    dash: true,
-    digibyte: true,
-    dogecoin: false,
-    eboost: false,
-    feathercoin: true,
-    groestlcoin: true,
-    litecoin: true,
-    qtum: true,
-    smartcash: true,
-    ufo: true,
-    vertcoin: true,
-    zcoin: true,
-    // edge-currency-monero:
-    monero: true, // { apiKey: '...' }
-    // edge-exchange-plugins:
-    'shapeshift-rate': true,
-    coinbase: true,
-    coincap: true,
-    currencyconverterapi: ENV.CURRENCYCONVERTERAPI_INIT,
-    herc: true,
-    // swap plugins:
-    changelly: ENV.CHANGELLY_INIT,
-    changenow: { apiKey: ENV.CHANGE_NOW_API_KEY },
-    faast: ENV.FAAST_INIT,
-    shapeshift: { apiKey: ENV.SHAPESHIFT_API_KEY }
+    ...currencyPlugins,
+    ...ratePlugins,
+    ...swapPlugins
   }
 }
 
-const nativeIo = {
+const isReactNative = detectBundler.isReactNative
+console.log('isReactNative: ', isReactNative)
+const nativeIo = isReactNative ? {
   'edge-currency-accountbased': makeAccountbasedIo(),
   'edge-currency-bitcoin': makeBitcoinIo(),
   'edge-currency-monero': makeMoneroIo(),
   'edge-exchange-plugins': makeExchangeIo()
-}
+} : {}
 
 export class EdgeCoreManager extends PureComponent<Props> {
   render () {

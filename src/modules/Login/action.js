@@ -195,7 +195,7 @@ export const mergeSettings = (
   defaults: Object,
   types: Object,
   account?: Object
-): { finalSettings: Object, isOverwriteNeeded: boolean, isDefaultTypeIncorrect: boolean, account?: Object } => {
+): { finalSettings: Object, isOverwriteNeeded: boolean, isDefaultTypeIncorrect: boolean } => {
   const finalSettings = {}
   // begin process for repairing damaged settings data
   let isOverwriteNeeded = false
