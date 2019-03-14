@@ -71,6 +71,7 @@ class PluginList extends Component<Props, State> {
           plugin.sourceFile = { uri: response }
         }
         const key = Actions.currentScene === SPEND ? PLUGIN_SPEND : PLUGIN_BUY
+        console.log('pvs: key', key)
         Actions[key]({ plugin: plugin })
       })
       return

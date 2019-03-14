@@ -59,6 +59,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   openingSendConfirmation: boolean
   constructor (props) {
     super(props)
+    console.log('pvs: Legacy')
     this.state = {
       showWalletList: false
     }
