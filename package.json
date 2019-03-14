@@ -25,6 +25,7 @@
     "android:release": "cd android && ./gradlew assembleRelease; cd ../",
     "android:release-install": "npm run android:clean && npm run android:release && cd android/app/build/outputs/apk && adb install app-release.apk; cd ../",
     "android:run": "react-native run-android",
+    "precommit": "npm run localize && lint-staged && npm run lint && npm run flow && npm test",
     "prepare": "rollup -c; node ./src/lib/bridge/stringifyBridge.js",
     "cover": "jest --coverage",
     "flow": "flow",

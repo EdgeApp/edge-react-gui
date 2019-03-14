@@ -1,5 +1,6 @@
 // @flow
 
+import detectBundler from 'detect-bundler'
 import { type EdgeContext, MakeEdgeContext, MakeFakeEdgeWorld } from 'edge-core-js'
 import makeAccountbasedIo from 'edge-currency-accountbased/lib/react-native-io.js'
 import makeBitcoinIo from 'edge-currency-bitcoin/lib/react-native-io.js'
@@ -7,7 +8,6 @@ import makeMoneroIo from 'edge-currency-monero/lib/react-native-io.js'
 import makeExchangeIo from 'edge-exchange-plugins/lib/react-native-io.js'
 import React, { PureComponent } from 'react'
 import { View } from 'react-native'
-import detectBundler from 'detect-bundler'
 
 import ENV from '../../../env.json'
 import { fakeUser } from '../../fake-user.js'
@@ -51,7 +51,7 @@ export const currencyPlugins = {
   vertcoin: true,
   zcoin: true,
   // edge-currency-monero:
-  monero: true, // { apiKey: '...' }
+  monero: true // { apiKey: '...' }
 }
 
 export const ratePlugins = {
@@ -80,12 +80,14 @@ const contextOptions = {
 }
 
 const isReactNative = detectBundler.isReactNative
-const nativeIo = isReactNative ? {
-  'edge-currency-accountbased': makeAccountbasedIo(),
-  'edge-currency-bitcoin': makeBitcoinIo(),
-  'edge-currency-monero': makeMoneroIo(),
-  'edge-exchange-plugins': makeExchangeIo()
-} : {}
+const nativeIo = isReactNative
+  ? {
+    'edge-currency-accountbased': makeAccountbasedIo(),
+    'edge-currency-bitcoin': makeBitcoinIo(),
+    'edge-currency-monero': makeMoneroIo(),
+    'edge-exchange-plugins': makeExchangeIo()
+  }
+  : {}
 
 export class EdgeCoreManager extends PureComponent<Props> {
   render () {

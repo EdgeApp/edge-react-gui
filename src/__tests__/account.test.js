@@ -3,13 +3,15 @@
 
 import { type EdgeAccount, type EdgeContext, type EdgeFakeWorld, addEdgeCorePlugins, lockEdgeCorePlugins, makeFakeEdgeWorld } from 'edge-core-js'
 import accountbased from 'edge-currency-accountbased'
-import monero from 'edge-currency-monero'
 import bitcoin from 'edge-currency-bitcoin'
+import monero from 'edge-currency-monero'
 import exchange from 'edge-exchange-plugins'
+
 import { currencyPlugins } from '../components/core/EdgeCoreManager.js'
+import { CURRENCY_PLUGIN_NAMES } from '../constants/WalletAndCurrencyConstants.js'
 import { fakeUser } from '../fake-user.js'
 import { SYNCED_ACCOUNT_DEFAULTS } from '../modules/Core/Account/settings.js'
-import { CURRENCY_PLUGIN_NAMES } from '../constants/WalletAndCurrencyConstants.js'
+
 // TODO: The core will do this work itself in a future version:
 addEdgeCorePlugins(bitcoin)
 addEdgeCorePlugins(monero)
@@ -18,16 +20,18 @@ addEdgeCorePlugins(exchange)
 lockEdgeCorePlugins()
 
 const contextOptions = { apiKey: '', appId: '', plugins: currencyPlugins }
-describe('Account', () => { 
+describe('Account', () => {
   it('has denominations that match the app default denomination settings', async () => {
     const world: EdgeFakeWorld = await makeFakeEdgeWorld([fakeUser])
     const context: EdgeContext = await world.makeEdgeContext(contextOptions)
     const account: EdgeAccount = await context.loginWithPIN(fakeUser.username, fakeUser.pin)
     for (const key in SYNCED_ACCOUNT_DEFAULTS) {
       const defaultDenom = SYNCED_ACCOUNT_DEFAULTS[key].denomination
-      if (defaultDenom) { // if it's in synced settings defaults
+      if (defaultDenom) {
+        // if it's in synced settings defaults
         const pluginName = CURRENCY_PLUGIN_NAMES[key]
-        if (pluginName) { // and is a plugin      
+        if (pluginName) {
+          // and is a plugin
           // check that default denom is in plugin options for denoms
           const plugin = account.currencyConfig[CURRENCY_PLUGIN_NAMES[key]]
           const currencyInfo = plugin.currencyInfo
@@ -37,6 +41,6 @@ describe('Account', () => {
         }
       }
     }
-    expect(account.username).toBe('js test 1')    
+    expect(account.username).toBe('js test 1')
   })
 })

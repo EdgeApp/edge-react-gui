@@ -231,8 +231,9 @@ export const mergeSettings = (
 
     if (account) {
       const currencyName = Constants.CURRENCY_PLUGIN_NAMES[key]
-      // if currency (not token) and has a plugin name
-      if (loadedSettings[key].denominations && currencyName) {
+      // if there are settings for this key
+      // and currency (not token) and has a plugin name
+      if (loadedSettings && loadedSettings[key] && loadedSettings[key].denominations && currencyName) {
         // for each currency info (each native currency)
         const pluginDenominations = account.currencyConfig[currencyName].currencyInfo.denominations // get denominations for that plugin
         const settingDenominationIndex = pluginDenominations.findIndex(pluginDenom => pluginDenom.multiplier === loadedSettings[key].denomination) // find settings denom in plugin denoms
