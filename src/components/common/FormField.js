@@ -80,7 +80,7 @@ class FormField extends Component {
           value={this.props.value}
           keyboardType={this.props.keyboardType}
           maxLength={this.props.maxLength}
-          autoCorrect={this.props.autoCorrect}
+          autoCorrect={this.props.autoCorrect || false}
           autoFocus={this.state.autoFocus}
         />
       )
@@ -110,7 +110,7 @@ class FormField extends Component {
           value={this.props.value}
           keyboardType={this.props.keyboardType}
           maxLength={this.props.maxLength}
-          autoCorrect={this.props.autoCorrect}
+          autoCorrect={this.props.autoCorrect || false}
         />
       )
     }
