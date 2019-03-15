@@ -122,6 +122,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   }
 
   webviewLoaded = () => {
+    if (!this.webview) return
     this.yaobBridge = new Bridge({
       sendMessage: message => this.webview.injectJavaScript(`window.bridge.handleMessage(${JSON.stringify(message)})`)
     })
