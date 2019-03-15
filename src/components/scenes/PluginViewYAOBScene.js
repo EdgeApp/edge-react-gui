@@ -72,7 +72,9 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   }
 
   backButtonClickHandler = arg => {
-    if (this.webview && arg) {
+    if (!this.webview) return
+
+    if (arg) {
       this.webview.injectJavaScript('window.history.back()')
       return
     }

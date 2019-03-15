@@ -123,9 +123,11 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   }
 
   _webviewBack = () => {
+    if (!this.webview) return
     this.webview.injectJavaScript('window.history.back()')
   }
   _webviewOpenUrl = (url: string) => {
+    if (!this.webview) return
     this.webview.injectJavaScript("window.open('" + url + "', '_self')")
   }
 
@@ -140,10 +142,12 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   }
 
   _pluginReturn = data => {
+    if (!this.webview) return
     this.webview.injectJavaScript(`window.PLUGIN_RETURN('${JSON.stringify(data)}')`)
   }
 
   _nextMessage = datastr => {
+    if (!this.webview) return
     this.webview.injectJavaScript(`window.PLUGIN_NEXT('${datastr}')`)
   }
 
