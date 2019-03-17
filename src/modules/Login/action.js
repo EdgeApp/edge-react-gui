@@ -150,13 +150,8 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       }
 
       newAccount = true
-      // we are going to assume that since there is no wallets, this is a first time user
-      Actions[Constants.ONBOARDING]()
-      // set the property on the user so that we can launch on boarding
-      // lets create the wallet
     } else if (!state.core.deepLinking.deepLinkPending) {
       // We have a wallet
-      Actions[Constants.EDGE]()
       const { walletId, currencyCode } = ACCOUNT_API.getFirstActiveWalletInfo(account, currencyCodes)
       accountInitObject.walletId = walletId
       accountInitObject.currencyCode = currencyCode
