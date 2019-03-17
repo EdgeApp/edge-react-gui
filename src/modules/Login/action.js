@@ -33,6 +33,61 @@ import type { Dispatch, GetState } from '../ReduxTypes'
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
+const createDefaultWallets = async (account: EdgeAccount, defaultFiat: string) => {
+  const ethWalletName = s.strings.string_first_ethereum_wallet_name
+  const btcWalletName = s.strings.string_first_bitcoin_wallet_name
+  const bchWalletName = s.strings.string_first_bitcoincash_wallet_name
+  const ethWalletType = Constants.ETHEREUM_WALLET
+  const btcWalletType = Constants.BITCOIN_WALLET
+  const bchWalletType = Constants.BITCOINCASH_WALLET
+  const fiatCurrencyCode = 'iso:' + defaultFiat
+
+  let edgeWallet
+  if (global.currencyCode) {
+    let walletType, walletName
+    // We got installed via a currencyCode referral. Only create one wallet of that type
+    for (const pluginName in account.currencyConfig) {
+      const { currencyInfo } = account.currencyConfig[pluginName]
+      if (currencyInfo.currencyCode.toLowerCase() === global.currencyCode.toLowerCase()) {
+        walletType = currencyInfo.walletType
+        walletName = sprintf(s.strings.my_crypto_wallet_name, currencyInfo.displayName)
+        global.startMoment && global.startMoment('INIT_ACCOUNT_CREATE_ONE_WALLET')
+        try {
+          edgeWallet = await runWithTimeout(20000, account.createCurrencyWallet(walletType, { name: walletName, fiatCurrencyCode }))
+        } catch (e) {
+          if (e.name === 'TimeoutExceeded') {
+            e.message = s.strings.error_creating_wallets
+          }
+          throw e
+        }
+        global.endMoment && global.endMoment('INIT_ACCOUNT_CREATE_ONE_WALLET')
+      }
+    }
+  }
+  if (!edgeWallet) {
+    global.startMoment && global.startMoment('INIT_ACCOUNT_CREATE_WALLETS')
+    try {
+      edgeWallet = await runWithTimeout(20000, account.createCurrencyWallet(btcWalletType, { name: btcWalletName, fiatCurrencyCode }))
+      await runWithTimeout(20000, account.createCurrencyWallet(bchWalletType, { name: bchWalletName, fiatCurrencyCode }))
+      await runWithTimeout(20000, account.createCurrencyWallet(ethWalletType, { name: ethWalletName, fiatCurrencyCode }))
+      // const p = []
+      // p.push(account.createCurrencyWallet(btcWalletType, { name: btcWalletName, fiatCurrencyCode }))
+      // p.push(account.createCurrencyWallet(bchWalletType, { name: bchWalletName, fiatCurrencyCode }))
+      // p.push(account.createCurrencyWallet(ethWalletType, { name: ethWalletName, fiatCurrencyCode }))
+      // const results = await runWithTimeout(20000, Promise.all(p))
+      // edgeWallet = results[0]
+    } catch (e) {
+      if (e.name === 'TimeoutExceeded') {
+        e.message = s.strings.error_creating_wallets
+      }
+      throw e
+    }
+    global.logEvent && global.logEvent(`Signup_Wallets_Created`)
+    global.endMoment && global.endMoment('INIT_ACCOUNT_CREATE_WALLETS')
+  }
+  return edgeWallet
+}
+
 export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => async (dispatch: Dispatch, getState: GetState) => {
   const currencyPlugins = []
   const currencyCodes = {}
@@ -87,66 +142,18 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN
   }
   try {
+    let newAccount = false
+    let defaultFiat = Constants.USD_FIAT
     if (account.activeWalletIds.length < 1) {
+      if (localeInfo.currencyCode && typeof localeInfo.currencyCode === 'string' && localeInfo.currencyCode.length >= 3) {
+        defaultFiat = localeInfo.currencyCode
+      }
+
+      newAccount = true
       // we are going to assume that since there is no wallets, this is a first time user
       Actions[Constants.ONBOARDING]()
       // set the property on the user so that we can launch on boarding
       // lets create the wallet
-      const ethWalletName = s.strings.string_first_ethereum_wallet_name
-      const btcWalletName = s.strings.string_first_bitcoin_wallet_name
-      const bchWalletName = s.strings.string_first_bitcoincash_wallet_name
-      const ethWalletType = Constants.ETHEREUM_WALLET
-      const btcWalletType = Constants.BITCOIN_WALLET
-      const bchWalletType = Constants.BITCOINCASH_WALLET
-      let fiatCurrencyCode = Constants.USD_FIAT
-      if (localeInfo.currencyCode && typeof localeInfo.currencyCode === 'string' && localeInfo.currencyCode.length >= 3) {
-        fiatCurrencyCode = 'iso:' + localeInfo.currencyCode
-      }
-      let edgeWallet
-      if (global.currencyCode) {
-        let walletType, walletName
-        // We got installed via a currencyCode referral. Only create one wallet of that type
-        for (const pluginName in account.currencyConfig) {
-          const { currencyInfo } = account.currencyConfig[pluginName]
-          if (currencyInfo.currencyCode.toLowerCase() === global.currencyCode.toLowerCase()) {
-            walletType = currencyInfo.walletType
-            walletName = sprintf(s.strings.my_crypto_wallet_name, currencyInfo.displayName)
-            global.startMoment && global.startMoment('INIT_ACCOUNT_CREATE_ONE_WALLET')
-            try {
-              edgeWallet = await runWithTimeout(20000, account.createCurrencyWallet(walletType, { name: walletName, fiatCurrencyCode }))
-            } catch (e) {
-              if (e.name === 'TimeoutExceeded') {
-                e.message = s.strings.error_creating_wallets
-              }
-              throw e
-            }
-            global.endMoment && global.endMoment('INIT_ACCOUNT_CREATE_ONE_WALLET')
-          }
-        }
-      }
-      if (!edgeWallet) {
-        global.startMoment && global.startMoment('INIT_ACCOUNT_CREATE_WALLETS')
-        try {
-          edgeWallet = await runWithTimeout(20000, account.createCurrencyWallet(btcWalletType, { name: btcWalletName, fiatCurrencyCode }))
-          await runWithTimeout(20000, account.createCurrencyWallet(bchWalletType, { name: bchWalletName, fiatCurrencyCode }))
-          await runWithTimeout(20000, account.createCurrencyWallet(ethWalletType, { name: ethWalletName, fiatCurrencyCode }))
-          // const p = []
-          // p.push(account.createCurrencyWallet(btcWalletType, { name: btcWalletName, fiatCurrencyCode }))
-          // p.push(account.createCurrencyWallet(bchWalletType, { name: bchWalletName, fiatCurrencyCode }))
-          // p.push(account.createCurrencyWallet(ethWalletType, { name: ethWalletName, fiatCurrencyCode }))
-          // const results = await runWithTimeout(20000, Promise.all(p))
-          // edgeWallet = results[0]
-        } catch (e) {
-          if (e.name === 'TimeoutExceeded') {
-            e.message = s.strings.error_creating_wallets
-          }
-          throw e
-        }
-        global.logEvent && global.logEvent(`Signup_Wallets_Created`)
-        global.endMoment && global.endMoment('INIT_ACCOUNT_CREATE_WALLETS')
-      }
-      accountInitObject.walletId = edgeWallet.id
-      accountInitObject.currencyCode = edgeWallet.currencyInfo.currencyCode
     } else if (!state.core.deepLinking.deepLinkPending) {
       // We have a wallet
       Actions[Constants.EDGE]()
@@ -196,6 +203,11 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
 
     accountInitObject.pinLoginEnabled = await context.pinLoginEnabled(account.username)
 
+    if (newAccount) {
+      accountInitObject.defaultFiat = defaultFiat
+      accountInitObject.defaultIsoFiat = 'iso:' + defaultFiat
+    }
+
     const coreSettings = await getCoreSettings(account)
     const coreDefaults = CORE_DEFAULTS
     const coreFinal = { ...coreDefaults, ...coreSettings }
@@ -206,6 +218,9 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       type: 'ACCOUNT_INIT_COMPLETE',
       data: { ...accountInitObject }
     })
+    if (newAccount) {
+      await createDefaultWallets(account, defaultFiat)
+    }
     // $FlowFixMe
     dispatch(updateWalletsRequest())
   } catch (error) {
