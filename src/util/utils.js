@@ -569,6 +569,23 @@ export function getObjectDiff (obj1: Object, obj2: Object, traverseObjects?: Obj
   return ''
 }
 
+export function runWithTimeout (timeout: number, promise: Promise<any>): Promise<any> {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const e = new Error('Error timeout exceeded')
+      e.name = 'TimeoutExceeded'
+      reject(e)
+    }, timeout)
+    promise
+      .then(result => {
+        resolve(result)
+      })
+      .catch(e => {
+        reject(e)
+      })
+  })
+}
+
 export function snooze (ms: number): Promise<void> {
   return new Promise((resolve: any) => setTimeout(resolve, ms))
 }

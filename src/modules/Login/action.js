@@ -1,7 +1,7 @@
 // @flow
 
 import type { EdgeAccount } from 'edge-core-js'
-import { Platform } from 'react-native'
+import { Alert, Platform } from 'react-native'
 import Locale from 'react-native-locale'
 import PushNotification from 'react-native-push-notification'
 import { Actions } from 'react-native-router-flux'
@@ -11,6 +11,7 @@ import { insertWalletIdsForProgress } from '../../actions/WalletActions.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { displayErrorAlert } from '../../modules/UI/components/ErrorAlert/actions'
+import { runWithTimeout } from '../../util/utils.js'
 import * as ACCOUNT_API from '../Core/Account/api'
 import {
   CORE_DEFAULTS,
@@ -110,16 +111,39 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
           if (currencyInfo.currencyCode.toLowerCase() === global.currencyCode.toLowerCase()) {
             walletType = currencyInfo.walletType
             walletName = sprintf(s.strings.my_crypto_wallet_name, currencyInfo.displayName)
-            edgeWallet = await ACCOUNT_API.createCurrencyWalletRequest(account, walletType, { name: walletName, fiatCurrencyCode })
-            global.firebase && global.firebase.analytics().logEvent(`Signup_Wallets_Created`)
+            global.startMoment && global.startMoment('INIT_ACCOUNT_CREATE_ONE_WALLET')
+            try {
+              edgeWallet = await runWithTimeout(20000, account.createCurrencyWallet(walletType, { name: walletName, fiatCurrencyCode }))
+            } catch (e) {
+              if (e.name === 'TimeoutExceeded') {
+                e.message = s.strings.error_creating_wallets
+              }
+              throw e
+            }
+            global.endMoment && global.endMoment('INIT_ACCOUNT_CREATE_ONE_WALLET')
           }
         }
       }
       if (!edgeWallet) {
-        edgeWallet = await ACCOUNT_API.createCurrencyWalletRequest(account, btcWalletType, { name: btcWalletName, fiatCurrencyCode })
-        await ACCOUNT_API.createCurrencyWalletRequest(account, bchWalletType, { name: bchWalletName, fiatCurrencyCode })
-        await ACCOUNT_API.createCurrencyWalletRequest(account, ethWalletType, { name: ethWalletName, fiatCurrencyCode })
-        global.firebase && global.firebase.analytics().logEvent(`Signup_Wallets_Created`)
+        global.startMoment && global.startMoment('INIT_ACCOUNT_CREATE_WALLETS')
+        try {
+          edgeWallet = await runWithTimeout(20000, account.createCurrencyWallet(btcWalletType, { name: btcWalletName, fiatCurrencyCode }))
+          await runWithTimeout(20000, account.createCurrencyWallet(bchWalletType, { name: bchWalletName, fiatCurrencyCode }))
+          await runWithTimeout(20000, account.createCurrencyWallet(ethWalletType, { name: ethWalletName, fiatCurrencyCode }))
+          // const p = []
+          // p.push(account.createCurrencyWallet(btcWalletType, { name: btcWalletName, fiatCurrencyCode }))
+          // p.push(account.createCurrencyWallet(bchWalletType, { name: bchWalletName, fiatCurrencyCode }))
+          // p.push(account.createCurrencyWallet(ethWalletType, { name: ethWalletName, fiatCurrencyCode }))
+          // const results = await runWithTimeout(20000, Promise.all(p))
+          // edgeWallet = results[0]
+        } catch (e) {
+          if (e.name === 'TimeoutExceeded') {
+            e.message = s.strings.error_creating_wallets
+          }
+          throw e
+        }
+        global.logEvent && global.logEvent(`Signup_Wallets_Created`)
+        global.endMoment && global.endMoment('INIT_ACCOUNT_CREATE_WALLETS')
       }
       accountInitObject.walletId = edgeWallet.id
       accountInitObject.currencyCode = edgeWallet.currencyInfo.currencyCode
@@ -186,6 +210,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     dispatch(updateWalletsRequest())
   } catch (error) {
     console.log('initializeAccount error: ', error)
+    Alert.alert(error.name, error.message)
     dispatch(displayErrorAlert(error.message))
   }
 }
