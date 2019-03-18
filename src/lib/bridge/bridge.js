@@ -33,7 +33,7 @@ setTimeout(function () {
         oldHistory.forward()
       },
 
-      go (arg?: number) {
+      go (arg) {
         oldHistory.go(arg)
       }
     }
