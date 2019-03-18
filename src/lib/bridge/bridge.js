@@ -13,7 +13,6 @@ setTimeout(function () {
         return oldHistory.length
       },
       back () {
-        console.log('new history back clicked')
         --counter
         if (counter < 0) {
           counter = 0
@@ -22,12 +21,21 @@ setTimeout(function () {
       },
 
       pushState (data, message, url) {
-        console.log('someone was doing a push state $$$$$ ++ ', counter)
         ++counter
-        console.log('someone was doing a push state ++ ', counter)
         oldHistory.pushState(data, message, url)
+      },
+
+      replaceState (data, message, url) {
+        oldHistory.replaceState(data, message, url)
+      },
+
+      forward () {
+        oldHistory.forward()
+      },
+
+      go (arg?: number) {
+        oldHistory.go(arg)
       }
-      // ... and shim all the others too
     }
 
     const myBackHandler = {

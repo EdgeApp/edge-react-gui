@@ -145,7 +145,7 @@ class EdgeProvider extends Bridgeable {
     const account = CORE_SELECTORS.getAccount(this._state)
     const folder = account.pluginData
     const returnObj = {}
-    for (let i = 0; i < keys.length; i) {
+    for (let i = 0; i < keys.length; i++) {
       try {
         const value = (await folder.getItem('pluginId', keys[i])) || undefined
         returnObj[keys[i]] = value
