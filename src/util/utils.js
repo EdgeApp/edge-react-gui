@@ -648,14 +648,19 @@ export const getTotalFiatAmountFromExchangeRates = (state: State, isoFiatCurrenc
   const settings = state.ui.settings
   // loop through each of the walletId's
   for (const parentProp in wallets) {
+    const wallet = wallets[parentProp]
     // loop through all of the nativeBalances, which includes both parent currency and tokens
-    for (const currencyCode in wallets[parentProp].nativeBalances) {
+    for (const currencyCode in wallet.nativeBalances) {
       // if there is no native balance for the currency / token then assume it's zero
       if (!temporaryTotalCrypto[currencyCode]) {
         temporaryTotalCrypto[currencyCode] = 0
       }
+
       // get the native balance for this currency
-      const nativeBalance = wallets[parentProp].nativeBalances[currencyCode]
+      const nativeBalance = wallet.nativeBalances[currencyCode]
+      // if it's a token and not enabled
+      const isDisabledToken = currencyCode !== wallet.currencyCode && !wallet.enabledTokens.includes(currencyCode)
+      if (isDisabledToken) continue
       // if it is a non-zero amount then we will process it
       if (nativeBalance && nativeBalance !== '0') {
         let denominations
