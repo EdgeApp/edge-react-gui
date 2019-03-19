@@ -5,14 +5,22 @@ v1.7.0
 * Vendi le crypto e ottieni fiat sulla carta di credito usando Simplex
 * Aggiunto LibertyX per supportare l'acquisto di Bitcoin da venditori fisici in USA
 
+v1.6.1
+
+* Migliorato il calcolo delle commissioni BTC
+* Aggiunto il tasto compra crypto nella schermata con la lista dei portafogli
+* Aggiunto il pulsante per acquistare e scambiare crypto per portafogli vuoti
+* Corretti numerosi bug all'UI
+* Migliorato il funzionamento dei plugin
+
 v1.6.0
 
 * Supporto a EOS
 * Implementazione deep link di bitcoin, ethereum, bitcoincash, dash e edge URIs
-* Add Wyre plugin to support buy/sell of Bitcoin from US bank account
+* Aggiunto il plugin Wyre per supportare la vendita e l'acquisto di Bitcoin dall'account US
 * Aggiunto il plugin Bitrefill per supportare l'acquisto di gift card e ricariche dei cellulari
-* Add Chinese, Korean, French, and Vietnamese translations
-* Add support for IMP and IRR fiat currencies
+* Aggiunta la traduzione in cinese, coreano, francese e vietnamita
+* Aggiunto il supporto per le valute fiat IMP e IRR
 
 v1.5.0
 
