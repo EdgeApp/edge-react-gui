@@ -5,14 +5,22 @@ Traslada Edge Core a un proceso independiente para aumentar el rendimiento y res
 * Vende criptomonedas hacia tu tarjeta de crédito usando Simplex
 * Incluye LibertyX para comprar Bitcoin de comercios físicos en EE. UU
 
+v1.6.1
+
+* Mejora del cálculo de comisiones en BTC
+* Añade botón para comprar criptos en la vista de listado de carteras
+* Añade nuevo botón para comprar y cambiar cripto en carteras vacías
+* Arreglados varios errores en la interface de usuario
+* Funcionalidad de plugins mejorada
+
 v1.6.0
 
 * Soporte para EOS
 * Implementa vínculos profundos (deep linking) de URIs de bitcoin, ethereum, bitcoin cash, dash y Edge
-* Add Wyre plugin to support buy/sell of Bitcoin from US bank account
+* Incluye soporte al plugin de Wyre para comprar/vender Bitcoin desde una cuenta bancaria USA
 *Incluye el plugin de Bitrefill para comprar tarjetas regalo y realizar recargas móviles
-* Add Chinese, Korean, French, and Vietnamese translations
-* Add support for IMP and IRR fiat currencies
+Incluye traducciones al chino, coreano, francés y vietnamita
+* Incluye soporte para las monedas fiat IMP e IRR
 
 v1.5.0
 
