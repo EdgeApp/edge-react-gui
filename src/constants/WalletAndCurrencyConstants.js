@@ -34,6 +34,7 @@ export const DEFAULT_STARTER_WALLET_NAMES = {
   XLM: s.strings.string_first_stellar_wallet_name
 }
 
+// DO NOT PUT ANY TOKENS IN HERE!
 export const CURRENCY_PLUGIN_NAMES = {
   BTC: 'bitcoin',
   BCH: 'bitcoincash',
@@ -45,7 +46,6 @@ export const CURRENCY_PLUGIN_NAMES = {
   ETH: 'ethereum',
   FTC: 'feathercoin',
   GRS: 'groestlcoin',
-  HERC: 'hercules',
   LTC: 'litecoin',
   XMR: 'monero',
   QTUM: 'qtum',
@@ -53,6 +53,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   SMART: 'smartcash',
   UFO: 'ufo',
   VTC: 'vertcoin',
+  XLM: 'stellar',
   XZC: 'zcoin'
 }
 

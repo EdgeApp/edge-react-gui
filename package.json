@@ -82,6 +82,7 @@
     "constants-browserify": "0.0.1",
     "core-js": "2.5.2",
     "dateformat": "^3.0.3",
+    "detect-bundler": "^1.0.0",
     "dns.js": "^1.0.1",
     "domain-browser": "^1.1.7",
     "edge-components": "^0.0.19",
