@@ -16,7 +16,7 @@ import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
 import type { State } from '../../modules/ReduxTypes.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import T from '../../modules/UI/components/FormattedText/index'
-import { calculateSettingsFiatBalance } from '../../modules/UI/selectors.js'
+import { calculateSettingsFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
 import styles, { styles as styleRaw } from '../../styles/scenes/WalletListStyle.js'
 import type { CustomTokenInfo, GuiDenomination } from '../../types'
 import { decimalOrZero, getFiatSymbol, getObjectDiff, truncateDecimals } from '../../util/utils.js'
@@ -53,7 +53,8 @@ export type FullWalletListRowLoadedStateProps = {
   customTokens: Array<CustomTokenInfo>,
   fiatSymbol: string,
   isWalletFiatBalanceVisible: boolean,
-  fiatBalance: string
+  settings: Object,
+  exchangeRates: { [string]: number }
 }
 
 export type FullWalletListRowLoadedOwnProps = {
@@ -91,7 +92,7 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
   }
 
   render () {
-    const { data, fiatSymbol, fiatBalance } = this.props
+    const { data, fiatSymbol, settings, exchangeRates } = this.props
     const walletData = data.item
     const currencyCode = walletData.currencyCode
     const cryptocurrencyName = walletData.currencyNames[currencyCode]
@@ -128,7 +129,7 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
         }
       }
     }
-
+    const fiatBalance = calculateSettingsFiatBalanceWithoutState(walletData, settings, exchangeRates)
     const fiatBalanceString = fiatSymbol + ' ' + fiatBalance
     return (
       <View style={[{ width: '100%' }]}>
@@ -202,16 +203,16 @@ const mapStateToProps = (state: State, ownProps: FullWalletListRowLoadedOwnProps
   const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, ownProps.data.item.currencyCode)
   const settings = state.ui.settings
   const fiatSymbol = getFiatSymbol(settings.defaultFiat) || ''
-  const customTokens = state.ui.settings.customTokens
-  const isWalletFiatBalanceVisible = state.ui.settings.isWalletFiatBalanceVisible
-  const fiatBalance = calculateSettingsFiatBalance(ownProps.data.item, state)
+  const customTokens = settings.customTokens
+  const isWalletFiatBalanceVisible = settings.isWalletFiatBalanceVisible
   return {
     displayDenomination,
     exchangeDenomination,
     customTokens,
     fiatSymbol,
     isWalletFiatBalanceVisible,
-    fiatBalance
+    settings,
+    exchangeRates: state.exchangeRates
   }
 }
 const mapDispatchToProps = dispatch => ({
