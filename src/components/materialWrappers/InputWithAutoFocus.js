@@ -31,7 +31,9 @@ type Props = {
   onSubmitEditing(): void,
   onBlur(): void,
   onChangeText(string): void,
-  maxLength?: number
+  maxLength?: number,
+  multiline?: boolean,
+  numberOfLines?: number
 }
 
 type State = {
@@ -79,7 +81,8 @@ class InputWithAutoFocus extends Component<Props, State> {
       errorColor,
       titleTextStyle,
       secureTextEntry,
-      returnKeyType
+      returnKeyType,
+      autoCorrect
     } = this.props
     return (
       <TextField
@@ -108,6 +111,9 @@ class InputWithAutoFocus extends Component<Props, State> {
         placeholder={this.props.placeholder}
         maxLength={this.props.maxLength}
         autoFocus={this.props.autoFocus}
+        numberOfLines={this.props.numberOfLines}
+        multiline={true}
+        autoCorrect={autoCorrect}
       />
     )
   }

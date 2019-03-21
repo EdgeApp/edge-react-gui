@@ -4,6 +4,7 @@ import { Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 
 import plugins from '../../../../assets/plugins.json'
+import { LEGACY_PLUGINS } from '../../../../constants/indexConstants'
 
 function loadPlugins (plugins: any, developerModeOn: boolean): Array<Object> {
   let addCustom = true
@@ -20,14 +21,16 @@ function loadPlugins (plugins: any, developerModeOn: boolean): Array<Object> {
       subtitle: 'Development Testing',
       provider: 'Edge Wallet',
       iconUrl: 'http://edge.app/wp-content/uploads/2019/01/wyre-logo-square-small.png',
-      environment: {}
+      environment: {},
+      isLegacy: false
     }
     plugins.push(devPlugin)
   }
   return plugins.map(plugin => {
-    console.log('Lodaing plugin ', plugin)
+    console.log('pluginStuff: Lodaing plugin ', plugin)
     const baseDir = Platform.OS === 'android' ? 'android_asset' : RNFS.MainBundlePath
     const pluginPath = `file:///${baseDir}/plugins/${plugin.pluginId}/index.html`
+    const isLegacy = LEGACY_PLUGINS.includes(plugin.name)
     return {
       pluginId: plugin.pluginId,
       sourceFile: { uri: pluginPath },
@@ -35,7 +38,8 @@ function loadPlugins (plugins: any, developerModeOn: boolean): Array<Object> {
       subtitle: plugin.subtitle,
       provider: plugin.provider,
       imageUrl: plugin.iconUrl,
-      environment: plugin.environment
+      environment: plugin.environment,
+      isLegacy
     }
   })
 }

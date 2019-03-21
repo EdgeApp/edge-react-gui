@@ -17,7 +17,8 @@ import { FormField } from '../common/FormField.js'
 
 export type CreateWalletNameOwnProps = {
   selectedFiat: GuiFiatType,
-  selectedWalletType: GuiWalletType
+  selectedWalletType: GuiWalletType,
+  cleanedPrivateKey?: string
 }
 type Props = CreateWalletNameOwnProps
 type State = {
@@ -45,11 +46,13 @@ export class CreateWalletName extends Component<Props, State> {
   }
 
   onNext = () => {
+    const { cleanedPrivateKey, selectedFiat, selectedWalletType } = this.props
     if (this.isValidWalletName()) {
       Actions[Constants.CREATE_WALLET_REVIEW]({
         walletName: this.state.walletName,
-        selectedFiat: this.props.selectedFiat,
-        selectedWalletType: this.props.selectedWalletType
+        selectedFiat: selectedFiat,
+        selectedWalletType: selectedWalletType,
+        cleanedPrivateKey
       })
     } else {
       Alert.alert(s.strings.create_wallet_invalid_name, s.strings.create_wallet_enter_valid_name)

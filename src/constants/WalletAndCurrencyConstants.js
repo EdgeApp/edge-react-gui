@@ -34,6 +34,7 @@ export const DEFAULT_STARTER_WALLET_NAMES = {
   XLM: s.strings.string_first_stellar_wallet_name
 }
 
+// DO NOT PUT ANY TOKENS IN HERE!
 export const CURRENCY_PLUGIN_NAMES = {
   BTC: 'bitcoin',
   BCH: 'bitcoincash',
@@ -45,7 +46,6 @@ export const CURRENCY_PLUGIN_NAMES = {
   ETH: 'ethereum',
   FTC: 'feathercoin',
   GRS: 'groestlcoin',
-  HERC: 'hercules',
   LTC: 'litecoin',
   XMR: 'monero',
   QTUM: 'qtum',
@@ -53,6 +53,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   SMART: 'smartcash',
   UFO: 'ufo',
   VTC: 'vertcoin',
+  XLM: 'stellar',
   XZC: 'zcoin'
 }
 
@@ -85,13 +86,16 @@ type SpecialCurrencyInfo = {
 
 export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   BTC: {
-    displayBuyCrypto: true
+    displayBuyCrypto: true,
+    isImportKeySupported: false
   },
   BCH: {
-    displayBuyCrypto: true
+    displayBuyCrypto: true,
+    isImportKeySupported: false
   },
   LTC: {
-    displayBuyCrypto: true
+    displayBuyCrypto: true,
+    isImportKeySupported: false
   },
   XLM: {
     dummyPublicAddress: 'GBEVGJYAUKJ2TVPMC3GEPI2GGZQLMWZDRWJCVNBXCJ3ELYTDPHVQQM74',
@@ -105,7 +109,8 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
       minimumNativeBalance: '10000000',
       modalMessage: s.strings.request_xlm_minimum_notification_body
     },
-    displayBuyCrypto: false
+    displayBuyCrypto: false,
+    isImportKeySupported: false
   },
   XRP: {
     dummyPublicAddress: 'rfuESo7eHUnvebxgaFjfYxfwXhM2uBPAj3',
@@ -119,7 +124,8 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
       minimumNativeBalance: '20000000',
       modalMessage: s.strings.request_xrp_minimum_notification_body
     },
-    displayBuyCrypto: true
+    displayBuyCrypto: true,
+    isImportKeySupported: false
   },
   XMR: {
     dummyPublicAddress: '46qxvuS78CNBoiiKmDjvjd5pMAZrTBbDNNHDoP52jKj9j5mk6m4R5nU6BDrWQURiWV9a2n5Sy8Qo4aJskKa92FX1GpZFiYA',
@@ -129,7 +135,9 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
       addButtonText: s.strings.unique_identifier_dropdown_option_payment_id,
       identifierName: s.strings.unique_identifier_payment_id,
       identifierKeyboardType: 'default'
-    }
+    },
+    uniqueIdentifierToNotes: true,
+    isImportKeySupported: false
   },
   EOS: {
     dummyPublicAddress: 'edgecreator2',
@@ -139,18 +147,22 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
       addButtonText: s.strings.unique_identifier_dropdown_option_memo,
       identifierName: s.strings.unique_identifier_memo,
       identifierKeyboardType: 'default'
-    }
+    },
+    isImportKeySupported: false
   },
   ETH: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
-    displayBuyCrypto: true
+    displayBuyCrypto: true,
+    isImportKeySupported: true
   },
   DAI: {
-    displayBuyCrypto: true
+    displayBuyCrypto: true,
+    isImportKeySupported: true
   },
   HERC: {
-    displayBuyCrypto: false
+    displayBuyCrypto: true,
+    isImportKeySupported: false
   }
 }
 

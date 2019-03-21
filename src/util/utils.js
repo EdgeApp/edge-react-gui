@@ -569,6 +569,19 @@ export function getObjectDiff (obj1: Object, obj2: Object, traverseObjects?: Obj
   return ''
 }
 
+export function runWithTimeout<T> (
+  promise: Promise<T>,
+  ms: number,
+  error: Error = new Error(`Timeout of ${ms}ms exceeded`)
+): Promise<T> {
+  const timeout = new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(error), ms)
+    const onDone = () => clearTimeout(timer)
+    promise.then(onDone, onDone)
+  })
+  return Promise.race([promise, timeout])
+}
+
 export function snooze (ms: number): Promise<void> {
   return new Promise((resolve: any) => setTimeout(resolve, ms))
 }
@@ -648,14 +661,19 @@ export const getTotalFiatAmountFromExchangeRates = (state: State, isoFiatCurrenc
   const settings = state.ui.settings
   // loop through each of the walletId's
   for (const parentProp in wallets) {
+    const wallet = wallets[parentProp]
     // loop through all of the nativeBalances, which includes both parent currency and tokens
-    for (const currencyCode in wallets[parentProp].nativeBalances) {
+    for (const currencyCode in wallet.nativeBalances) {
       // if there is no native balance for the currency / token then assume it's zero
       if (!temporaryTotalCrypto[currencyCode]) {
         temporaryTotalCrypto[currencyCode] = 0
       }
+
       // get the native balance for this currency
-      const nativeBalance = wallets[parentProp].nativeBalances[currencyCode]
+      const nativeBalance = wallet.nativeBalances[currencyCode]
+      // if it's a token and not enabled
+      const isDisabledToken = currencyCode !== wallet.currencyCode && !wallet.enabledTokens.includes(currencyCode)
+      if (isDisabledToken) continue
       // if it is a non-zero amount then we will process it
       if (nativeBalance && nativeBalance !== '0') {
         let denominations

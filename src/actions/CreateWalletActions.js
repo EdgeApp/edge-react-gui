@@ -66,20 +66,23 @@ export const createCurrencyWallet = (
   walletType: string,
   fiatCurrencyCode: string,
   popScene: boolean = true,
-  selectWallet: boolean = false
-) => (dispatch: Dispatch, getState: GetState) => {
+  selectWallet: boolean = false,
+  importText?: string // for creating wallet from private seed / key
+) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
 
   dispatch({ type: 'UI/WALLETS/CREATE_WALLET_START' })
   // Try and get the new format param from the legacy walletType if it's mentioned
   const [type, format] = walletType.split('-')
+  const opts = {
+    name: walletName,
+    fiatCurrencyCode,
+    keyOptions: format ? { format } : {},
+    importText
+  }
   return account
-    .createCurrencyWallet(type, {
-      name: walletName,
-      fiatCurrencyCode,
-      keyOptions: format ? { format } : {}
-    })
+    .createCurrencyWallet(type, opts)
     .then(edgeWallet => {
       if (popScene) Actions.popTo(Constants.WALLET_LIST_SCENE)
       dispatch({ type: 'UI/WALLETS/CREATE_WALLET_SUCCESS' })

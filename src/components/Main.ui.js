@@ -26,6 +26,7 @@ import scanIconSelected from '../assets/images/tabbar/scan_selected.png'
 import scanIcon from '../assets/images/tabbar/scan.png'
 import walletIconSelected from '../assets/images/tabbar/wallets_selected.png'
 import walletIcon from '../assets/images/tabbar/wallets.png'
+import { CreateWalletChoiceComponent } from '../components/scenes/CreateWalletChoiceScene.js'
 import ExchangeDropMenu from '../connectors/components/HeaderMenuExchangeConnector'
 import RequestDropMenu from '../connectors/components/HeaderMenuRequestConnector'
 import CurrencySettingsTitleConnector from '../connectors/CurrencySettingsTitleConnector.js'
@@ -36,6 +37,7 @@ import ChangePasswordConnector from '../connectors/scenes/ChangePasswordConnecto
 import ChangePinConnector from '../connectors/scenes/ChangePinConnector.ui'
 import { CreateWalletAccountSelectConnector } from '../connectors/scenes/CreateWalletAccountSelectConnector.js'
 import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWalletAccountSetupConnector.js'
+import { CreateWalletImportConnector } from '../connectors/scenes/CreateWalletImportConnector.js'
 import { CreateWalletReview } from '../connectors/scenes/CreateWalletReviewConnector'
 import { CreateWalletSelectCrypto } from '../connectors/scenes/CreateWalletSelectCryptoConnector'
 import { CreateWalletSelectFiat } from '../connectors/scenes/CreateWalletSelectFiatConnector'
@@ -81,7 +83,14 @@ import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
 import { PasswordRecoveryReminderModalConnector } from '../modules/UI/components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalConnector.js'
 import { passwordReminderModalConnector as PasswordReminderModal } from '../modules/UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
 import TransactionAlert from '../modules/UI/components/TransactionAlert/TransactionAlertConnector'
-import { PluginBuySell, PluginSpend, PluginView, renderPluginBackButton } from '../modules/UI/scenes/Plugins/index'
+import {
+  LegacyPluginView,
+  PluginBuySell,
+  PluginSpend,
+  YaobPluginView,
+  renderPluginBackButton,
+  renderYaobPluginBackButton
+} from '../modules/UI/scenes/Plugins/index'
 import { HwBackButtonHandler } from '../modules/UI/scenes/WalletList/components/HwBackButtonHandler/index'
 import { styles } from '../styles/MainStyle.js'
 import { EdgeCoreManager } from './core/EdgeCoreManager.js'
@@ -114,6 +123,7 @@ tabBarIconFilesSelected[Constants.EXCHANGE] = exchangeIconSelected
 
 const TRANSACTION_DETAILS = s.strings.title_transaction_details
 const WALLETS = s.strings.title_wallets
+const CREATE_WALLET_IMPORT = s.strings.create_wallet_import_title
 const CREATE_WALLET_SELECT_CRYPTO = s.strings.title_create_wallet_select_crypto
 const CREATE_WALLET_SELECT_FIAT = s.strings.title_create_wallet_select_fiat
 const CREATE_WALLET = s.strings.title_create_wallet
@@ -382,11 +392,29 @@ export default class Main extends Component<Props> {
                         />
 
                         <Scene
+                          key={Constants.CREATE_WALLET_CHOICE}
+                          navTransparent={true}
+                          component={CreateWalletChoiceComponent}
+                          renderTitle={this.renderTitle(CREATE_WALLET)}
+                          renderLeftButton={this.renderBackButton(WALLETS)}
+                          renderRightButton={this.renderEmptyButton()}
+                        />
+
+                        <Scene
+                          key={Constants.CREATE_WALLET_IMPORT}
+                          navTransparent={true}
+                          component={CreateWalletImportConnector}
+                          renderTitle={this.renderTitle(CREATE_WALLET_IMPORT)}
+                          renderLeftButton={this.renderBackButton()}
+                          renderRightButton={this.renderEmptyButton()}
+                        />
+
+                        <Scene
                           key={Constants.CREATE_WALLET_SELECT_CRYPTO}
                           navTransparent={true}
                           component={CreateWalletSelectCrypto}
                           renderTitle={this.renderTitle(CREATE_WALLET_SELECT_CRYPTO)}
-                          renderLeftButton={this.renderBackButton(WALLETS)}
+                          renderLeftButton={this.renderBackButton()}
                           renderRightButton={this.renderEmptyButton()}
                         />
 
@@ -673,9 +701,17 @@ export default class Main extends Component<Props> {
                         onLeft={Actions.pop}
                       />
                       <Scene
-                        key={Constants.PLUGIN}
+                        key={Constants.PLUGIN_BUY}
                         navTransparent={true}
-                        component={ifLoggedIn(PluginView, LoadingScene)}
+                        component={ifLoggedIn(YaobPluginView, LoadingScene)}
+                        renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
+                        renderLeftButton={renderYaobPluginBackButton(BACK)}
+                        renderRightButton={this.renderEmptyButton()}
+                      />
+                      <Scene
+                        key={Constants.PLUGIN_BUY_LEGACY}
+                        navTransparent={true}
+                        component={ifLoggedIn(LegacyPluginView, LoadingScene)}
                         renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
                         renderLeftButton={renderPluginBackButton(BACK)}
                         renderRightButton={this.renderEmptyButton()}
@@ -695,9 +731,18 @@ export default class Main extends Component<Props> {
                       <Scene
                         key={Constants.PLUGIN_SPEND}
                         navTransparent={true}
-                        component={ifLoggedIn(PluginView, LoadingScene)}
+                        component={ifLoggedIn(YaobPluginView, LoadingScene)}
                         renderTitle={this.renderTitle(PLUGIN_SPEND)}
-                        renderLeftButton={this.renderBackButton(BACK)}
+                        renderLeftButton={renderYaobPluginBackButton(BACK)}
+                        renderRightButton={this.renderEmptyButton()}
+                      />
+
+                      <Scene
+                        key={Constants.PLUGIN_SPEND_LEGACY}
+                        navTransparent={true}
+                        component={ifLoggedIn(LegacyPluginView, LoadingScene)}
+                        renderTitle={this.renderTitle(PLUGIN_SPEND)}
+                        renderLeftButton={renderPluginBackButton(BACK)}
                         renderRightButton={this.renderEmptyButton()}
                       />
                     </Stack>
