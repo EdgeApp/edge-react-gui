@@ -66,7 +66,8 @@ export class CreateWalletReview extends Component<CreateWalletReviewProps, Creat
       false,
       cleanedPrivateKey
     )
-    if (createdWallet) {
+    // note that we will be using cleanedPrivateKey as a flag for an imported private key
+    if (createdWallet && cleanedPrivateKey) {
       this.setState({
         isAnimationVisible: true
       })
