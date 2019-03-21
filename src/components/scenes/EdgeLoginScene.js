@@ -101,9 +101,15 @@ export default class EdgeLoginScene extends Component<EdgeLoginSceneProps> {
     const Style = this.props.style
     if (!this.props.lobby && !this.props.error) {
       return (
-        <View style={Style.spinnerContainer}>
-          <ActivityIndicator />
-        </View>
+        <SafeAreaView>
+          <Gradient style={Style.gradient} />
+          <View style={Style.spinnerContainer}>
+            <View>
+              <Text style={Style.loadingTextBody}>{s.strings.edge_login_fetching}</Text>
+              <ActivityIndicator />
+            </View>
+          </View>
+        </SafeAreaView>
       )
     }
     return (

@@ -26,6 +26,13 @@ export const edgeLogin: Reducer<EdgeLoginState, Action> = (state = initialState,
       }
     }
 
+    case 'EDGE_LOBBY_ACCEPT_FAILED': {
+      return {
+        ...state,
+        isProcessing: false
+      }
+    }
+
     case 'INVALIDATE_EDGE_LOBBY': {
       return {
         ...state,
