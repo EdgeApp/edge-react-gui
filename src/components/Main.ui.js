@@ -167,7 +167,7 @@ type Props = {
   openDrawer: () => void,
   dispatchAddressDeepLinkReceived: (addressDeepLinkData: Object) => any,
   deepLinkPending: boolean,
-  checkAndShowGetCryptoModal: () => void
+  checkAndShowGetCryptoModal: (?string) => void
 }
 
 async function queryUtilServer (context: EdgeContext, folder: DiskletFolder, usernames: Array<string>) {
@@ -529,10 +529,10 @@ export default class Main extends Component<Props> {
                         <Scene
                           key={Constants.SCAN_NOT_USED}
                           navTransparent={true}
-                          onEnter={() => {
+                          onEnter={props => {
                             this.props.requestPermission(PermissionStrings.CAMERA)
                             this.props.dispatchEnableScan()
-                            this.props.checkAndShowGetCryptoModal()
+                            this.props.checkAndShowGetCryptoModal(props.data)
                           }}
                           onExit={this.props.dispatchDisableScan}
                           component={Scan}
