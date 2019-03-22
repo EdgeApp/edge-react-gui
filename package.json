@@ -245,6 +245,9 @@
       ]
     ]
   },
+  "resolutions": {
+    "*/disklet": "^0.4.0"
+  },
   "detox": {
     "test-runner": "jest",
     "specs": "e2e",

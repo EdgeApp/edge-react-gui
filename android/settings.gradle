@@ -1,4 +1,6 @@
 rootProject.name = 'co.edgesecure.app'
+include ':disklet'
+project(':disklet').projectDir = new File(rootProject.projectDir, '../node_modules/disklet/android')
 include ':react-native-webview'
 project(':react-native-webview').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-webview/android')
 include ':react-native-cookies'

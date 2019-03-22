@@ -171,6 +171,7 @@ configurations.all {
 }
 
 dependencies {
+    compile project(':disklet')
     compile project(':react-native-webview')
     compile project(':react-native-cookies')
     compile project(':react-native-app-settings')
