@@ -105,7 +105,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
     this.bridge.context.coreWallets = this.props.coreWallets
     this.bridge.context.wallets = this.props.wallets
     this.bridge.context.walletName = this.props.walletName
-    this.bridge.context.walletId = this.props.coreWallet.id
+    this.bridge.context.walletId = this.props.coreWallet && this.props.coreWallet.id ? this.props.coreWallet.id : null
     this.bridge.context.wallet = this.props.coreWallet
   }
 
