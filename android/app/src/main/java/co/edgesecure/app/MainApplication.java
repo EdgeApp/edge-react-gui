@@ -4,6 +4,7 @@ import android.app.Application;
 import android.webkit.WebView;
 
 import com.facebook.react.ReactApplication;
+import com.reactlibrary.DiskletPackage;
 import com.reactnativecommunity.webview.RNCWebViewPackage;
 import com.psykar.cookiemanager.CookieManagerPackage;
 import com.krazylabs.OpenAppSettingsPackage;
@@ -56,6 +57,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new DiskletPackage(),
             new RNCWebViewPackage(),
             new CookieManagerPackage(),
             new OpenAppSettingsPackage(),

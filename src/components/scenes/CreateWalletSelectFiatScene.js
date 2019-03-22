@@ -23,7 +23,8 @@ const SOFT_MENU_BAR_HEIGHT = ExtraDimensions.get('SOFT_MENU_BAR_HEIGHT')
 export type CreateWalletSelectFiatOwnProps = {
   selectedWalletType: GuiWalletType,
   supportedFiats: Array<GuiFiatType>,
-  dimensions: DeviceDimensions
+  dimensions: DeviceDimensions,
+  cleanedPrivateKey?: string
 }
 export type CreateWalletSelectFiatStateProps = {
   dimensions: DeviceDimensions,
@@ -58,13 +59,16 @@ export class CreateWalletSelectFiat extends Component<Props, State> {
   }
 
   onNext = () => {
+    const { cleanedPrivateKey, selectedWalletType } = this.props
     if (this.isValidFiatType()) {
       // check if account-based or not
-      const specialCurrencyInfo = Constants.getSpecialCurrencyInfo(this.props.selectedWalletType.currencyCode)
+      const specialCurrencyInfo = Constants.getSpecialCurrencyInfo(selectedWalletType.currencyCode)
+      // check if eos-like
       const nextSceneKey = specialCurrencyInfo.needsAccountNameSetup ? Constants.CREATE_WALLET_ACCOUNT_SETUP : Constants.CREATE_WALLET_NAME
       Actions[nextSceneKey]({
-        selectedWalletType: this.props.selectedWalletType,
-        selectedFiat: this.getFiatType(this.state.selectedFiat)
+        selectedWalletType: selectedWalletType,
+        selectedFiat: this.getFiatType(this.state.selectedFiat),
+        cleanedPrivateKey
       })
     } else {
       Alert.alert(s.strings.create_wallet_invalid_input, s.strings.create_wallet_select_valid_fiat)

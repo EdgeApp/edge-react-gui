@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -129,6 +128,7 @@
 		FA970440AC4B42D28C64CB75 /* SourceSansPro-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C239BC5B07794717978CEF5D /* SourceSansPro-ExtraLight.ttf */; };
 		FD6D9F211FABEF8300D4998E /* libRCTSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FD6D9F011FABEF3A00D4998E /* libRCTSplashScreen.a */; };
 		FD982BCC1FACDEF00057F035 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = FD982BCB1FACDEF00057F035 /* LaunchScreen.xib */; };
+		A453881724A5452A8A0333FB /* libDisklet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 739B863F6D8546BBBC8DBF00 /* libDisklet.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -761,6 +761,8 @@
 		FD6D9EE51FABEF3A00D4998E /* RCTSplashScreen.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSplashScreen.xcodeproj; path = "../node_modules/react-native-smart-splash-screen/ios/RCTSplashScreen/RCTSplashScreen.xcodeproj"; sourceTree = "<group>"; };
 		FD982BCB1FACDEF00057F035 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
 		FE827F7FBEC849DABA8C4BB5 /* libRNOpenAppSettings.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNOpenAppSettings.a; sourceTree = "<group>"; };
+		1F9F651A5AFA4DDFBEA752ED /* Disklet.xcodeproj */ = {isa = PBXFileReference; name = "Disklet.xcodeproj"; path = "../node_modules/disklet/ios/Disklet.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		739B863F6D8546BBBC8DBF00 /* libDisklet.a */ = {isa = PBXFileReference; name = "libDisklet.a"; path = "libDisklet.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -806,6 +808,7 @@
 				4E198631156B46B4B3639242 /* libRNOpenAppSettings.a in Frameworks */,
 				0A9941B39E5E4145BD2C54E8 /* libRNCookieManagerIOS.a in Frameworks */,
 				15FCD3C75DEF4703ABEED695 /* libRNCWebView.a in Frameworks */,
+				A453881724A5452A8A0333FB /* libDisklet.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1151,6 +1154,7 @@
 				E08A0470E99A412CB00E7140 /* RNOpenAppSettings.xcodeproj */,
 				8C6E36B511F84168AD949B10 /* RNCookieManagerIOS.xcodeproj */,
 				31B27BFCD5764FDCB4999E72 /* RNCWebView.xcodeproj */,
+				1F9F651A5AFA4DDFBEA752ED /* Disklet.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -2259,12 +2263,14 @@
 					"$(SRCROOT)/../node_modules/react-native-app-settings/ios",
 					"$(SRCROOT)/../node_modules/react-native-cookies/ios/RNCookieManagerIOS",
 					"$(SRCROOT)/../node_modules/react-native-webview/ios",
+					"$(SRCROOT)/../node_modules/disklet/ios",
 				);
 				INFOPLIST_FILE = edge/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/edge\"",
 					"\"$(SRCROOT)/edge\"",
 					"\"$(SRCROOT)/edge\"",
 					"\"$(SRCROOT)/edge\"",
@@ -2324,12 +2330,14 @@
 					"$(SRCROOT)/../node_modules/react-native-app-settings/ios",
 					"$(SRCROOT)/../node_modules/react-native-cookies/ios/RNCookieManagerIOS",
 					"$(SRCROOT)/../node_modules/react-native-webview/ios",
+					"$(SRCROOT)/../node_modules/disklet/ios",
 				);
 				INFOPLIST_FILE = edge/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/edge\"",
 					"\"$(SRCROOT)/edge\"",
 					"\"$(SRCROOT)/edge\"",
 					"\"$(SRCROOT)/edge\"",

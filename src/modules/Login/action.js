@@ -1,7 +1,7 @@
 // @flow
 
 import type { EdgeAccount } from 'edge-core-js'
-import { Platform } from 'react-native'
+import { Alert, Platform } from 'react-native'
 import Locale from 'react-native-locale'
 import PushNotification from 'react-native-push-notification'
 import { Actions } from 'react-native-router-flux'
@@ -11,6 +11,7 @@ import { insertWalletIdsForProgress } from '../../actions/WalletActions.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { displayErrorAlert } from '../../modules/UI/components/ErrorAlert/actions'
+import { runWithTimeout } from '../../util/utils.js'
 import * as ACCOUNT_API from '../Core/Account/api'
 import {
   CORE_DEFAULTS,
@@ -31,6 +32,49 @@ import { updateWalletsRequest } from '../Core/Wallets/action.js'
 import type { Dispatch, GetState } from '../ReduxTypes'
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
+
+const createDefaultWallets = async (account: EdgeAccount, defaultFiat: string) => {
+  const ethWalletName = s.strings.string_first_ethereum_wallet_name
+  const btcWalletName = s.strings.string_first_bitcoin_wallet_name
+  const bchWalletName = s.strings.string_first_bitcoincash_wallet_name
+  const ethWalletType = Constants.ETHEREUM_WALLET
+  const btcWalletType = Constants.BITCOIN_WALLET
+  const bchWalletType = Constants.BITCOINCASH_WALLET
+  const fiatCurrencyCode = 'iso:' + defaultFiat
+
+  let edgeWallet
+  const timeoutErr = new Error(s.strings.error_creating_wallets)
+  timeoutErr.name = 'Error Creating Wallets'
+  if (global.currencyCode) {
+    let walletType, walletName
+    // We got installed via a currencyCode referral. Only create one wallet of that type
+    for (const pluginName in account.currencyConfig) {
+      const { currencyInfo } = account.currencyConfig[pluginName]
+      if (currencyInfo.currencyCode.toLowerCase() === global.currencyCode.toLowerCase()) {
+        walletType = currencyInfo.walletType
+        walletName = sprintf(s.strings.my_crypto_wallet_name, currencyInfo.displayName)
+        global.startMoment && global.startMoment('INIT_ACCOUNT_CREATE_ONE_WALLET')
+        edgeWallet = await runWithTimeout(account.createCurrencyWallet(walletType, { name: walletName, fiatCurrencyCode }), 20000, timeoutErr)
+        global.endMoment && global.endMoment('INIT_ACCOUNT_CREATE_ONE_WALLET')
+      }
+    }
+  }
+  if (!edgeWallet) {
+    global.startMoment && global.startMoment('INIT_ACCOUNT_CREATE_WALLETS')
+    edgeWallet = await runWithTimeout(account.createCurrencyWallet(btcWalletType, { name: btcWalletName, fiatCurrencyCode }), 20000, timeoutErr)
+    await runWithTimeout(account.createCurrencyWallet(bchWalletType, { name: bchWalletName, fiatCurrencyCode }), 20000, timeoutErr)
+    await runWithTimeout(account.createCurrencyWallet(ethWalletType, { name: ethWalletName, fiatCurrencyCode }), 20000, timeoutErr)
+    // const p = []
+    // p.push(account.createCurrencyWallet(btcWalletType, { name: btcWalletName, fiatCurrencyCode }))
+    // p.push(account.createCurrencyWallet(bchWalletType, { name: bchWalletName, fiatCurrencyCode }))
+    // p.push(account.createCurrencyWallet(ethWalletType, { name: ethWalletName, fiatCurrencyCode }))
+    // const results = await runWithTimeout(20000, Promise.all(p))
+    // edgeWallet = results[0]
+    global.logEvent && global.logEvent(`Signup_Wallets_Created`)
+    global.endMoment && global.endMoment('INIT_ACCOUNT_CREATE_WALLETS')
+  }
+  return edgeWallet
+}
 
 export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => async (dispatch: Dispatch, getState: GetState) => {
   const currencyPlugins = []
@@ -86,46 +130,16 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN
   }
   try {
+    let newAccount = false
+    let defaultFiat = Constants.USD_FIAT
     if (account.activeWalletIds.length < 1) {
-      // we are going to assume that since there is no wallets, this is a first time user
-      Actions[Constants.ONBOARDING]()
-      // set the property on the user so that we can launch on boarding
-      // lets create the wallet
-      const ethWalletName = s.strings.string_first_ethereum_wallet_name
-      const btcWalletName = s.strings.string_first_bitcoin_wallet_name
-      const bchWalletName = s.strings.string_first_bitcoincash_wallet_name
-      const ethWalletType = Constants.ETHEREUM_WALLET
-      const btcWalletType = Constants.BITCOIN_WALLET
-      const bchWalletType = Constants.BITCOINCASH_WALLET
-      let fiatCurrencyCode = Constants.USD_FIAT
       if (localeInfo.currencyCode && typeof localeInfo.currencyCode === 'string' && localeInfo.currencyCode.length >= 3) {
-        fiatCurrencyCode = 'iso:' + localeInfo.currencyCode
+        defaultFiat = localeInfo.currencyCode
       }
-      let edgeWallet
-      if (global.currencyCode) {
-        let walletType, walletName
-        // We got installed via a currencyCode referral. Only create one wallet of that type
-        for (const pluginName in account.currencyConfig) {
-          const { currencyInfo } = account.currencyConfig[pluginName]
-          if (currencyInfo.currencyCode.toLowerCase() === global.currencyCode.toLowerCase()) {
-            walletType = currencyInfo.walletType
-            walletName = sprintf(s.strings.my_crypto_wallet_name, currencyInfo.displayName)
-            edgeWallet = await ACCOUNT_API.createCurrencyWalletRequest(account, walletType, { name: walletName, fiatCurrencyCode })
-            global.firebase && global.firebase.analytics().logEvent(`Signup_Wallets_Created`)
-          }
-        }
-      }
-      if (!edgeWallet) {
-        edgeWallet = await ACCOUNT_API.createCurrencyWalletRequest(account, btcWalletType, { name: btcWalletName, fiatCurrencyCode })
-        await ACCOUNT_API.createCurrencyWalletRequest(account, bchWalletType, { name: bchWalletName, fiatCurrencyCode })
-        await ACCOUNT_API.createCurrencyWalletRequest(account, ethWalletType, { name: ethWalletName, fiatCurrencyCode })
-        global.firebase && global.firebase.analytics().logEvent(`Signup_Wallets_Created`)
-      }
-      accountInitObject.walletId = edgeWallet.id
-      accountInitObject.currencyCode = edgeWallet.currencyInfo.currencyCode
+
+      newAccount = true
     } else if (!state.core.deepLinking.deepLinkPending) {
       // We have a wallet
-      Actions[Constants.EDGE]()
       const { walletId, currencyCode } = ACCOUNT_API.getFirstActiveWalletInfo(account, currencyCodes)
       accountInitObject.walletId = walletId
       accountInitObject.currencyCode = currencyCode
@@ -139,7 +153,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
 
     const loadedSyncedSettings = await getSyncedSettings(account)
     const syncedSettings = { ...loadedSyncedSettings } // will prevent mergeSettings trying to find prop of undefined
-    const mergedSyncedSettings = mergeSettings(syncedSettings, SYNCED_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_TYPES)
+    const mergedSyncedSettings = mergeSettings(syncedSettings, SYNCED_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_TYPES, account)
     if (mergedSyncedSettings.isOverwriteNeeded) {
       setSyncedSettings(account, { ...mergedSyncedSettings.finalSettings })
     }
@@ -172,6 +186,11 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
 
     accountInitObject.pinLoginEnabled = await context.pinLoginEnabled(account.username)
 
+    if (newAccount) {
+      accountInitObject.defaultFiat = defaultFiat
+      accountInitObject.defaultIsoFiat = 'iso:' + defaultFiat
+    }
+
     const coreSettings = await getCoreSettings(account)
     const coreDefaults = CORE_DEFAULTS
     const coreFinal = { ...coreDefaults, ...coreSettings }
@@ -182,10 +201,14 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       type: 'ACCOUNT_INIT_COMPLETE',
       data: { ...accountInitObject }
     })
+    if (newAccount) {
+      await createDefaultWallets(account, defaultFiat)
+    }
     // $FlowFixMe
     dispatch(updateWalletsRequest())
   } catch (error) {
     console.log('initializeAccount error: ', error)
+    Alert.alert(error.name, error.message)
     dispatch(displayErrorAlert(error.message))
   }
 }
@@ -193,7 +216,8 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
 export const mergeSettings = (
   loadedSettings: Object,
   defaults: Object,
-  types: Object
+  types: Object,
+  account?: Object
 ): { finalSettings: Object, isOverwriteNeeded: boolean, isDefaultTypeIncorrect: boolean } => {
   const finalSettings = {}
   // begin process for repairing damaged settings data
@@ -206,6 +230,7 @@ export const mergeSettings = (
       isDefaultTypeIncorrect = true
       console.error('MismatchedDefaultSettingType key: ', key, ' with defaultSettingType: ', defaultSettingType, ' and necessary type: ', types[key])
     }
+
     // if the type of the loaded setting does not meet the enforced type
     // eslint-disable-next-line valid-typeof
     const loadedSettingType = typeof loadedSettings[key]
@@ -225,6 +250,23 @@ export const mergeSettings = (
       finalSettings[key] = defaults[key]
     } else {
       finalSettings[key] = loadedSettings[key]
+    }
+
+    if (account) {
+      const currencyName = Constants.CURRENCY_PLUGIN_NAMES[key]
+      // if there are settings for this key
+      // and currency (not token) and has a plugin name
+      if (loadedSettings && loadedSettings[key] && loadedSettings[key].denominations && currencyName) {
+        // for each currency info (each native currency)
+        const pluginDenominations = account.currencyConfig[currencyName].currencyInfo.denominations // get denominations for that plugin
+        const settingDenominationIndex = pluginDenominations.findIndex(pluginDenom => pluginDenom.multiplier === loadedSettings[key].denomination) // find settings denom in plugin denoms
+        if (settingDenominationIndex === -1) {
+          // setting denomination is not present in plugin (and on wallet)
+          finalSettings[key].denomination = pluginDenominations[0].multiplier // grab the first denom multiplier from plugin
+          console.warn(`${key} denomination ${loadedSettings[key].denomination} invalid, overwriting with plugin denom`)
+          isOverwriteNeeded = true // make sure synced settings get overwritten
+        }
+      }
     }
   }
 

@@ -45,12 +45,58 @@ class EdgeProvider extends Bridgeable {
   _plugin: any
   _state: any
   _dispatch: Function
-
-  constructor (plugin: any, state: any, dispatch: Function) {
+  _backClick: Function
+  _navStack: Array<string>
+  backHandler: { handleBack(): Promise<number> }
+  static instanceTracker = {}
+  static handleBack () {
+    if (EdgeProvider.instanceTracker.instance) {
+      EdgeProvider.instanceTracker.instance.onBackButtonPressed()
+    }
+  }
+  static navStackPush (arg: string) {
+    if (EdgeProvider.instanceTracker.instance) {
+      EdgeProvider.instanceTracker.instance._navStack.push(arg)
+    }
+  }
+  static navStackClear () {
+    if (EdgeProvider.instanceTracker.instance) {
+      EdgeProvider.instanceTracker.instance._navStack = []
+    }
+  }
+  constructor (plugin: any, state: any, dispatch: Function, backClick: Function) {
     super()
     this._plugin = plugin
     this._state = state
     this._dispatch = dispatch
+    this._backClick = backClick
+    this._navStack = []
+    this.constructor.instanceTracker.instance = this
+  }
+  navStackPush (arg: string) {
+    this._navStack.push(arg)
+  }
+  navStackClear () {
+    this._navStack = []
+  }
+  async setBackHandler (handler: { handleBack(): Promise<number> }): Promise<mixed> {
+    this.backHandler = handler
+  }
+  async onBackButtonPressed () {
+    let historyCounter = 0
+    if (this.backHandler) {
+      historyCounter = await this.backHandler.handleBack()
+    }
+    if (historyCounter > 0) {
+      this._backClick(true)
+      return
+    }
+    if (this._navStack.length > 0) {
+      this._navStack.pop()
+      this._backClick(true)
+      return
+    }
+    this._backClick(false)
   }
   // Set the currency wallet to interact with. This will show a wallet selector modal
   // for the user to pick a wallet within their list of wallets that match `currencyCodes`

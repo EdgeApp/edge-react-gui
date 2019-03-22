@@ -184,3 +184,14 @@ export type SpendingLimits = {
     amount: number
   }
 }
+
+export type BuySellPlugin = {
+  pluginId: string,
+  sourceFile: { uri: string },
+  name: string,
+  subtitle: string,
+  provider: string,
+  imageUrl: string,
+  environment: Object,
+  isLegacy: boolean
+}

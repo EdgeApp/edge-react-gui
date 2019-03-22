@@ -5,7 +5,7 @@ import { Alert, Image, Keyboard, TouchableHighlight, View } from 'react-native'
 import ExtraDimensions from 'react-native-extra-dimensions-android'
 import { Actions } from 'react-native-router-flux'
 
-import * as Constants from '../../constants/indexConstants.js'
+import { CREATE_WALLET_CHOICE, CREATE_WALLET_SELECT_FIAT, getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
 import { scale } from '../../lib/scaling.js'
 import s from '../../locales/strings.js'
 import Text from '../../modules/UI/components/FormattedText/index'
@@ -92,10 +92,19 @@ export class CreateWalletSelectCrypto extends Component<Props, State> {
   }
 
   onNext = () => {
+    const { selectedWalletType } = this.state
+    const walletType = this.getWalletType(selectedWalletType)
+    const currencyCode = walletType.currencyCode
+    const specialcurrencyInfo = getSpecialCurrencyInfo(currencyCode)
+    const isImportKeySupported = specialcurrencyInfo.isImportKeySupported
     if (this.isValidWalletType()) {
-      Actions[Constants.CREATE_WALLET_SELECT_FIAT]({
-        selectedWalletType: this.getWalletType(this.state.selectedWalletType)
-      })
+      if (isImportKeySupported) {
+        Actions[CREATE_WALLET_CHOICE]({
+          selectedWalletType: this.getWalletType(selectedWalletType)
+        })
+      } else {
+        Actions[CREATE_WALLET_SELECT_FIAT]({ selectedWalletType: this.getWalletType(selectedWalletType) })
+      }
     } else {
       Alert.alert(s.strings.create_wallet_invalid_input, s.strings.create_wallet_select_valid_crypto)
     }
