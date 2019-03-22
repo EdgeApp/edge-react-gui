@@ -314,11 +314,11 @@ class PluginView extends React.Component<PluginProps, PluginState> {
 const mapStateToProps = state => {
   const account = CORE_SELECTORS.getAccount(state)
   const guiWallet = UI_SELECTORS.getSelectedWallet(state)
-  const coreWallet = CORE_SELECTORS.getWallet(state, guiWallet.id)
+  const coreWallet = guiWallet && guiWallet.id ? CORE_SELECTORS.getWallet(state, guiWallet.id) : null
   const coreWallets = state.core.wallets.byId
   const wallets = state.ui.wallets.byId
-  const walletName = coreWallet.name
-  const walletId = coreWallet.id
+  const walletName = coreWallet ? coreWallet.name : null
+  const walletId = coreWallet ? coreWallet.id : null
   const currentState = state
   return {
     account,
