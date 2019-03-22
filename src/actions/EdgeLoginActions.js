@@ -32,7 +32,6 @@ export const lobbyLogin = () => async (dispatch: any, getState: any) => {
     }, 750)
   } catch (e) {
     dispatch({ type: 'EDGE_LOBBY_ACCEPT_FAILED' })
-    console.log('stop error here it is')
     showModal(errorModal(s.strings.edge_login_failed, e))
   }
 }
