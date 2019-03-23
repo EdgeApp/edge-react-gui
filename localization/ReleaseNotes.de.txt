@@ -1,9 +1,17 @@
 v1.7.0
 
-* Bech32 Adressen Support
+* Bech32 address support
 * Den Edge Core zum eigenständigen Prozess machen, um die Leistung und die GUI-Antwortzeit zu verbessern
 * Sell crypto to credit card using Simplex
 * Add LibertyX to support buying Bitcoin from physical merchants in US
+
+v1.6.1
+
+* Improved BTC fee calculations
+* Add buy crypto button at Wallets List screen
+* Add new button to buy and exchange crypto for empty wallets
+* Fix several UI display bugs
+* Improved plugin functionality
 
 v1.6.0
 
@@ -17,7 +25,7 @@ v1.6.0
 v1.5.0
 
 * Changenow als Tauschbörse hinzufügen
-* Use new colored currency icons
+* Benutze neue farbige Währungssymbole
 * Allow signin/singout of ShapeShift via Settings screen
 
 v1.4.4
@@ -26,7 +34,7 @@ v1.4.4
 * Add replay protection to BCH/BSV wallets
 * Improve login performance
 * Fix bug that caused XRP and XLM to re-query all transactions at each login
-* Improve connectivity to nodes for bitcoin related currencies (BTC, BCH, LTC, DASH, etc)
+* Verbesserung der Konnektivität zu Knoten bei Bitcoin verwandten Währungen (BTC, BCH, LTC, DASH, etc.)
 
 v1.4.3
 
@@ -42,7 +50,7 @@ v1.4.2
 
 * Unterstützung für Stellar
 * Füge die Fähigkeit um benutzerdefinierte Nodes für Bitcoin und ähnliche Währungen auszuwählen hinzu
-* Support for ShapeShift membership
+* Unterstützung für ShapeShift-Mitgliedschaft
 * Unterstütze Changelly.com bei der Tauschbörsenfunktion
 * Füge spanische, italienische und russische Übersetzungen hinzu
 
