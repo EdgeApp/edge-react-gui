@@ -491,5 +491,7 @@
   "load_plugin": "Load Plugin",
   "plugin_url": "Plugin URL",
   "choose_your_wallet": "Choose Your Wallet",
-  "error_creating_wallets": "Network timeout occurred trying to create and backup wallets. Please check your network connection and restart app to retry wallet creation."
+  "error_creating_wallets": "Network timeout occurred trying to create and backup wallets. Please check your network connection and restart app to retry wallet creation.",
+  "edge_login_failed": "Failed to Login",
+  "edge_login_fetching": "Fetching Edge Login info..."
 }
