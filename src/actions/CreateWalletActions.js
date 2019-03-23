@@ -55,7 +55,14 @@ export const createCurrencyWalletAndAddToSwap = (walletName: string, walletType:
       dispatch(selectWalletForExchange(edgeWallet.id, edgeWallet.currencyInfo.currencyCode))
     })
     .catch(async error => {
-      await showModal(errorModal(s.strings.create_wallet_failed, error))
+      const modal = createSimpleConfirmModal({
+        title: s.strings.create_wallet_failed_header,
+        message: s.strings.create_wallet_failed_message,
+        icon: <Icon type={Constants.MATERIAL_COMMUNITY} name={Constants.EXCLAMATION} size={30} />,
+        buttonText: s.strings.string_ok
+      })
+      await showModal(modal)
+      console.log(error)
       Actions.popTo(Constants.WALLET_LIST_SCENE)
       dispatch({ type: 'UI/WALLETS/CREATE_WALLET_FAILURE' })
     })
