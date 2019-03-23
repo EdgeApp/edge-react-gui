@@ -491,5 +491,7 @@
   "load_plugin": "",
   "plugin_url": "",
   "choose_your_wallet": "",
-  "error_creating_wallets": ""
+  "error_creating_wallets": "",
+  "edge_login_failed": "",
+  "edge_login_fetching": ""
 }
