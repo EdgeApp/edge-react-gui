@@ -21,7 +21,7 @@ type CreateWalletChoiceProps = {
 export class CreateWalletChoiceComponent extends PureComponent<CreateWalletChoiceProps> {
   onSelectNew = () => {
     const { selectedWalletType } = this.props
-    Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]({ selectedWalletType })
+    Actions[Constants.CREATE_WALLET_SELECT_FIAT]({ selectedWalletType })
   }
 
   onSelectRestore = () => {
