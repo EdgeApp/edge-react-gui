@@ -132,8 +132,8 @@
   "create_wallet_name_label": "Nome del portafoglio:",
   "create_wallet_crypto_type_label": "Tipo di portafoglio:",
   "create_wallet_fiat_type_label": "Portafoglio fiat:",
-  "create_wallet_failed_header": "",
-  "create_wallet_failed_message": "",
+  "create_wallet_failed_header": "Creazione portafoglio fallita",
+  "create_wallet_failed_message": "Creazione del portafoglio fallita causa timeout. Controlla la tua connessione Internet e riprova più tardi.",
   "create_wallet_create_account": "Crea un account",
   "create_wallet_account_activate": "Attiva l'account",
   "create_wallet_account_instructions": "Per procedere ti verrà chiesto di loggarti nel tuo account %s esistente:",
@@ -492,7 +492,7 @@
   "load_plugin": "Caricamento del plugin",
   "plugin_url": "URL del plugin",
   "choose_your_wallet": "Scegli il tuo portafoglio",
-  "error_creating_wallets": "",
-  "edge_login_failed": "",
-  "edge_login_fetching": ""
+  "error_creating_wallets": "Si è verificata un'interruzione di rete mentre si stavano creando e salvando dei portafogli. Controlla la connessione di rete e riavvia l'app per ritentare la creazione dei portafogli.",
+  "edge_login_failed": "Login fallito",
+  "edge_login_fetching": "Recupero le informazioni di login di Edge..."
 }
