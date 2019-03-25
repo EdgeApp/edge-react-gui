@@ -8239,10 +8239,9 @@ react-native-firebase@4.3.8:
   version "1.0.5"
   resolved "git://github.com/EdgeApp/react-native-flip-view.git#9796c6469385559da6689a4f56f540fc6f3d003a"
 
-react-native-fs@^2.11.15:
-  version "2.12.1"
-  resolved "https://registry.yarnpkg.com/react-native-fs/-/react-native-fs-2.12.1.tgz#55ec15392eb39e9fa9d6628c2c5b60b9f59102b7"
-  integrity sha512-T0vR5c+3fPVr12o4UoKr+gMHVokbLmKFGg2x1rOprwjaoJpV75Tw8mC3RpUp1u9AZHzWC4WcomhfqAlfXqDUug==
+"react-native-fs@git://github.com/EdgeApp/react-native-fs.git#edge/removeEncoding":
+  version "2.13.3"
+  resolved "git://github.com/EdgeApp/react-native-fs.git#575a0376ac7287f2048ee470e2af5ad3aeb65764"
   dependencies:
     base-64 "^0.1.0"
     utf8 "^2.1.1"
