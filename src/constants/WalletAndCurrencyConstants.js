@@ -154,7 +154,7 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     displayBuyCrypto: true,
-    isImportKeySupported: true
+    isImportKeySupported: false
   },
   DAI: {
     displayBuyCrypto: true,
