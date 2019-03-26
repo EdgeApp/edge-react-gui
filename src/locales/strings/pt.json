@@ -236,6 +236,7 @@
   "settings_set_custom_nodes_placeholder": "https://MyNode.example:18081",
   "string_cancel_cap": "Cancelar",
   "string_cancel": "CANCELAR",
+  "string_ok_cap": "",
   "string_delete": "Excluir",
   "string_custom_fee": "Configurar Taxas",
   "satPerByte": "Satoshi por Byte",
@@ -494,5 +495,7 @@
   "choose_your_wallet": "",
   "error_creating_wallets": "",
   "edge_login_failed": "",
-  "edge_login_fetching": ""
+  "edge_login_fetching": "",
+  "modal_addressexplorer_message": "",
+  "modal_addressexplorer_null": ""
 }
