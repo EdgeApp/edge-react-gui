@@ -236,6 +236,7 @@
   "settings_set_custom_nodes_placeholder": "https://MyNode.Example:18081",
   "string_cancel_cap": "Отмена",
   "string_cancel": "ОТМЕНА",
+  "string_ok_cap": "",
   "string_delete": "Удалить",
   "string_custom_fee": "Установить комиссию",
   "satPerByte": "Сатоши за байт",
@@ -494,5 +495,7 @@
   "choose_your_wallet": "",
   "error_creating_wallets": "",
   "edge_login_failed": "",
-  "edge_login_fetching": ""
+  "edge_login_fetching": "",
+  "modal_addressexplorer_message": "",
+  "modal_addressexplorer_null": ""
 }
