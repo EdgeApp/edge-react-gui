@@ -236,6 +236,7 @@
   "settings_set_custom_nodes_placeholder": "https://MyNode.Example:18081",
   "string_cancel_cap": "Cancel",
   "string_cancel": "CANCEL",
+  "string_ok_cap": "OK",
   "string_delete": "Delete",
   "string_custom_fee": "Set Fees",
   "satPerByte": "Satoshi Per Byte",
@@ -494,5 +495,7 @@
   "choose_your_wallet": "Choose Your Wallet",
   "error_creating_wallets": "Network timeout occurred trying to create and backup wallets. Please check your network connection and restart app to retry wallet creation.",
   "edge_login_failed": "Failed to Login",
-  "edge_login_fetching": "Fetching Edge Login info..."
+  "edge_login_fetching": "Fetching Edge Login info...",
+  "modal_addressexplorer_message": "Show Address in Blockexplorer?",
+  "modal_addressexplorer_null": "This currency has no explorer site as of now"
 }

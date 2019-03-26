@@ -214,21 +214,26 @@ exports[`SendConfirmation should render with destination 1`] = `
                 </FormattedText>
               </Text>
             </Row>
-            <Row
-              style={
-                Object {
-                  "paddingVertical": 4,
-                }
-              }
+            <AddressTextWithBlockExplorerModal
+              address="123123123"
+              addressExplorer={null}
             >
-              <Text
-                style={Object {}}
+              <Row
+                style={
+                  Object {
+                    "paddingVertical": 4,
+                  }
+                }
               >
-                <FormattedText>
-                  Address: 123123123
-                </FormattedText>
-              </Text>
-            </Row>
+                <Text
+                  style={Object {}}
+                >
+                  <FormattedText>
+                    Address: 123123123
+                  </FormattedText>
+                </Text>
+              </Row>
+            </AddressTextWithBlockExplorerModal>
           </Item>
         </Padding>
       </Component>
@@ -458,21 +463,26 @@ exports[`SendConfirmation should render with standard props 1`] = `
                 
               </FormattedText>
             </Row>
-            <Row
-              style={
-                Object {
-                  "paddingVertical": 4,
-                }
-              }
+            <AddressTextWithBlockExplorerModal
+              address="123123123"
+              addressExplorer={null}
             >
-              <Text
-                style={Object {}}
+              <Row
+                style={
+                  Object {
+                    "paddingVertical": 4,
+                  }
+                }
               >
-                <FormattedText>
-                  Address: 123123123
-                </FormattedText>
-              </Text>
-            </Row>
+                <Text
+                  style={Object {}}
+                >
+                  <FormattedText>
+                    Address: 123123123
+                  </FormattedText>
+                </Text>
+              </Row>
+            </AddressTextWithBlockExplorerModal>
           </Item>
         </Padding>
       </Component>

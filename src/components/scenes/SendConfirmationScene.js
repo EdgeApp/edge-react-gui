@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import { Scene } from 'edge-components'
-import type { EdgeCurrencyWallet, EdgeDenomination, EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
+import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
@@ -28,11 +28,13 @@ import { type GuiMakeSpendInfo, type SendConfirmationState } from '../../reducer
 import styles, { rawStyles } from '../../styles/scenes/SendConfirmationStyle.js'
 import type { GuiCurrencyInfo, GuiDenomination, SpendingLimits } from '../../types'
 import { convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../util/utils.js'
+import { AddressTextWithBlockExplorerModal } from '../common/AddressTextWithBlockExplorerModal'
 
 const DIVIDE_PRECISION = 18
 
 export type SendConfirmationStateProps = {
   fiatCurrencyCode: string,
+  currencyInfo: EdgeCurrencyInfo | null,
   currencyCode: string,
   nativeAmount: string,
   parentNetworkFee: string | null,
@@ -193,7 +195,8 @@ export class SendConfirmation extends Component<Props, State> {
     const cryptoBalanceAmountString = cryptoBalanceAmount ? intl.formatNumber(decimalOrZero(bns.toFixed(cryptoBalanceAmount, 0, 6), 6)) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)
     const balanceInFiatString = intl.formatNumber(this.props.balanceInFiat || 0, { toFixed: 2 })
 
-    const { address, authRequired, currencyCode, transactionMetadata, uniqueIdentifier } = this.props
+    const { address, authRequired, currencyCode, transactionMetadata, uniqueIdentifier, currencyInfo } = this.props
+    const addressExplorer = currencyInfo ? currencyInfo.addressExplorer : null
     const destination = transactionMetadata ? transactionMetadata.name : ''
     const DESTINATION_TEXT = sprintf(s.strings.send_confirmation_to, destination)
     const ADDRESS_TEXT = sprintf(s.strings.send_confirmation_address, address)
@@ -258,11 +261,13 @@ export class SendConfirmation extends Component<Props, State> {
                   )}
 
                   {!!address && (
-                    <Scene.Row style={{ paddingVertical: 4 }}>
-                      <Recipient.Text style={{}}>
-                        <Text>{ADDRESS_TEXT}</Text>
-                      </Recipient.Text>
-                    </Scene.Row>
+                    <AddressTextWithBlockExplorerModal address={address} addressExplorer={addressExplorer}>
+                      <Scene.Row style={{ paddingVertical: 4 }}>
+                        <Recipient.Text style={{}}>
+                          <Text>{ADDRESS_TEXT}</Text>
+                        </Recipient.Text>
+                      </Scene.Row>
+                    </AddressTextWithBlockExplorerModal>
                   )}
 
                   {isTaggableCurrency && (
