@@ -236,6 +236,7 @@
   "settings_set_custom_nodes_placeholder": "https://MyNode.Example:18081",
   "string_cancel_cap": "취소",
   "string_cancel": "취소",
+  "string_ok_cap": "",
   "string_delete": "삭제",
   "string_custom_fee": "수수료 설정",
   "satPerByte": "바이트당 사토시",
@@ -494,5 +495,7 @@
   "choose_your_wallet": "월렛 선택",
   "error_creating_wallets": "",
   "edge_login_failed": "",
-  "edge_login_fetching": ""
+  "edge_login_fetching": "",
+  "modal_addressexplorer_message": "",
+  "modal_addressexplorer_null": ""
 }
