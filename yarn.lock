@@ -3249,10 +3249,10 @@ edge-currency-bitcoin@4.0.2:
     uri-js "^4.2.2"
     url-parse "^1.4.3"
 
-edge-currency-monero@0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.2.1.tgz#57514dcb1c491e78e86c8f849d03d8488c0c349e"
-  integrity sha512-WJF36RkuPaMZEV2iFDo8ZCuo2jl0ctvNWXJlN8AFwRieqVAswtRfOd1C8ogz8PUC0LpaxwC6pIauVUKTHcwBOQ==
+edge-currency-monero@0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.2.2.tgz#40492cd8f4a415e0f04d07401da64cb67f401a45"
+  integrity sha512-AeGslF3QNrRVILV/VTG4zsU8sh4v8Ic6Mcj+bbE3kHoWaastdDGNxUQxKjYuA/UhD/A9njbdrMB5OoSG/fGU/g==
   dependencies:
     biggystring "^3.0.0"
     buffer "^5.0.6"
