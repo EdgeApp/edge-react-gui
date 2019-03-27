@@ -86,7 +86,7 @@
     "dns.js": "^1.0.1",
     "domain-browser": "^1.1.7",
     "edge-components": "^0.0.19",
-    "edge-core-js": "0.15.8",
+    "edge-core-js": "0.15.9",
     "edge-currency-accountbased": "^0.1.8",
     "edge-currency-bitcoin": "4.0.2",
     "edge-currency-monero": "0.2.2",
