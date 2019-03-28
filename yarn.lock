@@ -3082,6 +3082,13 @@ disklet@^0.4.0:
   dependencies:
     rfc4648 "^0.9.1"
 
+disklet@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/disklet/-/disklet-0.4.1.tgz#e98900934eedb73aef67f4b89444729b98e94f71"
+  integrity sha512-Ui7iVznycaVQwRvGra9qVsG1IwcCDiGetclSXlWfiXamEVplb05U3DK06DhsHJEL1V+fGgKQRigA+BmR+7w7pQ==
+  dependencies:
+    rfc4648 "^0.9.1"
+
 dlv@^1.1.0:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/dlv/-/dlv-1.1.2.tgz#270f6737b30d25b6657a7e962c784403f85137e5"
