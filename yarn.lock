@@ -8307,7 +8307,7 @@ react-native-mail@^3.0.5:
 
 "react-native-material-kit@git://github.com/EdgeApp/react-native-material-kit.git#fix-threadpool":
   version "0.4.1"
-  resolved "git://github.com/EdgeApp/react-native-material-kit.git#3b262f7fb0bb7856dd047acc7788d00a3a4d1806"
+  resolved "git://github.com/EdgeApp/react-native-material-kit.git#bcdd8d5227b2e800779c273b661a754621764999"
   dependencies:
     prop-types "^15.5.10"
     ramda "^0.24.1"
