@@ -117,7 +117,7 @@
     "react-native-dropdown": "git://github.com/g6ling/react-native-dropdown.git",
     "react-native-dropdownalert": "git://github.com/EdgeApp/react-native-dropdownalert.git",
     "react-native-extra-dimensions-android": "git://github.com/EdgeApp/react-native-extra-dimensions-android.git",
-    "react-native-fast-crypto": "^1.7.0",
+    "react-native-fast-crypto": "1.8.0",
     "react-native-firebase": "4.3.8",
     "react-native-flip-view": "git://github.com/EdgeApp/react-native-flip-view.git",
     "react-native-fs": "git://github.com/EdgeApp/react-native-fs.git#edge/removeEncoding",
