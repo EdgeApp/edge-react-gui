@@ -90,11 +90,16 @@ cp ./node_modules/edge-currency-monero/lib/react-native/edge-currency-monero.js 
 cp ./node_modules/edge-exchange-plugins/lib/react-native/edge-exchange-plugins.js ./ios/edge-core
 cp -r ./ios/edge-core ./android/app/src/main/assets/
 
+# Set up CocoaPods on iOS:
 unamestr=`uname`
 if [[ "$unamestr" == 'Darwin' ]]; then
-    cd ios
-    pod install
-    cd ..
+  # Copy missing podspecs:
+  for package in $(ls ios/podspecs | sed s/.podspec//); do
+    cp ios/podspecs/$package.podspec node_modules/$package/$package.podspec
+  done
+
+  # Install the dependencies:
+  (cd ios; pod install)
 fi
 
 # Apply patches
