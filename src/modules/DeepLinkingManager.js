@@ -5,10 +5,12 @@ import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
+import parse from 'url-parse'
 
 import { selectWallet } from '../actions/WalletActions.js'
-import { SCAN } from '../constants/indexConstants.js'
+import { PLUGIN_SPEND, SCAN } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
+import { buySellPlugins, spendPlugins } from '../modules/UI/scenes/Plugins/plugins'
 import type { Dispatch } from './ReduxTypes.js'
 
 type DeepLinkingManagerStateProps = {
@@ -33,11 +35,31 @@ class DeepLinkingManager extends React.Component<Props> {
   componentDidUpdate () {
     if (Object.keys(this.props.wallets).length > 0 && this.props.deepLinkPending) this.checkForWallet()
   }
+  processPluginDeepLink = (parsedUrl: Object) => {
+    if (parsedUrl.pathname.includes('simplex')) {
+      const plugins = spendPlugins(false).concat(buySellPlugins(false))
+      let i = 0
+      for (i; i < plugins.length; i++) {
+        const plugin = plugins[i]
+        if (plugin.name === 'Simplex') {
+          Actions[PLUGIN_SPEND]({ plugin: plugin })
+          this.props.markAddressDeepLinkDone()
+          return
+        }
+      }
+    }
+    this.props.markAddressDeepLinkDone()
+  }
 
   checkForWallet () {
     const { addressDeepLinkData } = this.props
     const { currencyCode } = addressDeepLinkData
-
+    // check to see what we have for a deep link.
+    const parsedUrl = parse(addressDeepLinkData.uri, {}, false)
+    if (parsedUrl.hostname === 'plugins') {
+      this.processPluginDeepLink(parsedUrl)
+      return
+    }
     if (!currencyCode) {
       Actions[SCAN]()
       return
