@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -336,13 +335,6 @@
 			remoteGlobalIDString = 8A1B8E771B22E4E300DB45C2;
 			remoteInfo = RCTMaterialKit;
 		};
-		6E1091181EB0512100947A0B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 140335BE384C400688DF5C1C /* UdpSockets.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 134814201AA4EA6300B7C361;
-			remoteInfo = UdpSockets;
-		};
 		6E1091211EB0512100947A0B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 22412DEE8F26420E8952DE97 /* RNImagePicker.xcodeproj */;
@@ -653,7 +645,6 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = edge/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = edge/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = edge/main.m; sourceTree = "<group>"; };
-		140335BE384C400688DF5C1C /* UdpSockets.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = UdpSockets.xcodeproj; path = "../node_modules/react-native-udp/ios/UdpSockets.xcodeproj"; sourceTree = "<group>"; };
 		1452E793F4134740BD7F189A /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		182DA17E6C5B447AB76E288E /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/native-base/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
@@ -1018,14 +1009,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		6E1090ED1EB0512100947A0B /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				6E1091191EB0512100947A0B /* libUdpSockets.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		6E1090EF1EB0512100947A0B /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -1166,7 +1149,6 @@
 				980AF5931F9907460014FACB /* RNSound.xcodeproj */,
 				892B05950477468DB932A014 /* RNVectorIcons.xcodeproj */,
 				F4D44BFC0C7E41B4BEBA4B07 /* TcpSockets.xcodeproj */,
-				140335BE384C400688DF5C1C /* UdpSockets.xcodeproj */,
 				E08A0470E99A412CB00E7140 /* RNOpenAppSettings.xcodeproj */,
 				8C6E36B511F84168AD949B10 /* RNCookieManagerIOS.xcodeproj */,
 				31B27BFCD5764FDCB4999E72 /* RNCWebView.xcodeproj */,
@@ -1596,10 +1578,6 @@
 					ProductGroup = 6E10912E1EB0512200947A0B /* Products */;
 					ProjectRef = F4D44BFC0C7E41B4BEBA4B07 /* TcpSockets.xcodeproj */;
 				},
-				{
-					ProductGroup = 6E1090ED1EB0512100947A0B /* Products */;
-					ProjectRef = 140335BE384C400688DF5C1C /* UdpSockets.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -1810,13 +1788,6 @@
 			fileType = archive.ar;
 			path = libRCTMaterialKit.a;
 			remoteRef = 6E1091041EB0512100947A0B /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		6E1091191EB0512100947A0B /* libUdpSockets.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libUdpSockets.a;
-			remoteRef = 6E1091181EB0512100947A0B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		6E1091221EB0512100947A0B /* libRNImagePicker.a */ = {
@@ -2274,7 +2245,6 @@
 					"$(SRCROOT)/../node_modules/react-native-material-kit/iOS/RCTMaterialKit",
 					"$(SRCROOT)/../node_modules/react-native-permissions/**",
 					"$(SRCROOT)/../node_modules/react-native-tcp/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-udp/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-locale/ios/RCTLocale",
 					"$(SRCROOT)/../node_modules/react-native-fast-crypto/ios/**",
@@ -2298,10 +2268,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/edge\"",
-					"\"$(SRCROOT)/edge\"",
-					"\"$(SRCROOT)/edge\"",
-					"\"$(SRCROOT)/edge\"",
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -2340,7 +2306,6 @@
 					"$(SRCROOT)/../node_modules/react-native-material-kit/iOS/RCTMaterialKit",
 					"$(SRCROOT)/../node_modules/react-native-permissions/**",
 					"$(SRCROOT)/../node_modules/react-native-tcp/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-udp/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-locale/ios/RCTLocale",
 					"$(SRCROOT)/../node_modules/react-native-fast-crypto/ios/**",
@@ -2365,10 +2330,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/edge\"",
-					"\"$(SRCROOT)/edge\"",
-					"\"$(SRCROOT)/edge\"",
-					"\"$(SRCROOT)/edge\"",
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",

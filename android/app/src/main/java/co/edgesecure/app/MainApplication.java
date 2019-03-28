@@ -28,7 +28,6 @@ import com.zmxv.RNSound.RNSoundPackage;
 import cl.json.RNSharePackage;
 import co.airbitz.fastcrypto.RNFastCryptoPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
-import com.tradle.react.UdpSocketsModule;
 import com.peel.react.TcpSocketsModule;
 import com.bitgo.randombytes.RandomBytesPackage;
 import com.github.xinthink.rnmk.ReactMaterialKitPackage;
@@ -76,7 +75,6 @@ public class MainApplication extends Application implements ReactApplication {
             new RandomBytesPackage(),
             new RNFastCryptoPackage(),
             new VectorIconsPackage(),
-            new UdpSocketsModule(),
             new TcpSocketsModule(),
             new ReactMaterialKitPackage(),
             new LinearGradientPackage(),

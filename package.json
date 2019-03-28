@@ -145,7 +145,6 @@
     "react-native-sound": "^0.10.4",
     "react-native-swipe-gestures": "^1.0.2",
     "react-native-tcp": "git://github.com/Airbitz/react-native-tcp.git#c6af8f728fcbbae23d20c0211fd5b6c322f7a446",
-    "react-native-udp": "^2.0.0",
     "react-native-vector-icons": "^6.1.0",
     "react-native-webview": "^3.1.3",
     "react-redux": "^5.0.5",
