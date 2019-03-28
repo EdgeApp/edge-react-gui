@@ -20,7 +20,7 @@ addEdgeCorePlugins(exchange)
 lockEdgeCorePlugins()
 
 const contextOptions = { apiKey: '', appId: '', plugins: currencyPlugins }
-describe('Account', () => {
+describe.skip('Account', () => {
   it('has denominations that match the app default denomination settings', async () => {
     const world: EdgeFakeWorld = await makeFakeEdgeWorld([fakeUser])
     const context: EdgeContext = await world.makeEdgeContext(contextOptions)
