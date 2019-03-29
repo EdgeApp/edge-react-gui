@@ -88,7 +88,7 @@
     "edge-components": "^0.0.19",
     "edge-core-js": "git://github.com/EdgeApp/edge-core-js.git#33ca0960a26c5905aebc7a42a68ac78203d17b84",
     "edge-currency-accountbased": "^0.1.8",
-    "edge-currency-bitcoin": "4.1.0-alpha.5",
+    "edge-currency-bitcoin": "4.1.0-alpha.6",
     "edge-currency-monero": "0.2.2",
     "edge-exchange-plugins": "^0.5.3",
     "edge-login-ui-rn": "^0.5.17",
