@@ -369,7 +369,7 @@ export const styles = {
     fontFamily: THEME.FONTS.SYMBOLS
   },
   txIDIcon: {
-    color: THEME.COLORS.PRIMARY
+    color: THEME.COLORS.SECONDARY
   },
   blockExplorerButton: {
     borderWidth: 0,
