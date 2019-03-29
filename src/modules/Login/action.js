@@ -40,28 +40,36 @@ const createDefaultWallets = async (account: EdgeAccount, defaultFiat: string) =
   const ethWalletType = Constants.ETHEREUM_WALLET
   const btcWalletType = Constants.BITCOIN_WALLET
   const bchWalletType = Constants.BITCOINCASH_WALLET
+  const btcKeyOptions = { format: 'bip49' }
   const fiatCurrencyCode = 'iso:' + defaultFiat
 
   let edgeWallet
   const timeoutErr = new Error(s.strings.error_creating_wallets)
   timeoutErr.name = 'Error Creating Wallets'
+
   if (global.currencyCode) {
-    let walletType, walletName
     // We got installed via a currencyCode referral. Only create one wallet of that type
     for (const pluginName in account.currencyConfig) {
       const { currencyInfo } = account.currencyConfig[pluginName]
       if (currencyInfo.currencyCode.toLowerCase() === global.currencyCode.toLowerCase()) {
-        walletType = currencyInfo.walletType
-        walletName = sprintf(s.strings.my_crypto_wallet_name, currencyInfo.displayName)
+        const walletType = currencyInfo.walletType
+        const walletName = sprintf(s.strings.my_crypto_wallet_name, currencyInfo.displayName)
+        const keyOptions = global.currencyCode.toLowerCase() === 'btc' ? btcKeyOptions : void 0
+
         global.startMoment && global.startMoment('INIT_ACCOUNT_CREATE_ONE_WALLET')
-        edgeWallet = await runWithTimeout(account.createCurrencyWallet(walletType, { name: walletName, fiatCurrencyCode }), 20000, timeoutErr)
+        edgeWallet = await runWithTimeout(account.createCurrencyWallet(walletType, { name: walletName, fiatCurrencyCode, keyOptions }), 20000, timeoutErr)
         global.endMoment && global.endMoment('INIT_ACCOUNT_CREATE_ONE_WALLET')
       }
     }
   }
+
   if (!edgeWallet) {
     global.startMoment && global.startMoment('INIT_ACCOUNT_CREATE_WALLETS')
-    edgeWallet = await runWithTimeout(account.createCurrencyWallet(btcWalletType, { name: btcWalletName, fiatCurrencyCode }), 20000, timeoutErr)
+    edgeWallet = await runWithTimeout(
+      account.createCurrencyWallet(btcWalletType, { name: btcWalletName, fiatCurrencyCode, keyOptions: btcKeyOptions }),
+      20000,
+      timeoutErr
+    )
     await runWithTimeout(account.createCurrencyWallet(bchWalletType, { name: bchWalletName, fiatCurrencyCode }), 20000, timeoutErr)
     await runWithTimeout(account.createCurrencyWallet(ethWalletType, { name: ethWalletName, fiatCurrencyCode }), 20000, timeoutErr)
     // const p = []
@@ -73,6 +81,7 @@ const createDefaultWallets = async (account: EdgeAccount, defaultFiat: string) =
     global.logEvent && global.logEvent(`Signup_Wallets_Created`)
     global.endMoment && global.endMoment('INIT_ACCOUNT_CREATE_WALLETS')
   }
+
   return edgeWallet
 }
 
