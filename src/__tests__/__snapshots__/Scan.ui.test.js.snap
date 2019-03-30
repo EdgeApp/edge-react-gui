@@ -2,7 +2,7 @@
 
 exports[`Scan component should render with AUTHORIZED props 1`] = `
 <SafeAreaViewComponent>
-  <Component
+  <View
     style={
       Object {
         "flex": 1,
@@ -16,8 +16,8 @@ exports[`Scan component should render with AUTHORIZED props 1`] = `
         }
       }
     />
-    <Component />
-    <Component
+    <View />
+    <View
       style={
         Object {
           "flex": 1,
@@ -38,7 +38,7 @@ exports[`Scan component should render with AUTHORIZED props 1`] = `
         }
         type="back"
       />
-      <Component
+      <View
         style={
           Array [
             Object {
@@ -51,7 +51,7 @@ exports[`Scan component should render with AUTHORIZED props 1`] = `
           ]
         }
       >
-        <Component
+        <View
           style={
             Array [
               Object {
@@ -77,8 +77,8 @@ exports[`Scan component should render with AUTHORIZED props 1`] = `
           >
             Scan to Send, Import, or Edge Login
           </FormattedText>
-        </Component>
-        <Component
+        </View>
+        <View
           style={
             Array [
               Object {
@@ -119,7 +119,7 @@ exports[`Scan component should render with AUTHORIZED props 1`] = `
             }
             underlayColor="#0E4B75"
           >
-            <Component
+            <View
               style={
                 Object {
                   "alignItems": "center",
@@ -162,7 +162,7 @@ exports[`Scan component should render with AUTHORIZED props 1`] = `
               >
                 Address
               </FormattedText>
-            </Component>
+            </View>
           </TouchableHighlight>
           <TouchableHighlight
             activeOpacity={0.85}
@@ -182,7 +182,7 @@ exports[`Scan component should render with AUTHORIZED props 1`] = `
             }
             underlayColor="#0E4B75"
           >
-            <Component
+            <View
               style={
                 Object {
                   "alignItems": "center",
@@ -220,20 +220,20 @@ exports[`Scan component should render with AUTHORIZED props 1`] = `
               >
                 Flash
               </FormattedText>
-            </Component>
+            </View>
           </TouchableHighlight>
         </Gradient>
-      </Component>
+      </View>
       <Connect(ABAlert) />
-    </Component>
-  </Component>
+    </View>
+  </View>
   <Connect(SecondaryModal) />
 </SafeAreaViewComponent>
 `;
 
 exports[`Scan component should render with DENIED props 1`] = `
 <SafeAreaViewComponent>
-  <Component
+  <View
     style={
       Object {
         "flex": 1,
@@ -247,8 +247,8 @@ exports[`Scan component should render with DENIED props 1`] = `
         }
       }
     />
-    <Component />
-    <Component
+    <View />
+    <View
       style={
         Object {
           "flex": 1,
@@ -258,8 +258,8 @@ exports[`Scan component should render with DENIED props 1`] = `
         }
       }
     >
-      <Component />
-      <Component
+      <View />
+      <View
         style={
           Array [
             Object {
@@ -272,7 +272,7 @@ exports[`Scan component should render with DENIED props 1`] = `
           ]
         }
       >
-        <Component
+        <View
           style={
             Array [
               Object {
@@ -298,8 +298,8 @@ exports[`Scan component should render with DENIED props 1`] = `
           >
             Scan to Send, Import, or Edge Login
           </FormattedText>
-        </Component>
-        <Component
+        </View>
+        <View
           style={
             Array [
               Object {
@@ -308,7 +308,7 @@ exports[`Scan component should render with DENIED props 1`] = `
             ]
           }
         >
-          <Component
+          <View
             style={
               Array [
                 Object {
@@ -323,9 +323,6 @@ exports[`Scan component should render with DENIED props 1`] = `
             }
           >
             <Text
-              accessible={true}
-              allowFontScaling={true}
-              ellipsizeMode="tail"
               style={
                 Object {
                   "fontSize": 19.66408450704225,
@@ -350,9 +347,6 @@ exports[`Scan component should render with DENIED props 1`] = `
               underlayColor="black"
             >
               <Text
-                accessible={true}
-                allowFontScaling={true}
-                ellipsizeMode="tail"
                 style={
                   Object {
                     "color": "#FFFFFF",
@@ -362,8 +356,8 @@ exports[`Scan component should render with DENIED props 1`] = `
                 Open Settings
               </Text>
             </TouchableHighlight>
-          </Component>
-        </Component>
+          </View>
+        </View>
         <Gradient
           style={
             Array [
@@ -396,7 +390,7 @@ exports[`Scan component should render with DENIED props 1`] = `
             }
             underlayColor="#0E4B75"
           >
-            <Component
+            <View
               style={
                 Object {
                   "alignItems": "center",
@@ -439,7 +433,7 @@ exports[`Scan component should render with DENIED props 1`] = `
               >
                 Address
               </FormattedText>
-            </Component>
+            </View>
           </TouchableHighlight>
           <TouchableHighlight
             activeOpacity={0.85}
@@ -459,7 +453,7 @@ exports[`Scan component should render with DENIED props 1`] = `
             }
             underlayColor="#0E4B75"
           >
-            <Component
+            <View
               style={
                 Object {
                   "alignItems": "center",
@@ -497,13 +491,13 @@ exports[`Scan component should render with DENIED props 1`] = `
               >
                 Flash
               </FormattedText>
-            </Component>
+            </View>
           </TouchableHighlight>
         </Gradient>
-      </Component>
+      </View>
       <Connect(ABAlert) />
-    </Component>
-  </Component>
+    </View>
+  </View>
   <Connect(SecondaryModal) />
 </SafeAreaViewComponent>
 `;

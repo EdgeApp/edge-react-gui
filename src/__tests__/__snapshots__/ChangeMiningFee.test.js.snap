@@ -2,7 +2,7 @@
 
 exports[`Change Mining Fees should render with custom props 1`] = `
 <SafeAreaViewComponent>
-  <Component>
+  <View>
     <Gradient
       style={
         Object {
@@ -12,7 +12,7 @@ exports[`Change Mining Fees should render with custom props 1`] = `
         }
       }
     />
-    <Component
+    <View
       style={
         Object {
           "paddingHorizontal": 28.091549295774648,
@@ -22,7 +22,7 @@ exports[`Change Mining Fees should render with custom props 1`] = `
         }
       }
     >
-      <Component
+      <View
         style={
           Object {
             "height": 61.80140845070422,
@@ -35,8 +35,8 @@ exports[`Change Mining Fees should render with custom props 1`] = `
           onPress={[Function]}
           value="high"
         />
-      </Component>
-      <Component
+      </View>
+      <View
         style={
           Object {
             "height": 61.80140845070422,
@@ -49,8 +49,8 @@ exports[`Change Mining Fees should render with custom props 1`] = `
           onPress={[Function]}
           value="standard"
         />
-      </Component>
-      <Component
+      </View>
+      <View
         style={
           Object {
             "height": 61.80140845070422,
@@ -63,8 +63,8 @@ exports[`Change Mining Fees should render with custom props 1`] = `
           onPress={[Function]}
           value="low"
         />
-      </Component>
-      <Component
+      </View>
+      <View
         style={
           Object {
             "marginTop": 18,
@@ -78,15 +78,15 @@ exports[`Change Mining Fees should render with custom props 1`] = `
             Set Custom Mining Fee
           </Text>
         </PrimaryButton>
-      </Component>
-    </Component>
-  </Component>
+      </View>
+    </View>
+  </View>
 </SafeAreaViewComponent>
 `;
 
 exports[`Change Mining Fees should render with high props 1`] = `
 <SafeAreaViewComponent>
-  <Component>
+  <View>
     <Gradient
       style={
         Object {
@@ -96,7 +96,7 @@ exports[`Change Mining Fees should render with high props 1`] = `
         }
       }
     />
-    <Component
+    <View
       style={
         Object {
           "paddingHorizontal": 28.091549295774648,
@@ -106,7 +106,7 @@ exports[`Change Mining Fees should render with high props 1`] = `
         }
       }
     >
-      <Component
+      <View
         style={
           Object {
             "height": 61.80140845070422,
@@ -119,8 +119,8 @@ exports[`Change Mining Fees should render with high props 1`] = `
           onPress={[Function]}
           value="high"
         />
-      </Component>
-      <Component
+      </View>
+      <View
         style={
           Object {
             "height": 61.80140845070422,
@@ -133,8 +133,8 @@ exports[`Change Mining Fees should render with high props 1`] = `
           onPress={[Function]}
           value="standard"
         />
-      </Component>
-      <Component
+      </View>
+      <View
         style={
           Object {
             "height": 61.80140845070422,
@@ -147,8 +147,8 @@ exports[`Change Mining Fees should render with high props 1`] = `
           onPress={[Function]}
           value="low"
         />
-      </Component>
-      <Component
+      </View>
+      <View
         style={
           Object {
             "marginTop": 18,
@@ -162,15 +162,15 @@ exports[`Change Mining Fees should render with high props 1`] = `
             Set Custom Mining Fee
           </Text>
         </PrimaryButton>
-      </Component>
-    </Component>
-  </Component>
+      </View>
+    </View>
+  </View>
 </SafeAreaViewComponent>
 `;
 
 exports[`Change Mining Fees should render with low props 1`] = `
 <SafeAreaViewComponent>
-  <Component>
+  <View>
     <Gradient
       style={
         Object {
@@ -180,7 +180,7 @@ exports[`Change Mining Fees should render with low props 1`] = `
         }
       }
     />
-    <Component
+    <View
       style={
         Object {
           "paddingHorizontal": 28.091549295774648,
@@ -190,7 +190,7 @@ exports[`Change Mining Fees should render with low props 1`] = `
         }
       }
     >
-      <Component
+      <View
         style={
           Object {
             "height": 61.80140845070422,
@@ -203,8 +203,8 @@ exports[`Change Mining Fees should render with low props 1`] = `
           onPress={[Function]}
           value="high"
         />
-      </Component>
-      <Component
+      </View>
+      <View
         style={
           Object {
             "height": 61.80140845070422,
@@ -217,8 +217,8 @@ exports[`Change Mining Fees should render with low props 1`] = `
           onPress={[Function]}
           value="standard"
         />
-      </Component>
-      <Component
+      </View>
+      <View
         style={
           Object {
             "height": 61.80140845070422,
@@ -231,8 +231,8 @@ exports[`Change Mining Fees should render with low props 1`] = `
           onPress={[Function]}
           value="low"
         />
-      </Component>
-      <Component
+      </View>
+      <View
         style={
           Object {
             "marginTop": 18,
@@ -246,15 +246,15 @@ exports[`Change Mining Fees should render with low props 1`] = `
             Set Custom Mining Fee
           </Text>
         </PrimaryButton>
-      </Component>
-    </Component>
-  </Component>
+      </View>
+    </View>
+  </View>
 </SafeAreaViewComponent>
 `;
 
 exports[`Change Mining Fees should render with standard props 1`] = `
 <SafeAreaViewComponent>
-  <Component>
+  <View>
     <Gradient
       style={
         Object {
@@ -264,7 +264,7 @@ exports[`Change Mining Fees should render with standard props 1`] = `
         }
       }
     />
-    <Component
+    <View
       style={
         Object {
           "paddingHorizontal": 28.091549295774648,
@@ -274,7 +274,7 @@ exports[`Change Mining Fees should render with standard props 1`] = `
         }
       }
     >
-      <Component
+      <View
         style={
           Object {
             "height": 61.80140845070422,
@@ -287,8 +287,8 @@ exports[`Change Mining Fees should render with standard props 1`] = `
           onPress={[Function]}
           value="high"
         />
-      </Component>
-      <Component
+      </View>
+      <View
         style={
           Object {
             "height": 61.80140845070422,
@@ -301,8 +301,8 @@ exports[`Change Mining Fees should render with standard props 1`] = `
           onPress={[Function]}
           value="standard"
         />
-      </Component>
-      <Component
+      </View>
+      <View
         style={
           Object {
             "height": 61.80140845070422,
@@ -315,8 +315,8 @@ exports[`Change Mining Fees should render with standard props 1`] = `
           onPress={[Function]}
           value="low"
         />
-      </Component>
-      <Component
+      </View>
+      <View
         style={
           Object {
             "marginTop": 18,
@@ -330,8 +330,8 @@ exports[`Change Mining Fees should render with standard props 1`] = `
             Set Custom Mining Fee
           </Text>
         </PrimaryButton>
-      </Component>
-    </Component>
-  </Component>
+      </View>
+    </View>
+  </View>
 </SafeAreaViewComponent>
 `;

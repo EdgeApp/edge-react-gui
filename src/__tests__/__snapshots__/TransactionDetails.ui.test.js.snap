@@ -2,7 +2,7 @@
 
 exports[`TransactionDetails.ui should render 1`] = `
 <SafeAreaViewComponent>
-  <Component
+  <View
     style={
       Array [
         Object {
@@ -21,7 +21,7 @@ exports[`TransactionDetails.ui should render 1`] = `
         }
       }
     />
-    <Component
+    <View
       style={
         Object {
           "position": "relative",
@@ -29,12 +29,12 @@ exports[`TransactionDetails.ui should render 1`] = `
         }
       }
     >
-      <ScrollView
+      <ScrollViewMock
         keyboardShouldPersistTaps="handled"
         overScrollMode="never"
         scrollEnabled={true}
       >
-        <Component
+        <View
           style={
             Array [
               Object {
@@ -47,7 +47,7 @@ exports[`TransactionDetails.ui should render 1`] = `
             ]
           }
         >
-          <Component>
+          <View>
             <Gradient
               style={
                 Array [
@@ -59,7 +59,7 @@ exports[`TransactionDetails.ui should render 1`] = `
                 ]
               }
             />
-            <Component
+            <View
               style={
                 Object {
                   "flexDirection": "row",
@@ -73,9 +73,9 @@ exports[`TransactionDetails.ui should render 1`] = `
                 direction="receive"
                 thumbnailPath="thumb/nail/path"
               />
-            </Component>
-          </Component>
-          <Component
+            </View>
+          </View>
+          <View
             style={
               Array [
                 Object {
@@ -86,7 +86,7 @@ exports[`TransactionDetails.ui should render 1`] = `
               ]
             }
           >
-            <Component
+            <View
               style={
                 Array [
                   Object {
@@ -96,7 +96,7 @@ exports[`TransactionDetails.ui should render 1`] = `
                 ]
               }
             >
-              <Component
+              <View
                 style={
                   Array [
                     Object {
@@ -115,6 +115,7 @@ exports[`TransactionDetails.ui should render 1`] = `
                   onFocus={[Function]}
                   placeholder="Payee"
                   placeholderTextColor="#87939E"
+                  rejectResponderTermination={true}
                   style={
                     Array [
                       Object {
@@ -130,9 +131,9 @@ exports[`TransactionDetails.ui should render 1`] = `
                   }
                   underlineColorAndroid="transparent"
                 />
-              </Component>
-            </Component>
-            <Component
+              </View>
+            </View>
+            <View
               style={
                 Object {
                   "alignSelf": "center",
@@ -143,7 +144,7 @@ exports[`TransactionDetails.ui should render 1`] = `
                 }
               }
             />
-            <Component
+            <View
               style={
                 Array [
                   Object {
@@ -166,7 +167,7 @@ exports[`TransactionDetails.ui should render 1`] = `
               >
                 Aug 31st, 2018, 9:59:40 PM
               </FormattedText>
-            </Component>
+            </View>
             <AmountArea
               categories={
                 Object {
@@ -266,24 +267,24 @@ exports[`TransactionDetails.ui should render 1`] = `
               txExplorerUrl={null}
               usableHeight={1221}
             />
-          </Component>
-        </Component>
-        <Component
+          </View>
+        </View>
+        <View
           style={
             Object {
               "height": 300,
             }
           }
         />
-      </ScrollView>
-    </Component>
-  </Component>
+      </ScrollViewMock>
+    </View>
+  </View>
 </SafeAreaViewComponent>
 `;
 
 exports[`TransactionDetails.ui should render with negative nativeAmount and fiatAmount 1`] = `
 <SafeAreaViewComponent>
-  <Component
+  <View
     style={
       Array [
         Object {
@@ -302,7 +303,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
         }
       }
     />
-    <Component
+    <View
       style={
         Object {
           "position": "relative",
@@ -310,12 +311,12 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
         }
       }
     >
-      <ScrollView
+      <ScrollViewMock
         keyboardShouldPersistTaps="handled"
         overScrollMode="never"
         scrollEnabled={true}
       >
-        <Component
+        <View
           style={
             Array [
               Object {
@@ -328,7 +329,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
             ]
           }
         >
-          <Component>
+          <View>
             <Gradient
               style={
                 Array [
@@ -340,7 +341,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
                 ]
               }
             />
-            <Component
+            <View
               style={
                 Object {
                   "flexDirection": "row",
@@ -354,9 +355,9 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
                 direction="send"
                 thumbnailPath="thumb/nail/path"
               />
-            </Component>
-          </Component>
-          <Component
+            </View>
+          </View>
+          <View
             style={
               Array [
                 Object {
@@ -367,7 +368,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
               ]
             }
           >
-            <Component
+            <View
               style={
                 Array [
                   Object {
@@ -377,7 +378,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
                 ]
               }
             >
-              <Component
+              <View
                 style={
                   Array [
                     Object {
@@ -396,6 +397,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
                   onFocus={[Function]}
                   placeholder="Payee"
                   placeholderTextColor="#87939E"
+                  rejectResponderTermination={true}
                   style={
                     Array [
                       Object {
@@ -411,9 +413,9 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
                   }
                   underlineColorAndroid="transparent"
                 />
-              </Component>
-            </Component>
-            <Component
+              </View>
+            </View>
+            <View
               style={
                 Object {
                   "alignSelf": "center",
@@ -424,7 +426,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
                 }
               }
             />
-            <Component
+            <View
               style={
                 Array [
                   Object {
@@ -447,7 +449,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
               >
                 Aug 31st, 2018, 9:59:40 PM
               </FormattedText>
-            </Component>
+            </View>
             <AmountArea
               categories={
                 Object {
@@ -550,24 +552,24 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
               txExplorerUrl={null}
               usableHeight={1221}
             />
-          </Component>
-        </Component>
-        <Component
+          </View>
+        </View>
+        <View
           style={
             Object {
               "height": 300,
             }
           }
         />
-      </ScrollView>
-    </Component>
-  </Component>
+      </ScrollViewMock>
+    </View>
+  </View>
 </SafeAreaViewComponent>
 `;
 
 exports[`TransactionDetails.ui should render with tx date off by 1000x in future 1`] = `
 <SafeAreaViewComponent>
-  <Component
+  <View
     style={
       Array [
         Object {
@@ -586,7 +588,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
         }
       }
     />
-    <Component
+    <View
       style={
         Object {
           "position": "relative",
@@ -594,12 +596,12 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
         }
       }
     >
-      <ScrollView
+      <ScrollViewMock
         keyboardShouldPersistTaps="handled"
         overScrollMode="never"
         scrollEnabled={true}
       >
-        <Component
+        <View
           style={
             Array [
               Object {
@@ -612,7 +614,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
             ]
           }
         >
-          <Component>
+          <View>
             <Gradient
               style={
                 Array [
@@ -624,7 +626,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
                 ]
               }
             />
-            <Component
+            <View
               style={
                 Object {
                   "flexDirection": "row",
@@ -638,9 +640,9 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
                 direction="receive"
                 thumbnailPath="thumb/nail/path"
               />
-            </Component>
-          </Component>
-          <Component
+            </View>
+          </View>
+          <View
             style={
               Array [
                 Object {
@@ -651,7 +653,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
               ]
             }
           >
-            <Component
+            <View
               style={
                 Array [
                   Object {
@@ -661,7 +663,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
                 ]
               }
             >
-              <Component
+              <View
                 style={
                   Array [
                     Object {
@@ -680,6 +682,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
                   onFocus={[Function]}
                   placeholder="Payee"
                   placeholderTextColor="#87939E"
+                  rejectResponderTermination={true}
                   style={
                     Array [
                       Object {
@@ -695,9 +698,9 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
                   }
                   underlineColorAndroid="transparent"
                 />
-              </Component>
-            </Component>
-            <Component
+              </View>
+            </View>
+            <View
               style={
                 Object {
                   "alignSelf": "center",
@@ -708,7 +711,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
                 }
               }
             />
-            <Component
+            <View
               style={
                 Array [
                   Object {
@@ -731,7 +734,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
               >
                 Aug 31st, 2018, 9:59:40 PM
               </FormattedText>
-            </Component>
+            </View>
             <AmountArea
               categories={
                 Object {
@@ -831,24 +834,24 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
               txExplorerUrl={null}
               usableHeight={1221}
             />
-          </Component>
-        </Component>
-        <Component
+          </View>
+        </View>
+        <View
           style={
             Object {
               "height": 300,
             }
           }
         />
-      </ScrollView>
-    </Component>
-  </Component>
+      </ScrollViewMock>
+    </View>
+  </View>
 </SafeAreaViewComponent>
 `;
 
 exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1`] = `
 <SafeAreaViewComponent>
-  <Component
+  <View
     style={
       Array [
         Object {
@@ -867,7 +870,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
         }
       }
     />
-    <Component
+    <View
       style={
         Object {
           "position": "relative",
@@ -875,12 +878,12 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
         }
       }
     >
-      <ScrollView
+      <ScrollViewMock
         keyboardShouldPersistTaps="handled"
         overScrollMode="never"
         scrollEnabled={true}
       >
-        <Component
+        <View
           style={
             Array [
               Object {
@@ -893,7 +896,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
             ]
           }
         >
-          <Component>
+          <View>
             <Gradient
               style={
                 Array [
@@ -905,7 +908,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
                 ]
               }
             />
-            <Component
+            <View
               style={
                 Object {
                   "flexDirection": "row",
@@ -919,9 +922,9 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
                 direction="receive"
                 thumbnailPath="thumb/nail/path"
               />
-            </Component>
-          </Component>
-          <Component
+            </View>
+          </View>
+          <View
             style={
               Array [
                 Object {
@@ -932,7 +935,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
               ]
             }
           >
-            <Component
+            <View
               style={
                 Array [
                   Object {
@@ -942,7 +945,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
                 ]
               }
             >
-              <Component
+              <View
                 style={
                   Array [
                     Object {
@@ -961,6 +964,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
                   onFocus={[Function]}
                   placeholder="Payee"
                   placeholderTextColor="#87939E"
+                  rejectResponderTermination={true}
                   style={
                     Array [
                       Object {
@@ -976,9 +980,9 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
                   }
                   underlineColorAndroid="transparent"
                 />
-              </Component>
-            </Component>
-            <Component
+              </View>
+            </View>
+            <View
               style={
                 Object {
                   "alignSelf": "center",
@@ -989,7 +993,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
                 }
               }
             />
-            <Component
+            <View
               style={
                 Array [
                   Object {
@@ -1012,7 +1016,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
               >
                 Aug 31st, 2018, 9:59:40 PM
               </FormattedText>
-            </Component>
+            </View>
             <AmountArea
               categories={
                 Object {
@@ -1112,17 +1116,17 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
               txExplorerUrl={null}
               usableHeight={1221}
             />
-          </Component>
-        </Component>
-        <Component
+          </View>
+        </View>
+        <View
           style={
             Object {
               "height": 300,
             }
           }
         />
-      </ScrollView>
-    </Component>
-  </Component>
+      </ScrollViewMock>
+    </View>
+  </View>
 </SafeAreaViewComponent>
 `;
