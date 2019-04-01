@@ -85,8 +85,8 @@ export class TransactionsExportSceneComponent extends Component<Props> {
     const transactionOptions: EdgeGetTransactionsOptions = {
       denomination: this.props.denomination
     }
-    const file = await this.props.sourceWallet.exportTransactionsToCSV(transactionOptions)
-
+    let file = await this.props.sourceWallet.exportTransactionsToCSV(transactionOptions)
+    if (typeof file !== 'string') file = ''
     const format = 'CSV'
 
     this.write(file, format)
