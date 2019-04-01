@@ -91,7 +91,7 @@
     "edge-currency-bitcoin": "4.0.3",
     "edge-currency-monero": "0.2.2",
     "edge-exchange-plugins": "^0.5.3",
-    "edge-login-ui-rn": "^0.5.17",
+    "edge-login-ui-rn": "^0.5.18",
     "https-browserify": "0.0.1",
     "jsc-android": "216113.0.3",
     "lodash": "^4.17.2",
