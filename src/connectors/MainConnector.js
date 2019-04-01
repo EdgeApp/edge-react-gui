@@ -12,9 +12,13 @@ import { selectWallet } from '../actions/WalletActions.js'
 import Main from '../components/Main.ui'
 import { addContext, addUsernames } from '../modules/Core/Context/action.js'
 import { requestPermission } from '../modules/PermissionsManager.js'
-import type { Dispatch } from '../modules/ReduxTypes'
+import type { Dispatch, State } from '../modules/ReduxTypes'
+import * as UI_SELECTORS from '../modules/UI/selectors.js'
 
-const mapStateToProps = () => ({})
+const mapStateToProps = (state: State) => ({
+  guiWallet: UI_SELECTORS.getSelectedWallet(state),
+  currencyCode: UI_SELECTORS.getSelectedCurrencyCode(state)
+})
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   requestPermission: permission => {
     return requestPermission(permission)

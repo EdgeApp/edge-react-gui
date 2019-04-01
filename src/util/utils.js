@@ -569,11 +569,7 @@ export function getObjectDiff (obj1: Object, obj2: Object, traverseObjects?: Obj
   return ''
 }
 
-export function runWithTimeout<T> (
-  promise: Promise<T>,
-  ms: number,
-  error: Error = new Error(`Timeout of ${ms}ms exceeded`)
-): Promise<T> {
+export function runWithTimeout<T> (promise: Promise<T>, ms: number, error: Error = new Error(`Timeout of ${ms}ms exceeded`)): Promise<T> {
   const timeout = new Promise((resolve, reject) => {
     const timer = setTimeout(() => reject(error), ms)
     const onDone = () => clearTimeout(timer)

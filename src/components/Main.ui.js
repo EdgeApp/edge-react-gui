@@ -516,13 +516,20 @@ export default class Main extends Component<Props> {
                       <Scene
                         key={Constants.REQUEST}
                         navTransparent={true}
-                        onEnter={this.updateSceneKeyRequest}
+                        onEnter={() => {
+                          this.updateSceneKeyRequest()
+                          if (this.props.guiWallet && this.props.currencyCode) return true
+                        }}
+                        success={() => Actions[Constants.REQUEST]()}
                         icon={this.icon(Constants.REQUEST)}
                         tabBarLabel={REQUEST}
                         component={Request}
                         renderTitle={this.renderWalletListNavBar()}
                         renderLeftButton={this.renderRequestMenuButton()}
                         renderRightButton={this.renderMenuButton()}
+                        failure={() => {
+                          Actions[Constants.WALLET_LIST]()
+                        }}
                       />
 
                       <Stack key={Constants.SCAN} icon={this.icon(Constants.SCAN)} tabBarLabel={SCAN}>
@@ -533,7 +540,12 @@ export default class Main extends Component<Props> {
                             this.props.requestPermission(PermissionStrings.CAMERA)
                             this.props.dispatchEnableScan()
                             this.props.checkAndShowGetCryptoModal()
+                            if (this.props.guiWallet && this.props.currencyCode) return true
                           }}
+                          failure={() => {
+                            Actions[Constants.WALLET_LIST]()
+                          }}
+                          success={() => Constants.SCAN_NOT_USED}
                           onExit={this.props.dispatchDisableScan}
                           component={Scan}
                           renderTitle={this.renderWalletListNavBar()}

@@ -202,7 +202,8 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       data: { ...accountInitObject }
     })
     if (newAccount) {
-      await createDefaultWallets(account, defaultFiat)
+      const selectedWallet = await createDefaultWallets(account, defaultFiat)
+      dispatch({ type: 'UI/WALLETS/SELECT_WALLET', data: { walletId: selectedWallet.id, currencyCode: selectedWallet.currencyInfo.currencyCode } })
     }
     // $FlowFixMe
     dispatch(updateWalletsRequest())
