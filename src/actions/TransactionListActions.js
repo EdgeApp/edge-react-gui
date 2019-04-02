@@ -182,8 +182,10 @@ export const newTransactionsRequest = (walletId: string, edgeTransactions: Array
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
   const selectedCurrencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
   let numberOfRelevantTransactions = 0
+  let isTransactionForSelectedWallet = false
   for (const transaction of edgeTransactions) {
     if (transaction.currencyCode === selectedCurrencyCode && transaction.wallet && transaction.wallet.id === selectedWalletId) {
+      isTransactionForSelectedWallet = true
       // this next part may be unnecessary
       const indexOfNewTransaction = _.findIndex(currentViewableTransactions, tx => tx.txid === transaction.txid)
       if (indexOfNewTransaction === -1) {
@@ -195,7 +197,7 @@ export const newTransactionsRequest = (walletId: string, edgeTransactions: Array
     startIndex: 0,
     startEntries: state.ui.scenes.transactionList.currentEndIndex + 1 + numberOfRelevantTransactions
   }
-  dispatch(fetchTransactions(walletId, selectedCurrencyCode, options))
+  if (isTransactionForSelectedWallet) dispatch(fetchTransactions(walletId, selectedCurrencyCode, options))
   if (!UTILS.isReceivedTransaction(edgeTransaction)) return
   dispatch(displayTransactionAlert(edgeTransaction))
 }
