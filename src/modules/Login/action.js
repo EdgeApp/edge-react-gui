@@ -33,7 +33,7 @@ import type { Dispatch, GetState } from '../ReduxTypes'
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
-const createDefaultWallets = async (account: EdgeAccount, defaultFiat: string) => {
+const createDefaultWallets = async (account: EdgeAccount, defaultFiat: string, dispatch: Dispatch) => {
   const ethWalletName = s.strings.string_first_ethereum_wallet_name
   const btcWalletName = s.strings.string_first_bitcoin_wallet_name
   const bchWalletName = s.strings.string_first_bitcoincash_wallet_name
@@ -62,6 +62,7 @@ const createDefaultWallets = async (account: EdgeAccount, defaultFiat: string) =
   if (!edgeWallet) {
     global.startMoment && global.startMoment('INIT_ACCOUNT_CREATE_WALLETS')
     edgeWallet = await runWithTimeout(account.createCurrencyWallet(btcWalletType, { name: btcWalletName, fiatCurrencyCode }), 20000, timeoutErr)
+    dispatch({ type: 'UI/WALLETS/SELECT_WALLET', data: { currencyCode: edgeWallet.currencyInfo.currencyCode, walletId: edgeWallet.id } })
     await runWithTimeout(account.createCurrencyWallet(bchWalletType, { name: bchWalletName, fiatCurrencyCode }), 20000, timeoutErr)
     await runWithTimeout(account.createCurrencyWallet(ethWalletType, { name: ethWalletName, fiatCurrencyCode }), 20000, timeoutErr)
     // const p = []
@@ -202,7 +203,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       data: { ...accountInitObject }
     })
     if (newAccount) {
-      await createDefaultWallets(account, defaultFiat)
+      await createDefaultWallets(account, defaultFiat, dispatch)
     }
     // $FlowFixMe
     dispatch(updateWalletsRequest())
