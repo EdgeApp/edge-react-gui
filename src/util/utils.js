@@ -65,15 +65,8 @@ export const getWalletDefaultDenomProps = (wallet: Object, settingsState: Object
     walletCurrencyCode = wallet.currencyCode
   }
   const currencySettings = settingsState[walletCurrencyCode] // includes 'denomination', currencyName, and currencyCode
-  let denomProperties: EdgeDenomination =
-    wallet.deonminations != null
-      ? wallet.denominations[0]
-      : {
-        name: '',
-        multiplier: '1',
-        symbol: ''
-      }
-  if (allWalletDenoms[walletCurrencyCode]) {
+  let denomProperties: EdgeDenomination
+  if (allWalletDenoms[walletCurrencyCode] != null && allWalletDenoms[walletCurrencyCode][currencySettings.denomination] != null) {
     denomProperties = allWalletDenoms[walletCurrencyCode][currencySettings.denomination] // includes name, multiplier, and symbol
   } else {
     // This is likely a custom token which has no denom setup in allWalletDenominations
