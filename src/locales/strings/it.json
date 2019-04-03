@@ -236,7 +236,7 @@
   "settings_set_custom_nodes_placeholder": "https://MyNode.Example:18081",
   "string_cancel_cap": "Annulla",
   "string_cancel": "ANNULLA",
-  "string_ok_cap": "",
+  "string_ok_cap": "OK",
   "string_delete": "Cancella",
   "string_custom_fee": "Imposta commissioni",
   "satPerByte": "Satoshi Per Byte",
@@ -496,6 +496,6 @@
   "error_creating_wallets": "Si è verificata un'interruzione di rete mentre si stavano creando e salvando dei portafogli. Controlla la connessione di rete e riavvia l'app per ritentare la creazione dei portafogli.",
   "edge_login_failed": "Login fallito",
   "edge_login_fetching": "Recupero le informazioni di login di Edge...",
-  "modal_addressexplorer_message": "",
-  "modal_addressexplorer_null": ""
+  "modal_addressexplorer_message": "Mostra l'indirizzo in Block Explorer",
+  "modal_addressexplorer_null": "Questa cripto non ha un sito explorer per il momento"
 }
