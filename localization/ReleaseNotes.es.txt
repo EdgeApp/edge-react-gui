@@ -14,6 +14,16 @@ Traslada Edge Core a un proceso independiente para aumentar el rendimiento y res
 * Vende criptomonedas hacia tu tarjeta de crédito usando Simplex
 * Incluye LibertyX para comprar Bitcoin de comercios físicos en EE. UU
 
+v1.6.2
+
+* Fix fiat denomination of wallets from Airbitz to Edge
+* Fix EOS Crash issues
+* Fix various UI display bugs
+* Fix metadata tagging of transactions to update immediately after saving
+* Improved syncing of XRP and ETH
+* Use multiple services to broadcast XRP and ETH transactions
+* Add Faa.st instant exchange provider
+
 v1.6.1
 
 * Mejora del cálculo de comisiones en BTC
