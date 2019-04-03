@@ -28,6 +28,9 @@ const mapStateToProps = (state: State) => {
   const isWalletFiatBalanceVisible = state.ui.settings.isWalletFiatBalanceVisible
   const defaultFiat = SETTINGS_SELECTORS.getDefaultFiat(state)
 
+  const supportedWalletTypes = SETTINGS_SELECTORS.getSupportedWalletTypes(state)
+  const ethereumWalletType = supportedWalletTypes.find(item => item.value === 'wallet:ethereum')
+
   return {
     coreWallets,
     wallets,
@@ -38,7 +41,8 @@ const mapStateToProps = (state: State) => {
     customTokens,
     otpResetPending,
     isWalletFiatBalanceVisible,
-    defaultFiat
+    defaultFiat,
+    ethereumWalletType
   }
 }
 

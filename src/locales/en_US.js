@@ -140,7 +140,8 @@ const strings = {
   create_wallet_name_label: 'Wallet Name:',
   create_wallet_crypto_type_label: 'Wallet Type:',
   create_wallet_fiat_type_label: 'Wallet Fiat:',
-  create_wallet_failed: 'Failed to create wallet',
+  create_wallet_failed_header: 'Create Wallet Failed',
+  create_wallet_failed_message: 'Wallet creation failed due to timeout. Please check your internet connection and try again later.',
   create_wallet_create_account: 'Create Account',
   create_wallet_account_activate: 'Activate Account',
   create_wallet_account_instructions: 'To proceed you will be asked to log in to your existing %s account:',
@@ -246,6 +247,7 @@ const strings = {
   settings_set_custom_nodes_placeholder: 'https://MyNode.Example:18081',
   string_cancel_cap: 'Cancel',
   string_cancel: 'CANCEL',
+  string_ok_cap: 'OK',
   string_delete: 'Delete',
   string_custom_fee: 'Set Fees',
   satPerByte: 'Satoshi Per Byte',
@@ -528,7 +530,11 @@ const strings = {
   plugin_url: 'Plugin URL',
   choose_your_wallet: 'Choose Your Wallet',
   error_creating_wallets:
-    'Network timeout occurred trying to create and backup wallets. Please check your network connection and restart app to retry wallet creation.'
+    'Network timeout occurred trying to create and backup wallets. Please check your network connection and restart app to retry wallet creation.',
+  edge_login_failed: 'Failed to Login',
+  edge_login_fetching: 'Fetching Edge Login info...',
+  modal_addressexplorer_message: 'Show Address in Block Explorer?',
+  modal_addressexplorer_null: 'This currency has no explorer site as of now'
 }
 
 // export default strings

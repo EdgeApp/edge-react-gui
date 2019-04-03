@@ -64,7 +64,9 @@ const EdgeLoginScreen = {
     alignItems: 'center'
   },
   spinnerContainer: {
-    flex: 1
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'space-around'
   },
   bodyText: {
     marginRight: '5%',
@@ -73,6 +75,13 @@ const EdgeLoginScreen = {
     fontSize: 18,
     textAlign: 'center',
     fontFamily: THEME.FONTS.DEFAULT
+  },
+  loadingTextBody: {
+    color: THEME.COLORS.GRAY_1,
+    fontSize: 18,
+    textAlign: 'center',
+    fontFamily: THEME.FONTS.DEFAULT,
+    marginBottom: 20
   },
   bodyTextWarning: {
     marginRight: '5%',

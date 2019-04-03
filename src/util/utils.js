@@ -66,7 +66,7 @@ export const getWalletDefaultDenomProps = (wallet: Object, settingsState: Object
   }
   const currencySettings = settingsState[walletCurrencyCode] // includes 'denomination', currencyName, and currencyCode
   let denomProperties: EdgeDenomination
-  if (allWalletDenoms[walletCurrencyCode]) {
+  if (allWalletDenoms[walletCurrencyCode] != null && allWalletDenoms[walletCurrencyCode][currencySettings.denomination] != null) {
     denomProperties = allWalletDenoms[walletCurrencyCode][currencySettings.denomination] // includes name, multiplier, and symbol
   } else {
     // This is likely a custom token which has no denom setup in allWalletDenominations
@@ -569,11 +569,7 @@ export function getObjectDiff (obj1: Object, obj2: Object, traverseObjects?: Obj
   return ''
 }
 
-export function runWithTimeout<T> (
-  promise: Promise<T>,
-  ms: number,
-  error: Error = new Error(`Timeout of ${ms}ms exceeded`)
-): Promise<T> {
+export function runWithTimeout<T> (promise: Promise<T>, ms: number, error: Error = new Error(`Timeout of ${ms}ms exceeded`)): Promise<T> {
   const timeout = new Promise((resolve, reject) => {
     const timer = setTimeout(() => reject(error), ms)
     const onDone = () => clearTimeout(timer)

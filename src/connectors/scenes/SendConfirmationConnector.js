@@ -1,6 +1,6 @@
 // @flow
 
-import { type EdgeSpendInfo, type EdgeTransaction, errorNames } from 'edge-core-js'
+import { type EdgeCurrencyInfo, type EdgeSpendInfo, type EdgeTransaction, errorNames } from 'edge-core-js'
 import { connect } from 'react-redux'
 
 import {
@@ -18,7 +18,7 @@ import { SendConfirmation } from '../../components/scenes/SendConfirmationScene'
 import type { SendConfirmationDispatchProps, SendConfirmationStateProps } from '../../components/scenes/SendConfirmationScene'
 import { getWallet } from '../../modules/Core/selectors.js'
 import type { Dispatch, State } from '../../modules/ReduxTypes'
-import { getDisplayDenomination, getExchangeDenomination as settingsGetExchangeDenomination } from '../../modules/Settings/selectors.js'
+import { getDisplayDenomination, getPlugins, getExchangeDenomination as settingsGetExchangeDenomination } from '../../modules/Settings/selectors.js'
 import {
   getError,
   getForceUpdateGuiCounter,
@@ -30,7 +30,7 @@ import {
 import type { AuthType } from '../../modules/UI/scenes/SendConfirmation/selectors.js'
 import { getExchangeDenomination, getExchangeRate, getSelectedCurrencyCode, getSelectedWallet } from '../../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
-import { convertNativeToExchange } from '../../util/utils'
+import { convertNativeToExchange, getCurrencyInfo } from '../../util/utils'
 
 const mapStateToProps = (state: State): SendConfirmationStateProps => {
   const sceneState = state.ui.scenes.sendConfirmation
@@ -46,6 +46,10 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
   const balanceInCryptoDisplay = convertNativeToExchange(exchangeDenomination.multiplier)(balanceInCrypto)
   fiatPerCrypto = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
   const balanceInFiat = fiatPerCrypto * parseFloat(balanceInCryptoDisplay)
+
+  const plugins: Object = getPlugins(state)
+  const allCurrencyInfos: Array<EdgeCurrencyInfo> = plugins.allCurrencyInfos
+  const currencyInfo: EdgeCurrencyInfo | void = getCurrencyInfo(allCurrencyInfos, currencyCode)
 
   if (guiWallet) {
     const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
@@ -78,6 +82,7 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
     balanceInCrypto,
     balanceInFiat,
     currencyCode,
+    currencyInfo: currencyInfo || null,
     transactionMetadata,
     errorMsg,
     exchangeRates,

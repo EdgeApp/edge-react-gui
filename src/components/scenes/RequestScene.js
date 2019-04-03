@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import { createSimpleConfirmModal, showModal } from 'edge-components'
-import type { EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
+import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, Clipboard, Platform, View } from 'react-native'
 import ContactsWrapper from 'react-native-contacts-wrapper'
@@ -31,6 +31,7 @@ const PUBLIC_ADDRESS_REFRESH_MS = 2000
 
 export type RequestStateProps = {
   currencyCode: string,
+  currencyInfo: EdgeCurrencyInfo | null,
   edgeWallet: EdgeCurrencyWallet,
   exchangeSecondaryToPrimaryRatio: number,
   guiWallet: GuiWallet,
@@ -46,6 +47,7 @@ export type RequestStateProps = {
 export type RequestLoadingProps = {
   edgeWallet: null,
   currencyCode: null,
+  currencyInfo: null,
   exchangeSecondaryToPrimaryRatio: null,
   guiWallet: null,
   loading: true,
@@ -226,7 +228,8 @@ export class Request extends Component<Props, State> {
     }
 
     const color = 'white'
-    const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio, onSelectWallet, wallets } = this.props
+    const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio, onSelectWallet, wallets, currencyInfo } = this.props
+    const addressExplorer = currencyInfo ? currencyInfo.addressExplorer : null
     const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
     const allowedWallets = {}
     for (const id in wallets) {
@@ -260,7 +263,7 @@ export class Request extends Component<Props, State> {
             />
 
             <QRCode value={this.state.encodedURI} />
-            <RequestStatus requestAddress={requestAddress} amountRequestedInCrypto={0} amountReceivedInCrypto={0} />
+            <RequestStatus requestAddress={requestAddress} addressExplorer={addressExplorer} amountRequestedInCrypto={0} amountReceivedInCrypto={0} />
           </View>
 
           <View style={styles.shareButtonsContainer}>

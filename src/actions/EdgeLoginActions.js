@@ -1,10 +1,12 @@
 // @flow
 
+import { showModal } from 'edge-components'
 import type { EdgeLobby } from 'edge-core-js'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import s from '../locales/strings.js'
+import { errorModal } from '../modules/UI/components/Modals/ErrorModal.js'
 
 export const loginWithEdge = (url: string) => async (dispatch: any, getState: any) => {
   const splitArray = url.split('edge/')
@@ -21,10 +23,15 @@ export const loginWithEdge = (url: string) => async (dispatch: any, getState: an
 export const lobbyLogin = () => async (dispatch: any, getState: any) => {
   const state = getState()
   dispatch({ type: 'PROCESS_EDGE_LOGIN' })
-  await state.core.edgeLogin.lobby.loginRequest.approve()
-  dispatch({ type: 'INVALIDATE_EDGE_LOBBY' })
-  Actions.pop()
-  setTimeout(() => {
-    Alert.alert(s.strings.send_scan_edge_login_success_title, s.strings.send_scan_edge_login_success_message)
-  }, 750)
+  try {
+    await state.core.edgeLogin.lobby.loginRequest.approve()
+    dispatch({ type: 'INVALIDATE_EDGE_LOBBY' })
+    Actions.pop()
+    setTimeout(() => {
+      Alert.alert(s.strings.send_scan_edge_login_success_title, s.strings.send_scan_edge_login_success_message)
+    }, 750)
+  } catch (e) {
+    dispatch({ type: 'EDGE_LOBBY_ACCEPT_FAILED' })
+    showModal(errorModal(s.strings.edge_login_failed, e))
+  }
 }
