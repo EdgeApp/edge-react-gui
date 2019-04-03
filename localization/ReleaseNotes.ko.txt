@@ -14,6 +14,16 @@ v1.7.0
 * Simplex를 사용하여 신용카드로 가상화폐를 매각
 * 미국 내에서 비트코인을 오프라인 구매할 수 있는 LibertyX를 추가
 
+v1.6.2
+
+* Fix fiat denomination of wallets from Airbitz to Edge
+* Fix EOS Crash issues
+* Fix various UI display bugs
+* Fix metadata tagging of transactions to update immediately after saving
+* Improved syncing of XRP and ETH
+* Use multiple services to broadcast XRP and ETH transactions
+* Add Faa.st instant exchange provider
+
 v1.6.1
 
 * 개선된 BTC 비용 계산
