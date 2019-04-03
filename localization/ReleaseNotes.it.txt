@@ -1,11 +1,11 @@
 v1.7.2
 
-* Fix performance issues on login
-* Fix Split BCH/BSV Error
-* Various visual and text updates
-* Add tap address to launch explorer at request or send confirmation screens
-* Fix segwit fees to be 15% lower than non-segwit
-* Account base currencies such as XRP, EOS etc. will show transactions as dropped if not found on the network
+* Corretti i problemi prestazionali al login
+* Corretto l'errore di split BCH/BSV
+* Vari aggiornamenti visuali e testuali
+* Aggiunta la possibilità di cliccare l'indirizzo per lanciare l'explorer a richiesta o inviare screen di conferma
+* Corrette le commissioni segwit al fine di essere il 15% più basse di quelle non-segwit
+* Le cripto basate su account come XRP, EOS ecc. mostreranno le transazioni come saltate se queste non vengono trovate nel network
 
 v1.7.0
 
