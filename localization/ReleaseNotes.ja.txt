@@ -1,3 +1,12 @@
+v1.7.2
+
+* Fix performance issues on login
+* Fix Split BCH/BSV Error
+* Various visual and text updates
+* Add tap address to launch explorer at request or send confirmation screens
+* Fix segwit fees to be 15% lower than non-segwit
+* Account base currencies such as XRP, EOS etc. will show transactions as dropped if not found on the network
+
 v1.7.0
 
 *Bech32アドレス対応
