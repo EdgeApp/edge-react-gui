@@ -54,13 +54,13 @@
     "flow": "flow",
     "flow-coverage": "flow-coverage-report",
     "flow:0": "flow; exit 0",
-    "format": "import-sort -l --write '*.js' 'src/**/*.js' 'test/**.*.js'; prettier-eslint --write '*.js' 'src/**/*.js' 'test/**.*.js'",
+    "format": "import-sort -l --write '*.js' 'src/**/*.js' 'test/**/*.js'; prettier-eslint --write '*.js' 'src/**/*.js' 'test/**/*.js'",
     "postinstall": "sh ./postinstall.sh",
     "ios:run": "react-native run-ios",
-    "lint": "eslint '*.js' 'src/**/*.js' 'test/**.*.js'",
+    "lint": "eslint '*.js' 'src/**/*.js' 'test/**/*.js'",
     "lint:fix": "npm run format",
     "localize": "node ./localizeLanguage.js; git add ./src/locales/strings",
-    "precommit": "npm run localize && lint-staged && npm run lint && npm run flow && npm test",
+    "precommit": "npm run localize && lint-staged && flow && npm test",
     "prepare": "rollup -c; node ./src/lib/bridge/stringifyBridge.js",
     "server": "node ./loggingServer.js",
     "start": "node --max_old_space_size=4000 node_modules/react-native/local-cli/cli.js start ",
@@ -78,11 +78,16 @@
     }
   },
   "lint-staged": {
-    "*.js": [
-      "import-sort -l --write",
-      "prettier-eslint --write",
-      "git add"
-    ]
+    "ignore": [
+      "**/flow-typed/npm/*.js"
+    ],
+    "linters": {
+      "*.js": [
+        "eslint",
+        "import-sort --list-different",
+        "prettier-eslint --list-different"
+      ]
+    }
   },
   "prettier": {
     "printWidth": 160
