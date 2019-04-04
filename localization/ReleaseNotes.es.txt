@@ -1,15 +1,15 @@
 v1.7.3
 
-* Patch to avoid BTC fee problems
+Parche para evitar problemas con las comisiones BTC
 
 v1.7.2
 
-* Fix performance issues on login
-* Fix Split BCH/BSV Error
-* Various visual and text updates
-* Add tap address to launch explorer at request or send confirmation screens
-* Fix segwit fees to be 15% lower than non-segwit
-* Account base currencies such as XRP, EOS etc. will show transactions as dropped if not found on the network
+* Solucionados problemas de rendimiento en el inicio de sesión
+* Solucionado error en la separación de carteras BCH/BSV
+* Varias actualizaciones visuales y de texto
+* Añadido click en dirección para abrir el explorer a demanda o enviar pantallas de confirmación
+* Solucionadas las comisiones segwit para ser un 15 % inferiores a las no-segwit
+* Las cuentas base de monedas como XRP, EOS, etc. mostrarán las transacciones como canceladas si no se encuentran en la red
 
 v1.7.0
 
@@ -20,19 +20,19 @@ Traslada Edge Core a un proceso independiente para aumentar el rendimiento y res
 
 v1.6.2
 
-* Fix fiat denomination of wallets from Airbitz to Edge
-* Fix EOS Crash issues
-* Fix various UI display bugs
-* Fix metadata tagging of transactions to update immediately after saving
-* Improved syncing of XRP and ETH
-* Use multiple services to broadcast XRP and ETH transactions
-* Add Faa.st instant exchange provider
+* Solucionada la denominación fiat de carteras de Airbitz a Edge
+* Solucionados problemas de bloqueo en la cartera EOS
+*Solucionados varios errores de la interface de usuario
+*Solucionado el etiquetado de metadatos para actualizarse inmediatamente después de guardar
+*Mejora en la sincronización de XRP y ETH
+*Uso de múltiples servicios para transmitir transacciones XRP y ETH
+* Añadido Faa.st como proveedor de intercambio instantáneo
 
 v1.6.1
 
 * Mejora del cálculo de comisiones en BTC
-* Añade botón para comprar criptos en la vista de listado de carteras
-* Añade nuevo botón para comprar y cambiar cripto en carteras vacías
+* Añade botón para comprar criptomonedas en la vista de listado de carteras
+* Añade nuevo botón para comprar y cambiar criptomonedas en carteras vacías
 * Arreglados varios errores en la interface de usuario
 * Funcionalidad de plugins mejorada
 
