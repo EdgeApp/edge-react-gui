@@ -32,7 +32,6 @@ matrix:
         - npm install -g yarn@1.5.1
       install:
         - travis_retry yarn install --network-concurrency 1 --child-concurrency 1
-        - npm run precommit
       android:
         components:
           - tools
@@ -53,6 +52,8 @@ matrix:
           - cmake
         licenses:
           - '.+'
+      # before_script:
+      #   - npm run precommit
       script:
         - cd android && ./gradlew assembleDebug && ./gradlew assembleRelease
     - language: objective-c
