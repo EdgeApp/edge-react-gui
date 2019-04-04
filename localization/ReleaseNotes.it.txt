@@ -1,3 +1,7 @@
+v1.7.3
+
+* Patch to avoid BTC fee problems
+
 v1.7.2
 
 * Corretti i problemi prestazionali al login
