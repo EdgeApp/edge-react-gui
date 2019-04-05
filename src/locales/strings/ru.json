@@ -495,6 +495,7 @@
   "choose_your_wallet": "",
   "error_creating_wallets": "",
   "edge_login_failed": "",
+  "edge_login_fail_message": "",
   "edge_login_fetching": "",
   "modal_addressexplorer_message": "",
   "modal_addressexplorer_null": ""
