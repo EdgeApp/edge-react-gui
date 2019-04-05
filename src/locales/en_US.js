@@ -532,6 +532,7 @@ const strings = {
   error_creating_wallets:
     'Network timeout occurred trying to create and backup wallets. Please check your network connection and restart app to retry wallet creation.',
   edge_login_failed: 'Failed to Login',
+  edge_login_fail_message: 'Could not connect to network. Please check your network connection and try again.',
   edge_login_fetching: 'Fetching Edge Login info...',
   modal_addressexplorer_message: 'Show Address in Block Explorer?',
   modal_addressexplorer_null: 'This currency has no explorer site as of now'
