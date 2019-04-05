@@ -193,6 +193,7 @@ exports[`SendConfirmation should render with destination 1`] = `
                       "color": "#FFFFFF",
                       "fontSize": 22.473239436619718,
                     },
+                    Object {},
                   ]
                 }
               >
@@ -457,6 +458,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
                       "color": "#FFFFFF",
                       "fontSize": 22.473239436619718,
                     },
+                    Object {},
                   ]
                 }
               >
@@ -706,6 +708,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
                       "color": "#FFFFFF",
                       "fontSize": 22.473239436619718,
                     },
+                    Object {},
                   ]
                 }
               >
@@ -971,6 +974,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
                       "color": "#FFFFFF",
                       "fontSize": 22.473239436619718,
                     },
+                    Object {},
                   ]
                 }
               >
