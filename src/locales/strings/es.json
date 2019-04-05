@@ -495,6 +495,7 @@
   "choose_your_wallet": "Elige tu cartera",
   "error_creating_wallets": "Se ha superado el tiempo de espera de la red para crear y respaldar carteras. Por favor comprueba tu conexión a la red y reinicia la aplicación para intentar crear la cartera de nuevo.",
   "edge_login_failed": "Fallo en el inicio de sesión",
+  "edge_login_fail_message": "",
   "edge_login_fetching": "Buscando información de inicio de sesión en Edge...",
   "modal_addressexplorer_message": "¿Quieres mostrar la dirección en el explorador de bloques?",
   "modal_addressexplorer_null": "Esta moneda no tiene explorador por el momento"
