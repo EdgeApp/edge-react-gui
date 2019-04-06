@@ -64,7 +64,8 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
 
   let errorMsg = null
   let resetSlider = false
-  if (error && error.message === 'broadcastError') {
+  // consider refactoring this method for resetting slider
+  if (error && (error.message === 'broadcastError' || error.message === 'transactionCancelled')) {
     error = null
     resetSlider = true
   }
