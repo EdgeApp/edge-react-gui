@@ -7,10 +7,12 @@ import { Actions } from 'react-native-router-flux'
 import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
 import parse from 'url-parse'
+import { Bridge } from 'yaob'
 
 import ENV from '../../../env.json'
 import { sendConfirmationUpdateTx } from '../../actions/SendConfirmationActions'
 import { selectWallet } from '../../actions/WalletActions'
+import { javascript } from '../../lib/bridge/injectThisInWebView.js'
 import s from '../../locales/strings.js'
 import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
 import { openABAlert } from '../../modules/UI/components/ABAlert/action'
@@ -19,6 +21,7 @@ import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import BackButton from '../../modules/UI/components/Header/Component/BackButton.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import { PluginBridge, pop as pluginPop } from '../../modules/UI/scenes/Plugins/api'
+import { EdgeProvider } from '../../modules/UI/scenes/Plugins/bridgeApi'
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
 import type { GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import styles from '../../styles/scenes/PluginsStyle.js'
@@ -57,6 +60,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   webview: any
   successUrl: ?string
   openingSendConfirmation: boolean
+  yaobBridge: Bridge
   constructor (props) {
     super(props)
     console.log('pvs: Legacy')
@@ -163,6 +167,10 @@ class PluginView extends React.Component<PluginProps, PluginState> {
       return
     }
     const { cbid, func } = data
+    if (!cbid && !func) {
+      this.yaobBridge.handleMessage(data)
+      return
+    }
     this._nextMessage(cbid)
     if (this.bridge[func]) {
       this.bridge[func](data)
@@ -287,6 +295,14 @@ class PluginView extends React.Component<PluginProps, PluginState> {
     }
   }
 
+  webviewLoaded = () => {
+    this.yaobBridge = new Bridge({
+      sendMessage: message => this.webview.injectJavaScript(`window.bridge.handleMessage(${JSON.stringify(message)})`)
+    })
+    const edgeProvider = new EdgeProvider(this.props.plugin, this.props.currentState, this.props.thisDispatch, this._webviewBack)
+    this.yaobBridge.sendRoot(edgeProvider)
+  }
+
   render () {
     const contentScaling = Platform.OS !== 'ios'
     return (
@@ -299,6 +315,9 @@ class PluginView extends React.Component<PluginProps, PluginState> {
           onNavigationStateChange={this._onNavigationStateChange}
           originWhitelist={['file://', 'https://', 'http://', 'edge://']}
           ref={this._setWebview}
+          onLoadEnd={this.webviewLoaded}
+          javaScriptEnabled={true}
+          injectedJavaScript={javascript}
           scalesPageToFit={contentScaling}
           source={this._renderWebView()}
           userAgent={
