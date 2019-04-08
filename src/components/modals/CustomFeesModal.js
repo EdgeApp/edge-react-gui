@@ -6,9 +6,10 @@ import React, { Component } from 'react'
 import { View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 
-import * as Constants from '../../constants/indexConstants.js'
+import { CUSTOM_FEES, MATERIAL_COMMUNITY, PICKAXE } from '../../constants/indexConstants.js'
+import { scale } from '../../lib/scaling.js'
 import s from '../../locales/strings.js'
-import OptionIcon from '../../modules/UI/components/OptionIcon/OptionIcon.ui'
+import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import styles from '../../styles/scenes/CustomFeesStyles'
 import { FormField } from '../common/FormField.js'
 
@@ -71,7 +72,7 @@ export class CustomFeesModal extends Component<Props, State> {
     return (
       <View style={ModalStyle.modal}>
         <Modal.Icon>
-          <OptionIcon iconName={Constants.CUSTOM_FEES_ICON} />
+          <Icon style={{ position: 'relative', top: 2 }} type={MATERIAL_COMMUNITY} size={scale(30)} name={PICKAXE} />
         </Modal.Icon>
         <Modal.Container>
           <Modal.Icon.AndroidHackSpacer />
@@ -85,7 +86,7 @@ export class CustomFeesModal extends Component<Props, State> {
               <PrimaryButton
                 style={[InputAndButtonStyle.yesButton]}
                 onPress={() => {
-                  this.props.onDone({ networkFeeOption: Constants.CUSTOM_FEES, ...this.state })
+                  this.props.onDone({ networkFeeOption: CUSTOM_FEES, ...this.state })
                 }}
               >
                 <PrimaryButton.Text style={[InputAndButtonStyle.buttonText]}>{s.strings.string_custom_fee}</PrimaryButton.Text>
