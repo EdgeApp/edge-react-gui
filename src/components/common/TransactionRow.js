@@ -138,8 +138,8 @@ export class TransactionRowComponent extends Component<Props, State> {
     } else if (tx.blockHeight < 0) {
       pendingTimeSyntax = s.strings.fragment_transaction_list_tx_dropped
       pendingTimeStyle = styles.transactionPartialConfirmation
-    } else if (currentConfirmations === 0) {
-      // if completely unconfirmed or wallet uninitialized
+    } else if (currentConfirmations <= 0) {
+      // if completely unconfirmed or wallet uninitialized, or wallet lagging behind (tx block height larger than wallet block height)
       pendingTimeStyle = styles.transactionPending
       pendingTimeSyntax = UNCONFIRMED_TRANSACTION
     } else if (currentConfirmations < requiredConfirmations) {
