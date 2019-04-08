@@ -2157,9 +2157,9 @@ bs58check@^1.0.8:
     bs58 "^3.1.0"
     create-hash "^1.1.0"
 
-"bs58grscheck@git+https://github.com/Groestlcoin/bs58grscheck.git":
+"bs58grscheck@https://github.com/Groestlcoin/bs58grscheck":
   version "2.1.2"
-  resolved "git+https://github.com/Groestlcoin/bs58grscheck.git#020feec2b3153aeb278596ea70ce3579a37f4e21"
+  resolved "https://github.com/Groestlcoin/bs58grscheck#020feec2b3153aeb278596ea70ce3579a37f4e21"
   dependencies:
     bs58 "^4.0.0"
     create-hash "^1.1.0"
@@ -3298,15 +3298,15 @@ edge-login-ui-rn@^0.5.18:
   dependencies:
     moment "^2.22.2"
 
-"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#cddab94":
+"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#11b4dae9":
   version "0.0.3"
-  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#cddab94896f7c6391c0dc7d4dddb2ec8a8e30c68"
+  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#11b4dae9780da36680547929858a0216e3661f71"
   dependencies:
     moment "^2.22.2"
 
-"edge-plugin-wyre@https://github.com/EdgeApp/edge-plugin-wyre.git#f828d56":
+"edge-plugin-wyre@https://github.com/EdgeApp/edge-plugin-wyre.git#ca1d2fe":
   version "0.1.2"
-  resolved "https://github.com/EdgeApp/edge-plugin-wyre.git#f828d5619a0059d25b6b893b2b94b0aa471df121"
+  resolved "https://github.com/EdgeApp/edge-plugin-wyre.git#ca1d2fe5bf995b69c0a461c56e930162f7a89327"
   dependencies:
     js-sha256 "^0.9.0"
     moment "^2.22.2"
