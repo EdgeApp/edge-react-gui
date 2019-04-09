@@ -1,12 +1,57 @@
-# Uncomment the next line to define a global platform for your project
 platform :ios, '9.0'
 
-target 'edge' do
-  # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
-  # use_frameworks!
+source 'https://github.com/CocoaPods/Specs.git'
 
-  # Pods for edge
+target 'edge' do
+  # React Native
+  pod 'React', :path => '../node_modules/react-native', :subspecs => [
+    'Core',
+    'CxxBridge',
+    'DevSupport',
+    'RCTAnimation',
+    'RCTImage',
+    'RCTLinkingIOS',
+    'RCTNetwork',
+    'RCTPushNotification',
+    'RCTSettings',
+    'RCTText',
+    'RCTWebSocket',
+  ]
+  pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
+  pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
+  pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
+  pod 'yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
+
+  # Other dependencies
   pod 'Firebase/Core', '~> 5.3.0'
 
-end
+  # React Native linked dependencies
+  pod 'BugsnagReactNative', :path => '../node_modules/bugsnag-react-native'
+  pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
+  pod 'disklet', :path => '../node_modules/disklet'
+  pod 'edge-login-ui-rn', :path => '../node_modules/edge-login-ui-rn'
+  pod 'Picker', :path => '../node_modules/react-native-picker'
+  pod 'react-native-camera', :path => '../node_modules/react-native-camera'
+  pod 'react-native-contacts-wrapper', :path => '../node_modules/react-native-contacts-wrapper'
+  pod 'react-native-contacts', :path => '../node_modules/react-native-contacts'
+  pod 'react-native-cookies', :path => '../node_modules/react-native-cookies'
+  pod 'react-native-fast-crypto', :path => '../node_modules/react-native-fast-crypto'
+  pod 'react-native-firebase', :path => '../node_modules/react-native-firebase'
+  pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
+  pod 'react-native-locale', :path => '../node_modules/react-native-locale'
+  pod 'react-native-mail', :path => '../node_modules/react-native-mail'
+  pod 'react-native-material-kit', :path => '../node_modules/react-native-material-kit'
+  pod 'react-native-randombytes', :path => '../node_modules/react-native-randombytes'
+  pod 'react-native-smart-splash-screen', :path => '../node_modules/react-native-smart-splash-screen'
+  pod 'react-native-tcp', :path => '../node_modules/react-native-tcp'
+  pod 'react-native-webview', :path => '../node_modules/react-native-webview'
+  pod 'ReactNativePermissions', :path => '../node_modules/react-native-permissions'
+  pod 'RNBackgroundFetch', :path => '../node_modules/react-native-background-fetch'
+  pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
+  pod 'RNOpenAppSettings', :path => '../node_modules/react-native-app-settings'
+  pod 'RNShare', :path => '../node_modules/react-native-share'
+  pod 'RNSound', :path => '../node_modules/react-native-sound'
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+end

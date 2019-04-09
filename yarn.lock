@@ -3082,6 +3082,13 @@ disklet@^0.4.0:
   dependencies:
     rfc4648 "^0.9.1"
 
+disklet@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/disklet/-/disklet-0.4.1.tgz#e98900934eedb73aef67f4b89444729b98e94f71"
+  integrity sha512-Ui7iVznycaVQwRvGra9qVsG1IwcCDiGetclSXlWfiXamEVplb05U3DK06DhsHJEL1V+fGgKQRigA+BmR+7w7pQ==
+  dependencies:
+    rfc4648 "^0.9.1"
+
 dlv@^1.1.0:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/dlv/-/dlv-1.1.2.tgz#270f6737b30d25b6657a7e962c784403f85137e5"
@@ -8218,10 +8225,10 @@ react-native-easy-grid@0.2.0:
   version "0.17.0"
   resolved "git://github.com/EdgeApp/react-native-extra-dimensions-android.git#4e1c03f0c5ee3dc26d820d3980796ac41eb51528"
 
-react-native-fast-crypto@^1.7.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/react-native-fast-crypto/-/react-native-fast-crypto-1.7.0.tgz#41cea5b037216c22b44b82227934cc7ea4105f1b"
-  integrity sha512-3K3c4L8IJ/gtYG5mVje5a9fL9nqGxImvipNj2BvnY1ErXEKADb7VYzy3G795GxFoVwYr6X3sMcunIZjj/xrB/w==
+react-native-fast-crypto@1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/react-native-fast-crypto/-/react-native-fast-crypto-1.8.0.tgz#b2955fecb72e8f133a3fe17ac26ce41d39a340a1"
+  integrity sha512-Wfwykyi+uuMNb3NWSr1mteGzYxD6yXBfF6nj1W80MMY6/ZEKI33aCpoc5iky77yv63Yz/Y0Ens9IjP8bJbVJsA==
   dependencies:
     buffer "^5.0.8"
     rfc4648 "^1.0.0"
@@ -8307,7 +8314,7 @@ react-native-mail@^3.0.5:
 
 "react-native-material-kit@git://github.com/EdgeApp/react-native-material-kit.git#fix-threadpool":
   version "0.4.1"
-  resolved "git://github.com/EdgeApp/react-native-material-kit.git#3b262f7fb0bb7856dd047acc7788d00a3a4d1806"
+  resolved "git://github.com/EdgeApp/react-native-material-kit.git#bcdd8d5227b2e800779c273b661a754621764999"
   dependencies:
     prop-types "^15.5.10"
     ramda "^0.24.1"
@@ -8443,17 +8450,6 @@ react-native-swipe-gestures@^1.0.2:
     ip-regex "^1.0.3"
     process "^0.11.9"
     stream-browserify "^1.0.0"
-    util "^0.10.3"
-
-react-native-udp@^2.0.0:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/react-native-udp/-/react-native-udp-2.3.1.tgz#88eb0f548ed8c7e35065392526ecf8ce2e2be91e"
-  integrity sha1-iOsPVI7Yx+NQZTklJuz4zi4r6R4=
-  dependencies:
-    base64-js "0.0.8"
-    events "^1.0.2"
-    inherits "^2.0.1"
-    ip-regex "^1.0.3"
     util "^0.10.3"
 
 react-native-vector-icons@4.6.0, react-native-vector-icons@^4.4.2:
