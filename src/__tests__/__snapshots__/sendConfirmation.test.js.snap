@@ -196,7 +196,7 @@ exports[`SendConfirmation should render with destination 1`] = `
                   ]
                 }
               >
-                
+                Fee: + 0 (0)
               </FormattedText>
             </Row>
             <Row
@@ -460,7 +460,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
                   ]
                 }
               >
-                
+                Fee: + 0 (0)
               </FormattedText>
             </Row>
             <AddressTextWithBlockExplorerModal
@@ -709,7 +709,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
                   ]
                 }
               >
-                
+                Fee: + 0 (0)
               </FormattedText>
             </Row>
             <Row
@@ -974,7 +974,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
                   ]
                 }
               >
-                
+                Fee: + 0 (0)
               </FormattedText>
             </Row>
             <Row
