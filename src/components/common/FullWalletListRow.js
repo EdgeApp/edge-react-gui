@@ -130,7 +130,8 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
       }
     }
     const fiatBalance = calculateSettingsFiatBalanceWithoutState(walletData, settings, exchangeRates)
-    const fiatBalanceString = fiatSymbol + ' ' + fiatBalance
+    const fiatBalanceFormat = fiatBalance && parseFloat(fiatBalance) > 0.000001 ? fiatBalance : 0
+    const fiatBalanceString = fiatSymbol + ' ' + fiatBalanceFormat
     return (
       <View style={[{ width: '100%' }]}>
         <View>
