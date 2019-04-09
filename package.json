@@ -72,6 +72,11 @@
     "updot": "updot",
     "watch": "npm test -- --watch"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run precommit"
+    }
+  },
   "lint-staged": {
     "*.js": [
       "import-sort -l --write",
@@ -223,7 +228,7 @@
     "express": "^4.16.2",
     "flow-bin": "^0.66.0",
     "flow-coverage-report": "^0.4.1",
-    "husky": "^0.12.0",
+    "husky": "^1.3.1",
     "import-sort-cli": "^5.0.0",
     "import-sort-parser-babylon": "^5.0.0",
     "import-sort-style-module": "^5.0.0",
