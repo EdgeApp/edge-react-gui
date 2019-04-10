@@ -95,10 +95,12 @@ export const styles = {
     padding: 3
   },
   customNodesInput: {
+    height: PLATFORM.deviceHeight * 0.13 - (PLATFORM.platform === 'android' ? 23 : 0) + (isIphoneX ? 60 : 0) - 8,
     color: THEME.COLORS.GRAY_1,
     fontSize: 15,
     fontFamily: THEME.FONTS.DEFAULT,
-    paddingVertical: 0
+    paddingVertical: 0,
+    textAlignVertical: 'top'
   },
   buttonsWrap: {
     flexDirection: 'column'
