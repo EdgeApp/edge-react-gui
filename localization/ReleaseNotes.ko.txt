@@ -1,15 +1,15 @@
 v1.7.3
 
-* Patch to avoid BTC fee problems
+* BTC 비용 애러를 위한 패치 적용
 
 v1.7.2
 
-* Fix performance issues on login
-* Fix Split BCH/BSV Error
-* Various visual and text updates
-* Add tap address to launch explorer at request or send confirmation screens
-* Fix segwit fees to be 15% lower than non-segwit
-* Account base currencies such as XRP, EOS etc. will show transactions as dropped if not found on the network
+* 로그인 퍼포먼스 오류 수정
+* BCH/BSV 분할 오류 수정
+* 그 외에 다양한 비주얼 및 텍스트 업데이트
+* 탭 주소를 추가하여 요청시 익스플로러를 시작하거나 확인 화면 전송하기
+* 세그윗 비용을 세그윗을 사용하지않는 경우보다 15% 낮게 개선
+* XRP나 EOS등의 계정 기본 통화는 네트워크에서 찾을 수 없을 경우 트랜잭션이 삭제된 것으로 표시됩니다.
 
 v1.7.0
 
@@ -20,13 +20,13 @@ v1.7.0
 
 v1.6.2
 
-* Fix fiat denomination of wallets from Airbitz to Edge
-* Fix EOS Crash issues
-* Fix various UI display bugs
-* Fix metadata tagging of transactions to update immediately after saving
-* Improved syncing of XRP and ETH
-* Use multiple services to broadcast XRP and ETH transactions
-* Add Faa.st instant exchange provider
+* Airbitz에서 Edge로 월렛의 피아트 명칭 수정
+* EOS Crash 현상 수정
+* UI 버그 수정
+* 저장후 메타 데이터 태그가 즉시 업데이트되도록 수정
+* XRP와 ETH 동기화 개선
+* XRP와 ETH 트랜잭션을 전송하기위해 여러 서비스를 사용하세요.
+* Faa.st 거래 공급처를 추가
 
 v1.6.1
 
