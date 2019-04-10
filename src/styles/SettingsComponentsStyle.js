@@ -95,6 +95,7 @@ export const styles = {
     padding: 3
   },
   customNodesInput: {
+    height: 128,
     color: THEME.COLORS.GRAY_1,
     fontSize: 15,
     fontFamily: THEME.FONTS.DEFAULT,
