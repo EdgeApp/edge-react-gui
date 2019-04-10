@@ -201,7 +201,6 @@ export const decimalOrZero = (input: string, decimalPlaces: number): string => {
 // uses default fiat setting to decide currency to convert to
 // this is *not* to be used for tallying because it returns a string
 export const getCurrencyAccountFiatBalanceFromWallet = (wallet: GuiWallet, currencyCode: string, state: State): string => {
-  console.log('inside getCurrencyAccountFiatBalanceFromWallet')
   const settings = state.ui.settings
   const nativeBalance = wallet.nativeBalances[currencyCode]
   if (!nativeBalance || nativeBalance === '0') return '0'
@@ -231,7 +230,6 @@ export const getCurrencyAccountFiatBalanceFromWalletWithoutState = (
   settings: Object,
   exchangeRates: Object
 ): string => {
-  console.log('inside getCurrencyAccountFiatBalanceFromWalletWithoutState')
   const nativeBalance = wallet.nativeBalances[currencyCode]
   if (!nativeBalance || nativeBalance === '0') return '0'
   let denominations
