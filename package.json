@@ -168,7 +168,7 @@
     "babel-jest": "23.4.2",
     "babel-preset-react-native": "^1.9.0",
     "body-parser": "^1.18.2",
-    "edge-plugin-bitrefill": "https://github.com/EdgeApp/edge-plugin-bitrefill.git#a3bc380",
+    "edge-plugin-bitrefill": "https://github.com/EdgeApp/edge-plugin-bitrefill.git#2627b9d",
     "edge-plugin-simplex": "https://github.com/Airbitz/edge-plugin-simplex.git#674b559",
     "edge-plugin-wyre": "https://github.com/EdgeApp/edge-plugin-wyre.git#ca1d2fe",
     "eslint": "^4.17.0",
