@@ -1,6 +1,6 @@
 v1.7.3
 
-* Patch to avoid BTC fee problems
+* Patch pour éviter les problèmes de frais BTC
 
 v1.7.2
 
