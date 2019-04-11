@@ -1,15 +1,15 @@
 v1.7.3
 
-* Patch to avoid BTC fee problems
+* 补丁以避免BTC费用问题
 
 v1.7.2
 
-* Fix performance issues on login
-* Fix Split BCH/BSV Error
-* Various visual and text updates
-* Add tap address to launch explorer at request or send confirmation screens
-* Fix segwit fees to be 15% lower than non-segwit
-* Account base currencies such as XRP, EOS etc. will show transactions as dropped if not found on the network
+* 修复登录时的性能问题
+* 修复拆分 bch/bsv 的故障
+* 各种视觉和文本更新
+* 根据要求添加点击地址以启动资源管理器或发送确认屏幕
+* 修正隔离见证费为比非隔离见证费低15%
+* 账户基础货币, 如 XRP、EOS 等 如果在网络上找不到， 将显示交易为已被减退。
 
 v1.7.0
 
@@ -20,13 +20,13 @@ v1.7.0
 
 v1.6.2
 
-* Fix fiat denomination of wallets from Airbitz to Edge
-* Fix EOS Crash issues
-* Fix various UI display bugs
-* Fix metadata tagging of transactions to update immediately after saving
-* Improved syncing of XRP and ETH
-* Use multiple services to broadcast XRP and ETH transactions
-* Add Faa.st instant exchange provider
+*修复从Airbitz到Edge的钱包 法定货币面额
+* 修复EOS 当机问题
+* 修复各种 UI 显示错误
+* 修复保存后立即更新交易的元数据标记
+* 改进 XRP 和 ETH 的同步
+* 使用多种服务广播 XRP 和 ETH 交易
+* 添加Faa.st 即时交易提供商
 
 v1.6.1
 
