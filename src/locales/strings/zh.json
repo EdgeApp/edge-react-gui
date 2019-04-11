@@ -497,6 +497,6 @@
   "edge_login_failed": "登录失败",
   "edge_login_fail_message": "无法连接网络。请检查您的网络连接并再试一次。",
   "edge_login_fetching": "正在获取Edge登录信息...",
-  "modal_addressexplorer_message": "",
-  "modal_addressexplorer_null": ""
+  "modal_addressexplorer_message": "是否在区块链浏览器中显示地址？",
+  "modal_addressexplorer_null": "此货币在目前为止没有浏览器网站"
 }
