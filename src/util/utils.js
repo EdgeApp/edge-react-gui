@@ -9,7 +9,7 @@ import parse from 'url-parse'
 import { FIAT_CODES_SYMBOLS, getSymbolFromCurrency } from '../constants/indexConstants.js'
 import { intl } from '../locales/intl.js'
 import type { State } from '../modules/ReduxTypes'
-import { convertCurrency } from '../modules/UI/selectors.js'
+import { convertCurrency, convertCurrencyWithoutState } from '../modules/UI/selectors.js'
 import borderColors from '../theme/variables/css3Colors'
 import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet } from '../types'
 
@@ -217,6 +217,34 @@ export const getCurrencyAccountFiatBalanceFromWallet = (wallet: GuiWallet, curre
   const nativeToExchangeRatio: string = exchangeDenomination.multiplier
   const cryptoAmount = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
   const unformattedFiatValue = convertCurrency(state, currencyCode, settings.defaultIsoFiat, cryptoAmount)
+  const formattedFiatValue = intl.formatNumber(unformattedFiatValue, { toFixed: 2 })
+  return formattedFiatValue || '0'
+}
+
+// helper function to convert either currency or token crypto amount to default fiat (formatted)
+// uses default fiat setting to decide currency to convert to
+// this is *not* to be used for tallying because it returns a string
+export const getCurrencyAccountFiatBalanceFromWalletWithoutState = (
+  wallet: GuiWallet,
+  currencyCode: string,
+  settings: Object,
+  exchangeRates: Object
+): string => {
+  const nativeBalance = wallet.nativeBalances[currencyCode]
+  if (!nativeBalance || nativeBalance === '0') return '0'
+  let denominations
+  if (settings[currencyCode]) {
+    denominations = settings[currencyCode].denominations
+  } else {
+    const tokenInfo = settings.customTokens.find(token => token.currencyCode === currencyCode)
+    if (!tokenInfo) return '0'
+    denominations = tokenInfo.denominations
+  }
+  const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
+  if (!exchangeDenomination) return '0'
+  const nativeToExchangeRatio: string = exchangeDenomination.multiplier
+  const cryptoAmount = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
+  const unformattedFiatValue = convertCurrencyWithoutState(exchangeRates, currencyCode, settings.defaultIsoFiat, cryptoAmount)
   const formattedFiatValue = intl.formatNumber(unformattedFiatValue, { toFixed: 2 })
   return formattedFiatValue || '0'
 }

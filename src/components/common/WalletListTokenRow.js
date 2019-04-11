@@ -8,6 +8,7 @@ import { Actions } from 'react-native-router-flux'
 import { intl } from '../../locales/intl'
 import T from '../../modules/UI/components/FormattedText/index'
 import styles, { styles as styleRaw } from '../../styles/scenes/WalletListStyle'
+import { type GuiWallet } from '../../types'
 import * as UTILS from '../../util/utils'
 
 type OwnProps = {
@@ -20,8 +21,11 @@ type OwnProps = {
 
 export type StateProps = {
   displayDenomination: EdgeDenomination,
-  fiatBalance: string,
-  isWalletFiatBalanceVisible: boolean
+  isWalletFiatBalanceVisible: boolean,
+  settings: Object,
+  exchangeRates: Object,
+  currencyCode: string,
+  wallet: GuiWallet
 }
 
 export type DispatchProps = {
@@ -38,6 +42,8 @@ export class WalletListTokenRow extends PureComponent<Props> {
   }
 
   render () {
+    const { wallet, currencyCode, settings, exchangeRates } = this.props
+    const fiatBalance = UTILS.getCurrencyAccountFiatBalanceFromWalletWithoutState(wallet, currencyCode, settings, exchangeRates)
     return (
       <TouchableHighlight
         style={styles.tokenRowContainer}
@@ -55,7 +61,7 @@ export class WalletListTokenRow extends PureComponent<Props> {
           <View style={[styles.rowBalanceTextWrap]}>
             <View style={styles.rowBalanceText}>
               {this.props.isWalletFiatBalanceVisible ? (
-                <T style={[styles.rowBalanceAmountText]}>{this.props.fiatSymbol + ' ' + this.props.fiatBalance}</T>
+                <T style={[styles.rowBalanceAmountText]}>{this.props.fiatSymbol + ' ' + fiatBalance}</T>
               ) : (
                 <T style={[styles.rowBalanceAmountText]}>
                   {intl.formatNumber(UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(this.props.balance) || '0')}
