@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 import { TextInput, View } from 'react-native'
 
-import * as Constants from '../../constants/indexConstants.js'
+import { MATERIAL_COMMUNITY, SERVER } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton, SecondaryButton } from '../../modules/UI/components/Buttons/index'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
@@ -72,7 +72,7 @@ export class SetCustomNodesModal extends Component<SetCustomNodeModalProps, SetC
     return (
       <InteractiveModal legacy isActive={this.props.isActive}>
         <InteractiveModal.Icon>
-          <Icon style={styles.txIDIcon} name={Constants.QUESTION_ICON} type={Constants.FONT_AWESOME} size={22} />
+          <Icon type={MATERIAL_COMMUNITY} name={SERVER} size={22} style={{ position: 'relative', top: 1 }} />
         </InteractiveModal.Icon>
         <InteractiveModal.Title>
           <Text>{s.strings.settings_set_custom_nodes_modal_title}</Text>
