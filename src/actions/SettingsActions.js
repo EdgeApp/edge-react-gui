@@ -360,7 +360,7 @@ export const showSendLogsModal = () => async (dispatch: Dispatch, getState: GetS
       noButton
     })
     const notes = await showModal(unlockSettingsModal)
-    if (notes) {
+    if (notes || notes === '') {
       dispatch(sendLogs(notes))
     }
   } catch (e) {
