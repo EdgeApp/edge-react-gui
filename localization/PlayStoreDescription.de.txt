@@ -14,18 +14,18 @@ Edge ist eine leistungsstarke und einfach zu bedienende Wallet für Kryptowähru
 
 Edge bietet auch den Tausch von Kryptowährungen an. Tauschen Sie einfach Ihre Währungen für andere mit ein paar Fingertipps. Tausche BTC für Ethereum, ETH für BCH und viele mehr.
 
-<b>Features</b>
-• Secure crypto wallet and blockchain app
-• Easy to use Bitcoin wallet app with support for top crypto like Bitcoin Cash, Litecoin, Ripple (XRP)
+<b>Funktionen</b>
+• Sichere Krypto-Wallet und Blockchain-App
+• Leicht zu nutzende Bitcoin-Wallet-App mit der Unterstützung für die beliebtesten Kryptowährungen wie Bitcoin Cash, Litecoin, Ripple (XRP)
 • Keine Kenntnisse & keinen Zugriff auf das Benutzer-Guthaben, die -Schlüssel oder -Transaktionsdaten durch Edge oder Dritte
 • Einfache Kontoerstellung mit nur einem Login & Passwort (kein Druck von PDFs, kein Niederschreiben von Passphrasen oder Hinzufügen von Verschlüsselungseinstellungen)
 * Biometrisches Touch-ID- und Face-ID-Einloggen für zusätzliche Sicherheit
 • Hierarchische deterministische Wallet's mit wechselnden Adressen pro Transaktion
 • Dezentralisierte Serverarchitektur. Wallet's funktionieren auch, wenn Edge-Server nicht erreichbar sind.
-• Open-source code. Verfügbar auf https://github.com/EdgeApp
+• Quelloffener Code. Verfügbar auf https://github.com/EdgeApp
 • Integrierte Kryptobörse zum Kauf & Verkauf von Kryptowährungen
 
-Privacy Notice
+Datenschutz
 Die Edge-Wallet-Anwendung verlangt Zugriff auf die Geräte-Kontaktliste und ihre persönlichen Informationen. Diese Information wird auf dem Gerät verwendet, um eine verbesserte Benutzerfreundlichkeit auf folgende Weise zu bieten:
 
 1. Automatisches Vervollständigen von Kontaktdaten aus dem Benutzer-Adressbuch nach einer Transaktion
