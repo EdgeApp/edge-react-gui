@@ -58,6 +58,7 @@ export const ratePlugins = {
   'shapeshift-rate': true,
   coinbase: true,
   coincap: true,
+  coincapLegacy: true,
   currencyconverterapi: ENV.CURRENCYCONVERTERAPI_INIT,
   herc: true
 }
