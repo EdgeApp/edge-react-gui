@@ -95,7 +95,7 @@ export class PluginBridge {
     const coreWallet = this.context.coreWallets[walletId]
     const currencyCode = data.currencyCode
     const address = await WALLET_API.getReceiveAddress(coreWallet, currencyCode)
-    const encodeUri = await coreWallet.encodeUri(address)
+    const encodeUri = await coreWallet.encodeUri({ ...address, currencyCode })
     return { encodeUri, address }
   }
 

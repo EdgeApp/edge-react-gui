@@ -16,7 +16,7 @@ import { getCurrencyInfo, getDenomFromIsoCode } from '../../util/utils'
 const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps => {
   const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
   const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
-
+  const customTokens = state.ui.settings.customTokens
   const plugins: Object = SETTINGS_SELECTORS.getPlugins(state)
   const allCurrencyInfos: Array<EdgeCurrencyInfo> = plugins.allCurrencyInfos
   const currencyInfo: EdgeCurrencyInfo | void = getCurrencyInfo(allCurrencyInfos, currencyCode)
@@ -36,7 +36,8 @@ const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps 
       legacyAddress: '',
       useLegacyAddress: null,
       currentScene: state.ui.scenes.currentScene,
-      wallets: state.ui.wallets.byId
+      wallets: state.ui.wallets.byId,
+      customTokens
     }
   }
 
@@ -78,7 +79,8 @@ const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps 
     showToWalletModal: state.ui.scenes.walletListModal.walletListModalVisible,
     useLegacyAddress: state.ui.scenes.requestType.useLegacyAddress,
     currentScene: state.ui.scenes.currentScene,
-    wallets: state.ui.wallets.byId
+    wallets: state.ui.wallets.byId,
+    customTokens
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch): RequestDispatchProps => ({

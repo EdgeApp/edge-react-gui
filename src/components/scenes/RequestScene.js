@@ -24,7 +24,7 @@ import SafeAreaView from '../../modules/UI/components/SafeAreaView/index.js'
 import ShareButtons from '../../modules/UI/components/ShareButtons/index.js'
 import WalletListModal from '../../modules/UI/components/WalletListModal/WalletListModalConnector'
 import styles from '../../styles/scenes/RequestStyle.js'
-import type { GuiCurrencyInfo, GuiWallet } from '../../types.js'
+import type { CustomTokenInfo, GuiCurrencyInfo, GuiWallet } from '../../types.js'
 import { getObjectDiff } from '../../util/utils'
 
 const PUBLIC_ADDRESS_REFRESH_MS = 2000
@@ -42,7 +42,8 @@ export type RequestStateProps = {
   secondaryCurrencyInfo: GuiCurrencyInfo,
   showToWalletModal: boolean,
   useLegacyAddress: boolean,
-  wallets: { [string]: GuiWallet }
+  wallets: { [string]: GuiWallet },
+  customTokens: Array<CustomTokenInfo>
 }
 export type RequestLoadingProps = {
   edgeWallet: null,
@@ -56,7 +57,8 @@ export type RequestLoadingProps = {
   legacyAddress: string,
   secondaryCurrencyInfo: null,
   showToWalletModal: null,
-  useLegacyAddress: null
+  useLegacyAddress: null,
+  customTokens: Array<CustomTokenInfo>
 }
 
 export type RequestDispatchProps = {
@@ -130,13 +132,13 @@ export class Request extends Component<Props, State> {
   }
 
   async generateEncodedUri () {
-    const { edgeWallet, useLegacyAddress } = this.props
+    const { edgeWallet, useLegacyAddress, customTokens } = this.props
     let publicAddress = this.props.publicAddress
     let legacyAddress = this.props.legacyAddress
     const abcEncodeUri = useLegacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
     let encodedURI = s.strings.loading
     try {
-      encodedURI = edgeWallet ? await edgeWallet.encodeUri(abcEncodeUri) : s.strings.loading
+      encodedURI = edgeWallet ? await edgeWallet.encodeUri(abcEncodeUri, customTokens) : s.strings.loading
       this.setState({
         encodedURI
       })
@@ -157,7 +159,8 @@ export class Request extends Component<Props, State> {
   }
 
   async UNSAFE_componentWillReceiveProps (nextProps: Props) {
-    if (nextProps.loading) return
+    const { currencyCode, customTokens } = nextProps
+    if (nextProps.loading || currencyCode === null) return
 
     const didAddressChange = this.state.publicAddress !== nextProps.guiWallet.receiveAddress.publicAddress
     const changeLegacyPublic = nextProps.useLegacyAddress !== this.props.useLegacyAddress
@@ -167,11 +170,11 @@ export class Request extends Component<Props, State> {
       let publicAddress = nextProps.guiWallet.receiveAddress.publicAddress
       let legacyAddress = nextProps.guiWallet.receiveAddress.legacyAddress
 
-      const abcEncodeUri = nextProps.useLegacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
+      const abcEncodeUri = nextProps.useLegacyAddress ? { publicAddress, legacyAddress, currencyCode } : { publicAddress, currencyCode }
 
       let encodedURI = s.strings.loading
       try {
-        encodedURI = nextProps.edgeWallet ? await nextProps.edgeWallet.encodeUri(abcEncodeUri) : s.strings.loading
+        encodedURI = nextProps.edgeWallet ? await nextProps.edgeWallet.encodeUri(abcEncodeUri, customTokens) : s.strings.loading
       } catch (e) {
         console.log(e)
         publicAddress = s.strings.loading
@@ -291,18 +294,20 @@ export class Request extends Component<Props, State> {
 
   onExchangeAmountChanged = async (amounts: ExchangedFlipInputAmounts) => {
     const { publicAddress, legacyAddress } = this.state
-    const edgeEncodeUri: EdgeEncodeUri = this.props.useLegacyAddress && legacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
+    const { currencyCode, useLegacyAddress, edgeWallet, customTokens } = this.props
+    if (!currencyCode) return
+    const edgeEncodeUri: EdgeEncodeUri = useLegacyAddress && legacyAddress ? { publicAddress, legacyAddress, currencyCode } : { publicAddress, currencyCode }
     if (bns.gt(amounts.nativeAmount, '0')) {
       edgeEncodeUri.nativeAmount = amounts.nativeAmount
     }
     let encodedURI = s.strings.loading
     try {
-      encodedURI = this.props.edgeWallet ? await this.props.edgeWallet.encodeUri(edgeEncodeUri) : s.strings.loading
+      encodedURI = edgeWallet ? await edgeWallet.encodeUri(edgeEncodeUri, customTokens) : s.strings.loading
     } catch (e) {
       console.log(e)
       setTimeout(() => {
-        if (this.props.edgeWallet && this.props.edgeWallet.id) {
-          this.props.refreshReceiveAddressRequest(this.props.edgeWallet.id)
+        if (edgeWallet && edgeWallet.id) {
+          this.props.refreshReceiveAddressRequest(edgeWallet.id)
         }
       }, PUBLIC_ADDRESS_REFRESH_MS)
     }
