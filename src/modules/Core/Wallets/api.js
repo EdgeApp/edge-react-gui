@@ -1,6 +1,15 @@
 // @flow
 
-import type { EdgeCurrencyWallet, EdgeMetadata, EdgeParsedUri, EdgePaymentProtocolInfo, EdgeReceiveAddress, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
+import type {
+  CustomTokenInfo,
+  EdgeCurrencyWallet,
+  EdgeMetadata,
+  EdgeParsedUri,
+  EdgePaymentProtocolInfo,
+  EdgeReceiveAddress,
+  EdgeSpendInfo,
+  EdgeTransaction
+} from 'edge-core-js'
 import _ from 'lodash'
 const ENABLED_TOKENS_FILENAME = 'EnabledTokens.json'
 
@@ -140,9 +149,9 @@ export async function updateEnabledTokens (wallet: EdgeCurrencyWallet, tokensToE
   }
 }
 
-export const parseUri = (wallet: EdgeCurrencyWallet, uri: string): Promise<EdgeParsedUri> => {
+export const parseUri = (wallet: EdgeCurrencyWallet, uri: string, currencyCode?: string, customTokens?: Array<CustomTokenInfo>): Promise<EdgeParsedUri> => {
   try {
-    return Promise.resolve(wallet.parseUri(uri))
+    return Promise.resolve(wallet.parseUri(uri, currencyCode, customTokens))
   } catch (error) {
     return Promise.reject(error)
   }
