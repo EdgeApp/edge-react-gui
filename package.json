@@ -4,6 +4,10 @@
   "private": true,
   "description": "Edge Wallet React GUI",
   "homepage": "https://edge.app",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:EdgeApp/edge-react-gui.git"
+  },
   "license": "SEE LICENSE IN LICENSE",
   "author": "Edge, Inc.",
   "contributors": [
@@ -16,38 +20,6 @@
     "William Swanson <william@edge.app>",
     "Tim Horton <tim@edge.app>"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:EdgeApp/edge-react-gui.git"
-  },
-  "scripts": {
-    "android:clean": "cd android && ./gradlew clean && rm -rf build && cd ../",
-    "android:logcat": "adb logcat *:S ReactNative:V ReactNativeJS:V",
-    "android:release": "cd android && ./gradlew assembleRelease; cd ../",
-    "android:release-install": "npm run android:clean && npm run android:release && cd android/app/build/outputs/apk && adb install app-release.apk; cd ../",
-    "android:run": "react-native run-android",
-    "precommit": "npm run localize && lint-staged && npm run lint && npm run flow && npm test",
-    "prepare": "rollup -c; node ./src/lib/bridge/stringifyBridge.js",
-    "cover": "jest --coverage",
-    "flow": "flow",
-    "flow:0": "flow; exit 0",
-    "flow-coverage": "flow-coverage-report",
-    "format": "import-sort -l --write '*.js' 'src/**/*.js' 'test/**.*.js'; prettier-eslint --write '*.js' 'src/**/*.js' 'test/**.*.js'",
-    "postinstall": "sh ./postinstall.sh",
-    "ios:run": "react-native run-ios",
-    "lint": "eslint '*.js' 'src/**/*.js' 'test/**.*.js'",
-    "lint:fix": "npm run format",
-    "localize": "node ./localizeLanguage.js; git add ./src/locales/strings",
-    "server": "node ./loggingServer.js",
-    "start": "node --max_old_space_size=4000 node_modules/react-native/local-cli/cli.js start ",
-    "test": "jest",
-    "test:e2e": "detox test -c ios.sim.debug",
-    "test:e2e:build": "detox build",
-    "test-ios": "detox build --configuration ios.sim.debug && detox test --configuration ios.sim.debug",
-    "test-android": "detox build --configuration android.emu.debug && detox test --configuration android.emu.debug -l verbose",
-    "updot": "updot",
-    "watch": "npm test -- --watch"
-  },
   "browser": {
     "_stream_duplex": "readable-stream/duplex",
     "_stream_passthrough": "readable-stream/passthrough",
@@ -71,6 +43,84 @@
     "tty": "tty-browserify",
     "vm": "vm-browserify",
     "zlib": "browserify-zlib"
+  },
+  "scripts": {
+    "android:clean": "cd android && ./gradlew clean && rm -rf build && cd ../",
+    "android:logcat": "adb logcat *:S ReactNative:V ReactNativeJS:V",
+    "android:release": "cd android && ./gradlew assembleRelease; cd ../",
+    "android:release-install": "npm run android:clean && npm run android:release && cd android/app/build/outputs/apk && adb install app-release.apk; cd ../",
+    "android:run": "react-native run-android",
+    "cover": "jest --coverage",
+    "flow": "flow",
+    "flow-coverage": "flow-coverage-report",
+    "flow:0": "flow; exit 0",
+    "format": "import-sort -l --write '*.js' 'src/**/*.js' 'test/**/*.js'; prettier-eslint --write '*.js' 'src/**/*.js' 'test/**/*.js'",
+    "postinstall": "sh ./postinstall.sh",
+    "ios:run": "react-native run-ios",
+    "lint": "eslint '*.js' 'src/**/*.js' 'test/**/*.js'",
+    "lint:fix": "npm run format",
+    "localize": "node ./localizeLanguage.js; git add ./src/locales/strings",
+    "precommit": "npm run localize && lint-staged && flow && npm test",
+    "prepare": "rollup -c; node ./src/lib/bridge/stringifyBridge.js",
+    "server": "node ./loggingServer.js",
+    "start": "node --max_old_space_size=4000 node_modules/react-native/local-cli/cli.js start ",
+    "test": "jest",
+    "test-android": "detox build --configuration android.emu.debug && detox test --configuration android.emu.debug -l verbose",
+    "test-ios": "detox build --configuration ios.sim.debug && detox test --configuration ios.sim.debug",
+    "test:e2e": "detox test -c ios.sim.debug",
+    "test:e2e:build": "detox build",
+    "updot": "updot",
+    "watch": "npm test -- --watch"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run precommit"
+    }
+  },
+  "lint-staged": {
+    "ignore": [
+      "**/flow-typed/npm/*.js"
+    ],
+    "linters": {
+      "*.js": [
+        "eslint",
+        "import-sort --list-different",
+        "prettier-eslint --list-different"
+      ]
+    }
+  },
+  "prettier": {
+    "printWidth": 160
+  },
+  "jest": {
+    "coverageDirectory": "./coverage",
+    "coverageReporters": [
+      "cobertura",
+      "html"
+    ],
+    "preset": "react-native",
+    "reporters": [
+      "default",
+      [
+        "jest-junit",
+        {
+          "output": "./coverage/junit.xml"
+        }
+      ]
+    ],
+    "setupFiles": [
+      "./testSetup.js"
+    ],
+    "testPathIgnorePatterns": [
+      "node_modules",
+      "<rootDir>/e2e"
+    ],
+    "transform": {
+      "^.+\\.js$": "<rootDir>/node_modules/react-native/jest/preprocessor.js"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/mobx-react"
+    ]
   },
   "dependencies": {
     "assert": "^1.4.1",
@@ -183,7 +233,7 @@
     "express": "^4.16.2",
     "flow-bin": "^0.66.0",
     "flow-coverage-report": "^0.4.1",
-    "husky": "^0.12.0",
+    "husky": "^1.3.1",
     "import-sort-cli": "^5.0.0",
     "import-sort-parser-babylon": "^5.0.0",
     "import-sort-style-module": "^5.0.0",
@@ -198,53 +248,6 @@
     "rollup": "^1.1.2",
     "rollup-plugin-node-resolve": "4.0.0",
     "updot": "^1.1.7"
-  },
-  "flow-coverage-report": {
-    "includeGlob": [
-      "src/**/*.js",
-      "*.js"
-    ],
-    "type": [
-      "text",
-      "html",
-      "json"
-    ]
-  },
-  "importSort": {
-    ".js, .es": {
-      "parser": "babylon",
-      "style": "module"
-    }
-  },
-  "jest": {
-    "preset": "react-native",
-    "transform": {
-      "^.+\\.js$": "<rootDir>/node_modules/react-native/jest/preprocessor.js"
-    },
-    "transformIgnorePatterns": [
-      "node_modules/mobx-react"
-    ],
-    "testPathIgnorePatterns": [
-      "node_modules",
-      "<rootDir>/e2e"
-    ],
-    "setupFiles": [
-      "./testSetup.js"
-    ],
-    "coverageReporters": [
-      "cobertura",
-      "html"
-    ],
-    "coverageDirectory": "./coverage",
-    "reporters": [
-      "default",
-      [
-        "jest-junit",
-        {
-          "output": "./coverage/junit.xml"
-        }
-      ]
-    ]
   },
   "detox": {
     "test-runner": "jest",
@@ -277,8 +280,31 @@
       }
     }
   },
-  "prettier": {
-    "printWidth": 160
+  "flow-coverage-report": {
+    "includeGlob": [
+      "src/**/*.js",
+      "*.js"
+    ],
+    "type": [
+      "text",
+      "html",
+      "json"
+    ]
+  },
+  "importSort": {
+    ".js, .es": {
+      "parser": "babylon",
+      "style": "module"
+    }
+  },
+  "plugins": {
+    "buysell": [
+      "edge-plugin-simplex",
+      "edge-plugin-wyre"
+    ],
+    "spend": [
+      "edge-plugin-bitrefill"
+    ]
   },
   "react-native": {
     "_stream_duplex": "readable-stream/duplex",
@@ -310,22 +336,6 @@
   "rnpm": {
     "assets": [
       "./src/assets/fonts"
-    ]
-  },
-  "plugins": {
-    "buysell": [
-      "edge-plugin-simplex",
-      "edge-plugin-wyre"
-    ],
-    "spend": [
-      "edge-plugin-bitrefill"
-    ]
-  },
-  "lint-staged": {
-    "*.js": [
-      "import-sort -l --write",
-      "prettier-eslint --write",
-      "git add"
     ]
   }
 }
