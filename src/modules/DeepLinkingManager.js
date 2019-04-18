@@ -8,7 +8,7 @@ import { sprintf } from 'sprintf-js'
 import parse from 'url-parse'
 
 import { selectWallet } from '../actions/WalletActions.js'
-import { PLUGIN_SPEND, SCAN } from '../constants/indexConstants.js'
+import { PLUGIN_BUY_LEGACY, SCAN } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import { buySellPlugins, spendPlugins } from '../modules/UI/scenes/Plugins/plugins'
 import type { Dispatch } from './ReduxTypes.js'
@@ -42,7 +42,7 @@ class DeepLinkingManager extends React.Component<Props> {
       for (i; i < plugins.length; i++) {
         const plugin = plugins[i]
         if (plugin.name === 'Simplex') {
-          Actions[PLUGIN_SPEND]({ plugin: plugin })
+          Actions[PLUGIN_BUY_LEGACY]({ plugin: plugin })
           this.props.markAddressDeepLinkDone()
           return
         }

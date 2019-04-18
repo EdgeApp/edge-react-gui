@@ -265,11 +265,11 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
-  BugsnagReactNative: 7ba00c17a3dedfeea4dd011919962d415a231c49
-  BVLinearGradient: 0d985ec461359c82bc254f26d11008bdae50d17a
-  disklet: 0aca5091512a734c94cdfe2bd575794b38717d9e
+  BugsnagReactNative: 0b7626917d3612281d07aea84e5041f123290fee
+  BVLinearGradient: b0b70acf63ee888829b7c2ebbf6b50e227396e55
+  disklet: 77cdc1bb30fadbc9f1657be5be17d5628855dd5f
   DoubleConversion: e22e0762848812a87afd67ffda3998d9ef29170c
-  edge-login-ui-rn: 731ccf21f5fbda6fe2c562e3e92b57a09de9596f
+  edge-login-ui-rn: 6a132a6caad014b8c724dbe43444d7ffdd9d4cf9
   Firebase: 68afeeb05461db02d7c9e3215cda28068670f4aa
   FirebaseAnalytics: b3628aea54c50464c32c393fb2ea032566e7ecc2
   FirebaseCore: 62f1b792a49bb9e8b4073f24606d2c93ffc352f0
@@ -278,31 +278,31 @@ SPEC CHECKSUMS:
   glog: 1de0bb937dccdc981596d3b5825ebfb765017ded
   GoogleToolboxForMac: 2b2596cbb7186865e98cadf2b1e262d851c2b168
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
-  Picker: 37554355aef82a532ea95b71b6eeba66bc86182b
-  React: 573d89cf10312b17920df6328eaf9ab8059283bf
-  react-native-camera: 9547ea9ab91ef13476a4ad79ec329b1fe634df8c
-  react-native-contacts: 72b9cda8a19f8b585fa73dbd801232c3eb50685c
-  react-native-contacts-wrapper: a423605f89dba6b83edf481940736646f97cd25a
-  react-native-cookies: 48615324004b541be94e9424f81224f0ba1ff68d
-  react-native-fast-crypto: 750f36a496f0d5c8f6586dc1f0b7e210e86267bf
-  react-native-firebase: c20ee01585998768935fc2cff74ff8e9740f1a73
-  react-native-image-picker: 3693786b3d5958c8f71deed66ec068b323565e0d
-  react-native-locale: 4a82bd5e629130ff135d8090c05cf22115cd5b2f
-  react-native-mail: 7ab61c6522cb955af4c5b9cebfefa070f96548c3
-  react-native-material-kit: e779e910356c15278dcd2d2153b8656d24084c05
-  react-native-randombytes: 1b6091800f62c6c393c6bc850ac089ebf63d4c0a
-  react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b
-  react-native-tcp: ec39d0ce136873220a2895a0e89dc33804fe0def
-  react-native-webview: 9a84bb3d5a10bc66924d25b0efda7d1376db28a1
-  ReactNativePermissions: bf462424ca7823d1b8e6cb463184d6e7f151971b
-  RNBackgroundFetch: 8098db4fee60e99afd8bcefa950e8d1760d733ba
-  RNDeviceInfo: e7c5fcde13d40e161d8a27f6c5dc69c638936002
-  RNFS: c9bbde46b0d59619f8e7b735991c60e0f73d22c1
-  RNOpenAppSettings: 1169b90a275e9e18c5973e1608949f97d426e7f3
-  RNShare: 4f206fa36e384e95a0cbf79f2a92490647e93127
-  RNSound: 24fa73ccfa6236a0b493e3f4bf3c952028dc3ce2
-  RNVectorIcons: ac7bf6bfeafaf3ad34552cdc6eed6fb8c4b7c940
-  yoga: 9403c2451c1b47d8cee3e4f1b6fd0ececc63839c
+  Picker: 67a2566d9ff6b141d505d88b9177f905aaa5f1a6
+  React: aa2040dbb6f317b95314968021bd2888816e03d5
+  react-native-camera: eac1e8cc7523273a2a11956d0e5dac08296cf4b0
+  react-native-contacts: 1a8913219e54d1fa20e817b99d9b42b9ec98558d
+  react-native-contacts-wrapper: 31a3117dc4ac206567b94a45bb45be912f6a83db
+  react-native-cookies: 31a3117dc4ac206567b94a45bb45be912f6a83db
+  react-native-fast-crypto: 21133b0827b0c74939740aa9bccc3751abe9be45
+  react-native-firebase: 7dcf6d12753fb4a291678f24c1310449b398f0a5
+  react-native-image-picker: b303e31c3c4ada1d7cb1342423d328d2efb07fb3
+  react-native-locale: cc551c4a467d0e2e7c5e5913a89630870ba43293
+  react-native-mail: ff4aba592530d80ac96eea6c1ca03114b84d630a
+  react-native-material-kit: f7bf5fd284396674f1fae7095a1d7581ba6d7349
+  react-native-randombytes: d3184d351604f78e019535178766590188bbc133
+  react-native-smart-splash-screen: 31a3117dc4ac206567b94a45bb45be912f6a83db
+  react-native-tcp: 31a3117dc4ac206567b94a45bb45be912f6a83db
+  react-native-webview: a42108b827082f8f0333529b0772102031d5960d
+  ReactNativePermissions: 9f2d9c45c98800795e6c2ed330e25d11a66a8169
+  RNBackgroundFetch: 8c4f77f83c398c659bce82af2f0a885079417b9e
+  RNDeviceInfo: 568c5641057313b4912d08a7742ff0b2f753ed5c
+  RNFS: bbb1a64eb245763daf34aea86f97c97c4e85f74c
+  RNOpenAppSettings: 7ec58f46d289c981c881bfe1539dd86d93237eea
+  RNShare: d875e8e37f3e5e8eb7a103ae01e06490af1796f6
+  RNSound: b360b3862d3118ed1c74bb9825696b5957686ac4
+  RNVectorIcons: 8c52e1e8da1153613fdef44748e865c25556cb9c
+  yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
 PODFILE CHECKSUM: b39fe0413b216fc82c3295555b341263251dc082
 
