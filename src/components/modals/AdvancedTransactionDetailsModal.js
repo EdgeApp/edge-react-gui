@@ -3,7 +3,8 @@
 import React, { Component } from 'react'
 import { Alert, Clipboard, Linking, TouchableOpacity } from 'react-native'
 
-import * as Constants from '../../constants/indexConstants.js'
+import { MATERIAL_COMMUNITY, TELESCOPE } from '../../constants/indexConstants.js'
+import { scale } from '../../lib/scaling.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText/index'
@@ -39,7 +40,7 @@ export class AdvancedTransactionDetailsModal extends Component<AdvancedTransacti
     return (
       <InteractiveModal>
         <InteractiveModal.Icon>
-          <Icon style={styles.txIDIcon} name={Constants.QUESTION_ICON} type={Constants.FONT_AWESOME} size={22} />
+          <Icon style={styles.txIDIcon} name={TELESCOPE} type={MATERIAL_COMMUNITY} size={scale(34)} />
         </InteractiveModal.Icon>
 
         <InteractiveModal.Title>

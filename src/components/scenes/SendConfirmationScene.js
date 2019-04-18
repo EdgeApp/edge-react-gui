@@ -246,11 +246,9 @@ export class SendConfirmation extends Component<Props, State> {
 
               <Scene.Padding style={{ paddingHorizontal: 54 }}>
                 <Scene.Item style={{ alignItems: 'center', flex: -1 }}>
-                  {feeCalculated && (
-                    <Scene.Row style={{ paddingVertical: 4 }}>
-                      <Text style={[styles.feeAreaText]}>{this.networkFeeSyntax()}</Text>
-                    </Scene.Row>
-                  )}
+                  <Scene.Row style={{ paddingVertical: 4 }}>
+                    <Text style={[styles.feeAreaText]}>{this.networkFeeSyntax()}</Text>
+                  </Scene.Row>
 
                   {!!destination && (
                     <Scene.Row style={{ paddingVertical: 10 }}>
@@ -365,7 +363,6 @@ export class SendConfirmation extends Component<Props, State> {
 
   networkFeeSyntax = () => {
     const { networkFee, parentNetworkFee, parentDisplayDenomination, exchangeRates } = this.props
-    if (!networkFee && !parentNetworkFee) return ''
 
     const primaryInfo: GuiCurrencyInfo = {
       displayCurrencyCode: this.props.currencyCode,
@@ -387,6 +384,18 @@ export class SendConfirmation extends Component<Props, State> {
       displayDenomination: this.state.secondaryDisplayDenomination,
       exchangeCurrencyCode: exchangeCurrencyCode,
       exchangeDenomination: this.state.secondaryDisplayDenomination
+    }
+
+    if (!networkFee && !parentNetworkFee) {
+      const cryptoFeeSymbolParent = parentDisplayDenomination.symbol ? parentDisplayDenomination.symbol : null
+      const cryptoFeeSymbolPrimary = primaryInfo.displayDenomination.symbol ? primaryInfo.displayDenomination.symbol : null
+      const cryptoFeeSymbol = () => {
+        if (cryptoFeeSymbolParent) return cryptoFeeSymbolParent
+        if (cryptoFeeSymbolPrimary) return cryptoFeeSymbolPrimary
+        return ''
+      }
+      const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol ? secondaryInfo.displayDenomination.symbol : ''
+      return sprintf(s.strings.send_confirmation_fee_line, `${cryptoFeeSymbol()} 0`, `${fiatFeeSymbol} 0`)
     }
 
     if (parentNetworkFee && bns.gt(parentNetworkFee, '0')) {
@@ -441,7 +450,7 @@ export class SendConfirmation extends Component<Props, State> {
       const fiatFeeString = `${fiatFeeSymbol} ${fiatFeeAmountPretty}`
       return sprintf(s.strings.send_confirmation_fee_line, cryptoFeeString, fiatFeeString)
     }
-    return ''
+    return sprintf(s.strings.send_confirmation_fee_line, '0', '0')
   }
 }
 

@@ -192,7 +192,6 @@ dependencies {
     compile project(':react-native-fast-crypto')
     compile project(':react-native-locale')
     compile project(':react-native-vector-icons')
-    compile project(':react-native-udp')
     compile project(':react-native-tcp')
     compile project(':react-native-material-kit')
     compile project(':react-native-linear-gradient')

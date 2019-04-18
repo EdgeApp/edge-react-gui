@@ -210,8 +210,8 @@ const strings = {
   settings_account_title_cap: 'Account',
   settings_button_change_password: 'Change Password',
   settings_button_debug: 'Debug',
-  settings_turn_on_developer_mode: 'Turn On Developer',
-  settings_turn_off_developer_mode: 'Turn Off Developer',
+  settings_turn_on_developer_mode: 'Enable Developer Mode',
+  settings_turn_off_developer_mode: 'Disable Developer Mode',
   settings_button_lock_settings: 'Tap to Lock Account Settings',
   settings_button_password_recovery: 'Set Up Password Recovery',
   settings_button_logout: 'Logout',
@@ -532,6 +532,7 @@ const strings = {
   error_creating_wallets:
     'Network timeout occurred trying to create and backup wallets. Please check your network connection and restart app to retry wallet creation.',
   edge_login_failed: 'Failed to Login',
+  edge_login_fail_message: 'Could not connect to network. Please check your network connection and try again.',
   edge_login_fetching: 'Fetching Edge Login info...',
   modal_addressexplorer_message: 'Show Address in Block Explorer?',
   modal_addressexplorer_null: 'This currency has no explorer site as of now'
