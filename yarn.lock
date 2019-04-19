@@ -8150,10 +8150,10 @@ raf@^3.1.0:
   dependencies:
     performance-now "^2.1.0"
 
-ramda@^0.24.1:
-  version "0.24.1"
-  resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.24.1.tgz#c3b7755197f35b8dc3502228262c4c91ddb6b857"
-  integrity sha1-w7d1UZfzW43DUCIoJixMkd22uFc=
+ramda@^0.25.0:
+  version "0.25.0"
+  resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.25.0.tgz#8fdf68231cffa90bc2f9460390a0cb74a29b29a9"
+  integrity sha512-GXpfrYVPwx3K7RQ6aYT8KPS8XViSXUVJT1ONhoKPE9VAleW42YE+U+8VEyGWt41EnEQW7gwecYJriTI0pKoecQ==
 
 randomatic@^3.0.0:
   version "3.1.1"
@@ -8255,10 +8255,9 @@ react-native-animatable@^1.1.0, react-native-animatable@^1.2.4:
   dependencies:
     prop-types "^15.5.10"
 
-react-native-app-settings@^2.0.0:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/react-native-app-settings/-/react-native-app-settings-2.0.1.tgz#97befc92813952750fa9efffc2692cbc39300960"
-  integrity sha512-MmYtXQbPBJ0tlAmn4MeeOOjrSR9Cup4PI4HFSsETDGUMrOGmb7WETrQ/9bZ06BeisNnqf8/Qj+efgH+OmFYDjQ==
+"react-native-app-settings@git://github.com/swansontec/react-native-app-settings#fix-rn59":
+  version "2.0.0"
+  resolved "git://github.com/swansontec/react-native-app-settings#a4c9729508ea2a5331117fc0891330e81e1a46f8"
 
 react-native-background-fetch@^2.4.3:
   version "2.4.5"
@@ -8275,19 +8274,18 @@ react-native-background-fetch@^2.4.3:
   dependencies:
     prop-types "^15.6.2"
 
-"react-native-contacts-wrapper@git://github.com/EdgeApp/react-native-contacts-wrapper.git":
+"react-native-contacts-wrapper@git://github.com/EdgeApp/react-native-contacts-wrapper.git#a57a5d9":
   version "0.2.4"
-  resolved "git://github.com/EdgeApp/react-native-contacts-wrapper.git#f6521814173d3ff0114047f9568bc8279b520a83"
+  resolved "git://github.com/EdgeApp/react-native-contacts-wrapper.git#a57a5d97ea7ee8c1b8968d57287d6e2653bfff06"
 
 react-native-contacts@2.2.5:
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/react-native-contacts/-/react-native-contacts-2.2.5.tgz#5f7ff7b0310a095753ef0491d6e9453dcfc17ff8"
   integrity sha512-yorPL9PS/g3lKIczZZ18s+LI2+tPHfudsAwuEKA63VB0YteBb5Rz2NnMmBzvI3bRdvNgzzXoCPwxOzAHL0tt1g==
 
-react-native-cookies@3.3.0:
+"react-native-cookies@git://github.com/joeferraro/react-native-cookies.git#4206542d":
   version "3.3.0"
-  resolved "https://registry.yarnpkg.com/react-native-cookies/-/react-native-cookies-3.3.0.tgz#527f65eb2d8a7a000107706bb11beb57f511e701"
-  integrity sha512-GobKo8Kvyuif6ROj6rDAjQJpCSLazcZl6AgZb1z7ldB9FrMtetQzXvIehS0QcwbpnXWyJzXJaY0yrlDjFz+NaA==
+  resolved "git://github.com/joeferraro/react-native-cookies.git#4206542d0735e12693848f742e86f663feeeabd9"
   dependencies:
     invariant "^2.1.0"
 
@@ -8447,22 +8445,20 @@ react-native-linear-gradient@^2.0.0, react-native-linear-gradient@^2.4.0:
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.5.3.tgz#d90cf19a13fcccfa8bb32025ac40a15ae1b49e99"
   integrity sha512-XdusrOXXlkI+yQpUW7YLeiq9cZiBwkvQX4XEkHPVrJ9H47gsKmdgBwObkZBzBQUP0dKK/Sg6aVpETEis4w43bQ==
 
-react-native-locale@^0.0.17:
-  version "0.0.17"
-  resolved "https://registry.yarnpkg.com/react-native-locale/-/react-native-locale-0.0.17.tgz#bf0cbfb9a86c2d280fa73d3b5cf7ec517391bdab"
-  integrity sha1-vwy/uahsLSgPpz07XPfsUXORvas=
+"react-native-locale@git://github.com/fixd/react-native-locale#a2b1296":
+  version "0.0.19"
+  resolved "git://github.com/fixd/react-native-locale#a2b12961a87e1dd638b0b08aa871b61fd1b4e69e"
 
 react-native-mail@3.0.7, react-native-mail@^3.0.5:
   version "3.0.7"
   resolved "https://registry.yarnpkg.com/react-native-mail/-/react-native-mail-3.0.7.tgz#07e6aca43f6f1f85f3e58e96e7fcd16b31a927b8"
   integrity sha512-FHe4kKJKAGuCPPWcDwaRSjdUhEE4IWIsVtTZ05dgD/MgOm00isYmM20zuJHla7oiHVQ2HmzGji76g6IuhIrCjw==
 
-"react-native-material-kit@git://github.com/EdgeApp/react-native-material-kit.git#fix-threadpool":
-  version "0.4.1"
-  resolved "git://github.com/EdgeApp/react-native-material-kit.git#bcdd8d5227b2e800779c273b661a754621764999"
+"react-native-material-kit@git://github.com/xinthink/react-native-material-kit.git#da1c292e":
+  version "0.5.1"
+  resolved "git://github.com/xinthink/react-native-material-kit.git#da1c292e2a6036b570381edb7a3752f254daf2b3"
   dependencies:
-    prop-types "^15.5.10"
-    ramda "^0.24.1"
+    ramda "^0.25.0"
 
 "react-native-material-textfield@git://github.com/EdgeApp/react-native-material-textfield.git":
   version "0.10.2"
@@ -8483,10 +8479,9 @@ react-native-permissions@1.0.6:
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-1.0.6.tgz#504f01728191431ad4b82895c4a349981fb5802b"
   integrity sha512-I9UXYcxkQw8umXsnQIlTj+l6Usgi5kvBPaz62K04tb/OTMXHn10a1BBYlacs4MYdGu3Fy+sSvxfeze9RPPaM3g==
 
-react-native-picker@^4.3.0:
+"react-native-picker@git://github.com/egodigital/react-native-picker#747c09b":
   version "4.3.7"
-  resolved "https://registry.yarnpkg.com/react-native-picker/-/react-native-picker-4.3.7.tgz#9842e8c62ff0d8b676e9514d9f9172413c0518a8"
-  integrity sha1-mELoxi/w2LZ26VFNn5FyQTwFGKg=
+  resolved "git://github.com/egodigital/react-native-picker#747c09b49e52b17ad095a712b694e41be0117ded"
 
 react-native-popup-menu@0.13.3:
   version "0.13.3"
@@ -8562,10 +8557,9 @@ react-native-slowlog@^1.0.2:
   resolved "https://registry.yarnpkg.com/react-native-slowlog/-/react-native-slowlog-1.0.2.tgz#5520979e3ef9d5273495d431ff3be34f02e35c89"
   integrity sha1-VSCXnj751Sc0ldQx/zvjTwLjXIk=
 
-react-native-smart-splash-screen@^2.3.5:
+"react-native-smart-splash-screen@git://github.com/swansontec/react-native-smart-splash-screen#fix-rn59":
   version "2.3.5"
-  resolved "https://registry.yarnpkg.com/react-native-smart-splash-screen/-/react-native-smart-splash-screen-2.3.5.tgz#68a1e45bfd708678aa12e65f2ba997ac5c1292a0"
-  integrity sha512-6Sl9UKzYIQu1Yl5SgsQdV4E8hUr1xz3UN1fmuqxHs82KRS9VkXaxkFJG1AIcFQGkKc4W1jQnU/RlP5PO8vezVg==
+  resolved "git://github.com/swansontec/react-native-smart-splash-screen#af8ee5e9e10afedb2e44f3b6565894477eb15ea9"
 
 react-native-sortable-listview@^0.2.7:
   version "0.2.8"
@@ -8596,9 +8590,9 @@ react-native-tab-view@^1.0.0:
   dependencies:
     prop-types "^15.6.1"
 
-"react-native-tcp@git://github.com/Airbitz/react-native-tcp.git#c6af8f728fcbbae23d20c0211fd5b6c322f7a446":
+"react-native-tcp@git://github.com/EdgeApp/react-native-tcp.git#77c60e4a38a46b19ffd7f69c07b95f6f43c9c999":
   version "3.2.2"
-  resolved "git://github.com/Airbitz/react-native-tcp.git#c6af8f728fcbbae23d20c0211fd5b6c322f7a446"
+  resolved "git://github.com/EdgeApp/react-native-tcp.git#77c60e4a38a46b19ffd7f69c07b95f6f43c9c999"
   dependencies:
     base64-js "0.0.8"
     buffer "^5.0.0"

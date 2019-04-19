@@ -66,7 +66,7 @@ PODS:
     - React
   - react-native-image-picker (0.28.0):
     - React
-  - react-native-locale (0.0.17):
+  - react-native-locale (0.0.19):
     - React
   - react-native-mail (3.0.7):
     - React
@@ -290,7 +290,7 @@ SPEC CHECKSUMS:
   react-native-fast-crypto: aed797071793e23416d6e8c7c1c5dadb63036a0c
   react-native-firebase: c20ee01585998768935fc2cff74ff8e9740f1a73
   react-native-image-picker: e6e06d4315e3c85bad17e4b2002cd29f11d202c8
-  react-native-locale: 4a82bd5e629130ff135d8090c05cf22115cd5b2f
+  react-native-locale: bd8edf0e51706d469af3e2fa568a8102213a3139
   react-native-mail: 021d8ee60e374609f5689ef354dc8e36839a9ba6
   react-native-material-kit: e779e910356c15278dcd2d2153b8656d24084c05
   react-native-randombytes: 1b6091800f62c6c393c6bc850ac089ebf63d4c0a
