@@ -8398,9 +8398,10 @@ react-native-firebase@4.3.8:
     Base64 "~0.2.0"
     inherits "~2.0.1"
 
-"react-native-image-picker@git://github.com/EdgeApp/react-native-image-picker.git":
-  version "0.26.10"
-  resolved "git://github.com/EdgeApp/react-native-image-picker.git#ec2a9081e01ca94ffb21297df4c6df8580ee852b"
+react-native-image-picker@0.28.0:
+  version "0.28.0"
+  resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-0.28.0.tgz#e3f26df170ea932e9c0404624fbced2f59a300e3"
+  integrity sha512-lQfdOyC1mQ/pvfEaUGdoodO1A1clg9kf6YC1WdbWhA6XK+joBd9GQYf8SaCf6/7vM25U4ib+6ux4yvnrS1pOqQ==
 
 react-native-iphone-x-helper@^1.0.1, react-native-iphone-x-helper@^1.0.3:
   version "1.2.0"

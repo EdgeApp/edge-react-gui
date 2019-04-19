@@ -64,7 +64,7 @@ PODS:
   - react-native-firebase (4.3.8):
     - Firebase/Core
     - React
-  - react-native-image-picker (0.14.3):
+  - react-native-image-picker (0.28.0):
     - React
   - react-native-locale (0.0.17):
     - React
@@ -286,7 +286,7 @@ SPEC CHECKSUMS:
   react-native-cookies: 48615324004b541be94e9424f81224f0ba1ff68d
   react-native-fast-crypto: 750f36a496f0d5c8f6586dc1f0b7e210e86267bf
   react-native-firebase: c20ee01585998768935fc2cff74ff8e9740f1a73
-  react-native-image-picker: 3693786b3d5958c8f71deed66ec068b323565e0d
+  react-native-image-picker: e6e06d4315e3c85bad17e4b2002cd29f11d202c8
   react-native-locale: 4a82bd5e629130ff135d8090c05cf22115cd5b2f
   react-native-mail: 7ab61c6522cb955af4c5b9cebfefa070f96548c3
   react-native-material-kit: e779e910356c15278dcd2d2153b8656d24084c05

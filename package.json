@@ -172,7 +172,7 @@
     "react-native-flip-view": "git://github.com/EdgeApp/react-native-flip-view.git",
     "react-native-fs": "git://github.com/EdgeApp/react-native-fs.git#edge/removeEncoding",
     "react-native-http": "git://github.com/tradle/react-native-http#834492d",
-    "react-native-image-picker": "git://github.com/EdgeApp/react-native-image-picker.git",
+    "react-native-image-picker": "0.28.0",
     "react-native-keyboard-aware-scroll-view": "^0.7.4",
     "react-native-linear-gradient": "^2.0.0",
     "react-native-locale": "^0.0.17",
