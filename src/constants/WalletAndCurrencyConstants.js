@@ -169,9 +169,10 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
 export const USD_FIAT = 'iso:USD'
 export const getSymbolFromCurrency = (currencyCode: string) => {
   if (typeof currencyCode !== 'string') return ''
-  const code = currencyCode.toUpperCase()
+  const codeWithoutIso = currencyCode.replace('iso:', '')
+  const code = codeWithoutIso.toUpperCase()
   if (!FIAT_CODES_SYMBOLS.hasOwnProperty(code)) return ''
-  return FIAT_CODES_SYMBOLS[code]
+  return FIAT_CODES_SYMBOLS[codeWithoutIso]
 }
 export const FIAT_CODES_SYMBOLS = {
   AED: 'د.إ',

@@ -1,13 +1,15 @@
 // @flow
 
 import { bns } from 'biggystring'
+import { createYesNoModal, showModal } from 'edge-components'
 import type { EdgeMetadata, EdgeParsedUri, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
+import React from 'react'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
-import { SEND_CONFIRMATION, TRANSACTION_DETAILS } from '../constants/indexConstants'
-import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants.js'
+import { EXCLAMATION, FEE_ALERT_THRESHOLD, MATERIAL_COMMUNITY, SEND_CONFIRMATION, TRANSACTION_DETAILS } from '../constants/indexConstants'
+import { getSpecialCurrencyInfo, getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import { checkPin } from '../modules/Core/Account/api.js'
 import { getAccount, getWallet } from '../modules/Core/selectors.js'
@@ -22,9 +24,11 @@ import {
 } from '../modules/Core/Wallets/api.js'
 import type { Dispatch, GetState } from '../modules/ReduxTypes'
 import { getExchangeDenomination as settingsGetExchangeDenomination } from '../modules/Settings/selectors.js'
+import Text from '../modules/UI/components/FormattedText/FormattedText.ui.js'
+import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import { getAuthRequired, getSpendInfo, getTransaction } from '../modules/UI/scenes/SendConfirmation/selectors'
 import type { AuthType } from '../modules/UI/scenes/SendConfirmation/selectors.js'
-import { getExchangeRate, getSelectedCurrencyCode, getSelectedWallet, getSelectedWalletId } from '../modules/UI/selectors.js'
+import { convertCurrencyFromExchangeRates, getExchangeRate, getSelectedCurrencyCode, getSelectedWallet, getSelectedWalletId } from '../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
 import { convertNativeToExchange } from '../util/utils'
 
@@ -181,15 +185,30 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
   const authRequired = getAuthRequired(state, spendInfo)
   const pin = state.ui.scenes.sendConfirmation.pin
 
-  dispatch(updateSpendPending(true))
+  // check hwo high fee is and decide whether to display warninig
+  const exchangeConverter = convertNativeToExchange(exchangeDenomination.multiplier)
+  const cryptoFeeExchangeAmount = exchangeConverter(edgeUnsignedTransaction.networkFee)
+  const feeAmountInUSD = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, 'iso:USD', parseFloat(cryptoFeeExchangeAmount))
+  const feeAmountInWalletFiat = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, isoFiatCurrencyCode, parseFloat(cryptoFeeExchangeAmount))
+  const feeAmountInWalletFiatShortened = feeAmountInWalletFiat.toFixed(2)
+  const walletFiatSymbol = getSymbolFromCurrency(isoFiatCurrencyCode)
+  const feeAmountInWalletFiatSyntax = `${walletFiatSymbol}${feeAmountInWalletFiatShortened}`
+  if (feeAmountInUSD > FEE_ALERT_THRESHOLD) {
+    const feeAlertResponse = await displayFeeAlert(feeAmountInWalletFiatSyntax)
+    console.log('feeAlertResponse is: ', feeAlertResponse)
+    if (!feeAlertResponse) {
+      dispatch(updateTransaction(edgeUnsignedTransaction, null, true, new Error('transactionCancelled')))
+      return
+    }
+  }
 
+  dispatch(updateSpendPending(true))
   let edgeSignedTransaction = edgeUnsignedTransaction
   try {
     if (authRequired === 'pin') {
       const isAuthorized = await checkPin(account, pin)
       if (!isAuthorized) throw new IncorrectPinError()
     }
-
     edgeSignedTransaction = await signTransaction(wallet, edgeUnsignedTransaction)
     edgeSignedTransaction = await broadcastTransaction(wallet, edgeSignedTransaction)
     await saveTransaction(wallet, edgeSignedTransaction)
@@ -262,4 +281,23 @@ export function IncorrectPinError (message: ?string = s.strings.incorrect_pin) {
   const error = new Error(message)
   error.name = errorNames.IncorrectPinError
   return error
+}
+
+export const displayFeeAlert = async (feeAmountInFiatSyntax: string) => {
+  const modal = createYesNoModal({
+    title: s.strings.send_confirmation_fee_modal_alert_title,
+    message: (
+      <Text>
+        {s.strings.send_confirmation_fee_modal_alert_message_fragment_1}
+        <Text style={{ fontWeight: 'bold' }}>{feeAmountInFiatSyntax}</Text>
+        {s.strings.send_confirmation_fee_modal_alert_message_fragment_2}
+      </Text>
+    ),
+    icon: <Icon type={MATERIAL_COMMUNITY} name={EXCLAMATION} size={38} />,
+    noButtonText: s.strings.string_cancel_cap,
+    yesButtonText: s.strings.title_send
+  })
+  const resolveValue = await showModal(modal)
+  console.log('resolveValue is: ', resolveValue)
+  return resolveValue
 }
