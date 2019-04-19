@@ -8269,9 +8269,10 @@ react-native-background-fetch@^2.4.3:
   version "0.2.4"
   resolved "git://github.com/EdgeApp/react-native-contacts-wrapper.git#f6521814173d3ff0114047f9568bc8279b520a83"
 
-"react-native-contacts@git://github.com/EdgeApp/react-native-contacts.git":
-  version "2.2.2"
-  resolved "git://github.com/EdgeApp/react-native-contacts.git#14ff01c8371c90fcf443a2854a1e74ca589e21ce"
+react-native-contacts@2.2.5:
+  version "2.2.5"
+  resolved "https://registry.yarnpkg.com/react-native-contacts/-/react-native-contacts-2.2.5.tgz#5f7ff7b0310a095753ef0491d6e9453dcfc17ff8"
+  integrity sha512-yorPL9PS/g3lKIczZZ18s+LI2+tPHfudsAwuEKA63VB0YteBb5Rz2NnMmBzvI3bRdvNgzzXoCPwxOzAHL0tt1g==
 
 react-native-cookies@3.3.0:
   version "3.3.0"

@@ -158,7 +158,7 @@
     "react-native-app-settings": "^2.0.0",
     "react-native-background-fetch": "^2.4.3",
     "react-native-camera": "git://github.com/EdgeApp/react-native-camera.git#a31ea429d77",
-    "react-native-contacts": "git://github.com/EdgeApp/react-native-contacts.git",
+    "react-native-contacts": "2.2.5",
     "react-native-contacts-wrapper": "git://github.com/EdgeApp/react-native-contacts-wrapper.git",
     "react-native-cookies": "3.3.0",
     "react-native-crypto": "^2.0.1",
