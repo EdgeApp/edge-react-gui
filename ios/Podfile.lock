@@ -78,7 +78,7 @@ PODS:
     - React
   - react-native-tcp (3.2.2):
     - React
-  - react-native-webview (3.2.1):
+  - react-native-webview (5.6.2):
     - React
   - React/Core (0.55.3):
     - yoga (= 0.55.3.React)
@@ -296,7 +296,7 @@ SPEC CHECKSUMS:
   react-native-randombytes: 1b6091800f62c6c393c6bc850ac089ebf63d4c0a
   react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b
   react-native-tcp: ec39d0ce136873220a2895a0e89dc33804fe0def
-  react-native-webview: 9a84bb3d5a10bc66924d25b0efda7d1376db28a1
+  react-native-webview: c0ddb07676492d983068b0dbfe38ff82d49b1175
   ReactNativePermissions: bf462424ca7823d1b8e6cb463184d6e7f151971b
   RNBackgroundFetch: 8098db4fee60e99afd8bcefa950e8d1760d733ba
   RNDeviceInfo: e7c5fcde13d40e161d8a27f6c5dc69c638936002

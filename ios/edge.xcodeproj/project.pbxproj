@@ -510,7 +510,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-edge/Pods-edge-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-edge/Pods-edge-resources.sh",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
@@ -547,7 +547,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-edge/Pods-edge-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-edge/Pods-edge-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		87B486B70BE20E76388C9872 /* [CP] Check Pods Manifest.lock */ = {
