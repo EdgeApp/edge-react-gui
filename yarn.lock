@@ -8358,9 +8358,10 @@ react-native-easy-grid@0.2.0:
   dependencies:
     lodash "^4.11.1"
 
-"react-native-extra-dimensions-android@git://github.com/EdgeApp/react-native-extra-dimensions-android.git":
-  version "0.17.0"
-  resolved "git://github.com/EdgeApp/react-native-extra-dimensions-android.git#4e1c03f0c5ee3dc26d820d3980796ac41eb51528"
+react-native-extra-dimensions-android@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-extra-dimensions-android/-/react-native-extra-dimensions-android-1.0.1.tgz#ef0fe94b61ab4ad9da0a01b65255063eeb36664e"
+  integrity sha512-45GgglgjZcwcYUktf8wa3g//MZKTLyURLQvmX0WjhiGkhqBYRhzjNAL+NZ+XZbGjWlaE4hp32rlzrQa7aVgGZA==
 
 react-native-fast-crypto@1.8.0:
   version "1.8.0"
