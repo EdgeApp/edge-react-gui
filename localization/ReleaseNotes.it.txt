@@ -1,7 +1,7 @@
 v1.7.4
 
-* Beta Simplex sell
-* Warn users about high fees
+* Beta vendita Simplex
+* Avvisa gli utenti riguardo commissioni elevate
 
 v1.7.3
 
