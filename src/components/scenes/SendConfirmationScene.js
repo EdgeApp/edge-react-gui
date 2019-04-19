@@ -9,7 +9,7 @@ import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
 import { UniqueIdentifierModalConnect as UniqueIdentifierModal } from '../../connectors/UniqueIdentifierModalConnector.js'
-import { getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
+import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD, getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import { makeSpend } from '../../modules/Core/Wallets/api.js'
@@ -169,6 +169,7 @@ export class SendConfirmation extends Component<Props, State> {
   }
 
   render () {
+    const { networkFee, parentNetworkFee } = this.props
     const primaryInfo: GuiCurrencyInfo = {
       displayCurrencyCode: this.props.currencyCode,
       displayDenomination: this.props.primaryDisplayDenomination,
@@ -201,12 +202,13 @@ export class SendConfirmation extends Component<Props, State> {
     const DESTINATION_TEXT = sprintf(s.strings.send_confirmation_to, destination)
     const ADDRESS_TEXT = sprintf(s.strings.send_confirmation_address, address)
 
-    const feeCalculated = !!this.props.networkFee || !!this.props.parentNetworkFee
+    const feeCalculated = !!networkFee || !!parentNetworkFee
+
     const sliderDisabled =
       this.props.sliderDisabled || !feeCalculated || (!getSpecialCurrencyInfo(this.props.currencyCode).allowZeroTx && this.props.nativeAmount === '0')
 
     const isTaggableCurrency = !!getSpecialCurrencyInfo(currencyCode).uniqueIdentifier
-
+    const networkFeeData = this.getNetworkFeeData()
     return (
       <SafeAreaView>
         <Gradient style={styles.view}>
@@ -247,7 +249,7 @@ export class SendConfirmation extends Component<Props, State> {
               <Scene.Padding style={{ paddingHorizontal: 54 }}>
                 <Scene.Item style={{ alignItems: 'center', flex: -1 }}>
                   <Scene.Row style={{ paddingVertical: 4 }}>
-                    <Text style={[styles.feeAreaText]}>{this.networkFeeSyntax()}</Text>
+                    <Text style={[styles.feeAreaText, networkFeeData.feeStyle]}>{networkFeeData.feeSyntax}</Text>
                   </Scene.Row>
 
                   {!!destination && (
@@ -361,8 +363,9 @@ export class SendConfirmation extends Component<Props, State> {
     }
   }
 
-  networkFeeSyntax = () => {
+  getNetworkFeeData = (): { feeSyntax: string, feeStyle: Object } => {
     const { networkFee, parentNetworkFee, parentDisplayDenomination, exchangeRates } = this.props
+    let feeStyle = {}
 
     const primaryInfo: GuiCurrencyInfo = {
       displayCurrencyCode: this.props.currencyCode,
@@ -386,7 +389,9 @@ export class SendConfirmation extends Component<Props, State> {
       exchangeDenomination: this.state.secondaryDisplayDenomination
     }
 
+    let denomination, exchangeDenomination, usedNetworkFee, currencyCode
     if (!networkFee && !parentNetworkFee) {
+      // if no fee
       const cryptoFeeSymbolParent = parentDisplayDenomination.symbol ? parentDisplayDenomination.symbol : null
       const cryptoFeeSymbolPrimary = primaryInfo.displayDenomination.symbol ? primaryInfo.displayDenomination.symbol : null
       const cryptoFeeSymbol = () => {
@@ -395,62 +400,56 @@ export class SendConfirmation extends Component<Props, State> {
         return ''
       }
       const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol ? secondaryInfo.displayDenomination.symbol : ''
-      return sprintf(s.strings.send_confirmation_fee_line, `${cryptoFeeSymbol()} 0`, `${fiatFeeSymbol} 0`)
+      return {
+        feeSyntax: sprintf(s.strings.send_confirmation_fee_line, `${cryptoFeeSymbol()} 0`, `${fiatFeeSymbol} 0`),
+        feeStyle
+      }
+      // if parentNetworkFee greater than zero
     }
-
     if (parentNetworkFee && bns.gt(parentNetworkFee, '0')) {
-      const cryptoFeeSymbol = parentDisplayDenomination.symbol ? parentDisplayDenomination.symbol : ''
-      // multiplier for display denomination
-      const displayDenomMultiplier = parentDisplayDenomination.multiplier
-      // multiplier for exchange denomination
-      const cryptoFeeMultiplier = this.props.parentExchangeDenomination.multiplier
-      // fee amount in exchange denomination
-      const cryptoFeeExchangeDenomAmount = parentNetworkFee ? convertNativeToDisplay(cryptoFeeMultiplier)(parentNetworkFee) : ''
-      const exchangeToDisplayMultiplierRatio = bns.div(cryptoFeeMultiplier, displayDenomMultiplier, DIVIDE_PRECISION)
-      const cryptoFeeDisplayDenomAmount = bns.mul(cryptoFeeExchangeDenomAmount, exchangeToDisplayMultiplierRatio)
-      const cryptoFeeString = `${cryptoFeeSymbol} ${cryptoFeeDisplayDenomAmount}`
-      const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol ? secondaryInfo.displayDenomination.symbol : ''
-      const exchangeConvertor = convertNativeToExchange(this.props.parentExchangeDenomination.multiplier)
-      const cryptoFeeExchangeAmount = exchangeConvertor(parentNetworkFee)
-      const fiatFeeAmount = convertCurrencyFromExchangeRates(
-        exchangeRates,
-        this.props.parentExchangeDenomination.name,
-        secondaryInfo.exchangeCurrencyCode,
-        parseFloat(cryptoFeeExchangeAmount)
-      )
-      const fiatFeeAmountString = fiatFeeAmount.toFixed(2)
-      const fiatFeeAmountPretty = bns.toFixed(fiatFeeAmountString, 2, 2)
-      const fiatFeeString = `${fiatFeeSymbol} ${fiatFeeAmountPretty}`
-      return sprintf(s.strings.send_confirmation_fee_line, cryptoFeeString, fiatFeeString)
+      denomination = parentDisplayDenomination
+      exchangeDenomination = this.props.parentExchangeDenomination
+      usedNetworkFee = parentNetworkFee
+      currencyCode = exchangeDenomination.name
+      // if networkFee greater than zero
+    } else if (networkFee && bns.gt(networkFee, '0')) {
+      denomination = primaryInfo.displayDenomination
+      exchangeDenomination = this.props.primaryExchangeDenomination
+      usedNetworkFee = networkFee
+      currencyCode = this.props.currencyCode
+    } else {
+      // catch-all scenario if only existing fee is negative (shouldn't be possible)
+      return {
+        feeSyntax: '',
+        feeStyle: {}
+      }
     }
+    const cryptoFeeSymbol = denomination.symbol ? denomination.symbol : ''
+    const displayDenomMultiplier = denomination.multiplier
+    const cryptoFeeMultiplier = exchangeDenomination.multiplier
+    const cryptoFeeExchangeDenomAmount = usedNetworkFee ? convertNativeToDisplay(cryptoFeeMultiplier)(usedNetworkFee) : ''
 
-    if (networkFee && bns.gt(networkFee, '0')) {
-      const cryptoFeeSymbol = primaryInfo.displayDenomination.symbol ? primaryInfo.displayDenomination.symbol : ''
-      // multiplier for display denomination
-      const displayDenomMultiplier = primaryInfo.displayDenomination.multiplier
-      // multiplier for EXCHANGE denomination
-      const cryptoFeeMultiplier = this.props.primaryExchangeDenomination.multiplier
-      // fee amount in exchange denomination
-      const cryptoFeeExchangeDenomAmount = networkFee ? convertNativeToDisplay(cryptoFeeMultiplier)(networkFee) : ''
-      const exchangeToDisplayMultiplierRatio = bns.div(cryptoFeeMultiplier, displayDenomMultiplier, DIVIDE_PRECISION)
-      const cryptoFeeDisplayDenomAmount = bns.mul(cryptoFeeExchangeDenomAmount, exchangeToDisplayMultiplierRatio)
-      const cryptoFeeString = `${cryptoFeeSymbol} ${cryptoFeeDisplayDenomAmount}`
-      const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol ? secondaryInfo.displayDenomination.symbol : ''
-      const exchangeConvertor = convertNativeToExchange(primaryInfo.exchangeDenomination.multiplier)
-      // amount in EXCHANGE denomination
-      const cryptoFeeExchangeAmount = exchangeConvertor(networkFee)
-      const fiatFeeAmount = convertCurrencyFromExchangeRates(
-        exchangeRates,
-        this.props.currencyCode,
-        secondaryInfo.exchangeCurrencyCode,
-        parseFloat(cryptoFeeExchangeAmount)
-      )
-      const fiatFeeAmountString = fiatFeeAmount.toFixed(2)
-      const fiatFeeAmountPretty = bns.toFixed(fiatFeeAmountString, 2, 2)
-      const fiatFeeString = `${fiatFeeSymbol} ${fiatFeeAmountPretty}`
-      return sprintf(s.strings.send_confirmation_fee_line, cryptoFeeString, fiatFeeString)
+    const exchangeToDisplayMultiplierRatio = bns.div(cryptoFeeMultiplier, displayDenomMultiplier, DIVIDE_PRECISION)
+    const cryptoFeeDisplayDenomAmount = bns.mul(cryptoFeeExchangeDenomAmount, exchangeToDisplayMultiplierRatio)
+    const cryptoFeeString = `${cryptoFeeSymbol} ${cryptoFeeDisplayDenomAmount}`
+    const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol ? secondaryInfo.displayDenomination.symbol : ''
+    const exchangeConvertor = convertNativeToExchange(exchangeDenomination.multiplier)
+    const cryptoFeeExchangeAmount = exchangeConvertor(usedNetworkFee)
+    const fiatFeeAmount = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, secondaryInfo.exchangeCurrencyCode, parseFloat(cryptoFeeExchangeAmount))
+    const fiatFeeAmountString = fiatFeeAmount.toFixed(2)
+    const fiatFeeAmountPretty = bns.toFixed(fiatFeeAmountString, 2, 2)
+    const fiatFeeString = `${fiatFeeSymbol} ${fiatFeeAmountPretty}`
+    const feeAmountInUSD = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, 'iso:USD', parseFloat(cryptoFeeExchangeAmount))
+    // check if fee is high enough to signal a warning to user (via font color)
+    if (feeAmountInUSD > FEE_ALERT_THRESHOLD) {
+      feeStyle = styles.feeDanger
+    } else if (feeAmountInUSD > FEE_COLOR_THRESHOLD) {
+      feeStyle = styles.feeWarning
     }
-    return sprintf(s.strings.send_confirmation_fee_line, '0', '0')
+    return {
+      feeSyntax: sprintf(s.strings.send_confirmation_fee_line, cryptoFeeString, fiatFeeString),
+      feeStyle
+    }
   }
 }
 
