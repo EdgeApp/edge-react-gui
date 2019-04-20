@@ -3,7 +3,7 @@
   "bitcoin_received": "Has recibido %1$s",
   "bitcoin_remaining": "Tu saldo es de %1$s…",
   "calculator_done": "Hecho",
-  "change_mining_fee_body": "Advertencia: Comisiones bajas pueden causar largos retrasos en la confirmación de la transacción",
+  "change_mining_fee_body": "Advertencia: Las comisiones bajas pueden causar largos retrasos en la confirmación de la transacción",
   "change_currency_fee": "Cambiar moneda",
   "could_not_select": "No se pudo seleccionar ninguna cartera",
   "dialog_title": "Fijar tiempo para desconexión automática",
