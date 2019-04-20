@@ -5,8 +5,6 @@ import { ActivityIndicator, Text, TouchableHighlight, View } from 'react-native'
 import OpenAppSettings from 'react-native-app-settings'
 import { RNCamera } from 'react-native-camera'
 // $FlowFixMe
-import ImagePicker from 'react-native-image-picker'
-import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -145,22 +143,22 @@ export class Scan extends Component<Props> {
     this.props.toggleAddressModal()
   }
 
-  selectPhotoTapped = () => {
-    const options = { takePhotoButtonTitle: null }
+  // selectPhotoTapped = () => {
+  //   const options = { takePhotoButtonTitle: null }
 
-    ImagePicker.showImagePicker(options, response => {
-      if (!response.didCancel && !response.error && !response.customButton) {
-        // this.refs.cameraCapture.capture({})
-        // You can also display the image using data:
-        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-        // TODO: make edgelogin work with image picker -paulvp
-        /* if (/^airbitz:\/\/edge\//.test(uri)) {
-          return
-        } */
-        Actions[Constants.SEND_CONFIRMATION]()
-      }
-    })
-  }
+  //   ImagePicker.showImagePicker(options, response => {
+  //     if (!response.didCancel && !response.error && !response.customButton) {
+  //       // this.refs.cameraCapture.capture({})
+  //       // You can also display the image using data:
+  //       // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+  //       // TODO: make edgelogin work with image picker -paulvp
+  //       /* if (/^airbitz:\/\/edge\//.test(uri)) {
+  //         return
+  //       } */
+  //       Actions[Constants.SEND_CONFIRMATION]()
+  //     }
+  //   })
+  // }
 
   openSettingsTapped = () => {
     OpenAppSettings.open()
