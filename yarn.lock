@@ -8442,14 +8442,10 @@ react-native-locale@^0.0.17:
   resolved "https://registry.yarnpkg.com/react-native-locale/-/react-native-locale-0.0.17.tgz#bf0cbfb9a86c2d280fa73d3b5cf7ec517391bdab"
   integrity sha1-vwy/uahsLSgPpz07XPfsUXORvas=
 
-react-native-mail@^3.0.5:
+react-native-mail@3.0.7, react-native-mail@^3.0.5:
   version "3.0.7"
   resolved "https://registry.yarnpkg.com/react-native-mail/-/react-native-mail-3.0.7.tgz#07e6aca43f6f1f85f3e58e96e7fcd16b31a927b8"
   integrity sha512-FHe4kKJKAGuCPPWcDwaRSjdUhEE4IWIsVtTZ05dgD/MgOm00isYmM20zuJHla7oiHVQ2HmzGji76g6IuhIrCjw==
-
-"react-native-mail@git://github.com/EdgeApp/react-native-mail.git":
-  version "3.0.6"
-  resolved "git://github.com/EdgeApp/react-native-mail.git#78fec9ec6f8888497c8f1df6f946d8e209f37dc1"
 
 "react-native-material-kit@git://github.com/EdgeApp/react-native-material-kit.git#fix-threadpool":
   version "0.4.1"
