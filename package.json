@@ -116,7 +116,8 @@
       "<rootDir>/e2e"
     ],
     "transform": {
-      "^.+\\.js$": "<rootDir>/node_modules/react-native/jest/preprocessor.js"
+      "^.+\\.js$": "<rootDir>/node_modules/react-native/jest/preprocessor.js",
+      "^.+\\.(bmp|gif|jpg|jpeg|mp4|png|psd|svg|webp)$": "<rootDir>/node_modules/react-native/jest/assetFileTransformer.js"
     },
     "transformIgnorePatterns": [
       "node_modules/mobx-react"
