@@ -130,6 +130,12 @@ export const rawStyles = {
   footerWithPaymentId: {
     marginTop: scale(0)
   },
+  feeWarning: {
+    color: THEME.COLORS.ACCENT_ORANGE
+  },
+  feeDanger: {
+    color: THEME.COLORS.ACCENT_RED
+  },
   debug
 }
 
