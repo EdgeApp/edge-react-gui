@@ -55,7 +55,12 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
       type: 'ADDRESS_DEEP_LINK_RECEIVED',
       data: addressDeepLinkData
     }),
-  checkAndShowGetCryptoModal: () => dispatch(checkAndShowGetCryptoModal())
+  checkAndShowGetCryptoModal: (routeData: string) => {
+    if (routeData === 'sweepPrivateKey') {
+      return null
+    }
+    dispatch(checkAndShowGetCryptoModal())
+  }
 })
 export default connect(
   mapStateToProps,
