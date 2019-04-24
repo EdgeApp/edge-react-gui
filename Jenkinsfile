@@ -50,7 +50,8 @@ pipeline {
         script {
           def packageJson = readJSON file: "./package.json"
           if (BRANCH_NAME != "master" && BRANCH_NAME != "develop") {
-            packageJson.version = "${packageJson.version}-${BRANCH_NAME}".inspect()
+            def cleanBranch = BRANCH_NAME.replaceAll('/', '-')
+            packageJson.version = "${packageJson.version}-${cleanBranch}".inspect()
             writeJSON file: "./package.json", json: packageJson
           }
           def description = "[version] ${packageJson.version}"
