@@ -1,5 +1,9 @@
 // @flow
 
+import { Platform } from 'react-native'
+import DeviceInfo from 'react-native-device-info'
+
+import packageJson from '../../../package.json'
 import * as LOGGER from '../../util/logger'
 import type { Dispatch, GetState } from '../ReduxTypes.js'
 import * as LOGS_API from './api'
@@ -57,11 +61,17 @@ export const sendLogs = (text: string) => async (dispatch: Dispatch, getState: G
     }
   }
 
+  const appInfo = `App version: ${packageJson.version}
+App build: ${DeviceInfo.getReadableVersion()}
+os: ${Platform.OS} ${Platform.Version}
+device: ${DeviceInfo.getBrand()} ${DeviceInfo.getDeviceId()}
+`
+
   LOGGER.log('SENDING LOGS WITH MESSAGE: ' + text)
-    // $FlowFixMe
-    .then(LOGGER.log(walletDump))
-    .then(LOGGER.readLogs)
-    .then(LOGS_API.sendLogs)
+    .then(() => LOGGER.log(appInfo))
+    .then(() => LOGGER.log(walletDump))
+    .then(() => LOGGER.readLogs())
+    .then(logs => LOGS_API.sendLogs(logs))
     .then(result => dispatch({ type: 'LOGS/SEND_LOGS_SUCCESS', result }))
     .catch(error => dispatch({ type: 'LOGS/SEND_LOGS_FAILURE', error }))
 }
