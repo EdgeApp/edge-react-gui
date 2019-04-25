@@ -2157,9 +2157,9 @@ bs58check@^1.0.8:
     bs58 "^3.1.0"
     create-hash "^1.1.0"
 
-"bs58grscheck@git+https://github.com/Groestlcoin/bs58grscheck.git":
+"bs58grscheck@https://github.com/Groestlcoin/bs58grscheck":
   version "2.1.2"
-  resolved "git+https://github.com/Groestlcoin/bs58grscheck.git#020feec2b3153aeb278596ea70ce3579a37f4e21"
+  resolved "https://github.com/Groestlcoin/bs58grscheck#020feec2b3153aeb278596ea70ce3579a37f4e21"
   dependencies:
     bs58 "^4.0.0"
     create-hash "^1.1.0"
@@ -3214,10 +3214,10 @@ edge-components@^0.0.19:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.15.10:
-  version "0.15.10"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.15.10.tgz#535a8b13e6b7b0841ab17fbb4984184cb1b07ade"
-  integrity sha512-zrarCq5fenxaXD+X6vkR5U6iKceOCy0BIu7Ekmcd3KiUh4XaRiCWE0Qvwkn3Vt0tzwiQieDBgMZ3CKZygP5jLw==
+edge-core-js@^0.15.11:
+  version "0.15.11"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.15.11.tgz#eb8e01cca2d4c93ee050901cc3b66cf4654a350f"
+  integrity sha512-UAjGBoNwpsWQRSeyK3tX/ubw0rGxscefKingXCboF4RiZAb0D4442MvtmLf/gQX8ZsjP+dXlLMOXxulfSfnzUA==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -3241,10 +3241,10 @@ edge-core-js@^0.15.10:
     ws "^5.1.1"
     yaob "^0.3.3"
 
-edge-currency-accountbased@^0.1.8:
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.1.8.tgz#5b267f4075af98ada0afa9475d155cfc680e7f90"
-  integrity sha512-RNkI6QhGCc06rXUryDbx71PW/n/RVOJzanqtK7BzKd5AKbtWrASubxhBrSn5lnAzqrt0uDbkTiFNanqKz7qJZA==
+edge-currency-accountbased@^0.1.9:
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.1.9.tgz#7a2d195c6bef4728d3f6103f37ac2d755d1af68f"
+  integrity sha512-kES/vG8KOZsf3aoJug+ZFsjPXdsiosw9MxfhsdTgDY3pjMcrxTavQ1eNH4CIxdnrv4BlDhmZuDPPCAtqyxPudA==
   dependencies:
     base-x "^1.0.4"
     biggystring "^3.0.0"
