@@ -124,11 +124,12 @@ export const parseScannedUri = (data: string) => (dispatch: Dispatch, getState: 
 
       if (parsedUri.token) {
         // TOKEN URI
-        const { contractAddress, currencyName, multiplier } = parsedUri.token
+        const { contractAddress, currencyName } = parsedUri.token
+        const multiplier = parsedUri.token.denominations[0].multiplier
         const currencyCode = parsedUri.token.currencyCode.toUpperCase()
         let decimalPlaces = 18
-        if (parsedUri.token && parsedUri.token.multiplier) {
-          decimalPlaces = denominationToDecimalPlaces(parsedUri.token.multiplier)
+        if (multiplier) {
+          decimalPlaces = denominationToDecimalPlaces(multiplier)
         }
         const parameters = {
           contractAddress,
