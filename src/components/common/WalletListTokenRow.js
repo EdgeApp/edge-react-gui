@@ -21,7 +21,6 @@ type OwnProps = {
 
 export type StateProps = {
   displayDenomination: EdgeDenomination,
-  isWalletFiatBalanceVisible: boolean,
   settings: Object,
   exchangeRates: Object,
   currencyCode: string,
@@ -57,16 +56,12 @@ export class WalletListTokenRow extends PureComponent<Props> {
           <View style={[styles.rowNameTextWrapAndroidIos]}>
             <T style={[styles.tokenRowText]}>{this.props.currencyCode}</T>
           </View>
-
           <View style={[styles.rowBalanceTextWrap]}>
-            <View style={styles.rowBalanceText}>
-              {this.props.isWalletFiatBalanceVisible ? (
-                <T style={[styles.rowBalanceAmountText]}>{this.props.fiatSymbol + ' ' + fiatBalance}</T>
-              ) : (
-                <T style={[styles.rowBalanceAmountText]}>
-                  {intl.formatNumber(UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(this.props.balance) || '0')}
-                </T>
-              )}
+            <View style={styles.rowBalanceAmount}>
+              <T style={[styles.rowBalanceAmountText]}>
+                {intl.formatNumber(UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(this.props.balance) || '0')}
+              </T>
+              <T style={[styles.rowBalanceAmountText]}>({this.props.fiatSymbol + ' ' + fiatBalance})</T>
             </View>
           </View>
           <View style={styles.rowOptionsWrap} />

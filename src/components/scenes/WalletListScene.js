@@ -27,7 +27,7 @@ import { TwoButtonModalStyle } from '../../styles/indexStyles.js'
 import styles from '../../styles/scenes/WalletListStyle'
 import THEME from '../../theme/variables/airbitz'
 import type { GuiWalletType } from '../../types'
-import { getFiatSymbol, getObjectDiff, getTotalFiatAmountFromExchangeRates } from '../../util/utils'
+import { getObjectDiff, getTotalFiatAmountFromExchangeRates } from '../../util/utils'
 import FullWalletListRow from '../common/FullWalletListRow.js'
 import SortableWalletListRow from '../common/SortableWalletListRow.js'
 import { WiredBalanceBox } from '../common/WiredBalanceBox.js'
@@ -66,7 +66,6 @@ type Props = {
   toggleAccountBalanceVisibility: () => void,
   toggleWalletFiatBalanceVisibility: () => void,
   isAccountBalanceVisible: boolean,
-  isWalletFiatBalanceVisible: boolean,
   defaultFiat: string,
   ethereumWalletType?: GuiWalletType
 }
@@ -135,7 +134,7 @@ export default class WalletList extends Component<Props, State> {
   }
 
   render () {
-    const { wallets, activeWalletIds, defaultFiat } = this.props
+    const { wallets, activeWalletIds } = this.props
     const walletsArray = []
     const activeWallets = {}
     for (const wallet in wallets) {
@@ -156,7 +155,6 @@ export default class WalletList extends Component<Props, State> {
       const tempWalletObj = wallets[x] ? wallets[x] : { key: null }
       activeWalletsObject[x] = tempWalletObj
     })
-    const fiatSymbol = defaultFiat ? getFiatSymbol(defaultFiat) : ''
 
     return (
       <SafeAreaView>
@@ -179,7 +177,7 @@ export default class WalletList extends Component<Props, State> {
                 </View>
               </View>
 
-              <View style={[styles.donePlusContainer, this.state.sortableListExists && styles.donePlusSortable]}>
+              <View style={[styles.donePlusContainer]}>
                 {this.state.sortableListExists && (
                   <Animated.View
                     style={[
@@ -205,9 +203,6 @@ export default class WalletList extends Component<Props, State> {
                       }
                     ]}
                   >
-                    <TouchableOpacity style={styles.fiatToggleWrap} onPress={this.onFiatSwitchToggle}>
-                      <T style={styles.toggleFiatText}>{this.props.isWalletFiatBalanceVisible ? s.strings.fragment_wallets_crypto_toggle_title : fiatSymbol}</T>
-                    </TouchableOpacity>
                     <TouchableOpacity style={[styles.walletsBoxHeaderAddWallet, { width: 41 }]} onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]}>
                       <Ionicon name="md-add" style={[styles.dropdownIcon]} size={28} color="white" />
                     </TouchableOpacity>

@@ -13,7 +13,6 @@ import { getWallet } from '../modules/UI/selectors.js'
 const mapStateToProps = (state: State, ownProps): StateProps => {
   const currencyCode: string = ownProps.currencyCode
   const settings = state.ui.settings
-  const isWalletFiatBalanceVisible = settings.isWalletFiatBalanceVisible
   const exchangeRates = state.exchangeRates
   // $FlowFixMe
   const displayDenomination: EdgeDenomination = SETTINGS_SELECTORS.getDisplayDenominationFull(state, currencyCode)
@@ -21,7 +20,6 @@ const mapStateToProps = (state: State, ownProps): StateProps => {
 
   return {
     displayDenomination,
-    isWalletFiatBalanceVisible,
     wallet,
     currencyCode,
     settings,

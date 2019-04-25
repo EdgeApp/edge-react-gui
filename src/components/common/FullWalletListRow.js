@@ -52,7 +52,6 @@ export type FullWalletListRowLoadedStateProps = {
   exchangeDenomination: GuiDenomination,
   customTokens: Array<CustomTokenInfo>,
   fiatSymbol: string,
-  isWalletFiatBalanceVisible: boolean,
   settings: Object,
   exchangeRates: { [string]: number }
 }
@@ -95,7 +94,6 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
     const { data, fiatSymbol, settings, exchangeRates } = this.props
     const walletData = data.item
     const currencyCode = walletData.currencyCode
-    const cryptocurrencyName = walletData.currencyNames[currencyCode]
     const denomination = this.props.displayDenomination
     const multiplier = denomination.multiplier
     const id = walletData.id
@@ -149,25 +147,14 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
                   {name}
                 </T>
               </View>
-              {this.props.isWalletFiatBalanceVisible ? (
-                <View style={[styles.rowBalanceTextWrap]}>
-                  <View style={styles.rowBalanceText}>
-                    <T style={[styles.rowBalanceAmountText]}>{fiatBalanceString}</T>
-                  </View>
+              <View style={[styles.rowBalanceTextWrap]}>
+                <View style={styles.rowBalanceAmount}>
+                  <T style={[styles.rowBalanceAmountText]}>
+                    {symbol || ''} {finalCryptoAmount}
+                  </T>
+                  <T style={[styles.rowBalanceAmountText]}>({fiatBalanceString})</T>
                 </View>
-              ) : (
-                <View style={[styles.rowBalanceTextWrap]}>
-                  <View style={styles.rowBalanceAmount}>
-                    <T style={[styles.rowBalanceAmountText]}>{finalCryptoAmount}</T>
-                  </View>
-
-                  <View style={styles.rowBalanceText}>
-                    <T style={[styles.rowBalanceDenominationText]}>{cryptocurrencyName} (</T>
-                    <T style={[styles.rowBalanceDenominationText, styles.symbol]}>{symbol || ''}</T>
-                    <T style={[styles.rowBalanceDenominationText]}>)</T>
-                  </View>
-                </View>
-              )}
+              </View>
               <View style={styles.rowOptionsWrap}>
                 <WalletListRowOptions currencyCode={walletData.currencyCode} executeWalletRowOption={walletData.executeWalletRowOption} walletKey={id} />
               </View>
@@ -205,13 +192,11 @@ const mapStateToProps = (state: State, ownProps: FullWalletListRowLoadedOwnProps
   const settings = state.ui.settings
   const fiatSymbol = getFiatSymbol(settings.defaultFiat) || ''
   const customTokens = settings.customTokens
-  const isWalletFiatBalanceVisible = settings.isWalletFiatBalanceVisible
   return {
     displayDenomination,
     exchangeDenomination,
     customTokens,
     fiatSymbol,
-    isWalletFiatBalanceVisible,
     settings,
     exchangeRates: state.exchangeRates
   }

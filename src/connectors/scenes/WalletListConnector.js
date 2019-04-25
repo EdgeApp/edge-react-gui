@@ -3,12 +3,7 @@
 import { connect } from 'react-redux'
 
 import { disableOtp, keepOtp } from '../../actions/OtpActions'
-import {
-  toggleAccountBalanceVisibility,
-  toggleWalletFiatBalanceVisibility,
-  updateActiveWalletsOrder,
-  updateArchivedWalletsOrder
-} from '../../actions/WalletListActions'
+import { toggleAccountBalanceVisibility, updateActiveWalletsOrder, updateArchivedWalletsOrder } from '../../actions/WalletListActions'
 import { walletRowOption } from '../../actions/WalletOptionsActions.js'
 import WalletList from '../../components/scenes/WalletListScene'
 import type { Dispatch, State } from '../../modules/ReduxTypes'
@@ -25,7 +20,6 @@ const mapStateToProps = (state: State) => {
   const dimensions = state.ui.scenes.dimensions
   const customTokens = state.ui.settings.customTokens
   const otpResetPending = SETTINGS_SELECTORS.getOtpResetPending(state)
-  const isWalletFiatBalanceVisible = state.ui.settings.isWalletFiatBalanceVisible
   const defaultFiat = SETTINGS_SELECTORS.getDefaultFiat(state)
 
   const supportedWalletTypes = SETTINGS_SELECTORS.getSupportedWalletTypes(state)
@@ -40,7 +34,6 @@ const mapStateToProps = (state: State) => {
     dimensions,
     customTokens,
     otpResetPending,
-    isWalletFiatBalanceVisible,
     defaultFiat,
     ethereumWalletType
   }
@@ -53,8 +46,7 @@ const mapDispatchToProps = (dispatch: Dispatch, state: State) => ({
   walletRowOption: (walletId, option, archived) => dispatch(walletRowOption(walletId, option, archived)),
   disableOtp: () => dispatch(disableOtp()),
   keepOtp: () => dispatch(keepOtp()),
-  toggleAccountBalanceVisibility: () => dispatch(toggleAccountBalanceVisibility()),
-  toggleWalletFiatBalanceVisibility: () => dispatch(toggleWalletFiatBalanceVisibility())
+  toggleAccountBalanceVisibility: () => dispatch(toggleAccountBalanceVisibility())
 })
 
 export default connect(

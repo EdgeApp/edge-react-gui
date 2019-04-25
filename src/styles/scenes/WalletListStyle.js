@@ -45,15 +45,13 @@ export const styles = {
   },
   donePlusContainer: {
     minWidth: scale(132),
-    height: scale(50)
-  },
-  donePlusSortable: {
+    height: scale(50),
     alignItems: 'flex-end',
     marginRight: scale(30)
   },
   plusContainer: {
     position: 'absolute',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     height: scale(50),
     flexDirection: 'row'
@@ -73,12 +71,6 @@ export const styles = {
     height: '100%',
     paddingVertical: scale(12),
     width: scale(82)
-  },
-  toggleFiatText: {
-    color: THEME.COLORS.WHITE,
-    backgroundColor: THEME.COLORS.TRANSPARENT,
-    fontSize: scale(18),
-    textAlign: 'center'
   },
   doneContainer: {
     position: 'absolute',

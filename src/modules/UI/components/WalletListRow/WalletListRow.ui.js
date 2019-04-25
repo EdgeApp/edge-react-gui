@@ -42,7 +42,6 @@ export type WalletListRowState = {
   exchangeDenomination: GuiDenomination,
   customTokens: Array<CustomTokenInfo>,
   fiatSymbol: string,
-  isWalletFiatBalanceVisible: boolean,
   fiatBalance: string
 }
 
