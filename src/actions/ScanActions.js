@@ -102,6 +102,8 @@ export const parseScannedUri = (data: string) => (dispatch: Dispatch, getState: 
   const selectedWalletId = state.ui.wallets.selectedWalletId
   const edgeWallet = state.core.wallets.byId[selectedWalletId]
   const guiWallet = state.ui.wallets.byId[selectedWalletId]
+  const currencyCode = state.ui.wallets.selectedCurrencyCode
+
   if (isEdgeLogin(data)) {
     // EDGE LOGIN
     dispatch(loginWithEdge(data))
@@ -116,7 +118,7 @@ export const parseScannedUri = (data: string) => (dispatch: Dispatch, getState: 
     console.log(e)
   }
 
-  WALLET_API.parseUri(edgeWallet, data).then(
+  WALLET_API.parseUri(edgeWallet, data, currencyCode).then(
     (parsedUri: EdgeParsedUri) => {
       dispatch({ type: 'PARSE_URI_SUCCEEDED', data: { parsedUri } })
 

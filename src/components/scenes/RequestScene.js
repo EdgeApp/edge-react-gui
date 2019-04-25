@@ -130,10 +130,11 @@ export class Request extends Component<Props, State> {
   }
 
   async generateEncodedUri () {
-    const { edgeWallet, useLegacyAddress } = this.props
+    const { edgeWallet, useLegacyAddress, currencyCode } = this.props
+    if (!currencyCode) return
     let publicAddress = this.props.publicAddress
     let legacyAddress = this.props.legacyAddress
-    const abcEncodeUri = useLegacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
+    const abcEncodeUri = useLegacyAddress ? { publicAddress, legacyAddress, currencyCode } : { publicAddress, currencyCode }
     let encodedURI = s.strings.loading
     try {
       encodedURI = edgeWallet ? await edgeWallet.encodeUri(abcEncodeUri) : s.strings.loading
@@ -157,7 +158,8 @@ export class Request extends Component<Props, State> {
   }
 
   async UNSAFE_componentWillReceiveProps (nextProps: Props) {
-    if (nextProps.loading) return
+    const { currencyCode } = nextProps
+    if (nextProps.loading || currencyCode === null) return
 
     const didAddressChange = this.state.publicAddress !== nextProps.guiWallet.receiveAddress.publicAddress
     const changeLegacyPublic = nextProps.useLegacyAddress !== this.props.useLegacyAddress
@@ -167,8 +169,7 @@ export class Request extends Component<Props, State> {
       let publicAddress = nextProps.guiWallet.receiveAddress.publicAddress
       let legacyAddress = nextProps.guiWallet.receiveAddress.legacyAddress
 
-      const abcEncodeUri = nextProps.useLegacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
-
+      const abcEncodeUri = nextProps.useLegacyAddress ? { publicAddress, legacyAddress, currencyCode } : { publicAddress, currencyCode }
       let encodedURI = s.strings.loading
       try {
         encodedURI = nextProps.edgeWallet ? await nextProps.edgeWallet.encodeUri(abcEncodeUri) : s.strings.loading
@@ -291,7 +292,10 @@ export class Request extends Component<Props, State> {
 
   onExchangeAmountChanged = async (amounts: ExchangedFlipInputAmounts) => {
     const { publicAddress, legacyAddress } = this.state
-    const edgeEncodeUri: EdgeEncodeUri = this.props.useLegacyAddress && legacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
+    const { currencyCode } = this.props
+    if (!currencyCode) return
+    const edgeEncodeUri: EdgeEncodeUri =
+      this.props.useLegacyAddress && legacyAddress ? { publicAddress, legacyAddress, currencyCode } : { publicAddress, currencyCode }
     if (bns.gt(amounts.nativeAmount, '0')) {
       edgeEncodeUri.nativeAmount = amounts.nativeAmount
     }
