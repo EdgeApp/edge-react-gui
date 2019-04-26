@@ -18,7 +18,9 @@ type Props = {
   wallets: Array<GuiWallet>,
   supportedWalletTypes: Array<Object>,
   showWalletCreators: boolean,
-  state: State
+  state: State,
+  cantCancel: boolean,
+  excludedTokens: Array<string>
 }
 type Record = {
   walletItem: GuiWallet | null,
@@ -72,7 +74,9 @@ class CryptoExchangeWalletSelectorModal extends Component<Props, LocalState> {
     }
   }
   calculateHeight = () => {
-    const length = this.props.showWalletCreators ? this.state.totalCurrenciesAndTokens + this.state.totalWalletsToAdd : this.state.totalCurrenciesAndTokens
+    const length = this.props.showWalletCreators
+      ? this.state.totalCurrenciesAndTokens + this.state.totalWalletsToAdd
+      : this.state.totalCurrenciesAndTokens - this.props.excludedTokens.length
     const windowHeight = Dimensions.get('window').height * 0.7 // - CRYPTO_EXCHANGE_WALLET_DIALOG_TOP
     const flatListHeight = length * styles.rowHeight
     if (flatListHeight + styles.rowHeight > windowHeight) {
@@ -99,6 +103,7 @@ class CryptoExchangeWalletSelectorModal extends Component<Props, LocalState> {
           wallet={item.walletItem}
           onPress={this.selectWallet}
           excludedCurrencyCode={this.props.excludedCurrencyCode}
+          excludedTokens={this.props.excludedTokens}
           onTokenPress={this.selectTokenWallet}
           state={this.props.state}
           isWalletFiatBalanceVisible
@@ -110,18 +115,30 @@ class CryptoExchangeWalletSelectorModal extends Component<Props, LocalState> {
     }
     return null
   }
+  renderHeader = () => {
+    if (this.props.cantCancel) {
+      return (
+        <View style={styles.header}>
+          <FormattedText>{this.props.headerTitle}</FormattedText>
+        </View>
+      )
+    }
+    return (
+      <View style={styles.header}>
+        <View style={styles.headerLeft}>
+          <FormattedText>{this.props.headerTitle}</FormattedText>
+        </View>
+        <View style={styles.headerRight}>
+          <IconButton style={styles.iconButton} onPress={this.props.onDone} icon={CLOSE_ICON} iconType={ION_ICONS} />
+        </View>
+      </View>
+    )
+  }
   render () {
     return (
       <View style={styles.container}>
         <View style={styles.activeArea}>
-          <View style={styles.header}>
-            <View style={styles.headerLeft}>
-              <FormattedText>{this.props.headerTitle}</FormattedText>
-            </View>
-            <View style={styles.headerRight}>
-              <IconButton style={styles.iconButton} onPress={this.props.onDone} icon={CLOSE_ICON} iconType={ION_ICONS} />
-            </View>
-          </View>
+          {this.renderHeader()}
           <View style={{ ...styles.flatListBox, height: this.calculateHeight() }}>
             <FlatList data={this.state.records} keyExtractor={this.keyExtractor} renderItem={this.renderWalletItem} />
           </View>
@@ -144,6 +161,8 @@ export const createCryptoExchangeWalletSelectorModal = (opts: Object) => (props:
       state={opts.state}
       excludedCurrencyCode={opts.excludedCurrencyCode}
       headerTitle={opts.headerTitle}
+      cantCancel={opts.cantCancel || false}
+      excludedTokens={opts.excludedTokens || []}
     />
   )
 }
