@@ -5,9 +5,9 @@ import { Actions } from 'react-native-router-flux'
 import { Bridgeable } from 'yaob'
 
 import { selectWallet } from '../../../../actions/WalletActions'
-// import { store } from '../../../../app.js'
 import { createCryptoExchangeWalletSelectorModal } from '../../../../components/modals/CryptoExchangeWalletSelectorModal'
 import { SEND_CONFIRMATION } from '../../../../constants/SceneKeys.js'
+import s from '../../../../locales/strings'
 import * as SETTINGS_SELECTORS from '../../../../modules/Settings/selectors.js'
 import type { GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
@@ -116,7 +116,6 @@ class EdgeProvider extends Bridgeable {
         walletsToUse.push(wallet)
       } else {
         if (excludedCurrencyCode === wallet.currencyCode && excludedCurrencyCode === 'ETH' && wallet.enabledTokens.length > 0) {
-          // CHECK THE
           const ignoredCodes = []
           let i = 0
           for (i; i < wallet.enabledTokens.length; i++) {
@@ -147,7 +146,7 @@ class EdgeProvider extends Bridgeable {
       supportedWalletTypes,
       showWalletCreators: false,
       state: this._state,
-      headerTitle: 'Allen  Rocks',
+      headerTitle: s.strings.choose_your_wallet,
       cantCancel: true,
       excludedTokens
     }

@@ -118,7 +118,7 @@ class CryptoExchangeWalletSelectorModal extends Component<Props, LocalState> {
   renderHeader = () => {
     if (this.props.cantCancel) {
       return (
-        <View style={styles.header}>
+        <View style={styles.headerCenter}>
           <FormattedText>{this.props.headerTitle}</FormattedText>
         </View>
       )
