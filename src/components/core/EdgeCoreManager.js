@@ -59,7 +59,7 @@ export const ratePlugins = {
   coinbase: true,
   coincap: true,
   coincapLegacy: true,
-  nomics: false,
+  nomics: true,
   currencyconverterapi: ENV.CURRENCYCONVERTERAPI_INIT,
   herc: true
 }
