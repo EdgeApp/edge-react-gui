@@ -59,7 +59,7 @@ export const ratePlugins = {
   coinbase: true,
   coincap: true,
   coincapLegacy: true,
-  nomics: true,
+  nomics: { apiKey: ENV.NOMICS_API_KEY },
   currencyconverterapi: ENV.CURRENCYCONVERTERAPI_INIT,
   herc: true
 }
@@ -68,8 +68,7 @@ export const swapPlugins = {
   changelly: ENV.CHANGELLY_INIT,
   changenow: { apiKey: ENV.CHANGE_NOW_API_KEY },
   faast: ENV.FAAST_INIT,
-  shapeshift: { apiKey: ENV.SHAPESHIFT_API_KEY },
-  nomics: { apiKey: ENV.NOMICS_API_KEY }
+  shapeshift: { apiKey: ENV.SHAPESHIFT_API_KEY }
 }
 
 const contextOptions = {
