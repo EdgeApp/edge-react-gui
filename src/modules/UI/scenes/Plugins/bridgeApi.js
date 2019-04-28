@@ -79,6 +79,9 @@ class EdgeProvider extends Bridgeable {
   navStackClear () {
     this._navStack = []
   }
+  updateState = (arg: any) => {
+    this._state = arg
+  }
   async setBackHandler (handler: { handleBack(): Promise<number> }): Promise<mixed> {
     this.backHandler = handler
   }
