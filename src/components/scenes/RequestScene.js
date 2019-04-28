@@ -346,8 +346,7 @@ export class Request extends Component<Props, State> {
         const shareOptions = {
           url,
           title,
-          message,
-          subject: sprintf(s.strings.request_qr_email_title, s.strings.app_name, this.props.currencyCode) //  for email,
+          message: this.state.encodedURI
         }
         Share.open(shareOptions).catch(e => console.log(e))
       })
