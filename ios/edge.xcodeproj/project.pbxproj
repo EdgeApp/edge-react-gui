@@ -34,6 +34,9 @@
 		98AF3B3C1F99F7D20083E087 /* audio_received.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 98AF3B3A1F99F7D10083E087 /* audio_received.mp3 */; };
 		9C77109EF9C7495E83B65835 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E22452AEA7F9422FA609E7B4 /* Octicons.ttf */; };
 		A32373B436A54BE09CB501C5 /* font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1FA75A7FCCEA4AACBBC97934 /* font.ttf */; };
+		A3D77D70227AEE1100035AA2 /* exchange_logo_coinzark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A3D77D6D227AEE1100035AA2 /* exchange_logo_coinzark@3x.png */; };
+		A3D77D71227AEE1100035AA2 /* exchange_logo_coinzark.png in Resources */ = {isa = PBXBuildFile; fileRef = A3D77D6E227AEE1100035AA2 /* exchange_logo_coinzark.png */; };
+		A3D77D72227AEE1100035AA2 /* exchange_logo_coinzark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A3D77D6F227AEE1100035AA2 /* exchange_logo_coinzark@2x.png */; };
 		A88329F9AD044FEB8B7D2AA1 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 497F4AA15A3F4601A2F7027F /* MaterialCommunityIcons.ttf */; };
 		ABAD41DADC5F4A96990A421E /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F7BCB7447264484B9199BD43 /* Feather.ttf */; };
 		AC40390740E9458CBD92E01B /* SF-UI-Text-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0F91EE15341B486DB1AD6756 /* SF-UI-Text-Regular.otf */; };
@@ -124,6 +127,9 @@
 		9D4EB636094148199D949ED1 /* RNBackgroundFetch+AppDelegate.m */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.objc; name = "RNBackgroundFetch+AppDelegate.m"; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/RNBackgroundFetch+AppDelegate.m"; sourceTree = "<group>"; };
 		9EAB0D55879A45ADA4669286 /* SourceSansPro-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-LightItalic.ttf"; path = "../src/assets/fonts/SourceSansPro-LightItalic.ttf"; sourceTree = "<group>"; };
 		A0587BF5EC0B93837E5E83BE /* Pods-edge.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-edge.release.xcconfig"; path = "Pods/Target Support Files/Pods-edge/Pods-edge.release.xcconfig"; sourceTree = "<group>"; };
+		A3D77D6D227AEE1100035AA2 /* exchange_logo_coinzark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "exchange_logo_coinzark@3x.png"; sourceTree = "<group>"; };
+		A3D77D6E227AEE1100035AA2 /* exchange_logo_coinzark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = exchange_logo_coinzark.png; sourceTree = "<group>"; };
+		A3D77D6F227AEE1100035AA2 /* exchange_logo_coinzark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "exchange_logo_coinzark@2x.png"; sourceTree = "<group>"; };
 		A4F20FA41E19409A93306235 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		AA0A843F10D9480786517FEF /* SourceSansPro-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-Italic.ttf"; path = "../src/assets/fonts/SourceSansPro-Italic.ttf"; sourceTree = "<group>"; };
 		B3F94957529C4939AD4E8BD9 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
@@ -304,6 +310,9 @@
 		FD982BC41FABFA020057F035 /* SplashScreenResource */ = {
 			isa = PBXGroup;
 			children = (
+				A3D77D6E227AEE1100035AA2 /* exchange_logo_coinzark.png */,
+				A3D77D6F227AEE1100035AA2 /* exchange_logo_coinzark@2x.png */,
+				A3D77D6D227AEE1100035AA2 /* exchange_logo_coinzark@3x.png */,
 				DA285EAA2203BF2F00F79CE6 /* exchange_logo_faast.png */,
 				DA285EAB2203BF2F00F79CE6 /* exchange_logo_faast@2x.png */,
 				DA285EA92203BF2F00F79CE6 /* exchange_logo_faast@3x.png */,
@@ -437,8 +446,10 @@
 				E6C089B0217E7ADB003DE9B9 /* exchange_logo_changelly@3x.png in Resources */,
 				DAF7C41220C505CC005B7898 /* plugins in Resources */,
 				E6C089A7217E7ADB003DE9B9 /* exchange_logo_changelly.png in Resources */,
+				A3D77D71227AEE1100035AA2 /* exchange_logo_coinzark.png in Resources */,
 				E616C51120F50FDB00F9252F /* iPadOnboarding1Horiz.png in Resources */,
 				B524052E4B614E5DB1524555 /* Roboto_medium.ttf in Resources */,
+				A3D77D72227AEE1100035AA2 /* exchange_logo_coinzark@2x.png in Resources */,
 				98AF3B3C1F99F7D20083E087 /* audio_received.mp3 in Resources */,
 				E6DBE8AE210C937200C52ABE /* onboardX2.png in Resources */,
 				E6DBE8B1210C937200C52ABE /* onboardX1.png in Resources */,
@@ -469,6 +480,7 @@
 				F3343A739BF04CF1B73A6AA6 /* SourceSansPro-Regular.ttf in Resources */,
 				8CBFB9E2496842FC8F06CE3C /* SourceSansPro-Semibold.ttf in Resources */,
 				BBF0CDD08FB044868A4B510C /* SourceSansPro-SemiboldItalic.ttf in Resources */,
+				A3D77D70227AEE1100035AA2 /* exchange_logo_coinzark@3x.png in Resources */,
 				5F0AA175FFCB452283063917 /* AntDesign.ttf in Resources */,
 				B0EBAEF96518483CAAC1AE18 /* Entypo.ttf in Resources */,
 				72FEADA163204A53BB83DDB1 /* EvilIcons.ttf in Resources */,
