@@ -163,8 +163,11 @@ const ScanButton = () => {
 }
 
 const SweepPrivateKeyButton = () => {
+  /* eslint-disable no-unused-vars */
+  const routeWithData = () => Actions.scan('sweepPrivateKey')
+  /* eslint-disable no-unused-vars */
   return (
-    <Button onPress={Actions.scan}>
+    <Button onPress={routeWithData}>
       <Button.Row>
         <Button.Left>
           <Image source={sweepIcon} style={styles.iconImage} />

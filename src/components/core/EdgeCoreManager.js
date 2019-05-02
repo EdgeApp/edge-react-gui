@@ -41,7 +41,7 @@ export const currencyPlugins = {
   dash: true,
   digibyte: true,
   dogecoin: false,
-  eboost: false,
+  eboost: true,
   feathercoin: true,
   groestlcoin: true,
   litecoin: true,
@@ -59,6 +59,7 @@ export const ratePlugins = {
   coinbase: true,
   coincap: true,
   coincapLegacy: true,
+  nomics: ENV.NOMICS_INIT,
   currencyconverterapi: ENV.CURRENCYCONVERTERAPI_INIT,
   herc: true
 }

@@ -3214,10 +3214,10 @@ edge-components@^0.0.19:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.15.10:
-  version "0.15.10"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.15.10.tgz#535a8b13e6b7b0841ab17fbb4984184cb1b07ade"
-  integrity sha512-zrarCq5fenxaXD+X6vkR5U6iKceOCy0BIu7Ekmcd3KiUh4XaRiCWE0Qvwkn3Vt0tzwiQieDBgMZ3CKZygP5jLw==
+edge-core-js@^0.15.11:
+  version "0.15.11"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.15.11.tgz#eb8e01cca2d4c93ee050901cc3b66cf4654a350f"
+  integrity sha512-UAjGBoNwpsWQRSeyK3tX/ubw0rGxscefKingXCboF4RiZAb0D4442MvtmLf/gQX8ZsjP+dXlLMOXxulfSfnzUA==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -3241,10 +3241,10 @@ edge-core-js@^0.15.10:
     ws "^5.1.1"
     yaob "^0.3.3"
 
-edge-currency-accountbased@^0.1.8:
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.1.8.tgz#5b267f4075af98ada0afa9475d155cfc680e7f90"
-  integrity sha512-RNkI6QhGCc06rXUryDbx71PW/n/RVOJzanqtK7BzKd5AKbtWrASubxhBrSn5lnAzqrt0uDbkTiFNanqKz7qJZA==
+edge-currency-accountbased@^0.1.9:
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.1.9.tgz#7a2d195c6bef4728d3f6103f37ac2d755d1af68f"
+  integrity sha512-kES/vG8KOZsf3aoJug+ZFsjPXdsiosw9MxfhsdTgDY3pjMcrxTavQ1eNH4CIxdnrv4BlDhmZuDPPCAtqyxPudA==
   dependencies:
     base-x "^1.0.4"
     biggystring "^3.0.0"
@@ -3261,10 +3261,10 @@ edge-currency-accountbased@^0.1.8:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@4.0.8:
-  version "4.0.8"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.0.8.tgz#42702cbfcded38812433c679fbccc6b380252aff"
-  integrity sha512-7Uzz7vntC50b/zVWy7BuC9gMCy0Y7eFDpt0LUZw5rP/mDhaJ5MhTyxnwv2Csy3MD7kJz4JdTf02929pqqjrKiQ==
+edge-currency-bitcoin@4.0.11:
+  version "4.0.11"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.0.11.tgz#f1e3d5c997c3c363d7cd0069d926028f1b93bbc9"
+  integrity sha512-t0au1VCqEFbiEpN8hXAeobdybFaIIP3N/rAIGaj4DQjJ3rJeAxUiyLfJccdd/0acOyCQiY61Be/h1TwPAjcKcg==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -3293,20 +3293,20 @@ edge-currency-monero@0.2.2:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#6eddbd64"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.5.5:
-  version "0.5.5"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.5.5.tgz#470f35b3e527a50f16f47a825a206d7b4a4e57ef"
-  integrity sha512-0uFjRiaZhSy+rGAaDgR7RlPXrQcmzfVerzWLolpL60UdCDVtUy1ThsP89V9hM0ZnNDS4NWVCsI7GX3K3Img6Pg==
+edge-exchange-plugins@^0.5.7:
+  version "0.5.7"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.5.7.tgz#0b9200a0824e1f250b8d6b3b7b02827a6f9f11c3"
+  integrity sha512-Z5Hi7PFl2f+gfXKncrtuU/+1YjKj4o5iFahktINxTxlYKHpDbnHSLaSFQCtiXcN96phSWbsUVB7YNuWQkzU8Lg==
   dependencies:
     esm "^3.2.4"
     hashjs "^1.2.0"
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.5.18:
-  version "0.5.18"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.5.18.tgz#e3d84f63a54ec73d94651fd00b56f120ef5f7c81"
-  integrity sha512-x614eI/BA2wQ7kZlZSU9oJun0sD/u7YkyWQdeA9nV6dmQlsfT1Hd2Kty+0ljhnRNoPnN7JlFtFlcAgaBKubDFA==
+edge-login-ui-rn@^0.5.19:
+  version "0.5.19"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.5.19.tgz#dd36129fa7dd1406aa7719b2af3b005d602325e5"
+  integrity sha512-sssryqRjnI3HJPZ97Syae9de1cA9tmorcVHJZrHgBthaVPio/DMi6cauAR7BnV2An9UPMIS/jm0a1rkkSxQBvQ==
   dependencies:
     material-ui "^0.20.0"
     moment "^2.19.3"
@@ -3331,9 +3331,9 @@ edge-login-ui-rn@^0.5.18:
   dependencies:
     moment "^2.22.2"
 
-"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#852f333":
+"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#4d40db9":
   version "0.0.3"
-  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#852f333a388571669caa84c0599d955f86fe81af"
+  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#4d40db949ab2a8fbe19f52b743074c1dff2a4680"
   dependencies:
     moment "^2.22.2"
 
@@ -3526,7 +3526,7 @@ escape-html@~1.0.3:
   resolved "https://registry.yarnpkg.com/escape-html/-/escape-html-1.0.3.tgz#0258eae4d3d0c0974de1c169188ef0051d1d1988"
   integrity sha1-Aljq5NPQwJdN4cFpGI7wBR0dGYg=
 
-escape-string-regexp@^1.0.2, escape-string-regexp@^1.0.5:
+escape-string-regexp@1.0.5, escape-string-regexp@^1.0.2, escape-string-regexp@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
   integrity sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=
@@ -4135,7 +4135,7 @@ fbjs-scripts@^0.8.1:
     semver "^5.1.0"
     through2 "^2.0.0"
 
-fbjs@^0.8.1, fbjs@^0.8.14, fbjs@^0.8.16, fbjs@^0.8.17, fbjs@^0.8.9:
+fbjs@^0.8.1, fbjs@^0.8.14, fbjs@^0.8.16, fbjs@^0.8.9:
   version "0.8.17"
   resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.17.tgz#c4d598ead6949112653d6588b01a5cdcd9f90fdd"
   integrity sha1-xNWY6taUkRJlPWWIsBpc3Nn5D90=
@@ -5148,7 +5148,7 @@ inquirer@^3.0.6:
     strip-ansi "^4.0.0"
     through "^2.3.6"
 
-invariant@^2.1.0, invariant@^2.2.0, invariant@^2.2.2, invariant@^2.2.4:
+invariant@2.2.4, invariant@^2.1.0, invariant@^2.2.0, invariant@^2.2.2, invariant@^2.2.4:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.4.tgz#610f3c92c9359ce1db616e538008d23ff35158e6"
   integrity sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==
@@ -8269,9 +8269,10 @@ react-native-background-fetch@^2.4.3:
   version "0.2.4"
   resolved "git://github.com/EdgeApp/react-native-contacts-wrapper.git#f6521814173d3ff0114047f9568bc8279b520a83"
 
-"react-native-contacts@git://github.com/EdgeApp/react-native-contacts.git":
-  version "2.2.2"
-  resolved "git://github.com/EdgeApp/react-native-contacts.git#14ff01c8371c90fcf443a2854a1e74ca589e21ce"
+react-native-contacts@2.2.5:
+  version "2.2.5"
+  resolved "https://registry.yarnpkg.com/react-native-contacts/-/react-native-contacts-2.2.5.tgz#5f7ff7b0310a095753ef0491d6e9453dcfc17ff8"
+  integrity sha512-yorPL9PS/g3lKIczZZ18s+LI2+tPHfudsAwuEKA63VB0YteBb5Rz2NnMmBzvI3bRdvNgzzXoCPwxOzAHL0tt1g==
 
 react-native-cookies@3.3.0:
   version "3.3.0"
@@ -8357,14 +8358,15 @@ react-native-easy-grid@0.2.0:
   dependencies:
     lodash "^4.11.1"
 
-"react-native-extra-dimensions-android@git://github.com/EdgeApp/react-native-extra-dimensions-android.git":
-  version "0.17.0"
-  resolved "git://github.com/EdgeApp/react-native-extra-dimensions-android.git#4e1c03f0c5ee3dc26d820d3980796ac41eb51528"
+react-native-extra-dimensions-android@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-extra-dimensions-android/-/react-native-extra-dimensions-android-1.0.1.tgz#ef0fe94b61ab4ad9da0a01b65255063eeb36664e"
+  integrity sha512-45GgglgjZcwcYUktf8wa3g//MZKTLyURLQvmX0WjhiGkhqBYRhzjNAL+NZ+XZbGjWlaE4hp32rlzrQa7aVgGZA==
 
-react-native-fast-crypto@1.8.0:
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/react-native-fast-crypto/-/react-native-fast-crypto-1.8.0.tgz#b2955fecb72e8f133a3fe17ac26ce41d39a340a1"
-  integrity sha512-Wfwykyi+uuMNb3NWSr1mteGzYxD6yXBfF6nj1W80MMY6/ZEKI33aCpoc5iky77yv63Yz/Y0Ens9IjP8bJbVJsA==
+react-native-fast-crypto@1.8.1:
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/react-native-fast-crypto/-/react-native-fast-crypto-1.8.1.tgz#9b59d7eb4bcb19f99c62695df9ea4f683bb1e52c"
+  integrity sha512-5Cym09wcYSDXS7+QFg5oWGuW4rz2DyaU09YTeGxn3Qc+rqc01VQ5T6ruW4dWv7bIULtyBcJ2ovTkXTtbsDl3uA==
   dependencies:
     buffer "^5.0.8"
     rfc4648 "^1.0.0"
@@ -8396,9 +8398,10 @@ react-native-firebase@4.3.8:
     Base64 "~0.2.0"
     inherits "~2.0.1"
 
-"react-native-image-picker@git://github.com/EdgeApp/react-native-image-picker.git":
-  version "0.26.10"
-  resolved "git://github.com/EdgeApp/react-native-image-picker.git#ec2a9081e01ca94ffb21297df4c6df8580ee852b"
+react-native-image-picker@0.28.0:
+  version "0.28.0"
+  resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-0.28.0.tgz#e3f26df170ea932e9c0404624fbced2f59a300e3"
+  integrity sha512-lQfdOyC1mQ/pvfEaUGdoodO1A1clg9kf6YC1WdbWhA6XK+joBd9GQYf8SaCf6/7vM25U4ib+6ux4yvnrS1pOqQ==
 
 react-native-iphone-x-helper@^1.0.1, react-native-iphone-x-helper@^1.0.3:
   version "1.2.0"
@@ -8439,14 +8442,10 @@ react-native-locale@^0.0.17:
   resolved "https://registry.yarnpkg.com/react-native-locale/-/react-native-locale-0.0.17.tgz#bf0cbfb9a86c2d280fa73d3b5cf7ec517391bdab"
   integrity sha1-vwy/uahsLSgPpz07XPfsUXORvas=
 
-react-native-mail@^3.0.5:
+react-native-mail@3.0.7, react-native-mail@^3.0.5:
   version "3.0.7"
   resolved "https://registry.yarnpkg.com/react-native-mail/-/react-native-mail-3.0.7.tgz#07e6aca43f6f1f85f3e58e96e7fcd16b31a927b8"
   integrity sha512-FHe4kKJKAGuCPPWcDwaRSjdUhEE4IWIsVtTZ05dgD/MgOm00isYmM20zuJHla7oiHVQ2HmzGji76g6IuhIrCjw==
-
-"react-native-mail@git://github.com/EdgeApp/react-native-mail.git":
-  version "3.0.6"
-  resolved "git://github.com/EdgeApp/react-native-mail.git#78fec9ec6f8888497c8f1df6f946d8e209f37dc1"
 
 "react-native-material-kit@git://github.com/EdgeApp/react-native-material-kit.git#fix-threadpool":
   version "0.4.1"
@@ -8560,10 +8559,10 @@ react-native-sortable-listview@^0.2.7:
   resolved "https://registry.yarnpkg.com/react-native-sortable-listview/-/react-native-sortable-listview-0.2.8.tgz#0d514fa73eb406a46baea96aa38a71e40257af90"
   integrity sha512-1zEzgMHv32w4oGNEMuwHRxK8uGYQjJeufwq/2ispmRYctR1oGc0eDgg/WSPChdNlInw4cpK/fPRd6sfLPHP1Kw==
 
-react-native-sound@^0.10.4:
-  version "0.10.9"
-  resolved "https://registry.yarnpkg.com/react-native-sound/-/react-native-sound-0.10.9.tgz#6b00b0f4afd017cde09fbb9d171df1b5d5b851a8"
-  integrity sha1-awCw9K/QF83gn7udFx3xtdW4Uag=
+react-native-sound@^0.10.12:
+  version "0.10.12"
+  resolved "https://registry.yarnpkg.com/react-native-sound/-/react-native-sound-0.10.12.tgz#f912d6f9d6e9e2b42b391e0226787628d940f01a"
+  integrity sha512-lhvzZ+ekNSHW9s4FjmxxGAQmd7yDT9FnHgJNP824cMyHRrTES/LgHnSOxES/1FWVoaQ8FdfbEHkWd2rN0G/L9A==
 
 react-native-swipe-gestures@^1.0.2:
   version "1.0.3"
@@ -8606,13 +8605,13 @@ react-native-vector-icons@^6.1.0:
     prop-types "^15.6.2"
     yargs "^8.0.2"
 
-react-native-webview@^3.1.3:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-3.2.1.tgz#a51843699f700c8c02a9c7fb33f9db96bc401237"
-  integrity sha512-pVLYK8zI2YD66FoMD90yFC2l/jhQjpknv6Bs0ezYrXmyWxhUdoCLMqAWjbrVbyR/w4P0pCE1YtVvMadozfGe0w==
+react-native-webview@^5.6.2:
+  version "5.6.2"
+  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-5.6.2.tgz#aa257f01d0038c514874d1c41d99528f83274d8c"
+  integrity sha512-VSn3dMm/OpZH30AgoQ5IQZSgH3//1dCOrTC+63rmHQL3bhggMvk6C+OWen/YL2w3FCw0R0Z+PFs/uccCQI+aEw==
   dependencies:
-    escape-string-regexp "^1.0.5"
-    fbjs "^0.8.17"
+    escape-string-regexp "1.0.5"
+    invariant "2.2.4"
 
 react-native@0.55.3:
   version "0.55.3"

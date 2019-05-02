@@ -59,6 +59,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   webview: any
   yaobBridge: Bridge
   counter: number
+  edgeProvider: EdgeProvider
   constructor (props) {
     super(props)
     this.state = {
@@ -86,6 +87,12 @@ class PluginView extends React.Component<PluginProps, PluginState> {
 
   componentWillUnmount () {
     BackHandler.removeEventListener('hardwareBackPress', EdgeProvider.handleBack)
+  }
+
+  UNSAFE_componentWillReceiveProps (nextProps: PluginProps) {
+    if (this.edgeProvider) {
+      this.edgeProvider.updateState(nextProps.currentState)
+    }
   }
 
   _renderWebView = () => {
@@ -126,8 +133,8 @@ class PluginView extends React.Component<PluginProps, PluginState> {
     this.yaobBridge = new Bridge({
       sendMessage: message => this.webview.injectJavaScript(`window.bridge.handleMessage(${JSON.stringify(message)})`)
     })
-    const edgeProvider = new EdgeProvider(this.props.plugin, this.props.currentState, this.props.thisDispatch, this.backButtonClickHandler)
-    this.yaobBridge.sendRoot(edgeProvider)
+    this.edgeProvider = new EdgeProvider(this.props.plugin, this.props.currentState, this.props.thisDispatch, this.backButtonClickHandler)
+    this.yaobBridge.sendRoot(this.edgeProvider)
   }
 
   _onNavigationStateChange = navState => {

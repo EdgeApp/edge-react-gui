@@ -102,6 +102,8 @@ export const parseScannedUri = (data: string) => (dispatch: Dispatch, getState: 
   const selectedWalletId = state.ui.wallets.selectedWalletId
   const edgeWallet = state.core.wallets.byId[selectedWalletId]
   const guiWallet = state.ui.wallets.byId[selectedWalletId]
+  const currencyCode = state.ui.wallets.selectedCurrencyCode
+
   if (isEdgeLogin(data)) {
     // EDGE LOGIN
     dispatch(loginWithEdge(data))
@@ -116,17 +118,18 @@ export const parseScannedUri = (data: string) => (dispatch: Dispatch, getState: 
     console.log(e)
   }
 
-  WALLET_API.parseUri(edgeWallet, data).then(
+  WALLET_API.parseUri(edgeWallet, data, currencyCode).then(
     (parsedUri: EdgeParsedUri) => {
       dispatch({ type: 'PARSE_URI_SUCCEEDED', data: { parsedUri } })
 
       if (parsedUri.token) {
         // TOKEN URI
-        const { contractAddress, currencyName, multiplier } = parsedUri.token
+        const { contractAddress, currencyName } = parsedUri.token
+        const multiplier = parsedUri.token.denominations[0].multiplier
         const currencyCode = parsedUri.token.currencyCode.toUpperCase()
         let decimalPlaces = 18
-        if (parsedUri.token && parsedUri.token.multiplier) {
-          decimalPlaces = denominationToDecimalPlaces(parsedUri.token.multiplier)
+        if (multiplier) {
+          decimalPlaces = denominationToDecimalPlaces(multiplier)
         }
         const parameters = {
           contractAddress,
