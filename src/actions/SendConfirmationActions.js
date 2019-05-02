@@ -195,9 +195,8 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
   const feeAmountInWalletFiatSyntax = `${walletFiatSymbol}${feeAmountInWalletFiatShortened}`
   if (feeAmountInUSD > FEE_ALERT_THRESHOLD) {
     const feeAlertResponse = await displayFeeAlert(feeAmountInWalletFiatSyntax)
-    console.log('feeAlertResponse is: ', feeAlertResponse)
     if (!feeAlertResponse) {
-      dispatch(updateTransaction(edgeUnsignedTransaction, null, true, new Error('transactionCancelled')))
+      dispatch(updateTransaction(edgeUnsignedTransaction, guiMakeSpendInfo, true, new Error('transactionCancelled')))
       return
     }
   }
