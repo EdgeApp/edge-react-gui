@@ -101,7 +101,7 @@
   "fragment_wallets_pubkey_copied_success": "L’adresse XPub a été copiée dans le presse-papies avec succès. ",
   "fragment_wallets_pubkey_copied_error": "Une erreur est survenue lors de la réalisation de votre commande.",
   "fragment_wallets_export_transactions": "Exporter les transactions",
-  "fragment_wallets_header": "Mes portefeuilles",
+  "fragment_wallets_header": "",
   "fragment_wallets_rename_wallet": "Renommer le portefeuille",
   "fragment_wallets_resync_wallet_first_confirm_message_mobile": "Souhaitez vous vraiment le resynchronizer ?  ",
   "fragment_wallets_split_wallet_bch_to_bsv": "Vous allez deviser ce BCH Wallet et créer un nouveau BSV Wallet depuis votre BCH clés privées.  Il est demandé une BCH transaction pour vous êmpecher des dépenses non intentionnelles et protéger vos fonds depuis les mauvais chains.  Souhaitez-vous vraiment diviser? ",
