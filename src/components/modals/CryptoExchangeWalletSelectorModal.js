@@ -14,7 +14,7 @@ import type { GuiWallet } from '../../types'
 type Props = {
   onDone(GuiWallet | Object): mixed,
   headerTitle: string,
-  excludedCurrencyCode: string,
+  excludedCurrencyCode: Array<string>,
   wallets: Array<GuiWallet>,
   supportedWalletTypes: Array<Object>,
   showWalletCreators: boolean,

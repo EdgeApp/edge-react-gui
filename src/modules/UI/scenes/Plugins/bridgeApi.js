@@ -107,7 +107,7 @@ class EdgeProvider extends Bridgeable {
   // Returns the currencyCode chosen by the user (store: Store)
   async chooseCurrencyWallet (currencyCodes: Array<string> = []): Promise<string> {
     const wallets = this._state.ui.wallets.byId // CORE_SELECTORS.getWallets(this._state)
-    const excludedCurrencyCode = currencyCodes.includes('ETH') ? '' : 'ETH'
+    const excludedCurrencyCode = []
     const excludedTokens = []
     const walletsToUse = []
     for (const key in wallets) {
@@ -115,7 +115,10 @@ class EdgeProvider extends Bridgeable {
       if (currencyCodes.length === 0) {
         walletsToUse.push(wallet)
       } else {
-        if (excludedCurrencyCode === wallet.currencyCode && excludedCurrencyCode === 'ETH' && wallet.enabledTokens.length > 0) {
+        if (!currencyCodes.includes(wallet.currencyCode) && wallet.enabledTokens.length > 0) {
+          if (!excludedCurrencyCode.includes(wallet.currencyCode)) {
+            excludedCurrencyCode.push(wallet.currencyCode)
+          }
           const ignoredCodes = []
           let i = 0
           for (i; i < wallet.enabledTokens.length; i++) {

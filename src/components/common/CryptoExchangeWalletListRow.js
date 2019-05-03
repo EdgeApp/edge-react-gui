@@ -18,7 +18,7 @@ import { CryptoExchangeWalletListTokenRow } from './CryptoExchangeWalletListToke
 type Props = {
   wallet: GuiWallet,
   onPress(GuiWallet): void,
-  excludedCurrencyCode: string,
+  excludedCurrencyCode: Array<string>,
   onTokenPress({ id: string, currencyCode: string }): void,
   state: State,
   excludedTokens: Array<string>
@@ -81,7 +81,7 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
   }
 
   onPress = () => {
-    if (this.props.excludedCurrencyCode !== this.props.wallet.currencyCode) {
+    if (!this.props.excludedCurrencyCode.includes(this.props.wallet.currencyCode)) {
       this.props.onPress(this.props.wallet)
     }
   }
