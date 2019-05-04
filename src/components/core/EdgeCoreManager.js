@@ -41,7 +41,7 @@ export const currencyPlugins = {
   dash: true,
   digibyte: true,
   dogecoin: false,
-  eboost: true,
+  eboost: false,
   feathercoin: true,
   groestlcoin: true,
   litecoin: true,
