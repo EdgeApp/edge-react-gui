@@ -3261,10 +3261,10 @@ edge-currency-accountbased@^0.1.9:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@4.0.11:
-  version "4.0.11"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.0.11.tgz#f1e3d5c997c3c363d7cd0069d926028f1b93bbc9"
-  integrity sha512-t0au1VCqEFbiEpN8hXAeobdybFaIIP3N/rAIGaj4DQjJ3rJeAxUiyLfJccdd/0acOyCQiY61Be/h1TwPAjcKcg==
+edge-currency-bitcoin@4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.1.0.tgz#c7ae3b90b40034d0891065e9c259f7e5d48b7506"
+  integrity sha512-/YQtRbZWRJPQtRCDG45TErzYjSCCllqkMG7mIE3vP2cIfTxNcS36AvxCIdEGRslelpqqgNegrEnEAWRD4SuLfg==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -3331,9 +3331,9 @@ edge-login-ui-rn@^0.5.19:
   dependencies:
     moment "^2.22.2"
 
-"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#4d40db9":
+"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#11b4dae":
   version "0.0.3"
-  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#4d40db949ab2a8fbe19f52b743074c1dff2a4680"
+  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#11b4dae9780da36680547929858a0216e3661f71"
   dependencies:
     moment "^2.22.2"
 
