@@ -15,8 +15,7 @@ export const styles = {
   container: {
     position: 'relative',
     flex: 1,
-    backgroundColor: THEME.COLORS.WHITE,
-    paddingBottom: scale(50)
+    backgroundColor: THEME.COLORS.WHITE
   },
   leftArea: {
     flexDirection: 'row'
@@ -108,12 +107,12 @@ export const styles = {
   /// //// end of token row styling /////////
 
   buttonsArea: {
-    height: scale(52),
+    height: scale(68),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     alignSelf: 'flex-end',
-    paddingVertical: scale(4),
+    paddingVertical: scale(12),
     paddingHorizontal: scale(20)
   },
   addButton: {
