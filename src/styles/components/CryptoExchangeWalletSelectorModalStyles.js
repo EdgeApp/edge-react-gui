@@ -19,6 +19,15 @@ const CryptoExchangeWalletSelectorModalStyles = {
     borderBottomWidth: 0.5,
     borderColor: THEME.COLORS.GRAY_3
   },
+  headerCenter: {
+    width: '100%',
+    height: scale(60),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    borderBottomWidth: 0.5,
+    borderColor: THEME.COLORS.GRAY_3
+  },
   headerLeft: {
     flex: 9,
     height: scale(60),
