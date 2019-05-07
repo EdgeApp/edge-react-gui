@@ -83,6 +83,7 @@ import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
 import { PasswordRecoveryReminderModalConnector } from '../modules/UI/components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalConnector.js'
 import { passwordReminderModalConnector as PasswordReminderModal } from '../modules/UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
 import TransactionAlert from '../modules/UI/components/TransactionAlert/TransactionAlertConnector'
+import { EdgeProvider } from '../modules/UI/scenes/Plugins/bridgeApi'
 import {
   LegacyPluginView,
   PluginBuySell,
@@ -898,6 +899,16 @@ export default class Main extends Component<Props> {
     }
     if (this.isCurrentScene(Constants.EXCHANGE_QUOTE_SCENE)) {
       Actions.popTo(Constants.EXCHANGE_SCENE)
+      return true
+    }
+    if (this.isCurrentScene(Constants.PLUGIN_SPEND)) {
+      console.log('pu: HA this is the extra - damn...')
+      EdgeProvider.handleBack()
+      return true
+    }
+    if (this.isCurrentScene(Constants.PLUGIN_BUY)) {
+      console.log('pu: HA this is the extra - oh yeah ...')
+      EdgeProvider.handleBack()
       return true
     }
     Actions.pop()

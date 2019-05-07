@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import { BackHandler, Platform, View } from 'react-native'
+import { Platform, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
@@ -74,19 +74,11 @@ class PluginView extends React.Component<PluginProps, PluginState> {
 
   backButtonClickHandler = arg => {
     if (!this.webview) return
-
     if (arg) {
       this.webview.injectJavaScript('window.history.back()')
       return
     }
     Actions.pop()
-  }
-  componentDidMount () {
-    BackHandler.addEventListener('hardwareBackPress', EdgeProvider.handleBack)
-  }
-
-  componentWillUnmount () {
-    BackHandler.removeEventListener('hardwareBackPress', EdgeProvider.handleBack)
   }
 
   UNSAFE_componentWillReceiveProps (nextProps: PluginProps) {
