@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - "8.4"
+  - "8.16.0"
 sudo: required
 cache:
   directories:
@@ -21,8 +21,8 @@ matrix:
       sudo: required
       node_js: false
       before_install:
-        - nvm install 8.9.3
-        - nvm use 8.9.3
+        - nvm install 8.16.0
+        - nvm use 8.16.0
         - node --version
         # install NDK
         - openssl aes-256-cbc -K $encrypted_e28d423744bc_key -iv $encrypted_e28d423744bc_iv -in env.json.enc -out env.json -d
@@ -61,8 +61,8 @@ matrix:
       osx_image: xcode9.4
       node_js: false
       before_install:
-        - nvm install 8.9.3
-        - nvm use 8.9.3
+        - nvm install 8.16.0
+        - nvm use 8.16.0
         - node --version
         - openssl aes-256-cbc -K $encrypted_e28d423744bc_key -iv $encrypted_e28d423744bc_iv -in env.json.enc -out env.json -d
         - npm install -g yarn@1.5.1
