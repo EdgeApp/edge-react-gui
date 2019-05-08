@@ -12,7 +12,7 @@ const platforms = [androidDir, iosDir]
 const pluginManifests = {
   buysell: [
     {
-      pluginId: 'co.edgesecure.libertyx',
+      pluginId: 'com.libertyx',
       pluginURL: 'https://libertyx.com/a/',
       name: 'libertyX',
       subtitle: 'Buy bitcoin instantly at trusted stores near you.',
@@ -21,7 +21,7 @@ const pluginManifests = {
       environment: {}
     },
     {
-      pluginId: 'co.edgesecure.bitaccess',
+      pluginId: 'com.bitaccessbtm',
       pluginURL: 'https://bitaccessbtm.com',
       name: 'Bitaccess',
       subtitle: 'Buy And Sell Bitcoin Instantly.',
@@ -30,7 +30,7 @@ const pluginManifests = {
       environment: {}
     },
     {
-      pluginId: 'co.edgesecure.moonpay',
+      pluginId: 'io.moonpay.buy',
       pluginURL: 'https://buy.moonpay.io',
       name: 'MoonPay',
       subtitle: 'Buy Crypto Instantly.',
@@ -41,7 +41,7 @@ const pluginManifests = {
   ],
   spend: [
     {
-      pluginId: 'co.edgesecure.bitaccess',
+      pluginId: 'com.bitaccessbtm',
       pluginURL: 'https://bitaccessbtm.com',
       name: 'Bitaccess',
       subtitle: 'Buy And Sell Bitcoin Instantly.',
