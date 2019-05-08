@@ -21,15 +21,6 @@ const pluginManifests = {
       environment: {}
     },
     {
-      pluginId: 'com.bitaccessbtm',
-      pluginURL: 'https://bitaccessbtm.com',
-      name: 'Bitaccess',
-      subtitle: 'Buy And Sell Bitcoin Instantly.',
-      provider: 'Edge Wallet',
-      iconUrl: 'https://edge.app/wp-content/uploads/2019/05/bitaccess-symbol.png',
-      environment: {}
-    },
-    {
       pluginId: 'io.moonpay.buy',
       pluginURL: 'https://buy.moonpay.io',
       name: 'MoonPay',
@@ -39,17 +30,7 @@ const pluginManifests = {
       environment: {}
     }
   ],
-  spend: [
-    {
-      pluginId: 'com.bitaccessbtm',
-      pluginURL: 'https://bitaccessbtm.com',
-      name: 'Bitaccess',
-      subtitle: 'Buy And Sell Bitcoin Instantly.',
-      provider: 'Edge Wallet',
-      iconUrl: 'https://edge.app/wp-content/uploads/2019/05/bitaccess-symbol.png',
-      environment: {}
-    }
-  ]
+  spend: []
 }
 
 platforms.forEach(platform => {
