@@ -29,7 +29,7 @@ function loadPlugins (plugins: any, developerModeOn: boolean): Array<Object> {
   return plugins.map(plugin => {
     console.log('pluginStuff: Lodaing plugin ', plugin)
     const baseDir = Platform.OS === 'android' ? 'android_asset' : RNFS.MainBundlePath
-    const pluginPath = `file:///${baseDir}/plugins/${plugin.pluginId}/index.html`
+    const pluginPath = plugin.pluginURL ? plugin.pluginURL : `file:///${baseDir}/plugins/${plugin.pluginId}/index.html`
     const isLegacy = LEGACY_PLUGINS.includes(plugin.name)
     return {
       pluginId: plugin.pluginId,

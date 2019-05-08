@@ -10,7 +10,26 @@ const iosDir = './ios/plugins/'
 
 const platforms = [androidDir, iosDir]
 const pluginManifests = {
-  buysell: [],
+  buysell: [
+    {
+      pluginId: 'com.libertyx',
+      pluginURL: 'https://libertyx.com/a/',
+      name: 'libertyX',
+      subtitle: 'Buy bitcoin instantly at trusted stores near you.',
+      provider: 'Edge Wallet',
+      iconUrl: 'https://edge.app/wp-content/uploads/2019/05/libertyXlogo.png',
+      environment: {}
+    },
+    {
+      pluginId: 'io.moonpay.buy',
+      pluginURL: 'https://buy.moonpay.io',
+      name: 'MoonPay',
+      subtitle: 'Buy Crypto Instantly.',
+      provider: 'Edge Wallet',
+      iconUrl: 'https://edge.app/wp-content/uploads/2019/05/icon_black_small.png',
+      environment: {}
+    }
+  ],
   spend: []
 }
 
