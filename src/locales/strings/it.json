@@ -313,7 +313,7 @@
   "title_edit_token": "Modifica token",
   "title_add_token": "Aggiungi token",
   "title_password_recovery": "Recupero password",
-  "title_plugin_buysell": "Compra crypto",
+  "title_plugin_buysell": "",
   "title_plugin_spend_cryptocurrency": "Spendi crypto",
   "title_plugin_spend": "Spendi",
   "title_otp": "2FA",
