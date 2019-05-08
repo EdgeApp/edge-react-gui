@@ -14,7 +14,7 @@ const pluginManifests = {
     {
       pluginId: 'co.edgesecure.libertyx',
       pluginURL: 'https://libertyx.com/a/',
-      name: 'LibertyX',
+      name: 'libertyX',
       subtitle: 'Buy bitcoin instantly at trusted stores near you.',
       provider: 'Edge Wallet',
       iconUrl: 'https://edge.app/wp-content/uploads/2019/05/libertyXlogo.png',
@@ -23,7 +23,7 @@ const pluginManifests = {
     {
       pluginId: 'co.edgesecure.bitaccess',
       pluginURL: 'https://bitaccessbtm.com',
-      name: 'bitaccess',
+      name: 'Bitaccess',
       subtitle: 'Buy And Sell Bitcoin Instantly.',
       provider: 'Edge Wallet',
       iconUrl: 'https://edge.app/wp-content/uploads/2019/05/bitaccess-symbol.png',
@@ -43,7 +43,7 @@ const pluginManifests = {
     {
       pluginId: 'co.edgesecure.bitaccess',
       pluginURL: 'https://bitaccessbtm.com',
-      name: 'bitaccess',
+      name: 'Bitaccess',
       subtitle: 'Buy And Sell Bitcoin Instantly.',
       provider: 'Edge Wallet',
       iconUrl: 'https://edge.app/wp-content/uploads/2019/05/bitaccess-symbol.png',
