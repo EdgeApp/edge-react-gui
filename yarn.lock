@@ -3303,10 +3303,10 @@ edge-exchange-plugins@^0.5.7:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.5.19:
-  version "0.5.19"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.5.19.tgz#dd36129fa7dd1406aa7719b2af3b005d602325e5"
-  integrity sha512-sssryqRjnI3HJPZ97Syae9de1cA9tmorcVHJZrHgBthaVPio/DMi6cauAR7BnV2An9UPMIS/jm0a1rkkSxQBvQ==
+edge-login-ui-rn@0.5.20:
+  version "0.5.20"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.5.20.tgz#8a33f9918de31d0c512eda93e3302673d07ec01a"
+  integrity sha512-u7OA4kfY5qKAclhYxBsnpavSFlo1X/4ExsT02RU2rwdaKtCjhIjxb73uTgMusPvV5NSP98HQNRKHxhW6gSPhVg==
   dependencies:
     material-ui "^0.20.0"
     moment "^2.19.3"
@@ -3331,9 +3331,9 @@ edge-login-ui-rn@^0.5.19:
   dependencies:
     moment "^2.22.2"
 
-"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#11b4dae":
+"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#4d40db9":
   version "0.0.3"
-  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#11b4dae9780da36680547929858a0216e3661f71"
+  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#4d40db949ab2a8fbe19f52b743074c1dff2a4680"
   dependencies:
     moment "^2.22.2"
 

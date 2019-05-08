@@ -106,10 +106,17 @@ export type WalletNameInputProps = {
 
 class WalletNameInput extends Component<WalletNameInputProps> {
   render () {
+    const MaterialInputOnWhiteStyle = {
+      ...MaterialInputOnWhite,
+      container: {
+        ...MaterialInputOnWhite.container,
+        width: '100%'
+      }
+    }
     return (
       <View style={styles.pickerView}>
         <FormField
-          style={MaterialInputOnWhite}
+          style={MaterialInputOnWhiteStyle}
           autoFocus
           clearButtonMode={'while-editing'}
           autoCorrect={false}

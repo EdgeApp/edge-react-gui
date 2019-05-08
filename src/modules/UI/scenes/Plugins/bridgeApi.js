@@ -5,9 +5,10 @@ import { Actions } from 'react-native-router-flux'
 import { Bridgeable } from 'yaob'
 
 import { selectWallet } from '../../../../actions/WalletActions'
-// import { store } from '../../../../app.js'
-import { createCustomWalletListModal } from '../../../../components/modals/CustomWalletListModal'
+import { createCryptoExchangeWalletSelectorModal } from '../../../../components/modals/CryptoExchangeWalletSelectorModal'
 import { SEND_CONFIRMATION } from '../../../../constants/SceneKeys.js'
+import s from '../../../../locales/strings'
+import * as SETTINGS_SELECTORS from '../../../../modules/Settings/selectors.js'
 import type { GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
@@ -105,23 +106,57 @@ class EdgeProvider extends Bridgeable {
   // for the user to pick a wallet within their list of wallets that match `currencyCodes`
   // Returns the currencyCode chosen by the user (store: Store)
   async chooseCurrencyWallet (currencyCodes: Array<string> = []): Promise<string> {
-    const wallets = CORE_SELECTORS.getWallets(this._state)
+    const wallets = this._state.ui.wallets.byId // CORE_SELECTORS.getWallets(this._state)
+    const excludedCurrencyCode = []
+    const excludedTokens = []
     const walletsToUse = []
     for (const key in wallets) {
       const wallet = wallets[key]
       if (currencyCodes.length === 0) {
         walletsToUse.push(wallet)
-      } else if (currencyCodes.includes(wallet.currencyInfo.currencyCode)) {
-        walletsToUse.push(wallet)
+      } else {
+        if (!currencyCodes.includes(wallet.currencyCode) && wallet.enabledTokens.length > 0) {
+          if (!excludedCurrencyCode.includes(wallet.currencyCode)) {
+            excludedCurrencyCode.push(wallet.currencyCode)
+          }
+          const ignoredCodes = []
+          let i = 0
+          for (i; i < wallet.enabledTokens.length; i++) {
+            if (!currencyCodes.includes(wallet.enabledTokens[i])) {
+              excludedTokens.push(wallet.enabledTokens[i])
+              ignoredCodes.push(wallet.enabledTokens[i])
+            }
+          }
+          if (wallet.enabledTokens.length > 0 && ignoredCodes.length < wallet.enabledTokens.length) {
+            walletsToUse.push(wallet)
+          }
+        }
+        if (currencyCodes.includes(wallet.currencyCode)) {
+          walletsToUse.push(wallet)
+        }
       }
     }
     //
-    const props = {
-      wallets: walletsToUse
+    const supportedWalletTypesPreFilter = SETTINGS_SELECTORS.getSupportedWalletTypes(this._state)
+    const supportedWalletTypes = []
+    for (let i = 0; i < supportedWalletTypesPreFilter.length; i++) {
+      const swt = supportedWalletTypesPreFilter[i]
+      supportedWalletTypes.push(swt)
     }
-    const modal = createCustomWalletListModal(props)
+    const props = {
+      wallets: walletsToUse,
+      excludedCurrencyCode,
+      supportedWalletTypes,
+      showWalletCreators: false,
+      state: this._state,
+      headerTitle: s.strings.choose_your_wallet,
+      cantCancel: true,
+      excludedTokens
+    }
+    const modal = createCryptoExchangeWalletSelectorModal(props)
+    // const modal = createCustomWalletListModal(props)
     const selectedWallet = await showModal(modal, { style: { margin: 0 } })
-    const code = selectedWallet.currencyInfo.currencyCode
+    const code = selectedWallet.currencyCode
     this._dispatch(selectWallet(selectedWallet.id, code))
     return Promise.resolve(code)
   }

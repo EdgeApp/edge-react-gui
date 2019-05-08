@@ -18,9 +18,10 @@ import { CryptoExchangeWalletListTokenRow } from './CryptoExchangeWalletListToke
 type Props = {
   wallet: GuiWallet,
   onPress(GuiWallet): void,
-  excludedCurrencyCode: string,
+  excludedCurrencyCode: Array<string>,
   onTokenPress({ id: string, currencyCode: string }): void,
-  state: State
+  state: State,
+  excludedTokens: Array<string>
 }
 type LocalState = {
   fiatBalance: string,
@@ -80,7 +81,7 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
   }
 
   onPress = () => {
-    if (this.props.excludedCurrencyCode !== this.props.wallet.currencyCode) {
+    if (!this.props.excludedCurrencyCode.includes(this.props.wallet.currencyCode)) {
       this.props.onPress(this.props.wallet)
     }
   }
@@ -98,7 +99,7 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
             const multiplier = this.state.denomination.multiplier
             const preliminaryCryptoAmount = truncateDecimals(bns.div(metaTokenBalances[property], multiplier, DIVIDE_PRECISION), 6)
             const cryptoBalance = intl.formatNumber(decimalOrZero(preliminaryCryptoAmount, 6))
-            if (property !== this.props.excludedCurrencyCode) {
+            if (property !== this.props.excludedCurrencyCode && !this.props.excludedTokens.includes(property)) {
               tokens.push(
                 <CryptoExchangeWalletListTokenRow
                   key={property}

@@ -341,7 +341,7 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
     const props = {
       wallets: allowedWallets,
       supportedWalletTypes,
-      excludedCurrencyCode,
+      excludedCurrencyCode: [excludedCurrencyCode],
       showWalletCreators: whichWallet === Constants.TO,
       state: this.props.state,
       headerTitle: whichWallet === Constants.TO ? s.strings.select_recv_wallet : s.strings.select_src_wallet

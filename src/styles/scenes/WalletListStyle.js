@@ -355,7 +355,7 @@ export const styles = {
     color: THEME.COLORS.ROW_PRESSED
   },
   emptyRow: {
-    height: scale(50),
+    height: scale(60),
     backgroundColor: THEME.COLORS.WHITE,
     padding: scale(16),
     paddingLeft: scale(20),
