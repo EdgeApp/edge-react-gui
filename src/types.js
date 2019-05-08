@@ -186,6 +186,7 @@ export type SpendingLimits = {
 }
 
 export type BuySellPlugin = {
+  pluginURL?: string,
   pluginId: string,
   sourceFile: { uri: string },
   name: string,

@@ -10,8 +10,37 @@ const iosDir = './ios/plugins/'
 
 const platforms = [androidDir, iosDir]
 const pluginManifests = {
-  buysell: [],
-  spend: []
+  buysell: [
+    {
+      pluginId: 'co.edgesecure.libertyx',
+      pluginURL: 'https://libertyx.com/a/',
+      name: 'LibertyX',
+      subtitle: 'Buy bitcoin instantly at trusted stores near you.',
+      provider: 'Edge Wallet',
+      iconUrl: 'https://edge.app/wp-content/uploads/2019/03/simplex-logo-smmm-square.png',
+      environment: {}
+    },
+    {
+      pluginId: 'co.edgesecure.bitaccess',
+      pluginURL: 'https://bitaccessbtm.com',
+      name: 'bitaccess',
+      subtitle: 'Buy And Sell Bitcoin Instantly.',
+      provider: 'Edge Wallet',
+      iconUrl: 'https://edge.app/wp-content/uploads/2019/03/simplex-logo-smmm-square.png',
+      environment: {}
+    }
+  ],
+  spend: [
+    {
+      pluginId: 'co.edgesecure.bitaccess',
+      pluginURL: 'https://bitaccessbtm.com',
+      name: 'bitaccess',
+      subtitle: 'Buy And Sell Bitcoin Instantly.',
+      provider: 'Edge Wallet',
+      iconUrl: 'https://edge.app/wp-content/uploads/2019/03/simplex-logo-smmm-square.png',
+      environment: {}
+    }
+  ]
 }
 
 platforms.forEach(platform => {
