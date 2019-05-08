@@ -17,7 +17,7 @@ const pluginManifests = {
       name: 'LibertyX',
       subtitle: 'Buy bitcoin instantly at trusted stores near you.',
       provider: 'Edge Wallet',
-      iconUrl: 'https://edge.app/wp-content/uploads/2019/03/simplex-logo-smmm-square.png',
+      iconUrl: 'https://edge.app/wp-content/uploads/2019/05/libertyXlogo.png',
       environment: {}
     },
     {
@@ -26,7 +26,16 @@ const pluginManifests = {
       name: 'bitaccess',
       subtitle: 'Buy And Sell Bitcoin Instantly.',
       provider: 'Edge Wallet',
-      iconUrl: 'https://edge.app/wp-content/uploads/2019/03/simplex-logo-smmm-square.png',
+      iconUrl: 'https://edge.app/wp-content/uploads/2019/05/bitaccess-symbol.png',
+      environment: {}
+    },
+    {
+      pluginId: 'co.edgesecure.moonpay',
+      pluginURL: 'https://buy.moonpay.io',
+      name: 'MoonPay',
+      subtitle: 'Buy Crypto Instantly.',
+      provider: 'Edge Wallet',
+      iconUrl: 'https://edge.app/wp-content/uploads/2019/05/icon_black_small.png',
       environment: {}
     }
   ],
@@ -37,7 +46,7 @@ const pluginManifests = {
       name: 'bitaccess',
       subtitle: 'Buy And Sell Bitcoin Instantly.',
       provider: 'Edge Wallet',
-      iconUrl: 'https://edge.app/wp-content/uploads/2019/03/simplex-logo-smmm-square.png',
+      iconUrl: 'https://edge.app/wp-content/uploads/2019/05/bitaccess-symbol.png',
       environment: {}
     }
   ]
