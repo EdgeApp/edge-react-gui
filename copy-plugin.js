@@ -14,11 +14,12 @@ const pluginManifests = {
     {
       pluginId: 'com.libertyx',
       pluginURL: 'https://libertyx.com/a/',
-      name: 'libertyX',
+      name: 'LibertyX',
       subtitle: 'Buy bitcoin instantly at trusted stores near you.',
       provider: 'Edge Wallet',
       iconUrl: 'https://edge.app/wp-content/uploads/2019/05/libertyXlogo.png',
-      environment: {}
+      environment: {},
+      permissions: ['location']
     },
     {
       pluginId: 'io.moonpay.buy',

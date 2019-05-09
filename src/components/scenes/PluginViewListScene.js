@@ -1,12 +1,13 @@
 // @flow
 import { createInputModal, showModal } from 'edge-components'
 import React, { Component } from 'react'
-import { FlatList, Image, Text, TouchableWithoutFeedback, View } from 'react-native'
+// eslint-disable-next-line
+import { FlatList, Image, PermissionsAndroid, Platform, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
-import { PLUGIN_BUY, PLUGIN_BUY_LEGACY, PLUGIN_SPEND, PLUGIN_SPEND_LEGACY, SPEND } from '../../constants/indexConstants'
+import { ANDROID, PLUGIN_BUY, PLUGIN_BUY_LEGACY, PLUGIN_SPEND, PLUGIN_SPEND_LEGACY, SPEND } from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
@@ -76,9 +77,33 @@ class PluginList extends Component<Props, State> {
       })
       return
     }
-    if (plugin.isLegacy) {
-      console.log('pluginStuff: legacy')
+    if (plugin.permissions && plugin.permissions.length > 0) {
+      if (Platform.OS === ANDROID) {
+        this.requestAndroidPermissions(plugin.permissions, plugin)
+        return
+      }
     }
+    this.openPlugin(plugin)
+  }
+  requestAndroidPermissions = async (permissionList: Array<string>, plugin: BuySellPlugin) => {
+    let reqType
+    switch (permissionList[0]) {
+      default:
+        reqType = PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+    }
+    try {
+      const request = reqType
+      const granted = await PermissionsAndroid.request(request, {})
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        this.openPlugin(plugin)
+      } else {
+        this.openPlugin(plugin)
+      }
+    } catch (err) {
+      console.warn(err)
+    }
+  }
+  openPlugin = (plugin: BuySellPlugin) => {
     if (Actions.currentScene === SPEND) {
       const key = plugin.isLegacy ? PLUGIN_SPEND_LEGACY : PLUGIN_SPEND
       Actions[key]({ plugin: plugin })

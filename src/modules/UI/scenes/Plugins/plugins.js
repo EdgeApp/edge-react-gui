@@ -39,6 +39,7 @@ function loadPlugins (plugins: any, developerModeOn: boolean): Array<Object> {
       provider: plugin.provider,
       imageUrl: plugin.iconUrl,
       environment: plugin.environment,
+      permissions: plugin.permissions || [],
       isLegacy
     }
   })
