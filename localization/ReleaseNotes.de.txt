@@ -18,7 +18,7 @@ v1.7.2
 
 v1.7.0
 
-* Bech32 address support
+* Bech32 Adressen Support
 * Den Edge Core zum eigenständigen Prozess machen, um die Leistung und die GUI-Antwortzeit zu verbessern
 * Sell crypto to credit card using Simplex
 * Add LibertyX to support buying Bitcoin from physical merchants in US
