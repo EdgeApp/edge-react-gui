@@ -299,7 +299,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
     this.yaobBridge = new Bridge({
       sendMessage: message => this.webview.injectJavaScript(`window.bridge.handleMessage(${JSON.stringify(message)})`)
     })
-    const edgeProvider = new EdgeProvider(this.props.plugin, this.props.currentState, this.props.thisDispatch, this._webviewBack)
+    const edgeProvider = new EdgeProvider(this.props.plugin.pluginId, this.props.currentState, this.props.thisDispatch)
     this.yaobBridge.sendRoot(edgeProvider)
   }
 

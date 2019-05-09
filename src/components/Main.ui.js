@@ -81,15 +81,15 @@ import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
 import { PasswordRecoveryReminderModalConnector } from '../modules/UI/components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalConnector.js'
 import { passwordReminderModalConnector as PasswordReminderModal } from '../modules/UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
 import TransactionAlert from '../modules/UI/components/TransactionAlert/TransactionAlertConnector'
-import { EdgeProvider } from '../modules/UI/scenes/Plugins/EdgeProvider.js'
 import {
   LegacyPluginView,
   PluginBuySell,
   PluginSpend,
-  YaobPluginView,
+  PluginView,
+  handlePluginBack,
   renderLegacyPluginBackButton,
-  renderYaobPluginBackButton
-} from '../modules/UI/scenes/Plugins/index'
+  renderPluginBackButton
+} from '../modules/UI/scenes/Plugins/index.js'
 import { HwBackButtonHandler } from '../modules/UI/scenes/WalletList/components/HwBackButtonHandler/index'
 import { styles } from '../styles/MainStyle.js'
 import { EdgeCoreManager } from './core/EdgeCoreManager.js'
@@ -702,9 +702,9 @@ export default class Main extends Component<Props> {
                       <Scene
                         key={Constants.PLUGIN_BUY}
                         navTransparent={true}
-                        component={ifLoggedIn(YaobPluginView, LoadingScene)}
+                        component={ifLoggedIn(PluginView, LoadingScene)}
                         renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
-                        renderLeftButton={renderYaobPluginBackButton(BACK)}
+                        renderLeftButton={renderPluginBackButton(BACK)}
                         renderRightButton={this.renderEmptyButton()}
                       />
                       <Scene
@@ -730,12 +730,11 @@ export default class Main extends Component<Props> {
                       <Scene
                         key={Constants.PLUGIN_SPEND}
                         navTransparent={true}
-                        component={ifLoggedIn(YaobPluginView, LoadingScene)}
+                        component={ifLoggedIn(PluginView, LoadingScene)}
                         renderTitle={this.renderTitle(PLUGIN_SPEND)}
-                        renderLeftButton={renderYaobPluginBackButton(BACK)}
+                        renderLeftButton={renderPluginBackButton(BACK)}
                         renderRightButton={this.renderEmptyButton()}
                       />
-
                       <Scene
                         key={Constants.PLUGIN_SPEND_LEGACY}
                         navTransparent={true}
@@ -901,11 +900,11 @@ export default class Main extends Component<Props> {
       return true
     }
     if (this.isCurrentScene(Constants.PLUGIN_SPEND)) {
-      EdgeProvider.handleBack()
+      handlePluginBack()
       return true
     }
     if (this.isCurrentScene(Constants.PLUGIN_BUY)) {
-      EdgeProvider.handleBack()
+      handlePluginBack()
       return true
     }
     Actions.pop()
