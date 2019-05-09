@@ -55,9 +55,17 @@ exports[`Request should render with loaded props 1`] = `
         primaryCurrencyInfo={Object {}}
         secondaryCurrencyInfo={Object {}}
       />
-      <QRCode
-        value=""
-      />
+      <Component
+        style={
+          Object {
+            "overflow": "hidden",
+          }
+        }
+      >
+        <QRCode
+          value=""
+        />
+      </Component>
       <RequestStatus
         addressExplorer={null}
         amountReceivedInCrypto={0}
