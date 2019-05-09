@@ -1,6 +1,6 @@
 // @flow
 
-import { Platform } from 'react-native'
+import { Platform, StatusBar } from 'react-native'
 
 export const colors = {
   gradient: {
@@ -54,7 +54,7 @@ export const THEME = {
     HEADER: gradientHeaderHeight
   },
 
-  HEADER: gradientHeaderHeight,
+  HEADER: Platform.OS === 'ios' ? gradientHeaderHeight : gradientHeaderHeight + StatusBar.currentHeight,
 
   FOOTER_TABS_HEIGHT: 50,
 
