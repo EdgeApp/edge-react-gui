@@ -185,7 +185,7 @@
     "react-native-picker": "^4.3.0",
     "react-native-popup-menu": "0.13.3",
     "react-native-push-notification": "^3.0.2",
-    "react-native-qrcode": "^0.2.3",
+    "react-native-qrcode": "^0.2.7",
     "react-native-randombytes": "^3.5.0",
     "react-native-router-flux": "4.0.6",
     "react-native-safe-area-view": "^0.13.1",

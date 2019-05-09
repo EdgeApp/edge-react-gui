@@ -11,8 +11,8 @@ exports[`QRCode should render 1`] = `
   }
 >
   <QRCode
-    bgColor="#FFFFFF"
-    fgColor="#25292C"
+    bgColor="black"
+    fgColor="white"
     size={333.5}
   />
 </Component>
