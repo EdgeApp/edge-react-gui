@@ -159,7 +159,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
           scalesPageToFit={contentScaling}
           source={this._renderWebView()}
           userAgent={
-            'Mozilla/5.0 (Linux; Android 6.0.1; SM-G532G Build/MMB29T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.83 Mobile Safari/537.36'
+            'Mozilla/5.0 (Linux; Android 6.0.1; SM-G532G Build/MMB29T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.83 Mobile Safari/537.36 edge/app.edge.' + Platform.OS
           }
           setWebContentsDebuggingEnabled={true}
         />
