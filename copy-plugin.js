@@ -15,7 +15,7 @@ const pluginManifests = {
       pluginId: 'com.libertyx',
       pluginURL: 'https://libertyx.com/a/',
       name: 'LibertyX',
-      subtitle: 'Buy bitcoin instantly at trusted stores near you.',
+      subtitle: 'Buy Bitcoin with cash at US merchants.\nFees 3-8% / Settlement instant.',
       provider: 'Edge Wallet',
       iconUrl: 'https://edge.app/wp-content/uploads/2019/05/libertyXlogo.png',
       environment: {},
@@ -25,7 +25,7 @@ const pluginManifests = {
       pluginId: 'io.moonpay.buy',
       pluginURL: 'https://buy.moonpay.io',
       name: 'MoonPay',
-      subtitle: 'Buy Crypto Instantly.',
+      subtitle: 'Buy crypto in Europe with credit card or Apple Pay.\nBTC, ETH, BCH.\nFees 5.5% / Settlement 10 mins',
       provider: 'Edge Wallet',
       iconUrl: 'https://edge.app/wp-content/uploads/2019/05/icon_black_small.png',
       environment: {}
