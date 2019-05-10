@@ -149,6 +149,8 @@ class PluginView extends React.Component<PluginProps, PluginState> {
           allowUniversalAccessFromFileURLs
           onMessage={this._onMessage}
           onLoadEnd={this.webviewLoaded}
+          useWebKit
+          geolocationEnabled
           javaScriptEnabled={true}
           injectedJavaScript={javascript}
           onNavigationStateChange={this._onNavigationStateChange}
