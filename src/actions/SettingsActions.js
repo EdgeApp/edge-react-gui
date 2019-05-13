@@ -4,7 +4,7 @@ import { createInputModal, createSecureTextModal, createYesNoModal, showModal } 
 import type { EdgeAccount } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import React from 'react'
-import { Image } from 'react-native'
+import { Alert, Image } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -361,10 +361,11 @@ export const showSendLogsModal = () => async (dispatch: Dispatch, getState: GetS
     })
     const notes = await showModal(unlockSettingsModal)
     if (notes || notes === '') {
-      dispatch(sendLogs(notes))
+      await dispatch(sendLogs(notes))
+      Alert.alert(s.strings.settings_modal_send_logs_success)
     }
   } catch (e) {
-    throw new Error('Send logs failed, please contact support')
+    Alert.alert(e.message)
   }
 }
 
