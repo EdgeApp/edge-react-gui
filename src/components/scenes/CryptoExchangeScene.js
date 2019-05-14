@@ -78,7 +78,8 @@ type LocalState = {
   whichWalletFocus: string, // Which wallet FlipInput was last focused and edited
   fromExchangeAmount: string,
   forceUpdateGuiCounter: number,
-  toExchangeAmount: string
+  toExchangeAmount: string,
+  isKycModalDisplayed: boolean
 }
 
 export class CryptoExchangeScene extends Component<Props, LocalState> {
@@ -93,18 +94,23 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
       whichWalletFocus: Constants.FROM,
       forceUpdateGuiCounter: 0,
       fromExchangeAmount: '',
-      toExchangeAmount: ''
+      toExchangeAmount: '',
+      isKycModalDisplayed: false
     }
     this.state = newState
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
   UNSAFE_componentWillReceiveProps (nextProps: Props) {
-    if (nextProps.showKYCAlert && Actions.currentScene !== Constants.EXCHANGE_SETTINGS) {
+    const { isKycModalDisplayed } = this.state
+    if (nextProps.showKYCAlert && Actions.currentScene !== Constants.EXCHANGE_SETTINGS && !isKycModalDisplayed) {
       Alert.alert(s.strings.kyc_title, s.strings.kyc_message, [
         { text: s.strings.string_cancel_cap, onPress: this.wipeKYCFlag },
         { text: s.strings.string_ok, onPress: this.getKYCToken }
       ])
+      this.setState({
+        isKycModalDisplayed: true
+      })
     }
     if (!this.props.pluginCompleteKYC && nextProps.pluginCompleteKYC) {
       // show modal.   closeFinishKYCModal
@@ -214,6 +220,9 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
   }
   wipeKYCFlag = () => {
     this.props.wipeKYCFlag()
+    this.setState({
+      isKycModalDisplayed: false
+    })
   }
   getKYCToken = () => {
     this.wipeKYCFlag()
