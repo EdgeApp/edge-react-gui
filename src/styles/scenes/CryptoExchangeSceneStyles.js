@@ -5,7 +5,7 @@ import THEME from '../../theme/variables/airbitz'
 import * as Styles from '../indexStyles'
 const CryptoExchangeSceneStyle = {
   gradient: {
-    height: THEME.SPACER.HEADER
+    height: THEME.HEADER
   },
   scene: Styles.SceneContainer,
   styleCatch: Styles,
