@@ -1,7 +1,10 @@
 // @flow
 
+import { StatusBar } from 'react-native'
+
 import { scale } from '../../../../lib/scaling.js'
 import THEME from '../../../../theme/variables/airbitz'
+import { PLATFORM } from '../../../../theme/variables/platform.js'
 
 export default {
   header: {
@@ -29,9 +32,13 @@ export default {
     justifyContent: 'flex-start',
     alignItems: 'center'
   },
-
+  safeAreaView: {
+    backgroundColor: 'transparent',
+    height: PLATFORM.deviceHeight - StatusBar.currentHeight - PLATFORM.footerHeight,
+    position: 'relative',
+    top: StatusBar.currentHeight
+  },
   container: {
-    flex: 1,
     alignItems: 'stretch'
   },
   iconImage: {

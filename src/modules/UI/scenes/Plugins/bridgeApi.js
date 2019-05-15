@@ -10,7 +10,9 @@ import { SEND_CONFIRMATION } from '../../../../constants/SceneKeys.js'
 import s from '../../../../locales/strings'
 import * as SETTINGS_SELECTORS from '../../../../modules/Settings/selectors.js'
 import type { GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
+import type { BuySellPlugin } from '../../../../types.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
+import type { Dispatch, State } from '../../../ReduxTypes.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 
 type EdgeReceiveAddress = {
@@ -18,6 +20,7 @@ type EdgeReceiveAddress = {
   segwitAddress?: string,
   legacyAddress?: string
 }
+
 type EdgeRequestSpendOptions = {
   // Specify the currencyCode to spend to this URI. Required for spending tokens
   currencyCode?: string,
@@ -42,13 +45,14 @@ type EdgeGetReceiveAddressOptions = {
   metadata?: EdgeMetadata
 }
 
-class EdgeProvider extends Bridgeable {
-  _plugin: any
-  _state: any
-  _dispatch: Function
+export class EdgeProvider extends Bridgeable {
+  _plugin: BuySellPlugin
+  _state: State
+  _dispatch: Dispatch
   _backClick: Function
   _navStack: Array<string>
   backHandler: { handleBack(): Promise<number> }
+
   static instanceTracker = {}
   static handleBack () {
     if (EdgeProvider.instanceTracker.instance) {
@@ -65,7 +69,8 @@ class EdgeProvider extends Bridgeable {
       EdgeProvider.instanceTracker.instance._navStack = []
     }
   }
-  constructor (plugin: any, state: any, dispatch: Function, backClick: Function) {
+
+  constructor (plugin: BuySellPlugin, state: State, dispatch: Dispatch, backClick: Function) {
     super()
     this._plugin = plugin
     this._state = state
@@ -83,9 +88,11 @@ class EdgeProvider extends Bridgeable {
   updateState = (arg: any) => {
     this._state = arg
   }
+
   async setBackHandler (handler: { handleBack(): Promise<number> }): Promise<mixed> {
     this.backHandler = handler
   }
+
   async onBackButtonPressed () {
     let historyCounter = 0
     if (this.backHandler) {
@@ -102,6 +109,7 @@ class EdgeProvider extends Bridgeable {
     }
     this._backClick(false)
   }
+
   // Set the currency wallet to interact with. This will show a wallet selector modal
   // for the user to pick a wallet within their list of wallets that match `currencyCodes`
   // Returns the currencyCode chosen by the user (store: Store)
@@ -160,6 +168,7 @@ class EdgeProvider extends Bridgeable {
     this._dispatch(selectWallet(selectedWallet.id, code))
     return Promise.resolve(code)
   }
+
   // Get an address from the user's wallet
   getReceiveAddress (options: EdgeGetReceiveAddressOptions): EdgeReceiveAddress {
     const wallet = UI_SELECTORS.getSelectedWallet(this._state)
@@ -168,30 +177,27 @@ class EdgeProvider extends Bridgeable {
     }
     return Promise.resolve(wallet.receiveAddress)
   }
+
   // Write data to user's account. This data is encrypted and persisted in their Edge
   // account and transferred between devices
   async writeData (data: { [key: string]: string }) {
     const account = CORE_SELECTORS.getAccount(this._state)
-    const folder = account.pluginData
-    await Promise.all(Object.keys(data).map(key => folder.setItem(this._plugin, key, data[key])))
+    const store = account.dataStore
+    await Promise.all(Object.keys(data).map(key => store.setItem(this._plugin.pluginId, key, data[key])))
     return { success: true }
   }
+
   // Read data back from the user's account. This can only access data written by this same plugin
   // 'keys' is an array of strings with keys to lookup.
   // Returns an object with a map of key value pairs from the keys passed in
   async readData (keys: Array<string>): Object {
     const account = CORE_SELECTORS.getAccount(this._state)
-    const folder = account.pluginData
+    const store = account.dataStore
     const returnObj = {}
     for (let i = 0; i < keys.length; i++) {
-      try {
-        const value = (await folder.getItem('pluginId', keys[i])) || undefined
-        returnObj[keys[i]] = value
-      } catch (error) {
-        returnObj[keys[i]] = undefined
-      }
+      returnObj[keys[i]] = await store.getItem(this._plugin.pluginId, keys[i]).catch(e => undefined)
     }
-    return Promise.resolve(returnObj)
+    return returnObj
   }
 
   // Request that the user spend to an address or multiple addresses
@@ -222,6 +228,7 @@ class EdgeProvider extends Bridgeable {
       return Promise.reject(e)
     }
   }
+
   // Request that the user spend to a URI
   async requestSpendUri (uri: string, options?: EdgeRequestSpendOptions) {
     const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
@@ -255,6 +262,7 @@ class EdgeProvider extends Bridgeable {
       return Promise.reject(e)
     }
   }
+
   // Sign a message using a public address from the current wallet
   /* signMessage (options: EdgeSignMessageOptions): EdgeSignedMessage {
     console.log('a1: signMessage', options)
@@ -266,11 +274,13 @@ class EdgeProvider extends Bridgeable {
     }
     return Promise.resolve(obj)
   } */
+
   // from the older stuff
   async makeSpendRequest (guiMakeSpendInfo: GuiMakeSpendInfo): Promise<EdgeTransaction> {
     const edgeTransaction = await this._spend(guiMakeSpendInfo)
     return edgeTransaction
   }
+
   _spend (guiMakeSpendInfo: GuiMakeSpendInfo, lockInputs: boolean = true, signOnly: boolean = false): Promise<EdgeTransaction> {
     return new Promise((resolve, reject) => {
       if (signOnly) {
@@ -284,4 +294,3 @@ class EdgeProvider extends Bridgeable {
     })
   }
 }
-export { EdgeProvider }

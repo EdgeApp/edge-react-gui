@@ -194,5 +194,6 @@ export type BuySellPlugin = {
   provider: string,
   imageUrl: string,
   environment: Object,
-  isLegacy: boolean
+  isLegacy: boolean,
+  permissions: Array<string>
 }

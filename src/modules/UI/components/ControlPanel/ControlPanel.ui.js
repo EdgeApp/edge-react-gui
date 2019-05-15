@@ -1,10 +1,11 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Image, Text, View } from 'react-native'
+import { Image, StatusBar, Text, View } from 'react-native'
 import MDIcon from 'react-native-vector-icons/MaterialIcons'
 
 import accountIcon from '../../../../assets/images/sidenav/accounts.png'
+import { PLATFORM } from '../../../../theme/variables/platform.js'
 import { emptyGuiDenomination } from '../../../../types'
 import type { GuiDenomination } from '../../../../types'
 import { getDenomFromIsoCode, getObjectDiff } from '../../../../util/utils.js'
@@ -14,6 +15,8 @@ import SafeAreaView from '../SafeAreaView/SafeAreaViewDrawer.ui.js'
 import { Button } from './Component/Button/Button.ui'
 import Main from './Component/MainConnector'
 import styles from './style'
+
+const containerStyle = PLATFORM.platform === 'ios' ? { flex: 1 } : { height: PLATFORM.deviceHeight - StatusBar.currentHeight - PLATFORM.footerHeight }
 
 export type Props = {
   currencyLogo: string,
@@ -69,8 +72,8 @@ export default class ControlPanel extends Component<Props> {
     const currencyLogoIcon = { uri: currencyLogo }
 
     return (
-      <SafeAreaView>
-        <Gradient reverse style={styles.container}>
+      <SafeAreaView style={[styles.safeAreaView]}>
+        <Gradient reverse style={[styles.container, containerStyle]}>
           <View style={styles.header}>
             {!!currencyLogo && <Image style={styles.iconImage} source={currencyLogoIcon} />}
             <View style={styles.exchangeContainer}>

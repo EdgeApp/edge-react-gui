@@ -263,7 +263,9 @@ export class Request extends Component<Props, State> {
               isFocus={false}
             />
 
-            <QRCode value={this.state.encodedURI} />
+            <View style={{ overflow: 'hidden' }}>
+              <QRCode value={this.state.encodedURI} />
+            </View>
             <RequestStatus requestAddress={requestAddress} addressExplorer={addressExplorer} amountRequestedInCrypto={0} amountReceivedInCrypto={0} />
           </View>
 

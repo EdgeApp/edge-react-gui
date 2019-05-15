@@ -15,13 +15,7 @@ export default class QRCode extends PureComponent<Props> {
   render () {
     return (
       <View style={styles.qrCodeBorder}>
-        <QrCode
-          style={styles.qrCode}
-          value={this.props.value}
-          bgColor={styles.qrCodeBackground.color}
-          fgColor={styles.qrCodeForeground.color}
-          size={PLATFORM.deviceHeight / 4}
-        />
+        <QrCode style={styles.qrCode} value={this.props.value} fgColor={'white'} bgColor={'black'} size={PLATFORM.deviceHeight / 4} />
       </View>
     )
   }

@@ -11,8 +11,6 @@ import { MenuProvider } from 'react-native-popup-menu'
 import { Actions, Drawer, Modal, Overlay, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import SplashScreen from 'react-native-smart-splash-screen'
-// $FlowFixMe
-import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'
 import { connect } from 'react-redux'
 import * as URI from 'uri-js'
 
@@ -354,7 +352,7 @@ export default class Main extends Component<Props> {
       <MenuProvider style={styles.mainMenuContext}>
         <RouterWithRedux backAndroidHandler={this.handleBack}>
           <Overlay>
-            <Modal hideNavBar transitionConfig={() => ({ screenInterpolator: CardStackStyleInterpolator.forFadeFromBottomAndroid })}>
+            <Modal hideNavBar>
               {/* <Lightbox> */}
               <Stack key={Constants.ROOT} hideNavBar panHandlers={null}>
                 <Scene key={Constants.LOGIN} initial component={LoginConnector} username={this.props.username} />
@@ -764,6 +762,7 @@ export default class Main extends Component<Props> {
             </Modal>
           </Overlay>
         </RouterWithRedux>
+        <StatusBar translucent backgroundColor="#000000" barStyle="light-content" />
         <HelpModal style={{ flex: 1 }} />
         <ErrorAlert />
         <TransactionAlert />
