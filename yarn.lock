@@ -3301,10 +3301,10 @@ edge-currency-monero@0.2.2:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#6eddbd64"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.5.7:
-  version "0.5.7"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.5.7.tgz#0b9200a0824e1f250b8d6b3b7b02827a6f9f11c3"
-  integrity sha512-Z5Hi7PFl2f+gfXKncrtuU/+1YjKj4o5iFahktINxTxlYKHpDbnHSLaSFQCtiXcN96phSWbsUVB7YNuWQkzU8Lg==
+edge-exchange-plugins@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.6.0.tgz#c75624e80bb7e45cee8111720674894022944e85"
+  integrity sha512-u90IYvWqT70q2ShMQx9D5wkcE5LXTxda3kNRSkwgHpB5iI+lNV/Z9qEE5UjjlQUfe7d90yDj7kwzwqwvXcaFMQ==
   dependencies:
     esm "^3.2.4"
     hashjs "^1.2.0"
