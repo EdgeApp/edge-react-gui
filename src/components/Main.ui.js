@@ -901,12 +901,10 @@ export default class Main extends Component<Props> {
       return true
     }
     if (this.isCurrentScene(Constants.PLUGIN_SPEND)) {
-      console.log('pu: HA this is the extra - damn...')
       EdgeProvider.handleBack()
       return true
     }
     if (this.isCurrentScene(Constants.PLUGIN_BUY)) {
-      console.log('pu: HA this is the extra - oh yeah ...')
       EdgeProvider.handleBack()
       return true
     }
