@@ -1,6 +1,6 @@
 // @flow
 import { bns } from 'biggystring'
-import type { EdgeCurrencyWallet, EdgeMetadata, EdgeSpendInfo, EdgeSwapQuote, EdgeSwapRequest } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeMetadata, EdgeSpendInfo, EdgeSwapQuote, EdgeSwapRequest, EdgeTransaction } from 'edge-core-js'
 import { errorNames } from 'edge-core-js'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -118,7 +118,7 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
   if (srcWallet) {
     try {
       global.firebase && global.firebase.analytics().logEvent(`Exchange_Shift_Start`)
-      const broadcastedTransaction = await quote.approve()
+      const broadcastedTransaction: EdgeTransaction = await quote.approve()
       await WALLET_API.saveTransaction(srcWallet, broadcastedTransaction)
 
       const category = sprintf(
@@ -133,8 +133,8 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
       const name = si.displayName
       const supportEmail = si.supportEmail
       const quoteIdUri = si.quoteUri && quote.quoteId ? si.quoteUri + quote.quoteId : broadcastedTransaction.txid
-      const payinAddress = broadcastedTransaction.otherParams.payinAddress
-      const uniqueIdentifier = broadcastedTransaction.otherParams.uniqueIdentifier
+      const payinAddress = broadcastedTransaction.otherParams != null ? broadcastedTransaction.otherParams.payinAddress : ''
+      const uniqueIdentifier = broadcastedTransaction.otherParams != null ? broadcastedTransaction.otherParams.uniqueIdentifier : ''
 
       const notes = sprintf(
         s.strings.exchange_notes_metadata_generic2,

@@ -139,7 +139,7 @@
     "dns.js": "^1.0.1",
     "domain-browser": "^1.1.7",
     "edge-components": "^0.0.19",
-    "edge-core-js": "^0.15.11",
+    "edge-core-js": "^0.16.0",
     "edge-currency-accountbased": "^0.1.9",
     "edge-currency-bitcoin": "4.1.0",
     "edge-currency-monero": "0.2.2",

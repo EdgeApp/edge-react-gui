@@ -150,7 +150,7 @@ export const getAuthRequired = (state: State, spendInfo: EdgeSpendInfo): AuthTyp
   const isEnabled = state.ui.settings.spendingLimits.transaction.isEnabled
   if (!isEnabled) return 'none'
 
-  const currencyCode = spendInfo.currencyCode || spendInfo.spendTargets[0].currencyCode
+  const currencyCode = spendInfo.currencyCode
   const { nativeAmount } = spendInfo.spendTargets[0]
   if (!currencyCode || !nativeAmount) throw new Error('Invalid Spend Request')
 

@@ -166,7 +166,7 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
   const account = getAccount(state)
   const selectedWalletId = getSelectedWalletId(state)
   const wallet = getWallet(state, selectedWalletId)
-  const edgeUnsignedTransaction = getTransaction(state)
+  const edgeUnsignedTransaction: EdgeTransaction = getTransaction(state)
 
   const guiWallet = getSelectedWallet(state)
   const currencyCode = getSelectedCurrencyCode(state)
@@ -202,7 +202,7 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
   }
 
   dispatch(updateSpendPending(true))
-  let edgeSignedTransaction = edgeUnsignedTransaction
+  let edgeSignedTransaction: EdgeTransaction = edgeUnsignedTransaction
   try {
     if (authRequired === 'pin') {
       const isAuthorized = await checkPin(account, pin)
@@ -218,7 +218,7 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
     if (!edgeMetadata.amountFiat) {
       edgeMetadata.amountFiat = amountFiat
     }
-    if (getSpecialCurrencyInfo(currencyCode).uniqueIdentifierToNotes) {
+    if (getSpecialCurrencyInfo(currencyCode).uniqueIdentifierToNotes && edgeSignedTransaction.otherParams != null) {
       const newNotesSyntax = sprintf(
         s.strings.tx_notes_metadata,
         s.strings.unique_identifier_payment_id,
