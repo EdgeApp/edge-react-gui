@@ -87,7 +87,7 @@ import {
   PluginBuySell,
   PluginSpend,
   YaobPluginView,
-  renderPluginBackButton,
+  renderLegacyPluginBackButton,
   renderYaobPluginBackButton
 } from '../modules/UI/scenes/Plugins/index'
 import { HwBackButtonHandler } from '../modules/UI/scenes/WalletList/components/HwBackButtonHandler/index'
@@ -712,7 +712,7 @@ export default class Main extends Component<Props> {
                         navTransparent={true}
                         component={ifLoggedIn(LegacyPluginView, LoadingScene)}
                         renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
-                        renderLeftButton={renderPluginBackButton(BACK)}
+                        renderLeftButton={renderLegacyPluginBackButton(BACK)}
                         renderRightButton={this.renderEmptyButton()}
                       />
                     </Stack>
@@ -741,7 +741,7 @@ export default class Main extends Component<Props> {
                         navTransparent={true}
                         component={ifLoggedIn(LegacyPluginView, LoadingScene)}
                         renderTitle={this.renderTitle(PLUGIN_SPEND)}
-                        renderLeftButton={renderPluginBackButton(BACK)}
+                        renderLeftButton={renderLegacyPluginBackButton(BACK)}
                         renderRightButton={this.renderEmptyButton()}
                       />
                     </Stack>

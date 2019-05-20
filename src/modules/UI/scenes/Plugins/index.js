@@ -1,6 +1,6 @@
 // @flow
 
-import { LegacyPluginViewConnect, renderPluginBackButton } from '../../../../components/scenes/PluginViewLegacyScene'
+import { LegacyPluginViewConnect, renderLegacyPluginBackButton } from '../../../../components/scenes/PluginViewLegacyScene'
 import { PluginBuySell, PluginSpend } from '../../../../components/scenes/PluginViewListScene'
 import { PluginViewYAOBConnect, renderYaobPluginBackButton } from '../../../../components/scenes/PluginViewYAOBScene'
 
@@ -9,6 +9,6 @@ export {
   LegacyPluginViewConnect as LegacyPluginView,
   PluginBuySell,
   PluginSpend,
-  renderPluginBackButton,
+  renderLegacyPluginBackButton,
   renderYaobPluginBackButton
 }

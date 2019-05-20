@@ -49,7 +49,7 @@ type PluginState = {
   showWalletList: any
 }
 
-export function renderPluginBackButton (label: string = BACK) {
+export function renderLegacyPluginBackButton (label: string = BACK) {
   return <BackButton withArrow onPress={pluginPop} label={label} />
 }
 
