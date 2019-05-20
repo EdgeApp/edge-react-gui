@@ -41,7 +41,7 @@ export const currencyPlugins = {
   dash: true,
   digibyte: true,
   dogecoin: false,
-  eboost: true,
+  eboost: false,
   feathercoin: true,
   groestlcoin: true,
   litecoin: true,
@@ -68,7 +68,8 @@ export const swapPlugins = {
   changelly: ENV.CHANGELLY_INIT,
   changenow: { apiKey: ENV.CHANGE_NOW_API_KEY },
   faast: ENV.FAAST_INIT,
-  shapeshift: { apiKey: ENV.SHAPESHIFT_API_KEY }
+  shapeshift: { apiKey: ENV.SHAPESHIFT_API_KEY },
+  godex: ENV.GODEX_INIT
 }
 
 const contextOptions = {

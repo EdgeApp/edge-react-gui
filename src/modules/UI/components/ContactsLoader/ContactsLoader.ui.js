@@ -85,6 +85,18 @@ const merchantPartners = [
     jobTitle: '',
     familyName: '',
     recordID: ''
+  },
+  {
+    givenName: 'Godex',
+    hasThumbnail: true,
+    thumbnailPath: 'https://developer.edge.app/content/godex.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
   }
 ]
 
