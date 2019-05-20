@@ -81,7 +81,7 @@ import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
 import { PasswordRecoveryReminderModalConnector } from '../modules/UI/components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalConnector.js'
 import { passwordReminderModalConnector as PasswordReminderModal } from '../modules/UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
 import TransactionAlert from '../modules/UI/components/TransactionAlert/TransactionAlertConnector'
-import { EdgeProvider } from '../modules/UI/scenes/Plugins/bridgeApi'
+import { EdgeProvider } from '../modules/UI/scenes/Plugins/EdgeProvider.js'
 import {
   LegacyPluginView,
   PluginBuySell,

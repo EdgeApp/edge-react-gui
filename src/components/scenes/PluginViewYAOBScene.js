@@ -18,7 +18,7 @@ import T from '../../modules/UI/components/FormattedText/index'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import BackButton from '../../modules/UI/components/Header/Component/BackButton.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
-import { EdgeProvider } from '../../modules/UI/scenes/Plugins/bridgeApi'
+import { EdgeProvider } from '../../modules/UI/scenes/Plugins/EdgeProvider.js'
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
 import type { GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import styles from '../../styles/scenes/PluginsStyle.js'
@@ -159,7 +159,8 @@ class PluginView extends React.Component<PluginProps, PluginState> {
           scalesPageToFit={contentScaling}
           source={this._renderWebView()}
           userAgent={
-            'Mozilla/5.0 (Linux; Android 6.0.1; SM-G532G Build/MMB29T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.83 Mobile Safari/537.36 edge/app.edge.' + Platform.OS
+            'Mozilla/5.0 (Linux; Android 6.0.1; SM-G532G Build/MMB29T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.83 Mobile Safari/537.36 edge/app.edge.' +
+            Platform.OS
           }
           setWebContentsDebuggingEnabled={true}
         />
