@@ -3,7 +3,9 @@
   <!-- Base application theme. -->
   <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
     <!-- Customize your theme here. -->
-    <item name="android:windowIsTranslucent">true</item>
+    <!-- Doing <item name="android:windowIsTranslucent">true</item>
+      as requested by react-native-smart-splash-screen crashes on Oreo
+      because we also request portrait mode. -->
   </style>
 
 </resources>
