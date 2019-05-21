@@ -501,5 +501,6 @@
   "edge_login_fail_message": "Không thể kết nối. Hãy kiểm tra lại kết nối mạng và thử lại.",
   "edge_login_fetching": "Tìm nạp thông tin đăng nhập Edge...",
   "modal_addressexplorer_message": "Hiển thị trong Block Explorer?",
-  "modal_addressexplorer_null": "Đồng tiền này hiện tại không có trang web explorer"
+  "modal_addressexplorer_null": "Đồng tiền này hiện tại không có trang web explorer",
+  "wallets_for_currency_code_dont_exist": ""
 }
