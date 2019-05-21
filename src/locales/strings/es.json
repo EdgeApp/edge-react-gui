@@ -501,5 +501,6 @@
   "edge_login_fail_message": "",
   "edge_login_fetching": "Buscando información de inicio de sesión en Edge...",
   "modal_addressexplorer_message": "¿Quieres mostrar la dirección en el explorador de bloques?",
-  "modal_addressexplorer_null": "Esta moneda no tiene explorador por el momento"
+  "modal_addressexplorer_null": "Esta moneda no tiene explorador por el momento",
+  "wallets_for_currency_code_dont_exist": ""
 }
