@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`MenuDropDown component should render without props 1`] = `
-<Component
+<View
   style={
     Array [
       Object {
@@ -12,7 +12,7 @@ exports[`MenuDropDown component should render without props 1`] = `
     ]
   }
 >
-  <Component
+  <View
     style={
       Object {
         "backgroundColor": "#F4F5F6",
@@ -24,7 +24,7 @@ exports[`MenuDropDown component should render without props 1`] = `
       }
     }
   >
-    <Component
+    <View
       style={
         Object {
           "flex": 1,
@@ -41,8 +41,8 @@ exports[`MenuDropDown component should render without props 1`] = `
       >
         Oct 14, 2018
       </FormattedText>
-    </Component>
-  </Component>
+    </View>
+  </View>
   <TouchableHighlight
     activeOpacity={0.85}
     delayPressOut={100}
@@ -64,7 +64,7 @@ exports[`MenuDropDown component should render without props 1`] = `
     }
     underlayColor="#D9E3ED"
   >
-    <Component
+    <View
       style={
         Array [
           Object {
@@ -76,7 +76,7 @@ exports[`MenuDropDown component should render without props 1`] = `
         ]
       }
     >
-      <Component
+      <View
         style={
           Object {
             "flex": 25,
@@ -84,7 +84,7 @@ exports[`MenuDropDown component should render without props 1`] = `
           }
         }
       >
-        <Component
+        <View
           style={
             Array [
               Object {
@@ -108,8 +108,8 @@ exports[`MenuDropDown component should render without props 1`] = `
               }
             }
           />
-        </Component>
-        <Component
+        </View>
+        <View
           style={
             Array [
               Object {
@@ -151,9 +151,9 @@ exports[`MenuDropDown component should render without props 1`] = `
           >
             Synchronizing
           </FormattedText>
-        </Component>
-      </Component>
-      <Component
+        </View>
+      </View>
+      <View
         style={
           Array [
             Object {
@@ -202,8 +202,8 @@ exports[`MenuDropDown component should render without props 1`] = `
         >
           $ 0.00
         </FormattedText>
-      </Component>
-    </Component>
+      </View>
+    </View>
   </TouchableHighlight>
-</Component>
+</View>
 `;

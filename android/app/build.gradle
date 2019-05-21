@@ -96,18 +96,19 @@ def enableProguardInReleaseBuilds = false
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
     defaultConfig {
+        multiDexEnabled true
         applicationId "co.edgesecure.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 21000000
         versionName "99.99.99"
-        ndk {
-            abiFilters "armeabi-v7a", "x86"
-        }
-        multiDexEnabled true
         renderscriptTargetApi 23
         renderscriptSupportModeEnabled true
     }
@@ -120,7 +121,7 @@ android {
             reset()
             enable enableSeparateBuildPerCPUArchitecture
             universalApk false  // If true, also generate a universal APK
-            include "armeabi-v7a", "x86"
+            include "armeabi-v7a", "x86", "arm64-v8a", "x86_64"
         }
     }
     buildTypes {
@@ -135,17 +136,13 @@ android {
         variant.outputs.each { output ->
             // For each separate APK per architecture, set a unique version code as described here:
             // http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits
-            def versionCodes = ["armeabi-v7a":1, "x86":2]
+            def versionCodes = ["armeabi-v7a":1, "x86":2, "arm64-v8a": 3, "x86_64": 4]
             def abi = output.getFilter(OutputFile.ABI)
             if (abi != null) {  // null for the universal-debug, universal-release variants
                 output.versionCodeOverride =
                         versionCodes.get(abi) * 1048576 + defaultConfig.versionCode
             }
         }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -164,46 +161,38 @@ if (hasProperty('storeFile')) {
     android.signingConfigs.release.keyPassword   = "password"
 }
 
-configurations.all {
-    resolutionStrategy {
-        force 'org.webkit:android-jsc:r216113'
-    }
-}
-
 dependencies {
-    compile project(':disklet')
-    compile project(':react-native-webview')
-    compile project(':react-native-cookies')
-    compile project(':react-native-app-settings')
-    compile fileTree(dir: "libs", include: ["*.jar"])
-    compile "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
-    compile "com.facebook.react:react-native:+"  // From node_modules
-
-    compile project(':bugsnag-react-native')
-    compile project(':react-native-background-fetch')
-    compile project(':react-native-firebase')
-    compile project(':react-native-mail')
-    compile project(':react-native-smart-splash-screen')
-    compile project(':react-native-picker')
-    compile project(':edge-login-ui-rn')
-    compile project(':react-native-sound')
-    compile project(':react-native-share')
-    compile project(':react-native-randombytes')
-    compile project(':react-native-fast-crypto')
-    compile project(':react-native-locale')
-    compile project(':react-native-vector-icons')
-    compile project(':react-native-tcp')
-    compile project(':react-native-material-kit')
-    compile project(':react-native-linear-gradient')
-    compile project(':react-native-image-picker')
-    compile project(':react-native-fs')
-    compile project(':react-native-device-info')
-    compile project(':react-native-contacts-wrapper')
-    compile project(':react-native-contacts')
-    compile project(':react-native-camera')
-    compile project(':react-native-push-notification')
-    compile project(':ExtraDimensions')
-    // From node_modules
+    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+    implementation "com.facebook.react:react-native:+"
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation project(':bugsnag-react-native')
+    implementation project(':disklet')
+    implementation project(':edge-login-ui-rn')
+    implementation project(':ExtraDimensions')
+    implementation project(':react-native-app-settings')
+    implementation project(':react-native-background-fetch')
+    implementation project(':react-native-camera')
+    implementation project(':react-native-contacts-wrapper')
+    implementation project(':react-native-contacts')
+    implementation project(':react-native-cookies')
+    implementation project(':react-native-device-info')
+    implementation project(':react-native-fast-crypto')
+    implementation project(':react-native-firebase')
+    implementation project(':react-native-fs')
+    implementation project(':react-native-image-picker')
+    implementation project(':react-native-linear-gradient')
+    implementation project(':react-native-locale')
+    implementation project(':react-native-mail')
+    implementation project(':react-native-material-kit')
+    implementation project(':react-native-picker')
+    implementation project(':react-native-push-notification')
+    implementation project(':react-native-randombytes')
+    implementation project(':react-native-share')
+    implementation project(':react-native-smart-splash-screen')
+    implementation project(':react-native-sound')
+    implementation project(':react-native-tcp')
+    implementation project(':react-native-vector-icons')
+    implementation project(':react-native-webview')
 
     // Firebase dependencies
     compile "com.google.android.gms:play-services-base:15.0.1"

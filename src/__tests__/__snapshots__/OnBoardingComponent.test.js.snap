@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`On-Boarding Component should render without props 1`] = `
-<Component
+<View
   style={
     Object {
       "alignItems": "center",
@@ -15,7 +15,7 @@ exports[`On-Boarding Component should render without props 1`] = `
     }
   }
 >
-  <Component
+  <View
     style={
       Object {
         "backgroundColor": "transparent",
@@ -160,7 +160,7 @@ Tap on a wallet name to send or receive funds for that wallet.",
       }
       totalItems={5}
     />
-    <Component
+    <View
       style={
         Object {
           "alignItems": "center",
@@ -193,8 +193,8 @@ Tap on a wallet name to send or receive funds for that wallet.",
           Next
         </Text>
       </PrimaryButton>
-    </Component>
-    <Component
+    </View>
+    <View
       style={
         Object {
           "alignItems": "flex-end",
@@ -226,7 +226,7 @@ Tap on a wallet name to send or receive funds for that wallet.",
           Skip
         </Text>
       </TextButton>
-    </Component>
-  </Component>
-</Component>
+    </View>
+  </View>
+</View>
 `;

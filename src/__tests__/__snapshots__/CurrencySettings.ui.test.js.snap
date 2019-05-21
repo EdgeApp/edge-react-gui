@@ -2,7 +2,7 @@
 
 exports[`CurrencySettings should render 1`] = `
 <SafeAreaViewComponent>
-  <Component
+  <View
     style={
       Array [
         undefined,
@@ -16,7 +16,7 @@ exports[`CurrencySettings should render 1`] = `
         }
       }
     />
-    <Component
+    <View
       style={
         Object {
           "backgroundColor": "#F4F5F6",
@@ -37,14 +37,14 @@ exports[`CurrencySettings should render 1`] = `
           ]
         }
       >
-        <Component
+        <View
           style={
             Array [
               undefined,
             ]
           }
         >
-          <Component
+          <View
             style={
               Object {
                 "flexDirection": "row",
@@ -63,8 +63,8 @@ exports[`CurrencySettings should render 1`] = `
             >
               Denominations
             </FormattedText>
-          </Component>
-        </Component>
+          </View>
+        </View>
       </Gradient>
       <RadioRows
         style={Object {}}
@@ -79,7 +79,7 @@ exports[`CurrencySettings should render 1`] = `
           }
           isSelected={false}
           left={
-            <Component
+            <View
               style={
                 Object {
                   "flexDirection": "row",
@@ -99,7 +99,7 @@ exports[`CurrencySettings should render 1`] = `
                  - 
                 BTG
               </FormattedText>
-            </Component>
+            </View>
           }
           onPress={[Function]}
         />
@@ -113,7 +113,7 @@ exports[`CurrencySettings should render 1`] = `
           }
           isSelected={false}
           left={
-            <Component
+            <View
               style={
                 Object {
                   "flexDirection": "row",
@@ -133,7 +133,7 @@ exports[`CurrencySettings should render 1`] = `
                  - 
                 mBTG
               </FormattedText>
-            </Component>
+            </View>
           }
           onPress={[Function]}
         />
@@ -147,7 +147,7 @@ exports[`CurrencySettings should render 1`] = `
           }
           isSelected={true}
           left={
-            <Component
+            <View
               style={
                 Object {
                   "flexDirection": "row",
@@ -167,12 +167,12 @@ exports[`CurrencySettings should render 1`] = `
                  - 
                 bits
               </FormattedText>
-            </Component>
+            </View>
           }
           onPress={[Function]}
         />
       </RadioRows>
-    </Component>
-  </Component>
+    </View>
+  </View>
 </SafeAreaViewComponent>
 `;

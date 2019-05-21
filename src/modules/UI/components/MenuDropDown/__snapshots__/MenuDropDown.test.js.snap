@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`MenuDropDown component should render with standard props 1`] = `
-<Component
+<View
   style={
     Object {
       "alignItems": "center",
@@ -46,7 +46,7 @@ exports[`MenuDropDown component should render with standard props 1`] = `
       }
       disabled={false}
     >
-      <Component
+      <View
         style={
           Object {
             "alignItems": "center",
@@ -57,9 +57,6 @@ exports[`MenuDropDown component should render with standard props 1`] = `
         }
       >
         <Text
-          accessible={true}
-          allowFontScaling={true}
-          ellipsizeMode="tail"
           style={
             Object {
               "color": "#4A5157",
@@ -69,7 +66,7 @@ exports[`MenuDropDown component should render with standard props 1`] = `
         >
           ⋮
         </Text>
-      </Component>
+      </View>
     </ForwardRef(enhanceContext-Context.Consumer(MenuTrigger))>
     <ForwardRef(enhanceContext-Context.Consumer(MenuOptions))
       customStyles={Object {}}
@@ -87,7 +84,7 @@ exports[`MenuDropDown component should render with standard props 1`] = `
         }
         value="Value1"
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -97,9 +94,6 @@ exports[`MenuDropDown component should render with standard props 1`] = `
           }
         >
           <Text
-            accessible={true}
-            allowFontScaling={true}
-            ellipsizeMode="tail"
             style={
               Object {
                 "color": "#4A5157",
@@ -109,9 +103,9 @@ exports[`MenuDropDown component should render with standard props 1`] = `
           >
             Label1
           </Text>
-        </Component>
+        </View>
       </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
     </ForwardRef(enhanceContext-Context.Consumer(MenuOptions))>
   </ForwardRef(enhanceContext-Context.Consumer(Menu))>
-</Component>
+</View>
 `;
