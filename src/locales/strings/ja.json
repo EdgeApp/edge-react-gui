@@ -501,5 +501,6 @@
   "edge_login_fail_message": "%s に接続できません。インターネット接続を確認し、再度お試しください。",
   "edge_login_fetching": "Edgeログイン情報を取得しています...",
   "modal_addressexplorer_message": "Block Explorerで表示しますか？",
-  "modal_addressexplorer_null": "まだこの通貨はエクスプローラーサイトがありません"
+  "modal_addressexplorer_null": "まだこの通貨はエクスプローラーサイトがありません",
+  "wallets_for_currency_code_dont_exist": ""
 }
