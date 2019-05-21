@@ -501,5 +501,6 @@
   "edge_login_fail_message": "",
   "edge_login_fetching": "",
   "modal_addressexplorer_message": "",
-  "modal_addressexplorer_null": ""
+  "modal_addressexplorer_null": "",
+  "wallets_for_currency_code_dont_exist": ""
 }
