@@ -501,5 +501,6 @@
   "edge_login_fail_message": "네트워크에 접속되지 않습니다. 네트워크 환경을 확인해고 다시 접속해주세요.",
   "edge_login_fetching": "Edge 로그인 정보를 취득중...",
   "modal_addressexplorer_message": "Block Explorer에서 주소를 표시하시겠습니까?",
-  "modal_addressexplorer_null": "이 통화에는 아직 explorer 사이트가 없습니다."
+  "modal_addressexplorer_null": "이 통화에는 아직 explorer 사이트가 없습니다.",
+  "wallets_for_currency_code_dont_exist": ""
 }
