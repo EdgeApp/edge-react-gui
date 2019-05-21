@@ -539,7 +539,8 @@ const strings = {
   edge_login_fail_message: 'Could not connect to network. Please check your network connection and try again.',
   edge_login_fetching: 'Fetching Edge Login info...',
   modal_addressexplorer_message: 'Show Address in Block Explorer?',
-  modal_addressexplorer_null: 'This currency has no explorer site as of now'
+  modal_addressexplorer_null: 'This currency has no explorer site as of now',
+  wallets_for_currency_code_dont_exist: 'Wallets do not exist for the following currencies:'
 }
 
 // export default strings

@@ -113,7 +113,15 @@ export class EdgeProvider extends Bridgeable {
   // Set the currency wallet to interact with. This will show a wallet selector modal
   // for the user to pick a wallet within their list of wallets that match `currencyCodes`
   // Returns the currencyCode chosen by the user (store: Store)
-  async chooseCurrencyWallet (currencyCodes: Array<string> = []): Promise<string> {
+  async chooseCurrencyWallet (cCodes: Array<string> = []): Promise<string> {
+    const currencyCodes = []
+    const currencyCodeCount = {}
+    let i = 0
+    for (i; i < cCodes.length; i++) {
+      currencyCodes.push(cCodes[i].toUpperCase())
+      currencyCodeCount[cCodes[i].toUpperCase()] = 0
+    }
+
     const wallets = this._state.ui.wallets.byId // CORE_SELECTORS.getWallets(this._state)
     const excludedCurrencyCode = []
     const excludedTokens = []
@@ -141,6 +149,16 @@ export class EdgeProvider extends Bridgeable {
         }
         if (currencyCodes.includes(wallet.currencyCode)) {
           walletsToUse.push(wallet)
+          currencyCodeCount[wallet.currencyCode]++
+        }
+      }
+    }
+    // check to see if there are any requested codes that there are no wallets for
+    const noWalletCodes = []
+    if (currencyCodes.length > 0) {
+      for (const key in currencyCodeCount) {
+        if (currencyCodeCount[key] === 0) {
+          noWalletCodes.push(key)
         }
       }
     }
@@ -159,7 +177,8 @@ export class EdgeProvider extends Bridgeable {
       state: this._state,
       headerTitle: s.strings.choose_your_wallet,
       cantCancel: true,
-      excludedTokens
+      excludedTokens,
+      noWalletCodes
     }
     const modal = createCryptoExchangeWalletSelectorModal(props)
     // const modal = createCustomWalletListModal(props)
