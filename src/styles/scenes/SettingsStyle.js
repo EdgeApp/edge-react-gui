@@ -75,7 +75,7 @@ export const styles = {
   },
   // //// Beginning of Settings Row ///////
   settingsRowContainer: {
-    height: scale(44),
+    minHeight: scale(44),
     backgroundColor: THEME.COLORS.WHITE,
     borderBottomWidth: 1,
     borderBottomColor: THEME.COLORS.GRAY_3,
@@ -89,14 +89,16 @@ export const styles = {
     alignItems: 'center'
   },
   settingsRowLeftContainer: {
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     flexDirection: 'row'
   },
   settingsRowRightContainer: {
     justifyContent: 'center'
   },
   settingsRowLeftText: {
+    width: '80%',
     color: THEME.COLORS.GRAY_1,
+    textAlign: 'left',
     fontSize: scale(16)
   },
   settingsRowLeftTextDisabled: {
@@ -116,8 +118,10 @@ export const styles = {
     color: THEME.COLORS.GRAY_1
   },
   modalRightText: {
+    width: '20%',
     color: THEME.COLORS.SECONDARY,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    textAlign: 'right'
   },
   routeRowRightText: {
     color: THEME.COLORS.SECONDARY,
