@@ -6,6 +6,8 @@ import { scale } from '../../../../lib/scaling.js'
 import THEME from '../../../../theme/variables/airbitz'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
 
+const safeAreaHeight = PLATFORM.deviceHeight - StatusBar.currentHeight - PLATFORM.footerHeight
+
 export default {
   header: {
     backgroundColor: THEME.COLORS.ACCENT_BLUE,
@@ -34,7 +36,7 @@ export default {
   },
   safeAreaView: {
     backgroundColor: 'transparent',
-    height: PLATFORM.deviceHeight - StatusBar.currentHeight - PLATFORM.footerHeight,
+    height: Number.isNaN(safeAreaHeight) ? void 0 : safeAreaHeight,
     position: 'relative',
     top: StatusBar.currentHeight
   },
