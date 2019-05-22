@@ -21,7 +21,7 @@ export class CurrencySettingsTitle extends Component<CurrencySettingsTitleCompon
     const title = sprintf(s.strings.title_crypto_settings, capitalizedPluginName)
     return (
       <View style={{ flexDirection: 'row' }}>
-        <Image style={{ height: 25, width: 25, resizeMode: Image.resizeMode.contain }} source={{ uri: logo }} />
+        <Image style={{ height: 25, width: 25, resizeMode: 'contain' }} source={{ uri: logo }} />
         <T style={styles.titleStyle}>{title || ''}</T>
       </View>
     )
