@@ -313,7 +313,7 @@
   "title_edit_token": "Modifica token",
   "title_add_token": "Aggiungi token",
   "title_password_recovery": "Recupero password",
-  "title_plugin_buysell": "",
+  "title_plugin_buysell": "Compra/Vendi Cripto",
   "title_plugin_spend_cryptocurrency": "Spendi crypto",
   "title_plugin_spend": "Spendi",
   "title_otp": "2FA",
@@ -502,5 +502,5 @@
   "edge_login_fetching": "Recupero le informazioni di login di Edge...",
   "modal_addressexplorer_message": "Mostra l'indirizzo in Block Explorer",
   "modal_addressexplorer_null": "Questa cripto non ha un sito explorer per il momento",
-  "wallets_for_currency_code_dont_exist": ""
+  "wallets_for_currency_code_dont_exist": "Non esistono portafogli per le seguenti cripto:"
 }
