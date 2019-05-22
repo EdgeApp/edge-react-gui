@@ -2,7 +2,7 @@
 
 import { type EdgeMetadata } from 'edge-core-js'
 import React from 'react'
-import { BackHandler, Platform, View } from 'react-native'
+import { BackHandler, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
@@ -52,6 +52,9 @@ type PluginState = {
 export function renderLegacyPluginBackButton (label: string = BACK) {
   return <BackButton withArrow onPress={pluginPop} label={label} />
 }
+
+const legacyJavascript =
+  'window.originalPostMessage = window.postMessage; window.postMessage = function(data) { window.ReactNativeWebView.postMessage(data); };' + javascript
 
 class PluginView extends React.Component<PluginProps, PluginState> {
   bridge: any
@@ -304,7 +307,6 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   }
 
   render () {
-    const contentScaling = Platform.OS !== 'ios'
     return (
       <SafeAreaView>
         <Gradient style={styles.gradient} />
@@ -315,15 +317,15 @@ class PluginView extends React.Component<PluginProps, PluginState> {
           onNavigationStateChange={this._onNavigationStateChange}
           originWhitelist={['file://', 'https://', 'http://', 'edge://']}
           ref={this._setWebview}
-          injectedJavaScript={javascript}
+          injectedJavaScript={legacyJavascript}
           javaScriptEnabled={true}
           onLoadEnd={this.webviewLoaded}
-          scalesPageToFit={contentScaling}
           source={this._renderWebView()}
           userAgent={
             'Mozilla/5.0 (Linux; Android 6.0.1; SM-G532G Build/MMB29T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.83 Mobile Safari/537.36'
           }
           setWebContentsDebuggingEnabled={true}
+          useWebKit
         />
       </SafeAreaView>
     )
