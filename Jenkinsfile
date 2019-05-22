@@ -49,7 +49,7 @@ pipeline {
         // Fix version for branchs that are not "master" or "develop"
         script {
           def packageJson = readJSON file: "./package.json"
-          if (BRANCH_NAME != "master" && BRANCH_NAME != "develop") {
+          if (BRANCH_NAME != "master" && BRANCH_NAME != "develop" && BRANCH_NAME != "test") {
             def cleanBranch = BRANCH_NAME.replaceAll('/', '-')
             packageJson.version = "${packageJson.version}-${cleanBranch}".inspect()
             writeJSON file: "./package.json", json: packageJson
@@ -98,6 +98,7 @@ pipeline {
         anyOf {
           branch 'master'
           branch 'develop'
+          branch 'test'
         }
       }
       parallel {
