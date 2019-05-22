@@ -10,7 +10,6 @@ import { SEND_CONFIRMATION } from '../../../../constants/SceneKeys.js'
 import s from '../../../../locales/strings'
 import * as SETTINGS_SELECTORS from '../../../../modules/Settings/selectors.js'
 import type { GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
-import type { BuySellPlugin } from '../../../../types.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import type { Dispatch, State } from '../../../ReduxTypes.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
@@ -46,68 +45,18 @@ type EdgeGetReceiveAddressOptions = {
 }
 
 export class EdgeProvider extends Bridgeable {
-  _plugin: BuySellPlugin
-  _state: State
+  _pluginName: string
   _dispatch: Dispatch
-  _backClick: Function
-  _navStack: Array<string>
-  backHandler: { handleBack(): Promise<number> }
+  _state: State
 
-  static instanceTracker = {}
-  static handleBack () {
-    if (EdgeProvider.instanceTracker.instance) {
-      EdgeProvider.instanceTracker.instance.onBackButtonPressed()
-    }
-  }
-  static navStackPush (arg: string) {
-    if (EdgeProvider.instanceTracker.instance) {
-      EdgeProvider.instanceTracker.instance._navStack.push(arg)
-    }
-  }
-  static navStackClear () {
-    if (EdgeProvider.instanceTracker.instance) {
-      EdgeProvider.instanceTracker.instance._navStack = []
-    }
-  }
-
-  constructor (plugin: BuySellPlugin, state: State, dispatch: Dispatch, backClick: Function) {
+  constructor (pluginName: string, state: State, dispatch: Dispatch) {
     super()
-    this._plugin = plugin
-    this._state = state
+    this._pluginName = pluginName
     this._dispatch = dispatch
-    this._backClick = backClick
-    this._navStack = []
-    this.constructor.instanceTracker.instance = this
-  }
-  navStackPush (arg: string) {
-    this._navStack.push(arg)
-  }
-  navStackClear () {
-    this._navStack = []
+    this._state = state
   }
   updateState = (arg: any) => {
     this._state = arg
-  }
-
-  async setBackHandler (handler: { handleBack(): Promise<number> }): Promise<mixed> {
-    this.backHandler = handler
-  }
-
-  async onBackButtonPressed () {
-    let historyCounter = 0
-    if (this.backHandler) {
-      historyCounter = await this.backHandler.handleBack()
-    }
-    if (historyCounter > 0) {
-      this._backClick(true)
-      return
-    }
-    if (this._navStack.length > 0) {
-      this._navStack.pop()
-      this._backClick(true)
-      return
-    }
-    this._backClick(false)
   }
 
   // Set the currency wallet to interact with. This will show a wallet selector modal
@@ -202,7 +151,7 @@ export class EdgeProvider extends Bridgeable {
   async writeData (data: { [key: string]: string }) {
     const account = CORE_SELECTORS.getAccount(this._state)
     const store = account.dataStore
-    await Promise.all(Object.keys(data).map(key => store.setItem(this._plugin.pluginId, key, data[key])))
+    await Promise.all(Object.keys(data).map(key => store.setItem(this._pluginName, key, data[key])))
     return { success: true }
   }
 
@@ -214,7 +163,7 @@ export class EdgeProvider extends Bridgeable {
     const store = account.dataStore
     const returnObj = {}
     for (let i = 0; i < keys.length; i++) {
-      returnObj[keys[i]] = await store.getItem(this._plugin.pluginId, keys[i]).catch(e => undefined)
+      returnObj[keys[i]] = await store.getItem(this._pluginName, keys[i]).catch(e => undefined)
     }
     return returnObj
   }

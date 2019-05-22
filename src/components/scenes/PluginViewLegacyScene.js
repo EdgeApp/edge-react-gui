@@ -21,7 +21,7 @@ import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import BackButton from '../../modules/UI/components/Header/Component/BackButton.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import { PluginBridge, pop as pluginPop } from '../../modules/UI/scenes/Plugins/api'
-import { EdgeProvider } from '../../modules/UI/scenes/Plugins/bridgeApi'
+import { EdgeProvider } from '../../modules/UI/scenes/Plugins/EdgeProvider.js'
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
 import type { GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import styles from '../../styles/scenes/PluginsStyle.js'
@@ -49,7 +49,7 @@ type PluginState = {
   showWalletList: any
 }
 
-export function renderPluginBackButton (label: string = BACK) {
+export function renderLegacyPluginBackButton (label: string = BACK) {
   return <BackButton withArrow onPress={pluginPop} label={label} />
 }
 
@@ -299,7 +299,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
     this.yaobBridge = new Bridge({
       sendMessage: message => this.webview.injectJavaScript(`window.bridge.handleMessage(${JSON.stringify(message)})`)
     })
-    const edgeProvider = new EdgeProvider(this.props.plugin, this.props.currentState, this.props.thisDispatch, this._webviewBack)
+    const edgeProvider = new EdgeProvider(this.props.plugin.pluginId, this.props.currentState, this.props.thisDispatch)
     this.yaobBridge.sendRoot(edgeProvider)
   }
 
