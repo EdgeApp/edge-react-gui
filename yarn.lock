@@ -3270,6 +3270,13 @@ edge-components@^0.0.19:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
+edge-components@^0.0.24:
+  version "0.0.24"
+  resolved "https://registry.yarnpkg.com/edge-components/-/edge-components-0.0.24.tgz#580711166ef290299ebfbd410b0ebad080649b7f"
+  integrity sha512-GHPgEhhMK7YPL1IzXMT+jdoCk5swFy9syAg804/ua4oy4H4FWYsyepeqxqjkAAAo1ZKn7ag7+MVYBhbkGMKC/g==
+  dependencies:
+    react-native-linear-gradient "^2.4.0"
+
 edge-core-js@^0.16.0:
   version "0.16.0"
   resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.16.0.tgz#5c483ed14720b605df217105b03bd4735bdceadc"
@@ -3359,11 +3366,12 @@ edge-exchange-plugins@^0.6.1:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@0.5.23:
-  version "0.5.23"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.5.23.tgz#16ac1bca5b4d48a3c802d511fd375b309c192b78"
-  integrity sha512-MEU3TMrablMJSkSO6yaY+Nicgh2g388rXB0jweQwPsCkrqEvSmUBifFDxoZLdzJOSfOvLGS2HBGXT+7u7VnF2Q==
+edge-login-ui-rn@0.5.25:
+  version "0.5.25"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.5.25.tgz#ba035538bb6fff8a580229b256927a4c95fc8554"
+  integrity sha512-RBU2nf3VgU4kcPfEPBP0u/F8lWCLViW1Z6Q+JyWrCrPt24rHp8eBK3bZajUVi7bUGkcNaJGTYctpJt4Z+qFT6A==
   dependencies:
+    edge-components "^0.0.24"
     material-ui "^0.20.0"
     moment "^2.19.3"
     native-base "^2.7.2"
