@@ -502,5 +502,7 @@
   "edge_login_fetching": "Recupero le informazioni di login di Edge...",
   "modal_addressexplorer_message": "Mostra l'indirizzo in Block Explorer",
   "modal_addressexplorer_null": "Questa cripto non ha un sito explorer per il momento",
-  "wallets_for_currency_code_dont_exist": "Non esistono portafogli per le seguenti cripto:"
+  "approximately": "",
+  "estimated_exchange_rate": "",
+  "estimated_exchange_rate_body": ""
 }
