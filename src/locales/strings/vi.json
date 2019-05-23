@@ -502,5 +502,7 @@
   "edge_login_fetching": "Tìm nạp thông tin đăng nhập Edge...",
   "modal_addressexplorer_message": "Hiển thị trong Block Explorer?",
   "modal_addressexplorer_null": "Đồng tiền này hiện tại không có trang web explorer",
-  "wallets_for_currency_code_dont_exist": ""
+  "approximately": "",
+  "estimated_exchange_rate": "",
+  "estimated_exchange_rate_body": ""
 }
