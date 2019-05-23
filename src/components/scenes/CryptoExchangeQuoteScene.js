@@ -176,6 +176,7 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
   }
 
   render () {
+    const isEstimate = this.props.quote.quote.isEstimate
     if (!this.props.fromWallet) {
       return null
     }
@@ -209,6 +210,7 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
               fiatCurrencyAmount={this.props.toBalanceInFiat}
               cryptoAmount={this.props.toDisplayAmount}
               currency={this.props.quote.toWalletCurrencyName}
+              isEstimate={isEstimate}
             />
           </View>
           <View style={styles.confirmTextRow}>

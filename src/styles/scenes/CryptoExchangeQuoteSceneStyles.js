@@ -63,6 +63,38 @@ const CryptoExchangeQuoteSceneStyles = {
       backgroundColor: THEME.COLORS.OPACITY_WHITE,
       borderRadius: 3
     },
+    headlineEstimateText: {
+      color: THEME.COLORS.ACCENT_ORANGE,
+      fontSize: scale(14),
+      height: scale(16)
+    },
+    headlineRow: {
+      flex: 1,
+      flexDirection: 'row',
+      paddingTop: scale(10),
+      paddingBottom: scale(10),
+      alignItems: 'center',
+      height: 40,
+      marginTop: 5,
+      marginBottom: 5
+    },
+    iconButton: {
+      container: {
+        width: 15,
+        height: scale(15),
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        marginLeft: 5
+      },
+      icon: {
+        color: THEME.COLORS.ACCENT_ORANGE
+      },
+      iconPressed: {
+        color: THEME.COLORS.ACCENT_ORANGE
+      },
+      iconSize: scale(15),
+      underlayColor: THEME.COLORS.TRANSPARENT
+    },
     headlineText: {
       color: THEME.COLORS.WHITE,
       fontSize: scale(14),
