@@ -502,5 +502,7 @@
   "edge_login_fetching": "Edgeログイン情報を取得しています...",
   "modal_addressexplorer_message": "Block Explorerで表示しますか？",
   "modal_addressexplorer_null": "まだこの通貨はエクスプローラーサイトがありません",
-  "wallets_for_currency_code_dont_exist": ""
+  "approximately": "",
+  "estimated_exchange_rate": "",
+  "estimated_exchange_rate_body": ""
 }
