@@ -75,7 +75,7 @@ export const styles = {
   },
   // //// Beginning of Settings Row ///////
   settingsRowContainer: {
-    minHeight: scale(44),
+    height: scale(44),
     backgroundColor: THEME.COLORS.WHITE,
     borderBottomWidth: 1,
     borderBottomColor: THEME.COLORS.GRAY_3,
@@ -96,7 +96,7 @@ export const styles = {
     justifyContent: 'center'
   },
   settingsRowLeftText: {
-    width: '80%',
+    width: '81%',
     color: THEME.COLORS.GRAY_1,
     textAlign: 'left',
     fontSize: scale(16)
@@ -118,7 +118,7 @@ export const styles = {
     color: THEME.COLORS.GRAY_1
   },
   modalRightText: {
-    width: '20%',
+    width: '19%',
     color: THEME.COLORS.SECONDARY,
     fontWeight: 'bold',
     textAlign: 'right'
