@@ -135,7 +135,7 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
       const quoteIdUri = si.quoteUri && quote.quoteId ? si.quoteUri + quote.quoteId : broadcastedTransaction.txid
       const payinAddress = broadcastedTransaction.otherParams != null ? broadcastedTransaction.otherParams.payinAddress : ''
       const uniqueIdentifier = broadcastedTransaction.otherParams != null ? broadcastedTransaction.otherParams.uniqueIdentifier : ''
-
+      const isEstimate = quote.isEstimate ? s.strings.estimated_quote : s.strings.fixed_quote
       const notes = sprintf(
         s.strings.exchange_notes_metadata_generic2,
         state.cryptoExchange.fromDisplayAmount,
@@ -149,7 +149,7 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
         payinAddress,
         uniqueIdentifier,
         supportEmail
-      )
+      ) + ' ' + isEstimate
 
       const edgeMetaData: EdgeMetadata = {
         name,
