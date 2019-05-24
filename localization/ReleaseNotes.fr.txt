@@ -1,7 +1,7 @@
 v1.7.4
 
-* Beta Simplex sell
-* Warn users about high fees
+* Vente Beta Simplex
+* Avertissez les utilisateurs sur les frais élevés
 
 v1.7.3
 
@@ -9,12 +9,12 @@ v1.7.3
 
 v1.7.2
 
-* Fix performance issues on login
-* Fix Split BCH/BSV Error
-* Various visual and text updates
-* Add tap address to launch explorer at request or send confirmation screens
-* Fix segwit fees to be 15% lower than non-segwit
-* Account base currencies such as XRP, EOS etc. will show transactions as dropped if not found on the network
+* Correction des problèmes de performance lors de la connexion
+* Correction d'une erreur BCH/BSV
+* mises à jour de plusieurs visuels et textes
+* Ajouter une adresse tactile pour lancer une demande ou envoyer des écrans de la confirmation
+*Fixer les frais de segwit 15% de moins que les non segwit
+* Devises de base du compte telles que XRP, EOS, etc. il affichera les transactions si elles ne sont pas trouvées sur le réseau
 
 v1.7.0
 
@@ -25,13 +25,13 @@ v1.7.0
 
 v1.6.2
 
-* Fix fiat denomination of wallets from Airbitz to Edge
-* Fix EOS Crash issues
-* Fix various UI display bugs
-* Fix metadata tagging of transactions to update immediately after saving
-* Improved syncing of XRP and ETH
-* Use multiple services to broadcast XRP and ETH transactions
-* Add Faa.st instant exchange provider
+* Correction de la dénomination fiat des portefeuilles d'Airbitz à Edge
+* Corriger les problemes IOS 10
+* Régler plusieurs bugs d'affichages de l'interface d'utilisateurs
+* Fixer le marquage des métadonnées des transactions à mettre à jour immédiatement après sauvegarde
+* Synchronisation améliorée de XRP et ETH
+* Utiliser plusieurs services afin de diffuser les transactions XRP et ETH
+* Ajouter un fournisseur d'échange instantané Faa.st
 
 v1.6.1
 
