@@ -35,7 +35,7 @@ export default {
     alignItems: 'center'
   },
   safeAreaView: {
-    backgroundColor: 'transparent',
+    backgroundColor: THEME.COLORS.PRIMARY,
     height: Number.isNaN(safeAreaHeight) ? void 0 : safeAreaHeight,
     position: 'relative',
     top: StatusBar.currentHeight
