@@ -503,6 +503,8 @@
   "modal_addressexplorer_message": "Mostra l'indirizzo in Block Explorer",
   "modal_addressexplorer_null": "Questa cripto non ha un sito explorer per il momento",
   "approximately": "",
+  "fixed_quote": "",
+  "estimated_quote": "",
   "estimated_exchange_rate": "",
   "estimated_exchange_rate_body": ""
 }
