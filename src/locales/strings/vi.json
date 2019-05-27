@@ -503,6 +503,8 @@
   "modal_addressexplorer_message": "Hiển thị trong Block Explorer?",
   "modal_addressexplorer_null": "Đồng tiền này hiện tại không có trang web explorer",
   "approximately": "",
+  "fixed_quote": "",
+  "estimated_quote": "",
   "estimated_exchange_rate": "",
   "estimated_exchange_rate_body": ""
 }
