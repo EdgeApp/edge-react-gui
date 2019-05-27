@@ -37,7 +37,7 @@ export default class RowSwitch extends Component {
         <View style={[styles.settingsRowTextRow]}>
           <View style={[styles.settingsRowLeftContainer]}>
             {this.props.logo}
-            <T style={[styles.settingsRowLeftText]}>{this.props.leftText}</T>
+            <T style={[styles.settingsRowLeftTextWithoutWidth]}>{this.props.leftText}</T>
           </View>
           <Switch onValueChange={() => this._onPressToggleSetting(this.props.property)} value={this.props.value} />
         </View>
