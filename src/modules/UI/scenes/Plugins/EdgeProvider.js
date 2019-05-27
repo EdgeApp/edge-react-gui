@@ -2,6 +2,7 @@
 import { showModal } from 'edge-components'
 import type { EdgeMetadata, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
 import { Actions } from 'react-native-router-flux'
+import SafariView from 'react-native-safari-view'
 import { Bridgeable } from 'yaob'
 
 import { selectWallet } from '../../../../actions/WalletActions'
@@ -55,6 +56,7 @@ export class EdgeProvider extends Bridgeable {
     this._dispatch = dispatch
     this._state = state
   }
+
   updateState = (arg: any) => {
     this._state = arg
   }
@@ -260,5 +262,13 @@ export class EdgeProvider extends Bridgeable {
       guiMakeSpendInfo.lockInputs = true
       Actions[SEND_CONFIRMATION]({ guiMakeSpendInfo })
     })
+  }
+
+  hasSafariView (): Promise<boolean> {
+    return SafariView.isAvailable()
+  }
+
+  async openSafariView (url: string): Promise<mixed> {
+    SafariView.show({ url })
   }
 }

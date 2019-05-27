@@ -10,7 +10,7 @@ PODS:
   - disklet (0.4.1):
     - React
   - DoubleConversion (1.1.6)
-  - edge-login-ui-rn (0.5.23):
+  - edge-login-ui-rn (0.5.27):
     - React
   - Firebase/Core (5.3.0):
     - Firebase/CoreOnly
@@ -73,6 +73,8 @@ PODS:
   - react-native-material-kit (0.3.4):
     - React
   - react-native-randombytes (3.5.1):
+    - React
+  - react-native-safari-view (1.0.0):
     - React
   - react-native-smart-splash-screen (2.3.5):
     - React
@@ -173,6 +175,7 @@ DEPENDENCIES:
   - react-native-mail (from `../node_modules/react-native-mail`)
   - react-native-material-kit (from `../node_modules/react-native-material-kit`)
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
+  - react-native-safari-view (from `../node_modules/react-native-safari-view`)
   - react-native-smart-splash-screen (from `../node_modules/react-native-smart-splash-screen`)
   - react-native-tcp (from `../node_modules/react-native-tcp`)
   - react-native-webview (from `../node_modules/react-native-webview`)
@@ -249,6 +252,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-material-kit"
   react-native-randombytes:
     :path: "../node_modules/react-native-randombytes"
+  react-native-safari-view:
+    :path: "../node_modules/react-native-safari-view"
   react-native-smart-splash-screen:
     :path: "../node_modules/react-native-smart-splash-screen"
   react-native-tcp:
@@ -280,7 +285,7 @@ SPEC CHECKSUMS:
   BVLinearGradient: 0d985ec461359c82bc254f26d11008bdae50d17a
   disklet: 0aca5091512a734c94cdfe2bd575794b38717d9e
   DoubleConversion: bb338842f62ab1d708ceb63ec3d999f0f3d98ecd
-  edge-login-ui-rn: b0697d3c44c5d510ae01283423acc4a45a08b31a
+  edge-login-ui-rn: d3951974992f8adc5382ae07ba36d8310eb8d330
   Firebase: 68afeeb05461db02d7c9e3215cda28068670f4aa
   FirebaseAnalytics: b3628aea54c50464c32c393fb2ea032566e7ecc2
   FirebaseCore: 62f1b792a49bb9e8b4073f24606d2c93ffc352f0
@@ -302,6 +307,7 @@ SPEC CHECKSUMS:
   react-native-mail: 021d8ee60e374609f5689ef354dc8e36839a9ba6
   react-native-material-kit: e779e910356c15278dcd2d2153b8656d24084c05
   react-native-randombytes: 1b6091800f62c6c393c6bc850ac089ebf63d4c0a
+  react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b
   react-native-tcp: ec39d0ce136873220a2895a0e89dc33804fe0def
   react-native-webview: c0ddb07676492d983068b0dbfe38ff82d49b1175
@@ -315,6 +321,6 @@ SPEC CHECKSUMS:
   RNVectorIcons: ac7bf6bfeafaf3ad34552cdc6eed6fb8c4b7c940
   yoga: 92b2102c3d373d1a790db4ab761d2b0ffc634f64
 
-PODFILE CHECKSUM: 5ae44f7449bbbe150b6c45a9c782e4419748b6a8
+PODFILE CHECKSUM: 5fc2d51a47ea6bef872004d3bd946edb628639af
 
 COCOAPODS: 1.6.1
