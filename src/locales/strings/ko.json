@@ -503,6 +503,8 @@
   "modal_addressexplorer_message": "Block Explorer에서 주소를 표시하시겠습니까?",
   "modal_addressexplorer_null": "이 통화에는 아직 explorer 사이트가 없습니다.",
   "approximately": "",
+  "fixed_quote": "",
+  "estimated_quote": "",
   "estimated_exchange_rate": "",
   "estimated_exchange_rate_body": ""
 }
