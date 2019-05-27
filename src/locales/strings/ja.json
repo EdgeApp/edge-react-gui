@@ -503,6 +503,8 @@
   "modal_addressexplorer_message": "Block Explorerで表示しますか？",
   "modal_addressexplorer_null": "まだこの通貨はエクスプローラーサイトがありません",
   "approximately": "",
+  "fixed_quote": "",
+  "estimated_quote": "",
   "estimated_exchange_rate": "",
   "estimated_exchange_rate_body": ""
 }
