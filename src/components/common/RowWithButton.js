@@ -29,10 +29,10 @@ class RowWithButton extends Component<Props> {
         <View style={[styles.settingsRowTextRow]}>
           <View style={[styles.settingsRowLeftContainer]}>
             <Image resizeMode={'contain'} style={styles.settingsRowLeftLogo} source={this.props.logo} />
-            <T style={[styles.settingsRowLeftText]}>{this.props.leftText}</T>
+            <T style={[styles.settingsRowLeftTextWithoutWidth]}>{this.props.leftText}</T>
           </View>
           <View style={styles.settingsRowRightContainer}>
-            <T style={[styles.settingsRowLeftText]}>{this.props.rightText}</T>
+            <T style={[styles.routeRowRightText]}>{this.props.rightText}</T>
           </View>
         </View>
       </TouchableHighlight>
