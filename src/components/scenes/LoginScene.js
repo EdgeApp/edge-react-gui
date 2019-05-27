@@ -3,7 +3,7 @@
 import type { EdgeAccount, EdgeContext } from 'edge-core-js'
 import { LoginScreen } from 'edge-login-ui-rn'
 import React, { Component } from 'react'
-import { View } from 'react-native'
+import { StatusBar, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 
 import * as CONTEXT_API from '../../modules/Core/Context/api'
@@ -47,8 +47,9 @@ export default class Login extends Component<Props, State> {
   }
 
   render () {
+    const statusBarHeight = StatusBar.currentHeight
     return !this.props.context.listUsernames ? null : (
-      <View style={{ flex: 1 }} testID={'edge: login-scene'}>
+      <View style={{ flex: 1, position: 'relative', top: statusBarHeight }} testID={'edge: login-scene'}>
         <LoginScreen
           username={this.props.username}
           accountOptions={null}

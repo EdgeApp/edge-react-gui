@@ -9,7 +9,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
       }
     }
   />
-  <ScrollView
+  <ScrollViewMock
     style={
       Object {
         "backgroundColor": "#F4F5F6",
@@ -30,14 +30,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         ]
       }
     >
-      <Component
+      <View
         style={
           Array [
             undefined,
           ]
         }
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -71,8 +71,8 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             : 
             
           </FormattedText>
-        </Component>
-      </Component>
+        </View>
+      </View>
     </Gradient>
     <RowRoute
       disabled={false}
@@ -170,14 +170,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         ]
       }
     >
-      <Component
+      <View
         style={
           Array [
             undefined,
           ]
         }
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -209,10 +209,10 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             Options
           </FormattedText>
-        </Component>
-      </Component>
+        </View>
+      </View>
     </Gradient>
-    <Component>
+    <View>
       <RowRoute
         disabled={false}
         leftText="Exchange Settings"
@@ -256,11 +256,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         disabled={false}
         leftText="Default Currency"
         right={
-          <Text
-            accessible={true}
-            allowFontScaling={true}
-            ellipsizeMode="tail"
-          >
+          <Text>
             
           </Text>
         }
@@ -349,7 +345,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         leftText="Terms of Service"
         scene="termsOfService"
       />
-      <Component
+      <View
         style={
           Array [
             Object {
@@ -367,8 +363,8 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             Enable Developer Mode
           </Text>
         </PrimaryButton>
-      </Component>
-      <Component
+      </View>
+      <View
         style={
           Object {
             "flex": 1,
@@ -376,8 +372,8 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           }
         }
       />
-    </Component>
-  </ScrollView>
+    </View>
+  </ScrollViewMock>
 </SafeAreaViewComponent>
 `;
 
@@ -390,7 +386,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
       }
     }
   />
-  <ScrollView
+  <ScrollViewMock
     style={
       Object {
         "backgroundColor": "#F4F5F6",
@@ -411,14 +407,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         ]
       }
     >
-      <Component
+      <View
         style={
           Array [
             undefined,
           ]
         }
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -452,8 +448,8 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             : 
             
           </FormattedText>
-        </Component>
-      </Component>
+        </View>
+      </View>
     </Gradient>
     <RowRoute
       disabled={false}
@@ -551,14 +547,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         ]
       }
     >
-      <Component
+      <View
         style={
           Array [
             undefined,
           ]
         }
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -590,10 +586,10 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             Options
           </FormattedText>
-        </Component>
-      </Component>
+        </View>
+      </View>
     </Gradient>
-    <Component>
+    <View>
       <RowRoute
         disabled={false}
         leftText="Exchange Settings"
@@ -637,11 +633,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         disabled={false}
         leftText="Default Currency"
         right={
-          <Text
-            accessible={true}
-            allowFontScaling={true}
-            ellipsizeMode="tail"
-          >
+          <Text>
             
           </Text>
         }
@@ -730,7 +722,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         leftText="Terms of Service"
         scene="termsOfService"
       />
-      <Component
+      <View
         style={
           Array [
             Object {
@@ -748,8 +740,8 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             Enable Developer Mode
           </Text>
         </PrimaryButton>
-      </Component>
-      <Component
+      </View>
+      <View
         style={
           Object {
             "flex": 1,
@@ -757,7 +749,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           }
         }
       />
-    </Component>
-  </ScrollView>
+    </View>
+  </ScrollViewMock>
 </SafeAreaViewComponent>
 `;

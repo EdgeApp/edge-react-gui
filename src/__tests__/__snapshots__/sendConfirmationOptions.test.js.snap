@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SendConfirmation XMR 1`] = `
-<Component>
+<View>
   <ForwardRef(enhanceContext-Context.Consumer(Menu))
     onBackdropPress={[Function]}
     onClose={[Function]}
@@ -54,7 +54,7 @@ exports[`SendConfirmation XMR 1`] = `
         }
         value="CHANGE_MINING_FEE"
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -73,7 +73,7 @@ exports[`SendConfirmation XMR 1`] = `
           >
             Change Mining Fee
           </FormattedText>
-        </Component>
+        </View>
       </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
       <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
         customStyles={Object {}}
@@ -88,7 +88,7 @@ exports[`SendConfirmation XMR 1`] = `
         }
         value="ADD_UNIQUE_IDENTIFIER"
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -109,7 +109,7 @@ exports[`SendConfirmation XMR 1`] = `
           >
             Add Payment ID
           </FormattedText>
-        </Component>
+        </View>
       </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
       <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
         customStyles={Object {}}
@@ -124,7 +124,7 @@ exports[`SendConfirmation XMR 1`] = `
         }
         value="HELP"
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -143,15 +143,15 @@ exports[`SendConfirmation XMR 1`] = `
           >
             Help
           </FormattedText>
-        </Component>
+        </View>
       </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
     </ForwardRef(enhanceContext-Context.Consumer(MenuOptions))>
   </ForwardRef(enhanceContext-Context.Consumer(Menu))>
-</Component>
+</View>
 `;
 
 exports[`SendConfirmation XRP 1`] = `
-<Component>
+<View>
   <ForwardRef(enhanceContext-Context.Consumer(Menu))
     onBackdropPress={[Function]}
     onClose={[Function]}
@@ -204,7 +204,7 @@ exports[`SendConfirmation XRP 1`] = `
         }
         value="CHANGE_MINING_FEE"
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -223,7 +223,7 @@ exports[`SendConfirmation XRP 1`] = `
           >
             Change Mining Fee
           </FormattedText>
-        </Component>
+        </View>
       </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
       <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
         customStyles={Object {}}
@@ -238,7 +238,7 @@ exports[`SendConfirmation XRP 1`] = `
         }
         value="SEND_MAX"
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -262,7 +262,7 @@ exports[`SendConfirmation XRP 1`] = `
           >
             Send Max Amount
           </FormattedText>
-        </Component>
+        </View>
       </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
       <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
         customStyles={Object {}}
@@ -277,7 +277,7 @@ exports[`SendConfirmation XRP 1`] = `
         }
         value="ADD_UNIQUE_IDENTIFIER"
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -298,7 +298,7 @@ exports[`SendConfirmation XRP 1`] = `
           >
             Add Destination Tag
           </FormattedText>
-        </Component>
+        </View>
       </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
       <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
         customStyles={Object {}}
@@ -313,7 +313,7 @@ exports[`SendConfirmation XRP 1`] = `
         }
         value="HELP"
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -332,15 +332,15 @@ exports[`SendConfirmation XRP 1`] = `
           >
             Help
           </FormattedText>
-        </Component>
+        </View>
       </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
     </ForwardRef(enhanceContext-Context.Consumer(MenuOptions))>
   </ForwardRef(enhanceContext-Context.Consumer(Menu))>
-</Component>
+</View>
 `;
 
 exports[`SendConfirmation not editable 1`] = `
-<Component>
+<View>
   <ForwardRef(enhanceContext-Context.Consumer(Menu))
     onBackdropPress={[Function]}
     onClose={[Function]}
@@ -393,7 +393,7 @@ exports[`SendConfirmation not editable 1`] = `
         }
         value="HELP"
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -412,15 +412,15 @@ exports[`SendConfirmation not editable 1`] = `
           >
             Help
           </FormattedText>
-        </Component>
+        </View>
       </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
     </ForwardRef(enhanceContext-Context.Consumer(MenuOptions))>
   </ForwardRef(enhanceContext-Context.Consumer(Menu))>
-</Component>
+</View>
 `;
 
 exports[`SendConfirmation should render with standard props 1`] = `
-<Component>
+<View>
   <ForwardRef(enhanceContext-Context.Consumer(Menu))
     onBackdropPress={[Function]}
     onClose={[Function]}
@@ -473,7 +473,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
         }
         value="CHANGE_MINING_FEE"
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -492,7 +492,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
           >
             Change Mining Fee
           </FormattedText>
-        </Component>
+        </View>
       </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
       <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
         customStyles={Object {}}
@@ -507,7 +507,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
         }
         value="SEND_MAX"
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -531,7 +531,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
           >
             Send Max Amount
           </FormattedText>
-        </Component>
+        </View>
       </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
       <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
         customStyles={Object {}}
@@ -546,7 +546,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
         }
         value="HELP"
       >
-        <Component
+        <View
           style={
             Object {
               "flexDirection": "row",
@@ -565,9 +565,9 @@ exports[`SendConfirmation should render with standard props 1`] = `
           >
             Help
           </FormattedText>
-        </Component>
+        </View>
       </ForwardRef(enhanceContext-Context.Consumer(MenuOption))>
     </ForwardRef(enhanceContext-Context.Consumer(MenuOptions))>
   </ForwardRef(enhanceContext-Context.Consumer(Menu))>
-</Component>
+</View>
 `;

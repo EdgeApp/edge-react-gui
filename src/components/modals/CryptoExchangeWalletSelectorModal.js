@@ -5,6 +5,7 @@ import { Dimensions, FlatList, View } from 'react-native'
 import { CryptoExchangeCreateWalletRow } from '../../components/common/CryptoExchangeCreateWalletRow.js'
 import { CryptoExchangeWalletListRow } from '../../components/common/CryptoExchangeWalletListRow.js'
 import { CLOSE_ICON, ION_ICONS } from '../../constants/indexConstants'
+import s from '../../locales/strings.js'
 import type { State } from '../../modules/ReduxTypes'
 import { IconButton } from '../../modules/UI/components/Buttons/IconButton.ui'
 import FormattedText from '../../modules/UI/components/FormattedText/index'
@@ -20,7 +21,8 @@ type Props = {
   showWalletCreators: boolean,
   state: State,
   cantCancel: boolean,
-  excludedTokens: Array<string>
+  excludedTokens: Array<string>,
+  noWalletCodes: Array<string>
 }
 type Record = {
   walletItem: GuiWallet | null,
@@ -115,6 +117,20 @@ class CryptoExchangeWalletSelectorModal extends Component<Props, LocalState> {
     }
     return null
   }
+  renderUnSupported = () => {
+    if (this.props.noWalletCodes.length > 0) {
+      return (
+        <View style={styles.header}>
+          <View style={styles.headerLeft}>
+            <FormattedText>
+              {s.strings.wallets_for_currency_code_dont_exist} {this.props.noWalletCodes.toString()}
+            </FormattedText>
+          </View>
+        </View>
+      )
+    }
+    return null
+  }
   renderHeader = () => {
     if (this.props.cantCancel) {
       return (
@@ -139,6 +155,7 @@ class CryptoExchangeWalletSelectorModal extends Component<Props, LocalState> {
       <View style={styles.container}>
         <View style={styles.activeArea}>
           {this.renderHeader()}
+          {this.renderUnSupported()}
           <View style={{ ...styles.flatListBox, height: this.calculateHeight() }}>
             <FlatList data={this.state.records} keyExtractor={this.keyExtractor} renderItem={this.renderWalletItem} />
           </View>
@@ -163,6 +180,7 @@ export const createCryptoExchangeWalletSelectorModal = (opts: Object) => (props:
       headerTitle={opts.headerTitle}
       cantCancel={opts.cantCancel || false}
       excludedTokens={opts.excludedTokens || []}
+      noWalletCodes={opts.noWalletCodes || []}
     />
   )
 }

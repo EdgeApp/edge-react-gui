@@ -539,7 +539,11 @@ const strings = {
   edge_login_fail_message: 'Could not connect to network. Please check your network connection and try again.',
   edge_login_fetching: 'Fetching Edge Login info...',
   modal_addressexplorer_message: 'Show Address in Block Explorer?',
-  modal_addressexplorer_null: 'This currency has no explorer site as of now'
+  modal_addressexplorer_null: 'This currency has no explorer site as of now',
+  approximately: 'Estimated',
+  estimated_exchange_rate: 'Estimated Exchange Rate',
+  estimated_exchange_rate_body:
+    'No exchange providers are able to provide a fixed quote for the exchange requested. This exchange may result in less funds received than quoted.'
 }
 
 // export default strings

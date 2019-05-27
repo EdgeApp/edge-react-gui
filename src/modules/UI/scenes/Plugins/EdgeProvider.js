@@ -2,6 +2,7 @@
 import { showModal } from 'edge-components'
 import type { EdgeMetadata, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
 import { Actions } from 'react-native-router-flux'
+import SafariView from 'react-native-safari-view'
 import { Bridgeable } from 'yaob'
 
 import { selectWallet } from '../../../../actions/WalletActions'
@@ -10,7 +11,6 @@ import { SEND_CONFIRMATION } from '../../../../constants/SceneKeys.js'
 import s from '../../../../locales/strings'
 import * as SETTINGS_SELECTORS from '../../../../modules/Settings/selectors.js'
 import type { GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
-import type { BuySellPlugin } from '../../../../types.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import type { Dispatch, State } from '../../../ReduxTypes.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
@@ -46,74 +46,33 @@ type EdgeGetReceiveAddressOptions = {
 }
 
 export class EdgeProvider extends Bridgeable {
-  _plugin: BuySellPlugin
-  _state: State
+  _pluginName: string
   _dispatch: Dispatch
-  _backClick: Function
-  _navStack: Array<string>
-  backHandler: { handleBack(): Promise<number> }
+  _state: State
 
-  static instanceTracker = {}
-  static handleBack () {
-    if (EdgeProvider.instanceTracker.instance) {
-      EdgeProvider.instanceTracker.instance.onBackButtonPressed()
-    }
-  }
-  static navStackPush (arg: string) {
-    if (EdgeProvider.instanceTracker.instance) {
-      EdgeProvider.instanceTracker.instance._navStack.push(arg)
-    }
-  }
-  static navStackClear () {
-    if (EdgeProvider.instanceTracker.instance) {
-      EdgeProvider.instanceTracker.instance._navStack = []
-    }
-  }
-
-  constructor (plugin: BuySellPlugin, state: State, dispatch: Dispatch, backClick: Function) {
+  constructor (pluginName: string, state: State, dispatch: Dispatch) {
     super()
-    this._plugin = plugin
-    this._state = state
+    this._pluginName = pluginName
     this._dispatch = dispatch
-    this._backClick = backClick
-    this._navStack = []
-    this.constructor.instanceTracker.instance = this
+    this._state = state
   }
-  navStackPush (arg: string) {
-    this._navStack.push(arg)
-  }
-  navStackClear () {
-    this._navStack = []
-  }
+
   updateState = (arg: any) => {
     this._state = arg
-  }
-
-  async setBackHandler (handler: { handleBack(): Promise<number> }): Promise<mixed> {
-    this.backHandler = handler
-  }
-
-  async onBackButtonPressed () {
-    let historyCounter = 0
-    if (this.backHandler) {
-      historyCounter = await this.backHandler.handleBack()
-    }
-    if (historyCounter > 0) {
-      this._backClick(true)
-      return
-    }
-    if (this._navStack.length > 0) {
-      this._navStack.pop()
-      this._backClick(true)
-      return
-    }
-    this._backClick(false)
   }
 
   // Set the currency wallet to interact with. This will show a wallet selector modal
   // for the user to pick a wallet within their list of wallets that match `currencyCodes`
   // Returns the currencyCode chosen by the user (store: Store)
-  async chooseCurrencyWallet (currencyCodes: Array<string> = []): Promise<string> {
+  async chooseCurrencyWallet (cCodes: Array<string> = []): Promise<string> {
+    const currencyCodes = []
+    const currencyCodeCount = {}
+    let i = 0
+    for (i; i < cCodes.length; i++) {
+      currencyCodes.push(cCodes[i].toUpperCase())
+      currencyCodeCount[cCodes[i].toUpperCase()] = 0
+    }
+
     const wallets = this._state.ui.wallets.byId // CORE_SELECTORS.getWallets(this._state)
     const excludedCurrencyCode = []
     const excludedTokens = []
@@ -141,6 +100,16 @@ export class EdgeProvider extends Bridgeable {
         }
         if (currencyCodes.includes(wallet.currencyCode)) {
           walletsToUse.push(wallet)
+          currencyCodeCount[wallet.currencyCode]++
+        }
+      }
+    }
+    // check to see if there are any requested codes that there are no wallets for
+    const noWalletCodes = []
+    if (currencyCodes.length > 0) {
+      for (const key in currencyCodeCount) {
+        if (currencyCodeCount[key] === 0) {
+          noWalletCodes.push(key)
         }
       }
     }
@@ -159,7 +128,8 @@ export class EdgeProvider extends Bridgeable {
       state: this._state,
       headerTitle: s.strings.choose_your_wallet,
       cantCancel: true,
-      excludedTokens
+      excludedTokens,
+      noWalletCodes
     }
     const modal = createCryptoExchangeWalletSelectorModal(props)
     // const modal = createCustomWalletListModal(props)
@@ -183,7 +153,7 @@ export class EdgeProvider extends Bridgeable {
   async writeData (data: { [key: string]: string }) {
     const account = CORE_SELECTORS.getAccount(this._state)
     const store = account.dataStore
-    await Promise.all(Object.keys(data).map(key => store.setItem(this._plugin.pluginId, key, data[key])))
+    await Promise.all(Object.keys(data).map(key => store.setItem(this._pluginName, key, data[key])))
     return { success: true }
   }
 
@@ -195,7 +165,7 @@ export class EdgeProvider extends Bridgeable {
     const store = account.dataStore
     const returnObj = {}
     for (let i = 0; i < keys.length; i++) {
-      returnObj[keys[i]] = await store.getItem(this._plugin.pluginId, keys[i]).catch(e => undefined)
+      returnObj[keys[i]] = await store.getItem(this._pluginName, keys[i]).catch(e => undefined)
     }
     return returnObj
   }
@@ -292,5 +262,13 @@ export class EdgeProvider extends Bridgeable {
       guiMakeSpendInfo.lockInputs = true
       Actions[SEND_CONFIRMATION]({ guiMakeSpendInfo })
     })
+  }
+
+  hasSafariView (): Promise<boolean> {
+    return SafariView.isAvailable()
+  }
+
+  async openSafariView (url: string): Promise<mixed> {
+    SafariView.show({ url })
   }
 }

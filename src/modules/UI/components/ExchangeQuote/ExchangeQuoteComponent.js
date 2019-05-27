@@ -1,11 +1,15 @@
 // @flow
 
+import { createSimpleConfirmModal, showModal } from 'edge-components'
 import React, { Component } from 'react'
-import { Image, View } from 'react-native'
+import { Image, Platform, View } from 'react-native'
 
+import { ANDROID_INFO_ICON, EXCLAMATION, ION_ICONS, IOS_INFO_ICON, MATERIAL_COMMUNITY } from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings.js'
 import { CryptoExchangeQuoteSceneStyles } from '../../../../styles/indexStyles.js'
 import FormattedText from '../../components/FormattedText'
+import { IconButton } from '../Buttons/IconButton.ui'
+import { Icon } from '../Icon/Icon.ui'
 
 type Props = {
   isTop?: boolean | null,
@@ -17,7 +21,8 @@ type Props = {
   fiatCurrencyCode: string,
   fiatCurrencyAmount: string,
   walletName: string,
-  miningFee?: string | null
+  miningFee?: string | null,
+  isEstimate?: boolean
 }
 type State = {}
 
@@ -40,12 +45,37 @@ class ExchangeQuoteComponent extends Component<Props, State> {
     }
     return null
   }
+  showExplanationForEstimate = () => {
+    const modal = createSimpleConfirmModal({
+      title: s.strings.estimated_exchange_rate,
+      message: s.strings.estimated_exchange_rate_body,
+      icon: <Icon type={MATERIAL_COMMUNITY} name={EXCLAMATION} size={30} />,
+      buttonText: s.strings.string_ok
+    })
+    showModal(modal).then((response: null) => {})
+  }
+  renderHeadline = () => {
+    const styles = CryptoExchangeQuoteSceneStyles.quoteDetailContainer
+    if (this.props.isEstimate) {
+      const platform = Platform.OS
+      const infoIcon = platform === 'ios' ? IOS_INFO_ICON : ANDROID_INFO_ICON
+      return (
+        <View style={styles.headlineRow}>
+          <FormattedText style={styles.headlineEstimateText}>
+            {s.strings.approximately} {this.props.headline}
+          </FormattedText>
+          <IconButton style={styles.iconButton} onPress={this.showExplanationForEstimate} icon={infoIcon} iconType={ION_ICONS} />
+        </View>
+      )
+    }
+    return <FormattedText style={styles.headlineText}>{this.props.headline}</FormattedText>
+  }
   render () {
     const styles = CryptoExchangeQuoteSceneStyles.quoteDetailContainer
     const container = this.props.isTop ? styles.containerExpanded : styles.containerCollapsed
     return (
       <View style={styles.container}>
-        <FormattedText style={styles.headlineText}>{this.props.headline}</FormattedText>
+        {this.renderHeadline()}
         <View style={container}>
           <View style={styles.topRow}>
             <View style={styles.logoContainer}>

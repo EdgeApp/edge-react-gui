@@ -34,6 +34,8 @@ class PluginList extends Component<Props, State> {
 
   _onPress = (plugin: BuySellPlugin) => {
     if (plugin.pluginId === 'custom') {
+      console.log('custom click!')
+
       const yesButton = {
         title: s.strings.load_plugin
       }
@@ -67,6 +69,7 @@ class PluginList extends Component<Props, State> {
         yesButton,
         noButton
       })
+      console.log('gonna show', modal)
       showModal(modal).then(response => {
         if (response) {
           plugin.sourceFile = { uri: response }
