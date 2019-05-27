@@ -503,6 +503,8 @@
   "modal_addressexplorer_message": "是否在区块链浏览器中显示地址？",
   "modal_addressexplorer_null": "此货币在目前为止没有浏览器网站",
   "approximately": "",
+  "fixed_quote": "",
+  "estimated_quote": "",
   "estimated_exchange_rate": "",
   "estimated_exchange_rate_body": ""
 }
