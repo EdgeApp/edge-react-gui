@@ -13,7 +13,7 @@ export type Props = {
   filterArray: Array<any>,
   dimensions: DeviceDimensions,
   height: number,
-  extraTopSpace: number,
+  extraTopSpace?: number,
   containerStyle: Object,
   onRegularSelectFxn: string => void,
   scrollRenderAheadDistance: number,
@@ -39,12 +39,14 @@ export default class SearchResults extends Component<Props, State> {
   }
 
   render () {
+    const { extraTopSpace = 0 } = this.props
     let searchResultsHeight
     if (this.props.dimensions.keyboardHeight) {
       searchResultsHeight = this.props.height + PLATFORM.toolbarHeight - this.props.dimensions.keyboardHeight
     } else {
       searchResultsHeight = this.props.height
     }
+
     return (
       <View
         style={[
@@ -52,7 +54,7 @@ export default class SearchResults extends Component<Props, State> {
           {
             height: searchResultsHeight,
             width: PLATFORM.deviceWidth,
-            top: scale(PLATFORM.toolbarHeight + this.props.extraTopSpace),
+            top: scale(PLATFORM.toolbarHeight + extraTopSpace),
             zIndex: 999
           },
           this.props.containerStyle
