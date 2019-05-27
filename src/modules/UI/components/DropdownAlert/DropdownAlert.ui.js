@@ -32,7 +32,7 @@ export default class DropdownAlert extends Component<Props> {
         onPress={onPress}
         panResponderEnabled={false}
         updateStatusBar={false}
-        endDelta={isIphoneX ? 45 : 20}
+        endDelta={isIphoneX ? 85 : 60}
         onClose={onClose}
       >
         {children}
