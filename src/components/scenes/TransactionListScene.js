@@ -160,7 +160,7 @@ export class TransactionList extends Component<Props, State> {
                 <FlatList
                   ListEmptyComponent={this.renderBuyCrypto()}
                   ListHeaderComponent={this.currentRenderBalanceBox()}
-                  ListFooterComponent={<View style={{ height: isAndroid ? 50 : 0 }} />}
+                  ListFooterComponent={<View style={{ height: isAndroid ? 80 : 0 }} />}
                   style={styles.transactionsScrollWrap}
                   data={txs}
                   renderItem={this.renderTx}
