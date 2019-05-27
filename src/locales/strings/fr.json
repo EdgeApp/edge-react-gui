@@ -503,6 +503,8 @@
   "modal_addressexplorer_message": "Afficher l'adresse dans Blockexplorer ?",
   "modal_addressexplorer_null": "Cette monnaie n’a aucun site explorer en ce moment  ",
   "approximately": "Estimé",
+  "fixed_quote": "",
+  "estimated_quote": "",
   "estimated_exchange_rate": "Taux de change estimé",
   "estimated_exchange_rate_body": "Aucun fournisseur d'échange ne peut fournir une soumission fixe pour l'échange demandé. Cet échange peut entraîner moins de fonds reçus que ceux cités."
 }
