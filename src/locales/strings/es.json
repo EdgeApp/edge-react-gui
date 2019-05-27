@@ -503,6 +503,8 @@
   "modal_addressexplorer_message": "¿Quieres mostrar la dirección en el explorador de bloques?",
   "modal_addressexplorer_null": "Esta moneda no tiene explorador por el momento",
   "approximately": "",
+  "fixed_quote": "",
+  "estimated_quote": "",
   "estimated_exchange_rate": "",
   "estimated_exchange_rate_body": ""
 }
