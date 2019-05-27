@@ -161,7 +161,10 @@ class PluginView extends React.Component<Props> {
 
   render () {
     const uri = Platform.OS === 'android' ? 'file:///android_asset/blank.html' : `file://${RNFS.MainBundlePath}/blank.html`
-
+    const userAgent =
+      Platform.OS === 'android'
+        ? 'Mozilla/5.0 (Linux; U; Android 4.4.2; en-us; SCH-I535 Build/KOT49H) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30'
+        : 'Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_1 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Version/10.0 Mobile/14E304 Safari/602.1'
     return (
       <SafeAreaView>
         <Gradient style={styles.gradient} />
@@ -176,10 +179,7 @@ class PluginView extends React.Component<Props> {
           ref={this._callbacks.setRef}
           setWebContentsDebuggingEnabled={true}
           source={{ uri }}
-          userAgent={
-            'Mozilla/5.0 (Linux; Android 6.0.1; SM-G532G Build/MMB29T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.83 Mobile Safari/537.36 edge/app.edge.' +
-            Platform.OS
-          }
+          userAgent={userAgent + ' edge/app.edge.'}
           useWebKit
         />
       </SafeAreaView>
