@@ -123,7 +123,7 @@ const SpendButton = () => {
   )
 }
 
-const popToWalletListScene = () => Actions.popTo(Constants.WALLET_LIST_SCENE)
+const popToWalletListScene = () => Actions.jump(Constants.WALLET_LIST_SCENE)
 const WalletsButton = () => {
   return (
     <Button onPress={popToWalletListScene}>
