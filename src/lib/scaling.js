@@ -7,24 +7,16 @@ const { width, height } = Dimensions.get('window')
 const guidelineBaseWidth = 320
 const guidelineBaseHeight = 568
 
-const scaleVertical = size => {
-  const out = (height / guidelineBaseHeight) * size
-  return out
-}
-
-const scaleHorizontal = size => {
-  const out = (width / guidelineBaseWidth) * size
-  return out
-}
+// Differences between current sizes and guideline sizes:
+const ratioHorizontal = (width - guidelineBaseWidth) / guidelineBaseWidth
+const ratioVertical = (height - guidelineBaseHeight) / guidelineBaseHeight
 
 export const scaleH = (size: number, factor: number = 0.3) => {
-  const out = size + (scaleHorizontal(size) - size) * factor
-  return out
+  return size + size * factor * ratioHorizontal
 }
 
 export const scaleV = (size: number, factor: number = 0.3) => {
-  const out = size + (scaleVertical(size) - size) * factor
-  return out
+  return size + size * factor * ratioVertical
 }
 
 export { scaleV as scale }

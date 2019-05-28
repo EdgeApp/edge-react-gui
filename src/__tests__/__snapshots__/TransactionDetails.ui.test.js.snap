@@ -15,7 +15,7 @@ exports[`TransactionDetails.ui should render 1`] = `
     <Gradient
       style={
         Object {
-          "height": 92.70211267605633,
+          "height": 92.70211267605634,
           "position": "absolute",
           "width": "100%",
         }
@@ -25,7 +25,7 @@ exports[`TransactionDetails.ui should render 1`] = `
       style={
         Object {
           "position": "relative",
-          "top": 92.70211267605633,
+          "top": 92.70211267605634,
         }
       }
     >
@@ -160,7 +160,7 @@ exports[`TransactionDetails.ui should render 1`] = `
                   Array [
                     Object {
                       "color": "#87939E",
-                      "fontSize": 19.66408450704225,
+                      "fontSize": 19.664084507042254,
                     },
                   ]
                 }
@@ -297,7 +297,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
     <Gradient
       style={
         Object {
-          "height": 92.70211267605633,
+          "height": 92.70211267605634,
           "position": "absolute",
           "width": "100%",
         }
@@ -307,7 +307,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
       style={
         Object {
           "position": "relative",
-          "top": 92.70211267605633,
+          "top": 92.70211267605634,
         }
       }
     >
@@ -442,7 +442,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
                   Array [
                     Object {
                       "color": "#87939E",
-                      "fontSize": 19.66408450704225,
+                      "fontSize": 19.664084507042254,
                     },
                   ]
                 }
@@ -582,7 +582,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
     <Gradient
       style={
         Object {
-          "height": 92.70211267605633,
+          "height": 92.70211267605634,
           "position": "absolute",
           "width": "100%",
         }
@@ -592,7 +592,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
       style={
         Object {
           "position": "relative",
-          "top": 92.70211267605633,
+          "top": 92.70211267605634,
         }
       }
     >
@@ -727,7 +727,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
                   Array [
                     Object {
                       "color": "#87939E",
-                      "fontSize": 19.66408450704225,
+                      "fontSize": 19.664084507042254,
                     },
                   ]
                 }
@@ -864,7 +864,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
     <Gradient
       style={
         Object {
-          "height": 92.70211267605633,
+          "height": 92.70211267605634,
           "position": "absolute",
           "width": "100%",
         }
@@ -874,7 +874,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
       style={
         Object {
           "position": "relative",
-          "top": 92.70211267605633,
+          "top": 92.70211267605634,
         }
       }
     >
@@ -1009,7 +1009,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
                   Array [
                     Object {
                       "color": "#87939E",
-                      "fontSize": 19.66408450704225,
+                      "fontSize": 19.664084507042254,
                     },
                   ]
                 }
