@@ -75,7 +75,7 @@ export const styles = {
   },
   // //// Beginning of Settings Row ///////
   settingsRowContainer: {
-    minHeight: scale(44),
+    height: scale(52),
     backgroundColor: THEME.COLORS.WHITE,
     borderBottomWidth: 1,
     borderBottomColor: THEME.COLORS.GRAY_3,
@@ -85,18 +85,19 @@ export const styles = {
   },
   settingsRowTextRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    width: '100%'
   },
   settingsRowLeftContainer: {
-    justifyContent: 'flex-start',
-    flexDirection: 'row'
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-start'
   },
   settingsRowRightContainer: {
-    justifyContent: 'center'
+    flexDirection: 'row',
+    justifyContent: 'flex-end'
   },
   settingsRowLeftText: {
-    width: '81%',
     color: THEME.COLORS.GRAY_1,
     textAlign: 'left',
     fontSize: scale(16)
@@ -123,7 +124,6 @@ export const styles = {
     color: THEME.COLORS.GRAY_1
   },
   modalRightText: {
-    width: '19%',
     color: THEME.COLORS.SECONDARY,
     fontWeight: 'bold',
     textAlign: 'right'
