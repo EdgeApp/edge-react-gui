@@ -15,6 +15,7 @@ describe('Scan component', () => {
       torchEnabled: false,
       scanEnabled: false,
       showToWalletModal: false,
+      cameraIncrementer: 0,
       deepLinkPending: false,
       deepLinkUri: null,
       wallets: {},
@@ -36,6 +37,7 @@ describe('Scan component', () => {
     const props = {
       cameraPermission: PermissionStatusStrings.AUTHORIZED,
       torchEnabled: false,
+      cameraIncrementer: 0,
       scanEnabled: false,
       showToWalletModal: false,
       deepLinkPending: false,
