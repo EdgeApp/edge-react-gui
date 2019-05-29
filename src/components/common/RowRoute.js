@@ -21,9 +21,7 @@ export default class RowRoute extends Component<Props> {
           <View style={[styles.settingsRowLeftContainer]}>
             <T style={[styles.settingsRowLeftText, this.props.disabled ? styles.settingsRowLeftTextDisabled : null]}>{this.props.leftText}</T>
           </View>
-          <View style={[styles.settingsRowLeftContainer]}>
-            <T style={[styles.routeRowRightText]}>{this.props.right}</T>
-          </View>
+          <T style={[styles.routeRowRightText]}>{this.props.right}</T>
         </View>
       </TouchableHighlight>
     )
