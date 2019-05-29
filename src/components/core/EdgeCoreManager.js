@@ -46,6 +46,7 @@ export const currencyPlugins = {
   groestlcoin: true,
   litecoin: true,
   qtum: true,
+  ravencoin: true,
   smartcash: true,
   ufo: true,
   vertcoin: true,

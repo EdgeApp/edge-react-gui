@@ -59,6 +59,9 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   VTC: {
     denomination: '100000000'
   },
+  RVN: {
+    denomination: '100000000'
+  },
   XZC: {
     denomination: '100000000'
   },
@@ -187,6 +190,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   LTC: 'object',
   FTC: 'object',
   VTC: 'object',
+  RVN: 'object',
   XZC: 'object',
   QTUM: 'object',
   XMR: 'object',

@@ -33,6 +33,7 @@ const WALLET_TYPE_ORDER = [
   'wallet:dash',
   'wallet:digibyte',
   'wallet:vertcoin',
+  'wallet:ravencoin',
   'wallet:qtum',
   'wallet:feathercoin',
   'wallet:bitcoingold',
