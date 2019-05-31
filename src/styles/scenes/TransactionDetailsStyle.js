@@ -18,15 +18,12 @@ export const styles = {
     paddingTop: scale(32),
     zIndex: 1
   },
-  expandedHeader: {
-    height: scale(32),
-    flexDirection: 'row',
-    justifyContent: 'center'
-  },
-  headerGradient: {
-    height: scale(66),
-    width: '100%',
-    position: 'absolute'
+  searchPopup: {
+    backgroundColor: THEME.COLORS.WHITE,
+    position: 'absolute',
+    bottom: 0,
+    top: 0,
+    width: '100%'
   },
   modalHeaderIconWrapBottom: {
     borderRadius: 24,
@@ -164,7 +161,8 @@ export const styles = {
     flexDirection: 'row',
     paddingLeft: scale(15),
     paddingRight: scale(15),
-    height: scale(38)
+    height: scale(38),
+    marginBottom: scale(8)
   },
   categoryLeft: {
     borderRadius: 3,
@@ -258,6 +256,12 @@ export const styles = {
     marginTop: scale(15),
     borderTopWidth: 1,
     borderTopColor: THEME.COLORS.GRAY_3
+  },
+  resultList: {
+    backgroundColor: THEME.COLORS.WHITE,
+    borderTopColor: THEME.COLORS.GRAY_3,
+    borderTopWidth: 1,
+    flex: 1
   },
   rowContainer: {
     flex: 1,
