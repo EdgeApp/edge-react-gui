@@ -1,32 +1,13 @@
 // @flow
 
 import { StyleSheet } from 'react-native'
-import ExtraDimensions from 'react-native-extra-dimensions-android'
 
 import { scale } from '../../lib/scaling.js'
 import THEME from '../../theme/variables/airbitz'
 import { PLATFORM } from '../../theme/variables/platform.js'
 
-const SOFT_MENU_BAR_HEIGHT = ExtraDimensions.get('SOFT_MENU_BAR_HEIGHT')
-
 export const styles = {
-  gradient: {
-    height: THEME.HEADER
-  },
-  scene: {
-    width: '100%',
-    height: PLATFORM.usableHeight + PLATFORM.toolbarHeight
-  },
-  container: {
-    flex: 1,
-    alignItems: 'stretch'
-  },
-
   // searchbar stuff
-
-  scrollView: {
-    flex: 1
-  },
   searchContainer: {
     backgroundColor: THEME.COLORS.PRIMARY,
     height: scale(44),
@@ -219,12 +200,6 @@ export const styles = {
   },
 
   // beginning of second half
-  transactionsWrap: {
-    flex: 1
-  },
-  androidTransactionsWrap: {
-    height: PLATFORM.usableHeight - SOFT_MENU_BAR_HEIGHT + THEME.HEADER
-  },
   searchBarView: {
     paddingLeft: scale(12),
     paddingRight: scale(24),

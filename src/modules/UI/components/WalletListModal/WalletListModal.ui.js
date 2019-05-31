@@ -5,7 +5,6 @@ import { FlatList } from 'react-native'
 import * as Animatable from 'react-native-animatable'
 import slowlog from 'react-native-slowlog'
 
-import { PLATFORM } from '../../../../theme/variables/platform.js'
 import type { GuiWallet } from '../../../../types.js'
 import { WalletListRowConnector } from '../WalletListRow/WalletListRowConnector.js'
 import WalletListModalHeader from './components/WalletListModalHeaderConnector'
@@ -46,20 +45,15 @@ export default class WalletListModal extends Component<WalletListModalProps> {
   }
 
   render () {
-    const { wallets, topDisplacement } = this.props
+    const { wallets, topDisplacement = 0 } = this.props
     const walletList = []
-    const top = topDisplacement || 38
     for (const id in wallets) {
       const wallet = wallets[id]
       // perhaps it'd be best to filter the list of valid wallets rather than arbitrary criteria
       walletList.push(wallet)
     }
     return (
-      <Animatable.View
-        style={[styles.topLevel, { position: 'absolute', top: top, height: PLATFORM.usableDimensionHeight }]}
-        animation="fadeInUp"
-        duration={250}
-      >
+      <Animatable.View style={[styles.topLevel, { position: 'absolute', bottom: 0, top: topDisplacement }]} animation="fadeInUp" duration={250}>
         <FlatList
           ListHeaderComponent={<WalletListModalHeader type={this.props.type} whichWallet={this.props.whichWallet} />}
           style={{ width: '100%' }}
