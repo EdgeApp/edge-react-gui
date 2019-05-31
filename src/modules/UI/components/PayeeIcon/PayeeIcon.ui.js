@@ -1,32 +1,34 @@
 // @flow
 
-import React, { Component } from 'react'
-import { Image, View } from 'react-native'
+import React from 'react'
+import { Image, StyleSheet } from 'react-native'
 
 import ReceivedIcon from '../../../../assets/images/transactions/transaction-details-received.png'
 import SentIcon from '../../../../assets/images/transactions/transaction-details-sent.png'
-import styles from './style'
+import { scale } from '../../../../lib/scaling.js'
 
 export type Props = {
   thumbnailPath: string,
   direction: string
 }
-export class PayeeIcon extends Component<Props> {
-  render () {
-    return <View style={[styles.modalHeaderIconWrapBottom]}>{this.renderIcon()}</View>
+export function PayeeIcon (props: Props) {
+  if (props.thumbnailPath) {
+    return <Image source={{ uri: props.thumbnailPath }} style={styles.payeeIcon} />
   }
 
-  renderIcon () {
-    if (this.props.thumbnailPath) {
-      return <Image source={{ uri: this.props.thumbnailPath }} style={styles.payeeIcon} />
-    } else {
-      if (this.props.direction === 'receive') {
-        return <Image source={ReceivedIcon} style={styles.payeeIcon} />
-      } else {
-        return <Image source={SentIcon} style={styles.payeeIcon} />
-      }
-    }
-  }
+  const source = props.direction === 'receive' ? ReceivedIcon : SentIcon
+  return <Image source={source} style={styles.payeeIcon} />
 }
 
-export default PayeeIcon
+const transparent = 'transparent'
+const styles = StyleSheet.create({
+  payeeIcon: {
+    alignSelf: 'center',
+    position: 'absolute',
+    top: scale(-24),
+    backgroundColor: transparent,
+    borderRadius: scale(24),
+    height: scale(48),
+    width: scale(48)
+  }
+})
