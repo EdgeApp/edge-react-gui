@@ -51,6 +51,16 @@ const setBluetoothModeStart = (bluetoothMode: boolean) => ({
   data: { bluetoothMode }
 })
 
+export const updateOneSetting = (setting: Object) => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const settings = state.ui.settings
+  const updatedSettings = {
+    ...settings,
+    ...setting
+  }
+  dispatch(SETTINGS_ACTIONS.updateSettings(updatedSettings))
+}
+
 export const setPINModeRequest = (pinMode: boolean) => (dispatch: Dispatch, getState: GetState) => {
   dispatch(setPINModeStart(pinMode))
 

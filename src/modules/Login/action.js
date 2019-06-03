@@ -116,6 +116,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     pinLoginEnabled: false,
     pinMode: false,
     otpMode: false,
+    countryCode: '',
     customTokens: [],
     defaultFiat: '',
     defaultIsoFiat: '',

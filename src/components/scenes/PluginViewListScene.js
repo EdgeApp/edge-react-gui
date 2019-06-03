@@ -2,22 +2,45 @@
 import { createInputModal } from 'edge-components'
 import React, { Component } from 'react'
 // eslint-disable-next-line
-import { FlatList, Image, PermissionsAndroid, Platform, Text, TouchableWithoutFeedback, View } from 'react-native'
+import { FlatList, Image, PermissionsAndroid, Platform, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
-import { ANDROID, PLUGIN_BUY, PLUGIN_BUY_LEGACY, PLUGIN_SPEND, PLUGIN_SPEND_LEGACY, SPEND } from '../../constants/indexConstants'
+import { updateOneSetting } from '../../actions/SettingsActions.js'
+import {
+  ANDROID,
+  ARROW_RIGHT,
+  COUNTRY_CODES,
+  EDGE_PLUGIN_REGIONS,
+  FLAG_LOGO_URL,
+  PLUGIN_BUY,
+  PLUGIN_BUY_LEGACY,
+  PLUGIN_SPEND,
+  PLUGIN_SPEND_LEGACY,
+  SIMPLE_ICONS,
+  SPEND
+} from '../../constants/indexConstants'
+import { scale } from '../../lib/scaling.js'
 import s from '../../locales/strings.js'
+import { getSyncedSettingsAsync, setSyncedSettingsAsync } from '../../modules/Core/Account/settings.js'
+import Text from '../../modules/UI/components/FormattedText'
+import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import { buySellPlugins, spendPlugins } from '../../modules/UI/scenes/Plugins/plugins'
 import styles from '../../styles/scenes/PluginsStyle.js'
 import { THEME, colors } from '../../theme/variables/airbitz.js'
 import type { BuySellPlugin } from '../../types'
 import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { updateOneSetting } from '../../actions/SettingsActions.js'
+import { scale } from '../../lib/scaling.js'
+import { createCountrySelectionModal } from '../modals/CountrySelectionModal.js'
 
 type Props = {
-  developerModeOn: boolean
+  developerModeOn: boolean,
+  account: Object,
+  updateCountryCode: ({ [string]: mixed }) => void,
+  countryCode: string
 }
 
 type State = {
@@ -116,6 +139,26 @@ class PluginList extends Component<Props, State> {
     Actions[key]({ plugin: plugin })
   }
 
+  openCountrySelectionModal = async () => {
+    const { account, updateCountryCode, countryCode } = this.props
+    const modal = createCountrySelectionModal({ countryCode })
+    const selectedCountryCode = await launchModal(modal, { style: { margin: 0, justifyContent: 'flex-end' } })
+    if (selectedCountryCode) {
+      try {
+        const syncedSettings = await getSyncedSettingsAsync(account)
+        const updatedSettings = {
+          ...syncedSettings,
+          countryCode: selectedCountryCode
+        }
+        updateCountryCode({ countryCode: selectedCountryCode })
+        await setSyncedSettingsAsync(account, updatedSettings)
+      } catch (e) {
+        console.log(e)
+        throw new Error(s.strings.settings_set_country_code_error)
+      }
+    }
+  }
+
   _renderPlugin = ({ item }) => (
     <TouchableWithoutFeedback onPress={() => this._onPress(item)}>
       <View style={styles.pluginRow}>
@@ -135,17 +178,43 @@ class PluginList extends Component<Props, State> {
   )
 
   render () {
+    const { countryCode } = this.props
+    const { data } = this.state
+    const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)
+    let countryName = s.strings.buy_sell_crypto_select_country_button
+    let filename = ''
+    let filteredPlugins = data
+    if (countryData) {
+      countryName = countryData.name
+      filename = countryData.filename ? countryData.filename : countryData.name.toLowerCase().replace(' ', '-')
+      filteredPlugins = data.filter(plugin => {
+        return EDGE_PLUGIN_REGIONS[plugin.name.toLowerCase()].countryCodes[countryCode]
+      })
+    }
+    const logoUrl = `${FLAG_LOGO_URL}/${filename}.png`
+
     return (
       <SceneWrapper background="body" hasTabs={false}>
-        {gap => (
-          <FlatList
-            style={{ marginBottom: -gap.bottom }}
-            contentContainerStyle={{ paddingBottom: gap.bottom }}
-            data={this.state.data}
-            keyExtractor={item => item.name}
-            renderItem={this._renderPlugin}
-          />
-        )}
+        <View style={styles.container}>
+          <View style={styles.selectedCountryWrapper}>
+            <TouchableWithoutFeedback style={styles.selectedCountry} onPress={this.openCountrySelectionModal}>
+              <View style={styles.selectedCountryTextWrapper}>
+                <View style={{ flexDirection: 'row' }}>
+                  {!!countryData && <Image source={{ uri: logoUrl }} style={{ height: scale(30), width: scale(30), borderRadius: scale(15) }} />}
+                  <Text style={{ fontSize: scale(16), alignSelf: 'center', paddingLeft: 12 }}>{countryName}</Text>
+                </View>
+                <Icon type={SIMPLE_ICONS} style={{ alignSelf: 'center' }} name={ARROW_RIGHT} />
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+          {!!countryCode && filteredPlugins.length === 0 ? (
+            <View style={{ flex: 1, width: '100%', padding: scale(50), justifyContent: 'center', alignItems: 'center' }}>
+              <Text style={{ textAlign: 'center' }}>{s.strings.buy_sell_crypto_no_plugin_region}</Text>
+            </View>
+          ) : (
+            <FlatList data={filteredPlugins} renderItem={this._renderPlugin} keyExtractor={item => item.name} />
+          )}
+        </View>
       </SceneWrapper>
     )
   }
@@ -153,6 +222,8 @@ class PluginList extends Component<Props, State> {
 
 class PluginBuySellComponent extends PluginList {
   componentDidMount () {
+    const { countryCode } = this.props
+    if (!countryCode) this.openCountrySelectionModal()
     console.log('pl: ', this.props.developerModeOn)
     this.setState({
       data: buySellPlugins(this.props.developerModeOn)
@@ -162,6 +233,8 @@ class PluginBuySellComponent extends PluginList {
 
 class PluginSpendComponent extends PluginList {
   componentDidMount () {
+    const { countryCode } = this.props
+    if (!countryCode) this.openCountrySelectionModal()
     this.setState({
       data: spendPlugins(this.props.developerModeOn)
     })
@@ -171,11 +244,15 @@ class PluginSpendComponent extends PluginList {
 const listMapStateToProps = state => {
   const developerModeOn = state.ui.settings.developerModeOn
   return {
-    developerModeOn
+    developerModeOn,
+    countryCode: state.ui.settings.countryCode,
+    account: state.core.account
   }
 }
 
-const listMapDispatchToProps = dispatch => ({})
+const listMapDispatchToProps = dispatch => ({
+  updateCountryCode: (countryCode: { [mixed]: any }) => dispatch(updateOneSetting(countryCode))
+})
 
 const PluginBuySell = connect(
   listMapStateToProps,

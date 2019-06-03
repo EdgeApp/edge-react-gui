@@ -26,6 +26,7 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   defaultFiat: 'USD',
   defaultIsoFiat: 'iso:USD',
   merchantMode: false,
+  countryCode: '',
   BTC: {
     denomination: '100'
   },
@@ -182,6 +183,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   defaultFiat: 'string',
   defaultIsoFiat: 'string',
   merchantMode: 'boolean',
+  countryCode: 'string',
   BTC: 'object',
   BCH: 'object',
   EOS: 'object',
