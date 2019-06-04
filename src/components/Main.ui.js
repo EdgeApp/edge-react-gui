@@ -351,415 +351,410 @@ export default class Main extends Component<Props> {
     return (
       <MenuProvider style={styles.mainMenuContext}>
         <RouterWithRedux backAndroidHandler={this.handleBack}>
-          <Overlay>
-            <Modal hideNavBar>
-              {/* <Lightbox> */}
-              <Stack key={Constants.ROOT} hideNavBar panHandlers={null}>
-                <Scene key={Constants.LOGIN} initial component={LoginConnector} username={this.props.username} />
+          <Stack key={Constants.ROOT} hideNavBar panHandlers={null}>
+            <Scene key={Constants.LOGIN} initial component={LoginConnector} username={this.props.username} />
 
-                <Scene key={Constants.ONBOARDING} navTransparent={true} component={OnBoardingComponent} />
-                <Scene
-                  key={Constants.TRANSACTION_DETAILS}
+            <Scene key={Constants.ONBOARDING} navTransparent={true} component={OnBoardingComponent} />
+            <Scene
+              key={Constants.TRANSACTION_DETAILS}
+              navTransparent={true}
+              onEnter={() => this.props.requestPermission(PermissionStrings.CONTACTS)}
+              clone
+              component={TransactionDetails}
+              renderTitle={this.renderTitle(TRANSACTION_DETAILS)}
+              renderLeftButton={this.renderBackButton()}
+              renderRightButton={this.renderMenuButton()}
+            />
+
+            <Drawer key={Constants.EDGE} hideNavBar contentComponent={ControlPanel} hideDrawerButton={true} drawerPosition="right" drawerWidth={scale(280)}>
+              {/* Wrapper Scene needed to fix a bug where the tabs would reload as a modal ontop of itself */}
+              <Scene key={'AllMyTabs'} hideNavBar>
+                <Tabs
+                  key={Constants.EDGE}
+                  swipeEnabled={false}
                   navTransparent={true}
-                  onEnter={() => this.props.requestPermission(PermissionStrings.CONTACTS)}
-                  clone
-                  component={TransactionDetails}
-                  renderTitle={this.renderTitle(TRANSACTION_DETAILS)}
-                  renderLeftButton={this.renderBackButton()}
-                  renderRightButton={this.renderMenuButton()}
-                />
-
-                <Drawer key={Constants.EDGE} hideNavBar contentComponent={ControlPanel} hideDrawerButton={true} drawerPosition="right" drawerWidth={scale(280)}>
-                  {/* Wrapper Scene needed to fix a bug where the tabs would reload as a modal ontop of itself */}
-                  <Scene key={'AllMyTabs'} hideNavBar>
-                    <Tabs
-                      key={Constants.EDGE}
-                      swipeEnabled={false}
+                  tabBarPosition={'bottom'}
+                  showLabel={true}
+                  tabBarStyle={styles.footerTabStyles}
+                >
+                  <Stack key={Constants.WALLET_LIST} icon={this.icon(Constants.WALLET_LIST)} tabBarLabel={WALLETS}>
+                    <Scene
+                      key={Constants.WALLET_LIST_SCENE}
                       navTransparent={true}
-                      tabBarPosition={'bottom'}
-                      showLabel={true}
-                      tabBarStyle={styles.footerTabStyles}
-                    >
-                      <Stack key={Constants.WALLET_LIST} icon={this.icon(Constants.WALLET_LIST)} tabBarLabel={WALLETS}>
-                        <Scene
-                          key={Constants.WALLET_LIST_SCENE}
-                          navTransparent={true}
-                          component={WalletList}
-                          renderTitle={this.renderTitle(WALLETS)}
-                          renderLeftButton={this.renderHelpButton()}
-                          renderRightButton={this.renderMenuButton()}
-                        />
+                      component={WalletList}
+                      renderTitle={this.renderTitle(WALLETS)}
+                      renderLeftButton={this.renderHelpButton()}
+                      renderRightButton={this.renderMenuButton()}
+                    />
 
-                        <Scene
-                          key={Constants.CREATE_WALLET_CHOICE}
-                          navTransparent={true}
-                          component={CreateWalletChoiceComponent}
-                          renderTitle={this.renderTitle(CREATE_WALLET)}
-                          renderLeftButton={this.renderBackButton(WALLETS)}
-                          renderRightButton={this.renderEmptyButton()}
-                        />
+                    <Scene
+                      key={Constants.CREATE_WALLET_CHOICE}
+                      navTransparent={true}
+                      component={CreateWalletChoiceComponent}
+                      renderTitle={this.renderTitle(CREATE_WALLET)}
+                      renderLeftButton={this.renderBackButton(WALLETS)}
+                      renderRightButton={this.renderEmptyButton()}
+                    />
 
-                        <Scene
-                          key={Constants.CREATE_WALLET_IMPORT}
-                          navTransparent={true}
-                          component={CreateWalletImportConnector}
-                          renderTitle={this.renderTitle(CREATE_WALLET_IMPORT)}
-                          renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton()}
-                        />
+                    <Scene
+                      key={Constants.CREATE_WALLET_IMPORT}
+                      navTransparent={true}
+                      component={CreateWalletImportConnector}
+                      renderTitle={this.renderTitle(CREATE_WALLET_IMPORT)}
+                      renderLeftButton={this.renderBackButton()}
+                      renderRightButton={this.renderEmptyButton()}
+                    />
 
-                        <Scene
-                          key={Constants.CREATE_WALLET_SELECT_CRYPTO}
-                          navTransparent={true}
-                          component={CreateWalletSelectCrypto}
-                          renderTitle={this.renderTitle(CREATE_WALLET_SELECT_CRYPTO)}
-                          renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton()}
-                        />
+                    <Scene
+                      key={Constants.CREATE_WALLET_SELECT_CRYPTO}
+                      navTransparent={true}
+                      component={CreateWalletSelectCrypto}
+                      renderTitle={this.renderTitle(CREATE_WALLET_SELECT_CRYPTO)}
+                      renderLeftButton={this.renderBackButton()}
+                      renderRightButton={this.renderEmptyButton()}
+                    />
 
-                        <Scene
-                          key={Constants.CREATE_WALLET_NAME}
-                          navTransparent={true}
-                          component={CreateWalletName}
-                          renderTitle={this.renderTitle(CREATE_WALLET)}
-                          renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton()}
-                        />
+                    <Scene
+                      key={Constants.CREATE_WALLET_NAME}
+                      navTransparent={true}
+                      component={CreateWalletName}
+                      renderTitle={this.renderTitle(CREATE_WALLET)}
+                      renderLeftButton={this.renderBackButton()}
+                      renderRightButton={this.renderEmptyButton()}
+                    />
 
-                        <Scene
-                          key={Constants.CREATE_WALLET_SELECT_FIAT}
-                          navTransparent={true}
-                          component={CreateWalletSelectFiat}
-                          renderTitle={this.renderTitle(CREATE_WALLET_SELECT_FIAT)}
-                          renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton()}
-                        />
+                    <Scene
+                      key={Constants.CREATE_WALLET_SELECT_FIAT}
+                      navTransparent={true}
+                      component={CreateWalletSelectFiat}
+                      renderTitle={this.renderTitle(CREATE_WALLET_SELECT_FIAT)}
+                      renderLeftButton={this.renderBackButton()}
+                      renderRightButton={this.renderEmptyButton()}
+                    />
 
-                        <Scene
-                          key={Constants.CREATE_WALLET_REVIEW}
-                          navTransparent={true}
-                          component={CreateWalletReview}
-                          renderTitle={this.renderTitle(CREATE_WALLET)}
-                          renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton()}
-                        />
+                    <Scene
+                      key={Constants.CREATE_WALLET_REVIEW}
+                      navTransparent={true}
+                      component={CreateWalletReview}
+                      renderTitle={this.renderTitle(CREATE_WALLET)}
+                      renderLeftButton={this.renderBackButton()}
+                      renderRightButton={this.renderEmptyButton()}
+                    />
 
-                        <Scene
-                          key={Constants.CREATE_WALLET_ACCOUNT_SETUP}
-                          navTransparent={true}
-                          component={CreateWalletAccountSetupConnector}
-                          renderTitle={this.renderTitle(CREATE_WALLET_ACCOUNT_SETUP)}
-                          renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderHelpButton()}
-                        />
+                    <Scene
+                      key={Constants.CREATE_WALLET_ACCOUNT_SETUP}
+                      navTransparent={true}
+                      component={CreateWalletAccountSetupConnector}
+                      renderTitle={this.renderTitle(CREATE_WALLET_ACCOUNT_SETUP)}
+                      renderLeftButton={this.renderBackButton()}
+                      renderRightButton={this.renderHelpButton()}
+                    />
 
-                        <Scene
-                          key={Constants.CREATE_WALLET_ACCOUNT_SELECT}
-                          navTransparent={true}
-                          component={CreateWalletAccountSelectConnector}
-                          renderTitle={this.renderTitle(CREATE_WALLET_ACCOUNT_ACTIVATE)}
-                          renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderHelpButton()}
-                        />
+                    <Scene
+                      key={Constants.CREATE_WALLET_ACCOUNT_SELECT}
+                      navTransparent={true}
+                      component={CreateWalletAccountSelectConnector}
+                      renderTitle={this.renderTitle(CREATE_WALLET_ACCOUNT_ACTIVATE)}
+                      renderLeftButton={this.renderBackButton()}
+                      renderRightButton={this.renderHelpButton()}
+                    />
 
-                        <Scene
-                          key={Constants.TRANSACTION_LIST}
-                          onEnter={() => {
-                            this.props.requestPermission(PermissionStrings.CONTACTS)
-                            this.props.updateCurrentSceneKey(Constants.TRANSACTION_LIST)
-                          }}
-                          navTransparent={true}
-                          component={TransactionListConnector}
-                          renderTitle={this.renderWalletListNavBar()}
-                          renderLeftButton={this.renderBackButton(WALLETS)}
-                          renderRightButton={this.renderMenuButton()}
-                        />
+                    <Scene
+                      key={Constants.TRANSACTION_LIST}
+                      onEnter={() => {
+                        this.props.requestPermission(PermissionStrings.CONTACTS)
+                        this.props.updateCurrentSceneKey(Constants.TRANSACTION_LIST)
+                      }}
+                      navTransparent={true}
+                      component={TransactionListConnector}
+                      renderTitle={this.renderWalletListNavBar()}
+                      renderLeftButton={this.renderBackButton(WALLETS)}
+                      renderRightButton={this.renderMenuButton()}
+                    />
 
-                        <Scene
-                          key={Constants.MANAGE_TOKENS}
-                          renderLeftButton={this.renderBackButton()}
-                          navTransparent={true}
-                          component={ManageTokens}
-                          renderTitle={this.renderTitle(MANAGE_TOKENS)}
-                          renderRightButton={this.renderEmptyButton()}
-                          animation={'fade'}
-                          duration={600}
-                        />
-                        <Scene
-                          key={Constants.ADD_TOKEN}
-                          component={AddToken}
-                          navTransparent={true}
-                          onLeft={Actions.pop}
-                          renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton()}
-                          renderTitle={this.renderTitle(ADD_TOKEN)}
-                        />
-                        <Scene
-                          key={Constants.EDIT_TOKEN}
-                          component={EditToken}
-                          navTransparent={true}
-                          renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton()}
-                          renderTitle={this.renderTitle(EDIT_TOKEN)}
-                        />
-                        <Scene
-                          key={Constants.TRANSACTIONS_EXPORT}
-                          navTransparent={true}
-                          component={ifLoggedIn(TransactionsExportSceneConnector, LoadingScene)}
-                          renderTitle={this.renderTitle(TRANSACTIONS_EXPORT)}
-                          renderLeftButton={this.renderBackButton(WALLETS)}
-                          renderRightButton={this.renderEmptyButton()}
-                        />
-                      </Stack>
+                    <Scene
+                      key={Constants.MANAGE_TOKENS}
+                      renderLeftButton={this.renderBackButton()}
+                      navTransparent={true}
+                      component={ManageTokens}
+                      renderTitle={this.renderTitle(MANAGE_TOKENS)}
+                      renderRightButton={this.renderEmptyButton()}
+                      animation={'fade'}
+                      duration={600}
+                    />
+                    <Scene
+                      key={Constants.ADD_TOKEN}
+                      component={AddToken}
+                      navTransparent={true}
+                      onLeft={Actions.pop}
+                      renderLeftButton={this.renderBackButton()}
+                      renderRightButton={this.renderEmptyButton()}
+                      renderTitle={this.renderTitle(ADD_TOKEN)}
+                    />
+                    <Scene
+                      key={Constants.EDIT_TOKEN}
+                      component={EditToken}
+                      navTransparent={true}
+                      renderLeftButton={this.renderBackButton()}
+                      renderRightButton={this.renderEmptyButton()}
+                      renderTitle={this.renderTitle(EDIT_TOKEN)}
+                    />
+                    <Scene
+                      key={Constants.TRANSACTIONS_EXPORT}
+                      navTransparent={true}
+                      component={ifLoggedIn(TransactionsExportSceneConnector, LoadingScene)}
+                      renderTitle={this.renderTitle(TRANSACTIONS_EXPORT)}
+                      renderLeftButton={this.renderBackButton(WALLETS)}
+                      renderRightButton={this.renderEmptyButton()}
+                    />
+                  </Stack>
 
-                      <Scene
-                        key={Constants.REQUEST}
-                        navTransparent={true}
-                        onEnter={this.updateSceneKeyRequest}
-                        icon={this.icon(Constants.REQUEST)}
-                        tabBarLabel={REQUEST}
-                        component={Request}
-                        renderTitle={this.renderWalletListNavBar()}
-                        renderLeftButton={this.renderRequestMenuButton()}
-                        renderRightButton={this.renderMenuButton()}
-                      />
+                  <Scene
+                    key={Constants.REQUEST}
+                    navTransparent={true}
+                    onEnter={this.updateSceneKeyRequest}
+                    icon={this.icon(Constants.REQUEST)}
+                    tabBarLabel={REQUEST}
+                    component={Request}
+                    renderTitle={this.renderWalletListNavBar()}
+                    renderLeftButton={this.renderRequestMenuButton()}
+                    renderRightButton={this.renderMenuButton()}
+                  />
 
-                      <Stack key={Constants.SCAN} icon={this.icon(Constants.SCAN)} tabBarLabel={SCAN}>
-                        <Scene
-                          key={Constants.SCAN_NOT_USED}
-                          navTransparent={true}
-                          onEnter={props => {
-                            this.props.requestPermission(PermissionStrings.CAMERA)
-                            this.props.dispatchEnableScan()
-                            this.props.checkAndShowGetCryptoModal(props.data)
-                          }}
-                          onExit={this.props.dispatchDisableScan}
-                          component={Scan}
-                          renderTitle={this.renderWalletListNavBar()}
-                          renderLeftButton={this.renderHelpButton()}
-                          renderRightButton={this.renderMenuButton()}
-                        />
-                        <Scene
-                          key={Constants.EDGE_LOGIN}
-                          navTransparent={true}
-                          component={EdgeLoginSceneConnector}
-                          renderTitle={this.renderTitle(EDGE_LOGIN)}
-                          renderLeftButton={this.renderHelpButton()}
-                          renderRightButton={this.renderEmptyButton()}
-                        />
-                      </Stack>
+                  <Stack key={Constants.SCAN} icon={this.icon(Constants.SCAN)} tabBarLabel={SCAN}>
+                    <Scene
+                      key={Constants.SCAN_NOT_USED}
+                      navTransparent={true}
+                      onEnter={props => {
+                        this.props.requestPermission(PermissionStrings.CAMERA)
+                        this.props.dispatchEnableScan()
+                        this.props.checkAndShowGetCryptoModal(props.data)
+                      }}
+                      onExit={this.props.dispatchDisableScan}
+                      component={Scan}
+                      renderTitle={this.renderWalletListNavBar()}
+                      renderLeftButton={this.renderHelpButton()}
+                      renderRightButton={this.renderMenuButton()}
+                    />
+                    <Scene
+                      key={Constants.EDGE_LOGIN}
+                      navTransparent={true}
+                      component={EdgeLoginSceneConnector}
+                      renderTitle={this.renderTitle(EDGE_LOGIN)}
+                      renderLeftButton={this.renderHelpButton()}
+                      renderRightButton={this.renderEmptyButton()}
+                    />
+                  </Stack>
 
-                      <Stack key={Constants.EXCHANGE} icon={this.icon(Constants.EXCHANGE)} tabBarLabel={EXCHANGE}>
-                        <Scene
-                          key={Constants.EXCHANGE_SCENE}
-                          navTransparent={true}
-                          component={ExchangeConnector}
-                          renderTitle={this.renderTitle(EXCHANGE)}
-                          renderLeftButton={this.renderExchangeButton()}
-                          renderRightButton={this.renderMenuButton()}
-                          onEnter={() => this.props.checkEnabledExchanges()}
-                        />
-                        <Scene
-                          key={Constants.EXCHANGE_QUOTE_PROCESSING_SCENE}
-                          navTransparent={true}
-                          hideTabBar
-                          component={CryptoExchangeQuoteProcessingScreenComponent}
-                          renderTitle={this.renderTitle(EXCHANGE)}
-                          renderLeftButton={this.renderEmptyButton()}
-                          renderRightButton={this.renderEmptyButton()}
-                        />
-                        <Scene
-                          key={Constants.EXCHANGE_QUOTE_SCENE}
-                          navTransparent={true}
-                          component={CryptoExchangeQuoteConnector}
-                          renderTitle={this.renderTitle(EXCHANGE)}
-                          renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderMenuButton()}
-                        />
-                      </Stack>
-                    </Tabs>
+                  <Stack key={Constants.EXCHANGE} icon={this.icon(Constants.EXCHANGE)} tabBarLabel={EXCHANGE}>
+                    <Scene
+                      key={Constants.EXCHANGE_SCENE}
+                      navTransparent={true}
+                      component={ExchangeConnector}
+                      renderTitle={this.renderTitle(EXCHANGE)}
+                      renderLeftButton={this.renderExchangeButton()}
+                      renderRightButton={this.renderMenuButton()}
+                      onEnter={() => this.props.checkEnabledExchanges()}
+                    />
+                    <Scene
+                      key={Constants.EXCHANGE_QUOTE_PROCESSING_SCENE}
+                      navTransparent={true}
+                      hideTabBar
+                      component={CryptoExchangeQuoteProcessingScreenComponent}
+                      renderTitle={this.renderTitle(EXCHANGE)}
+                      renderLeftButton={this.renderEmptyButton()}
+                      renderRightButton={this.renderEmptyButton()}
+                    />
+                    <Scene
+                      key={Constants.EXCHANGE_QUOTE_SCENE}
+                      navTransparent={true}
+                      component={CryptoExchangeQuoteConnector}
+                      renderTitle={this.renderTitle(EXCHANGE)}
+                      renderLeftButton={this.renderBackButton()}
+                      renderRightButton={this.renderMenuButton()}
+                    />
+                  </Stack>
+                </Tabs>
 
-                    <Stack key={Constants.SEND_CONFIRMATION} hideTabBar>
-                      <Scene
-                        key={Constants.SEND_CONFIRMATION_NOT_USED}
-                        navTransparent={true}
-                        hideTabBar
-                        panHandlers={null}
-                        component={SendConfirmation}
-                        renderTitle={this.renderWalletName()}
-                        renderLeftButton={this.renderBackButton()}
-                        renderRightButton={this.renderSendConfirmationButton()}
-                      />
-                      <Scene
-                        key={Constants.CHANGE_MINING_FEE_SEND_CONFIRMATION}
-                        navTransparent={true}
-                        component={ChangeMiningFeeSendConfirmation}
-                        renderTitle={this.renderTitle(CHANGE_MINING_FEE)}
-                        renderLeftButton={this.renderBackButton()}
-                        renderRightButton={this.renderHelpButton()}
-                      />
-                    </Stack>
+                <Stack key={Constants.SEND_CONFIRMATION} hideTabBar>
+                  <Scene
+                    key={Constants.SEND_CONFIRMATION_NOT_USED}
+                    navTransparent={true}
+                    hideTabBar
+                    panHandlers={null}
+                    component={SendConfirmation}
+                    renderTitle={this.renderWalletName()}
+                    renderLeftButton={this.renderBackButton()}
+                    renderRightButton={this.renderSendConfirmationButton()}
+                  />
+                  <Scene
+                    key={Constants.CHANGE_MINING_FEE_SEND_CONFIRMATION}
+                    navTransparent={true}
+                    component={ChangeMiningFeeSendConfirmation}
+                    renderTitle={this.renderTitle(CHANGE_MINING_FEE)}
+                    renderLeftButton={this.renderBackButton()}
+                    renderRightButton={this.renderHelpButton()}
+                  />
+                </Stack>
 
-                    <Stack key={Constants.MANAGE_TOKENS} hideTabBar>
-                      <Scene
-                        key={Constants.MANAGE_TOKENS_NOT_USED}
-                        navTransparent={true}
-                        component={ManageTokens}
-                        renderTitle={this.renderTitle(MANAGE_TOKENS)}
-                        renderLeftButton={this.renderBackButton()}
-                        renderRightButton={this.renderEmptyButton()}
-                      />
+                <Stack key={Constants.MANAGE_TOKENS} hideTabBar>
+                  <Scene
+                    key={Constants.MANAGE_TOKENS_NOT_USED}
+                    navTransparent={true}
+                    component={ManageTokens}
+                    renderTitle={this.renderTitle(MANAGE_TOKENS)}
+                    renderLeftButton={this.renderBackButton()}
+                    renderRightButton={this.renderEmptyButton()}
+                  />
 
-                      <Scene
-                        key={Constants.ADD_TOKEN}
-                        navTransparent={true}
-                        component={AddToken}
-                        renderTitle={this.renderTitle(ADD_TOKEN)}
-                        renderLeftButton={this.renderBackButton()}
-                        renderRightButton={this.renderEmptyButton()}
-                      />
-                    </Stack>
+                  <Scene
+                    key={Constants.ADD_TOKEN}
+                    navTransparent={true}
+                    component={AddToken}
+                    renderTitle={this.renderTitle(ADD_TOKEN)}
+                    renderLeftButton={this.renderBackButton()}
+                    renderRightButton={this.renderEmptyButton()}
+                  />
+                </Stack>
 
-                    <Stack key={Constants.SETTINGS_OVERVIEW_TAB} hideDrawerButton={true}>
-                      <Scene
-                        key={Constants.SETTINGS_OVERVIEW}
-                        navTransparent={true}
-                        onEnter={() => this.props.showReEnableOtpModal()}
-                        component={SettingsOverview}
-                        renderTitle={this.renderTitle(SETTINGS)}
-                        renderLeftButton={this.renderBackButton()}
-                        renderRightButton={this.renderEmptyButton()}
-                      />
-                      <Scene
-                        key={Constants.CHANGE_PASSWORD}
-                        navTransparent={true}
-                        component={ChangePasswordConnector}
-                        renderTitle={this.renderTitle(CHANGE_PASSWORD)}
-                        renderLeftButton={this.renderBackButton()}
-                        renderRightButton={this.renderEmptyButton()}
-                      />
-                      <Scene
-                        key={Constants.CHANGE_PIN}
-                        navTransparent={true}
-                        component={ChangePinConnector}
-                        renderTitle={this.renderTitle(CHANGE_PIN)}
-                        renderLeftButton={this.renderBackButton()}
-                        renderRightButton={this.renderEmptyButton()}
-                      />
-                      <Scene
-                        key={Constants.OTP_SETUP}
-                        navTransparent={true}
-                        component={OtpSettingsSceneConnector}
-                        renderTitle={this.renderTitle(OTP)}
-                        renderLeftButton={this.renderBackButton()}
-                        renderRightButton={this.renderEmptyButton()}
-                      />
-                      <Scene
-                        key={Constants.RECOVER_PASSWORD}
-                        navTransparent={true}
-                        component={PasswordRecoveryConnector}
-                        renderTitle={this.renderTitle(PASSWORD_RECOVERY)}
-                        renderLeftButton={this.renderBackButton()}
-                        renderRightButton={this.renderEmptyButton()}
-                      />
-                      <Scene
-                        key={Constants.SPENDING_LIMITS}
-                        navTransparent={true}
-                        component={SpendingLimitsConnector}
-                        renderTitle={this.renderTitle(SPENDING_LIMITS)}
-                        renderLeftButton={this.renderBackButton()}
-                        renderRightButton={this.renderEmptyButton()}
-                      />
-                      <Scene
-                        key={Constants.EXCHANGE_SETTINGS}
-                        navTransparent={true}
-                        component={ExchangeSettingsConnector}
-                        renderTitle={this.renderTitle(EXCHANGE_SETTINGS)}
-                        renderLeftButton={this.renderBackButton()}
-                        renderRightButton={this.renderEmptyButton()}
-                      />
-                      {this.renderCurrencySettings()}
-                      <Scene
-                        key={Constants.DEFAULT_FIAT_SETTING}
-                        navTransparent={true}
-                        component={DefaultFiatSettingConnector}
-                        renderTitle={this.renderTitle(DEFAULT_FIAT)}
-                        renderLeftButton={this.renderBackButton()}
-                        renderRightButton={this.renderEmptyButton()}
-                      />
-                    </Stack>
+                <Stack key={Constants.SETTINGS_OVERVIEW_TAB} hideDrawerButton={true}>
+                  <Scene
+                    key={Constants.SETTINGS_OVERVIEW}
+                    navTransparent={true}
+                    onEnter={() => this.props.showReEnableOtpModal()}
+                    component={SettingsOverview}
+                    renderTitle={this.renderTitle(SETTINGS)}
+                    renderLeftButton={this.renderBackButton()}
+                    renderRightButton={this.renderEmptyButton()}
+                  />
+                  <Scene
+                    key={Constants.CHANGE_PASSWORD}
+                    navTransparent={true}
+                    component={ChangePasswordConnector}
+                    renderTitle={this.renderTitle(CHANGE_PASSWORD)}
+                    renderLeftButton={this.renderBackButton()}
+                    renderRightButton={this.renderEmptyButton()}
+                  />
+                  <Scene
+                    key={Constants.CHANGE_PIN}
+                    navTransparent={true}
+                    component={ChangePinConnector}
+                    renderTitle={this.renderTitle(CHANGE_PIN)}
+                    renderLeftButton={this.renderBackButton()}
+                    renderRightButton={this.renderEmptyButton()}
+                  />
+                  <Scene
+                    key={Constants.OTP_SETUP}
+                    navTransparent={true}
+                    component={OtpSettingsSceneConnector}
+                    renderTitle={this.renderTitle(OTP)}
+                    renderLeftButton={this.renderBackButton()}
+                    renderRightButton={this.renderEmptyButton()}
+                  />
+                  <Scene
+                    key={Constants.RECOVER_PASSWORD}
+                    navTransparent={true}
+                    component={PasswordRecoveryConnector}
+                    renderTitle={this.renderTitle(PASSWORD_RECOVERY)}
+                    renderLeftButton={this.renderBackButton()}
+                    renderRightButton={this.renderEmptyButton()}
+                  />
+                  <Scene
+                    key={Constants.SPENDING_LIMITS}
+                    navTransparent={true}
+                    component={SpendingLimitsConnector}
+                    renderTitle={this.renderTitle(SPENDING_LIMITS)}
+                    renderLeftButton={this.renderBackButton()}
+                    renderRightButton={this.renderEmptyButton()}
+                  />
+                  <Scene
+                    key={Constants.EXCHANGE_SETTINGS}
+                    navTransparent={true}
+                    component={ExchangeSettingsConnector}
+                    renderTitle={this.renderTitle(EXCHANGE_SETTINGS)}
+                    renderLeftButton={this.renderBackButton()}
+                    renderRightButton={this.renderEmptyButton()}
+                  />
+                  {this.renderCurrencySettings()}
+                  <Scene
+                    key={Constants.DEFAULT_FIAT_SETTING}
+                    navTransparent={true}
+                    component={DefaultFiatSettingConnector}
+                    renderTitle={this.renderTitle(DEFAULT_FIAT)}
+                    renderLeftButton={this.renderBackButton()}
+                    renderRightButton={this.renderEmptyButton()}
+                  />
+                </Stack>
 
-                    <Stack key={Constants.BUY_SELL} hideDrawerButton={true}>
-                      <Scene
-                        key={Constants.BUY_SELL}
-                        navTransparent={true}
-                        component={PluginBuySell}
-                        renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
-                        renderLeftButton={this.renderBackButton(BACK)}
-                        renderRightButton={this.renderEmptyButton()}
-                        onLeft={Actions.pop}
-                      />
-                      <Scene
-                        key={Constants.PLUGIN_BUY}
-                        navTransparent={true}
-                        component={ifLoggedIn(PluginView, LoadingScene)}
-                        renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
-                        renderLeftButton={renderPluginBackButton(BACK)}
-                        renderRightButton={this.renderEmptyButton()}
-                      />
-                      <Scene
-                        key={Constants.PLUGIN_BUY_LEGACY}
-                        navTransparent={true}
-                        component={ifLoggedIn(LegacyPluginView, LoadingScene)}
-                        renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
-                        renderLeftButton={renderLegacyPluginBackButton(BACK)}
-                        renderRightButton={this.renderEmptyButton()}
-                      />
-                    </Stack>
+                <Stack key={Constants.BUY_SELL} hideDrawerButton={true}>
+                  <Scene
+                    key={Constants.BUY_SELL}
+                    navTransparent={true}
+                    component={PluginBuySell}
+                    renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
+                    renderLeftButton={this.renderBackButton(BACK)}
+                    renderRightButton={this.renderEmptyButton()}
+                    onLeft={Actions.pop}
+                  />
+                  <Scene
+                    key={Constants.PLUGIN_BUY}
+                    navTransparent={true}
+                    component={ifLoggedIn(PluginView, LoadingScene)}
+                    renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
+                    renderLeftButton={renderPluginBackButton(BACK)}
+                    renderRightButton={this.renderEmptyButton()}
+                  />
+                  <Scene
+                    key={Constants.PLUGIN_BUY_LEGACY}
+                    navTransparent={true}
+                    component={ifLoggedIn(LegacyPluginView, LoadingScene)}
+                    renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
+                    renderLeftButton={renderLegacyPluginBackButton(BACK)}
+                    renderRightButton={this.renderEmptyButton()}
+                  />
+                </Stack>
 
-                    <Stack key={Constants.SPEND} hideDrawerButton={true}>
-                      <Scene
-                        key={Constants.SPEND}
-                        navTransparent={true}
-                        component={PluginSpend}
-                        renderTitle={this.renderTitle(PLUGIN_SPEND)}
-                        renderLeftButton={this.renderBackButton(BACK)}
-                        renderRightButton={this.renderEmptyButton()}
-                        onLeft={Actions.pop}
-                      />
-                      <Scene
-                        key={Constants.PLUGIN_SPEND}
-                        navTransparent={true}
-                        component={ifLoggedIn(PluginView, LoadingScene)}
-                        renderTitle={this.renderTitle(PLUGIN_SPEND)}
-                        renderLeftButton={renderPluginBackButton(BACK)}
-                        renderRightButton={this.renderEmptyButton()}
-                      />
-                      <Scene
-                        key={Constants.PLUGIN_SPEND_LEGACY}
-                        navTransparent={true}
-                        component={ifLoggedIn(LegacyPluginView, LoadingScene)}
-                        renderTitle={this.renderTitle(PLUGIN_SPEND)}
-                        renderLeftButton={renderLegacyPluginBackButton(BACK)}
-                        renderRightButton={this.renderEmptyButton()}
-                      />
-                    </Stack>
-                    <Stack key={Constants.TERMS_OF_SERVICE}>
-                      <Scene
-                        key={Constants.TERMS_OF_SERVICE}
-                        navTransparent={true}
-                        component={TermsOfServiceComponent}
-                        renderTitle={this.renderTitle(TERMS_OF_SERVICE)}
-                        renderLeftButton={this.renderBackButton(BACK)}
-                        renderRightButton={this.renderEmptyButton()}
-                        onLeft={Actions.pop}
-                      />
-                    </Stack>
-                  </Scene>
-                </Drawer>
-              </Stack>
-            </Modal>
-          </Overlay>
+                <Stack key={Constants.SPEND} hideDrawerButton={true}>
+                  <Scene
+                    key={Constants.SPEND}
+                    navTransparent={true}
+                    component={PluginSpend}
+                    renderTitle={this.renderTitle(PLUGIN_SPEND)}
+                    renderLeftButton={this.renderBackButton(BACK)}
+                    renderRightButton={this.renderEmptyButton()}
+                    onLeft={Actions.pop}
+                  />
+                  <Scene
+                    key={Constants.PLUGIN_SPEND}
+                    navTransparent={true}
+                    component={ifLoggedIn(PluginView, LoadingScene)}
+                    renderTitle={this.renderTitle(PLUGIN_SPEND)}
+                    renderLeftButton={renderPluginBackButton(BACK)}
+                    renderRightButton={this.renderEmptyButton()}
+                  />
+                  <Scene
+                    key={Constants.PLUGIN_SPEND_LEGACY}
+                    navTransparent={true}
+                    component={ifLoggedIn(LegacyPluginView, LoadingScene)}
+                    renderTitle={this.renderTitle(PLUGIN_SPEND)}
+                    renderLeftButton={renderLegacyPluginBackButton(BACK)}
+                    renderRightButton={this.renderEmptyButton()}
+                  />
+                </Stack>
+                <Stack key={Constants.TERMS_OF_SERVICE}>
+                  <Scene
+                    key={Constants.TERMS_OF_SERVICE}
+                    navTransparent={true}
+                    component={TermsOfServiceComponent}
+                    renderTitle={this.renderTitle(TERMS_OF_SERVICE)}
+                    renderLeftButton={this.renderBackButton(BACK)}
+                    renderRightButton={this.renderEmptyButton()}
+                    onLeft={Actions.pop}
+                  />
+                </Stack>
+              </Scene>
+            </Drawer>
+          </Stack>
         </RouterWithRedux>
         <StatusBar translucent backgroundColor="#000000" barStyle="light-content" />
         <HelpModal style={{ flex: 1 }} />
