@@ -143,7 +143,7 @@
     "edge-currency-accountbased": "^0.1.10",
     "edge-currency-bitcoin": "4.2.3",
     "edge-currency-monero": "0.2.2",
-    "edge-exchange-plugins": "^0.6.1",
+    "edge-exchange-plugins": "^0.6.2",
     "edge-login-ui-rn": "0.5.28",
     "https-browserify": "0.0.1",
     "lodash": "^4.17.2",
