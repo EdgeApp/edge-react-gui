@@ -4,17 +4,16 @@ import { StyleSheet } from 'react-native'
 
 import { scale } from '../../lib/scaling.js'
 import THEME from '../../theme/variables/airbitz'
-import { PLATFORM } from '../../theme/variables/platform'
 
 export const styles = {
-  usableHeight: PLATFORM.usableHeight,
   gradient: {
     height: THEME.HEADER
   },
-  body: {
+  content: {
+    backgroundColor: THEME.COLORS.WHITE,
+    flex: 1,
     paddingHorizontal: scale(20),
-    paddingVertical: scale(5),
-    backgroundColor: THEME.COLORS.WHITE
+    paddingTop: scale(5)
   },
   container: {
     position: 'relative',
@@ -174,15 +173,13 @@ export const styles = {
   },
 
   /// //// beginning of default fiat area ////////
-  searchContainer: {
-    marginTop: scale(8),
-    position: 'relative',
-    backgroundColor: THEME.COLORS.TRANSPARENT,
-    borderBottomWidth: 1,
-    borderBottomColor: THEME.COLORS.GRAY_3,
-    width: '100%'
+  resultList: {
+    backgroundColor: THEME.COLORS.WHITE,
+    borderTopColor: THEME.COLORS.GRAY_3,
+    borderTopWidth: 1,
+    flexGrow: 1,
+    flexShrink: 1
   },
-
   singleFiatType: {
     height: scale(60),
     borderBottomWidth: 1,
