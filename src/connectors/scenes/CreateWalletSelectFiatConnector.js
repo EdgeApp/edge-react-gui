@@ -12,8 +12,7 @@ const mapStateToProps = (state: State): CreateWalletSelectFiatStateProps => {
   const defaultFiat = getDefaultFiat(state)
   const supportedFiats = getSupportedFiats(defaultFiat)
   const out = {
-    supportedFiats,
-    dimensions: state.ui.scenes.dimensions
+    supportedFiats
   }
   return out
 }

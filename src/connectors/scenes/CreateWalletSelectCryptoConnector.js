@@ -19,8 +19,7 @@ const mapStateToProps = (state: State): CreateWalletSelectCryptoStateProps => {
   }
 
   return {
-    supportedWalletTypes,
-    dimensions: state.ui.scenes.dimensions
+    supportedWalletTypes
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch) => {

@@ -20,6 +20,11 @@ export const styles = {
   scrollableGradient: {
     height: THEME.HEADER
   },
+  content: {
+    backgroundColor: THEME.COLORS.WHITE,
+    flex: 1,
+    paddingHorizontal: scale(20)
+  },
   view: {
     position: 'relative',
     top: THEME.HEADER,
@@ -46,19 +51,18 @@ export const styles = {
     height: scale(50),
     padding: scale(5)
   },
+  resultList: {
+    backgroundColor: THEME.COLORS.WHITE,
+    borderTopColor: THEME.COLORS.GRAY_3,
+    borderTopWidth: 1,
+    flex: 1
+  },
   selectedItem: {
     backgroundColor: THEME.COLORS.GRAY_4,
     borderLeftWidth: scale(1),
     borderLeftColor: THEME.COLORS.GRAY_3,
     borderRightWidth: scale(1),
     borderRightColor: THEME.COLORS.GRAY_3
-  },
-  searchContainer: {
-    position: 'relative',
-    backgroundColor: THEME.COLORS.TRANSPARENT,
-    borderBottomWidth: scale(1),
-    borderBottomColor: THEME.COLORS.GRAY_3,
-    width: '100%'
   },
   singleCryptoType: {
     height: scale(60),
