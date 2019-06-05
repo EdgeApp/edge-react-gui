@@ -15,8 +15,7 @@ const mapStateToProps = (state: State) => ({
   showToWalletModal: state.ui.scenes.walletListModal.walletListModalVisible,
   deepLinkPending: state.core.deepLinking.deepLinkPending,
   deepLinkUri: state.core.deepLinking.addressDeepLinkData.uri,
-  wallets: state.ui.wallets.byId,
-  cameraIncrementer: state.ui.scenes.scan.cameraIncrementer
+  wallets: state.ui.wallets.byId
 })
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
