@@ -70,7 +70,7 @@ export const WALLET_OPTIONS = {
   },
   VIEW_XPUB: {
     value: VIEW_XPUB_VALUE,
-    currencyCode: ['BTC', 'BCH', 'DASH', 'FTC', 'XZC', 'LTC', 'UFO', 'QTUM', 'VTC', 'BTG', 'DGB', 'SMART', 'GRS', 'BSV', 'EBST', 'EOS', 'DOGE'],
+    currencyCode: ['BTC', 'BCH', 'DASH', 'FTC', 'XZC', 'LTC', 'UFO', 'QTUM', 'VTC', 'BTG', 'DGB', 'SMART', 'GRS', 'BSV', 'EBST', 'EOS', 'DOGE', 'RVN'],
     label: s.strings.fragment_wallets_view_xpub,
     modalVisible: true
   }
