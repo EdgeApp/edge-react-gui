@@ -60,8 +60,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
       return null
     }
     dispatch(checkAndShowGetCryptoModal())
-  },
-  incrementCamera: () => dispatch({ type: 'CAMERA_INCREMENTER' })
+  }
 })
 export default connect(
   mapStateToProps,

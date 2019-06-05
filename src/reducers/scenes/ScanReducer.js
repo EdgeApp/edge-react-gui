@@ -13,25 +13,12 @@ export type ScanState = {
   +parsedUri: EdgeParsedUri | null,
   +torchEnabled: boolean,
   +scanEnabled: boolean,
-  +privateKeyModal: PrivateKeyModalState,
-  +cameraIncrementer: number
-}
-
-const cameraIncrementer = (state = 0, action: Action): number => {
-  switch (action.type) {
-    case 'CAMERA_INCREMENTER': {
-      const incrementer = state + 1
-      return incrementer
-    }
-    default:
-      return state
-  }
+  +privateKeyModal: PrivateKeyModalState
 }
 
 export const scan: Reducer<ScanState, Action> = combineReducers({
   parsedUri,
   privateKeyModal,
   scanEnabled,
-  torchEnabled,
-  cameraIncrementer
+  torchEnabled
 })
