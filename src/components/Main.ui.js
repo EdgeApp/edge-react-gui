@@ -159,7 +159,6 @@ type Props = {
   setDeviceDimensions: any => void,
   dispatchEnableScan: () => void,
   dispatchDisableScan: () => void,
-  incrementCamera: () => void,
   urlReceived: string => void,
   updateCurrentSceneKey: string => void,
   showReEnableOtpModal: () => void,
@@ -534,10 +533,7 @@ export default class Main extends Component<Props> {
                             this.props.dispatchEnableScan()
                             this.props.checkAndShowGetCryptoModal(props.data)
                           }}
-                          onExit={() => {
-                            this.props.dispatchDisableScan()
-                            this.props.incrementCamera()
-                          }}
+                          onExit={this.props.dispatchDisableScan}
                           component={Scan}
                           renderTitle={this.renderWalletListNavBar()}
                           renderLeftButton={this.renderHelpButton()}

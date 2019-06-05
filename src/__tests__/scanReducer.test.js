@@ -8,7 +8,6 @@ test('initialState', () => {
   const expected = {
     scanEnabled: false,
     torchEnabled: false,
-    cameraIncrementer: 0,
     privateKeyModal: {
       secondaryModal: {
         isActive: false
