@@ -169,6 +169,9 @@ export class Scan extends Component<Props> {
   }
 
   renderCamera = () => {
+    if (!this.props.scanEnabled) {
+      return null
+    }
     if (this.props.cameraPermission === PermissionStatusStrings.AUTHORIZED) {
       const flashMode = this.props.torchEnabled ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off
 
