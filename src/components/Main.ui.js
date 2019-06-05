@@ -756,7 +756,7 @@ export default class Main extends Component<Props> {
             </Drawer>
           </Stack>
         </RouterWithRedux>
-        <StatusBar translucent backgroundColor="#000000" barStyle="light-content" />
+        <StatusBar translucent backgroundColor="#00000040" barStyle="light-content" />
         <HelpModal style={{ flex: 1 }} />
         <ErrorAlert />
         <TransactionAlert />

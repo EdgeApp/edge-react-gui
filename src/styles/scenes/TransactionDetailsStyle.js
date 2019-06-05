@@ -10,11 +10,13 @@ export const activeOpacity = THEME.OPACITY.ACTIVE
 
 export const styles = {
   container: {
-    flex: 1,
     alignItems: 'stretch',
+    backgroundColor: THEME.COLORS.WHITE,
+    flex: 1,
     flexDirection: 'column',
-    zIndex: 1,
-    backgroundColor: THEME.COLORS.WHITE
+    marginTop: scale(24),
+    paddingTop: scale(32),
+    zIndex: 1
   },
   expandedHeader: {
     height: scale(32),
@@ -33,11 +35,6 @@ export const styles = {
     width: scale(48),
     position: 'relative',
     top: scale(10)
-  },
-  dataArea: {
-    position: 'relative',
-    top: scale(20),
-    flexDirection: 'column'
   },
   payeeNameArea: {
     alignItems: 'center',
@@ -229,7 +226,7 @@ export const styles = {
   footerArea: {
     backgroundColor: THEME.COLORS.GRAY_4,
     paddingTop: scale(20),
-    height: (PLATFORM.deviceHeight * 1) / 3 + 40,
+    height: (PLATFORM.deviceHeight * 1) / 3 + 340,
     paddingLeft: scale(15),
     paddingRight: scale(15)
   },
@@ -380,12 +377,6 @@ export const styles = {
     fontSize: scale(18),
     color: THEME.COLORS.ACCENT_BLUE,
     alignSelf: 'center'
-  },
-  PayeeIconWrapper: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    position: 'relative',
-    height: 0
   }
 }
 

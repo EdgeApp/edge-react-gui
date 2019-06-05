@@ -6,7 +6,7 @@ import { Image, Platform, View } from 'react-native'
 
 import { ANDROID_INFO_ICON, EXCLAMATION, ION_ICONS, IOS_INFO_ICON, MATERIAL_COMMUNITY } from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings.js'
-import { CryptoExchangeQuoteSceneStyles } from '../../../../styles/indexStyles.js'
+import { styles as sceneStyles } from '../../../../styles/scenes/CryptoExchangeQuoteSceneStyles.js'
 import FormattedText from '../../components/FormattedText'
 import { IconButton } from '../Buttons/IconButton.ui'
 import { Icon } from '../Icon/Icon.ui'
@@ -28,7 +28,7 @@ type State = {}
 
 class ExchangeQuoteComponent extends Component<Props, State> {
   renderBottom = () => {
-    const styles = CryptoExchangeQuoteSceneStyles.quoteDetailContainer
+    const styles = sceneStyles.quoteDetailContainer
     if (this.props.isTop) {
       return (
         <View style={styles.bottomRow}>
@@ -55,7 +55,7 @@ class ExchangeQuoteComponent extends Component<Props, State> {
     showModal(modal).then((response: null) => {})
   }
   renderHeadline = () => {
-    const styles = CryptoExchangeQuoteSceneStyles.quoteDetailContainer
+    const styles = sceneStyles.quoteDetailContainer
     if (this.props.isEstimate) {
       const platform = Platform.OS
       const infoIcon = platform === 'ios' ? IOS_INFO_ICON : ANDROID_INFO_ICON
@@ -71,7 +71,7 @@ class ExchangeQuoteComponent extends Component<Props, State> {
     return <FormattedText style={styles.headlineText}>{this.props.headline}</FormattedText>
   }
   render () {
-    const styles = CryptoExchangeQuoteSceneStyles.quoteDetailContainer
+    const styles = sceneStyles.quoteDetailContainer
     const container = this.props.isTop ? styles.containerExpanded : styles.containerCollapsed
     return (
       <View style={styles.container}>

@@ -6,7 +6,6 @@ import * as Constants from '../../../../../constants/indexConstants'
 import WalletListModalHeader from './WalletListModalHeader.ui'
 
 const mapStateToProps = (state?: any, ownProps: any): { type: string, whichWallet: string } => {
-  // console.log(state.ui.scenes.dimensions)
   const walletType = ownProps.type ? ownProps.type : Constants.FROM
   return {
     type: walletType,
