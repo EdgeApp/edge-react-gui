@@ -136,23 +136,20 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
       const payinAddress = broadcastedTransaction.otherParams != null ? broadcastedTransaction.otherParams.payinAddress : ''
       const uniqueIdentifier = broadcastedTransaction.otherParams != null ? broadcastedTransaction.otherParams.uniqueIdentifier : ''
       const isEstimate = quote.isEstimate ? s.strings.estimated_quote : s.strings.fixed_quote
-      const notes =
-        sprintf(
-          s.strings.exchange_notes_metadata_generic2,
-          state.cryptoExchange.fromDisplayAmount,
-          state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name,
-          fromWallet.name,
-          state.cryptoExchange.toDisplayAmount,
-          state.cryptoExchange.toWalletPrimaryInfo.displayDenomination.name,
-          toWallet.name,
-          quote.destinationAddress,
-          quoteIdUri,
-          payinAddress,
-          uniqueIdentifier,
-          supportEmail
-        ) +
-        ' ' +
-        isEstimate
+      const notes = sprintf(
+        s.strings.exchange_notes_metadata_generic2,
+        state.cryptoExchange.fromDisplayAmount,
+        state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name,
+        fromWallet.name,
+        state.cryptoExchange.toDisplayAmount,
+        state.cryptoExchange.toWalletPrimaryInfo.displayDenomination.name,
+        toWallet.name,
+        quote.destinationAddress,
+        quoteIdUri,
+        payinAddress,
+        uniqueIdentifier,
+        supportEmail
+      ) + ' ' + isEstimate
 
       const edgeMetaData: EdgeMetadata = {
         name,

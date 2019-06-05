@@ -59,7 +59,6 @@ test('initialState', () => {
     scan: {
       scanEnabled: false,
       torchEnabled: false,
-      cameraIncrementer: 0,
       privateKeyModal: {
         error: null,
         isSweeping: false,

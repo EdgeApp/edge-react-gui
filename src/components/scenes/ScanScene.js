@@ -37,8 +37,7 @@ type Props = {
   toggleScanToWalletListModal: () => void,
   onSelectWallet: (string, string) => void,
   markAddressDeepLinkDone: () => any,
-  wallets: { [string]: GuiWallet },
-  cameraIncrementer: number
+  wallets: { [string]: GuiWallet }
 }
 
 const HEADER_TEXT = s.strings.send_scan_header_text
@@ -170,18 +169,14 @@ export class Scan extends Component<Props> {
   }
 
   renderCamera = () => {
+    if (!this.props.scanEnabled) {
+      return null
+    }
     if (this.props.cameraPermission === PermissionStatusStrings.AUTHORIZED) {
       const flashMode = this.props.torchEnabled ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off
 
       return (
-        <RNCamera
-          key={this.props.cameraIncrementer}
-          style={styles.preview}
-          flashMode={flashMode}
-          type={RNCamera.Constants.Type.back}
-          ref="cameraCapture"
-          onBarCodeRead={this.onBarCodeRead}
-        />
+        <RNCamera style={styles.preview} flashMode={flashMode} type={RNCamera.Constants.Type.back} ref="cameraCapture" onBarCodeRead={this.onBarCodeRead} />
       )
     } else if (this.props.cameraPermission === PermissionStatusStrings.DENIED) {
       return <View />

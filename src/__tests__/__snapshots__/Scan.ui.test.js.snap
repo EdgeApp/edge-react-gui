@@ -27,17 +27,6 @@ exports[`Scan component should render with AUTHORIZED props 1`] = `
         }
       }
     >
-      <UNDEFINED
-        flashMode="off"
-        onBarCodeRead={[Function]}
-        style={
-          Object {
-            "alignItems": "center",
-            "flex": 1,
-          }
-        }
-        type="back"
-      />
       <View
         style={
           Array [
@@ -258,7 +247,6 @@ exports[`Scan component should render with DENIED props 1`] = `
         }
       }
     >
-      <View />
       <View
         style={
           Array [
