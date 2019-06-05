@@ -27,6 +27,7 @@ import { TwoButtonModalStyle } from '../../styles/indexStyles.js'
 import styles from '../../styles/scenes/WalletListStyle'
 import THEME from '../../theme/variables/airbitz'
 import type { GuiWalletType } from '../../types'
+import { type DeviceDimensions } from '../../types.js'
 import { getFiatSymbol, getObjectDiff, getTotalFiatAmountFromExchangeRates } from '../../util/utils'
 import FullWalletListRow from '../common/FullWalletListRow.js'
 import { launchModal } from '../common/ModalProvider.js'
@@ -55,7 +56,7 @@ type State = {
 type Props = {
   activeWalletIds: Array<string>,
   customTokens: Array<any>,
-  dimensions: any,
+  dimensions: DeviceDimensions,
   wallets: any,
   renameWalletInput: string,
   otpResetPending: boolean,

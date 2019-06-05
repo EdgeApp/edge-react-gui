@@ -3,10 +3,9 @@
 import { type Reducer } from 'redux'
 
 import type { Action } from '../modules/ReduxTypes'
+import type { DeviceDimensions } from '../types.js'
 
-export type DimensionsState = {
-  keyboardHeight: number
-}
+export type DimensionsState = DeviceDimensions
 
 const initialState = {
   keyboardHeight: 0
