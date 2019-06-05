@@ -23,7 +23,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         Array [
           Object {
             "flexDirection": "row",
-            "height": 70.22887323943661,
+            "height": 70.22887323943662,
             "justifyContent": "space-between",
             "padding": 16.854929577464787,
           },
@@ -51,7 +51,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 Object {
                   "backgroundColor": "transparent",
                   "color": "#FFFFFF",
-                  "fontSize": 30.90070422535211,
+                  "fontSize": 30.900704225352115,
                 },
               ]
             }
@@ -163,7 +163,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         Array [
           Object {
             "flexDirection": "row",
-            "height": 70.22887323943661,
+            "height": 70.22887323943662,
             "justifyContent": "space-between",
             "padding": 16.854929577464787,
           },
@@ -191,7 +191,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 Object {
                   "backgroundColor": "transparent",
                   "color": "#FFFFFF",
-                  "fontSize": 30.90070422535211,
+                  "fontSize": 30.900704225352115,
                 },
               ]
             }
@@ -400,7 +400,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         Array [
           Object {
             "flexDirection": "row",
-            "height": 70.22887323943661,
+            "height": 70.22887323943662,
             "justifyContent": "space-between",
             "padding": 16.854929577464787,
           },
@@ -428,7 +428,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 Object {
                   "backgroundColor": "transparent",
                   "color": "#FFFFFF",
-                  "fontSize": 30.90070422535211,
+                  "fontSize": 30.900704225352115,
                 },
               ]
             }
@@ -540,7 +540,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         Array [
           Object {
             "flexDirection": "row",
-            "height": 70.22887323943661,
+            "height": 70.22887323943662,
             "justifyContent": "space-between",
             "padding": 16.854929577464787,
           },
@@ -568,7 +568,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 Object {
                   "backgroundColor": "transparent",
                   "color": "#FFFFFF",
-                  "fontSize": 30.90070422535211,
+                  "fontSize": 30.900704225352115,
                 },
               ]
             }

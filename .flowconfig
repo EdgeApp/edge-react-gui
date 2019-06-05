@@ -21,15 +21,11 @@
 .*/node_modules/react-native-device-info/.*
 .*/node_modules/react-native-dropdown/.*
 .*/node_modules/react-native-dropdownalert/.*
-.*/node_modules/react-native-experimental-navigation/.*
 .*/node_modules/react-native-linear-gradient/.*
-.*/node_modules/react-navigation/.*
 .*/node_modules/react-native-router-flux/.*
 .*/node_modules/react-native-tab-view/.*
 .*/node_modules/react-native-permissions/.*
 .*/node_modules/react-native-tcp/.*
-.*/node_modules/react-native-udp/.*
-.*/node_modules/react-static-container/.*
 .*/node_modules/react-native-fs/.*
 .*/node_modules/metro-bundler/.*
 .*/node_modules/metro/.*
