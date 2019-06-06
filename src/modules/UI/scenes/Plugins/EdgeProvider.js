@@ -1,11 +1,12 @@
 // @flow
-import { showModal } from 'edge-components'
+
 import type { EdgeMetadata, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
 import { Actions } from 'react-native-router-flux'
 import SafariView from 'react-native-safari-view'
 import { Bridgeable } from 'yaob'
 
 import { selectWallet } from '../../../../actions/WalletActions'
+import { launchModal } from '../../../../components/common/ModalProvider.js'
 import { createCryptoExchangeWalletSelectorModal } from '../../../../components/modals/CryptoExchangeWalletSelectorModal'
 import { SEND_CONFIRMATION } from '../../../../constants/SceneKeys.js'
 import s from '../../../../locales/strings'
@@ -133,7 +134,7 @@ export class EdgeProvider extends Bridgeable {
     }
     const modal = createCryptoExchangeWalletSelectorModal(props)
     // const modal = createCustomWalletListModal(props)
-    const selectedWallet = await showModal(modal, { style: { margin: 0 } })
+    const selectedWallet = await launchModal(modal, { style: { margin: 0 } })
     const code = selectedWallet.currencyCode
     this._dispatch(selectWallet(selectedWallet.id, code))
     return Promise.resolve(code)

@@ -2,7 +2,6 @@
 
 import { bns } from 'biggystring'
 import dateformat from 'dateformat'
-import { showModal } from 'edge-components'
 import type { EdgeCurrencyInfo, EdgeDenomination, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Animated, Easing, Keyboard, ScrollView, TextInput, TouchableOpacity, View } from 'react-native'
@@ -20,6 +19,7 @@ import { PLATFORM } from '../../theme/variables/platform.js'
 import type { GuiContact, GuiWallet } from '../../types.js'
 import { autoCorrectDate, getFiatSymbol, getWalletDefaultDenomProps, inputBottomPadding, isCryptoParentCurrency } from '../../util/utils'
 import ContactSearchResults from '../common/ContactSearchResults.js'
+import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import AmountArea from '../common/TransactionDetailAmountArea.js'
 import SubCategorySelect from '../common/TransactionSubCategorySelect.js'
@@ -403,7 +403,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
       txExplorerUrl: txExplorerLink,
       txId: this.props.edgeTransaction.txid
     })
-    await showModal(modal)
+    await launchModal(modal)
   }
 
   onSaveTxDetails = () => {
