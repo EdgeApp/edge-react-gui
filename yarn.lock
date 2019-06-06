@@ -8830,6 +8830,13 @@ react-native-animatable@^1.1.0, react-native-animatable@^1.2.4:
   dependencies:
     prop-types "^15.5.10"
 
+react-native-animatable@^1.3.1:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/react-native-animatable/-/react-native-animatable-1.3.2.tgz#4783ee1a73dc98815aef234ce6b819f80bfe7d80"
+  integrity sha512-rmah3KQ63ft8DxkzFUwJSuZeq+oSYwldoGF4DTOR5WM2WR5wiWLgBAtrAHlI3Di3by323uOR21s+MlqPcHz2Kw==
+  dependencies:
+    prop-types "^15.5.10"
+
 "react-native-app-settings@git://github.com/swansontec/react-native-app-settings#fix-rn59":
   version "2.0.0"
   resolved "git://github.com/swansontec/react-native-app-settings#a4c9729508ea2a5331117fc0891330e81e1a46f8"
@@ -9040,6 +9047,14 @@ react-native-mail@3.0.7, react-native-mail@^3.0.5:
   resolved "git://github.com/EdgeApp/react-native-material-textfield.git#c30320fd26e5619c1fe57b3043b8fd9ae2a0c57a"
   dependencies:
     prop-types "^15.5.9"
+
+react-native-modal@^11.0.1:
+  version "11.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-modal/-/react-native-modal-11.0.1.tgz#0c7e546557938981f188c56b80474ddfe7c9835c"
+  integrity sha512-qXKRCFj28uJ1AopMPwf4HssscZ4LwTCY+PlDKnXERdxrbGK626rduj4fHyLXSZ1xJvrDy8doHqVAYoQ9YuObgQ==
+  dependencies:
+    prop-types "^15.6.2"
+    react-native-animatable "^1.3.1"
 
 react-native-modal@^6.5.0:
   version "6.5.0"

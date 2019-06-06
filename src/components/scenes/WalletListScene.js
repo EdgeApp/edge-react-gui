@@ -1,6 +1,6 @@
 // @flow
 
-import { createYesNoModal, showModal } from 'edge-components'
+import { createYesNoModal } from 'edge-components'
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, Animated, FlatList, Image, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -29,6 +29,7 @@ import THEME from '../../theme/variables/airbitz'
 import type { GuiWalletType } from '../../types'
 import { getFiatSymbol, getObjectDiff, getTotalFiatAmountFromExchangeRates } from '../../util/utils'
 import FullWalletListRow from '../common/FullWalletListRow.js'
+import { launchModal } from '../common/ModalProvider.js'
 import SortableWalletListRow from '../common/SortableWalletListRow.js'
 import { WiredBalanceBox } from '../common/WiredBalanceBox.js'
 import { StaticModalComponent, TwoButtonTextModalComponent } from '../indexComponents'
@@ -222,19 +223,19 @@ export default class WalletList extends Component<Props, State> {
               <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size={'large'} />
             )}
           </View>
-          {this.showModal()}
+          {this.launchModal()}
         </View>
       </SafeAreaView>
     )
   }
 
-  showModal = () => {
+  launchModal = () => {
     if (this.state.showOtpResetModal) {
       return (
         <TwoButtonTextModalComponent
           style={TwoButtonModalStyle}
           headerText={s.strings.otp_modal_reset_headline}
-          showModal
+          launchModal
           middleText={s.strings.otp_modal_reset_description}
           iconImage={iconImage}
           cancelText={s.strings.otp_disable}
@@ -469,7 +470,7 @@ export default class WalletList extends Component<Props, State> {
       })
 
       if (this.props.ethereumWalletType) {
-        return (await showModal(modal)) ? Actions[Constants.CREATE_WALLET_SELECT_FIAT]({ selectedWalletType: this.props.ethereumWalletType }) : null
+        return (await launchModal(modal)) ? Actions[Constants.CREATE_WALLET_SELECT_FIAT]({ selectedWalletType: this.props.ethereumWalletType }) : null
       } else {
         return Alert.alert(s.strings.create_wallet_invalid_input, s.strings.create_wallet_select_valid_crypto)
       }

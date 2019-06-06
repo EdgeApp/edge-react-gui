@@ -1,5 +1,5 @@
 // @flow
-import { createInputModal, showModal } from 'edge-components'
+import { createInputModal } from 'edge-components'
 import React, { Component } from 'react'
 // eslint-disable-next-line
 import { FlatList, Image, PermissionsAndroid, Platform, Text, TouchableWithoutFeedback, View } from 'react-native'
@@ -15,6 +15,7 @@ import { buySellPlugins, spendPlugins } from '../../modules/UI/scenes/Plugins/pl
 import styles from '../../styles/scenes/PluginsStyle.js'
 import { THEME, colors } from '../../theme/variables/airbitz.js'
 import type { BuySellPlugin } from '../../types'
+import { launchModal } from '../common/ModalProvider.js'
 
 type Props = {
   developerModeOn: boolean
@@ -70,7 +71,7 @@ class PluginList extends Component<Props, State> {
         noButton
       })
       console.log('gonna show', modal)
-      showModal(modal).then(response => {
+      launchModal(modal).then(response => {
         if (response) {
           plugin.sourceFile = { uri: response }
         }

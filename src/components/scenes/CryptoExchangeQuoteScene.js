@@ -1,6 +1,5 @@
 // @flow
 
-import { showModal } from 'edge-components'
 import type { EdgeAccount, EdgeSwapQuote } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Image, Linking, View } from 'react-native'
@@ -13,6 +12,7 @@ import Slider from '../../modules/UI/components/Slider/index'
 import { styles } from '../../styles/scenes/CryptoExchangeQuoteSceneStyles.js'
 import type { GuiWallet } from '../../types'
 import { CircleTimer } from '../common/CircleTimer'
+import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { createKYCAlertModal } from '../modals/KYCAlertModal'
 
@@ -129,7 +129,7 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
         privacyClick: this.viewPrivacy,
         amlClick: this.viewAML
       })
-      showModal(modal).then((response: null) => {})
+      launchModal(modal).then((response: null) => {})
     }
   }
   viewPrivacy = () => {

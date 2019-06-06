@@ -1,8 +1,9 @@
 // @flow
 
-import { createYesNoModal, showModal } from 'edge-components'
+import { createYesNoModal } from 'edge-components'
 import React from 'react'
 
+import { launchModal } from '../components/common/ModalProvider.js'
 import { SPLIT } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import { getAccount, getWallet, getWalletName } from '../modules/Core/selectors.js'
@@ -23,7 +24,7 @@ export const showSplitWalletModal = (walletId: string) => async (dispatch: Dispa
   if (edgeWallet.currencyInfo.currencyCode === 'BCH') {
     bodyText = s.strings.fragment_wallets_split_wallet_bch_to_bsv
   }
-  // Use `showModal` to put the modal component on screen:
+  // Use `launchModal` to put the modal component on screen:
   const modal = createYesNoModal({
     title: s.strings.fragment_wallets_split_wallet,
     message: (
@@ -37,7 +38,7 @@ export const showSplitWalletModal = (walletId: string) => async (dispatch: Dispa
     yesButtonText: s.strings.string_split
   })
 
-  const resolveValue = await showModal(modal)
+  const resolveValue = await launchModal(modal)
 
   if (resolveValue) {
     try {

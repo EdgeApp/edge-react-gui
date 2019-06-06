@@ -1,6 +1,6 @@
 // @flow
 
-import { PrimaryButton, showModal } from 'edge-components'
+import { PrimaryButton } from 'edge-components'
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
 import { View } from 'react-native'
@@ -12,6 +12,7 @@ import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import styles from '../../styles/scenes/ChangeMiningFeeStyle'
 import RadioButton from '../common/ChangeMiningFeeRadioButton'
+import { launchModal } from '../common/ModalProvider.js'
 import { type CustomFees, createCustomFeesModal } from '../modals/CustomFeesModal.js'
 
 const HIGH_FEE_TEXT = s.strings.mining_fee_high_label_choice
@@ -66,7 +67,7 @@ export default class ChangeMiningFee extends Component<ChangeMiningFeeProps, Sta
       customFeeSettings
     })
 
-    const data = await showModal(modal)
+    const data = await launchModal(modal)
     if (data) {
       this.setState({ feeSetting: data.networkFeeOption }, () => {
         this.props.onSubmitCustomFee(data)

@@ -179,7 +179,7 @@
     "react-native-mail": "3.0.7",
     "react-native-material-kit": "git://github.com/xinthink/react-native-material-kit.git#da1c292e",
     "react-native-material-textfield": "git://github.com/EdgeApp/react-native-material-textfield.git",
-    "react-native-modal": "^6.5.0",
+    "react-native-modal": "^11.0.1",
     "react-native-permissions": "1.0.6",
     "react-native-picker": "git://github.com/egodigital/react-native-picker#747c09b",
     "react-native-popup-menu": "0.13.3",

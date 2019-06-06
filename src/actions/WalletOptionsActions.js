@@ -1,11 +1,12 @@
 // @flow
 
-import { Icon, createInputModal, createSecureTextModal, createSimpleConfirmModal, showModal } from 'edge-components'
+import { Icon, createInputModal, createSecureTextModal, createSimpleConfirmModal } from 'edge-components'
 import React from 'react'
 import { Actions } from 'react-native-router-flux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 
 import { refreshWallet } from '../actions/WalletActions.js'
+import { launchModal } from '../components/common/ModalProvider.js'
 import * as Constants from '../constants/indexConstants'
 import s from '../locales/strings.js'
 import * as ACCOUNT_API from '../modules/Core/Account/api.js'
@@ -162,7 +163,7 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
             noButton,
             validateInput
           })
-          const resolveValue = await showModal(getSeedModal)
+          const resolveValue = await launchModal(getSeedModal)
           if (resolveValue) {
             const wallet = CORE_SELECTORS.getWallet(state, walletId)
             const seed = wallet.getDisplayPrivateSeed()
@@ -180,7 +181,7 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
                 />
               )
             })
-            await showModal(modal)
+            await launchModal(modal)
           }
         } catch (e) {}
       }
@@ -212,7 +213,7 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
             yesButton,
             noButton
           })
-          const resolveValue = await showModal(renameWalletModal)
+          const resolveValue = await launchModal(renameWalletModal)
           if (resolveValue) {
             await wallet.renameWallet(resolveValue)
             dispatch(refreshWallet(walletId))

@@ -1,6 +1,6 @@
 // @flow
 import { bns } from 'biggystring'
-import { createSimpleConfirmModal, showModal } from 'edge-components'
+import { createSimpleConfirmModal } from 'edge-components'
 import { type EdgeCurrencyWallet, type EdgeMetadata, type EdgeTransaction } from 'edge-core-js'
 import React from 'react'
 import { Alert } from 'react-native'
@@ -8,6 +8,7 @@ import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { selectWalletForExchange } from '../actions/indexActions'
+import { launchModal } from '../components/common/ModalProvider.js'
 import { type AccountPaymentParams } from '../components/scenes/CreateWalletAccountSelectScene.js'
 import * as Constants from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
@@ -61,7 +62,7 @@ export const createCurrencyWalletAndAddToSwap = (walletName: string, walletType:
         icon: <Icon type={Constants.MATERIAL_COMMUNITY} name={Constants.EXCLAMATION} size={30} />,
         buttonText: s.strings.string_ok
       })
-      await showModal(modal)
+      await launchModal(modal)
       console.log(error)
       Actions.popTo(Constants.WALLET_LIST_SCENE)
       dispatch({ type: 'UI/WALLETS/CREATE_WALLET_FAILURE' })
@@ -99,7 +100,7 @@ export const createCurrencyWallet = (
       return edgeWallet
     })
     .catch(async error => {
-      await showModal(errorModal(s.strings.create_wallet_failed, error))
+      await launchModal(errorModal(s.strings.create_wallet_failed, error))
       Actions.popTo(Constants.WALLET_LIST_SCENE)
       dispatch({ type: 'UI/WALLETS/CREATE_WALLET_FAILURE' })
     })
@@ -252,6 +253,6 @@ export const createHandleUnavailableModal = (newWalletId: string, accountName: s
     icon: <Icon type={Constants.MATERIAL_COMMUNITY} name={Constants.CLOSE_ICON} size={30} />,
     buttonText: s.strings.string_ok
   })
-  await showModal(modal)
+  await launchModal(modal)
   Actions.pop()
 }

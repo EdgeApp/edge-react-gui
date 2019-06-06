@@ -1,9 +1,10 @@
 // @flow
 
-import { createSimpleConfirmModal, showModal } from 'edge-components'
+import { createSimpleConfirmModal } from 'edge-components'
 import React, { Component } from 'react'
 import { Image, Platform, View } from 'react-native'
 
+import { launchModal } from '../../../../components/common/ModalProvider.js'
 import { ANDROID_INFO_ICON, EXCLAMATION, ION_ICONS, IOS_INFO_ICON, MATERIAL_COMMUNITY } from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings.js'
 import { styles as sceneStyles } from '../../../../styles/scenes/CryptoExchangeQuoteSceneStyles.js'
@@ -52,7 +53,7 @@ class ExchangeQuoteComponent extends Component<Props, State> {
       icon: <Icon type={MATERIAL_COMMUNITY} name={EXCLAMATION} size={30} />,
       buttonText: s.strings.string_ok
     })
-    showModal(modal).then((response: null) => {})
+    launchModal(modal).then((response: null) => {})
   }
   renderHeadline = () => {
     const styles = sceneStyles.quoteDetailContainer

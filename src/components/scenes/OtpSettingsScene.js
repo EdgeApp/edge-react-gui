@@ -1,6 +1,6 @@
 // @flow
 
-import { createStaticModal, createYesNoModal, showModal } from 'edge-components'
+import { createStaticModal, createYesNoModal } from 'edge-components'
 import React, { Component } from 'react'
 import { Image, Text, View } from 'react-native'
 
@@ -13,6 +13,7 @@ import Gradient from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import { OtpSettingsScreenStyles } from '../../styles/indexStyles.js'
+import { launchModal } from '../common/ModalProvider.js'
 import OtpHeroComponent from '../common/OtpHeroComponent.js'
 import { ExpandableBoxComponent, StaticModalComponent } from '../indexComponents.js'
 
@@ -46,7 +47,7 @@ export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, S
   }
 
   onPressDisable = async () => {
-    // Use `showModal` to put the modal component on screen:
+    // Use `launchModal` to put the modal component on screen:
     const confirmDisableModal = createYesNoModal({
       title: s.strings.otp_modal_headline,
       message: s.strings.otp_modal_body,
@@ -55,7 +56,7 @@ export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, S
       noButtonText: s.strings.string_cancel_cap
     })
 
-    const resolveValue = await showModal(confirmDisableModal)
+    const resolveValue = await launchModal(confirmDisableModal)
     if (resolveValue) {
       this.props.disableOtp()
       this.onConfirmDisable()
@@ -70,7 +71,7 @@ export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, S
       modalDismissTimerSeconds: 8
     })
 
-    await showModal(afterDisableModal)
+    await launchModal(afterDisableModal)
   }
 
   onPressEnable = () => {
