@@ -34,14 +34,14 @@ type Props = {
   // True if this scene should shrink to avoid the keyboard:
   avoidKeyboard?: boolean,
 
+  // Background options:
+  background?: 'gradient' | 'reverseGradient' | 'none',
+
   // True if this scene has a header (with back button & such):
   hasHeader?: boolean,
 
   // True if this scene has a bottom tab bar:
-  hasTabs?: boolean,
-
-  // Reverses the gradient background:
-  reverseGradient?: boolean
+  hasTabs?: boolean
 }
 
 type StateProps = {
@@ -55,7 +55,7 @@ type StateProps = {
  * Also draws a common gradient background under the scene.
  */
 function SceneWrapperComponent (props: Props & StateProps) {
-  const { children, avoidKeyboard = false, hasHeader = true, hasTabs = true, reverseGradient = false, keyboardHeight } = props
+  const { children, avoidKeyboard = false, background = 'gradient', hasHeader = true, hasTabs = true, keyboardHeight } = props
 
   // In the future, ReactNative itself will expose the safe area dimensions:
   // https://github.com/facebook/react-native/pull/20999
@@ -82,27 +82,20 @@ function SceneWrapperComponent (props: Props & StateProps) {
   // Pass the gap to our children, if they want it:
   const finalChildren = typeof children === 'function' ? children(gap) : children
 
+  // Use a height-based layout to avoid the tab bar when the keyboard is up:
+  const sceneLayout = { ...gap }
+  if (avoidKeyboard && keyboardHeight > 0 && hasTabs) {
+    sceneLayout.bottom = void 0
+    sceneLayout.height = height - gap.top - keyboardHeight
+  }
+
+  const scene = <View style={[styles.scene, sceneLayout]}>{finalChildren}</View>
+
   // Finally, render a gradient under everything:
+  if (background === 'none') return scene
   return (
-    <Gradient reverse={reverseGradient} style={styles.container}>
-      <View
-        style={[
-          styles.container,
-          hasTabs && keyboardHeight > 0
-            ? {
-              flex: 0,
-              height: height - gap.top - keyboardHeight
-            }
-            : { marginBottom: gap.bottom },
-          {
-            marginLeft: gap.left,
-            marginRight: gap.right,
-            marginTop: gap.top
-          }
-        ]}
-      >
-        {finalChildren}
-      </View>
+    <Gradient reverse={background === 'reverseGradient'} style={styles.gradient}>
+      {scene}
     </Gradient>
   )
 }
@@ -130,10 +123,17 @@ function getHeaderHeight () {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  gradient: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    top: 0
+  },
+  scene: {
     alignItems: 'stretch',
-    flex: 1,
     flexDirection: 'column',
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
+    position: 'absolute'
   }
 })
