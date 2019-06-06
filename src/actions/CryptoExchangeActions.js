@@ -247,17 +247,17 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, info: S
       return
     }
     if (error.name === errorNames.SwapPermissionError) {
-      if (error.message === 'needsActivation') {
+      if (error.reason === 'needsActivation') {
         dispatch({ type: 'NEED_KYC' })
         Actions.popTo(Constants.EXCHANGE_SCENE)
         return
       }
-      if (error.message === 'geoRestriction') {
+      if (error.reason === 'geoRestriction') {
         dispatch({ type: 'GENERIC_SHAPE_SHIFT_ERROR', data: s.strings.ss_geolock })
         Actions.popTo(Constants.EXCHANGE_SCENE)
         return
       }
-      if (error.message === 'noVerification') {
+      if (error.reason === 'noVerification') {
         let pluginName = ''
         if (typeof error.pluginName === 'string') {
           const { swapInfo } = account.swapConfig[error.pluginName]
