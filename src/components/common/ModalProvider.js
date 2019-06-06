@@ -1,6 +1,7 @@
 // @flow
 
 import React, { type ComponentType } from 'react'
+import { Dimensions, Platform } from 'react-native'
 import { default as Modal } from 'react-native-modal'
 
 export type ModalProps<Result> = { onDone(result: Result): mixed }
@@ -40,14 +41,19 @@ export class ModalProvider extends React.Component<{}, State> {
     // If the queue is empty, render nothing:
     if (this.state.queue.length === 0) return null
 
+    const deviceWidth = Dimensions.get('window').width
+    const deviceHeight = Platform.OS === 'ios' ? Dimensions.get('window').height : require('react-native-extra-dimensions-android').get('REAL_WINDOW_HEIGHT')
+
     const { Component, onDone, modalProps } = this.state.queue[0]
     return (
       <Modal
         avoidKeyboard
-        onModalHide={this.removeFromQueue}
-        onBackdropPress={() => onDone(null)}
-        onBackButtonPress={() => onDone(null)}
+        deviceHeight={deviceHeight}
+        deviceWidth={deviceWidth}
         isVisible={!this.state.isHiding}
+        onBackButtonPress={() => onDone(null)}
+        onBackdropPress={() => onDone(null)}
+        onModalHide={this.removeFromQueue}
         useNativeDriver
         {...modalProps}
       >
