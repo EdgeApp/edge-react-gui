@@ -10,13 +10,11 @@ import type { Dispatch, State } from '../../modules/ReduxTypes'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import { displayDropdownAlert } from '../../modules/UI/components/DropdownAlert/actions'
 import * as UI_SELECTORS from '../../modules/UI/selectors'
-import { PLATFORM } from '../../theme/variables/platform.js'
 import * as UTILS from '../../util/utils'
 
 const mapStateToProps = (state: State, ownProps: TransactionDetailsOwnProps) => {
   const wallets = UI_SELECTORS.getWallets(state)
   const contacts = state.contacts
-  const usableHeight: number = PLATFORM.usableHeight
   const subcategoriesList: Array<string> = state.ui.scenes.transactionDetails.subcategories.sort()
   const settings = SETTINGS_SELECTORS.getSettings(state)
   const currencyCode: string = ownProps.edgeTransaction.currencyCode
@@ -26,7 +24,6 @@ const mapStateToProps = (state: State, ownProps: TransactionDetailsOwnProps) => 
 
   return {
     contacts,
-    usableHeight,
     subcategoriesList,
     settings,
     currencyInfo,
