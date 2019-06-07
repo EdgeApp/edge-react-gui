@@ -147,7 +147,7 @@ export class TransactionList extends Component<Props, State> {
   render () {
     const txs = this.state.reset ? emptyArray : this.props.transactions
     return (
-      <SceneWrapper>
+      <SceneWrapper background="body" bodySplit={200}>
         <FlatList
           ListEmptyComponent={this.renderBuyCrypto()}
           ListHeaderComponent={this.currentRenderBalanceBox()}

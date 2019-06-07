@@ -1,12 +1,7 @@
 // @flow
 
-import { StatusBar } from 'react-native'
-
 import { scale } from '../../../../lib/scaling.js'
 import THEME from '../../../../theme/variables/airbitz'
-import { PLATFORM } from '../../../../theme/variables/platform.js'
-
-const safeAreaHeight = PLATFORM.deviceHeight - StatusBar.currentHeight - PLATFORM.footerHeight
 
 export default {
   header: {
@@ -33,15 +28,6 @@ export default {
     height: scale(58),
     justifyContent: 'flex-start',
     alignItems: 'center'
-  },
-  safeAreaView: {
-    backgroundColor: THEME.COLORS.PRIMARY,
-    height: Number.isNaN(safeAreaHeight) ? void 0 : safeAreaHeight,
-    position: 'relative',
-    top: StatusBar.currentHeight
-  },
-  container: {
-    alignItems: 'stretch'
   },
   iconImage: {
     width: scale(22),

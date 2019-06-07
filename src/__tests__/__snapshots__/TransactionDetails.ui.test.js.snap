@@ -2,7 +2,10 @@
 
 exports[`TransactionDetails.ui should render 1`] = `
 <React.Fragment>
-  <Connect(SceneWrapperComponent)>
+  <Connect(SceneWrapperComponent)
+    background="body"
+    bodySplit={33.709859154929575}
+  >
     <ScrollViewMock
       gradientHeight="50%"
       keyboardShouldPersistTaps="handled"
@@ -14,11 +17,9 @@ exports[`TransactionDetails.ui should render 1`] = `
           Object {
             "alignItems": "stretch",
             "backgroundColor": "#FFFFFF",
-            "flex": 1,
             "flexDirection": "column",
             "marginTop": 33.709859154929575,
             "paddingTop": 44.946478873239435,
-            "zIndex": 1,
           }
         }
       >
@@ -206,7 +207,10 @@ exports[`TransactionDetails.ui should render 1`] = `
 
 exports[`TransactionDetails.ui should render with negative nativeAmount and fiatAmount 1`] = `
 <React.Fragment>
-  <Connect(SceneWrapperComponent)>
+  <Connect(SceneWrapperComponent)
+    background="body"
+    bodySplit={33.709859154929575}
+  >
     <ScrollViewMock
       gradientHeight="50%"
       keyboardShouldPersistTaps="handled"
@@ -218,11 +222,9 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
           Object {
             "alignItems": "stretch",
             "backgroundColor": "#FFFFFF",
-            "flex": 1,
             "flexDirection": "column",
             "marginTop": 33.709859154929575,
             "paddingTop": 44.946478873239435,
-            "zIndex": 1,
           }
         }
       >
@@ -413,7 +415,10 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
 
 exports[`TransactionDetails.ui should render with tx date off by 1000x in future 1`] = `
 <React.Fragment>
-  <Connect(SceneWrapperComponent)>
+  <Connect(SceneWrapperComponent)
+    background="body"
+    bodySplit={33.709859154929575}
+  >
     <ScrollViewMock
       gradientHeight="50%"
       keyboardShouldPersistTaps="handled"
@@ -425,11 +430,9 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
           Object {
             "alignItems": "stretch",
             "backgroundColor": "#FFFFFF",
-            "flex": 1,
             "flexDirection": "column",
             "marginTop": 33.709859154929575,
             "paddingTop": 44.946478873239435,
-            "zIndex": 1,
           }
         }
       >
@@ -617,7 +620,10 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
 
 exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1`] = `
 <React.Fragment>
-  <Connect(SceneWrapperComponent)>
+  <Connect(SceneWrapperComponent)
+    background="body"
+    bodySplit={33.709859154929575}
+  >
     <ScrollViewMock
       gradientHeight="50%"
       keyboardShouldPersistTaps="handled"
@@ -629,11 +635,9 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
           Object {
             "alignItems": "stretch",
             "backgroundColor": "#FFFFFF",
-            "flex": 1,
             "flexDirection": "column",
             "marginTop": 33.709859154929575,
             "paddingTop": 44.946478873239435,
-            "zIndex": 1,
           }
         }
       >
