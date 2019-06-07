@@ -3359,16 +3359,17 @@ edge-exchange-plugins@^0.6.4:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@0.5.28:
-  version "0.5.28"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.5.28.tgz#3bc7807770ef1375c84fe0d744369cedd0919ee7"
-  integrity sha512-pCnpueMD9wLZFmPqAUIilFOBjo5yuNQEBW2pQ8FTSNuDALsTPjF7ZtPIGk67NY/wny2wyv4sf7Cw4giIUJU/Fw==
+edge-login-ui-rn@0.5.30:
+  version "0.5.30"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.5.30.tgz#cf55228e54c2aee550f0e8dcdf2a7e4048a52761"
+  integrity sha512-nVzXggrIcpgvo3I+qu7TSlYr4aNBoBcIftYOgLc42c1pscnK/auXTXMrSdMBqY5OsMogtlEQ/CgAEVzXjKOXQA==
   dependencies:
     edge-components "^0.0.26"
     material-ui "^0.20.0"
     moment "^2.19.3"
     native-base "^2.7.2"
     react-native-device-info "^0.11.0"
+    react-native-extra-dimensions-android "^1.2.5"
     react-native-keyboard-aware-scroll-view "^0.4.1"
     react-native-linear-gradient "^2.0.0"
     react-native-mail "^3.0.5"
@@ -8952,6 +8953,11 @@ react-native-extra-dimensions-android@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/react-native-extra-dimensions-android/-/react-native-extra-dimensions-android-1.0.1.tgz#ef0fe94b61ab4ad9da0a01b65255063eeb36664e"
   integrity sha512-45GgglgjZcwcYUktf8wa3g//MZKTLyURLQvmX0WjhiGkhqBYRhzjNAL+NZ+XZbGjWlaE4hp32rlzrQa7aVgGZA==
+
+react-native-extra-dimensions-android@^1.2.5:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/react-native-extra-dimensions-android/-/react-native-extra-dimensions-android-1.2.5.tgz#8ade91029aaac7519bf305116d39019e618a60f0"
+  integrity sha512-eorFo9X1vEqAWUkgcZ300yKBG1wtgNeE7tdWAH2CE+P50FGTniJg5Sr6l1iPWG8ZskQOuF+KeiSTFlDa4vLfMw==
 
 react-native-fast-crypto@1.8.1:
   version "1.8.1"
