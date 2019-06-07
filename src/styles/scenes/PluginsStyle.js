@@ -4,16 +4,8 @@ import { StyleSheet } from 'react-native'
 
 import { scale } from '../../lib/scaling.js'
 import THEME from '../../theme/variables/airbitz'
-import { PLATFORM } from '../../theme/variables/platform.js'
 
 export const styles = {
-  gradient: {
-    height: THEME.HEADER
-  },
-  scene: {
-    width: '100%',
-    height: PLATFORM.usableHeight + PLATFORM.toolbarHeight
-  },
   titleStyle: {
     alignSelf: 'center',
     fontSize: 20,
@@ -24,10 +16,6 @@ export const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%'
-  },
-  container: {
-    flex: 1,
-    alignItems: 'stretch'
   },
   pluginRow: {
     borderBottomWidth: 1,
