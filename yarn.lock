@@ -3297,10 +3297,10 @@ edge-core-js@^0.16.1:
     ws "^5.1.1"
     yaob "^0.3.3"
 
-edge-currency-accountbased@^0.1.10:
-  version "0.1.10"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.1.10.tgz#71f96c52ac826c6a5fd5287c7873eafdf24683e9"
-  integrity sha512-HGRBbSm3Xwqv5HHkZJ7Y8HXypzb13EQ84uX5A2X6NZWSnpSQlp27X1DPEJeG8+7yZPkWNPIU5AlOfN9ttXDojA==
+edge-currency-accountbased@^0.1.11:
+  version "0.1.11"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.1.11.tgz#67556ef0195af769a31274e0d862abe8b211fba0"
+  integrity sha512-623VkZT8i5u82nyP+O8i3xi8etkKn2+WlWzHI8d+h3+KoUf9u2pwphEcbfM50GyTagTRMcAW6HxGlXUkPCKzAA==
   dependencies:
     base-x "^1.0.4"
     biggystring "^3.0.0"
@@ -3317,10 +3317,10 @@ edge-currency-accountbased@^0.1.10:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@4.2.3:
-  version "4.2.3"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.2.3.tgz#8ce28dae6cce81d9a8bfa9cd0aa08dbacfa157b2"
-  integrity sha512-XDDXDSiT0D1CaBRf3uxQJVlFtHeH6EM0cH7/YnVh8z1esvPpGHMBs8c2OfGrFiksU0haACX3roGv36nZ5qMdJw==
+edge-currency-bitcoin@4.2.4:
+  version "4.2.4"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.2.4.tgz#5cbb977e487bd91c7dae47bf78b11ee2e971cd14"
+  integrity sha512-a1KrNwjtSFs1Sn2vOu+2r75DlCMfK+JVEAVNRfpvSrmcMNKSHc6QGlWUt5FzaCA4Q+35jAkr3Av5biV7O+BWSg==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -3349,26 +3349,27 @@ edge-currency-monero@0.2.2:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#6eddbd64"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.6.2:
-  version "0.6.2"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.6.2.tgz#78fd64da759f4970e062a7d5da6676eb7c64c690"
-  integrity sha512-lK2hdD+qOFJ71TtHLMoG2Spez98YNd4SNg23Z8B26Taexo4D8sqgChmBiixdjjuz7DWixaS3mV8JpcaMZjf5Ag==
+edge-exchange-plugins@^0.6.4:
+  version "0.6.4"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.6.4.tgz#4012668dc793eb8af5e535ae2fdba044c335fdc2"
+  integrity sha512-w4N5SCtxN2eEWNxV5odvzsWr/7YHy+Q4lpOnVXHZuVmlQdY0f7Cn0/mHcdUjDdJ/LHCSjNjiSrMW0IK807fzCQ==
   dependencies:
     esm "^3.2.4"
     hashjs "^1.2.0"
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@0.5.28:
-  version "0.5.28"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.5.28.tgz#3bc7807770ef1375c84fe0d744369cedd0919ee7"
-  integrity sha512-pCnpueMD9wLZFmPqAUIilFOBjo5yuNQEBW2pQ8FTSNuDALsTPjF7ZtPIGk67NY/wny2wyv4sf7Cw4giIUJU/Fw==
+edge-login-ui-rn@0.5.30:
+  version "0.5.30"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.5.30.tgz#cf55228e54c2aee550f0e8dcdf2a7e4048a52761"
+  integrity sha512-nVzXggrIcpgvo3I+qu7TSlYr4aNBoBcIftYOgLc42c1pscnK/auXTXMrSdMBqY5OsMogtlEQ/CgAEVzXjKOXQA==
   dependencies:
     edge-components "^0.0.26"
     material-ui "^0.20.0"
     moment "^2.19.3"
     native-base "^2.7.2"
     react-native-device-info "^0.11.0"
+    react-native-extra-dimensions-android "^1.2.5"
     react-native-keyboard-aware-scroll-view "^0.4.1"
     react-native-linear-gradient "^2.0.0"
     react-native-mail "^3.0.5"
@@ -6341,18 +6342,10 @@ js-xdr@^1.0.5:
     lodash "^4.17.5"
     long "^2.2.3"
 
-js-yaml@^3.13.0:
+js-yaml@^3.13.0, js-yaml@^3.9.0, js-yaml@^3.9.1:
   version "3.13.1"
   resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.13.1.tgz#aff151b30bfdfa8e49e05da22e7415e9dfa37847"
   integrity sha512-YfbcO7jXDdyj0DGxYVSlSeQNHbD7XPWvrVWeVUujrQEoZzWJIRrCPoyk6kL6IAjAG2IolMK4T0hNUe0HOUs5Jw==
-  dependencies:
-    argparse "^1.0.7"
-    esprima "^4.0.0"
-
-js-yaml@^3.9.0, js-yaml@^3.9.1:
-  version "3.12.0"
-  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.12.0.tgz#eaed656ec8344f10f527c6bfa1b6e2244de167d1"
-  integrity sha512-PIt2cnwmPfL4hKNwqeiuz4bKfnzHTBv6HyVgjahA6mPLwPDzjDWrplJBMjHUFxku/N3FlmrbyPclad+I+4mJ3A==
   dependencies:
     argparse "^1.0.7"
     esprima "^4.0.0"
@@ -8838,6 +8831,13 @@ react-native-animatable@^1.1.0, react-native-animatable@^1.2.4:
   dependencies:
     prop-types "^15.5.10"
 
+react-native-animatable@^1.3.1:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/react-native-animatable/-/react-native-animatable-1.3.2.tgz#4783ee1a73dc98815aef234ce6b819f80bfe7d80"
+  integrity sha512-rmah3KQ63ft8DxkzFUwJSuZeq+oSYwldoGF4DTOR5WM2WR5wiWLgBAtrAHlI3Di3by323uOR21s+MlqPcHz2Kw==
+  dependencies:
+    prop-types "^15.5.10"
+
 "react-native-app-settings@git://github.com/swansontec/react-native-app-settings#fix-rn59":
   version "2.0.0"
   resolved "git://github.com/swansontec/react-native-app-settings#a4c9729508ea2a5331117fc0891330e81e1a46f8"
@@ -8949,10 +8949,10 @@ react-native-easy-grid@0.2.0:
   dependencies:
     lodash "^4.11.1"
 
-react-native-extra-dimensions-android@1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/react-native-extra-dimensions-android/-/react-native-extra-dimensions-android-1.0.1.tgz#ef0fe94b61ab4ad9da0a01b65255063eeb36664e"
-  integrity sha512-45GgglgjZcwcYUktf8wa3g//MZKTLyURLQvmX0WjhiGkhqBYRhzjNAL+NZ+XZbGjWlaE4hp32rlzrQa7aVgGZA==
+react-native-extra-dimensions-android@^1.2.5:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/react-native-extra-dimensions-android/-/react-native-extra-dimensions-android-1.2.5.tgz#8ade91029aaac7519bf305116d39019e618a60f0"
+  integrity sha512-eorFo9X1vEqAWUkgcZ300yKBG1wtgNeE7tdWAH2CE+P50FGTniJg5Sr6l1iPWG8ZskQOuF+KeiSTFlDa4vLfMw==
 
 react-native-fast-crypto@1.8.1:
   version "1.8.1"
@@ -9049,6 +9049,14 @@ react-native-mail@3.0.7, react-native-mail@^3.0.5:
   dependencies:
     prop-types "^15.5.9"
 
+react-native-modal@^11.0.1:
+  version "11.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-modal/-/react-native-modal-11.0.1.tgz#0c7e546557938981f188c56b80474ddfe7c9835c"
+  integrity sha512-qXKRCFj28uJ1AopMPwf4HssscZ4LwTCY+PlDKnXERdxrbGK626rduj4fHyLXSZ1xJvrDy8doHqVAYoQ9YuObgQ==
+  dependencies:
+    prop-types "^15.6.2"
+    react-native-animatable "^1.3.1"
+
 react-native-modal@^6.5.0:
   version "6.5.0"
   resolved "https://registry.yarnpkg.com/react-native-modal/-/react-native-modal-6.5.0.tgz#46220b2289a41597d344c1db17454611b426a758"
@@ -9116,10 +9124,10 @@ react-native-safe-area-view@0.11.0:
   dependencies:
     hoist-non-react-statics "^2.3.1"
 
-react-native-safe-area-view@^0.13.1:
-  version "0.13.1"
-  resolved "https://registry.yarnpkg.com/react-native-safe-area-view/-/react-native-safe-area-view-0.13.1.tgz#834bbb6d22f76a7ff07de56725ee5667ba1386b0"
-  integrity sha512-d/pu2866jApSwLtK/xWAvMXZkNTIQcFrjjbcTATBrmIfFNnu8TNFUcMRFpfJ+eOn5nmx7uGmDvs9B53Ft7JGpQ==
+react-native-safe-area-view@^0.14.4:
+  version "0.14.4"
+  resolved "https://registry.yarnpkg.com/react-native-safe-area-view/-/react-native-safe-area-view-0.14.4.tgz#1647fa74fd452cb8cee4f47bd08de3829451bf5d"
+  integrity sha512-ypDQVoAyNHBhMR1IGfadm8kskNzPg5czrDAzQEu5MXG9Ahoi5f1cL/rT2KO+R9f6xRjf6b1IjY53m0B0xHRd0A==
   dependencies:
     hoist-non-react-statics "^2.3.1"
 

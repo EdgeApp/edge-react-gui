@@ -1,6 +1,5 @@
 // @flow
 import { bns } from 'biggystring'
-import { showModal } from 'edge-components'
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, Keyboard, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -26,6 +25,7 @@ import { CryptoExchangeSceneStyle } from '../../styles/indexStyles'
 import { emptyCurrencyInfo } from '../../types'
 import type { GuiCurrencyInfo, GuiWallet } from '../../types'
 import { getDenomFromIsoCode } from '../../util/utils.js'
+import { launchModal } from '../common/ModalProvider.js'
 
 export type CryptoExchangeSceneComponentStateProps = {
   // The following props are used to populate the CryptoExchangeFlipInputs
@@ -114,7 +114,7 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
     }
     if (!this.props.pluginCompleteKYC && nextProps.pluginCompleteKYC) {
       // show modal.   closeFinishKYCModal
-      showModal(SwapKYCInfoNeededModalConnector, { style: { margin: 0 } }).then((response: null) => {
+      launchModal(SwapKYCInfoNeededModalConnector, { style: { margin: 0 } }).then((response: null) => {
         console.log('nav: ', response)
       })
     }
@@ -226,7 +226,7 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
   }
   getKYCToken = () => {
     this.wipeKYCFlag()
-    showModal(SwapKYCModalConnector, { style: { margin: 0 } }).then((response: null | { accessToken: string, refreshToken: string }) => {
+    launchModal(SwapKYCModalConnector, { style: { margin: 0 } }).then((response: null | { accessToken: string, refreshToken: string }) => {
       console.log('nav: ', response)
     })
   }
@@ -356,7 +356,7 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
       headerTitle: whichWallet === Constants.TO ? s.strings.select_recv_wallet : s.strings.select_src_wallet
     }
     const modal = createCryptoExchangeWalletSelectorModal(props)
-    showModal(modal, { style: { margin: 0 } }).then(response => {
+    launchModal(modal, { style: { margin: 0 } }).then(response => {
       if (response) {
         if (response.id) {
           onSelectWallet(response.id, response.currencyCode)

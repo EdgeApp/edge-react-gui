@@ -1,6 +1,6 @@
 // @flow
 
-import { createInputModal, createSecureTextModal, createYesNoModal, showModal } from 'edge-components'
+import { createInputModal, createSecureTextModal, createYesNoModal } from 'edge-components'
 import type { EdgeAccount } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import React from 'react'
@@ -9,6 +9,7 @@ import { Actions } from 'react-native-router-flux'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import iconImage from '../assets/images/otp/OTP-badge_sm.png'
+import { launchModal } from '../components/common/ModalProvider.js'
 import { CURRENCY_PLUGIN_NAMES, ION_ICONS, LOCKED_ICON, WALLET_LIST } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import { restoreWalletsRequest } from '../modules/Core/Account/api.js'
@@ -217,7 +218,7 @@ export const showReEnableOtpModal = () => async (dispatch: Dispatch, getState: G
   const account = CORE_SELECTORS.getAccount(state)
   const otpResetDate = account.otpResetDate
   if (!otpResetDate) return
-  // Use `showModal` to put the modal component on screen:
+  // Use `launchModal` to put the modal component on screen:
   const modal = createYesNoModal({
     title: s.strings.title_otp_keep_modal,
     message: s.strings.otp_modal_reset_description,
@@ -225,7 +226,7 @@ export const showReEnableOtpModal = () => async (dispatch: Dispatch, getState: G
     yesButtonText: s.strings.otp_keep,
     noButtonText: s.strings.otp_disable
   })
-  const resolveValue = await showModal(modal)
+  const resolveValue = await launchModal(modal)
   if (resolveValue === true) {
     // true on positive, false on negative
     // let 2FA expire
@@ -314,7 +315,7 @@ export const showUnlockSettingsModal = () => async (dispatch: Dispatch, getState
       noButton,
       validateInput
     })
-    const resolveValue = await showModal(unlockSettingsModal)
+    const resolveValue = await launchModal(unlockSettingsModal)
     if (resolveValue) {
       dispatch(SETTINGS_ACTIONS.setSettingsLock(false))
     }
@@ -359,7 +360,7 @@ export const showSendLogsModal = () => async (dispatch: Dispatch, getState: GetS
       yesButton,
       noButton
     })
-    const notes = await showModal(unlockSettingsModal)
+    const notes = await launchModal(unlockSettingsModal)
     if (notes || notes === '') {
       await dispatch(sendLogs(notes))
       Alert.alert(s.strings.settings_modal_send_logs_success)
@@ -379,7 +380,7 @@ export const showRestoreWalletsModal = () => async (dispatch: Dispatch, getState
     noButtonText: s.strings.restore_wallets_modal_cancel,
     yesButtonText: s.strings.restore_wallets_modal_confirm
   })
-  const response = await showModal(restoreWalletsModal)
+  const response = await launchModal(restoreWalletsModal)
   if (response) {
     await restoreWalletsRequest(account)
     Actions[WALLET_LIST]()

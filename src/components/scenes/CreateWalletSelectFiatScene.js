@@ -1,33 +1,25 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Alert, TouchableHighlight, View } from 'react-native'
-import ExtraDimensions from 'react-native-extra-dimensions-android'
+import { Alert, FlatList, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import * as Constants from '../../constants/indexConstants.js'
 import { scale } from '../../lib/scaling.js'
 import s from '../../locales/strings.js'
 import Text from '../../modules/UI/components/FormattedText/index'
-import Gradient from '../../modules/UI/components/Gradient/Gradient.ui.js'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
-import SearchResults from '../../modules/UI/components/SearchResults/index'
 import styles, { styles as stylesRaw } from '../../styles/scenes/CreateWalletStyle.js'
-import { PLATFORM } from '../../theme/variables/platform'
-import type { DeviceDimensions, FlatListItem, GuiFiatType, GuiWalletType } from '../../types'
+import type { FlatListItem, GuiFiatType, GuiWalletType } from '../../types'
 import * as UTILS from '../../util/utils'
 import { FormField } from '../common/FormField.js'
-
-const SOFT_MENU_BAR_HEIGHT = ExtraDimensions.get('SOFT_MENU_BAR_HEIGHT')
+import { SceneWrapper } from '../common/SceneWrapper.js'
 
 export type CreateWalletSelectFiatOwnProps = {
   selectedWalletType: GuiWalletType,
   supportedFiats: Array<GuiFiatType>,
-  dimensions: DeviceDimensions,
   cleanedPrivateKey?: string
 }
 export type CreateWalletSelectFiatStateProps = {
-  dimensions: DeviceDimensions,
   supportedFiats: Array<GuiFiatType>
 }
 export type Props = CreateWalletSelectFiatOwnProps & CreateWalletSelectFiatStateProps
@@ -108,14 +100,11 @@ export class CreateWalletSelectFiat extends Component<Props, State> {
       return entry.label.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0
     })
     const formFieldHeight = scale(50)
-    const keyboardHeight = this.props.dimensions.keyboardHeight || 0
-    const footerHeight = PLATFORM.footerHeight
 
     return (
-      <SafeAreaView>
-        <View style={styles.scene}>
-          <Gradient style={styles.gradient} />
-          <View style={styles.view}>
+      <SceneWrapper avoidKeyboard>
+        {gap => (
+          <View style={[styles.content, { marginBottom: -gap.bottom }]}>
             <FormField
               style={styles.picker}
               autoFocus
@@ -130,26 +119,30 @@ export class CreateWalletSelectFiat extends Component<Props, State> {
               label={s.strings.fragment_wallets_addwallet_fiat_hint}
               returnKeyType={'search'}
             />
-            <SearchResults
-              renderRegularResultFxn={this.renderFiatTypeResult}
-              onRegularSelectFxn={this.handleSelectFiatType}
-              regularArray={filteredArray}
-              style={[styles.SearchResults]}
-              containerStyle={[styles.searchContainer, { flex: 1, marginBottom: keyboardHeight - footerHeight + SOFT_MENU_BAR_HEIGHT }]}
-              keyExtractor={this.keyExtractor}
+            <FlatList
+              style={styles.resultList}
+              automaticallyAdjustContentInsets={false}
+              contentContainerStyle={{ paddingBottom: gap.bottom }}
+              data={filteredArray}
               initialNumToRender={30}
-              scrollRenderAheadDistance={1600}
+              keyboardShouldPersistTaps="handled"
+              keyExtractor={this.keyExtractor}
+              renderItem={this.renderFiatTypeResult}
             />
           </View>
-        </View>
-      </SafeAreaView>
+        )}
+      </SceneWrapper>
     )
   }
 
-  renderFiatTypeResult = (data: FlatListItem, onRegularSelect: Function) => {
+  renderFiatTypeResult = (data: FlatListItem) => {
     return (
       <View style={[styles.singleCryptoTypeWrap, data.item.value === this.state.selectedFiat && styles.selectedItem]}>
-        <TouchableHighlight style={[styles.singleCryptoType]} onPress={() => onRegularSelect(data.item)} underlayColor={stylesRaw.underlayColor.color}>
+        <TouchableHighlight
+          style={[styles.singleCryptoType]}
+          onPress={() => this.handleSelectFiatType(data.item)}
+          underlayColor={stylesRaw.underlayColor.color}
+        >
           <View style={[styles.cryptoTypeInfoWrap]}>
             <View style={styles.cryptoTypeLeft}>
               <View style={[styles.cryptoTypeLeftTextWrap]}>

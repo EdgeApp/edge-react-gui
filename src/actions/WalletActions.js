@@ -1,12 +1,13 @@
 // @flow
 
-import { createSimpleConfirmModal, showModal } from 'edge-components'
+import { createSimpleConfirmModal } from 'edge-components'
 import type { EdgeCurrencyWallet, EdgeReceiveAddress } from 'edge-core-js'
 import _ from 'lodash'
 import React from 'react'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
+import { launchModal } from '../components/common/ModalProvider.js'
 import * as Constants from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import * as SETTINGS_API from '../modules/Core/Account/settings.js'
@@ -180,7 +181,7 @@ export const selectEOSWallet = (walletId: string, currencyCode: string, from?: s
         icon: <Icon type={Constants.MATERIAL_COMMUNITY} name={Constants.EXCLAMATION} size={30} />,
         buttonText: s.strings.string_ok
       })
-      showModal(modal)
+      launchModal(modal)
     }
   }
 }

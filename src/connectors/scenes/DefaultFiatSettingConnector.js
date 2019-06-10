@@ -14,8 +14,7 @@ const mapStateToProps = (state: State) => {
   const supportedFiats = getSupportedFiats(defaultFiat)
   const out = {
     defaultFiat,
-    supportedFiats,
-    dimensions: state.ui.scenes.dimensions
+    supportedFiats
   }
   return out
 }

@@ -1,8 +1,7 @@
 // @flow
 
-import React, { Component } from 'react'
-import type { Node } from 'react'
-import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native'
+import React, { Component, type Node } from 'react'
+import { Dimensions, Platform, StyleSheet, TouchableOpacity, View } from 'react-native'
 import Modal from 'react-native-modal'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
@@ -48,8 +47,11 @@ export default class StylizedModal extends Component<Props> {
   render () {
     const { headerText, headerSubtext } = this.props
 
+    const deviceWidth = Dimensions.get('window').width
+    const deviceHeight = Platform.OS === 'ios' ? Dimensions.get('window').height : require('react-native-extra-dimensions-android').get('REAL_WINDOW_HEIGHT')
+
     return (
-      <Modal style={[styles.topLevelModal, this.props.style]} isVisible={this.props.visibilityBoolean}>
+      <Modal deviceHeight={deviceHeight} deviceWidth={deviceWidth} isVisible={this.props.visibilityBoolean} style={[styles.topLevelModal, this.props.style]}>
         <View style={[styles.modalHeaderIconWrapBottom, this.props.modalHeaderIcon]}>{this.props.featuredIcon}</View>
 
         <View style={[styles.visibleModal, this.props.modalVisibleStyle]}>

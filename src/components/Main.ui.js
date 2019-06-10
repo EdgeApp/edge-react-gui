@@ -1,14 +1,13 @@
 // @flow
 
 import { type DiskletFolder, makeReactNativeFolder } from 'disklet'
-import { ModalManager } from 'edge-components'
 import type { EdgeContext } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Alert, Image, Keyboard, Linking, StatusBar, TouchableWithoutFeedback, View, YellowBox } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import Locale from 'react-native-locale'
 import { MenuProvider } from 'react-native-popup-menu'
-import { Actions, Drawer, Modal, Overlay, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
+import { Actions, Drawer, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import SplashScreen from 'react-native-smart-splash-screen'
 import { connect } from 'react-redux'
@@ -92,6 +91,7 @@ import {
 } from '../modules/UI/scenes/Plugins/index.js'
 import { HwBackButtonHandler } from '../modules/UI/scenes/WalletList/components/HwBackButtonHandler/index'
 import { styles } from '../styles/MainStyle.js'
+import { ModalProvider } from './common/ModalProvider.js'
 import { EdgeCoreManager } from './core/EdgeCoreManager.js'
 import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
 import { CryptoExchangeQuoteProcessingScreenComponent } from './scenes/CryptoExchangeQuoteProcessingScene.js'
@@ -756,7 +756,7 @@ export default class Main extends Component<Props> {
             </Drawer>
           </Stack>
         </RouterWithRedux>
-        <StatusBar translucent backgroundColor="#000000" barStyle="light-content" />
+        <StatusBar translucent backgroundColor="#00000040" barStyle="light-content" />
         <HelpModal style={{ flex: 1 }} />
         <ErrorAlert />
         <TransactionAlert />
@@ -764,7 +764,7 @@ export default class Main extends Component<Props> {
         <ContactsLoader />
         <PasswordReminderModal />
         <PasswordRecoveryReminderModalConnector />
-        <ModalManager />
+        <ModalProvider />
         <PermissionsManager />
 
         <EdgeCoreManager onLoad={this.onCoreLoad} onError={this.onCoreError} />

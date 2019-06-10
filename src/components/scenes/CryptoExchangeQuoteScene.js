@@ -1,6 +1,5 @@
 // @flow
 
-import { showModal } from 'edge-components'
 import type { EdgeAccount, EdgeSwapQuote } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Image, Linking, View } from 'react-native'
@@ -9,13 +8,12 @@ import { sprintf } from 'sprintf-js'
 import s from '../../locales/strings.js'
 import { ExchangeQuoteComponent } from '../../modules/UI/components/ExchangeQuote/ExchangeQuoteComponent.js'
 import FormattedText from '../../modules/UI/components/FormattedText/index'
-import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
-// import FormattedText from '../../components/FormattedText'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import Slider from '../../modules/UI/components/Slider/index'
-import { CryptoExchangeQuoteSceneStyles as styles } from '../../styles/indexStyles'
+import { styles } from '../../styles/scenes/CryptoExchangeQuoteSceneStyles.js'
 import type { GuiWallet } from '../../types'
 import { CircleTimer } from '../common/CircleTimer'
+import { launchModal } from '../common/ModalProvider.js'
+import { SceneWrapper } from '../common/SceneWrapper.js'
 import { createKYCAlertModal } from '../modals/KYCAlertModal'
 
 export type QuoteObject = {
@@ -134,7 +132,7 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
         privacyClick: this.viewPrivacy,
         amlClick: this.viewAML
       })
-      showModal(modal).then((response: null) => {})
+      launchModal(modal).then((response: null) => {})
     }
   }
   viewPrivacy = () => {
@@ -185,46 +183,43 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
     }
 
     return (
-      <SafeAreaView>
-        <Gradient style={styles.scene}>
-          <Gradient style={styles.gradient} />
-          <View style={styles.topRow}>
-            <Image source={this.renderImage(this.props.quote.quote.pluginName)} style={styles.logoImage} />
-          </View>
-          <View style={styles.centerRow}>
-            <ExchangeQuoteComponent
-              headline={sprintf(s.strings.exchange_will_be_sent, this.props.quote.fromDisplayAmount, this.props.quote.fromCurrencyCode)}
-              walletIcon={this.props.fromCurrencyIcon}
-              walletName={this.props.quote.fromWalletName}
-              cryptoAmount={this.props.fromDisplayAmount}
-              currencyCode={this.props.quote.fromCurrencyCode}
-              fiatCurrencyCode={this.props.fromWallet.fiatCurrencyCode}
-              fiatCurrencyAmount={this.props.fromBalanceInFiat}
-              currency={this.props.quote.fromWalletCurrencyName}
-              miningFee={this.props.fee}
-              isTop
-            />
-            <ExchangeQuoteComponent
-              headline={sprintf(s.strings.exchange_will_be_received, this.props.quote.toDisplayAmount, this.props.quote.toCurrencyCode)}
-              walletIcon={this.props.toCurrencyIcon}
-              walletName={this.props.quote.toWalletName}
-              currencyCode={this.props.quote.toCurrencyCode}
-              fiatCurrencyCode={this.props.toWallet.fiatCurrencyCode}
-              fiatCurrencyAmount={this.props.toBalanceInFiat}
-              cryptoAmount={this.props.toDisplayAmount}
-              currency={this.props.quote.toWalletCurrencyName}
-              isEstimate={isEstimate}
-            />
-          </View>
-          <View style={styles.confirmTextRow}>
-            <FormattedText style={styles.confirmText}>{s.strings.confirm_to_complete_exchange}</FormattedText>
-          </View>
-          <View style={styles.bottomRow}>
-            {this.renderSlider()}
-            {this.renderTimer()}
-          </View>
-        </Gradient>
-      </SafeAreaView>
+      <SceneWrapper>
+        <View style={styles.topRow}>
+          <Image source={this.renderImage(this.props.quote.quote.pluginName)} style={styles.logoImage} />
+        </View>
+        <View style={styles.centerRow}>
+          <ExchangeQuoteComponent
+            headline={sprintf(s.strings.exchange_will_be_sent, this.props.quote.fromDisplayAmount, this.props.quote.fromCurrencyCode)}
+            walletIcon={this.props.fromCurrencyIcon}
+            walletName={this.props.quote.fromWalletName}
+            cryptoAmount={this.props.fromDisplayAmount}
+            currencyCode={this.props.quote.fromCurrencyCode}
+            fiatCurrencyCode={this.props.fromWallet.fiatCurrencyCode}
+            fiatCurrencyAmount={this.props.fromBalanceInFiat}
+            currency={this.props.quote.fromWalletCurrencyName}
+            miningFee={this.props.fee}
+            isTop
+          />
+          <ExchangeQuoteComponent
+            headline={sprintf(s.strings.exchange_will_be_received, this.props.quote.toDisplayAmount, this.props.quote.toCurrencyCode)}
+            walletIcon={this.props.toCurrencyIcon}
+            walletName={this.props.quote.toWalletName}
+            currencyCode={this.props.quote.toCurrencyCode}
+            fiatCurrencyCode={this.props.toWallet.fiatCurrencyCode}
+            fiatCurrencyAmount={this.props.toBalanceInFiat}
+            cryptoAmount={this.props.toDisplayAmount}
+            currency={this.props.quote.toWalletCurrencyName}
+            isEstimate={isEstimate}
+          />
+        </View>
+        <View style={styles.confirmTextRow}>
+          <FormattedText style={styles.confirmText}>{s.strings.confirm_to_complete_exchange}</FormattedText>
+        </View>
+        <View style={styles.bottomRow}>
+          {this.renderSlider()}
+          {this.renderTimer()}
+        </View>
+      </SceneWrapper>
     )
   }
 }

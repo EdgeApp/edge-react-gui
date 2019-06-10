@@ -1,6 +1,6 @@
 // @flow
 
-import { createThreeButtonModal, createYesNoModal, showModal } from 'edge-components'
+import { createThreeButtonModal, createYesNoModal } from 'edge-components'
 import type { EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendInfo, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
 import React from 'react'
 import { Alert, Linking } from 'react-native'
@@ -8,6 +8,7 @@ import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { selectWalletForExchange } from '../actions/CryptoExchangeActions.js'
+import { launchModal } from '../components/common/ModalProvider.js'
 import { createAddressModal } from '../components/modals/AddressModal.js'
 import {
   ADD_TOKEN,
@@ -74,7 +75,7 @@ const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWallet, gu
     })
 
     setTimeout(() => {
-      showModal(modal)
+      launchModal(modal)
         .then(resolveValue => {
           dispatch({ type: 'ENABLE_SCAN' })
           if (resolveValue) {
@@ -231,7 +232,7 @@ export const toggleAddressModal = () => async (dispatch: Dispatch, getState: Get
     coreWallet,
     currencyCode
   })
-  const uri = await showModal(addressModal)
+  const uri = await launchModal(addressModal)
   if (uri) {
     dispatch(parseScannedUri(uri))
   }
@@ -259,7 +260,7 @@ export const showLegacyAddressModal = () => async (dispatch: Dispatch, getState:
     noButtonText: s.strings.legacy_address_modal_cancel,
     yesButtonText: s.strings.legacy_address_modal_continue
   })
-  const response = await showModal(legacyAddressModal)
+  const response = await launchModal(legacyAddressModal)
   if (response) {
     dispatch(legacyAddressModalContinueButtonPressed())
   } else {
@@ -275,7 +276,7 @@ export const privateKeyModalActivated = () => async (dispatch: Dispatch, getStat
     yesButtonText: s.strings.private_key_modal_import
   })
 
-  const firstResponse = await showModal(privateKeyModal)
+  const firstResponse = await launchModal(privateKeyModal)
   if (!firstResponse) return
   setTimeout(() => {
     dispatch(sweepPrivateKeyStart())
@@ -355,7 +356,7 @@ export const checkAndShowGetCryptoModal = () => async (dispatch: Dispatch, getSt
         }
       })
     }
-    const value = await showModal(threeButtonModal)
+    const value = await launchModal(threeButtonModal)
     if (value === 'buy') {
       Actions[BUY_SELL]()
     } else if (value === 'exchange') {

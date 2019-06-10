@@ -4,7 +4,7 @@ import { scale } from '../../lib/scaling'
 import THEME from '../../theme/variables/airbitz'
 import * as Styles from '../indexStyles'
 
-const CryptoExchangeQuoteSceneStyles = {
+export const styles = {
   scene: Styles.SceneContainer,
   gradient: {
     height: THEME.SPACER.HEADER
@@ -193,5 +193,3 @@ const CryptoExchangeQuoteSceneStyles = {
     }
   }
 }
-
-export { CryptoExchangeQuoteSceneStyles }

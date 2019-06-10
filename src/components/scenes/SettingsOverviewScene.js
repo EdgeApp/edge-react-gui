@@ -1,6 +1,5 @@
 // @flow
 
-import { showModal } from 'edge-components'
 import type { EdgeAccount } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Alert, ScrollView, Text, View } from 'react-native'
@@ -16,6 +15,7 @@ import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import styles from '../../styles/scenes/SettingsStyle'
 import { getTimeWithMeasurement } from '../../util/utils'
+import { launchModal } from '../common/ModalProvider.js'
 import RowModal from '../common/RowModal'
 import RowRoute from '../common/RowRoute'
 import RowSwitch from '../common/RowSwitch'
@@ -145,7 +145,7 @@ export default class SettingsOverview extends Component<Props, State> {
       autoLogoutTimeInMinutes: this.state.autoLogoutTimeInMinutes
     })
 
-    const autoLogoutTimeInMinutes = await showModal(modal)
+    const autoLogoutTimeInMinutes = await launchModal(modal)
     if (autoLogoutTimeInMinutes) {
       this.setState({
         autoLogoutTimeInMinutes

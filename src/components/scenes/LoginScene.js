@@ -3,12 +3,12 @@
 import type { EdgeAccount, EdgeContext } from 'edge-core-js'
 import { LoginScreen } from 'edge-login-ui-rn'
 import React, { Component } from 'react'
-import { StatusBar, View } from 'react-native'
+import { StatusBar, StyleSheet, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 
 import * as CONTEXT_API from '../../modules/Core/Context/api'
 import type { Dispatch } from '../../modules/ReduxTypes'
-import THEME from '../../theme/variables/airbitz'
+import THEME from '../../theme/variables/airbitz.js'
 
 type Props = {
   initializeAccount: (EdgeAccount, touchIdInfo: ?Object) => void,
@@ -20,6 +20,7 @@ type Props = {
   username?: string
 }
 type State = { key: number }
+
 export default class Login extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
@@ -47,9 +48,8 @@ export default class Login extends Component<Props, State> {
   }
 
   render () {
-    const statusBarHeight = StatusBar.currentHeight
     return !this.props.context.listUsernames ? null : (
-      <View style={{ flex: 1, position: 'relative', top: statusBarHeight }} testID={'edge: login-scene'}>
+      <View style={styles.container} testID={'edge: login-scene'}>
         <LoginScreen
           username={this.props.username}
           accountOptions={null}
@@ -65,3 +65,12 @@ export default class Login extends Component<Props, State> {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    position: 'relative',
+    paddingTop: StatusBar.currentHeight,
+    backgroundColor: THEME.COLORS.PRIMARY
+  }
+})

@@ -1,8 +1,9 @@
 // @flow
 
-import { createYesNoModal, showModal } from 'edge-components'
+import { createYesNoModal } from 'edge-components'
 import React from 'react'
 
+import { launchModal } from '../components/common/ModalProvider.js'
 import { RESYNC } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import { getWallet, getWalletName } from '../modules/Core/selectors.js'
@@ -16,7 +17,7 @@ export const showResyncWalletModal = (walletId: string) => async (dispatch: Disp
   const wallet = getWallet(state, walletId)
   const walletName = getWalletName(state, walletId)
 
-  // Use `showModal` to put the modal component on screen:
+  // Use `launchModal` to put the modal component on screen:
   const modal = createYesNoModal({
     title: s.strings.fragment_wallets_resync_wallet,
     message: (
@@ -30,7 +31,7 @@ export const showResyncWalletModal = (walletId: string) => async (dispatch: Disp
     yesButtonText: s.strings.string_resync
   })
 
-  const resolveValue = await showModal(modal)
+  const resolveValue = await launchModal(modal)
 
   if (resolveValue) {
     try {
