@@ -170,6 +170,9 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   DAI: {
     denomination: '1000000000000000000'
   },
+  BRZ: {
+    denomination: '10000'
+  },
   customTokens: [],
   passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN
 }
@@ -210,6 +213,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   POLY: 'object',
   STORJ: 'object',
   USDC: 'object',
+  BRZ: 'object',
   USDS: 'object',
   TUSD: 'object',
   ZRX: 'object',
