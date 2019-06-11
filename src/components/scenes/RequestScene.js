@@ -1,7 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import { createSimpleConfirmModal, showModal } from 'edge-components'
+import { createSimpleConfirmModal } from 'edge-components'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, Clipboard, Platform, View } from 'react-native'
@@ -26,6 +26,7 @@ import WalletListModal from '../../modules/UI/components/WalletListModal/WalletL
 import styles from '../../styles/scenes/RequestStyle.js'
 import type { GuiCurrencyInfo, GuiWallet } from '../../types.js'
 import { getObjectDiff } from '../../util/utils'
+import { launchModal } from '../common/ModalProvider.js'
 
 const PUBLIC_ADDRESS_REFRESH_MS = 2000
 
@@ -218,7 +219,7 @@ export class Request extends Component<Props, State> {
       buttonText: s.strings.string_ok
     })
 
-    await showModal(modal)
+    await launchModal(modal)
     // resolve value doesn't really matter here
     this.onCloseXRPMinimumModal()
   }

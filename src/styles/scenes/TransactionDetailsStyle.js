@@ -10,21 +10,20 @@ export const activeOpacity = THEME.OPACITY.ACTIVE
 
 export const styles = {
   container: {
-    flex: 1,
     alignItems: 'stretch',
+    backgroundColor: THEME.COLORS.WHITE,
+    flex: 1,
     flexDirection: 'column',
-    zIndex: 1,
-    backgroundColor: THEME.COLORS.WHITE
+    marginTop: scale(24),
+    paddingTop: scale(32),
+    zIndex: 1
   },
-  expandedHeader: {
-    height: scale(32),
-    flexDirection: 'row',
-    justifyContent: 'center'
-  },
-  headerGradient: {
-    height: scale(66),
-    width: '100%',
-    position: 'absolute'
+  searchPopup: {
+    backgroundColor: THEME.COLORS.WHITE,
+    position: 'absolute',
+    bottom: 0,
+    top: 0,
+    width: '100%'
   },
   modalHeaderIconWrapBottom: {
     borderRadius: 24,
@@ -33,11 +32,6 @@ export const styles = {
     width: scale(48),
     position: 'relative',
     top: scale(10)
-  },
-  dataArea: {
-    position: 'relative',
-    top: scale(20),
-    flexDirection: 'column'
   },
   payeeNameArea: {
     alignItems: 'center',
@@ -167,7 +161,8 @@ export const styles = {
     flexDirection: 'row',
     paddingLeft: scale(15),
     paddingRight: scale(15),
-    height: scale(38)
+    height: scale(38),
+    marginBottom: scale(8)
   },
   categoryLeft: {
     borderRadius: 3,
@@ -229,7 +224,7 @@ export const styles = {
   footerArea: {
     backgroundColor: THEME.COLORS.GRAY_4,
     paddingTop: scale(20),
-    height: (PLATFORM.deviceHeight * 1) / 3 + 40,
+    height: (PLATFORM.deviceHeight * 1) / 3 + 340,
     paddingLeft: scale(15),
     paddingRight: scale(15)
   },
@@ -261,6 +256,12 @@ export const styles = {
     marginTop: scale(15),
     borderTopWidth: 1,
     borderTopColor: THEME.COLORS.GRAY_3
+  },
+  resultList: {
+    backgroundColor: THEME.COLORS.WHITE,
+    borderTopColor: THEME.COLORS.GRAY_3,
+    borderTopWidth: 1,
+    flex: 1
   },
   rowContainer: {
     flex: 1,
@@ -380,12 +381,6 @@ export const styles = {
     fontSize: scale(18),
     color: THEME.COLORS.ACCENT_BLUE,
     alignSelf: 'center'
-  },
-  PayeeIconWrapper: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    position: 'relative',
-    height: 0
   }
 }
 

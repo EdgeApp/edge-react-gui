@@ -11,8 +11,6 @@ import { OnBoardingSceneStyles } from '../../styles/indexStyles.js'
 import { PLATFORM } from '../../theme/variables/platform'
 import { OnBoardingSlideComponent } from '../common/OnBoardingSlideComponent.js'
 
-/* import Modal from 'react-native-modal' */
-// import Swiper from 'react-native-swiper'
 export type OnBoardSlide = {
   text: string,
   iOSImage: string,

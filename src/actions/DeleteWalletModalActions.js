@@ -1,8 +1,9 @@
 // @flow
 
-import { createYesNoModal, showModal } from 'edge-components'
+import { createYesNoModal } from 'edge-components'
 import React from 'react'
 
+import { launchModal } from '../components/common/ModalProvider.js'
 import { DELETE } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import { deleteWalletRequest } from '../modules/Core/Account/api.js'
@@ -16,7 +17,7 @@ export const showDeleteWalletModal = (walletId: string) => async (dispatch: Disp
   const walletName = getWalletName(state, walletId)
   const account = getAccount(state)
 
-  // Use `showModal` to put the modal component on screen:
+  // Use `launchModal` to put the modal component on screen:
   const modal = createYesNoModal({
     title: s.strings.fragment_wallets_delete_wallet,
     message: (
@@ -30,7 +31,7 @@ export const showDeleteWalletModal = (walletId: string) => async (dispatch: Disp
     yesButtonText: s.strings.string_delete
   })
 
-  const resolveValue = await showModal(modal)
+  const resolveValue = await launchModal(modal)
 
   if (resolveValue) {
     try {

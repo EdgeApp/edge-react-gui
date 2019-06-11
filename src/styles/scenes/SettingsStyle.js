@@ -4,17 +4,16 @@ import { StyleSheet } from 'react-native'
 
 import { scale } from '../../lib/scaling.js'
 import THEME from '../../theme/variables/airbitz'
-import { PLATFORM } from '../../theme/variables/platform'
 
 export const styles = {
-  usableHeight: PLATFORM.usableHeight,
   gradient: {
     height: THEME.HEADER
   },
-  body: {
+  content: {
+    backgroundColor: THEME.COLORS.WHITE,
+    flex: 1,
     paddingHorizontal: scale(20),
-    paddingVertical: scale(5),
-    backgroundColor: THEME.COLORS.WHITE
+    paddingTop: scale(5)
   },
   container: {
     position: 'relative',
@@ -75,7 +74,7 @@ export const styles = {
   },
   // //// Beginning of Settings Row ///////
   settingsRowContainer: {
-    minHeight: scale(44),
+    height: scale(52),
     backgroundColor: THEME.COLORS.WHITE,
     borderBottomWidth: 1,
     borderBottomColor: THEME.COLORS.GRAY_3,
@@ -85,18 +84,24 @@ export const styles = {
   },
   settingsRowTextRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    width: '100%'
   },
   settingsRowLeftContainer: {
-    justifyContent: 'flex-start',
-    flexDirection: 'row'
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-start'
   },
   settingsRowRightContainer: {
-    justifyContent: 'center'
+    flexDirection: 'row',
+    justifyContent: 'flex-end'
   },
   settingsRowLeftText: {
-    width: '80%',
+    color: THEME.COLORS.GRAY_1,
+    textAlign: 'left',
+    fontSize: scale(16)
+  },
+  settingsRowLeftTextWithoutWidth: {
     color: THEME.COLORS.GRAY_1,
     textAlign: 'left',
     fontSize: scale(16)
@@ -118,7 +123,6 @@ export const styles = {
     color: THEME.COLORS.GRAY_1
   },
   modalRightText: {
-    width: '20%',
     color: THEME.COLORS.SECONDARY,
     fontWeight: 'bold',
     textAlign: 'right'
@@ -169,15 +173,13 @@ export const styles = {
   },
 
   /// //// beginning of default fiat area ////////
-  searchContainer: {
-    marginTop: scale(8),
-    position: 'relative',
-    backgroundColor: THEME.COLORS.TRANSPARENT,
-    borderBottomWidth: 1,
-    borderBottomColor: THEME.COLORS.GRAY_3,
-    width: '100%'
+  resultList: {
+    backgroundColor: THEME.COLORS.WHITE,
+    borderTopColor: THEME.COLORS.GRAY_3,
+    borderTopWidth: 1,
+    flexGrow: 1,
+    flexShrink: 1
   },
-
   singleFiatType: {
     height: scale(60),
     borderBottomWidth: 1,

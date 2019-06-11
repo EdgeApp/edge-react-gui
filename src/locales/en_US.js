@@ -278,6 +278,7 @@ const strings = {
   string_first_smartcash_wallet_name: 'My SmartCash',
   string_first_ufo_wallet_name: 'My UFO',
   string_first_vertcoin_wallet_name: 'My Vertcoin',
+  string_first_ravencoin_wallet_name: 'My Ravencoin',
   string_first_zcoin_wallet_name: 'My Zcoin',
   string_first_stellar_wallet_name: 'My Stellar',
   my_crypto_wallet_name: 'My %s',
@@ -541,6 +542,8 @@ const strings = {
   modal_addressexplorer_message: 'Show Address in Block Explorer?',
   modal_addressexplorer_null: 'This currency has no explorer site as of now',
   approximately: 'Estimated',
+  fixed_quote: 'Fixed Quote',
+  estimated_quote: 'Estimated Quote',
   estimated_exchange_rate: 'Estimated Exchange Rate',
   estimated_exchange_rate_body:
     'No exchange providers are able to provide a fixed quote for the exchange requested. This exchange may result in less funds received than quoted.'

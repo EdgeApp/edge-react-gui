@@ -1,8 +1,7 @@
 // @flow
 
-import React, { Component } from 'react'
-import type { Node } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React, { Component, type Node } from 'react'
+import { Dimensions, Platform, StyleSheet, Text, View } from 'react-native'
 import { default as Modal } from 'react-native-modal'
 
 import { Gradient } from '../../Gradient/Gradient.ui.js'
@@ -161,8 +160,19 @@ export class NonInteractiveModal extends Component<Props> {
     const icon = children.find(child => child.type === NonInteractiveModal.Icon)
     const footer = children.find(child => child.type === NonInteractiveModal.Footer)
 
+    const deviceWidth = Dimensions.get('window').width
+    const deviceHeight = Platform.OS === 'ios' ? Dimensions.get('window').height : require('react-native-extra-dimensions-android').get('REAL_WINDOW_HEIGHT')
+
     return (
-      <Modal useNativeDriver isVisible={isActive} onModalShow={this.onModalShow} onModalHide={this.onModalHide} {...props}>
+      <Modal
+        deviceHeight={deviceHeight}
+        deviceWidth={deviceWidth}
+        isVisible={isActive}
+        onModalHide={this.onModalHide}
+        onModalShow={this.onModalShow}
+        useNativeDriver
+        {...props}
+      >
         <Container style={styles.container}>
           <Header>{icon}</Header>
           <Footer>{footer}</Footer>

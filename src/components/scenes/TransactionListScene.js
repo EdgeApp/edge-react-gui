@@ -4,8 +4,6 @@ import { bns } from 'biggystring'
 import type { EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Animated, FlatList, Image, TouchableHighlight, TouchableOpacity, View } from 'react-native'
-// import Contacts from 'react-native-contacts'
-// import Permissions from 'react-native-permissions'
 import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 
@@ -16,17 +14,16 @@ import * as Constants from '../../constants/indexConstants'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/index'
-import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
+import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import WalletListModal from '../../modules/UI/components/WalletListModal/WalletListModalConnector'
 import { WiredProgressBar } from '../../modules/UI/components/WiredProgressBar/WiredProgressBar.ui.js'
 import { getSelectedWalletLoadingPercent } from '../../modules/UI/selectors.js'
 import type { ContactsState } from '../../reducers/ContactsReducer'
 import styles, { styles as styleRaw } from '../../styles/scenes/TransactionListStyle'
-import { PLATFORM } from '../../theme/variables/platform.js'
 import type { GuiWallet, TransactionListTx } from '../../types'
 import * as UTILS from '../../util/utils'
 import BuyCrypto from '../common/BuyCrypto.js'
+import { SceneWrapper } from '../common/SceneWrapper.js'
 
 // import SearchBar from './components/SearchBar.ui'
 const INITIAL_TRANSACTION_BATCH_NUMBER = 10
@@ -115,7 +112,7 @@ export class TransactionList extends Component<Props, State> {
   renderDropUp = () => {
     const { onSelectWallet, showToWalletModal } = this.props
     if (showToWalletModal) {
-      return <WalletListModal topDisplacement={Constants.TRANSACTIONLIST_WALLET_DIALOG_TOP} type={Constants.FROM} onSelectWallet={onSelectWallet} />
+      return <WalletListModal type={Constants.FROM} onSelectWallet={onSelectWallet} />
     }
     return null
   }
@@ -149,32 +146,21 @@ export class TransactionList extends Component<Props, State> {
 
   render () {
     const txs = this.state.reset ? emptyArray : this.props.transactions
-    const isAndroid = PLATFORM.platform === 'android'
     return (
-      <SafeAreaView>
-        <View style={styles.scene}>
-          <Gradient style={styles.gradient} />
-          <View style={styles.scrollView}>
-            <View style={styles.container}>
-              <View style={[isAndroid ? styles.androidTransactionsWrap : styles.transactionsWrap]}>
-                <FlatList
-                  ListEmptyComponent={this.renderBuyCrypto()}
-                  ListHeaderComponent={this.currentRenderBalanceBox()}
-                  ListFooterComponent={<View style={{ height: isAndroid ? 80 : 0 }} />}
-                  style={styles.transactionsScrollWrap}
-                  data={txs}
-                  renderItem={this.renderTx}
-                  initialNumToRender={INITIAL_TRANSACTION_BATCH_NUMBER}
-                  onEndReached={this.handleScrollEnd}
-                  onEndReachedThreshold={SCROLL_THRESHOLD}
-                  keyExtractor={item => item.key.toString()}
-                />
-              </View>
-            </View>
-          </View>
-          {this.renderDropUp()}
-        </View>
-      </SafeAreaView>
+      <SceneWrapper>
+        <FlatList
+          ListEmptyComponent={this.renderBuyCrypto()}
+          ListHeaderComponent={this.currentRenderBalanceBox()}
+          style={styles.transactionsScrollWrap}
+          data={txs}
+          renderItem={this.renderTx}
+          initialNumToRender={INITIAL_TRANSACTION_BATCH_NUMBER}
+          onEndReached={this.handleScrollEnd}
+          onEndReachedThreshold={SCROLL_THRESHOLD}
+          keyExtractor={item => item.key.toString()}
+        />
+        {this.renderDropUp()}
+      </SceneWrapper>
     )
   }
 

@@ -30,6 +30,7 @@ export const DEFAULT_STARTER_WALLET_NAMES = {
   SMART: s.strings.string_first_smartcash_wallet_name,
   UFO: s.strings.string_first_ufo_wallet_name,
   VTC: s.strings.string_first_vertcoin_wallet_name,
+  RVN: s.strings.string_first_ravencoin_wallet_name,
   XZC: s.strings.string_first_zcoin_wallet_name,
   XLM: s.strings.string_first_stellar_wallet_name
 }
@@ -49,6 +50,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   LTC: 'litecoin',
   XMR: 'monero',
   QTUM: 'qtum',
+  RVN: 'ravencoin',
   XRP: 'ripple',
   SMART: 'smartcash',
   UFO: 'ufo',

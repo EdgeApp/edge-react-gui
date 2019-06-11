@@ -1,24 +1,19 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Alert, Image, Keyboard, TouchableHighlight, View } from 'react-native'
-import ExtraDimensions from 'react-native-extra-dimensions-android'
+import { Alert, FlatList, Image, Keyboard, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import { CREATE_WALLET_CHOICE, CREATE_WALLET_SELECT_FIAT, getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
 import { scale } from '../../lib/scaling.js'
 import s from '../../locales/strings.js'
 import Text from '../../modules/UI/components/FormattedText/index'
-import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
-import SearchResults from '../../modules/UI/components/SearchResults/index'
 import styles, { styles as stylesRaw } from '../../styles/scenes/CreateWalletStyle.js'
-import { PLATFORM } from '../../theme/variables/platform'
-import type { DeviceDimensions, FlatListItem, GuiWalletType } from '../../types'
+import type { FlatListItem, GuiWalletType } from '../../types'
 import * as UTILS from '../../util/utils'
 import { FormField } from '../common/FormField.js'
+import { SceneWrapper } from '../common/SceneWrapper.js'
 
-const SOFT_MENU_BAR_HEIGHT = ExtraDimensions.get('SOFT_MENU_BAR_HEIGHT')
 const WALLET_TYPE_ORDER = [
   'wallet:bitcoin-bip44',
   'wallet:bitcoin-bip49',
@@ -33,6 +28,7 @@ const WALLET_TYPE_ORDER = [
   'wallet:dash',
   'wallet:digibyte',
   'wallet:vertcoin',
+  'wallet:ravencoin',
   'wallet:qtum',
   'wallet:feathercoin',
   'wallet:bitcoingold',
@@ -43,12 +39,10 @@ const WALLET_TYPE_ORDER = [
 ]
 
 export type CreateWalletSelectCryptoOwnProps = {
-  dimensions: DeviceDimensions,
   supportedWalletTypes: Array<GuiWalletType>
 }
 export type CreateWalletSelectCryptoStateProps = {
-  supportedWalletTypes: Array<GuiWalletType>,
-  dimensions: DeviceDimensions
+  supportedWalletTypes: Array<GuiWalletType>
 }
 
 type CreateWalletSelectCryptoDispatchProps = {
@@ -175,15 +169,12 @@ export class CreateWalletSelectCrypto extends Component<Props, State> {
         entry.currencyCode.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0
       )
     })
-    const keyboardHeight = this.props.dimensions.keyboardHeight || 0
     const formFieldHeight = scale(50)
-    const footerHeight = PLATFORM.footerHeight
 
     return (
-      <SafeAreaView>
-        <View style={styles.scene}>
-          <Gradient style={styles.gradient} />
-          <View style={styles.view}>
+      <SceneWrapper avoidKeyboard>
+        {gap => (
+          <View style={[styles.content, { marginBottom: -gap.bottom }]}>
             <FormField
               autoFocus
               containerStyle={{ height: formFieldHeight }}
@@ -199,24 +190,30 @@ export class CreateWalletSelectCrypto extends Component<Props, State> {
               returnKeyType={'search'}
               autpCorrect={false}
             />
-            <SearchResults
-              renderRegularResultFxn={this.renderWalletTypeResult}
-              onRegularSelectFxn={this.handleSelectWalletType}
-              regularArray={filteredArray}
-              style={[styles.SearchResults]}
-              containerStyle={[styles.searchContainer, { flex: 1, marginBottom: keyboardHeight - footerHeight + SOFT_MENU_BAR_HEIGHT }]}
+            <FlatList
+              style={styles.resultList}
+              automaticallyAdjustContentInsets={false}
+              contentContainerStyle={{ paddingBottom: gap.bottom }}
+              data={filteredArray}
+              initialNumToRender={12}
+              keyboardShouldPersistTaps="handled"
               keyExtractor={this.keyExtractor}
+              renderItem={this.renderWalletTypeResult}
             />
           </View>
-        </View>
-      </SafeAreaView>
+        )}
+      </SceneWrapper>
     )
   }
 
-  renderWalletTypeResult = (data: FlatListItem, onRegularSelect: Function) => {
+  renderWalletTypeResult = (data: FlatListItem) => {
     return (
       <View style={[styles.singleCryptoTypeWrap, data.item.value === this.state.selectedWalletType && styles.selectedItem]}>
-        <TouchableHighlight style={[styles.singleCryptoType]} onPress={() => onRegularSelect(data.item)} underlayColor={stylesRaw.underlayColor.color}>
+        <TouchableHighlight
+          style={[styles.singleCryptoType]}
+          onPress={() => this.handleSelectWalletType(data.item)}
+          underlayColor={stylesRaw.underlayColor.color}
+        >
           <View style={[styles.cryptoTypeInfoWrap]}>
             <View style={styles.cryptoTypeLeft}>
               <View style={[styles.cryptoTypeLogo]}>

@@ -1,6 +1,5 @@
 // @flow
 
-import { showModal } from 'edge-components'
 import type { EdgeAccount, EdgeSwapConfig } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Image, View } from 'react-native'
@@ -12,6 +11,7 @@ import T from '../../modules/UI/components/FormattedText/index'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import styles from '../../styles/scenes/SettingsStyle'
+import { launchModal } from '../common/ModalProvider.js'
 import SwitchRow from '../common/RowSwitch.js'
 import { RowWithButton } from '../common/RowWithButton.js'
 
@@ -94,7 +94,7 @@ export class ExchangeSettingsComponent extends Component<ExchangeSettingsProps, 
   }
   shapeShiftSignInToggle = () => {
     if (this.props.shapeShiftNeedsKYC) {
-      showModal(SwapKYCModalConnector, { style: { margin: 0 } }).then((response: null | { accessToken: string, refreshToken: string }) => {
+      launchModal(SwapKYCModalConnector, { style: { margin: 0 } }).then((response: null | { accessToken: string, refreshToken: string }) => {
         console.log('exchange: ', response)
       })
       return

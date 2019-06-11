@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { Dimensions, Platform, Text, TouchableOpacity, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import Modal from 'react-native-modal'
 
@@ -45,10 +45,15 @@ class StaticModalComponent extends Component<Props> {
     }
     return <Text style={styles.bodyText}>{this.props.body}</Text>
   }
+
   render () {
     const styles = StaticModalStyle
+
+    const deviceWidth = Dimensions.get('window').width
+    const deviceHeight = Platform.OS === 'ios' ? Dimensions.get('window').height : require('react-native-extra-dimensions-android').get('REAL_WINDOW_HEIGHT')
+
     return (
-      <Modal style={styles.container} animationType={'slide'} isVisible={this.props.isVisible}>
+      <Modal animationType={'slide'} isVisible={this.props.isVisible} style={styles.container} deviceHeight={deviceHeight} deviceWidth={deviceWidth}>
         <TouchableOpacity onPress={this.props.cancel}>
           <View style={styles.modalBox}>
             <View style={styles.innerBox}>

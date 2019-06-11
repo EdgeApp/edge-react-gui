@@ -1,10 +1,10 @@
 // @flow
 
-import { showModal } from 'edge-components'
 import type { EdgeLobby } from 'edge-core-js'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
+import { launchModal } from '../components/common/ModalProvider.js'
 import s from '../locales/strings.js'
 import { errorModal } from '../modules/UI/components/Modals/ErrorModal.js'
 
@@ -33,6 +33,6 @@ export const lobbyLogin = () => async (dispatch: any, getState: any) => {
   } catch (e) {
     dispatch({ type: 'EDGE_LOBBY_ACCEPT_FAILED' })
     e.message = e.message.includes('Could not reach') ? s.strings.edge_login_fail_message : e.message
-    showModal(errorModal(s.strings.edge_login_failed, e))
+    launchModal(errorModal(s.strings.edge_login_failed, e))
   }
 }

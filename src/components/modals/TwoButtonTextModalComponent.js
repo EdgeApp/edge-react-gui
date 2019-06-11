@@ -13,7 +13,7 @@ import TwoButtonsComponent from './TwoButtonsComponent.js'
 type Props = {
   style: StyleSheet.Styles,
   headerText: string,
-  showModal: boolean,
+  launchModal: boolean,
   middleText: string,
   icon: string,
   iconType: string,
@@ -51,7 +51,7 @@ class TwoButtonTextModalComponent extends Component<Props> {
 
     return (
       <StylizedModal
-        visibilityBoolean={this.props.showModal}
+        visibilityBoolean={this.props.launchModal}
         featuredIcon={icon}
         headerText={this.props.headerText}
         headerTextStyle={{ color: THEME.COLORS.PRIMARY, marginTop: -10, marginBottom: 10 }}

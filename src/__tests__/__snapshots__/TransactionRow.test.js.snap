@@ -35,7 +35,7 @@ exports[`MenuDropDown component should render without props 1`] = `
         style={
           Object {
             "color": "#87939E",
-            "fontSize": 19.66408450704225,
+            "fontSize": 19.664084507042254,
           }
         }
       >

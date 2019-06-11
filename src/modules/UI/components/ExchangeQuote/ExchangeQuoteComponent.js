@@ -1,12 +1,13 @@
 // @flow
 
-import { createSimpleConfirmModal, showModal } from 'edge-components'
+import { createSimpleConfirmModal } from 'edge-components'
 import React, { Component } from 'react'
 import { Image, Platform, View } from 'react-native'
 
+import { launchModal } from '../../../../components/common/ModalProvider.js'
 import { ANDROID_INFO_ICON, EXCLAMATION, ION_ICONS, IOS_INFO_ICON, MATERIAL_COMMUNITY } from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings.js'
-import { CryptoExchangeQuoteSceneStyles } from '../../../../styles/indexStyles.js'
+import { styles as sceneStyles } from '../../../../styles/scenes/CryptoExchangeQuoteSceneStyles.js'
 import FormattedText from '../../components/FormattedText'
 import { IconButton } from '../Buttons/IconButton.ui'
 import { Icon } from '../Icon/Icon.ui'
@@ -28,7 +29,7 @@ type State = {}
 
 class ExchangeQuoteComponent extends Component<Props, State> {
   renderBottom = () => {
-    const styles = CryptoExchangeQuoteSceneStyles.quoteDetailContainer
+    const styles = sceneStyles.quoteDetailContainer
     if (this.props.isTop) {
       return (
         <View style={styles.bottomRow}>
@@ -52,10 +53,10 @@ class ExchangeQuoteComponent extends Component<Props, State> {
       icon: <Icon type={MATERIAL_COMMUNITY} name={EXCLAMATION} size={30} />,
       buttonText: s.strings.string_ok
     })
-    showModal(modal).then((response: null) => {})
+    launchModal(modal).then((response: null) => {})
   }
   renderHeadline = () => {
-    const styles = CryptoExchangeQuoteSceneStyles.quoteDetailContainer
+    const styles = sceneStyles.quoteDetailContainer
     if (this.props.isEstimate) {
       const platform = Platform.OS
       const infoIcon = platform === 'ios' ? IOS_INFO_ICON : ANDROID_INFO_ICON
@@ -71,7 +72,7 @@ class ExchangeQuoteComponent extends Component<Props, State> {
     return <FormattedText style={styles.headlineText}>{this.props.headline}</FormattedText>
   }
   render () {
-    const styles = CryptoExchangeQuoteSceneStyles.quoteDetailContainer
+    const styles = sceneStyles.quoteDetailContainer
     const container = this.props.isTop ? styles.containerExpanded : styles.containerCollapsed
     return (
       <View style={styles.container}>

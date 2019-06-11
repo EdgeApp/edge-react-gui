@@ -91,7 +91,7 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
 const processMakeSpendError = e => (dispatch: Dispatch, getState: GetState) => {
   console.log(e)
   Actions.popTo(Constants.EXCHANGE_SCENE)
-  if (e.name === errorNames.InsufficientFundsError || e.message === Constants.INSUFFICIENT_FUNDS) {
+  if (e.name === errorNames.InsufficientFundsError || e.message === errorNames.InsufficientFundsError) {
     dispatch({ type: 'RECEIVED_INSUFFICENT_FUNDS_ERROR' })
     return
   }
@@ -135,21 +135,24 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
       const quoteIdUri = si.quoteUri && quote.quoteId ? si.quoteUri + quote.quoteId : broadcastedTransaction.txid
       const payinAddress = broadcastedTransaction.otherParams != null ? broadcastedTransaction.otherParams.payinAddress : ''
       const uniqueIdentifier = broadcastedTransaction.otherParams != null ? broadcastedTransaction.otherParams.uniqueIdentifier : ''
-
-      const notes = sprintf(
-        s.strings.exchange_notes_metadata_generic2,
-        state.cryptoExchange.fromDisplayAmount,
-        state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name,
-        fromWallet.name,
-        state.cryptoExchange.toDisplayAmount,
-        state.cryptoExchange.toWalletPrimaryInfo.displayDenomination.name,
-        toWallet.name,
-        quote.destinationAddress,
-        quoteIdUri,
-        payinAddress,
-        uniqueIdentifier,
-        supportEmail
-      )
+      const isEstimate = quote.isEstimate ? s.strings.estimated_quote : s.strings.fixed_quote
+      const notes =
+        sprintf(
+          s.strings.exchange_notes_metadata_generic2,
+          state.cryptoExchange.fromDisplayAmount,
+          state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name,
+          fromWallet.name,
+          state.cryptoExchange.toDisplayAmount,
+          state.cryptoExchange.toWalletPrimaryInfo.displayDenomination.name,
+          toWallet.name,
+          quote.destinationAddress,
+          quoteIdUri,
+          payinAddress,
+          uniqueIdentifier,
+          supportEmail
+        ) +
+        ' ' +
+        isEstimate
 
       const edgeMetaData: EdgeMetadata = {
         name,
@@ -207,7 +210,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, info: S
     edgeCoinExchangeQuote = await account.fetchSwapQuote(quoteData)
   } catch (error) {
     console.log(JSON.stringify(error))
-    if (error.message === 'InsufficientFundsError') {
+    if (error.name === errorNames.InsufficientFundsError || error.message === errorNames.InsufficientFundsError) {
       dispatch(processMakeSpendError(error))
       return
     }
@@ -244,17 +247,17 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, info: S
       return
     }
     if (error.name === errorNames.SwapPermissionError) {
-      if (error.message === 'needsActivation') {
+      if (error.reason === 'needsActivation') {
         dispatch({ type: 'NEED_KYC' })
         Actions.popTo(Constants.EXCHANGE_SCENE)
         return
       }
-      if (error.message === 'geoRestriction') {
+      if (error.reason === 'geoRestriction') {
         dispatch({ type: 'GENERIC_SHAPE_SHIFT_ERROR', data: s.strings.ss_geolock })
         Actions.popTo(Constants.EXCHANGE_SCENE)
         return
       }
-      if (error.message === 'noVerification') {
+      if (error.reason === 'noVerification') {
         let pluginName = ''
         if (typeof error.pluginName === 'string') {
           const { swapInfo } = account.swapConfig[error.pluginName]

@@ -30,7 +30,7 @@ exports[`CurrencySettings should render 1`] = `
           Array [
             Object {
               "flexDirection": "row",
-              "height": 70.22887323943661,
+              "height": 70.22887323943662,
               "justifyContent": "space-between",
               "padding": 16.854929577464787,
             },

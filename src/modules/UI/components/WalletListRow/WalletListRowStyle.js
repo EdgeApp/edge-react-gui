@@ -7,7 +7,6 @@ import THEME from '../../../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
 
 export const stylesRaw = {
-  usableHeight: PLATFORM.usableHeight,
   rowWrapper: {
     width: '100%'
   },

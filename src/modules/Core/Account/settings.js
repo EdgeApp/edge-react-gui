@@ -59,6 +59,9 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   VTC: {
     denomination: '100000000'
   },
+  // RVN: {
+  //   denomination: '100000000'
+  // },
   XZC: {
     denomination: '100000000'
   },
@@ -167,6 +170,9 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   DAI: {
     denomination: '1000000000000000000'
   },
+  BRZ: {
+    denomination: '10000'
+  },
   customTokens: [],
   passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN
 }
@@ -187,6 +193,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   LTC: 'object',
   FTC: 'object',
   VTC: 'object',
+  RVN: 'object',
   XZC: 'object',
   QTUM: 'object',
   XMR: 'object',
@@ -206,6 +213,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   POLY: 'object',
   STORJ: 'object',
   USDC: 'object',
+  BRZ: 'object',
   USDS: 'object',
   TUSD: 'object',
   ZRX: 'object',

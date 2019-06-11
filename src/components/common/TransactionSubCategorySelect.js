@@ -1,13 +1,11 @@
 // @flow
 
 import React, { Component } from 'react'
-import { TouchableHighlight, View } from 'react-native'
+import { FlatList, TouchableHighlight, View } from 'react-native'
 
 import FormattedText from '../../modules/UI/components/FormattedText/index'
-import SearchResults from '../../modules/UI/components/SearchResults/index'
 import styles from '../../styles/scenes/TransactionDetailsStyle'
-import { colors } from '../../theme/variables/airbitz'
-import { PLATFORM } from '../../theme/variables/platform.js'
+import { colors } from '../../theme/variables/airbitz.js'
 import type { SubcategorySearchResultData } from '../../types.js'
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
@@ -18,9 +16,9 @@ type State = {
   enteredSubcategory: string
 }
 type Props = {
+  bottomGap: number,
   subcategoriesList: Array<string>,
   enteredSubcategory: string,
-  usableHeight: number,
   onPressFxn: (input: string) => void
 }
 
@@ -32,7 +30,6 @@ class SubCategorySelect extends Component<Props, State> {
       filteredSubcategories: this.props.subcategoriesList.sort(),
       enteredSubcategory: this.props.enteredSubcategory
     }
-    // this.props.usableHight = PLATFORM.usableHeight
   }
 
   render () {
@@ -47,21 +44,19 @@ class SubCategorySelect extends Component<Props, State> {
     }
 
     return (
-      <SearchResults
-        renderRegularResultFxn={this.renderSubcategory}
-        onRegularSelectFxn={this.props.onPressFxn}
-        regularArray={filteredSubcats.concat(newPotentialSubCategoriesFiltered)}
-        usableHeight={this.props.usableHeight}
-        style={[{ width: PLATFORM.deviceWidth, height: PLATFORM.usableHeight }]}
+      <FlatList
+        style={styles.resultList}
+        contentContainerStyle={{ paddingBottom: this.props.bottomGap }}
+        data={filteredSubcats.concat(newPotentialSubCategoriesFiltered)}
+        initialNumToRender={12}
+        keyboardShouldPersistTaps="handled"
         keyExtractor={this.keyExtractor}
-        height={this.props.usableHeight - 67}
-        extraTopSpace={0}
-        filterArray={newPotentialSubCategoriesFiltered}
+        renderItem={rowData => this.renderSubcategory(rowData, newPotentialSubCategoriesFiltered)}
       />
     )
   }
 
-  renderSubcategory = (data: SubcategorySearchResultData, onRegularSelectFxn: Function, filterArray: Array<any>) => {
+  renderSubcategory = (data: SubcategorySearchResultData, filterArray: Array<any>) => {
     const renderAdd = () => {
       if (filterArray.find(item => item === data.item)) {
         return (

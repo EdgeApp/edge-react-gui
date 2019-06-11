@@ -1,22 +1,18 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Image, StatusBar, Text, View } from 'react-native'
+import { Image, Text, View } from 'react-native'
 import MDIcon from 'react-native-vector-icons/MaterialIcons'
 
 import accountIcon from '../../../../assets/images/sidenav/accounts.png'
-import { PLATFORM } from '../../../../theme/variables/platform.js'
+import { SceneWrapper } from '../../../../components/common/SceneWrapper.js'
 import { emptyGuiDenomination } from '../../../../types'
 import type { GuiDenomination } from '../../../../types'
 import { getDenomFromIsoCode, getObjectDiff } from '../../../../util/utils.js'
 import ExchangeRate from '../ExchangeRate/index.js'
-import Gradient from '../Gradient/Gradient.ui'
-import SafeAreaView from '../SafeAreaView/SafeAreaViewDrawer.ui.js'
 import { Button } from './Component/Button/Button.ui'
 import Main from './Component/MainConnector'
 import styles from './style'
-
-const containerStyle = PLATFORM.platform === 'ios' ? { flex: 1 } : { height: PLATFORM.deviceHeight - StatusBar.currentHeight - PLATFORM.footerHeight }
 
 export type Props = {
   currencyLogo: string,
@@ -72,35 +68,33 @@ export default class ControlPanel extends Component<Props> {
     const currencyLogoIcon = { uri: currencyLogo }
 
     return (
-      <SafeAreaView style={[styles.safeAreaView]}>
-        <Gradient reverse style={[styles.container, containerStyle]}>
-          <View style={styles.header}>
-            {!!currencyLogo && <Image style={styles.iconImage} source={currencyLogoIcon} />}
-            <View style={styles.exchangeContainer}>
-              <ExchangeRate primaryInfo={primaryCurrencyInfo} secondaryInfo={secondaryCurrencyInfo} secondaryDisplayAmount={secondaryToPrimaryRatio} />
-            </View>
+      <SceneWrapper background="reverseGradient" hasHeader={false} hasTabs={false}>
+        <View style={styles.header}>
+          {!!currencyLogo && <Image style={styles.iconImage} source={currencyLogoIcon} />}
+          <View style={styles.exchangeContainer}>
+            <ExchangeRate primaryInfo={primaryCurrencyInfo} secondaryInfo={secondaryCurrencyInfo} secondaryDisplayAmount={secondaryToPrimaryRatio} />
           </View>
+        </View>
 
-          <Button onPress={this.toggleUserList} style={styles.toggleButton} underlayColor={styles.underlay.color}>
-            <Button.Row>
-              <Button.Left>
-                <Image style={styles.iconImage} resizeMode={'contain'} source={accountIcon} />
-              </Button.Left>
+        <Button onPress={this.toggleUserList} style={styles.toggleButton} underlayColor={styles.underlay.color}>
+          <Button.Row>
+            <Button.Left>
+              <Image style={styles.iconImage} resizeMode={'contain'} source={accountIcon} />
+            </Button.Left>
 
-              <Button.Center>
-                <Button.Text>
-                  <Text>{this.props.username}</Text>
-                </Button.Text>
-              </Button.Center>
+            <Button.Center>
+              <Button.Text>
+                <Text>{this.props.username}</Text>
+              </Button.Text>
+            </Button.Center>
 
-              <Button.Right>
-                <MDIcon style={styles.toggleIcon} name={arrowIcon} />
-              </Button.Right>
-            </Button.Row>
-          </Button>
-          <Main />
-        </Gradient>
-      </SafeAreaView>
+            <Button.Right>
+              <MDIcon style={styles.toggleIcon} name={arrowIcon} />
+            </Button.Right>
+          </Button.Row>
+        </Button>
+        <Main />
+      </SceneWrapper>
     )
   }
 

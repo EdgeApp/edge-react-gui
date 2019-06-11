@@ -252,7 +252,7 @@ exports[`SendConfirmation should render with destination 1`] = `
           forceUpdateGuiCounter={0}
           parentStyle={
             Object {
-              "width": 379.2359154929577,
+              "width": 379.23591549295776,
             }
           }
           resetSlider={false}
@@ -502,7 +502,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
           forceUpdateGuiCounter={0}
           parentStyle={
             Object {
-              "width": 379.2359154929577,
+              "width": 379.23591549295776,
             }
           }
           resetSlider={false}
@@ -729,7 +729,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
                     "alignItems": "center",
                     "backgroundColor": "transparent",
                     "justifyContent": "center",
-                    "padding": 19.66408450704225,
+                    "padding": 19.664084507042254,
                   }
                 }
               >
@@ -764,7 +764,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           forceUpdateGuiCounter={0}
           parentStyle={
             Object {
-              "width": 379.2359154929577,
+              "width": 379.23591549295776,
             }
           }
           resetSlider={false}
@@ -995,7 +995,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
                     "alignItems": "center",
                     "backgroundColor": "transparent",
                     "justifyContent": "center",
-                    "padding": 19.66408450704225,
+                    "padding": 19.664084507042254,
                   }
                 }
               >
@@ -1030,7 +1030,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           forceUpdateGuiCounter={0}
           parentStyle={
             Object {
-              "width": 379.2359154929577,
+              "width": 379.23591549295776,
             }
           }
           resetSlider={false}

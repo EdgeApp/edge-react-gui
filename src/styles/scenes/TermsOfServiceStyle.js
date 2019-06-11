@@ -4,10 +4,8 @@ import { StyleSheet } from 'react-native'
 
 import { scale } from '../../lib/scaling.js'
 import THEME from '../../theme/variables/airbitz.js'
-import { PLATFORM } from '../../theme/variables/platform'
 
 export const stylesRaw = {
-  usableHeight: PLATFORM.usableHeight,
   scene: {
     flex: 1
   },

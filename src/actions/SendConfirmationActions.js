@@ -1,13 +1,14 @@
 // @flow
 
 import { bns } from 'biggystring'
-import { createYesNoModal, showModal } from 'edge-components'
+import { createYesNoModal } from 'edge-components'
 import type { EdgeMetadata, EdgeParsedUri, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import React from 'react'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
+import { launchModal } from '../components/common/ModalProvider.js'
 import { EXCLAMATION, FEE_ALERT_THRESHOLD, MATERIAL_COMMUNITY, SEND_CONFIRMATION, TRANSACTION_DETAILS } from '../constants/indexConstants'
 import { getSpecialCurrencyInfo, getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
@@ -296,7 +297,7 @@ export const displayFeeAlert = async (feeAmountInFiatSyntax: string) => {
     noButtonText: s.strings.string_cancel_cap,
     yesButtonText: s.strings.title_send
   })
-  const resolveValue = await showModal(modal)
+  const resolveValue = await launchModal(modal)
   console.log('resolveValue is: ', resolveValue)
   return resolveValue
 }
