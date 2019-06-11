@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { ActivityIndicator, Text, TouchableHighlight, View } from 'react-native'
 import OpenAppSettings from 'react-native-app-settings'
 import { RNCamera } from 'react-native-camera'
@@ -17,11 +17,10 @@ import { PermissionStatusStrings } from '../../modules/PermissionsManager.js'
 import type { PermissionStatus } from '../../modules/PermissionsManager.js'
 import ABAlert from '../../modules/UI/components/ABAlert/indexABAlert'
 import T from '../../modules/UI/components/FormattedText/index'
-import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import WalletListModal from '../../modules/UI/components/WalletListModal/WalletListModalConnector'
 import styles, { styles as styleRaw } from '../../styles/scenes/ScaneStyle'
 import { type GuiWallet } from '../../types.js'
+import { SceneWrapper } from '../common/SceneWrapper.js'
 
 type Props = {
   cameraPermission: PermissionStatus,
@@ -79,59 +78,29 @@ export class Scan extends Component<Props> {
       }
     }
     return (
-      <SafeAreaView>
-        <View style={{ flex: 1 }}>
-          <Gradient style={styles.gradient} />
-          <View style={styles.topSpacer} />
-
-          <View style={styles.container}>
-            {this.renderCamera()}
-
-            <View style={[styles.overlay]}>
-              <View style={[styles.overlayTop]}>
-                <T style={[styles.overlayTopText]}>{HEADER_TEXT}</T>
+      <Fragment>
+        <SceneWrapper background="header">
+          {this.renderCameraArea()}
+          <View style={styles.overlayButtonAreaWrap}>
+            <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleAddressModal} underlayColor={styleRaw.underlay.color}>
+              <View style={styles.bottomButtonTextWrap}>
+                <FAIcon style={styles.addressBookIcon} name="address-book-o" size={scale(18)} />
+                <T style={styles.bottomButtonText}>{ADDRESS_TEXT}</T>
               </View>
+            </TouchableHighlight>
 
-              <View style={[styles.overlayBlank]}>
-                {this.props.cameraPermission === PermissionStatusStrings.DENIED && (
-                  <View style={[styles.preview, { justifyContent: 'center', alignItems: 'center' }]}>
-                    <Text style={styles.cameraPermissionDeniedText}>{DENIED_PERMISSION_TEXT}</Text>
-                    <TouchableHighlight style={styles.settingsButton} onPress={this.openSettingsTapped}>
-                      <Text style={styles.settingsButtonText}>{OPEN_SETTINGS_TEXT}</Text>
-                    </TouchableHighlight>
-                  </View>
-                )}
+            <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleTorch} underlayColor={styleRaw.underlay.color}>
+              <View style={styles.bottomButtonTextWrap}>
+                <Ionicon style={styles.flashIcon} name="ios-flash" size={scale(24)} />
+                <T style={styles.bottomButtonText}>{FLASH_TEXT}</T>
               </View>
-
-              <Gradient style={[styles.overlayButtonAreaWrap]}>
-                <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleAddressModal} underlayColor={styleRaw.underlay.color}>
-                  <View style={styles.bottomButtonTextWrap}>
-                    <FAIcon style={[styles.addressBookIcon]} name="address-book-o" size={scale(18)} />
-                    <T style={[styles.addressButtonText, styles.bottomButtonText]}>{ADDRESS_TEXT}</T>
-                  </View>
-                </TouchableHighlight>
-
-                <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleTorch} underlayColor={styleRaw.underlay.color}>
-                  <View style={styles.bottomButtonTextWrap}>
-                    <Ionicon style={[styles.flashIcon]} name="ios-flash" size={scale(24)} />
-                    <T style={[styles.flashButtonText, styles.bottomButtonText]}>{FLASH_TEXT}</T>
-                  </View>
-                </TouchableHighlight>
-              </Gradient>
-            </View>
-            <ABAlert />
+            </TouchableHighlight>
           </View>
-          {this.props.showToWalletModal && (
-            <WalletListModal
-              wallets={allowedWallets}
-              topDisplacement={Constants.SCAN_WALLET_DIALOG_TOP}
-              type={Constants.FROM}
-              onSelectWallet={onSelectWallet}
-            />
-          )}
-        </View>
+          {this.props.showToWalletModal && <WalletListModal wallets={allowedWallets} type={Constants.FROM} onSelectWallet={onSelectWallet} />}
+        </SceneWrapper>
+        <ABAlert />
         <SecondaryModal />
-      </SafeAreaView>
+      </Fragment>
     )
   }
 
@@ -168,25 +137,40 @@ export class Scan extends Component<Props> {
     return this.props.qrCodeScanned(result.data)
   }
 
-  renderCamera = () => {
+  renderCameraArea = () => {
     if (!this.props.scanEnabled) {
-      return null
+      return <View style={styles.cameraArea} />
     }
+
+    if (this.props.cameraPermission === PermissionStatusStrings.DENIED) {
+      return (
+        <View style={styles.cameraArea}>
+          <Text style={styles.cameraPermissionDeniedText}>{DENIED_PERMISSION_TEXT}</Text>
+          <TouchableHighlight style={styles.settingsButton} onPress={this.openSettingsTapped}>
+            <Text style={styles.settingsButtonText}>{OPEN_SETTINGS_TEXT}</Text>
+          </TouchableHighlight>
+        </View>
+      )
+    }
+
     if (this.props.cameraPermission === PermissionStatusStrings.AUTHORIZED) {
       const flashMode = this.props.torchEnabled ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off
 
       return (
-        <RNCamera style={styles.preview} flashMode={flashMode} type={RNCamera.Constants.Type.back} ref="cameraCapture" onBarCodeRead={this.onBarCodeRead} />
-      )
-    } else if (this.props.cameraPermission === PermissionStatusStrings.DENIED) {
-      return <View />
-    } else {
-      return (
-        <View style={[{ flex: 1, justifyContent: 'center', alignItems: 'center' }]}>
-          <ActivityIndicator size="large" style={{ flex: 1, alignSelf: 'center' }} />
+        <View style={styles.cameraArea}>
+          <RNCamera style={styles.preview} flashMode={flashMode} type={RNCamera.Constants.Type.back} ref="cameraCapture" onBarCodeRead={this.onBarCodeRead} />
+          <View style={styles.overlayTop}>
+            <T style={styles.overlayTopText}>{HEADER_TEXT}</T>
+          </View>
         </View>
       )
     }
+
+    return (
+      <View style={styles.cameraArea}>
+        <ActivityIndicator size="large" />
+      </View>
+    )
   }
 }
 
