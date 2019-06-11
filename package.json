@@ -253,6 +253,9 @@
     "rollup-plugin-node-resolve": "4.0.0",
     "updot": "^1.1.7"
   },
+  "resolutions": {
+    "scrypt.js": "0.3.0"
+  },
   "detox": {
     "test-runner": "jest",
     "specs": "e2e",
