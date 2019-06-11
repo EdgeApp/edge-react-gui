@@ -91,7 +91,7 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
 const processMakeSpendError = e => (dispatch: Dispatch, getState: GetState) => {
   console.log(e)
   Actions.popTo(Constants.EXCHANGE_SCENE)
-  if (e.name === errorNames.InsufficientFundsError || e.message === Constants.INSUFFICIENT_FUNDS) {
+  if (e.name === errorNames.InsufficientFundsError || e.message === errorNames.InsufficientFundsError) {
     dispatch({ type: 'RECEIVED_INSUFFICENT_FUNDS_ERROR' })
     return
   }
@@ -210,7 +210,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, info: S
     edgeCoinExchangeQuote = await account.fetchSwapQuote(quoteData)
   } catch (error) {
     console.log(JSON.stringify(error))
-    if (error.message === 'InsufficientFundsError') {
+    if (error.name === errorNames.InsufficientFundsError || error.message === errorNames.InsufficientFundsError) {
       dispatch(processMakeSpendError(error))
       return
     }
@@ -247,17 +247,17 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, info: S
       return
     }
     if (error.name === errorNames.SwapPermissionError) {
-      if (error.message === 'needsActivation') {
+      if (error.reason === 'needsActivation') {
         dispatch({ type: 'NEED_KYC' })
         Actions.popTo(Constants.EXCHANGE_SCENE)
         return
       }
-      if (error.message === 'geoRestriction') {
+      if (error.reason === 'geoRestriction') {
         dispatch({ type: 'GENERIC_SHAPE_SHIFT_ERROR', data: s.strings.ss_geolock })
         Actions.popTo(Constants.EXCHANGE_SCENE)
         return
       }
-      if (error.message === 'noVerification') {
+      if (error.reason === 'noVerification') {
         let pluginName = ''
         if (typeof error.pluginName === 'string') {
           const { swapInfo } = account.swapConfig[error.pluginName]
