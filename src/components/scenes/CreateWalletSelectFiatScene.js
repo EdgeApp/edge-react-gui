@@ -102,7 +102,7 @@ export class CreateWalletSelectFiat extends Component<Props, State> {
     const formFieldHeight = scale(50)
 
     return (
-      <SceneWrapper avoidKeyboard>
+      <SceneWrapper avoidKeyboard background="body">
         {gap => (
           <View style={[styles.content, { marginBottom: -gap.bottom }]}>
             <FormField

@@ -1,14 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`MyComponent should render Locked SettingsOverview 1`] = `
-<SafeAreaViewComponent>
-  <Gradient
-    style={
-      Object {
-        "height": 44,
-      }
-    }
-  />
+<Connect(SceneWrapperComponent)
+  background="body"
+  hasTabs={false}
+>
   <ScrollViewMock
     style={
       Object {
@@ -374,18 +370,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
       />
     </View>
   </ScrollViewMock>
-</SafeAreaViewComponent>
+</Connect(SceneWrapperComponent)>
 `;
 
 exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
-<SafeAreaViewComponent>
-  <Gradient
-    style={
-      Object {
-        "height": 44,
-      }
-    }
-  />
+<Connect(SceneWrapperComponent)
+  background="body"
+  hasTabs={false}
+>
   <ScrollViewMock
     style={
       Object {
@@ -751,5 +743,5 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
       />
     </View>
   </ScrollViewMock>
-</SafeAreaViewComponent>
+</Connect(SceneWrapperComponent)>
 `;

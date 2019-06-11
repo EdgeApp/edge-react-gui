@@ -8,6 +8,7 @@ import { connect } from 'react-redux'
 
 import { type State } from '../../modules/ReduxTypes.js'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 
 /**
  * Describes the gap between the edge of the content area and
@@ -24,6 +25,12 @@ export type SceneGap = {
   top: number
 }
 
+type BackgroundOptions =
+  | 'header' // Header area covers the screen (default)
+  | 'body' // Seprate header and content areas
+  | 'none' // Do not render any background elements
+  | 'drawer' // Reverse gradient for the drawer
+
 type Props = {
   // The children can either be normal React elements,
   // or a function that accepts the current gap and returns an element.
@@ -35,7 +42,10 @@ type Props = {
   avoidKeyboard?: boolean,
 
   // Background options:
-  background?: 'gradient' | 'reverseGradient' | 'none',
+  background?: BackgroundOptions,
+
+  // Extra header area to insert above the body background:
+  bodySplit?: number,
 
   // True if this scene has a header (with back button & such):
   hasHeader?: boolean,
@@ -55,7 +65,7 @@ type StateProps = {
  * Also draws a common gradient background under the scene.
  */
 function SceneWrapperComponent (props: Props & StateProps) {
-  const { children, avoidKeyboard = false, background = 'gradient', hasHeader = true, hasTabs = true, keyboardHeight } = props
+  const { children, avoidKeyboard = false, background = 'header', bodySplit = 0, hasHeader = true, hasTabs = true, keyboardHeight } = props
 
   // In the future, ReactNative itself will expose the safe area dimensions:
   // https://github.com/facebook/react-native/pull/20999
@@ -94,7 +104,8 @@ function SceneWrapperComponent (props: Props & StateProps) {
   // Finally, render a gradient under everything:
   if (background === 'none') return scene
   return (
-    <Gradient reverse={background === 'reverseGradient'} style={styles.gradient}>
+    <Gradient reverse={background === 'drawer'} style={styles.gradient}>
+      {background === 'body' && <View style={[styles.body, { top: gap.top + bodySplit }]} />}
       {scene}
     </Gradient>
   )
@@ -135,5 +146,12 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'flex-start',
     position: 'absolute'
+  },
+  body: {
+    backgroundColor: THEME.COLORS.GRAY_4,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0
   }
 })
