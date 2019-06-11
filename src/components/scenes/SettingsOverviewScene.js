@@ -12,13 +12,13 @@ import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
 import T from '../../modules/UI/components/FormattedText/index'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import styles from '../../styles/scenes/SettingsStyle'
 import { getTimeWithMeasurement } from '../../util/utils'
 import { launchModal } from '../common/ModalProvider.js'
 import RowModal from '../common/RowModal'
 import RowRoute from '../common/RowRoute'
 import RowSwitch from '../common/RowSwitch'
+import { SceneWrapper } from '../common/SceneWrapper.js'
 import { createAutoLogoutModal } from '../modals/AutoLogoutModal.ui'
 
 const DISABLE_TEXT = s.strings.string_disable
@@ -159,8 +159,7 @@ export default class SettingsOverview extends Component<Props, State> {
     const autoLogoutRightText = autoLogoutValue === 0 ? DISABLE_TEXT : `${autoLogoutValue} ${s.strings['settings_' + autoLogoutMeasurement]}`
     const developerModeText = this.props.developerModeOn ? s.strings.settings_turn_off_developer_mode : s.strings.settings_turn_on_developer_mode
     return (
-      <SafeAreaView>
-        <Gradient style={styles.gradient} />
+      <SceneWrapper background="body" hasTabs={false}>
         <ScrollView style={styles.container}>
           <Gradient style={[styles.unlockRow]}>
             <View style={[styles.accountBoxHeaderTextWrap]}>
@@ -273,7 +272,7 @@ export default class SettingsOverview extends Component<Props, State> {
             <View style={styles.emptyBottom} />
           </View>
         </ScrollView>
-      </SafeAreaView>
+      </SceneWrapper>
     )
   }
 
