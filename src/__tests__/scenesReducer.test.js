@@ -10,14 +10,6 @@ const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
 
 test('initialState', () => {
   const expected = {
-    ABAlert: {
-      syntax: {
-        buttons: [],
-        message: '',
-        title: ''
-      },
-      view: false
-    },
     controlPanel: {
       selectedUser: null,
       usersView: false

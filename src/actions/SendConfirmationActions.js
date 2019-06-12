@@ -238,12 +238,15 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
     edgeSignedTransaction.metadata = edgeMetadata
     edgeSignedTransaction.wallet = wallet
 
-    const successInfo = {
-      success: true,
-      title: s.strings.transaction_success,
-      message: s.strings.transaction_success_message
-    }
-    dispatch({ type: 'OPEN_AB_ALERT', data: successInfo })
+    dispatch({ type: 'PLAY_SEND_SOUND' })
+    Alert.alert(s.strings.transaction_success, s.strings.transaction_success_message, [
+      {
+        onPress () {},
+        style: 'default',
+        text: s.strings.string_ok
+      }
+    ])
+
     if (guiMakeSpendInfo.onDone) {
       guiMakeSpendInfo.onDone(null, edgeSignedTransaction)
     } else {
@@ -252,21 +255,24 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
   } catch (e) {
     console.log(e)
     dispatch(updateSpendPending(false))
-    const errorInfo = {
-      success: false,
-      title: s.strings.transaction_failure,
-      message: sprintf(s.strings.transaction_failure_message, e.message)
-    }
+    let message = sprintf(s.strings.transaction_failure_message, e.message)
     if (e.name === 'ErrorEosInsufficientCpu') {
-      errorInfo.message = s.strings.send_confirmation_eos_error_cpu
+      message = s.strings.send_confirmation_eos_error_cpu
     } else if (e.name === 'ErrorEosInsufficientNet') {
-      errorInfo.message = s.strings.send_confirmation_eos_error_net
+      message = s.strings.send_confirmation_eos_error_net
     } else if (e.name === 'ErrorEosInsufficientRam') {
-      errorInfo.message = s.strings.send_confirmation_eos_error_ram
+      message = s.strings.send_confirmation_eos_error_ram
     }
 
     dispatch(updateTransaction(edgeSignedTransaction, null, true, new Error('broadcastError')))
-    dispatch({ type: 'OPEN_AB_ALERT', data: errorInfo })
+    Alert.alert(s.strings.transaction_failure, message, [
+      {
+        onPress () {},
+        style: 'default',
+        text: s.strings.string_ok
+      }
+    ])
+
     if (guiMakeSpendInfo.onDone) {
       guiMakeSpendInfo.onDone(e)
       Actions.pop()

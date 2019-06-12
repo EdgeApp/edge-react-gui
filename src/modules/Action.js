@@ -9,8 +9,6 @@ import { type CoreContextAction } from './Core/Context/action.js'
 import { type SendLogsAction } from './Logs/action.js'
 
 type LegacyActionName =
-  | 'OPEN_AB_ALERT'
-  | 'CLOSE_AB_ALERT'
   | 'UPDATE_RECEIVE_ADDRESS_SUCCESS'
   | 'NEW_RECEIVE_ADDRESS'
   | 'ERASE_DEEP_LINK'
@@ -189,6 +187,7 @@ type NoDataActionName =
   | 'ON_KYC_TOKEN_SET'
   | 'OPEN_SELECT_USER'
   | 'PASSWORD_USED'
+  | 'PLAY_SEND_SOUND'
   | 'PROCESS_EDGE_LOGIN'
   | 'EDGE_LOBBY_ACCEPT_FAILED'
   | 'WIPE_KYC_NEED'
