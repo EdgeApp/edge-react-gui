@@ -1,491 +1,287 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Scan component should render with AUTHORIZED props 1`] = `
-<SafeAreaViewComponent>
-  <View
-    style={
-      Object {
-        "flex": 1,
-      }
-    }
+<React.Fragment>
+  <Connect(SceneWrapperComponent)
+    background="header"
   >
-    <Gradient
-      style={
-        Object {
-          "height": 44,
-        }
-      }
-    />
-    <View />
     <View
       style={
         Object {
+          "alignItems": "center",
           "flex": 1,
+          "justifyContent": "center",
+        }
+      }
+    />
+    <View
+      style={
+        Object {
           "flexDirection": "row",
-          "height": 1191.2978873239435,
-          "position": "relative",
+          "paddingBottom": 15.450352112676057,
+          "paddingLeft": 11.236619718309859,
+          "paddingRight": 11.236619718309859,
+          "paddingTop": 15.450352112676057,
         }
       }
     >
-      <View
+      <TouchableHighlight
+        activeOpacity={0.85}
+        delayPressOut={100}
+        onPress={[Function]}
         style={
-          Array [
-            Object {
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            },
-          ]
+          Object {
+            "alignItems": "center",
+            "backgroundColor": "#FFFFFF10",
+            "borderRadius": 4.213732394366197,
+            "flex": 1,
+            "height": 70.22887323943662,
+            "justifyContent": "center",
+            "marginLeft": 1.4045774647887324,
+            "marginRight": 1.4045774647887324,
+          }
         }
+        underlayColor="#0E4B75"
       >
         <View
           style={
-            Array [
-              Object {
-                "alignItems": "center",
-                "backgroundColor": "#4A5157",
-                "justifyContent": "center",
-                "opacity": 0.95,
-                "padding": 9.832042253521127,
-              },
-            ]
+            Object {
+              "alignItems": "center",
+              "flexDirection": "column",
+              "justifyContent": "center",
+            }
           }
         >
+          <Icon
+            allowFontScaling={false}
+            name="address-book-o"
+            size={25.28239436619718}
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "fontSize": 22.473239436619718,
+                "height": 22.473239436619718,
+                "transform": Array [
+                  Object {
+                    "scaleX": -1,
+                  },
+                ],
+              }
+            }
+          />
           <FormattedText
             style={
-              Array [
-                Object {
-                  "color": "#FFFFFF",
-                  "fontSize": 19.664084507042254,
-                  "textAlign": "center",
-                },
-              ]
+              Object {
+                "backgroundColor": "transparent",
+                "color": "#FFFFFF",
+                "fontSize": 19.664084507042254,
+                "opacity": 1,
+              }
             }
           >
-            Scan to Send, Import, or Edge Login
+            Address
           </FormattedText>
         </View>
+      </TouchableHighlight>
+      <TouchableHighlight
+        activeOpacity={0.85}
+        delayPressOut={100}
+        onPress={[Function]}
+        style={
+          Object {
+            "alignItems": "center",
+            "backgroundColor": "#FFFFFF10",
+            "borderRadius": 4.213732394366197,
+            "flex": 1,
+            "height": 70.22887323943662,
+            "justifyContent": "center",
+            "marginLeft": 1.4045774647887324,
+            "marginRight": 1.4045774647887324,
+          }
+        }
+        underlayColor="#0E4B75"
+      >
         <View
           style={
-            Array [
-              Object {
-                "flex": 10,
-              },
-            ]
-          }
-        />
-        <Gradient
-          style={
-            Array [
-              Object {
-                "flexDirection": "row",
-                "height": 101.12957746478872,
-                "paddingBottom": 15.450352112676057,
-                "paddingLeft": 11.236619718309859,
-                "paddingRight": 11.236619718309859,
-                "paddingTop": 15.450352112676057,
-              },
-            ]
+            Object {
+              "alignItems": "center",
+              "flexDirection": "column",
+              "justifyContent": "center",
+            }
           }
         >
-          <TouchableHighlight
-            activeOpacity={0.85}
-            delayPressOut={100}
-            onPress={[Function]}
+          <Icon
+            allowFontScaling={false}
+            name="ios-flash"
+            size={33.709859154929575}
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "#FFFFFF10",
-                "borderRadius": 4.213732394366197,
-                "flex": 1,
-                "height": 70.22887323943662,
-                "justifyContent": "center",
-                "marginLeft": 1.4045774647887324,
-                "marginRight": 1.4045774647887324,
+                "color": "#FFFFFF",
+                "fontSize": 30.900704225352115,
+                "height": 25.28239436619718,
               }
             }
-            underlayColor="#0E4B75"
-          >
-            <View
-              style={
-                Object {
-                  "alignItems": "center",
-                  "flexDirection": "column",
-                  "justifyContent": "center",
-                }
-              }
-            >
-              <Icon
-                allowFontScaling={false}
-                name="address-book-o"
-                size={25.28239436619718}
-                style={
-                  Array [
-                    Object {
-                      "color": "#FFFFFF",
-                      "fontSize": 22.473239436619718,
-                      "height": 22.473239436619718,
-                      "transform": Array [
-                        Object {
-                          "scaleX": -1,
-                        },
-                      ],
-                    },
-                  ]
-                }
-              />
-              <FormattedText
-                style={
-                  Array [
-                    undefined,
-                    Object {
-                      "backgroundColor": "transparent",
-                      "color": "#FFFFFF",
-                      "fontSize": 19.664084507042254,
-                      "opacity": 1,
-                    },
-                  ]
-                }
-              >
-                Address
-              </FormattedText>
-            </View>
-          </TouchableHighlight>
-          <TouchableHighlight
-            activeOpacity={0.85}
-            delayPressOut={100}
-            onPress={[Function]}
+          />
+          <FormattedText
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "#FFFFFF10",
-                "borderRadius": 4.213732394366197,
-                "flex": 1,
-                "height": 70.22887323943662,
-                "justifyContent": "center",
-                "marginLeft": 1.4045774647887324,
-                "marginRight": 1.4045774647887324,
+                "backgroundColor": "transparent",
+                "color": "#FFFFFF",
+                "fontSize": 19.664084507042254,
+                "opacity": 1,
               }
             }
-            underlayColor="#0E4B75"
           >
-            <View
-              style={
-                Object {
-                  "alignItems": "center",
-                  "flexDirection": "column",
-                  "justifyContent": "center",
-                }
-              }
-            >
-              <Icon
-                allowFontScaling={false}
-                name="ios-flash"
-                size={33.709859154929575}
-                style={
-                  Array [
-                    Object {
-                      "color": "#FFFFFF",
-                      "fontSize": 30.900704225352115,
-                      "height": 25.28239436619718,
-                    },
-                  ]
-                }
-              />
-              <FormattedText
-                style={
-                  Array [
-                    undefined,
-                    Object {
-                      "backgroundColor": "transparent",
-                      "color": "#FFFFFF",
-                      "fontSize": 19.664084507042254,
-                      "opacity": 1,
-                    },
-                  ]
-                }
-              >
-                Flash
-              </FormattedText>
-            </View>
-          </TouchableHighlight>
-        </Gradient>
-      </View>
-      <Connect(ABAlert) />
+            Flash
+          </FormattedText>
+        </View>
+      </TouchableHighlight>
     </View>
-  </View>
+  </Connect(SceneWrapperComponent)>
+  <Connect(ABAlert) />
   <Connect(SecondaryModal) />
-</SafeAreaViewComponent>
+</React.Fragment>
 `;
 
 exports[`Scan component should render with DENIED props 1`] = `
-<SafeAreaViewComponent>
-  <View
-    style={
-      Object {
-        "flex": 1,
-      }
-    }
+<React.Fragment>
+  <Connect(SceneWrapperComponent)
+    background="header"
   >
-    <Gradient
-      style={
-        Object {
-          "height": 44,
-        }
-      }
-    />
-    <View />
     <View
       style={
         Object {
+          "alignItems": "center",
           "flex": 1,
+          "justifyContent": "center",
+        }
+      }
+    />
+    <View
+      style={
+        Object {
           "flexDirection": "row",
-          "height": 1191.2978873239435,
-          "position": "relative",
+          "paddingBottom": 15.450352112676057,
+          "paddingLeft": 11.236619718309859,
+          "paddingRight": 11.236619718309859,
+          "paddingTop": 15.450352112676057,
         }
       }
     >
-      <View
+      <TouchableHighlight
+        activeOpacity={0.85}
+        delayPressOut={100}
+        onPress={[Function]}
         style={
-          Array [
-            Object {
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            },
-          ]
+          Object {
+            "alignItems": "center",
+            "backgroundColor": "#FFFFFF10",
+            "borderRadius": 4.213732394366197,
+            "flex": 1,
+            "height": 70.22887323943662,
+            "justifyContent": "center",
+            "marginLeft": 1.4045774647887324,
+            "marginRight": 1.4045774647887324,
+          }
         }
+        underlayColor="#0E4B75"
       >
         <View
           style={
-            Array [
-              Object {
-                "alignItems": "center",
-                "backgroundColor": "#4A5157",
-                "justifyContent": "center",
-                "opacity": 0.95,
-                "padding": 9.832042253521127,
-              },
-            ]
+            Object {
+              "alignItems": "center",
+              "flexDirection": "column",
+              "justifyContent": "center",
+            }
           }
         >
+          <Icon
+            allowFontScaling={false}
+            name="address-book-o"
+            size={25.28239436619718}
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "fontSize": 22.473239436619718,
+                "height": 22.473239436619718,
+                "transform": Array [
+                  Object {
+                    "scaleX": -1,
+                  },
+                ],
+              }
+            }
+          />
           <FormattedText
             style={
-              Array [
-                Object {
-                  "color": "#FFFFFF",
-                  "fontSize": 19.664084507042254,
-                  "textAlign": "center",
-                },
-              ]
+              Object {
+                "backgroundColor": "transparent",
+                "color": "#FFFFFF",
+                "fontSize": 19.664084507042254,
+                "opacity": 1,
+              }
             }
           >
-            Scan to Send, Import, or Edge Login
+            Address
           </FormattedText>
         </View>
+      </TouchableHighlight>
+      <TouchableHighlight
+        activeOpacity={0.85}
+        delayPressOut={100}
+        onPress={[Function]}
+        style={
+          Object {
+            "alignItems": "center",
+            "backgroundColor": "#FFFFFF10",
+            "borderRadius": 4.213732394366197,
+            "flex": 1,
+            "height": 70.22887323943662,
+            "justifyContent": "center",
+            "marginLeft": 1.4045774647887324,
+            "marginRight": 1.4045774647887324,
+          }
+        }
+        underlayColor="#0E4B75"
+      >
         <View
           style={
-            Array [
-              Object {
-                "flex": 10,
-              },
-            ]
+            Object {
+              "alignItems": "center",
+              "flexDirection": "column",
+              "justifyContent": "center",
+            }
           }
         >
-          <View
+          <Icon
+            allowFontScaling={false}
+            name="ios-flash"
+            size={33.709859154929575}
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "flex": 1,
-                },
-                Object {
-                  "alignItems": "center",
-                  "justifyContent": "center",
-                },
-              ]
+              Object {
+                "color": "#FFFFFF",
+                "fontSize": 30.900704225352115,
+                "height": 25.28239436619718,
+              }
+            }
+          />
+          <FormattedText
+            style={
+              Object {
+                "backgroundColor": "transparent",
+                "color": "#FFFFFF",
+                "fontSize": 19.664084507042254,
+                "opacity": 1,
+              }
             }
           >
-            <Text
-              style={
-                Object {
-                  "fontSize": 19.664084507042254,
-                  "padding": 20,
-                  "textAlign": "center",
-                }
-              }
-            >
-              To scan a QR Code, please enable Camera access in Settings
-            </Text>
-            <TouchableHighlight
-              activeOpacity={0.85}
-              delayPressOut={100}
-              onPress={[Function]}
-              style={
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
-                  "padding": 10,
-                }
-              }
-              underlayColor="black"
-            >
-              <Text
-                style={
-                  Object {
-                    "color": "#FFFFFF",
-                  }
-                }
-              >
-                Open Settings
-              </Text>
-            </TouchableHighlight>
-          </View>
+            Flash
+          </FormattedText>
         </View>
-        <Gradient
-          style={
-            Array [
-              Object {
-                "flexDirection": "row",
-                "height": 101.12957746478872,
-                "paddingBottom": 15.450352112676057,
-                "paddingLeft": 11.236619718309859,
-                "paddingRight": 11.236619718309859,
-                "paddingTop": 15.450352112676057,
-              },
-            ]
-          }
-        >
-          <TouchableHighlight
-            activeOpacity={0.85}
-            delayPressOut={100}
-            onPress={[Function]}
-            style={
-              Object {
-                "alignItems": "center",
-                "backgroundColor": "#FFFFFF10",
-                "borderRadius": 4.213732394366197,
-                "flex": 1,
-                "height": 70.22887323943662,
-                "justifyContent": "center",
-                "marginLeft": 1.4045774647887324,
-                "marginRight": 1.4045774647887324,
-              }
-            }
-            underlayColor="#0E4B75"
-          >
-            <View
-              style={
-                Object {
-                  "alignItems": "center",
-                  "flexDirection": "column",
-                  "justifyContent": "center",
-                }
-              }
-            >
-              <Icon
-                allowFontScaling={false}
-                name="address-book-o"
-                size={25.28239436619718}
-                style={
-                  Array [
-                    Object {
-                      "color": "#FFFFFF",
-                      "fontSize": 22.473239436619718,
-                      "height": 22.473239436619718,
-                      "transform": Array [
-                        Object {
-                          "scaleX": -1,
-                        },
-                      ],
-                    },
-                  ]
-                }
-              />
-              <FormattedText
-                style={
-                  Array [
-                    undefined,
-                    Object {
-                      "backgroundColor": "transparent",
-                      "color": "#FFFFFF",
-                      "fontSize": 19.664084507042254,
-                      "opacity": 1,
-                    },
-                  ]
-                }
-              >
-                Address
-              </FormattedText>
-            </View>
-          </TouchableHighlight>
-          <TouchableHighlight
-            activeOpacity={0.85}
-            delayPressOut={100}
-            onPress={[Function]}
-            style={
-              Object {
-                "alignItems": "center",
-                "backgroundColor": "#FFFFFF10",
-                "borderRadius": 4.213732394366197,
-                "flex": 1,
-                "height": 70.22887323943662,
-                "justifyContent": "center",
-                "marginLeft": 1.4045774647887324,
-                "marginRight": 1.4045774647887324,
-              }
-            }
-            underlayColor="#0E4B75"
-          >
-            <View
-              style={
-                Object {
-                  "alignItems": "center",
-                  "flexDirection": "column",
-                  "justifyContent": "center",
-                }
-              }
-            >
-              <Icon
-                allowFontScaling={false}
-                name="ios-flash"
-                size={33.709859154929575}
-                style={
-                  Array [
-                    Object {
-                      "color": "#FFFFFF",
-                      "fontSize": 30.900704225352115,
-                      "height": 25.28239436619718,
-                    },
-                  ]
-                }
-              />
-              <FormattedText
-                style={
-                  Array [
-                    undefined,
-                    Object {
-                      "backgroundColor": "transparent",
-                      "color": "#FFFFFF",
-                      "fontSize": 19.664084507042254,
-                      "opacity": 1,
-                    },
-                  ]
-                }
-              >
-                Flash
-              </FormattedText>
-            </View>
-          </TouchableHighlight>
-        </Gradient>
-      </View>
-      <Connect(ABAlert) />
+      </TouchableHighlight>
     </View>
-  </View>
+  </Connect(SceneWrapperComponent)>
+  <Connect(ABAlert) />
   <Connect(SecondaryModal) />
-</SafeAreaViewComponent>
+</React.Fragment>
 `;

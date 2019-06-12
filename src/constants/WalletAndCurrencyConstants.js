@@ -50,7 +50,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   LTC: 'litecoin',
   XMR: 'monero',
   QTUM: 'qtum',
-  RVN: 'ravencoin',
+  // RVN: 'ravencoin',
   XRP: 'ripple',
   SMART: 'smartcash',
   UFO: 'ufo',
