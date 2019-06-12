@@ -3359,10 +3359,10 @@ edge-exchange-plugins@^0.6.5:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@0.5.31:
-  version "0.5.31"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.5.31.tgz#b3fd7e4f61c85e79f5d1ca592d48d9f19b8de8ef"
-  integrity sha512-N5LawPzZyEW/z+7osQQJXtgWkqKCP+I1oWGHO3bpN2rB2QF9e2P+PbuZCfWUv2Q2VODfF99rjugWnpj3Ko5lkg==
+edge-login-ui-rn@0.5.32:
+  version "0.5.32"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.5.32.tgz#7cbf63ea850e15a7a786aeb64c94948c1b2cff50"
+  integrity sha512-iE4PzXXr1i1bpZJU4kzAjMvJjDlJuQ5ScfYQqim4Ds/GKlrH0T+lOS8qkTbigjrlJD1RsZDtOYu5XwjhYMc/hA==
   dependencies:
     edge-components "^0.0.26"
     material-ui "^0.20.0"
@@ -9144,7 +9144,7 @@ react-native-slowlog@^1.0.2:
   version "2.3.5"
   resolved "git://github.com/swansontec/react-native-smart-splash-screen#af8ee5e9e10afedb2e44f3b6565894477eb15ea9"
 
-react-native-sortable-listview@^0.2.7:
+react-native-sortable-listview@^0.2.8:
   version "0.2.8"
   resolved "https://registry.yarnpkg.com/react-native-sortable-listview/-/react-native-sortable-listview-0.2.8.tgz#0d514fa73eb406a46baea96aa38a71e40257af90"
   integrity sha512-1zEzgMHv32w4oGNEMuwHRxK8uGYQjJeufwq/2ispmRYctR1oGc0eDgg/WSPChdNlInw4cpK/fPRd6sfLPHP1Kw==
