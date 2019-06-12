@@ -9,13 +9,12 @@ import { connect } from 'react-redux'
 
 import { ANDROID, PLUGIN_BUY, PLUGIN_BUY_LEGACY, PLUGIN_SPEND, PLUGIN_SPEND_LEGACY, SPEND } from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import { buySellPlugins, spendPlugins } from '../../modules/UI/scenes/Plugins/plugins'
 import styles from '../../styles/scenes/PluginsStyle.js'
 import { THEME, colors } from '../../theme/variables/airbitz.js'
 import type { BuySellPlugin } from '../../types'
 import { launchModal } from '../common/ModalProvider.js'
+import { SceneWrapper } from '../common/SceneWrapper.js'
 
 type Props = {
   developerModeOn: boolean
@@ -137,12 +136,17 @@ class PluginList extends Component<Props, State> {
 
   render () {
     return (
-      <SafeAreaView>
-        <Gradient style={styles.gradient} />
-        <View style={styles.container}>
-          <FlatList data={this.state.data} renderItem={this._renderPlugin} keyExtractor={item => item.name} />
-        </View>
-      </SafeAreaView>
+      <SceneWrapper background="body" hasTabs={false}>
+        {gap => (
+          <FlatList
+            style={{ marginBottom: -gap.bottom }}
+            contentContainerStyle={{ paddingBottom: gap.bottom }}
+            data={this.state.data}
+            keyExtractor={item => item.name}
+            renderItem={this._renderPlugin}
+          />
+        )}
+      </SceneWrapper>
     )
   }
 }

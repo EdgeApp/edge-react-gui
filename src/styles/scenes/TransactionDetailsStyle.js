@@ -12,11 +12,9 @@ export const styles = {
   container: {
     alignItems: 'stretch',
     backgroundColor: THEME.COLORS.WHITE,
-    flex: 1,
     flexDirection: 'column',
     marginTop: scale(24),
-    paddingTop: scale(32),
-    zIndex: 1
+    paddingTop: scale(32)
   },
   searchPopup: {
     backgroundColor: THEME.COLORS.WHITE,
@@ -223,8 +221,7 @@ export const styles = {
   },
   footerArea: {
     backgroundColor: THEME.COLORS.GRAY_4,
-    paddingTop: scale(20),
-    height: (PLATFORM.deviceHeight * 1) / 3 + 340,
+    paddingVertical: scale(20),
     paddingLeft: scale(15),
     paddingRight: scale(15)
   },

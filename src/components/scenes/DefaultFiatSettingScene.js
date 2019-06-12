@@ -45,7 +45,7 @@ export default class DefaultFiatSetting extends Component<Props, State> {
     })
 
     return (
-      <SceneWrapper avoidKeyboard hasTabs={false}>
+      <SceneWrapper avoidKeyboard background="body" hasTabs={false}>
         {gap => (
           <View style={[styles.content, { marginBottom: -gap.bottom }]}>
             <FormField

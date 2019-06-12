@@ -19,7 +19,7 @@ export const mapStateToProps = (state: State) => ({
 export const mapDispatchToProps = (dispatch: Dispatch) => ({
   onSubmit: (password: string) => dispatch(checkPassword(password)),
   onRequestChangePassword: () => {
-    Actions[CHANGE_PASSWORD]()
+    Actions.jump(CHANGE_PASSWORD)
     dispatch(requestChangePassword())
   },
   onPostpone: () => dispatch(postponePasswordReminder()),

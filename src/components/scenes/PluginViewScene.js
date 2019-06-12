@@ -11,12 +11,10 @@ import { Bridge, onMethod } from 'yaob'
 import ENV from '../../../env.json'
 import { javascript } from '../../lib/bridge/injectThisInWebView.js'
 import type { Dispatch, State } from '../../modules/ReduxTypes'
-import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import { setPluginScene } from '../../modules/UI/scenes/Plugins/BackButton.js'
 import { EdgeProvider } from '../../modules/UI/scenes/Plugins/EdgeProvider.js'
-import styles from '../../styles/scenes/PluginsStyle.js'
 import type { BuySellPlugin } from '../../types.js'
+import { SceneWrapper } from '../common/SceneWrapper.js'
 
 // WebView bridge managemer --------------------------------------------
 
@@ -166,8 +164,7 @@ class PluginView extends React.Component<Props> {
         ? 'Mozilla/5.0 (Linux; U; Android 4.4.2; en-us; SCH-I535 Build/KOT49H) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30'
         : 'Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_1 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Version/10.0 Mobile/14E304 Safari/602.1'
     return (
-      <SafeAreaView>
-        <Gradient style={styles.gradient} />
+      <SceneWrapper background="body" hasTabs={false}>
         <WebView
           allowFileAccess
           allowUniversalAccessFromFileURLs
@@ -182,7 +179,7 @@ class PluginView extends React.Component<Props> {
           userAgent={userAgent + ' edge/app.edge.'}
           useWebKit
         />
-      </SafeAreaView>
+      </SceneWrapper>
     )
   }
 }

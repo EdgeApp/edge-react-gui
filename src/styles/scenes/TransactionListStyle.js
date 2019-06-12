@@ -207,8 +207,7 @@ export const styles = {
     alignItems: 'center'
   },
   transactionsScrollWrap: {
-    flex: 1,
-    backgroundColor: THEME.COLORS.OFF_WHITE
+    flex: 1
   },
   singleTransaction: {
     height: scale(80),
@@ -317,12 +316,14 @@ export const styles = {
     fontFamily: THEME.FONTS.SYMBOLS
   },
   emptyListLoader: {
+    backgroundColor: THEME.COLORS.GRAY_4,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     height: scale(230)
   },
   buyCryptoContainer: {
+    backgroundColor: THEME.COLORS.GRAY_4,
     width: PLATFORM.deviceWidth,
     height: scale(220),
     flexDirection: 'column',

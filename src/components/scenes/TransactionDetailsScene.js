@@ -8,6 +8,7 @@ import { Animated, Easing, Keyboard, ScrollView, TextInput, TouchableOpacity, Vi
 import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
+import { scale } from '../../lib/scaling.js'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import FormattedText from '../../modules/UI/components/FormattedText/index'
@@ -529,7 +530,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
 
     return (
       <Fragment>
-        <SceneWrapper>
+        <SceneWrapper background="body" bodySplit={scale(24)}>
           <ScrollView
             keyboardShouldPersistTaps="handled"
             ref="_scrollView"

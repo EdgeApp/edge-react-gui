@@ -17,14 +17,13 @@ import s from '../../locales/strings.js'
 import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
 import { openABAlert } from '../../modules/UI/components/ABAlert/action'
 import T from '../../modules/UI/components/FormattedText/index'
-import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import BackButton from '../../modules/UI/components/Header/Component/BackButton.ui'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import { PluginBridge, pop as pluginPop } from '../../modules/UI/scenes/Plugins/api'
 import { EdgeProvider } from '../../modules/UI/scenes/Plugins/EdgeProvider.js'
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
 import type { GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import styles from '../../styles/scenes/PluginsStyle.js'
+import { SceneWrapper } from '../common/SceneWrapper.js'
 
 const BACK = s.strings.title_back
 
@@ -308,8 +307,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
 
   render () {
     return (
-      <SafeAreaView>
-        <Gradient style={styles.gradient} />
+      <SceneWrapper background="body" hasTabs={false}>
         <WebView
           allowFileAccess
           allowUniversalAccessFromFileURLs
@@ -327,7 +325,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
           setWebContentsDebuggingEnabled={true}
           useWebKit
         />
-      </SafeAreaView>
+      </SceneWrapper>
     )
   }
 }

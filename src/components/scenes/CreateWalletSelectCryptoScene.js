@@ -28,7 +28,7 @@ const WALLET_TYPE_ORDER = [
   'wallet:dash',
   'wallet:digibyte',
   'wallet:vertcoin',
-  'wallet:ravencoin',
+  // 'wallet:ravencoin',
   'wallet:qtum',
   'wallet:feathercoin',
   'wallet:bitcoingold',
@@ -172,7 +172,7 @@ export class CreateWalletSelectCrypto extends Component<Props, State> {
     const formFieldHeight = scale(50)
 
     return (
-      <SceneWrapper avoidKeyboard>
+      <SceneWrapper avoidKeyboard background="body">
         {gap => (
           <View style={[styles.content, { marginBottom: -gap.bottom }]}>
             <FormField

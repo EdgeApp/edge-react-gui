@@ -277,7 +277,10 @@ export const privateKeyModalActivated = () => async (dispatch: Dispatch, getStat
   })
 
   const firstResponse = await launchModal(privateKeyModal)
-  if (!firstResponse) return
+  if (!firstResponse) {
+    dispatch({ type: 'ENABLE_SCAN' })
+    return
+  }
   setTimeout(() => {
     dispatch(sweepPrivateKeyStart())
     dispatch(secondaryModalActivated())
