@@ -111,6 +111,10 @@ android {
         versionName "99.99.99"
         renderscriptTargetApi 23
         renderscriptSupportModeEnabled true
+        // arm64 disabled due to https://github.com/facebook/react-native/issues/24261
+        ndk {
+          abiFilters "armeabi-v7a", "x86"
+        }
     }
     signingConfigs {
         release {

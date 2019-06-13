@@ -60,7 +60,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
       return null
     }
     dispatch(checkAndShowGetCryptoModal())
-  }
+  },
+  logout: (username?: string) => dispatch(actions.logoutRequest(username))
 })
 export default connect(
   mapStateToProps,
