@@ -345,7 +345,7 @@
   "string_fee_with_brackets": "(комиссия сети)",
   "title_Header": "Заголовок",
   "back_button_text": "Назад",
-  "back_button_tap_again_to_exit": "Пожалуйста, нажмите ОБРАТНО для выхода из приложения",
+  "back_button_tap_again_to_exit": "",
   "send_confirmation_enter_send_password": "Пароль",
   "tx_detail_picker_title": "выберите категорию:",
   "transaction_detail_no_wallet": "Не указаны кошелек или ...",
