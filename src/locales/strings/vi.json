@@ -345,7 +345,7 @@
   "string_fee_with_brackets": "(Phí)",
   "title_Header": "Tiêu đề",
   "back_button_text": "Trở lại",
-  "back_button_tap_again_to_exit": "Xin vui lòng bấm trở lại một lần nữa để thoát khỏi ứng dụng",
+  "back_button_tap_again_to_exit": "",
   "send_confirmation_enter_send_password": "Mật khẩu",
   "tx_detail_picker_title": "Chọn một danh mục:",
   "transaction_detail_no_wallet": "Không có đối tượng chi tiêu của giao dịch",
