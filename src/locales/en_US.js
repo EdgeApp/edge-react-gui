@@ -358,7 +358,7 @@ const strings = {
   string_fee_with_brackets: '(Fee)',
   title_Header: 'Header',
   back_button_text: 'Back',
-  back_button_tap_again_to_exit: 'Please tap BACK again to exit app',
+  back_button_tap_again_to_exit: 'Please tap BACK again to log out',
   send_confirmation_enter_send_password: 'Password',
   tx_detail_picker_title: 'Choose a category:',
   transaction_detail_no_wallet: 'No wallet on transaction object',

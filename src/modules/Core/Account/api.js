@@ -3,10 +3,6 @@
 // Core/Account/api.js
 import type { EdgeAccount, EdgeCreateCurrencyWalletOptions } from 'edge-core-js'
 
-export const logoutRequest = (account: EdgeAccount) => {
-  return account.logout()
-}
-
 export const getFirstActiveWalletInfo = (account: EdgeAccount, currencyCodes: { [string]: string }) => {
   const walletId = account.activeWalletIds[0]
   const walletKey = account.allKeys.find(key => key.id === walletId)

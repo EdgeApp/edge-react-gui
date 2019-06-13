@@ -166,7 +166,8 @@ type Props = {
   openDrawer: () => void,
   dispatchAddressDeepLinkReceived: (addressDeepLinkData: Object) => any,
   deepLinkPending: boolean,
-  checkAndShowGetCryptoModal: (?string) => void
+  checkAndShowGetCryptoModal: (?string) => void,
+  logout(): () => mixed
 }
 
 async function queryUtilServer (context: EdgeContext, folder: DiskletFolder, usernames: Array<string>) {
@@ -888,7 +889,8 @@ export default class Main extends Component<Props> {
       return false
     }
     if (this.isCurrentScene(Constants.WALLET_LIST_SCENE)) {
-      return HwBackButtonHandler()
+      if (!HwBackButtonHandler()) this.props.logout()
+      return true
     }
     if (this.isCurrentScene(Constants.EXCHANGE_QUOTE_SCENE)) {
       Actions.popTo(Constants.EXCHANGE_SCENE)
