@@ -193,7 +193,7 @@
     "react-native-slider": "^0.11.0",
     "react-native-slowlog": "^1.0.2",
     "react-native-smart-splash-screen": "git://github.com/swansontec/react-native-smart-splash-screen#fix-rn59",
-    "react-native-sortable-listview": "^0.2.8",
+    "react-native-sortable-listview": "git://github.com/EdgeApp/react-native-sortable-listview.git",
     "react-native-sound": "^0.10.12",
     "react-native-swipe-gestures": "^1.0.2",
     "react-native-tcp": "git://github.com/EdgeApp/react-native-tcp.git#77c60e4a38a46b19ffd7f69c07b95f6f43c9c999",
