@@ -120,7 +120,7 @@ class PluginView extends React.Component<Props> {
     super(props)
     setPluginScene(this)
 
-    let firstRun: boolean = true
+    let pageState: 'start' | 'blank' | 'loaded' = 'start'
 
     // Set up the plugin:
     const { dispatch, plugin, state } = this.props
@@ -134,14 +134,30 @@ class PluginView extends React.Component<Props> {
       root.setEdgeProvider(this._edgeProvider).catch(e => {
         console.warn('plugin setEdgeProvider error: ' + String(e))
       })
-      if (root.isFirstPage) {
-        if (firstRun) {
-          const js = `document.location = ${JSON.stringify(plugin.sourceFile.uri)}`
-          if (this.webview) this.webview.injectJavaScript(js)
-          firstRun = false
-        } else {
-          Actions.pop()
-        }
+
+      switch (pageState) {
+        case 'start':
+          if (root.isFirstPage) {
+            // This is our first time visiting the loading page:
+            pageState = 'blank'
+            const js = `document.location = ${JSON.stringify(plugin.sourceFile.uri)}`
+            if (this.webview) this.webview.injectJavaScript(js)
+          }
+          break
+
+        case 'blank':
+          if (!root.isFirstPage) {
+            // We made it into the plugin:
+            pageState = 'loaded'
+          }
+          break
+
+        case 'loaded':
+          if (root.isFirstPage) {
+            // We were in the plugin, but now we are back at the loading page:
+            pageState = 'start'
+            Actions.pop()
+          }
       }
     }, true)
 
