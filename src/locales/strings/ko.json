@@ -345,7 +345,7 @@
   "string_fee_with_brackets": "(수수료)",
   "title_Header": "헤더",
   "back_button_text": "뒤로",
-  "back_button_tap_again_to_exit": "종료하려면 다시 뒤로를 탭하십시오.",
+  "back_button_tap_again_to_exit": "",
   "send_confirmation_enter_send_password": "암호",
   "tx_detail_picker_title": "카테고리 선택:",
   "transaction_detail_no_wallet": "거래 개체에 월렛이 없음",
