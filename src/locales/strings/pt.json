@@ -345,7 +345,7 @@
   "string_fee_with_brackets": "(Taxa)",
   "title_Header": "Cabeçalho",
   "back_button_text": "Voltar",
-  "back_button_tap_again_to_exit": "Por favor, clique novamente para sair do aplicativo",
+  "back_button_tap_again_to_exit": "",
   "send_confirmation_enter_send_password": "Senha",
   "tx_detail_picker_title": "",
   "transaction_detail_no_wallet": "Sem carteira no objeto transação",
