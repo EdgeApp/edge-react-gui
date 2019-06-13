@@ -345,7 +345,7 @@
   "string_fee_with_brackets": "(Frais)",
   "title_Header": "En-tête",
   "back_button_text": "Précédent",
-  "back_button_tap_again_to_exit": "Veuillez cliquer sur RETOUR pour quitter l'application",
+  "back_button_tap_again_to_exit": "",
   "send_confirmation_enter_send_password": "Mot de passe",
   "tx_detail_picker_title": "Choisissez une catégorie :",
   "transaction_detail_no_wallet": "Aucun portefeuille sur l'objet de transaction",
