@@ -345,7 +345,7 @@
   "string_fee_with_brackets": "(费用)",
   "title_Header": "标头",
   "back_button_text": "返回",
-  "back_button_tap_again_to_exit": "再次按返回键即可退出软件",
+  "back_button_tap_again_to_exit": "",
   "send_confirmation_enter_send_password": "密码",
   "tx_detail_picker_title": "选择一个分类：",
   "transaction_detail_no_wallet": "交易对象上没有钱包",
