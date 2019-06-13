@@ -345,7 +345,7 @@
   "string_fee_with_brackets": "(手数料)",
   "title_Header": "ヘッダー",
   "back_button_text": "戻る",
-  "back_button_tap_again_to_exit": "アプリを終了するにはもう一度「戻る」をタップしてください",
+  "back_button_tap_again_to_exit": "",
   "send_confirmation_enter_send_password": "パスワード",
   "tx_detail_picker_title": "カテゴリーを選択：",
   "transaction_detail_no_wallet": "No wallet on transaction object",
