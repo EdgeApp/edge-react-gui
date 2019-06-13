@@ -345,7 +345,7 @@
   "string_fee_with_brackets": "(Gebühr)",
   "title_Header": "Kopfzeile",
   "back_button_text": "Zurück",
-  "back_button_tap_again_to_exit": "Tippen Sie bitte noch einmal auf ZURÜCK, um die App zu verlassen",
+  "back_button_tap_again_to_exit": "",
   "send_confirmation_enter_send_password": "Passwort",
   "tx_detail_picker_title": "Wählen Sie eine Kategorie:",
   "transaction_detail_no_wallet": "Keine Wallet beim Transaktionsgerät",
