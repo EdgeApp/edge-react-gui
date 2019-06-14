@@ -237,6 +237,7 @@
   "settings_set_custom_nodes_modal_title": "Configurer la personalisation de Nodes ",
   "settings_set_custom_nodes_modal_instructions": "Veuillez saisir les nodes de client que vous souhaitez à utiliser ci-dessous (une par ligne) ",
   "settings_set_custom_nodes_placeholder": "https://MyNode.Example:18081",
+  "settings_set_country_code_error": "",
   "string_cancel_cap": "Annuler",
   "string_cancel": "ANNULER",
   "string_ok_cap": "OK",
@@ -507,5 +508,7 @@
   "fixed_quote": "",
   "estimated_quote": "",
   "estimated_exchange_rate": "Taux de change estimé",
-  "estimated_exchange_rate_body": "Aucun fournisseur d'échange ne peut fournir une soumission fixe pour l'échange demandé. Cet échange peut entraîner moins de fonds reçus que ceux cités."
+  "estimated_exchange_rate_body": "Aucun fournisseur d'échange ne peut fournir une soumission fixe pour l'échange demandé. Cet échange peut entraîner moins de fonds reçus que ceux cités.",
+  "buy_sell_crypto_select_country_button": "",
+  "buy_sell_crypto_no_plugin_region": ""
 }
