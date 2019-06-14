@@ -237,6 +237,7 @@
   "settings_set_custom_nodes_modal_title": "Установить пользовательские узлы",
   "settings_set_custom_nodes_modal_instructions": "Пожалуйста, укажите пользовательские узлы, которые вы хотите использовать (по одному на строку):",
   "settings_set_custom_nodes_placeholder": "https://MyNode.Example:18081",
+  "settings_set_country_code_error": "",
   "string_cancel_cap": "Отмена",
   "string_cancel": "ОТМЕНА",
   "string_ok_cap": "",
@@ -507,5 +508,7 @@
   "fixed_quote": "",
   "estimated_quote": "",
   "estimated_exchange_rate": "",
-  "estimated_exchange_rate_body": ""
+  "estimated_exchange_rate_body": "",
+  "buy_sell_crypto_select_country_button": "",
+  "buy_sell_crypto_no_plugin_region": ""
 }
