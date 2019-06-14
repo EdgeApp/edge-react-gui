@@ -237,6 +237,7 @@
   "settings_set_custom_nodes_modal_title": "Thiết lập các nút tuỳ chỉnh",
   "settings_set_custom_nodes_modal_instructions": "Vui lòng nhập các nút tùy chỉnh bạn muốn sử dụng dưới đây (một cho mỗi hàng):",
   "settings_set_custom_nodes_placeholder": "https://MyNode.Example:18081",
+  "settings_set_country_code_error": "",
   "string_cancel_cap": "Huỷ",
   "string_cancel": "HUỶ",
   "string_ok_cap": "Đồng ý",
@@ -507,5 +508,7 @@
   "fixed_quote": "",
   "estimated_quote": "",
   "estimated_exchange_rate": "",
-  "estimated_exchange_rate_body": ""
+  "estimated_exchange_rate_body": "",
+  "buy_sell_crypto_select_country_button": "",
+  "buy_sell_crypto_no_plugin_region": ""
 }
