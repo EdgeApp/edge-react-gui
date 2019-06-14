@@ -237,6 +237,7 @@
   "settings_set_custom_nodes_modal_title": "커스텀 노드 설정",
   "settings_set_custom_nodes_modal_instructions": "사용하고 싶은 커스텀 노드를 입력하십시오 (라인당 한대):",
   "settings_set_custom_nodes_placeholder": "https://MyNode.Example:18081",
+  "settings_set_country_code_error": "",
   "string_cancel_cap": "취소",
   "string_cancel": "취소",
   "string_ok_cap": "OK",
@@ -507,5 +508,7 @@
   "fixed_quote": "",
   "estimated_quote": "",
   "estimated_exchange_rate": "",
-  "estimated_exchange_rate_body": ""
+  "estimated_exchange_rate_body": "",
+  "buy_sell_crypto_select_country_button": "",
+  "buy_sell_crypto_no_plugin_region": ""
 }
