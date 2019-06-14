@@ -237,6 +237,7 @@
   "settings_set_custom_nodes_modal_title": "设定自定义节点",
   "settings_set_custom_nodes_modal_instructions": "请在下面输入要使用的自定义节点 (每行一个):",
   "settings_set_custom_nodes_placeholder": "https://MyNode.Example:18081",
+  "settings_set_country_code_error": "",
   "string_cancel_cap": "取消",
   "string_cancel": "取消",
   "string_ok_cap": "确定",
@@ -507,5 +508,7 @@
   "fixed_quote": "",
   "estimated_quote": "",
   "estimated_exchange_rate": "",
-  "estimated_exchange_rate_body": ""
+  "estimated_exchange_rate_body": "",
+  "buy_sell_crypto_select_country_button": "",
+  "buy_sell_crypto_no_plugin_region": ""
 }
