@@ -32,8 +32,6 @@ import { THEME, colors } from '../../theme/variables/airbitz.js'
 import type { BuySellPlugin } from '../../types'
 import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { updateOneSetting } from '../../actions/SettingsActions.js'
-import { scale } from '../../lib/scaling.js'
 import { createCountrySelectionModal } from '../modals/CountrySelectionModal.js'
 
 type Props = {
@@ -188,7 +186,10 @@ class PluginList extends Component<Props, State> {
       countryName = countryData.name
       filename = countryData.filename ? countryData.filename : countryData.name.toLowerCase().replace(' ', '-')
       filteredPlugins = data.filter(plugin => {
-        return EDGE_PLUGIN_REGIONS[plugin.name.toLowerCase()].countryCodes[countryCode]
+        return (
+          // needed because "Spend" scene doesn't have a plugins JSON currently
+          plugin && plugin.name && EDGE_PLUGIN_REGIONS[plugin.name.toLowerCase()] && EDGE_PLUGIN_REGIONS[plugin.name.toLowerCase()].countryCodes[countryCode]
+        )
       })
     }
     const logoUrl = `${FLAG_LOGO_URL}/${filename}.png`

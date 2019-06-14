@@ -95,7 +95,7 @@ export class CountrySelectionModal extends Component<CountrySelectionModalProps,
               />
             </View>
             <FlatList
-              style={{ width: '100%', height: 500 }}
+              style={{ width: '100%', height: 400 }}
               data={finalCountryCodes}
               renderItem={this._renderItem}
               keyExtractor={this.keyExtractor}
@@ -107,7 +107,7 @@ export class CountrySelectionModal extends Component<CountrySelectionModalProps,
     )
   }
 
-  keyExtractor = (item: { filename?: string, name: string, ['alpha-2']: string }, index: number) => index
+  keyExtractor = (item: { filename?: string, name: string, ['alpha-2']: string }, index: number) => item.name
 }
 
 export const createCountrySelectionModal = (args: { countryCode: string }) =>
