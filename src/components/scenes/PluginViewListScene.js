@@ -188,7 +188,9 @@ class PluginList extends Component<Props, State> {
       filteredPlugins = data.filter(plugin => {
         return (
           // needed because "Spend" scene doesn't have a plugins JSON currently
-          plugin && plugin.name && EDGE_PLUGIN_REGIONS[plugin.name.toLowerCase()] && EDGE_PLUGIN_REGIONS[plugin.name.toLowerCase()].countryCodes[countryCode]
+          plugin &&
+          (plugin.pluginId === 'custom' ||
+            (plugin.name && EDGE_PLUGIN_REGIONS[plugin.name.toLowerCase()] && EDGE_PLUGIN_REGIONS[plugin.name.toLowerCase()].countryCodes[countryCode]))
         )
       })
     }
