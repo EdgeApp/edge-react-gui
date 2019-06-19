@@ -1,5 +1,14 @@
 # edge-react-gui
 
+## 1.8.1
+
+* Fix the minimum Android SDK version to 23+ (Android 6)
+
+## 1.8.0
+
+* React native upgrade + visual fixes
+* Prefer fixed-rate quotes over estimates
+
 ## 1.6.0
 
 * EOS support
