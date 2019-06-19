@@ -17,7 +17,6 @@ import { type DimensionsState, dimensions } from '../DimensionsReducer.js'
 import { type EditTokenState, editToken } from '../EditTokenReducer.js'
 import { type RequestTypeState, requestType } from '../RequestTypeReducer.js'
 import { type UniqueIdentifierModalState, uniqueIdentifierModal } from '../UniqueIdentifierModalReducer.js'
-import { type ChangeMiningFeeState, changeMiningFee } from './ChangeMiningFeeReducer.js'
 import { type CreateWalletState, createWallet } from './CreateWalletReducer.js'
 import { type RequestSceneState, request } from './RequestReducer.js'
 import { type ScanState, scan } from './ScanReducer.js'
@@ -28,7 +27,6 @@ import { type WalletListState, walletList } from './WalletListReducer.js'
 import { type WalletTransferListState, walletTransferList } from './WalletTransferListReducer.js'
 
 export type ScenesState = {
-  +changeMiningFee: ChangeMiningFeeState,
   +controlPanel: ControlPanelState,
   +createWallet: CreateWalletState,
   +currentScene: string,
@@ -65,7 +63,6 @@ const currentScene = (state = '', action: Action): string => {
 }
 
 export const scenes: Reducer<ScenesState, Action> = combineReducers({
-  changeMiningFee,
   controlPanel,
   createWallet,
   currentScene,

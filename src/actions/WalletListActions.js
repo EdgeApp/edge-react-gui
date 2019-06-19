@@ -9,12 +9,7 @@ import { setAccountBalanceVisibility, updateWalletFiatBalanceVisibility } from '
 export const updateActiveWalletsOrder = (activeWalletIds: Array<string>) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
-  dispatch({ type: 'UPDATE_ACTIVE_WALLETS_ORDER_START', data: { activeWalletIds } })
-  ACCOUNT_API.updateActiveWalletsOrderRequest(account, activeWalletIds)
-    .then(() => {
-      dispatch({ type: 'UPDATE_ACTIVE_WALLETS_ORDER_SUCCESS', data: { activeWalletIds } })
-    })
-    .catch(error => console.log(error))
+  ACCOUNT_API.updateActiveWalletsOrderRequest(account, activeWalletIds).catch(error => console.log(error))
 }
 
 export const toggleAccountBalanceVisibility = () => (dispatch: Dispatch, getState: GetState) => {
@@ -43,11 +38,5 @@ export const updateArchivedWalletsOrder = (archivedWalletIds: Array<string>) => 
   const state = getState()
   const { account } = state.core
 
-  dispatch({ type: 'UPDATE_ARCHIVED_WALLETS_ORDER_START', data: { archivedWalletIds } })
-
-  ACCOUNT_API.updateArchivedWalletsOrderRequest(account, archivedWalletIds)
-    .then((archivedWalletIds: Array<string>) => {
-      dispatch({ type: 'UPDATE_ARCHIVED_WALLETS_ORDER_SUCCESS', data: { archivedWalletIds } })
-    })
-    .catch(error => console.log(error))
+  ACCOUNT_API.updateArchivedWalletsOrderRequest(account, archivedWalletIds).catch(error => console.log(error))
 }

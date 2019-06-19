@@ -2,7 +2,7 @@
 
 /* globals test expect */
 
-import { errorAlert, passwordReminder, request, scenes, settings, transactionAlert, ui, wallets } from '../modules/UI/reducer.js'
+import { errorAlert, passwordReminder, scenes, settings, transactionAlert, ui, wallets } from '../modules/UI/reducer.js'
 
 const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
 
@@ -13,7 +13,6 @@ test('initialState', () => {
     passwordReminder: passwordReminder(undefined, dummyAction),
     scenes: scenes(undefined, dummyAction),
     wallets: wallets(undefined, dummyAction),
-    request: request(undefined, dummyAction),
     settings: settings(undefined, dummyAction)
   }
   const expected = initialState

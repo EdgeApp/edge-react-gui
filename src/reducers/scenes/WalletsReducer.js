@@ -269,10 +269,6 @@ const addTokenPending = (state = false, action: Action): boolean => {
       return true
     }
 
-    case 'ADD_TOKEN_SUCCESS': {
-      return false
-    }
-
     case 'ADD_NEW_CUSTOM_TOKEN_SUCCESS': {
       return false
     }

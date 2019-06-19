@@ -31,13 +31,7 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
         const state = getState()
         const account = CORE_SELECTORS.getAccount(state)
 
-        dispatch({ type: 'ACTIVATE_WALLET_START', data: { walletId } })
-
-        ACCOUNT_API.activateWalletRequest(account, walletId)
-          .then(() => {
-            dispatch({ type: 'ACTIVATE_WALLET_SUCCESS', data: { walletId } })
-          })
-          .catch(error => console.log(error))
+        ACCOUNT_API.activateWalletRequest(account, walletId).catch(error => console.log(error))
       }
     }
 
@@ -46,13 +40,7 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
         const state = getState()
         const account = CORE_SELECTORS.getAccount(state)
 
-        dispatch({ type: 'ARCHIVE_WALLET_START', data: { walletId } })
-
-        ACCOUNT_API.archiveWalletRequest(account, walletId)
-          .then(() => {
-            dispatch({ type: 'ARCHIVE_WALLET_SUCCESS', data: { walletId } })
-          })
-          .catch(error => console.log(error))
+        ACCOUNT_API.archiveWalletRequest(account, walletId).catch(error => console.log(error))
       }
     }
 

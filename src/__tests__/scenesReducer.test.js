@@ -11,7 +11,6 @@ const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
 test('initialState', () => {
   const expected = {
     controlPanel: {
-      selectedUser: null,
       usersView: false
     },
     createWallet: {
@@ -61,9 +60,6 @@ test('initialState', () => {
       parsedUri: null
     },
     sendConfirmation: SendConfirmationInitialState,
-    changeMiningFee: {
-      isCustomFeeVisible: false
-    },
     transactionAlert: {
       edgeTransaction: null,
       displayAlert: false
