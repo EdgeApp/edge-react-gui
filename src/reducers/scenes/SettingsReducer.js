@@ -285,15 +285,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case 'UI/SETTINGS/SET_LOGIN_STATUS': {
-      if (!action.data) throw new Error('Invalid action')
-      const { loginStatus } = action.data
-      return {
-        ...state,
-        loginStatus
-      }
-    }
-
     case 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED': {
       if (!action.data) throw new Error('Invalid action')
       const { pinLoginEnabled } = action.data

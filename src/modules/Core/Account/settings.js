@@ -277,8 +277,6 @@ export const setPINModeRequest = (account: EdgeAccount, pinMode: boolean) =>
     ? account.enablePIN() // $FlowFixMe isablePIN not found on EdgeAccount type
     : account.disablePIN()
 
-export const setPINRequest = (account: EdgeAccount, pin: string) => account.changePin({ pin })
-
 // Account Settings
 export const setAutoLogoutTimeInSecondsRequest = (account: EdgeAccount, autoLogoutTimeInSeconds: number) =>
   getSyncedSettings(account).then(settings => {

@@ -21,20 +21,6 @@ import { errorModal } from '../modules/UI/components/Modals/ErrorModal.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import { selectWallet as selectWalletAction } from './WalletActions.js'
 
-export const updateWalletName = (walletName: string) => ({
-  type: 'UPDATE_WALLET_NAME',
-  data: { walletName }
-})
-
-export const selectWalletType = (walletType: string) => ({
-  type: 'SELECT_WALLET_TYPE',
-  data: { walletType }
-})
-
-export const selectFiat = (fiat: string) => ({
-  type: 'SELECT_FIAT',
-  data: { fiat }
-})
 export const createCurrencyWalletAndAddToSwap = (walletName: string, walletType: string, fiatCurrencyCode: string) => (
   dispatch: Dispatch,
   getState: GetState
