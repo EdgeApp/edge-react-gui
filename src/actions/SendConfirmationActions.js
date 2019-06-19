@@ -45,8 +45,7 @@ export const newSpendInfo = (spendInfo: EdgeSpendInfo, authRequired: AuthType) =
 })
 
 export const reset = () => ({
-  type: 'UI/SEND_CONFIMATION/RESET',
-  data: {}
+  type: 'UI/SEND_CONFIMATION/RESET'
 })
 
 export const updateTransaction = (transaction: ?EdgeTransaction, guiMakeSpendInfo: ?GuiMakeSpendInfo, forceUpdateGui: ?boolean, error: ?Error) => ({

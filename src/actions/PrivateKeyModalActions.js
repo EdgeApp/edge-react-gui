@@ -8,8 +8,7 @@ export const sweepPrivateKeyStart = () => ({
 })
 
 export const sweepPrivateKeySuccess = () => ({
-  type: 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_SUCCESS',
-  data: {}
+  type: 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_SUCCESS'
 })
 
 export const sweepPrivateKeyFail = (error: Error) => ({
@@ -18,8 +17,7 @@ export const sweepPrivateKeyFail = (error: Error) => ({
 })
 
 export const sweepPrivateKeyReset = () => ({
-  type: 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_RESET',
-  data: {}
+  type: 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_RESET'
 })
 
 export const deactivated = () => (dispatch: Dispatch) => {
