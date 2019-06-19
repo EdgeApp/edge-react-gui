@@ -1,7 +1,7 @@
 v1.7.4
 
-* Beta Simplex sell
-* Warn users about high fees
+* 公測 Simplex 销售
+* 警告用户高收费
 
 v1.7.3
 
