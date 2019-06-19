@@ -26,14 +26,9 @@ type CountrySelectionModalState = {
 export class CountrySelectionModal extends Component<CountrySelectionModalProps, CountrySelectionModalState> {
   constructor (props: CountrySelectionModalProps) {
     super(props)
-    let input = ''
-    if (props.countryCode) {
-      const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === props.countryCode)
-      if (countryData) input = countryData.name
-    }
     const deviceCountry = DeviceInfo.getDeviceCountry() // "US"
     this.state = {
-      input,
+      input: '',
       countryCode: props.countryCode || deviceCountry || 'US'
     }
   }
