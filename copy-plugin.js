@@ -29,6 +29,15 @@ const pluginManifests = {
       provider: 'Edge Wallet',
       iconUrl: 'https://edge.app/wp-content/uploads/2019/05/icon_black_small.png',
       environment: {}
+    },
+    {
+      pluginId: 'io.safello',
+      pluginURL: 'https://safello.com/edge/',
+      name: 'Safello',
+      subtitle: 'BTC, ETH, XRP, BCH\nSettlement - Instant \n3 seconds after confirmed payment',
+      provider: 'Edge Wallet',
+      iconUrl: 'https://edge.app/wp-content/uploads/2019/06/Safello-Logo-Green-background.png',
+      environment: {}
     }
   ],
   spend: []
