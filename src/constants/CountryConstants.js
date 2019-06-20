@@ -588,6 +588,52 @@ export const EDGE_PLUGIN_REGIONS = {
     priority: 1,
     paymentType: 'crypto'
   },
+  safello: {
+    countryCodes: {
+      AD: true,
+      AT: true,
+      BE: true,
+      HR: true,
+      DK: true,
+      EE: true,
+      FI: true,
+      FR: true,
+      DE: true,
+      GI: true,
+      GR: true,
+      GG: true,
+      HU: true,
+      IS: true,
+      IE: true,
+      IM: true,
+      IT: true,
+      JE: true,
+      LV: true,
+      LI: true,
+      LT: true,
+      LU: true,
+      MT: true,
+      MC: true,
+      ME: true,
+      NL: true,
+      NO: true,
+      PL: true,
+      PT: true,
+      SM: true,
+      SK: true,
+      SI: true,
+      ES: true,
+      SE: true,
+      CH: true,
+      GB: true
+    },
+    cryptoCodes: {
+      BTC: true,
+      ETH: true
+    },
+    priority: 1,
+    paymentType: credit
+  },
   libertyx: {
     countryCodes: {
       US: true
