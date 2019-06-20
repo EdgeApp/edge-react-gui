@@ -632,7 +632,7 @@ export const EDGE_PLUGIN_REGIONS = {
       ETH: true
     },
     priority: 1,
-    paymentType: credit
+    paymentType: 'credit'
   },
   libertyx: {
     countryCodes: {
