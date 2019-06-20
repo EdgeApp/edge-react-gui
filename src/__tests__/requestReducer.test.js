@@ -6,7 +6,6 @@ import { request as requestReducer } from '../reducers/scenes/RequestReducer.js'
 
 test('initialState', () => {
   const expected = {
-    inputCurrencySelected: 'fiat',
     receiveAddress: {
       nativeAmount: '0',
       metadata: {},

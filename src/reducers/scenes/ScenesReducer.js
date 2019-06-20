@@ -3,7 +3,6 @@
 import { type Reducer, combineReducers } from 'redux'
 
 import type { Action } from '../../modules/ReduxTypes.js'
-import { ABAlert, type ABAlertState } from '../../modules/UI/components/ABAlert/reducer.js'
 import { type ControlPanelState, controlPanel } from '../../modules/UI/components/ControlPanel/reducer.js'
 import { type ExchangeRateState, exchangeRate } from '../../modules/UI/components/ExchangeRate/reducer.js'
 import { type HelpModalState, helpModal } from '../../modules/UI/components/HelpModal/reducer.js'
@@ -18,7 +17,6 @@ import { type DimensionsState, dimensions } from '../DimensionsReducer.js'
 import { type EditTokenState, editToken } from '../EditTokenReducer.js'
 import { type RequestTypeState, requestType } from '../RequestTypeReducer.js'
 import { type UniqueIdentifierModalState, uniqueIdentifierModal } from '../UniqueIdentifierModalReducer.js'
-import { type ChangeMiningFeeState, changeMiningFee } from './ChangeMiningFeeReducer.js'
 import { type CreateWalletState, createWallet } from './CreateWalletReducer.js'
 import { type RequestSceneState, request } from './RequestReducer.js'
 import { type ScanState, scan } from './ScanReducer.js'
@@ -29,8 +27,6 @@ import { type WalletListState, walletList } from './WalletListReducer.js'
 import { type WalletTransferListState, walletTransferList } from './WalletTransferListReducer.js'
 
 export type ScenesState = {
-  +ABAlert: ABAlertState,
-  +changeMiningFee: ChangeMiningFeeState,
   +controlPanel: ControlPanelState,
   +createWallet: CreateWalletState,
   +currentScene: string,
@@ -67,8 +63,6 @@ const currentScene = (state = '', action: Action): string => {
 }
 
 export const scenes: Reducer<ScenesState, Action> = combineReducers({
-  ABAlert,
-  changeMiningFee,
   controlPanel,
   createWallet,
   currentScene,

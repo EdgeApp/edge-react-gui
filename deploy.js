@@ -346,6 +346,7 @@ function buildCommonPost (buildObj) {
     }' 'https://api.appcenter.ms/v0.1/apps/${buildObj.appCenterGroupName}/${buildObj.appCenterAppName}/release_uploads'`
     let response = rmNewline(cmd(curl))
     let responseObj = JSON.parse(response)
+    console.log('Got reply', response)
 
     mylog('\n*** Uploading IPA/APK')
     curl = `curl -F "ipa=@${buildObj.ipaFile}" ${responseObj.upload_url}`
@@ -359,6 +360,7 @@ function buildCommonPost (buildObj) {
     }'`
     response = rmNewline(cmd(curl))
     responseObj = JSON.parse(response)
+    console.log('Got reply', response)
 
     mylog('\n*** Releasing to distribution group')
     curl = `curl -X PATCH --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'X-API-Token: ${

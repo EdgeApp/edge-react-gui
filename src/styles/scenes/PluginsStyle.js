@@ -17,6 +17,26 @@ export const styles = {
     alignItems: 'center',
     width: '100%'
   },
+  container: {
+    flex: 1,
+    alignItems: 'stretch'
+  },
+  selectedCountryWrapper: {
+    padding: scale(16),
+    backgroundColor: THEME.COLORS.GRAY_4,
+    borderBottomWidth: 1,
+    borderBottomColor: THEME.COLORS.GRAY_3
+  },
+  selectedCountry: {
+    color: THEME.COLORS.GRAY_1,
+    backgroundColor: THEME.COLORS.GRAY_3,
+    borderRadius: scale(5),
+    padding: scale(8)
+  },
+  selectedCountryTextWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
   pluginRow: {
     borderBottomWidth: 1,
     borderBottomColor: THEME.COLORS.GRAY_3,

@@ -169,7 +169,6 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
       global.firebase && global.firebase.analytics().logEvent(`Exchange_Shift_Success`)
     } catch (error) {
       global.firebase && global.firebase.analytics().logEvent(`Exchange_Shift_Failed`)
-      dispatch({ type: 'SHIFT_ERROR' }) // TODO: error.message was never used anywhere
       dispatch({ type: 'DONE_SHIFT_TRANSACTION' })
       setTimeout(() => {
         Alert.alert(s.strings.exchange_failed, error.message)

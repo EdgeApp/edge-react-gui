@@ -27,19 +27,6 @@ export const postponePasswordReminder = () => ({
   type: 'PASSWORD_REMINDER_MODAL/PASSWORD_REMINDER_POSTPONED'
 })
 
-// Loading data from account local folder
-export const setPasswordReminderStart = () => ({
-  type: 'PASSWORD_REMINDER_MODAL/SET_PASSWORD_REMINDER_START'
-})
-
-export const setPasswordReminderSuccess = () => ({
-  type: 'PASSWORD_REMINDER_MODAL/SET_PASSWORD_REMINDER_SUCCESS'
-})
-
-export const setPasswordReminderFail = () => ({
-  type: 'PASSWORD_REMINDER_MODAL/SET_PASSWORD_REMINDER_FAIL'
-})
-
 export const checkPassword = (password: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const account = state.core.account
@@ -59,13 +46,7 @@ export const checkPassword = (password: string) => (dispatch: Dispatch, getState
 export const setPasswordReminder = (passwordReminder: Object) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const account = state.core.account
-  dispatch(setPasswordReminderStart())
-  SETTINGS_API.setPasswordReminderRequest(account, passwordReminder).then(
-    () => {
-      dispatch(setPasswordReminderSuccess())
-    },
-    () => {
-      dispatch(setPasswordReminderFail())
-    }
-  )
+  SETTINGS_API.setPasswordReminderRequest(account, passwordReminder).catch(e => {
+    // We have never logged or reported this particular error.
+  })
 }

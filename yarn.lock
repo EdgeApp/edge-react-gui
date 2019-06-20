@@ -3399,9 +3399,9 @@ edge-login-ui-rn@0.5.33:
   dependencies:
     moment "^2.22.2"
 
-"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#71b32e5":
+"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#8e5d95f":
   version "0.0.3"
-  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#71b32e5d949ca466f0b59c182cd15e172db34b59"
+  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#8e5d95fa430cc752624497cf614173953016544f"
   dependencies:
     moment "^2.22.2"
 
@@ -9214,10 +9214,9 @@ react-native-vector-icons@^6.1.0:
     prop-types "^15.6.2"
     yargs "^8.0.2"
 
-react-native-webview@^5.6.2:
-  version "5.6.2"
-  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-5.6.2.tgz#aa257f01d0038c514874d1c41d99528f83274d8c"
-  integrity sha512-VSn3dMm/OpZH30AgoQ5IQZSgH3//1dCOrTC+63rmHQL3bhggMvk6C+OWen/YL2w3FCw0R0Z+PFs/uccCQI+aEw==
+"react-native-webview@git://github.com/swansontec/react-native-webview#edge-version":
+  version "5.12.0"
+  resolved "git://github.com/swansontec/react-native-webview#273f7a080fd1e64ef903280a5f171611e1a10562"
   dependencies:
     escape-string-regexp "1.0.5"
     invariant "2.2.4"

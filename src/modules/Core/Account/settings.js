@@ -26,6 +26,7 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   defaultFiat: 'USD',
   defaultIsoFiat: 'iso:USD',
   merchantMode: false,
+  countryCode: '',
   BTC: {
     denomination: '100'
   },
@@ -182,6 +183,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   defaultFiat: 'string',
   defaultIsoFiat: 'string',
   merchantMode: 'boolean',
+  countryCode: 'string',
   BTC: 'object',
   BCH: 'object',
   EOS: 'object',
@@ -274,8 +276,6 @@ export const setPINModeRequest = (account: EdgeAccount, pinMode: boolean) =>
   pinMode // $FlowFixMe enablePIN not found on EdgeAccount type
     ? account.enablePIN() // $FlowFixMe isablePIN not found on EdgeAccount type
     : account.disablePIN()
-
-export const setPINRequest = (account: EdgeAccount, pin: string) => account.changePin({ pin })
 
 // Account Settings
 export const setAutoLogoutTimeInSecondsRequest = (account: EdgeAccount, autoLogoutTimeInSeconds: number) =>

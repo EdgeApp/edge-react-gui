@@ -98,28 +98,20 @@ export class ContactsLoader extends Component<Props> {
   }
 
   loadContacts = () => {
-    this.props.loadContactsStart()
     return this.props
       .fetchContacts()
-      .then(this.filterContacts)
-      .then(this.sortContacts)
-      .then(this.handleSuccess, this.handleFail)
-  }
+      .catch(error => {
+        this.props.loadContactsFail(error)
+        return []
+      })
+      .then(contacts => {
+        const cleanContacts = contacts
+          .filter(item => item.givenName)
+          .concat(merchantPartners)
+          .sort((a, b) => a.givenName.toUpperCase().localeCompare(b.givenName.toUpperCase()))
 
-  filterContacts = (contacts: Array<GuiContact>) => {
-    return contacts.filter(item => item.givenName).concat(merchantPartners)
-  }
-
-  sortContacts = (contacts: Array<GuiContact>): Array<GuiContact> => {
-    return contacts.sort((a, b) => a.givenName.toUpperCase().localeCompare(b.givenName.toUpperCase()))
-  }
-
-  handleSuccess = (contacts: Array<GuiContact>) => {
-    this.props.loadContactsSuccess(contacts)
-  }
-
-  handleFail = (error: Error) => {
-    this.props.loadContactsFail(error)
+        this.props.loadContactsSuccess(cleanContacts)
+      })
   }
 
   render () {

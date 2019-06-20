@@ -7,16 +7,14 @@ import { type ScenesState, scenes } from '../../reducers/scenes/ScenesReducer.js
 import { type SettingsState, settings } from '../../reducers/scenes/SettingsReducer.js'
 import { type WalletsState, wallets } from '../../reducers/scenes/WalletsReducer.js'
 import { type Action } from '../ReduxTypes.js'
-import { type RequestState, request } from '../Request/reducer.js'
 import { type ErrorAlertState, errorAlert } from './components/ErrorAlert/reducer.js'
 import { type TransactionAlertState, transactionAlert } from './components/TransactionAlert/reducer.js'
 
-export { errorAlert, transactionAlert, passwordReminder, scenes, wallets, request, settings }
+export { errorAlert, transactionAlert, passwordReminder, scenes, wallets, settings }
 
 export type UiState = {
   +errorAlert: ErrorAlertState,
   +passwordReminder: PasswordReminderState,
-  +request: RequestState,
   +scenes: ScenesState,
   +settings: SettingsState,
   +transactionAlert: TransactionAlertState,
@@ -26,7 +24,6 @@ export type UiState = {
 const uiInner: Reducer<UiState, Action> = combineReducers({
   errorAlert,
   passwordReminder,
-  request,
   scenes,
   settings,
   transactionAlert,
