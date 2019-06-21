@@ -1,62 +1,62 @@
 // @flow
 
+import { StyleSheet } from 'react-native'
+
 import { scale } from '../../lib/scaling'
 import THEME from '../../theme/variables/airbitz'
 import { PagingWithDotStyles } from '../components/PagingWithDotStyles'
 
-const OnBoardingSceneStyles = {
-  /* modalContainer: {
-    flex: 1,
-    alignItems: 'center',
-    zIndex: 1,
-    elevation: 1
-  }, */
+export const styles = StyleSheet.create({
   mainContainer: {
-    alignItems: 'center',
+    backgroundColor: THEME.COLORS.PRIMARY,
     position: 'absolute',
-    top: 0,
+    bottom: 0,
     left: 0,
     right: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: THEME.COLORS.PRIMARY
+    top: 0
   },
-  dots: {
-    ...PagingWithDotStyles,
-    container: {
-      ...PagingWithDotStyles.container,
-      position: 'absolute',
-      top: '77%',
-      left: 0,
-      right: 0,
-      height: scale(20)
-    }
-  },
-  wrapper: {},
+
+  // Slide:
   slideContainer: {
-    width: '100%',
-    height: '100%',
-    flexDirection: 'row',
-    backgroundColor: THEME.COLORS.TRANSPARENT
-  },
-  slideContainer2: {
-    width: '100%',
-    height: '100%',
-    flexDirection: 'row',
-    backgroundColor: THEME.COLORS.ACCENT_MINT
-  },
-  buttonContainerRow: {
     position: 'absolute',
+    bottom: 0,
+    top: 0,
+    flexDirection: 'row',
+    alignItems: 'stretch'
+  },
+  slideImage: {
+    resizeMode: 'stretch',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    top: 0
+  },
+  slideText: {
+    color: THEME.COLORS.WHITE,
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    paddingHorizontal: scale(20),
+    position: 'absolute',
+    width: '100%'
+  },
+
+  // Skip button:
+  skipContainer: {
+    position: 'absolute',
+    top: '4%',
+    right: '4%'
+  },
+
+  // Navigation area:
+  buttonContainer: {
+    position: 'absolute',
+    top: '82%',
+    width: '100%',
     alignItems: 'center',
     justifyContent: 'space-around',
-    flexDirection: 'column',
-    width: '100%',
-    height: scale(THEME.BUTTONS.HEIGHT),
-    top: '82%'
-  },
-  buttonContainer: {
-    width: '50%',
-    height: scale(THEME.BUTTONS.HEIGHT)
+    flexDirection: 'column'
   },
   buttonText: {
     color: THEME.COLORS.WHITE,
@@ -65,18 +65,17 @@ const OnBoardingSceneStyles = {
   },
   button: {
     width: '30%'
-  },
-  textOnlyButton: {
-    width: '20%'
-  },
-  textOnlyContainer: {
+  }
+})
+
+export const dotStyles = {
+  ...PagingWithDotStyles,
+  container: {
+    ...PagingWithDotStyles.container,
     position: 'absolute',
-    alignItems: 'flex-end',
-    flexDirection: 'column',
-    width: '100%',
-    height: scale(THEME.BUTTONS.HEIGHT),
-    top: '3%'
+    top: '77%',
+    left: 0,
+    right: 0,
+    height: scale(20)
   }
 }
-
-export { OnBoardingSceneStyles }

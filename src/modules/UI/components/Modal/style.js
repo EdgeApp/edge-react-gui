@@ -8,12 +8,6 @@ import { PLATFORM } from '../../../../theme/variables/platform'
 
 export const styles = {
   // modal styles
-  modalContainer: {
-    flex: 1,
-    alignItems: 'center',
-    zIndex: 1,
-    elevation: 1
-  },
   topLevelModal: {
     alignItems: 'center',
     position: 'absolute',
