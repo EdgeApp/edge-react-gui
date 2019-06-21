@@ -210,7 +210,7 @@ export const styles = {
     borderWidth: 1,
     borderColor: '#CCCCCC',
     borderRadius: 3,
-    height: PLATFORM.deviceHeight * 0.13 - (PLATFORM.platform === 'android' ? scale(20) : 0),
+    height: PLATFORM.deviceHeight * 0.13 - (Platform.OS === 'android' ? scale(20) : 0),
     padding: scale(3)
   },
   notesInput: {
