@@ -164,7 +164,6 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
 
     if (accountInitObject.customTokens) {
       accountInitObject.customTokens.forEach(token => {
-        // dispatch(ADD_TOKEN_ACTIONS.setTokenSettings(token))
         accountInitObject.customTokensSettings.push(token)
         // this second dispatch will be redundant if we set 'denomination' property upon customToken creation
         accountInitObject.denominationKeys.push({ currencyCode: token.currencyCode, denominationKey: token.multiplier })

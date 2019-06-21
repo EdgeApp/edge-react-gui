@@ -295,17 +295,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case 'UI/SETTINGS/SET_CUSTOM_TOKENS': {
-      if (!action.data) throw new Error('Invalid action')
-      const { customTokens } = action.data
-      return {
-        ...state,
-        customTokens
-      }
-    }
-
     case 'UPDATE_EXISTING_TOKEN_SUCCESS': {
-      if (!action.data) throw new Error('Invalid action')
       const { tokenObj } = action.data
       const customTokenSettings = state.customTokens
       const newCustomTokenSettings = customTokenSettings.map(item => {
@@ -358,7 +348,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'DELETE_CUSTOM_TOKEN_SUCCESS': {
-      if (!action.data) throw new Error('Invalid action')
       const { currencyCode } = action.data
       const customTokenSettings = state.customTokens
       const newCustomTokenSettings = customTokenSettings.map(item => {
@@ -375,18 +364,10 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case 'SET_TOKEN_SETTINGS': {
-      if (!action.data) throw new Error('Invalid action')
-      const { currencyCode } = action.data
-      return {
-        ...state,
-        [currencyCode]: action.data
-      }
-    }
-
     case 'ADD_NEW_CUSTOM_TOKEN_SUCCESS': {
       if (!action.data) throw new Error('Invalid action')
-      const { tokenObj, newCurrencyCode, settings } = action.data
+      const { tokenObj, settings } = action.data
+      const newCurrencyCode = tokenObj.currencyCode
       const customTokens = settings.customTokens
       return {
         ...state,
@@ -396,7 +377,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS': {
-      if (!action.data) throw new Error('Invalid action')
       const { tokenObj, code, setSettings, oldCurrencyCode } = action.data
       const customTokens = setSettings.customTokens
       const oldCurrencyCodeIndex = _.findIndex(customTokens, item => item.currencyCode === oldCurrencyCode)
