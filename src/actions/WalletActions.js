@@ -283,6 +283,7 @@ export const getEnabledTokens = (walletId: string) => async (dispatch: Dispatch,
   const state = getState()
   // get the AbcWallet
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
+  if (!wallet) return
   const guiWallet = UI_SELECTORS.getWallet(state, walletId)
 
   // get token information from settings
