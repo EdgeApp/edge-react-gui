@@ -13,13 +13,14 @@ type Props = {
   headerText: string,
   launchModal: boolean,
   middleText: string,
-  icon: string,
-  iconType: string,
+  icon?: string,
+  iconType?: string,
+  iconImage?: string,
   cancelText: string,
   doneText: string,
   onCancel(): void,
   onDone(): void,
-  onExitButtonFxn(): void,
+  onExitButtonFxn?: () => void,
   iconImage?: string
 }
 
@@ -38,7 +39,9 @@ class TwoButtonTextModalComponent extends Component<Props> {
     if (this.props.iconImage) {
       return <Image source={this.props.iconImage} />
     }
-    return <Icon style={style.icon} name={this.props.icon} size={40} type={this.props.iconType} />
+    if (this.props.icon != null && this.props.iconType != null) {
+      return <Icon style={style.icon} name={this.props.icon} size={40} type={this.props.iconType} />
+    }
   }
   render () {
     const modalBottom = (
