@@ -15,7 +15,7 @@ const pluginManifests = {
       pluginId: 'com.libertyx',
       pluginURL: 'https://libertyx.com/a/',
       name: 'LibertyX',
-      subtitle: 'Buy Bitcoin with cash at US merchants\nBTC\nFee: 3-8% / Settlement: instant',
+      subtitle: 'Buy Bitcoin with cash at US merchants\nBTC\nFee: 3-8% / Settlement: Instant',
       provider: 'Edge Wallet',
       iconUrl: 'https://edge.app/wp-content/uploads/2019/05/libertyXlogo.png',
       environment: {},
@@ -25,7 +25,7 @@ const pluginManifests = {
       pluginId: 'io.moonpay.buy',
       pluginURL: 'https://buy.moonpay.io?apiKey=pk_live_Y1vQHUgfppB4oMEZksB8DYNQAdA4sauy',
       name: 'MoonPay',
-      subtitle: 'Buy crypto in Europe with credit card or Apple Pay\nBTC, ETH, BCH\nFee: 5.5% / Settlement: 10 mins',
+      subtitle: 'Buy or sell Crypto with credit card or Apple Pay\nBTC, ETH, BCH\nFee: 5.5% / Settlement: 10 mins',
       provider: 'Edge Wallet',
       iconUrl: 'https://edge.app/wp-content/uploads/2019/05/icon_black_small.png',
       environment: {}
@@ -34,7 +34,7 @@ const pluginManifests = {
       pluginId: 'io.safello',
       pluginURL: 'https://safello.com/edge/',
       name: 'Safello',
-      subtitle: 'BTC, ETH, XRP, BCH\nSettlement - Instant \n3 seconds after confirmed payment',
+      subtitle: 'Fiat currencies EUR, SEK, DKK, NOK, GBP, CHF, HUF, PLN\nFee: 4.75%\nSettlement - Instant',
       provider: 'Edge Wallet',
       iconUrl: 'https://edge.app/wp-content/uploads/2019/06/Safello-Logo-Green-background.png',
       environment: {}
