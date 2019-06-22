@@ -25,7 +25,7 @@ const pluginManifests = {
       pluginId: 'io.moonpay.buy',
       pluginURL: 'https://buy.moonpay.io?apiKey=pk_live_Y1vQHUgfppB4oMEZksB8DYNQAdA4sauy',
       name: 'MoonPay',
-      subtitle: 'Buy Crypto with credit card or Apple Pay\nBTC, ETH, BCH\nFee: 5.5% / Settlement: 10 mins',
+      subtitle: 'Buy crypto with credit card or Apple Pay\nBTC, ETH, XRP, LTC, BCH\nFee: 5.5% / Settlement: 10 mins',
       provider: 'Edge Wallet',
       iconUrl: 'https://edge.app/wp-content/uploads/2019/05/icon_black_small.png',
       environment: {}
