@@ -16,10 +16,6 @@ export const sweepPrivateKeyFail = (error: Error) => ({
   data: { error }
 })
 
-export const sweepPrivateKeyReset = () => ({
-  type: 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_RESET'
-})
-
 export const deactivated = () => (dispatch: Dispatch) => {
   setTimeout(() => dispatch(secondaryModalDeactivated()), 500)
 }

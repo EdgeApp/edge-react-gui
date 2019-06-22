@@ -1,7 +1,7 @@
 // @flow
 
 import { createSimpleConfirmModal } from 'edge-components'
-import type { EdgeCurrencyWallet, EdgeReceiveAddress } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import _ from 'lodash'
 import React from 'react'
 import { Actions } from 'react-native-router-flux'
@@ -25,21 +25,6 @@ import type { CustomTokenInfo } from '../types.js'
 import * as UTILS from '../util/utils'
 import { addTokenAsync } from './AddTokenActions.js'
 
-export const refreshReceiveAddress = (walletId: string, receiveAddress: EdgeReceiveAddress) => ({
-  type: 'UI/WALLETS/REFRESH_RECEIVE_ADDRESS',
-  data: {
-    walletId,
-    receiveAddress
-  }
-})
-
-export function insertWalletIdsForProgress (activeWalletIds: Array<string>) {
-  return {
-    type: 'INSERT_WALLET_IDS_FOR_PROGRESS',
-    data: { activeWalletIds }
-  }
-}
-
 export const refreshReceiveAddressRequest = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const currentWalletId = state.ui.wallets.selectedWalletId
@@ -47,7 +32,10 @@ export const refreshReceiveAddressRequest = (walletId: string) => (dispatch: Dis
   if (walletId === currentWalletId) {
     const wallet = state.core.wallets.byId[walletId]
     wallet.getReceiveAddress().then(receiveAddress => {
-      dispatch(refreshReceiveAddress(walletId, receiveAddress))
+      dispatch({
+        type: 'UI/WALLETS/REFRESH_RECEIVE_ADDRESS',
+        data: { walletId, receiveAddress }
+      })
     })
   }
 }

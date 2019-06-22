@@ -1,7 +1,7 @@
 // @flow
 
 import type { DiskletFolder } from 'disklet'
-import type { EdgeContext, EdgeCurrencyWallet, EdgeLobby, EdgeParsedUri, EdgeSwapQuote } from 'edge-core-js'
+import type { EdgeContext, EdgeCurrencyWallet, EdgeLobby, EdgeParsedUri, EdgeReceiveAddress, EdgeSwapQuote } from 'edge-core-js'
 
 import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
 import { type CustomTokenInfo, type GuiContact, type GuiCurrencyInfo, type GuiWallet } from '../types.js'
@@ -13,12 +13,9 @@ type LegacyActionName =
   | 'CORE/WALLETS/UPDATE_WALLETS'
   | 'DEEP_LINK_RECEIVED'
   | 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES'
-  | 'INSERT_WALLET_IDS_FOR_PROGRESS'
-  | 'LOGOUT'
   | 'NEW_RECEIVE_ADDRESS'
   | 'PERMISSIONS/UPDATE'
   | 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_FAIL'
-  | 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_RESET'
   | 'SET_CONFIRM_PASSWORD_ERROR'
   | 'SET_TRANSACTION_SUBCATEGORIES'
   | 'SPENDING_LIMITS/NEW_SPENDING_LIMITS'
@@ -51,7 +48,6 @@ type LegacyActionName =
   | 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED'
   | 'UI/SETTINGS/TOUCH_ID_SETTINGS'
   | 'UI/SETTINGS/UPDATE_SETTINGS'
-  | 'UI/WALLETS/REFRESH_RECEIVE_ADDRESS'
   | 'UI/WALLETS/SELECT_WALLET'
   | 'UI/WALLETS/UPSERT_WALLETS'
   | 'UNIQUE_IDENTIFIER_MODAL/UNIQUE_IDENTIFIER_CHANGED'
@@ -172,7 +168,12 @@ export type Action =
       data: { username: string }
     }
   | { type: 'DELETE_CUSTOM_TOKEN_SUCCESS', data: { currencyCode: string } }
+  | {
+      type: 'INSERT_WALLET_IDS_FOR_PROGRESS',
+      data: { activeWalletIds: Array<string> }
+    }
   | { type: 'IS_CHECKING_HANDLE_AVAILABILITY', data: boolean }
+  | { type: 'LOGOUT', data: { username?: string } }
   | { type: 'LOGS/SEND_LOGS_REQUEST', text: string }
   | { type: 'LOGS/SEND_LOGS_SUCCESS', result: string }
   | { type: 'LOGS/SEND_LOGS_FAILURE', error: Error }
@@ -206,6 +207,13 @@ export type Action =
   | { type: 'SAVE_EDGE_LOBBY', data: EdgeLobby }
   | { type: 'SET_LOBBY_ERROR', data: string }
   | { type: 'SET_FROM_WALLET_MAX', data: string }
+  | {
+      type: 'UI/WALLETS/REFRESH_RECEIVE_ADDRESS',
+      data: {
+        walletId: string,
+        receiveAddress: EdgeReceiveAddress
+      }
+    }
   | {
       type: 'UPDATE_EXISTING_TOKEN_SUCCESS',
       data: { tokenObj: CustomTokenInfo }

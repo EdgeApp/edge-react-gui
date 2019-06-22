@@ -7,7 +7,7 @@ import PushNotification from 'react-native-push-notification'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
-import { getEnabledTokens, insertWalletIdsForProgress } from '../../actions/WalletActions.js'
+import { getEnabledTokens } from '../../actions/WalletActions.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { displayErrorAlert } from '../../modules/UI/components/ErrorAlert/actions'
@@ -148,7 +148,10 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       accountInitObject.currencyCode = currencyCode
     }
     const activeWalletIds = account.activeWalletIds
-    dispatch(insertWalletIdsForProgress(activeWalletIds))
+    dispatch({
+      type: 'INSERT_WALLET_IDS_FOR_PROGRESS',
+      data: { activeWalletIds }
+    })
     const archivedWalletIds = account.archivedWalletIds
 
     accountInitObject.activeWalletIds = activeWalletIds
@@ -286,9 +289,10 @@ export const logoutRequest = (username?: string) => (dispatch: Dispatch, getStat
   Actions.popTo(Constants.LOGIN, { username })
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
-  dispatch(logout(username))
+  dispatch({ type: 'LOGOUT', data: { username } })
   account.logout()
 }
+
 export const deepLinkLogout = (backupKey: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
@@ -300,8 +304,3 @@ export const deepLinkLogout = (backupKey: string) => (dispatch: Dispatch, getSta
     account.logout()
   }
 }
-
-export const logout = (username?: string) => ({
-  type: 'LOGOUT',
-  data: { username }
-})
