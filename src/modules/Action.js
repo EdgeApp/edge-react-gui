@@ -1,12 +1,10 @@
 // @flow
 
-import type { EdgeCurrencyWallet, EdgeLobby, EdgeParsedUri, EdgeSwapQuote } from 'edge-core-js'
+import type { DiskletFolder } from 'disklet'
+import type { EdgeContext, EdgeCurrencyWallet, EdgeLobby, EdgeParsedUri, EdgeSwapQuote } from 'edge-core-js'
 
-import { type XPubModalAction } from '../actions/XPubModalActions.js'
 import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
 import { type CustomTokenInfo, type GuiContact, type GuiCurrencyInfo, type GuiWallet } from '../types.js'
-import { type CoreContextAction } from './Core/Context/action.js'
-import { type SendLogsAction } from './Logs/action.js'
 
 type LegacyActionName =
   | 'ACCOUNT_INIT_COMPLETE'
@@ -72,6 +70,7 @@ type NoDataActionName =
   | 'CLOSE_ALL_WALLET_LIST_MODALS'
   | 'CLOSE_HELP_MODAL'
   | 'CLOSE_SELECT_USER'
+  | 'CLOSE_VIEWXPUB_WALLET_MODAL'
   | 'DELETE_CUSTOM_TOKEN_FAILURE'
   | 'DELETE_CUSTOM_TOKEN_START'
   | 'DEVELOPER_MODE_OFF'
@@ -89,6 +88,7 @@ type NoDataActionName =
   | 'HIDE_PASSWORD_RECOVERY_MODAL'
   | 'INVALIDATE_EDGE_LOBBY'
   | 'LOGGED_OUT'
+  | 'LOGS/SEND_LOGS_PENDING'
   | 'MANAGE_TOKENS_START'
   | 'MANAGE_TOKENS_SUCCESS'
   | 'NEED_FINISH_KYC_OFF'
@@ -135,9 +135,6 @@ type NoDataActionName =
 export type Action =
   | { type: LegacyActionName, data: any }
   | { type: NoDataActionName }
-  | XPubModalAction
-  | CoreContextAction
-  | SendLogsAction
   // Actions with known payloads:
   | { type: 'ACCOUNT_ACTIVATION_INFO', data: HandleActivationInfo }
   | { type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO', data: AccountActivationPaymentInfo }
@@ -162,8 +159,27 @@ export type Action =
         tokenObj: CustomTokenInfo
       }
     }
+  | {
+      type: 'CORE/CONTEXT/ADD_CONTEXT',
+      data: { context: EdgeContext, folder: DiskletFolder }
+    }
+  | {
+      type: 'CORE/CONTEXT/ADD_USERNAMES',
+      data: { usernames: Array<string> }
+    }
+  | {
+      type: 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT',
+      data: { username: string }
+    }
   | { type: 'DELETE_CUSTOM_TOKEN_SUCCESS', data: { currencyCode: string } }
   | { type: 'IS_CHECKING_HANDLE_AVAILABILITY', data: boolean }
+  | { type: 'LOGS/SEND_LOGS_REQUEST', text: string }
+  | { type: 'LOGS/SEND_LOGS_SUCCESS', result: string }
+  | { type: 'LOGS/SEND_LOGS_FAILURE', error: Error }
+  | {
+      type: 'OPEN_VIEWXPUB_WALLET_MODAL',
+      data: { walletId: string, xPub: string | null }
+    }
   | {
       type: 'OVERWRITE_THEN_DELETE_TOKEN_SUCCESS',
       data: {

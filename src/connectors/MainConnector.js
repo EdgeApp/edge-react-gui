@@ -9,7 +9,6 @@ import { openDrawer, updateCurrentSceneKey } from '../actions/ScenesActions.js'
 import { showReEnableOtpModal } from '../actions/SettingsActions.js'
 import { selectWallet } from '../actions/WalletActions.js'
 import Main from '../components/Main.ui'
-import { addContext, addUsernames } from '../modules/Core/Context/action.js'
 import { requestPermission } from '../modules/PermissionsManager.js'
 import type { Dispatch } from '../modules/ReduxTypes'
 
@@ -24,12 +23,16 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   dispatchDisableScan: () => {
     return dispatch({ type: 'DISABLE_SCAN' })
   },
-  addContext: (context, folder) => {
-    return dispatch(addContext(context, folder))
-  },
-  addUsernames: usernames => {
-    return dispatch(addUsernames(usernames))
-  },
+  addContext: (context, folder) =>
+    dispatch({
+      type: 'CORE/CONTEXT/ADD_CONTEXT',
+      data: { context, folder }
+    }),
+  addUsernames: usernames =>
+    dispatch({
+      type: 'CORE/CONTEXT/ADD_USERNAMES',
+      data: { usernames }
+    }),
   updateCurrentSceneKey: sceneKey => {
     return dispatch(updateCurrentSceneKey(sceneKey))
   },
