@@ -43,6 +43,7 @@ type Props = {
 }
 
 type State = {
+  isSpendModal: boolean,
   data: Array<Object>
 }
 
@@ -50,6 +51,7 @@ class PluginList extends Component<Props, State> {
   constructor (props) {
     super(props)
     this.state = {
+      isSpendModal: false,
       data: []
     }
   }
@@ -199,7 +201,7 @@ class PluginList extends Component<Props, State> {
 
     return (
       <SceneWrapper background="body" hasTabs={false}>
-        <View style={styles.container}>
+        {this.state.isSpendModal || (
           <View style={styles.selectedCountryWrapper}>
             <TouchableWithoutFeedback style={styles.selectedCountry} onPress={this.openCountrySelectionModal}>
               <View style={styles.selectedCountryTextWrapper}>
@@ -211,14 +213,14 @@ class PluginList extends Component<Props, State> {
               </View>
             </TouchableWithoutFeedback>
           </View>
-          {!!countryCode && filteredPlugins.length === 0 ? (
-            <View style={{ flex: 1, width: '100%', padding: scale(50), justifyContent: 'center', alignItems: 'center' }}>
-              <Text style={{ textAlign: 'center' }}>{s.strings.buy_sell_crypto_no_plugin_region}</Text>
-            </View>
-          ) : (
-            <FlatList data={filteredPlugins} renderItem={this._renderPlugin} keyExtractor={item => item.name} />
-          )}
-        </View>
+        )}
+        {!!countryCode && filteredPlugins.length === 0 ? (
+          <View style={{ flex: 1, width: '100%', padding: scale(50), justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={{ textAlign: 'center' }}>{s.strings.buy_sell_crypto_no_plugin_region}</Text>
+          </View>
+        ) : (
+          <FlatList data={filteredPlugins} renderItem={this._renderPlugin} keyExtractor={item => item.name} />
+        )}
       </SceneWrapper>
     )
   }
@@ -237,9 +239,8 @@ class PluginBuySellComponent extends PluginList {
 
 class PluginSpendComponent extends PluginList {
   componentDidMount () {
-    const { countryCode } = this.props
-    if (!countryCode) this.openCountrySelectionModal()
     this.setState({
+      isSpendModal: true,
       data: spendPlugins(this.props.developerModeOn)
     })
   }
