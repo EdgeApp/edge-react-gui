@@ -137,7 +137,7 @@ export class EdgeProvider extends Bridgeable {
       showWalletCreators: false,
       state: this._state,
       headerTitle: s.strings.choose_your_wallet,
-      cantCancel: true,
+      cantCancel: false,
       excludedTokens,
       noWalletCodes
     }
