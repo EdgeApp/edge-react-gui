@@ -142,7 +142,13 @@ class PluginList extends Component<Props, State> {
   openCountrySelectionModal = async () => {
     const { account, updateCountryCode, countryCode } = this.props
     const modal = createCountrySelectionModal({ countryCode })
-    const selectedCountryCode = await launchModal(modal, { style: { margin: 0, justifyContent: 'flex-end' } })
+    const selectedCountryCode = await launchModal(modal, {
+      avoidKeyboard: false,
+      style: {
+        margin: 0,
+        justifyContent: 'flex-end'
+      }
+    })
     if (selectedCountryCode) {
       try {
         const syncedSettings = await getSyncedSettingsAsync(account)
