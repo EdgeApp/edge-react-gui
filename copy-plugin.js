@@ -34,7 +34,7 @@ const pluginManifests = {
       pluginId: 'io.safello',
       pluginURL: 'https://safello.com/edge/',
       name: 'Safello',
-      subtitle: 'Fee: 4.75%\nSettlement - Instant',
+      subtitle: 'Buy crypto with credit card\nBTC, ETH, XRP, BCH\nFee: 5.75% / Settlement - Instant',
       provider: 'Edge Wallet',
       iconUrl: 'https://edge.app/wp-content/uploads/2019/06/Safello-Logo-Green-background.png',
       environment: {}
