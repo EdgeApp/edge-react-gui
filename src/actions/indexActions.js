@@ -5,6 +5,7 @@ export * from './EdgeLoginActions.js'
 export * from './OtpActions.js'
 export * from './CreateWalletActions.js'
 export * from './ScanActions.js'
+export * from '../modules/UI/components/ABAlert/action.js'
 export * from '../modules/Settings/SettingsActions.js'
 export * from '../modules/Login/action.js'
 

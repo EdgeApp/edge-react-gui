@@ -138,6 +138,7 @@ exports[`Scan component should render with AUTHORIZED props 1`] = `
       </TouchableHighlight>
     </View>
   </Connect(SceneWrapperComponent)>
+  <Connect(ABAlert) />
   <Connect(SecondaryModal) />
 </React.Fragment>
 `;
@@ -280,6 +281,7 @@ exports[`Scan component should render with DENIED props 1`] = `
       </TouchableHighlight>
     </View>
   </Connect(SceneWrapperComponent)>
+  <Connect(ABAlert) />
   <Connect(SecondaryModal) />
 </React.Fragment>
 `;

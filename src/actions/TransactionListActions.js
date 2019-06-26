@@ -27,12 +27,21 @@ export const updateBalance = () => ({
   type: 'noop'
 })
 
+export const deleteTransactionsList = () => ({
+  type: 'UI/SCENES/TRANSACTION_LIST/DELETE_TRANSACTIONS_LIST'
+})
+
 export const transactionsSearchVisible = () => ({
   type: 'UI/SCENES/TRANSACTION_LIST/TRANSACTIONS_SEARCH_VISIBLE'
 })
 
 export const transactionsSearchHidden = () => ({
   type: 'UI/SCENES/TRANSACTION_LIST/TRANSACTIONS_SEARCH_HIDDEN'
+})
+
+export const updateSearchResults = (data: any) => ({
+  type: 'UI/SCENES/TRANSACTION_LIST/UPDATE_SEARCH_RESULTS',
+  data
 })
 
 export const CHANGED_TRANSACTIONS = 'UI/SCENES/TRANSACTION_LIST/CHANGED_TRANSACTIONS'

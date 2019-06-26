@@ -29,7 +29,7 @@ export default () => (next: Function) => (action: Action) => {
   if (action.type === 'UI/COMPONENTS/TRANSACTION_ALERT/DISPLAY_TRANSACTION_ALERT') {
     audioReceived.play(playCb(AUDIO_RECEUVED_FILE))
   }
-  if (action.type === 'PLAY_SEND_SOUND') {
+  if (action.type === 'OPEN_AB_ALERT' && action.data && action.data.success) {
     audioSent.play(playCb(AUDIO_SEND_FILE))
   }
   next(action)

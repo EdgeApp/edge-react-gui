@@ -4,6 +4,7 @@ import { StyleSheet } from 'react-native'
 
 import { scale } from '../../lib/scaling.js'
 import THEME from '../../theme/variables/airbitz'
+import { PLATFORM } from '../../theme/variables/platform'
 
 export const styles = {
   gradient: {
@@ -12,6 +13,9 @@ export const styles = {
     position: 'absolute'
   },
   container: {
+    position: 'relative',
+    height: PLATFORM.deviceHeight - 66,
+    top: scale(66),
     paddingHorizontal: scale(20),
     backgroundColor: THEME.COLORS.GRAY_4
   },
@@ -71,7 +75,7 @@ export const styles = {
     color: THEME.COLORS.ACCENT_RED
   },
   buttonsArea: {
-    marginVertical: scale(16),
+    marginTop: scale(16),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -114,6 +118,9 @@ export const styles = {
   modalDeleteButton: {
     marginLeft: scale(2),
     backgroundColor: THEME.COLORS.SECONDARY
+  },
+  bottomPaddingForKeyboard: {
+    height: scale(300)
   },
   highlight: {
     color: THEME.COLORS.PRIMARY_BUTTON_TOUCHED

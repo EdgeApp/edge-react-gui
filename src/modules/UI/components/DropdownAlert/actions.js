@@ -11,5 +11,6 @@ export const displayDropdownAlert = ({ type = 'custom', title = '', message = ''
 })
 
 export const dismissDropdownAlert = () => ({
-  type: 'UI/COMPONENTS/DROPDOWN_ALERT/DISMISS_DROPDOWN_ALERT'
+  type: 'UI/COMPONENTS/DROPDOWN_ALERT/DISMISS_DROPDOWN_ALERT',
+  data: {}
 })

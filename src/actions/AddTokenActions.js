@@ -16,6 +16,10 @@ export const addTokenStart = () => ({
   type: 'ADD_TOKEN_START'
 })
 
+export const addTokenSuccess = () => ({
+  type: 'ADD_TOKEN_SUCCESS'
+})
+
 export const addNewTokenSuccess = (walletId: string, tokenObj: CustomTokenInfo, settings: Object, enabledTokens: Array<string>) => ({
   type: 'ADD_NEW_CUSTOM_TOKEN_SUCCESS',
   data: { walletId, tokenObj, settings, enabledTokens, newCurrencyCode: tokenObj.currencyCode }

@@ -45,7 +45,8 @@ export const newSpendInfo = (spendInfo: EdgeSpendInfo, authRequired: AuthType) =
 })
 
 export const reset = () => ({
-  type: 'UI/SEND_CONFIMATION/RESET'
+  type: 'UI/SEND_CONFIMATION/RESET',
+  data: {}
 })
 
 export const updateTransaction = (transaction: ?EdgeTransaction, guiMakeSpendInfo: ?GuiMakeSpendInfo, forceUpdateGui: ?boolean, error: ?Error) => ({
@@ -237,15 +238,12 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
     edgeSignedTransaction.metadata = edgeMetadata
     edgeSignedTransaction.wallet = wallet
 
-    dispatch({ type: 'PLAY_SEND_SOUND' })
-    Alert.alert(s.strings.transaction_success, s.strings.transaction_success_message, [
-      {
-        onPress () {},
-        style: 'default',
-        text: s.strings.string_ok
-      }
-    ])
-
+    const successInfo = {
+      success: true,
+      title: s.strings.transaction_success,
+      message: s.strings.transaction_success_message
+    }
+    dispatch({ type: 'OPEN_AB_ALERT', data: successInfo })
     if (guiMakeSpendInfo.onDone) {
       guiMakeSpendInfo.onDone(null, edgeSignedTransaction)
     } else {
@@ -254,24 +252,21 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
   } catch (e) {
     console.log(e)
     dispatch(updateSpendPending(false))
-    let message = sprintf(s.strings.transaction_failure_message, e.message)
+    const errorInfo = {
+      success: false,
+      title: s.strings.transaction_failure,
+      message: sprintf(s.strings.transaction_failure_message, e.message)
+    }
     if (e.name === 'ErrorEosInsufficientCpu') {
-      message = s.strings.send_confirmation_eos_error_cpu
+      errorInfo.message = s.strings.send_confirmation_eos_error_cpu
     } else if (e.name === 'ErrorEosInsufficientNet') {
-      message = s.strings.send_confirmation_eos_error_net
+      errorInfo.message = s.strings.send_confirmation_eos_error_net
     } else if (e.name === 'ErrorEosInsufficientRam') {
-      message = s.strings.send_confirmation_eos_error_ram
+      errorInfo.message = s.strings.send_confirmation_eos_error_ram
     }
 
     dispatch(updateTransaction(edgeSignedTransaction, null, true, new Error('broadcastError')))
-    Alert.alert(s.strings.transaction_failure, message, [
-      {
-        onPress () {},
-        style: 'default',
-        text: s.strings.string_ok
-      }
-    ])
-
+    dispatch({ type: 'OPEN_AB_ALERT', data: errorInfo })
     if (guiMakeSpendInfo.onDone) {
       guiMakeSpendInfo.onDone(e)
       Actions.pop()

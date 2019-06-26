@@ -26,21 +26,50 @@ import { newSpendingLimits } from '../reducers/SpendingLimitsReducer.js'
 import { THEME, colors } from '../theme/variables/airbitz.js'
 import { disableOtp, keepOtp } from './OtpActions.js'
 
-export const updateOneSetting = (setting: Object) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const settings = state.ui.settings
-  const updatedSettings = {
-    ...settings,
-    ...setting
-  }
-  dispatch(SETTINGS_ACTIONS.updateSettings(updatedSettings))
-}
+const setPINModeStart = (pinMode: boolean) => ({
+  type: 'UI/SCENES/SETTINGS/SET_PIN_MODE_START',
+  data: { pinMode }
+})
+
+const setPINStart = (pin: string) => ({
+  type: 'UI/SCENES/SETTINGS/SET_PIN_START',
+  data: { pin }
+})
+
+const setDefaultFiatStart = (defaultFiat: string) => ({
+  type: 'UI/SCENES/SETTINGS/SET_DEFAULT_FIAT_START',
+  data: { defaultFiat }
+})
+
+const setMerchantModeStart = (merchantMode: boolean) => ({
+  type: 'UI/SCENES/SETTINGS/SET_MERCHANT_MODE_START',
+  data: { merchantMode }
+})
+
+const setBluetoothModeStart = (bluetoothMode: boolean) => ({
+  type: 'UI/SCENES/SETTINGS/SET_BLUETOOTH_MODE_START',
+  data: { bluetoothMode }
+})
 
 export const setPINModeRequest = (pinMode: boolean) => (dispatch: Dispatch, getState: GetState) => {
+  dispatch(setPINModeStart(pinMode))
+
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
   ACCOUNT_SETTINGS.setPINModeRequest(account, pinMode)
     .then(() => dispatch(SETTINGS_ACTIONS.setPINMode(pinMode)))
+    .catch(error => {
+      console.error(error)
+    })
+}
+
+export const setPINRequest = (pin: string) => (dispatch: Dispatch, getState: GetState) => {
+  dispatch(setPINStart(pin))
+
+  const state = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  ACCOUNT_SETTINGS.setPINRequest(account, pin)
+    .then(() => dispatch(SETTINGS_ACTIONS.setPIN(pin)))
     .catch(error => {
       console.error(error)
     })
@@ -62,6 +91,8 @@ export const setAutoLogoutTimeInSecondsRequest = (autoLogoutTimeInSeconds: numbe
 }
 
 export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatch, getState: GetState) => {
+  dispatch(setDefaultFiatStart(defaultFiat))
+
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
 
@@ -101,6 +132,8 @@ export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatc
 }
 
 export const setMerchantModeRequest = (merchantMode: boolean) => (dispatch: Dispatch, getState: GetState) => {
+  dispatch(setMerchantModeStart(merchantMode))
+
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
   ACCOUNT_SETTINGS.setMerchantModeRequest(account, merchantMode)
@@ -111,6 +144,8 @@ export const setMerchantModeRequest = (merchantMode: boolean) => (dispatch: Disp
 }
 
 export const setBluetoothModeRequest = (bluetoothMode: boolean) => (dispatch: Dispatch, getState: GetState) => {
+  dispatch(setBluetoothModeStart(bluetoothMode))
+
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
   ACCOUNT_SETTINGS.setBluetoothModeRequest(account, bluetoothMode)

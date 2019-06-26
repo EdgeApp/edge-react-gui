@@ -15,6 +15,7 @@ import { scale } from '../../lib/scaling.js'
 import s from '../../locales/strings.js'
 import { PermissionStatusStrings } from '../../modules/PermissionsManager.js'
 import type { PermissionStatus } from '../../modules/PermissionsManager.js'
+import ABAlert from '../../modules/UI/components/ABAlert/indexABAlert'
 import T from '../../modules/UI/components/FormattedText/index'
 import WalletListModal from '../../modules/UI/components/WalletListModal/WalletListModalConnector'
 import styles, { styles as styleRaw } from '../../styles/scenes/ScaneStyle'
@@ -97,6 +98,7 @@ export class Scan extends Component<Props> {
           </View>
           {this.props.showToWalletModal && <WalletListModal wallets={allowedWallets} type={Constants.FROM} onSelectWallet={onSelectWallet} />}
         </SceneWrapper>
+        <ABAlert />
         <SecondaryModal />
       </Fragment>
     )

@@ -17,9 +17,19 @@ export const setPINMode = (pinMode: boolean) => ({
   data: { pinMode }
 })
 
+export const setPIN = (pin: string | number) => ({
+  type: 'UI/SETTINGS/SET_PIN',
+  data: { pin }
+})
+
 export const setOTPMode = (otpMode: boolean) => ({
   type: 'UI/SETTINGS/SET_OTP_MODE',
   data: { otpMode }
+})
+
+export const setOTP = (otp: string) => ({
+  type: 'UI/SETTINGS/SET_OTP',
+  data: { otp }
 })
 
 export const setAutoLogoutTimeInSeconds = (autoLogoutTimeInSeconds: number) => ({

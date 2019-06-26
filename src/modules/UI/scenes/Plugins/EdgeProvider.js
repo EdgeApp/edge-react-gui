@@ -12,7 +12,6 @@ import { SEND_CONFIRMATION } from '../../../../constants/SceneKeys.js'
 import s from '../../../../locales/strings'
 import * as SETTINGS_SELECTORS from '../../../../modules/Settings/selectors.js'
 import type { GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
-import type { GuiWallet } from '../../../../types'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import type { Dispatch, State } from '../../../ReduxTypes.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
@@ -21,14 +20,6 @@ type EdgeReceiveAddress = {
   publicAddress?: string,
   segwitAddress?: string,
   legacyAddress?: string
-}
-type WalletDetails = {
-  name: string,
-  receiveAddress: {
-    publicAddress: string
-  },
-  currencyCode: string,
-  fiatCurrencyCode: string
 }
 
 type EdgeRequestSpendOptions = {
@@ -151,22 +142,11 @@ export class EdgeProvider extends Bridgeable {
 
   // Get an address from the user's wallet
   getReceiveAddress (options: EdgeGetReceiveAddressOptions): EdgeReceiveAddress {
-    const wallet: GuiWallet = UI_SELECTORS.getSelectedWallet(this._state)
-    if (options && options.metadata) {
+    const wallet = UI_SELECTORS.getSelectedWallet(this._state)
+    if (options.metadata) {
       wallet.receiveAddress.metadata = options.metadata
     }
     return Promise.resolve(wallet.receiveAddress)
-  }
-
-  getCurrentWalletInfo (): Promise<WalletDetails> {
-    const wallet: GuiWallet = UI_SELECTORS.getSelectedWallet(this._state)
-    const returnObject: WalletDetails = {
-      name: wallet.name,
-      receiveAddress: wallet.receiveAddress,
-      currencyCode: wallet.currencyCode,
-      fiatCurrencyCode: wallet.fiatCurrencyCode
-    }
-    return Promise.resolve(returnObject)
   }
 
   // Write data to user's account. This data is encrypted and persisted in their Edge
@@ -188,7 +168,7 @@ export class EdgeProvider extends Bridgeable {
     for (let i = 0; i < keys.length; i++) {
       returnObj[keys[i]] = await store.getItem(this._pluginName, keys[i]).catch(e => undefined)
     }
-    return Promise.resolve(returnObj)
+    return returnObj
   }
 
   // Request that the user spend to an address or multiple addresses

@@ -74,7 +74,6 @@ export type SettingsState = {
   defaultIsoFiat: string,
   isOtpEnabled: boolean,
   isTouchEnabled: boolean,
-  countryCode: string,
   isTouchSupported: boolean,
   loginStatus: boolean | null,
   merchantMode: boolean,
@@ -203,7 +202,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         defaultFiat,
         defaultIsoFiat,
         merchantMode,
-        countryCode,
         customTokens,
         bluetoothMode,
         pinMode,
@@ -228,7 +226,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         defaultIsoFiat,
         merchantMode,
         customTokens,
-        countryCode,
         bluetoothMode,
         pinMode,
         pinLoginEnabled,
@@ -282,6 +279,15 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       return {
         ...state,
         confirmPasswordError: confirmPasswordError
+      }
+    }
+
+    case 'UI/SETTINGS/SET_LOGIN_STATUS': {
+      if (!action.data) throw new Error('Invalid action')
+      const { loginStatus } = action.data
+      return {
+        ...state,
+        loginStatus
       }
     }
 

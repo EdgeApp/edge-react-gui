@@ -15,6 +15,7 @@ import { selectWallet } from '../../actions/WalletActions'
 import { javascript } from '../../lib/bridge/injectThisInWebView.js'
 import s from '../../locales/strings.js'
 import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
+import { openABAlert } from '../../modules/UI/components/ABAlert/action'
 import T from '../../modules/UI/components/FormattedText/index'
 import BackButton from '../../modules/UI/components/Header/Component/BackButton.ui'
 import { PluginBridge, pop as pluginPop } from '../../modules/UI/scenes/Plugins/api'
@@ -29,6 +30,7 @@ const BACK = s.strings.title_back
 type PluginProps = {
   plugin: any,
   navigation: any,
+  showAlert: Function,
   account: any,
   guiWallet: any,
   coreWallet: any,
@@ -86,6 +88,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
       pluginId: this.plugin.pluginId,
       toggleWalletList: this.toggleWalletList,
       chooseWallet: this.chooseWallet,
+      showAlert: this.props.showAlert,
       back: this._webviewBack,
       renderTitle: this._renderTitle,
       edgeCallBack: this.edgeCallBack
@@ -349,6 +352,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
+  showAlert: alertSyntax => dispatch(openABAlert('OPEN_AB_ALERT', alertSyntax)),
   selectWallet: (walletId: string, currencyCode: string) => dispatch(selectWallet(walletId, currencyCode)),
   sendConfirmationUpdateTx: (info: GuiMakeSpendInfo) => dispatch(sendConfirmationUpdateTx(info)),
   thisDispatch: dispatch

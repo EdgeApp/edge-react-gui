@@ -21,7 +21,6 @@ export const GET_SEED = 'user-secret'
 export const EXCHANGE_ICON = 'exchange'
 export const QUESTION_ICON = 'question'
 export const FA_MONEY_ICON = 'money'
-export const FLAG = 'flag-o'
 
 // Feather
 export const FEATHER_ICONS = 'featherIcons'

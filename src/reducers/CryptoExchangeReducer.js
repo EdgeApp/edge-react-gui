@@ -187,6 +187,30 @@ function cryptoExchangeInner (state = initialState, action: Action): CryptoExcha
       }
     }
 
+    case 'INVALIDATE_SHIFT_TRANSACTION': {
+      return {
+        ...state,
+        quote: null,
+        insufficientError: false,
+        genericShapeShiftError: null,
+        quoteExpireDate: null
+      }
+    }
+
+    case 'SHIFT_ERROR': {
+      return {
+        ...state,
+        confirmTransactionModalVisible: false
+      }
+    }
+
+    case 'CLOSE_CRYPTO_EXEC_CONF_MODAL': {
+      return {
+        ...state,
+        confirmTransactionModalVisible: false
+      }
+    }
+
     case 'RECEIVED_INSUFFICENT_FUNDS_ERROR': {
       return {
         ...state,

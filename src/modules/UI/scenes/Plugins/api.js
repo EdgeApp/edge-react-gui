@@ -1,11 +1,10 @@
 // @flow
 
 import type { EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
-import { Alert, Linking } from 'react-native'
+import { Linking } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import { SEND_CONFIRMATION } from '../../../../constants/SceneKeys.js'
-import s from '../../../../locales/strings.js'
 import { type GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
 import * as WALLET_API from '../../../Core/Wallets/api'
 
@@ -227,13 +226,7 @@ export class PluginBridge {
   }
 
   showAlert (data: any): Promise<boolean> {
-    Alert.alert(data['title'], data['message'], [
-      {
-        onPress () {},
-        style: 'default',
-        text: s.strings.string_ok
-      }
-    ])
+    this.context.showAlert({ success: data['success'], title: data['title'], message: data['message'] })
     return Promise.resolve(true)
   }
 

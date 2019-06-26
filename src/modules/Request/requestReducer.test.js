@@ -2,14 +2,20 @@
 
 /* globals test expect */
 
-import { request as requestReducer } from '../reducers/scenes/RequestReducer.js'
+import { request as requestReducer } from './reducer.js'
 
 test('initialState', () => {
   const expected = {
-    inputCurrencySelected: 'fiat',
     receiveAddress: {
-      nativeAmount: '0',
-      metadata: {},
+      amountSatoshi: 0,
+      metadata: {
+        amountFiat: 0,
+        bizId: null,
+        category: '',
+        miscJson: '',
+        notes: '',
+        payeeName: ''
+      },
       publicAddress: ''
     }
   }

@@ -2,6 +2,8 @@
 
 import React from 'react'
 import { Platform } from 'react-native'
+import RNFS from 'react-native-fs'
+import { Actions } from 'react-native-router-flux'
 import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
 import { Bridge, onMethod } from 'yaob'
@@ -111,13 +113,14 @@ type PluginWorkerApi = {
 
 class PluginView extends React.Component<Props> {
   _callbacks: WebViewCallbacks
-  _canGoBack: boolean
   _edgeProvider: EdgeProvider
-  _webview: WebView | void
+  webview: WebView | void
 
   constructor (props) {
     super(props)
     setPluginScene(this)
+
+    let pageState: 'start' | 'blank' | 'loaded' = 'start'
 
     // Set up the plugin:
     const { dispatch, plugin, state } = this.props
@@ -127,18 +130,41 @@ class PluginView extends React.Component<Props> {
     this._edgeProvider = new EdgeProvider(plugin.pluginId, state, dispatch)
 
     // Set up the WebView bridge:
-    this._canGoBack = false
     this._callbacks = makeOuterWebViewBridge((root: PluginWorkerApi) => {
       root.setEdgeProvider(this._edgeProvider).catch(e => {
         console.warn('plugin setEdgeProvider error: ' + String(e))
       })
+
+      switch (pageState) {
+        case 'start':
+          if (root.isFirstPage) {
+            // This is our first time visiting the loading page:
+            pageState = 'blank'
+            const js = `document.location = ${JSON.stringify(plugin.sourceFile.uri)}`
+            if (this.webview) this.webview.injectJavaScript(js)
+          }
+          break
+
+        case 'blank':
+          if (!root.isFirstPage) {
+            // We made it into the plugin:
+            pageState = 'loaded'
+          }
+          break
+
+        case 'loaded':
+          if (root.isFirstPage) {
+            // We were in the plugin, but now we are back at the loading page:
+            pageState = 'start'
+            Actions.pop()
+          }
+      }
     }, true)
 
     // Capture the WebView ref:
     const { setRef } = this._callbacks
     this._callbacks.setRef = (element: WebView | void) => {
-      if (element == null) this._canGoBack = false
-      this._webview = element
+      this.webview = element
       setRef(element)
     }
   }
@@ -147,20 +173,8 @@ class PluginView extends React.Component<Props> {
     this._edgeProvider.updateState(this.props.state)
   }
 
-  goBack (): boolean {
-    if (this._webview == null || !this._canGoBack) {
-      return false
-    }
-    this._webview.goBack()
-    return true
-  }
-
-  onNavigationStateChange = event => {
-    this._canGoBack = event.canGoBack
-  }
-
   render () {
-    const { uri } = this.props.plugin.sourceFile
+    const uri = Platform.OS === 'android' ? 'file:///android_asset/blank.html' : `file://${RNFS.MainBundlePath}/blank.html`
     const userAgent =
       Platform.OS === 'android'
         ? 'Mozilla/5.0 (Linux; U; Android 4.4.2; en-us; SCH-I535 Build/KOT49H) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30'
@@ -173,7 +187,6 @@ class PluginView extends React.Component<Props> {
           geolocationEnabled
           injectedJavaScript={javascript}
           javaScriptEnabled={true}
-          onNavigationStateChange={this.onNavigationStateChange}
           onMessage={this._callbacks.onMessage}
           originWhitelist={['file://', 'https://', 'http://', 'edge://']}
           ref={this._callbacks.setRef}
