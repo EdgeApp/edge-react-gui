@@ -510,5 +510,6 @@
   "estimated_exchange_rate": "Taux de change estimé",
   "estimated_exchange_rate_body": "Aucun fournisseur d'échange ne peut fournir une soumission fixe pour l'échange demandé. Cet échange peut entraîner moins de fonds reçus que ceux cités.",
   "buy_sell_crypto_select_country_button": "",
-  "buy_sell_crypto_no_plugin_region": ""
+  "buy_sell_crypto_no_plugin_region": "",
+  "user_closed_modal_no_wallet": ""
 }
