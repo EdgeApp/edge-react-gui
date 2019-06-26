@@ -1,5 +1,9 @@
 # edge-react-gui
 
+## 1.8.2
+
+* Fix all-zero exchange rates
+
 ## 1.8.1
 
 * Fix the minimum Android SDK version to 23+ (Android 6)
