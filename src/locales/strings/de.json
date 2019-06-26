@@ -510,5 +510,6 @@
   "estimated_exchange_rate": "",
   "estimated_exchange_rate_body": "",
   "buy_sell_crypto_select_country_button": "",
-  "buy_sell_crypto_no_plugin_region": ""
+  "buy_sell_crypto_no_plugin_region": "",
+  "user_closed_modal_no_wallet": ""
 }
