@@ -1,14 +1,13 @@
 // @flow
 
 import React, { type ChildrenArray, type ComponentType, type Node } from 'react'
-import { Dimensions, Platform, StatusBar, StyleSheet, View } from 'react-native'
-// $FlowFixMe See https://github.com/react-native-community/react-native-safe-area-view/pull/77
-import { getInset } from 'react-native-safe-area-view'
+import { Platform, StyleSheet, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import { type State } from '../../modules/ReduxTypes.js'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
+import { LayoutContext } from './LayoutContext.js'
 
 /**
  * Describes the gap between the edge of the content area and
@@ -70,47 +69,39 @@ type StateProps = {
 function SceneWrapperComponent (props: Props & StateProps) {
   const { children, avoidKeyboard = false, background = 'header', bodySplit = 0, hasHeader = true, hasTabs = true, keyboardHeight } = props
 
-  // In the future, ReactNative itself will expose the safe area dimensions:
-  // https://github.com/facebook/react-native/pull/20999
-  //
-  // For now, we need to use the community react-native-safe-area-view,
-  // which exposes these dimensions with a bit of work.
-  const { width, height } = Dimensions.get('window')
-  const landscape = width > height
-  const hardwareGap = {
-    bottom: isIos ? getInset('bottom', landscape) : 0,
-    left: isIos ? getInset('left', landscape) : 0,
-    right: isIos ? getInset('right', landscape) : 0,
-    top: isIos ? getInset('top', landscape) : StatusBar.currentHeight
-  }
-
-  // Next, compensate for various react-navigation components:
-  const gap = {
-    bottom: avoidKeyboard && keyboardHeight > 0 ? keyboardHeight : hasTabs ? 0 : hardwareGap.bottom,
-    left: hardwareGap.left,
-    right: hardwareGap.right,
-    top: hardwareGap.top + (hasHeader ? getHeaderHeight() : 0)
-  }
-
-  // Pass the gap to our children, if they want it:
-  const finalChildren = typeof children === 'function' ? children(gap) : children
-
-  // Use a height-based layout to avoid the tab bar when the keyboard is up:
-  const sceneLayout: Object = { ...gap }
-  if (avoidKeyboard && keyboardHeight > 0 && hasTabs) {
-    sceneLayout.bottom = void 0
-    sceneLayout.height = height - gap.top - keyboardHeight
-  }
-
-  const scene = <View style={[styles.scene, sceneLayout]}>{finalChildren}</View>
-
-  // Finally, render a gradient under everything:
-  if (background === 'none') return scene
   return (
-    <Gradient reverse={background === 'drawer'} style={styles.gradient}>
-      {background === 'body' && <View style={[styles.body, { top: gap.top + bodySplit }]} />}
-      {scene}
-    </Gradient>
+    <LayoutContext>
+      {({ layout, safeAreaInsets }) => {
+        // Compensate for various react-navigation components:
+        const gap = {
+          bottom: avoidKeyboard && keyboardHeight > 0 ? keyboardHeight : hasTabs ? 0 : safeAreaInsets.bottom,
+          left: safeAreaInsets.left,
+          right: safeAreaInsets.right,
+          top: safeAreaInsets.top + (hasHeader ? getHeaderHeight() : 0)
+        }
+
+        // Pass the gap to our children, if they want it:
+        const finalChildren = typeof children === 'function' ? children(gap) : children
+
+        // Use a height-based layout to avoid the tab bar when the keyboard is up:
+        const sceneLayout: Object = { ...gap }
+        if (avoidKeyboard && keyboardHeight > 0 && hasTabs) {
+          sceneLayout.bottom = void 0
+          sceneLayout.height = layout.height - gap.top - keyboardHeight
+        }
+
+        const scene = <View style={[styles.scene, sceneLayout]}>{finalChildren}</View>
+
+        // Finally, render a gradient under everything:
+        if (background === 'none') return scene
+        return (
+          <Gradient reverse={background === 'drawer'} style={styles.gradient}>
+            {background === 'body' && <View style={[styles.body, { top: gap.top + bodySplit }]} />}
+            {scene}
+          </Gradient>
+        )
+      }}
+    </LayoutContext>
   )
 }
 
