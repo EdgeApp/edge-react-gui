@@ -510,5 +510,6 @@
   "estimated_exchange_rate": "估计汇率",
   "estimated_exchange_rate_body": "没有交易提供商能够为所要求的交易提供固定报价。这种交易可能导致收到的资金少于报价。",
   "buy_sell_crypto_select_country_button": "选择所在地区",
-  "buy_sell_crypto_no_plugin_region": "很抱歉，但是没有可用的插件用于本地区。"
+  "buy_sell_crypto_no_plugin_region": "很抱歉，但是没有可用的插件用于本地区。",
+  "user_closed_modal_no_wallet": ""
 }
