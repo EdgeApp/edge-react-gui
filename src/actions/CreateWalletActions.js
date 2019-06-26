@@ -64,17 +64,12 @@ export const createCurrencyWalletAndSelectForPlugins = (walletName: string, wall
   // dispatch({ type: 'UI/WALLETS/CREATE_WALLET_START' })
   // Try and get the new format param from the legacy walletType if it's mentioned
   const [type, format] = walletType.split('-')
-  try {
-    const wallet = await account.createCurrencyWallet(type, {
-      name: walletName,
-      fiatCurrencyCode,
-      keyOptions: format ? { format } : {}
-    })
-    return Promise.resolve(wallet)
-  } catch (e) {
-    return Promise.reject(e)
-  }
-  // return Promise.resolve('Hello')
+  const wallet = await account.createCurrencyWallet(type, {
+    name: walletName,
+    fiatCurrencyCode,
+    keyOptions: format ? { format } : {}
+  })
+  return Promise.resolve(wallet)
 }
 
 export const createCurrencyWallet = (

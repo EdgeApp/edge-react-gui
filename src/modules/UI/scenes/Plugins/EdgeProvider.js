@@ -186,12 +186,12 @@ export class EdgeProvider extends Bridgeable {
           icon: <Icon type={MATERIAL_COMMUNITY} name={EXCLAMATION} size={30} />,
           buttonText: s.strings.string_ok
         })
-        launchModal(modal).then(response => {
-          Promise.reject(e)
+        return launchModal(modal).then((response): Promise<string> => {
+          throw new Error(s.strings.user_closed_modal_no_wallet)
         })
       }
     }
-    return ''
+    throw new Error(s.strings.user_closed_modal_no_wallet)
   }
 
   // Get an address from the user's wallet
