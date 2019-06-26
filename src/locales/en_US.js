@@ -549,7 +549,8 @@ const strings = {
   estimated_exchange_rate_body:
     'No exchange providers are able to provide a fixed quote for the exchange requested. This exchange may result in less funds received than quoted.',
   buy_sell_crypto_select_country_button: 'Select your region',
-  buy_sell_crypto_no_plugin_region: "We're sorry but there are no available plugins for your region."
+  buy_sell_crypto_no_plugin_region: "We're sorry but there are no available plugins for your region.",
+  user_closed_modal_no_wallet: 'User closed modal. No wallet was selected'
 }
 
 // export default strings

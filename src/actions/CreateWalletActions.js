@@ -54,6 +54,23 @@ export const createCurrencyWalletAndAddToSwap = (walletName: string, walletType:
       dispatch({ type: 'UI/WALLETS/CREATE_WALLET_FAILURE' })
     })
 }
+export const createCurrencyWalletAndSelectForPlugins = (walletName: string, walletType: string, fiatCurrencyCode: string) => async (
+  dispatch: Dispatch,
+  getState: GetState
+) => {
+  const state = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+
+  // dispatch({ type: 'UI/WALLETS/CREATE_WALLET_START' })
+  // Try and get the new format param from the legacy walletType if it's mentioned
+  const [type, format] = walletType.split('-')
+  const wallet = await account.createCurrencyWallet(type, {
+    name: walletName,
+    fiatCurrencyCode,
+    keyOptions: format ? { format } : {}
+  })
+  return Promise.resolve(wallet)
+}
 
 export const createCurrencyWallet = (
   walletName: string,

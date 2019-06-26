@@ -1,7 +1,6 @@
 // @flow
 
 import { bns } from 'biggystring'
-import Locale from 'react-native-locale'
 import { connect } from 'react-redux'
 
 import type { SetNativeAmountInfo } from '../../actions/CryptoExchangeActions'
@@ -9,7 +8,7 @@ import { getQuoteForTransaction, selectWalletForExchange } from '../../actions/C
 import { createCurrencyWalletAndAddToSwap } from '../../actions/indexActions'
 import { CryptoExchangeScene } from '../../components/scenes/CryptoExchangeScene'
 import type { CryptoExchangeSceneComponentDispatchProps, CryptoExchangeSceneComponentStateProps } from '../../components/scenes/CryptoExchangeScene'
-import { DEFAULT_STARTER_WALLET_NAMES, USD_FIAT } from '../../constants/indexConstants'
+import { DEFAULT_STARTER_WALLET_NAMES } from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import type { Dispatch, State } from '../../modules/ReduxTypes'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
@@ -58,6 +57,8 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
   const wallets = state.ui.wallets.byId
   const totalWallets = Object.keys(wallets).length
   const creatingWallet = state.cryptoExchange.creatingWallet
+  const settings = SETTINGS_SELECTORS.getSettings(state)
+  const defaultIsoFiat = settings.defaultIsoFiat
   return {
     fromWallet: fromWallet || emptyGuiWallet,
     fromExchangeAmount,
@@ -87,7 +88,8 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
     totalWallets,
     supportedWalletTypes,
     state,
-    creatingWallet
+    creatingWallet,
+    defaultIsoFiat
   }
 }
 
@@ -100,14 +102,9 @@ export const mapDispatchToProps = (dispatch: Dispatch): CryptoExchangeSceneCompo
   },
   openModal: (data: 'from' | 'to') => dispatch({ type: 'OPEN_WALLET_SELECTOR_MODAL', data }),
   wipeKYCFlag: () => dispatch({ type: 'WIPE_KYC_NEED' }),
-  createCurrencyWallet: (walletType: string, currencyCode: string) => {
-    const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
-    let fiatCurrencyCode = USD_FIAT
-    if (localeInfo.currencyCode && typeof localeInfo.currencyCode === 'string' && localeInfo.currencyCode.length >= 3) {
-      fiatCurrencyCode = 'iso:' + localeInfo.currencyCode
-    }
+  createCurrencyWallet: (walletType: string, currencyCode: string, fiat: string) => {
     const walletName = DEFAULT_STARTER_WALLET_NAMES[currencyCode]
-    dispatch(createCurrencyWalletAndAddToSwap(walletName, walletType, fiatCurrencyCode))
+    dispatch(createCurrencyWalletAndAddToSwap(walletName, walletType, fiat))
   }
 })
 
