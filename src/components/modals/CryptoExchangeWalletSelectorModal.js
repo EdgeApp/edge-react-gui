@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react'
-import { Dimensions, FlatList, View } from 'react-native'
+import { Dimensions, FlatList, TouchableWithoutFeedback, View } from 'react-native'
 
 import { CryptoExchangeCreateWalletRow } from '../../components/common/CryptoExchangeCreateWalletRow.js'
 import { CryptoExchangeWalletListRow } from '../../components/common/CryptoExchangeWalletListRow.js'
@@ -152,15 +152,17 @@ class CryptoExchangeWalletSelectorModal extends Component<Props, LocalState> {
   }
   render () {
     return (
-      <View style={styles.container}>
-        <View style={styles.activeArea}>
-          {this.renderHeader()}
-          {this.renderUnSupported()}
-          <View style={{ ...styles.flatListBox, height: this.calculateHeight() }}>
-            <FlatList data={this.state.records} keyExtractor={this.keyExtractor} renderItem={this.renderWalletItem} />
+      <TouchableWithoutFeedback style={styles.touchable} onPress={this.props.onDone} underlayColor={styles.underlayColor}>
+        <View style={styles.container}>
+          <View style={styles.activeArea}>
+            {this.renderHeader()}
+            {this.renderUnSupported()}
+            <View style={{ ...styles.flatListBox, height: this.calculateHeight() }}>
+              <FlatList data={this.state.records} keyExtractor={this.keyExtractor} renderItem={this.renderWalletItem} />
+            </View>
           </View>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     )
   }
 }

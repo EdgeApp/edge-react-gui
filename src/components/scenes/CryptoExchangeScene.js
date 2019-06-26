@@ -60,7 +60,8 @@ export type CryptoExchangeSceneComponentStateProps = {
   totalWallets: number,
   supportedWalletTypes: Array<Object>,
   state: State,
-  creatingWallet: boolean
+  creatingWallet: boolean,
+  defaultIsoFiat: string
 }
 
 export type CryptoExchangeSceneComponentDispatchProps = {
@@ -68,7 +69,7 @@ export type CryptoExchangeSceneComponentDispatchProps = {
   openModal(data: 'from' | 'to'): mixed,
   getQuoteForTransaction(SetNativeAmountInfo): void,
   wipeKYCFlag: () => any,
-  createCurrencyWallet(string, string): void
+  createCurrencyWallet(string, string, string): void
 }
 
 type Props = CryptoExchangeSceneComponentStateProps & CryptoExchangeSceneComponentDispatchProps
@@ -362,7 +363,7 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
           onSelectWallet(response.id, response.currencyCode)
           return
         }
-        this.props.createCurrencyWallet(response.value, response.currencyCode)
+        this.props.createCurrencyWallet(response.value, response.currencyCode, this.props.defaultIsoFiat)
       }
     })
     return null

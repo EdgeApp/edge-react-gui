@@ -1,16 +1,21 @@
 // @flow
 
-import type { EdgeMetadata, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
+import { createSimpleConfirmModal } from 'edge-components'
+import type { EdgeCurrencyWallet, EdgeMetadata, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
+import React from 'react'
 import { Actions } from 'react-native-router-flux'
 import SafariView from 'react-native-safari-view'
 import { Bridgeable } from 'yaob'
 
+import { createCurrencyWalletAndSelectForPlugins } from '../../../../actions/indexActions'
 import { selectWallet } from '../../../../actions/WalletActions'
 import { launchModal } from '../../../../components/common/ModalProvider.js'
 import { createCryptoExchangeWalletSelectorModal } from '../../../../components/modals/CryptoExchangeWalletSelectorModal'
+import { DEFAULT_STARTER_WALLET_NAMES, EXCLAMATION, MATERIAL_COMMUNITY } from '../../../../constants/indexConstants'
 import { SEND_CONFIRMATION } from '../../../../constants/SceneKeys.js'
 import s from '../../../../locales/strings'
 import * as SETTINGS_SELECTORS from '../../../../modules/Settings/selectors.js'
+import { Icon } from '../../../../modules/UI/components/Icon/Icon.ui.js'
 import type { GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
 import type { GuiWallet } from '../../../../types'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
@@ -87,10 +92,12 @@ export class EdgeProvider extends Bridgeable {
     const excludedCurrencyCode = []
     const excludedTokens = []
     const walletsToUse = []
+    const walletsToUseCCode = []
     for (const key in wallets) {
       const wallet = wallets[key]
       if (currencyCodes.length === 0) {
         walletsToUse.push(wallet)
+        walletsToUseCCode.push(wallet.currencyCode)
       } else {
         if (!currencyCodes.includes(wallet.currencyCode) && wallet.enabledTokens.length > 0) {
           if (!excludedCurrencyCode.includes(wallet.currencyCode)) {
@@ -106,20 +113,21 @@ export class EdgeProvider extends Bridgeable {
           }
           if (wallet.enabledTokens.length > 0 && ignoredCodes.length < wallet.enabledTokens.length) {
             walletsToUse.push(wallet)
+            walletsToUseCCode.push(wallet.currencyCode)
           }
         }
         if (currencyCodes.includes(wallet.currencyCode)) {
+          if (wallet.enabledTokens.length > 0) {
+            let i = 0
+            for (i; i < wallet.enabledTokens.length; i++) {
+              if (!currencyCodes.includes(wallet.enabledTokens[i])) {
+                excludedTokens.push(wallet.enabledTokens[i])
+              }
+            }
+          }
           walletsToUse.push(wallet)
+          walletsToUseCCode.push(wallet.currencyCode)
           currencyCodeCount[wallet.currencyCode]++
-        }
-      }
-    }
-    // check to see if there are any requested codes that there are no wallets for
-    const noWalletCodes = []
-    if (currencyCodes.length > 0) {
-      for (const key in currencyCodeCount) {
-        if (currencyCodeCount[key] === 0) {
-          noWalletCodes.push(key)
         }
       }
     }
@@ -128,13 +136,24 @@ export class EdgeProvider extends Bridgeable {
     const supportedWalletTypes = []
     for (let i = 0; i < supportedWalletTypesPreFilter.length; i++) {
       const swt = supportedWalletTypesPreFilter[i]
-      supportedWalletTypes.push(swt)
+      if (currencyCodes.includes(swt.currencyCode) && !walletsToUseCCode.includes(swt.currencyCode)) {
+        supportedWalletTypes.push(swt)
+      }
+    }
+    // check to see if there are any requested codes that there are no wallets for
+    const noWalletCodes = []
+    if (currencyCodes.length > 0 && walletsToUse.length < 1 && supportedWalletTypes.length < 1) {
+      for (const key in currencyCodeCount) {
+        if (currencyCodeCount[key] === 0) {
+          noWalletCodes.push(key)
+        }
+      }
     }
     const props = {
       wallets: walletsToUse,
       excludedCurrencyCode,
       supportedWalletTypes,
-      showWalletCreators: false,
+      showWalletCreators: true,
       state: this._state,
       headerTitle: s.strings.choose_your_wallet,
       cantCancel: false,
@@ -144,9 +163,35 @@ export class EdgeProvider extends Bridgeable {
     const modal = createCryptoExchangeWalletSelectorModal(props)
     // const modal = createCustomWalletListModal(props)
     const selectedWallet = await launchModal(modal, { style: { margin: 0 } })
-    const code = selectedWallet.currencyCode
-    this._dispatch(selectWallet(selectedWallet.id, code))
-    return Promise.resolve(code)
+    if (selectedWallet) {
+      if (selectedWallet.id) {
+        const code = selectedWallet.currencyCode
+        this._dispatch(selectWallet(selectedWallet.id, code))
+        return Promise.resolve(code)
+      }
+      const settings = SETTINGS_SELECTORS.getSettings(this._state)
+      const walletName = DEFAULT_STARTER_WALLET_NAMES[selectedWallet.currencyCode]
+      try {
+        // $FlowFixMe
+        const newWallet: EdgeCurrencyWallet = await this._dispatch(
+          createCurrencyWalletAndSelectForPlugins(walletName, selectedWallet.value, settings.defaultIsoFiat)
+        )
+        this._dispatch(selectWallet(newWallet.id, newWallet.currencyInfo.currencyCode))
+        const returnString: string = newWallet.currencyInfo.currencyCode
+        return Promise.resolve(returnString)
+      } catch (e) {
+        const modal = createSimpleConfirmModal({
+          title: s.strings.create_wallet_failed_header,
+          message: s.strings.create_wallet_failed_message,
+          icon: <Icon type={MATERIAL_COMMUNITY} name={EXCLAMATION} size={30} />,
+          buttonText: s.strings.string_ok
+        })
+        launchModal(modal).then(response => {
+          Promise.reject(e)
+        })
+      }
+    }
+    return ''
   }
 
   // Get an address from the user's wallet
