@@ -173,7 +173,8 @@ export class Row extends Component<RowProps> {
 type Props = {
   isActive?: boolean,
   children: Node,
-  style?: StyleSheet.Styles
+  style?: StyleSheet.Styles,
+  legacy?: boolean
 }
 export class InteractiveModal extends Component<Props> {
   static Icon = Icon

@@ -102,7 +102,7 @@ export class CountrySelectionModal extends Component<CountrySelectionModalProps,
     )
   }
 
-  keyExtractor = (item: { filename?: string, name: string, ['alpha-2']: string }, index: number) => item.name
+  keyExtractor = (item: { filename?: string, name: string, 'alpha-2': string }, index: number) => item.name
 }
 
 export const createCountrySelectionModal = (args: { countryCode: string }) =>

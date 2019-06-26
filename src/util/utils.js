@@ -132,8 +132,8 @@ export const mergeTokens = (preferredEdgeMetaTokens: Array<$ReadOnly<EdgeMetaTok
   return tokensEnabled
 }
 
-export const mergeTokensRemoveInvisible = (preferredEdgeMetaTokens: Array<EdgeMetaToken>, edgeMetaTokens: Array<CustomTokenInfo>) => {
-  const tokensEnabled = [...preferredEdgeMetaTokens] // initially set the array to currencyInfo (from plugin), since it takes priority
+export const mergeTokensRemoveInvisible = (preferredEdgeMetaTokens: Array<EdgeMetaToken>, edgeMetaTokens: Array<CustomTokenInfo>): Array<EdgeMetaToken> => {
+  const tokensEnabled: Array<EdgeMetaToken> = [...preferredEdgeMetaTokens] // initially set the array to currencyInfo (from plugin), since it takes priority
   const tokensToAdd = []
   for (const x of edgeMetaTokens) {
     // loops through the account-level array
@@ -141,6 +141,8 @@ export const mergeTokensRemoveInvisible = (preferredEdgeMetaTokens: Array<EdgeMe
       tokensToAdd.push(x)
     }
   }
+
+  // $FlowFixMe this is actually an error, but I don't know how to fix it:
   return tokensEnabled.concat(tokensToAdd)
 }
 

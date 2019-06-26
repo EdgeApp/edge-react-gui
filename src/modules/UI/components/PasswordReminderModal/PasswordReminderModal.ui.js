@@ -21,7 +21,8 @@ type Props = {
   onRequestChangePassword: () => void,
   onPostpone: () => void,
   setPasswordReminder: (passwordReminder: PasswordReminder) => void,
-  passwordReminder: PasswordReminder
+  passwordReminder: PasswordReminder,
+  loginStatus: boolean | null
 }
 
 type State = {

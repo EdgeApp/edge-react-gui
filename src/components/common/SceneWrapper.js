@@ -93,7 +93,7 @@ function SceneWrapperComponent (props: Props & StateProps) {
   const finalChildren = typeof children === 'function' ? children(gap) : children
 
   // Use a height-based layout to avoid the tab bar when the keyboard is up:
-  const sceneLayout = { ...gap }
+  const sceneLayout: Object = { ...gap }
   if (avoidKeyboard && keyboardHeight > 0 && hasTabs) {
     sceneLayout.bottom = void 0
     sceneLayout.height = height - gap.top - keyboardHeight

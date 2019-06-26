@@ -21,7 +21,8 @@ type Props = {
   doneText: string,
   onCancel(): void,
   onDone(): void,
-  onExitButtonFxn(): void
+  onExitButtonFxn(): void,
+  iconImage?: string
 }
 
 class TwoButtonTextModalComponent extends Component<Props> {

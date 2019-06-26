@@ -1,7 +1,7 @@
 // @flow
 
 import { createSimpleConfirmModal } from 'edge-components'
-import type { EdgeCurrencyWallet, EdgeMetadata, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeMetadata, EdgeNetworkFee, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
 import React from 'react'
 import { Actions } from 'react-native-router-flux'
 import SafariView from 'react-native-safari-view'
@@ -52,7 +52,9 @@ type EdgeRequestSpendOptions = {
 
   // Additional identifier such as a payment ID for Monero or destination tag for Ripple/XRP
   // This overrides any parameters specified in a URI
-  uniqueIdentifier?: string
+  uniqueIdentifier?: string,
+
+  customNetworkFee?: EdgeNetworkFee
 }
 
 type EdgeGetReceiveAddressOptions = {
@@ -186,9 +188,11 @@ export class EdgeProvider extends Bridgeable {
           icon: <Icon type={MATERIAL_COMMUNITY} name={EXCLAMATION} size={30} />,
           buttonText: s.strings.string_ok
         })
-        return launchModal(modal).then((response): Promise<string> => {
-          throw new Error(s.strings.user_closed_modal_no_wallet)
-        })
+        return launchModal(modal).then(
+          (response): Promise<string> => {
+            throw new Error(s.strings.user_closed_modal_no_wallet)
+          }
+        )
       }
     }
     throw new Error(s.strings.user_closed_modal_no_wallet)
