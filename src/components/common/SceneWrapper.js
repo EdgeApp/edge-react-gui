@@ -1,6 +1,6 @@
 // @flow
 
-import React, { type ChildrenArray, type Node } from 'react'
+import React, { type ChildrenArray, type ComponentType, type Node } from 'react'
 import { Dimensions, Platform, StatusBar, StyleSheet, View } from 'react-native'
 // $FlowFixMe See https://github.com/react-native-community/react-native-safe-area-view/pull/77
 import { getInset } from 'react-native-safe-area-view'
@@ -31,12 +31,15 @@ type BackgroundOptions =
   | 'none' // Do not render any background elements
   | 'drawer' // Reverse gradient for the drawer
 
+// Should be ChildrenArray<Node>, but Flow is too old to understand:
+type NodeArray = Array<Node> | Node
+
 type Props = {
   // The children can either be normal React elements,
   // or a function that accepts the current gap and returns an element.
   // The function will be called on each render, allowing the scene to react
   // to changes in the gap.
-  children: ChildrenArray<Node> | ((gap: SceneGap) => ChildrenArray<Node>),
+  children: NodeArray | ((gap: SceneGap) => ChildrenArray<Node>),
 
   // True if this scene should shrink to avoid the keyboard:
   avoidKeyboard?: boolean,
@@ -111,7 +114,7 @@ function SceneWrapperComponent (props: Props & StateProps) {
   )
 }
 
-export const SceneWrapper = connect(
+export const SceneWrapper: ComponentType<Props> = connect(
   (state: State) => ({ keyboardHeight: state.ui.scenes.dimensions.keyboardHeight }),
   dispatch => ({})
 )(SceneWrapperComponent)
