@@ -13,7 +13,7 @@ import { CryptoExchangeWalletSelectorModalStyles as styles } from '../../styles/
 import type { GuiWallet } from '../../types'
 
 type Props = {
-  onDone(GuiWallet | Object): mixed,
+  onDone(GuiWallet | Object | null): mixed,
   headerTitle: string,
   excludedCurrencyCode: Array<string>,
   wallets: Array<GuiWallet>,
@@ -95,7 +95,6 @@ class CryptoExchangeWalletSelectorModal extends Component<Props, LocalState> {
     this.props.onDone(obj)
   }
   createWallet = (supportedWallet: Object) => {
-    console.log('Create Wallet')
     this.props.onDone(supportedWallet)
   }
   renderWalletItem = ({ item }: FlatListItem) => {
@@ -145,14 +144,17 @@ class CryptoExchangeWalletSelectorModal extends Component<Props, LocalState> {
           <FormattedText>{this.props.headerTitle}</FormattedText>
         </View>
         <View style={styles.headerRight}>
-          <IconButton style={styles.iconButton} onPress={this.props.onDone} icon={CLOSE_ICON} iconType={ION_ICONS} />
+          <IconButton style={styles.iconButton} onPress={this.closeModal} icon={CLOSE_ICON} iconType={ION_ICONS} />
         </View>
       </View>
     )
   }
+  closeModal = () => {
+    this.props.onDone(null)
+  }
   render () {
     return (
-      <TouchableWithoutFeedback style={styles.touchable} onPress={this.props.onDone} underlayColor={styles.underlayColor}>
+      <TouchableWithoutFeedback style={styles.touchable} onPress={this.closeModal} underlayColor={styles.underlayColor}>
         <View style={styles.container}>
           <View style={styles.activeArea}>
             {this.renderHeader()}
