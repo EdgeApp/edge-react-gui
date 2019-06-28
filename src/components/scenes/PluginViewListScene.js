@@ -32,7 +32,8 @@ import { THEME, colors } from '../../theme/variables/airbitz.js'
 import type { BuySellPlugin } from '../../types'
 import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { createCountrySelectionModal } from '../modals/CountrySelectionModal.js'
+import { Airship } from '../Main.ui.js'
+import { CountrySelectionModal } from '../modals/CountrySelectionModal.js'
 
 type Props = {
   developerModeOn: boolean,
@@ -139,8 +140,8 @@ class PluginList extends Component<Props, State> {
 
   openCountrySelectionModal = async () => {
     const { account, updateCountryCode, countryCode } = this.props
-    const modal = createCountrySelectionModal({ countryCode })
-    const selectedCountryCode = await launchModal(modal, { style: { margin: 0, justifyContent: 'flex-end' } })
+
+    const selectedCountryCode: string = await Airship.show(bridge => <CountrySelectionModal bridge={bridge} countryCode={countryCode} />)
     if (selectedCountryCode) {
       try {
         const syncedSettings = await getSyncedSettingsAsync(account)
