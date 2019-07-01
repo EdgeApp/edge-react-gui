@@ -184,7 +184,7 @@
   "send_confirmation_eos_error_cpu": "EOS 거래를 위한 CPU 가 충분하지 않습니다. CPU 가 재충전될 때까지 1-3일정도 기다려 주시기 바랍니다.",
   "send_confirmation_eos_error_net": "EOS 거래를 위한 NET 이 충분하지 않습니다. NET 이 재충전될 때까지 1-3일정도 기다려 주시기 바랍니다.",
   "send_confirmation_eos_error_ram": "EOS 거래를 위한 RAM 이 충분하지 않습니다. RAM 이 재충전될때까지 1-3일정도 기다려 주시기 바랍니다.",
-  "send_scan_header_text": "스캔하여 송신, 임포트, 또는 Edge 로그인",
+  "send_scan_header_text": "",
   "send_scan_edge_login_success_title": "로그인 성공",
   "send_scan_edge_login_success_message": "계속 하려면 로그인을 요청하는 브라우저 또는 어플리케이션으로 돌아가십시오.",
   "send_to_title": "받는 곳: %s",
