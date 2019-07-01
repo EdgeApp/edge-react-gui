@@ -90,7 +90,14 @@ export class CountrySelectionModal extends Component<CountrySelectionModalProps,
             keyboardType={'default'}
             label={s.strings.buy_sell_crypto_select_country_button}
           />
-          <FlatList style={{ flex: 1 }} data={finalCountryCodes} renderItem={this._renderItem} keyExtractor={this.keyExtractor} initialNumToRender={24} />
+          <FlatList
+            style={{ flex: 1 }}
+            data={finalCountryCodes}
+            initialNumToRender={24}
+            keyboardShouldPersistTaps="handled"
+            keyExtractor={this.keyExtractor}
+            renderItem={this._renderItem}
+          />
         </View>
       </AirshipBottomModal>
     )
