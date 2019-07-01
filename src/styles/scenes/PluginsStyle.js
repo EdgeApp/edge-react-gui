@@ -17,10 +17,6 @@ export const styles = {
     alignItems: 'center',
     width: '100%'
   },
-  container: {
-    flex: 1,
-    alignItems: 'stretch'
-  },
   selectedCountryWrapper: {
     padding: scale(16),
     backgroundColor: THEME.COLORS.GRAY_4,

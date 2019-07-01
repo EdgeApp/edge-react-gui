@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import _ from 'lodash'
-import React, { Component } from 'react'
+import React, { Component, type Node } from 'react'
 import { LayoutAnimation, TouchableHighlight, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 
@@ -139,7 +139,7 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
     )
   }
 
-  renderWalletRows () {
+  renderWalletRows (): Array<Node> {
     const guiWallets: Array<GuiWallet> = []
     for (const id of this.props.activeWalletIds) {
       if (typeof this.props.walletList[id] !== 'undefined') {

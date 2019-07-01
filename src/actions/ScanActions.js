@@ -219,6 +219,7 @@ export const isPrivateKeyUri = (parsedUri: EdgeParsedUri): boolean => {
 }
 
 export const isPaymentProtocolUri = (parsedUri: EdgeParsedUri): boolean => {
+  // $FlowFixMe should be paymentProtocolUrl (lowercased)?
   return !!parsedUri.paymentProtocolURL && !parsedUri.publicAddress
 }
 

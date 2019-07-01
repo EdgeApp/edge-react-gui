@@ -1,6 +1,6 @@
 // @flow
 
-import { FormField, MaterialInputStyle, Modal } from 'edge-components'
+import { FormField, MaterialInputStyle } from 'edge-components'
 import React, { Component } from 'react'
 import { FlatList, Image, TouchableHighlight, View } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
@@ -12,10 +12,12 @@ import FormattedText from '../../modules/UI/components/FormattedText/FormattedTe
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import styles from '../../styles/components/CountrySelectionModalStyle.js'
 import { colors } from '../../theme/variables/airbitz.js'
+import { type AirshipBridge } from '../common/Airship.js'
+import { AirshipBottomModal, IconCircle } from '../common/AirshipModal.js'
 
 type CountrySelectionModalProps = {
   countryCode: string,
-  onDone: string => void
+  bridge: AirshipBridge<string>
 }
 
 type CountrySelectionModalState = {
@@ -40,13 +42,14 @@ export class CountrySelectionModal extends Component<CountrySelectionModalProps,
   }
 
   _renderItem = data => {
-    const { onDone } = this.props
+    const { bridge } = this.props
     const { countryCode } = this.state
     const filename = data.item.filename ? data.item.filename : data.item.name.toLowerCase().replace(' ', '-')
     const logoUrl = `${FLAG_LOGO_URL}/${filename}.png`
+
     return (
       <View style={[styles.singleCountryWrap, data.item['alpha-2'] === countryCode && styles.selectedItem]}>
-        <TouchableHighlight style={[styles.singleCountry]} onPress={() => onDone(data.item['alpha-2'])} underlayColor={styles.underlayColor.color}>
+        <TouchableHighlight style={[styles.singleCountry]} onPress={() => bridge.resolve(data.item['alpha-2'])} underlayColor={styles.underlayColor.color}>
           <View style={[styles.countryInfoWrap]}>
             <View style={styles.countryLeft}>
               <View style={[styles.countryLogo]}>
@@ -63,6 +66,7 @@ export class CountrySelectionModal extends Component<CountrySelectionModalProps,
   }
 
   render () {
+    const { bridge } = this.props
     const { input, countryCode } = this.state
     const lowerCaseInput = input.toLowerCase()
     const filteredCountryCodes = COUNTRY_CODES.filter(country => {
@@ -71,41 +75,33 @@ export class CountrySelectionModal extends Component<CountrySelectionModalProps,
     const currentCountryCodeIndex = filteredCountryCodes.findIndex(country => country['alpha-2'] === countryCode)
     const currentCountryData = filteredCountryCodes.splice(currentCountryCodeIndex, 1)
     const finalCountryCodes = [...currentCountryData, ...filteredCountryCodes]
+
     return (
-      <View>
-        <Modal.Icon>
+      <AirshipBottomModal bridge={bridge} onCancel={() => bridge.resolve(this.state.countryCode)}>
+        <IconCircle>
           <Icon type={FONT_AWESOME} name={FLAG} size={36} color={colors.primary} />
-        </Modal.Icon>
-        <Modal.Container style={{ borderRadius: 0 }}>
-          <Modal.Icon.AndroidHackSpacer />
-          <Modal.Body>
-            <View>
-              <FormField
-                style={MaterialInputStyle}
-                value={input}
-                onChangeText={this.updateCountryInput}
-                error={''}
-                keyboardType={'default'}
-                label={s.strings.buy_sell_crypto_select_country_button}
-              />
-            </View>
-            <FlatList
-              style={{ width: '100%', height: 400 }}
-              data={finalCountryCodes}
-              renderItem={this._renderItem}
-              keyExtractor={this.keyExtractor}
-              initialNumToRender={24}
-            />
-          </Modal.Body>
-        </Modal.Container>
-      </View>
+        </IconCircle>
+        <View style={{ flex: 1, paddingLeft: scale(12), paddingRight: scale(12) }}>
+          <FormField
+            style={MaterialInputStyle}
+            value={input}
+            onChangeText={this.updateCountryInput}
+            error={''}
+            keyboardType={'default'}
+            label={s.strings.buy_sell_crypto_select_country_button}
+          />
+          <FlatList
+            style={{ flex: 1 }}
+            data={finalCountryCodes}
+            initialNumToRender={24}
+            keyboardShouldPersistTaps="handled"
+            keyExtractor={this.keyExtractor}
+            renderItem={this._renderItem}
+          />
+        </View>
+      </AirshipBottomModal>
     )
   }
 
-  keyExtractor = (item: { filename?: string, name: string, ['alpha-2']: string }, index: number) => item.name
+  keyExtractor = (item: { filename?: string, name: string, 'alpha-2': string }, index: number) => item.name
 }
-
-export const createCountrySelectionModal = (args: { countryCode: string }) =>
-  function CountrySelectionComponent (props: { +onDone: Function }) {
-    return <CountrySelectionModal {...props} {...args} />
-  }

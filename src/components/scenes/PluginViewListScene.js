@@ -32,7 +32,8 @@ import { THEME, colors } from '../../theme/variables/airbitz.js'
 import type { BuySellPlugin } from '../../types'
 import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { createCountrySelectionModal } from '../modals/CountrySelectionModal.js'
+import { Airship } from '../Main.ui.js'
+import { CountrySelectionModal } from '../modals/CountrySelectionModal.js'
 
 type Props = {
   developerModeOn: boolean,
@@ -42,6 +43,7 @@ type Props = {
 }
 
 type State = {
+  isSpendModal: boolean,
   data: Array<Object>
 }
 
@@ -49,6 +51,7 @@ class PluginList extends Component<Props, State> {
   constructor (props) {
     super(props)
     this.state = {
+      isSpendModal: false,
       data: []
     }
   }
@@ -139,8 +142,8 @@ class PluginList extends Component<Props, State> {
 
   openCountrySelectionModal = async () => {
     const { account, updateCountryCode, countryCode } = this.props
-    const modal = createCountrySelectionModal({ countryCode })
-    const selectedCountryCode = await launchModal(modal, { style: { margin: 0, justifyContent: 'flex-end' } })
+
+    const selectedCountryCode: string = await Airship.show(bridge => <CountrySelectionModal bridge={bridge} countryCode={countryCode} />)
     if (selectedCountryCode) {
       try {
         const syncedSettings = await getSyncedSettingsAsync(account)
@@ -198,7 +201,7 @@ class PluginList extends Component<Props, State> {
 
     return (
       <SceneWrapper background="body" hasTabs={false}>
-        <View style={styles.container}>
+        {this.state.isSpendModal || (
           <View style={styles.selectedCountryWrapper}>
             <TouchableWithoutFeedback style={styles.selectedCountry} onPress={this.openCountrySelectionModal}>
               <View style={styles.selectedCountryTextWrapper}>
@@ -210,14 +213,14 @@ class PluginList extends Component<Props, State> {
               </View>
             </TouchableWithoutFeedback>
           </View>
-          {!!countryCode && filteredPlugins.length === 0 ? (
-            <View style={{ flex: 1, width: '100%', padding: scale(50), justifyContent: 'center', alignItems: 'center' }}>
-              <Text style={{ textAlign: 'center' }}>{s.strings.buy_sell_crypto_no_plugin_region}</Text>
-            </View>
-          ) : (
-            <FlatList data={filteredPlugins} renderItem={this._renderPlugin} keyExtractor={item => item.name} />
-          )}
-        </View>
+        )}
+        {!!countryCode && filteredPlugins.length === 0 ? (
+          <View style={{ flex: 1, width: '100%', padding: scale(50), justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={{ textAlign: 'center' }}>{s.strings.buy_sell_crypto_no_plugin_region}</Text>
+          </View>
+        ) : (
+          <FlatList data={filteredPlugins} renderItem={this._renderPlugin} keyExtractor={item => item.name} />
+        )}
       </SceneWrapper>
     )
   }
@@ -236,9 +239,8 @@ class PluginBuySellComponent extends PluginList {
 
 class PluginSpendComponent extends PluginList {
   componentDidMount () {
-    const { countryCode } = this.props
-    if (!countryCode) this.openCountrySelectionModal()
     this.setState({
+      isSpendModal: true,
       data: spendPlugins(this.props.developerModeOn)
     })
   }

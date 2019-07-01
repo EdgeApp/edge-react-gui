@@ -81,7 +81,7 @@ class SubCategorySelect extends Component<Props, State> {
     )
   }
 
-  keyExtractor = (item: any, index: number) => index
+  keyExtractor = (item: any, index: number) => String(index)
 }
 
 export default SubCategorySelect

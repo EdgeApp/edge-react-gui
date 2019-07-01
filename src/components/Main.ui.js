@@ -91,12 +91,15 @@ import {
 } from '../modules/UI/scenes/Plugins/index.js'
 import { HwBackButtonHandler } from '../modules/UI/scenes/WalletList/components/HwBackButtonHandler/index'
 import { styles } from '../styles/MainStyle.js'
+import { makeAirship } from './common/Airship.js'
 import { ModalProvider } from './common/ModalProvider.js'
 import { EdgeCoreManager } from './core/EdgeCoreManager.js'
 import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
 import { CryptoExchangeQuoteProcessingScreenComponent } from './scenes/CryptoExchangeQuoteProcessingScene.js'
 import { OnBoardingComponent } from './scenes/OnBoardingScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
+
+export const Airship = makeAirship()
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
@@ -771,6 +774,7 @@ export default class Main extends Component<Props> {
         <EdgeCoreManager onLoad={this.onCoreLoad} onError={this.onCoreError} />
 
         <DeepLinkingManager />
+        <Airship />
       </MenuProvider>
     )
   }
