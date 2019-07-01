@@ -184,7 +184,7 @@
   "send_confirmation_eos_error_cpu": "EOSトランザクションを送信するための十分なCPUがありません。 CPUが充電されるまで1〜3日お待ちください。",
   "send_confirmation_eos_error_net": "EOSトランザクションを送信するためのNETが不足しています。 NETが再充電されるまで1〜3日お待ちください。",
   "send_confirmation_eos_error_ram": "EOSトランザクションを送信するために使用可能なRAMが不足しています。 解決方法の詳細については edge.app/eos を参照してください。",
-  "send_scan_header_text": "送信、インポートまたはエッジログインのためにスキャンする",
+  "send_scan_header_text": "",
   "send_scan_edge_login_success_title": "Edgeログイン成功",
   "send_scan_edge_login_success_message": "続行するには、Edge Loginを要求したブラウザまたはアプリケーションに戻ってください。",
   "send_to_title": "宛先：%s",
