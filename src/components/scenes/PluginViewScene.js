@@ -106,7 +106,6 @@ type Props = {
 }
 
 type PluginWorkerApi = {
-  isFirstPage: boolean,
   setEdgeProvider(provider: EdgeProvider): Promise<mixed>
 }
 
