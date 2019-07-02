@@ -20,7 +20,6 @@ import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/Flip
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
-// import WalletListModal from '../../modules/UI/components/WalletListModal/WalletListModalConnector'
 import { CryptoExchangeSceneStyle } from '../../styles/indexStyles'
 import { emptyCurrencyInfo } from '../../types'
 import type { GuiCurrencyInfo, GuiWallet } from '../../types'

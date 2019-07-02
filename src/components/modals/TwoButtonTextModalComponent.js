@@ -4,9 +4,7 @@ import React, { Component } from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
-// import {sprintf} from 'sprintf-js'
 import StylizedModal from '../../modules/UI/components/Modal/Modal.ui'
-// import strings from '../../../../../locales/default'
 import THEME from '../../theme/variables/airbitz'
 import TwoButtonsComponent from './TwoButtonsComponent.js'
 
