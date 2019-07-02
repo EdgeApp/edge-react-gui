@@ -195,5 +195,6 @@ export type BuySellPlugin = {
   imageUrl: string,
   environment: Object,
   isLegacy: boolean,
-  permissions: Array<string>
+  permissions: Array<string>,
+  lockDomain?: boolean
 }

@@ -4,6 +4,7 @@ import React from 'react'
 import { Platform } from 'react-native'
 import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
+import parse from 'url-parse'
 import { Bridge, onMethod } from 'yaob'
 
 import ENV from '../../../env.json'
@@ -165,6 +166,10 @@ class PluginView extends React.Component<Props> {
       Platform.OS === 'android'
         ? 'Mozilla/5.0 (Linux; U; Android 4.4.2; en-us; SCH-I535 Build/KOT49H) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30'
         : 'Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_1 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Version/10.0 Mobile/14E304 Safari/602.1'
+
+    const parsed = parse(uri, {}, false)
+    const origin = parsed.origin
+    const originWhiteList = this.props.plugin.lockDomain ? [origin] : ['file://', 'https://', 'http://', 'edge://']
     return (
       <SceneWrapper background="body" hasTabs={false}>
         <WebView
@@ -175,7 +180,7 @@ class PluginView extends React.Component<Props> {
           javaScriptEnabled={true}
           onNavigationStateChange={this.onNavigationStateChange}
           onMessage={this._callbacks.onMessage}
-          originWhitelist={['file://', 'https://', 'http://', 'edge://']}
+          originWhitelist={originWhiteList}
           ref={this._callbacks.setRef}
           setWebContentsDebuggingEnabled={true}
           source={{ uri }}

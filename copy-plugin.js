@@ -19,7 +19,8 @@ const pluginManifests = {
       provider: 'Edge Wallet',
       iconUrl: 'https://edge.app/wp-content/uploads/2019/05/libertyXlogo.png',
       environment: {},
-      permissions: ['location']
+      permissions: ['location'],
+      lockDomain: true
     },
     {
       pluginId: 'io.moonpay.buy',
