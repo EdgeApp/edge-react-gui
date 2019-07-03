@@ -285,6 +285,7 @@
   "string_save": "Salva",
   "string_share": "Condividi",
   "string_show_balance": "Mostra bilancio",
+  "exchange_rates_loading": "",
   "string_to_exchange_info": "e deposita %1$s %2$s\n a %3$s",
   "string_master_private_key": "Chiave privata principale",
   "string_split_wallet": "Dividi %s",
