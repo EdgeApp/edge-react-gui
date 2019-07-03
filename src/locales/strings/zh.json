@@ -285,6 +285,7 @@
   "string_save": "保存",
   "string_share": "分享",
   "string_show_balance": "显示余额",
+  "exchange_rates_loading": "",
   "string_to_exchange_info": "存款%1$s %2$s \n 到 %3$s",
   "string_master_private_key": "主私钥",
   "string_split_wallet": "拆分：%s",
