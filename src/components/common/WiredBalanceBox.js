@@ -17,14 +17,16 @@ type BalanceBoxProps = {
   showBalance: boolean,
   fiatAmount: number,
   isoFiatCurrencyCode: string,
-  onPress: Function
+  onPress: Function,
+  exchangeRates?: { [string]: number }
 }
 
 type WiredBalanceBoxOwnProps = {
   showBalance: boolean | Function,
   fiatAmount: number | Function,
   isoFiatCurrencyCode: string | Function,
-  onPress: Function
+  onPress: Function,
+  exchangeRates?: { [string]: number }
 }
 
 class BalanceBox extends PureComponent<BalanceBoxProps, BalanceBoxState> {
@@ -34,7 +36,7 @@ class BalanceBox extends PureComponent<BalanceBoxProps, BalanceBoxState> {
   }
 
   render () {
-    const { isoFiatCurrencyCode, fiatAmount } = this.props
+    const { isoFiatCurrencyCode, fiatAmount, showBalance, exchangeRates } = this.props
     const fiatSymbol = isoFiatCurrencyCode ? getFiatSymbol(isoFiatCurrencyCode) : ''
     const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
     let fiatBalanceString = ''
@@ -44,9 +46,23 @@ class BalanceBox extends PureComponent<BalanceBoxProps, BalanceBoxState> {
       fiatBalanceString = fiatSymbol + ' ' + fiatAmount + ' ' + fiatCurrencyCode
     }
 
-    return (
-      <TouchableOpacity onPress={this.props.onPress}>{this.props.showBalance ? this.balanceBox(fiatBalanceString) : this.hiddenBalanceBox()}</TouchableOpacity>
-    )
+    let displayedBox
+    const summation = (total: number, rate: number) => {
+      return total + rate
+    }
+    if (showBalance) {
+      // if there is no exchangeRates object, empty object, or object with zero values
+      // $FlowFixMe it appears that Object.values may break flow
+      if (!exchangeRates || !Object.keys(exchangeRates).length || !Object.values(exchangeRates).reduce(summation)) {
+        displayedBox = this.noBalanceBox('noExchangeRates')
+      } else {
+        displayedBox = this.balanceBox(fiatBalanceString)
+      }
+    } else {
+      displayedBox = this.noBalanceBox('balanceHidden')
+    }
+
+    return <TouchableOpacity onPress={this.props.onPress}>{displayedBox}</TouchableOpacity>
   }
 
   balanceBox (fiatBalanceString: string) {
@@ -64,12 +80,21 @@ class BalanceBox extends PureComponent<BalanceBoxProps, BalanceBoxState> {
     )
   }
 
-  hiddenBalanceBox () {
+  noBalanceBox (textType: string) {
+    let displayedText
+    if (textType === 'noExchangeRates') {
+      displayedText = s.strings.exchange_rates_loading
+    } else {
+      displayedText = s.strings.fragment_wallets_balance_text
+    }
+
     return (
       <View style={[styles.totalBalanceBox]}>
         <View style={[styles.totalBalanceWrap]}>
           <View style={[styles.hiddenBalanceBoxDollarsWrap]}>
-            <T style={[styles.currentBalanceBoxDollars]}>{s.strings.string_show_balance}</T>
+            <T numberOfLines={2} style={textType === 'noExchangeRates' ? styles.currentBalanceBoxNoExchangeRates : styles.currentBalanceBoxDollars}>
+              {displayedText}
+            </T>
           </View>
         </View>
       </View>
@@ -84,7 +109,8 @@ export const WiredBalanceBox = connect(
       showBalance: typeof ownProps.showBalance === 'function' ? ownProps.showBalance(state) : ownProps.showBalance,
       fiatAmount: typeof ownProps.fiatAmount === 'function' ? ownProps.fiatAmount(state, isoFiatCurrencyCode) : ownProps.fiatAmount,
       onPress: ownProps.onPress,
-      isoFiatCurrencyCode
+      isoFiatCurrencyCode,
+      exchangeRates: ownProps.exchangeRates
     }
   },
   null
