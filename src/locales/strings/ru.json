@@ -285,6 +285,7 @@
   "string_save": "Сохранить",
   "string_share": "Поделиться",
   "string_show_balance": "Показать баланс",
+  "exchange_rates_loading": "",
   "string_to_exchange_info": "и депозит %1$s %2$s на \n %3$s",
   "string_master_private_key": "Master Private Key",
   "string_split_wallet": "Разделить %s",
