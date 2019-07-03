@@ -55,6 +55,7 @@ const createDefaultWallets = async (account: EdgeAccount, defaultFiat: string, d
         walletName = sprintf(s.strings.my_crypto_wallet_name, currencyInfo.displayName)
         global.startMoment && global.startMoment('INIT_ACCOUNT_CREATE_ONE_WALLET')
         edgeWallet = await runWithTimeout(account.createCurrencyWallet(walletType, { name: walletName, fiatCurrencyCode }), 20000, timeoutErr)
+        global.firebase && global.firebase.analytics().logEvent(`Signup_Wallets_Created`)
         global.endMoment && global.endMoment('INIT_ACCOUNT_CREATE_ONE_WALLET')
       }
     }
@@ -71,7 +72,7 @@ const createDefaultWallets = async (account: EdgeAccount, defaultFiat: string, d
     // p.push(account.createCurrencyWallet(ethWalletType, { name: ethWalletName, fiatCurrencyCode }))
     // const results = await runWithTimeout(20000, Promise.all(p))
     // edgeWallet = results[0]
-    global.logEvent && global.logEvent(`Signup_Wallets_Created`)
+    global.firebase && global.firebase.analytics().logEvent(`Signup_Wallets_Created`)
     global.endMoment && global.endMoment('INIT_ACCOUNT_CREATE_WALLETS')
   }
   return edgeWallet
