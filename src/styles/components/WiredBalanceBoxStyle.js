@@ -39,6 +39,11 @@ export const rawStyles = {
   currentBalanceBoxDollars: {
     color: THEME.COLORS.PRIMARY,
     fontSize: scale(44)
+  },
+  currentBalanceBoxNoExchangeRates: {
+    color: THEME.COLORS.PRIMARY,
+    fontSize: scale(26),
+    textAlign: 'center'
   }
 }
 

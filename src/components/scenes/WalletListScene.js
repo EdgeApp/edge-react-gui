@@ -70,7 +70,8 @@ type Props = {
   isAccountBalanceVisible: boolean,
   isWalletFiatBalanceVisible: boolean,
   defaultFiat: string,
-  ethereumWalletType?: GuiWalletType
+  ethereumWalletType?: GuiWalletType,
+  exchangeRates: Object
 }
 export default class WalletList extends Component<Props, State> {
   constructor (props: Props) {
@@ -171,6 +172,7 @@ export default class WalletList extends Component<Props, State> {
             fiatAmount={getTotalFiatAmountFromExchangeRates}
             isoFiatCurrencyCode={getDefaultIsoFiat}
             onPress={this.props.toggleAccountBalanceVisibility}
+            exchangeRates={this.props.exchangeRates}
           />
           <View style={[styles.walletsBox]}>
             <Gradient style={[styles.walletsBoxHeaderWrap]}>
