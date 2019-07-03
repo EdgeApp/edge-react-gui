@@ -218,6 +218,10 @@ export class EdgeProvider extends Bridgeable {
     return Promise.resolve(returnObject)
   }
 
+  consoleLog (arg: any): void {
+    console.log('EP: BridgeLog', arg)
+  }
+
   // Write data to user's account. This data is encrypted and persisted in their Edge
   // account and transferred between devices
   async writeData (data: { [key: string]: string }) {
@@ -237,6 +241,7 @@ export class EdgeProvider extends Bridgeable {
     for (let i = 0; i < keys.length; i++) {
       returnObj[keys[i]] = await store.getItem(this._pluginName, keys[i]).catch(e => undefined)
     }
+    console.log()
     return Promise.resolve(returnObj)
   }
 
