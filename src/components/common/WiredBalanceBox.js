@@ -48,6 +48,7 @@ class BalanceBox extends PureComponent<BalanceBoxProps, BalanceBoxState> {
 
     let displayedBox
     const summation = (total: number, rate: number) => {
+      if (isNaN(rate)) rate = 0
       return total + rate
     }
     if (showBalance) {
