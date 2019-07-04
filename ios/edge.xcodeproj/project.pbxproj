@@ -11,6 +11,9 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		1FCEFE0722CDDA4900FE99D4 /* exchange_logo_sideshift.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FCEFE0422CDDA4900FE99D4 /* exchange_logo_sideshift.png */; };
+		1FCEFE0822CDDA4900FE99D4 /* exchange_logo_sideshift@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FCEFE0522CDDA4900FE99D4 /* exchange_logo_sideshift@2x.png */; };
+		1FCEFE0922CDDA4900FE99D4 /* exchange_logo_sideshift@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FCEFE0622CDDA4900FE99D4 /* exchange_logo_sideshift@3x.png */; };
 		224A82278CB1465E9E84DC30 /* SourceSansPro-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8D378044B6F0404F992F36CD /* SourceSansPro-Bold.ttf */; };
 		237AB7A9983F4B67B540A565 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 70AF6ADFA804412A874E948C /* MaterialIcons.ttf */; };
 		26B52E61E77947A1A4E07707 /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD256E3EDE9A4D5CA794D8AD /* FontAwesome5_Solid.ttf */; };
@@ -99,6 +102,9 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = edge/main.m; sourceTree = "<group>"; };
 		1DFA24CFCCD34ED081EE86CB /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		1FA75A7FCCEA4AACBBC97934 /* font.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = font.ttf; path = ../src/assets/fonts/font.ttf; sourceTree = "<group>"; };
+		1FCEFE0422CDDA4900FE99D4 /* exchange_logo_sideshift.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = exchange_logo_sideshift.png; sourceTree = "<group>"; };
+		1FCEFE0522CDDA4900FE99D4 /* exchange_logo_sideshift@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "exchange_logo_sideshift@2x.png"; sourceTree = "<group>"; };
+		1FCEFE0622CDDA4900FE99D4 /* exchange_logo_sideshift@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "exchange_logo_sideshift@3x.png"; sourceTree = "<group>"; };
 		27D9F41192F8419DA0531DFF /* SourceSansPro-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-BoldItalic.ttf"; path = "../src/assets/fonts/SourceSansPro-BoldItalic.ttf"; sourceTree = "<group>"; };
 		2FA801C9862A4F139CE441F6 /* Roboto_medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto_medium.ttf; path = "../node_modules/native-base/Fonts/Roboto_medium.ttf"; sourceTree = "<group>"; };
 		3174EFC33129444580156447 /* SourceSansPro-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-BlackItalic.ttf"; path = "../src/assets/fonts/SourceSansPro-BlackItalic.ttf"; sourceTree = "<group>"; };
@@ -319,6 +325,9 @@
 				E6C089A0217E7AD9003DE9B9 /* exchange_logo_shapeshift.png */,
 				E6C089A1217E7AD9003DE9B9 /* exchange_logo_shapeshift@2x.png */,
 				E6C089A2217E7ADA003DE9B9 /* exchange_logo_shapeshift@3x.png */,
+				1FCEFE0422CDDA4900FE99D4 /* exchange_logo_sideshift.png */,
+				1FCEFE0522CDDA4900FE99D4 /* exchange_logo_sideshift@2x.png */,
+				1FCEFE0622CDDA4900FE99D4 /* exchange_logo_sideshift@3x.png */,
 				E6DBE8A8210C937100C52ABE /* iPadOnboarding5Horiz.png */,
 				E6DBE8A9210C937100C52ABE /* iPadOnboarding5Vert.png */,
 				E6DBE8AA210C937200C52ABE /* onboardX1.png */,
@@ -423,6 +432,7 @@
 				E6C089AC217E7ADB003DE9B9 /* exchange_logo_shapeshift.png in Resources */,
 				E62A1697210BBD3D002D2665 /* onboard5.png in Resources */,
 				E62A1695210BBBA7002D2665 /* onboard1.png in Resources */,
+				1FCEFE0722CDDA4900FE99D4 /* exchange_logo_sideshift.png in Resources */,
 				E6DBE8B0210C937200C52ABE /* iPadOnboarding5Vert.png in Resources */,
 				E616C51020F50FDB00F9252F /* iPadOnboarding4Horiz.png in Resources */,
 				E6DBE8B4210C937200C52ABE /* onboardX4.png in Resources */,
@@ -449,10 +459,12 @@
 				049D53B0E7A04E8E9FB81225 /* Roboto.ttf in Resources */,
 				5753E201C6234F3D898201B7 /* rubicon-icon-font.ttf in Resources */,
 				E6DBE8B2210C937200C52ABE /* onboardX3.png in Resources */,
+				1FCEFE0822CDDA4900FE99D4 /* exchange_logo_sideshift@2x.png in Resources */,
 				E616C52320F51B1A00F9252F /* iPadOnboarding1Vert.png in Resources */,
 				E6C089AD217E7ADB003DE9B9 /* exchange_logo_shapeshift@2x.png in Resources */,
 				FD982BCC1FACDEF00057F035 /* LaunchScreen.xib in Resources */,
 				3D1368BD21DD76BB00DC8CE4 /* edge-core in Resources */,
+				1FCEFE0922CDDA4900FE99D4 /* exchange_logo_sideshift@3x.png in Resources */,
 				E616C50E20F50FDB00F9252F /* iPadOnboarding2Horiz.png in Resources */,
 				E638432C20EFE33B00EA9FE9 /* onboard2.png in Resources */,
 				98AF3B3B1F99F7D20083E087 /* audio_sent.mp3 in Resources */,
