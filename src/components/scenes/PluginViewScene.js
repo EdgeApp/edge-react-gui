@@ -153,6 +153,7 @@ class PluginView extends React.Component<Props> {
   }
 
   onNavigationStateChange = event => {
+    console.log('Plugin navigation: ', event)
     this._canGoBack = event.canGoBack
   }
 
