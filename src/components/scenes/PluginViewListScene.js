@@ -57,7 +57,8 @@ class PluginList extends Component<Props, State> {
   }
 
   _onPress = (plugin: BuySellPlugin) => {
-    if (plugin.pluginId === 'custom') {
+    const { pluginId, permissions = [] } = plugin
+    if (pluginId === 'custom') {
       console.log('custom click!')
 
       const yesButton = {
@@ -93,10 +94,9 @@ class PluginList extends Component<Props, State> {
         yesButton,
         noButton
       })
-      console.log('gonna show', modal)
       launchModal(modal).then(response => {
         if (response) {
-          plugin.sourceFile = { uri: response }
+          plugin.uri = response
         }
         const key = Actions.currentScene === SPEND ? PLUGIN_SPEND : PLUGIN_BUY
         console.log('pvs: key', key)
@@ -104,14 +104,15 @@ class PluginList extends Component<Props, State> {
       })
       return
     }
-    if (plugin.permissions && plugin.permissions.length > 0) {
+    if (permissions.length > 0) {
       if (Platform.OS === ANDROID) {
-        this.requestAndroidPermissions(plugin.permissions, plugin)
+        this.requestAndroidPermissions(permissions, plugin)
         return
       }
     }
     this.openPlugin(plugin)
   }
+
   requestAndroidPermissions = async (permissionList: Array<string>, plugin: BuySellPlugin) => {
     let reqType
     switch (permissionList[0]) {
@@ -130,6 +131,7 @@ class PluginList extends Component<Props, State> {
       console.warn(err)
     }
   }
+
   openPlugin = (plugin: BuySellPlugin) => {
     if (Actions.currentScene === SPEND) {
       const key = plugin.isLegacy ? PLUGIN_SPEND_LEGACY : PLUGIN_SPEND

@@ -3,8 +3,6 @@
 
 import { Bridge, bridgifyObject } from 'yaob'
 
-console.log('greetz from webview', window.location.href)
-
 function setupBridge () {
   // We have already run once in this context:
   if (window.bridge != null) return
