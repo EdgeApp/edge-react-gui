@@ -86,7 +86,7 @@ class BalanceBox extends PureComponent<BalanceBoxProps, BalanceBoxState> {
     if (textType === 'noExchangeRates') {
       displayedText = s.strings.exchange_rates_loading
     } else {
-      displayedText = s.strings.fragment_wallets_balance_text
+      displayedText = s.strings.string_show_balance
     }
 
     return (
