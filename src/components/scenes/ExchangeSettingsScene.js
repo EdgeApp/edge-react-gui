@@ -4,7 +4,7 @@ import type { EdgeAccount, EdgeSwapConfig } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Image, View } from 'react-native'
 
-import { changellyLogo, changenowLogo, defaultLogo, faastLogo, shapeshiftLogo } from '../../assets/images/exchange'
+import { changellyLogo, changenowLogo, defaultLogo, faastLogo, shapeshiftLogo, sideShiftLogo } from '../../assets/images/exchange'
 import { SwapKYCModalConnector } from '../../connectors/components/SwapKYCModalConnector.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/index'
@@ -32,6 +32,9 @@ type GuiExchangeSetting = {
 const exchangeInfo = {
   shapeshift: {
     logo: shapeshiftLogo
+  },
+  sideshift: {
+    logo: sideShiftLogo
   },
   changelly: {
     logo: changellyLogo

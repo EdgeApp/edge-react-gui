@@ -84,6 +84,9 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
       case 'shapeshift':
         return { uri: 'exchange_logo_shapeshift' }
 
+      case 'sideshift':
+        return { uri: 'exchange_logo_sideshift' }
+
       case 'changenow':
         return { uri: 'exchange_logo_changenow' }
 
