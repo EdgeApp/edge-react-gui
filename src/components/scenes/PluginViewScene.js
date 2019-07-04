@@ -177,7 +177,7 @@ class PluginView extends React.Component<Props> {
           ref={this._callbacks.setRef}
           setWebContentsDebuggingEnabled={true}
           source={{ uri }}
-          userAgent={userAgent + ' edge/app.edge.'}
+          userAgent={userAgent + ' hasEdgeProvider edge/app.edge.'}
           useWebKit
         />
       </SceneWrapper>
