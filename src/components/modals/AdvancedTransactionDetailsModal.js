@@ -1,19 +1,20 @@
 // @flow
 
-import React, { Component } from 'react'
+import { PrimaryButton, SecondaryButton } from 'edge-components'
+import { type EdgeTransaction } from 'edge-core-js'
+import React, { Component, Fragment } from 'react'
 import { Alert, Clipboard, Linking, TouchableOpacity } from 'react-native'
 
 import { MATERIAL_COMMUNITY, TELESCOPE } from '../../constants/indexConstants.js'
 import { scale } from '../../lib/scaling.js'
 import s from '../../locales/strings.js'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText/index'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import { InteractiveModal } from '../../modules/UI/components/Modals/InteractiveModal/InteractiveModal.ui.js'
 import styles, { activeOpacity } from '../../styles/scenes/TransactionDetailsStyle.js'
 
 export type AdvancedTransactionDetailsModalOwnProps = {
-  txId: string,
+  ...EdgeTransaction,
   txExplorerUrl: string | null,
   onDone: () => void
 }
@@ -29,14 +30,25 @@ export class AdvancedTransactionDetailsModal extends Component<AdvancedTransacti
     }
   }
 
-  copyToClipboard = () => {
-    Clipboard.setString(this.props.txId)
+  copyTxIdToClipboard = () => {
+    const { txid, onDone } = this.props
+    Clipboard.setString(txid)
     Alert.alert(s.strings.transaction_details_copy_txid_title, s.strings.transaction_details_copy_txid_message, [
-      { text: s.strings.string_ok, onPress: this.props.onDone }
+      { text: s.strings.string_ok, onPress: onDone }
+    ])
+  }
+
+  copyRawHexToClipboard = () => {
+    const { signedTx, onDone } = this.props
+    Clipboard.setString(signedTx)
+    Alert.alert(s.strings.transaction_details_copy_txid_title, s.strings.transaction_details_copy_raw_hex_message, [
+      { text: s.strings.string_ok, onPress: onDone }
     ])
   }
 
   render () {
+    const { otherParams, txid } = this.props
+    const debugInfo = otherParams ? otherParams.debugInfo : ''
     return (
       <InteractiveModal>
         <InteractiveModal.Icon>
@@ -49,10 +61,15 @@ export class AdvancedTransactionDetailsModal extends Component<AdvancedTransacti
 
         <InteractiveModal.Body>
           <InteractiveModal.Description style={{ textAlign: 'center' }}>
-            <Text>{this.props.txId}</Text>
+            <Text>{!!txid && `${txid}\n\n`}</Text>
+            {!!debugInfo && (
+              <Fragment>
+                <Text>{s.strings.transaction_details_modal_debug_info}</Text>
+                <Text>{debugInfo}</Text>
+              </Fragment>
+            )}
           </InteractiveModal.Description>
         </InteractiveModal.Body>
-
         <InteractiveModal.Footer>
           <InteractiveModal.Row>
             <InteractiveModal.Item>
@@ -63,9 +80,16 @@ export class AdvancedTransactionDetailsModal extends Component<AdvancedTransacti
           </InteractiveModal.Row>
           <InteractiveModal.Row>
             <InteractiveModal.Item>
-              <PrimaryButton onPress={this.copyToClipboard} style={{ flex: -1 }}>
-                <PrimaryButton.Text>{s.strings.fragment_request_copy_title}</PrimaryButton.Text>
+              <PrimaryButton onPress={this.copyTxIdToClipboard} style={{ flex: -1 }}>
+                <PrimaryButton.Text>{s.strings.transaction_details_copy_tx_id}</PrimaryButton.Text>
               </PrimaryButton>
+            </InteractiveModal.Item>
+          </InteractiveModal.Row>
+          <InteractiveModal.Row>
+            <InteractiveModal.Item>
+              <SecondaryButton onPress={this.copyRawHexToClipboard} style={{ flex: -1 }}>
+                <SecondaryButton.Text>{s.strings.transaction_details_copy_signed_tx}</SecondaryButton.Text>
+              </SecondaryButton>
             </InteractiveModal.Item>
           </InteractiveModal.Row>
         </InteractiveModal.Footer>
@@ -75,7 +99,7 @@ export class AdvancedTransactionDetailsModal extends Component<AdvancedTransacti
 }
 
 export type AdvancedTransactionDetailsOpts = {
-  txId: string,
+  txid: string,
   txExplorerUrl: string | null
 }
 
