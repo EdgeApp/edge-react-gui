@@ -169,7 +169,6 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
       global.firebase && global.firebase.analytics().logEvent(`Exchange_Shift_Success`)
     } catch (error) {
       global.firebase && global.firebase.analytics().logEvent(`Exchange_Shift_Failed`)
-      dispatch({ type: 'SHIFT_ERROR' }) // TODO: error.message was never used anywhere
       dispatch({ type: 'DONE_SHIFT_TRANSACTION' })
       setTimeout(() => {
         Alert.alert(s.strings.exchange_failed, error.message)
@@ -295,8 +294,8 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, info: S
   const toDisplayAmount = bns.toFixed(toDisplayAmountTemp, 0, 8)
   const feeNativeAmount = edgeCoinExchangeQuote.networkFee.nativeAmount
   const feeTempAmount = bns.div(feeNativeAmount, fromPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
-  const feeDisplayAmouhnt = bns.toFixed(feeTempAmount, 0, 8)
-  const fee = feeDisplayAmouhnt + ' ' + feeDenomination.name
+  const feeDisplayAmount = bns.toFixed(feeTempAmount, 0, 8)
+  const fee = feeDisplayAmount + ' ' + feeDenomination.name
 
   const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
   const fromExchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, fromWallet.currencyCode)
@@ -304,7 +303,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, info: S
   const fromBalanceInFiatRaw = await currencyConverter.convertCurrency(fromCurrencyCode, fromWallet.isoFiatCurrencyCode, Number(fromBalanceInCryptoDisplay))
   const fromBalanceInFiat = intl.formatNumber(fromBalanceInFiatRaw || 0, { toFixed: 2 })
 
-  const toExchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, toWallet.currencyCode)
+  const toExchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, toCurrencyCode)
   const toBalanceInCryptoDisplay = UTILS.convertNativeToExchange(toExchangeDenomination.multiplier)(edgeCoinExchangeQuote.toNativeAmount)
   const toBalanceInFiatRaw = await currencyConverter.convertCurrency(toCurrencyCode, toWallet.isoFiatCurrencyCode, Number(toBalanceInCryptoDisplay))
   const toBalanceInFiat = intl.formatNumber(toBalanceInFiatRaw || 0, { toFixed: 2 })

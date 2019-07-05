@@ -3,52 +3,71 @@
 import { Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 
-import plugins from '../../../../assets/plugins.json'
-import { LEGACY_PLUGINS } from '../../../../constants/indexConstants'
+import assetPlugins from '../../../../assets/plugins.json'
+import { type BuySellPlugin } from '../../../../types.js'
 
-function loadPlugins (plugins: any, developerModeOn: boolean): Array<Object> {
-  let addCustom = true
-  for (let i = 0; i < plugins.length; i++) {
-    const plugin = plugins[i]
-    if (plugin.pluginId === 'custom') {
-      addCustom = false
-    }
+const LEGACY_PLUGINS = ['Simplex', 'Wyre', 'Bitrefill']
+
+const hostedBuySellPlugins: Array<BuySellPlugin> = [
+  {
+    pluginId: 'com.libertyx',
+    uri: 'https://libertyx.com/a/',
+    name: 'LibertyX',
+    subtitle: 'Buy Bitcoin with cash at US merchants\nBTC\nFee: 3-8% / Settlement: Instant',
+    imageUrl: 'https://edge.app/wp-content/uploads/2019/05/libertyXlogo.png',
+
+    permissions: ['location'],
+    originWhitelist: ['https://libertyx.com']
+  },
+  {
+    pluginId: 'io.moonpay.buy',
+    uri: 'https://buy.moonpay.io?apiKey=pk_live_Y1vQHUgfppB4oMEZksB8DYNQAdA4sauy',
+    name: 'MoonPay',
+    subtitle: 'Buy crypto with credit card or Apple Pay\nBTC, ETH, XRP, LTC, BCH\nFee: 5.5% / Settlement: 10 mins',
+    imageUrl: 'https://edge.app/wp-content/uploads/2019/05/icon_black_small.png'
   }
-  if (developerModeOn && addCustom) {
-    const devPlugin = {
-      pluginId: 'custom',
-      name: 'Custom Dev',
-      subtitle: 'Development Testing',
-      provider: 'Edge Wallet',
-      iconUrl: 'http://edge.app/wp-content/uploads/2019/01/wyre-logo-square-small.png',
-      environment: {},
-      isLegacy: false
-    }
-    plugins.push(devPlugin)
-  }
+  // {
+  //   pluginId: 'io.safello',
+  //   uri: 'https://safello.com/edge/',
+  //   name: 'Safello',
+  //   subtitle: 'Buy crypto with credit card\nBTC, ETH, XRP, BCH\nFee: 5.75% / Settlement: Instant',
+  //   imageUrl: 'https://edge.app/wp-content/uploads/2019/06/Safello-Logo-Green-background.png'
+  // }
+]
+
+const hostedSpendPlugins: Array<BuySellPlugin> = []
+
+const devPlugin = {
+  pluginId: 'custom',
+  uri: 'https://edge.app',
+  name: 'Custom Dev',
+  subtitle: 'Development Testing',
+  imageUrl: 'http://edge.app/wp-content/uploads/2019/01/wyre-logo-square-small.png'
+}
+
+function fixPlugins (plugins: Array<Object>): Array<BuySellPlugin> {
+  const baseDir = Platform.OS === 'android' ? 'android_asset' : RNFS.MainBundlePath
+
   return plugins.map(plugin => {
-    console.log('pluginStuff: Lodaing plugin ', plugin)
-    const baseDir = Platform.OS === 'android' ? 'android_asset' : RNFS.MainBundlePath
-    const pluginPath = plugin.pluginURL ? plugin.pluginURL : `file:///${baseDir}/plugins/${plugin.pluginId}/index.html`
-    const isLegacy = LEGACY_PLUGINS.includes(plugin.name)
+    const pluginPath = `file:///${baseDir}/plugins/${plugin.pluginId}/index.html`
+
     return {
-      pluginId: plugin.pluginId,
-      sourceFile: { uri: pluginPath },
-      name: plugin.name,
-      subtitle: plugin.subtitle,
-      provider: plugin.provider,
       imageUrl: plugin.iconUrl,
-      environment: plugin.environment,
-      permissions: plugin.permissions || [],
-      isLegacy
+      isLegacy: LEGACY_PLUGINS.includes(plugin.name),
+      ...plugin,
+      uri: pluginPath
     }
   })
 }
 
-export function buySellPlugins (developerModeOn: boolean) {
-  return loadPlugins(plugins.buysell, developerModeOn)
+export function buySellPlugins (developerModeOn: boolean): Array<BuySellPlugin> {
+  const plugins = [...hostedBuySellPlugins, ...fixPlugins(assetPlugins.buysell)]
+
+  return developerModeOn ? [...plugins, devPlugin] : plugins
 }
 
-export function spendPlugins (developerModeOn: boolean) {
-  return loadPlugins(plugins.spend, developerModeOn)
+export function spendPlugins (developerModeOn: boolean): Array<BuySellPlugin> {
+  const plugins = [...hostedSpendPlugins, ...fixPlugins(assetPlugins.spend)]
+
+  return developerModeOn ? [...plugins, devPlugin] : plugins
 }

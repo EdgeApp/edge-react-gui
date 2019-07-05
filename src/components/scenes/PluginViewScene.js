@@ -2,13 +2,10 @@
 
 import React from 'react'
 import { Platform } from 'react-native'
-import RNFS from 'react-native-fs'
-import { Actions } from 'react-native-router-flux'
 import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
 import { Bridge, onMethod } from 'yaob'
 
-import ENV from '../../../env.json'
 import { javascript } from '../../lib/bridge/injectThisInWebView.js'
 import type { Dispatch, State } from '../../modules/ReduxTypes'
 import { setPluginScene } from '../../modules/UI/scenes/Plugins/BackButton.js'
@@ -107,64 +104,38 @@ type Props = {
 }
 
 type PluginWorkerApi = {
-  isFirstPage: boolean,
   setEdgeProvider(provider: EdgeProvider): Promise<mixed>
 }
 
 class PluginView extends React.Component<Props> {
   _callbacks: WebViewCallbacks
+  _canGoBack: boolean
   _edgeProvider: EdgeProvider
-  webview: WebView | void
+  _webview: WebView | void
 
   constructor (props) {
     super(props)
     setPluginScene(this)
 
-    let pageState: 'start' | 'blank' | 'loaded' = 'start'
-
     // Set up the plugin:
     const { dispatch, plugin, state } = this.props
-    plugin.environment.apiKey = ENV.PLUGIN_API_KEYS ? ENV.PLUGIN_API_KEYS[plugin.name] : 'edgeWallet' // latter is dummy code
 
     // Set up the EdgeProvider:
     this._edgeProvider = new EdgeProvider(plugin.pluginId, state, dispatch)
 
     // Set up the WebView bridge:
+    this._canGoBack = false
     this._callbacks = makeOuterWebViewBridge((root: PluginWorkerApi) => {
       root.setEdgeProvider(this._edgeProvider).catch(e => {
         console.warn('plugin setEdgeProvider error: ' + String(e))
       })
-
-      switch (pageState) {
-        case 'start':
-          if (root.isFirstPage) {
-            // This is our first time visiting the loading page:
-            pageState = 'blank'
-            const js = `document.location = ${JSON.stringify(plugin.sourceFile.uri)}`
-            if (this.webview) this.webview.injectJavaScript(js)
-          }
-          break
-
-        case 'blank':
-          if (!root.isFirstPage) {
-            // We made it into the plugin:
-            pageState = 'loaded'
-          }
-          break
-
-        case 'loaded':
-          if (root.isFirstPage) {
-            // We were in the plugin, but now we are back at the loading page:
-            pageState = 'start'
-            Actions.pop()
-          }
-      }
     }, true)
 
     // Capture the WebView ref:
     const { setRef } = this._callbacks
     this._callbacks.setRef = (element: WebView | void) => {
-      this.webview = element
+      if (element == null) this._canGoBack = false
+      this._webview = element
       setRef(element)
     }
   }
@@ -173,12 +144,26 @@ class PluginView extends React.Component<Props> {
     this._edgeProvider.updateState(this.props.state)
   }
 
+  goBack (): boolean {
+    if (this._webview == null || !this._canGoBack) {
+      return false
+    }
+    this._webview.goBack()
+    return true
+  }
+
+  onNavigationStateChange = event => {
+    console.log('Plugin navigation: ', event)
+    this._canGoBack = event.canGoBack
+  }
+
   render () {
-    const uri = Platform.OS === 'android' ? 'file:///android_asset/blank.html' : `file://${RNFS.MainBundlePath}/blank.html`
+    const { uri, originWhitelist = ['file://*', 'https://*', 'http://*', 'edge://*'] } = this.props.plugin
     const userAgent =
       Platform.OS === 'android'
         ? 'Mozilla/5.0 (Linux; U; Android 4.4.2; en-us; SCH-I535 Build/KOT49H) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30'
         : 'Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_1 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Version/10.0 Mobile/14E304 Safari/602.1'
+
     return (
       <SceneWrapper background="body" hasTabs={false}>
         <WebView
@@ -187,12 +172,13 @@ class PluginView extends React.Component<Props> {
           geolocationEnabled
           injectedJavaScript={javascript}
           javaScriptEnabled={true}
+          onNavigationStateChange={this.onNavigationStateChange}
           onMessage={this._callbacks.onMessage}
-          originWhitelist={['file://', 'https://', 'http://', 'edge://']}
+          originWhitelist={originWhitelist}
           ref={this._callbacks.setRef}
           setWebContentsDebuggingEnabled={true}
           source={{ uri }}
-          userAgent={userAgent + ' edge/app.edge.'}
+          userAgent={userAgent + ' hasEdgeProvider edge/app.edge.'}
           useWebKit
         />
       </SceneWrapper>

@@ -4,6 +4,8 @@ import { scale } from '../../lib/scaling'
 import THEME from '../../theme/variables/airbitz'
 
 const CryptoExchangeWalletSelectorModalStyles = {
+  touchable: {},
+  underlayColor: THEME.COLORS.TRANSPARENT,
   container: {
     flex: 1,
     justifyContent: 'flex-end'

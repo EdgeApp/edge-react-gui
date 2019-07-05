@@ -66,7 +66,7 @@ import * as CONTEXT_API from '../modules/Core/Context/api'
 import DeepLinkingManager from '../modules/DeepLinkingManager.js'
 import PermissionsManager, { type Permission, PermissionStrings } from '../modules/PermissionsManager.js'
 import AutoLogout from '../modules/UI/components/AutoLogout/AutoLogoutConnector'
-import { ContactsLoaderConnecter as ContactsLoader } from '../modules/UI/components/ContactsLoader/indexContactsLoader.js'
+import ContactsLoader from '../modules/UI/components/ContactsLoader/contactsLoaderConnector.js'
 import ControlPanel from '../modules/UI/components/ControlPanel/ControlPanelConnector'
 import ErrorAlert from '../modules/UI/components/ErrorAlert/ErrorAlertConnector'
 import T from '../modules/UI/components/FormattedText/index'
@@ -91,12 +91,15 @@ import {
 } from '../modules/UI/scenes/Plugins/index.js'
 import { HwBackButtonHandler } from '../modules/UI/scenes/WalletList/components/HwBackButtonHandler/index'
 import { styles } from '../styles/MainStyle.js'
+import { makeAirship } from './common/Airship.js'
 import { ModalProvider } from './common/ModalProvider.js'
 import { EdgeCoreManager } from './core/EdgeCoreManager.js'
 import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
 import { CryptoExchangeQuoteProcessingScreenComponent } from './scenes/CryptoExchangeQuoteProcessingScene.js'
 import { OnBoardingComponent } from './scenes/OnBoardingScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
+
+export const Airship = makeAirship()
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
@@ -771,6 +774,7 @@ export default class Main extends Component<Props> {
         <EdgeCoreManager onLoad={this.onCoreLoad} onError={this.onCoreError} />
 
         <DeepLinkingManager />
+        <Airship />
       </MenuProvider>
     )
   }

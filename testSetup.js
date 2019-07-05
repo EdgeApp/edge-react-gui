@@ -5,7 +5,12 @@ import dateformat from 'dateformat'
 /* globals jest */
 jest.mock('dateformat', () => (number, format) => dateformat(number, format, true)) // force timezone to UTC
 jest.mock('react-native-share', () => 'RNShare')
-jest.mock('react-native-device-info', () => ({ getDeviceLocale: jest.fn() }))
+jest.mock('react-native-device-info', () => ({
+  getDeviceLocale: jest.fn(),
+  isTablet () {
+    return false
+  }
+}))
 jest.mock('react-native-share', () => 'RNShare')
 jest.mock('react-native-qrcode', () => 'QRCode')
 jest.mock('react-native-camera', () => ({

@@ -1,5 +1,12 @@
 # edge-react-gui
 
+## 1.8.3
+
+* Add LibertyX plugin
+* Add MoonPay plugin
+* Fix EOS syncing issues
+* Improve Bitcoin & related coins connection reliability
+
 ## 1.8.2
 
 * Fix all-zero exchange rates

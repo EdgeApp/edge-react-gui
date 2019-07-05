@@ -7,30 +7,26 @@ import { Actions } from 'react-native-router-flux'
 import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
 import parse from 'url-parse'
-import { Bridge } from 'yaob'
 
 import ENV from '../../../env.json'
 import { sendConfirmationUpdateTx } from '../../actions/SendConfirmationActions'
 import { selectWallet } from '../../actions/WalletActions'
-import { javascript } from '../../lib/bridge/injectThisInWebView.js'
 import s from '../../locales/strings.js'
 import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
-import { openABAlert } from '../../modules/UI/components/ABAlert/action'
 import T from '../../modules/UI/components/FormattedText/index'
 import BackButton from '../../modules/UI/components/Header/Component/BackButton.ui'
 import { PluginBridge, pop as pluginPop } from '../../modules/UI/scenes/Plugins/api'
-import { EdgeProvider } from '../../modules/UI/scenes/Plugins/EdgeProvider.js'
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
 import type { GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import styles from '../../styles/scenes/PluginsStyle.js'
+import { type BuySellPlugin } from '../../types.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
 const BACK = s.strings.title_back
 
 type PluginProps = {
-  plugin: any,
+  plugin: BuySellPlugin,
   navigation: any,
-  showAlert: Function,
   account: any,
   guiWallet: any,
   coreWallet: any,
@@ -52,17 +48,19 @@ export function renderLegacyPluginBackButton (label: string = BACK) {
   return <BackButton withArrow onPress={pluginPop} label={label} />
 }
 
-const legacyJavascript =
-  'window.originalPostMessage = window.postMessage; window.postMessage = function(data) { window.ReactNativeWebView.postMessage(data); };' + javascript
+const legacyJavascript = `(function() {
+  window.originalPostMessage = window.postMessage;
+  window.postMessage = function(data) {
+    window.ReactNativeWebView.postMessage(data);
+  };
+})()`
 
 class PluginView extends React.Component<PluginProps, PluginState> {
   bridge: any
-  plugin: any
-  updateBridge: Function
   webview: any
   successUrl: ?string
   openingSendConfirmation: boolean
-  yaobBridge: Bridge
+
   constructor (props) {
     super(props)
     console.log('pvs: Legacy')
@@ -70,14 +68,13 @@ class PluginView extends React.Component<PluginProps, PluginState> {
       showWalletList: false
     }
     this.webview = null
-    this.plugin = this.props.plugin
-    this.plugin.environment.apiKey = ENV.PLUGIN_API_KEYS ? ENV.PLUGIN_API_KEYS[this.plugin.name] : 'edgeWallet' // latter is dummy code
-    this.updateBridge(this.props)
-  }
 
-  updateBridge (props) {
+    const apiKey = ENV.PLUGIN_API_KEYS ? ENV.PLUGIN_API_KEYS[props.plugin.name] : 'edgeWallet' // latter is dummy code
     this.bridge = new PluginBridge({
-      plugin: props.plugin,
+      plugin: {
+        ...props.plugin,
+        environment: { apiKey }
+      },
       account: props.account,
       coreWallets: props.coreWallets,
       wallets: props.wallets,
@@ -85,10 +82,9 @@ class PluginView extends React.Component<PluginProps, PluginState> {
       walletId: props.walletId,
       navigationState: this.props.navigation.state,
       folder: props.account.pluginData,
-      pluginId: this.plugin.pluginId,
+      pluginId: props.plugin.pluginId,
       toggleWalletList: this.toggleWalletList,
       chooseWallet: this.chooseWallet,
-      showAlert: this.props.showAlert,
       back: this._webviewBack,
       renderTitle: this._renderTitle,
       edgeCallBack: this.edgeCallBack
@@ -122,10 +118,6 @@ class PluginView extends React.Component<PluginProps, PluginState> {
 
   componentWillUnmount () {
     BackHandler.removeEventListener('hardwareBackPress', this.handleBack)
-  }
-
-  _renderWebView = () => {
-    return this.plugin.sourceFile
   }
 
   _webviewBack = () => {
@@ -165,12 +157,11 @@ class PluginView extends React.Component<PluginProps, PluginState> {
     try {
       data = JSON.parse(event.nativeEvent.data)
     } catch (e) {
-      console.log(e)
+      console.log(`Got bad json ${event.nativeEvent.data}`)
       return
     }
     const { cbid, func } = data
     if (!cbid && !func) {
-      this.yaobBridge.handleMessage(data)
       return
     }
 
@@ -297,15 +288,10 @@ class PluginView extends React.Component<PluginProps, PluginState> {
       this.bridge.navStackClear()
     }
   }
-  webviewLoaded = () => {
-    this.yaobBridge = new Bridge({
-      sendMessage: message => this.webview.injectJavaScript(`window.bridge.handleMessage(${JSON.stringify(message)})`)
-    })
-    const edgeProvider = new EdgeProvider(this.props.plugin.pluginId, this.props.currentState, this.props.thisDispatch)
-    this.yaobBridge.sendRoot(edgeProvider)
-  }
 
   render () {
+    const { uri } = this.props.plugin
+
     return (
       <SceneWrapper background="body" hasTabs={false}>
         <WebView
@@ -317,8 +303,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
           ref={this._setWebview}
           injectedJavaScript={legacyJavascript}
           javaScriptEnabled={true}
-          onLoadEnd={this.webviewLoaded}
-          source={this._renderWebView()}
+          source={{ uri }}
           userAgent={
             'Mozilla/5.0 (Linux; Android 6.0.1; SM-G532G Build/MMB29T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.83 Mobile Safari/537.36'
           }
@@ -352,7 +337,6 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  showAlert: alertSyntax => dispatch(openABAlert('OPEN_AB_ALERT', alertSyntax)),
   selectWallet: (walletId: string, currencyCode: string) => dispatch(selectWallet(walletId, currencyCode)),
   sendConfirmationUpdateTx: (info: GuiMakeSpendInfo) => dispatch(sendConfirmationUpdateTx(info)),
   thisDispatch: dispatch

@@ -180,6 +180,8 @@ export class SendConfirmation extends Component<Props, State> {
     let exchangeCurrencyCode = this.props.secondaryExchangeCurrencyCode
 
     if (this.props.secondaryExchangeCurrencyCode === '') {
+      // There is no `EdgeDenomination.currencyCode`,
+      // so this should never even run: $FlowFixMe
       if (this.state.secondaryDisplayDenomination.currencyCode) {
         exchangeCurrencyCode = this.state.secondaryDisplayDenomination.name
       }
@@ -377,6 +379,8 @@ export class SendConfirmation extends Component<Props, State> {
     let exchangeCurrencyCode = this.props.secondaryExchangeCurrencyCode
 
     if (this.props.secondaryExchangeCurrencyCode === '') {
+      // There is no `EdgeDenomination.currencyCode`,
+      // so this should never even run: $FlowFixMe
       if (this.state.secondaryDisplayDenomination.currencyCode) {
         exchangeCurrencyCode = this.state.secondaryDisplayDenomination.name
       }

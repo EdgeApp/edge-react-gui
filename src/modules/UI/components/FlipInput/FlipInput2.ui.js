@@ -56,7 +56,9 @@ export type FlipInputOwnProps = {
   onAmountChanged(decimalAmount: string): void,
   isEditable: boolean,
   isFiatOnTop: boolean,
-  isFocus: boolean
+  isFocus: boolean,
+
+  keyboardVisible: boolean
 }
 
 type Props = FlipInputOwnProps
@@ -108,7 +110,7 @@ const getInitialState = (props: Props) => {
   return newState
 }
 
-export class FlipInput extends Component<FlipInputOwnProps, State> {
+export class FlipInput extends Component<Props, State> {
   animatedValue: Animated.Value
   frontInterpolate: Animated.Value
   backInterpolate: Animated.Value

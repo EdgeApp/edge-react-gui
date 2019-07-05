@@ -195,7 +195,7 @@ const strings = {
   send_confirmation_eos_error_cpu: 'Insufficient CPU available to send EOS transaction. Please wait 1-3 days for CPU to recharge.',
   send_confirmation_eos_error_net: 'Insufficient NET available to send EOS transaction. Please wait 1-3 days for NET to recharge.',
   send_confirmation_eos_error_ram: 'Insufficient RAM available to send EOS transaction. Please see edge.app/eos for details on how to resolve.',
-  send_scan_header_text: 'Scan to Send, Import, or Edge Login',
+  send_scan_header_text: 'Scan to Send, Sweep, or Edge Login',
   send_scan_edge_login_success_title: 'Edge Login Successful',
   send_scan_edge_login_success_message: 'To continue, please return to the browser or application that requested the Edge Login.',
   send_to_title: 'To: %s',
@@ -249,6 +249,7 @@ const strings = {
   settings_set_custom_nodes_modal_title: 'Set Custom Nodes',
   settings_set_custom_nodes_modal_instructions: 'Please enter the custom nodes you wish to use below (one per row):',
   settings_set_custom_nodes_placeholder: 'https://MyNode.Example:18081',
+  settings_set_country_code_error: 'Unable to save region setting',
   string_cancel_cap: 'Cancel',
   string_cancel: 'CANCEL',
   string_ok_cap: 'OK',
@@ -296,6 +297,7 @@ const strings = {
   string_save: 'Save',
   string_share: 'Share',
   string_show_balance: 'Show Balance',
+  exchange_rates_loading: 'Exchange Rates Loading...',
   string_to_exchange_info: 'and deposit %1$s %2$s\n to %3$s',
   string_master_private_key: 'Master Private Key',
   string_split_wallet: 'Split %s',
@@ -546,7 +548,10 @@ const strings = {
   estimated_quote: 'Estimated Quote',
   estimated_exchange_rate: 'Estimated Exchange Rate',
   estimated_exchange_rate_body:
-    'No exchange providers are able to provide a fixed quote for the exchange requested. This exchange may result in less funds received than quoted.'
+    'No exchange providers are able to provide a fixed quote for the exchange requested. This exchange may result in less funds received than quoted.',
+  buy_sell_crypto_select_country_button: 'Select your region',
+  buy_sell_crypto_no_plugin_region: "We're sorry but there are no available plugins for your region.",
+  user_closed_modal_no_wallet: 'User closed modal. No wallet was selected'
 }
 
 // export default strings

@@ -7,7 +7,7 @@ import PushNotification from 'react-native-push-notification'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
-import { insertWalletIdsForProgress } from '../../actions/WalletActions.js'
+import { getEnabledTokens, insertWalletIdsForProgress } from '../../actions/WalletActions.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { displayErrorAlert } from '../../modules/UI/components/ErrorAlert/actions'
@@ -55,6 +55,7 @@ const createDefaultWallets = async (account: EdgeAccount, defaultFiat: string, d
         walletName = sprintf(s.strings.my_crypto_wallet_name, currencyInfo.displayName)
         global.startMoment && global.startMoment('INIT_ACCOUNT_CREATE_ONE_WALLET')
         edgeWallet = await runWithTimeout(account.createCurrencyWallet(walletType, { name: walletName, fiatCurrencyCode }), 20000, timeoutErr)
+        global.firebase && global.firebase.analytics().logEvent(`Signup_Wallets_Created`)
         global.endMoment && global.endMoment('INIT_ACCOUNT_CREATE_ONE_WALLET')
       }
     }
@@ -71,7 +72,7 @@ const createDefaultWallets = async (account: EdgeAccount, defaultFiat: string, d
     // p.push(account.createCurrencyWallet(ethWalletType, { name: ethWalletName, fiatCurrencyCode }))
     // const results = await runWithTimeout(20000, Promise.all(p))
     // edgeWallet = results[0]
-    global.logEvent && global.logEvent(`Signup_Wallets_Created`)
+    global.firebase && global.firebase.analytics().logEvent(`Signup_Wallets_Created`)
     global.endMoment && global.endMoment('INIT_ACCOUNT_CREATE_WALLETS')
   }
   return edgeWallet
@@ -116,6 +117,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     pinLoginEnabled: false,
     pinMode: false,
     otpMode: false,
+    countryCode: '',
     customTokens: [],
     defaultFiat: '',
     defaultIsoFiat: '',
@@ -207,6 +209,9 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     }
     // $FlowFixMe
     dispatch(updateWalletsRequest())
+    activeWalletIds.forEach(walletId => {
+      dispatch(getEnabledTokens(walletId))
+    })
   } catch (error) {
     console.log('initializeAccount error: ', error)
     Alert.alert(error.name, error.message)

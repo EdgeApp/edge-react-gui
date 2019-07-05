@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react'
-import { Dimensions, FlatList, View } from 'react-native'
+import { Dimensions, FlatList, TouchableWithoutFeedback, View } from 'react-native'
 
 import { CryptoExchangeCreateWalletRow } from '../../components/common/CryptoExchangeCreateWalletRow.js'
 import { CryptoExchangeWalletListRow } from '../../components/common/CryptoExchangeWalletListRow.js'
@@ -13,7 +13,7 @@ import { CryptoExchangeWalletSelectorModalStyles as styles } from '../../styles/
 import type { GuiWallet } from '../../types'
 
 type Props = {
-  onDone(GuiWallet | Object): mixed,
+  onDone(GuiWallet | Object | null): mixed,
   headerTitle: string,
   excludedCurrencyCode: Array<string>,
   wallets: Array<GuiWallet>,
@@ -95,7 +95,6 @@ class CryptoExchangeWalletSelectorModal extends Component<Props, LocalState> {
     this.props.onDone(obj)
   }
   createWallet = (supportedWallet: Object) => {
-    console.log('Create Wallet')
     this.props.onDone(supportedWallet)
   }
   renderWalletItem = ({ item }: FlatListItem) => {
@@ -145,22 +144,27 @@ class CryptoExchangeWalletSelectorModal extends Component<Props, LocalState> {
           <FormattedText>{this.props.headerTitle}</FormattedText>
         </View>
         <View style={styles.headerRight}>
-          <IconButton style={styles.iconButton} onPress={this.props.onDone} icon={CLOSE_ICON} iconType={ION_ICONS} />
+          <IconButton style={styles.iconButton} onPress={this.closeModal} icon={CLOSE_ICON} iconType={ION_ICONS} />
         </View>
       </View>
     )
   }
+  closeModal = () => {
+    this.props.onDone(null)
+  }
   render () {
     return (
-      <View style={styles.container}>
-        <View style={styles.activeArea}>
-          {this.renderHeader()}
-          {this.renderUnSupported()}
-          <View style={{ ...styles.flatListBox, height: this.calculateHeight() }}>
-            <FlatList data={this.state.records} keyExtractor={this.keyExtractor} renderItem={this.renderWalletItem} />
+      <TouchableWithoutFeedback style={styles.touchable} onPress={this.closeModal} underlayColor={styles.underlayColor}>
+        <View style={styles.container}>
+          <View style={styles.activeArea}>
+            {this.renderHeader()}
+            {this.renderUnSupported()}
+            <View style={{ ...styles.flatListBox, height: this.calculateHeight() }}>
+              <FlatList data={this.state.records} keyExtractor={this.keyExtractor} renderItem={this.renderWalletItem} />
+            </View>
           </View>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     )
   }
 }

@@ -1,17 +1,19 @@
 // @flow
+
 import React, { Component } from 'react'
-import { Animated, Dimensions, View } from 'react-native'
+import { Animated, Dimensions, Image, Platform, Text, View } from 'react-native'
+import DeviceInfo from 'react-native-device-info'
 import { Actions } from 'react-native-router-flux'
+import GestureRecognizer from 'react-native-swipe-gestures'
 
 import { EDGE } from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { PrimaryButton, TextButton } from '../../modules/UI/components/Buttons/index'
 import { PagingDotsComponent } from '../../modules/UI/components/PagingDots/PagingDotsComponent.js'
-import { OnBoardingSceneStyles } from '../../styles/indexStyles.js'
+import { dotStyles, styles } from '../../styles/scenes/OnBoardingSceneStyles.js'
 import { PLATFORM } from '../../theme/variables/platform'
-import { OnBoardingSlideComponent } from '../common/OnBoardingSlideComponent.js'
 
-export type OnBoardSlide = {
+type OnBoardSlide = {
   text: string,
   iOSImage: string,
   iPhoneX: string,
@@ -22,21 +24,21 @@ export type OnBoardSlide = {
   androidTabletVerticalImage: string
 }
 
-type Props = {
-  slides: Array<Object>,
-  totalSlides: number,
-  updateSlideIndex(number): void
-}
+type Props = {}
 type State = {
   currentIndex: number,
-  totalSlides: 5,
+  deviceWidth: number,
+  isLandscape: boolean,
   slides: Array<OnBoardSlide>
 }
 
-function getInitialState () {
+function getInitialState (): State {
+  const { height, width } = Dimensions.get('window')
+
   return {
     currentIndex: 0,
-    totalSlides: 5,
+    deviceWidth: width,
+    isLandscape: width > height,
     slides: [
       {
         text: s.strings.onboarding_slide_1,
@@ -99,69 +101,101 @@ class OnBoardingComponent extends Component<Props, State> {
     super(props)
     this.animatedValue = new Animated.Value(0)
     this.state = getInitialState()
+    Dimensions.addEventListener('change', this.updateLayout)
   }
 
-  onNextSlide = () => {
-    const index = this.state.currentIndex + 1
-    if (index === this.state.totalSlides) {
-      return
-    }
-    const newValue = index * PLATFORM.deviceWidth
+  componentWillUnmount () {
+    Dimensions.removeEventListener('change', this.updateLayout)
+  }
+
+  animateSlide (index: number) {
     Animated.timing(this.animatedValue, {
-      toValue: -newValue,
+      toValue: -index * this.state.deviceWidth,
       duration: 300
-    }).start(this.onCompleteMove(index))
+    }).start(() => this.setState({ currentIndex: index }))
   }
-  onPreviousSlide = () => {
-    const index = this.state.currentIndex - 1
-    if (index === -1) {
-      return
-    }
-    const newValue = index * Dimensions.get('window').width
-    Animated.timing(this.animatedValue, {
-      toValue: -newValue,
-      duration: 300
-    }).start(this.onCompleteMove(index))
+
+  goBack = () => {
+    const { currentIndex } = this.state
+    const index = currentIndex - 1
+    if (index >= 0) this.animateSlide(index)
   }
-  onCompleteMove = (index: number) => {
-    this.setState({
-      currentIndex: index
-    })
+
+  goForward = () => {
+    const { currentIndex, slides } = this.state
+    const index = currentIndex + 1
+    if (index < slides.length) this.animateSlide(index)
+    else this.skip()
   }
-  finishOnBoarding = () => {
+
+  skip = () => {
     Actions[EDGE]()
   }
-  renderSlides = (styles: Object) => {
-    let counter = 0
-    return this.state.slides.map(Slide => {
-      counter++
-      // const buttonFunction = counter === this.props.totalSlides ? this.props.finishOnBoarding : null
-      return <OnBoardingSlideComponent slide={Slide} key={'slides_' + counter} swipeLeft={this.onNextSlide} swipeRight={this.onPreviousSlide} index={counter} />
+
+  updateLayout = () => {
+    const { height, width } = Dimensions.get('window')
+    this.animatedValue = new Animated.Value(-this.state.currentIndex * width)
+    this.setState({
+      deviceWidth: width,
+      isLandscape: width > height
     })
+  }
+
+  renderSlide (slide: OnBoardSlide, index: number) {
+    const { deviceWidth, isLandscape } = this.state
+    const isTablet = DeviceInfo.isTablet()
+    const image =
+      Platform.OS === 'android'
+        ? isTablet
+          ? isLandscape
+            ? slide.androidTabletHorizontalImage
+            : slide.androidTabletVerticalImage
+          : slide.androidImage
+        : isTablet
+          ? isLandscape
+            ? slide.iPadImageHoriz
+            : slide.iPadImage
+          : PLATFORM.isIphoneX
+            ? slide.iPhoneX
+            : slide.iOSImage
+    const textTop = isTablet ? '64%' : index === 2 ? '60%' : '55%'
+
+    return (
+      <GestureRecognizer
+        key={`slide${index}`}
+        onSwipeLeft={this.goForward}
+        onSwipeRight={this.goBack}
+        config={{
+          velocityThreshold: 0.6,
+          directionalOffsetThreshold: 200
+        }}
+        style={{ width: deviceWidth }}
+      >
+        <Image style={styles.slideImage} source={{ uri: image }} />
+        <Text style={[styles.slideText, { top: textTop }]}>{slide.text}</Text>
+      </GestureRecognizer>
+    )
   }
 
   render () {
-    const styles = OnBoardingSceneStyles
-    const containerWidth = Dimensions.get('window').width * this.state.totalSlides
-    const containerStyle = { ...styles.slideContainer, width: containerWidth }
-    const animatedStyle = { left: this.animatedValue }
-    const buttonFunction = this.state.currentIndex === this.state.totalSlides - 1 ? this.finishOnBoarding : this.onNextSlide
-    const buttonText = this.state.currentIndex === this.state.totalSlides - 1 ? s.strings.onboarding_button : s.strings.string_next_capitalized
+    const { slides } = this.state
+    const buttonText = this.state.currentIndex === this.state.slides.length - 1 ? s.strings.onboarding_button : s.strings.string_next_capitalized
+
     return (
       <View style={styles.mainContainer}>
-        <View style={styles.slideContainer}>
-          <Animated.View style={[containerStyle, animatedStyle]}>{this.renderSlides(styles)}</Animated.View>
-          <PagingDotsComponent styles={styles.dots} totalItems={this.state.totalSlides} currentIndex={this.state.currentIndex} />
-          <View style={styles.buttonContainerRow}>
-            <PrimaryButton style={styles.button} onPress={buttonFunction}>
-              <PrimaryButton.Text style={styles.buttonText}>{buttonText}</PrimaryButton.Text>
-            </PrimaryButton>
-          </View>
-          <View style={styles.textOnlyContainer}>
-            <TextButton style={styles.textOnlyButton} onPress={this.finishOnBoarding}>
-              <TextButton.Text style={styles.buttonText}>{s.strings.onboarding_skip_button}</TextButton.Text>
-            </TextButton>
-          </View>
+        <Animated.View style={[styles.slideContainer, { left: this.animatedValue }]}>
+          {slides.map((slide, index) => this.renderSlide(slide, index))}
+        </Animated.View>
+        <View style={styles.skipContainer}>
+          <TextButton onPress={this.skip}>
+            <TextButton.Text style={styles.buttonText}>{s.strings.onboarding_skip_button}</TextButton.Text>
+          </TextButton>
+        </View>
+        <PagingDotsComponent styles={dotStyles} totalItems={this.state.slides.length} currentIndex={this.state.currentIndex} />
+        <View style={styles.buttonContainer}>
+          <PrimaryButton style={styles.button} onPress={this.goForward}>
+            <PrimaryButton.Text style={styles.buttonText}>{buttonText}</PrimaryButton.Text>
+          </PrimaryButton>
         </View>
       </View>
     )

@@ -3,13 +3,12 @@
 
 import { Bridge, bridgifyObject } from 'yaob'
 
-console.log('greetz from webview', window.location.href)
-
 function setupBridge () {
+  // We have already run once in this context:
+  if (window.bridge != null) return
+
   // Define our API for the GUI to call:
   const workerApi = {
-    isFirstPage: /file:\/\/.*\/blank\.html/.test(window.location.href),
-
     setEdgeProvider: function (provider) {
       window.edgeProvider = provider
 

@@ -30,7 +30,7 @@ const mapStateToProps = (state: State) => {
 
   const supportedWalletTypes = SETTINGS_SELECTORS.getSupportedWalletTypes(state)
   const ethereumWalletType = supportedWalletTypes.find(item => item.value === 'wallet:ethereum')
-
+  const exchangeRates = state.exchangeRates
   return {
     coreWallets,
     wallets,
@@ -42,7 +42,8 @@ const mapStateToProps = (state: State) => {
     otpResetPending,
     isWalletFiatBalanceVisible,
     defaultFiat,
-    ethereumWalletType
+    ethereumWalletType,
+    exchangeRates
   }
 }
 

@@ -21,20 +21,6 @@ import { errorModal } from '../modules/UI/components/Modals/ErrorModal.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import { selectWallet as selectWalletAction } from './WalletActions.js'
 
-export const updateWalletName = (walletName: string) => ({
-  type: 'UPDATE_WALLET_NAME',
-  data: { walletName }
-})
-
-export const selectWalletType = (walletType: string) => ({
-  type: 'SELECT_WALLET_TYPE',
-  data: { walletType }
-})
-
-export const selectFiat = (fiat: string) => ({
-  type: 'SELECT_FIAT',
-  data: { fiat }
-})
 export const createCurrencyWalletAndAddToSwap = (walletName: string, walletType: string, fiatCurrencyCode: string) => (
   dispatch: Dispatch,
   getState: GetState
@@ -67,6 +53,23 @@ export const createCurrencyWalletAndAddToSwap = (walletName: string, walletType:
       Actions.popTo(Constants.WALLET_LIST_SCENE)
       dispatch({ type: 'UI/WALLETS/CREATE_WALLET_FAILURE' })
     })
+}
+export const createCurrencyWalletAndSelectForPlugins = (walletName: string, walletType: string, fiatCurrencyCode: string) => async (
+  dispatch: Dispatch,
+  getState: GetState
+) => {
+  const state = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+
+  // dispatch({ type: 'UI/WALLETS/CREATE_WALLET_START' })
+  // Try and get the new format param from the legacy walletType if it's mentioned
+  const [type, format] = walletType.split('-')
+  const wallet = await account.createCurrencyWallet(type, {
+    name: walletName,
+    fiatCurrencyCode,
+    keyOptions: format ? { format } : {}
+  })
+  return Promise.resolve(wallet)
 }
 
 export const createCurrencyWallet = (

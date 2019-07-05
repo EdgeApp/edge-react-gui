@@ -134,7 +134,7 @@ export const styles = {
     color: THEME.COLORS.GRAY_1,
     fontSize: scale(17),
     textAlign: 'center',
-    height: PLATFORM.OS === 'ios' ? scale(26) : scale(34),
+    height: scale(34),
     flex: 1,
     fontFamily: THEME.FONTS.DEFAULT
   },
@@ -194,7 +194,7 @@ export const styles = {
   },
   categoryInput: {
     paddingTop: scale(4),
-    height: PLATFORM.OS === 'ios' ? scale(22) : scale(26),
+    height: scale(26),
     fontSize: scale(13),
     flex: 1,
     color: THEME.COLORS.GRAY_1,
