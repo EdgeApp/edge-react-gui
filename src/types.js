@@ -186,15 +186,13 @@ export type SpendingLimits = {
 }
 
 export type BuySellPlugin = {
-  pluginURL?: string,
   pluginId: string,
-  sourceFile: { uri: string },
+  uri: string,
   name: string,
   subtitle: string,
-  provider: string,
   imageUrl: string,
-  environment: Object,
-  isLegacy: boolean,
-  permissions: Array<string>,
-  lockDomain?: boolean
+
+  permissions?: Array<string>,
+  originWhitelist?: Array<string>,
+  isLegacy?: true
 }

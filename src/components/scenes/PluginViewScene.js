@@ -4,10 +4,8 @@ import React from 'react'
 import { Platform } from 'react-native'
 import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
-import parse from 'url-parse'
 import { Bridge, onMethod } from 'yaob'
 
-import ENV from '../../../env.json'
 import { javascript } from '../../lib/bridge/injectThisInWebView.js'
 import type { Dispatch, State } from '../../modules/ReduxTypes'
 import { setPluginScene } from '../../modules/UI/scenes/Plugins/BackButton.js'
@@ -121,7 +119,6 @@ class PluginView extends React.Component<Props> {
 
     // Set up the plugin:
     const { dispatch, plugin, state } = this.props
-    plugin.environment.apiKey = ENV.PLUGIN_API_KEYS ? ENV.PLUGIN_API_KEYS[plugin.name] : 'edgeWallet' // latter is dummy code
 
     // Set up the EdgeProvider:
     this._edgeProvider = new EdgeProvider(plugin.pluginId, state, dispatch)
@@ -156,19 +153,17 @@ class PluginView extends React.Component<Props> {
   }
 
   onNavigationStateChange = event => {
+    console.log('Plugin navigation: ', event)
     this._canGoBack = event.canGoBack
   }
 
   render () {
-    const { uri } = this.props.plugin.sourceFile
+    const { uri, originWhitelist = ['file://', 'https://', 'http://', 'edge://'] } = this.props.plugin
     const userAgent =
       Platform.OS === 'android'
         ? 'Mozilla/5.0 (Linux; U; Android 4.4.2; en-us; SCH-I535 Build/KOT49H) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30'
         : 'Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_1 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Version/10.0 Mobile/14E304 Safari/602.1'
 
-    const parsed = parse(uri, {}, false)
-    const origin = parsed.origin
-    const originWhiteList = this.props.plugin.lockDomain ? [origin] : ['file://', 'https://', 'http://', 'edge://']
     return (
       <SceneWrapper background="body" hasTabs={false}>
         <WebView
@@ -179,11 +174,11 @@ class PluginView extends React.Component<Props> {
           javaScriptEnabled={true}
           onNavigationStateChange={this.onNavigationStateChange}
           onMessage={this._callbacks.onMessage}
-          originWhitelist={originWhiteList}
+          originWhitelist={originWhitelist}
           ref={this._callbacks.setRef}
           setWebContentsDebuggingEnabled={true}
           source={{ uri }}
-          userAgent={userAgent + ' edge/app.edge.'}
+          userAgent={userAgent + ' hasEdgeProvider edge/app.edge.'}
           useWebKit
         />
       </SceneWrapper>

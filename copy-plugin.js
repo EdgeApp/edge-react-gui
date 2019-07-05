@@ -10,37 +10,7 @@ const iosDir = './ios/plugins/'
 
 const platforms = [androidDir, iosDir]
 const pluginManifests = {
-  buysell: [
-    {
-      pluginId: 'com.libertyx',
-      pluginURL: 'https://libertyx.com/a/',
-      name: 'LibertyX',
-      subtitle: 'Buy Bitcoin with cash at US merchants\nBTC\nFee: 3-8% / Settlement: Instant',
-      provider: 'Edge Wallet',
-      iconUrl: 'https://edge.app/wp-content/uploads/2019/05/libertyXlogo.png',
-      environment: {},
-      permissions: ['location'],
-      lockDomain: true
-    },
-    {
-      pluginId: 'io.moonpay.buy',
-      pluginURL: 'https://buy.moonpay.io?apiKey=pk_live_Y1vQHUgfppB4oMEZksB8DYNQAdA4sauy',
-      name: 'MoonPay',
-      subtitle: 'Buy crypto with credit card or Apple Pay\nBTC, ETH, XRP, LTC, BCH\nFee: 5.5% / Settlement: 10 mins',
-      provider: 'Edge Wallet',
-      iconUrl: 'https://edge.app/wp-content/uploads/2019/05/icon_black_small.png',
-      environment: {}
-    },
-    {
-      pluginId: 'io.safello',
-      pluginURL: 'https://safello.com/edge/',
-      name: 'Safello',
-      subtitle: 'Buy crypto with credit card\nBTC, ETH, XRP, BCH\nFee: 5.75% / Settlement: Instant',
-      provider: 'Edge Wallet',
-      iconUrl: 'https://edge.app/wp-content/uploads/2019/06/Safello-Logo-Green-background.png',
-      environment: {}
-    }
-  ],
+  buysell: [],
   spend: []
 }
 
