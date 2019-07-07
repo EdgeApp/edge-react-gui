@@ -299,7 +299,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
           allowUniversalAccessFromFileURLs
           onMessage={this._onMessage}
           onNavigationStateChange={this._onNavigationStateChange}
-          originWhitelist={['file://', 'https://', 'http://', 'edge://']}
+          originWhitelist={['file://*', 'https://*', 'http://*', 'edge://*']}
           ref={this._setWebview}
           injectedJavaScript={legacyJavascript}
           javaScriptEnabled={true}
