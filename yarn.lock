@@ -9215,7 +9215,7 @@ react-native-vector-icons@^6.1.0:
 
 "react-native-webview@git://github.com/swansontec/react-native-webview#edge-version":
   version "5.12.1"
-  resolved "git://github.com/swansontec/react-native-webview#4790c53f7afdc9e57b5b2ecf7b9940d02682427a"
+  resolved "git://github.com/swansontec/react-native-webview#af8b082a6bc1219c895aef9461e824c08e1334af"
   dependencies:
     escape-string-regexp "1.0.5"
     invariant "2.2.4"
