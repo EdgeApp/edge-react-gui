@@ -157,6 +157,16 @@ class PluginView extends React.Component<Props> {
     this._canGoBack = event.canGoBack
   }
 
+  onLoadProgress = event => {
+    console.log('Plugin navigation: ', event.nativeEvent)
+    this._canGoBack = event.nativeEvent.canGoBack
+  }
+
+  onNavigationStateChange = event => {
+    console.log('Plugin navigation: ', event)
+    this._canGoBack = event.canGoBack
+  }
+
   render () {
     const { uri, originWhitelist = ['file://*', 'https://*', 'http://*', 'edge://*'] } = this.props.plugin
     const userAgent =
@@ -172,6 +182,7 @@ class PluginView extends React.Component<Props> {
           geolocationEnabled
           injectedJavaScript={javascript}
           javaScriptEnabled={true}
+          onLoadProgress={this.onLoadProgress}
           onNavigationStateChange={this.onNavigationStateChange}
           onMessage={this._callbacks.onMessage}
           originWhitelist={originWhitelist}
