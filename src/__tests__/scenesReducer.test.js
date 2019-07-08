@@ -38,7 +38,6 @@ test('initialState', () => {
     exchangeRate: {
       exchangeRates: {}
     },
-    helpModal: false,
     request: request(undefined, dummyAction),
     requestType: {
       useLegacyAddress: false,

@@ -4,9 +4,16 @@ import dateformat from 'dateformat'
 
 /* globals jest */
 jest.mock('dateformat', () => (number, format) => dateformat(number, format, true)) // force timezone to UTC
-jest.mock('react-native-share', () => 'RNShare')
 jest.mock('react-native-device-info', () => ({
-  getDeviceLocale: jest.fn(),
+  getBuildNumber () {
+    return '2019010101'
+  },
+  getDeviceLocale () {
+    return 'en_US'
+  },
+  getVersion () {
+    return '1.2.3'
+  },
   isTablet () {
     return false
   }
