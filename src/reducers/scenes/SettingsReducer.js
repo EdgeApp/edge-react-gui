@@ -51,6 +51,7 @@ export type SettingsState = {
   BTC: CurrencySetting,
   DASH: CurrencySetting,
   FTC: CurrencySetting,
+  RVN: CurrencySetting,
   ETH: CurrencySetting,
   LTC: CurrencySetting,
   VTC: CurrencySetting,
