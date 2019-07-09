@@ -1,4 +1,5 @@
 // @flow
+
 import type { EdgeCurrencyWallet, EdgeGetTransactionsOptions } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Platform, View } from 'react-native'
@@ -9,10 +10,9 @@ import Share from 'react-native-share'
 import { IOS } from '../../constants/indexConstants'
 import s from '../../locales/strings'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
-import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/index.js'
-import { TransactionExportSceneStyle } from '../../styles/indexStyles'
+import { styles } from '../../styles/scenes/TransactionsExportSceneStyle.js'
 import { sanitizeForFilename } from '../../util/utils.js'
+import { SceneWrapper } from '../common/SceneWrapper.js'
 
 export type PassedProps = {
   sourceWallet: EdgeCurrencyWallet
@@ -25,25 +25,21 @@ type Props = StateProps & PassedProps
 
 export class TransactionsExportSceneComponent extends Component<Props> {
   render () {
-    const styles = TransactionExportSceneStyle
     return (
-      <SafeAreaView>
-        <View style={styles.container}>
-          <Gradient style={styles.gradient} />
-          <View style={styles.shim} />
-          <View style={styles.actionButtonContainer}>
-            <PrimaryButton onPress={this.exportQBO}>
-              <PrimaryButton.Text>{s.strings.string_export_qbo}</PrimaryButton.Text>
-            </PrimaryButton>
-          </View>
-          <View style={styles.shim} />
-          <View style={styles.actionButtonContainer}>
-            <PrimaryButton onPress={this.exportCSV}>
-              <PrimaryButton.Text>{s.strings.string_export_csv}</PrimaryButton.Text>
-            </PrimaryButton>
-          </View>
+      <SceneWrapper background="body">
+        <View style={styles.shim} />
+        <View style={styles.actionButtonContainer}>
+          <PrimaryButton onPress={this.exportQBO}>
+            <PrimaryButton.Text>{s.strings.string_export_qbo}</PrimaryButton.Text>
+          </PrimaryButton>
         </View>
-      </SafeAreaView>
+        <View style={styles.shim} />
+        <View style={styles.actionButtonContainer}>
+          <PrimaryButton onPress={this.exportCSV}>
+            <PrimaryButton.Text>{s.strings.string_export_csv}</PrimaryButton.Text>
+          </PrimaryButton>
+        </View>
+      </SceneWrapper>
     )
   }
 
