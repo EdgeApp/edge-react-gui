@@ -308,6 +308,10 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
       />
       <RowRoute
         disabled={false}
+        leftText="Ravencoin"
+      />
+      <RowRoute
+        disabled={false}
         leftText="Feathercoin"
       />
       <RowRoute
@@ -678,6 +682,10 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
       <RowRoute
         disabled={false}
         leftText="Vertcoin"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Ravencoin"
       />
       <RowRoute
         disabled={false}

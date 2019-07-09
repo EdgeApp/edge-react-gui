@@ -98,6 +98,10 @@ export const CURRENCY_SETTINGS = {
     pluginName: 'vertcoin',
     currencyCode: 'VTC'
   },
+  rvnSettings: {
+    pluginName: 'ravencoin',
+    currencyCode: 'RVN'
+  },
   ftcSettings: {
     pluginName: 'feathercoin',
     currencyCode: 'FTC'
