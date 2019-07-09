@@ -153,7 +153,7 @@
     "prop-types": "^15.5.10",
     "querystring-es3": "^0.2.1",
     "react": "16.8.3",
-    "react-native": "0.59.8",
+    "react-native": "0.59.10",
     "react-native-animatable": "^1.1.0",
     "react-native-app-settings": "git://github.com/swansontec/react-native-app-settings#fix-rn59",
     "react-native-background-fetch": "^2.4.3",

@@ -43,8 +43,8 @@ PODS:
     - Picker/Core (= 4.3.7)
   - Picker/Core (4.3.7):
     - React
-  - React (0.59.8):
-    - React/Core (= 0.59.8)
+  - React (0.59.10):
+    - React/Core (= 0.59.10)
   - react-native-camera (1.6.4):
     - React
     - react-native-camera/RCT (= 1.6.4)
@@ -82,54 +82,54 @@ PODS:
     - React
   - react-native-webview (5.12.1):
     - React
-  - React/Core (0.59.8):
-    - yoga (= 0.59.8.React)
-  - React/CxxBridge (0.59.8):
+  - React/Core (0.59.10):
+    - yoga (= 0.59.10.React)
+  - React/CxxBridge (0.59.10):
     - Folly (= 2018.10.22.00)
     - React/Core
     - React/cxxreact
     - React/jsiexecutor
-  - React/cxxreact (0.59.8):
+  - React/cxxreact (0.59.10):
     - boost-for-react-native (= 1.63.0)
     - DoubleConversion
     - Folly (= 2018.10.22.00)
     - glog
     - React/jsinspector
-  - React/DevSupport (0.59.8):
+  - React/DevSupport (0.59.10):
     - React/Core
     - React/RCTWebSocket
-  - React/fishhook (0.59.8)
-  - React/jsi (0.59.8):
+  - React/fishhook (0.59.10)
+  - React/jsi (0.59.10):
     - DoubleConversion
     - Folly (= 2018.10.22.00)
     - glog
-  - React/jsiexecutor (0.59.8):
+  - React/jsiexecutor (0.59.10):
     - DoubleConversion
     - Folly (= 2018.10.22.00)
     - glog
     - React/cxxreact
     - React/jsi
-  - React/jsinspector (0.59.8)
-  - React/RCTActionSheet (0.59.8):
+  - React/jsinspector (0.59.10)
+  - React/RCTActionSheet (0.59.10):
     - React/Core
-  - React/RCTAnimation (0.59.8):
+  - React/RCTAnimation (0.59.10):
     - React/Core
-  - React/RCTBlob (0.59.8):
+  - React/RCTBlob (0.59.10):
     - React/Core
-  - React/RCTImage (0.59.8):
+  - React/RCTImage (0.59.10):
     - React/Core
     - React/RCTNetwork
-  - React/RCTLinkingIOS (0.59.8):
+  - React/RCTLinkingIOS (0.59.10):
     - React/Core
-  - React/RCTNetwork (0.59.8):
+  - React/RCTNetwork (0.59.10):
     - React/Core
-  - React/RCTPushNotification (0.59.8):
+  - React/RCTPushNotification (0.59.10):
     - React/Core
-  - React/RCTSettings (0.59.8):
+  - React/RCTSettings (0.59.10):
     - React/Core
-  - React/RCTText (0.59.8):
+  - React/RCTText (0.59.10):
     - React/Core
-  - React/RCTWebSocket (0.59.8):
+  - React/RCTWebSocket (0.59.10):
     - React/Core
     - React/fishhook
     - React/RCTBlob
@@ -152,7 +152,7 @@ PODS:
     - React/Core
   - RNVectorIcons (6.1.0):
     - React
-  - yoga (0.59.8.React)
+  - yoga (0.59.10.React)
 
 DEPENDENCIES:
   - BugsnagReactNative (from `../node_modules/bugsnag-react-native`)
@@ -295,7 +295,7 @@ SPEC CHECKSUMS:
   GoogleToolboxForMac: 2b2596cbb7186865e98cadf2b1e262d851c2b168
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   Picker: 37554355aef82a532ea95b71b6eeba66bc86182b
-  React: 76e6aa2b87d05eb6cccb6926d72685c9a07df152
+  React: 36d0768f9e93be2473b37e7fa64f92c1d5341eef
   react-native-camera: 9547ea9ab91ef13476a4ad79ec329b1fe634df8c
   react-native-contacts: f6e5c518598762081ff9cf7c70db36f71668538e
   react-native-contacts-wrapper: a423605f89dba6b83edf481940736646f97cd25a
@@ -319,7 +319,7 @@ SPEC CHECKSUMS:
   RNShare: 4f206fa36e384e95a0cbf79f2a92490647e93127
   RNSound: a1d01988e043aed5dbb476c2152b5ffb02446750
   RNVectorIcons: ac7bf6bfeafaf3ad34552cdc6eed6fb8c4b7c940
-  yoga: 92b2102c3d373d1a790db4ab761d2b0ffc634f64
+  yoga: 684513b14b03201579ba3cee20218c9d1298b0cc
 
 PODFILE CHECKSUM: 5fc2d51a47ea6bef872004d3bd946edb628639af
 
