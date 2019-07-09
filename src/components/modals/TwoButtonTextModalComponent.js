@@ -4,9 +4,7 @@ import React, { Component } from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
-// import {sprintf} from 'sprintf-js'
 import StylizedModal from '../../modules/UI/components/Modal/Modal.ui'
-// import strings from '../../../../../locales/default'
 import THEME from '../../theme/variables/airbitz'
 import TwoButtonsComponent from './TwoButtonsComponent.js'
 
@@ -15,13 +13,14 @@ type Props = {
   headerText: string,
   launchModal: boolean,
   middleText: string,
-  icon: string,
-  iconType: string,
+  icon?: string,
+  iconType?: string,
+  iconImage?: string,
   cancelText: string,
   doneText: string,
   onCancel(): void,
   onDone(): void,
-  onExitButtonFxn(): void,
+  onExitButtonFxn?: () => void,
   iconImage?: string
 }
 
@@ -40,7 +39,9 @@ class TwoButtonTextModalComponent extends Component<Props> {
     if (this.props.iconImage) {
       return <Image source={this.props.iconImage} />
     }
-    return <Icon style={style.icon} name={this.props.icon} size={40} type={this.props.iconType} />
+    if (this.props.icon != null && this.props.iconType != null) {
+      return <Icon style={style.icon} name={this.props.icon} size={40} type={this.props.iconType} />
+    }
   }
   render () {
     const modalBottom = (

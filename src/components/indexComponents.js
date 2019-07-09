@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 export * from './common/FormField'
 export * from './modals/StaticModalComponent.js'

@@ -143,7 +143,7 @@ export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, S
         </View>
         <StaticModalComponent
           cancel={this.cancelStatic}
-          body={this.state.messageModalMessage}
+          body={this.state.messageModalMessage || ''}
           bodyComponent={this.state.messageModalComponent}
           isVisible={this.state.showMessageModal}
           modalDismissTimerSeconds={10}

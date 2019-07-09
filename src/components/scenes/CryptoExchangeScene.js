@@ -17,15 +17,13 @@ import type { State } from '../../modules/ReduxTypes'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
 import { CryptoExchangeFlipInputWrapperComponent } from '../../modules/UI/components/FlipInput/CryptoExchangeFlipInputWrapperComponent.js'
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2'
-import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
-// import WalletListModal from '../../modules/UI/components/WalletListModal/WalletListModalConnector'
-import { CryptoExchangeSceneStyle } from '../../styles/indexStyles'
+import { styles } from '../../styles/scenes/CryptoExchangeSceneStyles.js'
 import { emptyCurrencyInfo } from '../../types'
 import type { GuiCurrencyInfo, GuiWallet } from '../../types'
 import { getDenomFromIsoCode } from '../../util/utils.js'
 import { launchModal } from '../common/ModalProvider.js'
+import { SceneWrapper } from '../common/SceneWrapper.js'
 
 export type CryptoExchangeSceneComponentStateProps = {
   // The following props are used to populate the CryptoExchangeFlipInputs
@@ -140,7 +138,6 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
   }
 
   render () {
-    const style = CryptoExchangeSceneStyle
     let fromSecondaryInfo: GuiCurrencyInfo
     if (this.props.fromWallet) {
       fromSecondaryInfo = {
@@ -167,56 +164,53 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
     const isFromFocused = this.state.whichWalletFocus === Constants.FROM
     const isToFocused = this.state.whichWalletFocus === Constants.TO
     return (
-      <SafeAreaView>
-        <Gradient style={style.scene}>
-          <Gradient style={style.gradient} />
-          <KeyboardAwareScrollView
-            style={[style.mainScrollView]}
-            keyboardShouldPersistTaps={Constants.ALWAYS}
-            contentContainerStyle={style.scrollViewContentContainer}
-          >
-            <CryptoExchangeMessageConnector style={style.exchangeRateBanner} />
-            <View style={style.shim} />
-            <CryptoExchangeFlipInputWrapperComponent
-              style={style.flipWrapper}
-              guiWallet={this.props.fromWallet}
-              buttonText={this.props.fromButtonText}
-              currencyLogo={this.props.fromCurrencyIcon}
-              primaryCurrencyInfo={this.props.fromPrimaryInfo}
-              secondaryCurrencyInfo={fromSecondaryInfo}
-              fiatPerCrypto={this.props.fromFiatToCrypto}
-              overridePrimaryExchangeAmount={this.state.fromExchangeAmount}
-              forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
-              launchWalletSelector={this.launchFromWalletSelector}
-              onCryptoExchangeAmountChanged={this.fromAmountChanged}
-              isFocused={isFromFocused}
-              focusMe={this.focusFromWallet}
-            />
-            <View style={style.shim} />
-            <Icon style={style.downArrow} name={Constants.ARROW_DOWN_BOLD} size={style.downArrowSize} type={Constants.MATERIAL_COMMUNITY} />
-            <View style={style.shim} />
-            <CryptoExchangeFlipInputWrapperComponent
-              style={style.flipWrapper}
-              guiWallet={this.props.toWallet}
-              buttonText={this.props.toButtonText}
-              currencyLogo={this.props.toCurrencyIcon}
-              primaryCurrencyInfo={this.props.toPrimaryInfo}
-              secondaryCurrencyInfo={toSecondaryInfo}
-              fiatPerCrypto={this.props.toFiatToCrypto}
-              overridePrimaryExchangeAmount={this.state.toExchangeAmount}
-              forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
-              launchWalletSelector={this.launchToWalletSelector}
-              onCryptoExchangeAmountChanged={this.toAmountChanged}
-              isFocused={isToFocused}
-              isThinking={this.props.creatingWallet}
-              focusMe={this.focusToWallet}
-            />
-            <View style={style.shim} />
-            <View style={style.actionButtonContainer}>{this.renderButton()}</View>
-            <View style={style.shim} />
-          </KeyboardAwareScrollView>
-        </Gradient>
-      </SafeAreaView>
+      <SceneWrapper>
+        <KeyboardAwareScrollView
+          style={[styles.mainScrollView]}
+          keyboardShouldPersistTaps={Constants.ALWAYS}
+          contentContainerStyle={styles.scrollViewContentContainer}
+        >
+          <CryptoExchangeMessageConnector style={styles.exchangeRateBanner} />
+          <View style={styles.shim} />
+          <CryptoExchangeFlipInputWrapperComponent
+            style={styles.flipWrapper}
+            guiWallet={this.props.fromWallet}
+            buttonText={this.props.fromButtonText}
+            currencyLogo={this.props.fromCurrencyIcon}
+            primaryCurrencyInfo={this.props.fromPrimaryInfo}
+            secondaryCurrencyInfo={fromSecondaryInfo}
+            fiatPerCrypto={this.props.fromFiatToCrypto}
+            overridePrimaryExchangeAmount={this.state.fromExchangeAmount}
+            forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
+            launchWalletSelector={this.launchFromWalletSelector}
+            onCryptoExchangeAmountChanged={this.fromAmountChanged}
+            isFocused={isFromFocused}
+            focusMe={this.focusFromWallet}
+          />
+          <View style={styles.shim} />
+          <Icon style={styles.downArrow} name={Constants.ARROW_DOWN_BOLD} size={styles.downArrowSize} type={Constants.MATERIAL_COMMUNITY} />
+          <View style={styles.shim} />
+          <CryptoExchangeFlipInputWrapperComponent
+            style={styles.flipWrapper}
+            guiWallet={this.props.toWallet}
+            buttonText={this.props.toButtonText}
+            currencyLogo={this.props.toCurrencyIcon}
+            primaryCurrencyInfo={this.props.toPrimaryInfo}
+            secondaryCurrencyInfo={toSecondaryInfo}
+            fiatPerCrypto={this.props.toFiatToCrypto}
+            overridePrimaryExchangeAmount={this.state.toExchangeAmount}
+            forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
+            launchWalletSelector={this.launchToWalletSelector}
+            onCryptoExchangeAmountChanged={this.toAmountChanged}
+            isFocused={isToFocused}
+            isThinking={this.props.creatingWallet}
+            focusMe={this.focusToWallet}
+          />
+          <View style={styles.shim} />
+          <View style={styles.actionButtonContainer}>{this.renderButton()}</View>
+          <View style={styles.shim} />
+        </KeyboardAwareScrollView>
+      </SceneWrapper>
     )
   }
   wipeKYCFlag = () => {

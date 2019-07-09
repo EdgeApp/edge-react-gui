@@ -2,13 +2,9 @@
 
 import { scale } from '../../lib/scaling'
 import THEME from '../../theme/variables/airbitz'
-import * as Styles from '../indexStyles'
-const CryptoExchangeSceneStyle = {
-  gradient: {
-    height: THEME.HEADER
-  },
-  scene: Styles.SceneContainer,
-  styleCatch: Styles,
+import { IconButtonStyle, TextAndIconButtonStyle } from '../indexStyles'
+
+export const styles = {
   mainScrollView: {
     flex: 1
   },
@@ -50,7 +46,7 @@ const CryptoExchangeSceneStyle = {
     height: scale(20)
   },
 
-  flipButton: Styles.IconButtonStyle,
+  flipButton: IconButtonStyle,
   downArrow: {
     color: THEME.COLORS.WHITE
   },
@@ -79,12 +75,12 @@ const CryptoExchangeSceneStyle = {
       flexDirection: 'column',
       justifyContent: 'space-around'
     },
-    walletSelector: Styles.TextAndIconButtonStyle,
+    walletSelector: TextAndIconButtonStyle,
     noWalletSelected: {
-      ...Styles.TextAndIconButtonStyle,
+      ...TextAndIconButtonStyle,
       textContainer: {},
       inner: {
-        ...Styles.TextAndIconButtonStyle.inner,
+        ...TextAndIconButtonStyle.inner,
         width: '100%',
         justifyContent: 'center'
       }
@@ -134,5 +130,3 @@ const CryptoExchangeSceneStyle = {
     flipInputColor: THEME.COLORS.WHITE
   }
 }
-
-export { CryptoExchangeSceneStyle }
