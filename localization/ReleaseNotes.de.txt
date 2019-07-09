@@ -1,3 +1,7 @@
+v1.8.4
+* Simplex Sell - Sell crypto and pay off credit cards
+* Ravencoin added
+
 v1.8.1
 
 * Fix the minimum Android SDK version to 23+ (Android 6)
