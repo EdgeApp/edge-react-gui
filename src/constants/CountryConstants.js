@@ -282,6 +282,7 @@ export const EDGE_PLUGIN_REGIONS = {
       BE: true,
       BG: true,
       HR: true,
+      CA: true,
       CY: true,
       CZ: true,
       DK: true,
@@ -294,6 +295,7 @@ export const EDGE_PLUGIN_REGIONS = {
       IS: true,
       IE: true,
       IT: true,
+      KR: true,
       LV: true,
       LI: true,
       LT: true,
@@ -314,6 +316,7 @@ export const EDGE_PLUGIN_REGIONS = {
       BTC: true,
       BCH: true,
       ETH: true,
+      DAI: true,
       LTC: true,
       EOS: true,
       XRP: true,
@@ -322,7 +325,8 @@ export const EDGE_PLUGIN_REGIONS = {
       BNB: true,
       PAX: true,
       TUSD: true,
-      USDC: true
+      USDC: true,
+      USDT: true
     },
     priority: 1,
     paymentType: 'credit'
