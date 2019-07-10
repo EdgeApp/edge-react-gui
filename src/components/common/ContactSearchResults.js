@@ -54,7 +54,7 @@ class ContactSearchResults extends Component {
     )
   }
 
-  keyExtractor = (item, index) => index
+  keyExtractor = (item, index) => String(index)
 }
 
 export default ContactSearchResults
