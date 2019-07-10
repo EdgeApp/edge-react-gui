@@ -2160,9 +2160,9 @@ bs58check@^1.0.8:
     bs58 "^3.1.0"
     create-hash "^1.1.0"
 
-"bs58grscheck@https://github.com/Groestlcoin/bs58grscheck":
+"bs58grscheck@git+https://github.com/Groestlcoin/bs58grscheck.git":
   version "2.1.2"
-  resolved "https://github.com/Groestlcoin/bs58grscheck#020feec2b3153aeb278596ea70ce3579a37f4e21"
+  resolved "git+https://github.com/Groestlcoin/bs58grscheck.git#020feec2b3153aeb278596ea70ce3579a37f4e21"
   dependencies:
     bs58 "^4.0.0"
     create-hash "^1.1.0"
@@ -2551,11 +2551,6 @@ code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
   integrity sha1-DQcLTQQ6W+ozovGkDi7bPZpMz3c=
-
-coinselect@^3.1.11:
-  version "3.1.11"
-  resolved "https://registry.yarnpkg.com/coinselect/-/coinselect-3.1.11.tgz#e1f063bd1a5882f6735ee0519b9d8b5ac4a93099"
-  integrity sha1-4fBjvRpYgvZzXuBRm52LWsSpMJk=
 
 coinstring@^2.0.0:
   version "2.3.0"
@@ -3327,9 +3322,10 @@ edge-currency-accountbased@^0.1.15:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-"edge-currency-bitcoin@git://github.com/EdgeApp/edge-currency-bitcoin#86839c2b":
-  version "4.2.5"
-  resolved "git://github.com/EdgeApp/edge-currency-bitcoin#86839c2b56728c172f6debe783c7450c871917ce"
+edge-currency-bitcoin@^4.2.6:
+  version "4.2.6"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.2.6.tgz#e5e27ca5d920fd16f9bc1219f89ae175e4011b50"
+  integrity sha512-mfIsajnnLYizIfhT311TRJlZecorvNYvgxw163AbMCgFsft+600s6EQvDnRZurMgCqCunU8ou9GCTZuGJrhVDg==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -3338,7 +3334,6 @@ edge-currency-accountbased@^0.1.15:
     bs58smartcheck "^2.0.4"
     buffer "^5.2.1"
     chai "^4.2.0"
-    coinselect "^3.1.11"
     esm "^3.2.4"
     eventemitter3 "^3.1.0"
     jsonschema "^1.2.4"
@@ -9225,10 +9220,10 @@ react-native-vector-icons@^6.1.0:
     escape-string-regexp "1.0.5"
     invariant "2.2.4"
 
-react-native@0.59.8:
-  version "0.59.8"
-  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.59.8.tgz#ade4141c777c60f5ec4889d9811d0f80a9d56547"
-  integrity sha512-x1T+/pEXrjgdH9uDzd5doJy5aFlBqW04j7ljDKIGALchhnvdFbtXXrUZ/1PfWHMrIdZxtaDt4tkSttp662GSQA==
+react-native@0.59.10:
+  version "0.59.10"
+  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.59.10.tgz#352f381e382f93a0403be499c9e384bf51c2591c"
+  integrity sha512-guB9YW+pBqS1dnfZ4ntzjINopiCUAbdmshU2wMWD1W32fRczLAopi/7Q2iHKP8LTCdxuYZV3fa9Mew5PSuANAw==
   dependencies:
     "@babel/runtime" "^7.0.0"
     "@react-native-community/cli" "^1.2.1"

@@ -2,7 +2,7 @@
 
 import { StyleSheet } from 'react-native'
 
-import * as Styles from '../../../../styles/indexStyles'
+import { TextAndIconButtonStyle } from '../../../../styles/indexStyles'
 import THEME from '../../../../theme/variables/airbitz'
 
 export default StyleSheet.create({
@@ -52,7 +52,7 @@ export default StyleSheet.create({
 })
 
 export const walletSelectorStyles = {
-  ...Styles.TextAndIconButtonStyle,
-  content: { ...Styles.TextAndIconButtonStyle.content, position: 'relative', width: '80%' },
-  centeredContent: { ...Styles.TextAndIconButtonStyle.centeredContent, position: 'relative', width: '80%' }
+  ...TextAndIconButtonStyle,
+  content: { position: 'relative', width: '80%' },
+  centeredContent: { ...TextAndIconButtonStyle.centeredContent, position: 'relative', width: '80%' }
 }

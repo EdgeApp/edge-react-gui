@@ -2,13 +2,8 @@
 
 import { scale } from '../../lib/scaling'
 import THEME from '../../theme/variables/airbitz'
-import * as Styles from '../indexStyles'
 
 export const styles = {
-  scene: Styles.SceneContainer,
-  gradient: {
-    height: THEME.SPACER.HEADER
-  },
   topRow: {
     alignItems: 'center',
     justifyContent: 'space-around'

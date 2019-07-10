@@ -248,8 +248,8 @@ export default class WalletList extends Component<Props, State> {
         />
       )
     }
-    if (this.state.showMessageModal) {
-      return <StaticModalComponent cancel={this.cancelStatic} body={this.state.messageModalMessage} modalDismissTimerSeconds={8} />
+    if (this.state.showMessageModal && this.state.messageModalMessage != null) {
+      return <StaticModalComponent cancel={this.cancelStatic} body={this.state.messageModalMessage} modalDismissTimerSeconds={8} isVisible />
     }
 
     return null

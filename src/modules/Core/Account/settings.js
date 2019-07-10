@@ -60,9 +60,9 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   VTC: {
     denomination: '100000000'
   },
-  // RVN: {
-  //   denomination: '100000000'
-  // },
+  RVN: {
+    denomination: '100000000'
+  },
   XZC: {
     denomination: '100000000'
   },

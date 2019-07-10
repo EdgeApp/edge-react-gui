@@ -1,7 +1,8 @@
 // @flow
+
 import { createInputModal } from 'edge-components'
 import React, { Component } from 'react'
-// eslint-disable-next-line
+// eslint-disable-next-line react-native/split-platform-components
 import { FlatList, Image, PermissionsAndroid, Platform, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import IonIcon from 'react-native-vector-icons/Ionicons'
