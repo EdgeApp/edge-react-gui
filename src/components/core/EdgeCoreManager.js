@@ -62,7 +62,7 @@ export const ratePlugins = {
   coincapLegacy: true,
   nomics: ENV.NOMICS_INIT,
   currencyconverterapi: ENV.CURRENCYCONVERTERAPI_INIT,
-  herc: true
+  xagau: true
 }
 
 export const swapPlugins = {
