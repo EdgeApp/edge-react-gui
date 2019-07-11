@@ -2160,9 +2160,9 @@ bs58check@^1.0.8:
     bs58 "^3.1.0"
     create-hash "^1.1.0"
 
-"bs58grscheck@git+https://github.com/Groestlcoin/bs58grscheck.git":
+"bs58grscheck@https://github.com/Groestlcoin/bs58grscheck":
   version "2.1.2"
-  resolved "git+https://github.com/Groestlcoin/bs58grscheck.git#020feec2b3153aeb278596ea70ce3579a37f4e21"
+  resolved "https://github.com/Groestlcoin/bs58grscheck#020feec2b3153aeb278596ea70ce3579a37f4e21"
   dependencies:
     bs58 "^4.0.0"
     create-hash "^1.1.0"
@@ -3302,10 +3302,10 @@ edge-core-js@^0.16.4:
     ws "^5.1.1"
     yaob "^0.3.4"
 
-edge-currency-accountbased@^0.1.15:
-  version "0.1.15"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.1.15.tgz#9d3d295c57e467070add34932b3d7439f64d0aab"
-  integrity sha512-xgtDmJi11oCA3Hpgq5RmUpKiLRGwbecAiHqxws1S22dZ31Ylvzj7wDuXomWetjixQjKQc23HiK0gsOsk/badBw==
+edge-currency-accountbased@^0.1.16:
+  version "0.1.16"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.1.16.tgz#8fd57c6f90617fdb420c25221ecffe603278cf92"
+  integrity sha512-ve5AuWBw9whxoztnOT0TFPak52/Oo7Z5jRuvdJ5ny7ZIid/5H8UDEMMiy3SHNkND6C94ZNvGMRyCxfLyJChuxg==
   dependencies:
     base-x "^1.0.4"
     biggystring "^3.0.0"
@@ -3353,10 +3353,10 @@ edge-currency-monero@0.2.2:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#6eddbd64"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.6.5:
-  version "0.6.5"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.6.5.tgz#64fdc12219de9a22557439f21b43b6d07c37461f"
-  integrity sha512-TZx9HTwbFWT7MUZ9X2+DCPVqvDeldPYZ5Sm1ytkcgOCEbzTLc1Xx2AagmiP+EdKMaxI6WTSeWHo2T2FiqxqUeQ==
+edge-exchange-plugins@^0.6.7:
+  version "0.6.7"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.6.7.tgz#cf894178970968b088cb1a49e962d7e57afe86b9"
+  integrity sha512-iy6qRsLU3o3iL6fhL4cATnMiajksgkxYC2Sl1JZKz5QKWOxBRYeyh+eZm94+lx6eNWrFhEYhQdcB/uQbK/ysGQ==
   dependencies:
     esm "^3.2.4"
     hashjs "^1.2.0"
