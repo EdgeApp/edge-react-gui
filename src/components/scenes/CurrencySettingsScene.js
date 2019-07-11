@@ -5,13 +5,13 @@ import { View } from 'react-native'
 
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/index'
-import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
+import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import styles from '../../styles/scenes/SettingsStyle'
 import type { GuiDenomination } from '../../types'
 import RadioRows from '../common/RadioRows.js'
 import ModalRow from '../common/RowModal.js'
 import SwitchRow from '../common/RowSwitch.js'
+import { SceneWrapper } from '../common/SceneWrapper.js'
 import Row from '../common/SettingsRow.js'
 import { SetCustomNodesModal } from '../modals/SetCustomNodesModal.ui.js'
 
@@ -115,55 +115,52 @@ export default class CurrencySettings extends Component<Props, State> {
 
   render () {
     return (
-      <SafeAreaView>
-        <View style={[styles.ethereumSettings]}>
-          <Gradient style={styles.gradient} />
-          <View style={styles.container}>
-            {this.props.defaultElectrumServer.length !== 0 && (
-              <SetCustomNodesModal
-                isActive={this.state.isSetCustomNodesModalVisible}
-                onExit={this.closeSetCustomNodesModal}
-                electrumServers={this.props.electrumServers}
-                saveCustomNodesList={this.props.saveCustomNodesList}
-                defaultElectrumServer={this.props.defaultElectrumServer}
-                disableCustomNodes={this.props.disableCustomNodes}
-                activatedBy={this.state.activatedBy}
+      <SceneWrapper background="body" hasTabs={false}>
+        <View style={styles.container}>
+          {this.props.defaultElectrumServer.length !== 0 && (
+            <SetCustomNodesModal
+              isActive={this.state.isSetCustomNodesModalVisible}
+              onExit={this.closeSetCustomNodesModal}
+              electrumServers={this.props.electrumServers}
+              saveCustomNodesList={this.props.saveCustomNodesList}
+              defaultElectrumServer={this.props.defaultElectrumServer}
+              disableCustomNodes={this.props.disableCustomNodes}
+              activatedBy={this.state.activatedBy}
+            />
+          )}
+          {this.header(SETTINGS_DENOMINATION_TEXT)}
+          <RadioRows style={{}}>
+            {this.props.denominations.map(denomination => {
+              const key = denomination.multiplier
+              const left = (
+                <View style={{ flexDirection: 'row' }}>
+                  <T style={styles.symbol}>{denomination.symbol}</T>
+                  <T> - {denomination.name}</T>
+                </View>
+              )
+              const isSelected = key === this.props.selectedDenominationKey
+              const onPress = this.selectDenomination(key)
+              return <Row key={denomination.multiplier} denomination={denomination} left={left} isSelected={isSelected} onPress={onPress} />
+            })}
+          </RadioRows>
+          {this.props.defaultElectrumServer.length !== 0 && (
+            <View>
+              {this.subHeader(CUSTOM_NODES_TEXT)}
+              <SwitchRow
+                leftText={s.strings.settings_enable_custom_nodes}
+                onToggle={this.onChangeEnableCustomNodes}
+                value={this.props.disableFetchingServers}
+                onSaveCustomNodesList={this.props.saveCustomNodesList}
               />
-            )}
-            {this.header(SETTINGS_DENOMINATION_TEXT)}
-            <RadioRows style={{}}>
-              {this.props.denominations.map(denomination => {
-                const key = denomination.multiplier
-                const left = (
-                  <View style={{ flexDirection: 'row' }}>
-                    <T style={styles.symbol}>{denomination.symbol}</T>
-                    <T> - {denomination.name}</T>
-                  </View>
-                )
-                const isSelected = key === this.props.selectedDenominationKey
-                const onPress = this.selectDenomination(key)
-                return <Row key={denomination.multiplier} denomination={denomination} left={left} isSelected={isSelected} onPress={onPress} />
-              })}
-            </RadioRows>
-            {this.props.defaultElectrumServer.length !== 0 && (
-              <View>
-                {this.subHeader(CUSTOM_NODES_TEXT)}
-                <SwitchRow
-                  leftText={s.strings.settings_enable_custom_nodes}
-                  onToggle={this.onChangeEnableCustomNodes}
-                  value={this.props.disableFetchingServers}
-                  onSaveCustomNodesList={this.props.saveCustomNodesList}
-                />
-                <ModalRow
-                  onPress={() => this.openSetCustomNodesModal('row')}
-                  leftText={s.strings.settings_set_custom_nodes_modal_title}
-                  disabled={!this.props.disableFetchingServers}
-                />
-              </View>
-            )}
-          </View>
+              <ModalRow
+                onPress={() => this.openSetCustomNodesModal('row')}
+                leftText={s.strings.settings_set_custom_nodes_modal_title}
+                disabled={!this.props.disableFetchingServers}
+              />
+            </View>
+          )}
         </View>
-      </SafeAreaView>
+      </SceneWrapper>
     )
   }
 }

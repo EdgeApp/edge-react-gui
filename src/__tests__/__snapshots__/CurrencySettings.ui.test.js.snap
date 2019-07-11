@@ -1,49 +1,73 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CurrencySettings should render 1`] = `
-<SafeAreaViewComponent>
+<SceneWrapper
+  background="body"
+  hasTabs={false}
+>
   <View
     style={
-      Array [
-        undefined,
-      ]
+      Object {
+        "backgroundColor": "#F4F5F6",
+        "height": "100%",
+        "position": "relative",
+      }
     }
   >
     <Gradient
       style={
-        Object {
-          "height": 44,
-        }
-      }
-    />
-    <View
-      style={
-        Object {
-          "backgroundColor": "#F4F5F6",
-          "height": "100%",
-          "position": "relative",
-        }
+        Array [
+          Object {
+            "flexDirection": "row",
+            "height": 70.22887323943662,
+            "justifyContent": "space-between",
+            "padding": 16.854929577464787,
+          },
+        ]
       }
     >
-      <Gradient
+      <View
         style={
           Array [
-            Object {
-              "flexDirection": "row",
-              "height": 70.22887323943662,
-              "justifyContent": "space-between",
-              "padding": 16.854929577464787,
-            },
+            undefined,
           ]
         }
       >
         <View
           style={
-            Array [
-              undefined,
-            ]
+            Object {
+              "flexDirection": "row",
+            }
           }
         >
+          <FormattedText
+            style={
+              Object {
+                "backgroundColor": "transparent",
+                "color": "#FFFFFF",
+                "fontSize": 25.28239436619718,
+                "marginLeft": 22.473239436619718,
+              }
+            }
+          >
+            Denominations
+          </FormattedText>
+        </View>
+      </View>
+    </Gradient>
+    <RadioRows
+      style={Object {}}
+    >
+      <Row
+        denomination={
+          Object {
+            "multiplier": "100000000",
+            "name": "BTG",
+            "symbol": "₿",
+          }
+        }
+        isSelected={false}
+        left={
           <View
             style={
               Object {
@@ -54,125 +78,89 @@ exports[`CurrencySettings should render 1`] = `
             <FormattedText
               style={
                 Object {
-                  "backgroundColor": "transparent",
-                  "color": "#FFFFFF",
-                  "fontSize": 25.28239436619718,
-                  "marginLeft": 22.473239436619718,
+                  "fontFamily": "SourceSansPro-Black",
                 }
               }
             >
-              Denominations
+              ₿
+            </FormattedText>
+            <FormattedText>
+               - 
+              BTG
             </FormattedText>
           </View>
-        </View>
-      </Gradient>
-      <RadioRows
-        style={Object {}}
-      >
-        <Row
-          denomination={
-            Object {
-              "multiplier": "100000000",
-              "name": "BTG",
-              "symbol": "₿",
-            }
+        }
+        onPress={[Function]}
+      />
+      <Row
+        denomination={
+          Object {
+            "multiplier": "100000",
+            "name": "mBTG",
+            "symbol": "m₿",
           }
-          isSelected={false}
-          left={
-            <View
+        }
+        isSelected={false}
+        left={
+          <View
+            style={
+              Object {
+                "flexDirection": "row",
+              }
+            }
+          >
+            <FormattedText
               style={
                 Object {
-                  "flexDirection": "row",
+                  "fontFamily": "SourceSansPro-Black",
                 }
               }
             >
-              <FormattedText
-                style={
-                  Object {
-                    "fontFamily": "SourceSansPro-Black",
-                  }
-                }
-              >
-                ₿
-              </FormattedText>
-              <FormattedText>
-                 - 
-                BTG
-              </FormattedText>
-            </View>
+              m₿
+            </FormattedText>
+            <FormattedText>
+               - 
+              mBTG
+            </FormattedText>
+          </View>
+        }
+        onPress={[Function]}
+      />
+      <Row
+        denomination={
+          Object {
+            "multiplier": "100",
+            "name": "bits",
+            "symbol": "ƀ",
           }
-          onPress={[Function]}
-        />
-        <Row
-          denomination={
-            Object {
-              "multiplier": "100000",
-              "name": "mBTG",
-              "symbol": "m₿",
+        }
+        isSelected={true}
+        left={
+          <View
+            style={
+              Object {
+                "flexDirection": "row",
+              }
             }
-          }
-          isSelected={false}
-          left={
-            <View
+          >
+            <FormattedText
               style={
                 Object {
-                  "flexDirection": "row",
+                  "fontFamily": "SourceSansPro-Black",
                 }
               }
             >
-              <FormattedText
-                style={
-                  Object {
-                    "fontFamily": "SourceSansPro-Black",
-                  }
-                }
-              >
-                m₿
-              </FormattedText>
-              <FormattedText>
-                 - 
-                mBTG
-              </FormattedText>
-            </View>
-          }
-          onPress={[Function]}
-        />
-        <Row
-          denomination={
-            Object {
-              "multiplier": "100",
-              "name": "bits",
-              "symbol": "ƀ",
-            }
-          }
-          isSelected={true}
-          left={
-            <View
-              style={
-                Object {
-                  "flexDirection": "row",
-                }
-              }
-            >
-              <FormattedText
-                style={
-                  Object {
-                    "fontFamily": "SourceSansPro-Black",
-                  }
-                }
-              >
-                ƀ
-              </FormattedText>
-              <FormattedText>
-                 - 
-                bits
-              </FormattedText>
-            </View>
-          }
-          onPress={[Function]}
-        />
-      </RadioRows>
-    </View>
+              ƀ
+            </FormattedText>
+            <FormattedText>
+               - 
+              bits
+            </FormattedText>
+          </View>
+        }
+        onPress={[Function]}
+      />
+    </RadioRows>
   </View>
-</SafeAreaViewComponent>
+</SceneWrapper>
 `;

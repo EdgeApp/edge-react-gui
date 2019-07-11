@@ -3,11 +3,8 @@
 import type { EdgeAccount, EdgeContext } from 'edge-core-js'
 import { ChangePinScreen } from 'edge-login-ui-rn'
 import React, { Component } from 'react'
-import { View } from 'react-native'
 
-import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
-import styles from '../../styles/scenes/SettingsStyle.js'
+import { SceneWrapper } from '../common/SceneWrapper.js'
 
 export type ChangePinOwnProps = {
   account: EdgeAccount,
@@ -34,18 +31,9 @@ export default class ChangePassword extends Component<ChangePinComponentProps> {
 
   render () {
     return (
-      <SafeAreaView>
-        <Gradient style={styles.gradient} />
-        <View style={styles.container}>
-          <ChangePinScreen
-            account={this.props.account}
-            context={this.props.context}
-            onComplete={this.onComplete}
-            onCancel={this.onComplete}
-            showHeader={false}
-          />
-        </View>
-      </SafeAreaView>
+      <SceneWrapper hasTabs={false} background="body">
+        <ChangePinScreen account={this.props.account} context={this.props.context} onComplete={this.onComplete} onCancel={this.onComplete} showHeader={false} />
+      </SceneWrapper>
     )
   }
 }
