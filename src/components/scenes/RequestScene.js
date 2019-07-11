@@ -16,17 +16,16 @@ import s from '../../locales/strings.js'
 import ExchangeRate from '../../modules/UI/components/ExchangeRate/index.js'
 import { ExchangedFlipInput } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
-import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import QRCode from '../../modules/UI/components/QRCode/index.js'
 import RequestStatus from '../../modules/UI/components/RequestStatus/index.js'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/index.js'
 import ShareButtons from '../../modules/UI/components/ShareButtons/index.js'
 import WalletListModal from '../../modules/UI/components/WalletListModal/WalletListModalConnector'
-import styles from '../../styles/scenes/RequestStyle.js'
+import { styles } from '../../styles/scenes/RequestStyle.js'
 import type { GuiCurrencyInfo, GuiWallet } from '../../types.js'
 import { getObjectDiff } from '../../util/utils'
 import { launchModal } from '../common/ModalProvider.js'
+import { SceneWrapper } from '../common/SceneWrapper.js'
 
 const PUBLIC_ADDRESS_REFRESH_MS = 2000
 
@@ -242,54 +241,42 @@ export class Request extends Component<Props, State> {
     }
 
     return (
-      <SafeAreaView>
-        <Gradient style={styles.view}>
-          <Gradient style={styles.gradient} />
+      <SceneWrapper>
+        <View style={styles.exchangeRateContainer}>
+          <ExchangeRate primaryInfo={primaryCurrencyInfo} secondaryInfo={secondaryCurrencyInfo} secondaryDisplayAmount={exchangeSecondaryToPrimaryRatio} />
+        </View>
 
-          <View style={styles.exchangeRateContainer}>
-            <ExchangeRate primaryInfo={primaryCurrencyInfo} secondaryInfo={secondaryCurrencyInfo} secondaryDisplayAmount={exchangeSecondaryToPrimaryRatio} />
+        <View style={styles.main}>
+          <ExchangedFlipInput
+            primaryCurrencyInfo={primaryCurrencyInfo}
+            secondaryCurrencyInfo={secondaryCurrencyInfo}
+            exchangeSecondaryToPrimaryRatio={exchangeSecondaryToPrimaryRatio}
+            overridePrimaryExchangeAmount={''}
+            forceUpdateGuiCounter={0}
+            onExchangeAmountChanged={this.onExchangeAmountChanged}
+            keyboardVisible={false}
+            color={color}
+            isFiatOnTop={false}
+            isFocus={false}
+          />
+
+          <View style={{ overflow: 'hidden' }}>
+            <QRCode value={this.state.encodedURI} />
           </View>
+          <RequestStatus requestAddress={requestAddress} addressExplorer={addressExplorer} amountRequestedInCrypto={0} amountReceivedInCrypto={0} />
+        </View>
 
-          <View style={styles.main}>
-            <ExchangedFlipInput
-              primaryCurrencyInfo={primaryCurrencyInfo}
-              secondaryCurrencyInfo={secondaryCurrencyInfo}
-              exchangeSecondaryToPrimaryRatio={exchangeSecondaryToPrimaryRatio}
-              overridePrimaryExchangeAmount={''}
-              forceUpdateGuiCounter={0}
-              onExchangeAmountChanged={this.onExchangeAmountChanged}
-              keyboardVisible={false}
-              color={color}
-              isFiatOnTop={false}
-              isFocus={false}
-            />
-
-            <View style={{ overflow: 'hidden' }}>
-              <QRCode value={this.state.encodedURI} />
-            </View>
-            <RequestStatus requestAddress={requestAddress} addressExplorer={addressExplorer} amountRequestedInCrypto={0} amountReceivedInCrypto={0} />
-          </View>
-
-          <View style={styles.shareButtonsContainer}>
-            <ShareButtons
-              styles={styles.shareButtons}
-              shareViaEmail={this.shareViaEmail}
-              shareViaSMS={this.shareViaSMS}
-              shareViaShare={this.shareViaShare}
-              copyToClipboard={this.copyToClipboard}
-            />
-          </View>
-
-          {this.props.showToWalletModal && (
-            <WalletListModal
-              wallets={allowedWallets}
-              topDisplacement={Constants.REQUEST_WALLET_DIALOG_TOP}
-              type={Constants.TO}
-              onSelectWallet={onSelectWallet}
-            />
-          )}
-        </Gradient>
-      </SafeAreaView>
+        <View style={styles.shareButtonsContainer}>
+          <ShareButtons
+            styles={styles.shareButtons}
+            shareViaEmail={this.shareViaEmail}
+            shareViaSMS={this.shareViaSMS}
+            shareViaShare={this.shareViaShare}
+            copyToClipboard={this.copyToClipboard}
+          />
+        </View>
+        {this.props.showToWalletModal && <WalletListModal wallets={allowedWallets} type={Constants.TO} onSelectWallet={onSelectWallet} />}
+      </SceneWrapper>
     )
   }
 

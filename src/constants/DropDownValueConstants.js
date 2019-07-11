@@ -20,9 +20,7 @@ export const RESTORE_VALUE = 'restore'
 export const SPLIT_VALUE = 'split'
 export const EXPORT_WALLET_TRANSACTIONS_VALUE = 'exportWalletTransactions'
 export const MANAGE_TOKENS_VALUE = 'manageTokens'
-export const REQUEST_WALLET_DIALOG_TOP = THEME.HEADER
 export const TRANSACTIONLIST_WALLET_DIALOG_TOP = THEME.HEADER
-export const CRYPTO_EXCHANGE_WALLET_DIALOG_TOP = THEME.HEADER
 
 export const WALLET_OPTIONS = {
   SORT: {
