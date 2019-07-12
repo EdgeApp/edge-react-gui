@@ -2,24 +2,31 @@
 
 import { Component } from 'react'
 import { AppState } from 'react-native'
+import { connect } from 'react-redux'
+
+import { logoutRequest } from '../../modules/Login/action.js'
+import { type Dispatch, type State as ReduxState } from '../../modules/ReduxTypes.js'
 
 type AppStateType = 'active' | 'background' | 'inactive'
+
 type State = {
   timestamp: Date,
   appState: AppStateType
 }
+
 type Props = {
   autoLogoutTimeInSeconds: ?number,
-  autoLogout: () => void,
-  loginStatus: boolean
+  loginStatus: boolean,
+  logout: () => void
 }
-export default class AutoLogout extends Component<Props, State> {
+
+class AutoLogoutComponent extends Component<Props, State> {
   state = {
     timestamp: new Date(),
     appState: 'active'
   }
 
-  UNSAFE_componentWillMount () {
+  componentDidMount () {
     AppState.addEventListener('change', this.handleAppStateChange)
   }
 
@@ -33,7 +40,7 @@ export default class AutoLogout extends Component<Props, State> {
     const oldTimeStamp = this.state.timestamp
     const durationInSeconds = this.props.autoLogoutTimeInSeconds || Infinity
     if (this.foregrounded(nextAppState) && this.props.loginStatus && this.isTimeExpired(durationInSeconds, newTimestamp, oldTimeStamp)) {
-      this.props.autoLogout()
+      this.props.logout()
     }
 
     this.setState(state => ({
@@ -61,3 +68,15 @@ export default class AutoLogout extends Component<Props, State> {
     return null
   }
 }
+
+export const AutoLogout = connect(
+  (state: ReduxState) => ({
+    loginStatus: state.ui.settings.loginStatus,
+    autoLogoutTimeInSeconds: state.ui.settings.autoLogoutTimeInSeconds
+  }),
+  (dispatch: Dispatch) => ({
+    logout () {
+      return dispatch(logoutRequest())
+    }
+  })
+)(AutoLogoutComponent)
