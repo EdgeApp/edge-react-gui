@@ -35,7 +35,6 @@ const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps 
       publicAddress: '',
       legacyAddress: '',
       useLegacyAddress: null,
-      currentScene: state.ui.scenes.currentScene,
       wallets: state.ui.wallets.byId
     }
   }
@@ -76,7 +75,6 @@ const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps 
     secondaryCurrencyInfo,
     showToWalletModal: state.ui.scenes.walletListModal.walletListModalVisible,
     useLegacyAddress: state.ui.scenes.requestType.useLegacyAddress,
-    currentScene: state.ui.scenes.currentScene,
     wallets: state.ui.wallets.byId
   }
 }

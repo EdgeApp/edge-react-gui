@@ -27,7 +27,6 @@ import { type WalletListState, walletList } from './WalletListReducer.js'
 export type ScenesState = {
   +controlPanel: ControlPanelState,
   +createWallet: CreateWalletState,
-  +currentScene: string,
   +editToken: EditTokenState,
   +exchangeRate: ExchangeRateState,
   +helpModal: HelpModalState,
@@ -45,23 +44,9 @@ export type ScenesState = {
   +walletListModal: WalletListModalState
 }
 
-const currentScene = (state = '', action: Action): string => {
-  if (!action.data) return state
-  switch (action.type) {
-    case 'UPDATE_CURRENT_SCENE_KEY': {
-      // $FlowFixMe
-      return action.data.sceneKey
-    }
-
-    default:
-      return state
-  }
-}
-
 export const scenes: Reducer<ScenesState, Action> = combineReducers({
   controlPanel,
   createWallet,
-  currentScene,
   editToken,
   exchangeRate,
   helpModal,

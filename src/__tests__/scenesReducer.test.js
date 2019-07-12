@@ -82,7 +82,6 @@ test('initialState', () => {
     walletListModal: {
       walletListModalVisible: false
     },
-    currentScene: '',
     passwordReminderModal: {
       status: null
     },
