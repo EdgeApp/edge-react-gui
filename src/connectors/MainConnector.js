@@ -3,7 +3,6 @@
 import { connect } from 'react-redux'
 
 import { checkEnabledExchanges } from '../actions/CryptoExchangeActions.js'
-import { setKeyboardHeight } from '../actions/DimensionsActions.js'
 import * as actions from '../actions/indexActions'
 import { checkAndShowGetCryptoModal } from '../actions/ScanActions.js'
 import { openDrawer, updateCurrentSceneKey } from '../actions/ScenesActions.js'
@@ -24,9 +23,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   },
   dispatchDisableScan: () => {
     return dispatch({ type: 'DISABLE_SCAN' })
-  },
-  setKeyboardHeight: keyboardHeight => {
-    return dispatch(setKeyboardHeight(keyboardHeight))
   },
   addContext: (context, folder) => {
     return dispatch(addContext(context, folder))
