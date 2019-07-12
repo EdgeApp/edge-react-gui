@@ -5,14 +5,16 @@ import { Dimensions, Platform, StatusBar } from 'react-native'
 // $FlowFixMe See https://github.com/react-native-community/react-native-safe-area-view/pull/77
 import { getInset } from 'react-native-safe-area-view'
 
+export type SafeAreaGap = {
+  bottom: number,
+  left: number,
+  right: number,
+  top: number
+}
+
 export type LayoutMetrics = {
   layout: { height: number, width: number },
-  safeAreaInsets: {
-    bottom: number,
-    left: number,
-    right: number,
-    top: number
-  }
+  safeAreaInsets: SafeAreaGap
 }
 
 type Props = {
@@ -55,7 +57,7 @@ export class LayoutContext extends Component<Props, State> {
     const { height, width } = this.state
     const isLandscape = height < width
 
-    const layout = {
+    const metrics: LayoutMetrics = {
       layout: { x: 0, y: 0, height, width },
       safeAreaInsets: {
         bottom: isIos ? getInset('bottom', isLandscape) : 0,
@@ -65,7 +67,7 @@ export class LayoutContext extends Component<Props, State> {
       }
     }
 
-    return this.props.children(layout)
+    return this.props.children(metrics)
   }
 }
 
