@@ -140,7 +140,7 @@
     "domain-browser": "^1.1.7",
     "edge-components": "^0.0.26",
     "edge-core-js": "^0.16.4",
-    "edge-currency-accountbased": "^0.1.16",
+    "edge-currency-accountbased": "^0.1.18",
     "edge-currency-bitcoin": "^4.2.6",
     "edge-currency-monero": "0.2.2",
     "edge-exchange-plugins": "^0.6.7",
