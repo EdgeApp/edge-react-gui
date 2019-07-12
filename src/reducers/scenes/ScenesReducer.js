@@ -23,7 +23,6 @@ import { type SendConfirmationState, sendConfirmation } from './SendConfirmation
 import { type TransactionDetailsState, transactionDetails } from './TransactionDetailsReducer.js'
 import { type TransactionListState, transactionList } from './TransactionListReducer.js'
 import { type WalletListState, walletList } from './WalletListReducer.js'
-import { type WalletTransferListState, walletTransferList } from './WalletTransferListReducer.js'
 
 export type ScenesState = {
   +controlPanel: ControlPanelState,
@@ -43,8 +42,7 @@ export type ScenesState = {
   +transactionList: TransactionListState,
   +uniqueIdentifierModal: UniqueIdentifierModalState,
   +walletList: WalletListState,
-  +walletListModal: WalletListModalState,
-  +walletTransferList: WalletTransferListState
+  +walletListModal: WalletListModalState
 }
 
 const currentScene = (state = '', action: Action): string => {
@@ -78,6 +76,5 @@ export const scenes: Reducer<ScenesState, Action> = combineReducers({
   transactionList,
   uniqueIdentifierModal,
   walletList,
-  walletListModal,
-  walletTransferList
+  walletListModal
 })

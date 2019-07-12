@@ -82,10 +82,6 @@ test('initialState', () => {
     walletListModal: {
       walletListModalVisible: false
     },
-    walletTransferList: {
-      walletListModalVisible: false,
-      walletTransferList: []
-    },
     currentScene: '',
     passwordReminderModal: {
       status: null
