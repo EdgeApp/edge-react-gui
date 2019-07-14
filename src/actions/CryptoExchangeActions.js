@@ -281,13 +281,6 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, info: S
     throw quoteError
   }
 
-  // totle and other DEX's may not allow swapping to a different wallet (received coins must come to same wallet)
-  if (edgeCoinExchangeQuote.pluginName === 'totle') {
-    if (srcWallet.id !== destWallet.id) {
-      throw new Error('DEX swaps require same wallet for receiving')
-    }
-  }
-
   const fromPrimaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
   const toPrimaryInfo = state.cryptoExchange.toWalletPrimaryInfo
 
