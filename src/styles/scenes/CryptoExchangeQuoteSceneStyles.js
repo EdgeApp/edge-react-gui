@@ -6,7 +6,8 @@ import THEME from '../../theme/variables/airbitz'
 export const styles = {
   topRow: {
     alignItems: 'center',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
+    paddingHorizontal: scale(20)
   },
   centerRow: {
     alignItems: 'center'

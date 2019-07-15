@@ -85,7 +85,7 @@ class ExchangeQuoteComponent extends Component<Props, State> {
               </View>
             </View>
             <View style={styles.walletInfoContainer}>
-              <FormattedText style={styles.currencyNameText} isBold>
+              <FormattedText style={styles.currencyNameText} isBold numberOfLines={1}>
                 {this.props.currency}
               </FormattedText>
               <FormattedText style={styles.walletNameText} numberOfLines={1}>
