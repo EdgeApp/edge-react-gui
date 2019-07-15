@@ -53,12 +53,12 @@ cat >ios/edge-core/index.html <<HTML
   <body>
     <script src="edge-core.js"></script>
     <script>
-      let loading = 0
+      var loading = 0
 
       function load (path) {
         ++loading
 
-        const script = document.createElement('script')
+        var script = document.createElement('script')
         script.charset = 'utf-8'
         script.async = true
         function scriptDone () {
