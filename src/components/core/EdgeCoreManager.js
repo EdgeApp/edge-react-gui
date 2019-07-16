@@ -69,7 +69,8 @@ export const swapPlugins = {
   changelly: ENV.CHANGELLY_INIT,
   changenow: { apiKey: ENV.CHANGE_NOW_API_KEY },
   faast: ENV.FAAST_INIT,
-  shapeshift: { apiKey: ENV.SHAPESHIFT_API_KEY }
+  shapeshift: { apiKey: ENV.SHAPESHIFT_API_KEY },
+  totle: ENV.TOTLE_INIT
 }
 
 const contextOptions = {

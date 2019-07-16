@@ -5,6 +5,7 @@ import React, { Component } from 'react'
 import { ActivityIndicator, Image, Linking, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
+import * as EXCHANGE_IMAGES from '../../assets/images/exchange'
 import s from '../../locales/strings.js'
 import { ExchangeQuoteComponent } from '../../modules/UI/components/ExchangeQuote/ExchangeQuoteComponent.js'
 import FormattedText from '../../modules/UI/components/FormattedText/index'
@@ -79,22 +80,7 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
     }
     return null
   }
-  renderImage = (arg: string) => {
-    switch (arg) {
-      case 'shapeshift':
-        return { uri: 'exchange_logo_shapeshift' }
 
-      case 'changenow':
-        return { uri: 'exchange_logo_changenow' }
-
-      case 'faast':
-        return { uri: 'exchange_logo_faast' }
-
-      case 'changelly':
-      default:
-        return { uri: 'exchange_logo_changelly' }
-    }
-  }
   checkForKYC = () => {
     const pluginName = this.props.quote.quote.pluginName
     const componentProps = {
@@ -118,7 +104,7 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
     }
     if (componentProps.aboutText !== '') {
       const modal = createKYCAlertModal({
-        logo: this.renderImage(pluginName),
+        logo: EXCHANGE_IMAGES[`${pluginName}FullLogo`],
         aboutText: componentProps.aboutText,
         acceptText: componentProps.acceptText,
         termsText: componentProps.termsText,
@@ -174,15 +160,14 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
   }
 
   render () {
-    const isEstimate = this.props.quote.quote.isEstimate
+    const { pluginName, isEstimate } = this.props.quote.quote
     if (!this.props.fromWallet) {
       return null
     }
-
     return (
       <SceneWrapper>
         <View style={styles.topRow}>
-          <Image source={this.renderImage(this.props.quote.quote.pluginName)} style={styles.logoImage} />
+          <Image source={EXCHANGE_IMAGES[`${pluginName}FullLogo`]} resizeMode={'contain'} style={{ width: '100%' }} />
         </View>
         <View style={styles.centerRow}>
           <ExchangeQuoteComponent

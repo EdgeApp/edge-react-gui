@@ -3302,10 +3302,10 @@ edge-core-js@^0.16.4:
     ws "^5.1.1"
     yaob "^0.3.4"
 
-edge-currency-accountbased@^0.1.16:
-  version "0.1.16"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.1.16.tgz#8fd57c6f90617fdb420c25221ecffe603278cf92"
-  integrity sha512-ve5AuWBw9whxoztnOT0TFPak52/Oo7Z5jRuvdJ5ny7ZIid/5H8UDEMMiy3SHNkND6C94ZNvGMRyCxfLyJChuxg==
+edge-currency-accountbased@^0.1.18:
+  version "0.1.18"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.1.18.tgz#9979ab8e3b93442dfe3f13eabb5a8c049e136216"
+  integrity sha512-emybkkoDQ2iAQOoLuCXGXmnodeZ5QcBuK0QGgQw2ukfZG2U+R6Zzy4xxRe7JsUMKqmh07MoVlU/R193NLAGnpw==
   dependencies:
     base-x "^1.0.4"
     biggystring "^3.0.0"
@@ -3322,10 +3322,10 @@ edge-currency-accountbased@^0.1.16:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@^4.2.6:
-  version "4.2.6"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.2.6.tgz#e5e27ca5d920fd16f9bc1219f89ae175e4011b50"
-  integrity sha512-mfIsajnnLYizIfhT311TRJlZecorvNYvgxw163AbMCgFsft+600s6EQvDnRZurMgCqCunU8ou9GCTZuGJrhVDg==
+edge-currency-bitcoin@^4.2.7:
+  version "4.2.7"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.2.7.tgz#4e2a4daed2c99d8e34776eb7478c9b51713fac4a"
+  integrity sha512-mPcW91uEIeHihPvC6VJ5DCcWWwlXfrf1FS7oI9g0Si6xYV4zp7rIs0l4vCPSfNj6mMihAlnHPGtPCMfQlyLnOg==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -3353,10 +3353,10 @@ edge-currency-monero@0.2.2:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#6eddbd64"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.6.7:
-  version "0.6.7"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.6.7.tgz#cf894178970968b088cb1a49e962d7e57afe86b9"
-  integrity sha512-iy6qRsLU3o3iL6fhL4cATnMiajksgkxYC2Sl1JZKz5QKWOxBRYeyh+eZm94+lx6eNWrFhEYhQdcB/uQbK/ysGQ==
+edge-exchange-plugins@^0.6.9:
+  version "0.6.9"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.6.9.tgz#a969b2ea1c907cdf630bc9beda576780b13c5318"
+  integrity sha512-EulUmZ+ejZpjKChaT4W+xqpKAeMegumgNyuYtcFw0XcQy54LcOIJO9/y+q/N93fYQCNPv9tQIro9i55TS+CTHQ==
   dependencies:
     esm "^3.2.4"
     hashjs "^1.2.0"
@@ -3393,9 +3393,9 @@ edge-login-ui-rn@0.5.33:
   dependencies:
     moment "^2.22.2"
 
-"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#a453c33":
+"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#517e2db":
   version "0.0.3"
-  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#a453c33438c6a7661d635e0ecb48cf7281040dd5"
+  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#517e2dbf5c6be44c8adae62068d99a4246f68ae2"
   dependencies:
     moment "^2.22.2"
 
@@ -6749,9 +6749,9 @@ locate-path@^3.0.0:
     path-exists "^3.0.0"
 
 lodash-es@^4.2.1:
-  version "4.17.11"
-  resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.11.tgz#145ab4a7ac5c5e52a3531fb4f310255a152b4be0"
-  integrity sha512-DHb1ub+rMjjrxqlB3H56/6MXtm1lSksDp2rA2cNWjG8mlDUYFhUj3Di2Zn5IwSU87xLv8tNIQ7sSwE/YOX/D/Q==
+  version "4.17.14"
+  resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.14.tgz#12a95a963cc5955683cee3b74e85458954f37ecc"
+  integrity sha512-7zchRrGa8UZXjD/4ivUWP1867jDkhzTG2c/uj739utSd7O/pFFdxspCemIFKEEjErbcqRzn8nKnGsi7mvTgRPA==
 
 lodash.every@^4.6.0:
   version "4.6.0"
@@ -6789,9 +6789,9 @@ lodash.memoize@^4.1.2:
   integrity sha1-vMbEmkKihA7Zl/Mj6tpezRguC/4=
 
 lodash.merge@^4.6.0:
-  version "4.6.1"
-  resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.1.tgz#adc25d9cb99b9391c59624f379fbba60d7111d54"
-  integrity sha512-AOYza4+Hf5z1/0Hztxpm2/xiPZgi/cjMqdnKTUWTBSKchJlxXXuUSxCCl8rJlf4g6yww/j6mA8nC8Hw/EZWxKQ==
+  version "4.6.2"
+  resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.2.tgz#558aa53b43b661e1925a0afdfa36a9a1085fe57a"
+  integrity sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==
 
 lodash.pad@^4.1.0:
   version "4.5.1"
@@ -6844,9 +6844,9 @@ lodash@4.17.10:
   integrity sha512-UejweD1pDoXu+AD825lWwp4ZGtSwgnpZxb3JDViD7StjQz+Nb/6l093lx4OQ0foGWNRoc19mWy7BzL+UAK2iVg==
 
 lodash@^4.0.0, lodash@^4.10.1, lodash@^4.11.1, lodash@^4.12.0, lodash@^4.13.1, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.2, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0, lodash@^4.6.1:
-  version "4.17.11"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
-  integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==
+  version "4.17.14"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.14.tgz#9ce487ae66c96254fe20b599f21b6816028078ba"
+  integrity sha512-mmKYbW3GLuJeX+iGP+Y7Gp1AiGHGbXHCOh/jZmrawMmsE7MS4znI3RL2FsjbqOyMayHInjOeykW7PEajUk1/xw==
 
 log-symbols@^1.0.2:
   version "1.0.2"

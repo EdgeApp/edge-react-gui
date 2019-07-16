@@ -213,7 +213,9 @@ export class EdgeProvider extends Bridgeable {
       name: wallet.name,
       receiveAddress: wallet.receiveAddress,
       currencyCode: wallet.currencyCode,
-      fiatCurrencyCode: wallet.fiatCurrencyCode
+      fiatCurrencyCode: wallet.fiatCurrencyCode,
+      currencyIcon: wallet.symbolImage,
+      currencyIconDark: wallet.symbolImageDarkMono
     }
     return Promise.resolve(returnObject)
   }
@@ -246,7 +248,7 @@ export class EdgeProvider extends Bridgeable {
   }
 
   // Request that the user spend to an address or multiple addresses
-  async requestSpend (spendTargets: Array<EdgeSpendTarget>, options?: EdgeRequestSpendOptions) {
+  async requestSpend (spendTargets: Array<EdgeSpendTarget>, options?: EdgeRequestSpendOptions): Promise<EdgeTransaction> {
     const info: GuiMakeSpendInfo = {
       spendTargets
     }
@@ -267,7 +269,9 @@ export class EdgeProvider extends Bridgeable {
     }
     try {
       const transaction = await this.makeSpendRequest(info)
-      Actions.pop()
+      if (transaction) {
+        Actions.pop()
+      }
       return Promise.resolve(transaction)
     } catch (e) {
       return Promise.reject(e)
@@ -301,7 +305,9 @@ export class EdgeProvider extends Bridgeable {
     }
     try {
       const transaction = await this.makeSpendRequest(info)
-      Actions.pop()
+      if (transaction) {
+        Actions.pop()
+      }
       return Promise.resolve(transaction)
     } catch (e) {
       return Promise.reject(e)
@@ -333,6 +339,9 @@ export class EdgeProvider extends Bridgeable {
       }
       guiMakeSpendInfo.onDone = (error: Error | null, edgeTransaction?: EdgeTransaction) => {
         error ? reject(error) : resolve(edgeTransaction)
+      }
+      guiMakeSpendInfo.onBack = () => {
+        resolve()
       }
       guiMakeSpendInfo.lockInputs = true
       Actions[SEND_CONFIRMATION]({ guiMakeSpendInfo })

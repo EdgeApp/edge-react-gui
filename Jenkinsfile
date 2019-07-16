@@ -17,7 +17,7 @@ def build (platform) {
 pipeline {
   agent any
   tools {
-    nodejs "v10.15.1"
+    nodejs "v12.6.0"
   }
   options {
     timestamps()
@@ -101,7 +101,7 @@ pipeline {
           branch 'test'
         }
       }
-      parallel {
+      stages {
         stage("ios") {
           when { equals expected: true, actual: params.IOS_BUILD }
           steps {
