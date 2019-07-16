@@ -101,7 +101,7 @@ pipeline {
           branch 'test'
         }
       }
-      parallel {
+      stages {
         stage("ios") {
           when { equals expected: true, actual: params.IOS_BUILD }
           steps {
