@@ -84,13 +84,13 @@ export class AirshipModal extends Component<Props> {
     return (
       <LayoutContext>
         {metrics => {
-          const { safeAreaInsets } = metrics
+          const { layout, safeAreaInsets } = metrics
           const downValue = safeAreaInsets.bottom
           const upValue = keyboardHeight => Math.max(keyboardHeight, downValue)
 
           return (
             <KeyboardTracker downValue={downValue} upValue={upValue}>
-              {(keyboardAnimation, keyboardLayout) => this.renderModal(safeAreaInsets, keyboardAnimation, keyboardLayout)}
+              {(keyboardAnimation, keyboardLayout) => this.renderModal(layout.height, safeAreaInsets, keyboardAnimation, keyboardLayout)}
             </KeyboardTracker>
           )
         }}
@@ -101,7 +101,7 @@ export class AirshipModal extends Component<Props> {
   /**
    * Draws the actual visual elements, given the current layout information:
    */
-  renderModal (gap: SafeAreaGap, keyboardAnimation: Animated.Value, keyboardLayout: number) {
+  renderModal (height: number, gap: SafeAreaGap, keyboardAnimation: Animated.Value, keyboardLayout: number) {
     const { children, center } = this.props
 
     // Set up the dynamic CSS values:
@@ -118,6 +118,7 @@ export class AirshipModal extends Component<Props> {
         styles.bottomBody,
         {
           marginBottom: -keyboardLayout,
+          maxHeight: keyboardLayout + 0.75 * (height - gap.bottom - gap.top),
           paddingBottom: keyboardLayout,
           transform
         }
@@ -171,7 +172,6 @@ const styles = StyleSheet.create({
     // Layout:
     alignSelf: 'flex-end',
     marginHorizontal: -borderRadius,
-    marginTop: '25%',
 
     // Visuals:
     borderTopLeftRadius: borderRadius,
