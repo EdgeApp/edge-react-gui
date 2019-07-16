@@ -1,7 +1,7 @@
 // @flow
 
 import { FormField, MaterialInputStyle } from 'edge-components'
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { FlatList, Image, TouchableHighlight, View } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
@@ -79,27 +79,32 @@ export class CountrySelectionModal extends Component<CountrySelectionModalProps,
 
     return (
       <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(this.state.countryCode)}>
-        <IconCircle>
-          <Icon type={FONT_AWESOME} name={FLAG} size={36} color={colors.primary} />
-        </IconCircle>
-        <View style={{ flex: 1, paddingLeft: scale(12), paddingRight: scale(12) }}>
-          <FormField
-            style={MaterialInputStyle}
-            value={input}
-            onChangeText={this.updateCountryInput}
-            error={''}
-            keyboardType={'default'}
-            label={s.strings.buy_sell_crypto_select_country_button}
-          />
-          <FlatList
-            style={{ flex: 1 }}
-            data={finalCountryCodes}
-            initialNumToRender={24}
-            keyboardShouldPersistTaps="handled"
-            keyExtractor={this.keyExtractor}
-            renderItem={this._renderItem}
-          />
-        </View>
+        {gap => (
+          <Fragment>
+            <IconCircle>
+              <Icon type={FONT_AWESOME} name={FLAG} size={36} color={colors.primary} />
+            </IconCircle>
+            <View style={{ flex: 1, paddingLeft: scale(12), paddingRight: scale(12) }}>
+              <FormField
+                style={MaterialInputStyle}
+                value={input}
+                onChangeText={this.updateCountryInput}
+                error={''}
+                keyboardType={'default'}
+                label={s.strings.buy_sell_crypto_select_country_button}
+              />
+              <FlatList
+                style={{ flex: 1, marginBottom: -gap.bottom }}
+                contentContainerStyle={{ paddingBottom: gap.bottom }}
+                data={finalCountryCodes}
+                initialNumToRender={24}
+                keyboardShouldPersistTaps="handled"
+                keyExtractor={this.keyExtractor}
+                renderItem={this._renderItem}
+              />
+            </View>
+          </Fragment>
+        )}
       </AirshipModal>
     )
   }
