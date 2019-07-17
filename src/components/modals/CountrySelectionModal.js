@@ -1,7 +1,7 @@
 // @flow
 
 import { FormField, MaterialInputStyle } from 'edge-components'
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { FlatList, Image, TouchableHighlight, View } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
@@ -13,7 +13,8 @@ import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import styles from '../../styles/components/CountrySelectionModalStyle.js'
 import { colors } from '../../theme/variables/airbitz.js'
 import { type AirshipBridge } from '../common/Airship.js'
-import { AirshipBottomModal, IconCircle } from '../common/AirshipModal.js'
+import { AirshipModal } from '../common/AirshipModal.js'
+import { IconCircle } from '../common/IconCircle.js'
 
 type CountrySelectionModalProps = {
   countryCode: string,
@@ -77,29 +78,34 @@ export class CountrySelectionModal extends Component<CountrySelectionModalProps,
     const finalCountryCodes = [...currentCountryData, ...filteredCountryCodes]
 
     return (
-      <AirshipBottomModal bridge={bridge} onCancel={() => bridge.resolve(this.state.countryCode)}>
-        <IconCircle>
-          <Icon type={FONT_AWESOME} name={FLAG} size={36} color={colors.primary} />
-        </IconCircle>
-        <View style={{ flex: 1, paddingLeft: scale(12), paddingRight: scale(12) }}>
-          <FormField
-            style={MaterialInputStyle}
-            value={input}
-            onChangeText={this.updateCountryInput}
-            error={''}
-            keyboardType={'default'}
-            label={s.strings.buy_sell_crypto_select_country_button}
-          />
-          <FlatList
-            style={{ flex: 1 }}
-            data={finalCountryCodes}
-            initialNumToRender={24}
-            keyboardShouldPersistTaps="handled"
-            keyExtractor={this.keyExtractor}
-            renderItem={this._renderItem}
-          />
-        </View>
-      </AirshipBottomModal>
+      <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(this.state.countryCode)}>
+        {gap => (
+          <Fragment>
+            <IconCircle>
+              <Icon type={FONT_AWESOME} name={FLAG} size={36} color={colors.primary} />
+            </IconCircle>
+            <View style={{ flex: 1, paddingLeft: scale(12), paddingRight: scale(12) }}>
+              <FormField
+                style={MaterialInputStyle}
+                value={input}
+                onChangeText={this.updateCountryInput}
+                error={''}
+                keyboardType={'default'}
+                label={s.strings.buy_sell_crypto_select_country_button}
+              />
+              <FlatList
+                style={{ flex: 1, marginBottom: -gap.bottom }}
+                contentContainerStyle={{ paddingBottom: gap.bottom }}
+                data={finalCountryCodes}
+                initialNumToRender={24}
+                keyboardShouldPersistTaps="handled"
+                keyExtractor={this.keyExtractor}
+                renderItem={this._renderItem}
+              />
+            </View>
+          </Fragment>
+        )}
+      </AirshipModal>
     )
   }
 

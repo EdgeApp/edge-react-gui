@@ -2,7 +2,7 @@
 
 exports[`TransactionDetails.ui should render 1`] = `
 <React.Fragment>
-  <Connect(SceneWrapperComponent)
+  <SceneWrapper
     background="body"
     bodySplit={33.709859154929575}
   >
@@ -201,13 +201,13 @@ exports[`TransactionDetails.ui should render 1`] = `
         />
       </View>
     </ScrollViewMock>
-  </Connect(SceneWrapperComponent)>
+  </SceneWrapper>
 </React.Fragment>
 `;
 
 exports[`TransactionDetails.ui should render with negative nativeAmount and fiatAmount 1`] = `
 <React.Fragment>
-  <Connect(SceneWrapperComponent)
+  <SceneWrapper
     background="body"
     bodySplit={33.709859154929575}
   >
@@ -409,13 +409,13 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
         />
       </View>
     </ScrollViewMock>
-  </Connect(SceneWrapperComponent)>
+  </SceneWrapper>
 </React.Fragment>
 `;
 
 exports[`TransactionDetails.ui should render with tx date off by 1000x in future 1`] = `
 <React.Fragment>
-  <Connect(SceneWrapperComponent)
+  <SceneWrapper
     background="body"
     bodySplit={33.709859154929575}
   >
@@ -614,13 +614,13 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
         />
       </View>
     </ScrollViewMock>
-  </Connect(SceneWrapperComponent)>
+  </SceneWrapper>
 </React.Fragment>
 `;
 
 exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1`] = `
 <React.Fragment>
-  <Connect(SceneWrapperComponent)
+  <SceneWrapper
     background="body"
     bodySplit={33.709859154929575}
   >
@@ -819,6 +819,6 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
         />
       </View>
     </ScrollViewMock>
-  </Connect(SceneWrapperComponent)>
+  </SceneWrapper>
 </React.Fragment>
 `;
