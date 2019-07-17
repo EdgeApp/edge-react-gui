@@ -195,6 +195,7 @@ export default class Main extends Component<Props> {
       case 'bitcoin':
       case 'bitcoincash':
       case 'ethereum':
+      case 'rsk':
       case 'dash':
       case 'litecoin':
         this.handleAddress(parsedUri, url)
@@ -237,6 +238,8 @@ export default class Main extends Component<Props> {
         return 'LTC'
       case 'dash':
         return 'DASH'
+      case 'rsk':
+        return 'RBTC'
       default:
         console.log('Unrecognized currency URI scheme')
         return null

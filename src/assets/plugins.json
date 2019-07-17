@@ -1,0 +1,34 @@
+{
+  "buysell": [
+    {
+      "pluginId": "co.edgesecure.simplex",
+      "name": "Simplex",
+      "subtitle": "Buy or sell crypto with a credit card\nBTC, ETH, BCH, LTC, XRP\nFee: 6% / Settlement: 1-48 hours",
+      "provider": "Edge Wallet",
+      "iconUrl": "https://edge.app/wp-content/uploads/2019/03/simplex-logo-sm-square.png",
+      "environment": {}
+    },
+    {
+      "pluginId": "co.edgesecure.wyre",
+      "name": "Wyre",
+      "subtitle": "Buy or sell crypto with US bank accounts\nBTC, ETH, DAI\nFee: 1% / Settlement: 2-5 days",
+      "provider": "Edge Wallet",
+      "iconUrl": "https://edge.app/wp-content/uploads/2019/01/wyre-logo-square-small.png",
+      "environment": {},
+      "supportEmail": "support@sendwyre.com",
+      "permissions": [
+        "camera"
+      ]
+    }
+  ],
+  "spend": [
+    {
+      "pluginId": "co.edgesecure.bitrefill",
+      "name": "Bitrefill",
+      "subtitle": "Buy gift cards and refill phones\nAccepts BTC, DASH, ETH, and LTC",
+      "provider": "Edge Secure",
+      "iconUrl": "https://edge.app/wp-content/uploads/2019/01/bitrefill-2.png",
+      "environment": {}
+    }
+  ]
+}

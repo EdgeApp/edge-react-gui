@@ -292,6 +292,7 @@ const strings = {
   string_first_zcoin_wallet_name: 'My Zcoin',
   string_first_stellar_wallet_name: 'My Stellar',
   string_first_tezos_wallet_name: 'My Tezos',
+  string_first_rsk_wallet_name: 'My RSK',
   my_crypto_wallet_name: 'My %s',
   string_from_exchange_info: 'You are about to exchange\n %1$s %2$s\n (%3$s)\n from %4$s',
   string_help: 'Help',
