@@ -49,6 +49,7 @@ export const currencyPlugins = {
   ethereum: ENV.ETHEREUM_INIT,
   stellar: true,
   ripple: true,
+  rsk: true,
   // edge-currency-bitcoin:
   bitcoin: true,
   bitcoincash: true,
