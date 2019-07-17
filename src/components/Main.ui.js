@@ -717,7 +717,16 @@ export default class Main extends Component<Props> {
                     renderRightButton={this.renderEmptyButton()}
                   />
                 </Stack>
-
+                <Stack key={Constants.PLUGIN_BUY_DEEP} hideDrawerButton={true}>
+                  <Scene
+                    key={Constants.PLUGIN_BUY}
+                    navTransparent={true}
+                    component={ifLoggedIn(PluginView, LoadingScene)}
+                    renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
+                    renderLeftButton={renderPluginBackButton(BACK)}
+                    renderRightButton={this.renderEmptyButton()}
+                  />
+                </Stack>
                 <Stack key={Constants.SPEND} hideDrawerButton={true}>
                   <Scene
                     key={Constants.SPEND}
