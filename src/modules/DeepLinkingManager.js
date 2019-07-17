@@ -96,6 +96,8 @@ class DeepLinkingManager extends React.Component<Props> {
         return 'Litecoin'
       case 'DASH':
         return 'Dash'
+      case 'RBTC':
+        return 'RSK'
       default:
         return ''
     }
