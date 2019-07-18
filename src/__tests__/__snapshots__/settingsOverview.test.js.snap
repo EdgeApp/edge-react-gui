@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`MyComponent should render Locked SettingsOverview 1`] = `
-<Connect(SceneWrapperComponent)
+<SceneWrapper
   background="body"
   hasTabs={false}
 >
@@ -374,11 +374,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
       />
     </View>
   </ScrollViewMock>
-</Connect(SceneWrapperComponent)>
+</SceneWrapper>
 `;
 
 exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
-<Connect(SceneWrapperComponent)
+<SceneWrapper
   background="body"
   hasTabs={false}
 >
@@ -751,5 +751,5 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
       />
     </View>
   </ScrollViewMock>
-</Connect(SceneWrapperComponent)>
+</SceneWrapper>
 `;
