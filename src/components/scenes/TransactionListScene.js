@@ -145,7 +145,10 @@ export class TransactionList extends Component<Props, State> {
   }
 
   render () {
-    const txs = this.state.reset ? emptyArray : this.props.transactions
+    const { transactions } = this.props
+    const { reset } = this.state
+    const txs = reset ? emptyArray : transactions
+
     return (
       <SceneWrapper background="body" bodySplit={200}>
         <FlatList
@@ -283,6 +286,15 @@ export class TransactionList extends Component<Props, State> {
   }
 
   renderTx = (transaction: TransactionListTx) => {
+    const { uiWallet } = this.props
+    if (
+      // if it is a token transaction with no amount (ie proxy allowance), then hide
+      transaction.item.currencyCode !== uiWallet.currencyCode &&
+      transaction.item.amountSatoshi === 0 &&
+      transaction.item.nativeAmount === '0'
+    ) {
+      return null
+    }
     return (
       <TransactionRow
         transaction={transaction}
