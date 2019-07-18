@@ -126,5 +126,9 @@ export const CURRENCY_SETTINGS = {
   ufoSettings: {
     pluginName: 'ufo',
     currencyCode: 'UFO'
+  },
+  rskSettings: {
+    pluginName: 'rsk',
+    currencyCode: 'RBTC'
   }
 }

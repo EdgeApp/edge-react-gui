@@ -36,7 +36,8 @@ const WALLET_TYPE_ORDER = [
   'wallet:smartcash',
   'wallet:groestlcoin',
   'wallet:zcoin',
-  'wallet:ufo'
+  'wallet:ufo',
+  'wallet:rsk'
 ]
 
 export type CreateWalletSelectCryptoOwnProps = {
