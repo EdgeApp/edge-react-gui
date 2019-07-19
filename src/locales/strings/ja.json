@@ -1,5 +1,6 @@
 {
   "app_name": "エッジウォレット",
+  "app_name_short": "",
   "bitcoin_received": "%1$s受け取りました",
   "bitcoin_remaining": "残高%1$s",
   "calculator_done": "完了",
