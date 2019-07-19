@@ -1,5 +1,6 @@
 {
   "app_name": "Ví Edge",
+  "app_name_short": "",
   "bitcoin_received": "%1$s đã nhận được",
   "bitcoin_remaining": "%1$s còn lại...",
   "calculator_done": "Xong",
