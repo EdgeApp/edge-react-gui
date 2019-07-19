@@ -1,5 +1,6 @@
 {
   "app_name": "Edge 월렛",
+  "app_name_short": "",
   "bitcoin_received": "%1$s 받음",
   "bitcoin_remaining": "%1$s 남음",
   "calculator_done": "완료",
