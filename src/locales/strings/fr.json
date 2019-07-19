@@ -1,5 +1,6 @@
 {
   "app_name": "Edge Wallet ",
+  "app_name_short": "",
   "bitcoin_received": "%1$s reçu",
   "bitcoin_remaining": "Il vous reste %1$s…",
   "calculator_done": "Effectué",
