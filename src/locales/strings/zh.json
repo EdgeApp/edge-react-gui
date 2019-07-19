@@ -1,5 +1,6 @@
 {
   "app_name": "Edge钱包",
+  "app_name_short": "",
   "bitcoin_received": "已接收 %1$s",
   "bitcoin_remaining": "剩余%1$s...",
   "calculator_done": "完成",
