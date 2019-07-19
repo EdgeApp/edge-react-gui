@@ -6,6 +6,9 @@ import React, { Component } from 'react'
 import { StatusBar, StyleSheet, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 
+import edgeBackgroundImage from '../../assets/images/edgeBackground/login_bg.jpg'
+import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
+import s from '../../locales/strings.js'
 import * as CONTEXT_API from '../../modules/Core/Context/api'
 import type { Dispatch } from '../../modules/ReduxTypes'
 import THEME from '../../theme/variables/airbitz.js'
@@ -60,6 +63,9 @@ export default class Login extends Component<Props, State> {
             regularFontFamily: THEME.FONTS.DEFAULT
           }}
           key={this.state.key.toString()}
+          appName={s.strings.app_name_short}
+          backgroundImage={edgeBackgroundImage}
+          primaryLogo={edgeLogo}
         />
       </View>
     )
