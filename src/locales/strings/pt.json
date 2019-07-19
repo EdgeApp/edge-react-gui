@@ -1,5 +1,6 @@
 {
   "app_name": "Carteira Edge",
+  "app_name_short": "",
   "bitcoin_received": "%1$s Recebido",
   "bitcoin_remaining": "%1$s Restante…",
   "calculator_done": "Concluído",
