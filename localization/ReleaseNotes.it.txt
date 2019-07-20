@@ -1,15 +1,15 @@
 v1.8.4
-* Simplex Sell - Sell crypto and pay off credit cards
-* Ravencoin added
+* Vendita tramite Simplex - Vendi le cripto e ricevi le fiat sulla tua carta di credito o prepagata
+* Aggiunto Ravencoin
 
 v1.8.1
 
-* Fix the minimum Android SDK version to 23+ (Android 6)
+* La versione Android SDK minima richiesta è 23+ (Android 6)
 
 v1.8.0
 
-* React native upgrade + visual fixes
-* Prefer fixed-rate quotes over estimates
+* Aggiornamento nativo a React + correzioni all'interfaccia utente
+* Quote fisse preferite rispetto a quelle sovrastimate
 
 v1.7.4
 
