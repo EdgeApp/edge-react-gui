@@ -67,7 +67,7 @@ export class SceneWrapper extends Component<Props> {
               {(keyboardAnimation, keyboardLayout) => this.renderScene(gap, keyboardAnimation, downValue - keyboardLayout)}
             </KeyboardTracker>
           ) : (
-            this.renderScene(gap, downValue, 0)
+            this.renderScene(gap, null, 0)
           )
         }}
       </LayoutContext>
@@ -77,21 +77,17 @@ export class SceneWrapper extends Component<Props> {
   /**
    * Render the scene wrapper component, given various items from the context.
    */
-  renderScene (gap: SafeAreaGap, keyboardAnimation: number | Animated.Value, keyboardHeight: number) {
+  renderScene (gap: SafeAreaGap, keyboardAnimation: Animated.Value | null, keyboardHeight: number) {
     const { children, background = 'header', bodySplit = 0 } = this.props
 
     // Render the scene container:
-    const BestView = typeof keyboardAnimation === 'number' ? View : Animated.View
-    const scene = (
-      <BestView style={[styles.scene, { ...gap, maxHeight: keyboardAnimation }]}>
-        {typeof children === 'function'
-          ? children({
-            ...gap,
-            bottom: keyboardHeight
-          })
-          : children}
-      </BestView>
-    )
+    const finalChildren = typeof children === 'function' ? children({ ...gap, bottom: keyboardHeight }) : children
+    const scene =
+      keyboardAnimation != null ? (
+        <Animated.View style={[styles.scene, { ...gap, maxHeight: keyboardAnimation }]}>{finalChildren}</Animated.View>
+      ) : (
+        <View style={[styles.scene, gap]}>{finalChildren}</View>
+      )
 
     // Render the background, if any:
     if (background === 'none') return scene
