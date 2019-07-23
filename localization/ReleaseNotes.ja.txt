@@ -1,3 +1,8 @@
+v1.8.5
+* Wyre Sell - Sell crypo with your bank account
+* New and improved visuals at login screen
+* Prevent FaceID from automatically lauching on login
+
 v1.8.4
 * Simplex Sell - Sell crypto and pay off credit cards
 * Ravencoin added
