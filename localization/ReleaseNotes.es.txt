@@ -1,3 +1,39 @@
+v1.8.5
+* Wyre Sell - Sell crypo with your bank account
+* New and improved visuals at login screen
+* Prevent FaceID from automatically lauching on login
+
+v1.8.4
+* Simplex Sell - Sell crypto and pay off credit cards
+* Ravencoin added
+
+v1.8.1
+
+* Fix the minimum Android SDK version to 23+ (Android 6)
+
+v1.8.0
+
+* React native upgrade + visual fixes
+* Prefer fixed-rate quotes over estimates
+
+v1.7.4
+
+* Beta Simplex sell
+* Warn users about high fees
+
+v1.7.3
+
+Parche para evitar problemas con las comisiones BTC
+
+v1.7.2
+
+* Solucionados problemas de rendimiento en el inicio de sesión
+* Solucionado error en la separación de carteras BCH/BSV
+* Varias actualizaciones visuales y de texto
+* Añadido click en dirección para abrir el explorer a demanda o enviar pantallas de confirmación
+* Solucionadas las comisiones segwit para ser un 15 % inferiores a las no-segwit
+* Las cuentas base de monedas como XRP, EOS, etc. mostrarán las transacciones como canceladas si no se encuentran en la red
+
 v1.7.0
 
 * Soporte para direcciones Bech32
@@ -5,14 +41,32 @@ Traslada Edge Core a un proceso independiente para aumentar el rendimiento y res
 * Vende criptomonedas hacia tu tarjeta de crédito usando Simplex
 * Incluye LibertyX para comprar Bitcoin de comercios físicos en EE. UU
 
+v1.6.2
+
+* Solucionada la denominación fiat de carteras de Airbitz a Edge
+* Solucionados problemas de bloqueo en la cartera EOS
+*Solucionados varios errores de la interface de usuario
+*Solucionado el etiquetado de metadatos para actualizarse inmediatamente después de guardar
+*Mejora en la sincronización de XRP y ETH
+*Uso de múltiples servicios para transmitir transacciones XRP y ETH
+* Añadido Faa.st como proveedor de intercambio instantáneo
+
+v1.6.1
+
+* Mejora del cálculo de comisiones en BTC
+* Añade botón para comprar criptomonedas en la vista de listado de carteras
+* Añade nuevo botón para comprar y cambiar criptomonedas en carteras vacías
+* Arreglados varios errores en la interface de usuario
+* Funcionalidad de plugins mejorada
+
 v1.6.0
 
 * Soporte para EOS
 * Implementa vínculos profundos (deep linking) de URIs de bitcoin, ethereum, bitcoin cash, dash y Edge
-* Add Wyre plugin to support buy/sell of Bitcoin from US bank account
+* Incluye soporte al plugin de Wyre para comprar/vender Bitcoin desde una cuenta bancaria USA
 *Incluye el plugin de Bitrefill para comprar tarjetas regalo y realizar recargas móviles
-* Add Chinese, Korean, French, and Vietnamese translations
-* Add support for IMP and IRR fiat currencies
+Incluye traducciones al chino, coreano, francés y vietnamita
+* Incluye soporte para las monedas fiat IMP e IRR
 
 v1.5.0
 
