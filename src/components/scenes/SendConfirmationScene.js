@@ -3,7 +3,7 @@
 import { bns } from 'biggystring'
 import { Scene } from 'edge-components'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
@@ -14,21 +14,20 @@ import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import { makeSpend } from '../../modules/Core/Wallets/api.js'
 import ExchangeRate from '../../modules/UI/components/ExchangeRate/index.js'
-import { ExchangedFlipInput } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
+import { ExchangedFlipInput } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import Text from '../../modules/UI/components/FormattedText/index'
-import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import { PinInput } from '../../modules/UI/components/PinInput/PinInput.ui.js'
 import Recipient from '../../modules/UI/components/Recipient/index.js'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import ABSlider from '../../modules/UI/components/Slider/index.js'
 import { type AuthType, getSpendInfoWithoutState } from '../../modules/UI/scenes/SendConfirmation/selectors'
 import { convertCurrencyFromExchangeRates } from '../../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo, type SendConfirmationState } from '../../reducers/scenes/SendConfirmationReducer.js'
-import styles, { rawStyles } from '../../styles/scenes/SendConfirmationStyle.js'
+import { rawStyles, styles } from '../../styles/scenes/SendConfirmationStyle.js'
 import type { GuiCurrencyInfo, GuiDenomination, SpendingLimits } from '../../types'
 import { convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../util/utils.js'
 import { AddressTextWithBlockExplorerModal } from '../common/AddressTextWithBlockExplorerModal'
+import { SceneWrapper } from '../common/SceneWrapper.js'
 
 const DIVIDE_PRECISION = 18
 
@@ -212,10 +211,8 @@ export class SendConfirmation extends Component<Props, State> {
     const isTaggableCurrency = !!getSpecialCurrencyInfo(currencyCode).uniqueIdentifier
     const networkFeeData = this.getNetworkFeeData()
     return (
-      <SafeAreaView>
-        <Gradient style={styles.view}>
-          <Gradient style={styles.gradient} />
-
+      <Fragment>
+        <SceneWrapper>
           <View style={styles.mainScrollView}>
             <View style={[styles.balanceContainer, styles.error]}>
               <Text style={styles.balanceText}>
@@ -311,8 +308,7 @@ export class SendConfirmation extends Component<Props, State> {
               />
             </Scene.Footer>
           </View>
-        </Gradient>
-
+        </SceneWrapper>
         {isTaggableCurrency && (
           <UniqueIdentifierModal
             onConfirm={this.props.sendConfirmationUpdateTx}
@@ -320,7 +316,7 @@ export class SendConfirmation extends Component<Props, State> {
             keyboardType={getSpecialCurrencyInfo(currencyCode).uniqueIdentifier.identifierKeyboardType}
           />
         )}
-      </SafeAreaView>
+      </Fragment>
     )
   }
 

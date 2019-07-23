@@ -79,7 +79,7 @@ class CryptoExchangeWalletSelectorModal extends Component<Props, LocalState> {
     const length = this.props.showWalletCreators
       ? this.state.totalCurrenciesAndTokens + this.state.totalWalletsToAdd
       : this.state.totalCurrenciesAndTokens - this.props.excludedTokens.length
-    const windowHeight = Dimensions.get('window').height * 0.7 // - CRYPTO_EXCHANGE_WALLET_DIALOG_TOP
+    const windowHeight = Dimensions.get('window').height * 0.7
     const flatListHeight = length * styles.rowHeight
     if (flatListHeight + styles.rowHeight > windowHeight) {
       return windowHeight - styles.rowHeight

@@ -3,16 +3,15 @@
 import { PrimaryButton } from 'edge-components'
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
-import { View } from 'react-native'
+import { TouchableWithoutFeedback, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 
 import * as FEE from '../../constants/FeeConstants'
 import s from '../../locales/strings.js'
-import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
-import styles from '../../styles/scenes/ChangeMiningFeeStyle'
-import RadioButton from '../common/ChangeMiningFeeRadioButton'
+import T from '../../modules/UI/components/FormattedText/index'
+import { styles } from '../../styles/scenes/ChangeMiningFeeStyle.js'
 import { launchModal } from '../common/ModalProvider.js'
+import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type CustomFees, createCustomFeesModal } from '../modals/CustomFeesModal.js'
 
 const HIGH_FEE_TEXT = s.strings.mining_fee_high_label_choice
@@ -55,8 +54,8 @@ export default class ChangeMiningFee extends Component<ChangeMiningFeeProps, Sta
     this.props.onSubmit(this.state.feeSetting)
   }
 
-  handlePress = (feeSetting: string, cb: any) => {
-    return this.setState({ feeSetting }, cb)
+  handlePress = (feeSetting: string) => {
+    return this.setState({ feeSetting })
   }
 
   showCustomFeesModal = async () => {
@@ -74,41 +73,44 @@ export default class ChangeMiningFee extends Component<ChangeMiningFeeProps, Sta
       })
     }
   }
+
+  renderRadioRow (value: string, label: string) {
+    const { feeSetting } = this.state
+    return (
+      <View style={styles.row}>
+        <TouchableWithoutFeedback onPress={() => this.handlePress(value)}>
+          <View style={styles.column}>
+            <View style={[styles.radio, feeSetting === value ? styles.selected : null]} />
+            <View>
+              <T style={styles.label}>{label}</T>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </View>
+    )
+  }
+
   renderCustomFeeButton = () => {
-    if (!this.props.hideCustomFeeOption) {
-      return (
+    if (this.props.hideCustomFeeOption) return null
+    return (
+      <View style={{ marginTop: 18 }}>
         <PrimaryButton style={styles.customFeeButton} onPress={this.showCustomFeesModal}>
           <PrimaryButton.Text>{s.strings.fragment_wallets_set_custom_fees}</PrimaryButton.Text>
         </PrimaryButton>
-      )
-    }
-    return null
+      </View>
+    )
   }
 
   render () {
-    const { feeSetting } = this.state
-
     return (
-      <SafeAreaView>
-        <View style={styles.container}>
-          <Gradient style={styles.gradient} />
-
-          <View style={styles.content}>
-            <View style={styles.row}>
-              <RadioButton value={FEE.HIGH_FEE} label={HIGH_FEE_TEXT} onPress={this.handlePress} isSelected={FEE.HIGH_FEE === feeSetting} />
-            </View>
-
-            <View style={styles.row}>
-              <RadioButton value={FEE.STANDARD_FEE} label={STANDARD_FEE_TEXT} onPress={this.handlePress} isSelected={FEE.STANDARD_FEE === feeSetting} />
-            </View>
-
-            <View style={styles.row}>
-              <RadioButton value={FEE.LOW_FEE} label={LOW_FEE_TEXT} onPress={this.handlePress} isSelected={FEE.LOW_FEE === feeSetting} />
-            </View>
-            <View style={{ marginTop: 18 }}>{this.renderCustomFeeButton()}</View>
-          </View>
+      <SceneWrapper background="body" hasTabs={false}>
+        <View style={styles.content}>
+          {this.renderRadioRow(FEE.HIGH_FEE, HIGH_FEE_TEXT)}
+          {this.renderRadioRow(FEE.STANDARD_FEE, STANDARD_FEE_TEXT)}
+          {this.renderRadioRow(FEE.LOW_FEE, LOW_FEE_TEXT)}
+          {this.renderCustomFeeButton()}
         </View>
-      </SafeAreaView>
+      </SceneWrapper>
     )
   }
 }

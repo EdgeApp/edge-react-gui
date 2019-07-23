@@ -1,7 +1,7 @@
 // @flow
 
 import { createStaticModal, createYesNoModal } from 'edge-components'
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Image, Text, View } from 'react-native'
 
 import iconImage from '../../assets/images/otp/OTP-badge_sm.png'
@@ -9,15 +9,14 @@ import * as Constants from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton, TertiaryButton } from '../../modules/UI/components/Buttons/index'
 import T from '../../modules/UI/components/FormattedText/index'
-import Gradient from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
-import { OtpSettingsScreenStyles } from '../../styles/indexStyles.js'
+import { styles } from '../../styles/scenes/OtpSettingsScreenStyles.js'
 import { launchModal } from '../common/ModalProvider.js'
 import OtpHeroComponent from '../common/OtpHeroComponent.js'
+import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ExpandableBoxComponent, StaticModalComponent } from '../indexComponents.js'
 
-type OtpSettingsSceneProps = {
+type Props = {
   isOtpEnabled: boolean,
   otpKey?: string,
   otpResetDate?: string,
@@ -31,12 +30,13 @@ type State = {
   messageModalComponent?: any
 }
 
-export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, State> {
-  UNSAFE_componentWillMount () {
-    this.setState({
+export default class OtpSettingsScene extends Component<Props, State> {
+  constructor (props: Props) {
+    super(props)
+    this.state = {
       showMessageModal: false,
       messageModalMessage: ''
-    })
+    }
   }
 
   cancelStatic = () => {
@@ -64,7 +64,6 @@ export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, S
   }
 
   onConfirmDisable = async () => {
-    const styles = OtpSettingsScreenStyles
     const afterDisableModal = createStaticModal({
       message: s.strings.otp_disabled_modal,
       icon: <Icon style={styles.icon} name={Constants.CHECK_CIRCLE} size={styles.iconSize} type={Constants.SIMPLE_ICONS} />,
@@ -129,18 +128,16 @@ export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, S
   }
 
   render () {
-    const styles = OtpSettingsScreenStyles
     console.log('this.state.showMessageModal: ', this.state.showMessageModal)
     return (
-      <SafeAreaView>
-        <View style={styles.container}>
-          <Gradient style={styles.gradient} />
+      <Fragment>
+        <SceneWrapper hasTabs={false} background="body">
           <View style={styles.body}>
             <OtpHeroComponent style={styles.hero} enabled={this.props.isOtpEnabled} />
             {this.renderMiddle(styles)}
             <View style={styles.buttonContainer}>{this.renderButton()}</View>
           </View>
-        </View>
+        </SceneWrapper>
         <StaticModalComponent
           cancel={this.cancelStatic}
           body={this.state.messageModalMessage || ''}
@@ -148,7 +145,7 @@ export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, S
           isVisible={this.state.showMessageModal}
           modalDismissTimerSeconds={10}
         />
-      </SafeAreaView>
+      </Fragment>
     )
   }
 }

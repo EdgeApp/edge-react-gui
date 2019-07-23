@@ -5,21 +5,13 @@ import { StyleSheet } from 'react-native'
 import { scale } from '../../lib/scaling.js'
 import THEME from '../../theme/variables/airbitz'
 
-const styles = {
-  scene: {
-    flex: 1,
-    backgroundColor: THEME.COLORS.WHITE
-  },
-  gradient: {
-    height: THEME.SPACER.HEADER,
-    width: '100%',
-    position: 'absolute'
-  },
+export const styles = StyleSheet.create({
   content: {
-    position: 'relative',
-    top: scale(66),
+    flex: 1,
+    backgroundColor: THEME.COLORS.WHITE,
+    paddingBottom: scale(20),
     paddingHorizontal: scale(20),
-    paddingVertical: scale(20)
+    paddingTop: scale(66)
   },
   column: {
     flexDirection: 'row',
@@ -52,5 +44,4 @@ const styles = {
     padding: scale(2),
     color: THEME.COLORS.GRAY_2
   }
-}
-export default StyleSheet.create(styles)
+})

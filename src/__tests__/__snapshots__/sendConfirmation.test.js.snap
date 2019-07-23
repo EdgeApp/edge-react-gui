@@ -1,25 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SendConfirmation should render with destination 1`] = `
-<SafeAreaViewComponent>
-  <Gradient
-    style={
-      Object {
-        "alignItems": "stretch",
-        "flex": 1,
-        "flexDirection": "column",
-        "justifyContent": "flex-start",
-        "width": "100%",
-      }
-    }
-  >
-    <Gradient
-      style={
-        Object {
-          "height": 44,
-        }
-      }
-    />
+<React.Fragment>
+  <SceneWrapper>
     <View
       style={
         Object {
@@ -261,30 +244,13 @@ exports[`SendConfirmation should render with destination 1`] = `
         />
       </Footer>
     </View>
-  </Gradient>
-</SafeAreaViewComponent>
+  </SceneWrapper>
+</React.Fragment>
 `;
 
 exports[`SendConfirmation should render with standard props 1`] = `
-<SafeAreaViewComponent>
-  <Gradient
-    style={
-      Object {
-        "alignItems": "stretch",
-        "flex": 1,
-        "flexDirection": "column",
-        "justifyContent": "flex-start",
-        "width": "100%",
-      }
-    }
-  >
-    <Gradient
-      style={
-        Object {
-          "height": 44,
-        }
-      }
-    />
+<React.Fragment>
+  <SceneWrapper>
     <View
       style={
         Object {
@@ -511,30 +477,13 @@ exports[`SendConfirmation should render with standard props 1`] = `
         />
       </Footer>
     </View>
-  </Gradient>
-</SafeAreaViewComponent>
+  </SceneWrapper>
+</React.Fragment>
 `;
 
 exports[`SendConfirmation should render with unique identifier button with "ADD" text (XMR) 1`] = `
-<SafeAreaViewComponent>
-  <Gradient
-    style={
-      Object {
-        "alignItems": "stretch",
-        "flex": 1,
-        "flexDirection": "column",
-        "justifyContent": "flex-start",
-        "width": "100%",
-      }
-    }
-  >
-    <Gradient
-      style={
-        Object {
-          "height": 44,
-        }
-      }
-    />
+<React.Fragment>
+  <SceneWrapper>
     <View
       style={
         Object {
@@ -773,34 +722,17 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
         />
       </Footer>
     </View>
-  </Gradient>
+  </SceneWrapper>
   <Connect(UniqueIdentifierModal)
     currencyCode="XMR"
     keyboardType="default"
   />
-</SafeAreaViewComponent>
+</React.Fragment>
 `;
 
 exports[`SendConfirmation should render with unique identifier button with "ADD" text (XRP) 1`] = `
-<SafeAreaViewComponent>
-  <Gradient
-    style={
-      Object {
-        "alignItems": "stretch",
-        "flex": 1,
-        "flexDirection": "column",
-        "justifyContent": "flex-start",
-        "width": "100%",
-      }
-    }
-  >
-    <Gradient
-      style={
-        Object {
-          "height": 44,
-        }
-      }
-    />
+<React.Fragment>
+  <SceneWrapper>
     <View
       style={
         Object {
@@ -1039,10 +971,10 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
         />
       </Footer>
     </View>
-  </Gradient>
+  </SceneWrapper>
   <Connect(UniqueIdentifierModal)
     currencyCode="XRP"
     keyboardType="numeric"
   />
-</SafeAreaViewComponent>
+</React.Fragment>
 `;

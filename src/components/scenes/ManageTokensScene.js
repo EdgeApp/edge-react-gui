@@ -9,12 +9,12 @@ import { Actions } from 'react-native-router-flux'
 import s from '../../locales/strings.js'
 import { PrimaryButton, SecondaryButton } from '../../modules/UI/components/Buttons/index'
 import Text from '../../modules/UI/components/FormattedText/index'
-import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
-import styles from '../../styles/scenes/ManageTokensStyle.js'
+import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
+import { styles } from '../../styles/scenes/ManageTokensStyle.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types'
 import * as UTILS from '../../util/utils'
 import ManageTokenRow from '../common/ManageTokenRow.js'
+import { SceneWrapper } from '../common/SceneWrapper.js'
 
 // Put these in reverse order of preference
 const PREFERRED_TOKENS = ['WINGS', 'HERC', 'REP']
@@ -73,7 +73,7 @@ export default class ManageTokens extends Component<ManageTokensProps, State> {
   }
 
   render () {
-    const { metaTokens } = this.props.guiWallet
+    const { metaTokens, name } = this.props.guiWallet
     const { manageTokensPending } = this.props
     const accountMetaTokenInfo = [...this.props.settingsCustomTokens]
     const combinedTokenInfo = UTILS.mergeTokensRemoveInvisible(metaTokens, accountMetaTokenInfo)
@@ -92,57 +92,43 @@ export default class ManageTokens extends Component<ManageTokensProps, State> {
     }
 
     return (
-      <SafeAreaView>
-        <View style={[styles.manageTokens]}>
-          <Gradient style={styles.gradient} />
-          <View style={styles.container}>
-            {this.header()}
-            <View style={styles.instructionalArea}>
-              <Text style={styles.instructionalText}>{s.strings.managetokens_top_instructions}</Text>
+      <SceneWrapper background="body">
+        <Gradient style={styles.headerRow}>
+          <Text style={styles.headerText}>{name}</Text>
+        </Gradient>
+        <View style={styles.container}>
+          <View style={styles.instructionalArea}>
+            <Text style={styles.instructionalText}>{s.strings.managetokens_top_instructions}</Text>
+          </View>
+          <View style={[styles.metaTokenListArea]}>
+            <View style={[styles.metaTokenListWrap]}>
+              <FlatList
+                keyExtractor={item => item.currencyCode}
+                data={sortedTokenInfo}
+                renderItem={metaToken => (
+                  <ManageTokenRow
+                    goToEditTokenScene={this.goToEditTokenScene}
+                    metaToken={metaToken}
+                    walletId={this.props.guiWallet.id}
+                    toggleToken={this.toggleToken}
+                    enabledList={this.state.enabledList}
+                    metaTokens={this.props.guiWallet.metaTokens}
+                  />
+                )}
+                style={[styles.tokenList]}
+              />
             </View>
-            <View style={[styles.metaTokenListArea]}>
-              <View style={[styles.metaTokenListWrap]}>
-                <FlatList
-                  keyExtractor={item => item.currencyCode}
-                  data={sortedTokenInfo}
-                  renderItem={metaToken => (
-                    <ManageTokenRow
-                      goToEditTokenScene={this.goToEditTokenScene}
-                      metaToken={metaToken}
-                      walletId={this.props.guiWallet.id}
-                      toggleToken={this.toggleToken}
-                      enabledList={this.state.enabledList}
-                      metaTokens={this.props.guiWallet.metaTokens}
-                    />
-                  )}
-                  style={[styles.tokenList]}
-                />
-              </View>
-              <View style={[styles.buttonsArea]}>
-                <PrimaryButton style={[styles.saveButton]} onPress={this.saveEnabledTokenList}>
-                  {manageTokensPending ? <ActivityIndicator /> : <PrimaryButton.Text style={[styles.buttonText]}>{s.strings.string_save}</PrimaryButton.Text>}
-                </PrimaryButton>
-                <SecondaryButton style={[styles.addButton]} onPress={this.goToAddTokenScene}>
-                  <SecondaryButton.Text style={[styles.buttonText]}>{s.strings.addtoken_add}</SecondaryButton.Text>
-                </SecondaryButton>
-              </View>
+            <View style={[styles.buttonsArea]}>
+              <PrimaryButton style={[styles.saveButton]} onPress={this.saveEnabledTokenList}>
+                {manageTokensPending ? <ActivityIndicator /> : <PrimaryButton.Text style={[styles.buttonText]}>{s.strings.string_save}</PrimaryButton.Text>}
+              </PrimaryButton>
+              <SecondaryButton style={[styles.addButton]} onPress={this.goToAddTokenScene}>
+                <SecondaryButton.Text style={[styles.buttonText]}>{s.strings.addtoken_add}</SecondaryButton.Text>
+              </SecondaryButton>
             </View>
           </View>
         </View>
-      </SafeAreaView>
-    )
-  }
-
-  header () {
-    const { name } = this.props.guiWallet
-    return (
-      <Gradient style={[styles.headerRow]}>
-        <View style={[styles.headerTextWrap]}>
-          <View style={styles.leftArea}>
-            <Text style={styles.headerText}>{name}</Text>
-          </View>
-        </View>
-      </Gradient>
+      </SceneWrapper>
     )
   }
 

@@ -1,28 +1,20 @@
 // @flow
 
 import React, { Component } from 'react'
-import { View } from 'react-native'
 import { WebView } from 'react-native-webview'
 
-import Gradient from '../../modules/UI/components/Gradient/Gradient.ui.js'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
-import { styles } from '../../styles/scenes/TermsOfServiceStyle.js'
+import { SceneWrapper } from '../common/SceneWrapper.js'
 
 const WEB_URI = 'https://edge.app/tos/'
 
-export type TermsOfServiceOwnProps = {}
+type Props = {}
 
-export type TermsOfServiceProps = TermsOfServiceOwnProps
-
-export class TermsOfServiceComponent extends Component<TermsOfServiceProps> {
+export class TermsOfServiceComponent extends Component<Props> {
   render () {
     return (
-      <SafeAreaView style={styles.safeAreaView}>
-        <View style={styles.scene}>
-          <Gradient style={styles.gradient} />
-          <WebView style={styles.webView} source={{ uri: WEB_URI }} />
-        </View>
-      </SafeAreaView>
+      <SceneWrapper background="body" hasTabs={false}>
+        <WebView source={{ uri: WEB_URI }} />
+      </SceneWrapper>
     )
   }
 }
