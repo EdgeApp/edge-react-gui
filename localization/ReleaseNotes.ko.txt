@@ -1,20 +1,20 @@
 v1.8.4
-* Simplex Sell - Sell crypto and pay off credit cards
-* Ravencoin added
+* Simplex 매각 - 암포화폐 매각과 신용카드 결제
+* Ravencoin (레이븐코인) 추가
 
 v1.8.1
 
-* Fix the minimum Android SDK version to 23+ (Android 6)
+* Android SDK 최소 버전을 23+ (Android 6)로 수정
 
 v1.8.0
 
-* React native upgrade + visual fixes
-* Prefer fixed-rate quotes over estimates
+* React Native 업그레이드 + 비주얼 수정
+* 예상 시세보다 고정 시세를 우선
 
 v1.7.4
 
-* Beta Simplex sell
-* Warn users about high fees
+* Simplex 매각 β
+* 유저에게 고액 수수료 경고 알림
 
 v1.7.3
 
