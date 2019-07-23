@@ -8,7 +8,7 @@ import Menu, { MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-m
 import { getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import Text from '../../modules/UI/components/FormattedText/index'
-import { MenuDropDownStyle } from '../../styles/indexStyles'
+import { MenuDropDownStyle } from '../../styles/components/HeaderMenuDropDownStyles.js'
 import { styles } from '../../styles/scenes/SendConfirmationStyle.js'
 import { showHelpModal } from '../modals/HelpModal.js'
 

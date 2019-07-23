@@ -8,7 +8,7 @@ import { sprintf } from 'sprintf-js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { MenuDropDown } from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui.js'
-import { MenuDropDownStyle } from '../../styles/indexStyles'
+import { MenuDropDownStyle } from '../../styles/components/HeaderMenuDropDownStyles.js'
 import { scale } from '../../util/scaling.js'
 
 type Props = {

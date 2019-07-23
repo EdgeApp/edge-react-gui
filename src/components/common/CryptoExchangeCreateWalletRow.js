@@ -4,7 +4,7 @@ import { Image, Text, TouchableHighlight, View } from 'react-native'
 
 import localize from '../../locales/strings'
 import FormattedText from '../../modules/UI/components/FormattedText/index'
-import { CryptoExchangeWalletListRowStyle as styles } from '../../styles/indexStyles'
+import { CryptoExchangeWalletListRowStyle as styles } from '../../styles/components/CryptoExchangeWalletListRowStyle.js'
 
 type Props = {
   supportedWallet: Object,

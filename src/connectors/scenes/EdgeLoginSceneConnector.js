@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 
 import { lobbyLogin } from '../../actions/EdgeLoginActions.js'
 import LinkedComponent from '../../components/scenes/EdgeLoginScene'
-import { EdgeLoginScreen } from '../../styles/indexStyles'
+import { EdgeLoginScreen } from '../../styles/scenes/EdgeLoginSceneStyle.js'
 import type { Dispatch, State } from '../../types/reduxTypes.js'
 
 export const mapStateToProps = (state: State) => ({

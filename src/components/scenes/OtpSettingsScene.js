@@ -10,6 +10,7 @@ import s from '../../locales/strings.js'
 import { PrimaryButton, TertiaryButton } from '../../modules/UI/components/Buttons/index'
 import T from '../../modules/UI/components/FormattedText/index'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
+import { ExpandableBoxStyle } from '../../styles/components/ExpandableBoxStyle.js'
 import { styles } from '../../styles/scenes/OtpSettingsScreenStyles.js'
 import { ExpandableBoxComponent } from '../common/ExpandableBoxComponent.js'
 import { launchModal } from '../common/ModalProvider.js'
@@ -115,7 +116,7 @@ export default class OtpSettingsScene extends Component<Props, State> {
   renderKeyBox = (styles: Object) => {
     if (this.props.isOtpEnabled) {
       return (
-        <ExpandableBoxComponent style={styles.keyBox} showMessage={s.strings.otp_show_code} hideMessage={s.strings.otp_hide_code}>
+        <ExpandableBoxComponent style={ExpandableBoxStyle} showMessage={s.strings.otp_show_code} hideMessage={s.strings.otp_hide_code}>
           <TouchableOpacity onPress={this.onCopyOtpKey}>
             <Text style={styles.keyText}>{this.props.otpKey}</Text>
           </TouchableOpacity>

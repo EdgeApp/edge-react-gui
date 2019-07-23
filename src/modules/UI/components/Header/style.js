@@ -2,7 +2,7 @@
 
 import { StyleSheet } from 'react-native'
 
-import { TextAndIconButtonStyle } from '../../../../styles/indexStyles'
+import { TextAndIconButtonStyle } from '../../../../styles/components/ButtonStyles.js'
 import THEME from '../../../../theme/variables/airbitz'
 
 export default StyleSheet.create({

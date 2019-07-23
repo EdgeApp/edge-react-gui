@@ -2,7 +2,7 @@
 
 import THEME from '../../theme/variables/airbitz'
 import { scale } from '../../util/scaling.js'
-import { IconButtonStyle, TextAndIconButtonStyle } from '../indexStyles'
+import { IconButtonStyle, TextAndIconButtonStyle } from '../components/ButtonStyles.js'
 
 export const styles = {
   mainScrollView: {

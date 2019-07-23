@@ -1,8 +1,8 @@
 // @flow
 
-// import * as Constants from '../../constants/indexConstants.js'
-import * as Styles from '../../styles/indexStyles'
 import THEME from '../../theme/variables/airbitz.js'
+import { TextAndIconButtonStyle } from './ButtonStyles.js'
+
 const ExpandableBoxStyle = {
   container: {
     flex: 1,
@@ -10,19 +10,19 @@ const ExpandableBoxStyle = {
     flexDirection: 'column'
   },
   textIconButton: {
-    ...Styles.TextAndIconButtonStyle,
+    ...TextAndIconButtonStyle,
     text: {
-      ...Styles.TextAndIconButtonStyle.text,
+      ...TextAndIconButtonStyle.text,
       fontSize: 14,
       color: THEME.COLORS.SECONDARY
     },
     textPressed: {
-      ...Styles.TextAndIconButtonStyle.text,
+      ...TextAndIconButtonStyle.text,
       fontSize: 14,
       color: THEME.COLORS.SECONDARY
     },
     icon: {
-      ...Styles.TextAndIconButtonStyle.icon,
+      ...TextAndIconButtonStyle.icon,
       color: THEME.COLORS.SECONDARY
     }
   },

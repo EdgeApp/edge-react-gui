@@ -24,7 +24,7 @@ import { WiredProgressBar } from '../../modules/UI/components/WiredProgressBar/W
 import { getWalletLoadingPercent } from '../../modules/UI/selectors.js'
 import { addWalletStyle } from '../../styles/components/AddWalletStyle.js'
 import { buyMultipleCryptoStyle } from '../../styles/components/BuyCryptoStyle.js'
-import { TwoButtonModalStyle } from '../../styles/indexStyles.js'
+import { TwoButtonModalStyle } from '../../styles/components/TwoButtonModalStyle.js'
 import styles from '../../styles/scenes/WalletListStyle'
 import THEME from '../../theme/variables/airbitz'
 import { type AppMessage, type AppTweaks, getActiveMessage } from '../../types/AppTweaks.js'
