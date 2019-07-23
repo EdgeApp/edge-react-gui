@@ -6,7 +6,7 @@
 
 Управление вашими криптоактивами никогда не было проще. Edge кошелек обеспечивает максимальную безопасность при сохранении простоты, позволяя всем типам пользователей легко управлять, переводить и обменивать криптоактивы.
 
-Криптовалютный кошелёк EDGE в настоящее время поддерживает: Bitcoin, Bitcoin Cash, Litecoin, Dash, Ethereum, Stellar, Monero и Ripple/XRP.
+Edge Crypto Wallet currently supports: Bitcoin, Bitcoin Cash, Bitcoin SV, Litecoin, Dash, Ethereum, Stellar, Monero, Digibyte, EOS, and Ripple/XRP.
 
 Edge мощный и простой в использовании криптовалютный кошелек, позволяющий пользователям контролировать собственные приватные ключи с простотой, как в мобильном банке. 
 

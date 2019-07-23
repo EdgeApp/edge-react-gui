@@ -1,24 +1,78 @@
+v1.8.5
+* Wyre Sell - Sell crypo with your bank account
+* New and improved visuals at login screen
+* Prevent FaceID from automatically lauching on login
+
+v1.8.4
+* Simplex Sell - Sell crypto and pay off credit cards
+* Ravencoin added
+
+v1.8.1
+
+* Fix the minimum Android SDK version to 23+ (Android 6)
+
+v1.8.0
+
+* React native upgrade + visual fixes
+* Prefer fixed-rate quotes over estimates
+
+v1.7.4
+
+*ベータシンプレックス 販売
+高額料金へのユーザー警告
+
+v1.7.3
+
+* BTC手数料の問題を回避するためのパッチ
+
+v1.7.2
+
+*ログイン時のパフォーマンス問題への修正
+* BCH / BSVスプリットエラーを修正
+*様々なビジュアル及びテキストの更新
+*要求に応じてエクスプローラを起動するためにタップアドレスを追加、確認画面の送信
+*セグウィット手数料がセグウィット非対応より15%以下になるよう修正
+* XRP、EOSなどの基本通貨への対応 ネットワーク上に見つからない場合、トランザクションはドロップされたものとして表示。
+
 v1.7.0
 
 *Bech32アドレス対応
 *エッジの中核を独立プロセスに移しグラフィカルユーザインタフェースの反応性パフォーマンスを向上
-* Sell crypto to credit card using Simplex
-* Add LibertyX to support buying Bitcoin from physical merchants in US
+*シンプレックスを通じてクレジットカードへ暗号資産を売る
+*アメリカの実店舗からのBitcoinの購入をサポートするためにLibertyXを追加
+
+v1.6.2
+
+AirbitzからEdgeへのウォレットのフィアットの名称を修正
+* EOSクラッシュの問題を修正
+*UIにおける様々なバグを修正
+*保存後すぐに更新するようにトランザクションのメタデータタグ付けを修正
+* XRPとETHの同期の改善
+* XRP及びETHトランザクションをブロードキャストするために複数のサービスを使用
+* Faa.stインスタント交換プロバイダを追加
+
+v1.6.1
+
+BTC手数料計算の改善
+*ウォレットリスト画面で暗号資産購入ボタンを追加
+*空のウォレット用に暗号資産を購入/交換するボタンを追加
+UI上におけるいくつかのバグを修正
+プラグイン機能の改善
 
 v1.6.0
 
 *EOSサポート
 *ビットコイン、イーサリアム、ビットコインキャッシュ、ダッシュとエッジURIのディープリンクを実装
-* Add Wyre plugin to support buy/sell of Bitcoin from US bank account
-* Add Bitrefill plugin to support buying gift cards and mobile top ups
-* Add Chinese, Korean, French, and Vietnamese translations
-* Add support for IMP and IRR fiat currencies
+*アメリカの銀行口座からBitcoinの売買をサポートするためのWyreプラグインを追加
+*ギフトカードやモバイルトップアップの購入をサポートするためのBitrefillプラグインを追加
+*中国語・韓国語・フランス語・ベトナム語翻訳を追加
+* IMPおよびIRRフィアット通貨のサポート追加
 
 バージョン1.5.0
 
 *交換所提携先としてChangeNOWを追加
-* Use new colored currency icons
-* Allow signin/singout of ShapeShift via Settings screen
+*新色の通貨アイコンの使用
+*設定画面でShapeShiftへのサインイン/サインアウトを許可
 
 バージョン1.4.4
 

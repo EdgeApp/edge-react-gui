@@ -1,18 +1,72 @@
+v1.8.5
+* Wyre Sell - Sell crypo with your bank account
+* New and improved visuals at login screen
+* Prevent FaceID from automatically lauching on login
+
+v1.8.4
+* Simplex 매각 - 암포화폐 매각과 신용카드 결제
+* Ravencoin (레이븐코인) 추가
+
+v1.8.1
+
+* Android SDK 최소 버전을 23+ (Android 6)로 수정
+
+v1.8.0
+
+* React Native 업그레이드 + 비주얼 수정
+* 예상 시세보다 고정 시세를 우선
+
+v1.7.4
+
+* Simplex 매각 β
+* 유저에게 고액 수수료 경고 알림
+
+v1.7.3
+
+* BTC 비용 애러를 위한 패치 적용
+
+v1.7.2
+
+* 로그인 퍼포먼스 오류 수정
+* BCH/BSV 분할 오류 수정
+* 그 외에 다양한 비주얼 및 텍스트 업데이트
+* 탭 주소를 추가하여 요청시 익스플로러를 시작하거나 확인 화면 전송하기
+* 세그윗 비용을 세그윗을 사용하지않는 경우보다 15% 낮게 개선
+* XRP나 EOS등의 계정 기본 통화는 네트워크에서 찾을 수 없을 경우 트랜잭션이 삭제된 것으로 표시됩니다.
+
 v1.7.0
 
 * Bech32 주소 지원
-* 엣지 코어를 독립 프로세스로 옮김으로써 퍼포먼스와 그래픽 유저 인터페이스의 반응성을 향상
-* Sell crypto to credit card using Simplex
-* Add LibertyX to support buying Bitcoin from physical merchants in US
+* Edge 코어를 독립 프로세스로 옮김으로써 퍼포먼스와 그래픽 유저 인터페이스의 반응성을 향상
+* Simplex를 사용하여 신용카드로 가상화폐를 매각
+* 미국 내에서 비트코인을 오프라인 구매할 수 있는 LibertyX를 추가
+
+v1.6.2
+
+* Airbitz에서 Edge로 월렛의 피아트 명칭 수정
+* EOS Crash 현상 수정
+* UI 버그 수정
+* 저장후 메타 데이터 태그가 즉시 업데이트되도록 수정
+* XRP와 ETH 동기화 개선
+* XRP와 ETH 트랜잭션을 전송하기위해 여러 서비스를 사용하세요.
+* Faa.st 거래 공급처를 추가
+
+v1.6.1
+
+* 개선된 BTC 비용 계산
+* 월렛 리스트 화면에 가상화폐 구매 버튼 추가
+* 비어있는 월렛을 위한 새로운 구매 버튼과 가상화폐 거래 버튼 추가
+* UI 버그 수정
+* 개선된 플러그인 기능
 
 v1.6.0
 
 * EOS 지원
 * 비트코인, 이더리움, 비트코인 캐시, 대시, 그리고 엣지 URI의 딥 링크를 구현
-* Add Wyre plugin to support buy/sell of Bitcoin from US bank account
-* Add Bitrefill plugin to support buying gift cards and mobile top ups
-* Add Chinese, Korean, French, and Vietnamese translations
-* Add support for IMP and IRR fiat currencies
+* 미국 은행계좌로부터 비트코인을 구매/매매 할 수 있는 Wyre 플러그인을 추가
+* 기프트 카드와 모바일 프리페이 구매를 지원하는 Bitrefill 플러그인을 추가
+* 중국어, 한국어, 프랑스어, 베트남어 번역 추가
+* IMP와 IRR 법정 화폐 지원 추가
 
 v1.5.0
 
