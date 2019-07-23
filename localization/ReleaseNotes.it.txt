@@ -1,3 +1,8 @@
+v1.8.5
+* Wyre Sell - Sell crypo with your bank account
+* New and improved visuals at login screen
+* Prevent FaceID from automatically lauching on login
+
 v1.8.4
 * Vendita tramite Simplex - Vendi le cripto e ricevi le fiat sulla tua carta di credito o prepagata
 * Aggiunto Ravencoin
