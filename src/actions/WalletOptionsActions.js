@@ -44,12 +44,6 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
       }
     }
 
-    case 'addToken': {
-      return (dispatch: Dispatch) => {
-        dispatch({ type: 'ADD_TOKEN', data: { walletId } })
-      }
-    }
-
     case 'manageTokens': {
       return (dispatch: Dispatch, getState: GetState) => {
         const state = getState()

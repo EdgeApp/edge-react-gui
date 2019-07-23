@@ -13,7 +13,6 @@ import {
 import { type PasswordReminderModalState, passwordReminderModal } from '../../modules/UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
 import { type TransactionAlertState, transactionAlert } from '../../modules/UI/components/TransactionAlert/reducer.js'
 import { type WalletListModalState, walletListModal } from '../../modules/UI/components/WalletListModal/reducer.js'
-import { type DimensionsState, dimensions } from '../DimensionsReducer.js'
 import { type EditTokenState, editToken } from '../EditTokenReducer.js'
 import { type RequestTypeState, requestType } from '../RequestTypeReducer.js'
 import { type UniqueIdentifierModalState, uniqueIdentifierModal } from '../UniqueIdentifierModalReducer.js'
@@ -30,7 +29,6 @@ export type ScenesState = {
   +controlPanel: ControlPanelState,
   +createWallet: CreateWalletState,
   +currentScene: string,
-  +dimensions: DimensionsState,
   +editToken: EditTokenState,
   +exchangeRate: ExchangeRateState,
   +helpModal: HelpModalState,
@@ -66,7 +64,6 @@ export const scenes: Reducer<ScenesState, Action> = combineReducers({
   controlPanel,
   createWallet,
   currentScene,
-  dimensions,
   editToken,
   exchangeRate,
   helpModal,

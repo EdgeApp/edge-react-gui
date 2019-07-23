@@ -3,7 +3,7 @@
 import { type DiskletFolder, makeReactNativeFolder } from 'disklet'
 import type { EdgeContext } from 'edge-core-js'
 import React, { Component } from 'react'
-import { Alert, Image, Keyboard, Linking, StatusBar, TouchableWithoutFeedback, View, YellowBox } from 'react-native'
+import { Alert, Image, Linking, StatusBar, TouchableWithoutFeedback, View, YellowBox } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import Locale from 'react-native-locale'
 import { MenuProvider } from 'react-native-popup-menu'
@@ -156,7 +156,6 @@ const TERMS_OF_SERVICE = s.strings.title_terms_of_service
 type Props = {
   requestPermission: (permission: Permission) => void,
   username?: string,
-  setKeyboardHeight: number => void,
   addContext: (EdgeContext, DiskletFolder) => void,
   addUsernames: (Array<string>) => void,
   setDeviceDimensions: any => void,
@@ -207,9 +206,6 @@ async function queryUtilServer (context: EdgeContext, folder: DiskletFolder, use
 }
 
 export default class Main extends Component<Props> {
-  keyboardDidShowListener: any
-  keyboardDidHideListener: any
-
   constructor (props: Props) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
@@ -221,16 +217,6 @@ export default class Main extends Component<Props> {
         'The scalesPageToFit property is not supported when useWebKit = true'
       ])
     }
-  }
-
-  UNSAFE_componentWillMount () {
-    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow)
-    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide)
-  }
-
-  componentWillUnmount () {
-    this.keyboardDidShowListener.remove()
-    this.keyboardDidHideListener.remove()
   }
 
   componentDidMount () {
@@ -883,15 +869,6 @@ export default class Main extends Component<Props> {
       imageFile = tabBarIconFiles[tabName]
     }
     return <Image source={imageFile} />
-  }
-
-  keyboardDidShow = (event: any) => {
-    const keyboardHeight = event.endCoordinates.height
-    this.props.setKeyboardHeight(keyboardHeight)
-  }
-
-  keyboardDidHide = () => {
-    this.props.setKeyboardHeight(0)
   }
 
   isCurrentScene = (sceneKey: string) => {
