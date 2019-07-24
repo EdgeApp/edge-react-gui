@@ -2,8 +2,8 @@
 
 import { StyleSheet } from 'react-native'
 
-import { isIphoneX } from '../../../../lib/isIphoneX.js'
 import THEME from '../../../../theme/variables/airbitz.js'
+import { isIphoneX } from '../../../../util/isIphoneX.js'
 
 export default StyleSheet.create({
   stylizedModal: {

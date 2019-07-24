@@ -3,8 +3,8 @@
 import React, { Component, type Node } from 'react'
 import { Animated, BackHandler, Dimensions, StyleSheet, TouchableWithoutFeedback } from 'react-native'
 
-import { scale } from '../../lib/scaling.js'
 import THEME from '../../theme/variables/airbitz.js'
+import { scale } from '../../util/scaling.js'
 import { type AirshipBallast } from './Airship.js'
 import { KeyboardTracker } from './KeyboardTracker.js'
 import { LayoutContext, type SafeAreaGap } from './LayoutContext.js'

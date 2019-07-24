@@ -92,8 +92,8 @@ buck-out/
 /ios/plugins/
 
 # Yaob bridge
-src/lib/bridge/rolledUp.js
-src/lib/bridge/injectThisInWebView.js
+src/util/bridge/rolledUp.js
+src/util/bridge/injectThisInWebView.js
 
 ## Edge core
 /android/app/src/main/assets/edge-core/

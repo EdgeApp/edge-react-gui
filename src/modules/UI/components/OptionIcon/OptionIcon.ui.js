@@ -3,8 +3,8 @@
 import React, { Component } from 'react'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 
-import { scale } from '../../../../lib/scaling.js'
 import THEME from '../../../../theme/variables/airbitz.js'
+import { scale } from '../../../../util/scaling.js'
 
 type Props = {
   iconName: string

@@ -6,9 +6,9 @@ import slowlog from 'react-native-slowlog'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import * as Constants from '../../../../../constants/indexConstants'
-import { scale } from '../../../../../lib/scaling.js'
 import s from '../../../../../locales/strings.js'
 import THEME from '../../../../../theme/variables/airbitz'
+import { scale } from '../../../../../util/scaling.js'
 import T from '../../../components/FormattedText'
 import styles from '../style'
 

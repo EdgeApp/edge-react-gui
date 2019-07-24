@@ -1,8 +1,8 @@
 // @flow
 
-import { scale } from '../../lib/scaling.js'
 import THEME from '../../theme/variables/airbitz'
 import { PLATFORM } from '../../theme/variables/platform'
+import { scale } from '../../util/scaling.js'
 import * as Styles from '../indexStyles'
 
 const HeaderMenuRightSideStyle = {

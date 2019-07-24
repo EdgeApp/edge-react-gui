@@ -22,7 +22,6 @@ import {
   SIMPLE_ICONS,
   SPEND
 } from '../../constants/indexConstants'
-import { scale } from '../../lib/scaling.js'
 import s from '../../locales/strings.js'
 import { getSyncedSettingsAsync, setSyncedSettingsAsync } from '../../modules/Core/Account/settings.js'
 import Text from '../../modules/UI/components/FormattedText'
@@ -31,6 +30,7 @@ import { buySellPlugins, spendPlugins } from '../../modules/UI/scenes/Plugins/pl
 import styles from '../../styles/scenes/PluginsStyle.js'
 import { THEME, colors } from '../../theme/variables/airbitz.js'
 import type { BuySellPlugin } from '../../types'
+import { scale } from '../../util/scaling.js'
 import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { Airship } from '../Main.ui.js'

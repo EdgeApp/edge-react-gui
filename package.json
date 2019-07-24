@@ -61,7 +61,7 @@
     "lint:fix": "npm run format",
     "localize": "node ./localizeLanguage.js; git add ./src/locales/strings",
     "precommit": "npm run localize && lint-staged && flow && npm test",
-    "prepare": "rollup -c; node ./src/lib/bridge/stringifyBridge.js",
+    "prepare": "rollup -c; node ./src/util/bridge/stringifyBridge.js",
     "server": "node ./loggingServer.js",
     "start": "node --max_old_space_size=4000 node_modules/react-native/local-cli/cli.js start ",
     "test": "jest",

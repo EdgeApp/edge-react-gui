@@ -1,8 +1,7 @@
 // @flow
-
 /* global __DEV__ */
 
-import './util/polyfills'
+import './util/polyfills.js'
 
 import { Client } from 'bugsnag-react-native'
 import { fetchLoginMessages } from 'edge-core-js'
@@ -18,8 +17,8 @@ import { sprintf } from 'sprintf-js'
 import ENV from '../env.json'
 import Main from './connectors/MainConnector'
 import * as Constants from './constants/indexConstants.js'
-import configureStore from './lib/configureStore'
 import s from './locales/strings.js'
+import configureStore from './util/configureStore.js'
 import { log, logToServer } from './util/logger'
 
 const ENABLE_WHY_DID_YOU_UPDATE = false

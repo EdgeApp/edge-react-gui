@@ -5,7 +5,7 @@ import { Image, StyleSheet } from 'react-native'
 
 import ReceivedIcon from '../../../../assets/images/transactions/transaction-details-received.png'
 import SentIcon from '../../../../assets/images/transactions/transaction-details-sent.png'
-import { scale } from '../../../../lib/scaling.js'
+import { scale } from '../../../../util/scaling.js'
 
 export type Props = {
   thumbnailPath: string,

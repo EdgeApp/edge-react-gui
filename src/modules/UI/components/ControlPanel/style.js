@@ -1,7 +1,7 @@
 // @flow
 
-import { scale } from '../../../../lib/scaling.js'
 import THEME from '../../../../theme/variables/airbitz'
+import { scale } from '../../../../util/scaling.js'
 
 export default {
   header: {

@@ -3,7 +3,7 @@
 import React, { Component } from 'react'
 import { TextField } from 'react-native-material-textfield'
 
-import { scale } from '../../lib/scaling.js'
+import { scale } from '../../util/scaling.js'
 
 type Props = {
   value: string,

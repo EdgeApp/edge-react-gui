@@ -10,7 +10,7 @@ import React, { PureComponent } from 'react'
 import { View } from 'react-native'
 
 import ENV from '../../../env.json'
-import { fakeUser } from '../../fake-user.js'
+import { fakeUser } from '../../util/fake-user.js'
 import EdgeAccountCallbackManager from './EdgeAccountCallbackManager.js'
 import EdgeContextCallbackManager from './EdgeContextCallbackManager.js'
 import EdgeWalletsCallbackManager from './EdgeWalletsCallbackManager.js'

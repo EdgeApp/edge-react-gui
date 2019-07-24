@@ -7,8 +7,8 @@ import slowlog from 'react-native-slowlog'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 
 import * as Constants from '../../../../constants/indexConstants'
-import { scale } from '../../../../lib/scaling.js'
 import { intl } from '../../../../locales/intl'
+import { scale } from '../../../../util/scaling.js'
 import * as UTILS from '../../../../util/utils.js'
 import { bottom, styles, top } from './styles.js'
 

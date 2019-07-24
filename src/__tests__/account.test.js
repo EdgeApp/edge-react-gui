@@ -9,8 +9,8 @@ import exchange from 'edge-exchange-plugins'
 
 import { currencyPlugins } from '../components/core/EdgeCoreManager.js'
 import { CURRENCY_PLUGIN_NAMES } from '../constants/WalletAndCurrencyConstants.js'
-import { fakeUser } from '../fake-user.js'
 import { SYNCED_ACCOUNT_DEFAULTS } from '../modules/Core/Account/settings.js'
+import { fakeUser } from '../util/fake-user.js'
 
 // TODO: The core will do this work itself in a future version:
 addEdgeCorePlugins(bitcoin)
