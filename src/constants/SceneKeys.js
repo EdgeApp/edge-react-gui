@@ -119,10 +119,10 @@ export const CURRENCY_SETTINGS = {
     pluginName: 'groestlcoin',
     currencyCode: 'GRS'
   },
-  /* ebstSettings: {
+  ebstSettings: {
     pluginName: 'eboost',
     currencyCode: 'EBST'
-  }, */
+  },
   ufoSettings: {
     pluginName: 'ufo',
     currencyCode: 'UFO'
