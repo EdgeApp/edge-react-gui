@@ -2160,9 +2160,9 @@ bs58check@^1.0.8:
     bs58 "^3.1.0"
     create-hash "^1.1.0"
 
-"bs58grscheck@git+https://github.com/Groestlcoin/bs58grscheck.git":
+"bs58grscheck@https://github.com/Groestlcoin/bs58grscheck":
   version "2.1.2"
-  resolved "git+https://github.com/Groestlcoin/bs58grscheck.git#020feec2b3153aeb278596ea70ce3579a37f4e21"
+  resolved "https://github.com/Groestlcoin/bs58grscheck#020feec2b3153aeb278596ea70ce3579a37f4e21"
   dependencies:
     bs58 "^4.0.0"
     create-hash "^1.1.0"
@@ -3353,10 +3353,10 @@ edge-currency-monero@0.2.2:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#6eddbd64"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.6.10:
-  version "0.6.10"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.6.10.tgz#b05cc6fa42fc63a1ff314e053da43f7275a12d03"
-  integrity sha512-Y/mZCGcFxdgvS6Uw3bqM+bwg7EAuWE9pZtCEb/HmiJ/fqLM20+OnPyp+mosmiCOQOE0lYVYrBnso4RLSihBLGA==
+edge-exchange-plugins@^0.6.11:
+  version "0.6.11"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.6.11.tgz#f59ffdee328b86594103fa0a7bfbd3799e707d1e"
+  integrity sha512-iGlGxE8H99/qr0qGU8G8BA+zMsfuYPul+c0hztFNzRxyNQSLCS+sQUHcsljA3Z++QEQh2X36J0wtbmZ4Tr8Pdg==
   dependencies:
     esm "^3.2.4"
     hashjs "^1.2.0"
