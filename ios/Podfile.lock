@@ -45,13 +45,13 @@ PODS:
     - React
   - React (0.59.10):
     - React/Core (= 0.59.10)
-  - react-native-camera (1.6.4):
+  - react-native-camera (1.13.1):
     - React
-    - react-native-camera/RCT (= 1.6.4)
-    - react-native-camera/RN (= 1.6.4)
-  - react-native-camera/RCT (1.6.4):
+    - react-native-camera/RCT (= 1.13.1)
+    - react-native-camera/RN (= 1.13.1)
+  - react-native-camera/RCT (1.13.1):
     - React
-  - react-native-camera/RN (1.6.4):
+  - react-native-camera/RN (1.13.1):
     - React
   - react-native-contacts (2.2.5):
     - React
@@ -296,7 +296,7 @@ SPEC CHECKSUMS:
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   Picker: 37554355aef82a532ea95b71b6eeba66bc86182b
   React: 36d0768f9e93be2473b37e7fa64f92c1d5341eef
-  react-native-camera: 9547ea9ab91ef13476a4ad79ec329b1fe634df8c
+  react-native-camera: b322bc25f47536219473c6d00c666d221f7f2695
   react-native-contacts: f6e5c518598762081ff9cf7c70db36f71668538e
   react-native-contacts-wrapper: a423605f89dba6b83edf481940736646f97cd25a
   react-native-cookies: 48615324004b541be94e9424f81224f0ba1ff68d
@@ -323,4 +323,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 5fc2d51a47ea6bef872004d3bd946edb628639af
 
-COCOAPODS: 1.7.2
+COCOAPODS: 1.7.4
