@@ -191,6 +191,7 @@ export type BuySellPlugin = {
   name: string,
   subtitle: string,
   imageUrl: string,
+  supportEmail?: string,
 
   permissions?: Array<string>,
   originWhitelist?: Array<string>,
