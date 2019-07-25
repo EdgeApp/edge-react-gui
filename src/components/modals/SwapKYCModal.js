@@ -47,8 +47,7 @@ class SwapKYCModal extends Component<Props, State> {
     }
   }
   getToken = async (code: string) => {
-    const id = ENV.SHAPESHIFT_CLIENT_ID ? ENV.SHAPESHIFT_CLIENT_ID : '3a49c306-8c52-42a2-b7cf-bda4e4aa6d7d'
-    const secret = ENV.SHAPESHIFT_SECRET ? ENV.SHAPESHIFT_SECRET : 'CWmm11jKoayEGPptfLzkyrrmyVHAG1skzRQuKJZYBrhy'
+    const { clientId: id = '3a49c306-8c52-42a2-b7cf-bda4e4aa6d7d', secret = 'CWmm11jKoayEGPptfLzkyrrmyVHAG1skzRQuKJZYBrhy' } = ENV.SHAPESHIFT_INIT
     const text = id + ':' + secret
     const data = new Uint8Array(text.length)
     for (let i = 0; i < text.length; ++i) data[i] = text.charCodeAt(i)
