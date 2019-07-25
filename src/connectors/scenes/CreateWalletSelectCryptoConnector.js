@@ -24,7 +24,7 @@ const mapStateToProps = (state: State): CreateWalletSelectCryptoStateProps => {
 }
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
-    displayErrorAlert: (message: string) => dispatch(displayErrorAlert(message))
+    displayErrorAlert: error => dispatch(displayErrorAlert(error))
   }
 }
 export const CreateWalletSelectCrypto = connect(

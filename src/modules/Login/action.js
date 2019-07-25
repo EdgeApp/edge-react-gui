@@ -1,7 +1,7 @@
 // @flow
 
 import type { EdgeAccount } from 'edge-core-js'
-import { Alert, Platform } from 'react-native'
+import { Platform } from 'react-native'
 import Locale from 'react-native-locale'
 import PushNotification from 'react-native-push-notification'
 import { Actions } from 'react-native-router-flux'
@@ -214,9 +214,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       dispatch(getEnabledTokens(walletId))
     })
   } catch (error) {
-    console.log('initializeAccount error: ', error)
-    Alert.alert(error.name, error.message)
-    dispatch(displayErrorAlert(error.message))
+    dispatch(displayErrorAlert(error))
   }
 }
 
