@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeAccount, EdgeSwapConfig } from 'edge-core-js'
+import { type EdgeSwapConfig } from 'edge-core-js/types'
 import React, { Component } from 'react'
 import { Image, View } from 'react-native'
 
@@ -19,8 +19,7 @@ type ExchangeSettingsProps = {
     [string]: EdgeSwapConfig
   },
   shapeShiftNeedsKYC: boolean,
-  account: EdgeAccount,
-  shapeShiftLogOut(EdgeAccount): void
+  shapeShiftLogOut(): void
 }
 
 type GuiExchangeSetting = {
@@ -89,7 +88,7 @@ export class ExchangeSettingsComponent extends Component<ExchangeSettingsProps, 
       })
       return
     }
-    this.props.shapeShiftLogOut(this.props.account)
+    this.props.shapeShiftLogOut()
   }
   render () {
     const ssLoginText = this.props.shapeShiftNeedsKYC ? s.strings.ss_login : s.strings.ss_logout

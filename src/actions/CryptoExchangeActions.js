@@ -17,8 +17,6 @@ import * as UI_SELECTORS from '../modules/UI/selectors'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../types'
 import * as UTILS from '../util/utils'
 
-// import { getExchangeDenomination as settingsGetExchangeDenomination } from '../../modules/UI/Settings/selectors.js'
-
 const DIVIDE_PRECISION = 18
 
 export type SetNativeAmountInfo = {
@@ -27,16 +25,6 @@ export type SetNativeAmountInfo = {
   primaryNativeAmount: string,
   fromPrimaryInfo?: GuiCurrencyInfo,
   toPrimaryInfo?: GuiCurrencyInfo
-}
-
-export const setKycToken = (tokenInfo: { access_token: string, refresh_token: string }, pluginName: string) => async (
-  dispatch: Dispatch,
-  getState: GetState
-) => {
-  const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
-  await account.swapConfig[pluginName].changeUserSettings({ accessToken: tokenInfo.access_token, refreshToken: tokenInfo.refresh_token })
-  dispatch({ type: 'ON_KYC_TOKEN_SET' })
 }
 
 export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (dispatch: Dispatch, getState: GetState) => {
