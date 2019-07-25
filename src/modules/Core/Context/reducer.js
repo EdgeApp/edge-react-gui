@@ -61,7 +61,6 @@ export const context: Reducer<ContextState, Action> = (state = initialState, act
     }
 
     default:
-      // $FlowFixMe
       return state
   }
 }

@@ -208,7 +208,6 @@ export const translate = (reducer: typeof untranslatedReducer): Reducer<Password
     translatedAction = {
       type: 'PASSWORD_LOGIN',
       data: {
-        // $FlowFixMe
         ...action.data.passwordReminder,
         lastLoginDate: now,
         lastPasswordUseDate: now
@@ -221,7 +220,6 @@ export const translate = (reducer: typeof untranslatedReducer): Reducer<Password
     translatedAction = {
       type: 'NON_PASSWORD_LOGIN',
       data: {
-        // $FlowFixMe
         ...action.data.passwordReminder,
         lastLoginDate: Date.now()
       }

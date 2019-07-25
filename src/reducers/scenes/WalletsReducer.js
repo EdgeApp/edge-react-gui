@@ -25,7 +25,6 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
       const wallets = action.data.currencyWallets
       const out = {}
       for (const walletId of Object.keys(wallets)) {
-        // $FlowFixMe
         const tempWallet = schema(wallets[walletId], action.data.receiveAddresses[walletId])
         if (state[walletId]) {
           const enabledTokensOnWallet = state[walletId].enabledTokens

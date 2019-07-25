@@ -220,7 +220,6 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, info: S
       const currentCurrencyDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, fromCurrencyCode)
 
       const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, fromCurrencyCode)
-      // $FlowFixMe
       const nativeToDisplayRatio = displayDenomination.multiplier
       const displayMax = UTILS.convertNativeToDisplay(nativeToDisplayRatio)(nativeMax)
       const errorMessage = sprintf(s.strings.amount_above_limit, displayMax, currentCurrencyDenomination.name)
@@ -236,7 +235,6 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, info: S
       const currentCurrencyDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, fromCurrencyCode)
 
       const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, fromCurrencyCode)
-      // $FlowFixMe
       const nativeToDisplayRatio = displayDenomination.multiplier
       const displayMin = UTILS.convertNativeToDisplay(nativeToDisplayRatio)(nativeMin)
       const errorMessage = sprintf(s.strings.amount_below_limit, displayMin, currentCurrencyDenomination.name)

@@ -176,7 +176,6 @@ export class EdgeProvider extends Bridgeable {
       const settings = SETTINGS_SELECTORS.getSettings(this._state)
       const walletName = DEFAULT_STARTER_WALLET_NAMES[selectedWallet.currencyCode]
       try {
-        // $FlowFixMe
         const newWallet: EdgeCurrencyWallet = await this._dispatch(
           createCurrencyWalletAndSelectForPlugins(walletName, selectedWallet.value, settings.defaultIsoFiat)
         )

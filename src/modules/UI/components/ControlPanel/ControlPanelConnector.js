@@ -37,10 +37,7 @@ const mapStateToProps = (state: State) => {
     primaryDisplayDenomination = getDisplayDenominationFull(state, currencyCode)
     primaryExchangeDenomination = getExchangeDenomination(state, currencyCode)
     secondaryDisplayAmount =
-      (parseFloat(1) *
-        parseFloat(secondaryToPrimaryRatio) *
-        // $FlowFixMe
-        parseFloat(primaryDisplayDenomination.multiplier)) /
+      (parseFloat(1) * parseFloat(secondaryToPrimaryRatio) * parseFloat(primaryDisplayDenomination.multiplier)) /
       parseFloat(primaryExchangeDenomination.multiplier)
   }
 

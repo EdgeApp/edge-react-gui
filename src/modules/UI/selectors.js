@@ -91,7 +91,6 @@ export const getDefaultDenomination = (state: State, currencyCode: string) => {
   return denomination
 }
 
-// $FlowFixMe
 export const getExchangeDenomination = (state: State, currencyCode: string, specificWallet?: GuiWallet): GuiDenomination => {
   let wallet = getSelectedWallet(state)
   const customTokens = SETTINGS_SELECTORS.getCustomTokens(state)

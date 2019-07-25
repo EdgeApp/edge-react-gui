@@ -32,7 +32,6 @@ const isSweeping = (state = false, action: Action): boolean => {
 const error = (state = null, action: Action): Error | null => {
   switch (action.type) {
     case 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_FAIL': {
-      // $FlowFixMe
       return action.data.error
     }
 

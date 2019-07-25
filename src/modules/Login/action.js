@@ -209,7 +209,6 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     if (newAccount) {
       await createDefaultWallets(account, defaultFiat, dispatch)
     }
-    // $FlowFixMe
     dispatch(updateWalletsRequest())
     activeWalletIds.forEach(walletId => {
       dispatch(getEnabledTokens(walletId))
