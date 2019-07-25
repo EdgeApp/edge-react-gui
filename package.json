@@ -222,7 +222,7 @@
     "body-parser": "^1.18.2",
     "edge-plugin-bitrefill": "https://github.com/EdgeApp/edge-plugin-bitrefill.git#2627b9d",
     "edge-plugin-simplex": "https://github.com/Airbitz/edge-plugin-simplex.git#517e2db",
-    "edge-plugin-wyre": "https://github.com/EdgeApp/edge-plugin-wyre.git#6307aaf",
+    "edge-plugin-wyre": "https://github.com/EdgeApp/edge-plugin-wyre.git#81f7f53",
     "eslint": "^4.17.0",
     "eslint-config-standard": "^11.0.0-beta.0",
     "eslint-plugin-flowtype": "^2.35.0",
