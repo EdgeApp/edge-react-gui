@@ -4,13 +4,13 @@ import { type DiskletFolder } from 'disklet'
 import type { EdgeContext } from 'edge-core-js'
 import { type Reducer } from 'redux'
 
-import { type Action, type Username } from '../../ReduxTypes.js'
+import { type Action } from '../../ReduxTypes.js'
 
 export type ContextState = {
   context: EdgeContext | Object,
   folder: DiskletFolder | Object,
-  usernames: Array<Username>,
-  nextUsername: Username
+  usernames: Array<string>,
+  nextUsername: string
 }
 
 const initialState = {
