@@ -31,14 +31,14 @@ PODS:
     - DoubleConversion
     - glog
   - glog (0.3.5)
-  - GoogleToolboxForMac/Defines (2.1.0)
-  - "GoogleToolboxForMac/NSData+zlib (2.1.0)":
-    - GoogleToolboxForMac/Defines (= 2.1.0)
-  - nanopb (0.3.8):
-    - nanopb/decode (= 0.3.8)
-    - nanopb/encode (= 0.3.8)
-  - nanopb/decode (0.3.8)
-  - nanopb/encode (0.3.8)
+  - GoogleToolboxForMac/Defines (2.2.1)
+  - "GoogleToolboxForMac/NSData+zlib (2.2.1)":
+    - GoogleToolboxForMac/Defines (= 2.2.1)
+  - nanopb (0.3.901):
+    - nanopb/decode (= 0.3.901)
+    - nanopb/encode (= 0.3.901)
+  - nanopb/decode (0.3.901)
+  - nanopb/encode (0.3.901)
   - Picker (4.3.7):
     - Picker/Core (= 4.3.7)
   - Picker/Core (4.3.7):
@@ -292,8 +292,8 @@ SPEC CHECKSUMS:
   FirebaseInstanceID: f3f0657372592ecdfdfe2cac604a5a75758376a6
   Folly: de497beb10f102453a1afa9edbf8cf8a251890de
   glog: aefd1eb5dda2ab95ba0938556f34b98e2da3a60d
-  GoogleToolboxForMac: 2b2596cbb7186865e98cadf2b1e262d851c2b168
-  nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
+  GoogleToolboxForMac: b3553629623a3b1bff17f555e736cd5a6d95ad55
+  nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   Picker: 37554355aef82a532ea95b71b6eeba66bc86182b
   React: 36d0768f9e93be2473b37e7fa64f92c1d5341eef
   react-native-camera: b322bc25f47536219473c6d00c666d221f7f2695
