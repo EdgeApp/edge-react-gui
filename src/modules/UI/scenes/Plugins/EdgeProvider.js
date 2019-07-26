@@ -351,17 +351,11 @@ export class EdgeProvider extends Bridgeable {
     const edgeTransaction = await this._spend(guiMakeSpendInfo)
     const name = this._plugin.name
     if (guiMakeSpendInfo.spendTargets && guiMakeSpendInfo.spendTargets.length > 0) {
+      const { currencyCode } = guiMakeSpendInfo
       const spendTarget = guiMakeSpendInfo.spendTargets[0]
-      const category = sprintf('expense: %s %s %s', s.strings.title_plugin_spend, guiMakeSpendInfo.spendTargets[0].currencyCode, this._plugin.name)
+      const category = sprintf('expense: %s %s %s', s.strings.title_plugin_spend, currencyCode, this._plugin.name)
       const email = this._plugin.supportEmail || ''
-      const notes = sprintf(
-        s.strings.plugin_spend_notes_generic,
-        spendTarget.currencyCode,
-        coreWallet.name,
-        this._plugin.name,
-        spendTarget.publicAddress,
-        email
-      )
+      const notes = sprintf(s.strings.plugin_spend_notes_generic, currencyCode, coreWallet.name, this._plugin.name, spendTarget.publicAddress, email)
       const edgeMetaData: EdgeMetadata = {
         name,
         category,
