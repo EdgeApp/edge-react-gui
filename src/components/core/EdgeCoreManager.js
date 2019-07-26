@@ -81,7 +81,7 @@ export const ratePlugins = {
   coincapLegacy: true,
   nomics: ENV.NOMICS_INIT,
   currencyconverterapi: ENV.CURRENCYCONVERTERAPI_INIT,
-  xagau: true
+  xagau: false
 }
 
 export const swapPlugins = {
@@ -89,7 +89,8 @@ export const swapPlugins = {
   changenow: ENV.CHANGE_NOW_INIT,
   faast: ENV.FAAST_INIT,
   shapeshift: ENV.SHAPESHIFT_INIT,
-  totle: ENV.TOTLE_INIT
+  totle: ENV.TOTLE_INIT,
+  godex: ENV.GODEX_INIT
 }
 
 const contextOptions = {
