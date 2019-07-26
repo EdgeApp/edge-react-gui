@@ -9,9 +9,7 @@ export const styles = StyleSheet.create({
   content: {
     flex: 1,
     backgroundColor: THEME.COLORS.WHITE,
-    paddingBottom: scale(20),
-    paddingHorizontal: scale(20),
-    paddingTop: scale(66)
+    padding: scale(20)
   },
   column: {
     flexDirection: 'row',
