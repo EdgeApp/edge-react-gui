@@ -121,7 +121,7 @@ class PluginView extends React.Component<Props> {
     const { dispatch, plugin, state } = this.props
 
     // Set up the EdgeProvider:
-    this._edgeProvider = new EdgeProvider(plugin.pluginId, state, dispatch)
+    this._edgeProvider = new EdgeProvider(plugin, state, dispatch)
 
     // Set up the WebView bridge:
     this._canGoBack = false

@@ -5,6 +5,7 @@ import type { EdgeCurrencyWallet, EdgeMetadata, EdgeNetworkFee, EdgeSpendTarget,
 import React from 'react'
 import { Actions } from 'react-native-router-flux'
 import SafariView from 'react-native-safari-view'
+import { sprintf } from 'sprintf-js'
 import { Bridgeable } from 'yaob'
 
 import { createCurrencyWalletAndSelectForPlugins } from '../../../../actions/indexActions'
@@ -14,10 +15,11 @@ import { createCryptoExchangeWalletSelectorModal } from '../../../../components/
 import { DEFAULT_STARTER_WALLET_NAMES, EXCLAMATION, MATERIAL_COMMUNITY } from '../../../../constants/indexConstants'
 import { SEND_CONFIRMATION } from '../../../../constants/SceneKeys.js'
 import s from '../../../../locales/strings'
+import * as WALLET_API from '../../../../modules/Core/Wallets/api.js'
 import * as SETTINGS_SELECTORS from '../../../../modules/Settings/selectors.js'
 import { Icon } from '../../../../modules/UI/components/Icon/Icon.ui.js'
 import type { GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
-import type { GuiWallet } from '../../../../types'
+import type { BuySellPlugin, GuiWallet } from '../../../../types'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import type { Dispatch, State } from '../../../ReduxTypes.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
@@ -63,13 +65,15 @@ type EdgeGetReceiveAddressOptions = {
 }
 
 export class EdgeProvider extends Bridgeable {
-  _pluginName: string
+  _pluginId: string
+  _plugin: BuySellPlugin
   _dispatch: Dispatch
   _state: State
 
-  constructor (pluginName: string, state: State, dispatch: Dispatch) {
+  constructor (plugin: BuySellPlugin, state: State, dispatch: Dispatch) {
     super()
-    this._pluginName = pluginName
+    this._plugin = plugin
+    this._pluginId = plugin.pluginId
     this._dispatch = dispatch
     this._state = state
   }
@@ -229,7 +233,7 @@ export class EdgeProvider extends Bridgeable {
   async writeData (data: { [key: string]: string }) {
     const account = CORE_SELECTORS.getAccount(this._state)
     const store = account.dataStore
-    await Promise.all(Object.keys(data).map(key => store.setItem(this._pluginName, key, data[key])))
+    await Promise.all(Object.keys(data).map(key => store.setItem(this._pluginId, key, data[key])))
     return { success: true }
   }
 
@@ -241,7 +245,7 @@ export class EdgeProvider extends Bridgeable {
     const store = account.dataStore
     const returnObj = {}
     for (let i = 0; i < keys.length; i++) {
-      returnObj[keys[i]] = await store.getItem(this._pluginName, keys[i]).catch(e => undefined)
+      returnObj[keys[i]] = await store.getItem(this._pluginId, keys[i]).catch(e => undefined)
     }
     console.log()
     return Promise.resolve(returnObj)
@@ -307,6 +311,20 @@ export class EdgeProvider extends Bridgeable {
       const transaction = await this.makeSpendRequest(info)
       if (transaction) {
         Actions.pop()
+        const name = this._pluginId
+        const category = sprintf('expense: %s %s %s', s.strings.title_plugin_spend, info.currencyCode, this._pluginId)
+        // exchange_notes_metadata_generic2: 'Exchanged %1$s %2$s from %3$s to %4$s %5$s in %6$s to address %7$s \nOrder: %8$s. \nExchange payment address: %9$s. \nExchange unique identifier: %10$s \n\nFor assistance, please contact %11$s.',
+        // plugin_spend_notes_generic: 'Spent %1$s from %2$s to %3$s to address %4$s \nFor assistance, please contact %5$s.'
+        const email = this._plugin.supportEmail || ''
+        const notes = sprintf(s.strings.plugin_spend_notes_generic, info.currencyCode, coreWallet.name, this._pluginId, info.publicAddress, email)
+        const edgeMetaData: EdgeMetadata = {
+          name,
+          category,
+          notes
+        }
+        console.log('Here we stop')
+        await WALLET_API.setTransactionDetailsRequest(coreWallet, transaction.txid, transaction.currencyCode, edgeMetaData)
+        console.log('Past it. ')
       }
       return Promise.resolve(transaction)
     } catch (e) {
@@ -328,7 +346,34 @@ export class EdgeProvider extends Bridgeable {
 
   // from the older stuff
   async makeSpendRequest (guiMakeSpendInfo: GuiMakeSpendInfo): Promise<EdgeTransaction> {
+    const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
+    const coreWallet = CORE_SELECTORS.getWallet(this._state, guiWallet.id)
     const edgeTransaction = await this._spend(guiMakeSpendInfo)
+    const name = this._plugin.name
+    if (guiMakeSpendInfo.spendTargets && guiMakeSpendInfo.spendTargets.length > 0) {
+      const spendTarget = guiMakeSpendInfo.spendTargets[0]
+      const category = sprintf('expense: %s %s %s', s.strings.title_plugin_spend, guiMakeSpendInfo.spendTargets[0].currencyCode, this._plugin.name)
+      const email = this._plugin.supportEmail || ''
+      const notes = sprintf(
+        s.strings.plugin_spend_notes_generic,
+        spendTarget.currencyCode,
+        coreWallet.name,
+        this._plugin.name,
+        spendTarget.publicAddress,
+        email
+      )
+      const edgeMetaData: EdgeMetadata = {
+        name,
+        category,
+        notes
+      }
+      console.log('Here we stop')
+      await WALLET_API.setTransactionDetailsRequest(coreWallet, edgeTransaction.txid, edgeTransaction.currencyCode, edgeMetaData)
+      console.log('Past it. ')
+    }
+    // exchange_notes_metadata_generic2: 'Exchanged %1$s %2$s from %3$s to %4$s %5$s in %6$s to address %7$s \nOrder: %8$s. \nExchange payment address: %9$s. \nExchange unique identifier: %10$s \n\nFor assistance, please contact %11$s.',
+    // plugin_spend_notes_generic: 'Spent %1$s from %2$s to %3$s to address %4$s \nFor assistance, please contact %5$s.'
+
     return edgeTransaction
   }
 
