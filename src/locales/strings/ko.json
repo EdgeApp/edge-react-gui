@@ -517,5 +517,6 @@
   "estimated_exchange_rate_body": "요청된 거래의 고정 시세를 제공하는 거래 공급처가 존재하지 않습니다. 이 거래로 견적 가격보다 더 낮은 가격의 자산을 수령할 가능성이 있습니다.",
   "buy_sell_crypto_select_country_button": "지역 선택",
   "buy_sell_crypto_no_plugin_region": "이 지역에서 사용할 수 있는 플러그인이 없습니다.",
-  "user_closed_modal_no_wallet": "모달창이 닫혔습니다.월렛이 선택되지 않았습니다."
+  "user_closed_modal_no_wallet": "모달창이 닫혔습니다.월렛이 선택되지 않았습니다.",
+  "plugin_spend_notes_generic": ""
 }
