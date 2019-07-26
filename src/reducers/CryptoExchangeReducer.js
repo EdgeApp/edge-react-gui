@@ -1,6 +1,5 @@
 // @flow
 
-import type { EdgeSwapQuote } from 'edge-core-js'
 import { type Reducer } from 'redux'
 
 import { type Action } from '../types/reduxTypes.js'
@@ -25,16 +24,18 @@ export type CryptoExchangeState = {
   toCurrencyIconDark: string | null,
   toBalanceMessage: string,
 
+  // Errors:
   insufficientError: boolean,
-  walletListModalVisible: boolean,
-  forceUpdateGuiCounter: number,
   genericShapeShiftError: string | null,
+
+  // Wallet list modal:
+  walletListModalVisible: boolean,
   changeWallet: 'none' | 'from' | 'to',
-  fee: any,
+
+  // Activity flags:
+  forceUpdateGuiCounter: number,
   shiftPendingTransaction: boolean,
   calculatingMax: boolean,
-  quoteExpireDate: Date | null,
-  quote: EdgeSwapQuote | null,
   showKYCAlert: boolean,
   pluginCompleteKYC: string | null,
   creatingWallet: boolean
@@ -53,7 +54,7 @@ const dummyCurrencyInfo: GuiCurrencyInfo = {
   }
 }
 
-const initialState = {
+const initialState: CryptoExchangeState = {
   fromWallet: null,
   fromCurrencyCode: null,
   fromNativeAmount: '0',
@@ -72,7 +73,6 @@ const initialState = {
   toCurrencyIconDark: null,
   toBalanceMessage: '',
 
-  fee: 0,
   insufficientError: false,
   walletListModalVisible: false,
   genericShapeShiftError: null,
@@ -80,8 +80,6 @@ const initialState = {
   forceUpdateGuiCounter: 0,
   shiftPendingTransaction: false,
   calculatingMax: false,
-  quoteExpireDate: null,
-  quote: null,
   showKYCAlert: false,
   pluginCompleteKYC: null,
   creatingWallet: false
@@ -134,9 +132,6 @@ function cryptoExchangeInner (state = initialState, action: Action): CryptoExcha
         fromDisplayAmount: '0',
         toDisplayAmount: '0',
         minerFee: '0',
-        fee: '',
-        quoteExpireDate: null,
-        quote: null,
         genericShapeShiftError: null
       }
     }
@@ -157,9 +152,6 @@ function cryptoExchangeInner (state = initialState, action: Action): CryptoExcha
         fromDisplayAmount: '0',
         toDisplayAmount: '0',
         minerFee: '0',
-        fee: '',
-        quote: null,
-        quoteExpireDate: null,
         genericShapeShiftError: null
       }
     }
@@ -171,17 +163,13 @@ function cryptoExchangeInner (state = initialState, action: Action): CryptoExcha
       }
     }
 
-    case 'UPDATE_SHIFT_TRANSACTION_FEE': {
-      if (!action.data) throw new Error('Invalid action')
+    case 'UPDATE_SWAP_QUOTE': {
       return {
         ...state,
-        quote: action.data.quote,
-        toNativeAmount: action.data.toNativeAmount,
+        toNativeAmount: action.data.quote.toNativeAmount,
         toDisplayAmount: action.data.toDisplayAmount,
-        fromNativeAmount: action.data.fromNativeAmount,
+        fromNativeAmount: action.data.quote.fromNativeAmount,
         fromDisplayAmount: action.data.fromDisplayAmount,
-        quoteExpireDate: action.data.quoteExpireDate,
-        fee: action.data.fee,
         insufficientError: false,
         genericShapeShiftError: null
       }
@@ -190,7 +178,6 @@ function cryptoExchangeInner (state = initialState, action: Action): CryptoExcha
     case 'RECEIVED_INSUFFICENT_FUNDS_ERROR': {
       return {
         ...state,
-        quote: null,
         insufficientError: true,
         genericShapeShiftError: null
       }
@@ -199,7 +186,6 @@ function cryptoExchangeInner (state = initialState, action: Action): CryptoExcha
     case 'GENERIC_SHAPE_SHIFT_ERROR': {
       return {
         ...state,
-        quote: null,
         genericShapeShiftError: action.data
       }
     }

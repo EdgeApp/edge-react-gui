@@ -1,4 +1,5 @@
 // @flow
+
 import { bns } from 'biggystring'
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, Keyboard, View } from 'react-native'
@@ -226,8 +227,7 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
   }
   getQuote = () => {
     const data: SetNativeAmountInfo = {
-      whichWallet: this.state.whichWalletFocus,
-      primaryExchangeAmount: this.state.whichWalletFocus === Constants.FROM ? this.fromAmountDisplay : this.toAmountDisplay,
+      whichWallet: this.state.whichWalletFocus === Constants.FROM ? 'from' : 'to',
       primaryNativeAmount: this.state.whichWalletFocus === Constants.FROM ? this.fromAmountNative : this.toAmountNative
     }
     if (data.primaryNativeAmount && data.primaryNativeAmount !== '0') {
