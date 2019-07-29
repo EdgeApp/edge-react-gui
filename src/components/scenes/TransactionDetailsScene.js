@@ -393,6 +393,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
   }
 
   onPressAdvancedDetailsButton = async () => {
+    const { edgeTransaction } = this.props
     let txExplorerLink = null
     if (this.props.currencyInfo) {
       txExplorerLink = sprintf(this.props.currencyInfo.transactionExplorer, this.props.edgeTransaction.txid)
@@ -400,7 +401,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
 
     const modal = createAdvancedTransactionDetailsModal({
       txExplorerUrl: txExplorerLink,
-      txId: this.props.edgeTransaction.txid
+      ...edgeTransaction
     })
     await launchModal(modal)
   }

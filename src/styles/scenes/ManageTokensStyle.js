@@ -5,21 +5,14 @@ import { StyleSheet } from 'react-native'
 import { scale } from '../../lib/scaling.js'
 import THEME from '../../theme/variables/airbitz'
 
-export const styles = {
-  gradient: {
-    height: THEME.HEADER
-  },
-  manageTokens: {
-    flex: 1
-  },
+export const underlayColor = THEME.COLORS.PRIMARY_BUTTON_TOUCHED
+
+export const styles = StyleSheet.create({
   container: {
     position: 'relative',
     flex: 1,
     backgroundColor: THEME.COLORS.WHITE,
     paddingBottom: scale(50)
-  },
-  leftArea: {
-    flexDirection: 'row'
   },
   icon: {
     backgroundColor: THEME.COLORS.TRANSPARENT,
@@ -29,8 +22,7 @@ export const styles = {
   headerRow: {
     padding: scale(12),
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    height: scale(50)
+    justifyContent: 'space-between'
   },
   headerText: {
     fontSize: scale(18),
@@ -98,9 +90,6 @@ export const styles = {
   tokenCheckboxArea: {
     alignSelf: 'center'
   },
-  underlay: {
-    color: THEME.COLORS.PRIMARY_BUTTON_TOUCHED
-  },
   rowRightArrow: {
     fontSize: scale(18),
     color: THEME.COLORS.GRAY_1
@@ -132,6 +121,4 @@ export const styles = {
     backgroundColor: THEME.COLORS.SECONDARY,
     borderRadius: 3
   }
-}
-
-export default StyleSheet.create(styles)
+})

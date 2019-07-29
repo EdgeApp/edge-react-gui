@@ -42,8 +42,7 @@ export const context: Reducer<ContextState, Action> = (state = initialState, act
       }
     }
 
-    case 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT_REQUEST': {
-      if (!action.data) throw new Error('Invalid action')
+    case 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT': {
       const { username } = action.data
       return {
         ...state,

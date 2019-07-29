@@ -19,11 +19,9 @@ export type WalletsState = {
 }
 
 const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> => {
-  if (!action.data) return state
-
   switch (action.type) {
     case 'CORE/WALLETS/UPDATE_WALLETS': {
-      // $FlowFixMe
+      if (!action.data) return state
       const wallets = action.data.currencyWallets
       const out = {}
       for (const walletId of Object.keys(wallets)) {
@@ -46,7 +44,6 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
     }
 
     case 'UPDATE_WALLET_ENABLED_TOKENS': {
-      // $FlowFixMe
       const { walletId, tokens } = action.data
       if (state[walletId] !== undefined) {
         return {
@@ -62,7 +59,6 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
     }
 
     case 'ADD_NEW_CUSTOM_TOKEN_SUCCESS': {
-      // $FlowFixMe
       const { enabledTokens, walletId } = action.data
       if (state[walletId] !== undefined) {
         return {
@@ -78,7 +74,6 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
     }
 
     case 'ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS': {
-      // $FlowFixMe
       const { coreWalletsToUpdate, oldCurrencyCode, tokenObj } = action.data
       // coreWalletsToUpdate are wallets with non-empty enabledTokens properties
       // receiving token will have to take on sending tokens enabledness
@@ -107,7 +102,6 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
 
     case 'OVERWRITE_THEN_DELETE_TOKEN_SUCCESS': {
       // adjust enabled tokens
-      // $FlowFixMe
       const { coreWalletsToUpdate, oldCurrencyCode } = action.data
       // coreWalletsToUpdate are wallets with non-empty enabledTokens properties
       // receiving token will have to take on sending tokens enabledness
@@ -130,9 +124,8 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
     }
 
     case 'UI/WALLETS/UPSERT_WALLETS': {
-      const { data } = action
-      // $FlowFixMe
-      const wallets = data.wallets
+      if (!action.data) return state
+      const { wallets } = action.data
       const out = { ...state }
       for (const wallet of wallets) {
         if (!state || !state[wallet.id]) {
@@ -153,10 +146,8 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
     }
 
     case 'UI/WALLETS/REFRESH_RECEIVE_ADDRESS': {
-      const {
-        // $FlowFixMe
-        data: { walletId, receiveAddress }
-      } = action
+      if (!action.data) return state
+      const { walletId, receiveAddress } = action.data
       return {
         ...state,
         [walletId]: {
@@ -199,13 +190,12 @@ const walletLoadingProgress = (state = {}, action: Action): $PropertyType<Wallet
 }
 
 const activeWalletIds = (state = [], action: Action): Array<string> => {
-  if (!action.data) return state
   if (action.type === 'ACCOUNT_INIT_COMPLETE') {
-    // $FlowFixMe
+    if (!action.data) return state
     return action.data.activeWalletIds
   }
   if (action.type === 'CORE/WALLETS/UPDATE_WALLETS') {
-    // $FlowFixMe
+    if (!action.data) return state
     return action.data.activeWalletIds
   }
 
@@ -213,13 +203,12 @@ const activeWalletIds = (state = [], action: Action): Array<string> => {
 }
 
 const archivedWalletIds = (state = [], action: Action): Array<string> => {
-  if (!action.data) return state
   if (action.type === 'ACCOUNT_INIT_COMPLETE') {
-    // $FlowFixMe
+    if (!action.data) return state
     return action.data.archivedWalletIds
   }
   if (action.type === 'CORE/WALLETS/UPDATE_WALLETS') {
-    // $FlowFixMe
+    if (!action.data) return state
     return action.data.archivedWalletIds
   }
 
@@ -248,7 +237,6 @@ const selectedCurrencyCode = (state = '', action: Action): string => {
   switch (action.type) {
     case 'UI/WALLETS/SELECT_WALLET': {
       if (action.data == null) throw new TypeError('Invalid action')
-      // $FlowFixMe
       return action.data.currencyCode
     }
 
@@ -265,17 +253,12 @@ const selectedCurrencyCode = (state = '', action: Action): string => {
 
 const addTokenPending = (state = false, action: Action): boolean => {
   switch (action.type) {
-    case 'ADD_TOKEN_START': {
+    case 'ADD_TOKEN_START':
       return true
-    }
 
-    case 'ADD_NEW_CUSTOM_TOKEN_SUCCESS': {
+    case 'ADD_NEW_CUSTOM_TOKEN_FAILURE':
+    case 'ADD_NEW_CUSTOM_TOKEN_SUCCESS':
       return false
-    }
-
-    case 'ADD_NEW_CUSTOM_TOKEN_FAILURE': {
-      return false
-    }
 
     default:
       return state

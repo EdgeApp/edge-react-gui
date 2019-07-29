@@ -1,3 +1,39 @@
+v1.8.5
+* Wyre Sell - Sell crypo with your bank account
+* New and improved visuals at login screen
+* Prevent FaceID from automatically lauching on login
+
+v1.8.4
+* Vendita tramite Simplex - Vendi le cripto e ricevi le fiat sulla tua carta di credito o prepagata
+* Aggiunto Ravencoin
+
+v1.8.1
+
+* La versione Android SDK minima richiesta è 23+ (Android 6)
+
+v1.8.0
+
+* Aggiornamento nativo a React + correzioni all'interfaccia utente
+* Quote fisse preferite rispetto a quelle sovrastimate
+
+v1.7.4
+
+* Beta vendita Simplex
+* Avvisa gli utenti riguardo commissioni elevate
+
+v1.7.3
+
+* Patch per evitare problemi di commissione BTC
+
+v1.7.2
+
+* Corretti i problemi prestazionali al login
+* Corretto l'errore di split BCH/BSV
+* Vari aggiornamenti visuali e testuali
+* Aggiunta la possibilità di cliccare l'indirizzo per lanciare l'explorer a richiesta o inviare screen di conferma
+* Corrette le commissioni segwit al fine di essere il 15% più basse di quelle non-segwit
+* Le cripto basate su account come XRP, EOS ecc. mostreranno le transazioni come saltate se queste non vengono trovate nel network
+
 v1.7.0
 
 * Supporto agli indirizzi Bech32
@@ -5,14 +41,32 @@ v1.7.0
 * Vendi le crypto e ottieni fiat sulla carta di credito usando Simplex
 * Aggiunto LibertyX per supportare l'acquisto di Bitcoin da venditori fisici in USA
 
+v1.6.2
+
+* Corretta la denominazione fiat dei portafogli da Airbitz a Edge
+* Corretti i problemi di Crash di EOS
+* Corretti vari bug dell'interfaccia utente
+* Corretta l'identificazione dei metadati delle transazioni al fine di aggiornarsi immediatamente dopo il salvataggio
+* Migliorata la sincronizzazione di XRP e ETH
+* Utilizza più servizi per trasmettere le transazioni XRP e ETH
+* Aggiunto Faa.st instant exchange provider
+
+v1.6.1
+
+* Migliorato il calcolo delle commissioni BTC
+* Aggiunto il tasto compra crypto nella schermata con la lista dei portafogli
+* Aggiunto il pulsante per acquistare e scambiare crypto per portafogli vuoti
+* Corretti numerosi bug all'UI
+* Migliorato il funzionamento dei plugin
+
 v1.6.0
 
 * Supporto a EOS
 * Implementazione deep link di bitcoin, ethereum, bitcoincash, dash e edge URIs
-* Add Wyre plugin to support buy/sell of Bitcoin from US bank account
+* Aggiunto il plugin Wyre per supportare la vendita e l'acquisto di Bitcoin dall'account US
 * Aggiunto il plugin Bitrefill per supportare l'acquisto di gift card e ricariche dei cellulari
-* Add Chinese, Korean, French, and Vietnamese translations
-* Add support for IMP and IRR fiat currencies
+* Aggiunta la traduzione in cinese, coreano, francese e vietnamita
+* Aggiunto il supporto per le valute fiat IMP e IRR
 
 v1.5.0
 

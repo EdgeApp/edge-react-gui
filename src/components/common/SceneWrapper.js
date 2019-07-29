@@ -1,28 +1,15 @@
 // @flow
 
-import React, { type ChildrenArray, type ComponentType, type Node } from 'react'
-import { Platform, StyleSheet, View } from 'react-native'
-import { connect } from 'react-redux'
+import React, { Component, type Node } from 'react'
+import { Animated, Platform, StyleSheet, View } from 'react-native'
 
-import { type State } from '../../modules/ReduxTypes.js'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { LayoutContext } from './LayoutContext.js'
+import { KeyboardTracker } from './KeyboardTracker.js'
+import { LayoutContext, type SafeAreaGap } from './LayoutContext.js'
 
-/**
- * Describes the gap between the edge of the content area and
- * the edge of the visible area.
- *
- * This gap includes things like the status bar, header bar, hardware sensors,
- * and other areas the scene can't use, but might want to paint a background
- * behind.
- */
-export type SceneGap = {
-  bottom: number,
-  left: number,
-  right: number,
-  top: number
-}
+// Should be ChildrenArray<Node>, but Flow is too old to understand:
+type NodeArray = Array<Node> | Node
 
 type BackgroundOptions =
   | 'header' // Header area covers the screen (default)
@@ -30,15 +17,12 @@ type BackgroundOptions =
   | 'none' // Do not render any background elements
   | 'drawer' // Reverse gradient for the drawer
 
-// Should be ChildrenArray<Node>, but Flow is too old to understand:
-type NodeArray = Array<Node> | Node
-
 type Props = {
   // The children can either be normal React elements,
   // or a function that accepts the current gap and returns an element.
   // The function will be called on each render, allowing the scene to react
   // to changes in the gap.
-  children: NodeArray | ((gap: SceneGap) => ChildrenArray<Node>),
+  children: NodeArray | ((gap: SafeAreaGap) => NodeArray),
 
   // True if this scene should shrink to avoid the keyboard:
   avoidKeyboard?: boolean,
@@ -56,59 +40,65 @@ type Props = {
   hasTabs?: boolean
 }
 
-type StateProps = {
-  keyboardHeight: number
-}
-
 /**
  * Wraps a normal stacked scene, creating a perfectly-sized box
  * that avoids the header and tab bar (if any).
  *
  * Also draws a common gradient background under the scene.
  */
-function SceneWrapperComponent (props: Props & StateProps) {
-  const { children, avoidKeyboard = false, background = 'header', bodySplit = 0, hasHeader = true, hasTabs = true, keyboardHeight } = props
+export class SceneWrapper extends Component<Props> {
+  render () {
+    const { avoidKeyboard = false, hasHeader = true, hasTabs = true } = this.props
 
-  return (
-    <LayoutContext>
-      {({ layout, safeAreaInsets }) => {
-        // Compensate for various react-navigation components:
-        const gap = {
-          bottom: avoidKeyboard && keyboardHeight > 0 ? keyboardHeight : hasTabs ? 0 : safeAreaInsets.bottom,
-          left: safeAreaInsets.left,
-          right: safeAreaInsets.right,
-          top: safeAreaInsets.top + (hasHeader ? getHeaderHeight() : 0)
-        }
+    return (
+      <LayoutContext>
+        {metrics => {
+          const { safeAreaInsets } = metrics
+          const gap = {
+            ...safeAreaInsets,
+            bottom: hasTabs ? 0 : safeAreaInsets.bottom,
+            top: safeAreaInsets.top + (hasHeader ? getHeaderHeight() : 0)
+          }
+          const downValue = metrics.layout.height - gap.top
+          const upValue = keyboardHeight => downValue - keyboardHeight
 
-        // Pass the gap to our children, if they want it:
-        const finalChildren = typeof children === 'function' ? children(gap) : children
+          return avoidKeyboard ? (
+            <KeyboardTracker downValue={downValue} upValue={upValue}>
+              {(keyboardAnimation, keyboardLayout) => this.renderScene(gap, keyboardAnimation, downValue - keyboardLayout)}
+            </KeyboardTracker>
+          ) : (
+            this.renderScene(gap, null, 0)
+          )
+        }}
+      </LayoutContext>
+    )
+  }
 
-        // Use a height-based layout to avoid the tab bar when the keyboard is up:
-        const sceneLayout: Object = { ...gap }
-        if (avoidKeyboard && keyboardHeight > 0 && hasTabs) {
-          sceneLayout.bottom = void 0
-          sceneLayout.height = layout.height - gap.top - keyboardHeight
-        }
+  /**
+   * Render the scene wrapper component, given various items from the context.
+   */
+  renderScene (gap: SafeAreaGap, keyboardAnimation: Animated.Value | null, keyboardHeight: number) {
+    const { children, background = 'header', bodySplit = 0 } = this.props
 
-        const scene = <View style={[styles.scene, sceneLayout]}>{finalChildren}</View>
+    // Render the scene container:
+    const finalChildren = typeof children === 'function' ? children({ ...gap, bottom: keyboardHeight }) : children
+    const scene =
+      keyboardAnimation != null ? (
+        <Animated.View style={[styles.scene, { ...gap, maxHeight: keyboardAnimation }]}>{finalChildren}</Animated.View>
+      ) : (
+        <View style={[styles.scene, gap]}>{finalChildren}</View>
+      )
 
-        // Finally, render a gradient under everything:
-        if (background === 'none') return scene
-        return (
-          <Gradient reverse={background === 'drawer'} style={styles.gradient}>
-            {background === 'body' && <View style={[styles.body, { top: gap.top + bodySplit }]} />}
-            {scene}
-          </Gradient>
-        )
-      }}
-    </LayoutContext>
-  )
+    // Render the background, if any:
+    if (background === 'none') return scene
+    return (
+      <Gradient reverse={background === 'drawer'} style={styles.gradient}>
+        {background === 'body' && <View style={[styles.body, { top: gap.top + bodySplit }]} />}
+        {scene}
+      </Gradient>
+    )
+  }
 }
-
-export const SceneWrapper: ComponentType<Props> = connect(
-  (state: State) => ({ keyboardHeight: state.ui.scenes.dimensions.keyboardHeight }),
-  dispatch => ({})
-)(SceneWrapperComponent)
 
 const isIos = Platform.OS === 'ios'
 
@@ -117,35 +107,40 @@ const isIos = Platform.OS === 'ios'
  */
 function getHeaderHeight () {
   if (isIos) {
-    const majorVersionIOS = parseInt(Platform.Version, 10)
-    if (majorVersionIOS > 9 && majorVersionIOS < 11) {
-      return 62
-    } else {
-      return 44
-    }
+    const majorVersionIOS = Number(Platform.Version)
+    return majorVersionIOS > 9 && majorVersionIOS < 11 ? 62 : 44
   }
   return 56
 }
 
 const styles = StyleSheet.create({
+  body: {
+    // Layout:
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+
+    // Visuals:
+    backgroundColor: THEME.COLORS.GRAY_4
+  },
+
   gradient: {
+    // Layout:
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
     top: 0
   },
+
   scene: {
+    // Layout:
+    position: 'absolute',
+
+    // Children:
     alignItems: 'stretch',
     flexDirection: 'column',
-    justifyContent: 'flex-start',
-    position: 'absolute'
-  },
-  body: {
-    backgroundColor: THEME.COLORS.GRAY_4,
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0
+    justifyContent: 'flex-start'
   }
 })

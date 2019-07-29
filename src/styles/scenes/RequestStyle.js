@@ -2,18 +2,7 @@
 
 import { StyleSheet } from 'react-native'
 
-import THEME from '../../theme/variables/airbitz'
-
-const styles = StyleSheet.create({
-  gradient: {
-    height: THEME.HEADER
-  },
-  view: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'stretch'
-  },
+export const styles = StyleSheet.create({
   main: {
     flex: 1,
     justifyContent: 'flex-start',
@@ -42,5 +31,3 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   }
 })
-
-export default styles

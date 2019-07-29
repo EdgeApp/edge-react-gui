@@ -12,39 +12,28 @@ import type { CustomTokenInfo } from '../types.js'
 import * as UTILS from '../util/utils.js'
 import * as WALLET_ACTIONS from './WalletActions.js'
 
-export const addTokenStart = () => ({
-  type: 'ADD_TOKEN_START'
-})
-
-export const addNewTokenSuccess = (walletId: string, tokenObj: CustomTokenInfo, settings: Object, enabledTokens: Array<string>) => ({
-  type: 'ADD_NEW_CUSTOM_TOKEN_SUCCESS',
-  data: { walletId, tokenObj, settings, enabledTokens, newCurrencyCode: tokenObj.currencyCode }
-})
-
-export const addNewTokenFailure = (errorMessage: string) => ({
-  type: 'ADD_NEW_CUSTOM_TOKEN_FAILURE',
-  data: { errorMessage }
-})
-
-export const setTokenSettings = (tokenObj: CustomTokenInfo) => ({
-  type: 'SET_TOKEN_SETTINGS',
-  data: tokenObj
-})
-
 export const addNewToken = (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string) => {
   return (dispatch: Dispatch, getState: GetState) => {
-    dispatch(addTokenStart())
+    dispatch({ type: 'ADD_TOKEN_START' })
     const state = getState()
     addTokenAsync(walletId, currencyName, currencyCode, contractAddress, denomination, state)
       .then(addedWalletInfo => {
         const { walletId, newTokenObj, setSettings, enabledTokensOnWallet } = addedWalletInfo
-        dispatch(addNewTokenSuccess(walletId, newTokenObj, setSettings, enabledTokensOnWallet))
+        dispatch({
+          type: 'ADD_NEW_CUSTOM_TOKEN_SUCCESS',
+          data: {
+            walletId,
+            tokenObj: newTokenObj,
+            settings: setSettings,
+            enabledTokens: enabledTokensOnWallet
+          }
+        })
         dispatch(WALLET_ACTIONS.refreshWallet(walletId))
         Actions.pop()
       })
       .catch(error => {
-        dispatch(addNewTokenFailure(error.message))
         console.log(error)
+        dispatch({ type: 'ADD_NEW_CUSTOM_TOKEN_FAILURE' })
         dispatch(displayErrorAlert(error.message))
       })
   }

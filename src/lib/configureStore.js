@@ -6,7 +6,7 @@ import { applyMiddleware, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
 
 import ENV from '../../env.json'
-import { rootReducer } from '../reducers/scenes/MainReducer.js'
+import { rootReducer } from '../reducers/RootReducer.js'
 import errorAlert from './errorAlert.js'
 import loginStatusChecker from './loginStatusChecker.js'
 import perfLogger from './perfLogger.js'

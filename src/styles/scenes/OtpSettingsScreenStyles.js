@@ -5,16 +5,10 @@ import THEME from '../../theme/variables/airbitz'
 import * as Styles from '../indexStyles.js'
 // import {Image} from 'react-native'
 
-const OtpSettingsScreenStyles = {
-  container: {
-    backgroundColor: THEME.COLORS.WHITE,
-    height: '100%',
-    width: '100%'
-  },
-  gradient: {
-    height: THEME.HEADER
-  },
+export const styles = {
   body: {
+    backgroundColor: THEME.COLORS.WHITE,
+    flex: 1,
     padding: scale(18)
   },
   hero: {
@@ -68,5 +62,3 @@ const OtpSettingsScreenStyles = {
   },
   iconSize: scale(36)
 }
-
-export { OtpSettingsScreenStyles }

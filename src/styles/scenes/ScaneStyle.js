@@ -12,10 +12,6 @@ export const styles = {
     flex: 1,
     justifyContent: 'center'
   },
-  preview: {
-    flex: 1,
-    alignSelf: 'stretch'
-  },
   overlayTop: {
     alignItems: 'center',
     backgroundColor: THEME.COLORS.GRAY_1,

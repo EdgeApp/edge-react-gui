@@ -4,17 +4,11 @@ import { StyleSheet } from 'react-native'
 
 import { scale } from '../../lib/scaling.js'
 import THEME from '../../theme/variables/airbitz'
-import { PLATFORM } from '../../theme/variables/platform'
 
-export const styles = {
-  gradient: {
-    height: THEME.HEADER
-  },
+export const styles = StyleSheet.create({
   container: {
-    position: 'relative',
-    height: scale(PLATFORM.deviceHeight - 66),
-    paddingHorizontal: scale(20),
-    backgroundColor: THEME.COLORS.GRAY_4
+    flex: 1,
+    paddingHorizontal: scale(20)
   },
   leftArea: {
     flexDirection: 'row'
@@ -99,5 +93,4 @@ export const styles = {
   bottomPaddingForKeyboard: {
     height: scale(300)
   }
-}
-export default StyleSheet.create(styles)
+})

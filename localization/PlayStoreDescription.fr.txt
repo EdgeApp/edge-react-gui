@@ -6,20 +6,19 @@ Description courte : Privé, securisé & facile à utiliser. Acheter, vendre, en
 
 Votre gestion de cryptomonnaie a jamais été plus facile. Edge Wallet offert la sécurité maximum avec la simplicité, cela permet au tous les utilisateurs à gérer, transfer, faire l'échange leurs monnaies facilement.
 
-<b>Edge Crypto Wallet acutellement fournir :</b> Bitcoin (BTC), Bitcoin Cash (BCH), Litecoin (LTC), Qtum (QTUM), Dash (DASH), Ethereum (ETH), Monero (XMR), Ripple (XRP), et Feathercoin (FTC). Souhaitez-vous voir les autres cryptomonaies dans notre Wallet?  Envoyez-nous une demande!
+<b>Edge Crypto Wallet recensement supporte:</b> Bitcoin (BTC), Bitcoin Cash (BCH), Bitcoin SV (BSV), Litecoin (LTC), Qtum (QTUM), Dash (DASH), Ethereum (ETH), Monero (XMR), Ripple (XRP), Digibyte (DGB), EOS, et Feathercoin (FTC). Souhaitez-vous voir les autres cryptomonaies dans notre Wallet? Envoyez-nous une demande!
 
  Edge est un portefeuille de crypto monnaies puissance et facile à utiliser qui permet aux utilisateurs de contrôler facilement leurs clés privées avec la familiarité et l’aisance d’une banque en ligne mobile. 
 
-Contrôlez vos fonds! Avec Edge, uniquement vous auriez d'authorisation d'acess à vos fonds et vos informations de la transaction.  Ni Edge ni une tierce personne ne pourra accéder à votre porte monnaie ou à vos données. Vous aurez la confidentialité et autonomie financière pour laquelle Bitcoin a été conçu avec la facilité d’utilisation que même une personne âgés pourrait gérer.
+Contrôlez vos fonds! Avec Edge, uniquement vous auriez d'authorisation d'acess à vos fonds et vos informations de la transaction. Ni Edge ni une tierce personne ne pourra accéder à votre porte monnaie ou à vos données. Vous aurez la confidentialité et autonomie financière pour laquelle Bitcoin a été conçu avec la facilité d’utilisation que même une personne âgés pourrait gérer.
 
-Edge offert égalment les échange des cryptomonnaies. Il est facile à effacer vos monnaies complétement avec des quelques clics.  Faire l'échange les BTC pour Ethereum, les ETH pour les BCH et les autre cryptomonnaies. 
+Edge offert égalment les échange des cryptomonnaies. Il est facile à effacer vos monnaies complétement avec des quelques clics. Faire l'échange les BTC pour Ethereum, les ETH pour les BCH et les autre cryptomonnaies.
 
 <b>Fonctionnalités</b>
-• Securiser le crypto wallet et les applications de la blockchain 
+• Securiser le crypto wallet et les applications de la blockchain
 • Il est facile d'utiliser Bitcoin Wallet application avec les aides pour le top cryptomonnaies comme Bitcoin Cash, Litecoin, Ripple (XRP)
- 
-• Zéro connaissance de cryptomonnaies ou zéro accès aux fonds, clés ou  données de transaction de l’utilisateur par Edge ou des parties tierces
-• Il est facile de créer un compte en utilisant son identifiant & le mot de passee ( pas de papier à imprimer PDFs, aucun remplissage ou aucune configurations d'encryptions) 
+• Zéro connaissance de cryptomonnaies ou zéro accès aux fonds, clés ou données de transaction de l’utilisateur par Edge ou des parties tierces
+• Il est facile de créer un compte en utilisant son identifiant & le mot de passee ( pas de papier à imprimer PDFs, aucun remplissage ou aucune configurations d'encryptions)
 * La connexion de TouchID biométrique et de FaceID pour renforcer la sécurité
 • Portefeuilles déterministes hiérarchiques avec adresses changeantes par transaction
 • Architecture de serveur décentralisé. Les Walletes fonctionnent même si les serveurs Edge sont indisponibles.
@@ -30,7 +29,7 @@ Edge offert égalment les échange des cryptomonnaies. Il est facile à effacer 
 Notification de confidentialité
 L’application Edge Wallet vous demande l’accès à la liste de contacts de l'appareil, la localisation et au infos personnelles. Ces informations seront utilisées sur l’appareil pour vous fournir une meilleure expérience et contribueront aussi à l’améliorer en suivant le processus :
 
-1. Remplissage automatique des coordonnées des contacts de l’utilisateur après une transaction.
+1. Remplissage automatique des coordonnées des contacts de l’utilisateur après une transaction
 2. Compléter les contacts automatiquement à partir du carnet d’adresses de l’utilisateur pour envoyer des demandes de paiement par courriel ou SMS
 
 Aucune info personnelle ou info de liste de contacts ne quitte l’appareil sans avoir été préalablement cryptées par les infos d’identification de l’utilisateur (nom d’utilisateur/mot de passe). Ni Edge ni une tierce personne ne pourra accéder à votre porte monnaie ou à vos données.

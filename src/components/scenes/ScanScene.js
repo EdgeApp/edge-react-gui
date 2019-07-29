@@ -110,23 +110,6 @@ export class Scan extends Component<Props> {
     this.props.toggleAddressModal()
   }
 
-  // selectPhotoTapped = () => {
-  //   const options = { takePhotoButtonTitle: null }
-
-  //   ImagePicker.showImagePicker(options, response => {
-  //     if (!response.didCancel && !response.error && !response.customButton) {
-  //       // this.refs.cameraCapture.capture({})
-  //       // You can also display the image using data:
-  //       // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-  //       // TODO: make edgelogin work with image picker -paulvp
-  //       /* if (/^airbitz:\/\/edge\//.test(uri)) {
-  //         return
-  //       } */
-  //       Actions[Constants.SEND_CONFIRMATION]()
-  //     }
-  //   })
-  // }
-
   openSettingsTapped = () => {
     OpenAppSettings.open()
   }
@@ -155,12 +138,11 @@ export class Scan extends Component<Props> {
       const flashMode = this.props.torchEnabled ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off
 
       return (
-        <View style={styles.cameraArea}>
-          <RNCamera style={styles.preview} flashMode={flashMode} type={RNCamera.Constants.Type.back} ref="cameraCapture" onBarCodeRead={this.onBarCodeRead} />
+        <RNCamera style={styles.cameraArea} captureAudio={false} flashMode={flashMode} onBarCodeRead={this.onBarCodeRead} type={RNCamera.Constants.Type.back}>
           <View style={styles.overlayTop}>
             <T style={styles.overlayTopText}>{HEADER_TEXT}</T>
           </View>
-        </View>
+        </RNCamera>
       )
     }
 

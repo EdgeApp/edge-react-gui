@@ -5,9 +5,8 @@ import { ChangePasswordScreen } from 'edge-login-ui-rn'
 import React, { Component } from 'react'
 import { ScrollView, View } from 'react-native'
 
-import Gradient from '../../modules/UI/components/Gradient/Gradient.ui.js'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView'
 import styles from '../../styles/scenes/SettingsStyle.js'
+import { SceneWrapper } from '../common/SceneWrapper.js'
 
 export type ChangePasswordOwnProps = {
   account: EdgeAccount,
@@ -34,8 +33,7 @@ export class ChangePassword extends Component<ChangePasswordComponent> {
 
   render () {
     return (
-      <SafeAreaView>
-        <Gradient style={styles.gradient} />
+      <SceneWrapper hasTabs={false} background="body">
         <ScrollView style={styles.container} keyboardShouldPersistTaps={'always'}>
           <ChangePasswordScreen
             account={this.props.account}
@@ -46,7 +44,7 @@ export class ChangePassword extends Component<ChangePasswordComponent> {
           />
           <View style={[styles.bottomShim, { height: 360 }]} />
         </ScrollView>
-      </SafeAreaView>
+      </SceneWrapper>
     )
   }
 }

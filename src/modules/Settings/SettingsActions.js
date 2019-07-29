@@ -1,6 +1,6 @@
 // @flow
 
-import type { CustomTokenInfo, GuiTouchIdInfo } from '../../types.js'
+import type { GuiTouchIdInfo } from '../../types.js'
 
 export const updateSettings = (settings: Object) => ({
   type: 'UI/SETTINGS/UPDATE_SETTINGS',
@@ -57,12 +57,6 @@ export const setSettingsLock = (bool: boolean) => ({
 export const setDenominationKey = (currencyCode: string, denominationKey: string) => ({
   type: 'UI/SETTINGS/SET_DENOMINATION_KEY',
   data: { currencyCode, denominationKey }
-})
-
-// tokens
-export const setCustomTokens = (customTokens: Array<CustomTokenInfo>) => ({
-  type: 'UI/SETTINGS/SET_CUSTOM_TOKENS',
-  data: { customTokens }
 })
 
 // touch id settings

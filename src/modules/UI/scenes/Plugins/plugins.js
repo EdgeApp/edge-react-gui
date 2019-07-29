@@ -6,7 +6,7 @@ import RNFS from 'react-native-fs'
 import assetPlugins from '../../../../assets/plugins.json'
 import { type BuySellPlugin } from '../../../../types.js'
 
-const LEGACY_PLUGINS = ['Wyre', 'Bitrefill']
+const LEGACY_PLUGINS = ['Bitrefill']
 
 const hostedBuySellPlugins: Array<BuySellPlugin> = [
   {

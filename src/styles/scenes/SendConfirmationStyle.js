@@ -6,16 +6,6 @@ import { scale } from '../../lib/scaling.js'
 import THEME, { DEBUG as debug } from '../../theme/variables/airbitz'
 
 export const rawStyles = {
-  gradient: {
-    height: THEME.HEADER
-  },
-  view: {
-    flex: 1,
-    flexDirection: 'column',
-    width: '100%',
-    justifyContent: 'flex-start',
-    alignItems: 'stretch'
-  },
   mainScrollView: {
     flex: 1,
     width: '100%',
@@ -139,4 +129,4 @@ export const rawStyles = {
   debug
 }
 
-export default StyleSheet.create(rawStyles)
+export const styles = StyleSheet.create(rawStyles)

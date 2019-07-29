@@ -3275,10 +3275,10 @@ edge-components@^0.0.26:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.16.4:
-  version "0.16.4"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.16.4.tgz#1c372a0fbb716df20b2403d69bf63cb2c7b64df4"
-  integrity sha512-HDnDk4FOTUjkwaIVgwwyLGdq4xcAmkqEDckO/z3bizMBx3Em8EAnlwwpX8hvgPjXiwRpVLy2JR7iYcQ+bJ572g==
+edge-core-js@^0.16.5:
+  version "0.16.5"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.16.5.tgz#a9f238d69cd3592595b25a169c275c644399f895"
+  integrity sha512-dliHYC8bgjR+YKsndxY8jvdW689HTDAaHVyisJVOh4Ec+BqBpoomWU0F1tkqmI//vv7TOPisqtMXrSMKRMw0GQ==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -3322,10 +3322,10 @@ edge-currency-accountbased@^0.1.18:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@^4.2.7:
-  version "4.2.7"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.2.7.tgz#4e2a4daed2c99d8e34776eb7478c9b51713fac4a"
-  integrity sha512-mPcW91uEIeHihPvC6VJ5DCcWWwlXfrf1FS7oI9g0Si6xYV4zp7rIs0l4vCPSfNj6mMihAlnHPGtPCMfQlyLnOg==
+edge-currency-bitcoin@^4.4.1:
+  version "4.4.1"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.4.1.tgz#02d61788bb864017084e37a7011e6e54650df82f"
+  integrity sha512-Tds34cLNwOuchRnCiNZI2U6VlWq+AqfqEz3YHON6PRMAzAX3xkXLpQpaAyJ3S3bhZwFsYLxmwrFannP+mzF5qA==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -3353,20 +3353,20 @@ edge-currency-monero@0.2.2:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#6eddbd64"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.6.9:
-  version "0.6.9"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.6.9.tgz#a969b2ea1c907cdf630bc9beda576780b13c5318"
-  integrity sha512-EulUmZ+ejZpjKChaT4W+xqpKAeMegumgNyuYtcFw0XcQy54LcOIJO9/y+q/N93fYQCNPv9tQIro9i55TS+CTHQ==
+edge-exchange-plugins@^0.6.12:
+  version "0.6.12"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.6.12.tgz#191f7e855ba36e576e5817172ed7847fbc02db37"
+  integrity sha512-yTkXOdFts+JE9+QNyqIxITThA0cruxPaIBKbf65TzL92Op9in3e5T+GhtNjLnjAZc/RYE4yxUQs6fz0OYBVV6g==
   dependencies:
     esm "^3.2.4"
     hashjs "^1.2.0"
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@0.5.33:
-  version "0.5.33"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.5.33.tgz#3d76730d1e721409976adcddd6973fcfd11b65d0"
-  integrity sha512-qTJqZwbw3nPRqx+D2uIawm3f3km9YC7V1F5lU1oaZb+Q7VLXUTXYhw86NHFweFvtkrOJPhZ5X7Rw65qYTFdgng==
+edge-login-ui-rn@0.5.36:
+  version "0.5.36"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.5.36.tgz#c7a22443e39ed8826797e693d71f462f7ec80e06"
+  integrity sha512-8hYLn8Btp61JPe7jr3PZXKYSXpCl7hsiu4A2YeaOSkdi0cLWdpkZDvmqTSfO+3svjtCn1TaKSeUYaUhmgNZhGA==
   dependencies:
     edge-components "^0.0.26"
     material-ui "^0.20.0"
@@ -3393,15 +3393,15 @@ edge-login-ui-rn@0.5.33:
   dependencies:
     moment "^2.22.2"
 
-"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#517e2db":
+"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#546a3e3":
   version "0.0.3"
-  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#517e2dbf5c6be44c8adae62068d99a4246f68ae2"
+  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#546a3e32ed9c6d72616fb5bc2aa07306a15b2148"
   dependencies:
     moment "^2.22.2"
 
-"edge-plugin-wyre@https://github.com/EdgeApp/edge-plugin-wyre.git#201a7953":
+"edge-plugin-wyre@https://github.com/EdgeApp/edge-plugin-wyre.git#cf6589b":
   version "0.1.2"
-  resolved "https://github.com/EdgeApp/edge-plugin-wyre.git#201a79535636d07b1085998d8ab7cf4a53ebbb6d"
+  resolved "https://github.com/EdgeApp/edge-plugin-wyre.git#cf6589b724e192a7d83c942add80d486731cb208"
   dependencies:
     js-sha256 "^0.9.0"
     moment "^2.22.2"
@@ -8855,9 +8855,9 @@ react-native-background-fetch@^2.4.3:
     plist "^2.0.1"
     xcode "^0.9.1"
 
-"react-native-camera@git://github.com/EdgeApp/react-native-camera.git#a31ea429d77":
-  version "1.6.4"
-  resolved "git://github.com/EdgeApp/react-native-camera.git#a31ea429d7790c02ce78138e56141dc854360b33"
+"react-native-camera@git://github.com/EdgeApp/react-native-camera.git#edge-fixes":
+  version "1.13.1"
+  resolved "git://github.com/EdgeApp/react-native-camera.git#2ff75ebbacc0062b5fccbcc951f41db5c6c38c11"
   dependencies:
     prop-types "^15.6.2"
 

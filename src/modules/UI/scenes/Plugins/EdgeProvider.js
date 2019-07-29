@@ -17,7 +17,7 @@ import s from '../../../../locales/strings'
 import * as SETTINGS_SELECTORS from '../../../../modules/Settings/selectors.js'
 import { Icon } from '../../../../modules/UI/components/Icon/Icon.ui.js'
 import type { GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
-import type { GuiWallet } from '../../../../types'
+import type { BuySellPlugin, GuiWallet } from '../../../../types'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import type { Dispatch, State } from '../../../ReduxTypes.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
@@ -63,13 +63,15 @@ type EdgeGetReceiveAddressOptions = {
 }
 
 export class EdgeProvider extends Bridgeable {
-  _pluginName: string
+  _pluginId: string
+  _plugin: BuySellPlugin
   _dispatch: Dispatch
   _state: State
 
-  constructor (pluginName: string, state: State, dispatch: Dispatch) {
+  constructor (plugin: BuySellPlugin, state: State, dispatch: Dispatch) {
     super()
-    this._pluginName = pluginName
+    this._plugin = plugin
+    this._pluginId = plugin.pluginId
     this._dispatch = dispatch
     this._state = state
   }
@@ -229,7 +231,7 @@ export class EdgeProvider extends Bridgeable {
   async writeData (data: { [key: string]: string }) {
     const account = CORE_SELECTORS.getAccount(this._state)
     const store = account.dataStore
-    await Promise.all(Object.keys(data).map(key => store.setItem(this._pluginName, key, data[key])))
+    await Promise.all(Object.keys(data).map(key => store.setItem(this._pluginId, key, data[key])))
     return { success: true }
   }
 
@@ -241,7 +243,7 @@ export class EdgeProvider extends Bridgeable {
     const store = account.dataStore
     const returnObj = {}
     for (let i = 0; i < keys.length; i++) {
-      returnObj[keys[i]] = await store.getItem(this._pluginName, keys[i]).catch(e => undefined)
+      returnObj[keys[i]] = await store.getItem(this._pluginId, keys[i]).catch(e => undefined)
     }
     console.log()
     return Promise.resolve(returnObj)
@@ -268,7 +270,7 @@ export class EdgeProvider extends Bridgeable {
       info.uniqueIdentifier = options.uniqueIdentifier
     }
     try {
-      const transaction = await this.makeSpendRequest(info)
+      const transaction = await this._makeSpendRequest(info)
       if (transaction) {
         Actions.pop()
       }
@@ -279,10 +281,10 @@ export class EdgeProvider extends Bridgeable {
   }
 
   // Request that the user spend to a URI
-  async requestSpendUri (uri: string, options?: EdgeRequestSpendOptions) {
+  async requestSpendUri (uri: string, options?: EdgeRequestSpendOptions): Promise<EdgeTransaction> {
     const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
     const coreWallet = CORE_SELECTORS.getWallet(this._state, guiWallet.id)
-    const result = await coreWallet.parseUri(uri) /* .then(result => async () => { */
+    const result = await coreWallet.parseUri(uri)
     const info: GuiMakeSpendInfo = {
       currencyCode: result.currencyCode,
       nativeAmount: result.nativeAmount,
@@ -304,7 +306,7 @@ export class EdgeProvider extends Bridgeable {
       info.uniqueIdentifier = options.uniqueIdentifier
     }
     try {
-      const transaction = await this.makeSpendRequest(info)
+      const transaction = await this._makeSpendRequest(info)
       if (transaction) {
         Actions.pop()
       }
@@ -327,8 +329,15 @@ export class EdgeProvider extends Bridgeable {
   } */
 
   // from the older stuff
-  async makeSpendRequest (guiMakeSpendInfo: GuiMakeSpendInfo): Promise<EdgeTransaction> {
+  async _makeSpendRequest (guiMakeSpendInfo: GuiMakeSpendInfo): Promise<EdgeTransaction> {
     const edgeTransaction = await this._spend(guiMakeSpendInfo)
+
+    const { metadata } = guiMakeSpendInfo
+    if (metadata != null) {
+      const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
+      const coreWallet = CORE_SELECTORS.getWallet(this._state, guiWallet.id)
+      await coreWallet.saveTxMetadata(edgeTransaction.txid, edgeTransaction.currencyCode, metadata)
+    }
     return edgeTransaction
   }
 
