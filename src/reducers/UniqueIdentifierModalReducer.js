@@ -31,7 +31,6 @@ export const uniqueIdentifierModal: Reducer<UniqueIdentifierModalState, Action> 
     case 'UNIQUE_IDENTIFIER_MODAL/UNIQUE_IDENTIFIER_CHANGED': {
       return {
         ...state,
-        // $FlowFixMe
         uniqueIdentifier: action.data.uniqueIdentifier
       }
     }

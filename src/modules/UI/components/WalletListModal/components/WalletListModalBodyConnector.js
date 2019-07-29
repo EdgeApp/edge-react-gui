@@ -25,7 +25,6 @@ const mapDispatchToProps = (dispatch: Dispatch): {} => ({
       dispatch(UI_ACTIONS.selectWallet(walletId, currencyCode))
       return
     }
-    // $FlowFixMe
     dispatch(actions.selectWalletForExchange(walletId, currencyCode))
   },
   disableWalletListModalVisibility: () => dispatch({ type: 'DISABLE_WALLET_LIST_MODAL_VISIBILITY' }),

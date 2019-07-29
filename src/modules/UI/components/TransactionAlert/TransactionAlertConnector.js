@@ -21,7 +21,6 @@ const mapStateToProps = (state: State) => {
 
   const { nativeAmount, currencyCode } = edgeTransaction
   const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode || 'ETH')
-  // $FlowFixMe
   const { symbol: displaySymbol, name: displayName, multiplier: displayMultiplier } = displayDenomination
   const displayAmount = UTILS.convertNativeToDisplay(displayMultiplier)(nativeAmount)
   const viewTransaction = () => Actions.transactionDetails({ edgeTransaction })

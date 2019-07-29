@@ -17,8 +17,6 @@ import * as UI_SELECTORS from '../modules/UI/selectors'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../types'
 import * as UTILS from '../util/utils'
 
-// import { getExchangeDenomination as settingsGetExchangeDenomination } from '../../modules/UI/Settings/selectors.js'
-
 const DIVIDE_PRECISION = 18
 
 export type SetNativeAmountInfo = {
@@ -27,16 +25,6 @@ export type SetNativeAmountInfo = {
   primaryNativeAmount: string,
   fromPrimaryInfo?: GuiCurrencyInfo,
   toPrimaryInfo?: GuiCurrencyInfo
-}
-
-export const setKycToken = (tokenInfo: { access_token: string, refresh_token: string }, pluginName: string) => async (
-  dispatch: Dispatch,
-  getState: GetState
-) => {
-  const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
-  await account.swapConfig[pluginName].changeUserSettings({ accessToken: tokenInfo.access_token, refreshToken: tokenInfo.refresh_token })
-  dispatch({ type: 'ON_KYC_TOKEN_SET' })
 }
 
 export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (dispatch: Dispatch, getState: GetState) => {
@@ -220,7 +208,6 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, info: S
       const currentCurrencyDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, fromCurrencyCode)
 
       const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, fromCurrencyCode)
-      // $FlowFixMe
       const nativeToDisplayRatio = displayDenomination.multiplier
       const displayMax = UTILS.convertNativeToDisplay(nativeToDisplayRatio)(nativeMax)
       const errorMessage = sprintf(s.strings.amount_above_limit, displayMax, currentCurrencyDenomination.name)
@@ -236,7 +223,6 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, info: S
       const currentCurrencyDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, fromCurrencyCode)
 
       const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, fromCurrencyCode)
-      // $FlowFixMe
       const nativeToDisplayRatio = displayDenomination.multiplier
       const displayMin = UTILS.convertNativeToDisplay(nativeToDisplayRatio)(nativeMin)
       const errorMessage = sprintf(s.strings.amount_below_limit, displayMin, currentCurrencyDenomination.name)

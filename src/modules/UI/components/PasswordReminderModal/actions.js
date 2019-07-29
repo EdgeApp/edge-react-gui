@@ -6,6 +6,7 @@ import s from '../../../../locales/strings.js'
 import * as ACCOUNT_API from '../../../Core/Account/api.js'
 import * as SETTINGS_API from '../../../Core/Account/settings.js'
 import type { Dispatch, GetState } from '../../../ReduxTypes.js'
+import { displayErrorAlert } from '../ErrorAlert/actions.js'
 
 export const checkPasswordStart = () => ({
   type: 'PASSWORD_REMINDER_MODAL/CHECK_PASSWORD_START'
@@ -46,7 +47,7 @@ export const checkPassword = (password: string) => (dispatch: Dispatch, getState
 export const setPasswordReminder = (passwordReminder: Object) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const account = state.core.account
-  SETTINGS_API.setPasswordReminderRequest(account, passwordReminder).catch(e => {
-    // We have never logged or reported this particular error.
+  SETTINGS_API.setPasswordReminderRequest(account, passwordReminder).catch(error => {
+    dispatch(displayErrorAlert(error))
   })
 }

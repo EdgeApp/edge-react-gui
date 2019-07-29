@@ -46,7 +46,7 @@ export type CreateWalletSelectCryptoStateProps = {
 }
 
 type CreateWalletSelectCryptoDispatchProps = {
-  displayErrorAlert: string => void
+  displayErrorAlert: (Error | string) => void
 }
 
 type Props = CreateWalletSelectCryptoOwnProps & CreateWalletSelectCryptoStateProps & CreateWalletSelectCryptoDispatchProps

@@ -32,9 +32,8 @@ export const addNewToken = (walletId: string, currencyName: string, currencyCode
         Actions.pop()
       })
       .catch(error => {
-        console.log(error)
+        dispatch(displayErrorAlert(error))
         dispatch({ type: 'ADD_NEW_CUSTOM_TOKEN_FAILURE' })
-        dispatch(displayErrorAlert(error.message))
       })
   }
 }

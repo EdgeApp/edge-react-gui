@@ -281,10 +281,7 @@ export default class WalletList extends Component<Props, State> {
   }
 
   renderItem = (item: Object) => {
-    return (
-      // $FlowFixMe sortHandlers error. Where does sortHandlers even come from?
-      <FullWalletListRow data={item} customTokens={this.props.customTokens} />
-    )
+    return <FullWalletListRow data={item} customTokens={this.props.customTokens} />
   }
 
   renderActiveSortableList = (activeWalletsArray: Array<{ key: string }>, activeWalletsObject: {}) => {
