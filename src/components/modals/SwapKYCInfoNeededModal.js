@@ -35,6 +35,9 @@ export class SwapKYCInfoNeededModal extends Component<Props, State> {
       case 'changenow':
         return { uri: 'exchange_logo_changenow' }
 
+      case 'foxExchange':
+        return { uri: 'exchange_logo_fox_exchange' }
+
       case 'changelly':
       default:
         return { uri: 'exchange_logo_changelly' }

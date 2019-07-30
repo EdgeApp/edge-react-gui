@@ -35,6 +35,9 @@
 		98AF3B3C1F99F7D20083E087 /* audio_received.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 98AF3B3A1F99F7D10083E087 /* audio_received.mp3 */; };
 		9C77109EF9C7495E83B65835 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E22452AEA7F9422FA609E7B4 /* Octicons.ttf */; };
 		A32373B436A54BE09CB501C5 /* font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1FA75A7FCCEA4AACBBC97934 /* font.ttf */; };
+		A80A1C7122A653DC00A5417B /* exchange_logo_fox_exchange.png in Resources */ = {isa = PBXBuildFile; fileRef = A80A1C6E22A653DC00A5417B /* exchange_logo_fox_exchange.png */; };
+		A80A1C7222A653DC00A5417B /* exchange_logo_fox_exchange@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A80A1C6F22A653DC00A5417B /* exchange_logo_fox_exchange@2x.png */; };
+		A80A1C7322A653DC00A5417B /* exchange_logo_fox_exchange@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A80A1C7022A653DC00A5417B /* exchange_logo_fox_exchange@3x.png */; };
 		A88329F9AD044FEB8B7D2AA1 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 497F4AA15A3F4601A2F7027F /* MaterialCommunityIcons.ttf */; };
 		ABAD41DADC5F4A96990A421E /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F7BCB7447264484B9199BD43 /* Feather.ttf */; };
 		AC40390740E9458CBD92E01B /* SF-UI-Text-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0F91EE15341B486DB1AD6756 /* SF-UI-Text-Regular.otf */; };
@@ -127,6 +130,9 @@
 		9EAB0D55879A45ADA4669286 /* SourceSansPro-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-LightItalic.ttf"; path = "../src/assets/fonts/SourceSansPro-LightItalic.ttf"; sourceTree = "<group>"; };
 		A0587BF5EC0B93837E5E83BE /* Pods-edge.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-edge.release.xcconfig"; path = "Pods/Target Support Files/Pods-edge/Pods-edge.release.xcconfig"; sourceTree = "<group>"; };
 		A4F20FA41E19409A93306235 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
+		A80A1C6E22A653DC00A5417B /* exchange_logo_fox_exchange.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = exchange_logo_fox_exchange.png; sourceTree = "<group>"; };
+		A80A1C6F22A653DC00A5417B /* exchange_logo_fox_exchange@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "exchange_logo_fox_exchange@2x.png"; sourceTree = "<group>"; };
+		A80A1C7022A653DC00A5417B /* exchange_logo_fox_exchange@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "exchange_logo_fox_exchange@3x.png"; sourceTree = "<group>"; };
 		AA0A843F10D9480786517FEF /* SourceSansPro-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-Italic.ttf"; path = "../src/assets/fonts/SourceSansPro-Italic.ttf"; sourceTree = "<group>"; };
 		B3F94957529C4939AD4E8BD9 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		BC9BE38812E748DE91169D0A /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
@@ -307,6 +313,9 @@
 		FD982BC41FABFA020057F035 /* SplashScreenResource */ = {
 			isa = PBXGroup;
 			children = (
+				A80A1C6E22A653DC00A5417B /* exchange_logo_fox_exchange.png */,
+				A80A1C6F22A653DC00A5417B /* exchange_logo_fox_exchange@2x.png */,
+				A80A1C7022A653DC00A5417B /* exchange_logo_fox_exchange@3x.png */,
 				DA285EAA2203BF2F00F79CE6 /* exchange_logo_faast.png */,
 				DA285EAB2203BF2F00F79CE6 /* exchange_logo_faast@2x.png */,
 				DA285EA92203BF2F00F79CE6 /* exchange_logo_faast@3x.png */,
@@ -396,6 +405,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -461,8 +471,10 @@
 				DA285EAE2203BF3000F79CE6 /* exchange_logo_faast@2x.png in Resources */,
 				AC40390740E9458CBD92E01B /* SF-UI-Text-Regular.otf in Resources */,
 				A32373B436A54BE09CB501C5 /* font.ttf in Resources */,
+				A80A1C7322A653DC00A5417B /* exchange_logo_fox_exchange@3x.png in Resources */,
 				77105E1044684D61B6B0B1EA /* SourceSansPro-Black.ttf in Resources */,
 				F0D7D6C909584919867CD8B5 /* SourceSansPro-BlackItalic.ttf in Resources */,
+				A80A1C7222A653DC00A5417B /* exchange_logo_fox_exchange@2x.png in Resources */,
 				224A82278CB1465E9E84DC30 /* SourceSansPro-Bold.ttf in Resources */,
 				31BE19EEE2CA4692A7873F5F /* SourceSansPro-BoldItalic.ttf in Resources */,
 				F4A41DF580AB4DA18363D332 /* SourceSansPro-ExtraLight.ttf in Resources */,
@@ -478,6 +490,7 @@
 				72FEADA163204A53BB83DDB1 /* EvilIcons.ttf in Resources */,
 				ABAD41DADC5F4A96990A421E /* Feather.ttf in Resources */,
 				772873537EE6422F8F8E8CD3 /* FontAwesome.ttf in Resources */,
+				A80A1C7122A653DC00A5417B /* exchange_logo_fox_exchange.png in Resources */,
 				8E1B3057B68149CCA355FDBF /* FontAwesome5_Brands.ttf in Resources */,
 				5BAD66699331448D82B24104 /* FontAwesome5_Regular.ttf in Resources */,
 				26B52E61E77947A1A4E07707 /* FontAwesome5_Solid.ttf in Resources */,
@@ -506,7 +519,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		2AA364716BF34DF609A9E9B4 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -609,6 +622,7 @@
 					"$(SRCROOT)/../../../react-native/React/**",
 					"$(SRCROOT)/../node_modules/react-native-background-fetch/ios/RNBackgroundFetch",
 					"$(SRCROOT)/../node_modules/bugsnag-react-native/cocoa",
+					"${PODS_ROOT}/Headers/Private",
 				);
 				INFOPLIST_FILE = edge/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
@@ -647,6 +661,7 @@
 					"$(SRCROOT)/../../../react-native/React/**",
 					"$(SRCROOT)/../node_modules/react-native-background-fetch/ios/RNBackgroundFetch",
 					"$(SRCROOT)/../node_modules/bugsnag-react-native/cocoa",
+					"${PODS_ROOT}/Headers/Private",
 				);
 				INFOPLIST_FILE = edge/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;

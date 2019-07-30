@@ -90,7 +90,8 @@ export const swapPlugins = {
   faast: ENV.FAAST_INIT,
   shapeshift: ENV.SHAPESHIFT_INIT,
   totle: ENV.TOTLE_INIT,
-  godex: ENV.GODEX_INIT
+  godex: ENV.GODEX_INIT,
+  foxExchange: ENV.FOX_INIT
 }
 
 const contextOptions = {
