@@ -1,85 +1,85 @@
 v1.8.5
-* Wyre Sell - Sell crypo with your bank account
-* New and improved visuals at login screen
-* Prevent FaceID from automatically lauching on login
+* Wyre Sell - Verkaufen Sie Kristall mit Ihrem Bankkonto
+* Neue und verbesserte Visuals auf dem Login-Bildschirm
+* Verhindere FaceID automatisch beim Login lauschen
 
 v1.8.4
-* Simplex Sell - Sell crypto and pay off credit cards
-* Ravencoin added
+* Einfacher Verkauf - Verkaufen Sie Kryptographie und bezahlen Sie Kreditkarten
+* Ravencoin hinzugefügt
 
 v1.8.1
 
-* Fix the minimum Android SDK version to 23+ (Android 6)
+* Die mindestens Android SDK-Version auf 23+ (Android 6) beheben
 
 v1.8.0
 
-* React native upgrade + visual fixes
-* Prefer fixed-rate quotes over estimates
+* Eingeborenes Upgrade React + visuelle Korrekturen
+* Bevorzugt Festtarifquoten über Schätzungen
 
 v1.7.4
 
-* Beta Simplex sell
-* Warn users about high fees
+* Beta Simplex verkaufen
+* Benutzer über hohe Gebühren warnen
 
 v1.7.3
 
-* Patch to avoid BTC fee problems
+* Patch um BTC-Gebührenfragen zu vermeiden
 
 v1.7.2
 
-* Fix performance issues on login
-* Fix Split BCH/BSV Error
-* Various visual and text updates
-* Add tap address to launch explorer at request or send confirmation screens
-* Fix segwit fees to be 15% lower than non-segwit
-* Account base currencies such as XRP, EOS etc. will show transactions as dropped if not found on the network
+* Fehler beim Anmelden beheben
+* Fehler beim Split BCH/BSV beheben
+* Verschiedene visuelle und textliche Updates
+* Tippadresse hinzufügen, um den Explorer auf Anfrage zu starten oder Bestätigungs-Bildschirme zu senden
+* Fix segwit Gebühren um 15% niedriger als nicht segwit
+* Kontodatenwährungen wie XRP, EOS etc. wird Transaktionen als gelöscht anzeigen, wenn nicht im Netzwerk gefunden
 
 v1.7.0
 
 * Bech32 Adressen Support
 * Den Edge Core zum eigenständigen Prozess machen, um die Leistung und die GUI-Antwortzeit zu verbessern
-* Sell crypto to credit card using Simplex
-* Add LibertyX to support buying Bitcoin from physical merchants in US
+* Kryptographie mit Simplex an Kreditkarte verkaufen
+* Füge LibertyX hinzu, um Bitcoin von physischen Händlern in den USA zu kaufen
 
 v1.6.2
 
-* Fix fiat denomination of wallets from Airbitz to Edge
-* Fix EOS Crash issues
-* Fix various UI display bugs
-* Fix metadata tagging of transactions to update immediately after saving
-* Improved syncing of XRP and ETH
-* Use multiple services to broadcast XRP and ETH transactions
-* Add Faa.st instant exchange provider
+* Fix-Fiat-Nennung von Brieftaschen von Airbitz zu Edge
+* Fehler beim Absturz von EOS beheben
+* Mehrere UI-Anzeigeeinstellungen beheben
+* Metadaten-Markierung von Transaktionen, die nach dem Speichern sofort aktualisiert werden sollen
+* Verbesserte Synchronisierung von XRP und ETH
+* Mehrere Dienste verwenden, um XRP- und ETH-Transaktionen zu senden
+* Faa.st Instant Exchange Provider hinzufügen
 
 v1.6.1
 
-* Improved BTC fee calculations
-* Add buy crypto button at Wallets List screen
-* Add new button to buy and exchange crypto for empty wallets
-* Fix several UI display bugs
-* Improved plugin functionality
+* Verbesserte BTC-Gebührenrechner
+* Kryptographie-Taste auf dem Wallets-Listenbild hinzufügen
+* Neue Schaltfläche zum Kauf und Austausch von Kryptographie für leere Brieftaschen hinzufügen
+* Mehrere UI-Anzeigeeinstellungen beheben
+* Verbesserte Plugin Funktionalität
 
 v1.6.0
 
 * EOS Support
 * Deep-Linking für Bitcoin, Ethereum, Bitcoincash, Dash und Edge-URI's implementieren
-* Add Wyre plugin to support buy/sell of Bitcoin from US bank account
-* Add Bitrefill plugin to support buying gift cards and mobile top ups
-* Add Chinese, Korean, French, and Vietnamese translations
-* Add support for IMP and IRR fiat currencies
+* Wyre Plugin hinzufügen, um Bitcoin-Kaufen/Verkauf von US-Bankkonto zu unterstützen
+* Bitrefill Plugin hinzufügen, um Geschenkkarten und mobile Upups zu kaufen
+* Chinesische, koreanische, französische und vietnamesische Übersetzungen hinzufügen
+* Unterstützung für IMP- und IRR-Fiat-Währungen hinzufügen
 
 v1.5.0
 
 * Changenow als Tauschbörse hinzufügen
 * Benutze neue farbige Währungssymbole
-* Allow signin/singout of ShapeShift via Settings screen
+* Erlaube Anmeldung/Singout von ShapeShift über Einstellungsbild
 
 v1.4.4
 
-* Add ability to split BCH wallets into BSV wallets
-* Add replay protection to BCH/BSV wallets
-* Improve login performance
-* Fix bug that caused XRP and XLM to re-query all transactions at each login
+* Füge die Fähigkeit hinzu, BCH-Wallets in BSV-Wallets zu teilen
+* Wiederholungsschutz für BCH-Transaktionen hinzugefügt
+* Verbesserung der Leistung
+* Fehler beheben, der XRP und XLM dazu veranlasste, alle Transaktionen bei jedem Login erneut zu abfragen
 * Verbesserung der Konnektivität zu Knoten bei Bitcoin verwandten Währungen (BTC, BCH, LTC, DASH, etc.)
 
 v1.4.3
