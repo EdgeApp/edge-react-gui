@@ -3,6 +3,8 @@
 import { createSimpleConfirmModal } from 'edge-components'
 import type { EdgeCurrencyWallet, EdgeMetadata, EdgeNetworkFee, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
 import React from 'react'
+import { Linking } from 'react-native'
+import Mailer from 'react-native-mail'
 import { Actions } from 'react-native-router-flux'
 import SafariView from 'react-native-safari-view'
 import { Bridgeable } from 'yaob'
@@ -20,6 +22,7 @@ import type { GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmat
 import type { BuySellPlugin, GuiWallet } from '../../../../types'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import type { Dispatch, State } from '../../../ReduxTypes.js'
+import { displayErrorAlert } from '../../../UI/components/ErrorAlert/actions.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 
 type EdgeReceiveAddress = {
@@ -219,6 +222,25 @@ export class EdgeProvider extends Bridgeable {
       currencyIconDark: wallet.symbolImageDarkMono
     }
     return Promise.resolve(returnObject)
+  }
+
+  openURL (url: string): void {
+    Linking.openURL(url)
+  }
+  openEmailApp (emailAddress: string) {
+    Mailer.mail(
+      {
+        subject: '',
+        recipients: [emailAddress],
+        body: '',
+        isHTML: true
+      },
+      (error, event) => {
+        if (error) {
+          this._dispatch(displayErrorAlert(error)) // this occurs on simulators
+        }
+      }
+    )
   }
 
   consoleLog (arg: any): void {
