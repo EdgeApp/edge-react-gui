@@ -3342,15 +3342,15 @@ edge-currency-bitcoin@^4.4.1:
     uri-js "^4.2.2"
     url-parse "^1.4.3"
 
-edge-currency-monero@0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.2.2.tgz#40492cd8f4a415e0f04d07401da64cb67f401a45"
-  integrity sha512-AeGslF3QNrRVILV/VTG4zsU8sh4v8Ic6Mcj+bbE3kHoWaastdDGNxUQxKjYuA/UhD/A9njbdrMB5OoSG/fGU/g==
+edge-currency-monero@0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.2.3.tgz#0e0717c571e4c2dac8ca354eba260da1a09c91e1"
+  integrity sha512-U5KcBWX2R6QC78WUlLqpWdOSWr2d8cFE5Cir5kwz6FCF+t4PsD/873CHJk7cSfNtT7OamUyOlhba0O+aublcGg==
   dependencies:
     biggystring "^3.0.0"
     buffer "^5.0.6"
     jsonschema "^1.1.1"
-    mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#6eddbd64"
+    mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#william/v0.14.0-hardfork"
     uri-js "^3.0.2"
 
 edge-exchange-plugins@^0.7.0:
@@ -7579,9 +7579,9 @@ mute-stream@0.0.7:
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.7.tgz#3075ce93bc21b8fab43e1bc4da7e8115ed1e7bab"
   integrity sha1-MHXOk7whuPq0PhvE2n6BFe0ee6s=
 
-"mymonero-core-js@git://github.com/EdgeApp/mymonero-core-js.git#6eddbd64":
+"mymonero-core-js@git://github.com/EdgeApp/mymonero-core-js.git#william/v0.14.0-hardfork":
   version "1.1.0"
-  resolved "git://github.com/EdgeApp/mymonero-core-js.git#6eddbd64460d79da2bb46a31dfe55d5ef062a56d"
+  resolved "git://github.com/EdgeApp/mymonero-core-js.git#c17011785963677ec64981cc3d79e4e29f9e526a"
   dependencies:
     node-fetch "^2.2.0"
 
