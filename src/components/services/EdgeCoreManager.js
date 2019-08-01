@@ -7,7 +7,7 @@ import makeBitcoinIo from 'edge-currency-bitcoin/lib/react-native-io.js'
 import makeMoneroIo from 'edge-currency-monero/lib/react-native-io.js'
 import makeExchangeIo from 'edge-exchange-plugins/lib/react-native-io.js'
 import React, { Fragment, PureComponent } from 'react'
-import { Alert } from 'react-native'
+import { Alert, AppState } from 'react-native'
 import SplashScreen from 'react-native-smart-splash-screen'
 
 import ENV from '../../../env.json'
@@ -48,10 +48,32 @@ const nativeIo = isReactNative
  */
 export class EdgeCoreManager extends PureComponent<Props, State> {
   splashHidden: boolean = false
+  paused: boolean = false
 
   constructor (props: Props) {
     super(props)
     this.state = { context: null, counter: 0 }
+  }
+
+  componentDidMount () {
+    AppState.addEventListener('change', this.onAppStateChange)
+  }
+
+  componentWillUnmount () {
+    AppState.removeEventListener('change', this.onAppStateChange)
+  }
+
+  onAppStateChange = (appState: string) => {
+    const paused = appState !== 'active'
+    if (this.paused !== paused) {
+      this.paused = paused
+
+      const { context } = this.state
+      if (context != null) {
+        // TODO: Display a popdown error alert once we get that redux-free:
+        context.changePaused(paused, { secondsDelay: paused ? 20 : 0 }).catch(e => console.log(e))
+      }
+    }
   }
 
   hideSplash () {
