@@ -3,6 +3,8 @@
 import { createSimpleConfirmModal } from 'edge-components'
 import type { EdgeCurrencyWallet, EdgeMetadata, EdgeNetworkFee, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
 import React from 'react'
+import { Linking } from 'react-native'
+import Mailer from 'react-native-mail'
 import { Actions } from 'react-native-router-flux'
 import SafariView from 'react-native-safari-view'
 import { Bridgeable } from 'yaob'
@@ -219,6 +221,25 @@ export class EdgeProvider extends Bridgeable {
       currencyIconDark: wallet.symbolImageDarkMono
     }
     return Promise.resolve(returnObject)
+  }
+
+  openURL (url: string): void {
+    Linking.openURL(url)
+  }
+  openEmailApp (emailAddress: string) {
+    Mailer.mail(
+      {
+        subject: '',
+        recipients: [emailAddress],
+        body: '',
+        isHTML: true
+      },
+      (error, event) => {
+        if (error) {
+          console.log(error) // this occurs on simulators
+        }
+      }
+    )
   }
 
   consoleLog (arg: any): void {
