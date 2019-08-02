@@ -92,12 +92,12 @@ import { styles } from '../styles/MainStyle.js'
 import { scale } from '../util/scaling.js'
 import { makeAirship } from './common/Airship.js'
 import { ModalProvider } from './common/ModalProvider.js'
-import { EdgeCoreManager } from './core/EdgeCoreManager.js'
 import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
 import { CryptoExchangeQuoteProcessingScreenComponent } from './scenes/CryptoExchangeQuoteProcessingScene.js'
 import { LoadingScene } from './scenes/LoadingScene.js'
 import { OnBoardingComponent } from './scenes/OnBoardingScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
+import { EdgeCoreManager } from './services/EdgeCoreManager.js'
 
 export const Airship = makeAirship()
 
