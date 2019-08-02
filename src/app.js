@@ -5,29 +5,31 @@ import './util/polyfills.js'
 
 import { Client } from 'bugsnag-react-native'
 import { fetchLoginMessages } from 'edge-core-js'
-import React, { Component } from 'react'
-import { AsyncStorage, Platform, Text, TextInput } from 'react-native'
+import React from 'react'
+import { AsyncStorage, Platform, StatusBar, Text, TextInput } from 'react-native'
 import BackgroundFetch from 'react-native-background-fetch'
 import firebase from 'react-native-firebase'
 import RNFS from 'react-native-fs'
 import PushNotification from 'react-native-push-notification'
-import { Provider } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import ENV from '../env.json'
-import Main from './connectors/MainConnector'
 import * as Constants from './constants/indexConstants.js'
 import s from './locales/strings.js'
-import configureStore from './util/configureStore.js'
 import { log, logToServer } from './util/logger'
+
+// Set up the transparent status bar at boot time on Android:
+StatusBar.setBarStyle('light-content')
+if (StatusBar.setTranslucent != null) {
+  StatusBar.setTranslucent(true)
+  StatusBar.setBackgroundColor('#00000040')
+}
 
 const ENABLE_WHY_DID_YOU_UPDATE = false
 const ENABLE_PERF_LOGGING = false
 const PERF_LOGGING_ONLY = false
 
 global.bugsnag = new Client(ENV.BUGSNAG_API_KEY)
-
-const store: {} = configureStore({})
 
 const perfTimers = {}
 const perfCounters = {}
@@ -207,13 +209,3 @@ BackgroundFetch.configure(
     console.log(error)
   }
 )
-
-export default class App extends Component<{}> {
-  render () {
-    return (
-      <Provider store={store}>
-        <Main />
-      </Provider>
-    )
-  }
-}

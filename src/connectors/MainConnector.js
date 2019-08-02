@@ -23,16 +23,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   dispatchDisableScan: () => {
     return dispatch({ type: 'DISABLE_SCAN' })
   },
-  addContext: (context, folder) =>
-    dispatch({
-      type: 'CORE/CONTEXT/ADD_CONTEXT',
-      data: { context, folder }
-    }),
-  addUsernames: usernames =>
-    dispatch({
-      type: 'CORE/CONTEXT/ADD_USERNAMES',
-      data: { usernames }
-    }),
   updateCurrentSceneKey: sceneKey => {
     return dispatch(updateCurrentSceneKey(sceneKey))
   },

@@ -33,9 +33,9 @@ import type { BuySellPlugin } from '../../types'
 import { scale } from '../../util/scaling.js'
 import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { Airship } from '../Main.ui.js'
 import { CountrySelectionModal } from '../modals/CountrySelectionModal.js'
 import { SimpleConfirmationModal } from '../modals/SimpleConfirmationModal.js'
+import { Airship } from '../services/AirshipInstance.js'
 
 type Props = {
   developerModeOn: boolean,
