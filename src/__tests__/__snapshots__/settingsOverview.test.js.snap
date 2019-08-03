@@ -336,6 +336,10 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
       />
       <RowRoute
         disabled={false}
+        leftText="Tezos"
+      />
+      <RowRoute
+        disabled={false}
         leftText="Send Logs"
         routeFunction={[Function]}
       />
@@ -714,6 +718,10 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
       <RowRoute
         disabled={false}
         leftText="Ufo"
+      />
+      <RowRoute
+        disabled={false}
+        leftText="Tezos"
       />
       <RowRoute
         disabled={false}
