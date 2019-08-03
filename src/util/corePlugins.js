@@ -31,6 +31,7 @@ export const currencyPlugins = {
   ethereum: ENV.ETHEREUM_INIT,
   stellar: true,
   ripple: true,
+  tezos: true,
   // edge-currency-bitcoin:
   bitcoin: true,
   bitcoincash: true,
