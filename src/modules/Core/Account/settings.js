@@ -72,6 +72,9 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   XMR: {
     denomination: '1000000000000'
   },
+  XTZ: {
+    denomination: '1000000'
+  },
   ETH: {
     denomination: '1000000000000000000'
   },
@@ -195,6 +198,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   LTC: 'object',
   FTC: 'object',
   VTC: 'object',
+  XTZ: 'object',
   RVN: 'object',
   XZC: 'object',
   QTUM: 'object',

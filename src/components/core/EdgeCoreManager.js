@@ -64,6 +64,7 @@ export const currencyPlugins = {
   feathercoin: true,
   groestlcoin: true,
   litecoin: true,
+  tezos: true,
   qtum: true,
   ravencoin: true,
   smartcash: true,
