@@ -20,7 +20,7 @@ import { WiredProgressBar } from '../../modules/UI/components/WiredProgressBar/W
 import { getSelectedWalletLoadingPercent } from '../../modules/UI/selectors.js'
 import type { ContactsState } from '../../reducers/ContactsReducer'
 import styles, { styles as styleRaw } from '../../styles/scenes/TransactionListStyle'
-import type { GuiWallet, TransactionListTx } from '../../types'
+import type { GuiWallet, TransactionListTx } from '../../types/types.js'
 import * as UTILS from '../../util/utils'
 import BuyCrypto from '../common/BuyCrypto.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'

@@ -2,8 +2,8 @@
 
 import { type Reducer } from 'redux'
 
-import type { Action } from '../../modules/ReduxTypes.js'
-import type { GuiReceiveAddress } from '../../types.js'
+import type { Action } from '../../types/reduxTypes.js'
+import type { GuiReceiveAddress } from '../../types/types.js'
 
 export type RequestSceneState = {
   receiveAddress: GuiReceiveAddress

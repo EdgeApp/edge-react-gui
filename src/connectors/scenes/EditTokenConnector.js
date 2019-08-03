@@ -6,7 +6,7 @@ import * as EDIT_TOKEN_ACTIONS from '../../actions/EditTokenActions.js'
 import * as WALLET_ACTIONS from '../../actions/WalletActions'
 import EditToken from '../../components/scenes/EditTokenScene'
 import type { EditTokenDispatchProps, EditTokenStateProps } from '../../components/scenes/EditTokenScene'
-import type { Dispatch, State } from '../../modules/ReduxTypes'
+import type { Dispatch, State } from '../../types/reduxTypes.js'
 
 const mapStateToProps = (state: State): EditTokenStateProps => ({
   customTokens: state.ui.settings.customTokens,

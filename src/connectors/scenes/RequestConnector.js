@@ -7,10 +7,10 @@ import { refreshReceiveAddressRequest, selectWalletFromModal } from '../../actio
 import { Request } from '../../components/scenes/RequestScene'
 import type { RequestDispatchProps, RequestLoadingProps, RequestStateProps } from '../../components/scenes/RequestScene'
 import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
-import type { Dispatch, State } from '../../modules/ReduxTypes'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
-import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types'
+import type { Dispatch, State } from '../../types/reduxTypes.js'
+import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types.js'
 import { getCurrencyInfo, getDenomFromIsoCode } from '../../util/utils'
 
 const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps => {

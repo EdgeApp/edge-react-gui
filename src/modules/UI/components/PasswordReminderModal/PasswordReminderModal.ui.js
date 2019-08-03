@@ -6,7 +6,7 @@ import { ActivityIndicator, Text } from 'react-native'
 
 import * as Constants from '../../../../constants/indexConstants.js'
 import s from '../../../../locales/strings.js'
-import type { PasswordReminder } from '../../../../types.js'
+import type { PasswordReminder } from '../../../../types/types.js'
 import { SecondaryButton, TertiaryButton } from '../Buttons'
 import { Icon } from '../Icon/Icon.ui'
 import { InteractiveModal } from '../Modals'

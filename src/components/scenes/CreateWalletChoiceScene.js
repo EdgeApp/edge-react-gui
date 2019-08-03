@@ -12,7 +12,7 @@ import Text from '../../modules/UI/components/FormattedText'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
-import { type GuiWalletType } from '../../types.js'
+import { type GuiWalletType } from '../../types/types.js'
 
 type CreateWalletChoiceProps = {
   selectedWalletType: GuiWalletType

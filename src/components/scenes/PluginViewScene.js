@@ -6,10 +6,10 @@ import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
 import { Bridge, onMethod } from 'yaob'
 
-import type { Dispatch, State } from '../../modules/ReduxTypes'
 import { setPluginScene } from '../../modules/UI/scenes/Plugins/BackButton.js'
 import { EdgeProvider } from '../../modules/UI/scenes/Plugins/EdgeProvider.js'
-import type { BuySellPlugin } from '../../types.js'
+import type { Dispatch, State } from '../../types/reduxTypes.js'
+import type { BuySellPlugin } from '../../types/types.js'
 import { javascript } from '../../util/bridge/injectThisInWebView.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 

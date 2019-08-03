@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 
 import PasswordRecoveryComponent from '../../components/scenes/PasswordRecoveryScene.js'
 import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
-import type { State } from '../../modules/ReduxTypes'
+import type { State } from '../../types/reduxTypes.js'
 
 export const mapStateToProps = (state: State) => ({
   context: CORE_SELECTORS.getContext(state),

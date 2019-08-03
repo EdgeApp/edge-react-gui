@@ -2,8 +2,8 @@
 
 import { connect } from 'react-redux'
 
+import type { State } from '../../../../types/reduxTypes.js'
 import { getWalletName } from '../../../Core/selectors'
-import type { State } from '../../../ReduxTypes'
 import OptionSubtext from './OptionSubtext.ui'
 
 const mapStateToProps = (state: State, ownProps: { label: string, confirmationText: string }) => ({

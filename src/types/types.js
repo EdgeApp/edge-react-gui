@@ -2,7 +2,7 @@
 
 import type { EdgeDenomination, EdgeMetaToken, EdgeMetadata, EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
 
-import type { State } from './modules/ReduxTypes.js'
+import { type State } from './reduxTypes.js'
 
 export type GuiWallet = {
   id: string,

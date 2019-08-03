@@ -16,7 +16,7 @@ import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import WalletListModal from '../../modules/UI/components/WalletListModal/WalletListModalConnector.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
-import type { GuiFiatType, GuiWallet, GuiWalletType } from '../../types.js'
+import type { GuiFiatType, GuiWallet, GuiWalletType } from '../../types/types.js'
 import { fixFiatCurrencyCode } from '../../util/utils.js'
 
 const logos = {

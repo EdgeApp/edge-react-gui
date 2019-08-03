@@ -1,6 +1,6 @@
 // @flow
 
-import type { Action } from '../../../ReduxTypes'
+import type { Action } from '../../../../types/reduxTypes.js'
 
 export const initialState = {
   status: null

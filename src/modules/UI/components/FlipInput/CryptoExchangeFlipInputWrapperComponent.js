@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native'
 
 import * as Constants from '../../../../constants/indexConstants'
-import type { GuiCurrencyInfo, GuiWallet } from '../../../../types'
+import type { GuiCurrencyInfo, GuiWallet } from '../../../../types/types.js'
 import { TextAndIconButton } from '../Buttons'
 import { WalletNameHeader } from '../Header/Component/WalletNameHeader.ui'
 import { ExchangedFlipInput } from './ExchangedFlipInput2.js'

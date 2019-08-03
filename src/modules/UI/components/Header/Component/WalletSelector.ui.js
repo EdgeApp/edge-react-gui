@@ -5,7 +5,7 @@ import slowlog from 'react-native-slowlog'
 
 import * as Constants from '../../../../../constants/indexConstants'
 import s from '../../../../../locales/strings'
-import type { State } from '../../../../ReduxTypes'
+import type { State } from '../../../../../types/reduxTypes.js'
 import { TextAndIconButton } from '../../Buttons/TextAndIconButton.ui'
 import { walletSelectorStyles } from '../style'
 import { WalletNameHeader } from './WalletNameHeader.ui.js'

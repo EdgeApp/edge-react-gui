@@ -1,6 +1,6 @@
 // @flow
 
-import type { Action } from '../../../ReduxTypes.js'
+import type { Action } from '../../../../types/reduxTypes.js'
 
 const initialState = {
   visible: false,

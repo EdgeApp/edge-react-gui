@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import { toggleWalletListModal } from '../actions/WalleTransferListActions'
 import WalletTransferList from '../components/common/WalletTransferList'
-import type { Dispatch, State } from '../modules/ReduxTypes.js'
+import type { Dispatch, State } from '../types/reduxTypes.js'
 
 const mapStateToProps = (state: State) => ({
   walletTransferList: state.ui.scenes.walletTransferList.walletTransferList,

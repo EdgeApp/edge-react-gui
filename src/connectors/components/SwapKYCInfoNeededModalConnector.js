@@ -3,7 +3,7 @@
 import { connect } from 'react-redux'
 
 import { SwapKYCInfoNeededModal } from '../../components/modals/SwapKYCInfoNeededModal'
-import type { Dispatch, State } from '../../modules/ReduxTypes'
+import type { Dispatch, State } from '../../types/reduxTypes.js'
 
 export const mapStateToProps = (state: State) => {
   return {

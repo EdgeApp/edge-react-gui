@@ -10,9 +10,9 @@ import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions.
 import type { DispatchProps, StateProps } from '../../components/scenes/TransactionListScene'
 import { TransactionList } from '../../components/scenes/TransactionListScene'
 import { getWallet } from '../../modules/Core/selectors.js'
-import type { Dispatch, State } from '../../modules/ReduxTypes'
 import { getCustomTokens, getDisplayDenomination, getDisplayDenominationKey, getExchangeDenomination, getSettings } from '../../modules/Settings/selectors.js'
 import { convertCurrency, getSelectedCurrencyCode, getSelectedWallet, getSelectedWalletId, getTransactions } from '../../modules/UI/selectors.js'
+import type { Dispatch, State } from '../../types/reduxTypes.js'
 import { convertNativeToExchange, getFiatSymbol } from '../../util/utils'
 
 const mapStateToProps = (state: State) => {

@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import { checkHandleAvailability } from '../../actions/CreateWalletActions.js'
 import { CreateWalletAccountSetup } from '../../components/scenes/CreateWalletAccountSetupScene'
-import type { Dispatch, State } from '../../modules/ReduxTypes'
+import type { Dispatch, State } from '../../types/reduxTypes.js'
 
 const mapStateToProps = (state: State) => ({
   isCheckingHandleAvailability: state.ui.scenes.createWallet.isCheckingHandleAvailability,

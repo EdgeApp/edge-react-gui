@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import { activateShapeShift } from '../../actions/ShapeShiftActions.js'
 import { SwapKYCModal } from '../../components/modals/SwapKYCModal.js'
-import type { Dispatch, State } from '../../modules/ReduxTypes'
+import type { Dispatch, State } from '../../types/reduxTypes.js'
 
 export const SwapKYCModalConnector = connect(
   (state: State) => ({}),

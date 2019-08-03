@@ -5,7 +5,7 @@ import { FlatList } from 'react-native'
 import * as Animatable from 'react-native-animatable'
 import slowlog from 'react-native-slowlog'
 
-import type { GuiWallet } from '../../../../types.js'
+import type { GuiWallet } from '../../../../types/types.js'
 import { WalletListRowConnector } from '../WalletListRow/WalletListRowConnector.js'
 import WalletListModalHeader from './components/WalletListModalHeaderConnector'
 import styles from './style'

@@ -2,7 +2,7 @@
 
 import { connect } from 'react-redux'
 
-import type { Dispatch } from '../../../../ReduxTypes'
+import type { Dispatch } from '../../../../../types/reduxTypes.js'
 import { openHelpModal } from '../../HelpModal/actions'
 import HelpButton from './HelpButton.ui'
 

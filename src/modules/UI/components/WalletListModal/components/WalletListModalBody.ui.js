@@ -6,7 +6,7 @@ import React, { Component, type Node } from 'react'
 import { LayoutAnimation, TouchableHighlight, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 
-import type { GuiWallet } from '../../../../../types'
+import type { GuiWallet } from '../../../../../types/types.js'
 import * as UTILS from '../../../../../util/utils'
 import T from '../../../components/FormattedText'
 import styles, { styles as styleRaw } from '../style'

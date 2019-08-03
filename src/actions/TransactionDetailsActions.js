@@ -5,7 +5,7 @@ import { Actions } from 'react-native-router-flux'
 
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
-import type { Dispatch, GetState, State } from '../modules/ReduxTypes'
+import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
 import { refreshTransactionsRequest } from './TransactionListActions.js'
 
 export const setSubcategories = (subcategories: Array<string>) => ({

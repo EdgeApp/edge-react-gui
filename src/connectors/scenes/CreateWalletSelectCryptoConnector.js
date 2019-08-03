@@ -4,9 +4,9 @@ import { connect } from 'react-redux'
 
 import { CreateWalletSelectCrypto as CreateWalletSelectCryptoComponent } from '../../components/scenes/CreateWalletSelectCryptoScene.js'
 import type { CreateWalletSelectCryptoStateProps } from '../../components/scenes/CreateWalletSelectCryptoScene.js'
-import type { State } from '../../modules/ReduxTypes'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import { displayErrorAlert } from '../../modules/UI/components/ErrorAlert/actions'
+import type { State } from '../../types/reduxTypes.js'
 
 const mapStateToProps = (state: State): CreateWalletSelectCryptoStateProps => {
   const supportedWalletTypes = SETTINGS_SELECTORS.getSupportedWalletTypes(state)

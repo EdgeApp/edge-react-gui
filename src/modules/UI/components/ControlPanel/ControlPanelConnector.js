@@ -2,8 +2,8 @@
 
 import { connect } from 'react-redux'
 
+import type { Dispatch, State } from '../../../../types/reduxTypes.js'
 import { getUsername } from '../../../Core/selectors.js'
-import type { Dispatch, State } from '../../../ReduxTypes.js'
 import { getDisplayDenominationFull } from '../../../Settings/selectors.js'
 import { getExchangeDenomination, getExchangeRate, getSelectedCurrencyCode, getSelectedWallet } from '../../../UI/selectors.js'
 import ControlPanel from './ControlPanel.ui'

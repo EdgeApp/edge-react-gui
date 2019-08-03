@@ -2,7 +2,7 @@
 
 import { type Reducer, combineReducers } from 'redux'
 
-import type { Action } from '../../modules/Action.js'
+import type { Action } from '../../types/reduxActions.js'
 
 export type HandleActivationInfo = {
   supportedCurrencies: { [string]: boolean },

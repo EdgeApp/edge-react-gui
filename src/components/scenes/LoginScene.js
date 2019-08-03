@@ -10,8 +10,8 @@ import edgeBackgroundImage from '../../assets/images/edgeBackground/login_bg.jpg
 import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
 import s from '../../locales/strings.js'
 import * as CONTEXT_API from '../../modules/Core/Context/api'
-import type { Dispatch } from '../../modules/ReduxTypes'
 import THEME from '../../theme/variables/airbitz.js'
+import type { Dispatch } from '../../types/reduxTypes.js'
 
 type Props = {
   initializeAccount: (EdgeAccount, touchIdInfo: ?Object) => void,

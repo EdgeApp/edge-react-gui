@@ -3,7 +3,7 @@
 import { combineReducers } from 'redux'
 
 // ACTIONS
-import type { Action } from '../modules/ReduxTypes.js'
+import type { Action } from '../types/reduxTypes.js'
 
 export type SpendingLimits = {
   transaction: {

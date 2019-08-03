@@ -5,10 +5,10 @@ import _ from 'lodash'
 
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
-import type { Dispatch, GetState, State } from '../modules/ReduxTypes'
 import { displayTransactionAlert } from '../modules/UI/components/TransactionAlert/actions'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
-import type { TransactionListTx } from '../types.js'
+import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
+import type { TransactionListTx } from '../types/types.js'
 import * as UTILS from '../util/utils'
 
 export const updateTransactions = (transactionUpdate: {

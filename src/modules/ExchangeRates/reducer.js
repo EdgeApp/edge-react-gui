@@ -2,7 +2,7 @@
 
 import { type Reducer } from 'redux'
 
-import type { Action } from '../ReduxTypes.js'
+import type { Action } from '../../types/reduxTypes.js'
 
 export type ExchangeRatesState = {
   [string]: number

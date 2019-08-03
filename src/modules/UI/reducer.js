@@ -6,7 +6,7 @@ import { type PasswordReminderState, passwordReminder } from '../../reducers/Pas
 import { type ScenesState, scenes } from '../../reducers/scenes/ScenesReducer.js'
 import { type SettingsState, settings } from '../../reducers/scenes/SettingsReducer.js'
 import { type WalletsState, wallets } from '../../reducers/scenes/WalletsReducer.js'
-import { type Action } from '../ReduxTypes.js'
+import { type Action } from '../../types/reduxTypes.js'
 import { type ErrorAlertState, errorAlert } from './components/ErrorAlert/reducer.js'
 import { type TransactionAlertState, transactionAlert } from './components/TransactionAlert/reducer.js'
 

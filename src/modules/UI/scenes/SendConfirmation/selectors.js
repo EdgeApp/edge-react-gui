@@ -4,8 +4,8 @@ import type { EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 
 import { STANDARD_FEE } from '../../../../constants/indexConstants'
 import { type GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
+import type { State } from '../../../../types/reduxTypes.js'
 import { convertNativeToExchange } from '../../../../util/utils.js'
-import type { State } from '../../../ReduxTypes'
 import { getExchangeDenomination } from '../../../Settings/selectors.js'
 import { convertCurrency, getSceneState, getSelectedCurrencyCode } from '../../selectors.js'
 

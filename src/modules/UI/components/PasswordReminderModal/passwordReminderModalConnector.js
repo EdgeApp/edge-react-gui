@@ -5,8 +5,8 @@ import { connect } from 'react-redux'
 
 import { postponePasswordReminder } from '../../../../actions/PasswordReminderActions.js'
 import { CHANGE_PASSWORD } from '../../../../constants/indexConstants.js'
-import type { PasswordReminder } from '../../../../types.js'
-import type { Dispatch, State } from '../../../ReduxTypes.js'
+import type { Dispatch, State } from '../../../../types/reduxTypes.js'
+import type { PasswordReminder } from '../../../../types/types.js'
 import { checkPassword, requestChangePassword, setPasswordReminder } from './indexPasswordReminderModal.js'
 import { PasswordReminderModal } from './PasswordReminderModal.ui.js'
 

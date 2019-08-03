@@ -12,7 +12,7 @@ import Text from '../../modules/UI/components/FormattedText/index'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
-import type { GuiFiatType, GuiWalletType } from '../../types'
+import type { GuiFiatType, GuiWalletType } from '../../types/types.js'
 import { fixFiatCurrencyCode } from '../../util/utils'
 import { FullScreenTransitionComponent } from '../common/FullScreenTransition.js'
 

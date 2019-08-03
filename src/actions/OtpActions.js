@@ -1,8 +1,8 @@
 // @flow
 
 import * as CORE_SELECTORS from '../modules/Core/selectors'
-import type { Dispatch, GetState } from '../modules/ReduxTypes'
 import * as SETTINGS_ACTIONS from '../modules/Settings/SettingsActions.js'
+import type { Dispatch, GetState } from '../types/reduxTypes.js'
 
 export const enableOtp = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()

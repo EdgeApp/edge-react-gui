@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import ChangePinComponent from '../../components/scenes/ChangePinScene'
 import type { ChangePinDispatchProps, ChangePinOwnProps, ChangePinStateProps } from '../../components/scenes/ChangePinScene'
 import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
-import type { State } from '../../modules/ReduxTypes'
+import type { State } from '../../types/reduxTypes.js'
 
 export const mapStateToProps = (state: State, ownProps: ChangePinOwnProps): ChangePinStateProps => ({
   context: CORE_SELECTORS.getContext(state),

@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 
 import { updateWalletsRequest } from '../../modules/Core/Wallets/action.js'
 import { updateExchangeRates } from '../../modules/ExchangeRates/action.js'
-import type { Dispatch, State } from '../../modules/ReduxTypes.js'
+import type { Dispatch, State } from '../../types/reduxTypes.js'
 
 type EdgeAccountCallbackManagerStateProps = {
   account: EdgeAccount

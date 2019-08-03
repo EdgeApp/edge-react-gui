@@ -5,8 +5,8 @@ import { connect } from 'react-redux'
 // import * as Constants from '../../constants/indexConstants.js'
 import { disableOtp, enableOtp } from '../../actions/OtpActions.js'
 import OtpSettingsSceneComponent from '../../components/scenes/OtpSettingsScene.js'
-import type { Dispatch, State } from '../../modules/ReduxTypes'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
+import type { Dispatch, State } from '../../types/reduxTypes.js'
 
 export const mapStateToProps = (state: State) => {
   const isOtpEnabled = SETTINGS_SELECTORS.getIsOtpEnabled(state)
