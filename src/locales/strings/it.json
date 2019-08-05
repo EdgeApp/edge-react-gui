@@ -518,5 +518,6 @@
   "buy_sell_crypto_select_country_button": "Seleziona la tua regione",
   "buy_sell_crypto_no_plugin_region": "Siamo spiacenti ma non ci sono plugin disponibili per la tua regione.",
   "user_closed_modal_no_wallet": "Finestra chiusa dall'utente. Nessun portafoglio è stato selezionato",
-  "plugin_spend_notes_generic": "Spesi %1$s da %2$s a %3$s all'indirizzo: %4$s \nPer assistenza, contatta %5$s."
+  "plugin_spend_notes_generic": "Spesi %1$s da %2$s a %3$s all'indirizzo: %4$s \nPer assistenza, contatta %5$s.",
+  "plugin_provider_disclaimer": ""
 }
