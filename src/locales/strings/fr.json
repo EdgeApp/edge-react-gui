@@ -518,5 +518,6 @@
   "buy_sell_crypto_select_country_button": "",
   "buy_sell_crypto_no_plugin_region": "",
   "user_closed_modal_no_wallet": "",
-  "plugin_spend_notes_generic": ""
+  "plugin_spend_notes_generic": "",
+  "plugin_provider_disclaimer": ""
 }
