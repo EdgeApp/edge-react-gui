@@ -22,6 +22,7 @@ import type { GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmat
 import type { BuySellPlugin, GuiWallet } from '../../../../types'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import type { Dispatch, State } from '../../../ReduxTypes.js'
+import { displayErrorAlert } from '../../../UI/components/ErrorAlert/actions.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 
 type EdgeReceiveAddress = {
@@ -236,7 +237,7 @@ export class EdgeProvider extends Bridgeable {
       },
       (error, event) => {
         if (error) {
-          console.log(error) // this occurs on simulators
+          this._dispatch(displayErrorAlert(error)) // this occurs on simulators
         }
       }
     )

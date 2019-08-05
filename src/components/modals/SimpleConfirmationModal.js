@@ -27,19 +27,17 @@ export class SimpleConfirmationModal extends Component<SimpleConfirmationModalPr
     const { bridge, buttonText } = this.props
     return (
       <AirshipModal bridge={bridge} onCancel={() => bridge.resolve('complete')} center>
-        {gap => (
-          <View style={{ minHeight: 200, paddingLeft: scale(12), paddingRight: scale(12), paddingBottom: scale(12) }}>
-            <IconCircle>
-              <Icon type={FONT_AWESOME} name={EXCLAMATION} size={36} color={colors.primary} />
-            </IconCircle>
-            <View style={{ flex: 1, paddingLeft: scale(12), paddingRight: scale(12), paddingTop: scale(12) }}>
-              <FormattedText>{this.props.text}</FormattedText>
-            </View>
-            <PrimaryButton onPress={() => bridge.resolve('complete')}>
-              <PrimaryButton.Text>{buttonText}</PrimaryButton.Text>
-            </PrimaryButton>
+        <View style={{ minHeight: 200, paddingLeft: scale(12), paddingRight: scale(12), paddingBottom: scale(12) }}>
+          <IconCircle>
+            <Icon type={FONT_AWESOME} name={EXCLAMATION} size={36} color={colors.primary} />
+          </IconCircle>
+          <View style={{ flex: 1, paddingLeft: scale(12), paddingRight: scale(12), paddingTop: scale(12) }}>
+            <FormattedText>{this.props.text}</FormattedText>
           </View>
-        )}
+          <PrimaryButton onPress={() => bridge.resolve('complete')}>
+            <PrimaryButton.Text>{buttonText}</PrimaryButton.Text>
+          </PrimaryButton>
+        </View>
       </AirshipModal>
     )
   }

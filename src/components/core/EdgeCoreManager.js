@@ -71,7 +71,7 @@ export const currencyPlugins = {
   vertcoin: true,
   zcoin: true,
   // edge-currency-monero:
-  monero: true // { apiKey: '...' }
+  monero: ENV.MONERO_INIT
 }
 
 export const ratePlugins = {
