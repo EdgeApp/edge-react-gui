@@ -363,8 +363,8 @@ export class EdgeProvider extends Bridgeable {
     return edgeTransaction
   }
 
-  trackConversion (arg: string) {
-    global.firebase && global.firebase.analytics().logEvent(this._plugin.name + ': ' + arg)
+  trackConversion () {
+    global.firebase && global.firebase.analytics().logEvent(`EdgeProvider_Conversion_Success`)
   }
 
   _spend (guiMakeSpendInfo: GuiMakeSpendInfo, lockInputs: boolean = true, signOnly: boolean = false): Promise<EdgeTransaction> {
