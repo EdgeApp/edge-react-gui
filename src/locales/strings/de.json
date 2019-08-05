@@ -518,5 +518,6 @@
   "buy_sell_crypto_select_country_button": "Wählen Sie Ihr Land oder Ihre Region aus",
   "buy_sell_crypto_no_plugin_region": "Es tut uns leid, aber es gibt keine Plugins für Ihre Region.",
   "user_closed_modal_no_wallet": "Benutzer gesperrt modal. Keine Wallet ausgewählt",
-  "plugin_spend_notes_generic": "%1$s von %2$s bis %3$s an Adresse: %4$s \nFür Hilfe kontaktieren Sie bitte %5$s."
+  "plugin_spend_notes_generic": "%1$s von %2$s bis %3$s an Adresse: %4$s \nFür Hilfe kontaktieren Sie bitte %5$s.",
+  "plugin_provider_disclaimer": ""
 }
