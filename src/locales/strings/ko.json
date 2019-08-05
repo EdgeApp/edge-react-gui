@@ -518,5 +518,6 @@
   "buy_sell_crypto_select_country_button": "지역 선택",
   "buy_sell_crypto_no_plugin_region": "이 지역에서 사용할 수 있는 플러그인이 없습니다.",
   "user_closed_modal_no_wallet": "모달창이 닫혔습니다.월렛이 선택되지 않았습니다.",
-  "plugin_spend_notes_generic": ""
+  "plugin_spend_notes_generic": "",
+  "plugin_provider_disclaimer": ""
 }
