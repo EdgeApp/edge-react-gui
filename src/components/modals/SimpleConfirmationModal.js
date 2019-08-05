@@ -32,7 +32,7 @@ export class SimpleConfirmationModal extends Component<SimpleConfirmationModalPr
             <Icon type={FONT_AWESOME} name={EXCLAMATION} size={36} color={colors.primary} />
           </IconCircle>
           <View style={{ flex: 1, paddingLeft: scale(12), paddingRight: scale(12), paddingTop: scale(12) }}>
-            <FormattedText>{this.props.text}</FormattedText>
+            <FormattedText style={{ textAlign: 'center' }}>{this.props.text}</FormattedText>
           </View>
           <PrimaryButton onPress={() => bridge.resolve('complete')}>
             <PrimaryButton.Text>{buttonText}</PrimaryButton.Text>

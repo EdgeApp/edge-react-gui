@@ -306,7 +306,6 @@ export class EdgeProvider extends Bridgeable {
     const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
     const coreWallet = CORE_SELECTORS.getWallet(this._state, guiWallet.id)
     const result = await coreWallet.parseUri(uri)
-    const currencyCode = result.currencyCode || ''
     const info: GuiMakeSpendInfo = {
       currencyCode: result.currencyCode,
       nativeAmount: result.nativeAmount,
@@ -332,7 +331,7 @@ export class EdgeProvider extends Bridgeable {
       if (transaction) {
         Actions.pop()
       }
-      this.trackConversion('sell crypto: ' + currencyCode)
+      this.trackConversion()
       return Promise.resolve(transaction)
     } catch (e) {
       return Promise.reject(e)
