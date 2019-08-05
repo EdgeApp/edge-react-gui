@@ -32,7 +32,7 @@ const hostedBuySellPlugins: Array<BuySellPlugin> = [
     name: 'Safello',
     subtitle: 'Buy crypto with credit card\nBTC, ETH, XRP, BCH\nFee: 5.75% / Settlement: Instant',
     imageUrl: 'https://edge.app/wp-content/uploads/2019/06/Safello-Logo-Green-background.png',
-    originWhitelist: ['https://safello.com']
+    originWhitelist: ['https://safello.com', 'https://app.safello.com']
   }
 ]
 
