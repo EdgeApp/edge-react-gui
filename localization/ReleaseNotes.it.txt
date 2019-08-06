@@ -1,7 +1,7 @@
 v1.8.7
-* FoxExchange and Godex, 2 new exchange partners that allow you to convert your coins into other coins!
-* Import XRP and XLM private keys
-* WebSockets- Improved connectivity and syncing even when using VPN
+* FoxExchange e Godex, 2 nuovi cambio valuta partner che ti permettono di convertire le tue cripto in altre cripto!
+* Importa chiavi private XRP e XLM
+* WebSockets- Migliorata la connettività e la sincronizzazione anche quando si utilizza VPN
 
 v1.8.5
 * Wyre Sell - Vendi cripto con il tuo conto bancario
