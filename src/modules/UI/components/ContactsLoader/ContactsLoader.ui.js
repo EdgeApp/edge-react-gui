@@ -121,6 +121,18 @@ const merchantPartners = [
     jobTitle: '',
     familyName: '',
     recordID: ''
+  },
+  {
+    givenName: 'Fox Exchange',
+    hasThumbnail: true,
+    thumbnailPath: 'https://developer.edge.app/content/foxEchange.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
   }
 ]
 
