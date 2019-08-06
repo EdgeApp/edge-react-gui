@@ -2160,9 +2160,9 @@ bs58check@^1.0.8:
     bs58 "^3.1.0"
     create-hash "^1.1.0"
 
-"bs58grscheck@git+https://github.com/Groestlcoin/bs58grscheck.git":
+"bs58grscheck@https://github.com/Groestlcoin/bs58grscheck":
   version "2.1.2"
-  resolved "git+https://github.com/Groestlcoin/bs58grscheck.git#020feec2b3153aeb278596ea70ce3579a37f4e21"
+  resolved "https://github.com/Groestlcoin/bs58grscheck#020feec2b3153aeb278596ea70ce3579a37f4e21"
   dependencies:
     bs58 "^4.0.0"
     create-hash "^1.1.0"
@@ -3353,10 +3353,10 @@ edge-currency-monero@0.2.3:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#william/v0.14.0-hardfork"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.7.1:
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.7.1.tgz#1e3c988f3f5329c8480652db2387edfd0b32157e"
-  integrity sha512-u/redCcCgEm1/FWUWPTR+k+oJvKEYDnS3OWdkEKMoCMeRLqvqFS7hSWhnpJrjUFmiwJfw2UHU6G7S0q6g2VWwg==
+edge-exchange-plugins@^0.7.2:
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.7.2.tgz#99284c9f7be5fcd005cc36ea3ea88b537bdc8d19"
+  integrity sha512-JGSOp59P70kHyblbf4jjWU8mH4tOLoq/YNFCsH+HcIIY2Z5Q/FL3rpQac3MXrR9fAhNpVNoxp/J1x+q1UkzYfA==
   dependencies:
     esm "^3.2.4"
     hashjs "^1.2.0"
@@ -3393,9 +3393,9 @@ edge-login-ui-rn@0.5.36:
   dependencies:
     moment "^2.22.2"
 
-"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#20ab7da":
+"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#6e0cb2f":
   version "0.0.3"
-  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#20ab7da13d04eeecbbe65ba3eb5594b9f8120148"
+  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#6e0cb2f2d2e588614225504ea736cb3c55045518"
   dependencies:
     moment "^2.22.2"
 
