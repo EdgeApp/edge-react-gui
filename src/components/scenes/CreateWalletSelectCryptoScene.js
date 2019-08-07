@@ -30,6 +30,7 @@ const WALLET_TYPE_ORDER = [
   'wallet:digibyte',
   'wallet:vertcoin',
   'wallet:ravencoin',
+  'wallet:tezos',
   'wallet:qtum',
   'wallet:feathercoin',
   'wallet:bitcoingold',

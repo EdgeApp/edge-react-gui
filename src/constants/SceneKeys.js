@@ -130,5 +130,9 @@ export const CURRENCY_SETTINGS = {
   ufoSettings: {
     pluginName: 'ufo',
     currencyCode: 'UFO'
+  },
+  xtzSettings: {
+    pluginName: 'tezos',
+    currencyCode: 'XTZ'
   }
 }
