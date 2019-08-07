@@ -75,9 +75,45 @@ const merchantPartners = [
     recordID: ''
   },
   {
+    givenName: 'Simplex',
+    hasThumbnail: true,
+    thumbnailPath: 'https://developer.edge.app/content/simplex.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
+    givenName: 'Wyre',
+    hasThumbnail: true,
+    thumbnailPath: 'https://developer.edge.app/content/wyre.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
     givenName: 'Bitrefill',
     hasThumbnail: true,
     thumbnailPath: 'https://developer.edge.app/content/bitrefill.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
+    givenName: 'Godex',
+    hasThumbnail: true,
+    thumbnailPath: 'https://developer.edge.app/content/godex.png',
     emailAddresses: [],
     postalAddresses: [],
     middleName: '',

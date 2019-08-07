@@ -2,6 +2,7 @@
 
 const strings = {
   app_name: 'Edge Wallet',
+  app_name_short: 'Edge',
   bitcoin_received: '%1$s Received',
   bitcoin_remaining: '%1$s Remaining…',
   calculator_done: 'Done',
@@ -282,6 +283,7 @@ const strings = {
   string_first_ravencoin_wallet_name: 'My Ravencoin',
   string_first_zcoin_wallet_name: 'My Zcoin',
   string_first_stellar_wallet_name: 'My Stellar',
+  string_first_rsk_wallet_name: 'My RSK',
   my_crypto_wallet_name: 'My %s',
   string_from_exchange_info: 'You are about to exchange\n %1$s %2$s\n (%3$s)\n from %4$s',
   string_help: 'Help',
@@ -355,8 +357,12 @@ const strings = {
   transaction_details_view_advanced_data: 'View advanced transaction data',
   transaction_details_copy_txid_title: 'Copied',
   transaction_details_copy_txid_message: 'The transaction ID has been copied to your clipboard',
+  transaction_details_copy_raw_hex_message: 'The signed raw hex has been copied to your clipboard',
   transaction_details_tx_id_modal_title: 'Transaction ID',
   transaction_details_show_advanced_block_explorer: 'Show in Block Explorer',
+  transaction_details_copy_tx_id: 'Copy Transaction ID',
+  transaction_details_copy_signed_tx: 'Copy Signed Raw Hex',
+  transaction_details_modal_debug_info: 'Debug Info:\n',
   string_fee_with_brackets: '(Fee)',
   title_Header: 'Header',
   back_button_text: 'Back',
@@ -551,7 +557,9 @@ const strings = {
     'No exchange providers are able to provide a fixed quote for the exchange requested. This exchange may result in less funds received than quoted.',
   buy_sell_crypto_select_country_button: 'Select your region',
   buy_sell_crypto_no_plugin_region: "We're sorry but there are no available plugins for your region.",
-  user_closed_modal_no_wallet: 'User closed modal. No wallet was selected'
+  user_closed_modal_no_wallet: 'User closed modal. No wallet was selected',
+  plugin_spend_notes_generic: 'Spent %1$s from %2$s to %3$s at address: %4$s \nFor assistance, please contact %5$s.',
+  plugin_provider_disclaimer: 'The following services are not provided by Edge. \n\nFor issues and feedback please contact the respective service providers.'
 }
 
 // export default strings

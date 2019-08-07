@@ -8,10 +8,8 @@ import Icon from 'react-native-vector-icons/SimpleLineIcons'
 import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
 import CheckBox from '../../modules/UI/components/CheckBox/index'
 import Text from '../../modules/UI/components/FormattedText/index'
-import styles, { styles as rawStyles } from '../../styles/scenes/ManageTokensStyle.js'
+import { styles, underlayColor } from '../../styles/scenes/ManageTokensStyle.js'
 import * as UTILS from '../../util/utils.js'
-
-// import THEME from '../../../../theme/variables/airbitz'
 
 export type State = {
   enabled?: boolean
@@ -48,7 +46,7 @@ class ManageTokenRow extends Component<Props, State> {
     const onPress = isEditable ? goToEditTokenScene : UTILS.noOp
 
     return (
-      <TouchableHighlight onPress={() => onPress(item.currencyCode)} underlayColor={rawStyles.underlay.color} style={[styles.manageTokenRow]}>
+      <TouchableHighlight onPress={() => onPress(item.currencyCode)} underlayColor={underlayColor} style={[styles.manageTokenRow]}>
         <View style={[styles.manageTokenRowInterior]}>
           <View style={styles.rowLeftArea}>
             <TouchableWithoutFeedback onPress={() => toggleToken(item.currencyCode)} isVisible={item.isVisible} enabled={enabled}>

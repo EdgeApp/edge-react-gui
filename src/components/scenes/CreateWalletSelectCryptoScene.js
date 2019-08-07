@@ -24,6 +24,7 @@ const WALLET_TYPE_ORDER = [
   'wallet:litecoin',
   'wallet:eos',
   'wallet:ripple',
+  'wallet:rsk',
   'wallet:stellar',
   'wallet:dash',
   'wallet:digibyte',
@@ -46,7 +47,7 @@ export type CreateWalletSelectCryptoStateProps = {
 }
 
 type CreateWalletSelectCryptoDispatchProps = {
-  displayErrorAlert: string => void
+  displayErrorAlert: (Error | string) => void
 }
 
 type Props = CreateWalletSelectCryptoOwnProps & CreateWalletSelectCryptoStateProps & CreateWalletSelectCryptoDispatchProps

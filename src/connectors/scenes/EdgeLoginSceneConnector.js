@@ -17,7 +17,6 @@ export const mapStateToProps = (state: State) => ({
 
 export const mapDispatchToProps = (dispatch: Dispatch) => ({
   accept: () =>
-    // $FlowFixMe
     dispatch(actions.lobbyLogin()).catch(e => {
       console.log(e)
     }),

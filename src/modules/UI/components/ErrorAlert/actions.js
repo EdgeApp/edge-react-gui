@@ -9,7 +9,9 @@ export const displayErrorAlertStore = (message: string) => ({
   data: { message }
 })
 
-export const displayErrorAlert = (message: string) => (dispatch: Dispatch) => {
+export const displayErrorAlert = (error: Error | string) => (dispatch: Dispatch) => {
+  console.warn(error)
+  const message = error instanceof Error ? error.message : String(error)
   if (message === 'Invalid OTP token') {
     Alert.alert(s.strings.otp_out_of_sync_title, s.strings.otp_out_of_sync_body)
     return

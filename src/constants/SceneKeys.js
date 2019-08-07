@@ -50,6 +50,7 @@ export const PLUGIN = 'plugin'
 export const PLUGIN_SPEND = 'pluginSpend'
 export const PLUGIN_SPEND_LEGACY = 'pluginSpendLegacy'
 export const PLUGIN_BUY = 'pluginBuy'
+export const PLUGIN_BUY_DEEP = 'pluginBuyDeep'
 export const PLUGIN_BUY_LEGACY = 'pluginBuyLegacy'
 export const SPENDING_LIMITS = 'spendingLimits'
 
@@ -118,9 +119,13 @@ export const CURRENCY_SETTINGS = {
     pluginName: 'groestlcoin',
     currencyCode: 'GRS'
   },
-  /* ebstSettings: {
+  ebstSettings: {
     pluginName: 'eboost',
     currencyCode: 'EBST'
+  },
+  /* rskSettings: {
+     pluginName: 'rsk',
+     currencyCode: 'RBTC'
   }, */
   ufoSettings: {
     pluginName: 'ufo',

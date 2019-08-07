@@ -32,7 +32,8 @@ export const DEFAULT_STARTER_WALLET_NAMES = {
   VTC: s.strings.string_first_vertcoin_wallet_name,
   RVN: s.strings.string_first_ravencoin_wallet_name,
   XZC: s.strings.string_first_zcoin_wallet_name,
-  XLM: s.strings.string_first_stellar_wallet_name
+  XLM: s.strings.string_first_stellar_wallet_name,
+  RSK: s.strings.string_first_rsk_wallet_name
 }
 
 // DO NOT PUT ANY TOKENS IN HERE!
@@ -44,6 +45,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   DASH: 'dash',
   DGB: 'digibyte',
   EOS: 'eos',
+  EBST: 'eboost',
   ETH: 'ethereum',
   FTC: 'feathercoin',
   GRS: 'groestlcoin',
@@ -56,7 +58,8 @@ export const CURRENCY_PLUGIN_NAMES = {
   UFO: 'ufo',
   VTC: 'vertcoin',
   XLM: 'stellar',
-  XZC: 'zcoin'
+  XZC: 'zcoin',
+  RSK: 'rsk'
 }
 
 export const getSpecialCurrencyInfo = (currencyCode: string): Object => {
@@ -112,7 +115,7 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
       modalMessage: s.strings.request_xlm_minimum_notification_body
     },
     displayBuyCrypto: false,
-    isImportKeySupported: false
+    isImportKeySupported: true
   },
   XRP: {
     dummyPublicAddress: 'rfuESo7eHUnvebxgaFjfYxfwXhM2uBPAj3',
@@ -127,7 +130,7 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
       modalMessage: s.strings.request_xrp_minimum_notification_body
     },
     displayBuyCrypto: true,
-    isImportKeySupported: false
+    isImportKeySupported: true
   },
   XMR: {
     dummyPublicAddress: '46qxvuS78CNBoiiKmDjvjd5pMAZrTBbDNNHDoP52jKj9j5mk6m4R5nU6BDrWQURiWV9a2n5Sy8Qo4aJskKa92FX1GpZFiYA',

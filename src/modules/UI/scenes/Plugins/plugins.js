@@ -6,7 +6,7 @@ import RNFS from 'react-native-fs'
 import assetPlugins from '../../../../assets/plugins.json'
 import { type BuySellPlugin } from '../../../../types.js'
 
-const LEGACY_PLUGINS = ['Wyre', 'Bitrefill']
+const LEGACY_PLUGINS = ['Bitrefill']
 
 const hostedBuySellPlugins: Array<BuySellPlugin> = [
   {
@@ -25,14 +25,15 @@ const hostedBuySellPlugins: Array<BuySellPlugin> = [
     name: 'MoonPay',
     subtitle: 'Buy crypto with credit card or Apple Pay\nBTC, ETH, XRP, LTC, BCH\nFee: 5.5% / Settlement: 10 mins',
     imageUrl: 'https://edge.app/wp-content/uploads/2019/05/icon_black_small.png'
-  }
-  // {
-  //   pluginId: 'io.safello',
-  //   uri: 'https://safello.com/edge/',
-  //   name: 'Safello',
-  //   subtitle: 'Buy crypto with credit card\nBTC, ETH, XRP, BCH\nFee: 5.75% / Settlement: Instant',
-  //   imageUrl: 'https://edge.app/wp-content/uploads/2019/06/Safello-Logo-Green-background.png'
-  // }
+  } /* ,
+  {
+    pluginId: 'io.safello',
+    uri: 'https://safello.com/edge/',
+    name: 'Safello',
+    subtitle: 'Buy crypto with credit card\nBTC, ETH, XRP, BCH\nFee: 5.75% / Settlement: Instant',
+    imageUrl: 'https://edge.app/wp-content/uploads/2019/06/Safello-Logo-Green-background.png',
+    originWhitelist: ['https://safello.com', 'https://app.safello.com']
+  } */
 ]
 
 const hostedSpendPlugins: Array<BuySellPlugin> = []

@@ -12,27 +12,24 @@ type EdgeContextCallbackManagerStateProps = {
 }
 
 type EdgeContextCallbackManagerDispatchProps = {
-  displayErrorAlert: (message: string) => any
+  displayErrorAlert: (error: Error) => any
 }
 
 type Props = EdgeContextCallbackManagerStateProps & EdgeContextCallbackManagerDispatchProps
 
 class EdgeContextCallbackManager extends React.Component<Props> {
+  componentDidUpdate (oldProps: Props) {
+    if (this.props.context && this.props.context !== oldProps.context) {
+      const { context } = this.props
+
+      context.on('error', (error: Error) => {
+        this.props.displayErrorAlert(error)
+      })
+    }
+  }
+
   render () {
     return null
-  }
-
-  componentDidUpdate () {
-    if (this.props.context) this.subscribeToContext()
-  }
-
-  subscribeToContext = () => {
-    const { context } = this.props
-
-    context.on('error', (error: Error) => {
-      console.log(error)
-      this.props.displayErrorAlert(error.message)
-    })
   }
 }
 
@@ -44,7 +41,7 @@ const mapStateToProps = (state: State): EdgeContextCallbackManagerStateProps => 
 
 const mapDispatchToProps = (dispatch: Dispatch): EdgeContextCallbackManagerDispatchProps => {
   return {
-    displayErrorAlert: errorMessage => dispatch(displayErrorAlert(errorMessage))
+    displayErrorAlert: error => dispatch(displayErrorAlert(error))
   }
 }
 

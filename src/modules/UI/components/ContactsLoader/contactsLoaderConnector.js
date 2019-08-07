@@ -19,8 +19,7 @@ export const mapDispatchToProps = (dispatch: Dispatch) => ({
       data: { contacts }
     }),
   loadContactsFail: (error: Error) => {
-    console.log(error)
-    dispatch(displayErrorAlert(error.message))
+    dispatch(displayErrorAlert(error))
   }
 })
 

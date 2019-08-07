@@ -1,18 +1,75 @@
+v1.8.5
+* Wyre Sell - Sell crypo with your bank account
+* New and improved visuals at login screen
+* Prevent FaceID from automatically lauching on login
+
+v1.8.4
+* Simplex Sell - Sell crypto and pay off credit cards
+* Ravencoin added
+
+v1.8.1
+
+* Fix the minimum Android SDK version to 23+ (Android 6)
+
+v1.8.0
+
+* React native upgrade + visual fixes
+* Prefer fixed-rate quotes over estimates
+
+v1.7.4
+
+* Beta Simplex sell
+* Warn users about high fees
+
+v1.7.3
+
+* Bản vá để tránh các vấn đề về phí BTC
+
+v1.7.2
+
+
+* Khắc phục sự cố hiệu suất khi đăng nhập
+* Khắc phục lỗi phân tách BCH / BSV
+* Cập nhật hình ảnh và văn bản khác nhau
+* Thêm địa chỉ nhấn để khởi chạy explorer theo yêu cầu hoặc gửi màn hình xác nhận
+* Khắc phục phí segwit thấp hơn 15% so với phí không segwit
+* Các loại tiền cơ sở tài khoản như XRP, EOS, v. v. sẽ hiển thị các giao dịch bị hủy nếu không tìm thấy trên mạng
+
 v1.7.0
 
 * Hỗ trợ địa chỉ Bech32
 * Di chuyển Edge Core sang quy trình độc lập để tăng hiệu suất và khả năng phản hồi GUI
-* Sell crypto to credit card using Simplex
-* Add LibertyX to support buying Bitcoin from physical merchants in US
+Bán tiền điện tử vào thẻ tín dụng bằng Simplex
+
+* Thêm Liberty X để hỗ trợ mua Bitcoin từ các người bán thực tế ở Hoa Kỳ
+
+v1.6.2
+
+* Khắc phục mệnh giá fiat của ví từ Airbitz sang Edge
+* Khắc phục sự cố EOS Crash
+* Sửa các lỗi hiển thị UI khác nhau
+* Khắc phục việc gắn thẻ siêu dữ liệu của các giao dịch để cập nhật ngay lập tức sau khi lưu
+* Cải thiện đồng bộ hóa XRP và ETH
+* Sử dụng nhiều dịch vụ để phát các giao dịch XRP và ETH
+* Thêm nhà cung cấp trao đổi tức thì Faa.st
+
+v1.6.1
+
+* Cải thiện tính toán phí BTC
+* Thêm nút mua tiền điện tử tại màn hình danh sách Ví
+* Thêm nút mới để mua và trao đổi tiền điện tử cho ví trống
+* Khắc phục một số lỗi hiển thị UI
+
+* Cải thiện chức năng plugin
 
 v1.6.0
 
 * Hỗ trợ EOS
 * Triển khai liên kết sâu của các bitcoin bitcoin, ethereum, bitcoincash, dash và edge
-* Add Wyre plugin to support buy/sell of Bitcoin from US bank account
-* Add Bitrefill plugin to support buying gift cards and mobile top ups
-* Add Chinese, Korean, French, and Vietnamese translations
-* Add support for IMP and IRR fiat currencies
+* Thêm plugin Wyre để hỗ trợ mua / bán Bitcoin từ tài khoản ngân hàng Hoa Kỳ
+* Thêm plugin Bitrefill để hỗ trợ mua thẻ quà tặng và nạp tiền điện thoại di động
+* Thêm bản dịch tiếng Trung, tiếng Hàn, tiếng Pháp và tiếng Việt
+* Thêm hỗ trợ cho các loại tiền tệ fiat của IMP và IRR
 
 v1.5.0
 

@@ -126,8 +126,8 @@ export const fetchAccountActivationInfo = (currencyCode: string) => async (dispa
         activationCost: activationInfo[1]
       }
     })
-  } catch (e) {
-    dispatch(displayErrorAlert(e.message))
+  } catch (error) {
+    dispatch(displayErrorAlert(error))
   }
 }
 
@@ -156,10 +156,10 @@ export const fetchWalletAccountActivationPaymentInfo = (paymentParams: AccountPa
         clearTimeout(networkTimeout)
       })
       .catch(error => {
-        dispatch(displayErrorAlert(error.message))
+        dispatch(displayErrorAlert(error))
       })
-  } catch (e) {
-    dispatch(displayErrorAlert(e.message))
+  } catch (error) {
+    dispatch(displayErrorAlert(error))
   }
 }
 

@@ -4,9 +4,9 @@ import { type ChildrenArray, Component, type Node } from 'react'
 import { Animated, Keyboard, type KeyboardEvent, Platform } from 'react-native'
 
 type Props = {
-  children: (animation: Animated.Value, layoutHeight: number) => ChildrenArray<Node>,
-  downValue: number,
-  upValue: number | ((keyboardHeight: number) => number)
+  children: (animation: Animated.Value, layout: number) => ChildrenArray<Node>,
+  downValue?: number,
+  upValue?: number | ((keyboardHeight: number) => number)
 }
 
 /**
@@ -20,12 +20,12 @@ type Props = {
  * and the animated value will adjust to match. If `upValue` depends on
  * the keyboard height, just pass a function instead of number.
  *
- * This component also provides a "layout height" to your component.
- * The layout height changes to the final keyboard height right before
- * the keyboard starts sliding up, and goes back to zero after the keyboard
- * disappears. This gives you a chance to make layout updates in preparation
- * for the animation, like adding extra space to the bottom of your
- * component so a gap doesn't appear.
+ * This component also provides a "layout value" to your component.
+ * The layout value changes to the final `upValue` right before
+ * the keyboard starts sliding up, and goes back to `downValue`
+ * after the keyboard finishes disappearing. This gives you a chance
+ * to make layout updates in preparation for the animation, like adding
+ * extra space to the bottom of your component so a gap doesn't appear.
  */
 export class KeyboardTracker extends Component<Props> {
   animation: Animated.Value
@@ -46,11 +46,15 @@ export class KeyboardTracker extends Component<Props> {
   }
 
   calculateGoal () {
-    const { downValue, upValue } = this.props
+    const { downValue = 0, upValue = height => height } = this.props
     const { keyboardHeight, keyboardHiding } = this.sub
 
     if (keyboardHiding) return downValue
     return typeof upValue === 'function' ? upValue(keyboardHeight) : upValue
+  }
+
+  setNextDuration (duration: number) {
+    this.nextDuration = duration
   }
 
   triggerAnimation () {
@@ -69,7 +73,7 @@ export class KeyboardTracker extends Component<Props> {
     }
   }
 
-  updateKeyboardHeight () {
+  updateLayout () {
     if (this.props.children.length > 1) this.forceUpdate()
     else this.triggerAnimation()
   }
@@ -84,8 +88,7 @@ export class KeyboardTracker extends Component<Props> {
 
   render () {
     const { children } = this.props
-    const { keyboardHeight } = this.sub
-    return children(this.animation, keyboardHeight)
+    return children(this.animation, this.calculateGoal())
   }
 }
 
@@ -109,28 +112,28 @@ class KeyboardSubscriber {
       Keyboard.addListener('keyboardDidHide', (event: KeyboardEvent) => {
         this.keyboardHiding = true
         this.keyboardHeight = 0
-        this._updateHeights()
+        this._updateLayouts()
       })
       Keyboard.addListener('keyboardDidShow', (event: KeyboardEvent) => {
         this.keyboardHiding = false
         this.keyboardHeight = event.endCoordinates.height
-        this._updateHeights()
+        this._updateLayouts()
       })
     } else {
       Keyboard.addListener('keyboardDidHide', (event: KeyboardEvent) => {
         this.keyboardHeight = 0
-        this._updateHeights()
+        this._updateLayouts()
       })
       Keyboard.addListener('keyboardWillHide', (event: KeyboardEvent) => {
         this.keyboardHiding = true
-        this._writeDurations(event.duration)
+        this._setDurations(event.duration)
         this._triggerAnimations()
       })
       Keyboard.addListener('keyboardWillShow', (event: KeyboardEvent) => {
         this.keyboardHiding = false
         this.keyboardHeight = event.endCoordinates.height
-        this._writeDurations(event.duration)
-        this._updateHeights()
+        this._setDurations(event.duration)
+        this._updateLayouts()
       })
     }
   }
@@ -143,9 +146,9 @@ class KeyboardSubscriber {
     this.trackers = this.trackers.filter(item => item !== tracker)
   }
 
-  _updateHeights () {
+  _setDurations (duration: number) {
     for (const tracker of this.trackers) {
-      tracker.updateKeyboardHeight()
+      tracker.setNextDuration(duration)
     }
   }
 
@@ -155,9 +158,9 @@ class KeyboardSubscriber {
     }
   }
 
-  _writeDurations (duration: number) {
+  _updateLayouts () {
     for (const tracker of this.trackers) {
-      tracker.nextDuration = duration
+      tracker.updateLayout()
     }
   }
 }

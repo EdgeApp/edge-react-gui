@@ -1,27 +1,25 @@
 // @flow
 
-import type { EdgeAccount, EdgeSwapConfig } from 'edge-core-js'
+import { type EdgeSwapConfig } from 'edge-core-js/types'
 import React, { Component } from 'react'
 import { Image, View } from 'react-native'
 
-import { changellyLogo, changenowLogo, defaultLogo, faastLogo, shapeshiftLogo, totleLogo } from '../../assets/images/exchange'
+import { changellyLogo, changenowLogo, defaultLogo, faastLogo, foxExchangeLogo, godexLogo, shapeshiftLogo, totleLogo } from '../../assets/images/exchange'
 import { SwapKYCModalConnector } from '../../connectors/components/SwapKYCModalConnector.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/index'
-import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import styles from '../../styles/scenes/SettingsStyle'
 import { launchModal } from '../common/ModalProvider.js'
 import SwitchRow from '../common/RowSwitch.js'
 import { RowWithButton } from '../common/RowWithButton.js'
+import { SceneWrapper } from '../common/SceneWrapper.js'
 
 type ExchangeSettingsProps = {
   exchanges: {
     [string]: EdgeSwapConfig
   },
   shapeShiftNeedsKYC: boolean,
-  account: EdgeAccount,
-  shapeShiftLogOut(EdgeAccount): void
+  shapeShiftLogOut(): void
 }
 
 type GuiExchangeSetting = {
@@ -44,6 +42,12 @@ const exchangeInfo = {
   },
   totle: {
     logo: totleLogo
+  },
+  godex: {
+    logo: godexLogo
+  },
+  foxExchange: {
+    logo: foxExchangeLogo
   },
   default: {
     logo: defaultLogo
@@ -73,18 +77,6 @@ export class ExchangeSettingsComponent extends Component<ExchangeSettingsProps, 
     }
   }
 
-  subHeader (title: string) {
-    return (
-      <Gradient style={[styles.headerRow]}>
-        <View style={[styles.headerTextWrap]}>
-          <View style={styles.leftArea}>
-            <T style={styles.headerText}>{title}</T>
-          </View>
-        </View>
-      </Gradient>
-    )
-  }
-
   _onToggleEnableExchange = (exchangeName: string) => {
     const { exchanges } = this.props
     const newValue = !exchanges[exchangeName].enabled
@@ -102,43 +94,22 @@ export class ExchangeSettingsComponent extends Component<ExchangeSettingsProps, 
       })
       return
     }
-    this.props.shapeShiftLogOut(this.props.account)
+    this.props.shapeShiftLogOut()
   }
   render () {
     const ssLoginText = this.props.shapeShiftNeedsKYC ? s.strings.ss_login : s.strings.ss_logout
     return (
-      <SafeAreaView>
-        <View style={[styles.ethereumSettings]}>
-          <Gradient style={styles.gradient} />
-          <View style={styles.container}>
-            <View style={styles.instructionArea}>
-              <T style={styles.instructionText}>{s.strings.settings_exchange_instruction}</T>
-            </View>
-            {this.exchangeList.map(exchange => {
-              const logoSource = exchangeInfo[exchange.name] ? exchangeInfo[exchange.name].logo : exchangeInfo.default.logo
-              const logo = <Image resizeMode={'contain'} style={styles.settingsRowLeftLogo} source={logoSource} />
-              const exchangeName = exchange.name.charAt(0).toUpperCase() + exchange.name.substr(1)
-              if (exchangeName === 'Shapeshift') {
-                return (
-                  <View style={styles.doubleRowContainer} key={exchange.name}>
-                    <SwitchRow
-                      logo={logo}
-                      key={exchange.name}
-                      leftText={exchangeName}
-                      onToggle={() => this._onToggleEnableExchange(exchange.name)}
-                      value={this.state[exchange.name].enabled}
-                    />
-                    <RowWithButton
-                      logo={logoSource}
-                      key={exchange.name + '1'}
-                      leftText={exchangeName + ' ' + s.strings.account}
-                      rightText={ssLoginText}
-                      onPress={this.shapeShiftSignInToggle}
-                    />
-                  </View>
-                )
-              }
-              return (
+      <SceneWrapper hasTabs={false} background="body">
+        <View style={styles.instructionArea}>
+          <T style={styles.instructionText}>{s.strings.settings_exchange_instruction}</T>
+        </View>
+        {this.exchangeList.map(exchange => {
+          const logoSource = exchangeInfo[exchange.name] ? exchangeInfo[exchange.name].logo : exchangeInfo.default.logo
+          const logo = <Image resizeMode={'contain'} style={styles.settingsRowLeftLogo} source={logoSource} />
+          const exchangeName = exchange.name.charAt(0).toUpperCase() + exchange.name.substr(1)
+          if (exchangeName === 'Shapeshift') {
+            return (
+              <View style={styles.doubleRowContainer} key={exchange.name}>
                 <SwitchRow
                   logo={logo}
                   key={exchange.name}
@@ -146,11 +117,27 @@ export class ExchangeSettingsComponent extends Component<ExchangeSettingsProps, 
                   onToggle={() => this._onToggleEnableExchange(exchange.name)}
                   value={this.state[exchange.name].enabled}
                 />
-              )
-            })}
-          </View>
-        </View>
-      </SafeAreaView>
+                <RowWithButton
+                  logo={logoSource}
+                  key={exchange.name + '1'}
+                  leftText={exchangeName + ' ' + s.strings.account}
+                  rightText={ssLoginText}
+                  onPress={this.shapeShiftSignInToggle}
+                />
+              </View>
+            )
+          }
+          return (
+            <SwitchRow
+              logo={logo}
+              key={exchange.name}
+              leftText={exchangeName}
+              onToggle={() => this._onToggleEnableExchange(exchange.name)}
+              value={this.state[exchange.name].enabled}
+            />
+          )
+        })}
+      </SceneWrapper>
     )
   }
 }

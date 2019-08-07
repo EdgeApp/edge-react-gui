@@ -221,7 +221,6 @@ const mapDispatchToProps = dispatch => ({
   getEnabledTokensList: (walletId: string) => dispatch(getEnabledTokens(walletId))
 })
 
-// $FlowFixMe
 const FullWalletListRowConnected = connect(
   mapStateToProps,
   mapDispatchToProps

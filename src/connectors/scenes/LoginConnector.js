@@ -3,7 +3,6 @@
 import { connect } from 'react-redux'
 
 import Login from '../../components/scenes/LoginScene'
-import { addUsernames } from '../../modules/Core/Context/action'
 import * as CORE_SELECTORS from '../../modules/Core/selectors'
 import { initializeAccount } from '../../modules/Login/action'
 import type { Dispatch, State } from '../../modules/ReduxTypes'
@@ -16,7 +15,11 @@ const mapStateToProps = (state: State) => ({
 })
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   dispatch,
-  addUsernames: usernames => dispatch(addUsernames(usernames)),
+  addUsernames: usernames =>
+    dispatch({
+      type: 'CORE/CONTEXT/ADD_USERNAMES',
+      data: { usernames }
+    }),
   initializeAccount: (account, touchIdInfo) => dispatch(initializeAccount(account, touchIdInfo))
 })
 

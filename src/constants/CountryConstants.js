@@ -301,15 +301,18 @@ export const EDGE_PLUGIN_REGIONS = {
       LT: true,
       LU: true,
       MT: true,
+      MX: true,
       NL: true,
       NO: true,
       PL: true,
       PT: true,
       RO: true,
+      RU: true,
       SK: true,
       SI: true,
       ES: true,
       SE: true,
+      ZA: true,
       GB: true
     },
     cryptoCodes: {

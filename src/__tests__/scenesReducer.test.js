@@ -30,9 +30,6 @@ test('initialState', () => {
       },
       walletAccountActivationQuoteError: ''
     },
-    dimensions: {
-      keyboardHeight: 0
-    },
     editToken: {
       deleteCustomTokenProcessing: false,
       deleteTokenModalVisible: false,

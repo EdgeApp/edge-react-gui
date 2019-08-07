@@ -4,13 +4,13 @@ import { type DiskletFolder } from 'disklet'
 import type { EdgeContext } from 'edge-core-js'
 import { type Reducer } from 'redux'
 
-import { type Action, type Username } from '../../ReduxTypes.js'
+import { type Action } from '../../ReduxTypes.js'
 
 export type ContextState = {
   context: EdgeContext | Object,
   folder: DiskletFolder | Object,
-  usernames: Array<Username>,
-  nextUsername: Username
+  usernames: Array<string>,
+  nextUsername: string
 }
 
 const initialState = {
@@ -42,8 +42,7 @@ export const context: Reducer<ContextState, Action> = (state = initialState, act
       }
     }
 
-    case 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT_REQUEST': {
-      if (!action.data) throw new Error('Invalid action')
+    case 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT': {
       const { username } = action.data
       return {
         ...state,
@@ -62,7 +61,6 @@ export const context: Reducer<ContextState, Action> = (state = initialState, act
     }
 
     default:
-      // $FlowFixMe
       return state
   }
 }

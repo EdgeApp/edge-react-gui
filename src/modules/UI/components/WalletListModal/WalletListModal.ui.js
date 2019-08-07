@@ -40,8 +40,8 @@ export default class WalletListModal extends Component<WalletListModalProps> {
     return <WalletListRowConnector onSelectWallet={onSelectWallet} wallet={wallet} excludedCurrencyCode={excludedCurrencyCode} />
   }
 
-  keyExtractor = (item: { item: GuiWallet, index: number, separators: any }, index: number): number => {
-    return item.index
+  keyExtractor = (item: { item: GuiWallet, index: number, separators: any }, index: number): string => {
+    return String(item.index)
   }
 
   render () {
