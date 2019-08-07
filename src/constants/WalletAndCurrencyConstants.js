@@ -33,7 +33,8 @@ export const DEFAULT_STARTER_WALLET_NAMES = {
   RVN: s.strings.string_first_ravencoin_wallet_name,
   XZC: s.strings.string_first_zcoin_wallet_name,
   XLM: s.strings.string_first_stellar_wallet_name,
-  XTZ: s.strings.strinf_first_tezos_wallet_name
+  XTZ: s.strings.strinf_first_tezos_wallet_name,
+  RSK: s.strings.string_first_rsk_wallet_name
 }
 
 // DO NOT PUT ANY TOKENS IN HERE!
@@ -59,7 +60,8 @@ export const CURRENCY_PLUGIN_NAMES = {
   VTC: 'vertcoin',
   XLM: 'stellar',
   XTZ: 'tezos',
-  XZC: 'zcoin'
+  XZC: 'zcoin',
+  RSK: 'rsk'
 }
 
 export const getSpecialCurrencyInfo = (currencyCode: string): Object => {

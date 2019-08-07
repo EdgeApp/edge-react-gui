@@ -29,7 +29,7 @@ const mapStateToProps = (state: State) => {
   const defaultFiat = SETTINGS_SELECTORS.getDefaultFiat(state)
 
   const supportedWalletTypes = SETTINGS_SELECTORS.getSupportedWalletTypes(state)
-  const ethereumWalletType = supportedWalletTypes.find(item => item.value === 'wallet:ethereum')
+  const ethereumWalletType = supportedWalletTypes.find(item => item.value === 'wallet:ethereum' || item.value === 'wallet:rsk')
   const exchangeRates = state.exchangeRates
   return {
     coreWallets,

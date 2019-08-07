@@ -272,6 +272,7 @@
   "string_first_zcoin_wallet_name": "My Zcoin",
   "string_first_stellar_wallet_name": "My Stellar",
   "string_first_tezos_wallet_name": "My Tezos",
+  "string_first_rsk_wallet_name": "My RSK",
   "my_crypto_wallet_name": "My %s",
   "string_from_exchange_info": "You are about to exchange\n %1$s %2$s\n (%3$s)\n from %4$s",
   "string_help": "Help",
@@ -519,5 +520,6 @@
   "buy_sell_crypto_select_country_button": "Select your region",
   "buy_sell_crypto_no_plugin_region": "We're sorry but there are no available plugins for your region.",
   "user_closed_modal_no_wallet": "User closed modal. No wallet was selected",
-  "plugin_spend_notes_generic": "Spent %1$s from %2$s to %3$s at address: %4$s \nFor assistance, please contact %5$s."
+  "plugin_spend_notes_generic": "Spent %1$s from %2$s to %3$s at address: %4$s \nFor assistance, please contact %5$s.",
+  "plugin_provider_disclaimer": "The following services are not provided by Edge. \n\nFor issues and feedback please contact the respective service providers."
 }

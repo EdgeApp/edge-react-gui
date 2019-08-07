@@ -123,6 +123,10 @@ export const CURRENCY_SETTINGS = {
     pluginName: 'eboost',
     currencyCode: 'EBST'
   },
+  /* rskSettings: {
+     pluginName: 'rsk',
+     currencyCode: 'RBTC'
+  }, */
   ufoSettings: {
     pluginName: 'ufo',
     currencyCode: 'UFO'

@@ -3,6 +3,8 @@
 import { createSimpleConfirmModal } from 'edge-components'
 import type { EdgeCurrencyWallet, EdgeMetadata, EdgeNetworkFee, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
 import React from 'react'
+import { Linking } from 'react-native'
+import Mailer from 'react-native-mail'
 import { Actions } from 'react-native-router-flux'
 import SafariView from 'react-native-safari-view'
 import { Bridgeable } from 'yaob'
@@ -20,6 +22,7 @@ import type { GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmat
 import type { BuySellPlugin, GuiWallet } from '../../../../types'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import type { Dispatch, State } from '../../../ReduxTypes.js'
+import { displayErrorAlert } from '../../../UI/components/ErrorAlert/actions.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 
 type EdgeReceiveAddress = {
@@ -221,6 +224,25 @@ export class EdgeProvider extends Bridgeable {
     return Promise.resolve(returnObject)
   }
 
+  openURL (url: string): void {
+    Linking.openURL(url)
+  }
+  openEmailApp (emailAddress: string) {
+    Mailer.mail(
+      {
+        subject: '',
+        recipients: [emailAddress],
+        body: '',
+        isHTML: true
+      },
+      (error, event) => {
+        if (error) {
+          this._dispatch(displayErrorAlert(error)) // this occurs on simulators
+        }
+      }
+    )
+  }
+
   consoleLog (arg: any): void {
     console.log('EP: BridgeLog', arg)
   }
@@ -309,6 +331,7 @@ export class EdgeProvider extends Bridgeable {
       if (transaction) {
         Actions.pop()
       }
+      this.trackConversion()
       return Promise.resolve(transaction)
     } catch (e) {
       return Promise.reject(e)
@@ -338,6 +361,10 @@ export class EdgeProvider extends Bridgeable {
       await coreWallet.saveTxMetadata(edgeTransaction.txid, edgeTransaction.currencyCode, metadata)
     }
     return edgeTransaction
+  }
+
+  trackConversion () {
+    global.firebase && global.firebase.analytics().logEvent(`EdgeProvider_Conversion_Success`)
   }
 
   _spend (guiMakeSpendInfo: GuiMakeSpendInfo, lockInputs: boolean = true, signOnly: boolean = false): Promise<EdgeTransaction> {

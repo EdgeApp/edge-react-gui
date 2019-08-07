@@ -1,3 +1,8 @@
+v1.8.7
+* FoxExchange and Godex, 2 new exchange partners that allow you to convert your coins into other coins!
+* Import XRP and XLM private keys
+* WebSockets- Improved connectivity and syncing even when using VPN
+
 v1.8.5
 * Wyre Sell - Sell crypo with your bank account
 * New and improved visuals at login screen
