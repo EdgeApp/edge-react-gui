@@ -86,12 +86,13 @@ export class CountrySelectionModal extends Component<CountrySelectionModalProps,
             </IconCircle>
             <View style={{ flex: 1, paddingLeft: scale(12), paddingRight: scale(12) }}>
               <FormField
-                style={MaterialInputStyle}
-                value={input}
-                onChangeText={this.updateCountryInput}
+                autoFocus
                 error={''}
                 keyboardType={'default'}
                 label={s.strings.buy_sell_crypto_select_country_button}
+                onChangeText={this.updateCountryInput}
+                style={MaterialInputStyle}
+                value={input}
               />
               <FlatList
                 style={{ flex: 1, marginBottom: -gap.bottom }}

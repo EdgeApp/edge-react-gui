@@ -144,7 +144,7 @@ export class AirshipModal extends Component<Props> {
   }
 }
 
-const borderRadius = scale(4)
+const borderRadius = scale(16)
 const commonBody = {
   // Layout:
   flexShrink: 1,
@@ -171,7 +171,6 @@ const styles = StyleSheet.create({
 
     // Layout:
     alignSelf: 'flex-end',
-    marginHorizontal: -borderRadius,
 
     // Visuals:
     borderTopLeftRadius: borderRadius,

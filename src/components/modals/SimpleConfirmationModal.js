@@ -12,8 +12,6 @@ import { type AirshipBridge } from '../common/Airship.js'
 import { AirshipModal } from '../common/AirshipModal.js'
 import { IconCircle } from '../common/IconCircle.js'
 
-// import DeviceInfo from 'react-native-device-info'
-
 type SimpleConfirmationModalProps = {
   text: string,
   buttonText: string,
@@ -26,14 +24,14 @@ export class SimpleConfirmationModal extends Component<SimpleConfirmationModalPr
   render () {
     const { bridge, buttonText } = this.props
     return (
-      <AirshipModal bridge={bridge} onCancel={() => bridge.resolve('complete')} center>
-        <View style={{ minHeight: 200, paddingLeft: scale(12), paddingRight: scale(12), paddingBottom: scale(12) }}>
-          <IconCircle>
-            <Icon type={FONT_AWESOME} name={EXCLAMATION} size={36} color={colors.primary} />
-          </IconCircle>
-          <View style={{ flex: 1, paddingLeft: scale(12), paddingRight: scale(12), paddingTop: scale(12) }}>
-            <FormattedText style={{ textAlign: 'center' }}>{this.props.text}</FormattedText>
-          </View>
+      <AirshipModal bridge={bridge} onCancel={() => bridge.resolve('complete')}>
+        <IconCircle>
+          <Icon type={FONT_AWESOME} name={EXCLAMATION} size={36} color={colors.primary} />
+        </IconCircle>
+        <View style={{ padding: scale(16), flexGrow: 1 }}>
+          <FormattedText fontSize={16} style={{ textAlign: 'center', paddingBottom: scale(16), flexGrow: 1 }}>
+            {this.props.text}
+          </FormattedText>
           <PrimaryButton onPress={() => bridge.resolve('complete')}>
             <PrimaryButton.Text>{buttonText}</PrimaryButton.Text>
           </PrimaryButton>
