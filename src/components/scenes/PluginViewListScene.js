@@ -197,16 +197,10 @@ class PluginList extends Component<Props, State> {
   _renderPlugin = ({ item }) => (
     <TouchableWithoutFeedback onPress={() => this._onPress(item)}>
       <View style={styles.pluginRow}>
-        <View style={styles.pluginBox}>
-          <View style={styles.pluginLeft}>
-            <View style={styles.logoWrap}>
-              <View style={[styles.logo]}>{item.imageUrl && <Image style={{ height: '100%' }} source={{ uri: item.imageUrl }} />}</View>
-            </View>
-            <View style={styles.textBoxWrap}>
-              <Text style={styles.titleBox}>{item.name}</Text>
-              <Text style={styles.subtitleBox}>{item.subtitle}</Text>
-            </View>
-          </View>
+        <View style={styles.logo}>{item.imageUrl && <Image style={styles.logoImage} source={{ uri: item.imageUrl }} />}</View>
+        <View style={styles.textBoxWrap}>
+          <Text style={styles.titleText}>{item.name}</Text>
+          <Text style={styles.subtitleText}>{item.subtitle}</Text>
         </View>
       </View>
     </TouchableWithoutFeedback>
