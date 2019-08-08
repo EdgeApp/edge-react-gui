@@ -51,13 +51,7 @@ export class AdvancedTransactionDetailsModal extends Component<AdvancedTransacti
   render () {
     const { txid, signedTx } = this.props
     const isTxId = !!txid
-    const hexRegExp = /^[0-9a-fA-F]+$/
-    let isSignedTx
-    if (signedTx && hexRegExp.test(signedTx)) {
-      isSignedTx = true
-    } else {
-      isSignedTx = false
-    }
+    const isSignedTx = !!signedTx
     return (
       <InteractiveModal>
         <InteractiveModal.Icon>
