@@ -368,16 +368,6 @@ export const styles = {
   },
   txIDIcon: {
     color: THEME.COLORS.SECONDARY
-  },
-  blockExplorerButton: {
-    borderWidth: 0,
-    height: scale(44),
-    justifyContent: 'center'
-  },
-  blockExplorerButtonText: {
-    fontSize: scale(18),
-    color: THEME.COLORS.ACCENT_BLUE,
-    alignSelf: 'center'
   }
 }
 
