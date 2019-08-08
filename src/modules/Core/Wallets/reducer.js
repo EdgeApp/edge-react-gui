@@ -3,11 +3,11 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import { type Reducer, combineReducers } from 'redux'
 
-import { type Action, type Id } from '../../ReduxTypes.js'
+import { type Action } from '../../ReduxTypes.js'
 
 export type WalletsState = {
   byId: {
-    [Id]: EdgeCurrencyWallet
+    [id: string]: EdgeCurrencyWallet
   }
 }
 

@@ -252,8 +252,7 @@ export const getEnabledTokens = (walletId: string) => async (dispatch: Dispatch,
       dispatch(refreshWallet(walletId))
     }
   } catch (error) {
-    console.log(error)
-    dispatch(displayErrorAlert(error.message))
+    dispatch(displayErrorAlert(error))
   }
 }
 
@@ -308,8 +307,7 @@ export const editCustomToken = (
             Actions.pop()
           })
           .catch(error => {
-            console.log(error)
-            dispatch(displayErrorAlert(error.message))
+            dispatch(displayErrorAlert(error))
             dispatch({ type: 'EDIT_CUSTOM_TOKEN_FAILURE' })
           })
       } else {
@@ -326,8 +324,7 @@ export const editCustomToken = (
               })
           })
           .catch(error => {
-            console.log(error)
-            dispatch(displayErrorAlert(error.message))
+            dispatch(displayErrorAlert(error))
             dispatch({ type: 'EDIT_CUSTOM_TOKEN_FAILURE' })
           })
       }
@@ -353,8 +350,7 @@ export const editCustomToken = (
           })
         })
         .catch(error => {
-          console.log(error)
-          dispatch(displayErrorAlert(error.message))
+          dispatch(displayErrorAlert(error))
           dispatch({ type: 'EDIT_CUSTOM_TOKEN_FAILURE' })
         })
     }
@@ -452,8 +448,7 @@ export const deleteCustomToken = (walletId: string, currencyCode: string) => (di
       Actions.pop()
     })
     .catch(error => {
-      console.log(error)
-      dispatch(displayErrorAlert(error.message))
+      dispatch(displayErrorAlert(error))
       dispatch({ type: 'DELETE_CUSTOM_TOKEN_FAILURE' })
     })
 }

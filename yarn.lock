@@ -3275,10 +3275,10 @@ edge-components@^0.0.26:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.16.5:
-  version "0.16.5"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.16.5.tgz#a9f238d69cd3592595b25a169c275c644399f895"
-  integrity sha512-dliHYC8bgjR+YKsndxY8jvdW689HTDAaHVyisJVOh4Ec+BqBpoomWU0F1tkqmI//vv7TOPisqtMXrSMKRMw0GQ==
+edge-core-js@^0.16.6:
+  version "0.16.6"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.16.6.tgz#d708d942a206052cfd99a31150cd36f0cf3a9667"
+  integrity sha512-WrulXK1hG/Q6mPqFrX+PAHluI2yM9ikO+rqdr1asUNrJeePclFCBuH00ir+OmWdaUGgZUv/SJ5EncIdcDCVfmA==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -3302,10 +3302,10 @@ edge-core-js@^0.16.5:
     ws "^5.1.1"
     yaob "^0.3.4"
 
-edge-currency-accountbased@^0.1.18:
-  version "0.1.18"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.1.18.tgz#9979ab8e3b93442dfe3f13eabb5a8c049e136216"
-  integrity sha512-emybkkoDQ2iAQOoLuCXGXmnodeZ5QcBuK0QGgQw2ukfZG2U+R6Zzy4xxRe7JsUMKqmh07MoVlU/R193NLAGnpw==
+edge-currency-accountbased@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.2.0.tgz#807e3197e8b81a9df32970d6786e6392defb0634"
+  integrity sha512-fJ85Sp1UXMgImN0xgk9gWj3eBQl5ErfDqrFg9IPEOSYGosifG8WJ7N/wFkdXXNfV1EXUVErUk73J0D8ME9AxcQ==
   dependencies:
     base-x "^1.0.4"
     biggystring "^3.0.0"
@@ -3322,10 +3322,10 @@ edge-currency-accountbased@^0.1.18:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@^4.4.1:
-  version "4.4.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.4.1.tgz#02d61788bb864017084e37a7011e6e54650df82f"
-  integrity sha512-Tds34cLNwOuchRnCiNZI2U6VlWq+AqfqEz3YHON6PRMAzAX3xkXLpQpaAyJ3S3bhZwFsYLxmwrFannP+mzF5qA==
+edge-currency-bitcoin@^4.5.1:
+  version "4.5.1"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.5.1.tgz#f8a5075d6ac87f4fb0335574df4c43e3e8bf2929"
+  integrity sha512-diO5L8axwHO59iLxbEG8UJlp+aO9yf2OutgDLWw/SFZbShTguRktkdFIkhvPJm6rL9gWmHTqA3o345C3S9UZfg==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -3342,31 +3342,31 @@ edge-currency-bitcoin@^4.4.1:
     uri-js "^4.2.2"
     url-parse "^1.4.3"
 
-edge-currency-monero@0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.2.2.tgz#40492cd8f4a415e0f04d07401da64cb67f401a45"
-  integrity sha512-AeGslF3QNrRVILV/VTG4zsU8sh4v8Ic6Mcj+bbE3kHoWaastdDGNxUQxKjYuA/UhD/A9njbdrMB5OoSG/fGU/g==
+edge-currency-monero@0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.2.3.tgz#0e0717c571e4c2dac8ca354eba260da1a09c91e1"
+  integrity sha512-U5KcBWX2R6QC78WUlLqpWdOSWr2d8cFE5Cir5kwz6FCF+t4PsD/873CHJk7cSfNtT7OamUyOlhba0O+aublcGg==
   dependencies:
     biggystring "^3.0.0"
     buffer "^5.0.6"
     jsonschema "^1.1.1"
-    mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#6eddbd64"
+    mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#william/v0.14.0-hardfork"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.6.12:
-  version "0.6.12"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.6.12.tgz#191f7e855ba36e576e5817172ed7847fbc02db37"
-  integrity sha512-yTkXOdFts+JE9+QNyqIxITThA0cruxPaIBKbf65TzL92Op9in3e5T+GhtNjLnjAZc/RYE4yxUQs6fz0OYBVV6g==
+edge-exchange-plugins@^0.7.3:
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.7.3.tgz#e47f4f2f31a8546576925754caeb8e18149cbc3e"
+  integrity sha512-BtJM5Y4hUSWzanm6wkCi8qfd1qy303j5mR9ysOLplKm9qtiGGpGJbWvjK4OE5Utd6+OyYaEWTJN+ysX1GQ3qmQ==
   dependencies:
     esm "^3.2.4"
     hashjs "^1.2.0"
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@0.5.36:
-  version "0.5.36"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.5.36.tgz#c7a22443e39ed8826797e693d71f462f7ec80e06"
-  integrity sha512-8hYLn8Btp61JPe7jr3PZXKYSXpCl7hsiu4A2YeaOSkdi0cLWdpkZDvmqTSfO+3svjtCn1TaKSeUYaUhmgNZhGA==
+edge-login-ui-rn@0.5.38:
+  version "0.5.38"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.5.38.tgz#20619f0ded340334b263a7ae900bd52894294613"
+  integrity sha512-8O3TdYjh9Xq5ida/JGb8o8didK9ywxQrKluTZK56UOHrT0hOiTe0DPUMd/yDD2hhCx7NM7mtq3YkmBi3PfiF6g==
   dependencies:
     edge-components "^0.0.26"
     material-ui "^0.20.0"
@@ -3393,15 +3393,15 @@ edge-login-ui-rn@0.5.36:
   dependencies:
     moment "^2.22.2"
 
-"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#546a3e3":
+"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#f1434b5":
   version "0.0.3"
-  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#546a3e32ed9c6d72616fb5bc2aa07306a15b2148"
+  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#f1434b54a7bffd2209d5794c660db0f3265fdbbd"
   dependencies:
     moment "^2.22.2"
 
-"edge-plugin-wyre@https://github.com/EdgeApp/edge-plugin-wyre.git#cf6589b":
+"edge-plugin-wyre@https://github.com/EdgeApp/edge-plugin-wyre.git#0fccfe2":
   version "0.1.2"
-  resolved "https://github.com/EdgeApp/edge-plugin-wyre.git#cf6589b724e192a7d83c942add80d486731cb208"
+  resolved "https://github.com/EdgeApp/edge-plugin-wyre.git#0fccfe249f43a47adf38d88f12122452c6ed8560"
   dependencies:
     js-sha256 "^0.9.0"
     moment "^2.22.2"
@@ -7579,9 +7579,9 @@ mute-stream@0.0.7:
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.7.tgz#3075ce93bc21b8fab43e1bc4da7e8115ed1e7bab"
   integrity sha1-MHXOk7whuPq0PhvE2n6BFe0ee6s=
 
-"mymonero-core-js@git://github.com/EdgeApp/mymonero-core-js.git#6eddbd64":
+"mymonero-core-js@git://github.com/EdgeApp/mymonero-core-js.git#william/v0.14.0-hardfork":
   version "1.1.0"
-  resolved "git://github.com/EdgeApp/mymonero-core-js.git#6eddbd64460d79da2bb46a31dfe55d5ef062a56d"
+  resolved "git://github.com/EdgeApp/mymonero-core-js.git#c17011785963677ec64981cc3d79e4e29f9e526a"
   dependencies:
     node-fetch "^2.2.0"
 

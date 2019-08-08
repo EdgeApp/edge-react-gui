@@ -4,13 +4,13 @@ import type { EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeReceiveAd
 import _ from 'lodash'
 import { type Reducer, combineReducers } from 'redux'
 
-import type { Action, Id } from '../../modules/ReduxTypes.js'
+import type { Action } from '../../modules/ReduxTypes.js'
 import type { GuiWallet } from '../../types.js'
 
 export type WalletsState = {
-  byId: { [walletId: Id]: GuiWallet },
-  activeWalletIds: Array<Id>,
-  archivedWalletIds: Array<Id>,
+  byId: { [walletId: string]: GuiWallet },
+  activeWalletIds: Array<string>,
+  archivedWalletIds: Array<string>,
   selectedWalletId: string,
   selectedCurrencyCode: string,
   addTokenPending: boolean,
@@ -25,7 +25,6 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
       const wallets = action.data.currencyWallets
       const out = {}
       for (const walletId of Object.keys(wallets)) {
-        // $FlowFixMe
         const tempWallet = schema(wallets[walletId], action.data.receiveAddresses[walletId])
         if (state[walletId]) {
           const enabledTokensOnWallet = state[walletId].enabledTokens

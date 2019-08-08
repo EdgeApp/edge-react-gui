@@ -1,10 +1,10 @@
 // @flow
 
-import type { EdgeAccount, EdgeSwapConfig } from 'edge-core-js'
+import { type EdgeSwapConfig } from 'edge-core-js/types'
 import React, { Component } from 'react'
 import { Image, View } from 'react-native'
 
-import { changellyLogo, changenowLogo, defaultLogo, faastLogo, shapeshiftLogo, totleLogo } from '../../assets/images/exchange'
+import { changellyLogo, changenowLogo, defaultLogo, faastLogo, foxExchangeLogo, godexLogo, shapeshiftLogo, totleLogo } from '../../assets/images/exchange'
 import { SwapKYCModalConnector } from '../../connectors/components/SwapKYCModalConnector.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/index'
@@ -19,8 +19,7 @@ type ExchangeSettingsProps = {
     [string]: EdgeSwapConfig
   },
   shapeShiftNeedsKYC: boolean,
-  account: EdgeAccount,
-  shapeShiftLogOut(EdgeAccount): void
+  shapeShiftLogOut(): void
 }
 
 type GuiExchangeSetting = {
@@ -43,6 +42,12 @@ const exchangeInfo = {
   },
   totle: {
     logo: totleLogo
+  },
+  godex: {
+    logo: godexLogo
+  },
+  foxExchange: {
+    logo: foxExchangeLogo
   },
   default: {
     logo: defaultLogo
@@ -89,7 +94,7 @@ export class ExchangeSettingsComponent extends Component<ExchangeSettingsProps, 
       })
       return
     }
-    this.props.shapeShiftLogOut(this.props.account)
+    this.props.shapeShiftLogOut()
   }
   render () {
     const ssLoginText = this.props.shapeShiftNeedsKYC ? s.strings.ss_login : s.strings.ss_logout

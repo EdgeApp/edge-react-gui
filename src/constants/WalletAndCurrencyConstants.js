@@ -113,7 +113,7 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
       modalMessage: s.strings.request_xlm_minimum_notification_body
     },
     displayBuyCrypto: false,
-    isImportKeySupported: false
+    isImportKeySupported: true
   },
   XRP: {
     dummyPublicAddress: 'rfuESo7eHUnvebxgaFjfYxfwXhM2uBPAj3',
@@ -128,7 +128,7 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
       modalMessage: s.strings.request_xrp_minimum_notification_body
     },
     displayBuyCrypto: true,
-    isImportKeySupported: false
+    isImportKeySupported: true
   },
   XMR: {
     dummyPublicAddress: '46qxvuS78CNBoiiKmDjvjd5pMAZrTBbDNNHDoP52jKj9j5mk6m4R5nU6BDrWQURiWV9a2n5Sy8Qo4aJskKa92FX1GpZFiYA',

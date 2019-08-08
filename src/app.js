@@ -48,7 +48,6 @@ const IGNORED_WARNINGS = ['slowlog', 'Setting a timer for a long period of time'
 // $FlowExpectedError
 console.ignoredYellowBox = IGNORED_WARNINGS
 
-// $FlowFixMe
 global.OS = Platform.OS
 global.slowlogOptions = { threshold: 16 }
 // Disable the font scaling
@@ -64,10 +63,8 @@ TextInput.defaultProps.allowFontScaling = false
 
 if (!__DEV__) {
   // TODO: Fix logger to append data vs read/modify/write
-  // $FlowFixMe: suppressing this error until we can find a workaround
+  // $FlowFixMe
   console.log = log
-  // $FlowFixMe: suppressing this error until we can find a workaround
-  // console.log = () => {}
 }
 
 if (__DEV__ && ENABLE_WHY_DID_YOU_UPDATE) {
@@ -102,15 +99,12 @@ if (ENABLE_PERF_LOGGING) {
     return `${h}:${m}:${s}.${ms}`
   }
 
-  // $FlowFixMe: suppressing this error until we can find a workaround
   global.pnow = function (label: string) {
     const d = makeDate()
     clog(`${d} PTIMER PNOW: ${label}`)
   }
 
-  // $FlowFixMe: suppressing this error until we can find a workaround
   global.pstart = function (label: string) {
-    // $FlowFixMe: suppressing this error until we can find a workaround
     const d = makeDate()
     if (!perfTotals[label]) {
       perfTotals[label] = 0
@@ -123,9 +117,7 @@ if (ENABLE_PERF_LOGGING) {
     }
   }
 
-  // $FlowFixMe: suppressing this error until we can find a workaround
   global.pend = function (label: string) {
-    // $FlowFixMe: suppressing this error until we can find a workaround
     const d = makeDate()
     if (typeof perfTimers[label] === 'number') {
       const elapsed = global.nativePerformanceNow() - perfTimers[label]
@@ -138,9 +130,7 @@ if (ENABLE_PERF_LOGGING) {
     }
   }
 
-  // $FlowFixMe: suppressing this error until we can find a workaround
   global.pcount = function (label: string) {
-    // $FlowFixMe: suppressing this error until we can find a workaround
     const d = makeDate()
     if (typeof perfCounters[label] === 'undefined') {
       perfCounters[label] = 1

@@ -200,10 +200,8 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
             await wallet.renameWallet(resolveValue)
             dispatch(refreshWallet(walletId))
           }
-        } catch (e) {
-          console.log(e)
-          console.log(e.title)
-          dispatch(displayErrorAlert(e.message))
+        } catch (error) {
+          dispatch(displayErrorAlert(error))
         }
       }
     }

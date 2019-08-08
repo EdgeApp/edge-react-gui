@@ -35,6 +35,7 @@ import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { Airship } from '../Main.ui.js'
 import { CountrySelectionModal } from '../modals/CountrySelectionModal.js'
+import { SimpleConfirmationModal } from '../modals/SimpleConfirmationModal.js'
 
 type Props = {
   developerModeOn: boolean,
@@ -48,12 +49,42 @@ type State = {
   data: Array<Object>
 }
 
+const MODAL_DATA_FILE = 'pluginModalTracker.json'
+
 class PluginList extends Component<Props, State> {
   constructor (props) {
     super(props)
     this.state = {
       isSpendModal: false,
       data: []
+    }
+  }
+
+  async componentDidMount () {
+    const { account } = this.props
+    try {
+      const text = await account.disklet.getText(MODAL_DATA_FILE)
+      const data = JSON.parse(text)
+      const timesPluginWarningModalViewed = data.viewed
+      if (timesPluginWarningModalViewed < 3) {
+        const newNumber = timesPluginWarningModalViewed + 1
+        if (newNumber === 3) {
+          await Airship.show(bridge => (
+            <SimpleConfirmationModal bridge={bridge} text={s.strings.plugin_provider_disclaimer} buttonText={s.strings.string_ok_cap} />
+          ))
+        }
+        const newText = JSON.stringify({
+          viewed: newNumber
+        })
+        await account.disklet.setText(MODAL_DATA_FILE, newText)
+      }
+    } catch (e) {
+      const obj = {
+        viewed: 1
+      }
+      const text = JSON.stringify(obj)
+      await account.disklet.setText(MODAL_DATA_FILE, text)
+      await Airship.show(bridge => <SimpleConfirmationModal bridge={bridge} text={s.strings.plugin_provider_disclaimer} buttonText={s.strings.string_ok_cap} />)
     }
   }
 
@@ -231,6 +262,7 @@ class PluginList extends Component<Props, State> {
 
 class PluginBuySellComponent extends PluginList {
   componentDidMount () {
+    super.componentDidMount()
     const { countryCode } = this.props
     if (!countryCode) this.openCountrySelectionModal()
     console.log('pl: ', this.props.developerModeOn)
@@ -242,6 +274,7 @@ class PluginBuySellComponent extends PluginList {
 
 class PluginSpendComponent extends PluginList {
   componentDidMount () {
+    super.componentDidMount()
     this.setState({
       isSpendModal: true,
       data: spendPlugins(this.props.developerModeOn)
