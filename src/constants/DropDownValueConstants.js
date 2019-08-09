@@ -60,13 +60,13 @@ export const WALLET_OPTIONS = {
   },
   MANAGE_TOKENS: {
     value: MANAGE_TOKENS_VALUE,
-    currencyCode: ['ETH'],
+    currencyCode: ['ETH', 'RBTC'],
     label: s.strings.string_add_edit_tokens,
     modalVisible: false
   },
   VIEW_XPUB: {
     value: VIEW_XPUB_VALUE,
-    currencyCode: ['BTC', 'BCH', 'DASH', 'FTC', 'XZC', 'LTC', 'UFO', 'QTUM', 'VTC', 'BTG', 'DGB', 'SMART', 'GRS', 'BSV', 'EBST', 'EOS', 'DOGE', 'RVN'],
+    currencyCode: ['BTC', 'BCH', 'DASH', 'FTC', 'XZC', 'LTC', 'UFO', 'QTUM', 'VTC', 'BTG', 'DGB', 'SMART', 'GRS', 'BSV', 'EBST', 'EOS', 'DOGE', 'RVN', 'RBTC'],
     label: s.strings.fragment_wallets_view_xpub,
     modalVisible: true
   }
