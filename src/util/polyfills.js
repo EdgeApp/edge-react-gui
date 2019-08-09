@@ -1,5 +1,4 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-
 /* global __DEV__ */
 
 // In production mode, `process.env.NODE_ENV` starts out as "production",
@@ -17,9 +16,3 @@ if (!Uint8Array.prototype.slice) {
     value: Array.prototype.slice
   })
 }
-
-// try {
-//   require('core-js/library/es5')
-// } catch (e) {
-//   console.log(e)
-// }

@@ -4,9 +4,9 @@ import React, { Component } from 'react'
 import { FlatList, Image, TouchableHighlight, View } from 'react-native'
 
 import ContactImage from '../../assets/images/contact.png'
-import { scale } from '../../lib/scaling.js'
 import FormattedText from '../../modules/UI/components/FormattedText/index'
 import styles from '../../styles/scenes/TransactionDetailsStyle'
+import { scale } from '../../util/scaling.js'
 
 class ContactSearchResults extends Component {
   render () {

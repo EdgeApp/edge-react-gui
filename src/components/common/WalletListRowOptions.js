@@ -5,10 +5,10 @@ import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
 import * as Constants from '../../constants/indexConstants'
-import { scale } from '../../lib/scaling.js'
 import s from '../../locales/strings.js'
 import { MenuDropDown } from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui.js'
 import { MenuDropDownStyle } from '../../styles/indexStyles'
+import { scale } from '../../util/scaling.js'
 
 type Props = {
   walletKey: string,

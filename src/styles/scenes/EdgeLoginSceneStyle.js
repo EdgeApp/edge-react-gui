@@ -1,7 +1,7 @@
 // @flow
 
-import { isIphoneX } from '../../lib/isIphoneX.js'
 import THEME from '../../theme/variables/airbitz'
+import { isIphoneX } from '../../util/isIphoneX.js'
 
 const EdgeLoginScreen = {
   container: {

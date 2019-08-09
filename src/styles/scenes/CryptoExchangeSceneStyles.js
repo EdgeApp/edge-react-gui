@@ -1,7 +1,7 @@
 // @flow
 
-import { scale } from '../../lib/scaling'
 import THEME from '../../theme/variables/airbitz'
+import { scale } from '../../util/scaling.js'
 import { IconButtonStyle, TextAndIconButtonStyle } from '../indexStyles'
 
 export const styles = {

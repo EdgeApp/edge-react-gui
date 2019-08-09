@@ -4,11 +4,11 @@ import React, { Component } from 'react'
 import { Alert, Clipboard, Platform, Text } from 'react-native'
 
 import { EYE_ICON, ION_ICONS } from '../../constants/IconConstants.js'
-import { scale } from '../../lib/scaling.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import { InteractiveModal } from '../../modules/UI/components/Modals/InteractiveModal/InteractiveModal.ui.js'
+import { scale } from '../../util/scaling.js'
 
 type XPubModalOwnProps = {}
 

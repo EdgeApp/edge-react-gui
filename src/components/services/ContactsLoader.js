@@ -1,14 +1,17 @@
 // @flow
 
 import { Component } from 'react'
+import Contacts from 'react-native-contacts'
+import { connect } from 'react-redux'
 
-import type { GuiContact } from '../../../../types.js'
-import { type PermissionStatus, PermissionStatusStrings } from '../../../PermissionsManager.js'
+import { type PermissionStatus, PermissionStatusStrings } from '../../modules/PermissionsManager.js'
+import type { Dispatch, State } from '../../modules/ReduxTypes.js'
+import { displayErrorAlert } from '../../modules/UI/components/ErrorAlert/actions.js'
+import type { GuiContact } from '../../types.js'
 
-export type Props = {
+type Props = {
   contactsPermission: PermissionStatus,
   loadContactsStart: () => void,
-  fetchContacts: () => Promise<Array<GuiContact>>,
   loadContactsSuccess: (contacts: Array<GuiContact>) => void,
   loadContactsFail: (error: Error) => void
 }
@@ -136,7 +139,7 @@ const merchantPartners = [
   }
 ]
 
-export class ContactsLoader extends Component<Props> {
+class ContactsLoaderComponent extends Component<Props> {
   UNSAFE_componentWillReceiveProps (nextProps: Props) {
     const { contactsPermission } = nextProps
 
@@ -145,9 +148,18 @@ export class ContactsLoader extends Component<Props> {
     }
   }
 
+  fetchContacts (): Promise<Array<GuiContact>> {
+    return new Promise((resolve, reject) => {
+      return Contacts.getAll((error, result) => {
+        // The native code sometimes sends strings instead of errors:
+        if (error) return reject(typeof error === 'string' ? new Error(error) : error)
+        return resolve(result)
+      })
+    })
+  }
+
   loadContacts = () => {
-    return this.props
-      .fetchContacts()
+    return this.fetchContacts()
       .catch(error => {
         this.props.loadContactsFail(error)
         return []
@@ -166,3 +178,19 @@ export class ContactsLoader extends Component<Props> {
     return null
   }
 }
+
+export const ContactsLoader = connect(
+  (state: State) => ({
+    contactsPermission: state.permissions.contacts
+  }),
+  (dispatch: Dispatch) => ({
+    loadContactsSuccess: (contacts: Array<GuiContact>) =>
+      dispatch({
+        type: 'CONTACTS/LOAD_CONTACTS_SUCCESS',
+        data: { contacts }
+      }),
+    loadContactsFail: (error: Error) => {
+      dispatch(displayErrorAlert(error))
+    }
+  })
+)(ContactsLoaderComponent)

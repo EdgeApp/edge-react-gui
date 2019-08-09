@@ -3,8 +3,8 @@
 import React, { type ChildrenArray, type Node } from 'react'
 import { StyleSheet, View } from 'react-native'
 
-import { scale } from '../../lib/scaling.js'
 import THEME from '../../theme/variables/airbitz.js'
+import { scale } from '../../util/scaling.js'
 
 export const iconSize = scale(64)
 

@@ -2,9 +2,9 @@
 
 import { StyleSheet } from 'react-native'
 
-import { isIphoneX } from '../lib/isIphoneX.js'
 import THEME from '../theme/variables/airbitz'
 import { PLATFORM } from '../theme/variables/platform.js'
+import { isIphoneX } from '../util/isIphoneX.js'
 
 export const styles = {
   stylizedButtonText: {

@@ -10,7 +10,6 @@ import validIcon from '../../assets/images/createWallet/valid_icon.png'
 import eosLogo from '../../assets/images/currencies/fa_logo_eos.png'
 import steemLogo from '../../assets/images/currencies/fa_logo_steem.png'
 import * as Constants from '../../constants/indexConstants'
-import { scale } from '../../lib/scaling.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
 import Text from '../../modules/UI/components/FormattedText'
@@ -21,6 +20,7 @@ import { MaterialInputOnWhite } from '../../styles/components/FormFieldStyles.js
 import styles from '../../styles/scenes/CreateWalletStyle.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
 import type { GuiFiatType, GuiWalletType } from '../../types.js'
+import { scale } from '../../util/scaling.js'
 import { FormField } from '../common/FormField.js'
 
 const deviceWidth = PLATFORM.deviceWidth

@@ -6,8 +6,8 @@ import Slider from 'react-native-slider'
 import slowlog from 'react-native-slowlog'
 
 import leftArrowImg from '../../../../assets/images/slider/keyboard-arrow-left.png'
-import { scale } from '../../../../lib/scaling.js'
 import s from '../../../../locales/strings.js'
+import { scale } from '../../../../util/scaling.js'
 import styles from './styles.js'
 
 const SLIDE_TO_COMPLETE_TEXT = s.strings.send_confirmation_slide_to_confirm

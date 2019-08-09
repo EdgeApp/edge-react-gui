@@ -2,8 +2,8 @@
 
 import { StyleSheet } from 'react-native'
 
-import { scale } from '../../lib/scaling.js'
 import THEME, { DEBUG as debug } from '../../theme/variables/airbitz'
+import { scale } from '../../util/scaling.js'
 
 export const rawStyles = {
   mainScrollView: {

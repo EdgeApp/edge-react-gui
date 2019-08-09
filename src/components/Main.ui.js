@@ -1,15 +1,10 @@
 // @flow
 
-import { type DiskletFolder, makeReactNativeFolder } from 'disklet'
-import type { EdgeContext } from 'edge-core-js'
-import React, { Component } from 'react'
-import { Alert, Image, Linking, StatusBar, TouchableWithoutFeedback, View, YellowBox } from 'react-native'
+import React, { Component, Fragment } from 'react'
+import { Image, Linking, TouchableWithoutFeedback, View, YellowBox } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
-import Locale from 'react-native-locale'
-import { MenuProvider } from 'react-native-popup-menu'
 import { Actions, Drawer, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
-import SplashScreen from 'react-native-smart-splash-screen'
 import { connect } from 'react-redux'
 import * as URI from 'uri-js'
 
@@ -59,14 +54,9 @@ import WalletList from '../connectors/scenes/WalletListConnector'
 import SendConfirmationOptions from '../connectors/SendConfirmationOptionsConnector.js'
 import SpendingLimitsConnector from '../connectors/SpendingLimitsConnector.js'
 import * as Constants from '../constants/indexConstants'
-import { scale } from '../lib/scaling.js'
-import { setIntlLocale } from '../locales/intl'
-import s, { selectLocale } from '../locales/strings.js'
-import * as CONTEXT_API from '../modules/Core/Context/api'
+import s from '../locales/strings.js'
 import DeepLinkingManager from '../modules/DeepLinkingManager.js'
 import PermissionsManager, { type Permission, PermissionStrings } from '../modules/PermissionsManager.js'
-import AutoLogout from '../modules/UI/components/AutoLogout/AutoLogoutConnector'
-import ContactsLoader from '../modules/UI/components/ContactsLoader/contactsLoaderConnector.js'
 import ControlPanel from '../modules/UI/components/ControlPanel/ControlPanelConnector'
 import ErrorAlert from '../modules/UI/components/ErrorAlert/ErrorAlertConnector'
 import T from '../modules/UI/components/FormattedText/index'
@@ -90,24 +80,14 @@ import {
 } from '../modules/UI/scenes/Plugins/index.js'
 import { HwBackButtonHandler } from '../modules/UI/scenes/WalletList/components/HwBackButtonHandler/index'
 import { styles } from '../styles/MainStyle.js'
-import { makeAirship } from './common/Airship.js'
-import { ModalProvider } from './common/ModalProvider.js'
-import { EdgeCoreManager } from './core/EdgeCoreManager.js'
+import { scale } from '../util/scaling.js'
 import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
 import { CryptoExchangeQuoteProcessingScreenComponent } from './scenes/CryptoExchangeQuoteProcessingScene.js'
 import { LoadingScene } from './scenes/LoadingScene.js'
 import { OnBoardingComponent } from './scenes/OnBoardingScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
 
-export const Airship = makeAirship()
-
-const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
-
-const UTILITY_SERVER_FILE = 'utilityServer.json'
-
 const RouterWithRedux = connect()(Router)
-
-StatusBar.setBarStyle('light-content', true)
 
 const tabBarIconFiles: { [tabName: string]: string } = {}
 tabBarIconFiles[Constants.WALLET_LIST] = walletIcon
@@ -156,9 +136,6 @@ const TERMS_OF_SERVICE = s.strings.title_terms_of_service
 type Props = {
   requestPermission: (permission: Permission) => void,
   username?: string,
-  addContext: (EdgeContext, DiskletFolder) => void,
-  addUsernames: (Array<string>) => void,
-  setDeviceDimensions: any => void,
   dispatchEnableScan: () => void,
   dispatchDisableScan: () => void,
   urlReceived: string => void,
@@ -170,39 +147,6 @@ type Props = {
   deepLinkPending: boolean,
   checkAndShowGetCryptoModal: (?string) => void,
   logout(): () => mixed
-}
-
-async function queryUtilServer (context: EdgeContext, folder: DiskletFolder, usernames: Array<string>) {
-  let jsonObj: null | Object = null
-  try {
-    const json = await folder.file(UTILITY_SERVER_FILE).getText()
-    jsonObj = JSON.parse(json)
-  } catch (err) {
-    console.log(err)
-  }
-
-  if (jsonObj) {
-    if (jsonObj.currencyCode) {
-      global.currencyCode = jsonObj.currencyCode
-    }
-    return
-  }
-  if (usernames.length === 0 && !jsonObj) {
-    // New app launch. Query the utility server for referral information
-    try {
-      const response = await fetch('https://util1.edge.app/ref')
-      if (response) {
-        const util = await response.json()
-        if (util.currencyCode) {
-          global.currencyCode = util.currencyCode
-        }
-        // Save util data
-        folder.file(UTILITY_SERVER_FILE).setText(JSON.stringify(util))
-      }
-    } catch (e) {
-      console.log(e)
-    }
-  }
 }
 
 export default class Main extends Component<Props> {
@@ -233,34 +177,6 @@ export default class Main extends Component<Props> {
       })
       .catch(e => console.log(e))
     Linking.addEventListener('url', this.handleOpenURL)
-  }
-
-  onCoreLoad = (context: EdgeContext) => {
-    const folder = makeReactNativeFolder()
-
-    // Put the context into Redux:
-    this.props.addContext(context, folder)
-
-    CONTEXT_API.listUsernames(context).then(usernames => {
-      this.props.addUsernames(usernames)
-      queryUtilServer(context, folder, usernames)
-    })
-    setIntlLocale(localeInfo)
-    selectLocale(DeviceInfo.getDeviceLocale())
-    SplashScreen.close({
-      animationType: SplashScreen.animationType.fade,
-      duration: 850,
-      delay: 500
-    })
-  }
-
-  onCoreError = (error: any) => {
-    SplashScreen.close({
-      animationType: SplashScreen.animationType.fade,
-      duration: 850,
-      delay: 500
-    })
-    Alert.alert('Edge core failed to load', String(error))
   }
 
   handleOpenURL = (event: Object) => {
@@ -339,7 +255,7 @@ export default class Main extends Component<Props> {
 
   render () {
     return (
-      <MenuProvider style={styles.mainMenuContext}>
+      <Fragment>
         <RouterWithRedux backAndroidHandler={this.handleBack}>
           <Stack key={Constants.ROOT} hideNavBar panHandlers={null}>
             <Scene key={Constants.LOGIN} initial component={LoginConnector} username={this.props.username} />
@@ -756,22 +672,15 @@ export default class Main extends Component<Props> {
             </Drawer>
           </Stack>
         </RouterWithRedux>
-        <StatusBar translucent backgroundColor="#00000040" barStyle="light-content" />
         <HelpModal style={{ flex: 1 }} />
         <ErrorAlert />
         <TransactionAlert />
-        <AutoLogout />
-        <ContactsLoader />
         <PasswordReminderModal />
         <PasswordRecoveryReminderModalConnector />
-        <ModalProvider />
         <PermissionsManager />
 
-        <EdgeCoreManager onLoad={this.onCoreLoad} onError={this.onCoreError} />
-
         <DeepLinkingManager />
-        <Airship />
-      </MenuProvider>
+      </Fragment>
     )
   }
 

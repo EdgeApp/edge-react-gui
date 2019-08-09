@@ -4,8 +4,8 @@ import { PasswordRecoveryScreen } from 'edge-login-ui-rn'
 import React, { Component } from 'react'
 import { View } from 'react-native'
 
-import { scale } from '../../lib/scaling.js'
 import styles from '../../styles/scenes/SettingsStyle.js'
+import { scale } from '../../util/scaling.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
 type Props = {

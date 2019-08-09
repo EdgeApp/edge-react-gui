@@ -6,10 +6,10 @@ import DeviceInfo from 'react-native-device-info'
 import { WebView } from 'react-native-webview'
 
 import helpImage from '../../../../assets/images/modal/help.png'
-import { isIphoneX } from '../../../../lib/isIphoneX.js'
 import s from '../../../../locales/strings.js'
 import THEME from '../../../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
+import { isIphoneX } from '../../../../util/isIphoneX.js'
 import StylizedModal from '../Modal/index.js'
 import styles from './style.js'
 
