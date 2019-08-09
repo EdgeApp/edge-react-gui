@@ -12,13 +12,14 @@ import type { CustomTokenInfo } from '../types.js'
 import * as UTILS from '../util/utils.js'
 import * as WALLET_ACTIONS from './WalletActions.js'
 
-export const addNewToken = (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string) => {
+export const addNewToken = (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, walletType: string) => {
   return (dispatch: Dispatch, getState: GetState) => {
     dispatch({ type: 'ADD_TOKEN_START' })
     const state = getState()
     addTokenAsync(walletId, currencyName, currencyCode, contractAddress, denomination, state)
       .then(addedWalletInfo => {
         const { walletId, newTokenObj, setSettings, enabledTokensOnWallet } = addedWalletInfo
+        newTokenObj.walletType = walletType
         dispatch({
           type: 'ADD_NEW_CUSTOM_TOKEN_SUCCESS',
           data: {
@@ -46,10 +47,10 @@ export const addTokenAsync = async (
   denomination: string,
   state: State
 ) => {
-  // create modified object structure to match metaTokens
-  const newTokenObj: CustomTokenInfo = WALLET_ACTIONS.assembleCustomToken(currencyName, currencyCode, contractAddress, denomination)
-  const account = CORE_SELECTORS.getAccount(state)
   const uiWallet = UI_WALLET_SELECTORS.getWallet(state, walletId)
+  // create modified object structure to match metaTokens
+  const newTokenObj: CustomTokenInfo = WALLET_ACTIONS.assembleCustomToken(currencyName, currencyCode, contractAddress, denomination, uiWallet.type)
+  const account = CORE_SELECTORS.getAccount(state)
   const coreWallet = CORE_SELECTORS.getWallet(state, walletId)
   await coreWallet.addCustomToken(newTokenObj)
   coreWallet.enableTokens([currencyCode])

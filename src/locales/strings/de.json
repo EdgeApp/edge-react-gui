@@ -306,6 +306,8 @@
   "title_change_pin": "PIN ändern",
   "title_confirm_exchange": "Austausch bestätigen",
   "title_create_wallet": "Wallet erstellen",
+  "title_create_wallet_ethereum": "Wallet erstellen Ethereum",
+  "title_create_wallet_rsk": "Wallet erstellen RSK",
   "title_export_transactions": "Transaktionen exportieren",
   "title_default_fiat": "Standard-Fiatwährung",
   "title_edge_login": "Edge Anmeldung",
