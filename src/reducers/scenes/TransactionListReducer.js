@@ -10,7 +10,6 @@ export type TransactionListState = {
   +currentEndIndex: number,
   +currentWalletId: string,
   +numTransactions: number,
-  +searchVisible: boolean,
   +transactionIdMap: { [txid: string]: TransactionListTx },
   +transactions: Array<TransactionListTx>
 }
@@ -101,27 +100,11 @@ const currentEndIndex = (state = 0, action: Action): number => {
   }
 }
 
-const searchVisible = (state = false, action: Action): boolean => {
-  switch (action.type) {
-    case 'UI/SCENES/TRANSACTION_LIST/TRANSACTIONS_SEARCH_VISIBLE': {
-      return true
-    }
-
-    case 'UI/SCENES/TRANSACTION_LIST/TRANSACTIONS_SEARCH_HIDDEN': {
-      return false
-    }
-
-    default:
-      return state
-  }
-}
-
 export const transactionList: Reducer<TransactionListState, Action> = combineReducers({
   currentCurrencyCode,
   currentEndIndex,
   currentWalletId,
   numTransactions,
-  searchVisible,
   transactionIdMap,
   transactions
 })

@@ -27,14 +27,6 @@ export const updateBalance = () => ({
   type: 'noop'
 })
 
-export const transactionsSearchVisible = () => ({
-  type: 'UI/SCENES/TRANSACTION_LIST/TRANSACTIONS_SEARCH_VISIBLE'
-})
-
-export const transactionsSearchHidden = () => ({
-  type: 'UI/SCENES/TRANSACTION_LIST/TRANSACTIONS_SEARCH_HIDDEN'
-})
-
 export const CHANGED_TRANSACTIONS = 'UI/SCENES/TRANSACTION_LIST/CHANGED_TRANSACTIONS'
 export const SUBSEQUENT_TRANSACTION_BATCH_QUANTITY = 30
 export const INITIAL_TRANSACTION_BATCH_QUANTITY = 10

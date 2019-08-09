@@ -64,7 +64,6 @@ test('initialState', () => {
       subcategories: []
     },
     transactionList: {
-      searchVisible: false,
       transactions: [],
       transactionIdMap: {},
       currentCurrencyCode: '',
