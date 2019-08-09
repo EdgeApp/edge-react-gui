@@ -23,7 +23,6 @@ import {
   saveTransaction,
   signTransaction
 } from '../modules/Core/Wallets/api.js'
-import type { Dispatch, GetState } from '../modules/ReduxTypes'
 import { getExchangeDenomination as settingsGetExchangeDenomination } from '../modules/Settings/selectors.js'
 import Text from '../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
@@ -31,6 +30,7 @@ import { getAuthRequired, getSpendInfo, getTransaction } from '../modules/UI/sce
 import type { AuthType } from '../modules/UI/scenes/SendConfirmation/selectors.js'
 import { convertCurrencyFromExchangeRates, getExchangeRate, getSelectedCurrencyCode, getSelectedWallet, getSelectedWalletId } from '../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
+import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { convertNativeToExchange } from '../util/utils'
 
 // add empty string if there is an error but we don't need text feedback to the user

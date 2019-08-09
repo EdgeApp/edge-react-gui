@@ -17,7 +17,6 @@ import { activated as uniqueIdentifierModalActivated } from '../../actions/Uniqu
 import { SendConfirmation } from '../../components/scenes/SendConfirmationScene'
 import type { SendConfirmationDispatchProps, SendConfirmationStateProps } from '../../components/scenes/SendConfirmationScene'
 import { getWallet } from '../../modules/Core/selectors.js'
-import type { Dispatch, State } from '../../modules/ReduxTypes'
 import { getDisplayDenomination, getPlugins, getExchangeDenomination as settingsGetExchangeDenomination } from '../../modules/Settings/selectors.js'
 import {
   getError,
@@ -30,6 +29,7 @@ import {
 import type { AuthType } from '../../modules/UI/scenes/SendConfirmation/selectors.js'
 import { getExchangeDenomination, getExchangeRate, getSelectedCurrencyCode, getSelectedWallet } from '../../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
+import type { Dispatch, State } from '../../types/reduxTypes.js'
 import { convertNativeToExchange, getCurrencyInfo } from '../../util/utils'
 
 const mapStateToProps = (state: State): SendConfirmationStateProps => {

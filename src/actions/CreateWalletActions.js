@@ -13,12 +13,12 @@ import { type AccountPaymentParams } from '../components/scenes/CreateWalletAcco
 import * as Constants from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
-import type { Dispatch, GetState } from '../modules/ReduxTypes.js'
 import { getExchangeDenomination } from '../modules/Settings/selectors.js'
 import { displayErrorAlert } from '../modules/UI/components/ErrorAlert/actions.js'
 import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import { errorModal } from '../modules/UI/components/Modals/ErrorModal.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
+import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { selectWallet as selectWalletAction } from './WalletActions.js'
 
 export const createCurrencyWalletAndAddToSwap = (walletName: string, walletType: string, fiatCurrencyCode: string) => (

@@ -1,6 +1,6 @@
 // @flow
 
-import type { Action } from '../modules/ReduxTypes.js'
+import type { Action } from '../types/reduxTypes.js'
 
 export const initialState = false
 export type State = boolean

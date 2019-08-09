@@ -2,7 +2,7 @@
 
 import Sound from 'react-native-sound'
 
-import type { Action } from '../modules/ReduxTypes.js'
+import type { Action } from '../types/reduxTypes.js'
 
 const AUDIO_RECEUVED_FILE = 'audio_received.mp3'
 const AUDIO_SEND_FILE = 'audio_sent.mp3'

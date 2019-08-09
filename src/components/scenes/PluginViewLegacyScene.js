@@ -19,7 +19,7 @@ import { PluginBridge, pop as pluginPop } from '../../modules/UI/scenes/Plugins/
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
 import type { GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import styles from '../../styles/scenes/PluginsStyle.js'
-import { type BuySellPlugin } from '../../types.js'
+import { type BuySellPlugin } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
 const BACK = s.strings.title_back

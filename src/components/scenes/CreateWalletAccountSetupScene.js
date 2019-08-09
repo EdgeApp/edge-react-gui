@@ -19,7 +19,7 @@ import type { HandleAvailableStatus } from '../../reducers/scenes/CreateWalletRe
 import { MaterialInputOnWhite } from '../../styles/components/FormFieldStyles.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
-import type { GuiFiatType, GuiWalletType } from '../../types.js'
+import type { GuiFiatType, GuiWalletType } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { FormField } from '../common/FormField.js'
 

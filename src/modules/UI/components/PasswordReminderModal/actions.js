@@ -3,9 +3,9 @@
 import { Alert } from 'react-native'
 
 import s from '../../../../locales/strings.js'
+import type { Dispatch, GetState } from '../../../../types/reduxTypes.js'
 import * as ACCOUNT_API from '../../../Core/Account/api.js'
 import * as SETTINGS_API from '../../../Core/Account/settings.js'
-import type { Dispatch, GetState } from '../../../ReduxTypes.js'
 import { displayErrorAlert } from '../ErrorAlert/actions.js'
 
 export const checkPasswordStart = () => ({

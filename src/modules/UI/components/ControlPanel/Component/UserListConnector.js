@@ -2,9 +2,9 @@
 
 import { connect } from 'react-redux'
 
+import type { Dispatch, State } from '../../../../../types/reduxTypes.js'
 import * as CORE_SELECTORS from '../../../../Core/selectors.js'
 import { logoutRequest } from '../../../../Login/action'
-import type { Dispatch, State } from '../../../../ReduxTypes'
 import { deleteLocalAccount } from '../action'
 import UserList from './UserList'
 

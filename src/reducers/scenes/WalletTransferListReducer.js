@@ -2,7 +2,7 @@
 
 import { type Reducer, combineReducers } from 'redux'
 
-import type { Action } from '../../modules/ReduxTypes.js'
+import type { Action } from '../../types/reduxTypes.js'
 
 export type WalletTransferListState = {
   +walletTransferList: Array<any>,

@@ -1,8 +1,8 @@
 // @flow
 
+import type { Dispatch, GetState } from '../../../../types/reduxTypes.js'
 import * as CONTEXT_API from '../../../Core/Context/api'
 import * as CORE_SELECTORS from '../../../Core/selectors'
-import type { Dispatch, GetState } from '../../../ReduxTypes'
 
 export const deleteLocalAccount = (username: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()

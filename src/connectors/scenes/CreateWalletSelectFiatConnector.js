@@ -4,8 +4,8 @@ import { connect } from 'react-redux'
 
 import { CreateWalletSelectFiat as CreateWalletSelectFiatComponent } from '../../components/scenes/CreateWalletSelectFiatScene'
 import type { CreateWalletSelectFiatStateProps } from '../../components/scenes/CreateWalletSelectFiatScene'
-import type { State } from '../../modules/ReduxTypes'
 import { getDefaultFiat } from '../../modules/Settings/selectors.js'
+import type { State } from '../../types/reduxTypes.js'
 import { getSupportedFiats } from '../../util/utils'
 
 const mapStateToProps = (state: State): CreateWalletSelectFiatStateProps => {

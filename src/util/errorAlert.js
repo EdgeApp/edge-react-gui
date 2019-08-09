@@ -1,7 +1,7 @@
 // @flow
 
-import type { Action, Store } from '../modules/ReduxTypes.js'
 import { displayErrorAlertStore } from '../modules/UI/components/ErrorAlert/actions.js'
+import type { Action, Store } from '../types/reduxTypes.js'
 
 let showingError = false
 

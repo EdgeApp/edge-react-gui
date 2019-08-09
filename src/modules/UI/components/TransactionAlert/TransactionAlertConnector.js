@@ -3,8 +3,8 @@
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
+import type { Dispatch, State } from '../../../../types/reduxTypes.js'
 import * as UTILS from '../../../../util/utils'
-import type { Dispatch, State } from '../../../ReduxTypes'
 import * as SETTINGS_SELECTORS from '../../../Settings/selectors'
 import { dismissTransactionAlert } from './actions.js'
 import TransactionAlert from './TransactionAlert.ui'

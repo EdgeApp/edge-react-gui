@@ -17,8 +17,8 @@ import SettingsOverview from '../../components/scenes/SettingsOverviewScene'
 import * as Constants from '../../constants/indexConstants'
 import * as CORE_SELECTORS from '../../modules/Core/selectors'
 import { resetSendLogsStatus, sendLogs } from '../../modules/Logs/action'
-import type { Dispatch, State } from '../../modules/ReduxTypes'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
+import type { Dispatch, State } from '../../types/reduxTypes.js'
 
 // settings_button_lock_settings, or //settings_button_unlock_settings
 

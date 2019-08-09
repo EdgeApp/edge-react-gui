@@ -8,10 +8,10 @@ import parse from 'url-parse'
 
 import { FIAT_CODES_SYMBOLS, getSymbolFromCurrency } from '../constants/indexConstants.js'
 import { intl } from '../locales/intl.js'
-import type { State } from '../modules/ReduxTypes'
 import { convertCurrency, convertCurrencyWithoutState } from '../modules/UI/selectors.js'
 import borderColors from '../theme/variables/css3Colors'
-import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet } from '../types'
+import type { State } from '../types/reduxTypes.js'
+import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet } from '../types/types.js'
 
 export const DIVIDE_PRECISION = 18
 

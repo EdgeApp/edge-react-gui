@@ -17,7 +17,7 @@ import type { PermissionStatus } from '../../modules/PermissionsManager.js'
 import T from '../../modules/UI/components/FormattedText/index'
 import WalletListModal from '../../modules/UI/components/WalletListModal/WalletListModalConnector'
 import styles, { styles as styleRaw } from '../../styles/scenes/ScaneStyle'
-import { type GuiWallet } from '../../types.js'
+import { type GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 

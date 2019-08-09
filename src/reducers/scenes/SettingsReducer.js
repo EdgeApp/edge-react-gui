@@ -5,8 +5,8 @@ import _ from 'lodash'
 
 import * as Constants from '../../constants/indexConstants.js'
 import { CORE_DEFAULTS, LOCAL_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
-import type { Action } from '../../modules/ReduxTypes'
-import type { CustomTokenInfo } from '../../types'
+import type { Action } from '../../types/reduxTypes.js'
+import type { CustomTokenInfo } from '../../types/types.js'
 import { spendingLimits } from '../SpendingLimitsReducer.js'
 
 export const initialState = {

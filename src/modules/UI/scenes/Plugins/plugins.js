@@ -5,7 +5,7 @@ import RNFS from 'react-native-fs'
 
 import assetPlugins from '../../../../assets/plugins.json'
 import { EDGE_PLUGIN_REGIONS } from '../../../../constants/CountryConstants.js'
-import { type BuySellPlugin } from '../../../../types.js'
+import { type BuySellPlugin } from '../../../../types/types.js'
 
 const LEGACY_PLUGINS = ['Bitrefill']
 

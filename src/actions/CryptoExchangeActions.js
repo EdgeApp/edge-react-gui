@@ -11,10 +11,10 @@ import { intl } from '../locales/intl'
 import s from '../locales/strings.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors'
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
-import type { Dispatch, GetState, State } from '../modules/ReduxTypes'
 import * as SETTINGS_SELECTORS from '../modules/Settings/selectors.js'
 import * as UI_SELECTORS from '../modules/UI/selectors'
-import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../types'
+import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
+import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../types/types.js'
 import * as UTILS from '../util/utils'
 
 const DIVIDE_PRECISION = 18

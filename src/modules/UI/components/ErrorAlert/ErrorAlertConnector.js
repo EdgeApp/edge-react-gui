@@ -2,7 +2,7 @@
 
 import { connect } from 'react-redux'
 
-import type { Dispatch, State } from '../../../ReduxTypes'
+import type { Dispatch, State } from '../../../../types/reduxTypes.js'
 import { dismissErrorAlert } from './actions.js'
 import ErrorAlert from './ErrorAlert.ui'
 

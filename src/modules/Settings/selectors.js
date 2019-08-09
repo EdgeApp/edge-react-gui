@@ -3,7 +3,7 @@
 import type { EdgeCurrencyInfo, EdgeDenomination } from 'edge-core-js'
 
 import { type CurrencySetting } from '../../reducers/scenes/SettingsReducer.js'
-import type { State } from '../ReduxTypes'
+import type { State } from '../../types/reduxTypes.js'
 import isoFiatDenominations from './ISOFiatDenominations'
 
 const emptyEdgeDenomination: EdgeDenomination = {

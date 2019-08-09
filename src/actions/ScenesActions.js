@@ -1,8 +1,8 @@
 // @flow
 import { Actions } from 'react-native-router-flux'
 
-import type { Dispatch, GetState } from '../modules/ReduxTypes.js'
 import { getSelectedWalletId } from '../modules/UI/selectors.js'
+import type { Dispatch, GetState } from '../types/reduxTypes.js'
 
 export const updateCurrentSceneKey = (sceneKey: string) => ({
   type: 'UPDATE_CURRENT_SCENE_KEY',

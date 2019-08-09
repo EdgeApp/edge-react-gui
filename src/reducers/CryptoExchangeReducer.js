@@ -3,8 +3,8 @@
 import type { EdgeSwapQuote } from 'edge-core-js'
 import { type Reducer } from 'redux'
 
-import { type Action } from '../modules/ReduxTypes.js'
-import { type GuiCurrencyInfo, type GuiWallet } from '../types.js'
+import { type Action } from '../types/reduxTypes.js'
+import { type GuiCurrencyInfo, type GuiWallet } from '../types/types.js'
 
 export type CryptoExchangeState = {
   fromWallet: GuiWallet | null,

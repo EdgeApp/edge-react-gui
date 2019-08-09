@@ -2,7 +2,6 @@
 
 import { type Reducer, combineReducers } from 'redux'
 
-import type { Action } from '../../modules/ReduxTypes.js'
 import { type ControlPanelState, controlPanel } from '../../modules/UI/components/ControlPanel/reducer.js'
 import { type ExchangeRateState, exchangeRate } from '../../modules/UI/components/ExchangeRate/reducer.js'
 import { type HelpModalState, helpModal } from '../../modules/UI/components/HelpModal/reducer.js'
@@ -13,6 +12,7 @@ import {
 import { type PasswordReminderModalState, passwordReminderModal } from '../../modules/UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
 import { type TransactionAlertState, transactionAlert } from '../../modules/UI/components/TransactionAlert/reducer.js'
 import { type WalletListModalState, walletListModal } from '../../modules/UI/components/WalletListModal/reducer.js'
+import type { Action } from '../../types/reduxTypes.js'
 import { type EditTokenState, editToken } from '../EditTokenReducer.js'
 import { type RequestTypeState, requestType } from '../RequestTypeReducer.js'
 import { type UniqueIdentifierModalState, uniqueIdentifierModal } from '../UniqueIdentifierModalReducer.js'

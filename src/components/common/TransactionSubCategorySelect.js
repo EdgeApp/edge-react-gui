@@ -6,7 +6,7 @@ import { FlatList, TouchableHighlight, View } from 'react-native'
 import FormattedText from '../../modules/UI/components/FormattedText/index'
 import styles from '../../styles/scenes/TransactionDetailsStyle'
 import { colors } from '../../theme/variables/airbitz.js'
-import type { SubcategorySearchResultData } from '../../types.js'
+import type { SubcategorySearchResultData } from '../../types/types.js'
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
 

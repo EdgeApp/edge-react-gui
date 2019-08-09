@@ -2,7 +2,7 @@
 
 import { connect } from 'react-redux'
 
-import type { State } from '../../../../ReduxTypes'
+import type { State } from '../../../../../types/reduxTypes.js'
 import * as UI_SELECTORS from '../../../selectors'
 import type { Props } from './WalletName.ui'
 import { WalletName } from './WalletName.ui.js'

@@ -2,7 +2,7 @@
 import { Alert } from 'react-native'
 
 import s from '../../../../locales/strings.js'
-import type { Dispatch } from '../../../../modules/ReduxTypes'
+import type { Dispatch } from '../../../../types/reduxTypes.js'
 
 export const displayErrorAlertStore = (message: string) => ({
   type: 'UI/COMPONENTS/ERROR_ALERT/DISPLAY_ERROR_ALERT',

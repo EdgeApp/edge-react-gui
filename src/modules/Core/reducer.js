@@ -4,7 +4,7 @@ import { type Reducer, combineReducers } from 'redux'
 
 import { type DeepLinkingState, deepLinking } from '../../reducers/core/DeepLinkingReducer.js'
 import { type EdgeLoginState, edgeLogin } from '../../reducers/core/EdgeLoginReducer.js'
-import { type Action } from '../ReduxTypes.js'
+import { type Action } from '../../types/reduxTypes.js'
 import { type AccountState, account } from './Account/reducer.js'
 import { type ContextState, context } from './Context/reducer.js'
 import { type WalletsState, wallets } from './Wallets/reducer.js'

@@ -7,9 +7,9 @@ import { launchModal } from '../components/common/ModalProvider.js'
 import { SPLIT } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import { getAccount, getWallet, getWalletName } from '../modules/Core/selectors.js'
-import type { Dispatch, GetState } from '../modules/ReduxTypes.js'
 import Text from '../modules/UI/components/FormattedText/index'
 import OptionIcon from '../modules/UI/components/OptionIcon/OptionIcon.ui'
+import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { refreshWallet } from './WalletActions.js'
 
 const getSplitType = (currencyCode: string) => (currencyCode === 'BCH' ? 'wallet:bitcoinsv' : 'wallet:bitcoincash')

@@ -8,9 +8,9 @@ import { DELETE } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import { deleteWalletRequest } from '../modules/Core/Account/api.js'
 import { getAccount, getWalletName } from '../modules/Core/selectors.js'
-import type { Dispatch, GetState } from '../modules/ReduxTypes.js'
 import Text from '../modules/UI/components/FormattedText/index'
 import OptionIcon from '../modules/UI/components/OptionIcon/OptionIcon.ui'
+import type { Dispatch, GetState } from '../types/reduxTypes.js'
 
 export const showDeleteWalletModal = (walletId: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()

@@ -1,7 +1,7 @@
 // @flow
 
-import type { Action, Store } from '../modules/ReduxTypes.js'
 import * as SETTINGS_SELECTORS from '../modules/Settings/selectors'
+import type { Action, Store } from '../types/reduxTypes.js'
 
 export default (store: Store) => (next: Function) => (action: Action) => {
   const state = store.getState()

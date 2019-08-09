@@ -4,8 +4,8 @@ import type { EdgeContext } from 'edge-core-js'
 import React from 'react'
 import { connect } from 'react-redux'
 
-import type { Dispatch, State } from '../../modules/ReduxTypes.js'
 import { displayErrorAlert } from '../../modules/UI/components/ErrorAlert/actions'
+import type { Dispatch, State } from '../../types/reduxTypes.js'
 
 type EdgeContextCallbackManagerStateProps = {
   context: EdgeContext

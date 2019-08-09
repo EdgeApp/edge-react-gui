@@ -8,7 +8,7 @@ import { Actions } from 'react-native-router-flux'
 import { intl } from '../../locales/intl'
 import T from '../../modules/UI/components/FormattedText/index'
 import styles, { styles as styleRaw } from '../../styles/scenes/WalletListStyle'
-import { type GuiWallet } from '../../types'
+import { type GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils'
 
 type OwnProps = {

@@ -4,7 +4,7 @@ import type { DiskletFolder } from 'disklet'
 import type { EdgeContext, EdgeCurrencyWallet, EdgeLobby, EdgeParsedUri, EdgeReceiveAddress, EdgeSwapQuote } from 'edge-core-js'
 
 import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
-import { type CustomTokenInfo, type GuiContact, type GuiCurrencyInfo, type GuiWallet } from '../types.js'
+import { type CustomTokenInfo, type GuiContact, type GuiCurrencyInfo, type GuiWallet } from './types.js'
 
 type LegacyActionName =
   | 'ACCOUNT_INIT_COMPLETE'

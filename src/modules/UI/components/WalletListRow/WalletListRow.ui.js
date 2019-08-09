@@ -8,7 +8,7 @@ import { TouchableHighlight, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 
 import { intl } from '../../../../locales/intl.js'
-import type { CustomTokenInfo, GuiDenomination, GuiWallet } from '../../../../types.js'
+import type { CustomTokenInfo, GuiDenomination, GuiWallet } from '../../../../types/types.js'
 import {
   DIVIDE_PRECISION,
   decimalOrZero,

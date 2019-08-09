@@ -10,7 +10,7 @@ import { showReEnableOtpModal } from '../actions/SettingsActions.js'
 import { selectWallet } from '../actions/WalletActions.js'
 import Main from '../components/Main.ui'
 import { requestPermission } from '../modules/PermissionsManager.js'
-import type { Dispatch } from '../modules/ReduxTypes'
+import type { Dispatch } from '../types/reduxTypes.js'
 
 const mapStateToProps = () => ({})
 const mapDispatchToProps = (dispatch: Dispatch) => ({

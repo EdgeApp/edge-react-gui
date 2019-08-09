@@ -7,9 +7,9 @@ import s from '../locales/strings.js'
 import { checkPassword } from '../modules/Core/Account/api.js'
 import * as SETTINGS_API from '../modules/Core/Account/settings.js'
 import { getAccount } from '../modules/Core/selectors.js'
-import type { Dispatch, GetState } from '../modules/ReduxTypes.js'
 import { newSpendingLimits } from '../reducers/SpendingLimitsReducer.js'
-import type { SpendingLimits } from '../types.js'
+import type { Dispatch, GetState } from '../types/reduxTypes.js'
+import type { SpendingLimits } from '../types/types.js'
 
 export const setSpendingLimits = (spendingLimits: SpendingLimits, password: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()

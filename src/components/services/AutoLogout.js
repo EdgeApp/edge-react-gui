@@ -5,7 +5,7 @@ import { AppState } from 'react-native'
 import { connect } from 'react-redux'
 
 import { logoutRequest } from '../../modules/Login/action.js'
-import { type Dispatch, type State as ReduxState } from '../../modules/ReduxTypes.js'
+import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 
 type AppStateType = 'active' | 'background' | 'inactive'
 

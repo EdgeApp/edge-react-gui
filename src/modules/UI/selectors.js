@@ -3,9 +3,9 @@
 import _ from 'lodash'
 
 import { intl } from '../../locales/intl.js'
-import type { GuiDenomination, GuiWallet, TransactionListTx } from '../../types'
+import type { State } from '../../types/reduxTypes.js'
+import type { GuiDenomination, GuiWallet, TransactionListTx } from '../../types/types.js'
 import { convertNativeToExchange } from '../../util/utils.js'
-import type { State } from '../ReduxTypes'
 import * as SETTINGS_SELECTORS from '../Settings/selectors'
 
 export const getWallets = (state: State) => {

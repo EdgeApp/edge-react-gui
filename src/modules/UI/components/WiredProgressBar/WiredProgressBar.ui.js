@@ -4,7 +4,7 @@ import React, { PureComponent } from 'react'
 import { Animated, Easing, View } from 'react-native'
 import { connect } from 'react-redux'
 
-import type { State } from '../../../ReduxTypes'
+import type { State } from '../../../../types/reduxTypes.js'
 import style from './WiredProgressBarStyle.js'
 
 type WiredProgressBarOwnProps = {
