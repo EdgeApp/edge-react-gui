@@ -22,10 +22,6 @@ const walletListModalVisible = (state = false, action: Action): boolean => {
       return false
     }
 
-    case 'UPDATE_CURRENT_SCENE_KEY': {
-      return false
-    }
-
     default:
       return state
   }

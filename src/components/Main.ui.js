@@ -134,12 +134,12 @@ const PLUGIN_SPEND = s.strings.title_plugin_spend_cryptocurrency
 const TERMS_OF_SERVICE = s.strings.title_terms_of_service
 
 type Props = {
+  hideWalletListModal: () => mixed,
   requestPermission: (permission: Permission) => void,
   username?: string,
   dispatchEnableScan: () => void,
   dispatchDisableScan: () => void,
   urlReceived: string => void,
-  updateCurrentSceneKey: string => void,
   showReEnableOtpModal: () => void,
   checkEnabledExchanges: () => void,
   openDrawer: () => void,
@@ -247,10 +247,6 @@ export default class Main extends Component<Props> {
         console.log('Unrecognized currency URI scheme')
         return null
     }
-  }
-
-  updateSceneKeyRequest = () => {
-    this.props.updateCurrentSceneKey(Constants.REQUEST)
   }
 
   render () {
@@ -369,7 +365,7 @@ export default class Main extends Component<Props> {
                       key={Constants.TRANSACTION_LIST}
                       onEnter={() => {
                         this.props.requestPermission(PermissionStrings.CONTACTS)
-                        this.props.updateCurrentSceneKey(Constants.TRANSACTION_LIST)
+                        this.props.hideWalletListModal()
                       }}
                       navTransparent={true}
                       component={TransactionListConnector}
@@ -418,7 +414,7 @@ export default class Main extends Component<Props> {
                   <Scene
                     key={Constants.REQUEST}
                     navTransparent={true}
-                    onEnter={this.updateSceneKeyRequest}
+                    onEnter={this.props.hideWalletListModal}
                     icon={this.icon(Constants.REQUEST)}
                     tabBarLabel={REQUEST}
                     component={Request}
@@ -434,6 +430,7 @@ export default class Main extends Component<Props> {
                       onEnter={props => {
                         this.props.requestPermission(PermissionStrings.CAMERA)
                         this.props.dispatchEnableScan()
+                        this.props.hideWalletListModal()
                         this.props.checkAndShowGetCryptoModal(props.data)
                       }}
                       onExit={this.props.dispatchDisableScan}

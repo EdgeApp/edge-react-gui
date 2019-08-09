@@ -23,12 +23,10 @@ import { type SendConfirmationState, sendConfirmation } from './SendConfirmation
 import { type TransactionDetailsState, transactionDetails } from './TransactionDetailsReducer.js'
 import { type TransactionListState, transactionList } from './TransactionListReducer.js'
 import { type WalletListState, walletList } from './WalletListReducer.js'
-import { type WalletTransferListState, walletTransferList } from './WalletTransferListReducer.js'
 
 export type ScenesState = {
   +controlPanel: ControlPanelState,
   +createWallet: CreateWalletState,
-  +currentScene: string,
   +editToken: EditTokenState,
   +exchangeRate: ExchangeRateState,
   +helpModal: HelpModalState,
@@ -43,27 +41,12 @@ export type ScenesState = {
   +transactionList: TransactionListState,
   +uniqueIdentifierModal: UniqueIdentifierModalState,
   +walletList: WalletListState,
-  +walletListModal: WalletListModalState,
-  +walletTransferList: WalletTransferListState
-}
-
-const currentScene = (state = '', action: Action): string => {
-  if (!action.data) return state
-  switch (action.type) {
-    case 'UPDATE_CURRENT_SCENE_KEY': {
-      // $FlowFixMe
-      return action.data.sceneKey
-    }
-
-    default:
-      return state
-  }
+  +walletListModal: WalletListModalState
 }
 
 export const scenes: Reducer<ScenesState, Action> = combineReducers({
   controlPanel,
   createWallet,
-  currentScene,
   editToken,
   exchangeRate,
   helpModal,
@@ -78,6 +61,5 @@ export const scenes: Reducer<ScenesState, Action> = combineReducers({
   transactionList,
   uniqueIdentifierModal,
   walletList,
-  walletListModal,
-  walletTransferList
+  walletListModal
 })

@@ -9,7 +9,6 @@ import parse from 'url-parse'
 import { FIAT_CODES_SYMBOLS, getSymbolFromCurrency } from '../constants/indexConstants.js'
 import { intl } from '../locales/intl.js'
 import { convertCurrency, convertCurrencyWithoutState } from '../modules/UI/selectors.js'
-import borderColors from '../theme/variables/css3Colors'
 import type { State } from '../types/reduxTypes.js'
 import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet } from '../types/types.js'
 
@@ -80,12 +79,6 @@ export const getFiatSymbol = (code: string) => {
   return getSymbolFromCurrency(code)
 }
 
-export const devStyle = {
-  borderColor: 'red',
-  borderWidth: 1,
-  backgroundColor: 'yellow'
-}
-
 export const logInfo = (msg: string) => {
   console.log('%c ' + msg, 'background: grey; font-weight: bold; display: block;')
 }
@@ -96,14 +89,6 @@ export const logWarning = (msg: string) => {
 
 export const logError = (msg: string) => {
   console.log('%c ' + msg, 'background: red; font-weight: bold; display: block;')
-}
-
-export const border = (color: ?string) => {
-  const borderColor = color || getRandomColor()
-  return {
-    borderColor: borderColor,
-    borderWidth: 0
-  }
 }
 
 export const inputBottomPadding = () => {
@@ -145,8 +130,6 @@ export const mergeTokensRemoveInvisible = (preferredEdgeMetaTokens: Array<EdgeMe
   // $FlowFixMe this is actually an error, but I don't know how to fix it:
   return tokensEnabled.concat(tokensToAdd)
 }
-
-export const getRandomColor = () => borderColors[Math.floor(Math.random() * borderColors.length)]
 
 // Used to reject non-numeric (expect '.') values in the FlipInput
 export const isValidInput = (input: string): boolean =>
