@@ -1,7 +1,7 @@
 v1.8.7
-* FoxExchange and Godex, 2 new exchange partners that allow you to convert your coins into other coins!
-* Import XRP and XLM private keys
-* WebSockets- Improved connectivity and syncing even when using VPN
+* FoxExchange und Godex, 2 neue Austauschpartner, die es Ihnen ermöglichen, Ihre Coins in andere Coins umzuwandeln!
+* XRP und XLM private Schlüssel importieren
+* WebSockets- Verbesserte Konnektivität und Synchronisierung selbst bei der Nutzung von VPN
 
 v1.8.5
 * Wyre Sell - Verkaufen Sie Kristall mit Ihrem Bankkonto
