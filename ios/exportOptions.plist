@@ -2,13 +2,18 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>method</key>
-    <string>ad-hoc</string>
-    <key>teamID</key>
-    <string>Your10CharacterTeamId</string>
-    <key>compileBitcode</key>
-    <false/>
-    <key>uploadBitcode</key>
-    <false/>
+	<key>method</key>
+	<string>development</string>
+	<key>teamID</key>
+	<string>G5LQ7MERPK</string>
+	<key>compileBitcode</key>
+	<false/>
+	<key>provisioningProfiles</key>
+	<dict>
+		<key>co.edgesecure.app</key>
+		<string>Edge - Absinthe - Development</string>
+	</dict>
+	<key>uploadBitcode</key>
+	<false/>
 </dict>
 </plist>
