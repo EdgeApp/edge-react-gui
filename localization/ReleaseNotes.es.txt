@@ -1,30 +1,30 @@
 v1.8.7
-* FoxExchange and Godex, 2 new exchange partners that allow you to convert your coins into other coins!
-* Import XRP and XLM private keys
-* WebSockets- Improved connectivity and syncing even when using VPN
+* FoxExchange y Godex, 2 nuevos partners que te permiten convertir sus monedas en otras monedas!
+* Importa claves privadas de XRP y XLM
+* WebSockets - Mejora de la conectividad y sincronización incluso cuando se usa VPN
 
 v1.8.5
-* Wyre Sell - Sell crypo with your bank account
-* New and improved visuals at login screen
-* Prevent FaceID from automatically lauching on login
+* Wyre - Vende crypto con tu cuenta bancaria
+* Visuales nuevos y mejorados en la pantalla de inicio de sesión
+* Evitar que FaceID se lance automáticamente al iniciar sesión
 
 v1.8.4
-* Simplex Sell - Sell crypto and pay off credit cards
-* Ravencoin added
+* Simplex - Vende cripto y recibe los fondos en tus tarjetas de crédito
+* Soporte para Ravencoin
 
 v1.8.1
 
-* Fix the minimum Android SDK version to 23+ (Android 6)
+* Corrige la versión mínima de Android SDK a 23+ (Android 6)
 
 v1.8.0
 
-* React native upgrade + visual fixes
-* Prefer fixed-rate quotes over estimates
+* Mejora nativa de React + correcciones visuales
+* Preferir cotizaciones a tasa fija sobre estimaciones
 
 v1.7.4
 
-* Beta Simplex sell
-* Warn users about high fees
+* Beta de venta con Simplex
+* Aviso a usuarios sobre comisiones altas
 
 v1.7.3
 
