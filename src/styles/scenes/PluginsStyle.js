@@ -36,42 +36,33 @@ export const styles = {
   pluginRow: {
     borderBottomWidth: 1,
     borderBottomColor: THEME.COLORS.GRAY_3,
-    padding: scale(14),
-    paddingRight: scale(30),
-    paddingLeft: scale(15),
-    backgroundColor: THEME.COLORS.WHITE
-  },
-  pluginBox: {
+    padding: scale(16),
+    backgroundColor: THEME.COLORS.WHITE,
     flexDirection: 'row',
-    flex: 1,
-    justifyContent: 'space-between'
-  },
-  pluginLeft: {
-    flexDirection: 'row'
-  },
-  logoWrap: {
-    justifyContent: 'center'
+    justifyContent: 'flex-start',
+    alignItems: 'stretch'
   },
   logo: {
-    width: scale(50),
-    height: scale(50),
-    borderRadius: scale(20),
-    marginRight: scale(16)
+    justifyContent: 'center',
+    marginRight: scale(16),
+    width: scale(50)
+  },
+  logoImage: {
+    aspectRatio: 1,
+    width: '100%'
   },
   textBoxWrap: {
-    /* justifyContent: 'center' */
+    flexShrink: 1,
+    minHeight: scale(16 + 8 + 4 * 18)
   },
-  titleBox: {
-    fontSize: scale(16),
+  titleText: {
     color: THEME.COLORS.GRAY_1,
-    textAlignVertical: 'center'
+    fontSize: scale(16),
+    marginBottom: scale(8)
   },
-  subtitleBox: {
+  subtitleText: {
     fontSize: scale(12),
-    lineHeight: scale(18),
-    textAlignVertical: 'bottom',
-    position: 'relative',
-    top: scale(4)
+    lineHeight: scale(18)
   }
 }
 
