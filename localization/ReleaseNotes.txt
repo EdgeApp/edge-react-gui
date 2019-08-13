@@ -1,3 +1,9 @@
+v1.9.0
+* Improved stability when coming in and out of background
+* Integrate Safello for buying and selling in Europe
+* Integrate Bits of Gold for selling to Israeli and European bank account
+* Integrate CoinSwitch as an exchange provider
+
 v1.8.7
 * FoxExchange and Godex, 2 new exchange partners that allow you to convert your coins into other coins!
 * Import XRP and XLM private keys
