@@ -102,7 +102,7 @@ export const THEME = {
       DARK: '#0E4B75'
     },
 
-    ACCENT_BLUE: '#0073D9',
+    ACCENT_BLUE: '#0073D9', // Airbitz blue
     ACCENT_ORANGE: '#F1AA19',
     ACCENT_RED: '#E85466',
     ACCENT_MINT: '#66EDA8',

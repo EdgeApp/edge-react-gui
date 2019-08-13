@@ -62,10 +62,6 @@ export const rawStyles = {
     color: THEME.COLORS.GRAY_1,
     fontFamily: THEME.FONTS.DEFAULT,
     alignSelf: 'center'
-  },
-  debug: {
-    borderColor: 'red',
-    borderWidth: scale(1)
   }
 }
 

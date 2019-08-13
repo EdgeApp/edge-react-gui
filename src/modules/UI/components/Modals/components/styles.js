@@ -44,11 +44,6 @@ export const rawStyles = {
   tertiaryButtonUnderlay: { color: THEME.COLORS.GRAY_3 },
   tertiaryButtonText: {
     color: THEME.COLORS.PRIMARY
-  },
-
-  debug: {
-    borderColor: 'red',
-    borderWidth: 1
   }
 }
 

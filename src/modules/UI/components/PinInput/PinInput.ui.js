@@ -9,10 +9,6 @@ import { THEME } from '../../../../theme/variables/airbitz.js'
 const rawStyles = {
   pinInput: {
     justifyContent: 'center'
-  },
-  debug: {
-    borderWidth: 1,
-    borderColor: 'red'
   }
 }
 const styles = StyleSheet.create(rawStyles)
