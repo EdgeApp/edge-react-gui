@@ -3393,15 +3393,15 @@ edge-login-ui-rn@0.5.38:
   dependencies:
     moment "^2.22.2"
 
-"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#f1434b5":
+"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#29163e3":
   version "0.0.3"
-  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#f1434b54a7bffd2209d5794c660db0f3265fdbbd"
+  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#29163e3dd26a096913c7a36d8cd0da9fa6994b34"
   dependencies:
     moment "^2.22.2"
 
-"edge-plugin-wyre@https://github.com/EdgeApp/edge-plugin-wyre.git#11af12e":
+"edge-plugin-wyre@https://github.com/EdgeApp/edge-plugin-wyre.git#a94b79a":
   version "0.1.2"
-  resolved "https://github.com/EdgeApp/edge-plugin-wyre.git#11af12e0c2a64e3400ac2a941b1c75b3622a36c0"
+  resolved "https://github.com/EdgeApp/edge-plugin-wyre.git#a94b79a1c867617fa91ae6f38a08f173b1471ee2"
   dependencies:
     js-sha256 "^0.9.0"
     moment "^2.22.2"
