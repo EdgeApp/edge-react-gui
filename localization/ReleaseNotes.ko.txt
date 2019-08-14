@@ -1,18 +1,18 @@
 v1.9.0
-* Improved stability when coming in and out of background
-* Integrate Safello for buying and selling in Europe
-* Integrate Bits of Gold for selling to Israeli and European bank account
-* Integrate CoinSwitch as an exchange provider
+* 백그라운드에서 들어오고 나올 때의 안정성 향상
+* 유럽에서의 구매 및 판매를 위해 Safello 통합
+* 이스라엘 및 유럽 은행 계좌로의 판매를 위해 Bits of Gold 통합
+* CoinSwitch를 거래 공급처로 통합
 
 v1.8.7
-* FoxExchange and Godex, 2 new exchange partners that allow you to convert your coins into other coins!
-* Import XRP and XLM private keys
-* WebSockets- Improved connectivity and syncing even when using VPN
+* FoxExchange와 Godex, 새로운 거래소 파트너 2군대에서 자신의 코인을 다른 코인으로 교환 가능
+* XRP와 XLM 개인 키 가져오기
+* 웹소켓- VPN 사용시에도 향상된 연결성 및 동기화
 
 v1.8.5
-* Wyre Sell - Sell crypo with your bank account
-* New and improved visuals at login screen
-* Prevent FaceID from automatically lauching on login
+* Wyre 판매 - 은행 계좌로 암호화폐 판매하기
+* 새로운 비주얼로 향상된 로그인 화면
+* 로그인시 FaceID 자동시작을 방지
 
 v1.8.4
 * Simplex 판매 - 암포화폐 판매와 신용카드 결제
