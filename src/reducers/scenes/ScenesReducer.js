@@ -4,7 +4,6 @@ import { type Reducer, combineReducers } from 'redux'
 
 import { type ControlPanelState, controlPanel } from '../../modules/UI/components/ControlPanel/reducer.js'
 import { type ExchangeRateState, exchangeRate } from '../../modules/UI/components/ExchangeRate/reducer.js'
-import { type HelpModalState, helpModal } from '../../modules/UI/components/HelpModal/reducer.js'
 import {
   type PasswordRecoveryReminderModalState,
   passwordRecoveryReminderModal
@@ -29,7 +28,6 @@ export type ScenesState = {
   +createWallet: CreateWalletState,
   +editToken: EditTokenState,
   +exchangeRate: ExchangeRateState,
-  +helpModal: HelpModalState,
   +passwordRecoveryReminderModal: PasswordRecoveryReminderModalState,
   +passwordReminderModal: PasswordReminderModalState,
   +request: RequestSceneState,
@@ -49,7 +47,6 @@ export const scenes: Reducer<ScenesState, Action> = combineReducers({
   createWallet,
   editToken,
   exchangeRate,
-  helpModal,
   passwordRecoveryReminderModal,
   passwordReminderModal,
   request,

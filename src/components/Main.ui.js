@@ -61,10 +61,9 @@ import ControlPanel from '../modules/UI/components/ControlPanel/ControlPanelConn
 import ErrorAlert from '../modules/UI/components/ErrorAlert/ErrorAlertConnector'
 import T from '../modules/UI/components/FormattedText/index'
 import BackButton from '../modules/UI/components/Header/Component/BackButton.ui'
-import HelpButton from '../modules/UI/components/Header/Component/HelpButtonConnector'
+import HelpButton from '../modules/UI/components/Header/Component/HelpButton.ui.js'
 import Header from '../modules/UI/components/Header/Header.ui'
 import WalletName from '../modules/UI/components/Header/WalletName/WalletNameConnector.js'
-import HelpModal from '../modules/UI/components/HelpModal/index'
 import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
 import { PasswordRecoveryReminderModalConnector } from '../modules/UI/components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalConnector.js'
 import { passwordReminderModalConnector as PasswordReminderModal } from '../modules/UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
@@ -669,7 +668,6 @@ export default class Main extends Component<Props> {
             </Drawer>
           </Stack>
         </RouterWithRedux>
-        <HelpModal style={{ flex: 1 }} />
         <ErrorAlert />
         <TransactionAlert />
         <PasswordReminderModal />

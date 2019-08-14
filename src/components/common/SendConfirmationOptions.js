@@ -10,6 +10,7 @@ import s from '../../locales/strings.js'
 import Text from '../../modules/UI/components/FormattedText/index'
 import { MenuDropDownStyle } from '../../styles/indexStyles'
 import { styles } from '../../styles/scenes/SendConfirmationStyle.js'
+import { showHelpModal } from '../modals/HelpModal.js'
 
 const CHANGE_MINING_FEE_TEXT = s.strings.title_change_mining_fee
 const SEND_MAX_TEXT = s.strings.send_confirmation_max_button_title
@@ -23,7 +24,6 @@ const ADD_UNIQUE_IDENTIFIER = 'ADD_UNIQUE_IDENTIFIER'
 type Option = 'CHANGE_MINING_FEE' | 'SEND_MAX' | 'HELP' | 'ADD_UNIQUE_IDENTIFIER'
 type Props = {
   changeMiningFee: EdgeCurrencyWallet => void,
-  openHelpModal: () => void,
   sendMaxSpend: () => void,
   uniqueIdentifierModalActivated: () => void,
   sourceWallet: EdgeCurrencyWallet,
@@ -37,7 +37,7 @@ export default class SendConfirmationOptions extends Component<Props> {
       case CHANGE_MINING_FEE:
         return this.props.changeMiningFee(this.props.sourceWallet)
       case HELP:
-        return this.props.openHelpModal()
+        return showHelpModal()
       case SEND_MAX:
         return this.props.sendMaxSpend()
       case ADD_UNIQUE_IDENTIFIER:
