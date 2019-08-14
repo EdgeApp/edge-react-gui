@@ -4,7 +4,7 @@ import { type EdgeSwapConfig } from 'edge-core-js/types'
 import React, { Component } from 'react'
 import { Image, View } from 'react-native'
 
-import { changellyLogo, changenowLogo, defaultLogo, faastLogo, foxExchangeLogo, godexLogo, shapeshiftLogo, totleLogo } from '../../assets/images/exchange'
+import { changellyLogo, changenowLogo, defaultLogo, faastLogo, coinswitchLogo, foxExchangeLogo, godexLogo, shapeshiftLogo, totleLogo } from '../../assets/images/exchange'
 import { SwapKYCModalConnector } from '../../connectors/components/SwapKYCModalConnector.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/index'
@@ -48,6 +48,9 @@ const exchangeInfo = {
   },
   foxExchange: {
     logo: foxExchangeLogo
+  },
+  coinswitch: {
+    logo: coinswitchLogo
   },
   default: {
     logo: defaultLogo
