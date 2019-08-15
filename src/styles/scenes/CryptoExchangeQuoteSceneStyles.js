@@ -7,7 +7,8 @@ export const styles = {
   topRow: {
     alignItems: 'center',
     justifyContent: 'space-around',
-    paddingHorizontal: scale(20)
+    paddingHorizontal: scale(30),
+    paddingVertical: scale(14)
   },
   centerRow: {
     alignItems: 'center'

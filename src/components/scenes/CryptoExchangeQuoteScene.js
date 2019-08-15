@@ -167,7 +167,7 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
     return (
       <SceneWrapper>
         <View style={styles.topRow}>
-          <Image source={EXCHANGE_IMAGES[`${pluginName}FullLogo`]} resizeMode={'contain'} style={{ width: '100%' }} />
+          <Image source={EXCHANGE_IMAGES[`${pluginName}FullLogo`]} resizeMode={'contain'} style={styles.logoImage} />
         </View>
         <View style={styles.centerRow}>
           <ExchangeQuoteComponent
