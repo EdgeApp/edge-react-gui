@@ -247,7 +247,7 @@ export const EDGE_PLUGIN_REGIONS = {
       LTC: true,
       XRP: true
     },
-    priority: 1,
+    priority: 5,
     paymentType: 'credit'
   },
   wyre: {
@@ -317,7 +317,7 @@ export const EDGE_PLUGIN_REGIONS = {
       USDC: true,
       USDT: true
     },
-    priority: 1,
+    priority: 2,
     paymentType: 'credit'
   },
   bitrefill: {
@@ -624,7 +624,7 @@ export const EDGE_PLUGIN_REGIONS = {
       BTC: true,
       ETH: true
     },
-    priority: 1,
+    priority: 4,
     paymentType: 'credit'
   },
   libertyx: {
@@ -634,8 +634,67 @@ export const EDGE_PLUGIN_REGIONS = {
     cryptoCodes: {
       BTC: true
     },
-    priority: 1,
+    priority: 6,
     paymentType: 'cash'
+  },
+  bitsofgold: {
+    countryCodes: {
+      AD: true,
+      AT: true,
+      BE: true,
+      BG: true,
+      HR: true,
+      CY: true,
+      CZ: true,
+      DK: true,
+      EE: true,
+      FI: true,
+      FR: true,
+      GF: true,
+      DE: true,
+      GI: true,
+      GR: true,
+      GP: true,
+      GG: true,
+      VA: true,
+      HU: true,
+      IS: true,
+      IE: true,
+      IM: true,
+      IL: true,
+      IT: true,
+      JE: true,
+      LV: true,
+      LI: true,
+      LT: true,
+      LU: true,
+      MT: true,
+      MQ: true,
+      YT: true,
+      MC: true,
+      NL: true,
+      NO: true,
+      PL: true,
+      PT: true,
+      RO: true,
+      RE: true,
+      BL: true,
+      MF: true,
+      PM: true,
+      SM: true,
+      SK: true,
+      SI: true,
+      ES: true,
+      SE: true,
+      CH: true,
+      GB: true
+    },
+    cryptoCodes: {
+      BTC: true,
+      ETH: true
+    },
+    priority: 3,
+    paymentType: 'bank'
   }
 }
 
