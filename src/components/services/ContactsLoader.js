@@ -148,6 +148,18 @@ const merchantPartners = [
     jobTitle: '',
     familyName: '',
     recordID: ''
+  },
+  {
+    givenName: 'Bits of Gold',
+    hasThumbnail: true,
+    thumbnailPath: 'https://developer.edge.app/content/bits-of-gold-logo.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
   }
 ]
 
