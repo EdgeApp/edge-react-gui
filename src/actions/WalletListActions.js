@@ -1,6 +1,5 @@
 // @flow
 
-import * as ACCOUNT_API from '../modules/Core/Account/api.js'
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import { setAccountBalanceVisibility, updateWalletFiatBalanceVisibility } from '../modules/Settings/SettingsActions.js'
@@ -9,7 +8,13 @@ import type { Dispatch, GetState } from '../types/reduxTypes.js'
 export const updateActiveWalletsOrder = (activeWalletIds: Array<string>) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
-  ACCOUNT_API.updateActiveWalletsOrderRequest(account, activeWalletIds).catch(error => console.log(error))
+
+  const newKeyStates = activeWalletIds.reduce((keyStates, id, index) => {
+    keyStates[id] = { sortIndex: index }
+    return keyStates
+  }, {})
+
+  return account.changeWalletStates(newKeyStates).catch(error => console.log(error))
 }
 
 export const toggleAccountBalanceVisibility = () => (dispatch: Dispatch, getState: GetState) => {
@@ -38,5 +43,10 @@ export const updateArchivedWalletsOrder = (archivedWalletIds: Array<string>) => 
   const state = getState()
   const { account } = state.core
 
-  ACCOUNT_API.updateArchivedWalletsOrderRequest(account, archivedWalletIds).catch(error => console.log(error))
+  const newKeyStates = archivedWalletIds.reduce((keyStates, id, index) => {
+    keyStates[id] = { sortIndex: index }
+    return keyStates
+  }, {})
+
+  return account.changeWalletStates(newKeyStates).catch(error => console.log(error))
 }

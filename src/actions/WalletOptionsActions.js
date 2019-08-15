@@ -9,7 +9,6 @@ import { refreshWallet } from '../actions/WalletActions.js'
 import { launchModal } from '../components/common/ModalProvider.js'
 import * as Constants from '../constants/indexConstants'
 import s from '../locales/strings.js'
-import * as ACCOUNT_API from '../modules/Core/Account/api.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import { displayErrorAlert } from '../modules/UI/components/ErrorAlert/actions'
 import Text from '../modules/UI/components/FormattedText'
@@ -32,7 +31,7 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
         const state = getState()
         const account = CORE_SELECTORS.getAccount(state)
 
-        ACCOUNT_API.activateWalletRequest(account, walletId).catch(error => console.log(error))
+        account.changeWalletStates({ [walletId]: { archived: false } }).catch(error => console.log(error))
       }
     }
 
@@ -41,7 +40,7 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
         const state = getState()
         const account = CORE_SELECTORS.getAccount(state)
 
-        ACCOUNT_API.archiveWalletRequest(account, walletId).catch(error => console.log(error))
+        account.changeWalletStates({ [walletId]: { archived: true } }).catch(error => console.log(error))
       }
     }
 

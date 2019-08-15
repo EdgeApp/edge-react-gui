@@ -12,7 +12,6 @@ import { launchModal } from '../components/common/ModalProvider.js'
 import { EXCLAMATION, FEE_ALERT_THRESHOLD, MATERIAL_COMMUNITY, SEND_CONFIRMATION, TRANSACTION_DETAILS } from '../constants/indexConstants'
 import { getSpecialCurrencyInfo, getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
-import { checkPin } from '../modules/Core/Account/api.js'
 import { getAccount, getWallet } from '../modules/Core/selectors.js'
 import {
   broadcastTransaction,
@@ -206,7 +205,7 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
   let edgeSignedTransaction: EdgeTransaction = edgeUnsignedTransaction
   try {
     if (authRequired === 'pin') {
-      const isAuthorized = await checkPin(account, pin)
+      const isAuthorized = await account.checkPin(pin)
       if (!isAuthorized) throw new IncorrectPinError()
     }
     edgeSignedTransaction = await signTransaction(wallet, edgeUnsignedTransaction)

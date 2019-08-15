@@ -3,7 +3,6 @@
 import { showToast } from '../../../../components/services/AirshipInstance.js'
 import s from '../../../../locales/strings.js'
 import type { Dispatch, GetState } from '../../../../types/reduxTypes.js'
-import * as ACCOUNT_API from '../../../Core/Account/api.js'
 import * as SETTINGS_API from '../../../Core/Account/settings.js'
 import { displayErrorAlert } from '../ErrorAlert/actions.js'
 
@@ -32,7 +31,7 @@ export const checkPassword = (password: string) => (dispatch: Dispatch, getState
   const account = state.core.account
 
   dispatch(checkPasswordStart())
-  ACCOUNT_API.checkPassword(account, password).then(isValidPassword => {
+  account.checkPassword(password).then(isValidPassword => {
     if (isValidPassword) {
       dispatch(checkPasswordSuccess())
       showToast(s.strings.password_reminder_great_job)

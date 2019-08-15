@@ -13,7 +13,6 @@ import s from '../../locales/strings.js'
 import { displayErrorAlert } from '../../modules/UI/components/ErrorAlert/actions'
 import type { Dispatch, GetState } from '../../types/reduxTypes.js'
 import { runWithTimeout } from '../../util/utils.js'
-import * as ACCOUNT_API from '../Core/Account/api'
 import {
   CORE_DEFAULTS,
   LOCAL_ACCOUNT_DEFAULTS,
@@ -76,6 +75,19 @@ const createDefaultWallets = async (account: EdgeAccount, defaultFiat: string, d
     global.endMoment && global.endMoment('INIT_ACCOUNT_CREATE_WALLETS')
   }
   return edgeWallet
+}
+
+const getFirstActiveWalletInfo = (account: EdgeAccount, currencyCodes: { [string]: string }) => {
+  const walletId = account.activeWalletIds[0]
+  const walletKey = account.allKeys.find(key => key.id === walletId)
+  if (!walletKey) {
+    throw new Error('Cannot find a walletInfo for the active wallet')
+  }
+  const currencyCode = currencyCodes[walletKey.type]
+  return {
+    walletId,
+    currencyCode
+  }
 }
 
 export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => async (dispatch: Dispatch, getState: GetState) => {
@@ -143,7 +155,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       newAccount = true
     } else if (!state.core.deepLinking.deepLinkPending) {
       // We have a wallet
-      const { walletId, currencyCode } = ACCOUNT_API.getFirstActiveWalletInfo(account, currencyCodes)
+      const { walletId, currencyCode } = getFirstActiveWalletInfo(account, currencyCodes)
       accountInitObject.walletId = walletId
       accountInitObject.currencyCode = currencyCode
     }
