@@ -1,27 +1,12 @@
 // @flow
 
-import type { EdgeCurrencyWallet, EdgeReceiveAddress } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import _ from 'lodash'
 
 import type { Dispatch, GetState } from '../../../types/reduxTypes.js'
 import { getReceiveAddresses } from '../../../util/utils.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors'
 import * as CORE_SELECTORS from '../selectors'
-
-export const updateWallets = (
-  activeWalletIds: Array<string>,
-  archivedWalletIds: Array<string>,
-  currencyWallets: { [id: string]: EdgeCurrencyWallet },
-  receiveAddresses: { [id: string]: EdgeReceiveAddress }
-) => ({
-  type: 'CORE/WALLETS/UPDATE_WALLETS',
-  data: {
-    activeWalletIds,
-    archivedWalletIds,
-    currencyWallets,
-    receiveAddresses
-  }
-})
 
 export const updateWalletsRequest = () => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -54,6 +39,14 @@ export const updateWalletsRequest = () => (dispatch: Dispatch, getState: GetStat
       }
     }
 
-    dispatch(updateWallets(activeWalletIds, archivedWalletIds, currencyWallets, receiveAddresses))
+    dispatch({
+      type: 'CORE/WALLETS/UPDATE_WALLETS',
+      data: {
+        activeWalletIds,
+        archivedWalletIds,
+        currencyWallets,
+        receiveAddresses
+      }
+    })
   })
 }

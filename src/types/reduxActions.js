@@ -10,7 +10,6 @@ type LegacyActionName =
   | 'ACCOUNT_INIT_COMPLETE'
   | 'ACCOUNT/LOGGED_IN'
   | 'ADDRESS_DEEP_LINK_RECEIVED'
-  | 'CORE/WALLETS/UPDATE_WALLETS'
   | 'DEEP_LINK_RECEIVED'
   | 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES'
   | 'NEW_RECEIVE_ADDRESS'
@@ -153,6 +152,15 @@ export type Action =
   | {
       type: 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT',
       data: { username: string }
+    }
+  | {
+      type: 'CORE/WALLETS/UPDATE_WALLETS',
+      data: {
+        activeWalletIds: Array<string>,
+        archivedWalletIds: Array<string>,
+        currencyWallets: { [id: string]: EdgeCurrencyWallet },
+        receiveAddresses: { [id: string]: EdgeReceiveAddress }
+      }
     }
   | { type: 'DELETE_CUSTOM_TOKEN_SUCCESS', data: { currencyCode: string } }
   | {
