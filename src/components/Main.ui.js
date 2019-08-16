@@ -77,7 +77,6 @@ import {
   renderLegacyPluginBackButton,
   renderPluginBackButton
 } from '../modules/UI/scenes/Plugins/index.js'
-import { HwBackButtonHandler } from '../modules/UI/scenes/WalletList/components/HwBackButtonHandler/index'
 import { styles } from '../styles/MainStyle.js'
 import { scale } from '../util/scaling.js'
 import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
@@ -85,6 +84,7 @@ import { CryptoExchangeQuoteProcessingScreenComponent } from './scenes/CryptoExc
 import { LoadingScene } from './scenes/LoadingScene.js'
 import { OnBoardingComponent } from './scenes/OnBoardingScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
+import { showToast } from './services/AirshipInstance.js'
 
 const RouterWithRedux = connect()(Router)
 
@@ -149,6 +149,8 @@ type Props = {
 }
 
 export default class Main extends Component<Props> {
+  backPressedOnce: boolean
+
   constructor (props: Props) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
@@ -784,7 +786,14 @@ export default class Main extends Component<Props> {
       return false
     }
     if (this.isCurrentScene(Constants.WALLET_LIST_SCENE)) {
-      if (!HwBackButtonHandler()) this.props.logout()
+      if (this.backPressedOnce) {
+        this.props.logout()
+      } else {
+        this.backPressedOnce = true
+        showToast(s.strings.back_button_tap_again_to_exit).then(() => {
+          this.backPressedOnce = false
+        })
+      }
       return true
     }
     if (this.isCurrentScene(Constants.EXCHANGE_QUOTE_SCENE)) {
