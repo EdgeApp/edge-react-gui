@@ -1,7 +1,6 @@
 // @flow
 
-import { Alert } from 'react-native'
-
+import { showToast } from '../../../../components/services/AirshipInstance.js'
 import s from '../../../../locales/strings.js'
 import type { Dispatch, GetState } from '../../../../types/reduxTypes.js'
 import * as ACCOUNT_API from '../../../Core/Account/api.js'
@@ -36,7 +35,7 @@ export const checkPassword = (password: string) => (dispatch: Dispatch, getState
   ACCOUNT_API.checkPassword(account, password).then(isValidPassword => {
     if (isValidPassword) {
       dispatch(checkPasswordSuccess())
-      setTimeout(() => Alert.alert(s.strings.password_reminder_verified, s.strings.password_reminder_great_job), 500)
+      showToast(s.strings.password_reminder_great_job)
     } else {
       dispatch(checkPasswordFail())
     }

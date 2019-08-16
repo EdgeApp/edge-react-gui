@@ -106,7 +106,6 @@ const strings = {
   fragment_wallets_view_xpub: 'View XPub Address',
   fragment_wallets_no_xpub: 'This wallet type does not have a public key',
   fragment_wallets_pubkey_copied_title: 'XPub Address Copied',
-  fragment_wallets_pubkey_copied_success: 'The XPub Address has been successfully copied to the clipboard.',
   fragment_wallets_pubkey_copied_error: 'There has been an error copying your XPub Address.',
   fragment_wallets_export_transactions: 'Export Transactions',
   fragment_wallets_header: 'My Wallets',
@@ -415,7 +414,6 @@ const strings = {
   password_reminder_forgot_password: 'I forgot, change password',
   password_reminder_postpone: 'Later',
   password_reminder_great_job: 'Great job remembering your password.',
-  password_reminder_verified: 'Password Verified',
   password_reminder_invalid: 'Invalid Password',
 
   password_recovery_reminder_modal_title: 'Password Recovery Setup',
