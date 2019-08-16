@@ -6,6 +6,7 @@ import { Actions } from 'react-native-router-flux'
 
 import buysellIcon from '../../../../../assets/images/sidenav/buysell.png'
 import exchangeIcon from '../../../../../assets/images/sidenav/exchange.png'
+import fioIcon from '../../../../../assets/images/sidenav/fio-address.png'
 import giftIcon from '../../../../../assets/images/sidenav/ic_gift.png'
 import logoutImage from '../../../../../assets/images/sidenav/logout.png'
 import receiveIcon from '../../../../../assets/images/sidenav/receive.png'
@@ -35,11 +36,12 @@ const TERMS_OF_SERVICE_TEXT = s.strings.title_terms_of_service
 
 export type Props = {
   logout: (username?: string) => void,
+  registerFioAddress: () => Promise<mixed>,
   usersView: boolean
 }
 export default class Main extends Component<Props> {
   render () {
-    const { usersView } = this.props
+    const { registerFioAddress, usersView } = this.props
 
     return usersView ? (
       <UserList />
@@ -52,6 +54,8 @@ export default class Main extends Component<Props> {
               <BuySellButton />
               <Separator />
               <SpendButton />
+              <Separator />
+              <FioButton registerFioAddress={registerFioAddress} />
               <Separator />
               <WalletsButton />
               <Separator />
@@ -115,6 +119,31 @@ const SpendButton = () => {
           <Button.Center>
             <Button.Text>
               <Text>{PLUGIN_SPEND_TEXT}</Text>
+            </Button.Text>
+          </Button.Center>
+        </Button.Row>
+      </Button.Row>
+    </Button>
+  )
+}
+
+const FioButton = ({ registerFioAddress }) => {
+  return (
+    <Button
+      onPress={() => {
+        registerFioAddress()
+        Actions.drawerClose()
+      }}
+    >
+      <Button.Row>
+        <Button.Row>
+          <Button.Left>
+            <Image source={fioIcon} style={styles.iconImage} resizeMode="contain" />
+          </Button.Left>
+
+          <Button.Center>
+            <Button.Text>
+              <Text>{s.strings.title_register_fio_address}</Text>
             </Button.Text>
           </Button.Center>
         </Button.Row>
