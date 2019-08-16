@@ -4,8 +4,8 @@ import { connect } from 'react-redux'
 
 import { setSpendingLimits } from '../actions/SpendingLimitsActions.js'
 import { SpendingLimitsComponent } from '../components/scenes/SpendingLimitsScene.js'
-import type { State } from '../modules/ReduxTypes.js'
 import type { SpendingLimits as SpendingLimitsType } from '../reducers/SpendingLimitsReducer.js'
+import type { State } from '../types/reduxTypes.js'
 import { getFiatSymbol } from '../util/utils.js'
 
 export const mapStateToProps = (state: State) => ({

@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import { secondaryModalDeactivated } from '../actions/SecondaryModalActions.js'
 import { SecondaryModal } from '../components/modals/SecondaryModal.js'
-import type { Dispatch, State } from '../modules/ReduxTypes.js'
+import type { Dispatch, State } from '../types/reduxTypes.js'
 
 export const mapStateToProps = (state: State) => ({
   error: state.ui.scenes.scan.privateKeyModal.error,

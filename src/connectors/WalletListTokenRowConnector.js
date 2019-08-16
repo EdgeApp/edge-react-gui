@@ -6,9 +6,9 @@ import { connect } from 'react-redux'
 import { selectWallet } from '../actions/WalletActions'
 import type { DispatchProps, StateProps } from '../components/common/WalletListTokenRow.js'
 import { WalletListTokenRow } from '../components/common/WalletListTokenRow.js'
-import type { Dispatch, State } from '../modules/ReduxTypes'
 import * as SETTINGS_SELECTORS from '../modules/Settings/selectors'
 import { getWallet } from '../modules/UI/selectors.js'
+import type { Dispatch, State } from '../types/reduxTypes.js'
 
 const mapStateToProps = (state: State, ownProps): StateProps => {
   const currencyCode: string = ownProps.currencyCode

@@ -11,14 +11,14 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import SecondaryModal from '../../connectors/SecondaryModalConnector.js'
 import * as Constants from '../../constants/indexConstants'
-import { scale } from '../../lib/scaling.js'
 import s from '../../locales/strings.js'
 import { PermissionStatusStrings } from '../../modules/PermissionsManager.js'
 import type { PermissionStatus } from '../../modules/PermissionsManager.js'
 import T from '../../modules/UI/components/FormattedText/index'
 import WalletListModal from '../../modules/UI/components/WalletListModal/WalletListModalConnector'
 import styles, { styles as styleRaw } from '../../styles/scenes/ScaneStyle'
-import { type GuiWallet } from '../../types.js'
+import { type GuiWallet } from '../../types/types.js'
+import { scale } from '../../util/scaling.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
 type Props = {

@@ -4,8 +4,8 @@ import type { EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeReceiveAd
 import _ from 'lodash'
 import { type Reducer, combineReducers } from 'redux'
 
-import type { Action } from '../../modules/ReduxTypes.js'
-import type { GuiWallet } from '../../types.js'
+import type { Action } from '../../types/reduxTypes.js'
+import type { GuiWallet } from '../../types/types.js'
 
 export type WalletsState = {
   byId: { [walletId: string]: GuiWallet },

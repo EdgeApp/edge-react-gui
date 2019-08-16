@@ -7,10 +7,10 @@ import { View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 
 import { CUSTOM_FEES, MATERIAL_COMMUNITY, PICKAXE } from '../../constants/indexConstants.js'
-import { scale } from '../../lib/scaling.js'
 import s from '../../locales/strings.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import styles from '../../styles/scenes/CustomFeesStyles'
+import { scale } from '../../util/scaling.js'
 import { FormField } from '../common/FormField.js'
 
 export type CustomFees = {

@@ -3,8 +3,8 @@ import { connect } from 'react-redux'
 
 import type { PassedProps } from '../../components/scenes/TransactionsExportScene.js'
 import { TransactionsExportSceneComponent } from '../../components/scenes/TransactionsExportScene.js'
-import type { Dispatch, State } from '../../modules/ReduxTypes'
 import { getDisplayDenomination } from '../../modules/Settings/selectors.js'
+import type { Dispatch, State } from '../../types/reduxTypes.js'
 
 const mapStateToProps = (state: State, ownProps: PassedProps) => {
   const wallet = ownProps.sourceWallet

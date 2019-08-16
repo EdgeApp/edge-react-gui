@@ -6,11 +6,11 @@ import { CryptoExchangeCreateWalletRow } from '../../components/common/CryptoExc
 import { CryptoExchangeWalletListRow } from '../../components/common/CryptoExchangeWalletListRow.js'
 import { CLOSE_ICON, ION_ICONS } from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import type { State } from '../../modules/ReduxTypes'
 import { IconButton } from '../../modules/UI/components/Buttons/IconButton.ui'
 import FormattedText from '../../modules/UI/components/FormattedText/index'
 import { CryptoExchangeWalletSelectorModalStyles as styles } from '../../styles/indexStyles'
-import type { GuiWallet } from '../../types'
+import type { State } from '../../types/reduxTypes.js'
+import type { GuiWallet } from '../../types/types.js'
 
 type Props = {
   onDone(GuiWallet | Object | null): mixed,

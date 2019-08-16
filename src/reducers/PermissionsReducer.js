@@ -1,7 +1,7 @@
 // @flow
 
 import type { Permission, PermissionStatus } from '../modules/PermissionsManager.js'
-import type { Action } from '../modules/ReduxTypes'
+import type { Action } from '../types/reduxTypes.js'
 
 export type PermissionsState = { [Permission]: PermissionStatus }
 

@@ -1,7 +1,7 @@
 // @flow
 
 import s from '../locales/strings.js'
-import type { Action } from '../modules/ReduxTypes.js'
+import type { Action } from '../types/reduxTypes.js'
 
 export const xPubSyntax = (state: string = '', action: Action): string => {
   switch (action.type) {

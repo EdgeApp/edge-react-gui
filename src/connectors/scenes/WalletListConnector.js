@@ -11,9 +11,9 @@ import {
 } from '../../actions/WalletListActions'
 import { walletRowOption } from '../../actions/WalletOptionsActions.js'
 import WalletList from '../../components/scenes/WalletListScene'
-import type { Dispatch, State } from '../../modules/ReduxTypes'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
+import type { Dispatch, State } from '../../types/reduxTypes.js'
 
 const mapStateToProps = (state: State) => {
   const coreWallets = state.core.wallets.byId

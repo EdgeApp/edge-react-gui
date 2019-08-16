@@ -5,8 +5,8 @@ import { connect } from 'react-redux'
 
 import { setDefaultFiatRequest } from '../../actions/SettingsActions'
 import DefaultFiatSetting from '../../components/scenes/DefaultFiatSettingScene'
-import type { Dispatch, State } from '../../modules/ReduxTypes.js'
 import { getDefaultFiat } from '../../modules/Settings/selectors'
+import type { Dispatch, State } from '../../types/reduxTypes.js'
 import { getSupportedFiats } from '../../util/utils'
 
 const mapStateToProps = (state: State) => {

@@ -5,7 +5,7 @@ import { AppState } from 'react-native'
 import RNPermissions from 'react-native-permissions'
 import { connect } from 'react-redux'
 
-import type { Dispatch, State } from './ReduxTypes.js'
+import type { Dispatch, State } from './../types/reduxTypes.js'
 
 export const AppStates = {
   ACTIVE: 'active',

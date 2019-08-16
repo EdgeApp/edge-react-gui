@@ -1,22 +1,24 @@
 // @flow
 
-import { PrimaryButton, SecondaryButton } from 'edge-components'
+import { PrimaryButton, SecondaryButton, TertiaryButton } from 'edge-components'
 import { type EdgeTransaction } from 'edge-core-js'
-import React, { Component, Fragment } from 'react'
-import { Alert, Clipboard, Linking, TouchableOpacity } from 'react-native'
+import React, { Component } from 'react'
+import { Alert, Clipboard, Linking } from 'react-native'
 
 import { MATERIAL_COMMUNITY, TELESCOPE } from '../../constants/indexConstants.js'
-import { scale } from '../../lib/scaling.js'
 import s from '../../locales/strings.js'
 import Text from '../../modules/UI/components/FormattedText/index'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import { InteractiveModal } from '../../modules/UI/components/Modals/InteractiveModal/InteractiveModal.ui.js'
 import styles, { activeOpacity } from '../../styles/scenes/TransactionDetailsStyle.js'
+import { scale } from '../../util/scaling.js'
 
 export type AdvancedTransactionDetailsModalOwnProps = {
   ...EdgeTransaction,
   txExplorerUrl: string | null,
-  onDone: () => void
+  onDone: () => void,
+  txid: string,
+  signedTx?: string
 }
 
 export class AdvancedTransactionDetailsModal extends Component<AdvancedTransactionDetailsModalOwnProps> {
@@ -47,8 +49,9 @@ export class AdvancedTransactionDetailsModal extends Component<AdvancedTransacti
   }
 
   render () {
-    const { otherParams, txid } = this.props
-    const debugInfo = otherParams ? otherParams.debugInfo : ''
+    const { txid, signedTx } = this.props
+    const isTxId = !!txid
+    const isSignedTx = !!signedTx
     return (
       <InteractiveModal>
         <InteractiveModal.Icon>
@@ -61,37 +64,33 @@ export class AdvancedTransactionDetailsModal extends Component<AdvancedTransacti
 
         <InteractiveModal.Body>
           <InteractiveModal.Description style={{ textAlign: 'center' }}>
-            <Text>{!!txid && `${txid}\n\n`}</Text>
-            {!!debugInfo && (
-              <Fragment>
-                <Text>{s.strings.transaction_details_modal_debug_info}</Text>
-                <Text>{debugInfo}</Text>
-              </Fragment>
-            )}
+            <Text>{isTxId && `${txid}\n`}</Text>
           </InteractiveModal.Description>
         </InteractiveModal.Body>
         <InteractiveModal.Footer>
           <InteractiveModal.Row>
             <InteractiveModal.Item>
-              <TouchableOpacity onPress={this.handleClick} style={styles.blockExplorerButton} activeOpacity={activeOpacity}>
-                <Text style={styles.blockExplorerButtonText}>{s.strings.transaction_details_show_advanced_block_explorer}</Text>
-              </TouchableOpacity>
+              <TertiaryButton onPress={this.handleClick} activeOpacity={activeOpacity}>
+                <TertiaryButton.Text>{s.strings.transaction_details_show_advanced_block_explorer}</TertiaryButton.Text>
+              </TertiaryButton>
             </InteractiveModal.Item>
           </InteractiveModal.Row>
           <InteractiveModal.Row>
             <InteractiveModal.Item>
-              <PrimaryButton onPress={this.copyTxIdToClipboard} style={{ flex: -1 }}>
+              <PrimaryButton onPress={this.copyTxIdToClipboard}>
                 <PrimaryButton.Text>{s.strings.transaction_details_copy_tx_id}</PrimaryButton.Text>
               </PrimaryButton>
             </InteractiveModal.Item>
           </InteractiveModal.Row>
-          <InteractiveModal.Row>
-            <InteractiveModal.Item>
-              <SecondaryButton onPress={this.copyRawHexToClipboard} style={{ flex: -1 }}>
-                <SecondaryButton.Text>{s.strings.transaction_details_copy_signed_tx}</SecondaryButton.Text>
-              </SecondaryButton>
-            </InteractiveModal.Item>
-          </InteractiveModal.Row>
+          {isSignedTx && (
+            <InteractiveModal.Row>
+              <InteractiveModal.Item>
+                <SecondaryButton onPress={this.copyRawHexToClipboard}>
+                  <SecondaryButton.Text>{s.strings.transaction_details_copy_signed_tx}</SecondaryButton.Text>
+                </SecondaryButton>
+              </InteractiveModal.Item>
+            </InteractiveModal.Row>
+          )}
         </InteractiveModal.Footer>
       </InteractiveModal>
     )
@@ -100,7 +99,8 @@ export class AdvancedTransactionDetailsModal extends Component<AdvancedTransacti
 
 export type AdvancedTransactionDetailsOpts = {
   txid: string,
-  txExplorerUrl: string | null
+  txExplorerUrl: string | null,
+  signedTx?: string
 }
 
 export const createAdvancedTransactionDetailsModal = (opts: AdvancedTransactionDetailsOpts) => {

@@ -5,11 +5,11 @@ import { Alert, FlatList, Image, Keyboard, TouchableHighlight, View } from 'reac
 import { Actions } from 'react-native-router-flux'
 
 import { CREATE_WALLET_CHOICE, CREATE_WALLET_SELECT_FIAT, getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
-import { scale } from '../../lib/scaling.js'
 import s from '../../locales/strings.js'
 import Text from '../../modules/UI/components/FormattedText/index'
 import styles, { styles as stylesRaw } from '../../styles/scenes/CreateWalletStyle.js'
-import type { FlatListItem, GuiWalletType } from '../../types'
+import type { FlatListItem, GuiWalletType } from '../../types/types.js'
+import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils'
 import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'

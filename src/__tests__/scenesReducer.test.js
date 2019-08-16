@@ -38,7 +38,6 @@ test('initialState', () => {
     exchangeRate: {
       exchangeRates: {}
     },
-    helpModal: false,
     request: request(undefined, dummyAction),
     requestType: {
       useLegacyAddress: false,
@@ -82,11 +81,6 @@ test('initialState', () => {
     walletListModal: {
       walletListModalVisible: false
     },
-    walletTransferList: {
-      walletListModalVisible: false,
-      walletTransferList: []
-    },
-    currentScene: '',
     passwordReminderModal: {
       status: null
     },

@@ -6,8 +6,8 @@ import { disableCustomNodes, enableCustomNodes, saveCustomNodesList, setDenomina
 import CurrencySettings from '../../components/scenes/CurrencySettingsScene'
 import { CURRENCY_PLUGIN_NAMES } from '../../constants/indexConstants.js'
 import { getAccount } from '../../modules/Core/selectors.js'
-import type { Dispatch, State } from '../../modules/ReduxTypes.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
+import type { Dispatch, State } from '../../types/reduxTypes.js'
 
 const mapStateToProps = (state: State, ownProps) => {
   const account = getAccount(state)

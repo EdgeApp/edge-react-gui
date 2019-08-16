@@ -3,7 +3,7 @@
 import type { EdgeParsedUri } from 'edge-core-js'
 import { type Reducer, combineReducers } from 'redux'
 
-import { type Action } from '../../modules/ReduxTypes.js'
+import { type Action } from '../../types/reduxTypes.js'
 import { parsedUri } from '../ParsedUriReducer.js'
 import { type PrivateKeyModalState, privateKeyModal } from '../PrivateKeyModalReducer.js'
 import { scanEnabled } from '../ScanEnabledReducer.js'

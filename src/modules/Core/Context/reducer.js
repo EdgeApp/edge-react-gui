@@ -4,7 +4,7 @@ import { type DiskletFolder } from 'disklet'
 import type { EdgeContext } from 'edge-core-js'
 import { type Reducer } from 'redux'
 
-import { type Action } from '../../ReduxTypes.js'
+import { type Action } from '../../../types/reduxTypes.js'
 
 export type ContextState = {
   context: EdgeContext | Object,

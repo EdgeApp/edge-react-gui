@@ -1,6 +1,6 @@
 // @flow
 
-import type { Dispatch } from '../modules/ReduxTypes.js'
+import type { Dispatch } from '../types/reduxTypes.js'
 import { secondaryModalDeactivated } from './SecondaryModalActions.js'
 
 export const sweepPrivateKeyStart = () => ({

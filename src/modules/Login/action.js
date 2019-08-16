@@ -11,6 +11,7 @@ import { getEnabledTokens } from '../../actions/WalletActions.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { displayErrorAlert } from '../../modules/UI/components/ErrorAlert/actions'
+import type { Dispatch, GetState } from '../../types/reduxTypes.js'
 import { runWithTimeout } from '../../util/utils.js'
 import * as ACCOUNT_API from '../Core/Account/api'
 import {
@@ -29,7 +30,6 @@ import {
 // Login/action.js
 import * as CORE_SELECTORS from '../Core/selectors'
 import { updateWalletsRequest } from '../Core/Wallets/action.js'
-import type { Dispatch, GetState } from '../ReduxTypes'
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 

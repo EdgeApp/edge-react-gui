@@ -9,8 +9,8 @@ import type { CustomFees } from '../../components/modals/CustomFeesModal.js'
 import ChangeMiningFee from '../../components/scenes/ChangeMiningFeeScene.js'
 import type { ChangeMiningFeeDispatchProps, ChangeMiningFeeOwnProps, ChangeMiningFeeStateProps } from '../../components/scenes/ChangeMiningFeeScene.js'
 import * as Constants from '../../constants/indexConstants.js'
-import type { Dispatch, State } from '../../modules/ReduxTypes'
 import { getCustomNetworkFee, getNetworkFeeOption } from '../../modules/UI/scenes/SendConfirmation/selectors'
+import type { Dispatch, State } from '../../types/reduxTypes.js'
 
 export const mapStateToProps = (state: State, ownProps: ChangeMiningFeeOwnProps): ChangeMiningFeeStateProps => {
   const wallet = ownProps.sourceWallet

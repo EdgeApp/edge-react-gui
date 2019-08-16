@@ -1,13 +1,14 @@
 // @flow
 
-import { scale } from '../../lib/scaling'
 import THEME from '../../theme/variables/airbitz'
+import { scale } from '../../util/scaling.js'
 
 export const styles = {
   topRow: {
     alignItems: 'center',
     justifyContent: 'space-around',
-    paddingHorizontal: scale(20)
+    paddingHorizontal: scale(30),
+    paddingVertical: scale(14)
   },
   centerRow: {
     alignItems: 'center'

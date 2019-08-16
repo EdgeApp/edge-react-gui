@@ -14,7 +14,7 @@ import s from '../../locales/strings'
 import T from '../../modules/UI/components/FormattedText/index'
 import type { ContactsState } from '../../reducers/ContactsReducer'
 import styles, { styles as styleRaw } from '../../styles/scenes/TransactionListStyle'
-import type { GuiWallet, TransactionListTx } from '../../types'
+import type { GuiWallet, TransactionListTx } from '../../types/types.js'
 import * as UTILS from '../../util/utils'
 
 type TransactionRowOwnProps = {

@@ -2,9 +2,9 @@
 
 import { Platform, StyleSheet } from 'react-native'
 
-import { scale, scaleH } from '../../lib/scaling.js'
 import THEME from '../../theme/variables/airbitz'
 import { PLATFORM } from '../../theme/variables/platform.js'
+import { scale, scaleH } from '../../util/scaling.js'
 
 export const styles = {
   gradient: {

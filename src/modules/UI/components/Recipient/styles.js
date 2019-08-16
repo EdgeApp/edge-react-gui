@@ -2,7 +2,7 @@
 
 import { StyleSheet } from 'react-native'
 
-import THEME, { DEBUG as debug } from '../../../../theme/variables/airbitz.js'
+import THEME from '../../../../theme/variables/airbitz.js'
 
 export default StyleSheet.create({
   recipient: {
@@ -28,6 +28,5 @@ export default StyleSheet.create({
     backgroundColor: THEME.COLORS.TRANSPARENT,
     fontFamily: THEME.FONTS.DEFAULT,
     fontSize: 14
-  },
-  debug
+  }
 })

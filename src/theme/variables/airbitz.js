@@ -118,9 +118,4 @@ export const THEME = {
   }
 }
 
-export const DEBUG = {
-  borderWidth: 1,
-  borderColor: 'red'
-}
-
 export default THEME

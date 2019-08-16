@@ -10,11 +10,10 @@ import { CryptoExchangeScene } from '../../components/scenes/CryptoExchangeScene
 import type { CryptoExchangeSceneComponentDispatchProps, CryptoExchangeSceneComponentStateProps } from '../../components/scenes/CryptoExchangeScene'
 import { DEFAULT_STARTER_WALLET_NAMES } from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import type { Dispatch, State } from '../../modules/ReduxTypes'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import { getExchangeRate } from '../../modules/UI/selectors.js'
-import { emptyCurrencyInfo, emptyGuiWallet } from '../../types.js'
-import type { GuiCurrencyInfo } from '../../types.js'
+import type { Dispatch, State } from '../../types/reduxTypes.js'
+import { type GuiCurrencyInfo, emptyCurrencyInfo, emptyGuiWallet } from '../../types/types.js'
 
 const DIVIDE_PRECISION = 18
 

@@ -22,7 +22,6 @@ import {
   SIMPLE_ICONS,
   SPEND
 } from '../../constants/indexConstants'
-import { scale } from '../../lib/scaling.js'
 import s from '../../locales/strings.js'
 import { getSyncedSettingsAsync, setSyncedSettingsAsync } from '../../modules/Core/Account/settings.js'
 import Text from '../../modules/UI/components/FormattedText'
@@ -30,12 +29,13 @@ import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import { buySellPlugins, spendPlugins } from '../../modules/UI/scenes/Plugins/plugins'
 import styles from '../../styles/scenes/PluginsStyle.js'
 import { THEME, colors } from '../../theme/variables/airbitz.js'
-import type { BuySellPlugin } from '../../types'
+import type { BuySellPlugin } from '../../types/types.js'
+import { scale } from '../../util/scaling.js'
 import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { Airship } from '../Main.ui.js'
 import { CountrySelectionModal } from '../modals/CountrySelectionModal.js'
 import { SimpleConfirmationModal } from '../modals/SimpleConfirmationModal.js'
+import { Airship } from '../services/AirshipInstance.js'
 
 type Props = {
   developerModeOn: boolean,
@@ -197,16 +197,10 @@ class PluginList extends Component<Props, State> {
   _renderPlugin = ({ item }) => (
     <TouchableWithoutFeedback onPress={() => this._onPress(item)}>
       <View style={styles.pluginRow}>
-        <View style={styles.pluginBox}>
-          <View style={styles.pluginLeft}>
-            <View style={styles.logoWrap}>
-              <View style={[styles.logo]}>{item.imageUrl && <Image style={{ height: '100%' }} source={{ uri: item.imageUrl }} />}</View>
-            </View>
-            <View style={styles.textBoxWrap}>
-              <Text style={styles.titleBox}>{item.name}</Text>
-              <Text style={styles.subtitleBox}>{item.subtitle}</Text>
-            </View>
-          </View>
+        <View style={styles.logo}>{item.imageUrl && <Image style={styles.logoImage} source={{ uri: item.imageUrl }} />}</View>
+        <View style={styles.textBoxWrap}>
+          <Text style={styles.titleText}>{item.name}</Text>
+          <Text style={styles.subtitleText}>{item.subtitle}</Text>
         </View>
       </View>
     </TouchableWithoutFeedback>

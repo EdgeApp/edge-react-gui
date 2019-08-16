@@ -3,7 +3,7 @@
 import { Dimensions, Platform } from 'react-native'
 import ExtraDimensions from 'react-native-extra-dimensions-android'
 
-import { isIphoneX } from '../../lib/isIphoneX.js'
+import { isIphoneX } from '../../util/isIphoneX.js'
 
 const platform = Platform.OS
 const deviceWidth = Dimensions.get('window').width

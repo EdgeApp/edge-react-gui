@@ -11,7 +11,7 @@ import { ExchangeQuoteComponent } from '../../modules/UI/components/ExchangeQuot
 import FormattedText from '../../modules/UI/components/FormattedText/index'
 import Slider from '../../modules/UI/components/Slider/index'
 import { styles } from '../../styles/scenes/CryptoExchangeQuoteSceneStyles.js'
-import type { GuiWallet } from '../../types'
+import type { GuiWallet } from '../../types/types.js'
 import { CircleTimer } from '../common/CircleTimer'
 import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -167,7 +167,7 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
     return (
       <SceneWrapper>
         <View style={styles.topRow}>
-          <Image source={EXCHANGE_IMAGES[`${pluginName}FullLogo`]} resizeMode={'contain'} style={{ width: '100%' }} />
+          <Image source={EXCHANGE_IMAGES[`${pluginName}FullLogo`]} resizeMode={'contain'} style={styles.logoImage} />
         </View>
         <View style={styles.centerRow}>
           <ExchangeQuoteComponent

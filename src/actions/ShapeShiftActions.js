@@ -3,7 +3,7 @@
 import { base64 } from 'rfc4648'
 
 import ENV from '../../env.json'
-import { type Dispatch, type GetState } from '../modules/ReduxTypes.js'
+import { type Dispatch, type GetState } from '../types/reduxTypes.js'
 
 /**
  * Signs into a ShapeShift account, activating the plugin.

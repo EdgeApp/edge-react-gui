@@ -5,7 +5,6 @@ import { Text, View } from 'react-native'
 
 import { AddressTextWithBlockExplorerModal } from '../../../../components/common/AddressTextWithBlockExplorerModal'
 import s from '../../../../locales/strings.js'
-import { border as b } from '../../../../util/utils.js'
 import T from '../FormattedText/'
 import styles from './styles'
 
@@ -54,7 +53,7 @@ const RequestStatus = (props: RequestStateProps) => {
         <Text style={styles.text}>{s.strings.request_qr_your_receiving_wallet_address}</Text>
 
         <AddressTextWithBlockExplorerModal address={requestAddress} addressExplorer={addressExplorer}>
-          <T numberOfLines={1} ellipsizeMode="middle" style={[b(), styles.text]}>
+          <T numberOfLines={1} ellipsizeMode="middle" style={styles.text}>
             {requestAddress}
           </T>
         </AddressTextWithBlockExplorerModal>

@@ -1,6 +1,6 @@
 // @flow
 
-import type { GuiTouchIdInfo } from '../../types.js'
+import type { GuiTouchIdInfo } from '../../types/types.js'
 
 export const updateSettings = (settings: Object) => ({
   type: 'UI/SETTINGS/UPDATE_SETTINGS',

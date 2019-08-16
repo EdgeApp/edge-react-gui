@@ -4,7 +4,8 @@ import { Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 
 import assetPlugins from '../../../../assets/plugins.json'
-import { type BuySellPlugin } from '../../../../types.js'
+import { EDGE_PLUGIN_REGIONS } from '../../../../constants/CountryConstants.js'
+import { type BuySellPlugin } from '../../../../types/types.js'
 
 const LEGACY_PLUGINS = ['Bitrefill']
 
@@ -61,14 +62,21 @@ function fixPlugins (plugins: Array<Object>): Array<BuySellPlugin> {
   })
 }
 
+export const pluginSort = (a: BuySellPlugin, b: BuySellPlugin) => {
+  const aPriority = EDGE_PLUGIN_REGIONS[a.name.toLowerCase()].priority
+  const bPriority = EDGE_PLUGIN_REGIONS[b.name.toLowerCase()].priority
+
+  return aPriority - bPriority
+}
+
 export function buySellPlugins (developerModeOn: boolean): Array<BuySellPlugin> {
   const plugins = [...hostedBuySellPlugins, ...fixPlugins(assetPlugins.buysell)]
-
+  plugins.sort(pluginSort)
   return developerModeOn ? [...plugins, devPlugin] : plugins
 }
 
 export function spendPlugins (developerModeOn: boolean): Array<BuySellPlugin> {
   const plugins = [...hostedSpendPlugins, ...fixPlugins(assetPlugins.spend)]
-
+  plugins.sort(pluginSort)
   return developerModeOn ? [...plugins, devPlugin] : plugins
 }

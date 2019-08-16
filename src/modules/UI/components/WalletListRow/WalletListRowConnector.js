@@ -1,7 +1,7 @@
 // @flow
 import { connect } from 'react-redux'
 
-import type { Dispatch, State } from '../../../ReduxTypes'
+import type { Dispatch, State } from '../../../../types/reduxTypes.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../../Settings/selectors.js'
 import { calculateWalletFiatBalance } from '../../selectors.js'
 import { WalletListRowComponent } from './WalletListRow.ui.js'

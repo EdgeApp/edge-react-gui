@@ -11,7 +11,7 @@ import { PrimaryButton, SecondaryButton } from '../../modules/UI/components/Butt
 import Text from '../../modules/UI/components/FormattedText/index'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import { styles } from '../../styles/scenes/ManageTokensStyle.js'
-import type { CustomTokenInfo, GuiWallet } from '../../types'
+import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils'
 import ManageTokenRow from '../common/ManageTokenRow.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'

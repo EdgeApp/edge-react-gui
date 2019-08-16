@@ -5,9 +5,8 @@ import { Dimensions, Platform, StyleSheet, TouchableOpacity, View } from 'react-
 import Modal from 'react-native-modal'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
-import { scale } from '../../../../lib/scaling.js'
 import s from '../../../../locales/strings.js'
-import { border as b } from '../../../../util/utils'
+import { scale } from '../../../../util/scaling.js'
 import T from '../FormattedText'
 import styles, { exitColor } from './style'
 
@@ -36,8 +35,8 @@ export default class StylizedModal extends Component<Props> {
     if (this.props.onExitButtonFxn) {
       return (
         <View style={[styles.exitRow]}>
-          <TouchableOpacity style={[styles.exitButton, b()]} onPress={this.props.onExitButtonFxn}>
-            <Ionicon style={b()} name={exitIconName} size={scale(30)} color={exitColor} />
+          <TouchableOpacity style={styles.exitButton} onPress={this.props.onExitButtonFxn}>
+            <Ionicon name={exitIconName} size={scale(30)} color={exitColor} />
           </TouchableOpacity>
         </View>
       )

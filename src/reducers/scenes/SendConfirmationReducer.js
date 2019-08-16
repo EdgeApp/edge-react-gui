@@ -5,8 +5,8 @@ import type { EdgeMetadata, EdgeSpendInfo, EdgeSpendTarget, EdgeTransaction } fr
 import { isEqual } from 'lodash'
 import { type Reducer } from 'redux'
 
-import type { Action } from '../../modules/ReduxTypes.js'
 import { initialState } from '../../modules/UI/scenes/SendConfirmation/selectors'
+import type { Action } from '../../types/reduxTypes.js'
 
 export type GuiMakeSpendInfo = {
   currencyCode?: string,

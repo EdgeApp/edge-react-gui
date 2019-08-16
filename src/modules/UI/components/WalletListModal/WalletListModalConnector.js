@@ -2,7 +2,7 @@
 
 import { connect } from 'react-redux'
 
-import type { State } from '../../../ReduxTypes.js'
+import type { State } from '../../../../types/reduxTypes.js'
 import WalletListModal from './WalletListModal.ui'
 
 const mapStateToProps = (state: State, ownProps: any) => {

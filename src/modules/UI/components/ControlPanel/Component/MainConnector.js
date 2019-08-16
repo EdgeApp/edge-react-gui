@@ -2,8 +2,8 @@
 
 import { connect } from 'react-redux'
 
+import type { Dispatch, State } from '../../../../../types/reduxTypes.js'
 import { logoutRequest } from '../../../../Login/action'
-import type { Dispatch, State } from '../../../../ReduxTypes'
 import Main from './Main'
 
 const mapStateToProps = (state: State) => ({

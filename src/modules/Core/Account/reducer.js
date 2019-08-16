@@ -3,7 +3,7 @@
 import type { EdgeAccount } from 'edge-core-js'
 import { type Reducer } from 'redux'
 
-import type { Action } from '../../ReduxTypes.js'
+import type { Action } from '../../../types/reduxTypes.js'
 
 export type AccountState = EdgeAccount | Object
 

@@ -6,7 +6,7 @@ import { parseScannedUri, qrCodeScanned, toggleAddressModal } from '../../action
 import { selectWalletFromModal } from '../../actions/WalletActions.js'
 import Scan from '../../components/scenes/ScanScene'
 import { getCameraPermission } from '../../modules/permissions/PermissionsSelectors'
-import type { Dispatch, State } from '../../modules/ReduxTypes'
+import type { Dispatch, State } from '../../types/reduxTypes.js'
 
 const mapStateToProps = (state: State) => ({
   cameraPermission: getCameraPermission(state),

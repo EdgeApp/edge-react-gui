@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import { TouchableHighlight, View } from 'react-native'
 
 import { intl } from '../../../../locales/intl.js'
-import type { GuiWallet } from '../../../../types.js'
+import type { GuiWallet } from '../../../../types/types.js'
 import { getFiatSymbol } from '../../../../util/utils.js'
 import Text from '../FormattedText'
 import { styles, stylesRaw } from './WalletListRowStyle.js'

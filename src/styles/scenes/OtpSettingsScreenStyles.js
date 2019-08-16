@@ -1,7 +1,7 @@
 // @flow
 
-import { scale } from '../../lib/scaling.js'
 import THEME from '../../theme/variables/airbitz'
+import { scale } from '../../util/scaling.js'
 import * as Styles from '../indexStyles.js'
 // import {Image} from 'react-native'
 

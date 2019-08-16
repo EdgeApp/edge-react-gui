@@ -7,7 +7,7 @@ import s from '../../locales/strings.js'
 import Text from '../../modules/UI/components/FormattedText/index'
 import { MaterialInputOnWhite } from '../../styles/components/FormFieldStyles.js'
 import styles, { styles as stylesRaw } from '../../styles/scenes/SettingsStyle.js'
-import type { FlatListItem, GuiFiatType } from '../../types'
+import type { FlatListItem, GuiFiatType } from '../../types/types.js'
 import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 

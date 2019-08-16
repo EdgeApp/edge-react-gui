@@ -8,8 +8,7 @@ import { activated } from '../actions/UniqueIdentifierModalActions.js'
 import SendConfirmationOptions from '../components/common/SendConfirmationOptions'
 import { CHANGE_MINING_FEE_SEND_CONFIRMATION } from '../constants/indexConstants'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
-import type { Dispatch, State } from '../modules/ReduxTypes'
-import { openHelpModal } from '../modules/UI/components/HelpModal/actions.js'
+import type { Dispatch, State } from '../types/reduxTypes.js'
 
 const mapStateToProps = (state: State) => {
   const sourceWalletId = state.ui.wallets.selectedWalletId
@@ -25,7 +24,6 @@ const mapStateToProps = (state: State) => {
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   changeMiningFee: sourceWallet => Actions[CHANGE_MINING_FEE_SEND_CONFIRMATION]({ sourceWallet }),
-  openHelpModal: () => dispatch(openHelpModal()),
   sendMaxSpend: () => dispatch(updateMaxSpend()),
   uniqueIdentifierModalActivated: () => dispatch(activated())
 })

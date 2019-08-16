@@ -1,7 +1,7 @@
 // @flow
 
-import type { Action } from '../modules/ReduxTypes.js'
-import type { GuiContact } from '../types.js'
+import type { Action } from '../types/reduxTypes.js'
+import type { GuiContact } from '../types/types.js'
 
 export type ContactsState = Array<GuiContact>
 

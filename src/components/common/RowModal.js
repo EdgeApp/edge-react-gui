@@ -6,7 +6,6 @@ import slowlog from 'react-native-slowlog'
 
 import T from '../../modules/UI/components/FormattedText/index'
 import styles, { styles as styleRaw } from '../../styles/scenes/SettingsStyle'
-import { border as b } from '../../util/utils'
 
 export type Props = {
   leftText: string,
@@ -32,9 +31,9 @@ export default class RowModal extends Component<Props> {
         underlayColor={styleRaw.underlay.color}
         onPress={this.props.onPress}
       >
-        <View style={[styles.settingsRowTextRow, b('red')]}>
-          <View style={[styles.settingsRowLeftContainer, b('blue')]}>
-            <T style={[styles.settingsRowLeftText, b('green')]}>{this.props.leftText}</T>
+        <View style={styles.settingsRowTextRow}>
+          <View style={styles.settingsRowLeftContainer}>
+            <T style={styles.settingsRowLeftText}>{this.props.leftText}</T>
           </View>
 
           <T style={styles.modalRightText}>{this.props.rightText}</T>

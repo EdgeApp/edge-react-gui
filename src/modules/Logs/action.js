@@ -5,8 +5,8 @@ import DeviceInfo from 'react-native-device-info'
 
 import packageJson from '../../../package.json'
 import s from '../../locales/strings.js'
+import type { Dispatch, GetState } from '../../types/reduxTypes.js'
 import * as LOGGER from '../../util/logger'
-import type { Dispatch, GetState } from '../ReduxTypes.js'
 import * as LOGS_API from './api'
 
 export const sendLogs = (text: string) => async (dispatch: Dispatch, getState: GetState) => {

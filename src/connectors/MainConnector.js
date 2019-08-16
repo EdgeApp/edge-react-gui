@@ -5,15 +5,18 @@ import { connect } from 'react-redux'
 import { checkEnabledExchanges } from '../actions/CryptoExchangeActions.js'
 import * as actions from '../actions/indexActions'
 import { checkAndShowGetCryptoModal } from '../actions/ScanActions.js'
-import { openDrawer, updateCurrentSceneKey } from '../actions/ScenesActions.js'
+import { openDrawer } from '../actions/ScenesActions.js'
 import { showReEnableOtpModal } from '../actions/SettingsActions.js'
 import { selectWallet } from '../actions/WalletActions.js'
 import Main from '../components/Main.ui'
 import { requestPermission } from '../modules/PermissionsManager.js'
-import type { Dispatch } from '../modules/ReduxTypes'
+import type { Dispatch } from '../types/reduxTypes.js'
 
 const mapStateToProps = () => ({})
 const mapDispatchToProps = (dispatch: Dispatch) => ({
+  hideWalletListModal () {
+    return dispatch({ type: 'DISABLE_WALLET_LIST_MODAL_VISIBILITY' })
+  },
   requestPermission: permission => {
     return requestPermission(permission)
   },
@@ -22,19 +25,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   },
   dispatchDisableScan: () => {
     return dispatch({ type: 'DISABLE_SCAN' })
-  },
-  addContext: (context, folder) =>
-    dispatch({
-      type: 'CORE/CONTEXT/ADD_CONTEXT',
-      data: { context, folder }
-    }),
-  addUsernames: usernames =>
-    dispatch({
-      type: 'CORE/CONTEXT/ADD_USERNAMES',
-      data: { usernames }
-    }),
-  updateCurrentSceneKey: sceneKey => {
-    return dispatch(updateCurrentSceneKey(sceneKey))
   },
   // commented out since it was blowing up flow && doesnt seem to be called.. TODO remove
   /* setLocaleInfo: (localeInfo) => {

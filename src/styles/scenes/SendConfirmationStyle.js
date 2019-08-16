@@ -2,8 +2,8 @@
 
 import { StyleSheet } from 'react-native'
 
-import { scale } from '../../lib/scaling.js'
-import THEME, { DEBUG as debug } from '../../theme/variables/airbitz'
+import THEME from '../../theme/variables/airbitz.js'
+import { scale } from '../../util/scaling.js'
 
 export const rawStyles = {
   mainScrollView: {
@@ -125,8 +125,7 @@ export const rawStyles = {
   },
   feeDanger: {
     color: THEME.COLORS.ACCENT_RED
-  },
-  debug
+  }
 }
 
 export const styles = StyleSheet.create(rawStyles)

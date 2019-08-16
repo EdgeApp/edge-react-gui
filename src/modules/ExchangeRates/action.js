@@ -1,7 +1,7 @@
 // @flow
 
+import type { Dispatch, GetState } from '../../types/reduxTypes.js'
 import { buildExchangeRates } from '../Core/selectors.js'
-import type { Dispatch, GetState } from '../ReduxTypes.js'
 
 export const updateExchangeRates = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()

@@ -24,7 +24,7 @@ import { type AuthType, getSpendInfoWithoutState } from '../../modules/UI/scenes
 import { convertCurrencyFromExchangeRates } from '../../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo, type SendConfirmationState } from '../../reducers/scenes/SendConfirmationReducer.js'
 import { rawStyles, styles } from '../../styles/scenes/SendConfirmationStyle.js'
-import type { GuiCurrencyInfo, GuiDenomination, SpendingLimits } from '../../types'
+import type { GuiCurrencyInfo, GuiDenomination, SpendingLimits } from '../../types/types.js'
 import { convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../util/utils.js'
 import { AddressTextWithBlockExplorerModal } from '../common/AddressTextWithBlockExplorerModal'
 import { SceneWrapper } from '../common/SceneWrapper.js'

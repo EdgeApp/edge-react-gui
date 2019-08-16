@@ -5,9 +5,7 @@ import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/indexAc
 import { CryptoExchangeQuoteScreenComponent } from '../../components/scenes/CryptoExchangeQuoteScene'
 import type { OwnProps } from '../../components/scenes/CryptoExchangeQuoteScene'
 import * as CORE_SELECTORS from '../../modules/Core/selectors'
-import type { Dispatch, State } from '../../modules/ReduxTypes'
-
-/* import type { GuiWallet } from '../../types.js' */
+import type { Dispatch, State } from '../../types/reduxTypes.js'
 
 export const mapStateToProps = (state: State, ownProps: OwnProps) => {
   const fromWallet = state.cryptoExchange.fromWallet

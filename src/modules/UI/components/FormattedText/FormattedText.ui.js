@@ -3,7 +3,7 @@
 import React, { Component } from 'react'
 import { Text } from 'react-native'
 
-import { scale } from '../../../../lib/scaling.js'
+import { scale } from '../../../../util/scaling.js'
 import { getObjectDiff } from '../../../../util/utils.js'
 import styles from './style'
 

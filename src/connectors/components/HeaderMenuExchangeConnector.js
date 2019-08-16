@@ -4,13 +4,13 @@ import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import { exchangeMax } from '../../actions/indexActions'
+import { showHelpModal } from '../../components/modals/HelpModal.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import type { Dispatch, State } from '../../modules/ReduxTypes.js'
-import { openHelpModal } from '../../modules/UI/components/HelpModal/actions'
 import { type DispatchProps, MenuDropDown, type StateProps } from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui.js'
 import * as Styles from '../../styles/indexStyles'
 import THEME from '../../theme/variables/airbitz'
+import type { Dispatch, State } from '../../types/reduxTypes.js'
 
 export const dropDownStyle = {
   ...Styles.MenuDropDownStyleHeader,
@@ -43,7 +43,7 @@ export const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   onSelect: (value: Object) => {
     switch (value.title) {
       case Constants.HELP_VALUE:
-        dispatch(openHelpModal())
+        showHelpModal()
         break
       case Constants.EXCHANGE_MAX_AMOUNT_VALUE:
         dispatch(exchangeMax())

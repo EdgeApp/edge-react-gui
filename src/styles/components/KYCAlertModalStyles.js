@@ -1,8 +1,9 @@
 // @flow
+
 import { Dimensions } from 'react-native'
 
-import { scale } from '../../lib/scaling'
 import THEME from '../../theme/variables/airbitz'
+import { scale } from '../../util/scaling.js'
 
 const screenDimensions = {
   height: Dimensions.get('window').height,

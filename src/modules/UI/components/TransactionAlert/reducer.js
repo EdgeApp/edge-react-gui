@@ -3,7 +3,7 @@
 import type { EdgeTransaction } from 'edge-core-js'
 import { type Reducer, combineReducers } from 'redux'
 
-import type { Action } from '../../../ReduxTypes.js'
+import type { Action } from '../../../../types/reduxTypes.js'
 
 export type TransactionAlertState = {
   +displayAlert: boolean,

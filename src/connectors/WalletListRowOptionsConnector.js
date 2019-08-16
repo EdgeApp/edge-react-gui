@@ -5,9 +5,9 @@ import { connect } from 'react-redux'
 // $FlowFixMe
 import { updateRenameWalletInput } from '../actions/WalletListActions'
 import WalletListRowOptions from '../components/common/WalletListRowOptions'
-import type { Dispatch, State } from '../modules/ReduxTypes.js'
 // $FlowFixMe
 import UI_SELECTORS from '../modules/UI/selectors'
+import type { Dispatch, State } from '../types/reduxTypes.js'
 
 const mapStateToProps = (state: State) => ({
   wallets: UI_SELECTORS.getWallets(state),

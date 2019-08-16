@@ -2,8 +2,8 @@
 
 import { StyleSheet } from 'react-native'
 
-import { scale } from '../../lib/scaling.js'
 import THEME from '../../theme/variables/airbitz'
+import { scale } from '../../util/scaling.js'
 
 export const underlayColor = THEME.COLORS.PRIMARY_BUTTON_TOUCHED
 

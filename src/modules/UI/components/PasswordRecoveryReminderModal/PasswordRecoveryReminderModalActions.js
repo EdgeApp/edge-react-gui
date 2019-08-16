@@ -4,9 +4,9 @@ import { bns } from 'biggystring'
 import { Actions } from 'react-native-router-flux'
 
 import { RECOVER_PASSWORD as PASSWORD_RECOVERY_SCENE } from '../../../../constants/indexConstants.js'
+import type { Dispatch, GetState } from '../../../../types/reduxTypes.js'
 import { getTotalFiatAmountFromExchangeRates } from '../../../../util/utils.js'
 import { setPasswordRecoveryRemindersAsync } from '../../../Core/Account/settings.js'
-import type { Dispatch, GetState } from '../../../ReduxTypes.js'
 
 export const updateShowPasswordRecoveryReminderModal = (level: string, wasShown: boolean) => ({
   type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL',

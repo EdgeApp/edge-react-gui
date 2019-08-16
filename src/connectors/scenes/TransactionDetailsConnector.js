@@ -6,10 +6,10 @@ import { connect } from 'react-redux'
 import { getSubcategories, setNewSubcategory, setTransactionDetails } from '../../actions/TransactionDetailsActions.js'
 import { TransactionDetails } from '../../components/scenes/TransactionDetailsScene'
 import type { TransactionDetailsOwnProps } from '../../components/scenes/TransactionDetailsScene'
-import type { Dispatch, State } from '../../modules/ReduxTypes'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import { displayDropdownAlert } from '../../modules/UI/components/DropdownAlert/actions'
 import * as UI_SELECTORS from '../../modules/UI/selectors'
+import type { Dispatch, State } from '../../types/reduxTypes.js'
 import * as UTILS from '../../util/utils'
 
 const mapStateToProps = (state: State, ownProps: TransactionDetailsOwnProps) => {

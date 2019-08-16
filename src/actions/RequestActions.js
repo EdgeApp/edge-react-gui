@@ -2,9 +2,9 @@
 
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
-import type { Dispatch, GetState } from '../modules/ReduxTypes.js'
 import { displayErrorAlert } from '../modules/UI/components/ErrorAlert/actions.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
+import type { Dispatch, GetState } from '../types/reduxTypes.js'
 
 export const updateReceiveAddress = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
