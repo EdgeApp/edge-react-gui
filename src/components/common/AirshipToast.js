@@ -1,7 +1,7 @@
 // @flow
 
-import React, { Component } from 'react'
-import { Animated, StyleSheet, Text, View } from 'react-native'
+import React, { Component, Fragment } from 'react'
+import { ActivityIndicator, Animated, StyleSheet, Text, View } from 'react-native'
 
 import { THEME } from '../../theme/variables/airbitz.js'
 import { scale } from '../../util/scaling.js'
@@ -16,7 +16,11 @@ type Props = {
   bridge: AirshipBridge<void>,
 
   // The message to show in the toast:
-  message?: string
+  message?: string,
+
+  // If set, the toast will stay up for the lifetime of the promise,
+  // and will include a spinner.
+  activity?: Promise<mixed>
 }
 
 /**
@@ -31,7 +35,7 @@ export class AirshipToast extends Component<Props> {
   }
 
   componentDidMount () {
-    const { bridge } = this.props
+    const { activity, bridge } = this.props
 
     // Animate in:
     Animated.timing(this.opacity, {
@@ -41,19 +45,22 @@ export class AirshipToast extends Component<Props> {
     }).start()
 
     // Animate out:
-    setTimeout(() => {
+    const hide = () => {
       bridge.resolve()
       Animated.timing(this.opacity, {
         toValue: 0,
         duration: fadeOutTime,
         useNativeDriver: true
       }).start(() => bridge.remove())
-    }, fadeInTime + visibleTime)
+    }
+    if (activity != null) {
+      activity.then(hide, hide)
+    } else {
+      setTimeout(hide, fadeInTime + visibleTime)
+    }
   }
 
   render () {
-    const { message } = this.props
-
     return (
       <LayoutContext>
         {metrics => {
@@ -61,13 +68,23 @@ export class AirshipToast extends Component<Props> {
 
           return (
             <View pointerEvents="none" touch style={[styles.screen, safeAreaInsets]}>
-              <Animated.View style={[styles.body, { opacity: this.opacity }]}>
-                <Text style={styles.text}>{message}</Text>
-              </Animated.View>
+              <Animated.View style={[styles.body, { opacity: this.opacity }]}>{this.renderContent()}</Animated.View>
             </View>
           )
         }}
       </LayoutContext>
+    )
+  }
+
+  renderContent () {
+    const { activity, message } = this.props
+    if (activity == null) return <Text style={styles.text}>{message}</Text>
+
+    return (
+      <Fragment>
+        <Text style={[styles.text, { marginRight: unit }]}>{message}</Text>
+        <ActivityIndicator />
+      </Fragment>
     )
   }
 }
