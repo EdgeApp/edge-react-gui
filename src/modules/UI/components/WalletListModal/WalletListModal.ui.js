@@ -49,6 +49,7 @@ export default class WalletListModal extends Component<WalletListModalProps> {
     const walletList = []
     for (const id in wallets) {
       const wallet = wallets[id]
+      if (wallet.type === 'wallet:fio') continue
       // perhaps it'd be best to filter the list of valid wallets rather than arbitrary criteria
       walletList.push(wallet)
     }
