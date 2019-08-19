@@ -28,7 +28,7 @@ const hostedBuySellPlugins: Array<BuySellPlugin> = [
     imageUrl: 'https://edge.app/wp-content/uploads/2019/05/icon_black_small.png'
   },
   {
-    pluginId: 'io.safello',
+    pluginId: 'com.safello',
     uri: 'https://safello.com/edge/',
     name: 'Safello',
     subtitle: 'Buy crypto with credit card\nBTC, ETH, XRP, BCH\nFee: 5.75% / Settlement: Instant',
@@ -36,7 +36,7 @@ const hostedBuySellPlugins: Array<BuySellPlugin> = [
     originWhitelist: ['https://safello.com', 'https://app.safello.com']
   },
   {
-    pluginId: 'io.bitsofgold',
+    pluginId: 'com.bitsofgold',
     uri: 'https://www.bitsofgold.co.il/order/sell?order_id=null&page=0&utm_source=Edge&utm_medium=mobile_app&utm_campaign=co',
     name: 'Bits Of Gold',
     subtitle: 'Sell Bitcoin to bank account in Israel and Europe.\nFee: 5% / Settlement: 1-3 days',
