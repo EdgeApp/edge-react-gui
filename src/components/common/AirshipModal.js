@@ -3,7 +3,7 @@
 import React, { Component, type Node } from 'react'
 import { Animated, BackHandler, Dimensions, StyleSheet, TouchableWithoutFeedback } from 'react-native'
 
-import THEME from '../../theme/variables/airbitz.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 import { scale } from '../../util/scaling.js'
 import { type AirshipBallast } from './Airship.js'
 import { KeyboardTracker } from './KeyboardTracker.js'
@@ -13,8 +13,8 @@ import { LayoutContext, type SafeAreaGap } from './LayoutContext.js'
 type NodeArray = Array<Node> | Node
 
 type Props = {
-  children: NodeArray | ((gap: SafeAreaGap) => NodeArray),
   bridge: AirshipBallast,
+  children: NodeArray | ((gap: SafeAreaGap) => NodeArray),
 
   // True to have the modal float in the center of the screen,
   // or false for a bottom modal:
