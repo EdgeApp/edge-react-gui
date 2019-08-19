@@ -28,7 +28,7 @@ const hostedBuySellPlugins: Array<BuySellPlugin> = [
     imageUrl: 'https://edge.app/wp-content/uploads/2019/05/icon_black_small.png'
   },
   {
-    pluginId: 'io.safello',
+    pluginId: 'com.safello',
     uri: 'https://safello.com/edge/',
     name: 'Safello',
     subtitle: 'Buy crypto with credit card\nBTC, ETH, XRP, BCH\nFee: 5.75% / Settlement: Instant',
