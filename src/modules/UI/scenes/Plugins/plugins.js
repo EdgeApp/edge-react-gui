@@ -36,7 +36,7 @@ const hostedBuySellPlugins: Array<BuySellPlugin> = [
     originWhitelist: ['https://safello.com', 'https://app.safello.com']
   },
   {
-    pluginId: 'com.bitsofgold',
+    pluginId: 'bitsofgold',
     uri: 'https://www.bitsofgold.co.il/order/sell?order_id=null&page=0&utm_source=Edge&utm_medium=mobile_app&utm_campaign=co',
     name: 'Bits Of Gold',
     subtitle: 'Sell Bitcoin to bank account in Israel and Europe.\nFee: 5% / Settlement: 1-3 days',
