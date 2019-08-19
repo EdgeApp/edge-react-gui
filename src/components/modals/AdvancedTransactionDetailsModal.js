@@ -3,7 +3,7 @@
 import { PrimaryButton, SecondaryButton, TertiaryButton } from 'edge-components'
 import { type EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
-import { Alert, Clipboard, Linking } from 'react-native'
+import { Clipboard, Linking } from 'react-native'
 
 import { MATERIAL_COMMUNITY, TELESCOPE } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
@@ -12,6 +12,7 @@ import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import { InteractiveModal } from '../../modules/UI/components/Modals/InteractiveModal/InteractiveModal.ui.js'
 import styles, { activeOpacity } from '../../styles/scenes/TransactionDetailsStyle.js'
 import { scale } from '../../util/scaling.js'
+import { showToast } from '../services/AirshipInstance.js'
 
 export type AdvancedTransactionDetailsModalOwnProps = {
   ...EdgeTransaction,
@@ -35,17 +36,15 @@ export class AdvancedTransactionDetailsModal extends Component<AdvancedTransacti
   copyTxIdToClipboard = () => {
     const { txid, onDone } = this.props
     Clipboard.setString(txid)
-    Alert.alert(s.strings.transaction_details_copy_txid_title, s.strings.transaction_details_copy_txid_message, [
-      { text: s.strings.string_ok, onPress: onDone }
-    ])
+    showToast(s.strings.transaction_details_copy_txid_message)
+    onDone()
   }
 
   copyRawHexToClipboard = () => {
     const { signedTx, onDone } = this.props
     Clipboard.setString(signedTx)
-    Alert.alert(s.strings.transaction_details_copy_txid_title, s.strings.transaction_details_copy_raw_hex_message, [
-      { text: s.strings.string_ok, onPress: onDone }
-    ])
+    showToast(s.strings.transaction_details_copy_raw_hex_message)
+    onDone()
   }
 
   render () {
