@@ -285,7 +285,7 @@
   "string_save": "保存",
   "string_share": "共有",
   "string_show_balance": "残高を表示",
-  "exchange_rates_loading": "",
+  "exchange_rates_loading": "交換レートを読み込み中です...",
   "string_to_exchange_info": "それから%3$sへ%1$s%2$sをデポジットする",
   "string_master_private_key": "マスタープライベートキー",
   "string_split_wallet": "%sをスプリットさせる",
