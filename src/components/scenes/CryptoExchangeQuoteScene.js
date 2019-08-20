@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import { ActivityIndicator, Image, Linking, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import * as EXCHANGE_IMAGES from '../../assets/images/exchange'
+import { swapPluginLogos } from '../../assets/images/exchange'
 import s from '../../locales/strings.js'
 import { ExchangeQuoteComponent } from '../../modules/UI/components/ExchangeQuote/ExchangeQuoteComponent.js'
 import FormattedText from '../../modules/UI/components/FormattedText/index'
@@ -104,7 +104,7 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
     }
     if (componentProps.aboutText !== '') {
       const modal = createKYCAlertModal({
-        logo: EXCHANGE_IMAGES[`${pluginName}FullLogo`],
+        logo: swapPluginLogos[pluginName],
         aboutText: componentProps.aboutText,
         acceptText: componentProps.acceptText,
         termsText: componentProps.termsText,
@@ -167,7 +167,7 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
     return (
       <SceneWrapper>
         <View style={styles.topRow}>
-          <Image source={EXCHANGE_IMAGES[`${pluginName}FullLogo`]} resizeMode={'contain'} style={styles.logoImage} />
+          <Image source={swapPluginLogos[pluginName]} resizeMode={'contain'} style={styles.logoImage} />
         </View>
         <View style={styles.centerRow}>
           <ExchangeQuoteComponent

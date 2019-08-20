@@ -4,17 +4,7 @@ import { type EdgeSwapConfig } from 'edge-core-js/types'
 import React, { Component } from 'react'
 import { Image, View } from 'react-native'
 
-import {
-  changellyLogo,
-  changenowLogo,
-  coinswitchLogo,
-  defaultLogo,
-  faastLogo,
-  foxExchangeLogo,
-  godexLogo,
-  shapeshiftLogo,
-  totleLogo
-} from '../../assets/images/exchange'
+import { getSwapPluginIcon } from '../../assets/images/exchange'
 import { SwapKYCModalConnector } from '../../connectors/components/SwapKYCModalConnector.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/index'
@@ -35,36 +25,6 @@ type ExchangeSettingsProps = {
 type GuiExchangeSetting = {
   enabled: boolean,
   name: string
-}
-
-const exchangeInfo = {
-  shapeshift: {
-    logo: shapeshiftLogo
-  },
-  changelly: {
-    logo: changellyLogo
-  },
-  changenow: {
-    logo: changenowLogo
-  },
-  faast: {
-    logo: faastLogo
-  },
-  totle: {
-    logo: totleLogo
-  },
-  godex: {
-    logo: godexLogo
-  },
-  foxExchange: {
-    logo: foxExchangeLogo
-  },
-  coinswitch: {
-    logo: coinswitchLogo
-  },
-  default: {
-    logo: defaultLogo
-  }
 }
 
 type ExchangeSettingsState = {
@@ -117,7 +77,7 @@ export class ExchangeSettingsComponent extends Component<ExchangeSettingsProps, 
           <T style={styles.instructionText}>{s.strings.settings_exchange_instruction}</T>
         </View>
         {this.exchangeList.map(exchange => {
-          const logoSource = exchangeInfo[exchange.name] ? exchangeInfo[exchange.name].logo : exchangeInfo.default.logo
+          const logoSource = getSwapPluginIcon(exchange.name)
           const logo = <Image resizeMode={'contain'} style={styles.settingsRowLeftLogo} source={logoSource} />
           const exchangeName = exchange.name.charAt(0).toUpperCase() + exchange.name.substr(1)
           if (exchangeName === 'Shapeshift') {
