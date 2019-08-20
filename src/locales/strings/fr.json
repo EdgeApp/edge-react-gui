@@ -285,7 +285,7 @@
   "string_save": "Enregistrer",
   "string_share": "Partager",
   "string_show_balance": "Afficher le solde",
-  "exchange_rates_loading": "",
+  "exchange_rates_loading": "Chargement du taux de change...",
   "string_to_exchange_info": "et verser  %1$s %2$s\n à %3$s",
   "string_master_private_key": "Clés privées maîtresses",
   "string_split_wallet": "Diviser %s",
