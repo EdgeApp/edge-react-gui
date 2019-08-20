@@ -8,8 +8,9 @@ import { scale } from '../../util/scaling.js'
 import { type AirshipBridge } from './Airship.js'
 import { LayoutContext } from './LayoutContext.js'
 
-const animationTime = 1000
-const visibleTime = 2000
+const fadeInTime = 300
+const fadeOutTime = 1000
+const visibleTime = 3000
 
 type Props = {
   bridge: AirshipBridge<void>,
@@ -35,7 +36,7 @@ export class AirshipToast extends Component<Props> {
     // Animate in:
     Animated.timing(this.opacity, {
       toValue: 0.9,
-      duration: animationTime,
+      duration: fadeInTime,
       useNativeDriver: true
     }).start()
 
@@ -44,10 +45,10 @@ export class AirshipToast extends Component<Props> {
       bridge.resolve()
       Animated.timing(this.opacity, {
         toValue: 0,
-        duration: animationTime,
+        duration: fadeOutTime,
         useNativeDriver: true
       }).start(() => bridge.remove())
-    }, animationTime + visibleTime)
+    }, fadeInTime + visibleTime)
   }
 
   render () {
