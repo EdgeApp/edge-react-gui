@@ -99,7 +99,6 @@
   "fragment_wallets_view_xpub": "查看XPub地址",
   "fragment_wallets_no_xpub": "此钱包类型没有公钥",
   "fragment_wallets_pubkey_copied_title": "XPub 地址已复制",
-  "fragment_wallets_pubkey_copied_success": "XPub地址已成功复制到剪贴板。",
   "fragment_wallets_pubkey_copied_error": "复制XPub地址时出错。",
   "fragment_wallets_export_transactions": "导出交易",
   "fragment_wallets_header": "我的钱包",
@@ -341,8 +340,7 @@
   "transaction_details_category_title": "类别",
   "transaction_details_payee": "收款人",
   "transaction_details_view_advanced_data": "查看高级交易记录数据",
-  "transaction_details_copy_txid_title": "已复制",
-  "transaction_details_copy_txid_message": "交易ID已复制至剪贴板",
+  "transaction_details_copy_txid_message": "",
   "transaction_details_copy_raw_hex_message": "",
   "transaction_details_tx_id_modal_title": "交易ID",
   "transaction_details_show_advanced_block_explorer": "在区块浏览器显示",
@@ -394,7 +392,6 @@
   "password_reminder_forgot_password": "我忘记了我的密码， 改变密码",
   "password_reminder_postpone": "稍后",
   "password_reminder_great_job": "您记得您的密码，真棒！",
-  "password_reminder_verified": "密码已验证",
   "password_reminder_invalid": "密码错误",
   "password_recovery_reminder_modal_title": "密码复原设置程序",
   "password_recovery_reminder_modal_message": "你积累了不少的的加密货币。 您想设置恢复密码吗？",
@@ -517,5 +514,7 @@
   "estimated_exchange_rate_body": "没有交易提供商能够为所要求的交易提供固定报价。这种交易可能导致收到的资金少于报价。",
   "buy_sell_crypto_select_country_button": "选择所在地区",
   "buy_sell_crypto_no_plugin_region": "很抱歉，但是没有可用的插件用于本地区。",
-  "user_closed_modal_no_wallet": ""
+  "user_closed_modal_no_wallet": "",
+  "plugin_spend_notes_generic": "",
+  "plugin_provider_disclaimer": ""
 }
