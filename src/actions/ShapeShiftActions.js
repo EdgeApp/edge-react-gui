@@ -26,7 +26,6 @@ export function deactivateShapeShift () {
     const { account } = getState().core
 
     await account.swapConfig['shapeshift'].changeUserSettings({})
-    dispatch({ type: 'NEED_KYC_SETTING' })
   }
 }
 

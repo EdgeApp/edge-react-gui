@@ -18,99 +18,104 @@ type ExchangeSettingsProps = {
   exchanges: {
     [string]: EdgeSwapConfig
   },
-  shapeShiftNeedsKYC: boolean,
   shapeShiftLogOut(): void
 }
 
-type GuiExchangeSetting = {
-  enabled: boolean,
-  name: string
-}
-
 type ExchangeSettingsState = {
-  [exchange: string]: {
-    enabled: boolean
-  }
+  enabled: { [pluginId: string]: boolean },
+  needsActivation: { [pluginId: string]: boolean }
 }
 
 export class ExchangeSettingsComponent extends Component<ExchangeSettingsProps, ExchangeSettingsState> {
-  exchangeList: Array<GuiExchangeSetting>
+  cleanups: Array<() => mixed>
+  sortedIds: Array<string>
 
   constructor (props: ExchangeSettingsProps) {
     super(props)
-    this.state = {}
     const { exchanges } = props
-    this.exchangeList = []
-    for (const exchange in exchanges) {
-      const exchangeData = { enabled: exchanges[exchange].enabled, name: exchange }
-      this.exchangeList.push(exchangeData)
-      this.state[exchange] = {
-        enabled: exchanges[exchange].enabled
-      }
+
+    this.cleanups = []
+    this.state = { enabled: {}, needsActivation: {} }
+    for (const pluginId in exchanges) {
+      const exchange = exchanges[pluginId]
+      this.state.enabled[pluginId] = exchange.enabled
+      this.state.needsActivation[pluginId] = exchange.needsActivation
+
+      this.cleanups.push(
+        exchange.watch('enabled', enabled =>
+          this.setState(state => ({
+            enabled: { ...state.enabled, [pluginId]: enabled }
+          }))
+        )
+      )
+      this.cleanups.push(
+        exchange.watch('needsActivation', needsActivation =>
+          this.setState(state => ({
+            needsActivation: { ...state.needsActivation, [pluginId]: needsActivation }
+          }))
+        )
+      )
     }
+
+    this.sortedIds = Object.keys(exchanges).sort((a, b) => exchanges[a].swapInfo.displayName.localeCompare(exchanges[b].swapInfo.displayName))
   }
 
-  _onToggleEnableExchange = (exchangeName: string) => {
-    const { exchanges } = this.props
-    const newValue = !exchanges[exchangeName].enabled
-    exchanges[exchangeName].changeEnabled(newValue)
-    this.setState({
-      [exchangeName]: {
-        enabled: newValue
-      }
-    })
+  componentWillUnmount () {
+    for (const cleanup of this.cleanups) cleanup()
   }
+
+  _onToggleEnableExchange = (pluginId: string) => {
+    const { exchanges } = this.props
+    const newValue = !exchanges[pluginId].enabled
+    exchanges[pluginId].changeEnabled(newValue)
+  }
+
   shapeShiftSignInToggle = () => {
-    if (this.props.shapeShiftNeedsKYC) {
+    if (this.state.needsActivation.shapeshift) {
       launchModal(SwapKYCModalConnector, { style: { margin: 0 } }).then((response: null | { accessToken: string, refreshToken: string }) => {
         console.log('exchange: ', response)
       })
-      return
+    } else {
+      this.props.shapeShiftLogOut()
     }
-    this.props.shapeShiftLogOut()
   }
+
   render () {
-    const ssLoginText = this.props.shapeShiftNeedsKYC ? s.strings.ss_login : s.strings.ss_logout
     return (
       <SceneWrapper hasTabs={false} background="body">
         <View style={styles.instructionArea}>
           <T style={styles.instructionText}>{s.strings.settings_exchange_instruction}</T>
         </View>
-        {this.exchangeList.map(exchange => {
-          const logoSource = getSwapPluginIcon(exchange.name)
-          const logo = <Image resizeMode={'contain'} style={styles.settingsRowLeftLogo} source={logoSource} />
-          const exchangeName = exchange.name.charAt(0).toUpperCase() + exchange.name.substr(1)
-          if (exchangeName === 'Shapeshift') {
-            return (
-              <View style={styles.doubleRowContainer} key={exchange.name}>
-                <SwitchRow
-                  logo={logo}
-                  key={exchange.name}
-                  leftText={exchangeName}
-                  onToggle={() => this._onToggleEnableExchange(exchange.name)}
-                  value={this.state[exchange.name].enabled}
-                />
-                <RowWithButton
-                  logo={logoSource}
-                  key={exchange.name + '1'}
-                  leftText={exchangeName + ' ' + s.strings.account}
-                  rightText={ssLoginText}
-                  onPress={this.shapeShiftSignInToggle}
-                />
-              </View>
-            )
-          }
-          return (
-            <SwitchRow
-              logo={logo}
-              key={exchange.name}
-              leftText={exchangeName}
-              onToggle={() => this._onToggleEnableExchange(exchange.name)}
-              value={this.state[exchange.name].enabled}
-            />
-          )
-        })}
+        {this.sortedIds.map(pluginId => this.renderPlugin(pluginId))}
       </SceneWrapper>
+    )
+  }
+
+  renderPlugin (pluginId: string) {
+    const { exchanges } = this.props
+    const { displayName } = exchanges[pluginId].swapInfo
+    const logoSource = getSwapPluginIcon(pluginId)
+    const logo = <Image resizeMode={'contain'} style={styles.settingsRowLeftLogo} source={logoSource} />
+
+    if (pluginId === 'shapeshift') {
+      const ssLoginText = this.state.needsActivation.shapeshift ? s.strings.ss_login : s.strings.ss_logout
+
+      return (
+        <View style={styles.doubleRowContainer} key={pluginId}>
+          <SwitchRow logo={logo} leftText={displayName} onToggle={() => this._onToggleEnableExchange(pluginId)} value={this.state.enabled[pluginId]} />
+          <RowWithButton logo={logoSource} leftText={displayName + ' ' + s.strings.account} rightText={ssLoginText} onPress={this.shapeShiftSignInToggle} />
+        </View>
+      )
+    }
+
+    return (
+      <SwitchRow
+        logo={logo}
+        key={pluginId}
+        leftText={displayName}
+        onToggle={() => this._onToggleEnableExchange(pluginId)}
+        value={this.state.enabled[pluginId]}
+      />
     )
   }
 }

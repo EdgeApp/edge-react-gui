@@ -8,8 +8,7 @@ import type { Dispatch, State } from '../types/reduxTypes.js'
 
 export const ExchangeSettingsConnector = connect(
   (state: State) => ({
-    exchanges: state.core.account.swapConfig,
-    shapeShiftNeedsKYC: state.ui.settings.shapeShiftNeedsKYC
+    exchanges: state.core.account.swapConfig
   }),
   (dispatch: Dispatch) => ({
     shapeShiftLogOut () {
