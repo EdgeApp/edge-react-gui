@@ -9,6 +9,7 @@ import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import { InteractiveModal } from '../../modules/UI/components/Modals/InteractiveModal/InteractiveModal.ui.js'
 import { scale } from '../../util/scaling.js'
+import { showToast } from '../services/AirshipInstance.js'
 
 type XPubModalOwnProps = {}
 
@@ -28,13 +29,9 @@ type XPubModalComponentProps = XPubModalOwnProps & XPubModalStateProps & XPubMod
 export default class XPubModal extends Component<XPubModalComponentProps, XPubModalState> {
   _onPressCopy = () => {
     try {
+      this.props.onExit()
       Clipboard.setString(this.props.xPubSyntax)
-      Alert.alert(s.strings.fragment_wallets_pubkey_copied_title, s.strings.fragment_wallets_pubkey_copied_success, [
-        {
-          text: s.strings.string_ok,
-          onPress: () => this.props.onExit()
-        }
-      ])
+      showToast(s.strings.fragment_wallets_pubkey_copied_title)
     } catch (e) {
       console.log('Error:', e.title, e.message)
       Alert.alert('Error', s.strings.fragment_wallets_pubkey_copied_error)

@@ -4,7 +4,7 @@ import { bns } from 'biggystring'
 import { createSimpleConfirmModal } from 'edge-components'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, Alert, Clipboard, Platform, View } from 'react-native'
+import { ActivityIndicator, Clipboard, Platform, View } from 'react-native'
 import ContactsWrapper from 'react-native-contacts-wrapper'
 import RNFS from 'react-native-fs'
 import Share from 'react-native-share'
@@ -26,6 +26,7 @@ import type { GuiCurrencyInfo, GuiWallet } from '../../types/types.js'
 import { getObjectDiff } from '../../util/utils'
 import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { showToast } from '../services/AirshipInstance.js'
 
 const PUBLIC_ADDRESS_REFRESH_MS = 2000
 
@@ -307,7 +308,7 @@ export class Request extends Component<Props, State> {
   copyToClipboard = () => {
     const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
     Clipboard.setString(requestAddress)
-    Alert.alert(s.strings.fragment_request_address_copied)
+    showToast(s.strings.fragment_request_address_copied)
   }
 
   shouldShowMinimumModal = (props: Props): boolean => {

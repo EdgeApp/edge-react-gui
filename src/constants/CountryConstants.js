@@ -637,7 +637,8 @@ export const EDGE_PLUGIN_REGIONS = {
     priority: 6,
     paymentType: 'cash'
   },
-  bitsofgold: {
+  // eslint-disable-next-line no-useless-computed-key
+  'bits of gold': {
     countryCodes: {
       AD: true,
       AT: true,

@@ -99,7 +99,6 @@
   "fragment_wallets_view_xpub": "Просмотреть XPub адрес",
   "fragment_wallets_no_xpub": "Этот тип кошелька не имеет открытого ключа",
   "fragment_wallets_pubkey_copied_title": "Адрес XPub скопирован",
-  "fragment_wallets_pubkey_copied_success": "Адрес XPub был успешно скопирован в буфер обмена.",
   "fragment_wallets_pubkey_copied_error": "Произошла ошибка копирования XPub адреса.",
   "fragment_wallets_export_transactions": "Экспорт переводов кошелька",
   "fragment_wallets_header": "Мои кошельки",
@@ -341,8 +340,7 @@
   "transaction_details_category_title": "Категория",
   "transaction_details_payee": "Получатель платежа",
   "transaction_details_view_advanced_data": "Посмотреть расширенные детали транзакции",
-  "transaction_details_copy_txid_title": "Скопировано",
-  "transaction_details_copy_txid_message": "Идентификатор транзакции был скопирован в буфер обмена",
+  "transaction_details_copy_txid_message": "",
   "transaction_details_copy_raw_hex_message": "",
   "transaction_details_tx_id_modal_title": "Идентификатор транзакции",
   "transaction_details_show_advanced_block_explorer": "Показать в проводнике транзакций",
@@ -394,7 +392,6 @@
   "password_reminder_forgot_password": "Я забыл, сменить пароль",
   "password_reminder_postpone": "Позже",
   "password_reminder_great_job": "Вы помните свой пароль!",
-  "password_reminder_verified": "Пароль проверен",
   "password_reminder_invalid": "Неправильный пароль",
   "password_recovery_reminder_modal_title": "Настройка восстановления пароля",
   "password_recovery_reminder_modal_message": "Вы накопили достаточно много криптовалюты. Хотите настроить восстановление пароля?",
@@ -517,5 +514,7 @@
   "estimated_exchange_rate_body": "",
   "buy_sell_crypto_select_country_button": "",
   "buy_sell_crypto_no_plugin_region": "",
-  "user_closed_modal_no_wallet": ""
+  "user_closed_modal_no_wallet": "",
+  "plugin_spend_notes_generic": "",
+  "plugin_provider_disclaimer": ""
 }
