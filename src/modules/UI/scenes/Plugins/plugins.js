@@ -31,7 +31,7 @@ const hostedBuySellPlugins: Array<BuySellPlugin> = [
     pluginId: 'com.safello',
     uri: 'https://safello.com/edge/',
     name: 'Safello',
-    subtitle: 'Buy crypto with credit card\nBTC, ETH, XRP, BCH\nFee: 5.75% / Settlement: Instant',
+    subtitle: 'Buy crypto with Swish (in Sweden) or credit card\nBTC, ETH, XRP, BCH\nFee: 5.75% / Settlement: Instant',
     imageUrl: 'https://edge.app/wp-content/uploads/2019/06/Safello-Logo-Green-background.png',
     originWhitelist: ['https://safello.com', 'https://app.safello.com']
   },
