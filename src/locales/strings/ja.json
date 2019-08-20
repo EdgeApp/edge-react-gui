@@ -99,7 +99,6 @@
   "fragment_wallets_view_xpub": "拡張公開鍵(Xpub) アドレスを表示",
   "fragment_wallets_no_xpub": "このタイプのウォレットにはパブリックキーがありません",
   "fragment_wallets_pubkey_copied_title": "Xpubアドレスがコピーされました",
-  "fragment_wallets_pubkey_copied_success": "Xpubアドレスが正常にコピーされました",
   "fragment_wallets_pubkey_copied_error": "拡張公開鍵(Xpub) アドレスのコピーにエラーが発生しました。",
   "fragment_wallets_export_transactions": "トランザクションを出力",
   "fragment_wallets_header": "マイウォレット",
@@ -341,8 +340,7 @@
   "transaction_details_category_title": "カテゴリー",
   "transaction_details_payee": "受取人",
   "transaction_details_view_advanced_data": "高度な取引詳細を表示",
-  "transaction_details_copy_txid_title": "コピーしました",
-  "transaction_details_copy_txid_message": "取引IDはクリップボードにコピーされました",
+  "transaction_details_copy_txid_message": "",
   "transaction_details_copy_raw_hex_message": "",
   "transaction_details_tx_id_modal_title": "トランザクションID",
   "transaction_details_show_advanced_block_explorer": "ブロックエクスプローラーで表示",
@@ -394,7 +392,6 @@
   "password_reminder_forgot_password": "忘れました、パスワードを変更",
   "password_reminder_postpone": "あとで",
   "password_reminder_great_job": "素晴らしい！パスワードを覚えていましたね。",
-  "password_reminder_verified": "パスワードが確認されました",
   "password_reminder_invalid": "パスワードが正しくありません",
   "password_recovery_reminder_modal_title": "パスワード復元セットアップ",
   "password_recovery_reminder_modal_message": "かなりの仮想通貨がたまっています。パスワードの復元セットアップをしませんか？",
@@ -517,5 +514,7 @@
   "estimated_exchange_rate_body": "",
   "buy_sell_crypto_select_country_button": "",
   "buy_sell_crypto_no_plugin_region": "",
-  "user_closed_modal_no_wallet": ""
+  "user_closed_modal_no_wallet": "",
+  "plugin_spend_notes_generic": "",
+  "plugin_provider_disclaimer": ""
 }

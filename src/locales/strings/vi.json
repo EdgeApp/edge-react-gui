@@ -99,7 +99,6 @@
   "fragment_wallets_view_xpub": "Xem địa chỉ XPub",
   "fragment_wallets_no_xpub": "Đây là loại ví không có mã công khai",
   "fragment_wallets_pubkey_copied_title": "Đã sao chép địa chỉ XPub",
-  "fragment_wallets_pubkey_copied_success": "Địa chỉ XPub đã được sao chép vào bảng thành công.",
   "fragment_wallets_pubkey_copied_error": "Có lỗi sao chép địa chỉ XPub.",
   "fragment_wallets_export_transactions": "Giao dịch xuất đi",
   "fragment_wallets_header": "Ví của tôi",
@@ -341,8 +340,7 @@
   "transaction_details_category_title": "Danh mục",
   "transaction_details_payee": "Người nhận thanh toán",
   "transaction_details_view_advanced_data": "Xem dữ liệu giao dịch",
-  "transaction_details_copy_txid_title": "Đã sao chép",
-  "transaction_details_copy_txid_message": "ID giao dịch đã được sao chép vào bảng của bạn",
+  "transaction_details_copy_txid_message": "",
   "transaction_details_copy_raw_hex_message": "",
   "transaction_details_tx_id_modal_title": "ID giao dịch",
   "transaction_details_show_advanced_block_explorer": "Hiển thị trong Block Explorer",
@@ -394,7 +392,6 @@
   "password_reminder_forgot_password": "Tôi đã quên mật khẩu, thay đổi mật khẩu",
   "password_reminder_postpone": "Sau đó",
   "password_reminder_great_job": "Ghi nhớ mật khẩu của bạn một cách tốt.",
-  "password_reminder_verified": "Xác nhận mật khẩu",
   "password_reminder_invalid": "Mật khẩu không hợp lệ",
   "password_recovery_reminder_modal_title": "Khôi phục cài đặt mật khẩu",
   "password_recovery_reminder_modal_message": "Bạn đã tích lũy khá nhiều crypto. Bạn có muốn thiết lập phục hồi mật khẩu của bạn?",
@@ -517,5 +514,7 @@
   "estimated_exchange_rate_body": "",
   "buy_sell_crypto_select_country_button": "",
   "buy_sell_crypto_no_plugin_region": "",
-  "user_closed_modal_no_wallet": ""
+  "user_closed_modal_no_wallet": "",
+  "plugin_spend_notes_generic": "",
+  "plugin_provider_disclaimer": ""
 }
