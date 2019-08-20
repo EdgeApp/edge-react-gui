@@ -1,5 +1,12 @@
 # edge-react-gui
 
+## 1.9.0
+
+* Improved stability when coming in and out of background
+* Integrate Safello for buying in Nordic countries and Europe
+* Integrate Bits of Gold for selling to Israeli and European bank account
+* Integrate CoinSwitch for swapping coins
+
 ## 1.8.3
 
 * Add LibertyX plugin
