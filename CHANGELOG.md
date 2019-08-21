@@ -1,6 +1,6 @@
 # edge-react-gui
 
-## 1.9.0
+## 1.8.9
 
 * Improved stability when coming in and out of background
 * Integrate Safello for buying in Nordic countries and Europe
