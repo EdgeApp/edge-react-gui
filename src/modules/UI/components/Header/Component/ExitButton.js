@@ -8,8 +8,6 @@ import s from '../../../../../locales/strings.js'
 import T from '../../../components/FormattedText'
 import styles from '../style'
 
-const EXIT_TEXT = s.strings.string_exit
-
 type Props = {}
 
 class ExitButton extends Component<Props> {
@@ -19,7 +17,7 @@ class ExitButton extends Component<Props> {
   render () {
     return (
       <TouchableOpacity style={styles.sideTextWrap} onPress={this.popThis}>
-        <T style={[styles.sideText]}>{EXIT_TEXT}</T>
+        <T style={styles.sideText}>{s.strings.string_exit}</T>
       </TouchableOpacity>
     )
   }
