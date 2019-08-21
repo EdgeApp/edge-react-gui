@@ -270,6 +270,10 @@ export class EdgeProvider extends Bridgeable {
     return Promise.resolve(returnObj)
   }
 
+  async exitPlugin () {
+    Actions.pop()
+  }
+
   // Request that the user spend to an address or multiple addresses
   async requestSpend (spendTargets: Array<EdgeSpendTarget>, options?: EdgeRequestSpendOptions): Promise<EdgeTransaction> {
     const info: GuiMakeSpendInfo = {
