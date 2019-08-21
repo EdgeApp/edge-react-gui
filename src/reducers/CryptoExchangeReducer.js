@@ -36,8 +36,6 @@ export type CryptoExchangeState = {
   forceUpdateGuiCounter: number,
   shiftPendingTransaction: boolean,
   calculatingMax: boolean,
-  showKYCAlert: boolean,
-  pluginCompleteKYC: string | null,
   creatingWallet: boolean
 }
 
@@ -80,8 +78,6 @@ const initialState: CryptoExchangeState = {
   forceUpdateGuiCounter: 0,
   shiftPendingTransaction: false,
   calculatingMax: false,
-  showKYCAlert: false,
-  pluginCompleteKYC: null,
   creatingWallet: false
 }
 
@@ -96,24 +92,6 @@ function cryptoExchangeInner (state = initialState, action: Action): CryptoExcha
     }
     case 'UI/WALLETS/CREATE_WALLET_FAILURE': {
       return { ...state, creatingWallet: false }
-    }
-    case 'ON_KYC_TOKEN_SET': {
-      return { ...state, showKYCAlert: false }
-    }
-
-    case 'NEED_FINISH_KYC_OFF': {
-      return { ...state, pluginCompleteKYC: null }
-    }
-
-    case 'NEED_FINISH_KYC': {
-      return { ...state, pluginCompleteKYC: action.data.pluginName }
-    }
-
-    case 'WIPE_KYC_NEED': {
-      return { ...state, showKYCAlert: false }
-    }
-    case 'NEED_KYC': {
-      return { ...state, showKYCAlert: true }
     }
 
     case 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE': {

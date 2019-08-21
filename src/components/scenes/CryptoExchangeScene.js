@@ -4,14 +4,11 @@ import { bns } from 'biggystring'
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, Keyboard, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 
 import type { SetNativeAmountInfo } from '../../actions/CryptoExchangeActions.js'
 import { createCryptoExchangeWalletSelectorModal } from '../../components/modals/CryptoExchangeWalletSelectorModal'
 import CryptoExchangeMessageConnector from '../../connectors/components/CryptoExchangeMessageConnector'
-import { SwapKYCInfoNeededModalConnector } from '../../connectors/components/SwapKYCInfoNeededModalConnector'
-import { SwapKYCModalConnector } from '../../connectors/components/SwapKYCModalConnector.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
@@ -52,8 +49,6 @@ export type CryptoExchangeSceneComponentStateProps = {
   forceUpdateGuiCounter: number,
   shiftPendingTransaction: boolean,
   calculatingMax: boolean,
-  showKYCAlert: boolean,
-  pluginCompleteKYC: string | null,
   wallets: { [string]: GuiWallet },
   totalWallets: number,
   supportedWalletTypes: Array<Object>,
@@ -66,7 +61,6 @@ export type CryptoExchangeSceneComponentDispatchProps = {
   onSelectWallet(string, string): void,
   openModal(data: 'from' | 'to'): mixed,
   getQuoteForTransaction(SetNativeAmountInfo): void,
-  wipeKYCFlag: () => any,
   createCurrencyWallet(string, string, string): void
 }
 
@@ -77,8 +71,7 @@ type LocalState = {
   whichWalletFocus: string, // Which wallet FlipInput was last focused and edited
   fromExchangeAmount: string,
   forceUpdateGuiCounter: number,
-  toExchangeAmount: string,
-  isKycModalDisplayed: boolean
+  toExchangeAmount: string
 }
 
 export class CryptoExchangeScene extends Component<Props, LocalState> {
@@ -93,31 +86,13 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
       whichWalletFocus: Constants.FROM,
       forceUpdateGuiCounter: 0,
       fromExchangeAmount: '',
-      toExchangeAmount: '',
-      isKycModalDisplayed: false
+      toExchangeAmount: ''
     }
     this.state = newState
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
   UNSAFE_componentWillReceiveProps (nextProps: Props) {
-    const { isKycModalDisplayed } = this.state
-    if (nextProps.showKYCAlert && Actions.currentScene !== Constants.EXCHANGE_SETTINGS && !isKycModalDisplayed) {
-      Alert.alert(s.strings.kyc_title, s.strings.kyc_message, [
-        { text: s.strings.string_cancel_cap, onPress: this.wipeKYCFlag },
-        { text: s.strings.string_ok, onPress: this.getKYCToken }
-      ])
-      this.setState({
-        isKycModalDisplayed: true
-      })
-    }
-    if (!this.props.pluginCompleteKYC && nextProps.pluginCompleteKYC) {
-      // show modal.   closeFinishKYCModal
-      launchModal(SwapKYCInfoNeededModalConnector, { style: { margin: 0 } }).then((response: null) => {
-        console.log('nav: ', response)
-      })
-    }
-
     if (this.state.forceUpdateGuiCounter !== nextProps.forceUpdateGuiCounter) {
       this.setState({
         fromExchangeAmount: nextProps.fromExchangeAmount,
@@ -212,18 +187,6 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
         </KeyboardAwareScrollView>
       </SceneWrapper>
     )
-  }
-  wipeKYCFlag = () => {
-    this.props.wipeKYCFlag()
-    this.setState({
-      isKycModalDisplayed: false
-    })
-  }
-  getKYCToken = () => {
-    this.wipeKYCFlag()
-    launchModal(SwapKYCModalConnector, { style: { margin: 0 } }).then((response: null | { accessToken: string, refreshToken: string }) => {
-      console.log('nav: ', response)
-    })
   }
   getQuote = () => {
     const data: SetNativeAmountInfo = {

@@ -1,11 +1,22 @@
 // @flow
+
 import { bns } from 'biggystring'
-import type { EdgeCurrencyWallet, EdgeMetadata, EdgeSpendInfo, EdgeSwapQuote, EdgeSwapRequest, EdgeTransaction } from 'edge-core-js'
-import { errorNames } from 'edge-core-js'
+import {
+  type EdgeCurrencyWallet,
+  type EdgeMetadata,
+  type EdgeSpendInfo,
+  type EdgeSwapQuote,
+  type EdgeSwapRequest,
+  type EdgeTransaction,
+  errorNames
+} from 'edge-core-js/types'
+import React from 'react'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
+import { SwapVerifyShapeshiftModal } from '../components/modals/SwapVerifyShapeshiftModal.js'
+import { Airship } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants'
 import { intl } from '../locales/intl'
 import s from '../locales/strings.js'
@@ -214,12 +225,22 @@ const processSwapQuoteError = (error: any) => (dispatch: Dispatch, getState: Get
         }
 
         case 'needsActivation': {
-          return dispatch({ type: 'NEED_KYC' })
+          if (error.pluginName === 'shapeshift') {
+            Alert.alert(s.strings.kyc_title, s.strings.kyc_message, [
+              { text: s.strings.string_cancel_cap, onPress: () => {} },
+              { text: s.strings.string_ok, onPress: () => Actions[Constants.SWAP_ACTIVATE_SHAPESHIFT]() }
+            ])
+            return
+          }
+          break // Not handled
         }
 
         case 'noVerification': {
-          const { pluginName } = error
-          return dispatch({ type: 'NEED_FINISH_KYC', data: { pluginName } })
+          if (error.pluginName === 'shapeshift') {
+            Airship.show(bridge => <SwapVerifyShapeshiftModal bridge={bridge} />)
+            return
+          }
+          break // Not handled
         }
       }
       break // Not handled

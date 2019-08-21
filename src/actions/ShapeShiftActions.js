@@ -14,7 +14,6 @@ export function activateShapeShift (oauthCode: string) {
 
     const userSettings = await fetchShapeShiftToken(oauthCode)
     await account.swapConfig['shapeshift'].changeUserSettings(userSettings)
-    dispatch({ type: 'ON_KYC_TOKEN_SET' })
   }
 }
 

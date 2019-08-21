@@ -2,7 +2,7 @@
 
 import type { EdgeAccount } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, Image, Linking, View } from 'react-native'
+import { ActivityIndicator, Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { swapPluginLogos } from '../../assets/images/exchange'
@@ -13,9 +13,9 @@ import Slider from '../../modules/UI/components/Slider/index'
 import { styles } from '../../styles/scenes/CryptoExchangeQuoteSceneStyles.js'
 import { type GuiSwapInfo } from '../../types/types.js'
 import { CircleTimer } from '../common/CircleTimer'
-import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { createKYCAlertModal } from '../modals/KYCAlertModal'
+import { SwapVerifyChangellyModal } from '../modals/SwapVerifyChangellyModal.js'
+import { Airship } from '../services/AirshipInstance.js'
 
 export type OwnProps = {
   swapInfo: GuiSwapInfo
@@ -40,7 +40,11 @@ type State = {}
 
 class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
   componentDidMount = () => {
-    this.checkForKYC()
+    const { swapInfo } = this.props
+    const { pluginName } = swapInfo.quote
+    if (pluginName === 'changelly') {
+      this.checkChangellyKYC()
+    }
     global.firebase && global.firebase.analytics().logEvent(`Exchange_Shift_Quote`)
   }
 
@@ -59,87 +63,21 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
     return <CircleTimer style={styles.timerContainer} timeExpired={() => timeExpired(swapInfo)} expiration={expirationDate} />
   }
 
-  checkForKYC = () => {
-    const { account, swapInfo } = this.props
-    const { pluginName } = swapInfo.quote
-    const componentProps = {
-      aboutText: '',
-      acceptText: '',
-      termsText: '',
-      privacyText: '',
-      amlText: ''
+  async checkChangellyKYC () {
+    const { account, swapInfo, timeExpired } = this.props
+    const swapConfig = account.swapConfig.changelly
+    if (swapConfig.userSettings && swapConfig.userSettings.agreedToTerms) return
+
+    const result = await Airship.show(bridge => <SwapVerifyChangellyModal bridge={bridge} />)
+
+    if (result) {
+      await account.swapConfig.changelly.changeUserSettings({ agreedToTerms: true })
+    } else {
+      // If the user rejects the terms, disable Changelly and expire the quote:
+      await account.swapConfig.changelly.changeUserSettings({ agreedToTerms: false })
+      await account.swapConfig.changelly.changeEnabled(false)
+      timeExpired(swapInfo)
     }
-    switch (pluginName) {
-      case 'changelly':
-        console.log('KYC: settings', account.swapConfig[pluginName])
-        if (!account.swapConfig[pluginName].userSettings || !account.swapConfig[pluginName].userSettings.agreedToTerms) {
-          componentProps.aboutText = s.strings.changelly_about
-          componentProps.acceptText = s.strings.changelly_kyc_statement
-          componentProps.termsText = s.strings.terms_of_use
-          componentProps.privacyText = s.strings.privacy_policy
-          componentProps.amlText = s.strings.changelly_aml_kyc
-        }
-        break
-    }
-    if (componentProps.aboutText !== '') {
-      const modal = createKYCAlertModal({
-        logo: swapPluginLogos[pluginName],
-        aboutText: componentProps.aboutText,
-        acceptText: componentProps.acceptText,
-        termsText: componentProps.termsText,
-        privacyText: componentProps.privacyText,
-        amlText: componentProps.amlText,
-        onAccept: this.acceptKYCWarning,
-        termsClick: this.viewTerms,
-        privacyClick: this.viewPrivacy,
-        amlClick: this.viewAML
-      })
-      launchModal(modal).then((response: null) => {})
-    }
-  }
-  viewPrivacy = () => {
-    const { swapInfo } = this.props
-    const { pluginName } = swapInfo.quote
-    let url = null
-    switch (pluginName) {
-      case 'changelly':
-        url = 'https://changelly.com/privacy-policy'
-        break
-    }
-    if (url) {
-      Linking.openURL(url)
-    }
-  }
-  viewAML = () => {
-    const { swapInfo } = this.props
-    const { pluginName } = swapInfo.quote
-    let url = null
-    switch (pluginName) {
-      case 'changelly':
-        url = 'https://changelly.com/aml-kyc'
-        break
-    }
-    if (url) {
-      Linking.openURL(url)
-    }
-  }
-  viewTerms = () => {
-    const { swapInfo } = this.props
-    const { pluginName } = swapInfo.quote
-    let url = null
-    switch (pluginName) {
-      case 'changelly':
-        url = 'https://changelly.com/terms-of-use'
-        break
-    }
-    if (url) {
-      Linking.openURL(url)
-    }
-  }
-  acceptKYCWarning = async () => {
-    const { account, swapInfo } = this.props
-    const { pluginName } = swapInfo.quote
-    await account.swapConfig[pluginName].changeUserSettings({ agreedToTerms: true })
   }
 
   render () {

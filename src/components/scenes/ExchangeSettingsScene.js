@@ -3,13 +3,14 @@
 import { type EdgeSwapConfig } from 'edge-core-js/types'
 import React, { Component } from 'react'
 import { Image, View } from 'react-native'
+import CookieManager from 'react-native-cookies'
+import { Actions } from 'react-native-router-flux'
 
 import { getSwapPluginIcon } from '../../assets/images/exchange'
-import { SwapKYCModalConnector } from '../../connectors/components/SwapKYCModalConnector.js'
+import * as Constants from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/index'
 import styles from '../../styles/scenes/SettingsStyle'
-import { launchModal } from '../common/ModalProvider.js'
 import SwitchRow from '../common/RowSwitch.js'
 import { RowWithButton } from '../common/RowWithButton.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -72,9 +73,9 @@ export class ExchangeSettingsComponent extends Component<ExchangeSettingsProps, 
 
   shapeShiftSignInToggle = () => {
     if (this.state.needsActivation.shapeshift) {
-      launchModal(SwapKYCModalConnector, { style: { margin: 0 } }).then((response: null | { accessToken: string, refreshToken: string }) => {
-        console.log('exchange: ', response)
-      })
+      CookieManager.clearAll()
+        .catch(e => {}) // TODO: Error handling
+        .then(() => Actions[Constants.SWAP_ACTIVATE_SHAPESHIFT]())
     } else {
       this.props.shapeShiftLogOut()
     }

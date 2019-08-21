@@ -85,10 +85,6 @@ type NoDataActionName =
   | 'LOGS/SEND_LOGS_PENDING'
   | 'MANAGE_TOKENS_START'
   | 'MANAGE_TOKENS_SUCCESS'
-  | 'NEED_FINISH_KYC_OFF'
-  | 'NEED_KYC'
-  | 'NEED_KYC'
-  | 'ON_KYC_TOKEN_SET'
   | 'OPEN_SELECT_USER'
   | 'PASSWORD_REMINDER_MODAL/CHECK_PASSWORD_FAIL'
   | 'PASSWORD_REMINDER_MODAL/CHECK_PASSWORD_START'
@@ -121,7 +117,6 @@ type NoDataActionName =
   | 'UNIQUE_IDENTIFIER_MODAL/RESET'
   | 'USE_LEGACY_REQUEST_ADDRESS'
   | 'USE_REGULAR_REQUEST_ADDRESS'
-  | 'WIPE_KYC_NEED'
 
 export type Action =
   | { type: LegacyActionName, data: any }
@@ -195,7 +190,6 @@ export type Action =
       }
     }
   | { type: 'CONTACTS/LOAD_CONTACTS_SUCCESS', data: { contacts: Array<GuiContact> } }
-  | { type: 'NEED_FINISH_KYC', data: { pluginName: string } }
   | { type: 'GENERIC_SHAPE_SHIFT_ERROR', data: string }
   | { type: 'OPEN_WALLET_SELECTOR_MODAL', data: 'from' | 'to' }
   | { type: 'PARSE_URI_SUCCEEDED', data: { parsedUri: EdgeParsedUri } }
