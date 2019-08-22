@@ -273,6 +273,7 @@
   "my_crypto_wallet_name": "私の%s",
   "string_from_exchange_info": "%4$sから%1$s%2$s(%3$s) を交換します",
   "string_help": "ヘルプ",
+  "string_exit": "",
   "string_next": "次へ",
   "string_next_capitalized": "次へ",
   "string_no_name": "無名",
