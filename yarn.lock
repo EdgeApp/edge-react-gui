@@ -2206,9 +2206,9 @@ bs58check@^2.1.1, bs58check@^2.1.2:
     create-hash "^1.1.0"
     safe-buffer "^5.1.2"
 
-"bs58grscheck@https://github.com/Groestlcoin/bs58grscheck":
+"bs58grscheck@git+https://github.com/Groestlcoin/bs58grscheck.git":
   version "2.1.2"
-  resolved "https://github.com/Groestlcoin/bs58grscheck#020feec2b3153aeb278596ea70ce3579a37f4e21"
+  resolved "git+https://github.com/Groestlcoin/bs58grscheck.git#020feec2b3153aeb278596ea70ce3579a37f4e21"
   dependencies:
     bs58 "^4.0.0"
     create-hash "^1.1.0"
@@ -3398,10 +3398,10 @@ edge-currency-accountbased@^0.3.1:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@^4.5.1:
-  version "4.5.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.5.1.tgz#f8a5075d6ac87f4fb0335574df4c43e3e8bf2929"
-  integrity sha512-diO5L8axwHO59iLxbEG8UJlp+aO9yf2OutgDLWw/SFZbShTguRktkdFIkhvPJm6rL9gWmHTqA3o345C3S9UZfg==
+edge-currency-bitcoin@^4.5.2:
+  version "4.5.2"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.5.2.tgz#075d25a52a9533a4a0bd6e97ad0491c12207bc86"
+  integrity sha512-nUYiXK3jmbvznvJ6PObvlaLZUDgW6ov6wLCMC9KIrCUi6OkDjvE0dXBB5u5qhs/anLUdU27PXYTYMTst0gFtBA==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -3429,10 +3429,10 @@ edge-currency-monero@0.2.4:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#william/v0.14.0-hardfork"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.8.0:
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.8.0.tgz#70b7ff5164568cedc0d43659c340797dbec255ec"
-  integrity sha512-ZmMxkql/px4TxLw/sZWx+L4a+jZSrz6IXH95rbayjs0YXKlTi04TKq8RXKku2+SsfNwBPEGh002JhhiNtz+w0Q==
+edge-exchange-plugins@^0.8.1:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.8.1.tgz#486b40d3e331d853c838c9f1c4f75f4578feda2c"
+  integrity sha512-3Jl/TaW4SoE03rp7G0GhwOmKarc9CFfcWexwmTj5GYPW973z20Yh+2bDY0cL6jCB8Jwe7SBjiHbL61tbC4moOw==
   dependencies:
     esm "^3.2.4"
     hashjs "^1.2.0"
