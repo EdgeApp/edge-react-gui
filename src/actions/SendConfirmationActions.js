@@ -137,6 +137,7 @@ export const sendConfirmationUpdateTx = (guiMakeSpendInfo: GuiMakeSpendInfo | Ed
       return dispatch(updateTransaction(edgeTransaction, guiMakeSpendInfoClone, forceUpdateGui, null))
     })
     .catch(e => {
+      console.log(e)
       return dispatch(updateTransaction(null, guiMakeSpendInfoClone, forceUpdateGui, e))
     })
 }
