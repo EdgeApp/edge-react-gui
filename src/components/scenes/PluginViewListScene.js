@@ -45,22 +45,29 @@ type Props = {
 }
 
 type State = {
-  isSpendModal: boolean,
   data: Array<Object>
 }
 
 const MODAL_DATA_FILE = 'pluginModalTracker.json'
 
 class PluginList extends Component<Props, State> {
+  isSpendModal: boolean
+
   constructor (props) {
     super(props)
-    this.state = {
-      isSpendModal: false,
-      data: []
-    }
+    this.isSpendModal = false
+    this.state = { data: [] }
   }
 
   async componentDidMount () {
+    await this.checkDisclaimer()
+    if (!this.isSpendModal) this.checkCountry()
+  }
+
+  /**
+   * Verify that we have shown the disclaimer
+   */
+  async checkDisclaimer () {
     const { account } = this.props
     try {
       const text = await account.disklet.getText(MODAL_DATA_FILE)
@@ -86,6 +93,14 @@ class PluginList extends Component<Props, State> {
       await account.disklet.setText(MODAL_DATA_FILE, text)
       await Airship.show(bridge => <SimpleConfirmationModal bridge={bridge} text={s.strings.plugin_provider_disclaimer} buttonText={s.strings.string_ok_cap} />)
     }
+  }
+
+  /**
+   * Verify that we have a country selected
+   */
+  async checkCountry () {
+    const { countryCode } = this.props
+    if (!countryCode) this.openCountrySelectionModal()
   }
 
   _onPress = (plugin: BuySellPlugin) => {
@@ -229,7 +244,7 @@ class PluginList extends Component<Props, State> {
 
     return (
       <SceneWrapper background="body" hasTabs={false}>
-        {this.state.isSpendModal || (
+        {this.isSpendModal || (
           <View style={styles.selectedCountryWrapper}>
             <TouchableWithoutFeedback style={styles.selectedCountry} onPress={this.openCountrySelectionModal}>
               <View style={styles.selectedCountryTextWrapper}>
@@ -257,9 +272,6 @@ class PluginList extends Component<Props, State> {
 class PluginBuySellComponent extends PluginList {
   componentDidMount () {
     super.componentDidMount()
-    const { countryCode } = this.props
-    if (!countryCode) this.openCountrySelectionModal()
-    console.log('pl: ', this.props.developerModeOn)
     this.setState({
       data: buySellPlugins(this.props.developerModeOn)
     })
@@ -268,9 +280,9 @@ class PluginBuySellComponent extends PluginList {
 
 class PluginSpendComponent extends PluginList {
   componentDidMount () {
+    this.isSpendModal = true
     super.componentDidMount()
     this.setState({
-      isSpendModal: true,
       data: spendPlugins(this.props.developerModeOn)
     })
   }
