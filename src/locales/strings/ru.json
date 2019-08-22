@@ -273,6 +273,7 @@
   "my_crypto_wallet_name": "Мой %s",
   "string_from_exchange_info": "Вы собираетесь обменять\n %1$s %2$s\n (%3$s)\n с %4$s",
   "string_help": "Помощь",
+  "string_exit": "",
   "string_next": "ДАЛЕЕ",
   "string_next_capitalized": "Далее",
   "string_no_name": "Без имени",
