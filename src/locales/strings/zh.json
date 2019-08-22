@@ -273,6 +273,7 @@
   "my_crypto_wallet_name": "我的%s",
   "string_from_exchange_info": "你即将交易\n %1$s %2$s\n （%3$s）\n 从 %4$s",
   "string_help": "説明",
+  "string_exit": "",
   "string_next": "下一步",
   "string_next_capitalized": "下一步",
   "string_no_name": "没有名字",
