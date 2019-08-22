@@ -273,6 +273,7 @@
   "my_crypto_wallet_name": "Mon %s",
   "string_from_exchange_info": "Vous allez faire une échage %1$s %2$s\n (%3$s)\nde %4$s",
   "string_help": "Aide",
+  "string_exit": "",
   "string_next": "SUIVANT",
   "string_next_capitalized": "Suivant",
   "string_no_name": "Aucun nom",
