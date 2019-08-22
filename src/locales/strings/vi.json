@@ -273,6 +273,7 @@
   "my_crypto_wallet_name": "My %s",
   "string_from_exchange_info": "Bạn đang trao đổi\n %1$s %2$s\n (%3$s)\n từ %4$s",
   "string_help": "Trợ giúp",
+  "string_exit": "",
   "string_next": "Đi tiếp",
   "string_next_capitalized": "Đi tiếp",
   "string_no_name": "Không có tên",
