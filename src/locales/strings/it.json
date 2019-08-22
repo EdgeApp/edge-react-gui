@@ -273,6 +273,7 @@
   "my_crypto_wallet_name": "I miei %s",
   "string_from_exchange_info": "Stai per scambiare %1$s %2$s\n (%3$s)\n da %4$s",
   "string_help": "Aiuto",
+  "string_exit": "",
   "string_next": "PROSSIMO",
   "string_next_capitalized": "Prossimo",
   "string_no_name": "Nessun nome",
