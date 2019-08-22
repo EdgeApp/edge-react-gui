@@ -4,12 +4,13 @@ import { createInputModal, createSecureTextModal, createYesNoModal } from 'edge-
 import type { EdgeAccount } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import React from 'react'
-import { Alert, Image } from 'react-native'
+import { Image } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import iconImage from '../assets/images/otp/OTP-badge_sm.png'
 import { launchModal } from '../components/common/ModalProvider.js'
+import { showToast } from '../components/services/AirshipInstance.js'
 import { CURRENCY_PLUGIN_NAMES, ION_ICONS, LOCKED_ICON, WALLET_LIST } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import { restoreWalletsRequest } from '../modules/Core/Account/api.js'
@@ -327,10 +328,10 @@ export const showSendLogsModal = () => async (dispatch: Dispatch, getState: GetS
     const notes = await launchModal(unlockSettingsModal)
     if (notes || notes === '') {
       await dispatch(sendLogs(notes))
-      Alert.alert(s.strings.settings_modal_send_logs_success)
+      showToast(s.strings.settings_modal_send_logs_success)
     }
-  } catch (e) {
-    Alert.alert(e.message)
+  } catch (error) {
+    dispatch(displayErrorAlert(error))
   }
 }
 
