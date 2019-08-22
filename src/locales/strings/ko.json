@@ -273,6 +273,7 @@
   "my_crypto_wallet_name": "나의 %s",
   "string_from_exchange_info": "%4$s 부터 %1$s %2$s (%3$s) 로 거래합니다.",
   "string_help": "도움말",
+  "string_exit": "",
   "string_next": "다음",
   "string_next_capitalized": "다음",
   "string_no_name": "이름이 없음",
