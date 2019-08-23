@@ -2,6 +2,8 @@
 
 import { Platform, StatusBar } from 'react-native'
 
+import { scale } from '../../util/scaling.js'
+
 export const colors = {
   gradient: {
     light: '#3b7ada',
@@ -46,6 +48,10 @@ if (Platform.OS !== 'ios') {
 
 // https://projects.invisionapp.com/d/main#/console/10954562/239168414/inspect
 export const THEME = {
+  rem (n: number) {
+    return Math.round(n * scale(16))
+  },
+
   BUTTONS: {
     HEIGHT: 44
   },
