@@ -5,6 +5,7 @@ import { Image, StyleSheet } from 'react-native'
 
 import ReceivedIcon from '../../../../assets/images/transactions/transaction-details-received.png'
 import SentIcon from '../../../../assets/images/transactions/transaction-details-sent.png'
+import { THEME } from '../../../../theme/variables/airbitz.js'
 import { scale } from '../../../../util/scaling.js'
 
 export type Props = {
@@ -20,13 +21,12 @@ export function PayeeIcon (props: Props) {
   return <Image source={source} style={styles.payeeIcon} />
 }
 
-const transparent = 'transparent'
 const styles = StyleSheet.create({
   payeeIcon: {
     alignSelf: 'center',
     position: 'absolute',
     top: scale(-24),
-    backgroundColor: transparent,
+    backgroundColor: THEME.COLORS.WHITE,
     borderRadius: scale(24),
     height: scale(48),
     width: scale(48)
