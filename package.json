@@ -144,7 +144,7 @@
     "edge-currency-bitcoin": "^4.5.2",
     "edge-currency-monero": "0.2.4",
     "edge-login-ui-rn": "0.5.38",
-    "edge-exchange-plugins": "^0.8.1",
+    "edge-exchange-plugins": "^0.8.2",
     "https-browserify": "0.0.1",
     "lodash": "^4.17.2",
     "os-browserify": "^0.1.2",
