@@ -39,6 +39,8 @@ type Props = OwnProps & StateProps & DispatchProps
 type State = {}
 
 class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
+  calledApprove: true
+
   componentDidMount = () => {
     const { swapInfo } = this.props
     const { pluginName } = swapInfo.quote
@@ -48,12 +50,23 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
     global.firebase && global.firebase.analytics().logEvent(`Exchange_Shift_Quote`)
   }
 
+  componentWillUnmount () {
+    const { swapInfo } = this.props
+    if (!this.calledApprove) swapInfo.quote.close()
+  }
+
+  doShift = () => {
+    const { shift, swapInfo } = this.props
+    this.calledApprove = true
+    shift(swapInfo)
+  }
+
   renderSlider = () => {
-    const { pending, shift, swapInfo } = this.props
+    const { pending } = this.props
     if (pending) {
       return <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size={'small'} />
     }
-    return <Slider onSlidingComplete={() => shift(swapInfo)} sliderDisabled={pending} parentStyle={styles.slideContainer} />
+    return <Slider onSlidingComplete={this.doShift} sliderDisabled={pending} parentStyle={styles.slideContainer} />
   }
   renderTimer = () => {
     const { swapInfo, timeExpired } = this.props
