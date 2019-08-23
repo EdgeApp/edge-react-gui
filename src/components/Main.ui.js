@@ -61,6 +61,7 @@ import ControlPanel from '../modules/UI/components/ControlPanel/ControlPanelConn
 import ErrorAlert from '../modules/UI/components/ErrorAlert/ErrorAlertConnector'
 import T from '../modules/UI/components/FormattedText/index'
 import BackButton from '../modules/UI/components/Header/Component/BackButton.ui'
+import { ExitButton } from '../modules/UI/components/Header/Component/ExitButton.js'
 import HelpButton from '../modules/UI/components/Header/Component/HelpButton.ui.js'
 import Header from '../modules/UI/components/Header/Header.ui'
 import WalletName from '../modules/UI/components/Header/WalletName/WalletNameConnector.js'
@@ -606,7 +607,7 @@ export default class Main extends Component<Props> {
                     component={ifLoggedIn(PluginView, LoadingScene)}
                     renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
                     renderLeftButton={renderPluginBackButton(BACK)}
-                    renderRightButton={this.renderEmptyButton()}
+                    renderRightButton={this.renderExitButton()}
                   />
                   <Scene
                     key={Constants.PLUGIN_BUY_LEGACY}
@@ -614,7 +615,7 @@ export default class Main extends Component<Props> {
                     component={ifLoggedIn(LegacyPluginView, LoadingScene)}
                     renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
                     renderLeftButton={renderLegacyPluginBackButton(BACK)}
-                    renderRightButton={this.renderEmptyButton()}
+                    renderRightButton={this.renderExitButton()}
                   />
                 </Stack>
                 <Stack key={Constants.PLUGIN_BUY_DEEP} hideDrawerButton={true}>
@@ -624,7 +625,7 @@ export default class Main extends Component<Props> {
                     component={ifLoggedIn(PluginView, LoadingScene)}
                     renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
                     renderLeftButton={renderPluginBackButton(BACK)}
-                    renderRightButton={this.renderEmptyButton()}
+                    renderRightButton={this.renderExitButton()}
                   />
                 </Stack>
 
@@ -644,7 +645,7 @@ export default class Main extends Component<Props> {
                     component={ifLoggedIn(PluginView, LoadingScene)}
                     renderTitle={this.renderTitle(PLUGIN_SPEND)}
                     renderLeftButton={renderPluginBackButton(BACK)}
-                    renderRightButton={this.renderEmptyButton()}
+                    renderRightButton={this.renderExitButton()}
                   />
                   <Scene
                     key={Constants.PLUGIN_SPEND_LEGACY}
@@ -652,7 +653,7 @@ export default class Main extends Component<Props> {
                     component={ifLoggedIn(LegacyPluginView, LoadingScene)}
                     renderTitle={this.renderTitle(PLUGIN_SPEND)}
                     renderLeftButton={renderLegacyPluginBackButton(BACK)}
-                    renderRightButton={this.renderEmptyButton()}
+                    renderRightButton={this.renderExitButton()}
                   />
                 </Stack>
                 <Stack key={Constants.TERMS_OF_SERVICE}>
@@ -715,6 +716,10 @@ export default class Main extends Component<Props> {
         <WalletName />
       </View>
     )
+  }
+
+  renderExitButton = () => {
+    return <ExitButton />
   }
 
   renderEmptyButton = () => {

@@ -2,7 +2,7 @@
 
 import type { EdgeAccount } from 'edge-core-js'
 import React, { Component } from 'react'
-import { Alert, ScrollView, Text, View } from 'react-native'
+import { ScrollView, Text, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import * as Constants from '../../constants/indexConstants'
@@ -20,6 +20,7 @@ import RowRoute from '../common/RowRoute'
 import RowSwitch from '../common/RowSwitch'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { createAutoLogoutModal } from '../modals/AutoLogoutModal.ui'
+import { showToast } from '../services/AirshipInstance.js'
 
 const DISABLE_TEXT = s.strings.string_disable
 
@@ -97,9 +98,9 @@ export default class SettingsOverview extends Component<Props, State> {
     }
   }
 
-  _onPressDummyRouting = () => {}
-
-  unlockSettingsAlert = () => Alert.alert(null, s.strings.settings_alert_unlock, [{ text: s.strings.string_ok }])
+  unlockSettingsAlert () {
+    showToast(s.strings.settings_alert_unlock)
+  }
   _onPressChangePasswordRouting = () => {
     return this.props.isLocked ? this.unlockSettingsAlert() : Actions[Constants.CHANGE_PASSWORD]()
   }
