@@ -17,7 +17,7 @@ import ManageTokenRow from '../common/ManageTokenRow.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
 // Put these in reverse order of preference
-const PREFERRED_TOKENS = ['WINGS', 'HERC', 'REP']
+const PREFERRED_TOKENS = ['WINGS', 'HERC', 'REP', 'AGLD']
 
 export type ManageTokensOwnProps = {
   guiWallet: GuiWallet
