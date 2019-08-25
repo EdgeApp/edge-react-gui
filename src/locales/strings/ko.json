@@ -270,6 +270,7 @@
   "string_first_ravencoin_wallet_name": "My Ravencoin (레이븐코인)",
   "string_first_zcoin_wallet_name": "My Zcoin (지코인)",
   "string_first_stellar_wallet_name": "My Stellar (스텔라)",
+  "string_first_tezos_wallet_name": "",
   "my_crypto_wallet_name": "나의 %s",
   "string_from_exchange_info": "%4$s 부터 %1$s %2$s (%3$s) 로 거래합니다.",
   "string_help": "도움말",
