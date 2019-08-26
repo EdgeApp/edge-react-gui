@@ -1,41 +1,32 @@
 // @flow
+
 import { PrimaryButton } from 'edge-components'
 import React, { Component } from 'react'
-import { View } from 'react-native'
+import { Text } from 'react-native'
+import EntypoIcon from 'react-native-vector-icons/Entypo'
 
-import { EXCLAMATION, FONT_AWESOME } from '../../constants/indexConstants'
-import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
-import { colors } from '../../theme/variables/airbitz.js'
-import { scale } from '../../util/scaling.js'
-import { type AirshipBridge } from '../common/Airship.js'
-import { AirshipModal } from '../common/AirshipModal.js'
-import { IconCircle } from '../common/IconCircle.js'
+import { type AirshipBridge, AirshipModal, ContentArea, IconCircle, THEME, textStyles } from './modalParts.js'
 
-type SimpleConfirmationModalProps = {
+type Props = {
+  bridge: AirshipBridge<void>,
   text: string,
-  buttonText: string,
-  bridge: AirshipBridge<string>
+  buttonText: string
 }
 
-type SimpleConfirmationModalState = {}
-
-export class SimpleConfirmationModal extends Component<SimpleConfirmationModalProps, SimpleConfirmationModalState> {
+export class SimpleConfirmationModal extends Component<Props> {
   render () {
-    const { bridge, buttonText } = this.props
+    const { bridge, buttonText, text } = this.props
     return (
-      <AirshipModal bridge={bridge} onCancel={() => bridge.resolve('complete')}>
+      <AirshipModal bridge={bridge} onCancel={() => bridge.resolve()}>
         <IconCircle>
-          <Icon type={FONT_AWESOME} name={EXCLAMATION} size={36} color={colors.primary} />
+          <EntypoIcon name="info" size={THEME.rem(2)} color={THEME.COLORS.SECONDARY} />
         </IconCircle>
-        <View style={{ padding: scale(16), flexGrow: 1 }}>
-          <FormattedText fontSize={16} style={{ textAlign: 'center', paddingBottom: scale(16), flexGrow: 1 }}>
-            {this.props.text}
-          </FormattedText>
-          <PrimaryButton onPress={() => bridge.resolve('complete')}>
+        <ContentArea padding="wide">
+          <Text style={[textStyles.bodyParagraph, { flexGrow: 1 }]}>{text}</Text>
+          <PrimaryButton onPress={() => bridge.resolve()}>
             <PrimaryButton.Text>{buttonText}</PrimaryButton.Text>
           </PrimaryButton>
-        </View>
+        </ContentArea>
       </AirshipModal>
     )
   }

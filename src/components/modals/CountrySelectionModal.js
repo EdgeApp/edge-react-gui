@@ -10,11 +10,8 @@ import s from '../../locales/strings.js'
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import styles from '../../styles/components/CountrySelectionModalStyle.js'
-import { colors } from '../../theme/variables/airbitz.js'
 import { scale } from '../../util/scaling.js'
-import { type AirshipBridge } from '../common/Airship.js'
-import { AirshipModal } from '../common/AirshipModal.js'
-import { IconCircle } from '../common/IconCircle.js'
+import { type AirshipBridge, AirshipModal, IconCircle } from './modalParts.js'
 
 type CountrySelectionModalProps = {
   countryCode: string,
@@ -82,7 +79,7 @@ export class CountrySelectionModal extends Component<CountrySelectionModalProps,
         {gap => (
           <Fragment>
             <IconCircle>
-              <Icon type={FONT_AWESOME} name={FLAG} size={36} color={colors.primary} />
+              <Icon type={FONT_AWESOME} name={FLAG} size={36} />
             </IconCircle>
             <View style={{ flex: 1, paddingLeft: scale(12), paddingRight: scale(12) }}>
               <FormField
