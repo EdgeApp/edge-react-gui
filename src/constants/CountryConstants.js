@@ -262,6 +262,17 @@ export const EDGE_PLUGIN_REGIONS = {
     priority: 1,
     paymentType: 'bank'
   },
+  banxa: {
+    countryCodes: {
+      AU: true
+    },
+    cryptoCodes: {
+      BTC: true,
+      ETH: true
+    },
+    paymentType: 'bank',
+    priority: 4,
+  },
   moonpay: {
     countryCodes: {
       AT: true,
