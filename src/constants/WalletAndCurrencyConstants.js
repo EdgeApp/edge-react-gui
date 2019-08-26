@@ -168,6 +168,10 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   HERC: {
     displayBuyCrypto: true,
     isImportKeySupported: false
+  },
+  XTZ: {
+    // will share / copy public address instead of URI on Request scene
+    isUriEncodedStructure: true
   }
 }
 
