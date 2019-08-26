@@ -65,6 +65,7 @@ export type SettingsState = {
   DGB: CurrencySetting,
   WINGS: CurrencySetting,
   HERC: CurrencySetting,
+  AGLD: CurrencySetting,
 
   account: ?Object,
   autoLogoutTimeInSeconds: number,

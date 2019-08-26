@@ -177,6 +177,9 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   BRZ: {
     denomination: '10000'
   },
+  AGLD: {
+    denomination: '1000000000'
+  },
   customTokens: [],
   passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN
 }
@@ -207,6 +210,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   UFO: 'object',
   REP: 'object',
   WINGS: 'object',
+  AGLD: 'object',
   IND: 'object',
   HUR: 'object',
   HERC: 'object',

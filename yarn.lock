@@ -3430,10 +3430,10 @@ edge-core-js@^0.16.7:
     ws "^5.1.1"
     yaob "^0.3.4"
 
-edge-currency-accountbased@^0.3.4:
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.3.4.tgz#3e49e4085b43a7a5ce3b0e0e431ae7bfb7ff704f"
-  integrity sha512-hkLHV1cEjLHFjmrwiNGhjfZnYIyi3hU1tCjfPpVfzPlPjtD+9GoaU2zvRu7HZI2//4+KEyOAmRxSGfMcr1r+mg==
+edge-currency-accountbased@^0.3.5:
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.3.5.tgz#b93f8db099dfd4c1d2669b88b06c6fa2d7cc1e45"
+  integrity sha512-B8enovMct9jBYAJEpq6+9XWEbm1eyJZOiiIuJgYl0x2hF9UFwMUTIoMKAh6stKNCO3u2JNyywjEqjx3NYMPhYw==
   dependencies:
     "@dapix/react-native-fio" "0.1.0"
     base-x "^1.0.4"
