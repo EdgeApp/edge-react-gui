@@ -2,7 +2,7 @@
 
 import { createStaticModal, createYesNoModal } from 'edge-components'
 import React, { Component, Fragment } from 'react'
-import { Image, Text, View } from 'react-native'
+import { Clipboard, Image, Text, TouchableOpacity, View } from 'react-native'
 
 import iconImage from '../../assets/images/otp/OTP-badge_sm.png'
 import * as Constants from '../../constants/indexConstants.js'
@@ -15,6 +15,7 @@ import { launchModal } from '../common/ModalProvider.js'
 import OtpHeroComponent from '../common/OtpHeroComponent.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ExpandableBoxComponent, StaticModalComponent } from '../indexComponents.js'
+import { showToast } from '../services/AirshipInstance.js'
 
 type Props = {
   isOtpEnabled: boolean,
@@ -105,11 +106,18 @@ export default class OtpSettingsScene extends Component<Props, State> {
     )
   }
 
+  onCopyOtpKey = () => {
+    Clipboard.setString(this.props.otpKey)
+    showToast(s.strings.otp_copied_modal)
+  }
+
   renderKeyBox = (styles: Object) => {
     if (this.props.isOtpEnabled) {
       return (
         <ExpandableBoxComponent style={styles.keyBox} showMessage={s.strings.otp_show_code} hideMessage={s.strings.otp_hide_code}>
-          <Text style={styles.keyText}>{this.props.otpKey}</Text>
+          <TouchableOpacity onPress={this.onCopyOtpKey}>
+            <Text style={styles.keyText}>{this.props.otpKey}</Text>
+          </TouchableOpacity>
         </ExpandableBoxComponent>
       )
     }
