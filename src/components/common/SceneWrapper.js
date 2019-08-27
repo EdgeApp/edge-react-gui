@@ -8,9 +8,6 @@ import { THEME } from '../../theme/variables/airbitz.js'
 import { KeyboardTracker } from './KeyboardTracker.js'
 import { LayoutContext, type SafeAreaGap } from './LayoutContext.js'
 
-// Should be ChildrenArray<Node>, but Flow is too old to understand:
-type NodeArray = Array<Node> | Node
-
 type BackgroundOptions =
   | 'header' // Header area covers the screen (default)
   | 'body' // Seprate header and content areas
@@ -22,7 +19,7 @@ type Props = {
   // or a function that accepts the current gap and returns an element.
   // The function will be called on each render, allowing the scene to react
   // to changes in the gap.
-  children: NodeArray | ((gap: SafeAreaGap) => NodeArray),
+  children: Node | ((gap: SafeAreaGap) => Node),
 
   // True if this scene should shrink to avoid the keyboard:
   avoidKeyboard?: boolean,

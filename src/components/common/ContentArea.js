@@ -6,16 +6,13 @@ import { View } from 'react-native'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { LadderLayout } from './LadderLayout.js'
 
-// Should be ChildrenArray<Node>, but Flow is too old to understand:
-type NodeArray = Array<Node> | Node
-
 type BackgroundOptions =
   | 'none' // Don't draw any background
   | 'body' // White content
   | 'tray' // Off-white tray area
 
 type Props = {
-  children: NodeArray,
+  children: Node,
   background?: BackgroundOptions,
 
   // True if we should expand to fill all available space,
