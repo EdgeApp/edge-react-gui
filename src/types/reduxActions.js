@@ -1,10 +1,10 @@
 // @flow
 
 import type { DiskletFolder } from 'disklet'
-import type { EdgeContext, EdgeCurrencyWallet, EdgeLobby, EdgeParsedUri, EdgeReceiveAddress, EdgeSwapQuote } from 'edge-core-js'
+import type { EdgeContext, EdgeCurrencyWallet, EdgeLobby, EdgeParsedUri, EdgeReceiveAddress } from 'edge-core-js'
 
 import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
-import { type CustomTokenInfo, type GuiContact, type GuiCurrencyInfo, type GuiWallet } from './types.js'
+import { type CustomTokenInfo, type GuiContact, type GuiCurrencyInfo, type GuiSwapInfo, type GuiWallet } from './types.js'
 
 type LegacyActionName =
   | 'ACCOUNT_INIT_COMPLETE'
@@ -85,11 +85,6 @@ type NoDataActionName =
   | 'LOGS/SEND_LOGS_PENDING'
   | 'MANAGE_TOKENS_START'
   | 'MANAGE_TOKENS_SUCCESS'
-  | 'NEED_FINISH_KYC_OFF'
-  | 'NEED_KYC_SETTING'
-  | 'NEED_KYC'
-  | 'NEED_KYC'
-  | 'ON_KYC_TOKEN_SET'
   | 'OPEN_SELECT_USER'
   | 'PASSWORD_REMINDER_MODAL/CHECK_PASSWORD_FAIL'
   | 'PASSWORD_REMINDER_MODAL/CHECK_PASSWORD_START'
@@ -122,7 +117,6 @@ type NoDataActionName =
   | 'UNIQUE_IDENTIFIER_MODAL/RESET'
   | 'USE_LEGACY_REQUEST_ADDRESS'
   | 'USE_REGULAR_REQUEST_ADDRESS'
-  | 'WIPE_KYC_NEED'
 
 export type Action =
   | { type: LegacyActionName, data: any }
@@ -196,7 +190,6 @@ export type Action =
       }
     }
   | { type: 'CONTACTS/LOAD_CONTACTS_SUCCESS', data: { contacts: Array<GuiContact> } }
-  | { type: 'NEED_FINISH_KYC', data: { pluginName: string } }
   | { type: 'GENERIC_SHAPE_SHIFT_ERROR', data: string }
   | { type: 'OPEN_WALLET_SELECTOR_MODAL', data: 'from' | 'to' }
   | { type: 'PARSE_URI_SUCCEEDED', data: { parsedUri: EdgeParsedUri } }
@@ -214,18 +207,7 @@ export type Action =
       type: 'UPDATE_EXISTING_TOKEN_SUCCESS',
       data: { tokenObj: CustomTokenInfo }
     }
-  | {
-      type: 'UPDATE_SHIFT_TRANSACTION_FEE',
-      data: {
-        quote: EdgeSwapQuote,
-        toNativeAmount: string,
-        toDisplayAmount: string,
-        fromNativeAmount: string,
-        fromDisplayAmount: string,
-        quoteExpireDate: Date | null,
-        fee: string
-      }
-    }
+  | { type: 'UPDATE_SWAP_QUOTE', data: GuiSwapInfo }
   | {
       type: 'UPDATE_WALLET_ENABLED_TOKENS',
       data: { walletId: string, tokens: Array<string> }

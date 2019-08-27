@@ -18,22 +18,31 @@ import godexLogo from './settingsExchangeGodex.png'
 import shapeshiftLogo from './settingsExchangeShapeshift.png'
 import totleLogo from './settingsExchangeTotle.png'
 
-export {
-  changellyLogo,
-  changenowLogo,
-  defaultLogo,
-  faastLogo,
-  shapeshiftLogo,
-  totleLogo,
-  godexLogo,
-  coinswitchLogo,
-  coinswitchFullLogo,
-  changellyFullLogo,
-  changenowFullLogo,
-  faastFullLogo,
-  shapeshiftFullLogo,
-  totleFullLogo,
-  godexFullLogo,
-  foxExchangeLogo,
-  foxExchangeFullLogo
+export function getSwapPluginIcon (pluginId: string) {
+  const icon = swapPluginIcons[pluginId]
+  return icon == null ? defaultLogo : icon
+}
+
+// Small icons for the settings:
+export const swapPluginIcons = {
+  changelly: changellyLogo,
+  changenow: changenowLogo,
+  coinswitch: coinswitchLogo,
+  faast: faastLogo,
+  foxExchange: foxExchangeLogo,
+  godex: godexLogo,
+  shapeshift: shapeshiftLogo,
+  totle: totleLogo
+}
+
+// Big logos for the quote scene:
+export const swapPluginLogos = {
+  changelly: changellyFullLogo,
+  changenow: changenowFullLogo,
+  coinswitch: coinswitchFullLogo,
+  faast: faastFullLogo,
+  foxExchange: foxExchangeFullLogo,
+  godex: godexFullLogo,
+  shapeshift: shapeshiftFullLogo,
+  totle: totleFullLogo
 }

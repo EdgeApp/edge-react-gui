@@ -1,46 +1,83 @@
 // @flow
+
 import { bns } from 'biggystring'
-import type { EdgeCurrencyWallet, EdgeMetadata, EdgeSpendInfo, EdgeSwapQuote, EdgeSwapRequest, EdgeTransaction } from 'edge-core-js'
-import { errorNames } from 'edge-core-js'
+import {
+  type EdgeCurrencyWallet,
+  type EdgeMetadata,
+  type EdgeSpendInfo,
+  type EdgeSwapQuote,
+  type EdgeSwapRequest,
+  type EdgeTransaction,
+  errorNames
+} from 'edge-core-js/types'
+import React from 'react'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
+import { SwapVerifyShapeshiftModal } from '../components/modals/SwapVerifyShapeshiftModal.js'
+import { Airship } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants'
 import { intl } from '../locales/intl'
 import s from '../locales/strings.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors'
-import * as WALLET_API from '../modules/Core/Wallets/api.js'
 import * as SETTINGS_SELECTORS from '../modules/Settings/selectors.js'
 import * as UI_SELECTORS from '../modules/UI/selectors'
 import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
-import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../types/types.js'
+import type { GuiCurrencyInfo, GuiDenomination, GuiSwapInfo, GuiWallet } from '../types/types.js'
 import * as UTILS from '../util/utils'
 
 const DIVIDE_PRECISION = 18
 
 export type SetNativeAmountInfo = {
-  whichWallet: string,
-  primaryExchangeAmount: string,
-  primaryNativeAmount: string,
-  fromPrimaryInfo?: GuiCurrencyInfo,
-  toPrimaryInfo?: GuiCurrencyInfo
+  whichWallet: 'from' | 'to',
+  primaryNativeAmount: string
 }
 
 export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const fromWallet: GuiWallet | null = state.cryptoExchange.fromWallet
-  const toWallet: GuiWallet | null = state.cryptoExchange.toWallet
-
-  // dispatch(actions.setNativeAmount(info, false))
   Actions[Constants.EXCHANGE_QUOTE_PROCESSING_SCENE]()
 
-  if (fromWallet && toWallet) {
-    try {
-      await dispatch(getShiftTransaction(fromWallet, toWallet, info))
-    } catch (e) {
-      dispatch(processMakeSpendError(e))
+  try {
+    const state = getState()
+    const { fromWallet, toWallet, fromCurrencyCode, toCurrencyCode } = state.cryptoExchange
+    if (fromWallet == null || toWallet == null) {
+      throw new Error('No wallet selected') // Should never happen
     }
+    if (fromCurrencyCode == null || toCurrencyCode == null) {
+      throw new Error('No currency selected') // Should never happen
+    }
+
+    const fromCoreWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
+    const toCoreWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, toWallet.id)
+    const request: EdgeSwapRequest = {
+      fromCurrencyCode,
+      fromWallet: fromCoreWallet,
+      nativeAmount: info.primaryNativeAmount,
+      quoteFor: info.whichWallet,
+      toCurrencyCode,
+      toWallet: toCoreWallet
+    }
+
+    const swapInfo = await fetchSwapQuote(state, request)
+    Actions[Constants.EXCHANGE_QUOTE_SCENE]({ swapInfo })
+    dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
+  } catch (error) {
+    Actions.popTo(Constants.EXCHANGE_SCENE)
+    dispatch(processSwapQuoteError(error))
+  }
+}
+
+export const exchangeTimerExpired = (swapInfo: GuiSwapInfo) => async (dispatch: Dispatch, getState: GetState) => {
+  if (Actions.currentScene !== Constants.EXCHANGE_QUOTE_SCENE) return
+  Actions[Constants.EXCHANGE_QUOTE_PROCESSING_SCENE]()
+
+  try {
+    swapInfo = await fetchSwapQuote(getState(), swapInfo.request)
+    Actions[Constants.EXCHANGE_QUOTE_SCENE]({ swapInfo })
+    dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
+  } catch (error) {
+    Actions.popTo(Constants.EXCHANGE_SCENE)
+    dispatch(processSwapQuoteError(error))
   }
 }
 
@@ -76,243 +113,217 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
   dispatch({ type: 'SET_FROM_WALLET_MAX', data: primaryNativeAmount })
 }
 
-const processMakeSpendError = e => (dispatch: Dispatch, getState: GetState) => {
-  console.log(e)
-  Actions.popTo(Constants.EXCHANGE_SCENE)
-  if (e.name === errorNames.InsufficientFundsError || e.message === errorNames.InsufficientFundsError) {
-    dispatch({ type: 'RECEIVED_INSUFFICENT_FUNDS_ERROR' })
-    return
-  }
-  dispatch({ type: 'GENERIC_SHAPE_SHIFT_ERROR', data: e.message })
-}
-
-export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: GetState) => {
-  dispatch({ type: 'START_SHIFT_TRANSACTION' })
-  const state = getState()
-  const quote: EdgeSwapQuote | null = state.cryptoExchange.quote
-  const fromWallet = state.cryptoExchange.fromWallet
-  const toWallet = state.cryptoExchange.toWallet
-  if (!quote || !fromWallet || !toWallet) {
-    dispatch({ type: 'DONE_SHIFT_TRANSACTION' })
-    return
-  }
-
-  const srcWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
-
-  if (!srcWallet) {
-    dispatch({ type: 'DONE_SHIFT_TRANSACTION' })
-    return
-  }
-  if (srcWallet) {
-    try {
-      global.firebase && global.firebase.analytics().logEvent(`Exchange_Shift_Start`)
-      const broadcastedTransaction: EdgeTransaction = await quote.approve()
-      await WALLET_API.saveTransaction(srcWallet, broadcastedTransaction)
-
-      const category = sprintf(
-        'exchange:%s %s %s',
-        state.cryptoExchange.fromCurrencyCode,
-        s.strings.word_to_in_convert_from_to_string,
-        state.cryptoExchange.toCurrencyCode
-      )
-      const account = CORE_SELECTORS.getAccount(state)
-      const pn = quote.pluginName
-      const si = account.swapConfig[pn].swapInfo
-      const name = si.displayName
-      const supportEmail = si.supportEmail
-      const quoteIdUri = si.quoteUri && quote.quoteId ? si.quoteUri + quote.quoteId : broadcastedTransaction.txid
-      const payinAddress = broadcastedTransaction.otherParams != null ? broadcastedTransaction.otherParams.payinAddress : ''
-      const uniqueIdentifier = broadcastedTransaction.otherParams != null ? broadcastedTransaction.otherParams.uniqueIdentifier : ''
-      const isEstimate = quote.isEstimate ? s.strings.estimated_quote : s.strings.fixed_quote
-      const notes =
-        sprintf(
-          s.strings.exchange_notes_metadata_generic2,
-          state.cryptoExchange.fromDisplayAmount,
-          state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name,
-          fromWallet.name,
-          state.cryptoExchange.toDisplayAmount,
-          state.cryptoExchange.toWalletPrimaryInfo.displayDenomination.name,
-          toWallet.name,
-          quote.destinationAddress,
-          quoteIdUri,
-          payinAddress,
-          uniqueIdentifier,
-          supportEmail
-        ) +
-        ' ' +
-        isEstimate
-
-      const edgeMetaData: EdgeMetadata = {
-        name,
-        category,
-        notes
-      }
-      Actions.popTo(Constants.EXCHANGE_SCENE)
-      await WALLET_API.setTransactionDetailsRequest(srcWallet, broadcastedTransaction.txid, broadcastedTransaction.currencyCode, edgeMetaData)
-
-      dispatch({ type: 'SHIFT_COMPLETE' })
-      setTimeout(() => {
-        Alert.alert(s.strings.exchange_succeeded, s.strings.exchanges_may_take_minutes)
-      }, 1)
-      global.firebase && global.firebase.analytics().logEvent(`Exchange_Shift_Success`)
-    } catch (error) {
-      global.firebase && global.firebase.analytics().logEvent(`Exchange_Shift_Failed`)
-      dispatch({ type: 'DONE_SHIFT_TRANSACTION' })
-      setTimeout(() => {
-        Alert.alert(s.strings.exchange_failed, error.message)
-      }, 1)
-    }
-  }
-}
-
-const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, info: SetNativeAmountInfo) => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
+async function fetchSwapQuote (state: State, request: EdgeSwapRequest): Promise<GuiSwapInfo> {
   const account = CORE_SELECTORS.getAccount(state)
-  const destWallet = CORE_SELECTORS.getWallet(state, toWallet.id)
-  const srcWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
-  const fromNativeAmount = info.primaryNativeAmount
-  const fromCurrencyCode = state.cryptoExchange.fromCurrencyCode ? state.cryptoExchange.fromCurrencyCode : undefined
-  const toCurrencyCode = state.cryptoExchange.toCurrencyCode ? state.cryptoExchange.toCurrencyCode : undefined
+  const quote: EdgeSwapQuote = await account.fetchSwapQuote(request)
 
-  if (!fromCurrencyCode || !toCurrencyCode) {
-    // this funciton is solely for flow
-    return
-  }
+  // Currency conversion tools:
+  const { fromWallet, toWallet, fromCurrencyCode, toCurrencyCode } = request
+  const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
 
-  const quoteNativeAmount = fromNativeAmount
-  const whichWalletLiteral = info.whichWallet === Constants.TO ? 'to' : 'from'
-  const quoteData: EdgeSwapRequest = {
-    fromCurrencyCode,
-    fromWallet: srcWallet,
-    nativeAmount: quoteNativeAmount,
-    quoteFor: whichWalletLiteral,
-    toCurrencyCode,
-    toWallet: destWallet
-  }
-
-  let quoteError
-  let edgeCoinExchangeQuote: EdgeSwapQuote
-  const settings = SETTINGS_SELECTORS.getSettings(state)
-  try {
-    edgeCoinExchangeQuote = await account.fetchSwapQuote(quoteData)
-  } catch (error) {
-    console.log(JSON.stringify(error))
-    if (error.name === errorNames.InsufficientFundsError || error.message === errorNames.InsufficientFundsError) {
-      dispatch(processMakeSpendError(error))
-      return
-    }
-    if (error.name === errorNames.SwapAboveLimitError) {
-      const nativeMax: string = error.nativeMax
-
-      const settings = SETTINGS_SELECTORS.getSettings(state)
-      const currentCurrencyDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, fromCurrencyCode)
-
-      const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, fromCurrencyCode)
-      const nativeToDisplayRatio = displayDenomination.multiplier
-      const displayMax = UTILS.convertNativeToDisplay(nativeToDisplayRatio)(nativeMax)
-      const errorMessage = sprintf(s.strings.amount_above_limit, displayMax, currentCurrencyDenomination.name)
-      console.log(`getShiftTransaction:above limit`)
-      dispatch({ type: 'GENERIC_SHAPE_SHIFT_ERROR', data: errorMessage })
-      Actions.popTo(Constants.EXCHANGE_SCENE)
-      return
-    }
-    if (error.name === errorNames.SwapBelowLimitError) {
-      const nativeMin: string = error.nativeMin
-
-      const settings = SETTINGS_SELECTORS.getSettings(state)
-      const currentCurrencyDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, fromCurrencyCode)
-
-      const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, fromCurrencyCode)
-      const nativeToDisplayRatio = displayDenomination.multiplier
-      const displayMin = UTILS.convertNativeToDisplay(nativeToDisplayRatio)(nativeMin)
-      const errorMessage = sprintf(s.strings.amount_below_limit, displayMin, currentCurrencyDenomination.name)
-      console.log(`getShiftTransaction:below limit`)
-      dispatch({ type: 'GENERIC_SHAPE_SHIFT_ERROR', data: errorMessage })
-      Actions.popTo(Constants.EXCHANGE_SCENE)
-      return
-    }
-    if (error.name === errorNames.SwapPermissionError) {
-      if (error.reason === 'needsActivation') {
-        dispatch({ type: 'NEED_KYC' })
-        Actions.popTo(Constants.EXCHANGE_SCENE)
-        return
-      }
-      if (error.reason === 'geoRestriction') {
-        dispatch({ type: 'GENERIC_SHAPE_SHIFT_ERROR', data: s.strings.ss_geolock })
-        Actions.popTo(Constants.EXCHANGE_SCENE)
-        return
-      }
-      if (error.reason === 'noVerification') {
-        let pluginName = ''
-        if (typeof error.pluginName === 'string') {
-          const { swapInfo } = account.swapConfig[error.pluginName]
-          pluginName = swapInfo.displayName
-        }
-        dispatch({ type: 'NEED_FINISH_KYC', data: { pluginName } })
-        Actions.popTo(Constants.EXCHANGE_SCENE)
-        return
-      }
-    }
-    if (error.name === errorNames.SwapCurrencyError) {
-      dispatch({ type: 'GENERIC_SHAPE_SHIFT_ERROR', data: sprintf(s.strings.ss_unable, fromCurrencyCode, toCurrencyCode) })
-      Actions.popTo(Constants.EXCHANGE_SCENE)
-      return
-    }
-    // console.log('Got the error ', error.name)
-    quoteError = error
-  }
-
-  if (quoteError || !edgeCoinExchangeQuote) {
-    console.log('stop')
-    throw quoteError
-  }
-
+  // Format from amount:
   const fromPrimaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
-  const toPrimaryInfo = state.cryptoExchange.toWalletPrimaryInfo
-
-  const currentFromCurrencyDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, fromCurrencyCode)
-  const currentToCurrencyDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, toCurrencyCode)
-  const feeDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, edgeCoinExchangeQuote.networkFee.currencyCode)
-
-  const fromDisplayAmountTemp = bns.div(edgeCoinExchangeQuote.fromNativeAmount, fromPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
+  const fromDisplayAmountTemp = bns.div(quote.fromNativeAmount, fromPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
   const fromDisplayAmount = bns.toFixed(fromDisplayAmountTemp, 0, 8)
-  const toDisplayAmountTemp = bns.div(edgeCoinExchangeQuote.toNativeAmount, toPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
-  const toDisplayAmount = bns.toFixed(toDisplayAmountTemp, 0, 8)
-  const feeNativeAmount = edgeCoinExchangeQuote.networkFee.nativeAmount
+
+  // Format from fiat:
+  const fromExchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, fromCurrencyCode)
+  const fromBalanceInCryptoDisplay = UTILS.convertNativeToExchange(fromExchangeDenomination.multiplier)(quote.fromNativeAmount)
+  const fromBalanceInFiatRaw = await currencyConverter.convertCurrency(fromCurrencyCode, fromWallet.fiatCurrencyCode, Number(fromBalanceInCryptoDisplay))
+  const fromFiat = intl.formatNumber(fromBalanceInFiatRaw || 0, { toFixed: 2 })
+
+  // Format fee:
+  const settings = SETTINGS_SELECTORS.getSettings(state)
+  const feeDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, quote.networkFee.currencyCode)
+  const feeNativeAmount = quote.networkFee.nativeAmount
   const feeTempAmount = bns.div(feeNativeAmount, fromPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
   const feeDisplayAmount = bns.toFixed(feeTempAmount, 0, 8)
   const fee = feeDisplayAmount + ' ' + feeDenomination.name
 
-  const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
-  const fromExchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, fromCurrencyCode)
-  const fromBalanceInCryptoDisplay = UTILS.convertNativeToExchange(fromExchangeDenomination.multiplier)(edgeCoinExchangeQuote.fromNativeAmount)
-  const fromBalanceInFiatRaw = await currencyConverter.convertCurrency(fromCurrencyCode, fromWallet.isoFiatCurrencyCode, Number(fromBalanceInCryptoDisplay))
-  const fromBalanceInFiat = intl.formatNumber(fromBalanceInFiatRaw || 0, { toFixed: 2 })
+  // Format to amount:
+  const toPrimaryInfo = state.cryptoExchange.toWalletPrimaryInfo
+  const toDisplayAmountTemp = bns.div(quote.toNativeAmount, toPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
+  const toDisplayAmount = bns.toFixed(toDisplayAmountTemp, 0, 8)
 
+  // Format to fiat:
   const toExchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, toCurrencyCode)
-  const toBalanceInCryptoDisplay = UTILS.convertNativeToExchange(toExchangeDenomination.multiplier)(edgeCoinExchangeQuote.toNativeAmount)
-  const toBalanceInFiatRaw = await currencyConverter.convertCurrency(toCurrencyCode, toWallet.isoFiatCurrencyCode, Number(toBalanceInCryptoDisplay))
-  const toBalanceInFiat = intl.formatNumber(toBalanceInFiatRaw || 0, { toFixed: 2 })
+  const toBalanceInCryptoDisplay = UTILS.convertNativeToExchange(toExchangeDenomination.multiplier)(quote.toNativeAmount)
+  const toBalanceInFiatRaw = await currencyConverter.convertCurrency(toCurrencyCode, toWallet.fiatCurrencyCode, Number(toBalanceInCryptoDisplay))
+  const toFiat = intl.formatNumber(toBalanceInFiatRaw || 0, { toFixed: 2 })
 
-  const returnObject = {
-    quote: edgeCoinExchangeQuote,
-    fromNativeAmount: edgeCoinExchangeQuote.fromNativeAmount,
-    fromDisplayAmount: fromDisplayAmount,
-    fromWalletName: fromWallet.name,
-    fromWalletCurrencyName: fromWallet.currencyNames[fromCurrencyCode],
-    fromFiat: fromBalanceInFiat,
-    toNativeAmount: edgeCoinExchangeQuote.toNativeAmount,
-    toDisplayAmount: toDisplayAmount,
-    toWalletName: toWallet.name,
-    toWalletCurrencyName: toWallet.currencyNames[toCurrencyCode],
-    toFiat: toBalanceInFiat,
-    quoteExpireDate: edgeCoinExchangeQuote.expirationDate || null,
+  const swapInfo: GuiSwapInfo = {
+    quote,
+    request,
+
     fee,
-    fromCurrencyCode: currentFromCurrencyDenomination.name,
-    toCurrencyCode: currentToCurrencyDenomination.name
+    fromDisplayAmount,
+    fromFiat,
+    toDisplayAmount,
+    toFiat
   }
-  Actions[Constants.EXCHANGE_QUOTE_SCENE]({ quote: returnObject })
-  dispatch({ type: 'UPDATE_SHIFT_TRANSACTION_FEE', data: returnObject })
+  return swapInfo
+}
+
+const processSwapQuoteError = (error: any) => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const { fromCurrencyCode, toCurrencyCode } = state.cryptoExchange
+
+  // Basic sanity checks (should never fail):
+  if (error == null) return
+  if (fromCurrencyCode == null || toCurrencyCode == null) return
+
+  // Check for known error types:
+  switch (error.name) {
+    case errorNames.InsufficientFundsError: {
+      return dispatch({ type: 'RECEIVED_INSUFFICENT_FUNDS_ERROR' })
+    }
+
+    case errorNames.SwapAboveLimitError: {
+      const settings = SETTINGS_SELECTORS.getSettings(state)
+      const currentCurrencyDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, fromCurrencyCode)
+
+      const nativeMax: string = error.nativeMax
+      const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, fromCurrencyCode)
+      const nativeToDisplayRatio = displayDenomination.multiplier
+      const displayMax = UTILS.convertNativeToDisplay(nativeToDisplayRatio)(nativeMax)
+
+      return dispatch({
+        type: 'GENERIC_SHAPE_SHIFT_ERROR',
+        data: sprintf(s.strings.amount_above_limit, displayMax, currentCurrencyDenomination.name)
+      })
+    }
+
+    case errorNames.SwapBelowLimitError: {
+      const settings = SETTINGS_SELECTORS.getSettings(state)
+      const currentCurrencyDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, fromCurrencyCode)
+
+      const nativeMin: string = error.nativeMin
+      const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, fromCurrencyCode)
+      const nativeToDisplayRatio = displayDenomination.multiplier
+      const displayMin = UTILS.convertNativeToDisplay(nativeToDisplayRatio)(nativeMin)
+
+      return dispatch({
+        type: 'GENERIC_SHAPE_SHIFT_ERROR',
+        data: sprintf(s.strings.amount_below_limit, displayMin, currentCurrencyDenomination.name)
+      })
+    }
+
+    case errorNames.SwapCurrencyError: {
+      return dispatch({
+        type: 'GENERIC_SHAPE_SHIFT_ERROR',
+        data: sprintf(s.strings.ss_unable, fromCurrencyCode, toCurrencyCode)
+      })
+    }
+
+    case errorNames.SwapPermissionError: {
+      switch (error.reason) {
+        case 'geoRestriction': {
+          return dispatch({
+            type: 'GENERIC_SHAPE_SHIFT_ERROR',
+            data: s.strings.ss_geolock
+          })
+        }
+
+        case 'needsActivation': {
+          if (error.pluginName === 'shapeshift') {
+            Alert.alert(s.strings.kyc_title, s.strings.kyc_message, [
+              { text: s.strings.string_cancel_cap, onPress: () => {} },
+              { text: s.strings.string_ok, onPress: () => Actions[Constants.SWAP_ACTIVATE_SHAPESHIFT]() }
+            ])
+            return
+          }
+          break // Not handled
+        }
+
+        case 'noVerification': {
+          if (error.pluginName === 'shapeshift') {
+            Airship.show(bridge => <SwapVerifyShapeshiftModal bridge={bridge} />)
+            return
+          }
+          break // Not handled
+        }
+      }
+      break // Not handled
+    }
+  }
+
+  // Some plugins get this error wrong:
+  if (error.message === errorNames.InsufficientFundsError) {
+    return dispatch({ type: 'RECEIVED_INSUFFICENT_FUNDS_ERROR' })
+  }
+
+  // Anything else:
+  return dispatch({
+    type: 'GENERIC_SHAPE_SHIFT_ERROR',
+    data: error.message
+  })
+}
+
+export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  dispatch({ type: 'START_SHIFT_TRANSACTION' })
+
+  const { quote, request } = swapInfo
+  const { fromWallet, toWallet } = request
+
+  try {
+    global.firebase && global.firebase.analytics().logEvent(`Exchange_Shift_Start`)
+    const broadcastedTransaction: EdgeTransaction = await quote.approve()
+    await fromWallet.saveTx(broadcastedTransaction)
+
+    const category = sprintf(
+      'exchange:%s %s %s',
+      state.cryptoExchange.fromCurrencyCode,
+      s.strings.word_to_in_convert_from_to_string,
+      state.cryptoExchange.toCurrencyCode
+    )
+    const account = CORE_SELECTORS.getAccount(state)
+    const pn = quote.pluginName
+    const si = account.swapConfig[pn].swapInfo
+    const name = si.displayName
+    const supportEmail = si.supportEmail
+    const quoteIdUri = si.quoteUri && quote.quoteId ? si.quoteUri + quote.quoteId : broadcastedTransaction.txid
+    const payinAddress = broadcastedTransaction.otherParams != null ? broadcastedTransaction.otherParams.payinAddress : ''
+    const uniqueIdentifier = broadcastedTransaction.otherParams != null ? broadcastedTransaction.otherParams.uniqueIdentifier : ''
+    const isEstimate = quote.isEstimate ? s.strings.estimated_quote : s.strings.fixed_quote
+    const notes =
+      sprintf(
+        s.strings.exchange_notes_metadata_generic2,
+        state.cryptoExchange.fromDisplayAmount,
+        state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name,
+        fromWallet.name,
+        state.cryptoExchange.toDisplayAmount,
+        state.cryptoExchange.toWalletPrimaryInfo.displayDenomination.name,
+        toWallet.name,
+        quote.destinationAddress,
+        quoteIdUri,
+        payinAddress,
+        uniqueIdentifier,
+        supportEmail
+      ) +
+      ' ' +
+      isEstimate
+
+    const edgeMetaData: EdgeMetadata = {
+      name,
+      category,
+      notes
+    }
+    Actions.popTo(Constants.EXCHANGE_SCENE)
+    await fromWallet.saveTxMetadata(broadcastedTransaction.txid, broadcastedTransaction.currencyCode, edgeMetaData)
+
+    dispatch({ type: 'SHIFT_COMPLETE' })
+    setTimeout(() => {
+      Alert.alert(s.strings.exchange_succeeded, s.strings.exchanges_may_take_minutes)
+    }, 1)
+    global.firebase && global.firebase.analytics().logEvent(`Exchange_Shift_Success`)
+  } catch (error) {
+    global.firebase && global.firebase.analytics().logEvent(`Exchange_Shift_Failed`)
+    dispatch({ type: 'DONE_SHIFT_TRANSACTION' })
+    setTimeout(() => {
+      Alert.alert(s.strings.exchange_failed, error.message)
+    }, 1)
+  }
 }
 
 export const selectWalletForExchange = (walletId: string, currencyCode: string, direction?: string) => async (dispatch: Dispatch, getState: GetState) => {
@@ -349,25 +360,6 @@ export const selectWalletForExchange = (walletId: string, currencyCode: string, 
     dispatch({ type: 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE', data })
   } else {
     dispatch({ type: 'SELECT_TO_WALLET_CRYPTO_EXCHANGE', data })
-  }
-}
-
-export const exchangeTimerExpired = () => (dispatch: Dispatch, getState: GetState) => {
-  const currentScene = Actions.currentScene
-  if (currentScene !== Constants.EXCHANGE_QUOTE_SCENE) {
-    return
-  }
-  Actions[Constants.EXCHANGE_QUOTE_PROCESSING_SCENE]()
-  const state = getState()
-  const hasFrom = state.cryptoExchange.fromWallet ? state.cryptoExchange.fromWallet : null
-  const hasTo = state.cryptoExchange.toWallet ? state.cryptoExchange.toWallet : null
-  const info = {
-    whichWallet: Constants.FROM,
-    primaryExchangeAmount: state.cryptoExchange.fromDisplayAmount,
-    primaryNativeAmount: state.cryptoExchange.fromNativeAmount
-  }
-  if (hasFrom && hasTo) {
-    dispatch(getShiftTransaction(hasFrom, hasTo, info))
   }
 }
 

@@ -84,6 +84,7 @@ import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
 import { CryptoExchangeQuoteProcessingScreenComponent } from './scenes/CryptoExchangeQuoteProcessingScene.js'
 import { LoadingScene } from './scenes/LoadingScene.js'
 import { OnBoardingComponent } from './scenes/OnBoardingScene.js'
+import { SwapActivateShapeshiftScene } from './scenes/SwapActivateShapeshiftScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
 import { showToast } from './services/AirshipInstance.js'
 
@@ -478,6 +479,15 @@ export default class Main extends Component<Props> {
                       renderLeftButton={this.renderBackButton()}
                       renderRightButton={this.renderMenuButton()}
                     />
+                    <Scene
+                      key={Constants.SWAP_ACTIVATE_SHAPESHIFT}
+                      navTransparent={true}
+                      component={SwapActivateShapeshiftScene}
+                      renderTitle={this.renderTitle(s.strings.title_activate_shapeshift)}
+                      renderLeftButton={this.renderBackButton(BACK)}
+                      renderRightButton={this.renderEmptyButton()}
+                      onLeft={Actions.pop}
+                    />
                   </Stack>
                 </Tabs>
 
@@ -589,6 +599,15 @@ export default class Main extends Component<Props> {
                     renderLeftButton={this.renderBackButton()}
                     renderRightButton={this.renderEmptyButton()}
                   />
+                  <Scene
+                    key={Constants.SWAP_ACTIVATE_SHAPESHIFT}
+                    navTransparent={true}
+                    component={SwapActivateShapeshiftScene}
+                    renderTitle={this.renderTitle(s.strings.title_activate_shapeshift)}
+                    renderLeftButton={this.renderBackButton(BACK)}
+                    renderRightButton={this.renderEmptyButton()}
+                    onLeft={Actions.pop}
+                  />
                 </Stack>
 
                 <Stack key={Constants.BUY_SELL} hideDrawerButton={true}>
@@ -618,6 +637,7 @@ export default class Main extends Component<Props> {
                     renderRightButton={this.renderExitButton()}
                   />
                 </Stack>
+
                 <Stack key={Constants.PLUGIN_BUY_DEEP} hideDrawerButton={true}>
                   <Scene
                     key={Constants.PLUGIN_BUY}
@@ -656,6 +676,7 @@ export default class Main extends Component<Props> {
                     renderRightButton={this.renderExitButton()}
                   />
                 </Stack>
+
                 <Stack key={Constants.TERMS_OF_SERVICE}>
                   <Scene
                     key={Constants.TERMS_OF_SERVICE}

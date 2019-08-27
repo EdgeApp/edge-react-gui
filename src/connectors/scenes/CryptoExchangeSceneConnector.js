@@ -52,7 +52,6 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
     toButtonText = s.strings.select_recv_wallet
     toFiatToCrypto = 1
   }
-  const showKYCAlert = state.cryptoExchange.showKYCAlert
   const wallets = state.ui.wallets.byId
   const totalWallets = Object.keys(wallets).length
   const creatingWallet = state.cryptoExchange.creatingWallet
@@ -81,8 +80,6 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
     // showWalletSelectModal: state.ui.scenes.walletListModal.walletListModalVisible,
     shiftPendingTransaction: state.cryptoExchange.shiftPendingTransaction,
     calculatingMax: state.cryptoExchange.calculatingMax,
-    showKYCAlert,
-    pluginCompleteKYC: state.cryptoExchange.pluginCompleteKYC,
     wallets,
     totalWallets,
     supportedWalletTypes,
@@ -100,7 +97,6 @@ export const mapDispatchToProps = (dispatch: Dispatch): CryptoExchangeSceneCompo
     dispatch(selectWalletForExchange(walletId, currencyCode))
   },
   openModal: (data: 'from' | 'to') => dispatch({ type: 'OPEN_WALLET_SELECTOR_MODAL', data }),
-  wipeKYCFlag: () => dispatch({ type: 'WIPE_KYC_NEED' }),
   createCurrencyWallet: (walletType: string, currencyCode: string, fiat: string) => {
     const walletName = DEFAULT_STARTER_WALLET_NAMES[currencyCode]
     dispatch(createCurrencyWalletAndAddToSwap(walletName, walletType, fiat))

@@ -1,6 +1,14 @@
 // @flow
 
-import type { EdgeDenomination, EdgeMetaToken, EdgeMetadata, EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
+import {
+  type EdgeDenomination,
+  type EdgeMetaToken,
+  type EdgeMetadata,
+  type EdgeReceiveAddress,
+  type EdgeSwapQuote,
+  type EdgeSwapRequest,
+  type EdgeTransaction
+} from 'edge-core-js/types'
 
 import { type State } from './reduxTypes.js'
 
@@ -44,6 +52,21 @@ export type GuiContact = {
   thumbnailPath: string,
   recordID: string,
   givenName: string
+}
+
+/**
+ * An EdgeSwapQuote, but with amounts pretty-printed.
+ */
+export type GuiSwapInfo = {
+  quote: EdgeSwapQuote,
+  request: EdgeSwapRequest,
+
+  // Formatted amounts:
+  fee: string,
+  fromDisplayAmount: string,
+  fromFiat: string,
+  toDisplayAmount: string,
+  toFiat: string
 }
 
 export type ExchangeData = {
