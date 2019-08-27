@@ -11,27 +11,7 @@ export const colors = {
   },
 
   primary: '#2a5799',
-  secondary: '#4977bb',
-
-  accentGreen: '#7fc343',
-  accentOrange: '#f7a623',
-  accentRed: '#f03a47',
-
-  black: '#000000',
-  gray1: '#58595c',
-  gray2: '#909091',
-  gray3: '#d8d6d8',
-  gray4: '#F7F7F7',
-  white: '#FFFFFF',
-  offWhite: '#F6F6F6'
-}
-
-export const opacity = {
-  active: 0.3
-}
-
-export const font = {
-  default: 'SourceSansPro-Black'
+  secondary: '#4977bb'
 }
 
 let gradientHeaderHeight
@@ -54,10 +34,6 @@ export const THEME = {
 
   BUTTONS: {
     HEIGHT: 44
-  },
-
-  SPACER: {
-    HEADER: gradientHeaderHeight
   },
 
   HEADER: Platform.OS === 'ios' ? gradientHeaderHeight : gradientHeaderHeight + StatusBar.currentHeight,
@@ -118,7 +94,6 @@ export const THEME = {
     OPACITY_WHITE: 'rgba(255, 255, 255, 0.1)',
 
     TRANSPARENT: 'transparent',
-    MODAL_BOX: 'rgba(0, 0, 0, .6)',
 
     ROW_PRESSED: '#D9E3ED' // same as GRAY_3
   }

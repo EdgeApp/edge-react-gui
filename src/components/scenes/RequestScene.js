@@ -22,6 +22,7 @@ import RequestStatus from '../../modules/UI/components/RequestStatus/index.js'
 import ShareButtons from '../../modules/UI/components/ShareButtons/index.js'
 import WalletListModal from '../../modules/UI/components/WalletListModal/WalletListModalConnector'
 import { styles } from '../../styles/scenes/RequestStyle.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 import type { GuiCurrencyInfo, GuiWallet } from '../../types/types.js'
 import { getObjectDiff } from '../../util/utils'
 import { launchModal } from '../common/ModalProvider.js'
@@ -229,7 +230,6 @@ export class Request extends Component<Props, State> {
       return <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size={'large'} />
     }
 
-    const color = 'white'
     const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio, onSelectWallet, wallets, currencyInfo } = this.props
     const addressExplorer = currencyInfo ? currencyInfo.addressExplorer : null
     const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
@@ -256,7 +256,7 @@ export class Request extends Component<Props, State> {
             forceUpdateGuiCounter={0}
             onExchangeAmountChanged={this.onExchangeAmountChanged}
             keyboardVisible={false}
-            color={color}
+            color={THEME.COLORS.WHITE}
             isFiatOnTop={false}
             isFocus={false}
           />

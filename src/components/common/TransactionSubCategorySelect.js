@@ -5,7 +5,7 @@ import { FlatList, TouchableHighlight, View } from 'react-native'
 
 import FormattedText from '../../modules/UI/components/FormattedText/index'
 import styles from '../../styles/scenes/TransactionDetailsStyle'
-import { colors } from '../../theme/variables/airbitz.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 import type { SubcategorySearchResultData } from '../../types/types.js'
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
@@ -68,7 +68,7 @@ class SubCategorySelect extends Component<Props, State> {
     }
 
     return (
-      <TouchableHighlight delayPressIn={60} style={[styles.rowContainer]} underlayColor={colors.gray4} onPress={() => this.props.onPressFxn(data.item)}>
+      <TouchableHighlight delayPressIn={60} style={styles.rowContainer} underlayColor={THEME.COLORS.GRAY_4} onPress={() => this.props.onPressFxn(data.item)}>
         <View style={[styles.rowContent]}>
           <View style={[styles.rowCategoryTextWrap]}>
             <FormattedText style={[styles.rowCategoryText]} numberOfLines={1}>
