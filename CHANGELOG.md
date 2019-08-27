@@ -1,5 +1,15 @@
 # edge-react-gui
 
+## 1.9.1
+
+* Integrate Bits of Gold for selling
+* Fix Wyre UX and stability bugs
+* Fix DASH max fee issue
+* Improve API transaction broadcasting reliability for Bitcoin-related coins
+* Enable Tezos (XTZ)
+* Add Anthem Gold (AGLD) as preferred token
+* UI notification improvements
+
 ## 1.9.0
 
 * Improved stability when coming in and out of background
@@ -292,4 +302,3 @@ Fixes
 * Fix numeric entry on different locale numpads
 * Fix exchange screen to provide spinner feedback while getting order
 * Prevent spends to addresses of different format. Ie. LTC to BTC
-
