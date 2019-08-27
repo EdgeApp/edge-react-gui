@@ -55,7 +55,8 @@ export const selectWallet = (walletId: string, currencyCode: string, from?: stri
       data: { walletId, currencyCode }
     })
     const wallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
-    WALLET_API.getReceiveAddress(wallet, currencyCode)
+    wallet
+      .getReceiveAddress({ currencyCode })
       .then(receiveAddress => {
         dispatch({ type: 'NEW_RECEIVE_ADDRESS', data: { receiveAddress } })
       })

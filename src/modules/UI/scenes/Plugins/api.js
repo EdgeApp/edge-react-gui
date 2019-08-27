@@ -7,7 +7,6 @@ import { Actions } from 'react-native-router-flux'
 import { SEND_CONFIRMATION } from '../../../../constants/SceneKeys.js'
 import s from '../../../../locales/strings.js'
 import { type GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
-import * as WALLET_API from '../../../Core/Wallets/api'
 
 const formatWallet = w => {
   return {
@@ -95,7 +94,7 @@ export class PluginBridge {
     const walletId = data.walletId
     const coreWallet = this.context.coreWallets[walletId]
     const currencyCode = data.currencyCode
-    const address = await WALLET_API.getReceiveAddress(coreWallet, currencyCode)
+    const address = await coreWallet.getReceiveAddress({ currencyCode })
     const encodeUri = await coreWallet.encodeUri(address)
     return { encodeUri, address }
   }
@@ -162,14 +161,10 @@ export class PluginBridge {
 
   broadcastTx (data: any): Promise<EdgeTransaction> {
     throw new Error('ErrorUnimplemented')
-    // const { coreWallet, rawtx } = data
-    // return WALLET_API.broadcastTransaction(coreWallet, rawtx)
   }
 
   saveTx (data: any): Promise<EdgeTransaction> {
     throw new Error('ErrorUnimplemented')
-    // const { coreWallet, signedTransaction } = data
-    // return WALLET_API.signTransaction(coreWallet, signedTransaction)
   }
 
   requestFile (): Promise<string> {

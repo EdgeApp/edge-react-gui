@@ -4,7 +4,6 @@ import type { EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import { Actions } from 'react-native-router-flux'
 
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
-import * as WALLET_API from '../modules/Core/Wallets/api.js'
 import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
 import { refreshTransactionsRequest } from './TransactionListActions.js'
 
@@ -21,7 +20,8 @@ export const setTransactionDetails = (transaction: EdgeTransaction, edgeMetadata
     Actions.pop()
   }
   const onError = () => {}
-  WALLET_API.setTransactionDetailsRequest(wallet, transaction.txid, transaction.currencyCode, edgeMetadata)
+  wallet
+    .saveTxMetadata(transaction.txid, transaction.currencyCode, edgeMetadata)
     .then(onSuccess)
     .catch(onError)
 }

@@ -1,7 +1,6 @@
 // @flow
 
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
-import * as WALLET_API from '../modules/Core/Wallets/api.js'
 import { displayErrorAlert } from '../modules/UI/components/ErrorAlert/actions.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
@@ -10,7 +9,8 @@ export const updateReceiveAddress = (walletId: string, currencyCode: string) => 
   const state = getState()
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
 
-  WALLET_API.getReceiveAddress(wallet, currencyCode)
+  wallet
+    .getReceiveAddress({ currencyCode })
     .then(receiveAddress => {
       dispatch({
         type: 'UPDATE_RECEIVE_ADDRESS_SUCCESS',
