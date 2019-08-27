@@ -49,7 +49,8 @@ export const styles = {
     fontSize: scale(18),
     textAlign: 'center',
     fontFamily: THEME.FONTS.DEFAULT,
-    color: THEME.COLORS.GRAY_1
+    color: THEME.COLORS.ACCENT_BLUE,
+    textDecorationLine: 'underline'
   },
   buttonContainer: {
     width: '100%',
