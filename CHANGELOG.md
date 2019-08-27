@@ -2,7 +2,7 @@
 
 ## 1.9.1
 
-* Integrate Bits of Gold for selling
+* Integrate Bits of Gold for selling BTC in Israel
 * Fix Wyre UX and stability bugs
 * Fix DASH max fee issue
 * Improve API transaction broadcasting reliability for Bitcoin-related coins
