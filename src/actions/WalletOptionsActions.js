@@ -14,6 +14,7 @@ import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import { displayErrorAlert } from '../modules/UI/components/ErrorAlert/actions'
 import Text from '../modules/UI/components/FormattedText'
 import * as WALLET_SELECTORS from '../modules/UI/selectors.js'
+import { B } from '../styles/common/textStyles.js'
 import { THEME } from '../theme/variables/airbitz.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { showDeleteWalletModal } from './DeleteWalletModalActions.js'
@@ -137,7 +138,7 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
             message: (
               <Text>
                 {s.strings.fragment_wallets_get_seed_wallet_first_confirm_message_mobile}
-                <Text style={{ fontWeight: 'bold' }}>{walletName}</Text>
+                <B>{walletName}</B>
               </Text>
             ),
             input,

@@ -66,8 +66,8 @@ exports[`On-Boarding Component should render without props 1`] = `
           Array [
             Object {
               "color": "#FFFFFF",
+              "fontFamily": "SourceSansPro-Bold",
               "fontSize": 18,
-              "fontWeight": "bold",
               "paddingHorizontal": 28.091549295774648,
               "position": "absolute",
               "textAlign": "center",
@@ -121,8 +121,8 @@ Tap on a wallet name to send or receive funds for that wallet.
           Array [
             Object {
               "color": "#FFFFFF",
+              "fontFamily": "SourceSansPro-Bold",
               "fontSize": 18,
-              "fontWeight": "bold",
               "paddingHorizontal": 28.091549295774648,
               "position": "absolute",
               "textAlign": "center",
@@ -174,8 +174,8 @@ Tap on a wallet name to send or receive funds for that wallet.
           Array [
             Object {
               "color": "#FFFFFF",
+              "fontFamily": "SourceSansPro-Bold",
               "fontSize": 18,
-              "fontWeight": "bold",
               "paddingHorizontal": 28.091549295774648,
               "position": "absolute",
               "textAlign": "center",
@@ -227,8 +227,8 @@ Tap on a wallet name to send or receive funds for that wallet.
           Array [
             Object {
               "color": "#FFFFFF",
+              "fontFamily": "SourceSansPro-Bold",
               "fontSize": 18,
-              "fontWeight": "bold",
               "paddingHorizontal": 28.091549295774648,
               "position": "absolute",
               "textAlign": "center",
@@ -280,8 +280,8 @@ Tap on a wallet name to send or receive funds for that wallet.
           Array [
             Object {
               "color": "#FFFFFF",
+              "fontFamily": "SourceSansPro-Bold",
               "fontSize": 18,
-              "fontWeight": "bold",
               "paddingHorizontal": 28.091549295774648,
               "position": "absolute",
               "textAlign": "center",

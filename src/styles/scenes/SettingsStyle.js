@@ -2,7 +2,7 @@
 
 import { StyleSheet } from 'react-native'
 
-import THEME from '../../theme/variables/airbitz'
+import { THEME } from '../../theme/variables/airbitz'
 import { scale } from '../../util/scaling.js'
 
 export const styles = {
@@ -123,13 +123,13 @@ export const styles = {
     color: THEME.COLORS.GRAY_1
   },
   modalRightText: {
+    fontFamily: THEME.FONTS.BOLD,
     color: THEME.COLORS.SECONDARY,
-    fontWeight: 'bold',
     textAlign: 'right'
   },
   routeRowRightText: {
-    color: THEME.COLORS.SECONDARY,
-    fontWeight: 'bold'
+    fontFamily: THEME.FONTS.BOLD,
+    color: THEME.COLORS.SECONDARY
   },
 
   // /////// End of Settings Row /////////

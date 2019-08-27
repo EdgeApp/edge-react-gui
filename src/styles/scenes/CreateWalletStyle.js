@@ -2,7 +2,7 @@
 
 import { StyleSheet } from 'react-native'
 
-import THEME from '../../theme/variables/airbitz'
+import { THEME } from '../../theme/variables/airbitz'
 import { PLATFORM } from '../../theme/variables/platform'
 import { scale } from '../../util/scaling.js'
 
@@ -204,9 +204,9 @@ export const styles = {
     height: scale(22)
   },
   paymentRight: {
+    fontFamily: THEME.FONTS.BOLD,
     fontSize: scale(16),
-    color: THEME.COLORS.GRAY_2,
-    fontWeight: '500'
+    color: THEME.COLORS.GRAY_2
   },
   accountReviewWalletNameArea: {
     flexDirection: 'row',
@@ -216,9 +216,9 @@ export const styles = {
     alignItems: 'center'
   },
   accountReviewWalletNameText: {
+    fontFamily: THEME.FONTS.BOLD,
     fontSize: scale(16),
-    color: THEME.COLORS.SECONDARY,
-    fontWeight: 'bold'
+    color: THEME.COLORS.SECONDARY
   },
   accountReviewInfoArea: {
     width: '100%',

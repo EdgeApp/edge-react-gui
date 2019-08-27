@@ -23,7 +23,7 @@
     "react/no-typos": "error",
     "react/prop-types": 0,
     "react/self-closing-comp": ["error", { "component": true }],
-    "react-native/no-raw-text": ["error", { "skip": ["FormattedText", "T"] }]
+    "react-native/no-raw-text": ["error", { "skip": ["FormattedText", "T", "B"] }]
   },
   "settings": {
     "react": { "pragma": "React", "version": "16.8.0", "flowVersion": "0.66" }

@@ -2,7 +2,7 @@
 
 import { StyleSheet } from 'react-native'
 
-import THEME from '../../theme/variables/airbitz.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 import { scale } from '../../util/scaling.js'
 
 export const rawStyles = {
@@ -57,9 +57,9 @@ export const rawStyles = {
     paddingVertical: scale(4)
   },
   trigger: {
+    fontFamily: THEME.FONTS.BOLD,
     fontSize: scale(18),
     color: THEME.COLORS.WHITE,
-    fontWeight: '700',
     paddingHorizontal: scale(8)
   },
   optionContainer: {

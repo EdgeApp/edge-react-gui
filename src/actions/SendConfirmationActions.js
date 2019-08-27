@@ -30,6 +30,7 @@ import { getAuthRequired, getSpendInfo, getTransaction } from '../modules/UI/sce
 import type { AuthType } from '../modules/UI/scenes/SendConfirmation/selectors.js'
 import { convertCurrencyFromExchangeRates, getExchangeRate, getSelectedCurrencyCode, getSelectedWallet, getSelectedWalletId } from '../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
+import { B } from '../styles/common/textStyles.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { convertNativeToExchange } from '../util/utils'
 
@@ -294,7 +295,7 @@ export const displayFeeAlert = async (feeAmountInFiatSyntax: string) => {
     message: (
       <Text>
         {s.strings.send_confirmation_fee_modal_alert_message_fragment_1}
-        <Text style={{ fontWeight: 'bold' }}>{feeAmountInFiatSyntax}</Text>
+        <B>{feeAmountInFiatSyntax}</B>
         {s.strings.send_confirmation_fee_modal_alert_message_fragment_2}
       </Text>
     ),
