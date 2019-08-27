@@ -6,6 +6,7 @@ import React, { Component } from 'react'
 import { StatusBar, StyleSheet, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 
+import { version } from '../../../package.json'
 import edgeBackgroundImage from '../../assets/images/edgeBackground/login_bg.jpg'
 import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
 import s from '../../locales/strings.js'
@@ -66,6 +67,7 @@ export default class Login extends Component<Props, State> {
           appName={s.strings.app_name_short}
           backgroundImage={edgeBackgroundImage}
           primaryLogo={edgeLogo}
+          landingScreenText={`v${version}`}
         />
       </View>
     )
