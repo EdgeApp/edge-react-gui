@@ -18,6 +18,10 @@ const strings = {
   drawer_sweep_private_key: 'Sweep Private Key',
   drawer_wallets: 'Wallets',
 
+  // Alert component:
+  alert_dropdown_alert: 'Alert! ',
+  alert_dropdown_warning: 'Warning! ',
+
   dropdown_exchange_max_amount: 'Exchange Max Amount',
   max_spend_unavailable_modal_title: 'Max Spend Unavailable',
   max_spend_unavailable_modal_message: 'Unable to calculate maximum spendable amount for currency %s. Please enter amount.',
