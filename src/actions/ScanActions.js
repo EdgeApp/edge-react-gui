@@ -33,6 +33,7 @@ import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import OptionIcon from '../modules/UI/components/OptionIcon/OptionIcon.ui.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
+import { B } from '../styles/common/textStyles.js'
 import { colors as COLORS } from '../theme/variables/airbitz.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import type { GuiWallet } from '../types/types.js'
@@ -66,7 +67,7 @@ const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWallet, gu
       message: (
         <Text style={{ textAlign: 'center' }}>
           {bodyString}
-          <Text style={{ fontWeight: 'bold', textAlign: 'center' }}>{`${requestAddress.callbackDomain}`}</Text>
+          <B>{`${requestAddress.callbackDomain}`}</B>
         </Text>
       ),
       icon: <OptionIcon iconName={FA_MONEY_ICON} />,

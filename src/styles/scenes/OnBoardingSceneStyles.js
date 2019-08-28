@@ -2,7 +2,7 @@
 
 import { StyleSheet } from 'react-native'
 
-import THEME from '../../theme/variables/airbitz'
+import { THEME } from '../../theme/variables/airbitz'
 import { scale } from '../../util/scaling.js'
 import { PagingWithDotStyles } from '../components/PagingWithDotStyles'
 
@@ -33,9 +33,9 @@ export const styles = StyleSheet.create({
     top: 0
   },
   slideText: {
+    fontFamily: THEME.FONTS.BOLD,
     color: THEME.COLORS.WHITE,
     fontSize: 18,
-    fontWeight: 'bold',
     textAlign: 'center',
     paddingHorizontal: scale(20),
     position: 'absolute',

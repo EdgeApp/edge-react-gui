@@ -9,6 +9,7 @@ import s from '../locales/strings.js'
 import { getAccount, getWallet, getWalletName } from '../modules/Core/selectors.js'
 import Text from '../modules/UI/components/FormattedText/index'
 import OptionIcon from '../modules/UI/components/OptionIcon/OptionIcon.ui'
+import { B } from '../styles/common/textStyles.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { refreshWallet } from './WalletActions.js'
 
@@ -30,7 +31,7 @@ export const showSplitWalletModal = (walletId: string) => async (dispatch: Dispa
     message: (
       <Text style={{ textAlign: 'center' }}>
         {bodyText}
-        <Text style={{ fontWeight: 'bold', textAlign: 'center' }}>{`${walletName}?`}</Text>
+        <B>{`${walletName}?`}</B>
       </Text>
     ),
     icon: <OptionIcon iconName={SPLIT} />,

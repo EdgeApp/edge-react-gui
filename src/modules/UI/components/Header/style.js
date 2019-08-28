@@ -45,9 +45,6 @@ export default StyleSheet.create({
   headerNameContainer: {
     display: 'flex',
     flexDirection: 'row'
-  },
-  cCode: {
-    fontWeight: 'bold'
   }
 })
 

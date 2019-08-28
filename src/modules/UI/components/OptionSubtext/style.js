@@ -2,7 +2,7 @@
 
 import { StyleSheet } from 'react-native'
 
-import THEME from '../../../../theme/variables/airbitz'
+import { THEME } from '../../../../theme/variables/airbitz'
 import { scale } from '../../../../util/scaling.js'
 
 export default StyleSheet.create({
@@ -12,7 +12,7 @@ export default StyleSheet.create({
     fontSize: scale(14)
   },
   subHeaderWalletName: {
-    fontWeight: 'bold',
+    fontFamily: THEME.FONTS.BOLD,
     lineHeight: scale(26),
     fontSize: scale(18)
   }

@@ -10,6 +10,7 @@ import { deleteWalletRequest } from '../modules/Core/Account/api.js'
 import { getAccount, getWalletName } from '../modules/Core/selectors.js'
 import Text from '../modules/UI/components/FormattedText/index'
 import OptionIcon from '../modules/UI/components/OptionIcon/OptionIcon.ui'
+import { B } from '../styles/common/textStyles.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 
 export const showDeleteWalletModal = (walletId: string) => async (dispatch: Dispatch, getState: GetState) => {
@@ -23,7 +24,7 @@ export const showDeleteWalletModal = (walletId: string) => async (dispatch: Disp
     message: (
       <Text style={{ textAlign: 'center' }}>
         {s.strings.fragmet_wallets_delete_wallet_first_confirm_message_mobile}
-        <Text style={{ fontWeight: 'bold', textAlign: 'center' }}>{`${walletName}?`}</Text>
+        <B>{`${walletName}?`}</B>
       </Text>
     ),
     icon: <OptionIcon iconName={DELETE} />,

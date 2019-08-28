@@ -3,6 +3,7 @@
 import React from 'react'
 import { Text, View } from 'react-native'
 
+import { B } from '../../../../../styles/common/textStyles.js'
 import { getObjectDiff } from '../../../../../util/utils'
 import style from '../style'
 
@@ -29,7 +30,7 @@ class WalletNameHeader extends React.Component<Props> {
     return (
       <View style={style.headerNameContainer}>
         <Text style={textStyles} ellipsizeMode={'middle'} numberOfLines={1}>
-          {name}:<Text style={[style.cCode, ...textStyles]}>{denomination}</Text>
+          {name}:<B>{denomination}</B>
         </Text>
       </View>
     )

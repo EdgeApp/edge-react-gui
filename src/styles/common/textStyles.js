@@ -1,8 +1,13 @@
 // @flow
 
-import { StyleSheet } from 'react-native'
+import React, { type Node } from 'react'
+import { StyleSheet, Text } from 'react-native'
 
 import { THEME } from '../../theme/variables/airbitz.js'
+
+export function B (props: { children: Node }) {
+  return <Text style={textStyles.bold}>{props.children}</Text>
+}
 
 const rawStyles = {
   bold: {
