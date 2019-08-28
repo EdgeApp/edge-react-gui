@@ -7,10 +7,10 @@ import FAIcon from 'react-native-vector-icons/FontAwesome'
 
 import { refreshWallet } from '../actions/WalletActions.js'
 import { launchModal } from '../components/common/ModalProvider.js'
+import { showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants'
 import s from '../locales/strings.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
-import { displayErrorAlert } from '../modules/UI/components/ErrorAlert/actions'
 import Text from '../modules/UI/components/FormattedText'
 import * as WALLET_SELECTORS from '../modules/UI/selectors.js'
 import { B } from '../styles/common/textStyles.js'
@@ -201,7 +201,7 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
             dispatch(refreshWallet(walletId))
           }
         } catch (error) {
-          dispatch(displayErrorAlert(error))
+          showError(error)
         }
       }
     }

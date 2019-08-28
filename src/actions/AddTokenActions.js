@@ -2,10 +2,10 @@
 
 import { Actions } from 'react-native-router-flux'
 
+import { showError } from '../components/services/AirshipInstance.js'
 import * as SETTINGS_API from '../modules/Core/Account/settings'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
-import { displayErrorAlert } from '../modules/UI/components/ErrorAlert/actions'
 import * as UI_WALLET_SELECTORS from '../modules/UI/selectors.js'
 import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
 import type { CustomTokenInfo } from '../types/types.js'
@@ -32,7 +32,7 @@ export const addNewToken = (walletId: string, currencyName: string, currencyCode
         Actions.pop()
       })
       .catch(error => {
-        dispatch(displayErrorAlert(error))
+        showError(error)
         dispatch({ type: 'ADD_NEW_CUSTOM_TOKEN_FAILURE' })
       })
   }

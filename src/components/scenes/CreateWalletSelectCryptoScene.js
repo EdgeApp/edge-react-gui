@@ -13,6 +13,7 @@ import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils'
 import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { showError } from '../services/AirshipInstance.js'
 
 const WALLET_TYPE_ORDER = [
   'wallet:bitcoin-bip44',
@@ -46,11 +47,8 @@ export type CreateWalletSelectCryptoStateProps = {
   supportedWalletTypes: Array<GuiWalletType>
 }
 
-type CreateWalletSelectCryptoDispatchProps = {
-  displayErrorAlert: (Error | string) => void
-}
+type Props = CreateWalletSelectCryptoOwnProps & CreateWalletSelectCryptoStateProps
 
-type Props = CreateWalletSelectCryptoOwnProps & CreateWalletSelectCryptoStateProps & CreateWalletSelectCryptoDispatchProps
 type State = {
   selectedWalletType: string,
   sortedWalletTypes: Array<GuiWalletType>,
@@ -138,7 +136,6 @@ export class CreateWalletSelectCrypto extends Component<Props, State> {
   }
 
   static getDerivedStateFromProps (nextProps: Props, prevState: State) {
-    const { displayErrorAlert } = nextProps
     let { errorShown } = prevState
     // Sort the wallet types
     const sortedWalletTypes: Array<GuiWalletType> = []
@@ -155,7 +152,7 @@ export class CreateWalletSelectCrypto extends Component<Props, State> {
     }
     if (unloadedWalletCount) {
       if (!errorShown) {
-        displayErrorAlert(s.strings.create_wallet_selcet_crypto_unloaded_plugins_error)
+        showError(s.strings.create_wallet_selcet_crypto_unloaded_plugins_error)
         errorShown = true
       }
     }

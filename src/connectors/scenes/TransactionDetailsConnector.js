@@ -7,7 +7,6 @@ import { getSubcategories, setNewSubcategory, setTransactionDetails } from '../.
 import { TransactionDetails } from '../../components/scenes/TransactionDetailsScene'
 import type { TransactionDetailsOwnProps } from '../../components/scenes/TransactionDetailsScene'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
-import { displayDropdownAlert } from '../../modules/UI/components/DropdownAlert/actions'
 import * as UI_SELECTORS from '../../modules/UI/selectors'
 import type { Dispatch, State } from '../../types/reduxTypes.js'
 import * as UTILS from '../../util/utils'
@@ -37,7 +36,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(setTransactionDetails(transaction, edgeMetadata))
   },
   getSubcategories: () => dispatch(getSubcategories()),
-  displayDropdownAlert: (message: string, title: string) => dispatch(displayDropdownAlert({ message, title })),
   setNewSubcategory: (newSubcategory: string) => dispatch(setNewSubcategory(newSubcategory))
 })
 

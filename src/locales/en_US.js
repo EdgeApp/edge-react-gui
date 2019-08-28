@@ -376,7 +376,6 @@ const strings = {
   back_button_tap_again_to_exit: 'Please tap BACK again to log out',
   send_confirmation_enter_send_password: 'Password',
   tx_detail_picker_title: 'Choose a category:',
-  transaction_detail_no_wallet: 'No wallet on transaction object',
   transaction_detail_unable_to_load_transaction: 'Unable to load transaction',
   string_confirm: 'Confirm',
   fragment_tx_detail_mining_fee_with_symbol: '+ %1s %2f (Fee)',

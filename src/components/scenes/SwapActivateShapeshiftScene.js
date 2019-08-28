@@ -7,10 +7,9 @@ import { connect } from 'react-redux'
 
 import { activateShapeShift } from '../../actions/ShapeShiftActions.js'
 import s from '../../locales/strings.js'
-import { displayErrorAlert } from '../../modules/UI/components/ErrorAlert/actions'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { showActivity } from '../services/AirshipInstance.js'
+import { showActivity, showError } from '../services/AirshipInstance.js'
 
 type Props = {
   activateShapeShift(oauthCode: string): Promise<mixed>
@@ -25,7 +24,8 @@ class SwapActivateShapeshiftComponent extends Component<Props> {
       Actions.pop()
 
       const code = navstate.url.replace('https://developer.airbitz.co/shapeshift-auth?code=', '')
-      showActivity(s.strings.activity_activating_shapeshift, this.props.activateShapeShift(code))
+      const promise = this.props.activateShapeShift(code).catch(showError)
+      showActivity(s.strings.activity_activating_shapeshift, promise)
     }
   }
 
@@ -52,7 +52,7 @@ export const SwapActivateShapeshiftScene = connect(
   (state: ReduxState) => ({}),
   (dispatch: Dispatch) => ({
     activateShapeShift (oauthCode: string) {
-      return dispatch(activateShapeShift(oauthCode)).catch(error => dispatch(displayErrorAlert(error)))
+      return dispatch(activateShapeShift(oauthCode))
     }
   })
 )(SwapActivateShapeshiftComponent)

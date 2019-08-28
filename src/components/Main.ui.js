@@ -58,7 +58,6 @@ import s from '../locales/strings.js'
 import DeepLinkingManager from '../modules/DeepLinkingManager.js'
 import PermissionsManager, { type Permission, PermissionStrings } from '../modules/PermissionsManager.js'
 import ControlPanel from '../modules/UI/components/ControlPanel/ControlPanelConnector'
-import ErrorAlert from '../modules/UI/components/ErrorAlert/ErrorAlertConnector'
 import T from '../modules/UI/components/FormattedText/index'
 import BackButton from '../modules/UI/components/Header/Component/BackButton.ui'
 import { ExitButton } from '../modules/UI/components/Header/Component/ExitButton.js'
@@ -692,7 +691,6 @@ export default class Main extends Component<Props> {
             </Drawer>
           </Stack>
         </RouterWithRedux>
-        <ErrorAlert />
         <TransactionAlert />
         <PasswordReminderModal />
         <PasswordRecoveryReminderModalConnector />

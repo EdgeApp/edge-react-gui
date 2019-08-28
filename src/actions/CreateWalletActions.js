@@ -10,11 +10,11 @@ import { sprintf } from 'sprintf-js'
 import { selectWalletForExchange } from '../actions/indexActions'
 import { launchModal } from '../components/common/ModalProvider.js'
 import { type AccountPaymentParams } from '../components/scenes/CreateWalletAccountSelectScene.js'
+import { showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import { getExchangeDenomination } from '../modules/Settings/selectors.js'
-import { displayErrorAlert } from '../modules/UI/components/ErrorAlert/actions.js'
 import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import { errorModal } from '../modules/UI/components/Modals/ErrorModal.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
@@ -127,7 +127,7 @@ export const fetchAccountActivationInfo = (currencyCode: string) => async (dispa
       }
     })
   } catch (error) {
-    dispatch(displayErrorAlert(error))
+    showError(error)
   }
 }
 
@@ -137,7 +137,7 @@ export const fetchWalletAccountActivationPaymentInfo = (paymentParams: AccountPa
 ) => {
   try {
     const networkTimeout = setTimeout(() => {
-      dispatch(displayErrorAlert('Network Timeout'))
+      showError('Network Timeout')
       dispatch({
         type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR',
         data: 'Network Timeout'
@@ -155,11 +155,9 @@ export const fetchWalletAccountActivationPaymentInfo = (paymentParams: AccountPa
         })
         clearTimeout(networkTimeout)
       })
-      .catch(error => {
-        dispatch(displayErrorAlert(error))
-      })
+      .catch(showError)
   } catch (error) {
-    dispatch(displayErrorAlert(error))
+    showError(error)
   }
 }
 
