@@ -10,7 +10,6 @@ type LegacyActionName =
   | 'ACCOUNT_INIT_COMPLETE'
   | 'ACCOUNT/LOGGED_IN'
   | 'ADDRESS_DEEP_LINK_RECEIVED'
-  | 'CORE/WALLETS/UPDATE_WALLETS'
   | 'DEEP_LINK_RECEIVED'
   | 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES'
   | 'NEW_RECEIVE_ADDRESS'
@@ -25,8 +24,6 @@ type LegacyActionName =
   | 'UI/COMPONENTS/ERROR_ALERT/DISPLAY_ERROR_ALERT'
   | 'UI/COMPONENTS/TRANSACTION_ALERT/DISMISS_TRANSACTION_ALERT'
   | 'UI/COMPONENTS/TRANSACTION_ALERT/DISPLAY_TRANSACTION_ALERT'
-  | 'UI/SCENES/TRANSACTION_LIST/TRANSACTIONS_SEARCH_HIDDEN'
-  | 'UI/SCENES/TRANSACTION_LIST/TRANSACTIONS_SEARCH_VISIBLE'
   | 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS'
   | 'UI/SEND_CONFIMATION/MAKE_SPEND_FAILED'
   | 'UI/SEND_CONFIMATION/NEW_PIN'
@@ -62,7 +59,6 @@ type NoDataActionName =
   | 'ADD_NEW_CUSTOM_TOKEN_FAILURE'
   | 'ADD_TOKEN_START'
   | 'ADDRESS_DEEP_LINK_COMPLETE'
-  | 'CLOSE_ALL_WALLET_LIST_MODALS'
   | 'CLOSE_SELECT_USER'
   | 'CLOSE_VIEWXPUB_WALLET_MODAL'
   | 'DELETE_CUSTOM_TOKEN_FAILURE'
@@ -156,6 +152,15 @@ export type Action =
   | {
       type: 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT',
       data: { username: string }
+    }
+  | {
+      type: 'CORE/WALLETS/UPDATE_WALLETS',
+      data: {
+        activeWalletIds: Array<string>,
+        archivedWalletIds: Array<string>,
+        currencyWallets: { [id: string]: EdgeCurrencyWallet },
+        receiveAddresses: { [id: string]: EdgeReceiveAddress }
+      }
     }
   | { type: 'DELETE_CUSTOM_TOKEN_SUCCESS', data: { currencyCode: string } }
   | {

@@ -18,10 +18,6 @@ const walletListModalVisible = (state = false, action: Action): boolean => {
       return false
     }
 
-    case 'CLOSE_ALL_WALLET_LIST_MODALS': {
-      return false
-    }
-
     default:
       return state
   }

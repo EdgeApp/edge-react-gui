@@ -13,7 +13,6 @@ import { launchModal } from '../components/common/ModalProvider.js'
 import { showToast } from '../components/services/AirshipInstance.js'
 import { CURRENCY_PLUGIN_NAMES, ION_ICONS, LOCKED_ICON, WALLET_LIST } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
-import { restoreWalletsRequest } from '../modules/Core/Account/api.js'
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors'
 import { updateExchangeRates } from '../modules/ExchangeRates/action.js'
@@ -347,7 +346,16 @@ export const showRestoreWalletsModal = () => async (dispatch: Dispatch, getState
   })
   const response = await launchModal(restoreWalletsModal)
   if (response) {
-    await restoreWalletsRequest(account)
+    const restoreKeys = account.allKeys.filter(key => key.archived || key.deleted)
+    await Promise.all(
+      restoreKeys
+        .map(key => key.id)
+        .map(walletId =>
+          account.changeWalletStates({
+            [walletId]: { archived: false, deleted: false }
+          })
+        )
+    )
     Actions[WALLET_LIST]()
   }
 }

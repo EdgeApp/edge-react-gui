@@ -4,10 +4,6 @@ import { StyleSheet } from 'react-native'
 
 import THEME from '../../theme/variables/airbitz'
 
-const debug = {
-  borderColor: 'red',
-  borderWidth: 1
-}
 export const rawStyles = {
   scene: {
     padding: 24,
@@ -28,8 +24,7 @@ export const rawStyles = {
   spendingLimit: {},
   dailySpendingLimit: {},
   transactionSpendingLimit: {},
-  submitButton: {},
-  debug
+  submitButton: {}
 }
 export const styles = StyleSheet.create(rawStyles)
 export default styles

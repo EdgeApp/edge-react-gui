@@ -6,7 +6,6 @@ import { transactionList as transactionListReducer } from '../reducers/scenes/Tr
 
 test('initialState', () => {
   const expected = {
-    searchVisible: false,
     transactions: [],
     transactionIdMap: {},
     currentCurrencyCode: '',

@@ -12,7 +12,6 @@ import { UniqueIdentifierModalConnect as UniqueIdentifierModal } from '../../con
 import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD, getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
-import { makeSpend } from '../../modules/Core/Wallets/api.js'
 import ExchangeRate from '../../modules/UI/components/ExchangeRate/index.js'
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import { ExchangedFlipInput } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
@@ -348,7 +347,7 @@ export class SendConfirmation extends Component<Props, State> {
     }
     try {
       newSpendInfo(spendInfo, authType)
-      const edgeTransaction = await makeSpend(coreWallet, spendInfo)
+      const edgeTransaction = await coreWallet.makeSpend(spendInfo)
       if (count === this.count) {
         this.lastSeenCount = count
         updateTransaction(edgeTransaction, guiMakeSpendInfoClone, false, null)

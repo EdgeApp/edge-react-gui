@@ -53,10 +53,6 @@ export const rawStyles = {
   },
   underlay: {
     color: `${THEME.COLORS.WHITE}${THEME.ALPHA.LOW}`
-  },
-  debug: {
-    // borderColor: 'red',
-    // borderWidth: 1
   }
 }
 

@@ -9,7 +9,6 @@ import { sprintf } from 'sprintf-js'
 
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import * as WALLET_API from '../../modules/Core/Wallets/api.js'
 import styles from '../../styles/scenes/ScaneStyle'
 import { colors as COLORS } from '../../theme/variables/airbitz.js'
 
@@ -51,7 +50,7 @@ export class AddressModal extends Component<AddressModalProps, AddressModalState
       const uri = await Clipboard.getString()
 
       // Will throw in case uri is invalid
-      await WALLET_API.parseUri(coreWallet, uri)
+      await coreWallet.parseUri(uri)
 
       this.setState({
         clipboard: uri

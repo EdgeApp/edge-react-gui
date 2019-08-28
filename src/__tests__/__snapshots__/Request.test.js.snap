@@ -26,7 +26,7 @@ exports[`Request should render with loaded props 1`] = `
     }
   >
     <ExchangedFlipInput
-      color="white"
+      color="#FFFFFF"
       exchangeSecondaryToPrimaryRatio={Object {}}
       forceUpdateGuiCounter={0}
       isEditable={true}

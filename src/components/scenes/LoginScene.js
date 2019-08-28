@@ -9,7 +9,6 @@ import slowlog from 'react-native-slowlog'
 import edgeBackgroundImage from '../../assets/images/edgeBackground/login_bg.jpg'
 import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
 import s from '../../locales/strings.js'
-import * as CONTEXT_API from '../../modules/Core/Context/api'
 import THEME from '../../theme/variables/airbitz.js'
 import type { Dispatch } from '../../types/reduxTypes.js'
 
@@ -35,10 +34,10 @@ export default class Login extends Component<Props, State> {
     if (error || !account) return
     this.props.initializeAccount(account, touchIdInfo)
 
-    CONTEXT_API.listUsernames(this.props.context) // update users list after each login
-      .then(usernames => {
-        this.props.addUsernames(usernames)
-      })
+    // update users list after each login
+    this.props.context.listUsernames().then(usernames => {
+      this.props.addUsernames(usernames)
+    })
   }
 
   UNSAFE_componentWillReceiveProps (nextProps: Props) {

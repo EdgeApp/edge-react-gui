@@ -4,12 +4,6 @@ import { StyleSheet } from 'react-native'
 
 import THEME from '../../../../theme/variables/airbitz'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
-import { scale } from '../../../../util/scaling.js'
-
-const debug = {
-  borderWidth: scale(1),
-  borderColor: 'red'
-}
 
 export const rawStyles = {
   container: {},
@@ -49,8 +43,7 @@ export const rawStyles = {
     alignSelf: 'center',
     top: 17,
     zIndex: 1
-  },
-  debug
+  }
 }
 
 export const styles = StyleSheet.create(rawStyles)

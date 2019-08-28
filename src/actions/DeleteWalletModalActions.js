@@ -6,8 +6,8 @@ import React from 'react'
 import { launchModal } from '../components/common/ModalProvider.js'
 import { DELETE } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
-import { deleteWalletRequest } from '../modules/Core/Account/api.js'
 import { getAccount, getWalletName } from '../modules/Core/selectors.js'
+import { displayErrorAlert } from '../modules/UI/components/ErrorAlert/actions.js'
 import Text from '../modules/UI/components/FormattedText/index'
 import OptionIcon from '../modules/UI/components/OptionIcon/OptionIcon.ui'
 import { B } from '../styles/common/textStyles.js'
@@ -35,10 +35,6 @@ export const showDeleteWalletModal = (walletId: string) => async (dispatch: Disp
   const resolveValue = await launchModal(modal)
 
   if (resolveValue) {
-    try {
-      deleteWalletRequest(account, walletId)
-    } catch (e) {
-      throw new Error(e)
-    }
+    account.changeWalletStates({ [walletId]: { deleted: true } }).catch(error => dispatch(displayErrorAlert(error)))
   }
 }
