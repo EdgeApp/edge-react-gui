@@ -32,7 +32,7 @@ import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { CountrySelectionModal } from '../modals/CountrySelectionModal.js'
 import { SimpleConfirmationModal } from '../modals/SimpleConfirmationModal.js'
-import { Airship } from '../services/AirshipInstance.js'
+import { Airship, showError } from '../services/AirshipInstance.js'
 
 const paymentTypeLogosById = {
   credit: paymentTypeLogoCreditCard,
@@ -139,8 +139,8 @@ class PluginList extends Component<Props> {
       } else {
         this.openPlugin(plugin)
       }
-    } catch (err) {
-      console.warn(err)
+    } catch (error) {
+      showError(error)
     }
   }
 
@@ -182,9 +182,8 @@ class PluginList extends Component<Props> {
         }
         updateCountryCode(selectedCountryCode)
         await setSyncedSettingsAsync(account, updatedSettings)
-      } catch (e) {
-        console.log(e)
-        throw new Error(s.strings.settings_set_country_code_error)
+      } catch (error) {
+        showError(error)
       }
     }
   }

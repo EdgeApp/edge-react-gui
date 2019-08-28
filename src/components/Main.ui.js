@@ -79,7 +79,7 @@ import { PluginListScene } from './scenes/PluginViewListScene.js'
 import { PluginViewConnect } from './scenes/PluginViewScene.js'
 import { SwapActivateShapeshiftScene } from './scenes/SwapActivateShapeshiftScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
-import { showToast } from './services/AirshipInstance.js'
+import { showError, showToast } from './services/AirshipInstance.js'
 
 const RouterWithRedux = connect()(Router)
 
@@ -169,7 +169,7 @@ export default class Main extends Component<Props> {
         }
         // this.navigate(url);
       })
-      .catch(e => console.log(e))
+      .catch(showError)
     Linking.addEventListener('url', this.handleOpenURL)
   }
 

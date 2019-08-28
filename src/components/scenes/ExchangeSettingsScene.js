@@ -14,6 +14,7 @@ import styles from '../../styles/scenes/SettingsStyle'
 import SwitchRow from '../common/RowSwitch.js'
 import { RowWithButton } from '../common/RowWithButton.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { showError } from '../services/AirshipInstance.js'
 
 type ExchangeSettingsProps = {
   exchanges: {
@@ -73,7 +74,7 @@ export class ExchangeSettingsComponent extends Component<ExchangeSettingsProps, 
   shapeShiftSignInToggle = () => {
     if (this.state.needsActivation.shapeshift) {
       CookieManager.clearAll()
-        .catch(e => {}) // TODO: Error handling
+        .catch(showError)
         .then(() => Actions[Constants.SWAP_ACTIVATE_SHAPESHIFT]())
     } else {
       this.props.shapeShiftLogOut()

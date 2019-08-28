@@ -3,6 +3,7 @@
 import type { EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import { Actions } from 'react-native-router-flux'
 
+import { showError } from '../components/services/AirshipInstance.js'
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
 import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
 import { refreshTransactionsRequest } from './TransactionListActions.js'
@@ -15,15 +16,13 @@ export const setSubcategories = (subcategories: Array<string>) => ({
 export const setTransactionDetails = (transaction: EdgeTransaction, edgeMetadata: EdgeMetadata) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const wallet = getSelectedWallet(state)
-  const onSuccess = () => {
-    dispatch(refreshTransactionsRequest(wallet.id, [transaction]))
-    Actions.pop()
-  }
-  const onError = () => {}
   wallet
     .saveTxMetadata(transaction.txid, transaction.currencyCode, edgeMetadata)
-    .then(onSuccess)
-    .catch(onError)
+    .then(() => {
+      dispatch(refreshTransactionsRequest(wallet.id, [transaction]))
+      Actions.pop()
+    })
+    .catch(showError)
 }
 
 export const getSubcategories = () => (dispatch: Dispatch, getState: GetState) => {
@@ -42,9 +41,7 @@ export const setNewSubcategory = (newSubcategory: string) => (dispatch: Dispatch
     .then(() => {
       dispatch(setSubcategories(newSubcategories.sort()))
     })
-    .catch(e => {
-      console.error(e)
-    })
+    .catch(showError)
 }
 
 export const getSelectedWallet = (state: State) => {

@@ -34,10 +34,6 @@ export const showResyncWalletModal = (walletId: string) => async (dispatch: Disp
   const resolveValue = await launchModal(modal)
 
   if (resolveValue) {
-    try {
-      wallet.resyncBlockchain()
-    } catch (e) {
-      throw new Error(e)
-    }
+    await wallet.resyncBlockchain()
   }
 }
