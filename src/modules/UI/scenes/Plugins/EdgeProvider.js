@@ -334,12 +334,8 @@ export class EdgeProvider extends Bridgeable {
     const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
     const coreWallet = CORE_SELECTORS.getWallet(this._state, guiWallet.id)
 
-    try {
-      const signedMessage = await coreWallet.otherMethods.signMessageBase64(message, guiWallet.receiveAddress.publicAddress)
-      return signedMessage
-    } catch (e) {
-      throw e
-    }
+    const signedMessage = await coreWallet.otherMethods.signMessageBase64(message, guiWallet.receiveAddress.publicAddress)
+    return signedMessage
   }
   // from the older stuff
   async _makeSpendRequest (guiMakeSpendInfo: GuiMakeSpendInfo): Promise<EdgeTransaction> {
@@ -379,61 +375,51 @@ export class EdgeProvider extends Bridgeable {
   }
 
   async deprecatedAndNotSupportedDouble (request: Object, url: string, url2: string): Promise<mixed> {
-    try {
-      const response = await window.fetch(url, request)
-      if (response.status !== 201) {
-        const errorData = await response.json()
-        throw new Error(errorData.errors[0].code + ' ' + errorData.errors[0].message)
+    const response = await window.fetch(url, request)
+    if (response.status !== 201) {
+      const errorData = await response.json()
+      throw new Error(errorData.errors[0].code + ' ' + errorData.errors[0].message)
+    }
+    const newURL = url2 + response.headers.get('Location')
+    const request2 = {
+      method: 'GET',
+      credentials: 'include'
+    }
+    const response2 = await window.fetch(newURL, request2)
+    if (response2.status !== 200) {
+      throw new Error('Problem confirming order: Code n200')
+    }
+    const orderData = await response2.json()
+    if (orderData.message_to_sign) {
+      const { signature_submission_url, body } = orderData.message_to_sign
+      const signedTransaction = await this.signMessage(body)
+      const newURL = url2 + signature_submission_url
+      const request = {
+        method: 'POST',
+        headers: {
+          Host: 'exchange.api.bity.com',
+          'Content-Type': '*/*'
+        },
+        body: signedTransaction
       }
-      const newURL = url2 + response.headers.get('Location')
-      const request2 = {
-        method: 'GET',
-        credentials: 'include'
+      const signedTransactionResponse = await window.fetch(newURL, request)
+      if (signedTransactionResponse.status === 400) {
+        throw new Error('Could not complete transaction. Code: 470')
       }
-      const response2 = await window.fetch(newURL, request2)
-      if (response2.status !== 200) {
-        throw new Error('Problem confirming order: Code n200')
-      }
-      const orderData = await response2.json()
-      if (orderData.message_to_sign) {
-        try {
-          const { signature_submission_url, body } = orderData.message_to_sign
-          const signedTransaction = await this.signMessage(body)
-          const newURL = url2 + signature_submission_url
-          const request = {
-            method: 'POST',
-            headers: {
-              Host: 'exchange.api.bity.com',
-              'Content-Type': '*/*'
-            },
-            body: signedTransaction
-          }
-          const signedTransactionResponse = await window.fetch(newURL, request)
-          if (signedTransactionResponse.status === 400) {
-            throw new Error('Could not complete transaction. Code: 470')
-          }
-          if (signedTransactionResponse.status === 204) {
-            const bankDetailsRequest = {
-              method: 'GET',
-              credentials: 'include'
-            }
-            const detailUrl = url + '/' + orderData.id
-            const bankDetailResponse = await window.fetch(detailUrl, bankDetailsRequest)
-            if (bankDetailResponse.status === 200) {
-              const parsedResponse = await bankDetailResponse.json()
-              return parsedResponse
-            }
-          }
-        } catch (e) {
-          console.log('Error ', e)
-          throw e
+      if (signedTransactionResponse.status === 204) {
+        const bankDetailsRequest = {
+          method: 'GET',
+          credentials: 'include'
+        }
+        const detailUrl = url + '/' + orderData.id
+        const bankDetailResponse = await window.fetch(detailUrl, bankDetailsRequest)
+        if (bankDetailResponse.status === 200) {
+          const parsedResponse = await bankDetailResponse.json()
+          return parsedResponse
         }
       }
-      //
-      return orderData
-    } catch (e) {
-      throw new Error(e)
     }
+    return orderData
   }
 
   async openSafariView (url: string): Promise<mixed> {
