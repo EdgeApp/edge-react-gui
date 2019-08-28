@@ -696,6 +696,17 @@ export const EDGE_PLUGIN_REGIONS = {
     },
     priority: 3,
     paymentType: 'bank'
+  },
+  banxa: {
+    countryCodes: {
+      AT: false,
+      AU: true
+    },
+    cryptoCodes: {
+      BTC: true
+    },
+    priority: 4,
+    paymentType: 'bank'
   }
 }
 

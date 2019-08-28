@@ -41,6 +41,13 @@ const hostedBuySellPlugins: Array<BuySellPlugin> = [
     name: 'Bits of Gold',
     subtitle: 'Sell Bitcoin to bank account in Israel and Europe\nBTC\nFee: 5% / Settlement: 2 days',
     imageUrl: 'https://edge.app/wp-content/uploads/2019/08/bits-of-gold-logo-sm.png'
+  },
+  {
+    pluginId: 'banxa',
+    uri: 'https://edge.banxa.com',
+    name: 'Banxa',
+    subtitle: 'Buy Bitcoin and Ethereum in Australia\nBTC, ETH\nFee: 1-3% / Settlement: 5 min - 24 hrs',
+    imageUrl: 'https://edge.app/wp-content/uploads/2019/08/banxa.png'
   }
 ]
 
