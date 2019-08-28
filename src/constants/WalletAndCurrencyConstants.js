@@ -170,6 +170,7 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     isImportKeySupported: false
   },
   XTZ: {
+    noChangeMiningFee: true,
     // will share / copy public address instead of URI on Request scene
     isUriEncodedStructure: true
   }
