@@ -18,7 +18,7 @@ import type { Dispatch, State } from '../../types/reduxTypes.js'
 const mapStateToProps = (state: State) => {
   const coreWallets = state.core.wallets.byId
   const wallets = state.ui.wallets.byId
-  const activeWalletIds = UI_SELECTORS.getActiveWalletIds(state)
+  const activeWalletIds = UI_SELECTORS.getActiveWalletIds(state).filter(id => !(wallets[id] != null && wallets[id].type === 'wallet:fio'))
   const archivedWalletIds = UI_SELECTORS.getArchivedWalletIds(state)
   const walletArchivesVisible = state.ui.scenes.walletList.walletArchivesVisible
   // $FlowFixMe

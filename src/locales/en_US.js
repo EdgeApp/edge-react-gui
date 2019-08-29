@@ -173,6 +173,7 @@ const strings = {
   create_wallet_account_unfinished_activation_title: 'Wallet Not Activated',
   create_wallet_account_unfinished_activation_message:
     'In order to complete activation of this %s wallet, please choose a unique account name and complete the activation payment. If you already made an activation payment, please wait for that payment to confirm before attempting to use this wallet.',
+  preparing_fio_wallet: 'Preparing FIO wallet',
   submit: 'Submit',
   login: 'Login',
   help_build: 'Build',
@@ -270,6 +271,7 @@ const strings = {
   string_first_digibyte_wallet_name: 'My DigiByte',
   string_first_eos_wallet_name: 'My EOS',
   string_first_feather_coin_wallet_name: 'My Feather Coin',
+  string_first_fio_wallet_name: 'My FIO',
   string_first_groestlcoin_wallet_name: 'My Groestlcoin',
   string_first_hercules_wallet_name: 'My Hercules',
   string_first_litecoin_wallet_name: 'My Litecoin',
@@ -335,6 +337,7 @@ const strings = {
   title_plugin_spend_cryptocurrency: 'Spend Cryptocurrency',
   title_plugin_spend: 'Spend',
   title_otp: '2FA',
+  title_register_fio_address: 'Register FIO Address',
   title_request: 'Request',
   title_send_confirmation: 'Send Confirmation',
   title_send: 'Send',
