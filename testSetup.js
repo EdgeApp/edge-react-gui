@@ -19,6 +19,14 @@ jest.mock('react-native-device-info', () => ({
   }
 }))
 jest.mock('react-native-share', () => 'RNShare')
+jest.mock(
+  'react-native-sound',
+  () =>
+    class Sound {
+      static setCategory () {}
+      play () {}
+    }
+)
 jest.mock('react-native-qrcode', () => 'QRCode')
 jest.mock('react-native-camera', () => ({
   RNCamera: {
