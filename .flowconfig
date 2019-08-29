@@ -20,8 +20,6 @@
 .*/node_modules/react-native/.*
 .*/node_modules/react-native-camera/.*
 .*/node_modules/react-native-device-info/.*
-.*/node_modules/react-native-dropdown/.*
-.*/node_modules/react-native-dropdownalert/.*
 .*/node_modules/react-native-firebase/.*
 .*/node_modules/react-native-linear-gradient/.*
 .*/node_modules/react-native-router-flux/.*
@@ -33,8 +31,6 @@
 .*/node_modules/metro/.*
 .*/node_modules/metro-cache/.*
 .*/node_modules/react-native-keyboard-aware-scroll-view/.*
-.*/node_modules/react-native-dropdownalert/.*
-.*/node_modules/react-native-dropdown/.*
 .*/node_modules/fbjs/.*
 
 [include]

@@ -56,10 +56,6 @@ test('initialState', () => {
       parsedUri: null
     },
     sendConfirmation: SendConfirmationInitialState,
-    transactionAlert: {
-      edgeTransaction: null,
-      displayAlert: false
-    },
     transactionDetails: {
       subcategories: []
     },

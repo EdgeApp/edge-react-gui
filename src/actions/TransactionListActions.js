@@ -3,8 +3,8 @@
 import type { EdgeTransaction } from 'edge-core-js'
 import _ from 'lodash'
 
+import { showTransactionDropdown } from '../components/navigation/TransactionDropdown.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
-import { displayTransactionAlert } from '../modules/UI/components/TransactionAlert/actions'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
 import type { TransactionListTx } from '../types/types.js'
@@ -181,7 +181,7 @@ export const newTransactionsRequest = (walletId: string, edgeTransactions: Array
   }
   if (isTransactionForSelectedWallet) dispatch(fetchTransactions(walletId, selectedCurrencyCode, options))
   if (!UTILS.isReceivedTransaction(edgeTransaction)) return
-  dispatch(displayTransactionAlert(edgeTransaction))
+  showTransactionDropdown(edgeTransaction)
 }
 
 export const fetchTransactions = (walletId: string, currencyCode: string, options?: Object) => (dispatch: Dispatch, getState: GetState) => {

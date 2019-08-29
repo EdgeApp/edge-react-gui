@@ -67,7 +67,6 @@ import WalletName from '../modules/UI/components/Header/WalletName/WalletNameCon
 import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
 import { PasswordRecoveryReminderModalConnector } from '../modules/UI/components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalConnector.js'
 import { passwordReminderModalConnector as PasswordReminderModal } from '../modules/UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
-import TransactionAlert from '../modules/UI/components/TransactionAlert/TransactionAlertConnector'
 import {
   LegacyPluginView,
   PluginBuySell,
@@ -691,7 +690,6 @@ export default class Main extends Component<Props> {
             </Drawer>
           </Stack>
         </RouterWithRedux>
-        <TransactionAlert />
         <PasswordReminderModal />
         <PasswordRecoveryReminderModalConnector />
         <PermissionsManager />

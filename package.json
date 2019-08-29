@@ -164,8 +164,6 @@
     "react-native-crypto": "^2.0.1",
     "react-native-device-info": "^0.22.4",
     "react-native-drawer": "^2.3.0",
-    "react-native-dropdown": "git://github.com/g6ling/react-native-dropdown.git",
-    "react-native-dropdownalert": "git://github.com/EdgeApp/react-native-dropdownalert.git",
     "react-native-extra-dimensions-android": "^1.2.5",
     "react-native-fast-crypto": "1.8.1",
     "react-native-firebase": "4.3.8",
