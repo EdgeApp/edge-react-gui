@@ -599,7 +599,8 @@ const MyEdgeLoginProtocols = {
   'edge:': true,
   'edge-ret:': true,
   'airbitz:': true,
-  'airbitz-ret:': true
+  'airbitz-ret:': true,
+  'https:': true
 }
 
 export const isEdgeLogin = (data: string) => {
@@ -611,6 +612,9 @@ export const isEdgeLogin = (data: string) => {
           return true
         }
       }
+    }
+    if (parsedUrl.hostname === 'www.edge.app' && parsedUrl.pathname === '/edgelogin') {
+      return true
     }
   }
   return false
