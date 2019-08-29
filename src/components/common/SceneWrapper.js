@@ -1,15 +1,12 @@
 // @flow
 
 import React, { Component, type Node } from 'react'
-import { Animated, Platform, StyleSheet, View } from 'react-native'
+import { Animated, StyleSheet, View } from 'react-native'
 
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
-import { THEME } from '../../theme/variables/airbitz.js'
+import { THEME, getHeaderHeight } from '../../theme/variables/airbitz.js'
 import { KeyboardTracker } from './KeyboardTracker.js'
 import { LayoutContext, type SafeAreaGap } from './LayoutContext.js'
-
-// Should be ChildrenArray<Node>, but Flow is too old to understand:
-type NodeArray = Array<Node> | Node
 
 type BackgroundOptions =
   | 'header' // Header area covers the screen (default)
@@ -22,7 +19,7 @@ type Props = {
   // or a function that accepts the current gap and returns an element.
   // The function will be called on each render, allowing the scene to react
   // to changes in the gap.
-  children: NodeArray | ((gap: SafeAreaGap) => NodeArray),
+  children: Node | ((gap: SafeAreaGap) => Node),
 
   // True if this scene should shrink to avoid the keyboard:
   avoidKeyboard?: boolean,
@@ -98,19 +95,6 @@ export class SceneWrapper extends Component<Props> {
       </Gradient>
     )
   }
-}
-
-const isIos = Platform.OS === 'ios'
-
-/**
- * Calculates the height of the header (where the back button lives).
- */
-function getHeaderHeight () {
-  if (isIos) {
-    const majorVersionIOS = Number(Platform.Version)
-    return majorVersionIOS > 9 && majorVersionIOS < 11 ? 62 : 44
-  }
-  return 56
 }
 
 const styles = StyleSheet.create({

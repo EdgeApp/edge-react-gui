@@ -18,6 +18,10 @@ const strings = {
   drawer_sweep_private_key: 'Sweep Private Key',
   drawer_wallets: 'Wallets',
 
+  // Alert component:
+  alert_dropdown_alert: 'Alert! ',
+  alert_dropdown_warning: 'Warning! ',
+
   dropdown_exchange_max_amount: 'Exchange Max Amount',
   max_spend_unavailable_modal_title: 'Max Spend Unavailable',
   max_spend_unavailable_modal_message: 'Unable to calculate maximum spendable amount for currency %s. Please enter amount.',
@@ -372,7 +376,6 @@ const strings = {
   back_button_tap_again_to_exit: 'Please tap BACK again to log out',
   send_confirmation_enter_send_password: 'Password',
   tx_detail_picker_title: 'Choose a category:',
-  transaction_detail_no_wallet: 'No wallet on transaction object',
   transaction_detail_unable_to_load_transaction: 'Unable to load transaction',
   string_confirm: 'Confirm',
   fragment_tx_detail_mining_fee_with_symbol: '+ %1s %2f (Fee)',

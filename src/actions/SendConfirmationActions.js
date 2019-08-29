@@ -23,6 +23,7 @@ import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReduce
 import { B } from '../styles/common/textStyles.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { convertNativeToExchange } from '../util/utils'
+import { playSendSound } from './SoundActions.js'
 
 // add empty string if there is an error but we don't need text feedback to the user
 export const makeSpendFailed = (error: Error | null) => ({
@@ -246,7 +247,7 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
     edgeSignedTransaction.metadata = edgeMetadata
     edgeSignedTransaction.wallet = wallet
 
-    dispatch({ type: 'PLAY_SEND_SOUND' })
+    playSendSound().catch(error => console.log(error)) // Fail quietly
     Alert.alert(s.strings.transaction_success, s.strings.transaction_success_message, [
       {
         onPress () {},

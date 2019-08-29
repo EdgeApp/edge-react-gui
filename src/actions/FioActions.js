@@ -3,9 +3,8 @@
 import { type EdgeAccount } from 'edge-core-js/types'
 import { Linking } from 'react-native'
 
-import { showActivity } from '../components/services/AirshipInstance.js'
+import { showActivity, showError } from '../components/services/AirshipInstance.js'
 import s from '../locales/strings.js'
-import { displayErrorAlert } from '../modules/UI/components/ErrorAlert/actions.js'
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
 
 export function registerFioAddress () {
@@ -14,14 +13,9 @@ export function registerFioAddress () {
     const defaultFiat = state.ui.settings.defaultIsoFiat
     const { account } = state.core
 
-    return showActivity(s.strings.preparing_fio_wallet, getFioAddress(account, defaultFiat)).then(
-      fioAddress => {
-        Linking.openURL(`https://addresses.fio.foundation/fiorequest/edge/${fioAddress}`)
-      },
-      error => {
-        dispatch(displayErrorAlert(error))
-      }
-    )
+    return showActivity(s.strings.preparing_fio_wallet, getFioAddress(account, defaultFiat)).then(fioAddress => {
+      Linking.openURL(`https://addresses.fio.foundation/fiorequest/edge/${fioAddress}`)
+    }, showError)
   }
 }
 

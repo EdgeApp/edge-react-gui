@@ -1,7 +1,7 @@
 // @flow
 
+import { showError } from '../components/services/AirshipInstance.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
-import { displayErrorAlert } from '../modules/UI/components/ErrorAlert/actions.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 
@@ -17,9 +17,7 @@ export const updateReceiveAddress = (walletId: string, currencyCode: string) => 
         data: { receiveAddress }
       })
     })
-    .catch(error => {
-      dispatch(displayErrorAlert(error))
-    })
+    .catch(showError)
 }
 
 export const saveReceiveAddress = (receiveAddress: Object) => (dispatch: Dispatch, getState: GetState) => {

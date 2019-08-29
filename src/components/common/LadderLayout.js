@@ -3,11 +3,8 @@
 import React, { Fragment, type Node } from 'react'
 import { Image, Text, View } from 'react-native'
 
-// Should be ChildrenArray<Node>, but Flow is too old to understand:
-type NodeArray = Array<Node> | Node
-
 type Props = {
-  children: NodeArray,
+  children: Node,
 
   // Space to put between all items:
   padding: number,

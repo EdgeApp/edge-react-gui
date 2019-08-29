@@ -8,9 +8,9 @@ import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { getEnabledTokens } from '../../actions/WalletActions.js'
+import { showError } from '../../components/services/AirshipInstance.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import { displayErrorAlert } from '../../modules/UI/components/ErrorAlert/actions'
 import type { Dispatch, GetState } from '../../types/reduxTypes.js'
 import { runWithTimeout } from '../../util/utils.js'
 import {
@@ -226,7 +226,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       dispatch(getEnabledTokens(walletId))
     })
   } catch (error) {
-    dispatch(displayErrorAlert(error))
+    showError(error)
   }
 }
 
