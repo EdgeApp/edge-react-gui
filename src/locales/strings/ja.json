@@ -387,6 +387,7 @@
   "otp_modal_body": "他のデバイスの不正アクセスからあなたのデバイスを守るために、2段階認証を利用することをおすすめします。",
   "otp_notif_title": "他のデバイスから2段階認証の無効化がリクエストされました",
   "otp_notif_body": "もしこのリクエストに覚えがなければ、%1$sとしてログインしパスワードの変更を行ってください",
+  "otp_copied_msg": "",
   "word_to_in_convert_from_to_string": "から",
   "legacy_address_modal_title": "レガシーアドレスを検出",
   "legacy_address_modal_warning": "警告：他の通貨のアドレスと区別がつかないため、従来の目的の通貨ではない可能性があるアドレスをスキャンしました。\n\nこのアドレスへの送信を継続しますか？",
