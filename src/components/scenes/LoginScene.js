@@ -3,7 +3,7 @@
 import type { EdgeAccount, EdgeContext } from 'edge-core-js'
 import { LoginScreen } from 'edge-login-ui-rn'
 import React, { Component } from 'react'
-import { StatusBar, StyleSheet, View } from 'react-native'
+import { Keyboard, StatusBar, StyleSheet, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 
 import edgeBackgroundImage from '../../assets/images/edgeBackground/login_bg.jpg'
@@ -11,6 +11,7 @@ import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
 import s from '../../locales/strings.js'
 import THEME from '../../theme/variables/airbitz.js'
 import type { Dispatch } from '../../types/reduxTypes.js'
+import { showHelpModal } from '../modals/HelpModal.js'
 
 type Props = {
   initializeAccount: (EdgeAccount, touchIdInfo: ?Object) => void,
@@ -49,6 +50,11 @@ export default class Login extends Component<Props, State> {
     }
   }
 
+  onClickHelp () {
+    Keyboard.dismiss()
+    showHelpModal()
+  }
+
   render () {
     return !this.props.context.listUsernames ? null : (
       <View style={styles.container} testID={'edge: login-scene'}>
@@ -65,6 +71,7 @@ export default class Login extends Component<Props, State> {
           appName={s.strings.app_name_short}
           backgroundImage={edgeBackgroundImage}
           primaryLogo={edgeLogo}
+          parentButton={{ text: s.strings.string_help, callback: this.onClickHelp }}
         />
       </View>
     )
