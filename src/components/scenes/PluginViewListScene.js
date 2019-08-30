@@ -163,6 +163,9 @@ class PluginList extends Component<Props, State> {
   requestAndroidPermissions = async (permissionList: Array<string>, plugin: BuySellPlugin) => {
     let reqType
     switch (permissionList[0]) {
+      case 'camera':
+        reqType = PermissionsAndroid.PERMISSIONS.CAMERA
+        break
       default:
         reqType = PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
     }
