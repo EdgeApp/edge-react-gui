@@ -16,7 +16,6 @@ const hostedBuySellPlugins: Array<BuySellPlugin> = [
     name: 'LibertyX',
     subtitle: 'Buy Bitcoin with cash or debit card at US merchants\nBTC\nFee: 3-8% / Settlement: Instant',
     imageUrl: 'https://edge.app/wp-content/uploads/2019/05/libertyXlogo.png',
-
     permissions: ['location'],
     originWhitelist: ['https://libertyx.com']
   },
