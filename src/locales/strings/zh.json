@@ -387,6 +387,7 @@
   "otp_modal_body": "建议使用双重身份验证以确保您的设备免受其他设备的未经授权的存取。",
   "otp_notif_title": "另一台设备已请求禁用双重身份验证",
   "otp_notif_body": "如果您没有发出此请求, 请以 \"%1$s的身份登录并更改密码",
+  "otp_copied_msg": "",
   "word_to_in_convert_from_to_string": "至",
   "legacy_address_modal_title": "检测到传统地址",
   "legacy_address_modal_warning": "警告：您已扫描了一个可能不适用于预期货币的旧格式地址，因为它与其他货币地址无法区分。\n\n你想继续发送到这个地址吗？",
