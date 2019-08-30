@@ -46,7 +46,7 @@ const hostedBuySellPlugins: Array<BuySellPlugin> = [
     pluginId: 'banxa',
     uri: 'https://edge.banxa.com',
     name: 'Banxa',
-    subtitle: 'Buy Bitcoin and Ethereum in Australia\nBTC, ETH\nFee: 1-3% / Settlement: 5 min - 24 hrs',
+    subtitle: 'Buy crypto in Australia with POLi bank transfer or Newsagent\nBTC, ETH\nFee: 1-3% / Settlement: 5 min - 24 hrs',
     imageUrl: 'https://edge.app/wp-content/uploads/2019/08/banxa.png'
   }
 ]
