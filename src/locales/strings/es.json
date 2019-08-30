@@ -387,6 +387,7 @@
   "otp_modal_body": "La autenticación de doble factor está recomendada para mantener tu dispositivo seguro frente a accesos no autorizados desde otros dispositivos.",
   "otp_notif_title": "Otro dispositivo ha solicitado la desactivación de 2FA",
   "otp_notif_body": "Si tú no has realizado esta solicitud, accede como %1$s y cambia tu contraseña",
+  "otp_copied_msg": "",
   "word_to_in_convert_from_to_string": "hacia",
   "legacy_address_modal_title": "Dirección \"legacy\" detectada",
   "legacy_address_modal_warning": "Advertencia: Has escaneado una dirección antigua (legacy) que puede no corresponder a la criptomoneda deseada ya que no es distinguible de las direcciones de otras monedas. \n\n¿Quieres continuar con el envío a esta dirección?",
