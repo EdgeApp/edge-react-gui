@@ -387,6 +387,7 @@
   "otp_modal_body": "Il est recommandé d'utiliser le multi facteur d'authentification pour garder votre appareil sécurisé et prevenir d'access d'unauthorisé depuis les autres appareils ",
   "otp_notif_title": "Une demande du multi facteurs d'authentification a été envoyé par un autre appareil ",
   "otp_notif_body": "Si vous n'avez pas fait cette demande, veuillez se connecter en %1$s et changer votre mot de passe",
+  "otp_copied_msg": "",
   "word_to_in_convert_from_to_string": "à",
   "legacy_address_modal_title": "Legacy adresse détectée",
   "legacy_address_modal_warning": "Attention : Vous avez scanné une formate d'adresse Legacy qui ne correspondrait pas au devise prévue comme il est impossible de le distinguer d'autres adresses de monnaie. Souhaitez vous vraiment continuer à envoyer à cet adresse? ",
