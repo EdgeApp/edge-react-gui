@@ -387,6 +387,7 @@
   "otp_modal_body": "2FA được đặt ra để giữ thiết bị của bạn không bị xâm nhập khi chưa cho phép từ các thiết bị khác.",
   "otp_notif_title": "Vô hiệu hóa 2FA được yêu cầu thừ thiết bị khác",
   "otp_notif_body": "Nếu bạn không yêu cầu, hãy đăng nhập %1$s và thay đổi mật khẩu",
+  "otp_copied_msg": "",
   "word_to_in_convert_from_to_string": "tới",
   "legacy_address_modal_title": "Phát hiện ra địa chỉ tài sản",
   "legacy_address_modal_warning": "Cảnh báo: Bạn đã quét một địa chỉ định dạng cũ có thể không dành cho mục đích tiền tệ vì nó không thể phân biệt với các địa chỉ tiền tệ khác.\n\nBạn có muốn tiếp tục gửi đến địa chỉ này?",
