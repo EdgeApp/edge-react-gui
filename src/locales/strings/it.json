@@ -387,6 +387,7 @@
   "otp_modal_body": "Il 2FA è raccomandato per tenere il tuo dispositivo al sicuro da accessi non autorizzati provenienti da altri dispositivi.",
   "otp_notif_title": "È stato richiesto di disabilitare il 2FA da un altro dispositivo",
   "otp_notif_body": "Se non hai generato questa richiesta, accedi come %1$s e cambia la tua password",
+  "otp_copied_msg": "",
   "word_to_in_convert_from_to_string": "a",
   "legacy_address_modal_title": "Rilevato indirizzo Legacy",
   "legacy_address_modal_warning": "Attenzione: hai scansionato un indirizzo di formato legacy che potrebbe non essere adatto alla valuta desiderata poiché è indistinguibile da altri indirizzi di valuta.\n\nVuoi continuare a inviare a questo indirizzo?",
