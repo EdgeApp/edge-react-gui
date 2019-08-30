@@ -13,6 +13,7 @@ import { createCurrencyWalletAndSelectForPlugins } from '../../../../actions/ind
 import { selectWallet } from '../../../../actions/WalletActions'
 import { launchModal } from '../../../../components/common/ModalProvider.js'
 import { createCryptoExchangeWalletSelectorModal } from '../../../../components/modals/CryptoExchangeWalletSelectorModal'
+import { showError } from '../../../../components/services/AirshipInstance.js'
 import { DEFAULT_STARTER_WALLET_NAMES, EXCLAMATION, MATERIAL_COMMUNITY } from '../../../../constants/indexConstants'
 import { SEND_CONFIRMATION } from '../../../../constants/SceneKeys.js'
 import s from '../../../../locales/strings'
@@ -22,7 +23,6 @@ import type { GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmat
 import type { Dispatch, State } from '../../../../types/reduxTypes.js'
 import type { BuySellPlugin, GuiWallet } from '../../../../types/types.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
-import { displayErrorAlert } from '../../../UI/components/ErrorAlert/actions.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 
 type EdgeReceiveAddress = {
@@ -236,9 +236,7 @@ export class EdgeProvider extends Bridgeable {
         isHTML: true
       },
       (error, event) => {
-        if (error) {
-          this._dispatch(displayErrorAlert(error)) // this occurs on simulators
-        }
+        if (error) showError(error)
       }
     )
   }

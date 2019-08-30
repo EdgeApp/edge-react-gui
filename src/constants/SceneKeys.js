@@ -32,6 +32,7 @@ export const SCAN = 'scan'
 export const SCAN_NOT_USED = 'scan_notused'
 export const SEND_CONFIRMATION = 'sendConfirmation'
 export const SEND_CONFIRMATION_NOT_USED = 'sendconfirmation_notused'
+export const SWAP_ACTIVATE_SHAPESHIFT = 'swapActivateShapeShift'
 export const CHANGE_MINING_FEE_SEND_CONFIRMATION = 'changeMiningFeeSendConfirmation'
 export const CHANGE_MINING_FEE_EXCHANGE = 'changeMiningFeeExchange'
 export const REQUEST = 'request'
@@ -126,5 +127,9 @@ export const CURRENCY_SETTINGS = {
   ufoSettings: {
     pluginName: 'ufo',
     currencyCode: 'UFO'
+  },
+  xtzSettings: {
+    pluginName: 'tezos',
+    currencyCode: 'XTZ'
   }
 }

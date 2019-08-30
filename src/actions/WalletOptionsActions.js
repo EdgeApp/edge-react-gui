@@ -7,13 +7,13 @@ import FAIcon from 'react-native-vector-icons/FontAwesome'
 
 import { refreshWallet } from '../actions/WalletActions.js'
 import { launchModal } from '../components/common/ModalProvider.js'
+import { showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants'
 import s from '../locales/strings.js'
-import * as ACCOUNT_API from '../modules/Core/Account/api.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
-import { displayErrorAlert } from '../modules/UI/components/ErrorAlert/actions'
 import Text from '../modules/UI/components/FormattedText'
 import * as WALLET_SELECTORS from '../modules/UI/selectors.js'
+import { B } from '../styles/common/textStyles.js'
 import { THEME } from '../theme/variables/airbitz.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { showDeleteWalletModal } from './DeleteWalletModalActions.js'
@@ -31,7 +31,7 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
         const state = getState()
         const account = CORE_SELECTORS.getAccount(state)
 
-        ACCOUNT_API.activateWalletRequest(account, walletId).catch(error => console.log(error))
+        account.changeWalletStates({ [walletId]: { archived: false } }).catch(error => console.log(error))
       }
     }
 
@@ -40,7 +40,7 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
         const state = getState()
         const account = CORE_SELECTORS.getAccount(state)
 
-        ACCOUNT_API.archiveWalletRequest(account, walletId).catch(error => console.log(error))
+        account.changeWalletStates({ [walletId]: { archived: true } }).catch(error => console.log(error))
       }
     }
 
@@ -137,7 +137,7 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
             message: (
               <Text>
                 {s.strings.fragment_wallets_get_seed_wallet_first_confirm_message_mobile}
-                <Text style={{ fontWeight: 'bold' }}>{walletName}</Text>
+                <B>{walletName}</B>
               </Text>
             ),
             input,
@@ -201,7 +201,7 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
             dispatch(refreshWallet(walletId))
           }
         } catch (error) {
-          dispatch(displayErrorAlert(error))
+          showError(error)
         }
       }
     }

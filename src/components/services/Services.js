@@ -21,7 +21,6 @@ import { type State } from '../../types/reduxTypes.js'
 import errorAlert from '../../util/errorAlert.js'
 import loginStatusChecker from '../../util/loginStatusChecker.js'
 import perfLogger from '../../util/perfLogger.js'
-import soundsMiddleware from '../../util/soundsMiddleware.js'
 import { ModalProvider } from '../common/ModalProvider.js'
 import { Airship } from './AirshipInstance.js'
 import { AutoLogout } from './AutoLogout.js'
@@ -42,7 +41,7 @@ export class Services extends PureComponent<Props> {
   constructor (props: Props) {
     super(props)
 
-    const middleware: Array<Object> = [errorAlert, loginStatusChecker, thunk, soundsMiddleware]
+    const middleware: Array<Object> = [errorAlert, loginStatusChecker, thunk]
     if (ENV.ENABLE_REDUX_PERF_LOGGING) middleware.push(perfLogger)
 
     const composeEnhancers =

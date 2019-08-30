@@ -9,12 +9,9 @@ import { type AirshipBallast } from './Airship.js'
 import { KeyboardTracker } from './KeyboardTracker.js'
 import { LayoutContext, type SafeAreaGap } from './LayoutContext.js'
 
-// Should be ChildrenArray<Node>, but Flow is too old to understand:
-type NodeArray = Array<Node> | Node
-
 type Props = {
   bridge: AirshipBallast,
-  children: NodeArray | ((gap: SafeAreaGap) => NodeArray),
+  children: Node | ((gap: SafeAreaGap) => Node),
 
   // True to have the modal float in the center of the screen,
   // or false for a bottom modal:

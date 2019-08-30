@@ -6,57 +6,59 @@ export const BITCOINCASH_WALLET = 'wallet:bitcoincash'
 export const MAX_TOKEN_CODE_CHARACTERS = 6
 
 export const CURRENCY_SYMBOL_IMAGES = {
+  BCH: 'https://developer.airbitz.co/content/bitcoincash-logo-solo-64.png',
   BTC: 'https://developer.airbitz.co/content/bitcoin-logo-solo-64.png',
-  ETH: 'https://developer.airbitz.co/content/ethereum-logo-solo-64.png',
-  BCH: 'https://developer.airbitz.co/content/bitcoincash-logo-solo-64.png'
+  ETH: 'https://developer.airbitz.co/content/ethereum-logo-solo-64.png'
 }
 
 export const DEFAULT_STARTER_WALLET_NAMES = {
-  BTC: s.strings.string_first_bitcoin_wallet_name,
   BCH: s.strings.string_first_bitcoincash_wallet_name,
-  ETH: s.strings.string_first_ethereum_wallet_name,
   BSV: s.strings.string_first_bitcoin_sv_wallet_name,
+  BTC: s.strings.string_first_bitcoin_wallet_name,
   BTG: s.strings.string_first_bitcoin_gold_wallet_name,
   DASH: s.strings.string_first_dash_wallet_name,
   DGB: s.strings.string_first_digibyte_wallet_name,
   EOS: s.strings.string_first_eos_wallet_name,
+  ETH: s.strings.string_first_ethereum_wallet_name,
   FTC: s.strings.string_first_feather_coin_wallet_name,
   GRS: s.strings.string_first_groestlcoin_wallet_name,
   HERC: s.strings.string_first_hercules_wallet_name,
   LTC: s.strings.string_first_litecoin_wallet_name,
-  XMR: s.strings.string_first_monero_wallet_name,
   QTUM: s.strings.string_first_qtum_wallet_name,
-  XRP: s.strings.string_first_ripple_wallet_name,
+  RVN: s.strings.string_first_ravencoin_wallet_name,
   SMART: s.strings.string_first_smartcash_wallet_name,
   UFO: s.strings.string_first_ufo_wallet_name,
   VTC: s.strings.string_first_vertcoin_wallet_name,
-  RVN: s.strings.string_first_ravencoin_wallet_name,
-  XZC: s.strings.string_first_zcoin_wallet_name,
-  XLM: s.strings.string_first_stellar_wallet_name
+  XLM: s.strings.string_first_stellar_wallet_name,
+  XMR: s.strings.string_first_monero_wallet_name,
+  XRP: s.strings.string_first_ripple_wallet_name,
+  XTZ: s.strings.strinf_first_tezos_wallet_name,
+  XZC: s.strings.string_first_zcoin_wallet_name
 }
 
 // DO NOT PUT ANY TOKENS IN HERE!
 export const CURRENCY_PLUGIN_NAMES = {
-  BTC: 'bitcoin',
   BCH: 'bitcoincash',
   BSV: 'bitcoinsv',
+  BTC: 'bitcoin',
   BTG: 'bitcoingold',
   DASH: 'dash',
   DGB: 'digibyte',
-  EOS: 'eos',
   EBST: 'eboost',
+  EOS: 'eos',
   ETH: 'ethereum',
   FTC: 'feathercoin',
   GRS: 'groestlcoin',
   LTC: 'litecoin',
-  XMR: 'monero',
   QTUM: 'qtum',
   RVN: 'ravencoin',
-  XRP: 'ripple',
   SMART: 'smartcash',
   UFO: 'ufo',
   VTC: 'vertcoin',
   XLM: 'stellar',
+  XMR: 'monero',
+  XRP: 'ripple',
+  XTZ: 'tezos',
   XZC: 'zcoin'
 }
 
@@ -166,6 +168,11 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   HERC: {
     displayBuyCrypto: true,
     isImportKeySupported: false
+  },
+  XTZ: {
+    noChangeMiningFee: true,
+    // will share / copy public address instead of URI on Request scene
+    isUriEncodedStructure: true
   }
 }
 

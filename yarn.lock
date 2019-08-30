@@ -3403,10 +3403,10 @@ edge-components@^0.0.26:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.16.7:
-  version "0.16.7"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.16.7.tgz#9a55b5c226cea04e58c9d9302b844c82adcb6d60"
-  integrity sha512-zw/Be7BKQJWkYVoouZOaP0Hddt2F/i+A8GLsqiqUqJCPhzmGUtqVXv4qFAeDepNw88bLRRf3TiN7bjqVMHz1ug==
+edge-core-js@^0.16.8:
+  version "0.16.8"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.16.8.tgz#26fb1f217bba0f98a15b985d22435833292d7466"
+  integrity sha512-mxTV8wofATnX6MHfEm5HaZjnQXJQL7qmr9Dq4PICmM6LMUwe5Kucg+4DovdiaOVAKjB19W+xk/4xhJPV5kTaIA==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -3430,10 +3430,10 @@ edge-core-js@^0.16.7:
     ws "^5.1.1"
     yaob "^0.3.4"
 
-edge-currency-accountbased@^0.3.4:
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.3.4.tgz#3e49e4085b43a7a5ce3b0e0e431ae7bfb7ff704f"
-  integrity sha512-hkLHV1cEjLHFjmrwiNGhjfZnYIyi3hU1tCjfPpVfzPlPjtD+9GoaU2zvRu7HZI2//4+KEyOAmRxSGfMcr1r+mg==
+edge-currency-accountbased@^0.3.7:
+  version "0.3.7"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.3.7.tgz#4a8effe21b114d8b93dc2c64d4987b020bbc3427"
+  integrity sha512-Q3+q+REXKpV8/K2mJ/DSE3X6krUEfNhkuy7kTEGqsaJlnRDNr7jPaLf/gtue4aRCgppW8zWKslgA/6YxB1VwAw==
   dependencies:
     "@dapix/react-native-fio" "0.1.0"
     base-x "^1.0.4"
@@ -3484,10 +3484,10 @@ edge-currency-monero@0.2.4:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#william/v0.14.0-hardfork"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.8.2:
-  version "0.8.2"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.8.2.tgz#51fa9b1bdd7c22c71e2d786acb0048b940ebc363"
-  integrity sha512-7YUY4jXbX2xo7u4yuCrDfZ84AtInfUfOiUr2r30ER7oGW5Jml/0qvdHI1mJt/kouyrX0+gWGFyDouFrknm53Mg==
+edge-exchange-plugins@^0.8.3:
+  version "0.8.3"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.8.3.tgz#aa59e795550c91ee8c248e5bf5f45c985c240d39"
+  integrity sha512-kV1SpxQwLwWJRKTQpQz4yuO0GGTghEhNlolTdCt3dEmNEo/gX/7IokVGyOISLcisYp+R8N56HxywmAMhNC7xGw==
   dependencies:
     esm "^3.2.4"
     hashjs "^1.2.0"
@@ -3530,9 +3530,9 @@ edge-login-ui-rn@0.5.38:
   dependencies:
     moment "^2.22.2"
 
-"edge-plugin-wyre@https://github.com/EdgeApp/edge-plugin-wyre.git#9aedf3d":
+"edge-plugin-wyre@https://github.com/EdgeApp/edge-plugin-wyre.git#d67c931":
   version "0.1.2"
-  resolved "https://github.com/EdgeApp/edge-plugin-wyre.git#9aedf3d0c79626a587eae6eb2dbdf2fc1f634853"
+  resolved "https://github.com/EdgeApp/edge-plugin-wyre.git#d67c931c0353e8c2e152cbbb19496ce831e80c56"
   dependencies:
     js-sha256 "^0.9.0"
     moment "^2.22.2"
@@ -8896,14 +8896,6 @@ prompts@^2.0.1:
     kleur "^3.0.2"
     sisteransi "^1.0.0"
 
-prop-types@15.5.10, prop-types@~15.5.7:
-  version "15.5.10"
-  resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.5.10.tgz#2797dfc3126182e3a95e3dfbb2e893ddd7456154"
-  integrity sha1-J5ffwxJhguOpXj37suiT3ddFYVQ=
-  dependencies:
-    fbjs "^0.8.9"
-    loose-envify "^1.3.1"
-
 prop-types@^15.5.10, prop-types@^15.5.6, prop-types@^15.5.7, prop-types@^15.5.8, prop-types@^15.5.9, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2:
   version "15.6.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.2.tgz#05d5ca77b4453e985d60fc7ff8c859094a497102"
@@ -8911,6 +8903,14 @@ prop-types@^15.5.10, prop-types@^15.5.6, prop-types@^15.5.7, prop-types@^15.5.8,
   dependencies:
     loose-envify "^1.3.1"
     object-assign "^4.1.1"
+
+prop-types@~15.5.7:
+  version "15.5.10"
+  resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.5.10.tgz#2797dfc3126182e3a95e3dfbb2e893ddd7456154"
+  integrity sha1-J5ffwxJhguOpXj37suiT3ddFYVQ=
+  dependencies:
+    fbjs "^0.8.9"
+    loose-envify "^1.3.1"
 
 proxy-addr@~2.0.4:
   version "2.0.4"
@@ -9228,16 +9228,6 @@ react-native-drawer@^2.3.0:
   dependencies:
     prop-types "^15.5.8"
     tween-functions "^1.0.1"
-
-"react-native-dropdown@git://github.com/g6ling/react-native-dropdown.git":
-  version "0.0.7"
-  resolved "git://github.com/g6ling/react-native-dropdown.git#12cd976c8131706134f1a042bb88c4bdb82965ac"
-
-"react-native-dropdownalert@git://github.com/EdgeApp/react-native-dropdownalert.git":
-  version "3.1.1"
-  resolved "git://github.com/EdgeApp/react-native-dropdownalert.git#27a0e599d4a51bccaafb4260e84b6a9caefac726"
-  dependencies:
-    prop-types "15.5.10"
 
 react-native-easy-grid@0.2.0:
   version "0.2.0"

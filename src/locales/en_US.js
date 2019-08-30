@@ -18,6 +18,10 @@ const strings = {
   drawer_sweep_private_key: 'Sweep Private Key',
   drawer_wallets: 'Wallets',
 
+  // Alert component:
+  alert_dropdown_alert: 'Alert! ',
+  alert_dropdown_warning: 'Warning! ',
+
   dropdown_exchange_max_amount: 'Exchange Max Amount',
   max_spend_unavailable_modal_title: 'Max Spend Unavailable',
   max_spend_unavailable_modal_message: 'Unable to calculate maximum spendable amount for currency %s. Please enter amount.',
@@ -173,6 +177,7 @@ const strings = {
   create_wallet_account_unfinished_activation_title: 'Wallet Not Activated',
   create_wallet_account_unfinished_activation_message:
     'In order to complete activation of this %s wallet, please choose a unique account name and complete the activation payment. If you already made an activation payment, please wait for that payment to confirm before attempting to use this wallet.',
+  preparing_fio_wallet: 'Preparing FIO wallet',
   submit: 'Submit',
   login: 'Login',
   help_build: 'Build',
@@ -270,6 +275,7 @@ const strings = {
   string_first_digibyte_wallet_name: 'My DigiByte',
   string_first_eos_wallet_name: 'My EOS',
   string_first_feather_coin_wallet_name: 'My Feather Coin',
+  string_first_fio_wallet_name: 'My FIO',
   string_first_groestlcoin_wallet_name: 'My Groestlcoin',
   string_first_hercules_wallet_name: 'My Hercules',
   string_first_litecoin_wallet_name: 'My Litecoin',
@@ -282,6 +288,7 @@ const strings = {
   string_first_ravencoin_wallet_name: 'My Ravencoin',
   string_first_zcoin_wallet_name: 'My Zcoin',
   string_first_stellar_wallet_name: 'My Stellar',
+  string_first_tezos_wallet_name: 'My Tezos',
   my_crypto_wallet_name: 'My %s',
   string_from_exchange_info: 'You are about to exchange\n %1$s %2$s\n (%3$s)\n from %4$s',
   string_help: 'Help',
@@ -334,9 +341,11 @@ const strings = {
   title_plugin_spend_cryptocurrency: 'Spend Cryptocurrency',
   title_plugin_spend: 'Spend',
   title_otp: '2FA',
+  title_register_fio_address: 'Register FIO Address',
   title_request: 'Request',
   title_send_confirmation: 'Send Confirmation',
   title_send: 'Send',
+  title_activate_shapeshift: 'Activate ShapeShift',
   title_scan: 'Scan',
   title_settings: 'Settings',
   title_terms_of_service: 'Terms of Service',
@@ -367,7 +376,6 @@ const strings = {
   back_button_tap_again_to_exit: 'Please tap BACK again to log out',
   send_confirmation_enter_send_password: 'Password',
   tx_detail_picker_title: 'Choose a category:',
-  transaction_detail_no_wallet: 'No wallet on transaction object',
   transaction_detail_unable_to_load_transaction: 'Unable to load transaction',
   string_confirm: 'Confirm',
   fragment_tx_detail_mining_fee_with_symbol: '+ %1s %2f (Fee)',
@@ -398,6 +406,7 @@ const strings = {
   otp_modal_body: '2FA is recommended to keep your device secure from unauthorized access from other devices.',
   otp_notif_title: '2FA disable has been requested by another device',
   otp_notif_body: 'If you did not create this request, log in as %1$s and change your password',
+  otp_copied_msg: '2FA code successfully copied to clipboard',
 
   word_to_in_convert_from_to_string: 'to',
 
@@ -513,8 +522,7 @@ const strings = {
   request_crypto_address_modal_body:
     'The service "%s" is requesting an address from your %s wallet to send you money. The address will be sent to the following URL:',
   request_crypto_address_modal_send_address_button: 'Send Address',
-  kyc_something_wrong: 'Something went wrong',
-  kyc_something_wrong_message: 'Please try again later',
+  activity_activating_shapeshift: 'Activating ShapeShift account',
   kyc_ss_finish: 'Please complete ID verification for %s',
   ss_geolock: 'Location restricted. Unable to complete exchange.',
   ss_unable: 'No enabled exchanges support %1$s to %2$s.',
@@ -532,6 +540,7 @@ const strings = {
   changelly_about: 'Changelly exchange option empowers you to seamlessly exchange one crypto into another with maximum comfort!',
   changelly_kyc_statement:
     'I have read and I agree to the Changelly terms of use and privacy policy.  By clicking Accept, I acknowledge and understand that my transaction may trigger an AML/KYC verification according to Changelly AML/KYC',
+  changelly_reject_kyc: 'Reject',
   terms_of_use: 'Terms of Use',
   privacy_policy: 'Privacy Policy',
   changelly_aml_kyc: 'AML/KYC',

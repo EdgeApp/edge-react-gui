@@ -10,16 +10,14 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import iconImage from '../assets/images/otp/OTP-badge_sm.png'
 import { launchModal } from '../components/common/ModalProvider.js'
-import { showToast } from '../components/services/AirshipInstance.js'
+import { showError, showToast } from '../components/services/AirshipInstance.js'
 import { CURRENCY_PLUGIN_NAMES, ION_ICONS, LOCKED_ICON, WALLET_LIST } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
-import { restoreWalletsRequest } from '../modules/Core/Account/api.js'
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors'
 import { updateExchangeRates } from '../modules/ExchangeRates/action.js'
 import { sendLogs } from '../modules/Logs/action.js'
 import * as SETTINGS_ACTIONS from '../modules/Settings/SettingsActions.js'
-import { displayErrorAlert } from '../modules/UI/components/ErrorAlert/actions.js'
 import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import { convertCurrency } from '../modules/UI/selectors.js'
 import { newSpendingLimits } from '../reducers/SpendingLimitsReducer.js'
@@ -169,9 +167,8 @@ export function togglePinLoginEnabled (pinLoginEnabled: boolean) {
 
     dispatch(SETTINGS_ACTIONS.togglePinLoginEnabled(pinLoginEnabled))
     return account.changePin({ enableLogin: pinLoginEnabled }).catch(async error => {
-      dispatch(displayErrorAlert(error))
+      showError(error)
 
-      // TODO: Make a proper error action so we can avoid the double dispatch:
       const pinLoginEnabled = await context.pinLoginEnabled(account.username)
       dispatch(SETTINGS_ACTIONS.togglePinLoginEnabled(pinLoginEnabled))
     })
@@ -331,7 +328,7 @@ export const showSendLogsModal = () => async (dispatch: Dispatch, getState: GetS
       showToast(s.strings.settings_modal_send_logs_success)
     }
   } catch (error) {
-    dispatch(displayErrorAlert(error))
+    showError(error)
   }
 }
 
@@ -347,7 +344,16 @@ export const showRestoreWalletsModal = () => async (dispatch: Dispatch, getState
   })
   const response = await launchModal(restoreWalletsModal)
   if (response) {
-    await restoreWalletsRequest(account)
+    const restoreKeys = account.allKeys.filter(key => key.archived || key.deleted)
+    await Promise.all(
+      restoreKeys
+        .map(key => key.id)
+        .map(walletId =>
+          account.changeWalletStates({
+            [walletId]: { archived: false, deleted: false }
+          })
+        )
+    )
     Actions[WALLET_LIST]()
   }
 }

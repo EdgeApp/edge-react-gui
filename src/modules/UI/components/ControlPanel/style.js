@@ -62,9 +62,5 @@ export default {
   },
   underlay: {
     color: `${THEME.COLORS.PRIMARY}${THEME.ALPHA.LOW}`
-  },
-  debug: {
-    borderColor: 'red',
-    borderWidth: 1
   }
 }

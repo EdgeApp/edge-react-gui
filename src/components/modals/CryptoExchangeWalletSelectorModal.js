@@ -49,6 +49,7 @@ class CryptoExchangeWalletSelectorModal extends Component<Props, LocalState> {
     let totalWalletsToAdd = 0
     for (i; i < this.props.wallets.length; i++) {
       const wallet = this.props.wallets[i]
+      if (wallet.type === 'wallet:fio') continue
       const record = {
         walletItem: wallet,
         supportedWalletType: null

@@ -37,7 +37,6 @@ export const initialState = {
       amount: 0
     }
   },
-  shapeShiftNeedsKYC: true,
   developerModeOn: false
 }
 
@@ -65,6 +64,7 @@ export type SettingsState = {
   DGB: CurrencySetting,
   WINGS: CurrencySetting,
   HERC: CurrencySetting,
+  AGLD: CurrencySetting,
 
   account: ?Object,
   autoLogoutTimeInSeconds: number,
@@ -100,7 +100,6 @@ export type SettingsState = {
       amount: number
     }
   },
-  shapeShiftNeedsKYC: boolean,
   developerModeOn: boolean,
   passwordRecoveryRemindersShown: {
     '20': boolean,
@@ -237,8 +236,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         otpResetDate: account.otpResetDate,
         isAccountBalanceVisible,
         isWalletFiatBalanceVisible,
-        passwordRecoveryRemindersShown,
-        shapeShiftNeedsKYC: account.swapConfig['shapeshift'].needsActivation
+        passwordRecoveryRemindersShown
       }
       denominationKeys.forEach(key => {
         const currencyCode = key.currencyCode
@@ -265,17 +263,11 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       })
       return newState
     }
-    case 'NEED_KYC_SETTING': {
-      return { ...state, shapeShiftNeedsKYC: true }
-    }
     case 'DEVELOPER_MODE_ON': {
       return { ...state, developerModeOn: true }
     }
     case 'DEVELOPER_MODE_OFF': {
       return { ...state, developerModeOn: false }
-    }
-    case 'ON_KYC_TOKEN_SET': {
-      return { ...state, shapeShiftNeedsKYC: false }
     }
     case 'SET_CONFIRM_PASSWORD_ERROR': {
       if (!action.data) throw new Error('Invalid action')

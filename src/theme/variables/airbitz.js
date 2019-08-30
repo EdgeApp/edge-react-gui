@@ -2,6 +2,19 @@
 
 import { Platform, StatusBar } from 'react-native'
 
+import { scale } from '../../util/scaling.js'
+
+/**
+ * Calculates the height of the header (where the back button lives).
+ */
+export function getHeaderHeight () {
+  if (Platform.OS === 'ios') {
+    const majorVersionIOS = Number(Platform.Version)
+    return majorVersionIOS > 9 && majorVersionIOS < 11 ? 62 : 44
+  }
+  return 56
+}
+
 export const colors = {
   gradient: {
     light: '#3b7ada',
@@ -9,52 +22,20 @@ export const colors = {
   },
 
   primary: '#2a5799',
-  secondary: '#4977bb',
-
-  accentGreen: '#7fc343',
-  accentOrange: '#f7a623',
-  accentRed: '#f03a47',
-
-  black: '#000000',
-  gray1: '#58595c',
-  gray2: '#909091',
-  gray3: '#d8d6d8',
-  gray4: '#F7F7F7',
-  white: '#FFFFFF',
-  offWhite: '#F6F6F6'
-}
-
-export const opacity = {
-  active: 0.3
-}
-
-export const font = {
-  default: 'SourceSansPro-Black'
-}
-
-let gradientHeaderHeight
-if (Platform.OS !== 'ios') {
-  gradientHeaderHeight = 56
-} else {
-  const majorVersionIOS = parseInt(Platform.Version, 10)
-  if (majorVersionIOS > 9 && majorVersionIOS < 11) {
-    gradientHeaderHeight = 62
-  } else {
-    gradientHeaderHeight = 44
-  }
+  secondary: '#4977bb'
 }
 
 // https://projects.invisionapp.com/d/main#/console/10954562/239168414/inspect
 export const THEME = {
+  rem (n: number) {
+    return Math.round(n * scale(16))
+  },
+
   BUTTONS: {
     HEIGHT: 44
   },
 
-  SPACER: {
-    HEADER: gradientHeaderHeight
-  },
-
-  HEADER: Platform.OS === 'ios' ? gradientHeaderHeight : gradientHeaderHeight + StatusBar.currentHeight,
+  HEADER: Platform.OS === 'ios' ? getHeaderHeight() : getHeaderHeight() + StatusBar.currentHeight,
 
   FOOTER_TABS_HEIGHT: 50,
 
@@ -96,7 +77,7 @@ export const THEME = {
       DARK: '#0E4B75'
     },
 
-    ACCENT_BLUE: '#0073D9',
+    ACCENT_BLUE: '#0073D9', // Airbitz blue
     ACCENT_ORANGE: '#F1AA19',
     ACCENT_RED: '#E85466',
     ACCENT_MINT: '#66EDA8',
@@ -112,7 +93,6 @@ export const THEME = {
     OPACITY_WHITE: 'rgba(255, 255, 255, 0.1)',
 
     TRANSPARENT: 'transparent',
-    MODAL_BOX: 'rgba(0, 0, 0, .6)',
 
     ROW_PRESSED: '#D9E3ED' // same as GRAY_3
   }

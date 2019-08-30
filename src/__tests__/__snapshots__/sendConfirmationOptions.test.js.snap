@@ -24,8 +24,8 @@ exports[`SendConfirmation XMR 1`] = `
         style={
           Object {
             "color": "#FFFFFF",
+            "fontFamily": "SourceSansPro-Bold",
             "fontSize": 25.28239436619718,
-            "fontWeight": "700",
             "paddingHorizontal": 11.236619718309859,
           }
         }
@@ -174,8 +174,8 @@ exports[`SendConfirmation XRP 1`] = `
         style={
           Object {
             "color": "#FFFFFF",
+            "fontFamily": "SourceSansPro-Bold",
             "fontSize": 25.28239436619718,
-            "fontWeight": "700",
             "paddingHorizontal": 11.236619718309859,
           }
         }
@@ -363,8 +363,8 @@ exports[`SendConfirmation not editable 1`] = `
         style={
           Object {
             "color": "#FFFFFF",
+            "fontFamily": "SourceSansPro-Bold",
             "fontSize": 25.28239436619718,
-            "fontWeight": "700",
             "paddingHorizontal": 11.236619718309859,
           }
         }
@@ -443,8 +443,8 @@ exports[`SendConfirmation should render with standard props 1`] = `
         style={
           Object {
             "color": "#FFFFFF",
+            "fontFamily": "SourceSansPro-Bold",
             "fontSize": 25.28239436619718,
-            "fontWeight": "700",
             "paddingHorizontal": 11.236619718309859,
           }
         }

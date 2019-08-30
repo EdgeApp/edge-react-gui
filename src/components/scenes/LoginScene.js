@@ -3,15 +3,15 @@
 import type { EdgeAccount, EdgeContext } from 'edge-core-js'
 import { LoginScreen } from 'edge-login-ui-rn'
 import React, { Component } from 'react'
-import { StatusBar, StyleSheet, View } from 'react-native'
+import { Keyboard, StatusBar, StyleSheet, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 
 import edgeBackgroundImage from '../../assets/images/edgeBackground/login_bg.jpg'
 import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
 import s from '../../locales/strings.js'
-import * as CONTEXT_API from '../../modules/Core/Context/api'
 import THEME from '../../theme/variables/airbitz.js'
 import type { Dispatch } from '../../types/reduxTypes.js'
+import { showHelpModal } from '../modals/HelpModal.js'
 
 type Props = {
   initializeAccount: (EdgeAccount, touchIdInfo: ?Object) => void,
@@ -35,10 +35,10 @@ export default class Login extends Component<Props, State> {
     if (error || !account) return
     this.props.initializeAccount(account, touchIdInfo)
 
-    CONTEXT_API.listUsernames(this.props.context) // update users list after each login
-      .then(usernames => {
-        this.props.addUsernames(usernames)
-      })
+    // update users list after each login
+    this.props.context.listUsernames().then(usernames => {
+      this.props.addUsernames(usernames)
+    })
   }
 
   UNSAFE_componentWillReceiveProps (nextProps: Props) {
@@ -48,6 +48,11 @@ export default class Login extends Component<Props, State> {
         this.setState({ key: this.state.key + 1 })
       }
     }
+  }
+
+  onClickHelp () {
+    Keyboard.dismiss()
+    showHelpModal()
   }
 
   render () {
@@ -66,6 +71,7 @@ export default class Login extends Component<Props, State> {
           appName={s.strings.app_name_short}
           backgroundImage={edgeBackgroundImage}
           primaryLogo={edgeLogo}
+          parentButton={{ text: s.strings.string_help, callback: this.onClickHelp }}
         />
       </View>
     )

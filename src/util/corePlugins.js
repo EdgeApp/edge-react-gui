@@ -29,8 +29,10 @@ export const currencyPlugins = {
   // edge-currency-accountbased:
   eos: true,
   ethereum: ENV.ETHEREUM_INIT,
+  fio: true,
   stellar: true,
   ripple: true,
+  tezos: true,
   // edge-currency-bitcoin:
   bitcoin: true,
   bitcoincash: true,
@@ -63,7 +65,7 @@ export const ratePlugins = {
   coincapLegacy: true,
   nomics: ENV.NOMICS_INIT,
   currencyconverterapi: ENV.CURRENCYCONVERTERAPI_INIT,
-  xagau: false
+  xagau: true
 }
 
 export const swapPlugins = {

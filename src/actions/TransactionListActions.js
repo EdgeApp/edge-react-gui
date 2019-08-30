@@ -3,9 +3,8 @@
 import type { EdgeTransaction } from 'edge-core-js'
 import _ from 'lodash'
 
+import { showTransactionDropdown } from '../components/navigation/TransactionDropdown.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
-import * as WALLET_API from '../modules/Core/Wallets/api.js'
-import { displayTransactionAlert } from '../modules/UI/components/TransactionAlert/actions'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
 import type { TransactionListTx } from '../types/types.js'
@@ -25,14 +24,6 @@ export const updateTransactions = (transactionUpdate: {
 
 export const updateBalance = () => ({
   type: 'noop'
-})
-
-export const transactionsSearchVisible = () => ({
-  type: 'UI/SCENES/TRANSACTION_LIST/TRANSACTIONS_SEARCH_VISIBLE'
-})
-
-export const transactionsSearchHidden = () => ({
-  type: 'UI/SCENES/TRANSACTION_LIST/TRANSACTIONS_SEARCH_HIDDEN'
 })
 
 export const CHANGED_TRANSACTIONS = 'UI/SCENES/TRANSACTION_LIST/CHANGED_TRANSACTIONS'
@@ -105,8 +96,8 @@ const getAndMergeTransactions = async (state: State, dispatch: Dispatch, walletI
     key = transactionsWithKeys.length // and fast forward the counter
   }
   try {
-    const numTransactions = await WALLET_API.getNumTransactions(wallet, currencyCode) // get number of transactions on wallet
-    const transactions = await WALLET_API.getTransactions(wallet, currencyCode, options) // get transactions from certain range
+    const numTransactions = await wallet.getNumTransactions({ currencyCode }) // get number of transactions on wallet
+    const transactions = await wallet.getTransactions({ ...options, currencyCode }) // get transactions from certain range
 
     for (const tx of transactions) {
       // for each transaction, add some meta info
@@ -190,7 +181,7 @@ export const newTransactionsRequest = (walletId: string, edgeTransactions: Array
   }
   if (isTransactionForSelectedWallet) dispatch(fetchTransactions(walletId, selectedCurrencyCode, options))
   if (!UTILS.isReceivedTransaction(edgeTransaction)) return
-  dispatch(displayTransactionAlert(edgeTransaction))
+  showTransactionDropdown(edgeTransaction)
 }
 
 export const fetchTransactions = (walletId: string, currencyCode: string, options?: Object) => (dispatch: Dispatch, getState: GetState) => {

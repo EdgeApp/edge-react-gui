@@ -27,12 +27,12 @@ import {
 } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
-import * as WALLET_API from '../modules/Core/Wallets/api.js'
 import Text from '../modules/UI/components/FormattedText'
 import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import OptionIcon from '../modules/UI/components/OptionIcon/OptionIcon.ui.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
+import { B } from '../styles/common/textStyles.js'
 import { colors as COLORS } from '../theme/variables/airbitz.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import type { GuiWallet } from '../types/types.js'
@@ -66,7 +66,7 @@ const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWallet, gu
       message: (
         <Text style={{ textAlign: 'center' }}>
           {bodyString}
-          <Text style={{ fontWeight: 'bold', textAlign: 'center' }}>{`${requestAddress.callbackDomain}`}</Text>
+          <B>{`${requestAddress.callbackDomain}`}</B>
         </Text>
       ),
       icon: <OptionIcon iconName={FA_MONEY_ICON} />,
@@ -119,7 +119,7 @@ export const parseScannedUri = (data: string) => (dispatch: Dispatch, getState: 
     console.log(e)
   }
 
-  WALLET_API.parseUri(edgeWallet, data, currencyCode).then(
+  edgeWallet.parseUri(data, currencyCode).then(
     (parsedUri: EdgeParsedUri) => {
       dispatch({ type: 'PARSE_URI_SUCCEEDED', data: { parsedUri } })
 

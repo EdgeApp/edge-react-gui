@@ -8,6 +8,7 @@ import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { launchModal } from '../components/common/ModalProvider.js'
+import { showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import * as SETTINGS_API from '../modules/Core/Account/settings.js'
@@ -17,7 +18,6 @@ import * as WALLET_API from '../modules/Core/Wallets/api.js'
 import { updateExchangeRates } from '../modules/ExchangeRates/action.js'
 import * as SETTINGS_SELECTORS from '../modules/Settings/selectors'
 import { updateSettings } from '../modules/Settings/SettingsActions'
-import { displayErrorAlert } from '../modules/UI/components/ErrorAlert/actions'
 import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
@@ -55,7 +55,8 @@ export const selectWallet = (walletId: string, currencyCode: string, from?: stri
       data: { walletId, currencyCode }
     })
     const wallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
-    WALLET_API.getReceiveAddress(wallet, currencyCode)
+    wallet
+      .getReceiveAddress({ currencyCode })
       .then(receiveAddress => {
         dispatch({ type: 'NEW_RECEIVE_ADDRESS', data: { receiveAddress } })
       })
@@ -116,7 +117,7 @@ export const selectEOSWallet = (walletId: string, currencyCode: string, from?: s
 
 export const selectWalletFromModal = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
   dispatch(selectWallet(walletId, currencyCode))
-  dispatch({ type: 'CLOSE_ALL_WALLET_LIST_MODALS' })
+  dispatch({ type: 'DISABLE_WALLET_LIST_MODAL_VISIBILITY' })
   dispatch(refreshReceiveAddressRequest(walletId))
 }
 
@@ -252,7 +253,7 @@ export const getEnabledTokens = (walletId: string) => async (dispatch: Dispatch,
       dispatch(refreshWallet(walletId))
     }
   } catch (error) {
-    dispatch(displayErrorAlert(error))
+    showError(error)
   }
 }
 
@@ -307,7 +308,7 @@ export const editCustomToken = (
             Actions.pop()
           })
           .catch(error => {
-            dispatch(displayErrorAlert(error))
+            showError(error)
             dispatch({ type: 'EDIT_CUSTOM_TOKEN_FAILURE' })
           })
       } else {
@@ -324,7 +325,7 @@ export const editCustomToken = (
               })
           })
           .catch(error => {
-            dispatch(displayErrorAlert(error))
+            showError(error)
             dispatch({ type: 'EDIT_CUSTOM_TOKEN_FAILURE' })
           })
       }
@@ -350,7 +351,7 @@ export const editCustomToken = (
           })
         })
         .catch(error => {
-          dispatch(displayErrorAlert(error))
+          showError(error)
           dispatch({ type: 'EDIT_CUSTOM_TOKEN_FAILURE' })
         })
     }
@@ -448,7 +449,7 @@ export const deleteCustomToken = (walletId: string, currencyCode: string) => (di
       Actions.pop()
     })
     .catch(error => {
-      dispatch(displayErrorAlert(error))
+      showError(error)
       dispatch({ type: 'DELETE_CUSTOM_TOKEN_FAILURE' })
     })
 }

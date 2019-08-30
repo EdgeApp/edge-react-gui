@@ -72,6 +72,9 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   XMR: {
     denomination: '1000000000000'
   },
+  XTZ: {
+    denomination: '1000000'
+  },
   ETH: {
     denomination: '1000000000000000000'
   },
@@ -174,6 +177,9 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   BRZ: {
     denomination: '10000'
   },
+  AGLD: {
+    denomination: '1000000000'
+  },
   customTokens: [],
   passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN
 }
@@ -195,6 +201,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   LTC: 'object',
   FTC: 'object',
   VTC: 'object',
+  XTZ: 'object',
   RVN: 'object',
   XZC: 'object',
   QTUM: 'object',
@@ -203,6 +210,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   UFO: 'object',
   REP: 'object',
   WINGS: 'object',
+  AGLD: 'object',
   IND: 'object',
   HUR: 'object',
   HERC: 'object',

@@ -59,11 +59,6 @@ export const rawStyles = {
   textButtonUnderlay: { color: THEME.COLORS.TRANSPARENT },
   textButtonText: {
     color: THEME.COLORS.WHITE
-  },
-
-  debug: {
-    borderColor: 'red',
-    borderWidth: 1
   }
 }
 

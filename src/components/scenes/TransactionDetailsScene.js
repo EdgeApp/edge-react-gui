@@ -23,6 +23,7 @@ import { SceneWrapper } from '../common/SceneWrapper.js'
 import AmountArea from '../common/TransactionDetailAmountArea.js'
 import SubCategorySelect from '../common/TransactionSubCategorySelect.js'
 import { createAdvancedTransactionDetailsModal } from '../modals/AdvancedTransactionDetailsModal.js'
+import { showError } from '../services/AirshipInstance.js'
 
 const EXCHANGE_TEXT = s.strings.fragment_transaction_exchange
 const EXPENSE_TEXT = s.strings.fragment_transaction_expense
@@ -67,8 +68,7 @@ export type TransactionDetailsDispatchProps = {
   setNewSubcategory: (string, Array<string>) => void,
   openHelpModal: () => void,
   setTransactionDetails: (transaction: EdgeTransaction, edgeMetadata: EdgeMetadata) => void,
-  getSubcategories: () => void,
-  displayDropdownAlert: (message: string, title: string) => void
+  getSubcategories: () => void
 }
 
 type State = {
@@ -117,7 +117,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
       this.guiWallet = props.wallets[edgeTransaction.wallet.id]
       this.fiatSymbol = getFiatSymbol(this.guiWallet.fiatCurrencyCode)
     } else {
-      this.props.displayDropdownAlert(s.strings.transaction_detail_no_wallet, s.strings.transaction_detail_unable_to_load_transaction)
+      showError(s.strings.transaction_detail_unable_to_load_transaction)
     }
 
     if (edgeTransaction && edgeTransaction.metadata) {

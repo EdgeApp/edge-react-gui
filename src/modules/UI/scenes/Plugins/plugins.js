@@ -16,7 +16,6 @@ const hostedBuySellPlugins: Array<BuySellPlugin> = [
     name: 'LibertyX',
     subtitle: 'Buy Bitcoin with cash or debit card at US merchants\nBTC\nFee: 3-8% / Settlement: Instant',
     imageUrl: 'https://edge.app/wp-content/uploads/2019/05/libertyXlogo.png',
-
     permissions: ['location'],
     originWhitelist: ['https://libertyx.com']
   },
@@ -41,6 +40,13 @@ const hostedBuySellPlugins: Array<BuySellPlugin> = [
     name: 'Bits of Gold',
     subtitle: 'Sell Bitcoin to bank account in Israel and Europe\nBTC\nFee: 5% / Settlement: 2 days',
     imageUrl: 'https://edge.app/wp-content/uploads/2019/08/bits-of-gold-logo-sm.png'
+  },
+  {
+    pluginId: 'banxa',
+    uri: 'https://edge.banxa.com',
+    name: 'Banxa',
+    subtitle: 'Buy crypto in Australia with POLi bank transfer or Newsagent\nBTC, ETH\nFee: 1-3% / Settlement: 5 min - 24 hrs',
+    imageUrl: 'https://edge.app/wp-content/uploads/2019/08/banxa.png'
   }
 ]
 

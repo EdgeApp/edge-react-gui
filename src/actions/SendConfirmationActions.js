@@ -12,17 +12,7 @@ import { launchModal } from '../components/common/ModalProvider.js'
 import { EXCLAMATION, FEE_ALERT_THRESHOLD, MATERIAL_COMMUNITY, SEND_CONFIRMATION, TRANSACTION_DETAILS } from '../constants/indexConstants'
 import { getSpecialCurrencyInfo, getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
-import { checkPin } from '../modules/Core/Account/api.js'
 import { getAccount, getWallet } from '../modules/Core/selectors.js'
-import {
-  broadcastTransaction,
-  getMaxSpendable,
-  getPaymentProtocolInfo,
-  makeSpend,
-  makeSpendInfo,
-  saveTransaction,
-  signTransaction
-} from '../modules/Core/Wallets/api.js'
 import { getExchangeDenomination as settingsGetExchangeDenomination } from '../modules/Settings/selectors.js'
 import Text from '../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
@@ -30,8 +20,10 @@ import { getAuthRequired, getSpendInfo, getTransaction } from '../modules/UI/sce
 import type { AuthType } from '../modules/UI/scenes/SendConfirmation/selectors.js'
 import { convertCurrencyFromExchangeRates, getExchangeRate, getSelectedCurrencyCode, getSelectedWallet, getSelectedWalletId } from '../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
+import { B } from '../styles/common/textStyles.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { convertNativeToExchange } from '../util/utils'
+import { playSendSound } from './SoundActions.js'
 
 // add empty string if there is an error but we don't need text feedback to the user
 export const makeSpendFailed = (error: Error | null) => ({
@@ -75,31 +67,47 @@ export const updateAmount = (nativeAmount: string, exchangeAmount: string, fiatP
 
 type EdgePaymentProtocolUri = EdgeParsedUri & { paymentProtocolURL: string }
 
+const BITPAY = {
+  domain: 'bitpay.com',
+  merchantName: (memo: string) => {
+    // Example BitPay memo
+    // "Payment request for BitPay invoice DKffym7WxX6kzJ73yfYS7s for merchant Electronic Frontier Foundation"
+    // eslint-disable-next-line no-unused-vars
+    const [_, merchantName] = memo.split(' for merchant ')
+    return merchantName
+  }
+}
+
 export const paymentProtocolUriReceived = ({ paymentProtocolURL }: EdgePaymentProtocolUri) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const walletId = getSelectedWalletId(state)
   const edgeWallet = getWallet(state, walletId)
 
   Promise.resolve(paymentProtocolURL)
-    .then(paymentProtocolURL => getPaymentProtocolInfo(edgeWallet, paymentProtocolURL))
-    .then(makeSpendInfo)
-    .then(spendInfo => {
+    .then(paymentProtocolURL => edgeWallet.getPaymentProtocolInfo(paymentProtocolURL))
+    .then(paymentProtocolInfo => {
+      const { domain, memo, nativeAmount, spendTargets } = paymentProtocolInfo
+
+      const name = domain === BITPAY.domain ? BITPAY.merchantName(memo) : domain
+      const notes = memo
+
+      const spendInfo: EdgeSpendInfo = {
+        networkFeeOption: 'standard',
+        metadata: {
+          name,
+          notes
+        },
+        nativeAmount,
+        spendTargets,
+        otherParams: { paymentProtocolInfo }
+      }
+
       // const authRequired = getAuthRequired(state, spendInfo)
       // dispatch(newSpendInfo(spendInfo, authRequired))
 
       const guiMakeSpendInfo: GuiMakeSpendInfo = { ...spendInfo }
       guiMakeSpendInfo.lockInputs = true
       Actions[SEND_CONFIRMATION]({ guiMakeSpendInfo })
-      // return makeSpend(edgeWallet, spendInfo).then(
-      //   edgeTransaction => {
-      //     dispatch(updatePaymentProtocolTransaction(edgeTransaction))
-      //     // Actions[SEND_CONFIRMATION]('fromScan')
-      //   },
-      //   error => {
-      //     dispatch(makeSpendFailed(error))
-      //     // Actions[SEND_CONFIRMATION]('fromScan')
-      //   }
-      // )
     })
     .catch((error: Error) => {
       console.log(error)
@@ -123,7 +131,8 @@ export const sendConfirmationUpdateTx = (guiMakeSpendInfo: GuiMakeSpendInfo | Ed
   const authRequired = getAuthRequired(state, spendInfo)
   dispatch(newSpendInfo(spendInfo, authRequired))
 
-  await makeSpend(edgeWallet, spendInfo)
+  await edgeWallet
+    .makeSpend(spendInfo)
     .then(edgeTransaction => {
       return dispatch(updateTransaction(edgeTransaction, guiMakeSpendInfoClone, forceUpdateGui, null))
     })
@@ -138,7 +147,8 @@ export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => 
   const edgeWallet = getWallet(state, walletId)
   const spendInfo = getSpendInfo(state)
 
-  getMaxSpendable(edgeWallet, spendInfo)
+  edgeWallet
+    .getMaxSpendable(spendInfo)
     .then(nativeAmount => {
       const state = getState()
       const spendInfo = getSpendInfo(state, { nativeAmount })
@@ -205,12 +215,12 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
   let edgeSignedTransaction: EdgeTransaction = edgeUnsignedTransaction
   try {
     if (authRequired === 'pin') {
-      const isAuthorized = await checkPin(account, pin)
+      const isAuthorized = await account.checkPin(pin)
       if (!isAuthorized) throw new IncorrectPinError()
     }
-    edgeSignedTransaction = await signTransaction(wallet, edgeUnsignedTransaction)
-    edgeSignedTransaction = await broadcastTransaction(wallet, edgeSignedTransaction)
-    await saveTransaction(wallet, edgeSignedTransaction)
+    edgeSignedTransaction = await wallet.signTx(edgeUnsignedTransaction)
+    edgeSignedTransaction = await wallet.broadcastTx(edgeSignedTransaction)
+    await wallet.saveTx(edgeSignedTransaction)
     let edgeMetadata = { ...spendInfo.metadata }
     if (state.ui.scenes.sendConfirmation.transactionMetadata) {
       edgeMetadata = { ...edgeMetadata, ...state.ui.scenes.sendConfirmation.transactionMetadata }
@@ -237,7 +247,7 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
     edgeSignedTransaction.metadata = edgeMetadata
     edgeSignedTransaction.wallet = wallet
 
-    dispatch({ type: 'PLAY_SEND_SOUND' })
+    playSendSound().catch(error => console.log(error)) // Fail quietly
     Alert.alert(s.strings.transaction_success, s.strings.transaction_success_message, [
       {
         onPress () {},
@@ -294,7 +304,7 @@ export const displayFeeAlert = async (feeAmountInFiatSyntax: string) => {
     message: (
       <Text>
         {s.strings.send_confirmation_fee_modal_alert_message_fragment_1}
-        <Text style={{ fontWeight: 'bold' }}>{feeAmountInFiatSyntax}</Text>
+        <B>{feeAmountInFiatSyntax}</B>
         {s.strings.send_confirmation_fee_modal_alert_message_fragment_2}
       </Text>
     ),
