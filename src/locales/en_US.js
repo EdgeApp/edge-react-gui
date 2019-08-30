@@ -406,6 +406,7 @@ const strings = {
   otp_modal_body: '2FA is recommended to keep your device secure from unauthorized access from other devices.',
   otp_notif_title: '2FA disable has been requested by another device',
   otp_notif_body: 'If you did not create this request, log in as %1$s and change your password',
+  otp_copied_msg: '2FA code successfully copied to clipboard',
 
   word_to_in_convert_from_to_string: 'to',
 
