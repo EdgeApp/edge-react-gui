@@ -387,6 +387,7 @@
   "otp_modal_body": "2FA wird empfohlen, um Ihr Gerät vor unbefugtem Zugriff von fremden Geräten abzusichern.",
   "otp_notif_title": "2FA-Deaktivierung wurde von einem anderen Gerät angefordert",
   "otp_notif_body": "Wenn Sie diese Anfrage nicht erstellt haben, loggen Sie sich als %1$s ein und ändern Sie Ihr Passwort",
+  "otp_copied_msg": "",
   "word_to_in_convert_from_to_string": "zu",
   "legacy_address_modal_title": "Legacy-Adresse erkannt",
   "legacy_address_modal_warning": "Warnung: Sie haben eine Legacy-Adresse gescannt, deren Format möglicherweise nicht für die beabsichtigte Währung sein kann, da sie von anderen Währungsadressen nicht zu unterscheiden ist.\n\nMöchten Sie trotzdem an diese Adresse senden?",
