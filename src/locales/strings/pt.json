@@ -387,6 +387,7 @@
   "otp_modal_body": "2FA é recomendado para manter o seu dispositivo protegido contra acesso não autorizado à sua conta de outros dispositivos.",
   "otp_notif_title": "Um pedido para desabilitar 2FA foi feito por outro dispositivo",
   "otp_notif_body": "Se você não fez este pedido, faça login como %1$s e altere sua senha",
+  "otp_copied_msg": "",
   "word_to_in_convert_from_to_string": "para",
   "legacy_address_modal_title": "Endereço Legacy Detectado",
   "legacy_address_modal_warning": "",
