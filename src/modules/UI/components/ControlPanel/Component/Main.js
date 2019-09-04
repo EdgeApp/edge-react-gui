@@ -11,6 +11,7 @@ import giftIcon from '../../../../../assets/images/sidenav/ic_gift.png'
 import logoutImage from '../../../../../assets/images/sidenav/logout.png'
 import receiveIcon from '../../../../../assets/images/sidenav/receive.png'
 import scanIcon from '../../../../../assets/images/sidenav/scan.png'
+import sellIcon from '../../../../../assets/images/sidenav/sell.png'
 import settings from '../../../../../assets/images/sidenav/settings.png'
 import sweepIcon from '../../../../../assets/images/sidenav/sweep.png'
 import termsIcon from '../../../../../assets/images/sidenav/terms.png'
@@ -126,7 +127,7 @@ const SellButton = () => {
       <Button.Row>
         <Button.Row>
           <Button.Left>
-            <Image source={buysellIcon} style={styles.iconImage} />
+            <Image source={sellIcon} style={styles.iconImage} />
           </Button.Left>
 
           <Button.Center>
