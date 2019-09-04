@@ -41,7 +41,8 @@ type Props = {
   developerModeOn: boolean,
   account: Object,
   updateCountryCode: ({ [string]: mixed }) => void,
-  countryCode: string
+  countryCode: string,
+  data?: string
 }
 
 type State = {
@@ -274,9 +275,11 @@ class PluginList extends Component<Props, State> {
 
 class PluginBuySellComponent extends PluginList {
   componentDidMount () {
+    const { data, developerModeOn } = this.props
+    const type = data
     super.componentDidMount()
     this.setState({
-      data: buySellPlugins(this.props.developerModeOn)
+      data: buySellPlugins(developerModeOn, type)
     })
   }
 }

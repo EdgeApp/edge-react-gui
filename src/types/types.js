@@ -215,7 +215,7 @@ export type BuySellPlugin = {
   subtitle: string,
   imageUrl: string,
   supportEmail?: string,
-
+  type: Array<string>, // note that this is not relevant to spend plugins
   permissions?: Array<string>,
   originWhitelist?: Array<string>,
   isLegacy?: true
