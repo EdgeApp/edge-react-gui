@@ -368,7 +368,11 @@ export const getCurrencyInfo = (allCurrencyInfos: Array<EdgeCurrencyInfo>, curre
         return info
       }
     }
-
+  }
+  // loop through metaTokens only after all top-level / parent
+  // cryptos have been looped through. Native / parent currency
+  // takes precedence over tokens
+  for (const info of allCurrencyInfos) {
     for (const token of info.metaTokens) {
       for (const denomination of token.denominations) {
         if (denomination.name === currencyCode) {
@@ -377,7 +381,6 @@ export const getCurrencyInfo = (allCurrencyInfos: Array<EdgeCurrencyInfo>, curre
       }
     }
   }
-
   return void 0
 }
 

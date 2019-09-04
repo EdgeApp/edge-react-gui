@@ -1,11 +1,12 @@
 // @flow
 
+import type { EdgeCurrencyInfo, EdgeDenomination } from 'edge-core-js'
 import _ from 'lodash'
 
 import { intl } from '../../locales/intl.js'
 import type { State } from '../../types/reduxTypes.js'
 import type { GuiDenomination, GuiWallet, TransactionListTx } from '../../types/types.js'
-import { convertNativeToExchange } from '../../util/utils.js'
+import { convertNativeToExchange, getCurrencyInfo } from '../../util/utils.js'
 import * as SETTINGS_SELECTORS from '../Settings/selectors'
 
 export const getWallets = (state: State) => {
@@ -83,11 +84,16 @@ export const getDenominations = (state: State, currencyCode: string) => {
   return denominations
 }
 
-export const getDefaultDenomination = (state: State, currencyCode: string) => {
+export const getDefaultDenomination = (state: State, currencyCode: string): EdgeDenomination => {
+  const plugins: Object = SETTINGS_SELECTORS.getPlugins(state)
+  const allCurrencyInfos: Array<EdgeCurrencyInfo> = plugins.allCurrencyInfos
+  const currencyInfo = getCurrencyInfo(allCurrencyInfos, currencyCode)
+  if (currencyInfo) return currencyInfo[0]
   const settings = state.ui.settings
   const currencySettings = settings[currencyCode]
   const defaultMultiplier = currencySettings.denomination
   const denomination = _.find(currencySettings.denominations, denom => denom.multiplier === defaultMultiplier)
+  if (!denomination) throw new Error('Edge: Denomination not found. Possible invalid currencyCode.')
   return denomination
 }
 

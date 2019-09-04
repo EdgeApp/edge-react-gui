@@ -59,7 +59,8 @@ export const CURRENCY_PLUGIN_NAMES = {
   XMR: 'monero',
   XRP: 'ripple',
   XTZ: 'tezos',
-  XZC: 'zcoin'
+  XZC: 'zcoin',
+  BNB: 'binance'
 }
 
 export const getSpecialCurrencyInfo = (currencyCode: string): Object => {
@@ -173,6 +174,14 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     noChangeMiningFee: true,
     // will share / copy public address instead of URI on Request scene
     isUriEncodedStructure: true
+  },
+  BNB: {
+    uniqueIdentifier: {
+      addButtonText: s.strings.unique_identifier_dropdown_option_memo,
+      identifierName: s.strings.unique_identifier_memo,
+      identifierKeyboardType: 'default'
+    },
+    isImportKeySupported: true
   }
 }
 

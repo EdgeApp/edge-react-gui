@@ -42,6 +42,9 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   XLM: {
     denomination: '10000000'
   },
+  BNB: {
+    denomination: '100000000'
+  },
   DASH: {
     denomination: '100000000'
   },
@@ -141,9 +144,6 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   NMR: {
     denomination: '1000000000000000000'
   },
-  BNB: {
-    denomination: '1000000000000000000'
-  },
   MKR: {
     denomination: '1000000000000000000'
   },
@@ -199,6 +199,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   DOGE: 'object',
   DGB: 'object',
   LTC: 'object',
+  BNB: 'object',
   FTC: 'object',
   VTC: 'object',
   XTZ: 'object',
@@ -230,7 +231,6 @@ export const SYNCED_ACCOUNT_TYPES = {
   GNO: 'object',
   OMG: 'object',
   NMR: 'object',
-  BNB: 'object',
   MKR: 'object',
   GUSD: 'object',
   PAX: 'object',
