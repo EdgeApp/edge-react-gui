@@ -141,7 +141,7 @@
     "edge-components": "^0.0.26",
     "edge-core-js": "^0.16.8",
     "edge-currency-accountbased": "0.4.0",
-    "edge-currency-bitcoin": "^4.5.3",
+    "edge-currency-bitcoin": "^4.5.4",
     "edge-currency-monero": "0.2.4",
     "edge-login-ui-rn": "0.5.38",
     "edge-exchange-plugins": "^0.8.3",
