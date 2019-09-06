@@ -81,31 +81,44 @@ function fixPlugins (plugins: Array<Object>): Array<BuySellPlugin> {
   })
 }
 
-export const pluginSort = (a: BuySellPlugin, b: BuySellPlugin) => {
+export const pluginSortWithoutType = (a: BuySellPlugin, b: BuySellPlugin) => {
+  const aPriority = EDGE_PLUGIN_REGIONS.buy[a.name.toLowerCase()].priority
+  const bPriority = EDGE_PLUGIN_REGIONS.buy[b.name.toLowerCase()].priority
+
+  return aPriority - bPriority
+}
+
+export const pluginSortWithType = (a: BuySellPlugin, b: BuySellPlugin, type?: string) => {
   const aPriority = EDGE_PLUGIN_REGIONS[a.name.toLowerCase()].priority
   const bPriority = EDGE_PLUGIN_REGIONS[b.name.toLowerCase()].priority
 
   return aPriority - bPriority
 }
 
-export function buySellPlugins (developerModeOn: boolean, type?: string): Array<BuySellPlugin> {
+export function buySellPlugins (developerModeOn: boolean, type?: string = ''): Array<BuySellPlugin> {
   const plugins = [...hostedBuySellPlugins, ...fixPlugins(assetPlugins.buysell)]
-  const filteredPlugins = plugins.filter(plugin => {
-    if (type) {
-      if (plugin.type.find(item => type === item)) {
-        return true
-      }
-      return false
-    }
-    // don't filter if 'type' is not set
-    return true
-  })
-  filteredPlugins.sort(pluginSort)
+  let filteredPlugins = []
+  if (type) {
+    filteredPlugins = plugins.filter(plugin => {
+      return EDGE_PLUGIN_REGIONS[type][plugin.name.toLowerCase()]
+    })
+    filteredPlugins.sort((a, b) => {
+      const aPriority = EDGE_PLUGIN_REGIONS[type][a.name.toLowerCase()].priority
+      const bPriority = EDGE_PLUGIN_REGIONS[type][b.name.toLowerCase()].priority
+      return aPriority - bPriority
+    })
+  } else {
+    filteredPlugins = plugins
+      .filter(plugin => {
+        return EDGE_PLUGIN_REGIONS.buy[plugin.name.toLowerCase()]
+      })
+      .sort(pluginSortWithoutType)
+  }
   return developerModeOn ? [...filteredPlugins, devPlugin] : filteredPlugins
 }
 
 export function spendPlugins (developerModeOn: boolean): Array<BuySellPlugin> {
   const plugins = [...hostedSpendPlugins, ...fixPlugins(assetPlugins.spend)]
-  plugins.sort(pluginSort)
+  plugins.sort(pluginSortWithoutType)
   return developerModeOn ? [...plugins, devPlugin] : plugins
 }

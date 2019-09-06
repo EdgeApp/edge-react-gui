@@ -93,12 +93,12 @@ export default class Main extends Component<Props> {
 
 const goToBuyScene = () => {
   const type = 'buy'
-  Actions[Constants.BUY_SELL](type)
+  Actions[Constants.BUY_SELL]({ title: type })
 }
 
 const goToSellScene = () => {
   const type = 'sell'
-  Actions[Constants.BUY_SELL](type)
+  Actions[Constants.BUY_SELL]({ title: type })
 }
 
 const BuyButton = () => {

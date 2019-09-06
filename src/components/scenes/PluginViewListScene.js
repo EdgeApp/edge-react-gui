@@ -42,7 +42,7 @@ type Props = {
   account: Object,
   updateCountryCode: ({ [string]: mixed }) => void,
   countryCode: string,
-  data?: string
+  title?: string
 }
 
 type State = {
@@ -226,7 +226,7 @@ class PluginList extends Component<Props, State> {
   )
 
   render () {
-    const { countryCode } = this.props
+    const { countryCode, title } = this.props
     const { data } = this.state
     const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)
     let countryName = s.strings.buy_sell_crypto_select_country_button
@@ -240,7 +240,16 @@ class PluginList extends Component<Props, State> {
           // needed because "Spend" scene doesn't have a plugins JSON currently
           plugin &&
           (plugin.pluginId === 'custom' ||
-            (plugin.name && EDGE_PLUGIN_REGIONS[plugin.name.toLowerCase()] && EDGE_PLUGIN_REGIONS[plugin.name.toLowerCase()].countryCodes[countryCode]))
+            // there is a title (buy or sell) and you can use it to find its country codes
+            ((title &&
+              plugin.name &&
+              EDGE_PLUGIN_REGIONS[title][plugin.name.toLowerCase()] &&
+              EDGE_PLUGIN_REGIONS[title][plugin.name.toLowerCase()].countryCodes[countryCode]) ||
+              // there is no title (buy or sell) and therefore you use the 'buy' option
+              (!title &&
+                plugin.name &&
+                EDGE_PLUGIN_REGIONS.buy[plugin.name.toLowerCase()] &&
+                EDGE_PLUGIN_REGIONS.buy[plugin.name.toLowerCase()].countryCodes[countryCode])))
         )
       })
     }
@@ -275,11 +284,11 @@ class PluginList extends Component<Props, State> {
 
 class PluginBuySellComponent extends PluginList {
   componentDidMount () {
-    const { data, developerModeOn } = this.props
-    const type = data
+    const { title, developerModeOn } = this.props
     super.componentDidMount()
+    const pluginsList = buySellPlugins(developerModeOn, title)
     this.setState({
-      data: buySellPlugins(developerModeOn, type)
+      data: pluginsList
     })
   }
 }

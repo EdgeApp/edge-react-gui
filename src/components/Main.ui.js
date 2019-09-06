@@ -613,7 +613,7 @@ export default class Main extends Component<Props> {
                     key={Constants.BUY_SELL}
                     navTransparent={true}
                     component={PluginBuySell}
-                    renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
+                    renderTitle={props => this.renderTitle(PLUGIN_BUYSELL, props)}
                     renderLeftButton={this.renderBackButton(BACK)}
                     renderRightButton={this.renderEmptyButton()}
                     onLeft={Actions.pop}
@@ -751,7 +751,11 @@ export default class Main extends Component<Props> {
     return <BackButton withArrow onPress={this.handleBack} label={label} />
   }
 
-  renderTitle = (title: string) => {
+  renderTitle = (title: string, props?: Object) => {
+    if (props && props.title && props.routeName === 'buysell') {
+      // title =
+      title = s.strings[`title_plugin_${props.title}`]
+    }
     return (
       <View style={styles.titleWrapper}>
         <T style={styles.titleStyle}>{title}</T>
