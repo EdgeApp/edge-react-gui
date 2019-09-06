@@ -392,4 +392,7 @@ export class EdgeProvider extends Bridgeable {
   async openSafariView (url: string): Promise<mixed> {
     SafariView.show({ url })
   }
+  async displayError (error: Error | string) {
+    showError(error)
+  }
 }
