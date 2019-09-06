@@ -4,13 +4,6 @@ import type { EdgeCurrencyWallet } from 'edge-core-js'
 import _ from 'lodash'
 const ENABLED_TOKENS_FILENAME = 'EnabledTokens.json'
 
-export const addCoreCustomToken = (wallet: EdgeCurrencyWallet, tokenObj: any) => {
-  return wallet
-    .addCustomToken(tokenObj)
-    .then(() => wallet.enableTokens([tokenObj.currencyCode]))
-    .catch(e => console.log(e))
-}
-
 export const getEnabledTokensFromFile = async (wallet: EdgeCurrencyWallet): Promise<Array<any>> => {
   try {
     const tokensText = await wallet.disklet.getText(ENABLED_TOKENS_FILENAME)

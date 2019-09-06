@@ -5,7 +5,7 @@ import { Actions } from 'react-native-router-flux'
 import { showError } from '../components/services/AirshipInstance.js'
 import * as SETTINGS_API from '../modules/Core/Account/settings'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
-import * as WALLET_API from '../modules/Core/Wallets/api.js'
+import { setEnabledTokens } from '../modules/Core/Wallets/EnabledTokens.js'
 import * as UI_WALLET_SELECTORS from '../modules/UI/selectors.js'
 import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
 import type { CustomTokenInfo } from '../types/types.js'
@@ -71,6 +71,6 @@ export const addTokenAsync = async (
   if (uiWallet.enabledTokens.indexOf(newTokenObj.currencyCode) === -1) {
     newEnabledTokens.push(newTokenObj.currencyCode)
   }
-  await WALLET_API.setEnabledTokens(coreWallet, newEnabledTokens)
+  await setEnabledTokens(coreWallet, newEnabledTokens)
   return { walletId, newTokenObj, setSettings, enabledTokensOnWallet: newEnabledTokens }
 }
