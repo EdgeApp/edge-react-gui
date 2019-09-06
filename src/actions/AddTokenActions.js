@@ -1,8 +1,10 @@
 // @flow
 
 import { Actions } from 'react-native-router-flux'
+import { sprintf } from 'sprintf-js'
 
 import { showError } from '../components/services/AirshipInstance.js'
+import s from '../locales/strings.js'
 import * as SETTINGS_API from '../modules/Core/Account/settings'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import { setEnabledTokens } from '../modules/Core/Wallets/EnabledTokens.js'
@@ -49,6 +51,16 @@ export const addTokenAsync = async (
   // create modified object structure to match metaTokens
   const newTokenObj: CustomTokenInfo = WALLET_ACTIONS.assembleCustomToken(currencyName, currencyCode, contractAddress, denomination)
   const account = CORE_SELECTORS.getAccount(state)
+
+  // Check for conflicting currency codes:
+  const { currencyConfig } = account
+  for (const pluginName in currencyConfig) {
+    const { currencyInfo } = currencyConfig[pluginName]
+    if (currencyCode === currencyInfo.currencyCode) {
+      throw new Error(sprintf(s.strings.error_token_exists, currencyCode))
+    }
+  }
+
   const uiWallet = UI_WALLET_SELECTORS.getWallet(state, walletId)
   const coreWallet = CORE_SELECTORS.getWallet(state, walletId)
   await coreWallet.addCustomToken(newTokenObj)
