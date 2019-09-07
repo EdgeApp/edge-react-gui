@@ -14,6 +14,7 @@
   "drawer_scan_qr_send": "扫描二维码 (发送)",
   "drawer_sweep_private_key": "扫描私钥",
   "drawer_wallets": "钱包",
+  "error_token_exists": "",
   "alert_dropdown_alert": "",
   "alert_dropdown_warning": "",
   "dropdown_exchange_max_amount": "兑换最大金额",
