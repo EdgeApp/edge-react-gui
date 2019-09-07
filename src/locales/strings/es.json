@@ -14,6 +14,7 @@
   "drawer_scan_qr_send": "Escanear QR (Enviar)",
   "drawer_sweep_private_key": "Barrer clave privada (Sweep Pk)",
   "drawer_wallets": "Carteras",
+  "error_token_exists": "",
   "alert_dropdown_alert": "",
   "alert_dropdown_warning": "",
   "dropdown_exchange_max_amount": "Cambiar la cantidad máxima",
