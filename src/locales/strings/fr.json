@@ -14,6 +14,7 @@
   "drawer_scan_qr_send": "Scanner le QR (Envoyer)",
   "drawer_sweep_private_key": "Effacer complétement la Clé Privée ",
   "drawer_wallets": "Portefeuilles",
+  "error_token_exists": "",
   "alert_dropdown_alert": "",
   "alert_dropdown_warning": "",
   "dropdown_exchange_max_amount": "Echanger le montant maximum ",
