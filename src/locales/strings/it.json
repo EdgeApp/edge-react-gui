@@ -14,6 +14,7 @@
   "drawer_scan_qr_send": "Scansiona il QR code (invia)",
   "drawer_sweep_private_key": "Scansiona la Private Key",
   "drawer_wallets": "Portafogli",
+  "error_token_exists": "",
   "alert_dropdown_alert": "Avviso! ",
   "alert_dropdown_warning": "Attenzione! ",
   "dropdown_exchange_max_amount": "Scambia l'importo massimo",
