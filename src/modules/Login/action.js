@@ -12,6 +12,7 @@ import { showError } from '../../components/services/AirshipInstance.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import type { Dispatch, GetState } from '../../types/reduxTypes.js'
+import { type CustomTokenInfo } from '../../types/types.js'
 import { runWithTimeout } from '../../util/utils.js'
 import {
   CORE_DEFAULTS,
@@ -287,6 +288,18 @@ export const mergeSettings = (
         }
       }
     }
+  }
+
+  // Filter conflicting tokens out of synced settings:
+  if (finalSettings.customTokens && account != null) {
+    const { currencyConfig } = account
+    finalSettings.customTokens = finalSettings.customTokens.filter((customToken: CustomTokenInfo) => {
+      for (const pluginName in currencyConfig) {
+        const { currencyInfo } = currencyConfig[pluginName]
+        if (customToken.currencyCode === currencyInfo.currencyCode) return false
+      }
+      return true
+    })
   }
 
   return {

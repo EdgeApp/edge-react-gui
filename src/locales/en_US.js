@@ -18,6 +18,9 @@ const strings = {
   drawer_sweep_private_key: 'Sweep Private Key',
   drawer_wallets: 'Wallets',
 
+  // Error messages:
+  error_token_exists: 'A currency named %s already exists',
+
   // Alert component:
   alert_dropdown_alert: 'Alert! ',
   alert_dropdown_warning: 'Warning! ',
