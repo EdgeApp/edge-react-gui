@@ -87,7 +87,6 @@ buck-out/
 *.jsbundle
 
 ## App Plugins
-/src/assets/plugins.json
 /android/app/src/main/assets/plugins/
 /ios/plugins/
 

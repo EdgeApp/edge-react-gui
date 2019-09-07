@@ -9,9 +9,9 @@ import parse from 'url-parse'
 
 import type { Dispatch } from './../types/reduxTypes.js'
 import { selectWallet } from '../actions/WalletActions.js'
-import { PLUGIN_BUY_DEEP, SCAN } from '../constants/indexConstants.js'
+import { PLUGIN_VIEW_DEEP, SCAN } from '../constants/indexConstants.js'
+import { allPlugins } from '../constants/plugins/buySellPlugins.js'
 import s from '../locales/strings.js'
-import { buySellPlugins, spendPlugins } from '../modules/UI/scenes/Plugins/plugins'
 
 type DeepLinkingManagerStateProps = {
   totalWalletCount: number,
@@ -37,12 +37,10 @@ class DeepLinkingManager extends React.Component<Props> {
   }
   processPluginDeepLink = (parsedUrl: Object) => {
     if (parsedUrl.pathname.includes('simplex')) {
-      const plugins = spendPlugins(false).concat(buySellPlugins(false))
-      let i = 0
-      for (i; i < plugins.length; i++) {
-        const plugin = plugins[i]
+      for (let i = 0; i < allPlugins.length; i++) {
+        const plugin = allPlugins[i]
         if (plugin.name === 'Simplex') {
-          Actions[PLUGIN_BUY_DEEP]({ plugin: plugin })
+          Actions[PLUGIN_VIEW_DEEP]({ plugin: plugin })
           this.props.markAddressDeepLinkDone()
           return
         }

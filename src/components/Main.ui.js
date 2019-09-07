@@ -67,21 +67,16 @@ import WalletName from '../modules/UI/components/Header/WalletName/WalletNameCon
 import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
 import { PasswordRecoveryReminderModalConnector } from '../modules/UI/components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalConnector.js'
 import { passwordReminderModalConnector as PasswordReminderModal } from '../modules/UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
-import {
-  LegacyPluginView,
-  PluginBuySell,
-  PluginSpend,
-  PluginView,
-  handlePluginBack,
-  renderLegacyPluginBackButton,
-  renderPluginBackButton
-} from '../modules/UI/scenes/Plugins/index.js'
+import { handlePluginBack, renderPluginBackButton } from '../modules/UI/scenes/Plugins/BackButton.js'
 import { styles } from '../styles/MainStyle.js'
 import { scale } from '../util/scaling.js'
 import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
 import { CryptoExchangeQuoteProcessingScreenComponent } from './scenes/CryptoExchangeQuoteProcessingScene.js'
 import { LoadingScene } from './scenes/LoadingScene.js'
 import { OnBoardingComponent } from './scenes/OnBoardingScene.js'
+import { LegacyPluginViewConnect, renderLegacyPluginBackButton } from './scenes/PluginViewLegacyScene.js'
+import { PluginListScene } from './scenes/PluginViewListScene.js'
+import { PluginViewConnect } from './scenes/PluginViewScene.js'
 import { SwapActivateShapeshiftScene } from './scenes/SwapActivateShapeshiftScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
 import { showToast } from './services/AirshipInstance.js'
@@ -129,7 +124,6 @@ const PASSWORD_RECOVERY = s.strings.title_password_recovery
 const OTP = s.strings.title_otp
 const DEFAULT_FIAT = s.strings.title_default_fiat
 const PLUGIN_BUYSELL = s.strings.title_plugin_buysell
-const PLUGIN_SPEND = s.strings.title_plugin_spend_cryptocurrency
 const TERMS_OF_SERVICE = s.strings.title_terms_of_service
 
 type Props = {
@@ -608,69 +602,41 @@ export default class Main extends Component<Props> {
                   />
                 </Stack>
 
-                <Stack key={Constants.BUY_SELL} hideDrawerButton={true}>
+                <Stack key={Constants.PLUGIN_LIST} hideDrawerButton={true}>
                   <Scene
-                    key={Constants.BUY_SELL}
+                    key={Constants.PLUGIN_LIST}
                     navTransparent={true}
-                    component={PluginBuySell}
+                    component={PluginListScene}
                     renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
                     renderLeftButton={this.renderBackButton(BACK)}
                     renderRightButton={this.renderEmptyButton()}
                     onLeft={Actions.pop}
                   />
                   <Scene
-                    key={Constants.PLUGIN_BUY}
+                    key={Constants.PLUGIN_VIEW}
                     navTransparent={true}
-                    component={ifLoggedIn(PluginView, LoadingScene)}
+                    component={ifLoggedIn(PluginViewConnect, LoadingScene)}
                     renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
                     renderLeftButton={renderPluginBackButton(BACK)}
                     renderRightButton={this.renderExitButton()}
                   />
                   <Scene
-                    key={Constants.PLUGIN_BUY_LEGACY}
+                    key={Constants.PLUGIN_VIEW_LEGACY}
                     navTransparent={true}
-                    component={ifLoggedIn(LegacyPluginView, LoadingScene)}
+                    component={ifLoggedIn(LegacyPluginViewConnect, LoadingScene)}
                     renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
                     renderLeftButton={renderLegacyPluginBackButton(BACK)}
                     renderRightButton={this.renderExitButton()}
                   />
                 </Stack>
 
-                <Stack key={Constants.PLUGIN_BUY_DEEP} hideDrawerButton={true}>
+                <Stack key={Constants.PLUGIN_VIEW_DEEP} hideDrawerButton={true}>
                   <Scene
-                    key={Constants.PLUGIN_BUY}
+                    key={Constants.PLUGIN_VIEW}
                     navTransparent={true}
-                    component={ifLoggedIn(PluginView, LoadingScene)}
+                    component={ifLoggedIn(PluginViewConnect, LoadingScene)}
                     renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
                     renderLeftButton={renderPluginBackButton(BACK)}
-                    renderRightButton={this.renderExitButton()}
-                  />
-                </Stack>
-
-                <Stack key={Constants.SPEND} hideDrawerButton={true}>
-                  <Scene
-                    key={Constants.SPEND}
-                    navTransparent={true}
-                    component={PluginSpend}
-                    renderTitle={this.renderTitle(PLUGIN_SPEND)}
-                    renderLeftButton={this.renderBackButton(BACK)}
-                    renderRightButton={this.renderEmptyButton()}
-                    onLeft={Actions.pop}
-                  />
-                  <Scene
-                    key={Constants.PLUGIN_SPEND}
-                    navTransparent={true}
-                    component={ifLoggedIn(PluginView, LoadingScene)}
-                    renderTitle={this.renderTitle(PLUGIN_SPEND)}
-                    renderLeftButton={renderPluginBackButton(BACK)}
-                    renderRightButton={this.renderExitButton()}
-                  />
-                  <Scene
-                    key={Constants.PLUGIN_SPEND_LEGACY}
-                    navTransparent={true}
-                    component={ifLoggedIn(LegacyPluginView, LoadingScene)}
-                    renderTitle={this.renderTitle(PLUGIN_SPEND)}
-                    renderLeftButton={renderLegacyPluginBackButton(BACK)}
                     renderRightButton={this.renderExitButton()}
                   />
                 </Stack>
@@ -822,11 +788,7 @@ export default class Main extends Component<Props> {
       Actions.popTo(Constants.EXCHANGE_SCENE)
       return true
     }
-    if (this.isCurrentScene(Constants.PLUGIN_SPEND)) {
-      handlePluginBack()
-      return true
-    }
-    if (this.isCurrentScene(Constants.PLUGIN_BUY)) {
+    if (this.isCurrentScene(Constants.PLUGIN_VIEW)) {
       handlePluginBack()
       return true
     }

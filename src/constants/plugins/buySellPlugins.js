@@ -3,13 +3,13 @@
 import { Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 
-import assetPlugins from '../../../../assets/plugins.json'
-import { EDGE_PLUGIN_REGIONS } from '../../../../constants/CountryConstants.js'
-import { type BuySellPlugin } from '../../../../types/types.js'
+import type { BuySellPlugin } from '../../types/types.js'
+import { buyPluginFilter } from './buyPluginFilter.js'
+import { sellPluginFilter } from './sellPluginFilter.js'
 
-const LEGACY_PLUGINS = ['Bitrefill']
+const hostedUri = Platform.OS === 'android' ? 'file:///android_asset/plugins/' : `file:///${RNFS.MainBundlePath}/plugins/`
 
-const hostedBuySellPlugins: Array<BuySellPlugin> = [
+export const allPlugins: Array<BuySellPlugin> = [
   {
     pluginId: 'com.libertyx',
     uri: 'https://libertyx.com/a/',
@@ -52,12 +52,37 @@ const hostedBuySellPlugins: Array<BuySellPlugin> = [
     subtitle: 'Buy crypto in Australia with POLi bank transfer or Newsagent\nBTC, ETH\nFee: 1-3% / Settlement: 5 min - 24 hrs',
     imageUrl: 'https://edge.app/wp-content/uploads/2019/08/banxa.png',
     type: ['buy']
+  },
+  {
+    pluginId: 'co.edgesecure.simplex',
+    uri: hostedUri + 'co.edgesecure.simplex/index.html',
+    name: 'Simplex',
+    subtitle: 'Buy or sell crypto with a credit card\nBTC, ETH, BCH, LTC, XRP\nFee: 6% / Settlement: 1-48 hours',
+    imageUrl: 'https://edge.app/wp-content/uploads/2019/03/simplex-logo-sm-square.png',
+    type: ['buy', 'sell']
+  },
+  {
+    pluginId: 'co.edgesecure.wyre',
+    uri: hostedUri + 'co.edgesecure.wyre/index.html',
+    name: 'Wyre',
+    subtitle: 'Buy or sell crypto with US bank accounts\nBTC, ETH, DAI\nFee: 1% / Settlement: 2-5 days',
+    imageUrl: 'https://edge.app/wp-content/uploads/2019/01/wyre-logo-square-small.png',
+    supportEmail: 'support@sendwyre.com',
+    permissions: ['camera'],
+    type: ['buy', 'sell']
+  },
+  {
+    pluginId: 'co.edgesecure.bitrefill',
+    uri: hostedUri + 'co.edgesecure.bitrefill/index.html',
+    name: 'Bitrefill',
+    subtitle: 'Buy gift cards and refill phones\nAccepts BTC, DASH, ETH, and LTC',
+    imageUrl: 'https://edge.app/wp-content/uploads/2019/01/bitrefill-2.png',
+    isLegacy: true,
+    type: ['buy', 'sell']
   }
 ]
 
-const hostedSpendPlugins: Array<BuySellPlugin> = []
-
-const devPlugin = {
+export const devPlugin: BuySellPlugin = {
   pluginId: 'custom',
   uri: 'https://edge.app',
   name: 'Custom Dev',
@@ -66,46 +91,22 @@ const devPlugin = {
   type: ['buy', 'sell']
 }
 
-function fixPlugins (plugins: Array<Object>): Array<BuySellPlugin> {
-  const baseDir = Platform.OS === 'android' ? 'android_asset' : RNFS.MainBundlePath
+/**
+ * Quick & dirty merge function to handle the plugin filters.
+ */
+function deepMerge (a: Object, b: Object) {
+  // Slight bias in favor of a, for non-object keys:
+  if (a == null || b == null || typeof a !== 'object' || typeof b !== 'object') return a
 
-  return plugins.map(plugin => {
-    const pluginPath = `file:///${baseDir}/plugins/${plugin.pluginId}/index.html`
-
-    return {
-      imageUrl: plugin.iconUrl,
-      isLegacy: LEGACY_PLUGINS.includes(plugin.name),
-      ...plugin,
-      uri: pluginPath
-    }
-  })
+  const out = {}
+  for (const key in a) {
+    out[key] = key in b ? deepMerge(a[key], b[key]) : a[key]
+  }
+  for (const key in b) {
+    if (!(key in a)) out[key] = b[key]
+  }
+  return out
 }
 
-export const pluginSort = (a: BuySellPlugin, b: BuySellPlugin) => {
-  const aPriority = EDGE_PLUGIN_REGIONS[a.name.toLowerCase()].priority
-  const bPriority = EDGE_PLUGIN_REGIONS[b.name.toLowerCase()].priority
-
-  return aPriority - bPriority
-}
-
-export function buySellPlugins (developerModeOn: boolean, type?: string): Array<BuySellPlugin> {
-  const plugins = [...hostedBuySellPlugins, ...fixPlugins(assetPlugins.buysell)]
-  const filteredPlugins = plugins.filter(plugin => {
-    if (type) {
-      if (plugin.type.find(item => type === item)) {
-        return true
-      }
-      return false
-    }
-    // don't filter if 'type' is not set
-    return true
-  })
-  filteredPlugins.sort(pluginSort)
-  return developerModeOn ? [...filteredPlugins, devPlugin] : filteredPlugins
-}
-
-export function spendPlugins (developerModeOn: boolean): Array<BuySellPlugin> {
-  const plugins = [...hostedSpendPlugins, ...fixPlugins(assetPlugins.spend)]
-  plugins.sort(pluginSort)
-  return developerModeOn ? [...plugins, devPlugin] : plugins
-}
+export { buyPluginFilter, sellPluginFilter }
+export const buySellPluginFilter = deepMerge(buyPluginFilter, sellPluginFilter)

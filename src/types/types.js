@@ -215,8 +215,26 @@ export type BuySellPlugin = {
   subtitle: string,
   imageUrl: string,
   supportEmail?: string,
-  type: Array<string>, // note that this is not relevant to spend plugins
   permissions?: Array<string>,
   originWhitelist?: Array<string>,
   isLegacy?: true
+}
+
+export type BuySellFilter = {
+  [pluginName: string]: {
+    countryCodes: {
+      [countryCode: string]: boolean
+    },
+    cryptoCodes: {
+      [currencyCode: string]: boolean
+    },
+    priority: number,
+    paymentType: 'bank' | 'cash' | 'credit' | 'crypto'
+  }
+}
+
+export type CountryData = {
+  name: string,
+  'alpha-2': string,
+  filename?: string
 }
