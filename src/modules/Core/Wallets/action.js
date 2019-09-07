@@ -21,6 +21,9 @@ export const updateWalletsRequest = () => (dispatch: Dispatch, getState: GetStat
   const { activeWalletIds, archivedWalletIds, currencyWallets } = account
 
   getReceiveAddresses(currencyWallets).then(receiveAddresses => {
+    const plugins: Object = getState().ui.settings.plugins
+    const allCurrencyInfos = plugins.allCurrencyInfos
+    const allSupportedParentCurrencies = allCurrencyInfos.map(info => info.currencyCode)
     for (const walletId: string of Object.keys(currencyWallets)) {
       const edgeWallet: EdgeCurrencyWallet = currencyWallets[walletId]
       if (edgeWallet.type === 'wallet:ethereum') {
@@ -29,6 +32,9 @@ export const updateWalletsRequest = () => (dispatch: Dispatch, getState: GetStat
           const customTokens = state.ui.settings.customTokens
           const enabledNotHiddenTokens = enabledTokens.filter(token => {
             let isVisible = true // assume we will enable token
+            if (allSupportedParentCurrencies.includes(token)) {
+              return false
+            }
             const tokenIndex = _.findIndex(customTokens, item => item.currencyCode === token)
             // if token is not supposed to be visible, not point in enabling it
             if (tokenIndex > -1 && customTokens[tokenIndex].isVisible === false) isVisible = false

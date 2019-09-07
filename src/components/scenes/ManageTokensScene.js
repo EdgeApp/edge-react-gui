@@ -29,7 +29,8 @@ export type ManageTokensDispatchProps = {
 export type ManageTokensStateProps = {
   guiWallet: GuiWallet,
   manageTokensPending: boolean,
-  settingsCustomTokens: Array<CustomTokenInfo>
+  settingsCustomTokens: Array<CustomTokenInfo>,
+  plugins: Object
 }
 
 export type ManageTokensProps = ManageTokensOwnProps & ManageTokensDispatchProps & ManageTokensStateProps
@@ -74,11 +75,15 @@ export default class ManageTokens extends Component<ManageTokensProps, State> {
 
   render () {
     const { metaTokens, name } = this.props.guiWallet
-    const { manageTokensPending } = this.props
+    const { manageTokensPending, plugins } = this.props
     const accountMetaTokenInfo = [...this.props.settingsCustomTokens]
     const combinedTokenInfo = UTILS.mergeTokensRemoveInvisible(metaTokens, accountMetaTokenInfo)
-
-    const sortedTokenInfo = combinedTokenInfo.sort((a, b) => {
+    const allCurrencyInfos = plugins.allCurrencyInfos
+    const allSupportedParentCurrencies = allCurrencyInfos.map(info => info.currencyCode)
+    const combinedFilteredTokenInfo = combinedTokenInfo.filter(token => {
+      return !allSupportedParentCurrencies.includes(token.currencyCode)
+    })
+    const sortedTokenInfo = combinedFilteredTokenInfo.sort((a, b) => {
       if (a.currencyCode < b.currencyCode) return -1
       if (a === b) return 0
       return 1

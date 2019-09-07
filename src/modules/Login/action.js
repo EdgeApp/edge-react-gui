@@ -169,6 +169,8 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     accountInitObject.activeWalletIds = activeWalletIds
     accountInitObject.archivedWalletIds = archivedWalletIds
 
+    const allSupportedParentCurrencies = currencyPlugins.map(plugin => plugin.currencyInfo.currencyCode)
+
     const loadedSyncedSettings = await getSyncedSettings(account)
     const syncedSettings = { ...loadedSyncedSettings } // will prevent mergeSettings trying to find prop of undefined
     const mergedSyncedSettings = mergeSettings(syncedSettings, SYNCED_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_TYPES, account)
@@ -179,9 +181,13 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
 
     if (accountInitObject.customTokens) {
       accountInitObject.customTokens.forEach(token => {
-        accountInitObject.customTokensSettings.push(token)
-        // this second dispatch will be redundant if we set 'denomination' property upon customToken creation
-        accountInitObject.denominationKeys.push({ currencyCode: token.currencyCode, denominationKey: token.multiplier })
+        if (allSupportedParentCurrencies.find(item => item === token.currencyCode)) {
+          console.log('Not allowing custom token, ', token.currencyCode, ' to be saved since existing parent currency')
+        } else {
+          accountInitObject.customTokensSettings.push(token)
+          // this second dispatch will be redundant if we set 'denomination' property upon customToken creation
+          accountInitObject.denominationKeys.push({ currencyCode: token.currencyCode, denominationKey: token.multiplier })
+        }
       })
     }
     for (const key in accountInitObject) {
@@ -279,6 +285,10 @@ export const mergeSettings = (
         // for each currency info (each native currency)
         const pluginDenominations = account.currencyConfig[currencyName].currencyInfo.denominations // get denominations for that plugin
         const settingDenominationIndex = pluginDenominations.findIndex(pluginDenom => pluginDenom.multiplier === loadedSettings[key].denomination) // find settings denom in plugin denoms
+        if (loadedSettings[key].multiplier !== pluginDenominations[0].multiplier) finalSettings[key].multiplier = pluginDenominations[0].multiplier
+        if (loadedSettings[key].denominations && loadedSettings[key].denominations[0].multiplier !== pluginDenominations[0].multiplier) {
+          finalSettings[key].denominations = pluginDenominations
+        }
         if (settingDenominationIndex === -1) {
           // setting denomination is not present in plugin (and on wallet)
           finalSettings[key].denomination = pluginDenominations[0].multiplier // grab the first denom multiplier from plugin

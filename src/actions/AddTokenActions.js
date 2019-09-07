@@ -3,6 +3,7 @@
 import { Actions } from 'react-native-router-flux'
 
 import { showError } from '../components/services/AirshipInstance.js'
+import s from '../locales/strings.js'
 import * as SETTINGS_API from '../modules/Core/Account/settings'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
@@ -48,6 +49,12 @@ export const addTokenAsync = async (
 ) => {
   // create modified object structure to match metaTokens
   const newTokenObj: CustomTokenInfo = WALLET_ACTIONS.assembleCustomToken(currencyName, currencyCode, contractAddress, denomination)
+  const plugins: Object = state.ui.settings.plugins
+  const allCurrencyInfos = plugins.allCurrencyInfos
+  const allSupportedParentCurrencies = allCurrencyInfos.map(info => info.currencyCode)
+  if (allSupportedParentCurrencies.find(item => item === currencyCode)) {
+    throw new Error(s.strings.error_token_exists)
+  }
   const account = CORE_SELECTORS.getAccount(state)
   const uiWallet = UI_WALLET_SELECTORS.getWallet(state, walletId)
   const coreWallet = CORE_SELECTORS.getWallet(state, walletId)

@@ -245,10 +245,18 @@ export const getEnabledTokens = (walletId: string) => async (dispatch: Dispatch,
     }
     await Promise.all(promiseArray)
     // now reflect that change in Redux's version of the wallet
-    if (tokensToEnable.length) {
+    const plugins: Object = state.ui.settings.plugins
+    const allCurrencyInfos = plugins.allCurrencyInfos
+    // make sure that the token doesn't have same currencyCode
+    // as a parent plugin
+    const allSupportedParentCurrencies = allCurrencyInfos.map(info => info.currencyCode)
+    const filteredTokensToEnable = tokensToEnable.filter(token => {
+      return !allSupportedParentCurrencies.includes(token)
+    })
+    if (filteredTokensToEnable.length) {
       dispatch({
         type: 'UPDATE_WALLET_ENABLED_TOKENS',
-        data: { walletId, tokens: tokensToEnable }
+        data: { walletId, tokens: filteredTokensToEnable }
       })
       dispatch(refreshWallet(walletId))
     }
