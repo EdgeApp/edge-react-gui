@@ -7,7 +7,6 @@ import { Actions } from 'react-native-router-flux'
 import buysellIcon from '../../../../../assets/images/sidenav/buysell.png'
 import exchangeIcon from '../../../../../assets/images/sidenav/exchange.png'
 import fioIcon from '../../../../../assets/images/sidenav/fio-address.png'
-import giftIcon from '../../../../../assets/images/sidenav/ic_gift.png'
 import logoutImage from '../../../../../assets/images/sidenav/logout.png'
 import receiveIcon from '../../../../../assets/images/sidenav/receive.png'
 import scanIcon from '../../../../../assets/images/sidenav/scan.png'
@@ -33,7 +32,6 @@ const LOGOUT_TEXT = s.strings.settings_button_logout
 const SETTINGS_TEXT = s.strings.settings_title
 const PLUGIN_BUY_TEXT = s.strings.title_plugin_buy
 const PLUGIN_SELL_TEXT = s.strings.title_plugin_sell
-const PLUGIN_SPEND_TEXT = s.strings.title_plugin_spend_cryptocurrency
 const TERMS_OF_SERVICE_TEXT = s.strings.title_terms_of_service
 
 export type Props = {
@@ -56,8 +54,6 @@ export default class Main extends Component<Props> {
               <BuyButton />
               <Separator />
               <SellButton />
-              <Separator />
-              <SpendButton />
               <Separator />
               <FioButton registerFioAddress={registerFioAddress} />
               <Separator />
@@ -91,16 +87,7 @@ export default class Main extends Component<Props> {
   }
 }
 
-const goToBuyScene = () => {
-  const type = 'buy'
-  Actions[Constants.BUY_SELL](type)
-}
-
-const goToSellScene = () => {
-  const type = 'sell'
-  Actions[Constants.BUY_SELL](type)
-}
-
+const goToBuyScene = () => Actions[Constants.PLUGIN_LIST]({ direction: 'buy' })
 const BuyButton = () => {
   return (
     <Button onPress={goToBuyScene}>
@@ -121,6 +108,7 @@ const BuyButton = () => {
   )
 }
 
+const goToSellScene = () => Actions[Constants.PLUGIN_LIST]({ direction: 'sell' })
 const SellButton = () => {
   return (
     <Button onPress={goToSellScene}>
@@ -133,26 +121,6 @@ const SellButton = () => {
           <Button.Center>
             <Button.Text>
               <Text>{PLUGIN_SELL_TEXT}</Text>
-            </Button.Text>
-          </Button.Center>
-        </Button.Row>
-      </Button.Row>
-    </Button>
-  )
-}
-
-const SpendButton = () => {
-  return (
-    <Button onPress={Actions[Constants.SPEND]}>
-      <Button.Row>
-        <Button.Row>
-          <Button.Left>
-            <Image source={giftIcon} style={styles.iconImage} />
-          </Button.Left>
-
-          <Button.Center>
-            <Button.Text>
-              <Text>{PLUGIN_SPEND_TEXT}</Text>
             </Button.Text>
           </Button.Center>
         </Button.Row>
