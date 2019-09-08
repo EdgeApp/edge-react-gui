@@ -247,7 +247,7 @@ export const buyPluginFilter: BuySellFilter = {
       LTC: true,
       XRP: true
     },
-    priority: 5,
+    priority: 4,
     paymentType: 'credit'
   },
 
@@ -366,7 +366,7 @@ export const buyPluginFilter: BuySellFilter = {
       BTC: true,
       ETH: true
     },
-    priority: 4,
+    priority: 3,
     paymentType: 'credit'
   },
 
@@ -377,7 +377,7 @@ export const buyPluginFilter: BuySellFilter = {
     cryptoCodes: {
       BTC: true
     },
-    priority: 6,
+    priority: 5,
     paymentType: 'cash'
   },
 
@@ -389,7 +389,7 @@ export const buyPluginFilter: BuySellFilter = {
     cryptoCodes: {
       BTC: true
     },
-    priority: 4,
+    priority: 2,
     paymentType: 'bank'
   }
 }
