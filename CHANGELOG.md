@@ -1,5 +1,9 @@
 # edge-react-gui
 
+## 1.9.2
+
+* Fix Tezos balance updating bug
+
 ## 1.9.1
 
 * Fix DASH max fee issue
