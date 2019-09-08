@@ -14,7 +14,7 @@ import s from '../locales/strings.js'
 import * as SETTINGS_API from '../modules/Core/Account/settings.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import { updateWalletsRequest } from '../modules/Core/Wallets/action.js'
-import * as WALLET_API from '../modules/Core/Wallets/api.js'
+import { getEnabledTokensFromFile, setEnabledTokens, updateEnabledTokens } from '../modules/Core/Wallets/EnabledTokens.js'
 import { updateExchangeRates } from '../modules/ExchangeRates/action.js'
 import * as SETTINGS_SELECTORS from '../modules/Settings/selectors'
 import { updateSettings } from '../modules/Settings/SettingsActions'
@@ -183,14 +183,10 @@ export const upsertWallets = (wallets: Array<EdgeCurrencyWallet>) => (dispatch: 
   })
 }
 
-// adds to core and enables in core
-export const addCustomToken = (walletId: string, tokenObj: any) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const wallet = CORE_SELECTORS.getWallet(state, walletId)
-  return WALLET_API.addCoreCustomToken(wallet, tokenObj)
-}
-
-export const setEnabledTokens = (walletId: string, enabledTokens: Array<string>, disabledTokens: Array<string>) => (dispatch: Dispatch, getState: GetState) => {
+export const setWalletEnabledTokens = (walletId: string, enabledTokens: Array<string>, disabledTokens: Array<string>) => (
+  dispatch: Dispatch,
+  getState: GetState
+) => {
   // tell Redux that we are updating the enabledTokens list
   dispatch({ type: 'MANAGE_TOKENS_START' })
   // get a snapshot of the state
@@ -198,7 +194,7 @@ export const setEnabledTokens = (walletId: string, enabledTokens: Array<string>,
   // get a copy of the relevant core wallet
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
   // now actually tell the wallet to enable the token(s) in the core and save to file
-  return WALLET_API.setEnabledTokens(wallet, enabledTokens, disabledTokens).then(() => {
+  return setEnabledTokens(wallet, enabledTokens, disabledTokens).then(() => {
     // let Redux know it was completed successfully
     dispatch({ type: 'MANAGE_TOKENS_SUCCESS' })
     dispatch({
@@ -221,7 +217,7 @@ export const getEnabledTokens = (walletId: string) => async (dispatch: Dispatch,
   // get token information from settings
   const customTokens: Array<CustomTokenInfo> = SETTINGS_SELECTORS.getCustomTokens(state)
   try {
-    const enabledTokens = await WALLET_API.getEnabledTokensFromFile(wallet)
+    const enabledTokens = await getEnabledTokensFromFile(wallet)
     const promiseArray = []
     const tokensToEnable = []
 
@@ -380,7 +376,7 @@ export async function deleteCustomTokenAsync (walletId: string, currencyCode: st
     if (wallet.enabledTokens && wallet.enabledTokens.length > 0) {
       // if the wallet has some enabled tokens
       coreWalletsToUpdate.push(theCoreWallet)
-      return WALLET_API.updateEnabledTokens(theCoreWallet, [], [currencyCode])
+      return updateEnabledTokens(theCoreWallet, [], [currencyCode])
     }
     return Promise.resolve()
   })
@@ -424,7 +420,7 @@ export const deleteCustomToken = (walletId: string, currencyCode: string) => (di
         // $FlowFixMe
         if (wallet.enabledTokens && wallet.enabledTokens.length > 0) {
           coreWalletsToUpdate.push(theCoreWallet)
-          return WALLET_API.updateEnabledTokens(theCoreWallet, [], [currencyCode])
+          return updateEnabledTokens(theCoreWallet, [], [currencyCode])
         }
         return Promise.resolve()
       })

@@ -356,6 +356,7 @@ export class SendConfirmation extends Component<Props, State> {
         this.lastSeenCount = count
       }
     } catch (e) {
+      console.log(e)
       updateTransaction(null, guiMakeSpendInfoClone, false, e)
     }
   }

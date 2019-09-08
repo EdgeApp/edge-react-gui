@@ -12,7 +12,6 @@ import { launchModal } from '../components/common/ModalProvider.js'
 import { createAddressModal } from '../components/modals/AddressModal.js'
 import {
   ADD_TOKEN,
-  BUY_SELL,
   EDGE_LOGIN,
   EXCHANGE_SCENE,
   EXCLAMATION,
@@ -21,6 +20,7 @@ import {
   KEY_ICON,
   MATERIAL_COMMUNITY,
   MATERIAL_ICONS,
+  PLUGIN_LIST,
   SEND_CONFIRMATION,
   SHOPPING_CART,
   getSpecialCurrencyInfo
@@ -362,7 +362,7 @@ export const checkAndShowGetCryptoModal = () => async (dispatch: Dispatch, getSt
     }
     const value = await launchModal(threeButtonModal)
     if (value === 'buy') {
-      Actions[BUY_SELL]()
+      Actions[PLUGIN_LIST]({ direction: 'buy' })
     } else if (value === 'exchange') {
       dispatch(selectWalletForExchange(wallet.id, currencyCode, 'to'))
       Actions[EXCHANGE_SCENE]()

@@ -1,6 +1,7 @@
 // @flow
 
 import { createInputModal } from 'edge-components'
+import { type EdgeAccount } from 'edge-core-js/types'
 import React, { Component } from 'react'
 // eslint-disable-next-line react-native/split-platform-components
 import { FlatList, Image, PermissionsAndroid, Platform, TouchableWithoutFeedback, View } from 'react-native'
@@ -9,27 +10,16 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
 import { updateOneSetting } from '../../actions/SettingsActions.js'
-import {
-  ANDROID,
-  ARROW_RIGHT,
-  COUNTRY_CODES,
-  EDGE_PLUGIN_REGIONS,
-  FLAG_LOGO_URL,
-  PLUGIN_BUY,
-  PLUGIN_BUY_LEGACY,
-  PLUGIN_SPEND,
-  PLUGIN_SPEND_LEGACY,
-  SIMPLE_ICONS,
-  SPEND
-} from '../../constants/indexConstants'
+import { ANDROID, ARROW_RIGHT, COUNTRY_CODES, FLAG_LOGO_URL, PLUGIN_VIEW, PLUGIN_VIEW_LEGACY, SIMPLE_ICONS } from '../../constants/indexConstants.js'
+import { allPlugins, buyPluginFilter, buySellPluginFilter, devPlugin, sellPluginFilter } from '../../constants/plugins/buySellPlugins.js'
 import s from '../../locales/strings.js'
 import { getSyncedSettingsAsync, setSyncedSettingsAsync } from '../../modules/Core/Account/settings.js'
 import Text from '../../modules/UI/components/FormattedText'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
-import { buySellPlugins, spendPlugins } from '../../modules/UI/scenes/Plugins/plugins'
 import styles from '../../styles/scenes/PluginsStyle.js'
-import { THEME, colors } from '../../theme/variables/airbitz.js'
-import type { BuySellPlugin } from '../../types/types.js'
+import { THEME } from '../../theme/variables/airbitz.js'
+import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
+import { type BuySellFilter, type BuySellPlugin, type CountryData } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -37,31 +27,28 @@ import { CountrySelectionModal } from '../modals/CountrySelectionModal.js'
 import { SimpleConfirmationModal } from '../modals/SimpleConfirmationModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 
-type Props = {
-  developerModeOn: boolean,
-  account: Object,
-  updateCountryCode: ({ [string]: mixed }) => void,
-  countryCode: string
+type OwnProps = {
+  direction?: 'buy' | 'sell'
 }
 
-type State = {
-  data: Array<Object>
+type StateProps = {
+  account: EdgeAccount,
+  countryCode: string,
+  developerModeOn: boolean
 }
+
+type DispatchProps = {
+  updateCountryCode(string): void
+}
+
+type Props = OwnProps & StateProps & DispatchProps
 
 const MODAL_DATA_FILE = 'pluginModalTracker.json'
 
-class PluginList extends Component<Props, State> {
-  isSpendModal: boolean
-
-  constructor (props) {
-    super(props)
-    this.isSpendModal = false
-    this.state = { data: [] }
-  }
-
+class PluginList extends Component<Props> {
   async componentDidMount () {
     await this.checkDisclaimer()
-    if (!this.isSpendModal) this.checkCountry()
+    this.checkCountry()
   }
 
   /**
@@ -71,8 +58,8 @@ class PluginList extends Component<Props, State> {
     const { account } = this.props
     try {
       const text = await account.disklet.getText(MODAL_DATA_FILE)
-      const data = JSON.parse(text)
-      const timesPluginWarningModalViewed = data.viewed
+      const json = JSON.parse(text)
+      const timesPluginWarningModalViewed = json.viewed
       if (timesPluginWarningModalViewed < 3) {
         const newNumber = timesPluginWarningModalViewed + 1
         if (newNumber === 3) {
@@ -86,10 +73,10 @@ class PluginList extends Component<Props, State> {
         await account.disklet.setText(MODAL_DATA_FILE, newText)
       }
     } catch (e) {
-      const obj = {
+      const json = {
         viewed: 1
       }
-      const text = JSON.stringify(obj)
+      const text = JSON.stringify(json)
       await account.disklet.setText(MODAL_DATA_FILE, text)
       await Airship.show(bridge => <SimpleConfirmationModal bridge={bridge} text={s.strings.plugin_provider_disclaimer} buttonText={s.strings.string_ok_cap} />)
     }
@@ -106,49 +93,7 @@ class PluginList extends Component<Props, State> {
   _onPress = (plugin: BuySellPlugin) => {
     const { pluginId, permissions = [] } = plugin
     if (pluginId === 'custom') {
-      console.log('custom click!')
-
-      const yesButton = {
-        title: s.strings.load_plugin
-      }
-      const noButton = {
-        title: s.strings.string_cancel_cap
-      }
-      const input = {
-        label: s.strings.plugin_url,
-        autoCorrect: false,
-        returnKeyType: 'go',
-        initialValue: '',
-        autoFocus: true
-      }
-      const modal = createInputModal({
-        icon: (
-          <IonIcon
-            name="md-globe"
-            size={42}
-            color={colors.primary}
-            style={[
-              {
-                backgroundColor: THEME.COLORS.TRANSPARENT,
-                zIndex: 1015,
-                elevation: 1015
-              }
-            ]}
-          />
-        ),
-        title: s.strings.load_plugin,
-        input,
-        yesButton,
-        noButton
-      })
-      launchModal(modal).then(response => {
-        if (response) {
-          plugin.uri = response
-        }
-        const key = Actions.currentScene === SPEND ? PLUGIN_SPEND : PLUGIN_BUY
-        console.log('pvs: key', key)
-        Actions[key]({ plugin: plugin })
-      })
+      this.openCustomPlugin(plugin)
       return
     }
     if (permissions.length > 0) {
@@ -182,14 +127,29 @@ class PluginList extends Component<Props, State> {
     }
   }
 
+  openCustomPlugin (plugin: BuySellPlugin) {
+    const modal = createInputModal({
+      icon: <IonIcon name="md-globe" size={42} color={THEME.COLORS.SECONDARY} />,
+      title: s.strings.load_plugin,
+      input: {
+        label: s.strings.plugin_url,
+        autoCorrect: false,
+        returnKeyType: 'go',
+        initialValue: plugin.uri,
+        autoFocus: true
+      },
+      yesButton: { title: s.strings.load_plugin },
+      noButton: { title: s.strings.string_cancel_cap }
+    })
+    launchModal(modal).then(response => {
+      plugin.uri = response
+      Actions[PLUGIN_VIEW]({ plugin })
+    })
+  }
+
   openPlugin = (plugin: BuySellPlugin) => {
-    if (Actions.currentScene === SPEND) {
-      const key = plugin.isLegacy ? PLUGIN_SPEND_LEGACY : PLUGIN_SPEND
-      Actions[key]({ plugin: plugin })
-      return
-    }
-    const key = plugin.isLegacy ? PLUGIN_BUY_LEGACY : PLUGIN_BUY
-    Actions[key]({ plugin: plugin })
+    const key = plugin.isLegacy ? PLUGIN_VIEW_LEGACY : PLUGIN_VIEW
+    Actions[key]({ plugin })
   }
 
   openCountrySelectionModal = async () => {
@@ -203,7 +163,7 @@ class PluginList extends Component<Props, State> {
           ...syncedSettings,
           countryCode: selectedCountryCode
         }
-        updateCountryCode({ countryCode: selectedCountryCode })
+        updateCountryCode(selectedCountryCode)
         await setSyncedSettingsAsync(account, updatedSettings)
       } catch (e) {
         console.log(e)
@@ -225,93 +185,81 @@ class PluginList extends Component<Props, State> {
   )
 
   render () {
-    const { countryCode } = this.props
-    const { data } = this.state
+    const { countryCode, developerModeOn, direction } = this.props
     const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)
-    let countryName = s.strings.buy_sell_crypto_select_country_button
-    let filename = ''
-    let filteredPlugins = data
-    if (countryData) {
-      countryName = countryData.name
-      filename = countryData.filename ? countryData.filename : countryData.name.toLowerCase().replace(' ', '-')
-      filteredPlugins = data.filter(plugin => {
-        return (
-          // needed because "Spend" scene doesn't have a plugins JSON currently
-          plugin &&
-          (plugin.pluginId === 'custom' ||
-            (plugin.name && EDGE_PLUGIN_REGIONS[plugin.name.toLowerCase()] && EDGE_PLUGIN_REGIONS[plugin.name.toLowerCase()].countryCodes[countryCode]))
-        )
-      })
+
+    // Pick a filter based on our direction:
+    const filter: BuySellFilter = direction === 'buy' ? buyPluginFilter : direction === 'sell' ? sellPluginFilter : buySellPluginFilter
+
+    // Remove plugins that don't exist in the filter:
+    let plugins = allPlugins.filter((plugin: BuySellPlugin) => filter[plugin.name.toLowerCase()] != null)
+
+    // Remove plugins that don't match our country:
+    if (countryData != null) {
+      plugins = plugins.filter((plugin: BuySellPlugin) => plugin.pluginId === 'custom' || filter[plugin.name.toLowerCase()].countryCodes[countryCode])
     }
-    const logoUrl = `${FLAG_LOGO_URL}/${filename}.png`
+
+    // Sort the plugins:
+    plugins.sort((a: BuySellPlugin, b: BuySellPlugin) => {
+      const aPriority = filter[a.name.toLowerCase()].priority
+      const bPriority = filter[b.name.toLowerCase()].priority
+      return aPriority - bPriority
+    })
+
+    // Add the dev mode plugin if enabled:
+    if (developerModeOn) {
+      plugins = [...plugins, devPlugin]
+    }
 
     return (
       <SceneWrapper background="body" hasTabs={false}>
-        {this.isSpendModal || (
-          <View style={styles.selectedCountryWrapper}>
-            <TouchableWithoutFeedback style={styles.selectedCountry} onPress={this.openCountrySelectionModal}>
-              <View style={styles.selectedCountryTextWrapper}>
-                <View style={{ flexDirection: 'row' }}>
-                  {!!countryData && <Image source={{ uri: logoUrl }} style={{ height: scale(30), width: scale(30), borderRadius: scale(15) }} />}
-                  <Text style={{ fontSize: scale(16), alignSelf: 'center', paddingLeft: 12 }}>{countryName}</Text>
-                </View>
-                <Icon type={SIMPLE_ICONS} style={{ alignSelf: 'center' }} name={ARROW_RIGHT} />
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
-        )}
-        {!!countryCode && filteredPlugins.length === 0 ? (
+        {this.renderCountryPicker(countryData)}
+        {plugins.length === 0 ? (
           <View style={{ flex: 1, width: '100%', padding: scale(50), justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ textAlign: 'center' }}>{s.strings.buy_sell_crypto_no_plugin_region}</Text>
           </View>
         ) : (
-          <FlatList data={filteredPlugins} renderItem={this._renderPlugin} keyExtractor={item => item.name} />
+          <FlatList data={plugins} renderItem={this._renderPlugin} keyExtractor={(item: BuySellPlugin) => item.pluginId} />
         )}
       </SceneWrapper>
     )
   }
-}
 
-class PluginBuySellComponent extends PluginList {
-  componentDidMount () {
-    super.componentDidMount()
-    this.setState({
-      data: buySellPlugins(this.props.developerModeOn)
-    })
+  renderCountryPicker (countryData: CountryData | void) {
+    let flag = null
+    let message = s.strings.buy_sell_crypto_select_country_button
+    if (countryData != null) {
+      const { filename = countryData.name.toLowerCase().replace(' ', '-') } = countryData
+
+      flag = <Image source={{ uri: `${FLAG_LOGO_URL}/${filename}.png` }} style={{ height: scale(30), width: scale(30), borderRadius: scale(15) }} />
+      message = countryData.name
+    }
+
+    return (
+      <View style={styles.selectedCountryWrapper}>
+        <TouchableWithoutFeedback style={styles.selectedCountry} onPress={this.openCountrySelectionModal}>
+          <View style={styles.selectedCountryTextWrapper}>
+            <View style={{ flexDirection: 'row' }}>
+              {flag}
+              <Text style={{ fontSize: scale(16), alignSelf: 'center', paddingLeft: 12 }}>{message}</Text>
+            </View>
+            <Icon type={SIMPLE_ICONS} style={{ alignSelf: 'center' }} name={ARROW_RIGHT} />
+          </View>
+        </TouchableWithoutFeedback>
+      </View>
+    )
   }
 }
 
-class PluginSpendComponent extends PluginList {
-  componentDidMount () {
-    this.isSpendModal = true
-    super.componentDidMount()
-    this.setState({
-      data: spendPlugins(this.props.developerModeOn)
-    })
-  }
-}
-
-const listMapStateToProps = state => {
-  const developerModeOn = state.ui.settings.developerModeOn
-  return {
-    developerModeOn,
+export const PluginListScene = connect(
+  (state: ReduxState): StateProps => ({
+    developerModeOn: state.ui.settings.developerModeOn,
     countryCode: state.ui.settings.countryCode,
     account: state.core.account
-  }
-}
-
-const listMapDispatchToProps = dispatch => ({
-  updateCountryCode: (countryCode: { [mixed]: any }) => dispatch(updateOneSetting(countryCode))
-})
-
-const PluginBuySell = connect(
-  listMapStateToProps,
-  listMapDispatchToProps
-)(PluginBuySellComponent)
-
-const PluginSpend = connect(
-  listMapStateToProps,
-  listMapDispatchToProps
-)(PluginSpendComponent)
-
-export { PluginBuySell, PluginSpend }
+  }),
+  (dispatch: Dispatch): DispatchProps => ({
+    updateCountryCode (countryCode: string) {
+      dispatch(updateOneSetting({ countryCode }))
+    }
+  })
+)(PluginList)

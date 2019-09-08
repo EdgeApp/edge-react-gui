@@ -18,6 +18,9 @@ const strings = {
   drawer_sweep_private_key: 'Sweep Private Key',
   drawer_wallets: 'Wallets',
 
+  // Error messages:
+  error_token_exists: 'A currency named %s already exists',
+
   // Alert component:
   alert_dropdown_alert: 'Alert! ',
   alert_dropdown_warning: 'Warning! ',
@@ -337,8 +340,9 @@ const strings = {
   title_edit_token: 'Edit Token',
   title_add_token: 'Add Token',
   title_password_recovery: 'Password Recovery',
-  title_plugin_buysell: 'Buy/Sell Cryptocurrency',
-  title_plugin_spend_cryptocurrency: 'Spend Cryptocurrency',
+  title_plugin_buy: 'Buy Cryptocurrency',
+  title_plugin_sell: 'Sell Cryptocurrency',
+  title_plugin_buysell: 'Buy / Sell Cryptocurrency',
   title_plugin_spend: 'Spend',
   title_otp: '2FA',
   title_register_fio_address: 'Register FIO Address',

@@ -12,6 +12,7 @@ import { showError } from '../../components/services/AirshipInstance.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import type { Dispatch, GetState } from '../../types/reduxTypes.js'
+import { type CustomTokenInfo } from '../../types/types.js'
 import { runWithTimeout } from '../../util/utils.js'
 import {
   CORE_DEFAULTS,
@@ -269,11 +270,13 @@ export const mergeSettings = (
       finalSettings[key] = loadedSettings[key]
     }
 
-    if (account) {
+    if (account && loadedSettings[key] != null) {
       const currencyName = Constants.CURRENCY_PLUGIN_NAMES[key]
+      const doesHaveDenominations = loadedSettings[key].denominations
+      const doesHavePlugin = account.currencyConfig[currencyName]
       // if there are settings for this key
       // and currency (not token) and has a plugin name
-      if (loadedSettings && loadedSettings[key] && loadedSettings[key].denominations && currencyName) {
+      if (loadedSettings && loadedSettings[key] && (doesHaveDenominations || doesHavePlugin) && currencyName) {
         // for each currency info (each native currency)
         const pluginDenominations = account.currencyConfig[currencyName].currencyInfo.denominations // get denominations for that plugin
         const settingDenominationIndex = pluginDenominations.findIndex(pluginDenom => pluginDenom.multiplier === loadedSettings[key].denomination) // find settings denom in plugin denoms
@@ -285,6 +288,18 @@ export const mergeSettings = (
         }
       }
     }
+  }
+
+  // Filter conflicting tokens out of synced settings:
+  if (finalSettings.customTokens && account != null) {
+    const { currencyConfig } = account
+    finalSettings.customTokens = finalSettings.customTokens.filter((customToken: CustomTokenInfo) => {
+      for (const pluginName in currencyConfig) {
+        const { currencyInfo } = currencyConfig[pluginName]
+        if (customToken.currencyCode === currencyInfo.currencyCode) return false
+      }
+      return true
+    })
   }
 
   return {

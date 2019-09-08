@@ -4,15 +4,10 @@ const fs = require('fs')
 const path = require('path')
 const { plugins } = require('./package.json')
 
-const pluginsFile = './src/assets/plugins.json'
 const androidDir = './android/app/src/main/assets/plugins/'
 const iosDir = './ios/plugins/'
 
 const platforms = [androidDir, iosDir]
-const pluginManifests = {
-  buysell: [],
-  spend: []
-}
 
 platforms.forEach(platform => {
   if (!fs.existsSync(platform)) {
@@ -32,18 +27,8 @@ function copyAssets (plugin) {
   return manifest
 }
 
-if (plugins.buysell) {
-  plugins.buysell.forEach(function (plugin) {
-    const manifest = copyAssets(plugin)
-    pluginManifests.buysell.push(manifest)
+if (plugins) {
+  plugins.forEach(function (plugin) {
+    copyAssets(plugin)
   })
 }
-
-if (plugins.spend) {
-  plugins.spend.forEach(function (plugin) {
-    const manifest = copyAssets(plugin)
-    pluginManifests.spend.push(manifest)
-  })
-}
-
-fs.writeFileSync(pluginsFile, JSON.stringify(pluginManifests, null, 2))

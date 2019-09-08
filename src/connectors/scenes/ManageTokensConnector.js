@@ -2,7 +2,7 @@
 
 import { connect } from 'react-redux'
 
-import { setEnabledTokens } from '../../actions/WalletActions.js'
+import { setWalletEnabledTokens } from '../../actions/WalletActions.js'
 import ManageTokens from '../../components/scenes/ManageTokensScene.js'
 import type { ManageTokensDispatchProps, ManageTokensOwnProps, ManageTokensStateProps } from '../../components/scenes/ManageTokensScene.js'
 import type { State } from '../../types/reduxTypes.js'
@@ -14,7 +14,7 @@ const mapStateToProps = (state: State, ownProps: ManageTokensOwnProps): ManageTo
 })
 const mapDispatchToProps = (dispatch: Dispatch): ManageTokensDispatchProps => ({
   setEnabledTokensList: (walletId: string, enabledTokens: Array<string>, oldEnabledTokensList: Array<string>) =>
-    dispatch(setEnabledTokens(walletId, enabledTokens, oldEnabledTokensList))
+    dispatch(setWalletEnabledTokens(walletId, enabledTokens, oldEnabledTokensList))
 })
 export default connect(
   mapStateToProps,
