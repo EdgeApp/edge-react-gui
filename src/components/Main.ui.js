@@ -123,7 +123,6 @@ const SPENDING_LIMITS = s.strings.spending_limits
 const PASSWORD_RECOVERY = s.strings.title_password_recovery
 const OTP = s.strings.title_otp
 const DEFAULT_FIAT = s.strings.title_default_fiat
-const PLUGIN_BUYSELL = s.strings.title_plugin_buysell
 const TERMS_OF_SERVICE = s.strings.title_terms_of_service
 
 type Props = {
@@ -607,7 +606,15 @@ export default class Main extends Component<Props> {
                     key={Constants.PLUGIN_LIST}
                     navTransparent={true}
                     component={PluginListScene}
-                    renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
+                    renderTitle={props =>
+                      this.renderTitle(
+                        props.direction === 'buy'
+                          ? s.strings.title_plugin_buy
+                          : props.direction === 'sell'
+                            ? s.strings.title_plugin_sell
+                            : s.strings.title_plugin_buysell
+                      )
+                    }
                     renderLeftButton={this.renderBackButton(BACK)}
                     renderRightButton={this.renderEmptyButton()}
                     onLeft={Actions.pop}
@@ -616,7 +623,7 @@ export default class Main extends Component<Props> {
                     key={Constants.PLUGIN_VIEW}
                     navTransparent={true}
                     component={ifLoggedIn(PluginViewConnect, LoadingScene)}
-                    renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
+                    renderTitle={props => this.renderTitle(props.plugin.name)}
                     renderLeftButton={renderPluginBackButton(BACK)}
                     renderRightButton={this.renderExitButton()}
                   />
@@ -624,7 +631,7 @@ export default class Main extends Component<Props> {
                     key={Constants.PLUGIN_VIEW_LEGACY}
                     navTransparent={true}
                     component={ifLoggedIn(LegacyPluginViewConnect, LoadingScene)}
-                    renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
+                    renderTitle={props => this.renderTitle(props.plugin.name)}
                     renderLeftButton={renderLegacyPluginBackButton(BACK)}
                     renderRightButton={this.renderExitButton()}
                   />
@@ -635,7 +642,7 @@ export default class Main extends Component<Props> {
                     key={Constants.PLUGIN_VIEW}
                     navTransparent={true}
                     component={ifLoggedIn(PluginViewConnect, LoadingScene)}
-                    renderTitle={this.renderTitle(PLUGIN_BUYSELL)}
+                    renderTitle={props => this.renderTitle(props.plugin.name)}
                     renderLeftButton={renderPluginBackButton(BACK)}
                     renderRightButton={this.renderExitButton()}
                   />
