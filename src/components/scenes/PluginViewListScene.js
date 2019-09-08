@@ -1,6 +1,7 @@
 // @flow
 
 import { createInputModal } from 'edge-components'
+import { type EdgeAccount } from 'edge-core-js/types'
 import React, { Component } from 'react'
 // eslint-disable-next-line react-native/split-platform-components
 import { FlatList, Image, PermissionsAndroid, Platform, TouchableWithoutFeedback, View } from 'react-native'
@@ -31,9 +32,9 @@ type OwnProps = {
 }
 
 type StateProps = {
-  developerModeOn: boolean,
-  account: Object,
-  countryCode: string
+  account: EdgeAccount,
+  countryCode: string,
+  developerModeOn: boolean
 }
 
 type DispatchProps = {
@@ -134,23 +135,21 @@ class PluginList extends Component<Props> {
         label: s.strings.plugin_url,
         autoCorrect: false,
         returnKeyType: 'go',
-        initialValue: '',
+        initialValue: plugin.uri,
         autoFocus: true
       },
       yesButton: { title: s.strings.load_plugin },
       noButton: { title: s.strings.string_cancel_cap }
     })
     launchModal(modal).then(response => {
-      if (response) {
-        plugin.uri = response
-      }
+      plugin.uri = response
       Actions[PLUGIN_VIEW]({ plugin })
     })
   }
 
   openPlugin = (plugin: BuySellPlugin) => {
     const key = plugin.isLegacy ? PLUGIN_VIEW_LEGACY : PLUGIN_VIEW
-    Actions[key]({ plugin: plugin })
+    Actions[key]({ plugin })
   }
 
   openCountrySelectionModal = async () => {
@@ -187,32 +186,34 @@ class PluginList extends Component<Props> {
 
   render () {
     const { countryCode, developerModeOn, direction } = this.props
-    const countryData: CountryData | void = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)
+    const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)
 
     // Pick a filter based on our direction:
     const filter: BuySellFilter = direction === 'buy' ? buyPluginFilter : direction === 'sell' ? sellPluginFilter : buySellPluginFilter
 
-    // Prepare the plugin list:
-    let plugins = developerModeOn ? [...allPlugins, devPlugin] : allPlugins
-
     // Remove plugins that don't exist in the filter:
-    plugins = plugins.filter((plugin: BuySellPlugin) => filter[plugin.name.toLowerCase()] != null)
+    let plugins = allPlugins.filter((plugin: BuySellPlugin) => filter[plugin.name.toLowerCase()] != null)
 
     // Remove plugins that don't match our country:
     if (countryData != null) {
       plugins = plugins.filter((plugin: BuySellPlugin) => plugin.pluginId === 'custom' || filter[plugin.name.toLowerCase()].countryCodes[countryCode])
     }
 
-    // Finally, sort:
+    // Sort the plugins:
     plugins.sort((a: BuySellPlugin, b: BuySellPlugin) => {
       const aPriority = filter[a.name.toLowerCase()].priority
       const bPriority = filter[b.name.toLowerCase()].priority
       return aPriority - bPriority
     })
 
+    // Add the dev mode plugin if enabled:
+    if (developerModeOn) {
+      plugins = [...plugins, devPlugin]
+    }
+
     return (
       <SceneWrapper background="body" hasTabs={false}>
-        {this.renderCountryPicker()}
+        {this.renderCountryPicker(countryData)}
         {plugins.length === 0 ? (
           <View style={{ flex: 1, width: '100%', padding: scale(50), justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ textAlign: 'center' }}>{s.strings.buy_sell_crypto_no_plugin_region}</Text>
@@ -224,10 +225,7 @@ class PluginList extends Component<Props> {
     )
   }
 
-  renderCountryPicker () {
-    const { countryCode } = this.props
-    const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)
-
+  renderCountryPicker (countryData: CountryData | void) {
     let flag = null
     let message = s.strings.buy_sell_crypto_select_country_button
     if (countryData != null) {

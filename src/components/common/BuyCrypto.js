@@ -20,9 +20,12 @@ export default class BuyCrypto extends Component<Props> {
     const { wallet } = this.props
     return wallet.currencyNames[wallet.currencyCode]
   }
+
+  goToBuy = () => Actions[PLUGIN_LIST]({ direction: 'buy' })
+
   render () {
     return (
-      <TouchableWithoutFeedback onPress={Actions[PLUGIN_LIST]({ direction: 'buy' })}>
+      <TouchableWithoutFeedback onPress={this.goToBuy}>
         <View style={style.buyCryptoContainer}>
           <View style={style.buyCryptoBox}>
             <Image style={style.buyCryptoBoxImage} source={{ uri: this.props.wallet.symbolImage }} resizeMode={'cover'} />

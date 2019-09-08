@@ -548,7 +548,7 @@ export const sellPluginFilter: BuySellFilter = {
       UA: true,
       AE: true,
       GB: true,
-      US: true,
+      US: false,
       UM: true,
       UY: true,
       UZ: true,

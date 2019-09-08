@@ -40,7 +40,7 @@ class DeepLinkingManager extends React.Component<Props> {
       for (let i = 0; i < allPlugins.length; i++) {
         const plugin = allPlugins[i]
         if (plugin.name === 'Simplex') {
-          Actions[PLUGIN_VIEW_DEEP]({ plugin: plugin })
+          Actions[PLUGIN_VIEW_DEEP]({ plugin })
           this.props.markAddressDeepLinkDone()
           return
         }
