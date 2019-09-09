@@ -158,6 +158,18 @@ const merchantPartners = [
     jobTitle: '',
     familyName: '',
     recordID: ''
+  },
+  {
+    givenName: 'Totle',
+    hasThumbnail: true,
+    thumbnailPath: 'https://developer.edge.app/content/totle-logo.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
   }
 ]
 
