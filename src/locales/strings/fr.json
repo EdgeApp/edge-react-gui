@@ -276,6 +276,7 @@
   "string_first_zcoin_wallet_name": "Mes Zcoins",
   "string_first_stellar_wallet_name": "Mes Stellars",
   "string_first_tezos_wallet_name": "",
+  "string_first_rsk_wallet_name": "",
   "my_crypto_wallet_name": "Mon %s",
   "string_from_exchange_info": "Vous allez faire une échage %1$s %2$s\n (%3$s)\nde %4$s",
   "string_help": "Aide",
