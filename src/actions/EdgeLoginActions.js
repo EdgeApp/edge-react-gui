@@ -40,7 +40,7 @@ export const lobbyLogin = () => async (dispatch: any, getState: any) => {
 }
 
 const getToken = (data: any) => {
-  if (data.protocol === 'edge-ret:') {
+  if (data.protocol === 'edge:' || data.protocol === 'edge-ret:' || data.protocol === 'airbitz:' || data.protocol === 'airbitz-ret:') {
     const splitArray = data.href.split('edge/')
     return splitArray[1]
   }
