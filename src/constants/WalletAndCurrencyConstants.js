@@ -33,7 +33,8 @@ export const DEFAULT_STARTER_WALLET_NAMES = {
   XMR: s.strings.string_first_monero_wallet_name,
   XRP: s.strings.string_first_ripple_wallet_name,
   XTZ: s.strings.strinf_first_tezos_wallet_name,
-  XZC: s.strings.string_first_zcoin_wallet_name
+  XZC: s.strings.string_first_zcoin_wallet_name,
+  RSK: s.strings.string_first_rsk_wallet_name
 }
 
 // DO NOT PUT ANY TOKENS IN HERE!
@@ -60,7 +61,8 @@ export const CURRENCY_PLUGIN_NAMES = {
   XRP: 'ripple',
   XTZ: 'tezos',
   XZC: 'zcoin',
-  BNB: 'binance'
+  BNB: 'binance',
+  RSK: 'rsk'
 }
 
 export const getSpecialCurrencyInfo = (currencyCode: string): Object => {
