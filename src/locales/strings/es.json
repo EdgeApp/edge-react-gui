@@ -275,7 +275,7 @@
   "string_first_zcoin_wallet_name": "Mi Zcoin",
   "string_first_stellar_wallet_name": "Mi Stellar",
   "string_first_tezos_wallet_name": "Mi Tezos",
-  "string_first_rsk_wallet_name": "Mi RSK",
+  "string_first_rsk_wallet_name": "Mi Rootstock",
   "my_crypto_wallet_name": "Mi %s",
   "string_from_exchange_info": "Estás a punto de cambiar %1$s%2$s(%3$s) desde %4$s",
   "string_help": "Ayuda",
