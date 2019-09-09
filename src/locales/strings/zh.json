@@ -276,6 +276,7 @@
   "string_first_zcoin_wallet_name": "我的小零币",
   "string_first_stellar_wallet_name": "我的恒星币",
   "string_first_tezos_wallet_name": "",
+  "string_first_rsk_wallet_name": "",
   "my_crypto_wallet_name": "我的%s",
   "string_from_exchange_info": "你即将交易\n %1$s %2$s\n （%3$s）\n 从 %4$s",
   "string_help": "説明",
