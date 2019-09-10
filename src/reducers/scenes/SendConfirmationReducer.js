@@ -8,12 +8,14 @@ import { type Reducer } from 'redux'
 import { initialState } from '../../modules/UI/scenes/SendConfirmation/selectors'
 import type { Action } from '../../types/reduxTypes.js'
 
+export type FeeOption = 'custom' | 'high' | 'low' | 'standard'
+
 export type GuiMakeSpendInfo = {
   currencyCode?: string,
-  customNetworkFee?: any,
   metadata?: any,
   nativeAmount?: string,
-  networkFeeOption?: string,
+  networkFeeOption?: FeeOption,
+  customNetworkFee?: Object,
   publicAddress?: string,
   spendTargets?: Array<EdgeSpendTarget>,
   lockInputs?: boolean,

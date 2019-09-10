@@ -1,116 +1,148 @@
 // @flow
 
-import { PrimaryButton } from 'edge-components'
-import type { EdgeCurrencyWallet } from 'edge-core-js'
-import React, { Component } from 'react'
-import { TouchableWithoutFeedback, View } from 'react-native'
-import slowlog from 'react-native-slowlog'
+import { type EdgeCurrencyWallet } from 'edge-core-js/types'
+import React, { Component, type Node } from 'react'
+import { ScrollView, Text, TouchableWithoutFeedback, View } from 'react-native'
+import EntypoIcon from 'react-native-vector-icons/Entypo'
+import { connect } from 'react-redux'
 
-import * as FEE from '../../constants/FeeConstants'
+import { sendConfirmationUpdateTx } from '../../actions/SendConfirmationActions.js'
+import { FEE_STRINGS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
-import T from '../../modules/UI/components/FormattedText/index'
+import { getGuiMakeSpendInfo } from '../../modules/UI/scenes/SendConfirmation/selectors.js'
+import { type FeeOption } from '../../reducers/scenes/SendConfirmationReducer.js'
+import { dayText, nightText } from '../../styles/common/textStyles.js'
 import { styles } from '../../styles/scenes/ChangeMiningFeeStyle.js'
-import { launchModal } from '../common/ModalProvider.js'
+import { THEME } from '../../theme/variables/airbitz.js'
+import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
+import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { type CustomFees, createCustomFeesModal } from '../modals/CustomFeesModal.js'
 
-const HIGH_FEE_TEXT = s.strings.mining_fee_high_label_choice
-const STANDARD_FEE_TEXT = s.strings.mining_fee_standard_label_choice
-const LOW_FEE_TEXT = s.strings.mining_fee_low_label_choice
-
-export type ChangeMiningFeeOwnProps = {
-  // fee: string,
-  feeSetting: string,
-  onSubmit: (feeSetting: string) => Promise<void>,
-  sourceWallet: EdgeCurrencyWallet,
-  onSubmitCustomFee: (customNetworkFee: CustomFees) => void
+type OwnProps = {
+  wallet: EdgeCurrencyWallet
 }
 
-export type ChangeMiningFeeStateProps = {
-  feeSetting: string,
-  customFeeSettings: Array<string>,
-  customNetworkFee: Object,
-  hideCustomFeeOption?: boolean
+type StateProps = {
+  networkFeeOption?: FeeOption,
+  customNetworkFee?: Object
 }
 
-export type ChangeMiningFeeDispatchProps = {}
+type DispatchProps = {
+  onSubmit(networkFeeOption: string, customNetworkFee: Object): mixed
+}
+
+type Props = OwnProps & StateProps & DispatchProps
 
 type State = {
-  feeSetting: string
+  networkFeeOption: FeeOption,
+  customNetworkFee: Object
 }
 
-export type ChangeMiningFeeProps = ChangeMiningFeeOwnProps & ChangeMiningFeeDispatchProps & ChangeMiningFeeStateProps
+export class ChangeMiningFee extends Component<Props, State> {
+  hasCustomFees: boolean
 
-export default class ChangeMiningFee extends Component<ChangeMiningFeeProps, State> {
-  constructor (props: ChangeMiningFeeProps) {
+  constructor (props: Props) {
     super(props)
-    this.state = {
-      feeSetting: props.feeSetting
+    const { networkFeeOption = 'standard', customNetworkFee, wallet } = props
+
+    // Figure out how custom fees are supposed to look (if any):
+    const defaultCustomFee = {}
+    if (wallet.currencyInfo.defaultSettings != null) {
+      const { customFeeSettings } = wallet.currencyInfo.defaultSettings
+      if (customFeeSettings != null) {
+        this.hasCustomFees = true
+        for (const row of customFeeSettings) {
+          defaultCustomFee[row] = '0'
+        }
+      }
     }
-    slowlog(this, /.*/, global.slowlogOptions)
+
+    if (customNetworkFee == null || Object.keys(customNetworkFee).length !== Object.keys(defaultCustomFee).length) {
+      // Use the default custom fees if we get bogus ones:
+      this.state = { networkFeeOption, customNetworkFee: defaultCustomFee }
+    } else {
+      // Otherwise, use the custom fees from before:
+      this.state = { networkFeeOption, customNetworkFee }
+    }
   }
 
   componentWillUnmount () {
-    this.props.onSubmit(this.state.feeSetting)
-  }
-
-  handlePress = (feeSetting: string) => {
-    return this.setState({ feeSetting })
-  }
-
-  showCustomFeesModal = async () => {
-    const { customNetworkFee, customFeeSettings, sourceWallet } = this.props
-    const modal = createCustomFeesModal({
-      sourceWallet,
-      customNetworkFee,
-      customFeeSettings
-    })
-
-    const data = await launchModal(modal)
-    if (data) {
-      this.setState({ feeSetting: data.networkFeeOption }, () => {
-        this.props.onSubmitCustomFee(data)
-      })
-    }
-  }
-
-  renderRadioRow (value: string, label: string) {
-    const { feeSetting } = this.state
-    return (
-      <View style={styles.row}>
-        <TouchableWithoutFeedback onPress={() => this.handlePress(value)}>
-          <View style={styles.column}>
-            <View style={[styles.radio, feeSetting === value ? styles.selected : null]} />
-            <View>
-              <T style={styles.label}>{label}</T>
-            </View>
-          </View>
-        </TouchableWithoutFeedback>
-      </View>
-    )
-  }
-
-  renderCustomFeeButton = () => {
-    if (this.props.hideCustomFeeOption) return null
-    return (
-      <View style={{ marginTop: 18 }}>
-        <PrimaryButton style={styles.customFeeButton} onPress={this.showCustomFeesModal}>
-          <PrimaryButton.Text>{s.strings.fragment_wallets_set_custom_fees}</PrimaryButton.Text>
-        </PrimaryButton>
-      </View>
-    )
+    const { networkFeeOption, customNetworkFee } = this.state
+    this.props.onSubmit(networkFeeOption, customNetworkFee)
   }
 
   render () {
     return (
-      <SceneWrapper background="body" hasTabs={false}>
-        <View style={styles.content}>
-          {this.renderRadioRow(FEE.HIGH_FEE, HIGH_FEE_TEXT)}
-          {this.renderRadioRow(FEE.STANDARD_FEE, STANDARD_FEE_TEXT)}
-          {this.renderRadioRow(FEE.LOW_FEE, LOW_FEE_TEXT)}
-          {this.renderCustomFeeButton()}
-        </View>
+      <SceneWrapper background="body" hasTabs={false} avoidKeyboard>
+        <ScrollView style={styles.content}>
+          {this.renderRadioRow('high', s.strings.mining_fee_high_label_choice)}
+          {this.renderRadioRow('standard', s.strings.mining_fee_standard_label_choice)}
+          {this.renderRadioRow('low', s.strings.mining_fee_low_label_choice)}
+          {this.hasCustomFees != null ? this.renderRadioRow('custom', s.strings.mining_fee_custom_label_choice) : null}
+          {this.renderCustomFee()}
+          {this.renderFeeWarning()}
+        </ScrollView>
       </SceneWrapper>
     )
   }
+
+  renderRadioRow (value: FeeOption, label: string) {
+    const { networkFeeOption } = this.state
+
+    return (
+      <TouchableWithoutFeedback onPress={() => this.setState({ networkFeeOption: value })}>
+        <View style={styles.radioRow}>
+          <View style={[styles.radio, networkFeeOption === value ? styles.selected : null]} />
+          <Text style={dayText('row-left')}>{label}</Text>
+        </View>
+      </TouchableWithoutFeedback>
+    )
+  }
+
+  renderCustomFee (): Node {
+    const { networkFeeOption, customNetworkFee } = this.state
+    if (networkFeeOption !== 'custom') return null
+
+    return (
+      <View style={styles.customArea}>
+        {Object.keys(customNetworkFee).map(key => (
+          <FormField
+            key={key}
+            keyboardType="numeric"
+            onChangeText={text =>
+              this.setState({
+                customNetworkFee: { ...customNetworkFee, [key]: text }
+              })
+            }
+            value={customNetworkFee[key]}
+            label={FEE_STRINGS[key] || key}
+          />
+        ))}
+      </View>
+    )
+  }
+
+  renderFeeWarning () {
+    const { networkFeeOption } = this.state
+    if (networkFeeOption !== 'custom' && networkFeeOption !== 'low') return null
+
+    return (
+      <View style={styles.warningBox}>
+        <EntypoIcon name="warning" color={THEME.COLORS.WHITE} size={THEME.rem(1.4)} />
+        <Text style={nightText('small')}>{s.strings.warning_low_or_custom_fee}</Text>
+      </View>
+    )
+  }
 }
+
+export const ChangeMiningFeeScene = connect(
+  (state: ReduxState): StateProps => ({
+    networkFeeOption: getGuiMakeSpendInfo(state).networkFeeOption,
+    customNetworkFee: getGuiMakeSpendInfo(state).customNetworkFee
+  }),
+  (dispatch: Dispatch): DispatchProps => ({
+    onSubmit (networkFeeOption: string, customNetworkFee: Object) {
+      dispatch(sendConfirmationUpdateTx({ networkFeeOption, customNetworkFee }))
+    }
+  })
+)(ChangeMiningFee)

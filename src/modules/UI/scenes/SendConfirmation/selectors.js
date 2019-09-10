@@ -2,7 +2,6 @@
 
 import type { EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 
-import { STANDARD_FEE } from '../../../../constants/indexConstants'
 import { type GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
 import type { State } from '../../../../types/reduxTypes.js'
 import { convertNativeToExchange } from '../../../../util/utils.js'
@@ -14,7 +13,7 @@ export const initialState = {
   forceUpdateGuiCounter: 0,
 
   guiMakeSpendInfo: {
-    networkFeeOption: (STANDARD_FEE: string),
+    networkFeeOption: 'standard',
     customNetworkFee: {},
     publicAddress: '',
     nativeAmount: '0',

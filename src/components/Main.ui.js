@@ -24,7 +24,6 @@ import RequestDropMenu from '../connectors/components/HeaderMenuRequestConnector
 import CurrencySettingsTitleConnector from '../connectors/CurrencySettingsTitleConnector.js'
 import { ExchangeSettingsConnector } from '../connectors/ExchangeSettingsConnector.js'
 import AddToken from '../connectors/scenes/AddTokenConnector.js'
-import ChangeMiningFeeSendConfirmation from '../connectors/scenes/ChangeMiningFeeSendConfirmationConnector.ui'
 import ChangePasswordConnector from '../connectors/scenes/ChangePasswordConnector.ui'
 import ChangePinConnector from '../connectors/scenes/ChangePinConnector.ui'
 import { CreateWalletAccountSelectConnector } from '../connectors/scenes/CreateWalletAccountSelectConnector.js'
@@ -70,6 +69,7 @@ import { passwordReminderModalConnector as PasswordReminderModal } from '../modu
 import { handlePluginBack, renderPluginBackButton } from '../modules/UI/scenes/Plugins/BackButton.js'
 import { styles } from '../styles/MainStyle.js'
 import { scale } from '../util/scaling.js'
+import { ChangeMiningFeeScene } from './scenes/ChangeMiningFeeScene.js'
 import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
 import { CryptoExchangeQuoteProcessingScreenComponent } from './scenes/CryptoExchangeQuoteProcessingScene.js'
 import { LoadingScene } from './scenes/LoadingScene.js'
@@ -499,7 +499,7 @@ export default class Main extends Component<Props> {
                   <Scene
                     key={Constants.CHANGE_MINING_FEE_SEND_CONFIRMATION}
                     navTransparent={true}
-                    component={ChangeMiningFeeSendConfirmation}
+                    component={ChangeMiningFeeScene}
                     renderTitle={this.renderTitle(CHANGE_MINING_FEE)}
                     renderLeftButton={this.renderBackButton()}
                     renderRightButton={this.renderHelpButton()}

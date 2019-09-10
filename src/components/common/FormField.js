@@ -54,7 +54,8 @@ class FormField extends Component {
     })
   }
   render () {
-    const { container, baseColor, tintColor, textColor, errorColor, titleTextStyle } = this.props.style
+    const { style = {} } = this.props
+    const { container, baseColor, tintColor, textColor, errorColor, titleTextStyle } = style
     if (this.props.autoFocus) {
       return (
         <InputWithAutoFocus

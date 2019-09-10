@@ -23,7 +23,7 @@ const mapStateToProps = (state: State) => {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  changeMiningFee: sourceWallet => Actions[CHANGE_MINING_FEE_SEND_CONFIRMATION]({ sourceWallet }),
+  changeMiningFee: wallet => Actions[CHANGE_MINING_FEE_SEND_CONFIRMATION]({ wallet }),
   sendMaxSpend: () => dispatch(updateMaxSpend()),
   uniqueIdentifierModalActivated: () => dispatch(activated())
 })
