@@ -26,6 +26,7 @@ import * as UI_SELECTORS from '../modules/UI/selectors'
 import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiSwapInfo, GuiWallet } from '../types/types.js'
 import * as UTILS from '../util/utils'
+import { updateSwapCount } from './RequestReviewActions.js'
 
 const DIVIDE_PRECISION = 18
 
@@ -313,6 +314,9 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
     await fromWallet.saveTxMetadata(broadcastedTransaction.txid, broadcastedTransaction.currencyCode, edgeMetaData)
 
     dispatch({ type: 'SHIFT_COMPLETE' })
+
+    updateSwapCount(state)
+
     setTimeout(() => {
       Alert.alert(s.strings.exchange_succeeded, s.strings.exchanges_may_take_minutes)
     }, 1)
