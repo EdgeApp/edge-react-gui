@@ -28,14 +28,13 @@ type ExchangeSettingsState = {
 }
 
 export class ExchangeSettingsComponent extends Component<ExchangeSettingsProps, ExchangeSettingsState> {
-  cleanups: Array<() => mixed>
+  cleanups: Array<() => mixed> = []
   sortedIds: Array<string>
 
   constructor (props: ExchangeSettingsProps) {
     super(props)
     const { exchanges } = props
 
-    this.cleanups = []
     this.state = { enabled: {}, needsActivation: {} }
     for (const pluginId in exchanges) {
       const exchange = exchanges[pluginId]
