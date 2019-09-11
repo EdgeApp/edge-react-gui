@@ -11,6 +11,7 @@ import { sprintf } from 'sprintf-js'
 import { playReceiveSound } from '../../actions/SoundActions.js'
 import s from '../../locales/strings.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
+import { nightText } from '../../styles/common/textStyles.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import type { Dispatch, State } from '../../types/reduxTypes.js'
 import { convertNativeToDisplay } from '../../util/utils.js'
@@ -64,15 +65,8 @@ const styles = StyleSheet.create({
   },
 
   text: {
-    // Layout:
-    alignSelf: 'center',
-    flexShrink: 1,
-    padding,
-
-    // Visuals:
-    color: THEME.COLORS.WHITE,
-    fontFamily: THEME.FONTS.DEFAULT,
-    fontSize: THEME.rem(1)
+    ...nightText('row-center'),
+    padding
   }
 })
 

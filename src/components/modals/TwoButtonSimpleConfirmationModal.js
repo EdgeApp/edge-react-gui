@@ -5,8 +5,7 @@ import React, { Component } from 'react'
 import { Text, TouchableOpacity } from 'react-native'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 
-import { TwoButtonSimpleConfirmationModalStyles } from '../../styles/components/TwoButtonSimpleConfirmationModalStyles'
-import { type AirshipBridge, AirshipModal, ContentArea, IconCircle, THEME } from './modalParts.js'
+import { type AirshipBridge, AirshipModal, ContentArea, IconCircle, THEME, dayText } from './modalParts.js'
 
 type Props = {
   bridge: AirshipBridge<boolean>,
@@ -25,21 +24,13 @@ export class TwoButtonSimpleConfirmationModal extends Component<Props> {
           <EntypoIcon name="info" size={THEME.rem(2)} color={THEME.COLORS.SECONDARY} />
         </IconCircle>
         <ContentArea padding="wide">
-          <Text
-            style={[
-              TwoButtonSimpleConfirmationModalStyles.texLarge,
-              TwoButtonSimpleConfirmationModalStyles.textCenter,
-              TwoButtonSimpleConfirmationModalStyles.bold
-            ]}
-          >
-            {title}
-          </Text>
-          <Text style={[TwoButtonSimpleConfirmationModalStyles.textCenter]}>{subTitle}</Text>
+          <Text style={dayText('title')}>{title}</Text>
+          <Text style={dayText('autoCenter')}>{subTitle}</Text>
           <PrimaryButton onPress={() => bridge.resolve(true)}>
             <PrimaryButton.Text>{doneText}</PrimaryButton.Text>
           </PrimaryButton>
           <TouchableOpacity onPress={() => bridge.resolve(false)}>
-            <Text style={[TwoButtonSimpleConfirmationModalStyles.textCenter, TwoButtonSimpleConfirmationModalStyles.textLink]}>{cancelText}</Text>
+            <Text style={dayText('autoCenter', 'link')}>{cancelText}</Text>
           </TouchableOpacity>
         </ContentArea>
       </AirshipModal>
