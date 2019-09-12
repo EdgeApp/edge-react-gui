@@ -21,6 +21,9 @@ const strings = {
   // Error messages:
   error_token_exists: 'A currency named %s already exists',
 
+  // Warning messages:
+  warning_low_or_custom_fee: 'Using a low fee may increase the amount of time it takes for your transaction to confirm.',
+
   // Alert component:
   alert_dropdown_alert: 'Alert! ',
   alert_dropdown_warning: 'Warning! ',
@@ -105,7 +108,6 @@ const strings = {
   fragment_wallets_fiat_toggle_title: 'Fiat',
   fragment_wallets_crypto_toggle_title: 'Crypto',
   fragment_wallets_delete_wallet: 'Delete Wallet',
-  fragment_wallets_set_custom_fees: 'Set Custom Mining Fee',
   fragment_wallets_resync_wallet: 'Resync Wallet',
   fragment_wallets_split_wallet: 'Split Wallet',
   fragment_wallets_get_seed_wallet: 'Get Seed',
@@ -187,6 +189,7 @@ const strings = {
   help_modal_title: 'Crypto Wallet',
   help_version: 'Version',
   loading: 'Loading…',
+  mining_fee_custom_label_choice: 'Custom',
   mining_fee_high_label_choice: 'High',
   mining_fee_low_label_choice: 'Low',
   mining_fee_standard_label_choice: 'Standard',
@@ -267,7 +270,6 @@ const strings = {
   string_cancel: 'CANCEL',
   string_ok_cap: 'OK',
   string_delete: 'Delete',
-  string_custom_fee: 'Set Fees',
   satPerByte: 'Satoshi Per Byte',
   gasLimit: 'Gas Limit',
   gasPrice: 'Gas Price (Gwei)',

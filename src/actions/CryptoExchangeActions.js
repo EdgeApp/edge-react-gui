@@ -103,7 +103,7 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
   try {
     const publicAddress = dummyPublicAddress || (await wallet.getReceiveAddress()).publicAddress
     const edgeSpendInfo: EdgeSpendInfo = {
-      networkFeeOption: Constants.STANDARD_FEE,
+      networkFeeOption: 'standard',
       currencyCode,
       spendTargets: [{ publicAddress }]
     }

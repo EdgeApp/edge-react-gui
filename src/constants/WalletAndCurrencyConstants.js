@@ -1,14 +1,26 @@
 // @flow
+
 import s from '../locales/strings.js'
+
 export const ETHEREUM_WALLET = 'wallet:ethereum'
 export const BITCOIN_WALLET = 'wallet:bitcoin'
 export const BITCOINCASH_WALLET = 'wallet:bitcoincash'
 export const MAX_TOKEN_CODE_CHARACTERS = 6
 
+export const FEE_COLOR_THRESHOLD = 2.0 // this is denominated in dollars
+export const FEE_ALERT_THRESHOLD = 5.0 // this is denominated in dollars
+
 export const CURRENCY_SYMBOL_IMAGES = {
   BCH: 'https://developer.airbitz.co/content/bitcoincash-logo-solo-64.png',
   BTC: 'https://developer.airbitz.co/content/bitcoin-logo-solo-64.png',
   ETH: 'https://developer.airbitz.co/content/ethereum-logo-solo-64.png'
+}
+
+// Translations for custom fee keys:
+export const FEE_STRINGS = {
+  gasLimit: s.strings.gasLimit,
+  gasPrice: s.strings.gasPrice,
+  satPerByte: s.strings.satPerByte
 }
 
 export const DEFAULT_STARTER_WALLET_NAMES = {
@@ -107,7 +119,6 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   },
   XLM: {
     dummyPublicAddress: 'GBEVGJYAUKJ2TVPMC3GEPI2GGZQLMWZDRWJCVNBXCJ3ELYTDPHVQQM74',
-    noCustomMiningFee: true,
     uniqueIdentifier: {
       addButtonText: s.strings.unique_identifier_dropdown_option_memo_id,
       identifierName: s.strings.unique_identifier_memo_id,
@@ -122,7 +133,6 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   },
   XRP: {
     dummyPublicAddress: 'rfuESo7eHUnvebxgaFjfYxfwXhM2uBPAj3',
-    noCustomMiningFee: true,
     uniqueIdentifier: {
       addButtonText: s.strings.unique_identifier_dropdown_option_destination_tag,
       identifierName: s.strings.unique_identifier_destination_tag,
@@ -137,7 +147,6 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   },
   XMR: {
     dummyPublicAddress: '46qxvuS78CNBoiiKmDjvjd5pMAZrTBbDNNHDoP52jKj9j5mk6m4R5nU6BDrWQURiWV9a2n5Sy8Qo4aJskKa92FX1GpZFiYA',
-    noCustomMiningFee: true,
     noMaxSpend: true,
     uniqueIdentifier: {
       addButtonText: s.strings.unique_identifier_dropdown_option_payment_id,

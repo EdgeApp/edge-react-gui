@@ -3,7 +3,7 @@
 
 import { type AirshipBridge } from '../common/Airship.js'
 
-export { textStyles } from '../../styles/common/textStyles.js'
+export * from '../../styles/common/textStyles.js'
 export { THEME } from '../../theme/variables/airbitz.js'
 export { AirshipModal } from '../common/AirshipModal.js'
 export { ContentArea } from '../common/ContentArea.js'

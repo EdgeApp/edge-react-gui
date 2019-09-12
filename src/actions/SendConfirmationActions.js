@@ -91,7 +91,7 @@ export const paymentProtocolUriReceived = ({ paymentProtocolURL }: EdgePaymentPr
       const name = domain === BITPAY.domain ? BITPAY.merchantName(memo) : domain
       const notes = memo
 
-      const spendInfo: EdgeSpendInfo = {
+      const guiMakeSpendInfo: GuiMakeSpendInfo = {
         networkFeeOption: 'standard',
         metadata: {
           name,
@@ -101,11 +101,6 @@ export const paymentProtocolUriReceived = ({ paymentProtocolURL }: EdgePaymentPr
         spendTargets,
         otherParams: { paymentProtocolInfo }
       }
-
-      // const authRequired = getAuthRequired(state, spendInfo)
-      // dispatch(newSpendInfo(spendInfo, authRequired))
-
-      const guiMakeSpendInfo: GuiMakeSpendInfo = { ...spendInfo }
       guiMakeSpendInfo.lockInputs = true
       Actions[SEND_CONFIRMATION]({ guiMakeSpendInfo })
     })
