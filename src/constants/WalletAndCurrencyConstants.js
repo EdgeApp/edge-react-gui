@@ -176,7 +176,7 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     noChangeMiningFee: true,
     // will share / copy public address instead of URI on Request scene
     isUriEncodedStructure: true,
-    dummyPublicAddress: '0xeaD78d3535FC785c976f56b7BEAC26E957a40D8c'
+    dummyPublicAddress: 'tz1cVgSd4oY25pDkH7vdvVp5DfPkZwT2hXwX'
   },
   BNB: {
     uniqueIdentifier: {
@@ -185,7 +185,7 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
       identifierKeyboardType: 'default'
     },
     isImportKeySupported: true,
-    dummyPublicAddress: 'bnb1yykhxx2fhq8wucm07eljqpj8v7ntf5a6srzafa'
+    dummyPublicAddress: 'bnb1rt449yu7us6hmk4pmyr8talc60ydkwp4qkvcl7'
   }
 }
 
