@@ -184,7 +184,8 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   XTZ: {
     noChangeMiningFee: true,
     // will share / copy public address instead of URI on Request scene
-    isUriEncodedStructure: true
+    isUriEncodedStructure: true,
+    dummyPublicAddress: 'tz1cVgSd4oY25pDkH7vdvVp5DfPkZwT2hXwX'
   },
   BNB: {
     uniqueIdentifier: {
@@ -192,7 +193,8 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
       identifierName: s.strings.unique_identifier_memo,
       identifierKeyboardType: 'default'
     },
-    isImportKeySupported: true
+    isImportKeySupported: true,
+    dummyPublicAddress: 'bnb1rt449yu7us6hmk4pmyr8talc60ydkwp4qkvcl7'
   }
 }
 
