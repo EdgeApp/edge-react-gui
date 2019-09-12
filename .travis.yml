@@ -32,7 +32,7 @@ matrix:
         - npm install -g yarn@1.5.1
         - echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
       install:
-        - travis_retry yarn install --network-concurrency 1 --child-concurrency 1
+        - travis_retry yarn install --network-concurrency 1 --child-concurrency 1 --ignore-optional
       android:
         components:
           - tools
