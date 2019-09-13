@@ -25,11 +25,14 @@ export const FEE_STRINGS = {
 
 export const DEFAULT_STARTER_WALLET_NAMES = {
   BCH: s.strings.string_first_bitcoincash_wallet_name,
+  BNB: s.strings.string_first_bnb_wallet_name,
   BSV: s.strings.string_first_bitcoin_sv_wallet_name,
   BTC: s.strings.string_first_bitcoin_wallet_name,
   BTG: s.strings.string_first_bitcoin_gold_wallet_name,
   DASH: s.strings.string_first_dash_wallet_name,
   DGB: s.strings.string_first_digibyte_wallet_name,
+  DOGE: s.strings.string_first_doge_wallet_name,
+  EBST: s.strings.string_first_eboost_wallet_name,
   EOS: s.strings.string_first_eos_wallet_name,
   ETH: s.strings.string_first_ethereum_wallet_name,
   FTC: s.strings.string_first_feather_coin_wallet_name,
@@ -37,6 +40,7 @@ export const DEFAULT_STARTER_WALLET_NAMES = {
   HERC: s.strings.string_first_hercules_wallet_name,
   LTC: s.strings.string_first_litecoin_wallet_name,
   QTUM: s.strings.string_first_qtum_wallet_name,
+  RSK: s.strings.string_first_rsk_wallet_name,
   RVN: s.strings.string_first_ravencoin_wallet_name,
   SMART: s.strings.string_first_smartcash_wallet_name,
   UFO: s.strings.string_first_ufo_wallet_name,
@@ -45,18 +49,19 @@ export const DEFAULT_STARTER_WALLET_NAMES = {
   XMR: s.strings.string_first_monero_wallet_name,
   XRP: s.strings.string_first_ripple_wallet_name,
   XTZ: s.strings.strinf_first_tezos_wallet_name,
-  XZC: s.strings.string_first_zcoin_wallet_name,
-  RSK: s.strings.string_first_rsk_wallet_name
+  XZC: s.strings.string_first_zcoin_wallet_name
 }
 
 // DO NOT PUT ANY TOKENS IN HERE!
 export const CURRENCY_PLUGIN_NAMES = {
   BCH: 'bitcoincash',
+  BNB: 'binance',
   BSV: 'bitcoinsv',
   BTC: 'bitcoin',
   BTG: 'bitcoingold',
   DASH: 'dash',
   DGB: 'digibyte',
+  DOGE: 'dogecoin',
   EBST: 'eboost',
   EOS: 'eos',
   ETH: 'ethereum',
@@ -64,6 +69,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   GRS: 'groestlcoin',
   LTC: 'litecoin',
   QTUM: 'qtum',
+  RSK: 'rsk',
   RVN: 'ravencoin',
   SMART: 'smartcash',
   UFO: 'ufo',
@@ -72,9 +78,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   XMR: 'monero',
   XRP: 'ripple',
   XTZ: 'tezos',
-  XZC: 'zcoin',
-  BNB: 'binance',
-  RSK: 'rsk'
+  XZC: 'zcoin'
 }
 
 export const getSpecialCurrencyInfo = (currencyCode: string): Object => {
