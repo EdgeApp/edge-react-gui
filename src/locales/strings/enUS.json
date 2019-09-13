@@ -519,6 +519,8 @@
   "alert_deep_link_no_wallet": "No wallets exist that support %1$s. You can create a wallet for %2$s by tapping + on the Wallet List screen.",
   "load_plugin": "Load Plugin",
   "plugin_url": "Plugin URL",
+  "wallets_for_currency_code_dont_exist": "No wallets exist for ",
+  "create_wallet_failed": "Failed to create wallet",
   "choose_your_wallet": "Choose Your Wallet",
   "error_creating_wallets": "Network timeout occurred trying to create and backup wallets. Please check your network connection and restart app to retry wallet creation.",
   "edge_login_failed": "Failed to Login",
