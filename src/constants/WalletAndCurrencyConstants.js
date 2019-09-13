@@ -69,7 +69,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   GRS: 'groestlcoin',
   LTC: 'litecoin',
   QTUM: 'qtum',
-  RSK: 'rsk',
+  RBTC: 'rsk',
   RVN: 'ravencoin',
   SMART: 'smartcash',
   UFO: 'ufo',
@@ -120,6 +120,11 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   LTC: {
     displayBuyCrypto: true,
     isImportKeySupported: false
+  },
+  RBTC: {
+    dummyPublicAddress: '0x74f9452e22fe58e27575f176fc884729d88267ba', // rj116
+    allowZeroTx: true,
+    isImportKeySupported: true
   },
   XLM: {
     dummyPublicAddress: 'GBEVGJYAUKJ2TVPMC3GEPI2GGZQLMWZDRWJCVNBXCJ3ELYTDPHVQQM74',
