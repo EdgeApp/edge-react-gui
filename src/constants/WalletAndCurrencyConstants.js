@@ -40,7 +40,7 @@ export const DEFAULT_STARTER_WALLET_NAMES = {
   HERC: s.strings.string_first_hercules_wallet_name,
   LTC: s.strings.string_first_litecoin_wallet_name,
   QTUM: s.strings.string_first_qtum_wallet_name,
-  RSK: s.strings.string_first_rsk_wallet_name,
+  RBTC: s.strings.string_first_rsk_wallet_name,
   RVN: s.strings.string_first_ravencoin_wallet_name,
   SMART: s.strings.string_first_smartcash_wallet_name,
   UFO: s.strings.string_first_ufo_wallet_name,
@@ -48,7 +48,7 @@ export const DEFAULT_STARTER_WALLET_NAMES = {
   XLM: s.strings.string_first_stellar_wallet_name,
   XMR: s.strings.string_first_monero_wallet_name,
   XRP: s.strings.string_first_ripple_wallet_name,
-  XTZ: s.strings.strinf_first_tezos_wallet_name,
+  XTZ: s.strings.string_first_tezos_wallet_name,
   XZC: s.strings.string_first_zcoin_wallet_name
 }
 
