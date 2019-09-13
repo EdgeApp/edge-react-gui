@@ -1,9 +1,14 @@
 // @flow
+
 import s from '../locales/strings.js'
+
 export const ETHEREUM_WALLET = 'wallet:ethereum'
 export const BITCOIN_WALLET = 'wallet:bitcoin'
 export const BITCOINCASH_WALLET = 'wallet:bitcoincash'
 export const MAX_TOKEN_CODE_CHARACTERS = 6
+
+export const FEE_COLOR_THRESHOLD = 2.0 // this is denominated in dollars
+export const FEE_ALERT_THRESHOLD = 5.0 // this is denominated in dollars
 
 export const CURRENCY_SYMBOL_IMAGES = {
   BCH: 'https://developer.airbitz.co/content/bitcoincash-logo-solo-64.png',
@@ -11,13 +16,23 @@ export const CURRENCY_SYMBOL_IMAGES = {
   ETH: 'https://developer.airbitz.co/content/ethereum-logo-solo-64.png'
 }
 
+// Translations for custom fee keys:
+export const FEE_STRINGS = {
+  gasLimit: s.strings.gasLimit,
+  gasPrice: s.strings.gasPrice,
+  satPerByte: s.strings.satPerByte
+}
+
 export const DEFAULT_STARTER_WALLET_NAMES = {
   BCH: s.strings.string_first_bitcoincash_wallet_name,
+  BNB: s.strings.string_first_bnb_wallet_name,
   BSV: s.strings.string_first_bitcoin_sv_wallet_name,
   BTC: s.strings.string_first_bitcoin_wallet_name,
   BTG: s.strings.string_first_bitcoin_gold_wallet_name,
   DASH: s.strings.string_first_dash_wallet_name,
   DGB: s.strings.string_first_digibyte_wallet_name,
+  DOGE: s.strings.string_first_doge_wallet_name,
+  EBST: s.strings.string_first_eboost_wallet_name,
   EOS: s.strings.string_first_eos_wallet_name,
   ETH: s.strings.string_first_ethereum_wallet_name,
   FTC: s.strings.string_first_feather_coin_wallet_name,
@@ -25,6 +40,7 @@ export const DEFAULT_STARTER_WALLET_NAMES = {
   HERC: s.strings.string_first_hercules_wallet_name,
   LTC: s.strings.string_first_litecoin_wallet_name,
   QTUM: s.strings.string_first_qtum_wallet_name,
+  RBTC: s.strings.string_first_rsk_wallet_name,
   RVN: s.strings.string_first_ravencoin_wallet_name,
   SMART: s.strings.string_first_smartcash_wallet_name,
   UFO: s.strings.string_first_ufo_wallet_name,
@@ -32,18 +48,20 @@ export const DEFAULT_STARTER_WALLET_NAMES = {
   XLM: s.strings.string_first_stellar_wallet_name,
   XMR: s.strings.string_first_monero_wallet_name,
   XRP: s.strings.string_first_ripple_wallet_name,
-  XTZ: s.strings.strinf_first_tezos_wallet_name,
+  XTZ: s.strings.string_first_tezos_wallet_name,
   XZC: s.strings.string_first_zcoin_wallet_name
 }
 
 // DO NOT PUT ANY TOKENS IN HERE!
 export const CURRENCY_PLUGIN_NAMES = {
   BCH: 'bitcoincash',
+  BNB: 'binance',
   BSV: 'bitcoinsv',
   BTC: 'bitcoin',
   BTG: 'bitcoingold',
   DASH: 'dash',
   DGB: 'digibyte',
+  DOGE: 'dogecoin',
   EBST: 'eboost',
   EOS: 'eos',
   ETH: 'ethereum',
@@ -51,6 +69,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   GRS: 'groestlcoin',
   LTC: 'litecoin',
   QTUM: 'qtum',
+  RSK: 'rsk',
   RVN: 'ravencoin',
   SMART: 'smartcash',
   UFO: 'ufo',
@@ -59,8 +78,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   XMR: 'monero',
   XRP: 'ripple',
   XTZ: 'tezos',
-  XZC: 'zcoin',
-  BNB: 'binance'
+  XZC: 'zcoin'
 }
 
 export const getSpecialCurrencyInfo = (currencyCode: string): Object => {
@@ -105,7 +123,6 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   },
   XLM: {
     dummyPublicAddress: 'GBEVGJYAUKJ2TVPMC3GEPI2GGZQLMWZDRWJCVNBXCJ3ELYTDPHVQQM74',
-    noCustomMiningFee: true,
     uniqueIdentifier: {
       addButtonText: s.strings.unique_identifier_dropdown_option_memo_id,
       identifierName: s.strings.unique_identifier_memo_id,
@@ -120,7 +137,6 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   },
   XRP: {
     dummyPublicAddress: 'rfuESo7eHUnvebxgaFjfYxfwXhM2uBPAj3',
-    noCustomMiningFee: true,
     uniqueIdentifier: {
       addButtonText: s.strings.unique_identifier_dropdown_option_destination_tag,
       identifierName: s.strings.unique_identifier_destination_tag,
@@ -135,7 +151,6 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   },
   XMR: {
     dummyPublicAddress: '46qxvuS78CNBoiiKmDjvjd5pMAZrTBbDNNHDoP52jKj9j5mk6m4R5nU6BDrWQURiWV9a2n5Sy8Qo4aJskKa92FX1GpZFiYA',
-    noCustomMiningFee: true,
     noMaxSpend: true,
     uniqueIdentifier: {
       addButtonText: s.strings.unique_identifier_dropdown_option_payment_id,
@@ -173,7 +188,8 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   XTZ: {
     noChangeMiningFee: true,
     // will share / copy public address instead of URI on Request scene
-    isUriEncodedStructure: true
+    isUriEncodedStructure: true,
+    dummyPublicAddress: 'tz1cVgSd4oY25pDkH7vdvVp5DfPkZwT2hXwX'
   },
   BNB: {
     uniqueIdentifier: {
@@ -181,7 +197,8 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
       identifierName: s.strings.unique_identifier_memo,
       identifierKeyboardType: 'default'
     },
-    isImportKeySupported: true
+    isImportKeySupported: true,
+    dummyPublicAddress: 'bnb1rt449yu7us6hmk4pmyr8talc60ydkwp4qkvcl7'
   }
 }
 

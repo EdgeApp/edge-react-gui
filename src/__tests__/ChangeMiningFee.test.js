@@ -1,61 +1,43 @@
 /* globals jest describe it expect */
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
-import ChangeMiningFees from '../components/scenes/ChangeMiningFeeScene.js'
+import { ChangeMiningFee } from '../components/scenes/ChangeMiningFeeScene.js'
 
 describe('Change Mining Fees', () => {
+  const onSubmit = jest.fn()
+  const wallet: Object = {
+    currencyInfo: {
+      defaultSettings: {
+        customFeeSettings: ['satPerByte']
+      }
+    }
+  }
+  const commonProps = { onSubmit, wallet }
+
   it('should render with standard props', () => {
     const renderer = new ShallowRenderer()
-
-    const props = {
-      feeSetting: 'standard',
-      onSubmit: jest.fn(),
-      sourceWallet: {}
-    }
-    const actual = renderer.render(<ChangeMiningFees {...props} />)
-
-    expect(actual).toMatchSnapshot()
+    const element = <ChangeMiningFee {...commonProps} networkFeeOption="standard" />
+    expect(renderer.render(element)).toMatchSnapshot()
   })
 
   it('should render with high props', () => {
     const renderer = new ShallowRenderer()
-
-    const props = {
-      feeSetting: 'high',
-      onSubmit: jest.fn(),
-      sourceWallet: {}
-    }
-    const actual = renderer.render(<ChangeMiningFees {...props} />)
-
-    expect(actual).toMatchSnapshot()
+    const element = <ChangeMiningFee {...commonProps} networkFeeOption="high" />
+    expect(renderer.render(element)).toMatchSnapshot()
   })
 
   it('should render with low props', () => {
     const renderer = new ShallowRenderer()
-
-    const props = {
-      feeSetting: 'low',
-      onSubmit: jest.fn(),
-      sourceWallet: {}
-    }
-    const actual = renderer.render(<ChangeMiningFees {...props} />)
-
-    expect(actual).toMatchSnapshot()
+    const element = <ChangeMiningFee {...commonProps} networkFeeOption="low" />
+    expect(renderer.render(element)).toMatchSnapshot()
   })
 
   it('should render with custom props', () => {
     const renderer = new ShallowRenderer()
-
-    const props = {
-      feeSetting: 'custom',
-      onSubmit: jest.fn(),
-      sourceWallet: {}
-    }
-    const actual = renderer.render(<ChangeMiningFees {...props} />)
-
-    expect(actual).toMatchSnapshot()
+    const element = <ChangeMiningFee {...commonProps} networkFeeOption="custom" />
+    expect(renderer.render(element)).toMatchSnapshot()
   })
 })

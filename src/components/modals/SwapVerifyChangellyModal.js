@@ -6,7 +6,7 @@ import { Image, Linking, Text, View } from 'react-native'
 import { swapPluginIcons } from '../../assets/images/exchange'
 import s from '../../locales/strings.js'
 import { PrimaryButton, SecondaryButton } from '../../modules/UI/components/Buttons/index'
-import { type AirshipBridge, AirshipModal, ContentArea, IconCircle, THEME, textStyles } from './modalParts.js'
+import { type AirshipBridge, AirshipModal, ContentArea, IconCircle, THEME, dayText } from './modalParts.js'
 
 type Props = {
   bridge: AirshipBridge<boolean>
@@ -27,10 +27,7 @@ function amlClick () {
 export function SwapVerifyChangellyModal (props: Props) {
   const { bridge } = props
   const iconSize = THEME.rem(1.75)
-  const linkStyle = {
-    color: THEME.COLORS.ACCENT_BLUE,
-    fontSize: THEME.rem(0.7)
-  }
+  const linkStyle = dayText('small', 'link')
 
   return (
     <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(false)}>
@@ -39,8 +36,8 @@ export function SwapVerifyChangellyModal (props: Props) {
       </IconCircle>
 
       <ContentArea padding="wide">
-        <Text style={[textStyles.bodyParagraph, textStyles.bold]}>{s.strings.changelly_about}</Text>
-        <Text style={textStyles.bodyParagraph}>{s.strings.changelly_kyc_statement}</Text>
+        <Text style={dayText('bold')}>{s.strings.changelly_about}</Text>
+        <Text style={dayText()}>{s.strings.changelly_kyc_statement}</Text>
         <PrimaryButton onPress={() => bridge.resolve(true)}>
           <PrimaryButton.Text>{s.strings.accept_button_text}</PrimaryButton.Text>
         </PrimaryButton>

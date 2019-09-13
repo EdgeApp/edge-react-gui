@@ -3,7 +3,6 @@
 export * from './SceneKeys'
 export * from './IconConstants'
 export * from './DropDownValueConstants'
-export * from './FeeConstants'
 export * from './ErrorConstants'
 export { REQUEST_STATUS } from './RequestStatusConstants'
 export * from './WalletAndCurrencyConstants.js'

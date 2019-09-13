@@ -6,7 +6,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 
 import s from '../../locales/strings.js'
-import { B } from '../../styles/common/textStyles.js'
+import { B, nightText } from '../../styles/common/textStyles.js'
 import { THEME, getHeaderHeight } from '../../theme/variables/airbitz.js'
 import { type AirshipBridge } from '../common/Airship.js'
 import { AirshipDropdown } from '../common/AirshipDropdown.js'
@@ -55,14 +55,7 @@ const styles = StyleSheet.create({
   },
 
   text: {
-    // Layout:
-    flexShrink: 1,
-    marginHorizontal: padding,
-
-    // Visuals:
-    color: THEME.COLORS.WHITE,
-    fontFamily: THEME.FONTS.DEFAULT,
-    fontSize: THEME.rem(0.84),
-    textAlign: 'justify'
+    ...nightText('row-left', 'small'),
+    marginHorizontal: padding
   }
 })

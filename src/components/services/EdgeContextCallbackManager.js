@@ -8,26 +8,43 @@ import type { Dispatch, State } from '../../types/reduxTypes.js'
 import { AlertDropdown } from '../navigation/AlertDropdown.js'
 import { Airship } from './AirshipInstance.js'
 
-type EdgeContextCallbackManagerStateProps = {
+type StateProps = {
   context: EdgeContext
 }
 
-type Props = EdgeContextCallbackManagerStateProps
+type Props = StateProps
 
 class EdgeContextCallbackManager extends React.Component<Props> {
-  componentDidUpdate (oldProps: Props) {
-    if (this.props.context && this.props.context !== oldProps.context) {
-      const { context } = this.props
+  cleanups: Array<() => mixed> = []
 
+  constructor (props: Props) {
+    super(props)
+    const { context } = props
+
+    let errorShown = false
+    this.cleanups.push(
       context.on('error', (error: mixed) => {
         console.log(error)
 
-        // TODO: Run the errors through our translation infrastructure:
-        const message = error instanceof Error ? error.message : String(error)
-
-        return Airship.show(bridge => <AlertDropdown bridge={bridge} message={message} warning />)
+        if (!errorShown) {
+          errorShown = true
+          this.showError(error).then(() => {
+            errorShown = false
+          })
+        }
       })
-    }
+    )
+  }
+
+  componentWillUnmount () {
+    for (const cleanup of this.cleanups) cleanup()
+  }
+
+  showError (error: mixed): Promise<void> {
+    // TODO: Run the errors through our translation infrastructure:
+    const message = error instanceof Error ? error.message : String(error)
+
+    return Airship.show(bridge => <AlertDropdown bridge={bridge} message={message} warning />)
   }
 
   render () {
@@ -35,13 +52,9 @@ class EdgeContextCallbackManager extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state: State): EdgeContextCallbackManagerStateProps => ({
-  context: state.core.context.context
-})
-
-const mapDispatchToProps = (dispatch: Dispatch) => ({})
-
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  (state: State): StateProps => ({
+    context: state.core.context.context
+  }),
+  (dispatch: Dispatch) => ({})
 )(EdgeContextCallbackManager)

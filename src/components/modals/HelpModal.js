@@ -8,7 +8,7 @@ import { WebView } from 'react-native-webview'
 
 import s from '../../locales/strings.js'
 import { Airship } from '../services/AirshipInstance.js'
-import { type AirshipBridge, AirshipModal, ContentArea, IconCircle, ModalCloseArrow, THEME, textStyles } from './modalParts.js'
+import { type AirshipBridge, AirshipModal, ContentArea, IconCircle, ModalCloseArrow, THEME, dayText, textSize } from './modalParts.js'
 
 const buildNumber = DeviceInfo.getBuildNumber()
 const versionNumber = DeviceInfo.getVersion()
@@ -35,7 +35,7 @@ class HelpModal extends Component<Props> {
         </IconCircle>
 
         <ContentArea grow>
-          <Text style={textStyles.bodyTitle}>{s.strings.help_modal_title}</Text>
+          <Text style={dayText('title')}>{s.strings.help_modal_title}</Text>
           <WebView
             onNavigationStateChange={event => {
               if (!event.url.includes('info.html')) {
@@ -47,7 +47,7 @@ class HelpModal extends Component<Props> {
             ref={element => (this.webview = element)}
             source={{ uri: CONTENT_URI }}
           />
-          <Text style={[textStyles.bodyCenter, { fontSize: THEME.rem(0.8), lineHeight: THEME.rem(1.2) }]}>
+          <Text style={[dayText('center', 'small'), { lineHeight: textSize.large }]}>
             {s.strings.help_version} {versionNumber}
             {'\n'}
             {s.strings.help_build} {buildNumber}

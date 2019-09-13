@@ -23,7 +23,7 @@ export const updateWalletsRequest = () => (dispatch: Dispatch, getState: GetStat
   getReceiveAddresses(currencyWallets).then(receiveAddresses => {
     for (const walletId: string of Object.keys(currencyWallets)) {
       const edgeWallet: EdgeCurrencyWallet = currencyWallets[walletId]
-      if (edgeWallet.type === 'wallet:ethereum') {
+      if (edgeWallet.type === 'wallet:ethereum' || edgeWallet.type === 'wallet:rsk') {
         if (state.ui.wallets && state.ui.wallets.byId && state.ui.wallets.byId[walletId]) {
           const enabledTokens = state.ui.wallets.byId[walletId].enabledTokens
           const customTokens = state.ui.settings.customTokens

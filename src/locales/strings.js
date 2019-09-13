@@ -15,7 +15,7 @@ import zh from './strings/zh.json'
 
 const allLocales = { en, ru, es, it, pt, ja, fr, ko, vi, zh }
 
-const strings: { [stringCode: string]: string } = {}
+const strings: typeof en = { ...en }
 const out = { strings }
 
 selectLocale(DeviceInfo.getDeviceLocale())
@@ -40,9 +40,6 @@ export function selectLocale (locale: string = 'en'): boolean {
 
   let found = false
   const lang = normalizedLocale.slice(0, 2)
-
-  // Set default of US English
-  mergeStrings(out.strings, en)
 
   if (locale === 'en') return true
 

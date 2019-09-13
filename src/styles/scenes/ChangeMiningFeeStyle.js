@@ -2,44 +2,48 @@
 
 import { StyleSheet } from 'react-native'
 
-import THEME from '../../theme/variables/airbitz'
-import { scale } from '../../util/scaling.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 
 export const styles = StyleSheet.create({
   content: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: THEME.COLORS.WHITE,
-    padding: scale(20)
+    padding: THEME.rem(1.4)
   },
-  column: {
+
+  // Radio input:
+  radioRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: scale(10)
-  },
-  row: {
-    height: scale(44)
+    marginBottom: THEME.rem(1)
   },
   radio: {
-    borderRadius: scale(9),
-    width: scale(18),
-    height: scale(18),
-    borderWidth: scale(1),
+    borderRadius: THEME.rem(0.5),
+    marginRight: THEME.rem(0.5),
+    width: THEME.rem(1),
+    height: THEME.rem(1),
+    borderWidth: THEME.rem(1 / 16),
     borderColor: THEME.COLORS.GRAY_2
   },
   selected: {
     borderColor: THEME.COLORS.ACCENT_BLUE,
     backgroundColor: THEME.COLORS.ACCENT_BLUE
   },
-  label: {
-    fontSize: scale(16),
-    paddingLeft: scale(10),
-    color: THEME.COLORS.GRAY_1,
-    lineHeight: scale(16)
+
+  // Custom fee area:
+  customArea: {
+    marginBottom: THEME.rem(1)
   },
-  input: {
-    marginTop: scale(10),
-    marginLeft: scale(30),
-    padding: scale(2),
-    color: THEME.COLORS.GRAY_2
+
+  // Warning box:
+  warningBox: {
+    padding: THEME.rem(0.5),
+
+    backgroundColor: THEME.COLORS.ACCENT_ORANGE,
+    borderRadius: THEME.rem(0.5),
+
+    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'space-between'
   }
 })
