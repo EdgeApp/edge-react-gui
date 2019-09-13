@@ -519,6 +519,8 @@
   "alert_deep_link_no_wallet": "%1$sをサポートするウォレットはありません。 Wallet List画面で+をタップすると、%2$s用のWalletを作成できます。",
   "load_plugin": "プラグインを読み込み中",
   "plugin_url": "プラグインURL",
+  "wallets_for_currency_code_dont_exist": "",
+  "create_wallet_failed": "",
   "choose_your_wallet": "ウォレットを選択",
   "error_creating_wallets": "Wallet作成およびバックアップ中に、ネットワークタイムアウトが発生しました。 ネットワーク接続を確認し、アプリを再起動してウォレットの作成を再試行してください。",
   "edge_login_failed": "ログインに失敗しました",
