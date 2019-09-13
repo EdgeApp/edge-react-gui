@@ -519,6 +519,8 @@
   "alert_deep_link_no_wallet": "Ví không tồn tại mà hỗ trợ %1$s. Bạn có thể tạo một ví cho %2$s bằng cách bấm dấu + trên màn hình danh sách ví.",
   "load_plugin": "Tải Plugin",
   "plugin_url": "Plugin URL",
+  "wallets_for_currency_code_dont_exist": "",
+  "create_wallet_failed": "",
   "choose_your_wallet": "Chọn ví của bạn",
   "error_creating_wallets": "Thời gian chờ mạng xảy ra khi cố gắng tạo và sao lưu ví. Vui lòng kiểm tra kết nối mạng của bạn và khởi động lại ứng dụng để thử lại việc tạo ví.",
   "edge_login_failed": "Đăng nhập thất bại",
