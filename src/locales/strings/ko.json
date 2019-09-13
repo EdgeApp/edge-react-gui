@@ -519,6 +519,8 @@
   "alert_deep_link_no_wallet": "%1$s 를 지원하는 월렛이 없습니다. 월렛 리스트 화면에 있는 + 를 누르면 %2$s 를 지원하는 월릿을 생성할 수 있습니다.",
   "load_plugin": "플러그인을 로딩",
   "plugin_url": "플러그인 URL",
+  "wallets_for_currency_code_dont_exist": "",
+  "create_wallet_failed": "",
   "choose_your_wallet": "월렛 선택",
   "error_creating_wallets": "월렛을 생성 또는 백업시 네트워크 타임아웃이 발생하였습니다. 네트워크 환경을 재확인해주시고 어플을 다시 시작하여 월렛생성을 다시 해주세요.",
   "edge_login_failed": "로그인 실패",
