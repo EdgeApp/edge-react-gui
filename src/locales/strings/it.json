@@ -519,6 +519,8 @@
   "alert_deep_link_no_wallet": "Non esiste nessun portafoglio che supporti %1$s. Puoi crearne uno cliccando su + in cima alla lista dei portafogli.",
   "load_plugin": "Caricamento del plugin",
   "plugin_url": "URL del plugin",
+  "wallets_for_currency_code_dont_exist": "",
+  "create_wallet_failed": "",
   "choose_your_wallet": "Scegli il tuo portafoglio",
   "error_creating_wallets": "Si è verificata un'interruzione di rete mentre si stavano creando e salvando dei portafogli. Controlla la connessione di rete e riavvia l'app per ritentare la creazione dei portafogli.",
   "edge_login_failed": "Login fallito",
