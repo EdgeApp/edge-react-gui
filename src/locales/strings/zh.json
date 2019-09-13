@@ -519,6 +519,8 @@
   "alert_deep_link_no_wallet": "不存在支持 %1$s的钱包。您可以通过点击 \"钱包列表\" 屏幕上的 + 来创建 %2$s 的钱包。",
   "load_plugin": "装入插件",
   "plugin_url": "插件网址",
+  "wallets_for_currency_code_dont_exist": "",
+  "create_wallet_failed": "",
   "choose_your_wallet": "选择您的钱包",
   "error_creating_wallets": "试图创建和备份钱包时发生网络超时。请检查您的网络连接并重新启动应用程序以重试创建钱包。",
   "edge_login_failed": "登录失败",
