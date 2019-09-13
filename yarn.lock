@@ -9814,11 +9814,6 @@ react-native-sound@^0.10.12:
   resolved "https://registry.yarnpkg.com/react-native-sound/-/react-native-sound-0.10.12.tgz#f912d6f9d6e9e2b42b391e0226787628d940f01a"
   integrity sha512-lhvzZ+ekNSHW9s4FjmxxGAQmd7yDT9FnHgJNP824cMyHRrTES/LgHnSOxES/1FWVoaQ8FdfbEHkWd2rN0G/L9A==
 
-react-native-store-review@^0.1.5:
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/react-native-store-review/-/react-native-store-review-0.1.5.tgz#9df69786a137580748e368641698d2104519e4cf"
-  integrity sha512-vVx7NYaQva3bGU5MdqXn4yEB+o+GPdmjqAuj7PnkepfeCS6Bi3sqniiKoXmKOKDgRTfIobBZjUkHzWeHli1+3A==
-
 react-native-swipe-gestures@^1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/react-native-swipe-gestures/-/react-native-swipe-gestures-1.0.3.tgz#4160f8d459627323f3a3d2770af4bcd82fd054f5"

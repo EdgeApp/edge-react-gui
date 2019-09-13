@@ -199,6 +199,7 @@ const strings = {
   request_review_question_subtitle: 'Please give us a review',
   request_review_answer_no: 'No Thanks',
   request_review_answer_yes: 'Review Now',
+  request_review_ios_page_link: 'https://apps.apple.com/us/app/edge-crypto-bitcoin-wallet/id1344400091',
   request_review_android_page_link: 'https://play.google.com/store/apps/details?id=co.edgesecure.app&hl=en_US',
   request_share_edge_request: 'Share Edge Request',
   select_recv_wallet: 'Select Receiving Wallet',

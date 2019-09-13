@@ -2,7 +2,6 @@
 
 import React from 'react'
 import { Linking, Platform } from 'react-native'
-import * as StoreReview from 'react-native-store-review'
 import { sprintf } from 'sprintf-js'
 
 import { TwoButtonSimpleConfirmationModal } from '../components/modals/TwoButtonSimpleConfirmationModal.js'
@@ -15,24 +14,18 @@ const SWAP_COUNT_DATA_FILE = 'swapCountData.json'
 const MANY_SWAPS_TO_TRIGGER_REQUEST = 3
 
 const requestReview = async () => {
-  if (Platform.OS === 'ios') {
-    StoreReview.requestReview()
-  } else if (Platform.OS === 'android') {
-    const title = sprintf(s.strings.request_review_question_title, s.strings.app_name_short)
-    const doRequest = await Airship.show(bridge => (
-      <TwoButtonSimpleConfirmationModal
-        bridge={bridge}
-        title={title}
-        subTitle={s.strings.request_review_question_subtitle}
-        cancelText={s.strings.request_review_answer_no}
-        doneText={s.strings.request_review_answer_yes}
-      />
-    ))
-    if (doRequest) {
-      Linking.openURL(s.strings.request_review_android_page_link)
-    }
-  } else {
-    console.warn(`Unhandled Platform.OS: ${Platform.OS}. Unable to request review from user`)
+  const title = sprintf(s.strings.request_review_question_title, s.strings.app_name_short)
+  const doRequest = await Airship.show(bridge => (
+    <TwoButtonSimpleConfirmationModal
+      bridge={bridge}
+      title={title}
+      subTitle={s.strings.request_review_question_subtitle}
+      cancelText={s.strings.request_review_answer_no}
+      doneText={s.strings.request_review_answer_yes}
+    />
+  ))
+  if (doRequest) {
+    Linking.openURL(Platform.OS === 'ios' ? s.strings.request_review_ios_page_link : s.strings.request_review_android_page_link)
   }
 }
 
