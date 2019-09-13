@@ -519,6 +519,8 @@
   "alert_deep_link_no_wallet": "Aucun portefeuille actuellement supporte %1$s. Vous pouvez créer un portefeuille pour %2$s en tapant + sur l'écran de la liste de portefeuille.",
   "load_plugin": "Charger le Plugin",
   "plugin_url": "Plugin URL",
+  "wallets_for_currency_code_dont_exist": "",
+  "create_wallet_failed": "",
   "choose_your_wallet": "Choisissez votre portefeuille",
   "error_creating_wallets": "Le délai de connexion réseau s'est produit en essayant de créer et de sauvegarder des portefeuilles. Veuillez vérifier votre connexion réseau et redémarrer l'application pour réessayer la création du portefeuille.",
   "edge_login_failed": "Échec de connexion",
