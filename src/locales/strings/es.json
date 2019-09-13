@@ -519,6 +519,8 @@
   "alert_deep_link_no_wallet": "No existen carteras de %1$s. Puedes crear una cartera de %2$s pulsando + en la lista de carteras.",
   "load_plugin": "Cargar plugin",
   "plugin_url": "URL del plugin",
+  "wallets_for_currency_code_dont_exist": "",
+  "create_wallet_failed": "",
   "choose_your_wallet": "Elige tu cartera",
   "error_creating_wallets": "Se ha superado el tiempo de espera de la red para crear y respaldar carteras. Por favor comprueba tu conexión a la red y reinicia la aplicación para intentar crear la cartera de nuevo.",
   "edge_login_failed": "Fallo en el inicio de sesión",
