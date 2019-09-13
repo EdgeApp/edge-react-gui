@@ -46,7 +46,7 @@ export const allPlugins: Array<BuySellPlugin> = [
     pluginId: 'banxa',
     uri: 'https://edge.banxa.com',
     name: 'Banxa',
-    subtitle: 'POLi bank transfer or Cash with Newsagent\nBTC, ETH\nFee: 5.5 - 8.5% / Settlement: 5 min - 24 hrs\nLimit: $50000',
+    subtitle: 'POLi bank transfer or Cash with Newsagent\nBTC, ETH\nFee: 4.5 - 6.5% / Settlement: 5 min - 24 hrs\nLimit: $50000',
     imageUrl: 'https://edge.app/wp-content/uploads/2019/08/banxa.png'
   },
   {
