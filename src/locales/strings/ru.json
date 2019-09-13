@@ -519,6 +519,8 @@
   "alert_deep_link_no_wallet": "",
   "load_plugin": "",
   "plugin_url": "",
+  "wallets_for_currency_code_dont_exist": "",
+  "create_wallet_failed": "",
   "choose_your_wallet": "",
   "error_creating_wallets": "",
   "edge_login_failed": "",
