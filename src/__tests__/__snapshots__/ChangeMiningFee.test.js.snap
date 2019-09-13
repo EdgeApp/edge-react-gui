@@ -202,7 +202,7 @@ exports[`Change Mining Fees should render with custom props 1`] = `
         label="Satoshi Per Byte"
         onChangeText={[Function]}
         returnKeyType="go"
-        value="0"
+        value=""
       />
     </View>
     <View

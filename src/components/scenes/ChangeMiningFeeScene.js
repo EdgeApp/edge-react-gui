@@ -39,30 +39,27 @@ type State = {
 }
 
 export class ChangeMiningFee extends Component<Props, State> {
-  hasCustomFees: boolean
-
   constructor (props: Props) {
     super(props)
-    const { networkFeeOption = 'standard', customNetworkFee, wallet } = props
+    const { networkFeeOption = 'standard', customNetworkFee = {} } = props
+    const customFormat = this.getCustomFormat()
 
-    // Figure out how custom fees are supposed to look (if any):
-    const defaultCustomFee = {}
-    if (wallet.currencyInfo.defaultSettings != null) {
-      const { customFeeSettings } = wallet.currencyInfo.defaultSettings
-      if (customFeeSettings != null) {
-        this.hasCustomFees = true
-        for (const row of customFeeSettings) {
-          defaultCustomFee[row] = '0'
-        }
-      }
-    }
-
-    if (customNetworkFee == null || Object.keys(customNetworkFee).length !== Object.keys(defaultCustomFee).length) {
-      // Use the default custom fees if we get bogus ones:
+    if (customFormat != null && Object.keys(customNetworkFee).length !== customFormat.length) {
+      // Reset the custom fees if they don't match the format:
+      const defaultCustomFee = {}
+      for (const key of customFormat) defaultCustomFee[key] = ''
       this.state = { networkFeeOption, customNetworkFee: defaultCustomFee }
     } else {
       // Otherwise, use the custom fees from before:
       this.state = { networkFeeOption, customNetworkFee }
+    }
+  }
+
+  getCustomFormat (): Array<string> | void {
+    const { wallet } = this.props
+    if (wallet.currencyInfo.defaultSettings != null) {
+      const { customFeeSettings } = wallet.currencyInfo.defaultSettings
+      return customFeeSettings
     }
   }
 
@@ -72,14 +69,16 @@ export class ChangeMiningFee extends Component<Props, State> {
   }
 
   render () {
+    const customFormat = this.getCustomFormat()
+
     return (
       <SceneWrapper background="body" hasTabs={false} avoidKeyboard>
         <ScrollView style={styles.content}>
           {this.renderRadioRow('high', s.strings.mining_fee_high_label_choice)}
           {this.renderRadioRow('standard', s.strings.mining_fee_standard_label_choice)}
           {this.renderRadioRow('low', s.strings.mining_fee_low_label_choice)}
-          {this.hasCustomFees != null ? this.renderRadioRow('custom', s.strings.mining_fee_custom_label_choice) : null}
-          {this.renderCustomFee()}
+          {customFormat != null ? this.renderRadioRow('custom', s.strings.mining_fee_custom_label_choice) : null}
+          {customFormat != null ? this.renderCustomFee(customFormat) : null}
           {this.renderFeeWarning()}
         </ScrollView>
       </SceneWrapper>
@@ -99,13 +98,13 @@ export class ChangeMiningFee extends Component<Props, State> {
     )
   }
 
-  renderCustomFee (): Node {
+  renderCustomFee (customFormat: Array<string>): Node {
     const { networkFeeOption, customNetworkFee } = this.state
     if (networkFeeOption !== 'custom') return null
 
     return (
       <View style={styles.customArea}>
-        {Object.keys(customNetworkFee).map(key => (
+        {customFormat.map(key => (
           <FormField
             key={key}
             keyboardType="numeric"
