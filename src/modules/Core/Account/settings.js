@@ -180,6 +180,9 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   AGLD: {
     denomination: '1000000000'
   },
+  LINK: {
+    denomination: '1000000000000000000'
+  },
   customTokens: [],
   passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN
 }
@@ -225,6 +228,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   STORJ: 'object',
   USDC: 'object',
   BRZ: 'object',
+  LINK: 'object',
   USDS: 'object',
   TUSD: 'object',
   ZRX: 'object',
