@@ -38,7 +38,7 @@ export const allPlugins: Array<BuySellPlugin> = [
     pluginId: 'bitsofgold',
     uri: 'https://www.bitsofgold.co.il/order/sell?order_id=null&page=0&utm_source=Edge&utm_medium=mobile_app&utm_campaign=co',
     name: 'Bits of Gold',
-    subtitle: 'SEPA or Isreal bank transfer \nBTC\nFee: ~7.5% / Settlement: 2 days\nLimit: €5000',
+    subtitle: 'SEPA or Israel bank transfer \nBTC\nFee: ~7.5% / Settlement: 2 days\nLimit: €5000',
     imageUrl: 'https://edge.app/wp-content/uploads/2019/08/bits-of-gold-logo-sm.png',
     permissions: ['camera']
   },
