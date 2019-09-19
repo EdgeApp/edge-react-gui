@@ -44,8 +44,7 @@ type State = {
   contractAddress: string,
   decimalPlaces: string,
   multiplier: string,
-  enabled?: boolean,
-  walletType?: string
+  enabled?: boolean
 }
 
 export type AddTokenProps = AddTokenOwnProps & AddTokenStateProps & AddTokenDispatchProps
@@ -53,13 +52,13 @@ export type AddTokenProps = AddTokenOwnProps & AddTokenStateProps & AddTokenDisp
 export class AddToken extends Component<AddTokenProps, State> {
   constructor (props: AddTokenProps) {
     super(props)
+    const { currencyName, currencyCode, contractAddress, decimalPlaces } = props
     this.state = {
-      currencyName: this.props.currencyName || '',
-      currencyCode: this.props.currencyCode || '',
-      contractAddress: this.props.contractAddress || '',
-      decimalPlaces: this.props.decimalPlaces || '',
-      multiplier: '',
-      walletType: this.props.wallet.type || ''
+      currencyName: currencyName || '',
+      currencyCode: currencyCode || '',
+      contractAddress: contractAddress || '',
+      decimalPlaces: decimalPlaces || '',
+      multiplier: ''
     }
     slowlog(this, /.*/, global.slowlogOptions)
   }
@@ -162,7 +161,7 @@ export class AddToken extends Component<AddTokenProps, State> {
       },
       () => {
         const { currencyName, decimalPlaces, contractAddress } = this.state
-        const { currentCustomTokens, wallet, walletId } = this.props
+        const { currentCustomTokens, wallet, walletId, addNewToken, onAddToken } = this.props
         const currentCustomTokenIndex = _.findIndex(currentCustomTokens, item => item.currencyCode === currencyCode)
         const metaTokensIndex = _.findIndex(wallet.metaTokens, item => item.currencyCode === currencyCode)
         // if token is hard-coded into wallets of this type
@@ -173,8 +172,8 @@ export class AddToken extends Component<AddTokenProps, State> {
         } else {
           if (currencyName && currencyCode && decimalPlaces && contractAddress) {
             const denomination = decimalPlacesToDenomination(decimalPlaces)
-            this.props.addNewToken(walletId, currencyName, currencyCode, contractAddress, denomination, wallet.type)
-            this.props.onAddToken(currencyCode)
+            addNewToken(walletId, currencyName, currencyCode, contractAddress, denomination, wallet.type)
+            onAddToken(currencyCode)
           } else {
             Alert.alert(s.strings.addtoken_invalid_information)
           }
