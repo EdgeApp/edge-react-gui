@@ -194,7 +194,8 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     noChangeMiningFee: true,
     // will share / copy public address instead of URI on Request scene
     isUriEncodedStructure: true,
-    dummyPublicAddress: 'tz1cVgSd4oY25pDkH7vdvVp5DfPkZwT2hXwX'
+    dummyPublicAddress: 'tz1cVgSd4oY25pDkH7vdvVp5DfPkZwT2hXwX',
+    isImportKeySupported: true
   },
   BNB: {
     uniqueIdentifier: {
