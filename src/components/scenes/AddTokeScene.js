@@ -30,7 +30,7 @@ export type AddTokenOwnProps = {
 }
 
 export type AddTokenDispatchProps = {
-  addNewToken: (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string) => void
+  addNewToken: (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, type: string) => void
 }
 
 export type AddTokenStateProps = {
@@ -44,7 +44,8 @@ type State = {
   contractAddress: string,
   decimalPlaces: string,
   multiplier: string,
-  enabled?: boolean
+  enabled?: boolean,
+  walletType?: string
 }
 
 export type AddTokenProps = AddTokenOwnProps & AddTokenStateProps & AddTokenDispatchProps
@@ -57,7 +58,8 @@ export class AddToken extends Component<AddTokenProps, State> {
       currencyCode: this.props.currencyCode || '',
       contractAddress: this.props.contractAddress || '',
       decimalPlaces: this.props.decimalPlaces || '',
-      multiplier: ''
+      multiplier: '',
+      walletType: this.props.wallet.type || ''
     }
     slowlog(this, /.*/, global.slowlogOptions)
   }
@@ -171,7 +173,7 @@ export class AddToken extends Component<AddTokenProps, State> {
         } else {
           if (currencyName && currencyCode && decimalPlaces && contractAddress) {
             const denomination = decimalPlacesToDenomination(decimalPlaces)
-            this.props.addNewToken(walletId, currencyName, currencyCode, contractAddress, denomination)
+            this.props.addNewToken(walletId, currencyName, currencyCode, contractAddress, denomination, wallet.type)
             this.props.onAddToken(currencyCode)
           } else {
             Alert.alert(s.strings.addtoken_invalid_information)

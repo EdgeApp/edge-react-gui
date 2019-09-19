@@ -1,8 +1,8 @@
 // @flow
 
-import { createYesNoModal } from 'edge-components'
+import { createThreeButtonModal } from 'edge-components'
 import React, { Component } from 'react'
-import { ActivityIndicator, Alert, Animated, FlatList, Image, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, Animated, FlatList, Image, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import SortableListView from 'react-native-sortable-listview'
@@ -71,6 +71,7 @@ type Props = {
   isWalletFiatBalanceVisible: boolean,
   defaultFiat: string,
   ethereumWalletType?: GuiWalletType,
+  rskWalletType?: GuiWalletType,
   exchangeRates: Object
 }
 export default class WalletList extends Component<Props, State> {
@@ -443,36 +444,48 @@ export default class WalletList extends Component<Props, State> {
 
   addToken = async () => {
     const { wallets } = this.props
-    let ethereumWallets = 0
+    let tokenEnabledWallets = 0
 
     for (const key in wallets) {
-      if (wallets[key].currencyCode === 'ETH') {
-        ethereumWallets++
+      if (wallets[key].currencyCode === 'ETH' || wallets[key].currencyCode === 'RBTC') {
+        tokenEnabledWallets++
       }
     }
 
-    if (ethereumWallets > 0) {
+    if (tokenEnabledWallets > 0) {
       for (const key in wallets) {
         const wallet = wallets[key]
-        if (wallet.currencyCode === 'ETH') {
+        if (wallet.currencyCode === 'ETH' || wallet.currencyCode === 'RBTC') {
           return this.props.walletRowOption(wallet.id, 'manageTokens', wallet.archived)
         }
       }
     }
 
-    if (ethereumWallets === 0) {
-      const modal = createYesNoModal({
+    if (tokenEnabledWallets === 0) {
+      const threeButtonModal = createThreeButtonModal({
         title: s.strings.wallet_list_add_token_modal_title,
         message: s.strings.wallet_list_add_token_modal_message,
         icon: <Icon type={Constants.ION_ICONS} name={Constants.WALLET_ICON} size={30} />,
-        noButtonText: s.strings.string_cancel_cap,
-        yesButtonText: s.strings.title_create_wallet
+        primaryButton: {
+          text: s.strings.title_create_wallet_ethereum,
+          returnValue: 'eth'
+        },
+        secondaryButton: {
+          text: s.strings.title_create_wallet_rsk,
+          returnValue: 'rsk'
+        },
+        tertiaryButton: {
+          text: s.strings.string_cancel_cap,
+          returnValue: 'cancel'
+        }
       })
 
-      if (this.props.ethereumWalletType) {
-        return (await launchModal(modal)) ? Actions[Constants.CREATE_WALLET_SELECT_FIAT]({ selectedWalletType: this.props.ethereumWalletType }) : null
-      } else {
-        return Alert.alert(s.strings.create_wallet_invalid_input, s.strings.create_wallet_select_valid_crypto)
+      const returnValue = await launchModal(threeButtonModal)
+      if (returnValue === 'eth' && this.props.ethereumWalletType) {
+        return Actions[Constants.CREATE_WALLET_SELECT_FIAT]({ selectedWalletType: this.props.ethereumWalletType })
+      }
+      if (returnValue === 'rsk' && this.props.rskWalletType) {
+        return Actions[Constants.CREATE_WALLET_SELECT_FIAT]({ selectedWalletType: this.props.rskWalletType })
       }
     }
   }

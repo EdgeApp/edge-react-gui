@@ -17,7 +17,7 @@ import ManageTokenRow from '../common/ManageTokenRow.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
 // Put these in reverse order of preference
-const PREFERRED_TOKENS = ['WINGS', 'HERC', 'REP', 'AGLD']
+const PREFERRED_TOKENS = ['WINGS', 'HERC', 'REP', 'AGLD', 'RIF']
 
 export type ManageTokensOwnProps = {
   guiWallet: GuiWallet
@@ -76,7 +76,8 @@ export default class ManageTokens extends Component<ManageTokensProps, State> {
     const { metaTokens, name } = this.props.guiWallet
     const { manageTokensPending } = this.props
     const accountMetaTokenInfo = [...this.props.settingsCustomTokens]
-    const combinedTokenInfo = UTILS.mergeTokensRemoveInvisible(metaTokens, accountMetaTokenInfo)
+    const filteredTokenInfo = accountMetaTokenInfo.filter(token => token.walletType === this.props.guiWallet.type || token.walletType === undefined)
+    const combinedTokenInfo = UTILS.mergeTokensRemoveInvisible(metaTokens, filteredTokenInfo)
 
     const sortedTokenInfo = combinedTokenInfo.sort((a, b) => {
       if (a.currencyCode < b.currencyCode) return -1
@@ -86,9 +87,11 @@ export default class ManageTokens extends Component<ManageTokensProps, State> {
 
     for (const cc of PREFERRED_TOKENS) {
       const idx = sortedTokenInfo.findIndex(e => e.currencyCode === cc)
-      const tokenInfo = sortedTokenInfo[idx]
-      sortedTokenInfo.splice(idx, 1)
-      sortedTokenInfo.unshift(tokenInfo)
+      if (idx > -1) {
+        const tokenInfo = sortedTokenInfo[idx]
+        sortedTokenInfo.splice(idx, 1)
+        sortedTokenInfo.unshift(tokenInfo)
+      }
     }
 
     return (

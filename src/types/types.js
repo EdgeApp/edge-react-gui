@@ -84,7 +84,8 @@ export type CustomTokenInfo = {
   multiplier: string,
   denomination: string, // eventually change to mandatory
   isVisible?: boolean, // eventually change to mandatory,
-  denominations: Array<EdgeDenomination>
+  denominations: Array<EdgeDenomination>,
+  walletType?: string
 }
 
 export type GuiWalletType = {
