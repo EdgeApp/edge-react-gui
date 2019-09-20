@@ -183,6 +183,12 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   LINK: {
     denomination: '1000000000000000000'
   },
+  RBTC: {
+    denomination: '1000000000000000000'
+  },
+  RIF: {
+    denomination: '1000000000000000000'
+  },
   customTokens: [],
   passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN
 }
@@ -245,6 +251,8 @@ export const SYNCED_ACCOUNT_TYPES = {
   KIN: 'object',
   USDT: 'object',
   DAI: 'object',
+  RBTC: 'object',
+  RIF: 'object',
   customTokens: 'object', // arrays return 'object' to typeof
   passwordRecoveryRemindersShown: 'object'
 }

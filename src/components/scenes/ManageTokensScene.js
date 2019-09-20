@@ -6,6 +6,7 @@ import React, { Component } from 'react'
 import { ActivityIndicator, FlatList, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
+import { PREFERRED_TOKENS, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton, SecondaryButton } from '../../modules/UI/components/Buttons/index'
 import Text from '../../modules/UI/components/FormattedText/index'
@@ -15,9 +16,6 @@ import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils'
 import ManageTokenRow from '../common/ManageTokenRow.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-
-// Put these in reverse order of preference
-const PREFERRED_TOKENS = ['WINGS', 'HERC', 'REP', 'AGLD']
 
 export type ManageTokensOwnProps = {
   guiWallet: GuiWallet
@@ -73,10 +71,18 @@ export default class ManageTokens extends Component<ManageTokensProps, State> {
   }
 
   render () {
-    const { metaTokens, name } = this.props.guiWallet
+    const { metaTokens, name, currencyCode } = this.props.guiWallet
     const { manageTokensPending } = this.props
-    const accountMetaTokenInfo = [...this.props.settingsCustomTokens]
-    const combinedTokenInfo = UTILS.mergeTokensRemoveInvisible(metaTokens, accountMetaTokenInfo)
+    let accountMetaTokenInfo = []
+    const specialCurrencyInfo = getSpecialCurrencyInfo(currencyCode)
+    // this will need refactoring later
+    if (specialCurrencyInfo.isCustomTokensSupported) {
+      accountMetaTokenInfo = [...this.props.settingsCustomTokens]
+    }
+    const filteredTokenInfo = accountMetaTokenInfo.filter(token => {
+      return token.walletType === this.props.guiWallet.type || token.walletType === undefined
+    })
+    const combinedTokenInfo = UTILS.mergeTokensRemoveInvisible(metaTokens, filteredTokenInfo)
 
     const sortedTokenInfo = combinedTokenInfo.sort((a, b) => {
       if (a.currencyCode < b.currencyCode) return -1
@@ -84,11 +90,14 @@ export default class ManageTokens extends Component<ManageTokensProps, State> {
       return 1
     })
 
+    // put preferred tokens at the top
     for (const cc of PREFERRED_TOKENS) {
       const idx = sortedTokenInfo.findIndex(e => e.currencyCode === cc)
-      const tokenInfo = sortedTokenInfo[idx]
-      sortedTokenInfo.splice(idx, 1)
-      sortedTokenInfo.unshift(tokenInfo)
+      if (idx > -1) {
+        const tokenInfo = sortedTokenInfo[idx]
+        sortedTokenInfo.splice(idx, 1)
+        sortedTokenInfo.unshift(tokenInfo)
+      }
     }
 
     return (
@@ -118,14 +127,22 @@ export default class ManageTokens extends Component<ManageTokensProps, State> {
                 style={[styles.tokenList]}
               />
             </View>
-            <View style={[styles.buttonsArea]}>
-              <PrimaryButton style={[styles.saveButton]} onPress={this.saveEnabledTokenList}>
-                {manageTokensPending ? <ActivityIndicator /> : <PrimaryButton.Text style={[styles.buttonText]}>{s.strings.string_save}</PrimaryButton.Text>}
-              </PrimaryButton>
-              <SecondaryButton style={[styles.addButton]} onPress={this.goToAddTokenScene}>
-                <SecondaryButton.Text style={[styles.buttonText]}>{s.strings.addtoken_add}</SecondaryButton.Text>
-              </SecondaryButton>
-            </View>
+            {specialCurrencyInfo.isCustomTokensSupported ? (
+              <View style={[styles.buttonsArea]}>
+                <PrimaryButton style={[styles.saveButton]} onPress={this.saveEnabledTokenList}>
+                  {manageTokensPending ? <ActivityIndicator /> : <PrimaryButton.Text style={[styles.buttonText]}>{s.strings.string_save}</PrimaryButton.Text>}
+                </PrimaryButton>
+                <SecondaryButton style={[styles.addButton]} onPress={this.goToAddTokenScene}>
+                  <SecondaryButton.Text style={[styles.buttonText]}>{s.strings.addtoken_add}</SecondaryButton.Text>
+                </SecondaryButton>
+              </View>
+            ) : (
+              <View style={[styles.buttonsArea]}>
+                <PrimaryButton style={[styles.oneButton]} onPress={this.saveEnabledTokenList}>
+                  {manageTokensPending ? <ActivityIndicator /> : <PrimaryButton.Text style={[styles.buttonText]}>{s.strings.string_save}</PrimaryButton.Text>}
+                </PrimaryButton>
+              </View>
+            )}
           </View>
         </View>
       </SceneWrapper>
