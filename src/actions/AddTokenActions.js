@@ -14,7 +14,14 @@ import type { CustomTokenInfo } from '../types/types.js'
 import * as UTILS from '../util/utils.js'
 import * as WALLET_ACTIONS from './WalletActions.js'
 
-export const addNewToken = (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, walletType: string) => {
+export const addNewToken = (
+  walletId: string,
+  currencyName: string,
+  currencyCode: string,
+  contractAddress: string,
+  denomination: string,
+  walletType: string
+) => {
   return (dispatch: Dispatch, getState: GetState) => {
     dispatch({ type: 'ADD_TOKEN_START' })
     const state = getState()
@@ -63,7 +70,6 @@ export const addTokenAsync = async (
     }
   }
 
-  const uiWallet = UI_WALLET_SELECTORS.getWallet(state, walletId)
   const coreWallet = CORE_SELECTORS.getWallet(state, walletId)
   await coreWallet.addCustomToken(newTokenObj)
   coreWallet.enableTokens([currencyCode])

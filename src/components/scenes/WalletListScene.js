@@ -72,7 +72,6 @@ type Props = {
   isWalletFiatBalanceVisible: boolean,
   defaultFiat: string,
   ethereumWalletType?: GuiWalletType,
-  rskWalletType?: GuiWalletType,
   exchangeRates: Object
 }
 export default class WalletList extends Component<Props, State> {
