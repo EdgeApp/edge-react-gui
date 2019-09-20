@@ -347,7 +347,7 @@ export class EdgeProvider extends Bridgeable {
       const signedMessage = await coreWallet.otherMethods.signMessageBase64(message, guiWallet.receiveAddress.publicAddress)
       return signedMessage
     } catch (e) {
-      console.log('EP: E', e)
+      throw e
     }
   }
   // from the older stuff

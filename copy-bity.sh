@@ -1,5 +1,5 @@
 #!/bin/sh
-# Usage: copy-core [path-to-core-ui]
+# Usage: copy-edge-plugin-bity [path-to-bity plugin]
 set -e
 src=${1:-../edge-plugin-bity}
 
