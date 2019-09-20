@@ -68,10 +68,6 @@ export const CURRENCY_SETTINGS = {
     pluginName: 'dash',
     currencyCode: 'DASH'
   },
-  eosSettings: {
-    pluginName: 'eos',
-    currencyCode: 'EOS'
-  },
   ltcSettings: {
     pluginName: 'litecoin',
     currencyCode: 'LTC'
@@ -120,16 +116,8 @@ export const CURRENCY_SETTINGS = {
     pluginName: 'eboost',
     currencyCode: 'EBST'
   },
-  rskSettings: {
-    pluginName: 'rsk',
-    currencyCode: 'RBTC'
-  },
   ufoSettings: {
     pluginName: 'ufo',
     currencyCode: 'UFO'
-  },
-  xtzSettings: {
-    pluginName: 'tezos',
-    currencyCode: 'XTZ'
   }
 }

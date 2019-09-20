@@ -1,6 +1,6 @@
 {
   "name": "edge-react-gui",
-  "version": "1.9.5",
+  "version": "1.9.6",
   "private": true,
   "description": "Edge Wallet React GUI",
   "homepage": "https://edge.app",
@@ -140,8 +140,8 @@
     "domain-browser": "^1.1.7",
     "edge-components": "^0.0.26",
     "edge-core-js": "^0.16.9",
-    "edge-currency-accountbased": "0.4.3",
-    "edge-currency-bitcoin": "^4.5.4",
+    "edge-currency-accountbased": "0.4.5",
+    "edge-currency-bitcoin": "^4.6.0",
     "edge-currency-monero": "0.2.4",
     "edge-exchange-plugins": "^0.8.3",
     "edge-login-ui-rn": "0.5.41",
@@ -222,6 +222,7 @@
     "edge-plugin-bitrefill": "https://github.com/EdgeApp/edge-plugin-bitrefill.git#2627b9d",
     "edge-plugin-simplex": "https://github.com/Airbitz/edge-plugin-simplex.git#29163e3",
     "edge-plugin-wyre": "https://github.com/EdgeApp/edge-plugin-wyre.git#3a67fdf",
+    "edge-plugins-bity": "https://github.com/EdgeApp/edge-plugin-bity.git#1b8ff9b",
     "eslint": "^4.17.0",
     "eslint-config-standard": "^11.0.0-beta.0",
     "eslint-plugin-flowtype": "^2.35.0",
@@ -306,7 +307,8 @@
   "plugins": [
     "edge-plugin-simplex",
     "edge-plugin-wyre",
-    "edge-plugin-bitrefill"
+    "edge-plugin-bitrefill",
+    "edge-plugin-bity"
   ],
   "react-native": {
     "_stream_duplex": "readable-stream/duplex",

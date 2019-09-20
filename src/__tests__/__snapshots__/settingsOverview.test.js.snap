@@ -280,10 +280,6 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
       />
       <RowRoute
         disabled={false}
-        leftText="Eos"
-      />
-      <RowRoute
-        disabled={false}
         leftText="Litecoin"
       />
       <RowRoute
@@ -332,15 +328,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
       />
       <RowRoute
         disabled={false}
-        leftText="Rsk"
-      />
-      <RowRoute
-        disabled={false}
         leftText="Ufo"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Tezos"
       />
       <RowRoute
         disabled={false}
@@ -669,10 +657,6 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
       />
       <RowRoute
         disabled={false}
-        leftText="Eos"
-      />
-      <RowRoute
-        disabled={false}
         leftText="Litecoin"
       />
       <RowRoute
@@ -721,15 +705,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
       />
       <RowRoute
         disabled={false}
-        leftText="Rsk"
-      />
-      <RowRoute
-        disabled={false}
         leftText="Ufo"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Tezos"
       />
       <RowRoute
         disabled={false}

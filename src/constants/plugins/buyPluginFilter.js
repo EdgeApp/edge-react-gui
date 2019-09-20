@@ -263,6 +263,16 @@ export const buyPluginFilter: BuySellFilter = {
     priority: 1,
     paymentType: 'bank'
   },
+  bity: {
+    countryCodes: {
+      US: true
+    },
+    cryptoCodes: {
+      BTC: true
+    },
+    priority: 1,
+    paymentType: 'bank'
+  },
 
   moonpay: {
     countryCodes: {

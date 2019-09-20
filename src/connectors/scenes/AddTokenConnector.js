@@ -13,8 +13,8 @@ const mapStateToProps = (state: State, ownProps: AddTokenOwnProps): AddTokenStat
   wallet: getWallet(state, ownProps.walletId)
 })
 const mapDispatchToProps = (dispatch: Dispatch): AddTokenDispatchProps => ({
-  addNewToken: (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string) => {
-    dispatch(ADD_TOKEN_ACTIONS.addNewToken(walletId, currencyName, currencyCode, contractAddress, denomination))
+  addNewToken: (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, walletType: string) => {
+    dispatch(ADD_TOKEN_ACTIONS.addNewToken(walletId, currencyName, currencyCode, contractAddress, denomination, walletType))
   }
 })
 
