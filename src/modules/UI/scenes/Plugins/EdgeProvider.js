@@ -344,7 +344,7 @@ export class EdgeProvider extends Bridgeable {
     const coreWallet = CORE_SELECTORS.getWallet(this._state, guiWallet.id)
 
     try {
-      const signedMessage = await coreWallet.otherMethods.signMessageBase64('A message', guiWallet.receiveAddress.publicAddress)
+      const signedMessage = await coreWallet.otherMethods.signMessageBase64(message, guiWallet.receiveAddress.publicAddress)
       return signedMessage
     } catch (e) {
       console.log('EP: E', e)
@@ -386,108 +386,26 @@ export class EdgeProvider extends Bridgeable {
   hasSafariView (): Promise<boolean> {
     return SafariView.isAvailable()
   }
-  async sendSignature (sig: string, url: string): Promise<mixed> {
-    console.log('EP: ')
-    const request = {
-      method: 'POST',
-      headers: {
-        Host: 'exchange.api.bity.com',
-        'Content-Type': '*/*'
-      },
-      body: sig
-    }
-    console.log('EP: ')
-    const response = await window.fetch(url, request)
-    if (response.status === 400) {
-      console.log('EP:> No good ')
-    }
-    if (response.status === 203) {
-      console.log('EP:> Bueno ')
-    }
-    console.log('EP: ')
-    return response
-    /* try {
 
-    } catch (e) {
-      console.log('EP error ', e)
-      console.log('EP error ', e)
-    } */
-  }
-  async makeRequestWithLocation (request: Object, url: string, url2: string): Promise<mixed> {
-    /* const response = await window.fetch(url, request)
-    console.log('EP result location ', response.headers.get('Location'))
-    const newURL = url2 + response.headers.get('Location')
-    const request2 = {
-      method: 'GET',
-      credentials: 'include'
-    }
-    const response2 = await window.fetch(newURL, request2)
-    const newData = await response2.json()
-    console.log('EP: new data ', newData)
-    return newData */
-    /* const data = {
-      input: {
-        amount: '0.5',
-        currency: 'ETH',
-        type: 'crypto_address',
-        crypto_address: '0xf35074bbd0a9aee46f4ea137971feec024ab7048'
-      },
-      output: {
-        currency: 'CHF',
-        type: 'bank_account',
-        iban: 'CH3600000000000000000',
-        bic_swift: 'XXXXCHXXXXX',
-        owner: {
-          name: 'John Doe'
-        }
-      }
-    } */
-    /* const data = {
-      output: {
-        currency: 'ETH',
-        type: 'crypto_address',
-        crypto_address: '0xf35074bbd0a9aee46f4ea137971feec024ab7048'
-      },
-      input: {
-        amount: '30',
-        currency: 'CHF',
-        type: 'bank_account',
-        iban: 'CH3600000000000000000',
-        bic_swift: 'XXXXCHXXXXX',
-        owner: {
-          name: 'John Doe'
-        }
-      }
-    }
-    const request = {
-      method: 'POST',
-      headers: {
-        'Host': 'exchange.api.bity.com',
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include',
-      body: JSON.stringify(data)
-    }
-    const url = 'https://exchange.api.bity.com/v2/orders' */
+  async deprecatedAndNotSupportedDouble (request: Object, url: string, url2: string): Promise<mixed> {
     try {
       const response = await window.fetch(url, request)
-      console.log(' result location ')
-      console.log(response.headers.get('Location'))
-      const newURL = 'https://exchange.api.bity.com' + response.headers.get('Location')
+      if (response.status !== 201) {
+        throw new Error('Problem confirming order: Code n201')
+      }
+      const newURL = url2 + response.headers.get('Location')
       const request2 = {
         method: 'GET',
         credentials: 'include'
       }
       const response2 = await window.fetch(newURL, request2)
-      console.log(' response2 ')
+      if (response2.status !== 200) {
+        throw new Error('Problem confirming order: Code n200')
+      }
       const newData = await response2.json()
-      console.log('EP: final Data ', newData)
       return newData
     } catch (e) {
-      console.log(' error ')
-      console.log(e)
-      return 'error'
+      throw new Error(e)
     }
   }
 
