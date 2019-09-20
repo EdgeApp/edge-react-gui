@@ -321,6 +321,8 @@
   "title_change_pin": "Alterar PIN",
   "title_confirm_exchange": "Confirmar troca",
   "title_create_wallet": "Criar Carteira",
+  "title_create_wallet_ethereum": "",
+  "title_create_wallet_rsk": "",
   "title_export_transactions": "Exportar Transações",
   "title_default_fiat": "Moeda Fiduciária Padrão",
   "title_edge_login": "Login Edge",
