@@ -1,6 +1,5 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-import './src/util/shim.js'
 import './src/app.js'
 
 import { AppRegistry } from 'react-native'
