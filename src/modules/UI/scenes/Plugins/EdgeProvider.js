@@ -339,19 +339,17 @@ export class EdgeProvider extends Bridgeable {
       return Promise.reject(e)
     }
   }
+  async signMessage (message: string) /* EdgeSignedMessage */ {
+    const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
+    const coreWallet = CORE_SELECTORS.getWallet(this._state, guiWallet.id)
 
-  // Sign a message using a public address from the current wallet
-  /* signMessage (options: EdgeSignMessageOptions): EdgeSignedMessage {
-    console.log('a1: signMessage', options)
-    // this is about bit id signatures.
-    const obj = {
-      publicKey: 'string',
-      // Hex encoded signature
-      signedMessage: 'string'
+    try {
+      const signedMessage = await coreWallet.otherMethods.signMessageBase64(message, guiWallet.receiveAddress.publicAddress)
+      return signedMessage
+    } catch (e) {
+      throw e
     }
-    return Promise.resolve(obj)
-  } */
-
+  }
   // from the older stuff
   async _makeSpendRequest (guiMakeSpendInfo: GuiMakeSpendInfo): Promise<EdgeTransaction> {
     const edgeTransaction = await this._spend(guiMakeSpendInfo)
@@ -387,6 +385,28 @@ export class EdgeProvider extends Bridgeable {
 
   hasSafariView (): Promise<boolean> {
     return SafariView.isAvailable()
+  }
+
+  async deprecatedAndNotSupportedDouble (request: Object, url: string, url2: string): Promise<mixed> {
+    try {
+      const response = await window.fetch(url, request)
+      if (response.status !== 201) {
+        throw new Error('Problem confirming order: Code n201')
+      }
+      const newURL = url2 + response.headers.get('Location')
+      const request2 = {
+        method: 'GET',
+        credentials: 'include'
+      }
+      const response2 = await window.fetch(newURL, request2)
+      if (response2.status !== 200) {
+        throw new Error('Problem confirming order: Code n200')
+      }
+      const newData = await response2.json()
+      return newData
+    } catch (e) {
+      throw new Error(e)
+    }
   }
 
   async openSafariView (url: string): Promise<mixed> {
