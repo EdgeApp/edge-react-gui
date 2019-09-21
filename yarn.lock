@@ -3764,9 +3764,9 @@ edge-login-ui-rn@0.5.41:
     js-sha256 "^0.9.0"
     moment "^2.22.2"
 
-"edge-plugins-bity@https://github.com/EdgeApp/edge-plugin-bity.git#1b8ff9b":
+"edge-plugins-bity@https://github.com/EdgeApp/edge-plugin-bity.git#8706f13":
   version "0.0.1"
-  resolved "https://github.com/EdgeApp/edge-plugin-bity.git#1b8ff9b1c1e65ebe2a85b26adb29a014cc7ee89a"
+  resolved "https://github.com/EdgeApp/edge-plugin-bity.git#8706f1347fff5bd3ee933770f578b66da3d8a271"
   dependencies:
     js-sha256 "^0.9.0"
     moment "^2.22.2"
