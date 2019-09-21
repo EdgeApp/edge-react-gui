@@ -3711,10 +3711,10 @@ edge-currency-monero@0.2.4:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#william/v0.14.0-hardfork"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.8.3:
-  version "0.8.3"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.8.3.tgz#aa59e795550c91ee8c248e5bf5f45c985c240d39"
-  integrity sha512-kV1SpxQwLwWJRKTQpQz4yuO0GGTghEhNlolTdCt3dEmNEo/gX/7IokVGyOISLcisYp+R8N56HxywmAMhNC7xGw==
+edge-exchange-plugins@^0.8.5:
+  version "0.8.5"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.8.5.tgz#6c4dde07fa32d513848b12da87be1300db36248a"
+  integrity sha512-poMy7Z1blBBLoRd1lYdpqttwXAUSFcw7daQUPbPKfrvV7VVwqRGhjRCf4wUHDA6kl2c2DOPwN0hLORitLnNe/Q==
   dependencies:
     esm "^3.2.4"
     hashjs "^1.2.0"
@@ -3751,6 +3751,13 @@ edge-login-ui-rn@0.5.41:
   dependencies:
     moment "^2.22.2"
 
+"edge-plugin-bity@https://github.com/EdgeApp/edge-plugin-bity.git#8706f13":
+  version "0.0.1"
+  resolved "https://github.com/EdgeApp/edge-plugin-bity.git#8706f1347fff5bd3ee933770f578b66da3d8a271"
+  dependencies:
+    js-sha256 "^0.9.0"
+    moment "^2.22.2"
+
 "edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#29163e3":
   version "0.0.3"
   resolved "https://github.com/Airbitz/edge-plugin-simplex.git#29163e3dd26a096913c7a36d8cd0da9fa6994b34"
@@ -3760,13 +3767,6 @@ edge-login-ui-rn@0.5.41:
 "edge-plugin-wyre@https://github.com/EdgeApp/edge-plugin-wyre.git#3a67fdf":
   version "0.1.2"
   resolved "https://github.com/EdgeApp/edge-plugin-wyre.git#3a67fdf8acf0f104db4f9cc379a7e89e9c623d18"
-  dependencies:
-    js-sha256 "^0.9.0"
-    moment "^2.22.2"
-
-"edge-plugins-bity@https://github.com/EdgeApp/edge-plugin-bity.git#8706f13":
-  version "0.0.1"
-  resolved "https://github.com/EdgeApp/edge-plugin-bity.git#8706f1347fff5bd3ee933770f578b66da3d8a271"
   dependencies:
     js-sha256 "^0.9.0"
     moment "^2.22.2"
