@@ -67,7 +67,7 @@ export const allPlugins: Array<BuySellPlugin> = [
   },
   {
     pluginId: 'com.bity',
-    uri: hostedUri + 'co.edgesecure.bity/index.html',
+    uri: hostedUri + 'com.bity/index.html',
     name: 'Bity',
     subtitle: 'ACH bank transfer\nBTC\nFee: 1% / Settlement: 1-5 days\nBuy Limit: $2500 / Unlimited Sell',
     imageUrl: 'https://edge.app/wp-content/uploads/2019/09/logoBity.png',
