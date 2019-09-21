@@ -394,5 +394,41 @@ export const sellPluginFilter: BuySellFilter = {
     },
     priority: 1,
     paymentType: 'bank'
+  },
+  bity: {
+    countryCodes: {
+      AT: true,
+      BE: true,
+      BG: true,
+      CY: true,
+      CZ: true,
+      DK: true,
+      EE: true,
+      FI: true,
+      FR: true,
+      DE: true,
+      GR: true,
+      HU: true,
+      IE: true,
+      IT: true,
+      LV: true,
+      LT: true,
+      LU: true,
+      MT: true,
+      NL: true,
+      PL: true,
+      PT: true,
+      RO: true,
+      SK: true,
+      SI: true,
+      ES: true,
+      SE: true,
+      GB: true
+    },
+    cryptoCodes: {
+      BTC: true
+    },
+    priority: 1,
+    paymentType: 'bank'
   }
 }
