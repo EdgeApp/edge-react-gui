@@ -1,15 +1,5 @@
 #!/bin/bash
 
-rn-nodeify --hack
-rm -rf ./node_modules/bcoin/.babelrc ./node_modules/edge-currency-bitcoin/node_modules/bcoin/.babelrc
-rm -rf ./node_modules/bccoin/.babelrc ./node_modules/edge-currency-bitcoin/node_modules/bccoin/.babelrc
-rm -rf ./node_modules/lcoin/.babelrc ./node_modules/edge-currency-bitcoin/node_modules/lcoin/.babelrc
-
-# Fix rn-nodify's hack of fs -> react-native-level-fs for mymonero-core-js. Use react-native-fs instead
-sed "s/react-native-level-fs/react-native-fs/g" ./node_modules/mymonero-core-js/package.json > ./node_modules/mymonero-core-js/package.json.fix
-mv ./node_modules/mymonero-core-js/package.json.fix ./node_modules/mymonero-core-js/package.json
-
-node postinstall.js
 mkdir -p temp
 
 # Remove inclusion of c++_shared.so library since we are using jsc-android which already includes it
@@ -20,16 +10,6 @@ mv temp/build.gradle ./node_modules/react-native-fast-crypto/android/build.gradl
 sed "s/--reset-cache/--reset-cache --sourcemap-output ios-release.bundle.map/g" node_modules/react-native/scripts/react-native-xcode.sh > temp/react-native-xcode.sh
 mv temp/react-native-xcode.sh node_modules/react-native/scripts/react-native-xcode.sh
 chmod 755 node_modules/react-native/scripts/react-native-xcode.sh
-
-# Force rand to exist for miller-rabin library
-sed "s/function MillerRabin(rand)/function MillerRabin(rand = 'NoRandFunction')/g" node_modules/miller-rabin/lib/mr.js > temp/mr.js
-mv temp/mr.js node_modules/miller-rabin/lib/mr.js
-chmod 755 node_modules/miller-rabin/lib/mr.js
-
-# Remove fetch polyfill from eosjs-api
-sed "s/require('isomorphic-fetch');//g" node_modules/eosjs-api/lib/apigen.js > temp/apigen.js
-mv temp/apigen.js node_modules/eosjs-api/lib/apigen.js
-chmod 755 node_modules/eosjs-api/lib/apigen.js
 
 node ./copy-plugin.js
 
@@ -42,8 +22,15 @@ node ./copy-plugin.js
 # See: https://github.com/facebook/react-native/pull/16456
 
 # Copy edge-core-js WebView contents:
-mkdir -p ios/edge-core
-cat >ios/edge-core/index.html <<HTML
+core_assets="./android/app/src/main/assets/edge-core"
+if [ -d "$core_assets" ]; then
+  rm -r "$core_assets"
+fi
+mkdir -p "$core_assets"
+cp ./node_modules/edge-core-js/lib/react-native/edge-core.js "$core_assets"
+
+# Write out an edge-core-js index.html file:
+cat >"$core_assets/index.html" <<HTML
 <!DOCTYPE html>
 <html>
   <head>
@@ -53,42 +40,20 @@ cat >ios/edge-core/index.html <<HTML
   <body>
     <script src="edge-core.js"></script>
     <script>
-      var loading = 0
-
-      function load (path) {
-        ++loading
-
+      function load() {
         var script = document.createElement('script')
         script.charset = 'utf-8'
         script.async = true
-        function scriptDone () {
-          document.head.removeChild(script)
-          if (--loading === 0) {
-            window.lockEdgeCorePlugins()
-          }
-        }
-        script.addEventListener('error', scriptDone)
-        script.addEventListener('load', scriptDone)
-        script.src = path
+        script.addEventListener('error', window.lockEdgeCorePlugins)
+        script.addEventListener('load', window.lockEdgeCorePlugins)
+        script.src = 'plugin-bundle.js'
         document.head.appendChild(script)
       }
-
-      setTimeout(function () {
-        load('edge-currency-accountbased.js')
-        load('edge-currency-bitcoin.js')
-        load('edge-currency-monero.js')
-        load('edge-exchange-plugins.js')
-      }, 200)
+      setTimeout(load, 200)
     </script>
   </body>
 </html>
 HTML
-cp ./node_modules/edge-core-js/lib/react-native/edge-core.js ./ios/edge-core
-cp ./node_modules/edge-currency-accountbased/lib/react-native/edge-currency-accountbased.js ./ios/edge-core
-cp ./node_modules/edge-currency-bitcoin/lib/react-native/edge-currency-bitcoin.js ./ios/edge-core
-cp ./node_modules/edge-currency-monero/lib/react-native/edge-currency-monero.js ./ios/edge-core
-cp ./node_modules/edge-exchange-plugins/lib/react-native/edge-exchange-plugins.js ./ios/edge-core
-cp -r ./ios/edge-core ./android/app/src/main/assets/
 
 # Set up CocoaPods on iOS:
 unamestr=`uname`
