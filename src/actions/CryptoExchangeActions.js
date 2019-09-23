@@ -73,6 +73,7 @@ export const exchangeTimerExpired = (swapInfo: GuiSwapInfo) => async (dispatch: 
   Actions[Constants.EXCHANGE_QUOTE_PROCESSING_SCENE]()
 
   try {
+    console.log('refreshing', swapInfo)
     swapInfo = await fetchSwapQuote(getState(), swapInfo.request)
     Actions[Constants.EXCHANGE_QUOTE_SCENE]({ swapInfo })
     dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
