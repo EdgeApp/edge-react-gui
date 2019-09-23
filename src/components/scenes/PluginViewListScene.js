@@ -10,8 +10,14 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
 import { updateOneSetting } from '../../actions/SettingsActions.js'
+import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
+import paymentTypeLogoBankTransfer from '../../assets/images/paymentTypes/paymentTypeLogoBankTransfer.png'
+import paymentTypeLogoCash from '../../assets/images/paymentTypes/paymentTypeLogoCash.png'
+import paymentTypeLogoCreditCard from '../../assets/images/paymentTypes/paymentTypeLogoCreditCard.png'
+import paymentTypeLogoGiftCard from '../../assets/images/paymentTypes/paymentTypeLogoGiftCard.png'
+import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLogoPoli.png'
 import { ANDROID, ARROW_RIGHT, COUNTRY_CODES, FLAG_LOGO_URL, PLUGIN_VIEW, PLUGIN_VIEW_LEGACY, SIMPLE_ICONS } from '../../constants/indexConstants.js'
-import { allPlugins, buyPluginFilter, buySellPluginFilter, devPlugin, sellPluginFilter } from '../../constants/plugins/buySellPlugins.js'
+import { devPlugin, getBuyPlugins, getSellPlugins, pluginUrlMap } from '../../constants/plugins/buySellPlugins.js'
 import s from '../../locales/strings.js'
 import { getSyncedSettingsAsync, setSyncedSettingsAsync } from '../../modules/Core/Account/settings.js'
 import Text from '../../modules/UI/components/FormattedText'
@@ -19,13 +25,22 @@ import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import styles from '../../styles/scenes/PluginsStyle.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
-import { type BuySellFilter, type BuySellPlugin, type CountryData } from '../../types/types.js'
+import { type BuySellPlugin, type CountryData, type PluginUrlMap } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { CountrySelectionModal } from '../modals/CountrySelectionModal.js'
 import { SimpleConfirmationModal } from '../modals/SimpleConfirmationModal.js'
 import { Airship } from '../services/AirshipInstance.js'
+
+const paymentTypeLogosById = {
+  credit: paymentTypeLogoCreditCard,
+  applepay: paymentTypeLogoApplePay,
+  bank: paymentTypeLogoBankTransfer,
+  cash: paymentTypeLogoCash,
+  giftcard: paymentTypeLogoGiftCard,
+  poli: paymentTypeLogoPoli
+}
 
 type OwnProps = {
   direction?: 'buy' | 'sell'
@@ -90,7 +105,7 @@ class PluginList extends Component<Props> {
     if (!countryCode) this.openCountrySelectionModal()
   }
 
-  _onPress = (plugin: BuySellPlugin) => {
+  _onPress = (plugin: BuySellPlugin & PluginUrlMap) => {
     const { pluginId, permissions = [] } = plugin
     if (pluginId === 'custom') {
       this.openCustomPlugin(plugin)
@@ -105,7 +120,7 @@ class PluginList extends Component<Props> {
     this.openPlugin(plugin)
   }
 
-  requestAndroidPermissions = async (permissionList: Array<string>, plugin: BuySellPlugin) => {
+  requestAndroidPermissions = async (permissionList: Array<string>, plugin: BuySellPlugin & PluginUrlMap) => {
     let reqType
     switch (permissionList[0]) {
       case 'camera':
@@ -127,7 +142,7 @@ class PluginList extends Component<Props> {
     }
   }
 
-  openCustomPlugin (plugin: BuySellPlugin) {
+  openCustomPlugin (plugin: BuySellPlugin & PluginUrlMap) {
     const modal = createInputModal({
       icon: <IonIcon name="md-globe" size={42} color={THEME.COLORS.SECONDARY} />,
       title: s.strings.load_plugin,
@@ -147,7 +162,7 @@ class PluginList extends Component<Props> {
     })
   }
 
-  openPlugin = (plugin: BuySellPlugin) => {
+  openPlugin = (plugin: BuySellPlugin & PluginUrlMap) => {
     const key = plugin.isLegacy ? PLUGIN_VIEW_LEGACY : PLUGIN_VIEW
     Actions[key]({ plugin })
   }
@@ -175,10 +190,20 @@ class PluginList extends Component<Props> {
   _renderPlugin = ({ item }) => (
     <TouchableWithoutFeedback onPress={() => this._onPress(item)}>
       <View style={styles.pluginRow}>
-        <View style={styles.logo}>{item.imageUrl && <Image style={styles.logoImage} source={{ uri: item.imageUrl }} />}</View>
-        <View style={styles.textBoxWrap}>
-          <Text style={styles.titleText}>{item.name}</Text>
-          <Text style={styles.subtitleText}>{item.subtitle}</Text>
+        <View style={styles.pluginRowLogoAndInfo}>
+          <View style={styles.logo}>
+            <Image style={styles.logoImage} source={paymentTypeLogosById[item.paymentTypeLogoKey]} />
+          </View>
+          <View style={styles.textBoxWrap}>
+            <Text style={styles.titleText}>{item.title}</Text>
+            <Text style={styles.subtitleText}>{`Currencies: ${item.cryptoCodes.join(', ')}`}</Text>
+            <Text style={styles.subtitleText}>{item.description}</Text>
+          </View>
+        </View>
+        <View style={styles.pluginRowPoweredByRow}>
+          <Text style={styles.footerText}>Powered by </Text>
+          <Image style={styles.partnerIconImage} source={{ uri: item.partnerIconPath }} />
+          <Text style={styles.footerText}> {item.name}</Text>
         </View>
       </View>
     </TouchableWithoutFeedback>
@@ -189,26 +214,19 @@ class PluginList extends Component<Props> {
     const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)
 
     // Pick a filter based on our direction:
-    const filter: BuySellFilter = direction === 'buy' ? buyPluginFilter : direction === 'sell' ? sellPluginFilter : buySellPluginFilter
-
-    // Remove plugins that don't exist in the filter:
-    let plugins = allPlugins.filter((plugin: BuySellPlugin) => filter[plugin.name.toLowerCase()] != null)
-
-    // Remove plugins that don't match our country:
-    if (countryData != null) {
-      plugins = plugins.filter((plugin: BuySellPlugin) => plugin.pluginId === 'custom' || filter[plugin.name.toLowerCase()].countryCodes[countryCode])
-    }
+    const pluginsBuySellPlugins: Array<BuySellPlugin> = direction === 'buy' ? getBuyPlugins(Platform.OS, countryCode) : getSellPlugins(Platform.OS, countryCode)
 
     // Sort the plugins:
-    plugins.sort((a: BuySellPlugin, b: BuySellPlugin) => {
-      const aPriority = filter[a.name.toLowerCase()].priority
-      const bPriority = filter[b.name.toLowerCase()].priority
-      return aPriority - bPriority
+    pluginsBuySellPlugins.sort((a: BuySellPlugin, b: BuySellPlugin) => a.priority - b.priority)
+
+    const plugins: Array<BuySellPlugin & PluginUrlMap> = pluginsBuySellPlugins.map((_buySellPlugin: BuySellPlugin) => {
+      const _pluginUrlMap = pluginUrlMap[_buySellPlugin.pluginId]
+      return { ..._pluginUrlMap, ..._buySellPlugin }
     })
 
     // Add the dev mode plugin if enabled:
     if (developerModeOn) {
-      plugins = [...plugins, devPlugin]
+      plugins.push(devPlugin)
     }
 
     return (
@@ -219,7 +237,7 @@ class PluginList extends Component<Props> {
             <Text style={{ textAlign: 'center' }}>{s.strings.buy_sell_crypto_no_plugin_region}</Text>
           </View>
         ) : (
-          <FlatList data={plugins} renderItem={this._renderPlugin} keyExtractor={(item: BuySellPlugin) => item.pluginId} />
+          <FlatList data={plugins} renderItem={this._renderPlugin} keyExtractor={item => item.pluginId} />
         )}
       </SceneWrapper>
     )
