@@ -391,7 +391,8 @@ export class EdgeProvider extends Bridgeable {
     try {
       const response = await window.fetch(url, request)
       if (response.status !== 201) {
-        throw new Error('Problem confirming order: Code n201')
+        const errorData = await response.json()
+        throw new Error(errorData.errors[0].code + ' ' + errorData.errors[0].message)
       }
       const newURL = url2 + response.headers.get('Location')
       const request2 = {
@@ -402,8 +403,43 @@ export class EdgeProvider extends Bridgeable {
       if (response2.status !== 200) {
         throw new Error('Problem confirming order: Code n200')
       }
-      const newData = await response2.json()
-      return newData
+      const orderData = await response2.json()
+      if (orderData.message_to_sign) {
+        try {
+          const { signature_submission_url, body } = orderData.message_to_sign
+          const signedTransaction = await this.signMessage(body)
+          const newURL = url2 + signature_submission_url
+          const request = {
+            method: 'POST',
+            headers: {
+              Host: 'exchange.api.bity.com',
+              'Content-Type': '*/*'
+            },
+            body: signedTransaction
+          }
+          const signedTransactionResponse = await window.fetch(newURL, request)
+          if (signedTransactionResponse.status === 400) {
+            throw new Error('Could not complete transaction. Code: 470')
+          }
+          if (signedTransactionResponse.status === 204) {
+            const bankDetailsRequest = {
+              method: 'GET',
+              credentials: 'include'
+            }
+            const detailUrl = url + '/' + orderData.id
+            const bankDetailResponse = await window.fetch(detailUrl, bankDetailsRequest)
+            if (bankDetailResponse.status === 200) {
+              const parsedResponse = await bankDetailResponse.json()
+              return parsedResponse
+            }
+          }
+        } catch (e) {
+          console.log('Error ', e)
+          throw e
+        }
+      }
+      //
+      return orderData
     } catch (e) {
       throw new Error(e)
     }
