@@ -27,7 +27,7 @@ import type { GuiCurrencyInfo, GuiWallet } from '../../types/types.js'
 import { getObjectDiff } from '../../util/utils'
 import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { showToast } from '../services/AirshipInstance.js'
+import { showError, showToast } from '../services/AirshipInstance.js'
 
 const PUBLIC_ADDRESS_REFRESH_MS = 2000
 
@@ -103,11 +103,7 @@ export class Request extends Component<Props, State> {
   }
 
   componentDidMount () {
-    try {
-      this.generateEncodedUri()
-    } catch (e) {
-      console.log('error generating encodedURI: ', e)
-    }
+    this.generateEncodedUri()
   }
 
   onCloseXRPMinimumModal = () => {
@@ -347,9 +343,7 @@ export class Request extends Component<Props, State> {
         }
         Share.open(shareOptions).catch(e => console.log(e))
       })
-      .catch(err => {
-        console.log(err.message)
-      })
+      .catch(showError)
   }
 
   shareViaEmail = () => {
@@ -358,9 +352,7 @@ export class Request extends Component<Props, State> {
         this.shareMessage()
         // console.log('shareViaEmail')
       })
-      .catch(e => {
-        console.log(e)
-      })
+      .catch(showError)
   }
 
   shareViaSMS = () => {
@@ -369,9 +361,7 @@ export class Request extends Component<Props, State> {
         this.shareMessage()
         // console.log('shareViaSMS')
       })
-      .catch(e => {
-        console.log(e)
-      })
+      .catch(showError)
   }
 
   shareViaShare = () => {

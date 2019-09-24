@@ -21,6 +21,7 @@ import type { GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationRed
 import styles from '../../styles/scenes/PluginsStyle.js'
 import { type BuySellPlugin, type PluginUrlMap } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { showError } from '../services/AirshipInstance.js'
 
 const BACK = s.strings.title_back
 
@@ -222,9 +223,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
                   this._webviewOpenUrl(this.successUrl)
                 }
               })
-              .catch(e => {
-                console.log(e)
-              })
+              .catch(showError)
           }
         })
         break
@@ -262,9 +261,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
                   this._webviewOpenUrl(this.successUrl)
                 }
               })
-              .catch(e => {
-                console.log(e)
-              })
+              .catch(showError)
           })
           break
         default:

@@ -40,9 +40,7 @@ export const setPINModeRequest = (pinMode: boolean) => (dispatch: Dispatch, getS
   const account = CORE_SELECTORS.getAccount(state)
   ACCOUNT_SETTINGS.setPINModeRequest(account, pinMode)
     .then(() => dispatch(SETTINGS_ACTIONS.setPINMode(pinMode)))
-    .catch(error => {
-      console.error(error)
-    })
+    .catch(showError)
 }
 
 export const setAutoLogoutTimeInMinutesRequest = (autoLogoutTimeInMinutes: number) => {
@@ -55,9 +53,7 @@ export const setAutoLogoutTimeInSecondsRequest = (autoLogoutTimeInSeconds: numbe
   const account = CORE_SELECTORS.getAccount(state)
   ACCOUNT_SETTINGS.setAutoLogoutTimeInSecondsRequest(account, autoLogoutTimeInSeconds)
     .then(() => dispatch(SETTINGS_ACTIONS.setAutoLogoutTimeInSeconds(autoLogoutTimeInSeconds)))
-    .catch(error => {
-      console.error(error)
-    })
+    .catch(showError)
 }
 
 export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatch, getState: GetState) => {
@@ -96,7 +92,7 @@ export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatc
       dispatch(newSpendingLimits(nextSpendingLimits))
       dispatch(updateExchangeRates())
     })
-    .catch(e => console.log(e))
+    .catch(showError)
 }
 
 export const setMerchantModeRequest = (merchantMode: boolean) => (dispatch: Dispatch, getState: GetState) => {
@@ -104,9 +100,7 @@ export const setMerchantModeRequest = (merchantMode: boolean) => (dispatch: Disp
   const account = CORE_SELECTORS.getAccount(state)
   ACCOUNT_SETTINGS.setMerchantModeRequest(account, merchantMode)
     .then(() => dispatch(SETTINGS_ACTIONS.setMerchantMode(merchantMode)))
-    .catch(error => {
-      console.error(error)
-    })
+    .catch(showError)
 }
 
 export const setBluetoothModeRequest = (bluetoothMode: boolean) => (dispatch: Dispatch, getState: GetState) => {
@@ -114,9 +108,7 @@ export const setBluetoothModeRequest = (bluetoothMode: boolean) => (dispatch: Di
   const account = CORE_SELECTORS.getAccount(state)
   ACCOUNT_SETTINGS.setBluetoothModeRequest(account, bluetoothMode)
     .then(() => dispatch(SETTINGS_ACTIONS.setBluetoothMode(bluetoothMode)))
-    .catch(error => {
-      console.error(error)
-    })
+    .catch(showError)
 }
 
 export const checkCurrentPassword = (arg: string) => async (dispatch: Dispatch, getState: GetState) => {
@@ -139,12 +131,10 @@ export const lockSettings = () => async (dispatch: Dispatch) => {
 export const setDenominationKeyRequest = (currencyCode: string, denominationKey: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
-  const onSuccess = () => dispatch(SETTINGS_ACTIONS.setDenominationKey(currencyCode, denominationKey))
-  const onError = e => console.log(e)
 
   return ACCOUNT_SETTINGS.setDenominationKeyRequest(account, currencyCode, denominationKey)
-    .then(onSuccess)
-    .catch(onError)
+    .then(() => dispatch(SETTINGS_ACTIONS.setDenominationKey(currencyCode, denominationKey)))
+    .catch(showError)
 }
 
 // touch id interaction
@@ -205,9 +195,8 @@ export const enableCustomNodes = (currencyCode: string) => async (dispatch: Disp
   const currencyPlugin = account.currencyConfig[currencyPluginName]
   try {
     await currencyPlugin.changeUserSettings({ ...currencyPlugin.userSettings, disableFetchingServers: true })
-  } catch (e) {
-    console.log(e)
-    throw new Error(e)
+  } catch (error) {
+    showError(error)
   }
 }
 
@@ -218,9 +207,8 @@ export const disableCustomNodes = (currencyCode: string) => async (dispatch: Dis
   const currencyPlugin = account.currencyConfig[currencyPluginName]
   try {
     await currencyPlugin.changeUserSettings({ ...currencyPlugin.userSettings, disableFetchingServers: false })
-  } catch (e) {
-    console.log(e)
-    throw new Error(e)
+  } catch (error) {
+    showError(error)
   }
 }
 
@@ -231,9 +219,8 @@ export const saveCustomNodesList = (currencyCode: string, nodesList: Array<strin
   const currencyPlugin = account.currencyConfig[currencyPluginName]
   try {
     await currencyPlugin.changeUserSettings({ ...currencyPlugin.userSettings, electrumServers: nodesList })
-  } catch (e) {
-    console.log(e)
-    throw new Error('Unable to save plugin setting')
+  } catch (error) {
+    showError(error)
   }
 }
 
@@ -281,8 +268,8 @@ export const showUnlockSettingsModal = () => async (dispatch: Dispatch, getState
     if (resolveValue) {
       dispatch(SETTINGS_ACTIONS.setSettingsLock(false))
     }
-  } catch (e) {
-    throw new Error('Unable to unlock settings')
+  } catch (error) {
+    showError(error)
   }
 }
 

@@ -2,6 +2,7 @@
 
 import type { EdgeAccount } from 'edge-core-js'
 
+import { showError } from '../../../components/services/AirshipInstance.js'
 import type { PasswordReminder } from '../../../types/types.js'
 import { categories } from './subcategories.js'
 
@@ -426,8 +427,8 @@ export async function setSyncedSubcategories (account: EdgeAccount, subcategorie
   const stringifiedSubcategories = JSON.stringify(finalText)
   try {
     await account.disklet.setText(CATEGORIES_FILENAME, stringifiedSubcategories)
-  } catch (e) {
-    console.log(e)
+  } catch (error) {
+    showError(error)
   }
 }
 

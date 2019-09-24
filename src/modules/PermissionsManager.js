@@ -5,7 +5,8 @@ import { AppState } from 'react-native'
 import RNPermissions from 'react-native-permissions'
 import { connect } from 'react-redux'
 
-import type { Dispatch, State } from './../types/reduxTypes.js'
+import { showError } from '../components/services/AirshipInstance.js'
+import type { Dispatch, State } from '../types/reduxTypes.js'
 
 export const AppStates = {
   ACTIVE: 'active',
@@ -79,9 +80,7 @@ export class PermissionsManager extends React.Component<Props> {
           console.log('Permissions unchanged')
         }
       })
-      .catch(error => {
-        console.log(error)
-      })
+      .catch(showError)
   }
 }
 

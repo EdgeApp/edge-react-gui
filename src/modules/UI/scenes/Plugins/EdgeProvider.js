@@ -257,15 +257,14 @@ export class EdgeProvider extends Bridgeable {
   // Read data back from the user's account. This can only access data written by this same plugin
   // 'keys' is an array of strings with keys to lookup.
   // Returns an object with a map of key value pairs from the keys passed in
-  async readData (keys: Array<string>): Object {
+  async readData (keys: Array<string>): Promise<Object> {
     const account = CORE_SELECTORS.getAccount(this._state)
     const store = account.dataStore
     const returnObj = {}
     for (let i = 0; i < keys.length; i++) {
       returnObj[keys[i]] = await store.getItem(this._pluginId, keys[i]).catch(e => undefined)
     }
-    console.log()
-    return Promise.resolve(returnObj)
+    return returnObj
   }
 
   async exitPlugin () {
@@ -292,15 +291,11 @@ export class EdgeProvider extends Bridgeable {
     if (options && options.uniqueIdentifier) {
       info.uniqueIdentifier = options.uniqueIdentifier
     }
-    try {
-      const transaction = await this._makeSpendRequest(info)
-      if (transaction) {
-        Actions.pop()
-      }
-      return Promise.resolve(transaction)
-    } catch (e) {
-      return Promise.reject(e)
+    const transaction = await this._makeSpendRequest(info)
+    if (transaction) {
+      Actions.pop()
     }
+    return transaction
   }
 
   // Request that the user spend to a URI
@@ -328,16 +323,12 @@ export class EdgeProvider extends Bridgeable {
     if (options && options.uniqueIdentifier) {
       info.uniqueIdentifier = options.uniqueIdentifier
     }
-    try {
-      const transaction = await this._makeSpendRequest(info)
-      if (transaction) {
-        Actions.pop()
-      }
-      this.trackConversion()
-      return Promise.resolve(transaction)
-    } catch (e) {
-      return Promise.reject(e)
+    const transaction = await this._makeSpendRequest(info)
+    if (transaction) {
+      Actions.pop()
     }
+    this.trackConversion()
+    return transaction
   }
   async signMessage (message: string) /* EdgeSignedMessage */ {
     const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
