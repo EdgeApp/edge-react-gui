@@ -260,8 +260,14 @@
     "description": "Fee: 1% / Settlement: 1 - 5 days\nLimit: $2500",
     "title": "ACH Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/01/wyre-logo-square-small.png",
-    "countryCodes": { "US": true },
-    "cryptoCodes": [ "BTC", "ETH", "DAI" ],
+    "countryCodes": {
+      "US": true
+    },
+    "cryptoCodes": [
+      "BTC",
+      "ETH",
+      "DAI"
+    ],
     "paymentTypeLogoKey": "bank"
   },
   {
@@ -296,7 +302,9 @@
       "SE": true,
       "GB": true
     },
-    "cryptoCodes": [ "BTC" ],
+    "cryptoCodes": [
+      "BTC"
+    ],
     "priority": 1,
     "paymentType": "bank",
     "description": "ACH bank transfer\nBTC\nFee: 1% / Settlement: 1-5 days\nBuy Limit: $2500 / Unlimited Sell",
@@ -414,60 +422,98 @@
       "CH": true,
       "GB": true
     },
-    "cryptoCodes": [ "BTC", "ETH" ],
+    "cryptoCodes": [
+      "BTC",
+      "ETH"
+    ],
     "paymentTypeLogoKey": "credit"
   },
   {
     "id": "libertyx",
     "pluginId": "com.libertyx",
     "priority": 5,
-    "paymentType": { "cash": true, "credit": true },
+    "paymentType": {
+      "cash": true,
+      "credit": true
+    },
     "description": "Fee: 3 - 8% / Settlement: Instant\nLimit: $200 - $3000",
     "title": "Cash and Debit Card",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/05/libertyXlogo.png",
-    "countryCodes": { "US": true },
-    "cryptoCodes": [ "BTC" ],
+    "countryCodes": {
+      "US": true
+    },
+    "cryptoCodes": [
+      "BTC"
+    ],
     "paymentTypeLogoKey": "cash"
   },
   {
     "id": "banxa",
     "pluginId": "com.banxa",
     "priority": 2,
-    "paymentType": { "bank": true, "cash": true },
+    "paymentType": {
+      "bank": true,
+      "cash": true
+    },
     "description": "Fee: 4.5 - 6.5% / Settlement: 5 min - 24 hours\nLimit: $50000",
     "title": "POLi Bank Transfer or Cash with Newsagent",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
-    "countryCodes": { "AT": false, "AU": true },
-    "cryptoCodes": [ "BTC" ],
+    "countryCodes": {
+      "AT": false,
+      "AU": true
+    },
+    "cryptoCodes": [
+      "BTC"
+    ],
     "paymentTypeLogoKey": "poli"
   },
-
   "----- Sorting -----",
-
-  { "id": "simplex", "priority": 4 },
-  { "id": "wyre", "priority": 1 },
-  { "id": "banxa", "priority": 2 },
-  { "id": "libertyx", "priority": 5 },
-  { "id": "safello", "priority": 3 },
-  { "id": "moonpay", "priority": 2 },
-
+  {
+    "id": "simplex",
+    "priority": 4
+  },
+  {
+    "id": "wyre",
+    "priority": 1
+  },
+  {
+    "id": "banxa",
+    "priority": 2
+  },
+  {
+    "id": "libertyx",
+    "priority": 5
+  },
+  {
+    "id": "safello",
+    "priority": 3
+  },
+  {
+    "id": "moonpay",
+    "priority": 2
+  },
   "----- iOS specifics -----",
-
   {
     "id": "moonpay",
     "forPlatform": "ios",
     "priority": 1,
-    "paymentType": { "credit": true, "applepay": true },
+    "paymentType": {
+      "credit": true,
+      "applepay": true
+    },
     "paymentTypeLogoKey": "applepay",
     "title": "Apple Pay and Credit Card"
   },
-
   "----- Country Specifics -----",
-
   {
     "id": "safello",
-    "forCountries": ["SE"],
-    "paymentType": { "bank": true, "credit": true },
+    "forCountries": [
+      "SE"
+    ],
+    "paymentType": {
+      "bank": true,
+      "credit": true
+    },
     "title": "Swish and Credit Card",
     "paymentTypeLogoKey": "swish"
   }

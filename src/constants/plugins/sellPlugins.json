@@ -57,7 +57,9 @@
       "CH": true,
       "GB": true
     },
-    "cryptoCodes": [ "BTC" ],
+    "cryptoCodes": [
+      "BTC"
+    ],
     "paymentTypeLogoKey": "credit"
   },
   {
@@ -68,8 +70,14 @@
     "description": "Fee: 1% / Settlement: 1 - 5 days\nLimit: $2500",
     "title": "ACH Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/01/wyre-logo-square-small.png",
-    "countryCodes": { "US": true },
-    "cryptoCodes": [ "BTC", "ETH", "DAI" ],
+    "countryCodes": {
+      "US": true
+    },
+    "cryptoCodes": [
+      "BTC",
+      "ETH",
+      "DAI"
+    ],
     "paymentTypeLogoKey": "bank"
   },
   {
@@ -131,7 +139,10 @@
       "VA": true,
       "YT": true
     },
-    "cryptoCodes": [ "BTC", "ETH" ],
+    "cryptoCodes": [
+      "BTC",
+      "ETH"
+    ],
     "paymentTypeLogoKey": "bank"
   },
   {
@@ -433,7 +444,9 @@
       "SE": true,
       "GB": true
     },
-    "cryptoCodes": [ "BTC" ],
+    "cryptoCodes": [
+      "BTC"
+    ],
     "priority": 1,
     "paymentType": "bank",
     "description": "ACH bank transfer\nBTC\nFee: 1% / Settlement: 1-5 days\nBuy Limit: $2500 / Unlimited Sell",
@@ -441,21 +454,30 @@
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/09/logoBity.png",
     "paymentTypeLogoKey": "bank"
   },
-
   "----- Sorting -----",
-
-  { "id": "simplex", "priority": 2 },
-  { "id": "wyre", "priority": 1 },
-  { "id": "bits of gold", "priority": 3 },
-  { "id": "bitrefill", "priority": 5 },
-
-  "----- iOS specifics -----",
-
-  "----- Country Specifics -----",
-
+  {
+    "id": "simplex",
+    "priority": 2
+  },
+  {
+    "id": "wyre",
+    "priority": 1
+  },
   {
     "id": "bits of gold",
-    "forCountries": ["IS"],
+    "priority": 3
+  },
+  {
+    "id": "bitrefill",
+    "priority": 5
+  },
+  "----- iOS specifics -----",
+  "----- Country Specifics -----",
+  {
+    "id": "bits of gold",
+    "forCountries": [
+      "IS"
+    ],
     "title": "SEPA and Israeli Bank Transfer"
   }
 ]
