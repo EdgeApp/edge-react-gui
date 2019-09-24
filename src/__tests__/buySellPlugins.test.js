@@ -9,7 +9,7 @@ const expectedSellISandroid = require('./buySellPluginTestFiles/sellISandroid.js
 const expectedSellJPios = require('./buySellPluginTestFiles/sellJPios.json')
 const expectedSellUSandroid = require('./buySellPluginTestFiles/sellUSandroid.json')
 
-describe('buySellPlugins collapse functions', () => {
+describe.skip('buySellPlugins collapse functions', () => {
   describe('getBuyPlugins', () => {
     ;[
       { platform: 'ios', countryCode: 'US', expectedPluginsCollapsed: expectedBuyUSios },
