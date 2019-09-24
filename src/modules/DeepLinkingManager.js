@@ -10,7 +10,7 @@ import parse from 'url-parse'
 import type { Dispatch } from './../types/reduxTypes.js'
 import { selectWallet } from '../actions/WalletActions.js'
 import { PLUGIN_VIEW_DEEP, SCAN } from '../constants/indexConstants.js'
-import { allPlugins } from '../constants/plugins/buySellPlugins.js'
+import { pluginUrlMap } from '../constants/plugins/buySellPlugins.js'
 import s from '../locales/strings.js'
 
 type DeepLinkingManagerStateProps = {
@@ -37,14 +37,10 @@ class DeepLinkingManager extends React.Component<Props> {
   }
   processPluginDeepLink = (parsedUrl: Object) => {
     if (parsedUrl.pathname.includes('simplex')) {
-      for (let i = 0; i < allPlugins.length; i++) {
-        const plugin = allPlugins[i]
-        if (plugin.name === 'Simplex') {
-          Actions[PLUGIN_VIEW_DEEP]({ plugin })
-          this.props.markAddressDeepLinkDone()
-          return
-        }
-      }
+      const simplexPlugin = pluginUrlMap['co.edgesecure.simplex']
+      Actions[PLUGIN_VIEW_DEEP]({ simplexPlugin })
+      this.props.markAddressDeepLinkDone()
+      return
     }
     this.props.markAddressDeepLinkDone()
   }

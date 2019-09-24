@@ -1,0 +1,35 @@
+[
+  {
+    "cryptoCodes": [
+      "BTC",
+      "BCH",
+      "ETH",
+      "LTC",
+      "XRP"
+    ],
+    "description": "Fee: ~7% / Settlement: 10-30 minutes\nLimit: $18000",
+    "id": "simplex",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/03/simplex-logo-sm-square.png",
+    "paymentType": "credit",
+    "paymentTypeLogoKey": "credit",
+    "pluginId": "co.edgesecure.simplex",
+    "priority": 4,
+    "title": "Credit and Debit Card"
+  },
+  {
+    "cryptoCodes": [
+      "BTC"
+    ],
+    "description": "Fee: 4.5 - 6.5% / Settlement: 5 min - 24 hours\nLimit: $50000",
+    "id": "banxa",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
+    "paymentType": {
+      "bank": true,
+      "cash": true
+    },
+    "paymentTypeLogoKey": "poli",
+    "pluginId": "com.banxa",
+    "priority": 2,
+    "title": "POLi Bank Transfer or Cash with Newsagent"
+  }
+]
