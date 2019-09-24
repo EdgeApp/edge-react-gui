@@ -2,7 +2,6 @@
   {
     "id": "simplex",
     "pluginId": "co.edgesecure.simplex",
-    "priority": 4,
     "paymentType": "credit",
     "description": "Fee: ~7% / Settlement: 10-30 minutes\nLimit: $18000",
     "title": "Credit and Debit Card",
@@ -255,7 +254,6 @@
   {
     "id": "wyre",
     "pluginId": "co.edgesecure.wyre",
-    "priority": 1,
     "paymentType": "bank",
     "description": "Fee: 1% / Settlement: 1 - 5 days\nLimit: $2500",
     "title": "ACH Bank Transfer",
@@ -277,6 +275,7 @@
       "AT": true,
       "BE": true,
       "BG": true,
+      "CH": true,
       "CY": true,
       "CZ": true,
       "DK": true,
@@ -305,10 +304,9 @@
     "cryptoCodes": [
       "BTC"
     ],
-    "priority": 1,
     "paymentType": "bank",
-    "description": "ACH bank transfer\nBTC\nFee: 1% / Settlement: 1-5 days\nBuy Limit: $2500 / Unlimited Sell",
-    "title": "Bity",
+    "description": "Fee: 1% / Settlement: 1-2 days\nLimit: €5000/day with no KYC",
+    "title": "SEPA Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/09/logoBity.png",
     "paymentTypeLogoKey": "bank"
   },
@@ -319,7 +317,6 @@
     "description": "Fee: 6.5% / Settlement: 10 minutes\nLimit: $2000",
     "title": "Credit Card",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/05/icon_black_small.png",
-    "priority": 2,
     "countryCodes": {
       "AT": true,
       "BE": true,
@@ -379,7 +376,6 @@
   {
     "id": "safello",
     "pluginId": "com.safello",
-    "priority": 3,
     "paymentType": "credit",
     "description": "Fee: 6.5% / Settlement: Instant\nLimit: €2500",
     "title": "Credit Card",
@@ -431,7 +427,6 @@
   {
     "id": "libertyx",
     "pluginId": "com.libertyx",
-    "priority": 5,
     "paymentType": {
       "cash": true,
       "credit": true
@@ -450,7 +445,6 @@
   {
     "id": "banxa",
     "pluginId": "com.banxa",
-    "priority": 2,
     "paymentType": {
       "bank": true,
       "cash": true
@@ -477,26 +471,30 @@
     "priority": 1
   },
   {
+    "id": "bity",
+    "priority": 1
+  },
+  {
     "id": "banxa",
-    "priority": 2
+    "priority": 1
   },
   {
     "id": "libertyx",
-    "priority": 5
+    "priority": 7
   },
   {
     "id": "safello",
-    "priority": 3
+    "priority": 6
   },
   {
     "id": "moonpay",
-    "priority": 2
+    "priority": 5
   },
   "----- iOS specifics -----",
   {
     "id": "moonpay",
     "forPlatform": "ios",
-    "priority": 1,
+    "priority": 3,
     "paymentType": {
       "credit": true,
       "applepay": true
@@ -515,6 +513,7 @@
       "credit": true
     },
     "title": "Swish and Credit Card",
+    "priority": 2,
     "paymentTypeLogoKey": "swish"
   }
 ]

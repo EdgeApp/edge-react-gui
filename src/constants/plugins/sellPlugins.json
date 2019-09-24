@@ -2,7 +2,6 @@
   {
     "id": "simplex",
     "pluginId": "co.edgesecure.simplex",
-    "priority": 2,
     "paymentType": "credit",
     "description": "Fee: ~4% / Settlement: 10-30 minutes\nLimit: €4400",
     "title": "Credit and Debit Card",
@@ -65,7 +64,6 @@
   {
     "id": "wyre",
     "pluginId": "co.edgesecure.wyre",
-    "priority": 1,
     "paymentType": "bank",
     "description": "Fee: 1% / Settlement: 1 - 5 days\nLimit: $2500",
     "title": "ACH Bank Transfer",
@@ -83,7 +81,6 @@
   {
     "id": "bits of gold",
     "pluginId": "bitsofgold",
-    "priority": 3,
     "paymentType": "bank",
     "description": "Fee: ~7.5% / Settlement: 2 days\nLimit: €5000",
     "title": "SEPA Bank Transfer",
@@ -140,15 +137,13 @@
       "YT": true
     },
     "cryptoCodes": [
-      "BTC",
-      "ETH"
+      "BTC"
     ],
     "paymentTypeLogoKey": "bank"
   },
   {
     "id": "bitrefill",
     "pluginId": "co.edgesecure.bitrefill",
-    "priority": 5,
     "paymentType": "giftcard",
     "description": "Buy gift cards and reload phones with crypto",
     "title": "Gift Cards",
@@ -419,6 +414,7 @@
       "AT": true,
       "BE": true,
       "BG": true,
+      "CH": true,
       "CY": true,
       "CZ": true,
       "DK": true,
@@ -447,20 +443,23 @@
     "cryptoCodes": [
       "BTC"
     ],
-    "priority": 1,
     "paymentType": "bank",
-    "description": "ACH bank transfer\nBTC\nFee: 1% / Settlement: 1-5 days\nBuy Limit: $2500 / Unlimited Sell",
-    "title": "Bity",
+    "description": "Fee: 1% / Settlement: 1-2 days\nLimit: €5000/day with no KYC",
+    "title": "SEPA Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/09/logoBity.png",
     "paymentTypeLogoKey": "bank"
   },
   "----- Sorting -----",
   {
     "id": "simplex",
-    "priority": 2
+    "priority": 4
   },
   {
     "id": "wyre",
+    "priority": 1
+  },
+  {
+    "id": "bity",
     "priority": 1
   },
   {
@@ -478,6 +477,7 @@
     "forCountries": [
       "IS"
     ],
-    "title": "SEPA and Israeli Bank Transfer"
+    "priority": 2,
+    "title": "Israeli Bank Transfer"
   }
 ]
