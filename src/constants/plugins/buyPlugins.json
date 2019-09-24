@@ -458,6 +458,7 @@
     "forPlatform": "ios",
     "priority": 1,
     "paymentType": { "credit": true, "applepay": true },
+    "paymentTypeLogoKey": "applepay",
     "title": "Apple Pay and Credit Card"
   },
 
@@ -467,6 +468,7 @@
     "id": "safello",
     "forCountries": ["SE"],
     "paymentType": { "bank": true, "credit": true },
-    "title": "Swish and Credit Card"
+    "title": "Swish and Credit Card",
+    "paymentTypeLogoKey": "swish"
   }
 ]

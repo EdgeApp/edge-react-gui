@@ -16,6 +16,7 @@ import paymentTypeLogoCash from '../../assets/images/paymentTypes/paymentTypeLog
 import paymentTypeLogoCreditCard from '../../assets/images/paymentTypes/paymentTypeLogoCreditCard.png'
 import paymentTypeLogoGiftCard from '../../assets/images/paymentTypes/paymentTypeLogoGiftCard.png'
 import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLogoPoli.png'
+import paymentTypeLogoSwish from '../../assets/images/paymentTypes/paymentTypeLogoSwish.png'
 import { ANDROID, ARROW_RIGHT, COUNTRY_CODES, FLAG_LOGO_URL, PLUGIN_VIEW, PLUGIN_VIEW_LEGACY, SIMPLE_ICONS } from '../../constants/indexConstants.js'
 import { devPlugin, getBuyPlugins, getSellPlugins, pluginUrlMap } from '../../constants/plugins/buySellPlugins.js'
 import s from '../../locales/strings.js'
@@ -39,7 +40,8 @@ const paymentTypeLogosById = {
   bank: paymentTypeLogoBankTransfer,
   cash: paymentTypeLogoCash,
   giftcard: paymentTypeLogoGiftCard,
-  poli: paymentTypeLogoPoli
+  poli: paymentTypeLogoPoli,
+  swish: paymentTypeLogoSwish
 }
 
 type OwnProps = {
