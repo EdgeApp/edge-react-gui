@@ -9,13 +9,12 @@
     "paymentType": "credit",
     "paymentTypeLogoKey": "credit",
     "pluginId": "co.edgesecure.simplex",
-    "priority": 2,
+    "priority": 4,
     "title": "Credit and Debit Card"
   },
   {
     "cryptoCodes": [
-      "BTC",
-      "ETH"
+      "BTC"
     ],
     "description": "Fee: ~7.5% / Settlement: 2 days\nLimit: €5000",
     "forCountries": [
@@ -26,8 +25,8 @@
     "paymentType": "bank",
     "paymentTypeLogoKey": "bank",
     "pluginId": "bitsofgold",
-    "priority": 3,
-    "title": "SEPA and Israeli Bank Transfer"
+    "priority": 2,
+    "title": "Israeli Bank Transfer"
   },
   {
     "cryptoCodes": [
