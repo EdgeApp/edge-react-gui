@@ -68,11 +68,11 @@ export class EdgeCoreManager extends PureComponent<Props, State> {
     if (this.paused !== paused) {
       this.paused = paused
 
-      // const { context } = this.state
-      // if (context != null) {
-      //   // TODO: Display a popdown error alert once we get that redux-free:
-      //   context.changePaused(paused, { secondsDelay: paused ? 20 : 0 }).catch(e => console.log(e))
-      // }
+      const { context } = this.state
+      if (context != null) {
+        // TODO: Display a popdown error alert once we get that redux-free:
+        context.changePaused(paused, { secondsDelay: paused ? 20 : 0 }).catch(e => console.log(e))
+      }
     }
   }
 
@@ -91,7 +91,6 @@ export class EdgeCoreManager extends PureComponent<Props, State> {
     context.on('close', () => {
       this.setState({ context: null })
     })
-    context.changePaused(true)
     this.setState(state => ({ context, counter: state.counter + 1 }), () => this.hideSplash())
   }
 
