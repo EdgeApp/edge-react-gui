@@ -31,7 +31,7 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
         const state = getState()
         const account = CORE_SELECTORS.getAccount(state)
 
-        account.changeWalletStates({ [walletId]: { archived: false } }).catch(error => console.log(error))
+        account.changeWalletStates({ [walletId]: { archived: false } }).catch(showError)
       }
     }
 
@@ -40,7 +40,7 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
         const state = getState()
         const account = CORE_SELECTORS.getAccount(state)
 
-        account.changeWalletStates({ [walletId]: { archived: true } }).catch(error => console.log(error))
+        account.changeWalletStates({ [walletId]: { archived: true } }).catch(showError)
       }
     }
 
@@ -165,7 +165,9 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
             })
             await launchModal(modal)
           }
-        } catch (e) {}
+        } catch (error) {
+          showError(error)
+        }
       }
     }
 

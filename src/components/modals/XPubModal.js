@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Alert, Clipboard, Platform, Text } from 'react-native'
+import { Clipboard, Platform, Text } from 'react-native'
 
 import { EYE_ICON, ION_ICONS } from '../../constants/IconConstants.js'
 import s from '../../locales/strings.js'
@@ -9,7 +9,7 @@ import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import { InteractiveModal } from '../../modules/UI/components/Modals/InteractiveModal/InteractiveModal.ui.js'
 import { scale } from '../../util/scaling.js'
-import { showToast } from '../services/AirshipInstance.js'
+import { showError, showToast } from '../services/AirshipInstance.js'
 
 type XPubModalOwnProps = {}
 
@@ -32,9 +32,8 @@ export default class XPubModal extends Component<XPubModalComponentProps, XPubMo
       this.props.onExit()
       Clipboard.setString(this.props.xPubSyntax)
       showToast(s.strings.fragment_wallets_pubkey_copied_title)
-    } catch (e) {
-      console.log('Error:', e.title, e.message)
-      Alert.alert('Error', s.strings.fragment_wallets_pubkey_copied_error)
+    } catch (error) {
+      showError(error)
     }
   }
 

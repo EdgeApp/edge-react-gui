@@ -83,11 +83,7 @@ const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWallet, gu
             const addr = guiWallet.receiveAddress.publicAddress
             const url = decodeURIComponent(requestAddress.callbackUrl)
             const finalUrl = url + '?address=' + encodeURIComponent(addr)
-            try {
-              Linking.openURL(finalUrl)
-            } catch (e) {
-              throw new Error(e)
-            }
+            Linking.openURL(finalUrl)
           }
         })
         .catch(e => {
@@ -368,6 +364,7 @@ export const checkAndShowGetCryptoModal = () => async (dispatch: Dispatch, getSt
       Actions[EXCHANGE_SCENE]()
     }
   } catch (e) {
-    console.log('error generating encodedURI: ', e)
+    // Don't bother the user with this error, but log it quietly:
+    console.log(e)
   }
 }

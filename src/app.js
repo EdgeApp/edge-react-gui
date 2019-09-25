@@ -1,8 +1,6 @@
 // @flow
 /* global __DEV__ */
 
-import './util/polyfills.js'
-
 import { Client } from 'bugsnag-react-native'
 import { fetchLoginMessages } from 'edge-core-js'
 import React from 'react'

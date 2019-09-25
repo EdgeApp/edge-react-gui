@@ -26,15 +26,8 @@ export const saveReceiveAddress = (receiveAddress: Object) => (dispatch: Dispatc
   const selectedCurrencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
   const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
 
-  const onSuccess = () => {
-    dispatch(updateReceiveAddress(selectedWalletId, selectedCurrencyCode))
-  }
-  const onError = e => {
-    console.log(e)
-  }
-
   wallet
     .saveReceiveAddress(receiveAddress)
-    .then(onSuccess)
-    .catch(onError)
+    .then(() => dispatch(updateReceiveAddress(selectedWalletId, selectedCurrencyCode)))
+    .catch(showError)
 }

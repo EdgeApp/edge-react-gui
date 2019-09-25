@@ -9,6 +9,7 @@ import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { launchModal } from '../components/common/ModalProvider.js'
+import { showError } from '../components/services/AirshipInstance.js'
 import { EXCLAMATION, FEE_ALERT_THRESHOLD, MATERIAL_COMMUNITY, SEND_CONFIRMATION, TRANSACTION_DETAILS } from '../constants/indexConstants'
 import { getSpecialCurrencyInfo, getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
@@ -164,7 +165,7 @@ export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => 
 
       dispatch(updateAmount(nativeAmount, exchangeAmount, fiatPerCrypto.toString(), true))
     })
-    .catch(e => console.log(e))
+    .catch(showError)
 }
 
 export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: GetState) => {

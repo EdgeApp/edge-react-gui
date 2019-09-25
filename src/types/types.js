@@ -209,29 +209,29 @@ export type SpendingLimits = {
   }
 }
 
-export type BuySellPlugin = {
-  pluginId: string,
+export type PluginUrlMap = {
+  id: string,
   uri: string,
   name: string,
-  subtitle: string,
-  imageUrl: string,
   supportEmail?: string,
   permissions?: Array<string>,
   originWhitelist?: Array<string>,
-  isLegacy?: true
+  isLegacy?: boolean
 }
 
-export type BuySellFilter = {
-  [pluginName: string]: {
-    countryCodes: {
-      [countryCode: string]: boolean
-    },
-    cryptoCodes: {
-      [currencyCode: string]: boolean
-    },
-    priority: number,
-    paymentType: 'bank' | 'cash' | 'credit' | 'crypto'
-  }
+export type BuySellPlugin = {
+  id: string,
+  pluginId: string,
+  priority: number,
+  paymentType: string | { [string]: boolean },
+  description: string,
+  title: string,
+  paymentTypeLogoKey: string,
+  partnerIconPath: string,
+  cryptoCodes?: Array<string>,
+  countryCodes?: { [string]: boolean },
+  forPlatform?: string,
+  forCountries?: Array<string>
 }
 
 export type CountryData = {

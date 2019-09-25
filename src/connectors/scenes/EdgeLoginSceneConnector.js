@@ -16,10 +16,7 @@ export const mapStateToProps = (state: State) => ({
 })
 
 export const mapDispatchToProps = (dispatch: Dispatch) => ({
-  accept: () =>
-    dispatch(actions.lobbyLogin()).catch(e => {
-      console.log(e)
-    }),
+  accept: () => dispatch(actions.lobbyLogin()),
   decline: () => Actions.pop()
 })
 

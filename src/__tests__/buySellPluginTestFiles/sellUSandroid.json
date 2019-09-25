@@ -1,0 +1,34 @@
+[
+  {
+    "cryptoCodes": [
+      "BTC",
+      "ETH",
+      "DAI"
+    ],
+    "description": "Fee: 1% / Settlement: 1 - 5 days\nLimit: $2500",
+    "id": "wyre",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/01/wyre-logo-square-small.png",
+    "paymentType": "bank",
+    "paymentTypeLogoKey": "bank",
+    "pluginId": "co.edgesecure.wyre",
+    "priority": 1,
+    "title": "ACH Bank Transfer"
+  },
+  {
+    "cryptoCodes": [
+      "BTC",
+      "DASH",
+      "DOGE",
+      "ETH",
+      "LTC"
+    ],
+    "description": "Buy gift cards and reload phones with crypto",
+    "id": "bitrefill",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/01/bitrefill-2.png",
+    "paymentType": "giftcard",
+    "paymentTypeLogoKey": "giftcard",
+    "pluginId": "co.edgesecure.bitrefill",
+    "priority": 5,
+    "title": "Gift Cards"
+  }
+]

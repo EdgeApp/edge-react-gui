@@ -107,19 +107,17 @@ async function queryUtilServer (context: EdgeContext, folder: DiskletFolder, use
   try {
     const json = await folder.file(UTILITY_SERVER_FILE).getText()
     jsonObj = JSON.parse(json)
-  } catch (err) {
-    console.log(err)
-  }
-
-  if (jsonObj) {
     if (jsonObj.currencyCode) {
       global.currencyCode = jsonObj.currencyCode
     }
     return
+  } catch (e) {
+    // Failing here is OK, fall through:
   }
-  if (usernames.length === 0 && !jsonObj) {
-    // New app launch. Query the utility server for referral information
-    try {
+
+  try {
+    if (usernames.length === 0) {
+      // New app launch. Query the utility server for referral information
       const response = await fetch('https://util1.edge.app/ref')
       if (response) {
         const util = await response.json()
@@ -129,8 +127,9 @@ async function queryUtilServer (context: EdgeContext, folder: DiskletFolder, use
         // Save util data
         folder.file(UTILITY_SERVER_FILE).setText(JSON.stringify(util))
       }
-    } catch (e) {
-      console.log(e)
     }
+  } catch (e) {
+    // Failing here is still OK, but log it:
+    console.log(e)
   }
 }
