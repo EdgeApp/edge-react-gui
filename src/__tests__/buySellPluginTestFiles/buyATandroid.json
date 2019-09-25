@@ -20,14 +20,14 @@
     "cryptoCodes": [
       "BTC"
     ],
-    "description": "ACH bank transfer\nBTC\nFee: 1% / Settlement: 1-5 days\nBuy Limit: $2500 / Unlimited Sell",
+    "description": "Fee: 1% / Settlement: 1-2 days\nLimit: €5000/day with no KYC",
     "id": "bity",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/09/logoBity.png",
     "paymentType": "bank",
     "paymentTypeLogoKey": "bank",
     "pluginId": "com.bity",
     "priority": 1,
-    "title": "Bity"
+    "title": "SEPA Bank Transfer"
   },
   {
     "cryptoCodes": [
@@ -52,7 +52,7 @@
     "paymentType": "credit",
     "paymentTypeLogoKey": "credit",
     "pluginId": "io.moonpay.buy",
-    "priority": 2,
+    "priority": 5,
     "title": "Credit Card"
   },
   {
@@ -66,7 +66,7 @@
     "paymentType": "credit",
     "paymentTypeLogoKey": "credit",
     "pluginId": "com.safello",
-    "priority": 3,
+    "priority": 6,
     "title": "Credit Card"
   }
 ]

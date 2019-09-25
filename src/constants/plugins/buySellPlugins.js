@@ -84,7 +84,7 @@ export const devPlugin: BuySellPlugin & PluginUrlMap = {
   isLegacy: false
 }
 
-function collapsePlugins (pluginsRaw: Array<string | BuySellPlugin>, platform: string, countryCode: string): Array<BuySellPlugin> {
+export const collapsePlugins = function (pluginsRaw: Array<string | BuySellPlugin>, platform: string, countryCode: string): Array<BuySellPlugin> {
   const collapsedById: { [id: string]: BuySellPlugin } = {}
 
   // Collapse all
