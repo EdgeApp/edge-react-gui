@@ -159,8 +159,10 @@ class PluginList extends Component<Props> {
       noButton: { title: s.strings.string_cancel_cap }
     })
     launchModal(modal).then(response => {
-      plugin.uri = response
-      Actions[PLUGIN_VIEW]({ plugin })
+      if (response) {
+        plugin.uri = response
+        Actions[PLUGIN_VIEW]({ plugin })
+      }
     })
   }
 
@@ -197,7 +199,7 @@ class PluginList extends Component<Props> {
           </View>
           <View style={styles.textBoxWrap}>
             <Text style={styles.titleText}>{item.title}</Text>
-            <Text style={styles.subtitleText}>{`Currencies: ${item.cryptoCodes.join(', ')}`}</Text>
+            <Text style={styles.subtitleText}>{item.cryptoCodes.length > 0 && `Currencies: ${item.cryptoCodes.join(', ')}`}</Text>
             <Text style={styles.subtitleText}>{item.description}</Text>
           </View>
         </View>
