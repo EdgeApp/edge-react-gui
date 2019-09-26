@@ -69,13 +69,13 @@ export const pluginUrlMap = {
 export const devPlugin: BuySellPlugin & PluginUrlMap = {
   pluginId: 'custom',
   uri: '',
-  name: 'Custom Dev',
+  name: '',
   id: '',
   priority: 99,
   paymentType: '',
   description: '',
-  title: '',
-  paymentTypeLogoKey: '',
+  title: 'Custom Dev',
+  paymentTypeLogoKey: 'credit',
   partnerIconPath: '',
   cryptoCodes: [],
   supportEmail: '',
@@ -84,7 +84,7 @@ export const devPlugin: BuySellPlugin & PluginUrlMap = {
   isLegacy: false
 }
 
-function collapsePlugins (pluginsRaw: Array<string | BuySellPlugin>, platform: string, countryCode: string): Array<BuySellPlugin> {
+export const collapsePlugins = function (pluginsRaw: Array<string | BuySellPlugin>, platform: string, countryCode: string): Array<BuySellPlugin> {
   const collapsedById: { [id: string]: BuySellPlugin } = {}
 
   // Collapse all

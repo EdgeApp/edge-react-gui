@@ -29,10 +29,10 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   merchantMode: false,
   countryCode: '',
   BTC: {
-    denomination: '100'
+    denomination: '100000000'
   },
   BCH: {
-    denomination: '100'
+    denomination: '100000000'
   },
   EOS: {
     denomination: '10000'

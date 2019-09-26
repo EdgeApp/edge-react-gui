@@ -44,7 +44,7 @@
     },
     "paymentTypeLogoKey": "cash",
     "pluginId": "com.libertyx",
-    "priority": 5,
+    "priority": 7,
     "title": "Cash and Debit Card"
   }
 ]
