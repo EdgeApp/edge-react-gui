@@ -60,9 +60,7 @@ export const selectWallet = (walletId: string, currencyCode: string, from?: stri
       .then(receiveAddress => {
         dispatch({ type: 'NEW_RECEIVE_ADDRESS', data: { receiveAddress } })
       })
-      .catch(e => {
-        console.log('error on getting wallet receive address')
-      })
+      .catch(showError)
   }
 }
 
@@ -253,7 +251,7 @@ export const getEnabledTokens = (walletId: string) => async (dispatch: Dispatch,
   }
 }
 
-export const assembleCustomToken = (currencyName: string, currencyCode: string, contractAddress: string, denomination: string) => {
+export const assembleCustomToken = (currencyName: string, currencyCode: string, contractAddress: string, denomination: string, walletType: string) => {
   // create modified object structure to match metaTokens
   const newTokenObj: CustomTokenInfo = {
     currencyName,
@@ -268,7 +266,8 @@ export const assembleCustomToken = (currencyName: string, currencyCode: string, 
         symbol: ''
       }
     ],
-    isVisible: true
+    isVisible: true,
+    walletType
   }
 
   return newTokenObj
@@ -290,7 +289,7 @@ export const editCustomToken = (
     const guiWallet = UI_SELECTORS.getWallet(state, walletId)
     const allTokens = UTILS.mergeTokens(guiWallet.metaTokens, customTokens)
     const indexInAllTokens = _.findIndex(allTokens, token => token.currencyCode === currencyCode)
-    const tokenObj = assembleCustomToken(currencyName, currencyCode, contractAddress, denomination)
+    const tokenObj = assembleCustomToken(currencyName, currencyCode, contractAddress, denomination, guiWallet.type)
     if (indexInAllTokens >= 0) {
       // currently exists in some form
       if (currencyCode === oldCurrencyCode) {

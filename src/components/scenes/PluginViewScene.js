@@ -9,7 +9,7 @@ import { Bridge, onMethod } from 'yaob'
 import { setPluginScene } from '../../modules/UI/scenes/Plugins/BackButton.js'
 import { EdgeProvider } from '../../modules/UI/scenes/Plugins/EdgeProvider.js'
 import type { Dispatch, State } from '../../types/reduxTypes.js'
-import { type BuySellPlugin } from '../../types/types.js'
+import { type BuySellPlugin, type PluginUrlMap } from '../../types/types.js'
 import { javascript } from '../../util/bridge/injectThisInWebView.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
@@ -99,7 +99,7 @@ function makeOuterWebViewBridge<Root> (onRoot: (root: Root) => mixed, debug: boo
 
 type Props = {
   dispatch: Dispatch,
-  plugin: BuySellPlugin,
+  plugin: BuySellPlugin & PluginUrlMap,
   state: State
 }
 

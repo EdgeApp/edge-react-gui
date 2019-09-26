@@ -19,13 +19,14 @@ import { PluginBridge, pop as pluginPop } from '../../modules/UI/scenes/Plugins/
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
 import type { GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import styles from '../../styles/scenes/PluginsStyle.js'
-import { type BuySellPlugin } from '../../types/types.js'
+import { type BuySellPlugin, type PluginUrlMap } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { showError } from '../services/AirshipInstance.js'
 
 const BACK = s.strings.title_back
 
 type PluginProps = {
-  plugin: BuySellPlugin,
+  plugin: BuySellPlugin & PluginUrlMap,
   navigation: any,
   account: any,
   guiWallet: any,
@@ -222,9 +223,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
                   this._webviewOpenUrl(this.successUrl)
                 }
               })
-              .catch(e => {
-                console.log(e)
-              })
+              .catch(showError)
           }
         })
         break
@@ -262,9 +261,7 @@ class PluginView extends React.Component<PluginProps, PluginState> {
                   this._webviewOpenUrl(this.successUrl)
                 }
               })
-              .catch(e => {
-                console.log(e)
-              })
+              .catch(showError)
           })
           break
         default:

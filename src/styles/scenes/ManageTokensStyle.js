@@ -120,5 +120,10 @@ export const styles = StyleSheet.create({
     marginRight: scale(2),
     backgroundColor: THEME.COLORS.SECONDARY,
     borderRadius: 3
+  },
+  oneButton: {
+    flex: 1,
+    backgroundColor: THEME.COLORS.SECONDARY,
+    borderRadius: 3
   }
 })

@@ -257,15 +257,14 @@ export class EdgeProvider extends Bridgeable {
   // Read data back from the user's account. This can only access data written by this same plugin
   // 'keys' is an array of strings with keys to lookup.
   // Returns an object with a map of key value pairs from the keys passed in
-  async readData (keys: Array<string>): Object {
+  async readData (keys: Array<string>): Promise<Object> {
     const account = CORE_SELECTORS.getAccount(this._state)
     const store = account.dataStore
     const returnObj = {}
     for (let i = 0; i < keys.length; i++) {
       returnObj[keys[i]] = await store.getItem(this._pluginId, keys[i]).catch(e => undefined)
     }
-    console.log()
-    return Promise.resolve(returnObj)
+    return returnObj
   }
 
   async exitPlugin () {
@@ -292,15 +291,11 @@ export class EdgeProvider extends Bridgeable {
     if (options && options.uniqueIdentifier) {
       info.uniqueIdentifier = options.uniqueIdentifier
     }
-    try {
-      const transaction = await this._makeSpendRequest(info)
-      if (transaction) {
-        Actions.pop()
-      }
-      return Promise.resolve(transaction)
-    } catch (e) {
-      return Promise.reject(e)
+    const transaction = await this._makeSpendRequest(info)
+    if (transaction) {
+      Actions.pop()
     }
+    return transaction
   }
 
   // Request that the user spend to a URI
@@ -328,30 +323,20 @@ export class EdgeProvider extends Bridgeable {
     if (options && options.uniqueIdentifier) {
       info.uniqueIdentifier = options.uniqueIdentifier
     }
-    try {
-      const transaction = await this._makeSpendRequest(info)
-      if (transaction) {
-        Actions.pop()
-      }
-      this.trackConversion()
-      return Promise.resolve(transaction)
-    } catch (e) {
-      return Promise.reject(e)
+    const transaction = await this._makeSpendRequest(info)
+    if (transaction) {
+      Actions.pop()
     }
+    this.trackConversion()
+    return transaction
   }
+  async signMessage (message: string) /* EdgeSignedMessage */ {
+    const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
+    const coreWallet = CORE_SELECTORS.getWallet(this._state, guiWallet.id)
 
-  // Sign a message using a public address from the current wallet
-  /* signMessage (options: EdgeSignMessageOptions): EdgeSignedMessage {
-    console.log('a1: signMessage', options)
-    // this is about bit id signatures.
-    const obj = {
-      publicKey: 'string',
-      // Hex encoded signature
-      signedMessage: 'string'
-    }
-    return Promise.resolve(obj)
-  } */
-
+    const signedMessage = await coreWallet.otherMethods.signMessageBase64(message, guiWallet.receiveAddress.publicAddress)
+    return signedMessage
+  }
   // from the older stuff
   async _makeSpendRequest (guiMakeSpendInfo: GuiMakeSpendInfo): Promise<EdgeTransaction> {
     const edgeTransaction = await this._spend(guiMakeSpendInfo)
@@ -387,6 +372,54 @@ export class EdgeProvider extends Bridgeable {
 
   hasSafariView (): Promise<boolean> {
     return SafariView.isAvailable()
+  }
+
+  async deprecatedAndNotSupportedDouble (request: Object, url: string, url2: string): Promise<mixed> {
+    const response = await window.fetch(url, request)
+    if (response.status !== 201) {
+      const errorData = await response.json()
+      throw new Error(errorData.errors[0].code + ' ' + errorData.errors[0].message)
+    }
+    const newURL = url2 + response.headers.get('Location')
+    const request2 = {
+      method: 'GET',
+      credentials: 'include'
+    }
+    const response2 = await window.fetch(newURL, request2)
+    if (response2.status !== 200) {
+      throw new Error('Problem confirming order: Code n200')
+    }
+    const orderData = await response2.json()
+    if (orderData.message_to_sign) {
+      const { signature_submission_url, body } = orderData.message_to_sign
+      const signedTransaction = await this.signMessage(body)
+      const newURL = url2 + signature_submission_url
+      const request = {
+        method: 'POST',
+        headers: {
+          Host: 'exchange.api.bity.com',
+          'Content-Type': '*/*'
+        },
+        body: signedTransaction
+      }
+      const signedTransactionResponse = await window.fetch(newURL, request)
+      if (signedTransactionResponse.status === 400) {
+        throw new Error('Could not complete transaction. Code: 470')
+      }
+      if (signedTransactionResponse.status === 204) {
+        const bankDetailsRequest = {
+          method: 'GET',
+          credentials: 'include'
+        }
+        const detailUrl = url + '/' + orderData.id
+        const bankDetailResponse = await window.fetch(detailUrl, bankDetailsRequest)
+        if (bankDetailResponse.status === 200) {
+          const parsedResponse = await bankDetailResponse.json()
+          return parsedResponse
+        }
+      }
+    }
+    return orderData
   }
 
   async openSafariView (url: string): Promise<mixed> {

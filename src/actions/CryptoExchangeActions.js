@@ -16,7 +16,7 @@ import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { SwapVerifyShapeshiftModal } from '../components/modals/SwapVerifyShapeshiftModal.js'
-import { Airship } from '../components/services/AirshipInstance.js'
+import { Airship, showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants'
 import { intl } from '../locales/intl'
 import s from '../locales/strings.js'
@@ -108,8 +108,8 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
       spendTargets: [{ publicAddress }]
     }
     primaryNativeAmount = await wallet.getMaxSpendable(edgeSpendInfo)
-  } catch (e) {
-    console.log(e.name, e.message)
+  } catch (error) {
+    showError(error)
   }
   dispatch({ type: 'SET_FROM_WALLET_MAX', data: primaryNativeAmount })
 }
@@ -322,6 +322,7 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
     }, 1)
     global.firebase && global.firebase.analytics().logEvent(`Exchange_Shift_Success`)
   } catch (error) {
+    console.log(error)
     global.firebase && global.firebase.analytics().logEvent(`Exchange_Shift_Failed`)
     dispatch({ type: 'DONE_SHIFT_TRANSACTION' })
     setTimeout(() => {

@@ -4,6 +4,7 @@ import { createYesNoModal } from 'edge-components'
 import React from 'react'
 
 import { launchModal } from '../components/common/ModalProvider.js'
+import { showError } from '../components/services/AirshipInstance.js'
 import { SPLIT } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import { getAccount, getWallet, getWalletName } from '../modules/Core/selectors.js'
@@ -47,8 +48,8 @@ export const showSplitWalletModal = (walletId: string) => async (dispatch: Dispa
       const splitType = getSplitType(wallet.currencyInfo.currencyCode)
       await account.splitWalletInfo(walletId, splitType)
       dispatch(refreshWallet(walletId))
-    } catch (e) {
-      throw new Error(e)
+    } catch (error) {
+      showError(error)
     }
   }
 }

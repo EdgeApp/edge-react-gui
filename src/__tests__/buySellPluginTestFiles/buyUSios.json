@@ -1,0 +1,50 @@
+[
+  {
+    "cryptoCodes": [
+      "BTC",
+      "BCH",
+      "ETH",
+      "LTC",
+      "XRP"
+    ],
+    "description": "Fee: ~7% / Settlement: 10-30 minutes\nLimit: $18000",
+    "id": "simplex",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/03/simplex-logo-sm-square.png",
+    "paymentType": "credit",
+    "paymentTypeLogoKey": "credit",
+    "pluginId": "co.edgesecure.simplex",
+    "priority": 4,
+    "title": "Credit and Debit Card"
+  },
+  {
+    "cryptoCodes": [
+      "BTC",
+      "ETH",
+      "DAI"
+    ],
+    "description": "Fee: 1% / Settlement: 1 - 5 days\nLimit: $2500",
+    "id": "wyre",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/01/wyre-logo-square-small.png",
+    "paymentType": "bank",
+    "paymentTypeLogoKey": "bank",
+    "pluginId": "co.edgesecure.wyre",
+    "priority": 1,
+    "title": "ACH Bank Transfer"
+  },
+  {
+    "cryptoCodes": [
+      "BTC"
+    ],
+    "description": "Fee: 3 - 8% / Settlement: Instant\nLimit: $200 - $3000",
+    "id": "libertyx",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/05/libertyXlogo.png",
+    "paymentType": {
+      "cash": true,
+      "credit": true
+    },
+    "paymentTypeLogoKey": "cash",
+    "pluginId": "com.libertyx",
+    "priority": 7,
+    "title": "Cash and Debit Card"
+  }
+]

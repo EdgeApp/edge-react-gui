@@ -42,7 +42,7 @@ export const currencyPlugins = {
   bitcoingold: true,
   bitcoingoldtestnet: false,
   bitcoinsv: true,
-  bitcointestnet: false,
+  bitcointestnet: true,
   dash: true,
   digibyte: true,
   dogecoin: true,
@@ -64,7 +64,8 @@ export const ratePlugins = {
   'shapeshift-rate': false,
   coinbase: true,
   coincap: true,
-  coincapLegacy: true,
+  constantRate: true,
+  coincapLegacy: false,
   nomics: ENV.NOMICS_INIT,
   currencyconverterapi: ENV.CURRENCYCONVERTERAPI_INIT,
   xagau: true

@@ -1,0 +1,19 @@
+[
+  {
+    "cryptoCodes": [
+      "BTC",
+      "DASH",
+      "DOGE",
+      "ETH",
+      "LTC"
+    ],
+    "description": "Buy gift cards and reload phones with crypto",
+    "id": "bitrefill",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/01/bitrefill-2.png",
+    "paymentType": "giftcard",
+    "paymentTypeLogoKey": "giftcard",
+    "pluginId": "co.edgesecure.bitrefill",
+    "priority": 5,
+    "title": "Gift Cards"
+  }
+]

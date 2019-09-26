@@ -1,5 +1,6 @@
 // @flow
 
+import { showError } from '../components/services/AirshipInstance.js'
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import { setAccountBalanceVisibility, updateWalletFiatBalanceVisibility } from '../modules/Settings/SettingsActions.js'
@@ -14,7 +15,7 @@ export const updateActiveWalletsOrder = (activeWalletIds: Array<string>) => (dis
     return keyStates
   }, {})
 
-  return account.changeWalletStates(newKeyStates).catch(error => console.log(error))
+  return account.changeWalletStates(newKeyStates).catch(showError)
 }
 
 export const toggleAccountBalanceVisibility = () => (dispatch: Dispatch, getState: GetState) => {
@@ -25,7 +26,7 @@ export const toggleAccountBalanceVisibility = () => (dispatch: Dispatch, getStat
     .then(() => {
       dispatch(setAccountBalanceVisibility(!currentAccountBalanceVisibility))
     })
-    .catch(error => console.error(error))
+    .catch(showError)
 }
 
 export const toggleWalletFiatBalanceVisibility = () => (dispatch: Dispatch, getState: GetState) => {
@@ -36,7 +37,7 @@ export const toggleWalletFiatBalanceVisibility = () => (dispatch: Dispatch, getS
     .then(() => {
       dispatch(updateWalletFiatBalanceVisibility(!currentWalletFiatBalanceVisibility))
     })
-    .catch(error => console.error(error))
+    .catch(showError)
 }
 
 export const updateArchivedWalletsOrder = (archivedWalletIds: Array<string>) => (dispatch: Dispatch, getState: GetState) => {

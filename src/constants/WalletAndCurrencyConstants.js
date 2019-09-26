@@ -52,6 +52,9 @@ export const DEFAULT_STARTER_WALLET_NAMES = {
   XZC: s.strings.string_first_zcoin_wallet_name
 }
 
+// Put these in reverse order of preference
+export const PREFERRED_TOKENS = ['WINGS', 'HERC', 'REP', 'AGLD', 'RIF']
+
 // DO NOT PUT ANY TOKENS IN HERE!
 export const CURRENCY_PLUGIN_NAMES = {
   BCH: 'bitcoincash',
@@ -124,7 +127,9 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   RBTC: {
     dummyPublicAddress: '0x74f9452e22fe58e27575f176fc884729d88267ba', // rj116
     allowZeroTx: true,
-    isImportKeySupported: true
+    isImportKeySupported: true,
+    isCustomTokensSupported: false,
+    isTokensSupported: true
   },
   XLM: {
     dummyPublicAddress: 'GBEVGJYAUKJ2TVPMC3GEPI2GGZQLMWZDRWJCVNBXCJ3ELYTDPHVQQM74',
@@ -180,7 +185,9 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     displayBuyCrypto: true,
-    isImportKeySupported: true
+    isImportKeySupported: true,
+    isCustomTokensSupported: true,
+    isTokensSupported: true
   },
   DAI: {
     displayBuyCrypto: true,
@@ -194,7 +201,8 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     noChangeMiningFee: true,
     // will share / copy public address instead of URI on Request scene
     isUriEncodedStructure: true,
-    dummyPublicAddress: 'tz1cVgSd4oY25pDkH7vdvVp5DfPkZwT2hXwX'
+    dummyPublicAddress: 'tz1cVgSd4oY25pDkH7vdvVp5DfPkZwT2hXwX',
+    isImportKeySupported: true
   },
   BNB: {
     uniqueIdentifier: {

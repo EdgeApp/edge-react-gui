@@ -1,0 +1,48 @@
+[
+  {
+    "cryptoCodes": [
+      "BTC"
+    ],
+    "description": "Fee: ~4% / Settlement: 10-30 minutes\nLimit: €4400",
+    "id": "simplex",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/03/simplex-logo-sm-square.png",
+    "paymentType": "credit",
+    "paymentTypeLogoKey": "credit",
+    "pluginId": "co.edgesecure.simplex",
+    "priority": 4,
+    "title": "Credit and Debit Card"
+  },
+  {
+    "cryptoCodes": [
+      "BTC"
+    ],
+    "description": "Fee: ~7.5% / Settlement: 2 days\nLimit: €5000",
+    "forCountries": [
+      "IS"
+    ],
+    "id": "bits of gold",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/bits-of-gold-logo-sm.png",
+    "paymentType": "bank",
+    "paymentTypeLogoKey": "bank",
+    "pluginId": "bitsofgold",
+    "priority": 2,
+    "title": "Israeli Bank Transfer"
+  },
+  {
+    "cryptoCodes": [
+      "BTC",
+      "DASH",
+      "DOGE",
+      "ETH",
+      "LTC"
+    ],
+    "description": "Buy gift cards and reload phones with crypto",
+    "id": "bitrefill",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/01/bitrefill-2.png",
+    "paymentType": "giftcard",
+    "paymentTypeLogoKey": "giftcard",
+    "pluginId": "co.edgesecure.bitrefill",
+    "priority": 5,
+    "title": "Gift Cards"
+  }
+]

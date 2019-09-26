@@ -1,0 +1,72 @@
+[
+  {
+    "cryptoCodes": [
+      "BTC",
+      "BCH",
+      "ETH",
+      "LTC",
+      "XRP"
+    ],
+    "description": "Fee: ~7% / Settlement: 10-30 minutes\nLimit: $18000",
+    "id": "simplex",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/03/simplex-logo-sm-square.png",
+    "paymentType": "credit",
+    "paymentTypeLogoKey": "credit",
+    "pluginId": "co.edgesecure.simplex",
+    "priority": 4,
+    "title": "Credit and Debit Card"
+  },
+  {
+    "cryptoCodes": [
+      "BTC"
+    ],
+    "description": "Fee: 1% / Settlement: 1-2 days\nLimit: €5000/day with no KYC",
+    "id": "bity",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/09/logoBity.png",
+    "paymentType": "bank",
+    "paymentTypeLogoKey": "bank",
+    "pluginId": "com.bity",
+    "priority": 1,
+    "title": "SEPA Bank Transfer"
+  },
+  {
+    "cryptoCodes": [
+      "BTC",
+      "BCH",
+      "ETH",
+      "DAI",
+      "LTC",
+      "EOS",
+      "XRP",
+      "XLM",
+      "BAT",
+      "BNB",
+      "PAX",
+      "TUSD",
+      "USDC",
+      "USDT"
+    ],
+    "description": "Fee: 6.5% / Settlement: 10 minutes\nLimit: $2000",
+    "id": "moonpay",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/05/icon_black_small.png",
+    "paymentType": "credit",
+    "paymentTypeLogoKey": "credit",
+    "pluginId": "io.moonpay.buy",
+    "priority": 5,
+    "title": "Credit Card"
+  },
+  {
+    "cryptoCodes": [
+      "BTC",
+      "ETH"
+    ],
+    "description": "Fee: 6.5% / Settlement: Instant\nLimit: €2500",
+    "id": "safello",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/06/Safello-Logo-Green-background.png",
+    "paymentType": "credit",
+    "paymentTypeLogoKey": "credit",
+    "pluginId": "com.safello",
+    "priority": 6,
+    "title": "Credit Card"
+  }
+]

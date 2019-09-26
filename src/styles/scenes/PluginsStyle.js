@@ -36,11 +36,27 @@ export const styles = {
   pluginRow: {
     borderBottomWidth: 1,
     borderBottomColor: THEME.COLORS.GRAY_3,
-    padding: scale(16),
+    paddingVertical: scale(8),
+    paddingHorizontal: scale(16),
     backgroundColor: THEME.COLORS.WHITE,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'stretch',
+    flexWrap: 'nowrap',
+    width: '100%'
+  },
+  pluginRowLogoAndInfo: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'stretch'
+    alignItems: 'center',
+    flexWrap: 'nowrap'
+  },
+  pluginRowPoweredByRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    flexWrap: 'nowrap',
+    width: '100%'
   },
   logo: {
     justifyContent: 'center',
@@ -49,20 +65,32 @@ export const styles = {
   },
   logoImage: {
     aspectRatio: 1,
-    width: '100%'
+    width: 50,
+    height: 50,
+    resizeMode: 'contain'
+  },
+  partnerIconImage: {
+    aspectRatio: 1,
+    height: scale(10)
   },
   textBoxWrap: {
-    flexShrink: 1,
-    minHeight: scale(16 + 8 + 4 * 18)
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    width: '80%'
   },
   titleText: {
     color: THEME.COLORS.GRAY_1,
     fontSize: scale(16),
-    marginBottom: scale(8)
+    marginBottom: scale(4)
   },
   subtitleText: {
     fontSize: scale(12),
     lineHeight: scale(18)
+  },
+  footerText: {
+    fontSize: scale(10),
+    lineHeight: scale(16)
   }
 }
 

@@ -4,6 +4,7 @@ import type { EdgeTransaction } from 'edge-core-js'
 import _ from 'lodash'
 
 import { showTransactionDropdown } from '../components/navigation/TransactionDropdown.js'
+import { showError } from '../components/services/AirshipInstance.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
@@ -135,8 +136,8 @@ const getAndMergeTransactions = async (state: State, dispatch: Dispatch, walletI
         currentEndIndex: lastUnfilteredIndex
       })
     )
-  } catch (e) {
-    console.log('Issue with getTransactions: ', e.message)
+  } catch (error) {
+    showError(error)
   }
 }
 

@@ -2,6 +2,7 @@
 
 import type { EdgeAccount } from 'edge-core-js'
 
+import { showError } from '../../../components/services/AirshipInstance.js'
 import type { PasswordReminder } from '../../../types/types.js'
 import { categories } from './subcategories.js'
 
@@ -28,10 +29,10 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   merchantMode: false,
   countryCode: '',
   BTC: {
-    denomination: '100'
+    denomination: '100000000'
   },
   BCH: {
-    denomination: '100'
+    denomination: '100000000'
   },
   EOS: {
     denomination: '10000'
@@ -183,6 +184,12 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   LINK: {
     denomination: '1000000000000000000'
   },
+  RBTC: {
+    denomination: '1000000000000000000'
+  },
+  RIF: {
+    denomination: '1000000000000000000'
+  },
   customTokens: [],
   passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN
 }
@@ -245,6 +252,8 @@ export const SYNCED_ACCOUNT_TYPES = {
   KIN: 'object',
   USDT: 'object',
   DAI: 'object',
+  RBTC: 'object',
+  RIF: 'object',
   customTokens: 'object', // arrays return 'object' to typeof
   passwordRecoveryRemindersShown: 'object'
 }
@@ -418,8 +427,8 @@ export async function setSyncedSubcategories (account: EdgeAccount, subcategorie
   const stringifiedSubcategories = JSON.stringify(finalText)
   try {
     await account.disklet.setText(CATEGORIES_FILENAME, stringifiedSubcategories)
-  } catch (e) {
-    console.log(e)
+  } catch (error) {
+    showError(error)
   }
 }
 
