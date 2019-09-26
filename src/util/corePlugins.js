@@ -78,7 +78,8 @@ export const swapPlugins = {
   foxExchange: ENV.FOX_INIT,
   godex: ENV.GODEX_INIT,
   shapeshift: ENV.SHAPESHIFT_INIT,
-  totle: ENV.TOTLE_INIT
+  totle: ENV.TOTLE_INIT,
+  changehero: ENV.CHANGEHERO_INIT
 }
 
 export const allPlugins = {
