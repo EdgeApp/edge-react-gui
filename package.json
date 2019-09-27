@@ -114,7 +114,7 @@
     "edge-currency-bitcoin": "^4.6.0",
     "edge-currency-monero": "^0.2.4",
     "edge-exchange-plugins": "^0.8.5",
-    "edge-login-ui-rn": "0.5.41",
+    "edge-login-ui-rn": "0.5.43",
     "lodash": "^4.17.2",
     "process": "^0.11.10",
     "prop-types": "^15.5.10",
