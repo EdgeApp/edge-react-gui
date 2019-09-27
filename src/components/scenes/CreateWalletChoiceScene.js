@@ -41,14 +41,14 @@ export class CreateWalletChoiceComponent extends PureComponent<CreateWalletChoic
                 <Text style={styles.instructionalText}>{s.strings.create_wallet_choice_instructions}</Text>
               </View>
               <View style={styles.buttons}>
-                <SecondaryButton style={[styles.next]} onPress={this.onSelectNew}>
-                  <SecondaryButton.Text>{s.strings.create_wallet_choice_new_button}</SecondaryButton.Text>
-                </SecondaryButton>
+                <PrimaryButton style={[styles.next]} onPress={this.onSelectNew}>
+                  <PrimaryButton.Text>{s.strings.create_wallet_choice_new_button}</PrimaryButton.Text>
+                </PrimaryButton>
               </View>
               <View style={styles.buttons}>
-                <PrimaryButton style={[styles.next]} onPress={this.onSelectRestore}>
-                  <PrimaryButton.Text>{s.strings.create_wallet_choice_restore_wallet}</PrimaryButton.Text>
-                </PrimaryButton>
+                <SecondaryButton style={[styles.next]} onPress={this.onSelectRestore}>
+                  <SecondaryButton.Text>{s.strings.create_wallet_import_title}</SecondaryButton.Text>
+                </SecondaryButton>
               </View>
             </View>
           </ScrollView>

@@ -149,6 +149,7 @@ const strings = {
   create_wallet_crypto_type_label: 'Wallet Type:',
   create_wallet_fiat_type_label: 'Wallet Fiat:',
   create_wallet_failed_header: 'Create Wallet Failed',
+  create_wallet_failed_import_header: 'Import Key Failed',
   create_wallet_failed_message: 'Wallet creation failed due to timeout. Please check your internet connection and try again later.',
   create_wallet_create_account: 'Create Account',
   create_wallet_account_activate: 'Activate Account',
