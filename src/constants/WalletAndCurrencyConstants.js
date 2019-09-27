@@ -75,6 +75,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   RBTC: 'rsk',
   RVN: 'ravencoin',
   SMART: 'smartcash',
+  TBTC: 'bitcointestnet',
   UFO: 'ufo',
   VTC: 'vertcoin',
   XLM: 'stellar',

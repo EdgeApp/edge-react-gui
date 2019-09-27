@@ -4099,10 +4099,10 @@ edge-components@^0.0.26:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.16.10:
-  version "0.16.10"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.16.10.tgz#483e1a931a31338e28f0837fc013cf6328ddb35d"
-  integrity sha512-RlpD48xZwIv+8/R3fZs8KqbO/a9Ja3SUZ0nXj4CmRlqp+e4RdCsPUmAYSf1O7GkGUuqElRc+RmcXpAZmoiwNbg==
+edge-core-js@^0.16.11:
+  version "0.16.11"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.16.11.tgz#f6950d7df2e1e68880fbdc353a566610c9f8bb95"
+  integrity sha512-/888gUj/mrvm4hB5B1CLbsPFUo6XVhkIVrH8jpE89LqBXbDyJSoVxQTpCavJWz0973KMndrMFh+Ummx+Ke91bQ==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -4193,10 +4193,10 @@ edge-exchange-plugins@^0.8.5:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@0.5.41:
-  version "0.5.41"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.5.41.tgz#9a639b38f559e74d93f31dde6fa8108513ab438b"
-  integrity sha512-UFK8wXuUBej3tcRE5GjzEoF8GzsCfLWv5f4P0ckiMyhYFwbfWGI6XbPlHGuTQKBr2Y57bZWxnerUH6sb8JFP0A==
+edge-login-ui-rn@0.5.43:
+  version "0.5.43"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.5.43.tgz#5baab7cc88f70ad78f42725b345f8967bbb31ce6"
+  integrity sha512-QupybZNy8NbU7HzCRi/ictqsU+B9OvZmjosQOrO5RiY1I+lOJaM7V2mndNzoLZsu3YOcnA7YJrIgpst52IZxGQ==
   dependencies:
     edge-components "^0.0.26"
     material-ui "^0.20.0"
@@ -4223,9 +4223,9 @@ edge-login-ui-rn@0.5.41:
   dependencies:
     moment "^2.22.2"
 
-"edge-plugin-bity@https://github.com/EdgeApp/edge-plugin-bity.git#feb4f3":
+"edge-plugin-bity@https://github.com/EdgeApp/edge-plugin-bity.git#3093e8de":
   version "0.0.1"
-  resolved "https://github.com/EdgeApp/edge-plugin-bity.git#feb4f3e606e9877502392fd6c1d64e1b9c7341ff"
+  resolved "https://github.com/EdgeApp/edge-plugin-bity.git#3093e8ded41aba38761175b343ad117f4902062f"
 
 "edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#29163e3":
   version "0.0.3"
