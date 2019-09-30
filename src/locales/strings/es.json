@@ -135,6 +135,7 @@
   "create_wallet_crypto_type_label": "Tipo de cartera:",
   "create_wallet_fiat_type_label": "Moneda fiat de la cartera:",
   "create_wallet_failed_header": "Error al crear la cartera",
+  "create_wallet_failed_import_header": "",
   "create_wallet_failed_message": "La creación de la cartera falló por exceder el tiempo de espera. Por favor comprueba tu conexión a internet e inténtalo de nuevo más tarde.",
   "create_wallet_create_account": "Crear cuenta",
   "create_wallet_account_activate": "Activar cuenta",
