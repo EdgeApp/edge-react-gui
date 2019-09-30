@@ -135,6 +135,7 @@
   "create_wallet_crypto_type_label": "ウォレットタイプ：",
   "create_wallet_fiat_type_label": "ウォレット法定通貨：",
   "create_wallet_failed_header": "ウォレット作成失敗",
+  "create_wallet_failed_import_header": "",
   "create_wallet_failed_message": "ウォレット作成に失敗しました。インターネット接続を確認し、しばらくしてからもう一度お試しください。",
   "create_wallet_create_account": "アカウント作成",
   "create_wallet_account_activate": "アカウント有効化",
