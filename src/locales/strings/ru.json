@@ -135,6 +135,7 @@
   "create_wallet_crypto_type_label": "Тип кошелька:",
   "create_wallet_fiat_type_label": "Официальная валюта кошелька:",
   "create_wallet_failed_header": "",
+  "create_wallet_failed_import_header": "",
   "create_wallet_failed_message": "",
   "create_wallet_create_account": "",
   "create_wallet_account_activate": "",
