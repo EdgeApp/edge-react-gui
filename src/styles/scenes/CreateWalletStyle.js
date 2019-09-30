@@ -144,7 +144,8 @@ export const styles = {
   },
   reviewAreaText: {
     fontSize: scale(16),
-    lineHeight: scale(24)
+    lineHeight: scale(24),
+    color: THEME.COLORS.BLACK
   },
   text: {
     color: THEME.COLORS.WHITE

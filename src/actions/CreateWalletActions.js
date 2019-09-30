@@ -50,7 +50,6 @@ export const createCurrencyWalletAndAddToSwap = (walletName: string, walletType:
       })
       await launchModal(modal)
       console.log(error)
-      Actions.popTo(Constants.WALLET_LIST_SCENE)
       dispatch({ type: 'UI/WALLETS/CREATE_WALLET_FAILURE' })
     })
 }
@@ -104,7 +103,6 @@ export const createCurrencyWallet = (
     })
     .catch(async error => {
       await launchModal(errorModal(s.strings.create_wallet_failed, error))
-      Actions.popTo(Constants.WALLET_LIST_SCENE)
       dispatch({ type: 'UI/WALLETS/CREATE_WALLET_FAILURE' })
     })
 }
