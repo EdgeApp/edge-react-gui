@@ -135,6 +135,7 @@
   "create_wallet_crypto_type_label": "钱包类型:",
   "create_wallet_fiat_type_label": "法定货币钱包:",
   "create_wallet_failed_header": "创建钱包失败",
+  "create_wallet_failed_import_header": "",
   "create_wallet_failed_message": "钱包创建因超时失败。请检查您的互联网连接，然后再试一次。",
   "create_wallet_create_account": "创建帐户",
   "create_wallet_account_activate": "激活帐号",
