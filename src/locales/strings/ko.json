@@ -135,6 +135,7 @@
   "create_wallet_crypto_type_label": "월렛 종류:",
   "create_wallet_fiat_type_label": "월렛 피아트:",
   "create_wallet_failed_header": "월렛 생성 실패",
+  "create_wallet_failed_import_header": "",
   "create_wallet_failed_message": "로딩시간이 초과되어 월렛 생성에 실패하였습니다.",
   "create_wallet_create_account": "계정 만들기",
   "create_wallet_account_activate": "계정 활성화",
