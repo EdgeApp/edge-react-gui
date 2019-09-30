@@ -135,6 +135,7 @@
   "create_wallet_crypto_type_label": "Loại ví:",
   "create_wallet_fiat_type_label": "Ví Fiat:",
   "create_wallet_failed_header": "Tạo ví thất bại",
+  "create_wallet_failed_import_header": "",
   "create_wallet_failed_message": "Wallet tạo thất bại do hết thời gian. Xin vui lòng kiểm tra kết nối internet của bạn và thử lại sau.",
   "create_wallet_create_account": "Tạo Tài Khoản",
   "create_wallet_account_activate": "Kích hoạt tài khoản",
