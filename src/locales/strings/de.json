@@ -135,6 +135,7 @@
   "create_wallet_crypto_type_label": "Wallet-Typ:",
   "create_wallet_fiat_type_label": "Wallet-Fiat:",
   "create_wallet_failed_header": "Überprüfung des Wallets fehlgeschlagen",
+  "create_wallet_failed_import_header": "",
   "create_wallet_failed_message": "Die Suche nach Updates ist fehlgeschlagen. Bitte überprüfen Sie die Internetverbindung und versuchen es später erneut.",
   "create_wallet_create_account": "Benutzerkonto anlegen",
   "create_wallet_account_activate": "Konto aktivieren",
