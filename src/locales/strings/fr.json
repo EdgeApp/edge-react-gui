@@ -135,6 +135,7 @@
   "create_wallet_crypto_type_label": "Type de portefeuille:",
   "create_wallet_fiat_type_label": "Portefeuille de Fiat",
   "create_wallet_failed_header": "Échec de la création du portefeuille",
+  "create_wallet_failed_import_header": "",
   "create_wallet_failed_message": "La vérification a échoué. Vérifiez votre connexion internet et réessayez ultérieurement.",
   "create_wallet_create_account": "Créer un Compte",
   "create_wallet_account_activate": "Activer le compte",
