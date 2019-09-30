@@ -135,6 +135,7 @@
   "create_wallet_crypto_type_label": "Tipo di portafoglio:",
   "create_wallet_fiat_type_label": "Portafoglio fiat:",
   "create_wallet_failed_header": "Creazione portafoglio fallita",
+  "create_wallet_failed_import_header": "",
   "create_wallet_failed_message": "Creazione del portafoglio fallita causa timeout. Controlla la tua connessione Internet e riprova più tardi.",
   "create_wallet_create_account": "Crea un account",
   "create_wallet_account_activate": "Attiva l'account",
