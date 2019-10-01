@@ -7,8 +7,7 @@ export const styles = {
   topRow: {
     alignItems: 'center',
     justifyContent: 'space-around',
-    paddingHorizontal: scale(30),
-    paddingVertical: scale(14)
+    paddingVertical: scale(8)
   },
   centerRow: {
     alignItems: 'center'
@@ -27,8 +26,7 @@ export const styles = {
   },
   logoImage: {
     position: 'relative',
-    width: '100%',
-    height: scale(90),
+    width: '80%',
     resizeMode: 'contain'
   },
   confirmText: {
@@ -136,7 +134,6 @@ export const styles = {
       textAlign: 'right'
     },
     topRow: {
-      height: scale(65),
       flexDirection: 'row'
     },
     bottomRow: {

@@ -2,7 +2,7 @@
 
 import type { EdgeAccount } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, Image, View } from 'react-native'
+import { ActivityIndicator, Image, ScrollView, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { swapPluginLogos } from '../../assets/images/exchange'
@@ -101,41 +101,43 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
 
     return (
       <SceneWrapper>
-        <View style={styles.topRow}>
-          <Image source={swapPluginLogos[pluginName]} resizeMode={'contain'} style={styles.logoImage} />
-        </View>
-        <View style={styles.centerRow}>
-          <ExchangeQuoteComponent
-            cryptoAmount={fromDisplayAmount}
-            currency={fromWalletCurrencyName}
-            currencyCode={fromDenomination}
-            fiatCurrencyAmount={fromFiat}
-            fiatCurrencyCode={fromWallet.fiatCurrencyCode.replace('iso:', '')}
-            headline={sprintf(s.strings.exchange_will_be_sent, fromDisplayAmount, fromDenomination)}
-            isTop
-            miningFee={fee}
-            walletIcon={fromCurrencyIcon}
-            walletName={fromWallet.name || ''}
-          />
-          <ExchangeQuoteComponent
-            cryptoAmount={toDisplayAmount}
-            currency={toWalletCurrencyName}
-            currencyCode={toDenomination}
-            fiatCurrencyAmount={toFiat}
-            fiatCurrencyCode={toWallet.fiatCurrencyCode.replace('iso:', '')}
-            headline={sprintf(s.strings.exchange_will_be_received, toDisplayAmount, toDenomination)}
-            isEstimate={isEstimate}
-            walletIcon={toCurrencyIcon}
-            walletName={toWallet.name || ''}
-          />
-        </View>
-        <View style={styles.confirmTextRow}>
-          <FormattedText style={styles.confirmText}>{s.strings.confirm_to_complete_exchange}</FormattedText>
-        </View>
-        <View style={styles.bottomRow}>
-          {this.renderSlider()}
-          {this.renderTimer()}
-        </View>
+        <ScrollView>
+          <View style={styles.topRow}>
+            <Image source={swapPluginLogos[pluginName]} resizeMode={'contain'} style={styles.logoImage} />
+          </View>
+          <View style={styles.centerRow}>
+            <ExchangeQuoteComponent
+              cryptoAmount={fromDisplayAmount}
+              currency={fromWalletCurrencyName}
+              currencyCode={fromDenomination}
+              fiatCurrencyAmount={fromFiat}
+              fiatCurrencyCode={fromWallet.fiatCurrencyCode.replace('iso:', '')}
+              headline={sprintf(s.strings.exchange_will_be_sent, fromDisplayAmount, fromDenomination)}
+              isTop
+              miningFee={fee}
+              walletIcon={fromCurrencyIcon}
+              walletName={fromWallet.name || ''}
+            />
+            <ExchangeQuoteComponent
+              cryptoAmount={toDisplayAmount}
+              currency={toWalletCurrencyName}
+              currencyCode={toDenomination}
+              fiatCurrencyAmount={toFiat}
+              fiatCurrencyCode={toWallet.fiatCurrencyCode.replace('iso:', '')}
+              headline={sprintf(s.strings.exchange_will_be_received, toDisplayAmount, toDenomination)}
+              isEstimate={isEstimate}
+              walletIcon={toCurrencyIcon}
+              walletName={toWallet.name || ''}
+            />
+          </View>
+          <View style={styles.confirmTextRow}>
+            <FormattedText style={styles.confirmText}>{s.strings.confirm_to_complete_exchange}</FormattedText>
+          </View>
+          <View style={styles.bottomRow}>
+            {this.renderSlider()}
+            {this.renderTimer()}
+          </View>
+        </ScrollView>
       </SceneWrapper>
     )
   }
