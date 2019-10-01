@@ -162,9 +162,9 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
             isFocused={isFromFocused}
             focusMe={this.focusFromWallet}
           />
-          <View style={styles.shim} />
+          <View style={styles.arrowShim} />
           <Icon style={styles.downArrow} name={Constants.ARROW_DOWN_BOLD} size={styles.downArrowSize} type={Constants.MATERIAL_COMMUNITY} />
-          <View style={styles.shim} />
+          <View style={styles.arrowShim} />
           <CryptoExchangeFlipInputWrapperComponent
             style={styles.flipWrapper}
             guiWallet={this.props.toWallet}

@@ -137,6 +137,7 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
             {this.renderSlider()}
             {this.renderTimer()}
           </View>
+          <View style={{ height: 200 }} />
         </ScrollView>
       </SceneWrapper>
     )

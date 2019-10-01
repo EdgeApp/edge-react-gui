@@ -13,7 +13,7 @@ export const styles = {
     alignItems: 'center'
   },
   confirmTextRow: {
-    paddingVertical: scale(20),
+    paddingVertical: scale(12),
     alignItems: 'center',
     justifyContent: 'center'
   },

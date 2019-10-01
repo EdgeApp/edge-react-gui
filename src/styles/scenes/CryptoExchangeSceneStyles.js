@@ -42,6 +42,9 @@ export const styles = {
       fontSize: scale(10)
     }
   },
+  arrowShim: {
+    height: scale(8)
+  },
   shim: {
     height: scale(20)
   },
@@ -50,7 +53,7 @@ export const styles = {
   downArrow: {
     color: THEME.COLORS.WHITE
   },
-  downArrowSize: scale(36),
+  downArrowSize: scale(30),
   actionButtonContainer: {
     width: '90%'
   },
