@@ -9,6 +9,7 @@ import { sprintf } from 'sprintf-js'
 
 import { launchModal } from '../components/common/ModalProvider.js'
 import { showError } from '../components/services/AirshipInstance.js'
+import { getSpecialCurrencyInfo } from '../constants/indexConstants'
 import * as Constants from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import { getSyncedSettings, setMostRecentWalletsSelected, setSyncedSettings } from '../modules/Core/Account/settings.js'
@@ -43,9 +44,10 @@ export const refreshReceiveAddressRequest = (walletId: string) => (dispatch: Dis
 
 export const selectWallet = (walletId: string, currencyCode: string, from?: string) => (dispatch: Dispatch, getState: GetState) => {
   dispatch(updateMostRecentWalletsSelected(walletId, currencyCode))
-  if (currencyCode === 'EOS') {
-    // EOS needs different path in case not activated yet
-    dispatch(selectEOSWallet(walletId, currencyCode, from))
+  const specialCurrencyInfo = getSpecialCurrencyInfo(currencyCode)
+  if (specialCurrencyInfo.needsAccountNameSetup || specialCurrencyInfo.needsAccountCreation) {
+    // EOS/Hedera need a different path in case not activated yet
+    dispatch(selectWalletOrRequireSetup(walletId, currencyCode, from))
     return
   }
   const state = getState()
@@ -67,19 +69,24 @@ export const selectWallet = (walletId: string, currencyCode: string, from?: stri
   }
 }
 
-// check if the EOS wallet is activated (via public address blank string check) and route to activation scene(s)
-export const selectEOSWallet = (walletId: string, currencyCode: string, from?: string) => (dispatch: Dispatch, getState: GetState) => {
+// check if the (EOS, Hedera) wallet is activated (via public address blank string check) and route to activation scene(s)
+export const selectWalletOrRequireSetup = (walletId: string, currencyCode: string, from?: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const currentWalletId = state.ui.wallets.selectedWalletId
   const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
   const guiWallet = UI_SELECTORS.getWallet(state, walletId)
+  const coreWallet = state.core.account.currencyWallets[walletId]
+  const specialCurrencyInfo = getSpecialCurrencyInfo(currencyCode)
   if (walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode || from === Constants.WALLET_LIST_SCENE) {
     const { publicAddress } = guiWallet.receiveAddress
     if (!publicAddress) {
       // Update all wallets' addresses. Hopefully gets the updated address for the next time
-      // We enter the EOS wallet
+      // we enter the EOS-like wallet
       dispatch(updateWalletsRequest())
     }
+
+    const paymentSubmitted =
+      coreWallet && coreWallet.otherMethods.getActivationPaymentSubmitted && (await coreWallet.otherMethods.getActivationPaymentSubmitted())
 
     if (publicAddress) {
       // already activated
@@ -87,6 +94,15 @@ export const selectEOSWallet = (walletId: string, currencyCode: string, from?: s
         type: 'UI/WALLETS/SELECT_WALLET',
         data: { walletId, currencyCode }
       })
+    } else if (paymentSubmitted) {
+      // Hedera: wallet is pending activation, we have no course of action but to wait
+      const modal = createSimpleConfirmModal({
+        title: s.strings.create_wallet_account_pending_activation_title,
+        message: sprintf(s.strings.create_wallet_account_pending_activation_message, guiWallet.currencyNames[currencyCode]),
+        icon: <Icon type={Constants.MATERIAL_COMMUNITY} name={Constants.EXCLAMATION} size={30} />,
+        buttonText: s.strings.string_ok
+      })
+      launchModal(modal)
     } else {
       // not activated yet
       // find fiat and crypto (EOS) types and populate scene props
@@ -94,19 +110,36 @@ export const selectEOSWallet = (walletId: string, currencyCode: string, from?: s
       const fiatTypeIndex = supportedFiats.findIndex(fiatType => fiatType.value === guiWallet.fiatCurrencyCode)
       const selectedFiat = supportedFiats[fiatTypeIndex]
 
-      const { eos } = state.core.account.currencyConfig
-      const selectedWalletType = makeCreateWalletType(eos.currencyInfo)
-      const createWalletAccountSetupSceneProps = {
+      const selectedWalletType = makeCreateWalletType(coreWallet.currencyInfo)
+
+      const nextSceneProps = {
+        // CreateWalletAccountSetupScene uses the former, CreateWalletAccountSelectScene the latter
         accountHandle: guiWallet.name,
+        accountName: guiWallet.name,
         selectedWalletType,
         selectedFiat,
         isReactivation: true,
         existingWalletId: walletId
       }
-      Actions[Constants.CREATE_WALLET_ACCOUNT_SETUP](createWalletAccountSetupSceneProps)
+
+      const needsAccountNameSetup = specialCurrencyInfo && specialCurrencyInfo.needsAccountNameSetup
+
+      if (needsAccountNameSetup) {
+        // EOS-like (needs unique account name, then activation payment)
+        Actions[Constants.CREATE_WALLET_ACCOUNT_SETUP](nextSceneProps)
+      } else {
+        // Hedera-like (just needs activation payment)
+        Actions[Constants.CREATE_WALLET_ACCOUNT_SELECT](nextSceneProps)
+      }
+
+      const message =
+        currencyCode === needsAccountNameSetup
+          ? s.strings.create_wallet_account_unfinished_activation_message
+          : s.strings.create_wallet_account_needs_activation_message
+
       const modal = createSimpleConfirmModal({
         title: s.strings.create_wallet_account_unfinished_activation_title,
-        message: sprintf(s.strings.create_wallet_account_unfinished_activation_message, 'EOS'),
+        message: sprintf(message, guiWallet.currencyNames[currencyCode]),
         icon: <Icon type={Constants.MATERIAL_COMMUNITY} name={Constants.EXCLAMATION} size={30} />,
         buttonText: s.strings.string_ok
       })

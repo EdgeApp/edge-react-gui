@@ -9,7 +9,7 @@ import { connect } from 'react-redux'
 import { getEnabledTokens, selectWallet } from '../../actions/WalletActions.js'
 import { type WalletListMenuKey } from '../../actions/WalletListMenuActions.js'
 import WalletListTokenRow from '../../connectors/WalletListTokenRowConnector.js'
-import { TRANSACTION_LIST, WALLET_LIST_SCENE } from '../../constants/indexConstants.js'
+import { getSpecialCurrencyInfo, TRANSACTION_LIST, WALLET_LIST_SCENE } from '../../constants/indexConstants'
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
@@ -49,9 +49,13 @@ type Props = OwnProps & StateProps & DispatchProps
 class WalletListRowComponent extends Component<Props> {
   _onPressSelectWallet = (walletId, currencyCode, publicAddress) => {
     this.props.selectWallet(walletId, currencyCode)
-    // if it's EOS then we need to see if activated, if not then it will get routed somewhere else
-    // if it's not EOS then go to txList, if it's EOS and activated with publicAddress then go to txList
-    if (currencyCode !== 'EOS' || (currencyCode === 'EOS' && publicAddress)) {
+    const specialCurrencyInfo = getSpecialCurrencyInfo(currencyCode)
+
+    // EOS, Hedera: if account is not activated then selectWallet() will have routed us
+    // somewhere else and we shouldn't go to the transaction list
+    const hasAccountSetupStep = specialCurrencyInfo.needsAccountCreation || specialCurrencyInfo.needsAccountNameSetup
+
+    if (!hasAccountSetupStep || publicAddress) {
       Actions[TRANSACTION_LIST]({ params: 'walletList' })
     }
   }

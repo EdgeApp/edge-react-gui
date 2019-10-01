@@ -8,6 +8,7 @@ import { sprintf } from 'sprintf-js'
 
 import eosLogo from '../../assets/images/currencies/fa_logo_eos.png'
 import steemLogo from '../../assets/images/currencies/fa_logo_steem.png'
+import hederaLogo from '../../assets/images/currencies/fa_logo_hedera.png'
 import { type WalletListResult, WalletListModal } from '../../components/modals/WalletListModal.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
@@ -21,8 +22,9 @@ import { fixFiatCurrencyCode } from '../../util/utils.js'
 import { Airship } from '../services/AirshipInstance.js'
 
 const logos = {
-  eos: eosLogo,
-  steem: steemLogo
+  EOS: eosLogo,
+  steem: steemLogo,
+  HBAR: hederaLogo
 }
 
 export type AccountPaymentParams = {
@@ -269,7 +271,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
           <Gradient style={styles.scrollableGradient} />
           <ScrollView>
             <View style={styles.scrollableView}>
-              <Image source={logos.eos} style={styles.currencyLogo} resizeMode="cover" />
+              <Image source={logos[selectedWalletType.currencyCode]} style={styles.currencyLogo} resizeMode={'cover'} />
               <View style={styles.createWalletPromptArea}>
                 <Text style={styles.instructionalText}>{!walletId || walletAccountActivationQuoteError ? instructionSyntax : confirmMessageSyntax}</Text>
               </View>

@@ -18,6 +18,7 @@ import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
 export type CreateWalletNameOwnProps = {
   selectedFiat: GuiFiatType,
   selectedWalletType: CreateWalletType,
+  needsAccountCreation?: boolean,
   cleanedPrivateKey?: string
 }
 type Props = CreateWalletNameOwnProps
@@ -47,13 +48,23 @@ export class CreateWalletName extends Component<Props, State> {
 
   onNext = () => {
     const { cleanedPrivateKey, selectedFiat, selectedWalletType } = this.props
+    const { needsAccountCreation } = Constants.getSpecialCurrencyInfo(selectedWalletType.currencyCode)
+
     if (this.isValidWalletName()) {
-      Actions[Constants.CREATE_WALLET_REVIEW]({
-        walletName: this.state.walletName,
-        selectedFiat: selectedFiat,
-        selectedWalletType: selectedWalletType,
-        cleanedPrivateKey
-      })
+      // if this is a new wallet and needs account activation but wallet name is local-only (Hedera)
+      if (!cleanedPrivateKey && needsAccountCreation) {
+        Actions[Constants.CREATE_WALLET_ACCOUNT_SELECT]({
+          ...this.props,
+          accountName: this.state.walletName
+        })
+      } else {
+        Actions[Constants.CREATE_WALLET_REVIEW]({
+          walletName: this.state.walletName,
+          selectedFiat: selectedFiat,
+          selectedWalletType: selectedWalletType,
+          cleanedPrivateKey
+        })
+      }
     } else {
       Alert.alert(s.strings.create_wallet_invalid_name, s.strings.create_wallet_enter_valid_name)
     }

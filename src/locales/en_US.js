@@ -170,6 +170,11 @@ const strings = {
   create_wallet_account_unfinished_activation_title: 'Wallet Not Activated',
   create_wallet_account_unfinished_activation_message:
     'In order to complete activation of this %s wallet, please choose a unique account name and complete the activation payment. If you already made an activation payment, please wait for that payment to confirm before attempting to use this wallet.',
+  create_wallet_account_needs_activation_message:
+    'In order to use your %s wallet it must first be activated. Please follow the prompts on screen to complete this process.',
+  create_wallet_account_pending_activation_title: 'Wallet Pending Activation',
+  create_wallet_account_pending_activation_message:
+    'Your %s wallet is awaiting activation. Please check again in a few minutes. If you are still receiving this message after an hour, please check the status of your activation payment in the payment wallet you selected.',
   preparing_fio_wallet: 'Preparing FIO wallet',
   fio_address: 'FIO Address: %s',
   fio_pending_requests: 'Pending Requests',

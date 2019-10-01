@@ -27,6 +27,15 @@ export type GuiMakeSpendInfo = {
   fioPendingRequest?: FioRequest,
   isSendUsingFioAddress?: boolean,
   onBack?: () => void,
+  /**
+   * If set, this will be called before the transaction is broadcast by its own wallet.
+   *
+   * If submitting a payment to a service as a signed transaction, return `false` to cancel
+   * the broadcast via the currency plugin.
+   *
+   * @param edgeTransaction
+   */
+  beforeBroadcast?: (edgeTransaction: EdgeTransaction) => Promise<boolean>,
   onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void,
   beforeTransaction?: () => Promise<void>
 }

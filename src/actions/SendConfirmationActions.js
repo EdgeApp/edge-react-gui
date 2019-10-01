@@ -241,7 +241,11 @@ export const signBroadcastAndSave = (fioSender?: FioSenderInfo) => async (dispat
       if (!isAuthorized) throw new IncorrectPinError()
     }
     edgeSignedTransaction = await wallet.signTx(edgeUnsignedTransaction)
-    edgeSignedTransaction = await wallet.broadcastTx(edgeSignedTransaction)
+
+    if ((!guiMakeSpendInfo.beforeBroadcast) || await guiMakeSpendInfo.beforeBroadcast(edgeSignedTransaction)) {
+      edgeSignedTransaction = await wallet.broadcastTx(edgeSignedTransaction)
+    }
+
     await wallet.saveTx(edgeSignedTransaction)
     let edgeMetadata = { ...spendInfo.metadata }
     if (state.ui.scenes.sendConfirmation.transactionMetadata) {
