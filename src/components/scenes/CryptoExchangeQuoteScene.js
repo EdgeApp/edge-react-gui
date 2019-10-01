@@ -102,7 +102,7 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
     return (
       <SceneWrapper>
         <ScrollView>
-          <View style={styles.topRow}>
+          <View style={styles.topLogoRow}>
             <Image source={swapPluginLogos[pluginName]} resizeMode={'contain'} style={styles.logoImage} />
           </View>
           <View style={styles.centerRow}>

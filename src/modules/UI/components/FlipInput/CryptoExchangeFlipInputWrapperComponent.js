@@ -24,7 +24,8 @@ export type Props = {
   isThinking?: boolean,
   focusMe(): void,
   launchWalletSelector: () => void,
-  onCryptoExchangeAmountChanged: ExchangedFlipInputAmounts => void
+  onCryptoExchangeAmountChanged: ExchangedFlipInputAmounts => void,
+  onNext: () => void
 }
 export class CryptoExchangeFlipInputWrapperComponent extends Component<Props> {
   launchSelector = () => {
@@ -52,7 +53,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends Component<Props> {
 
   render () {
     const style: StyleSheet.Styles = this.props.style
-    const { primaryCurrencyInfo, secondaryCurrencyInfo, fiatPerCrypto, forceUpdateGuiCounter, overridePrimaryExchangeAmount } = this.props
+    const { onNext, primaryCurrencyInfo, secondaryCurrencyInfo, fiatPerCrypto, forceUpdateGuiCounter, overridePrimaryExchangeAmount } = this.props
 
     if (this.props.isThinking) {
       return (
@@ -104,6 +105,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends Component<Props> {
 
         <View style={style.flipInput}>
           <ExchangedFlipInput
+            onNext={onNext}
             primaryCurrencyInfo={primaryCurrencyInfo}
             secondaryCurrencyInfo={secondaryCurrencyInfo}
             exchangeSecondaryToPrimaryRatio={fiatPerCrypto}

@@ -22,6 +22,7 @@ export type ExchangedFlipInputOwnProps = {
   overridePrimaryExchangeAmount: string,
   primaryCurrencyInfo: GuiCurrencyInfo,
   secondaryCurrencyInfo: GuiCurrencyInfo,
+  onNext?: () => void,
 
   // Exchange rate
   exchangeSecondaryToPrimaryRatio: number,
@@ -159,6 +160,7 @@ export class ExchangedFlipInput extends Component<Props, State> {
         isEditable={this.props.isEditable}
         isFiatOnTop={this.props.isFiatOnTop}
         isFocus={this.props.isFocus}
+        onNext={this.props.onNext}
       />
     )
   }

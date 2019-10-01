@@ -161,6 +161,7 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
             onCryptoExchangeAmountChanged={this.fromAmountChanged}
             isFocused={isFromFocused}
             focusMe={this.focusFromWallet}
+            onNext={this.getQuote}
           />
           <View style={styles.arrowShim} />
           <Icon style={styles.downArrow} name={Constants.ARROW_DOWN_BOLD} size={styles.downArrowSize} type={Constants.MATERIAL_COMMUNITY} />
@@ -180,10 +181,11 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
             isFocused={isToFocused}
             isThinking={this.props.creatingWallet}
             focusMe={this.focusToWallet}
+            onNext={this.getQuote}
           />
           <View style={styles.shim} />
           <View style={styles.actionButtonContainer}>{this.renderButton()}</View>
-          <View style={styles.shim} />
+          <View style={{ height: 300 }} />
         </KeyboardAwareScrollView>
       </SceneWrapper>
     )

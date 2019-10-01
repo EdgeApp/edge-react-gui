@@ -9,6 +9,18 @@ export const styles = {
     justifyContent: 'space-around',
     paddingVertical: scale(8)
   },
+  topLogoRow: {
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    paddingTop: scale(8),
+    height: scale(55),
+    paddingBottom: 4
+  },
+  logoImage: {
+    position: 'relative',
+    maxWidth: '70%',
+    resizeMode: 'contain'
+  },
   centerRow: {
     alignItems: 'center'
   },
@@ -23,11 +35,6 @@ export const styles = {
   slideContainer: {
     height: scale(35),
     width: 270
-  },
-  logoImage: {
-    position: 'relative',
-    width: '80%',
-    resizeMode: 'contain'
   },
   confirmText: {
     color: THEME.COLORS.WHITE,
