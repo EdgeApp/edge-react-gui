@@ -62,5 +62,9 @@ export default {
   },
   underlay: {
     color: `${THEME.COLORS.PRIMARY}${THEME.ALPHA.LOW}`
+  },
+  exchangeRateText: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(16)
   }
 }
