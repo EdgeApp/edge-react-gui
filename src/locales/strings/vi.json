@@ -301,6 +301,7 @@
   "string_share": "Chia sẻ",
   "string_show_balance": "Hiển thị số dư",
   "exchange_rates_loading": "Đang tải tỉ giá hối đoái...",
+  "exchange_rate_loading_singular": "",
   "string_to_exchange_info": "và tiền gửi %1$s %2$s\n %3$s",
   "string_master_private_key": "Quét từ khóa riêng",
   "string_split_wallet": "Phân chia %s",
