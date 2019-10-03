@@ -5,6 +5,7 @@
 # so this script prepares those.
 
 set -e
+cd "$(dirname "$0")"
 
 # Build the EdgeProvider shim code:
 node ./node_modules/.bin/rollup -c
