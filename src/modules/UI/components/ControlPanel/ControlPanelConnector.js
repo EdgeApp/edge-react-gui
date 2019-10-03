@@ -12,6 +12,7 @@ const mapStateToProps = (state: State) => {
   let secondaryToPrimaryRatio = 0
   const guiWallet = getSelectedWallet(state)
   const currencyCode = getSelectedCurrencyCode(state)
+  const exchangeRate = guiWallet ? getExchangeRate(state, currencyCode, guiWallet.isoFiatCurrencyCode) : 0
   let primaryDisplayDenomination = null
   let primaryExchangeDenomination = null
   let secondaryDisplayAmount = '0'
@@ -47,6 +48,7 @@ const mapStateToProps = (state: State) => {
     primaryDisplayCurrencyCode: currencyCode,
     primaryDisplayDenomination,
     primaryExchangeDenomination,
+    exchangeRate,
     secondaryDisplayCurrencyCode,
     secondaryDisplayAmount,
     secondaryToPrimaryRatio,
