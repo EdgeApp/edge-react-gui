@@ -28,7 +28,7 @@ export type Props = {
   openSelectUser: () => void,
   closeSelectUser: () => void,
   usersView: boolean,
-  exchangeRate: Object | number
+  exchangeRate: number
 }
 
 export default class ControlPanel extends Component<Props> {
@@ -79,7 +79,7 @@ export default class ControlPanel extends Component<Props> {
             {exchangeRate ? (
               <ExchangeRate primaryInfo={primaryCurrencyInfo} secondaryInfo={secondaryCurrencyInfo} secondaryDisplayAmount={secondaryToPrimaryRatio} />
             ) : (
-              <FormattedText style={styles.exchangeRateText}>{s.strings.exchange_rates_loading}</FormattedText>
+              <FormattedText style={styles.exchangeRateText}>{s.strings.exchange_rate_loading_singular}</FormattedText>
             )}
           </View>
         </View>

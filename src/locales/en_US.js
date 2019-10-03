@@ -319,6 +319,7 @@ const strings = {
   string_share: 'Share',
   string_show_balance: 'Show Balance',
   exchange_rates_loading: 'Exchange Rates Loading...',
+  exchange_rate_loading_singular: 'Exchange Rate Loading...',
   string_to_exchange_info: 'and deposit %1$s %2$s\n to %3$s',
   string_master_private_key: 'Master Private Key',
   string_split_wallet: 'Split %s',
