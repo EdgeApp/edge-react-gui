@@ -7,14 +7,25 @@ export const styles = {
   topRow: {
     alignItems: 'center',
     justifyContent: 'space-around',
-    paddingHorizontal: scale(30),
-    paddingVertical: scale(14)
+    paddingVertical: scale(8)
+  },
+  topLogoRow: {
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    paddingTop: scale(8),
+    height: scale(55),
+    paddingBottom: 4
+  },
+  logoImage: {
+    position: 'relative',
+    maxWidth: '70%',
+    resizeMode: 'contain'
   },
   centerRow: {
     alignItems: 'center'
   },
   confirmTextRow: {
-    paddingVertical: scale(20),
+    paddingVertical: scale(12),
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -24,12 +35,6 @@ export const styles = {
   slideContainer: {
     height: scale(35),
     width: 270
-  },
-  logoImage: {
-    position: 'relative',
-    width: '100%',
-    height: scale(90),
-    resizeMode: 'contain'
   },
   confirmText: {
     color: THEME.COLORS.WHITE,
@@ -136,7 +141,6 @@ export const styles = {
       textAlign: 'right'
     },
     topRow: {
-      height: scale(65),
       flexDirection: 'row'
     },
     bottomRow: {

@@ -48,7 +48,7 @@ export type FlipInputOwnProps = {
   // Information regarding the primary and secondary field. Mostly related to currency name, code, and denominations
   primaryInfo: FlipInputFieldInfo,
   secondaryInfo: FlipInputFieldInfo,
-
+  onNext?: () => void,
   forceUpdateGuiCounter: number,
 
   // Callback when primaryDecimalAmount changes. **This is only called when the user types into a field or if
@@ -298,6 +298,7 @@ export class FlipInput extends Component<Props, State> {
           onFocus={this.textInputFrontFocusTrue}
           onBlur={this.textInputFrontFocusFalse}
           editable={this.props.isEditable}
+          onSubmitEditing={this.props.onNext}
         />
         <Text style={[top.currencyCode]}>{fieldInfo.currencyName}</Text>
       </View>
@@ -329,12 +330,14 @@ export class FlipInput extends Component<Props, State> {
           autoCorrect={false}
           keyboardType="numeric"
           selectionColor="white"
-          returnKeyType="done"
+          returnKeyType="next"
+          returnKeyLabel="next"
           underlineColorAndroid={'transparent'}
           ref={this.getTextInputBackRef}
           onFocus={this.textInputBackFocusTrue}
           onBlur={this.textInputBackFocusFalse}
           editable={this.props.isEditable}
+          onSubmitEditing={this.props.onNext}
         />
         <Text style={[top.currencyCode]}>{fieldInfo.currencyName}</Text>
       </View>
