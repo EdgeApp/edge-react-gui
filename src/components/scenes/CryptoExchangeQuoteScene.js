@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeAccount } from 'edge-core-js'
+import { type EdgeAccount } from 'edge-core-js/types'
 import React, { Component } from 'react'
 import { ActivityIndicator, Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -14,8 +14,8 @@ import { styles } from '../../styles/scenes/CryptoExchangeQuoteSceneStyles.js'
 import { type GuiSwapInfo } from '../../types/types.js'
 import { CircleTimer } from '../common/CircleTimer'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { SwapVerifyChangellyModal } from '../modals/SwapVerifyChangellyModal.js'
-import { Airship } from '../services/AirshipInstance.js'
+import { swapVerifyTerms } from '../modals/SwapVerifyTermsModal.js'
+import { showError } from '../services/AirshipInstance.js'
 
 export type OwnProps = {
   swapInfo: GuiSwapInfo
@@ -45,7 +45,9 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
     const { swapInfo } = this.props
     const { pluginName } = swapInfo.quote
     if (pluginName === 'changelly') {
-      this.checkChangellyKYC()
+      this.checkChangellyKYC().catch(showError)
+    } else if (pluginName === 'changenow') {
+      this.checkChangeNowKYC().catch(showError)
     }
     global.firebase && global.firebase.analytics().logEvent(`Exchange_Shift_Quote`)
   }
@@ -78,19 +80,40 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
 
   async checkChangellyKYC () {
     const { account, swapInfo, timeExpired } = this.props
-    const swapConfig = account.swapConfig.changelly
-    if (swapConfig.userSettings && swapConfig.userSettings.agreedToTerms) return
+    const result = await swapVerifyTerms(account.swapConfig.changelly, [
+      {
+        text: s.strings.swap_terms_terms_link,
+        uri: 'https://changelly.com/terms-of-use'
+      },
+      {
+        text: s.strings.swap_terms_privacy_link,
+        uri: 'https://changelly.com/privacy-policy'
+      },
+      {
+        text: s.strings.swap_terms_kyc_link,
+        uri: 'https://changelly.com/aml-kyc'
+      }
+    ])
+    if (!result) timeExpired(swapInfo)
+  }
 
-    const result = await Airship.show(bridge => <SwapVerifyChangellyModal bridge={bridge} />)
-
-    if (result) {
-      await account.swapConfig.changelly.changeUserSettings({ agreedToTerms: true })
-    } else {
-      // If the user rejects the terms, disable Changelly and expire the quote:
-      await account.swapConfig.changelly.changeUserSettings({ agreedToTerms: false })
-      await account.swapConfig.changelly.changeEnabled(false)
-      timeExpired(swapInfo)
-    }
+  async checkChangeNowKYC () {
+    const { account, swapInfo, timeExpired } = this.props
+    const result = await swapVerifyTerms(account.swapConfig.changenow, [
+      {
+        text: s.strings.swap_terms_terms_link,
+        uri: 'https://changenow.io/terms-of-use'
+      },
+      {
+        text: s.strings.swap_terms_privacy_link,
+        uri: 'https://changenow.io/privacy-policy'
+      },
+      {
+        text: s.strings.swap_terms_kyc_link,
+        uri: 'https://changenow.io/faq/kyc'
+      }
+    ])
+    if (!result) timeExpired(swapInfo)
   }
 
   render () {
