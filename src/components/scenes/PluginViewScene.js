@@ -47,9 +47,16 @@ function makeOuterWebViewBridge<Root> (onRoot: (root: Root) => mixed, debug: boo
     const message = JSON.parse(event.nativeEvent.data)
     if (debug) console.info('plugin →', message)
 
+    // This was crashing us, so send to bugsnag:
+    if (bridge != null && message.events != null && typeof message.events.find !== 'function') {
+      global.bugsnag.notify(new Error('Corrupted yaob events'), report => {
+        report.metadata.rawData = event.nativeEvent.data
+      })
+    }
+
     // This is a terrible hack. We are using our inside knowledge
     // of YAOB's message format to determine when the client has restarted.
-    if (bridge != null && message.events != null && message.events.find(event => event.localId === 0)) {
+    if (bridge != null && Array.isArray(message.events) && message.events.find(event => event.localId === 0)) {
       bridge.close(new Error('plugin: The WebView has been unmounted.'))
       bridge = void 0
     }
