@@ -10,7 +10,7 @@ const sellPlugins = require('./sellPlugins.json')
 
 const hostedUri = Platform.OS === 'android' ? 'file:///android_asset/plugins/' : `file:///${RNFS.MainBundlePath}/plugins/`
 
-export const pluginUrlMap = {
+export const pluginUrlMap: { [pluginId: string]: PluginUrlMap } = {
   'com.libertyx': {
     pluginId: 'com.libertyx',
     uri: 'https://libertyx.com/a/',
@@ -35,8 +35,8 @@ export const pluginUrlMap = {
     name: 'Bits of Gold',
     permissions: ['camera']
   },
-  'com.banxa': {
-    pluginId: 'com.banxa',
+  banxa: {
+    pluginId: 'banxa',
     uri: 'https://edge.banxa.com',
     name: 'Banxa'
   },
@@ -80,7 +80,6 @@ export const devPlugin: BuySellPlugin & PluginUrlMap = {
   cryptoCodes: [],
   supportEmail: '',
   permissions: [],
-  originWhitelist: [],
   isLegacy: false
 }
 

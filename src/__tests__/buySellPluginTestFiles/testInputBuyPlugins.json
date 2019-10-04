@@ -445,7 +445,7 @@
   },
   {
     "id": "banxa",
-    "pluginId": "com.banxa",
+    "pluginId": "banxa",
     "paymentType": {
       "bank": true,
       "cash": true

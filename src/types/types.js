@@ -210,7 +210,7 @@ export type SpendingLimits = {
 }
 
 export type PluginUrlMap = {
-  id: string,
+  pluginId: string,
   uri: string,
   name: string,
   supportEmail?: string,
