@@ -2,7 +2,7 @@
 
 import { type EdgeSwapConfig } from 'edge-core-js/types'
 import React, { Component } from 'react'
-import { Image, View } from 'react-native'
+import { Image, ScrollView, View } from 'react-native'
 import CookieManager from 'react-native-cookies'
 import { Actions } from 'react-native-router-flux'
 
@@ -84,10 +84,12 @@ export class ExchangeSettingsComponent extends Component<ExchangeSettingsProps, 
   render () {
     return (
       <SceneWrapper hasTabs={false} background="body">
-        <View style={styles.instructionArea}>
-          <T style={styles.instructionText}>{s.strings.settings_exchange_instruction}</T>
-        </View>
-        {this.sortedIds.map(pluginId => this.renderPlugin(pluginId))}
+        <ScrollView>
+          <View style={styles.instructionArea}>
+            <T style={styles.instructionText}>{s.strings.settings_exchange_instruction}</T>
+          </View>
+          {this.sortedIds.map(pluginId => this.renderPlugin(pluginId))}
+        </ScrollView>
       </SceneWrapper>
     )
   }
