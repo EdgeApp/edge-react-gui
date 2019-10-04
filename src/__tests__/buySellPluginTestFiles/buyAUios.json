@@ -28,7 +28,7 @@
       "cash": true
     },
     "paymentTypeLogoKey": "poli",
-    "pluginId": "com.banxa",
+    "pluginId": "banxa",
     "priority": 1,
     "title": "POLi Bank Transfer or Cash with Newsagent"
   }
