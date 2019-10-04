@@ -80,7 +80,6 @@ export const devPlugin: BuySellPlugin & PluginUrlMap = {
   cryptoCodes: [],
   supportEmail: '',
   permissions: [],
-  originWhitelist: [],
   isLegacy: false
 }
 
