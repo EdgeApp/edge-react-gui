@@ -13,7 +13,7 @@ import { createCurrencyWalletAndSelectForPlugins } from '../../../../actions/ind
 import { selectWallet } from '../../../../actions/WalletActions'
 import { launchModal } from '../../../../components/common/ModalProvider.js'
 import { createCryptoExchangeWalletSelectorModal } from '../../../../components/modals/CryptoExchangeWalletSelectorModal'
-import { showError } from '../../../../components/services/AirshipInstance.js'
+import { showError, showToast } from '../../../../components/services/AirshipInstance.js'
 import { DEFAULT_STARTER_WALLET_NAMES, EXCLAMATION, MATERIAL_COMMUNITY } from '../../../../constants/indexConstants'
 import { SEND_CONFIRMATION } from '../../../../constants/SceneKeys.js'
 import s from '../../../../locales/strings'
@@ -213,10 +213,16 @@ export class EdgeProvider extends Bridgeable {
 
   getCurrentWalletInfo (): Promise<WalletDetails> {
     const wallet: GuiWallet = UI_SELECTORS.getSelectedWallet(this._state)
+    const currentCode = UI_SELECTORS.getSelectedCurrencyCode(this._state)
+    let walletName = wallet.name
+    if (wallet.enabledTokens.length > 1) {
+      console.log('EP: We have tokens.. what do we do with them ')
+      walletName = currentCode
+    }
     const returnObject: WalletDetails = {
-      name: wallet.name,
+      name: walletName,
       receiveAddress: wallet.receiveAddress,
-      currencyCode: wallet.currencyCode,
+      currencyCode: currentCode,
       fiatCurrencyCode: wallet.fiatCurrencyCode,
       currencyIcon: wallet.symbolImage,
       currencyIconDark: wallet.symbolImageDarkMono
@@ -427,5 +433,8 @@ export class EdgeProvider extends Bridgeable {
   }
   async displayError (error: Error | string) {
     showError(error)
+  }
+  async displayToast (arg: string) {
+    showToast(arg)
   }
 }
