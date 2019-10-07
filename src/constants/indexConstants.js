@@ -22,3 +22,4 @@ export const IOS = 'ios'
 export const ANDROID = 'android'
 export const PUSH_DELAY_SECONDS = 86400
 export const LOCAL_STORAGE_BACKGROUND_PUSH_KEY = 'EdgeWalletLastPushNotification'
+export const LOCAL_STORAGE_PREVIOUS_NOTIFICATIONS = 'LocalStoragePreviousNotification'

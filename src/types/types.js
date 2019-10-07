@@ -239,3 +239,14 @@ export type CountryData = {
   'alpha-2': string,
   filename?: string
 }
+
+export type Notification = {
+  subject: string,
+  message: string,
+  apiKeys: { [key: string]: true },
+  minVersion: string,
+  maxVersion: string,
+  android: boolean,
+  ios: boolean,
+  isUpgrade: boolean
+}

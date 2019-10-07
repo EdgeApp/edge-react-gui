@@ -15,6 +15,7 @@ import ENV from '../env.json'
 import * as Constants from './constants/indexConstants.js'
 import s from './locales/strings.js'
 import { log, logToServer } from './util/logger'
+import { checkForNotifications } from './util/notificationUtil'
 
 // Set up the transparent status bar at boot time on Android:
 StatusBar.setBarStyle('light-content')
@@ -149,10 +150,10 @@ if (ENABLE_PERF_LOGGING) {
 
 async function backgroundWorker () {
   console.log('appStateLog: running background task')
-  const lastNotif = await AsyncStorage.getItem(Constants.LOCAL_STORAGE_BACKGROUND_PUSH_KEY)
+  const last24HourNotif = await AsyncStorage.getItem(Constants.LOCAL_STORAGE_BACKGROUND_PUSH_KEY)
   const now = new Date()
-  if (lastNotif) {
-    const lastNotifDate = new Date(lastNotif).getTime() / 1000
+  if (last24HourNotif) {
+    const lastNotifDate = new Date(last24HourNotif).getTime() / 1000
     const delta = now.getTime() / 1000 - lastNotifDate
     if (delta < Constants.PUSH_DELAY_SECONDS) {
       BackgroundFetch.finish()
@@ -160,6 +161,7 @@ async function backgroundWorker () {
     }
   }
   try {
+    // this is checking for OTP resets.
     const result = await fetchLoginMessages(ENV.AIRBITZ_API_KEY)
     const date = new Date(Date.now() + 1000)
     // for each key
@@ -181,6 +183,24 @@ async function backgroundWorker () {
             date
           })
         }
+      }
+    }
+    // After OTP resets, the next thing to check for is are there any other notifications.
+    const notification = await checkForNotifications()
+    if (notification) {
+      const dateOne = new Date(Date.now() + 1000)
+      if (Platform.OS === Constants.IOS) {
+        PushNotification.localNotificationSchedule({
+          title: notification.subject,
+          message: notification.message,
+          date: dateOne
+        })
+      } else {
+        PushNotification.localNotificationSchedule({
+          title: notification.subject,
+          message: notification.message,
+          date: dateOne
+        })
       }
     }
   } catch (error) {
