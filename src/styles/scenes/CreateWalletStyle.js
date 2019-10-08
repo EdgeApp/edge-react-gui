@@ -119,7 +119,8 @@ export const styles = {
   currencyLogo: {
     alignSelf: 'center',
     marginTop: scale(24),
-    height: scale(64)
+    height: scale(64),
+    width: scale(64)
   },
   instructionalArea: {
     paddingVertical: scale(16),
