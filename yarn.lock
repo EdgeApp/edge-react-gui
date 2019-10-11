@@ -4126,10 +4126,10 @@ edge-core-js@^0.16.11:
     ws "^5.1.1"
     yaob "^0.3.4"
 
-edge-currency-accountbased@^0.4.5:
-  version "0.4.5"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.4.5.tgz#cd108e1eb06e45627e98cd0a1f340005b3693328"
-  integrity sha512-7ZnObpOe5TWb3Vs1GWpFaxNv5YePH/Ecjla25y4Lhm2LJlVR1p/755oAUDMY1SRI9H8hlz/lCYWJaMKfJHQCyg==
+edge-currency-accountbased@^0.4.8:
+  version "0.4.8"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.4.8.tgz#7edc13fca5c474444d440a08a3b4f267ba309e01"
+  integrity sha512-DaM65oIjG/ouw6Uo4kje8Wang22vYVLeDqXoZ0yYn/iffju+FkgDGMbL9Y+zauTvbdL70LJLn1LG9QPUzcpPCQ==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@dapix/react-native-fio" "0.1.0"
@@ -4311,10 +4311,9 @@ envinfo@^5.7.0:
   resolved "https://registry.yarnpkg.com/envinfo/-/envinfo-5.12.1.tgz#83068c33e0972eb657d6bc69a6df30badefb46ef"
   integrity sha512-pwdo0/G3CIkQ0y6PCXq4RdkvId2elvtPCJMG0konqlrfkWQbf1DWeH9K2b/cvu2YgGvPPTOnonZxXM1gikFu1w==
 
-eosjs-api@7.0.4:
+eosjs-api@7.0.4, "eosjs-api@git://github.com/EdgeApp/eosjs-api.git#prepare-script":
   version "7.0.4"
-  resolved "https://registry.yarnpkg.com/eosjs-api/-/eosjs-api-7.0.4.tgz#dc3a7206d4ac3e6818f0a950b8d24333175ac7c9"
-  integrity sha512-oLbM39rcyWYkqu6nIEQ50I92yT2vvD7WZPZ3FujbydG2ssR5Re/uSvbkFfZTB02g3I4D+UDUA1jd65HlM7r3MQ==
+  resolved "git://github.com/EdgeApp/eosjs-api.git#3676348b6a7443389b28d21c98067760c51e02fb"
   dependencies:
     camel-case "^3.0.0"
     isomorphic-fetch "^2.2.1"
