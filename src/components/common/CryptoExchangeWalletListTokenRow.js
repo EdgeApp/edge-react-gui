@@ -11,12 +11,15 @@ type Props = {
   fiatSymbol: string,
   fiatBalance: string,
   cryptoBalance: string,
+  parentCryptoBalance: string,
+  disabled: boolean,
   onPress({ id: string, currencyCode: string }): void
 }
 type LocalState = {}
 
 class CryptoExchangeWalletListTokenRow extends Component<Props, LocalState> {
   onPress = () => {
+    if (this.props.disabled || this.props.parentCryptoBalance === '0') return
     this.props.onPress({
       id: this.props.parentId,
       currencyCode: this.props.currencyCode
@@ -28,12 +31,31 @@ class CryptoExchangeWalletListTokenRow extends Component<Props, LocalState> {
         <View style={styles.containerToken}>
           <View style={styles.containerLeft} />
           <View style={styles.containerCenter}>
-            <FormattedText>{this.props.currencyCode}</FormattedText>
+            <FormattedText
+              style={[
+                styles.enabled,
+                this.props.disabled && (this.props.cryptoBalance === '0' || this.props.parentCryptoBalance === '0') && styles.zeroBalance
+              ]}
+            >
+              {this.props.currencyCode}
+            </FormattedText>
           </View>
           <View style={styles.containerRight}>
             <View style={styles.holderView}>
-              <Text style={styles.balanceTextStyle}>{this.props.cryptoBalance}</Text>
-              <Text style={styles.balanceTextStyle}>
+              <Text
+                style={[
+                  styles.balanceTextStyle,
+                  this.props.disabled && (this.props.cryptoBalance === '0' || this.props.parentCryptoBalance === '0') && styles.zeroBalance
+                ]}
+              >
+                {this.props.cryptoBalance}
+              </Text>
+              <Text
+                style={[
+                  styles.balanceTextStyle,
+                  this.props.disabled && (this.props.cryptoBalance === '0' || this.props.parentCryptoBalance === '0') && styles.zeroBalance
+                ]}
+              >
                 {this.props.fiatSymbol} {this.props.fiatBalance}
               </Text>
             </View>
