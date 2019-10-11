@@ -1,5 +1,12 @@
 # edge-react-gui
 
+## 1.9.7
+
+- Emergency EOS fix
+- Minor UX bug-fixes
+- Minor Bity updates
+- Remove uninhabited and non-sovereign locations
+
 ## 1.9.5
 
 - Integrate RSK

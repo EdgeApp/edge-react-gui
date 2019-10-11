@@ -6,10 +6,12 @@ import MDIcon from 'react-native-vector-icons/MaterialIcons'
 
 import accountIcon from '../../../../assets/images/sidenav/accounts.png'
 import { SceneWrapper } from '../../../../components/common/SceneWrapper.js'
+import s from '../../../../locales/strings'
 import { emptyGuiDenomination } from '../../../../types/types.js'
 import type { GuiDenomination } from '../../../../types/types.js'
 import { getDenomFromIsoCode, getObjectDiff } from '../../../../util/utils.js'
 import ExchangeRate from '../ExchangeRate/index.js'
+import FormattedText from '../FormattedText'
 import { Button } from './Component/Button/Button.ui'
 import Main from './Component/MainConnector'
 import styles from './style'
@@ -25,7 +27,8 @@ export type Props = {
   username: string,
   openSelectUser: () => void,
   closeSelectUser: () => void,
-  usersView: boolean
+  usersView: boolean,
+  exchangeRate: number
 }
 
 export default class ControlPanel extends Component<Props> {
@@ -41,6 +44,7 @@ export default class ControlPanel extends Component<Props> {
 
   render () {
     const {
+      exchangeRate,
       currencyLogo,
       primaryDisplayCurrencyCode,
       primaryDisplayDenomination,
@@ -72,7 +76,11 @@ export default class ControlPanel extends Component<Props> {
         <View style={styles.header}>
           {!!currencyLogo && <Image style={styles.iconImage} source={currencyLogoIcon} />}
           <View style={styles.exchangeContainer}>
-            <ExchangeRate primaryInfo={primaryCurrencyInfo} secondaryInfo={secondaryCurrencyInfo} secondaryDisplayAmount={secondaryToPrimaryRatio} />
+            {exchangeRate ? (
+              <ExchangeRate primaryInfo={primaryCurrencyInfo} secondaryInfo={secondaryCurrencyInfo} secondaryDisplayAmount={secondaryToPrimaryRatio} />
+            ) : (
+              <FormattedText style={styles.exchangeRateText}>{s.strings.exchange_rate_loading_singular}</FormattedText>
+            )}
           </View>
         </View>
 

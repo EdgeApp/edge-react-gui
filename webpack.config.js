@@ -9,22 +9,25 @@ const production = true
 
 const babelOptions = {
   babelrc: false,
-  presets: production ? ['@babel/preset-env'] : [],
+  presets: ['@babel/preset-env'],
   plugins: [['@babel/plugin-transform-for-of', { assumeArray: true }]],
   cacheDirectory: true
 }
 
 module.exports = {
+  devtool: 'cheap-source-map',
   entry: './src/util/corePluginBundle.js',
   mode: production ? 'production' : 'development',
   module: {
-    rules: [
-      {
-        test: /\.js$/,
-        exclude: /(@babel\/runtime|babel-runtime)/,
-        use: { loader: 'babel-loader', options: babelOptions }
-      }
-    ]
+    rules: production
+      ? [
+        {
+          test: /\.js$/,
+          exclude: /(@babel\/runtime|babel-runtime)/,
+          use: { loader: 'babel-loader', options: babelOptions }
+        }
+      ]
+      : []
   },
   output: {
     filename: 'plugin-bundle.js',
