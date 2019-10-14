@@ -1,5 +1,9 @@
 # edge-react-gui
 
+## 1.9.8
+
+- Emergency EOS fix (part 2)
+
 ## 1.9.7
 
 - Emergency EOS fix
