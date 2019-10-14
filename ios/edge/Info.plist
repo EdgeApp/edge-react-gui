@@ -4,6 +4,8 @@
 <dict>
 	<key>BugsnagAPIKey</key>
 	<string>5aca2dbe708503471d8137625e092675</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>This application does not use Bluetooth. However, it does utilize a third-party SDK that includes Bluetooth capability, even though $(PRODUCT_NAME) does not use or need the Bluetooth features.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>This allows you to securely and conveniently access your $(PRODUCT_NAME) wallet</string>
 	<key>CFBundleDevelopmentRegion</key>
