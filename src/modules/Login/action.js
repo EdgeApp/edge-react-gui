@@ -196,7 +196,9 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     }
     const loadedLocalSettings = await getLocalSettings(account)
     const localSettings = { ...loadedLocalSettings }
+    console.log(localSettings)
     const mergedLocalSettings = mergeSettings(localSettings, LOCAL_ACCOUNT_DEFAULTS, LOCAL_ACCOUNT_TYPES)
+    console.log(mergedLocalSettings)
     if (mergedLocalSettings.isOverwriteNeeded) {
       setLocalSettings(account, { ...mergedSyncedSettings.finalSettings })
     }
@@ -214,6 +216,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     const coreFinal = { ...coreDefaults, ...coreSettings }
     accountInitObject.pinMode = coreFinal.pinMode
     accountInitObject.otpMode = coreFinal.otpMode
+    console.log(accountInitObject)
 
     dispatch({
       type: 'ACCOUNT_INIT_COMPLETE',

@@ -260,6 +260,7 @@ export const SYNCED_ACCOUNT_TYPES = {
 
 export const LOCAL_ACCOUNT_DEFAULTS = {
   bluetoothMode: false,
+  developerModeOn: false,
   passwordReminder: {
     needsPasswordCheck: false,
     lastPasswordUseDate: 0,
@@ -280,6 +281,7 @@ export const LOCAL_ACCOUNT_DEFAULTS = {
 
 export const LOCAL_ACCOUNT_TYPES = {
   bluetoothMode: 'boolean',
+  developerModeOn: 'boolean',
   passwordReminder: 'object',
   isAccountBalanceVisible: 'boolean',
   isWalletFiatBalanceVisible: 'boolean',
@@ -340,6 +342,13 @@ export const setAccountBalanceVisibility = (account: EdgeAccount, isAccountBalan
 export const setWalletFiatBalanceVisibility = (account: EdgeAccount, isWalletFiatBalanceVisible: boolean) => {
   return getLocalSettings(account).then(settings => {
     const updatedSettings = updateSettings(settings, { isWalletFiatBalanceVisible })
+    return setLocalSettings(account, updatedSettings)
+  })
+}
+
+export const setDeveloperModeOn = (account: EdgeAccount, developerModeOn: boolean) => {
+  return getLocalSettings(account).then(settings => {
+    const updatedSettings = updateSettings(settings, { developerModeOn })
     return setLocalSettings(account, updatedSettings)
   })
 }
