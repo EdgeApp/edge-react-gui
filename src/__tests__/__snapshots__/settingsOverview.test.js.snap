@@ -334,10 +334,10 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         disabled={false}
         leftText="Ufo"
       />
-      <RowRoute
-        disabled={false}
-        leftText="Send Logs"
-        routeFunction={[Function]}
+      <RowSwitch
+        leftText="Developer Mode"
+        onToggle={[Function]}
+        value={false}
       />
       <RowModal
         leftText="Restore Wallets"
@@ -364,7 +364,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           onPress={[Function]}
         >
           <Text>
-            Enable Developer Mode
+            Send Logs
           </Text>
         </PrimaryButton>
       </View>
@@ -715,10 +715,10 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         disabled={false}
         leftText="Ufo"
       />
-      <RowRoute
-        disabled={false}
-        leftText="Send Logs"
-        routeFunction={[Function]}
+      <RowSwitch
+        leftText="Developer Mode"
+        onToggle={[Function]}
+        value={false}
       />
       <RowModal
         leftText="Restore Wallets"
@@ -745,7 +745,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           onPress={[Function]}
         >
           <Text>
-            Enable Developer Mode
+            Send Logs
           </Text>
         </PrimaryButton>
       </View>
