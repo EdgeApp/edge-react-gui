@@ -19,6 +19,7 @@ import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import { errorModal } from '../modules/UI/components/Modals/ErrorModal.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
+import { trackEvent } from '../util/tracking.js'
 import { selectWallet as selectWalletAction } from './WalletActions.js'
 
 export const createCurrencyWalletAndAddToSwap = (walletName: string, walletType: string, fiatCurrencyCode: string) => (
@@ -206,7 +207,7 @@ export const createAccountTransaction = (createdWalletId: string, accountName: s
       lockInputs: true,
       onBack: () => {
         // Hack. Keyboard pops up for some reason. Close it
-        global.firebase && global.firebase.analytics().logEvent(`CreateWalletAccountSendBack_${createdWalletCurrencyCode}`)
+        trackEvent(`CreateWalletAccountSendBack_${createdWalletCurrencyCode}`)
       },
       onDone: (error: Error | null, edgeTransaction?: EdgeTransaction) => {
         if (error) {
@@ -215,7 +216,7 @@ export const createAccountTransaction = (createdWalletId: string, accountName: s
             Alert.alert(s.strings.create_wallet_account_error_sending_transaction)
           }, 750)
         } else if (edgeTransaction) {
-          global.firebase && global.firebase.analytics().logEvent(`CreateWalletAccountDone_${createdWalletCurrencyCode}`)
+          trackEvent(`CreateWalletAccountDone_${createdWalletCurrencyCode}`)
           const edgeMetadata: EdgeMetadata = {
             name: sprintf(s.strings.create_wallet_account_metadata_name, createdWalletCurrencyCode),
             category: 'Expense:' + sprintf(s.strings.create_wallet_account_metadata_category, createdWalletCurrencyCode),

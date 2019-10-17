@@ -22,6 +22,7 @@ import { Icon } from '../../../../modules/UI/components/Icon/Icon.ui.js'
 import type { GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
 import type { Dispatch, State } from '../../../../types/reduxTypes.js'
 import type { BuySellPlugin, GuiWallet } from '../../../../types/types.js'
+import { trackEvent } from '../../../../util/tracking.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 
@@ -360,7 +361,7 @@ export class EdgeProvider extends Bridgeable {
   }
 
   trackConversion () {
-    global.firebase && global.firebase.analytics().logEvent(`EdgeProvider_Conversion_Success`)
+    trackEvent('EdgeProvider_Conversion_Success')
   }
 
   _spend (guiMakeSpendInfo: GuiMakeSpendInfo, lockInputs: boolean = true, signOnly: boolean = false): Promise<EdgeTransaction> {
