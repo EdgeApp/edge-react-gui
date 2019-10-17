@@ -25,7 +25,7 @@ import * as SETTINGS_SELECTORS from '../modules/Settings/selectors.js'
 import * as UI_SELECTORS from '../modules/UI/selectors'
 import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiSwapInfo, GuiWallet } from '../types/types.js'
-import { trackEvent } from '../util/tracking.js'
+import { trackConversion, trackEvent } from '../util/tracking.js'
 import * as UTILS from '../util/utils'
 import { updateSwapCount } from './RequestReviewActions.js'
 
@@ -266,7 +266,8 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
   dispatch({ type: 'START_SHIFT_TRANSACTION' })
 
   const { quote, request } = swapInfo
-  const { fromWallet, toWallet } = request
+  const { pluginName, toNativeAmount } = quote
+  const { fromWallet, toWallet, toCurrencyCode } = request
 
   try {
     trackEvent('Exchange_Shift_Start')
@@ -280,8 +281,7 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
       state.cryptoExchange.toCurrencyCode
     )
     const account = CORE_SELECTORS.getAccount(state)
-    const pn = quote.pluginName
-    const si = account.swapConfig[pn].swapInfo
+    const si = account.swapConfig[pluginName].swapInfo
     const name = si.displayName
     const supportEmail = si.supportEmail
     const quoteIdUri = si.quoteUri && quote.quoteId ? si.quoteUri + quote.quoteId : broadcastedTransaction.txid
@@ -321,7 +321,13 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
     setTimeout(() => {
       Alert.alert(s.strings.exchange_succeeded, s.strings.exchanges_may_take_minutes)
     }, 1)
-    trackEvent('Exchange_Shift_Success')
+    const exchangeAmount = await toWallet.nativeToDenomination(toNativeAmount, toCurrencyCode)
+    trackConversion('Exchange_Shift_Success', {
+      account,
+      pluginId: pluginName,
+      currencyCode: toCurrencyCode,
+      exchangeAmount: Number(exchangeAmount)
+    })
   } catch (error) {
     console.log(error)
     trackEvent('Exchange_Shift_Failed')
