@@ -5,11 +5,13 @@ import firebase from 'react-native-firebase'
 
 import ENV from '../../env.json'
 
+// Feel free to add new events at any time!
+// This type is here so we know all the possible values:
 type TrackingEvent =
-  | 'CreateWalletAccountDone_EOS'
-  | 'CreateWalletAccountSelect_EOS'
-  | 'CreateWalletAccountSendBack_EOS'
-  | 'CreateWalletAccountSetup_EOS'
+  | 'Activate_Wallet_Cancel'
+  | 'Activate_Wallet_Done'
+  | 'Activate_Wallet_Select'
+  | 'Activate_Wallet_Start'
   | 'EdgeProvider_Conversion_Success'
   | 'Exchange_Shift_Failed'
   | 'Exchange_Shift_Quote'
@@ -18,8 +20,10 @@ type TrackingEvent =
   | 'Signup_Wallets_Created'
   | 'Start_App'
 
-type TrackingParams = {
-  [key: string]: string
+// Feel free to add new parameters at any time!
+// This type is here so we know all the possible values:
+type TrackingOptions = {
+  currencyCode?: string // Wallet currency code
 }
 
 // Set up the global Firebase instance at boot:
@@ -31,8 +35,12 @@ if (ENV.USE_FIREBASE && !firebase.isMock) {
 /**
  * Tracks a user event, like navigating or logging in.
  */
-export async function trackEvent (event: TrackingEvent | string, params?: TrackingParams) {
+export async function trackEvent (event: TrackingEvent, opts?: TrackingOptions = {}) {
   if (global.firebase) {
+    const { currencyCode } = opts
+
+    const params: Object = {}
+    if (currencyCode != null) params.currency = currencyCode
     global.firebase.analytics().logEvent(event, params)
   }
 }
