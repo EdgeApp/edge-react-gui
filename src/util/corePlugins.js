@@ -62,6 +62,7 @@ export const currencyPlugins = {
 
 export const ratePlugins = {
   'shapeshift-rate': false,
+  compound: true,
   coinbase: true,
   coincap: true,
   constantRate: true,

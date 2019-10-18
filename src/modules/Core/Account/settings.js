@@ -190,6 +190,27 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   RIF: {
     denomination: '1000000000000000000'
   },
+  CREP: {
+    denomination: '1000000000000000000'
+  },
+  CUSDC: {
+    denomination: '1000000'
+  },
+  CBAT: {
+    denomination: '1000000000000000000'
+  },
+  CZRX: {
+    denomination: '1000000000000000000'
+  },
+  CWBTC: {
+    denomination: '100000000'
+  },
+  CDAI: {
+    denomination: '1000000000000000000'
+  },
+  CETH: {
+    denomination: '1000000000000000000'
+  },
   customTokens: [],
   passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN
 }
@@ -254,6 +275,13 @@ export const SYNCED_ACCOUNT_TYPES = {
   DAI: 'object',
   RBTC: 'object',
   RIF: 'object',
+  CREP: 'object',
+  CUSDC: 'object',
+  CBAT: 'object',
+  CZRX: 'object',
+  CWBTC: 'object',
+  CDAI: 'object',
+  CETH: 'object',
   customTokens: 'object', // arrays return 'object' to typeof
   passwordRecoveryRemindersShown: 'object'
 }
