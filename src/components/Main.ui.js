@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component, Fragment } from 'react'
-import { AsyncStorage, Image, Linking, TouchableWithoutFeedback, View, YellowBox } from 'react-native'
+import { Image, Linking, TouchableWithoutFeedback, View, YellowBox } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import { Actions, Drawer, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
@@ -138,8 +138,6 @@ type Props = {
   dispatchAddressDeepLinkReceived: (addressDeepLinkData: Object) => any,
   deepLinkPending: boolean,
   checkAndShowGetCryptoModal: (?string) => void,
-  turnOnDeveloperMode: () => void,
-  turnOffDeveloperMode: () => void,
   logout(): () => mixed
 }
 
@@ -159,7 +157,7 @@ export default class Main extends Component<Props> {
     }
   }
 
-  async componentDidMount () {
+  componentDidMount () {
     const id = DeviceInfo.getUniqueID()
     global.firebase && global.firebase.analytics().setUserId(id)
     global.firebase && global.firebase.analytics().logEvent(`Start_App`)
@@ -173,15 +171,6 @@ export default class Main extends Component<Props> {
       })
       .catch(showError)
     Linking.addEventListener('url', this.handleOpenURL)
-    this.handleDeveloperMode(await AsyncStorage.getItem('developerMode'))
-  }
-
-  handleDeveloperMode = (mode: boolean) => {
-    if (mode === 'true') {
-      this.props.turnOnDeveloperMode()
-      return
-    }
-    this.props.turnOffDeveloperMode()
   }
 
   handleOpenURL = (event: Object) => {

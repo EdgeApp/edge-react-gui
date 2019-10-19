@@ -1,5 +1,6 @@
 // @flow
 
+import AsyncStorage from '@react-native-community/async-storage'
 import { createInputModal } from 'edge-components'
 import { type EdgeAccount } from 'edge-core-js/types'
 import React, { Component } from 'react'
@@ -17,7 +18,16 @@ import paymentTypeLogoCreditCard from '../../assets/images/paymentTypes/paymentT
 import paymentTypeLogoGiftCard from '../../assets/images/paymentTypes/paymentTypeLogoGiftCard.png'
 import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLogoPoli.png'
 import paymentTypeLogoSwish from '../../assets/images/paymentTypes/paymentTypeLogoSwish.png'
-import { ANDROID, ARROW_RIGHT, COUNTRY_CODES, FLAG_LOGO_URL, PLUGIN_VIEW, PLUGIN_VIEW_LEGACY, SIMPLE_ICONS } from '../../constants/indexConstants.js'
+import {
+  ANDROID,
+  ARROW_RIGHT,
+  COUNTRY_CODES,
+  DEVELOPER_PLUGIN,
+  FLAG_LOGO_URL,
+  PLUGIN_VIEW,
+  PLUGIN_VIEW_LEGACY,
+  SIMPLE_ICONS
+} from '../../constants/indexConstants.js'
 import { devPlugin, getBuyPlugins, getSellPlugins, pluginUrlMap } from '../../constants/plugins/buySellPlugins.js'
 import s from '../../locales/strings.js'
 import { getSyncedSettingsAsync, setSyncedSettingsAsync } from '../../modules/Core/Account/settings.js'
@@ -59,13 +69,27 @@ type DispatchProps = {
 }
 
 type Props = OwnProps & StateProps & DispatchProps
+type State = {
+  developerPlugin: BuySellPlugin & PluginUrlMap
+}
 
 const MODAL_DATA_FILE = 'pluginModalTracker.json'
 
-class PluginList extends Component<Props> {
+class PluginList extends Component<Props, State> {
+  constructor (props: Props) {
+    super(props)
+    this.state = {
+      developerPlugin: devPlugin
+    }
+  }
   async componentDidMount () {
     await this.checkDisclaimer()
     this.checkCountry()
+
+    const storedDeveloperPlugin = await AsyncStorage.getItem(DEVELOPER_PLUGIN)
+    this.setState({
+      developerPlugin: storedDeveloperPlugin ? JSON.parse(storedDeveloperPlugin) : devPlugin
+    })
   }
 
   /**
@@ -158,9 +182,10 @@ class PluginList extends Component<Props> {
       yesButton: { title: s.strings.load_plugin },
       noButton: { title: s.strings.string_cancel_cap }
     })
-    launchModal(modal).then(response => {
+    launchModal(modal).then(async response => {
       if (response) {
         plugin.uri = response
+        await AsyncStorage.setItem(DEVELOPER_PLUGIN, JSON.stringify(plugin))
         Actions[PLUGIN_VIEW]({ plugin })
       }
     })
@@ -229,7 +254,7 @@ class PluginList extends Component<Props> {
 
     // Add the dev mode plugin if enabled:
     if (developerModeOn) {
-      plugins.push(devPlugin)
+      plugins.push(this.state.developerPlugin)
     }
 
     return (

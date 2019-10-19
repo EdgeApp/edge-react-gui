@@ -58,4 +58,6 @@ target 'edge' do
 
   pod 'react-native-safari-view', :path => '../node_modules/react-native-safari-view'
 
+  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
+
 end

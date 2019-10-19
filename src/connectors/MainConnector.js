@@ -50,9 +50,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     }
     dispatch(checkAndShowGetCryptoModal())
   },
-  logout: (username?: string) => dispatch(actions.logoutRequest(username)),
-  turnOnDeveloperMode: () => dispatch({ type: 'DEVELOPER_MODE_ON' }),
-  turnOffDeveloperMode: () => dispatch({ type: 'DEVELOPER_MODE_OFF' })
+  logout: (username?: string) => dispatch(actions.logoutRequest(username))
 })
 export default connect(
   mapStateToProps,
