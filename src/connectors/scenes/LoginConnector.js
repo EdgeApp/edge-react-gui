@@ -2,6 +2,7 @@
 
 import { connect } from 'react-redux'
 
+import { showSendLogsModal } from '../../actions/SettingsActions'
 import Login from '../../components/scenes/LoginScene'
 import * as CORE_SELECTORS from '../../modules/Core/selectors'
 import { initializeAccount } from '../../modules/Login/action'
@@ -20,6 +21,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
       type: 'CORE/CONTEXT/ADD_USERNAMES',
       data: { usernames }
     }),
+  showSendLogsModal: () => dispatch(showSendLogsModal()),
   initializeAccount: (account, touchIdInfo) => dispatch(initializeAccount(account, touchIdInfo))
 })
 
