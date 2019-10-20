@@ -214,6 +214,7 @@
   "settings_button_debug": "Debugger",
   "settings_turn_on_developer_mode": "Activer le mode développeur",
   "settings_turn_off_developer_mode": "Désactiver le mode développeur",
+  "settings_developer_mode": "",
   "settings_button_lock_settings": "Cliquer pour débloquer le compte dans les réglages ",
   "settings_button_password_recovery": "Configuere la récupération du mot de passe ",
   "settings_button_logout": "Se déconnecter",
