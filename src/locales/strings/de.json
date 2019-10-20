@@ -214,6 +214,7 @@
   "settings_button_debug": "Debug",
   "settings_turn_on_developer_mode": "Entwickler Modus aktivieren",
   "settings_turn_off_developer_mode": "Entwickler Modus deaktivieren",
+  "settings_developer_mode": "",
   "settings_button_lock_settings": "Tippen um Benutzerkontoeinstellungen zu sperren",
   "settings_button_password_recovery": "Passwortwiederherstellung einrichten",
   "settings_button_logout": "Ausloggen",
