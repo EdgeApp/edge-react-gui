@@ -214,6 +214,7 @@
   "settings_button_debug": "Depurar",
   "settings_turn_on_developer_mode": "Activar modo desarrollador",
   "settings_turn_off_developer_mode": "Desactivar modo desarrollador",
+  "settings_developer_mode": "",
   "settings_button_lock_settings": "Pulsar para bloquear la configuración de la cuenta",
   "settings_button_password_recovery": "Configurar recuperación de contraseña",
   "settings_button_logout": "Salir",
