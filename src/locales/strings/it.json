@@ -214,6 +214,7 @@
   "settings_button_debug": "Debug",
   "settings_turn_on_developer_mode": "Abilita Modalità Sviluppatore",
   "settings_turn_off_developer_mode": "Disabilita Modalità Sviluppatore",
+  "settings_developer_mode": "",
   "settings_button_lock_settings": "Fai tap per bloccare le impostazioni dell'account",
   "settings_button_password_recovery": "Imposta il Recupero Password",
   "settings_button_logout": "Esci",
