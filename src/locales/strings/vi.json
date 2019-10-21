@@ -214,6 +214,7 @@
   "settings_button_debug": "Gỡ lỗi",
   "settings_turn_on_developer_mode": "",
   "settings_turn_off_developer_mode": "",
+  "settings_developer_mode": "",
   "settings_button_lock_settings": "Bấm để khóa cài đặt tài khoản",
   "settings_button_password_recovery": "Thiết lập mật khẩu phục hồi",
   "settings_button_logout": "Đăng xuất",

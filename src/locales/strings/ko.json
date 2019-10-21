@@ -214,6 +214,7 @@
   "settings_button_debug": "버그 수정",
   "settings_turn_on_developer_mode": "개발자 모드 활성화",
   "settings_turn_off_developer_mode": "개발자 모드 비활성화",
+  "settings_developer_mode": "",
   "settings_button_lock_settings": "탭하여 계정 설정 잠금",
   "settings_button_password_recovery": "암호 복구 셋업",
   "settings_button_logout": "로그아웃",
