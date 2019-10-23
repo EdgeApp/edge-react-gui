@@ -23,6 +23,7 @@ export type Props = {
   isFocused: boolean,
   isThinking?: boolean,
   focusMe(): void,
+  isFiatOnTop: boolean,
   launchWalletSelector: () => void,
   onCryptoExchangeAmountChanged: ExchangedFlipInputAmounts => void,
   onNext: () => void
@@ -113,7 +114,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends Component<Props> {
             forceUpdateGuiCounter={forceUpdateGuiCounter}
             onExchangeAmountChanged={this.onExchangeAmountChanged}
             keyboardVisible={false}
-            isFiatOnTop={false}
+            isFiatOnTop={this.props.isFiatOnTop}
             isFocus={false}
           />
         </View>

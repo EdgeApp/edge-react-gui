@@ -20,7 +20,10 @@ const DIVIDE_PRECISION = 18
 export const mapStateToProps = (state: State): CryptoExchangeSceneComponentStateProps => {
   const fromWallet = state.cryptoExchange.fromWallet
   const toWallet = state.cryptoExchange.toWallet
+  const exchangeRates = state.exchangeRates
   const supportedWalletTypes = SETTINGS_SELECTORS.getSupportedWalletTypes(state)
+  const checkExchangeRatesToFlipInputFiatTop = Object.keys(exchangeRates).length !== 0
+
   let fromCurrencyCode, fromPrimaryInfo: GuiCurrencyInfo, fromButtonText: string, fromNativeAmount: string, fromExchangeAmount: string, fromFiatToCrypto: number
   if (fromWallet) {
     fromCurrencyCode = state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name
@@ -85,7 +88,8 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
     supportedWalletTypes,
     state,
     creatingWallet,
-    defaultIsoFiat
+    defaultIsoFiat,
+    isFiatOnTop: checkExchangeRatesToFlipInputFiatTop
   }
 }
 

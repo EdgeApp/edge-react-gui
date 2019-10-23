@@ -253,7 +253,7 @@ export class Request extends Component<Props, State> {
             onExchangeAmountChanged={this.onExchangeAmountChanged}
             keyboardVisible={false}
             color={THEME.COLORS.WHITE}
-            isFiatOnTop={false}
+            isFiatOnTop={true}
             isFocus={false}
           />
 
