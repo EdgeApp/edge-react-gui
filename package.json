@@ -77,12 +77,7 @@
     "preset": "react-native",
     "reporters": [
       "default",
-      [
-        "jest-junit",
-        {
-          "output": "./coverage/junit.xml"
-        }
-      ]
+      "jest-junit"
     ],
     "setupFiles": [
       "./testSetup.js"
@@ -109,7 +104,7 @@
     "detect-bundler": "^1.0.0",
     "disklet": "^0.4.1",
     "edge-components": "^0.0.26",
-    "edge-core-js": "^0.16.11",
+    "edge-core-js": "^0.16.12",
     "edge-currency-accountbased": "^0.5.0",
     "edge-currency-bitcoin": "^4.6.3",
     "edge-currency-monero": "^0.2.4",
@@ -200,8 +195,8 @@
     "import-sort-cli": "^5.0.0",
     "import-sort-parser-babylon": "^5.0.0",
     "import-sort-style-module": "^5.0.0",
-    "jest": "^24.5.0",
-    "jest-junit": "^5.1.0",
+    "jest": "^24.9.0",
+    "jest-junit": "^9.0.0",
     "jsonfile": "^4.0.0",
     "lint-staged": "^6.1.1",
     "metro-react-native-babel-preset": "^0.53.1",
@@ -289,6 +284,10 @@
       "parser": "babylon",
       "style": "module"
     }
+  },
+  "jest-junit": {
+    "outputDirectory": "./coverage",
+    "outputName": "junit.xml"
   },
   "plugins": [
     "edge-plugin-simplex",

@@ -7,7 +7,7 @@ PODS:
     - React
   - BVLinearGradient (2.5.3):
     - React
-  - disklet (0.4.2):
+  - disklet (0.4.3):
     - React
   - DoubleConversion (1.1.6)
   - edge-login-ui-rn (0.5.44):
@@ -288,7 +288,7 @@ SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   BugsnagReactNative: 7ba00c17a3dedfeea4dd011919962d415a231c49
   BVLinearGradient: 0d985ec461359c82bc254f26d11008bdae50d17a
-  disklet: 2fd40706dc13842175ae23bdd57d5b893fbb68a8
+  disklet: aad587c2ee9642a374c7f41117bf5e2ea0286b91
   DoubleConversion: bb338842f62ab1d708ceb63ec3d999f0f3d98ecd
   edge-login-ui-rn: 77730e2cf4d1439c02601dfc570acd0b02c6a082
   Firebase: 68afeeb05461db02d7c9e3215cda28068670f4aa
