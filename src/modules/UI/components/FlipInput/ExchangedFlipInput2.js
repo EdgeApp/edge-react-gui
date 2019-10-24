@@ -112,6 +112,9 @@ function propsToState (props: Props): State {
 }
 
 export class ExchangedFlipInput extends Component<Props, State> {
+  flipInput: any
+  toggleCryptoOnTop: any
+
   static defaultProps = {
     isEditable: true
   }
@@ -120,10 +123,15 @@ export class ExchangedFlipInput extends Component<Props, State> {
     super(props)
     this.state = propsToState(props)
     slowlog(this, /.*/, global.slowlogOptions)
+    this.flipInput = React.createRef()
   }
 
   UNSAFE_componentWillReceiveProps (nextProps: Props) {
     this.setState(propsToState(nextProps))
+  }
+
+  componentDidMount () {
+    this.toggleCryptoOnTop = this.flipInput.current ? this.flipInput.current.toggleCryptoOnTop : null
   }
 
   shouldComponentUpdate (nextProps: Props, nextState: State) {
@@ -168,6 +176,7 @@ export class ExchangedFlipInput extends Component<Props, State> {
         isFiatOnTop={this.isFiatOnTop()}
         isFocus={this.props.isFocus}
         onNext={this.props.onNext}
+        ref={this.flipInput}
       />
     )
   }

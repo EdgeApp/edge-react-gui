@@ -76,6 +76,7 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
   const uniqueIdentifier = sceneState.guiMakeSpendInfo.uniqueIdentifier
   const transactionMetadata = sceneState.transactionMetadata
   const exchangeRates = state.exchangeRates
+  const { toggleCryptoOnTop } = sceneState
 
   const { spendingLimits } = state.ui.settings
 
@@ -109,7 +110,8 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
     address: state.ui.scenes.sendConfirmation.address,
     sceneState,
     coreWallet,
-    spendingLimits
+    spendingLimits,
+    toggleCryptoOnTop
   }
   return out
 }

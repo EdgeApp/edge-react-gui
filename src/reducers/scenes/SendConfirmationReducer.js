@@ -42,7 +42,9 @@ export type SendConfirmationState = {
   error: Error | null,
 
   pin: string,
-  authRequired: 'pin' | 'none'
+  authRequired: 'pin' | 'none',
+
+  toggleCryptoOnTop: number
 }
 
 export const sendConfirmationLegacy = (state: SendConfirmationState = initialState, action: Action) => {
@@ -245,6 +247,17 @@ export const transaction = (state: EdgeTransaction | null = null, action: Action
   }
 }
 
+export const toggleCryptoOnTop = (state: number = 0, action: Action) => {
+  switch (action.type) {
+    case 'UI/SEND_CONFIMATION/TOGGLE_CRYPTO_ON_TOP': {
+      return state + 1
+    }
+
+    default:
+      return state
+  }
+}
+
 export const sendConfirmation: Reducer<SendConfirmationState, Action> = (state = initialState, action) => {
   if (action.type === 'UI/SEND_CONFIMATION/RESET') return initialState
 
@@ -261,7 +274,8 @@ export const sendConfirmation: Reducer<SendConfirmationState, Action> = (state =
     spendInfo: spendInfo(state.spendInfo, action),
     nativeAmount: nativeAmount(state.nativeAmount, action),
     address: address(state.address, action),
-    authRequired: authRequired(state.authRequired, action)
+    authRequired: authRequired(state.authRequired, action),
+    toggleCryptoOnTop: toggleCryptoOnTop(state.toggleCryptoOnTop, action)
   }
 }
 export default sendConfirmation
