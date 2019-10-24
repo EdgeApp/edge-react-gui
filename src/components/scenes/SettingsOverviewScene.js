@@ -48,8 +48,7 @@ type Props = {
   showUnlockSettingsModal: () => void,
   showSendLogsModal: () => void,
   showRestoreWalletsModal: () => void,
-  turnOnDeveloperMode(): void,
-  turnOffDeveloperMode(): void
+  toggleDeveloperMode(boolean): void
 }
 type State = {
   showAutoLogoutModal: boolean,
@@ -134,11 +133,7 @@ export default class SettingsOverview extends Component<Props, State> {
   }
 
   onDeveloperPress = () => {
-    if (this.props.developerModeOn) {
-      this.props.turnOffDeveloperMode()
-      return
-    }
-    this.props.turnOnDeveloperMode()
+    this.props.toggleDeveloperMode(!this.props.developerModeOn)
   }
 
   showAutoLogoutModal = async () => {

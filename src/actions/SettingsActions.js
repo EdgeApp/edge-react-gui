@@ -344,3 +344,17 @@ export const showRestoreWalletsModal = () => async (dispatch: Dispatch, getState
     Actions[WALLET_LIST]()
   }
 }
+
+export const setDeveloperModeOn = (developerModeOn: boolean) => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  ACCOUNT_SETTINGS.setDeveloperModeOn(account, developerModeOn)
+    .then(() => {
+      if (developerModeOn) {
+        dispatch({ type: 'DEVELOPER_MODE_ON' })
+        return
+      }
+      dispatch({ type: 'DEVELOPER_MODE_OFF' })
+    })
+    .catch(showError)
+}
