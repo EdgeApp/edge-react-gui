@@ -1,7 +1,7 @@
 // @flow
 /* global window */
 
-import { type DiskletFolder, makeReactNativeFolder } from 'disklet'
+import { downgradeDisklet, makeReactNativeDisklet } from 'disklet'
 import { type EdgeContext } from 'edge-core-js/types'
 import React, { PureComponent } from 'react'
 import DeviceInfo from 'react-native-device-info'
@@ -21,6 +21,7 @@ import { type State } from '../../types/reduxTypes.js'
 import errorAlert from '../../util/errorAlert.js'
 import loginStatusChecker from '../../util/loginStatusChecker.js'
 import perfLogger from '../../util/perfLogger.js'
+import { loadInstallReason } from '../../util/tracking.js'
 import { ModalProvider } from '../common/ModalProvider.js'
 import { Airship } from './AirshipInstance.js'
 import { AutoLogout } from './AutoLogout.js'
@@ -54,7 +55,8 @@ export class Services extends PureComponent<Props> {
 
     // Put the context into Redux:
     const { context } = props
-    const folder = makeReactNativeFolder()
+    const disklet = makeReactNativeDisklet()
+    const folder = downgradeDisklet(disklet)
     this.store.dispatch({
       type: 'CORE/CONTEXT/ADD_CONTEXT',
       data: { context, folder }
@@ -65,7 +67,7 @@ export class Services extends PureComponent<Props> {
         type: 'CORE/CONTEXT/ADD_USERNAMES',
         data: { usernames }
       })
-      queryUtilServer(context, folder, usernames)
+      loadInstallReason(disklet, usernames.length === 0)
     })
   }
 
@@ -97,39 +99,5 @@ export class Services extends PureComponent<Props> {
         </React.Fragment>
       </Provider>
     )
-  }
-}
-
-const UTILITY_SERVER_FILE = 'utilityServer.json'
-
-async function queryUtilServer (context: EdgeContext, folder: DiskletFolder, usernames: Array<string>) {
-  let jsonObj: null | Object = null
-  try {
-    const json = await folder.file(UTILITY_SERVER_FILE).getText()
-    jsonObj = JSON.parse(json)
-    if (jsonObj.currencyCode) {
-      global.currencyCode = jsonObj.currencyCode
-    }
-    return
-  } catch (e) {
-    // Failing here is OK, fall through:
-  }
-
-  try {
-    if (usernames.length === 0) {
-      // New app launch. Query the utility server for referral information
-      const response = await fetch('https://util1.edge.app/ref')
-      if (response) {
-        const util = await response.json()
-        if (util.currencyCode) {
-          global.currencyCode = util.currencyCode
-        }
-        // Save util data
-        folder.file(UTILITY_SERVER_FILE).setText(JSON.stringify(util))
-      }
-    }
-  } catch (e) {
-    // Failing here is still OK, but log it:
-    console.log(e)
   }
 }

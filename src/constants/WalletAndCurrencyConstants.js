@@ -2,9 +2,6 @@
 
 import s from '../locales/strings.js'
 
-export const ETHEREUM_WALLET = 'wallet:ethereum'
-export const BITCOIN_WALLET = 'wallet:bitcoin'
-export const BITCOINCASH_WALLET = 'wallet:bitcoincash'
 export const MAX_TOKEN_CODE_CHARACTERS = 6
 
 export const FEE_COLOR_THRESHOLD = 2.0 // this is denominated in dollars
