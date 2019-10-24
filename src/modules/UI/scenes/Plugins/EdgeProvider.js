@@ -12,8 +12,8 @@ import { Bridgeable } from 'yaob'
 import { createCurrencyWalletAndSelectForPlugins } from '../../../../actions/indexActions'
 import { selectWallet } from '../../../../actions/WalletActions'
 import { launchModal } from '../../../../components/common/ModalProvider.js'
-import { createCryptoExchangeWalletSelectorModal } from '../../../../components/modals/CryptoExchangeWalletSelectorModal'
-import { showError, showToast } from '../../../../components/services/AirshipInstance.js'
+import { WalletListModal } from '../../../../components/modals/WalletListModal'
+import { Airship, showError, showToast } from '../../../../components/services/AirshipInstance.js'
 import { DEFAULT_STARTER_WALLET_NAMES, EXCLAMATION, MATERIAL_COMMUNITY } from '../../../../constants/indexConstants'
 import { SEND_CONFIRMATION } from '../../../../constants/SceneKeys.js'
 import s from '../../../../locales/strings'
@@ -156,20 +156,21 @@ export class EdgeProvider extends Bridgeable {
         }
       }
     }
-    const props = {
-      wallets: walletsToUse,
-      excludedCurrencyCode,
-      supportedWalletTypes,
-      showWalletCreators: true,
-      state: this._state,
-      headerTitle: s.strings.choose_your_wallet,
-      cantCancel: false,
-      excludedTokens,
-      noWalletCodes
-    }
-    const modal = createCryptoExchangeWalletSelectorModal(props)
-    // const modal = createCustomWalletListModal(props)
-    const selectedWallet = await launchModal(modal, { style: { margin: 0 } })
+    const selectedWallet = await Airship.show(bridge => (
+      <WalletListModal
+        bridge={bridge}
+        wallets={walletsToUse}
+        supportedWalletTypes={supportedWalletTypes}
+        excludedCurrencyCode={excludedCurrencyCode}
+        showWalletCreators={true}
+        state={this._state}
+        headerTitle={s.strings.choose_your_wallet}
+        excludedTokens={excludedTokens}
+        noWalletCodes={noWalletCodes}
+        disableZeroBalance={false}
+      />
+    ))
+
     if (selectedWallet) {
       if (selectedWallet.id) {
         const code = selectedWallet.currencyCode
@@ -179,12 +180,14 @@ export class EdgeProvider extends Bridgeable {
       const settings = SETTINGS_SELECTORS.getSettings(this._state)
       const walletName = DEFAULT_STARTER_WALLET_NAMES[selectedWallet.currencyCode]
       try {
-        const newWallet: EdgeCurrencyWallet = await this._dispatch(
-          createCurrencyWalletAndSelectForPlugins(walletName, selectedWallet.value, settings.defaultIsoFiat)
-        )
-        this._dispatch(selectWallet(newWallet.id, newWallet.currencyInfo.currencyCode))
-        const returnString: string = newWallet.currencyInfo.currencyCode
-        return Promise.resolve(returnString)
+        if (typeof selectedWallet.value === 'string') {
+          const newWallet: EdgeCurrencyWallet = await this._dispatch(
+            createCurrencyWalletAndSelectForPlugins(walletName, selectedWallet.value, settings.defaultIsoFiat)
+          )
+          this._dispatch(selectWallet(newWallet.id, newWallet.currencyInfo.currencyCode))
+          const returnString: string = newWallet.currencyInfo.currencyCode
+          return Promise.resolve(returnString)
+        }
       } catch (e) {
         const modal = createSimpleConfirmModal({
           title: s.strings.create_wallet_failed_header,
