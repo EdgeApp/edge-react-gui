@@ -217,7 +217,6 @@ const archivedWalletIds = (state = [], action: Action): Array<string> => {
 const selectedWalletId = (state = '', action: Action): string => {
   switch (action.type) {
     case 'UI/WALLETS/SELECT_WALLET': {
-      if (action.data == null) throw new TypeError('Invalid action')
       return action.data.walletId
     }
 
@@ -235,7 +234,6 @@ const selectedWalletId = (state = '', action: Action): string => {
 const selectedCurrencyCode = (state = '', action: Action): string => {
   switch (action.type) {
     case 'UI/WALLETS/SELECT_WALLET': {
-      if (action.data == null) throw new TypeError('Invalid action')
       return action.data.currencyCode
     }
 
