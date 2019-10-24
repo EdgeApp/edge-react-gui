@@ -154,6 +154,8 @@ PODS:
     - React/Core
   - RNStoreReview (0.1.5):
     - React
+  - RNSVG (9.13.2):
+    - React
   - RNVectorIcons (6.1.0):
     - React
   - yoga (0.59.10.React)
@@ -204,6 +206,7 @@ DEPENDENCIES:
   - RNShare (from `../node_modules/react-native-share`)
   - RNSound (from `../node_modules/react-native-sound`)
   - RNStoreReview (from `../node_modules/react-native-store-review/ios`)
+  - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -284,6 +287,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-sound"
   RNStoreReview:
     :path: "../node_modules/react-native-store-review/ios"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
   yoga:
@@ -330,9 +335,10 @@ SPEC CHECKSUMS:
   RNShare: 4f206fa36e384e95a0cbf79f2a92490647e93127
   RNSound: a1d01988e043aed5dbb476c2152b5ffb02446750
   RNStoreReview: 62d6afd7c37db711a594bbffca6b0ea3a812b7a8
+  RNSVG: c0ee15672ff52cdbd7bc8d1d8ba488601bd5db02
   RNVectorIcons: ac7bf6bfeafaf3ad34552cdc6eed6fb8c4b7c940
   yoga: 684513b14b03201579ba3cee20218c9d1298b0cc
 
-PODFILE CHECKSUM: 3f20579d3913ea66ae652119c1ffa2f0e600bc79
+PODFILE CHECKSUM: 295173b5a5fd2590996dbdd7eec350ada982290e
 
 COCOAPODS: 1.8.4

@@ -27,7 +27,6 @@ target 'edge' do
   pod 'Firebase/Core', '~> 5.3.0'
 
   # React Native linked dependencies
-  pod 'RNStoreReview', :path => '../node_modules/react-native-store-review/ios'
   pod 'BugsnagReactNative', :path => '../node_modules/bugsnag-react-native'
   pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
   pod 'disklet', :path => '../node_modules/disklet'
@@ -44,20 +43,20 @@ target 'edge' do
   pod 'react-native-mail', :path => '../node_modules/react-native-mail'
   pod 'react-native-material-kit', :path => '../node_modules/react-native-material-kit'
   pod 'react-native-randombytes', :path => '../node_modules/react-native-randombytes'
+  pod 'react-native-safari-view', :path => '../node_modules/react-native-safari-view'
   pod 'react-native-smart-splash-screen', :path => '../node_modules/react-native-smart-splash-screen'
   pod 'react-native-tcp', :path => '../node_modules/react-native-tcp'
   pod 'react-native-webview', :path => '../node_modules/react-native-webview'
   pod 'ReactNativePermissions', :path => '../node_modules/react-native-permissions'
   pod 'RNBackgroundFetch', :path => '../node_modules/react-native-background-fetch'
+  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
   pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
   pod 'RNFS', :path => '../node_modules/react-native-fs'
   pod 'RNOpenAppSettings', :path => '../node_modules/react-native-app-settings'
   pod 'RNShare', :path => '../node_modules/react-native-share'
   pod 'RNSound', :path => '../node_modules/react-native-sound'
+  pod 'RNStoreReview', :path => '../node_modules/react-native-store-review/ios'
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
-
-  pod 'react-native-safari-view', :path => '../node_modules/react-native-safari-view'
-
-  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
 
 end

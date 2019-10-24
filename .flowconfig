@@ -17,21 +17,22 @@
 .*/Libraries/react-native/ReactNative.js
 
 .*/node_modules/edge-login-ui-rn/.*
-.*/node_modules/react-native/.*
+.*/node_modules/fbjs/.*
+.*/node_modules/metro-bundler/.*
+.*/node_modules/metro-cache/.*
+.*/node_modules/metro/.*
 .*/node_modules/react-native-camera/.*
 .*/node_modules/react-native-device-info/.*
 .*/node_modules/react-native-firebase/.*
-.*/node_modules/react-native-linear-gradient/.*
-.*/node_modules/react-native-router-flux/.*
-.*/node_modules/react-native-tab-view/.*
-.*/node_modules/react-native-permissions/.*
-.*/node_modules/react-native-tcp/.*
 .*/node_modules/react-native-fs/.*
-.*/node_modules/metro-bundler/.*
-.*/node_modules/metro/.*
-.*/node_modules/metro-cache/.*
 .*/node_modules/react-native-keyboard-aware-scroll-view/.*
-.*/node_modules/fbjs/.*
+.*/node_modules/react-native-linear-gradient/.*
+.*/node_modules/react-native-permissions/.*
+.*/node_modules/react-native-router-flux/.*
+.*/node_modules/react-native-svg/.*
+.*/node_modules/react-native-tab-view/.*
+.*/node_modules/react-native-tcp/.*
+.*/node_modules/react-native/.*
 
 [include]
 

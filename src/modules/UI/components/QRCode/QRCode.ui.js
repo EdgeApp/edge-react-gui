@@ -2,7 +2,7 @@
 
 import React, { PureComponent } from 'react'
 import { View } from 'react-native'
-import QrCode from 'react-native-qrcode'
+import QRCodeSVG from 'react-native-qrcode-svg'
 
 import { PLATFORM } from '../../../../theme/variables/platform.js'
 import styles from './styles'
@@ -15,7 +15,7 @@ export default class QRCode extends PureComponent<Props> {
   render () {
     return (
       <View style={styles.qrCodeBorder}>
-        <QrCode style={styles.qrCode} value={this.props.value} fgColor={'white'} bgColor={'black'} size={PLATFORM.deviceHeight / 4} />
+        <QRCodeSVG value={this.props.value || '?'} color={'black'} backgroundColor={'white'} size={PLATFORM.deviceHeight / 4} />
       </View>
     )
   }

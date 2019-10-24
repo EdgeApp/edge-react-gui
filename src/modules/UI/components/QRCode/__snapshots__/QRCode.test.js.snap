@@ -11,9 +11,15 @@ exports[`QRCode should render 1`] = `
   }
 >
   <QRCode
-    bgColor="black"
-    fgColor="white"
+    backgroundColor="white"
+    color="black"
+    ecl="M"
+    logoBackgroundColor="white"
+    logoBorderRadius={0}
+    logoMargin={2}
+    logoSize={20}
     size={333.5}
+    value="?"
   />
 </View>
 `;
