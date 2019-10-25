@@ -330,8 +330,7 @@ export class FlipInput extends Component<Props, State> {
           autoCorrect={false}
           keyboardType="numeric"
           selectionColor="white"
-          returnKeyType="next"
-          returnKeyLabel="next"
+          returnKeyType="done"
           underlineColorAndroid={'transparent'}
           ref={this.getTextInputBackRef}
           onFocus={this.textInputBackFocusTrue}
