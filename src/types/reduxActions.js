@@ -39,7 +39,6 @@ type LegacyActionName =
   | 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED'
   | 'UI/SETTINGS/TOUCH_ID_SETTINGS'
   | 'UI/SETTINGS/UPDATE_SETTINGS'
-  | 'UI/WALLETS/SELECT_WALLET'
   | 'UI/WALLETS/UPSERT_WALLETS'
   | 'UNIQUE_IDENTIFIER_MODAL/UNIQUE_IDENTIFIER_CHANGED'
   | 'UPDATE_EXCHANGE_RATES'
@@ -200,6 +199,10 @@ export type Action =
         walletId: string,
         receiveAddress: EdgeReceiveAddress
       }
+    }
+  | {
+      type: 'UI/WALLETS/SELECT_WALLET',
+      data: { currencyCode: string, walletId: string }
     }
   | {
       type: 'UPDATE_EXISTING_TOKEN_SUCCESS',

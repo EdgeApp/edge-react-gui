@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeAccount } from 'edge-core-js'
+import { type EdgeAccount, type EdgeCurrencyInfo } from 'edge-core-js/types'
 import { Platform } from 'react-native'
 import Locale from 'react-native-locale'
 import PushNotification from 'react-native-push-notification'
@@ -13,6 +13,7 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import type { Dispatch, GetState } from '../../types/reduxTypes.js'
 import { type CustomTokenInfo } from '../../types/types.js'
+import { getInstallCurrencies, saveCreationReason, trackEvent } from '../../util/tracking.js'
 import { runWithTimeout } from '../../util/utils.js'
 import {
   CORE_DEFAULTS,
@@ -27,56 +28,10 @@ import {
   setLocalSettings,
   setSyncedSettings
 } from '../Core/Account/settings.js'
-// Login/action.js
 import * as CORE_SELECTORS from '../Core/selectors'
 import { updateWalletsRequest } from '../Core/Wallets/action.js'
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
-
-const createDefaultWallets = async (account: EdgeAccount, defaultFiat: string, dispatch: Dispatch) => {
-  const ethWalletName = s.strings.string_first_ethereum_wallet_name
-  const btcWalletName = s.strings.string_first_bitcoin_wallet_name
-  const bchWalletName = s.strings.string_first_bitcoincash_wallet_name
-  const ethWalletType = Constants.ETHEREUM_WALLET
-  const btcWalletType = Constants.BITCOIN_WALLET
-  const bchWalletType = Constants.BITCOINCASH_WALLET
-  const fiatCurrencyCode = 'iso:' + defaultFiat
-
-  let edgeWallet
-  const timeoutErr = new Error(s.strings.error_creating_wallets)
-  timeoutErr.name = 'Error Creating Wallets'
-  if (global.currencyCode) {
-    let walletType, walletName
-    // We got installed via a currencyCode referral. Only create one wallet of that type
-    for (const pluginName in account.currencyConfig) {
-      const { currencyInfo } = account.currencyConfig[pluginName]
-      if (currencyInfo.currencyCode.toLowerCase() === global.currencyCode.toLowerCase()) {
-        walletType = currencyInfo.walletType
-        walletName = sprintf(s.strings.my_crypto_wallet_name, currencyInfo.displayName)
-        global.startMoment && global.startMoment('INIT_ACCOUNT_CREATE_ONE_WALLET')
-        edgeWallet = await runWithTimeout(account.createCurrencyWallet(walletType, { name: walletName, fiatCurrencyCode }), 20000, timeoutErr)
-        global.firebase && global.firebase.analytics().logEvent(`Signup_Wallets_Created`)
-        global.endMoment && global.endMoment('INIT_ACCOUNT_CREATE_ONE_WALLET')
-      }
-    }
-  }
-  if (!edgeWallet) {
-    global.startMoment && global.startMoment('INIT_ACCOUNT_CREATE_WALLETS')
-    edgeWallet = await runWithTimeout(account.createCurrencyWallet(btcWalletType, { name: btcWalletName, fiatCurrencyCode }), 20000, timeoutErr)
-    dispatch({ type: 'UI/WALLETS/SELECT_WALLET', data: { currencyCode: edgeWallet.currencyInfo.currencyCode, walletId: edgeWallet.id } })
-    await runWithTimeout(account.createCurrencyWallet(bchWalletType, { name: bchWalletName, fiatCurrencyCode }), 20000, timeoutErr)
-    await runWithTimeout(account.createCurrencyWallet(ethWalletType, { name: ethWalletName, fiatCurrencyCode }), 20000, timeoutErr)
-    // const p = []
-    // p.push(account.createCurrencyWallet(btcWalletType, { name: btcWalletName, fiatCurrencyCode }))
-    // p.push(account.createCurrencyWallet(bchWalletType, { name: bchWalletName, fiatCurrencyCode }))
-    // p.push(account.createCurrencyWallet(ethWalletType, { name: ethWalletName, fiatCurrencyCode }))
-    // const results = await runWithTimeout(20000, Promise.all(p))
-    // edgeWallet = results[0]
-    global.firebase && global.firebase.analytics().logEvent(`Signup_Wallets_Created`)
-    global.endMoment && global.endMoment('INIT_ACCOUNT_CREATE_WALLETS')
-  }
-  return edgeWallet
-}
 
 const getFirstActiveWalletInfo = (account: EdgeAccount, currencyCodes: { [string]: string }) => {
   const walletId = account.activeWalletIds[0]
@@ -222,6 +177,9 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     if (newAccount) {
       await createDefaultWallets(account, defaultFiat, dispatch)
     }
+    if (account.newAccount) {
+      await saveCreationReason(account)
+    }
     dispatch(updateWalletsRequest())
     activeWalletIds.forEach(walletId => {
       dispatch(getEnabledTokens(walletId))
@@ -327,4 +285,64 @@ export const deepLinkLogout = (backupKey: string) => (dispatch: Dispatch, getSta
   if (!account) {
     account.logout()
   }
+}
+
+/**
+ * Finds the currency info for a currency code.
+ */
+function findCurrencyInfo (account: EdgeAccount, currencyCode: string): EdgeCurrencyInfo | void {
+  for (const pluginName in account.currencyConfig) {
+    const { currencyInfo } = account.currencyConfig[pluginName]
+    if (currencyInfo.currencyCode.toUpperCase() === currencyCode) {
+      return currencyInfo
+    }
+  }
+}
+
+/**
+ * Creates a wallet, with timeout, and maybe also activates it.
+ */
+async function safeCreateWallet (account: EdgeAccount, walletType: string, walletName: string, fiatCurrencyCode: string, dispatch: Dispatch) {
+  const wallet = await runWithTimeout(
+    account.createCurrencyWallet(walletType, {
+      name: walletName,
+      fiatCurrencyCode
+    }),
+    20000,
+    new Error(s.strings.error_creating_wallets)
+  )
+  if (account.activeWalletIds.length <= 1) {
+    dispatch({
+      type: 'UI/WALLETS/SELECT_WALLET',
+      data: { currencyCode: wallet.currencyInfo.currencyCode, walletId: wallet.id }
+    })
+  }
+}
+
+/**
+ * Creates the default wallets inside a new account.
+ */
+async function createDefaultWallets (account: EdgeAccount, defaultFiat: string, dispatch: Dispatch) {
+  const fiatCurrencyCode = 'iso:' + defaultFiat
+
+  const currencyCodes = getInstallCurrencies()
+  if (currencyCodes != null) {
+    for (const currencyCode of currencyCodes) {
+      const currencyInfo = findCurrencyInfo(account, currencyCode)
+      if (currencyInfo == null) continue
+
+      const walletName = sprintf(s.strings.my_crypto_wallet_name, currencyInfo.displayName)
+      await safeCreateWallet(account, currencyInfo.walletType, walletName, fiatCurrencyCode, dispatch)
+    }
+
+    trackEvent('Signup_Wallets_Created')
+    return
+  }
+
+  // TODO: Run these in parallel once the Core has safer locking:
+  await safeCreateWallet(account, 'wallet:bitcoin', s.strings.string_first_bitcoin_wallet_name, fiatCurrencyCode, dispatch)
+  await safeCreateWallet(account, 'wallet:bitcoincash', s.strings.string_first_bitcoincash_wallet_name, fiatCurrencyCode, dispatch)
+  await safeCreateWallet(account, 'wallet:ethereum', s.strings.string_first_ethereum_wallet_name, fiatCurrencyCode, dispatch)
+
+  trackEvent('Signup_Wallets_Created')
 }
