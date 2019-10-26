@@ -20,7 +20,8 @@ type Props = {
   account: ?EdgeAccount,
   recoveryLogin: string,
   dispatch: Dispatch,
-  username?: string
+  username?: string,
+  showSendLogsModal: () => void
 }
 type State = { key: number }
 
@@ -71,6 +72,7 @@ export default class Login extends Component<Props, State> {
           appName={s.strings.app_name_short}
           backgroundImage={edgeBackgroundImage}
           primaryLogo={edgeLogo}
+          primaryLogoCallback={this.props.showSendLogsModal}
           parentButton={{ text: s.strings.string_help, callback: this.onClickHelp }}
         />
       </View>
