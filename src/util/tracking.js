@@ -88,6 +88,7 @@ export async function trackEvent (event: TrackingEvent, opts?: TrackingOptions =
       delete params.CURRENCY
       global.firebase.analytics().logEvent('purchase', params)
       global.firebase.analytics().logEvent('ecommerce_purchase', params)
+      global.firebase.analytics().logEvent('in_app_purchase', params)
     }
   }
 }
