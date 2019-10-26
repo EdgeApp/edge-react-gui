@@ -213,7 +213,8 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         customTokensSettings,
         isAccountBalanceVisible,
         isWalletFiatBalanceVisible,
-        passwordRecoveryRemindersShown
+        passwordRecoveryRemindersShown,
+        developerModeOn
       } = action.data
       let newState = {
         ...state,
@@ -236,7 +237,8 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         otpResetDate: account.otpResetDate,
         isAccountBalanceVisible,
         isWalletFiatBalanceVisible,
-        passwordRecoveryRemindersShown
+        passwordRecoveryRemindersShown,
+        developerModeOn
       }
       denominationKeys.forEach(key => {
         const currencyCode = key.currencyCode

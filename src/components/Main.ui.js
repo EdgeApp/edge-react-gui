@@ -2,7 +2,6 @@
 
 import React, { Component, Fragment } from 'react'
 import { Image, Linking, TouchableWithoutFeedback, View, YellowBox } from 'react-native'
-import DeviceInfo from 'react-native-device-info'
 import { Actions, Drawer, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import { connect } from 'react-redux'
@@ -69,6 +68,7 @@ import { passwordReminderModalConnector as PasswordReminderModal } from '../modu
 import { handlePluginBack, renderPluginBackButton } from '../modules/UI/scenes/Plugins/BackButton.js'
 import { styles } from '../styles/MainStyle.js'
 import { scale } from '../util/scaling.js'
+import { trackEvent } from '../util/tracking.js'
 import { ChangeMiningFeeScene } from './scenes/ChangeMiningFeeScene.js'
 import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
 import { CryptoExchangeQuoteProcessingScreenComponent } from './scenes/CryptoExchangeQuoteProcessingScene.js'
@@ -158,9 +158,7 @@ export default class Main extends Component<Props> {
   }
 
   componentDidMount () {
-    const id = DeviceInfo.getUniqueID()
-    global.firebase && global.firebase.analytics().setUserId(id)
-    global.firebase && global.firebase.analytics().logEvent(`Start_App`)
+    trackEvent('Start_App')
 
     Linking.getInitialURL()
       .then(url => {

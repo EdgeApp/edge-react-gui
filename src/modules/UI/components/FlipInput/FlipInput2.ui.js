@@ -209,7 +209,7 @@ export class FlipInput extends Component<Props, State> {
       isToggled: !this.state.isToggled
     })
     if (this.state.isToggled) {
-      if (this.state.textInputBackFocus && this.textInputFront) {
+      if (this.textInputFront) {
         this.textInputFront.focus()
       }
       Animated.spring(this.animatedValue, {
@@ -219,7 +219,7 @@ export class FlipInput extends Component<Props, State> {
       }).start()
     }
     if (!this.state.isToggled) {
-      if (this.state.textInputFrontFocus && this.textInputBack) {
+      if (this.textInputBack) {
         this.textInputBack.focus()
       }
       Animated.spring(this.animatedValue, {
@@ -330,8 +330,7 @@ export class FlipInput extends Component<Props, State> {
           autoCorrect={false}
           keyboardType="numeric"
           selectionColor="white"
-          returnKeyType="next"
-          returnKeyLabel="next"
+          returnKeyType="done"
           underlineColorAndroid={'transparent'}
           ref={this.getTextInputBackRef}
           onFocus={this.textInputBackFocusTrue}

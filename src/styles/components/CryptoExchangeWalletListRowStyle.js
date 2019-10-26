@@ -9,6 +9,12 @@ const CryptoExchangeWalletListRowStyle = {
   container: {
     width: '100%'
   },
+  zeroBalance: {
+    color: THEME.COLORS.GRAY_2
+  },
+  enabled: {
+    color: THEME.COLORS.BLACK
+  },
   containerToken: {
     width: '100%',
     height: 60,

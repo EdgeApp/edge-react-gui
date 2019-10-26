@@ -190,6 +190,27 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   RIF: {
     denomination: '1000000000000000000'
   },
+  CREP: {
+    denomination: '100000000'
+  },
+  CUSDC: {
+    denomination: '100000000'
+  },
+  CBAT: {
+    denomination: '100000000'
+  },
+  CZRX: {
+    denomination: '100000000'
+  },
+  CWBTC: {
+    denomination: '100000000'
+  },
+  CDAI: {
+    denomination: '100000000'
+  },
+  CETH: {
+    denomination: '100000000'
+  },
   customTokens: [],
   passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN
 }
@@ -254,12 +275,20 @@ export const SYNCED_ACCOUNT_TYPES = {
   DAI: 'object',
   RBTC: 'object',
   RIF: 'object',
+  CREP: 'object',
+  CUSDC: 'object',
+  CBAT: 'object',
+  CZRX: 'object',
+  CWBTC: 'object',
+  CDAI: 'object',
+  CETH: 'object',
   customTokens: 'object', // arrays return 'object' to typeof
   passwordRecoveryRemindersShown: 'object'
 }
 
 export const LOCAL_ACCOUNT_DEFAULTS = {
   bluetoothMode: false,
+  developerModeOn: false,
   passwordReminder: {
     needsPasswordCheck: false,
     lastPasswordUseDate: 0,
@@ -280,6 +309,7 @@ export const LOCAL_ACCOUNT_DEFAULTS = {
 
 export const LOCAL_ACCOUNT_TYPES = {
   bluetoothMode: 'boolean',
+  developerModeOn: 'boolean',
   passwordReminder: 'object',
   isAccountBalanceVisible: 'boolean',
   isWalletFiatBalanceVisible: 'boolean',
@@ -340,6 +370,13 @@ export const setAccountBalanceVisibility = (account: EdgeAccount, isAccountBalan
 export const setWalletFiatBalanceVisibility = (account: EdgeAccount, isWalletFiatBalanceVisible: boolean) => {
   return getLocalSettings(account).then(settings => {
     const updatedSettings = updateSettings(settings, { isWalletFiatBalanceVisible })
+    return setLocalSettings(account, updatedSettings)
+  })
+}
+
+export const setDeveloperModeOn = (account: EdgeAccount, developerModeOn: boolean) => {
+  return getLocalSettings(account).then(settings => {
+    const updatedSettings = updateSettings(settings, { developerModeOn })
     return setLocalSettings(account, updatedSettings)
   })
 }

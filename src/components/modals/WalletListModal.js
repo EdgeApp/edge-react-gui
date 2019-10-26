@@ -1,29 +1,34 @@
 // @flow
-import React, { Component } from 'react'
-import { Dimensions, FlatList, TouchableWithoutFeedback, View } from 'react-native'
+
+import { FormField, MaterialInputStyle } from 'edge-components'
+import React, { Component, Fragment } from 'react'
+import { Dimensions, FlatList, View } from 'react-native'
 
 import { CryptoExchangeCreateWalletRow } from '../../components/common/CryptoExchangeCreateWalletRow.js'
 import { CryptoExchangeWalletListRow } from '../../components/common/CryptoExchangeWalletListRow.js'
-import { CLOSE_ICON, ION_ICONS } from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import { IconButton } from '../../modules/UI/components/Buttons/IconButton.ui'
 import FormattedText from '../../modules/UI/components/FormattedText/index'
 import { CryptoExchangeWalletSelectorModalStyles as styles } from '../../styles/indexStyles'
 import type { State } from '../../types/reduxTypes.js'
 import type { GuiWallet } from '../../types/types.js'
+import { scale } from '../../util/scaling.js'
+import { type AirshipBridge, AirshipModal } from './modalParts.js'
 
 type Props = {
-  onDone(GuiWallet | Object | null): mixed,
+  bridge: AirshipBridge<GuiWallet | Object | null>,
+  wallets: Array<GuiWallet>,
+  existingWalletToFilterId?: string,
+  existingWalletToFilterCurrencyCode?: string,
   headerTitle: string,
   excludedCurrencyCode: Array<string>,
-  wallets: Array<GuiWallet>,
   supportedWalletTypes: Array<Object>,
   showWalletCreators: boolean,
   state: State,
-  cantCancel: boolean,
   excludedTokens: Array<string>,
-  noWalletCodes: Array<string>
+  noWalletCodes: Array<string>,
+  disableZeroBalance: boolean
 }
+
 type Record = {
   walletItem: GuiWallet | null,
   supportedWalletType: Object | null
@@ -35,12 +40,13 @@ type FlatListItem = {
 }
 
 type LocalState = {
+  input: string,
   records: Array<Record>,
   totalCurrenciesAndTokens: number,
   totalWalletsToAdd: number
 }
 
-class CryptoExchangeWalletSelectorModal extends Component<Props, LocalState> {
+export class WalletListModal extends Component<Props, LocalState> {
   constructor (props: Props) {
     super(props)
     const records = []
@@ -60,7 +66,6 @@ class CryptoExchangeWalletSelectorModal extends Component<Props, LocalState> {
         totalCurrenciesAndTokens = totalCurrenciesAndTokens + wallet.enabledTokens.length
       }
     }
-
     for (i = 0; i < this.props.supportedWalletTypes.length; i++) {
       const record = {
         walletItem: null,
@@ -71,11 +76,13 @@ class CryptoExchangeWalletSelectorModal extends Component<Props, LocalState> {
     }
 
     this.state = {
+      input: '',
       records,
       totalCurrenciesAndTokens,
       totalWalletsToAdd
     }
   }
+
   calculateHeight = () => {
     const length = this.props.showWalletCreators
       ? this.state.totalCurrenciesAndTokens + this.state.totalWalletsToAdd
@@ -90,30 +97,32 @@ class CryptoExchangeWalletSelectorModal extends Component<Props, LocalState> {
   keyExtractor = (item: Record, index: number) => index.toString()
 
   selectWallet = (wallet: GuiWallet) => {
-    this.props.onDone(wallet)
+    this.props.bridge.resolve(wallet)
   }
   selectTokenWallet = (obj: Object) => {
-    this.props.onDone(obj)
+    this.props.bridge.resolve(obj)
   }
   createWallet = (supportedWallet: Object) => {
-    this.props.onDone(supportedWallet)
+    this.props.bridge.resolve(supportedWallet)
   }
   renderWalletItem = ({ item }: FlatListItem) => {
+    const excludeCurrency = this.props.existingWalletToFilterCurrencyCode || ''
     if (item.walletItem) {
       return (
         <CryptoExchangeWalletListRow
           wallet={item.walletItem}
           onPress={this.selectWallet}
-          excludedCurrencyCode={this.props.excludedCurrencyCode}
+          excludedCurrencyCode={[excludeCurrency]}
           excludedTokens={this.props.excludedTokens}
           onTokenPress={this.selectTokenWallet}
           state={this.props.state}
           isWalletFiatBalanceVisible
+          disableZeroBalance={this.props.disableZeroBalance}
         />
       )
     }
     if (this.props.showWalletCreators) {
-      return <CryptoExchangeCreateWalletRow supportedWallet={item.supportedWalletType || {}} onPress={this.createWallet} />
+      return <CryptoExchangeCreateWalletRow supportedWallet={item.supportedWalletType || {}} onPress={this.createWallet} disableZeroBalance={false} />
     }
     return null
   }
@@ -131,61 +140,65 @@ class CryptoExchangeWalletSelectorModal extends Component<Props, LocalState> {
     }
     return null
   }
-  renderHeader = () => {
-    if (this.props.cantCancel) {
-      return (
-        <View style={styles.headerCenter}>
-          <FormattedText>{this.props.headerTitle}</FormattedText>
-        </View>
-      )
+  onSearchFilterChange = (input: string) => {
+    this.setState({
+      input
+    })
+  }
+  filterRecords = () => {
+    const { records, input } = this.state
+    if (input === '') {
+      return records
     }
-    return (
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <FormattedText>{this.props.headerTitle}</FormattedText>
-        </View>
-        <View style={styles.headerRight}>
-          <IconButton style={styles.iconButton} onPress={this.closeModal} icon={CLOSE_ICON} iconType={ION_ICONS} />
-        </View>
-      </View>
-    )
+    const upperCaseInput = input.toUpperCase()
+    const filteredRecords = []
+    for (let i = 0; i < records.length; i++) {
+      const record: Record = records[i]
+      const { walletItem, supportedWalletType } = record
+      if (walletItem) {
+        if (walletItem.name.includes(input) || walletItem.currencyCode.includes(upperCaseInput) || walletItem.enabledTokens.includes(upperCaseInput)) {
+          filteredRecords.push(record)
+        }
+      }
+
+      if (supportedWalletType && !walletItem) {
+        filteredRecords.push(record)
+      }
+    }
+    return filteredRecords
   }
-  closeModal = () => {
-    this.props.onDone(null)
-  }
+
   render () {
+    const { bridge } = this.props
+    const { input } = this.state
+
     return (
-      <TouchableWithoutFeedback style={styles.touchable} onPress={this.closeModal} underlayColor={styles.underlayColor}>
-        <View style={styles.container}>
-          <View style={styles.activeArea}>
-            {this.renderHeader()}
-            {this.renderUnSupported()}
-            <View style={{ ...styles.flatListBox, height: this.calculateHeight() }}>
-              <FlatList data={this.state.records} keyExtractor={this.keyExtractor} renderItem={this.renderWalletItem} />
+      <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(null)}>
+        {gap => (
+          <Fragment>
+            <View style={{ flex: 1, paddingLeft: scale(12), paddingRight: scale(12) }}>
+              <FormField
+                autoFocus
+                error={''}
+                keyboardType={'default'}
+                label={this.props.headerTitle}
+                onChangeText={this.onSearchFilterChange}
+                style={MaterialInputStyle}
+                value={input}
+              />
+              <FlatList
+                style={{ flex: 1, marginBottom: -gap.bottom }}
+                contentContainerStyle={{ paddingBottom: gap.bottom }}
+                data={this.filterRecords()}
+                initialNumToRender={24}
+                keyboardShouldPersistTaps="handled"
+                keyExtractor={this.keyExtractor}
+                renderItem={this.renderWalletItem}
+              />
             </View>
-          </View>
-        </View>
-      </TouchableWithoutFeedback>
+          </Fragment>
+        )}
+      </AirshipModal>
     )
   }
-}
-
-export { CryptoExchangeWalletSelectorModal }
-
-// eslint-disable-next-line
-export const createCryptoExchangeWalletSelectorModal = (opts: Object) => (props: { +onDone: Function }) => {
-  return (
-    <CryptoExchangeWalletSelectorModal
-      supportedWalletTypes={opts.supportedWalletTypes}
-      wallets={opts.wallets}
-      showWalletCreators={opts.showWalletCreators || false}
-      onDone={props.onDone}
-      state={opts.state}
-      excludedCurrencyCode={opts.excludedCurrencyCode}
-      headerTitle={opts.headerTitle}
-      cantCancel={opts.cantCancel || false}
-      excludedTokens={opts.excludedTokens || []}
-      noWalletCodes={opts.noWalletCodes || []}
-    />
-  )
 }

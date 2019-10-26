@@ -6,7 +6,6 @@ import { fetchLoginMessages } from 'edge-core-js'
 import React from 'react'
 import { AsyncStorage, Platform, StatusBar, Text, TextInput } from 'react-native'
 import BackgroundFetch from 'react-native-background-fetch'
-import firebase from 'react-native-firebase'
 import RNFS from 'react-native-fs'
 import PushNotification from 'react-native-push-notification'
 import { sprintf } from 'sprintf-js'
@@ -38,9 +37,6 @@ console.log('App directory: ' + RNFS.DocumentDirectoryPath)
 console.log('***********************')
 
 global.clog = console.log
-if (ENV.USE_FIREBASE) {
-  global.firebase = firebase
-}
 
 // TODO: Remove isMounted from IGNORED_WARNINGS once we upgrade to RN 0.57
 const IGNORED_WARNINGS = ['slowlog', 'Setting a timer for a long period of time', 'Warning: isMounted(...) is deprecated']

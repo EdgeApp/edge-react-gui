@@ -38,7 +38,8 @@ export const pluginUrlMap: { [pluginId: string]: PluginUrlMap } = {
   banxa: {
     pluginId: 'banxa',
     uri: 'https://edge.banxa.com',
-    name: 'Banxa'
+    name: 'Banxa',
+    permissions: ['camera']
   },
   'co.edgesecure.simplex': {
     pluginId: 'co.edgesecure.simplex',

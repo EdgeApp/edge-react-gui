@@ -12,6 +12,7 @@ import FormattedText from '../../modules/UI/components/FormattedText/index'
 import Slider from '../../modules/UI/components/Slider/index'
 import { styles } from '../../styles/scenes/CryptoExchangeQuoteSceneStyles.js'
 import { type GuiSwapInfo } from '../../types/types.js'
+import { trackEvent } from '../../util/tracking.js'
 import { CircleTimer } from '../common/CircleTimer'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { swapVerifyTerms } from '../modals/SwapVerifyTermsModal.js'
@@ -49,7 +50,7 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
     } else if (pluginName === 'changenow') {
       this.checkChangeNowKYC().catch(showError)
     }
-    global.firebase && global.firebase.analytics().logEvent(`Exchange_Shift_Quote`)
+    trackEvent('Exchange_Shift_Quote')
   }
 
   componentWillUnmount () {

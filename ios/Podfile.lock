@@ -7,10 +7,10 @@ PODS:
     - React
   - BVLinearGradient (2.5.3):
     - React
-  - disklet (0.4.2):
+  - disklet (0.4.3):
     - React
   - DoubleConversion (1.1.6)
-  - edge-login-ui-rn (0.5.44):
+  - edge-login-ui-rn (0.6.0):
     - React
   - Firebase/Core (5.3.0):
     - Firebase/CoreOnly
@@ -137,6 +137,8 @@ PODS:
     - React
   - RNBackgroundFetch (2.4.5):
     - React
+  - RNCAsyncStorage (1.6.2):
+    - React
   - RNDeviceInfo (0.21.5):
     - React
   - RNFS (2.13.3):
@@ -195,6 +197,7 @@ DEPENDENCIES:
   - React/RCTWebSocket (from `../node_modules/react-native`)
   - ReactNativePermissions (from `../node_modules/react-native-permissions`)
   - RNBackgroundFetch (from `../node_modules/react-native-background-fetch`)
+  - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNFS (from `../node_modules/react-native-fs`)
   - RNOpenAppSettings (from `../node_modules/react-native-app-settings`)
@@ -205,7 +208,7 @@ DEPENDENCIES:
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - boost-for-react-native
     - Firebase
     - FirebaseAnalytics
@@ -267,6 +270,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-permissions"
   RNBackgroundFetch:
     :path: "../node_modules/react-native-background-fetch"
+  RNCAsyncStorage:
+    :path: "../node_modules/@react-native-community/async-storage"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
   RNFS:
@@ -288,9 +293,9 @@ SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   BugsnagReactNative: 7ba00c17a3dedfeea4dd011919962d415a231c49
   BVLinearGradient: 0d985ec461359c82bc254f26d11008bdae50d17a
-  disklet: 2fd40706dc13842175ae23bdd57d5b893fbb68a8
+  disklet: aad587c2ee9642a374c7f41117bf5e2ea0286b91
   DoubleConversion: bb338842f62ab1d708ceb63ec3d999f0f3d98ecd
-  edge-login-ui-rn: 77730e2cf4d1439c02601dfc570acd0b02c6a082
+  edge-login-ui-rn: 97f78d7acaa78ea975d64c32cb2237aa26cd4f83
   Firebase: 68afeeb05461db02d7c9e3215cda28068670f4aa
   FirebaseAnalytics: b3628aea54c50464c32c393fb2ea032566e7ecc2
   FirebaseCore: 62f1b792a49bb9e8b4073f24606d2c93ffc352f0
@@ -318,6 +323,7 @@ SPEC CHECKSUMS:
   react-native-webview: 5036ed4a973ad1deeeff118262d2df7b60b3419d
   ReactNativePermissions: bf462424ca7823d1b8e6cb463184d6e7f151971b
   RNBackgroundFetch: 8098db4fee60e99afd8bcefa950e8d1760d733ba
+  RNCAsyncStorage: 60a80e72d95bf02a01cace55d3697d9724f0d77f
   RNDeviceInfo: e7c5fcde13d40e161d8a27f6c5dc69c638936002
   RNFS: c9bbde46b0d59619f8e7b735991c60e0f73d22c1
   RNOpenAppSettings: 1169b90a275e9e18c5973e1608949f97d426e7f3
@@ -327,6 +333,6 @@ SPEC CHECKSUMS:
   RNVectorIcons: ac7bf6bfeafaf3ad34552cdc6eed6fb8c4b7c940
   yoga: 684513b14b03201579ba3cee20218c9d1298b0cc
 
-PODFILE CHECKSUM: e95c4eea0ac023f5e8d30540238dd6de034dfb67
+PODFILE CHECKSUM: 3f20579d3913ea66ae652119c1ffa2f0e600bc79
 
-COCOAPODS: 1.7.5
+COCOAPODS: 1.8.4

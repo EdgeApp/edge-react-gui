@@ -18,6 +18,7 @@ jest.mock('react-native-device-info', () => ({
     return false
   }
 }))
+jest.mock('react-native-firebase', () => ({ isMock: true }))
 jest.mock('react-native-share', () => 'RNShare')
 jest.mock(
   'react-native-sound',

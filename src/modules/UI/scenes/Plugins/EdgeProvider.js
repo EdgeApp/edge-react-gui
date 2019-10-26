@@ -12,8 +12,8 @@ import { Bridgeable } from 'yaob'
 import { createCurrencyWalletAndSelectForPlugins } from '../../../../actions/indexActions'
 import { selectWallet } from '../../../../actions/WalletActions'
 import { launchModal } from '../../../../components/common/ModalProvider.js'
-import { createCryptoExchangeWalletSelectorModal } from '../../../../components/modals/CryptoExchangeWalletSelectorModal'
-import { showError, showToast } from '../../../../components/services/AirshipInstance.js'
+import { WalletListModal } from '../../../../components/modals/WalletListModal'
+import { Airship, showError, showToast } from '../../../../components/services/AirshipInstance.js'
 import { DEFAULT_STARTER_WALLET_NAMES, EXCLAMATION, MATERIAL_COMMUNITY } from '../../../../constants/indexConstants'
 import { SEND_CONFIRMATION } from '../../../../constants/SceneKeys.js'
 import s from '../../../../locales/strings'
@@ -22,6 +22,7 @@ import { Icon } from '../../../../modules/UI/components/Icon/Icon.ui.js'
 import type { GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
 import type { Dispatch, State } from '../../../../types/reduxTypes.js'
 import type { BuySellPlugin, GuiWallet } from '../../../../types/types.js'
+import { trackConversion, trackEvent } from '../../../../util/tracking.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 
@@ -156,20 +157,21 @@ export class EdgeProvider extends Bridgeable {
         }
       }
     }
-    const props = {
-      wallets: walletsToUse,
-      excludedCurrencyCode,
-      supportedWalletTypes,
-      showWalletCreators: true,
-      state: this._state,
-      headerTitle: s.strings.choose_your_wallet,
-      cantCancel: false,
-      excludedTokens,
-      noWalletCodes
-    }
-    const modal = createCryptoExchangeWalletSelectorModal(props)
-    // const modal = createCustomWalletListModal(props)
-    const selectedWallet = await launchModal(modal, { style: { margin: 0 } })
+    const selectedWallet = await Airship.show(bridge => (
+      <WalletListModal
+        bridge={bridge}
+        wallets={walletsToUse}
+        supportedWalletTypes={supportedWalletTypes}
+        excludedCurrencyCode={excludedCurrencyCode}
+        showWalletCreators={true}
+        state={this._state}
+        headerTitle={s.strings.choose_your_wallet}
+        excludedTokens={excludedTokens}
+        noWalletCodes={noWalletCodes}
+        disableZeroBalance={false}
+      />
+    ))
+
     if (selectedWallet) {
       if (selectedWallet.id) {
         const code = selectedWallet.currencyCode
@@ -179,12 +181,14 @@ export class EdgeProvider extends Bridgeable {
       const settings = SETTINGS_SELECTORS.getSettings(this._state)
       const walletName = DEFAULT_STARTER_WALLET_NAMES[selectedWallet.currencyCode]
       try {
-        const newWallet: EdgeCurrencyWallet = await this._dispatch(
-          createCurrencyWalletAndSelectForPlugins(walletName, selectedWallet.value, settings.defaultIsoFiat)
-        )
-        this._dispatch(selectWallet(newWallet.id, newWallet.currencyInfo.currencyCode))
-        const returnString: string = newWallet.currencyInfo.currencyCode
-        return Promise.resolve(returnString)
+        if (typeof selectedWallet.value === 'string') {
+          const newWallet: EdgeCurrencyWallet = await this._dispatch(
+            createCurrencyWalletAndSelectForPlugins(walletName, selectedWallet.value, settings.defaultIsoFiat)
+          )
+          this._dispatch(selectWallet(newWallet.id, newWallet.currencyInfo.currencyCode))
+          const returnString: string = newWallet.currencyInfo.currencyCode
+          return Promise.resolve(returnString)
+        }
       } catch (e) {
         const modal = createSimpleConfirmModal({
           title: s.strings.create_wallet_failed_header,
@@ -278,7 +282,9 @@ export class EdgeProvider extends Bridgeable {
   }
 
   // Request that the user spend to an address or multiple addresses
-  async requestSpend (spendTargets: Array<EdgeSpendTarget>, options?: EdgeRequestSpendOptions): Promise<EdgeTransaction> {
+  async requestSpend (spendTargets: Array<EdgeSpendTarget>, options?: EdgeRequestSpendOptions): Promise<EdgeTransaction | void> {
+    const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
+    const coreWallet = CORE_SELECTORS.getWallet(this._state, guiWallet.id)
     const info: GuiMakeSpendInfo = {
       spendTargets
     }
@@ -297,15 +303,24 @@ export class EdgeProvider extends Bridgeable {
     if (options && options.uniqueIdentifier) {
       info.uniqueIdentifier = options.uniqueIdentifier
     }
+
     const transaction = await this._makeSpendRequest(info)
     if (transaction) {
       Actions.pop()
+
+      const exchangeAmount = await coreWallet.nativeToDenomination(transaction.nativeAmount, transaction.currencyCode)
+      trackConversion('EdgeProvider_Conversion_Success', {
+        pluginId: this._pluginId,
+        account: CORE_SELECTORS.getAccount(this._state),
+        currencyCode: transaction.currencyCode,
+        exchangeAmount: Number(exchangeAmount)
+      })
     }
     return transaction
   }
 
   // Request that the user spend to a URI
-  async requestSpendUri (uri: string, options?: EdgeRequestSpendOptions): Promise<EdgeTransaction> {
+  async requestSpendUri (uri: string, options?: EdgeRequestSpendOptions): Promise<EdgeTransaction | void> {
     const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
     const coreWallet = CORE_SELECTORS.getWallet(this._state, guiWallet.id)
     const result = await coreWallet.parseUri(uri)
@@ -314,6 +329,7 @@ export class EdgeProvider extends Bridgeable {
       nativeAmount: result.nativeAmount,
       publicAddress: result.publicAddress
     }
+
     if (options && options.currencyCode) {
       info.currencyCode = options.currencyCode
     }
@@ -329,13 +345,22 @@ export class EdgeProvider extends Bridgeable {
     if (options && options.uniqueIdentifier) {
       info.uniqueIdentifier = options.uniqueIdentifier
     }
+
     const transaction = await this._makeSpendRequest(info)
     if (transaction) {
       Actions.pop()
+
+      const exchangeAmount = await coreWallet.nativeToDenomination(transaction.nativeAmount, transaction.currencyCode)
+      trackConversion('EdgeProvider_Conversion_Success', {
+        pluginId: this._pluginId,
+        account: CORE_SELECTORS.getAccount(this._state),
+        currencyCode: transaction.currencyCode,
+        exchangeAmount: Number(exchangeAmount)
+      })
     }
-    this.trackConversion()
     return transaction
   }
+
   async signMessage (message: string) /* EdgeSignedMessage */ {
     const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
     const coreWallet = CORE_SELECTORS.getWallet(this._state, guiWallet.id)
@@ -343,12 +368,12 @@ export class EdgeProvider extends Bridgeable {
     const signedMessage = await coreWallet.otherMethods.signMessageBase64(message, guiWallet.receiveAddress.publicAddress)
     return signedMessage
   }
-  // from the older stuff
-  async _makeSpendRequest (guiMakeSpendInfo: GuiMakeSpendInfo): Promise<EdgeTransaction> {
-    const edgeTransaction = await this._spend(guiMakeSpendInfo)
+
+  async _makeSpendRequest (guiMakeSpendInfo: GuiMakeSpendInfo): Promise<EdgeTransaction | void> {
+    const edgeTransaction: EdgeTransaction | void = await this._spend(guiMakeSpendInfo)
 
     const { metadata } = guiMakeSpendInfo
-    if (metadata != null) {
+    if (metadata != null && edgeTransaction != null) {
       const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
       const coreWallet = CORE_SELECTORS.getWallet(this._state, guiWallet.id)
       await coreWallet.saveTxMetadata(edgeTransaction.txid, edgeTransaction.currencyCode, metadata)
@@ -356,11 +381,23 @@ export class EdgeProvider extends Bridgeable {
     return edgeTransaction
   }
 
-  trackConversion () {
-    global.firebase && global.firebase.analytics().logEvent(`EdgeProvider_Conversion_Success`)
+  trackConversion (opts?: { currencyCode: string, exchangeAmount: number }) {
+    if (opts != null) {
+      const { currencyCode, exchangeAmount } = opts
+      trackConversion('EdgeProvider_Conversion_Success', {
+        pluginId: this._pluginId,
+        account: CORE_SELECTORS.getAccount(this._state),
+        currencyCode,
+        exchangeAmount
+      })
+    } else {
+      trackEvent('EdgeProvider_Conversion_Success', {
+        pluginId: this._pluginId
+      })
+    }
   }
 
-  _spend (guiMakeSpendInfo: GuiMakeSpendInfo, lockInputs: boolean = true, signOnly: boolean = false): Promise<EdgeTransaction> {
+  _spend (guiMakeSpendInfo: GuiMakeSpendInfo, lockInputs: boolean = true, signOnly: boolean = false): Promise<EdgeTransaction | void> {
     return new Promise((resolve, reject) => {
       if (signOnly) {
         reject(new Error('not implemented'))

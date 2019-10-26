@@ -7,6 +7,7 @@ import {
   checkCurrentPassword,
   lockSettings,
   setAutoLogoutTimeInMinutesRequest,
+  setDeveloperModeOn,
   showRestoreWalletsModal,
   showSendLogsModal,
   showUnlockSettingsModal,
@@ -61,8 +62,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   showUnlockSettingsModal: () => dispatch(showUnlockSettingsModal()),
   showSendLogsModal: () => dispatch(showSendLogsModal()),
   showRestoreWalletsModal: () => dispatch(showRestoreWalletsModal()),
-  turnOnDeveloperMode: () => dispatch({ type: 'DEVELOPER_MODE_ON' }),
-  turnOffDeveloperMode: () => dispatch({ type: 'DEVELOPER_MODE_OFF' })
+  toggleDeveloperMode: (developerModeOn: boolean) => dispatch(setDeveloperModeOn(developerModeOn))
 })
 
 export default connect(

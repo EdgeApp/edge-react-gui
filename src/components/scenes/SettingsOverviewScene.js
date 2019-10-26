@@ -48,8 +48,7 @@ type Props = {
   showUnlockSettingsModal: () => void,
   showSendLogsModal: () => void,
   showRestoreWalletsModal: () => void,
-  turnOnDeveloperMode(): void,
-  turnOffDeveloperMode(): void
+  toggleDeveloperMode(boolean): void
 }
 type State = {
   showAutoLogoutModal: boolean,
@@ -134,11 +133,7 @@ export default class SettingsOverview extends Component<Props, State> {
   }
 
   onDeveloperPress = () => {
-    if (this.props.developerModeOn) {
-      this.props.turnOffDeveloperMode()
-      return
-    }
-    this.props.turnOnDeveloperMode()
+    this.props.toggleDeveloperMode(!this.props.developerModeOn)
   }
 
   showAutoLogoutModal = async () => {
@@ -158,7 +153,6 @@ export default class SettingsOverview extends Component<Props, State> {
   render () {
     const { measurement: autoLogoutMeasurement, value: autoLogoutValue } = getTimeWithMeasurement(this.state.autoLogoutTimeInMinutes)
     const autoLogoutRightText = autoLogoutValue === 0 ? DISABLE_TEXT : `${autoLogoutValue} ${s.strings['settings_' + autoLogoutMeasurement]}`
-    const developerModeText = this.props.developerModeOn ? s.strings.settings_turn_off_developer_mode : s.strings.settings_turn_on_developer_mode
     return (
       <SceneWrapper background="body" hasTabs={false}>
         <ScrollView style={styles.container}>
@@ -253,7 +247,7 @@ export default class SettingsOverview extends Component<Props, State> {
 
             {this.currencies.map(this.renderRowRoute)}
 
-            <RowRoute disabled={false} leftText={s.strings.settings_button_send_logs} routeFunction={this.showSendLogsModal} />
+            <RowSwitch leftText={s.strings.settings_developer_mode} key="developerMode" onToggle={this.onDeveloperPress} value={this.props.developerModeOn} />
 
             <RowModal onPress={this.showRestoreWalletModal} leftText={s.strings.restore_wallets_modal_title} />
 
@@ -265,8 +259,8 @@ export default class SettingsOverview extends Component<Props, State> {
             />
 
             <View style={[styles.debugArea]}>
-              <PrimaryButton onPress={this.onDeveloperPress}>
-                <PrimaryButton.Text>{developerModeText}</PrimaryButton.Text>
+              <PrimaryButton onPress={this.showSendLogsModal}>
+                <PrimaryButton.Text>{s.strings.settings_button_send_logs}</PrimaryButton.Text>
               </PrimaryButton>
             </View>
 

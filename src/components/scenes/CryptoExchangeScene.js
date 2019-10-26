@@ -7,7 +7,6 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import slowlog from 'react-native-slowlog'
 
 import type { SetNativeAmountInfo } from '../../actions/CryptoExchangeActions.js'
-import { createCryptoExchangeWalletSelectorModal } from '../../components/modals/CryptoExchangeWalletSelectorModal'
 import CryptoExchangeMessageConnector from '../../connectors/components/CryptoExchangeMessageConnector'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
@@ -19,8 +18,9 @@ import { styles } from '../../styles/scenes/CryptoExchangeSceneStyles.js'
 import type { State } from '../../types/reduxTypes.js'
 import { type GuiCurrencyInfo, type GuiWallet, emptyCurrencyInfo } from '../../types/types.js'
 import { getDenomFromIsoCode } from '../../util/utils.js'
-import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { WalletListModal } from '../modals/WalletListModal'
+import { Airship } from '../services/AirshipInstance.js'
 
 export type CryptoExchangeSceneComponentStateProps = {
   // The following props are used to populate the CryptoExchangeFlipInputs
@@ -259,69 +259,49 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
 
   renderDropUp = (whichWallet: string) => {
     const { onSelectWallet, fromCurrencyCode, fromWallet, toCurrencyCode, toWallet, wallets } = this.props
-
-    let excludedCurrencyCode = '' // should allow for multiple excluded currencyCodes
-    // some complex logic because 'toCurrencyCode/fromCurrencyCode'
-    // can be denomination (needs to change to actual currencyCode)
-    if (whichWallet === Constants.TO) {
-      if (fromWallet) {
-        if (fromWallet.enabledTokens.length > 1) {
-          // could be token
-          excludedCurrencyCode = fromCurrencyCode
-        } else {
-          excludedCurrencyCode = fromWallet.currencyCode
-        }
-      }
-    } else {
-      if (toWallet) {
-        if (toWallet.enabledTokens.length > 1) {
-          // could be token
-          excludedCurrencyCode = toCurrencyCode
-        } else {
-          excludedCurrencyCode = toWallet.currencyCode
-        }
-      }
-    }
     const walletCurrencyCodes = []
     const allowedWallets = []
     for (const id in wallets) {
       const wallet = wallets[id]
-      if (excludedCurrencyCode === wallet.currencyCode && excludedCurrencyCode === 'ETH' && wallet.enabledTokens.length > 0) {
-        walletCurrencyCodes.push(wallet.currencyCode)
-        if (wallet.receiveAddress && wallet.receiveAddress.publicAddress) {
-          allowedWallets.push(wallets[id])
-        }
-      }
-      if (excludedCurrencyCode !== wallet.currencyCode) {
-        walletCurrencyCodes.push(wallet.currencyCode)
-        if (wallet.receiveAddress && wallet.receiveAddress.publicAddress) {
-          allowedWallets.push(wallets[id])
-        }
+      walletCurrencyCodes.push(wallet.currencyCode)
+      if (wallet.receiveAddress && wallet.receiveAddress.publicAddress) {
+        allowedWallets.push(wallets[id])
       }
     }
     const supportedWalletTypes = []
     for (let i = 0; i < this.props.supportedWalletTypes.length; i++) {
       const swt = this.props.supportedWalletTypes[i]
-      if (!walletCurrencyCodes.includes(swt.currencyCode) && swt.currencyCode !== 'EOS' && excludedCurrencyCode !== swt.currencyCode) {
+      if (!walletCurrencyCodes.includes(swt.currencyCode) && swt.currencyCode !== 'EOS') {
         supportedWalletTypes.push(swt)
       }
     }
-    const props = {
-      wallets: allowedWallets,
-      supportedWalletTypes,
-      excludedCurrencyCode: [excludedCurrencyCode],
-      showWalletCreators: whichWallet === Constants.TO,
-      state: this.props.state,
-      headerTitle: whichWallet === Constants.TO ? s.strings.select_recv_wallet : s.strings.select_src_wallet
-    }
-    const modal = createCryptoExchangeWalletSelectorModal(props)
-    launchModal(modal, { style: { margin: 0 } }).then(response => {
+    const filterWalletId = whichWallet === Constants.TO ? fromWallet.id : toWallet.id
+    const filterWalletCurrencyCode = whichWallet === Constants.TO ? fromCurrencyCode : toCurrencyCode
+    Airship.show(bridge => (
+      <WalletListModal
+        bridge={bridge}
+        wallets={allowedWallets}
+        type={whichWallet}
+        existingWalletToFilterId={filterWalletId}
+        existingWalletToFilterCurrencyCode={filterWalletCurrencyCode}
+        supportedWalletTypes={supportedWalletTypes}
+        excludedCurrencyCode={[]}
+        showWalletCreators={whichWallet === Constants.TO}
+        state={this.props.state}
+        headerTitle={whichWallet === Constants.TO ? s.strings.select_recv_wallet : s.strings.select_src_wallet}
+        excludedTokens={[]}
+        noWalletCodes={[]}
+        disableZeroBalance={whichWallet === Constants.FROM}
+      />
+    )).then((response: GuiWallet | Object | null) => {
       if (response) {
         if (response.id) {
           onSelectWallet(response.id, response.currencyCode)
           return
         }
-        this.props.createCurrencyWallet(response.value, response.currencyCode, this.props.defaultIsoFiat)
+        if (typeof response.value === 'string') {
+          this.props.createCurrencyWallet(response.value, response.currencyCode, this.props.defaultIsoFiat)
+        }
       }
     })
     return null

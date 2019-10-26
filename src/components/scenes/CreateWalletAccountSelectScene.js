@@ -17,6 +17,7 @@ import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import WalletListModal from '../../modules/UI/components/WalletListModal/WalletListModalConnector.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
 import type { GuiFiatType, GuiWallet, GuiWalletType } from '../../types/types.js'
+import { trackEvent } from '../../util/tracking.js'
 import { fixFiatCurrencyCode } from '../../util/utils.js'
 
 const logos = {
@@ -99,7 +100,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
   }
 
   componentDidMount () {
-    global.firebase && global.firebase.analytics().logEvent(`CreateWalletAccountSelect_EOS`)
+    trackEvent('Activate_Wallet_Select')
   }
 
   onBack = () => {
