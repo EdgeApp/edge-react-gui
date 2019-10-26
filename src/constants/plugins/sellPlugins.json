@@ -438,6 +438,12 @@
       "SI": true,
       "ES": true,
       "SE": true,
+      "HR": true,
+      "IS": true,
+      "LI": true,
+      "MC": true,
+      "NO": true,
+      "SM": true,
       "GB": true
     },
     "cryptoCodes": [
