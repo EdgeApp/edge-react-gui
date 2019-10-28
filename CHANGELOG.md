@@ -1,5 +1,13 @@
 # edge-react-gui
 
+## 1.10.0
+
+- Integration of Compound
+- Settings Send Logs button
+- Developer mode URI sticky will continue for all accounts on device of last URI entered
+- Affiliate links
+- Exchange Screen able to search wallet in wallet picker
+
 ## 1.9.8
 
 - Emergency EOS fix (part 2)
