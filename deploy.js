@@ -1,8 +1,6 @@
 #!/usr/bin/env node
-/**
- * Created by paul on 6/27/17.
- * @flow
- */
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 const fs = require('fs')
 const childProcess = require('child_process')
 const sprintf = require('sprintf-js').sprintf
@@ -12,34 +10,56 @@ const mylog = console.log
 
 let _currentPath = __dirname
 
-// type CoreDep = {
-//   repoName: string,
-//   repoHash: string
-// }
-// type BuildObj = {
-//   guiDir: string,
-//   hockeyAppId: string,
-//   hockeyAppToken: string,
-//   hockeyAppTags: string,
-//   coreDeps: {[repo: string]: CoreDep},
-//   repoBranch: string,
-//   platformType: string,
-//   guiPlatformDir: string,
-//   productName: string,
-//   xcodeScheme: string,
-//   teamId: string,
-//   provisioningProfile: string,
+/**
+ * Things we expect to be set in the config file:
+ */
+// type BuildConfigFile = {
+//   // Android build options:
 //   androidKeyStore: string,
 //   androidKeyStoreAlias: string,
 //   androidKeyStorePassword: string,
-//   version: string,
-//   buildNum: string,
-//   guiDir: string,
-//   guiHash: string,
+//   androidTask: string,
+
+//   // iOS build options:
+//   appleDeveloperTeamId: string,
 //   xcodeScheme: string,
+//   xcodeWorkspace: string,
+
+//   // Upload options:
+//   appCenterApiToken: string,
+//   appCenterAppName: string,
+//   appCenterDistroGroup: string,
+//   appCenterGroupName: string,
+//   bugsnagApiKey: string,
+//   hockeyAppId: string,
+//   hockeyAppTags: string,
+//   hockeyAppToken: string,
+//   productName: string
+// }
+
+/**
+ * These are basically global variables:
+ */
+// type BuildObj = BuildConfigFile & {
+//   // Set in makeCommonPre:
+//   guiDir: string,
+//   guiPlatformDir: string,
+//   platformType: string, // 'android' | 'ios'
+//   repoBranch: string, // 'develop' | 'master' | 'test'
+//   tmpDir: string,
+
+//   // Set in makeCommonPost:
+//   buildNum: string,
+//   bundleMapFile: string,
+//   bundlePath: string,
+//   bundleUrl: string,
+//   guiHash: string,
+//   version: string,
+
+//   // Set in build steps:
+//   dSymFile: string,
 //   dSymZip: string,
-//   ipaFile: string,
-//   androidTask: string
+//   ipaFile: string // Also APK
 // }
 
 main()
@@ -52,39 +72,11 @@ function main () {
     mylog('  network options: master, develop')
   }
 
-  // let buildObj: BuildObj = {
-  //   guiDir: '',
-  //   hockeyAppId: '',
-  //   hockeyAppToken: '',
-  //   hockeyAppTags: '',
-  //   coreDeps: {},
-  //   repoBranch: '',
-  //   platformType: '',
-  //   guiPlatformDir: '',
-  //   productName: '',
-  //   xcodeScheme: '',
-  //   teamId: '',
-  //   provisioningProfile: '',
-  //   androidKeyStore: '',
-  //   androidKeyStoreAlias: '',
-  //   androidKeyStorePassword: '',
-  //   version: '',
-  //   buildNum: '',
-  //   guiHash: '',
-  //   dSymZip: '',
-  //   ipaFile: '',
-  //   androidTask: ''
-  // }
-
-  const buildObj = {}
+  const buildObj = {} // BuildObj
 
   makeCommonPre(argv, buildObj)
-
   makeProject(argv[2], buildObj)
-
   makeCommonPost(buildObj)
-
-  buildCommon(buildObj)
 
   if (argv[3] === 'ios') {
     buildIos(buildObj)
@@ -96,7 +88,6 @@ function main () {
 
 function makeCommonPre (argv, buildObj) {
   buildObj.guiDir = __dirname
-  buildObj.coreDeps = []
   buildObj.repoBranch = argv[4] // master or develop
   buildObj.platformType = argv[3] // ios or android
   buildObj.guiPlatformDir = buildObj.guiDir + '/' + buildObj.platformType
@@ -148,28 +139,6 @@ function makeCommonPost (buildObj) {
     buildObj.bundleUrl = 'main.jsbundle'
     buildObj.bundleMapFile = '../ios-release.bundle.map'
   }
-}
-
-function buildCommon (buildObj) {
-  // chdir(buildObj.guiDir)
-  // call('rm -rf ' + buildObj.guiDir + '/node_modules')
-  // call('rm -rf $TMPDIR/*react-*')
-  // call('yarn')
-  // // buildObj.packageLock = JSON.parse(fs.readFileSync(buildObj.guiDir + '/package-lock.json', 'utf8'))
-  //
-  // for (const coreDep of buildObj.coreDeps) {
-  //   // if (typeof buildObj.packageLock !== 'undefined') {
-  //   //   if (typeof buildObj.packageLock.dependencies !== 'undefined') {
-  //   //     if (typeof buildObj.packageLock.dependencies[coreDep.repoName] !== 'undefined') {
-  //   //       if (typeof buildObj.packageLock.dependencies[coreDep.repoName].version !== 'undefined') {
-  //   //         coreDep.repoHash = buildObj.packageLock.dependencies[coreDep.repoName].version
-  //   coreDep.repoHash = 'Unknown'
-  //
-  //   //       }
-  //   //     }
-  //   //   }
-  //   // }
-  // }
 }
 
 function buildIos (buildObj) {
