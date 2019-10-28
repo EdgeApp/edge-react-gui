@@ -78,6 +78,18 @@ export async function trackEvent (event: TrackingEvent, opts?: TrackingOptions =
     if (installerId != null) params.aid = installerId
     if (pluginId != null) params.plugin = pluginId
     global.firebase.analytics().logEvent(event, params)
+
+    // TODO: remove me. testing only
+    if (event === 'Exchange_Shift_Success' || event === 'EdgeProvider_Conversion_Success') {
+      params.value = params.VALUE
+      params.currency = params.CURRENCY
+      params.items = event
+      delete params.VALUE
+      delete params.CURRENCY
+      global.firebase.analytics().logEvent('purchase', params)
+      global.firebase.analytics().logEvent('ecommerce_purchase', params)
+      global.firebase.analytics().logEvent('in_app_purchase', params)
+    }
   }
 }
 
