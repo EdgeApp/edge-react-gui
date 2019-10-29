@@ -49,6 +49,10 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
       this.checkChangellyKYC().catch(showError)
     } else if (pluginName === 'changenow') {
       this.checkChangeNowKYC().catch(showError)
+    } else if (pluginName === 'coinswitch') {
+      this.checkCoinswitchKYC().catch(showError)
+    } else if (pluginName === 'foxExchange') {
+      this.checkFoxExchangeKYC().catch(showError)
     }
     trackEvent('Exchange_Shift_Quote')
   }
@@ -112,6 +116,28 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
       {
         text: s.strings.swap_terms_kyc_link,
         uri: 'https://changenow.io/faq/kyc'
+      }
+    ])
+    if (!result) timeExpired(swapInfo)
+  }
+
+  async checkCoinswitchKYC () {
+    const { account, swapInfo, timeExpired } = this.props
+    const result = await swapVerifyTerms(account.swapConfig.coinswitch, [
+      {
+        text: s.strings.swap_terms_terms_link,
+        uri: 'https://coinswitch.co/terms'
+      }
+    ])
+    if (!result) timeExpired(swapInfo)
+  }
+
+  async checkFoxExchangeKYC () {
+    const { account, swapInfo, timeExpired } = this.props
+    const result = await swapVerifyTerms(account.swapConfig.foxExchange, [
+      {
+        text: s.strings.swap_terms_terms_link,
+        uri: 'https://fox.exchange/tos'
       }
     ])
     if (!result) timeExpired(swapInfo)
