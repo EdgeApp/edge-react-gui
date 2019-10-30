@@ -72,23 +72,18 @@ export async function trackEvent (event: TrackingEvent, opts?: TrackingOptions =
     if (accountDate != null) params.adate = accountDate
     if (currencyCode != null) params.currency = currencyCode
     if (dollarValue != null) {
-      params.CURRENCY = 'USD'
-      params.VALUE = Number(dollarValue.toFixed(2))
+      params.currency = 'USD'
+      params.value = Number(dollarValue.toFixed(2))
     }
     if (installerId != null) params.aid = installerId
     if (pluginId != null) params.plugin = pluginId
     global.firebase.analytics().logEvent(event, params)
 
-    // TODO: remove me. testing only
-    if (event === 'Exchange_Shift_Success' || event === 'EdgeProvider_Conversion_Success') {
-      params.value = params.VALUE
-      params.currency = params.CURRENCY
+    // If we get passed a dollarValue, translate the event into a purchase:
+    if (dollarValue != null) {
       params.items = event
-      delete params.VALUE
-      delete params.CURRENCY
       global.firebase.analytics().logEvent('purchase', params)
       global.firebase.analytics().logEvent('ecommerce_purchase', params)
-      global.firebase.analytics().logEvent('in_app_purchase', params)
     }
   }
 }
