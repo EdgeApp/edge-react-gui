@@ -4021,10 +4021,10 @@ edge-components@^0.0.26:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.16.12:
-  version "0.16.12"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.16.12.tgz#9900e85adaa4c26ab89b2ca54b140ef940b26bbb"
-  integrity sha512-M71akxUhDOARgkt619zv7u1fWMyNUzIplKOOlLYfbw0slqwhAvZab1yK/p/p4Zqhj9CHT9ATPq1ND6MYbR8Peg==
+edge-core-js@^0.16.13:
+  version "0.16.13"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.16.13.tgz#400d046bfa89602a40c659410aa08f68930b06aa"
+  integrity sha512-DCBAnxAQKCdexmfYxeAKciDMiwg/pmePwxCRbxqbK/nHU8PGttWFcWCQsLG2YllgeYvIo1A4vWnLRw/cifvYpg==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -8406,17 +8406,12 @@ n64@0.0.18:
   resolved "https://registry.yarnpkg.com/n64/-/n64-0.0.18.tgz#dfdf8dc8f1a02fffab4204a22031607561abc718"
   integrity sha512-z5gRoCNFTY5fderO8n5tt6p7+jZiivzN1LhuR4EqrTkciYDCpJy8xkwkd1YO5eyfimeLAjXy/6k3FLC+GQ6lLw==
 
-nan@2.13.2, nan@^2.12.1:
+nan@2.13.2:
   version "2.13.2"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.13.2.tgz#f51dc7ae66ba7d5d55e1e6d4d8092e802c9aefe7"
   integrity sha512-TghvYc72wlMGMVMluVo9WRJc0mB8KxxF/gZ4YYFy7V2ZQX9l7rgbPg7vjS9mt6U5HXODVFVI2bOduCzwOMv/lw==
 
-nan@^2.0.8, nan@^2.0.9, nan@^2.2.1, nan@^2.9.2:
-  version "2.11.1"
-  resolved "https://registry.yarnpkg.com/nan/-/nan-2.11.1.tgz#90e22bccb8ca57ea4cd37cc83d3819b52eea6766"
-  integrity sha512-iji6k87OSXa0CcrLl9z+ZiYSuR2o+c0bGuNmXdrhTQTakxytAFsC56SArGYoiHlJlFoHSnvmhpceZJaXkVuOtA==
-
-nan@^2.13.2, nan@^2.14.0:
+nan@^2.0.8, nan@^2.0.9, nan@^2.12.1, nan@^2.13.2, nan@^2.14.0, nan@^2.2.1:
   version "2.14.0"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.0.tgz#7818f722027b2459a86f0295d434d1fc2336c52c"
   integrity sha512-INOFj37C7k3AfaNTtX8RhsTw7qRy7eLET14cROi9+5HAVbbHuIWUHEauBv5qT4Av2tWasiTY1Jw6puUNqRJXQg==
@@ -8615,22 +8610,6 @@ node-notifier@^5.4.2:
     semver "^5.5.0"
     shellwords "^0.1.1"
     which "^1.3.0"
-
-node-pre-gyp@^0.10.0:
-  version "0.10.3"
-  resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.10.3.tgz#3070040716afdc778747b61b6887bf78880b80fc"
-  integrity sha512-d1xFs+C/IPS8Id0qPTZ4bUT8wWryfR/OzzAFxweG+uLN85oPzyo2Iw6bVlLQ/JOdgNonXLCoRyqDzDWq4iw72A==
-  dependencies:
-    detect-libc "^1.0.2"
-    mkdirp "^0.5.1"
-    needle "^2.2.1"
-    nopt "^4.0.1"
-    npm-packlist "^1.1.6"
-    npmlog "^4.0.2"
-    rc "^1.2.7"
-    rimraf "^2.6.1"
-    semver "^5.3.0"
-    tar "^4"
 
 node-pre-gyp@^0.12.0:
   version "0.12.0"
