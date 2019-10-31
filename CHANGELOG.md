@@ -1,5 +1,11 @@
 # edge-react-gui
 
+## 1.10.1
+
+- Add KYC notices for Fox Exchange & CoinSwitch.
+- Fix Tezos support.
+- Fix Firebase tracking crash bug.
+
 ## 1.10.0
 
 - Integration of Compound
