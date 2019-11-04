@@ -172,6 +172,7 @@ export const styles = {
     paddingRight: scale(32)
   },
   rowIconWrap: {
+    alignItems: 'center',
     justifyContent: 'center',
     width: scale(36)
   },
@@ -188,13 +189,28 @@ export const styles = {
     flexDirection: 'row'
   },
   rowCurrencyLogoAndroid: {
+    position: 'absolute',
+    top: 14,
+    left: 0,
+    right: 0,
+    bottom: 0,
     height: scale(22),
     width: scale(22),
-    marginRight: scale(10),
-    marginLeft: scale(5),
+    marginRight: scale(12),
+    marginLeft: scale(3),
     resizeMode: 'contain',
     alignSelf: 'center'
   },
+  rowCurrencyOverlayLogo: {
+    position: 'absolute',
+    top: 12.9,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    marginLeft: scale(2),
+    alignSelf: 'center'
+  },
+  rowCurrencyOverlaySize: scale(24.1),
   rowCurrencyLogoIOS: {
     height: scale(22),
     width: scale(26),

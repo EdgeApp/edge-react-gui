@@ -133,6 +133,8 @@ PODS:
     - React/Core
     - React/fishhook
     - React/RCTBlob
+  - ReactNativeART (1.0.2):
+    - React
   - ReactNativePermissions (1.0.6):
     - React
   - RNBackgroundFetch (2.4.5):
@@ -195,6 +197,7 @@ DEPENDENCIES:
   - React/RCTSettings (from `../node_modules/react-native`)
   - React/RCTText (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
+  - "ReactNativeART (from `../node_modules/@react-native-community/art`)"
   - ReactNativePermissions (from `../node_modules/react-native-permissions`)
   - RNBackgroundFetch (from `../node_modules/react-native-background-fetch`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
@@ -266,6 +269,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-tcp"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
+  ReactNativeART:
+    :path: "../node_modules/@react-native-community/art"
   ReactNativePermissions:
     :path: "../node_modules/react-native-permissions"
   RNBackgroundFetch:
@@ -321,6 +326,7 @@ SPEC CHECKSUMS:
   react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b
   react-native-tcp: ec39d0ce136873220a2895a0e89dc33804fe0def
   react-native-webview: 5036ed4a973ad1deeeff118262d2df7b60b3419d
+  ReactNativeART: 103929e284be663b5a2f921ed912821f04120a70
   ReactNativePermissions: bf462424ca7823d1b8e6cb463184d6e7f151971b
   RNBackgroundFetch: 8098db4fee60e99afd8bcefa950e8d1760d733ba
   RNCAsyncStorage: 60a80e72d95bf02a01cace55d3697d9724f0d77f
@@ -333,6 +339,6 @@ SPEC CHECKSUMS:
   RNVectorIcons: ac7bf6bfeafaf3ad34552cdc6eed6fb8c4b7c940
   yoga: 684513b14b03201579ba3cee20218c9d1298b0cc
 
-PODFILE CHECKSUM: 3f20579d3913ea66ae652119c1ffa2f0e600bc79
+PODFILE CHECKSUM: 670d65f5d38b938b6c88a7259e0bb79a817d2d34
 
 COCOAPODS: 1.8.4
