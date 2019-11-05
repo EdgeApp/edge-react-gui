@@ -57,7 +57,7 @@ export async function trackConversion (
     pluginId,
     ...(await loadCreationReason(account))
   }
-  return logToFirebase(event, values)
+  return logEvent(event, values)
 }
 
 /**
@@ -77,7 +77,14 @@ export async function trackEvent (
     currencyCode,
     ...(await loadCreationReason(account))
   }
-  return logToFirebase(event, values)
+  return logEvent(event, values)
+}
+
+/**
+ * Send a raw event to all backends.
+ */
+async function logEvent (event: TrackingEvent, values: TrackingValues) {
+  return Promise.all([logToFirebase(event, values), logToUtilServer(event, values)]).catch(error => console.warn(error))
 }
 
 /**
@@ -123,4 +130,18 @@ async function logToFirebase (event: TrackingEvent, values: TrackingValues) {
     global.firebase.analytics().logEvent('purchase', params)
     global.firebase.analytics().logEvent('ecommerce_purchase', params)
   }
+}
+
+/**
+ * Send a tracking event to the util server.
+ */
+async function logToUtilServer (event: TrackingEvent, values: TrackingValues) {
+  fetch('https://util1.edge.app/api/v1/event', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json'
+    },
+    body: JSON.stringify({ ...values, event })
+  })
 }
