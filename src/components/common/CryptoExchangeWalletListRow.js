@@ -109,7 +109,7 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
             const preliminaryCryptoAmount = truncateDecimals(bns.div(metaTokenBalances[property], multiplier, DIVIDE_PRECISION), 6)
             const cryptoBalance = intl.formatNumber(decimalOrZero(preliminaryCryptoAmount, 6))
             const disabled =
-              this.props.excludedCurrencyCode.includes(property) || (this.props.disableZeroBalance && cryptoBalance === '0' && formattedFiatBalance !== 0)
+              this.props.excludedCurrencyCode.includes(property) || (this.props.disableZeroBalance && cryptoBalance === '0' && formattedFiatBalance !== '0')
             if (property !== this.props.excludedCurrencyCode && !this.props.excludedTokens.includes(property)) {
               tokens.push(
                 <CryptoExchangeWalletListTokenRow
