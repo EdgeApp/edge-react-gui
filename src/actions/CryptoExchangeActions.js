@@ -270,7 +270,7 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
   const { fromWallet, toWallet, toCurrencyCode } = request
 
   try {
-    trackEvent('Exchange_Shift_Start')
+    trackEvent('SwapStart')
     const broadcastedTransaction: EdgeTransaction = await quote.approve()
     await fromWallet.saveTx(broadcastedTransaction)
 
@@ -322,7 +322,7 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
       Alert.alert(s.strings.exchange_succeeded, s.strings.exchanges_may_take_minutes)
     }, 1)
     const exchangeAmount = await toWallet.nativeToDenomination(toNativeAmount, toCurrencyCode)
-    trackConversion('Exchange_Shift_Success', {
+    trackConversion('SwapSuccess', {
       account,
       pluginId: pluginName,
       currencyCode: toCurrencyCode,
@@ -330,7 +330,7 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
     })
   } catch (error) {
     console.log(error)
-    trackEvent('Exchange_Shift_Failed')
+    trackEvent('SwapFailed')
     dispatch({ type: 'DONE_SHIFT_TRANSACTION' })
     setTimeout(() => {
       Alert.alert(s.strings.exchange_failed, error.message)

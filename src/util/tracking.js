@@ -8,17 +8,17 @@ import ENV from '../../env.json'
 import { loadCreationReason } from './installReason.js'
 
 type TrackingEvent =
-  | 'Activate_Wallet_Cancel'
-  | 'Activate_Wallet_Done'
-  | 'Activate_Wallet_Select'
-  | 'Activate_Wallet_Start'
-  | 'EdgeProvider_Conversion_Success'
-  | 'Exchange_Shift_Failed'
-  | 'Exchange_Shift_Quote'
-  | 'Exchange_Shift_Start'
-  | 'Exchange_Shift_Success'
-  | 'Signup_Wallets_Created'
-  | 'Start_App'
+  | 'ActivateWalletCancel'
+  | 'ActivateWalletSelect'
+  | 'ActivateWalletStart'
+  | 'ActivateWalletSuccess'
+  | 'EdgeProviderConversion'
+  | 'SwapFailed'
+  | 'SwapQuote'
+  | 'SwapStart'
+  | 'SwapSuccess'
+  | 'SignupWalletsCreated'
+  | 'AppStart'
 
 export type TrackingValues = {
   accountDate?: string, // Account creation date
@@ -88,6 +88,23 @@ async function logToFirebase (event: TrackingEvent, values: TrackingValues) {
 
   if (!global.firebase) return
 
+  // Adjust event name:
+  const names = {
+    ActivateWalletCancel: 'Activate_Wallet_Cancel',
+    ActivateWalletSelect: 'Activate_Wallet_Select',
+    ActivateWalletStart: 'Activate_Wallet_Start',
+    ActivateWalletSuccess: 'Activate_Wallet_Done',
+    EdgeProviderConversion: 'EdgeProvider_Conversion_Success',
+    SwapFailed: 'Exchange_Shift_Failed',
+    SwapQuote: 'Exchange_Shift_Quote',
+    SwapStart: 'Exchange_Shift_Start',
+    SwapSuccess: 'Exchange_Shift_Success',
+    SignupWalletsCreated: 'Signup_Wallets_Created',
+    AppStart: 'Start_App'
+  }
+  const name = names[event]
+  if (!name) return
+
   // Adjust params:
   const params: Object = {}
   if (accountDate != null) params.adate = accountDate
@@ -98,11 +115,11 @@ async function logToFirebase (event: TrackingEvent, values: TrackingValues) {
   }
   if (installerId != null) params.aid = installerId
   if (pluginId != null) params.plugin = pluginId
-  global.firebase.analytics().logEvent(event, params)
+  global.firebase.analytics().logEvent(name, params)
 
   // If we get passed a dollarValue, translate the event into a purchase:
   if (dollarValue != null) {
-    params.items = event
+    params.items = name
     global.firebase.analytics().logEvent('purchase', params)
     global.firebase.analytics().logEvent('ecommerce_purchase', params)
   }

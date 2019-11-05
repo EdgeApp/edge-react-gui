@@ -336,7 +336,7 @@ async function createDefaultWallets (account: EdgeAccount, defaultFiat: string, 
       await safeCreateWallet(account, currencyInfo.walletType, walletName, fiatCurrencyCode, dispatch)
     }
 
-    trackEvent('Signup_Wallets_Created')
+    trackEvent('SignupWalletsCreated')
     return
   }
 
@@ -345,5 +345,5 @@ async function createDefaultWallets (account: EdgeAccount, defaultFiat: string, 
   await safeCreateWallet(account, 'wallet:bitcoincash', s.strings.string_first_bitcoincash_wallet_name, fiatCurrencyCode, dispatch)
   await safeCreateWallet(account, 'wallet:ethereum', s.strings.string_first_ethereum_wallet_name, fiatCurrencyCode, dispatch)
 
-  trackEvent('Signup_Wallets_Created')
+  trackEvent('SignupWalletsCreated')
 }

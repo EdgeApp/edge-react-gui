@@ -309,7 +309,7 @@ export class EdgeProvider extends Bridgeable {
       Actions.pop()
 
       const exchangeAmount = await coreWallet.nativeToDenomination(transaction.nativeAmount, transaction.currencyCode)
-      trackConversion('EdgeProvider_Conversion_Success', {
+      trackConversion('EdgeProviderConversion', {
         pluginId: this._pluginId,
         account: CORE_SELECTORS.getAccount(this._state),
         currencyCode: transaction.currencyCode,
@@ -351,7 +351,7 @@ export class EdgeProvider extends Bridgeable {
       Actions.pop()
 
       const exchangeAmount = await coreWallet.nativeToDenomination(transaction.nativeAmount, transaction.currencyCode)
-      trackConversion('EdgeProvider_Conversion_Success', {
+      trackConversion('EdgeProviderConversion', {
         pluginId: this._pluginId,
         account: CORE_SELECTORS.getAccount(this._state),
         currencyCode: transaction.currencyCode,
@@ -384,14 +384,14 @@ export class EdgeProvider extends Bridgeable {
   trackConversion (opts?: { currencyCode: string, exchangeAmount: number }) {
     if (opts != null) {
       const { currencyCode, exchangeAmount } = opts
-      trackConversion('EdgeProvider_Conversion_Success', {
+      trackConversion('EdgeProviderConversion', {
         pluginId: this._pluginId,
         account: CORE_SELECTORS.getAccount(this._state),
         currencyCode,
         exchangeAmount
       })
     } else {
-      trackEvent('EdgeProvider_Conversion_Success', {
+      trackEvent('EdgeProviderConversion', {
         pluginId: this._pluginId
       })
     }
