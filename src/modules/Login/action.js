@@ -13,7 +13,8 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import type { Dispatch, GetState } from '../../types/reduxTypes.js'
 import { type CustomTokenInfo } from '../../types/types.js'
-import { getInstallCurrencies, saveCreationReason, trackEvent } from '../../util/tracking.js'
+import { getInstallCurrencies, saveCreationReason } from '../../util/installReason.js'
+import { trackEvent } from '../../util/tracking.js'
 import { runWithTimeout } from '../../util/utils.js'
 import {
   CORE_DEFAULTS,
