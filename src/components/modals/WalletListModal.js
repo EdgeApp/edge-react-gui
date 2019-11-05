@@ -156,7 +156,13 @@ export class WalletListModal extends Component<Props, LocalState> {
       const record: Record = records[i]
       const { walletItem, supportedWalletType } = record
       if (walletItem) {
-        if (walletItem.name.includes(input) || walletItem.currencyCode.includes(upperCaseInput) || walletItem.enabledTokens.includes(upperCaseInput)) {
+        const tokens = walletItem.enabledTokens.toString()
+        if (
+          walletItem.name.includes(input) ||
+          walletItem.currencyCode.includes(upperCaseInput) ||
+          walletItem.enabledTokens.includes(upperCaseInput) ||
+          tokens.includes(upperCaseInput)
+        ) {
           filteredRecords.push(record)
         }
       }
