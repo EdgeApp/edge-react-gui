@@ -60,4 +60,6 @@ target 'edge' do
 
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
 
+  pod 'ReactNativeART', :path => '../node_modules/@react-native-community/art'
+
 end

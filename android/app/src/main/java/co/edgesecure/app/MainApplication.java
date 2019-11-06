@@ -4,6 +4,7 @@ import android.app.Application;
 import android.webkit.WebView;
 
 import com.facebook.react.ReactApplication;
+import com.reactnativecommunity.art.ARTPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.reactlibrary.DiskletPackage;
 import com.reactnativecommunity.webview.RNCWebViewPackage;
@@ -57,6 +58,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new ARTPackage(),
             new AsyncStoragePackage(),
             new DiskletPackage(),
             new RNCWebViewPackage(),
