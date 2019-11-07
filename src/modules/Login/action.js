@@ -13,7 +13,8 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import type { Dispatch, GetState } from '../../types/reduxTypes.js'
 import { type CustomTokenInfo } from '../../types/types.js'
-import { getInstallCurrencies, saveCreationReason, trackEvent } from '../../util/tracking.js'
+import { getInstallCurrencies, saveCreationReason } from '../../util/installReason.js'
+import { trackEvent } from '../../util/tracking.js'
 import { runWithTimeout } from '../../util/utils.js'
 import {
   CORE_DEFAULTS,
@@ -335,7 +336,7 @@ async function createDefaultWallets (account: EdgeAccount, defaultFiat: string, 
       await safeCreateWallet(account, currencyInfo.walletType, walletName, fiatCurrencyCode, dispatch)
     }
 
-    trackEvent('Signup_Wallets_Created')
+    trackEvent('SignupWalletsCreated', { account })
     return
   }
 
@@ -344,5 +345,5 @@ async function createDefaultWallets (account: EdgeAccount, defaultFiat: string, 
   await safeCreateWallet(account, 'wallet:bitcoincash', s.strings.string_first_bitcoincash_wallet_name, fiatCurrencyCode, dispatch)
   await safeCreateWallet(account, 'wallet:ethereum', s.strings.string_first_ethereum_wallet_name, fiatCurrencyCode, dispatch)
 
-  trackEvent('Signup_Wallets_Created')
+  trackEvent('SignupWalletsCreated', { account })
 }

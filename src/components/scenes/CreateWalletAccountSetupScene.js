@@ -65,7 +65,7 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
   }
 
   componentDidMount () {
-    trackEvent('Activate_Wallet_Start')
+    trackEvent('ActivateWalletStart')
   }
 
   modifiedStyle = {
