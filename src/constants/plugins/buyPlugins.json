@@ -452,23 +452,46 @@
     "paymentTypeLogoKey": "cash"
   },
   {
-    "id": "banxa",
+    "id": "banxa.bank",
     "pluginId": "banxa",
     "paymentType": {
       "bank": true,
-      "cash": true
+      "cash": false
     },
     "description": "Fee: 4 - 6% / Settlement: 5 min - 24 hours\nLimit: $50000",
-    "title": "POLi Bank Transfer or Cash with Newsagent",
+    "title": "POLi Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
     "countryCodes": {
-      "AT": false,
+      "GB": false,
       "AU": true
     },
     "cryptoCodes": [
-      "BTC"
+      "BTC",
+      "ETH"
     ],
-    "paymentTypeLogoKey": "poli"
+    "paymentTypeLogoKey": "poli",
+    "addOnUrl": "/?country=AU&payment=POLI"
+  },  
+  {
+    "id": "banxa.cash",
+    "pluginId": "banxa",
+    "paymentType": {
+      "bank": false,
+      "cash": true
+    },
+    "description": "Fee: 4 - 6% / Settlement: 5 min - 24 hours\nLimit: $9000",
+    "title": "Cash with Newsagent",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
+    "countryCodes": {
+      "GB": false,
+      "AU": true
+    },
+    "cryptoCodes": [
+      "BTC",
+      "ETH"
+    ],
+    "paymentTypeLogoKey": "newsagent",
+    "addOnUrl": "?country=AU&payment=BLUEONLINE"
   },
   "----- Sorting -----",
   {
@@ -484,8 +507,12 @@
     "priority": 1
   },
   {
-    "id": "banxa",
+    "id": "banxa.bank",
     "priority": 1
+  },
+  {
+    "id": "banxa.cash",
+    "priority": 7
   },
   {
     "id": "libertyx",
@@ -524,5 +551,20 @@
     "title": "Swish and Credit Card",
     "priority": 2,
     "paymentTypeLogoKey": "swish"
+  },
+  {
+    "id": "banxa.bank",
+    "forCountries": [
+      "GB"
+    ],
+    "addOnUrl": "/?country=GB"
+
+  },
+  {
+    "id": "banxa.cash",
+    "forCountries": [
+      "GB"
+    ],
+    "addOnUrl": "/?country=GB"
   }
 ]
