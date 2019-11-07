@@ -8,7 +8,7 @@ import { WebView } from 'react-native-webview'
 
 import s from '../../locales/strings.js'
 import { Airship } from '../services/AirshipInstance.js'
-import { type AirshipBridge, AirshipModal, ContentArea, IconCircle, ModalCloseArrow, THEME, dayText, textSize } from './modalParts.js'
+import { type AirshipBridge, AirshipModal, ContentArea, dayText, IconCircle, ModalCloseArrow, textSize, THEME } from './modalParts.js'
 
 const buildNumber = DeviceInfo.getBuildNumber()
 const versionNumber = DeviceInfo.getVersion()

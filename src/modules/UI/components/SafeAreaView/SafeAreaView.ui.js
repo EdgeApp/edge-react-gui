@@ -1,7 +1,7 @@
 // @flow
 
-import React from 'react'
 import type { Node } from 'react'
+import React from 'react'
 import { StyleSheet } from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 

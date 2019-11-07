@@ -14,10 +14,10 @@ import {
   updateTransaction
 } from '../../actions/SendConfirmationActions.js'
 import { activated as uniqueIdentifierModalActivated } from '../../actions/UniqueIdentifierModalActions.js'
-import { SendConfirmation } from '../../components/scenes/SendConfirmationScene'
 import type { SendConfirmationDispatchProps, SendConfirmationStateProps } from '../../components/scenes/SendConfirmationScene'
+import { SendConfirmation } from '../../components/scenes/SendConfirmationScene'
 import { getWallet } from '../../modules/Core/selectors.js'
-import { getDisplayDenomination, getPlugins, getExchangeDenomination as settingsGetExchangeDenomination } from '../../modules/Settings/selectors.js'
+import { getDisplayDenomination, getExchangeDenomination as settingsGetExchangeDenomination, getPlugins } from '../../modules/Settings/selectors.js'
 import {
   getError,
   getForceUpdateGuiCounter,

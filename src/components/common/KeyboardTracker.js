@@ -1,7 +1,7 @@
 // @flow
 
-import { type ChildrenArray, Component, type Node } from 'react'
-import { Animated, Keyboard, type KeyboardEvent, Platform } from 'react-native'
+import { type ChildrenArray, type Node, Component } from 'react'
+import { type KeyboardEvent, Animated, Keyboard, Platform } from 'react-native'
 
 type Props = {
   children: (animation: Animated.Value, layout: number) => ChildrenArray<Node>,

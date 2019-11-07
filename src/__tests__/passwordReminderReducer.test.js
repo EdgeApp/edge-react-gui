@@ -2,8 +2,8 @@
 
 /* globals test describe expect */
 
-import { MAX_NON_PASSWORD_DAYS_LIMIT, MAX_NON_PASSWORD_LOGINS_LIMIT, initialState, untranslatedReducer as uut } from '../reducers/PasswordReminderReducer.js'
-import { MILLISECONDS_PER_DAY, daysBetween } from '../util/utils.js'
+import { initialState, MAX_NON_PASSWORD_DAYS_LIMIT, MAX_NON_PASSWORD_LOGINS_LIMIT, untranslatedReducer as uut } from '../reducers/PasswordReminderReducer.js'
+import { daysBetween, MILLISECONDS_PER_DAY } from '../util/utils.js'
 
 const dummyAction: any = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
 

@@ -10,8 +10,8 @@ import slowlog from 'react-native-slowlog'
 import { intl } from '../../../../locales/intl.js'
 import type { CustomTokenInfo, GuiDenomination, GuiWallet } from '../../../../types/types.js'
 import {
-  DIVIDE_PRECISION,
   decimalOrZero,
+  DIVIDE_PRECISION,
   getFiatSymbol,
   getSettingsCurrencyMultiplier,
   getWalletDefaultDenomProps,

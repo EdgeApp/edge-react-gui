@@ -8,7 +8,7 @@ import { swapPluginIcons } from '../../assets/images/exchange'
 import s from '../../locales/strings.js'
 import { PrimaryButton, SecondaryButton } from '../../modules/UI/components/Buttons/index'
 import { Airship } from '../services/AirshipInstance.js'
-import { type AirshipBridge, AirshipModal, ContentArea, IconCircle, THEME, dayText } from './modalParts.js'
+import { type AirshipBridge, AirshipModal, ContentArea, dayText, IconCircle, THEME } from './modalParts.js'
 
 export async function swapVerifyTerms (swapConfig: EdgeSwapConfig, links: Array<{ text: string, uri: string }>): Promise<boolean> {
   if (swapConfig.userSettings && swapConfig.userSettings.agreedToTerms) {

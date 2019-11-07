@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import { Text, TouchableOpacity } from 'react-native'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 
-import { type AirshipBridge, AirshipModal, ContentArea, IconCircle, THEME, dayText } from './modalParts.js'
+import { type AirshipBridge, AirshipModal, ContentArea, dayText, IconCircle, THEME } from './modalParts.js'
 
 type Props = {
   bridge: AirshipBridge<boolean>,

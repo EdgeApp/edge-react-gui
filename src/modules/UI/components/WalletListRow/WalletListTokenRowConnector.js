@@ -6,8 +6,8 @@ import { connect } from 'react-redux'
 import type { Dispatch, State } from '../../../../types/reduxTypes.js'
 import { DIVIDE_PRECISION, getSettingsTokenMultiplier } from '../../../../util/utils.js'
 import { convertCurrency } from '../../selectors.js'
-import { WalletListTokenRowComponent } from './WalletListTokenRow.ui.js'
 import type { WalletListTokenRowDispatchProps, WalletListTokenRowOwnProps, WalletListTokenRowStateProps } from './WalletListTokenRow.ui.js'
+import { WalletListTokenRowComponent } from './WalletListTokenRow.ui.js'
 
 const mapStateToProps = (state: State, ownProps: WalletListTokenRowOwnProps): WalletListTokenRowStateProps => {
   const settings = state.ui.settings

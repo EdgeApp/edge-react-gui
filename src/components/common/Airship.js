@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component, type ComponentType, type Node } from 'react'
+import React, { type ComponentType, type Node, Component } from 'react'
 import { StyleSheet, View } from 'react-native'
 
 /**

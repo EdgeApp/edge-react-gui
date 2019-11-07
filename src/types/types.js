@@ -2,8 +2,8 @@
 
 import {
   type EdgeDenomination,
-  type EdgeMetaToken,
   type EdgeMetadata,
+  type EdgeMetaToken,
   type EdgeReceiveAddress,
   type EdgeSwapQuote,
   type EdgeSwapRequest,

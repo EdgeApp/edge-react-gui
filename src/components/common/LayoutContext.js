@@ -1,6 +1,6 @@
 // @flow
 
-import { type ChildrenArray, Component, type Node } from 'react'
+import { type ChildrenArray, type Node, Component } from 'react'
 import { Dimensions, Platform, StatusBar } from 'react-native'
 // $FlowFixMe See https://github.com/react-native-community/react-native-safe-area-view/pull/77
 import { getInset } from 'react-native-safe-area-view'

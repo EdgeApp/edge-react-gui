@@ -6,7 +6,7 @@ import React, { Component } from 'react'
 import { ActivityIndicator, FlatList, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
-import { PREFERRED_TOKENS, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
+import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton, SecondaryButton } from '../../modules/UI/components/Buttons/index'
 import Text from '../../modules/UI/components/FormattedText/index'

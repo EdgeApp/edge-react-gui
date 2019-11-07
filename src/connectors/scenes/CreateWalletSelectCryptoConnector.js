@@ -2,8 +2,8 @@
 
 import { connect } from 'react-redux'
 
-import { CreateWalletSelectCrypto as CreateWalletSelectCryptoComponent } from '../../components/scenes/CreateWalletSelectCryptoScene.js'
 import type { CreateWalletSelectCryptoStateProps } from '../../components/scenes/CreateWalletSelectCryptoScene.js'
+import { CreateWalletSelectCrypto as CreateWalletSelectCryptoComponent } from '../../components/scenes/CreateWalletSelectCryptoScene.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import type { State } from '../../types/reduxTypes.js'
 

@@ -11,8 +11,8 @@ import {
 } from '../../actions/CreateWalletActions.js'
 import {
   type AccountPaymentParams,
-  CreateWalletAccountSelect,
-  type CreateWalletAccountSelectOwnProps
+  type CreateWalletAccountSelectOwnProps,
+  CreateWalletAccountSelect
 } from '../../components/scenes/CreateWalletAccountSelectScene'
 import { getWallet } from '../../modules/Core/selectors.js'
 import { getDefaultDenomination } from '../../modules/UI/selectors.js'

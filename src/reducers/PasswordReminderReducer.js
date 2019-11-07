@@ -3,7 +3,7 @@
 import { type Reducer } from 'redux'
 
 import type { Action } from '../types/reduxTypes.js'
-import { MILLISECONDS_PER_DAY, daysBetween } from '../util/utils.js'
+import { daysBetween, MILLISECONDS_PER_DAY } from '../util/utils.js'
 
 export const INITIAL_NON_PASSWORD_DAYS_LIMIT = 2
 export const INITIAL_NON_PASSWORD_LOGINS_LIMIT = 2

@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import _ from 'lodash'
-import React, { Component, type Node } from 'react'
+import React, { type Node, Component } from 'react'
 import { LayoutAnimation, TouchableHighlight, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 

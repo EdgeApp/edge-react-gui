@@ -2,7 +2,6 @@
 /* globals describe test expect */
 
 import {
-  MILLISECONDS_PER_DAY,
   autoCorrectDate,
   convertDisplayToNative,
   convertNativeToDenomination,
@@ -23,6 +22,7 @@ import {
   isTooFarBehind,
   isValidInput,
   mergeTokens,
+  MILLISECONDS_PER_DAY,
   msToSeconds,
   secondsToMs,
   truncateDecimals

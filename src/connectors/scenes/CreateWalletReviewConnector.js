@@ -3,8 +3,8 @@
 import { connect } from 'react-redux'
 
 import { createCurrencyWallet } from '../../actions/CreateWalletActions.js'
-import { CreateWalletReview as CreateWalletReviewConnector } from '../../components/scenes/CreateWalletReviewScene'
 import type { CreateWalletReviewDispatchProps } from '../../components/scenes/CreateWalletReviewScene'
+import { CreateWalletReview as CreateWalletReviewConnector } from '../../components/scenes/CreateWalletReviewScene'
 import { getSupportedWalletTypes } from '../../modules/Settings/selectors.js'
 import type { Dispatch, State } from '../../types/reduxTypes.js'
 
