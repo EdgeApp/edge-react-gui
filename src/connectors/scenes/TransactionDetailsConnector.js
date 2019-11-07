@@ -4,8 +4,8 @@ import type { EdgeCurrencyInfo, EdgeMetadata, EdgeTransaction } from 'edge-core-
 import { connect } from 'react-redux'
 
 import { getSubcategories, setNewSubcategory, setTransactionDetails } from '../../actions/TransactionDetailsActions.js'
-import { TransactionDetails } from '../../components/scenes/TransactionDetailsScene'
 import type { TransactionDetailsOwnProps } from '../../components/scenes/TransactionDetailsScene'
+import { TransactionDetails } from '../../components/scenes/TransactionDetailsScene'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import * as UI_SELECTORS from '../../modules/UI/selectors'
 import type { Dispatch, State } from '../../types/reduxTypes.js'

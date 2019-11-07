@@ -11,8 +11,8 @@ import {
 } from './actions.js'
 import { PasswordReminderModal } from './PasswordReminderModal.ui.js'
 import { passwordReminderModalConnector } from './passwordReminderModalConnector.js'
-import { initialState, passwordReminderModalReducer } from './passwordReminderModalReducer.js'
 import type { PasswordReminderModalState } from './passwordReminderModalReducer.js'
+import { initialState, passwordReminderModalReducer } from './passwordReminderModalReducer.js'
 
 export {
   initialState,

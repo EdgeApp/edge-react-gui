@@ -30,7 +30,7 @@
     "flow": "flow",
     "flow-coverage": "flow-coverage-report",
     "flow:0": "flow; exit 0",
-    "format": "import-sort -l --write '*.js' 'src/**/*.js' 'test/**/*.js'; prettier-eslint --write '*.js' 'src/**/*.js' 'test/**/*.js'",
+    "format": "prettier-eslint --write '*.js' 'src/**/*.js' 'test/**/*.js'",
     "postinstall": "sh ./postinstall.sh",
     "ios:run": "react-native run-ios",
     "lint": "eslint '*.js' 'src/**/*.js' 'test/**/*.js'",
@@ -60,7 +60,6 @@
     "linters": {
       "*.js": [
         "eslint",
-        "import-sort --list-different",
         "prettier-eslint --list-different"
       ]
     }
@@ -190,14 +189,12 @@
     "eslint-plugin-promise": "^3.6.0",
     "eslint-plugin-react": "^7.3.0",
     "eslint-plugin-react-native": "^3.0.1",
+    "eslint-plugin-simple-import-sort": ">=4.0.0",
     "eslint-plugin-standard": "^3.0.1",
     "express": "^4.16.2",
     "flow-bin": "^0.75.0",
     "flow-coverage-report": "^0.4.1",
     "husky": "^1.3.1",
-    "import-sort-cli": "^5.0.0",
-    "import-sort-parser-babylon": "^5.0.0",
-    "import-sort-style-module": "^5.0.0",
     "jest": "^24.9.0",
     "jest-junit": "^9.0.0",
     "jsonfile": "^4.0.0",
@@ -281,12 +278,6 @@
       "html",
       "json"
     ]
-  },
-  "importSort": {
-    ".js, .es": {
-      "parser": "babylon",
-      "style": "module"
-    }
   },
   "jest-junit": {
     "outputDirectory": "./coverage",

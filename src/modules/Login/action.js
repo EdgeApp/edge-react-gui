@@ -18,16 +18,16 @@ import { trackEvent } from '../../util/tracking.js'
 import { runWithTimeout } from '../../util/utils.js'
 import {
   CORE_DEFAULTS,
-  LOCAL_ACCOUNT_DEFAULTS,
-  LOCAL_ACCOUNT_TYPES,
-  PASSWORD_RECOVERY_REMINDERS_SHOWN,
-  SYNCED_ACCOUNT_DEFAULTS,
-  SYNCED_ACCOUNT_TYPES,
   getCoreSettings,
   getLocalSettings,
   getSyncedSettings,
+  LOCAL_ACCOUNT_DEFAULTS,
+  LOCAL_ACCOUNT_TYPES,
+  PASSWORD_RECOVERY_REMINDERS_SHOWN,
   setLocalSettings,
-  setSyncedSettings
+  setSyncedSettings,
+  SYNCED_ACCOUNT_DEFAULTS,
+  SYNCED_ACCOUNT_TYPES
 } from '../Core/Account/settings.js'
 import * as CORE_SELECTORS from '../Core/selectors'
 import { updateWalletsRequest } from '../Core/Wallets/action.js'

@@ -1,6 +1,6 @@
 // @flow
 
-import { Icon, createInputModal, createSecureTextModal, createSimpleConfirmModal } from 'edge-components'
+import { createInputModal, createSecureTextModal, createSimpleConfirmModal, Icon } from 'edge-components'
 import React from 'react'
 import { Actions } from 'react-native-router-flux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'

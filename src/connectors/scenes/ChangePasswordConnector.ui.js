@@ -3,8 +3,8 @@
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import ChangePasswordComponent from '../../components/scenes/ChangePasswordScene'
 import type { ChangePasswordDispatchProps, ChangePasswordOwnProps, ChangePasswordStateProps } from '../../components/scenes/ChangePasswordScene'
+import ChangePasswordComponent from '../../components/scenes/ChangePasswordScene'
 import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
 import type { State } from '../../types/reduxTypes.js'
 

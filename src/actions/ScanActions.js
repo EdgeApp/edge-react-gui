@@ -16,14 +16,14 @@ import {
   EXCHANGE_SCENE,
   EXCLAMATION,
   FA_MONEY_ICON,
+  getSpecialCurrencyInfo,
   ION_ICONS,
   KEY_ICON,
   MATERIAL_COMMUNITY,
   MATERIAL_ICONS,
   PLUGIN_LIST,
   SEND_CONFIRMATION,
-  SHOPPING_CART,
-  getSpecialCurrencyInfo
+  SHOPPING_CART
 } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'

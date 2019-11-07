@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component, type Node } from 'react'
+import React, { type Node, Component } from 'react'
 import { Dimensions, Platform, StyleSheet, TouchableOpacity, View } from 'react-native'
 import Modal from 'react-native-modal'
 import Ionicon from 'react-native-vector-icons/Ionicons'

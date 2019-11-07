@@ -1,7 +1,7 @@
 // @flow
 
-import React, { Component } from 'react'
 import type { Node } from 'react'
+import React, { Component } from 'react'
 import { Animated, View } from 'react-native'
 
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
