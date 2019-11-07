@@ -83,8 +83,9 @@ For best results, please consider using the following versions (up-to-date as of
 
 ### Add API key in env.json
 
-Get an API key from https://developer.airbitz.co by scanning the QR code with your Airbitz wallet (https://airbitz.co/app)
-Copy the env.example.json to env.json and change the `AIRBITZ_API_KEY` to the API key you received from developer.airbitz.co.
+A public API key is built into the edge-core-js which can be used to build and test the Edge app. This key is severely rate limited and should not be used for production. For production use, get an API key by emailing info@edge.app. 
+
+Copy the `env.example.json` to `env.json` and change the `AIRBITZ_API_KEY` to the API key you received from Edge. To use the public API key, leave `AIRBITZ_API_KEY` blank. 
 
 ### Run the app in debug mode
 
