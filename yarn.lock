@@ -1445,7 +1445,7 @@
   resolved "https://registry.yarnpkg.com/@ledgerhq/logs/-/logs-4.68.2.tgz#3ba74680927807f83d9f0bfd7da45f192d2c0893"
   integrity sha512-iFwGIzPmAMDvxVLtTvBUo0DCWz8vVaD0C4IsprNaXbxu+AsDmlc9kO9CKLB5YFEZblKNNKqJMJDfKvg5brIpTw==
 
-"@react-native-community/art@^1.0.1", "@react-native-community/art@^1.0.2":
+"@react-native-community/art@^1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@react-native-community/art/-/art-1.0.2.tgz#38671edcf4eb3d820d62dc5ba3a151d75352f847"
   integrity sha512-GFqRy5DfHmD0LF+cIn1TPeNienFNTuLsv3SNq1vsg2J04l51ESSAUq7dY35cCE/g6Hfi9t8zx+A9sEMplRKZ0g==
@@ -9880,13 +9880,6 @@ react-native-popup-menu@0.13.3:
   version "0.13.3"
   resolved "https://registry.yarnpkg.com/react-native-popup-menu/-/react-native-popup-menu-0.13.3.tgz#3f4203945acb4954d08d5b50a0345ccc18657eba"
   integrity sha1-P0IDlFrLSVTQjVtQoDRczBhlfro=
-
-"react-native-progress@https://github.com/EdgeApp/react-native-progress":
-  version "4.0.1"
-  resolved "https://github.com/EdgeApp/react-native-progress#ee19c1fa5aa2893255b9b600173c21bcb04d8661"
-  dependencies:
-    "@react-native-community/art" "^1.0.1"
-    prop-types "^15.7.2"
 
 react-native-push-notification@^3.0.2:
   version "3.1.2"

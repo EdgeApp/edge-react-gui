@@ -141,7 +141,6 @@
     "react-native-permissions": "1.0.6",
     "react-native-picker": "git://github.com/egodigital/react-native-picker#747c09b",
     "react-native-popup-menu": "0.13.3",
-    "react-native-progress": "https://github.com/EdgeApp/react-native-progress",
     "react-native-push-notification": "^3.0.2",
     "react-native-qrcode": "^0.2.7",
     "react-native-randombytes": "^3.5.0",

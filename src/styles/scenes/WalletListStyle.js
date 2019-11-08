@@ -201,16 +201,7 @@ export const styles = {
     resizeMode: 'contain',
     alignSelf: 'center'
   },
-  rowCurrencyOverlayLogo: {
-    position: 'absolute',
-    top: 12.9,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    marginLeft: scale(2),
-    alignSelf: 'center'
-  },
-  rowCurrencyOverlaySize: scale(24.1),
+  rowCurrencyOverlaySize: scale(22),
   rowCurrencyLogoIOS: {
     height: scale(22),
     width: scale(26),
