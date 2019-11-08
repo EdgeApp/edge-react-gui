@@ -3,7 +3,6 @@
 import { bns } from 'biggystring'
 import React, { Component } from 'react'
 import { ActivityIndicator, Image, TouchableHighlight, View } from 'react-native'
-import { Pie } from 'react-native-progress'
 import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import { connect } from 'react-redux'
@@ -21,6 +20,7 @@ import styles, { styles as styleRaw } from '../../styles/scenes/WalletListStyle.
 import type { State } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo, GuiDenomination } from '../../types/types.js'
 import { decimalOrZero, getFiatSymbol, getObjectDiff, truncateDecimals } from '../../util/utils.js'
+import { ProgressPie } from './ProgressPie.js'
 import WalletListRowOptions from './WalletListRowOptions'
 
 const DIVIDE_PRECISION = 18
@@ -145,7 +145,9 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
             <View style={[styles.rowContent]}>
               <View style={styles.rowIconWrap}>
                 {symbolImageDarkMono && <Image style={[styles.rowCurrencyLogoAndroid]} source={{ uri: symbolImageDarkMono }} resizeMode="cover" />}
-                <Pie size={styles.rowCurrencyOverlaySize} color={'rgba(0, 0, 0, 0.5)'} progress={this.getProgress()} style={styles.rowCurrencyOverlayLogo} />
+                <View style={styles.rowCurrencyLogoAndroid}>
+                  <ProgressPie size={styles.rowCurrencyOverlaySize} color={'rgba(255, 255, 255, 0.75)'} progress={this.getProgress()} />
+                </View>
               </View>
               <View style={[styles.rowNameTextWrapAndroidIos]}>
                 <T style={[styles.rowNameText]} numberOfLines={2} adjustsFontSizeToFit={true} minimumFontScale={0.6}>
