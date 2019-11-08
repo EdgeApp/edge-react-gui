@@ -291,7 +291,7 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
         headerTitle={whichWallet === Constants.TO ? s.strings.select_recv_wallet : s.strings.select_src_wallet}
         excludedTokens={[]}
         noWalletCodes={[]}
-        disableZeroBalance={whichWallet === Constants.FROM}
+        disableZeroBalance={false}
       />
     )).then((response: GuiWallet | Object | null) => {
       if (response) {
