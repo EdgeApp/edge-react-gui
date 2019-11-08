@@ -19,43 +19,28 @@ type LocalState = {}
 
 class CryptoExchangeWalletListTokenRow extends Component<Props, LocalState> {
   onPress = () => {
-    if (this.props.disabled || this.props.parentCryptoBalance === '0') return
+    const isDisabled = this.props.disabled && this.props.parentCryptoBalance === '0'
+    if (isDisabled) return
     this.props.onPress({
       id: this.props.parentId,
       currencyCode: this.props.currencyCode
     })
   }
   render () {
+    const isDisabled =
+      this.props.disabled &&
+      ((this.props.cryptoBalance === '0' && (this.props.fiatBalance === '0' || this.props.fiatBalance === '0.00')) || this.props.parentCryptoBalance === '0')
     return (
       <TouchableHighlight style={styles.touchable} underlayColor={styles.underlayColor} onPress={this.onPress}>
         <View style={styles.containerToken}>
           <View style={styles.containerLeft} />
           <View style={styles.containerCenter}>
-            <FormattedText
-              style={[
-                styles.enabled,
-                this.props.disabled && (this.props.cryptoBalance === '0' || this.props.parentCryptoBalance === '0') && styles.zeroBalance
-              ]}
-            >
-              {this.props.currencyCode}
-            </FormattedText>
+            <FormattedText style={[styles.enabled, isDisabled && styles.zeroBalance]}>{this.props.currencyCode}</FormattedText>
           </View>
           <View style={styles.containerRight}>
             <View style={styles.holderView}>
-              <Text
-                style={[
-                  styles.balanceTextStyle,
-                  this.props.disabled && (this.props.cryptoBalance === '0' || this.props.parentCryptoBalance === '0') && styles.zeroBalance
-                ]}
-              >
-                {this.props.cryptoBalance}
-              </Text>
-              <Text
-                style={[
-                  styles.balanceTextStyle,
-                  this.props.disabled && (this.props.cryptoBalance === '0' || this.props.parentCryptoBalance === '0') && styles.zeroBalance
-                ]}
-              >
+              <Text style={[styles.balanceTextStyle, isDisabled && styles.zeroBalance]}>{this.props.cryptoBalance}</Text>
+              <Text style={[styles.balanceTextStyle, isDisabled && styles.zeroBalance]}>
                 {this.props.fiatSymbol} {this.props.fiatBalance}
               </Text>
             </View>

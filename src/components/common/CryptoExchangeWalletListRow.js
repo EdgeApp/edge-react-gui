@@ -89,7 +89,8 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
     })
   }
   onPress = () => {
-    if (this.props.disableZeroBalance && this.state.cryptoBalance === '0' && this.state.fiatBalance === '0') return
+    const isDisabled = this.props.disableZeroBalance && this.state.cryptoBalance === '0' && this.state.fiatBalance === '0'
+    if (isDisabled) return
     if (!this.props.excludedCurrencyCode.includes(this.props.wallet.currencyCode)) {
       this.props.onPress(this.props.wallet)
     }
@@ -109,7 +110,7 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
             const preliminaryCryptoAmount = truncateDecimals(bns.div(metaTokenBalances[property], multiplier, DIVIDE_PRECISION), 6)
             const cryptoBalance = intl.formatNumber(decimalOrZero(preliminaryCryptoAmount, 6))
             const disabled =
-              this.props.excludedCurrencyCode.includes(property) || (this.props.disableZeroBalance && cryptoBalance === '0' && formattedFiatBalance !== '0')
+              this.props.excludedCurrencyCode.includes(property) || (this.props.disableZeroBalance && cryptoBalance === '0' && formattedFiatBalance === '0')
             if (property !== this.props.excludedCurrencyCode && !this.props.excludedTokens.includes(property)) {
               tokens.push(
                 <CryptoExchangeWalletListTokenRow
@@ -134,6 +135,8 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
   }
   render () {
     const { wallet } = this.props
+    const isDisabled =
+      this.props.disableZeroBalance && (this.state.cryptoBalance === '0' && (this.state.fiatBalance === '0' || this.state.fiatBalance === '0.00'))
     return (
       <View style={styles.container}>
         <TouchableHighlight style={styles.touchable} underlayColor={styles.underlayColor} onPress={this.onPress}>
@@ -142,14 +145,7 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
               <Image style={styles.imageContainer} source={{ uri: wallet.symbolImage }} resizeMode={'contain'} />
             </View>
             <View style={styles.containerCenter}>
-              <FormattedText
-                style={[
-                  styles.enabled,
-                  this.props.disableZeroBalance &&
-                    (this.state.cryptoBalance === '0' && (this.state.fiatBalance === '0' || this.state.fiatBalance === '0.00')) &&
-                    styles.zeroBalance
-                ]}
-              >
+              <FormattedText style={[styles.enabled, isDisabled && styles.zeroBalance]}>
                 {wallet.name} ({wallet.currencyCode})
               </FormattedText>
             </View>
