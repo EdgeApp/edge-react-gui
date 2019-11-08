@@ -2,8 +2,8 @@
 
 import {
   type EdgeDenomination,
-  type EdgeMetaToken,
   type EdgeMetadata,
+  type EdgeMetaToken,
   type EdgeReceiveAddress,
   type EdgeSwapQuote,
   type EdgeSwapRequest,
@@ -231,7 +231,8 @@ export type BuySellPlugin = {
   cryptoCodes?: Array<string>,
   countryCodes?: { [string]: boolean },
   forPlatform?: string,
-  forCountries?: Array<string>
+  forCountries?: Array<string>,
+  addOnUrl?: string // Optional suffix to add to plugin URI
 }
 
 export type CountryData = {

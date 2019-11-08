@@ -1,7 +1,7 @@
 // @flow
 
-import React, { Component } from 'react'
 import type { Node } from 'react'
+import React, { Component } from 'react'
 import { TouchableHighlight, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 

@@ -7,7 +7,7 @@ import EntypoIcon from 'react-native-vector-icons/Entypo'
 
 import s from '../../locales/strings.js'
 import { B, nightText } from '../../styles/common/textStyles.js'
-import { THEME, getHeaderHeight } from '../../theme/variables/airbitz.js'
+import { getHeaderHeight, THEME } from '../../theme/variables/airbitz.js'
 import { type AirshipBridge } from '../common/Airship.js'
 import { AirshipDropdown } from '../common/AirshipDropdown.js'
 

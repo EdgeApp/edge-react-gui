@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component, type Node } from 'react'
+import React, { type Node, Component } from 'react'
 import { Animated, Dimensions, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 
 import { THEME } from '../../theme/variables/airbitz.js'

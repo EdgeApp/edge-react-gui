@@ -3,8 +3,8 @@
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import ChangePinComponent from '../../components/scenes/ChangePinScene'
 import type { ChangePinDispatchProps, ChangePinOwnProps, ChangePinStateProps } from '../../components/scenes/ChangePinScene'
+import ChangePinComponent from '../../components/scenes/ChangePinScene'
 import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
 import type { State } from '../../types/reduxTypes.js'
 

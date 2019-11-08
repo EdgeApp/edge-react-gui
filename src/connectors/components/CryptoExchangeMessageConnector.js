@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
 
 import s from '../../locales/strings.js'
-import { CryptoExchangeMessageBoxComponent, type Props } from '../../modules/UI/components/CryptoExchangeMessageBox/CryptoExchangeMessageBoxComponent'
+import { type Props, CryptoExchangeMessageBoxComponent } from '../../modules/UI/components/CryptoExchangeMessageBox/CryptoExchangeMessageBoxComponent'
 import type { State } from '../../types/reduxTypes.js'
 
 type OwnProps = {

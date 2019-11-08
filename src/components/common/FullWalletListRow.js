@@ -20,6 +20,7 @@ import styles, { styles as styleRaw } from '../../styles/scenes/WalletListStyle.
 import type { State } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo, GuiDenomination } from '../../types/types.js'
 import { decimalOrZero, getFiatSymbol, getObjectDiff, truncateDecimals } from '../../util/utils.js'
+import { ProgressPie } from './ProgressPie.js'
 import WalletListRowOptions from './WalletListRowOptions'
 
 const DIVIDE_PRECISION = 18
@@ -54,7 +55,8 @@ export type FullWalletListRowLoadedStateProps = {
   fiatSymbol: string,
   isWalletFiatBalanceVisible: boolean,
   settings: Object,
-  exchangeRates: { [string]: number }
+  exchangeRates: { [string]: number },
+  walletsProgress: Object
 }
 
 export type FullWalletListRowLoadedOwnProps = {
@@ -143,6 +145,9 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
             <View style={[styles.rowContent]}>
               <View style={styles.rowIconWrap}>
                 {symbolImageDarkMono && <Image style={[styles.rowCurrencyLogoAndroid]} source={{ uri: symbolImageDarkMono }} resizeMode="cover" />}
+                <View style={styles.rowCurrencyLogoAndroid}>
+                  <ProgressPie size={styles.rowCurrencyOverlaySize} color={'rgba(255, 255, 255, 0.75)'} progress={this.getProgress()} />
+                </View>
               </View>
               <View style={[styles.rowNameTextWrapAndroidIos]}>
                 <T style={[styles.rowNameText]} numberOfLines={2} adjustsFontSizeToFit={true} minimumFontScale={0.6}>
@@ -198,6 +203,23 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
     }
     return tokens
   }
+
+  getProgress = () => {
+    const { data } = this.props
+    const walletId = data.item ? data.item.id : null
+    const walletProgress = walletId ? this.props.walletsProgress[walletId] : 1
+
+    if (walletProgress === 1) {
+      return 1
+    }
+    if (walletProgress < 0.1) {
+      return 0.1
+    }
+    if (walletProgress > 0.95) {
+      return 0.95
+    }
+    return walletProgress
+  }
 }
 const mapStateToProps = (state: State, ownProps: FullWalletListRowLoadedOwnProps): FullWalletListRowLoadedStateProps => {
   const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, ownProps.data.item.currencyCode)
@@ -206,6 +228,7 @@ const mapStateToProps = (state: State, ownProps: FullWalletListRowLoadedOwnProps
   const fiatSymbol = getFiatSymbol(settings.defaultFiat) || ''
   const customTokens = settings.customTokens
   const isWalletFiatBalanceVisible = settings.isWalletFiatBalanceVisible
+  const walletsProgress = state.ui.wallets.walletLoadingProgress
   return {
     displayDenomination,
     exchangeDenomination,
@@ -213,7 +236,8 @@ const mapStateToProps = (state: State, ownProps: FullWalletListRowLoadedOwnProps
     fiatSymbol,
     isWalletFiatBalanceVisible,
     settings,
-    exchangeRates: state.exchangeRates
+    exchangeRates: state.exchangeRates,
+    walletsProgress
   }
 }
 const mapDispatchToProps = dispatch => ({

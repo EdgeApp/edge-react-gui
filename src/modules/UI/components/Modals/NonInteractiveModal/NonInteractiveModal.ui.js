@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component, type Node } from 'react'
+import React, { type Node, Component } from 'react'
 import { Dimensions, Platform, StyleSheet, Text, View } from 'react-native'
 import { default as Modal } from 'react-native-modal'
 

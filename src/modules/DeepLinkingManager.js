@@ -7,11 +7,11 @@ import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 import parse from 'url-parse'
 
-import type { Dispatch } from './../types/reduxTypes.js'
 import { selectWallet } from '../actions/WalletActions.js'
 import { PLUGIN_VIEW_DEEP, SCAN } from '../constants/indexConstants.js'
 import { pluginUrlMap } from '../constants/plugins/buySellPlugins.js'
 import s from '../locales/strings.js'
+import type { Dispatch } from './../types/reduxTypes.js'
 
 type DeepLinkingManagerStateProps = {
   totalWalletCount: number,

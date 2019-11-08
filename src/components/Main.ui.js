@@ -158,7 +158,7 @@ export default class Main extends Component<Props> {
   }
 
   componentDidMount () {
-    trackEvent('Start_App')
+    trackEvent('AppStart')
 
     Linking.getInitialURL()
       .then(url => {

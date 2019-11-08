@@ -1,7 +1,7 @@
 // @flow
 
 import { type EdgeCurrencyWallet } from 'edge-core-js/types'
-import React, { Component, type Node } from 'react'
+import React, { type Node, Component } from 'react'
 import { ScrollView, Text, TouchableWithoutFeedback, View } from 'react-native'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 import { connect } from 'react-redux'

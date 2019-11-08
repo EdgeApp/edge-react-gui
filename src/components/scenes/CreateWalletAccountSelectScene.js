@@ -100,7 +100,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
   }
 
   componentDidMount () {
-    trackEvent('Activate_Wallet_Select')
+    trackEvent('ActivateWalletSelect')
   }
 
   onBack = () => {

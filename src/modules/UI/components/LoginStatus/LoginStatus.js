@@ -1,7 +1,7 @@
 // @flow
 
-import React from 'react'
 import type { ComponentType } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 
 import { getLoginStatus } from '../../../Settings/selectors.js'

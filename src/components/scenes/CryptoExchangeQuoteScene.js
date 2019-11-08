@@ -54,7 +54,7 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
     } else if (pluginName === 'foxExchange') {
       this.checkFoxExchangeKYC().catch(showError)
     }
-    trackEvent('Exchange_Shift_Quote')
+    trackEvent('SwapQuote')
   }
 
   componentWillUnmount () {

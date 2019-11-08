@@ -3,8 +3,8 @@
 import { connect } from 'react-redux'
 
 import { setWalletEnabledTokens } from '../../actions/WalletActions.js'
-import ManageTokens from '../../components/scenes/ManageTokensScene.js'
 import type { ManageTokensDispatchProps, ManageTokensOwnProps, ManageTokensStateProps } from '../../components/scenes/ManageTokensScene.js'
+import ManageTokens from '../../components/scenes/ManageTokensScene.js'
 import type { State } from '../../types/reduxTypes.js'
 
 const mapStateToProps = (state: State, ownProps: ManageTokensOwnProps): ManageTokensStateProps => ({

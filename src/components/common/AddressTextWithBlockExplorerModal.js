@@ -1,8 +1,8 @@
 // @flow
 
 import { createYesNoModal } from 'edge-components'
-import React from 'react'
 import type { Node } from 'react'
+import React from 'react'
 import { Alert, Linking, TouchableOpacity } from 'react-native'
 import { sprintf } from 'sprintf-js'
 

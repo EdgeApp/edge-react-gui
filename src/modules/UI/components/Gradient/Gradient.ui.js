@@ -1,7 +1,7 @@
 // @flow
 
-import React, { Component } from 'react'
 import type { Node } from 'react'
+import React, { Component } from 'react'
 import { StyleSheet } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 

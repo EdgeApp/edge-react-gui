@@ -1,13 +1,13 @@
 // @flow
 
-import React, { Component, type Node } from 'react'
+import React, { type Node, Component } from 'react'
 import { Animated, BackHandler, Dimensions, StyleSheet, TouchableWithoutFeedback } from 'react-native'
 
 import { THEME } from '../../theme/variables/airbitz.js'
 import { scale } from '../../util/scaling.js'
 import { type AirshipBallast } from './Airship.js'
 import { KeyboardTracker } from './KeyboardTracker.js'
-import { LayoutContext, type SafeAreaGap } from './LayoutContext.js'
+import { type SafeAreaGap, LayoutContext } from './LayoutContext.js'
 
 type Props = {
   bridge: AirshipBallast,

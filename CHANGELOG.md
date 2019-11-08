@@ -1,5 +1,13 @@
 # edge-react-gui
 
+## 1.10.2
+
+- Improve EOS & Ethereum connectivity.
+- Fix spends from large UFO & other non-Bitcoin wallets.
+- Add visual indication for syncing wallets.
+- Improve wallet selector search.
+- Add Banxa GB support.
+
 ## 1.10.1
 
 - Add KYC notices for Fox Exchange & CoinSwitch.

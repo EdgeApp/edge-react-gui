@@ -176,11 +176,12 @@ class PluginView extends React.Component<Props> {
   }
 
   render () {
-    const { uri, originWhitelist = ['file://*', 'https://*', 'http://*', 'edge://*'] } = this.props.plugin
+    const { uri, addOnUrl = '', originWhitelist = ['file://*', 'https://*', 'http://*', 'edge://*'] } = this.props.plugin
     const userAgent =
       Platform.OS === 'android'
         ? 'Mozilla/5.0 (Linux; U; Android 4.4.2; en-us; SCH-I535 Build/KOT49H) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30'
         : 'Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_1 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Version/10.0 Mobile/14E304 Safari/602.1'
+    const expandedUri = `${uri}${addOnUrl}`
 
     return (
       <SceneWrapper background="body" hasTabs={false}>
@@ -196,7 +197,7 @@ class PluginView extends React.Component<Props> {
           originWhitelist={originWhitelist}
           ref={this._callbacks.setRef}
           setWebContentsDebuggingEnabled={true}
-          source={{ uri }}
+          source={{ uri: expandedUri }}
           userAgent={userAgent + ' hasEdgeProvider edge/app.edge.'}
           useWebKit
         />

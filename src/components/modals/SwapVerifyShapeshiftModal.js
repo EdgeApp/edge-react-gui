@@ -6,7 +6,7 @@ import { Image, Linking, Text } from 'react-native'
 import { swapPluginIcons, swapPluginLogos } from '../../assets/images/exchange'
 import s from '../../locales/strings'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
-import { type AirshipBridge, AirshipModal, ContentArea, IconCircle, ModalCloseArrow, THEME, dayText } from './modalParts.js'
+import { type AirshipBridge, AirshipModal, ContentArea, dayText, IconCircle, ModalCloseArrow, THEME } from './modalParts.js'
 
 type Props = {
   bridge: AirshipBridge<boolean>

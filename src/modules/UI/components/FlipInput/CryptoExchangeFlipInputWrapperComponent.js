@@ -7,8 +7,8 @@ import * as Constants from '../../../../constants/indexConstants'
 import type { GuiCurrencyInfo, GuiWallet } from '../../../../types/types.js'
 import { TextAndIconButton } from '../Buttons'
 import { WalletNameHeader } from '../Header/Component/WalletNameHeader.ui'
-import { ExchangedFlipInput } from './ExchangedFlipInput2.js'
 import type { ExchangedFlipInputAmounts } from './ExchangedFlipInput2.js'
+import { ExchangedFlipInput } from './ExchangedFlipInput2.js'
 
 export type Props = {
   style: StyleSheet.Styles,

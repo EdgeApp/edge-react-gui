@@ -1,12 +1,12 @@
 // @flow
 
-import React, { Component, type Node } from 'react'
+import React, { type Node, Component } from 'react'
 import { Animated, StyleSheet, View } from 'react-native'
 
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
-import { THEME, getHeaderHeight } from '../../theme/variables/airbitz.js'
+import { getHeaderHeight, THEME } from '../../theme/variables/airbitz.js'
 import { KeyboardTracker } from './KeyboardTracker.js'
-import { LayoutContext, type SafeAreaGap } from './LayoutContext.js'
+import { type SafeAreaGap, LayoutContext } from './LayoutContext.js'
 
 type BackgroundOptions =
   | 'header' // Header area covers the screen (default)
