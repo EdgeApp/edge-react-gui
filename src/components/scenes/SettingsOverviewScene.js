@@ -1,6 +1,7 @@
 // @flow
 
 import type { EdgeAccount } from 'edge-core-js'
+import { getSupportedBiometryType } from 'edge-login-ui-rn'
 import React, { Component } from 'react'
 import { ScrollView, Text, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -83,6 +84,33 @@ export default class SettingsOverview extends Component<Props> {
         text: pluginName.charAt(0).toUpperCase() + pluginName.slice(1),
         routeFunction: Actions[currencyKey]
       })
+    }
+  }
+
+  async componentDidMount () {
+    if (!this.props.supportsTouchId) {
+      return null
+    }
+    try {
+      const biometryType = await getSupportedBiometryType()
+      switch (biometryType) {
+        case 'FaceID':
+          this.options.useTouchID.text = s.strings.settings_button_use_faceID
+          this.forceUpdate()
+          return null
+        case 'TouchID':
+          this.options.useTouchID.text = s.strings.settings_button_use_touchID
+          this.forceUpdate()
+          return null
+        case 'Fingerprint':
+          this.options.useTouchID.text = s.strings.settings_button_use_biometric
+          this.forceUpdate()
+          return null
+        default:
+          return null
+      }
+    } catch (error) {
+      console.log(error)
     }
   }
 
