@@ -325,6 +325,7 @@
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/05/icon_black_small.png",
     "countryCodes": {
       "AT": true,
+      "AU": true,
       "BE": true,
       "BG": true,
       "BR": true,
