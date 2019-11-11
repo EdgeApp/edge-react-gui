@@ -13,14 +13,12 @@ import type { Dispatch, State } from '../types/reduxTypes.js'
 const mapStateToProps = (state: State, ownProps): StateProps => {
   const currencyCode: string = ownProps.currencyCode
   const settings = state.ui.settings
-  const isWalletFiatBalanceVisible = settings.isWalletFiatBalanceVisible
   const exchangeRates = state.exchangeRates
   const displayDenomination: EdgeDenomination = SETTINGS_SELECTORS.getDisplayDenominationFull(state, currencyCode)
   const wallet = getWallet(state, ownProps.parentId)
 
   return {
     displayDenomination,
-    isWalletFiatBalanceVisible,
     wallet,
     currencyCode,
     settings,

@@ -30,7 +30,6 @@ export const initialState = {
   confirmPasswordError: '',
   sendLogsStatus: Constants.REQUEST_STATUS.PENDING,
   isAccountBalanceVisible: true,
-  isWalletFiatBalanceVisible: false,
   spendingLimits: {
     transaction: {
       isEnabled: false,
@@ -93,7 +92,6 @@ export type SettingsState = {
   confirmPasswordError: string,
   sendLogsStatus: string,
   isAccountBalanceVisible: boolean,
-  isWalletFiatBalanceVisible: boolean,
   spendingLimits: {
     transaction: {
       isEnabled: boolean,
@@ -212,7 +210,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         denominationKeys,
         customTokensSettings,
         isAccountBalanceVisible,
-        isWalletFiatBalanceVisible,
         passwordRecoveryRemindersShown,
         developerModeOn
       } = action.data
@@ -236,7 +233,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         otpMode,
         otpResetDate: account.otpResetDate,
         isAccountBalanceVisible,
-        isWalletFiatBalanceVisible,
         passwordRecoveryRemindersShown,
         developerModeOn
       }
@@ -552,14 +548,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       return {
         ...state,
         isAccountBalanceVisible: action.data.isAccountBalanceVisible
-      }
-    }
-
-    case 'UPDATE_WALLET_FIAT_BALANCE_VISIBILITY': {
-      if (!action.data) throw new Error('Invalid action')
-      return {
-        ...state,
-        isWalletFiatBalanceVisible: action.data.isWalletFiatBalanceVisible
       }
     }
 

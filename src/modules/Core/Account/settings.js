@@ -367,13 +367,6 @@ export const setAccountBalanceVisibility = (account: EdgeAccount, isAccountBalan
   })
 }
 
-export const setWalletFiatBalanceVisibility = (account: EdgeAccount, isWalletFiatBalanceVisible: boolean) => {
-  return getLocalSettings(account).then(settings => {
-    const updatedSettings = updateSettings(settings, { isWalletFiatBalanceVisible })
-    return setLocalSettings(account, updatedSettings)
-  })
-}
-
 export const setDeveloperModeOn = (account: EdgeAccount, developerModeOn: boolean) => {
   return getLocalSettings(account).then(settings => {
     const updatedSettings = updateSettings(settings, { developerModeOn })

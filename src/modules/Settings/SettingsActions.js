@@ -79,8 +79,3 @@ export const setAccountBalanceVisibility = (isAccountBalanceVisible: boolean) =>
   type: 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY',
   data: { isAccountBalanceVisible }
 })
-
-export const updateWalletFiatBalanceVisibility = (isWalletFiatBalanceVisible: boolean) => ({
-  type: 'UPDATE_WALLET_FIAT_BALANCE_VISIBILITY',
-  data: { isWalletFiatBalanceVisible }
-})

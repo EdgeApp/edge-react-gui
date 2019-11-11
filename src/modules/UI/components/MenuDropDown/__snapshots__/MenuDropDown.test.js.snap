@@ -51,7 +51,7 @@ exports[`MenuDropDown component should render with standard props 1`] = `
           Object {
             "alignItems": "center",
             "height": "100%",
-            "justifyContent": "center",
+            "justifyContent": "flex-start",
             "width": 64.61056338028169,
           }
         }
@@ -59,8 +59,8 @@ exports[`MenuDropDown component should render with standard props 1`] = `
         <Text
           style={
             Object {
-              "color": "#4A5157",
               "fontSize": 28.091549295774648,
+              "fontWeight": 200,
             }
           }
         >

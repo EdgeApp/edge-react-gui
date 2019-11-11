@@ -29,7 +29,7 @@ import THEME from '../../theme/variables/airbitz'
 import type { GuiWalletType } from '../../types/types.js'
 import { type DeviceDimensions } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
-import { getFiatSymbol, getObjectDiff, getTotalFiatAmountFromExchangeRates } from '../../util/utils'
+import { getObjectDiff, getTotalFiatAmountFromExchangeRates } from '../../util/utils'
 import FullWalletListRow from '../common/FullWalletListRow.js'
 import { launchModal } from '../common/ModalProvider.js'
 import SortableWalletListRow from '../common/SortableWalletListRow.js'
@@ -67,10 +67,7 @@ type Props = {
   disableOtp: () => void,
   keepOtp: () => void,
   toggleAccountBalanceVisibility: () => void,
-  toggleWalletFiatBalanceVisibility: () => void,
   isAccountBalanceVisible: boolean,
-  isWalletFiatBalanceVisible: boolean,
-  defaultFiat: string,
   ethereumWalletType?: GuiWalletType,
   exchangeRates: Object
 }
@@ -134,12 +131,8 @@ export default class WalletList extends Component<Props, State> {
     }
   }
 
-  onFiatSwitchToggle = () => {
-    this.props.toggleWalletFiatBalanceVisibility()
-  }
-
   render () {
-    const { wallets, activeWalletIds, defaultFiat } = this.props
+    const { wallets, activeWalletIds } = this.props
     const walletsArray = []
     const activeWallets = {}
     for (const wallet in wallets) {
@@ -160,7 +153,6 @@ export default class WalletList extends Component<Props, State> {
       const tempWalletObj = wallets[x] ? wallets[x] : { key: null }
       activeWalletsObject[x] = tempWalletObj
     })
-    const fiatSymbol = defaultFiat ? getFiatSymbol(defaultFiat) : ''
 
     return (
       <SafeAreaView>
@@ -210,10 +202,8 @@ export default class WalletList extends Component<Props, State> {
                       }
                     ]}
                   >
-                    <TouchableOpacity style={styles.fiatToggleWrap} onPress={this.onFiatSwitchToggle}>
-                      <T style={styles.toggleFiatText}>{this.props.isWalletFiatBalanceVisible ? s.strings.fragment_wallets_crypto_toggle_title : fiatSymbol}</T>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={[styles.walletsBoxHeaderAddWallet, { width: 41 }]} onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]}>
+                    <View style={styles.plusSpacer} />
+                    <TouchableOpacity style={[styles.walletsBoxHeaderAddWallet]} onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]}>
                       <Ionicon name="md-add" style={[styles.dropdownIcon]} size={28} color="white" />
                     </TouchableOpacity>
                   </Animated.View>
@@ -278,11 +268,11 @@ export default class WalletList extends Component<Props, State> {
   }
 
   renderRow = (row: Object) => {
-    return <SortableWalletListRow data={row} dimensions={this.props.dimensions} />
+    return <SortableWalletListRow data={row} showBalance={getIsAccountBalanceVisible} dimensions={this.props.dimensions} />
   }
 
   renderItem = (item: Object) => {
-    return <FullWalletListRow data={item} customTokens={this.props.customTokens} />
+    return <FullWalletListRow data={item} showBalance={getIsAccountBalanceVisible} customTokens={this.props.customTokens} />
   }
 
   renderActiveSortableList = (activeWalletsArray: Array<{ key: string }>, activeWalletsObject: {}) => {
