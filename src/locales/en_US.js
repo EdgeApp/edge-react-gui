@@ -528,7 +528,7 @@ const strings = {
   trying_to_find: 'Searching for the best exchange rate...',
   exchange_will_be_sent: '%1$s %2$s will be sent',
   exchange_will_be_received: '%1$s %2$s will be received',
-  mining_fee: 'Mining Fee',
+  mining_fee: 'Maximum network fee',
   confirm_to_complete_exchange: 'Confirm to complete your exchange.',
   kyc_title: 'Customer Information Needed',
   kyc_message: 'The available exchange for this transaction requires a ShapeShift account. Please create an account to continue.',
