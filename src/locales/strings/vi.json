@@ -489,7 +489,7 @@
   "trying_to_find": "Tìm kiếm tỷ giá hối đoái tốt nhất...",
   "exchange_will_be_sent": "%1$s%2$s sẽ được gửi",
   "exchange_will_be_received": "%1$s%2$s sẽ được nhận",
-  "mining_fee": "Phí giao dịch",
+  "mining_fee": "",
   "confirm_to_complete_exchange": "Xác nhận để hoàn tất giao dịch của bạn.",
   "kyc_title": "Thông tin khách hàng",
   "kyc_message": "Việc trao đổi có sẵn cho giao dịch này yêu cầu tài khoản ShapeShift. Vui lòng tạo một tài khoản để tiếp tục.",
