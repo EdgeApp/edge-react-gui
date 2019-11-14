@@ -489,7 +489,7 @@
   "trying_to_find": "ベストな為替レート検索をしています...",
   "exchange_will_be_sent": "%1$s %2$s が送信されます",
   "exchange_will_be_received": "%1$s %2$s が受信されます",
-  "mining_fee": "マイニング手数料",
+  "mining_fee": "",
   "confirm_to_complete_exchange": "取引を完了するために確認してください",
   "kyc_title": "お客様情報が必要です",
   "kyc_message": "その利用可能な為替取引にはShapeShiftアカウントが必要です。続けるにはアカウントを作成してください。",
