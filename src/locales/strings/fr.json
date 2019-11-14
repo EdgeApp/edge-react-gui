@@ -489,7 +489,7 @@
   "trying_to_find": " Recherche du meilleure taux de change.......",
   "exchange_will_be_sent": "%1$d %2$s seront effectués",
   "exchange_will_be_received": "%1$d %2$s seront reçus",
-  "mining_fee": "Frais du mining",
+  "mining_fee": "",
   "confirm_to_complete_exchange": "Confirmer la finalisation de votre echange ",
   "kyc_title": "Obligatoire de mettre l'information client ",
   "kyc_message": "Il est demandé d'avoir le compte de ShapeShift pour cette transaction à l'échange disponible ",
