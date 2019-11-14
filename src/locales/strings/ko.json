@@ -489,7 +489,7 @@
   "trying_to_find": "최고의 거래율을 검색중...",
   "exchange_will_be_sent": "%1$s %2$s 가 송신됩니다.",
   "exchange_will_be_received": "%1$s %2$s 가 수신됩니다.",
-  "mining_fee": "채굴 수수료",
+  "mining_fee": "",
   "confirm_to_complete_exchange": "거래를 완료하려면 확인을 누르십시오.",
   "kyc_title": "고객 정보가 필요합니다.",
   "kyc_message": "이 거래가 가능한 거래소에서는 ShapeShift계정이 필요합니다. 계속하려면 계정을 작성하십시오.",
