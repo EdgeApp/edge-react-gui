@@ -489,7 +489,7 @@
   "trying_to_find": "Auf der Suche nach dem besten Wechselkurs...",
   "exchange_will_be_sent": "%1$s %2$s werden gesendet",
   "exchange_will_be_received": "%1$s %2$s werden empfangen",
-  "mining_fee": "Miner-Gebühr",
+  "mining_fee": "",
   "confirm_to_complete_exchange": "Bestätigen Sie, um Ihren Umtausch abzuschließen.",
   "kyc_title": "Kundeninformationen erforderlich",
   "kyc_message": "Der verfügbare Tausch für diese Transaktion erfordert ein ShapeShift-Konto. Bitte erstellen Sie ein Konto, um fortzufahren.",
