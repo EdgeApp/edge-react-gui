@@ -71,7 +71,6 @@ exports[`MenuDropDown component should render without props 1`] = `
             "flex": 1,
             "flexDirection": "row",
             "height": 56.183098591549296,
-            "justifyContent": "space-between",
           },
         ]
       }
@@ -79,7 +78,6 @@ exports[`MenuDropDown component should render without props 1`] = `
       <View
         style={
           Object {
-            "flex": 25,
             "flexDirection": "row",
           }
         }
@@ -109,13 +107,28 @@ exports[`MenuDropDown component should render without props 1`] = `
             }
           />
         </View>
+      </View>
+      <View
+        style={
+          Array [
+            Object {
+              "flex": 1,
+              "flexDirection": "column",
+              "height": "100%",
+              "justifyContent": "center",
+              "width": "100%",
+            },
+          ]
+        }
+      >
         <View
           style={
             Array [
               Object {
-                "flex": 10,
-                "justifyContent": "center",
+                "flexDirection": "row",
+                "width": "100%",
               },
+              null,
             ]
           }
         >
@@ -125,9 +138,7 @@ exports[`MenuDropDown component should render without props 1`] = `
             style={
               Array [
                 Object {
-                  "color": "#4A5157",
-                  "fontSize": 22.473239436619718,
-                  "textAlignVertical": "center",
+                  "flex": 1,
                 },
               ]
             }
@@ -136,72 +147,53 @@ exports[`MenuDropDown component should render without props 1`] = `
           </FormattedText>
           <FormattedText
             style={
+              Object {
+                "color": "#E85466",
+              }
+            }
+          >
+            - 
+            ‎ɱ
+             
+            32.295514
+          </FormattedText>
+        </View>
+        <View
+          style={
+            Array [
+              Object {
+                "flexDirection": "row",
+                "width": "100%",
+              },
+            ]
+          }
+        >
+          <FormattedText
+            style={
               Array [
                 Object {
-                  "fontSize": 16.854929577464787,
-                  "position": "relative",
-                  "textAlignVertical": "bottom",
-                  "top": 5.618309859154929,
-                },
-                Object {
-                  "color": "#F1AA19",
+                  "color": "#0E507D",
+                  "flex": 1,
+                  "fontSize": 12,
                 },
               ]
             }
           >
             Synchronizing
           </FormattedText>
+          <FormattedText
+            style={
+              Array [
+                Object {
+                  "color": "#0E507D",
+                  "fontSize": 12,
+                },
+              ]
+            }
+          >
+            $ 0.00
+          </FormattedText>
         </View>
-      </View>
-      <View
-        style={
-          Array [
-            Object {
-              "alignItems": "flex-end",
-              "flex": 10,
-              "justifyContent": "center",
-            },
-          ]
-        }
-      >
-        <FormattedText
-          style={
-            Array [
-              Object {
-                "fontSize": 22.473239436619718,
-                "textAlignVertical": "center",
-              },
-              Object {
-                "color": "#E85466",
-              },
-              Object {
-                "fontFamily": "SourceSansPro-Black",
-              },
-            ]
-          }
-        >
-          ‎ɱ
-           
-          32.295514
-        </FormattedText>
-        <FormattedText
-          style={
-            Array [
-              Object {
-                "color": "#87939E",
-                "fontSize": 16.854929577464787,
-                "position": "relative",
-                "textAlignVertical": "center",
-                "top": 5.618309859154929,
-              },
-              Object {
-                "color": "#E85466",
-              },
-            ]
-          }
-        >
-          $ 0.00
-        </FormattedText>
       </View>
     </View>
   </TouchableHighlight>

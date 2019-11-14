@@ -70,7 +70,7 @@ export class TransactionRowComponent extends Component<Props, State> {
       tx.metadata.name = ''
     }
 
-    let txColorStyle, lastOfDate, txImage, pendingTimeStyle, pendingTimeSyntax, transactionPartner
+    let lastOfDate, txImage, pendingTimeSyntax, transactionPartner
     let txName = ''
     let thumbnailPath = ''
 
@@ -80,11 +80,9 @@ export class TransactionRowComponent extends Component<Props, State> {
     }
     if (UTILS.isSentTransaction(tx)) {
       // XXX -paulvp Why is this hard coded here?
-      txColorStyle = styles.accentRed
       txName = SENT_TEXT + currencyName
       txImage = sentTypeImage
     } else {
-      txColorStyle = styles.accentGreen
       txName = RECEIVED_TEXT + currencyName
       txImage = receivedTypeImage
     }
@@ -134,19 +132,14 @@ export class TransactionRowComponent extends Component<Props, State> {
 
     if (walletBlockHeight === 0) {
       pendingTimeSyntax = s.strings.fragment_transaction_list_tx_synchronizing
-      pendingTimeStyle = styles.transactionPartialConfirmation
     } else if (tx.blockHeight < 0) {
       pendingTimeSyntax = s.strings.fragment_transaction_list_tx_dropped
-      pendingTimeStyle = styles.transactionPartialConfirmation
     } else if (currentConfirmations <= 0) {
       // if completely unconfirmed or wallet uninitialized, or wallet lagging behind (tx block height larger than wallet block height)
-      pendingTimeStyle = styles.transactionPending
       pendingTimeSyntax = UNCONFIRMED_TRANSACTION
     } else if (currentConfirmations < requiredConfirmations) {
-      pendingTimeStyle = styles.transactionPartialConfirmation
       pendingTimeSyntax = sprintf(CONFIRMATION_PROGRESS_TEXT, currentConfirmations, requiredConfirmations)
     } else {
-      pendingTimeStyle = styles.transactionTime
       pendingTimeSyntax = tx.time
     }
 
@@ -155,6 +148,22 @@ export class TransactionRowComponent extends Component<Props, State> {
     } else {
       transactionPartner = txName
     }
+    const transactionAmountString = () => {
+      if (UTILS.isSentTransaction(tx)) {
+        return (
+          <T style={styles.transactionDetailsSentTx}>
+            - {this.props.displayDenomination.symbol} {amountString}
+          </T>
+        )
+      }
+      return (
+        <T style={styles.transactionDetailsReceivedTx}>
+          + {this.props.displayDenomination.symbol} {amountString}
+        </T>
+      )
+    }
+    const transactionMeta = tx ? tx.metadata : null
+    const transactionCategory = transactionMeta ? transactionMeta.category : null
     const out = (
       <View style={[styles.singleTransactionWrap]}>
         {(tx.key === 0 || tx.dateString !== completedTxList[tx.key - 1].dateString) && (
@@ -178,20 +187,24 @@ export class TransactionRowComponent extends Component<Props, State> {
                   <Image style={styles.transactionLogo} source={txImage} />
                 )}
               </View>
-
-              <View style={[styles.transactionLeftTextWrap]}>
-                <T style={[styles.transactionPartner]} adjustsFontSizeToFit={true} minimumFontScale={0.6}>
-                  {transactionPartner}
-                </T>
-                <T style={[styles.transactionTimePendingArea, pendingTimeStyle]}>{pendingTimeSyntax}</T>
-              </View>
             </View>
 
             <View style={[styles.transactionRight]}>
-              <T style={[styles.transactionBitAmount, txColorStyle, styles.symbol]}>
-                {this.props.displayDenomination.symbol} {amountString}
-              </T>
-              <T style={[styles.transactionDollarAmount, txColorStyle]}>{fiatSymbol + ' ' + fiatAmountString}</T>
+              <View style={[styles.transactionDetailsRow, transactionCategory ? styles.transactionDetailsRowMargin : null]}>
+                <T style={[styles.transactionPartner]} adjustsFontSizeToFit={true} minimumFontScale={0.6}>
+                  {transactionPartner}
+                </T>
+                {transactionAmountString()}
+              </View>
+              <View style={[styles.transactionDetailsRow]}>
+                <T style={[styles.transactionCategory]}>{transactionCategory || pendingTimeSyntax}</T>
+                <T style={[styles.transactionFiat]}>{`${fiatSymbol} ${fiatAmountString}`}</T>
+              </View>
+              {transactionCategory ? (
+                <View style={[styles.transactionDetailsRow, styles.transactionDetailsRowMargin]}>
+                  <T style={[styles.transactionPendingTime]}>{pendingTimeSyntax}</T>
+                </View>
+              ) : null}
             </View>
           </View>
         </TouchableHighlight>
