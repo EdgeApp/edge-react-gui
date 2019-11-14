@@ -14,7 +14,7 @@ export function registerFioAddress () {
     const { account } = state.core
 
     return showActivity(s.strings.preparing_fio_wallet, getFioAddress(account, defaultFiat)).then(fioAddress => {
-      Linking.openURL(`https://addresses.fio.foundation/fiorequest/edge/${fioAddress}`)
+      Linking.openURL(`https://giveaway.fio.foundation/?referrer=edge&fpk=${fioAddress}`)
     }, showError)
   }
 }
