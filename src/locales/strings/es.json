@@ -489,7 +489,7 @@
   "trying_to_find": "Buscando el mejor tipo de cambio...",
   "exchange_will_be_sent": "%1$s%2$s serán enviados",
   "exchange_will_be_received": "%1$s %2$s serán recibidos",
-  "mining_fee": "Comisión de minado",
+  "mining_fee": "",
   "confirm_to_complete_exchange": "Confirma para completar el cambio.",
   "kyc_title": "La información del cliente es necesaria",
   "kyc_message": "La casa de cambio disponible para esta transacción requiere una cuenta de Shapeshift. Por favor crea una cuenta para continuar.",
