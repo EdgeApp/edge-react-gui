@@ -1,5 +1,6 @@
 // @flow
 
+import { bns } from 'biggystring'
 import { createSimpleConfirmModal } from 'edge-components'
 import type { EdgeCurrencyWallet, EdgeMetadata, EdgeNetworkFee, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
 import React from 'react'
@@ -313,7 +314,7 @@ export class EdgeProvider extends Bridgeable {
         pluginId: this._pluginId,
         account: CORE_SELECTORS.getAccount(this._state),
         currencyCode: transaction.currencyCode,
-        exchangeAmount: Number(exchangeAmount)
+        exchangeAmount: Number(bns.abs(exchangeAmount))
       })
     }
     return transaction
@@ -355,7 +356,7 @@ export class EdgeProvider extends Bridgeable {
         pluginId: this._pluginId,
         account: CORE_SELECTORS.getAccount(this._state),
         currencyCode: transaction.currencyCode,
-        exchangeAmount: Number(exchangeAmount)
+        exchangeAmount: Number(bns.abs(exchangeAmount))
       })
     }
     return transaction
