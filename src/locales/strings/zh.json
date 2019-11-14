@@ -489,7 +489,7 @@
   "trying_to_find": "寻找最佳汇率......",
   "exchange_will_be_sent": "%1$s %2$s将会被发出",
   "exchange_will_be_received": "您将会收取 %1$s %2$s",
-  "mining_fee": "挖矿费用",
+  "mining_fee": "",
   "confirm_to_complete_exchange": "确认以完成您的交易。",
   "kyc_title": "需要客户信息",
   "kyc_message": "此交易记录需要一个 shapeshift 帐户。请创建一个帐户以继续。",
