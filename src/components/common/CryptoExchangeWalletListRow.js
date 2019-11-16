@@ -89,7 +89,7 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
     })
   }
   onPress = () => {
-    const isDisabled = this.props.disableZeroBalance && this.state.cryptoBalance === '0' && this.state.fiatBalance === '0'
+    const isDisabled = this.props.disableZeroBalance && this.state.cryptoBalance === '0'
     if (isDisabled) return
     if (!this.props.excludedCurrencyCode.includes(this.props.wallet.currencyCode)) {
       this.props.onPress(this.props.wallet)
@@ -108,9 +108,11 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
             }
             const multiplier = this.state.denomination.multiplier
             const preliminaryCryptoAmount = truncateDecimals(bns.div(metaTokenBalances[property], multiplier, DIVIDE_PRECISION), 6)
-            const cryptoBalance = intl.formatNumber(decimalOrZero(preliminaryCryptoAmount, 6))
-            const disabled =
-              this.props.excludedCurrencyCode.includes(property) || (this.props.disableZeroBalance && cryptoBalance === '0' && formattedFiatBalance === '0')
+            let cryptoBalance = intl.formatNumber(decimalOrZero(preliminaryCryptoAmount, 6))
+            if (cryptoBalance === '0' && this.props.wallet.nativeBalances[property] !== '0') {
+              cryptoBalance = this.props.wallet.nativeBalances[property]
+            }
+            const disabled = this.props.excludedCurrencyCode.includes(property) || (this.props.disableZeroBalance && cryptoBalance === '0')
             if (property !== this.props.excludedCurrencyCode && !this.props.excludedTokens.includes(property)) {
               tokens.push(
                 <CryptoExchangeWalletListTokenRow

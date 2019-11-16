@@ -27,9 +27,7 @@ class CryptoExchangeWalletListTokenRow extends Component<Props, LocalState> {
     })
   }
   render () {
-    const isDisabled =
-      this.props.disabled &&
-      ((this.props.cryptoBalance === '0' && (this.props.fiatBalance === '0' || this.props.fiatBalance === '0.00')) || this.props.parentCryptoBalance === '0')
+    const isDisabled = this.props.disabled && ((this.props.cryptoBalance === '0' && this.props.fiatBalance === '0') || this.props.parentCryptoBalance === '0')
     return (
       <TouchableHighlight style={styles.touchable} underlayColor={styles.underlayColor} onPress={this.onPress}>
         <View style={styles.containerToken}>
