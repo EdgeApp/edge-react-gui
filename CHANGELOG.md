@@ -1,5 +1,9 @@
 # edge-react-gui
 
+## 1.10.3
+
+- FIO Registration URL update
+
 ## 1.10.2
 
 - Improve EOS & Ethereum connectivity.
