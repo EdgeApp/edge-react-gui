@@ -242,14 +242,12 @@ export const styles = {
     alignItems: 'flex-end'
   },
   transactionInfoWrap: {
-    flexDirection: 'row',
-    height: scale(40),
     flex: 1,
-    justifyContent: 'space-between'
+    flexDirection: 'row',
+    height: scale(40)
   },
   transactionLeft: {
-    flexDirection: 'row',
-    flex: 25
+    flexDirection: 'row'
   },
   transactionLogo: {
     width: scale(40),
@@ -265,17 +263,17 @@ export const styles = {
     justifyContent: 'center'
   },
   transactionPartner: {
-    fontSize: scale(16),
-    color: THEME.COLORS.GRAY_1,
-    textAlignVertical: 'center'
+    flex: 1
   },
   transactionBitAmount: {
     fontSize: scale(16),
     textAlignVertical: 'center'
   },
   transactionRight: {
-    flex: 10,
-    alignItems: 'flex-end',
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    flexDirection: 'column',
     justifyContent: 'center'
   },
   transactionTimePendingArea: {
@@ -357,6 +355,32 @@ export const styles = {
   buyCryptoNoTransactionText: {
     fontSize: scale(17),
     color: THEME.COLORS.ACCENT_BLUE
+  },
+  transactionDetailsRow: {
+    flexDirection: 'row',
+    width: '100%'
+  },
+  transactionDetailsRowMargin: {
+    marginBottom: scale(2)
+  },
+  transactionDetailsReceivedTx: {
+    color: '#77C513'
+  },
+  transactionDetailsSentTx: {
+    color: '#E85466'
+  },
+  transactionCategory: {
+    flex: 1,
+    fontSize: 12,
+    color: '#0E507D'
+  },
+  transactionFiat: {
+    fontSize: 12,
+    color: '#0E507D'
+  },
+  transactionPendingTime: {
+    fontSize: 12,
+    color: '#0E507D'
   }
 }
 
