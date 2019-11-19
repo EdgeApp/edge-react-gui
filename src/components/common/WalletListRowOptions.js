@@ -21,9 +21,9 @@ const modifiedMenuDropDownStyle = {
   ...MenuDropDownStyle,
   icon: {
     ...MenuDropDownStyle.icon,
-    fontSize: scale(30),
+    fontSize: scale(21),
     position: 'relative',
-    top: 2
+    top: 6
   }
 }
 

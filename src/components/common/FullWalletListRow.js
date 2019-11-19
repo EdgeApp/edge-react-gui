@@ -26,7 +26,8 @@ import WalletListRowOptions from './WalletListRowOptions'
 const DIVIDE_PRECISION = 18
 
 export type OwnProps = {
-  data: any // TODO: Need to type this
+  data: any, // TODO: Need to type this
+  showBalance: boolean | Function
 }
 
 export default class FullWalletListRow extends Component<OwnProps> {
@@ -44,7 +45,11 @@ export default class FullWalletListRow extends Component<OwnProps> {
   }
 
   render () {
-    return <View>{this.props.data.item.id ? <FullWalletListRowConnected data={this.props.data} /> : <FullListRowEmptyData />}</View>
+    return (
+      <View>
+        {this.props.data.item.id ? <FullWalletListRowConnected data={this.props.data} showBalance={this.props.showBalance} /> : <FullListRowEmptyData />}
+      </View>
+    )
   }
 }
 
@@ -53,14 +58,14 @@ export type FullWalletListRowLoadedStateProps = {
   exchangeDenomination: GuiDenomination,
   customTokens: Array<CustomTokenInfo>,
   fiatSymbol: string,
-  isWalletFiatBalanceVisible: boolean,
   settings: Object,
   exchangeRates: { [string]: number },
   walletsProgress: Object
 }
 
 export type FullWalletListRowLoadedOwnProps = {
-  data: any
+  data: any,
+  showBalance: boolean | Function
 }
 
 export type FullWalletListRowLoadedDispatchProps = {
@@ -94,10 +99,9 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
   }
 
   render () {
-    const { data, fiatSymbol, settings, exchangeRates } = this.props
+    const { data, fiatSymbol, settings, exchangeRates, showBalance } = this.props
     const walletData = data.item
     const currencyCode = walletData.currencyCode
-    const cryptocurrencyName = walletData.currencyNames[currencyCode]
     const denomination = this.props.displayDenomination
     const multiplier = denomination.multiplier
     const id = walletData.id
@@ -106,6 +110,7 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
     const symbolImageDarkMono = walletData.symbolImageDarkMono
     const preliminaryCryptoAmount = truncateDecimals(bns.div(walletData.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)
     const finalCryptoAmount = intl.formatNumber(decimalOrZero(preliminaryCryptoAmount, 6)) // check if infinitesimal (would display as zero), cut off trailing zeroes
+    const finalCryptoAmountString = showBalance ? `${symbol || ''} ${finalCryptoAmount}` : ''
     // need to crossreference tokensEnabled with nativeBalances
     const enabledNativeBalances = {}
     const enabledTokens = walletData.enabledTokens
@@ -133,7 +138,12 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
     }
     const fiatBalance = calculateSettingsFiatBalanceWithoutState(walletData, settings, exchangeRates)
     const fiatBalanceFormat = fiatBalance && parseFloat(fiatBalance) > 0.000001 ? fiatBalance : 0
-    const fiatBalanceString = fiatSymbol + ' ' + fiatBalanceFormat
+    const fiatBalanceString = showBalance ? `${fiatSymbol} ${fiatBalanceFormat}` : ''
+    const rateKey = `${currencyCode}_${settings.defaultIsoFiat}`
+    const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
+    const exchangeRateFormat = intl.formatNumber(exchangeRate, { toFixed: 2 }) || '0'
+    const exchangeRateString = `${fiatSymbol} ${exchangeRateFormat}/${currencyCode}`
+
     return (
       <View style={[{ width: '100%' }]}>
         <View>
@@ -149,30 +159,20 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
                   <ProgressPie size={styles.rowCurrencyOverlaySize} color={'rgba(255, 255, 255, 0.75)'} progress={this.getProgress()} />
                 </View>
               </View>
-              <View style={[styles.rowNameTextWrapAndroidIos]}>
-                <T style={[styles.rowNameText]} numberOfLines={2} adjustsFontSizeToFit={true} minimumFontScale={0.6}>
-                  {name}
-                </T>
+              <View style={styles.walletDetailsContainer}>
+                <View style={styles.walletDetailsRow}>
+                  <T style={[styles.walletDetailsRowCurrency]}>{currencyCode}</T>
+                  <T style={[styles.walletDetailsRowValue]}>{finalCryptoAmountString}</T>
+                </View>
+                <View style={styles.walletDetailsRow}>
+                  <T style={[styles.walletDetailsRowName]}>{name}</T>
+                  <T style={[styles.walletDetailsRowFiat]}>{fiatBalanceString}</T>
+                </View>
+                <View style={styles.walletDetailsRowLine} />
+                <View style={styles.walletDetailsRow}>
+                  <T style={[styles.walletDetailsRowExchangeRate]}>{exchangeRateString}</T>
+                </View>
               </View>
-              {this.props.isWalletFiatBalanceVisible ? (
-                <View style={[styles.rowBalanceTextWrap]}>
-                  <View style={styles.rowBalanceText}>
-                    <T style={[styles.rowBalanceAmountText]}>{fiatBalanceString}</T>
-                  </View>
-                </View>
-              ) : (
-                <View style={[styles.rowBalanceTextWrap]}>
-                  <View style={styles.rowBalanceAmount}>
-                    <T style={[styles.rowBalanceAmountText]}>{finalCryptoAmount}</T>
-                  </View>
-
-                  <View style={styles.rowBalanceText}>
-                    <T style={[styles.rowBalanceDenominationText]}>{cryptocurrencyName} (</T>
-                    <T style={[styles.rowBalanceDenominationText, styles.symbol]}>{symbol || ''}</T>
-                    <T style={[styles.rowBalanceDenominationText]}>)</T>
-                  </View>
-                </View>
-              )}
               <View style={styles.rowOptionsWrap}>
                 <WalletListRowOptions currencyCode={walletData.currencyCode} executeWalletRowOption={walletData.executeWalletRowOption} walletKey={id} />
               </View>
@@ -196,6 +196,7 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
               key={property}
               fiatSymbol={this.props.fiatSymbol}
               balance={metaTokenBalances[property]}
+              showBalance={this.props.showBalance}
             />
           )
         }
@@ -227,14 +228,13 @@ const mapStateToProps = (state: State, ownProps: FullWalletListRowLoadedOwnProps
   const settings = state.ui.settings
   const fiatSymbol = getFiatSymbol(settings.defaultFiat) || ''
   const customTokens = settings.customTokens
-  const isWalletFiatBalanceVisible = settings.isWalletFiatBalanceVisible
   const walletsProgress = state.ui.wallets.walletLoadingProgress
   return {
+    showBalance: typeof ownProps.showBalance === 'function' ? ownProps.showBalance(state) : ownProps.showBalance,
     displayDenomination,
     exchangeDenomination,
     customTokens,
     fiatSymbol,
-    isWalletFiatBalanceVisible,
     settings,
     exchangeRates: state.exchangeRates,
     walletsProgress
