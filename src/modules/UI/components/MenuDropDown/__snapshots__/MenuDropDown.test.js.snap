@@ -60,7 +60,7 @@ exports[`MenuDropDown component should render with standard props 1`] = `
           style={
             Object {
               "fontSize": 28.091549295774648,
-              "fontWeight": 200,
+              "fontWeight": "200",
             }
           }
         >

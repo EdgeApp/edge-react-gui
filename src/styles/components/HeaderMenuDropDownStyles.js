@@ -71,7 +71,7 @@ const MenuDropDownStyle = {
   },
   icon: {
     fontSize: scale(20),
-    fontWeight: 200
+    fontWeight: '200'
   },
   altIconText: {
     fontSize: scale(20)
