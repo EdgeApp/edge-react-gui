@@ -3978,10 +3978,10 @@ edge-components@^0.0.26:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.16.13:
-  version "0.16.13"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.16.13.tgz#400d046bfa89602a40c659410aa08f68930b06aa"
-  integrity sha512-DCBAnxAQKCdexmfYxeAKciDMiwg/pmePwxCRbxqbK/nHU8PGttWFcWCQsLG2YllgeYvIo1A4vWnLRw/cifvYpg==
+edge-core-js@^0.16.14:
+  version "0.16.14"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.16.14.tgz#2640ca15033a83481f307da7c37f9ad3facb80f3"
+  integrity sha512-/KZe1TVuMF8+QtMKpXb2Yh1+nVt3SCxoBFF9B6hJ2h0hU0BgQPe8HCpvSY0ArlltlUWWXevk5yqHHrXY39Suqw==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -4073,10 +4073,10 @@ edge-exchange-plugins@^0.8.12:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.6.0.tgz#c8d771e6ca4e48328326b8c819550d5ee3e339a2"
-  integrity sha512-mzMi6wemmL2WL6hGa1i5V2DD/881kOiepTkhB+rb2T7pEPKimQWu6ticBKVJtxJFY1XQSIvPw5YddU8mB4Vm5g==
+edge-login-ui-rn@0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.6.1.tgz#90fd6cc87fd9367ebcc7886f958a6f1538a62b0e"
+  integrity sha512-ZBsxeKVMnJ3NbX+dmkClp5+KlO9ylvzUrU6FzkA7EucON0UZIJ6UPzyy32mdz85jJIEVXNeyN+OiFWvdHgAEDw==
   dependencies:
     edge-components "^0.0.26"
     material-ui "^0.20.0"
@@ -5319,9 +5319,6 @@ fsevents@^1.2.3:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-1.2.4.tgz#f41dcb1af2582af3692da36fc55cbd8e1041c426"
   integrity sha512-z8H8/diyk76B7q5wg+Ud0+CqzcAF3mBBI/bA5ne5zrRUUIvNkJY//D3BqyH571KuAC4Nr7Rw7CjWX4r0y9DvNg==
-  dependencies:
-    nan "^2.9.2"
-    node-pre-gyp "^0.10.0"
 
 fsevents@^1.2.7:
   version "1.2.9"
