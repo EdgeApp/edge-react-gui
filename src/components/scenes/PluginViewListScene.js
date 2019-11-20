@@ -267,7 +267,7 @@ class PluginList extends Component<Props, State> {
             <Text style={{ textAlign: 'center' }}>{s.strings.buy_sell_crypto_no_plugin_region}</Text>
           </View>
         ) : (
-          <FlatList data={plugins} renderItem={this._renderPlugin} keyExtractor={item => item.pluginId} />
+          <FlatList data={plugins} renderItem={this._renderPlugin} keyExtractor={item => item.id} />
         )}
       </SceneWrapper>
     )
