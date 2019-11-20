@@ -10,12 +10,117 @@ export const activeOpacity = THEME.OPACITY.ACTIVE
 
 export const styles = {
   container: {
-    alignItems: 'stretch',
-    backgroundColor: THEME.COLORS.WHITE,
-    flexDirection: 'column',
-    marginTop: scale(24),
-    paddingTop: scale(32)
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    backgroundColor: THEME.COLORS.GRAY_4
   },
+  tilesContainer: {
+    flex: 1,
+    width: '100%',
+    flexDirection: 'column'
+  },
+  tileContainerBig: {
+    width: '100%',
+    height: THEME.rem(4.5),
+    backgroundColor: '#FFFFFF',
+    padding: THEME.rem(0.8),
+    borderBottomWidth: 1,
+    borderBottomColor: THEME.COLORS.GRAY_3,
+    justifyContent: 'center'
+  },
+  tileContainer: {
+    width: '100%',
+    height: THEME.rem(4),
+    backgroundColor: '#FFFFFF',
+    padding: THEME.rem(0.8),
+    borderBottomWidth: 1,
+    borderBottomColor: THEME.COLORS.GRAY_3,
+    justifyContent: 'center'
+  },
+  tileRow: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  textTransactionData: {
+    color: THEME.COLORS.SECONDARY,
+    marginTop: THEME.rem(0.8),
+    fontSize: THEME.rem(0.9),
+    width: '100%',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    textAlign: 'center'
+  },
+  tileTextTop: {
+    color: THEME.COLORS.SECONDARY,
+    fontSize: THEME.rem(0.7),
+    marginBottom: THEME.rem(0.1)
+  },
+  tileTextBottom: {
+    color: THEME.COLORS.GRAY_5,
+    fontSize: THEME.rem(1),
+  },
+  tileTextPrice: {
+    flex: 1,
+    color: THEME.COLORS.GRAY_5,
+    fontSize: THEME.rem(1),
+  },
+  tileTextPriceChange: {
+    color: THEME.COLORS.ACCENT_RED,
+    fontSize: THEME.rem(1),
+  },
+  tileTextNotes: {
+    color: THEME.COLORS.GRAY_5,
+    fontSize: THEME.rem(0.9)
+  },
+  tileIcon: {
+    position: 'absolute',
+    top: 10,
+    right: 10
+  },
+  tileAvatarIcon: {
+    color: THEME.COLORS.GRAY_2,
+    marginRight: THEME.rem(0.4)
+  },
+  category: {
+    paddingHorizontal: THEME.rem(0.5),
+    paddingVertical: THEME.rem(0.3),
+    marginVertical: THEME.rem(0.3),
+    backgroundColor: '#A4C7DF',
+    borderRadius: 3
+  },
+  categoryText: {
+    color: THEME.COLORS.PRIMARY,
+    fontSize: THEME.rem(0.9)
+  },
+  subCategoryText: {
+    marginVertical: THEME.rem(0.3),
+    marginHorizontal: THEME.rem(0.7),
+    color: THEME.COLORS.GRAY_5
+  },
+  airshipContainer: {
+    flex: 1,
+    padding: THEME.rem(0.8)
+  },
+  airshipHeader: {
+    fontSize: THEME.rem(1.2),
+    marginBottom: THEME.rem(1),
+    alignSelf: 'center'
+  },
+  notesInputWrap: {
+    borderWidth: 1,
+    borderColor: '#CCCCCC',
+    borderRadius: 3,
+    height: PLATFORM.deviceHeight * 0.13 - (PLATFORM.platform === 'android' ? scale(20) : 0),
+    paddingVertical: THEME.rem(0.1),
+    paddingHorizontal: THEME.rem(0.8)
+  },
+  fiatInput: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#CCCCCC',
+  },
+
+  //old style
   searchPopup: {
     backgroundColor: THEME.COLORS.WHITE,
     position: 'absolute',
@@ -368,7 +473,11 @@ export const styles = {
   },
   txIDIcon: {
     color: THEME.COLORS.SECONDARY
-  }
+  },
+}
+
+export const iconSize = {
+  avatar: THEME.rem(2)
 }
 
 export default StyleSheet.create(styles)

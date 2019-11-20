@@ -20,7 +20,6 @@ export const setTransactionDetails = (transaction: EdgeTransaction, edgeMetadata
     .saveTxMetadata(transaction.txid, transaction.currencyCode, edgeMetadata)
     .then(() => {
       dispatch(refreshTransactionsRequest(wallet.id, [transaction]))
-      Actions.pop()
     })
     .catch(showError)
 }

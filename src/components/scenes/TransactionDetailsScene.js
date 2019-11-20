@@ -1,10 +1,10 @@
 // @flow
 
-import { bns } from 'biggystring'
+import { abs, sub, bns } from 'biggystring'
 import dateformat from 'dateformat'
 import type { EdgeCurrencyInfo, EdgeDenomination, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import React, { Component, Fragment } from 'react'
-import { Animated, Easing, Keyboard, ScrollView, TextInput, TouchableOpacity, View } from 'react-native'
+import { Animated, Easing, Keyboard, ScrollView, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
@@ -12,7 +12,7 @@ import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import FormattedText from '../../modules/UI/components/FormattedText/index'
 import { PayeeIcon } from '../../modules/UI/components/PayeeIcon/PayeeIcon.ui.js'
-import styles, { styles as styleRaw } from '../../styles/scenes/TransactionDetailsStyle'
+import styles, { styles as styleRaw, iconSize } from '../../styles/scenes/TransactionDetailsStyle'
 import THEME from '../../theme/variables/airbitz'
 import type { GuiContact, GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
@@ -24,6 +24,11 @@ import AmountArea from '../common/TransactionDetailAmountArea.js'
 import SubCategorySelect from '../common/TransactionSubCategorySelect.js'
 import { createAdvancedTransactionDetailsModal } from '../modals/AdvancedTransactionDetailsModal.js'
 import { showError } from '../services/AirshipInstance.js'
+import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
+import * as Constants from '../../constants/indexConstants'
+import * as UTILS from '../../util/utils'
+import { type AirshipBridge, AirshipModal } from '../modals/modalParts'
+import { Airship } from '../services/AirshipInstance.js'
 
 const EXCHANGE_TEXT = s.strings.fragment_transaction_exchange
 const EXPENSE_TEXT = s.strings.fragment_transaction_expense
@@ -276,15 +281,6 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     })
   }
 
-  onFocusNotes = () => {
-    this.refs._scrollView.scrollTo({ x: 0, y: 300, animated: true })
-  }
-
-  onBlurNotes = () => {
-    Keyboard.dismiss()
-    this.refs._scrollView.scrollTo({ x: 0, y: 0, animated: true })
-  }
-
   onNotesKeyboardReturn = () => {
     this.onBlurNotes()
   }
@@ -384,7 +380,6 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
         amountFiat: ''
       })
     }
-    this.refs._scrollView.scrollTo({ x: 0, y: 90, animated: true })
   }
 
   onPressAdvancedDetailsButton = async () => {
@@ -517,80 +512,175 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     )
   }
 
+  renderNotesInput () {
+    const notes = this.props.edgeTransaction.metadata ? this.props.edgeTransaction.metadata.notes : ''
+    Airship.show(bridge => (
+      <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(null)}>
+        <TouchableWithoutFeedback onPress={() => bridge.resolve(null)}>
+          <View style={styles.airshipContainer}>
+            <FormattedText style={styles.airshipHeader}>{s.strings.transaction_details_notes_title}</FormattedText>
+            <TouchableWithoutFeedback onPress={() => this.notesInput.focus()}>
+              <View style={[styles.notesInputWrap]}>
+                <TextInput
+                  autoFocus
+                  multiline
+                  underlineColorAndroid={'transparent'}
+                  onChangeText={this.onChangeNotes}
+                  defaultValue={notes}
+                  style={[styles.notesInput]}
+                  placeholderTextColor={THEME.COLORS.GRAY_}
+                  placeholder={s.strings.transaction_details_notes_title}
+                  autoCapitalize="sentences"
+                  autoCorrect={false}
+                  ref={ref => { this.notesInput = ref }}
+                />
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </AirshipModal>
+    )).then((_) => {
+      this.onSaveTxDetails()
+    })
+  }
+
+  renderFiatInput () {
+    const { fiatCurrencyCode } = this.guiWallet
+    Airship.show(bridge => (
+      <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(null)}>
+        <TouchableWithoutFeedback onPress={() => bridge.resolve(null)}>
+          <View style={styles.airshipContainer}>
+            <FormattedText style={styles.airshipHeader}>{fiatCurrencyCode} AMOUNT</FormattedText>
+              <TextInput
+                underlineColorAndroid={'transparent'}
+                returnKeyType="done"
+                autoCapitalize="none"
+                autoCorrect={false}
+                onFocus={this.onFocusFiatAmount}
+                onBlur={this.onBlurFiat}
+                onChangeText={this.onChangeFiat}
+                style={styles.fiatInput}
+                keyboardType="numeric"
+                value={UTILS.truncateDecimals(this.state.amountFiat.toString().replace('-', ''), 2, true)}
+              />
+          </View>
+        </TouchableWithoutFeedback>
+      </AirshipModal>
+    )).then((_) => {
+      this.onSaveTxDetails()
+    })
+  }
+
+
   render () {
-    const categoryColor = categories[this.state.category].color
-    let txExplorerLink = null
-    if (this.props.currencyInfo) {
-      txExplorerLink = sprintf(this.props.currencyInfo.transactionExplorer, this.props.edgeTransaction.txid)
+    let feeSyntax, leftData, convertedAmount, amountString, symbolString, feeDenomination
+    const { guiWallet, fiatSymbol } = this
+    const { edgeTransaction } = this.props
+    const { walletDefaultDenomProps, direction, amountFiat } = this.state
+    const absoluteAmount = abs(this.props.edgeTransaction.nativeAmount)
+    if (isCryptoParentCurrency(guiWallet, edgeTransaction.currencyCode)) {
+      symbolString = walletDefaultDenomProps.symbol ? walletDefaultDenomProps.symbol + ' ' : ''
+    } else {
+      symbolString = ''
     }
+
+    if (direction === 'receive') {
+      convertedAmount = UTILS.convertNativeToDisplay(walletDefaultDenomProps.multiplier)(absoluteAmount) // convert to correct denomiation
+      amountString = UTILS.decimalOrZero(UTILS.truncateDecimals(convertedAmount, 6), 6) // limit to 6 decimals, check if infinitesimal, and remove unnecessary trailing zeroes
+      feeSyntax = ''
+      leftData = {
+        color: THEME.COLORS.ACCENT_BLUE,
+        syntax: s.strings.fragment_transaction_income
+      }
+    } else {
+      // send tx
+      if (edgeTransaction.networkFee) {
+        // stub, check BTC vs. ETH (parent currency)
+        feeDenomination = walletDefaultDenomProps.name
+        convertedAmount = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(absoluteAmount) // convert the native amount to correct *denomination*
+        const convertedFee = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.edgeTransaction.networkFee) // convert fee to correct denomination
+        const amountMinusFee = sub(convertedAmount, convertedFee) // for outgoing tx substract fee from total amount
+        const amountTruncatedDecimals = UTILS.truncateDecimals(amountMinusFee.toString(), 6) // limit to 6 decimals, at most
+        amountString = UTILS.decimalOrZero(amountTruncatedDecimals, 6) // change infinitesimal values to zero, otherwise cut off insignificant zeroes (at end of decimal)
+        const feeString = abs(UTILS.truncateDecimals(convertedFee, 6)) // fee should never be negative
+        feeSyntax = symbolString
+          ? sprintf(s.strings.fragment_tx_detail_mining_fee_with_symbol, symbolString, feeString)
+          : sprintf(s.strings.fragment_tx_detail_mining_fee_with_denom, feeString, feeDenomination)
+        leftData = {
+          color: THEME.COLORS.ACCENT_RED,
+          syntax: s.strings.fragment_transaction_expense
+        }
+      } else {
+        // do not show fee, because token
+        amountString = absoluteAmount
+        feeSyntax = ''
+        leftData = {
+          color: THEME.COLORS.ACCENT_RED,
+          syntax: s.strings.fragment_transaction_expense
+        }
+      }
+    }
+    const fiatValue = UTILS.truncateDecimals(amountFiat.toString().replace('-', ''), 2, true)
+    const fiatString = `${fiatSymbol}${fiatValue}`
+    const { fiatCurrencyCode } = guiWallet
+
+    const cryptoAmountString = `${symbolString}${amountString}`
+
+    const notes = this.props.edgeTransaction.metadata ? this.props.edgeTransaction.metadata.notes : ''
+    const payeeName = this.state.payeeName && this.state.payeeName !== '' ? this.state.payeeName : 'Payee Name'
 
     return (
       <Fragment>
-        <SceneWrapper background="body" bodySplit={scale(24)}>
-          <ScrollView
-            keyboardShouldPersistTaps="handled"
-            ref="_scrollView"
-            scrollEnabled={!this.state.subCategorySelectVisibility}
-            overScrollMode="never"
-            gradientHeight="50%"
-          >
-            <View style={styles.container}>
-              <PayeeIcon direction={this.state.direction} thumbnailPath={this.state.thumbnailPath} />
-              <View style={styles.payeeNameArea}>
-                <View style={styles.payeeNameWrap}>
-                  <TextInput
-                    underlineColorAndroid={'transparent'}
-                    autoCapitalize="words"
-                    onFocus={this.onFocusPayee}
-                    autoCorrect={false}
-                    style={[styles.payeeNameInput, inputBottomPadding()]}
-                    placeholder={s.strings.transaction_details_payee}
-                    defaultValue={this.state.payeeName}
-                    placeholderTextColor={THEME.COLORS.GRAY_2}
-                  />
+        <SceneWrapper bodySplit={scale(24)}>
+          <View style={styles.container}>
+            <View style={styles.tilesContainer}>
+              <View style={styles.tileContainerBig}>
+                <Icon type={Constants.ION_ICONS} name={Constants.CREATE_OUTLINE} size={16} style={styles.tileIcon}/>
+                <FormattedText style={styles.tileTextTop}>Recipent Name</FormattedText>
+                <View style={styles.tileRow}>
+                  <Icon type={Constants.ION_ICONS} name={Constants.CONTACT} size={iconSize.avatar} style={styles.tileAvatarIcon}/>
+                  <FormattedText style={styles.tileTextBottom}>{ payeeName }</FormattedText>
                 </View>
               </View>
-              <View style={styles.payeeSeperator} />
-              <View style={styles.dateWrap}>
-                <FormattedText style={styles.date}>{this.state.displayDate}</FormattedText>
+              <View style={styles.tileContainer}>
+                <FormattedText style={styles.tileTextTop}>Bitcoin Amount</FormattedText>
+                <FormattedText style={styles.tileTextBottom}>{cryptoAmountString} (+10 fee)</FormattedText>
               </View>
-              <AmountArea
-                edgeTransaction={this.props.edgeTransaction}
-                onChangeNotesFxn={this.onChangeNotes}
-                onChangeCategory={this.onChangeCategory}
-                onChangeFiatFxn={this.onChangeFiat}
-                onBlurFiatFxn={this.onBlurFiat}
-                onPressFxn={this.onSaveTxDetails}
-                fiatCurrencyCode={this.guiWallet.fiatCurrencyCode}
-                cryptoCurrencyCode={this.props.edgeTransaction.currencyCode}
-                fiatCurrencySymbol={this.fiatSymbol}
-                fiatAmount={this.state.amountFiat}
-                onEnterSubcategories={this.onEnterSubcategories}
-                subCategorySelectVisibility={this.state.subCategorySelectVisibility}
-                categorySelectVisibility={this.state.categorySelectVisibility}
-                onSelectSubCategory={this.onSelectSubCategory}
-                category={this.state.category}
-                subCategory={this.state.subCategory}
-                categories={categories}
-                onEnterCategories={this.onEnterCategories}
-                onExitCategories={this.onExitCategories}
-                onSubcategoryKeyboardReturn={this.onSubcategoriesKeyboardReturn}
-                onNotesKeyboardReturn={this.onNotesKeyboardReturn}
-                onFocusNotes={this.onFocusNotes}
-                onBlurNotes={this.onBlurNotes}
-                direction={this.state.direction}
-                color={categoryColor}
-                onFocusFiatAmount={this.onFocusFiatAmount}
-                walletDefaultDenomProps={this.state.walletDefaultDenomProps}
-                guiWallet={this.guiWallet}
-                onPressAdvancedDetailsButton={this.onPressAdvancedDetailsButton}
-                txExplorerUrl={txExplorerLink}
-              />
+              <TouchableWithoutFeedback onPress={this.renderFiatInput}>
+                <View style={styles.tileContainer}>
+                  <Icon type={Constants.ION_ICONS} name={Constants.CREATE_OUTLINE} size={16} style={styles.tileIcon}/>
+                  <FormattedText style={styles.tileTextTop}>Amount in {fiatCurrencyCode}</FormattedText>
+                  <FormattedText style={styles.tileTextBottom}>{fiatString}</FormattedText>
+                </View>
+              </TouchableWithoutFeedback>
+              <View style={styles.tileContainer}>
+                <FormattedText style={styles.tileTextTop}>Amount at Current Price</FormattedText>
+                  <View style={styles.tileRow}>
+                    <FormattedText style={styles.tileTextPrice}>$290.88</FormattedText>
+                    <FormattedText style={styles.tileTextPriceChange}>- 5.6%</FormattedText>
+                  </View>
+              </View>
+              <View style={styles.tileContainerBig}>
+                <Icon type={Constants.ION_ICONS} name={Constants.CREATE_OUTLINE} size={16} style={styles.tileIcon}/>
+                <FormattedText style={styles.tileTextTop}>Category</FormattedText>
+                  <View style={styles.tileRow}>
+                    <View style={styles.category}>
+                      <FormattedText style={styles.categoryText}>Income</FormattedText>
+                    </View>
+                    <FormattedText style={styles.subCategoryText}>Salary</FormattedText>
+                  </View>
+              </View>
+              <TouchableWithoutFeedback onPress={this.renderNotesInput}>
+                <View style={styles.tileContainerBig}>
+                  <Icon type={Constants.ION_ICONS} name={Constants.CREATE_OUTLINE} size={16} style={styles.tileIcon}/>
+                  <FormattedText style={styles.tileTextTop}>Notes</FormattedText>
+                  <FormattedText style={styles.tileTextNotes}>{notes}</FormattedText>
+                </View>
+              </TouchableWithoutFeedback>
+              <FormattedText style={styles.textTransactionData}>View Advance Transaction Data</FormattedText>
             </View>
-          </ScrollView>
+          </View>
         </SceneWrapper>
-        {this.state.contactSearchVisibility && this.renderPayeeSearch()}
-        {this.state.subCategorySelectVisibility && this.renderCategorySearch()}
       </Fragment>
     )
   }
