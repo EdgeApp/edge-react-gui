@@ -78,6 +78,7 @@ import { type Dispatch, type State as ReduxState } from '../types/reduxTypes.js'
 import { scale } from '../util/scaling.js'
 import { logEvent } from '../util/tracking.js'
 import { CurrencySettingsTitle } from './navigation/CurrencySettingsTitle.js'
+import { TransactionDetailsTitle } from './navigation/TransactionDetailsTitle.js'
 import { ChangeMiningFeeScene } from './scenes/ChangeMiningFeeScene.js'
 import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
 import { CryptoExchangeQuoteProcessingScreenComponent } from './scenes/CryptoExchangeQuoteProcessingScene.js'
@@ -106,7 +107,6 @@ tabBarIconFilesSelected[Constants.PLUGIN_SELL] = sellIconSelected
 tabBarIconFilesSelected[Constants.TRANSACTION_LIST] = exchangeIconSelected
 tabBarIconFilesSelected[Constants.EXCHANGE] = exchangeIconSelected
 
-const TRANSACTION_DETAILS = s.strings.title_transaction_details
 const WALLETS = s.strings.title_wallets
 const CREATE_WALLET_IMPORT = s.strings.create_wallet_import_title
 const CREATE_WALLET_SELECT_CRYPTO = s.strings.title_create_wallet_select_crypto
@@ -208,7 +208,7 @@ export class MainComponent extends Component<Props> {
         onEnter={() => this.props.requestPermission('contacts')}
         clone
         component={TransactionDetails}
-        renderTitle={this.renderTitle(TRANSACTION_DETAILS)}
+        renderTitle={TransactionDetailsTitle}
         renderLeftButton={this.renderBackButton()}
         renderRightButton={this.renderMenuButton()}
       />

@@ -2,251 +2,190 @@
 
 import { Platform, StyleSheet } from 'react-native'
 
+import { MaterialInputOnWhite } from '../../styles/components/FormFieldStyles'
 import THEME from '../../theme/variables/airbitz'
 import { PLATFORM } from '../../theme/variables/platform.js'
 import { scale } from '../../util/scaling.js'
+
+const { rem } = THEME
 
 export const activeOpacity = THEME.OPACITY.ACTIVE
 
 export const styles = {
   container: {
-    alignItems: 'stretch',
-    backgroundColor: THEME.COLORS.WHITE,
-    flexDirection: 'column',
-    marginTop: scale(24),
-    paddingTop: scale(32)
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    backgroundColor: THEME.COLORS.GRAY_4
   },
-  searchPopup: {
-    backgroundColor: THEME.COLORS.WHITE,
-    position: 'absolute',
-    bottom: 0,
-    top: 0,
-    width: '100%'
-  },
-  modalHeaderIconWrapBottom: {
-    borderRadius: 24,
-    backgroundColor: THEME.COLORS.TRANSPARENT,
-    height: scale(48),
-    width: scale(48),
-    position: 'relative',
-    top: scale(10)
-  },
-  payeeNameArea: {
-    alignItems: 'center',
+  tilesContainer: {
+    flex: 1,
+    width: '100%',
     flexDirection: 'column'
   },
-  payeeNameWrap: {
-    width: '80%',
-    padding: scale(4),
+  tileContainerBig: {
+    width: '100%',
+    height: rem(4.5),
+    backgroundColor: '#FFFFFF',
+    padding: rem(0.8),
+    borderBottomWidth: 1,
+    borderBottomColor: THEME.COLORS.GRAY_3,
+    justifyContent: 'center'
+  },
+  tileContainerNotes: {
+    width: '100%',
+    minHeight: rem(4.5),
+    backgroundColor: '#FFFFFF',
+    padding: rem(0.8),
+    borderBottomWidth: 1,
+    borderBottomColor: THEME.COLORS.GRAY_3
+  },
+  tileContainer: {
+    width: '100%',
+    height: rem(4),
+    backgroundColor: '#FFFFFF',
+    padding: rem(0.8),
+    borderBottomWidth: 1,
+    borderBottomColor: THEME.COLORS.GRAY_3,
+    justifyContent: 'center'
+  },
+  tileRow: {
+    flexDirection: 'row',
     alignItems: 'center'
   },
-  payeeNameInput: {
-    color: THEME.COLORS.GRAY_1,
-    fontSize: scale(17),
-    height: Platform.OS === 'ios' ? scale(24) : scale(33),
-    textAlign: 'center',
+  textTransactionData: {
+    color: THEME.COLORS.SECONDARY,
+    marginVertical: rem(1.3),
+    fontSize: rem(0.9),
     width: '100%',
-    fontFamily: THEME.FONTS.DEFAULT
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    textAlign: 'center'
   },
-  payeeSeperator: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#CCCCCC',
-    width: '38%',
-    height: scale(1),
+  tileTextTop: {
+    color: THEME.COLORS.SECONDARY,
+    fontSize: rem(0.7),
+    marginBottom: rem(0.1)
+  },
+  tileTextTopNotes: {
+    color: THEME.COLORS.SECONDARY,
+    fontSize: rem(0.7),
+    marginBottom: rem(0.5)
+  },
+  tileTextBottom: {
+    color: THEME.COLORS.GRAY_5,
+    fontSize: rem(1)
+  },
+  tileTextPrice: {
+    flex: 1,
+    color: THEME.COLORS.GRAY_5,
+    fontSize: rem(1)
+  },
+  tileTextPriceChangeUp: {
+    color: THEME.COLORS.ACCENT_MINT,
+    fontSize: rem(1)
+  },
+  tileTextPriceChangeDown: {
+    color: THEME.COLORS.ACCENT_RED,
+    fontSize: rem(1)
+  },
+  tileTextNotes: {
+    color: THEME.COLORS.GRAY_5,
+    fontSize: rem(0.9)
+  },
+  tileIcon: {
+    position: 'absolute',
+    width: rem(0.7),
+    height: rem(0.7),
+    top: 10,
+    right: 10
+  },
+  tileAvatarIcon: {
+    color: THEME.COLORS.GRAY_2,
+    marginRight: rem(0.4)
+  },
+  tileThumbnail: {
+    width: rem(1.8),
+    height: rem(1.8),
+    borderRadius: rem(0.9),
+    marginRight: rem(0.4)
+  },
+  tileCategory: {
+    paddingHorizontal: rem(0.5),
+    paddingVertical: rem(0.3),
+    marginVertical: rem(0.3),
+    backgroundColor: '#A4C7DF',
+    borderRadius: 3
+  },
+  tileCategoryText: {
+    color: THEME.COLORS.SECONDARY,
+    fontSize: rem(0.9)
+  },
+  tileSubCategoryText: {
+    marginVertical: rem(0.3),
+    marginHorizontal: rem(0.7),
+    color: THEME.COLORS.GRAY_5
+  },
+  airshipContainer: {
+    flex: 1,
+    padding: rem(0.8)
+  },
+  airshipHeader: {
+    fontSize: rem(1.2),
+    marginBottom: rem(1),
     alignSelf: 'center'
   },
-  dateWrap: {
-    padding: scale(4),
-    alignItems: 'center',
-    flexDirection: 'column'
+  fiatInput: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#CCCCCC'
   },
-  date: {
-    color: THEME.COLORS.GRAY_2,
-    fontSize: scale(14)
-  },
-  amountAreaContainer: {
-    flexDirection: 'column'
-  },
-  amountAreaCryptoRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingTop: scale(10),
-    paddingBottom: scale(10),
-    paddingLeft: scale(15),
-    paddingRight: scale(15)
-  },
-  amountAreaLeft: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'flex-start'
-  },
-  amountAreaLeftText: {
-    fontSize: scale(14)
-  },
-  amountAreaMiddle: {
-    paddingTop: scale(10),
-    flex: 3,
-    alignSelf: 'center',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  amountAreaMiddleTop: {
-    paddingBottom: scale(4)
-  },
-  amountAreaMiddleTopText: {
-    fontSize: scale(26),
-    color: THEME.COLORS.GRAY_1
-  },
-  amountAreaMiddleBottom: {},
-  amountAreaMiddleBottomText: {
-    fontSize: scale(14),
-    color: THEME.COLORS.GRAY_2
-  },
-  amountAreaRight: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'flex-end'
-  },
-  amountAreaRightText: {
-    color: THEME.COLORS.GRAY_2,
-    fontSize: scale(14)
-  },
-  editableFiatRow: {
-    flexDirection: 'row',
-    paddingLeft: scale(15),
-    paddingRight: scale(15)
-  },
-  editableFiatLeft: {
+  spacer: {
     flex: 1
   },
-  editableFiatArea: {
-    width: '38%',
-    borderBottomWidth: 1,
-    borderBottomColor: '#CCCCCC',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row'
-  },
-  fiatSymbol: {
-    color: THEME.COLORS.GRAY_2
-  },
-  editableFiat: {
-    color: THEME.COLORS.GRAY_1,
-    fontSize: scale(17),
-    textAlign: 'center',
-    height: scale(34),
-    flex: 1,
-    fontFamily: THEME.FONTS.DEFAULT
-  },
-  editableFiatRight: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'flex-end'
-  },
-  editableFiatRightText: {
-    color: THEME.COLORS.GRAY_2,
-    fontSize: scale(14)
-  },
-  categoryRow: {
-    paddingTop: scale(15),
-    marginTop: scale(10),
-    flexDirection: 'row',
-    paddingLeft: scale(15),
-    paddingRight: scale(15)
-  },
-  modalCategoryRow: {
-    paddingTop: scale(8),
-    flexDirection: 'row',
-    paddingLeft: scale(15),
-    paddingRight: scale(15),
-    height: scale(38),
-    marginBottom: scale(8)
-  },
-  categoryLeft: {
-    borderRadius: 3,
-    borderWidth: 1,
-    paddingLeft: scale(5),
-    paddingRight: scale(5),
-    paddingTop: scale(4),
-    paddingBottom: scale(6)
-  },
-  categoryLeftText: {
-    fontSize: scale(15)
-  },
-  categoryInputArea: {
-    flex: 1,
-    borderBottomWidth: 1,
-    borderBottomColor: '#CCCCCC',
-    marginLeft: scale(11),
-    height: scale(27),
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    flexDirection: 'row'
-  },
-  modalCategoryInputArea: {
-    flex: 1,
-    borderBottomWidth: 1,
-    borderBottomColor: '#CCCCCC',
-    marginLeft: scale(11),
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    flexDirection: 'row'
-  },
-  categoryInput: {
-    paddingTop: scale(4),
-    height: scale(26),
-    fontSize: scale(13),
-    flex: 1,
-    color: THEME.COLORS.GRAY_1,
-    fontFamily: THEME.FONTS.DEFAULT
-  },
-  notesRow: {
-    paddingBottom: scale(20),
-    paddingTop: scale(14),
-    paddingLeft: scale(15),
-    paddingRight: scale(15)
-  },
-  notesInputWrap: {
-    borderWidth: 1,
-    borderColor: '#CCCCCC',
-    borderRadius: 3,
-    height: PLATFORM.deviceHeight * 0.13 - (Platform.OS === 'android' ? scale(20) : 0),
-    padding: scale(3)
-  },
-  notesInput: {
-    color: THEME.COLORS.GRAY_2,
-    fontSize: scale(15),
-    fontFamily: THEME.FONTS.DEFAULT,
-    paddingVertical: 0
-  },
-  footerArea: {
-    backgroundColor: THEME.COLORS.GRAY_4,
-    paddingVertical: scale(20),
-    paddingLeft: scale(15),
-    paddingRight: scale(15)
-  },
-  buttonArea: {
-    height: scale(50)
+  saveButtonContainer: {
+    paddingHorizontal: rem(0.5),
+    paddingBottom: rem(0.8)
   },
   saveButton: {
-    height: scale(50)
+    height: rem(3)
   },
-  advancedTxArea: {
-    padding: scale(12),
-    paddingBottom: scale(12),
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: scale(50)
+  inputCategoryListHeader: {
+    fontSize: rem(0.7),
+    marginBottom: rem(0.3),
+    color: THEME.COLORS.SECONDARY
   },
-  advancedTxText: {
+  InputCategoryRow: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  inputCategoryContainter: {
+    paddingHorizontal: rem(0.5),
+    paddingVertical: rem(0.2),
+    marginRight: rem(0.6),
+    borderWidth: 1,
+    borderColor: '#A4C7DF',
+    borderRadius: 3
+  },
+  inputCategoryContainterSelected: {
+    paddingHorizontal: rem(0.5),
+    paddingVertical: rem(0.2),
+    marginRight: rem(0.6),
+    borderWidth: 1,
+    borderRadius: 3,
+    borderColor: '#A4C7DF',
+    backgroundColor: '#A4C7DF'
+  },
+  inputCategoryText: {
     color: THEME.COLORS.SECONDARY,
-    fontSize: scale(14),
-    paddingTop: scale(12),
-    paddingBottom: scale(12),
-    alignSelf: 'center'
+    fontSize: rem(0.9)
+  },
+  inputCategoryMainContainter: {
+    marginBottom: rem(0.8)
+  },
+  inputSubCategoryContainter: {
+    marginTop: rem(0.8)
   },
 
-  // subcategory selector
   subCategoryContainer: {
     paddingLeft: scale(15),
     paddingRight: scale(15),
@@ -262,8 +201,8 @@ export const styles = {
   },
   rowContainer: {
     flex: 1,
-    height: scale(50),
-    paddingLeft: scale(16),
+    height: rem(3.1),
+    paddingLeft: rem(0.6),
     flexDirection: 'row',
     justifyContent: 'space-between',
     backgroundColor: THEME.COLORS.WHITE,
@@ -281,21 +220,38 @@ export const styles = {
     marginRight: scale(5)
   },
   rowCategoryText: {
-    fontSize: scale(18),
-    color: '#58595C'
+    fontSize: rem(0.95)
   },
   rowPlusWrap: {
     justifyContent: 'center'
   },
   rowPlus: {
-    fontSize: scale(16),
-    color: '#58595C'
+    fontSize: rem(0.95)
   },
-
-  // beginning of contact search results
-  searchResults: {
-    width: '100%',
-    backgroundColor: THEME.COLORS.WHITE
+  inputNotesWrap: {
+    borderWidth: 1,
+    borderColor: '#CCCCCC',
+    borderRadius: 3,
+    height: PLATFORM.deviceHeight * (Platform.OS === 'android' ? 0.3 : 0.35),
+    padding: rem(0.8)
+  },
+  inputNotes: {
+    color: THEME.COLORS.GRAY_2,
+    fontSize: scale(15),
+    fontFamily: THEME.FONTS.DEFAULT,
+    paddingVertical: 0
+  },
+  inputNotesButton: {
+    color: THEME.COLORS.GRAY_2,
+    fontSize: scale(15),
+    fontFamily: THEME.FONTS.DEFAULT,
+    paddingVertical: 0
+  },
+  txIDIcon: {
+    color: THEME.COLORS.SECONDARY
+  },
+  underlayColor: {
+    color: THEME.COLORS.GRAY_4
   },
   singleContact: {
     height: scale(60),
@@ -307,17 +263,6 @@ export const styles = {
   },
   singleContactWrap: {
     flexDirection: 'column',
-    flex: 1
-  },
-  singleDateArea: {
-    backgroundColor: '#f6f6f6',
-    flex: 3,
-    padding: scale(8),
-    paddingLeft: scale(15),
-    flexDirection: 'row',
-    paddingRight: scale(24)
-  },
-  leftDateArea: {
     flex: 1
   },
   contactInfoWrap: {
@@ -342,32 +287,33 @@ export const styles = {
     color: '#58595C',
     textAlignVertical: 'center'
   },
-  contactBitAmount: {
-    fontSize: scale(16),
-    color: '#000000',
-    textAlignVertical: 'center'
-  },
+  contactThumbnail: {
+    height: scale(40),
+    width: scale(40),
+    borderRadius: scale(20)
+  }
+}
 
-  typeExchange: {
-    color: THEME.COLORS.ACCENT_ORANGE
-  },
-  typeExpense: {
-    color: THEME.COLORS.ACCENT_RED
-  },
-  typeTransfer: {
-    color: THEME.COLORS.PRIMARY
-  },
-  typeIncome: {
-    color: THEME.COLORS.ACCENT_BLUE
-  },
-  underlayColor: {
-    color: THEME.COLORS.GRAY_4
-  },
-  symbol: {
-    fontFamily: THEME.FONTS.SYMBOLS
-  },
-  txIDIcon: {
-    color: THEME.COLORS.SECONDARY
+export const iconSize = {
+  avatar: rem(2)
+}
+
+export const materialFiatInput = {
+  ...MaterialInputOnWhite,
+  fontSize: rem(3),
+  container: {
+    ...MaterialInputOnWhite.container,
+    width: '100%'
+  }
+}
+export const materialInput = {
+  ...MaterialInputOnWhite,
+  fontSize: rem(0.9),
+  labelFontSize: rem(0.65),
+  container: {
+    ...MaterialInputOnWhite.container,
+    height: rem(3.44),
+    width: '100%'
   }
 }
 

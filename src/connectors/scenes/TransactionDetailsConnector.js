@@ -1,33 +1,49 @@
 // @flow
 
-import type { EdgeCurrencyInfo, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
+import { bns } from 'biggystring'
+import { type EdgeCurrencyInfo, type EdgeDenomination, type EdgeMetadata, type EdgeTransaction } from 'edge-core-js'
 import { connect } from 'react-redux'
 
 import { getSubcategories, setNewSubcategory, setTransactionDetails } from '../../actions/TransactionDetailsActions.js'
-import type { TransactionDetailsOwnProps } from '../../components/scenes/TransactionDetailsScene'
-import { TransactionDetails } from '../../components/scenes/TransactionDetailsScene'
+import type { TransactionDetailsOwnProps } from '../../components/scenes/TransactionDetailsScene.js'
+import { TransactionDetails } from '../../components/scenes/TransactionDetailsScene.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
-import * as UI_SELECTORS from '../../modules/UI/selectors'
+import * as UI_SELECTORS from '../../modules/UI/selectors.js'
 import type { Dispatch, State } from '../../types/reduxTypes.js'
-import * as UTILS from '../../util/utils'
+import * as UTILS from '../../util/utils.js'
 
 const mapStateToProps = (state: State, ownProps: TransactionDetailsOwnProps) => {
-  const wallets = UI_SELECTORS.getWallets(state)
+  const { edgeTransaction } = ownProps
+  const walletId = edgeTransaction.wallet ? edgeTransaction.wallet.id : null
+  const wallet = walletId ? UI_SELECTORS.getWallet(state, walletId) : UI_SELECTORS.getSelectedWallet(state)
   const contacts = state.contacts
   const subcategoriesList: Array<string> = state.ui.scenes.transactionDetails.subcategories.sort()
   const settings = SETTINGS_SELECTORS.getSettings(state)
-  const currencyCode: string = ownProps.edgeTransaction.currencyCode
+  const currencyCode: string = edgeTransaction.currencyCode
   const plugins: Object = SETTINGS_SELECTORS.getPlugins(state)
   const allCurrencyInfos: Array<EdgeCurrencyInfo> = plugins.allCurrencyInfos
   const currencyInfo: EdgeCurrencyInfo | void = UTILS.getCurrencyInfo(allCurrencyInfos, currencyCode)
+  const walletDefaultDenomProps: EdgeDenomination = UTILS.isCryptoParentCurrency(wallet, edgeTransaction.currencyCode)
+    ? UTILS.getWalletDefaultDenomProps(wallet, settings)
+    : UTILS.getWalletDefaultDenomProps(wallet, settings, edgeTransaction.currencyCode)
+
+  const nativeAmount = edgeTransaction && edgeTransaction.nativeAmount ? bns.abs(edgeTransaction.nativeAmount) : ''
+  const cryptoAmount: string = UI_SELECTORS.convertNativeToExchangeRateDenomination(settings, currencyCode, nativeAmount)
+  const currentFiatAmount = UI_SELECTORS.convertCurrencyFromExchangeRates(
+    state.exchangeRates,
+    currencyCode,
+    wallet.isoFiatCurrencyCode,
+    parseFloat(cryptoAmount)
+  )
 
   return {
     contacts,
     subcategoriesList,
-    settings,
     currencyInfo,
     currencyCode,
-    wallets
+    guiWallet: wallet,
+    currentFiatAmount,
+    walletDefaultDenomProps
   }
 }
 

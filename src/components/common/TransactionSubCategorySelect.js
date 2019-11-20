@@ -8,8 +8,6 @@ import styles from '../../styles/scenes/TransactionDetailsStyle'
 import { THEME } from '../../theme/variables/airbitz.js'
 import type { SubcategorySearchResultData } from '../../types/types.js'
 
-const categories = ['income', 'expense', 'exchange', 'transfer']
-
 type State = {
   subcategories: Array<string>,
   filteredSubcategories: Array<string>,
@@ -19,7 +17,8 @@ type Props = {
   bottomGap: number,
   subcategoriesList: Array<string>,
   enteredSubcategory: string,
-  onPressFxn: (input: string) => void
+  onPressFxn: (input: string) => void,
+  categories: Array<string>
 }
 
 class SubCategorySelect extends Component<Props, State> {
@@ -27,15 +26,19 @@ class SubCategorySelect extends Component<Props, State> {
     super(props)
     this.state = {
       subcategories: this.props.subcategoriesList,
-      filteredSubcategories: this.props.subcategoriesList.sort(),
+      filteredSubcategories: this.props.subcategoriesList,
       enteredSubcategory: this.props.enteredSubcategory
     }
   }
 
+  filterSubcategory = () => {
+    const { subcategoriesList, enteredSubcategory } = this.props
+    return subcategoriesList.filter(subCategory => subCategory.toLowerCase().includes(enteredSubcategory.toLowerCase()))
+  }
+
   render () {
-    const filteredSubcats = !this.props.enteredSubcategory
-      ? this.props.subcategoriesList
-      : this.props.subcategoriesList.filter(entry => entry.indexOf(this.props.enteredSubcategory) >= 0)
+    const { categories } = this.props
+    const filteredSubcats = !this.props.enteredSubcategory ? this.props.subcategoriesList : this.filterSubcategory()
     let newPotentialSubCategories = []
     let newPotentialSubCategoriesFiltered = []
     if (this.props.enteredSubcategory) {
