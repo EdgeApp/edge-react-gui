@@ -147,6 +147,13 @@ export class ExchangedFlipInput extends Component<Props, State> {
     this.props.onExchangeAmountChanged({ exchangeAmount, nativeAmount })
   }
 
+  isFiatOnTop = () => {
+    if (this.props.isFiatOnTop) {
+      return this.props.isFiatOnTop
+    }
+    return !bns.eq(this.state.exchangeSecondaryToPrimaryRatio, '0')
+  }
+
   render () {
     return (
       <FlipInput
@@ -158,7 +165,7 @@ export class ExchangedFlipInput extends Component<Props, State> {
         onAmountChanged={this.onAmountChanged}
         keyboardVisible={this.props.keyboardVisible}
         isEditable={this.props.isEditable}
-        isFiatOnTop={this.props.isFiatOnTop}
+        isFiatOnTop={this.isFiatOnTop()}
         isFocus={this.props.isFocus}
         onNext={this.props.onNext}
       />
