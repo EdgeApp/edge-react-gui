@@ -283,7 +283,7 @@ export const styles = {
     top: scale(4)
   },
   transactionTime: {
-    color: THEME.COLORS.GRAY_1
+    color: THEME.COLORS.SECONDARY
   },
   transactionPending: {
     color: THEME.COLORS.ACCENT_RED
@@ -372,15 +372,15 @@ export const styles = {
   transactionCategory: {
     flex: 1,
     fontSize: 12,
-    color: '#0E507D'
+    color: THEME.COLORS.SECONDARY
   },
   transactionFiat: {
     fontSize: 12,
-    color: '#0E507D'
+    color: THEME.COLORS.SECONDARY
   },
   transactionPendingTime: {
-    fontSize: 12,
-    color: '#0E507D'
+    flex: 1,
+    fontSize: 12
   }
 }
 
