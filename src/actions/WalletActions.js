@@ -395,8 +395,8 @@ export const deleteCustomToken = (walletId: string, currencyCode: string) => (di
   dispatch({ type: 'DELETE_CUSTOM_TOKEN_START' })
   SETTINGS_API.getSyncedSettings(account)
     .then(settings => {
-      settings[currencyCode].isVisible = false // remove top-level property. We should migrate away from it eventually anyway
-      localSettings[currencyCode].isVisible = false
+      if (settings[currencyCode]) settings[currencyCode].isVisible = false // remove top-level property. We should migrate away from it eventually anyway
+      if (localSettings[currencyCode]) localSettings[currencyCode].isVisible = false
       const customTokensOnFile = [...settings.customTokens] // should use '|| []' as catch-all or no?
       const customTokensOnLocal = [...localSettings.customTokens]
       const indexOfToken = _.findIndex(customTokensOnFile, item => item.currencyCode === currencyCode)
