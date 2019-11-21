@@ -16,7 +16,7 @@ import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import T from '../../modules/UI/components/FormattedText/index'
 import { calculateSettingsFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
-import styles, { styles as styleRaw } from '../../styles/scenes/WalletListStyle.js'
+import styles, { customWalletListOptionsStyles, styles as styleRaw } from '../../styles/scenes/WalletListStyle.js'
 import type { State } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo, GuiDenomination } from '../../types/types.js'
 import { decimalOrZero, getFiatSymbol, getObjectDiff, truncateDecimals } from '../../util/utils.js'
@@ -174,7 +174,12 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
                 </View>
               </View>
               <View style={styles.rowOptionsWrap}>
-                <WalletListRowOptions currencyCode={walletData.currencyCode} executeWalletRowOption={walletData.executeWalletRowOption} walletKey={id} />
+                <WalletListRowOptions
+                  currencyCode={walletData.currencyCode}
+                  executeWalletRowOption={walletData.executeWalletRowOption}
+                  walletKey={id}
+                  customStyles={customWalletListOptionsStyles}
+                />
               </View>
             </View>
           </TouchableHighlight>

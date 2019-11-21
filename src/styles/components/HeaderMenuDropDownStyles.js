@@ -57,7 +57,7 @@ const MenuDropDownStyle = {
     width: scale(46),
     height: '100%',
     alignItems: 'center',
-    justifyContent: 'flex-start'
+    justifyContent: 'center'
   },
   menuOptions: {},
   menuOptionItem: {
@@ -71,7 +71,7 @@ const MenuDropDownStyle = {
   },
   icon: {
     fontSize: scale(20),
-    fontWeight: '200'
+    color: THEME.COLORS.GRAY_1
   },
   altIconText: {
     fontSize: scale(20)
