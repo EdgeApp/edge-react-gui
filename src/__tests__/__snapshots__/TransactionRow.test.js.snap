@@ -172,9 +172,11 @@ exports[`MenuDropDown component should render without props 1`] = `
             style={
               Array [
                 Object {
-                  "color": "#0E507D",
                   "flex": 1,
                   "fontSize": 12,
+                },
+                Object {
+                  "color": "#F1AA19",
                 },
               ]
             }
@@ -185,7 +187,7 @@ exports[`MenuDropDown component should render without props 1`] = `
             style={
               Array [
                 Object {
-                  "color": "#0E507D",
+                  "color": "#0E4B75",
                   "fontSize": 12,
                 },
               ]
