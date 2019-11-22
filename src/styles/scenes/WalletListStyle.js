@@ -148,7 +148,7 @@ export const styles = {
   },
   sortableWalletListRow: {
     width: PLATFORM.deviceWidth,
-    height: scale(55),
+    height: 65,
     backgroundColor: THEME.COLORS.WHITE,
     paddingVertical: scale(6),
     paddingHorizontal: scale(20),
@@ -164,7 +164,7 @@ export const styles = {
   rowContainer: {
     padding: scale(6),
     paddingLeft: scale(8),
-    height: scale(100),
+    height: 108,
     backgroundColor: THEME.COLORS.WHITE,
     borderBottomWidth: scale(1),
     borderBottomColor: THEME.COLORS.GRAY_3
@@ -340,7 +340,7 @@ export const styles = {
   tokenRowContainer: {
     padding: scale(6),
     paddingLeft: scale(8),
-    height: scale(100),
+    height: 108,
     backgroundColor: THEME.COLORS.GRAY_4,
     borderBottomWidth: 1,
     borderColor: THEME.COLORS.GRAY_3
@@ -446,5 +446,20 @@ export const styles = {
     color: THEME.COLORS.GRAY_1
   }
 }
+
+export const customWalletListOptionsStyles = StyleSheet.create({
+  icon: {
+    fontSize: scale(21),
+    fontWeight: '200',
+    position: 'relative',
+    top: 6
+  },
+  menuIconWrap: {
+    width: scale(46),
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'flex-start'
+  }
+})
 
 export default StyleSheet.create(styles)

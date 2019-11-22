@@ -1,6 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
+import { StyleSheet } from 'react-native'
 import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
@@ -13,7 +14,8 @@ import { scale } from '../../util/scaling.js'
 type Props = {
   walletKey: string,
   executeWalletRowOption: (walletKey: string, option: string) => void,
-  currencyCode: Array<string>
+  currencyCode: Array<string>,
+  customStyles: StyleSheet.Styles
 }
 
 const modifiedMenuDropDownStyle = {
@@ -21,9 +23,9 @@ const modifiedMenuDropDownStyle = {
   ...MenuDropDownStyle,
   icon: {
     ...MenuDropDownStyle.icon,
-    fontSize: scale(21),
+    fontSize: scale(30),
     position: 'relative',
-    top: 6
+    top: 2
   }
 }
 
@@ -56,6 +58,6 @@ export default class WalletListRowOptions extends Component<Props> {
   }
 
   render () {
-    return <MenuDropDown style={modifiedMenuDropDownStyle} onSelect={this.optionAction} data={this.options} />
+    return <MenuDropDown style={{ ...modifiedMenuDropDownStyle, ...this.props.customStyles }} onSelect={this.optionAction} data={this.options} />
   }
 }
