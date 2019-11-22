@@ -61,7 +61,7 @@ export const styles = {
     },
     containerExpanded: {
       width: '100%',
-      height: scale(110),
+      height: scale(91),
       backgroundColor: THEME.COLORS.OPACITY_WHITE,
       borderRadius: 3
     },
