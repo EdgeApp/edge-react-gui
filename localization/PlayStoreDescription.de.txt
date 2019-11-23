@@ -6,7 +6,7 @@ Kurze Beschreibung: Privat, sicher & einfach zu nutzen. Bitcoin & andere Kryptow
 
 Die Verwaltung Ihrer Kryptowährung war nie einfacher. Die Edge-Wallet bietet maximale Sicherheit bei gleichzeitiger Einfachheit und ermöglicht es allen Nutzern, ihre Währungen einfach zu verwalten, zu transferieren und zu tauschen.
 
-<b>Die Edge-Krypto-Wallet unterstützt derzeit:</b> Bitcoin (BTC), Bitcoin Cash (BCH), Bitcoin SV (BSV), Litecoin (LTC), Qtum (QTUM), Dash (DASH), Ethereum (ETH), Monero (XMR), Ripple (XRP), Digibyte (DGB), EOS und Feathercoin (FTC). Du willst andere Kryptowährungen in unserer Wallet sehen? Senden Sie uns eine Anfrage!
+<b>Edge Crypto Wallet currently supports:</b> Bitcoin (BTC), Bitcoin Cash (BCH), Bitcoin SV (BSV), Litecoin (LTC), Qtum (QTUM), Dash (DASH), Ethereum (ETH), Monero (XMR), Ripple (XRP), Digibyte (DGB), EOS, Binance Chain (BNB), RSK (RBTC), Stellar (XLM), Tezos (XTZ), Ravencoin (RVN), SmartCash (SMART), Zcoin (XZC), Dogecoin (DOGE), and Feathercoin (FTC). Du willst andere Kryptowährungen in unserer Wallet sehen? Senden Sie uns eine Anfrage!
 
 Edge ist eine leistungsstarke und einfach zu bedienende Wallet für Kryptowährungen, die es Benutzern erlaubt, ihre eigenen privaten Schlüssel mit der Vertrautheit und Leichtigkeit des mobilen Banking's zu kontrollieren. 
 
