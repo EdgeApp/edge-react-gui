@@ -116,6 +116,7 @@
     "prop-types": "^15.5.10",
     "react": "16.8.3",
     "react-native": "0.59.10",
+    "react-native-airship": "^0.1.1",
     "react-native-animatable": "^1.1.0",
     "react-native-app-settings": "git://github.com/swansontec/react-native-app-settings#fix-rn59",
     "react-native-background-fetch": "^2.4.3",

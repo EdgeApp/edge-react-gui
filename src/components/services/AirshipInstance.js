@@ -1,8 +1,8 @@
 // @flow
 
 import React from 'react'
+import { makeAirship } from 'react-native-airship'
 
-import { makeAirship } from '../common/Airship.js'
 import { AirshipToast } from '../common/AirshipToast.js'
 import { AlertDropdown } from '../navigation/AlertDropdown.js'
 
