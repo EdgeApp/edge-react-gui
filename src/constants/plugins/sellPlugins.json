@@ -3,7 +3,7 @@
     "id": "simplex",
     "pluginId": "co.edgesecure.simplex",
     "paymentType": "credit",
-    "description": "Fee: ~4% / Settlement: 10-30 minutes\nLimit: €4400",
+    "description": "Fee: ~4% / Settlement: 10 - 30 minutes\nLimit: €4400",
     "title": "Credit and Debit Card",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/03/simplex-logo-sm-square.png",
     "countryCodes": {
@@ -82,7 +82,7 @@
     "id": "bits of gold",
     "pluginId": "bitsofgold",
     "paymentType": "bank",
-    "description": "Fee: ~6.5% / Settlement: 1-72 hours\nLimit: €5000",
+    "description": "Fee: ~6.5% / Settlement: 1 - 72 hours\nLimit: €5000",
     "title": "SEPA Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/bits-of-gold-logo-sm.png",
     "countryCodes": {
@@ -450,10 +450,28 @@
       "BTC"
     ],
     "paymentType": "bank",
-    "description": "Fee: 1% / Settlement: 1-2 days\nLimit: €5000/day with no KYC",
+    "description": "Fee: 1% / Settlement: 1 - 2 days\nLimit: €5000/day with no KYC",
     "title": "SEPA Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/09/logoBity.png",
     "paymentTypeLogoKey": "bank"
+  },
+  {
+    "id": "safello.bank",
+    "pluginId": "com.safello.sell",
+    "paymentType": "bank",
+    "description": "Fee: 3% / Settlement: 1 - 2 days\nLimit: €2500",
+    "title": "Bank Transfer",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/06/Safello-Logo-Green-background.png",
+    "countryCodes": {
+      "SE": true,
+      "DK": true
+    },
+    "cryptoCodes": [
+      "BTC",
+      "ETH"
+    ],
+    "paymentTypeLogoKey": "bank",
+    "addOnUrl": "sdk/quickbuy.html?appId=e12e499b-4b81-465a-a7ad-d0ed12843887&tab=sell&utm_source=Edge&utm_medium=Wallet"
   },
   "----- Sorting -----",
   {
@@ -476,6 +494,10 @@
     "id": "bitrefill",
     "priority": 5
   },
+  {
+    "id": "safello.bank",
+    "priority": 2
+  },
   "----- iOS specifics -----",
   "----- Country Specifics -----",
   {
@@ -485,5 +507,13 @@
     ],
     "priority": 2,
     "title": "Israeli Bank Transfer"
+  },
+  {
+    "id": "safello.bank",
+    "forCountries": [
+      "SE"
+    ],
+    "paymentTypeLogoKey": "bankgirot",
+    "title": "Bankgirot Bank Transfer"
   }
 ]
