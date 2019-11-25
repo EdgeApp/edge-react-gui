@@ -105,7 +105,7 @@
     "detect-bundler": "^1.0.0",
     "disklet": "^0.4.1",
     "edge-components": "^0.0.26",
-    "edge-core-js": "^0.16.14",
+    "edge-core-js": "^0.16.15",
     "edge-currency-accountbased": "^0.5.5",
     "edge-currency-bitcoin": "^4.6.4",
     "edge-currency-monero": "^0.2.4",
@@ -165,8 +165,7 @@
     "sprintf-js": "^1.1.1",
     "url": "^0.11.0",
     "url-parse": "^1.4.4",
-    "why-did-you-update": "^0.1.1",
-    "yaob": "0.3.4"
+    "why-did-you-update": "^0.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.4.0",
