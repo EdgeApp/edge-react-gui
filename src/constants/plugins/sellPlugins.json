@@ -467,8 +467,7 @@
       "DK": true
     },
     "cryptoCodes": [
-      "BTC",
-      "ETH"
+      "BTC"
     ],
     "paymentTypeLogoKey": "bank",
     "addOnUrl": "sdk/quickbuy.html?appId=e12e499b-4b81-465a-a7ad-d0ed12843887&tab=sell&utm_source=Edge&utm_medium=Wallet"

@@ -430,7 +430,9 @@
     },
     "cryptoCodes": [
       "BTC",
-      "ETH"
+      "ETH",
+      "BCH",
+      "XRP"
     ],
     "paymentTypeLogoKey": "credit"
   },
@@ -447,7 +449,9 @@
     },
     "cryptoCodes": [
       "BTC",
-      "ETH"
+      "ETH",
+      "BCH",
+      "XRP"
     ],
     "paymentTypeLogoKey": "bank",
     "addOnUrl": "buy/bank"
