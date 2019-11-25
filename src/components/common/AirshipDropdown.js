@@ -2,9 +2,9 @@
 
 import React, { type Node, Component } from 'react'
 import { Animated, Dimensions, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import { type AirshipBridge } from 'react-native-airship'
 
 import { THEME } from '../../theme/variables/airbitz.js'
-import { type AirshipBridge } from './Airship.js'
 import { LayoutContext } from './LayoutContext.js'
 
 const slideInTime = 300

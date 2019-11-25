@@ -2,15 +2,15 @@
 
 import React, { type Node, Component } from 'react'
 import { Animated, BackHandler, Dimensions, StyleSheet, TouchableWithoutFeedback } from 'react-native'
+import { type AirshipBridge } from 'react-native-airship'
 
 import { THEME } from '../../theme/variables/airbitz.js'
 import { scale } from '../../util/scaling.js'
-import { type AirshipBallast } from './Airship.js'
 import { KeyboardTracker } from './KeyboardTracker.js'
 import { type SafeAreaGap, LayoutContext } from './LayoutContext.js'
 
 type Props = {
-  bridge: AirshipBallast,
+  bridge: AirshipBridge<any>,
   children: Node | ((gap: SafeAreaGap) => Node),
 
   // True to have the modal float in the center of the screen,
