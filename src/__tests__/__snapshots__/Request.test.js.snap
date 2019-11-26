@@ -41,12 +41,15 @@ exports[`Request should render with loaded props 1`] = `
     <View
       style={
         Object {
-          "overflow": "hidden",
+          "backgroundColor": "white",
+          "borderRadius": 5.618309859154929,
+          "padding": 5.618309859154929,
         }
       }
     >
-      <QRCode
-        value=""
+      <QrCode
+        data=""
+        size={333.5}
       />
     </View>
     <RequestStatus
