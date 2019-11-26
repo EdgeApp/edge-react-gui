@@ -4005,10 +4005,10 @@ edge-core-js@^0.16.15:
     ws "^5.1.1"
     yaob "^0.3.5"
 
-edge-currency-accountbased@^0.5.5:
-  version "0.5.5"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.5.5.tgz#59a5f373e185171a7cf95300d6d98ac72c0985fe"
-  integrity sha512-N9ENVZ1Nebh3WKkSC/U423njhYgM69ebB5DA1NplYUm3gifdCOjAd0PbbDEqnjtdHqHeQ/uqK+ilfQ8iYCQyvQ==
+edge-currency-accountbased@^0.5.6:
+  version "0.5.6"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.5.6.tgz#6c61fe8c98bc3c8248dee6c2dd4811682191219a"
+  integrity sha512-npkNf7S1QNy4tPqOnIbioHXW4xL1+a6W9+A/UAeqT779lDewx6DEaUimNckuZT/SPvHqTcI5QLqoQpTN3e2upw==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@dapix/react-native-fio" "0.1.0"
@@ -5319,6 +5319,9 @@ fsevents@^1.2.3:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-1.2.4.tgz#f41dcb1af2582af3692da36fc55cbd8e1041c426"
   integrity sha512-z8H8/diyk76B7q5wg+Ud0+CqzcAF3mBBI/bA5ne5zrRUUIvNkJY//D3BqyH571KuAC4Nr7Rw7CjWX4r0y9DvNg==
+  dependencies:
+    nan "^2.9.2"
+    node-pre-gyp "^0.10.0"
 
 fsevents@^1.2.7:
   version "1.2.9"
