@@ -20,7 +20,6 @@ import org.reactnative.camera.RNCameraPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.analytics.RNFirebaseAnalyticsPackage;
 import io.invertase.firebase.database.RNFirebaseDatabasePackage;
-import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.chirag.RNMail.RNMail;
 import com.reactnativecomponent.splashscreen.RCTSplashScreenPackage;
 import com.beefe.picker.PickerViewPackage;
@@ -67,7 +66,6 @@ public class MainApplication extends Application implements ReactApplication {
             new RNFirebasePackage(),
             new RNFirebaseAnalyticsPackage(),
             new RNFirebaseDatabasePackage(),
-            new ReactNativePushNotificationPackage(),
             new RNMail(),
             new RCTSplashScreenPackage(),
             new PickerViewPackage(),

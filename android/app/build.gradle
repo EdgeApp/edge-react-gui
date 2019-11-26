@@ -186,7 +186,6 @@ dependencies {
     implementation project(':react-native-mail')
     implementation project(':react-native-material-kit')
     implementation project(':react-native-picker')
-    implementation project(':react-native-push-notification')
     implementation project(':react-native-randombytes')
     implementation project(':react-native-share')
     implementation project(':react-native-smart-splash-screen')

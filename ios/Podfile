@@ -12,7 +12,6 @@ target 'edge' do
     'RCTImage',
     'RCTLinkingIOS',
     'RCTNetwork',
-    'RCTPushNotification',
     'RCTSettings',
     'RCTActionSheet',
     'RCTText',
