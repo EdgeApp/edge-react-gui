@@ -15,5 +15,3 @@ export const FROM = 'from'
 export const TO = 'to'
 
 export const CRYPTO_EXCHANGE = 'cryptoExchange'
-export const PUSH_DELAY_SECONDS = 86400
-export const LOCAL_STORAGE_BACKGROUND_PUSH_KEY = 'EdgeWalletLastPushNotification'

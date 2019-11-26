@@ -16,7 +16,6 @@ import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 
 import com.bugsnag.BugsnagReactNative;
-import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
 import org.reactnative.camera.RNCameraPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.analytics.RNFirebaseAnalyticsPackage;
@@ -64,7 +63,6 @@ public class MainApplication extends Application implements ReactApplication {
             new RNCWebViewPackage(),
             new CookieManagerPackage(),
             new OpenAppSettingsPackage(),
-            new RNBackgroundFetchPackage(),
             BugsnagReactNative.getPackage(),
             new RNFirebasePackage(),
             new RNFirebaseAnalyticsPackage(),

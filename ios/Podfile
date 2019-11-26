@@ -49,7 +49,6 @@ target 'edge' do
   pod 'react-native-webview', :path => '../node_modules/react-native-webview'
   pod 'ReactNativeART', :path => '../node_modules/@react-native-community/art'
   pod 'ReactNativePermissions', :path => '../node_modules/react-native-permissions'
-  pod 'RNBackgroundFetch', :path => '../node_modules/react-native-background-fetch'
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
   pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
   pod 'RNFS', :path => '../node_modules/react-native-fs'

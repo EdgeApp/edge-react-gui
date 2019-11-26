@@ -172,7 +172,6 @@ dependencies {
     implementation project(':edge-login-ui-rn')
     implementation project(':ExtraDimensions')
     implementation project(':react-native-app-settings')
-    implementation project(':react-native-background-fetch')
     implementation project(':react-native-camera')
     implementation project(':react-native-contacts-wrapper')
     implementation project(':react-native-contacts')
