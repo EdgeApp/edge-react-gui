@@ -12,6 +12,7 @@ import { connect } from 'react-redux'
 
 import { updateOneSetting } from '../../actions/SettingsActions.js'
 import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
+import paymentTypeLogoBankgirot from '../../assets/images/paymentTypes/paymentTypeLogoBankgirot.png'
 import paymentTypeLogoBankTransfer from '../../assets/images/paymentTypes/paymentTypeLogoBankTransfer.png'
 import paymentTypeLogoCash from '../../assets/images/paymentTypes/paymentTypeLogoCash.png'
 import paymentTypeLogoCreditCard from '../../assets/images/paymentTypes/paymentTypeLogoCreditCard.png'
@@ -49,6 +50,7 @@ const paymentTypeLogosById = {
   credit: paymentTypeLogoCreditCard,
   applepay: paymentTypeLogoApplePay,
   bank: paymentTypeLogoBankTransfer,
+  bankgirot: paymentTypeLogoBankgirot,
   cash: paymentTypeLogoCash,
   giftcard: paymentTypeLogoGiftCard,
   newsagent: paymentTypeLogoNewsagent,

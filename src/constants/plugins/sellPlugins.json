@@ -65,7 +65,7 @@
     "id": "wyre",
     "pluginId": "co.edgesecure.wyre",
     "paymentType": "bank",
-    "description": "Fee: 1% / Settlement: 1 - 5 days\nLimit: $2500",
+    "description": "Fee: 1% / Settlement: 1-5 days\nLimit: $2500",
     "title": "ACH Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/01/wyre-logo-square-small.png",
     "countryCodes": {
@@ -455,6 +455,23 @@
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/09/logoBity.png",
     "paymentTypeLogoKey": "bank"
   },
+  {
+    "id": "safello.bank",
+    "pluginId": "com.safello.sell",
+    "paymentType": "bank",
+    "description": "Fee: 3% / Settlement: 1-2 days\nLimit: €2500",
+    "title": "Bank Transfer",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/06/Safello-Logo-Green-background.png",
+    "countryCodes": {
+      "SE": true,
+      "DK": true
+    },
+    "cryptoCodes": [
+      "BTC"
+    ],
+    "paymentTypeLogoKey": "bank",
+    "addOnUrl": "sdk/quickbuy.html?appId=e12e499b-4b81-465a-a7ad-d0ed12843887&tab=sell&utm_source=Edge&utm_medium=Wallet"
+  },
   "----- Sorting -----",
   {
     "id": "simplex",
@@ -476,6 +493,10 @@
     "id": "bitrefill",
     "priority": 5
   },
+  {
+    "id": "safello.bank",
+    "priority": 2
+  },
   "----- iOS specifics -----",
   "----- Country Specifics -----",
   {
@@ -485,5 +506,13 @@
     ],
     "priority": 2,
     "title": "Israeli Bank Transfer"
+  },
+  {
+    "id": "safello.bank",
+    "forCountries": [
+      "SE"
+    ],
+    "paymentTypeLogoKey": "bankgirot",
+    "title": "Bankgirot Bank Transfer"
   }
 ]
