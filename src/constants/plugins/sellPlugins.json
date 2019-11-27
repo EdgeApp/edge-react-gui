@@ -513,6 +513,13 @@
       "SE"
     ],
     "paymentTypeLogoKey": "bankgirot",
-    "title": "Bankgirot Bank Transfer"
+    "title": "Bankgiro"
+  },
+  {
+    "id": "safello.bank",
+    "forCountries": [
+      "DK"
+    ],
+    "title": "DKK Bank Transfer"
   }
 ]
