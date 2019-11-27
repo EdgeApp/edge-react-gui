@@ -28,7 +28,6 @@ jest.mock(
       play () {}
     }
 )
-jest.mock('react-native-qrcode', () => 'QRCode')
 jest.mock('react-native-camera', () => ({
   RNCamera: {
     Constants: {

@@ -3527,7 +3527,7 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4, create-hmac@^1.1.6, 
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-create-react-class@*, create-react-class@^15.6.0, create-react-class@^15.6.3:
+create-react-class@*, create-react-class@^15.6.3:
   version "15.6.3"
   resolved "https://registry.yarnpkg.com/create-react-class/-/create-react-class-15.6.3.tgz#2d73237fb3f970ae6ebe011a9e66f46dbca80036"
   integrity sha512-M+/3Q6E6DLO6Yx3OwrWjwHBnvfXXYA7W+dFjt/ZDBemHO1DDZhsalX/NUtnTYclN6GfnBDRh4qRHjcDHmlJBJg==
@@ -4073,23 +4073,23 @@ edge-exchange-plugins@^0.8.12:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@0.6.1:
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.6.1.tgz#90fd6cc87fd9367ebcc7886f958a6f1538a62b0e"
-  integrity sha512-ZBsxeKVMnJ3NbX+dmkClp5+KlO9ylvzUrU6FzkA7EucON0UZIJ6UPzyy32mdz85jJIEVXNeyN+OiFWvdHgAEDw==
+edge-login-ui-rn@0.6.2:
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.6.2.tgz#6c7a645fca83cb4e325e22645fdf04cc839a0fac"
+  integrity sha512-D2pBcWS8E9/8LshjJNGpTjNtR+LhibgwNrOi9B5BB0jEXARCem7jMs8mKTe9R3RBjPhJYUvgDeeA6Q8BALmNBA==
   dependencies:
     edge-components "^0.0.26"
     material-ui "^0.20.0"
     moment "^2.19.3"
     native-base "^2.7.2"
+    qrcode-generator "^1.4.4"
     react-native-device-info "^0.11.0"
     react-native-extra-dimensions-android "^1.2.5"
-    react-native-keyboard-aware-scroll-view "^0.4.1"
+    react-native-keyboard-aware-scroll-view "^0.9.1"
     react-native-linear-gradient "^2.0.0"
     react-native-mail "^3.0.5"
     react-native-material-textfield "git://github.com/EdgeApp/react-native-material-textfield.git"
     react-native-modal "^11.0.1"
-    react-native-qrcode "^0.2.7"
     react-native-vector-icons "^4.4.2"
     react-redux "^5.0.7"
     redux "~3.5.2"
@@ -5319,9 +5319,6 @@ fsevents@^1.2.3:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-1.2.4.tgz#f41dcb1af2582af3692da36fc55cbd8e1041c426"
   integrity sha512-z8H8/diyk76B7q5wg+Ud0+CqzcAF3mBBI/bA5ne5zrRUUIvNkJY//D3BqyH571KuAC4Nr7Rw7CjWX4r0y9DvNg==
-  dependencies:
-    nan "^2.9.2"
-    node-pre-gyp "^0.10.0"
 
 fsevents@^1.2.7:
   version "1.2.9"
@@ -9512,11 +9509,6 @@ punycode@^2.1.0, punycode@^2.1.1:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
 
-qr.js@0.0.0:
-  version "0.0.0"
-  resolved "https://registry.yarnpkg.com/qr.js/-/qr.js-0.0.0.tgz#cace86386f59a0db8050fa90d9b6b0e88a1e364f"
-  integrity sha1-ys6GOG9ZoNuAUPqQ2baw6IoeNk8=
-
 qrcode-generator@^1.4.4:
   version "1.4.4"
   resolved "https://registry.yarnpkg.com/qrcode-generator/-/qrcode-generator-1.4.4.tgz#63f771224854759329a99048806a53ed278740e7"
@@ -9830,18 +9822,10 @@ react-native-keyboard-aware-scroll-view@0.5.0:
     prop-types "^15.6.0"
     react-native-iphone-x-helper "^1.0.1"
 
-react-native-keyboard-aware-scroll-view@^0.4.1:
-  version "0.4.4"
-  resolved "https://registry.yarnpkg.com/react-native-keyboard-aware-scroll-view/-/react-native-keyboard-aware-scroll-view-0.4.4.tgz#116d08975a84482e4ee64dd0b526a8f04138b0a7"
-  integrity sha512-wRQ9Ji1MNN7bMetkcoRvom5i2+8bH+s8QD/m2TEIZaSRlmsWxu4TKcWwYY+T4WABJn4l0UQM9c8QL0GWa6QTbQ==
-  dependencies:
-    prop-types "^15.6.0"
-    react-native-iphone-x-helper "^1.0.1"
-
-react-native-keyboard-aware-scroll-view@^0.7.4:
-  version "0.7.4"
-  resolved "https://registry.yarnpkg.com/react-native-keyboard-aware-scroll-view/-/react-native-keyboard-aware-scroll-view-0.7.4.tgz#80fb4b56f3c5cb399da0c6832ec52729856ac08a"
-  integrity sha512-5AJ11sGcleiX43IJ32T0kPtIxcd1JWw0R+YPwkgyZWro7uuGBlq09CFW5jS9JTNoGq7crFzFfTcoTIY6B41rNQ==
+react-native-keyboard-aware-scroll-view@^0.9.1:
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/react-native-keyboard-aware-scroll-view/-/react-native-keyboard-aware-scroll-view-0.9.1.tgz#9e54b565a5f19b30bed12221d48921781f7630af"
+  integrity sha512-tBZ8rmjELN0F6t5UBp5CW3NYmZXgVnJSzVCssv/OqG2t6kiB+OUTqxNvUP24K+HARX4H+XaW0aEJSFQkQCv6KA==
   dependencies:
     prop-types "^15.6.2"
     react-native-iphone-x-helper "^1.0.3"
@@ -9898,15 +9882,6 @@ react-native-push-notification@^3.0.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/react-native-push-notification/-/react-native-push-notification-3.1.2.tgz#a6129fb2897773a19c7b42bba1b51a9a4aac7df3"
   integrity sha512-MjjPNXb2Cw7g1D41DtVbTVuGFCAtADxb91pAEFSkQ0AZ2gIooqYkWFHBL6woc15QHhtaZS8VT2GQoyW5OWlxIg==
-
-react-native-qrcode@^0.2.7:
-  version "0.2.7"
-  resolved "https://registry.yarnpkg.com/react-native-qrcode/-/react-native-qrcode-0.2.7.tgz#d103166fb1a5b53643e8bf7b88c0672e689ac4f8"
-  integrity sha512-Xvc3T1h95zA9tbRxiMkKethDYpPwKcqDPIHe9Cxt7pM+lma9dSzd6yXGGLGeZmFU/SmHMK+4bTnDltUv1s4Jnw==
-  dependencies:
-    create-react-class "^15.6.0"
-    prop-types "^15.5.10"
-    qr.js "0.0.0"
 
 react-native-randombytes@^3.5.0:
   version "3.5.1"
