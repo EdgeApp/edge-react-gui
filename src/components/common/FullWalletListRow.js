@@ -143,6 +143,7 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
     const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
     const exchangeRateFormat = intl.formatNumber(exchangeRate, { toFixed: 2 }) || '0'
     const exchangeRateString = `${fiatSymbol} ${exchangeRateFormat}/${currencyCode}`
+    const progress = this.getProgress()
 
     return (
       <View style={[{ width: '100%' }]}>
@@ -156,7 +157,7 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
               <View style={styles.rowIconWrap}>
                 {symbolImageDarkMono && <Image style={[styles.rowCurrencyLogoAndroid]} source={{ uri: symbolImageDarkMono }} resizeMode="cover" />}
                 <View style={styles.rowCurrencyLogoAndroid}>
-                  <ProgressPie size={styles.rowCurrencyOverlaySize} color={'rgba(255, 255, 255, 0.75)'} progress={this.getProgress()} />
+                  <ProgressPie size={styles.rowCurrencyOverlaySize} color={'rgba(255, 255, 255, 0.75)'} progress={progress} />
                 </View>
               </View>
               <View style={styles.walletDetailsContainer}>
@@ -183,13 +184,13 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
               </View>
             </View>
           </TouchableHighlight>
-          {this.renderTokenRow(id, enabledNativeBalances)}
+          {this.renderTokenRow(id, enabledNativeBalances, progress)}
         </View>
       </View>
     )
   }
 
-  renderTokenRow = (parentId: string, metaTokenBalances) => {
+  renderTokenRow = (parentId: string, metaTokenBalances, progress: number) => {
     const tokens = []
     for (const property in metaTokenBalances) {
       if (metaTokenBalances.hasOwnProperty(property)) {
@@ -202,6 +203,7 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
               fiatSymbol={this.props.fiatSymbol}
               balance={metaTokenBalances[property]}
               showBalance={this.props.showBalance}
+              progress={progress}
             />
           )
         }

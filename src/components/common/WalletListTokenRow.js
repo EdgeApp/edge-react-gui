@@ -10,6 +10,7 @@ import T from '../../modules/UI/components/FormattedText/index'
 import styles, { styles as styleRaw } from '../../styles/scenes/WalletListStyle'
 import { type GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils'
+import { ProgressPie } from './ProgressPie.js'
 
 type OwnProps = {
   parentId: string,
@@ -17,7 +18,8 @@ type OwnProps = {
   currencyCode: string,
   balance: string,
   fiatSymbol: string,
-  showBalance: boolean
+  showBalance: boolean,
+  progress: number
 }
 
 export type StateProps = {
@@ -42,7 +44,7 @@ export class WalletListTokenRow extends PureComponent<Props> {
   }
 
   render () {
-    const { wallet, currencyCode, settings, exchangeRates, fiatSymbol, showBalance } = this.props
+    const { wallet, currencyCode, settings, exchangeRates, fiatSymbol, showBalance, progress } = this.props
     const { name } = wallet
     const meta = wallet.metaTokens.find(token => token.currencyCode === currencyCode)
     const symbolImage = meta ? meta.symbolImage : null
@@ -66,6 +68,9 @@ export class WalletListTokenRow extends PureComponent<Props> {
         <View style={[styles.rowContent]}>
           <View style={styles.rowIconWrap}>
             {symbolImage && <Image style={[styles.rowCurrencyLogoAndroid]} source={{ uri: symbolImage }} resizeMode="cover" />}
+            <View style={styles.rowCurrencyLogoAndroid}>
+              <ProgressPie size={styles.rowCurrencyOverlaySize} color={'rgba(255, 255, 255, 0.75)'} progress={progress} />
+            </View>
           </View>
           <View style={styles.walletDetailsContainer}>
             <View style={styles.walletDetailsRow}>
