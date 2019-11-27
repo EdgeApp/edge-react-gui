@@ -22,7 +22,7 @@ export async function setEnabledTokens (wallet: EdgeCurrencyWallet, tokens: Arra
   const stringifiedTokens = JSON.stringify(finalTextArray)
   // grab the enabledTokensFile
   await wallet.disklet.setText(ENABLED_TOKENS_FILENAME, stringifiedTokens)
-  wallet.enableTokens(tokens)
+  wallet.changeEnabledTokens(tokens)
   if (tokensToDisable && tokensToDisable.length > 0) {
     wallet.disableTokens(tokensToDisable)
   }
@@ -35,7 +35,7 @@ export async function updateEnabledTokens (wallet: EdgeCurrencyWallet, tokensToE
     const enabledTokens = JSON.parse(tokensText)
     const tokensWithNewTokens = _.union(tokensToEnable, enabledTokens)
     const finalTokensToEnable = _.difference(tokensWithNewTokens, tokensToDisable)
-    await wallet.enableTokens(finalTokensToEnable)
+    await wallet.changeEnabledTokens(finalTokensToEnable)
     await wallet.disableTokens(tokensToDisable)
     await wallet.disklet.setText(ENABLED_TOKENS_FILENAME, JSON.stringify(finalTokensToEnable))
   } catch (e) {
