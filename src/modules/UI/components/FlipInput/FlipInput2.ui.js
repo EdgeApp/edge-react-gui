@@ -204,6 +204,12 @@ export class FlipInput extends Component<Props, State> {
     }
   }
 
+  toggleCryptoOnTop = () => {
+    if (this.state.isToggled) {
+      this.onToggleFlipInput()
+    }
+  }
+
   onToggleFlipInput = () => {
     this.setState({
       isToggled: !this.state.isToggled

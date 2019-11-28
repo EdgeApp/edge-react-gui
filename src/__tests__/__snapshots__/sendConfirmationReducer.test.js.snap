@@ -35,6 +35,7 @@ Object {
       },
     ],
   },
+  "toggleCryptoOnTop": 0,
   "transaction": null,
   "transactionMetadata": Object {},
 }
@@ -80,6 +81,7 @@ Object {
       },
     ],
   },
+  "toggleCryptoOnTop": 0,
   "transaction": null,
   "transactionMetadata": Object {
     "name": "airbitz",
@@ -125,6 +127,7 @@ Object {
       },
     ],
   },
+  "toggleCryptoOnTop": 0,
   "transaction": null,
   "transactionMetadata": Object {},
 }
@@ -156,6 +159,7 @@ Object {
   "pending": false,
   "pin": "",
   "spendInfo": null,
+  "toggleCryptoOnTop": 0,
   "transaction": null,
   "transactionMetadata": null,
 }
@@ -187,6 +191,7 @@ Object {
   "pending": false,
   "pin": "",
   "spendInfo": null,
+  "toggleCryptoOnTop": 0,
   "transaction": Object {
     "blockHeight": 0,
     "currencyCode": "BCH",
@@ -232,6 +237,7 @@ Object {
   "pending": false,
   "pin": "",
   "spendInfo": null,
+  "toggleCryptoOnTop": 0,
   "transaction": Object {
     "blockHeight": 0,
     "currencyCode": "BCH",
@@ -276,6 +282,7 @@ Object {
   "pending": false,
   "pin": "",
   "spendInfo": null,
+  "toggleCryptoOnTop": 0,
   "transaction": Object {
     "blockHeight": 0,
     "currencyCode": "BCH",
@@ -321,6 +328,7 @@ Object {
   "pending": false,
   "pin": "",
   "spendInfo": null,
+  "toggleCryptoOnTop": 0,
   "transaction": Object {
     "blockHeight": -1,
     "currencyCode": "",
@@ -364,6 +372,7 @@ Object {
   "pending": false,
   "pin": "",
   "spendInfo": null,
+  "toggleCryptoOnTop": 0,
   "transaction": null,
   "transactionMetadata": null,
 }
@@ -395,6 +404,7 @@ Object {
   "pending": false,
   "pin": "",
   "spendInfo": null,
+  "toggleCryptoOnTop": 0,
   "transaction": Object {
     "blockHeight": -1,
     "currencyCode": "",
@@ -438,6 +448,7 @@ Object {
   "pending": false,
   "pin": "",
   "spendInfo": null,
+  "toggleCryptoOnTop": 0,
   "transaction": Object {
     "blockHeight": -1,
     "currencyCode": "",
@@ -481,6 +492,7 @@ Object {
   "pending": true,
   "pin": "",
   "spendInfo": null,
+  "toggleCryptoOnTop": 0,
   "transaction": Object {
     "blockHeight": -1,
     "currencyCode": "",
@@ -524,6 +536,7 @@ Object {
   "pending": false,
   "pin": "1234",
   "spendInfo": null,
+  "toggleCryptoOnTop": 0,
   "transaction": Object {
     "blockHeight": -1,
     "currencyCode": "",
@@ -567,6 +580,7 @@ Object {
   "pending": false,
   "pin": "",
   "spendInfo": null,
+  "toggleCryptoOnTop": 0,
   "transaction": Object {
     "blockHeight": -1,
     "currencyCode": "",
