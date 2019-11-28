@@ -140,11 +140,7 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
     const isToFocused = this.state.whichWalletFocus === Constants.TO
     return (
       <SceneWrapper>
-        <KeyboardAwareScrollView
-          style={[styles.mainScrollView]}
-          keyboardShouldPersistTaps={Constants.ALWAYS}
-          contentContainerStyle={styles.scrollViewContentContainer}
-        >
+        <KeyboardAwareScrollView style={[styles.mainScrollView]} keyboardShouldPersistTaps="always" contentContainerStyle={styles.scrollViewContentContainer}>
           <CryptoExchangeMessageConnector style={styles.exchangeRateBanner} />
           <View style={styles.shim} />
           <CryptoExchangeFlipInputWrapperComponent
