@@ -27,13 +27,13 @@ export const pluginUrlMap: { [pluginId: string]: PluginUrlMap } = {
     pluginId: 'com.safello',
     uri: 'https://safello.com/edge/',
     name: 'Safello',
-    originWhitelist: ['https://safello.com', 'https://app.safello.com']
+    originWhitelist: ['https://safello.com', 'https://app.safello.com', 'http://safello.com']
   },
   'com.safello.sell': {
     pluginId: 'com.safello.sell',
     uri: 'https://app.safello.com/',
     name: 'Safello',
-    originWhitelist: ['https://safello.com', 'https://app.safello.com']
+    originWhitelist: ['https://safello.com', 'https://app.safello.com', 'http://safello.com']
   },
   bitsofgold: {
     pluginId: 'bitsofgold',
