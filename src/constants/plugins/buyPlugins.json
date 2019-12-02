@@ -602,5 +602,12 @@
     "title": "Faster Payments",
     "paymentTypeLogoKey": "fasterPayments",
     "priority": 1
+  },
+  {
+    "id": "bity",
+    "forCountries": [
+      "GB"
+    ],
+    "priority": 1
   }
 ]
