@@ -3,6 +3,7 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 
 import type { State } from '../../types/reduxTypes.js'
+import { getYesterdayDateRoundDownHour } from '../../util/utils.js'
 import { getDefaultIsoFiat } from '../Settings/selectors.js'
 import { convertCurrency } from '../UI/selectors.js'
 
@@ -87,6 +88,10 @@ export const buildExchangeRates = async (state: State) => {
   const walletIds = Object.keys(wallets)
   const exchangeRates = {}
   const finalExchangeRates = {}
+  const yesterdayDate = getYesterdayDateRoundDownHour()
+  if (accountIsoFiat !== 'iso:USD') {
+    exchangeRates[`iso:USD_${accountIsoFiat}`] = fetchExchangeRateFromCore(state, 'iso:USD', accountIsoFiat)
+  }
   for (const id of walletIds) {
     const wallet = wallets[id]
     const walletIsoFiat = wallet.fiatCurrencyCode
@@ -94,13 +99,18 @@ export const buildExchangeRates = async (state: State) => {
     // need to get both forward and backwards exchange rates for wallets & account fiats, for each parent currency AND each token
     exchangeRates[`${currencyCode}_${walletIsoFiat}`] = fetchExchangeRateFromCore(state, currencyCode, walletIsoFiat)
     exchangeRates[`${currencyCode}_${accountIsoFiat}`] = fetchExchangeRateFromCore(state, currencyCode, accountIsoFiat)
+    exchangeRates[`${currencyCode}_iso:USD_${yesterdayDate}`] = fetchExchangeRateHistory(currencyCode, yesterdayDate)
     // add them to the list of promises to resolve
     // keep track of the exchange rates
     // now add tokens, if they exist
+    if (walletIsoFiat !== 'iso:USD') {
+      exchangeRates[`iso:USD_${walletIsoFiat}`] = fetchExchangeRateFromCore(state, 'iso:USD', walletIsoFiat)
+    }
     for (const tokenCode in wallet.balances) {
       if (tokenCode !== currencyCode) {
         exchangeRates[`${tokenCode}_${walletIsoFiat}`] = fetchExchangeRateFromCore(state, tokenCode, walletIsoFiat)
         exchangeRates[`${tokenCode}_${accountIsoFiat}`] = fetchExchangeRateFromCore(state, tokenCode, accountIsoFiat)
+        exchangeRates[`${tokenCode}_iso:USD_${yesterdayDate}`] = fetchExchangeRateHistory(tokenCode, yesterdayDate)
       }
     }
   }
@@ -108,10 +118,10 @@ export const buildExchangeRates = async (state: State) => {
   const exchangeRatePromises = Object.values(exchangeRates)
   const rates = await Promise.all(exchangeRatePromises)
   for (let i = 0; i < exchangeRateKeys.length; i++) {
-    const rate = rates[i]
     const key = exchangeRateKeys[i]
     const codes = key.split('_')
-    const reverseExchangeRateKey = `${codes[1]}_${codes[0]}`
+    const rate = rates[i]
+    const reverseExchangeRateKey = `${codes[1]}_${codes[0]}${codes[2] ? '_' + codes[2] : ''}`
     if (isNaN(rate)) {
       finalExchangeRates[key] = 0
       finalExchangeRates[reverseExchangeRateKey] = 0
@@ -132,4 +142,10 @@ export const fetchExchangeRateFromCore = (state: State, fromCurrencyCode: string
   const currencyConverter = getCurrencyConverter(state)
   const exchangeRate = currencyConverter.convertCurrency(fromCurrencyCode, toCurrencyCode, 1)
   return Promise.resolve(exchangeRate)
+}
+
+export const fetchExchangeRateHistory = async (currency: string, date: string): Promise<number> => {
+  const currencyHistory = await fetch(`https://info1.edgesecure.co:8444/v1/exchangeRate?currency_pair=${currency}_USD&date=${date}`)
+  const result = await currencyHistory.json()
+  return parseFloat(result.exchangeRate)
 }

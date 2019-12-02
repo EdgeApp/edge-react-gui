@@ -444,6 +444,23 @@ export const styles = {
     flex: 1,
     fontSize: 16,
     color: THEME.COLORS.GRAY_1
+  },
+  walletDetailsRowDifferenceNeutral: {
+    fontSize: 16,
+    textAlign: 'right',
+    color: THEME.COLORS.SECONDARY
+  },
+  walletDetailsRowDifferencePositive: {
+    fontSize: 16,
+    textAlign: 'right',
+    fontWeight: '400',
+    color: '#77C513'
+  },
+  walletDetailsRowDifferenceNegative: {
+    fontSize: 16,
+    textAlign: 'right',
+    fontWeight: '400',
+    color: '#E85466'
   }
 }
 

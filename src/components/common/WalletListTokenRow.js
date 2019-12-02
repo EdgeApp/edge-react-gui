@@ -17,7 +17,7 @@ type OwnProps = {
   sortHandlers: any,
   currencyCode: string,
   balance: string,
-  fiatSymbol: string,
+  walletFiatSymbol: string,
   showBalance: boolean,
   progress: number
 }
@@ -44,19 +44,45 @@ export class WalletListTokenRow extends PureComponent<Props> {
   }
 
   render () {
-    const { wallet, currencyCode, settings, exchangeRates, fiatSymbol, showBalance, progress } = this.props
+    const { wallet, currencyCode, settings, exchangeRates, walletFiatSymbol, showBalance, progress } = this.props
     const { name } = wallet
     const meta = wallet.metaTokens.find(token => token.currencyCode === currencyCode)
     const symbolImage = meta ? meta.symbolImage : null
     const cryptoAmount = intl.formatNumber(UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(this.props.balance) || '0') // check if infinitesimal (would display as zero), cut off trailing zeroes
     const cryptoAmountString = showBalance ? cryptoAmount : ''
+    const rateKey = `${currencyCode}_${wallet.isoFiatCurrencyCode}`
+    const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : null
+    // Fiat Balance Formatting
     const fiatBalance = UTILS.getCurrencyAccountFiatBalanceFromWalletWithoutState(wallet, currencyCode, settings, exchangeRates)
     const fiatBalanceFormat = fiatBalance && parseFloat(fiatBalance) > 0.000001 ? fiatBalance : 0
-    const fiatBalanceString = showBalance ? `${fiatSymbol} ${fiatBalanceFormat}` : ''
-    const rateKey = `${currencyCode}_${settings.defaultIsoFiat}`
-    const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
-    const exchangeRateFormat = intl.formatNumber(exchangeRate, { toFixed: 2 }) || '0'
-    const exchangeRateString = `${fiatSymbol} ${exchangeRateFormat}/${currencyCode}`
+    const fiatBalanceString = showBalance && exchangeRate ? `${walletFiatSymbol} ${fiatBalanceFormat}` : ''
+    // Exhange Rate Formatting
+    const exchangeRateFormat = exchangeRate ? intl.formatNumber(exchangeRate, { toFixed: 2 }) : null
+    const exchangeRateString = exchangeRateFormat ? `${walletFiatSymbol} ${exchangeRateFormat}/${currencyCode}` : 'No Exchange Rate'
+    // Yesterdays Percentage Difference Formatting
+    const yesterdayUsdExchangeRate = exchangeRates[`${currencyCode}_iso:USD_${UTILS.getYesterdayDateRoundDownHour()}`]
+    const fiatExchangeRate = wallet.isoFiatCurrencyCode !== 'iso:USD' ? exchangeRates[`iso:USD_${wallet.isoFiatCurrencyCode}`] : 1
+    const yestedayExchangeRate = yesterdayUsdExchangeRate * fiatExchangeRate
+    const differenceYesterday = exchangeRate ? exchangeRate - yestedayExchangeRate : null
+    const differencePercentage = differenceYesterday ? (differenceYesterday / yestedayExchangeRate) * 100 : null
+    let differencePercentageString, differencePercentageStringStyle
+    if (!exchangeRate || !differencePercentage || isNaN(differencePercentage)) {
+      differencePercentageStringStyle = styles.walletDetailsRowDifferenceNeutral
+      differencePercentageString = ''
+    }
+    if (exchangeRate && differencePercentage && differencePercentage === 0) {
+      differencePercentageStringStyle = styles.walletDetailsRowDifferenceNeutral
+      differencePercentageString = `0`
+    }
+    if (exchangeRate && differencePercentage && differencePercentage < 0) {
+      differencePercentageStringStyle = styles.walletDetailsRowDifferenceNegative
+      differencePercentageString = `- ${Math.abs(differencePercentage).toFixed(2)}%`
+    }
+    if (exchangeRate && differencePercentage && differencePercentage > 0) {
+      differencePercentageStringStyle = styles.walletDetailsRowDifferencePositive
+      differencePercentageString = `+ ${Math.abs(differencePercentage).toFixed(2)}%`
+    }
+
     return (
       <TouchableHighlight
         style={styles.tokenRowContainer}
@@ -84,6 +110,7 @@ export class WalletListTokenRow extends PureComponent<Props> {
             <View style={styles.walletDetailsRowLine} />
             <View style={styles.walletDetailsRow}>
               <T style={[styles.walletDetailsRowExchangeRate]}>{exchangeRateString}</T>
+              <T style={[differencePercentageStringStyle]}>{differencePercentageString}</T>
             </View>
           </View>
           <View style={styles.rowOptionsWrap} />

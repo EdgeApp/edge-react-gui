@@ -19,7 +19,7 @@ import { calculateSettingsFiatBalanceWithoutState } from '../../modules/UI/selec
 import styles, { customWalletListOptionsStyles, styles as styleRaw } from '../../styles/scenes/WalletListStyle.js'
 import type { State } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo, GuiDenomination } from '../../types/types.js'
-import { decimalOrZero, getFiatSymbol, getObjectDiff, truncateDecimals } from '../../util/utils.js'
+import { decimalOrZero, getFiatSymbol, getObjectDiff, getYesterdayDateRoundDownHour, truncateDecimals } from '../../util/utils.js'
 import { ProgressPie } from './ProgressPie.js'
 import WalletListRowOptions from './WalletListRowOptions'
 
@@ -57,7 +57,7 @@ export type FullWalletListRowLoadedStateProps = {
   displayDenomination: GuiDenomination,
   exchangeDenomination: GuiDenomination,
   customTokens: Array<CustomTokenInfo>,
-  fiatSymbol: string,
+  walletFiatSymbol: string,
   settings: Object,
   exchangeRates: { [string]: number },
   walletsProgress: Object
@@ -99,7 +99,8 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
   }
 
   render () {
-    const { data, fiatSymbol, settings, exchangeRates, showBalance } = this.props
+    const { data, walletFiatSymbol, settings, exchangeRates, showBalance } = this.props
+    const progress = this.getProgress()
     const walletData = data.item
     const currencyCode = walletData.currencyCode
     const denomination = this.props.displayDenomination
@@ -136,14 +137,38 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
         }
       }
     }
+    const rateKey = `${currencyCode}_${walletData.isoFiatCurrencyCode}`
+    const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : null
+    // Fiat Balance Formatting
     const fiatBalance = calculateSettingsFiatBalanceWithoutState(walletData, settings, exchangeRates)
     const fiatBalanceFormat = fiatBalance && parseFloat(fiatBalance) > 0.000001 ? fiatBalance : 0
-    const fiatBalanceString = showBalance ? `${fiatSymbol} ${fiatBalanceFormat}` : ''
-    const rateKey = `${currencyCode}_${settings.defaultIsoFiat}`
-    const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
-    const exchangeRateFormat = intl.formatNumber(exchangeRate, { toFixed: 2 }) || '0'
-    const exchangeRateString = `${fiatSymbol} ${exchangeRateFormat}/${currencyCode}`
-    const progress = this.getProgress()
+    const fiatBalanceString = showBalance && exchangeRate ? `${walletFiatSymbol} ${fiatBalanceFormat}` : ''
+    // Exhange Rate Formatting
+    const exchangeRateFormat = exchangeRate ? intl.formatNumber(exchangeRate, { toFixed: 2 }) : null
+    const exchangeRateString = exchangeRateFormat ? `${walletFiatSymbol} ${exchangeRateFormat}/${currencyCode}` : 'No Exchange Rate'
+    // Yesterdays Percentage Difference Formatting
+    const yesterdayUsdExchangeRate = exchangeRates[`${currencyCode}_iso:USD_${getYesterdayDateRoundDownHour()}`]
+    const fiatExchangeRate = walletData.isoFiatCurrencyCode !== 'iso:USD' ? exchangeRates[`iso:USD_${walletData.isoFiatCurrencyCode}`] : 1
+    const yestedayExchangeRate = yesterdayUsdExchangeRate * fiatExchangeRate
+    const differenceYesterday = exchangeRate ? exchangeRate - yestedayExchangeRate : null
+    const differencePercentage = differenceYesterday ? (differenceYesterday / yestedayExchangeRate) * 100 : null
+    let differencePercentageString, differencePercentageStringStyle
+    if (!exchangeRate || !differencePercentage || isNaN(differencePercentage)) {
+      differencePercentageStringStyle = styles.walletDetailsRowDifferenceNeutral
+      differencePercentageString = ''
+    }
+    if (exchangeRate && differencePercentage && differencePercentage === 0) {
+      differencePercentageStringStyle = styles.walletDetailsRowDifferenceNeutral
+      differencePercentageString = `0`
+    }
+    if (exchangeRate && differencePercentage && differencePercentage < 0) {
+      differencePercentageStringStyle = styles.walletDetailsRowDifferenceNegative
+      differencePercentageString = `- ${Math.abs(differencePercentage).toFixed(2)}%`
+    }
+    if (exchangeRate && differencePercentage && differencePercentage > 0) {
+      differencePercentageStringStyle = styles.walletDetailsRowDifferencePositive
+      differencePercentageString = `+ ${Math.abs(differencePercentage).toFixed(2)}%`
+    }
 
     return (
       <View style={[{ width: '100%' }]}>
@@ -172,6 +197,7 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
                 <View style={styles.walletDetailsRowLine} />
                 <View style={styles.walletDetailsRow}>
                   <T style={[styles.walletDetailsRowExchangeRate]}>{exchangeRateString}</T>
+                  <T style={[differencePercentageStringStyle]}>{differencePercentageString}</T>
                 </View>
               </View>
               <View style={styles.rowOptionsWrap}>
@@ -200,7 +226,7 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
               parentId={parentId}
               currencyCode={property}
               key={property}
-              fiatSymbol={this.props.fiatSymbol}
+              walletFiatSymbol={this.props.walletFiatSymbol}
               balance={metaTokenBalances[property]}
               showBalance={this.props.showBalance}
               progress={progress}
@@ -233,15 +259,18 @@ const mapStateToProps = (state: State, ownProps: FullWalletListRowLoadedOwnProps
   const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, ownProps.data.item.currencyCode)
   const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, ownProps.data.item.currencyCode)
   const settings = state.ui.settings
-  const fiatSymbol = getFiatSymbol(settings.defaultFiat) || ''
   const customTokens = settings.customTokens
   const walletsProgress = state.ui.wallets.walletLoadingProgress
+
+  const data = ownProps.data || null
+  const wallet = data ? data.item : null
+  const walletFiatSymbol = wallet ? getFiatSymbol(wallet.isoFiatCurrencyCode) : ''
   return {
     showBalance: typeof ownProps.showBalance === 'function' ? ownProps.showBalance(state) : ownProps.showBalance,
     displayDenomination,
     exchangeDenomination,
     customTokens,
-    fiatSymbol,
+    walletFiatSymbol,
     settings,
     exchangeRates: state.exchangeRates,
     walletsProgress
