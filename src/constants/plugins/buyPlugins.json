@@ -599,7 +599,8 @@
       "GB"
     ],
     "addOnUrl": "/?country=GB&payment_id=6018",
-    "title": "Bank Transfer",
-    "paymentTypeLogoKey": "bank"
+    "title": "Faster Payments",
+    "paymentTypeLogoKey": "fasterPayments",
+    "priority": 1
   }
 ]
