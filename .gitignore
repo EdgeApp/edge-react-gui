@@ -50,6 +50,7 @@ IDEWorkspaceChecks.plist
 
 # Android/IntelliJ
 #
+/android/google-java-format-*.jar
 build/
 .idea
 .gradle
