@@ -1,6 +1,7 @@
 package co.edgesecure.app;
 
 import android.app.Application;
+import android.content.Context;
 import android.webkit.WebView;
 import ca.jaysoo.extradimensions.ExtraDimensionsPackage;
 import cl.json.RNSharePackage;
@@ -100,14 +101,19 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public void onCreate() {
     super.onCreate();
+    Context context = getApplicationContext();
 
     // Disable RTL
     I18nUtil sharedI18nUtilInstance = I18nUtil.getInstance();
-    sharedI18nUtilInstance.allowRTL(getApplicationContext(), false);
+    sharedI18nUtilInstance.allowRTL(context, false);
 
     BugsnagReactNative.start(this);
     SoLoader.init(this, /* native exopackage */ false);
 
     WebView.setWebContentsDebuggingEnabled(true);
+
+    // Background task:
+    MessagesWorker.ensureScheduled(context);
+    // MessagesWorker.testRun(context);
   }
 }
