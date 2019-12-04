@@ -540,5 +540,6 @@
   "buy_sell_crypto_no_plugin_region": "이 지역에서 사용할 수 있는 플러그인이 없습니다.",
   "user_closed_modal_no_wallet": "모달창이 닫혔습니다.월렛이 선택되지 않았습니다.",
   "plugin_spend_notes_generic": "주소: %4$s 에서 %2$s 에서 %3$s 로 %1$s 가 송신되었습니다.\n도움이 필요한 경우 %5$s 로 문의해주시길 바랍니다.",
-  "plugin_provider_disclaimer": "다음 서비스는 Edge에서 제공되지 않습니다. \n\n문제 및 피드백 제공을 위해선 해당 서비스 제공 업체에 문의해 주시길 바랍니다."
+  "plugin_provider_disclaimer": "다음 서비스는 Edge에서 제공되지 않습니다. \n\n문제 및 피드백 제공을 위해선 해당 서비스 제공 업체에 문의해 주시길 바랍니다.",
+  "no_exchange_rate": ""
 }
