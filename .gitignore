@@ -99,4 +99,8 @@ src/util/bridge/injectThisInWebView.js
 /android/app/src/main/assets/edge-core/
 /ios/edge-core/
 
+## Generated headers
+/android/app/src/main/java/co/edgesecure/app/EdgeApiKey.java
+/ios/edge/edgeApiKey.h
+
 *.swp

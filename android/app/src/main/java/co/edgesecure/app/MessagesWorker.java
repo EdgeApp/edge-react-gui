@@ -40,7 +40,6 @@ import org.json.JSONObject;
 public class MessagesWorker extends Worker {
   private static final String workId = "MessagesWorker";
   private static final int notificationId = 1;
-  private String apiKey = "4248c1bf41e53b840a5fdb2c872dd3ade525e66d";
 
   public MessagesWorker(Context context, WorkerParameters params) {
     super(context, params);
@@ -221,7 +220,7 @@ public class MessagesWorker extends Worker {
       byte[] bodyData = body.getBytes("UTF-8");
       connection.setRequestProperty("Accept", "application/json");
       connection.setRequestProperty("Content-Type", "application/json");
-      connection.setRequestProperty("Authorization", "Token " + apiKey);
+      connection.setRequestProperty("Authorization", "Token " + EdgeApiKey.apiKey);
       connection.setRequestProperty("Content-Length", Integer.toString(bodyData.length));
       connection.setRequestMethod("POST");
       connection.setDoInput(true);

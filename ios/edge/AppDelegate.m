@@ -6,6 +6,7 @@
  */
 
 #import "AppDelegate.h"
+#import "edgeApiKey.h"
 
 #import "RCTSplashScreen.h"
 #import <BugsnagReactNative.h>
@@ -160,7 +161,7 @@ typedef void (^MessagesHandler)(NSArray<NSString *> *resetUsers, NSError *error)
   NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
   [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
   [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-  [request setValue:@"Token 4248c1bf41e53b840a5fdb2c872dd3ade525e66d"
+  [request setValue:[@"Token " stringByAppendingString:@EDGE_API_KEY]
       forHTTPHeaderField:@"Authorization"];
   request.HTTPMethod = @"POST";
   request.HTTPBody = payloadData;
