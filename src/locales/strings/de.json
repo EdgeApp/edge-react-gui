@@ -540,5 +540,6 @@
   "buy_sell_crypto_no_plugin_region": "Es tut uns leid, aber es gibt keine Plugins für Ihre Region.",
   "user_closed_modal_no_wallet": "Benutzer gesperrt modal. Keine Wallet ausgewählt",
   "plugin_spend_notes_generic": "%1$s von %2$s bis %3$s an Adresse: %4$s \nFür Hilfe kontaktieren Sie bitte %5$s.",
-  "plugin_provider_disclaimer": "Die folgenden Dienste werden nicht von Edge bereitgestellt. \n\nFür Probleme und Feedback kontaktieren Sie bitte die jeweiligen Dienstleister."
+  "plugin_provider_disclaimer": "Die folgenden Dienste werden nicht von Edge bereitgestellt. \n\nFür Probleme und Feedback kontaktieren Sie bitte die jeweiligen Dienstleister.",
+  "no_exchange_rate": ""
 }
