@@ -585,7 +585,8 @@ const strings = {
   buy_sell_crypto_no_plugin_region: "We're sorry but there are no available plugins for your region.",
   user_closed_modal_no_wallet: 'User closed modal. No wallet was selected',
   plugin_spend_notes_generic: 'Spent %1$s from %2$s to %3$s at address: %4$s \nFor assistance, please contact %5$s.',
-  plugin_provider_disclaimer: 'The following services are not provided by Edge. \n\nFor issues and feedback please contact the respective service providers.'
+  plugin_provider_disclaimer: 'The following services are not provided by Edge. \n\nFor issues and feedback please contact the respective service providers.',
+  no_exchange_rate: 'No Exchange Rate'
 }
 
 // export default strings

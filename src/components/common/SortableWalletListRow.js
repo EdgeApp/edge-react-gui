@@ -29,7 +29,7 @@ class SortableWalletListRow extends Component<Props, State> {
       fiatBalance,
       fiatBalanceFormat,
       fiatBalanceString
-    const { data, fiatSymbol, settings, exchangeRates, showBalance } = this.props
+    const { data, walletFiatSymbol, settings, exchangeRates, showBalance } = this.props
     const walletData = data
 
     if (walletData.currencyCode) {
@@ -45,7 +45,7 @@ class SortableWalletListRow extends Component<Props, State> {
       finalCryptoAmountString = showBalance ? `${symbol || ''} ${finalCryptoAmount}` : ''
       fiatBalance = calculateSettingsFiatBalanceWithoutState(walletData, settings, exchangeRates)
       fiatBalanceFormat = fiatBalance && parseFloat(fiatBalance) > 0.000001 ? fiatBalance : 0
-      fiatBalanceString = showBalance ? `${fiatSymbol} ${fiatBalanceFormat}` : ''
+      fiatBalanceString = showBalance ? `${walletFiatSymbol} ${fiatBalanceFormat}` : ''
     }
 
     return (
@@ -93,13 +93,15 @@ class SortableWalletListRow extends Component<Props, State> {
 
 export default connect((state, ownProps) => {
   const settings = state.ui.settings
-  const fiatSymbol = getFiatSymbol(settings.defaultFiat) || ''
   const exchangeRates = state.exchangeRates
+
+  const data = ownProps.data || null
+  const walletFiatSymbol = data ? getFiatSymbol(data.isoFiatCurrencyCode) : ''
 
   return {
     showBalance: typeof ownProps.showBalance === 'function' ? ownProps.showBalance(state) : ownProps.showBalance,
     settings,
-    fiatSymbol,
-    exchangeRates
+    exchangeRates,
+    walletFiatSymbol
   }
 })(SortableWalletListRow)
