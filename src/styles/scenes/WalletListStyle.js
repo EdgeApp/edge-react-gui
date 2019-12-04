@@ -423,41 +423,41 @@ export const styles = {
   },
   walletDetailsRowCurrency: {
     flex: 1,
-    fontSize: 16
+    fontSize: scale(16)
   },
   walletDetailsRowValue: {
     textAlign: 'right',
-    fontSize: 16,
+    fontSize: scale(16),
     color: THEME.COLORS.GRAY_1
   },
   walletDetailsRowName: {
     flex: 1,
-    fontSize: 12,
+    fontSize: scale(12),
     color: THEME.COLORS.SECONDARY
   },
   walletDetailsRowFiat: {
-    fontSize: 12,
+    fontSize: scale(12),
     textAlign: 'right',
     color: THEME.COLORS.SECONDARY
   },
   walletDetailsRowExchangeRate: {
     flex: 1,
-    fontSize: 16,
+    fontSize: scale(16),
     color: THEME.COLORS.GRAY_1
   },
   walletDetailsRowDifferenceNeutral: {
-    fontSize: 16,
+    fontSize: scale(16),
     textAlign: 'right',
     color: THEME.COLORS.SECONDARY
   },
   walletDetailsRowDifferencePositive: {
-    fontSize: 16,
+    fontSize: scale(16),
     textAlign: 'right',
     fontWeight: '400',
     color: '#77C513'
   },
   walletDetailsRowDifferenceNegative: {
-    fontSize: 16,
+    fontSize: scale(16),
     textAlign: 'right',
     fontWeight: '400',
     color: '#E85466'

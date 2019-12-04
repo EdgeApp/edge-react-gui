@@ -6,6 +6,7 @@ import { Image, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import { intl } from '../../locales/intl'
+import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/index'
 import styles, { styles as styleRaw } from '../../styles/scenes/WalletListStyle'
 import { type GuiWallet } from '../../types/types.js'
@@ -58,27 +59,24 @@ export class WalletListTokenRow extends PureComponent<Props> {
     const fiatBalanceString = showBalance && exchangeRate ? `${walletFiatSymbol} ${fiatBalanceFormat}` : ''
     // Exhange Rate Formatting
     const exchangeRateFormat = exchangeRate ? intl.formatNumber(exchangeRate, { toFixed: 2 }) : null
-    const exchangeRateString = exchangeRateFormat ? `${walletFiatSymbol} ${exchangeRateFormat}/${currencyCode}` : 'No Exchange Rate'
+    const exchangeRateString = exchangeRateFormat ? `${walletFiatSymbol} ${exchangeRateFormat}/${currencyCode}` : s.strings.no_exchange_rate
     // Yesterdays Percentage Difference Formatting
     const yesterdayUsdExchangeRate = exchangeRates[`${currencyCode}_iso:USD_${UTILS.getYesterdayDateRoundDownHour()}`]
     const fiatExchangeRate = wallet.isoFiatCurrencyCode !== 'iso:USD' ? exchangeRates[`iso:USD_${wallet.isoFiatCurrencyCode}`] : 1
-    const yestedayExchangeRate = yesterdayUsdExchangeRate * fiatExchangeRate
-    const differenceYesterday = exchangeRate ? exchangeRate - yestedayExchangeRate : null
-    const differencePercentage = differenceYesterday ? (differenceYesterday / yestedayExchangeRate) * 100 : null
+    const yesterdayExchangeRate = yesterdayUsdExchangeRate * fiatExchangeRate
+    const differenceYesterday = exchangeRate ? exchangeRate - yesterdayExchangeRate : null
+    const differencePercentage = differenceYesterday ? (differenceYesterday / yesterdayExchangeRate) * 100 : null
     let differencePercentageString, differencePercentageStringStyle
     if (!exchangeRate || !differencePercentage || isNaN(differencePercentage)) {
       differencePercentageStringStyle = styles.walletDetailsRowDifferenceNeutral
       differencePercentageString = ''
-    }
-    if (exchangeRate && differencePercentage && differencePercentage === 0) {
+    } else if (exchangeRate && differencePercentage && differencePercentage === 0) {
       differencePercentageStringStyle = styles.walletDetailsRowDifferenceNeutral
-      differencePercentageString = `0`
-    }
-    if (exchangeRate && differencePercentage && differencePercentage < 0) {
+      differencePercentageString = `0.00%`
+    } else if (exchangeRate && differencePercentage && differencePercentage < 0) {
       differencePercentageStringStyle = styles.walletDetailsRowDifferenceNegative
       differencePercentageString = `- ${Math.abs(differencePercentage).toFixed(2)}%`
-    }
-    if (exchangeRate && differencePercentage && differencePercentage > 0) {
+    } else if (exchangeRate && differencePercentage && differencePercentage > 0) {
       differencePercentageStringStyle = styles.walletDetailsRowDifferencePositive
       differencePercentageString = `+ ${Math.abs(differencePercentage).toFixed(2)}%`
     }
