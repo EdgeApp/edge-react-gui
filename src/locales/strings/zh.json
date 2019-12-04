@@ -540,5 +540,6 @@
   "buy_sell_crypto_no_plugin_region": "很抱歉，但是没有可用的插件用于本地区。",
   "user_closed_modal_no_wallet": "",
   "plugin_spend_notes_generic": "",
-  "plugin_provider_disclaimer": ""
+  "plugin_provider_disclaimer": "",
+  "no_exchange_rate": ""
 }
