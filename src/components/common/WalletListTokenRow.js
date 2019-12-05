@@ -65,7 +65,10 @@ export class WalletListTokenRow extends PureComponent<Props> {
     const fiatExchangeRate = wallet.isoFiatCurrencyCode !== 'iso:USD' ? exchangeRates[`iso:USD_${wallet.isoFiatCurrencyCode}`] : 1
     const yesterdayExchangeRate = yesterdayUsdExchangeRate * fiatExchangeRate
     const differenceYesterday = exchangeRate ? exchangeRate - yesterdayExchangeRate : null
-    const differencePercentage = differenceYesterday ? (differenceYesterday / yesterdayExchangeRate) * 100 : null
+    let differencePercentage = differenceYesterday ? (differenceYesterday / yesterdayExchangeRate) * 100 : null
+    if (!yesterdayExchangeRate) {
+      differencePercentage = ''
+    }
     let differencePercentageString, differencePercentageStringStyle
     if (!exchangeRate || !differencePercentage || isNaN(differencePercentage)) {
       differencePercentageStringStyle = styles.walletDetailsRowDifferenceNeutral
