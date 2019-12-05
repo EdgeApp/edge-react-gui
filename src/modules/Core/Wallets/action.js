@@ -34,7 +34,7 @@ export const updateWalletsRequest = () => (dispatch: Dispatch, getState: GetStat
             if (tokenIndex > -1 && customTokens[tokenIndex].isVisible === false) isVisible = false
             return isVisible
           })
-          edgeWallet.enableTokens(enabledNotHiddenTokens)
+          edgeWallet.changeEnabledTokens(enabledNotHiddenTokens)
         }
       }
     }
