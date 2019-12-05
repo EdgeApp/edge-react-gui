@@ -148,7 +148,7 @@ export const styles = {
   },
   sortableWalletListRow: {
     width: PLATFORM.deviceWidth,
-    height: 65,
+    height: scale(60),
     backgroundColor: THEME.COLORS.WHITE,
     paddingVertical: scale(6),
     paddingHorizontal: scale(20),
@@ -164,7 +164,7 @@ export const styles = {
   rowContainer: {
     padding: scale(6),
     paddingLeft: scale(8),
-    height: 108,
+    height: scale(106),
     backgroundColor: THEME.COLORS.WHITE,
     borderBottomWidth: scale(1),
     borderBottomColor: THEME.COLORS.GRAY_3
@@ -340,7 +340,7 @@ export const styles = {
   tokenRowContainer: {
     padding: scale(6),
     paddingLeft: scale(8),
-    height: 108,
+    height: scale(106),
     backgroundColor: THEME.COLORS.GRAY_4,
     borderBottomWidth: 1,
     borderColor: THEME.COLORS.GRAY_3
@@ -407,7 +407,7 @@ export const styles = {
   walletDetailsContainer: {
     flex: 1,
     flexDirection: 'column',
-    marginTop: 5
+    marginTop: scale(5)
   },
   walletDetailsRow: {
     flexDirection: 'row',
@@ -418,46 +418,46 @@ export const styles = {
     height: 1,
     borderColor: 'rgba(14, 75, 117, 0.5)',
     borderBottomWidth: 1,
-    marginTop: 15,
-    marginBottom: 11
+    marginTop: scale(12),
+    marginBottom: scale(9)
   },
   walletDetailsRowCurrency: {
     flex: 1,
-    fontSize: scale(16)
+    fontSize: scale(18)
   },
   walletDetailsRowValue: {
     textAlign: 'right',
-    fontSize: scale(16),
+    fontSize: scale(18),
     color: THEME.COLORS.GRAY_1
   },
   walletDetailsRowName: {
     flex: 1,
-    fontSize: scale(12),
+    fontSize: scale(14),
     color: THEME.COLORS.SECONDARY
   },
   walletDetailsRowFiat: {
-    fontSize: scale(12),
+    fontSize: scale(14),
     textAlign: 'right',
     color: THEME.COLORS.SECONDARY
   },
   walletDetailsRowExchangeRate: {
     flex: 1,
-    fontSize: scale(16),
+    fontSize: scale(14),
     color: THEME.COLORS.GRAY_1
   },
   walletDetailsRowDifferenceNeutral: {
-    fontSize: scale(16),
+    fontSize: scale(14),
     textAlign: 'right',
     color: THEME.COLORS.SECONDARY
   },
   walletDetailsRowDifferencePositive: {
-    fontSize: scale(16),
+    fontSize: scale(14),
     textAlign: 'right',
     fontWeight: '400',
     color: '#77C513'
   },
   walletDetailsRowDifferenceNegative: {
-    fontSize: scale(16),
+    fontSize: scale(14),
     textAlign: 'right',
     fontWeight: '400',
     color: '#E85466'
