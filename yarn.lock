@@ -4005,10 +4005,10 @@ edge-core-js@^0.16.15:
     ws "^5.1.1"
     yaob "^0.3.5"
 
-edge-currency-accountbased@^0.5.7:
-  version "0.5.7"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.5.7.tgz#15cf5d69e1d1d057375af4995812c9b9c86e9db2"
-  integrity sha512-HzsHS8SP5uENPYspzMctTW+Vv9pzVy1fvGL6zOXqbBKYL/r+zBsH0/d8Tc96Oqvvwi6XkslyliqD8TDecGGfeA==
+edge-currency-accountbased@^0.5.8:
+  version "0.5.8"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.5.8.tgz#aa992c20786ab0ed056e8fd1979f1b56851a7bff"
+  integrity sha512-qK+5qT7jYJ4G73w3jeYa/nPL9zlau6kTLNH3klnSCqeUxBftL06nPCJxOLExWguDWrrf75ldrQ8Nkpi+oQnG7A==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@dapix/react-native-fio" "0.1.0"
@@ -8260,7 +8260,7 @@ nan@2.13.2:
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.13.2.tgz#f51dc7ae66ba7d5d55e1e6d4d8092e802c9aefe7"
   integrity sha512-TghvYc72wlMGMVMluVo9WRJc0mB8KxxF/gZ4YYFy7V2ZQX9l7rgbPg7vjS9mt6U5HXODVFVI2bOduCzwOMv/lw==
 
-nan@^2.0.8, nan@^2.0.9, nan@^2.12.1, nan@^2.13.2, nan@^2.14.0, nan@^2.2.1:
+nan@^2.0.8, nan@^2.0.9, nan@^2.12.1, nan@^2.13.2, nan@^2.14.0, nan@^2.2.1, nan@^2.9.2:
   version "2.14.0"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.0.tgz#7818f722027b2459a86f0295d434d1fc2336c52c"
   integrity sha512-INOFj37C7k3AfaNTtX8RhsTw7qRy7eLET14cROi9+5HAVbbHuIWUHEauBv5qT4Av2tWasiTY1Jw6puUNqRJXQg==
@@ -8459,6 +8459,22 @@ node-notifier@^5.4.2:
     semver "^5.5.0"
     shellwords "^0.1.1"
     which "^1.3.0"
+
+node-pre-gyp@^0.10.0:
+  version "0.10.3"
+  resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.10.3.tgz#3070040716afdc778747b61b6887bf78880b80fc"
+  integrity sha512-d1xFs+C/IPS8Id0qPTZ4bUT8wWryfR/OzzAFxweG+uLN85oPzyo2Iw6bVlLQ/JOdgNonXLCoRyqDzDWq4iw72A==
+  dependencies:
+    detect-libc "^1.0.2"
+    mkdirp "^0.5.1"
+    needle "^2.2.1"
+    nopt "^4.0.1"
+    npm-packlist "^1.1.6"
+    npmlog "^4.0.2"
+    rc "^1.2.7"
+    rimraf "^2.6.1"
+    semver "^5.3.0"
+    tar "^4"
 
 node-pre-gyp@^0.12.0:
   version "0.12.0"
