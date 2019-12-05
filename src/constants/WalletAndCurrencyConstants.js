@@ -160,12 +160,6 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   XMR: {
     dummyPublicAddress: '46qxvuS78CNBoiiKmDjvjd5pMAZrTBbDNNHDoP52jKj9j5mk6m4R5nU6BDrWQURiWV9a2n5Sy8Qo4aJskKa92FX1GpZFiYA',
     noMaxSpend: true,
-    uniqueIdentifier: {
-      addButtonText: s.strings.unique_identifier_dropdown_option_payment_id,
-      identifierName: s.strings.unique_identifier_payment_id,
-      identifierKeyboardType: 'default'
-    },
-    uniqueIdentifierToNotes: true,
     isImportKeySupported: false
   },
   EOS: {
