@@ -460,7 +460,6 @@
   "unique_identifier_dropdown_option_memo": "Notiz hinzufügen",
   "unique_identifier_dropdown_option_memo_id": "Füge Memo ID hinzu",
   "unique_identifier_dropdown_option_destination_tag": "Ziel-Tag hinzufügen",
-  "unique_identifier_dropdown_option_payment_id": "Zahlungs-ID hinzufügen",
   "unique_identifier_modal_description": "Bitte geben Sie den %s-Wert ein, der an den Empfänger dieser Transaktion gesendet werden soll",
   "unique_identifier_modal_confirm": "Bestätigen",
   "unique_identifier_modal_cancel": "Abbrechen",
