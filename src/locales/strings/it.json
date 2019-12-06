@@ -460,7 +460,6 @@
   "unique_identifier_dropdown_option_memo": "Aggiungi Promemoria",
   "unique_identifier_dropdown_option_memo_id": "Aggiungi una nota ID",
   "unique_identifier_dropdown_option_destination_tag": "Aggiungi un tag di destinazione",
-  "unique_identifier_dropdown_option_payment_id": "Aggiungi ID pagamento",
   "unique_identifier_modal_description": "Inserisci il valore %s da inviare al ricevente di questa transazione",
   "unique_identifier_modal_confirm": "Conferma",
   "unique_identifier_modal_cancel": "Annulla",
