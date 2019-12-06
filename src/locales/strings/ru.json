@@ -460,7 +460,6 @@
   "unique_identifier_dropdown_option_memo": "",
   "unique_identifier_dropdown_option_memo_id": "Добавьте идентификатор МЕМО",
   "unique_identifier_dropdown_option_destination_tag": "Добавить назначение платежа",
-  "unique_identifier_dropdown_option_payment_id": "Добавить идентификатор платежа",
   "unique_identifier_modal_description": "",
   "unique_identifier_modal_confirm": "Подтвердить",
   "unique_identifier_modal_cancel": "Отмена",
@@ -489,7 +488,7 @@
   "trying_to_find": "Поиск лучшего курса обмена...",
   "exchange_will_be_sent": "%1$s %2$s будут отправлены",
   "exchange_will_be_received": "%1$s %2$s будут получены",
-  "mining_fee": "Комиссия майнера",
+  "mining_fee": "",
   "confirm_to_complete_exchange": "Подтвердите для завершения вашего обмена.",
   "kyc_title": "Необходима информация о клиенте",
   "kyc_message": "Доступный обмен для этой транзакции требует учетную запись ShapeShift. Пожалуйста, создайте аккаунт, чтобы продолжить.",
@@ -540,5 +539,6 @@
   "buy_sell_crypto_no_plugin_region": "",
   "user_closed_modal_no_wallet": "",
   "plugin_spend_notes_generic": "",
-  "plugin_provider_disclaimer": ""
+  "plugin_provider_disclaimer": "",
+  "no_exchange_rate": ""
 }
