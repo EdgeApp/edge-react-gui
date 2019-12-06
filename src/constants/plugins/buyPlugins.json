@@ -600,6 +600,7 @@
     ],
     "addOnUrl": "/?country=GB&payment_id=6018",
     "title": "Faster Payments",
+    "description": "Fee: ~3.5% / Settlement: 5 min-24 hours\nLimit: $50000",
     "paymentTypeLogoKey": "fasterPayments",
     "priority": 1
   },
