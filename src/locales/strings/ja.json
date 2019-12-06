@@ -460,7 +460,6 @@
   "unique_identifier_dropdown_option_memo": "メモを追加",
   "unique_identifier_dropdown_option_memo_id": "メモIDを追加",
   "unique_identifier_dropdown_option_destination_tag": "宛先タグを追加",
-  "unique_identifier_dropdown_option_payment_id": "支払いIDを追加",
   "unique_identifier_modal_description": "この取引の受信者に送信される%s値を入力してください。",
   "unique_identifier_modal_confirm": "確認",
   "unique_identifier_modal_cancel": "キャンセル",
@@ -489,7 +488,7 @@
   "trying_to_find": "ベストな為替レート検索をしています...",
   "exchange_will_be_sent": "%1$s %2$s が送信されます",
   "exchange_will_be_received": "%1$s %2$s が受信されます",
-  "mining_fee": "マイニング手数料",
+  "mining_fee": "",
   "confirm_to_complete_exchange": "取引を完了するために確認してください",
   "kyc_title": "お客様情報が必要です",
   "kyc_message": "その利用可能な為替取引にはShapeShiftアカウントが必要です。続けるにはアカウントを作成してください。",
@@ -540,5 +539,6 @@
   "buy_sell_crypto_no_plugin_region": "",
   "user_closed_modal_no_wallet": "",
   "plugin_spend_notes_generic": "",
-  "plugin_provider_disclaimer": ""
+  "plugin_provider_disclaimer": "",
+  "no_exchange_rate": ""
 }
