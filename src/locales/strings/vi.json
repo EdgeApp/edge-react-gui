@@ -460,7 +460,6 @@
   "unique_identifier_dropdown_option_memo": "Thêm ghi chú",
   "unique_identifier_dropdown_option_memo_id": "Thêm ghi nhớ ID",
   "unique_identifier_dropdown_option_destination_tag": "Thêm địa chỉ gửi đến",
-  "unique_identifier_dropdown_option_payment_id": "Thêm ID thanh toán",
   "unique_identifier_modal_description": "Vui lòng nhập giá trị %s sẽ được gửi đến người nhận của giao dịch này",
   "unique_identifier_modal_confirm": "Xác nhận",
   "unique_identifier_modal_cancel": "Huỷ",
