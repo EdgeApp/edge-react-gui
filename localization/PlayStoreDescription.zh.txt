@@ -6,7 +6,7 @@
 
 管理您的加密货币资产从未如此简单。 Edge 钱包为您提供最大的安全性，同时保持简洁，允许所有类型的用户轻松管理，转移和交换他们的货币。
 
-<b>Edge加密钱包目前支持:</b> 比特币 (BTC), 比特币现金 (BCH)、比特币现金 SV (BSV)、莱特币 (LTC)、 量子链 (QTUM)、达世币 (dash)、以太坊(eth)、 门罗币(xmr)、 瑞波币(xrp)、极特币(DGB)、 EOS 和 羽毛币 (ftc)。 想在钱包里使用其他币吗？ 请向我们发出建议!
+<b>Edge Crypto Wallet currently supports:</b> Bitcoin (BTC), Bitcoin Cash (BCH), Bitcoin SV (BSV), Litecoin (LTC), Qtum (QTUM), Dash (DASH), Ethereum (ETH), Monero (XMR), Ripple (XRP), Digibyte (DGB), EOS, Binance Chain (BNB), RSK (RBTC), Stellar (XLM), Tezos (XTZ), Ravencoin (RVN), SmartCash (SMART), Zcoin (XZC), Dogecoin (DOGE), and Feathercoin (FTC). 想在钱包里使用其他币吗？ 请向我们发出建议!
 
 Edge 是一个功能强大且易于使用的加密货币钱包, 它允许用户利用便利的手机银行模式，轻松地控制自己的私钥。 
 
