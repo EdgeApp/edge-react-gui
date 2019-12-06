@@ -460,7 +460,6 @@
   "unique_identifier_dropdown_option_memo": "Add Memo",
   "unique_identifier_dropdown_option_memo_id": "Add Memo ID",
   "unique_identifier_dropdown_option_destination_tag": "Add Destination Tag",
-  "unique_identifier_dropdown_option_payment_id": "Add Payment ID",
   "unique_identifier_modal_description": "Please enter the %s value to be sent to the recipient of this transaction",
   "unique_identifier_modal_confirm": "Confirm",
   "unique_identifier_modal_cancel": "Cancel",

@@ -664,36 +664,6 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
                 
               </FormattedText>
             </Row>
-            <Row
-              style={
-                Object {
-                  "paddingVertical": 10,
-                }
-              }
-            >
-              <TouchableOpacity
-                activeOpacity={0.3}
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "backgroundColor": "transparent",
-                    "justifyContent": "center",
-                    "padding": 19.664084507042254,
-                  }
-                }
-              >
-                <FormattedText
-                  ellipsizeMode="tail"
-                  style={
-                    Object {
-                      "color": "#FFFFFF",
-                    }
-                  }
-                >
-                  Add Payment ID
-                </FormattedText>
-              </TouchableOpacity>
-            </Row>
           </Item>
         </Padding>
       </View>
@@ -703,9 +673,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
             Object {
               "marginTop": 16.854929577464787,
             },
-            Object {
-              "marginTop": 0,
-            },
+            false,
           ]
         }
       >
@@ -723,10 +691,6 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
       </Footer>
     </View>
   </SceneWrapper>
-  <Connect(UniqueIdentifierModal)
-    currencyCode="XMR"
-    keyboardType="default"
-  />
 </React.Fragment>
 `;
 
