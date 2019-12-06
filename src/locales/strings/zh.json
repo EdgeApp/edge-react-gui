@@ -460,7 +460,6 @@
   "unique_identifier_dropdown_option_memo": "添加备注",
   "unique_identifier_dropdown_option_memo_id": "添加备忘录识别元",
   "unique_identifier_dropdown_option_destination_tag": "添加目的地标签",
-  "unique_identifier_dropdown_option_payment_id": "添加支付识别元",
   "unique_identifier_modal_description": "请输入要发送给此交易的收件人的 %s 值",
   "unique_identifier_modal_confirm": "确认",
   "unique_identifier_modal_cancel": "取消",
