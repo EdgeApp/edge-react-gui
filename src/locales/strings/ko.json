@@ -460,7 +460,6 @@
   "unique_identifier_dropdown_option_memo": "메모 추가",
   "unique_identifier_dropdown_option_memo_id": "메모 ID를 추가",
   "unique_identifier_dropdown_option_destination_tag": "대상 태그를 추가",
-  "unique_identifier_dropdown_option_payment_id": "결제 ID를 추가",
   "unique_identifier_modal_description": "이 거래의 수신자에게 보낼 %s 치를 입력하십시오.",
   "unique_identifier_modal_confirm": "확인",
   "unique_identifier_modal_cancel": "취소",
