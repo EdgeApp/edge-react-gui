@@ -460,7 +460,6 @@
   "unique_identifier_dropdown_option_memo": "Añadir recordatorio",
   "unique_identifier_dropdown_option_memo_id": "Añadir Memo ID",
   "unique_identifier_dropdown_option_destination_tag": "Añadir etiqueta de destino",
-  "unique_identifier_dropdown_option_payment_id": "Añadir ID de pago",
   "unique_identifier_modal_description": "Por favor introduce el valor de %s a enviar al receptor de esta transacción",
   "unique_identifier_modal_confirm": "Confirmar",
   "unique_identifier_modal_cancel": "Cancelar",
