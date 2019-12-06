@@ -460,7 +460,6 @@
   "unique_identifier_dropdown_option_memo": "Ajouter une note",
   "unique_identifier_dropdown_option_memo_id": "Ajouter Memo ID",
   "unique_identifier_dropdown_option_destination_tag": "Ajouter les étiaquettes de la destination",
-  "unique_identifier_dropdown_option_payment_id": "Ajouter un paiement ID",
   "unique_identifier_modal_description": "Veuillez saisir le numéro %s à envoyer au destinataire de cette transaction",
   "unique_identifier_modal_confirm": "Confirmer",
   "unique_identifier_modal_cancel": "Annuler",
@@ -489,7 +488,7 @@
   "trying_to_find": " Recherche du meilleure taux de change.......",
   "exchange_will_be_sent": "%1$d %2$s seront effectués",
   "exchange_will_be_received": "%1$d %2$s seront reçus",
-  "mining_fee": "Frais du mining",
+  "mining_fee": "",
   "confirm_to_complete_exchange": "Confirmer la finalisation de votre echange ",
   "kyc_title": "Obligatoire de mettre l'information client ",
   "kyc_message": "Il est demandé d'avoir le compte de ShapeShift pour cette transaction à l'échange disponible ",
@@ -540,5 +539,6 @@
   "buy_sell_crypto_no_plugin_region": "",
   "user_closed_modal_no_wallet": "",
   "plugin_spend_notes_generic": "",
-  "plugin_provider_disclaimer": ""
+  "plugin_provider_disclaimer": "",
+  "no_exchange_rate": ""
 }
