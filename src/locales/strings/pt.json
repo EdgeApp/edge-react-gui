@@ -460,7 +460,6 @@
   "unique_identifier_dropdown_option_memo": "",
   "unique_identifier_dropdown_option_memo_id": "Adicione ID de Memo",
   "unique_identifier_dropdown_option_destination_tag": "Adicionar Tag de Destino",
-  "unique_identifier_dropdown_option_payment_id": "Adicionar ID de pagamento",
   "unique_identifier_modal_description": "",
   "unique_identifier_modal_confirm": "Confirmar",
   "unique_identifier_modal_cancel": "Cancelar",
@@ -489,7 +488,7 @@
   "trying_to_find": "",
   "exchange_will_be_sent": "%1$s %2$s serão enviados",
   "exchange_will_be_received": "%1$s %2$s serão recebidos",
-  "mining_fee": "Taxa de mineração",
+  "mining_fee": "",
   "confirm_to_complete_exchange": "",
   "kyc_title": "",
   "kyc_message": "",
@@ -540,5 +539,6 @@
   "buy_sell_crypto_no_plugin_region": "",
   "user_closed_modal_no_wallet": "",
   "plugin_spend_notes_generic": "",
-  "plugin_provider_disclaimer": ""
+  "plugin_provider_disclaimer": "",
+  "no_exchange_rate": ""
 }
