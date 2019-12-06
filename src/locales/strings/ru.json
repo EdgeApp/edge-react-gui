@@ -460,7 +460,6 @@
   "unique_identifier_dropdown_option_memo": "",
   "unique_identifier_dropdown_option_memo_id": "Добавьте идентификатор МЕМО",
   "unique_identifier_dropdown_option_destination_tag": "Добавить назначение платежа",
-  "unique_identifier_dropdown_option_payment_id": "Добавить идентификатор платежа",
   "unique_identifier_modal_description": "",
   "unique_identifier_modal_confirm": "Подтвердить",
   "unique_identifier_modal_cancel": "Отмена",
