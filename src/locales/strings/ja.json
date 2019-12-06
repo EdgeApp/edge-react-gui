@@ -460,7 +460,6 @@
   "unique_identifier_dropdown_option_memo": "メモを追加",
   "unique_identifier_dropdown_option_memo_id": "メモIDを追加",
   "unique_identifier_dropdown_option_destination_tag": "宛先タグを追加",
-  "unique_identifier_dropdown_option_payment_id": "支払いIDを追加",
   "unique_identifier_modal_description": "この取引の受信者に送信される%s値を入力してください。",
   "unique_identifier_modal_confirm": "確認",
   "unique_identifier_modal_cancel": "キャンセル",
