@@ -460,7 +460,6 @@
   "unique_identifier_dropdown_option_memo": "Ajouter une note",
   "unique_identifier_dropdown_option_memo_id": "Ajouter Memo ID",
   "unique_identifier_dropdown_option_destination_tag": "Ajouter les étiaquettes de la destination",
-  "unique_identifier_dropdown_option_payment_id": "Ajouter un paiement ID",
   "unique_identifier_modal_description": "Veuillez saisir le numéro %s à envoyer au destinataire de cette transaction",
   "unique_identifier_modal_confirm": "Confirmer",
   "unique_identifier_modal_cancel": "Annuler",
