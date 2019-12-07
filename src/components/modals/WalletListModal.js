@@ -182,16 +182,18 @@ export class WalletListModal extends Component<Props, LocalState> {
       <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(null)}>
         {gap => (
           <Fragment>
-            <View style={{ flex: 1, paddingLeft: scale(12), paddingRight: scale(12) }}>
-              <FormField
-                autoFocus
-                error={''}
-                keyboardType={'default'}
-                label={this.props.headerTitle}
-                onChangeText={this.onSearchFilterChange}
-                style={MaterialInputStyle}
-                value={input}
-              />
+            <View style={{ flex: 1 }}>
+              <View style={{ marginHorizontal: scale(15), marginBottom: scale(13) }}>
+                <FormField
+                  autoFocus
+                  error={''}
+                  keyboardType={'default'}
+                  label={this.props.headerTitle}
+                  onChangeText={this.onSearchFilterChange}
+                  style={MaterialInputStyle}
+                  value={input}
+                />
+              </View>
               <FlatList
                 style={{ flex: 1, marginBottom: -gap.bottom }}
                 contentContainerStyle={{ paddingBottom: gap.bottom }}

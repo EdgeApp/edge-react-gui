@@ -18,6 +18,7 @@ class CryptoExchangeCreateWalletRow extends Component<Props, State> {
   }
   render () {
     const { supportedWallet } = this.props
+    console.log(supportedWallet)
     return (
       <View style={styles.container}>
         <TouchableHighlight style={styles.touchable} underlayColor={styles.underlayColor} onPress={this.onPress}>
@@ -25,10 +26,9 @@ class CryptoExchangeCreateWalletRow extends Component<Props, State> {
             <View style={styles.containerLeft}>
               <Image style={styles.imageContainer} source={{ uri: supportedWallet.symbolImage }} resizeMode={'contain'} />
             </View>
-            <View style={styles.containerCenter}>
-              <FormattedText>
-                {supportedWallet.label} ({supportedWallet.currencyCode})
-              </FormattedText>
+            <View style={[styles.containerCenter, styles.containerCreateCenter]}>
+              <FormattedText style={styles.containerCenterCurrency}>{supportedWallet.currencyCode}</FormattedText>
+              <FormattedText style={styles.containerCenterName}>{supportedWallet.label}</FormattedText>
             </View>
             <View style={styles.containerRight}>
               <Text style={styles.createText}>{localize.strings.fragment_create_wallet_create_wallet}</Text>

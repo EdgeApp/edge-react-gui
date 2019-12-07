@@ -23,20 +23,39 @@ const CryptoExchangeWalletListRowStyle = {
   },
   rowContainerTop: {
     width: '100%',
-    height: scale(60),
-    flexDirection: 'row'
+    height: scale(76),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingLeft: scale(10),
+    paddingRight: scale(10),
+    borderBottomWidth: scale(1),
+    borderBottomColor: THEME.COLORS.GRAY_3
   },
   rowContainerBottom: {
     width: '100%'
   },
   containerLeft: {
-    flex: 2,
-    justifyContent: 'space-around'
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: scale(10),
+    width: scale(36)
   },
   containerCenter: {
     flex: 9,
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'flex-start'
+  },
+  containerCenterCurrency: {
+    fontSize: scale(18)
+  },
+  containerCenterName: {
+    fontSize: scale(14),
+    color: THEME.COLORS.SECONDARY
+  },
+  containerCreateCenter: {
+    flexDirection: 'column',
+    textAlign: 'left'
   },
   containerRight: {
     flex: 4,
@@ -45,7 +64,8 @@ const CryptoExchangeWalletListRowStyle = {
     flexDirection: 'row'
   },
   imageContainer: {
-    height: scale(20)
+    height: scale(24),
+    width: scale(24)
   },
   holderView: {
     width: '80%',
@@ -59,6 +79,44 @@ const CryptoExchangeWalletListRowStyle = {
     fontFamily: THEME.FONTS.DEFAULT,
     textAlign: 'right',
     marginRight: 10
+  },
+
+  walletDetailsContainer: {
+    flex: 1,
+    flexDirection: 'column'
+  },
+  walletDetailsRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  walletDetailsRowLine: {
+    height: 1,
+    borderColor: 'rgba(14, 75, 117, 0.5)',
+    borderBottomWidth: 1,
+    marginTop: scale(12),
+    marginBottom: scale(9)
+  },
+  walletDetailsRowCurrency: {
+    flex: 1,
+    fontSize: scale(18)
+  },
+  walletDetailsRowValue: {
+    textAlign: 'right',
+    fontSize: scale(18),
+    marginRight: scale(8),
+    color: THEME.COLORS.GRAY_1
+  },
+  walletDetailsRowName: {
+    flex: 1,
+    fontSize: scale(14),
+    color: THEME.COLORS.SECONDARY
+  },
+  walletDetailsRowFiat: {
+    fontSize: scale(14),
+    textAlign: 'right',
+    marginRight: scale(8),
+    color: THEME.COLORS.SECONDARY
   }
 }
 
