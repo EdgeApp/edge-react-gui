@@ -61,7 +61,7 @@ export const styles = {
     },
     containerExpanded: {
       width: '100%',
-      height: scale(110),
+      height: scale(94),
       backgroundColor: THEME.COLORS.OPACITY_WHITE,
       borderRadius: 3
     },
@@ -106,13 +106,13 @@ export const styles = {
     minerFeeText: {
       color: THEME.COLORS.WHITE,
       fontSize: scale(14),
-      paddingTop: scale(10),
+      paddingTop: scale(5),
       paddingBottom: scale(10)
     },
     minerFeeRightText: {
       color: THEME.COLORS.WHITE,
       fontSize: scale(14),
-      paddingTop: scale(10),
+      paddingTop: scale(5),
       paddingBottom: scale(10),
       alignSelf: 'flex-end'
     },
@@ -132,12 +132,14 @@ export const styles = {
     walletNameText: {
       color: THEME.COLORS.WHITE,
       fontSize: scale(16),
-      paddingLeft: scale(10)
+      paddingLeft: scale(10),
+      paddingBottom: scale(9)
     },
     fiatAmountText: {
       color: THEME.COLORS.WHITE,
       fontSize: scale(16),
       paddingRight: 10,
+      paddingBottom: scale(9),
       textAlign: 'right'
     },
     topRow: {

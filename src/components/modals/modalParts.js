@@ -1,7 +1,7 @@
 // @flow
 // This file gathers together various helpful things for building modals.
 
-import { type AirshipBridge } from '../common/Airship.js'
+import { type AirshipBridge } from 'react-native-airship'
 
 export * from '../../styles/common/textStyles.js'
 export { THEME } from '../../theme/variables/airbitz.js'

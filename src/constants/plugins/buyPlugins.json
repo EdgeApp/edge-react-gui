@@ -255,7 +255,7 @@
     "id": "wyre",
     "pluginId": "co.edgesecure.wyre",
     "paymentType": "bank",
-    "description": "Fee: 1% / Settlement: 1 - 5 days\nLimit: $2500",
+    "description": "Fee: 1% / Settlement: 1-5 days\nLimit: $2500",
     "title": "ACH Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/01/wyre-logo-square-small.png",
     "countryCodes": {
@@ -387,7 +387,7 @@
     "id": "safello",
     "pluginId": "com.safello",
     "paymentType": "credit",
-    "description": "Fee: 6.5% / Settlement: Instant\nLimit: €2500",
+    "description": "Fee: 5.75% / Settlement: Instant\nLimit: €2500",
     "title": "Credit Card",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/06/Safello-Logo-Green-background.png",
     "countryCodes": {
@@ -430,9 +430,31 @@
     },
     "cryptoCodes": [
       "BTC",
-      "ETH"
+      "ETH",
+      "BCH",
+      "XRP"
     ],
     "paymentTypeLogoKey": "credit"
+  },
+  {
+    "id": "safello.bank",
+    "pluginId": "com.safello",
+    "paymentType": "bank",
+    "description": "Fee: 4% / Settlement: 1-2 days\nLimit: €2500",
+    "title": "Bank Transfer",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/06/Safello-Logo-Green-background.png",
+    "countryCodes": {
+      "DK": true,
+      "SE": true
+    },
+    "cryptoCodes": [
+      "BTC",
+      "ETH",
+      "BCH",
+      "XRP"
+    ],
+    "paymentTypeLogoKey": "bank",
+    "addOnUrl": "buy/bank"
   },
   {
     "id": "libertyx",
@@ -441,7 +463,7 @@
       "cash": true,
       "credit": true
     },
-    "description": "Fee: 3 - 8% / Settlement: Instant\nLimit: $200 - $3000",
+    "description": "Fee: 3-8% / Settlement: Instant\nLimit: $200 - $3000",
     "title": "Cash and Debit Card",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/05/libertyXlogo.png",
     "countryCodes": {
@@ -459,11 +481,11 @@
       "bank": true,
       "cash": false
     },
-    "description": "Fee: 4 - 6% / Settlement: 5 min - 24 hours\nLimit: $50000",
+    "description": "Fee: 4-6% / Settlement: 5 min-24 hours\nLimit: $50000",
     "title": "POLi Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
     "countryCodes": {
-      "GB": false,
+      "GB": true,
       "AU": true
     },
     "cryptoCodes": [
@@ -480,11 +502,10 @@
       "bank": false,
       "cash": true
     },
-    "description": "Fee: 4 - 6% / Settlement: 5 min - 24 hours\nLimit: $9000",
+    "description": "Fee: 4-6% / Settlement: 5 min-24 hours\nLimit: $9000",
     "title": "Cash with Newsagent",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
     "countryCodes": {
-      "GB": false,
       "AU": true
     },
     "cryptoCodes": [
@@ -505,6 +526,10 @@
   },
   {
     "id": "bity",
+    "priority": 1
+  },
+  {
+    "id": "safello.bank",
     "priority": 1
   },
   {
@@ -554,18 +579,35 @@
     "paymentTypeLogoKey": "swish"
   },
   {
+    "id": "safello.bank",
+    "forCountries": [
+      "SE"
+    ],
+    "paymentTypeLogoKey": "bankgirot",
+    "title": "Bankgiro"
+  },
+  {
+    "id": "safello.bank",
+    "forCountries": [
+      "DK"
+    ],
+    "title": "DKK Bank Transfer"
+  },
+  {
     "id": "banxa.bank",
     "forCountries": [
       "GB"
     ],
-    "addOnUrl": "/?country=GB"
-
+    "addOnUrl": "/?country=GB&payment_id=6018",
+    "title": "Faster Payments",
+    "paymentTypeLogoKey": "fasterPayments",
+    "priority": 1
   },
   {
-    "id": "banxa.cash",
+    "id": "bity",
     "forCountries": [
       "GB"
     ],
-    "addOnUrl": "/?country=GB"
+    "priority": 2
   }
 ]

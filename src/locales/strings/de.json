@@ -460,7 +460,6 @@
   "unique_identifier_dropdown_option_memo": "Notiz hinzufügen",
   "unique_identifier_dropdown_option_memo_id": "Füge Memo ID hinzu",
   "unique_identifier_dropdown_option_destination_tag": "Ziel-Tag hinzufügen",
-  "unique_identifier_dropdown_option_payment_id": "Zahlungs-ID hinzufügen",
   "unique_identifier_modal_description": "Bitte geben Sie den %s-Wert ein, der an den Empfänger dieser Transaktion gesendet werden soll",
   "unique_identifier_modal_confirm": "Bestätigen",
   "unique_identifier_modal_cancel": "Abbrechen",
@@ -489,7 +488,7 @@
   "trying_to_find": "Auf der Suche nach dem besten Wechselkurs...",
   "exchange_will_be_sent": "%1$s %2$s werden gesendet",
   "exchange_will_be_received": "%1$s %2$s werden empfangen",
-  "mining_fee": "Miner-Gebühr",
+  "mining_fee": "Maximale Netzwerkgebühr",
   "confirm_to_complete_exchange": "Bestätigen Sie, um Ihren Umtausch abzuschließen.",
   "kyc_title": "Kundeninformationen erforderlich",
   "kyc_message": "Der verfügbare Tausch für diese Transaktion erfordert ein ShapeShift-Konto. Bitte erstellen Sie ein Konto, um fortzufahren.",
@@ -540,5 +539,6 @@
   "buy_sell_crypto_no_plugin_region": "Es tut uns leid, aber es gibt keine Plugins für Ihre Region.",
   "user_closed_modal_no_wallet": "Benutzer gesperrt modal. Keine Wallet ausgewählt",
   "plugin_spend_notes_generic": "%1$s von %2$s bis %3$s an Adresse: %4$s \nFür Hilfe kontaktieren Sie bitte %5$s.",
-  "plugin_provider_disclaimer": "Die folgenden Dienste werden nicht von Edge bereitgestellt. \n\nFür Probleme und Feedback kontaktieren Sie bitte die jeweiligen Dienstleister."
+  "plugin_provider_disclaimer": "Die folgenden Dienste werden nicht von Edge bereitgestellt. \n\nFür Probleme und Feedback kontaktieren Sie bitte die jeweiligen Dienstleister.",
+  "no_exchange_rate": ""
 }

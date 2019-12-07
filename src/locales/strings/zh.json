@@ -460,7 +460,6 @@
   "unique_identifier_dropdown_option_memo": "添加备注",
   "unique_identifier_dropdown_option_memo_id": "添加备忘录识别元",
   "unique_identifier_dropdown_option_destination_tag": "添加目的地标签",
-  "unique_identifier_dropdown_option_payment_id": "添加支付识别元",
   "unique_identifier_modal_description": "请输入要发送给此交易的收件人的 %s 值",
   "unique_identifier_modal_confirm": "确认",
   "unique_identifier_modal_cancel": "取消",
@@ -489,7 +488,7 @@
   "trying_to_find": "寻找最佳汇率......",
   "exchange_will_be_sent": "%1$s %2$s将会被发出",
   "exchange_will_be_received": "您将会收取 %1$s %2$s",
-  "mining_fee": "挖矿费用",
+  "mining_fee": "",
   "confirm_to_complete_exchange": "确认以完成您的交易。",
   "kyc_title": "需要客户信息",
   "kyc_message": "此交易记录需要一个 shapeshift 帐户。请创建一个帐户以继续。",
@@ -540,5 +539,6 @@
   "buy_sell_crypto_no_plugin_region": "很抱歉，但是没有可用的插件用于本地区。",
   "user_closed_modal_no_wallet": "",
   "plugin_spend_notes_generic": "",
-  "plugin_provider_disclaimer": ""
+  "plugin_provider_disclaimer": "",
+  "no_exchange_rate": ""
 }

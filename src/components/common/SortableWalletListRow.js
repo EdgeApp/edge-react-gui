@@ -10,29 +10,44 @@ import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import T from '../../modules/UI/components/FormattedText/index'
+import { calculateSettingsFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
 import styles, { styles as styleRaw } from '../../styles/scenes/WalletListStyle.js'
-import { decimalOrZero, findDenominationSymbol, truncateDecimals } from '../../util/utils'
+import { decimalOrZero, getFiatSymbol, truncateDecimals } from '../../util/utils'
 
 const DIVIDE_PRECISION = 18
 
 class SortableWalletListRow extends Component<Props, State> {
   render () {
-    const { data } = this.props
+    let multiplier,
+      name,
+      symbol,
+      symbolImageDarkMono,
+      currencyCode,
+      preliminaryCryptoAmount,
+      finalCryptoAmount,
+      finalCryptoAmountString,
+      fiatBalance,
+      fiatBalanceFormat,
+      fiatBalanceString
+    const { data, walletFiatSymbol, settings, exchangeRates, showBalance } = this.props
     const walletData = data
-    let multiplier, name, symbol, cryptoCurrencyName, symbolImageDarkMono, preliminaryCryptoAmount, finalCryptoAmount
 
-    // const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, data.currencyCode)
     if (walletData.currencyCode) {
       // if wallet is done loading
       const displayDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(this.props.settings, walletData.currencyCode)
       multiplier = displayDenomination.multiplier
       name = walletData.name || s.strings.string_no_name
-      symbol = findDenominationSymbol(walletData.denominations, walletData.currencyCode)
-      cryptoCurrencyName = walletData.currencyNames[walletData.currencyCode]
+      symbol = displayDenomination.symbol
       symbolImageDarkMono = walletData.symbolImageDarkMono
+      currencyCode = walletData.currencyCode
       preliminaryCryptoAmount = truncateDecimals(bns.div(walletData.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)
       finalCryptoAmount = intl.formatNumberInput(decimalOrZero(preliminaryCryptoAmount, 6)) // make it show zero if infinitesimal number
+      finalCryptoAmountString = showBalance ? `${symbol || ''} ${finalCryptoAmount}` : ''
+      fiatBalance = calculateSettingsFiatBalanceWithoutState(walletData, settings, exchangeRates)
+      fiatBalanceFormat = fiatBalance && parseFloat(fiatBalance) > 0.000001 ? fiatBalance : 0
+      fiatBalanceString = showBalance ? `${walletFiatSymbol} ${fiatBalanceFormat}` : ''
     }
+
     return (
       <TouchableHighlight
         style={[styles.rowContainer, styles.sortableWalletListRow]}
@@ -53,18 +68,14 @@ class SortableWalletListRow extends Component<Props, State> {
                 />
               )}
             </View>
-            <View style={[styles.rowNameTextWrapAndroidIos]}>
-              <T style={[styles.rowNameText]} numberOfLines={2} adjustsFontSizeToFit={true} minimumFontScale={0.6}>
-                {name}
-              </T>
-            </View>
-            <View style={[styles.rowBalanceTextWrap]}>
-              <T style={[styles.rowBalanceAmountText]}>{finalCryptoAmount}</T>
-              <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-                <T style={[styles.rowBalanceDenominationText]}>{cryptoCurrencyName}</T>
-                <T> (</T>
-                <T style={[styles.rowBalanceDenominationText, styles.symbol]}>{symbol || ''}</T>
-                <T>)</T>
+            <View style={styles.walletDetailsContainer}>
+              <View style={styles.walletDetailsRow}>
+                <T style={[styles.walletDetailsRowCurrency]}>{currencyCode}</T>
+                <T style={[styles.walletDetailsRowValue]}>{finalCryptoAmountString}</T>
+              </View>
+              <View style={styles.walletDetailsRow}>
+                <T style={[styles.walletDetailsRowName]}>{name}</T>
+                <T style={[styles.walletDetailsRowFiat]}>{fiatBalanceString}</T>
               </View>
             </View>
           </View>
@@ -80,10 +91,17 @@ class SortableWalletListRow extends Component<Props, State> {
   }
 }
 
-export default connect(state => {
+export default connect((state, ownProps) => {
   const settings = state.ui.settings
+  const exchangeRates = state.exchangeRates
+
+  const data = ownProps.data || null
+  const walletFiatSymbol = data ? getFiatSymbol(data.isoFiatCurrencyCode) : ''
 
   return {
-    settings
+    showBalance: typeof ownProps.showBalance === 'function' ? ownProps.showBalance(state) : ownProps.showBalance,
+    settings,
+    exchangeRates,
+    walletFiatSymbol
   }
 })(SortableWalletListRow)

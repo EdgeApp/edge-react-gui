@@ -50,7 +50,9 @@ export const initialState = {
 
   pin: '',
   authRequired: 'none',
-  address: ''
+  address: '',
+
+  toggleCryptoOnTop: 0
 }
 
 export const getScene = (state: State): any => getSceneState(state, 'sendConfirmation')

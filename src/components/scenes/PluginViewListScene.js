@@ -12,23 +12,16 @@ import { connect } from 'react-redux'
 
 import { updateOneSetting } from '../../actions/SettingsActions.js'
 import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
+import paymentTypeLogoBankgirot from '../../assets/images/paymentTypes/paymentTypeLogoBankgirot.png'
 import paymentTypeLogoBankTransfer from '../../assets/images/paymentTypes/paymentTypeLogoBankTransfer.png'
 import paymentTypeLogoCash from '../../assets/images/paymentTypes/paymentTypeLogoCash.png'
 import paymentTypeLogoCreditCard from '../../assets/images/paymentTypes/paymentTypeLogoCreditCard.png'
+import paymentTypeLogoFasterPayments from '../../assets/images/paymentTypes/paymentTypeLogoFasterPayments.png'
 import paymentTypeLogoGiftCard from '../../assets/images/paymentTypes/paymentTypeLogoGiftCard.png'
 import paymentTypeLogoNewsagent from '../../assets/images/paymentTypes/paymentTypeLogoNewsagent.png'
 import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLogoPoli.png'
 import paymentTypeLogoSwish from '../../assets/images/paymentTypes/paymentTypeLogoSwish.png'
-import {
-  ANDROID,
-  ARROW_RIGHT,
-  COUNTRY_CODES,
-  DEVELOPER_PLUGIN,
-  FLAG_LOGO_URL,
-  PLUGIN_VIEW,
-  PLUGIN_VIEW_LEGACY,
-  SIMPLE_ICONS
-} from '../../constants/indexConstants.js'
+import { ANDROID, ARROW_RIGHT, COUNTRY_CODES, FLAG_LOGO_URL, PLUGIN_VIEW, PLUGIN_VIEW_LEGACY, SIMPLE_ICONS } from '../../constants/indexConstants.js'
 import { devPlugin, getBuyPlugins, getSellPlugins, pluginUrlMap } from '../../constants/plugins/buySellPlugins.js'
 import s from '../../locales/strings.js'
 import { getSyncedSettingsAsync, setSyncedSettingsAsync } from '../../modules/Core/Account/settings.js'
@@ -49,7 +42,9 @@ const paymentTypeLogosById = {
   credit: paymentTypeLogoCreditCard,
   applepay: paymentTypeLogoApplePay,
   bank: paymentTypeLogoBankTransfer,
+  bankgirot: paymentTypeLogoBankgirot,
   cash: paymentTypeLogoCash,
+  fasterPayments: paymentTypeLogoFasterPayments,
   giftcard: paymentTypeLogoGiftCard,
   newsagent: paymentTypeLogoNewsagent,
   poli: paymentTypeLogoPoli,
@@ -76,6 +71,7 @@ type State = {
 }
 
 const MODAL_DATA_FILE = 'pluginModalTracker.json'
+const DEVELOPER_PLUGIN_KEY = 'developerPlugin'
 
 class PluginList extends Component<Props, State> {
   constructor (props: Props) {
@@ -88,7 +84,7 @@ class PluginList extends Component<Props, State> {
     await this.checkDisclaimer()
     this.checkCountry()
 
-    const storedDeveloperPlugin = await AsyncStorage.getItem(DEVELOPER_PLUGIN)
+    const storedDeveloperPlugin = await AsyncStorage.getItem(DEVELOPER_PLUGIN_KEY)
     this.setState({
       developerPlugin: storedDeveloperPlugin ? JSON.parse(storedDeveloperPlugin) : devPlugin
     })
@@ -187,7 +183,7 @@ class PluginList extends Component<Props, State> {
     launchModal(modal).then(async response => {
       if (response) {
         plugin.uri = response
-        await AsyncStorage.setItem(DEVELOPER_PLUGIN, JSON.stringify(plugin))
+        await AsyncStorage.setItem(DEVELOPER_PLUGIN_KEY, JSON.stringify(plugin))
         Actions[PLUGIN_VIEW]({ plugin })
       }
     })
@@ -267,7 +263,7 @@ class PluginList extends Component<Props, State> {
             <Text style={{ textAlign: 'center' }}>{s.strings.buy_sell_crypto_no_plugin_region}</Text>
           </View>
         ) : (
-          <FlatList data={plugins} renderItem={this._renderPlugin} keyExtractor={item => item.pluginId} />
+          <FlatList data={plugins} renderItem={this._renderPlugin} keyExtractor={item => item.id} />
         )}
       </SceneWrapper>
     )

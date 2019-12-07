@@ -2,10 +2,10 @@
 
 import React, { Component, Fragment } from 'react'
 import { ActivityIndicator, Animated, StyleSheet, Text, View } from 'react-native'
+import { type AirshipBridge } from 'react-native-airship'
 
 import { THEME } from '../../theme/variables/airbitz.js'
 import { scale } from '../../util/scaling.js'
-import { type AirshipBridge } from './Airship.js'
 import { LayoutContext } from './LayoutContext.js'
 
 const fadeInTime = 300

@@ -4,7 +4,7 @@ import { bns } from 'biggystring'
 import { createSimpleConfirmModal } from 'edge-components'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, Clipboard, Platform, View } from 'react-native'
+import { ActivityIndicator, Clipboard, Dimensions, Platform, View } from 'react-native'
 import ContactsWrapper from 'react-native-contacts-wrapper'
 import RNFS from 'react-native-fs'
 import Share from 'react-native-share'
@@ -17,7 +17,6 @@ import ExchangeRate from '../../modules/UI/components/ExchangeRate/index.js'
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import { ExchangedFlipInput } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
-import QRCode from '../../modules/UI/components/QRCode/index.js'
 import RequestStatus from '../../modules/UI/components/RequestStatus/index.js'
 import ShareButtons from '../../modules/UI/components/ShareButtons/index.js'
 import WalletListModal from '../../modules/UI/components/WalletListModal/WalletListModalConnector'
@@ -26,6 +25,7 @@ import { THEME } from '../../theme/variables/airbitz.js'
 import type { GuiCurrencyInfo, GuiWallet } from '../../types/types.js'
 import { getObjectDiff } from '../../util/utils'
 import { launchModal } from '../common/ModalProvider.js'
+import { QrCode } from '../common/QrCode.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError, showToast } from '../services/AirshipInstance.js'
 
@@ -236,6 +236,7 @@ export class Request extends Component<Props, State> {
         allowedWallets[id] = wallets[id]
       }
     }
+    const qrSize = Dimensions.get('window').height / 4
 
     return (
       <SceneWrapper>
@@ -257,15 +258,14 @@ export class Request extends Component<Props, State> {
             isFocus={false}
           />
 
-          <View style={{ overflow: 'hidden' }}>
-            <QRCode value={this.state.encodedURI} />
+          <View style={styles.qrContainer}>
+            <QrCode data={this.state.encodedURI} size={qrSize} />
           </View>
           <RequestStatus requestAddress={requestAddress} addressExplorer={addressExplorer} amountRequestedInCrypto={0} amountReceivedInCrypto={0} />
         </View>
 
         <View style={styles.shareButtonsContainer}>
           <ShareButtons
-            styles={styles.shareButtons}
             shareViaEmail={this.shareViaEmail}
             shareViaSMS={this.shareViaSMS}
             shareViaShare={this.shareViaShare}

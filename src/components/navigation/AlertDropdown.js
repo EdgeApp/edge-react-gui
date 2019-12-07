@@ -2,13 +2,13 @@
 
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
+import { type AirshipBridge } from 'react-native-airship'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 
 import s from '../../locales/strings.js'
 import { B, nightText } from '../../styles/common/textStyles.js'
 import { getHeaderHeight, THEME } from '../../theme/variables/airbitz.js'
-import { type AirshipBridge } from '../common/Airship.js'
 import { AirshipDropdown } from '../common/AirshipDropdown.js'
 
 type Props = {

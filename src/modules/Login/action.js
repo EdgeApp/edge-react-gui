@@ -1,9 +1,7 @@
 // @flow
 
 import { type EdgeAccount, type EdgeCurrencyInfo } from 'edge-core-js/types'
-import { Platform } from 'react-native'
 import Locale from 'react-native-locale'
-import PushNotification from 'react-native-push-notification'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
@@ -67,13 +65,6 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
 
   const state = getState()
   const context = CORE_SELECTORS.getContext(state)
-  if (Platform.OS === Constants.IOS) {
-    PushNotification.configure({
-      onNotification: notification => {
-        console.log('NOTIFICATION:', notification)
-      }
-    })
-  }
   let accountInitObject = {
     account: account,
     touchIdInfo: touchIdInfo,

@@ -59,7 +59,8 @@ export type SendConfirmationStateProps = {
   exchangeRates: { [string]: number },
   coreWallet: EdgeCurrencyWallet,
   sceneState: SendConfirmationState,
-  spendingLimits: SpendingLimits
+  spendingLimits: SpendingLimits,
+  toggleCryptoOnTop: number
 }
 
 export type SendConfirmationDispatchProps = {
@@ -93,8 +94,10 @@ type State = {|
 
 export class SendConfirmation extends Component<Props, State> {
   pinInput: any
+  flipInput: any
   count: number
   lastSeenCount: number
+
   constructor (props: Props) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
@@ -114,6 +117,7 @@ export class SendConfirmation extends Component<Props, State> {
     }
     this.count = 0
     this.lastSeenCount = 0
+    this.flipInput = React.createRef()
   }
 
   componentDidMount () {
@@ -137,6 +141,9 @@ export class SendConfirmation extends Component<Props, State> {
   componentDidUpdate (prevProps: Props) {
     if (!prevProps.transactionMetadata && this.props.transactionMetadata && this.props.authRequired !== 'none' && this.props.nativeAmount !== '0') {
       this.pinInput.focus()
+    }
+    if (prevProps.toggleCryptoOnTop !== this.props.toggleCryptoOnTop) {
+      this.flipInput.current.toggleCryptoOnTop()
     }
   }
 
@@ -242,6 +249,7 @@ export class SendConfirmation extends Component<Props, State> {
                 isEditable={this.props.isEditable}
                 isFiatOnTop={this.state.isFiatOnTop}
                 isFocus={this.state.isFocus}
+                ref={this.flipInput}
               />
 
               <Scene.Padding style={{ paddingHorizontal: 54 }}>

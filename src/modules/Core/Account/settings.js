@@ -175,6 +175,9 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   DAI: {
     denomination: '1000000000000000000'
   },
+  SAI: {
+    denomination: '1000000000000000000'
+  },
   BRZ: {
     denomination: '10000'
   },
@@ -206,6 +209,9 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
     denomination: '100000000'
   },
   CDAI: {
+    denomination: '100000000'
+  },
+  CSAI: {
     denomination: '100000000'
   },
   CETH: {
@@ -273,6 +279,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   KIN: 'object',
   USDT: 'object',
   DAI: 'object',
+  SAI: 'object',
   RBTC: 'object',
   RIF: 'object',
   CREP: 'object',
@@ -280,6 +287,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   CBAT: 'object',
   CZRX: 'object',
   CWBTC: 'object',
+  CSAI: 'object',
   CDAI: 'object',
   CETH: 'object',
   customTokens: 'object', // arrays return 'object' to typeof
@@ -363,13 +371,6 @@ export const setPasswordReminderRequest = (account: EdgeAccount, passwordReminde
 export const setAccountBalanceVisibility = (account: EdgeAccount, isAccountBalanceVisible: boolean) => {
   return getLocalSettings(account).then(settings => {
     const updatedSettings = updateSettings(settings, { isAccountBalanceVisible })
-    return setLocalSettings(account, updatedSettings)
-  })
-}
-
-export const setWalletFiatBalanceVisibility = (account: EdgeAccount, isWalletFiatBalanceVisible: boolean) => {
-  return getLocalSettings(account).then(settings => {
-    const updatedSettings = updateSettings(settings, { isWalletFiatBalanceVisible })
     return setLocalSettings(account, updatedSettings)
   })
 }

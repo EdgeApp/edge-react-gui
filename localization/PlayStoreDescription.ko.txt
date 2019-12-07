@@ -6,7 +6,7 @@
 
 지금까지 가상화폐를 관리하는 것은 결코 쉬운 일이 아니었습니다. 엣지 월렛은 어떤 유형의 유저들에게도 통화를 간편하게 관리, 송금, 환전할 수 있도록 간소함을 유지하면서도 최고의 보안을 제공합니다.
 
-<b>엣지 월렛이 현재 지원하는 가상화폐:</b> 비트코인 (BTC), 비트코인 캐시 (BCH), 비트코인 SV (BSV), 라이트코인 (LTC), 큐텀 (QTUM), 대시 (DASH), 이더리움 (ETH), 모네로 (XMR), 리플 (XRP), 디지바이트 (DGB), 이오스, 페더코인 (FTC). 다른 가상화폐들도 엣지 월렛에서 관리하고 싶으십니까? 요청을 보내주세요!
+<b>Edge Crypto Wallet currently supports:</b> Bitcoin (BTC), Bitcoin Cash (BCH), Bitcoin SV (BSV), Litecoin (LTC), Qtum (QTUM), Dash (DASH), Ethereum (ETH), Monero (XMR), Ripple (XRP), Digibyte (DGB), EOS, Binance Chain (BNB), RSK (RBTC), Stellar (XLM), Tezos (XTZ), Ravencoin (RVN), SmartCash (SMART), Zcoin (XZC), Dogecoin (DOGE), and Feathercoin (FTC). 다른 가상화폐들도 엣지 월렛에서 관리하고 싶으십니까? 요청을 보내주세요!
 
 엣지는 모바일뱅킹을 사용하는것과 동일하게 자신의 개인 키를 관리할 수 있게 만들어주는 간편한 가상화폐 월렛입니다. 
 
