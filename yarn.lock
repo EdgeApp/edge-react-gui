@@ -4005,10 +4005,10 @@ edge-core-js@^0.16.15:
     ws "^5.1.1"
     yaob "^0.3.5"
 
-edge-currency-accountbased@^0.5.8:
-  version "0.5.8"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.5.8.tgz#aa992c20786ab0ed056e8fd1979f1b56851a7bff"
-  integrity sha512-qK+5qT7jYJ4G73w3jeYa/nPL9zlau6kTLNH3klnSCqeUxBftL06nPCJxOLExWguDWrrf75ldrQ8Nkpi+oQnG7A==
+edge-currency-accountbased@^0.5.9:
+  version "0.5.9"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.5.9.tgz#58ae0cce5d8d2b1a06dd01801f9176eb50bb2ba6"
+  integrity sha512-XqMYNoL+TpQ53qtHN22wLMMgA5vXWhQbQOW2NFVbZcSd1RcVbxjrBhiikCKlWTEU/eS5IJWyJnhkkBUoYN3qRA==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@dapix/react-native-fio" "0.1.0"
