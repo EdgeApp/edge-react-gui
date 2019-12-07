@@ -172,7 +172,6 @@ dependencies {
     implementation project(':edge-login-ui-rn')
     implementation project(':ExtraDimensions')
     implementation project(':react-native-app-settings')
-    implementation project(':react-native-background-fetch')
     implementation project(':react-native-camera')
     implementation project(':react-native-contacts-wrapper')
     implementation project(':react-native-contacts')
@@ -187,7 +186,6 @@ dependencies {
     implementation project(':react-native-mail')
     implementation project(':react-native-material-kit')
     implementation project(':react-native-picker')
-    implementation project(':react-native-push-notification')
     implementation project(':react-native-randombytes')
     implementation project(':react-native-share')
     implementation project(':react-native-smart-splash-screen')
@@ -206,6 +204,13 @@ dependencies {
     compile "com.google.firebase:firebase-firestore:17.1.0"
     compile "com.google.firebase:firebase-messaging:17.3.0"
     compile "com.google.firebase:firebase-storage:16.0.1"
+
+    // Background fetching (pre AndroidX version):
+    // https://stackoverflow.com/questions/52521302
+    implementation("android.arch.work:work-runtime:1.0.0") {
+      exclude group: 'com.google.guava', module: 'listenablefuture'
+    }
+    implementation 'org.json:json:20190722'
 }
 
 // Run this once to be able to run the application with BUCK

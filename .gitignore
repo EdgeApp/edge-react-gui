@@ -50,6 +50,7 @@ IDEWorkspaceChecks.plist
 
 # Android/IntelliJ
 #
+/android/google-java-format-*.jar
 build/
 .idea
 .gradle
@@ -97,5 +98,9 @@ src/util/bridge/injectThisInWebView.js
 ## Edge core
 /android/app/src/main/assets/edge-core/
 /ios/edge-core/
+
+## Generated headers
+/android/app/src/main/java/co/edgesecure/app/EdgeApiKey.java
+/ios/edge/edgeApiKey.h
 
 *.swp

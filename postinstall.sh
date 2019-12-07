@@ -33,3 +33,5 @@ fi
 
 # Apply patches
 patch -f ./node_modules/react-native/React/Views/RCTFont.mm ./patches/RCTFont.patch || true
+
+node ./scripts/makeNativeHeaders.js
