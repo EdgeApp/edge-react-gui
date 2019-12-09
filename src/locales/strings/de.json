@@ -540,5 +540,5 @@
   "user_closed_modal_no_wallet": "Benutzer gesperrt modal. Keine Wallet ausgewählt",
   "plugin_spend_notes_generic": "%1$s von %2$s bis %3$s an Adresse: %4$s \nFür Hilfe kontaktieren Sie bitte %5$s.",
   "plugin_provider_disclaimer": "Die folgenden Dienste werden nicht von Edge bereitgestellt. \n\nFür Probleme und Feedback kontaktieren Sie bitte die jeweiligen Dienstleister.",
-  "no_exchange_rate": ""
+  "no_exchange_rate": "Kein Wechselkurs"
 }
