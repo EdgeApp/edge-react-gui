@@ -3,6 +3,7 @@
 ## 1.11.1
 
 - Wallet list fixes
+- Update Banxa GB
 
 ## 1.11.0
 
