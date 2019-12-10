@@ -1,5 +1,19 @@
 # edge-react-gui
 
+## 1.11.1
+
+- Wallet list fixes
+
+## 1.11.0
+
+- Redesign of Wallet List and Transaction History screens 
+- Improved 2FA Background Notifications 
+- Safello - Sell 
+- Safello - Denmark region support added 
+- Safello - Additional payment method added for Sweden 
+- Support new DAI and SAI
+- Other minor fixes
+
 ## 1.10.3
 
 - FIO Registration URL update
