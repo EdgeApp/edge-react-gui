@@ -28,7 +28,7 @@ import {
   SYNCED_ACCOUNT_TYPES
 } from '../Core/Account/settings.js'
 import * as CORE_SELECTORS from '../Core/selectors'
-import { updateWalletsRequest } from '../Core/Wallets/action.js'
+import { updateWalletsEnabledTokens, updateWalletsRequest } from '../Core/Wallets/action.js'
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
@@ -172,11 +172,13 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     if (account.newAccount) {
       await saveCreationReason(account)
     }
-    dispatch(updateWalletsRequest())
-    activeWalletIds.forEach(walletId => {
-      dispatch(getEnabledTokens(walletId))
-    })
+    await updateWalletsRequest()(dispatch, getState)
+    for (const wId of activeWalletIds) {
+      await getEnabledTokens(wId)(dispatch, getState)
+    }
+    updateWalletsEnabledTokens(getState)
   } catch (error) {
+    console.log(error)
     showError(error)
   }
 }
