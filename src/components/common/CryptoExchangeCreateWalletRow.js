@@ -18,7 +18,6 @@ class CryptoExchangeCreateWalletRow extends Component<Props, State> {
   }
   render () {
     const { supportedWallet } = this.props
-    console.log(supportedWallet)
     return (
       <View style={styles.container}>
         <TouchableHighlight style={styles.touchable} underlayColor={styles.underlayColor} onPress={this.onPress}>
