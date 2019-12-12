@@ -277,6 +277,7 @@ const strings = {
   string_done_cap: 'Done',
   string_fee_with_colon: 'Fee: ',
   string_first_ethereum_wallet_name: 'My Ether',
+  string_first_badcoin_wallet_name: 'My Badcoin',
   string_first_bitcoin_wallet_name: 'My Bitcoin',
   string_first_bitcoincash_wallet_name: 'My Bitcoin Cash',
   string_first_bitcoin_sv_wallet_name: 'My Bitcoin SV',

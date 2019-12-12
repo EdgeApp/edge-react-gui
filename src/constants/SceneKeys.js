@@ -52,6 +52,10 @@ export const PLUGIN_VIEW_LEGACY = 'pluginViewLegacy'
 export const SPENDING_LIMITS = 'spendingLimits'
 
 export const CURRENCY_SETTINGS = {
+  badSettings: {
+    pluginName: 'badcoin',
+    currencyCode: 'BAD'
+  },
   btcSettings: {
     pluginName: 'bitcoin',
     currencyCode: 'BTC'

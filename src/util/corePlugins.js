@@ -36,6 +36,7 @@ export const currencyPlugins = {
   binance: true,
   rsk: true,
   // edge-currency-bitcoin:
+  badcoin: true,
   bitcoin: true,
   bitcoincash: true,
   bitcoincashtestnet: false,
