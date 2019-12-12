@@ -142,10 +142,12 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
     // Fiat Balance Formatting
     const fiatBalance = calculateSettingsFiatBalanceWithoutState(walletData, settings, exchangeRates)
     const fiatBalanceFormat = fiatBalance && parseFloat(fiatBalance) > 0.000001 ? fiatBalance : 0
-    const fiatBalanceString = showBalance && exchangeRate ? `${walletFiatSymbol} ${fiatBalanceFormat}` : ''
+    const fiatBalanceSymbol = showBalance && exchangeRate ? walletFiatSymbol : ''
+    const fiatBalanceString = showBalance && exchangeRate ? fiatBalanceFormat : ''
     // Exhange Rate Formatting
     const exchangeRateFormat = exchangeRate ? intl.formatNumber(exchangeRate, { toFixed: 2 }) : null
-    const exchangeRateString = exchangeRateFormat ? `${walletFiatSymbol} ${exchangeRateFormat}/${currencyCode}` : s.strings.no_exchange_rate
+    const exchangeRateFiatSymbol = exchangeRateFormat ? `${walletFiatSymbol} ` : ''
+    const exchangeRateString = exchangeRateFormat ? `${exchangeRateFormat}/${currencyCode}` : s.strings.no_exchange_rate
     // Yesterdays Percentage Difference Formatting
     const yesterdayUsdExchangeRate = exchangeRates[`${currencyCode}_iso:USD_${getYesterdayDateRoundDownHour()}`]
     const fiatExchangeRate = walletData.isoFiatCurrencyCode !== 'iso:USD' ? exchangeRates[`iso:USD_${walletData.isoFiatCurrencyCode}`] : 1
@@ -192,11 +194,17 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
                 </View>
                 <View style={styles.walletDetailsRow}>
                   <T style={[styles.walletDetailsRowName]}>{name}</T>
-                  <T style={[styles.walletDetailsRowFiat]}>{fiatBalanceString}</T>
+                  <View style={styles.walletDetailsFiatBalanceRow}>
+                    <T style={[styles.walletDetailsRowFiat]}>{fiatBalanceSymbol}</T>
+                    <T style={[styles.walletDetailsRowFiat]}>{fiatBalanceString}</T>
+                  </View>
                 </View>
                 <View style={styles.walletDetailsRowLine} />
                 <View style={styles.walletDetailsRow}>
-                  <T style={[styles.walletDetailsRowExchangeRate]}>{exchangeRateString}</T>
+                  <View style={styles.walletDetailsExchangeRow}>
+                    <T style={[styles.walletDetailsRowExchangeRate]}>{exchangeRateFiatSymbol}</T>
+                    <T style={[styles.walletDetailsRowExchangeRate]}>{exchangeRateString}</T>
+                  </View>
                   <T style={[differencePercentageStringStyle]}>{differencePercentageString}</T>
                 </View>
               </View>

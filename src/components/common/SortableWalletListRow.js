@@ -28,6 +28,7 @@ class SortableWalletListRow extends Component<Props, State> {
       finalCryptoAmountString,
       fiatBalance,
       fiatBalanceFormat,
+      fiatBalanceSymbol,
       fiatBalanceString
     const { data, walletFiatSymbol, settings, exchangeRates, showBalance } = this.props
     const walletData = data
@@ -45,7 +46,8 @@ class SortableWalletListRow extends Component<Props, State> {
       finalCryptoAmountString = showBalance ? `${symbol || ''} ${finalCryptoAmount}` : ''
       fiatBalance = calculateSettingsFiatBalanceWithoutState(walletData, settings, exchangeRates)
       fiatBalanceFormat = fiatBalance && parseFloat(fiatBalance) > 0.000001 ? fiatBalance : 0
-      fiatBalanceString = showBalance ? `${walletFiatSymbol} ${fiatBalanceFormat}` : ''
+      fiatBalanceSymbol = showBalance ? walletFiatSymbol : ''
+      fiatBalanceString = showBalance ? fiatBalanceFormat : ''
     }
 
     return (
@@ -75,7 +77,10 @@ class SortableWalletListRow extends Component<Props, State> {
               </View>
               <View style={styles.walletDetailsRow}>
                 <T style={[styles.walletDetailsRowName]}>{name}</T>
-                <T style={[styles.walletDetailsRowFiat]}>{fiatBalanceString}</T>
+                <View style={styles.walletDetailsFiatBalanceRow}>
+                  <T style={[styles.walletDetailsRowFiat]}>{fiatBalanceSymbol}</T>
+                  <T style={[styles.walletDetailsRowFiat]}>{fiatBalanceString}</T>
+                </View>
               </View>
             </View>
           </View>
