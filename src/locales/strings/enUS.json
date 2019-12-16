@@ -184,6 +184,7 @@
   "request_review_answer_yes": "Review Now",
   "request_review_android_page_link": "https://play.google.com/store/apps/details?id=co.edgesecure.app&hl=en_US",
   "request_share_edge_request": "Share Edge Request",
+  "select_wallet": "Select Wallet",
   "select_recv_wallet": "Select Receiving Wallet",
   "select_src_wallet": "Select Source Wallet",
   "select_destination_wallet": "Select destination wallet:",

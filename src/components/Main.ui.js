@@ -20,6 +20,7 @@ import walletIcon from '../assets/images/tabbar/wallets.png'
 import { CreateWalletChoiceComponent } from '../components/scenes/CreateWalletChoiceScene.js'
 import ExchangeDropMenu from '../connectors/components/HeaderMenuExchangeConnector'
 import RequestDropMenu from '../connectors/components/HeaderMenuRequestConnector'
+import { HeaderWalletSelectorConnector as HeaderWalletSelector } from '../connectors/components/HeaderWalletSelectorConnector.js'
 import CurrencySettingsTitleConnector from '../connectors/CurrencySettingsTitleConnector.js'
 import { ExchangeSettingsConnector } from '../connectors/ExchangeSettingsConnector.js'
 import AddToken from '../connectors/scenes/AddTokenConnector.js'
@@ -60,7 +61,6 @@ import T from '../modules/UI/components/FormattedText/index'
 import BackButton from '../modules/UI/components/Header/Component/BackButton.ui'
 import { ExitButton } from '../modules/UI/components/Header/Component/ExitButton.js'
 import HelpButton from '../modules/UI/components/Header/Component/HelpButton.ui.js'
-import Header from '../modules/UI/components/Header/Header.ui'
 import WalletName from '../modules/UI/components/Header/WalletName/WalletNameConnector.js'
 import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
 import { PasswordRecoveryReminderModalConnector } from '../modules/UI/components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalConnector.js'
@@ -364,7 +364,7 @@ export default class Main extends Component<Props> {
                       }}
                       navTransparent={true}
                       component={TransactionListConnector}
-                      renderTitle={this.renderWalletListNavBar()}
+                      renderTitle={this.renderHeaderWalletSelector()}
                       renderLeftButton={this.renderBackButton(WALLETS)}
                       renderRightButton={this.renderMenuButton()}
                     />
@@ -413,7 +413,7 @@ export default class Main extends Component<Props> {
                     icon={this.icon(Constants.REQUEST)}
                     tabBarLabel={REQUEST}
                     component={Request}
-                    renderTitle={this.renderWalletListNavBar()}
+                    renderTitle={this.renderHeaderWalletSelector()}
                     renderLeftButton={this.renderRequestMenuButton()}
                     renderRightButton={this.renderMenuButton()}
                   />
@@ -430,7 +430,7 @@ export default class Main extends Component<Props> {
                       }}
                       onExit={this.props.dispatchDisableScan}
                       component={Scan}
-                      renderTitle={this.renderWalletListNavBar()}
+                      renderTitle={this.renderHeaderWalletSelector()}
                       renderLeftButton={this.renderHelpButton()}
                       renderRightButton={this.renderMenuButton()}
                     />
@@ -697,8 +697,8 @@ export default class Main extends Component<Props> {
     return settings
   }
 
-  renderWalletListNavBar = () => {
-    return <Header />
+  renderHeaderWalletSelector = () => {
+    return <HeaderWalletSelector />
   }
 
   renderWalletName = () => {
