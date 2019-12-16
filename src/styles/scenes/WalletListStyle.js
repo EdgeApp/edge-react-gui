@@ -441,8 +441,8 @@ export const styles = {
     color: THEME.COLORS.SECONDARY
   },
   walletDetailsRowExchangeRate: {
-    flex: 1,
     fontSize: scale(14),
+    textAlign: 'left',
     color: THEME.COLORS.GRAY_1
   },
   walletDetailsRowDifferenceNeutral: {
@@ -461,6 +461,13 @@ export const styles = {
     textAlign: 'right',
     fontWeight: '400',
     color: '#E85466'
+  },
+  walletDetailsFiatBalanceRow: {
+    flexDirection: 'row'
+  },
+  walletDetailsExchangeRow: {
+    flexDirection: 'row',
+    flex: 1
   }
 }
 
