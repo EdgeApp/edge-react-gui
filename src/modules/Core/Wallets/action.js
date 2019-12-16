@@ -11,13 +11,14 @@ export const updateWalletsRequest = () => async (dispatch: Dispatch, getState: G
   const state = getState()
 
   const account = CORE_SELECTORS.getAccount(state)
-  const { activeWalletIds, archivedWalletIds, currencyWallets } = account
+  const { activeWalletIds, archivedWalletIds, hiddenWalletIds, currencyWallets } = account
   return getReceiveAddresses(currencyWallets).then(receiveAddresses => {
     dispatch({
       type: 'CORE/WALLETS/UPDATE_WALLETS',
       data: {
         activeWalletIds,
         archivedWalletIds,
+        hiddenWalletIds,
         currencyWallets,
         receiveAddresses
       }

@@ -18,6 +18,7 @@ const mapStateToProps = (state: State) => {
   const wallets = state.ui.wallets.byId
   const activeWalletIds = UI_SELECTORS.getActiveWalletIds(state).filter(id => !(wallets[id] != null && wallets[id].type === 'wallet:fio'))
   const archivedWalletIds = UI_SELECTORS.getArchivedWalletIds(state)
+  const hiddenWalletIds = UI_SELECTORS.getHiddenWalletIds(state)
   const walletArchivesVisible = state.ui.scenes.walletList.walletArchivesVisible
   // $FlowFixMe
   const dimensions = state.ui.scenes.dimensions
@@ -33,6 +34,7 @@ const mapStateToProps = (state: State) => {
     wallets,
     activeWalletIds,
     archivedWalletIds,
+    hiddenWalletIds,
     walletArchivesVisible,
     dimensions,
     customTokens,

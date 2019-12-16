@@ -11,6 +11,7 @@ export type WalletsState = {
   byId: { [walletId: string]: GuiWallet },
   activeWalletIds: Array<string>,
   archivedWalletIds: Array<string>,
+  hiddenWalletIds: Array<string>,
   selectedWalletId: string,
   selectedCurrencyCode: string,
   addTokenPending: boolean,
@@ -214,6 +215,19 @@ const archivedWalletIds = (state = [], action: Action): Array<string> => {
   return state
 }
 
+const hiddenWalletIds = (state = [], action: Action): Array<string> => {
+  if (action.type === 'ACCOUNT_INIT_COMPLETE') {
+    if (!action.data) return state
+    return action.data.hiddenWalletIds
+  }
+  if (action.type === 'CORE/WALLETS/UPDATE_WALLETS') {
+    if (!action.data) return state
+    return action.data.hiddenWalletIds
+  }
+
+  return state
+}
+
 const selectedWalletId = (state = '', action: Action): string => {
   switch (action.type) {
     case 'UI/WALLETS/SELECT_WALLET': {
@@ -362,6 +376,7 @@ export const wallets: Reducer<WalletsState, Action> = combineReducers({
   byId,
   activeWalletIds,
   archivedWalletIds,
+  hiddenWalletIds,
   selectedWalletId,
   selectedCurrencyCode,
   addTokenPending,

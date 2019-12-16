@@ -87,6 +87,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     customTokensSettings: [],
     activeWalletIds: [],
     archivedWalletIds: [],
+    hiddenWalletIds: [],
     passwordReminder: {},
     isAccountBalanceVisible: false,
     isWalletFiatBalanceVisible: false,
@@ -114,9 +115,11 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       data: { activeWalletIds }
     })
     const archivedWalletIds = account.archivedWalletIds
+    const hiddenWalletIds = account.hiddenWalletIds
 
     accountInitObject.activeWalletIds = activeWalletIds
     accountInitObject.archivedWalletIds = archivedWalletIds
+    accountInitObject.hiddenWalletIds = hiddenWalletIds
 
     const loadedSyncedSettings = await getSyncedSettings(account)
     const syncedSettings = { ...loadedSyncedSettings } // will prevent mergeSettings trying to find prop of undefined

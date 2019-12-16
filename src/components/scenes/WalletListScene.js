@@ -59,6 +59,7 @@ type State = {
 type Props = {
   activeWalletIds: Array<string>,
   creationTweaks: AppTweaks,
+  hiddenWalletIds: Array<string>,
   customTokens: Array<any>,
   dimensions: DeviceDimensions,
   wallets: any,
@@ -136,24 +137,21 @@ export default class WalletList extends Component<Props, State> {
   }
 
   render () {
-    const { wallets, activeWalletIds } = this.props
-    const walletsArray = []
-    const activeWallets = {}
+    const { wallets, activeWalletIds, hiddenWalletIds } = this.props
     for (const wallet in wallets) {
       const theWallet = wallets[wallet]
       theWallet.key = wallet
       theWallet.executeWalletRowOption = this.executeWalletRowOption
-      walletsArray.push(theWallet)
-      if (activeWalletIds.includes(wallet)) activeWallets[wallet] = wallets[wallet]
     }
+    const visibleActiveWalletIds = activeWalletIds.filter(x => !hiddenWalletIds.includes(x))
 
-    const activeWalletsArray = activeWalletIds.map(function (x) {
+    const activeWalletsArray = visibleActiveWalletIds.map(function (x) {
       const tempWalletObj = { key: x }
       return wallets[x] || tempWalletObj
     })
 
     const activeWalletsObject = {}
-    activeWalletIds.forEach(function (x) {
+    visibleActiveWalletIds.forEach(function (x) {
       const tempWalletObj = wallets[x] ? wallets[x] : { key: null }
       activeWalletsObject[x] = tempWalletObj
     })

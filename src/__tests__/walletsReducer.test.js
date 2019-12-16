@@ -12,6 +12,7 @@ describe('WalletsReducer', () => {
       byId: {},
       activeWalletIds: [],
       archivedWalletIds: [],
+      hiddenWalletIds: [],
       selectedWalletId: '',
       selectedCurrencyCode: '',
       manageTokensPending: false,

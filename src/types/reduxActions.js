@@ -143,6 +143,7 @@ export type Action =
       data: {
         activeWalletIds: Array<string>,
         archivedWalletIds: Array<string>,
+        hiddenWalletIds: Array<string>,
         currencyWallets: { [id: string]: EdgeCurrencyWallet },
         receiveAddresses: { [id: string]: EdgeReceiveAddress }
       }
