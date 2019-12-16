@@ -14,9 +14,6 @@
   <uses-permission android:name="android.permission.BLUETOOTH" />
   <uses-permission android:name="android.permission.CAMERA" />
   <uses-permission android:name="android.permission.VIBRATE" />
-  <uses-permission android:name="android.permission.WAKE_LOCK" />
-  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-  <uses-permission android:name="co.edgesecure.app.permission.C2D_MESSAGE" />
 
   <uses-feature android:name="android.hardware.bluetooth" android:required="false" />
   <uses-feature android:name="android.hardware.bluetooth_le" android:required="false" />
@@ -24,9 +21,6 @@
   <uses-feature android:name="android.hardware.camera.flash" android:required="false" />
   <uses-feature android:name="android.hardware.fingerprint" android:required="false" />
   <uses-feature android:name="android.hardware.location" android:required="false" />
-  <permission
-    android:name="co.edgesecure.app.permission.C2D_MESSAGE"
-    android:protectionLevel="signature" />
 
   <uses-sdk
     android:minSdkVersion="23"
@@ -118,30 +112,6 @@
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
-    <receiver
-      android:name="com.google.android.gms.gcm.GcmReceiver"
-      android:exported="true"
-      android:permission="com.google.android.c2dm.permission.SEND" >
-      <intent-filter>
-        <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-        <category android:name="co.edgesecure.app" />
-      </intent-filter>
-    </receiver>
-
-    <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationPublisher" />
-    <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationBootEventReceiver">
-      <intent-filter>
-        <action android:name="android.intent.action.BOOT_COMPLETED" />
-      </intent-filter>
-    </receiver>
-    <service android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationRegistrationService"/>
-    <service
-      android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerService"
-      android:exported="false" >
-      <intent-filter>
-        <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-      </intent-filter>
-    </service>
   </application>
 
 </manifest>
