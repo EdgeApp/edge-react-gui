@@ -4020,7 +4020,7 @@ edge-currency-accountbased@^0.5.9:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@^4.7.0:
+edge-currency-bitcoin@^4.6.4:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.7.0.tgz#af4a8b390c019b950f85f5f7c3567fdbcd2f5104"
   integrity sha512-3QWAQisB9rKsVsKjC3BWAoqVXbpItjQRlWFSwnWswrvcuRYPq4L+Ny+0vD3awvP8QvmQoj+hn2IMkQ4bk6FFgQ==
