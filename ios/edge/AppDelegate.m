@@ -58,8 +58,8 @@
   [[UNUserNotificationCenter currentNotificationCenter]
       requestAuthorizationWithOptions:UNAuthorizationOptionBadge | UNAuthorizationOptionAlert
       completionHandler: ^(BOOL granted, NSError *error) {
-        if (error) NSLog(@"failed to get notification permission")
-        else NSLog(granted ? @"notifications granted" : @"notifications not granted")
+        if (error) NSLog(@"failed to get notification permission");
+        else NSLog(granted ? @"notifications granted" : @"notifications not granted");
       }];
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
