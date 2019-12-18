@@ -8,6 +8,7 @@ import { Actions } from 'react-native-router-flux'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/index'
+import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
 import styles, { styles as styleRaw } from '../../styles/scenes/WalletListStyle'
 import { type GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils'
@@ -54,7 +55,7 @@ export class WalletListTokenRow extends PureComponent<Props> {
     const rateKey = `${currencyCode}_${wallet.isoFiatCurrencyCode}`
     const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : null
     // Fiat Balance Formatting
-    const fiatBalance = UTILS.getCurrencyAccountFiatBalanceFromWalletWithoutState(wallet, currencyCode, settings, exchangeRates)
+    const fiatBalance = calculateWalletFiatBalanceWithoutState(wallet, currencyCode, settings, exchangeRates)
     const fiatBalanceFormat = fiatBalance && parseFloat(fiatBalance) > 0.000001 ? fiatBalance : 0
     const fiatBalanceSymbol = showBalance && exchangeRate ? walletFiatSymbol : ''
     const fiatBalanceString = showBalance && exchangeRate ? fiatBalanceFormat : ''

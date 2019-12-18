@@ -11,7 +11,7 @@ const mapStateToProps = (state: State, ownProps: WalletListRowOwnProps): WalletL
   const displayDenomination = getDisplayDenomination(state, ownProps.wallet.currencyCode)
   const exchangeDenomination = getExchangeDenomination(state, ownProps.wallet.currencyCode)
   const settings = state.ui.settings
-  const fiatBalance = calculateWalletFiatBalance(ownProps.wallet, state)
+  const fiatBalance = calculateWalletFiatBalance(ownProps.wallet, ownProps.wallet.currencyCode, state)
   return {
     displayDenomination,
     exchangeDenomination,
