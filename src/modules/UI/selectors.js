@@ -163,36 +163,6 @@ export const convertCurrencyFromExchangeRates = (exchangeRates: { [string]: numb
 }
 
 // not sure if this can be used with tokens
-export const calculateSettingsFiatBalance = (wallet: GuiWallet, state: State): string => {
-  let fiatValue = 0 // default to zero if not calculable
-  const currencyCode = wallet.currencyCode
-  const nativeBalance = wallet.nativeBalances[currencyCode]
-  const settings = state.ui.settings
-  if (!nativeBalance || nativeBalance === '0') return '0'
-  const denominations = settings[currencyCode].denominations
-  const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
-  if (!exchangeDenomination) return '0'
-  const nativeToExchangeRatio: string = exchangeDenomination.multiplier
-  const cryptoAmount: number = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
-  fiatValue = convertCurrency(state, currencyCode, settings.defaultIsoFiat, cryptoAmount)
-  return intl.formatNumber(fiatValue, { toFixed: 2 }) || '0'
-}
-
-export const calculateSettingsFiatBalanceWithoutState = (wallet: GuiWallet, settings: Object, exchangeRates: { [string]: number }) => {
-  let fiatValue = 0 // default to zero if not calculable
-  const currencyCode = wallet.currencyCode
-  const nativeBalance = wallet.nativeBalances[currencyCode]
-  if (!nativeBalance || nativeBalance === '0') return '0'
-  const denominations = settings[currencyCode].denominations
-  const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
-  if (!exchangeDenomination) return '0'
-  const nativeToExchangeRatio: string = exchangeDenomination.multiplier
-  const cryptoAmount: number = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
-  fiatValue = convertCurrencyWithoutState(exchangeRates, currencyCode, settings.defaultIsoFiat, cryptoAmount)
-  return intl.formatNumber(fiatValue, { toFixed: 2 }) || '0'
-}
-
-// not sure if this can be used with tokens
 export const calculateWalletFiatBalance = (wallet: GuiWallet, state: State): string => {
   let fiatValue = 0 // default to zero if not calculable
   const currencyCode = wallet.currencyCode
@@ -208,12 +178,14 @@ export const calculateWalletFiatBalance = (wallet: GuiWallet, state: State): str
   return intl.formatNumber(fiatValue, { toFixed: 2 }) || '0'
 }
 
-export const calculateWalletFiatBalanceWithoutState = (wallet: GuiWallet, settings: Object, exchangeRates: { [string]: number }) => {
+export const calculateWalletFiatBalanceWithoutState = (wallet: GuiWallet, currencyCode: string, settings: Object, exchangeRates: { [string]: number }) => {
   let fiatValue = 0 // default to zero if not calculable
-  const currencyCode = wallet.currencyCode
+  console.log('currencyCode: ' + currencyCode)
   const nativeBalance = wallet.nativeBalances[currencyCode]
+  console.log('nativeBalance: ' + nativeBalance)
   if (!nativeBalance || nativeBalance === '0') return '0'
   const denominations = settings[currencyCode].denominations
+  console.log('denominations: ' + denominations)
   const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
   if (!exchangeDenomination) return '0'
   const nativeToExchangeRatio: string = exchangeDenomination.multiplier

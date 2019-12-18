@@ -140,7 +140,7 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
     const rateKey = `${currencyCode}_${walletData.isoFiatCurrencyCode}`
     const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : null
     // Fiat Balance Formatting
-    const fiatBalance = calculateWalletFiatBalanceWithoutState(walletData, settings, exchangeRates)
+    const fiatBalance = calculateWalletFiatBalanceWithoutState(walletData, currencyCode, settings, exchangeRates)
     const fiatBalanceFormat = fiatBalance && parseFloat(fiatBalance) > 0.000001 ? fiatBalance : 0
     const fiatBalanceSymbol = showBalance && exchangeRate ? walletFiatSymbol : ''
     const fiatBalanceString = showBalance && exchangeRate ? fiatBalanceFormat : ''
