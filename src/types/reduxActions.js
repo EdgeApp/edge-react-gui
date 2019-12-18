@@ -29,7 +29,6 @@ type LegacyActionName =
   | 'UI/SETTINGS/LOAD_SETTINGS'
   | 'UI/SETTINGS/OTP_SETTINGS'
   | 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY'
-  | 'UI/SETTINGS/SET_AUTO_LOGOUT_TIME'
   | 'UI/SETTINGS/SET_BLUETOOTH_MODE'
   | 'UI/SETTINGS/SET_DEFAULT_FIAT'
   | 'UI/SETTINGS/SET_DENOMINATION_KEY'
@@ -194,6 +193,7 @@ export type Action =
   | { type: 'SAVE_EDGE_LOBBY', data: EdgeLobby }
   | { type: 'SET_LOBBY_ERROR', data: string }
   | { type: 'SET_FROM_WALLET_MAX', data: string }
+  | { type: 'UI/SETTINGS/SET_AUTO_LOGOUT_TIME', data: { autoLogoutTimeInSeconds: number } }
   | {
       type: 'UI/WALLETS/REFRESH_RECEIVE_ADDRESS',
       data: {

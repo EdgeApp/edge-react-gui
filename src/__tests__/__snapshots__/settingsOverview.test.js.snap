@@ -246,7 +246,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
       <RowModal
         leftText="Auto Log Off After"
         onPress={[Function]}
-        rightText="DISABLE"
+        rightText="Disabled"
       />
       <RowRoute
         disabled={false}
@@ -627,7 +627,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
       <RowModal
         leftText="Auto Log Off After"
         onPress={[Function]}
-        rightText="DISABLE"
+        rightText="Disabled"
       />
       <RowRoute
         disabled={false}

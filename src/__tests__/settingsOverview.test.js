@@ -13,7 +13,7 @@ describe('MyComponent', () => {
 
     const props = {
       defaultFiat: '',
-      autoLogoutTimeInMinutes: 0,
+      autoLogoutTimeInSeconds: 0,
       username: '',
       account: {},
       pinLoginEnabled: false,
@@ -25,7 +25,7 @@ describe('MyComponent', () => {
       confirmPasswordError: '',
       sendLogsStatus: '',
 
-      setAutoLogoutTimeInMinutes: jest.fn,
+      setAutoLogoutTimeInSeconds: jest.fn,
       confirmPassword: jest.fn,
       lockSettings: jest.fn,
       dispatchUpdateEnableTouchIdEnable: jest.fn,
@@ -45,7 +45,7 @@ describe('MyComponent', () => {
 
     const props = {
       defaultFiat: '',
-      autoLogoutTimeInMinutes: 0,
+      autoLogoutTimeInSeconds: 0,
       username: '',
       account: {},
       pinLoginEnabled: false,
@@ -57,7 +57,7 @@ describe('MyComponent', () => {
       confirmPasswordError: '',
       sendLogsStatus: '',
 
-      setAutoLogoutTimeInMinutes: jest.fn,
+      setAutoLogoutTimeInSeconds: jest.fn,
       confirmPassword: jest.fn,
       lockSettings: jest.fn,
       dispatchUpdateEnableTouchIdEnable: jest.fn,

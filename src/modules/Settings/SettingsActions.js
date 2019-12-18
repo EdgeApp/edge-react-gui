@@ -22,11 +22,6 @@ export const setOTPMode = (otpMode: boolean) => ({
   data: { otpMode }
 })
 
-export const setAutoLogoutTimeInSeconds = (autoLogoutTimeInSeconds: number) => ({
-  type: 'UI/SETTINGS/SET_AUTO_LOGOUT_TIME',
-  data: { autoLogoutTimeInSeconds }
-})
-
 export const setDefaultFiat = (defaultFiat: string) => ({
   type: 'UI/SETTINGS/SET_DEFAULT_FIAT',
   data: { defaultFiat }
