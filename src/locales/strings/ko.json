@@ -255,7 +255,7 @@
   "satPerByte": "바이트당 사토시",
   "gasLimit": "가스 한도",
   "gasPrice": "가스 가격 (Gwei)",
-  "string_disable": "비활성화",
+  "string_disable": "",
   "string_done_cap": "완료",
   "string_fee_with_colon": "수수료: ",
   "string_first_ethereum_wallet_name": "나의 이더리움",
