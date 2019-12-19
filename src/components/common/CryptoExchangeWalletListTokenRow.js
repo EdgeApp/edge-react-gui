@@ -21,7 +21,8 @@ type LocalState = {}
 
 class CryptoExchangeWalletListTokenRow extends Component<Props, LocalState> {
   onPress = () => {
-    if (this.props.disabled || this.props.parentCryptoBalance === '0') return
+    // Removed the logic that disables you from selecting a wallet when the wallet is disabled or when the parent wallet balance is 0.
+    // if (this.props.disabled || this.props.parentCryptoBalance === '0') return
     this.props.onPress({
       id: this.props.parentId,
       currencyCode: this.props.currencyCode
