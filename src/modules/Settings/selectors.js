@@ -166,14 +166,7 @@ export const getSettingsLock = (state: State) => {
 }
 export const getAutoLogoutTimeInSeconds = (state: State): number => {
   const settings = getSettings(state)
-  const autoLogoutTimeInSeconds: number = settings.autoLogoutTimeInSeconds
-  return autoLogoutTimeInSeconds
-}
-
-export const getAutoLogoutTimeInMinutes = (state: State) => {
-  const autoLogoutTimeInSeconds = getAutoLogoutTimeInSeconds(state)
-  const autoLogoutTimeInMinutes = autoLogoutTimeInSeconds / 60
-  return autoLogoutTimeInMinutes
+  return settings.autoLogoutTimeInSeconds
 }
 
 export const getDefaultFiat = (state: State) => {

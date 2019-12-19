@@ -13,9 +13,6 @@ import {
   getObjectDiff,
   getRequestForAddress,
   getSupportedFiats,
-  getTimeInMinutes,
-  getTimeMeasurement,
-  getTimeWithMeasurement,
   isCompleteExchangeData,
   isEdgeLogin,
   isTooFarAhead,
@@ -567,63 +564,6 @@ describe('mergeTokens', function () {
     // $FlowExpectedError
     const actual = mergeTokens(preferredEdgeMetaTokens, edgeMetaTokens)
     expect(actual).toEqual(expected)
-  })
-})
-
-describe('getTimeMeasurement', function () {
-  test('should return seconds measurement', function () {
-    const expected = 'seconds'
-    const actual = getTimeMeasurement(0.9)
-    expect(actual).toBe(expected)
-  })
-
-  test('should return minutes measurements', function () {
-    // accept minutes
-    const expected = 'minutes'
-    expect(getTimeMeasurement(1)).toBe(expected)
-    expect(getTimeMeasurement(59)).toBe(expected)
-  })
-
-  test('should return hours measurements', function () {
-    const expected = 'hours'
-    expect(getTimeMeasurement(60)).toBe(expected)
-    expect(getTimeMeasurement(1439)).toBe(expected)
-  })
-
-  test('should return days measurements', function () {
-    const expected = 'days'
-    expect(getTimeMeasurement(1440)).toBe(expected)
-    expect(getTimeMeasurement(50000)).toBe(expected)
-  })
-})
-
-describe('getTimeWithMeasurement', function () {
-  test(' => {measurement: "seconds", value: 35 }', function () {
-    expect(getTimeWithMeasurement(0.58)).toEqual({ measurement: 'seconds', value: 35 })
-  })
-  test(' => {measurement: "minutes", value: 2 }', function () {
-    expect(getTimeWithMeasurement(2)).toEqual({ measurement: 'minutes', value: 2 })
-  })
-  test(' => {measurement: "hours", value: 1 }', function () {
-    expect(getTimeWithMeasurement(60)).toEqual({ measurement: 'hours', value: 1 })
-  })
-  test(' => {measurement: "days", value: 1 }', function () {
-    expect(getTimeWithMeasurement(1440)).toEqual({ measurement: 'days', value: 1 })
-  })
-})
-
-describe('getTimeInMinutes', function () {
-  test('1 min => 1', function () {
-    expect(getTimeInMinutes({ measurement: 'minutes', value: 1 })).toEqual(1)
-  })
-  test('2 hours => 120', function () {
-    expect(getTimeInMinutes({ measurement: 'hours', value: 2 })).toEqual(120)
-  })
-  test('1 days => 1440', function () {
-    expect(getTimeInMinutes({ measurement: 'days', value: 1 })).toEqual(1440)
-  })
-  test('44 seconds => 0.73', function () {
-    expect(getTimeInMinutes({ measurement: 'seconds', value: 44 })).toEqual(0.73)
   })
 })
 
