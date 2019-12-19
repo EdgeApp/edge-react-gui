@@ -255,7 +255,7 @@
   "satPerByte": "1バイトあたりのSatoshi",
   "gasLimit": "ガスリミット",
   "gasPrice": "ガス価格 (Gwei)",
-  "string_disable": "無効にする",
+  "string_disable": "",
   "string_done_cap": "完了",
   "string_fee_with_colon": "手数料： ",
   "string_first_ethereum_wallet_name": "私のイーサリアム",
