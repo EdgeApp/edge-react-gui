@@ -255,7 +255,7 @@
   "satPerByte": "Satoshi mỗi Byte",
   "gasLimit": "Khí giới hạn",
   "gasPrice": "Giá Gas (Gwei)",
-  "string_disable": "VÔ HIỆU HOÁ",
+  "string_disable": "",
   "string_done_cap": "Xong",
   "string_fee_with_colon": "Phí: ",
   "string_first_ethereum_wallet_name": "Ether của tôi",
