@@ -8,11 +8,11 @@ import { Image, TouchableHighlight, View } from 'react-native'
 import { intl } from '../../locales/intl'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import FormattedText from '../../modules/UI/components/FormattedText/index'
-import { calculateSettingsFiatBalance } from '../../modules/UI/selectors.js'
+import { calculateWalletFiatBalance } from '../../modules/UI/selectors.js'
 import { CryptoExchangeWalletListRowStyle as styles } from '../../styles/indexStyles'
 import type { State } from '../../types/reduxTypes.js'
 import type { GuiWallet } from '../../types/types.js'
-import { decimalOrZero, getCurrencyAccountFiatBalanceFromWallet, getFiatSymbol, truncateDecimals } from '../../util/utils.js'
+import { decimalOrZero, getFiatSymbol, truncateDecimals } from '../../util/utils.js'
 import { CryptoExchangeWalletListTokenRow } from './CryptoExchangeWalletListTokenRow.js'
 
 type Props = {
@@ -81,7 +81,7 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
     }
     this.setState({
       denomination,
-      fiatBalance: calculateSettingsFiatBalance(props.wallet, props.state),
+      fiatBalance: calculateWalletFiatBalance(props.wallet, props.wallet.currencyCode, props.state),
       fiatSymbol: wallet ? getFiatSymbol(wallet.isoFiatCurrencyCode) : '',
       cryptoBalance,
       cryptoSymbol: denomination.symbol,
@@ -101,7 +101,7 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
       for (const property in metaTokenBalances) {
         if (metaTokenBalances.hasOwnProperty(property)) {
           if (property !== this.props.wallet.currencyCode) {
-            const formattedFiatBalance = getCurrencyAccountFiatBalanceFromWallet(this.props.wallet, property, this.props.state)
+            const formattedFiatBalance = calculateWalletFiatBalance(this.props.wallet, property, this.props.state)
             if (!this.state.denomination || !this.state.denomination.multiplier) {
               return []
             }
