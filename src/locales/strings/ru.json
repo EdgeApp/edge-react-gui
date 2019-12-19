@@ -255,7 +255,7 @@
   "satPerByte": "Сатоши за байт",
   "gasLimit": "Лимит газа",
   "gasPrice": "Цена газа (Gwei)",
-  "string_disable": "ОТКЛЮЧИТЬ",
+  "string_disable": "",
   "string_done_cap": "Готово",
   "string_fee_with_colon": "Комиссия: ",
   "string_first_ethereum_wallet_name": "Мой Ether",
