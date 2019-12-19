@@ -108,11 +108,8 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
             const token = this.props.wallet.metaTokens.find(item => item.currencyCode === property)
             const { name } = this.props.wallet
             const tokenImage = token ? token.symbolImage : ''
-            const multiplier = this.state.denomination ? this.state.denomination.multiplier : '0'
-            const preliminaryCryptoAmount = truncateDecimals(bns.div(metaTokenBalances[property], multiplier, DIVIDE_PRECISION), 6)
-            const cryptoBalance = intl.formatNumber(decimalOrZero(preliminaryCryptoAmount, 6))
-            const disabled =
-              this.props.excludedCurrencyCode.includes(property) || (this.props.disableZeroBalance && cryptoBalance === '0' && formattedFiatBalance === '0')
+            const nativeAmount = metaTokenBalances[property]
+            const disabled = this.props.excludedCurrencyCode.includes(property) || this.props.disableZeroBalance
             if (property !== this.props.excludedCurrencyCode && !this.props.excludedTokens.includes(property)) {
               tokens.push(
                 <CryptoExchangeWalletListTokenRow
@@ -124,7 +121,7 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
                   fiatBalance={formattedFiatBalance}
                   name={name}
                   image={tokenImage}
-                  cryptoBalance={cryptoBalance}
+                  nativeAmount={nativeAmount}
                   parentCryptoBalance={this.state.cryptoBalance}
                   disabled={disabled}
                 />
