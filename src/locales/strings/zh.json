@@ -255,7 +255,7 @@
   "satPerByte": "Satoshi/Byte",
   "gasLimit": "Gas Limit (Gas燃料上限)",
   "gasPrice": "燃料价格 Gas Price (Gwei)",
-  "string_disable": "禁用",
+  "string_disable": "",
   "string_done_cap": "完成",
   "string_fee_with_colon": "费用: ",
   "string_first_ethereum_wallet_name": "我的以太坊",
