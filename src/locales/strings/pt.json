@@ -255,7 +255,7 @@
   "satPerByte": "Satoshi por Byte",
   "gasLimit": "Limite de gás",
   "gasPrice": "Preço do Gás (Gwei)",
-  "string_disable": "DESATIVAR",
+  "string_disable": "",
   "string_done_cap": "Concluído",
   "string_fee_with_colon": "Taxa: ",
   "string_first_ethereum_wallet_name": "Meu Ether",
