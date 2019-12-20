@@ -15,7 +15,7 @@ import s from '../../locales/strings.js'
 import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import T from '../../modules/UI/components/FormattedText/index'
-import { calculateSettingsFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
+import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
 import styles, { customWalletListOptionsStyles, styles as styleRaw } from '../../styles/scenes/WalletListStyle.js'
 import type { State } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo, GuiDenomination } from '../../types/types.js'
@@ -140,12 +140,14 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
     const rateKey = `${currencyCode}_${walletData.isoFiatCurrencyCode}`
     const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : null
     // Fiat Balance Formatting
-    const fiatBalance = calculateSettingsFiatBalanceWithoutState(walletData, settings, exchangeRates)
+    const fiatBalance = calculateWalletFiatBalanceWithoutState(walletData, currencyCode, settings, exchangeRates)
     const fiatBalanceFormat = fiatBalance && parseFloat(fiatBalance) > 0.000001 ? fiatBalance : 0
-    const fiatBalanceString = showBalance && exchangeRate ? `${walletFiatSymbol} ${fiatBalanceFormat}` : ''
+    const fiatBalanceSymbol = showBalance && exchangeRate ? walletFiatSymbol : ''
+    const fiatBalanceString = showBalance && exchangeRate ? fiatBalanceFormat : ''
     // Exhange Rate Formatting
     const exchangeRateFormat = exchangeRate ? intl.formatNumber(exchangeRate, { toFixed: 2 }) : null
-    const exchangeRateString = exchangeRateFormat ? `${walletFiatSymbol} ${exchangeRateFormat}/${currencyCode}` : s.strings.no_exchange_rate
+    const exchangeRateFiatSymbol = exchangeRateFormat ? `${walletFiatSymbol} ` : ''
+    const exchangeRateString = exchangeRateFormat ? `${exchangeRateFormat}/${currencyCode}` : s.strings.no_exchange_rate
     // Yesterdays Percentage Difference Formatting
     const yesterdayUsdExchangeRate = exchangeRates[`${currencyCode}_iso:USD_${getYesterdayDateRoundDownHour()}`]
     const fiatExchangeRate = walletData.isoFiatCurrencyCode !== 'iso:USD' ? exchangeRates[`iso:USD_${walletData.isoFiatCurrencyCode}`] : 1
@@ -192,11 +194,17 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
                 </View>
                 <View style={styles.walletDetailsRow}>
                   <T style={[styles.walletDetailsRowName]}>{name}</T>
-                  <T style={[styles.walletDetailsRowFiat]}>{fiatBalanceString}</T>
+                  <View style={styles.walletDetailsFiatBalanceRow}>
+                    <T style={[styles.walletDetailsRowFiat]}>{fiatBalanceSymbol}</T>
+                    <T style={[styles.walletDetailsRowFiat]}>{fiatBalanceString}</T>
+                  </View>
                 </View>
                 <View style={styles.walletDetailsRowLine} />
                 <View style={styles.walletDetailsRow}>
-                  <T style={[styles.walletDetailsRowExchangeRate]}>{exchangeRateString}</T>
+                  <View style={styles.walletDetailsExchangeRow}>
+                    <T style={[styles.walletDetailsRowExchangeRate]}>{exchangeRateFiatSymbol}</T>
+                    <T style={[styles.walletDetailsRowExchangeRate]}>{exchangeRateString}</T>
+                  </View>
                   <T style={[differencePercentageStringStyle]}>{differencePercentageString}</T>
                 </View>
               </View>

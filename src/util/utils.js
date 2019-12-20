@@ -8,7 +8,7 @@ import parse from 'url-parse'
 
 import { FIAT_CODES_SYMBOLS, getSymbolFromCurrency } from '../constants/indexConstants.js'
 import { intl } from '../locales/intl.js'
-import { convertCurrency, convertCurrencyWithoutState } from '../modules/UI/selectors.js'
+import { convertCurrency } from '../modules/UI/selectors.js'
 import type { State } from '../types/reduxTypes.js'
 import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet } from '../types/types.js'
 
@@ -182,82 +182,6 @@ export const decimalOrZero = (input: string, decimalPlaces: number): string => {
   }
 }
 
-// helper function to convert either currency or token crypto amount to default fiat (formatted)
-// uses default fiat setting to decide currency to convert to
-// this is *not* to be used for tallying because it returns a string
-export const getCurrencyAccountFiatBalanceFromWallet = (wallet: GuiWallet, currencyCode: string, state: State): string => {
-  const settings = state.ui.settings
-  const nativeBalance = wallet.nativeBalances[currencyCode]
-  if (!nativeBalance || nativeBalance === '0') return '0'
-  let denominations
-  if (settings[currencyCode]) {
-    denominations = settings[currencyCode].denominations
-  } else {
-    const tokenInfo = settings.customTokens.find(token => token.currencyCode === currencyCode)
-    if (!tokenInfo) return '0'
-    denominations = tokenInfo.denominations
-  }
-  const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
-  if (!exchangeDenomination) return '0'
-  const nativeToExchangeRatio: string = exchangeDenomination.multiplier
-  const cryptoAmount = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
-  const unformattedFiatValue = convertCurrency(state, currencyCode, settings.defaultIsoFiat, cryptoAmount)
-  const formattedFiatValue = intl.formatNumber(unformattedFiatValue, { toFixed: 2 })
-  return formattedFiatValue || '0'
-}
-
-// helper function to convert either currency or token crypto amount to default fiat (formatted)
-// uses default fiat setting to decide currency to convert to
-// this is *not* to be used for tallying because it returns a string
-export const getCurrencyAccountFiatBalanceFromWalletWithoutState = (
-  wallet: GuiWallet,
-  currencyCode: string,
-  settings: Object,
-  exchangeRates: Object
-): string => {
-  const nativeBalance = wallet.nativeBalances[currencyCode]
-  if (!nativeBalance || nativeBalance === '0') return '0'
-  let denominations
-  if (settings[currencyCode]) {
-    denominations = settings[currencyCode].denominations
-  } else {
-    const tokenInfo = settings.customTokens.find(token => token.currencyCode === currencyCode)
-    if (!tokenInfo) return '0'
-    denominations = tokenInfo.denominations
-  }
-  const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
-  if (!exchangeDenomination) return '0'
-  const nativeToExchangeRatio: string = exchangeDenomination.multiplier
-  const cryptoAmount = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
-  const unformattedFiatValue = convertCurrencyWithoutState(exchangeRates, currencyCode, settings.defaultIsoFiat, cryptoAmount)
-  const formattedFiatValue = intl.formatNumber(unformattedFiatValue, { toFixed: 2 })
-  return formattedFiatValue || '0'
-}
-
-// helper function to convert either currency or token crypto amount to default fiat (formatted)
-// uses *wallet fiat setting* (immutable) to decide which currency to convert to
-// this is *not* to be used for tallying because it returns a string
-export const getCurrencyWalletFiatBalanceFromWallet = (wallet: GuiWallet, currencyCode: string, state: State): string => {
-  const settings = state.ui.settings
-  const nativeBalance = wallet.nativeBalances[currencyCode]
-  if (!nativeBalance || nativeBalance === '0') return '0'
-  let denominations
-  if (settings[currencyCode]) {
-    denominations = settings[currencyCode].denominations
-  } else {
-    const tokenInfo = settings.customTokens.find(token => token.currencyCode === currencyCode)
-    if (!tokenInfo) return '0'
-    denominations = tokenInfo.denominations
-  }
-  const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
-  if (!exchangeDenomination) return '0'
-  const nativeToExchangeRatio: string = exchangeDenomination.multiplier
-  const cryptoAmount = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
-  const unformattedFiatValue = convertCurrency(state, currencyCode, wallet.isoFiatCurrencyCode, cryptoAmount)
-  const formattedFiatValue = intl.formatNumber(unformattedFiatValue, { toFixed: 2 })
-  return formattedFiatValue || '0'
-}
-
 // Used to convert outputs from core into other denominations (exchangeDenomination, displayDenomination)
 export const convertNativeToDenomination = (nativeToTargetRatio: string) => (nativeAmount: string): string =>
   div(nativeAmount, nativeToTargetRatio, DIVIDE_PRECISION)
@@ -403,80 +327,6 @@ export const isReceivedTransaction = (edgeTransaction: EdgeTransaction): boolean
 }
 export const isSentTransaction = (edgeTransaction: EdgeTransaction): boolean => {
   return !!edgeTransaction.nativeAmount && edgeTransaction.nativeAmount.charAt(0) === '-'
-}
-
-export const getTimeMeasurement = (inMinutes: number): string => {
-  switch (true) {
-    case inMinutes < 1:
-      return 'seconds'
-
-    case inMinutes < 60:
-      return 'minutes'
-
-    case inMinutes < 1440:
-      return 'hours'
-
-    case inMinutes <= 84960:
-      return 'days'
-
-    default:
-      return ''
-  }
-}
-
-export const getTimeWithMeasurement = (inMinutes: number): { measurement: string, value: number } => {
-  const measurement = getTimeMeasurement(inMinutes)
-
-  const measurements = {
-    seconds (minutes) {
-      const val = Math.round(minutes * 60)
-      return val
-    },
-    minutes (minutes) {
-      return minutes
-    },
-    hours (minutes) {
-      return minutes / 60
-    },
-    days (minutes) {
-      return minutes / 24 / 60
-    }
-  }
-  const strategy = measurements[measurement]
-
-  if (!strategy) {
-    console.error(`No strategy for particular measurement: ${measurement}`)
-    return { measurement: '', value: Infinity }
-  }
-  return {
-    measurement,
-    value: strategy(inMinutes)
-  }
-}
-export const getTimeInMinutes = (params: { measurement: string, value: number }): number => {
-  const { measurement, value } = params
-  const measurementStrategies = {
-    seconds (v) {
-      const val = Math.round((v / 60) * 100) / 100
-      return val
-    },
-    minutes (v) {
-      return v
-    },
-    hours (v) {
-      return v * 60
-    },
-    days (v) {
-      return v * 24 * 60
-    }
-  }
-  const strategy = measurementStrategies[measurement]
-
-  if (!strategy) {
-    console.error(`No strategy for particular measurement: ${measurement}`)
-    return Infinity
-  }
-  return strategy(value)
 }
 
 export type PrecisionAdjustParams = {

@@ -273,7 +273,7 @@ const strings = {
   satPerByte: 'Satoshi Per Byte',
   gasLimit: 'Gas Limit',
   gasPrice: 'Gas Price (Gwei)',
-  string_disable: 'DISABLE',
+  string_disable: 'Disabled',
   string_done_cap: 'Done',
   string_fee_with_colon: 'Fee: ',
   string_first_ethereum_wallet_name: 'My Ether',

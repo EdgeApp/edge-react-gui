@@ -438,7 +438,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/SET_AUTO_LOGOUT_TIME': {
-      if (!action.data) throw new Error('Invalid action')
       const { autoLogoutTimeInSeconds } = action.data
       return {
         ...state,

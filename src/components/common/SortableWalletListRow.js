@@ -10,7 +10,7 @@ import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import T from '../../modules/UI/components/FormattedText/index'
-import { calculateSettingsFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
+import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
 import styles, { styles as styleRaw } from '../../styles/scenes/WalletListStyle.js'
 import { decimalOrZero, getFiatSymbol, truncateDecimals } from '../../util/utils'
 
@@ -28,6 +28,7 @@ class SortableWalletListRow extends Component<Props, State> {
       finalCryptoAmountString,
       fiatBalance,
       fiatBalanceFormat,
+      fiatBalanceSymbol,
       fiatBalanceString
     const { data, walletFiatSymbol, settings, exchangeRates, showBalance } = this.props
     const walletData = data
@@ -43,9 +44,10 @@ class SortableWalletListRow extends Component<Props, State> {
       preliminaryCryptoAmount = truncateDecimals(bns.div(walletData.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)
       finalCryptoAmount = intl.formatNumberInput(decimalOrZero(preliminaryCryptoAmount, 6)) // make it show zero if infinitesimal number
       finalCryptoAmountString = showBalance ? `${symbol || ''} ${finalCryptoAmount}` : ''
-      fiatBalance = calculateSettingsFiatBalanceWithoutState(walletData, settings, exchangeRates)
+      fiatBalance = calculateWalletFiatBalanceWithoutState(walletData, currencyCode, settings, exchangeRates)
       fiatBalanceFormat = fiatBalance && parseFloat(fiatBalance) > 0.000001 ? fiatBalance : 0
-      fiatBalanceString = showBalance ? `${walletFiatSymbol} ${fiatBalanceFormat}` : ''
+      fiatBalanceSymbol = showBalance ? walletFiatSymbol : ''
+      fiatBalanceString = showBalance ? fiatBalanceFormat : ''
     }
 
     return (
@@ -75,7 +77,10 @@ class SortableWalletListRow extends Component<Props, State> {
               </View>
               <View style={styles.walletDetailsRow}>
                 <T style={[styles.walletDetailsRowName]}>{name}</T>
-                <T style={[styles.walletDetailsRowFiat]}>{fiatBalanceString}</T>
+                <View style={styles.walletDetailsFiatBalanceRow}>
+                  <T style={[styles.walletDetailsRowFiat]}>{fiatBalanceSymbol}</T>
+                  <T style={[styles.walletDetailsRowFiat]}>{fiatBalanceString}</T>
+                </View>
               </View>
             </View>
           </View>

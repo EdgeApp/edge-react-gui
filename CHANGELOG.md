@@ -1,5 +1,12 @@
 # edge-react-gui
 
+## 1.11.2
+
+- Fixed RSK synchronization
+- Resolved delayed app notifications
+- Fixed various wallet list display issues
+- Enhanced ETH network performance
+
 ## 1.11.1
 
 - Wallet list fixes

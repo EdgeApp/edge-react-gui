@@ -82,11 +82,6 @@ export const styles = {
   autoLogoutDialogTitle: {
     color: THEME.COLORS.PRIMARY
   },
-  autoLogoutPickerContainer: {
-    flex: 1,
-    margin: 4
-  },
-  txIDIcon: {},
   customNodesInputWrap: {
     borderWidth: 1,
     borderColor: '#CCCCCC',

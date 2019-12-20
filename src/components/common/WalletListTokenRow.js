@@ -8,6 +8,7 @@ import { Actions } from 'react-native-router-flux'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/index'
+import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
 import styles, { styles as styleRaw } from '../../styles/scenes/WalletListStyle'
 import { type GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils'
@@ -54,12 +55,14 @@ export class WalletListTokenRow extends PureComponent<Props> {
     const rateKey = `${currencyCode}_${wallet.isoFiatCurrencyCode}`
     const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : null
     // Fiat Balance Formatting
-    const fiatBalance = UTILS.getCurrencyAccountFiatBalanceFromWalletWithoutState(wallet, currencyCode, settings, exchangeRates)
+    const fiatBalance = calculateWalletFiatBalanceWithoutState(wallet, currencyCode, settings, exchangeRates)
     const fiatBalanceFormat = fiatBalance && parseFloat(fiatBalance) > 0.000001 ? fiatBalance : 0
-    const fiatBalanceString = showBalance && exchangeRate ? `${walletFiatSymbol} ${fiatBalanceFormat}` : ''
+    const fiatBalanceSymbol = showBalance && exchangeRate ? walletFiatSymbol : ''
+    const fiatBalanceString = showBalance && exchangeRate ? fiatBalanceFormat : ''
     // Exhange Rate Formatting
     const exchangeRateFormat = exchangeRate ? intl.formatNumber(exchangeRate, { toFixed: 2 }) : null
-    const exchangeRateString = exchangeRateFormat ? `${walletFiatSymbol} ${exchangeRateFormat}/${currencyCode}` : s.strings.no_exchange_rate
+    const exchangeRateFiatSymbol = exchangeRateFormat ? `${walletFiatSymbol} ` : ''
+    const exchangeRateString = exchangeRateFormat ? `${exchangeRateFormat}/${currencyCode}` : s.strings.no_exchange_rate
     // Yesterdays Percentage Difference Formatting
     const yesterdayUsdExchangeRate = exchangeRates[`${currencyCode}_iso:USD_${UTILS.getYesterdayDateRoundDownHour()}`]
     const fiatExchangeRate = wallet.isoFiatCurrencyCode !== 'iso:USD' ? exchangeRates[`iso:USD_${wallet.isoFiatCurrencyCode}`] : 1
@@ -106,11 +109,17 @@ export class WalletListTokenRow extends PureComponent<Props> {
             </View>
             <View style={styles.walletDetailsRow}>
               <T style={[styles.walletDetailsRowName]}>{name}</T>
-              <T style={[styles.walletDetailsRowFiat]}>{fiatBalanceString}</T>
+              <View style={styles.walletDetailsFiatBalanceRow}>
+                <T style={[styles.walletDetailsRowFiat]}>{fiatBalanceSymbol}</T>
+                <T style={[styles.walletDetailsRowFiat]}>{fiatBalanceString}</T>
+              </View>
             </View>
             <View style={styles.walletDetailsRowLine} />
             <View style={styles.walletDetailsRow}>
-              <T style={[styles.walletDetailsRowExchangeRate]}>{exchangeRateString}</T>
+              <View style={styles.walletDetailsExchangeRow}>
+                <T style={[styles.walletDetailsRowExchangeRate]}>{exchangeRateFiatSymbol}</T>
+                <T style={[styles.walletDetailsRowExchangeRate]}>{exchangeRateString}</T>
+              </View>
               <T style={[differencePercentageStringStyle]}>{differencePercentageString}</T>
             </View>
           </View>

@@ -17,6 +17,7 @@
 #import <React/RCTLinkingManager.h>
 #import <React/RCTRootView.h>
 #import <sys/errno.h>
+#import <UserNotifications/UserNotifications.h>
 
 @implementation AppDelegate
 
@@ -52,6 +53,14 @@
 
   // Client-side background fetch interval:
   [[UIApplication sharedApplication] setMinimumBackgroundFetchInterval:60*60*12];
+
+  // Notification permissions:
+  [[UNUserNotificationCenter currentNotificationCenter]
+      requestAuthorizationWithOptions:UNAuthorizationOptionBadge | UNAuthorizationOptionAlert
+      completionHandler: ^(BOOL granted, NSError *error) {
+        if (error) NSLog(@"failed to get notification permission");
+        else NSLog(granted ? @"notifications granted" : @"notifications not granted");
+      }];
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];
@@ -89,16 +98,25 @@
 
     dispatch_async(dispatch_get_main_queue(), ^(void) {
       application.applicationIconBadgeNumber = resetUsers.count;
-
       if (resetUsers.count == 0) {
         return completionHandler(UIBackgroundFetchResultNoData);
       }
-      UILocalNotification *notification = [[UILocalNotification alloc] init];
-      notification.fireDate = [[NSDate date] dateByAddingTimeInterval:1];
-      notification.alertBody = message;
-      [[UIApplication sharedApplication] scheduleLocalNotification:notification];
 
-      completionHandler(UIBackgroundFetchResultNewData);
+      UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
+      content.title = @"Urgent";
+      content.body = message;
+      UNTimeIntervalNotificationTrigger* trigger = [UNTimeIntervalNotificationTrigger
+          triggerWithTimeInterval:1
+                          repeats:NO];
+      UNNotificationRequest* request = [UNNotificationRequest
+          requestWithIdentifier:@"2faReset"
+                        content:content
+                        trigger:trigger];
+      [[UNUserNotificationCenter currentNotificationCenter]
+          addNotificationRequest:request
+           withCompletionHandler:^(NSError *error) {
+            completionHandler(UIBackgroundFetchResultNewData);
+           }];
     });
   }];
 }

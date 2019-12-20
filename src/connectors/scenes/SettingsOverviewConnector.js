@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import {
   checkCurrentPassword,
   lockSettings,
-  setAutoLogoutTimeInMinutesRequest,
+  setAutoLogoutTimeInSecondsRequest,
   setDeveloperModeOn,
   showRestoreWalletsModal,
   showSendLogsModal,
@@ -36,7 +36,7 @@ const mapStateToProps = (state: State) => {
   const developerModeOn = state.ui.settings.developerModeOn
   return {
     defaultFiat: SETTINGS_SELECTORS.getDefaultFiat(state),
-    autoLogoutTimeInMinutes: SETTINGS_SELECTORS.getAutoLogoutTimeInMinutes(state),
+    autoLogoutTimeInSeconds: SETTINGS_SELECTORS.getAutoLogoutTimeInSeconds(state),
     username: CORE_SELECTORS.getUsername(state),
     account,
     supportsTouchId: isTouchIdSupported,
@@ -51,7 +51,7 @@ const mapStateToProps = (state: State) => {
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  setAutoLogoutTimeInMinutes: (autoLogoutTimeInMinutes: number) => dispatch(setAutoLogoutTimeInMinutesRequest(autoLogoutTimeInMinutes)),
+  setAutoLogoutTimeInSeconds: (autoLogoutTimeInSeconds: number) => dispatch(setAutoLogoutTimeInSecondsRequest(autoLogoutTimeInSeconds)),
   confirmPassword: (arg: string) => dispatch(checkCurrentPassword(arg)),
   lockSettings: () => dispatch(lockSettings()),
   dispatchUpdateEnableTouchIdEnable: (arg: boolean, account: EdgeAccount) => dispatch(updateTouchIdEnabled(arg, account)),

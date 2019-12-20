@@ -13,20 +13,17 @@ import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import styles from '../../styles/scenes/SettingsStyle'
 import { type Action } from '../../types/reduxTypes.js'
-import { getTimeWithMeasurement } from '../../util/utils'
-import { launchModal } from '../common/ModalProvider.js'
+import { secondsToDisplay } from '../../util/displayTime.js'
 import RowModal from '../common/RowModal'
 import RowRoute from '../common/RowRoute'
 import RowSwitch from '../common/RowSwitch'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { createAutoLogoutModal } from '../modals/AutoLogoutModal.ui'
-import { showToast } from '../services/AirshipInstance.js'
-
-const DISABLE_TEXT = s.strings.string_disable
+import { AutoLogoutModal } from '../modals/AutoLogoutModal.js'
+import { Airship, showToast } from '../services/AirshipInstance.js'
 
 type Props = {
   defaultFiat: string,
-  autoLogoutTimeInMinutes: number,
+  autoLogoutTimeInSeconds: number,
   username: string,
   account: EdgeAccount,
   pinLoginEnabled: boolean,
@@ -37,7 +34,7 @@ type Props = {
   isLocked: boolean,
   confirmPasswordError: string,
   developerModeOn: boolean,
-  setAutoLogoutTimeInMinutes(number): void,
+  setAutoLogoutTimeInSeconds(number): void,
   confirmPassword(string): void,
   lockSettings(): void,
   dispatchUpdateEnableTouchIdEnable(boolean, EdgeAccount): void,
@@ -50,21 +47,13 @@ type Props = {
   showRestoreWalletsModal: () => void,
   toggleDeveloperMode(boolean): void
 }
-type State = {
-  showAutoLogoutModal: boolean,
-  autoLogoutTimeInMinutes: number
-}
 
-export default class SettingsOverview extends Component<Props, State> {
+export default class SettingsOverview extends Component<Props> {
   optionModals: Array<Object>
   currencies: Array<Object>
   options: Object
   constructor (props: Props) {
     super(props)
-    this.state = {
-      showAutoLogoutModal: false,
-      autoLogoutTimeInMinutes: props.autoLogoutTimeInMinutes
-    }
 
     const useTouchID = this.props.supportsTouchId
       ? {
@@ -137,22 +126,23 @@ export default class SettingsOverview extends Component<Props, State> {
   }
 
   showAutoLogoutModal = async () => {
-    const modal = createAutoLogoutModal({
-      autoLogoutTimeInMinutes: this.state.autoLogoutTimeInMinutes
-    })
+    const result = await Airship.show(bridge => <AutoLogoutModal autoLogoutTimeInSeconds={this.props.autoLogoutTimeInSeconds} bridge={bridge} />)
 
-    const autoLogoutTimeInMinutes = await launchModal(modal)
-    if (autoLogoutTimeInMinutes) {
-      this.setState({
-        autoLogoutTimeInMinutes
-      })
-      this.props.setAutoLogoutTimeInMinutes(autoLogoutTimeInMinutes)
+    if (typeof result === 'number') {
+      this.props.setAutoLogoutTimeInSeconds(result)
     }
   }
 
   render () {
-    const { measurement: autoLogoutMeasurement, value: autoLogoutValue } = getTimeWithMeasurement(this.state.autoLogoutTimeInMinutes)
-    const autoLogoutRightText = autoLogoutValue === 0 ? DISABLE_TEXT : `${autoLogoutValue} ${s.strings['settings_' + autoLogoutMeasurement]}`
+    const autoLogout = secondsToDisplay(this.props.autoLogoutTimeInSeconds)
+    const timeStrings = {
+      seconds: s.strings.settings_seconds,
+      minutes: s.strings.settings_minutes,
+      hours: s.strings.settings_hours,
+      days: s.strings.settings_days
+    }
+    const autoLogoutRightText = autoLogout.value === 0 ? s.strings.string_disable : `${autoLogout.value} ${timeStrings[autoLogout.measurement]}`
+
     return (
       <SceneWrapper background="body" hasTabs={false}>
         <ScrollView style={styles.container}>

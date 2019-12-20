@@ -150,18 +150,28 @@ export class WalletListModal extends Component<Props, LocalState> {
     if (input === '') {
       return records
     }
-    const upperCaseInput = input.toUpperCase()
+    const inputLowerCase = input.toLowerCase()
     const filteredRecords = []
     for (let i = 0; i < records.length; i++) {
       const record: Record = records[i]
       const { walletItem, supportedWalletType } = record
       if (walletItem) {
-        const tokens = walletItem.enabledTokens.toString()
+        const { name, currencyCode, currencyNames, enabledTokens } = walletItem
+        const nameString = name.toLowerCase()
+        const currencyNameString = currencyNames[currencyCode].toString().toLowerCase()
+        const currencyCodeString = currencyCode.toLowerCase()
+        const tokenCodesString = enabledTokens.toString().toLowerCase()
+        const tokenNamesObject = {}
+        enabledTokens.forEach(token => {
+          tokenNamesObject[token] = currencyNames[token]
+        })
+        const tokenNameString = JSON.stringify(tokenNamesObject).toLowerCase()
         if (
-          walletItem.name.includes(input) ||
-          walletItem.currencyCode.includes(upperCaseInput) ||
-          walletItem.enabledTokens.includes(upperCaseInput) ||
-          tokens.includes(upperCaseInput)
+          nameString.includes(inputLowerCase) ||
+          currencyNameString.includes(inputLowerCase) ||
+          currencyCodeString.includes(inputLowerCase) ||
+          tokenCodesString.includes(inputLowerCase) ||
+          tokenNameString.includes(inputLowerCase)
         ) {
           filteredRecords.push(record)
         }
@@ -182,16 +192,18 @@ export class WalletListModal extends Component<Props, LocalState> {
       <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(null)}>
         {gap => (
           <Fragment>
-            <View style={{ flex: 1, paddingLeft: scale(12), paddingRight: scale(12) }}>
-              <FormField
-                autoFocus
-                error={''}
-                keyboardType={'default'}
-                label={this.props.headerTitle}
-                onChangeText={this.onSearchFilterChange}
-                style={MaterialInputStyle}
-                value={input}
-              />
+            <View style={{ flex: 1 }}>
+              <View style={{ marginHorizontal: scale(15), marginBottom: scale(13) }}>
+                <FormField
+                  autoFocus
+                  error={''}
+                  keyboardType={'default'}
+                  label={this.props.headerTitle}
+                  onChangeText={this.onSearchFilterChange}
+                  style={MaterialInputStyle}
+                  value={input}
+                />
+              </View>
               <FlatList
                 style={{ flex: 1, marginBottom: -gap.bottom }}
                 contentContainerStyle={{ paddingBottom: gap.bottom }}
