@@ -5,7 +5,6 @@ import _ from 'lodash'
 import { connect } from 'react-redux'
 
 import { fetchMoreTransactions } from '../../actions/TransactionListActions'
-import { selectWalletFromModal } from '../../actions/WalletActions.js'
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions.js'
 import type { DispatchProps, StateProps } from '../../components/scenes/TransactionListScene'
 import { TransactionList } from '../../components/scenes/TransactionListScene'
@@ -79,7 +78,6 @@ const mapStateToProps = (state: State) => {
     multiplier,
     contacts: state.contacts,
     fiatSymbol,
-    showToWalletModal: state.ui.scenes.walletListModal.walletListModalVisible,
     requiredConfirmations,
     numTransactions,
     isBalanceVisible
@@ -91,9 +89,6 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => dispatch(fetchMoreTransactions(walletId, currencyCode, reset)),
   toggleBalanceVisibility: () => {
     dispatch(toggleAccountBalanceVisibility())
-  },
-  onSelectWallet: (walletId: string, currencyCode: string) => {
-    dispatch(selectWalletFromModal(walletId, currencyCode))
   }
 })
 

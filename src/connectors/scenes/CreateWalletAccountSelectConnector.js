@@ -44,7 +44,8 @@ const mapStateToProps = (state: State, ownProps: CreateWalletAccountSelectOwnPro
     isCreatingWallet,
     paymentDenominationSymbol,
     existingCoreWallet,
-    walletAccountActivationQuoteError
+    walletAccountActivationQuoteError,
+    state
   }
 }
 
