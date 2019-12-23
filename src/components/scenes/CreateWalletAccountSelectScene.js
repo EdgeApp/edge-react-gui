@@ -170,11 +170,12 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
   renderSelectWallet = () => {
     const { activationCost, selectedWalletType } = this.props
     const currencyCode = selectedWalletType.currencyCode
+    const isSelectWalletDisabled = !activationCost || activationCost === ''
     return (
       <View style={styles.selectPaymentLower}>
         <View style={styles.buttons}>
-          <PrimaryButton style={[styles.next]} onPress={this.onPressSelect}>
-            <PrimaryButton.Text>{s.strings.create_wallet_account_select_wallet}</PrimaryButton.Text>
+          <PrimaryButton disabled={isSelectWalletDisabled} style={[styles.next]} onPress={this.onPressSelect}>
+            {isSelectWalletDisabled ? <ActivityIndicator /> : <PrimaryButton.Text>{s.strings.create_wallet_account_select_wallet}</PrimaryButton.Text>}
           </PrimaryButton>
         </View>
         <View style={styles.paymentArea}>
