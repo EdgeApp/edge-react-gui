@@ -556,7 +556,6 @@
   {
     "id": "moonpay",
     "forPlatform": "ios",
-    "priority": 3,
     "paymentType": {
       "credit": true,
       "applepay": true
