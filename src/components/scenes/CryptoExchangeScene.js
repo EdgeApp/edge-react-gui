@@ -50,6 +50,7 @@ export type CryptoExchangeSceneComponentStateProps = {
   shiftPendingTransaction: boolean,
   calculatingMax: boolean,
   wallets: { [string]: GuiWallet },
+  activeWalletIds: Array<string>,
   totalWallets: number,
   supportedWalletTypes: Array<Object>,
   state: State,
@@ -254,7 +255,7 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
   }
 
   renderDropUp = (whichWallet: string) => {
-    const { onSelectWallet, fromCurrencyCode, fromWallet, toCurrencyCode, toWallet, wallets } = this.props
+    const { onSelectWallet, fromCurrencyCode, fromWallet, toCurrencyCode, toWallet, wallets, activeWalletIds } = this.props
     const walletCurrencyCodes = []
     const allowedWallets = []
     for (const id in wallets) {
@@ -277,6 +278,7 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
       <WalletListModal
         bridge={bridge}
         wallets={allowedWallets}
+        activeWalletIds={activeWalletIds}
         type={whichWallet}
         existingWalletToFilterId={filterWalletId}
         existingWalletToFilterCurrencyCode={filterWalletCurrencyCode}

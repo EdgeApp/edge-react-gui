@@ -98,6 +98,7 @@ export class EdgeProvider extends Bridgeable {
     }
 
     const wallets = this._state.ui.wallets.byId // CORE_SELECTORS.getWallets(this._state)
+    const activeWalletIds = UI_SELECTORS.getActiveWalletIds(this._state).filter(id => !(wallets[id] != null && wallets[id].type === 'wallet:fio'))
     const excludedCurrencyCode = []
     const excludedTokens = []
     const walletsToUse = []
@@ -162,6 +163,7 @@ export class EdgeProvider extends Bridgeable {
       <WalletListModal
         bridge={bridge}
         wallets={walletsToUse}
+        activeWalletIds={activeWalletIds}
         supportedWalletTypes={supportedWalletTypes}
         excludedCurrencyCode={excludedCurrencyCode}
         showWalletCreators={true}

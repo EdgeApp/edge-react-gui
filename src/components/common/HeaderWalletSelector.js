@@ -10,6 +10,7 @@ import { WalletListModal } from '../modals/WalletListModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 
 export type StateProps = {
+  activeWalletIds: Array<string>,
   wallets: { [string]: GuiWallet },
   state: State
 }
@@ -22,7 +23,7 @@ type Props = StateProps & DispatchProps
 
 class HeaderWalletSelector extends Component<Props> {
   onPress = () => {
-    const { wallets } = this.props
+    const { wallets, activeWalletIds } = this.props
     const allowedWallets = []
     for (const id in wallets) {
       const wallet = wallets[id]
@@ -34,6 +35,7 @@ class HeaderWalletSelector extends Component<Props> {
       <WalletListModal
         bridge={bridge}
         wallets={allowedWallets}
+        activeWalletIds={activeWalletIds}
         existingWalletToFilterId={''}
         existingWalletToFilterCurrencyCode={''}
         supportedWalletTypes={[]}

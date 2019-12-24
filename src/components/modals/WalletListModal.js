@@ -17,6 +17,7 @@ import { type AirshipBridge, AirshipModal } from './modalParts.js'
 type Props = {
   bridge: AirshipBridge<GuiWallet | Object | null>,
   wallets: Array<GuiWallet>,
+  activeWalletIds: Array<string>,
   existingWalletToFilterId?: string,
   existingWalletToFilterCurrencyCode?: string,
   headerTitle: string,
@@ -53,17 +54,18 @@ export class WalletListModal extends Component<Props, LocalState> {
     let i = 0
     let totalCurrenciesAndTokens = 0
     let totalWalletsToAdd = 0
-    for (i; i < this.props.wallets.length; i++) {
-      const wallet = this.props.wallets[i]
-      if (wallet.type === 'wallet:fio') continue
-      const record = {
-        walletItem: wallet,
-        supportedWalletType: null
-      }
-      records.push(record)
-      totalCurrenciesAndTokens++
-      if (wallet.enabledTokens.length) {
-        totalCurrenciesAndTokens = totalCurrenciesAndTokens + wallet.enabledTokens.length
+    for (i; i < this.props.activeWalletIds.length; i++) {
+      const wallet = this.props.wallets.find(wallet => wallet.id === this.props.activeWalletIds[i])
+      if (wallet) {
+        const record = {
+          walletItem: wallet,
+          supportedWalletType: null
+        }
+        records.push(record)
+        totalCurrenciesAndTokens++
+        if (wallet.enabledTokens.length) {
+          totalCurrenciesAndTokens = totalCurrenciesAndTokens + wallet.enabledTokens.length
+        }
       }
     }
     for (i = 0; i < this.props.supportedWalletTypes.length; i++) {

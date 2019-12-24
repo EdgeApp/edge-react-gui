@@ -35,6 +35,7 @@ export type AccountPaymentParams = {
 
 export type CreateWalletAccountSelectStateProps = {
   wallets: { [string]: GuiWallet },
+  activeWalletIds: Array<string>,
   paymentCurrencyCode: string,
   paymentAddress: string,
   amount: string,
@@ -108,7 +109,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
   }
 
   onPressSelect = () => {
-    const { supportedCurrencies, wallets } = this.props
+    const { supportedCurrencies, activeWalletIds, wallets } = this.props
     const allowedWallets = []
     for (const id in wallets) {
       const wallet = wallets[id]
@@ -120,6 +121,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
       <WalletListModal
         bridge={bridge}
         wallets={allowedWallets}
+        activeWalletIds={activeWalletIds}
         existingWalletToFilterId={''}
         existingWalletToFilterCurrencyCode={''}
         supportedWalletTypes={[]}
