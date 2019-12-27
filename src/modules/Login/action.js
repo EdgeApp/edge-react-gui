@@ -166,11 +166,11 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       type: 'ACCOUNT_INIT_COMPLETE',
       data: { ...accountInitObject }
     })
-    if (newAccount) {
-      await createDefaultWallets(account, defaultFiat, dispatch)
-    }
     if (account.newAccount) {
       await saveCreationReason(account)
+    }
+    if (newAccount) {
+      await createDefaultWallets(account, defaultFiat, dispatch)
     }
     await updateWalletsRequest()(dispatch, getState)
     for (const wId of activeWalletIds) {
