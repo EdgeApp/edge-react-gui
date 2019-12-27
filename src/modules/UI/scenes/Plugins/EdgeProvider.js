@@ -362,11 +362,15 @@ export class EdgeProvider extends Bridgeable {
     return transaction
   }
 
+  // log body and signature and pubic address and final message (returned from signMessage)
+  // log response afterwards line 451
   async signMessage (message: string) /* EdgeSignedMessage */ {
+    console.log('signMessage message: ', JSON.stringify(message))
     const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
     const coreWallet = CORE_SELECTORS.getWallet(this._state, guiWallet.id)
-
+    console.log('signMessage public address: ', guiWallet.receiveAddress.publicAddress)
     const signedMessage = await coreWallet.otherMethods.signMessageBase64(message, guiWallet.receiveAddress.publicAddress)
+    console.log('signMessage signedMessage: ', JSON.stringify(signedMessage))
     return signedMessage
   }
 
@@ -419,26 +423,37 @@ export class EdgeProvider extends Bridgeable {
     return SafariView.isAvailable()
   }
 
-  async deprecatedAndNotSupportedDouble (request: Object, url: string, url2: string): Promise<mixed> {
-    const response = await window.fetch(url, request)
+  // window.fetch.catch(console log then throw)
+  async deprecatedAndNotSupportedDouble (request: Object, firstURL: string, url2: string): Promise<mixed> {
+    const response = await window.fetch(firstURL, request).catch(e => {
+      console.log(`throw from fetch firstURL: ${firstURL}`, e)
+      throw e
+    })
+    console.log('Bity response1: ', response)
     if (response.status !== 201) {
       const errorData = await response.json()
       throw new Error(errorData.errors[0].code + ' ' + errorData.errors[0].message)
     }
-    const newURL = url2 + response.headers.get('Location')
+    const secondURL = url2 + response.headers.get('Location')
+    console.log('Bity secondURL: ', secondURL)
     const request2 = {
       method: 'GET',
       credentials: 'include'
     }
-    const response2 = await window.fetch(newURL, request2)
+    const response2 = await window.fetch(secondURL, request2).catch(e => {
+      console.log(`throw from fetch secondURL: ${secondURL}`, e)
+      throw e
+    })
+    console.log('Bity response2: ', response2)
     if (response2.status !== 200) {
       throw new Error('Problem confirming order: Code n200')
     }
     const orderData = await response2.json()
+    console.log('Bity orderData: ', orderData)
     if (orderData.message_to_sign) {
       const { signature_submission_url, body } = orderData.message_to_sign
       const signedTransaction = await this.signMessage(body)
-      const newURL = url2 + signature_submission_url
+      const thirdURL = url2 + signature_submission_url
       const request = {
         method: 'POST',
         headers: {
@@ -447,7 +462,11 @@ export class EdgeProvider extends Bridgeable {
         },
         body: signedTransaction
       }
-      const signedTransactionResponse = await window.fetch(newURL, request)
+      const signedTransactionResponse = await window.fetch(thirdURL, request).catch(e => {
+        console.log(`throw from fetch thirdURL: ${thirdURL}`, e)
+        throw e
+      })
+      console.log('Bity signedTransactionResponse: ', signedTransactionResponse)
       if (signedTransactionResponse.status === 400) {
         throw new Error('Could not complete transaction. Code: 470')
       }
@@ -456,10 +475,14 @@ export class EdgeProvider extends Bridgeable {
           method: 'GET',
           credentials: 'include'
         }
-        const detailUrl = url + '/' + orderData.id
-        const bankDetailResponse = await window.fetch(detailUrl, bankDetailsRequest)
+        const detailUrl = firstURL + '/' + orderData.id
+        const bankDetailResponse = await window.fetch(detailUrl, bankDetailsRequest).catch(e => {
+          console.log(`throw from fetch deatilUrl: ${detailUrl}`, e)
+          throw e
+        })
         if (bankDetailResponse.status === 200) {
           const parsedResponse = await bankDetailResponse.json()
+          console.log('Bity parsedResponse: ', parsedResponse)
           return parsedResponse
         }
       }
