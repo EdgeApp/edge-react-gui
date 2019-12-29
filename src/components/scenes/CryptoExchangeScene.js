@@ -5,6 +5,7 @@ import React, { Component } from 'react'
 import { ActivityIndicator, Alert, Keyboard, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import slowlog from 'react-native-slowlog'
+import { sprintf } from 'sprintf-js'
 
 import type { SetNativeAmountInfo } from '../../actions/CryptoExchangeActions.js'
 import CryptoExchangeMessageConnector from '../../connectors/components/CryptoExchangeMessageConnector'
@@ -136,6 +137,8 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
     }
     const isFromFocused = this.state.whichWalletFocus === Constants.FROM
     const isToFocused = this.state.whichWalletFocus === Constants.TO
+    const fromHeaderText = sprintf(s.strings.exchange_from_wallet, this.props.fromWallet.name)
+    const toHeaderText = sprintf(s.strings.exchange_to_wallet, this.props.toWallet.name)
     return (
       <SceneWrapper>
         <KeyboardAwareScrollView style={[styles.mainScrollView]} keyboardShouldPersistTaps="always" contentContainerStyle={styles.scrollViewContentContainer}>
@@ -146,6 +149,7 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
             guiWallet={this.props.fromWallet}
             buttonText={this.props.fromButtonText}
             currencyLogo={this.props.fromCurrencyIcon}
+            headerText={fromHeaderText}
             primaryCurrencyInfo={this.props.fromPrimaryInfo}
             secondaryCurrencyInfo={fromSecondaryInfo}
             fiatPerCrypto={this.props.fromFiatToCrypto}
@@ -165,6 +169,7 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
             guiWallet={this.props.toWallet}
             buttonText={this.props.toButtonText}
             currencyLogo={this.props.toCurrencyIcon}
+            headerText={toHeaderText}
             primaryCurrencyInfo={this.props.toPrimaryInfo}
             secondaryCurrencyInfo={toSecondaryInfo}
             fiatPerCrypto={this.props.toFiatToCrypto}

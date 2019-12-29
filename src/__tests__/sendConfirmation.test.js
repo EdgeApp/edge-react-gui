@@ -51,7 +51,8 @@ describe('SendConfirmation', () => {
       isEditable: true,
       authRequired: 'none',
       pin: '',
-      address: '123123123'
+      address: '123123123',
+      guiWallet: {}
     }
     const actual = renderer.render(<SendConfirmation {...props} />)
 
@@ -102,7 +103,8 @@ describe('SendConfirmation', () => {
       isEditable: true,
       authRequired: 'none',
       pin: '',
-      address: '123123123'
+      address: '123123123',
+      guiWallet: {}
     }
     const actual = renderer.render(<SendConfirmation {...props} />)
 
@@ -152,7 +154,8 @@ describe('SendConfirmation', () => {
       transactionMetadata: null,
       isEditable: true,
       authRequired: 'none',
-      pin: ''
+      pin: '',
+      guiWallet: {}
     }
     const actual = renderer.render(<SendConfirmation {...props} />)
 
@@ -202,7 +205,8 @@ describe('SendConfirmation', () => {
       transactionMetadata: null,
       isEditable: true,
       authRequired: 'none',
-      pin: ''
+      pin: '',
+      guiWallet: {}
     }
     const actual = renderer.render(<SendConfirmation {...props} />)
 

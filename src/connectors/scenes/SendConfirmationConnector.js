@@ -87,6 +87,7 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
     currencyInfo: currencyInfo || null,
     transactionMetadata,
     errorMsg,
+    guiWallet,
     exchangeRates,
     fiatCurrencyCode: guiWallet.fiatCurrencyCode,
     fiatPerCrypto,

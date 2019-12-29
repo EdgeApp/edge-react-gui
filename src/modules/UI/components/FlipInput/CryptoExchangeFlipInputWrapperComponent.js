@@ -15,6 +15,7 @@ export type Props = {
   guiWallet: GuiWallet,
   buttonText: string,
   currencyLogo: string,
+  headerText: string,
   primaryCurrencyInfo: GuiCurrencyInfo,
   secondaryCurrencyInfo: GuiCurrencyInfo,
   fiatPerCrypto: number,
@@ -87,37 +88,31 @@ export class CryptoExchangeFlipInputWrapperComponent extends Component<Props> {
 
     if (!this.props.isFocused) {
       return (
-        <View style={[style.containerNoFee, style.containerNoWalletSelected]}>
+        <View style={[style.containerSelectedWalletNotFocus]}>
+          {this.renderLogo(style, this.props.currencyLogo)}
           <View style={style.topRow}>
             <TextAndIconButton style={style.walletSelector} onPress={this.props.focusMe} icon={Constants.KEYBOARD_ARROW_DOWN} title={titleComp} />
           </View>
-          {this.renderLogo(style, this.props.currencyLogo)}
         </View>
       )
     }
 
     return (
-      <View style={style.containerNoFee}>
-        <View style={style.topRow}>
-          <TextAndIconButton style={style.walletSelector} onPress={this.launchSelector} icon={Constants.KEYBOARD_ARROW_DOWN} title={titleComp} />
-        </View>
-        {this.renderLogo(style, this.props.currencyLogo)}
-
-        <View style={style.flipInput}>
-          <ExchangedFlipInput
-            onNext={onNext}
-            primaryCurrencyInfo={primaryCurrencyInfo}
-            secondaryCurrencyInfo={secondaryCurrencyInfo}
-            exchangeSecondaryToPrimaryRatio={fiatPerCrypto}
-            overridePrimaryExchangeAmount={overridePrimaryExchangeAmount}
-            forceUpdateGuiCounter={forceUpdateGuiCounter}
-            onExchangeAmountChanged={this.onExchangeAmountChanged}
-            keyboardVisible={false}
-            isFiatOnTop={false}
-            isFocus={false}
-          />
-        </View>
-      </View>
+      <ExchangedFlipInput
+        onNext={onNext}
+        headerText={this.props.headerText}
+        headerLogo={this.props.currencyLogo}
+        headerCallback={this.launchSelector}
+        primaryCurrencyInfo={primaryCurrencyInfo}
+        secondaryCurrencyInfo={secondaryCurrencyInfo}
+        exchangeSecondaryToPrimaryRatio={fiatPerCrypto}
+        overridePrimaryExchangeAmount={overridePrimaryExchangeAmount}
+        forceUpdateGuiCounter={forceUpdateGuiCounter}
+        onExchangeAmountChanged={this.onExchangeAmountChanged}
+        keyboardVisible={false}
+        isFiatOnTop={false}
+        isFocus={false}
+      />
     )
   }
 }

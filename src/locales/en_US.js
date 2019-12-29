@@ -588,7 +588,11 @@ const strings = {
   user_closed_modal_no_wallet: 'User closed modal. No wallet was selected',
   plugin_spend_notes_generic: 'Spent %1$s from %2$s to %3$s at address: %4$s \nFor assistance, please contact %5$s.',
   plugin_provider_disclaimer: 'The following services are not provided by Edge. \n\nFor issues and feedback please contact the respective service providers.',
-  no_exchange_rate: 'No Exchange Rate'
+  no_exchange_rate: 'No Exchange Rate',
+  send_from_wallet: 'Send from %s',
+  send_to_wallet: 'Receive to %s',
+  exchange_from_wallet: 'Exchange from %s',
+  exchange_to_wallet: 'Exhchange to %s'
 }
 
 // export default strings

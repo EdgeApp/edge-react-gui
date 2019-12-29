@@ -221,10 +221,12 @@ export class Request extends Component<Props, State> {
       return <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size={'large'} />
     }
 
-    const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio, currencyInfo } = this.props
+    const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio, currencyInfo, guiWallet } = this.props
     const addressExplorer = currencyInfo ? currencyInfo.addressExplorer : null
     const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
     const qrSize = Dimensions.get('window').height / 4
+    const flipInputHeaderText = guiWallet ? sprintf(s.strings.send_to_wallet, guiWallet.name) : ''
+    const flipInputHeaderLogo = guiWallet.symbolImageDarkMono
 
     return (
       <SceneWrapper>
@@ -234,6 +236,8 @@ export class Request extends Component<Props, State> {
 
         <View style={styles.main}>
           <ExchangedFlipInput
+            headerText={flipInputHeaderText}
+            headerLogo={flipInputHeaderLogo}
             primaryCurrencyInfo={primaryCurrencyInfo}
             secondaryCurrencyInfo={secondaryCurrencyInfo}
             exchangeSecondaryToPrimaryRatio={exchangeSecondaryToPrimaryRatio}
