@@ -14,17 +14,20 @@ import type { GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { type AirshipBridge, AirshipModal } from './modalParts.js'
 
-type Props = {
+export type StateProps = {
+  state: State,
+  activeWalletIds: Array<string>
+}
+
+type OwnProps = {
   bridge: AirshipBridge<GuiWallet | Object | null>,
   wallets: Array<GuiWallet>,
-  activeWalletIds: Array<string>,
   existingWalletToFilterId?: string,
   existingWalletToFilterCurrencyCode?: string,
   headerTitle: string,
   excludedCurrencyCode: Array<string>,
   supportedWalletTypes: Array<Object>,
   showWalletCreators: boolean,
-  state: State,
   excludedTokens: Array<string>,
   noWalletCodes: Array<string>,
   disableZeroBalance: boolean
@@ -47,6 +50,8 @@ type LocalState = {
   totalWalletsToAdd: number
 }
 
+type Props = StateProps & OwnProps
+
 export class WalletListModal extends Component<Props, LocalState> {
   constructor (props: Props) {
     super(props)
@@ -57,6 +62,7 @@ export class WalletListModal extends Component<Props, LocalState> {
     for (i; i < this.props.activeWalletIds.length; i++) {
       const wallet = this.props.wallets.find(wallet => wallet.id === this.props.activeWalletIds[i])
       if (wallet) {
+        if (wallet.type === 'wallet:fio') continue
         const record = {
           walletItem: wallet,
           supportedWalletType: null

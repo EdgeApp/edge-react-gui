@@ -5,16 +5,12 @@ import { connect } from 'react-redux'
 import { selectWalletFromModal } from '../../actions/WalletActions'
 import type { DispatchProps, StateProps } from '../../components/common/HeaderWalletSelector'
 import { HeaderWalletSelector } from '../../components/common/HeaderWalletSelector'
-import { getActiveWalletIds } from '../../modules/UI/selectors.js'
 import type { Dispatch, State } from '../../types/reduxTypes.js'
 
 export const mapStateToProps = (state: State): StateProps => {
   const wallets = state.ui.wallets.byId
-  const activeWalletIds = getActiveWalletIds(state).filter(id => !(wallets[id] != null && wallets[id].type === 'wallet:fio'))
   return {
-    state,
-    wallets,
-    activeWalletIds
+    wallets
   }
 }
 

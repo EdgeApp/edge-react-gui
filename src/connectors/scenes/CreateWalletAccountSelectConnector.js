@@ -15,12 +15,11 @@ import {
   CreateWalletAccountSelect
 } from '../../components/scenes/CreateWalletAccountSelectScene'
 import { getWallet } from '../../modules/Core/selectors.js'
-import { getActiveWalletIds, getDefaultDenomination } from '../../modules/UI/selectors.js'
+import { getDefaultDenomination } from '../../modules/UI/selectors.js'
 import type { Dispatch, State } from '../../types/reduxTypes.js'
 
 const mapStateToProps = (state: State, ownProps: CreateWalletAccountSelectOwnProps) => {
   const wallets = state.ui.wallets.byId
-  const activeWalletIds = getActiveWalletIds(state).filter(id => !(wallets[id] != null && wallets[id].type === 'wallet:fio'))
   const handleActivationInfo = state.ui.scenes.createWallet.handleActivationInfo
   const walletAccountActivationPaymentInfo = state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
   const { supportedCurrencies, activationCost } = handleActivationInfo
@@ -43,12 +42,10 @@ const mapStateToProps = (state: State, ownProps: CreateWalletAccountSelectOwnPro
     supportedCurrencies,
     activationCost,
     wallets,
-    activeWalletIds,
     isCreatingWallet,
     paymentDenominationSymbol,
     existingCoreWallet,
-    walletAccountActivationQuoteError,
-    state
+    walletAccountActivationQuoteError
   }
 }
 

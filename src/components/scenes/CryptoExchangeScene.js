@@ -8,6 +8,7 @@ import slowlog from 'react-native-slowlog'
 
 import type { SetNativeAmountInfo } from '../../actions/CryptoExchangeActions.js'
 import CryptoExchangeMessageConnector from '../../connectors/components/CryptoExchangeMessageConnector'
+import { WalletListModalConnected as WalletListModal } from '../../connectors/components/WalletListModalConnector.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
@@ -15,11 +16,9 @@ import { CryptoExchangeFlipInputWrapperComponent } from '../../modules/UI/compon
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import { styles } from '../../styles/scenes/CryptoExchangeSceneStyles.js'
-import type { State } from '../../types/reduxTypes.js'
 import { type GuiCurrencyInfo, type GuiWallet, emptyCurrencyInfo } from '../../types/types.js'
 import { getDenomFromIsoCode } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { WalletListModal } from '../modals/WalletListModal'
 import { Airship } from '../services/AirshipInstance.js'
 
 export type CryptoExchangeSceneComponentStateProps = {
@@ -50,10 +49,8 @@ export type CryptoExchangeSceneComponentStateProps = {
   shiftPendingTransaction: boolean,
   calculatingMax: boolean,
   wallets: { [string]: GuiWallet },
-  activeWalletIds: Array<string>,
   totalWallets: number,
   supportedWalletTypes: Array<Object>,
-  state: State,
   creatingWallet: boolean,
   defaultIsoFiat: string
 }
@@ -255,7 +252,7 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
   }
 
   renderDropUp = (whichWallet: string) => {
-    const { onSelectWallet, fromCurrencyCode, fromWallet, toCurrencyCode, toWallet, wallets, activeWalletIds } = this.props
+    const { onSelectWallet, fromCurrencyCode, fromWallet, toCurrencyCode, toWallet, wallets } = this.props
     const walletCurrencyCodes = []
     const allowedWallets = []
     for (const id in wallets) {
@@ -278,14 +275,12 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
       <WalletListModal
         bridge={bridge}
         wallets={allowedWallets}
-        activeWalletIds={activeWalletIds}
         type={whichWallet}
         existingWalletToFilterId={filterWalletId}
         existingWalletToFilterCurrencyCode={filterWalletCurrencyCode}
         supportedWalletTypes={supportedWalletTypes}
         excludedCurrencyCode={[]}
         showWalletCreators={whichWallet === Constants.TO}
-        state={this.props.state}
         headerTitle={whichWallet === Constants.TO ? s.strings.select_recv_wallet : s.strings.select_src_wallet}
         excludedTokens={[]}
         noWalletCodes={[]}

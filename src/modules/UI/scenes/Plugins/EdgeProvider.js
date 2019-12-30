@@ -13,8 +13,8 @@ import { Bridgeable } from 'yaob'
 import { createCurrencyWalletAndSelectForPlugins } from '../../../../actions/indexActions'
 import { selectWallet } from '../../../../actions/WalletActions'
 import { launchModal } from '../../../../components/common/ModalProvider.js'
-import { WalletListModal } from '../../../../components/modals/WalletListModal'
 import { Airship, showError, showToast } from '../../../../components/services/AirshipInstance.js'
+import { WalletListModalConnected as WalletListModal } from '../../../../connectors/components/WalletListModalConnector.js'
 import { DEFAULT_STARTER_WALLET_NAMES, EXCLAMATION, MATERIAL_COMMUNITY } from '../../../../constants/indexConstants'
 import { SEND_CONFIRMATION } from '../../../../constants/SceneKeys.js'
 import s from '../../../../locales/strings'
@@ -98,7 +98,6 @@ export class EdgeProvider extends Bridgeable {
     }
 
     const wallets = this._state.ui.wallets.byId // CORE_SELECTORS.getWallets(this._state)
-    const activeWalletIds = UI_SELECTORS.getActiveWalletIds(this._state).filter(id => !(wallets[id] != null && wallets[id].type === 'wallet:fio'))
     const excludedCurrencyCode = []
     const excludedTokens = []
     const walletsToUse = []
@@ -163,11 +162,9 @@ export class EdgeProvider extends Bridgeable {
       <WalletListModal
         bridge={bridge}
         wallets={walletsToUse}
-        activeWalletIds={activeWalletIds}
         supportedWalletTypes={supportedWalletTypes}
         excludedCurrencyCode={excludedCurrencyCode}
         showWalletCreators={true}
-        state={this._state}
         headerTitle={s.strings.choose_your_wallet}
         excludedTokens={excludedTokens}
         noWalletCodes={noWalletCodes}

@@ -11,7 +11,7 @@ import { CryptoExchangeScene } from '../../components/scenes/CryptoExchangeScene
 import { DEFAULT_STARTER_WALLET_NAMES } from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
-import { getActiveWalletIds, getExchangeRate } from '../../modules/UI/selectors.js'
+import { getExchangeRate } from '../../modules/UI/selectors.js'
 import type { Dispatch, State } from '../../types/reduxTypes.js'
 import { type GuiCurrencyInfo, emptyCurrencyInfo, emptyGuiWallet } from '../../types/types.js'
 
@@ -53,7 +53,6 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
     toFiatToCrypto = 1
   }
   const wallets = state.ui.wallets.byId
-  const activeWalletIds = getActiveWalletIds(state).filter(id => !(wallets[id] != null && wallets[id].type === 'wallet:fio'))
   const totalWallets = Object.keys(wallets).length
   const creatingWallet = state.cryptoExchange.creatingWallet
   const settings = SETTINGS_SELECTORS.getSettings(state)
@@ -82,10 +81,8 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
     shiftPendingTransaction: state.cryptoExchange.shiftPendingTransaction,
     calculatingMax: state.cryptoExchange.calculatingMax,
     wallets,
-    activeWalletIds,
     totalWallets,
     supportedWalletTypes,
-    state,
     creatingWallet,
     defaultIsoFiat
   }

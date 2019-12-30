@@ -8,17 +8,16 @@ import { sprintf } from 'sprintf-js'
 
 import eosLogo from '../../assets/images/currencies/fa_logo_eos.png'
 import steemLogo from '../../assets/images/currencies/fa_logo_steem.png'
+import { WalletListModalConnected as WalletListModal } from '../../connectors/components/WalletListModalConnector.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
 import Text from '../../modules/UI/components/FormattedText'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
-import type { State as StateType } from '../../types/reduxTypes.js'
 import type { GuiFiatType, GuiWallet, GuiWalletType } from '../../types/types.js'
 import { trackEvent } from '../../util/tracking.js'
 import { fixFiatCurrencyCode } from '../../util/utils.js'
-import { WalletListModal } from '../modals/WalletListModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 
 const logos = {
@@ -35,7 +34,6 @@ export type AccountPaymentParams = {
 
 export type CreateWalletAccountSelectStateProps = {
   wallets: { [string]: GuiWallet },
-  activeWalletIds: Array<string>,
   paymentCurrencyCode: string,
   paymentAddress: string,
   amount: string,
@@ -45,8 +43,7 @@ export type CreateWalletAccountSelectStateProps = {
   isCreatingWallet: boolean,
   paymentDenominationSymbol: string,
   existingCoreWallet: EdgeCurrencyWallet,
-  walletAccountActivationQuoteError: string,
-  state: StateType
+  walletAccountActivationQuoteError: string
 }
 
 export type CreateWalletAccountSelectOwnProps = {
@@ -109,7 +106,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
   }
 
   onPressSelect = () => {
-    const { supportedCurrencies, activeWalletIds, wallets } = this.props
+    const { supportedCurrencies, wallets } = this.props
     const allowedWallets = []
     for (const id in wallets) {
       const wallet = wallets[id]
@@ -121,13 +118,11 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
       <WalletListModal
         bridge={bridge}
         wallets={allowedWallets}
-        activeWalletIds={activeWalletIds}
         existingWalletToFilterId={''}
         existingWalletToFilterCurrencyCode={''}
         supportedWalletTypes={[]}
         excludedCurrencyCode={[]}
         showWalletCreators={false}
-        state={this.props.state}
         headerTitle={s.strings.select_wallet}
         excludedTokens={[]}
         noWalletCodes={[]}
