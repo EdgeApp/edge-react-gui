@@ -404,7 +404,7 @@
   "otp_notif_body": "Se você não fez este pedido, faça login como %1$s e altere sua senha",
   "otp_copied_msg": "",
   "word_to_in_convert_from_to_string": "para",
-  "legacy_address_modal_title": "Endereço Legacy Detectado",
+  "legacy_address_modal_title": "",
   "legacy_address_modal_warning": "",
   "legacy_address_modal_continue": "Continuar",
   "legacy_address_modal_cancel": "Cancelar",
