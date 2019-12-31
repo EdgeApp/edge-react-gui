@@ -3,7 +3,7 @@
     "id": "simplex",
     "pluginId": "co.edgesecure.simplex",
     "paymentType": "credit",
-    "description": "Fee: ~4% / Settlement: 10-30 minutes\nLimit: €4400",
+    "description": "Fee: ~4% / Settlement: 10-30 minutes\nLimit: €4400/day",
     "title": "Credit and Debit Card",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/03/simplex-logo-sm-square.png",
     "countryCodes": {
@@ -65,7 +65,7 @@
     "id": "wyre",
     "pluginId": "co.edgesecure.wyre",
     "paymentType": "bank",
-    "description": "Fee: 1% / Settlement: 1-5 days\nLimit: $2500",
+    "description": "Fee: 1% / Settlement: 1-5 days\nLimit: Unlimited",
     "title": "ACH Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/01/wyre-logo-square-small.png",
     "countryCodes": {
@@ -82,7 +82,7 @@
     "id": "bits of gold",
     "pluginId": "bitsofgold",
     "paymentType": "bank",
-    "description": "Fee: ~6.5% / Settlement: 1-72 hours\nLimit: €5000",
+    "description": "Fee: ~6.5% / Settlement: 1-72 hours\nLimit: €5000/day",
     "title": "SEPA Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/bits-of-gold-logo-sm.png",
     "countryCodes": {
@@ -459,7 +459,7 @@
     "id": "safello.bank",
     "pluginId": "com.safello.sell",
     "paymentType": "bank",
-    "description": "Fee: 3% / Settlement: 1-2 days\nLimit: €2500",
+    "description": "Fee: 3% / Settlement: 1-2 days\nLimit: €2500/day",
     "title": "Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/06/Safello-Logo-Green-background.png",
     "countryCodes": {
