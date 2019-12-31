@@ -404,7 +404,7 @@
   "otp_notif_body": "Если вы не создавали этого запроса, то войдите в систему как %1$s и смените пароль учетной записи",
   "otp_copied_msg": "",
   "word_to_in_convert_from_to_string": "кому",
-  "legacy_address_modal_title": "Обнаружен устаревший адрес",
+  "legacy_address_modal_title": "",
   "legacy_address_modal_warning": "",
   "legacy_address_modal_continue": "Продолжить",
   "legacy_address_modal_cancel": "Отмена",
