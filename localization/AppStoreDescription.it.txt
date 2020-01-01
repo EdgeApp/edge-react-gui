@@ -6,7 +6,7 @@ Privacy totale e sicurezza nel nostro portafoglio blockchain semplice da utilizz
 
 Gestire le tue criptovalute non è mai stato così semplice. Edge Wallet fornisce la massima sicurezza mantenendo le cose semplici: permette a qualunque tipo di utente di gestire con facilità le proprie criptovalute, trasferirle e scambiarle.
 
-Edge Crypto Wallet currently supports: Bitcoin, Bitcoin Cash, Bitcoin SV, Litecoin, Dash, Ethereum, Stellar, Monero, Digibyte, EOS, Binance Chain (BNB), RSK (RBTC), Stellar (XLM), Tezos (XTZ), Ravencoin (RVN), SmartCash (SMART), Zcoin (XZC), Dogecoin (DOGE), and Ripple/XRP.
+Edge Wallet attualmente supporta: Bitcoin, Bitcoin Cash, Bitcoin SV, Litecoin, Dash, Ethereum, Stellar, Monero, Digibyte, EOS, Binance Chain (BNB), RSK (RBTC), Stellar (XLM), Tezos (XTZ), Ravencoin (RVN), SmartCash (SMART), Zcoin (XZC), Dogecoin (DOGE) e Ripple/XRP.
 
 Edge è un portafoglio di criptovalute potente e di facile utilizzo che permette agli utenti di controllare le loro chiavi private con la familiarità e semplicità del mobile banking. 
 
