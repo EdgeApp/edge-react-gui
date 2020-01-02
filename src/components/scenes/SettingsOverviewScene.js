@@ -49,25 +49,17 @@ type Props = {
   toggleDeveloperMode(boolean): void
 }
 
-export default class SettingsOverview extends Component<Props> {
+type State = {
+  touchIdText: string
+}
+
+export default class SettingsOverview extends Component<Props, State> {
   optionModals: Array<Object>
   currencies: Array<Object>
-  options: Object
   constructor (props: Props) {
     super(props)
-
-    const useTouchID = this.props.supportsTouchId
-      ? {
-        text: s.strings.settings_button_use_touchID,
-        key: 'useTouchID',
-        routeFunction: this._onToggleTouchIdOption,
-        value: this.props.touchIdEnabled
-      }
-      : null
-    if (useTouchID) {
-      this.options = { useTouchID }
-    } else {
-      this.options = {}
+    this.state = {
+      touchIdText: s.strings.settings_button_use_touchID
     }
 
     this.optionModals = [
@@ -95,16 +87,13 @@ export default class SettingsOverview extends Component<Props> {
       const biometryType = await getSupportedBiometryType()
       switch (biometryType) {
         case 'FaceID':
-          this.options.useTouchID.text = s.strings.settings_button_use_faceID
-          this.forceUpdate()
+          this.setState({ touchIdText: s.strings.settings_button_use_faceID })
           return null
         case 'TouchID':
-          this.options.useTouchID.text = s.strings.settings_button_use_touchID
-          this.forceUpdate()
+          this.setState({ touchIdText: s.strings.settings_button_use_touchID })
           return null
         case 'Fingerprint':
-          this.options.useTouchID.text = s.strings.settings_button_use_biometric
-          this.forceUpdate()
+          this.setState({ touchIdText: s.strings.settings_button_use_biometric })
           return null
         default:
           return null
@@ -146,7 +135,6 @@ export default class SettingsOverview extends Component<Props> {
 
   _onToggleTouchIdOption = (bool: boolean) => {
     this.props.dispatchUpdateEnableTouchIdEnable(bool, this.props.account)
-    this.options.useTouchID.value = bool
   }
 
   onDeveloperPress = () => {
@@ -255,13 +243,9 @@ export default class SettingsOverview extends Component<Props> {
               value={this.props.pinLoginEnabled}
             />
 
-            {Object.keys(this.options)
-              .filter(optionName => {
-                if (!this.options[optionName]) return false
-                const { text, key, routeFunction } = this.options[optionName]
-                return text && key && routeFunction
-              })
-              .map(this.renderRowSwitch)}
+            {this.props.supportsTouchId && (
+              <RowSwitch leftText={this.state.touchIdText} key={'useTouchID'} onToggle={this._onToggleTouchIdOption} value={this.props.touchIdEnabled} />
+            )}
 
             {this.currencies.map(this.renderRowRoute)}
 
@@ -306,16 +290,6 @@ export default class SettingsOverview extends Component<Props> {
   }
 
   renderRowRoute = (x: Object, i: number) => <RowRoute disabled={false} key={i} leftText={x.text} routeFunction={x.routeFunction} right={x.right} />
-
-  renderRowSwitch = (x: string) => (
-    <RowSwitch
-      leftText={this.options[x] ? this.options[x].text : ''}
-      key={this.options[x] ? this.options[x].key : ''}
-      property={this.options[x] ? this.options[x].key : ''}
-      onToggle={this.options[x] ? this.options[x].routeFunction : () => {}}
-      value={this.options[x] ? this.options[x].value : false}
-    />
-  )
 
   renderRowModal = (x: Object) => <RowModal leftText={x.text} key={x.key} modal={x.key.toString()} />
 }
