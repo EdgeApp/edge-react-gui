@@ -228,6 +228,8 @@
   "settings_button_setup_two_factor": "Configurar segundo fator de autenticação",
   "settings_button_unlock_settings": "Clique para Redefinir as Configurações da Conta",
   "settings_button_use_touchID": "Use o TouchID",
+  "settings_button_use_faceID": "",
+  "settings_button_use_biometric": "",
   "settings_days": "Dia(s)",
   "settings_denominations_title": "Denominações",
   "settings_custom_nodes_title": "Nós Personalizados",
