@@ -228,6 +228,8 @@
   "settings_button_setup_two_factor": "Imposta l'autenticazione a due fattori (2FA)",
   "settings_button_unlock_settings": "Fai tap per sbloccare le impostazioni dell'account",
   "settings_button_use_touchID": "Usa il TouchID",
+  "settings_button_use_faceID": "",
+  "settings_button_use_biometric": "",
   "settings_days": "Giorno(i)",
   "settings_denominations_title": "Denominazioni",
   "settings_custom_nodes_title": "Nodi personalizzati",
