@@ -228,6 +228,8 @@
   "settings_button_setup_two_factor": "Thiết lập mã hóa lần 2",
   "settings_button_unlock_settings": "Bấm để mở khóa các cài đặt tài khoản",
   "settings_button_use_touchID": "Dùng TouchID",
+  "settings_button_use_faceID": "",
+  "settings_button_use_biometric": "",
   "settings_days": "Ngày(s)",
   "settings_denominations_title": "Mệnh giá",
   "settings_custom_nodes_title": "Các nút tuỳ chỉnh",
