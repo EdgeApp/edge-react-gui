@@ -228,6 +228,8 @@
   "settings_button_setup_two_factor": "２段階認証をセットアップ",
   "settings_button_unlock_settings": "アカウント設定をロック解除するためにタップしてください",
   "settings_button_use_touchID": "タッチIDを使う",
+  "settings_button_use_faceID": "",
+  "settings_button_use_biometric": "",
   "settings_days": "日",
   "settings_denominations_title": "額面価格",
   "settings_custom_nodes_title": "カスタムノード",
