@@ -228,6 +228,8 @@
   "settings_button_setup_two_factor": "2단계 인증 설정",
   "settings_button_unlock_settings": "탭하여 계정 설정 잠금 해제",
   "settings_button_use_touchID": "터치ID 사용",
+  "settings_button_use_faceID": "",
+  "settings_button_use_biometric": "",
   "settings_days": "일",
   "settings_denominations_title": "액면 금액",
   "settings_custom_nodes_title": "커스텀 노드",
