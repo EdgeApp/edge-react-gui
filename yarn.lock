@@ -3968,10 +3968,10 @@ edge-components@^0.0.26:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.16.15:
-  version "0.16.15"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.16.15.tgz#e556c20eb52215645e77191aea92c9616c772730"
-  integrity sha512-LdlP4luUuuKOelxYJYlAtponHwOkHtF3TQ7NixYilxeygKQzHfCRBJFzGFCwQxNfq0WXxpUONq5hatkfeeskgw==
+edge-core-js@^0.16.18:
+  version "0.16.18"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.16.18.tgz#aba52dd797ec74926dddf8e4e7913949b83df56f"
+  integrity sha512-dC+tbg6KZ4rKBt0kz0bVp3uHjOvK6Pcm/RMXOUYNZKHNJ+R1b3HjBRcKqFtN4dfoBP5wnp5GYWzEP6EeSl61sQ==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -3993,7 +3993,7 @@ edge-core-js@^0.16.15:
     scrypt-js "^2.0.3"
     utf8 "^3.0.0"
     ws "^5.1.1"
-    yaob "^0.3.5"
+    yaob "^0.3.6"
 
 edge-currency-accountbased@^0.6.2:
   version "0.6.2"
@@ -12610,10 +12610,10 @@ yallist@^3.0.0, yallist@^3.0.2:
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-3.0.3.tgz#b4b049e314be545e3ce802236d6cd22cd91c3de9"
   integrity sha512-S+Zk8DEWE6oKpV+vI3qWkaK+jSbIK86pCwe2IF/xwIpQ8jEuxpw9NyaGjmp9+BoJv5FV2piqCDcoCtStppiq2A==
 
-yaob@^0.3.5:
-  version "0.3.5"
-  resolved "https://registry.yarnpkg.com/yaob/-/yaob-0.3.5.tgz#838035a8488a2b0f1b6117db171730bdcb57a75a"
-  integrity sha512-b2r4f4r+nDZKLfDCYHCubQNe/V7SLlzLrfufYwik9FC5yiSlzTc074wQpo1Q418fhiJvfUMP74HubOEkVWgZTA==
+yaob@^0.3.6:
+  version "0.3.6"
+  resolved "https://registry.yarnpkg.com/yaob/-/yaob-0.3.6.tgz#84f9970d2e3629e041a791d1dea41f8a5387e91f"
+  integrity sha512-MGfSGsmQsRgWM62vPn+7NjSeU70EH78aZg5uXhLGAw94C7nMDxKJaamozTTGuiF4cwp8bsoM4cOhiDogk23INg==
   dependencies:
     rfc4648 "^1.1.0"
 

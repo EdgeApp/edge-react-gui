@@ -105,7 +105,7 @@
     "detect-bundler": "^1.0.0",
     "disklet": "^0.4.1",
     "edge-components": "^0.0.26",
-    "edge-core-js": "^0.16.15",
+    "edge-core-js": "^0.16.18",
     "edge-currency-accountbased": "^0.6.2",
     "edge-currency-bitcoin": "4.7.2",
     "edge-currency-monero": "^0.2.4",
