@@ -5,17 +5,15 @@ import React, { Component, Fragment } from 'react'
 import { Dimensions, FlatList, View } from 'react-native'
 
 import { CryptoExchangeCreateWalletRow } from '../../components/common/CryptoExchangeCreateWalletRow.js'
-import { CryptoExchangeWalletListRow } from '../../components/common/CryptoExchangeWalletListRow.js'
+import { CryptoExchangeWalletListTokenRowConnected as CryptoExchangeWalletListRow } from '../../connectors/components/CryptoExchangeWalletListRowConnector.js'
 import s from '../../locales/strings.js'
 import FormattedText from '../../modules/UI/components/FormattedText/index'
 import { CryptoExchangeWalletSelectorModalStyles as styles } from '../../styles/indexStyles'
-import type { State } from '../../types/reduxTypes.js'
 import type { GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { type AirshipBridge, AirshipModal } from './modalParts.js'
 
 export type StateProps = {
-  state: State,
   activeWalletIds: Array<string>
 }
 
@@ -123,7 +121,6 @@ export class WalletListModal extends Component<Props, LocalState> {
           excludedCurrencyCode={[excludeCurrency]}
           excludedTokens={this.props.excludedTokens}
           onTokenPress={this.selectTokenWallet}
-          state={this.props.state}
           isWalletFiatBalanceVisible
           disableZeroBalance={this.props.disableZeroBalance}
         />
