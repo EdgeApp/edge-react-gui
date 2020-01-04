@@ -83,7 +83,6 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
     wallets,
     totalWallets,
     supportedWalletTypes,
-    state,
     creatingWallet,
     defaultIsoFiat
   }

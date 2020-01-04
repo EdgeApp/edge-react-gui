@@ -2,16 +2,14 @@
 
 import React, { Component } from 'react'
 
+import { WalletListModalConnected as WalletListModal } from '../../connectors/components/WalletListModalConnector.js'
 import s from '../../locales/strings.js'
 import WalletSelector from '../../modules/UI/components/Header/Component/WalletSelectorConnector'
-import type { State } from '../../types/reduxTypes.js'
 import type { GuiWallet } from '../../types/types.js'
-import { WalletListModal } from '../modals/WalletListModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 
 export type StateProps = {
-  wallets: { [string]: GuiWallet },
-  state: State
+  wallets: { [string]: GuiWallet }
 }
 
 export type DispatchProps = {
@@ -39,7 +37,6 @@ class HeaderWalletSelector extends Component<Props> {
         supportedWalletTypes={[]}
         excludedCurrencyCode={[]}
         showWalletCreators={false}
-        state={this.props.state}
         headerTitle={s.strings.select_wallet}
         excludedTokens={[]}
         noWalletCodes={[]}

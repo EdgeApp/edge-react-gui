@@ -5,16 +5,19 @@ import React, { Component, Fragment } from 'react'
 import { Dimensions, FlatList, View } from 'react-native'
 
 import { CryptoExchangeCreateWalletRow } from '../../components/common/CryptoExchangeCreateWalletRow.js'
-import { CryptoExchangeWalletListRow } from '../../components/common/CryptoExchangeWalletListRow.js'
+import { CryptoExchangeWalletListTokenRowConnected as CryptoExchangeWalletListRow } from '../../connectors/components/CryptoExchangeWalletListRowConnector.js'
 import s from '../../locales/strings.js'
 import FormattedText from '../../modules/UI/components/FormattedText/index'
 import { CryptoExchangeWalletSelectorModalStyles as styles } from '../../styles/indexStyles'
-import type { State } from '../../types/reduxTypes.js'
 import type { GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { type AirshipBridge, AirshipModal } from './modalParts.js'
 
-type Props = {
+export type StateProps = {
+  activeWalletIds: Array<string>
+}
+
+type OwnProps = {
   bridge: AirshipBridge<GuiWallet | Object | null>,
   wallets: Array<GuiWallet>,
   existingWalletToFilterId?: string,
@@ -23,7 +26,6 @@ type Props = {
   excludedCurrencyCode: Array<string>,
   supportedWalletTypes: Array<Object>,
   showWalletCreators: boolean,
-  state: State,
   excludedTokens: Array<string>,
   noWalletCodes: Array<string>,
   disableZeroBalance: boolean
@@ -46,6 +48,8 @@ type LocalState = {
   totalWalletsToAdd: number
 }
 
+type Props = StateProps & OwnProps
+
 export class WalletListModal extends Component<Props, LocalState> {
   constructor (props: Props) {
     super(props)
@@ -53,17 +57,19 @@ export class WalletListModal extends Component<Props, LocalState> {
     let i = 0
     let totalCurrenciesAndTokens = 0
     let totalWalletsToAdd = 0
-    for (i; i < this.props.wallets.length; i++) {
-      const wallet = this.props.wallets[i]
-      if (wallet.type === 'wallet:fio') continue
-      const record = {
-        walletItem: wallet,
-        supportedWalletType: null
-      }
-      records.push(record)
-      totalCurrenciesAndTokens++
-      if (wallet.enabledTokens.length) {
-        totalCurrenciesAndTokens = totalCurrenciesAndTokens + wallet.enabledTokens.length
+    for (i; i < this.props.activeWalletIds.length; i++) {
+      const wallet = this.props.wallets.find(wallet => wallet.id === this.props.activeWalletIds[i])
+      if (wallet) {
+        if (wallet.type === 'wallet:fio') continue
+        const record = {
+          walletItem: wallet,
+          supportedWalletType: null
+        }
+        records.push(record)
+        totalCurrenciesAndTokens++
+        if (wallet.enabledTokens.length) {
+          totalCurrenciesAndTokens = totalCurrenciesAndTokens + wallet.enabledTokens.length
+        }
       }
     }
     for (i = 0; i < this.props.supportedWalletTypes.length; i++) {
@@ -115,7 +121,6 @@ export class WalletListModal extends Component<Props, LocalState> {
           excludedCurrencyCode={[excludeCurrency]}
           excludedTokens={this.props.excludedTokens}
           onTokenPress={this.selectTokenWallet}
-          state={this.props.state}
           isWalletFiatBalanceVisible
           disableZeroBalance={this.props.disableZeroBalance}
         />

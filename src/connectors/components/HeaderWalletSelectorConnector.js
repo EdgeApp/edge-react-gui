@@ -8,9 +8,9 @@ import { HeaderWalletSelector } from '../../components/common/HeaderWalletSelect
 import type { Dispatch, State } from '../../types/reduxTypes.js'
 
 export const mapStateToProps = (state: State): StateProps => {
+  const wallets = state.ui.wallets.byId
   return {
-    wallets: state.ui.wallets.byId,
-    state
+    wallets
   }
 }
 
