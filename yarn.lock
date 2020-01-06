@@ -2759,9 +2759,9 @@ bs58check@2.1.2, bs58check@<3.0.0, bs58check@^1.0.8, bs58check@^2.1.1, bs58check
     create-hash "^1.1.0"
     safe-buffer "^5.1.2"
 
-"bs58grscheck@git+https://github.com/Groestlcoin/bs58grscheck.git":
+"bs58grscheck@https://github.com/Groestlcoin/bs58grscheck":
   version "2.1.2"
-  resolved "git+https://github.com/Groestlcoin/bs58grscheck.git#020feec2b3153aeb278596ea70ce3579a37f4e21"
+  resolved "https://github.com/Groestlcoin/bs58grscheck#020feec2b3153aeb278596ea70ce3579a37f4e21"
   dependencies:
     bs58 "^4.0.0"
     create-hash "^1.1.0"
@@ -3968,10 +3968,10 @@ edge-components@^0.0.26:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.16.15:
-  version "0.16.15"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.16.15.tgz#e556c20eb52215645e77191aea92c9616c772730"
-  integrity sha512-LdlP4luUuuKOelxYJYlAtponHwOkHtF3TQ7NixYilxeygKQzHfCRBJFzGFCwQxNfq0WXxpUONq5hatkfeeskgw==
+edge-core-js@^0.16.18:
+  version "0.16.18"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.16.18.tgz#aba52dd797ec74926dddf8e4e7913949b83df56f"
+  integrity sha512-dC+tbg6KZ4rKBt0kz0bVp3uHjOvK6Pcm/RMXOUYNZKHNJ+R1b3HjBRcKqFtN4dfoBP5wnp5GYWzEP6EeSl61sQ==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -3993,12 +3993,12 @@ edge-core-js@^0.16.15:
     scrypt-js "^2.0.3"
     utf8 "^3.0.0"
     ws "^5.1.1"
-    yaob "^0.3.5"
+    yaob "^0.3.6"
 
-edge-currency-accountbased@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.6.0.tgz#f02ed7eb9bdd90efdf22b077cb51df6bfa67a935"
-  integrity sha512-SgqlExDZHiBDc53uhHw8KuX/3CA22PJcw/Vdk0JNVqK5s8/bHWELHeyWIo+ok0QUKsBKYx9ocoq7Q9qFA5Hm6w==
+edge-currency-accountbased@^0.6.3:
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.6.3.tgz#1606d6edd7e58a42368171d1aeddcde18a0cc80d"
+  integrity sha512-Xh2wTIyXEkUroJemyaT0UgZE4OwfnufVxCgjU2zBc3rgyU5CZES+mNfptoei6kQ8GqGpaJjXysVuMC7bpVM/DA==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@dapix/react-native-fio" "0.1.0"
@@ -4020,10 +4020,10 @@ edge-currency-accountbased@^0.6.0:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@4.6.4:
-  version "4.6.4"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.6.4.tgz#f378b0408f991888c68d887e6bc6efc942554c13"
-  integrity sha512-JhHl9z/WEKwrKg1Dsqs/Y4cXJq5nHS0ob0SA6lWd06Nm0Xr6mX9uO5Cv0tFoQ2mq0XjJ+m7P8r0xzQ6LYHO9CA==
+edge-currency-bitcoin@4.7.2:
+  version "4.7.2"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.7.2.tgz#33aabad2055cf7fdb866879a39208cbefc7787e0"
+  integrity sha512-QA9Hyl7FaWhwR0XL2JBb8NRi90QCWg41BS6//H3CUQrWjEwHcH5RX/47seAZgemtHI9N5+22q+IcC/+5FjGhoA==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -4052,10 +4052,10 @@ edge-currency-monero@^0.2.4:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#william/v0.14.0-hardfork"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.8.12:
-  version "0.8.12"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.8.12.tgz#860b2fb0b74ef065d2bd79866056c339cd05b117"
-  integrity sha512-/HBhREuVAXX51iEtuKD5c6Urmupy0qV7O+xLYWiG8LX6KdWab9Uwm1Z47L2MXmf7e9JDQk9rfhKSzTQYBSLegg==
+edge-exchange-plugins@^0.8.13:
+  version "0.8.13"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.8.13.tgz#d2aa38fc93e73ed549935e8f3d298068b988c9d8"
+  integrity sha512-jQ5Mo9pwU/ANNtWTJpSOoev2Iq8zme57iSf75WYhLTw2SW1cAGMW9GjBcl0KEOsU+FB7EofXRmq9+PCcGpy5zQ==
   dependencies:
     biggystring "^3.0.2"
     esm "^3.2.4"
@@ -12610,10 +12610,10 @@ yallist@^3.0.0, yallist@^3.0.2:
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-3.0.3.tgz#b4b049e314be545e3ce802236d6cd22cd91c3de9"
   integrity sha512-S+Zk8DEWE6oKpV+vI3qWkaK+jSbIK86pCwe2IF/xwIpQ8jEuxpw9NyaGjmp9+BoJv5FV2piqCDcoCtStppiq2A==
 
-yaob@^0.3.5:
-  version "0.3.5"
-  resolved "https://registry.yarnpkg.com/yaob/-/yaob-0.3.5.tgz#838035a8488a2b0f1b6117db171730bdcb57a75a"
-  integrity sha512-b2r4f4r+nDZKLfDCYHCubQNe/V7SLlzLrfufYwik9FC5yiSlzTc074wQpo1Q418fhiJvfUMP74HubOEkVWgZTA==
+yaob@^0.3.6:
+  version "0.3.6"
+  resolved "https://registry.yarnpkg.com/yaob/-/yaob-0.3.6.tgz#84f9970d2e3629e041a791d1dea41f8a5387e91f"
+  integrity sha512-MGfSGsmQsRgWM62vPn+7NjSeU70EH78aZg5uXhLGAw94C7nMDxKJaamozTTGuiF4cwp8bsoM4cOhiDogk23INg==
   dependencies:
     rfc4648 "^1.1.0"
 

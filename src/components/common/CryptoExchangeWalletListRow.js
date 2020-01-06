@@ -6,32 +6,38 @@ import React, { Component } from 'react'
 import { Image, TouchableHighlight, View } from 'react-native'
 
 import { intl } from '../../locales/intl'
-import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import FormattedText from '../../modules/UI/components/FormattedText/index'
-import { calculateWalletFiatBalance } from '../../modules/UI/selectors.js'
+import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
 import { CryptoExchangeWalletListRowStyle as styles } from '../../styles/indexStyles'
-import type { State } from '../../types/reduxTypes.js'
-import type { GuiWallet } from '../../types/types.js'
+import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
 import { decimalOrZero, getFiatSymbol, truncateDecimals } from '../../util/utils.js'
 import { CryptoExchangeWalletListTokenRow } from './CryptoExchangeWalletListTokenRow.js'
 
-type Props = {
+export type StateProps = {
+  denomination: EdgeDenomination,
+  customTokens: Array<CustomTokenInfo>,
+  settings: Object,
+  exchangeRates: { [string]: number }
+}
+
+export type OwnProps = {
   wallet: GuiWallet,
   onPress(GuiWallet): void,
   excludedCurrencyCode: Array<string>,
   onTokenPress({ id: string, currencyCode: string }): void,
-  state: State,
   excludedTokens: Array<string>,
   disableZeroBalance: boolean
 }
+
 type LocalState = {
   fiatBalance: string,
   fiatSymbol: string,
   cryptoBalance: string,
   cryptoSymbol: string,
-  enabledNativeBalances: Object,
-  denomination?: EdgeDenomination
+  enabledNativeBalances: Object
 }
+
+type Props = StateProps & OwnProps
 
 const DIVIDE_PRECISION = 18
 
@@ -53,14 +59,13 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
     this.setUp(nextProps)
   }
   setUp = (props: Props) => {
-    const denomination: EdgeDenomination = SETTINGS_SELECTORS.getDisplayDenomination(props.state, props.wallet.currencyCode)
+    const { denomination, customTokens, settings, exchangeRates } = this.props
     const multiplier = denomination.multiplier
     const preliminaryCryptoAmount = truncateDecimals(bns.div(props.wallet.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)
     const cryptoBalance = intl.formatNumber(decimalOrZero(preliminaryCryptoAmount, 6)) // check if infinitesimal (would display as zero), cut off trailing zeroes
     const enabledTokens = props.wallet.enabledTokens
     const wallet = props.wallet
 
-    const customTokens = props.state.ui.settings.customTokens
     const enabledNativeBalances = {}
     const enabledNotHiddenTokens = enabledTokens.filter(token => {
       let isVisible = true // assume we will enable token
@@ -80,8 +85,7 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
       }
     }
     this.setState({
-      denomination,
-      fiatBalance: calculateWalletFiatBalance(props.wallet, props.wallet.currencyCode, props.state),
+      fiatBalance: calculateWalletFiatBalanceWithoutState(wallet, wallet.currencyCode, settings, exchangeRates),
       fiatSymbol: wallet ? getFiatSymbol(wallet.isoFiatCurrencyCode) : '',
       cryptoBalance,
       cryptoSymbol: denomination.symbol,
@@ -95,14 +99,15 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
     }
   }
   renderTokens = () => {
+    const { wallet, settings, exchangeRates } = this.props
     if (this.props.wallet.enabledTokens.length > 0) {
       const tokens = []
       const metaTokenBalances = this.state.enabledNativeBalances
       for (const property in metaTokenBalances) {
         if (metaTokenBalances.hasOwnProperty(property)) {
           if (property !== this.props.wallet.currencyCode) {
-            const formattedFiatBalance = calculateWalletFiatBalance(this.props.wallet, property, this.props.state)
-            if (!this.state.denomination || !this.state.denomination.multiplier) {
+            const formattedFiatBalance = calculateWalletFiatBalanceWithoutState(wallet, property, settings, exchangeRates)
+            if (!this.props.denomination || !this.props.denomination.multiplier) {
               return []
             }
             const token = this.props.wallet.metaTokens.find(item => item.currencyCode === property)

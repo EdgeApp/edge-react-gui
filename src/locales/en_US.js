@@ -201,6 +201,7 @@ const strings = {
   request_review_answer_yes: 'Review Now',
   request_review_android_page_link: 'https://play.google.com/store/apps/details?id=co.edgesecure.app&hl=en_US',
   request_share_edge_request: 'Share Edge Request',
+  select_wallet: 'Select Wallet',
   select_recv_wallet: 'Select Receiving Wallet',
   select_src_wallet: 'Select Source Wallet',
   select_destination_wallet: 'Select destination wallet:',
@@ -245,6 +246,8 @@ const strings = {
   settings_button_setup_two_factor: 'Setup 2 Factor',
   settings_button_unlock_settings: 'Tap to Unlock Account Settings',
   settings_button_use_touchID: 'Use TouchID',
+  settings_button_use_faceID: 'Use FaceID',
+  settings_button_use_biometric: 'Use Biometric',
   settings_days: 'Day(s)',
   settings_denominations_title: 'Denominations',
   settings_custom_nodes_title: 'Custom Nodes',
@@ -428,9 +431,9 @@ const strings = {
 
   word_to_in_convert_from_to_string: 'to',
 
-  legacy_address_modal_title: 'Legacy Address Detected',
+  legacy_address_modal_title: 'Warning! Legacy Address Detected',
   legacy_address_modal_warning:
-    'Warning: You have scanned a legacy format address that may not be for the intended currency as it is indistinguishable from other currency addresses.\n\nDo you want to continue sending to this address?',
+    'You have scanned a legacy format address that may not be for the intended currency as it is indistinguishable from other currency addresses.\n\nSending to this address MAY result in a LOSS of funds!\n\nDo you want to continue?',
   legacy_address_modal_continue: 'Continue',
   legacy_address_modal_cancel: 'Cancel',
 

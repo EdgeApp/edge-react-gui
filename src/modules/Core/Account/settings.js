@@ -217,6 +217,9 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   CETH: {
     denomination: '100000000'
   },
+  ETHBNT: {
+    denomination: '1000000000000000000'
+  },
   customTokens: [],
   passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN
 }
@@ -290,6 +293,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   CSAI: 'object',
   CDAI: 'object',
   CETH: 'object',
+  ETHBNT: 'object',
   customTokens: 'object', // arrays return 'object' to typeof
   passwordRecoveryRemindersShown: 'object'
 }

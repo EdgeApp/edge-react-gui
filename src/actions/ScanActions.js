@@ -14,16 +14,15 @@ import {
   ADD_TOKEN,
   EDGE_LOGIN,
   EXCHANGE_SCENE,
-  EXCLAMATION,
   FA_MONEY_ICON,
   getSpecialCurrencyInfo,
   ION_ICONS,
   KEY_ICON,
-  MATERIAL_COMMUNITY,
   MATERIAL_ICONS,
   PLUGIN_LIST,
   SEND_CONFIRMATION,
-  SHOPPING_CART
+  SHOPPING_CART,
+  WARNING
 } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
@@ -33,6 +32,7 @@ import OptionIcon from '../modules/UI/components/OptionIcon/OptionIcon.ui.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
 import { B } from '../styles/common/textStyles.js'
+import styles from '../styles/scenes/ScaneStyle.js'
 import { colors as COLORS } from '../theme/variables/airbitz.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import type { GuiWallet } from '../types/types.js'
@@ -251,7 +251,7 @@ export const legacyAddressModalContinueButtonPressed = () => (dispatch: Dispatch
 export const showLegacyAddressModal = () => async (dispatch: Dispatch, getState: GetState) => {
   const legacyAddressModal = createYesNoModal({
     title: s.strings.legacy_address_modal_title,
-    icon: <Icon style={{}} type={MATERIAL_COMMUNITY} name={EXCLAMATION} size={30} />,
+    icon: <Icon style={styles.legacyAddressModalIcon} type={ION_ICONS} name={WARNING} size={50} />,
     message: s.strings.legacy_address_modal_warning,
     textAlign: 'left',
     noButtonText: s.strings.legacy_address_modal_cancel,

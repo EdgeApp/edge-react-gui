@@ -3,7 +3,7 @@
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet } from 'edge-core-js'
 import { connect } from 'react-redux'
 
-import { refreshReceiveAddressRequest, selectWalletFromModal } from '../../actions/WalletActions'
+import { refreshReceiveAddressRequest } from '../../actions/WalletActions'
 import type { RequestDispatchProps, RequestLoadingProps, RequestStateProps } from '../../components/scenes/RequestScene'
 import { Request } from '../../components/scenes/RequestScene'
 import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
@@ -31,11 +31,9 @@ const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps 
       loading: true,
       primaryCurrencyInfo: null,
       secondaryCurrencyInfo: null,
-      showToWalletModal: null,
       publicAddress: '',
       legacyAddress: '',
-      useLegacyAddress: null,
-      wallets: state.ui.wallets.byId
+      useLegacyAddress: null
     }
   }
 
@@ -73,17 +71,12 @@ const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps 
     loading: false,
     primaryCurrencyInfo,
     secondaryCurrencyInfo,
-    showToWalletModal: state.ui.scenes.walletListModal.walletListModalVisible,
-    useLegacyAddress: state.ui.scenes.requestType.useLegacyAddress,
-    wallets: state.ui.wallets.byId
+    useLegacyAddress: state.ui.scenes.requestType.useLegacyAddress
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch): RequestDispatchProps => ({
   refreshReceiveAddressRequest: (walletId: string) => {
     dispatch(refreshReceiveAddressRequest(walletId))
-  },
-  onSelectWallet: (walletId: string, currencyCode: string) => {
-    dispatch(selectWalletFromModal(walletId, currencyCode))
   }
 })
 

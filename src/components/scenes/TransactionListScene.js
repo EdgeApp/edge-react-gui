@@ -10,12 +10,10 @@ import slowlog from 'react-native-slowlog'
 import requestImage from '../../assets/images/transactions/transactions-request.png'
 import sendImage from '../../assets/images/transactions/transactions-send.png'
 import TransactionRow from '../../connectors/TransactionRowConnector.js'
-import * as Constants from '../../constants/indexConstants'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/index'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
-import WalletListModal from '../../modules/UI/components/WalletListModal/WalletListModalConnector'
 import { WiredProgressBar } from '../../modules/UI/components/WiredProgressBar/WiredProgressBar.ui.js'
 import { getSelectedWalletLoadingPercent } from '../../modules/UI/selectors.js'
 import type { ContactsState } from '../../reducers/ContactsReducer'
@@ -45,7 +43,6 @@ export type StateProps = {
   multiplier: string,
   contacts: ContactsState,
   fiatSymbol: string,
-  showToWalletModal: boolean,
   requiredConfirmations?: number,
   numTransactions: number,
   isBalanceVisible: boolean
@@ -53,8 +50,7 @@ export type StateProps = {
 
 export type DispatchProps = {
   fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => any,
-  toggleBalanceVisibility: () => void,
-  onSelectWallet: (string, string) => void
+  toggleBalanceVisibility: () => void
 }
 
 type Props = StateProps & DispatchProps
@@ -109,14 +105,6 @@ export class TransactionList extends Component<Props, State> {
     }
   }
 
-  renderDropUp = () => {
-    const { onSelectWallet, showToWalletModal } = this.props
-    if (showToWalletModal) {
-      return <WalletListModal type={Constants.FROM} onSelectWallet={onSelectWallet} />
-    }
-    return null
-  }
-
   renderBuyCrypto = () => {
     const wallet = this.props.uiWallet
     const { selectedCurrencyCode } = this.props
@@ -159,7 +147,6 @@ export class TransactionList extends Component<Props, State> {
           onEndReachedThreshold={SCROLL_THRESHOLD}
           keyExtractor={item => item.key.toString()}
         />
-        {this.renderDropUp()}
       </SceneWrapper>
     )
   }

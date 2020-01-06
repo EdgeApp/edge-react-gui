@@ -137,6 +137,9 @@ export const styles = {
   },
   underlay: {
     color: THEME.COLORS.SECONDARY
+  },
+  legacyAddressModalIcon: {
+    color: THEME.COLORS.ACCENT_RED
   }
 }
 export default StyleSheet.create(styles)

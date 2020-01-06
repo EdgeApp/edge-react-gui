@@ -16,7 +16,7 @@ export type StateProps = {
 }
 
 export type DispatchProps = {
-  onPress: () => any
+  onPress: () => any | null
 }
 
 type Props = StateProps & DispatchProps

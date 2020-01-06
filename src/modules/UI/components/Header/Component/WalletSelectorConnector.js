@@ -15,12 +15,15 @@ const mapStateToProps = (state: State): StateProps => {
     selectedWalletCurrencyCode
   }
 }
-const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-  onPress: () => {
+const mapDispatchToProps = (dispatch: Dispatch, ownProps: DispatchProps): DispatchProps => {
+  const onPress = () => {
     dispatch({ type: 'TOGGLE_WALLET_LIST_MODAL_VISIBILITY' })
     dispatch({ type: 'TOGGLE_SCAN_TO_WALLET_LIST_MODAL' })
   }
-})
+  return {
+    onPress: ownProps.onPress || onPress
+  }
+}
 export default connect(
   mapStateToProps,
   mapDispatchToProps

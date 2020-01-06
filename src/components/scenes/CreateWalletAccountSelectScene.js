@@ -8,17 +8,17 @@ import { sprintf } from 'sprintf-js'
 
 import eosLogo from '../../assets/images/currencies/fa_logo_eos.png'
 import steemLogo from '../../assets/images/currencies/fa_logo_steem.png'
-import * as Constants from '../../constants/indexConstants'
+import { WalletListModalConnected as WalletListModal } from '../../connectors/components/WalletListModalConnector.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
 import Text from '../../modules/UI/components/FormattedText'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
-import WalletListModal from '../../modules/UI/components/WalletListModal/WalletListModalConnector.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
 import type { GuiFiatType, GuiWallet, GuiWalletType } from '../../types/types.js'
 import { trackEvent } from '../../util/tracking.js'
 import { fixFiatCurrencyCode } from '../../util/utils.js'
+import { Airship } from '../services/AirshipInstance.js'
 
 const logos = {
   eos: eosLogo,
@@ -67,7 +67,6 @@ type Props = CreateWalletAccountSelectOwnProps & CreateWalletAccountSelectDispat
 type State = {
   walletName: string,
   walletId: string,
-  isModalVisible: boolean,
   error: string,
   createdWallet: Promise<EdgeCurrencyWallet>
 }
@@ -83,7 +82,6 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
       createdWallet = createAccountBasedWallet(accountName, selectedWalletType.value, fixFiatCurrencyCode(selectedFiat.value), false, false)
     }
     this.state = {
-      isModalVisible: false,
       error: '',
       walletId: '',
       walletName: '',
@@ -108,8 +106,32 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
   }
 
   onPressSelect = () => {
-    this.setState({
-      isModalVisible: true
+    const { supportedCurrencies, wallets } = this.props
+    const allowedWallets = []
+    for (const id in wallets) {
+      const wallet = wallets[id]
+      if (supportedCurrencies[wallet.currencyCode]) {
+        allowedWallets.push(wallets[id])
+      }
+    }
+    Airship.show(bridge => (
+      <WalletListModal
+        bridge={bridge}
+        wallets={allowedWallets}
+        existingWalletToFilterId={''}
+        existingWalletToFilterCurrencyCode={''}
+        supportedWalletTypes={[]}
+        excludedCurrencyCode={[]}
+        showWalletCreators={false}
+        headerTitle={s.strings.select_wallet}
+        excludedTokens={[]}
+        noWalletCodes={[]}
+        disableZeroBalance={false}
+      />
+    )).then((response: GuiWallet | Object | null) => {
+      if (response) {
+        this.onSelectWallet(response.id, response.currencyCode)
+      }
     })
   }
 
@@ -128,7 +150,6 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
     const paymentWallet = wallets[walletId]
     const walletName = paymentWallet.name
     this.setState({
-      isModalVisible: false,
       walletId,
       walletName
     })
@@ -146,11 +167,12 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
   renderSelectWallet = () => {
     const { activationCost, selectedWalletType } = this.props
     const currencyCode = selectedWalletType.currencyCode
+    const isSelectWalletDisabled = !activationCost || activationCost === ''
     return (
       <View style={styles.selectPaymentLower}>
         <View style={styles.buttons}>
-          <PrimaryButton style={[styles.next]} onPress={this.onPressSelect}>
-            <PrimaryButton.Text>{s.strings.create_wallet_account_select_wallet}</PrimaryButton.Text>
+          <PrimaryButton disabled={isSelectWalletDisabled} style={[styles.next]} onPress={this.onPressSelect}>
+            {isSelectWalletDisabled ? <ActivityIndicator /> : <PrimaryButton.Text>{s.strings.create_wallet_account_select_wallet}</PrimaryButton.Text>}
           </PrimaryButton>
         </View>
         <View style={styles.paymentArea}>
@@ -268,14 +290,6 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
             </View>
             <View style={{ paddingBottom: 200 }} />
           </ScrollView>
-          {this.state.isModalVisible && (
-            <WalletListModal
-              topDisplacement={Constants.TRANSACTIONLIST_WALLET_DIALOG_TOP}
-              type={Constants.FROM}
-              onSelectWallet={this.onSelectWallet}
-              wallets={walletsCopy}
-            />
-          )}
         </View>
       </SafeAreaView>
     )
