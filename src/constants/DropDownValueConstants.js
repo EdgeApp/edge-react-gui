@@ -86,7 +86,8 @@ export const WALLET_OPTIONS = {
       'DOGE',
       'RVN',
       'RBTC',
-      'TBTC'
+      'TBTC',
+      'BAD'
     ],
     label: s.strings.fragment_wallets_view_xpub,
     modalVisible: true

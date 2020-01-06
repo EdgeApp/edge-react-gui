@@ -21,6 +21,7 @@ export const FEE_STRINGS = {
 }
 
 export const DEFAULT_STARTER_WALLET_NAMES = {
+  BAD: s.strings.string_first_badcoin_wallet_name,
   BCH: s.strings.string_first_bitcoincash_wallet_name,
   BNB: s.strings.string_first_bnb_wallet_name,
   BSV: s.strings.string_first_bitcoin_sv_wallet_name,
@@ -54,6 +55,7 @@ export const PREFERRED_TOKENS = ['WINGS', 'HERC', 'REP', 'AGLD', 'RIF']
 
 // DO NOT PUT ANY TOKENS IN HERE!
 export const CURRENCY_PLUGIN_NAMES = {
+  BAD: 'badcoin',
   BCH: 'bitcoincash',
   BNB: 'binance',
   BSV: 'bitcoinsv',

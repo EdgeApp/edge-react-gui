@@ -123,5 +123,9 @@ export const CURRENCY_SETTINGS = {
   ufoSettings: {
     pluginName: 'ufo',
     currencyCode: 'UFO'
+  },
+  badSettings: {
+    pluginName: 'badcoin',
+    currencyCode: 'BAD'
   }
 }
