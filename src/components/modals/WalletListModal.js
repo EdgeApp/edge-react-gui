@@ -123,6 +123,7 @@ export class WalletListModal extends Component<Props, LocalState> {
           onTokenPress={this.selectTokenWallet}
           isWalletFiatBalanceVisible
           disableZeroBalance={this.props.disableZeroBalance}
+          searchFilter={this.state.input}
         />
       )
     }
