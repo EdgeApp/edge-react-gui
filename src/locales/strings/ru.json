@@ -228,6 +228,8 @@
   "settings_button_setup_two_factor": "Установить 2FA",
   "settings_button_unlock_settings": "Нажмите, чтобы разблокировать настройки учетной записи",
   "settings_button_use_touchID": "Использовать TouchID",
+  "settings_button_use_faceID": "",
+  "settings_button_use_biometric": "",
   "settings_days": "Дней",
   "settings_denominations_title": "Деноминации",
   "settings_custom_nodes_title": "Пользовательские узлы",
