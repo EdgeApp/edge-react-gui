@@ -228,6 +228,8 @@
   "settings_button_setup_two_factor": "设置二元",
   "settings_button_unlock_settings": "点击解锁帐户设置",
   "settings_button_use_touchID": "使用 TouchID",
+  "settings_button_use_faceID": "",
+  "settings_button_use_biometric": "",
   "settings_days": "天",
   "settings_denominations_title": "面值",
   "settings_custom_nodes_title": "自定义节点",

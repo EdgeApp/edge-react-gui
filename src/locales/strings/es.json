@@ -228,6 +228,8 @@
   "settings_button_setup_two_factor": "Configurar doble factor",
   "settings_button_unlock_settings": "Pulsa para desbloquear la configuración de la cuenta",
   "settings_button_use_touchID": "Usar TouchID",
+  "settings_button_use_faceID": "",
+  "settings_button_use_biometric": "",
   "settings_days": "Día(s)",
   "settings_denominations_title": "Denominaciones",
   "settings_custom_nodes_title": "Nodos personalizados",

@@ -228,6 +228,8 @@
   "settings_button_setup_two_factor": "2 Faktorautentifizierung einrichten",
   "settings_button_unlock_settings": "Tippen um Benutzerkontoeinstellungen zu entsperren",
   "settings_button_use_touchID": "TouchID verwenden",
+  "settings_button_use_faceID": "",
+  "settings_button_use_biometric": "",
   "settings_days": "Tag(e)",
   "settings_denominations_title": "Stückelungen",
   "settings_custom_nodes_title": "Benutzerdefinierte Node",

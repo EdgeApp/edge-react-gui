@@ -228,6 +228,8 @@
   "settings_button_setup_two_factor": "Configuration du multi facteurs d'authentification ",
   "settings_button_unlock_settings": "Cliquer sur débloquer le compte dans les réglages ",
   "settings_button_use_touchID": "Utiliser Touch ID",
+  "settings_button_use_faceID": "",
+  "settings_button_use_biometric": "",
   "settings_days": "Jour(s)",
   "settings_denominations_title": "Dénominations ",
   "settings_custom_nodes_title": "Personlisation de Nodes ",
