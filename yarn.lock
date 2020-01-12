@@ -2759,9 +2759,9 @@ bs58check@2.1.2, bs58check@<3.0.0, bs58check@^1.0.8, bs58check@^2.1.1, bs58check
     create-hash "^1.1.0"
     safe-buffer "^5.1.2"
 
-"bs58grscheck@https://github.com/Groestlcoin/bs58grscheck":
+"bs58grscheck@git+https://github.com/Groestlcoin/bs58grscheck.git":
   version "2.1.2"
-  resolved "https://github.com/Groestlcoin/bs58grscheck#020feec2b3153aeb278596ea70ce3579a37f4e21"
+  resolved "git+https://github.com/Groestlcoin/bs58grscheck.git#020feec2b3153aeb278596ea70ce3579a37f4e21"
   dependencies:
     bs58 "^4.0.0"
     create-hash "^1.1.0"
@@ -4020,10 +4020,10 @@ edge-currency-accountbased@^0.6.3:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@4.7.2:
-  version "4.7.2"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.7.2.tgz#33aabad2055cf7fdb866879a39208cbefc7787e0"
-  integrity sha512-QA9Hyl7FaWhwR0XL2JBb8NRi90QCWg41BS6//H3CUQrWjEwHcH5RX/47seAZgemtHI9N5+22q+IcC/+5FjGhoA==
+edge-currency-bitcoin@4.7.3:
+  version "4.7.3"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.7.3.tgz#764daddb0ba29c81b8bd1e0464b2947c8af93d34"
+  integrity sha512-kKvOHmmoPfIcxewBEa+zyPbKDDnGkCqrSBfV0nr1BLfEQku1WrrDEpfjWnZxd1HkT4tfJBKCYZBue6F23GTMAA==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
