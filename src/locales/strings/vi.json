@@ -543,5 +543,9 @@
   "user_closed_modal_no_wallet": "",
   "plugin_spend_notes_generic": "",
   "plugin_provider_disclaimer": "",
-  "no_exchange_rate": ""
+  "no_exchange_rate": "",
+  "send_from_wallet": "",
+  "send_to_wallet": "",
+  "exchange_from_wallet": "",
+  "exchange_to_wallet": ""
 }
