@@ -284,35 +284,44 @@ export class FlipInput extends Component<Props, State> {
   textInputFrontFocusTrue = () => {
     this.setState({ textInputFrontFocus: true })
   }
+
   textInputFrontFocusFalse = () => {
     this.setState({ textInputFrontFocus: false })
   }
 
+  textInputFrontFocus = () => {
+    if (this.textInputFront) {
+      this.textInputFront.focus()
+    }
+  }
+
   topRowFront = (fieldInfo: FlipInputFieldInfo, onChangeText: string => void, amount: string) => {
     return (
-      <View style={top.row} key={'top'}>
-        <Text style={[top.currencyCode]}>{fieldInfo.currencyCode}</Text>
-        <View style={[top.amountContainer]}>
-          <Text style={[top.symbol]}>{fieldInfo.currencySymbol}</Text>
-          <TextInput
-            style={[top.amount]}
-            placeholder={'0'}
-            placeholderTextColor={'rgba(255, 255, 255, 0.60)'}
-            value={amount}
-            onChangeText={onChangeText}
-            autoCorrect={false}
-            keyboardType="numeric"
-            selectionColor="white"
-            returnKeyType="done"
-            underlineColorAndroid={'transparent'}
-            ref={this.getTextInputFrontRef}
-            onFocus={this.textInputFrontFocusTrue}
-            onBlur={this.textInputFrontFocusFalse}
-            editable={this.props.isEditable}
-            onSubmitEditing={this.props.onNext}
-          />
+      <TouchableWithoutFeedback onPress={this.textInputFrontFocus}>
+        <View style={top.row} key={'top'}>
+          <Text style={[top.currencyCode]}>{fieldInfo.currencyCode}</Text>
+          <View style={[top.amountContainer]}>
+            <Text style={[top.symbol]}>{fieldInfo.currencySymbol}</Text>
+            <TextInput
+              style={[top.amount]}
+              placeholder={'0'}
+              placeholderTextColor={'rgba(255, 255, 255, 0.60)'}
+              value={amount}
+              onChangeText={onChangeText}
+              autoCorrect={false}
+              keyboardType="numeric"
+              selectionColor="white"
+              returnKeyType="done"
+              underlineColorAndroid={'transparent'}
+              ref={this.getTextInputFrontRef}
+              onFocus={this.textInputFrontFocusTrue}
+              onBlur={this.textInputFrontFocusFalse}
+              editable={this.props.isEditable}
+              onSubmitEditing={this.props.onNext}
+            />
+          </View>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     )
   }
 
@@ -328,31 +337,39 @@ export class FlipInput extends Component<Props, State> {
     this.setState({ textInputBackFocus: false })
   }
 
+  textInputBackFocus = () => {
+    if (this.textInputBack) {
+      this.textInputBack.focus()
+    }
+  }
+
   topRowBack = (fieldInfo: FlipInputFieldInfo, onChangeText: string => void, amount: string) => {
     return (
-      <View style={top.row} key={'top'}>
-        <Text style={[top.currencyCode]}>{fieldInfo.currencyName}</Text>
-        <View style={[top.amountContainer]}>
-          <Text style={[top.symbol]}>{fieldInfo.currencySymbol}</Text>
-          <TextInput
-            style={[top.amount]}
-            placeholder={this.props.isFiatOnTop ? 'Amount' : '0'}
-            placeholderTextColor={'rgba(255, 255, 255, 0.60)'}
-            value={amount}
-            onChangeText={onChangeText}
-            autoCorrect={false}
-            keyboardType="numeric"
-            selectionColor="white"
-            returnKeyType="done"
-            underlineColorAndroid={'transparent'}
-            ref={this.getTextInputBackRef}
-            onFocus={this.textInputBackFocusTrue}
-            onBlur={this.textInputBackFocusFalse}
-            editable={this.props.isEditable}
-            onSubmitEditing={this.props.onNext}
-          />
+      <TouchableWithoutFeedback onPress={this.textInputBackFocus}>
+        <View style={top.row} key={'top'}>
+          <Text style={[top.currencyCode]}>{fieldInfo.currencyName}</Text>
+          <View style={[top.amountContainer]}>
+            <Text style={[top.symbol]}>{fieldInfo.currencySymbol}</Text>
+            <TextInput
+              style={[top.amount]}
+              placeholder={this.props.isFiatOnTop ? 'Amount' : '0'}
+              placeholderTextColor={'rgba(255, 255, 255, 0.60)'}
+              value={amount}
+              onChangeText={onChangeText}
+              autoCorrect={false}
+              keyboardType="numeric"
+              selectionColor="white"
+              returnKeyType="done"
+              underlineColorAndroid={'transparent'}
+              ref={this.getTextInputBackRef}
+              onFocus={this.textInputBackFocusTrue}
+              onBlur={this.textInputBackFocusFalse}
+              editable={this.props.isEditable}
+              onSubmitEditing={this.props.onNext}
+            />
+          </View>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     )
   }
 
