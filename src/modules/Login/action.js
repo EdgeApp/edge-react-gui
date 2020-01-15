@@ -56,8 +56,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     currencyPlugins.push({ pluginName, currencyInfo })
   }
   dispatch({ type: 'ACCOUNT/LOGGED_IN', data: { account, currencyPlugins } })
-
-  account.activeWalletIds.length < 1 ? Actions[Constants.ONBOARDING]() : Actions[Constants.EDGE]()
+  Actions[Constants.EDGE]()
 
   const walletInfos = account.allKeys
   const filteredWalletInfos = walletInfos.map(({ keys, id, ...info }) => info)
