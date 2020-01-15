@@ -64,7 +64,7 @@ export class Scan extends Component<Props> {
   render () {
     return (
       <Fragment>
-        <SceneWrapper background="header">
+        <SceneWrapper background="header" hasTabs={false}>
           {this.renderCameraArea()}
           <View style={styles.overlayButtonAreaWrap}>
             <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleAddressModal} underlayColor={styleRaw.underlay.color}>

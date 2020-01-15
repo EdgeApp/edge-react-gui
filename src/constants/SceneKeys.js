@@ -45,11 +45,12 @@ export const EXCHANGE_QUOTE_PROCESSING_SCENE = 'exchangeQuoteProcessing'
 export const EXCHANGE_QUOTE_SCENE = 'exchangeQuote'
 export const CREATE_WALLET = 'createWallet'
 export const TERMS_OF_SERVICE = 'termsOfService'
-export const PLUGIN_LIST = 'pluginList'
 export const PLUGIN_VIEW = 'pluginView'
 export const PLUGIN_VIEW_DEEP = 'pluginViewDeep'
 export const PLUGIN_VIEW_LEGACY = 'pluginViewLegacy'
 export const SPENDING_LIMITS = 'spendingLimits'
+export const PLUGIN_BUY = 'pluginBuy'
+export const PLUGIN_SELL = 'pluginSell'
 
 export const CURRENCY_SETTINGS = {
   btcSettings: {

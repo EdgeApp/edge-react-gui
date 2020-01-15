@@ -373,6 +373,8 @@ const strings = {
   title_transaction_details: 'Transaction Details',
   title_transactions: 'Transactions',
   title_wallets: 'Wallets',
+  title_buy: 'Buy',
+  title_sell: 'Sell',
   title_use_legacy_address: 'Use Legacy Address',
   title_use_regular_address: 'Use Regular Address',
   token_not_supported: 'Token is not supported by exchange',

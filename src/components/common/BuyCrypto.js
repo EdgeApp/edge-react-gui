@@ -5,7 +5,7 @@ import { Image, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
-import { PLUGIN_LIST } from '../../constants/indexConstants.js'
+import * as Constants from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/index'
 import style from '../../styles/scenes/TransactionListStyle.js'
@@ -21,11 +21,9 @@ export default class BuyCrypto extends Component<Props> {
     return wallet.currencyNames[wallet.currencyCode]
   }
 
-  goToBuy = () => Actions[PLUGIN_LIST]({ direction: 'buy' })
-
   render () {
     return (
-      <TouchableWithoutFeedback onPress={this.goToBuy}>
+      <TouchableWithoutFeedback onPress={Actions[Constants.PLUGIN_BUY]}>
         <View style={style.buyCryptoContainer}>
           <View style={style.buyCryptoBox}>
             <Image style={style.buyCryptoBoxImage} source={{ uri: this.props.wallet.symbolImage }} resizeMode={'cover'} />
