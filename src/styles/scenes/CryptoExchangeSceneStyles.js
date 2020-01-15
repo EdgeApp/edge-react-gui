@@ -71,12 +71,23 @@ export const styles = {
     },
     containerNoWalletSelected: {
       paddingVertical: scale(10),
-      justifyContent: 'space-around'
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    containerSelectedWalletNotFocus: {
+      width: '90%',
+      paddingVertical: scale(10),
+      backgroundColor: THEME.COLORS.OPACITY_WHITE,
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+      alignItems: 'center'
     },
     topRow: {
       height: scale(34),
       flexDirection: 'column',
-      justifyContent: 'space-around'
+      justifyContent: 'space-around',
+      alignItems: 'center'
     },
     walletSelector: TextAndIconButtonStyle,
     noWalletSelected: {
@@ -89,15 +100,12 @@ export const styles = {
       }
     },
     iconContainer: {
-      position: 'absolute',
-      top: scale(3),
-      left: 3,
       height: scale(29),
-      width: 29,
+      width: scale(29),
       backgroundColor: THEME.COLORS.TRANSPARENT,
       borderRadius: 15,
-      alignItems: 'center',
-      justifyContent: 'space-around'
+      marginRight: scale(8),
+      marginLeft: scale(12)
     },
     altIconContainer: {
       position: 'absolute',

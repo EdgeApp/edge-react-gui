@@ -23,7 +23,7 @@ import { type AuthType, getSpendInfoWithoutState } from '../../modules/UI/scenes
 import { convertCurrencyFromExchangeRates } from '../../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo, type SendConfirmationState } from '../../reducers/scenes/SendConfirmationReducer.js'
 import { rawStyles, styles } from '../../styles/scenes/SendConfirmationStyle.js'
-import type { GuiCurrencyInfo, GuiDenomination, SpendingLimits } from '../../types/types.js'
+import type { GuiCurrencyInfo, GuiDenomination, GuiWallet, SpendingLimits } from '../../types/types.js'
 import { convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../util/utils.js'
 import { AddressTextWithBlockExplorerModal } from '../common/AddressTextWithBlockExplorerModal'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -60,7 +60,8 @@ export type SendConfirmationStateProps = {
   coreWallet: EdgeCurrencyWallet,
   sceneState: SendConfirmationState,
   spendingLimits: SpendingLimits,
-  toggleCryptoOnTop: number
+  toggleCryptoOnTop: number,
+  guiWallet: GuiWallet
 }
 
 export type SendConfirmationDispatchProps = {
@@ -174,7 +175,7 @@ export class SendConfirmation extends Component<Props, State> {
   }
 
   render () {
-    const { networkFee, parentNetworkFee } = this.props
+    const { networkFee, parentNetworkFee, guiWallet } = this.props
     const primaryInfo: GuiCurrencyInfo = {
       displayCurrencyCode: this.props.currencyCode,
       displayDenomination: this.props.primaryDisplayDenomination,
@@ -216,6 +217,9 @@ export class SendConfirmation extends Component<Props, State> {
 
     const isTaggableCurrency = !!getSpecialCurrencyInfo(currencyCode).uniqueIdentifier
     const networkFeeData = this.getNetworkFeeData()
+
+    const flipInputHeaderText = guiWallet ? sprintf(s.strings.send_from_wallet, guiWallet.name) : ''
+    const flipInputHeaderLogo = guiWallet.symbolImageDarkMono
     return (
       <Fragment>
         <SceneWrapper>
@@ -239,6 +243,8 @@ export class SendConfirmation extends Component<Props, State> {
 
             <View style={styles.main}>
               <ExchangedFlipInput
+                headerText={flipInputHeaderText}
+                headerLogo={flipInputHeaderLogo}
                 primaryCurrencyInfo={{ ...primaryInfo }}
                 secondaryCurrencyInfo={{ ...secondaryInfo }}
                 exchangeSecondaryToPrimaryRatio={this.props.fiatPerCrypto}

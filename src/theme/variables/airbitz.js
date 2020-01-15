@@ -67,6 +67,7 @@ export const THEME = {
     PRIMARY: '#0D2145',
     SECONDARY: '#0E4B75',
     PRIMARY_BUTTON_TOUCHED: 'rgba(42,87,153,0.55)',
+    BLUE_3: '#0E507D',
 
     GRADIENT: {
       DARK: '#0D2145',
@@ -91,6 +92,7 @@ export const THEME = {
     OFF_WHITE: '#F6F6F6',
     CLEAR: 'rgba(0, 0, 0, 0)',
     OPACITY_WHITE: 'rgba(255, 255, 255, 0.1)',
+    OPAQUE_WHITE: 'rgba(255, 255, 255, 0.5)',
 
     TRANSPARENT: 'transparent',
 
