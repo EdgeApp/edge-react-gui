@@ -73,7 +73,6 @@ import { ChangeMiningFeeScene } from './scenes/ChangeMiningFeeScene.js'
 import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
 import { CryptoExchangeQuoteProcessingScreenComponent } from './scenes/CryptoExchangeQuoteProcessingScene.js'
 import { LoadingScene } from './scenes/LoadingScene.js'
-import { OnBoardingComponent } from './scenes/OnBoardingScene.js'
 import { LegacyPluginViewConnect, renderLegacyPluginBackButton } from './scenes/PluginViewLegacyScene.js'
 import { PluginListScene } from './scenes/PluginViewListScene.js'
 import { PluginViewConnect } from './scenes/PluginViewScene.js'
@@ -251,7 +250,6 @@ export default class Main extends Component<Props> {
           <Stack key={Constants.ROOT} hideNavBar panHandlers={null}>
             <Scene key={Constants.LOGIN} initial component={LoginConnector} username={this.props.username} />
 
-            <Scene key={Constants.ONBOARDING} navTransparent={true} component={OnBoardingComponent} />
             <Scene
               key={Constants.TRANSACTION_DETAILS}
               navTransparent={true}
