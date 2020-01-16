@@ -547,5 +547,5 @@
   "send_from_wallet": "Senden von %s",
   "send_to_wallet": "Erhalten an %s",
   "exchange_from_wallet": "Umtausch von %s",
-  "exchange_to_wallet": "Wechseln nach %s"
+  "exchange_to_wallet": ""
 }
