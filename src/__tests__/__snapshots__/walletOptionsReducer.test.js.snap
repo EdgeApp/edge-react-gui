@@ -5,6 +5,7 @@ Object {
   "viewXPubWalletModalVisible": false,
   "walletArchivesVisible": false,
   "walletId": "",
+  "xPubExplorer": "",
   "xPubSyntax": "",
 }
 `;
@@ -14,6 +15,7 @@ Object {
   "viewXPubWalletModalVisible": true,
   "walletArchivesVisible": false,
   "walletId": "VIEWXPUB WALLET ID",
+  "xPubExplorer": "",
   "xPubSyntax": "VIEWXPUB xpub1892736451987263r",
 }
 `;

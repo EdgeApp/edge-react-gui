@@ -4,6 +4,7 @@ import { createInputModal, createSecureTextModal, createSimpleConfirmModal, Icon
 import React from 'react'
 import { Actions } from 'react-native-router-flux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
+import { sprintf } from 'sprintf-js'
 
 import { refreshWallet } from '../actions/WalletActions.js'
 import { launchModal } from '../components/common/ModalProvider.js'
@@ -75,7 +76,8 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
         const state = getState()
         const wallet = CORE_SELECTORS.getWallet(state, walletId)
         const xPub = wallet.getDisplayPublicSeed()
-        dispatch({ type: 'OPEN_VIEWXPUB_WALLET_MODAL', data: { xPub, walletId } })
+        const xPubExplorer = wallet.currencyInfo.xpubExplorer && xPub ? sprintf(wallet.currencyInfo.xpubExplorer, xPub) : ''
+        dispatch({ type: 'OPEN_VIEWXPUB_WALLET_MODAL', data: { xPub, walletId, xPubExplorer } })
       }
     }
 

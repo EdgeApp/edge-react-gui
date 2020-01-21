@@ -69,6 +69,7 @@ test('initialState', () => {
     },
     walletList: {
       viewXPubWalletModalVisible: false,
+      xPubExplorer: '',
       xPubSyntax: '',
       walletArchivesVisible: false,
       walletId: ''

@@ -3,13 +3,14 @@
 import { type Reducer, combineReducers } from 'redux'
 
 import type { Action } from '../types/reduxTypes.js'
-import { xPubSyntax } from './XPubModalReducer.js'
+import { xPubExplorer, xPubSyntax } from './XPubModalReducer.js'
 
 export type WalletListState = {
   +viewXPubWalletModalVisible: boolean,
   +walletArchivesVisible: boolean,
   +walletId: string,
-  +xPubSyntax: string
+  +xPubSyntax: string,
+  +xPubExplorer: string
 }
 
 const walletId = (state = '', action: Action): string => {
@@ -58,5 +59,6 @@ export const walletList: Reducer<WalletListState, Action> = combineReducers({
   viewXPubWalletModalVisible,
   walletArchivesVisible,
   walletId,
-  xPubSyntax
+  xPubSyntax,
+  xPubExplorer
 })

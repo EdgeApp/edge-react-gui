@@ -166,7 +166,7 @@ export type Action =
   | { type: 'LOGS/SEND_LOGS_FAILURE', error: Error }
   | {
       type: 'OPEN_VIEWXPUB_WALLET_MODAL',
-      data: { walletId: string, xPub: string | null }
+      data: { walletId: string, xPub: string | null, xPubExplorer: string }
     }
   | {
       type: 'OVERWRITE_THEN_DELETE_TOKEN_SUCCESS',
