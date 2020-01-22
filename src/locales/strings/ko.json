@@ -354,6 +354,8 @@
   "title_transaction_details": "상세 거래 내역",
   "title_transactions": "거래 내역",
   "title_wallets": "월렛",
+  "title_buy": "",
+  "title_sell": "",
   "title_use_legacy_address": "레거시 주소를 사용",
   "title_use_regular_address": "보통 주소를 사용",
   "token_not_supported": "이 토큰은 거래소에서 지원되지 않습니다.",
