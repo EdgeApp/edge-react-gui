@@ -354,6 +354,8 @@
   "title_transaction_details": "取引の詳細",
   "title_transactions": "トランザクション",
   "title_wallets": "ウォレット",
+  "title_buy": "",
+  "title_sell": "",
   "title_use_legacy_address": "レガシーアドレスを使う",
   "title_use_regular_address": "通常のアドレスを使う",
   "token_not_supported": "トークンは取引所で取り扱われていません",
