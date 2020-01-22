@@ -311,6 +311,7 @@
   "string_split_wallet": "Dividir %s",
   "string_add_edit_tokens": "Añadir /Editar Tokens",
   "tx_notes_metadata": "%s%s\nDirección del destinatario:%s",
+  "tx_notes_metadata_recipient_address": "",
   "exchange_notes_metadata_generic": "Cambiados %1$s %2$s de %3$s a %4$s %5$s en %6$s a la dirección %7$s\nPedido:%8$s\nPara asistencia, por favor contactar %9$s.",
   "exchange_notes_metadata_generic2": "Cambiados %1$s%2$s de %3$s a %4$s%5$s en %6$s a la dirección %7$s\nPedido:%8$s\nDirección de pago del exchange:%9$s\nIdentificador único del cambio:%10$s\n\nPara asistencia por favor contacta con %11$s.",
   "title_crypto_settings": "%s Ajustes",
