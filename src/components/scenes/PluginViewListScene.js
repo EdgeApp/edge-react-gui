@@ -256,7 +256,7 @@ class PluginList extends Component<Props, State> {
     }
 
     return (
-      <SceneWrapper background="body" hasTabs={false}>
+      <SceneWrapper background="body">
         {this.renderCountryPicker(countryData)}
         {plugins.length === 0 ? (
           <View style={{ flex: 1, width: '100%', padding: scale(50), justifyContent: 'center', alignItems: 'center' }}>

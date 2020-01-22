@@ -19,7 +19,7 @@ import {
   ION_ICONS,
   KEY_ICON,
   MATERIAL_ICONS,
-  PLUGIN_LIST,
+  PLUGIN_BUY,
   SEND_CONFIRMATION,
   SHOPPING_CART,
   WARNING
@@ -358,10 +358,10 @@ export const checkAndShowGetCryptoModal = () => async (dispatch: Dispatch, getSt
     }
     const value = await launchModal(threeButtonModal)
     if (value === 'buy') {
-      Actions[PLUGIN_LIST]({ direction: 'buy' })
+      Actions.jump(PLUGIN_BUY)
     } else if (value === 'exchange') {
       dispatch(selectWalletForExchange(wallet.id, currencyCode, 'to'))
-      Actions[EXCHANGE_SCENE]()
+      Actions.jump(EXCHANGE_SCENE)
     }
   } catch (e) {
     // Don't bother the user with this error, but log it quietly:
