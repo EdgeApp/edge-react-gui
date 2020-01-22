@@ -8,6 +8,8 @@ import slowlog from 'react-native-slowlog'
 import SortableListView from 'react-native-sortable-listview'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
+import buyIcon from '../../assets/images/buysell/buy.png'
+import sellIcon from '../../assets/images/buysell/sell.png'
 import iconImage from '../../assets/images/otp/OTP-badge_sm.png'
 import WalletIcon from '../../assets/images/walletlist/my-wallets.png'
 import WalletOptions from '../../connectors/WalletOptionsConnector.js'
@@ -21,8 +23,6 @@ import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index.js'
 import { WiredProgressBar } from '../../modules/UI/components/WiredProgressBar/WiredProgressBar.ui.js'
 import { getWalletLoadingPercent } from '../../modules/UI/selectors.js'
-import { addWalletStyle } from '../../styles/components/AddWalletStyle.js'
-import { buyMultipleCryptoStyle } from '../../styles/components/BuyCryptoStyle.js'
 import { TwoButtonModalStyle } from '../../styles/indexStyles.js'
 import styles from '../../styles/scenes/WalletListStyle'
 import THEME from '../../theme/variables/airbitz'
@@ -476,31 +476,35 @@ export default class WalletList extends Component<Props, State> {
 
   renderFooter = () => {
     return (
-      <View style={buyMultipleCryptoStyle.multipleCallToActionWrap}>
-        <View style={{ flexDirection: 'row', alignItems: 'stretch' }}>
-          <TouchableWithoutFeedback onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]} style={addWalletStyle.addWalletButton}>
-            <View style={addWalletStyle.addWalletContentWrap}>
-              <Ionicon name="md-add-circle" style={addWalletStyle.addWalletIcon} size={scale(24)} color={THEME.COLORS.GRAY_2} />
-              <T style={addWalletStyle.addWalletText}>{s.strings.wallet_list_add_wallet}</T>
+      <View style={styles.footerContainer}>
+        <View style={styles.buySellButtonContainer}>
+          <TouchableWithoutFeedback onPress={Actions[Constants.PLUGIN_BUY]}>
+            <View style={styles.buyButton}>
+              <Image style={styles.buySellButtonImage} source={buyIcon} resizeMode={'cover'} />
+              <T style={styles.buyButtonText}>{s.strings.string_buy_crypto}</T>
             </View>
           </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback onPress={this.addToken} style={addWalletStyle.addWalletButton}>
-            <View style={addWalletStyle.addTokenContentWrap}>
-              <Ionicon name="md-add-circle" style={addWalletStyle.addWalletIcon} size={scale(24)} color={THEME.COLORS.GRAY_2} />
-              <T style={addWalletStyle.addWalletText}>{s.strings.wallet_list_add_token}</T>
+          <TouchableWithoutFeedback onPress={Actions[Constants.PLUGIN_SELL]}>
+            <View style={styles.sellButton}>
+              <Image style={styles.buySellButtonImage} source={sellIcon} resizeMode={'cover'} />
+              <T style={styles.sellButtonText}>{s.strings.string_sell_crypto}</T>
             </View>
           </TouchableWithoutFeedback>
         </View>
-        <TouchableWithoutFeedback onPress={Actions[Constants.PLUGIN_BUY]} style={buyMultipleCryptoStyle.buyMultipleCryptoContainer}>
-          <View style={buyMultipleCryptoStyle.buyMultipleCryptoBox}>
-            <View style={buyMultipleCryptoStyle.buyMultipleCryptoContentWrap}>
-              <Image style={buyMultipleCryptoStyle.buyMultipleCryptoBoxImage} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES['BTC'] }} resizeMode={'cover'} />
-              <Image style={buyMultipleCryptoStyle.buyMultipleCryptoBoxImage} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES['ETH'] }} resizeMode={'cover'} />
-              <Image style={buyMultipleCryptoStyle.buyMultipleCryptoBoxImage} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES['BCH'] }} resizeMode={'cover'} />
+        <View style={styles.addWalletTokenButtonContainer}>
+          <TouchableWithoutFeedback onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]}>
+            <View style={styles.createWalletButton}>
+              <Ionicon name="md-add-circle-outline" style={styles.addWalletTokenButtonImage} size={scale(24)} color={THEME.COLORS.SECONDARY} />
+              <T style={styles.createWalletButtonText}>{s.strings.fragment_create_wallet_create_wallet}</T>
             </View>
-            <T style={buyMultipleCryptoStyle.buyMultipleCryptoBoxText}>{s.strings.title_plugin_buy}</T>
-          </View>
-        </TouchableWithoutFeedback>
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback onPress={this.addToken}>
+            <View style={styles.addTokenButton}>
+              <Ionicon name="md-add-circle-outline" style={styles.addWalletTokenButtonImage} size={scale(24)} color={THEME.COLORS.SECONDARY} />
+              <T style={styles.addTokenButtonText}>{s.strings.wallet_list_add_token}</T>
+            </View>
+          </TouchableWithoutFeedback>
+        </View>
       </View>
     )
   }

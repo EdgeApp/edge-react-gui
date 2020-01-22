@@ -468,6 +468,85 @@ export const styles = {
   walletDetailsExchangeRow: {
     flexDirection: 'row',
     flex: 1
+  },
+  footerContainer: {
+    padding: scale(15)
+  },
+  buySellButtonContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    marginBottom: scale(10)
+  },
+  buyButton: {
+    backgroundColor: THEME.COLORS.SECONDARY,
+    flex: 1,
+    height: scale(52),
+    marginRight: scale(5),
+    borderRadius: 3,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  sellButton: {
+    backgroundColor: THEME.COLORS.SECONDARY,
+    flex: 1,
+    height: scale(52),
+    marginLeft: scale(5),
+    borderRadius: 3,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  buySellButtonImage: {
+    marginRight: scale(5)
+  },
+  buyButtonText: {
+    fontSize: scale(17),
+    marginLeft: scale(5),
+    color: THEME.COLORS.WHITE
+  },
+  sellButtonText: {
+    fontSize: scale(17),
+    marginLeft: scale(5),
+    color: THEME.COLORS.WHITE
+  },
+  addWalletTokenButtonContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    marginBottom: scale(10)
+  },
+  createWalletButton: {
+    backgroundColor: THEME.COLORS.WHITE,
+    flex: 1,
+    height: scale(52),
+    marginRight: scale(5),
+    borderRadius: 3,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  addTokenButton: {
+    backgroundColor: THEME.COLORS.WHITE,
+    flex: 1,
+    height: scale(52),
+    marginLeft: scale(5),
+    borderRadius: 3,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  addWalletTokenButtonImage: {
+    marginRight: scale(5)
+  },
+  createWalletButtonText: {
+    fontSize: scale(17),
+    marginLeft: scale(4),
+    color: THEME.COLORS.SECONDARY
+  },
+  addTokenButtonText: {
+    fontSize: scale(17),
+    marginLeft: scale(4),
+    color: THEME.COLORS.SECONDARY
   }
 }
 

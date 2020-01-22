@@ -594,7 +594,9 @@ const strings = {
   send_from_wallet: 'Send from %s',
   send_to_wallet: 'Receive to %s',
   exchange_from_wallet: 'Exchange from %s',
-  exchange_to_wallet: 'Exchange to %s'
+  exchange_to_wallet: 'Exchange to %s',
+  string_buy_crypto: 'Buy Crypto',
+  string_sell_crypto: 'Sell Crypto'
 }
 
 // export default strings
