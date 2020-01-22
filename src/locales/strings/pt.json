@@ -311,6 +311,7 @@
   "string_split_wallet": "",
   "string_add_edit_tokens": "Adicionar / Editar Tokens",
   "tx_notes_metadata": "",
+  "tx_notes_metadata_recipient_address": "",
   "exchange_notes_metadata_generic": "",
   "exchange_notes_metadata_generic2": "",
   "title_crypto_settings": "configurações de %s",
