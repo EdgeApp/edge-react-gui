@@ -354,6 +354,8 @@
   "title_transaction_details": "Détails de la transaction",
   "title_transactions": "Transactions",
   "title_wallets": "Portefeuilles",
+  "title_buy": "",
+  "title_sell": "",
   "title_use_legacy_address": "Utiliser Legacy Adresse",
   "title_use_regular_address": "Utiliser Regular Adresse ",
   "token_not_supported": "Les Tokens ne seront pas assistés par l'exchange ",
