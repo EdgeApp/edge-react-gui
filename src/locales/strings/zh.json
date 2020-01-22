@@ -354,6 +354,8 @@
   "title_transaction_details": "交易详情",
   "title_transactions": "交易",
   "title_wallets": "钱包",
+  "title_buy": "",
+  "title_sell": "",
   "title_use_legacy_address": "使用旧地址",
   "title_use_regular_address": "使用常规地址",
   "token_not_supported": "交易所不支持此代币",
