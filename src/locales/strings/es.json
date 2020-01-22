@@ -354,6 +354,8 @@
   "title_transaction_details": "Detalles de la transacción",
   "title_transactions": "Transacciones",
   "title_wallets": "Carteras",
+  "title_buy": "",
+  "title_sell": "",
   "title_use_legacy_address": "Usar dirección \"legacy\"",
   "title_use_regular_address": "Usar dirección normal",
   "token_not_supported": "El token no es compatible por la casa de cambio",
