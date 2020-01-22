@@ -354,6 +354,8 @@
   "title_transaction_details": "Transaktionsdetails",
   "title_transactions": "Transaktionen",
   "title_wallets": "Wallets",
+  "title_buy": "",
+  "title_sell": "",
   "title_use_legacy_address": "Legacy-Adresse verwenden",
   "title_use_regular_address": "Reguläre Adresse verwenden",
   "token_not_supported": "Token wird nicht von der Börse unterstützt",
