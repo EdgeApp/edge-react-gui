@@ -119,12 +119,16 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
             const disabled = this.props.excludedCurrencyCode.includes(property) || this.props.disableZeroBalance
 
             // Token Filters
+            const walletNameString = name.toLowerCase()
             const currencyNameString = token ? token.currencyName.toLowerCase() : ''
             const currencyCodeString = token ? token.currencyCode.toLowerCase() : ''
             if (
               property !== this.props.excludedCurrencyCode &&
               !this.props.excludedTokens.includes(property) &&
-              (searchFilterLowerCase === '' || currencyNameString.includes(searchFilterLowerCase) || currencyCodeString.includes(searchFilterLowerCase))
+              (searchFilterLowerCase === '' ||
+                walletNameString.includes(searchFilterLowerCase) ||
+                currencyNameString.includes(searchFilterLowerCase) ||
+                currencyCodeString.includes(searchFilterLowerCase))
             ) {
               tokens.push(
                 <CryptoExchangeWalletListTokenRow
