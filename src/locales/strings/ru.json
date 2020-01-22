@@ -354,6 +354,8 @@
   "title_transaction_details": "Детали транзакции",
   "title_transactions": "Переводы",
   "title_wallets": "Кошельки",
+  "title_buy": "",
+  "title_sell": "",
   "title_use_legacy_address": "Использовать старый тип адреса",
   "title_use_regular_address": "Использовать общепринятый тип адреса",
   "token_not_supported": "Токен не поддерживается сервисом",
