@@ -354,6 +354,8 @@
   "title_transaction_details": "Chi tiết giao dịch",
   "title_transactions": "Giao dịch",
   "title_wallets": "Ví",
+  "title_buy": "",
+  "title_sell": "",
   "title_use_legacy_address": "Sử dụng danh sách địa chỉ",
   "title_use_regular_address": "Sử dụng địa chỉ thường xuyên",
   "token_not_supported": "Mã thông báo không được hỗ trợ khi trao đổi",
