@@ -311,6 +311,7 @@
   "string_split_wallet": "%s aufsplitten",
   "string_add_edit_tokens": "Hinzufügen / Bearbeiten von Token",
   "tx_notes_metadata": "%s: %s\nEmpfänger Adresse: %s",
+  "tx_notes_metadata_recipient_address": "",
   "exchange_notes_metadata_generic": "Umgetauschte %1$s %2$s von %3$s in %4$s %5$s in %6$s an Addresse %7$s \nAuftrag: %8$s.\nFür Hilfe kontaktieren Sie bitte %9$s.",
   "exchange_notes_metadata_generic2": "Umgetauschte %1$s %2$s von %3$s in %4$s %5$s in %6$s an Addresse %7$s \nAuftrag: %8$s. \nBörsen-Zahlungs-ID: %9$s. \nEinmalige Börsen-ID: %10$s \n\nFür Hilfe, kontaktieren Sie bitte %11$s.",
   "title_crypto_settings": "%s Einstellungen",
