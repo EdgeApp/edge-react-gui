@@ -354,6 +354,8 @@
   "title_transaction_details": "Dettagli transazione",
   "title_transactions": "Transazioni",
   "title_wallets": "Portafogli",
+  "title_buy": "",
+  "title_sell": "",
   "title_use_legacy_address": "Usa l'indirizzo Legacy",
   "title_use_regular_address": "Usa l'indirizzo regolare",
   "token_not_supported": "Il token non è supportato dal cambio valuta",
