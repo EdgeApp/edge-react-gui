@@ -37,8 +37,8 @@ class DeepLinkingManager extends React.Component<Props> {
   }
   processPluginDeepLink = (parsedUrl: Object) => {
     if (parsedUrl.pathname.includes('simplex')) {
-      const simplexPlugin = pluginUrlMap['co.edgesecure.simplex']
-      Actions[PLUGIN_VIEW_DEEP]({ simplexPlugin })
+      const plugin = pluginUrlMap['co.edgesecure.simplex']
+      Actions[PLUGIN_VIEW_DEEP]({ plugin })
       this.props.markAddressDeepLinkDone()
       return
     }
