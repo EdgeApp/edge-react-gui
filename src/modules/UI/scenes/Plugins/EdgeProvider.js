@@ -378,12 +378,13 @@ export class EdgeProvider extends Bridgeable {
   // log body and signature and pubic address and final message (returned from signMessage)
   // log response afterwards line 451
   async signMessage (message: string) /* EdgeSignedMessage */ {
-    console.log('signMessage message: ', JSON.stringify(message))
+    console.log('signMessage message:', message)
     const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
     const coreWallet = CORE_SELECTORS.getWallet(this._state, guiWallet.id)
-    console.log('signMessage public address: ', guiWallet.receiveAddress.publicAddress)
+    console.log('signMessage public address:', guiWallet.receiveAddress.publicAddress)
     const signedMessage = await coreWallet.otherMethods.signMessageBase64(message, guiWallet.receiveAddress.publicAddress)
-    console.log('signMessage signedMessage: ', JSON.stringify(signedMessage))
+    console.log('signMessage signedMessage:', signedMessage)
+    console.log(message + guiWallet.receiveAddress.publicAddress + signedMessage)
     return signedMessage
   }
 
@@ -438,6 +439,7 @@ export class EdgeProvider extends Bridgeable {
 
   // window.fetch.catch(console log then throw)
   async deprecatedAndNotSupportedDouble (request: Object, firstURL: string, url2: string): Promise<mixed> {
+    console.log('Bity firstURL: ' + firstURL)
     const response = await window.fetch(firstURL, request).catch(e => {
       console.log(`throw from fetch firstURL: ${firstURL}`, e)
       throw e
@@ -475,6 +477,7 @@ export class EdgeProvider extends Bridgeable {
         },
         body: signedTransaction
       }
+      console.log('Bity thirdURL: ' + thirdURL)
       const signedTransactionResponse = await window.fetch(thirdURL, request).catch(e => {
         console.log(`throw from fetch thirdURL: ${thirdURL}`, e)
         throw e
@@ -489,8 +492,9 @@ export class EdgeProvider extends Bridgeable {
           credentials: 'include'
         }
         const detailUrl = firstURL + '/' + orderData.id
+        console.log('detailURL: ' + detailUrl)
         const bankDetailResponse = await window.fetch(detailUrl, bankDetailsRequest).catch(e => {
-          console.log(`throw from fetch deatilUrl: ${detailUrl}`, e)
+          console.log(`throw from fetch detailUrl: ${detailUrl}`, e)
           throw e
         })
         if (bankDetailResponse.status === 200) {
