@@ -67,6 +67,10 @@ type EdgeGetReceiveAddressOptions = {
   metadata?: EdgeMetadata
 }
 
+export type EdgeProviderSpendTarget = EdgeSpendTarget & {
+  exchangeAmount?: string
+}
+
 export class EdgeProvider extends Bridgeable {
   _pluginId: string
   _plugin: BuySellPlugin
@@ -282,15 +286,17 @@ export class EdgeProvider extends Bridgeable {
   }
 
   // Request that the user spend to an address or multiple addresses
-  async requestSpend (spendTargets: Array<EdgeSpendTarget>, options?: EdgeRequestSpendOptions): Promise<EdgeTransaction | void> {
+  async requestSpend (spendTargets: Array<EdgeProviderSpendTarget>, options?: EdgeRequestSpendOptions): Promise<EdgeTransaction | void> {
     const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
     const coreWallet = CORE_SELECTORS.getWallet(this._state, guiWallet.id)
-    const info: GuiMakeSpendInfo = {
-      spendTargets
-    }
+
+    const info: GuiMakeSpendInfo = {}
     if (options && options.currencyCode) {
       info.currencyCode = options.currencyCode
+    } else {
+      info.currencyCode = coreWallet.currencyInfo.currencyCode
     }
+
     if (options && options.customNetworkFee) {
       info.customNetworkFee = options.customNetworkFee
     }
@@ -304,6 +310,14 @@ export class EdgeProvider extends Bridgeable {
       info.uniqueIdentifier = options.uniqueIdentifier
     }
 
+    for (const spendTarget of spendTargets) {
+      if (spendTarget.exchangeAmount && !spendTarget.nativeAmount) {
+        spendTarget.nativeAmount = await coreWallet.denominationToNative(spendTarget.exchangeAmount, info.currencyCode)
+      }
+    }
+    const edgeSpendTargets: any = spendTargets
+    const edgeSpendTargets2: Array<EdgeSpendTarget> = edgeSpendTargets
+    info.spendTargets = edgeSpendTargets2
     const transaction = await this._makeSpendRequest(info)
     if (transaction) {
       Actions.pop()
