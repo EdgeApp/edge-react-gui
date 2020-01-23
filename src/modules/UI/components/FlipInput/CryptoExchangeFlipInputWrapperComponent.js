@@ -110,7 +110,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends Component<Props> {
         forceUpdateGuiCounter={forceUpdateGuiCounter}
         onExchangeAmountChanged={this.onExchangeAmountChanged}
         keyboardVisible={false}
-        isFiatOnTop={false}
+        isFiatOnTop={true}
         isFocus={false}
       />
     )
