@@ -160,8 +160,8 @@ export class ExchangedFlipInput extends Component<Props, State> {
   }
 
   isFiatOnTop = () => {
-    if (this.props.isFiatOnTop) {
-      return this.props.isFiatOnTop
+    if (!this.props.isFiatOnTop) {
+      return false
     }
     return !bns.eq(this.state.exchangeSecondaryToPrimaryRatio, '0')
   }
