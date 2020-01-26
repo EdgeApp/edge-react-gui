@@ -311,6 +311,7 @@
   "string_split_wallet": "Разделить %s",
   "string_add_edit_tokens": "Добавить / редактировать токены",
   "tx_notes_metadata": "",
+  "tx_notes_metadata_recipient_address": "",
   "exchange_notes_metadata_generic": "",
   "exchange_notes_metadata_generic2": "",
   "title_crypto_settings": "%s Настройки",
@@ -354,6 +355,8 @@
   "title_transaction_details": "Детали транзакции",
   "title_transactions": "Переводы",
   "title_wallets": "Кошельки",
+  "title_buy": "",
+  "title_sell": "",
   "title_use_legacy_address": "Использовать старый тип адреса",
   "title_use_regular_address": "Использовать общепринятый тип адреса",
   "token_not_supported": "Токен не поддерживается сервисом",
@@ -543,5 +546,9 @@
   "user_closed_modal_no_wallet": "",
   "plugin_spend_notes_generic": "",
   "plugin_provider_disclaimer": "",
-  "no_exchange_rate": ""
+  "no_exchange_rate": "",
+  "send_from_wallet": "",
+  "send_to_wallet": "",
+  "exchange_from_wallet": "",
+  "exchange_to_wallet": ""
 }
