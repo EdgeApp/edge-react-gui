@@ -1,5 +1,15 @@
 # edge-react-gui
 
+## 1.11.3
+
+- Update BSV address to use 1 format
+- Remove Bitcoin Cash prefix from BCH addresses
+- Add ETHBNT as a default token
+- Fixed BNB Syncing
+- Fixed Wallet Picker to use the same wallet order from the Wallets List screen
+- Visual and text improvements
+- Minor bug fixes
+
 ## 1.11.2
 
 - Fixed RSK synchronization
