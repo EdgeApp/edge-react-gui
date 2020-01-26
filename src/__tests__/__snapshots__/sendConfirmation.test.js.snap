@@ -107,6 +107,7 @@ exports[`SendConfirmation should render with destination 1`] = `
         <ExchangedFlipInput
           exchangeSecondaryToPrimaryRatio={8000}
           forceUpdateGuiCounter={0}
+          headerText="Send from undefined"
           isEditable={true}
           isFiatOnTop={false}
           isFocus={false}
@@ -355,6 +356,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
         <ExchangedFlipInput
           exchangeSecondaryToPrimaryRatio={8000}
           forceUpdateGuiCounter={0}
+          headerText="Send from undefined"
           isEditable={true}
           isFiatOnTop={false}
           isFocus={false}
@@ -588,6 +590,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
         <ExchangedFlipInput
           exchangeSecondaryToPrimaryRatio={8000}
           forceUpdateGuiCounter={0}
+          headerText="Send from undefined"
           isEditable={true}
           isFiatOnTop={false}
           isFocus={false}
@@ -801,6 +804,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
         <ExchangedFlipInput
           exchangeSecondaryToPrimaryRatio={8000}
           forceUpdateGuiCounter={0}
+          headerText="Send from undefined"
           isEditable={true}
           isFiatOnTop={false}
           isFocus={false}

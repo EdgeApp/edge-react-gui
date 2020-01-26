@@ -228,6 +228,8 @@
   "settings_button_setup_two_factor": "Configuration du multi facteurs d'authentification ",
   "settings_button_unlock_settings": "Cliquer sur débloquer le compte dans les réglages ",
   "settings_button_use_touchID": "Utiliser Touch ID",
+  "settings_button_use_faceID": "",
+  "settings_button_use_biometric": "",
   "settings_days": "Jour(s)",
   "settings_denominations_title": "Dénominations ",
   "settings_custom_nodes_title": "Personlisation de Nodes ",
@@ -309,6 +311,7 @@
   "string_split_wallet": "Diviser %s",
   "string_add_edit_tokens": "Ajouter/ Modifier les Tokens",
   "tx_notes_metadata": "%s: %s\nAdresse du destinataire : %s",
+  "tx_notes_metadata_recipient_address": "",
   "exchange_notes_metadata_generic": "Échangées %1$s %2$s %3$s %4$s %5$s %6$s à l’adresse  Commandez %7$s \n: %8$s. \nPour l’assistance, veuillez communiquer avec %9$s.",
   "exchange_notes_metadata_generic2": "Échange %1$s %2$s de %3$s à %4$s %5$s dans %6$s à l'adresse %7$s \nOrdre : %8$s. \nAdresse de paiement d'éhange : %9$s. \nIdentifiant unique d'échange : %10$s \n\nPour assistance, veuillez contacter %11$s.",
   "title_crypto_settings": "%s Paramètres",
@@ -352,6 +355,8 @@
   "title_transaction_details": "Détails de la transaction",
   "title_transactions": "Transactions",
   "title_wallets": "Portefeuilles",
+  "title_buy": "",
+  "title_sell": "",
   "title_use_legacy_address": "Utiliser Legacy Adresse",
   "title_use_regular_address": "Utiliser Regular Adresse ",
   "token_not_supported": "Les Tokens ne seront pas assistés par l'exchange ",
@@ -541,5 +546,9 @@
   "user_closed_modal_no_wallet": "",
   "plugin_spend_notes_generic": "",
   "plugin_provider_disclaimer": "",
-  "no_exchange_rate": ""
+  "no_exchange_rate": "",
+  "send_from_wallet": "",
+  "send_to_wallet": "",
+  "exchange_from_wallet": "",
+  "exchange_to_wallet": ""
 }

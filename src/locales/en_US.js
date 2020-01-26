@@ -329,6 +329,7 @@ const strings = {
   string_split_wallet: 'Split %s',
   string_add_edit_tokens: 'Add / Edit Tokens',
   tx_notes_metadata: '%s: %s\nRecipient Address: %s',
+  tx_notes_metadata_recipient_address: 'Recipient Address: ',
   exchange_notes_metadata_generic: 'Exchanged %1$s %2$s from %3$s to %4$s %5$s in %6$s to address %7$s \nOrder: %8$s. \nFor assistance, please contact %9$s.',
   exchange_notes_metadata_generic2:
     'Exchanged %1$s %2$s from %3$s to %4$s %5$s in %6$s to address %7$s \nOrder: %8$s. \nExchange payment address: %9$s. \nExchange unique identifier: %10$s \n\nFor assistance, please contact %11$s.',
@@ -373,6 +374,8 @@ const strings = {
   title_transaction_details: 'Transaction Details',
   title_transactions: 'Transactions',
   title_wallets: 'Wallets',
+  title_buy: 'Buy',
+  title_sell: 'Sell',
   title_use_legacy_address: 'Use Legacy Address',
   title_use_regular_address: 'Use Regular Address',
   token_not_supported: 'Token is not supported by exchange',
@@ -588,7 +591,11 @@ const strings = {
   user_closed_modal_no_wallet: 'User closed modal. No wallet was selected',
   plugin_spend_notes_generic: 'Spent %1$s from %2$s to %3$s at address: %4$s \nFor assistance, please contact %5$s.',
   plugin_provider_disclaimer: 'The following services are not provided by Edge. \n\nFor issues and feedback please contact the respective service providers.',
-  no_exchange_rate: 'No Exchange Rate'
+  no_exchange_rate: 'No Exchange Rate',
+  send_from_wallet: 'Send from %s',
+  send_to_wallet: 'Receive to %s',
+  exchange_from_wallet: 'Exchange from %s',
+  exchange_to_wallet: 'Exchange to %s'
 }
 
 // export default strings

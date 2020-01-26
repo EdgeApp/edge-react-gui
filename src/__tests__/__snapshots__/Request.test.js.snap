@@ -1,12 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Request should render with loaded props 1`] = `
-<SceneWrapper>
+<SceneWrapper
+  hasTabs={false}
+>
   <View
     style={
       Object {
         "alignItems": "center",
-        "marginVertical": 5,
+        "marginBottom": 14.045774647887324,
       }
     }
   >
@@ -29,8 +31,9 @@ exports[`Request should render with loaded props 1`] = `
       color="#FFFFFF"
       exchangeSecondaryToPrimaryRatio={Object {}}
       forceUpdateGuiCounter={0}
+      headerText="Receive to undefined"
       isEditable={true}
-      isFiatOnTop={false}
+      isFiatOnTop={true}
       isFocus={false}
       keyboardVisible={false}
       onExchangeAmountChanged={[Function]}
@@ -43,6 +46,7 @@ exports[`Request should render with loaded props 1`] = `
         Object {
           "backgroundColor": "white",
           "borderRadius": 5.618309859154929,
+          "marginTop": 21.068661971830984,
           "padding": 5.618309859154929,
         }
       }

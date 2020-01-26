@@ -26,7 +26,8 @@ export type OwnProps = {
   excludedCurrencyCode: Array<string>,
   onTokenPress({ id: string, currencyCode: string }): void,
   excludedTokens: Array<string>,
-  disableZeroBalance: boolean
+  disableZeroBalance: boolean,
+  searchFilter: string
 }
 
 type LocalState = {
@@ -99,7 +100,8 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
     }
   }
   renderTokens = () => {
-    const { wallet, settings, exchangeRates } = this.props
+    const { wallet, settings, exchangeRates, searchFilter } = this.props
+    const searchFilterLowerCase = searchFilter.toLowerCase()
     if (this.props.wallet.enabledTokens.length > 0) {
       const tokens = []
       const metaTokenBalances = this.state.enabledNativeBalances
@@ -110,12 +112,24 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
             if (!this.props.denomination || !this.props.denomination.multiplier) {
               return []
             }
-            const token = this.props.wallet.metaTokens.find(item => item.currencyCode === property)
             const { name } = this.props.wallet
+            const token = this.props.wallet.metaTokens.find(item => item.currencyCode === property)
             const tokenImage = token ? token.symbolImage : ''
             const nativeAmount = metaTokenBalances[property]
             const disabled = this.props.excludedCurrencyCode.includes(property) || this.props.disableZeroBalance
-            if (property !== this.props.excludedCurrencyCode && !this.props.excludedTokens.includes(property)) {
+
+            // Token Filters
+            const walletNameString = name.toLowerCase()
+            const currencyNameString = token ? token.currencyName.toLowerCase() : ''
+            const currencyCodeString = token ? token.currencyCode.toLowerCase() : ''
+            if (
+              property !== this.props.excludedCurrencyCode &&
+              !this.props.excludedTokens.includes(property) &&
+              (searchFilterLowerCase === '' ||
+                walletNameString.includes(searchFilterLowerCase) ||
+                currencyNameString.includes(searchFilterLowerCase) ||
+                currencyCodeString.includes(searchFilterLowerCase))
+            ) {
               tokens.push(
                 <CryptoExchangeWalletListTokenRow
                   key={property}
@@ -139,10 +153,19 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
     }
     return null
   }
-  render () {
-    const { wallet } = this.props
-    return (
-      <View style={styles.container}>
+  renderWallet = () => {
+    const { wallet, searchFilter } = this.props
+    const searchFilterLowerCase = searchFilter.toLowerCase()
+    const nameString = wallet.name.toLowerCase()
+    const currencyNameString = wallet.currencyNames[wallet.currencyCode].toLowerCase()
+    const currencyCodeString = wallet.currencyCode.toLowerCase()
+    if (
+      searchFilterLowerCase === '' ||
+      nameString.includes(searchFilterLowerCase) ||
+      currencyNameString.includes(searchFilterLowerCase) ||
+      currencyCodeString.includes(searchFilterLowerCase)
+    ) {
+      return (
         <TouchableHighlight style={styles.touchable} underlayColor={styles.underlayColor} onPress={this.onPress}>
           <View style={styles.rowContainerTop}>
             <View style={styles.containerLeft}>
@@ -164,6 +187,14 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
             </View>
           </View>
         </TouchableHighlight>
+      )
+    }
+    return null
+  }
+  render () {
+    return (
+      <View style={styles.container}>
+        {this.renderWallet()}
         <View styles={styles.rowContainerBottom}>{this.renderTokens()}</View>
       </View>
     )

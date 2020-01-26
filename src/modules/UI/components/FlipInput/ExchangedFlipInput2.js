@@ -35,7 +35,11 @@ export type ExchangedFlipInputOwnProps = {
   onExchangeAmountChanged(amounts: ExchangedFlipInputAmounts): mixed,
   isEditable: boolean,
   isFiatOnTop: boolean,
-  isFocus: boolean
+  isFocus: boolean,
+
+  headerText: string,
+  headerLogo: string | void,
+  headerCallback?: () => void
 }
 
 type Props = ExchangedFlipInputOwnProps
@@ -156,8 +160,8 @@ export class ExchangedFlipInput extends Component<Props, State> {
   }
 
   isFiatOnTop = () => {
-    if (this.props.isFiatOnTop) {
-      return this.props.isFiatOnTop
+    if (!this.props.isFiatOnTop) {
+      return false
     }
     return !bns.eq(this.state.exchangeSecondaryToPrimaryRatio, '0')
   }
@@ -167,6 +171,9 @@ export class ExchangedFlipInput extends Component<Props, State> {
       <FlipInput
         overridePrimaryDecimalAmount={this.state.overridePrimaryDecimalAmount}
         exchangeSecondaryToPrimaryRatio={this.state.exchangeSecondaryToPrimaryRatio}
+        headerText={this.props.headerText}
+        headerLogo={this.props.headerLogo}
+        headerCallback={this.props.headerCallback}
         primaryInfo={this.state.primaryInfo}
         secondaryInfo={this.state.secondaryInfo}
         forceUpdateGuiCounter={this.props.forceUpdateGuiCounter}

@@ -228,6 +228,8 @@
   "settings_button_setup_two_factor": "2단계 인증 설정",
   "settings_button_unlock_settings": "탭하여 계정 설정 잠금 해제",
   "settings_button_use_touchID": "터치ID 사용",
+  "settings_button_use_faceID": "",
+  "settings_button_use_biometric": "",
   "settings_days": "일",
   "settings_denominations_title": "액면 금액",
   "settings_custom_nodes_title": "커스텀 노드",
@@ -309,6 +311,7 @@
   "string_split_wallet": "%s 를 분할",
   "string_add_edit_tokens": "토큰을 추가 / 편집",
   "tx_notes_metadata": "%s: %s\n수취인 주소: %s",
+  "tx_notes_metadata_recipient_address": "",
   "exchange_notes_metadata_generic": "%6$s 에서 %7$s 주소에게 %3$s 부터 %4$s %5$s 로 %1$s %2$s 가 거래됨\n주문: %8$s\n도움이 필요한 경우 %9$s 로 연락 주시길 바랍니다.",
   "exchange_notes_metadata_generic2": "%6$s 에서 %7$s 주소에게 %3$s 부터 %4$s %5$s 로 %1$s %2$s 가 거래됨\n주문: %8$s\n거래 지불 주소: %9$s\n거래 고유 식별자: %10$s\n\n도움이 필요하시면 %11$s 로 문의해주시길 바랍니다.",
   "title_crypto_settings": "%s 설정",
@@ -352,6 +355,8 @@
   "title_transaction_details": "상세 거래 내역",
   "title_transactions": "거래 내역",
   "title_wallets": "월렛",
+  "title_buy": "",
+  "title_sell": "",
   "title_use_legacy_address": "레거시 주소를 사용",
   "title_use_regular_address": "보통 주소를 사용",
   "token_not_supported": "이 토큰은 거래소에서 지원되지 않습니다.",
@@ -541,5 +546,9 @@
   "user_closed_modal_no_wallet": "모달창이 닫혔습니다.월렛이 선택되지 않았습니다.",
   "plugin_spend_notes_generic": "주소: %4$s 에서 %2$s 에서 %3$s 로 %1$s 가 송신되었습니다.\n도움이 필요한 경우 %5$s 로 문의해주시길 바랍니다.",
   "plugin_provider_disclaimer": "다음 서비스는 Edge에서 제공되지 않습니다. \n\n문제 및 피드백 제공을 위해선 해당 서비스 제공 업체에 문의해 주시길 바랍니다.",
-  "no_exchange_rate": ""
+  "no_exchange_rate": "",
+  "send_from_wallet": "",
+  "send_to_wallet": "",
+  "exchange_from_wallet": "",
+  "exchange_to_wallet": ""
 }

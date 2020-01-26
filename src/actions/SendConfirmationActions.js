@@ -229,6 +229,14 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
     if (state.ui.scenes.sendConfirmation.transactionMetadata) {
       edgeMetadata = { ...edgeMetadata, ...state.ui.scenes.sendConfirmation.transactionMetadata }
     }
+    const publicAddress = spendInfo ? spendInfo.spendTargets[0].publicAddress : ''
+    if (publicAddress) {
+      if (edgeMetadata.notes) {
+        edgeMetadata.notes += `\n${s.strings.tx_notes_metadata_recipient_address + publicAddress}`
+      } else {
+        edgeMetadata.notes = s.strings.tx_notes_metadata_recipient_address + publicAddress
+      }
+    }
     if (!edgeMetadata.amountFiat) {
       edgeMetadata.amountFiat = amountFiat
     }

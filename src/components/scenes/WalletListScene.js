@@ -491,10 +491,7 @@ export default class WalletList extends Component<Props, State> {
             </View>
           </TouchableWithoutFeedback>
         </View>
-        <TouchableWithoutFeedback
-          onPress={() => Actions[Constants.PLUGIN_LIST]({ direction: 'buy' })}
-          style={buyMultipleCryptoStyle.buyMultipleCryptoContainer}
-        >
+        <TouchableWithoutFeedback onPress={Actions[Constants.PLUGIN_BUY]} style={buyMultipleCryptoStyle.buyMultipleCryptoContainer}>
           <View style={buyMultipleCryptoStyle.buyMultipleCryptoBox}>
             <View style={buyMultipleCryptoStyle.buyMultipleCryptoContentWrap}>
               <Image style={buyMultipleCryptoStyle.buyMultipleCryptoBoxImage} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES['BTC'] }} resizeMode={'cover'} />

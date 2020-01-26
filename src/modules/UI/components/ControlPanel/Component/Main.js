@@ -87,10 +87,10 @@ export default class Main extends Component<Props> {
   }
 }
 
-const goToBuyScene = () => Actions[Constants.PLUGIN_LIST]({ direction: 'buy' })
+const popToPluginBuyScene = () => Actions.jump(Constants.PLUGIN_BUY)
 const BuyButton = () => {
   return (
-    <Button onPress={goToBuyScene}>
+    <Button onPress={popToPluginBuyScene}>
       <Button.Row>
         <Button.Row>
           <Button.Left>
@@ -108,10 +108,10 @@ const BuyButton = () => {
   )
 }
 
-const goToSellScene = () => Actions[Constants.PLUGIN_LIST]({ direction: 'sell' })
+const popToPluginSellScene = () => Actions.jump(Constants.PLUGIN_SELL)
 const SellButton = () => {
   return (
-    <Button onPress={goToSellScene}>
+    <Button onPress={popToPluginSellScene}>
       <Button.Row>
         <Button.Row>
           <Button.Left>

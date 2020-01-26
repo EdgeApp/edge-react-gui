@@ -3,21 +3,57 @@
 import { StyleSheet } from 'react-native'
 
 import THEME from '../../../../theme/variables/airbitz'
+import { PLATFORM } from '../../../../theme/variables/platform.js'
 import { scale } from '../../../../util/scaling.js'
 
 export const styles = StyleSheet.create({
   container: {
-    height: scale(110),
-    marginVertical: 0,
-    marginHorizontal: scale(14),
-    alignSelf: 'stretch',
-    backgroundColor: THEME.COLORS.TRANSPARENT,
-    flexDirection: 'row'
+    width: '90%',
+    minHeight: PLATFORM.platform === 'ios' ? scale(110) : scale(120),
+    backgroundColor: THEME.COLORS.BLUE_3,
+    borderRadius: 5,
+    flexDirection: 'column',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    paddingVertical: scale(12)
   },
-  flipContainerFront: {
+  flipContainerHeader: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginBottom: scale(8)
+  },
+  flipContainerHeaderIcon: {
+    height: scale(22),
+    width: scale(22),
+    marginLeft: scale(13),
+    marginRight: scale(13),
+    resizeMode: 'cover'
+  },
+  flipContainerHeaderTextContainer: {
     flex: 1,
     flexDirection: 'row',
-    alignSelf: 'stretch',
+    alignItems: 'center',
+    color: THEME.COLORS.WHITE
+  },
+  flipContainerHeaderText: {
+    fontSize: scale(15),
+    color: THEME.COLORS.WHITE
+  },
+  flipContainerHeaderTextDropDown: {
+    marginLeft: scale(3),
+    color: THEME.COLORS.WHITE
+  },
+  flipContainerBody: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  flipContainerFront: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
     backfaceVisibility: 'hidden'
   },
   flipContainerBack: {
@@ -28,91 +64,92 @@ export const styles = StyleSheet.create({
     right: 0
   },
   flipButton: {
-    flex: 1,
     backgroundColor: THEME.COLORS.TRANSPARENT,
+    marginLeft: scale(13),
+    marginRight: scale(9),
     alignItems: 'center',
-    marginRight: scale(10),
-    justifyContent: 'space-around'
+    justifyContent: 'center'
   },
   flipIcon: {
     color: THEME.COLORS.GRAY_3
   },
-  spacer: {
-    flex: 1,
-    backgroundColor: THEME.COLORS.TRANSPARENT,
-    alignItems: 'center',
-    justifyContent: 'space-around'
-  },
   rows: {
-    flex: 8,
+    flex: 1,
     flexDirection: 'column',
+    marginRight: scale(23),
     backgroundColor: THEME.COLORS.TRANSPARENT
   }
 })
 
 export const top = StyleSheet.create({
   row: {
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: THEME.COLORS.TRANSPARENT,
-    borderBottomColor: THEME.COLORS.GRAY_4,
+    paddingBottom: scale(8),
+    borderBottomColor: THEME.COLORS.OPAQUE_WHITE,
     borderBottomWidth: scale(1)
   },
+  amountContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end'
+  },
   symbol: {
-    flex: 2,
     fontSize: scale(15),
     color: THEME.COLORS.WHITE,
-    textAlign: 'left',
-    backgroundColor: THEME.COLORS.TRANSPARENT,
-    fontFamily: THEME.FONTS.SYMBOLS
+    fontFamily: THEME.FONTS.SYMBOLS,
+    marginRight: scale(5),
+    textAlign: 'right'
   },
   amount: {
-    flex: 6,
-    fontSize: scale(30),
+    fontSize: scale(15),
     color: THEME.COLORS.WHITE,
-    textAlign: 'center',
-    backgroundColor: THEME.COLORS.TRANSPARENT
+    fontFamily: THEME.FONTS.SYMBOLS,
+    textAlign: 'right',
+    padding: 0
   },
   currencyCode: {
-    flex: 2,
-    fontSize: scale(10),
-    lineHeight: scale(20),
+    fontSize: scale(15),
     color: THEME.COLORS.WHITE,
-    textAlign: 'right',
-    backgroundColor: THEME.COLORS.TRANSPARENT
+    textAlign: 'left'
   }
 })
 
 export const bottom = StyleSheet.create({
   row: {
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: THEME.COLORS.TRANSPARENT
+    paddingTop: scale(8)
+  },
+  amountContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end'
   },
   symbol: {
-    flex: 3,
-    fontSize: scale(16),
-    color: THEME.COLORS.WHITE,
-    textAlign: 'left',
-    backgroundColor: THEME.COLORS.TRANSPARENT
-  },
-  amount: {
-    flex: 6,
-    fontSize: scale(18),
-    color: THEME.COLORS.WHITE,
-    textAlign: 'center',
-    backgroundColor: THEME.COLORS.TRANSPARENT
-  },
-  currencyCode: {
-    flex: 3,
     fontSize: scale(10),
     color: THEME.COLORS.WHITE,
+    opacity: THEME.OPACITY.MID,
+    fontFamily: THEME.FONTS.SYMBOLS,
+    marginRight: scale(5),
+    textAlign: 'right'
+  },
+  amount: {
+    fontSize: scale(10),
+    color: THEME.COLORS.WHITE,
+    opacity: THEME.OPACITY.MID,
+    fontFamily: THEME.FONTS.SYMBOLS,
     textAlign: 'right',
-    backgroundColor: THEME.COLORS.TRANSPARENT
+    padding: 0
+  },
+  currencyCode: {
+    fontSize: scale(10),
+    color: THEME.COLORS.WHITE,
+    opacity: THEME.OPACITY.MID,
+    textAlign: 'right'
   },
   alert: {
     color: THEME.COLORS.WHITE,

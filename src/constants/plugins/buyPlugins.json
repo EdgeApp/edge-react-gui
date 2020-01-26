@@ -363,7 +363,8 @@
       "ES": true,
       "SE": true,
       "ZA": true,
-      "GB": true
+      "GB": true,
+      "US": true
     },
     "cryptoCodes": [
       "BTC",
