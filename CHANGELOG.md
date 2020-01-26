@@ -1,5 +1,13 @@
 # edge-react-gui
 
+## 1.11.4
+
+- New Visual Improvements
+- Buy Crypto with ApplePay now supported in United States
+- Automatically add recipient address in notes after a send transaction for easy viewing
+- Improved wallet search
+- Minor bug fixes
+
 ## 1.11.3
 
 - Update BSV address to use 1 format
