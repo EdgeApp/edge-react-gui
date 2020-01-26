@@ -311,6 +311,7 @@
   "string_split_wallet": "%sをスプリットさせる",
   "string_add_edit_tokens": "トークンを追加 / 編集する",
   "tx_notes_metadata": "%s:%s\n受信アドレス:%s",
+  "tx_notes_metadata_recipient_address": "",
   "exchange_notes_metadata_generic": "%7$sアドレスに%3$s から %1$s %2$s を %6$s の %4$s %5$s に交換しました。\n注文：%8$s \nご不明な点がございましたら、%9$s までお問い合わせください。",
   "exchange_notes_metadata_generic2": "%7$sアドレスに%6$sの%1$s%2$sを%3$sから%4$s%5$sに変更しました\n注文：%8$s。\n取引所支払い先アドレス：%9$s。\n取引所の任意の識別子：%10$s\n\nご不明な点がございましたら、%11$sまでお問い合わせください。",
   "title_crypto_settings": "%s設定",
@@ -354,6 +355,8 @@
   "title_transaction_details": "取引の詳細",
   "title_transactions": "トランザクション",
   "title_wallets": "ウォレット",
+  "title_buy": "",
+  "title_sell": "",
   "title_use_legacy_address": "レガシーアドレスを使う",
   "title_use_regular_address": "通常のアドレスを使う",
   "token_not_supported": "トークンは取引所で取り扱われていません",
@@ -543,5 +546,9 @@
   "user_closed_modal_no_wallet": "",
   "plugin_spend_notes_generic": "",
   "plugin_provider_disclaimer": "",
-  "no_exchange_rate": ""
+  "no_exchange_rate": "",
+  "send_from_wallet": "",
+  "send_to_wallet": "",
+  "exchange_from_wallet": "",
+  "exchange_to_wallet": ""
 }

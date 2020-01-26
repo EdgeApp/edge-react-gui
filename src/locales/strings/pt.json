@@ -311,6 +311,7 @@
   "string_split_wallet": "",
   "string_add_edit_tokens": "Adicionar / Editar Tokens",
   "tx_notes_metadata": "",
+  "tx_notes_metadata_recipient_address": "",
   "exchange_notes_metadata_generic": "",
   "exchange_notes_metadata_generic2": "",
   "title_crypto_settings": "configurações de %s",
@@ -354,6 +355,8 @@
   "title_transaction_details": "Detalhes de Transação",
   "title_transactions": "Transações",
   "title_wallets": "Carteiras",
+  "title_buy": "",
+  "title_sell": "",
   "title_use_legacy_address": "Use o endereço legacy",
   "title_use_regular_address": "Use o endereço regular",
   "token_not_supported": "Token não suportado pela exchange",
@@ -543,5 +546,9 @@
   "user_closed_modal_no_wallet": "",
   "plugin_spend_notes_generic": "",
   "plugin_provider_disclaimer": "",
-  "no_exchange_rate": ""
+  "no_exchange_rate": "",
+  "send_from_wallet": "",
+  "send_to_wallet": "",
+  "exchange_from_wallet": "",
+  "exchange_to_wallet": ""
 }

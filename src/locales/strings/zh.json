@@ -311,6 +311,7 @@
   "string_split_wallet": "拆分：%s",
   "string_add_edit_tokens": "添加/编辑代币",
   "tx_notes_metadata": "%s: %s\n收件人地址: %s",
+  "tx_notes_metadata_recipient_address": "",
   "exchange_notes_metadata_generic": "已交易 %1$s %2$s 从 %3$s 到 %4$s %5$s 在 %6$s 到地址%7$s \n订单：%8$s。 \n如需帮助，请联系%9$s。",
   "exchange_notes_metadata_generic2": "交易%1$s%2$s， 从%3$s 到%4$s%5$s 在%6$s中 到以下地址 %7$s \n命令:%8$s。 \n支付地址: %9$s。 \n唯一标识符: %10$s \n\n如需帮助, 请联系%11$s。",
   "title_crypto_settings": "%s 设置",
@@ -354,6 +355,8 @@
   "title_transaction_details": "交易详情",
   "title_transactions": "交易",
   "title_wallets": "钱包",
+  "title_buy": "",
+  "title_sell": "",
   "title_use_legacy_address": "使用旧地址",
   "title_use_regular_address": "使用常规地址",
   "token_not_supported": "交易所不支持此代币",
@@ -543,5 +546,9 @@
   "user_closed_modal_no_wallet": "",
   "plugin_spend_notes_generic": "",
   "plugin_provider_disclaimer": "",
-  "no_exchange_rate": ""
+  "no_exchange_rate": "",
+  "send_from_wallet": "",
+  "send_to_wallet": "",
+  "exchange_from_wallet": "",
+  "exchange_to_wallet": ""
 }

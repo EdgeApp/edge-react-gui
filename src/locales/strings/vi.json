@@ -311,6 +311,7 @@
   "string_split_wallet": "Phân chia %s",
   "string_add_edit_tokens": "Thêm / chỉnh sửa thẻ",
   "tx_notes_metadata": "Địa chỉ người nhận",
+  "tx_notes_metadata_recipient_address": "",
   "exchange_notes_metadata_generic": "Trao đổi %1$s %2$s %3$s %4$s %5$s %6$s đến địa chỉ %7$s \nđặt hàng: %8$s. \nđể hỗ trợ, xin vui lòng liên hệ với %9$s.",
   "exchange_notes_metadata_generic2": "Trao đổi %1$s %2$s %3$s %4$s %5$s %6$s để địa chỉ %7$s \nđặt hàng: %8$s. \ntrao đổi địa chỉ thanh toán: %9$s. \ntrao đổi định danh duy nhất: %10$s \n\nđể được trợ giúp, xin vui lòng liên hệ với %11$s.",
   "title_crypto_settings": "%s cài đặt",
@@ -354,6 +355,8 @@
   "title_transaction_details": "Chi tiết giao dịch",
   "title_transactions": "Giao dịch",
   "title_wallets": "Ví",
+  "title_buy": "",
+  "title_sell": "",
   "title_use_legacy_address": "Sử dụng danh sách địa chỉ",
   "title_use_regular_address": "Sử dụng địa chỉ thường xuyên",
   "token_not_supported": "Mã thông báo không được hỗ trợ khi trao đổi",
@@ -543,5 +546,9 @@
   "user_closed_modal_no_wallet": "",
   "plugin_spend_notes_generic": "",
   "plugin_provider_disclaimer": "",
-  "no_exchange_rate": ""
+  "no_exchange_rate": "",
+  "send_from_wallet": "",
+  "send_to_wallet": "",
+  "exchange_from_wallet": "",
+  "exchange_to_wallet": ""
 }
