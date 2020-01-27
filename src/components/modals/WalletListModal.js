@@ -9,12 +9,13 @@ import { CryptoExchangeWalletListTokenRowConnected as CryptoExchangeWalletListRo
 import s from '../../locales/strings.js'
 import FormattedText from '../../modules/UI/components/FormattedText/index'
 import { CryptoExchangeWalletSelectorModalStyles as styles } from '../../styles/indexStyles'
-import type { GuiWallet } from '../../types/types.js'
+import type { GuiWallet, MostRecentWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { type AirshipBridge, AirshipModal } from './modalParts.js'
 
 export type StateProps = {
-  activeWalletIds: Array<string>
+  activeWalletIds: Array<string>,
+  mostRecentWallets: Array<MostRecentWallet>
 }
 
 type OwnProps = {
@@ -33,7 +34,9 @@ type OwnProps = {
 
 type Record = {
   walletItem: GuiWallet | null,
-  supportedWalletType: Object | null
+  supportedWalletType: Object | null,
+  mostRecentUsed?: boolean,
+  currencyCode?: string | null
 }
 
 type FlatListItem = {
@@ -123,7 +126,9 @@ export class WalletListModal extends Component<Props, LocalState> {
           onTokenPress={this.selectTokenWallet}
           isWalletFiatBalanceVisible
           disableZeroBalance={this.props.disableZeroBalance}
+          isMostRecentWallet={item.mostRecentUsed}
           searchFilter={this.state.input}
+          currencyCodeFilter={item.currencyCode || ''}
         />
       )
     }
@@ -151,11 +156,50 @@ export class WalletListModal extends Component<Props, LocalState> {
       input
     })
   }
-  filterRecords = () => {
+  getMostRecentlyUsedWalletRecords = (size: number) => {
+    const { mostRecentWallets } = this.props
+    const { records } = this.state
+    const mostRecentWalletRecords: Array<Record> = []
+    let i = 0
+    while (mostRecentWalletRecords.length < size) {
+      if (!mostRecentWallets[i]) {
+        break
+      }
+      const mostRecentWalletRecord = records.find(record => record.walletItem && record.walletItem.id === mostRecentWallets[i].id)
+      if (mostRecentWalletRecord) {
+        mostRecentWalletRecords.push({
+          ...mostRecentWalletRecord,
+          currencyCode: mostRecentWallets[i].currencyCode,
+          mostRecentUsed: true
+        })
+      }
+      i++
+    }
+    return mostRecentWalletRecords
+  }
+  getWalletRecords = () => {
     const { records, input } = this.state
+
+    // Most Recent Wallet Records
     if (input === '') {
+      const walletTokenCount = records.reduce((total, record) => {
+        const wallet = record.walletItem
+        const tokenValue = wallet ? wallet.enabledTokens.length : 0
+        if (wallet) {
+          return total + tokenValue + 1
+        }
+        return total
+      }, 0)
+      if (walletTokenCount > 4 && walletTokenCount < 11) {
+        return [...this.getMostRecentlyUsedWalletRecords(2), ...records]
+      }
+      if (walletTokenCount > 10) {
+        return [...this.getMostRecentlyUsedWalletRecords(3), ...records]
+      }
       return records
     }
+
+    // Search Input Filter
     const inputLowerCase = input.toLowerCase()
     const filteredRecords = []
     for (let i = 0; i < records.length; i++) {
@@ -193,7 +237,6 @@ export class WalletListModal extends Component<Props, LocalState> {
   render () {
     const { bridge } = this.props
     const { input } = this.state
-
     return (
       <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(null)}>
         {gap => (
@@ -213,7 +256,7 @@ export class WalletListModal extends Component<Props, LocalState> {
               <FlatList
                 style={{ flex: 1, marginBottom: -gap.bottom }}
                 contentContainerStyle={{ paddingBottom: gap.bottom }}
-                data={this.filterRecords()}
+                data={this.getWalletRecords()}
                 initialNumToRender={24}
                 keyboardShouldPersistTaps="handled"
                 keyExtractor={this.keyExtractor}

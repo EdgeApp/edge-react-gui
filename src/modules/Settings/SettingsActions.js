@@ -1,6 +1,6 @@
 // @flow
 
-import type { GuiTouchIdInfo } from '../../types/types.js'
+import type { GuiTouchIdInfo, MostRecentWallet } from '../../types/types.js'
 
 export const updateSettings = (settings: Object) => ({
   type: 'UI/SETTINGS/UPDATE_SETTINGS',
@@ -73,4 +73,9 @@ export const updateOtpInfo = (otpInfo: { enabled: boolean, otpKey: ?string }) =>
 export const setAccountBalanceVisibility = (isAccountBalanceVisible: boolean) => ({
   type: 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY',
   data: { isAccountBalanceVisible }
+})
+
+export const updateMostRecentWallets = (mostRecentWallets: Array<MostRecentWallet>) => ({
+  type: 'UI/SETTINGS/SET_MOST_RECENT_WALLETS',
+  data: { mostRecentWallets }
 })
