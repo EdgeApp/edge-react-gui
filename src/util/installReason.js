@@ -3,7 +3,7 @@
 import { type Disklet } from 'disklet'
 import { type EdgeAccount } from 'edge-core-js/types'
 
-import { type TrackingValues } from './tracking.js'
+import { type TrackingValues, trackEvent } from './tracking.js'
 
 /**
  * Why was this app installed on the phone?
@@ -34,8 +34,8 @@ let installReason: InstallReason = {}
  * Call this early in the app startup to see if we were installed
  * from an affiliate link or coin-specific link.
  */
-export async function loadInstallReason (disklet: Disklet, isFreshInstall: boolean) {
-  const json = await disklet
+export function loadInstallReason (disklet: Disklet, isFreshInstall: boolean) {
+  return disklet
     .getText(UTILITY_SERVER_FILE)
     .then(json => JSON.parse(json))
     .catch(async () => {
@@ -47,10 +47,12 @@ export async function loadInstallReason (disklet: Disklet, isFreshInstall: boole
     .catch(e => {
       // If all else fails, we just don't have a reason:
       console.log(e)
+      trackEvent('LoadInstallReasonFail')
       return {}
     })
-
-  installReason = cleanInstallReason(json)
+    .then(json => {
+      installReason = cleanInstallReason(json)
+    })
 }
 
 /**
