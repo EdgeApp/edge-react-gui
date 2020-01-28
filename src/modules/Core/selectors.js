@@ -147,9 +147,8 @@ export const fetchExchangeRateFromCore = (state: State, fromCurrencyCode: string
 export const fetchExchangeRateHistory = async (currency: string, date: string): Promise<number> => {
   const currencyHistory = await fetch(`https://info1.edgesecure.co:8444/v1/exchangeRate?currency_pair=${currency}_USD&date=${date}`).catch(e => {
     console.log('Error fetching fetchExchangeRateHistory', e)
-    return 0
   })
-  if (currencyHistory) {
+  if (currencyHistory != null) {
     const result = await currencyHistory.json()
     return parseFloat(result.exchangeRate)
   }
