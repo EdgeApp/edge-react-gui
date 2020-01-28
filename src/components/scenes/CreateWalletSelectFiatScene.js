@@ -56,7 +56,12 @@ export class CreateWalletSelectFiat extends Component<Props, State> {
       // check if account-based or not
       const specialCurrencyInfo = Constants.getSpecialCurrencyInfo(selectedWalletType.currencyCode)
       // check if eos-like
-      const nextSceneKey = specialCurrencyInfo.needsAccountNameSetup ? Constants.CREATE_WALLET_ACCOUNT_SETUP : Constants.CREATE_WALLET_NAME
+      let nextSceneKey = Constants.CREATE_WALLET_NAME
+      if (!specialCurrencyInfo.needsAccountNameSetup || cleanedPrivateKey) {
+        nextSceneKey = Constants.CREATE_WALLET_NAME
+      } else {
+        nextSceneKey = Constants.CREATE_WALLET_ACCOUNT_SETUP
+      }
       Actions[nextSceneKey]({
         selectedWalletType: selectedWalletType,
         selectedFiat: this.getFiatType(this.state.selectedFiat),
