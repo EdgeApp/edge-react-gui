@@ -264,7 +264,9 @@ export class EdgeProvider extends Bridgeable {
   async writeData (data: { [key: string]: string }) {
     const account = CORE_SELECTORS.getAccount(this._state)
     const store = account.dataStore
+    console.log('edgeProvider writeData: ', JSON.stringify(data))
     await Promise.all(Object.keys(data).map(key => store.setItem(this._pluginId, key, data[key])))
+    console.log('edgeProvider writeData Success')
     return { success: true }
   }
 
@@ -278,6 +280,7 @@ export class EdgeProvider extends Bridgeable {
     for (let i = 0; i < keys.length; i++) {
       returnObj[keys[i]] = await store.getItem(this._pluginId, keys[i]).catch(e => undefined)
     }
+    console.log('edgeProvider readData: ', JSON.stringify(returnObj))
     return returnObj
   }
 
