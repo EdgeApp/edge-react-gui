@@ -20,13 +20,6 @@ export const styles = {
     height: '100%',
     backgroundColor: THEME.COLORS.GRAY_4
   },
-  titleStyle: {
-    alignSelf: 'center',
-    fontSize: 20,
-    color: THEME.COLORS.WHITE,
-    fontFamily: THEME.FONTS.DEFAULT,
-    marginLeft: 8
-  },
   instructionArea: {
     paddingVertical: scale(16),
     paddingHorizontal: scale(20),
