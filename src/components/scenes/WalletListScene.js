@@ -11,7 +11,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import iconImage from '../../assets/images/otp/OTP-badge_sm.png'
 import WalletIcon from '../../assets/images/walletlist/my-wallets.png'
-import WalletOptions from '../../connectors/WalletOptionsConnector.js'
+import XPubModal from '../../connectors/XPubModalConnector.js'
 import * as Constants from '../../constants/indexConstants.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
@@ -161,7 +161,7 @@ export default class WalletList extends Component<Props, State> {
     return (
       <SafeAreaView>
         <View style={styles.container}>
-          <WalletOptions />
+          <XPubModal />
           <Gradient style={styles.gradient} />
           <WiredProgressBar progress={getWalletLoadingPercent} />
           <WiredBalanceBox
