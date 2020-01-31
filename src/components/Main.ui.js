@@ -18,10 +18,10 @@ import sellIcon from '../assets/images/tabbar/sell.png'
 import walletIconSelected from '../assets/images/tabbar/wallets_selected.png'
 import walletIcon from '../assets/images/tabbar/wallets.png'
 import { CreateWalletChoiceComponent } from '../components/scenes/CreateWalletChoiceScene.js'
+import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
 import ExchangeDropMenu from '../connectors/components/HeaderMenuExchangeConnector'
 import RequestDropMenu from '../connectors/components/HeaderMenuRequestConnector'
 import { HeaderWalletSelectorConnector as HeaderWalletSelector } from '../connectors/components/HeaderWalletSelectorConnector.js'
-import { ExchangeSettingsConnector } from '../connectors/ExchangeSettingsConnector.js'
 import AddToken from '../connectors/scenes/AddTokenConnector.js'
 import ChangePasswordConnector from '../connectors/scenes/ChangePasswordConnector.ui'
 import ChangePinConnector from '../connectors/scenes/ChangePinConnector.ui'
@@ -638,7 +638,7 @@ export default class Main extends Component<Props> {
                   <Scene
                     key={Constants.EXCHANGE_SETTINGS}
                     navTransparent={true}
-                    component={ExchangeSettingsConnector}
+                    component={SwapSettingsScene}
                     renderTitle={this.renderTitle(EXCHANGE_SETTINGS)}
                     renderLeftButton={this.renderBackButton()}
                     renderRightButton={this.renderEmptyButton()}

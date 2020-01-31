@@ -1,38 +1,39 @@
 // @flow
 
-import { type EdgeSwapConfig } from 'edge-core-js/types'
+import { type EdgePluginMap, type EdgeSwapConfig } from 'edge-core-js/types'
 import React, { Component } from 'react'
 import { Image, ScrollView, View } from 'react-native'
 import CookieManager from 'react-native-cookies'
 import { Actions } from 'react-native-router-flux'
+import { connect } from 'react-redux'
 
+import { deactivateShapeShift } from '../../actions/ShapeShiftActions.js'
 import { getSwapPluginIcon } from '../../assets/images/exchange'
 import * as Constants from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/index'
 import styles from '../../styles/scenes/SettingsStyle'
+import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import SwitchRow from '../common/RowSwitch.js'
 import { RowWithButton } from '../common/RowWithButton.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance.js'
 
-type ExchangeSettingsProps = {
-  exchanges: {
-    [string]: EdgeSwapConfig
-  },
+type Props = {
+  exchanges: EdgePluginMap<EdgeSwapConfig>,
   shapeShiftLogOut(): void
 }
 
-type ExchangeSettingsState = {
+type State = {
   enabled: { [pluginId: string]: boolean },
   needsActivation: { [pluginId: string]: boolean }
 }
 
-export class ExchangeSettingsComponent extends Component<ExchangeSettingsProps, ExchangeSettingsState> {
+export class SwapSettings extends Component<Props, State> {
   cleanups: Array<() => mixed> = []
   sortedIds: Array<string>
 
-  constructor (props: ExchangeSettingsProps) {
+  constructor (props: Props) {
     super(props)
     const { exchanges } = props
 
@@ -65,7 +66,7 @@ export class ExchangeSettingsComponent extends Component<ExchangeSettingsProps, 
     for (const cleanup of this.cleanups) cleanup()
   }
 
-  _onToggleEnableExchange = (pluginId: string) => {
+  _onToggleEnableSwap = (pluginId: string) => {
     const { exchanges } = this.props
     const newValue = !exchanges[pluginId].enabled
     exchanges[pluginId].changeEnabled(newValue)
@@ -105,20 +106,25 @@ export class ExchangeSettingsComponent extends Component<ExchangeSettingsProps, 
 
       return (
         <View style={styles.doubleRowContainer} key={pluginId}>
-          <SwitchRow logo={logo} leftText={displayName} onToggle={() => this._onToggleEnableExchange(pluginId)} value={this.state.enabled[pluginId]} />
+          <SwitchRow logo={logo} leftText={displayName} onToggle={() => this._onToggleEnableSwap(pluginId)} value={this.state.enabled[pluginId]} />
           <RowWithButton logo={logoSource} leftText={displayName + ' ' + s.strings.account} rightText={ssLoginText} onPress={this.shapeShiftSignInToggle} />
         </View>
       )
     }
 
     return (
-      <SwitchRow
-        logo={logo}
-        key={pluginId}
-        leftText={displayName}
-        onToggle={() => this._onToggleEnableExchange(pluginId)}
-        value={this.state.enabled[pluginId]}
-      />
+      <SwitchRow logo={logo} key={pluginId} leftText={displayName} onToggle={() => this._onToggleEnableSwap(pluginId)} value={this.state.enabled[pluginId]} />
     )
   }
 }
+
+export const SwapSettingsScene = connect(
+  (state: ReduxState) => ({
+    exchanges: state.core.account.swapConfig
+  }),
+  (dispatch: Dispatch) => ({
+    shapeShiftLogOut () {
+      dispatch(deactivateShapeShift())
+    }
+  })
+)(SwapSettings)
