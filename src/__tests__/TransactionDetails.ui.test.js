@@ -46,7 +46,6 @@ describe('TransactionDetails.ui', () => {
       currencyCode: 'BTC',
       wallets: { [fakeWallet.id]: fakeWallet },
       setNewSubcategory: jest.fn(),
-      openHelpModal: jest.fn(),
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),
       displayDropdownAlert: jest.fn()
@@ -95,7 +94,6 @@ describe('TransactionDetails.ui', () => {
       currencyCode: 'BTC',
       wallets: { [fakeWallet.id]: fakeWallet },
       setNewSubcategory: jest.fn(),
-      openHelpModal: jest.fn(),
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),
       displayDropdownAlert: jest.fn()
@@ -144,7 +142,6 @@ describe('TransactionDetails.ui', () => {
       currencyCode: 'BTC',
       wallets: { [fakeWallet.id]: fakeWallet },
       setNewSubcategory: jest.fn(),
-      openHelpModal: jest.fn(),
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),
       displayDropdownAlert: jest.fn()
@@ -196,7 +193,6 @@ describe('TransactionDetails.ui', () => {
       currencyCode: 'BTC',
       wallets: { [fakeWallet.id]: fakeWallet },
       setNewSubcategory: jest.fn(),
-      openHelpModal: jest.fn(),
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),
       displayDropdownAlert: jest.fn()

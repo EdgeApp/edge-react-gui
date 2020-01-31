@@ -194,7 +194,6 @@ exports[`TransactionDetails.ui should render 1`] = `
           onPressFxn={[Function]}
           onSelectSubCategory={[Function]}
           onSubcategoryKeyboardReturn={[Function]}
-          openModalFxn={[Function]}
           subCategory=""
           subCategorySelectVisibility={false}
           txExplorerUrl={null}
@@ -402,7 +401,6 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
           onPressFxn={[Function]}
           onSelectSubCategory={[Function]}
           onSubcategoryKeyboardReturn={[Function]}
-          openModalFxn={[Function]}
           subCategory=""
           subCategorySelectVisibility={false}
           txExplorerUrl={null}
@@ -607,7 +605,6 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
           onPressFxn={[Function]}
           onSelectSubCategory={[Function]}
           onSubcategoryKeyboardReturn={[Function]}
-          openModalFxn={[Function]}
           subCategory=""
           subCategorySelectVisibility={false}
           txExplorerUrl={null}
@@ -812,7 +809,6 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
           onPressFxn={[Function]}
           onSelectSubCategory={[Function]}
           onSubcategoryKeyboardReturn={[Function]}
-          openModalFxn={[Function]}
           subCategory=""
           subCategorySelectVisibility={false}
           txExplorerUrl={null}
