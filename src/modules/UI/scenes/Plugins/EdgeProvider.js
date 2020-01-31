@@ -381,13 +381,12 @@ export class EdgeProvider extends Bridgeable {
   // log body and signature and pubic address and final message (returned from signMessage)
   // log response afterwards line 451
   async signMessage (message: string) /* EdgeSignedMessage */ {
-    console.log('signMessage message:', message)
+    console.log(`signMessage message:***${message}***`)
     const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
     const coreWallet = CORE_SELECTORS.getWallet(this._state, guiWallet.id)
-    console.log('signMessage public address:', guiWallet.receiveAddress.publicAddress)
     const signedMessage = await coreWallet.otherMethods.signMessageBase64(message, guiWallet.receiveAddress.publicAddress)
-    console.log('signMessage signedMessage:', signedMessage)
-    console.log(message + guiWallet.receiveAddress.publicAddress + signedMessage)
+    console.log(`signMessage public address:***${guiWallet.receiveAddress.publicAddress}***`)
+    console.log(`signMessage signedMessage:***${signedMessage}***`)
     return signedMessage
   }
 
