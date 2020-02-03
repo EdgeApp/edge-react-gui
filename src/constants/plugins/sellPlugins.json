@@ -464,7 +464,7 @@
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/06/Safello-Logo-Green-background.png",
     "countryCodes": {
       "SE": true,
-      "DK": true
+      "DK": false
     },
     "cryptoCodes": [
       "BTC"
