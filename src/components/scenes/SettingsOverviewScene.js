@@ -2,7 +2,7 @@
 
 import type { EdgeAccount } from 'edge-core-js'
 import { getSupportedBiometryType } from 'edge-login-ui-rn'
-import React, { Component } from 'react'
+import React, { type Node, Component } from 'react'
 import { ScrollView, Text, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
@@ -54,28 +54,10 @@ type State = {
 }
 
 export default class SettingsOverview extends Component<Props, State> {
-  optionModals: Array<Object>
-  currencies: Array<Object>
   constructor (props: Props) {
     super(props)
     this.state = {
       touchIdText: s.strings.settings_button_use_touchID
-    }
-
-    this.optionModals = [
-      {
-        key: 'autoLogoff',
-        text: s.strings.settings_title_auto_logoff
-      }
-    ]
-
-    this.currencies = []
-    for (const currencyKey in Constants.CURRENCY_SETTINGS) {
-      const { pluginName } = Constants.CURRENCY_SETTINGS[currencyKey]
-      this.currencies.push({
-        text: pluginName.charAt(0).toUpperCase() + pluginName.slice(1),
-        routeFunction: Actions[currencyKey]
-      })
     }
   }
 
@@ -247,7 +229,7 @@ export default class SettingsOverview extends Component<Props, State> {
               <RowSwitch leftText={this.state.touchIdText} key={'useTouchID'} onToggle={this._onToggleTouchIdOption} value={this.props.touchIdEnabled} />
             )}
 
-            {this.currencies.map(this.renderRowRoute)}
+            {this.renderCurrencyRows()}
 
             <RowSwitch leftText={s.strings.settings_developer_mode} key="developerMode" onToggle={this.onDeveloperPress} value={this.props.developerModeOn} />
 
@@ -273,6 +255,24 @@ export default class SettingsOverview extends Component<Props, State> {
     )
   }
 
+  renderCurrencyRows (): Node[] {
+    const { account } = this.props
+
+    const out: Node[] = []
+    for (const currencyKey in Constants.CURRENCY_SETTINGS) {
+      const routeFunction = Actions[currencyKey]
+
+      // Grab out the displayName, if the currency exists:
+      const { pluginName } = Constants.CURRENCY_SETTINGS[currencyKey]
+      const currencyConfig = account.currencyConfig[pluginName]
+      if (currencyConfig == null) continue
+      const { displayName } = currencyConfig.currencyInfo
+
+      out.push(<RowRoute disabled={false} key={currencyKey} leftText={displayName} routeFunction={routeFunction} />)
+    }
+    return out
+  }
+
   showConfirmPasswordModal = () => {
     if (!this.props.isLocked) {
       this.props.lockSettings()
@@ -288,8 +288,4 @@ export default class SettingsOverview extends Component<Props, State> {
   showRestoreWalletModal = () => {
     this.props.showRestoreWalletsModal()
   }
-
-  renderRowRoute = (x: Object, i: number) => <RowRoute disabled={false} key={i} leftText={x.text} routeFunction={x.routeFunction} right={x.right} />
-
-  renderRowModal = (x: Object) => <RowModal leftText={x.text} key={x.key} modal={x.key.toString()} />
 }
