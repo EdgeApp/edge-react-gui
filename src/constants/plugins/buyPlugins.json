@@ -620,7 +620,7 @@
     "addOnUrl": "/?payment=IDEAL&country=nl",
     "title": "iDEAL",
     "paymentTypeLogoKey": "ideal",
-    "description": "Fee: 1% / Settlement: Instant\nLimit: £10000",
+    "description": "Fee: ~2.9% / Settlement: Instant\nLimit: £10000",
     "priority": 1
   }
 ]
