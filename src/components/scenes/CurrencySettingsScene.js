@@ -1,12 +1,14 @@
 // @flow
 
-import React, { Component } from 'react'
-import { View } from 'react-native'
+import React, { Component, Fragment } from 'react'
+import { ScrollView, Text, View } from 'react-native'
 
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/index'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
+import { dayText } from '../../styles/common/textStyles.js'
 import styles from '../../styles/scenes/SettingsStyle'
+import { THEME } from '../../theme/variables/airbitz'
 import type { GuiDenomination } from '../../types/types.js'
 import RadioRows from '../common/RadioRows.js'
 import ModalRow from '../common/RowModal.js'
@@ -116,7 +118,7 @@ export default class CurrencySettings extends Component<Props, State> {
   render () {
     return (
       <SceneWrapper background="body" hasTabs={false}>
-        <View style={styles.container}>
+        <ScrollView>
           {this.props.defaultElectrumServer.length !== 0 && (
             <SetCustomNodesModal
               isActive={this.state.isSetCustomNodesModalVisible}
@@ -133,10 +135,9 @@ export default class CurrencySettings extends Component<Props, State> {
             {this.props.denominations.map(denomination => {
               const key = denomination.multiplier
               const left = (
-                <View style={{ flexDirection: 'row' }}>
-                  <T style={styles.symbol}>{denomination.symbol}</T>
-                  <T> - {denomination.name}</T>
-                </View>
+                <Text style={{ ...dayText('row-left'), color: THEME.COLORS.GRAY_1 }}>
+                  <Text style={{ fontFamily: THEME.FONTS.SYMBOLS }}>{denomination.symbol}</Text> - {denomination.name}
+                </Text>
               )
               const isSelected = key === this.props.selectedDenominationKey
               const onPress = this.selectDenomination(key)
@@ -144,7 +145,7 @@ export default class CurrencySettings extends Component<Props, State> {
             })}
           </RadioRows>
           {this.props.defaultElectrumServer.length !== 0 && (
-            <View>
+            <Fragment>
               {this.subHeader(CUSTOM_NODES_TEXT)}
               <SwitchRow
                 leftText={s.strings.settings_enable_custom_nodes}
@@ -157,9 +158,9 @@ export default class CurrencySettings extends Component<Props, State> {
                 leftText={s.strings.settings_set_custom_nodes_modal_title}
                 disabled={!this.props.disableFetchingServers}
               />
-            </View>
+            </Fragment>
           )}
-        </View>
+        </ScrollView>
       </SceneWrapper>
     )
   }

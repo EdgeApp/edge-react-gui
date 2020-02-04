@@ -20,16 +20,6 @@ export const styles = {
     height: '100%',
     backgroundColor: THEME.COLORS.GRAY_4
   },
-  instructionArea: {
-    paddingVertical: scale(16),
-    paddingHorizontal: scale(20),
-    backgroundColor: THEME.COLORS.GRAY_4
-  },
-  instructionText: {
-    textAlign: 'center',
-    fontSize: scale(16),
-    color: THEME.COLORS.GRAY_1
-  },
   listStyle: {
     height: scale(100)
   },
@@ -160,58 +150,6 @@ export const styles = {
   },
   underlay: {
     color: 'rgba(0,0,0,0)'
-  },
-  symbol: {
-    fontFamily: THEME.FONTS.SYMBOLS
-  },
-
-  /// //// beginning of default fiat area ////////
-  resultList: {
-    backgroundColor: THEME.COLORS.WHITE,
-    borderTopColor: THEME.COLORS.GRAY_3,
-    borderTopWidth: 1,
-    flexGrow: 1,
-    flexShrink: 1
-  },
-  singleFiatType: {
-    height: scale(60),
-    borderBottomWidth: 1,
-    borderBottomColor: THEME.COLORS.GRAY_3,
-    paddingVertical: scale(10),
-    paddingHorizontal: scale(15)
-  },
-  singleFiatTypeWrap: {
-    flexDirection: 'column',
-    flex: 1
-  },
-  fiatTypeInfoWrap: {
-    flexDirection: 'row',
-    height: scale(40),
-    flex: 1,
-    justifyContent: 'space-between'
-  },
-  fiatTypeLeft: {
-    flexDirection: 'row'
-  },
-  fiatTypeLogo: {
-    width: scale(40),
-    height: scale(40),
-    marginRight: scale(10)
-  },
-  fiatTypeLeftTextWrap: {
-    justifyContent: 'center'
-  },
-  fiatTypeName: {
-    fontSize: scale(16),
-    color: THEME.COLORS.GRAY_1,
-    textAlignVertical: 'center'
-  },
-  underlayColor: {
-    color: THEME.COLORS.GRAY_4
-  },
-  /// ////// end of default fiat area //////////
-  bottomShim: {
-    backgroundColor: THEME.COLORS.WHITE
   }
 }
 export default StyleSheet.create(styles)

@@ -5,15 +5,7 @@ exports[`CurrencySettings should render 1`] = `
   background="body"
   hasTabs={false}
 >
-  <View
-    style={
-      Object {
-        "backgroundColor": "#F4F5F6",
-        "height": "100%",
-        "position": "relative",
-      }
-    }
-  >
+  <ScrollViewMock>
     <Gradient
       style={
         Array [
@@ -68,14 +60,18 @@ exports[`CurrencySettings should render 1`] = `
         }
         isSelected={false}
         left={
-          <View
+          <Text
             style={
               Object {
-                "flexDirection": "row",
+                "color": "#4A5157",
+                "flexShrink": 1,
+                "fontFamily": "SourceSansPro-Black",
+                "fontSize": 22,
+                "textAlign": "left",
               }
             }
           >
-            <FormattedText
+            <Text
               style={
                 Object {
                   "fontFamily": "SourceSansPro-Black",
@@ -83,12 +79,10 @@ exports[`CurrencySettings should render 1`] = `
               }
             >
               ₿
-            </FormattedText>
-            <FormattedText>
-               - 
-              BTG
-            </FormattedText>
-          </View>
+            </Text>
+             - 
+            BTG
+          </Text>
         }
         onPress={[Function]}
       />
@@ -102,14 +96,18 @@ exports[`CurrencySettings should render 1`] = `
         }
         isSelected={false}
         left={
-          <View
+          <Text
             style={
               Object {
-                "flexDirection": "row",
+                "color": "#4A5157",
+                "flexShrink": 1,
+                "fontFamily": "SourceSansPro-Black",
+                "fontSize": 22,
+                "textAlign": "left",
               }
             }
           >
-            <FormattedText
+            <Text
               style={
                 Object {
                   "fontFamily": "SourceSansPro-Black",
@@ -117,12 +115,10 @@ exports[`CurrencySettings should render 1`] = `
               }
             >
               m₿
-            </FormattedText>
-            <FormattedText>
-               - 
-              mBTG
-            </FormattedText>
-          </View>
+            </Text>
+             - 
+            mBTG
+          </Text>
         }
         onPress={[Function]}
       />
@@ -136,14 +132,18 @@ exports[`CurrencySettings should render 1`] = `
         }
         isSelected={true}
         left={
-          <View
+          <Text
             style={
               Object {
-                "flexDirection": "row",
+                "color": "#4A5157",
+                "flexShrink": 1,
+                "fontFamily": "SourceSansPro-Black",
+                "fontSize": 22,
+                "textAlign": "left",
               }
             }
           >
-            <FormattedText
+            <Text
               style={
                 Object {
                   "fontFamily": "SourceSansPro-Black",
@@ -151,16 +151,14 @@ exports[`CurrencySettings should render 1`] = `
               }
             >
               ƀ
-            </FormattedText>
-            <FormattedText>
-               - 
-              bits
-            </FormattedText>
-          </View>
+            </Text>
+             - 
+            bits
+          </Text>
         }
         onPress={[Function]}
       />
     </RadioRows>
-  </View>
+  </ScrollViewMock>
 </SceneWrapper>
 `;
