@@ -18,6 +18,7 @@ import paymentTypeLogoCash from '../../assets/images/paymentTypes/paymentTypeLog
 import paymentTypeLogoCreditCard from '../../assets/images/paymentTypes/paymentTypeLogoCreditCard.png'
 import paymentTypeLogoFasterPayments from '../../assets/images/paymentTypes/paymentTypeLogoFasterPayments.png'
 import paymentTypeLogoGiftCard from '../../assets/images/paymentTypes/paymentTypeLogoGiftCard.png'
+import paymentTypeLogoIdeal from '../../assets/images/paymentTypes/paymentTypeLogoIdeal.png'
 import paymentTypeLogoNewsagent from '../../assets/images/paymentTypes/paymentTypeLogoNewsagent.png'
 import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLogoPoli.png'
 import paymentTypeLogoSwish from '../../assets/images/paymentTypes/paymentTypeLogoSwish.png'
@@ -46,6 +47,7 @@ const paymentTypeLogosById = {
   cash: paymentTypeLogoCash,
   fasterPayments: paymentTypeLogoFasterPayments,
   giftcard: paymentTypeLogoGiftCard,
+  ideal: paymentTypeLogoIdeal,
   newsagent: paymentTypeLogoNewsagent,
   poli: paymentTypeLogoPoli,
   swish: paymentTypeLogoSwish

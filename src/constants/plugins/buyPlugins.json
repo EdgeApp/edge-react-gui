@@ -487,7 +487,8 @@
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
     "countryCodes": {
       "GB": true,
-      "AU": true
+      "AU": true,
+      "NL": true
     },
     "cryptoCodes": [
       "BTC",
@@ -610,5 +611,16 @@
       "GB"
     ],
     "priority": 2
+  },
+  {
+    "id": "banxa.bank",
+    "forCountries": [
+      "NL"
+    ],
+    "addOnUrl": "/?payment=IDEAL&country=nl",
+    "title": "iDEAL",
+    "paymentTypeLogoKey": "ideal",
+    "description": "Fee: ~2.9% / Settlement: Instant\nLimit: €10000",
+    "priority": 1
   }
 ]
