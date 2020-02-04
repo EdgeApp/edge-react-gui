@@ -516,6 +516,27 @@
     "paymentTypeLogoKey": "newsagent",
     "addOnUrl": "?country=AU&payment=BLUEONLINE"
   },
+  {
+    "id": "banxa.credit",
+    "pluginId": "banxa",
+    "paymentType": {
+      "bank": false,
+      "cash": false,
+      "credit": true
+    },
+    "description": "Fee: ~2.9% / Settlement: Instant\nLimit: $5000/day",
+    "title": "Credit and Debit Card",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
+    "countryCodes": {
+      "AU": true
+    },
+    "cryptoCodes": [
+      "BTC",
+      "ETH"
+    ],
+    "paymentTypeLogoKey": "credit",
+    "addOnUrl": "?payment=WORLDPAYCREDIT&country=au"
+  },
   "----- Sorting -----",
   {
     "id": "simplex",
@@ -540,6 +561,10 @@
   {
     "id": "banxa.cash",
     "priority": 7
+  },
+  {
+    "id": "banxa.credit",
+    "priority": 2
   },
   {
     "id": "libertyx",
