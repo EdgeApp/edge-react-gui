@@ -10,7 +10,7 @@ PODS:
   - disklet (0.4.4):
     - React
   - DoubleConversion (1.1.6)
-  - edge-login-ui-rn (0.6.2):
+  - edge-login-ui-rn (0.6.4):
     - React
   - Firebase/Core (5.3.0):
     - Firebase/CoreOnly
@@ -292,7 +292,7 @@ SPEC CHECKSUMS:
   BVLinearGradient: 0d985ec461359c82bc254f26d11008bdae50d17a
   disklet: e96005d8f739209fdb4bae6151bf8d63df5f5d52
   DoubleConversion: bb338842f62ab1d708ceb63ec3d999f0f3d98ecd
-  edge-login-ui-rn: 65e1fe554f541cb70d0f6b8788a8c67df738aa04
+  edge-login-ui-rn: f26f05516fd9b8739f4418e3cf0d0c38526049ea
   Firebase: 68afeeb05461db02d7c9e3215cda28068670f4aa
   FirebaseAnalytics: b3628aea54c50464c32c393fb2ea032566e7ecc2
   FirebaseCore: 62f1b792a49bb9e8b4073f24606d2c93ffc352f0
