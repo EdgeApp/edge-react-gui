@@ -550,5 +550,12 @@
   "send_from_wallet": "Send from %s",
   "send_to_wallet": "Receive to %s",
   "exchange_from_wallet": "Exchange from %s",
-  "exchange_to_wallet": "Exchange to %s"
+  "exchange_to_wallet": "Exchange to %s",
+  "UnregisteredDomain": "Domain %1$s is not registered",
+  "UnspecifiedResolver": "Domain %1$s is not configured",
+  "UnsupportedDomain": "Domain %1$s is not supported",
+  "UnspecifiedCurrency": "Domain %1$s has no %2$s address attached to it",
+  "NamingServiceDown": "%3$s naming service is down at the moment",
+  "UnsupportedCurrency": "%2$s is not supported for %1%s",
+  "RecordNotFound": "No %2%s record found for %1$s"
 }
