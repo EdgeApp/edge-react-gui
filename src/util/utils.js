@@ -521,6 +521,22 @@ export const getRequestForAddress = (data: string): RequestPaymentAddress => {
   return { sourceName, currencyName, callbackUrl, callbackDomain }
 }
 
+export const debounce = (func: any, wait: number, immediate: boolean) => {
+  let timeout
+  return () => {
+    const context = this
+    const args = arguments
+    const later = () => {
+      timeout = null
+      if (!immediate) func.apply(context, args)
+    }
+    const callNow = immediate && !timeout
+    if (timeout) clearTimeout(timeout)
+    timeout = setTimeout(later, wait)
+    if (callNow) func.apply(context, args)
+  }
+}
+
 export const getTotalFiatAmountFromExchangeRates = (state: State, isoFiatCurrencyCode: string) => {
   const temporaryTotalCrypto = {}
   const wallets = state.ui.wallets.byId
