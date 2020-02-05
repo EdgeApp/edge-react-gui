@@ -2759,9 +2759,9 @@ bs58check@2.1.2, bs58check@<3.0.0, bs58check@^1.0.8, bs58check@^2.1.1, bs58check
     create-hash "^1.1.0"
     safe-buffer "^5.1.2"
 
-"bs58grscheck@git+https://github.com/Groestlcoin/bs58grscheck.git":
+"bs58grscheck@https://github.com/Groestlcoin/bs58grscheck":
   version "2.1.2"
-  resolved "git+https://github.com/Groestlcoin/bs58grscheck.git#79d8126ae627cdfa26aec1c2cfd18f71946695c4"
+  resolved "https://github.com/Groestlcoin/bs58grscheck#79d8126ae627cdfa26aec1c2cfd18f71946695c4"
   dependencies:
     bs58 "^4.0.0"
     create-hash "^1.1.0"
@@ -3968,10 +3968,10 @@ edge-components@^0.0.26:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.16.20:
-  version "0.16.20"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.16.20.tgz#a109fe87d71cf112f888810b008d2431c470f1f0"
-  integrity sha512-q7yMY/285ZYavmDQ486R39VXYk3stHudzjxzA4Nzbz5ZP9xt1BWzVnR0jG/kR6Eb2tMQzYsi2YYSUiuZwyvCsQ==
+edge-core-js@^0.16.21:
+  version "0.16.21"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.16.21.tgz#3fda8654a07e464722c9ec3607f75abd77f286e2"
+  integrity sha512-MpBArihJNYh//VLRGmQC+n2e91a7ZEMNV8VaEENLzjUD4E4UkfBsd/Uvj9r+2J6yQiXVpr/WucTubZvX+3SzfA==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
