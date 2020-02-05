@@ -20,9 +20,12 @@ type DispatchProps = {
 const mapStateToProps = (state: State): StateProps => {
   const currentUsername = CORE_SELECTORS.getUsername(state)
   const allUsernames = CORE_SELECTORS.getUsernames(state)
+  const folder = CORE_SELECTORS.getFolder(state)
+
   return {
     currentUsername,
-    allUsernames
+    allUsernames,
+    folder
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
