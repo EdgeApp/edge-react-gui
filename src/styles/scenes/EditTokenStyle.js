@@ -24,23 +24,6 @@ export const styles = {
     color: THEME.COLORS.WHITE
   },
 
-  headerRow: {
-    padding: scale(12),
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    height: scale(50)
-  },
-  headerText: {
-    fontSize: scale(18),
-    color: THEME.COLORS.WHITE,
-    backgroundColor: THEME.COLORS.TRANSPARENT,
-    marginLeft: scale(16)
-  },
-  headerIcon: {
-    backgroundColor: THEME.COLORS.TRANSPARENT,
-    fontSize: scale(22)
-  },
-
   instructionalArea: {
     paddingVertical: scale(16),
     paddingHorizontal: scale(20)

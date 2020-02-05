@@ -14,9 +14,9 @@ import s from '../../locales/strings.js'
 import { dayText } from '../../styles/common/textStyles.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
-import SwitchRow from '../common/RowSwitch.js'
-import { RowWithButton } from '../common/RowWithButton.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { SettingsLabelRow } from '../common/SettingsLabelRow.js'
+import { SettingsSwitchRow } from '../common/SettingsSwitchRow.js'
 import { showError } from '../services/AirshipInstance.js'
 
 type Props = {
@@ -66,12 +66,6 @@ export class SwapSettings extends Component<Props, State> {
     for (const cleanup of this.cleanups) cleanup()
   }
 
-  _onToggleEnableSwap = (pluginId: string) => {
-    const { exchanges } = this.props
-    const newValue = !exchanges[pluginId].enabled
-    exchanges[pluginId].changeEnabled(newValue)
-  }
-
   shapeShiftSignInToggle = () => {
     if (this.state.needsActivation.shapeshift) {
       CookieManager.clearAll()
@@ -100,21 +94,26 @@ export class SwapSettings extends Component<Props, State> {
     const { displayName } = exchanges[pluginId].swapInfo
     const logo = this.renderPluginIcon(pluginId)
 
+    function handlePress () {
+      const newValue = !exchanges[pluginId].enabled
+      exchanges[pluginId].changeEnabled(newValue)
+    }
+
+    const toggle = <SettingsSwitchRow key={pluginId} icon={logo} text={displayName} value={this.state.enabled[pluginId]} onPress={handlePress} />
+
     if (pluginId === 'shapeshift') {
-      const logoSource = getSwapPluginIcon(pluginId)
-      const ssLoginText = this.state.needsActivation.shapeshift ? s.strings.ss_login : s.strings.ss_logout
+      const leftText = displayName + ' ' + s.strings.account
+      const actionText = this.state.needsActivation.shapeshift ? s.strings.ss_login : s.strings.ss_logout
 
       return (
         <Fragment>
-          <SwitchRow logo={logo} leftText={displayName} onToggle={() => this._onToggleEnableSwap(pluginId)} value={this.state.enabled[pluginId]} />
-          <RowWithButton logo={logoSource} leftText={displayName + ' ' + s.strings.account} rightText={ssLoginText} onPress={this.shapeShiftSignInToggle} />
+          {toggle}
+          <SettingsLabelRow key="activate" icon={logo} text={leftText} right={actionText} onPress={this.shapeShiftSignInToggle} />
         </Fragment>
       )
     }
 
-    return (
-      <SwitchRow logo={logo} key={pluginId} leftText={displayName} onToggle={() => this._onToggleEnableSwap(pluginId)} value={this.state.enabled[pluginId]} />
-    )
+    return toggle
   }
 
   renderPluginIcon (pluginId: string): Node {
@@ -136,8 +135,7 @@ const rawStyles = {
   },
   swapIcon: {
     height: iconSize,
-    width: iconSize,
-    marginRight: THEME.rem(1)
+    width: iconSize
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
