@@ -2759,13 +2759,13 @@ bs58check@2.1.2, bs58check@<3.0.0, bs58check@^1.0.8, bs58check@^2.1.1, bs58check
     create-hash "^1.1.0"
     safe-buffer "^5.1.2"
 
-"bs58grscheck@https://github.com/Groestlcoin/bs58grscheck":
+"bs58grscheck@git+https://github.com/Groestlcoin/bs58grscheck.git":
   version "2.1.2"
-  resolved "https://github.com/Groestlcoin/bs58grscheck#020feec2b3153aeb278596ea70ce3579a37f4e21"
+  resolved "git+https://github.com/Groestlcoin/bs58grscheck.git#79d8126ae627cdfa26aec1c2cfd18f71946695c4"
   dependencies:
     bs58 "^4.0.0"
     create-hash "^1.1.0"
-    groestl-hash-js "https://github.com/Groestlcoin/groestl-hash-js.git"
+    groestl-hash-js "^1.0.0"
     safe-buffer "^5.1.2"
 
 bs58smartcheck@^2.0.4:
@@ -4019,10 +4019,10 @@ edge-currency-accountbased@^0.6.4:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@^4.7.4:
-  version "4.7.4"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.7.4.tgz#ab6eaf285687d06c08ea098d9f3ee73ffe2f93c5"
-  integrity sha512-Dujd19WKb2sqeWmMpPbYPUQ9gVxTPh6CUG56z1L2x5UMQ6F+wGew6KXOYsIXXy+wMF/hwnSBNXo0MHJ8kKCw5A==
+edge-currency-bitcoin@^4.7.5:
+  version "4.7.5"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.7.5.tgz#5fc5f38e84942a54865f69314010c468a7af0a9d"
+  integrity sha512-bcynmGNN3VJM757RgwCc7+ip/wld0l7qLQTRVuJAvMxW4srmSI2KsmBoUn0q4i/T13ZZH9eHcSDv78enf6PO+Q==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -5557,9 +5557,10 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.3
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.15.tgz#ffb703e1066e8a0eeaa4c8b80ba9253eeefbfb00"
   integrity sha512-6uHUhOPEBgQ24HM+r6b/QwWfZq+yiFcipKFrOFiBEnWdy5sdzYoi+pJeQaPI5qOLRFqWmAXUPQNsielzdLoecA==
 
-"groestl-hash-js@https://github.com/Groestlcoin/groestl-hash-js.git":
+groestl-hash-js@^1.0.0:
   version "1.0.0"
-  resolved "https://github.com/Groestlcoin/groestl-hash-js.git#ef6a04f1c4d2f0448f0882b5f213ef7a0659baee"
+  resolved "https://registry.yarnpkg.com/groestl-hash-js/-/groestl-hash-js-1.0.0.tgz#c9ec325716ec48b223cfaaee673c5f8ffd7606c9"
+  integrity sha1-yewyVxbsSLIjz6ruZzxfj/12Bsk=
 
 growly@^1.3.0:
   version "1.3.0"
