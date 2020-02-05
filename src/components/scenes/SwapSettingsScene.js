@@ -5,8 +5,10 @@ import React, { type Node, Component, Fragment } from 'react'
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native'
 import CookieManager from 'react-native-cookies'
 import { Actions } from 'react-native-router-flux'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { connect } from 'react-redux'
 
+import { setPreferredSwapPluginId } from '../../actions/SettingsActions.js'
 import { deactivateShapeShift } from '../../actions/ShapeShiftActions.js'
 import { getSwapPluginIcon } from '../../assets/images/exchange'
 import * as Constants from '../../constants/indexConstants.js'
@@ -15,12 +17,17 @@ import { dayText } from '../../styles/common/textStyles.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
 import { SettingsLabelRow } from '../common/SettingsLabelRow.js'
+import { SettingsRow } from '../common/SettingsRow.js'
 import { SettingsSwitchRow } from '../common/SettingsSwitchRow.js'
-import { showError } from '../services/AirshipInstance.js'
+import { SwapPreferredModal } from '../modals/SwapPreferredModal.js'
+import { Airship, showError } from '../services/AirshipInstance.js'
 
 type Props = {
   exchanges: EdgePluginMap<EdgeSwapConfig>,
+  preferredSwapPluginId: string | void,
+  changePreferredSwapPlugin(pluginId: string | void): void,
   shapeShiftLogOut(): void
 }
 
@@ -76,14 +83,23 @@ export class SwapSettings extends Component<Props, State> {
     }
   }
 
+  handlePreferredModal = () => {
+    const { exchanges, preferredSwapPluginId, changePreferredSwapPlugin } = this.props
+    Airship.show(bridge => <SwapPreferredModal bridge={bridge} exchanges={exchanges} selected={preferredSwapPluginId} />).then(pluginId => {
+      if (pluginId !== preferredSwapPluginId) changePreferredSwapPlugin(pluginId)
+    })
+  }
+
   render () {
     return (
       <SceneWrapper hasTabs={false} background="body">
-        <ScrollView>
+        <ScrollView contentContainerStyle={{ paddingBottom: THEME.rem(4) }}>
           <View style={styles.instructionArea}>
             <Text style={styles.instructionText}>{s.strings.settings_exchange_instruction}</Text>
           </View>
           {this.sortedIds.map(pluginId => this.renderPlugin(pluginId))}
+          <SettingsHeaderRow text={s.strings.swap_preferred_header} />
+          {this.renderPreferredArea()}
         </ScrollView>
       </SceneWrapper>
     )
@@ -120,6 +136,32 @@ export class SwapSettings extends Component<Props, State> {
     const logoSource = getSwapPluginIcon(pluginId)
     return <Image resizeMode="contain" style={styles.swapIcon} source={logoSource} />
   }
+
+  renderPreferredArea () {
+    const { exchanges } = this.props
+    const pluginId = this.props.preferredSwapPluginId
+
+    const { text, icon } =
+      pluginId != null && exchanges[pluginId] != null
+        ? {
+          text: exchanges[pluginId].swapInfo.displayName,
+          icon: this.renderPluginIcon(pluginId)
+        }
+        : {
+          text: s.strings.swap_preferred_cheapest,
+          icon: <AntDesignIcon name="barschart" color={THEME.COLORS.GRAY_1} size={iconSize} style={styles.swapIcon} />
+        }
+
+    return (
+      <Fragment>
+        <View style={styles.instructionArea}>
+          <Text style={styles.instructionText}>{s.strings.swap_preferred_instructions}</Text>
+        </View>
+
+        <SettingsRow icon={icon} text={text} onPress={this.handlePreferredModal} />
+      </Fragment>
+    )
+  }
 }
 
 const iconSize = THEME.rem(1.375)
@@ -142,11 +184,15 @@ const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const SwapSettingsScene = connect(
   (state: ReduxState) => ({
-    exchanges: state.core.account.swapConfig
+    exchanges: state.core.account.swapConfig,
+    preferredSwapPluginId: state.ui.settings.preferredSwapPluginId
   }),
   (dispatch: Dispatch) => ({
     shapeShiftLogOut () {
       dispatch(deactivateShapeShift())
+    },
+    changePreferredSwapPlugin (pluginId) {
+      dispatch(setPreferredSwapPluginId(pluginId))
     }
   })
 )(SwapSettings)
