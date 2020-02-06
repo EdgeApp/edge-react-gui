@@ -27,6 +27,7 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   defaultFiat: 'USD',
   defaultIsoFiat: 'iso:USD',
   merchantMode: false,
+  preferredSwapPluginId: '',
   countryCode: '',
   BTC: {
     denomination: '100000000'
@@ -230,6 +231,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   defaultFiat: 'string',
   defaultIsoFiat: 'string',
   merchantMode: 'boolean',
+  preferredSwapPluginId: 'string',
   countryCode: 'string',
   BTC: 'object',
   BCH: 'object',
@@ -360,6 +362,13 @@ export const setMerchantModeRequest = (account: EdgeAccount, merchantMode: boole
     const updatedSettings = updateSettings(settings, { merchantMode })
     return setSyncedSettings(account, updatedSettings)
   })
+
+export const setPreferredSwapPluginId = (account: EdgeAccount, pluginId: string | void) => {
+  return getSyncedSettings(account).then(settings => {
+    const updatedSettings = updateSettings(settings, { preferredSwapPluginId: pluginId == null ? '' : pluginId })
+    return setSyncedSettings(account, updatedSettings)
+  })
+}
 
 export const setMostRecentWalletsSelected = (account: EdgeAccount, mostRecentWallets: Array<MostRecentWallet>) =>
   getSyncedSettings(account).then(settings => {
