@@ -15,7 +15,7 @@ export const sendLogs = (text: string) => async (dispatch: Dispatch, getState: G
   const core = getState().core
   let walletDump = ''
   if (core && core.wallets && core.wallets.byId) {
-    let accountSummary = ''
+    let accountSummary = '***Account Wallet Summary***\n'
     for (const walletId in core.wallets.byId) {
       const codes = await core.wallets.byId[walletId].getEnabledTokens()
       if (codes.length === 0) {
