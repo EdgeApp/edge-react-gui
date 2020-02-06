@@ -117,7 +117,8 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
 
 async function fetchSwapQuote (state: State, request: EdgeSwapRequest): Promise<GuiSwapInfo> {
   const account = CORE_SELECTORS.getAccount(state)
-  const quote: EdgeSwapQuote = await account.fetchSwapQuote(request)
+  const { preferredSwapPluginId } = state.ui.settings
+  const quote: EdgeSwapQuote = await account.fetchSwapQuote(request, { preferPluginId: preferredSwapPluginId })
 
   // Currency conversion tools:
   const { fromWallet, toWallet, fromCurrencyCode, toCurrencyCode } = request

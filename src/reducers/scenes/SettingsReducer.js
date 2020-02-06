@@ -79,6 +79,7 @@ export type SettingsState = {
   isTouchSupported: boolean,
   loginStatus: boolean | null,
   merchantMode: boolean,
+  preferredSwapPluginId: string | void,
   otpKey: string | null,
   otpResetPending: boolean,
   otpMode: boolean,
@@ -203,6 +204,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         defaultFiat,
         defaultIsoFiat,
         merchantMode,
+        preferredSwapPluginId,
         countryCode,
         customTokens,
         bluetoothMode,
@@ -228,6 +230,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         defaultFiat,
         defaultIsoFiat,
         merchantMode,
+        preferredSwapPluginId: preferredSwapPluginId === '' ? undefined : preferredSwapPluginId,
         customTokens,
         countryCode,
         bluetoothMode,
@@ -494,6 +497,11 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         ...state,
         merchantMode
       }
+    }
+
+    case 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN': {
+      const pluginId = action.data
+      return { ...state, preferredSwapPluginId: pluginId }
     }
 
     case 'UI/SETTINGS/SET_BLUETOOTH_MODE': {

@@ -18,7 +18,10 @@ type Props = {
   center?: boolean,
 
   // Called when the user taps outside the modal or clicks the back button:
-  onCancel: () => mixed
+  onCancel: () => mixed,
+
+  // Content padding:
+  padding?: number
 }
 
 /**
@@ -99,7 +102,7 @@ export class AirshipModal extends Component<Props> {
    * Draws the actual visual elements, given the current layout information:
    */
   renderModal (height: number, gap: SafeAreaGap, keyboardAnimation: Animated.Value, keyboardLayout: number) {
-    const { children, center } = this.props
+    const { children, center, padding = 0 } = this.props
 
     // Set up the dynamic CSS values:
     const screenPadding = {
@@ -110,13 +113,16 @@ export class AirshipModal extends Component<Props> {
     }
     const transform = [{ translateY: this.offset }]
     const bodyStyle = center
-      ? [styles.centerBody, { transform }]
+      ? [styles.centerBody, { padding, transform }]
       : [
         styles.bottomBody,
         {
           marginBottom: -keyboardLayout,
           maxHeight: keyboardLayout + 0.75 * (height - gap.bottom - gap.top),
-          paddingBottom: keyboardLayout,
+          paddingBottom: keyboardLayout + padding,
+          paddingLeft: padding,
+          paddingRight: padding,
+          paddingTop: padding,
           transform
         }
       ]
@@ -129,10 +135,10 @@ export class AirshipModal extends Component<Props> {
         <Animated.View style={bodyStyle}>
           {typeof children === 'function'
             ? children({
-              bottom: center ? 0 : keyboardLayout,
-              left: 0,
-              right: 0,
-              top: 0
+              bottom: center ? padding : keyboardLayout + padding,
+              left: padding,
+              right: padding,
+              top: padding
             })
             : children}
         </Animated.View>
