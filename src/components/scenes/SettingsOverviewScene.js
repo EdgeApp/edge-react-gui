@@ -2,23 +2,24 @@
 
 import type { EdgeAccount } from 'edge-core-js'
 import { getSupportedBiometryType } from 'edge-login-ui-rn'
-import React, { Component } from 'react'
-import { ScrollView, Text, View } from 'react-native'
+import React, { type Node, Component } from 'react'
+import { Image, ScrollView, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
+import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
-import T from '../../modules/UI/components/FormattedText/index'
-import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
-import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
-import styles from '../../styles/scenes/SettingsStyle'
+import { THEME } from '../../theme/variables/airbitz.js'
 import { type Action } from '../../types/reduxTypes.js'
 import { secondsToDisplay } from '../../util/displayTime.js'
-import RowModal from '../common/RowModal'
-import RowRoute from '../common/RowRoute'
-import RowSwitch from '../common/RowSwitch'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
+import { SettingsLabelRow } from '../common/SettingsLabelRow.js'
+import { SettingsRow } from '../common/SettingsRow.js'
+import { SettingsSwitchRow } from '../common/SettingsSwitchRow.js'
 import { AutoLogoutModal } from '../modals/AutoLogoutModal.js'
 import { Airship, showToast } from '../services/AirshipInstance.js'
 
@@ -54,28 +55,10 @@ type State = {
 }
 
 export default class SettingsOverview extends Component<Props, State> {
-  optionModals: Array<Object>
-  currencies: Array<Object>
   constructor (props: Props) {
     super(props)
     this.state = {
       touchIdText: s.strings.settings_button_use_touchID
-    }
-
-    this.optionModals = [
-      {
-        key: 'autoLogoff',
-        text: s.strings.settings_title_auto_logoff
-      }
-    ]
-
-    this.currencies = []
-    for (const currencyKey in Constants.CURRENCY_SETTINGS) {
-      const { pluginName } = Constants.CURRENCY_SETTINGS[currencyKey]
-      this.currencies.push({
-        text: pluginName.charAt(0).toUpperCase() + pluginName.slice(1),
-        routeFunction: Actions[currencyKey]
-      })
     }
   }
 
@@ -133,8 +116,12 @@ export default class SettingsOverview extends Component<Props, State> {
 
   _onPressOpenChangeCategories = () => {}
 
-  _onToggleTouchIdOption = (bool: boolean) => {
-    this.props.dispatchUpdateEnableTouchIdEnable(bool, this.props.account)
+  _onTogglePinLogin = () => {
+    this.props.onTogglePinLoginEnabled(!this.props.pinLoginEnabled)
+  }
+
+  _onToggleTouchIdOption = () => {
+    this.props.dispatchUpdateEnableTouchIdEnable(!this.props.touchIdEnabled, this.props.account)
   }
 
   onDeveloperPress = () => {
@@ -159,118 +146,86 @@ export default class SettingsOverview extends Component<Props, State> {
     }
     const autoLogoutRightText = autoLogout.value === 0 ? s.strings.string_disable : `${autoLogout.value} ${timeStrings[autoLogout.measurement]}`
 
+    const rightArrow = <AntDesignIcon name="right" color={THEME.COLORS.GRAY_2} size={THEME.rem(1)} />
+
     return (
       <SceneWrapper background="body" hasTabs={false}>
-        <ScrollView style={styles.container}>
-          <Gradient style={[styles.unlockRow]}>
-            <View style={[styles.accountBoxHeaderTextWrap]}>
-              <View style={styles.leftArea}>
-                <Icon type={Constants.FONT_AWESOME} style={[styles.icon]} name={Constants.USER_O} />
-                <T style={styles.accountBoxHeaderText}>
-                  {s.strings.settings_account_title_cap}: {this.props.username}
-                </T>
-              </View>
-            </View>
-          </Gradient>
-          <RowRoute
-            leftText={s.strings[this.props.lockButton]}
-            disabled={false}
-            routeFunction={this.showConfirmPasswordModal}
-            right={<Icon style={styles.settingsLocks} name={this.props.lockButtonIcon} size={24} type={Constants.ION_ICONS} />}
+        <ScrollView>
+          <SettingsHeaderRow
+            icon={<FontAwesomeIcon name="user-o" color={THEME.COLORS.WHITE} size={iconSize} />}
+            text={`${s.strings.settings_account_title_cap}: ${this.props.username}`}
           />
-          <RowRoute
-            leftText={s.strings.settings_button_change_password}
+          <SettingsRow
+            text={s.strings[this.props.lockButton]}
+            right={<IonIcon name={this.props.lockButtonIcon} color={THEME.COLORS.GRAY_1} size={iconSize} />}
+            onPress={this.showConfirmPasswordModal}
+          />
+          <SettingsRow
             disabled={this.props.isLocked}
-            routeFunction={this._onPressChangePasswordRouting}
-            right={<Icon type={Constants.SIMPLE_ICONS} style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
+            text={s.strings.settings_button_change_password}
+            right={rightArrow}
+            onPress={this._onPressChangePasswordRouting}
           />
-          <RowRoute
-            leftText={s.strings.settings_button_pin}
+          <SettingsRow disabled={this.props.isLocked} text={s.strings.settings_button_pin} right={rightArrow} onPress={this._onPressChangePinRouting} />
+          <SettingsRow disabled={this.props.isLocked} text={s.strings.settings_button_setup_two_factor} right={rightArrow} onPress={this._onPressOtp} />
+          <SettingsRow
             disabled={this.props.isLocked}
-            routeFunction={this._onPressChangePinRouting}
-            right={<Icon type={Constants.SIMPLE_ICONS} style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
-          />
-          <RowRoute
-            leftText={s.strings.settings_button_setup_two_factor}
-            disabled={this.props.isLocked}
-            routeFunction={this._onPressOtp}
-            right={<Icon type={Constants.SIMPLE_ICONS} style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
-          />
-          <RowRoute
-            leftText={s.strings.settings_button_password_recovery}
-            disabled={this.props.isLocked}
-            routeFunction={this._onPressRecoverPasswordRouting}
-            right={<Icon type={Constants.SIMPLE_ICONS} style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
+            text={s.strings.settings_button_password_recovery}
+            right={rightArrow}
+            onPress={this._onPressRecoverPasswordRouting}
           />
 
-          <Gradient style={[styles.unlockRow]}>
-            <View style={[styles.accountBoxHeaderTextWrap]}>
-              <View style={styles.leftArea}>
-                <Icon type={Constants.ION_ICONS} name="ios-options" style={[styles.icon]} />
-                <T style={styles.accountBoxHeaderText}>{s.strings.settings_options_title_cap}</T>
-              </View>
-            </View>
-          </Gradient>
+          <SettingsHeaderRow icon={<IonIcon name="ios-options" color={THEME.COLORS.WHITE} size={iconSize} />} text={s.strings.settings_options_title_cap} />
+          <SettingsRow text={s.strings.settings_exchange_settings} right={rightArrow} onPress={this._onPressExchangeSettings} />
+          <SettingsRow text={s.strings.spending_limits} right={rightArrow} onPress={this._onPressSpendingLimits} />
+          <SettingsLabelRow
+            text={s.strings.settings_title_auto_logoff}
+            right={autoLogoutRightText}
+            onPress={() => {
+              this.showAutoLogoutModal()
+            }}
+          />
+          <SettingsLabelRow text={s.strings.settings_title_currency} right={this.props.defaultFiat.replace('iso:', '')} onPress={Actions.defaultFiatSetting} />
 
-          <View>
-            <RowRoute
-              disabled={false}
-              leftText={s.strings.settings_exchange_settings}
-              routeFunction={this._onPressExchangeSettings}
-              right={<Icon type={Constants.SIMPLE_ICONS} style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
-            />
+          <SettingsSwitchRow key="pinRelogin" text={s.strings.settings_title_pin_login} value={this.props.pinLoginEnabled} onPress={this._onTogglePinLogin} />
+          {this.props.supportsTouchId && (
+            <SettingsSwitchRow key={'useTouchID'} text={this.state.touchIdText} value={this.props.touchIdEnabled} onPress={this._onToggleTouchIdOption} />
+          )}
 
-            <RowRoute
-              disabled={false}
-              leftText={s.strings.spending_limits}
-              routeFunction={this._onPressSpendingLimits}
-              right={<Icon type={Constants.SIMPLE_ICONS} style={styles.settingsRowRightArrow} name={Constants.ARROW_RIGHT} />}
-            />
+          {this.renderCurrencyRows()}
 
-            <RowModal onPress={this.showAutoLogoutModal} leftText={s.strings.settings_title_auto_logoff} rightText={autoLogoutRightText} />
+          <SettingsSwitchRow key="developerMode" text={s.strings.settings_developer_mode} value={this.props.developerModeOn} onPress={this.onDeveloperPress} />
+          <SettingsRow onPress={this.showRestoreWalletModal} text={s.strings.restore_wallets_modal_title} />
+          <SettingsRow text={s.strings.title_terms_of_service} onPress={Actions[Constants.TERMS_OF_SERVICE]} right={rightArrow} />
 
-            <RowRoute
-              disabled={false}
-              leftText={s.strings.settings_title_currency}
-              routeFunction={Actions.defaultFiatSetting}
-              right={<Text>{this.props.defaultFiat.replace('iso:', '')}</Text>}
-            />
-
-            <RowSwitch
-              leftText={s.strings.settings_title_pin_login}
-              key="pinRelogin"
-              onToggle={this.props.onTogglePinLoginEnabled}
-              value={this.props.pinLoginEnabled}
-            />
-
-            {this.props.supportsTouchId && (
-              <RowSwitch leftText={this.state.touchIdText} key={'useTouchID'} onToggle={this._onToggleTouchIdOption} value={this.props.touchIdEnabled} />
-            )}
-
-            {this.currencies.map(this.renderRowRoute)}
-
-            <RowSwitch leftText={s.strings.settings_developer_mode} key="developerMode" onToggle={this.onDeveloperPress} value={this.props.developerModeOn} />
-
-            <RowModal onPress={this.showRestoreWalletModal} leftText={s.strings.restore_wallets_modal_title} />
-
-            <RowRoute
-              disabled={false}
-              leftText={s.strings.title_terms_of_service}
-              scene={Constants.TERMS_OF_SERVICE}
-              routeFunction={Actions[Constants.TERMS_OF_SERVICE]}
-            />
-
-            <View style={[styles.debugArea]}>
-              <PrimaryButton onPress={this.showSendLogsModal}>
-                <PrimaryButton.Text>{s.strings.settings_button_send_logs}</PrimaryButton.Text>
-              </PrimaryButton>
-            </View>
-
-            <View style={styles.emptyBottom} />
+          <View style={styles.bottomArea}>
+            <PrimaryButton onPress={this.showSendLogsModal}>
+              <PrimaryButton.Text>{s.strings.settings_button_send_logs}</PrimaryButton.Text>
+            </PrimaryButton>
           </View>
         </ScrollView>
       </SceneWrapper>
     )
+  }
+
+  renderCurrencyRows (): Node[] {
+    const { account } = this.props
+    const rightArrow = <AntDesignIcon name="right" color={THEME.COLORS.GRAY_2} size={THEME.rem(1)} />
+
+    const out: Node[] = []
+    for (const currencyKey in Constants.CURRENCY_SETTINGS) {
+      const onPress = Actions[currencyKey]
+
+      // Grab out the displayName & logo, if the currency exists:
+      const { pluginName } = Constants.CURRENCY_SETTINGS[currencyKey]
+      const currencyConfig = account.currencyConfig[pluginName]
+      if (currencyConfig == null) continue
+      const { displayName, symbolImage } = currencyConfig.currencyInfo
+      const icon = symbolImage != null ? <Image style={styles.currencyLogo} source={{ uri: symbolImage }} /> : undefined
+
+      out.push(<SettingsRow key={currencyKey} icon={icon} text={displayName} onPress={onPress} right={rightArrow} />)
+    }
+    return out
   }
 
   showConfirmPasswordModal = () => {
@@ -288,8 +243,19 @@ export default class SettingsOverview extends Component<Props, State> {
   showRestoreWalletModal = () => {
     this.props.showRestoreWalletsModal()
   }
+}
 
-  renderRowRoute = (x: Object, i: number) => <RowRoute disabled={false} key={i} leftText={x.text} routeFunction={x.routeFunction} right={x.right} />
+const iconSize = THEME.rem(1.375)
 
-  renderRowModal = (x: Object) => <RowModal leftText={x.text} key={x.key} modal={x.key.toString()} />
+const styles = {
+  currencyLogo: {
+    height: iconSize,
+    width: iconSize,
+    resizeMode: 'contain'
+  },
+
+  bottomArea: {
+    padding: THEME.rem(1.414),
+    marginBottom: THEME.rem(4)
+  }
 }

@@ -5,162 +5,100 @@ exports[`CurrencySettings should render 1`] = `
   background="body"
   hasTabs={false}
 >
-  <View
-    style={
-      Object {
-        "backgroundColor": "#F4F5F6",
-        "height": "100%",
-        "position": "relative",
-      }
-    }
-  >
-    <Gradient
-      style={
-        Array [
-          Object {
-            "flexDirection": "row",
-            "height": 70.22887323943662,
-            "justifyContent": "space-between",
-            "padding": 16.854929577464787,
-          },
-        ]
-      }
-    >
-      <View
-        style={
-          Array [
-            undefined,
-          ]
-        }
-      >
-        <View
+  <ScrollViewMock>
+    <SettingsHeaderRow
+      text="Denominations"
+    />
+    <SettingsRadioRow
+      icon={
+        <Text
           style={
             Object {
-              "flexDirection": "row",
+              "color": "#4A5157",
+              "flexShrink": 1,
+              "fontFamily": "SourceSansPro-Black",
+              "fontSize": 22,
+              "textAlign": "left",
             }
           }
         >
-          <FormattedText
+          <Text
             style={
               Object {
-                "backgroundColor": "transparent",
-                "color": "#FFFFFF",
-                "fontSize": 25.28239436619718,
-                "marginLeft": 22.473239436619718,
+                "fontFamily": "SourceSansPro-Black",
               }
             }
           >
-            Denominations
-          </FormattedText>
-        </View>
-      </View>
-    </Gradient>
-    <RadioRows
-      style={Object {}}
-    >
-      <Row
-        denomination={
-          Object {
-            "multiplier": "100000000",
-            "name": "BTG",
-            "symbol": "₿",
+            ₿
+          </Text>
+           - 
+          BTG
+        </Text>
+      }
+      isSelected={false}
+      onPress={[Function]}
+      text=""
+    />
+    <SettingsRadioRow
+      icon={
+        <Text
+          style={
+            Object {
+              "color": "#4A5157",
+              "flexShrink": 1,
+              "fontFamily": "SourceSansPro-Black",
+              "fontSize": 22,
+              "textAlign": "left",
+            }
           }
-        }
-        isSelected={false}
-        left={
-          <View
+        >
+          <Text
             style={
               Object {
-                "flexDirection": "row",
+                "fontFamily": "SourceSansPro-Black",
               }
             }
           >
-            <FormattedText
-              style={
-                Object {
-                  "fontFamily": "SourceSansPro-Black",
-                }
-              }
-            >
-              ₿
-            </FormattedText>
-            <FormattedText>
-               - 
-              BTG
-            </FormattedText>
-          </View>
-        }
-        onPress={[Function]}
-      />
-      <Row
-        denomination={
-          Object {
-            "multiplier": "100000",
-            "name": "mBTG",
-            "symbol": "m₿",
+            m₿
+          </Text>
+           - 
+          mBTG
+        </Text>
+      }
+      isSelected={false}
+      onPress={[Function]}
+      text=""
+    />
+    <SettingsRadioRow
+      icon={
+        <Text
+          style={
+            Object {
+              "color": "#4A5157",
+              "flexShrink": 1,
+              "fontFamily": "SourceSansPro-Black",
+              "fontSize": 22,
+              "textAlign": "left",
+            }
           }
-        }
-        isSelected={false}
-        left={
-          <View
+        >
+          <Text
             style={
               Object {
-                "flexDirection": "row",
+                "fontFamily": "SourceSansPro-Black",
               }
             }
           >
-            <FormattedText
-              style={
-                Object {
-                  "fontFamily": "SourceSansPro-Black",
-                }
-              }
-            >
-              m₿
-            </FormattedText>
-            <FormattedText>
-               - 
-              mBTG
-            </FormattedText>
-          </View>
-        }
-        onPress={[Function]}
-      />
-      <Row
-        denomination={
-          Object {
-            "multiplier": "100",
-            "name": "bits",
-            "symbol": "ƀ",
-          }
-        }
-        isSelected={true}
-        left={
-          <View
-            style={
-              Object {
-                "flexDirection": "row",
-              }
-            }
-          >
-            <FormattedText
-              style={
-                Object {
-                  "fontFamily": "SourceSansPro-Black",
-                }
-              }
-            >
-              ƀ
-            </FormattedText>
-            <FormattedText>
-               - 
-              bits
-            </FormattedText>
-          </View>
-        }
-        onPress={[Function]}
-      />
-    </RadioRows>
-  </View>
+            ƀ
+          </Text>
+           - 
+          bits
+        </Text>
+      }
+      isSelected={true}
+      onPress={[Function]}
+      text=""
+    />
+  </ScrollViewMock>
 </SceneWrapper>
 `;

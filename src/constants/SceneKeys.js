@@ -58,11 +58,11 @@ export const CURRENCY_SETTINGS = {
     currencyCode: 'BTC'
   },
   tbtcSettigs: {
-    pluginName: 'bitcoinTestnet',
+    pluginName: 'bitcointestnet',
     currencyCode: 'TBTC'
   },
   bchSettings: {
-    pluginName: 'bitcoinCash',
+    pluginName: 'bitcoincash',
     currencyCode: 'BCH'
   },
   ethSettings: {
@@ -106,7 +106,7 @@ export const CURRENCY_SETTINGS = {
     currencyCode: 'RVN'
   },
   btgSettings: {
-    pluginName: 'bitcoinGold',
+    pluginName: 'bitcoingold',
     currencyCode: 'BTG'
   },
   smartcashSettings: {
