@@ -3,7 +3,7 @@
 import type { EdgeAccount } from 'edge-core-js'
 
 import { showError } from '../../../components/services/AirshipInstance.js'
-import type { PasswordReminder } from '../../../types/types.js'
+import type { MostRecentWallet, PasswordReminder } from '../../../types/types.js'
 import { categories } from './subcategories.js'
 
 // Default Core Settings
@@ -221,6 +221,7 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
     denomination: '1000000000000000000'
   },
   customTokens: [],
+  mostRecentWallets: [],
   passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN
 }
 
@@ -295,6 +296,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   CETH: 'object',
   ETHBNT: 'object',
   customTokens: 'object', // arrays return 'object' to typeof
+  mostRecentWallets: 'object',
   passwordRecoveryRemindersShown: 'object'
 }
 
@@ -356,6 +358,12 @@ export const setDefaultFiatRequest = (account: EdgeAccount, defaultFiat: string)
 export const setMerchantModeRequest = (account: EdgeAccount, merchantMode: boolean) =>
   getSyncedSettings(account).then(settings => {
     const updatedSettings = updateSettings(settings, { merchantMode })
+    return setSyncedSettings(account, updatedSettings)
+  })
+
+export const setMostRecentWalletsSelected = (account: EdgeAccount, mostRecentWallets: Array<MostRecentWallet>) =>
+  getSyncedSettings(account).then(settings => {
+    const updatedSettings = updateSettings(settings, { mostRecentWallets })
     return setSyncedSettings(account, updatedSettings)
   })
 
