@@ -10,8 +10,7 @@ test('initialState', () => {
   const expected = {
     context: {},
     folder: {},
-    nextUsername: '',
-    usernames: []
+    nextUsername: ''
   }
   const actual = contextReducer(undefined, dummyAction)
 

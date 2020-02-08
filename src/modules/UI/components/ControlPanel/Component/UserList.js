@@ -1,10 +1,12 @@
 // @flow
 
 import { makeReactNativeDisklet } from 'disklet'
+import { type EdgeContext, type EdgeUserInfo } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Alert, ScrollView, TouchableHighlight, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
+import { showError } from '../../../../../components/services/AirshipInstance.js'
 import * as Constants from '../../../../../constants/indexConstants.js'
 import s from '../../../../../locales/strings'
 import T from '../../../components/FormattedText'
@@ -12,37 +14,63 @@ import { Icon } from '../../Icon/Icon.ui.js'
 import styles from '../style'
 
 type Props = {
-  usernames: Array<string>,
   logout: (username?: string) => void,
   deleteLocalAccount: string => void,
-  allUsernames: Array<string>,
+  context: EdgeContext,
   currentUsername: string
 }
 
 type State = {
+  localUsers: Array<EdgeUserInfo>,
   mostRecentUsernames: Array<string>
 }
 
 export default class UserList extends Component<Props, State> {
+  cleanups: Array<() => mixed> = []
+
   constructor (props: Props) {
     super(props)
     this.state = {
+      localUsers: this.props.context.localUsers,
       mostRecentUsernames: []
     }
   }
-  async componentDidMount () {
-    const { allUsernames } = this.props
-    const recentUsernames = await this.getRecentLoginUsernames()
-    const filteredUsernames = allUsernames.filter((username: string) => !recentUsernames.find((lastUser: string) => username === lastUser))
-    const sortedUsernames = this.sortUsernames(filteredUsernames)
-    recentUsernames.shift()
-    this.setState({
-      mostRecentUsernames: [...recentUsernames, ...sortedUsernames]
-    })
+
+  componentDidMount () {
+    const { context } = this.props
+    this.cleanups.push(context.watch('localUsers', localUsers => this.setState({ localUsers })))
+
+    this.getRecentLoginUsernames()
+      .then(mostRecentUsernames =>
+        this.setState({
+          mostRecentUsernames
+        })
+      )
+      .catch(showError)
   }
+
+  componentWillUnmount () {
+    this.cleanups.forEach(cleanup => cleanup())
+  }
+
   render () {
-    const { mostRecentUsernames } = this.state
-    const usernames = mostRecentUsernames.length > 0 ? mostRecentUsernames : this.getUsernameList()
+    const { currentUsername } = this.props
+    const { localUsers, mostRecentUsernames } = this.state
+
+    // Grab all usernames that aren't logged in:
+    const coreUsernames = localUsers.map(userInfo => userInfo.username).filter(username => username !== currentUsername)
+
+    // Move recent usernames to their own list:
+    const recentUsernames = []
+    for (const username of mostRecentUsernames) {
+      const index = coreUsernames.indexOf(username)
+      if (index < 0) continue // Skip deleted & logged-in users
+      coreUsernames.splice(index, 1)
+      recentUsernames.push(username)
+    }
+
+    const usernames = [...recentUsernames, ...this.sortUsernames(coreUsernames)]
+
     return (
       <ScrollView style={styles.userList.container}>
         {usernames.map((username: string) => (
@@ -72,11 +100,7 @@ export default class UserList extends Component<Props, State> {
       { text: s.strings.yes, onPress: () => this.handleDeleteLocalAccount(username)() }
     ])
   }
-  getUsernameList = () => {
-    const { allUsernames, currentUsername } = this.props
-    const usernames = allUsernames.filter(username => username !== currentUsername)
-    return this.sortUsernames(usernames)
-  }
+
   getRecentLoginUsernames = async () => {
     const disklet = makeReactNativeDisklet()
     const lastUsers = await disklet
@@ -85,6 +109,7 @@ export default class UserList extends Component<Props, State> {
       .catch(_ => [])
     return lastUsers.slice(0, 4)
   }
+
   sortUsernames = (usernames: Array<string>): Array<string> => {
     return usernames.sort((a: string, b: string) => {
       const stringA = a.toUpperCase()

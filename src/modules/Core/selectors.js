@@ -22,12 +22,6 @@ export const getFolder = (state: State) => {
   return folder
 }
 
-export const getUsernames = (state: State) => {
-  const core = getCore(state)
-  const usernames = core.context.usernames
-  return usernames
-}
-
 export const getNextUsername = (state: State) => {
   const core = getCore(state)
   const nextUsername = core.context.nextUsername
