@@ -1,6 +1,5 @@
 // @flow
 
-// import _ from 'lodash'
 import { bns } from 'biggystring'
 import _ from 'lodash'
 import React, { Component } from 'react'

@@ -1,7 +1,5 @@
 // @flow
 
-// import { StyleSheet } from 'react-native'
-
 // Can't access sub-properties if using Stylesheet.create({})
 const styles = {
   over: {

@@ -1,6 +1,5 @@
 // @flow
 
-// import * as Constants from '../../constants/'
 import { Dimensions } from 'react-native'
 
 import THEME from '../../theme/variables/airbitz'
