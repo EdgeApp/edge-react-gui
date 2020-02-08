@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import type { SetNativeAmountInfo } from '../../actions/CryptoExchangeActions'
 import { getQuoteForTransaction, selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
 import { createCurrencyWalletAndAddToSwap } from '../../actions/indexActions'
+import { updateMostRecentWalletsSelected } from '../../actions/WalletActions'
 import type { CryptoExchangeSceneComponentDispatchProps, CryptoExchangeSceneComponentStateProps } from '../../components/scenes/CryptoExchangeScene'
 import { CryptoExchangeScene } from '../../components/scenes/CryptoExchangeScene'
 import { DEFAULT_STARTER_WALLET_NAMES } from '../../constants/indexConstants'
@@ -94,6 +95,7 @@ export const mapDispatchToProps = (dispatch: Dispatch): CryptoExchangeSceneCompo
   },
   onSelectWallet: (walletId: string, currencyCode: string) => {
     dispatch(selectWalletForExchange(walletId, currencyCode))
+    dispatch(updateMostRecentWalletsSelected(walletId, currencyCode))
   },
   openModal: (data: 'from' | 'to') => dispatch({ type: 'OPEN_WALLET_SELECTOR_MODAL', data }),
   createCurrencyWallet: (walletType: string, currencyCode: string, fiat: string) => {
