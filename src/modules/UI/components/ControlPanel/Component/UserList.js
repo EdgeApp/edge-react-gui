@@ -1,6 +1,6 @@
 // @flow
 
-import type { DiskletFolder } from 'disklet'
+import { makeReactNativeDisklet } from 'disklet'
 import React, { Component } from 'react'
 import { Alert, ScrollView, TouchableHighlight, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -13,7 +13,6 @@ import styles from '../style'
 
 type Props = {
   usernames: Array<string>,
-  folder: DiskletFolder,
   logout: (username?: string) => void,
   deleteLocalAccount: string => void,
   allUsernames: Array<string>,
@@ -79,13 +78,12 @@ export default class UserList extends Component<Props, State> {
     return this.sortUsernames(usernames)
   }
   getRecentLoginUsernames = async () => {
-    const { folder } = this.props
-    // $FlowFixMe - Can't figure out what type to use on this context folder
-    const lastUsers = await folder._disklet
+    const disklet = makeReactNativeDisklet()
+    const lastUsers = await disklet
       .getText('lastusers.json')
       .then(text => JSON.parse(text))
-      .catch(e => e)
-    return lastUsers && lastUsers.length > 0 ? lastUsers.slice(0, 4) : []
+      .catch(_ => [])
+    return lastUsers.slice(0, 4)
   }
   sortUsernames = (usernames: Array<string>): Array<string> => {
     return usernames.sort((a: string, b: string) => {
