@@ -402,7 +402,7 @@ export class FlipInput extends Component<Props, State> {
       <View style={[styles.container]}>
         <TouchableWithoutFeedback onPress={headerCallback}>
           <View style={styles.flipContainerHeader}>
-            {headerLogo && <Image style={styles.flipContainerHeaderIcon} source={{ uri: headerLogo }} />}
+            <Image style={styles.flipContainerHeaderIcon} source={{ uri: headerLogo || '' }} />
             <View style={styles.flipContainerHeaderTextContainer}>
               <Text style={styles.flipContainerHeaderText}>{headerText}</Text>
               {headerCallback && <FAIcon style={[styles.flipContainerHeaderTextDropDown]} name={Constants.KEYBOARD_ARROW_DOWN} size={scale(20)} />}
