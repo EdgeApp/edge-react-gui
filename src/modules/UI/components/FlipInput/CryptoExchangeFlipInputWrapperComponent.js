@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Image, StyleSheet, View } from 'react-native'
 
 import * as Constants from '../../../../constants/indexConstants'
 import type { GuiCurrencyInfo, GuiWallet } from '../../../../types/types.js'
@@ -38,16 +38,9 @@ export class CryptoExchangeFlipInputWrapperComponent extends Component<Props> {
   }
 
   renderLogo = (style: StyleSheet.Styles, logo: string) => {
-    if (logo) {
-      return (
-        <View style={style.iconContainer}>
-          <Image style={style.currencyIcon} source={{ uri: logo }} />
-        </View>
-      )
-    }
     return (
-      <View style={style.altIconContainer}>
-        <Text style={style.altCurrencyText}>{this.props.primaryCurrencyInfo.displayCurrencyCode}</Text>
+      <View style={style.iconContainer}>
+        <Image style={style.currencyIcon} source={{ uri: logo || '' }} />
       </View>
     )
   }
