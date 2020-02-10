@@ -20,6 +20,7 @@ type DispatchProps = {
 const mapStateToProps = (state: State): StateProps => {
   const currentUsername = CORE_SELECTORS.getUsername(state)
   const allUsernames = CORE_SELECTORS.getUsernames(state)
+
   return {
     currentUsername,
     allUsernames
