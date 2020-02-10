@@ -12,8 +12,7 @@ test('initialState', () => {
     context: {
       context: {},
       folder: {},
-      nextUsername: '',
-      usernames: []
+      nextUsername: ''
     },
     deepLinking: {
       addressDeepLinkData: {},

@@ -9,15 +9,13 @@ import { type Action } from '../../../types/reduxTypes.js'
 export type ContextState = {
   context: EdgeContext | Object,
   folder: DiskletFolder | Object,
-  usernames: Array<string>,
   nextUsername: string
 }
 
 const initialState = {
   context: {},
   folder: {},
-  nextUsername: '',
-  usernames: []
+  nextUsername: ''
 }
 
 export const context: Reducer<ContextState, Action> = (state = initialState, action: Action) => {
@@ -30,23 +28,6 @@ export const context: Reducer<ContextState, Action> = (state = initialState, act
         ...state,
         context,
         folder
-      }
-    }
-
-    case 'CORE/CONTEXT/ADD_USERNAMES': {
-      if (!action.data) throw new Error('Invalid action')
-      const { usernames } = action.data
-      return {
-        ...state,
-        usernames
-      }
-    }
-
-    case 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT': {
-      const { username } = action.data
-      return {
-        ...state,
-        usernames: state.usernames.filter(name => name !== username)
       }
     }
 

@@ -1,5 +1,6 @@
 // @flow
 
+import { type EdgeContext } from 'edge-core-js'
 import { connect } from 'react-redux'
 
 import type { Dispatch, State } from '../../../../../types/reduxTypes.js'
@@ -9,7 +10,7 @@ import { deleteLocalAccount } from '../action'
 import UserList from './UserList'
 
 type StateProps = {
-  allUsernames: Array<string>,
+  context: EdgeContext,
   currentUsername: string
 }
 type DispatchProps = {
@@ -18,12 +19,9 @@ type DispatchProps = {
 }
 
 const mapStateToProps = (state: State): StateProps => {
-  const currentUsername = CORE_SELECTORS.getUsername(state)
-  const allUsernames = CORE_SELECTORS.getUsernames(state)
-
   return {
-    currentUsername,
-    allUsernames
+    context: CORE_SELECTORS.getContext(state),
+    currentUsername: CORE_SELECTORS.getUsername(state)
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({

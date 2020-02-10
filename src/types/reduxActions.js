@@ -139,14 +139,6 @@ export type Action =
       data: { context: EdgeContext, folder: DiskletFolder }
     }
   | {
-      type: 'CORE/CONTEXT/ADD_USERNAMES',
-      data: { usernames: Array<string> }
-    }
-  | {
-      type: 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT',
-      data: { username: string }
-    }
-  | {
       type: 'CORE/WALLETS/UPDATE_WALLETS',
       data: {
         activeWalletIds: Array<string>,

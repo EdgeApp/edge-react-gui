@@ -10,16 +10,13 @@ import edgeBackgroundImage from '../../assets/images/edgeBackground/login_bg.jpg
 import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
 import s from '../../locales/strings.js'
 import THEME from '../../theme/variables/airbitz.js'
-import type { Dispatch } from '../../types/reduxTypes.js'
 import { showHelpModal } from '../modals/HelpModal.js'
 
 type Props = {
   initializeAccount: (EdgeAccount, touchIdInfo: ?Object) => void,
   context: EdgeContext,
-  addUsernames: (Array<string>) => void,
   account: ?EdgeAccount,
   recoveryLogin: string,
-  dispatch: Dispatch,
   username?: string,
   showSendLogsModal: () => void
 }
@@ -35,11 +32,6 @@ export default class Login extends Component<Props, State> {
   onLogin = (error: ?Error = null, account: ?EdgeAccount, touchIdInfo: ?Object = null) => {
     if (error || !account) return
     this.props.initializeAccount(account, touchIdInfo)
-
-    // update users list after each login
-    this.props.context.listUsernames().then(usernames => {
-      this.props.addUsernames(usernames)
-    })
   }
 
   UNSAFE_componentWillReceiveProps (nextProps: Props) {
