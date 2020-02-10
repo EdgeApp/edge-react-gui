@@ -1,6 +1,6 @@
 // @flow
 
-import type { DiskletFolder } from 'disklet'
+import { type Disklet } from 'disklet'
 import type { EdgeContext, EdgeCurrencyWallet, EdgeLobby, EdgeParsedUri, EdgeReceiveAddress } from 'edge-core-js'
 
 import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
@@ -135,7 +135,7 @@ export type Action =
     }
   | {
       type: 'CORE/CONTEXT/ADD_CONTEXT',
-      data: { context: EdgeContext, folder: DiskletFolder }
+      data: { context: EdgeContext, disklet: Disklet }
     }
   | {
       type: 'CORE/WALLETS/UPDATE_WALLETS',

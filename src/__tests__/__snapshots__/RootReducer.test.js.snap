@@ -7,13 +7,13 @@ Object {
     "account": Object {},
     "context": Object {
       "context": Object {},
-      "folder": Object {},
     },
     "deepLinking": Object {
       "addressDeepLinkData": Object {},
       "deepLinkPending": false,
       "passwordRecoveryLink": null,
     },
+    "disklet": Object {},
     "edgeLogin": Object {
       "error": null,
       "isProcessing": false,

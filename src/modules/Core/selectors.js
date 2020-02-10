@@ -16,12 +16,6 @@ export const getContext = (state: State) => {
   return context
 }
 
-export const getFolder = (state: State) => {
-  const core = getCore(state)
-  const folder = core.context.folder
-  return folder
-}
-
 // Account
 export const getAccount = (state: State) => {
   const core = getCore(state)
