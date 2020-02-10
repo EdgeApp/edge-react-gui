@@ -3,6 +3,7 @@
 import { connect } from 'react-redux'
 
 import { hideMessageTweak } from '../../actions/AccountReferralActions.js'
+import { createCurrencyWallet } from '../../actions/CreateWalletActions.js'
 import { disableOtp, keepOtp } from '../../actions/OtpActions'
 import { toggleAccountBalanceVisibility, updateActiveWalletsOrder, updateArchivedWalletsOrder } from '../../actions/WalletListActions'
 import { walletRowOption } from '../../actions/WalletOptionsActions.js'
@@ -15,7 +16,7 @@ import { type TweakSource } from '../../util/ReferralHelpers.js'
 const mapStateToProps = (state: State) => {
   const coreWallets = state.core.wallets.byId
   const wallets = state.ui.wallets.byId
-  const activeWalletIds = UI_SELECTORS.getActiveWalletIds(state).filter(id => !(wallets[id] != null && wallets[id].type === 'wallet:fio'))
+  const activeWalletIds = UI_SELECTORS.getActiveWalletIds(state)
   const archivedWalletIds = UI_SELECTORS.getArchivedWalletIds(state)
   const walletArchivesVisible = state.ui.scenes.walletList.walletArchivesVisible
   // $FlowFixMe
@@ -52,7 +53,9 @@ const mapDispatchToProps = (dispatch: Dispatch, state: State) => ({
   hideMessageTweak (messageId: string, source: TweakSource) {
     dispatch(hideMessageTweak(messageId, source))
   },
-  toggleAccountBalanceVisibility: () => dispatch(toggleAccountBalanceVisibility())
+  toggleAccountBalanceVisibility: () => dispatch(toggleAccountBalanceVisibility()),
+  createCurrencyWallet: (walletName: string, walletType: string, fiatCurrencyCode: string, isScenePop: boolean, selectWallet: boolean, importText?: string) =>
+    dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode, isScenePop, false, importText))
 })
 
 export default connect(

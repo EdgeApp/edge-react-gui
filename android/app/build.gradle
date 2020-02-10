@@ -162,6 +162,7 @@ if (hasProperty('storeFile')) {
 }
 
 dependencies {
+    implementation project(':@react-native-community_netinfo')
     implementation project(':@react-native-community_art')
     implementation project(':@react-native-community_async-storage')
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"

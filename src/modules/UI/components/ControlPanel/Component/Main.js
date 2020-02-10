@@ -6,7 +6,7 @@ import { Actions } from 'react-native-router-flux'
 
 import buysellIcon from '../../../../../assets/images/sidenav/buysell.png'
 import exchangeIcon from '../../../../../assets/images/sidenav/exchange.png'
-import fioIcon from '../../../../../assets/images/sidenav/fio-address.png'
+import fioAddressIcon from '../../../../../assets/images/sidenav/fioaddress.png'
 import logoutImage from '../../../../../assets/images/sidenav/logout.png'
 import receiveIcon from '../../../../../assets/images/sidenav/receive.png'
 import scanIcon from '../../../../../assets/images/sidenav/scan.png'
@@ -35,15 +35,15 @@ const PLUGIN_BUY_TEXT = s.strings.title_plugin_buy
 const PLUGIN_SELL_TEXT = s.strings.title_plugin_sell
 const EARN_INTEREST_TEXT = s.strings.earn_interest
 const TERMS_OF_SERVICE_TEXT = s.strings.title_terms_of_service
+const FIO_ADDRESS_TEXT = s.strings.drawer_fio_address
 
 export type Props = {
   logout: (username?: string) => void,
-  registerFioAddress: () => Promise<mixed>,
   usersView: boolean
 }
 export default class Main extends Component<Props> {
   render () {
-    const { registerFioAddress, usersView } = this.props
+    const { usersView } = this.props
 
     return usersView ? (
       <UserList />
@@ -59,7 +59,7 @@ export default class Main extends Component<Props> {
               <Separator />
               <EarnInterestButton />
               <Separator />
-              <FioButton registerFioAddress={registerFioAddress} />
+              <FioAddressButton />
               <Separator />
               <WalletsButton />
               <Separator />
@@ -146,31 +146,6 @@ const EarnInterestButton = () => {
           <Button.Center>
             <Button.Text>
               <Text>{EARN_INTEREST_TEXT}</Text>
-            </Button.Text>
-          </Button.Center>
-        </Button.Row>
-      </Button.Row>
-    </Button>
-  )
-}
-
-const FioButton = ({ registerFioAddress }) => {
-  return (
-    <Button
-      onPress={() => {
-        registerFioAddress()
-        Actions.drawerClose()
-      }}
-    >
-      <Button.Row>
-        <Button.Row>
-          <Button.Left>
-            <Image source={fioIcon} style={styles.iconImage} resizeMode="contain" />
-          </Button.Left>
-
-          <Button.Center>
-            <Button.Text>
-              <Text>{s.strings.title_register_fio_address}</Text>
             </Button.Text>
           </Button.Center>
         </Button.Row>
@@ -322,6 +297,25 @@ const LogoutButton = ({ onPress }) => {
         <Button.Center>
           <Button.Text>
             <Text>{LOGOUT_TEXT}</Text>
+          </Button.Text>
+        </Button.Center>
+      </Button.Row>
+    </Button>
+  )
+}
+
+const goToFioAddressesScene = () => Actions[Constants.FIO_ADDRESS_LIST]()
+const FioAddressButton = () => {
+  return (
+    <Button onPress={goToFioAddressesScene}>
+      <Button.Row>
+        <Button.Left>
+          <Image source={fioAddressIcon} style={styles.iconImage} />
+        </Button.Left>
+
+        <Button.Center>
+          <Button.Text>
+            <Text>{FIO_ADDRESS_TEXT}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>

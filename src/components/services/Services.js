@@ -31,6 +31,7 @@ import EdgeAccountCallbackManager from './EdgeAccountCallbackManager.js'
 import EdgeContextCallbackManager from './EdgeContextCallbackManager.js'
 import EdgeWalletsCallbackManager from './EdgeWalletsCallbackManager.js'
 import { PermissionsManager } from './PermissionsManager.js'
+import { NetworkActivity } from './NetworkActivity.js'
 
 type Props = { context: EdgeContext }
 
@@ -95,6 +96,7 @@ export class Services extends PureComponent<Props> {
           <EdgeWalletsCallbackManager />
           <ModalProvider />
           <PermissionsManager />
+          <NetworkActivity />
         </React.Fragment>
       </Provider>
     )

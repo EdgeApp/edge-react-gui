@@ -16,7 +16,8 @@ describe('WalletsReducer', () => {
       selectedCurrencyCode: '',
       manageTokensPending: false,
       addTokenPending: false,
-      walletLoadingProgress: {}
+      walletLoadingProgress: {},
+      fioWallets: []
     }
     const actual = wallets(undefined, dummyAction)
 

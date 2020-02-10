@@ -245,3 +245,18 @@ export type MostRecentWallet = {
   id: string,
   currencyCode: string
 }
+
+export type IsConnectedProp = {
+  isConnected: boolean
+}
+
+export type FioAddress = {
+  fio_address: string,
+  expiration: string
+}
+
+export type FioDomain = {
+  fio_domain: string,
+  expiration: string,
+  is_public?: number
+}

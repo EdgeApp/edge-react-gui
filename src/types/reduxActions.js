@@ -46,6 +46,8 @@ type LegacyActionName =
   | 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL'
   | 'UPDATE_WALLET_FIAT_BALANCE_VISIBILITY'
   | 'UPDATE_WALLET_LOADING_PROGRESS'
+  | 'FIO/FIO_ADDRESS_UPDATE_FIO_ADDRESS_NAME'
+  | 'FIO/FIO_ADDRESS_UPDATE_SELECTED_WALLET'
 
 // Actions with no payload:
 type NoDataActionName =
@@ -215,3 +217,7 @@ export type Action =
       data: { walletId: string, tokens: Array<string> }
     }
   | { type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR', data: string }
+  | { type: 'NETWORK/NETWORK_STATUS', data: { isConnected: boolean } }
+  | { type: 'FIO/FIO_ADDRESS_UPDATE_FIO_ADDRESS_NAME', data: { fioAddressName: string } }
+  | { type: 'FIO/FIO_ADDRESS_UPDATE_SELECTED_WALLET', data: { selectedWallet: EdgeCurrencyWallet, expiration: string, fee_collected: number } }
+  | { type: 'FIO/FIO_ADDRESS_SET_FIO_ADDRESS', data: { fioAddressName: string, expiration: string } }

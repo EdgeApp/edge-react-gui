@@ -54,8 +54,31 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
     }
 
     case 'delete': {
-      return (dispatch: Dispatch) => {
-        dispatch(showDeleteWalletModal(walletId))
+      return async (dispatch: Dispatch, getState: GetState) => {
+        const state = getState()
+        const wallet = WALLET_SELECTORS.getWallet(state, walletId)
+        const type = wallet.type.replace('wallet:', '')
+        let fioAddress = ''
+
+        if (type === 'fio') {
+          const engine = state.core.account.currencyWallets[walletId]
+          if (engine != null) {
+            fioAddress = await engine.otherMethods.getFioAddress()[0]
+            if (!fioAddress) {
+              try {
+                const data = await engine.otherMethods.fioAction('getFioNames', { fioPublicKey: wallet.receiveAddress.publicAddress })
+                fioAddress = data.fio_addresses[0].fio_address
+              } catch (e) {
+                fioAddress = ''
+              }
+            }
+          }
+        }
+        if (fioAddress) {
+          dispatch(showDeleteWalletModal(walletId, s.strings.fragmet_wallets_delete_fio_extra_message_mobile))
+        } else {
+          dispatch(showDeleteWalletModal(walletId))
+        }
       }
     }
 

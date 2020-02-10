@@ -18,6 +18,7 @@
   "warning_low_or_custom_fee": "",
   "alert_dropdown_alert": "",
   "alert_dropdown_warning": "",
+  "drawer_fio_address": "FIO Address",
   "dropdown_exchange_max_amount": "Обменять максимальное количество",
   "max_spend_unavailable_modal_title": "",
   "max_spend_unavailable_modal_message": "",

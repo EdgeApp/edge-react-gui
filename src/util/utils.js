@@ -544,3 +544,14 @@ export const getYesterdayDateRoundDownHour = () => {
   const yesterday = date.setDate(date.getDate() - 1)
   return new Date(yesterday).toISOString()
 }
+
+export const getFeeDisplayed = (number: number): string => {
+  const defaultAmount = 2
+  const dec = number % 10
+
+  if (dec) {
+    return dec.toString().length > 2 ? number.toString() : number.toFixed(defaultAmount)
+  }
+
+  return number.toFixed(defaultAmount)
+}

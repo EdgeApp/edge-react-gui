@@ -200,6 +200,7 @@ exports[`Change Mining Fees should render with custom props 1`] = `
         forceFocus={false}
         keyboardType="numeric"
         label="Satoshi Per Byte"
+        multiline={false}
         onChangeText={[Function]}
         returnKeyType="go"
         value=""

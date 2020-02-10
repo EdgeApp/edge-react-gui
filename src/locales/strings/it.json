@@ -18,6 +18,7 @@
   "warning_low_or_custom_fee": "Usare una commissione bassa può aumentare il tempo necessario per confermare la transazione.",
   "alert_dropdown_alert": "Avviso! ",
   "alert_dropdown_warning": "Attenzione! ",
+  "drawer_fio_address": "FIO Address",
   "dropdown_exchange_max_amount": "Scambia l'importo massimo",
   "max_spend_unavailable_modal_title": "Spesa massima non disponibile",
   "max_spend_unavailable_modal_message": "Impossibile calcolare la quantità massima spendibile per la moneta %s. Inserisci un importo.",

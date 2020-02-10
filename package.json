@@ -93,6 +93,7 @@
   "dependencies": {
     "@react-native-community/art": "^1.0.2",
     "@react-native-community/async-storage": "^1.6.2",
+    "@react-native-community/netinfo": "3.2.1",
     "async-lock": "^1.1.2",
     "biggystring": "^3.0.2",
     "buffer": "^5.0.8",
@@ -134,6 +135,7 @@
     "react-native-linear-gradient": "^2.0.0",
     "react-native-locale": "git://github.com/fixd/react-native-locale#a2b1296",
     "react-native-mail": "3.0.7",
+    "react-native-material-dropdown": "^0.11.1",
     "react-native-material-kit": "git://github.com/xinthink/react-native-material-kit.git#da1c292e",
     "react-native-material-textfield": "git://github.com/EdgeApp/react-native-material-textfield.git",
     "react-native-modal": "^11.0.1",
