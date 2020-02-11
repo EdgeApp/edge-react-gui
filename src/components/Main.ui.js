@@ -54,7 +54,6 @@ import SpendingLimitsConnector from '../connectors/SpendingLimitsConnector.js'
 import * as Constants from '../constants/indexConstants'
 import s from '../locales/strings.js'
 import DeepLinkingManager from '../modules/DeepLinkingManager.js'
-import PermissionsManager from '../modules/PermissionsManager.js'
 import ControlPanel from '../modules/UI/components/ControlPanel/ControlPanelConnector'
 import T from '../modules/UI/components/FormattedText/index'
 import BackButton from '../modules/UI/components/Header/Component/BackButton.ui'
@@ -688,7 +687,6 @@ export default class Main extends Component<Props> {
         </RouterWithRedux>
         <PasswordReminderModal />
         <PasswordRecoveryReminderModalConnector />
-        <PermissionsManager />
 
         <DeepLinkingManager />
       </Fragment>

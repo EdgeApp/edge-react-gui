@@ -5,9 +5,9 @@ import { AppState } from 'react-native'
 import RNPermissions from 'react-native-permissions'
 import { connect } from 'react-redux'
 
-import { showError } from '../components/services/AirshipInstance.js'
-import { type Permission, type PermissionsState, type PermissionStatus } from '../reducers/PermissionsReducer.js'
-import type { Dispatch, State } from '../types/reduxTypes.js'
+import { type Permission, type PermissionsState, type PermissionStatus } from '../../reducers/PermissionsReducer.js'
+import type { Dispatch, State } from '../../types/reduxTypes.js'
+import { showError } from './AirshipInstance.js'
 
 const PERMISSION_LIST: Permission[] = ['camera', 'contacts']
 
@@ -22,7 +22,7 @@ type PermissionsManagerDispatchProps = {
 
 type Props = PermissionsManagerStateProps & PermissionsManagerDispatchProps
 
-export class PermissionsManager extends React.Component<Props> {
+class PermissionsManagerComponent extends React.Component<Props> {
   render () {
     return null
   }
@@ -72,7 +72,7 @@ export const requestPermission = (permission: Permission): Promise<PermissionSta
       return RNPermissions.request(permission)
     }
 
-    return Promise.resolve(status)
+    return status
   })
 }
 
@@ -87,7 +87,7 @@ const mapDispatchToProps = (dispatch: Dispatch): PermissionsManagerDispatchProps
   }
 })
 
-export default connect(
+export const PermissionsManager = connect(
   mapStateToProps,
   mapDispatchToProps
-)(PermissionsManager)
+)(PermissionsManagerComponent)
