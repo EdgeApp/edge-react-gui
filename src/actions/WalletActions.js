@@ -167,11 +167,6 @@ export const refreshWallet = (walletId: string) => (dispatch: Dispatch, getState
 }
 
 export const upsertWallets = (wallets: Array<EdgeCurrencyWallet>) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const loginStatus = SETTINGS_SELECTORS.getLoginStatus(state)
-  if (!loginStatus) {
-    dispatch({ type: 'LOGGED_OUT' })
-  }
   dispatch(updateExchangeRates())
   dispatch({
     type: 'UI/WALLETS/UPSERT_WALLETS',

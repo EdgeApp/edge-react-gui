@@ -5,17 +5,10 @@ import _ from 'lodash'
 
 import type { Dispatch, GetState } from '../../../types/reduxTypes.js'
 import { getReceiveAddresses } from '../../../util/utils.js'
-import * as SETTINGS_SELECTORS from '../../Settings/selectors'
 import * as CORE_SELECTORS from '../selectors'
 
 export const updateWalletsRequest = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const loginStatus = SETTINGS_SELECTORS.getLoginStatus(state)
-  if (!loginStatus) {
-    dispatch({
-      type: 'LOGGED_OUT'
-    })
-  }
 
   const account = CORE_SELECTORS.getAccount(state)
   const { activeWalletIds, archivedWalletIds, currencyWallets } = account
