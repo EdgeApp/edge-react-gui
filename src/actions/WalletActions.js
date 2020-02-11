@@ -116,7 +116,6 @@ export const selectEOSWallet = (walletId: string, currencyCode: string, from?: s
 
 export const selectWalletFromModal = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
   dispatch(selectWallet(walletId, currencyCode))
-  dispatch({ type: 'DISABLE_WALLET_LIST_MODAL_VISIBILITY' })
   dispatch(refreshReceiveAddressRequest(walletId))
 }
 
