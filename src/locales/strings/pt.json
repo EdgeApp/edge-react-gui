@@ -553,5 +553,7 @@
   "send_from_wallet": "",
   "send_to_wallet": "",
   "exchange_from_wallet": "",
-  "exchange_to_wallet": ""
+  "exchange_to_wallet": "",
+  "wallet_list_modal_header_mru": "",
+  "wallet_list_modal_header_all": ""
 }
