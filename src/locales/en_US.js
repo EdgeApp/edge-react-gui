@@ -598,7 +598,9 @@ const strings = {
   send_from_wallet: 'Send from %s',
   send_to_wallet: 'Receive to %s',
   exchange_from_wallet: 'Exchange from %s',
-  exchange_to_wallet: 'Exchange to %s'
+  exchange_to_wallet: 'Exchange to %s',
+  wallet_list_modal_header_mru: 'Most Recent Wallets',
+  wallet_list_modal_header_all: 'All Wallets'
 }
 
 // export default strings

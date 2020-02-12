@@ -6,6 +6,7 @@ import React, { Component } from 'react'
 import { Image, TouchableHighlight, View } from 'react-native'
 
 import { intl } from '../../locales/intl'
+import s from '../../locales/strings.js'
 import FormattedText from '../../modules/UI/components/FormattedText/index'
 import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
 import { CryptoExchangeWalletListRowStyle as styles } from '../../styles/indexStyles'
@@ -17,7 +18,8 @@ export type StateProps = {
   denomination: EdgeDenomination,
   customTokens: Array<CustomTokenInfo>,
   settings: Object,
-  exchangeRates: { [string]: number }
+  exchangeRates: { [string]: number },
+  headerLabel?: string
 }
 
 export type OwnProps = {
@@ -170,8 +172,6 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
       currencyCodeString.includes(searchFilterLowerCase)
     const mostRecentUsedCheck = isMostRecentWallet ? currencyCodeString === currencyCodeFilter.toLowerCase() : true
 
-    console.log(isMostRecentWallet)
-
     if (searchFilter !== '' ? filter : mostRecentUsedCheck) {
       return (
         <TouchableHighlight style={styles.touchable} underlayColor={styles.underlayColor} onPress={this.onPress}>
@@ -202,6 +202,20 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
   render () {
     return (
       <View style={styles.container}>
+        {this.props.headerLabel === 'mostRecentWalletsHeader' && (
+          <View style={styles.walletHeaderContainer}>
+            <View style={styles.walletHeaderTextContainer}>
+              <FormattedText style={styles.walletHeaderText}>{s.strings.wallet_list_modal_header_mru}</FormattedText>
+            </View>
+          </View>
+        )}
+        {this.props.headerLabel === 'normalWalletHeader' && (
+          <View style={styles.walletHeaderContainer}>
+            <View style={styles.walletHeaderTextContainer}>
+              <FormattedText style={styles.walletHeaderText}>{s.strings.wallet_list_modal_header_all}</FormattedText>
+            </View>
+          </View>
+        )}
         {this.renderWallet()}
         <View styles={styles.rowContainerBottom}>{this.renderTokens()}</View>
       </View>
