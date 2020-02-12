@@ -15,9 +15,8 @@ import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import { MaterialInputOnWhite } from '../../styles/components/FormFieldStyles.js'
-import styles from '../../styles/scenes/FioAddressRegisterStyle'
+import { styles } from '../../styles/scenes/FioAddressRegisterStyle'
 import THEME from '../../theme/variables/airbitz'
-import type { IsConnectedProp } from '../../types/types'
 import { FormField } from '../common/FormField.js'
 import { showError } from '../services/AirshipInstance'
 
@@ -40,7 +39,7 @@ export type DispatchProps = {
   createCurrencyWallet: (walletName: string, walletType: string, fiatCurrencyCode: string) => any
 }
 
-type Props = StateProps & IsConnectedProp & DispatchProps
+type Props = StateProps & DispatchProps
 
 export class FioAddressRegisterScene extends Component<Props, State> {
   clearButtonMode = 'while-editing'

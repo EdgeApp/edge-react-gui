@@ -17,7 +17,7 @@ class NetworkActivityComponent extends Component<Props> {
 
   componentDidMount () {
     this.netInfoUnsubscribe = NetInfo.addEventListener(state => {
-      console.log(state.isConnected)
+      console.log('NetworkActivity - isConnected changed: ', state.isConnected)
       this.props.changeConnectivity(state.isConnected)
       if (!state.isConnected) {
         showError(`${s.strings.network_alert_title}`)

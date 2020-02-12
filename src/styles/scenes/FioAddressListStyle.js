@@ -8,7 +8,7 @@ import { scale } from '../../util/scaling'
 const borderBottomColor = '#D8E2ED'
 const fontColor = '#4B5158'
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   gradient: {
     height: THEME.HEADER
   },
@@ -70,5 +70,3 @@ const styles = StyleSheet.create({
     color: `${THEME.COLORS.PRIMARY}${THEME.ALPHA.LOW}`
   }
 })
-
-export default styles

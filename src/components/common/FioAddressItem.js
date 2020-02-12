@@ -9,7 +9,7 @@ import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/index'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
-import styles from '../../styles/scenes/FioAddressListStyle'
+import { styles } from '../../styles/scenes/FioAddressListStyle'
 import type { FioAddress } from '../../types/types'
 import { scale } from '../../util/scaling.js'
 
@@ -18,7 +18,7 @@ type FioAddressItemProps = {
   onFioAddressPress: (fioAddress: string, expiration: string) => void
 }
 
-const FioAddressItem = (props: FioAddressItemProps) => {
+export const FioAddressItem = (props: FioAddressItemProps) => {
   const { address, onFioAddressPress } = props
 
   return (
@@ -41,5 +41,3 @@ const FioAddressItem = (props: FioAddressItemProps) => {
     </TouchableHighlight>
   )
 }
-
-export default FioAddressItem

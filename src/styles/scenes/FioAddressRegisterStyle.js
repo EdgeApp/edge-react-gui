@@ -5,7 +5,7 @@ import { StyleSheet } from 'react-native'
 import THEME from '../../theme/variables/airbitz'
 import { scale } from '../../util/scaling.js'
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   gradient: {
     height: THEME.HEADER
   },
@@ -81,5 +81,3 @@ const styles = StyleSheet.create({
     color: `${THEME.COLORS.PRIMARY}${THEME.ALPHA.LOW}`
   }
 })
-
-export default styles

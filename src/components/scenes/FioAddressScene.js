@@ -12,7 +12,7 @@ import T from '../../modules/UI/components/FormattedText/index'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
-import styles from '../../styles/scenes/FioAddressStyle'
+import { styles } from '../../styles/scenes/FioAddressStyle'
 
 type Props = {}
 

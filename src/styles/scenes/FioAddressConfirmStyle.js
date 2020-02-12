@@ -5,7 +5,7 @@ import { StyleSheet } from 'react-native'
 import THEME from '../../theme/variables/airbitz'
 import { scale } from '../../util/scaling'
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   scene: {
     flex: 1,
     flexDirection: 'column',
@@ -97,5 +97,3 @@ const styles = StyleSheet.create({
     paddingTop: scale(20)
   }
 })
-
-export default styles

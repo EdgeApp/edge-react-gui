@@ -9,7 +9,7 @@ import * as Constants from '../../constants/SceneKeys'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/index'
-import styles from '../../styles/scenes/FioAddressDetailsStyle'
+import { styles } from '../../styles/scenes/FioAddressDetailsStyle'
 import { SceneWrapper } from '../common/SceneWrapper'
 
 export type State = {}

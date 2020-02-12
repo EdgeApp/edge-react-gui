@@ -12,8 +12,8 @@ import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/index'
 import ABSlider from '../../modules/UI/components/Slider/index.js'
 import { MaterialInput } from '../../styles/components/FormFieldStyles.js'
-import styles from '../../styles/scenes/FioAddressConfirmStyle'
-import type { FioAddress, FioDomain, IsConnectedProp } from '../../types/types'
+import { styles } from '../../styles/scenes/FioAddressConfirmStyle'
+import type { FioAddress, FioDomain } from '../../types/types'
 import { getFeeDisplayed } from '../../util/utils'
 import { FormFieldSelect } from '../common/FormFieldSelect.js'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -37,15 +37,16 @@ export type StateProps = {
   fioAddressName: string,
   fioWallets: EdgeCurrencyWallet[],
   account: any,
+  defaultFiatCode: string,
   isConnected: boolean
 }
 
 export type DispatchProps = {
-  createCurrencyWallet: (walletName: string, walletType: string) => any,
+  createCurrencyWallet: (walletName: string, walletType: string, fiatCurrencyCode: string) => any,
   changeConfirmSelectedWallet: (selectedWallet: EdgeCurrencyWallet | null, expiration: Date, fee_collected: number) => any
 }
 
-type Props = StateProps & IsConnectedProp & DispatchProps
+type Props = StateProps & DispatchProps
 
 export class FioAddressConfirmScene extends Component<Props, State> {
   state: State = {
@@ -104,9 +105,9 @@ export class FioAddressConfirmScene extends Component<Props, State> {
   }
 
   createFioWallet = async (): Promise<EdgeCurrencyWallet | null> => {
-    const { createCurrencyWallet } = this.props
+    const { createCurrencyWallet, defaultFiatCode } = this.props
     try {
-      const wallet = await createCurrencyWallet(s.strings.fio_address_register_default_fio_wallet_name, FIO_WALLET_TYPE)
+      const wallet = await createCurrencyWallet(s.strings.fio_address_register_default_fio_wallet_name, FIO_WALLET_TYPE, defaultFiatCode)
       return wallet
     } catch (e) {
       return null

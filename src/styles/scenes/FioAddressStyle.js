@@ -8,7 +8,7 @@ import { scale } from '../../util/scaling'
 const buttonBoxBackgroundColor = '#efeef4'
 const dotColor = 'black'
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   gradient: {
     height: THEME.HEADER
   },
@@ -76,5 +76,3 @@ const styles = StyleSheet.create({
     color: `${THEME.COLORS.PRIMARY}${THEME.ALPHA.LOW}`
   }
 })
-
-export default styles
