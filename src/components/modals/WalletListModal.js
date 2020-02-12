@@ -36,7 +36,8 @@ type Record = {
   walletItem: GuiWallet | null,
   supportedWalletType: Object | null,
   mostRecentUsed?: boolean,
-  currencyCode?: string | null
+  currencyCode?: string | null,
+  headerLabel?: string
 }
 
 type FlatListItem = {
@@ -129,6 +130,7 @@ export class WalletListModal extends Component<Props, LocalState> {
           isMostRecentWallet={item.mostRecentUsed}
           searchFilter={this.state.input}
           currencyCodeFilter={item.currencyCode || ''}
+          headerLabel={item.headerLabel}
         />
       )
     }
@@ -156,6 +158,17 @@ export class WalletListModal extends Component<Props, LocalState> {
       input
     })
   }
+  setWalletRecordsLabel = (wallets: Array<Record>, header: string): Array<Record> => {
+    return wallets.map((record: Record, i: number) => {
+      if (i === 0) {
+        return {
+          ...record,
+          headerLabel: header
+        }
+      }
+      return record
+    })
+  }
   getMostRecentlyUsedWalletRecords = (size: number) => {
     const { mostRecentWallets } = this.props
     const { records } = this.state
@@ -175,14 +188,14 @@ export class WalletListModal extends Component<Props, LocalState> {
       }
       i++
     }
-    return mostRecentWalletRecords
+    return this.setWalletRecordsLabel(mostRecentWalletRecords, 'mostRecentWalletsHeader')
   }
   getWalletRecords = () => {
     const { records, input } = this.state
 
     // Most Recent Wallet Records
     if (input === '') {
-      const walletTokenCount = records.reduce((total, record) => {
+      const walletTokenCount = records.reduce((total: number, record: Record) => {
         const wallet = record.walletItem
         const tokenValue = wallet ? wallet.enabledTokens.length : 0
         if (wallet) {
@@ -191,10 +204,12 @@ export class WalletListModal extends Component<Props, LocalState> {
         return total
       }, 0)
       if (walletTokenCount > 4 && walletTokenCount < 11) {
-        return [...this.getMostRecentlyUsedWalletRecords(2), ...records]
+        const wallets = this.setWalletRecordsLabel(records, 'normalWalletHeader')
+        return [...this.getMostRecentlyUsedWalletRecords(2), ...wallets]
       }
       if (walletTokenCount > 10) {
-        return [...this.getMostRecentlyUsedWalletRecords(3), ...records]
+        const wallets = this.setWalletRecordsLabel(records, 'normalWalletHeader')
+        return [...this.getMostRecentlyUsedWalletRecords(3), ...wallets]
       }
       return records
     }

@@ -117,6 +117,21 @@ const CryptoExchangeWalletListRowStyle = {
     textAlign: 'right',
     marginRight: scale(8),
     color: THEME.COLORS.SECONDARY
+  },
+  walletHeaderContainer: {
+    backgroundColor: THEME.COLORS.GRAY_4,
+    flex: 3,
+    padding: scale(3),
+    paddingLeft: scale(15),
+    flexDirection: 'row',
+    paddingRight: scale(24)
+  },
+  walletHeaderTextContainer: {
+    flex: 1
+  },
+  walletHeaderText: {
+    color: THEME.COLORS.GRAY_2,
+    fontSize: scale(14)
   }
 }
 
