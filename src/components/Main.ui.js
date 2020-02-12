@@ -8,6 +8,10 @@ import { connect } from 'react-redux'
 import * as URI from 'uri-js'
 
 import ENV from '../../env.json'
+import { checkEnabledExchanges } from '../actions/CryptoExchangeActions.js'
+import { checkAndShowGetCryptoModal } from '../actions/ScanActions.js'
+import { openDrawer } from '../actions/ScenesActions.js'
+import { showReEnableOtpModal } from '../actions/SettingsActions.js'
 import MenuIcon from '../assets/images/MenuButton/menu.png'
 import buyIconSelected from '../assets/images/tabbar/buy_selected.png'
 import buyIcon from '../assets/images/tabbar/buy.png'
@@ -19,6 +23,7 @@ import walletIconSelected from '../assets/images/tabbar/wallets_selected.png'
 import walletIcon from '../assets/images/tabbar/wallets.png'
 import { CreateWalletChoiceComponent } from '../components/scenes/CreateWalletChoiceScene.js'
 import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
+import { requestPermission } from '../components/services/PermissionsManager.js'
 import ExchangeDropMenu from '../connectors/components/HeaderMenuExchangeConnector'
 import RequestDropMenu from '../connectors/components/HeaderMenuRequestConnector'
 import { HeaderWalletSelectorConnector as HeaderWalletSelector } from '../connectors/components/HeaderWalletSelectorConnector.js'
@@ -54,6 +59,7 @@ import SpendingLimitsConnector from '../connectors/SpendingLimitsConnector.js'
 import * as Constants from '../constants/indexConstants'
 import s from '../locales/strings.js'
 import DeepLinkingManager from '../modules/DeepLinkingManager.js'
+import { deepLinkLogout, logoutRequest } from '../modules/Login/action.js'
 import ControlPanel from '../modules/UI/components/ControlPanel/ControlPanelConnector'
 import T from '../modules/UI/components/FormattedText/index'
 import BackButton from '../modules/UI/components/Header/Component/BackButton.ui'
@@ -66,6 +72,7 @@ import { passwordReminderModalConnector as PasswordReminderModal } from '../modu
 import { handlePluginBack, renderPluginBackButton } from '../modules/UI/scenes/Plugins/BackButton.js'
 import { type Permission } from '../reducers/PermissionsReducer.js'
 import { styles } from '../styles/MainStyle.js'
+import { type Dispatch, type State as ReduxState } from '../types/reduxTypes.js'
 import { scale } from '../util/scaling.js'
 import { logEvent } from '../util/tracking.js'
 import { CurrencySettingsTitle } from './navigation/CurrencySettingsTitle.js'
@@ -124,22 +131,29 @@ const OTP = s.strings.title_otp
 const DEFAULT_FIAT = s.strings.title_default_fiat
 const TERMS_OF_SERVICE = s.strings.title_terms_of_service
 
-type Props = {
-  requestPermission: (permission: Permission) => void,
-  username?: string,
-  dispatchEnableScan: () => void,
-  dispatchDisableScan: () => void,
-  urlReceived: string => void,
-  showReEnableOtpModal: () => void,
-  checkEnabledExchanges: () => void,
-  openDrawer: () => void,
-  dispatchAddressDeepLinkReceived: (addressDeepLinkData: Object) => any,
-  deepLinkPending: boolean,
-  checkAndShowGetCryptoModal: (?string) => void,
-  logout(): () => mixed
+type DispatchProps = {
+  // Linking:
+  urlReceived(backupKey: string): void,
+  dispatchAddressDeepLinkReceived(addressDeepLinkData: Object): void,
+
+  // Navigation actions:
+  logout(username?: string): void,
+  openDrawer(): void,
+
+  // Things to do when we enter certain scenes:
+  checkAndShowGetCryptoModal(routeData: string | void): void,
+  checkEnabledExchanges(): void,
+  dispatchDisableScan(): void,
+  dispatchEnableScan(): void,
+  requestPermission(permission: Permission): void,
+  showReEnableOtpModal(): void
 }
 
-export default class Main extends Component<Props> {
+type StateProps = {}
+
+type Props = DispatchProps & StateProps
+
+export class MainComponent extends Component<Props> {
   backPressedOnce: boolean
 
   constructor (props: Props) {
@@ -247,7 +261,7 @@ export default class Main extends Component<Props> {
       <Fragment>
         <RouterWithRedux backAndroidHandler={this.handleBack}>
           <Stack key={Constants.ROOT} hideNavBar panHandlers={null}>
-            <Scene key={Constants.LOGIN} initial component={LoginConnector} username={this.props.username} />
+            <Scene key={Constants.LOGIN} initial component={LoginConnector} />
 
             <Scene
               key={Constants.TRANSACTION_DETAILS}
@@ -820,3 +834,48 @@ export default class Main extends Component<Props> {
     return true
   }
 }
+
+export const Main = connect(
+  (state: ReduxState): StateProps => ({}),
+  (dispatch: Dispatch): DispatchProps => ({
+    // Linking:
+    urlReceived (backupKey) {
+      dispatch(deepLinkLogout(backupKey))
+    },
+    dispatchAddressDeepLinkReceived (addressDeepLinkData) {
+      dispatch({
+        type: 'ADDRESS_DEEP_LINK_RECEIVED',
+        data: addressDeepLinkData
+      })
+    },
+
+    // Navigation actions:
+    logout (username?: string): void {
+      dispatch(logoutRequest(username))
+    },
+    openDrawer () {
+      dispatch(openDrawer())
+    },
+
+    // Things to do when we enter certain scenes:
+    checkAndShowGetCryptoModal (routeData: string | void): void {
+      if (routeData === 'sweepPrivateKey') return
+      dispatch(checkAndShowGetCryptoModal())
+    },
+    checkEnabledExchanges () {
+      dispatch(checkEnabledExchanges())
+    },
+    dispatchDisableScan () {
+      dispatch({ type: 'DISABLE_SCAN' })
+    },
+    dispatchEnableScan () {
+      dispatch({ type: 'ENABLE_SCAN' })
+    },
+    requestPermission (permission: Permission) {
+      requestPermission(permission)
+    },
+    showReEnableOtpModal () {
+      dispatch(showReEnableOtpModal())
+    }
+  })
+)(MainComponent)
