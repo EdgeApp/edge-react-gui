@@ -553,5 +553,7 @@
   "send_from_wallet": "Senden von %s",
   "send_to_wallet": "Erhalten an %s",
   "exchange_from_wallet": "Umtausch von %s",
-  "exchange_to_wallet": "Umtausch zu %s"
+  "exchange_to_wallet": "Umtausch zu %s",
+  "wallet_list_modal_header_mru": "",
+  "wallet_list_modal_header_all": ""
 }
