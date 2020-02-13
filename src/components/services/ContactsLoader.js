@@ -4,7 +4,7 @@ import { Component } from 'react'
 import Contacts from 'react-native-contacts'
 import { connect } from 'react-redux'
 
-import { type PermissionStatus, PermissionStatusStrings } from '../../modules/PermissionsManager.js'
+import { type PermissionStatus } from '../../reducers/PermissionsReducer.js'
 import type { Dispatch, State } from '../../types/reduxTypes.js'
 import type { GuiContact } from '../../types/types.js'
 import { showError } from '../services/AirshipInstance.js'
@@ -177,7 +177,7 @@ class ContactsLoaderComponent extends Component<Props> {
   UNSAFE_componentWillReceiveProps (nextProps: Props) {
     const { contactsPermission } = nextProps
 
-    if (this.props.contactsPermission !== PermissionStatusStrings.AUTHORIZED && contactsPermission === PermissionStatusStrings.AUTHORIZED) {
+    if (this.props.contactsPermission !== 'authorized' && contactsPermission === 'authorized') {
       this.loadContacts()
     }
   }

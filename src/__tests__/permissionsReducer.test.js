@@ -2,15 +2,9 @@
 
 /* globals test expect */
 
-import { type Permission, type PermissionStatus, PermissionStatusStrings } from '../modules/PermissionsManager.js'
 import { initialState, permissions as permissionsReducer } from '../reducers/PermissionsReducer.js'
 
 const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
-
-const updatePermissionsAction = (permissions: { [Permission]: PermissionStatus }) => ({
-  type: 'PERMISSIONS/UPDATE',
-  data: { ...permissions }
-})
 
 test('initialState', () => {
   const expected = initialState
@@ -22,9 +16,9 @@ test('initialState', () => {
 test('updatePermissions => AUTHORIZED', () => {
   const expected = {
     ...initialState,
-    camera: PermissionStatusStrings.AUTHORIZED
+    camera: 'authorized'
   }
-  const action = updatePermissionsAction({ camera: PermissionStatusStrings.AUTHORIZED })
+  const action = { type: 'PERMISSIONS/UPDATE', data: { camera: 'authorized' } }
   const actual = permissionsReducer(initialState, action)
 
   expect(actual).toEqual(expected)
@@ -33,9 +27,9 @@ test('updatePermissions => AUTHORIZED', () => {
 test('updatePermissions => DENIED', () => {
   const expected = {
     ...initialState,
-    camera: PermissionStatusStrings.DENIED
+    camera: 'denied'
   }
-  const action = updatePermissionsAction({ camera: PermissionStatusStrings.DENIED })
+  const action = { type: 'PERMISSIONS/UPDATE', data: { camera: 'denied' } }
   const actual = permissionsReducer(initialState, action)
 
   expect(actual).toEqual(expected)
@@ -44,9 +38,9 @@ test('updatePermissions => DENIED', () => {
 test('updatePermissions => RESTRICTED', () => {
   const expected = {
     ...initialState,
-    camera: PermissionStatusStrings.RESTRICTED
+    camera: 'restricted'
   }
-  const action = updatePermissionsAction({ camera: PermissionStatusStrings.RESTRICTED })
+  const action = { type: 'PERMISSIONS/UPDATE', data: { camera: 'restricted' } }
   const actual = permissionsReducer(initialState, action)
 
   expect(actual).toEqual(expected)
@@ -55,13 +49,16 @@ test('updatePermissions => RESTRICTED', () => {
 test('updatePermissions => MULTI', () => {
   const expected = {
     ...initialState,
-    camera: PermissionStatusStrings.RESTRICTED,
-    contacts: PermissionStatusStrings.AUTHORIZED
+    camera: 'restricted',
+    contacts: 'authorized'
   }
-  const action = updatePermissionsAction({
-    camera: PermissionStatusStrings.RESTRICTED,
-    contacts: PermissionStatusStrings.AUTHORIZED
-  })
+  const action = {
+    type: 'PERMISSIONS/UPDATE',
+    data: {
+      camera: 'restricted',
+      contacts: 'authorized'
+    }
+  }
   const actual = permissionsReducer(initialState, action)
 
   expect(actual).toEqual(expected)

@@ -3,6 +3,7 @@
 import { type Disklet } from 'disklet'
 import type { EdgeContext, EdgeCurrencyWallet, EdgeLobby, EdgeParsedUri, EdgeReceiveAddress } from 'edge-core-js'
 
+import { type PermissionsState } from '../reducers/PermissionsReducer.js'
 import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
 import { type AppMessage } from './AppTweaks.js'
 import { type CreationReason } from './CreationReason.js'
@@ -15,7 +16,6 @@ type LegacyActionName =
   | 'ADDRESS_DEEP_LINK_RECEIVED'
   | 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES'
   | 'NEW_RECEIVE_ADDRESS'
-  | 'PERMISSIONS/UPDATE'
   | 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_FAIL'
   | 'SET_CONFIRM_PASSWORD_ERROR'
   | 'SET_TRANSACTION_SUBCATEGORIES'
@@ -173,6 +173,7 @@ export type Action =
         coreWalletsToUpdate: Array<EdgeCurrencyWallet>
       }
     }
+  | { type: 'PERMISSIONS/UPDATE', data: PermissionsState }
   | { type: 'HANDLE_AVAILABLE_STATUS', data: HandleAvailableStatus }
   | {
       type: 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE' | 'SELECT_TO_WALLET_CRYPTO_EXCHANGE',

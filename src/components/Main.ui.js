@@ -54,7 +54,7 @@ import SpendingLimitsConnector from '../connectors/SpendingLimitsConnector.js'
 import * as Constants from '../constants/indexConstants'
 import s from '../locales/strings.js'
 import DeepLinkingManager from '../modules/DeepLinkingManager.js'
-import PermissionsManager, { type Permission, PermissionStrings } from '../modules/PermissionsManager.js'
+import PermissionsManager from '../modules/PermissionsManager.js'
 import ControlPanel from '../modules/UI/components/ControlPanel/ControlPanelConnector'
 import T from '../modules/UI/components/FormattedText/index'
 import BackButton from '../modules/UI/components/Header/Component/BackButton.ui'
@@ -65,6 +65,7 @@ import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
 import { PasswordRecoveryReminderModalConnector } from '../modules/UI/components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalConnector.js'
 import { passwordReminderModalConnector as PasswordReminderModal } from '../modules/UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
 import { handlePluginBack, renderPluginBackButton } from '../modules/UI/scenes/Plugins/BackButton.js'
+import { type Permission } from '../reducers/PermissionsReducer.js'
 import { styles } from '../styles/MainStyle.js'
 import { scale } from '../util/scaling.js'
 import { logEvent } from '../util/tracking.js'
@@ -252,7 +253,7 @@ export default class Main extends Component<Props> {
             <Scene
               key={Constants.TRANSACTION_DETAILS}
               navTransparent={true}
-              onEnter={() => this.props.requestPermission(PermissionStrings.CONTACTS)}
+              onEnter={() => this.props.requestPermission('contacts')}
               clone
               component={TransactionDetails}
               renderTitle={this.renderTitle(TRANSACTION_DETAILS)}
@@ -356,7 +357,7 @@ export default class Main extends Component<Props> {
                     <Scene
                       key={Constants.TRANSACTION_LIST}
                       onEnter={() => {
-                        this.props.requestPermission(PermissionStrings.CONTACTS)
+                        this.props.requestPermission('contacts')
                       }}
                       navTransparent={true}
                       component={TransactionListConnector}
@@ -508,7 +509,7 @@ export default class Main extends Component<Props> {
                     key={Constants.SCAN_NOT_USED}
                     navTransparent={true}
                     onEnter={props => {
-                      this.props.requestPermission(PermissionStrings.CAMERA)
+                      this.props.requestPermission('camera')
                       this.props.dispatchEnableScan()
                       this.props.checkAndShowGetCryptoModal(props.data)
                     }}
