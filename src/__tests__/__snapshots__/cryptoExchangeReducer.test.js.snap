@@ -3,7 +3,6 @@
 exports[`initialState 1`] = `
 Object {
   "calculatingMax": false,
-  "changeWallet": "none",
   "creatingWallet": false,
   "forceUpdateGuiCounter": 0,
   "fromBalanceMessage": "",
@@ -47,6 +46,5 @@ Object {
       "name": "",
     },
   },
-  "walletListModalVisible": false,
 }
 `;

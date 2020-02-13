@@ -61,14 +61,12 @@ type StateProps = {
   defaultIsoFiat: string
 }
 type DispatchProps = {
-  onSelectWallet(string, string): void,
-  openModal(data: 'from' | 'to'): mixed,
+  onSelectWallet(walletId: string, currencyCode: string, direction: 'from' | 'to'): void,
   getQuoteForTransaction(SetNativeAmountInfo): void
 }
 type Props = StateProps & DispatchProps
 
 type State = {
-  whichWallet: 'from' | 'to', // Which wallet selector dropdown was tapped
   whichWalletFocus: 'from' | 'to', // Which wallet FlipInput was last focused and edited
   fromExchangeAmount: string,
   forceUpdateGuiCounter: number,
@@ -83,7 +81,6 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     const newState: State = {
-      whichWallet: 'from',
       whichWalletFocus: 'from',
       forceUpdateGuiCounter: 0,
       fromExchangeAmount: '',
@@ -221,31 +218,21 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
   }
 
   launchFromWalletSelector = () => {
-    this.props.openModal('from')
     this.renderDropUp('from')
-    this.setState({
-      whichWallet: 'from'
-    })
   }
 
   launchToWalletSelector = () => {
-    this.props.openModal('to')
     this.renderDropUp('to')
-    this.setState({
-      whichWallet: 'to'
-    })
   }
 
   focusFromWallet = () => {
     this.setState({
-      whichWallet: 'from',
       whichWalletFocus: 'from'
     })
   }
 
   focusToWallet = () => {
     this.setState({
-      whichWallet: 'to',
       whichWalletFocus: 'to'
     })
   }
@@ -260,7 +247,7 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
     this.toAmountDisplay = amounts.exchangeAmount
   }
 
-  renderDropUp = (whichWallet: string) => {
+  renderDropUp = (whichWallet: 'from' | 'to') => {
     Airship.show(bridge => (
       <WalletListModal
         bridge={bridge}
@@ -269,7 +256,7 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
       />
     )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
-        this.props.onSelectWallet(walletId, currencyCode)
+        this.props.onSelectWallet(walletId, currencyCode, whichWallet)
       }
     })
     return null
@@ -371,15 +358,12 @@ export const CryptoExchangeScene = connect(
     }
   },
   (dispatch: Dispatch): DispatchProps => ({
-    getQuoteForTransaction(fromWalletNativeAmount: SetNativeAmountInfo) {
+    getQuoteForTransaction(fromWalletNativeAmount) {
       dispatch(getQuoteForTransaction(fromWalletNativeAmount))
     },
-    onSelectWallet(walletId: string, currencyCode: string) {
-      dispatch(selectWalletForExchange(walletId, currencyCode))
+    onSelectWallet(walletId, currencyCode, direction) {
+      dispatch(selectWalletForExchange(walletId, currencyCode, direction))
       dispatch(updateMostRecentWalletsSelected(walletId, currencyCode))
-    },
-    openModal(data: 'from' | 'to') {
-      dispatch({ type: 'OPEN_WALLET_SELECTOR_MODAL', data })
     }
   })
 )(CryptoExchangeComponent)
