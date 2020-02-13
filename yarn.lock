@@ -2787,9 +2787,9 @@ bs58check@2.1.2, bs58check@<3.0.0, bs58check@^1.0.8, bs58check@^2.1.1, bs58check
     create-hash "^1.1.0"
     safe-buffer "^5.1.2"
 
-"bs58grscheck@git+https://github.com/Groestlcoin/bs58grscheck.git":
+"bs58grscheck@https://github.com/Groestlcoin/bs58grscheck":
   version "2.1.2"
-  resolved "git+https://github.com/Groestlcoin/bs58grscheck.git#79d8126ae627cdfa26aec1c2cfd18f71946695c4"
+  resolved "https://github.com/Groestlcoin/bs58grscheck#79d8126ae627cdfa26aec1c2cfd18f71946695c4"
   dependencies:
     bs58 "^4.0.0"
     create-hash "^1.1.0"
@@ -4041,10 +4041,10 @@ edge-core-js@^0.16.21:
     ws "^5.1.1"
     yaob "^0.3.6"
 
-edge-currency-accountbased@^0.6.5:
-  version "0.6.5"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.6.5.tgz#c56c9eaf9266e4babce3f1ba2c1f8c143eb7329f"
-  integrity sha512-KxEtoiSeLixsZZZ/ODqrOZJHzLBsM+buBWgwzX7JSEksYtDiYdMTiiZfrKSU7OX3qe6SmSOH5UEHsI00xFDaZA==
+edge-currency-accountbased@^0.6.6:
+  version "0.6.6"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.6.6.tgz#5e63799e2f01cd21da13a3cb6a0c68535203f15c"
+  integrity sha512-5R2EwdtiO4OCi/2qBVrHGsYcb5A9PONM1KEEFixw+a70rGg7GRelKGJwWALTJ/kofOP2f0KZPYB51gno9tIsag==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@dapix/react-native-fio" "0.1.0"
