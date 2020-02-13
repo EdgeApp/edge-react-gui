@@ -223,6 +223,9 @@
   "settings_exchange_settings": "Tauschbörsen-Einstellungen",
   "settings_exchange_instruction": "Aktivieren oder deaktivieren Sie die Tauschbörsen-Anbieter die ihnen zur Verfügung stehen",
   "settings_exchange_enable": "Tauschbörsen aktivieren",
+  "swap_preferred_header": "",
+  "swap_preferred_cheapest": "",
+  "swap_preferred_instructions": "",
   "string_enable": "Aktivieren",
   "settings_button_send_logs": "Protokolle senden",
   "settings_button_setup_two_factor": "2 Faktorautentifizierung einrichten",
@@ -311,7 +314,7 @@
   "string_split_wallet": "%s aufsplitten",
   "string_add_edit_tokens": "Hinzufügen / Bearbeiten von Token",
   "tx_notes_metadata": "%s: %s\nEmpfänger Adresse: %s",
-  "tx_notes_metadata_recipient_address": "",
+  "tx_notes_metadata_recipient_address": "Empfängeradresse:",
   "exchange_notes_metadata_generic": "Umgetauschte %1$s %2$s von %3$s in %4$s %5$s in %6$s an Addresse %7$s \nAuftrag: %8$s.\nFür Hilfe kontaktieren Sie bitte %9$s.",
   "exchange_notes_metadata_generic2": "Umgetauschte %1$s %2$s von %3$s in %4$s %5$s in %6$s an Addresse %7$s \nAuftrag: %8$s. \nBörsen-Zahlungs-ID: %9$s. \nEinmalige Börsen-ID: %10$s \n\nFür Hilfe, kontaktieren Sie bitte %11$s.",
   "title_crypto_settings": "%s Einstellungen",
@@ -355,8 +358,8 @@
   "title_transaction_details": "Transaktionsdetails",
   "title_transactions": "Transaktionen",
   "title_wallets": "Wallets",
-  "title_buy": "",
-  "title_sell": "",
+  "title_buy": "Kaufen",
+  "title_sell": "Verkaufen",
   "title_use_legacy_address": "Legacy-Adresse verwenden",
   "title_use_regular_address": "Reguläre Adresse verwenden",
   "token_not_supported": "Token wird nicht von der Börse unterstützt",
@@ -550,5 +553,7 @@
   "send_from_wallet": "Senden von %s",
   "send_to_wallet": "Erhalten an %s",
   "exchange_from_wallet": "Umtausch von %s",
-  "exchange_to_wallet": "Umtausch zu %s"
+  "exchange_to_wallet": "Umtausch zu %s",
+  "wallet_list_modal_header_mru": "",
+  "wallet_list_modal_header_all": ""
 }
