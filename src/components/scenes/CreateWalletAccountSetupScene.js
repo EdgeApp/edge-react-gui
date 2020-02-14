@@ -21,7 +21,7 @@ import styles from '../../styles/scenes/CreateWalletStyle.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
 import type { GuiFiatType, GuiWalletType } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
-import { trackEvent } from '../../util/tracking.js'
+import { logEvent } from '../../util/tracking.js'
 import { FormField } from '../common/FormField.js'
 
 const deviceWidth = PLATFORM.deviceWidth
@@ -65,7 +65,7 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
   }
 
   componentDidMount () {
-    trackEvent('ActivateWalletStart')
+    logEvent('ActivateWalletStart')
   }
 
   modifiedStyle = {

@@ -25,7 +25,7 @@ import * as SETTINGS_SELECTORS from '../modules/Settings/selectors.js'
 import * as UI_SELECTORS from '../modules/UI/selectors'
 import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiSwapInfo, GuiWallet } from '../types/types.js'
-import { trackConversion, trackEvent } from '../util/tracking.js'
+import { logEvent, trackConversion } from '../util/tracking.js'
 import * as UTILS from '../util/utils'
 import { updateSwapCount } from './RequestReviewActions.js'
 
@@ -271,7 +271,7 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
   const { fromWallet, toWallet, toCurrencyCode } = request
 
   try {
-    trackEvent('SwapStart')
+    logEvent('SwapStart')
     const broadcastedTransaction: EdgeTransaction = await quote.approve()
     await fromWallet.saveTx(broadcastedTransaction)
 
@@ -331,7 +331,7 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
     })
   } catch (error) {
     console.log(error)
-    trackEvent('SwapFailed')
+    logEvent('SwapFailed')
     dispatch({ type: 'DONE_SHIFT_TRANSACTION' })
     setTimeout(() => {
       Alert.alert(s.strings.exchange_failed, error.message)

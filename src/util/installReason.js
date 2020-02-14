@@ -3,7 +3,7 @@
 import { type Disklet } from 'disklet'
 import { type EdgeAccount } from 'edge-core-js/types'
 
-import { type TrackingValues, trackEvent } from './tracking.js'
+import { type TrackingValues, logEvent } from './tracking.js'
 
 /**
  * Why was this app installed on the phone?
@@ -47,7 +47,7 @@ export function loadInstallReason (disklet: Disklet, isFreshInstall: boolean) {
     .catch(e => {
       // If all else fails, we just don't have a reason:
       console.log(e)
-      trackEvent('LoadInstallReasonFail')
+      logEvent('LoadInstallReasonFail')
       return {}
     })
     .then(json => {

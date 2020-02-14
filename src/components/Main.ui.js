@@ -67,7 +67,7 @@ import { passwordReminderModalConnector as PasswordReminderModal } from '../modu
 import { handlePluginBack, renderPluginBackButton } from '../modules/UI/scenes/Plugins/BackButton.js'
 import { styles } from '../styles/MainStyle.js'
 import { scale } from '../util/scaling.js'
-import { trackEvent } from '../util/tracking.js'
+import { logEvent } from '../util/tracking.js'
 import { CurrencySettingsTitle } from './navigation/CurrencySettingsTitle.js'
 import { ChangeMiningFeeScene } from './scenes/ChangeMiningFeeScene.js'
 import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
@@ -157,7 +157,7 @@ export default class Main extends Component<Props> {
   }
 
   componentDidMount () {
-    trackEvent('AppStart')
+    logEvent('AppStart')
 
     Linking.getInitialURL()
       .then(url => {
