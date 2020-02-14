@@ -11,6 +11,7 @@ import SafariView from 'react-native-safari-view'
 import { Bridgeable } from 'yaob'
 
 import { createCurrencyWalletAndSelectForPlugins } from '../../../../actions/indexActions'
+import { trackAccountEvent, trackConversion } from '../../../../actions/TrackingActions.js'
 import { selectWallet } from '../../../../actions/WalletActions'
 import { launchModal } from '../../../../components/common/ModalProvider.js'
 import { Airship, showError, showToast } from '../../../../components/services/AirshipInstance.js'
@@ -23,7 +24,6 @@ import { Icon } from '../../../../modules/UI/components/Icon/Icon.ui.js'
 import type { GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
 import type { Dispatch, State } from '../../../../types/reduxTypes.js'
 import type { BuySellPlugin, GuiWallet } from '../../../../types/types.js'
-import { trackConversion, trackEvent } from '../../../../util/tracking.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 
@@ -412,10 +412,11 @@ export class EdgeProvider extends Bridgeable {
         exchangeAmount
       })
     } else {
-      trackEvent('EdgeProviderConversion', {
-        pluginId: this._pluginId,
-        account: CORE_SELECTORS.getAccount(this._state)
-      })
+      this._dispatch(
+        trackAccountEvent('EdgeProviderConversion', {
+          pluginId: this._pluginId
+        })
+      )
     }
   }
 

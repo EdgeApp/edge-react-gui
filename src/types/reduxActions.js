@@ -4,6 +4,8 @@ import { type Disklet } from 'disklet'
 import type { EdgeContext, EdgeCurrencyWallet, EdgeLobby, EdgeParsedUri, EdgeReceiveAddress } from 'edge-core-js'
 
 import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
+import { type CreationReason } from './CreationReason.js'
+import { type InstallReason } from './InstallReason.js'
 import { type CustomTokenInfo, type GuiContact, type GuiCurrencyInfo, type GuiSwapInfo, type GuiWallet } from './types.js'
 
 type LegacyActionName =
@@ -146,12 +148,14 @@ export type Action =
         receiveAddresses: { [id: string]: EdgeReceiveAddress }
       }
     }
+  | { type: 'CREATION_REASON_LOADED', data: CreationReason }
   | { type: 'DEEP_LINK_RECEIVED', data: string /* Password recovery link */ }
   | { type: 'DELETE_CUSTOM_TOKEN_SUCCESS', data: { currencyCode: string } }
   | {
       type: 'INSERT_WALLET_IDS_FOR_PROGRESS',
       data: { activeWalletIds: Array<string> }
     }
+  | { type: 'INSTALL_REASON_LOADED', data: InstallReason }
   | { type: 'IS_CHECKING_HANDLE_AVAILABILITY', data: boolean }
   | { type: 'LOGOUT', data: { username?: string } }
   | { type: 'LOGS/SEND_LOGS_REQUEST', text: string }

@@ -1,13 +1,11 @@
 // @flow
 
-import { type EdgeAccount } from 'edge-core-js/types'
 import DeviceInfo from 'react-native-device-info'
 import firebase from 'react-native-firebase'
 
 import ENV from '../../env.json'
-import { loadCreationReason } from './installReason.js'
 
-type TrackingEvent =
+export type TrackingEvent =
   | 'ActivateWalletCancel'
   | 'ActivateWalletSelect'
   | 'ActivateWalletStart'
@@ -33,52 +31,6 @@ export type TrackingValues = {
 if (ENV.USE_FIREBASE && !firebase.isMock) {
   firebase.analytics().setUserId(DeviceInfo.getUniqueID())
   global.firebase = firebase
-}
-
-/**
- * Tracks a conversion, which involves some type of revenue.
- */
-export async function trackConversion (
-  event: TrackingEvent,
-  opts: {
-    account: EdgeAccount,
-    currencyCode: string,
-    exchangeAmount: number,
-    pluginId: string
-  }
-) {
-  const { account, currencyCode, exchangeAmount, pluginId } = opts
-
-  // Look up the dollar value:
-  const dollarValue: number = await account.exchangeCache.convertCurrency(currencyCode, 'iso:USD', exchangeAmount)
-
-  // Record the event:
-  const values: TrackingValues = {
-    dollarValue,
-    pluginId,
-    ...(await loadCreationReason(account))
-  }
-  return logEvent(event, values)
-}
-
-/**
- * Tracks a user event, like navigating or logging in.
- */
-export async function trackEvent (
-  event: TrackingEvent,
-  opts?: {
-    account?: EdgeAccount,
-    currencyCode?: string // For wallet creation events
-  } = {}
-) {
-  const { account, currencyCode } = opts
-
-  // Record the event:
-  const values: TrackingValues = {
-    currencyCode,
-    ...(await loadCreationReason(account))
-  }
-  return logEvent(event, values)
 }
 
 /**

@@ -5,14 +5,16 @@ import Locale from 'react-native-locale'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
+import { loadCreationReason } from '../../actions/CreationReasonActions.js'
+import { trackAccountEvent } from '../../actions/TrackingActions.js'
 import { getEnabledTokens } from '../../actions/WalletActions.js'
 import { showError } from '../../components/services/AirshipInstance.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
+import { getCreationTweaks } from '../../selectors/AccountSelectors.js'
+import { type AppTweaks } from '../../types/AppTweaks.js'
 import type { Dispatch, GetState } from '../../types/reduxTypes.js'
 import { type CustomTokenInfo } from '../../types/types.js'
-import { getInstallCurrencies, saveCreationReason } from '../../util/installReason.js'
-import { trackEvent } from '../../util/tracking.js'
 import { runWithTimeout } from '../../util/utils.js'
 import {
   CORE_DEFAULTS,
@@ -165,19 +167,23 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       type: 'ACCOUNT_INIT_COMPLETE',
       data: { ...accountInitObject }
     })
-    if (account.newAccount) {
-      await saveCreationReason(account)
-    }
+
     if (newAccount) {
-      await createDefaultWallets(account, defaultFiat, dispatch)
+      // Ensure the creation reason is available before creating wallets:
+      await dispatch(loadCreationReason(account))
+      const creationTweaks = getCreationTweaks(getState())
+      await createDefaultWallets(account, defaultFiat, creationTweaks, dispatch)
+    } else {
+      // Load the creation reason more lazily:
+      dispatch(loadCreationReason(account))
     }
+
     await updateWalletsRequest()(dispatch, getState)
     for (const wId of activeWalletIds) {
       await getEnabledTokens(wId)(dispatch, getState)
     }
     updateWalletsEnabledTokens(getState)
   } catch (error) {
-    console.log(error)
     showError(error)
   }
 }
@@ -315,12 +321,11 @@ async function safeCreateWallet (account: EdgeAccount, walletType: string, walle
 /**
  * Creates the default wallets inside a new account.
  */
-async function createDefaultWallets (account: EdgeAccount, defaultFiat: string, dispatch: Dispatch) {
+async function createDefaultWallets (account: EdgeAccount, defaultFiat: string, creationTweaks: AppTweaks, dispatch: Dispatch) {
   const fiatCurrencyCode = 'iso:' + defaultFiat
 
-  const currencyCodes = getInstallCurrencies()
-  if (currencyCodes != null) {
-    for (const currencyCode of currencyCodes) {
+  if (creationTweaks.currencyCodes != null) {
+    for (const currencyCode of creationTweaks.currencyCodes) {
       const currencyInfo = findCurrencyInfo(account, currencyCode)
       if (currencyInfo == null) continue
 
@@ -328,7 +333,7 @@ async function createDefaultWallets (account: EdgeAccount, defaultFiat: string, 
       await safeCreateWallet(account, currencyInfo.walletType, walletName, fiatCurrencyCode, dispatch)
     }
 
-    trackEvent('SignupWalletsCreated', { account })
+    dispatch(trackAccountEvent('SignupWalletsCreated'))
     return
   }
 
@@ -337,5 +342,5 @@ async function createDefaultWallets (account: EdgeAccount, defaultFiat: string, 
   await safeCreateWallet(account, 'wallet:bitcoincash', s.strings.string_first_bitcoincash_wallet_name, fiatCurrencyCode, dispatch)
   await safeCreateWallet(account, 'wallet:ethereum', s.strings.string_first_ethereum_wallet_name, fiatCurrencyCode, dispatch)
 
-  trackEvent('SignupWalletsCreated', { account })
+  dispatch(trackAccountEvent('SignupWalletsCreated'))
 }
