@@ -1,37 +1,67 @@
 // @flow
 
-import type { Node } from 'react'
-import React, { Component } from 'react'
-import { TouchableHighlight, View } from 'react-native'
-import IonIcon from 'react-native-vector-icons/Ionicons'
+import React, { type Node } from 'react'
+import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 
-import styles, { styles as styleRaw } from '../../styles/SettingsComponentsStyle'
+import { dayText } from '../../styles/common/textStyles.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 
 type Props = {
-  left: Node,
-  isSelected: boolean,
-  onPress: () => void
+  disabled?: boolean, // Show with grey style
+  icon?: Node,
+  text: string,
+  right?: Node,
+  onPress?: () => void
 }
 
-class Row extends Component<Props> {
-  render () {
-    const { left, isSelected, onPress } = this.props
+/**
+ * A settings row features tappable text, as well as an optional icon
+ * on the left and another optional component on the right.
+ */
+export function SettingsRow (props: Props): Node {
+  const { disabled = false, icon, text, right, onPress } = props
 
-    const icon = isSelected ? (
-      <IonIcon style={[styles.radioButton]} name="ios-radio-button-on" />
-    ) : (
-      <IonIcon style={[styles.radioButton, styles.radioButtonSelected]} name="ios-radio-button-off" />
-    )
+  return (
+    <TouchableHighlight onPress={onPress} underlayColor="rgba(0,0,0,0)">
+      <View style={styles.row}>
+        {icon != null ? <View style={styles.padding}>{icon}</View> : undefined}
+        <Text style={disabled ? styles.disabledText : styles.text}>{text}</Text>
+        {right != null ? <View style={styles.padding}>{right}</View> : undefined}
+      </View>
+    </TouchableHighlight>
+  )
+}
 
-    return (
-      <TouchableHighlight style={[styles.rowContainer]} underlayColor={styleRaw.underlay.color} onPress={onPress}>
-        <View style={[styles.rowTextRow]}>
-          <View style={[styles.rowLeftContainer]}>{left}</View>
-          {icon}
-        </View>
-      </TouchableHighlight>
-    )
+const commonText = {
+  ...dayText('row-left'),
+  color: THEME.COLORS.GRAY_1,
+  flexGrow: 1,
+  padding: THEME.rem(0.5)
+}
+
+const rawStyles = {
+  row: {
+    // Appearance:
+    backgroundColor: THEME.COLORS.WHITE,
+    borderBottomColor: THEME.COLORS.GRAY_3,
+    borderBottomWidth: THEME.rem(1 / 16),
+
+    // Layout:
+    minHeight: THEME.rem(3.25),
+    paddingLeft: THEME.rem(0.5),
+    paddingRight: THEME.rem(0.5),
+
+    // Children:
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'flex-start'
+  },
+
+  text: commonText,
+  disabledText: { ...commonText, color: THEME.COLORS.GRAY_2 },
+
+  padding: {
+    padding: THEME.rem(0.5)
   }
 }
-
-export default Row
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

@@ -5,7 +5,7 @@ import { ChangePasswordScreen } from 'edge-login-ui-rn'
 import React, { Component } from 'react'
 import { ScrollView, View } from 'react-native'
 
-import styles from '../../styles/scenes/SettingsStyle.js'
+import { THEME } from '../../theme/variables/airbitz'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
 export type ChangePasswordOwnProps = {
@@ -34,7 +34,7 @@ export class ChangePassword extends Component<ChangePasswordComponent> {
   render () {
     return (
       <SceneWrapper hasTabs={false} background="body">
-        <ScrollView style={styles.container} keyboardShouldPersistTaps={'always'}>
+        <ScrollView keyboardShouldPersistTaps={'always'}>
           <ChangePasswordScreen
             account={this.props.account}
             context={this.props.context}
@@ -42,7 +42,7 @@ export class ChangePassword extends Component<ChangePasswordComponent> {
             onCancel={this.onComplete}
             showHeader={this.props.showHeader}
           />
-          <View style={[styles.bottomShim, { height: 360 }]} />
+          <View style={{ backgroundColor: THEME.COLORS.WHITE, height: 360 }} />
         </ScrollView>
       </SceneWrapper>
     )

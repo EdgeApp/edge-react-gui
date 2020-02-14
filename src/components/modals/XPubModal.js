@@ -1,20 +1,22 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Clipboard, Platform, Text } from 'react-native'
+import { Clipboard, Linking, Platform, Text } from 'react-native'
 
 import { EYE_ICON, ION_ICONS } from '../../constants/IconConstants.js'
 import s from '../../locales/strings.js'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
+import { PrimaryButton, SecondaryButton } from '../../modules/UI/components/Buttons/index'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import { InteractiveModal } from '../../modules/UI/components/Modals/InteractiveModal/InteractiveModal.ui.js'
 import { scale } from '../../util/scaling.js'
 import { showError, showToast } from '../services/AirshipInstance.js'
+// import {sprintf} from "sprintf-js"
 
 type XPubModalOwnProps = {}
 
 type XPubModalStateProps = {
   xPubSyntax: string,
+  xPubExplorer: string,
   visibilityBoolean: boolean
 }
 
@@ -37,8 +39,22 @@ export default class XPubModal extends Component<XPubModalComponentProps, XPubMo
     }
   }
 
+  _loadXpubExplorer = () => {
+    this.props.onExit()
+    const xPubExplorerLink = this.props.xPubExplorer
+    Linking.canOpenURL(xPubExplorerLink).then(supported => {
+      if (supported) {
+        Linking.openURL(xPubExplorerLink)
+      }
+    })
+  }
+
   render () {
     const osPrefix = Platform.OS === 'ios' ? 'ios-' : 'md-'
+    let hasXpubExplorerValue = false
+    if (this.props.xPubExplorer) {
+      hasXpubExplorerValue = true
+    }
     return (
       <InteractiveModal
         legacy
@@ -67,6 +83,15 @@ export default class XPubModal extends Component<XPubModalComponentProps, XPubMo
               </PrimaryButton>
             </InteractiveModal.Item>
           </InteractiveModal.Row>
+          {hasXpubExplorerValue && (
+            <InteractiveModal.Row>
+              <InteractiveModal.Item>
+                <SecondaryButton onPress={this._loadXpubExplorer}>
+                  <SecondaryButton.Text>{s.strings.transaction_details_show_advanced_block_explorer}</SecondaryButton.Text>
+                </SecondaryButton>
+              </InteractiveModal.Item>
+            </InteractiveModal.Row>
+          )}
         </InteractiveModal.Footer>
       </InteractiveModal>
     )

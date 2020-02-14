@@ -28,6 +28,7 @@ type LegacyActionName =
   | 'UI/SETTINGS/CHANGE_TOUCH_ID_SETTINGS'
   | 'UI/SETTINGS/LOAD_SETTINGS'
   | 'UI/SETTINGS/OTP_SETTINGS'
+  | 'UI/SETTINGS/SET_MOST_RECENT_WALLETS'
   | 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY'
   | 'UI/SETTINGS/SET_BLUETOOTH_MODE'
   | 'UI/SETTINGS/SET_DEFAULT_FIAT'
@@ -138,14 +139,6 @@ export type Action =
       data: { context: EdgeContext, folder: DiskletFolder }
     }
   | {
-      type: 'CORE/CONTEXT/ADD_USERNAMES',
-      data: { usernames: Array<string> }
-    }
-  | {
-      type: 'CORE/CONTEXT/DELETE_LOCAL_ACCOUNT',
-      data: { username: string }
-    }
-  | {
       type: 'CORE/WALLETS/UPDATE_WALLETS',
       data: {
         activeWalletIds: Array<string>,
@@ -166,7 +159,7 @@ export type Action =
   | { type: 'LOGS/SEND_LOGS_FAILURE', error: Error }
   | {
       type: 'OPEN_VIEWXPUB_WALLET_MODAL',
-      data: { walletId: string, xPub: string | null }
+      data: { walletId: string, xPub: string | null, xPubExplorer: string }
     }
   | {
       type: 'OVERWRITE_THEN_DELETE_TOKEN_SUCCESS',
@@ -194,6 +187,7 @@ export type Action =
   | { type: 'SET_LOBBY_ERROR', data: string }
   | { type: 'SET_FROM_WALLET_MAX', data: string }
   | { type: 'UI/SETTINGS/SET_AUTO_LOGOUT_TIME', data: { autoLogoutTimeInSeconds: number } }
+  | { type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN', data: string | void }
   | {
       type: 'UI/WALLETS/REFRESH_RECEIVE_ADDRESS',
       data: {

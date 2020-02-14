@@ -240,3 +240,8 @@ export type CountryData = {
   'alpha-2': string,
   filename?: string
 }
+
+export type MostRecentWallet = {
+  id: string,
+  currencyCode: string
+}

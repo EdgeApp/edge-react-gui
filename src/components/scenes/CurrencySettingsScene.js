@@ -1,18 +1,17 @@
 // @flow
 
-import React, { Component } from 'react'
-import { View } from 'react-native'
+import React, { Component, Fragment } from 'react'
+import { ScrollView, Text } from 'react-native'
 
 import s from '../../locales/strings.js'
-import T from '../../modules/UI/components/FormattedText/index'
-import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
-import styles from '../../styles/scenes/SettingsStyle'
+import { dayText } from '../../styles/common/textStyles.js'
+import { THEME } from '../../theme/variables/airbitz'
 import type { GuiDenomination } from '../../types/types.js'
-import RadioRows from '../common/RadioRows.js'
-import ModalRow from '../common/RowModal.js'
-import SwitchRow from '../common/RowSwitch.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import Row from '../common/SettingsRow.js'
+import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
+import { SettingsRadioRow } from '../common/SettingsRadioRow.js'
+import { SettingsRow } from '../common/SettingsRow.js'
+import { SettingsSwitchRow } from '../common/SettingsSwitchRow.js'
 import { SetCustomNodesModal } from '../modals/SetCustomNodesModal.ui.js'
 
 const SETTINGS_DENOMINATION_TEXT = s.strings.settings_denominations_title
@@ -45,30 +44,6 @@ export default class CurrencySettings extends Component<Props, State> {
       isSetCustomNodesModalVisible: false,
       activatedBy: null
     }
-  }
-
-  header (title: string) {
-    return (
-      <Gradient style={[styles.headerRow]}>
-        <View style={[styles.headerTextWrap]}>
-          <View style={styles.leftArea}>
-            <T style={styles.headerText}>{SETTINGS_DENOMINATION_TEXT}</T>
-          </View>
-        </View>
-      </Gradient>
-    )
-  }
-
-  subHeader (title: string) {
-    return (
-      <Gradient style={[styles.headerRow]}>
-        <View style={[styles.headerTextWrap]}>
-          <View style={styles.leftArea}>
-            <T style={styles.headerText}>{title}</T>
-          </View>
-        </View>
-      </Gradient>
-    )
   }
 
   selectDenomination = (key: string) => () => {
@@ -116,7 +91,7 @@ export default class CurrencySettings extends Component<Props, State> {
   render () {
     return (
       <SceneWrapper background="body" hasTabs={false}>
-        <View style={styles.container}>
+        <ScrollView>
           {this.props.defaultElectrumServer.length !== 0 && (
             <SetCustomNodesModal
               isActive={this.state.isSetCustomNodesModalVisible}
@@ -128,38 +103,34 @@ export default class CurrencySettings extends Component<Props, State> {
               activatedBy={this.state.activatedBy}
             />
           )}
-          {this.header(SETTINGS_DENOMINATION_TEXT)}
-          <RadioRows style={{}}>
-            {this.props.denominations.map(denomination => {
-              const key = denomination.multiplier
-              const left = (
-                <View style={{ flexDirection: 'row' }}>
-                  <T style={styles.symbol}>{denomination.symbol}</T>
-                  <T> - {denomination.name}</T>
-                </View>
-              )
-              const isSelected = key === this.props.selectedDenominationKey
-              const onPress = this.selectDenomination(key)
-              return <Row key={denomination.multiplier} denomination={denomination} left={left} isSelected={isSelected} onPress={onPress} />
-            })}
-          </RadioRows>
+          <SettingsHeaderRow text={SETTINGS_DENOMINATION_TEXT} />
+          {this.props.denominations.map(denomination => {
+            const key = denomination.multiplier
+            const left = (
+              <Text style={{ ...dayText('row-left'), color: THEME.COLORS.GRAY_1 }}>
+                <Text style={{ fontFamily: THEME.FONTS.SYMBOLS }}>{denomination.symbol}</Text> - {denomination.name}
+              </Text>
+            )
+            const isSelected = key === this.props.selectedDenominationKey
+            const onPress = this.selectDenomination(key)
+            return <SettingsRadioRow key={denomination.multiplier} icon={left} text="" isSelected={isSelected} onPress={onPress} />
+          })}
           {this.props.defaultElectrumServer.length !== 0 && (
-            <View>
-              {this.subHeader(CUSTOM_NODES_TEXT)}
-              <SwitchRow
-                leftText={s.strings.settings_enable_custom_nodes}
-                onToggle={this.onChangeEnableCustomNodes}
+            <Fragment>
+              <SettingsHeaderRow text={CUSTOM_NODES_TEXT} />
+              <SettingsSwitchRow
+                text={s.strings.settings_enable_custom_nodes}
                 value={this.props.disableFetchingServers}
-                onSaveCustomNodesList={this.props.saveCustomNodesList}
+                onPress={this.onChangeEnableCustomNodes}
               />
-              <ModalRow
-                onPress={() => this.openSetCustomNodesModal('row')}
-                leftText={s.strings.settings_set_custom_nodes_modal_title}
+              <SettingsRow
                 disabled={!this.props.disableFetchingServers}
+                text={s.strings.settings_set_custom_nodes_modal_title}
+                onPress={() => this.openSetCustomNodesModal('row')}
               />
-            </View>
+            </Fragment>
           )}
-        </View>
+        </ScrollView>
       </SceneWrapper>
     )
   }

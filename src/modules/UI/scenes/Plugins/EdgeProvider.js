@@ -264,7 +264,9 @@ export class EdgeProvider extends Bridgeable {
   async writeData (data: { [key: string]: string }) {
     const account = CORE_SELECTORS.getAccount(this._state)
     const store = account.dataStore
+    console.log('edgeProvider writeData: ', JSON.stringify(data))
     await Promise.all(Object.keys(data).map(key => store.setItem(this._pluginId, key, data[key])))
+    console.log('edgeProvider writeData Success')
     return { success: true }
   }
 
@@ -278,6 +280,7 @@ export class EdgeProvider extends Bridgeable {
     for (let i = 0; i < keys.length; i++) {
       returnObj[keys[i]] = await store.getItem(this._pluginId, keys[i]).catch(e => undefined)
     }
+    console.log('edgeProvider readData: ', JSON.stringify(returnObj))
     return returnObj
   }
 
@@ -378,13 +381,12 @@ export class EdgeProvider extends Bridgeable {
   // log body and signature and pubic address and final message (returned from signMessage)
   // log response afterwards line 451
   async signMessage (message: string) /* EdgeSignedMessage */ {
-    console.log('signMessage message:', message)
+    console.log(`signMessage message:***${message}***`)
     const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
     const coreWallet = CORE_SELECTORS.getWallet(this._state, guiWallet.id)
-    console.log('signMessage public address:', guiWallet.receiveAddress.publicAddress)
     const signedMessage = await coreWallet.otherMethods.signMessageBase64(message, guiWallet.receiveAddress.publicAddress)
-    console.log('signMessage signedMessage:', signedMessage)
-    console.log(message + guiWallet.receiveAddress.publicAddress + signedMessage)
+    console.log(`signMessage public address:***${guiWallet.receiveAddress.publicAddress}***`)
+    console.log(`signMessage signedMessage:***${signedMessage}***`)
     return signedMessage
   }
 

@@ -2,6 +2,10 @@
 
 mkdir -p temp
 
+# The `usb` module doesn't properly install on some boxes:
+mkdir -p node_modules/usb
+touch node_modules/usb/index.js
+
 # Remove inclusion of c++_shared.so library since we are using jsc-android which already includes it
 sed "s/\,[[:space:]]'-DANDROID_STL=c++_shared'//g" ./node_modules/react-native-fast-crypto/android/build.gradle > temp/build.gradle
 mv temp/build.gradle ./node_modules/react-native-fast-crypto/android/build.gradle

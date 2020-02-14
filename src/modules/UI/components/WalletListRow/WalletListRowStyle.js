@@ -37,9 +37,6 @@ export const stylesRaw = {
   modalRoot: {
     paddingTop: scale(50)
   },
-  headerContainer: {
-    backgroundColor: THEME.COLORS.GRAY_1
-  },
   modalBody: {
     width: PLATFORM.deviceWidth,
     zIndex: 4
@@ -65,14 +62,6 @@ export const stylesRaw = {
   headerContent: {
     justifyContent: 'space-between',
     flexDirection: 'row'
-  },
-  headerTextWrap: {
-    justifyContent: 'center'
-  },
-  headerText: {
-    color: THEME.COLORS.WHITE,
-    fontSize: scale(14),
-    fontFamily: THEME.FONTS.DEFAULT
   },
   headerCloseWrap: {
     alignSelf: 'flex-end'

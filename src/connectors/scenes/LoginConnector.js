@@ -15,12 +15,6 @@ const mapStateToProps = (state: State) => ({
   recoveryLogin: state.core.deepLinking.passwordRecoveryLink
 })
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  dispatch,
-  addUsernames: usernames =>
-    dispatch({
-      type: 'CORE/CONTEXT/ADD_USERNAMES',
-      data: { usernames }
-    }),
   showSendLogsModal: () => dispatch(showSendLogsModal()),
   initializeAccount: (account, touchIdInfo) => dispatch(initializeAccount(account, touchIdInfo))
 })

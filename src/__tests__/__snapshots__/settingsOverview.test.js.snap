@@ -5,377 +5,164 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
   background="body"
   hasTabs={false}
 >
-  <ScrollViewMock
-    style={
-      Object {
-        "backgroundColor": "#F4F5F6",
-        "height": "100%",
-        "position": "relative",
+  <ScrollViewMock>
+    <SettingsHeaderRow
+      icon={
+        <Icon
+          allowFontScaling={false}
+          color="#FFFFFF"
+          name="user-o"
+          size={31}
+        />
       }
-    }
-  >
-    <Gradient
-      style={
-        Array [
-          Object {
-            "flexDirection": "row",
-            "height": 70.22887323943662,
-            "justifyContent": "space-between",
-            "padding": 16.854929577464787,
-          },
-        ]
-      }
-    >
-      <View
-        style={
-          Array [
-            undefined,
-          ]
-        }
-      >
-        <View
-          style={
-            Object {
-              "flexDirection": "row",
-            }
-          }
-        >
-          <Icon
-            name="user-o"
-            style={
-              Array [
-                Object {
-                  "backgroundColor": "transparent",
-                  "color": "#FFFFFF",
-                  "fontSize": 30.900704225352115,
-                },
-              ]
-            }
-            type="fontAwesome"
-          />
-          <FormattedText
-            style={
-              Object {
-                "backgroundColor": "transparent",
-                "color": "#FFFFFF",
-                "fontSize": 25.28239436619718,
-                "marginLeft": 22.473239436619718,
-              }
-            }
-          >
-            Account
-            : 
-            
-          </FormattedText>
-        </View>
-      </View>
-    </Gradient>
-    <RowRoute
-      disabled={false}
+      text="Account: "
+    />
+    <SettingsRow
+      onPress={[Function]}
       right={
         <Icon
+          allowFontScaling={false}
+          color="#4A5157"
           name="ios-lock"
-          size={24}
-          style={
-            Object {
-              "color": "#4A5157",
-            }
-          }
-          type="ionIcons"
+          size={31}
         />
       }
-      routeFunction={[Function]}
     />
-    <RowRoute
+    <SettingsRow
       disabled={true}
-      leftText="Change Password"
+      onPress={[Function]}
       right={
         <Icon
-          name="arrow-right"
-          style={
-            Object {
-              "color": "#4A5157",
-              "fontSize": 25.28239436619718,
-            }
-          }
-          type="simpleIcons"
+          allowFontScaling={false}
+          color="#87939E"
+          name="right"
+          size={22}
         />
       }
-      routeFunction={[Function]}
+      text="Change Password"
     />
-    <RowRoute
+    <SettingsRow
       disabled={true}
-      leftText="Change PIN"
+      onPress={[Function]}
       right={
         <Icon
-          name="arrow-right"
-          style={
-            Object {
-              "color": "#4A5157",
-              "fontSize": 25.28239436619718,
-            }
-          }
-          type="simpleIcons"
+          allowFontScaling={false}
+          color="#87939E"
+          name="right"
+          size={22}
         />
       }
-      routeFunction={[Function]}
+      text="Change PIN"
     />
-    <RowRoute
+    <SettingsRow
       disabled={true}
-      leftText="Setup 2 Factor"
+      onPress={[Function]}
       right={
         <Icon
-          name="arrow-right"
-          style={
-            Object {
-              "color": "#4A5157",
-              "fontSize": 25.28239436619718,
-            }
-          }
-          type="simpleIcons"
+          allowFontScaling={false}
+          color="#87939E"
+          name="right"
+          size={22}
         />
       }
-      routeFunction={[Function]}
+      text="Setup 2 Factor"
     />
-    <RowRoute
+    <SettingsRow
       disabled={true}
-      leftText="Set Up Password Recovery"
+      onPress={[Function]}
       right={
         <Icon
-          name="arrow-right"
-          style={
-            Object {
-              "color": "#4A5157",
-              "fontSize": 25.28239436619718,
-            }
-          }
-          type="simpleIcons"
+          allowFontScaling={false}
+          color="#87939E"
+          name="right"
+          size={22}
         />
       }
-      routeFunction={[Function]}
+      text="Set Up Password Recovery"
     />
-    <Gradient
+    <SettingsHeaderRow
+      icon={
+        <Icon
+          allowFontScaling={false}
+          color="#FFFFFF"
+          name="ios-options"
+          size={31}
+        />
+      }
+      text="Options"
+    />
+    <SettingsRow
+      onPress={[Function]}
+      right={
+        <Icon
+          allowFontScaling={false}
+          color="#87939E"
+          name="right"
+          size={22}
+        />
+      }
+      text="Exchange Settings"
+    />
+    <SettingsRow
+      onPress={[Function]}
+      right={
+        <Icon
+          allowFontScaling={false}
+          color="#87939E"
+          name="right"
+          size={22}
+        />
+      }
+      text="Spending Limits"
+    />
+    <SettingsLabelRow
+      onPress={[Function]}
+      right="Disabled"
+      text="Auto Log Off After"
+    />
+    <SettingsLabelRow
+      right=""
+      text="Default Currency"
+    />
+    <SettingsSwitchRow
+      onPress={[Function]}
+      text="PIN Re-login"
+      value={false}
+    />
+    <SettingsSwitchRow
+      onPress={[Function]}
+      text="Developer Mode"
+    />
+    <SettingsRow
+      onPress={[Function]}
+      text="Restore Wallets"
+    />
+    <SettingsRow
+      right={
+        <Icon
+          allowFontScaling={false}
+          color="#87939E"
+          name="right"
+          size={22}
+        />
+      }
+      text="Terms of Service"
+    />
+    <View
       style={
-        Array [
-          Object {
-            "flexDirection": "row",
-            "height": 70.22887323943662,
-            "justifyContent": "space-between",
-            "padding": 16.854929577464787,
-          },
-        ]
+        Object {
+          "marginBottom": 90,
+          "padding": 32,
+        }
       }
     >
-      <View
-        style={
-          Array [
-            undefined,
-          ]
-        }
-      >
-        <View
-          style={
-            Object {
-              "flexDirection": "row",
-            }
-          }
-        >
-          <Icon
-            name="ios-options"
-            style={
-              Array [
-                Object {
-                  "backgroundColor": "transparent",
-                  "color": "#FFFFFF",
-                  "fontSize": 30.900704225352115,
-                },
-              ]
-            }
-            type="ionIcons"
-          />
-          <FormattedText
-            style={
-              Object {
-                "backgroundColor": "transparent",
-                "color": "#FFFFFF",
-                "fontSize": 25.28239436619718,
-                "marginLeft": 22.473239436619718,
-              }
-            }
-          >
-            Options
-          </FormattedText>
-        </View>
-      </View>
-    </Gradient>
-    <View>
-      <RowRoute
-        disabled={false}
-        leftText="Exchange Settings"
-        right={
-          <Icon
-            name="arrow-right"
-            style={
-              Object {
-                "color": "#4A5157",
-                "fontSize": 25.28239436619718,
-              }
-            }
-            type="simpleIcons"
-          />
-        }
-        routeFunction={[Function]}
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Spending Limits"
-        right={
-          <Icon
-            name="arrow-right"
-            style={
-              Object {
-                "color": "#4A5157",
-                "fontSize": 25.28239436619718,
-              }
-            }
-            type="simpleIcons"
-          />
-        }
-        routeFunction={[Function]}
-      />
-      <RowModal
-        leftText="Auto Log Off After"
+      <PrimaryButton
         onPress={[Function]}
-        rightText="Disabled"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Default Currency"
-        right={
-          <Text>
-            
-          </Text>
-        }
-      />
-      <RowSwitch
-        leftText="PIN Re-login"
-        onToggle={[Function]}
-        value={false}
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Bitcoin"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="BitcoinTestnet"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="BitcoinCash"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Ethereum"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Dash"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Litecoin"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Bitcoinsv"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Zcoin"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Digibyte"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Qtum"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Vertcoin"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Feathercoin"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Ravencoin"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="BitcoinGold"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Smartcash"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Groestlcoin"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Eboost"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Ufo"
-      />
-      <RowSwitch
-        leftText="Developer Mode"
-        onToggle={[Function]}
-        value={false}
-      />
-      <RowModal
-        leftText="Restore Wallets"
-        onPress={[Function]}
-        rightText=""
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Terms of Service"
-        scene="termsOfService"
-      />
-      <View
-        style={
-          Array [
-            Object {
-              "backgroundColor": "#F4F5F6",
-              "flex": 1,
-              "padding": 28.091549295774648,
-            },
-          ]
-        }
       >
-        <PrimaryButton
-          onPress={[Function]}
-        >
-          <Text>
-            Send Logs
-          </Text>
-        </PrimaryButton>
-      </View>
-      <View
-        style={
-          Object {
-            "flex": 1,
-            "height": 71.63345070422535,
-          }
-        }
-      />
+        <Text>
+          Send Logs
+        </Text>
+      </PrimaryButton>
     </View>
   </ScrollViewMock>
 </SceneWrapper>
@@ -386,377 +173,164 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
   background="body"
   hasTabs={false}
 >
-  <ScrollViewMock
-    style={
-      Object {
-        "backgroundColor": "#F4F5F6",
-        "height": "100%",
-        "position": "relative",
+  <ScrollViewMock>
+    <SettingsHeaderRow
+      icon={
+        <Icon
+          allowFontScaling={false}
+          color="#FFFFFF"
+          name="user-o"
+          size={31}
+        />
       }
-    }
-  >
-    <Gradient
-      style={
-        Array [
-          Object {
-            "flexDirection": "row",
-            "height": 70.22887323943662,
-            "justifyContent": "space-between",
-            "padding": 16.854929577464787,
-          },
-        ]
-      }
-    >
-      <View
-        style={
-          Array [
-            undefined,
-          ]
-        }
-      >
-        <View
-          style={
-            Object {
-              "flexDirection": "row",
-            }
-          }
-        >
-          <Icon
-            name="user-o"
-            style={
-              Array [
-                Object {
-                  "backgroundColor": "transparent",
-                  "color": "#FFFFFF",
-                  "fontSize": 30.900704225352115,
-                },
-              ]
-            }
-            type="fontAwesome"
-          />
-          <FormattedText
-            style={
-              Object {
-                "backgroundColor": "transparent",
-                "color": "#FFFFFF",
-                "fontSize": 25.28239436619718,
-                "marginLeft": 22.473239436619718,
-              }
-            }
-          >
-            Account
-            : 
-            
-          </FormattedText>
-        </View>
-      </View>
-    </Gradient>
-    <RowRoute
-      disabled={false}
+      text="Account: "
+    />
+    <SettingsRow
+      onPress={[Function]}
       right={
         <Icon
+          allowFontScaling={false}
+          color="#4A5157"
           name="ios-unlock"
-          size={24}
-          style={
-            Object {
-              "color": "#4A5157",
-            }
-          }
-          type="ionIcons"
+          size={31}
         />
       }
-      routeFunction={[Function]}
     />
-    <RowRoute
+    <SettingsRow
       disabled={false}
-      leftText="Change Password"
+      onPress={[Function]}
       right={
         <Icon
-          name="arrow-right"
-          style={
-            Object {
-              "color": "#4A5157",
-              "fontSize": 25.28239436619718,
-            }
-          }
-          type="simpleIcons"
+          allowFontScaling={false}
+          color="#87939E"
+          name="right"
+          size={22}
         />
       }
-      routeFunction={[Function]}
+      text="Change Password"
     />
-    <RowRoute
+    <SettingsRow
       disabled={false}
-      leftText="Change PIN"
+      onPress={[Function]}
       right={
         <Icon
-          name="arrow-right"
-          style={
-            Object {
-              "color": "#4A5157",
-              "fontSize": 25.28239436619718,
-            }
-          }
-          type="simpleIcons"
+          allowFontScaling={false}
+          color="#87939E"
+          name="right"
+          size={22}
         />
       }
-      routeFunction={[Function]}
+      text="Change PIN"
     />
-    <RowRoute
+    <SettingsRow
       disabled={false}
-      leftText="Setup 2 Factor"
+      onPress={[Function]}
       right={
         <Icon
-          name="arrow-right"
-          style={
-            Object {
-              "color": "#4A5157",
-              "fontSize": 25.28239436619718,
-            }
-          }
-          type="simpleIcons"
+          allowFontScaling={false}
+          color="#87939E"
+          name="right"
+          size={22}
         />
       }
-      routeFunction={[Function]}
+      text="Setup 2 Factor"
     />
-    <RowRoute
+    <SettingsRow
       disabled={false}
-      leftText="Set Up Password Recovery"
+      onPress={[Function]}
       right={
         <Icon
-          name="arrow-right"
-          style={
-            Object {
-              "color": "#4A5157",
-              "fontSize": 25.28239436619718,
-            }
-          }
-          type="simpleIcons"
+          allowFontScaling={false}
+          color="#87939E"
+          name="right"
+          size={22}
         />
       }
-      routeFunction={[Function]}
+      text="Set Up Password Recovery"
     />
-    <Gradient
+    <SettingsHeaderRow
+      icon={
+        <Icon
+          allowFontScaling={false}
+          color="#FFFFFF"
+          name="ios-options"
+          size={31}
+        />
+      }
+      text="Options"
+    />
+    <SettingsRow
+      onPress={[Function]}
+      right={
+        <Icon
+          allowFontScaling={false}
+          color="#87939E"
+          name="right"
+          size={22}
+        />
+      }
+      text="Exchange Settings"
+    />
+    <SettingsRow
+      onPress={[Function]}
+      right={
+        <Icon
+          allowFontScaling={false}
+          color="#87939E"
+          name="right"
+          size={22}
+        />
+      }
+      text="Spending Limits"
+    />
+    <SettingsLabelRow
+      onPress={[Function]}
+      right="Disabled"
+      text="Auto Log Off After"
+    />
+    <SettingsLabelRow
+      right=""
+      text="Default Currency"
+    />
+    <SettingsSwitchRow
+      onPress={[Function]}
+      text="PIN Re-login"
+      value={false}
+    />
+    <SettingsSwitchRow
+      onPress={[Function]}
+      text="Developer Mode"
+    />
+    <SettingsRow
+      onPress={[Function]}
+      text="Restore Wallets"
+    />
+    <SettingsRow
+      right={
+        <Icon
+          allowFontScaling={false}
+          color="#87939E"
+          name="right"
+          size={22}
+        />
+      }
+      text="Terms of Service"
+    />
+    <View
       style={
-        Array [
-          Object {
-            "flexDirection": "row",
-            "height": 70.22887323943662,
-            "justifyContent": "space-between",
-            "padding": 16.854929577464787,
-          },
-        ]
+        Object {
+          "marginBottom": 90,
+          "padding": 32,
+        }
       }
     >
-      <View
-        style={
-          Array [
-            undefined,
-          ]
-        }
-      >
-        <View
-          style={
-            Object {
-              "flexDirection": "row",
-            }
-          }
-        >
-          <Icon
-            name="ios-options"
-            style={
-              Array [
-                Object {
-                  "backgroundColor": "transparent",
-                  "color": "#FFFFFF",
-                  "fontSize": 30.900704225352115,
-                },
-              ]
-            }
-            type="ionIcons"
-          />
-          <FormattedText
-            style={
-              Object {
-                "backgroundColor": "transparent",
-                "color": "#FFFFFF",
-                "fontSize": 25.28239436619718,
-                "marginLeft": 22.473239436619718,
-              }
-            }
-          >
-            Options
-          </FormattedText>
-        </View>
-      </View>
-    </Gradient>
-    <View>
-      <RowRoute
-        disabled={false}
-        leftText="Exchange Settings"
-        right={
-          <Icon
-            name="arrow-right"
-            style={
-              Object {
-                "color": "#4A5157",
-                "fontSize": 25.28239436619718,
-              }
-            }
-            type="simpleIcons"
-          />
-        }
-        routeFunction={[Function]}
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Spending Limits"
-        right={
-          <Icon
-            name="arrow-right"
-            style={
-              Object {
-                "color": "#4A5157",
-                "fontSize": 25.28239436619718,
-              }
-            }
-            type="simpleIcons"
-          />
-        }
-        routeFunction={[Function]}
-      />
-      <RowModal
-        leftText="Auto Log Off After"
+      <PrimaryButton
         onPress={[Function]}
-        rightText="Disabled"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Default Currency"
-        right={
-          <Text>
-            
-          </Text>
-        }
-      />
-      <RowSwitch
-        leftText="PIN Re-login"
-        onToggle={[Function]}
-        value={false}
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Bitcoin"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="BitcoinTestnet"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="BitcoinCash"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Ethereum"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Dash"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Litecoin"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Bitcoinsv"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Zcoin"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Digibyte"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Qtum"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Vertcoin"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Feathercoin"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Ravencoin"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="BitcoinGold"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Smartcash"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Groestlcoin"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Eboost"
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Ufo"
-      />
-      <RowSwitch
-        leftText="Developer Mode"
-        onToggle={[Function]}
-        value={false}
-      />
-      <RowModal
-        leftText="Restore Wallets"
-        onPress={[Function]}
-        rightText=""
-      />
-      <RowRoute
-        disabled={false}
-        leftText="Terms of Service"
-        scene="termsOfService"
-      />
-      <View
-        style={
-          Array [
-            Object {
-              "backgroundColor": "#F4F5F6",
-              "flex": 1,
-              "padding": 28.091549295774648,
-            },
-          ]
-        }
       >
-        <PrimaryButton
-          onPress={[Function]}
-        >
-          <Text>
-            Send Logs
-          </Text>
-        </PrimaryButton>
-      </View>
-      <View
-        style={
-          Object {
-            "flex": 1,
-            "height": 71.63345070422535,
-          }
-        }
-      />
+        <Text>
+          Send Logs
+        </Text>
+      </PrimaryButton>
     </View>
   </ScrollViewMock>
 </SceneWrapper>

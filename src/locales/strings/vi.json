@@ -223,6 +223,9 @@
   "settings_exchange_settings": "Cài đặt trao đổi",
   "settings_exchange_instruction": "Bật hoặc vô hiệu hóa việc trao đổi các nhà cung cấp có sẵn cho bạn",
   "settings_exchange_enable": "Trao đổi có thể thực hiện",
+  "swap_preferred_header": "",
+  "swap_preferred_cheapest": "",
+  "swap_preferred_instructions": "",
   "string_enable": "Kích hoạt",
   "settings_button_send_logs": "Gửi các bản ghi",
   "settings_button_setup_two_factor": "Thiết lập mã hóa lần 2",
@@ -550,5 +553,7 @@
   "send_from_wallet": "",
   "send_to_wallet": "",
   "exchange_from_wallet": "",
-  "exchange_to_wallet": ""
+  "exchange_to_wallet": "",
+  "wallet_list_modal_header_mru": "",
+  "wallet_list_modal_header_all": ""
 }

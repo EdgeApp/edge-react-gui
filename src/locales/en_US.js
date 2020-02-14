@@ -241,6 +241,9 @@ const strings = {
   settings_exchange_settings: 'Exchange Settings',
   settings_exchange_instruction: 'Enable or disable the exchange providers available to you',
   settings_exchange_enable: 'Enable Exchanges',
+  swap_preferred_header: 'Preferred Exchange',
+  swap_preferred_cheapest: 'Pick best price',
+  swap_preferred_instructions: 'When multiple exchanges can fill an order, prefer:',
   string_enable: 'Enable',
   settings_button_send_logs: 'Send Logs',
   settings_button_setup_two_factor: 'Setup 2 Factor',
@@ -595,7 +598,9 @@ const strings = {
   send_from_wallet: 'Send from %s',
   send_to_wallet: 'Receive to %s',
   exchange_from_wallet: 'Exchange from %s',
-  exchange_to_wallet: 'Exchange to %s'
+  exchange_to_wallet: 'Exchange to %s',
+  wallet_list_modal_header_mru: 'Most Recent Wallets',
+  wallet_list_modal_header_all: 'All Wallets'
 }
 
 // export default strings

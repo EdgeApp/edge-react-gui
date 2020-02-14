@@ -20,7 +20,7 @@ import { errorModal } from '../modules/UI/components/Modals/ErrorModal.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { trackEvent } from '../util/tracking.js'
-import { selectWallet as selectWalletAction } from './WalletActions.js'
+import { selectWallet as selectWalletAction, updateMostRecentWalletsSelected } from './WalletActions.js'
 
 export const createCurrencyWalletAndAddToSwap = (walletName: string, walletType: string, fiatCurrencyCode: string) => (
   dispatch: Dispatch,
@@ -40,6 +40,7 @@ export const createCurrencyWalletAndAddToSwap = (walletName: string, walletType:
     })
     .then(edgeWallet => {
       dispatch({ type: 'UI/WALLETS/CREATE_WALLET_SUCCESS' })
+      dispatch(updateMostRecentWalletsSelected(edgeWallet.id, edgeWallet.currencyInfo.currencyCode))
       dispatch(selectWalletForExchange(edgeWallet.id, edgeWallet.currencyInfo.currencyCode))
     })
     .catch(async error => {

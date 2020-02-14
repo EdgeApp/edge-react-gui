@@ -1,13 +1,14 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Alert, FlatList, Keyboard, TouchableHighlight, View } from 'react-native'
+import { Alert, FlatList, Keyboard, StyleSheet, TouchableHighlight, View } from 'react-native'
 
 import s from '../../locales/strings.js'
 import Text from '../../modules/UI/components/FormattedText/index'
 import { MaterialInputOnWhite } from '../../styles/components/FormFieldStyles.js'
-import styles, { styles as stylesRaw } from '../../styles/scenes/SettingsStyle.js'
+import { THEME } from '../../theme/variables/airbitz'
 import type { FlatListItem, GuiFiatType } from '../../types/types.js'
+import { scale } from '../../util/scaling.js'
 import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
@@ -110,3 +111,57 @@ export default class DefaultFiatSetting extends Component<Props, State> {
 
   keyExtractor = (item: GuiFiatType, index: string) => String(index)
 }
+
+const stylesRaw = {
+  content: {
+    backgroundColor: THEME.COLORS.WHITE,
+    flex: 1,
+    paddingHorizontal: scale(20),
+    paddingTop: scale(5)
+  },
+  selectedItem: {},
+  resultList: {
+    backgroundColor: THEME.COLORS.WHITE,
+    borderTopColor: THEME.COLORS.GRAY_3,
+    borderTopWidth: 1,
+    flexGrow: 1,
+    flexShrink: 1
+  },
+  singleFiatType: {
+    height: scale(60),
+    borderBottomWidth: 1,
+    borderBottomColor: THEME.COLORS.GRAY_3,
+    paddingVertical: scale(10),
+    paddingHorizontal: scale(15)
+  },
+  singleFiatTypeWrap: {
+    flexDirection: 'column',
+    flex: 1
+  },
+  fiatTypeInfoWrap: {
+    flexDirection: 'row',
+    height: scale(40),
+    flex: 1,
+    justifyContent: 'space-between'
+  },
+  fiatTypeLeft: {
+    flexDirection: 'row'
+  },
+  fiatTypeLogo: {
+    width: scale(40),
+    height: scale(40),
+    marginRight: scale(10)
+  },
+  fiatTypeLeftTextWrap: {
+    justifyContent: 'center'
+  },
+  fiatTypeName: {
+    fontSize: scale(16),
+    color: THEME.COLORS.GRAY_1,
+    textAlignVertical: 'center'
+  },
+  underlayColor: {
+    color: THEME.COLORS.GRAY_4
+  }
+}
+const styles: typeof stylesRaw = StyleSheet.create(stylesRaw)

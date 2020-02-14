@@ -10,12 +10,12 @@ import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../constants/Wallet
 import s from '../../locales/strings.js'
 import { PrimaryButton, SecondaryButton } from '../../modules/UI/components/Buttons/index'
 import Text from '../../modules/UI/components/FormattedText/index'
-import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import { styles } from '../../styles/scenes/ManageTokensStyle.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils'
 import ManageTokenRow from '../common/ManageTokenRow.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
 
 export type ManageTokensOwnProps = {
   guiWallet: GuiWallet
@@ -102,9 +102,7 @@ export default class ManageTokens extends Component<ManageTokensProps, State> {
 
     return (
       <SceneWrapper background="body">
-        <Gradient style={styles.headerRow}>
-          <Text style={styles.headerText}>{name}</Text>
-        </Gradient>
+        <SettingsHeaderRow text={name} />
         <View style={styles.container}>
           <View style={styles.instructionalArea}>
             <Text style={styles.instructionalText}>{s.strings.managetokens_top_instructions}</Text>

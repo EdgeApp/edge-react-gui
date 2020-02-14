@@ -19,6 +19,7 @@ type TrackingEvent =
   | 'SwapSuccess'
   | 'SignupWalletsCreated'
   | 'AppStart'
+  | 'LoadInstallReasonFail'
 
 export type TrackingValues = {
   accountDate?: string, // Account creation date
@@ -107,7 +108,8 @@ async function logToFirebase (event: TrackingEvent, values: TrackingValues) {
     SwapStart: 'Exchange_Shift_Start',
     SwapSuccess: 'Exchange_Shift_Success',
     SignupWalletsCreated: 'Signup_Wallets_Created',
-    AppStart: 'Start_App'
+    AppStart: 'Start_App',
+    LoadInstallReasonFail: 'Load_Install_Reason_Fail'
   }
   const name = names[event]
   if (!name) return

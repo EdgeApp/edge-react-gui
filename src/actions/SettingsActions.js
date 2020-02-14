@@ -103,6 +103,14 @@ export const setMerchantModeRequest = (merchantMode: boolean) => (dispatch: Disp
     .catch(showError)
 }
 
+export const setPreferredSwapPluginId = (pluginId: string | void) => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  ACCOUNT_SETTINGS.setPreferredSwapPluginId(account, pluginId)
+    .then(() => dispatch({ type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN', data: pluginId }))
+    .catch(showError)
+}
+
 export const setBluetoothModeRequest = (bluetoothMode: boolean) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)

@@ -2,7 +2,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 /* globals describe test expect */
 
-import * as CORE_SELECTORS from '../modules/Core/selectors'
 import * as SETTINGS_SELECTORS from '../modules/Settings/selectors'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 
@@ -38,40 +37,6 @@ describe('getSupportedWalletTypes', function () {
       }
       const expected = []
       const actual = SETTINGS_SELECTORS.getSupportedWalletTypes(state)
-      expect(actual).toEqual(expected)
-    })
-  })
-})
-
-describe('getUsernames', function () {
-  describe('when multiple users', function () {
-    test('[usernames] => [usernames]', function () {
-      const usernames = ['user1', 'user2', 'user3']
-      const state = {
-        core: {
-          context: {
-            usernames: [...usernames]
-          }
-        }
-      }
-      const expected = usernames
-      const actual = CORE_SELECTORS.getUsernames(state)
-      expect(actual).toEqual(expected)
-    })
-  })
-
-  describe('when no users', function () {
-    test('[] => []', function () {
-      const usernames = []
-      const state = {
-        core: {
-          context: {
-            usernames: [...usernames]
-          }
-        }
-      }
-      const expected = usernames
-      const actual = CORE_SELECTORS.getUsernames(state)
       expect(actual).toEqual(expected)
     })
   })

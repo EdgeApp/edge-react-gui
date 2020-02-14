@@ -18,11 +18,10 @@ import sellIcon from '../assets/images/tabbar/sell.png'
 import walletIconSelected from '../assets/images/tabbar/wallets_selected.png'
 import walletIcon from '../assets/images/tabbar/wallets.png'
 import { CreateWalletChoiceComponent } from '../components/scenes/CreateWalletChoiceScene.js'
+import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
 import ExchangeDropMenu from '../connectors/components/HeaderMenuExchangeConnector'
 import RequestDropMenu from '../connectors/components/HeaderMenuRequestConnector'
 import { HeaderWalletSelectorConnector as HeaderWalletSelector } from '../connectors/components/HeaderWalletSelectorConnector.js'
-import CurrencySettingsTitleConnector from '../connectors/CurrencySettingsTitleConnector.js'
-import { ExchangeSettingsConnector } from '../connectors/ExchangeSettingsConnector.js'
 import AddToken from '../connectors/scenes/AddTokenConnector.js'
 import ChangePasswordConnector from '../connectors/scenes/ChangePasswordConnector.ui'
 import ChangePinConnector from '../connectors/scenes/ChangePinConnector.ui'
@@ -69,6 +68,7 @@ import { handlePluginBack, renderPluginBackButton } from '../modules/UI/scenes/P
 import { styles } from '../styles/MainStyle.js'
 import { scale } from '../util/scaling.js'
 import { trackEvent } from '../util/tracking.js'
+import { CurrencySettingsTitle } from './navigation/CurrencySettingsTitle.js'
 import { ChangeMiningFeeScene } from './scenes/ChangeMiningFeeScene.js'
 import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
 import { CryptoExchangeQuoteProcessingScreenComponent } from './scenes/CryptoExchangeQuoteProcessingScene.js'
@@ -638,7 +638,7 @@ export default class Main extends Component<Props> {
                   <Scene
                     key={Constants.EXCHANGE_SETTINGS}
                     navTransparent={true}
-                    component={ExchangeSettingsConnector}
+                    component={SwapSettingsScene}
                     renderTitle={this.renderTitle(EXCHANGE_SETTINGS)}
                     renderLeftButton={this.renderBackButton()}
                     renderRightButton={this.renderEmptyButton()}
@@ -709,11 +709,7 @@ export default class Main extends Component<Props> {
           currencyCode={currencyCode}
           navTransparent={true}
           component={CurrencySettings}
-          renderTitle={
-            <View style={styles.titleWrapper}>
-              <CurrencySettingsTitleConnector key={key} cryptoKey={key} pluginName={pluginName} currencyCode={currencyCode} />
-            </View>
-          }
+          renderTitle={<CurrencySettingsTitle key={key} pluginName={pluginName} />}
           renderLeftButton={this.renderBackButton()}
           renderRightButton={this.renderEmptyButton()}
         />

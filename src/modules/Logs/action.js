@@ -15,6 +15,17 @@ export const sendLogs = (text: string) => async (dispatch: Dispatch, getState: G
   const core = getState().core
   let walletDump = ''
   if (core && core.wallets && core.wallets.byId) {
+    let accountSummary = '***Account Wallet Summary***\n'
+    for (const walletId in core.wallets.byId) {
+      const codes = await core.wallets.byId[walletId].getEnabledTokens()
+      if (codes.length === 0) {
+        codes.push(core.wallets.byId[walletId].currencyInfo.currencyCode)
+      }
+      for (let i = 0; i < codes.length; i++) {
+        const txs = await core.wallets.byId[walletId].getNumTransactions({ currencyCode: codes[i] })
+        accountSummary += `${codes[i]}: ${txs} txs\n`
+      }
+    }
     for (const walletId in core.wallets.byId) {
       const wallet = core.wallets.byId[walletId]
       if (wallet) {
@@ -39,8 +50,8 @@ export const sendLogs = (text: string) => async (dispatch: Dispatch, getState: G
         walletDump = walletDump + ds
       }
     }
+    walletDump = accountSummary + walletDump
   }
-
   const appInfo = `App version: ${packageJson.version}
 App build: ${DeviceInfo.getReadableVersion()}
 os: ${Platform.OS} ${Platform.Version}

@@ -29,7 +29,7 @@ class HelpModal extends Component<Props> {
     const { bridge } = this.props
 
     return (
-      <AirshipModal bridge={bridge} hasIcon onCancel={() => bridge.resolve()}>
+      <AirshipModal bridge={bridge} onCancel={() => bridge.resolve()}>
         <IconCircle>
           <AntDesignIcon name="question" size={THEME.rem(2)} color={THEME.COLORS.SECONDARY} style={{ marginLeft: THEME.rem(0.1) }} />
         </IconCircle>

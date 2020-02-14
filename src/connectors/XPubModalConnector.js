@@ -7,7 +7,8 @@ import type { Dispatch, State } from '../types/reduxTypes.js'
 
 const mapStateToProps = (state: State) => ({
   visibilityBoolean: state.ui.scenes.walletList.viewXPubWalletModalVisible,
-  xPubSyntax: state.ui.scenes.walletList.xPubSyntax
+  xPubSyntax: state.ui.scenes.walletList.xPubSyntax,
+  xPubExplorer: state.ui.scenes.walletList.xPubExplorer
 })
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({

@@ -223,6 +223,9 @@
   "settings_exchange_settings": "エクスチェンジ設定",
   "settings_exchange_instruction": "取引所プロバイダの利用を有効化、無効化する",
   "settings_exchange_enable": "通貨交換を有効化",
+  "swap_preferred_header": "",
+  "swap_preferred_cheapest": "",
+  "swap_preferred_instructions": "",
   "string_enable": "有効にする",
   "settings_button_send_logs": "記録を送信する",
   "settings_button_setup_two_factor": "２段階認証をセットアップ",
@@ -550,5 +553,7 @@
   "send_from_wallet": "",
   "send_to_wallet": "",
   "exchange_from_wallet": "",
-  "exchange_to_wallet": ""
+  "exchange_to_wallet": "",
+  "wallet_list_modal_header_mru": "",
+  "wallet_list_modal_header_all": ""
 }

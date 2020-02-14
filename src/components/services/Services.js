@@ -61,14 +61,7 @@ export class Services extends PureComponent<Props> {
       type: 'CORE/CONTEXT/ADD_CONTEXT',
       data: { context, folder }
     })
-
-    context.listUsernames().then(usernames => {
-      this.store.dispatch({
-        type: 'CORE/CONTEXT/ADD_USERNAMES',
-        data: { usernames }
-      })
-      loadInstallReason(disklet, usernames.length === 0)
-    })
+    loadInstallReason(disklet, context.localUsers.length === 0)
   }
 
   componentDidMount () {

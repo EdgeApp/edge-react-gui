@@ -392,42 +392,42 @@
     "title": "Credit Card",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/06/Safello-Logo-Green-background.png",
     "countryCodes": {
-      "AD": true,
-      "AT": true,
-      "BE": true,
-      "HR": true,
-      "DK": true,
-      "EE": true,
-      "FI": true,
-      "FR": true,
-      "DE": true,
-      "GI": true,
-      "GR": true,
-      "GG": true,
-      "HU": true,
-      "IS": true,
-      "IE": true,
-      "IM": true,
-      "IT": true,
-      "JE": true,
-      "LV": true,
-      "LI": true,
-      "LT": true,
-      "LU": true,
-      "MT": true,
-      "MC": true,
-      "ME": true,
-      "NL": true,
-      "NO": true,
-      "PL": true,
-      "PT": true,
-      "SM": true,
-      "SK": true,
-      "SI": true,
-      "ES": true,
+      "AD": false,
+      "AT": false,
+      "BE": false,
+      "HR": false,
+      "DK": false,
+      "EE": false,
+      "FI": false,
+      "FR": false,
+      "DE": false,
+      "GI": false,
+      "GR": false,
+      "GG": false,
+      "HU": false,
+      "IS": false,
+      "IE": false,
+      "IM": false,
+      "IT": false,
+      "JE": false,
+      "LV": false,
+      "LI": false,
+      "LT": false,
+      "LU": false,
+      "MT": false,
+      "MC": false,
+      "ME": false,
+      "NL": false,
+      "NO": false,
+      "PL": false,
+      "PT": false,
+      "SM": false,
+      "SK": false,
+      "SI": false,
+      "ES": false,
       "SE": true,
-      "CH": true,
-      "GB": true
+      "CH": false,
+      "GB": false
     },
     "cryptoCodes": [
       "BTC",
@@ -445,7 +445,7 @@
     "title": "Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/06/Safello-Logo-Green-background.png",
     "countryCodes": {
-      "DK": true,
+      "DK": false,
       "SE": true
     },
     "cryptoCodes": [
@@ -487,7 +487,8 @@
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
     "countryCodes": {
       "GB": true,
-      "AU": true
+      "AU": true,
+      "NL": true
     },
     "cryptoCodes": [
       "BTC",
@@ -610,5 +611,16 @@
       "GB"
     ],
     "priority": 2
+  },
+  {
+    "id": "banxa.bank",
+    "forCountries": [
+      "NL"
+    ],
+    "addOnUrl": "/?payment=IDEAL&country=nl",
+    "title": "iDEAL",
+    "paymentTypeLogoKey": "ideal",
+    "description": "Fee: ~2.9% / Settlement: Instant\nLimit: €10000",
+    "priority": 1
   }
 ]
