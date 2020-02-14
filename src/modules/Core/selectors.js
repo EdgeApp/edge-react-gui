@@ -12,7 +12,7 @@ export const getCore = (state: State) => state.core
 // Context
 export const getContext = (state: State) => {
   const core = getCore(state)
-  const context = core.context.context
+  const context = core.context
   return context
 }
 

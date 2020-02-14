@@ -5,9 +5,7 @@ Object {
   "contacts": Array [],
   "core": Object {
     "account": Object {},
-    "context": Object {
-      "context": Object {},
-    },
+    "context": Object {},
     "deepLinking": Object {
       "addressDeepLinkData": Object {},
       "deepLinkPending": false,
