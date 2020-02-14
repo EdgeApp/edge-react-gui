@@ -15,7 +15,20 @@ export type AccountState = {
 
 const accountInner: Reducer<AccountState, Action> = combineReducers({
   creationReason (state: CreationReason | null = null, action: Action): CreationReason | null {
-    return action.type === 'CREATION_REASON_LOADED' ? action.data : state
+    switch (action.type) {
+      case 'CREATION_REASON_LOADED':
+        return action.data
+      case 'CREATION_REASON_REMOVE_SWAP': {
+        if (state == null) return state
+        const plugins = state.appTweaks.plugins.map(plugin => {
+          const { preferredSwap = false } = plugin
+          if (!preferredSwap) return plugin
+          return { ...plugin, preferredSwap: false }
+        })
+        return { ...state, appTweaks: { ...state.appTweaks, plugins } }
+      }
+    }
+    return state
   }
 })
 

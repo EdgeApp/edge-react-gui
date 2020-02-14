@@ -8,13 +8,16 @@ import { Actions } from 'react-native-router-flux'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { connect } from 'react-redux'
 
+import { removeCreationSwapPlugin } from '../../actions/CreationReasonActions.js'
 import { setPreferredSwapPluginId } from '../../actions/SettingsActions.js'
 import { deactivateShapeShift } from '../../actions/ShapeShiftActions.js'
 import { getSwapPluginIcon } from '../../assets/images/exchange'
 import * as Constants from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
+import { getCreationTweaks } from '../../selectors/AccountSelectors.js'
 import { dayText } from '../../styles/common/textStyles.js'
 import { THEME } from '../../theme/variables/airbitz.js'
+import { type AppTweaks, getActivePlugins } from '../../types/AppTweaks.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
@@ -24,12 +27,19 @@ import { SettingsSwitchRow } from '../common/SettingsSwitchRow.js'
 import { SwapPreferredModal } from '../modals/SwapPreferredModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 
-type Props = {
-  exchanges: EdgePluginMap<EdgeSwapConfig>,
-  preferredSwapPluginId: string | void,
+type DispatchProps = {
   changePreferredSwapPlugin(pluginId: string | void): void,
-  shapeShiftLogOut(): void
+  shapeShiftLogOut(): void,
+  removeCreationSwapPlugin(): void
 }
+
+type StateProps = {
+  creationTweaks: AppTweaks,
+  exchanges: EdgePluginMap<EdgeSwapConfig>,
+  preferredSwapPluginId: string | void
+}
+
+type Props = StateProps & DispatchProps
 
 type State = {
   enabled: { [pluginId: string]: boolean },
@@ -84,9 +94,15 @@ export class SwapSettings extends Component<Props, State> {
   }
 
   handlePreferredModal = () => {
-    const { exchanges, preferredSwapPluginId, changePreferredSwapPlugin } = this.props
-    Airship.show(bridge => <SwapPreferredModal bridge={bridge} exchanges={exchanges} selected={preferredSwapPluginId} />).then(result => {
+    const { changePreferredSwapPlugin, creationTweaks, exchanges, preferredSwapPluginId, removeCreationSwapPlugin } = this.props
+
+    // Pick plugin:
+    const activePlugins = getActivePlugins(creationTweaks, preferredSwapPluginId)
+    const pluginId = activePlugins.preferredSwapPluginId
+
+    Airship.show(bridge => <SwapPreferredModal bridge={bridge} exchanges={exchanges} selected={pluginId} />).then(result => {
       if (result.type === 'cancel') return
+      if (activePlugins.preferredSwapSource === 'creation') removeCreationSwapPlugin()
       changePreferredSwapPlugin(result.pluginId)
     })
   }
@@ -139,8 +155,11 @@ export class SwapSettings extends Component<Props, State> {
   }
 
   renderPreferredArea () {
-    const { exchanges } = this.props
-    const pluginId = this.props.preferredSwapPluginId
+    const { exchanges, creationTweaks, preferredSwapPluginId } = this.props
+
+    // Pick plugin:
+    const activePlugins = getActivePlugins(creationTweaks, preferredSwapPluginId)
+    const pluginId = activePlugins.preferredSwapPluginId
 
     const { text, icon } =
       pluginId != null && exchanges[pluginId] != null
@@ -184,13 +203,17 @@ const rawStyles = {
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const SwapSettingsScene = connect(
-  (state: ReduxState) => ({
+  (state: ReduxState): StateProps => ({
+    creationTweaks: getCreationTweaks(state),
     exchanges: state.core.account.swapConfig,
     preferredSwapPluginId: state.ui.settings.preferredSwapPluginId
   }),
-  (dispatch: Dispatch) => ({
+  (dispatch: Dispatch): DispatchProps => ({
     shapeShiftLogOut () {
       dispatch(deactivateShapeShift())
+    },
+    removeCreationSwapPlugin () {
+      dispatch(removeCreationSwapPlugin())
     },
     changePreferredSwapPlugin (pluginId) {
       dispatch(setPreferredSwapPluginId(pluginId))

@@ -4,7 +4,7 @@ import { type EdgeAccount } from 'edge-core-js/types'
 
 import { lockStartDates } from '../types/AppTweaks.js'
 import { type CreationReason, packCreationReason, unpackCreationReason } from '../types/CreationReason.js'
-import { type Dispatch, type GetState } from '../types/reduxTypes.js'
+import { type Dispatch, type GetState, type State } from '../types/reduxTypes.js'
 
 const CREATION_REASON_FILE = 'CreationReason.json'
 
@@ -34,5 +34,24 @@ export const loadCreationReason = (account: EdgeAccount) => async (dispatch: Dis
   }
 
   dispatch({ type: 'CREATION_REASON_LOADED', data: creationReason })
+  saveCreationReason(getState())
+}
+
+/**
+ * Removes the preferred swap plugin from the affilation app tweaks.
+ */
+export const removeCreationSwapPlugin = () => async (dispatch: Dispatch, getState: GetState) => {
+  dispatch({ type: 'CREATION_REASON_REMOVE_SWAP' })
+  saveCreationReason(getState())
+}
+
+/**
+ * Writes the creation reason from redux to the disk.
+ */
+async function saveCreationReason (state: State): Promise<void> {
+  const { account } = state.core
+  const { creationReason } = state.account
+  if (creationReason == null) return
+
   await account.disklet.setText(CREATION_REASON_FILE, JSON.stringify(packCreationReason(creationReason)))
 }

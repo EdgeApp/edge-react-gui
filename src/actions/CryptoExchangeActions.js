@@ -24,6 +24,8 @@ import s from '../locales/strings.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors'
 import * as SETTINGS_SELECTORS from '../modules/Settings/selectors.js'
 import * as UI_SELECTORS from '../modules/UI/selectors'
+import { getCreationTweaks } from '../selectors/AccountSelectors.js'
+import { getActivePlugins } from '../types/AppTweaks.js'
 import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiSwapInfo, GuiWallet } from '../types/types.js'
 import { logEvent } from '../util/tracking.js'
@@ -118,8 +120,16 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
 
 async function fetchSwapQuote (state: State, request: EdgeSwapRequest): Promise<GuiSwapInfo> {
   const account = CORE_SELECTORS.getAccount(state)
-  const { preferredSwapPluginId } = state.ui.settings
-  const quote: EdgeSwapQuote = await account.fetchSwapQuote(request, { preferPluginId: preferredSwapPluginId })
+
+  // Find preferred swap provider:
+  const activePlugins = getActivePlugins(getCreationTweaks(state), state.ui.settings.preferredSwapPluginId)
+  const preferPluginId = activePlugins.preferredSwapPluginId
+  if (preferPluginId != null) {
+    console.log(`Preferring ${preferPluginId} from ${activePlugins.preferredSwapSource}`)
+  }
+
+  // Get the quote:
+  const quote: EdgeSwapQuote = await account.fetchSwapQuote(request, { preferPluginId })
 
   // Currency conversion tools:
   const { fromWallet, toWallet, fromCurrencyCode, toCurrencyCode } = request
