@@ -79,7 +79,7 @@ export const swapPlugins = {
   faast: ENV.FAAST_INIT,
   foxExchange: ENV.FOX_INIT,
   godex: ENV.GODEX_INIT,
-  shapeshift: ENV.SHAPESHIFT_INIT,
+  // shapeshift: ENV.SHAPESHIFT_INIT,
   totle: ENV.TOTLE_INIT
 }
 
