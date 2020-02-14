@@ -22,12 +22,6 @@ export const getFolder = (state: State) => {
   return folder
 }
 
-export const getNextUsername = (state: State) => {
-  const core = getCore(state)
-  const nextUsername = core.context.nextUsername
-  return nextUsername
-}
-
 // Account
 export const getAccount = (state: State) => {
   const core = getCore(state)

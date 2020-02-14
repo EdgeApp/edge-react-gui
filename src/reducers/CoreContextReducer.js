@@ -8,14 +8,12 @@ import { type Action } from '../types/reduxTypes.js'
 
 export type ContextState = {
   context: EdgeContext | Object,
-  folder: DiskletFolder | Object,
-  nextUsername: string
+  folder: DiskletFolder | Object
 }
 
 const initialState = {
   context: {},
-  folder: {},
-  nextUsername: ''
+  folder: {}
 }
 
 export const context: Reducer<ContextState, Action> = (state = initialState, action: Action) => {
@@ -28,16 +26,6 @@ export const context: Reducer<ContextState, Action> = (state = initialState, act
         ...state,
         context,
         folder
-      }
-    }
-
-    case 'DEEP_LINK_RECEIVED':
-    case 'LOGOUT': {
-      if (!action.data) throw new TypeError('Invalid action')
-      const { username } = action.data
-      return {
-        ...state,
-        nextUsername: username || ''
       }
     }
 

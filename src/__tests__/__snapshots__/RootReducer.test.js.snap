@@ -8,7 +8,6 @@ Object {
     "context": Object {
       "context": Object {},
       "folder": Object {},
-      "nextUsername": "",
     },
     "deepLinking": Object {
       "addressDeepLinkData": Object {},
@@ -73,6 +72,7 @@ Object {
     "walletListModalVisible": false,
   },
   "exchangeRates": Object {},
+  "nextUsername": null,
   "permissions": Object {
     "camera": "undetermined",
     "contacts": "undetermined",

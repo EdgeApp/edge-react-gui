@@ -11,6 +11,10 @@ import { type CryptoExchangeState, cryptoExchange } from './CryptoExchangeReduce
 import { type PermissionsState, permissions } from './PermissionsReducer.js'
 
 export type RootState = {
+  // Next username to auto-fill at the login screen, or blank if none:
+  +nextUsername: string | null,
+
+  // Nested reducers:
   +contacts: ContactsState,
   +core: CoreState,
   +cryptoExchange: CryptoExchangeState,
@@ -20,6 +24,19 @@ export type RootState = {
 }
 
 export const rootReducer: Reducer<RootState, Action> = combineReducers({
+  nextUsername (state: string | null = null, action: Action): string | null {
+    switch (action.type) {
+      case 'DEEP_LINK_RECEIVED':
+        return null
+      case 'LOGOUT': {
+        const { username = null } = action.data
+        return username
+      }
+    }
+    return state
+  },
+
+  // Nested reducers:
   contacts,
   core,
   cryptoExchange,

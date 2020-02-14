@@ -10,7 +10,6 @@ type LegacyActionName =
   | 'ACCOUNT_INIT_COMPLETE'
   | 'ACCOUNT/LOGGED_IN'
   | 'ADDRESS_DEEP_LINK_RECEIVED'
-  | 'DEEP_LINK_RECEIVED'
   | 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES'
   | 'NEW_RECEIVE_ADDRESS'
   | 'PERMISSIONS/UPDATE'
@@ -147,6 +146,7 @@ export type Action =
         receiveAddresses: { [id: string]: EdgeReceiveAddress }
       }
     }
+  | { type: 'DEEP_LINK_RECEIVED', data: string /* Password recovery link */ }
   | { type: 'DELETE_CUSTOM_TOKEN_SUCCESS', data: { currencyCode: string } }
   | {
       type: 'INSERT_WALLET_IDS_FOR_PROGRESS',
