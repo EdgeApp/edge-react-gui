@@ -10,8 +10,6 @@ import { type ContactsState, contacts } from './ContactsReducer.js'
 import { type CryptoExchangeState, cryptoExchange } from './CryptoExchangeReducer.js'
 import { type PermissionsState, permissions } from './PermissionsReducer.js'
 
-export { core, ui, cryptoExchange, exchangeRates, permissions, contacts }
-
 export type RootState = {
   +contacts: ContactsState,
   +core: CoreState,

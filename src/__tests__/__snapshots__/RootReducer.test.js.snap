@@ -1,0 +1,469 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`initialState 1`] = `
+Object {
+  "contacts": Array [],
+  "core": Object {
+    "account": Object {},
+    "context": Object {
+      "context": Object {},
+      "folder": Object {},
+      "nextUsername": "",
+    },
+    "deepLinking": Object {
+      "addressDeepLinkData": Object {},
+      "deepLinkPending": false,
+      "passwordRecoveryLink": null,
+    },
+    "edgeLogin": Object {
+      "error": null,
+      "isProcessing": false,
+      "lobby": null,
+    },
+    "wallets": Object {
+      "byId": Object {},
+    },
+  },
+  "cryptoExchange": Object {
+    "calculatingMax": false,
+    "changeWallet": "none",
+    "creatingWallet": false,
+    "forceUpdateGuiCounter": 0,
+    "fromBalanceMessage": "",
+    "fromCurrencyCode": null,
+    "fromCurrencyIcon": null,
+    "fromCurrencyIconDark": null,
+    "fromDisplayAmount": "0",
+    "fromNativeAmount": "0",
+    "fromWallet": null,
+    "fromWalletPrimaryInfo": Object {
+      "displayCurrencyCode": "",
+      "displayDenomination": Object {
+        "multiplier": "1",
+        "name": "",
+      },
+      "exchangeCurrencyCode": "",
+      "exchangeDenomination": Object {
+        "multiplier": "1",
+        "name": "",
+      },
+    },
+    "genericShapeShiftError": null,
+    "insufficientError": false,
+    "shiftPendingTransaction": false,
+    "toBalanceMessage": "",
+    "toCurrencyCode": null,
+    "toCurrencyIcon": null,
+    "toCurrencyIconDark": null,
+    "toDisplayAmount": "0",
+    "toNativeAmount": "0",
+    "toWallet": null,
+    "toWalletPrimaryInfo": Object {
+      "displayCurrencyCode": "",
+      "displayDenomination": Object {
+        "multiplier": "1",
+        "name": "",
+      },
+      "exchangeCurrencyCode": "",
+      "exchangeDenomination": Object {
+        "multiplier": "1",
+        "name": "",
+      },
+    },
+    "walletListModalVisible": false,
+  },
+  "exchangeRates": Object {},
+  "permissions": Object {
+    "camera": "undetermined",
+    "contacts": "undetermined",
+  },
+  "ui": Object {
+    "passwordReminder": Object {
+      "lastLoginDate": -Infinity,
+      "lastPasswordUseDate": -Infinity,
+      "needsPasswordCheck": false,
+      "nonPasswordDaysLimit": 2,
+      "nonPasswordLoginsCount": 0,
+      "nonPasswordLoginsLimit": 2,
+      "passwordUseCount": 0,
+    },
+    "scenes": Object {
+      "controlPanel": Object {
+        "usersView": false,
+      },
+      "createWallet": Object {
+        "handleActivationInfo": Object {
+          "activationCost": "",
+          "supportedCurrencies": Object {},
+        },
+        "handleAvailableStatus": "",
+        "isCheckingHandleAvailability": false,
+        "isCreatingWallet": false,
+        "walletAccountActivationPaymentInfo": Object {
+          "amount": "",
+          "currencyCode": "",
+          "exchangeAmount": "",
+          "expireTime": 0,
+          "paymentAddress": "",
+        },
+        "walletAccountActivationQuoteError": "",
+      },
+      "editToken": Object {
+        "deleteCustomTokenProcessing": false,
+        "deleteTokenModalVisible": false,
+        "editCustomTokenProcessing": false,
+      },
+      "exchangeRate": Object {
+        "exchangeRates": Object {},
+      },
+      "passwordRecoveryReminderModal": Object {
+        "isVisible": false,
+      },
+      "passwordReminderModal": Object {
+        "status": null,
+      },
+      "request": Object {
+        "receiveAddress": Object {
+          "metadata": Object {},
+          "nativeAmount": "0",
+          "publicAddress": "",
+        },
+      },
+      "requestType": Object {
+        "uniqueLegacyAddress": false,
+        "useLegacyAddress": false,
+      },
+      "scan": Object {
+        "parsedUri": null,
+        "privateKeyModal": Object {
+          "error": null,
+          "isSweeping": false,
+          "secondaryModal": Object {
+            "isActive": false,
+          },
+        },
+        "scanEnabled": false,
+        "torchEnabled": false,
+      },
+      "sendConfirmation": Object {
+        "address": "",
+        "authRequired": "none",
+        "error": null,
+        "forceUpdateGuiCounter": 0,
+        "guiMakeSpendInfo": Object {
+          "customNetworkFee": Object {},
+          "metadata": Object {
+            "amountFiat": 0,
+            "bizId": 0,
+            "category": "",
+            "miscJson": "",
+            "name": "",
+            "notes": "",
+          },
+          "nativeAmount": "0",
+          "networkFeeOption": "standard",
+          "publicAddress": "",
+        },
+        "isEditable": true,
+        "isKeyboardVisible": false,
+        "nativeAmount": "0",
+        "pending": false,
+        "pin": "",
+        "spendInfo": null,
+        "toggleCryptoOnTop": 0,
+        "transaction": Object {
+          "blockHeight": -1,
+          "currencyCode": "",
+          "date": 0,
+          "metadata": Object {},
+          "nativeAmount": "0",
+          "networkFee": "",
+          "otherParams": Object {},
+          "ourReceiveAddresses": Array [],
+          "parentNetworkFee": "",
+          "signedTx": "",
+          "txid": "",
+        },
+        "transactionMetadata": null,
+      },
+      "transactionDetails": Object {
+        "subcategories": Array [],
+      },
+      "transactionList": Object {
+        "currentCurrencyCode": "",
+        "currentEndIndex": 0,
+        "currentWalletId": "",
+        "numTransactions": 0,
+        "transactionIdMap": Object {},
+        "transactions": Array [],
+      },
+      "uniqueIdentifierModal": Object {
+        "isActive": false,
+        "uniqueIdentifier": undefined,
+      },
+      "walletList": Object {
+        "viewXPubWalletModalVisible": false,
+        "walletArchivesVisible": false,
+        "walletId": "",
+        "xPubExplorer": "",
+        "xPubSyntax": "",
+      },
+    },
+    "settings": Object {
+      "AGLD": Object {
+        "denomination": "1000000000",
+      },
+      "ANT": Object {
+        "denomination": "1000000000000000000",
+      },
+      "BAT": Object {
+        "denomination": "1000000000000000000",
+      },
+      "BCH": Object {
+        "denomination": "100000000",
+      },
+      "BNB": Object {
+        "denomination": "100000000",
+      },
+      "BNT": Object {
+        "denomination": "1000000000000000000",
+      },
+      "BRZ": Object {
+        "denomination": "10000",
+      },
+      "BTC": Object {
+        "denomination": "100000000",
+      },
+      "CBAT": Object {
+        "denomination": "100000000",
+      },
+      "CDAI": Object {
+        "denomination": "100000000",
+      },
+      "CETH": Object {
+        "denomination": "100000000",
+      },
+      "CREP": Object {
+        "denomination": "100000000",
+      },
+      "CSAI": Object {
+        "denomination": "100000000",
+      },
+      "CUSDC": Object {
+        "denomination": "100000000",
+      },
+      "CWBTC": Object {
+        "denomination": "100000000",
+      },
+      "CZRX": Object {
+        "denomination": "100000000",
+      },
+      "DAI": Object {
+        "denomination": "1000000000000000000",
+      },
+      "DASH": Object {
+        "denomination": "100000000",
+      },
+      "DGB": Object {
+        "denomination": "100000000",
+      },
+      "DOGE": Object {
+        "denomination": "100000000",
+      },
+      "EOS": Object {
+        "denomination": "10000",
+      },
+      "ETH": Object {
+        "denomination": "1000000000000000000",
+      },
+      "ETHBNT": Object {
+        "denomination": "1000000000000000000",
+      },
+      "FTC": Object {
+        "denomination": "100000000",
+      },
+      "FUN": Object {
+        "denomination": "100000000",
+      },
+      "GNO": Object {
+        "denomination": "1000000000000000000",
+      },
+      "GNT": Object {
+        "denomination": "1000000000000000000",
+      },
+      "GUSD": Object {
+        "denomination": "100",
+      },
+      "HERC": Object {
+        "denomination": "1000000000000000000",
+      },
+      "HUR": Object {
+        "denomination": "1000000000000000000",
+      },
+      "IND": Object {
+        "denomination": "1000000000000000000",
+      },
+      "KIN": Object {
+        "denomination": "1000000000000000000",
+      },
+      "KNC": Object {
+        "denomination": "1000000000000000000",
+      },
+      "LINK": Object {
+        "denomination": "1000000000000000000",
+      },
+      "LTC": Object {
+        "denomination": "100000000",
+      },
+      "MANA": Object {
+        "denomination": "1000000000000000000",
+      },
+      "MKR": Object {
+        "denomination": "1000000000000000000",
+      },
+      "NEXO": Object {
+        "denomination": "1000000000000000000",
+      },
+      "NMR": Object {
+        "denomination": "1000000000000000000",
+      },
+      "OMG": Object {
+        "denomination": "1000000000000000000",
+      },
+      "PAX": Object {
+        "denomination": "1000000000000000000",
+      },
+      "POLY": Object {
+        "denomination": "1000000000000000000",
+      },
+      "QTUM": Object {
+        "denomination": "100000000",
+      },
+      "RBTC": Object {
+        "denomination": "1000000000000000000",
+      },
+      "REP": Object {
+        "denomination": "1000000000000000000",
+      },
+      "RIF": Object {
+        "denomination": "1000000000000000000",
+      },
+      "RVN": Object {
+        "denomination": "100000000",
+      },
+      "SAI": Object {
+        "denomination": "1000000000000000000",
+      },
+      "SALT": Object {
+        "denomination": "100000000",
+      },
+      "SMART": Object {
+        "denomination": "100000000",
+      },
+      "STORJ": Object {
+        "denomination": "100000000",
+      },
+      "TUSD": Object {
+        "denomination": "1000000000000000000",
+      },
+      "UFO": Object {
+        "denomination": "100000000",
+      },
+      "USDC": Object {
+        "denomination": "1000000",
+      },
+      "USDS": Object {
+        "denomination": "1000000",
+      },
+      "USDT": Object {
+        "denomination": "1000000",
+      },
+      "VTC": Object {
+        "denomination": "100000000",
+      },
+      "WINGS": Object {
+        "denomination": "1000000000000000000",
+      },
+      "XLM": Object {
+        "denomination": "10000000",
+      },
+      "XMR": Object {
+        "denomination": "1000000000000",
+      },
+      "XRP": Object {
+        "denomination": "1000000",
+      },
+      "XTZ": Object {
+        "denomination": "1000000",
+      },
+      "XZC": Object {
+        "denomination": "100000000",
+      },
+      "ZRX": Object {
+        "denomination": "1000000000000000000",
+      },
+      "account": null,
+      "autoLogoutTimeInSeconds": 3600,
+      "bluetoothMode": false,
+      "changesLocked": true,
+      "confirmPasswordError": "",
+      "countryCode": "",
+      "customTokens": Array [],
+      "defaultFiat": "USD",
+      "defaultIsoFiat": "iso:USD",
+      "developerModeOn": false,
+      "isAccountBalanceVisible": true,
+      "isOtpEnabled": false,
+      "isTouchEnabled": false,
+      "isTouchSupported": false,
+      "isWalletFiatBalanceVisible": false,
+      "loginStatus": null,
+      "merchantMode": false,
+      "mostRecentWallets": Array [],
+      "otpKey": null,
+      "otpMode": false,
+      "otpResetDate": null,
+      "otpResetPending": false,
+      "passwordRecoveryRemindersShown": Object {
+        "20": false,
+        "200": false,
+        "2000": false,
+        "20000": false,
+        "200000": false,
+      },
+      "passwordReminder": Object {
+        "lastPasswordUseDate": 0,
+        "needsPasswordCheck": false,
+        "nonPasswordDaysLimit": 4,
+        "nonPasswordLoginsCount": 0,
+        "nonPasswordLoginsLimit": 4,
+        "passwordUseCount": 0,
+      },
+      "pinLoginEnabled": false,
+      "pinMode": false,
+      "plugins": Object {
+        "allCurrencyInfos": Array [],
+        "supportedWalletTypes": Array [],
+      },
+      "preferredSwapPluginId": "",
+      "sendLogsStatus": "pending",
+      "spendingLimits": Object {
+        "transaction": Object {
+          "amount": 0,
+          "isEnabled": false,
+        },
+      },
+    },
+    "wallets": Object {
+      "activeWalletIds": Array [],
+      "addTokenPending": false,
+      "archivedWalletIds": Array [],
+      "byId": Object {},
+      "manageTokensPending": false,
+      "selectedCurrencyCode": "",
+      "selectedWalletId": "",
+      "walletLoadingProgress": Object {},
+    },
+  },
+}
+`;
