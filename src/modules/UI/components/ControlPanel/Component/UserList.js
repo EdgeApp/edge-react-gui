@@ -1,6 +1,6 @@
 // @flow
 
-import { makeReactNativeDisklet } from 'disklet'
+import { type Disklet } from 'disklet'
 import { type EdgeContext, type EdgeUserInfo } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Alert, ScrollView, TouchableHighlight, View } from 'react-native'
@@ -17,6 +17,7 @@ type Props = {
   logout: (username?: string) => void,
   deleteLocalAccount: string => void,
   context: EdgeContext,
+  disklet: Disklet,
   currentUsername: string
 }
 
@@ -102,7 +103,7 @@ export default class UserList extends Component<Props, State> {
   }
 
   getRecentLoginUsernames = async () => {
-    const disklet = makeReactNativeDisklet()
+    const { disklet } = this.props
     const lastUsers = await disklet
       .getText('lastusers.json')
       .then(text => JSON.parse(text))

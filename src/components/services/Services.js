@@ -1,7 +1,7 @@
 // @flow
 /* global window */
 
-import { downgradeDisklet, makeReactNativeDisklet } from 'disklet'
+import { makeReactNativeDisklet } from 'disklet'
 import { type EdgeContext } from 'edge-core-js/types'
 import React, { PureComponent } from 'react'
 import DeviceInfo from 'react-native-device-info'
@@ -56,10 +56,9 @@ export class Services extends PureComponent<Props> {
     // Put the context into Redux:
     const { context } = props
     const disklet = makeReactNativeDisklet()
-    const folder = downgradeDisklet(disklet)
     this.store.dispatch({
       type: 'CORE/CONTEXT/ADD_CONTEXT',
-      data: { context, folder }
+      data: { context, disklet }
     })
     loadInstallReason(disklet, context.localUsers.length === 0)
   }

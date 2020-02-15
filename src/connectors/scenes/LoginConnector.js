@@ -11,7 +11,7 @@ import type { Dispatch, State } from '../../types/reduxTypes.js'
 const mapStateToProps = (state: State) => ({
   context: CORE_SELECTORS.getContext(state),
   account: CORE_SELECTORS.getAccount(state),
-  username: CORE_SELECTORS.getNextUsername(state),
+  username: state.nextUsername == null ? '' : state.nextUsername,
   recoveryLogin: state.core.deepLinking.passwordRecoveryLink
 })
 const mapDispatchToProps = (dispatch: Dispatch) => ({
