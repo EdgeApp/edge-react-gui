@@ -2,10 +2,11 @@
 
 import { createYesNoModal } from 'edge-components'
 import React, { Component } from 'react'
-import { ActivityIndicator, Alert, Animated, FlatList, Image, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, Alert, Animated, FlatList, Image, Linking, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import SortableListView from 'react-native-sortable-listview'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import iconImage from '../../assets/images/otp/OTP-badge_sm.png'
@@ -26,6 +27,7 @@ import { buyMultipleCryptoStyle } from '../../styles/components/BuyCryptoStyle.j
 import { TwoButtonModalStyle } from '../../styles/indexStyles.js'
 import styles from '../../styles/scenes/WalletListStyle'
 import THEME from '../../theme/variables/airbitz'
+import { type AppMessage, type AppTweaks, getActiveMessage } from '../../types/AppTweaks.js'
 import type { GuiWalletType } from '../../types/types.js'
 import { type DeviceDimensions } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
@@ -56,6 +58,7 @@ type State = {
 }
 type Props = {
   activeWalletIds: Array<string>,
+  creationTweaks: AppTweaks,
   customTokens: Array<any>,
   dimensions: DeviceDimensions,
   wallets: any,
@@ -66,6 +69,7 @@ type Props = {
   walletRowOption: (walletId: string, option: string, archived: boolean) => void,
   disableOtp: () => void,
   keepOtp: () => void,
+  removeCreationMessage(message: AppMessage): void,
   toggleAccountBalanceVisibility: () => void,
   isAccountBalanceVisible: boolean,
   ethereumWalletType?: GuiWalletType,
@@ -305,6 +309,7 @@ export default class WalletList extends Component<Props, State> {
               sortableMode={this.state.sortableMode}
               executeWalletRowOption={this.executeWalletRowOption}
               ListFooterComponent={this.renderFooter()}
+              ListHeaderComponent={this.renderPromoCard()}
             />
           </Animated.View>
         )}
@@ -501,6 +506,34 @@ export default class WalletList extends Component<Props, State> {
             <T style={buyMultipleCryptoStyle.buyMultipleCryptoBoxText}>{s.strings.title_plugin_buy}</T>
           </View>
         </TouchableWithoutFeedback>
+      </View>
+    )
+  }
+
+  renderPromoCard () {
+    const { creationTweaks, removeCreationMessage } = this.props
+    const message = getActiveMessage(creationTweaks)
+    if (message == null) return null
+
+    const { uri, iconUri } = message
+    function handlePress () {
+      if (uri != null) Linking.openURL(uri)
+    }
+    function handleClose () {
+      removeCreationMessage(message)
+    }
+
+    return (
+      <View style={styles.promoArea}>
+        <TouchableOpacity onPress={handlePress}>
+          <View style={styles.promoCard}>
+            {iconUri != null ? <Image resizeMode="contain" source={{ uri: iconUri }} style={styles.promoIcon} /> : null}
+            <Text style={styles.promoText}>{message.message}</Text>
+            <TouchableOpacity onPress={handleClose}>
+              <AntDesignIcon name="close" color={THEME.COLORS.GRAY_2} size={THEME.rem(1)} style={styles.promoClose} />
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
       </View>
     )
   }

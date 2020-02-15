@@ -2,6 +2,7 @@
 
 import { Platform, StyleSheet } from 'react-native'
 
+import { dayText } from '../../styles/common/textStyles.js'
 import THEME from '../../theme/variables/airbitz'
 import { PLATFORM } from '../../theme/variables/platform.js'
 import { scale, scaleH } from '../../util/scaling.js'
@@ -468,6 +469,31 @@ export const styles = {
   walletDetailsExchangeRow: {
     flexDirection: 'row',
     flex: 1
+  },
+
+  // Promo area:
+  promoArea: {
+    padding: THEME.rem(0.5)
+  },
+  promoCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: THEME.COLORS.WHITE,
+    margin: THEME.rem(0.5),
+    padding: THEME.rem(0.5)
+  },
+  promoIcon: {
+    width: THEME.rem(2),
+    height: THEME.rem(2),
+    margin: THEME.rem(0.5)
+  },
+  promoText: {
+    ...dayText(),
+    flexGrow: 1,
+    margin: THEME.rem(0.5)
+  },
+  promoClose: {
+    padding: THEME.rem(0.5)
   }
 }
 

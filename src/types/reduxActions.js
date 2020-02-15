@@ -4,6 +4,7 @@ import { type Disklet } from 'disklet'
 import type { EdgeContext, EdgeCurrencyWallet, EdgeLobby, EdgeParsedUri, EdgeReceiveAddress } from 'edge-core-js'
 
 import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
+import { type AppMessage } from './AppTweaks.js'
 import { type CreationReason } from './CreationReason.js'
 import { type InstallReason } from './InstallReason.js'
 import { type CustomTokenInfo, type GuiContact, type GuiCurrencyInfo, type GuiSwapInfo, type GuiWallet } from './types.js'
@@ -150,6 +151,7 @@ export type Action =
       }
     }
   | { type: 'CREATION_REASON_LOADED', data: CreationReason }
+  | { type: 'CREATION_REASON_REMOVE_MESSAGE', data: AppMessage }
   | { type: 'DEEP_LINK_RECEIVED', data: string /* Password recovery link */ }
   | { type: 'DELETE_CUSTOM_TOKEN_SUCCESS', data: { currencyCode: string } }
   | {

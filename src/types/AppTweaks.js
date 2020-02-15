@@ -60,6 +60,21 @@ export type ActivePlugins = {
 }
 
 /**
+ * Finds the active message card.
+ * Use this with the `getCreationTweaks` selector.
+ */
+export function getActiveMessage (tweaks: AppTweaks, now: Date = new Date()): AppMessage | void {
+  let out: AppMessage | void
+
+  for (const message of tweaks.messages) {
+    if (!isActive(message, now)) continue
+    out = message
+  }
+
+  return out
+}
+
+/**
  * Reports the active plugin tweaks.
  * Use this with the `getCreationTweaks` selector.
  */

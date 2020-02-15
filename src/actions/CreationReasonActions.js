@@ -2,7 +2,7 @@
 
 import { type EdgeAccount } from 'edge-core-js/types'
 
-import { lockStartDates } from '../types/AppTweaks.js'
+import { type AppMessage, lockStartDates } from '../types/AppTweaks.js'
 import { type CreationReason, packCreationReason, unpackCreationReason } from '../types/CreationReason.js'
 import { type Dispatch, type GetState, type State } from '../types/reduxTypes.js'
 
@@ -34,6 +34,14 @@ export const loadCreationReason = (account: EdgeAccount) => async (dispatch: Dis
   }
 
   dispatch({ type: 'CREATION_REASON_LOADED', data: creationReason })
+  saveCreationReason(getState())
+}
+
+/**
+ * Removes the given creation reason message.
+ */
+export const removeCreationMessage = (message: AppMessage) => async (dispatch: Dispatch, getState: GetState) => {
+  dispatch({ type: 'CREATION_REASON_REMOVE_MESSAGE', data: message })
   saveCreationReason(getState())
 }
 

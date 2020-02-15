@@ -18,6 +18,12 @@ const accountInner: Reducer<AccountState, Action> = combineReducers({
     switch (action.type) {
       case 'CREATION_REASON_LOADED':
         return action.data
+      case 'CREATION_REASON_REMOVE_MESSAGE': {
+        if (state == null) return state
+        const toRemove = action.data
+        const messages = state.appTweaks.messages.filter(message => message !== toRemove)
+        return { ...state, appTweaks: { ...state.appTweaks, messages } }
+      }
       case 'CREATION_REASON_REMOVE_SWAP': {
         if (state == null) return state
         const plugins = state.appTweaks.plugins.map(plugin => {

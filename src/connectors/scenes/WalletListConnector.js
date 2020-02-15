@@ -2,12 +2,15 @@
 
 import { connect } from 'react-redux'
 
+import { removeCreationMessage } from '../../actions/CreationReasonActions.js'
 import { disableOtp, keepOtp } from '../../actions/OtpActions'
 import { toggleAccountBalanceVisibility, updateActiveWalletsOrder, updateArchivedWalletsOrder } from '../../actions/WalletListActions'
 import { walletRowOption } from '../../actions/WalletOptionsActions.js'
 import WalletList from '../../components/scenes/WalletListScene'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
+import { getCreationTweaks } from '../../selectors/AccountSelectors.js'
+import { type AppMessage } from '../../types/AppTweaks.js'
 import type { Dispatch, State } from '../../types/reduxTypes.js'
 
 const mapStateToProps = (state: State) => {
@@ -26,6 +29,7 @@ const mapStateToProps = (state: State) => {
   const exchangeRates = state.exchangeRates
   return {
     coreWallets,
+    creationTweaks: getCreationTweaks(state),
     wallets,
     activeWalletIds,
     archivedWalletIds,
@@ -45,6 +49,9 @@ const mapDispatchToProps = (dispatch: Dispatch, state: State) => ({
   walletRowOption: (walletId, option, archived) => dispatch(walletRowOption(walletId, option, archived)),
   disableOtp: () => dispatch(disableOtp()),
   keepOtp: () => dispatch(keepOtp()),
+  removeCreationMessage (message: AppMessage) {
+    dispatch(removeCreationMessage(message))
+  },
   toggleAccountBalanceVisibility: () => dispatch(toggleAccountBalanceVisibility())
 })
 
