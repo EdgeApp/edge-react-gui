@@ -85,8 +85,9 @@ export class SwapSettings extends Component<Props, State> {
 
   handlePreferredModal = () => {
     const { exchanges, preferredSwapPluginId, changePreferredSwapPlugin } = this.props
-    Airship.show(bridge => <SwapPreferredModal bridge={bridge} exchanges={exchanges} selected={preferredSwapPluginId} />).then(pluginId => {
-      if (pluginId !== preferredSwapPluginId) changePreferredSwapPlugin(pluginId)
+    Airship.show(bridge => <SwapPreferredModal bridge={bridge} exchanges={exchanges} selected={preferredSwapPluginId} />).then(result => {
+      if (result.type === 'cancel') return
+      changePreferredSwapPlugin(result.pluginId)
     })
   }
 
