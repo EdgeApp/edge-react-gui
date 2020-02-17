@@ -6,8 +6,6 @@ import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-na
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
-import eosLogo from '../../assets/images/currencies/fa_logo_eos.png'
-import steemLogo from '../../assets/images/currencies/fa_logo_steem.png'
 import { type WalletListResult, WalletListModal } from '../../components/modals/WalletListModal.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
@@ -21,16 +19,12 @@ import { logEvent } from '../../util/tracking.js'
 import { fixFiatCurrencyCode } from '../../util/utils.js'
 import { Airship } from '../services/AirshipInstance.js'
 
-const logos = {
-  eos: eosLogo,
-  steem: steemLogo
-}
-
 export type AccountPaymentParams = {
   requestedAccountName: string,
   currencyCode: string,
   ownerPublicKey: string,
-  activePublicKey: string
+  activePublicKey: string,
+  requestedAccountCurrencyCode: string
 }
 
 export type CreateWalletAccountSelectStateProps = {
@@ -44,7 +38,8 @@ export type CreateWalletAccountSelectStateProps = {
   isCreatingWallet: boolean,
   paymentDenominationSymbol: string,
   existingCoreWallet: EdgeCurrencyWallet,
-  walletAccountActivationQuoteError: string
+  walletAccountActivationQuoteError: string,
+  currencyConfigs: Object
 }
 
 export type CreateWalletAccountSelectOwnProps = {
@@ -133,7 +128,7 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
   }
 
   onSelectWallet = async (walletId: string, paymentCurrencyCode: string) => {
-    const { wallets, accountName, fetchWalletAccountActivationPaymentInfo, setWalletAccountActivationQuoteError } = this.props
+    const { wallets, accountName, fetchWalletAccountActivationPaymentInfo, setWalletAccountActivationQuoteError, selectedWalletType } = this.props
     setWalletAccountActivationQuoteError('') // reset fetching quote error to falsy
     const paymentWallet = wallets[walletId]
     const walletName = paymentWallet.name
@@ -146,7 +141,8 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
       requestedAccountName: accountName,
       currencyCode: paymentCurrencyCode,
       ownerPublicKey: createdWallet.publicWalletInfo.keys.ownerPublicKey,
-      activePublicKey: createdWallet.publicWalletInfo.keys.publicKey
+      activePublicKey: createdWallet.publicWalletInfo.keys.publicKey,
+      requestedAccountCurrencyCode: selectedWalletType.currencyCode
     }
 
     fetchWalletAccountActivationPaymentInfo(paymentInfo, createdWallet)
@@ -239,8 +235,10 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
   }
 
   render() {
-    const { supportedCurrencies, selectedWalletType, activationCost, wallets, walletAccountActivationQuoteError } = this.props
+    const { currencyConfigs, supportedCurrencies, selectedWalletType, activationCost, wallets, walletAccountActivationQuoteError } = this.props
     const { walletId } = this.state
+    const walletTypeValue = selectedWalletType.walletType.replace('wallet:', '')
+    const { symbolImage } = currencyConfigs[walletTypeValue].currencyInfo
     const instructionSyntax = sprintf(
       s.strings.create_wallet_account_select_instructions_with_cost,
       selectedWalletType.currencyCode,
@@ -270,7 +268,7 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
           <Gradient style={styles.scrollableGradient} />
           <ScrollView>
             <View style={styles.scrollableView}>
-              <Image source={logos.eos} style={styles.currencyLogo} resizeMode="cover" />
+              <Image source={{ uri: symbolImage }} style={styles.currencyLogo} resizeMode="cover" />
               <View style={styles.createWalletPromptArea}>
                 <Text style={styles.instructionalText}>{!walletId || walletAccountActivationQuoteError ? instructionSyntax : confirmMessageSyntax}</Text>
               </View>
