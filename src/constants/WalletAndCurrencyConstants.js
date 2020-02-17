@@ -31,6 +31,7 @@ export const DEFAULT_STARTER_WALLET_NAMES = {
   DOGE: s.strings.string_first_doge_wallet_name,
   EBST: s.strings.string_first_eboost_wallet_name,
   EOS: s.strings.string_first_eos_wallet_name,
+  TLOS: s.strings.string_first_telos_wallet_name,
   ETH: s.strings.string_first_ethereum_wallet_name,
   FTC: s.strings.string_first_feather_coin_wallet_name,
   GRS: s.strings.string_first_groestlcoin_wallet_name,
@@ -73,6 +74,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   RVN: 'ravencoin',
   SMART: 'smartcash',
   TBTC: 'bitcointestnet',
+  TLOS: 'telos',
   UFO: 'ufo',
   VTC: 'vertcoin',
   XLM: 'stellar',
@@ -163,6 +165,17 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     isImportKeySupported: false
   },
   EOS: {
+    dummyPublicAddress: 'edgecreator2',
+    needsAccountNameSetup: true,
+    noChangeMiningFee: true,
+    uniqueIdentifier: {
+      addButtonText: s.strings.unique_identifier_dropdown_option_memo,
+      identifierName: s.strings.unique_identifier_memo,
+      identifierKeyboardType: 'default'
+    },
+    isImportKeySupported: true
+  },
+  TLOS: {
     dummyPublicAddress: 'edgecreator2',
     needsAccountNameSetup: true,
     noChangeMiningFee: true,

@@ -28,6 +28,7 @@ if (ENV.CHANGE_NOW_INIT == null && ENV.CHANGE_NOW_API_KEY) {
 export const currencyPlugins = {
   // edge-currency-accountbased:
   eos: true,
+  telos: true,
   ethereum: ENV.ETHEREUM_INIT,
   fio: true,
   stellar: true,
@@ -65,6 +66,7 @@ export const ratePlugins = {
   compound: true,
   coinbase: true,
   coincap: true,
+  coingecko: true,
   constantRate: true,
   coincapLegacy: false,
   nomics: ENV.NOMICS_INIT,

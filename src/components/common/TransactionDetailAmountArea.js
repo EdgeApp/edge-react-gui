@@ -78,18 +78,19 @@ class AmountArea extends Component {
   }
 
   render () {
+    const { edgeTransaction, guiWallet, walletDefaultDenomProps, direction, categories, category } = this.props
     let feeSyntax, leftData, convertedAmount, amountString, symbolString, feeDenomination
 
-    const absoluteAmount = abs(this.props.edgeTransaction.nativeAmount)
-    if (UTILS.isCryptoParentCurrency(this.props.guiWallet, this.props.edgeTransaction.currencyCode)) {
+    const absoluteAmount = abs(edgeTransaction.nativeAmount)
+    if (UTILS.isCryptoParentCurrency(guiWallet, edgeTransaction.currencyCode)) {
       // if it is the parent crypto
-      symbolString = this.props.walletDefaultDenomProps.symbol ? this.props.walletDefaultDenomProps.symbol + ' ' : ''
+      symbolString = walletDefaultDenomProps.symbol ? walletDefaultDenomProps.symbol + ' ' : ''
     } else {
       symbolString = ''
     }
 
-    if (this.props.direction === 'receive') {
-      convertedAmount = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(absoluteAmount) // convert to correct denomiation
+    if (direction === 'receive') {
+      convertedAmount = UTILS.convertNativeToDisplay(walletDefaultDenomProps.multiplier)(absoluteAmount) // convert to correct denomiation
       amountString = UTILS.decimalOrZero(UTILS.truncateDecimals(convertedAmount, 6), 6) // limit to 6 decimals, check if infinitesimal, and remove unnecessary trailing zeroes
       feeSyntax = ''
       leftData = {
@@ -98,11 +99,11 @@ class AmountArea extends Component {
       }
     } else {
       // send tx
-      if (this.props.edgeTransaction.networkFee) {
+      if (edgeTransaction.networkFee) {
         // stub, check BTC vs. ETH (parent currency)
-        feeDenomination = this.props.walletDefaultDenomProps.name
-        convertedAmount = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(absoluteAmount) // convert the native amount to correct *denomination*
-        const convertedFee = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.edgeTransaction.networkFee) // convert fee to correct denomination
+        feeDenomination = walletDefaultDenomProps.name
+        convertedAmount = UTILS.convertNativeToDisplay(walletDefaultDenomProps.multiplier)(absoluteAmount) // convert the native amount to correct *denomination*
+        const convertedFee = UTILS.convertNativeToDisplay(walletDefaultDenomProps.multiplier)(edgeTransaction.networkFee) // convert fee to correct denomination
         const amountMinusFee = sub(convertedAmount, convertedFee) // for outgoing tx substract fee from total amount
         const amountTruncatedDecimals = UTILS.truncateDecimals(amountMinusFee.toString(), 6) // limit to 6 decimals, at most
         amountString = UTILS.decimalOrZero(amountTruncatedDecimals, 6) // change infinitesimal values to zero, otherwise cut off insignificant zeroes (at end of decimal)
@@ -125,10 +126,16 @@ class AmountArea extends Component {
       }
     }
 
-    let notes = this.props.edgeTransaction.metadata ? this.props.edgeTransaction.metadata.notes : ''
+    let notes = ''
+    if (edgeTransaction.metadata) {
+      notes = edgeTransaction.metadata.notes
+      if (edgeTransaction.otherParams && edgeTransaction.otherParams.notes) {
+        notes = notes ? `${notes}\n\n${edgeTransaction.otherParams.notes}` : `${edgeTransaction.otherParams.notes}`
+      }
+    }
 
     if (!notes) notes = ''
-    const categoryInfo = this.props.categories[this.props.category]
+    const categoryInfo = categories[category]
     return (
       <View style={[styles.amountAreaContainer]}>
         <View style={[styles.amountAreaCryptoRow]}>

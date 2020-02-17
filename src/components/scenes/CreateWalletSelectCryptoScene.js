@@ -25,6 +25,7 @@ const WALLET_TYPE_ORDER = [
   'wallet:bitcoinsv',
   'wallet:litecoin',
   'wallet:eos',
+  'wallet:telos',
   'wallet:ripple',
   'wallet:rsk',
   'wallet:stellar',
