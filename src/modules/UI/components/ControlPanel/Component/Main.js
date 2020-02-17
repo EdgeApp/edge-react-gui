@@ -32,6 +32,7 @@ const LOGOUT_TEXT = s.strings.settings_button_logout
 const SETTINGS_TEXT = s.strings.settings_title
 const PLUGIN_BUY_TEXT = s.strings.title_plugin_buy
 const PLUGIN_SELL_TEXT = s.strings.title_plugin_sell
+const EARN_INTEREST_TEXT = s.strings.earn_interest
 const TERMS_OF_SERVICE_TEXT = s.strings.title_terms_of_service
 
 export type Props = {
@@ -54,6 +55,8 @@ export default class Main extends Component<Props> {
               <BuyButton />
               <Separator />
               <SellButton />
+              <Separator />
+              <EarnInterestButton />
               <Separator />
               <FioButton registerFioAddress={registerFioAddress} />
               <Separator />
@@ -121,6 +124,27 @@ const SellButton = () => {
           <Button.Center>
             <Button.Text>
               <Text>{PLUGIN_SELL_TEXT}</Text>
+            </Button.Text>
+          </Button.Center>
+        </Button.Row>
+      </Button.Row>
+    </Button>
+  )
+}
+
+const earnInterestAction = () => Actions[Constants.PLUGIN_VIEW]({ plugin: Constants.mock_plugin })
+const EarnInterestButton = () => {
+  return (
+    <Button onPress={earnInterestAction}>
+      <Button.Row>
+        <Button.Row>
+          <Button.Left>
+            <Image source={buysellIcon} style={styles.iconImage} />
+          </Button.Left>
+
+          <Button.Center>
+            <Button.Text>
+              <Text>{EARN_INTEREST_TEXT}</Text>
             </Button.Text>
           </Button.Center>
         </Button.Row>
