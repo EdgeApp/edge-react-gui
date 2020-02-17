@@ -33,6 +33,9 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   EOS: {
     denomination: '10000'
   },
+  TLOS: {
+    denomination: '10000'
+  },
   XRP: {
     denomination: '1000000'
   },
@@ -255,6 +258,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   BTC: 'object',
   BCH: 'object',
   EOS: 'object',
+  TLOS: 'object',
   XRP: 'object',
   XLM: 'object',
   DASH: 'object',
