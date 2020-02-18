@@ -42,7 +42,6 @@ import CurrencySettings from '../connectors/scenes/CurrencySettingsConnector'
 import DefaultFiatSettingConnector from '../connectors/scenes/DefaultFiatSettingConnector'
 import EdgeLoginSceneConnector from '../connectors/scenes/EdgeLoginSceneConnector'
 import EditToken from '../connectors/scenes/EditTokenConnector.js'
-import LoginConnector from '../connectors/scenes/LoginConnector'
 import ManageTokens from '../connectors/scenes/ManageTokensConnector.js'
 import OtpSettingsSceneConnector from '../connectors/scenes/OtpSettingsSceneConnector.js'
 import PasswordRecoveryConnector from '../connectors/scenes/PasswordRecoveryConnector.js'
@@ -80,6 +79,7 @@ import { ChangeMiningFeeScene } from './scenes/ChangeMiningFeeScene.js'
 import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
 import { CryptoExchangeQuoteProcessingScreenComponent } from './scenes/CryptoExchangeQuoteProcessingScene.js'
 import { LoadingScene } from './scenes/LoadingScene.js'
+import { LoginScene } from './scenes/LoginScene.js'
 import { LegacyPluginViewConnect, renderLegacyPluginBackButton } from './scenes/PluginViewLegacyScene.js'
 import { PluginListScene } from './scenes/PluginViewListScene.js'
 import { PluginViewConnect } from './scenes/PluginViewScene.js'
@@ -261,7 +261,7 @@ export class MainComponent extends Component<Props> {
       <Fragment>
         <RouterWithRedux backAndroidHandler={this.handleBack}>
           <Stack key={Constants.ROOT} hideNavBar panHandlers={null}>
-            <Scene key={Constants.LOGIN} initial component={LoginConnector} />
+            <Scene key={Constants.LOGIN} initial component={LoginScene} />
 
             <Scene
               key={Constants.TRANSACTION_DETAILS}

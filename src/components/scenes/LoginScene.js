@@ -5,33 +5,36 @@ import { LoginScreen } from 'edge-login-ui-rn'
 import React, { Component } from 'react'
 import { Keyboard, StatusBar, StyleSheet, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
+import { connect } from 'react-redux'
 
+import { showSendLogsModal } from '../../actions/SettingsActions'
 import edgeBackgroundImage from '../../assets/images/edgeBackground/login_bg.jpg'
 import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
 import s from '../../locales/strings.js'
+import { initializeAccount } from '../../modules/Login/action'
 import THEME from '../../theme/variables/airbitz.js'
+import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { showHelpModal } from '../modals/HelpModal.js'
 
-type Props = {
-  initializeAccount: (EdgeAccount, touchIdInfo: ?Object) => void,
+type StateProps = {
+  account: EdgeAccount,
   context: EdgeContext,
-  account: ?EdgeAccount,
-  recoveryLogin: string,
-  username?: string,
-  showSendLogsModal: () => void
+  recoveryKey: string | null,
+  username: string
 }
+type DispatchProps = {
+  initializeAccount(account: EdgeAccount, touchIdInfo: Object): void,
+  showSendLogsModal(): void
+}
+type Props = StateProps & DispatchProps
+
 type State = { key: number }
 
-export default class Login extends Component<Props, State> {
+class LoginSceneComponent extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = { key: 0 }
     slowlog(this, /.*/, global.slowlogOptions)
-  }
-
-  onLogin = (error: ?Error = null, account: ?EdgeAccount, touchIdInfo: ?Object = null) => {
-    if (error || !account) return
-    this.props.initializeAccount(account, touchIdInfo)
   }
 
   UNSAFE_componentWillReceiveProps (nextProps: Props) {
@@ -48,6 +51,11 @@ export default class Login extends Component<Props, State> {
     showHelpModal()
   }
 
+  onLogin = (error: Error | null, account: EdgeAccount | null, touchIdInfo: Object) => {
+    if (error != null) return
+    if (account != null) this.props.initializeAccount(account, touchIdInfo)
+  }
+
   render () {
     return !this.props.context.listUsernames ? null : (
       <View style={styles.container} testID={'edge: login-scene'}>
@@ -55,11 +63,9 @@ export default class Login extends Component<Props, State> {
           username={this.props.username}
           accountOptions={null}
           context={this.props.context}
-          recoveryLogin={this.props.recoveryLogin}
+          recoveryLogin={this.props.recoveryKey}
           onLogin={this.onLogin}
-          fontDescription={{
-            regularFontFamily: THEME.FONTS.DEFAULT
-          }}
+          fontDescription={{ regularFontFamily: THEME.FONTS.DEFAULT }}
           key={this.state.key.toString()}
           appName={s.strings.app_name_short}
           backgroundImage={edgeBackgroundImage}
@@ -80,3 +86,21 @@ const styles = StyleSheet.create({
     backgroundColor: THEME.COLORS.PRIMARY
   }
 })
+
+export const LoginScene = connect(
+  (state: ReduxState): StateProps => ({
+    context: state.core.context,
+    account: state.core.account,
+    recoveryKey: state.core.deepLinking.passwordRecoveryLink,
+    username: state.nextUsername == null ? '' : state.nextUsername
+  }),
+
+  (dispatch: Dispatch): DispatchProps => ({
+    showSendLogsModal () {
+      dispatch(showSendLogsModal())
+    },
+    initializeAccount (account, touchIdInfo) {
+      dispatch(initializeAccount(account, touchIdInfo))
+    }
+  })
+)(LoginSceneComponent)
