@@ -460,6 +460,7 @@ Object {
       "addTokenPending": false,
       "archivedWalletIds": Array [],
       "byId": Object {},
+      "hiddenWalletIds": Array [],
       "manageTokensPending": false,
       "selectedCurrencyCode": "",
       "selectedWalletId": "",
