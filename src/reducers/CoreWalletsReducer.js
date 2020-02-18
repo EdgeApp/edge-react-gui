@@ -29,7 +29,7 @@ const byId = (state = initialState, action: Action): $PropertyType<WalletsState,
 }
 
 export const wallets: Reducer<WalletsState, Action> = (state, action: Action) => {
-  if (action.type === 'LOGOUT' || action.type === 'DEEP_LINK_RECEIVED') {
+  if (action.type === 'LOGOUT') {
     state = undefined
   }
 

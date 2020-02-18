@@ -17,8 +17,6 @@ export const exchangeRates: Reducer<ExchangeRatesState, Action> = (state = initi
       return action.data.exchangeRates
     case 'LOGOUT':
       return initialState
-    case 'DEEP_LINK_RECEIVED':
-      return initialState
     default:
       return state
   }

@@ -271,19 +271,7 @@ export const logoutRequest = (username?: string) => (dispatch: Dispatch, getStat
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
   dispatch({ type: 'LOGOUT', data: { username } })
-  account.logout()
-}
-
-export const deepLinkLogout = (backupKey: string) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
-  const username = account.username
-  Actions.popTo(Constants.LOGIN, { username })
-  dispatch({ type: 'DEEP_LINK_RECEIVED', data: backupKey })
-  // dispatch(logout('deepLinkReceived'))
-  if (!account) {
-    account.logout()
-  }
+  if (typeof account.logout === 'function') account.logout()
 }
 
 /**

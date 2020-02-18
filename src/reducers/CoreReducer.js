@@ -33,7 +33,6 @@ export const core: Reducer<CoreState, Action> = combineReducers({
         return action.data.account
       }
       case 'LOGOUT':
-      case 'DEEP_LINK_RECEIVED':
         return defaultAccount
     }
     return state

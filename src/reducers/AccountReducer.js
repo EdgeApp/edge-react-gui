@@ -40,7 +40,7 @@ const accountInner: Reducer<AccountState, Action> = combineReducers({
 
 // Shared logout logic:
 export const account: Reducer<AccountState, Action> = (state: AccountState | void, action: Action) => {
-  if (action.type === 'LOGOUT' || action.type === 'DEEP_LINK_RECEIVED') {
+  if (action.type === 'LOGOUT') {
     return accountInner(undefined, { type: 'DUMMY_ACTION_PLEASE_IGNORE' })
   }
   return accountInner(state, action)

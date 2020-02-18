@@ -43,8 +43,6 @@ export const rootReducer: Reducer<RootState, Action> = combineReducers({
 
   nextUsername (state: string | null = null, action: Action): string | null {
     switch (action.type) {
-      case 'DEEP_LINK_RECEIVED':
-        return null
       case 'LOGOUT': {
         const { username = null } = action.data
         return username
