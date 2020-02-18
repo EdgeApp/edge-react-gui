@@ -1,9 +1,12 @@
 // @flow
 
-import type { Permission, PermissionStatus } from '../modules/PermissionsManager.js'
 import type { Action } from '../types/reduxTypes.js'
 
-export type PermissionsState = { [Permission]: PermissionStatus }
+export type Permission = 'camera' | 'contacts'
+export type PermissionStatus = 'authorized' | 'denied' | 'restricted' | 'undetermined'
+export type PermissionsState = {
+  [permission: Permission]: PermissionStatus
+}
 
 export const initialState = {
   camera: 'undetermined',

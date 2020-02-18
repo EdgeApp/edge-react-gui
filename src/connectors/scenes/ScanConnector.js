@@ -4,11 +4,10 @@ import { connect } from 'react-redux'
 
 import { parseScannedUri, qrCodeScanned, toggleAddressModal } from '../../actions/ScanActions'
 import Scan from '../../components/scenes/ScanScene'
-import { getCameraPermission } from '../../modules/permissions/PermissionsSelectors'
 import type { Dispatch, State } from '../../types/reduxTypes.js'
 
 const mapStateToProps = (state: State) => ({
-  cameraPermission: getCameraPermission(state),
+  cameraPermission: state.permissions.camera,
   torchEnabled: state.ui.scenes.scan.torchEnabled,
   scanEnabled: state.ui.scenes.scan.scanEnabled,
   deepLinkPending: state.core.deepLinking.deepLinkPending,
