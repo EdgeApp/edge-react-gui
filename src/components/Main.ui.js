@@ -57,7 +57,6 @@ import SendConfirmationOptions from '../connectors/SendConfirmationOptionsConnec
 import SpendingLimitsConnector from '../connectors/SpendingLimitsConnector.js'
 import * as Constants from '../constants/indexConstants'
 import s from '../locales/strings.js'
-import DeepLinkingManager from '../modules/DeepLinkingManager.js'
 import { deepLinkLogout, logoutRequest } from '../modules/Login/action.js'
 import ControlPanel from '../modules/UI/components/ControlPanel/ControlPanelConnector'
 import T from '../modules/UI/components/FormattedText/index'
@@ -701,8 +700,6 @@ export class MainComponent extends Component<Props> {
         </RouterWithRedux>
         <PasswordReminderModal />
         <PasswordRecoveryReminderModalConnector />
-
-        <DeepLinkingManager />
       </Fragment>
     )
   }

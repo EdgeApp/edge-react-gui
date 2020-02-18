@@ -7,27 +7,27 @@ import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 import parse from 'url-parse'
 
-import { selectWallet } from '../actions/WalletActions.js'
-import { PLUGIN_VIEW_DEEP, SCAN } from '../constants/indexConstants.js'
-import { pluginUrlMap } from '../constants/plugins/buySellPlugins.js'
-import s from '../locales/strings.js'
-import type { Dispatch } from './../types/reduxTypes.js'
+import { selectWallet } from '../../actions/WalletActions.js'
+import { pluginUrlMap } from '../../constants/plugins/buySellPlugins.js'
+import { PLUGIN_VIEW_DEEP, SCAN } from '../../constants/SceneKeys.js'
+import s from '../../locales/strings.js'
+import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 
-type DeepLinkingManagerStateProps = {
-  totalWalletCount: number,
-  wallets: Object,
+type StateProps = {
   addressDeepLinkData: Object,
-  deepLinkPending: boolean
+  deepLinkPending: boolean,
+  totalWalletCount: number,
+  wallets: Object
 }
 
-type DeepLinkingManagerDispatchProps = {
-  selectWallet: (walletId: string, currencyCode: string) => any,
-  markAddressDeepLinkDone: () => any
+type DispatchProps = {
+  markAddressDeepLinkDone(): void,
+  selectWallet(walletId: string, currencyCode: string): void
 }
 
-type Props = DeepLinkingManagerStateProps & DeepLinkingManagerDispatchProps
+type Props = StateProps & DispatchProps
 
-class DeepLinkingManager extends React.Component<Props> {
+class DeepLinkingManagerComponent extends React.Component<Props> {
   render () {
     return null
   }
@@ -98,26 +98,20 @@ class DeepLinkingManager extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state): DeepLinkingManagerStateProps => {
-  return {
-    totalWalletCount: state.ui.wallets.activeWalletIds.length,
-    wallets: state.ui.wallets.byId,
+export const DeepLinkingManager = connect(
+  (state: ReduxState): StateProps => ({
     addressDeepLinkData: state.core.deepLinking.addressDeepLinkData,
-    deepLinkPending: state.core.deepLinking.deepLinkPending
-  }
-}
+    deepLinkPending: state.core.deepLinking.deepLinkPending,
+    totalWalletCount: state.ui.wallets.activeWalletIds.length,
+    wallets: state.ui.wallets.byId
+  }),
 
-const mapDispatchToProps = (dispatch: Dispatch): DeepLinkingManagerDispatchProps => {
-  return {
-    selectWallet: (walletId: string, currencyCode: string) => dispatch(selectWallet(walletId, currencyCode)),
-    markAddressDeepLinkDone: () =>
-      dispatch({
-        type: 'ADDRESS_DEEP_LINK_COMPLETE'
-      })
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(DeepLinkingManager)
+  (dispatch: Dispatch): DispatchProps => ({
+    markAddressDeepLinkDone () {
+      dispatch({ type: 'ADDRESS_DEEP_LINK_COMPLETE' })
+    },
+    selectWallet (walletId: string, currencyCode: string) {
+      dispatch(selectWallet(walletId, currencyCode))
+    }
+  })
+)(DeepLinkingManagerComponent)

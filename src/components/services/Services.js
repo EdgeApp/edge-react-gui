@@ -26,6 +26,7 @@ import { Main } from '../Main.ui.js'
 import { Airship } from './AirshipInstance.js'
 import { AutoLogout } from './AutoLogout.js'
 import { ContactsLoader } from './ContactsLoader.js'
+import { DeepLinkingManager } from './DeepLinkingManager.js'
 import EdgeAccountCallbackManager from './EdgeAccountCallbackManager.js'
 import EdgeContextCallbackManager from './EdgeContextCallbackManager.js'
 import EdgeWalletsCallbackManager from './EdgeWalletsCallbackManager.js'
@@ -88,6 +89,7 @@ export class Services extends PureComponent<Props> {
           <Airship />
           <AutoLogout />
           <ContactsLoader />
+          <DeepLinkingManager />
           <EdgeAccountCallbackManager />
           <EdgeContextCallbackManager />
           <EdgeWalletsCallbackManager />
