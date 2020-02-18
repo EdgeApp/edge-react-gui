@@ -4,6 +4,7 @@ import { type Reducer, combineReducers } from 'redux'
 
 import { type ExchangeRatesState, exchangeRates } from '../modules/ExchangeRates/reducer.js'
 import { type UiState, ui } from '../modules/UI/reducer.js'
+import { type DeepLink } from '../types/DeepLink.js'
 import { type InstallReason } from '../types/InstallReason.js'
 import { type Action } from '../types/reduxTypes.js'
 import { type AccountState, account } from './AccountReducer.js'
@@ -26,6 +27,9 @@ export type RootState = {
   // Next username to auto-fill at the login screen, or blank if none:
   +nextUsername: string | null,
 
+  // Deep link waiting to be fulfilled:
+  +pendingDeepLink: DeepLink | null,
+
   // Nested reducers:
   +account: AccountState,
   +contacts: ContactsState,
@@ -47,6 +51,16 @@ export const rootReducer: Reducer<RootState, Action> = combineReducers({
         const { username = null } = action.data
         return username
       }
+    }
+    return state
+  },
+
+  pendingDeepLink (state: DeepLink | null = null, action: Action): DeepLink | null {
+    switch (action.type) {
+      case 'DEEP_LINK_RECEIVED':
+        return action.data
+      case 'DEEP_LINK_HANDLED':
+        return null
     }
     return state
   },

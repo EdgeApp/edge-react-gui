@@ -3,20 +3,17 @@
 import { type EdgeLobby } from 'edge-core-js/types'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import parse from 'url-parse'
 
 import { launchModal } from '../components/common/ModalProvider.js'
 import s from '../locales/strings.js'
 import { errorModal } from '../modules/UI/components/Modals/ErrorModal.js'
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
 
-export const loginWithEdge = (url: string) => (dispatch: Dispatch, getState: GetState) => {
-  const parsedUrl = parse(url, {}, false)
-  const token = getToken(parsedUrl)
+export const loginWithEdge = (lobbyId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const account = state.core.account
   account
-    .fetchLobby(token)
+    .fetchLobby(lobbyId)
     .then((lobby: EdgeLobby) => {
       dispatch({ type: 'SAVE_EDGE_LOBBY', data: lobby })
     })
@@ -45,16 +42,4 @@ export const lobbyLogin = () => async (dispatch: Dispatch, getState: GetState) =
     e.message = e.message.includes('Could not reach') ? s.strings.edge_login_fail_message : e.message
     launchModal(errorModal(s.strings.edge_login_failed, e))
   }
-}
-
-const getToken = (data: any): string => {
-  if (data.protocol === 'edge:' || data.protocol === 'edge-ret:' || data.protocol === 'airbitz:' || data.protocol === 'airbitz-ret:') {
-    const splitArray = data.href.split('edge/')
-    return splitArray[1]
-  }
-  if (data.protocol === 'https:') {
-    const splitArray = data.query.split('address=')
-    return splitArray[1]
-  }
-  return ''
 }

@@ -1,11 +1,10 @@
 // @flow
 
 import React, { Component, Fragment } from 'react'
-import { Image, Linking, TouchableWithoutFeedback, View, YellowBox } from 'react-native'
+import { Image, TouchableWithoutFeedback, View, YellowBox } from 'react-native'
 import { Actions, Drawer, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import { connect } from 'react-redux'
-import * as URI from 'uri-js'
 
 import ENV from '../../env.json'
 import { checkEnabledExchanges } from '../actions/CryptoExchangeActions.js'
@@ -84,7 +83,7 @@ import { PluginListScene } from './scenes/PluginViewListScene.js'
 import { PluginViewConnect } from './scenes/PluginViewScene.js'
 import { SwapActivateShapeshiftScene } from './scenes/SwapActivateShapeshiftScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
-import { showError, showToast } from './services/AirshipInstance.js'
+import { showToast } from './services/AirshipInstance.js'
 
 const RouterWithRedux = connect()(Router)
 
@@ -131,10 +130,6 @@ const DEFAULT_FIAT = s.strings.title_default_fiat
 const TERMS_OF_SERVICE = s.strings.title_terms_of_service
 
 type DispatchProps = {
-  // Linking:
-  urlReceived(backupKey: string): void,
-  dispatchAddressDeepLinkReceived(addressDeepLinkData: Object): void,
-
   // Navigation actions:
   logout(username?: string): void,
   openDrawer(): void,
@@ -170,89 +165,6 @@ export class MainComponent extends Component<Props> {
 
   componentDidMount () {
     logEvent('AppStart')
-
-    Linking.getInitialURL()
-      .then(url => {
-        if (url) {
-          this.doDeepLink(url)
-        }
-        // this.navigate(url);
-      })
-      .catch(showError)
-    Linking.addEventListener('url', this.handleOpenURL)
-  }
-
-  handleOpenURL = (event: Object) => {
-    this.doDeepLink(event.url)
-  }
-
-  doDeepLink (url: string) {
-    const parsedUri = URI.parse(url)
-
-    switch (parsedUri.scheme) {
-      case 'edge':
-      case 'airbitz':
-      case 'edge-ret':
-      case 'airbitz-ret':
-      case 'https':
-        if (parsedUri.host === 'recovery' || parsedUri.host === 'recovery.edgesecure.co') {
-          this.handleRecoveryToken(parsedUri)
-        } else {
-          this.handleAddress(parsedUri, url)
-        }
-        break
-      case 'bitcoin':
-      case 'bitcoincash':
-      case 'ethereum':
-      case 'rsk':
-      case 'dash':
-      case 'litecoin':
-        this.handleAddress(parsedUri, url)
-        break
-    }
-  }
-
-  handleRecoveryToken (parsedUri: URI) {
-    const query = parsedUri.query
-    if (!query || !query.includes('token=')) {
-      return
-    }
-    const splitArray = query.split('token=')
-    const nextString = splitArray[1]
-    const finalArray = nextString.split('&')
-    const token = finalArray[0]
-    this.props.urlReceived(token)
-  }
-
-  handleAddress (parsedUri: URI, url: string) {
-    const addressDeepLinkData = {}
-
-    const currencyCode = this.convertCurrencyCodeFromScheme(parsedUri.scheme)
-
-    addressDeepLinkData.currencyCode = currencyCode
-    addressDeepLinkData.uri = url
-
-    this.props.dispatchAddressDeepLinkReceived(addressDeepLinkData)
-  }
-
-  convertCurrencyCodeFromScheme (scheme: string) {
-    switch (scheme) {
-      case 'bitcoin':
-        return 'BTC'
-      case 'bitcoincash':
-        return 'BCH'
-      case 'ethereum':
-        return 'ETH'
-      case 'litecoin':
-        return 'LTC'
-      case 'dash':
-        return 'DASH'
-      case 'rsk':
-        return 'RBTC'
-      default:
-        console.log('Unrecognized currency URI scheme')
-        return null
-    }
   }
 
   render () {
@@ -271,6 +183,14 @@ export class MainComponent extends Component<Props> {
               renderTitle={this.renderTitle(TRANSACTION_DETAILS)}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderMenuButton()}
+            />
+            <Scene
+              key={Constants.EDGE_LOGIN}
+              navTransparent={true}
+              component={EdgeLoginSceneConnector}
+              renderTitle={this.renderTitle(EDGE_LOGIN)}
+              renderLeftButton={this.renderBackButton()}
+              renderRightButton={this.renderHelpButton()}
             />
 
             <Drawer key={Constants.EDGE} hideNavBar contentComponent={ControlPanel} hideDrawerButton={true} drawerPosition="right" drawerWidth={scale(280)}>
@@ -516,42 +436,30 @@ export class MainComponent extends Component<Props> {
                   </Stack>
                 </Tabs>
 
-                <Stack key={Constants.SCAN} hideTabBar>
-                  <Scene
-                    key={Constants.SCAN_NOT_USED}
-                    navTransparent={true}
-                    onEnter={props => {
-                      this.props.requestPermission('camera')
-                      this.props.dispatchEnableScan()
-                      this.props.checkAndShowGetCryptoModal(props.data)
-                    }}
-                    onExit={this.props.dispatchDisableScan}
-                    component={Scan}
-                    renderTitle={this.renderHeaderWalletSelector()}
-                    renderLeftButton={this.renderBackButton()}
-                    renderRightButton={this.renderMenuButton()}
-                  />
-                  <Scene
-                    key={Constants.EDGE_LOGIN}
-                    navTransparent={true}
-                    component={EdgeLoginSceneConnector}
-                    renderTitle={this.renderTitle(EDGE_LOGIN)}
-                    renderLeftButton={this.renderBackButton()}
-                    renderRightButton={this.renderHelpButton()}
-                  />
-                </Stack>
+                <Scene
+                  key={Constants.SCAN}
+                  navTransparent={true}
+                  onEnter={props => {
+                    this.props.requestPermission('camera')
+                    this.props.dispatchEnableScan()
+                    this.props.checkAndShowGetCryptoModal(props.data)
+                  }}
+                  onExit={this.props.dispatchDisableScan}
+                  component={Scan}
+                  renderTitle={this.renderHeaderWalletSelector()}
+                  renderLeftButton={this.renderBackButton()}
+                  renderRightButton={this.renderMenuButton()}
+                />
 
-                <Stack key={Constants.REQUEST}>
-                  <Scene
-                    key={Constants.REQUEST}
-                    navTransparent={true}
-                    component={Request}
-                    renderTitle={this.renderHeaderWalletSelector()}
-                    renderLeftButton={this.renderBackButton()}
-                    renderRightButton={this.renderRequestMenuButton()}
-                    hideTabBar
-                  />
-                </Stack>
+                <Scene
+                  key={Constants.REQUEST}
+                  navTransparent={true}
+                  component={Request}
+                  renderTitle={this.renderHeaderWalletSelector()}
+                  renderLeftButton={this.renderBackButton()}
+                  renderRightButton={this.renderRequestMenuButton()}
+                  hideTabBar
+                />
 
                 <Stack key={Constants.SEND_CONFIRMATION} hideTabBar>
                   <Scene
@@ -835,18 +743,6 @@ export class MainComponent extends Component<Props> {
 export const Main = connect(
   (state: ReduxState): StateProps => ({}),
   (dispatch: Dispatch): DispatchProps => ({
-    // Linking:
-    urlReceived (backupKey) {
-      dispatch(logoutRequest())
-      dispatch({ type: 'DEEP_LINK_RECEIVED', data: backupKey })
-    },
-    dispatchAddressDeepLinkReceived (addressDeepLinkData) {
-      dispatch({
-        type: 'ADDRESS_DEEP_LINK_RECEIVED',
-        data: addressDeepLinkData
-      })
-    },
-
     // Navigation actions:
     logout (username?: string): void {
       dispatch(logoutRequest(username))

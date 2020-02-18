@@ -102,7 +102,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       }
 
       newAccount = true
-    } else if (!state.core.deepLinking.deepLinkPending) {
+    } else {
       // We have a wallet
       const { walletId, currencyCode } = getFirstActiveWalletInfo(account, currencyCodes)
       accountInitObject.walletId = walletId

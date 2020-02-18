@@ -11,10 +11,8 @@ import {
   getNewArrayWithItem,
   getNewArrayWithoutItem,
   getObjectDiff,
-  getRequestForAddress,
   getSupportedFiats,
   isCompleteExchangeData,
-  isEdgeLogin,
   isTooFarAhead,
   isTooFarBehind,
   isValidInput,
@@ -24,159 +22,6 @@ import {
   secondsToMs,
   truncateDecimals
 } from '../util/utils.js'
-
-describe('getRequestForAddress', function () {
-  describe('protocol bitcoin-ret', function () {
-    test('bitwage', function () {
-      const uri =
-        'bitcoin-ret://x-callback-url/request-address?category=Income%3ASalary&max-number=100&x-error=https://www.bitwage.com/bitcoinret%2Ferror&x-source=Bitwage&x-success=https://www.bitwage.com/bitcoinret%2F5321947550318592%2F2%2Fadd%3Fcsrf%3D8040b2ac-61db-4d64-8705-9df856c3998a'
-      const result = getRequestForAddress(uri)
-      const expected = true
-      let actual = true
-      if (result.callbackUrl !== 'https://www.bitwage.com/bitcoinret/5321947550318592/2/add?csrf=8040b2ac-61db-4d64-8705-9df856c3998a') {
-        actual = false
-      }
-      if (result.currencyName !== 'bitcoin') {
-        actual = false
-      }
-      if (result.sourceName !== 'Bitwage') {
-        actual = false
-      }
-      expect(actual).toBe(expected)
-    })
-    test('cryptotip', function () {
-      const uri = 'bitcoin-ret://x-callback-url/request-address?x-source=Crypto%20Tip&x-success=https%3A%2F%2Fcryptotip.org%2Fedge%2F1234-1234-4321'
-      const result = getRequestForAddress(uri)
-      const expected = true
-      let actual = true
-      if (result.callbackUrl !== 'https://cryptotip.org/edge/1234-1234-4321') {
-        actual = false
-      }
-      if (result.currencyName !== 'bitcoin') {
-        actual = false
-      }
-      if (result.sourceName !== 'Crypto Tip') {
-        actual = false
-      }
-      expect(actual).toBe(expected)
-    })
-    test('cryptotip invalid currency', function () {
-      const uri = 'bitcoinz-ret://x-callback-url/request-address?x-source=Crypto%20Tip&x-success=https%3A%2F%2Fcryptotip.org%2Fedge%2F1234-1234-4321'
-      const expected = false
-      let actual = true
-      let result = {}
-      try {
-        result = getRequestForAddress(uri)
-        actual = false
-      } catch (e) {}
-      if (result.callbackUrl !== 'https://cryptotip.org/edge/1234-1234-4321') {
-        actual = false
-      }
-      if (result.currencyName !== 'bitcoinz') {
-        actual = false
-      }
-      if (result.sourceName !== 'Crypto Tip') {
-        actual = false
-      }
-      expect(actual).toBe(expected)
-    })
-  })
-  describe('protocol edge', function () {
-    test('bitwage bitcoin', function () {
-      const uri =
-        'edge://x-callback-url/request-bitcoin-address?category=Income%3ASalary&max-number=100&x-error=https://www.bitwage.com/bitcoinret%2Ferror&x-source=Bitwage&x-success=https://www.bitwage.com/bitcoinret%2F5321947550318592%2F2%2Fadd%3Fcsrf%3D8040b2ac-61db-4d64-8705-9df856c3998a'
-      const result = getRequestForAddress(uri)
-      const expected = true
-      let actual = true
-      if (result.callbackUrl !== 'https://www.bitwage.com/bitcoinret/5321947550318592/2/add?csrf=8040b2ac-61db-4d64-8705-9df856c3998a') {
-        actual = false
-      }
-      if (result.currencyName !== 'bitcoin') {
-        actual = false
-      }
-      if (result.sourceName !== 'Bitwage') {
-        actual = false
-      }
-      expect(actual).toBe(expected)
-    })
-    test('cryptotip dash', function () {
-      const uri = 'edge://x-callback-url/request-dash-address?x-source=Crypto%20Tip&x-success=https%3A%2F%2Fcryptotip.org%2Fedge%2F1234-1234-4321'
-      const result = getRequestForAddress(uri)
-      const expected = true
-      let actual = true
-      if (result.callbackUrl !== 'https://cryptotip.org/edge/1234-1234-4321') {
-        actual = false
-      }
-      if (result.currencyName !== 'dash') {
-        actual = false
-      }
-      if (result.sourceName !== 'Crypto Tip') {
-        actual = false
-      }
-      expect(actual).toBe(expected)
-    })
-    test('cryptotip invalid currency', function () {
-      const uri = 'edge-ret://x-callback-url/request-dashy-address?x-source=Crypto%20Tip&x-success=https%3A%2F%2Fcryptotip.org%2Fedge%2F1234-1234-4321'
-      const expected = false
-      let actual = true
-      let result = {}
-      try {
-        result = getRequestForAddress(uri)
-        actual = false
-      } catch (e) {}
-      if (result.callbackUrl !== 'https://cryptotip.org/edge/1234-1234-4321') {
-        actual = false
-      }
-      if (result.currencyName !== 'dashy') {
-        actual = false
-      }
-      if (result.sourceName !== 'Crypto Tip') {
-        actual = false
-      }
-      expect(actual).toBe(expected)
-    })
-    test('cryptotip missing source', function () {
-      const uri = 'edge-ret://x-callback-url/request-dashy-address?x-sourcey=Crypto%20Tip&x-success=https%3A%2F%2Fcryptotip.org%2Fedge%2F1234-1234-4321'
-      const expected = false
-      let actual = true
-      let result = {}
-      try {
-        result = getRequestForAddress(uri)
-        actual = false
-      } catch (e) {}
-      if (result.callbackUrl !== 'https://cryptotip.org/edge/1234-1234-4321') {
-        actual = false
-      }
-      if (result.currencyName !== 'dashy') {
-        actual = false
-      }
-      if (result.sourceName !== 'Crypto Tip') {
-        actual = false
-      }
-      expect(actual).toBe(expected)
-    })
-    test('cryptotip missing callback-url', function () {
-      const uri = 'edge-ret://x-callback-url/request-dashy-address?x-source=Crypto%20Tip'
-      const expected = false
-      let actual = true
-      let result = {}
-      try {
-        result = getRequestForAddress(uri)
-        actual = false
-      } catch (e) {}
-      if (result.callbackUrl !== 'https://cryptotip.org/edge/1234-1234-4321') {
-        actual = false
-      }
-      if (result.currencyName !== 'dashy') {
-        actual = false
-      }
-      if (result.sourceName !== 'Crypto Tip') {
-        actual = false
-      }
-      expect(actual).toBe(expected)
-    })
-  })
-})
 
 describe('isValidInput', function () {
   describe('when input is valid', function () {
@@ -735,30 +580,6 @@ describe('getObjectDiff', () => {
       }
     }
     expect(getObjectDiff(obj1, obj2, { b: true })).toEqual('b')
-  })
-})
-
-describe('isEdgeLogin', () => {
-  test('Edge Login airbitz:', () => {
-    expect(isEdgeLogin('airbitz://edge/1234567890a')).toBe(true)
-  })
-  test('Edge Login airbitz-ret', () => {
-    expect(isEdgeLogin('airbitz-ret://edge/1234567890a')).toBe(true)
-  })
-  test('Edge Login edge', () => {
-    expect(isEdgeLogin('edge://edge/1234567890a')).toBe(true)
-  })
-  test('Edge Login edge-ret', () => {
-    expect(isEdgeLogin('edge-ret://edge/1234567890a')).toBe(true)
-  })
-  test('Non Edge Login bad protocol', () => {
-    expect(isEdgeLogin('edge-re://edge/1234567890a')).toBe(false)
-  })
-  test('Non Edge Login bad host', () => {
-    expect(isEdgeLogin('edge-ret://edgey/1234567890a')).toBe(false)
-  })
-  test('Non Edge Login bad path', () => {
-    expect(isEdgeLogin('edge-ret://edge/1234567890')).toBe(false)
   })
 })
 

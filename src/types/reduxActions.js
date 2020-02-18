@@ -7,13 +7,13 @@ import { type PermissionsState } from '../reducers/PermissionsReducer.js'
 import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
 import { type AppMessage } from './AppTweaks.js'
 import { type CreationReason } from './CreationReason.js'
+import { type DeepLink } from './DeepLink.js'
 import { type InstallReason } from './InstallReason.js'
 import { type CustomTokenInfo, type GuiContact, type GuiCurrencyInfo, type GuiSwapInfo, type GuiWallet } from './types.js'
 
 type LegacyActionName =
   | 'ACCOUNT_INIT_COMPLETE'
   | 'ACCOUNT/LOGGED_IN'
-  | 'ADDRESS_DEEP_LINK_RECEIVED'
   | 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES'
   | 'NEW_RECEIVE_ADDRESS'
   | 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_FAIL'
@@ -53,10 +53,10 @@ type LegacyActionName =
 type NoDataActionName =
   | 'ADD_NEW_CUSTOM_TOKEN_FAILURE'
   | 'ADD_TOKEN_START'
-  | 'ADDRESS_DEEP_LINK_COMPLETE'
   | 'CLOSE_SELECT_USER'
   | 'CLOSE_VIEWXPUB_WALLET_MODAL'
   | 'CREATION_REASON_REMOVE_SWAP'
+  | 'DEEP_LINK_HANDLED'
   | 'DELETE_CUSTOM_TOKEN_FAILURE'
   | 'DELETE_CUSTOM_TOKEN_START'
   | 'DEVELOPER_MODE_OFF'
@@ -149,7 +149,7 @@ export type Action =
     }
   | { type: 'CREATION_REASON_LOADED', data: CreationReason }
   | { type: 'CREATION_REASON_REMOVE_MESSAGE', data: AppMessage }
-  | { type: 'DEEP_LINK_RECEIVED', data: string /* Password recovery link */ }
+  | { type: 'DEEP_LINK_RECEIVED', data: DeepLink }
   | { type: 'DELETE_CUSTOM_TOKEN_SUCCESS', data: { currencyCode: string } }
   | {
       type: 'INSERT_WALLET_IDS_FOR_PROGRESS',
