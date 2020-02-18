@@ -19,7 +19,7 @@ import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import { errorModal } from '../modules/UI/components/Modals/ErrorModal.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
-import { trackEvent } from '../util/tracking.js'
+import { logEvent } from '../util/tracking.js'
 import { selectWallet as selectWalletAction, updateMostRecentWalletsSelected } from './WalletActions.js'
 
 export const createCurrencyWalletAndAddToSwap = (walletName: string, walletType: string, fiatCurrencyCode: string) => (
@@ -208,7 +208,7 @@ export const createAccountTransaction = (createdWalletId: string, accountName: s
       lockInputs: true,
       onBack: () => {
         // Hack. Keyboard pops up for some reason. Close it
-        trackEvent('ActivateWalletCancel', {
+        logEvent('ActivateWalletCancel', {
           currencyCode: createdWalletCurrencyCode
         })
       },
@@ -219,7 +219,7 @@ export const createAccountTransaction = (createdWalletId: string, accountName: s
             Alert.alert(s.strings.create_wallet_account_error_sending_transaction)
           }, 750)
         } else if (edgeTransaction) {
-          trackEvent('ActivateWalletSuccess', {
+          logEvent('ActivateWalletSuccess', {
             currencyCode: createdWalletCurrencyCode
           })
           const edgeMetadata: EdgeMetadata = {

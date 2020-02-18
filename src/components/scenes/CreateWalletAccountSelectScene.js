@@ -16,7 +16,7 @@ import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
 import type { GuiFiatType, GuiWallet, GuiWalletType } from '../../types/types.js'
-import { trackEvent } from '../../util/tracking.js'
+import { logEvent } from '../../util/tracking.js'
 import { fixFiatCurrencyCode } from '../../util/utils.js'
 import { Airship } from '../services/AirshipInstance.js'
 
@@ -98,7 +98,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
   }
 
   componentDidMount () {
-    trackEvent('ActivateWalletSelect')
+    logEvent('ActivateWalletSelect')
   }
 
   onBack = () => {

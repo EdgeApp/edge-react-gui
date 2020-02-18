@@ -9,8 +9,10 @@ import { getSwapPluginIcon } from '../../assets/images/exchange'
 import s from '../../locales/strings.js'
 import { type AirshipBridge, AirshipModal, dayText, THEME } from './modalParts.js'
 
+type ModalResult = { type: 'cancel' } | { type: 'select', pluginId: string | void }
+
 type Props = {
-  bridge: AirshipBridge<string | void>,
+  bridge: AirshipBridge<ModalResult>,
   exchanges: EdgePluginMap<EdgeSwapConfig>,
   selected: string | void
 }
@@ -44,7 +46,7 @@ export function SwapPreferredModal (props: Props) {
         }
 
     return (
-      <TouchableOpacity onPress={() => bridge.resolve(pluginId)}>
+      <TouchableOpacity onPress={() => bridge.resolve({ type: 'select', pluginId })}>
         <View style={styles.row}>
           {icon}
           <Text style={styles.rowText}>{text}</Text>
@@ -55,7 +57,7 @@ export function SwapPreferredModal (props: Props) {
   }
 
   return (
-    <AirshipModal bridge={bridge} padding={margin} onCancel={() => bridge.resolve(selected)}>
+    <AirshipModal bridge={bridge} padding={margin} onCancel={() => bridge.resolve({ type: 'cancel' })}>
       {gap => (
         <Fragment>
           <Text style={styles.headerText}>{s.strings.swap_preferred_header}</Text>

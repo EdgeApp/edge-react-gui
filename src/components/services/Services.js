@@ -12,14 +12,14 @@ import { type Store, applyMiddleware, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
 
 import ENV from '../../../env.json'
+import { loadInstallReason } from '../../actions/InstallReasonActions.js'
 import Main from '../../connectors/MainConnector.js'
 import { setIntlLocale } from '../../locales/intl.js'
 import { selectLocale } from '../../locales/strings.js'
 import { rootReducer } from '../../reducers/RootReducer.js'
 import { type Action } from '../../types/reduxActions.js'
-import { type State } from '../../types/reduxTypes.js'
+import { type Dispatch, type State } from '../../types/reduxTypes.js'
 import errorAlert from '../../util/errorAlert.js'
-import { loadInstallReason } from '../../util/installReason.js'
 import loginStatusChecker from '../../util/loginStatusChecker.js'
 import perfLogger from '../../util/perfLogger.js'
 import { ModalProvider } from '../common/ModalProvider.js'
@@ -38,6 +38,7 @@ type Props = { context: EdgeContext }
  */
 export class Services extends PureComponent<Props> {
   store: Store<State, Action>
+  dispatch: Dispatch
 
   constructor (props: Props) {
     super(props)
@@ -52,6 +53,8 @@ export class Services extends PureComponent<Props> {
 
     const initialState: Object = {}
     this.store = createStore(rootReducer, initialState, composeEnhancers(applyMiddleware(...middleware)))
+    const flowHack: any = this.store.dispatch
+    this.dispatch = flowHack // Flow doesn't know about redux-thunk
 
     // Put the context into Redux:
     const { context } = props
@@ -60,10 +63,10 @@ export class Services extends PureComponent<Props> {
       type: 'CORE/CONTEXT/ADD_CONTEXT',
       data: { context, disklet }
     })
-    loadInstallReason(disklet, context.localUsers.length === 0)
   }
 
   componentDidMount () {
+    this.dispatch(loadInstallReason())
     setIntlLocale(Locale.constants())
     selectLocale(DeviceInfo.getDeviceLocale())
   }

@@ -15,6 +15,7 @@ import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
+import { trackConversion } from '../actions/TrackingActions.js'
 import { SwapVerifyShapeshiftModal } from '../components/modals/SwapVerifyShapeshiftModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants'
@@ -23,9 +24,11 @@ import s from '../locales/strings.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors'
 import * as SETTINGS_SELECTORS from '../modules/Settings/selectors.js'
 import * as UI_SELECTORS from '../modules/UI/selectors'
+import { getCreationTweaks } from '../selectors/AccountSelectors.js'
+import { getActivePlugins } from '../types/AppTweaks.js'
 import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiSwapInfo, GuiWallet } from '../types/types.js'
-import { trackConversion, trackEvent } from '../util/tracking.js'
+import { logEvent } from '../util/tracking.js'
 import * as UTILS from '../util/utils'
 import { updateSwapCount } from './RequestReviewActions.js'
 
@@ -117,8 +120,16 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
 
 async function fetchSwapQuote (state: State, request: EdgeSwapRequest): Promise<GuiSwapInfo> {
   const account = CORE_SELECTORS.getAccount(state)
-  const { preferredSwapPluginId } = state.ui.settings
-  const quote: EdgeSwapQuote = await account.fetchSwapQuote(request, { preferPluginId: preferredSwapPluginId })
+
+  // Find preferred swap provider:
+  const activePlugins = getActivePlugins(getCreationTweaks(state), state.ui.settings.preferredSwapPluginId)
+  const preferPluginId = activePlugins.preferredSwapPluginId
+  if (preferPluginId != null) {
+    console.log(`Preferring ${preferPluginId} from ${activePlugins.preferredSwapSource}`)
+  }
+
+  // Get the quote:
+  const quote: EdgeSwapQuote = await account.fetchSwapQuote(request, { preferPluginId })
 
   // Currency conversion tools:
   const { fromWallet, toWallet, fromCurrencyCode, toCurrencyCode } = request
@@ -271,7 +282,7 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
   const { fromWallet, toWallet, toCurrencyCode } = request
 
   try {
-    trackEvent('SwapStart')
+    logEvent('SwapStart')
     const broadcastedTransaction: EdgeTransaction = await quote.approve()
     await fromWallet.saveTx(broadcastedTransaction)
 
@@ -331,7 +342,7 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
     })
   } catch (error) {
     console.log(error)
-    trackEvent('SwapFailed')
+    logEvent('SwapFailed')
     dispatch({ type: 'DONE_SHIFT_TRANSACTION' })
     setTimeout(() => {
       Alert.alert(s.strings.exchange_failed, error.message)

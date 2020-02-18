@@ -2,6 +2,9 @@
 
 exports[`initialState 1`] = `
 Object {
+  "account": Object {
+    "creationReason": null,
+  },
   "contacts": Array [],
   "core": Object {
     "account": Object {},
@@ -70,6 +73,13 @@ Object {
     "walletListModalVisible": false,
   },
   "exchangeRates": Object {},
+  "installReason": Object {
+    "appTweaks": Object {
+      "currencyCodes": undefined,
+      "messages": Array [],
+      "plugins": Array [],
+    },
+  },
   "nextUsername": null,
   "permissions": Object {
     "camera": "undetermined",
