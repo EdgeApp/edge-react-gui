@@ -116,7 +116,6 @@ export const selectEOSWallet = (walletId: string, currencyCode: string, from?: s
 
 export const selectWalletFromModal = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
   dispatch(selectWallet(walletId, currencyCode))
-  dispatch({ type: 'DISABLE_WALLET_LIST_MODAL_VISIBILITY' })
   dispatch(refreshReceiveAddressRequest(walletId))
 }
 
@@ -168,11 +167,6 @@ export const refreshWallet = (walletId: string) => (dispatch: Dispatch, getState
 }
 
 export const upsertWallets = (wallets: Array<EdgeCurrencyWallet>) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const loginStatus = SETTINGS_SELECTORS.getLoginStatus(state)
-  if (!loginStatus) {
-    dispatch({ type: 'LOGGED_OUT' })
-  }
   dispatch(updateExchangeRates())
   dispatch({
     type: 'UI/WALLETS/UPSERT_WALLETS',

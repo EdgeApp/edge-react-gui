@@ -1,23 +1,7 @@
 // @flow
 
 import THEME from '../../theme/variables/airbitz'
-import { PLATFORM } from '../../theme/variables/platform'
 import { scale } from '../../util/scaling.js'
-import * as Styles from '../indexStyles'
-
-const HeaderMenuRightSideStyle = {
-  menuContainer: {
-    width: 300,
-    height: PLATFORM.deviceHeight,
-    backgroundColor: 'rgba(255,255,255,.8)'
-  },
-  buttonContainer: {
-    width: 40,
-    height: 35,
-    backgroundColor: 'rgba(255,255,255,0)'
-  },
-  iconButton: { ...Styles.IconButtonStyle, iconSize: 15 }
-}
 
 const dropdownTriggerWidth = 46
 
@@ -82,6 +66,5 @@ const MenuDropDownStyleHeader = {
   ...MenuDropDownStyle
 }
 
-export { HeaderMenuRightSideStyle }
 export { MenuDropDownStyle }
 export { MenuDropDownStyleHeader }

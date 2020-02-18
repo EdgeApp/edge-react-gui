@@ -66,7 +66,6 @@ export type TransactionDetailsOwnProps = {
 
 export type TransactionDetailsDispatchProps = {
   setNewSubcategory: (string, Array<string>) => void,
-  openHelpModal: () => void,
   setTransactionDetails: (transaction: EdgeTransaction, edgeMetadata: EdgeMetadata) => void,
   getSubcategories: () => void
 }
@@ -388,10 +387,6 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     this.refs._scrollView.scrollTo({ x: 0, y: 90, animated: true })
   }
 
-  amountAreaOpenModal = () => {
-    this.props.openHelpModal()
-  }
-
   onPressAdvancedDetailsButton = async () => {
     const { edgeTransaction } = this.props
     let txExplorerLink = null
@@ -587,7 +582,6 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                 color={categoryColor}
                 onFocusFiatAmount={this.onFocusFiatAmount}
                 walletDefaultDenomProps={this.state.walletDefaultDenomProps}
-                openModalFxn={this.amountAreaOpenModal}
                 guiWallet={this.guiWallet}
                 onPressAdvancedDetailsButton={this.onPressAdvancedDetailsButton}
                 txExplorerUrl={txExplorerLink}

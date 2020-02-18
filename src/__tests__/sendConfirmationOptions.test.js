@@ -12,7 +12,6 @@ describe('SendConfirmation', () => {
 
     const props = {
       changeMiningFee: jest.fn,
-      openHelpModal: jest.fn,
       sendMaxSpend: jest.fn,
       uniqueIdentifierModalActivated: jest.fn,
       sourceWallet: {},
@@ -29,7 +28,6 @@ describe('SendConfirmation', () => {
 
     const props = {
       changeMiningFee: jest.fn,
-      openHelpModal: jest.fn,
       sendMaxSpend: jest.fn,
       uniqueIdentifierModalActivated: jest.fn,
       sourceWallet: {},
@@ -46,7 +44,6 @@ describe('SendConfirmation', () => {
 
     const props = {
       changeMiningFee: jest.fn,
-      openHelpModal: jest.fn,
       sendMaxSpend: jest.fn,
       uniqueIdentifierModalActivated: jest.fn,
       sourceWallet: {},
@@ -63,7 +60,6 @@ describe('SendConfirmation', () => {
 
     const props = {
       changeMiningFee: jest.fn,
-      openHelpModal: jest.fn,
       sendMaxSpend: jest.fn,
       uniqueIdentifierModalActivated: jest.fn,
       sourceWallet: {},

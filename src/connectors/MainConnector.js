@@ -14,9 +14,6 @@ import type { Dispatch } from '../types/reduxTypes.js'
 
 const mapStateToProps = () => ({})
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  hideWalletListModal () {
-    return dispatch({ type: 'DISABLE_WALLET_LIST_MODAL_VISIBILITY' })
-  },
   requestPermission: permission => {
     return requestPermission(permission)
   },

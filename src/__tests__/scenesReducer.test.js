@@ -3,7 +3,6 @@
 /* globals test expect */
 
 import { initialState as SendConfirmationInitialState } from '../modules/UI/scenes/SendConfirmation/selectors.js'
-import { request } from '../reducers/scenes/RequestReducer.js'
 import { scenes as scenesReducer } from '../reducers/scenes/ScenesReducer.js'
 
 const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
@@ -38,7 +37,6 @@ test('initialState', () => {
     exchangeRate: {
       exchangeRates: {}
     },
-    request: request(undefined, dummyAction),
     requestType: {
       useLegacyAddress: false,
       uniqueLegacyAddress: false

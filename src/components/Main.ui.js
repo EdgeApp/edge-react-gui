@@ -125,7 +125,6 @@ const DEFAULT_FIAT = s.strings.title_default_fiat
 const TERMS_OF_SERVICE = s.strings.title_terms_of_service
 
 type Props = {
-  hideWalletListModal: () => mixed,
   requestPermission: (permission: Permission) => void,
   username?: string,
   dispatchEnableScan: () => void,
@@ -358,7 +357,6 @@ export default class Main extends Component<Props> {
                       key={Constants.TRANSACTION_LIST}
                       onEnter={() => {
                         this.props.requestPermission(PermissionStrings.CONTACTS)
-                        this.props.hideWalletListModal()
                       }}
                       navTransparent={true}
                       component={TransactionListConnector}
@@ -512,7 +510,6 @@ export default class Main extends Component<Props> {
                     onEnter={props => {
                       this.props.requestPermission(PermissionStrings.CAMERA)
                       this.props.dispatchEnableScan()
-                      this.props.hideWalletListModal()
                       this.props.checkAndShowGetCryptoModal(props.data)
                     }}
                     onExit={this.props.dispatchDisableScan}
@@ -535,7 +532,6 @@ export default class Main extends Component<Props> {
                   <Scene
                     key={Constants.REQUEST}
                     navTransparent={true}
-                    onEnter={this.props.hideWalletListModal}
                     component={Request}
                     renderTitle={this.renderHeaderWalletSelector()}
                     renderLeftButton={this.renderBackButton()}

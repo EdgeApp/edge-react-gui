@@ -130,13 +130,6 @@ Object {
       "passwordReminderModal": Object {
         "status": null,
       },
-      "request": Object {
-        "receiveAddress": Object {
-          "metadata": Object {},
-          "nativeAmount": "0",
-          "publicAddress": "",
-        },
-      },
       "requestType": Object {
         "uniqueLegacyAddress": false,
         "useLegacyAddress": false,
