@@ -74,6 +74,9 @@ function handleLink (dispatch: Dispatch, state: ReduxState, link: DeepLink): boo
       }
       return true
 
+    case 'promotion':
+      return true
+
     case 'returnAddress': {
       if (!hasCurrentWallet) return false
       // The code for dealing with this is a mess, so fake a barcode scan:

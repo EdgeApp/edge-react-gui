@@ -83,6 +83,16 @@ describe('parseDeepLink', function () {
     })
   })
 
+  describe('promotion', function () {
+    it('https://dl.edge.app', function () {
+      const result = parseDeepLink('https://dl.edge.app/bob')
+      expect(result.type).toBe('promotion')
+
+      if (result.type !== 'promotion') return
+      expect(result.installerId).toBe('bob')
+    })
+  })
+
   describe('returnAddress', function () {
     it('bitwage', function () {
       const uri =

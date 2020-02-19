@@ -19,6 +19,11 @@ export type PluginLink = {
   query: { [key: string]: string }
 }
 
+export type PromotionLink = {
+  type: 'promotion',
+  installerId?: string
+}
+
 export type ReturnAddressLink = {
   type: 'returnAddress',
   uri: string, // TODO: Remove once we stop needing to double-parse
@@ -31,6 +36,7 @@ export type DeepLink =
   | EdgeLoginLink
   | PasswordRecoveryLink
   | PluginLink
+  | PromotionLink
   | ReturnAddressLink
   | {
       type: 'other',
@@ -72,6 +78,13 @@ export function parseDeepLink (uri: string): DeepLink {
     const [pluginId = ''] = pathParts.splice(1, 1)
     const path = pathParts.join('/')
     return { type: 'plugin', pluginId, path, query: url.query }
+  }
+
+  // Check for promotion links:
+  if ((url.protocol === 'https:' && url.host === 'dl.edge.app') || (url.protocol === 'edge:' && url.host === 'promotion')) {
+    const pathParts = url.pathname.split('/')
+    const installerId = pathParts[1]
+    return { type: 'promotion', installerId }
   }
 
   // Check for the bitcoin-ret protocol:
