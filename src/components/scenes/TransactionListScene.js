@@ -163,7 +163,8 @@ export class TransactionList extends Component<Props, State> {
       balanceInFiat,
       fiatCurrencyCode,
       isoFiatCurrencyCode,
-      isBalanceVisible
+      isBalanceVisible,
+      transactions
     } = this.props
 
     // should we get rid of "loading" area? Currently unused
@@ -267,8 +268,8 @@ export class TransactionList extends Component<Props, State> {
           </Gradient>
           <WiredProgressBar progress={getSelectedWalletLoadingPercent} />
         </TouchableOpacity>
-        {Constants.getSpecialCurrencyInfo(currencyCode).showEarnInterestCard && (
-          <TouchableOpacity onPress={() => Actions[Constants.PLUGIN_VIEW]({ plugin: Constants.mock_plugin })} style={styles.earnInterestContainer}>
+        {transactions.length !== 0 && Constants.getSpecialCurrencyInfo(currencyCode).showEarnInterestCard && (
+          <TouchableOpacity onPress={() => Actions[Constants.PLUGIN_EARN_INTEREST]({ plugin: Constants.mock_plugin })} style={styles.earnInterestContainer}>
             <View style={styles.earnInterestBox}>
               <Image style={styles.earnInterestImage} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES['ETH'] }} resizeMode={'cover'} />
               <T style={styles.earnInterestText}>{sprintf(s.strings.earn_interest_on, currencyName)}</T>

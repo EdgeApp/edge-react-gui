@@ -502,6 +502,18 @@ export class MainComponent extends Component<Props> {
                   />
                 </Stack>
 
+                <Stack key={Constants.PLUGIN_EARN_INTEREST}>
+                  <Scene
+                    key={Constants.PLUGIN_EARN_INTEREST}
+                    navTransparent={true}
+                    component={ifLoggedIn(PluginViewConnect, LoadingScene)}
+                    renderTitle={props => this.renderTitle(props.plugin.name)}
+                    renderLeftButton={renderPluginBackButton(BACK)}
+                    renderRightButton={this.renderExitButton()}
+                    hideTabBar
+                  />
+                </Stack>
+
                 <Stack key={Constants.SETTINGS_OVERVIEW_TAB} hideDrawerButton={true}>
                   <Scene
                     key={Constants.SETTINGS_OVERVIEW}

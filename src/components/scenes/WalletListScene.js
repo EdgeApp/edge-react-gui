@@ -508,7 +508,7 @@ export default class WalletList extends Component<Props, State> {
           </View>
         </TouchableWithoutFeedback>
         <TouchableWithoutFeedback
-          onPress={() => Actions[Constants.PLUGIN_VIEW]({ plugin: Constants.mock_plugin })}
+          onPress={() => Actions[Constants.PLUGIN_EARN_INTEREST]({ plugin: Constants.mock_plugin })}
           style={buyMultipleCryptoStyle.buyMultipleCryptoContainer}
         >
           <View style={buyMultipleCryptoStyle.buyMultipleCryptoBox}>

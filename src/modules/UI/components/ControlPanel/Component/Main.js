@@ -132,7 +132,7 @@ const SellButton = () => {
   )
 }
 
-const earnInterestAction = () => Actions[Constants.PLUGIN_VIEW]({ plugin: Constants.mock_plugin })
+const earnInterestAction = () => Actions[Constants.PLUGIN_EARN_INTEREST]({ plugin: Constants.mock_plugin })
 const EarnInterestButton = () => {
   return (
     <Button onPress={earnInterestAction}>

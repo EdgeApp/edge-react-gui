@@ -383,10 +383,11 @@ export const styles = {
     fontSize: 12
   },
   earnInterestContainer: {
+    backgroundColor: THEME.COLORS.GRAY_4,
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    margin: scale(15),
+    padding: scale(15),
     marginBottom: 0
   },
   earnInterestBox: {
