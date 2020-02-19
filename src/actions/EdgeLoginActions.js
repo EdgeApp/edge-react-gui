@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeLobby } from 'edge-core-js'
+import { type EdgeLobby } from 'edge-core-js/types'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import parse from 'url-parse'
@@ -8,25 +8,33 @@ import parse from 'url-parse'
 import { launchModal } from '../components/common/ModalProvider.js'
 import s from '../locales/strings.js'
 import { errorModal } from '../modules/UI/components/Modals/ErrorModal.js'
+import { type Dispatch, type GetState } from '../types/reduxTypes.js'
 
-export const loginWithEdge = (url: string) => async (dispatch: any, getState: any) => {
+export const loginWithEdge = (url: string) => (dispatch: Dispatch, getState: GetState) => {
   const parsedUrl = parse(url, {}, false)
   const token = getToken(parsedUrl)
   const state = getState()
   const account = state.core.account
-  const lobby: EdgeLobby = await account.fetchLobby(token).catch(error => {
-    dispatch({ type: 'SET_LOBBY_ERROR', data: error.message })
-  })
-  if (lobby) {
-    dispatch({ type: 'SAVE_EDGE_LOBBY', data: lobby })
-  }
+  account
+    .fetchLobby(token)
+    .then((lobby: EdgeLobby) => {
+      dispatch({ type: 'SAVE_EDGE_LOBBY', data: lobby })
+    })
+    .catch(error => {
+      dispatch({ type: 'SET_LOBBY_ERROR', data: error.message })
+    })
 }
 
-export const lobbyLogin = () => async (dispatch: any, getState: any) => {
+export const lobbyLogin = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
+  const { lobby } = state.core.edgeLogin
+  if (lobby == null) return
+  const { loginRequest } = lobby
+  if (loginRequest == null) return
+
   dispatch({ type: 'PROCESS_EDGE_LOGIN' })
   try {
-    await state.core.edgeLogin.lobby.loginRequest.approve()
+    await loginRequest.approve()
     dispatch({ type: 'INVALIDATE_EDGE_LOBBY' })
     Actions.pop()
     setTimeout(() => {
@@ -39,7 +47,7 @@ export const lobbyLogin = () => async (dispatch: any, getState: any) => {
   }
 }
 
-const getToken = (data: any) => {
+const getToken = (data: any): string => {
   if (data.protocol === 'edge:' || data.protocol === 'edge-ret:' || data.protocol === 'airbitz:' || data.protocol === 'airbitz-ret:') {
     const splitArray = data.href.split('edge/')
     return splitArray[1]
@@ -48,4 +56,5 @@ const getToken = (data: any) => {
     const splitArray = data.query.split('address=')
     return splitArray[1]
   }
+  return ''
 }
