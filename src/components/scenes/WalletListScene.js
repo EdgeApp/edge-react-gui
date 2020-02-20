@@ -11,7 +11,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import iconImage from '../../assets/images/otp/OTP-badge_sm.png'
 import WalletIcon from '../../assets/images/walletlist/my-wallets.png'
-import WalletOptions from '../../connectors/WalletOptionsConnector.js'
+import XPubModal from '../../connectors/XPubModalConnector.js'
 import * as Constants from '../../constants/indexConstants.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
@@ -24,7 +24,7 @@ import { WiredProgressBar } from '../../modules/UI/components/WiredProgressBar/W
 import { getWalletLoadingPercent } from '../../modules/UI/selectors.js'
 import { addWalletStyle } from '../../styles/components/AddWalletStyle.js'
 import { buyMultipleCryptoStyle } from '../../styles/components/BuyCryptoStyle.js'
-import { TwoButtonModalStyle } from '../../styles/indexStyles.js'
+import { TwoButtonModalStyle } from '../../styles/components/TwoButtonModalStyle.js'
 import styles from '../../styles/scenes/WalletListStyle'
 import THEME from '../../theme/variables/airbitz'
 import { type AppMessage, type AppTweaks, getActiveMessage } from '../../types/AppTweaks.js'
@@ -36,7 +36,8 @@ import FullWalletListRow from '../common/FullWalletListRow.js'
 import { launchModal } from '../common/ModalProvider.js'
 import SortableWalletListRow from '../common/SortableWalletListRow.js'
 import { WiredBalanceBox } from '../common/WiredBalanceBox.js'
-import { StaticModalComponent, TwoButtonTextModalComponent } from '../indexComponents'
+import { StaticModalComponent } from '../modals/StaticModalComponent.js'
+import { TwoButtonTextModalComponent } from '../modals/TwoButtonTextModalComponent.js'
 
 const DONE_TEXT = s.strings.string_done_cap
 const WALLETS_HEADER_TEXT = s.strings.fragment_wallets_header
@@ -161,7 +162,7 @@ export default class WalletList extends Component<Props, State> {
     return (
       <SafeAreaView>
         <View style={styles.container}>
-          <WalletOptions />
+          <XPubModal />
           <Gradient style={styles.gradient} />
           <WiredProgressBar progress={getWalletLoadingPercent} />
           <WiredBalanceBox

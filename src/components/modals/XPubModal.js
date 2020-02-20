@@ -10,7 +10,6 @@ import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import { InteractiveModal } from '../../modules/UI/components/Modals/InteractiveModal/InteractiveModal.ui.js'
 import { scale } from '../../util/scaling.js'
 import { showError, showToast } from '../services/AirshipInstance.js'
-// import {sprintf} from "sprintf-js"
 
 type XPubModalOwnProps = {}
 

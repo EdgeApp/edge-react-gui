@@ -3,9 +3,9 @@
 import { bns } from 'biggystring'
 import { connect } from 'react-redux'
 
+import { createCurrencyWalletAndAddToSwap } from '../../actions/CreateWalletActions.js'
 import type { SetNativeAmountInfo } from '../../actions/CryptoExchangeActions'
 import { getQuoteForTransaction, selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
-import { createCurrencyWalletAndAddToSwap } from '../../actions/indexActions'
 import { updateMostRecentWalletsSelected } from '../../actions/WalletActions'
 import type { CryptoExchangeSceneComponentDispatchProps, CryptoExchangeSceneComponentStateProps } from '../../components/scenes/CryptoExchangeScene'
 import { CryptoExchangeScene } from '../../components/scenes/CryptoExchangeScene'

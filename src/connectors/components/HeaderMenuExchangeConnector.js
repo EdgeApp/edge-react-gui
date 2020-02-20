@@ -3,18 +3,18 @@
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import { exchangeMax } from '../../actions/indexActions'
+import { exchangeMax } from '../../actions/CryptoExchangeActions.js'
 import { showHelpModal } from '../../components/modals/HelpModal.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { type DispatchProps, type StateProps, MenuDropDown } from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui.js'
-import * as Styles from '../../styles/indexStyles'
+import { MenuDropDownStyle } from '../../styles/components/HeaderMenuDropDownStyles.js'
 import THEME from '../../theme/variables/airbitz'
 import type { Dispatch, State } from '../../types/reduxTypes.js'
 
 export const dropDownStyle = {
-  ...Styles.MenuDropDownStyleHeader,
-  icon: { ...Styles.MenuDropDownStyle.icon, color: THEME.COLORS.WHITE }
+  ...MenuDropDownStyle,
+  icon: { ...MenuDropDownStyle.icon, color: THEME.COLORS.WHITE }
 }
 export const mapStateToProps = (state: State): StateProps => {
   const data = [

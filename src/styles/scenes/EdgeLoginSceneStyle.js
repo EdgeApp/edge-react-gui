@@ -3,14 +3,7 @@
 import THEME from '../../theme/variables/airbitz'
 import { isIphoneX } from '../../util/isIphoneX.js'
 
-const EdgeLoginScreen = {
-  container: {
-    flex: 1
-  },
-  gradient: {
-    height: THEME.HEADER,
-    width: '100%'
-  },
+export const styles = {
   header: {
     position: 'relative',
     flex: 3,
@@ -66,7 +59,7 @@ const EdgeLoginScreen = {
   spinnerContainer: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'space-around'
+    justifyContent: 'center'
   },
   bodyText: {
     marginRight: '5%',
@@ -115,5 +108,3 @@ const EdgeLoginScreen = {
     borderRadius: 3
   }
 }
-
-export { EdgeLoginScreen }

@@ -2,7 +2,6 @@
 
 import React, { Component } from 'react'
 
-// import * as Constants from '../../../common/constants'
 import { Input, InputWithAutoFocus } from '../materialWrappers/indexMaterial'
 
 /*

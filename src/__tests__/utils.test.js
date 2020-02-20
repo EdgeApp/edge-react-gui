@@ -18,8 +18,6 @@ import {
   isValidInput,
   mergeTokens,
   MILLISECONDS_PER_DAY,
-  msToSeconds,
-  secondsToMs,
   truncateDecimals
 } from '../util/utils.js'
 
@@ -580,18 +578,6 @@ describe('getObjectDiff', () => {
       }
     }
     expect(getObjectDiff(obj1, obj2, { b: true })).toEqual('b')
-  })
-})
-
-describe('secondsToMs', () => {
-  test('converts 1 seconds to 1000 ms', () => {
-    expect(secondsToMs(1)).toEqual(1000)
-  })
-})
-
-describe('msToSeconds', () => {
-  test('converts 1000 ms to 1 second', () => {
-    expect(msToSeconds(1000)).toEqual(1)
   })
 })
 

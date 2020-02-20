@@ -62,9 +62,4 @@ const MenuDropDownStyle = {
   }
 }
 
-const MenuDropDownStyleHeader = {
-  ...MenuDropDownStyle
-}
-
 export { MenuDropDownStyle }
-export { MenuDropDownStyleHeader }

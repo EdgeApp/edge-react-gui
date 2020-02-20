@@ -519,20 +519,10 @@ export const isTooFarBehind = (dateInSeconds: number) => {
   return dateInSeconds < dateOfBitcoinGenesisInSeconds
 }
 
-export const autoCorrectDate = (dateInSeconds: number, currentDateInSeconds: number = msToSeconds(Date.now())) => {
+export const autoCorrectDate = (dateInSeconds: number, currentDateInSeconds: number = Date.now() / 1000) => {
   if (isTooFarAhead(dateInSeconds, currentDateInSeconds)) return dateInSeconds / 1000
   if (isTooFarBehind(dateInSeconds)) return dateInSeconds * 1000
   return dateInSeconds
-}
-
-export const secondsToMs = (dateInSeconds: number) => {
-  const msPerSecond = 1000
-  return dateInSeconds * msPerSecond
-}
-
-export const msToSeconds = (dateInMs: number) => {
-  const msPerSecond = 1000
-  return dateInMs / msPerSecond
 }
 
 // Strips special characters and replaces spaces with hyphens
