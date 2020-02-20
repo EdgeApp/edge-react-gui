@@ -4,6 +4,7 @@ import { abs, sub, bns } from 'biggystring'
 import dateformat from 'dateformat'
 import type { EdgeCurrencyInfo, EdgeDenomination, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import React, { Component, Fragment } from 'react'
+import type { Ref } from 'react'
 import { Animated, Easing, Keyboard, ScrollView, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
@@ -12,9 +13,8 @@ import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import FormattedText from '../../modules/UI/components/FormattedText/index'
 import { PayeeIcon } from '../../modules/UI/components/PayeeIcon/PayeeIcon.ui.js'
-import styles, { styles as styleRaw, iconSize } from '../../styles/scenes/TransactionDetailsStyle'
+import styles, { styles as styleRaw, iconSize, materialInput } from '../../styles/scenes/TransactionDetailsStyle'
 import THEME from '../../theme/variables/airbitz'
-import type { GuiContact, GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { autoCorrectDate, getFiatSymbol, getWalletDefaultDenomProps, inputBottomPadding, isCryptoParentCurrency } from '../../util/utils'
 import ContactSearchResults from '../common/ContactSearchResults.js'
@@ -29,6 +29,11 @@ import * as Constants from '../../constants/indexConstants'
 import * as UTILS from '../../util/utils'
 import { type AirshipBridge, AirshipModal } from '../modals/modalParts'
 import { Airship } from '../services/AirshipInstance.js'
+import { FormField } from '../common/FormField.js'
+import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
+import type { GuiContact, GuiWallet } from '../../types/types.js'
+import { TransactionDetailsPayeeInput } from '../common/TransactionDetailsPayeeInput'
+import { TransactionDetailsFiatInput } from '../common/TransactionDetailsFiatInput'
 
 const EXCHANGE_TEXT = s.strings.fragment_transaction_exchange
 const EXPENSE_TEXT = s.strings.fragment_transaction_expense
@@ -102,9 +107,11 @@ type TransactionDetailsProps = TransactionDetailsOwnProps & TransactionDetailsDi
 export class TransactionDetails extends Component<TransactionDetailsProps, State> {
   guiWallet: GuiWallet
   fiatSymbol: string
+  notesInput: any
 
   constructor (props: TransactionDetailsProps) {
     super(props)
+    this.notesInput = React.createRef()
     const edgeTransaction = {
       ...props.edgeTransaction,
       date: autoCorrectDate(props.edgeTransaction.date)
@@ -186,13 +193,11 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
 
   onFocusPayee = () => {
     this.enablePayeeVisibility()
-    this.refs._scrollView.scrollTo({ x: 0, y: 62, animated: true })
   }
 
   onBlurPayee = () => {
     this.disablePayeeVisibility()
     Keyboard.dismiss()
-    this.refs._scrollView.scrollTo({ x: 0, y: 0, animated: true })
   }
 
   enablePayeeVisibility = () => {
@@ -226,42 +231,8 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
   onSelectPayee = (payeeName: string, thumbnail: string) => {
     this.onChangePayee(payeeName, thumbnail)
     this.onBlurPayee()
-    this.refs._scrollView.scrollTo({ x: 0, y: 0, animated: true })
   }
 
-  onChangeFiat = (input: string) => {
-    // This next chained statement / expression is to ensure only one decimal place. Remember decimals are commas in some locales
-    // double-check that this implementation change works!
-    const newInputStripped = input
-      .replace(/[^\d.,]/, '')
-      .replace(/\./, 'x')
-      .replace(/\./g, '')
-      .replace(/x/, '.')
-      .replace(/,/, 'x')
-      .replace(/,/g, '')
-      .replace(/x/, ',')
-    const newInputFiltered =
-      (isNaN(newInputStripped.replace(',', '.')) && (newInputStripped !== ',' && newInputStripped !== '.')) || newInputStripped === '' ? '' : newInputStripped
-    this.setState({
-      amountFiat: newInputFiltered
-    })
-  }
-
-  onBlurFiat = () => {
-    // needs badly to be flowed and / or research best practices for converting TextInput to float / fiat
-    // keep in mind that TextField returns a string, and amountFiat will need to be a floating point number
-    let amountFiat
-    if (parseFloat(this.state.amountFiat)) {
-      const amountFiatOneDecimal = this.state.amountFiat.toString().replace(/[^\d.,]/, '')
-      const absoluteAmountFiatOneDecimal = bns.abs(amountFiatOneDecimal)
-      amountFiat = bns.toFixed(absoluteAmountFiatOneDecimal, 2, 2)
-    } else {
-      amountFiat = intl.formatNumber('0.00')
-    }
-    this.setState({
-      amountFiat
-    })
-  }
 
   onChangeCategory = (input: string) => {
     this.setState({
@@ -528,49 +499,44 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                   onChangeText={this.onChangeNotes}
                   defaultValue={notes}
                   style={[styles.notesInput]}
-                  placeholderTextColor={THEME.COLORS.GRAY_}
+                  placeholderTextColor={THEME.COLORS.GRAY_3}
                   placeholder={s.strings.transaction_details_notes_title}
                   autoCapitalize="sentences"
                   autoCorrect={false}
-                  ref={ref => { this.notesInput = ref }}
+                  ref={this.notesInput}
                 />
               </View>
             </TouchableWithoutFeedback>
           </View>
         </TouchableWithoutFeedback>
       </AirshipModal>
-    )).then((_) => {
-      this.onSaveTxDetails()
-    })
+    )).then(_ => {})
   }
 
+  onChangeFiat = (amountFiat: string) =>  this.setState({ amountFiat })
   renderFiatInput () {
-    const { fiatCurrencyCode } = this.guiWallet
     Airship.show(bridge => (
-      <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(null)}>
-        <TouchableWithoutFeedback onPress={() => bridge.resolve(null)}>
-          <View style={styles.airshipContainer}>
-            <FormattedText style={styles.airshipHeader}>{fiatCurrencyCode} AMOUNT</FormattedText>
-              <TextInput
-                underlineColorAndroid={'transparent'}
-                returnKeyType="done"
-                autoCapitalize="none"
-                autoCorrect={false}
-                onFocus={this.onFocusFiatAmount}
-                onBlur={this.onBlurFiat}
-                onChangeText={this.onChangeFiat}
-                style={styles.fiatInput}
-                keyboardType="numeric"
-                value={UTILS.truncateDecimals(this.state.amountFiat.toString().replace('-', ''), 2, true)}
-              />
-          </View>
-        </TouchableWithoutFeedback>
-      </AirshipModal>
-    )).then((_) => {
-      this.onSaveTxDetails()
-    })
+      <TransactionDetailsFiatInput
+        bridge={bridge}
+        currency={this.guiWallet.fiatCurrencyCode}
+        amount={this.state.amountFiat}
+        onChange={this.onChangeFiat}
+      />
+    )).then(_ => {})
   }
 
+  openPayeeInput () {
+    const payeeStatus = this.state.direction === 'send' ? s.strings.transaction_details_recepient : s.strings.transaction_details_sender
+    Airship.show(bridge => (
+      <TransactionDetailsPayeeInput
+        bridge={bridge}
+        payeeStatus={payeeStatus}
+        payeeName={this.state.payeeName}
+        onChangePayee={this.onChangePayee}
+        contacts={this.props.contacts}
+      />
+    )).then(_ => {})
+  }
 
   render () {
     let feeSyntax, leftData, convertedAmount, amountString, symbolString, feeDenomination
@@ -634,14 +600,16 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
         <SceneWrapper bodySplit={scale(24)}>
           <View style={styles.container}>
             <View style={styles.tilesContainer}>
-              <View style={styles.tileContainerBig}>
-                <Icon type={Constants.ION_ICONS} name={Constants.CREATE_OUTLINE} size={16} style={styles.tileIcon}/>
-                <FormattedText style={styles.tileTextTop}>Recipent Name</FormattedText>
-                <View style={styles.tileRow}>
-                  <Icon type={Constants.ION_ICONS} name={Constants.CONTACT} size={iconSize.avatar} style={styles.tileAvatarIcon}/>
-                  <FormattedText style={styles.tileTextBottom}>{ payeeName }</FormattedText>
+              <TouchableWithoutFeedback onPress={this.openPayeeInput}>
+                <View style={styles.tileContainerBig}>
+                  <Icon type={Constants.ION_ICONS} name={Constants.CREATE_OUTLINE} size={16} style={styles.tileIcon}/>
+                  <FormattedText style={styles.tileTextTop}>Recipent Name</FormattedText>
+                  <View style={styles.tileRow}>
+                    <Icon type={Constants.ION_ICONS} name={Constants.CONTACT} size={iconSize.avatar} style={styles.tileAvatarIcon}/>
+                    <FormattedText style={styles.tileTextBottom}>{ payeeName }</FormattedText>
+                  </View>
                 </View>
-              </View>
+              </TouchableWithoutFeedback>
               <View style={styles.tileContainer}>
                 <FormattedText style={styles.tileTextTop}>Bitcoin Amount</FormattedText>
                 <FormattedText style={styles.tileTextBottom}>{cryptoAmountString} (+10 fee)</FormattedText>
@@ -678,6 +646,12 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                 </View>
               </TouchableWithoutFeedback>
               <FormattedText style={styles.textTransactionData}>View Advance Transaction Data</FormattedText>
+              <View style={styles.spacer} />
+              <View style={styles.saveButtonContainer}>
+                <PrimaryButton style={styles.saveButton} onPress={this.onSaveTxDetails}>
+                  <PrimaryButton.Text>{s.strings.string_save}</PrimaryButton.Text>
+                </PrimaryButton>
+              </View>
             </View>
           </View>
         </SceneWrapper>

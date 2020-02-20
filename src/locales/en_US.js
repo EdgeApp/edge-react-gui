@@ -398,6 +398,10 @@ const strings = {
   amount_below_limit: 'Transaction amount is below the min limit of %1$s %2$s',
   transaction_details_category_title: 'Category',
   transaction_details_payee: 'Payee',
+  transaction_details_payer: 'Payer',
+  transaction_details_recepient: 'Recepient',
+  transaction_details_sender: 'Sender',
+  transaction_details_payee_input: 'Choose a %s',
   transaction_details_view_advanced_data: 'View advanced transaction data',
   transaction_details_copy_txid_message: 'Copied transaction ID',
   transaction_details_copy_raw_hex_message: 'Copied transaction raw hex',
@@ -406,7 +410,12 @@ const strings = {
   transaction_details_copy_tx_id: 'Copy Transaction ID',
   transaction_details_copy_signed_tx: 'Copy Signed Raw Hex',
   transaction_details_modal_debug_info: 'Debug Info:\n',
+<<<<<<< HEAD
   transaction_history_permission: 'Would you like to share the entire transaction history of %s with this partner?',
+=======
+  transaction_details_fiat_modal_header: '%s AMOUNT',
+  transaction_details_fiat_label: 'Choose an amount',
+>>>>>>> 351188ed6... Added Transaction Detaails Fiat input and Payee Name Input
   string_fee_with_brackets: '(Fee)',
   title_Header: 'Header',
   back_button_text: 'Back',
@@ -613,6 +622,7 @@ const strings = {
   wallet_list_modal_header_all: 'All Wallets',
   earn_interest: 'Earn Interest',
   earn_interest_on: 'Earn Interest on %s',
+  choose_an_amount: 'Choose an amount',
   fio_address_first_screen_title: 'Send and Receive with an easy to remember FIO Address!',
   fio_address_first_screen_item_1: 'Works across all tokens and coins',
   fio_address_first_screen_item_2: 'Secured from your wallet',

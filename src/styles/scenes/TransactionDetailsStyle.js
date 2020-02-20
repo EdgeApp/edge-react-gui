@@ -5,6 +5,9 @@ import { Platform, StyleSheet } from 'react-native'
 import THEME from '../../theme/variables/airbitz'
 import { PLATFORM } from '../../theme/variables/platform.js'
 import { scale } from '../../util/scaling.js'
+import { MaterialInputOnWhite } from '../../styles/components/FormFieldStyles'
+
+const { rem } = THEME
 
 export const activeOpacity = THEME.OPACITY.ACTIVE
 
@@ -22,18 +25,18 @@ export const styles = {
   },
   tileContainerBig: {
     width: '100%',
-    height: THEME.rem(4.5),
+    height: rem(4.5),
     backgroundColor: '#FFFFFF',
-    padding: THEME.rem(0.8),
+    padding: rem(0.8),
     borderBottomWidth: 1,
     borderBottomColor: THEME.COLORS.GRAY_3,
     justifyContent: 'center'
   },
   tileContainer: {
     width: '100%',
-    height: THEME.rem(4),
+    height: rem(4),
     backgroundColor: '#FFFFFF',
-    padding: THEME.rem(0.8),
+    padding: rem(0.8),
     borderBottomWidth: 1,
     borderBottomColor: THEME.COLORS.GRAY_3,
     justifyContent: 'center'
@@ -44,8 +47,8 @@ export const styles = {
   },
   textTransactionData: {
     color: THEME.COLORS.SECONDARY,
-    marginTop: THEME.rem(0.8),
-    fontSize: THEME.rem(0.9),
+    marginTop: rem(0.8),
+    fontSize: rem(0.9),
     width: '100%',
     marginLeft: 'auto',
     marginRight: 'auto',
@@ -53,25 +56,25 @@ export const styles = {
   },
   tileTextTop: {
     color: THEME.COLORS.SECONDARY,
-    fontSize: THEME.rem(0.7),
-    marginBottom: THEME.rem(0.1)
+    fontSize: rem(0.7),
+    marginBottom: rem(0.1)
   },
   tileTextBottom: {
     color: THEME.COLORS.GRAY_5,
-    fontSize: THEME.rem(1),
+    fontSize: rem(1),
   },
   tileTextPrice: {
     flex: 1,
     color: THEME.COLORS.GRAY_5,
-    fontSize: THEME.rem(1),
+    fontSize: rem(1),
   },
   tileTextPriceChange: {
     color: THEME.COLORS.ACCENT_RED,
-    fontSize: THEME.rem(1),
+    fontSize: rem(1),
   },
   tileTextNotes: {
     color: THEME.COLORS.GRAY_5,
-    fontSize: THEME.rem(0.9)
+    fontSize: rem(0.9)
   },
   tileIcon: {
     position: 'absolute',
@@ -80,31 +83,31 @@ export const styles = {
   },
   tileAvatarIcon: {
     color: THEME.COLORS.GRAY_2,
-    marginRight: THEME.rem(0.4)
+    marginRight: rem(0.4)
   },
   category: {
-    paddingHorizontal: THEME.rem(0.5),
-    paddingVertical: THEME.rem(0.3),
-    marginVertical: THEME.rem(0.3),
+    paddingHorizontal: rem(0.5),
+    paddingVertical: rem(0.3),
+    marginVertical: rem(0.3),
     backgroundColor: '#A4C7DF',
     borderRadius: 3
   },
   categoryText: {
     color: THEME.COLORS.PRIMARY,
-    fontSize: THEME.rem(0.9)
+    fontSize: rem(0.9)
   },
   subCategoryText: {
-    marginVertical: THEME.rem(0.3),
-    marginHorizontal: THEME.rem(0.7),
+    marginVertical: rem(0.3),
+    marginHorizontal: rem(0.7),
     color: THEME.COLORS.GRAY_5
   },
   airshipContainer: {
     flex: 1,
-    padding: THEME.rem(0.8)
+    padding: rem(0.8)
   },
   airshipHeader: {
-    fontSize: THEME.rem(1.2),
-    marginBottom: THEME.rem(1),
+    fontSize: rem(1.2),
+    marginBottom: rem(1),
     alignSelf: 'center'
   },
   notesInputWrap: {
@@ -112,12 +115,21 @@ export const styles = {
     borderColor: '#CCCCCC',
     borderRadius: 3,
     height: PLATFORM.deviceHeight * 0.13 - (PLATFORM.platform === 'android' ? scale(20) : 0),
-    paddingVertical: THEME.rem(0.1),
-    paddingHorizontal: THEME.rem(0.8)
+    paddingVertical: rem(0.1),
+    paddingHorizontal: rem(0.8)
   },
   fiatInput: {
     borderBottomWidth: 1,
     borderBottomColor: '#CCCCCC',
+  },
+  spacer:{
+    flex: 1
+  },
+  saveButtonContainer: {
+    padding: rem(0.5)
+  },
+  saveButton: {
+    height: rem(3)
   },
 
   //old style
@@ -330,12 +342,6 @@ export const styles = {
     paddingLeft: scale(15),
     paddingRight: scale(15)
   },
-  buttonArea: {
-    height: scale(50)
-  },
-  saveButton: {
-    height: scale(50)
-  },
   advancedTxArea: {
     padding: scale(12),
     paddingBottom: scale(12),
@@ -477,7 +483,16 @@ export const styles = {
 }
 
 export const iconSize = {
-  avatar: THEME.rem(2)
+  avatar: rem(2)
+}
+
+export const materialInput = {
+  ...MaterialInputOnWhite,
+  fontSize: rem(2),
+  container: {
+    ...MaterialInputOnWhite.container,
+    width: '100%'
+  },
 }
 
 export default StyleSheet.create(styles)
