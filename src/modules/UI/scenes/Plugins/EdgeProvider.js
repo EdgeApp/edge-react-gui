@@ -405,12 +405,14 @@ export class EdgeProvider extends Bridgeable {
   async trackConversion (opts?: { currencyCode: string, exchangeAmount: number }) {
     if (opts != null) {
       const { currencyCode, exchangeAmount } = opts
-      trackConversion('EdgeProviderConversion', {
-        pluginId: this._pluginId,
-        account: CORE_SELECTORS.getAccount(this._state),
-        currencyCode,
-        exchangeAmount
-      })
+      this._dispatch(
+        trackConversion('EdgeProviderConversion', {
+          pluginId: this._pluginId,
+          account: CORE_SELECTORS.getAccount(this._state),
+          currencyCode,
+          exchangeAmount
+        })
+      )
     } else {
       this._dispatch(
         trackAccountEvent('EdgeProviderConversion', {
