@@ -285,7 +285,6 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
       message = s.strings.send_confirmation_eos_error_ram
     }
 
-    dispatch(updateTransaction(edgeSignedTransaction, null, true, new Error('broadcastError')))
     Alert.alert(s.strings.transaction_failure, message, [
       {
         onPress () {},
@@ -293,11 +292,6 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
         text: s.strings.string_ok
       }
     ])
-
-    if (guiMakeSpendInfo.onDone) {
-      guiMakeSpendInfo.onDone(e)
-      Actions.pop()
-    }
   }
 }
 
