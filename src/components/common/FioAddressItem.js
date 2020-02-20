@@ -22,13 +22,13 @@ export const FioAddressItem = (props: FioAddressItemProps) => {
   const { address, onFioAddressPress } = props
 
   return (
-    <TouchableHighlight onPress={() => onFioAddressPress(`${address.fio_address}`, address.expiration)}>
+    <TouchableHighlight onPress={() => onFioAddressPress(`${address.name}`, address.expiration)}>
       <View style={styles.item}>
         <View style={styles.icon}>
           <Image source={fioAddressListIcon} style={styles.iconImg} />
         </View>
         <View style={styles.info}>
-          <T style={styles.infoTitle}>{address.fio_address}</T>
+          <T style={styles.infoTitle}>{address.name}</T>
           <T style={styles.infoSubtitle}>
             {`${s.strings.fio_address_details_screen_expires} `}&nbsp;
             {intl.formatExpDate(address.expiration)}

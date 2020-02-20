@@ -247,12 +247,6 @@ export type MostRecentWallet = {
 }
 
 export type FioAddress = {
-  fio_address: string,
+  name: string,
   expiration: string
-}
-
-export type FioDomain = {
-  fio_domain: string,
-  expiration: string,
-  is_public?: number
 }

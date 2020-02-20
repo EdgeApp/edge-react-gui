@@ -68,5 +68,10 @@ export const styles = StyleSheet.create({
   },
   underlay: {
     color: `${THEME.COLORS.PRIMARY}${THEME.ALPHA.LOW}`
+  },
+  loading: {
+    flex: 1,
+    marginTop: scale(40),
+    alignSelf: 'center'
   }
 })

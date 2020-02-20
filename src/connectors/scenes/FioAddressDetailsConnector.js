@@ -11,8 +11,7 @@ const mapStateToProps = (state: State) => {
 
   const out: StateProps = {
     fioAddressName: fioAddress.fioAddressName,
-    expiration: fioAddress.expiration,
-    fee_collected: fioAddress.fee_collected
+    expiration: fioAddress.expiration
   }
   return out
 }

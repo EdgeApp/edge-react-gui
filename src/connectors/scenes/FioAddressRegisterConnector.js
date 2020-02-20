@@ -1,22 +1,23 @@
 // @flow
 
-import { type EdgeCurrencyWallet } from 'edge-core-js'
 import { connect } from 'react-redux'
 
 import { createCurrencyWallet } from '../../actions/CreateWalletActions.js'
 import type { DispatchProps, StateProps } from '../../components/scenes/FioAddressRegisterScene'
 import { FioAddressRegisterScene } from '../../components/scenes/FioAddressRegisterScene'
-import { isConnectedState } from '../../modules/Core/selectors'
+import * as Constants from '../../constants/indexConstants'
+import { getAccount, isConnectedState } from '../../modules/Core/selectors'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
-import { getFioWallets } from '../../modules/UI/selectors'
 import type { Dispatch, State } from '../../types/reduxTypes'
 
 const mapStateToProps = (state: State) => {
-  const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
   const defaultFiatCode = SETTINGS_SELECTORS.getDefaultIsoFiat(state)
+  const account = getAccount(state)
+  const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[Constants.FIO_STR]
+  const fioPlugin = account.currencyConfig[currencyPluginName]
 
   const out: StateProps = {
-    fioWallets,
+    fioPlugin,
     defaultFiatCode,
     isConnected: isConnectedState(state)
   }

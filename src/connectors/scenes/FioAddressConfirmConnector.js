@@ -30,10 +30,10 @@ const mapStateToProps = (state: State) => {
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   createCurrencyWallet: (walletName: string, walletType: string, fiatCurrencyCode: string) =>
     dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode, false, false)),
-  changeConfirmSelectedWallet: (selectedWallet: EdgeCurrencyWallet | null, expiration: Date, fee_collected: number) =>
+  changeConfirmSelectedWallet: (selectedWallet: EdgeCurrencyWallet | null, expiration: string, feeCollected: number) =>
     dispatch({
       type: 'FIO/FIO_ADDRESS_UPDATE_SELECTED_WALLET',
-      data: { selectedWallet, expiration, fee_collected }
+      data: { selectedWallet, expiration, feeCollected }
     })
 })
 

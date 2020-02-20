@@ -1,13 +1,13 @@
 // @flow
 
-import { type EdgeCurrencyWallet } from 'edge-core-js'
+import { type EdgeCurrencyConfig } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Image, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import fioAddressDetailsIcon from '../../assets/images/details_fioAddress.png'
 import * as Constants from '../../constants/indexConstants'
-import { FIO_DOMAIN_DEFAULT, FIO_WALLET_TYPE } from '../../constants/WalletAndCurrencyConstants'
+import { FIO_DOMAIN_DEFAULT } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings.js'
 import { Button } from '../../modules/UI/components/ControlPanel/Component/Button/Button.ui'
 import T from '../../modules/UI/components/FormattedText/index'
@@ -29,7 +29,7 @@ export type State = {
 }
 
 export type StateProps = {
-  fioWallets: EdgeCurrencyWallet[],
+  fioPlugin: EdgeCurrencyConfig,
   defaultFiatCode: string,
   isConnected: boolean
 }
@@ -54,26 +54,10 @@ export class FioAddressRegisterScene extends Component<Props, State> {
     replaceRegex: new RegExp(`${FIO_DOMAIN_DEFAULT}`)
   }
 
-  wallet: EdgeCurrencyWallet | null
   bcValidationTimer: TimeoutID | null
 
   async componentDidMount () {
-    const { fioWallets } = this.props
-    if (fioWallets.length === 0) {
-      this.wallet = await this.createFioWallet()
-    } else {
-      this.wallet = fioWallets[0]
-    }
     this.getRegexFromDomain(FIO_DOMAIN_DEFAULT)
-  }
-
-  createFioWallet = async (): Promise<EdgeCurrencyWallet | null> => {
-    const { createCurrencyWallet, defaultFiatCode } = this.props
-    try {
-      return await createCurrencyWallet(s.strings.fio_address_register_default_fio_wallet_name, FIO_WALLET_TYPE, defaultFiatCode)
-    } catch (e) {
-      return null
-    }
   }
 
   handleNextButton = () => {
@@ -88,35 +72,28 @@ export class FioAddressRegisterScene extends Component<Props, State> {
   }
 
   handleFioAddressChange = async (fioAddressChanged: string) => {
-    if (!this.wallet) {
-      return this.setState({
-        isAvailable: null
-      })
-    }
     fioAddressChanged = fioAddressChanged.replace(this.state.replaceRegex, '')
     const fioAddressLength = fioAddressChanged.length
-    const regexValidation = this.wallet ? await this.wallet.otherMethods.validateFioAddress(fioAddressChanged + FIO_DOMAIN_DEFAULT) : false
-
-    const isValid = !(fioAddressLength === 0 || fioAddressLength > 20 - 5 || !regexValidation)
+    const isValid = !(fioAddressLength === 0 || fioAddressLength > 20 - 5)
 
     if (this.bcValidationTimer) {
       clearTimeout(this.bcValidationTimer)
       this.bcValidationTimer = null
     }
     if (!this.props.isConnected) {
-      this.setState({
+      return this.setState({
         fioAddress: fioAddressChanged,
         isValid: false,
         touched: true,
         isAvailable: null
       })
-      return
     }
     if (isValid) {
+      const { fioPlugin } = this.props
       this.bcValidationTimer = window.requestAnimationFrame(async () => {
-        const isUnavailable = await this.validateAddressNetwork(fioAddressChanged + FIO_DOMAIN_DEFAULT)
+        const isAvailable = fioPlugin.otherMethods ? await fioPlugin.otherMethods.validateAccount(fioAddressChanged + FIO_DOMAIN_DEFAULT) : false
         this.setState({
-          isAvailable: !isUnavailable
+          isAvailable
         })
       })
     }
@@ -127,18 +104,6 @@ export class FioAddressRegisterScene extends Component<Props, State> {
       touched: true,
       isAvailable: null
     })
-  }
-
-  validateAddressNetwork = async (fioAddress: string): Promise<boolean> => {
-    try {
-      if (this.wallet) {
-        const obj = await this.wallet.otherMethods.fioAction('isAvailable', { fioName: fioAddress })
-        return !!obj.is_registered
-      }
-      return false
-    } catch (e) {
-      return false
-    }
   }
 
   getRegexFromDomain = (domain: string) => {

@@ -30,8 +30,8 @@ import { DeepLinkingManager } from './DeepLinkingManager.js'
 import EdgeAccountCallbackManager from './EdgeAccountCallbackManager.js'
 import EdgeContextCallbackManager from './EdgeContextCallbackManager.js'
 import EdgeWalletsCallbackManager from './EdgeWalletsCallbackManager.js'
-import { PermissionsManager } from './PermissionsManager.js'
 import { NetworkActivity } from './NetworkActivity.js'
+import { PermissionsManager } from './PermissionsManager.js'
 
 type Props = { context: EdgeContext }
 

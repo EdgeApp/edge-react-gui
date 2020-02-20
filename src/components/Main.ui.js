@@ -627,7 +627,7 @@ export class MainComponent extends Component<Props> {
                     navTransparent={true}
                     component={FioAddressConnector}
                     renderTitle={this.renderTitle(FIO_ADDRESS)}
-                    renderLeftButton={this.renderBackButton(BACK)}
+                    renderLeftButton={this.renderEmptyButton()}
                     renderRightButton={this.renderMenuButton()}
                     onLeft={Actions.pop}
                   />

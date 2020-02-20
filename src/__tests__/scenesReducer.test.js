@@ -39,9 +39,10 @@ test('initialState', () => {
     },
     fioAddress: {
       expiration: new Date('1/1/2019'),
-      fee_collected: 0,
+      feeCollected: 0,
       fioAddressName: '',
       fioAddresses: [],
+      fioAddressesLoading: false,
       selectedWallet: null
     },
     requestType: {

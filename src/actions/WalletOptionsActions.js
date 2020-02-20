@@ -66,8 +66,8 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
             fioAddress = await engine.otherMethods.getFioAddress()[0]
             if (!fioAddress) {
               try {
-                const data = await engine.otherMethods.fioAction('getFioNames', { fioPublicKey: wallet.receiveAddress.publicAddress })
-                fioAddress = data.fio_addresses[0].fio_address
+                const fioAddresses = await engine.otherMethods.getFioAddressNames()
+                fioAddress = fioAddresses[0]
               } catch (e) {
                 fioAddress = ''
               }

@@ -4,21 +4,24 @@ import type { EdgeCurrencyWallet } from 'edge-core-js'
 import { type Reducer } from 'redux'
 
 import type { Action } from '../../types/reduxTypes.js'
+import type { FioAddress } from '../../types/types'
 
 export type FioAddressSceneState = {
   fioAddressName: string,
-  fioAddresses: string[],
+  fioAddresses: FioAddress[],
+  fioAddressesLoading: boolean,
   selectedWallet: EdgeCurrencyWallet | null,
   expiration: Date,
-  fee_collected: number
+  feeCollected: number
 }
 
 const initialState: FioAddressSceneState = {
   fioAddressName: '',
   fioAddresses: [],
+  fioAddressesLoading: false,
   selectedWallet: null,
   expiration: new Date('1/1/2019'),
-  fee_collected: 0
+  feeCollected: 0
 }
 
 export const fioAddress: Reducer<FioAddressSceneState, Action> = (state = initialState, action: Action) => {
@@ -35,7 +38,7 @@ export const fioAddress: Reducer<FioAddressSceneState, Action> = (state = initia
         ...state,
         selectedWallet: action.data.selectedWallet,
         expiration: new Date(action.data.expiration),
-        fee_collected: action.data.fee_collected
+        feeCollected: action.data.feeCollected
       }
     case 'FIO/FIO_ADDRESS_SET_FIO_ADDRESS':
       if (!action.data) throw new Error(`Invalid action FIO_ADDRESS_SET_FIO_ADDRESS`)
@@ -43,6 +46,18 @@ export const fioAddress: Reducer<FioAddressSceneState, Action> = (state = initia
         ...state,
         fioAddressName: action.data.fioAddressName,
         expiration: new Date(action.data.expiration)
+      }
+    case 'FIO/SET_FIO_ADDRESSES_PROGRESS':
+      return {
+        ...state,
+        fioAddressesLoading: true
+      }
+    case 'FIO/SET_FIO_ADDRESSES':
+      if (!action.data) throw new Error(`Invalid action SET_FIO_ADDRESSES`)
+      return {
+        ...state,
+        fioAddresses: action.data.fioAddresses,
+        fioAddressesLoading: false
       }
     default:
       return state

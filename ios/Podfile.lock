@@ -74,7 +74,7 @@ PODS:
     - React
   - react-native-netinfo (3.2.1):
     - React
-  - react-native-randombytes (3.5.3):
+  - react-native-randombytes (3.5.1):
     - React
   - react-native-safari-view (1.0.0):
     - React
@@ -319,7 +319,7 @@ SPEC CHECKSUMS:
   react-native-mail: 021d8ee60e374609f5689ef354dc8e36839a9ba6
   react-native-material-kit: e779e910356c15278dcd2d2153b8656d24084c05
   react-native-netinfo: 0da34082d2cec3100c9b5073bb217e35f1142bdd
-  react-native-randombytes: 3638d24759d67c68f6ccba60c52a7a8a8faa6a23
+  react-native-randombytes: 1b6091800f62c6c393c6bc850ac089ebf63d4c0a
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b
   react-native-tcp: ec39d0ce136873220a2895a0e89dc33804fe0def

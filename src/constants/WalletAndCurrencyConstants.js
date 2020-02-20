@@ -65,6 +65,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   EBST: 'eboost',
   EOS: 'eos',
   ETH: 'ethereum',
+  FIO: 'fio',
   FTC: 'feathercoin',
   GRS: 'groestlcoin',
   LTC: 'litecoin',

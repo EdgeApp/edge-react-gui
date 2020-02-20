@@ -17,7 +17,6 @@ export type State = {}
 export type StateProps = {
   fioAddressName: string,
   expiration: Date,
-  fee_collected: number,
   registerSuccess?: boolean
 }
 
@@ -42,7 +41,7 @@ export class FioAddressDetailsScene extends Component<Props, State> {
     if (this.props.registerSuccess) {
       return (
         <View style={styles.buttons}>
-          <TouchableHighlight style={styles.bottomButton} onPress={() => Actions.popTo(Constants.FIO_ADDRESS_LIST)} underlayColor={styles.underlay.color}>
+          <TouchableHighlight style={styles.bottomButton} onPress={() => Actions[Constants.FIO_ADDRESS_LIST]()} underlayColor={styles.underlay.color}>
             <View style={styles.bottomButtonTextWrap}>
               <T style={styles.bottomButtonText}>{s.strings.fio_address_list}</T>
             </View>

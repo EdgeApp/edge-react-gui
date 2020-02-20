@@ -13,20 +13,13 @@ import T from '../../modules/UI/components/FormattedText/index'
 import ABSlider from '../../modules/UI/components/Slider/index.js'
 import { MaterialInput } from '../../styles/components/FormFieldStyles.js'
 import { styles } from '../../styles/scenes/FioAddressConfirmStyle'
-import type { FioAddress, FioDomain } from '../../types/types'
 import { getFeeDisplayed } from '../../util/utils'
 import { FormFieldSelect } from '../common/FormFieldSelect.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 
-type WalletAddress = {
-  wallet: EdgeCurrencyWallet,
-  addresses: FioAddress[]
-}
 export type State = {
-  walletAddresses: WalletAddress[],
   selectedWallet: Object | null,
-  fee: number | null,
   displayFee: number | null,
   balance: number | null,
   sliderDisabled: boolean | false,
@@ -43,42 +36,21 @@ export type StateProps = {
 
 export type DispatchProps = {
   createCurrencyWallet: (walletName: string, walletType: string, fiatCurrencyCode: string) => any,
-  changeConfirmSelectedWallet: (selectedWallet: EdgeCurrencyWallet | null, expiration: Date, fee_collected: number) => any
+  changeConfirmSelectedWallet: (selectedWallet: EdgeCurrencyWallet | null, expiration: string, feeCollected: number) => any
 }
 
 type Props = StateProps & DispatchProps
 
 export class FioAddressConfirmScene extends Component<Props, State> {
   state: State = {
-    walletAddresses: [],
     selectedWallet: null,
-    fee: null,
     displayFee: null,
     balance: null,
     sliderDisabled: false,
     loading: false
   }
 
-  async fetchData () {
-    const { fioWallets } = this.props
-    const walletAddresses = []
-    for (const fioWallet of fioWallets) {
-      const addresses = await this.getAddressFromWallet(fioWallet)
-      if (addresses) {
-        walletAddresses.push({
-          wallet: fioWallet,
-          addresses: addresses.fio_addresses
-        })
-      }
-    }
-
-    this.setState({
-      walletAddresses
-    })
-  }
-
   async componentDidMount () {
-    this.fetchData()
     const { fioWallets } = this.props
     if (fioWallets.length === 0) {
       const wallet: EdgeCurrencyWallet | null = await this.createFioWallet()
@@ -122,33 +94,18 @@ export class FioAddressConfirmScene extends Component<Props, State> {
   }
 
   saveFioAddress = async () => {
-    const { selectedWallet, fee } = this.state
+    const { selectedWallet } = this.state
     if (selectedWallet) {
       const { wallet } = selectedWallet
       const { fioAddressName } = this.props
       try {
-        await wallet.otherMethods.registerFioAddress(fioAddressName, fee)
-        this.confirmSelected()
+        const { expiration, feeCollected } = await wallet.otherMethods.fioAction('registerFioAddress', { fioAddress: fioAddressName })
+        this.confirmSelected(expiration, feeCollected)
       } catch (e) {
         showError(s.strings.fio_register_address_err_msg)
       }
     }
     this.toggleLoading()
-  }
-
-  getAddressFromWallet = async (
-    wallet: EdgeCurrencyWallet
-  ): Promise<{
-    fio_domains: FioDomain[],
-    fio_addresses: FioAddress[]
-  } | null> => {
-    try {
-      const receiveAddress = await wallet.getReceiveAddress()
-      const fioNames = await wallet.otherMethods.fioAction('getFioNames', { fioPublicKey: receiveAddress.publicAddress })
-      return fioNames
-    } catch (e) {
-      return null
-    }
   }
 
   toggleButton = () => {
@@ -173,16 +130,11 @@ export class FioAddressConfirmScene extends Component<Props, State> {
     if (selectedWallet) {
       const { wallet } = selectedWallet
       try {
-        const obj = await wallet.otherMethods.fioAction('getFee', { endPoint: 'register_fio_address', fioAddress: '' })
-        if (obj) {
-          if (obj.fee) {
-            const displayFee = obj.fee / Constants.BILLION
-            this.setState({
-              fee: obj.fee,
-              displayFee
-            })
-          }
-        }
+        const fee = await wallet.otherMethods.getFee('registerFioAddress')
+        const displayFee = fee / Constants.BILLION
+        this.setState({
+          displayFee
+        })
       } catch (e) {
         showError(s.strings.fio_get_fee_err_msg)
       }
@@ -194,15 +146,13 @@ export class FioAddressConfirmScene extends Component<Props, State> {
     if (selectedWallet) {
       const { wallet } = selectedWallet
       try {
-        const obj = await wallet.otherMethods.fioAction('getFioBalance', {})
+        const balance = await wallet.getBalance()
 
-        if (obj) {
-          if (obj.balance || obj.balance === 0) {
-            const newBalance = obj.balance / Constants.BILLION
-            this.setState({
-              balance: newBalance
-            })
-          }
+        if (balance || balance === 0) {
+          const newBalance = balance / Constants.BILLION
+          this.setState({
+            balance: newBalance
+          })
         }
       } catch (e) {
         this.setState({
@@ -212,39 +162,15 @@ export class FioAddressConfirmScene extends Component<Props, State> {
     }
   }
 
-  confirmSelected = async () => {
+  confirmSelected = (expiration: string, feeCollected: number): void => {
     const { selectedWallet } = this.state
     const { changeConfirmSelectedWallet, isConnected } = this.props
     if (!isConnected) {
       showError(s.strings.fio_network_alert_text)
       return
     }
-    if (selectedWallet) {
-      const { wallet } = selectedWallet
-      const { fioAddressName } = this.props
-      try {
-        const receiveAddress = await wallet.getReceiveAddress()
-        const fioNames = await wallet.otherMethods.fioAction('getFioNames', { fioPublicKey: receiveAddress.publicAddress })
-
-        let name = ''
-        if (fioNames) {
-          if (fioNames.fio_addresses) {
-            name = fioNames.fio_addresses.find(item => item.fio_address === fioAddressName)
-            if (name) {
-              if (name.expiration) {
-                changeConfirmSelectedWallet(selectedWallet, new Date(name.expiration), 300000)
-                window.requestAnimationFrame(() => Actions[Constants.FIO_ADDRESS_REGISTER_SUCCESS]({ registerSuccess: true }))
-              }
-            }
-          }
-        }
-      } catch (e) {
-        //
-      }
-    } else {
-      changeConfirmSelectedWallet(selectedWallet, new Date(), 300000)
-      window.requestAnimationFrame(() => Actions[Constants.FIO_ADDRESS_REGISTER_SUCCESS]({ registerSuccess: true }))
-    }
+    changeConfirmSelectedWallet(selectedWallet && selectedWallet.wallet, expiration, feeCollected)
+    window.requestAnimationFrame(() => Actions[Constants.FIO_ADDRESS_REGISTER_SUCCESS]({ registerSuccess: true }))
   }
 
   onNextPress = () => {
