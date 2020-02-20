@@ -9,11 +9,6 @@ Object {
   "core": Object {
     "account": Object {},
     "context": Object {},
-    "deepLinking": Object {
-      "addressDeepLinkData": Object {},
-      "deepLinkPending": false,
-      "passwordRecoveryLink": null,
-    },
     "disklet": Object {},
     "edgeLogin": Object {
       "error": null,
@@ -81,6 +76,7 @@ Object {
     },
   },
   "nextUsername": null,
+  "pendingDeepLink": null,
   "permissions": Object {
     "camera": "undetermined",
     "contacts": "undetermined",

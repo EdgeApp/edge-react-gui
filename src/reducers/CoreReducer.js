@@ -6,7 +6,6 @@ import { type Reducer, combineReducers } from 'redux'
 
 import { type Action } from '../types/reduxTypes.js'
 import { type WalletsState, wallets } from './CoreWalletsReducer.js'
-import { type DeepLinkingState, deepLinking } from './DeepLinkingReducer.js'
 import { type EdgeLoginState, edgeLogin } from './EdgeLoginReducer.js'
 
 export type CoreState = {
@@ -16,8 +15,7 @@ export type CoreState = {
 
   // Nested reducers:
   +wallets: WalletsState,
-  +edgeLogin: EdgeLoginState,
-  +deepLinking: DeepLinkingState
+  +edgeLogin: EdgeLoginState
 }
 
 const flowHack: any = {}
@@ -33,7 +31,6 @@ export const core: Reducer<CoreState, Action> = combineReducers({
         return action.data.account
       }
       case 'LOGOUT':
-      case 'DEEP_LINK_RECEIVED':
         return defaultAccount
     }
     return state
@@ -48,7 +45,6 @@ export const core: Reducer<CoreState, Action> = combineReducers({
   },
 
   // Nested reducers:
-  deepLinking,
   edgeLogin,
   wallets
 })

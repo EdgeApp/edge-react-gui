@@ -5,41 +5,57 @@ import { LoginScreen } from 'edge-login-ui-rn'
 import React, { Component } from 'react'
 import { Keyboard, StatusBar, StyleSheet, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
+import { connect } from 'react-redux'
 
+import { showSendLogsModal } from '../../actions/SettingsActions'
 import edgeBackgroundImage from '../../assets/images/edgeBackground/login_bg.jpg'
 import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
 import s from '../../locales/strings.js'
+import { initializeAccount, logoutRequest } from '../../modules/Login/action.js'
 import THEME from '../../theme/variables/airbitz.js'
+import { type DeepLink } from '../../types/DeepLink.js'
+import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { showHelpModal } from '../modals/HelpModal.js'
+import { LoadingScene } from './LoadingScene.js'
 
-type Props = {
-  initializeAccount: (EdgeAccount, touchIdInfo: ?Object) => void,
+type StateProps = {
+  account: EdgeAccount,
   context: EdgeContext,
-  account: ?EdgeAccount,
-  recoveryLogin: string,
-  username?: string,
-  showSendLogsModal: () => void
+  pendingDeepLink: DeepLink | null,
+  username: string
 }
-type State = { key: number }
+type DispatchProps = {
+  deepLinkHandled(): void,
+  initializeAccount(account: EdgeAccount, touchIdInfo: Object): void,
+  logout(): void,
+  showSendLogsModal(): void
+}
+type Props = StateProps & DispatchProps
 
-export default class Login extends Component<Props, State> {
+type State = {
+  counter: number,
+  passwordRecoveryKey?: string
+}
+
+class LoginSceneComponent extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
-    this.state = { key: 0 }
+    this.state = { counter: 0 }
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
-  onLogin = (error: ?Error = null, account: ?EdgeAccount, touchIdInfo: ?Object = null) => {
-    if (error || !account) return
-    this.props.initializeAccount(account, touchIdInfo)
-  }
+  componentDidUpdate (oldProps: Props) {
+    const { account, pendingDeepLink } = this.props
 
-  UNSAFE_componentWillReceiveProps (nextProps: Props) {
-    // If we have logged out, destroy and recreate the login screen:
-    if (this.props.account && nextProps.account && nextProps.account !== this.props.account) {
-      if (typeof nextProps.account.username === 'undefined') {
-        this.setState({ key: this.state.key + 1 })
-      }
+    // Did we get a new recovery link?
+    if (pendingDeepLink !== oldProps.pendingDeepLink && pendingDeepLink != null && pendingDeepLink.type === 'passwordRecovery') {
+      // Log out if necessary:
+      if (account.username !== null) this.props.logout()
+
+      // Pass the link to our component:
+      const { passwordRecoveryKey } = pendingDeepLink
+      this.setState(state => ({ passwordRecoveryKey, counter: state.counter + 1 }))
+      this.props.deepLinkHandled()
     }
   }
 
@@ -48,19 +64,25 @@ export default class Login extends Component<Props, State> {
     showHelpModal()
   }
 
+  onLogin = (error: Error | null, account: EdgeAccount | null, touchIdInfo: Object) => {
+    if (error != null) return
+    this.setState({ passwordRecoveryKey: undefined })
+    if (account != null) this.props.initializeAccount(account, touchIdInfo)
+  }
+
   render () {
-    return !this.props.context.listUsernames ? null : (
+    const { counter, passwordRecoveryKey } = this.state
+
+    return this.props.account.username == null ? (
       <View style={styles.container} testID={'edge: login-scene'}>
         <LoginScreen
           username={this.props.username}
           accountOptions={null}
           context={this.props.context}
-          recoveryLogin={this.props.recoveryLogin}
+          recoveryLogin={passwordRecoveryKey}
           onLogin={this.onLogin}
-          fontDescription={{
-            regularFontFamily: THEME.FONTS.DEFAULT
-          }}
-          key={this.state.key.toString()}
+          fontDescription={{ regularFontFamily: THEME.FONTS.DEFAULT }}
+          key={String(counter)}
           appName={s.strings.app_name_short}
           backgroundImage={edgeBackgroundImage}
           primaryLogo={edgeLogo}
@@ -68,6 +90,8 @@ export default class Login extends Component<Props, State> {
           parentButton={{ text: s.strings.string_help, callback: this.onClickHelp }}
         />
       </View>
+    ) : (
+      <LoadingScene />
     )
   }
 }
@@ -80,3 +104,27 @@ const styles = StyleSheet.create({
     backgroundColor: THEME.COLORS.PRIMARY
   }
 })
+
+export const LoginScene = connect(
+  (state: ReduxState): StateProps => ({
+    context: state.core.context,
+    account: state.core.account,
+    pendingDeepLink: state.pendingDeepLink,
+    username: state.nextUsername == null ? '' : state.nextUsername
+  }),
+
+  (dispatch: Dispatch): DispatchProps => ({
+    deepLinkHandled () {
+      dispatch({ type: 'DEEP_LINK_HANDLED' })
+    },
+    initializeAccount (account, touchIdInfo) {
+      dispatch(initializeAccount(account, touchIdInfo))
+    },
+    logout () {
+      dispatch(logoutRequest())
+    },
+    showSendLogsModal () {
+      dispatch(showSendLogsModal())
+    }
+  })
+)(LoginSceneComponent)

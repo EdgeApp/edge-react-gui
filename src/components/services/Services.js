@@ -13,7 +13,6 @@ import thunk from 'redux-thunk'
 
 import ENV from '../../../env.json'
 import { loadInstallReason } from '../../actions/InstallReasonActions.js'
-import Main from '../../connectors/MainConnector.js'
 import { setIntlLocale } from '../../locales/intl.js'
 import { selectLocale } from '../../locales/strings.js'
 import { rootReducer } from '../../reducers/RootReducer.js'
@@ -23,9 +22,11 @@ import errorAlert from '../../util/errorAlert.js'
 import loginStatusChecker from '../../util/loginStatusChecker.js'
 import perfLogger from '../../util/perfLogger.js'
 import { ModalProvider } from '../common/ModalProvider.js'
+import { Main } from '../Main.ui.js'
 import { Airship } from './AirshipInstance.js'
 import { AutoLogout } from './AutoLogout.js'
 import { ContactsLoader } from './ContactsLoader.js'
+import { DeepLinkingManager } from './DeepLinkingManager.js'
 import EdgeAccountCallbackManager from './EdgeAccountCallbackManager.js'
 import EdgeContextCallbackManager from './EdgeContextCallbackManager.js'
 import EdgeWalletsCallbackManager from './EdgeWalletsCallbackManager.js'
@@ -88,6 +89,7 @@ export class Services extends PureComponent<Props> {
           <Airship />
           <AutoLogout />
           <ContactsLoader />
+          <DeepLinkingManager />
           <EdgeAccountCallbackManager />
           <EdgeContextCallbackManager />
           <EdgeWalletsCallbackManager />

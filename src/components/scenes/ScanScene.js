@@ -21,14 +21,11 @@ type Props = {
   cameraPermission: PermissionStatus,
   torchEnabled: boolean,
   scanEnabled: boolean,
-  deepLinkPending: boolean,
-  deepLinkUri: string | null,
   qrCodeScanned: (data: string) => void,
   parseScannedUri: (data: string) => void,
   toggleEnableTorch: () => void,
   toggleAddressModal: () => void,
-  toggleScanToWalletListModal: () => void,
-  markAddressDeepLinkDone: () => any
+  toggleScanToWalletListModal: () => void
 }
 
 const HEADER_TEXT = s.strings.send_scan_header_text
@@ -42,22 +39,7 @@ const FLASH_TEXT = s.strings.fragment_send_flash
 export class Scan extends Component<Props> {
   constructor (props: Props) {
     super(props)
-
-    this.checkForDeepLink()
-
     slowlog(this, /.*/, global.slowlogOptions)
-  }
-
-  componentDidUpdate () {
-    this.checkForDeepLink()
-  }
-
-  checkForDeepLink () {
-    if (this.props.deepLinkUri && this.props.deepLinkPending) {
-      const deepLinkUri = this.props.deepLinkUri
-      this.props.markAddressDeepLinkDone()
-      this.props.parseScannedUri(deepLinkUri)
-    }
   }
 
   render () {

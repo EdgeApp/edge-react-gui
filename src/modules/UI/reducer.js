@@ -25,7 +25,7 @@ const uiInner: Reducer<UiState, Action> = combineReducers({
 })
 
 export const ui: Reducer<UiState, Action> = (state, action: Action) => {
-  if (action.type === 'LOGOUT' || action.type === 'DEEP_LINK_RECEIVED') {
+  if (action.type === 'LOGOUT') {
     return uiInner(undefined, { type: 'DUMMY_ACTION_PLEASE_IGNORE' })
   }
 

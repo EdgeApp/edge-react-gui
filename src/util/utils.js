@@ -4,7 +4,6 @@ import { bns, div, eq, gte, mul, toFixed } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
 import _ from 'lodash'
 import { Platform } from 'react-native'
-import parse from 'url-parse'
 
 import { FIAT_CODES_SYMBOLS, getSymbolFromCurrency } from '../constants/indexConstants.js'
 import { intl } from '../locales/intl.js'
@@ -446,79 +445,6 @@ export function runWithTimeout<T> (promise: Promise<T>, ms: number, error: Error
 
 export function snooze (ms: number): Promise<void> {
   return new Promise((resolve: any) => setTimeout(resolve, ms))
-}
-
-const MyEdgeLoginProtocols = {
-  'edge:': true,
-  'edge-ret:': true,
-  'airbitz:': true,
-  'airbitz-ret:': true,
-  'https:': true
-}
-
-export const isEdgeLogin = (data: string) => {
-  const parsedUrl = parse(data, {}, false)
-  if (MyEdgeLoginProtocols[parsedUrl.protocol]) {
-    if (parsedUrl.host === 'edge') {
-      if (typeof parsedUrl.pathname === 'string') {
-        if (parsedUrl.pathname.length > 11) {
-          return true
-        }
-      }
-    }
-    if (parsedUrl.hostname === 'www.edge.app' && parsedUrl.pathname === '/edgelogin') {
-      return true
-    }
-  }
-  return false
-}
-
-const REQUEST_CURRENCIES = {
-  bitcoin: true,
-  dash: true,
-  bitcoincash: true
-}
-
-export type RequestPaymentAddress = {
-  sourceName: string,
-  currencyName: string,
-  callbackUrl: string,
-  callbackDomain: string
-}
-
-export const getRequestForAddress = (data: string): RequestPaymentAddress => {
-  const parsedUrl = parse(data, {}, true)
-  if (typeof parsedUrl.protocol !== 'string') throw new Error('InvalidRequestForAddress')
-  if (typeof parsedUrl.pathname !== 'string') throw new Error('InvalidRequestForAddress')
-  if (parsedUrl.host !== 'x-callback-url') throw new Error('InvalidRequestForAddress')
-  let currencyName = ''
-  parsedUrl.protocol = parsedUrl.protocol.replace(':', '')
-  if (parsedUrl.protocol === 'edge-ret' || parsedUrl.protocol === 'airbitz-ret' || parsedUrl.protocol === 'edge' || parsedUrl.protocol === 'airbitz') {
-    // Get currency from the pathname of format 'request-litecoin-address'
-    let pathname = parsedUrl.pathname.replace('/request-', '')
-    pathname = pathname.replace('-address', '')
-    if (pathname.length) {
-      if (REQUEST_CURRENCIES[pathname] === true) {
-        currencyName = pathname
-      }
-    }
-  } else {
-    for (const curr in REQUEST_CURRENCIES) {
-      if (curr + '-ret' === parsedUrl.protocol) {
-        currencyName = curr
-        break
-      }
-    }
-  }
-  // Get source and url
-  if (!currencyName || !parsedUrl.query['x-success'] || !parsedUrl.query['x-source']) {
-    throw new Error('InvalidRequestForAddress')
-  }
-  const callbackUrl = parsedUrl.query['x-success']
-  const sourceName = parsedUrl.query['x-source']
-  const parsedCallbackUrl = parse(callbackUrl)
-  const callbackDomain = parsedCallbackUrl.host
-  return { sourceName, currencyName, callbackUrl, callbackDomain }
 }
 
 export const getTotalFiatAmountFromExchangeRates = (state: State, isoFiatCurrencyCode: string) => {
