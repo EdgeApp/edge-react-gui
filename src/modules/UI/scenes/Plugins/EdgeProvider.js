@@ -10,7 +10,7 @@ import { Actions } from 'react-native-router-flux'
 import SafariView from 'react-native-safari-view'
 import { Bridgeable } from 'yaob'
 
-import { createCurrencyWalletAndSelectForPlugins } from '../../../../actions/indexActions'
+import { createCurrencyWalletAndSelectForPlugins } from '../../../../actions/CreateWalletActions.js'
 import { trackAccountEvent, trackConversion } from '../../../../actions/TrackingActions.js'
 import { selectWallet } from '../../../../actions/WalletActions'
 import { launchModal } from '../../../../components/common/ModalProvider.js'

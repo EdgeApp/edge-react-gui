@@ -3,7 +3,7 @@
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import { exchangeMax } from '../../actions/indexActions'
+import { exchangeMax } from '../../actions/CryptoExchangeActions.js'
 import { showHelpModal } from '../../components/modals/HelpModal.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'

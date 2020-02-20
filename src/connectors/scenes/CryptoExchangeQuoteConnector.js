@@ -1,7 +1,7 @@
 // @flow
 import { connect } from 'react-redux'
 
-import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/indexActions.js'
+import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/CryptoExchangeActions.js'
 import { type DispatchProps, type OwnProps, type StateProps, CryptoExchangeQuoteScreenComponent } from '../../components/scenes/CryptoExchangeQuoteScene'
 import * as CORE_SELECTORS from '../../modules/Core/selectors'
 import type { Dispatch, State } from '../../types/reduxTypes.js'

@@ -7,7 +7,7 @@ import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
-import { selectWalletForExchange } from '../actions/indexActions'
+import { selectWalletForExchange } from '../actions/CryptoExchangeActions.js'
 import { launchModal } from '../components/common/ModalProvider.js'
 import { type AccountPaymentParams } from '../components/scenes/CreateWalletAccountSelectScene.js'
 import { showError } from '../components/services/AirshipInstance.js'
