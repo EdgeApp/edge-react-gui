@@ -64,9 +64,6 @@
       ]
     }
   },
-  "prettier": {
-    "printWidth": 160
-  },
   "jest": {
     "coverageDirectory": "./coverage",
     "coverageReporters": [
