@@ -16,6 +16,7 @@ import sweepIcon from '../../../../../assets/images/sidenav/sweep.png'
 import termsIcon from '../../../../../assets/images/sidenav/terms.png'
 import walletIcon from '../../../../../assets/images/sidenav/wallets.png'
 import * as Constants from '../../../../../constants/indexConstants.js'
+import { pluginUrlMap } from '../../../../../constants/plugins/buySellPlugins'
 import s from '../../../../../locales/strings.js'
 import { scale } from '../../../../../util/scaling.js'
 import styles from '../style'
@@ -132,7 +133,7 @@ const SellButton = () => {
   )
 }
 
-const earnInterestAction = () => Actions[Constants.PLUGIN_EARN_INTEREST]({ plugin: Constants.mock_plugin })
+const earnInterestAction = () => Actions[Constants.PLUGIN_EARN_INTEREST]({ plugin: pluginUrlMap.cred })
 const EarnInterestButton = () => {
   return (
     <Button onPress={earnInterestAction}>
