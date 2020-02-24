@@ -299,6 +299,31 @@ export class MainComponent extends Component<Props> {
                     />
 
                     <Scene
+                      key={Constants.SCAN}
+                      navTransparent={true}
+                      onEnter={props => {
+                        this.props.requestPermission('camera')
+                        this.props.dispatchEnableScan()
+                        this.props.checkAndShowGetCryptoModal(props.data)
+                      }}
+                      onExit={this.props.dispatchDisableScan}
+                      component={Scan}
+                      renderTitle={this.renderHeaderWalletSelector()}
+                      renderLeftButton={this.renderBackButton()}
+                      renderRightButton={this.renderMenuButton()}
+                    />
+
+                    <Scene
+                      key={Constants.REQUEST}
+                      navTransparent={true}
+                      component={Request}
+                      renderTitle={this.renderHeaderWalletSelector()}
+                      renderLeftButton={this.renderBackButton()}
+                      renderRightButton={this.renderRequestMenuButton()}
+                      hideTabBar
+                    />
+
+                    <Scene
                       key={Constants.MANAGE_TOKENS}
                       renderLeftButton={this.renderBackButton()}
                       navTransparent={true}
@@ -435,31 +460,6 @@ export class MainComponent extends Component<Props> {
                     />
                   </Stack>
                 </Tabs>
-
-                <Scene
-                  key={Constants.SCAN}
-                  navTransparent={true}
-                  onEnter={props => {
-                    this.props.requestPermission('camera')
-                    this.props.dispatchEnableScan()
-                    this.props.checkAndShowGetCryptoModal(props.data)
-                  }}
-                  onExit={this.props.dispatchDisableScan}
-                  component={Scan}
-                  renderTitle={this.renderHeaderWalletSelector()}
-                  renderLeftButton={this.renderBackButton()}
-                  renderRightButton={this.renderMenuButton()}
-                />
-
-                <Scene
-                  key={Constants.REQUEST}
-                  navTransparent={true}
-                  component={Request}
-                  renderTitle={this.renderHeaderWalletSelector()}
-                  renderLeftButton={this.renderBackButton()}
-                  renderRightButton={this.renderRequestMenuButton()}
-                  hideTabBar
-                />
 
                 <Stack key={Constants.SEND_CONFIRMATION} hideTabBar>
                   <Scene
