@@ -378,6 +378,7 @@
   "transaction_details_copy_tx_id": "Copia l'ID transazione",
   "transaction_details_copy_signed_tx": "Copia il Raw Hex firmato",
   "transaction_details_modal_debug_info": "Informazioni di debug:\n",
+  "transaction_history_permission": "",
   "string_fee_with_brackets": "(commissione)",
   "title_Header": "Intestazione",
   "back_button_text": "Indietro",
