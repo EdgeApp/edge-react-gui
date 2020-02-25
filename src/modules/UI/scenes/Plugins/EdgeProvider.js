@@ -8,12 +8,14 @@ import { Linking } from 'react-native'
 import Mailer from 'react-native-mail'
 import { Actions } from 'react-native-router-flux'
 import SafariView from 'react-native-safari-view'
+import { sprintf } from 'sprintf-js'
 import { Bridgeable } from 'yaob'
 
 import { createCurrencyWalletAndSelectForPlugins } from '../../../../actions/CreateWalletActions.js'
 import { trackAccountEvent, trackConversion } from '../../../../actions/TrackingActions.js'
 import { selectWallet } from '../../../../actions/WalletActions'
 import { launchModal } from '../../../../components/common/ModalProvider.js'
+import { TwoButtonSimpleConfirmationModal } from '../../../../components/modals/TwoButtonSimpleConfirmationModal.js'
 import { Airship, showError, showToast } from '../../../../components/services/AirshipInstance.js'
 import { WalletListModalConnected as WalletListModal } from '../../../../connectors/components/WalletListModalConnector.js'
 import { DEFAULT_STARTER_WALLET_NAMES, EXCLAMATION, MATERIAL_COMMUNITY } from '../../../../constants/indexConstants'
@@ -65,6 +67,12 @@ type EdgeRequestSpendOptions = {
 type EdgeGetReceiveAddressOptions = {
   // Metadata to tag these addresses with for when funds arrive at the address
   metadata?: EdgeMetadata
+}
+
+type EdgeGetTransactionsResult = {
+  fiatCurrencyCode: string, // the fiat currency code of all transactions in the wallet. I.e. "iso:USD"
+  balance: string, // the current balance of wallet in the native amount units. I.e. "satoshis"
+  transactions: Array<EdgeTransaction>
 }
 
 export type EdgeProviderSpendTarget = EdgeSpendTarget & {
@@ -286,6 +294,60 @@ export class EdgeProvider extends Bridgeable {
 
   async exitPlugin () {
     Actions.pop()
+  }
+
+  async getTransactions () {
+    // Get Wallet Info
+
+    const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
+    const coreWallet = CORE_SELECTORS.getWallet(this._state, guiWallet.id)
+    const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(this._state)
+
+    // Prompt user with yes/no modal for permission
+
+    const confirmTxShare = await Airship.show(bridge => (
+      <TwoButtonSimpleConfirmationModal
+        bridge={bridge}
+        title={s.strings.fragment_wallets_export_transactions}
+        subTitle={sprintf(s.strings.transaction_history_permission, coreWallet.name)}
+        cancelText={s.strings.no}
+        doneText={s.strings.yes}
+      />
+    ))
+
+    // Grab transactions from current wallet
+
+    if (confirmTxShare) {
+      const fiatCurrencyCode = coreWallet.fiatCurrencyCode
+      const balance = coreWallet.getBalance({ currencyCode })
+
+      const txs = await coreWallet.getTransactions({ currencyCode })
+      const transactions: Array<EdgeTransaction> = []
+      for (const tx of txs) {
+        const newTx: EdgeTransaction = {
+          currencyCode: tx.currencyCode,
+          nativeAmount: tx.nativeAmount,
+          networkFee: tx.networkFee,
+          parentNetworkFee: tx.parentNetworkFee,
+          blockHeight: tx.blockHeight,
+          date: tx.date,
+          signedTx: '',
+          txid: tx.txid,
+          ourReceiveAddresses: tx.ourReceiveAddresses,
+          metadata: tx.metadata
+        }
+        transactions.push(newTx)
+      }
+      const result: EdgeGetTransactionsResult = {
+        fiatCurrencyCode,
+        balance,
+        transactions
+      }
+      console.log('EdgeGetTransactionsResult', JSON.stringify(result))
+      return result
+    } else {
+      throw new Error('User denied permission')
+    }
   }
 
   // Request that the user spend to an address or multiple addresses
