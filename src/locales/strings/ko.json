@@ -378,6 +378,7 @@
   "transaction_details_copy_tx_id": "트랜잭션 ID 복사",
   "transaction_details_copy_signed_tx": "서명된 Raw 헥스 복사",
   "transaction_details_modal_debug_info": "디버그 정보:\n",
+  "transaction_history_permission": "",
   "string_fee_with_brackets": "(수수료)",
   "title_Header": "헤더",
   "back_button_text": "뒤로",
