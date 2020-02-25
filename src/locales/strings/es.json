@@ -378,6 +378,7 @@
   "transaction_details_copy_tx_id": "Copiar ID de transacción",
   "transaction_details_copy_signed_tx": "Copiar hexadecimal firmado",
   "transaction_details_modal_debug_info": "Información de depuración:\n",
+  "transaction_history_permission": "",
   "string_fee_with_brackets": "(Comisión)",
   "title_Header": "Cabecera",
   "back_button_text": "Volver",
