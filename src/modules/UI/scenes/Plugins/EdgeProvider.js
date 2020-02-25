@@ -69,7 +69,7 @@ type EdgeGetReceiveAddressOptions = {
   metadata?: EdgeMetadata
 }
 
-type EdgeGetTransactionsResult = {
+type EdgeGetWalletHistoryResult = {
   fiatCurrencyCode: string, // the fiat currency code of all transactions in the wallet. I.e. "iso:USD"
   balance: string, // the current balance of wallet in the native amount units. I.e. "satoshis"
   transactions: Array<EdgeTransaction>
@@ -296,15 +296,13 @@ export class EdgeProvider extends Bridgeable {
     Actions.pop()
   }
 
-  async getTransactions () {
+  async getWalletHistory () {
     // Get Wallet Info
-
     const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
     const coreWallet = CORE_SELECTORS.getWallet(this._state, guiWallet.id)
     const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(this._state)
 
     // Prompt user with yes/no modal for permission
-
     const confirmTxShare = await Airship.show(bridge => (
       <TwoButtonSimpleConfirmationModal
         bridge={bridge}
@@ -314,40 +312,38 @@ export class EdgeProvider extends Bridgeable {
         doneText={s.strings.yes}
       />
     ))
-
-    // Grab transactions from current wallet
-
-    if (confirmTxShare) {
-      const fiatCurrencyCode = coreWallet.fiatCurrencyCode
-      const balance = coreWallet.getBalance({ currencyCode })
-
-      const txs = await coreWallet.getTransactions({ currencyCode })
-      const transactions: Array<EdgeTransaction> = []
-      for (const tx of txs) {
-        const newTx: EdgeTransaction = {
-          currencyCode: tx.currencyCode,
-          nativeAmount: tx.nativeAmount,
-          networkFee: tx.networkFee,
-          parentNetworkFee: tx.parentNetworkFee,
-          blockHeight: tx.blockHeight,
-          date: tx.date,
-          signedTx: '',
-          txid: tx.txid,
-          ourReceiveAddresses: tx.ourReceiveAddresses,
-          metadata: tx.metadata
-        }
-        transactions.push(newTx)
-      }
-      const result: EdgeGetTransactionsResult = {
-        fiatCurrencyCode,
-        balance,
-        transactions
-      }
-      console.log('EdgeGetTransactionsResult', JSON.stringify(result))
-      return result
-    } else {
+    if (!confirmTxShare) {
       throw new Error('User denied permission')
     }
+
+    // Grab transactions from current wallet
+    const fiatCurrencyCode = coreWallet.fiatCurrencyCode
+    const balance = coreWallet.getBalance({ currencyCode })
+
+    const txs = await coreWallet.getTransactions({ currencyCode })
+    const transactions: Array<EdgeTransaction> = []
+    for (const tx of txs) {
+      const newTx: EdgeTransaction = {
+        currencyCode: tx.currencyCode,
+        nativeAmount: tx.nativeAmount,
+        networkFee: tx.networkFee,
+        parentNetworkFee: tx.parentNetworkFee,
+        blockHeight: tx.blockHeight,
+        date: tx.date,
+        signedTx: '',
+        txid: tx.txid,
+        ourReceiveAddresses: tx.ourReceiveAddresses,
+        metadata: tx.metadata
+      }
+      transactions.push(newTx)
+    }
+    const result: EdgeGetWalletHistoryResult = {
+      fiatCurrencyCode,
+      balance,
+      transactions
+    }
+    console.log('EdgeGetWalletHistoryResult', JSON.stringify(result))
+    return result
   }
 
   // Request that the user spend to an address or multiple addresses
