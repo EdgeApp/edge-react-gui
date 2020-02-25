@@ -86,7 +86,7 @@ export const devPlugin: BuySellPlugin & PluginUrlMap = {
   partnerIconPath: '',
   cryptoCodes: [],
   supportEmail: '',
-  permissions: [],
+  permissions: ['camera', 'location'],
   isLegacy: false
 }
 
