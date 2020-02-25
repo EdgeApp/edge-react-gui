@@ -378,6 +378,7 @@
   "transaction_details_copy_tx_id": "Transaktions ID kopieren",
   "transaction_details_copy_signed_tx": "Signierte Raw Hex kopieren",
   "transaction_details_modal_debug_info": "Debug Info:\n",
+  "transaction_history_permission": "",
   "string_fee_with_brackets": "(Gebühr)",
   "title_Header": "Kopfzeile",
   "back_button_text": "Zurück",
