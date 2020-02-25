@@ -378,6 +378,7 @@
   "transaction_details_copy_tx_id": "",
   "transaction_details_copy_signed_tx": "",
   "transaction_details_modal_debug_info": "",
+  "transaction_history_permission": "",
   "string_fee_with_brackets": "(Frais)",
   "title_Header": "En-tête",
   "back_button_text": "Précédent",
