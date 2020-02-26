@@ -9,6 +9,7 @@ import { EDGE_LOGIN, PLUGIN_VIEW_DEEP, SCAN } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
 import { type DeepLink } from '../types/DeepLink.js'
 import { type Dispatch, type GetState, type State as ReduxState } from '../types/reduxTypes.js'
+import { activatePromotion } from './AccountReferralActions.js'
 import { loginWithEdge } from './EdgeLoginActions.js'
 import { parseScannedUri } from './ScanActions.js'
 import { selectWallet } from './WalletActions.js'
@@ -74,8 +75,12 @@ function handleLink (dispatch: Dispatch, state: ReduxState, link: DeepLink): boo
       }
       return true
 
-    case 'promotion':
+    case 'promotion': {
+      if (!state.account.accountReferralLoaded) return false
+      const { installerId = '' } = link
+      dispatch(activatePromotion(installerId))
       return true
+    }
 
     case 'returnAddress': {
       if (!hasCurrentWallet) return false

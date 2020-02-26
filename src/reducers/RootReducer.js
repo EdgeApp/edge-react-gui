@@ -5,24 +5,18 @@ import { type Reducer, combineReducers } from 'redux'
 import { type ExchangeRatesState, exchangeRates } from '../modules/ExchangeRates/reducer.js'
 import { type UiState, ui } from '../modules/UI/reducer.js'
 import { type DeepLink } from '../types/DeepLink.js'
-import { type InstallReason } from '../types/InstallReason.js'
 import { type Action } from '../types/reduxTypes.js'
+import { type DeviceReferral } from '../types/ReferralTypes.js'
 import { type AccountState, account } from './AccountReducer.js'
 import { type ContactsState, contacts } from './ContactsReducer.js'
 import { type CoreState, core } from './CoreReducer.js'
 import { type CryptoExchangeState, cryptoExchange } from './CryptoExchangeReducer.js'
 import { type PermissionsState, permissions } from './PermissionsReducer.js'
 
-const defaultInstallReason: InstallReason = {
-  appTweaks: {
-    currencyCodes: undefined,
-    messages: [],
-    plugins: []
-  }
-}
+const defaultDeviceReferral: DeviceReferral = { messages: [], plugins: [] }
 
 export type RootState = {
-  +installReason: InstallReason,
+  +deviceReferral: DeviceReferral,
 
   // Next username to auto-fill at the login screen, or blank if none:
   +nextUsername: string | null,
@@ -41,8 +35,8 @@ export type RootState = {
 }
 
 export const rootReducer: Reducer<RootState, Action> = combineReducers({
-  installReason (state: InstallReason = defaultInstallReason, action: Action): InstallReason {
-    return action.type === 'INSTALL_REASON_LOADED' ? action.data : state
+  deviceReferral (state: DeviceReferral = defaultDeviceReferral, action: Action): DeviceReferral {
+    return action.type === 'DEVICE_REFERRAL_LOADED' ? action.data : state
   },
 
   nextUsername (state: string | null = null, action: Action): string | null {

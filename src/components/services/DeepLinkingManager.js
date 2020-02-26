@@ -14,7 +14,8 @@ import { showError } from './AirshipInstance.js'
 type StateProps = {
   pendingDeepLink: DeepLink | null,
 
-  // We don't actually read this, but we need it to trigger updates:
+  // We don't actually read these, but we need them to trigger updates:
+  accountReferralLoaded: boolean,
   wallets: WalletsState
 }
 
@@ -59,8 +60,9 @@ class DeepLinkingManagerComponent extends React.Component<Props> {
 
 export const DeepLinkingManager = connect(
   (state: ReduxState): StateProps => ({
-    wallets: state.ui.wallets,
-    pendingDeepLink: state.pendingDeepLink
+    pendingDeepLink: state.pendingDeepLink,
+    accountReferralLoaded: state.account.accountReferralLoaded,
+    wallets: state.ui.wallets
   }),
 
   (dispatch: Dispatch): DispatchProps => ({
