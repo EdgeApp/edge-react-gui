@@ -110,6 +110,7 @@
     "edge-currency-monero": "^0.2.4",
     "edge-exchange-plugins": "^0.9.1",
     "edge-login-ui-rn": "0.6.7",
+    "jsc-android": "241213.x.x",
     "lodash": "^4.17.2",
     "process": "^0.11.10",
     "prop-types": "^15.5.10",

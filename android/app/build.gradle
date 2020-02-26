@@ -144,6 +144,10 @@ android {
             }
         }
     }
+    packagingOptions {
+       pickFirst '**/libjsc.so'
+       pickFirst '**/libc++_shared.so'
+    }
 }
 
 // specify signing properties on the command line
@@ -162,6 +166,7 @@ if (hasProperty('storeFile')) {
 }
 
 dependencies {
+    implementation "org.webkit:android-jsc-intl:r241213"
     implementation project(':@react-native-community_netinfo')
     implementation project(':@react-native-community_art')
     implementation project(':@react-native-community_async-storage')
