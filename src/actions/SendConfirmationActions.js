@@ -26,12 +26,6 @@ import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { convertNativeToExchange } from '../util/utils'
 import { playSendSound } from './SoundActions.js'
 
-// add empty string if there is an error but we don't need text feedback to the user
-export const makeSpendFailed = (error: Error | null) => ({
-  type: 'UI/SEND_CONFIMATION/MAKE_SPEND_FAILED',
-  data: { error }
-})
-
 export const newSpendInfo = (spendInfo: EdgeSpendInfo, authRequired: AuthType) => ({
   type: 'UI/SEND_CONFIMATION/NEW_SPEND_INFO',
   data: { spendInfo, authRequired }

@@ -178,8 +178,7 @@ export const transactionMetadata = (state: EdgeMetadata | null = null, action: A
 
 export const error = (state: Error | null = null, action: Action) => {
   switch (action.type) {
-    case 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION':
-    case 'UI/SEND_CONFIMATION/MAKE_SPEND_FAILED': {
+    case 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION': {
       if (!action.data) throw new Error('Invalid Action')
       return action.data.error
     }
