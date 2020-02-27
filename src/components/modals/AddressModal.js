@@ -85,7 +85,7 @@ export class AddressModal extends Component<AddressModalProps, AddressModalState
   onChangeTextDelayed = (domain: string) => {
     const { currencyCode } = this.props
     console.log(`before bouncing on ${domain} ${currencyCode}`)
-    debounce(this.resolveAddress(domain, currencyCode), 500)
+    debounce(this.resolveAddress(domain, currencyCode), 500, false)
     this.updateUri(domain)
   }
 

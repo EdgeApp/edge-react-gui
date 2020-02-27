@@ -93,7 +93,7 @@
   "dependencies": {
     "@react-native-community/art": "^1.0.2",
     "@react-native-community/async-storage": "^1.6.2",
-    "@unstoppabledomains/resolution": "^1.0.26",
+    "@unstoppabledomains/resolution": "^1.1.0",
     "async-lock": "^1.1.2",
     "biggystring": "^3.0.2",
     "buffer": "^5.0.8",
