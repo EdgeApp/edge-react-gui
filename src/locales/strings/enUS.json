@@ -603,5 +603,13 @@
   "fio_address_details_screen_manage_account_settings": "Account Settings",
   "fio_address_list_screen_button_register": "Register New FIO Address",
   "fio_get_fee_err_msg": "There was an issue getting fee. Please try later.",
-  "fio_register_address_err_msg": "There was an issue registering an address. Please try later."
+  "fio_register_address_err_msg": "There was an issue registering an address. Please try later.",
+  "resolving": "Resolving...",
+  "UnregisteredDomain": "Domain %1$s is not registered",
+  "UnspecifiedResolver": "Domain %1$s is not configured",
+  "UnsupportedDomain": "Domain %1$s is not supported",
+  "UnspecifiedCurrency": "Domain %1$s has no %2$s address attached to it",
+  "NamingServiceDown": "%3$s naming service is down at the moment",
+  "UnsupportedCurrency": "%2$s is not supported for %1%s",
+  "RecordNotFound": "No %2%s record found for %1$s"
 }

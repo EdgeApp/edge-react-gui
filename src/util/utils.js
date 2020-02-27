@@ -519,6 +519,22 @@ export const isTooFarBehind = (dateInSeconds: number) => {
   return dateInSeconds < dateOfBitcoinGenesisInSeconds
 }
 
+export const debounce = (func: any, wait: number, immediate: boolean) => {
+  let timeout
+  return () => {
+    const context = this
+    const args = arguments
+    const later = () => {
+      timeout = null
+      if (!immediate) func.apply(context, args)
+    }
+    const callNow = immediate && !timeout
+    if (timeout) clearTimeout(timeout)
+    timeout = setTimeout(later, wait)
+    if (callNow) func.apply(context, args)
+  }
+}
+
 export const autoCorrectDate = (dateInSeconds: number, currentDateInSeconds: number = Date.now() / 1000) => {
   if (isTooFarAhead(dateInSeconds, currentDateInSeconds)) return dateInSeconds / 1000
   if (isTooFarBehind(dateInSeconds)) return dateInSeconds * 1000
