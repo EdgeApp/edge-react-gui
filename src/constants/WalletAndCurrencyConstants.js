@@ -2,7 +2,7 @@
 
 import s from '../locales/strings.js'
 
-export const MAX_TOKEN_CODE_CHARACTERS = 6
+export const MAX_TOKEN_CODE_CHARACTERS = 7
 
 export const FEE_COLOR_THRESHOLD = 2.0 // this is denominated in dollars
 export const FEE_ALERT_THRESHOLD = 5.0 // this is denominated in dollars
