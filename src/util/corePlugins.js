@@ -74,6 +74,7 @@ export const ratePlugins = {
 
 export const swapPlugins = {
   changelly: ENV.CHANGELLY_INIT,
+  sideshift: ENV.SIDESHIFT_INIT,
   changenow: ENV.CHANGE_NOW_INIT,
   coinswitch: ENV.COINSWITCH_INIT,
   faast: ENV.FAAST_INIT,

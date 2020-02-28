@@ -53,6 +53,8 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
       this.checkCoinswitchKYC().catch(showError)
     } else if (pluginId === 'foxExchange') {
       this.checkFoxExchangeKYC().catch(showError)
+    } else if (pluginId === 'sideshift') {
+      this.checkSideShiftKYC().catch(showError)
     } else if (pluginId === 'switchain') {
       this.checkSwitchainKYC().catch(showError)
     }
@@ -86,6 +88,25 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
   }
 
   async checkChangellyKYC () {
+    const { account, swapInfo, timeExpired } = this.props
+    const result = await swapVerifyTerms(account.swapConfig.changelly, [
+      {
+        text: s.strings.swap_terms_terms_link,
+        uri: 'https://changelly.com/terms-of-use'
+      },
+      {
+        text: s.strings.swap_terms_privacy_link,
+        uri: 'https://changelly.com/privacy-policy'
+      },
+      {
+        text: s.strings.swap_terms_kyc_link,
+        uri: 'https://changelly.com/aml-kyc'
+      }
+    ])
+    if (!result) timeExpired(swapInfo)
+  }
+
+  async checkSideShiftKYC () {
     const { account, swapInfo, timeExpired } = this.props
     const result = await swapVerifyTerms(account.swapConfig.changelly, [
       {
