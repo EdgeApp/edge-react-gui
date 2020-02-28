@@ -12,7 +12,6 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import styles from '../../styles/scenes/ScaneStyle'
 import { colors as COLORS } from '../../theme/variables/airbitz.js'
-import { debounce } from '../../util/utils'
 
 // INTERACTIVE_MODAL /////////////////////////////////////////////////////////////////////////////
 type AddressModalProps = {
@@ -85,7 +84,9 @@ export class AddressModal extends Component<AddressModalProps, AddressModalState
   onChangeTextDelayed = (domain: string) => {
     const { currencyCode } = this.props
     console.log(`before bouncing on ${domain} ${currencyCode}`)
-    debounce(this.resolveAddress(domain, currencyCode), 500, false)
+    if (domain.endsWith('.zil') || domain.endsWith('.crypto')) {
+      this.resolveAddress(domain, currencyCode)
+    }
     this.updateUri(domain)
   }
 
