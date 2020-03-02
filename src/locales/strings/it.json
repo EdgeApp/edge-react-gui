@@ -556,5 +556,7 @@
   "exchange_from_wallet": "Scambia da %s",
   "exchange_to_wallet": "Scambia in %s",
   "wallet_list_modal_header_mru": "Portafogli più recenti",
-  "wallet_list_modal_header_all": "Tutti i portafogli"
+  "wallet_list_modal_header_all": "Tutti i portafogli",
+  "earn_interest": "",
+  "earn_interest_on": ""
 }
