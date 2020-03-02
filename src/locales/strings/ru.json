@@ -556,5 +556,7 @@
   "exchange_from_wallet": "",
   "exchange_to_wallet": "",
   "wallet_list_modal_header_mru": "",
-  "wallet_list_modal_header_all": ""
+  "wallet_list_modal_header_all": "",
+  "earn_interest": "",
+  "earn_interest_on": ""
 }
