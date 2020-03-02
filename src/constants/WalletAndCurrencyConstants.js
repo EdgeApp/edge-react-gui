@@ -118,11 +118,13 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   },
   BCH: {
     displayBuyCrypto: true,
-    isImportKeySupported: false
+    isImportKeySupported: false,
+    showEarnInterestCard: true
   },
   LTC: {
     displayBuyCrypto: true,
-    isImportKeySupported: false
+    isImportKeySupported: false,
+    showEarnInterestCard: true
   },
   RBTC: {
     dummyPublicAddress: '0x74f9452e22fe58e27575f176fc884729d88267ba', // rj116
@@ -207,6 +209,15 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     },
     isImportKeySupported: true,
     dummyPublicAddress: 'bnb1rt449yu7us6hmk4pmyr8talc60ydkwp4qkvcl7'
+  },
+  TUSD: {
+    showEarnInterestCard: true
+  },
+  LBA: {
+    showEarnInterestCard: true
+  },
+  BAT: {
+    showEarnInterestCard: true
   }
 }
 
