@@ -8,6 +8,7 @@ import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
+import credLogo from '../../assets/images/cred_logo.png'
 import requestImage from '../../assets/images/transactions/transactions-request.png'
 import sendImage from '../../assets/images/transactions/transactions-send.png'
 import TransactionRow from '../../connectors/TransactionRowConnector.js'
@@ -192,7 +193,7 @@ export class TransactionList extends Component<Props, State> {
     let fiatBalanceString
     const receivedFiatSymbol = fiatSymbol ? UTILS.getFiatSymbol(isoFiatCurrencyCode) : ''
     const fiatBalanceFormat = `${intl.formatNumber(balanceInFiat && balanceInFiat > 0.000001 ? balanceInFiat : 0, { toFixed: 2 })} ${fiatCurrencyCode}`
-    const { currencyCode } = uiWallet
+    const currencyCode = this.props.selectedCurrencyCode
     const currencyName = uiWallet.currencyNames[currencyCode]
 
     if (receivedFiatSymbol.length !== 1) {
@@ -272,7 +273,7 @@ export class TransactionList extends Component<Props, State> {
         {transactions.length !== 0 && Constants.getSpecialCurrencyInfo(currencyCode).showEarnInterestCard && (
           <TouchableOpacity onPress={() => Actions[Constants.PLUGIN_EARN_INTEREST]({ plugin: pluginUrlMap.cred })} style={styles.earnInterestContainer}>
             <View style={styles.earnInterestBox}>
-              <Image style={styles.earnInterestImage} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES['ETH'] }} resizeMode={'cover'} />
+              <Image style={styles.earnInterestImage} source={credLogo} resizeMode={'contain'} />
               <T style={styles.earnInterestText}>{sprintf(s.strings.earn_interest_on, currencyName)}</T>
             </View>
           </TouchableOpacity>

@@ -9,6 +9,7 @@ import SortableListView from 'react-native-sortable-listview'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
+import credLogo from '../../assets/images/cred_logo.png'
 import iconImage from '../../assets/images/otp/OTP-badge_sm.png'
 import WalletIcon from '../../assets/images/walletlist/my-wallets.png'
 import XPubModal from '../../connectors/XPubModalConnector.js'
@@ -514,7 +515,7 @@ export default class WalletList extends Component<Props, State> {
         >
           <View style={buyMultipleCryptoStyle.buyMultipleCryptoBox}>
             <View style={buyMultipleCryptoStyle.buyMultipleCryptoContentWrap}>
-              <Image style={buyMultipleCryptoStyle.buyMultipleCryptoBoxImage} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES['ETH'] }} resizeMode={'cover'} />
+              <Image style={buyMultipleCryptoStyle.buyMultipleCryptoBoxImage} source={credLogo} resizeMode={'contain'} />
             </View>
             <T style={buyMultipleCryptoStyle.buyMultipleCryptoBoxText}>{s.strings.earn_interest}</T>
           </View>
