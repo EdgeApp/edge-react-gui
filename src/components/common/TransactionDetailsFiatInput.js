@@ -10,7 +10,7 @@ import { intl } from '../../locales/intl'
 import ContactSearchResults from './ContactSearchResults.js'
 import { FormField } from '../common/FormField'
 import FormattedText from '../../modules/UI/components/FormattedText/index'
-import styles, { materialInput } from '../../styles/scenes/TransactionDetailsStyle'
+import styles, { materialFiatInput } from '../../styles/scenes/TransactionDetailsStyle'
 import { truncateDecimals } from '../../util/utils'
 
 type Props = {
@@ -68,7 +68,7 @@ export class TransactionDetailsFiatInput extends Component<Props, State> {
               keyboardType="numeric"
               clearButtonMode={'while-editing'}
               label={s.strings.transaction_details_fiat_label}
-              style={materialInput}
+              style={materialFiatInput}
               onFocus={this.onFocus}
               onBlur={this.onBlur}
               onChangeText={this.onChange}

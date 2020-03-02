@@ -5,7 +5,7 @@ import dateformat from 'dateformat'
 import type { EdgeCurrencyInfo, EdgeDenomination, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import React, { Component, Fragment } from 'react'
 import type { Ref } from 'react'
-import { Animated, Easing, Keyboard, ScrollView, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { Animated, Easing, Keyboard, ScrollView, TextInput, TouchableOpacity, TouchableWithoutFeedback, View, Image } from 'react-native'
 import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
@@ -32,8 +32,10 @@ import { Airship } from '../services/AirshipInstance.js'
 import { FormField } from '../common/FormField.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
 import type { GuiContact, GuiWallet } from '../../types/types.js'
-import { TransactionDetailsPayeeInput } from '../common/TransactionDetailsPayeeInput'
+import { TransactionDetailsPersonInput } from '../common/TransactionDetailsPersonInput'
+import { TransactionDetailsCategoryInput } from '../common/TransactionDetailsCategoryInput'
 import { TransactionDetailsFiatInput } from '../common/TransactionDetailsFiatInput'
+import { TransactionDetailsNotesInput } from '../common/TransactionDetailsNotesInput'
 
 const EXCHANGE_TEXT = s.strings.fragment_transaction_exchange
 const EXPENSE_TEXT = s.strings.fragment_transaction_expense
@@ -63,6 +65,13 @@ const categories = {
   }
 }
 
+const categoryList = [
+  EXCHANGE_TEXT,
+  EXPENSE_TEXT,
+  TRANSFER_TEXT,
+  INCOME_TEXT
+]
+
 export type TransactionDetailsOwnProps = {
   edgeTransaction: EdgeTransaction,
   contacts: Array<GuiContact>,
@@ -71,7 +80,8 @@ export type TransactionDetailsOwnProps = {
   thumbnailPath: string,
   currencyInfo: EdgeCurrencyInfo | null,
   currencyCode: string,
-  wallets: { [walletId: string]: GuiWallet }
+  wallets: { [walletId: string]: GuiWallet },
+  currentFiatAmount?: string
 }
 
 export type TransactionDetailsDispatchProps = {
@@ -107,11 +117,9 @@ type TransactionDetailsProps = TransactionDetailsOwnProps & TransactionDetailsDi
 export class TransactionDetails extends Component<TransactionDetailsProps, State> {
   guiWallet: GuiWallet
   fiatSymbol: string
-  notesInput: any
 
   constructor (props: TransactionDetailsProps) {
     super(props)
-    this.notesInput = React.createRef()
     const edgeTransaction = {
       ...props.edgeTransaction,
       date: autoCorrectDate(props.edgeTransaction.date)
@@ -221,13 +229,6 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     })
   }
 
-  onChangePayee = (contactName: string, thumbnailPath: string) => {
-    this.setState({
-      payeeName: contactName,
-      thumbnailPath: thumbnailPath
-    })
-  }
-
   onSelectPayee = (payeeName: string, thumbnail: string) => {
     this.onChangePayee(payeeName, thumbnail)
     this.onBlurPayee()
@@ -246,11 +247,6 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     })
   }
 
-  onChangeNotes = (input: string) => {
-    this.setState({
-      notes: input
-    })
-  }
 
   onNotesKeyboardReturn = () => {
     this.onBlurNotes()
@@ -483,38 +479,26 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     )
   }
 
-  renderNotesInput () {
-    const notes = this.props.edgeTransaction.metadata ? this.props.edgeTransaction.metadata.notes : ''
+  // Inputs Components
+
+  onChangePayee = (payeeName: string, thumbnailPath: string) => {
+    this.setState({ payeeName, thumbnailPath })
+  }
+  openPersonInput () {
+    const personLabel = this.state.direction === 'receive' ? s.strings.transaction_details_payer : s.strings.transaction_details_payee
     Airship.show(bridge => (
-      <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(null)}>
-        <TouchableWithoutFeedback onPress={() => bridge.resolve(null)}>
-          <View style={styles.airshipContainer}>
-            <FormattedText style={styles.airshipHeader}>{s.strings.transaction_details_notes_title}</FormattedText>
-            <TouchableWithoutFeedback onPress={() => this.notesInput.focus()}>
-              <View style={[styles.notesInputWrap]}>
-                <TextInput
-                  autoFocus
-                  multiline
-                  underlineColorAndroid={'transparent'}
-                  onChangeText={this.onChangeNotes}
-                  defaultValue={notes}
-                  style={[styles.notesInput]}
-                  placeholderTextColor={THEME.COLORS.GRAY_3}
-                  placeholder={s.strings.transaction_details_notes_title}
-                  autoCapitalize="sentences"
-                  autoCorrect={false}
-                  ref={this.notesInput}
-                />
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
-        </TouchableWithoutFeedback>
-      </AirshipModal>
+      <TransactionDetailsPersonInput
+        bridge={bridge}
+        personStatus={personLabel}
+        personName={this.state.payeeName}
+        onChangePerson={this.onChangePayee}
+        contacts={this.props.contacts}
+      />
     )).then(_ => {})
   }
 
   onChangeFiat = (amountFiat: string) =>  this.setState({ amountFiat })
-  renderFiatInput () {
+  openFiatInput () {
     Airship.show(bridge => (
       <TransactionDetailsFiatInput
         bridge={bridge}
@@ -525,123 +509,197 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     )).then(_ => {})
   }
 
-  openPayeeInput () {
-    const payeeStatus = this.state.direction === 'send' ? s.strings.transaction_details_recepient : s.strings.transaction_details_sender
+  onChangeCategory = (category: string, subCategory: string) => this.setState({ category, subCategory })
+  openCategoryInput () {
     Airship.show(bridge => (
-      <TransactionDetailsPayeeInput
+      <TransactionDetailsCategoryInput
         bridge={bridge}
-        payeeStatus={payeeStatus}
-        payeeName={this.state.payeeName}
-        onChangePayee={this.onChangePayee}
-        contacts={this.props.contacts}
+        categories={categoryList}
+        subCategories={this.props.subcategoriesList}
+        category={this.state.category}
+        subCategory={this.state.subCategory}
+        setNewSubcategory={this.props.setNewSubcategory}
+        onChange={this.onChangeCategory}
       />
     )).then(_ => {})
   }
 
-  render () {
-    let feeSyntax, leftData, convertedAmount, amountString, symbolString, feeDenomination
-    const { guiWallet, fiatSymbol } = this
+  onChangeNotes = (notes: string) => this.setState({ notes })
+  openNotesInput () {
+    Airship.show(bridge => (
+      <TransactionDetailsNotesInput
+        bridge={bridge}
+        notes={this.state.notes}
+        onChange={this.onChangeNotes}
+      />
+    )).then(_ => {})
+  }
+
+  // Crypto Amount Logic
+  getReceivedCryptoAmount = () => {
+    const { guiWallet } = this
     const { edgeTransaction } = this.props
-    const { walletDefaultDenomProps, direction, amountFiat } = this.state
-    const absoluteAmount = abs(this.props.edgeTransaction.nativeAmount)
-    if (isCryptoParentCurrency(guiWallet, edgeTransaction.currencyCode)) {
-      symbolString = walletDefaultDenomProps.symbol ? walletDefaultDenomProps.symbol + ' ' : ''
-    } else {
-      symbolString = ''
-    }
+    const { walletDefaultDenomProps } = this.state
 
-    if (direction === 'receive') {
-      convertedAmount = UTILS.convertNativeToDisplay(walletDefaultDenomProps.multiplier)(absoluteAmount) // convert to correct denomiation
-      amountString = UTILS.decimalOrZero(UTILS.truncateDecimals(convertedAmount, 6), 6) // limit to 6 decimals, check if infinitesimal, and remove unnecessary trailing zeroes
-      feeSyntax = ''
-      leftData = {
-        color: THEME.COLORS.ACCENT_BLUE,
-        syntax: s.strings.fragment_transaction_income
+    const absoluteAmount = abs(edgeTransaction.nativeAmount)
+    const convertedAmount = UTILS.convertNativeToDisplay(walletDefaultDenomProps.multiplier)(absoluteAmount)
+    const amountString = UTILS.decimalOrZero(UTILS.truncateDecimals(convertedAmount, 6), 6)
+    const currencyName = guiWallet.currencyNames[guiWallet.currencyCode]
+    const symbolString = isCryptoParentCurrency(guiWallet, edgeTransaction.currencyCode)
+      && walletDefaultDenomProps.symbol
+      ? walletDefaultDenomProps.symbol
+      : ''
+
+    return {
+      amountString,
+      symbolString,
+      currencyName,
+      feeString: null
+    }
+  }
+
+  getSentCryptoAmount = () => {
+    const { guiWallet } = this
+    const { edgeTransaction } = this.props
+    const { walletDefaultDenomProps } = this.state
+
+    const absoluteAmount = abs(edgeTransaction.nativeAmount)
+    const symbolString = isCryptoParentCurrency(guiWallet, edgeTransaction.currencyCode)
+      && walletDefaultDenomProps.symbol
+      ? walletDefaultDenomProps.symbol
+      : ''
+    const currencyName = guiWallet.currencyNames[guiWallet.currencyCode]
+
+    if (edgeTransaction.networkFee) {
+      const convertedAmount = UTILS.convertNativeToDisplay(walletDefaultDenomProps.multiplier)(absoluteAmount)
+      const convertedFee = UTILS.convertNativeToDisplay(walletDefaultDenomProps.multiplier)(edgeTransaction.networkFee)
+      const amountMinusFee = sub(convertedAmount, convertedFee)
+      const amountTruncatedDecimals = UTILS.truncateDecimals(amountMinusFee.toString(), 6)
+      const amountString = UTILS.decimalOrZero(amountTruncatedDecimals, 6)
+
+      const feeAbsolute = abs(UTILS.truncateDecimals(convertedFee, 6))
+      const feeString = symbolString
+        ? sprintf(s.strings.fragment_tx_detail_mining_fee_with_symbol, symbolString, feeAbsolute)
+        : sprintf(s.strings.fragment_tx_detail_mining_fee_with_denom, feeAbsolute, walletDefaultDenomProps.name)
+      return {
+        amountString,
+        symbolString,
+        currencyName,
+        feeString
       }
     } else {
-      // send tx
-      if (edgeTransaction.networkFee) {
-        // stub, check BTC vs. ETH (parent currency)
-        feeDenomination = walletDefaultDenomProps.name
-        convertedAmount = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(absoluteAmount) // convert the native amount to correct *denomination*
-        const convertedFee = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.edgeTransaction.networkFee) // convert fee to correct denomination
-        const amountMinusFee = sub(convertedAmount, convertedFee) // for outgoing tx substract fee from total amount
-        const amountTruncatedDecimals = UTILS.truncateDecimals(amountMinusFee.toString(), 6) // limit to 6 decimals, at most
-        amountString = UTILS.decimalOrZero(amountTruncatedDecimals, 6) // change infinitesimal values to zero, otherwise cut off insignificant zeroes (at end of decimal)
-        const feeString = abs(UTILS.truncateDecimals(convertedFee, 6)) // fee should never be negative
-        feeSyntax = symbolString
-          ? sprintf(s.strings.fragment_tx_detail_mining_fee_with_symbol, symbolString, feeString)
-          : sprintf(s.strings.fragment_tx_detail_mining_fee_with_denom, feeString, feeDenomination)
-        leftData = {
-          color: THEME.COLORS.ACCENT_RED,
-          syntax: s.strings.fragment_transaction_expense
-        }
-      } else {
-        // do not show fee, because token
-        amountString = absoluteAmount
-        feeSyntax = ''
-        leftData = {
-          color: THEME.COLORS.ACCENT_RED,
-          syntax: s.strings.fragment_transaction_expense
-        }
+      return {
+        amountString: absoluteAmount,
+        symbolString,
+        currencyName,
+        feeString: null
       }
     }
-    const fiatValue = UTILS.truncateDecimals(amountFiat.toString().replace('-', ''), 2, true)
-    const fiatString = `${fiatSymbol}${fiatValue}`
+  }
+
+  // Exchange Rate Fiat
+  getCurrentFiat = () => {
+    const { currentFiatAmount } = this.props
+    const { amountFiat } = this.state
+
+    const fiatAmount = amountFiat.replace(',', '.')
+    const difference = parseFloat(currentFiatAmount) - parseFloat(fiatAmount)
+    const percentageFloat = (difference / parseFloat(fiatAmount)) * 100
+    const percentage = bns.toFixed(percentageFloat.toString(), 2, 2)
+
+    return {
+      amount: currentFiatAmount,
+      difference,
+      percentage: bns.abs(percentage)
+    }
+  }
+
+  // Render
+  render () {
+    const { guiWallet, fiatSymbol } = this
     const { fiatCurrencyCode } = guiWallet
+    const { direction, amountFiat, payeeName, thumbnailPath, notes, category, subCategory } = this.state
+    const { currentFiatAmount } = this.props
 
-    const cryptoAmountString = `${symbolString}${amountString}`
+    const crypto = direction === 'receive' ? this.getReceivedCryptoAmount() : this.getSentCryptoAmount()
+    const fiatValue = UTILS.truncateDecimals(amountFiat.replace('-', ''), 2, true)
+    const currentFiat = this.getCurrentFiat()
 
-    const notes = this.props.edgeTransaction.metadata ? this.props.edgeTransaction.metadata.notes : ''
-    const payeeName = this.state.payeeName && this.state.payeeName !== '' ? this.state.payeeName : 'Payee Name'
+    const personLabel = direction === 'receive' ? s.strings.transaction_details_sender : s.strings.transaction_details_recepient
+    const personName = payeeName && payeeName !== '' ? this.state.payeeName : personLabel
+    const personHeader = sprintf(s.strings.transaction_details_person_name, personLabel)
 
     return (
       <Fragment>
         <SceneWrapper bodySplit={scale(24)}>
           <View style={styles.container}>
             <View style={styles.tilesContainer}>
-              <TouchableWithoutFeedback onPress={this.openPayeeInput}>
+              <TouchableWithoutFeedback onPress={this.openPersonInput}>
                 <View style={styles.tileContainerBig}>
                   <Icon type={Constants.ION_ICONS} name={Constants.CREATE_OUTLINE} size={16} style={styles.tileIcon}/>
-                  <FormattedText style={styles.tileTextTop}>Recipent Name</FormattedText>
+                  <FormattedText style={styles.tileTextTop}>{personHeader}</FormattedText>
                   <View style={styles.tileRow}>
-                    <Icon type={Constants.ION_ICONS} name={Constants.CONTACT} size={iconSize.avatar} style={styles.tileAvatarIcon}/>
-                    <FormattedText style={styles.tileTextBottom}>{ payeeName }</FormattedText>
+                    {thumbnailPath ? (
+                      <Image style={[styles.tileThumbnail]} source={{ uri: thumbnailPath }} />
+                    ) : (
+                      <Icon type={Constants.ION_ICONS} name={Constants.CONTACT} size={iconSize.avatar} style={styles.tileAvatarIcon}/>
+                    )}
+                    <FormattedText style={styles.tileTextBottom}>{personName}</FormattedText>
                   </View>
                 </View>
               </TouchableWithoutFeedback>
               <View style={styles.tileContainer}>
-                <FormattedText style={styles.tileTextTop}>Bitcoin Amount</FormattedText>
-                <FormattedText style={styles.tileTextBottom}>{cryptoAmountString} (+10 fee)</FormattedText>
+                <FormattedText style={styles.tileTextTop}>
+                  {sprintf(s.strings.transaction_details_crypto_amount, crypto.currencyName)}
+                </FormattedText>
+                <FormattedText style={styles.tileTextBottom}>
+                  {`${crypto.symbolString} `}{crypto.amountString}
+                  {crypto.feeString ? ` (${crypto.feeString})` : null}
+                </FormattedText>
               </View>
-              <TouchableWithoutFeedback onPress={this.renderFiatInput}>
+              <TouchableWithoutFeedback onPress={this.openFiatInput}>
                 <View style={styles.tileContainer}>
                   <Icon type={Constants.ION_ICONS} name={Constants.CREATE_OUTLINE} size={16} style={styles.tileIcon}/>
-                  <FormattedText style={styles.tileTextTop}>Amount in {fiatCurrencyCode}</FormattedText>
-                  <FormattedText style={styles.tileTextBottom}>{fiatString}</FormattedText>
+                  <FormattedText style={styles.tileTextTop}>
+                    {sprintf(s.strings.transaction_details_amount_in_fiat, fiatCurrencyCode)}
+                  </FormattedText>
+                  <View style={styles.tileRow}>
+                    <FormattedText style={styles.tileTextBottom}>{`${fiatSymbol} `}</FormattedText>
+                    <FormattedText style={styles.tileTextBottom}>{fiatValue}</FormattedText>
+                  </View>
                 </View>
               </TouchableWithoutFeedback>
               <View style={styles.tileContainer}>
-                <FormattedText style={styles.tileTextTop}>Amount at Current Price</FormattedText>
-                  <View style={styles.tileRow}>
-                    <FormattedText style={styles.tileTextPrice}>$290.88</FormattedText>
-                    <FormattedText style={styles.tileTextPriceChange}>- 5.6%</FormattedText>
-                  </View>
+                <FormattedText style={styles.tileTextTop}>
+                  {s.strings.transaction_details_amount_current_price}
+                </FormattedText>
+                <View style={styles.tileRow}>
+                  <FormattedText style={styles.tileTextPrice}>{`${fiatSymbol} `}{currentFiat.amount}</FormattedText>
+                  <FormattedText
+                    style={currentFiat.difference >= 0 ? styles.tileTextPriceChangeUp : styles.tileTextPriceChangeDown}
+                  >
+                    {currentFiat.difference >= 0 ? currentFiat.percentage : `- ${currentFiat.percentage}`}%
+                  </FormattedText>
+                </View>
               </View>
-              <View style={styles.tileContainerBig}>
-                <Icon type={Constants.ION_ICONS} name={Constants.CREATE_OUTLINE} size={16} style={styles.tileIcon}/>
-                <FormattedText style={styles.tileTextTop}>Category</FormattedText>
-                  <View style={styles.tileRow}>
-                    <View style={styles.category}>
-                      <FormattedText style={styles.categoryText}>Income</FormattedText>
-                    </View>
-                    <FormattedText style={styles.subCategoryText}>Salary</FormattedText>
-                  </View>
-              </View>
-              <TouchableWithoutFeedback onPress={this.renderNotesInput}>
+              <TouchableWithoutFeedback onPress={this.openCategoryInput}>
                 <View style={styles.tileContainerBig}>
                   <Icon type={Constants.ION_ICONS} name={Constants.CREATE_OUTLINE} size={16} style={styles.tileIcon}/>
-                  <FormattedText style={styles.tileTextTop}>Notes</FormattedText>
+                  <FormattedText style={styles.tileTextTop}>
+                    {s.strings.transaction_details_category_title}
+                  </FormattedText>
+                  <View style={styles.tileRow}>
+                    <View style={styles.tileCategory}>
+                      <FormattedText style={styles.tileCategoryText}>{categories[category].syntax}</FormattedText>
+                    </View>
+                    <FormattedText style={styles.tileSubCategoryText}>{subCategory}</FormattedText>
+                  </View>
+                </View>
+              </TouchableWithoutFeedback>
+              <TouchableWithoutFeedback onPress={this.openNotesInput}>
+                <View style={styles.tileContainerBig}>
+                  <Icon type={Constants.ION_ICONS} name={Constants.CREATE_OUTLINE} size={16} style={styles.tileIcon}/>
+                  <FormattedText style={styles.tileTextTop}>{s.strings.transaction_details_notes_title}</FormattedText>
                   <FormattedText style={styles.tileTextNotes}>{notes}</FormattedText>
                 </View>
               </TouchableWithoutFeedback>

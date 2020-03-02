@@ -12,6 +12,8 @@ import type { Dispatch, State } from '../../types/reduxTypes.js'
 import * as UTILS from '../../util/utils'
 
 const mapStateToProps = (state: State, ownProps: TransactionDetailsOwnProps) => {
+  const walletId = ownProps.edgeTransaction.wallet ? ownProps.edgeTransaction.wallet.id : null
+  const wallet = walletId ? UI_SELECTORS.getWallet(state, walletId) : null
   const wallets = UI_SELECTORS.getWallets(state)
   const contacts = state.contacts
   const subcategoriesList: Array<string> = state.ui.scenes.transactionDetails.subcategories.sort()
@@ -21,13 +23,18 @@ const mapStateToProps = (state: State, ownProps: TransactionDetailsOwnProps) => 
   const allCurrencyInfos: Array<EdgeCurrencyInfo> = plugins.allCurrencyInfos
   const currencyInfo: EdgeCurrencyInfo | void = UTILS.getCurrencyInfo(allCurrencyInfos, currencyCode)
 
+  const currentFiatAmount = wallet ?
+    UI_SELECTORS.calculateWalletFiatBalanceWithoutState(wallet, currencyCode, state.ui.settings ,state.exchangeRates) :
+    null
+
   return {
     contacts,
     subcategoriesList,
     settings,
     currencyInfo,
     currencyCode,
-    wallets
+    wallets,
+    currentFiatAmount
   }
 }
 

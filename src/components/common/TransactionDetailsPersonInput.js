@@ -14,55 +14,54 @@ import type { GuiContact } from '../../types/types.js'
 
 type Props = {
   bridge: AirshipBridge<null>,
-  payeeStatus: string,
-  payeeName: string,
+  personStatus: string,
+  personName: string,
   contacts: Array<GuiContact>,
-  onChangePayee: (string, string) => void
+  onChangePerson: (string, string) => void
 }
 
 type State = {
-  payeeName: string
+  personName: string
 }
 
-export class TransactionDetailsPayeeInput extends Component<Props, State> {
+export class TransactionDetailsPersonInput extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
-    this.state = { payeeName: props.payeeName }
+    this.state = { personName: props.personName }
   }
-  onChangePayee = (value: string) => {
-    this.props.onChangePayee(value, '')
-    this.setState({ payeeName: value })
+  onChangePerson = (value: string) => {
+    this.props.onChangePerson(value, '')
+    this.setState({ personName: value })
   }
-  onSelectPayee = (payeeName: string, thumbnail: string) => {
-    this.props.onChangePayee(payeeName, thumbnail)
-    this.setState({ payeeName: payeeName })
+  onSelectPerson = (personName: string, thumbnail: string) => {
+    this.props.onChangePerson(personName, thumbnail)
+    this.setState({ personName: personName })
     this.props.bridge.resolve(null)
   }
   render() {
-    const { bridge, payeeStatus, contacts } = this.props
-    const { payeeName } = this.state
-    const payeeStatusString = sprintf(s.strings.transaction_details_payee_input, payeeStatus)
+    const { bridge, personStatus, contacts } = this.props
+    const { personName } = this.state
+    const personStatusString = sprintf(s.strings.transaction_details_person_input, personStatus)
     return (
       <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(null)}>
           <TouchableWithoutFeedback onPress={() => bridge.resolve(null)}>
             <View style={styles.airshipContainer}>
-              <FormattedText style={styles.airshipHeader}>{payeeStatusString}</FormattedText>
+              <FormattedText style={styles.airshipHeader}>{personStatusString}</FormattedText>
                 <FormField
                   autoFocus
                   autoCorrect={false}
                   autoCapitalize="words"
                   returnKeyLabel={"done"}
                   returnKeyType={"done"}
-                  label={payeeStatusString}
-                  onChangeText={this.onChangePayee}
-                  placeholder={s.strings.transaction_details_payee}
-                  value={payeeName}
+                  label={personStatusString}
+                  onChangeText={this.onChangePerson}
+                  value={personName}
                   style={materialInput}
                 />
                 <ContactSearchResults
                   contacts={contacts}
-                  currentPayeeText={payeeName}
-                  onSelectPayee={this.onSelectPayee}
+                  currentPayeeText={personName}
+                  onSelectPayee={this.onSelectPerson}
                 />
             </View>
           </TouchableWithoutFeedback>
