@@ -557,6 +557,6 @@
   "exchange_to_wallet": "Cambiar a %s",
   "wallet_list_modal_header_mru": "Carteras más recientes",
   "wallet_list_modal_header_all": "Todas las carteras",
-  "earn_interest": "",
-  "earn_interest_on": ""
+  "earn_interest": "Gana intereses",
+  "earn_interest_on": "Gana intereses de %s"
 }
