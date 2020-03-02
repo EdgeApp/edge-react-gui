@@ -102,6 +102,7 @@ type SpecialCurrencyInfo = {
       identifierName: string,
       identifierKeyboardType: string
     },
+    showEarnInterestCard?: boolean,
     minimumPopupModals?: {
       minimumNativeBalance: string,
       modalMessage: string
@@ -112,7 +113,8 @@ type SpecialCurrencyInfo = {
 export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   BTC: {
     displayBuyCrypto: true,
-    isImportKeySupported: false
+    isImportKeySupported: false,
+    showEarnInterestCard: true
   },
   BCH: {
     displayBuyCrypto: true,
@@ -179,7 +181,8 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     displayBuyCrypto: true,
     isImportKeySupported: true,
     isCustomTokensSupported: true,
-    isTokensSupported: true
+    isTokensSupported: true,
+    showEarnInterestCard: true
   },
   DAI: {
     displayBuyCrypto: true,

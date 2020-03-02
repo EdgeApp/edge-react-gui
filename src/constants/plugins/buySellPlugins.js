@@ -70,6 +70,12 @@ export const pluginUrlMap: { [pluginId: string]: PluginUrlMap } = {
     uri: hostedUri + 'co.edgesecure.bitrefill/index.html',
     name: 'Bitrefill',
     isLegacy: true
+  },
+  cred: {
+    pluginId: 'cred',
+    uri: 'https://earn.mycred.io/edge',
+    name: 'Edge Cred',
+    permissions: ['camera']
   }
 }
 

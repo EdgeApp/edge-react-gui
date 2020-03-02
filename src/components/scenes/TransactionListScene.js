@@ -6,10 +6,13 @@ import React, { Component } from 'react'
 import { ActivityIndicator, Animated, FlatList, Image, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
+import { sprintf } from 'sprintf-js'
 
 import requestImage from '../../assets/images/transactions/transactions-request.png'
 import sendImage from '../../assets/images/transactions/transactions-send.png'
 import TransactionRow from '../../connectors/TransactionRowConnector.js'
+import * as Constants from '../../constants/indexConstants.js'
+import { pluginUrlMap } from '../../constants/plugins/buySellPlugins'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/index'
@@ -161,7 +164,8 @@ export class TransactionList extends Component<Props, State> {
       balanceInFiat,
       fiatCurrencyCode,
       isoFiatCurrencyCode,
-      isBalanceVisible
+      isBalanceVisible,
+      transactions
     } = this.props
 
     // should we get rid of "loading" area? Currently unused
@@ -188,79 +192,92 @@ export class TransactionList extends Component<Props, State> {
     let fiatBalanceString
     const receivedFiatSymbol = fiatSymbol ? UTILS.getFiatSymbol(isoFiatCurrencyCode) : ''
     const fiatBalanceFormat = `${intl.formatNumber(balanceInFiat && balanceInFiat > 0.000001 ? balanceInFiat : 0, { toFixed: 2 })} ${fiatCurrencyCode}`
+    const { currencyCode } = uiWallet
+    const currencyName = uiWallet.currencyNames[currencyCode]
+
     if (receivedFiatSymbol.length !== 1) {
       fiatBalanceString = fiatBalanceFormat
     } else {
       fiatBalanceString = receivedFiatSymbol + ' ' + fiatBalanceFormat
     }
     return (
-      <TouchableOpacity onPress={this.props.toggleBalanceVisibility} style={styles.touchableBalanceBox} activeOpacity={BALANCE_BOX_OPACITY}>
-        <Gradient style={[styles.currentBalanceBox]}>
-          <View style={styles.balanceBoxContents}>
-            {!isBalanceVisible ? (
-              <View style={[styles.totalBalanceWrap]}>
-                <View style={[styles.hiddenBalanceBoxDollarsWrap]}>
-                  <T style={[styles.currentBalanceBoxHiddenText]}>{SHOW_BALANCE_TEXT}</T>
-                </View>
-              </View>
-            ) : (
-              <View style={styles.balanceShownContainer}>
-                <View style={[styles.iconWrap]}>
-                  {logo ? (
-                    <Image style={[{ height: '100%' }]} source={{ uri: logo }} resizeMode={'cover'} />
-                  ) : (
-                    <T style={[styles.request]}>{displayDenomination.symbol}</T>
-                  )}
-                </View>
-                <View style={[styles.currentBalanceBoxBitsWrap]}>
-                  <View style={{ flexDirection: 'row' }}>
-                    {displayDenomination.symbol ? (
-                      <View style={{ flexDirection: 'row' }}>
-                        <T numberOfLines={1} style={[styles.currentBalanceBoxBits, styles.symbol]}>
-                          {displayDenomination.symbol + ' '}
-                        </T>
-                        <T numberOfLines={1} style={[styles.currentBalanceBoxBits, styles.symbol]}>
-                          {cryptoAmountString}
-                        </T>
-                      </View>
-                    ) : (
-                      <T numberOfLines={1} style={styles.currentBalanceBoxBits}>
-                        {cryptoAmountString}
-                      </T>
-                    )}
-
-                    {!displayDenomination.symbol && (
-                      <T numberOfLines={1} style={styles.currentBalanceBoxBits}>
-                        {' ' + selectedCurrencyCode}
-                      </T>
-                    )}
+      <View>
+        <TouchableOpacity onPress={this.props.toggleBalanceVisibility} style={styles.touchableBalanceBox} activeOpacity={BALANCE_BOX_OPACITY}>
+          <Gradient style={[styles.currentBalanceBox]}>
+            <View style={styles.balanceBoxContents}>
+              {!isBalanceVisible ? (
+                <View style={[styles.totalBalanceWrap]}>
+                  <View style={[styles.hiddenBalanceBoxDollarsWrap]}>
+                    <T style={[styles.currentBalanceBoxHiddenText]}>{SHOW_BALANCE_TEXT}</T>
                   </View>
                 </View>
-                <View style={[styles.currentBalanceBoxDollarsWrap]}>
-                  <T numberOfLines={1} style={[styles.currentBalanceBoxDollars]}>
-                    {fiatBalanceString}
-                  </T>
+              ) : (
+                <View style={styles.balanceShownContainer}>
+                  <View style={[styles.iconWrap]}>
+                    {logo ? (
+                      <Image style={[{ height: '100%' }]} source={{ uri: logo }} resizeMode={'cover'} />
+                    ) : (
+                      <T style={[styles.request]}>{displayDenomination.symbol}</T>
+                    )}
+                  </View>
+                  <View style={[styles.currentBalanceBoxBitsWrap]}>
+                    <View style={{ flexDirection: 'row' }}>
+                      {displayDenomination.symbol ? (
+                        <View style={{ flexDirection: 'row' }}>
+                          <T numberOfLines={1} style={[styles.currentBalanceBoxBits, styles.symbol]}>
+                            {displayDenomination.symbol + ' '}
+                          </T>
+                          <T numberOfLines={1} style={[styles.currentBalanceBoxBits, styles.symbol]}>
+                            {cryptoAmountString}
+                          </T>
+                        </View>
+                      ) : (
+                        <T numberOfLines={1} style={styles.currentBalanceBoxBits}>
+                          {cryptoAmountString}
+                        </T>
+                      )}
+
+                      {!displayDenomination.symbol && (
+                        <T numberOfLines={1} style={styles.currentBalanceBoxBits}>
+                          {' ' + selectedCurrencyCode}
+                        </T>
+                      )}
+                    </View>
+                  </View>
+                  <View style={[styles.currentBalanceBoxDollarsWrap]}>
+                    <T numberOfLines={1} style={[styles.currentBalanceBoxDollars]}>
+                      {fiatBalanceString}
+                    </T>
+                  </View>
                 </View>
+              )}
+              <View style={[styles.requestSendRow]}>
+                <TouchableHighlight style={[styles.requestBox, styles.button]} underlayColor={styleRaw.underlay.color} onPress={Actions.request}>
+                  <View style={[styles.requestWrap]}>
+                    <Image style={{ width: 25, height: 25 }} source={requestImage} />
+                    <T style={[styles.request]}>{REQUEST_TEXT}</T>
+                  </View>
+                </TouchableHighlight>
+                <TouchableHighlight style={[styles.sendBox, styles.button]} underlayColor={styleRaw.underlay.color} onPress={Actions.scan}>
+                  <View style={[styles.sendWrap]}>
+                    <Image style={{ width: 25, height: 25 }} source={sendImage} />
+                    <T style={styles.send}>{SEND_TEXT}</T>
+                  </View>
+                </TouchableHighlight>
               </View>
-            )}
-            <View style={[styles.requestSendRow]}>
-              <TouchableHighlight style={[styles.requestBox, styles.button]} underlayColor={styleRaw.underlay.color} onPress={Actions.request}>
-                <View style={[styles.requestWrap]}>
-                  <Image style={{ width: 25, height: 25 }} source={requestImage} />
-                  <T style={[styles.request]}>{REQUEST_TEXT}</T>
-                </View>
-              </TouchableHighlight>
-              <TouchableHighlight style={[styles.sendBox, styles.button]} underlayColor={styleRaw.underlay.color} onPress={Actions.scan}>
-                <View style={[styles.sendWrap]}>
-                  <Image style={{ width: 25, height: 25 }} source={sendImage} />
-                  <T style={styles.send}>{SEND_TEXT}</T>
-                </View>
-              </TouchableHighlight>
             </View>
-          </View>
-        </Gradient>
-        <WiredProgressBar progress={getSelectedWalletLoadingPercent} />
-      </TouchableOpacity>
+          </Gradient>
+          <WiredProgressBar progress={getSelectedWalletLoadingPercent} />
+        </TouchableOpacity>
+        {transactions.length !== 0 && Constants.getSpecialCurrencyInfo(currencyCode).showEarnInterestCard && (
+          <TouchableOpacity onPress={() => Actions[Constants.PLUGIN_EARN_INTEREST]({ plugin: pluginUrlMap.cred })} style={styles.earnInterestContainer}>
+            <View style={styles.earnInterestBox}>
+              <Image style={styles.earnInterestImage} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES['ETH'] }} resizeMode={'cover'} />
+              <T style={styles.earnInterestText}>{sprintf(s.strings.earn_interest_on, currencyName)}</T>
+            </View>
+          </TouchableOpacity>
+        )}
+      </View>
     )
   }
 

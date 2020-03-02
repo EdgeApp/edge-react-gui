@@ -16,6 +16,7 @@ import sweepIcon from '../../../../../assets/images/sidenav/sweep.png'
 import termsIcon from '../../../../../assets/images/sidenav/terms.png'
 import walletIcon from '../../../../../assets/images/sidenav/wallets.png'
 import * as Constants from '../../../../../constants/indexConstants.js'
+import { pluginUrlMap } from '../../../../../constants/plugins/buySellPlugins'
 import s from '../../../../../locales/strings.js'
 import { scale } from '../../../../../util/scaling.js'
 import styles from '../style'
@@ -32,6 +33,7 @@ const LOGOUT_TEXT = s.strings.settings_button_logout
 const SETTINGS_TEXT = s.strings.settings_title
 const PLUGIN_BUY_TEXT = s.strings.title_plugin_buy
 const PLUGIN_SELL_TEXT = s.strings.title_plugin_sell
+const EARN_INTEREST_TEXT = s.strings.earn_interest
 const TERMS_OF_SERVICE_TEXT = s.strings.title_terms_of_service
 
 export type Props = {
@@ -54,6 +56,8 @@ export default class Main extends Component<Props> {
               <BuyButton />
               <Separator />
               <SellButton />
+              <Separator />
+              <EarnInterestButton />
               <Separator />
               <FioButton registerFioAddress={registerFioAddress} />
               <Separator />
@@ -121,6 +125,27 @@ const SellButton = () => {
           <Button.Center>
             <Button.Text>
               <Text>{PLUGIN_SELL_TEXT}</Text>
+            </Button.Text>
+          </Button.Center>
+        </Button.Row>
+      </Button.Row>
+    </Button>
+  )
+}
+
+const earnInterestAction = () => Actions[Constants.PLUGIN_EARN_INTEREST]({ plugin: pluginUrlMap.cred })
+const EarnInterestButton = () => {
+  return (
+    <Button onPress={earnInterestAction}>
+      <Button.Row>
+        <Button.Row>
+          <Button.Left>
+            <Image source={buysellIcon} style={styles.iconImage} />
+          </Button.Left>
+
+          <Button.Center>
+            <Button.Text>
+              <Text>{EARN_INTEREST_TEXT}</Text>
             </Button.Text>
           </Button.Center>
         </Button.Row>

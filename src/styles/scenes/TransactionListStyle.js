@@ -381,6 +381,32 @@ export const styles = {
   transactionPendingTime: {
     flex: 1,
     fontSize: 12
+  },
+  earnInterestContainer: {
+    backgroundColor: THEME.COLORS.GRAY_4,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: scale(15),
+    marginBottom: 0
+  },
+  earnInterestBox: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    backgroundColor: THEME.COLORS.WHITE,
+    padding: scale(15)
+  },
+  earnInterestImage: {
+    width: scale(32),
+    height: scale(32),
+    marginHorizontal: scale(4)
+  },
+  earnInterestText: {
+    marginTop: scale(10),
+    fontSize: scale(17),
+    color: THEME.COLORS.GRAY_1
   }
 }
 
