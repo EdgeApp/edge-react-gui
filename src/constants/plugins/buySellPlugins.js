@@ -74,7 +74,7 @@ export const pluginUrlMap: { [pluginId: string]: PluginUrlMap } = {
   cred: {
     pluginId: 'cred',
     uri: 'https://earn.mycred.io/edge',
-    name: 'Edge Cred',
+    name: 'Cred',
     permissions: ['camera']
   }
 }
