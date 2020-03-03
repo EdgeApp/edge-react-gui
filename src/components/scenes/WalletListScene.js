@@ -29,9 +29,11 @@ import { buyMultipleCryptoStyle } from '../../styles/components/BuyCryptoStyle.j
 import { TwoButtonModalStyle } from '../../styles/components/TwoButtonModalStyle.js'
 import styles from '../../styles/scenes/WalletListStyle'
 import THEME from '../../theme/variables/airbitz'
-import { type AppMessage, type AppTweaks, getActiveMessage } from '../../types/AppTweaks.js'
+import { type AccountReferral } from '../../types/ReferralTypes.js'
+import { type MessageTweak } from '../../types/TweakTypes.js'
 import type { GuiWalletType } from '../../types/types.js'
 import { type DeviceDimensions } from '../../types/types.js'
+import { type TweakSource, bestOfMessages } from '../../util/ReferralHelpers.js'
 import { scale } from '../../util/scaling.js'
 import { getObjectDiff, getTotalFiatAmountFromExchangeRates } from '../../util/utils'
 import FullWalletListRow from '../common/FullWalletListRow.js'
@@ -61,7 +63,8 @@ type State = {
 }
 type Props = {
   activeWalletIds: Array<string>,
-  creationTweaks: AppTweaks,
+  accountMessages: MessageTweak[],
+  accountReferral: AccountReferral,
   customTokens: Array<any>,
   dimensions: DeviceDimensions,
   wallets: any,
@@ -72,7 +75,7 @@ type Props = {
   walletRowOption: (walletId: string, option: string, archived: boolean) => void,
   disableOtp: () => void,
   keepOtp: () => void,
-  removeCreationMessage(message: AppMessage): void,
+  hideMessageTweak(messageId: string, source: TweakSource): void,
   toggleAccountBalanceVisibility: () => void,
   isAccountBalanceVisible: boolean,
   ethereumWalletType?: GuiWalletType,
@@ -525,16 +528,17 @@ export default class WalletList extends Component<Props, State> {
   }
 
   renderPromoCard () {
-    const { creationTweaks, removeCreationMessage } = this.props
-    const message = getActiveMessage(creationTweaks)
-    if (message == null) return null
+    const { accountMessages, accountReferral, hideMessageTweak } = this.props
+    const messageSummary = bestOfMessages(accountMessages, accountReferral)
+    if (messageSummary == null) return null
 
+    const { message, messageId, messageSource } = messageSummary
     const { uri, iconUri } = message
     function handlePress () {
       if (uri != null) Linking.openURL(uri)
     }
     function handleClose () {
-      removeCreationMessage(message)
+      hideMessageTweak(messageId, messageSource)
     }
 
     return (

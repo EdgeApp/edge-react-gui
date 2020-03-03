@@ -5,14 +5,12 @@ import Locale from 'react-native-locale'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
-import { loadCreationReason } from '../../actions/CreationReasonActions.js'
+import { loadAccountReferral, refreshAccountReferral } from '../../actions/AccountReferralActions.js'
 import { trackAccountEvent } from '../../actions/TrackingActions.js'
 import { getEnabledTokens } from '../../actions/WalletActions.js'
 import { showError } from '../../components/services/AirshipInstance.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import { getCreationTweaks } from '../../selectors/AccountSelectors.js'
-import { type AppTweaks } from '../../types/AppTweaks.js'
 import type { Dispatch, GetState } from '../../types/reduxTypes.js'
 import { type CustomTokenInfo } from '../../types/types.js'
 import { runWithTimeout } from '../../util/utils.js'
@@ -170,12 +168,13 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
 
     if (newAccount) {
       // Ensure the creation reason is available before creating wallets:
-      await dispatch(loadCreationReason(account))
-      const creationTweaks = getCreationTweaks(getState())
-      await createDefaultWallets(account, defaultFiat, creationTweaks, dispatch)
+      await dispatch(loadAccountReferral(account))
+      const { currencyCodes } = getState().account.accountReferral
+      await createDefaultWallets(account, defaultFiat, currencyCodes, dispatch)
+      dispatch(refreshAccountReferral())
     } else {
       // Load the creation reason more lazily:
-      dispatch(loadCreationReason(account))
+      dispatch(loadAccountReferral(account)).then(() => dispatch(refreshAccountReferral()))
     }
 
     await updateWalletsRequest()(dispatch, getState)
@@ -309,11 +308,11 @@ async function safeCreateWallet (account: EdgeAccount, walletType: string, walle
 /**
  * Creates the default wallets inside a new account.
  */
-async function createDefaultWallets (account: EdgeAccount, defaultFiat: string, creationTweaks: AppTweaks, dispatch: Dispatch) {
+async function createDefaultWallets (account: EdgeAccount, defaultFiat: string, currencyCodes?: string[], dispatch: Dispatch) {
   const fiatCurrencyCode = 'iso:' + defaultFiat
 
-  if (creationTweaks.currencyCodes != null) {
-    for (const currencyCode of creationTweaks.currencyCodes) {
+  if (currencyCodes != null) {
+    for (const currencyCode of currencyCodes) {
       const currencyInfo = findCurrencyInfo(account, currencyCode)
       if (currencyInfo == null) continue
 

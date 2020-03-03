@@ -5,10 +5,9 @@ import type { EdgeContext, EdgeCurrencyWallet, EdgeLobby, EdgeParsedUri, EdgeRec
 
 import { type PermissionsState } from '../reducers/PermissionsReducer.js'
 import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
-import { type AppMessage } from './AppTweaks.js'
-import { type CreationReason } from './CreationReason.js'
+import { type TweakSource } from '../util/ReferralHelpers.js'
 import { type DeepLink } from './DeepLink.js'
-import { type InstallReason } from './InstallReason.js'
+import { type AccountReferral, type DeviceReferral, type Promotion, type ReferralCache } from './ReferralTypes.js'
 import { type CustomTokenInfo, type GuiContact, type GuiCurrencyInfo, type GuiSwapInfo, type GuiWallet } from './types.js'
 
 type LegacyActionName =
@@ -50,11 +49,11 @@ type LegacyActionName =
 
 // Actions with no payload:
 type NoDataActionName =
+  | 'ACCOUNT_SWAP_IGNORED'
   | 'ADD_NEW_CUSTOM_TOKEN_FAILURE'
   | 'ADD_TOKEN_START'
   | 'CLOSE_SELECT_USER'
   | 'CLOSE_VIEWXPUB_WALLET_MODAL'
-  | 'CREATION_REASON_REMOVE_SWAP'
   | 'DEEP_LINK_HANDLED'
   | 'DELETE_CUSTOM_TOKEN_FAILURE'
   | 'DELETE_CUSTOM_TOKEN_START'
@@ -112,6 +111,8 @@ export type Action =
   // Actions with known payloads:
   | { type: 'ACCOUNT_ACTIVATION_INFO', data: HandleActivationInfo }
   | { type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO', data: AccountActivationPaymentInfo }
+  | { type: 'ACCOUNT_REFERRAL_LOADED', data: { referral: AccountReferral, cache: ReferralCache } }
+  | { type: 'ACCOUNT_TWEAKS_REFRESHED', data: ReferralCache }
   | {
       type: 'ADD_NEW_CUSTOM_TOKEN_SUCCESS',
       data: {
@@ -146,20 +147,19 @@ export type Action =
         receiveAddresses: { [id: string]: EdgeReceiveAddress }
       }
     }
-  | { type: 'CREATION_REASON_LOADED', data: CreationReason }
-  | { type: 'CREATION_REASON_REMOVE_MESSAGE', data: AppMessage }
   | { type: 'DEEP_LINK_RECEIVED', data: DeepLink }
   | { type: 'DELETE_CUSTOM_TOKEN_SUCCESS', data: { currencyCode: string } }
+  | { type: 'DEVICE_REFERRAL_LOADED', data: DeviceReferral }
   | {
       type: 'INSERT_WALLET_IDS_FOR_PROGRESS',
       data: { activeWalletIds: Array<string> }
     }
-  | { type: 'INSTALL_REASON_LOADED', data: InstallReason }
   | { type: 'IS_CHECKING_HANDLE_AVAILABILITY', data: boolean }
   | { type: 'LOGOUT', data: { username?: string } }
   | { type: 'LOGS/SEND_LOGS_REQUEST', text: string }
   | { type: 'LOGS/SEND_LOGS_SUCCESS', result: string }
   | { type: 'LOGS/SEND_LOGS_FAILURE', error: Error }
+  | { type: 'MESSAGE_TWEAK_HIDDEN', data: { messageId: string, source: TweakSource } }
   | {
       type: 'OPEN_VIEWXPUB_WALLET_MODAL',
       data: { walletId: string, xPub: string | null, xPubExplorer: string }
@@ -173,6 +173,8 @@ export type Action =
       }
     }
   | { type: 'PERMISSIONS/UPDATE', data: PermissionsState }
+  | { type: 'PROMOTION_ADDED', data: Promotion }
+  | { type: 'PROMOTION_REMOVED', data: string /* installerId */ }
   | { type: 'HANDLE_AVAILABLE_STATUS', data: HandleAvailableStatus }
   | {
       type: 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE' | 'SELECT_TO_WALLET_CRYPTO_EXCHANGE',

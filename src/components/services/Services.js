@@ -12,7 +12,7 @@ import { type Store, applyMiddleware, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
 
 import ENV from '../../../env.json'
-import { loadInstallReason } from '../../actions/InstallReasonActions.js'
+import { loadDeviceReferral } from '../../actions/DeviceReferralActions.js'
 import { setIntlLocale } from '../../locales/intl.js'
 import { selectLocale } from '../../locales/strings.js'
 import { rootReducer } from '../../reducers/RootReducer.js'
@@ -68,7 +68,7 @@ export class Services extends PureComponent<Props> {
   }
 
   componentDidMount () {
-    this.dispatch(loadInstallReason())
+    this.dispatch(loadDeviceReferral())
     setIntlLocale(Locale.constants())
     selectLocale(DeviceInfo.getDeviceLocale())
   }

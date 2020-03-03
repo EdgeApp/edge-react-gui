@@ -24,10 +24,9 @@ import s from '../locales/strings.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors'
 import * as SETTINGS_SELECTORS from '../modules/Settings/selectors.js'
 import * as UI_SELECTORS from '../modules/UI/selectors'
-import { getCreationTweaks } from '../selectors/AccountSelectors.js'
-import { getActivePlugins } from '../types/AppTweaks.js'
 import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiSwapInfo, GuiWallet } from '../types/types.js'
+import { bestOfPlugins } from '../util/ReferralHelpers.js'
 import { logEvent } from '../util/tracking.js'
 import * as UTILS from '../util/utils'
 import { updateSwapCount } from './RequestReviewActions.js'
@@ -122,10 +121,12 @@ async function fetchSwapQuote (state: State, request: EdgeSwapRequest): Promise<
   const account = CORE_SELECTORS.getAccount(state)
 
   // Find preferred swap provider:
-  const activePlugins = getActivePlugins(getCreationTweaks(state), state.ui.settings.preferredSwapPluginId)
+  const activePlugins = bestOfPlugins(state.account.referralCache.accountPlugins, state.account.accountReferral, state.ui.settings.preferredSwapPluginId)
   const preferPluginId = activePlugins.preferredSwapPluginId
   if (preferPluginId != null) {
-    console.log(`Preferring ${preferPluginId} from ${activePlugins.preferredSwapSource}`)
+    const { swapSource } = activePlugins
+    const reason = swapSource.type === 'promotion' ? 'promo ' + swapSource.installerId : swapSource.type
+    console.log(`Preferring ${preferPluginId} from ${reason}`)
   }
 
   // Get the quote:

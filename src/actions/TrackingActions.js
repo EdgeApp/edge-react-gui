@@ -1,7 +1,7 @@
 // @flow
 
-import { type CreationReason } from '../types/CreationReason.js'
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
+import { type AccountReferral } from '../types/ReferralTypes.js'
 import { type TrackingEvent, type TrackingValues, logEvent } from '../util/tracking.js'
 
 /**
@@ -23,11 +23,11 @@ export const trackConversion = (
   const dollarValue: number = await account.exchangeCache.convertCurrency(currencyCode, 'iso:USD', exchangeAmount)
 
   // Record the event:
-  const { creationReason } = state.account
+  const { accountReferral } = state.account
   return logEvent(event, {
     dollarValue,
     pluginId,
-    ...makeTrackingValues(creationReason)
+    ...makeTrackingValues(accountReferral)
   })
 }
 
@@ -39,10 +39,10 @@ export const trackAccountEvent = (event: TrackingEvent, trackingValues: Tracking
   const state = getState()
 
   // Record the event:
-  const { creationReason } = state.account
+  const { accountReferral } = state.account
   return logEvent(event, {
     ...trackingValues,
-    ...makeTrackingValues(creationReason)
+    ...makeTrackingValues(accountReferral)
   })
 }
 
@@ -50,10 +50,11 @@ export const trackAccountEvent = (event: TrackingEvent, trackingValues: Tracking
  * Turn account affiliate information into clean tracking values.
  * Obfuscates the creation date so the server can't guess account identities.
  */
-function makeTrackingValues (creationReason: CreationReason | null | void): TrackingValues {
-  if (creationReason == null) return {}
+function makeTrackingValues (accountReferral: AccountReferral): TrackingValues {
+  const { creationDate, installerId } = accountReferral
+  if (installerId == null || creationDate == null) return {}
   return {
-    accountDate: creationReason.creationDate.toISOString().replace(/-\d\dT.*/, ''),
-    installerId: creationReason.installerId
+    accountDate: creationDate.toISOString().replace(/-\d\dT.*/, ''),
+    installerId
   }
 }

@@ -8,17 +8,18 @@ import { Actions } from 'react-native-router-flux'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { connect } from 'react-redux'
 
-import { removeCreationSwapPlugin } from '../../actions/CreationReasonActions.js'
+import { ignoreAccountSwap, removePromotion } from '../../actions/AccountReferralActions.js'
 import { setPreferredSwapPluginId } from '../../actions/SettingsActions.js'
 import { deactivateShapeShift } from '../../actions/ShapeShiftActions.js'
 import { getSwapPluginIcon } from '../../assets/images/exchange'
 import * as Constants from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
-import { getCreationTweaks } from '../../selectors/AccountSelectors.js'
 import { dayText } from '../../styles/common/textStyles.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { type AppTweaks, getActivePlugins } from '../../types/AppTweaks.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
+import { type AccountReferral } from '../../types/ReferralTypes.js'
+import { type PluginTweak } from '../../types/TweakTypes.js'
+import { bestOfPlugins } from '../../util/ReferralHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
 import { SettingsLabelRow } from '../common/SettingsLabelRow.js'
@@ -29,14 +30,16 @@ import { Airship, showError } from '../services/AirshipInstance.js'
 
 type DispatchProps = {
   changePreferredSwapPlugin(pluginId: string | void): void,
-  shapeShiftLogOut(): void,
-  removeCreationSwapPlugin(): void
+  ignoreAccountSwap(): void,
+  removePromotion(installerId: string): void,
+  shapeShiftLogOut(): void
 }
 
 type StateProps = {
-  creationTweaks: AppTweaks,
+  accountPlugins: PluginTweak[],
   exchanges: EdgePluginMap<EdgeSwapConfig>,
-  preferredSwapPluginId: string | void
+  accountReferral: AccountReferral,
+  settingsPreferredSwap: string | void
 }
 
 type Props = StateProps & DispatchProps
@@ -94,15 +97,15 @@ export class SwapSettings extends Component<Props, State> {
   }
 
   handlePreferredModal = () => {
-    const { changePreferredSwapPlugin, creationTweaks, exchanges, preferredSwapPluginId, removeCreationSwapPlugin } = this.props
+    const { accountPlugins, changePreferredSwapPlugin, exchanges, ignoreAccountSwap, accountReferral, settingsPreferredSwap } = this.props
 
     // Pick plugin:
-    const activePlugins = getActivePlugins(creationTweaks, preferredSwapPluginId)
+    const activePlugins = bestOfPlugins(accountPlugins, accountReferral, settingsPreferredSwap)
     const pluginId = activePlugins.preferredSwapPluginId
 
     Airship.show(bridge => <SwapPreferredModal bridge={bridge} exchanges={exchanges} selected={pluginId} />).then(result => {
       if (result.type === 'cancel') return
-      if (activePlugins.preferredSwapSource === 'creation') removeCreationSwapPlugin()
+      if (activePlugins.swapSource.type === 'account') ignoreAccountSwap()
       changePreferredSwapPlugin(result.pluginId)
     })
   }
@@ -155,12 +158,28 @@ export class SwapSettings extends Component<Props, State> {
   }
 
   renderPreferredArea () {
-    const { exchanges, creationTweaks, preferredSwapPluginId } = this.props
+    const { accountPlugins, exchanges, accountReferral, settingsPreferredSwap } = this.props
 
     // Pick plugin:
-    const activePlugins = getActivePlugins(creationTweaks, preferredSwapPluginId)
+    const activePlugins = bestOfPlugins(accountPlugins, accountReferral, settingsPreferredSwap)
     const pluginId = activePlugins.preferredSwapPluginId
+    const { swapSource } = activePlugins
 
+    // Pick the instructions format:
+    const { instructions, handlePress, right } =
+      swapSource.type === 'promotion'
+        ? {
+          instructions: s.strings.swap_preferred_promo_instructions,
+          handlePress: () => this.props.removePromotion(swapSource.installerId),
+          right: <AntDesignIcon name="close" color={THEME.COLORS.GRAY_1} size={iconSize} style={styles.swapIcon} />
+        }
+        : {
+          instructions: s.strings.swap_preferred_instructions,
+          handlePress: this.handlePreferredModal,
+          right: null
+        }
+
+    // Pick the selection row:
     const { text, icon } =
       pluginId != null && exchanges[pluginId] != null
         ? {
@@ -175,10 +194,10 @@ export class SwapSettings extends Component<Props, State> {
     return (
       <Fragment>
         <View style={styles.instructionArea}>
-          <Text style={styles.instructionText}>{s.strings.swap_preferred_instructions}</Text>
+          <Text style={styles.instructionText}>{instructions}</Text>
         </View>
 
-        <SettingsRow icon={icon} text={text} onPress={this.handlePreferredModal} />
+        <SettingsRow icon={icon} text={text} onPress={handlePress} right={right} />
       </Fragment>
     )
   }
@@ -204,19 +223,23 @@ const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const SwapSettingsScene = connect(
   (state: ReduxState): StateProps => ({
-    creationTweaks: getCreationTweaks(state),
+    accountPlugins: state.account.referralCache.accountPlugins,
     exchanges: state.core.account.swapConfig,
-    preferredSwapPluginId: state.ui.settings.preferredSwapPluginId
+    accountReferral: state.account.accountReferral,
+    settingsPreferredSwap: state.ui.settings.preferredSwapPluginId
   }),
   (dispatch: Dispatch): DispatchProps => ({
-    shapeShiftLogOut () {
-      dispatch(deactivateShapeShift())
-    },
-    removeCreationSwapPlugin () {
-      dispatch(removeCreationSwapPlugin())
-    },
     changePreferredSwapPlugin (pluginId) {
       dispatch(setPreferredSwapPluginId(pluginId))
+    },
+    ignoreAccountSwap () {
+      dispatch(ignoreAccountSwap())
+    },
+    removePromotion (installerId: string) {
+      dispatch(removePromotion(installerId))
+    },
+    shapeShiftLogOut () {
+      dispatch(deactivateShapeShift())
     }
   })
 )(SwapSettings)

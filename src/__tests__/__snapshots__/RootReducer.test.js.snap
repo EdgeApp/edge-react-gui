@@ -3,7 +3,16 @@
 exports[`initialState 1`] = `
 Object {
   "account": Object {
-    "creationReason": null,
+    "accountReferral": Object {
+      "hiddenAccountMessages": Object {},
+      "ignoreAccountSwap": false,
+      "promotions": Array [],
+    },
+    "accountReferralLoaded": false,
+    "referralCache": Object {
+      "accountMessages": Array [],
+      "accountPlugins": Array [],
+    },
   },
   "contacts": Array [],
   "core": Object {
@@ -67,14 +76,11 @@ Object {
     },
     "walletListModalVisible": false,
   },
-  "exchangeRates": Object {},
-  "installReason": Object {
-    "appTweaks": Object {
-      "currencyCodes": undefined,
-      "messages": Array [],
-      "plugins": Array [],
-    },
+  "deviceReferral": Object {
+    "messages": Array [],
+    "plugins": Array [],
   },
+  "exchangeRates": Object {},
   "nextUsername": null,
   "pendingDeepLink": null,
   "permissions": Object {

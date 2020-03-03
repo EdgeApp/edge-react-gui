@@ -97,7 +97,7 @@
     "biggystring": "^3.0.2",
     "buffer": "^5.0.8",
     "bugsnag-react-native": "^2.10.2",
-    "cleaners": "^0.1.1",
+    "cleaners": "^0.1.4",
     "core-js": "^2.5.2",
     "dateformat": "^3.0.3",
     "detect-bundler": "^1.0.0",

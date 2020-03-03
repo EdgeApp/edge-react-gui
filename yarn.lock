@@ -3183,10 +3183,10 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-cleaners@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.1.1.tgz#eb47c372e262c0a980a7276934583fab8301690c"
-  integrity sha512-0Px5Ngk78ppW/50TLgk+WiccmH1hXK1dQJewaVLMmSPixFp6fEQmHCLYzQ5kkhlCu0aLnX5zyjieb4KJPOzH+Q==
+cleaners@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.1.4.tgz#8eeb3474096e661641983bfc011c372d50e81013"
+  integrity sha512-EfNsbvIl+zFkUkyEYPk8BMlxUulCUxG3eyVFeRvPG21xS2CNsBRqIiPv88W7/yAhhjt7RGZb/GPNU/gLmSpsVw==
 
 cli-cursor@^1.0.2:
   version "1.0.2"
