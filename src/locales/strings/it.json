@@ -226,6 +226,7 @@
   "swap_preferred_header": "Cambio preferito",
   "swap_preferred_cheapest": "Scegli il miglior prezzo",
   "swap_preferred_instructions": "Quando più cambi valuta possono eseguire un ordine, preferisci:",
+  "swap_preferred_promo_instructions": "",
   "string_enable": "Abilita",
   "settings_button_send_logs": "Invia i log",
   "settings_button_setup_two_factor": "Imposta l'autenticazione a due fattori (2FA)",
@@ -378,6 +379,7 @@
   "transaction_details_copy_tx_id": "Copia l'ID transazione",
   "transaction_details_copy_signed_tx": "Copia il Raw Hex firmato",
   "transaction_details_modal_debug_info": "Informazioni di debug:\n",
+  "transaction_history_permission": "",
   "string_fee_with_brackets": "(commissione)",
   "title_Header": "Intestazione",
   "back_button_text": "Indietro",
@@ -554,6 +556,8 @@
   "send_to_wallet": "Ricevi da %s",
   "exchange_from_wallet": "Scambia da %s",
   "exchange_to_wallet": "Scambia in %s",
-  "wallet_list_modal_header_mru": "",
-  "wallet_list_modal_header_all": ""
+  "wallet_list_modal_header_mru": "Portafogli più recenti",
+  "wallet_list_modal_header_all": "Tutti i portafogli",
+  "earn_interest": "",
+  "earn_interest_on": ""
 }
