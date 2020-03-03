@@ -226,6 +226,7 @@
   "swap_preferred_header": "",
   "swap_preferred_cheapest": "",
   "swap_preferred_instructions": "",
+  "swap_preferred_promo_instructions": "",
   "string_enable": "Aktivieren",
   "settings_button_send_logs": "Protokolle senden",
   "settings_button_setup_two_factor": "2 Faktorautentifizierung einrichten",
