@@ -226,6 +226,7 @@
   "swap_preferred_header": "Cambio preferito",
   "swap_preferred_cheapest": "Scegli il miglior prezzo",
   "swap_preferred_instructions": "Quando più cambi valuta possono eseguire un ordine, preferisci:",
+  "swap_preferred_promo_instructions": "",
   "string_enable": "Abilita",
   "settings_button_send_logs": "Invia i log",
   "settings_button_setup_two_factor": "Imposta l'autenticazione a due fattori (2FA)",
