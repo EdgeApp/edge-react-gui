@@ -12,9 +12,14 @@ import styles, { materialInput } from '../../styles/scenes/TransactionDetailsSty
 import THEME from '../../theme/variables/airbitz'
 import SubCategorySelect from '../common/TransactionSubCategorySelect.js'
 
+type CategoriesType = Array<{
+  key: string,
+  syntax: string
+}>
+
 type Props = {
   bridge: AirshipBridge<null>,
-  categories: Array<string>,
+  categories: Object,
   subCategories: Array<string>,
   category: string,
   subCategory: string,
@@ -23,6 +28,7 @@ type Props = {
 }
 
 type State = {
+  categories: CategoriesType,
   category: string,
   subCategory: string
 }
@@ -31,7 +37,16 @@ export class TransactionDetailsCategoryInput extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     const { category, subCategory } = props
-    this.state = { category, subCategory }
+    const categories = this.formattedCategories(props.categories)
+    this.state = { categories, category, subCategory }
+  }
+  formattedCategories = (categories: Object) : CategoriesType => {
+    return Object.keys(categories).map(key => {
+      return {
+        key: categories[key].key,
+        syntax: categories[key].syntax
+      }
+    })
   }
   onChangeCategory = (category: string) => {
     this.setState({ category })
@@ -54,8 +69,8 @@ export class TransactionDetailsCategoryInput extends Component<Props, State> {
     bridge.resolve(null)
   }
   render() {
-    const { bridge, categories, subCategories } = this.props
-    const { category, subCategory } = this.state
+    const { bridge, subCategories } = this.props
+    const { categories, category, subCategory } = this.state
     return (
       <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(null)}>
         <TouchableWithoutFeedback onPress={() => bridge.resolve(null)}>
@@ -67,13 +82,13 @@ export class TransactionDetailsCategoryInput extends Component<Props, State> {
               </FormattedText>
               <View style={styles.InputCategoryRow}>
                 {categories.map(item => {
-                  const containterStyle = category.toLowerCase() === item.toLowerCase() ?
+                  const containterStyle = category === item.key ?
                     styles.inputCategoryContainterSelected :
                     styles.inputCategoryContainter
                   return (
-                    <TouchableWithoutFeedback onPress={() => this.onChangeCategory(item.toLowerCase())} key={item}>
+                    <TouchableWithoutFeedback onPress={() => this.onChangeCategory(item.key)} key={item.key}>
                       <View style={containterStyle}>
-                        <FormattedText style={styles.inputCategoryText}>{item}</FormattedText>
+                        <FormattedText style={styles.inputCategoryText}>{item.syntax}</FormattedText>
                       </View>
                     </TouchableWithoutFeedback>
                   )
@@ -91,7 +106,7 @@ export class TransactionDetailsCategoryInput extends Component<Props, State> {
                 fontSize={materialInput.fontSize}
                 labelFontSize={materialInput.labelFontSize}
                 onChangeText={this.onChangeSubCategory}
-                onSubmitEditing={this.onChangeSubCategory}
+                onSubmitEditing={() => bridge.resolve(null)}
                 value={subCategory}
               />
             </View>
@@ -99,28 +114,33 @@ export class TransactionDetailsCategoryInput extends Component<Props, State> {
               bottomGap={0}
               onPressFxn={this.onSelectSubCategory}
               enteredSubcategory={subCategory}
-              subcategoriesList={subCategories}
+              subcategoriesList={this.getSortedSubCategories()}
+              categories={this.getSortedCategories()}
             />
           </View>
         </TouchableWithoutFeedback>
       </AirshipModal>
     )
   }
-  // getSubcategories = () => {
-  //   const { categories, subCategories } = this.props
-  //   const formattedCategories = categories.map(category => {
-  //     const lowerCaseCategory = category.toLowerCase()
-  //     const formattedSubCategories = subCategories.map(subCategory => {
-  //       const splittedSubCategory = subCategory.split(':')
-  //       const lowerCaseOwnSubCategory = splittedSubCategory[0].toLowerCase()
-  //       return lowerCaseCategory === lowerCaseOwnSubCategory ? splittedSubCategory[1] : null
-  //     })
-  //     const filteredSubCategories = formattedSubCategories.filter(subCategory => subCategory != null)
-  //     return {
-  //       [category]: filteredSubCategories
-  //     }
-  //   })
-  //   // This converts an array to object. This should be Object.assign() but having flow error
-  //   return formattedCategories.reduce((previous, current) => ({ ...previous, ...current }), {})
-  // }
+  getSortedCategories = (): Array<string> => {
+    const { categories, category } = this.state
+    const selectedCategories = categories.filter(item => item.key === category)
+    const filteredCategories = categories.filter(item => item.key !== category)
+    const sortedCategories = [ ...selectedCategories, ...filteredCategories ]
+    return sortedCategories.map(category => category.key)
+  }
+  getSortedSubCategories = () => {
+    const { categories, subCategories } = this.props
+    const { category } = this.state
+
+    const selectedSubcategories = subCategories.filter(subCategory => {
+      const splittedSubCategory = subCategory.split(':')
+      return splittedSubCategory[0].toLowerCase() === categories[category].syntax.toLowerCase()
+    })
+    const filteredSubcategories = subCategories.filter(subCategory => {
+      const splittedSubCategory = subCategory.split(':')
+      return splittedSubCategory[0].toLowerCase() !== categories[category].syntax.toLowerCase()
+    })
+    return [...selectedSubcategories, ...filteredSubcategories]
+  }
 }

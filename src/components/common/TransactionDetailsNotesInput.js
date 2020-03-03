@@ -13,6 +13,7 @@ import FormattedText from '../../modules/UI/components/FormattedText/index'
 import styles, { materialInput } from '../../styles/scenes/TransactionDetailsStyle'
 import { truncateDecimals } from '../../util/utils'
 import THEME from '../../theme/variables/airbitz'
+import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
 
 type Props = {
   bridge: AirshipBridge<null>,
@@ -44,12 +45,12 @@ export class TransactionDetailsNotesInput extends Component<Props, State> {
           <View style={styles.airshipContainer}>
             <FormattedText style={styles.airshipHeader}>{s.strings.transaction_details_notes_title}</FormattedText>
             <TouchableWithoutFeedback onPress={() => this.input.focus()}>
-              <View style={[styles.notesInputWrap]}>
+              <View style={styles.inputNotesWrap}>
                 <TextInput
                   autoFocus
                   multiline
                   autoCorrect={false}
-                  style={styles.notesInput}
+                  style={styles.inputNotes}
                   autoCapitalize="sentences"
                   underlineColorAndroid={'transparent'}
                   placeholderTextColor={THEME.COLORS.GRAY_3}
@@ -60,6 +61,10 @@ export class TransactionDetailsNotesInput extends Component<Props, State> {
                 />
               </View>
             </TouchableWithoutFeedback>
+            <View style={styles.spacer} />
+            <PrimaryButton style={styles.saveButton} onPress={() => bridge.resolve(null)}>
+              <PrimaryButton.Text>{s.strings.string_save}</PrimaryButton.Text>
+            </PrimaryButton>
           </View>
         </TouchableWithoutFeedback>
       </AirshipModal>

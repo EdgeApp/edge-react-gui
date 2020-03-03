@@ -65,13 +65,6 @@ const categories = {
   }
 }
 
-const categoryList = [
-  EXCHANGE_TEXT,
-  EXPENSE_TEXT,
-  TRANSFER_TEXT,
-  INCOME_TEXT
-]
-
 export type TransactionDetailsOwnProps = {
   edgeTransaction: EdgeTransaction,
   contacts: Array<GuiContact>,
@@ -514,7 +507,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     Airship.show(bridge => (
       <TransactionDetailsCategoryInput
         bridge={bridge}
-        categories={categoryList}
+        categories={categories}
         subCategories={this.props.subcategoriesList}
         category={this.state.category}
         subCategory={this.state.subCategory}

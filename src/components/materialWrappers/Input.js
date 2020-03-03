@@ -125,7 +125,7 @@ class Input extends Component<Props, State> {
         placeholder={this.props.placeholder}
         maxLength={this.props.maxLength}
         numberOfLines={this.props.numberOfLines}
-        multiline={true}
+        multiline={this.props.multiline}
         autoCorrect={autoCorrect}
       />
     )

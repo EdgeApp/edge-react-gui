@@ -120,14 +120,6 @@ export const styles = {
     marginBottom: rem(1),
     alignSelf: 'center'
   },
-  notesInputWrap: {
-    borderWidth: 1,
-    borderColor: '#CCCCCC',
-    borderRadius: 3,
-    height: PLATFORM.deviceHeight * 0.13 - (PLATFORM.platform === 'android' ? scale(20) : 0),
-    paddingVertical: rem(0.1),
-    paddingHorizontal: rem(0.8)
-  },
   fiatInput: {
     borderBottomWidth: 1,
     borderBottomColor: '#CCCCCC',
@@ -220,10 +212,26 @@ export const styles = {
   rowPlus: {
     fontSize: rem(0.95)
   },
-
-
-
-
+  inputNotesWrap: {
+    borderWidth: 1,
+    borderColor: '#CCCCCC',
+    borderRadius: 3,
+    height: PLATFORM.deviceHeight * 0.45 - (PLATFORM.platform === 'android' ? rem(1.25) : 0),
+    paddingVertical: rem(0.1),
+    paddingHorizontal: rem(0.8)
+  },
+  inputNotes: {
+    color: THEME.COLORS.GRAY_2,
+    fontSize: scale(15),
+    fontFamily: THEME.FONTS.DEFAULT,
+    paddingVertical: 0
+  },
+  inputNotesButton: {
+    color: THEME.COLORS.GRAY_2,
+    fontSize: scale(15),
+    fontFamily: THEME.FONTS.DEFAULT,
+    paddingVertical: 0
+  },
 
   //old style
   searchPopup: {
