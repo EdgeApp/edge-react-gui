@@ -1,32 +1,37 @@
 // @flow
 
-import type { EdgeLobby } from 'edge-core-js'
+import { type EdgeLobby } from 'edge-core-js/types'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import parse from 'url-parse'
 
 import { launchModal } from '../components/common/ModalProvider.js'
 import s from '../locales/strings.js'
 import { errorModal } from '../modules/UI/components/Modals/ErrorModal.js'
+import { type Dispatch, type GetState } from '../types/reduxTypes.js'
 
-export const loginWithEdge = (url: string) => async (dispatch: any, getState: any) => {
-  const parsedUrl = parse(url, {}, false)
-  const token = getToken(parsedUrl)
+export const loginWithEdge = (lobbyId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const account = state.core.account
-  const lobby: EdgeLobby = await account.fetchLobby(token).catch(error => {
-    dispatch({ type: 'SET_LOBBY_ERROR', data: error.message })
-  })
-  if (lobby) {
-    dispatch({ type: 'SAVE_EDGE_LOBBY', data: lobby })
-  }
+  account
+    .fetchLobby(lobbyId)
+    .then((lobby: EdgeLobby) => {
+      dispatch({ type: 'SAVE_EDGE_LOBBY', data: lobby })
+    })
+    .catch(error => {
+      dispatch({ type: 'SET_LOBBY_ERROR', data: error.message })
+    })
 }
 
-export const lobbyLogin = () => async (dispatch: any, getState: any) => {
+export const lobbyLogin = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
+  const { lobby } = state.core.edgeLogin
+  if (lobby == null) return
+  const { loginRequest } = lobby
+  if (loginRequest == null) return
+
   dispatch({ type: 'PROCESS_EDGE_LOGIN' })
   try {
-    await state.core.edgeLogin.lobby.loginRequest.approve()
+    await loginRequest.approve()
     dispatch({ type: 'INVALIDATE_EDGE_LOBBY' })
     Actions.pop()
     setTimeout(() => {
@@ -36,16 +41,5 @@ export const lobbyLogin = () => async (dispatch: any, getState: any) => {
     dispatch({ type: 'EDGE_LOBBY_ACCEPT_FAILED' })
     e.message = e.message.includes('Could not reach') ? s.strings.edge_login_fail_message : e.message
     launchModal(errorModal(s.strings.edge_login_failed, e))
-  }
-}
-
-const getToken = (data: any) => {
-  if (data.protocol === 'edge:' || data.protocol === 'edge-ret:' || data.protocol === 'airbitz:' || data.protocol === 'airbitz-ret:') {
-    const splitArray = data.href.split('edge/')
-    return splitArray[1]
-  }
-  if (data.protocol === 'https:') {
-    const splitArray = data.query.split('address=')
-    return splitArray[1]
   }
 }

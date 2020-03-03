@@ -54,7 +54,7 @@ class EdgeContextCallbackManager extends React.Component<Props> {
 
 export default connect(
   (state: State): StateProps => ({
-    context: state.core.context.context
+    context: state.core.context
   }),
   (dispatch: Dispatch) => ({})
 )(EdgeContextCallbackManager)

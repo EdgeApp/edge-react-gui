@@ -8,7 +8,7 @@ import { CryptoExchangeCreateWalletRow } from '../../components/common/CryptoExc
 import { CryptoExchangeWalletListTokenRowConnected as CryptoExchangeWalletListRow } from '../../connectors/components/CryptoExchangeWalletListRowConnector.js'
 import s from '../../locales/strings.js'
 import FormattedText from '../../modules/UI/components/FormattedText/index'
-import { CryptoExchangeWalletSelectorModalStyles as styles } from '../../styles/indexStyles'
+import { CryptoExchangeWalletSelectorModalStyles as styles } from '../../styles/components/CryptoExchangeWalletSelectorModalStyles.js'
 import type { GuiWallet, MostRecentWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { type AirshipBridge, AirshipModal } from './modalParts.js'

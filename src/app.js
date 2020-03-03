@@ -136,3 +136,16 @@ if (ENABLE_PERF_LOGGING) {
   global.pend = function (label: string) {}
   global.pcount = function (label: string) {}
 }
+
+const realFetch = fetch
+fetch = (...args: any) => {
+  return realFetch(...args).catch(e => {
+    global.bugsnag.leaveBreadcrumb('realFetchError', {
+      url: args[0],
+      errorName: e.name,
+      errorMsg: e.message
+    })
+    console.log(`realFetchError: ${args[0]} ${e.name} ${e.message}`)
+    throw e
+  })
+}

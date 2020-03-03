@@ -8,11 +8,14 @@ import { Linking } from 'react-native'
 import Mailer from 'react-native-mail'
 import { Actions } from 'react-native-router-flux'
 import SafariView from 'react-native-safari-view'
+import { sprintf } from 'sprintf-js'
 import { Bridgeable } from 'yaob'
 
-import { createCurrencyWalletAndSelectForPlugins } from '../../../../actions/indexActions'
+import { createCurrencyWalletAndSelectForPlugins } from '../../../../actions/CreateWalletActions.js'
+import { trackAccountEvent, trackConversion } from '../../../../actions/TrackingActions.js'
 import { selectWallet } from '../../../../actions/WalletActions'
 import { launchModal } from '../../../../components/common/ModalProvider.js'
+import { TwoButtonSimpleConfirmationModal } from '../../../../components/modals/TwoButtonSimpleConfirmationModal.js'
 import { Airship, showError, showToast } from '../../../../components/services/AirshipInstance.js'
 import { WalletListModalConnected as WalletListModal } from '../../../../connectors/components/WalletListModalConnector.js'
 import { DEFAULT_STARTER_WALLET_NAMES, EXCLAMATION, MATERIAL_COMMUNITY } from '../../../../constants/indexConstants'
@@ -23,7 +26,6 @@ import { Icon } from '../../../../modules/UI/components/Icon/Icon.ui.js'
 import type { GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
 import type { Dispatch, State } from '../../../../types/reduxTypes.js'
 import type { BuySellPlugin, GuiWallet } from '../../../../types/types.js'
-import { trackConversion, trackEvent } from '../../../../util/tracking.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 
@@ -65,6 +67,12 @@ type EdgeRequestSpendOptions = {
 type EdgeGetReceiveAddressOptions = {
   // Metadata to tag these addresses with for when funds arrive at the address
   metadata?: EdgeMetadata
+}
+
+type EdgeGetWalletHistoryResult = {
+  fiatCurrencyCode: string, // the fiat currency code of all transactions in the wallet. I.e. "iso:USD"
+  balance: string, // the current balance of wallet in the native amount units. I.e. "satoshis"
+  transactions: Array<EdgeTransaction>
 }
 
 export type EdgeProviderSpendTarget = EdgeSpendTarget & {
@@ -288,6 +296,56 @@ export class EdgeProvider extends Bridgeable {
     Actions.pop()
   }
 
+  async getWalletHistory () {
+    // Get Wallet Info
+    const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
+    const coreWallet = CORE_SELECTORS.getWallet(this._state, guiWallet.id)
+    const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(this._state)
+
+    // Prompt user with yes/no modal for permission
+    const confirmTxShare = await Airship.show(bridge => (
+      <TwoButtonSimpleConfirmationModal
+        bridge={bridge}
+        title={s.strings.fragment_wallets_export_transactions}
+        subTitle={sprintf(s.strings.transaction_history_permission, coreWallet.name)}
+        cancelText={s.strings.no}
+        doneText={s.strings.yes}
+      />
+    ))
+    if (!confirmTxShare) {
+      throw new Error('User denied permission')
+    }
+
+    // Grab transactions from current wallet
+    const fiatCurrencyCode = coreWallet.fiatCurrencyCode
+    const balance = coreWallet.getBalance({ currencyCode })
+
+    const txs = await coreWallet.getTransactions({ currencyCode })
+    const transactions: Array<EdgeTransaction> = []
+    for (const tx of txs) {
+      const newTx: EdgeTransaction = {
+        currencyCode: tx.currencyCode,
+        nativeAmount: tx.nativeAmount,
+        networkFee: tx.networkFee,
+        parentNetworkFee: tx.parentNetworkFee,
+        blockHeight: tx.blockHeight,
+        date: tx.date,
+        signedTx: '',
+        txid: tx.txid,
+        ourReceiveAddresses: tx.ourReceiveAddresses,
+        metadata: tx.metadata
+      }
+      transactions.push(newTx)
+    }
+    const result: EdgeGetWalletHistoryResult = {
+      fiatCurrencyCode,
+      balance,
+      transactions
+    }
+    console.log('EdgeGetWalletHistoryResult', JSON.stringify(result))
+    return result
+  }
+
   // Request that the user spend to an address or multiple addresses
   async requestSpend (spendTargets: Array<EdgeProviderSpendTarget>, options?: EdgeRequestSpendOptions): Promise<EdgeTransaction | void> {
     const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
@@ -405,17 +463,20 @@ export class EdgeProvider extends Bridgeable {
   async trackConversion (opts?: { currencyCode: string, exchangeAmount: number }) {
     if (opts != null) {
       const { currencyCode, exchangeAmount } = opts
-      trackConversion('EdgeProviderConversion', {
-        pluginId: this._pluginId,
-        account: CORE_SELECTORS.getAccount(this._state),
-        currencyCode,
-        exchangeAmount
-      })
+      this._dispatch(
+        trackConversion('EdgeProviderConversion', {
+          pluginId: this._pluginId,
+          account: CORE_SELECTORS.getAccount(this._state),
+          currencyCode,
+          exchangeAmount
+        })
+      )
     } else {
-      trackEvent('EdgeProviderConversion', {
-        pluginId: this._pluginId,
-        account: CORE_SELECTORS.getAccount(this._state)
-      })
+      this._dispatch(
+        trackAccountEvent('EdgeProviderConversion', {
+          pluginId: this._pluginId
+        })
+      )
     }
   }
 

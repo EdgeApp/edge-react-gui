@@ -11,9 +11,8 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import SecondaryModal from '../../connectors/SecondaryModalConnector.js'
 import s from '../../locales/strings.js'
-import type { PermissionStatus } from '../../modules/PermissionsManager.js'
-import { PermissionStatusStrings } from '../../modules/PermissionsManager.js'
 import T from '../../modules/UI/components/FormattedText/index'
+import { type PermissionStatus } from '../../reducers/PermissionsReducer.js'
 import styles, { styles as styleRaw } from '../../styles/scenes/ScaneStyle'
 import { scale } from '../../util/scaling.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -22,14 +21,11 @@ type Props = {
   cameraPermission: PermissionStatus,
   torchEnabled: boolean,
   scanEnabled: boolean,
-  deepLinkPending: boolean,
-  deepLinkUri: string | null,
   qrCodeScanned: (data: string) => void,
   parseScannedUri: (data: string) => void,
   toggleEnableTorch: () => void,
   toggleAddressModal: () => void,
-  toggleScanToWalletListModal: () => void,
-  markAddressDeepLinkDone: () => any
+  toggleScanToWalletListModal: () => void
 }
 
 const HEADER_TEXT = s.strings.send_scan_header_text
@@ -43,22 +39,7 @@ const FLASH_TEXT = s.strings.fragment_send_flash
 export class Scan extends Component<Props> {
   constructor (props: Props) {
     super(props)
-
-    this.checkForDeepLink()
-
     slowlog(this, /.*/, global.slowlogOptions)
-  }
-
-  componentDidUpdate () {
-    this.checkForDeepLink()
-  }
-
-  checkForDeepLink () {
-    if (this.props.deepLinkUri && this.props.deepLinkPending) {
-      const deepLinkUri = this.props.deepLinkUri
-      this.props.markAddressDeepLinkDone()
-      this.props.parseScannedUri(deepLinkUri)
-    }
   }
 
   render () {
@@ -108,7 +89,7 @@ export class Scan extends Component<Props> {
       return <View style={styles.cameraArea} />
     }
 
-    if (this.props.cameraPermission === PermissionStatusStrings.DENIED) {
+    if (this.props.cameraPermission === 'denied') {
       return (
         <View style={styles.cameraArea}>
           <Text style={styles.cameraPermissionDeniedText}>{DENIED_PERMISSION_TEXT}</Text>
@@ -119,7 +100,7 @@ export class Scan extends Component<Props> {
       )
     }
 
-    if (this.props.cameraPermission === PermissionStatusStrings.AUTHORIZED) {
+    if (this.props.cameraPermission === 'authorized') {
       const flashMode = this.props.torchEnabled ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off
 
       return (

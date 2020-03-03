@@ -14,7 +14,6 @@ import { type EditTokenState, editToken } from '../EditTokenReducer.js'
 import { type RequestTypeState, requestType } from '../RequestTypeReducer.js'
 import { type UniqueIdentifierModalState, uniqueIdentifierModal } from '../UniqueIdentifierModalReducer.js'
 import { type CreateWalletState, createWallet } from './CreateWalletReducer.js'
-import { type RequestSceneState, request } from './RequestReducer.js'
 import { type ScanState, scan } from './ScanReducer.js'
 import { type SendConfirmationState, sendConfirmation } from './SendConfirmationReducer.js'
 import { type TransactionDetailsState, transactionDetails } from './TransactionDetailsReducer.js'
@@ -28,7 +27,6 @@ export type ScenesState = {
   +exchangeRate: ExchangeRateState,
   +passwordRecoveryReminderModal: PasswordRecoveryReminderModalState,
   +passwordReminderModal: PasswordReminderModalState,
-  +request: RequestSceneState,
   +requestType: RequestTypeState,
   +scan: ScanState,
   +sendConfirmation: SendConfirmationState,
@@ -45,7 +43,6 @@ export const scenes: Reducer<ScenesState, Action> = combineReducers({
   exchangeRate,
   passwordRecoveryReminderModal,
   passwordReminderModal,
-  request,
   requestType,
   scan,
   sendConfirmation,

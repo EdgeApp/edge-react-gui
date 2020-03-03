@@ -7,11 +7,10 @@ import { sprintf } from 'sprintf-js'
 
 import s from '../../locales/strings.js'
 import { PrimaryButton, SecondaryButton } from '../../modules/UI/components/Buttons/index'
-import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
+import { styles } from '../../styles/scenes/EdgeLoginSceneStyle.js'
+import { SceneWrapper } from '../common/SceneWrapper.js'
 
 type EdgeLoginSceneProps = {
-  style: Object,
   lobby?: EdgeLobby,
   error?: string,
   isProcessing: boolean,
@@ -20,9 +19,8 @@ type EdgeLoginSceneProps = {
 }
 
 export default class EdgeLoginScene extends Component<EdgeLoginSceneProps> {
-  renderBody (style: Object) {
+  renderBody () {
     let message = this.props.error
-    let textStyle = style.bodyText
     if (!this.props.error) {
       message = s.strings.edge_description
     }
@@ -30,28 +28,28 @@ export default class EdgeLoginScene extends Component<EdgeLoginSceneProps> {
       throw new Error('Not normal expected behavior')
     }
     if (this.props.lobby && this.props.lobby.loginRequest && this.props.lobby.loginRequest.appId === '') {
-      textStyle = style.bodyText
       message = sprintf(s.strings.edge_description_warning, this.props.lobby.loginRequest.displayName)
     }
     return (
-      <View style={style.body}>
-        <Text style={textStyle}>{message}</Text>
+      <View style={styles.body}>
+        <Text style={styles.bodyText}>{message}</Text>
       </View>
     )
   }
-  renderButtons (style: Object) {
+
+  renderButtons () {
     if (this.props.isProcessing) {
       return (
-        <View style={style.buttonsProcessing}>
+        <View style={styles.buttonsProcessing}>
           <ActivityIndicator />
         </View>
       )
     }
     if (this.props.error) {
       return (
-        <View style={style.buttonContainer}>
-          <View style={style.buttons}>
-            <SecondaryButton style={style.cancelSolo} onPress={this.props.decline}>
+        <View style={styles.buttonContainer}>
+          <View style={styles.buttons}>
+            <SecondaryButton style={styles.cancelSolo} onPress={this.props.decline}>
               <SecondaryButton.Text>{s.strings.string_cancel_cap}</SecondaryButton.Text>
             </SecondaryButton>
           </View>
@@ -59,68 +57,64 @@ export default class EdgeLoginScene extends Component<EdgeLoginSceneProps> {
       )
     }
     return (
-      <View style={style.buttonContainer}>
-        <View style={style.buttons}>
-          <SecondaryButton style={style.cancel} onPress={this.props.decline}>
+      <View style={styles.buttonContainer}>
+        <View style={styles.buttons}>
+          <SecondaryButton style={styles.cancel} onPress={this.props.decline}>
             <SecondaryButton.Text>{s.strings.string_cancel_cap}</SecondaryButton.Text>
           </SecondaryButton>
-          <PrimaryButton style={style.submit} onPress={this.props.accept}>
+          <PrimaryButton style={styles.submit} onPress={this.props.accept}>
             <PrimaryButton.Text>{s.strings.accept_button_text}</PrimaryButton.Text>
           </PrimaryButton>
         </View>
       </View>
     )
   }
-  renderImage (style: Object) {
+
+  renderImage () {
     if (this.props.lobby && this.props.lobby.loginRequest && this.props.lobby.loginRequest.displayImageUrl) {
-      return <Image style={style.image} resizeMode={'contain'} source={{ uri: this.props.lobby.loginRequest.displayImageUrl }} />
+      return <Image style={styles.image} resizeMode={'contain'} source={{ uri: this.props.lobby.loginRequest.displayImageUrl }} />
     }
     return null
   }
-  renderHeader (style: Object) {
+
+  renderHeader () {
     let title = ''
     if (this.props.lobby && this.props.lobby.loginRequest) {
       title = this.props.lobby.loginRequest.displayName ? this.props.lobby.loginRequest.displayName : ''
     }
     if (this.props.lobby) {
       return (
-        <View style={style.header}>
-          <View style={style.headerTopShim} />
-          <View style={style.headerImageContainer}>{this.renderImage(style)}</View>
-          <View style={style.headerTopShim} />
-          <View style={style.headerTextRow}>
-            <Text style={style.bodyText}>{title}</Text>
+        <View style={styles.header}>
+          <View style={styles.headerTopShim} />
+          <View style={styles.headerImageContainer}>{this.renderImage()}</View>
+          <View style={styles.headerTopShim} />
+          <View style={styles.headerTextRow}>
+            <Text style={styles.bodyText}>{title}</Text>
           </View>
-          <View style={style.headerBottomShim} />
+          <View style={styles.headerBottomShim} />
         </View>
       )
     }
-    return <View style={style.header} />
+    return <View style={styles.header} />
   }
+
   render () {
-    const Style = this.props.style
     if (!this.props.lobby && !this.props.error) {
       return (
-        <SafeAreaView>
-          <Gradient style={Style.gradient} />
-          <View style={Style.spinnerContainer}>
-            <View>
-              <Text style={Style.loadingTextBody}>{s.strings.edge_login_fetching}</Text>
-              <ActivityIndicator />
-            </View>
+        <SceneWrapper background="body">
+          <View style={styles.spinnerContainer}>
+            <Text style={styles.loadingTextBody}>{s.strings.edge_login_fetching}</Text>
+            <ActivityIndicator />
           </View>
-        </SafeAreaView>
+        </SceneWrapper>
       )
     }
     return (
-      <SafeAreaView>
-        <Gradient style={Style.gradient} />
-        <View style={Style.container}>
-          {this.renderHeader(Style)}
-          {this.renderBody(Style)}
-          {this.renderButtons(Style)}
-        </View>
-      </SafeAreaView>
+      <SceneWrapper background="body">
+        {this.renderHeader()}
+        {this.renderBody()}
+        {this.renderButtons()}
+      </SceneWrapper>
     )
   }
 }

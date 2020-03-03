@@ -3,7 +3,7 @@
 
 import { clone } from 'ramda'
 
-import { makeSpendFailed, newPin, newSpendInfo, reset, updateSpendPending, updateTransaction } from '../actions/SendConfirmationActions.js'
+import { newPin, newSpendInfo, reset, updateSpendPending, updateTransaction } from '../actions/SendConfirmationActions.js'
 import s from '../locales/strings.js'
 import { initialState } from '../modules/UI/scenes/SendConfirmation/selectors.js'
 import { sendConfirmation } from '../reducers/scenes/SendConfirmationReducer.js'
@@ -168,33 +168,14 @@ describe('sendConfirmation reducer', () => {
     //   const action = updatePaymentProtocolTransaction(edgeTransaction)
     //   const initialStateClone = clone(initialState)
     //   const actual = sendConfirmation(initialStateClone, action)
-
     //   expect(actual).toMatchSnapshot()
     // })
-
-    test('MAKE_PAYMENT_PROTOCOL_TRANSACTION_FAILED', () => {
-      const error = new Error()
-      const action = makeSpendFailed(error)
-      const initialStateClone = clone(initialState)
-      const actual = sendConfirmation(initialStateClone, action)
-
-      expect(actual).toMatchSnapshot()
-    })
   })
 
   describe('error', () => {
     test('UPDATE_TRANSACTION', () => {
       const error = new Error()
       const action = updateTransaction(null, null, null, error)
-      const initialStateClone = clone(initialState)
-      const actual = sendConfirmation(initialStateClone, action)
-
-      expect(actual).toMatchSnapshot()
-    })
-
-    test('MAKE_PAYMENT_PROTOCOL_TRANSACTION_FAILED', () => {
-      const error = new Error()
-      const action = makeSpendFailed(error)
       const initialStateClone = clone(initialState)
       const actual = sendConfirmation(initialStateClone, action)
 

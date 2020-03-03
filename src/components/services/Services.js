@@ -1,7 +1,7 @@
 // @flow
 /* global window */
 
-import { downgradeDisklet, makeReactNativeDisklet } from 'disklet'
+import { makeReactNativeDisklet } from 'disklet'
 import { type EdgeContext } from 'edge-core-js/types'
 import React, { PureComponent } from 'react'
 import DeviceInfo from 'react-native-device-info'
@@ -12,23 +12,25 @@ import { type Store, applyMiddleware, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
 
 import ENV from '../../../env.json'
-import Main from '../../connectors/MainConnector.js'
+import { loadDeviceReferral } from '../../actions/DeviceReferralActions.js'
 import { setIntlLocale } from '../../locales/intl.js'
 import { selectLocale } from '../../locales/strings.js'
 import { rootReducer } from '../../reducers/RootReducer.js'
 import { type Action } from '../../types/reduxActions.js'
-import { type State } from '../../types/reduxTypes.js'
+import { type Dispatch, type State } from '../../types/reduxTypes.js'
 import errorAlert from '../../util/errorAlert.js'
-import { loadInstallReason } from '../../util/installReason.js'
 import loginStatusChecker from '../../util/loginStatusChecker.js'
 import perfLogger from '../../util/perfLogger.js'
 import { ModalProvider } from '../common/ModalProvider.js'
+import { Main } from '../Main.ui.js'
 import { Airship } from './AirshipInstance.js'
 import { AutoLogout } from './AutoLogout.js'
 import { ContactsLoader } from './ContactsLoader.js'
+import { DeepLinkingManager } from './DeepLinkingManager.js'
 import EdgeAccountCallbackManager from './EdgeAccountCallbackManager.js'
 import EdgeContextCallbackManager from './EdgeContextCallbackManager.js'
 import EdgeWalletsCallbackManager from './EdgeWalletsCallbackManager.js'
+import { PermissionsManager } from './PermissionsManager.js'
 
 type Props = { context: EdgeContext }
 
@@ -38,6 +40,7 @@ type Props = { context: EdgeContext }
  */
 export class Services extends PureComponent<Props> {
   store: Store<State, Action>
+  dispatch: Dispatch
 
   constructor (props: Props) {
     super(props)
@@ -52,19 +55,20 @@ export class Services extends PureComponent<Props> {
 
     const initialState: Object = {}
     this.store = createStore(rootReducer, initialState, composeEnhancers(applyMiddleware(...middleware)))
+    const flowHack: any = this.store.dispatch
+    this.dispatch = flowHack // Flow doesn't know about redux-thunk
 
     // Put the context into Redux:
     const { context } = props
     const disklet = makeReactNativeDisklet()
-    const folder = downgradeDisklet(disklet)
     this.store.dispatch({
       type: 'CORE/CONTEXT/ADD_CONTEXT',
-      data: { context, folder }
+      data: { context, disklet }
     })
-    loadInstallReason(disklet, context.localUsers.length === 0)
   }
 
   componentDidMount () {
+    this.dispatch(loadDeviceReferral())
     setIntlLocale(Locale.constants())
     selectLocale(DeviceInfo.getDeviceLocale())
   }
@@ -85,10 +89,12 @@ export class Services extends PureComponent<Props> {
           <Airship />
           <AutoLogout />
           <ContactsLoader />
+          <DeepLinkingManager />
           <EdgeAccountCallbackManager />
           <EdgeContextCallbackManager />
           <EdgeWalletsCallbackManager />
           <ModalProvider />
+          <PermissionsManager />
         </React.Fragment>
       </Provider>
     )

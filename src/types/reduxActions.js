@@ -1,25 +1,25 @@
 // @flow
 
-import type { DiskletFolder } from 'disklet'
+import { type Disklet } from 'disklet'
 import type { EdgeContext, EdgeCurrencyWallet, EdgeLobby, EdgeParsedUri, EdgeReceiveAddress } from 'edge-core-js'
 
+import { type PermissionsState } from '../reducers/PermissionsReducer.js'
 import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
+import { type TweakSource } from '../util/ReferralHelpers.js'
+import { type DeepLink } from './DeepLink.js'
+import { type AccountReferral, type DeviceReferral, type Promotion, type ReferralCache } from './ReferralTypes.js'
 import { type CustomTokenInfo, type GuiContact, type GuiCurrencyInfo, type GuiSwapInfo, type GuiWallet } from './types.js'
 
 type LegacyActionName =
   | 'ACCOUNT_INIT_COMPLETE'
   | 'ACCOUNT/LOGGED_IN'
-  | 'ADDRESS_DEEP_LINK_RECEIVED'
-  | 'DEEP_LINK_RECEIVED'
   | 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES'
   | 'NEW_RECEIVE_ADDRESS'
-  | 'PERMISSIONS/UPDATE'
   | 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_FAIL'
   | 'SET_CONFIRM_PASSWORD_ERROR'
   | 'SET_TRANSACTION_SUBCATEGORIES'
   | 'SPENDING_LIMITS/NEW_SPENDING_LIMITS'
   | 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS'
-  | 'UI/SEND_CONFIMATION/MAKE_SPEND_FAILED'
   | 'UI/SEND_CONFIMATION/NEW_PIN'
   | 'UI/SEND_CONFIMATION/NEW_SPEND_INFO'
   | 'UI/SEND_CONFIMATION/UPDATE_SPEND_PENDING'
@@ -43,25 +43,24 @@ type LegacyActionName =
   | 'UI/WALLETS/UPSERT_WALLETS'
   | 'UNIQUE_IDENTIFIER_MODAL/UNIQUE_IDENTIFIER_CHANGED'
   | 'UPDATE_EXCHANGE_RATES'
-  | 'UPDATE_RECEIVE_ADDRESS_SUCCESS'
   | 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL'
   | 'UPDATE_WALLET_FIAT_BALANCE_VISIBILITY'
   | 'UPDATE_WALLET_LOADING_PROGRESS'
 
 // Actions with no payload:
 type NoDataActionName =
+  | 'ACCOUNT_SWAP_IGNORED'
   | 'ADD_NEW_CUSTOM_TOKEN_FAILURE'
   | 'ADD_TOKEN_START'
-  | 'ADDRESS_DEEP_LINK_COMPLETE'
   | 'CLOSE_SELECT_USER'
   | 'CLOSE_VIEWXPUB_WALLET_MODAL'
+  | 'DEEP_LINK_HANDLED'
   | 'DELETE_CUSTOM_TOKEN_FAILURE'
   | 'DELETE_CUSTOM_TOKEN_START'
   | 'DEVELOPER_MODE_OFF'
   | 'DEVELOPER_MODE_ON'
   | 'DISABLE_OTP_RESET'
   | 'DISABLE_SCAN'
-  | 'DISABLE_WALLET_LIST_MODAL_VISIBILITY'
   | 'DONE_SHIFT_TRANSACTION'
   | 'DUMMY_ACTION_PLEASE_IGNORE'
   | 'EDGE_LOBBY_ACCEPT_FAILED'
@@ -71,7 +70,6 @@ type NoDataActionName =
   | 'HIDE_DELETE_TOKEN_MODAL'
   | 'HIDE_PASSWORD_RECOVERY_MODAL'
   | 'INVALIDATE_EDGE_LOBBY'
-  | 'LOGGED_OUT'
   | 'LOGS/SEND_LOGS_PENDING'
   | 'MANAGE_TOKENS_START'
   | 'MANAGE_TOKENS_SUCCESS'
@@ -113,6 +111,8 @@ export type Action =
   // Actions with known payloads:
   | { type: 'ACCOUNT_ACTIVATION_INFO', data: HandleActivationInfo }
   | { type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO', data: AccountActivationPaymentInfo }
+  | { type: 'ACCOUNT_REFERRAL_LOADED', data: { referral: AccountReferral, cache: ReferralCache } }
+  | { type: 'ACCOUNT_TWEAKS_REFRESHED', data: ReferralCache }
   | {
       type: 'ADD_NEW_CUSTOM_TOKEN_SUCCESS',
       data: {
@@ -136,7 +136,7 @@ export type Action =
     }
   | {
       type: 'CORE/CONTEXT/ADD_CONTEXT',
-      data: { context: EdgeContext, folder: DiskletFolder }
+      data: { context: EdgeContext, disklet: Disklet }
     }
   | {
       type: 'CORE/WALLETS/UPDATE_WALLETS',
@@ -147,7 +147,9 @@ export type Action =
         receiveAddresses: { [id: string]: EdgeReceiveAddress }
       }
     }
+  | { type: 'DEEP_LINK_RECEIVED', data: DeepLink }
   | { type: 'DELETE_CUSTOM_TOKEN_SUCCESS', data: { currencyCode: string } }
+  | { type: 'DEVICE_REFERRAL_LOADED', data: DeviceReferral }
   | {
       type: 'INSERT_WALLET_IDS_FOR_PROGRESS',
       data: { activeWalletIds: Array<string> }
@@ -157,6 +159,7 @@ export type Action =
   | { type: 'LOGS/SEND_LOGS_REQUEST', text: string }
   | { type: 'LOGS/SEND_LOGS_SUCCESS', result: string }
   | { type: 'LOGS/SEND_LOGS_FAILURE', error: Error }
+  | { type: 'MESSAGE_TWEAK_HIDDEN', data: { messageId: string, source: TweakSource } }
   | {
       type: 'OPEN_VIEWXPUB_WALLET_MODAL',
       data: { walletId: string, xPub: string | null, xPubExplorer: string }
@@ -169,6 +172,9 @@ export type Action =
         coreWalletsToUpdate: Array<EdgeCurrencyWallet>
       }
     }
+  | { type: 'PERMISSIONS/UPDATE', data: PermissionsState }
+  | { type: 'PROMOTION_ADDED', data: Promotion }
+  | { type: 'PROMOTION_REMOVED', data: string /* installerId */ }
   | { type: 'HANDLE_AVAILABLE_STATUS', data: HandleAvailableStatus }
   | {
       type: 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE' | 'SELECT_TO_WALLET_CRYPTO_EXCHANGE',

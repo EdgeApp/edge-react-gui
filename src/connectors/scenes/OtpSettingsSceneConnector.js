@@ -2,7 +2,6 @@
 
 import { connect } from 'react-redux'
 
-// import * as Constants from '../../constants/indexConstants.js'
 import { disableOtp, enableOtp } from '../../actions/OtpActions.js'
 import OtpSettingsSceneComponent from '../../components/scenes/OtpSettingsScene.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'

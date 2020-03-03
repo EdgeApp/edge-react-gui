@@ -2,16 +2,19 @@
 
 import { createYesNoModal } from 'edge-components'
 import React, { Component } from 'react'
-import { ActivityIndicator, Alert, Animated, FlatList, Image, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, Alert, Animated, FlatList, Image, Linking, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import SortableListView from 'react-native-sortable-listview'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
+import credLogo from '../../assets/images/cred_logo.png'
 import iconImage from '../../assets/images/otp/OTP-badge_sm.png'
 import WalletIcon from '../../assets/images/walletlist/my-wallets.png'
-import WalletOptions from '../../connectors/WalletOptionsConnector.js'
+import XPubModal from '../../connectors/XPubModalConnector.js'
 import * as Constants from '../../constants/indexConstants.js'
+import { pluginUrlMap } from '../../constants/plugins/buySellPlugins'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getDefaultIsoFiat, getIsAccountBalanceVisible } from '../../modules/Settings/selectors.js'
@@ -23,18 +26,22 @@ import { WiredProgressBar } from '../../modules/UI/components/WiredProgressBar/W
 import { getWalletLoadingPercent } from '../../modules/UI/selectors.js'
 import { addWalletStyle } from '../../styles/components/AddWalletStyle.js'
 import { buyMultipleCryptoStyle } from '../../styles/components/BuyCryptoStyle.js'
-import { TwoButtonModalStyle } from '../../styles/indexStyles.js'
+import { TwoButtonModalStyle } from '../../styles/components/TwoButtonModalStyle.js'
 import styles from '../../styles/scenes/WalletListStyle'
 import THEME from '../../theme/variables/airbitz'
+import { type AccountReferral } from '../../types/ReferralTypes.js'
+import { type MessageTweak } from '../../types/TweakTypes.js'
 import type { GuiWalletType } from '../../types/types.js'
 import { type DeviceDimensions } from '../../types/types.js'
+import { type TweakSource, bestOfMessages } from '../../util/ReferralHelpers.js'
 import { scale } from '../../util/scaling.js'
 import { getObjectDiff, getTotalFiatAmountFromExchangeRates } from '../../util/utils'
 import FullWalletListRow from '../common/FullWalletListRow.js'
 import { launchModal } from '../common/ModalProvider.js'
 import SortableWalletListRow from '../common/SortableWalletListRow.js'
 import { WiredBalanceBox } from '../common/WiredBalanceBox.js'
-import { StaticModalComponent, TwoButtonTextModalComponent } from '../indexComponents'
+import { StaticModalComponent } from '../modals/StaticModalComponent.js'
+import { TwoButtonTextModalComponent } from '../modals/TwoButtonTextModalComponent.js'
 
 const DONE_TEXT = s.strings.string_done_cap
 const WALLETS_HEADER_TEXT = s.strings.fragment_wallets_header
@@ -56,6 +63,8 @@ type State = {
 }
 type Props = {
   activeWalletIds: Array<string>,
+  accountMessages: MessageTweak[],
+  accountReferral: AccountReferral,
   customTokens: Array<any>,
   dimensions: DeviceDimensions,
   wallets: any,
@@ -66,6 +75,7 @@ type Props = {
   walletRowOption: (walletId: string, option: string, archived: boolean) => void,
   disableOtp: () => void,
   keepOtp: () => void,
+  hideMessageTweak(messageId: string, source: TweakSource): void,
   toggleAccountBalanceVisibility: () => void,
   isAccountBalanceVisible: boolean,
   ethereumWalletType?: GuiWalletType,
@@ -157,7 +167,7 @@ export default class WalletList extends Component<Props, State> {
     return (
       <SafeAreaView>
         <View style={styles.container}>
-          <WalletOptions />
+          <XPubModal />
           <Gradient style={styles.gradient} />
           <WiredProgressBar progress={getWalletLoadingPercent} />
           <WiredBalanceBox
@@ -305,6 +315,7 @@ export default class WalletList extends Component<Props, State> {
               sortableMode={this.state.sortableMode}
               executeWalletRowOption={this.executeWalletRowOption}
               ListFooterComponent={this.renderFooter()}
+              ListHeaderComponent={this.renderPromoCard()}
             />
           </Animated.View>
         )}
@@ -501,6 +512,46 @@ export default class WalletList extends Component<Props, State> {
             <T style={buyMultipleCryptoStyle.buyMultipleCryptoBoxText}>{s.strings.title_plugin_buy}</T>
           </View>
         </TouchableWithoutFeedback>
+        <TouchableWithoutFeedback
+          onPress={() => Actions[Constants.PLUGIN_EARN_INTEREST]({ plugin: pluginUrlMap.cred })}
+          style={buyMultipleCryptoStyle.buyMultipleCryptoContainer}
+        >
+          <View style={buyMultipleCryptoStyle.buyMultipleCryptoBox}>
+            <View style={buyMultipleCryptoStyle.buyMultipleCryptoContentWrap}>
+              <Image style={buyMultipleCryptoStyle.buyMultipleCryptoBoxImage} source={credLogo} resizeMode={'contain'} />
+            </View>
+            <T style={buyMultipleCryptoStyle.buyMultipleCryptoBoxText}>{s.strings.earn_interest}</T>
+          </View>
+        </TouchableWithoutFeedback>
+      </View>
+    )
+  }
+
+  renderPromoCard () {
+    const { accountMessages, accountReferral, hideMessageTweak } = this.props
+    const messageSummary = bestOfMessages(accountMessages, accountReferral)
+    if (messageSummary == null) return null
+
+    const { message, messageId, messageSource } = messageSummary
+    const { uri, iconUri } = message
+    function handlePress () {
+      if (uri != null) Linking.openURL(uri)
+    }
+    function handleClose () {
+      hideMessageTweak(messageId, messageSource)
+    }
+
+    return (
+      <View style={styles.promoArea}>
+        <TouchableOpacity onPress={handlePress}>
+          <View style={styles.promoCard}>
+            {iconUri != null ? <Image resizeMode="contain" source={{ uri: iconUri }} style={styles.promoIcon} /> : null}
+            <Text style={styles.promoText}>{message.message}</Text>
+            <TouchableOpacity onPress={handleClose}>
+              <AntDesignIcon name="close" color={THEME.COLORS.GRAY_2} size={THEME.rem(1)} style={styles.promoClose} />
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
       </View>
     )
   }

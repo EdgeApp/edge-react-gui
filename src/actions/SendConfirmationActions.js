@@ -26,12 +26,6 @@ import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { convertNativeToExchange } from '../util/utils'
 import { playSendSound } from './SoundActions.js'
 
-// add empty string if there is an error but we don't need text feedback to the user
-export const makeSpendFailed = (error: Error | null) => ({
-  type: 'UI/SEND_CONFIMATION/MAKE_SPEND_FAILED',
-  data: { error }
-})
-
 export const newSpendInfo = (spendInfo: EdgeSpendInfo, authRequired: AuthType) => ({
   type: 'UI/SEND_CONFIMATION/NEW_SPEND_INFO',
   data: { spendInfo, authRequired }
@@ -285,7 +279,6 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
       message = s.strings.send_confirmation_eos_error_ram
     }
 
-    dispatch(updateTransaction(edgeSignedTransaction, null, true, new Error('broadcastError')))
     Alert.alert(s.strings.transaction_failure, message, [
       {
         onPress () {},
@@ -293,11 +286,6 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
         text: s.strings.string_ok
       }
     ])
-
-    if (guiMakeSpendInfo.onDone) {
-      guiMakeSpendInfo.onDone(e)
-      Actions.pop()
-    }
   }
 }
 

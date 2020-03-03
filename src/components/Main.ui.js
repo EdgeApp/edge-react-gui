@@ -1,13 +1,16 @@
 // @flow
 
 import React, { Component, Fragment } from 'react'
-import { Image, Linking, TouchableWithoutFeedback, View, YellowBox } from 'react-native'
+import { Image, TouchableWithoutFeedback, View, YellowBox } from 'react-native'
 import { Actions, Drawer, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import { connect } from 'react-redux'
-import * as URI from 'uri-js'
 
 import ENV from '../../env.json'
+import { checkEnabledExchanges } from '../actions/CryptoExchangeActions.js'
+import { checkAndShowGetCryptoModal } from '../actions/ScanActions.js'
+import { openDrawer } from '../actions/ScenesActions.js'
+import { showReEnableOtpModal } from '../actions/SettingsActions.js'
 import MenuIcon from '../assets/images/MenuButton/menu.png'
 import buyIconSelected from '../assets/images/tabbar/buy_selected.png'
 import buyIcon from '../assets/images/tabbar/buy.png'
@@ -19,6 +22,7 @@ import walletIconSelected from '../assets/images/tabbar/wallets_selected.png'
 import walletIcon from '../assets/images/tabbar/wallets.png'
 import { CreateWalletChoiceComponent } from '../components/scenes/CreateWalletChoiceScene.js'
 import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
+import { requestPermission } from '../components/services/PermissionsManager.js'
 import ExchangeDropMenu from '../connectors/components/HeaderMenuExchangeConnector'
 import RequestDropMenu from '../connectors/components/HeaderMenuRequestConnector'
 import { HeaderWalletSelectorConnector as HeaderWalletSelector } from '../connectors/components/HeaderWalletSelectorConnector.js'
@@ -37,7 +41,6 @@ import CurrencySettings from '../connectors/scenes/CurrencySettingsConnector'
 import DefaultFiatSettingConnector from '../connectors/scenes/DefaultFiatSettingConnector'
 import EdgeLoginSceneConnector from '../connectors/scenes/EdgeLoginSceneConnector'
 import EditToken from '../connectors/scenes/EditTokenConnector.js'
-import LoginConnector from '../connectors/scenes/LoginConnector'
 import ManageTokens from '../connectors/scenes/ManageTokensConnector.js'
 import OtpSettingsSceneConnector from '../connectors/scenes/OtpSettingsSceneConnector.js'
 import PasswordRecoveryConnector from '../connectors/scenes/PasswordRecoveryConnector.js'
@@ -53,8 +56,7 @@ import SendConfirmationOptions from '../connectors/SendConfirmationOptionsConnec
 import SpendingLimitsConnector from '../connectors/SpendingLimitsConnector.js'
 import * as Constants from '../constants/indexConstants'
 import s from '../locales/strings.js'
-import DeepLinkingManager from '../modules/DeepLinkingManager.js'
-import PermissionsManager, { type Permission, PermissionStrings } from '../modules/PermissionsManager.js'
+import { logoutRequest } from '../modules/Login/action.js'
 import ControlPanel from '../modules/UI/components/ControlPanel/ControlPanelConnector'
 import T from '../modules/UI/components/FormattedText/index'
 import BackButton from '../modules/UI/components/Header/Component/BackButton.ui'
@@ -65,20 +67,23 @@ import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
 import { PasswordRecoveryReminderModalConnector } from '../modules/UI/components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalConnector.js'
 import { passwordReminderModalConnector as PasswordReminderModal } from '../modules/UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
 import { handlePluginBack, renderPluginBackButton } from '../modules/UI/scenes/Plugins/BackButton.js'
+import { type Permission } from '../reducers/PermissionsReducer.js'
 import { styles } from '../styles/MainStyle.js'
+import { type Dispatch, type State as ReduxState } from '../types/reduxTypes.js'
 import { scale } from '../util/scaling.js'
-import { trackEvent } from '../util/tracking.js'
+import { logEvent } from '../util/tracking.js'
 import { CurrencySettingsTitle } from './navigation/CurrencySettingsTitle.js'
 import { ChangeMiningFeeScene } from './scenes/ChangeMiningFeeScene.js'
 import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
 import { CryptoExchangeQuoteProcessingScreenComponent } from './scenes/CryptoExchangeQuoteProcessingScene.js'
 import { LoadingScene } from './scenes/LoadingScene.js'
+import { LoginScene } from './scenes/LoginScene.js'
 import { LegacyPluginViewConnect, renderLegacyPluginBackButton } from './scenes/PluginViewLegacyScene.js'
 import { PluginListScene } from './scenes/PluginViewListScene.js'
 import { PluginViewConnect } from './scenes/PluginViewScene.js'
 import { SwapActivateShapeshiftScene } from './scenes/SwapActivateShapeshiftScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
-import { showError, showToast } from './services/AirshipInstance.js'
+import { showToast } from './services/AirshipInstance.js'
 
 const RouterWithRedux = connect()(Router)
 
@@ -124,23 +129,25 @@ const OTP = s.strings.title_otp
 const DEFAULT_FIAT = s.strings.title_default_fiat
 const TERMS_OF_SERVICE = s.strings.title_terms_of_service
 
-type Props = {
-  hideWalletListModal: () => mixed,
-  requestPermission: (permission: Permission) => void,
-  username?: string,
-  dispatchEnableScan: () => void,
-  dispatchDisableScan: () => void,
-  urlReceived: string => void,
-  showReEnableOtpModal: () => void,
-  checkEnabledExchanges: () => void,
-  openDrawer: () => void,
-  dispatchAddressDeepLinkReceived: (addressDeepLinkData: Object) => any,
-  deepLinkPending: boolean,
-  checkAndShowGetCryptoModal: (?string) => void,
-  logout(): () => mixed
+type DispatchProps = {
+  // Navigation actions:
+  logout(username?: string): void,
+  openDrawer(): void,
+
+  // Things to do when we enter certain scenes:
+  checkAndShowGetCryptoModal(routeData: string | void): void,
+  checkEnabledExchanges(): void,
+  dispatchDisableScan(): void,
+  dispatchEnableScan(): void,
+  requestPermission(permission: Permission): void,
+  showReEnableOtpModal(): void
 }
 
-export default class Main extends Component<Props> {
+type StateProps = {}
+
+type Props = DispatchProps & StateProps
+
+export class MainComponent extends Component<Props> {
   backPressedOnce: boolean
 
   constructor (props: Props) {
@@ -157,90 +164,7 @@ export default class Main extends Component<Props> {
   }
 
   componentDidMount () {
-    trackEvent('AppStart')
-
-    Linking.getInitialURL()
-      .then(url => {
-        if (url) {
-          this.doDeepLink(url)
-        }
-        // this.navigate(url);
-      })
-      .catch(showError)
-    Linking.addEventListener('url', this.handleOpenURL)
-  }
-
-  handleOpenURL = (event: Object) => {
-    this.doDeepLink(event.url)
-  }
-
-  doDeepLink (url: string) {
-    const parsedUri = URI.parse(url)
-
-    switch (parsedUri.scheme) {
-      case 'edge':
-      case 'airbitz':
-      case 'edge-ret':
-      case 'airbitz-ret':
-      case 'https':
-        if (parsedUri.host === 'recovery' || parsedUri.host === 'recovery.edgesecure.co') {
-          this.handleRecoveryToken(parsedUri)
-        } else {
-          this.handleAddress(parsedUri, url)
-        }
-        break
-      case 'bitcoin':
-      case 'bitcoincash':
-      case 'ethereum':
-      case 'rsk':
-      case 'dash':
-      case 'litecoin':
-        this.handleAddress(parsedUri, url)
-        break
-    }
-  }
-
-  handleRecoveryToken (parsedUri: URI) {
-    const query = parsedUri.query
-    if (!query || !query.includes('token=')) {
-      return
-    }
-    const splitArray = query.split('token=')
-    const nextString = splitArray[1]
-    const finalArray = nextString.split('&')
-    const token = finalArray[0]
-    this.props.urlReceived(token)
-  }
-
-  handleAddress (parsedUri: URI, url: string) {
-    const addressDeepLinkData = {}
-
-    const currencyCode = this.convertCurrencyCodeFromScheme(parsedUri.scheme)
-
-    addressDeepLinkData.currencyCode = currencyCode
-    addressDeepLinkData.uri = url
-
-    this.props.dispatchAddressDeepLinkReceived(addressDeepLinkData)
-  }
-
-  convertCurrencyCodeFromScheme (scheme: string) {
-    switch (scheme) {
-      case 'bitcoin':
-        return 'BTC'
-      case 'bitcoincash':
-        return 'BCH'
-      case 'ethereum':
-        return 'ETH'
-      case 'litecoin':
-        return 'LTC'
-      case 'dash':
-        return 'DASH'
-      case 'rsk':
-        return 'RBTC'
-      default:
-        console.log('Unrecognized currency URI scheme')
-        return null
-    }
+    logEvent('AppStart')
   }
 
   render () {
@@ -248,17 +172,25 @@ export default class Main extends Component<Props> {
       <Fragment>
         <RouterWithRedux backAndroidHandler={this.handleBack}>
           <Stack key={Constants.ROOT} hideNavBar panHandlers={null}>
-            <Scene key={Constants.LOGIN} initial component={LoginConnector} username={this.props.username} />
+            <Scene key={Constants.LOGIN} initial component={LoginScene} />
 
             <Scene
               key={Constants.TRANSACTION_DETAILS}
               navTransparent={true}
-              onEnter={() => this.props.requestPermission(PermissionStrings.CONTACTS)}
+              onEnter={() => this.props.requestPermission('contacts')}
               clone
               component={TransactionDetails}
               renderTitle={this.renderTitle(TRANSACTION_DETAILS)}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderMenuButton()}
+            />
+            <Scene
+              key={Constants.EDGE_LOGIN}
+              navTransparent={true}
+              component={EdgeLoginSceneConnector}
+              renderTitle={this.renderTitle(EDGE_LOGIN)}
+              renderLeftButton={this.renderBackButton()}
+              renderRightButton={this.renderHelpButton()}
             />
 
             <Drawer key={Constants.EDGE} hideNavBar contentComponent={ControlPanel} hideDrawerButton={true} drawerPosition="right" drawerWidth={scale(280)}>
@@ -357,14 +289,38 @@ export default class Main extends Component<Props> {
                     <Scene
                       key={Constants.TRANSACTION_LIST}
                       onEnter={() => {
-                        this.props.requestPermission(PermissionStrings.CONTACTS)
-                        this.props.hideWalletListModal()
+                        this.props.requestPermission('contacts')
                       }}
                       navTransparent={true}
                       component={TransactionListConnector}
                       renderTitle={this.renderHeaderWalletSelector()}
                       renderLeftButton={this.renderBackButton(WALLETS)}
                       renderRightButton={this.renderMenuButton()}
+                    />
+
+                    <Scene
+                      key={Constants.SCAN}
+                      navTransparent={true}
+                      onEnter={props => {
+                        this.props.requestPermission('camera')
+                        this.props.dispatchEnableScan()
+                        this.props.checkAndShowGetCryptoModal(props.data)
+                      }}
+                      onExit={this.props.dispatchDisableScan}
+                      component={Scan}
+                      renderTitle={this.renderHeaderWalletSelector()}
+                      renderLeftButton={this.renderBackButton()}
+                      renderRightButton={this.renderMenuButton()}
+                    />
+
+                    <Scene
+                      key={Constants.REQUEST}
+                      navTransparent={true}
+                      component={Request}
+                      renderTitle={this.renderHeaderWalletSelector()}
+                      renderLeftButton={this.renderBackButton()}
+                      renderRightButton={this.renderRequestMenuButton()}
+                      hideTabBar
                     />
 
                     <Scene
@@ -505,45 +461,6 @@ export default class Main extends Component<Props> {
                   </Stack>
                 </Tabs>
 
-                <Stack key={Constants.SCAN} hideTabBar>
-                  <Scene
-                    key={Constants.SCAN_NOT_USED}
-                    navTransparent={true}
-                    onEnter={props => {
-                      this.props.requestPermission(PermissionStrings.CAMERA)
-                      this.props.dispatchEnableScan()
-                      this.props.hideWalletListModal()
-                      this.props.checkAndShowGetCryptoModal(props.data)
-                    }}
-                    onExit={this.props.dispatchDisableScan}
-                    component={Scan}
-                    renderTitle={this.renderHeaderWalletSelector()}
-                    renderLeftButton={this.renderBackButton()}
-                    renderRightButton={this.renderMenuButton()}
-                  />
-                  <Scene
-                    key={Constants.EDGE_LOGIN}
-                    navTransparent={true}
-                    component={EdgeLoginSceneConnector}
-                    renderTitle={this.renderTitle(EDGE_LOGIN)}
-                    renderLeftButton={this.renderBackButton()}
-                    renderRightButton={this.renderHelpButton()}
-                  />
-                </Stack>
-
-                <Stack key={Constants.REQUEST}>
-                  <Scene
-                    key={Constants.REQUEST}
-                    navTransparent={true}
-                    onEnter={this.props.hideWalletListModal}
-                    component={Request}
-                    renderTitle={this.renderHeaderWalletSelector()}
-                    renderLeftButton={this.renderBackButton()}
-                    renderRightButton={this.renderRequestMenuButton()}
-                    hideTabBar
-                  />
-                </Stack>
-
                 <Stack key={Constants.SEND_CONFIRMATION} hideTabBar>
                   <Scene
                     key={Constants.SEND_CONFIRMATION_NOT_USED}
@@ -582,6 +499,18 @@ export default class Main extends Component<Props> {
                     renderTitle={this.renderTitle(ADD_TOKEN)}
                     renderLeftButton={this.renderBackButton()}
                     renderRightButton={this.renderEmptyButton()}
+                  />
+                </Stack>
+
+                <Stack key={Constants.PLUGIN_EARN_INTEREST}>
+                  <Scene
+                    key={Constants.PLUGIN_EARN_INTEREST}
+                    navTransparent={true}
+                    component={ifLoggedIn(PluginViewConnect, LoadingScene)}
+                    renderTitle={props => this.renderTitle(props.plugin.name)}
+                    renderLeftButton={renderPluginBackButton(BACK)}
+                    renderRightButton={this.renderExitButton()}
+                    hideTabBar
                   />
                 </Stack>
 
@@ -691,9 +620,6 @@ export default class Main extends Component<Props> {
         </RouterWithRedux>
         <PasswordReminderModal />
         <PasswordRecoveryReminderModalConnector />
-        <PermissionsManager />
-
-        <DeepLinkingManager />
       </Fragment>
     )
   }
@@ -825,3 +751,37 @@ export default class Main extends Component<Props> {
     return true
   }
 }
+
+export const Main = connect(
+  (state: ReduxState): StateProps => ({}),
+  (dispatch: Dispatch): DispatchProps => ({
+    // Navigation actions:
+    logout (username?: string): void {
+      dispatch(logoutRequest(username))
+    },
+    openDrawer () {
+      dispatch(openDrawer())
+    },
+
+    // Things to do when we enter certain scenes:
+    checkAndShowGetCryptoModal (routeData: string | void): void {
+      if (routeData === 'sweepPrivateKey') return
+      dispatch(checkAndShowGetCryptoModal())
+    },
+    checkEnabledExchanges () {
+      dispatch(checkEnabledExchanges())
+    },
+    dispatchDisableScan () {
+      dispatch({ type: 'DISABLE_SCAN' })
+    },
+    dispatchEnableScan () {
+      dispatch({ type: 'ENABLE_SCAN' })
+    },
+    requestPermission (permission: Permission) {
+      requestPermission(permission)
+    },
+    showReEnableOtpModal () {
+      dispatch(showReEnableOtpModal())
+    }
+  })
+)(MainComponent)

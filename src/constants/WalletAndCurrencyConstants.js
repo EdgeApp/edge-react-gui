@@ -2,7 +2,7 @@
 
 import s from '../locales/strings.js'
 
-export const MAX_TOKEN_CODE_CHARACTERS = 6
+export const MAX_TOKEN_CODE_CHARACTERS = 7
 
 export const FEE_COLOR_THRESHOLD = 2.0 // this is denominated in dollars
 export const FEE_ALERT_THRESHOLD = 5.0 // this is denominated in dollars
@@ -102,6 +102,7 @@ type SpecialCurrencyInfo = {
       identifierName: string,
       identifierKeyboardType: string
     },
+    showEarnInterestCard?: boolean,
     minimumPopupModals?: {
       minimumNativeBalance: string,
       modalMessage: string
@@ -112,15 +113,18 @@ type SpecialCurrencyInfo = {
 export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   BTC: {
     displayBuyCrypto: true,
-    isImportKeySupported: false
+    isImportKeySupported: false,
+    showEarnInterestCard: true
   },
   BCH: {
     displayBuyCrypto: true,
-    isImportKeySupported: false
+    isImportKeySupported: false,
+    showEarnInterestCard: true
   },
   LTC: {
     displayBuyCrypto: true,
-    isImportKeySupported: false
+    isImportKeySupported: false,
+    showEarnInterestCard: true
   },
   RBTC: {
     dummyPublicAddress: '0x74f9452e22fe58e27575f176fc884729d88267ba', // rj116
@@ -179,7 +183,8 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     displayBuyCrypto: true,
     isImportKeySupported: true,
     isCustomTokensSupported: true,
-    isTokensSupported: true
+    isTokensSupported: true,
+    showEarnInterestCard: true
   },
   DAI: {
     displayBuyCrypto: true,
@@ -204,6 +209,15 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     },
     isImportKeySupported: true,
     dummyPublicAddress: 'bnb1rt449yu7us6hmk4pmyr8talc60ydkwp4qkvcl7'
+  },
+  TUSD: {
+    showEarnInterestCard: true
+  },
+  LBA: {
+    showEarnInterestCard: true
+  },
+  BAT: {
+    showEarnInterestCard: true
   }
 }
 

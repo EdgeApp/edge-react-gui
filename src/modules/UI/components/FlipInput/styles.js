@@ -1,15 +1,14 @@
 // @flow
 
-import { StyleSheet } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 
 import THEME from '../../../../theme/variables/airbitz'
-import { PLATFORM } from '../../../../theme/variables/platform.js'
 import { scale } from '../../../../util/scaling.js'
 
 export const styles = StyleSheet.create({
   container: {
     width: '90%',
-    minHeight: PLATFORM.platform === 'ios' ? scale(110) : scale(120),
+    minHeight: Platform.OS === 'ios' ? scale(110) : scale(120),
     backgroundColor: THEME.COLORS.BLUE_3,
     borderRadius: 5,
     flexDirection: 'column',

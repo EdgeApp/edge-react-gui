@@ -5,29 +5,11 @@ import { AppState } from 'react-native'
 import RNPermissions from 'react-native-permissions'
 import { connect } from 'react-redux'
 
-import { showError } from '../components/services/AirshipInstance.js'
-import type { Dispatch, State } from '../types/reduxTypes.js'
+import { type Permission, type PermissionsState, type PermissionStatus } from '../../reducers/PermissionsReducer.js'
+import type { Dispatch, State } from '../../types/reduxTypes.js'
+import { showError } from './AirshipInstance.js'
 
-export const AppStates = {
-  ACTIVE: 'active',
-  BACKGROUND: 'background',
-  INACTIVE: 'inactive'
-}
-export const PermissionStrings = {
-  CAMERA: 'camera',
-  CONTACTS: 'contacts'
-}
-
-export const PermissionStatusStrings = {
-  AUTHORIZED: 'authorized',
-  DENIED: 'denied',
-  RESTRICTED: 'restricted',
-  UNDETERMINED: 'undetermined'
-}
-
-export type Permission = 'camera' | 'contacts'
-
-export type PermissionStatus = 'authorized' | 'denied' | 'restricted' | 'undetermined'
+const PERMISSION_LIST: Permission[] = ['camera', 'contacts']
 
 type PermissionsManagerStateProps = {
   camera: string,
@@ -35,12 +17,12 @@ type PermissionsManagerStateProps = {
 }
 
 type PermissionsManagerDispatchProps = {
-  updatePermissions: (permissions: { [string]: string }) => any
+  updatePermissions(permissions: PermissionsState): void
 }
 
 type Props = PermissionsManagerStateProps & PermissionsManagerDispatchProps
 
-export class PermissionsManager extends React.Component<Props> {
+class PermissionsManagerComponent extends React.Component<Props> {
   render () {
     return null
   }
@@ -54,13 +36,13 @@ export class PermissionsManager extends React.Component<Props> {
   handleAppStateChange = (nextAppState: string) => {
     console.log('State Change => ', nextAppState)
 
-    if (nextAppState === AppStates.ACTIVE) {
+    if (nextAppState === 'active') {
       this.checkPermissions()
     }
   }
 
   checkPermissions = () => {
-    RNPermissions.checkMultiple(Object.values(PermissionStrings))
+    RNPermissions.checkMultiple(PERMISSION_LIST)
       .then(response => {
         // response is an object mapping type to permission
         const permissions = {}
@@ -85,12 +67,12 @@ export class PermissionsManager extends React.Component<Props> {
 }
 
 export const requestPermission = (permission: Permission): Promise<PermissionStatus> => {
-  return RNPermissions.check(permission).then(status => {
-    if (status === PermissionStatusStrings.UNDETERMINED) {
+  return RNPermissions.check(permission).then((status: PermissionStatus) => {
+    if (status === 'undetermined') {
       return RNPermissions.request(permission)
     }
 
-    return Promise.resolve(status)
+    return status
   })
 }
 
@@ -100,14 +82,12 @@ const mapStateToProps = (state: State): PermissionsManagerStateProps => ({
 })
 
 const mapDispatchToProps = (dispatch: Dispatch): PermissionsManagerDispatchProps => ({
-  updatePermissions: permissions =>
-    dispatch({
-      type: 'PERMISSIONS/UPDATE',
-      data: { ...permissions }
-    })
+  updatePermissions (permissions: PermissionsState) {
+    dispatch({ type: 'PERMISSIONS/UPDATE', data: permissions })
+  }
 })
 
-export default connect(
+export const PermissionsManager = connect(
   mapStateToProps,
   mapDispatchToProps
-)(PermissionsManager)
+)(PermissionsManagerComponent)

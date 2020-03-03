@@ -2,8 +2,6 @@
 
 import THEME from '../../theme/variables/airbitz'
 import { scale } from '../../util/scaling.js'
-import * as Styles from '../indexStyles.js'
-// import {Image} from 'react-native'
 
 export const styles = {
   body: {
@@ -56,8 +54,6 @@ export const styles = {
     width: '100%',
     height: scale(THEME.BUTTONS.HEIGHT)
   },
-  keyBox: Styles.ExpandableBoxStyle,
-  showConfirmationModal: Styles.TwoButtonModalStyle,
   icon: {
     color: THEME.COLORS.WHITE
   },

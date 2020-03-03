@@ -1,13 +1,11 @@
 // @flow
 
-import { type EdgeAccount } from 'edge-core-js/types'
 import DeviceInfo from 'react-native-device-info'
 import firebase from 'react-native-firebase'
 
 import ENV from '../../env.json'
-import { loadCreationReason } from './installReason.js'
 
-type TrackingEvent =
+export type TrackingEvent =
   | 'ActivateWalletCancel'
   | 'ActivateWalletSelect'
   | 'ActivateWalletStart'
@@ -19,7 +17,7 @@ type TrackingEvent =
   | 'SwapSuccess'
   | 'SignupWalletsCreated'
   | 'AppStart'
-  | 'LoadInstallReasonFail'
+  | 'LoadDeviceReferralFail'
 
 export type TrackingValues = {
   accountDate?: string, // Account creation date
@@ -36,55 +34,9 @@ if (ENV.USE_FIREBASE && !firebase.isMock) {
 }
 
 /**
- * Tracks a conversion, which involves some type of revenue.
- */
-export async function trackConversion (
-  event: TrackingEvent,
-  opts: {
-    account: EdgeAccount,
-    currencyCode: string,
-    exchangeAmount: number,
-    pluginId: string
-  }
-) {
-  const { account, currencyCode, exchangeAmount, pluginId } = opts
-
-  // Look up the dollar value:
-  const dollarValue: number = await account.exchangeCache.convertCurrency(currencyCode, 'iso:USD', exchangeAmount)
-
-  // Record the event:
-  const values: TrackingValues = {
-    dollarValue,
-    pluginId,
-    ...(await loadCreationReason(account))
-  }
-  return logEvent(event, values)
-}
-
-/**
- * Tracks a user event, like navigating or logging in.
- */
-export async function trackEvent (
-  event: TrackingEvent,
-  opts?: {
-    account?: EdgeAccount,
-    currencyCode?: string // For wallet creation events
-  } = {}
-) {
-  const { account, currencyCode } = opts
-
-  // Record the event:
-  const values: TrackingValues = {
-    currencyCode,
-    ...(await loadCreationReason(account))
-  }
-  return logEvent(event, values)
-}
-
-/**
  * Send a raw event to all backends.
  */
-async function logEvent (event: TrackingEvent, values: TrackingValues) {
+export async function logEvent (event: TrackingEvent, values: TrackingValues = {}) {
   return Promise.all([logToFirebase(event, values), logToUtilServer(event, values)]).catch(error => console.warn(error))
 }
 
@@ -109,7 +61,7 @@ async function logToFirebase (event: TrackingEvent, values: TrackingValues) {
     SwapSuccess: 'Exchange_Shift_Success',
     SignupWalletsCreated: 'Signup_Wallets_Created',
     AppStart: 'Start_App',
-    LoadInstallReasonFail: 'Load_Install_Reason_Fail'
+    LoadDeviceReferralFail: 'Load_Install_Reason_Fail'
   }
   const name = names[event]
   if (!name) return

@@ -5,22 +5,18 @@ import React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { Scan } from '../components/scenes/ScanScene.js'
-import { PermissionStatusStrings } from '../modules/PermissionsManager.js'
 
 describe('Scan component', () => {
   it('should render with DENIED props', () => {
     const renderer = new ShallowRenderer()
     const props = {
-      cameraPermission: PermissionStatusStrings.DENIED,
+      cameraPermission: 'denied',
       torchEnabled: false,
       scanEnabled: false,
       showToWalletModal: false,
-      deepLinkPending: false,
-      deepLinkUri: null,
       wallets: {},
       qrCodeScanned: jest.fn(),
       parseScannedUri: jest.fn(),
-      markAddressDeepLinkDone: jest.fn(),
       toggleEnableTorch: jest.fn(),
       toggleAddressModal: jest.fn(),
       toggleScanToWalletListModal: jest.fn(),
@@ -34,15 +30,12 @@ describe('Scan component', () => {
   it('should render with AUTHORIZED props', () => {
     const renderer = new ShallowRenderer()
     const props = {
-      cameraPermission: PermissionStatusStrings.AUTHORIZED,
+      cameraPermission: 'authorized',
       torchEnabled: false,
       scanEnabled: false,
       showToWalletModal: false,
-      deepLinkPending: false,
-      deepLinkUri: null,
       qrCodeScanned: jest.fn(),
       parseScannedUri: jest.fn(),
-      markAddressDeepLinkDone: jest.fn(),
       toggleEnableTorch: jest.fn(),
       toggleAddressModal: jest.fn(),
       toggleScanToWalletListModal: jest.fn(),

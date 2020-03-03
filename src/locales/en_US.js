@@ -244,6 +244,7 @@ const strings = {
   swap_preferred_header: 'Preferred Exchange',
   swap_preferred_cheapest: 'Pick best price',
   swap_preferred_instructions: 'When multiple exchanges can fill an order, prefer:',
+  swap_preferred_promo_instructions: 'When multiple exchanges can fill an order, the current promotion aways prefers:',
   string_enable: 'Enable',
   settings_button_send_logs: 'Send Logs',
   settings_button_setup_two_factor: 'Setup 2 Factor',
@@ -397,6 +398,7 @@ const strings = {
   transaction_details_copy_tx_id: 'Copy Transaction ID',
   transaction_details_copy_signed_tx: 'Copy Signed Raw Hex',
   transaction_details_modal_debug_info: 'Debug Info:\n',
+  transaction_history_permission: 'Would you like to share the entire transaction history of %s with this partner?',
   string_fee_with_brackets: '(Fee)',
   title_Header: 'Header',
   back_button_text: 'Back',
@@ -600,7 +602,9 @@ const strings = {
   exchange_from_wallet: 'Exchange from %s',
   exchange_to_wallet: 'Exchange to %s',
   wallet_list_modal_header_mru: 'Most Recent Wallets',
-  wallet_list_modal_header_all: 'All Wallets'
+  wallet_list_modal_header_all: 'All Wallets',
+  earn_interest: 'Earn Interest',
+  earn_interest_on: 'Earn Interest on %s'
 }
 
 // export default strings

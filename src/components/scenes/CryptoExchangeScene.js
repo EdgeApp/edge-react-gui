@@ -141,7 +141,7 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
     const toHeaderText = sprintf(s.strings.exchange_to_wallet, this.props.toWallet.name)
     return (
       <SceneWrapper>
-        <KeyboardAwareScrollView style={[styles.mainScrollView]} keyboardShouldPersistTaps="always" contentContainerStyle={styles.scrollViewContentContainer}>
+        <KeyboardAwareScrollView style={styles.mainScrollView} keyboardShouldPersistTaps="always" contentContainerStyle={styles.scrollViewContentContainer}>
           <CryptoExchangeMessageConnector style={styles.exchangeRateBanner} />
           <View style={styles.shim} />
           <CryptoExchangeFlipInputWrapperComponent

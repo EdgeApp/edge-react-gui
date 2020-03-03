@@ -6,13 +6,13 @@ import React from 'react'
 import { Alert, Linking } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
+import URL from 'url-parse'
 
 import { selectWalletForExchange } from '../actions/CryptoExchangeActions.js'
 import { launchModal } from '../components/common/ModalProvider.js'
 import { createAddressModal } from '../components/modals/AddressModal.js'
 import {
   ADD_TOKEN,
-  EDGE_LOGIN,
   EXCHANGE_SCENE,
   FA_MONEY_ICON,
   getSpecialCurrencyInfo,
@@ -34,19 +34,21 @@ import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReduce
 import { B } from '../styles/common/textStyles.js'
 import styles from '../styles/scenes/ScaneStyle.js'
 import { colors as COLORS } from '../theme/variables/airbitz.js'
+import { type ReturnAddressLink, parseDeepLink } from '../types/DeepLink.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import type { GuiWallet } from '../types/types.js'
-import { type RequestPaymentAddress, denominationToDecimalPlaces, getRequestForAddress, isEdgeLogin, noOp } from '../util/utils.js'
-import { loginWithEdge } from './EdgeLoginActions.js'
+import { denominationToDecimalPlaces, noOp } from '../util/utils.js'
+import { launchDeepLink } from './DeepLinkingActions.js'
 import { sweepPrivateKeyFail, sweepPrivateKeyStart, sweepPrivateKeySuccess } from './PrivateKeyModalActions.js'
 import { secondaryModalActivated } from './SecondaryModalActions.js'
 import { paymentProtocolUriReceived } from './SendConfirmationActions.js'
 
-const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWallet, guiWallet: GuiWallet, requestAddress: RequestPaymentAddress) => {
+const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWallet, guiWallet: GuiWallet, link: ReturnAddressLink) => {
+  const { currencyName, sourceName = '', successUri = '' } = link
   dispatch({ type: 'DISABLE_SCAN' })
-  if (requestAddress.currencyName !== edgeWallet.currencyInfo.pluginName) {
+  if (currencyName !== edgeWallet.currencyInfo.pluginName) {
     // Mismatching currency
-    const body = sprintf(s.strings.currency_mismatch_popup_body, requestAddress.currencyName, requestAddress.currencyName)
+    const body = sprintf(s.strings.currency_mismatch_popup_body, currencyName, currencyName)
     setTimeout(
       () =>
         Alert.alert(s.strings.currency_mismatch_popup_title, body, [
@@ -59,14 +61,15 @@ const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWallet, gu
     )
   } else {
     // Currencies match. Ask user to confirm sending an address
-    const bodyString = sprintf(s.strings.request_crypto_address_modal_body, requestAddress.sourceName, requestAddress.currencyName) + '\n\n'
+    const bodyString = sprintf(s.strings.request_crypto_address_modal_body, sourceName, currencyName) + '\n\n'
 
+    const { host } = new URL(successUri)
     const modal = createYesNoModal({
       title: s.strings.request_crypto_address_modal_title,
       message: (
         <Text style={{ textAlign: 'center' }}>
           {bodyString}
-          <B>{`${requestAddress.callbackDomain}`}</B>
+          <B>{`${host}`}</B>
         </Text>
       ),
       icon: <OptionIcon iconName={FA_MONEY_ICON} />,
@@ -81,7 +84,7 @@ const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWallet, gu
           if (resolveValue) {
             // Build the URL
             const addr = guiWallet.receiveAddress.publicAddress
-            const url = decodeURIComponent(requestAddress.callbackUrl)
+            const url = decodeURIComponent(successUri)
             const finalUrl = url + '?address=' + encodeURIComponent(addr)
             Linking.openURL(finalUrl)
           }
@@ -101,18 +104,20 @@ export const parseScannedUri = (data: string) => (dispatch: Dispatch, getState: 
   const guiWallet = state.ui.wallets.byId[selectedWalletId]
   const currencyCode = state.ui.wallets.selectedCurrencyCode
 
-  if (isEdgeLogin(data)) {
-    // EDGE LOGIN
-    dispatch(loginWithEdge(data))
-    Actions[EDGE_LOGIN]()
-    return
-  }
-
-  try {
-    const requestAddress: RequestPaymentAddress = getRequestForAddress(data)
-    return doRequestAddress(dispatch, edgeWallet, guiWallet, requestAddress)
-  } catch (e) {
-    console.log(e)
+  // Check for things other than coins:
+  const deepLink = parseDeepLink(data)
+  switch (deepLink.type) {
+    case 'edgeLogin':
+    case 'passwordRecovery':
+    case 'plugin':
+      dispatch(launchDeepLink(deepLink))
+      return
+    case 'returnAddress':
+      try {
+        return doRequestAddress(dispatch, edgeWallet, guiWallet, deepLink)
+      } catch (e) {
+        console.log(e)
+      }
   }
 
   edgeWallet.parseUri(data, currencyCode).then(

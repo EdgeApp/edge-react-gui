@@ -7,7 +7,7 @@ import Modal from 'react-native-modal'
 
 import * as Constants from '../../constants/indexConstants.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
-import { StaticModalStyle } from '../../styles/indexStyles.js'
+import { StaticModalStyle } from '../../styles/components/StaticModalStyle.js'
 import THEME from '../../theme/variables/airbitz'
 import { getObjectDiff } from '../../util/utils'
 

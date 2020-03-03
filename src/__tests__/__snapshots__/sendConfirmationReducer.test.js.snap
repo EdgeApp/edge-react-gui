@@ -302,50 +302,6 @@ Object {
 }
 `;
 
-exports[`sendConfirmation reducer error MAKE_PAYMENT_PROTOCOL_TRANSACTION_FAILED 1`] = `
-Object {
-  "address": "",
-  "authRequired": "none",
-  "error": [Error],
-  "forceUpdateGuiCounter": 0,
-  "guiMakeSpendInfo": Object {
-    "customNetworkFee": Object {},
-    "metadata": Object {
-      "amountFiat": 0,
-      "bizId": 0,
-      "category": "",
-      "miscJson": "",
-      "name": "",
-      "notes": "",
-    },
-    "nativeAmount": "0",
-    "networkFeeOption": "standard",
-    "publicAddress": "",
-  },
-  "isEditable": true,
-  "isKeyboardVisible": false,
-  "nativeAmount": "0",
-  "pending": false,
-  "pin": "",
-  "spendInfo": null,
-  "toggleCryptoOnTop": 0,
-  "transaction": Object {
-    "blockHeight": -1,
-    "currencyCode": "",
-    "date": 0,
-    "metadata": Object {},
-    "nativeAmount": "0",
-    "networkFee": "",
-    "otherParams": Object {},
-    "ourReceiveAddresses": Array [],
-    "parentNetworkFee": "",
-    "signedTx": "",
-    "txid": "",
-  },
-  "transactionMetadata": null,
-}
-`;
-
 exports[`sendConfirmation reducer error UPDATE_TRANSACTION 1`] = `
 Object {
   "address": "",
@@ -383,50 +339,6 @@ Object {
   "address": "",
   "authRequired": "none",
   "error": null,
-  "forceUpdateGuiCounter": 0,
-  "guiMakeSpendInfo": Object {
-    "customNetworkFee": Object {},
-    "metadata": Object {
-      "amountFiat": 0,
-      "bizId": 0,
-      "category": "",
-      "miscJson": "",
-      "name": "",
-      "notes": "",
-    },
-    "nativeAmount": "0",
-    "networkFeeOption": "standard",
-    "publicAddress": "",
-  },
-  "isEditable": true,
-  "isKeyboardVisible": false,
-  "nativeAmount": "0",
-  "pending": false,
-  "pin": "",
-  "spendInfo": null,
-  "toggleCryptoOnTop": 0,
-  "transaction": Object {
-    "blockHeight": -1,
-    "currencyCode": "",
-    "date": 0,
-    "metadata": Object {},
-    "nativeAmount": "0",
-    "networkFee": "",
-    "otherParams": Object {},
-    "ourReceiveAddresses": Array [],
-    "parentNetworkFee": "",
-    "signedTx": "",
-    "txid": "",
-  },
-  "transactionMetadata": null,
-}
-`;
-
-exports[`sendConfirmation reducer isEditable MAKE_PAYMENT_PROTOCOL_TRANSACTION_FAILED 1`] = `
-Object {
-  "address": "",
-  "authRequired": "none",
-  "error": [Error],
   "forceUpdateGuiCounter": 0,
   "guiMakeSpendInfo": Object {
     "customNetworkFee": Object {},

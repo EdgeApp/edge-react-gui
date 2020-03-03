@@ -233,7 +233,7 @@ function getLogoDark (wallet, currencyCode) {
 
 // Nuke the state on logout:
 export const cryptoExchange: Reducer<CryptoExchangeState, Action> = (state, action: Action) => {
-  if (action.type === 'LOGOUT' || action.type === 'DEEP_LINK_RECEIVED') {
+  if (action.type === 'LOGOUT') {
     return cryptoExchangeInner(undefined, { type: 'DUMMY_ACTION_PLEASE_IGNORE' })
   }
 

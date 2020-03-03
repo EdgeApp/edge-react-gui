@@ -226,6 +226,7 @@
   "swap_preferred_header": "",
   "swap_preferred_cheapest": "",
   "swap_preferred_instructions": "",
+  "swap_preferred_promo_instructions": "",
   "string_enable": "有効にする",
   "settings_button_send_logs": "記録を送信する",
   "settings_button_setup_two_factor": "２段階認証をセットアップ",
@@ -378,6 +379,7 @@
   "transaction_details_copy_tx_id": "",
   "transaction_details_copy_signed_tx": "",
   "transaction_details_modal_debug_info": "",
+  "transaction_history_permission": "",
   "string_fee_with_brackets": "(手数料)",
   "title_Header": "ヘッダー",
   "back_button_text": "戻る",
@@ -555,5 +557,7 @@
   "exchange_from_wallet": "",
   "exchange_to_wallet": "",
   "wallet_list_modal_header_mru": "",
-  "wallet_list_modal_header_all": ""
+  "wallet_list_modal_header_all": "",
+  "earn_interest": "",
+  "earn_interest_on": ""
 }

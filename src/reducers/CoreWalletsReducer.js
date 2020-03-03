@@ -3,7 +3,7 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import { type Reducer, combineReducers } from 'redux'
 
-import { type Action } from '../../../types/reduxTypes.js'
+import { type Action } from '../types/reduxTypes.js'
 
 export type WalletsState = {
   byId: {
@@ -29,7 +29,7 @@ const byId = (state = initialState, action: Action): $PropertyType<WalletsState,
 }
 
 export const wallets: Reducer<WalletsState, Action> = (state, action: Action) => {
-  if (action.type === 'LOGOUT' || action.type === 'DEEP_LINK_RECEIVED') {
+  if (action.type === 'LOGOUT') {
     state = undefined
   }
 
