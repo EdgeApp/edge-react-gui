@@ -226,6 +226,7 @@
   "swap_preferred_header": "Casa de cambio preferida",
   "swap_preferred_cheapest": "Elegir mejor precio",
   "swap_preferred_instructions": "Cuando varias casas de cambio pueden ejecutar una orden, preferir:",
+  "swap_preferred_promo_instructions": "",
   "string_enable": "Activar",
   "settings_button_send_logs": "Enviar registros (logs)",
   "settings_button_setup_two_factor": "Configurar doble factor",
