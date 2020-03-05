@@ -4105,10 +4105,10 @@ edge-currency-monero@^0.2.4:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#william/v0.14.0-hardfork"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.9.0:
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.9.0.tgz#280c7d01ab7c9eb3921adf7377e2cdcddf54c954"
-  integrity sha512-9U5qOD0xTBIM5I3hjDcaZgLoNkl0QAW+fKSYbtd7dY4JbZeGMI2xUzXzDdlIs/Cq7RbTT32ymkkn88wukWfuiQ==
+edge-exchange-plugins@^0.9.1:
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.9.1.tgz#9f7126361df243277574dab6628e0a21465fa6bd"
+  integrity sha512-C7Pbog2K+8H9oWifbyEUPVNx2SP0U8mQ7ozhWgAv765zZOLztVc5pHbEpceHyEpb8Cv5F+5frExNLlTUStLfZg==
   dependencies:
     biggystring "^3.0.2"
     esm "^3.2.4"
