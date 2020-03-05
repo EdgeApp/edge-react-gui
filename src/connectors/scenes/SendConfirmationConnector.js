@@ -4,6 +4,7 @@ import { type EdgeCurrencyInfo, type EdgeSpendInfo, type EdgeTransaction, errorN
 import { connect } from 'react-redux'
 
 import {
+  getAuthRequiredDispatch,
   newPin,
   newSpendInfo,
   reset,
@@ -78,8 +79,6 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
   const exchangeRates = state.exchangeRates
   const { toggleCryptoOnTop } = sceneState
 
-  const { spendingLimits } = state.ui.settings
-
   const out = {
     balanceInCrypto,
     balanceInFiat,
@@ -111,7 +110,6 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
     address: state.ui.scenes.sendConfirmation.address,
     sceneState,
     coreWallet,
-    spendingLimits,
     toggleCryptoOnTop
   }
   return out
@@ -134,7 +132,8 @@ const mapDispatchToProps = (dispatch: Dispatch): SendConfirmationDispatchProps =
   },
   updateTransaction: (transaction: ?EdgeTransaction, guiMakeSpendInfo: ?GuiMakeSpendInfo, forceUpdateGui: ?boolean, error: ?Error) => {
     dispatch(updateTransaction(transaction, guiMakeSpendInfo, forceUpdateGui, error))
-  }
+  },
+  getAuthRequiredDispatch: (spendInfo: EdgeSpendInfo): any => dispatch(getAuthRequiredDispatch(spendInfo)) // Type casting any cause dispatch returns a function
 })
 
 export default connect(
