@@ -130,7 +130,11 @@ async function fetchSwapQuote (state: State, request: EdgeSwapRequest): Promise<
   }
 
   // Get the quote:
-  const quote: EdgeSwapQuote = await account.fetchSwapQuote(request, { preferPluginId })
+  const quote: EdgeSwapQuote = await account.fetchSwapQuote(request, {
+    preferPluginId,
+    disabled: activePlugins.disabled,
+    promoCodes: activePlugins.promoCodes
+  })
 
   // Currency conversion tools:
   const { fromWallet, toWallet, fromCurrencyCode, toCurrencyCode } = request
