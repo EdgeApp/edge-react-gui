@@ -96,8 +96,6 @@ type State = {|
 export class SendConfirmation extends Component<Props, State> {
   pinInput: any
   flipInput: any
-  count: number
-  lastSeenCount: number
 
   constructor (props: Props) {
     super(props)
@@ -116,8 +114,6 @@ export class SendConfirmation extends Component<Props, State> {
       isFiatOnTop: !!(props.guiMakeSpendInfo && props.guiMakeSpendInfo.nativeAmount && bns.eq(props.guiMakeSpendInfo.nativeAmount, '0')),
       isFocus: !!(props.guiMakeSpendInfo && props.guiMakeSpendInfo.nativeAmount && bns.eq(props.guiMakeSpendInfo.nativeAmount, '0'))
     }
-    this.count = 0
-    this.lastSeenCount = 0
     this.flipInput = React.createRef()
   }
 
@@ -342,10 +338,7 @@ export class SendConfirmation extends Component<Props, State> {
 
   onExchangeAmountChanged = async ({ nativeAmount, exchangeAmount }: ExchangedFlipInputAmounts) => {
     const { fiatPerCrypto, coreWallet, sceneState, currencyCode, newSpendInfo, updateTransaction, getAuthRequiredDispatch } = this.props
-    this.setState({
-      showSpinner: true
-    })
-    const count = ++this.count
+    this.setState({ showSpinner: true })
     const amountFiatString: string = bns.mul(exchangeAmount, fiatPerCrypto.toString())
     const amountFiat: number = parseFloat(amountFiatString)
     const metadata: EdgeMetadata = { amountFiat }
@@ -357,13 +350,8 @@ export class SendConfirmation extends Component<Props, State> {
     try {
       newSpendInfo(spendInfo, authType)
       const edgeTransaction = await coreWallet.makeSpend(spendInfo)
-      if (count === this.count) {
-        this.lastSeenCount = count
-        updateTransaction(edgeTransaction, guiMakeSpendInfoClone, false, null)
-        this.setState({ showSpinner: false })
-      } else if (count > this.lastSeenCount) {
-        this.lastSeenCount = count
-      }
+      updateTransaction(edgeTransaction, guiMakeSpendInfoClone, false, null)
+      this.setState({ showSpinner: false })
     } catch (e) {
       console.log(e)
       updateTransaction(null, guiMakeSpendInfoClone, false, e)
