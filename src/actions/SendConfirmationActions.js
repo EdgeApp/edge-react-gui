@@ -316,3 +316,7 @@ export const displayFeeAlert = async (feeAmountInFiatSyntax: string) => {
   console.log('resolveValue is: ', resolveValue)
   return resolveValue
 }
+
+export const getAuthRequiredDispatch = (spendInfo: EdgeSpendInfo) => (dispatch: Dispatch, getState: GetState) => {
+  return getAuthRequired(getState(), spendInfo)
+}
