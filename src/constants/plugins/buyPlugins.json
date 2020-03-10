@@ -521,59 +521,11 @@
     "id": "bits of gold",
     "pluginId": "bitsofgold",
     "paymentType": "bank",
-    "description": "Fee: ~6.5% / Settlement: 1-72 hours\nLimit: €5000/day",
-    "title": "SEPA Bank Transfer",
+    "description": "Fee: ~6.5% / Settlement: 1-48 hours\nLimit: €5000/day",
+    "title": "Israeli Bank Transfe",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/bits-of-gold-logo-sm.png",
     "countryCodes": {
-      "AD": true,
-      "AT": true,
-      "BE": true,
-      "BG": true,
-      "BL": true,
-      "CH": true,
-      "CY": true,
-      "CZ": true,
-      "DE": true,
-      "DK": true,
-      "EE": true,
-      "ES": true,
-      "FI": true,
-      "FR": true,
-      "GB": true,
-      "GF": true,
-      "GG": true,
-      "GI": true,
-      "GP": true,
-      "GR": true,
-      "HR": true,
-      "HU": true,
-      "IE": true,
-      "IL": true,
-      "IM": true,
-      "IS": true,
-      "IT": true,
-      "JE": true,
-      "LI": true,
-      "LT": true,
-      "LU": true,
-      "LV": true,
-      "MC": true,
-      "MF": true,
-      "MQ": true,
-      "MT": true,
-      "NL": true,
-      "NO": true,
-      "PL": true,
-      "PM": true,
-      "PT": true,
-      "RE": true,
-      "RO": true,
-      "SE": true,
-      "SI": true,
-      "SK": true,
-      "SM": true,
-      "VA": true,
-      "YT": true
+      "IL": true
     },
     "cryptoCodes": [
       "BTC"
@@ -588,7 +540,7 @@
   },
   {
     "id": "bits of gold",
-    "priority": 3
+    "priority": 2
   },
   {
     "id": "wyre",
@@ -690,13 +642,5 @@
     "paymentTypeLogoKey": "ideal",
     "description": "Fee: ~2.9% / Settlement: Instant\nLimit: €10000",
     "priority": 1
-  },
-  {
-    "id": "bits of gold",
-    "forCountries": [
-      "IL"
-    ],
-    "priority": 2,
-    "title": "Israeli Bank Transfer"
   }
 ]
