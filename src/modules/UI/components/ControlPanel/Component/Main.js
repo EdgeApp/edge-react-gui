@@ -305,7 +305,11 @@ const LogoutButton = ({ onPress }) => {
 }
 
 const goToFioAddressesScene = () => Actions[Constants.FIO_ADDRESS_LIST]()
+// FIO disable changes below. Rename to enable
 const FioAddressButton = () => {
+  return null
+}
+const _FioAddressButton = () => {
   return (
     <Button onPress={goToFioAddressesScene}>
       <Button.Row>
