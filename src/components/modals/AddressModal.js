@@ -1,6 +1,5 @@
 // @flow
 
-import Resolution, {ResolutionError} from '@unstoppabledomains/resolution'
 import { FormField, InputAndButtonStyle, MaterialInputStyle, Modal, ModalStyle, PrimaryButton, SecondaryButton, TertiaryButton } from 'edge-components'
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
@@ -12,6 +11,7 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import styles from '../../styles/scenes/ScaneStyle'
 import { colors as COLORS } from '../../theme/variables/airbitz.js'
+import ResolutionError, { ResolutionErrorCode} from '../common/ResolutionError.js'
 
 // INTERACTIVE_MODAL /////////////////////////////////////////////////////////////////////////////
 type AddressModalProps = {
@@ -84,28 +84,40 @@ export class AddressModal extends Component<AddressModalProps, AddressModalState
   onChangeTextDelayed = (domain: string) => {
     const { currencyCode } = this.props
     console.log(`before bouncing on ${domain} ${currencyCode}`)
-    if (domain.endsWith('.zil') || domain.endsWith('.crypto')) {
+    if (domain.endsWith('.zil') || domain.endsWith('.crypto') || domain.endsWith('.eth')) {
       this.resolveAddress(domain, currencyCode)
     }
     this.updateUri(domain)
   }
 
+  fetchDomain = async (domain: string, currencyTicker: string) => {
+    console.log(domain)
+    if (!domain.endsWith('.zil') && !domain.endsWith('.crypto') && !domain.endsWith('.eth')) {
+      throw new ResolutionError(ResolutionErrorCode.UnsupportedDomain)
+    }
+    const baseurl = `https://unstoppabledomains.com/api/v1`
+    const url = `${baseurl}/${domain}`
+    const response = await global.fetch(url).then(res => res.json())
+    const { addresses, meta } = response
+    if (!meta || !meta.owner) {
+      throw new ResolutionError(ResolutionErrorCode.UnregisteredDomain, {domain})
+    }
+    const ticker = currencyTicker.toUpperCase()
+    if (!addresses || !addresses[ticker]) {
+      throw new ResolutionError(ResolutionErrorCode.UnspecifiedCurrency, {domain, currencyTicker})
+    }
+    return addresses[ticker]
+  }
+
   resolveAddress = async (domain: string, currencyTicker: string) => {
-    const resolution = new Resolution({
-      blockchain: {
-        ens: false,
-        cns: false
-      }
-    })
     let addr = 'nothing'
     try {
       this.setStatusLabel(s.strings.resolving)
-      addr = await resolution.addressOrThrow(domain, currencyTicker)
+      addr = await this.fetchDomain(domain, currencyTicker)
       this.setStatusLabel(addr)
     } catch (err) {
       if (err instanceof ResolutionError) {
-        const method = this.getServiceName(resolution, domain)
-        const message = sprintf(s.strings[err.code], domain, currencyTicker, method)
+        const message = sprintf(s.strings[err.code], domain, currencyTicker)
         if (domain === '') this.setStatusLabel(s.strings.fragment_send_send_to_hint)
         else this.setStatusLabel(message)
       }
