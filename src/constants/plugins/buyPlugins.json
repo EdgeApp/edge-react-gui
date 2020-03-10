@@ -522,7 +522,7 @@
     "pluginId": "bitsofgold",
     "paymentType": "bank",
     "description": "Fee: ~6.5% / Settlement: 1-48 hours\nLimit: €5000/day",
-    "title": "Israeli Bank Transfe",
+    "title": "Israeli Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/bits-of-gold-logo-sm.png",
     "countryCodes": {
       "IL": true
