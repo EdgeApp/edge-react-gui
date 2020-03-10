@@ -1,16 +1,15 @@
 // @flow
 import React, { Component } from 'react'
-import { View, TextInput, TouchableWithoutFeedback } from 'react-native'
-import s from '../../locales/strings.js'
-import { type AirshipBridge, AirshipModal } from '../modals/modalParts'
+import { TouchableWithoutFeedback, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import ContactSearchResults from './ContactSearchResults.js'
-import { FormField } from '../common/FormField'
+import s from '../../locales/strings.js'
 import FormattedText from '../../modules/UI/components/FormattedText/index'
 import styles, { materialInput } from '../../styles/scenes/TransactionDetailsStyle'
-
 import type { GuiContact } from '../../types/types.js'
+import { FormField } from '../common/FormField'
+import { type AirshipBridge, AirshipModal } from '../modals/modalParts'
+import ContactSearchResults from './ContactSearchResults.js'
 
 type Props = {
   bridge: AirshipBridge<null>,
@@ -38,33 +37,29 @@ export class TransactionDetailsPersonInput extends Component<Props, State> {
     this.setState({ personName: personName })
     this.props.bridge.resolve(null)
   }
-  render() {
+  render () {
     const { bridge, personStatus, contacts } = this.props
     const { personName } = this.state
     const personStatusString = sprintf(s.strings.transaction_details_person_input, personStatus)
     return (
       <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(null)}>
-          <TouchableWithoutFeedback onPress={() => bridge.resolve(null)}>
-            <View style={styles.airshipContainer}>
-              <FormattedText style={styles.airshipHeader}>{personStatusString}</FormattedText>
-                <FormField
-                  autoFocus
-                  autoCorrect={false}
-                  autoCapitalize="words"
-                  returnKeyLabel={"done"}
-                  returnKeyType={"done"}
-                  label={personStatusString}
-                  onChangeText={this.onChangePerson}
-                  value={personName}
-                  style={materialInput}
-                />
-                <ContactSearchResults
-                  contacts={contacts}
-                  currentPayeeText={personName}
-                  onSelectPayee={this.onSelectPerson}
-                />
-            </View>
-          </TouchableWithoutFeedback>
+        <TouchableWithoutFeedback onPress={() => bridge.resolve(null)}>
+          <View style={styles.airshipContainer}>
+            <FormattedText style={styles.airshipHeader}>{personStatusString}</FormattedText>
+            <FormField
+              autoFocus
+              autoCorrect={false}
+              autoCapitalize="words"
+              returnKeyLabel={'done'}
+              returnKeyType={'done'}
+              label={personStatusString}
+              onChangeText={this.onChangePerson}
+              value={personName}
+              style={materialInput}
+            />
+            <ContactSearchResults contacts={contacts} currentPayeeText={personName} onSelectPayee={this.onSelectPerson} />
+          </View>
+        </TouchableWithoutFeedback>
       </AirshipModal>
     )
   }

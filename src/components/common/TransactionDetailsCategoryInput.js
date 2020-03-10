@@ -1,16 +1,13 @@
 // @flow
-import { bns } from 'biggystring'
 import React, { Component } from 'react'
-import { View, TextInput, TouchableWithoutFeedback } from 'react-native'
-import s from '../../locales/strings.js'
-import { type AirshipBridge, AirshipModal } from '../modals/modalParts'
-import { sprintf } from 'sprintf-js'
+import { TouchableWithoutFeedback, View } from 'react-native'
 
-import { FormField } from '../common/FormField'
+import s from '../../locales/strings.js'
 import FormattedText from '../../modules/UI/components/FormattedText/index'
 import styles, { materialInput } from '../../styles/scenes/TransactionDetailsStyle'
-import THEME from '../../theme/variables/airbitz'
+import { FormField } from '../common/FormField'
 import SubCategorySelect from '../common/TransactionSubCategorySelect.js'
+import { type AirshipBridge, AirshipModal } from '../modals/modalParts'
 
 type CategoriesType = Array<{
   key: string,
@@ -40,7 +37,7 @@ export class TransactionDetailsCategoryInput extends Component<Props, State> {
     const categories = this.formattedCategories(props.categories)
     this.state = { categories, category, subCategory }
   }
-  formattedCategories = (categories: Object) : CategoriesType => {
+  formattedCategories = (categories: Object): CategoriesType => {
     return Object.keys(categories).map(key => {
       return {
         key: categories[key].key,
@@ -68,8 +65,8 @@ export class TransactionDetailsCategoryInput extends Component<Props, State> {
     }
     bridge.resolve(null)
   }
-  render() {
-    const { bridge, subCategories } = this.props
+  render () {
+    const { bridge } = this.props
     const { categories, category, subCategory } = this.state
     return (
       <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(null)}>
@@ -77,14 +74,10 @@ export class TransactionDetailsCategoryInput extends Component<Props, State> {
           <View style={styles.airshipContainer}>
             <FormattedText style={styles.airshipHeader}>{s.strings.transaction_details_category_title}</FormattedText>
             <View style={styles.inputCategoryMainContainter}>
-              <FormattedText style={styles.inputCategoryListHeader}>
-                {s.strings.tx_detail_picker_title}
-              </FormattedText>
+              <FormattedText style={styles.inputCategoryListHeader}>{s.strings.tx_detail_picker_title}</FormattedText>
               <View style={styles.InputCategoryRow}>
                 {categories.map(item => {
-                  const containterStyle = category === item.key ?
-                    styles.inputCategoryContainterSelected :
-                    styles.inputCategoryContainter
+                  const containterStyle = category === item.key ? styles.inputCategoryContainterSelected : styles.inputCategoryContainter
                   return (
                     <TouchableWithoutFeedback onPress={() => this.onChangeCategory(item.key)} key={item.key}>
                       <View style={containterStyle}>
@@ -126,7 +119,7 @@ export class TransactionDetailsCategoryInput extends Component<Props, State> {
     const { categories, category } = this.state
     const selectedCategories = categories.filter(item => item.key === category)
     const filteredCategories = categories.filter(item => item.key !== category)
-    const sortedCategories = [ ...selectedCategories, ...filteredCategories ]
+    const sortedCategories = [...selectedCategories, ...filteredCategories]
     return sortedCategories.map(category => category.key)
   }
   getSortedSubCategories = () => {

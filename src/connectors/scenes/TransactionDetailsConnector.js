@@ -23,9 +23,7 @@ const mapStateToProps = (state: State, ownProps: TransactionDetailsOwnProps) => 
   const allCurrencyInfos: Array<EdgeCurrencyInfo> = plugins.allCurrencyInfos
   const currencyInfo: EdgeCurrencyInfo | void = UTILS.getCurrencyInfo(allCurrencyInfos, currencyCode)
 
-  const currentFiatAmount = wallet ?
-    UI_SELECTORS.calculateWalletFiatBalanceWithoutState(wallet, currencyCode, state.ui.settings ,state.exchangeRates) :
-    null
+  const currentFiatAmount = wallet ? UI_SELECTORS.calculateWalletFiatBalanceWithoutState(wallet, currencyCode, state.ui.settings, state.exchangeRates) : null
 
   return {
     contacts,

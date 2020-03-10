@@ -11,7 +11,7 @@ import type { SubcategorySearchResultData } from '../../types/types.js'
 type State = {
   subcategories: Array<string>,
   filteredSubcategories: Array<string>,
-  enteredSubcategory: string,
+  enteredSubcategory: string
 }
 type Props = {
   bottomGap: number,

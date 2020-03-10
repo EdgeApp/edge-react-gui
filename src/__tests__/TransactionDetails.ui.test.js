@@ -5,22 +5,49 @@ import React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { TransactionDetails } from '../components/scenes/TransactionDetailsScene.js'
+const fakeWallet: any = {
+  allDenominations: {
+    BTC: {
+      '100000000': {
+        name: 'BTC',
+        multiplier: '100000000',
+        symbol: '₿'
+      }
+    }
+  },
+  denominations: [
+    {
+      name: 'BTC',
+      multiplier: '100000000',
+      symbol: '₿'
+    }
+  ],
+  balances: { BTC: '123123' },
+  blockHeight: 12345,
+  currencyNames: { BTC: 'Bitcoin' },
+  currencyCode: 'BTC',
+  currencyInfo: {},
+  displayPrivateSeed: 'private seed',
+  displayPublicSeed: 'public seed',
+  fiatCurrencyCode: 'iso:USD',
+  id: '123',
+  name: 'wallet name'
+}
+
+const settings = {
+  [fakeWallet.currencyCode]: {
+    denomination: '100000000',
+    denominations: {
+      name: 'BTC',
+      multiplier: '100000000',
+      symbol: '₿'
+    }
+  }
+}
 
 describe('TransactionDetails.ui', () => {
   it('should render', () => {
     const renderer = new ShallowRenderer()
-    const fakeWallet: any = {
-      allDenominations: {},
-      balances: { BTC: '123123' },
-      blockHeight: 12345,
-      currencyCode: 'BTC',
-      currencyInfo: {},
-      displayPrivateSeed: 'private seed',
-      displayPublicSeed: 'public seed',
-      fiatCurrencyCode: 'iso:USD',
-      id: '123',
-      name: 'wallet name'
-    }
     const props = {
       edgeTransaction: {
         txid: 'this is the txid',
@@ -36,15 +63,11 @@ describe('TransactionDetails.ui', () => {
       },
       contacts: [],
       subcategoriesList: [],
-      settings: {
-        [fakeWallet.currencyCode]: {
-          denominations: {}
-        }
-      },
       thumbnailPath: 'thumb/nail/path',
       currencyInfo: null,
       currencyCode: 'BTC',
       wallets: { [fakeWallet.id]: fakeWallet },
+      settings,
       setNewSubcategory: jest.fn(),
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),
@@ -57,18 +80,6 @@ describe('TransactionDetails.ui', () => {
 
   it('should render with tx date off by 1000x in future', () => {
     const renderer = new ShallowRenderer()
-    const fakeWallet: any = {
-      allDenominations: {},
-      balances: { BTC: '123123' },
-      blockHeight: 12345,
-      currencyCode: 'BTC',
-      currencyInfo: {},
-      displayPrivateSeed: 'private seed',
-      displayPublicSeed: 'public seed',
-      fiatCurrencyCode: 'iso:USD',
-      id: '123',
-      name: 'wallet name'
-    }
     const props = {
       edgeTransaction: {
         txid: 'this is the txid',
@@ -84,15 +95,11 @@ describe('TransactionDetails.ui', () => {
       },
       contacts: [],
       subcategoriesList: [],
-      settings: {
-        [fakeWallet.currencyCode]: {
-          denominations: {}
-        }
-      },
       thumbnailPath: 'thumb/nail/path',
       currencyInfo: null,
       currencyCode: 'BTC',
       wallets: { [fakeWallet.id]: fakeWallet },
+      settings,
       setNewSubcategory: jest.fn(),
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),
@@ -105,18 +112,6 @@ describe('TransactionDetails.ui', () => {
 
   it('should render with tx date off by 1000x in past', () => {
     const renderer = new ShallowRenderer()
-    const fakeWallet: any = {
-      allDenominations: {},
-      balances: { BTC: '123123' },
-      blockHeight: 12345,
-      currencyCode: 'BTC',
-      currencyInfo: {},
-      displayPrivateSeed: 'private seed',
-      displayPublicSeed: 'public seed',
-      fiatCurrencyCode: 'iso:USD',
-      id: '123',
-      name: 'wallet name'
-    }
     const props = {
       edgeTransaction: {
         txid: 'this is the txid',
@@ -132,15 +127,11 @@ describe('TransactionDetails.ui', () => {
       },
       contacts: [],
       subcategoriesList: [],
-      settings: {
-        [fakeWallet.currencyCode]: {
-          denominations: {}
-        }
-      },
       thumbnailPath: 'thumb/nail/path',
       currencyInfo: null,
       currencyCode: 'BTC',
       wallets: { [fakeWallet.id]: fakeWallet },
+      settings,
       setNewSubcategory: jest.fn(),
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),
@@ -153,18 +144,6 @@ describe('TransactionDetails.ui', () => {
 
   it('should render with negative nativeAmount and fiatAmount', () => {
     const renderer = new ShallowRenderer()
-    const fakeWallet: any = {
-      allDenominations: {},
-      balances: { BTC: '123123' },
-      blockHeight: 12345,
-      currencyCode: 'BTC',
-      currencyInfo: {},
-      displayPrivateSeed: 'private seed',
-      displayPublicSeed: 'public seed',
-      fiatCurrencyCode: 'iso:USD',
-      id: '123',
-      name: 'wallet name'
-    }
     const props = {
       edgeTransaction: {
         txid: 'this is the txid',
@@ -183,15 +162,11 @@ describe('TransactionDetails.ui', () => {
       },
       contacts: [],
       subcategoriesList: [],
-      settings: {
-        [fakeWallet.currencyCode]: {
-          denominations: {}
-        }
-      },
       thumbnailPath: 'thumb/nail/path',
       currencyInfo: null,
       currencyCode: 'BTC',
       wallets: { [fakeWallet.id]: fakeWallet },
+      settings,
       setNewSubcategory: jest.fn(),
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),

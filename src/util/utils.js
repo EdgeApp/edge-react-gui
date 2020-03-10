@@ -3,7 +3,6 @@
 import { bns, div, eq, gte, mul, toFixed } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
 import _ from 'lodash'
-import { Platform } from 'react-native'
 
 import { FIAT_CODES_SYMBOLS, getSymbolFromCurrency } from '../constants/indexConstants.js'
 import { intl } from '../locales/intl.js'
@@ -12,6 +11,15 @@ import type { State } from '../types/reduxTypes.js'
 import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet } from '../types/types.js'
 
 export const DIVIDE_PRECISION = 18
+
+export const capitalize = (string: string) => {
+  if (!string) {
+    return ''
+  }
+  const firstLetter = string.charAt(0).toUpperCase()
+  const otherLetters = string.slice(1)
+  return `${firstLetter}${otherLetters}`
+}
 
 export const cutOffText = (str: string, lng: number) => {
   if (str.length >= lng) {
@@ -52,7 +60,7 @@ export const getSettingsTokenMultiplier = (currencyCode: string, settings: Objec
   return multiplier
 }
 
-export const getWalletDefaultDenomProps = (wallet: Object, settingsState: Object, currencyCode?: string /* for metaTokens */): EdgeDenomination => {
+export const getWalletDefaultDenomProps = (wallet: GuiWallet, settingsState: Object, currencyCode?: string /* for metaTokens */): EdgeDenomination => {
   const allWalletDenoms = wallet.allDenominations
   let walletCurrencyCode
   if (currencyCode) {
@@ -88,14 +96,6 @@ export const logWarning = (msg: string) => {
 
 export const logError = (msg: string) => {
   console.log('%c ' + msg, 'background: red; font-weight: bold; display: block;')
-}
-
-export const inputBottomPadding = () => {
-  if (Platform.OS === 'android') {
-    return {
-      paddingBottom: 0
-    }
-  }
 }
 
 // will take the metaTokens property on the wallet (that comes from currencyInfo), merge with account-level custom tokens added, and only return if enabled (wallet-specific)

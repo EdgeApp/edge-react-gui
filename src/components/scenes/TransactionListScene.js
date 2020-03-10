@@ -3,7 +3,7 @@
 import { bns } from 'biggystring'
 import type { EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, Animated, FlatList, Image, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, Animated, FlatList, Image, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
@@ -283,7 +283,11 @@ export class TransactionList extends Component<Props, State> {
   }
 
   goToTxDetail = (edgeTransaction: EdgeTransaction, thumbnailPath: string) => {
-    Actions.transactionDetails({ edgeTransaction, thumbnailPath })
+    if (edgeTransaction) {
+      Actions.transactionDetails({ edgeTransaction, thumbnailPath })
+    } else {
+      Alert.alert(s.strings.transaction_details_error_invalid)
+    }
   }
 
   renderTx = (transaction: TransactionListTx) => {

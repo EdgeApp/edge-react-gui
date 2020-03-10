@@ -2,10 +2,10 @@
 
 import { Platform, StyleSheet } from 'react-native'
 
+import { MaterialInputOnWhite } from '../../styles/components/FormFieldStyles'
 import THEME from '../../theme/variables/airbitz'
 import { PLATFORM } from '../../theme/variables/platform.js'
 import { scale } from '../../util/scaling.js'
-import { MaterialInputOnWhite } from '../../styles/components/FormFieldStyles'
 
 const { rem } = THEME
 
@@ -61,20 +61,20 @@ export const styles = {
   },
   tileTextBottom: {
     color: THEME.COLORS.GRAY_5,
-    fontSize: rem(1),
+    fontSize: rem(1)
   },
   tileTextPrice: {
     flex: 1,
     color: THEME.COLORS.GRAY_5,
-    fontSize: rem(1),
+    fontSize: rem(1)
   },
   tileTextPriceChangeUp: {
     color: THEME.COLORS.ACCENT_MINT,
-    fontSize: rem(1),
+    fontSize: rem(1)
   },
   tileTextPriceChangeDown: {
     color: THEME.COLORS.ACCENT_RED,
-    fontSize: rem(1),
+    fontSize: rem(1)
   },
   tileTextNotes: {
     color: THEME.COLORS.GRAY_5,
@@ -122,9 +122,9 @@ export const styles = {
   },
   fiatInput: {
     borderBottomWidth: 1,
-    borderBottomColor: '#CCCCCC',
+    borderBottomColor: '#CCCCCC'
   },
-  spacer:{
+  spacer: {
     flex: 1
   },
   saveButtonContainer: {
@@ -147,7 +147,7 @@ export const styles = {
     paddingVertical: rem(0.2),
     marginRight: rem(0.6),
     borderWidth: 1,
-    borderColor: "#A4C7DF",
+    borderColor: '#A4C7DF',
     borderRadius: 3
   },
   inputCategoryContainterSelected: {
@@ -156,7 +156,7 @@ export const styles = {
     marginRight: rem(0.6),
     borderWidth: 1,
     borderRadius: 3,
-    borderColor: "#A4C7DF",
+    borderColor: '#A4C7DF',
     backgroundColor: '#A4C7DF'
   },
   inputCategoryText: {
@@ -233,7 +233,7 @@ export const styles = {
     paddingVertical: 0
   },
 
-  //old style
+  // old style
   searchPopup: {
     backgroundColor: THEME.COLORS.WHITE,
     position: 'absolute',
@@ -534,7 +534,7 @@ export const styles = {
   },
   txIDIcon: {
     color: THEME.COLORS.SECONDARY
-  },
+  }
 }
 
 export const iconSize = {
@@ -547,7 +547,7 @@ export const materialFiatInput = {
   container: {
     ...MaterialInputOnWhite.container,
     width: '100%'
-  },
+  }
 }
 export const materialInput = {
   ...MaterialInputOnWhite,
@@ -557,7 +557,7 @@ export const materialInput = {
     ...MaterialInputOnWhite.container,
     height: rem(3.44),
     width: '100%'
-  },
+  }
 }
 
 export default StyleSheet.create(styles)

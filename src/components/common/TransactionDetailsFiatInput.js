@@ -1,23 +1,22 @@
 // @flow
 import { bns } from 'biggystring'
 import React, { Component } from 'react'
-import { View, TextInput, TouchableWithoutFeedback } from 'react-native'
-import s from '../../locales/strings.js'
-import { type AirshipBridge, AirshipModal } from '../modals/modalParts'
+import { TouchableWithoutFeedback, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { intl } from '../../locales/intl'
-import ContactSearchResults from './ContactSearchResults.js'
-import { FormField } from '../common/FormField'
+import s from '../../locales/strings.js'
 import FormattedText from '../../modules/UI/components/FormattedText/index'
 import styles, { materialFiatInput } from '../../styles/scenes/TransactionDetailsStyle'
 import { truncateDecimals } from '../../util/utils'
+import { FormField } from '../common/FormField'
+import { type AirshipBridge, AirshipModal } from '../modals/modalParts'
 
 type Props = {
   bridge: AirshipBridge<null>,
   currency: string,
   amount: string,
-  onChange: (string) => void
+  onChange: string => void
 }
 
 type State = {
@@ -34,9 +33,7 @@ export class TransactionDetailsFiatInput extends Component<Props, State> {
     this.setState({ amount })
   }
   onFocus = () => {
-    this.changeAmount(
-      this.state.amount !== '0.00' && this.state.amount !== '0,00' ? this.state.amount : ''
-    )
+    this.changeAmount(this.state.amount !== '0.00' && this.state.amount !== '0,00' ? this.state.amount : '')
   }
   onBlur = () => {
     const { amount } = this.state
@@ -53,7 +50,7 @@ export class TransactionDetailsFiatInput extends Component<Props, State> {
     const check = (isNaN(input.replace(',', '.')) && (input !== ',' && input !== '.')) || input === ''
     this.changeAmount(check ? '' : input)
   }
-  render() {
+  render () {
     const { bridge, currency } = this.props
     const { amount } = this.state
     return (

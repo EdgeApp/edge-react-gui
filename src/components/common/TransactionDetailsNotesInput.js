@@ -1,24 +1,18 @@
 // @flow
-import { bns } from 'biggystring'
 import React, { Component } from 'react'
-import { View, TextInput, TouchableWithoutFeedback } from 'react-native'
-import s from '../../locales/strings.js'
-import { type AirshipBridge, AirshipModal } from '../modals/modalParts'
-import { sprintf } from 'sprintf-js'
+import { TextInput, TouchableWithoutFeedback, View } from 'react-native'
 
-import { intl } from '../../locales/intl'
-import ContactSearchResults from './ContactSearchResults.js'
-import { FormField } from '../common/FormField'
-import FormattedText from '../../modules/UI/components/FormattedText/index'
-import styles, { materialInput } from '../../styles/scenes/TransactionDetailsStyle'
-import { truncateDecimals } from '../../util/utils'
-import THEME from '../../theme/variables/airbitz'
+import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
+import FormattedText from '../../modules/UI/components/FormattedText/index'
+import styles from '../../styles/scenes/TransactionDetailsStyle'
+import THEME from '../../theme/variables/airbitz'
+import { type AirshipBridge, AirshipModal } from '../modals/modalParts'
 
 type Props = {
   bridge: AirshipBridge<null>,
   notes: string,
-  onChange: (string) => void
+  onChange: string => void
 }
 
 type State = {
@@ -36,7 +30,7 @@ export class TransactionDetailsNotesInput extends Component<Props, State> {
     this.setState({ notes })
     this.props.onChange(notes)
   }
-  render() {
+  render () {
     const { bridge } = this.props
     const { notes } = this.state
     return (
