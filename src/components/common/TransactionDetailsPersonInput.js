@@ -54,6 +54,7 @@ export class TransactionDetailsPersonInput extends Component<Props, State> {
               returnKeyType={'done'}
               label={personStatusString}
               onChangeText={this.onChangePerson}
+              onSubmitEditing={() => bridge.resolve(null)}
               value={personName}
               style={materialInput}
             />

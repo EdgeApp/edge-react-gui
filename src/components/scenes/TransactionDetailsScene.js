@@ -13,7 +13,7 @@ import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
 import FormattedText from '../../modules/UI/components/FormattedText/index'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
-import styles, { iconSize, styles as styleRaw } from '../../styles/scenes/TransactionDetailsStyle'
+import styles, { iconSize } from '../../styles/scenes/TransactionDetailsStyle'
 import type { GuiContact, GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils'
@@ -28,22 +28,18 @@ import { Airship } from '../services/AirshipInstance.js'
 
 const categories = {
   exchange: {
-    color: styleRaw.typeExchange.color,
     syntax: s.strings.fragment_transaction_exchange,
     key: 'exchange'
   },
   expense: {
-    color: styleRaw.typeExpense.color,
     syntax: s.strings.fragment_transaction_expense,
     key: 'expense'
   },
   transfer: {
-    color: styleRaw.typeTransfer.color,
     syntax: s.strings.fragment_transaction_transfer,
     key: 'transfer'
   },
   income: {
-    color: styleRaw.typeIncome.color,
     syntax: s.strings.fragment_transaction_income,
     key: 'income'
   }
@@ -111,7 +107,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     this.state = {
       amountFiat: this.initalizeAmountBalance(edgeTransaction.metadata),
       payeeName: edgeTransaction.metadata && edgeTransaction.metadata.name ? edgeTransaction.metadata.name : '', // remove commenting once metaData in Redux
-      notes: edgeTransaction.metadata && edgeTransaction.metadata.name ? edgeTransaction.metadata.name : '',
+      notes: edgeTransaction.metadata && edgeTransaction.metadata.notes ? edgeTransaction.metadata.notes : '',
       category: category.category,
       subCategory: category.subCategory,
       thumbnailPath,
@@ -141,8 +137,8 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
       const fullCategory = metadata.category || ''
       const colonOccurrence = fullCategory.indexOf(':')
       if (fullCategory && colonOccurrence) {
-        const splittedCategory = fullCategory.split('')
-        const category = splittedCategory[0]
+        const splittedCategory = fullCategory.split(':')
+        const category = splittedCategory[0].toLowerCase()
         return {
           category: categories[category] ? categories[category].key : defaultCategory,
           subCategory: splittedCategory[1]
@@ -342,7 +338,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                 <FormattedText style={styles.tileTextBottom}>
                   {`${crypto.symbolString} `}
                   {crypto.amountString}
-                  {` (${crypto.feeString})`}
+                  {crypto.feeString ? ` (${crypto.feeString})` : ''}
                 </FormattedText>
               </View>
               <TouchableWithoutFeedback onPress={this.openFiatInput}>
@@ -380,7 +376,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                 </View>
               </TouchableWithoutFeedback>
               <TouchableWithoutFeedback onPress={this.openNotesInput}>
-                <View style={styles.tileContainerBig}>
+                <View style={styles.tileContainerNotes}>
                   <Icon type={Constants.ION_ICONS} name={Constants.CREATE_OUTLINE} size={16} style={styles.tileIcon} />
                   <FormattedText style={styles.tileTextTop}>{s.strings.transaction_details_notes_title}</FormattedText>
                   <FormattedText style={styles.tileTextNotes}>{notes}</FormattedText>

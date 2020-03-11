@@ -136,7 +136,7 @@ exports[`TransactionDetails.ui should render 1`] = `
           >
             ₿
             0.000001
-             ()
+            
           </FormattedText>
         </View>
         <TouchableWithoutFeedback
@@ -358,8 +358,9 @@ exports[`TransactionDetails.ui should render 1`] = `
                 "backgroundColor": "#FFFFFF",
                 "borderBottomColor": "#D9E3ED",
                 "borderBottomWidth": 1,
-                "height": 101,
                 "justifyContent": "center",
+                "maxHeight": 180,
+                "minHeight": 101,
                 "padding": 18,
                 "width": "100%",
               }
@@ -588,7 +589,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
           >
             ₿
             0.000001
-             (+ ₿  0 (Fee))
+             (+ ₿  0 fee)
           </FormattedText>
         </View>
         <TouchableWithoutFeedback
@@ -810,8 +811,9 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
                 "backgroundColor": "#FFFFFF",
                 "borderBottomColor": "#D9E3ED",
                 "borderBottomWidth": 1,
-                "height": 101,
                 "justifyContent": "center",
+                "maxHeight": 180,
+                "minHeight": 101,
                 "padding": 18,
                 "width": "100%",
               }
@@ -1040,7 +1042,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
           >
             ₿
             0.000001
-             ()
+            
           </FormattedText>
         </View>
         <TouchableWithoutFeedback
@@ -1262,8 +1264,9 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
                 "backgroundColor": "#FFFFFF",
                 "borderBottomColor": "#D9E3ED",
                 "borderBottomWidth": 1,
-                "height": 101,
                 "justifyContent": "center",
+                "maxHeight": 180,
+                "minHeight": 101,
                 "padding": 18,
                 "width": "100%",
               }
@@ -1492,7 +1495,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
           >
             ₿
             0.000001
-             ()
+            
           </FormattedText>
         </View>
         <TouchableWithoutFeedback
@@ -1714,8 +1717,9 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
                 "backgroundColor": "#FFFFFF",
                 "borderBottomColor": "#D9E3ED",
                 "borderBottomWidth": 1,
-                "height": 101,
                 "justifyContent": "center",
+                "maxHeight": 180,
+                "minHeight": 101,
                 "padding": 18,
                 "width": "100%",
               }

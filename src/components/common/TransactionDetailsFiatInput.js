@@ -69,6 +69,7 @@ export class TransactionDetailsFiatInput extends Component<Props, State> {
               onFocus={this.onFocus}
               onBlur={this.onBlur}
               onChangeText={this.onChange}
+              onSubmitEditing={() => bridge.resolve(null)}
               value={truncateDecimals(amount.toString().replace('-', ''), 2, true)}
             />
           </View>
