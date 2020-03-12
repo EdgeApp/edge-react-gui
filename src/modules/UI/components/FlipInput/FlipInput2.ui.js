@@ -352,7 +352,7 @@ export class FlipInput extends Component<Props, State> {
             <Text style={[top.symbol]}>{fieldInfo.currencySymbol}</Text>
             <TextInput
               style={[top.amount]}
-              placeholder={this.props.isFiatOnTop ? 'Amount' : '0'}
+              placeholder={'0'}
               placeholderTextColor={'rgba(255, 255, 255, 0.60)'}
               value={amount}
               onChangeText={onChangeText}
