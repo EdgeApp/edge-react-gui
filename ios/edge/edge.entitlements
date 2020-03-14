@@ -6,6 +6,7 @@
 	<array>
 		<string>applinks:www.edge.app</string>
 		<string>applinks:dl.edge.app</string>
+		<string>applinks:deep.edge.app</string>
 	</array>
 </dict>
 </plist>
