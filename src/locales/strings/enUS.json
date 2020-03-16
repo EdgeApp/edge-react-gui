@@ -407,7 +407,7 @@
   "send_confirmation_enter_send_password": "Password",
   "transaction_detail_unable_to_load_transaction": "Unable to load transaction",
   "string_confirm": "Confirm",
-  "fragment_tx_detail_mining_fee_with_symbol": "+ %1s %2f fee",
+  "fragment_tx_detail_mining_fee_with_symbol": "+ %1s fee",
   "fragment_tx_detail_mining_fee_with_denom": "+ %1f %2s fee",
   "string_search": "Search",
   "confirm_password_text": "Confirm Password",

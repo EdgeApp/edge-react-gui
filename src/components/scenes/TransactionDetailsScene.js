@@ -62,12 +62,12 @@ export type TransactionDetailsOwnProps = {
   edgeTransaction: EdgeTransaction,
   contacts: Array<GuiContact>,
   subcategoriesList: Array<string>,
-  settings: Object, // TODO: This badly needs to get typed but it is a huge dynamically generated object with embedded maps -paulvp,
   thumbnailPath: string,
   currencyInfo: EdgeCurrencyInfo | null,
   currencyCode: string,
-  wallets: { [walletId: string]: GuiWallet },
-  currentFiatAmount?: string
+  guiWallet: GuiWallet,
+  currentFiatAmount: string,
+  walletDefaultDenomProps: EdgeDenomination
 }
 
 export type TransactionDetailsDispatchProps = {
@@ -85,9 +85,7 @@ type State = {
   bizId: number,
   miscJson: any, // core receives this as a string
   category: string,
-  subCategory: string,
-  walletDefaultDenomProps: EdgeDenomination,
-  guiWallet: GuiWallet
+  subCategory: string
 }
 
 type TransactionDetailsProps = TransactionDetailsOwnProps & TransactionDetailsDispatchProps
@@ -95,14 +93,13 @@ type TransactionDetailsProps = TransactionDetailsOwnProps & TransactionDetailsDi
 export class TransactionDetails extends Component<TransactionDetailsProps, State> {
   constructor (props: TransactionDetailsProps) {
     super(props)
-    const { settings, thumbnailPath, wallets } = props
+    const { thumbnailPath } = props
     const edgeTransaction = {
       ...props.edgeTransaction,
       date: UTILS.autoCorrectDate(props.edgeTransaction.date)
     }
     const direction = parseInt(edgeTransaction.nativeAmount) >= 0 ? 'receive' : 'send'
     const category = this.initializeFormattedCategories(edgeTransaction.metadata, direction)
-    const guiWallet = wallets[edgeTransaction.wallet.id]
 
     this.state = {
       amountFiat: this.initalizeAmountBalance(edgeTransaction.metadata),
@@ -112,12 +109,8 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
       subCategory: category.subCategory,
       thumbnailPath,
       direction,
-      guiWallet,
       bizId: 0,
-      miscJson: edgeTransaction.metadata ? edgeTransaction.metadata.miscJson : '',
-      walletDefaultDenomProps: UTILS.isCryptoParentCurrency(guiWallet, edgeTransaction.currencyCode)
-        ? UTILS.getWalletDefaultDenomProps(guiWallet, settings)
-        : UTILS.getWalletDefaultDenomProps(guiWallet, settings, edgeTransaction.currencyCode)
+      miscJson: edgeTransaction.metadata ? edgeTransaction.metadata.miscJson : ''
     }
     slowlog(this, /.*/, global.slowlogOptions)
   }
@@ -174,7 +167,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     Airship.show(bridge => (
       <TransactionDetailsFiatInput
         bridge={bridge}
-        currency={this.state.guiWallet.fiatCurrencyCode}
+        currency={this.props.guiWallet.fiatCurrencyCode}
         amount={this.state.amountFiat}
         onChange={this.onChangeFiat}
       />
@@ -230,18 +223,16 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
 
   // Crypto Amount Logic
   getReceivedCryptoAmount = () => {
-    const { edgeTransaction } = this.props
-    const { walletDefaultDenomProps, guiWallet } = this.state
+    const { edgeTransaction, walletDefaultDenomProps, guiWallet } = this.props
 
     const absoluteAmount = abs(edgeTransaction.nativeAmount)
     const convertedAmount = UTILS.convertNativeToDisplay(walletDefaultDenomProps.multiplier)(absoluteAmount)
-    const amountString = UTILS.decimalOrZero(UTILS.truncateDecimals(convertedAmount, 6), 6)
     const currencyName = guiWallet.currencyNames[guiWallet.currencyCode]
     const symbolString =
       UTILS.isCryptoParentCurrency(guiWallet, edgeTransaction.currencyCode) && walletDefaultDenomProps.symbol ? walletDefaultDenomProps.symbol : ''
 
     return {
-      amountString,
+      amountString: convertedAmount,
       symbolString,
       currencyName,
       feeString: ''
@@ -249,8 +240,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
   }
 
   getSentCryptoAmount = () => {
-    const { edgeTransaction } = this.props
-    const { walletDefaultDenomProps, guiWallet } = this.state
+    const { edgeTransaction, walletDefaultDenomProps, guiWallet } = this.props
 
     const absoluteAmount = abs(edgeTransaction.nativeAmount)
     const symbolString =
@@ -261,15 +251,13 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
       const convertedAmount = UTILS.convertNativeToDisplay(walletDefaultDenomProps.multiplier)(absoluteAmount)
       const convertedFee = UTILS.convertNativeToDisplay(walletDefaultDenomProps.multiplier)(edgeTransaction.networkFee)
       const amountMinusFee = sub(convertedAmount, convertedFee)
-      const amountTruncatedDecimals = UTILS.truncateDecimals(amountMinusFee.toString(), 6)
-      const amountString = UTILS.decimalOrZero(amountTruncatedDecimals, 6)
 
       const feeAbsolute = abs(UTILS.truncateDecimals(convertedFee, 6))
       const feeString = symbolString
-        ? sprintf(s.strings.fragment_tx_detail_mining_fee_with_symbol, symbolString, feeAbsolute)
+        ? sprintf(s.strings.fragment_tx_detail_mining_fee_with_symbol, feeAbsolute)
         : sprintf(s.strings.fragment_tx_detail_mining_fee_with_denom, feeAbsolute, walletDefaultDenomProps.name)
       return {
-        amountString,
+        amountString: amountMinusFee,
         symbolString,
         currencyName,
         feeString
@@ -291,11 +279,12 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
 
     const fiatAmount = amountFiat.replace(',', '.')
     const difference = parseFloat(currentFiatAmount) - parseFloat(fiatAmount)
-    const percentageFloat = (difference / parseFloat(fiatAmount)) * 100
+    const percentageFloat = currentFiatAmount ? (difference / parseFloat(fiatAmount)) * 100 : 0
     const percentage = bns.toFixed(percentageFloat.toString(), 2, 2)
+    const amount = currentFiatAmount ? bns.toFixed(currentFiatAmount.toString(), 2, 2) : ''
 
     return {
-      amount: currentFiatAmount || '',
+      amount,
       difference,
       percentage: bns.abs(percentage)
     }
@@ -303,7 +292,8 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
 
   // Render
   render () {
-    const { direction, amountFiat, payeeName, thumbnailPath, notes, category, subCategory, guiWallet } = this.state
+    const { guiWallet } = this.props
+    const { direction, amountFiat, payeeName, thumbnailPath, notes, category, subCategory } = this.state
     const { fiatCurrencyCode } = guiWallet
 
     const crypto: fiatCryptoAmountUI = direction === 'receive' ? this.getReceivedCryptoAmount() : this.getSentCryptoAmount()

@@ -3,7 +3,6 @@
 exports[`TransactionDetails.ui should render 1`] = `
 <React.Fragment>
   <SceneWrapper
-    background="body"
     bodySplit={33.709859154929575}
   >
     <View
@@ -134,8 +133,8 @@ exports[`TransactionDetails.ui should render 1`] = `
               }
             }
           >
-            ₿
-            0.000001
+            ₿ 
+            0.00000123
             
           </FormattedText>
         </View>
@@ -194,7 +193,7 @@ exports[`TransactionDetails.ui should render 1`] = `
                   }
                 }
               >
-                $
+                $ 
               </FormattedText>
               <FormattedText
                 style={
@@ -250,18 +249,18 @@ exports[`TransactionDetails.ui should render 1`] = `
                 }
               }
             >
-              $
-
+              $ 
+              120.00
             </FormattedText>
             <FormattedText
               style={
                 Object {
-                  "color": "#E85466",
+                  "color": "#66EDA8",
                   "fontSize": 22,
                 }
               }
             >
-              - 3758
+              2667178313
               %
             </FormattedText>
           </View>
@@ -344,7 +343,7 @@ exports[`TransactionDetails.ui should render 1`] = `
                   }
                 }
               >
-
+                
               </FormattedText>
             </View>
           </View>
@@ -397,7 +396,7 @@ exports[`TransactionDetails.ui should render 1`] = `
                 }
               }
             >
-
+              
             </FormattedText>
           </View>
         </TouchableWithoutFeedback>
@@ -456,7 +455,6 @@ exports[`TransactionDetails.ui should render 1`] = `
 exports[`TransactionDetails.ui should render with negative nativeAmount and fiatAmount 1`] = `
 <React.Fragment>
   <SceneWrapper
-    background="body"
     bodySplit={33.709859154929575}
   >
     <View
@@ -587,9 +585,9 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
               }
             }
           >
-            ₿
-            0.000001
-             (+ ₿  0 fee)
+            ₿ 
+            0.00000122
+             (+ 0 fee)
           </FormattedText>
         </View>
         <TouchableWithoutFeedback
@@ -647,7 +645,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
                   }
                 }
               >
-                $
+                $ 
               </FormattedText>
               <FormattedText
                 style={
@@ -703,8 +701,8 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
                 }
               }
             >
-              $
-
+              $ 
+              120.00
             </FormattedText>
             <FormattedText
               style={
@@ -714,7 +712,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
                 }
               }
             >
-              - 3758
+              - 98.12
               %
             </FormattedText>
           </View>
@@ -797,7 +795,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
                   }
                 }
               >
-
+                
               </FormattedText>
             </View>
           </View>
@@ -850,7 +848,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
                 }
               }
             >
-
+              
             </FormattedText>
           </View>
         </TouchableWithoutFeedback>
@@ -909,7 +907,6 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
 exports[`TransactionDetails.ui should render with tx date off by 1000x in future 1`] = `
 <React.Fragment>
   <SceneWrapper
-    background="body"
     bodySplit={33.709859154929575}
   >
     <View
@@ -1040,8 +1037,8 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
               }
             }
           >
-            ₿
-            0.000001
+            ₿ 
+            0.00000123
             
           </FormattedText>
         </View>
@@ -1100,7 +1097,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
                   }
                 }
               >
-                $
+                $ 
               </FormattedText>
               <FormattedText
                 style={
@@ -1156,18 +1153,18 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
                 }
               }
             >
-              $
-
+              $ 
+              120.00
             </FormattedText>
             <FormattedText
               style={
                 Object {
-                  "color": "#E85466",
+                  "color": "#66EDA8",
                   "fontSize": 22,
                 }
               }
             >
-              - 3758
+              2667178313
               %
             </FormattedText>
           </View>
@@ -1250,7 +1247,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
                   }
                 }
               >
-
+                
               </FormattedText>
             </View>
           </View>
@@ -1303,7 +1300,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
                 }
               }
             >
-
+              
             </FormattedText>
           </View>
         </TouchableWithoutFeedback>
@@ -1362,7 +1359,6 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
 exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1`] = `
 <React.Fragment>
   <SceneWrapper
-    background="body"
     bodySplit={33.709859154929575}
   >
     <View
@@ -1493,8 +1489,8 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
               }
             }
           >
-            ₿
-            0.000001
+            ₿ 
+            0.00000123
             
           </FormattedText>
         </View>
@@ -1553,7 +1549,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
                   }
                 }
               >
-                $
+                $ 
               </FormattedText>
               <FormattedText
                 style={
@@ -1609,18 +1605,18 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
                 }
               }
             >
-              $
-
+              $ 
+              120.00
             </FormattedText>
             <FormattedText
               style={
                 Object {
-                  "color": "#E85466",
+                  "color": "#66EDA8",
                   "fontSize": 22,
                 }
               }
             >
-              - 3758
+              2667178313
               %
             </FormattedText>
           </View>
@@ -1703,7 +1699,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
                   }
                 }
               >
-
+                
               </FormattedText>
             </View>
           </View>
@@ -1756,7 +1752,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
                 }
               }
             >
-
+              
             </FormattedText>
           </View>
         </TouchableWithoutFeedback>
