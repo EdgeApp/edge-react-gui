@@ -269,7 +269,9 @@ export const logoutRequest = (username?: string) => (dispatch: Dispatch, getStat
   Actions.popTo(Constants.LOGIN, { username })
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
-  dispatch({ type: 'LOGOUT', data: { username } })
+  setTimeout(() => {
+    dispatch({ type: 'LOGOUT', data: { username } })
+  }, 1000)
   if (typeof account.logout === 'function') account.logout()
 }
 
