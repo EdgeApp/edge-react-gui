@@ -151,4 +151,4 @@ fetch = (...args: any) => {
 }
 
 // FIO disable changes below
-global.isFioDisabled = false
+global.isFioDisabled = true
