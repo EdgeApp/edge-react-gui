@@ -11,7 +11,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import iconImage from '../assets/images/otp/OTP-badge_sm.png'
 import { launchModal } from '../components/common/ModalProvider.js'
-import { showError, showToast } from '../components/services/AirshipInstance.js'
+import { showActivity, showError, showToast } from '../components/services/AirshipInstance.js'
 import { CURRENCY_PLUGIN_NAMES, ION_ICONS, LOCKED_ICON, WALLET_LIST } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
@@ -321,7 +321,7 @@ export const showSendLogsModal = () => async (dispatch: Dispatch, getState: GetS
     })
     const notes = await launchModal(unlockSettingsModal)
     if (notes || notes === '') {
-      await dispatch(sendLogs(notes))
+      await showActivity(s.strings.settings_modal_send_logs_loading, dispatch(sendLogs(notes)))
       showToast(s.strings.settings_modal_send_logs_success)
     }
   } catch (error) {
