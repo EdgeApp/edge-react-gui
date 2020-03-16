@@ -1,6 +1,8 @@
 // @flow
 
-import NetInfo from '@react-native-community/netinfo'
+// todo: enable @react-native-community/netinfo for react-native >= 0.60 or figure out how to use with Jetifier for current version
+// "@react-native-community/netinfo": "3.2.1"
+// import NetInfo from '@react-native-community/netinfo'
 import { Component } from 'react'
 import { connect } from 'react-redux'
 
@@ -11,6 +13,8 @@ import { showError } from './AirshipInstance'
 type Props = {
   changeConnectivity: (isConnected: boolean) => void
 }
+
+const NetInfo = {}
 
 class NetworkActivityComponent extends Component<Props> {
   netInfoUnsubscribe: Function | null = null

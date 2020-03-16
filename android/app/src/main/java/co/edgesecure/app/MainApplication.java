@@ -27,7 +27,6 @@ import com.oblador.vectoricons.VectorIconsPackage;
 import com.peel.react.TcpSocketsModule;
 import com.psykar.cookiemanager.CookieManagerPackage;
 import com.reactlibrary.DiskletPackage;
-import com.reactnativecommunity.netinfo.NetInfoPackage;
 import com.reactnativecommunity.art.ARTPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.reactnativecommunity.webview.RNCWebViewPackage;

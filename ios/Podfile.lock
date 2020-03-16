@@ -72,8 +72,6 @@ PODS:
     - React
   - react-native-material-kit (0.3.4):
     - React
-  - react-native-netinfo (3.2.1):
-    - React
   - react-native-randombytes (3.5.1):
     - React
   - react-native-safari-view (1.0.0):
@@ -178,7 +176,6 @@ DEPENDENCIES:
   - react-native-locale (from `../node_modules/react-native-locale`)
   - react-native-mail (from `../node_modules/react-native-mail`)
   - react-native-material-kit (from `../node_modules/react-native-material-kit`)
-  - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
   - react-native-safari-view (from `../node_modules/react-native-safari-view`)
   - react-native-smart-splash-screen (from `../node_modules/react-native-smart-splash-screen`)
@@ -256,8 +253,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-mail"
   react-native-material-kit:
     :path: "../node_modules/react-native-material-kit"
-  react-native-netinfo:
-    :path: "../node_modules/@react-native-community/netinfo"
   react-native-randombytes:
     :path: "../node_modules/react-native-randombytes"
   react-native-safari-view:
@@ -318,7 +313,6 @@ SPEC CHECKSUMS:
   react-native-locale: bd8edf0e51706d469af3e2fa568a8102213a3139
   react-native-mail: 021d8ee60e374609f5689ef354dc8e36839a9ba6
   react-native-material-kit: e779e910356c15278dcd2d2153b8656d24084c05
-  react-native-netinfo: 0da34082d2cec3100c9b5073bb217e35f1142bdd
   react-native-randombytes: 1b6091800f62c6c393c6bc850ac089ebf63d4c0a
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b
@@ -336,6 +330,6 @@ SPEC CHECKSUMS:
   RNVectorIcons: ac7bf6bfeafaf3ad34552cdc6eed6fb8c4b7c940
   yoga: 684513b14b03201579ba3cee20218c9d1298b0cc
 
-PODFILE CHECKSUM: 82b00434fdc7421abcb805e260a3c527857bc0ff
+PODFILE CHECKSUM: 34d340a3d10b851aab4466b7d0250f1729b712f7
 
 COCOAPODS: 1.8.4
