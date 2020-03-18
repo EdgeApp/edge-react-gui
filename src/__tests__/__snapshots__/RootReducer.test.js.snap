@@ -130,7 +130,7 @@ Object {
         "exchangeRates": Object {},
       },
       "fioAddress": Object {
-        "expiration": 2018-12-31T22:00:00.000Z,
+        "expiration": 2019-01-01T08:00:00.000Z,
         "feeCollected": 0,
         "fioAddressName": "",
         "fioAddresses": Array [],
@@ -330,6 +330,9 @@ Object {
         "denomination": "100000000",
       },
       "MANA": Object {
+        "denomination": "1000000000000000000",
+      },
+      "MET": Object {
         "denomination": "1000000000000000000",
       },
       "MKR": Object {
