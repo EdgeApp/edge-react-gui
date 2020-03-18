@@ -64,7 +64,7 @@ export class WalletListModal extends Component<Props, LocalState> {
     for (i; i < this.props.activeWalletIds.length; i++) {
       const wallet = this.props.wallets.find(wallet => wallet.id === this.props.activeWalletIds[i])
       if (wallet) {
-        if (wallet.type === 'wallet:fio') continue
+        if (wallet.type === 'wallet:fio' && global.isFioDisabled) continue // FIO disable changes
         const record = {
           walletItem: wallet,
           supportedWalletType: null

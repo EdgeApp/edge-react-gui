@@ -51,6 +51,12 @@ export const PLUGIN_EARN_INTEREST = 'pluginEarnInterest'
 export const SPENDING_LIMITS = 'spendingLimits'
 export const PLUGIN_BUY = 'pluginBuy'
 export const PLUGIN_SELL = 'pluginSell'
+export const FIO_ADDRESS = 'fioAddress'
+export const FIO_ADDRESS_LIST = 'fioAddressList'
+export const FIO_ADDRESS_REGISTER = 'fioAddressRegister'
+export const FIO_ADDRESS_CONFIRM = 'fioAddressConfirm'
+export const FIO_ADDRESS_DETAILS = 'fioAddressDetails'
+export const FIO_ADDRESS_REGISTER_SUCCESS = 'fioAddressRegisterSuccess'
 
 export const CURRENCY_SETTINGS = {
   btcSettings: {

@@ -149,3 +149,6 @@ fetch = (...args: any) => {
     throw e
   })
 }
+
+// FIO disable changes below
+global.isFioDisabled = true

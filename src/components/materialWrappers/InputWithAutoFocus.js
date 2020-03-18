@@ -33,7 +33,8 @@ type Props = {
   onChangeText(string): void,
   maxLength?: number,
   multiline?: boolean,
-  numberOfLines?: number
+  numberOfLines?: number,
+  suffix?: string
 }
 
 type State = {
@@ -49,7 +50,8 @@ class InputWithAutoFocus extends Component<Props, State> {
     returnKeyType: 'go',
     onFocus: null,
     keyboardType: 'default',
-    placeholder: ''
+    placeholder: '',
+    multiline: true
   }
   textInput: TextField
   UNSAFE_componentWillMount () {
@@ -82,7 +84,8 @@ class InputWithAutoFocus extends Component<Props, State> {
       titleTextStyle,
       secureTextEntry,
       returnKeyType,
-      autoCorrect
+      autoCorrect,
+      suffix
     } = this.props
     return (
       <TextField
@@ -112,8 +115,9 @@ class InputWithAutoFocus extends Component<Props, State> {
         maxLength={this.props.maxLength}
         autoFocus={this.props.autoFocus}
         numberOfLines={this.props.numberOfLines}
-        multiline={true}
+        multiline={this.props.multiline}
         autoCorrect={autoCorrect}
+        suffix={suffix}
       />
     )
   }

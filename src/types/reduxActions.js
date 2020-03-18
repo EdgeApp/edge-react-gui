@@ -8,7 +8,7 @@ import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailabl
 import { type TweakSource } from '../util/ReferralHelpers.js'
 import { type DeepLink } from './DeepLink.js'
 import { type AccountReferral, type DeviceReferral, type Promotion, type ReferralCache } from './ReferralTypes.js'
-import { type CustomTokenInfo, type GuiContact, type GuiCurrencyInfo, type GuiSwapInfo, type GuiWallet } from './types.js'
+import { type CustomTokenInfo, type FioAddress, type GuiContact, type GuiCurrencyInfo, type GuiSwapInfo, type GuiWallet } from './types.js'
 
 type LegacyActionName =
   | 'ACCOUNT_INIT_COMPLETE'
@@ -104,6 +104,7 @@ type NoDataActionName =
   | 'UNIQUE_IDENTIFIER_MODAL/RESET'
   | 'USE_LEGACY_REQUEST_ADDRESS'
   | 'USE_REGULAR_REQUEST_ADDRESS'
+  | 'FIO/SET_FIO_ADDRESSES_PROGRESS'
 
 export type Action =
   | { type: LegacyActionName, data: any }
@@ -215,3 +216,8 @@ export type Action =
       data: { walletId: string, tokens: Array<string> }
     }
   | { type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR', data: string }
+  | { type: 'NETWORK/NETWORK_STATUS', data: { isConnected: boolean } }
+  | { type: 'FIO/FIO_ADDRESS_UPDATE_FIO_ADDRESS_NAME', data: { fioAddressName: string } }
+  | { type: 'FIO/FIO_ADDRESS_UPDATE_SELECTED_WALLET', data: { selectedWallet: EdgeCurrencyWallet | null, expiration: string, feeCollected: number } }
+  | { type: 'FIO/FIO_ADDRESS_SET_FIO_ADDRESS', data: { fioAddressName: string, expiration: string } }
+  | { type: 'FIO/SET_FIO_ADDRESSES', data: { fioAddresses: FioAddress[] } }

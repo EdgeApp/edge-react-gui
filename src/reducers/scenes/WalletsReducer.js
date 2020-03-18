@@ -4,6 +4,7 @@ import type { EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeReceiveAd
 import _ from 'lodash'
 import { type Reducer, combineReducers } from 'redux'
 
+import { FIO_WALLET_TYPE } from '../../constants/WalletAndCurrencyConstants'
 import type { Action } from '../../types/reduxTypes.js'
 import type { GuiWallet } from '../../types/types.js'
 
@@ -15,7 +16,8 @@ export type WalletsState = {
   selectedCurrencyCode: string,
   addTokenPending: boolean,
   manageTokensPending: boolean,
-  walletLoadingProgress: { [walletId: string]: number }
+  walletLoadingProgress: { [walletId: string]: number },
+  fioWallets: EdgeCurrencyWallet[]
 }
 
 const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> => {
@@ -358,6 +360,26 @@ function schema (wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress)
   return newWallet
 }
 
+const fioWallets = (state = [], action: Action): $PropertyType<WalletsState, 'fioWallets'> => {
+  switch (action.type) {
+    case 'CORE/WALLETS/UPDATE_WALLETS': {
+      if (!action.data) return state
+      const wallets = action.data.currencyWallets
+      const fioWallets = []
+      for (const walletId of Object.keys(wallets)) {
+        if (wallets[walletId] && wallets[walletId].type === FIO_WALLET_TYPE) {
+          fioWallets.push(wallets[walletId])
+        }
+      }
+
+      return fioWallets
+    }
+
+    default:
+      return state
+  }
+}
+
 export const wallets: Reducer<WalletsState, Action> = combineReducers({
   byId,
   activeWalletIds,
@@ -366,5 +388,6 @@ export const wallets: Reducer<WalletsState, Action> = combineReducers({
   selectedCurrencyCode,
   addTokenPending,
   manageTokensPending,
-  walletLoadingProgress
+  walletLoadingProgress,
+  fioWallets
 })

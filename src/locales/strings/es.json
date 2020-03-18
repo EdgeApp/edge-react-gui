@@ -18,6 +18,7 @@
   "warning_low_or_custom_fee": "Usar una tarifa baja puede aumentar la cantidad de tiempo necesaria para confirmar la transacción.",
   "alert_dropdown_alert": "¡Alerta! ",
   "alert_dropdown_warning": "¡Advertencia! ",
+  "drawer_fio_address": "FIO Address",
   "dropdown_exchange_max_amount": "Cambiar la cantidad máxima",
   "max_spend_unavailable_modal_title": "Gasto máximo no disponible",
   "max_spend_unavailable_modal_message": "No podemos calcular la cantidad máxima disponible para la moneda %s. Por favor introduce una cantidad.",
