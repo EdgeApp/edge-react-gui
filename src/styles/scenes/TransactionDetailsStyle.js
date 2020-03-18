@@ -34,8 +34,7 @@ export const styles = {
   },
   tileContainerNotes: {
     width: '100%',
-    minHeight: rem(4.5),
-    maxHeight: rem(8),
+    height: scale(110),
     backgroundColor: '#FFFFFF',
     padding: rem(0.8),
     borderBottomWidth: 1,
@@ -88,10 +87,15 @@ export const styles = {
   },
   tileTextNotes: {
     color: THEME.COLORS.GRAY_5,
-    fontSize: rem(0.9)
+    fontSize: rem(0.9),
+    flex: 1,
+    flexWrap: 'wrap'
+    // height: rem(3)
   },
   tileIcon: {
     position: 'absolute',
+    width: rem(0.7),
+    height: rem(0.7),
     top: 10,
     right: 10
   },
@@ -226,7 +230,7 @@ export const styles = {
     borderWidth: 1,
     borderColor: '#CCCCCC',
     borderRadius: 3,
-    height: PLATFORM.deviceHeight * 0.45 - (PLATFORM.platform === 'android' ? rem(1.25) : 0),
+    height: PLATFORM.deviceHeight * 0.45 - (PLATFORM.OS === 'android' ? rem(1.25) : 0),
     paddingVertical: rem(0.1),
     paddingHorizontal: rem(0.8)
   },

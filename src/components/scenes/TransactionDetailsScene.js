@@ -7,6 +7,7 @@ import { Image, TouchableWithoutFeedback, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
+import editIcon from '../../assets/images/transaction_details_icon.png'
 import * as Constants from '../../constants/indexConstants'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
@@ -278,10 +279,10 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     const { amountFiat } = this.state
 
     const fiatAmount = amountFiat.replace(',', '.')
-    const difference = parseFloat(currentFiatAmount) - parseFloat(fiatAmount)
-    const percentageFloat = currentFiatAmount ? (difference / parseFloat(fiatAmount)) * 100 : 0
+    const difference = currentFiatAmount ? parseFloat(currentFiatAmount) - parseFloat(fiatAmount) : 0
+    const percentageFloat = currentFiatAmount && parseFloat(fiatAmount) > 0 ? (difference / parseFloat(fiatAmount)) * 100 : 0
     const percentage = bns.toFixed(percentageFloat.toString(), 2, 2)
-    const amount = currentFiatAmount ? bns.toFixed(currentFiatAmount.toString(), 2, 2) : ''
+    const amount = currentFiatAmount ? bns.toFixed(currentFiatAmount.toString(), 2, 2) : '0'
 
     return {
       amount,
@@ -311,7 +312,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
             <View style={styles.tilesContainer}>
               <TouchableWithoutFeedback onPress={this.openPersonInput}>
                 <View style={styles.tileContainerBig}>
-                  <Icon type={Constants.ION_ICONS} name={Constants.CREATE_OUTLINE} size={16} style={styles.tileIcon} />
+                  <Image style={[styles.tileIcon]} source={editIcon} />
                   <FormattedText style={styles.tileTextTop}>{personHeader}</FormattedText>
                   <View style={styles.tileRow}>
                     {thumbnailPath ? (
@@ -333,7 +334,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
               </View>
               <TouchableWithoutFeedback onPress={this.openFiatInput}>
                 <View style={styles.tileContainer}>
-                  <Icon type={Constants.ION_ICONS} name={Constants.CREATE_OUTLINE} size={16} style={styles.tileIcon} />
+                  <Image style={[styles.tileIcon]} source={editIcon} />
                   <FormattedText style={styles.tileTextTop}>{sprintf(s.strings.transaction_details_amount_in_fiat, fiatCurrencyCode)}</FormattedText>
                   <View style={styles.tileRow}>
                     <FormattedText style={styles.tileTextBottom}>{`${fiatSymbol} `}</FormattedText>
@@ -348,14 +349,14 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                     {`${fiatSymbol} `}
                     {currentFiat.amount}
                   </FormattedText>
-                  <FormattedText style={currentFiat.difference >= 0 ? styles.tileTextPriceChangeUp : styles.tileTextPriceChangeDown}>
-                    {currentFiat.difference >= 0 ? currentFiat.percentage : `- ${currentFiat.percentage}`}%
+                  <FormattedText style={parseFloat(currentFiat.difference) >= 0 ? styles.tileTextPriceChangeUp : styles.tileTextPriceChangeDown}>
+                    {parseFloat(currentFiat.difference) >= 0 ? currentFiat.percentage : `- ${currentFiat.percentage}`}%
                   </FormattedText>
                 </View>
               </View>
               <TouchableWithoutFeedback onPress={this.openCategoryInput}>
                 <View style={styles.tileContainerBig}>
-                  <Icon type={Constants.ION_ICONS} name={Constants.CREATE_OUTLINE} size={16} style={styles.tileIcon} />
+                  <Image style={[styles.tileIcon]} source={editIcon} />
                   <FormattedText style={styles.tileTextTop}>{s.strings.transaction_details_category_title}</FormattedText>
                   <View style={styles.tileRow}>
                     <View style={styles.tileCategory}>
@@ -367,7 +368,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
               </TouchableWithoutFeedback>
               <TouchableWithoutFeedback onPress={this.openNotesInput}>
                 <View style={styles.tileContainerNotes}>
-                  <Icon type={Constants.ION_ICONS} name={Constants.CREATE_OUTLINE} size={16} style={styles.tileIcon} />
+                  <Image style={[styles.tileIcon]} source={editIcon} />
                   <FormattedText style={styles.tileTextTop}>{s.strings.transaction_details_notes_title}</FormattedText>
                   <FormattedText style={styles.tileTextNotes}>{notes}</FormattedText>
                 </View>

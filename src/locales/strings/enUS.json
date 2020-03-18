@@ -578,6 +578,7 @@
   "wallet_list_modal_header_all": "All Wallets",
   "earn_interest": "Earn Interest",
   "earn_interest_on": "Earn Interest on %s",
+  "choose_an_amount": "Choose an amount",
   "fio_address_first_screen_title": "Send and Receive with an easy to remember FIO Address!",
   "fio_address_first_screen_item_1": "Works across all tokens and coins",
   "fio_address_first_screen_item_2": "Secured from your wallet",
