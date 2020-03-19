@@ -11,7 +11,7 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import styles from '../../styles/scenes/ScaneStyle'
 import { colors as COLORS } from '../../theme/variables/airbitz.js'
-import ResolutionError, { ResolutionErrorCode} from '../common/ResolutionError.js'
+import ResolutionError, { ResolutionErrorCode } from '../common/ResolutionError.js'
 
 // INTERACTIVE_MODAL /////////////////////////////////////////////////////////////////////////////
 type AddressModalProps = {
@@ -70,7 +70,7 @@ export class AddressModal extends Component<AddressModalProps, AddressModalState
     this.setState({ statusLabel: status })
   }
 
-  setCryptoAddress = (address: string) => {
+  setCryptoAddress = (address?: string) => {
     this.setState({ cryptoAddress: address })
   }
 
@@ -88,18 +88,18 @@ export class AddressModal extends Component<AddressModalProps, AddressModalState
 
   fetchDomain = async (domain: string, currencyTicker: string) => {
     if (!this.checkIfDomain(domain)) {
-      throw new ResolutionError(ResolutionErrorCode.UnsupportedDomain, {domain})
+      throw new ResolutionError(ResolutionErrorCode.UnsupportedDomain, { domain })
     }
     const baseurl = `https://unstoppabledomains.com/api/v1`
     const url = `${baseurl}/${domain}`
     const response = await global.fetch(url).then(res => res.json())
     const { addresses, meta } = response
     if (!meta || !meta.owner) {
-      throw new ResolutionError(ResolutionErrorCode.UnregisteredDomain, {domain})
+      throw new ResolutionError(ResolutionErrorCode.UnregisteredDomain, { domain })
     }
     const ticker = currencyTicker.toUpperCase()
     if (!addresses || !addresses[ticker]) {
-      throw new ResolutionError(ResolutionErrorCode.UnspecifiedCurrency, {domain, currencyTicker})
+      throw new ResolutionError(ResolutionErrorCode.UnspecifiedCurrency, { domain, currencyTicker })
     }
     return addresses[ticker]
   }
