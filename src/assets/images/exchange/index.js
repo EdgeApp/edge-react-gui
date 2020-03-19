@@ -7,6 +7,7 @@ import faastFullLogo from './exchange_logo_faast.png'
 import foxExchangeFullLogo from './exchange_logo_fox_exchange.png'
 import godexFullLogo from './exchange_logo_godex.png'
 import shapeshiftFullLogo from './exchange_logo_shapeshift.png'
+import switchainFullLogo from './exchange_logo_switchain.png'
 import totleFullLogo from './exchange_logo_totle.png'
 import changellyLogo from './settingsExchangeChangelly.png'
 import changenowLogo from './settingsExchangeChangenow.png'
@@ -16,6 +17,7 @@ import faastLogo from './settingsExchangeFaast.png'
 import foxExchangeLogo from './settingsExchangeFoxExchange.png'
 import godexLogo from './settingsExchangeGodex.png'
 import shapeshiftLogo from './settingsExchangeShapeshift.png'
+import switchainLogo from './settingsExchangeSwitchain.png'
 import totleLogo from './settingsExchangeTotle.png'
 
 export function getSwapPluginIcon (pluginId: string) {
@@ -32,6 +34,7 @@ export const swapPluginIcons = {
   foxExchange: foxExchangeLogo,
   godex: godexLogo,
   shapeshift: shapeshiftLogo,
+  switchain: switchainLogo,
   totle: totleLogo
 }
 
@@ -44,5 +47,6 @@ export const swapPluginLogos = {
   foxExchange: foxExchangeFullLogo,
   godex: godexFullLogo,
   shapeshift: shapeshiftFullLogo,
+  switchain: switchainFullLogo,
   totle: totleFullLogo
 }
