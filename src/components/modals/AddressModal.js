@@ -114,7 +114,10 @@ export class AddressModal extends Component<AddressModalProps, AddressModalState
       if (err instanceof ResolutionError) {
         const message = sprintf(s.strings[err.code], domain, currencyTicker)
         if (domain === '') this.setStatusLabel(s.strings.fragment_send_send_to_hint)
-        else this.setStatusLabel(message)
+        else {
+          this.setStatusLabel(message)
+          this.setCryptoAddress(undefined)
+        }
       }
     }
   }
@@ -130,9 +133,16 @@ export class AddressModal extends Component<AddressModalProps, AddressModalState
     this.props.onDone(clipboard)
   }
 
+  handleSubmit = () => {
+    const { uri, cryptoAddress } = this.state
+    const submitData = cryptoAddress || uri
+    console.log(`submiting ${submitData}`)
+    this.props.onDone(submitData)
+  }
+
   render () {
     const copyMessage = this.state.clipboard ? sprintf(s.strings.string_paste_address, this.state.clipboard) : null
-    const { uri, statusLabel, cryptoAddress } = this.state
+    const { uri, statusLabel } = this.state
     return (
       <View style={ModalStyle.modal}>
         <Modal.Icon>
@@ -152,7 +162,7 @@ export class AddressModal extends Component<AddressModalProps, AddressModalState
                 error={''}
                 placeholder={s.strings.fragment_send_send_to_hint}
                 label={statusLabel}
-                onSubmit={() => this.props.onDone(cryptoAddress)}
+                onSubmit={this.handleSubmit}
               />
             </View>
           </Modal.Body>
@@ -168,7 +178,7 @@ export class AddressModal extends Component<AddressModalProps, AddressModalState
               <SecondaryButton onPress={() => this.props.onDone(null)} style={[InputAndButtonStyle.noButton]}>
                 <SecondaryButton.Text style={[InputAndButtonStyle.buttonText]}>{s.strings.string_cancel_cap}</SecondaryButton.Text>
               </SecondaryButton>
-              <PrimaryButton onPress={() => this.props.onDone(cryptoAddress)} style={[InputAndButtonStyle.yesButton]}>
+              <PrimaryButton onPress={this.handleSubmit} style={[InputAndButtonStyle.yesButton]}>
                 <PrimaryButton.Text style={[InputAndButtonStyle.buttonText]}>{s.strings.string_done_cap}</PrimaryButton.Text>
               </PrimaryButton>
             </Modal.Row>
