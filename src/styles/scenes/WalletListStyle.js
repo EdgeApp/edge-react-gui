@@ -488,7 +488,7 @@ export const styles = {
     margin: THEME.rem(0.5)
   },
   promoText: {
-    ...dayText(),
+    ...dayText('row-left'),
     flexGrow: 1,
     margin: THEME.rem(0.5)
   },
