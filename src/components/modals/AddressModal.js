@@ -40,7 +40,8 @@ export class AddressModal extends Component<AddressModalProps, AddressModalState
     this.state = {
       clipboard: '',
       uri: '',
-      statusLabel: s.strings.fragment_send_send_to_hint
+      statusLabel: s.strings.fragment_send_send_to_hint,
+      cryptoAddress: undefined
     }
   }
 
@@ -73,27 +74,21 @@ export class AddressModal extends Component<AddressModalProps, AddressModalState
     this.setState({ cryptoAddress: address })
   }
 
-  getServiceName = (resolutionObject: Resolution, domain: string) => {
-    try {
-      return resolutionObject.serviceName(domain)
-    } catch (err) {
-      return 'unknown'
-    }
-  }
-
   onChangeTextDelayed = (domain: string) => {
     const { currencyCode } = this.props
-    console.log(`before bouncing on ${domain} ${currencyCode}`)
-    if (domain.endsWith('.zil') || domain.endsWith('.crypto') || domain.endsWith('.eth')) {
+    if (this.checkIfDomain(domain)) {
       this.resolveAddress(domain, currencyCode)
     }
     this.updateUri(domain)
   }
 
+  checkIfDomain = (domain: string): boolean => {
+    return domain.endsWith('.zil') || domain.endsWith('.crypto') || domain.endsWith('.eth')
+  }
+
   fetchDomain = async (domain: string, currencyTicker: string) => {
-    console.log(domain)
-    if (!domain.endsWith('.zil') && !domain.endsWith('.crypto') && !domain.endsWith('.eth')) {
-      throw new ResolutionError(ResolutionErrorCode.UnsupportedDomain)
+    if (!this.checkIfDomain(domain)) {
+      throw new ResolutionError(ResolutionErrorCode.UnsupportedDomain, {domain})
     }
     const baseurl = `https://unstoppabledomains.com/api/v1`
     const url = `${baseurl}/${domain}`
@@ -110,11 +105,11 @@ export class AddressModal extends Component<AddressModalProps, AddressModalState
   }
 
   resolveAddress = async (domain: string, currencyTicker: string) => {
-    let addr = 'nothing'
     try {
       this.setStatusLabel(s.strings.resolving)
-      addr = await this.fetchDomain(domain, currencyTicker)
+      const addr = await this.fetchDomain(domain, currencyTicker)
       this.setStatusLabel(addr)
+      this.setCryptoAddress(addr)
     } catch (err) {
       if (err instanceof ResolutionError) {
         const message = sprintf(s.strings[err.code], domain, currencyTicker)
@@ -137,7 +132,7 @@ export class AddressModal extends Component<AddressModalProps, AddressModalState
 
   render () {
     const copyMessage = this.state.clipboard ? sprintf(s.strings.string_paste_address, this.state.clipboard) : null
-    const { uri, statusLabel } = this.state
+    const { uri, statusLabel, cryptoAddress } = this.state
     return (
       <View style={ModalStyle.modal}>
         <Modal.Icon>
@@ -157,7 +152,7 @@ export class AddressModal extends Component<AddressModalProps, AddressModalState
                 error={''}
                 placeholder={s.strings.fragment_send_send_to_hint}
                 label={statusLabel}
-                onSubmit={() => this.props.onDone(uri)}
+                onSubmit={() => this.props.onDone(cryptoAddress)}
               />
             </View>
           </Modal.Body>
@@ -173,7 +168,7 @@ export class AddressModal extends Component<AddressModalProps, AddressModalState
               <SecondaryButton onPress={() => this.props.onDone(null)} style={[InputAndButtonStyle.noButton]}>
                 <SecondaryButton.Text style={[InputAndButtonStyle.buttonText]}>{s.strings.string_cancel_cap}</SecondaryButton.Text>
               </SecondaryButton>
-              <PrimaryButton onPress={() => this.props.onDone(this.state.uri)} style={[InputAndButtonStyle.yesButton]}>
+              <PrimaryButton onPress={() => this.props.onDone(cryptoAddress)} style={[InputAndButtonStyle.yesButton]}>
                 <PrimaryButton.Text style={[InputAndButtonStyle.buttonText]}>{s.strings.string_done_cap}</PrimaryButton.Text>
               </PrimaryButton>
             </Modal.Row>

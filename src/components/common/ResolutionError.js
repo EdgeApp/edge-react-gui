@@ -1,7 +1,8 @@
 // @flow
 /** Explains Resolution Error options */
 type ResolutionErrorOptions = {
-  domain?: string;
+  domain: string;
+  method?: string;
   currencyTicker?: string;
   recordName?: string;
 }
@@ -15,7 +16,7 @@ export const ResolutionErrorCode = {
   UnsupportedDomain: 'UnsupportedDomain',
   UnspecifiedCurrency: 'UnspecifiedCurrency',
   NamingServiceDown: 'NamingServiceDown',
-  UnsupportedCiurrency: 'UnsupportedCurrency',
+  UnsupportedCurrency: 'UnsupportedCurrency',
   IncorrectResolverInterface: 'IncorrectResolverInterface',
   RecordNotFound: 'RecordNotFound'
 }
@@ -37,7 +38,7 @@ const HandlersByCode = {
   }) =>
     `Domain ${params.domain} has no ${params.currencyTicker} attached to it`,
   [ResolutionErrorCode.NamingServiceDown]: (params: {
-    method: ResolutionMethod
+    method: string
   }) => `${params.method} naming service is down at the moment`,
   [ResolutionErrorCode.UnsupportedCurrency]: (params: {
     currencyTicker: string
@@ -63,12 +64,13 @@ const HandlersByCode = {
  * @param method
  */
 export class ResolutionError extends Error {
-  code: String;
-  message: String;
-  domain: String;
+  code: string;
+  message: string;
+  domain: string;
+  method: string;
   currencyTicker: string;
 
-  constructor (code: ResolutionErrorCode, options: ResolutionErrorOptions = {}) {
+  constructor (code: string, options: ResolutionErrorOptions = {domain: ''}) {
     const resolutionErrorHandler: ResolutionErrorHandler = HandlersByCode[code]
     const { domain, method, currencyTicker, recordName } = options
     super(
@@ -76,8 +78,8 @@ export class ResolutionError extends Error {
     )
     this.code = code
     this.domain = domain
-    this.method = method
-    this.currencyTicker = currencyTicker
+    this.method = method || ''
+    this.currencyTicker = currencyTicker || ''
     this.name = 'ResolutionError'
     Object.setPrototypeOf(this, ResolutionError.prototype)
   }
