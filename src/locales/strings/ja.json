@@ -603,5 +603,13 @@
   "fio_address_details_screen_manage_account_settings": "",
   "fio_address_list_screen_button_register": "",
   "fio_get_fee_err_msg": "",
-  "fio_register_address_err_msg": ""
+  "fio_register_address_err_msg": "",
+  "resolving": "",
+  "UnregisteredDomain": "",
+  "UnspecifiedResolver": "",
+  "UnsupportedDomain": "",
+  "UnspecifiedCurrency": "",
+  "NamingServiceDown": "",
+  "UnsupportedCurrency": "",
+  "RecordNotFound": ""
 }
