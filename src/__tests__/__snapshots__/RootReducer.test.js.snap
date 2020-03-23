@@ -81,6 +81,9 @@ Object {
     "plugins": Array [],
   },
   "exchangeRates": Object {},
+  "network": Object {
+    "isConnected": true,
+  },
   "nextUsername": null,
   "pendingDeepLink": null,
   "permissions": Object {
@@ -125,6 +128,14 @@ Object {
       },
       "exchangeRate": Object {
         "exchangeRates": Object {},
+      },
+      "fioAddress": Object {
+        "expiration": 2019-01-01T08:00:00.000Z,
+        "feeCollected": 0,
+        "fioAddressName": "",
+        "fioAddresses": Array [],
+        "fioAddressesLoading": false,
+        "selectedWallet": null,
       },
       "passwordRecoveryReminderModal": Object {
         "isVisible": false,
@@ -321,6 +332,9 @@ Object {
       "MANA": Object {
         "denomination": "1000000000000000000",
       },
+      "MET": Object {
+        "denomination": "1000000000000000000",
+      },
       "MKR": Object {
         "denomination": "1000000000000000000",
       },
@@ -462,6 +476,7 @@ Object {
       "addTokenPending": false,
       "archivedWalletIds": Array [],
       "byId": Object {},
+      "fioWallets": Array [],
       "manageTokensPending": false,
       "selectedCurrencyCode": "",
       "selectedWalletId": "",

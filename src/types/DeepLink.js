@@ -44,12 +44,59 @@ export type DeepLink =
       uri: string
     }
 
+function parseDeepLinkPlugins (pathParts: Array<string>, query: { [key: string]: string }) {
+  const [pluginId = ''] = pathParts.splice(1, 1)
+  const path = pathParts.join('/')
+  return { type: 'plugin', pluginId, path, query: query }
+}
+
+function parseDeepLinkPay (pathParts: Array<string>, uri: string) {
+  const [protocol = ''] = pathParts.splice(1, 1)
+  // Reconstruct URL and remove resource and currency code:
+  const reHttps = new RegExp(`https://deep.edge.app/pay/${protocol}/`, 'g')
+  const reEdge = new RegExp(`edge://pay/${protocol}/`, 'g')
+  const newPath = uri.replace(reHttps, '').replace(reEdge, '')
+  const newUri = `${protocol}:${newPath}`
+  return { type: 'other', protocol, uri: newUri }
+}
+
 /**
  * Parse a link into the app, identifying special
  * features that Edge knows how to handle.
  */
 export function parseDeepLink (uri: string): DeepLink {
   const url = new URL(uri, true)
+
+  // Check for https://deep.edge.app/[resource]/[path...]
+  //  Where resource = [plugins|...]
+  if (url.protocol === 'https:' && url.host === 'deep.edge.app') {
+    const pathParts = url.pathname.split('/')
+    const [resourceName = ''] = pathParts.splice(1, 1)
+    if (resourceName === 'plugins') {
+      // https://deep.edge.app/plugins/[plugin id][/...][?...]
+      return parseDeepLinkPlugins(pathParts, url.query)
+    }
+    if (resourceName === 'pay') {
+      // https://deep.edge.app/pay/bitcoin/[address]?amount=0.005&message=hi
+      return parseDeepLinkPay(pathParts, uri)
+    }
+  }
+
+  // Check for edge://[resource]/[path...]
+  if (url.protocol === 'edge:') {
+    const pathParts = url.pathname.split('/')
+    switch (url.host) {
+      case 'plugins':
+        // edge://plugins/[plugin id][/...][?...]
+        return parseDeepLinkPlugins(pathParts, url.query)
+      case 'pay':
+        // edge://pay/bitcoin/[address]?amount=0.005&message=hi
+        return parseDeepLinkPay(pathParts, uri)
+      default:
+        // Do Nothing
+        break
+    }
+  }
 
   // Check for edge login links:
   if ((url.protocol === 'edge:' && url.host === 'edge') || (url.protocol === 'airbitz:' && url.host === 'edge')) {
@@ -73,7 +120,7 @@ export function parseDeepLink (uri: string): DeepLink {
   }
 
   // Check for plugin deep links:
-  if ((url.protocol === 'edge-ret:' && url.host === 'plugins') || (url.protocol === 'edge:' && url.host === 'plugins')) {
+  if (url.protocol === 'edge-ret:' && url.host === 'plugins') {
     const pathParts = url.pathname.split('/')
     const [pluginId = ''] = pathParts.splice(1, 1)
     const path = pathParts.join('/')

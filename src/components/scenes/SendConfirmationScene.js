@@ -23,7 +23,7 @@ import { type AuthType, getSpendInfoWithoutState } from '../../modules/UI/scenes
 import { convertCurrencyFromExchangeRates } from '../../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo, type SendConfirmationState } from '../../reducers/scenes/SendConfirmationReducer.js'
 import { rawStyles, styles } from '../../styles/scenes/SendConfirmationStyle.js'
-import type { GuiCurrencyInfo, GuiDenomination, GuiWallet, SpendingLimits } from '../../types/types.js'
+import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types.js'
 import { convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../util/utils.js'
 import { AddressTextWithBlockExplorerModal } from '../common/AddressTextWithBlockExplorerModal'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -59,7 +59,6 @@ export type SendConfirmationStateProps = {
   exchangeRates: { [string]: number },
   coreWallet: EdgeCurrencyWallet,
   sceneState: SendConfirmationState,
-  spendingLimits: SpendingLimits,
   toggleCryptoOnTop: number,
   guiWallet: GuiWallet
 }
@@ -73,7 +72,8 @@ export type SendConfirmationDispatchProps = {
   onChangePin: (pin: string) => mixed,
   uniqueIdentifierButtonPressed: () => void,
   newSpendInfo: (EdgeSpendInfo, AuthType) => mixed,
-  updateTransaction: (?EdgeTransaction, ?GuiMakeSpendInfo, ?boolean, ?Error) => void
+  updateTransaction: (?EdgeTransaction, ?GuiMakeSpendInfo, ?boolean, ?Error) => void,
+  getAuthRequiredDispatch: EdgeSpendInfo => void
 }
 
 type SendConfirmationRouterParams = {
@@ -96,8 +96,6 @@ type State = {|
 export class SendConfirmation extends Component<Props, State> {
   pinInput: any
   flipInput: any
-  count: number
-  lastSeenCount: number
 
   constructor (props: Props) {
     super(props)
@@ -116,8 +114,6 @@ export class SendConfirmation extends Component<Props, State> {
       isFiatOnTop: !!(props.guiMakeSpendInfo && props.guiMakeSpendInfo.nativeAmount && bns.eq(props.guiMakeSpendInfo.nativeAmount, '0')),
       isFocus: !!(props.guiMakeSpendInfo && props.guiMakeSpendInfo.nativeAmount && bns.eq(props.guiMakeSpendInfo.nativeAmount, '0'))
     }
-    this.count = 0
-    this.lastSeenCount = 0
     this.flipInput = React.createRef()
   }
 
@@ -341,11 +337,8 @@ export class SendConfirmation extends Component<Props, State> {
   }
 
   onExchangeAmountChanged = async ({ nativeAmount, exchangeAmount }: ExchangedFlipInputAmounts) => {
-    const { spendingLimits, fiatPerCrypto, coreWallet, sceneState, currencyCode, newSpendInfo, updateTransaction } = this.props
-    this.setState({
-      showSpinner: true
-    })
-    const count = ++this.count
+    const { fiatPerCrypto, coreWallet, sceneState, currencyCode, newSpendInfo, updateTransaction, getAuthRequiredDispatch } = this.props
+    this.setState({ showSpinner: true })
     const amountFiatString: string = bns.mul(exchangeAmount, fiatPerCrypto.toString())
     const amountFiat: number = parseFloat(amountFiatString)
     const metadata: EdgeMetadata = { amountFiat }
@@ -353,22 +346,12 @@ export class SendConfirmation extends Component<Props, State> {
 
     const guiMakeSpendInfoClone = { ...guiMakeSpendInfo }
     const spendInfo = getSpendInfoWithoutState(guiMakeSpendInfoClone, sceneState, currencyCode)
-    let authType
-    if (spendingLimits.transaction.isEnabled) {
-      authType = amountFiat > spendingLimits.transaction.amount ? 'pin' : 'none'
-    } else {
-      authType = 'none'
-    }
+    const authType: any = getAuthRequiredDispatch(spendInfo) // Type casting any cause dispatch returns a function
     try {
       newSpendInfo(spendInfo, authType)
       const edgeTransaction = await coreWallet.makeSpend(spendInfo)
-      if (count === this.count) {
-        this.lastSeenCount = count
-        updateTransaction(edgeTransaction, guiMakeSpendInfoClone, false, null)
-        this.setState({ showSpinner: false })
-      } else if (count > this.lastSeenCount) {
-        this.lastSeenCount = count
-      }
+      updateTransaction(edgeTransaction, guiMakeSpendInfoClone, false, null)
+      this.setState({ showSpinner: false })
     } catch (e) {
       console.log(e)
       updateTransaction(null, guiMakeSpendInfoClone, false, e)

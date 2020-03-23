@@ -81,6 +81,16 @@ describe('parseDeepLink', function () {
       expect(result.path).toBe('/rabbit/hole')
       expect(result.query).toEqual({ param: 'alice' })
     })
+
+    it('https:', function () {
+      const result = parseDeepLink('https://deep.edge.app/plugins/simplex/rabbit/hole?param=alice')
+      expect(result.type).toBe('plugin')
+
+      if (result.type !== 'plugin') return
+      expect(result.pluginId).toBe('simplex')
+      expect(result.path).toBe('/rabbit/hole')
+      expect(result.query).toEqual({ param: 'alice' })
+    })
   })
 
   describe('promotion', function () {

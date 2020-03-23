@@ -13,7 +13,7 @@ import OptionIcon from '../modules/UI/components/OptionIcon/OptionIcon.ui'
 import { B } from '../styles/common/textStyles.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 
-export const showDeleteWalletModal = (walletId: string) => async (dispatch: Dispatch, getState: GetState) => {
+export const showDeleteWalletModal = (walletId: string, additionalMsg: string = '') => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const walletName = getWalletName(state, walletId)
   const account = getAccount(state)
@@ -25,6 +25,7 @@ export const showDeleteWalletModal = (walletId: string) => async (dispatch: Disp
       <Text style={{ textAlign: 'center' }}>
         {s.strings.fragmet_wallets_delete_wallet_first_confirm_message_mobile}
         <B>{`${walletName}?`}</B>
+        {additionalMsg}
       </Text>
     ),
     icon: <OptionIcon iconName={DELETE} />,

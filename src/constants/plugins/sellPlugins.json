@@ -82,7 +82,7 @@
     "id": "bits of gold",
     "pluginId": "bitsofgold",
     "paymentType": "bank",
-    "description": "Fee: ~6.5% / Settlement: 1-72 hours\nLimit: €5000/day",
+    "description": "Fee: ~6.5% / Settlement: 1-48 hours\nLimit: €10000/day",
     "title": "SEPA Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/bits-of-gold-logo-sm.png",
     "countryCodes": {
@@ -139,7 +139,8 @@
     "cryptoCodes": [
       "BTC"
     ],
-    "paymentTypeLogoKey": "bank"
+    "paymentTypeLogoKey": "bank",
+    "addOnUrl": "sell?order_id=null&page=0&utm_source=Edge&utm_medium=mobile_app&utm_campaign=co&etag=true"
   },
   {
     "id": "bitrefill",

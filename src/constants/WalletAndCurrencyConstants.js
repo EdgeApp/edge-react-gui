@@ -65,6 +65,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   EBST: 'eboost',
   EOS: 'eos',
   ETH: 'ethereum',
+  FIO: 'fio',
   FTC: 'feathercoin',
   GRS: 'groestlcoin',
   LTC: 'litecoin',
@@ -390,3 +391,7 @@ export const FIAT_CODES_SYMBOLS = {
   ZAR: 'R',
   ZMW: 'ZK'
 }
+
+export const FIO_WALLET_TYPE = 'wallet:fio'
+export const FIO_STR = 'FIO'
+export const FIO_DOMAIN_DEFAULT = '@fiotestnet'

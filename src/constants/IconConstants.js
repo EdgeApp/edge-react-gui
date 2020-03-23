@@ -8,6 +8,7 @@ export const ARROW_RIGHT = 'arrow-right'
 // Entypo
 export const ENTYPO = 'entypo'
 export const THREE_DOT_MENU = 'dots-three-vertical'
+export const DOT_SINGLE = 'dot-single'
 
 // FontAwesome
 export const FONT_AWESOME = 'fontAwesome'
@@ -22,6 +23,7 @@ export const EXCHANGE_ICON = 'exchange'
 export const QUESTION_ICON = 'question'
 export const FA_MONEY_ICON = 'money'
 export const FLAG = 'flag-o'
+export const ANGLE_RIGHT = 'angle-right'
 
 // Feather
 export const FEATHER_ICONS = 'featherIcons'
@@ -58,3 +60,5 @@ export const ARROW_DOWN = 'arrow-down'
 export const PICKAXE = 'pickaxe'
 export const TELESCOPE = 'telescope'
 export const SERVER = 'server'
+export const CLOSE_CIRCLE_ICON = 'close-circle-outline'
+export const CHECK_CIRCLE_ICON = 'check-circle-outline'

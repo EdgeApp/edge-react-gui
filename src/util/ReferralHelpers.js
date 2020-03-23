@@ -29,6 +29,7 @@ export type MessageSummary = {
 export type PluginSummary = {
   preferredFiatPluginId: string | void,
   preferredSwapPluginId: string | void,
+  disabled: { [pluginId: string]: true },
   promoCodes: { [pluginId: string]: string }
 }
 
@@ -68,6 +69,7 @@ export function bestOfPlugins (
   let out: PluginSummary = {
     preferredFiatPluginId: undefined,
     preferredSwapPluginId: settingsPreferredSwap,
+    disabled: {},
     promoCodes: {}
   }
 
@@ -109,6 +111,7 @@ function mergePluginSummaries (a: PluginSummary, b: PluginSummary): PluginSummar
   return {
     preferredFiatPluginId,
     preferredSwapPluginId,
+    disabled: { ...a.disabled, ...b.disabled },
     promoCodes: { ...a.promoCodes, ...b.promoCodes }
   }
 }
@@ -134,16 +137,18 @@ function summarizePlugins (plugins: PluginTweak[], now: Date): PluginSummary {
   const out: PluginSummary = {
     preferredFiatPluginId: undefined,
     preferredSwapPluginId: undefined,
+    disabled: {},
     promoCodes: {}
   }
 
   // Search through the account creation plugin tweaks:
   for (const plugin of plugins) {
-    const { pluginId, preferredFiat = false, preferredSwap = false, promoCode } = plugin
+    const { pluginId, preferredFiat = false, preferredSwap = false, promoCode, disabled } = plugin
     if (!isActive(plugin, now)) continue
 
     if (preferredFiat) out.preferredFiatPluginId = pluginId
     if (preferredSwap) out.preferredSwapPluginId = pluginId
+    if (disabled) out.disabled[pluginId] = true
     if (promoCode != null) out.promoCodes[pluginId] = promoCode
   }
   return out

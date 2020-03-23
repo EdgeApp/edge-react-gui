@@ -37,7 +37,7 @@ export const pluginUrlMap: { [pluginId: string]: PluginUrlMap } = {
   },
   bitsofgold: {
     pluginId: 'bitsofgold',
-    uri: 'https://www.bitsofgold.co.il/order/sell?order_id=null&page=0&utm_source=Edge&utm_medium=mobile_app&utm_campaign=co&etag=true',
+    uri: 'https://www.bitsofgold.co.il/order/',
     name: 'Bits of Gold',
     permissions: ['camera']
   },

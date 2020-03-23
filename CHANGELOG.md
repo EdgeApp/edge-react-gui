@@ -1,5 +1,23 @@
 # edge-react-gui
 
+## 1.11.7
+
+- Bits of Gold support for Buy in Israel
+- Add Metronome ERC20 token
+- Bug fixes and visual improvements
+
+## 1.11.6
+
+- Added support for Cred
+
+## 1.11.5
+
+- Implement Greymass Fuel for EOS send
+- Support buying with iDEAL in Netherlands through Banxa
+- Exchange Settings now has an option to select Preferred Provider or Best Exchange Rate
+- Visual and text updates
+- Bug fixes
+
 ## 1.11.4
 
 - New Visual Improvements

@@ -37,6 +37,14 @@ test('initialState', () => {
     exchangeRate: {
       exchangeRates: {}
     },
+    fioAddress: {
+      expiration: new Date('1/1/2019'),
+      feeCollected: 0,
+      fioAddressName: '',
+      fioAddresses: [],
+      fioAddressesLoading: false,
+      selectedWallet: null
+    },
     requestType: {
       useLegacyAddress: false,
       uniqueLegacyAddress: false

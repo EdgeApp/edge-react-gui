@@ -4020,10 +4020,10 @@ edge-components@^0.0.26:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.16.21:
-  version "0.16.21"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.16.21.tgz#3fda8654a07e464722c9ec3607f75abd77f286e2"
-  integrity sha512-MpBArihJNYh//VLRGmQC+n2e91a7ZEMNV8VaEENLzjUD4E4UkfBsd/Uvj9r+2J6yQiXVpr/WucTubZvX+3SzfA==
+edge-core-js@^0.16.24:
+  version "0.16.24"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.16.24.tgz#149a6a6e8c02effd84b3dcc7197d1f8e75575d86"
+  integrity sha512-RRwM+w3hd0pSTq1yr3ZI/73I/WFz3SbhEv/f/yqsUdhfZh6XAsFz1GM3t0mP0xbc3I+OCUv62pudOLS5EK1EBQ==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -4046,10 +4046,10 @@ edge-core-js@^0.16.21:
     ws "^5.1.1"
     yaob "^0.3.6"
 
-edge-currency-accountbased@^0.6.6:
-  version "0.6.6"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.6.6.tgz#5e63799e2f01cd21da13a3cb6a0c68535203f15c"
-  integrity sha512-5R2EwdtiO4OCi/2qBVrHGsYcb5A9PONM1KEEFixw+a70rGg7GRelKGJwWALTJ/kofOP2f0KZPYB51gno9tIsag==
+edge-currency-accountbased@^0.6.9:
+  version "0.6.9"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.6.9.tgz#622e6b5602e168c83c9636277fbf17a45a844601"
+  integrity sha512-0oUmxZ38LIXqVWgg1pVsC9A0EFfQlKEPYQPFJPml4F0rcflEVvfNgGn1KKd+pLO2elttmZUIWzhymY29LUcxjw==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@dapix/react-native-fio" "0.1.0"
@@ -4105,10 +4105,10 @@ edge-currency-monero@^0.2.4:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#william/v0.14.0-hardfork"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.9.0:
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.9.0.tgz#280c7d01ab7c9eb3921adf7377e2cdcddf54c954"
-  integrity sha512-9U5qOD0xTBIM5I3hjDcaZgLoNkl0QAW+fKSYbtd7dY4JbZeGMI2xUzXzDdlIs/Cq7RbTT32ymkkn88wukWfuiQ==
+edge-exchange-plugins@^0.9.1:
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.9.1.tgz#9f7126361df243277574dab6628e0a21465fa6bd"
+  integrity sha512-C7Pbog2K+8H9oWifbyEUPVNx2SP0U8mQ7ozhWgAv765zZOLztVc5pHbEpceHyEpb8Cv5F+5frExNLlTUStLfZg==
   dependencies:
     biggystring "^3.0.2"
     esm "^3.2.4"
@@ -4116,10 +4116,10 @@ edge-exchange-plugins@^0.9.0:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@0.6.6:
-  version "0.6.6"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.6.6.tgz#83269ca14db354da2c44fc6df56fb7282345c2fd"
-  integrity sha512-w6QIbSqzL7SIoOtRr1NzWEf0PHES54UUXbSWDiGClPdQbmIt3KlRSfgzree9/ydhaRt+Jf30bZPspQVWxuYKJA==
+edge-login-ui-rn@0.6.8:
+  version "0.6.8"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.6.8.tgz#9364dfbd44c552145d3bb2f12591b1705a3df52f"
+  integrity sha512-zH9DlbWywSDJ58dM2Kanx9UExk7hLLvbDA4CSmQfcnjb8ClQkabKvQKO0i0vrElQ7GD1lwciYeJSChqlZDBBWA==
   dependencies:
     edge-components "^0.0.26"
     material-ui "^0.20.0"
@@ -6980,6 +6980,11 @@ jsbn@~0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/jsbn/-/jsbn-0.1.1.tgz#a5e654c2e5a2deb5f201d96cefbca80c0ef2f513"
   integrity sha1-peZUwuWi3rXyAdls77yoDA7y9RM=
+
+jsc-android@241213.x.x:
+  version "241213.1.0"
+  resolved "https://registry.yarnpkg.com/jsc-android/-/jsc-android-241213.1.0.tgz#8f940d7c7f6bebf14eda32bef42a76182e336452"
+  integrity sha512-AH8NYyMNLNhcUEF97QbMxPNLNW+oiSBlvm1rsMNzgJ1d5TQzdh/AOJGsxeeESp3m9YIWGLCgUvGTVoVLs0p68A==
 
 jsdom@^11.5.1:
   version "11.12.0"
@@ -9868,11 +9873,50 @@ react-native-mail@3.0.7, react-native-mail@^3.0.5:
   resolved "https://registry.yarnpkg.com/react-native-mail/-/react-native-mail-3.0.7.tgz#07e6aca43f6f1f85f3e58e96e7fcd16b31a927b8"
   integrity sha512-FHe4kKJKAGuCPPWcDwaRSjdUhEE4IWIsVtTZ05dgD/MgOm00isYmM20zuJHla7oiHVQ2HmzGji76g6IuhIrCjw==
 
+react-native-material-buttons@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-material-buttons/-/react-native-material-buttons-0.5.0.tgz#ab2b3e3fc3f500ca713f51e9d75978aff602152a"
+  integrity sha1-qys+P8P1AMpxP1Hp11l4r/YCFSo=
+  dependencies:
+    prop-types "^15.5.9"
+    react-native-material-ripple "^0.7.0"
+
+react-native-material-dropdown@^0.11.1:
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/react-native-material-dropdown/-/react-native-material-dropdown-0.11.1.tgz#c0fe434a8e617941ef910ba44d2f07c8f37584fe"
+  integrity sha1-wP5DSo5heUHvkQukTS8HyPN1hP4=
+  dependencies:
+    prop-types "^15.5.9"
+    react-native-material-buttons "^0.5.0"
+    react-native-material-ripple "^0.8.0"
+    react-native-material-textfield "^0.12.0"
+
 "react-native-material-kit@git://github.com/xinthink/react-native-material-kit.git#da1c292e":
   version "0.5.1"
   resolved "git://github.com/xinthink/react-native-material-kit.git#da1c292e2a6036b570381edb7a3752f254daf2b3"
   dependencies:
     ramda "^0.25.0"
+
+react-native-material-ripple@^0.7.0:
+  version "0.7.5"
+  resolved "https://registry.yarnpkg.com/react-native-material-ripple/-/react-native-material-ripple-0.7.5.tgz#e2af5110680532f14aea3c3a438247be2ffef659"
+  integrity sha1-4q9REGgFMvFK6jw6Q4JHvi/+9lk=
+  dependencies:
+    prop-types "^15.5.10"
+
+react-native-material-ripple@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/react-native-material-ripple/-/react-native-material-ripple-0.8.0.tgz#b8c24e6fdea2af2a21e8468b1f40b35483019e2f"
+  integrity sha1-uMJOb96iryoh6EaLH0CzVIMBni8=
+  dependencies:
+    prop-types "^15.5.10"
+
+react-native-material-textfield@^0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/react-native-material-textfield/-/react-native-material-textfield-0.12.0.tgz#3fba19d76ab89f67052c81e082152fc243d82a3f"
+  integrity sha1-P7oZ12q4n2cFLIHgghUvwkPYKj8=
+  dependencies:
+    prop-types "^15.5.9"
 
 "react-native-material-textfield@git://github.com/EdgeApp/react-native-material-textfield.git":
   version "0.10.2"

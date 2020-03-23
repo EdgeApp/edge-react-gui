@@ -218,7 +218,7 @@ export default class SettingsOverview extends Component<Props, State> {
 
       // Grab out the displayName & logo, if the currency exists:
       const { pluginName } = Constants.CURRENCY_SETTINGS[currencyKey]
-      const currencyConfig = account.currencyConfig[pluginName]
+      const currencyConfig = pluginName && account.currencyConfig ? account.currencyConfig[pluginName] : null
       if (currencyConfig == null) continue
       const { displayName, symbolImage } = currencyConfig.currencyInfo
       const icon = symbolImage != null ? <Image style={styles.currencyLogo} source={{ uri: symbolImage }} /> : undefined

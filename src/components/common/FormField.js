@@ -43,7 +43,8 @@ class FormField extends Component {
     forceFocus: false,
     returnKeyType: 'go',
     label: '',
-    keyboardType: 'default'
+    keyboardType: 'default',
+    multiline: false
   }
   UNSAFE_componentWillMount () {
     const secure = this.props.secureTextEntry ? this.props.secureTextEntry : false
@@ -82,6 +83,8 @@ class FormField extends Component {
           maxLength={this.props.maxLength}
           autoCorrect={this.props.autoCorrect || false}
           autoFocus={this.state.autoFocus}
+          multiline={this.props.multiline}
+          suffix={this.props.suffix}
         />
       )
     } else {

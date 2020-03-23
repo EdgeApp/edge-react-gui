@@ -144,6 +144,21 @@ const intlHandler = {
 
     return standardized
   },
+
+  /**
+   * Returns date string depending on locale
+   * @param expiration
+   * @param monthShort
+   * @returns {string}
+   */
+  formatExpDate (expiration: Date | string, monthShort?: boolean = false): string {
+    const expirationDate = new Date(expiration)
+
+    return new Intl.DateTimeFormat(locale.localeIdentifier.replace('_', '-'), {
+      dateStyle: monthShort ? 'medium' : 'long'
+    }).format(expirationDate)
+  },
+
   // $FlowFixMe: add after implementation
   formatDate (date, options) {
     throw new Error('Not implemented')

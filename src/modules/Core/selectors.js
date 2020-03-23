@@ -136,3 +136,7 @@ export const fetchExchangeRateHistory = async (currency: string, date: string): 
   }
   return 0
 }
+
+export const isConnectedState = (state: State) => {
+  return state.network.isConnected
+}
