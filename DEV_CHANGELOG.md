@@ -4,6 +4,7 @@
 
 - Add priority setting for exchange rate providers
 - Fix white screen crash on settings screen
+- Enhanced deeplink support
 - Upgrade edge-login-ui-rn to v0.6.8
   - Added auto-scroll on terms and conditions screen
 - Upgrade edge-currency-accountbased to v0.6.9
