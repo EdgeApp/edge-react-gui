@@ -99,7 +99,8 @@ export const top = StyleSheet.create({
     fontSize: scale(15),
     color: THEME.COLORS.WHITE,
     fontFamily: THEME.FONTS.SYMBOLS,
-    marginRight: scale(5),
+    marginRight: scale(3),
+    marginBottom: Platform.OS === 'ios' ? 0 : 3,
     textAlign: 'right'
   },
   amount: {

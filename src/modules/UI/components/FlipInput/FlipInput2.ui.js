@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import React, { Component } from 'react'
-import { Animated, Image, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
+import { Animated, Image, Platform, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 
@@ -343,6 +343,10 @@ export class FlipInput extends Component<Props, State> {
     }
   }
 
+  checkPlaceholderDisplay = (amount: string) => {
+    const isFiatOnTop = this.props
+    return Platform.OS === 'ios' && (isFiatOnTop || !amount) ? 'Amount' : '0'
+  }
   topRowBack = (fieldInfo: FlipInputFieldInfo, onChangeText: string => void, amount: string) => {
     return (
       <TouchableWithoutFeedback onPress={this.textInputBackFocus}>
@@ -352,7 +356,7 @@ export class FlipInput extends Component<Props, State> {
             <Text style={[top.symbol]}>{fieldInfo.currencySymbol}</Text>
             <TextInput
               style={[top.amount]}
-              placeholder={this.props.isFiatOnTop ? 'Amount' : '0'}
+              placeholder={this.checkPlaceholderDisplay(amount)}
               placeholderTextColor={'rgba(255, 255, 255, 0.60)'}
               value={amount}
               onChangeText={onChangeText}
