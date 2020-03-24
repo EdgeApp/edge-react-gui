@@ -1,5 +1,9 @@
 # edge-react-gui
 
+## 1.11.8
+
+- Fix wallet type error message on Create Wallet
+
 ## 1.11.7
 
 - Bits of Gold support for Buy in Israel
