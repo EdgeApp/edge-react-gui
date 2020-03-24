@@ -164,6 +164,7 @@
     "sprintf-js": "^1.1.1",
     "url": "^0.11.0",
     "url-parse": "^1.4.4",
+    "v8-android-jit": "8.80.1",
     "why-did-you-update": "^0.1.1"
   },
   "devDependencies": {

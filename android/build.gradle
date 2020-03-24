@@ -33,7 +33,7 @@ allprojects {
         }
         maven {
             // prebuilt libv8android.so
-            url("$rootDir/../node_modules/v8-android/dist")
+            url("$rootDir/../node_modules/v8-android-jit/dist")
          }
         maven { url "https://jitpack.io" }
         maven { url "https://maven.google.com" }
