@@ -1,5 +1,9 @@
 # edge-react-gui
 
+## 1.11.9
+
+- Samsung S7 crash fix
+
 ## 1.11.8
 
 - Fix wallet type error message on Create Wallet

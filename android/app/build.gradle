@@ -145,8 +145,8 @@ android {
         }
     }
     packagingOptions {
-       pickFirst '**/libjsc.so'
-       pickFirst '**/libc++_shared.so'
+        // Make sure libjsc.so does not packed in APK
+        exclude "**/libjsc.so"
     }
 }
 
@@ -166,7 +166,6 @@ if (hasProperty('storeFile')) {
 }
 
 dependencies {
-    implementation "org.webkit:android-jsc-intl:r241213"
     implementation project(':@react-native-community_art')
     implementation project(':@react-native-community_async-storage')
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
@@ -198,6 +197,9 @@ dependencies {
     implementation project(':react-native-tcp')
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-webview')
+
+    // Add v8-android - prebuilt libv8android.so into APK
+    implementation 'org.chromium:v8-android:+'
 
     // Firebase dependencies
     compile "com.google.android.gms:play-services-base:15.0.1"
