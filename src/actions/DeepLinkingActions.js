@@ -11,7 +11,7 @@ import { type DeepLink } from '../types/DeepLink.js'
 import { type Dispatch, type GetState, type State as ReduxState } from '../types/reduxTypes.js'
 import { activatePromotion } from './AccountReferralActions.js'
 import { loginWithEdge } from './EdgeLoginActions.js'
-import { parseScannedUri } from './ScanActions.js'
+import { doRequestAddress, parseScannedUri } from './ScanActions.js'
 import { selectWallet } from './WalletActions.js'
 
 /**
@@ -51,7 +51,7 @@ export const retryPendingDeepLink = () => (dispatch: Dispatch, getState: GetStat
  * Launches a link if it app is able to do so.
  */
 function handleLink (dispatch: Dispatch, state: ReduxState, link: DeepLink): boolean {
-  const { activeWalletIds = [], username } = state.core.account
+  const { activeWalletIds = [], currencyWallets = {}, username } = state.core.account
   const { byId = {}, selectedWalletId } = state.ui.wallets
   const hasCurrentWallet = byId[selectedWalletId] != null
 
@@ -90,7 +90,9 @@ function handleLink (dispatch: Dispatch, state: ReduxState, link: DeepLink): boo
       if (!hasCurrentWallet) return false
       // The code for dealing with this is a mess, so fake a barcode scan:
       Actions.push(SCAN)
-      dispatch(parseScannedUri(link.uri))
+      const edgeWallet = currencyWallets[selectedWalletId]
+      const guiWallet = byId[selectedWalletId]
+      doRequestAddress(dispatch, edgeWallet, guiWallet, link)
       return true
     }
 

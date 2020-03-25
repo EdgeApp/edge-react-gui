@@ -26,7 +26,6 @@ export type PromotionLink = {
 
 export type ReturnAddressLink = {
   type: 'returnAddress',
-  uri: string, // TODO: Remove once we stop needing to double-parse
   currencyName: string,
   sourceName?: string,
   successUri?: string
@@ -146,7 +145,7 @@ export function parseDeepLink (uri: string): DeepLink {
       const currencyName = currencyNameMatch[1]
       const sourceName = url.query['x-source']
       const successUri = url.query['x-success']
-      return { type: 'returnAddress', currencyName, sourceName, successUri, uri }
+      return { type: 'returnAddress', currencyName, sourceName, successUri }
     }
 
     // Fall through, since without a currency name, it must be something else:
