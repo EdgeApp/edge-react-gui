@@ -3,7 +3,7 @@
 import { Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 
-import { type BuySellPlugin, type PluginUrlMap } from '../../types/types.js'
+import { type BuySellPlugin, type PluginUrlMap } from '../../types/GuiPluginTypes.js'
 
 const buyPlugins = require('./buyPlugins.json')
 const sellPlugins = require('./sellPlugins.json')
