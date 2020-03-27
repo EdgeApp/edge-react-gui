@@ -1,6 +1,7 @@
 // @flow
 /* globals describe test expect */
-import { collapsePlugins } from '../constants/plugins/buySellPlugins'
+
+import { collapsePlugins } from '../constants/plugins/GuiPlugins.js'
 
 const expectedBuyUSios = require('./buySellPluginTestFiles/buyUSios.json')
 const expectedBuyATandroid = require('./buySellPluginTestFiles/buyATandroid.json')
@@ -11,7 +12,7 @@ const expectedSellUSandroid = require('./buySellPluginTestFiles/sellUSandroid.js
 const buyPlugins = require('./buySellPluginTestFiles/testInputBuyPlugins')
 const sellPlugins = require('./buySellPluginTestFiles/testInputSellPlugins')
 
-describe('buySellPlugins collapse functions', () => {
+describe('GuiPlugins collapse functions', () => {
   describe('getBuyPlugins', () => {
     ;[
       { platform: 'ios', countryCode: 'US', expectedPluginsCollapsed: expectedBuyUSios },

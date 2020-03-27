@@ -89,6 +89,7 @@ Object {
   "permissions": Object {
     "camera": "undetermined",
     "contacts": "undetermined",
+    "location": "undetermined",
   },
   "ui": Object {
     "passwordReminder": Object {

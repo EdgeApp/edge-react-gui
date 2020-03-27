@@ -81,11 +81,11 @@ import { CurrencySettingsTitle } from './navigation/CurrencySettingsTitle.js'
 import { ChangeMiningFeeScene } from './scenes/ChangeMiningFeeScene.js'
 import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
 import { CryptoExchangeQuoteProcessingScreenComponent } from './scenes/CryptoExchangeQuoteProcessingScene.js'
+import { GuiPluginLegacyScene, renderLegacyPluginBackButton } from './scenes/GuiPluginLegacyScene.js'
+import { GuiPluginListScene } from './scenes/GuiPluginListScene.js'
+import { GuiPluginViewScene } from './scenes/GuiPluginViewScene.js'
 import { LoadingScene } from './scenes/LoadingScene.js'
 import { LoginScene } from './scenes/LoginScene.js'
-import { LegacyPluginViewConnect, renderLegacyPluginBackButton } from './scenes/PluginViewLegacyScene.js'
-import { PluginListScene } from './scenes/PluginViewListScene.js'
-import { PluginViewConnect } from './scenes/PluginViewScene.js'
 import { SwapActivateShapeshiftScene } from './scenes/SwapActivateShapeshiftScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
 import { showToast } from './services/AirshipInstance.js'
@@ -371,7 +371,7 @@ export class MainComponent extends Component<Props> {
                     <Scene
                       key={Constants.PLUGIN_BUY}
                       navTransparent={true}
-                      component={PluginListScene}
+                      component={GuiPluginListScene}
                       renderTitle={this.renderTitle(s.strings.title_plugin_buy)}
                       renderLeftButton={this.renderHelpButton()}
                       renderRightButton={this.renderMenuButton()}
@@ -381,7 +381,7 @@ export class MainComponent extends Component<Props> {
                     <Scene
                       key={Constants.PLUGIN_VIEW}
                       navTransparent={true}
-                      component={ifLoggedIn(PluginViewConnect, LoadingScene)}
+                      component={ifLoggedIn(GuiPluginViewScene, LoadingScene)}
                       renderTitle={props => this.renderTitle(props.plugin.name)}
                       renderLeftButton={renderPluginBackButton(BACK)}
                       renderRightButton={this.renderExitButton()}
@@ -390,7 +390,7 @@ export class MainComponent extends Component<Props> {
                     <Scene
                       key={Constants.PLUGIN_VIEW_LEGACY}
                       navTransparent={true}
-                      component={ifLoggedIn(LegacyPluginViewConnect, LoadingScene)}
+                      component={ifLoggedIn(GuiPluginLegacyScene, LoadingScene)}
                       renderTitle={props => this.renderTitle(props.plugin.name)}
                       renderLeftButton={renderLegacyPluginBackButton(BACK)}
                       renderRightButton={this.renderExitButton()}
@@ -402,7 +402,7 @@ export class MainComponent extends Component<Props> {
                     <Scene
                       key={Constants.PLUGIN_SELL}
                       navTransparent={true}
-                      component={PluginListScene}
+                      component={GuiPluginListScene}
                       renderTitle={this.renderTitle(s.strings.title_plugin_sell)}
                       renderLeftButton={this.renderHelpButton()}
                       renderRightButton={this.renderMenuButton()}
@@ -412,7 +412,7 @@ export class MainComponent extends Component<Props> {
                     <Scene
                       key={Constants.PLUGIN_VIEW}
                       navTransparent={true}
-                      component={ifLoggedIn(PluginViewConnect, LoadingScene)}
+                      component={ifLoggedIn(GuiPluginViewScene, LoadingScene)}
                       renderTitle={props => this.renderTitle(props.plugin.name)}
                       renderLeftButton={renderPluginBackButton(BACK)}
                       renderRightButton={this.renderExitButton()}
@@ -421,7 +421,7 @@ export class MainComponent extends Component<Props> {
                     <Scene
                       key={Constants.PLUGIN_VIEW_LEGACY}
                       navTransparent={true}
-                      component={ifLoggedIn(LegacyPluginViewConnect, LoadingScene)}
+                      component={ifLoggedIn(GuiPluginLegacyScene, LoadingScene)}
                       renderTitle={props => this.renderTitle(props.plugin.name)}
                       renderLeftButton={renderLegacyPluginBackButton(BACK)}
                       renderRightButton={this.renderExitButton()}
@@ -513,7 +513,7 @@ export class MainComponent extends Component<Props> {
                   <Scene
                     key={Constants.PLUGIN_EARN_INTEREST}
                     navTransparent={true}
-                    component={ifLoggedIn(PluginViewConnect, LoadingScene)}
+                    component={ifLoggedIn(GuiPluginViewScene, LoadingScene)}
                     renderTitle={props => this.renderTitle(props.plugin.name)}
                     renderLeftButton={renderPluginBackButton(BACK)}
                     renderRightButton={this.renderExitButton()}
@@ -603,7 +603,7 @@ export class MainComponent extends Component<Props> {
                   <Scene
                     key={Constants.PLUGIN_VIEW}
                     navTransparent={true}
-                    component={ifLoggedIn(PluginViewConnect, LoadingScene)}
+                    component={ifLoggedIn(GuiPluginViewScene, LoadingScene)}
                     renderTitle={props => this.renderTitle(props.plugin.name)}
                     renderLeftButton={renderPluginBackButton(BACK)}
                     renderRightButton={this.renderExitButton()}

@@ -13,7 +13,7 @@ import requestImage from '../../assets/images/transactions/transactions-request.
 import sendImage from '../../assets/images/transactions/transactions-send.png'
 import TransactionRow from '../../connectors/TransactionRowConnector.js'
 import * as Constants from '../../constants/indexConstants.js'
-import { pluginUrlMap } from '../../constants/plugins/buySellPlugins'
+import { pluginUrlMap } from '../../constants/plugins/GuiPlugins.js'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/index'

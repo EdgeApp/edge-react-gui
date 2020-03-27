@@ -8,10 +8,12 @@ import { Bridge, onMethod } from 'yaob'
 
 import { setPluginScene } from '../../modules/UI/scenes/Plugins/BackButton.js'
 import { EdgeProvider } from '../../modules/UI/scenes/Plugins/EdgeProvider.js'
+import { type BuySellPlugin, type PluginUrlMap } from '../../types/GuiPluginTypes.js'
 import type { Dispatch, State } from '../../types/reduxTypes.js'
-import { type BuySellPlugin, type PluginUrlMap } from '../../types/types.js'
 import { javascript } from '../../util/bridge/injectThisInWebView.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { showError } from '../services/AirshipInstance.js'
+import { requestPermission } from '../services/PermissionsManager.js'
 
 // WebView bridge managemer --------------------------------------------
 
@@ -115,7 +117,7 @@ type PluginWorkerApi = {
   setEdgeProvider(provider: EdgeProvider): Promise<mixed>
 }
 
-class PluginView extends React.Component<Props> {
+class GuiPluginView extends React.Component<Props> {
   _callbacks: WebViewCallbacks
   _canGoBack: boolean
   _edgeProvider: EdgeProvider
@@ -148,8 +150,18 @@ class PluginView extends React.Component<Props> {
     }
   }
 
+  componentDidMount () {
+    this.checkPermissions().catch(showError)
+  }
+
   componentDidUpdate () {
     this._edgeProvider.updateState(this.props.state)
+  }
+
+  async checkPermissions () {
+    const { plugin } = this.props
+    const { permissions = [] } = plugin
+    for (const name of permissions) await requestPermission(name)
   }
 
   goBack (): boolean {
@@ -208,10 +220,7 @@ class PluginView extends React.Component<Props> {
 
 // Connector -----------------------------------------------------------
 
-const mapStateToProps = state => ({ state })
-const mapDispatchToProps = dispatch => ({ dispatch })
-
-export const PluginViewConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PluginView)
+export const GuiPluginViewScene = connect(
+  state => ({ state }),
+  dispatch => ({ dispatch })
+)(GuiPluginView)

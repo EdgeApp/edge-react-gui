@@ -9,18 +9,15 @@ import { type Permission, type PermissionsState, type PermissionStatus } from '.
 import type { Dispatch, State } from '../../types/reduxTypes.js'
 import { showError } from './AirshipInstance.js'
 
-const PERMISSION_LIST: Permission[] = ['camera', 'contacts']
-
-type PermissionsManagerStateProps = {
-  camera: string,
-  contacts: string
+type StateProps = {
+  permissions: PermissionsState
 }
 
-type PermissionsManagerDispatchProps = {
+type DispatchProps = {
   updatePermissions(permissions: PermissionsState): void
 }
 
-type Props = PermissionsManagerStateProps & PermissionsManagerDispatchProps
+type Props = StateProps & DispatchProps
 
 class PermissionsManagerComponent extends React.Component<Props> {
   render () {
@@ -30,64 +27,54 @@ class PermissionsManagerComponent extends React.Component<Props> {
   componentDidMount () {
     AppState.addEventListener('change', this.handleAppStateChange)
 
-    this.checkPermissions()
+    this.checkPermissions().catch(showError)
   }
 
   handleAppStateChange = (nextAppState: string) => {
     console.log('State Change => ', nextAppState)
 
     if (nextAppState === 'active') {
-      this.checkPermissions()
+      this.checkPermissions().catch(showError)
     }
   }
 
-  checkPermissions = () => {
-    RNPermissions.checkMultiple(PERMISSION_LIST)
-      .then(response => {
-        // response is an object mapping type to permission
-        const permissions = {}
+  async checkPermissions () {
+    const { permissions } = this.props
+    const names = Object.keys(permissions)
+    const response: PermissionsState = await RNPermissions.checkMultiple(names)
 
-        if (this.props.camera !== response.camera) {
-          permissions.camera = response.camera
-        }
-
-        if (this.props.contacts !== response.contacts) {
-          permissions.contacts = response.contacts
-        }
-
-        if (Object.keys(permissions).length > 0) {
-          console.log('Permissions updated')
-          this.props.updatePermissions(permissions)
-        } else {
-          console.log('Permissions unchanged')
-        }
-      })
-      .catch(showError)
-  }
-}
-
-export const requestPermission = (permission: Permission): Promise<PermissionStatus> => {
-  return RNPermissions.check(permission).then((status: PermissionStatus) => {
-    if (status === 'undetermined') {
-      return RNPermissions.request(permission)
+    // Figure out which ones have changed to avoid a pointless dispatch:
+    const newPermissions: PermissionsState = {}
+    for (const name of names) {
+      if (response[name] !== permissions[name]) {
+        newPermissions[name] = response[name]
+      }
     }
 
-    return status
-  })
+    if (Object.keys(newPermissions).length > 0) {
+      console.log('Permissions updated')
+      this.props.updatePermissions(newPermissions)
+    } else {
+      console.log('Permissions unchanged')
+    }
+  }
 }
 
-const mapStateToProps = (state: State): PermissionsManagerStateProps => ({
-  camera: state.permissions.camera,
-  contacts: state.permissions.contacts
-})
-
-const mapDispatchToProps = (dispatch: Dispatch): PermissionsManagerDispatchProps => ({
-  updatePermissions (permissions: PermissionsState) {
-    dispatch({ type: 'PERMISSIONS/UPDATE', data: permissions })
+export async function requestPermission (permission: Permission): Promise<PermissionStatus> {
+  const status: PermissionStatus = await RNPermissions.check(permission)
+  if (status === 'undetermined') {
+    return RNPermissions.request(permission)
   }
-})
+  return status
+}
 
 export const PermissionsManager = connect(
-  mapStateToProps,
-  mapDispatchToProps
+  (state: State): StateProps => ({
+    permissions: state.permissions
+  }),
+  (dispatch: Dispatch): DispatchProps => ({
+    updatePermissions (permissions: PermissionsState) {
+      dispatch({ type: 'PERMISSIONS/UPDATE', data: permissions })
+    }
+  })
 )(PermissionsManagerComponent)

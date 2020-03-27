@@ -1,11 +1,11 @@
 // @flow
 
 import AsyncStorage from '@react-native-community/async-storage'
+import { asObject, asString } from 'cleaners'
 import { createInputModal } from 'edge-components'
 import { type EdgeAccount } from 'edge-core-js/types'
 import React, { Component } from 'react'
-// eslint-disable-next-line react-native/split-platform-components
-import { FlatList, Image, PermissionsAndroid, Platform, TouchableWithoutFeedback, View } from 'react-native'
+import { FlatList, Image, Platform, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
@@ -22,16 +22,17 @@ import paymentTypeLogoIdeal from '../../assets/images/paymentTypes/paymentTypeLo
 import paymentTypeLogoNewsagent from '../../assets/images/paymentTypes/paymentTypeLogoNewsagent.png'
 import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLogoPoli.png'
 import paymentTypeLogoSwish from '../../assets/images/paymentTypes/paymentTypeLogoSwish.png'
-import { ANDROID, ARROW_RIGHT, COUNTRY_CODES, FLAG_LOGO_URL, PLUGIN_VIEW, PLUGIN_VIEW_LEGACY, SIMPLE_ICONS } from '../../constants/indexConstants.js'
-import { devPlugin, getBuyPlugins, getSellPlugins, pluginUrlMap } from '../../constants/plugins/buySellPlugins.js'
+import { ARROW_RIGHT, COUNTRY_CODES, FLAG_LOGO_URL, PLUGIN_VIEW, PLUGIN_VIEW_LEGACY, SIMPLE_ICONS } from '../../constants/indexConstants.js'
+import { devPlugin, getBuyPlugins, getSellPlugins, pluginUrlMap } from '../../constants/plugins/GuiPlugins.js'
 import s from '../../locales/strings.js'
 import { getSyncedSettingsAsync, setSyncedSettingsAsync } from '../../modules/Core/Account/settings.js'
 import Text from '../../modules/UI/components/FormattedText'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import styles from '../../styles/scenes/PluginsStyle.js'
 import { THEME } from '../../theme/variables/airbitz.js'
+import { type BuySellPlugin, type PluginUrlMap } from '../../types/GuiPluginTypes.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
-import { type BuySellPlugin, type CountryData, type PluginUrlMap } from '../../types/types.js'
+import { type CountryData } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -69,27 +70,30 @@ type DispatchProps = {
 
 type Props = OwnProps & StateProps & DispatchProps
 type State = {
-  developerPlugin: BuySellPlugin & PluginUrlMap
+  developerUri: string
 }
 
 const MODAL_DATA_FILE = 'pluginModalTracker.json'
 const DEVELOPER_PLUGIN_KEY = 'developerPlugin'
+const asDeveloperUri = asObject({ uri: asString })
 
-class PluginList extends Component<Props, State> {
+class GuiPluginList extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {
-      developerPlugin: devPlugin
+      developerUri: ''
     }
   }
+
   async componentDidMount () {
     await this.checkDisclaimer()
     this.checkCountry()
 
-    const storedDeveloperPlugin = await AsyncStorage.getItem(DEVELOPER_PLUGIN_KEY)
-    this.setState({
-      developerPlugin: storedDeveloperPlugin ? JSON.parse(storedDeveloperPlugin) : devPlugin
-    })
+    const text = await AsyncStorage.getItem(DEVELOPER_PLUGIN_KEY)
+    if (text != null) {
+      const clean = asDeveloperUri(JSON.parse(text))
+      this.setState({ developerUri: clean.uri })
+    }
   }
 
   /**
@@ -126,77 +130,53 @@ class PluginList extends Component<Props, State> {
   /**
    * Verify that we have a country selected
    */
-  async checkCountry () {
+  checkCountry () {
     const { countryCode } = this.props
-    if (!countryCode) this.openCountrySelectionModal()
+    if (!countryCode) this.showCountrySelectionModal().catch(showError)
   }
 
-  _onPress = (plugin: BuySellPlugin & PluginUrlMap) => {
-    const { pluginId, permissions = [] } = plugin
+  /**
+   * Launch the provided plugin, including pre-flight checks.
+   */
+  async openPlugin (plugin: BuySellPlugin & PluginUrlMap) {
+    const { pluginId } = plugin
+
+    // Grab a custom URI if necessary:
     if (pluginId === 'custom') {
-      this.openCustomPlugin(plugin)
-      return
+      const { developerUri } = this.state
+      const modal = createInputModal({
+        icon: <IonIcon name="md-globe" size={42} color={THEME.COLORS.SECONDARY} />,
+        title: s.strings.load_plugin,
+        input: {
+          label: s.strings.plugin_url,
+          autoCorrect: false,
+          returnKeyType: 'go',
+          initialValue: developerUri,
+          autoFocus: true
+        },
+        yesButton: { title: s.strings.load_plugin },
+        noButton: { title: s.strings.string_cancel_cap }
+      })
+      const response: string | void = await launchModal(modal)
+      if (response == null) return
+
+      this.setState({ developerUri: response })
+
+      // Directly hack the global plugin:
+      plugin.uri = response
+
+      // Write to disk lazily:
+      AsyncStorage.setItem(DEVELOPER_PLUGIN_KEY, JSON.stringify({ uri: response })).catch(showError)
     }
-    if (permissions.length > 0) {
-      if (Platform.OS === ANDROID) {
-        this.requestAndroidPermissions(permissions, plugin)
-        return
-      }
+
+    // Launch!
+    if (plugin.isLegacy) {
+      return Actions[PLUGIN_VIEW_LEGACY]({ plugin })
     }
-    this.openPlugin(plugin)
+    return Actions[PLUGIN_VIEW]({ plugin })
   }
 
-  requestAndroidPermissions = async (permissionList: Array<string>, plugin: BuySellPlugin & PluginUrlMap) => {
-    let reqType
-    switch (permissionList[0]) {
-      case 'camera':
-        reqType = PermissionsAndroid.PERMISSIONS.CAMERA
-        break
-      default:
-        reqType = PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
-    }
-    try {
-      const request = reqType
-      const granted = await PermissionsAndroid.request(request, {})
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        this.openPlugin(plugin)
-      } else {
-        this.openPlugin(plugin)
-      }
-    } catch (error) {
-      showError(error)
-    }
-  }
-
-  openCustomPlugin (plugin: BuySellPlugin & PluginUrlMap) {
-    const modal = createInputModal({
-      icon: <IonIcon name="md-globe" size={42} color={THEME.COLORS.SECONDARY} />,
-      title: s.strings.load_plugin,
-      input: {
-        label: s.strings.plugin_url,
-        autoCorrect: false,
-        returnKeyType: 'go',
-        initialValue: plugin.uri,
-        autoFocus: true
-      },
-      yesButton: { title: s.strings.load_plugin },
-      noButton: { title: s.strings.string_cancel_cap }
-    })
-    launchModal(modal).then(async response => {
-      if (response) {
-        plugin.uri = response
-        await AsyncStorage.setItem(DEVELOPER_PLUGIN_KEY, JSON.stringify(plugin))
-        Actions[PLUGIN_VIEW]({ plugin })
-      }
-    })
-  }
-
-  openPlugin = (plugin: BuySellPlugin & PluginUrlMap) => {
-    const key = plugin.isLegacy ? PLUGIN_VIEW_LEGACY : PLUGIN_VIEW
-    Actions[key]({ plugin })
-  }
-
-  openCountrySelectionModal = async () => {
+  async showCountrySelectionModal () {
     const { account, updateCountryCode, countryCode } = this.props
 
     const selectedCountryCode: string = await Airship.show(bridge => <CountrySelectionModal bridge={bridge} countryCode={countryCode} />)
@@ -215,8 +195,12 @@ class PluginList extends Component<Props, State> {
     }
   }
 
+  _handleCountryPress = () => {
+    this.showCountrySelectionModal().catch(showError)
+  }
+
   _renderPlugin = ({ item }) => (
-    <TouchableWithoutFeedback onPress={() => this._onPress(item)}>
+    <TouchableWithoutFeedback onPress={() => this.openPlugin(item).catch(showError)}>
       <View style={styles.pluginRow}>
         <View style={styles.pluginRowLogoAndInfo}>
           <View style={styles.logo}>
@@ -254,7 +238,7 @@ class PluginList extends Component<Props, State> {
 
     // Add the dev mode plugin if enabled:
     if (developerModeOn) {
-      plugins.push(this.state.developerPlugin)
+      plugins.push(devPlugin)
     }
 
     return (
@@ -283,7 +267,7 @@ class PluginList extends Component<Props, State> {
 
     return (
       <View style={styles.selectedCountryWrapper}>
-        <TouchableWithoutFeedback style={styles.selectedCountry} onPress={this.openCountrySelectionModal}>
+        <TouchableWithoutFeedback style={styles.selectedCountry} onPress={this._handleCountryPress}>
           <View style={styles.selectedCountryTextWrapper}>
             <View style={{ flexDirection: 'row' }}>
               {flag}
@@ -297,7 +281,7 @@ class PluginList extends Component<Props, State> {
   }
 }
 
-export const PluginListScene = connect(
+export const GuiPluginListScene = connect(
   (state: ReduxState): StateProps => ({
     developerModeOn: state.ui.settings.developerModeOn,
     countryCode: state.ui.settings.countryCode,
@@ -308,4 +292,4 @@ export const PluginListScene = connect(
       dispatch(updateOneSetting({ countryCode }))
     }
   })
-)(PluginList)
+)(GuiPluginList)
