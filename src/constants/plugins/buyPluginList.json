@@ -1,7 +1,7 @@
 [
   {
     "id": "simplex",
-    "pluginId": "co.edgesecure.simplex",
+    "pluginId": "simplex",
     "paymentType": "credit",
     "description": "Fee: ~7% / Settlement: 10-30 minutes\nLimit: $18000/day",
     "title": "Credit and Debit Card",
@@ -253,7 +253,7 @@
   },
   {
     "id": "wyre",
-    "pluginId": "co.edgesecure.wyre",
+    "pluginId": "wyre",
     "paymentType": "bank",
     "description": "Fee: 1% / Settlement: 1-5 days\nLimit: $2500/week",
     "title": "ACH Bank Transfer",
@@ -270,7 +270,7 @@
   },
   {
     "id": "bity",
-    "pluginId": "com.bity",
+    "pluginId": "bity",
     "countryCodes": {
       "AT": true,
       "BE": true,
@@ -318,7 +318,7 @@
   },
   {
     "id": "moonpay",
-    "pluginId": "io.moonpay.buy",
+    "pluginId": "moonpay",
     "paymentType": "credit",
     "description": "Fee: 6.5% / Settlement: 10 minutes\nLimit: $2000/day",
     "title": "Credit Card",
@@ -386,7 +386,7 @@
   },
   {
     "id": "safello",
-    "pluginId": "com.safello",
+    "pluginId": "safello",
     "paymentType": "credit",
     "description": "Fee: 5.75% / Settlement: Instant\nLimit: €2500/day",
     "title": "Credit Card",
@@ -439,7 +439,7 @@
   },
   {
     "id": "safello.bank",
-    "pluginId": "com.safello",
+    "pluginId": "safello",
     "paymentType": "bank",
     "description": "Fee: 4% / Settlement: 1-2 days\nLimit: €2500/day",
     "title": "Bank Transfer",
@@ -459,7 +459,7 @@
   },
   {
     "id": "libertyx",
-    "pluginId": "com.libertyx",
+    "pluginId": "libertyx",
     "paymentType": {
       "cash": true,
       "credit": true
@@ -496,7 +496,7 @@
     ],
     "paymentTypeLogoKey": "poli",
     "addOnUrl": "/?country=AU&payment=POLI"
-  },  
+  },
   {
     "id": "banxa.cash",
     "pluginId": "banxa",

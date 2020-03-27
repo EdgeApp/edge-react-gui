@@ -19,7 +19,7 @@ import { PluginBridge, pop as pluginPop } from '../../modules/UI/scenes/Plugins/
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
 import type { GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import styles from '../../styles/scenes/PluginsStyle.js'
-import { type PluginUrlMap } from '../../types/GuiPluginTypes.js'
+import { type GuiPlugin } from '../../types/GuiPluginTypes.js'
 import { type GuiWallet } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance.js'
@@ -27,7 +27,7 @@ import { showError } from '../services/AirshipInstance.js'
 const BACK = s.strings.title_back
 
 type Props = {
-  plugin: PluginUrlMap,
+  plugin: GuiPlugin,
   navigation: any,
   account: any,
   guiWallet: GuiWallet,
@@ -71,7 +71,9 @@ class GuiPluginLegacy extends React.Component<Props, State> {
     }
     this.webview = null
 
-    const apiKey = ENV.PLUGIN_API_KEYS ? ENV.PLUGIN_API_KEYS[props.plugin.name] : 'edgeWallet' // latter is dummy code
+    // This is a gross misuse of the displayName,
+    // and the second value is just a dummy, but heh, legacy:
+    const apiKey = ENV.PLUGIN_API_KEYS ? ENV.PLUGIN_API_KEYS[props.plugin.displayName] : 'edgeWallet'
     this.bridge = new PluginBridge({
       plugin: {
         ...props.plugin,
@@ -287,7 +289,11 @@ class GuiPluginLegacy extends React.Component<Props, State> {
   }
 
   render () {
-    const { uri } = this.props.plugin
+    const { baseUri } = this.props.plugin
+
+    // We don't support deep linking or custom query parameters,
+    // but they would go here if we needed that:
+    const uri = baseUri
 
     return (
       <SceneWrapper background="body" hasTabs={false}>

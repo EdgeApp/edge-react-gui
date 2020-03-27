@@ -7,7 +7,7 @@ import { Actions } from 'react-native-router-flux'
 import { SEND_CONFIRMATION } from '../../../../constants/SceneKeys.js'
 import s from '../../../../locales/strings.js'
 import { type GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
-import { type PluginUrlMap } from '../../../../types/GuiPluginTypes.js'
+import { type GuiPlugin } from '../../../../types/GuiPluginTypes.js'
 import { type GuiWallet } from '../../../../types/types.js'
 
 type Wallet = {
@@ -32,7 +32,7 @@ function formatWallet (w: GuiWallet): Wallet {
 }
 
 type Context = {
-  plugin: PluginUrlMap & { environment: { [key: string]: any } },
+  plugin: GuiPlugin & { environment: { [key: string]: any } },
 
   folder: EdgeDataStore,
   wallet?: GuiWallet,
@@ -199,7 +199,7 @@ export class PluginBridge {
 
   readData = async (data: any): Promise<string> => {
     try {
-      const response = await this.context.folder.getItem(this.context.plugin.pluginId, data.key)
+      const response = await this.context.folder.getItem(this.context.plugin.storeId, data.key)
       console.log('LOGGING readData response is: ', response)
       return response
     } catch (e) {
@@ -212,7 +212,7 @@ export class PluginBridge {
     const { key, value } = data
     try {
       console.log('LOGGING about to write data with key: ', key, ' and value: ', value)
-      await this.context.folder.setItem(this.context.plugin.pluginId, key, value)
+      await this.context.folder.setItem(this.context.plugin.storeId, key, value)
       console.log('LOGGING successfully written data and returning true')
       return true
     } catch (e) {
@@ -222,7 +222,7 @@ export class PluginBridge {
   }
 
   clearData (): Promise<boolean> {
-    return this.context.folder.deleteStore(this.context.plugin.pluginId).then(() => {
+    return this.context.folder.deleteStore(this.context.plugin.storeId).then(() => {
       return true
     })
   }

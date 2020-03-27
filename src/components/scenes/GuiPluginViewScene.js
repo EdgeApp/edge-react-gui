@@ -8,7 +8,7 @@ import { Bridge, onMethod } from 'yaob'
 
 import { setPluginScene } from '../../modules/UI/scenes/Plugins/BackButton.js'
 import { EdgeProvider } from '../../modules/UI/scenes/Plugins/EdgeProvider.js'
-import { type PluginUrlMap } from '../../types/GuiPluginTypes.js'
+import { type GuiPlugin } from '../../types/GuiPluginTypes.js'
 import type { Dispatch, State } from '../../types/reduxTypes.js'
 import { javascript } from '../../util/bridge/injectThisInWebView.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -109,7 +109,7 @@ function makeOuterWebViewBridge<Root> (onRoot: (root: Root) => mixed, debug: boo
 
 type OwnProps = {
   // The GUI plugin we are showing the user:
-  plugin: PluginUrlMap,
+  plugin: GuiPlugin,
 
   // Set this to add stuff to the plugin URI:
   deepPath?: string
@@ -195,12 +195,13 @@ class GuiPluginView extends React.Component<Props> {
 
   render () {
     const { plugin, deepPath = '' } = this.props
-    const { uri, originWhitelist = ['file://*', 'https://*', 'http://*', 'edge://*'] } = plugin
+    const { baseUri, originWhitelist = ['file://*', 'https://*', 'http://*', 'edge://*'] } = plugin
+    const uri = `${baseUri}${deepPath}`
+
     const userAgent =
       Platform.OS === 'android'
         ? 'Mozilla/5.0 (Linux; U; Android 4.4.2; en-us; SCH-I535 Build/KOT49H) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30'
         : 'Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_1 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Version/10.0 Mobile/14E304 Safari/602.1'
-    const expandedUri = `${uri}${deepPath}`
 
     return (
       <SceneWrapper background="body" hasTabs={false}>
@@ -216,7 +217,7 @@ class GuiPluginView extends React.Component<Props> {
           originWhitelist={originWhitelist}
           ref={this._callbacks.setRef}
           setWebContentsDebuggingEnabled={true}
-          source={{ uri: expandedUri }}
+          source={{ uri }}
           userAgent={userAgent + ' hasEdgeProvider edge/app.edge.'}
           useWebKit
         />

@@ -3,84 +3,96 @@
 import { Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 
-import { type BuySellPlugin, type PluginUrlMap } from '../../types/GuiPluginTypes.js'
+import { type BuySellPlugin, type GuiPlugin } from '../../types/GuiPluginTypes.js'
 
 const buyPlugins = require('./buyPluginList.json')
 const sellPlugins = require('./sellPluginList.json')
 
 const hostedUri = Platform.OS === 'android' ? 'file:///android_asset/plugins/' : `file:///${RNFS.MainBundlePath}/plugins/`
 
-export const pluginUrlMap: { [pluginId: string]: PluginUrlMap } = {
-  'com.libertyx': {
-    pluginId: 'com.libertyx',
-    uri: 'https://libertyx.com/a/',
-    name: 'LibertyX',
-    permissions: ['location'],
-    originWhitelist: ['https://libertyx.com']
+export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
+  libertyx: {
+    pluginId: 'libertyx',
+    storeId: 'com.libertyx',
+    baseUri: 'https://libertyx.com/a/',
+    displayName: 'LibertyX',
+    originWhitelist: ['https://libertyx.com'],
+    permissions: ['location']
   },
-  'io.moonpay.buy': {
-    pluginId: 'io.moonpay.buy',
-    uri: 'https://buy.moonpay.io?apiKey=pk_live_Y1vQHUgfppB4oMEZksB8DYNQAdA4sauy',
-    name: 'MoonPay'
+  moonpay: {
+    pluginId: 'moonpay',
+    storeId: 'io.moonpay.buy',
+    baseUri: 'https://buy.moonpay.io?apiKey=pk_live_Y1vQHUgfppB4oMEZksB8DYNQAdA4sauy',
+    displayName: 'MoonPay'
   },
-  'com.safello': {
-    pluginId: 'com.safello',
-    uri: 'https://safello.com/edge/',
-    name: 'Safello',
+  safello: {
+    pluginId: 'safello',
+    storeId: 'com.safello',
+    baseUri: 'https://safello.com/edge/',
+    displayName: 'Safello',
     originWhitelist: ['https://safello.com', 'https://app.safello.com', 'http://safello.com']
   },
-  'com.safello.sell': {
-    pluginId: 'com.safello.sell',
-    uri: 'https://app.safello.com/',
-    name: 'Safello',
+  'safello-sell': {
+    pluginId: 'safello-sell',
+    storeId: 'com.safello.sell',
+    baseUri: 'https://app.safello.com/',
+    displayName: 'Safello',
     originWhitelist: ['https://safello.com', 'https://app.safello.com', 'http://safello.com']
   },
   bitsofgold: {
     pluginId: 'bitsofgold',
-    uri: 'https://www.bitsofgold.co.il/order/',
-    name: 'Bits of Gold',
+    storeId: 'bitsofgold',
+    baseUri: 'https://www.bitsofgold.co.il/order/',
+    displayName: 'Bits of Gold',
     permissions: ['camera']
   },
   banxa: {
     pluginId: 'banxa',
-    uri: 'https://edge.banxa.com',
-    name: 'Banxa',
+    storeId: 'banxa',
+    baseUri: 'https://edge.banxa.com',
+    displayName: 'Banxa',
     permissions: ['camera']
   },
-  'co.edgesecure.simplex': {
-    pluginId: 'co.edgesecure.simplex',
-    uri: hostedUri + 'co.edgesecure.simplex/index.html',
-    name: 'Simplex'
+  simplex: {
+    pluginId: 'simplex',
+    storeId: 'co.edgesecure.simplex',
+    baseUri: hostedUri + 'co.edgesecure.simplex/index.html',
+    displayName: 'Simplex'
   },
-  'co.edgesecure.wyre': {
-    pluginId: 'co.edgesecure.wyre',
-    uri: hostedUri + 'co.edgesecure.wyre/index.html',
-    name: 'Wyre',
-    supportEmail: 'support@sendwyre.com',
+  wyre: {
+    pluginId: 'wyre',
+    storeId: 'co.edgesecure.wyre',
+    baseUri: hostedUri + 'co.edgesecure.wyre/index.html',
+    displayName: 'Wyre',
     permissions: ['camera']
+    // supportEmail: 'support@sendwyre.com'
   },
-  'com.bity': {
-    pluginId: 'com.bity',
-    uri: hostedUri + 'com.bity/index.html',
-    name: 'Bity',
-    supportEmail: 'support@bity.com'
+  bity: {
+    pluginId: 'bity',
+    storeId: 'com.bity',
+    baseUri: hostedUri + 'com.bity/index.html',
+    displayName: 'Bity'
+    // supportßEmail: 'support@bity.com'
   },
-  'co.edgesecure.bitrefill': {
-    pluginId: 'co.edgesecure.bitrefill',
-    uri: hostedUri + 'co.edgesecure.bitrefill/index.html',
-    name: 'Bitrefill',
+  bitrefill: {
+    pluginId: 'bitrefill',
+    storeId: 'co.edgesecure.bitrefill',
+    baseUri: hostedUri + 'co.edgesecure.bitrefill/index.html',
+    displayName: 'Bitrefill',
     isLegacy: true
   },
   cred: {
     pluginId: 'cred',
-    uri: 'https://earn.mycred.io/edge',
-    name: 'Cred',
+    storeId: 'cred',
+    baseUri: 'https://earn.mycred.io/edge',
+    displayName: 'Cred',
     permissions: ['camera']
   },
   custom: {
     pluginId: 'custom',
-    uri: '',
-    name: '',
+    storeId: 'custom',
+    baseUri: '',
+    displayName: 'Custom Plugin',
     permissions: ['camera', 'location']
   }
 }

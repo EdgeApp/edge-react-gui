@@ -23,7 +23,7 @@ import paymentTypeLogoNewsagent from '../../assets/images/paymentTypes/paymentTy
 import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLogoPoli.png'
 import paymentTypeLogoSwish from '../../assets/images/paymentTypes/paymentTypeLogoSwish.png'
 import { ARROW_RIGHT, COUNTRY_CODES, FLAG_LOGO_URL, PLUGIN_VIEW, PLUGIN_VIEW_LEGACY, SIMPLE_ICONS } from '../../constants/indexConstants.js'
-import { devPlugin, getBuyPlugins, getSellPlugins, pluginUrlMap } from '../../constants/plugins/GuiPlugins.js'
+import { devPlugin, getBuyPlugins, getSellPlugins, guiPlugins } from '../../constants/plugins/GuiPlugins.js'
 import s from '../../locales/strings.js'
 import { getSyncedSettingsAsync, setSyncedSettingsAsync } from '../../modules/Core/Account/settings.js'
 import Text from '../../modules/UI/components/FormattedText'
@@ -140,7 +140,7 @@ class GuiPluginList extends Component<Props, State> {
    */
   async openPlugin (listRow: BuySellPlugin) {
     const { pluginId } = listRow
-    const plugin = pluginUrlMap[pluginId]
+    const plugin = guiPlugins[pluginId]
 
     // Grab a custom URI if necessary:
     let deepPath: string | void = listRow.addOnUrl
@@ -202,7 +202,7 @@ class GuiPluginList extends Component<Props, State> {
 
   _renderPlugin = ({ item }) => {
     const { pluginId } = item
-    const plugin = pluginUrlMap[pluginId]
+    const plugin = guiPlugins[pluginId]
 
     return (
       <TouchableWithoutFeedback onPress={() => this.openPlugin(item).catch(showError)}>
@@ -220,7 +220,7 @@ class GuiPluginList extends Component<Props, State> {
           <View style={styles.pluginRowPoweredByRow}>
             <Text style={styles.footerText}>Powered by </Text>
             <Image style={styles.partnerIconImage} source={{ uri: item.partnerIconPath }} />
-            <Text style={styles.footerText}> {plugin.name}</Text>
+            <Text style={styles.footerText}> {plugin.displayName}</Text>
           </View>
         </View>
       </TouchableWithoutFeedback>

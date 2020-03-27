@@ -24,7 +24,7 @@ import s from '../../../../locales/strings'
 import * as SETTINGS_SELECTORS from '../../../../modules/Settings/selectors.js'
 import { Icon } from '../../../../modules/UI/components/Icon/Icon.ui.js'
 import type { GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
-import { type PluginUrlMap } from '../../../../types/GuiPluginTypes.js'
+import { type GuiPlugin } from '../../../../types/GuiPluginTypes.js'
 import type { Dispatch, State } from '../../../../types/reduxTypes.js'
 import { type GuiWallet } from '../../../../types/types.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
@@ -84,15 +84,13 @@ export type EdgeProviderSpendTarget = {
 }
 
 export class EdgeProvider extends Bridgeable {
-  _pluginId: string
-  _plugin: PluginUrlMap
+  _plugin: GuiPlugin
   _dispatch: Dispatch
   _state: State
 
-  constructor (plugin: PluginUrlMap, state: State, dispatch: Dispatch) {
+  constructor (plugin: GuiPlugin, state: State, dispatch: Dispatch) {
     super()
     this._plugin = plugin
-    this._pluginId = plugin.pluginId
     this._dispatch = dispatch
     this._state = state
   }
@@ -277,7 +275,7 @@ export class EdgeProvider extends Bridgeable {
     const account = CORE_SELECTORS.getAccount(this._state)
     const store = account.dataStore
     console.log('edgeProvider writeData: ', JSON.stringify(data))
-    await Promise.all(Object.keys(data).map(key => store.setItem(this._pluginId, key, data[key])))
+    await Promise.all(Object.keys(data).map(key => store.setItem(this._plugin.storeId, key, data[key])))
     console.log('edgeProvider writeData Success')
     return { success: true }
   }
@@ -290,7 +288,7 @@ export class EdgeProvider extends Bridgeable {
     const store = account.dataStore
     const returnObj = {}
     for (let i = 0; i < keys.length; i++) {
-      returnObj[keys[i]] = await store.getItem(this._pluginId, keys[i]).catch(e => undefined)
+      returnObj[keys[i]] = await store.getItem(this._plugin.storeId, keys[i]).catch(e => undefined)
     }
     console.log('edgeProvider readData: ', JSON.stringify(returnObj))
     return returnObj
@@ -442,7 +440,7 @@ export class EdgeProvider extends Bridgeable {
 
       const exchangeAmount = await coreWallet.nativeToDenomination(transaction.nativeAmount, transaction.currencyCode)
       trackConversion('EdgeProviderConversion', {
-        pluginId: this._pluginId,
+        pluginId: this._plugin.storeId,
         account: CORE_SELECTORS.getAccount(this._state),
         currencyCode: transaction.currencyCode,
         exchangeAmount: Number(bns.abs(exchangeAmount))
@@ -456,7 +454,7 @@ export class EdgeProvider extends Bridgeable {
       const { currencyCode, exchangeAmount } = opts
       this._dispatch(
         trackConversion('EdgeProviderConversion', {
-          pluginId: this._pluginId,
+          pluginId: this._plugin.storeId,
           account: CORE_SELECTORS.getAccount(this._state),
           currencyCode,
           exchangeAmount
@@ -465,7 +463,7 @@ export class EdgeProvider extends Bridgeable {
     } else {
       this._dispatch(
         trackAccountEvent('EdgeProviderConversion', {
-          pluginId: this._pluginId
+          pluginId: this._plugin.storeId
         })
       )
     }

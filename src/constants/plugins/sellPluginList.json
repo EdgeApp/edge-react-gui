@@ -1,7 +1,7 @@
 [
   {
     "id": "simplex",
-    "pluginId": "co.edgesecure.simplex",
+    "pluginId": "simplex",
     "paymentType": "credit",
     "description": "Fee: ~4% / Settlement: 10-30 minutes\nLimit: €4400/day",
     "title": "Credit and Debit Card",
@@ -63,7 +63,7 @@
   },
   {
     "id": "wyre",
-    "pluginId": "co.edgesecure.wyre",
+    "pluginId": "wyre",
     "paymentType": "bank",
     "description": "Fee: 1% / Settlement: 1-5 days\nLimit: Unlimited",
     "title": "ACH Bank Transfer",
@@ -144,7 +144,7 @@
   },
   {
     "id": "bitrefill",
-    "pluginId": "co.edgesecure.bitrefill",
+    "pluginId": "bitrefill",
     "paymentType": "giftcard",
     "description": "Buy gift cards and reload phones with crypto",
     "title": "Gift Cards",
@@ -410,7 +410,7 @@
   },
   {
     "id": "bity",
-    "pluginId": "com.bity",
+    "pluginId": "bity",
     "countryCodes": {
       "AT": true,
       "BE": true,
@@ -458,7 +458,7 @@
   },
   {
     "id": "safello.bank",
-    "pluginId": "com.safello.sell",
+    "pluginId": "safello-sell",
     "paymentType": "bank",
     "description": "Fee: 3% / Settlement: 1-2 days\nLimit: €2500/day",
     "title": "Bank Transfer",
