@@ -1,11 +1,13 @@
 // @flow
 
+import { type Permission } from '../reducers/PermissionsReducer.js'
+
 export type PluginUrlMap = {
   pluginId: string,
   uri: string,
   name: string,
   supportEmail?: string,
-  permissions?: Array<string>,
+  permissions?: Array<Permission>,
   originWhitelist?: Array<string>,
   isLegacy?: boolean
 }

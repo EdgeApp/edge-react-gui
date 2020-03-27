@@ -12,6 +12,8 @@ import { type BuySellPlugin, type PluginUrlMap } from '../../types/GuiPluginType
 import type { Dispatch, State } from '../../types/reduxTypes.js'
 import { javascript } from '../../util/bridge/injectThisInWebView.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { showError } from '../services/AirshipInstance.js'
+import { requestPermission } from '../services/PermissionsManager.js'
 
 // WebView bridge managemer --------------------------------------------
 
@@ -148,8 +150,18 @@ class GuiPluginView extends React.Component<Props> {
     }
   }
 
+  componentDidMount () {
+    this.checkPermissions().catch(showError)
+  }
+
   componentDidUpdate () {
     this._edgeProvider.updateState(this.props.state)
+  }
+
+  async checkPermissions () {
+    const { plugin } = this.props
+    const { permissions = [] } = plugin
+    for (const name of permissions) await requestPermission(name)
   }
 
   goBack (): boolean {
