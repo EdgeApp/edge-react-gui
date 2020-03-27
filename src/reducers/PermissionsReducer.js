@@ -2,6 +2,7 @@
 
 import type { Action } from '../types/reduxTypes.js'
 
+// To add new permissions, just put them in this list an in `initialState`:
 export type Permission = 'camera' | 'contacts'
 export type PermissionStatus = 'authorized' | 'denied' | 'restricted' | 'undetermined'
 export type PermissionsState = {
