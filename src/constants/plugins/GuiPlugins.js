@@ -5,8 +5,8 @@ import RNFS from 'react-native-fs'
 
 import { type BuySellPlugin, type PluginUrlMap } from '../../types/GuiPluginTypes.js'
 
-const buyPlugins = require('./buyPlugins.json')
-const sellPlugins = require('./sellPlugins.json')
+const buyPlugins = require('./buyPluginList.json')
+const sellPlugins = require('./sellPluginList.json')
 
 const hostedUri = Platform.OS === 'android' ? 'file:///android_asset/plugins/' : `file:///${RNFS.MainBundlePath}/plugins/`
 

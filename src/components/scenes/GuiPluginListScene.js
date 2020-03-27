@@ -23,7 +23,7 @@ import paymentTypeLogoNewsagent from '../../assets/images/paymentTypes/paymentTy
 import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLogoPoli.png'
 import paymentTypeLogoSwish from '../../assets/images/paymentTypes/paymentTypeLogoSwish.png'
 import { ANDROID, ARROW_RIGHT, COUNTRY_CODES, FLAG_LOGO_URL, PLUGIN_VIEW, PLUGIN_VIEW_LEGACY, SIMPLE_ICONS } from '../../constants/indexConstants.js'
-import { devPlugin, getBuyPlugins, getSellPlugins, pluginUrlMap } from '../../constants/plugins/buySellPlugins.js'
+import { devPlugin, getBuyPlugins, getSellPlugins, pluginUrlMap } from '../../constants/plugins/GuiPlugins.js'
 import s from '../../locales/strings.js'
 import { getSyncedSettingsAsync, setSyncedSettingsAsync } from '../../modules/Core/Account/settings.js'
 import Text from '../../modules/UI/components/FormattedText'

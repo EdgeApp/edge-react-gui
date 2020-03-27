@@ -4,7 +4,7 @@ import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { showError } from '../components/services/AirshipInstance.js'
-import { pluginUrlMap } from '../constants/plugins/buySellPlugins.js'
+import { pluginUrlMap } from '../constants/plugins/GuiPlugins.js'
 import { EDGE_LOGIN, PLUGIN_VIEW_DEEP, SCAN } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
 import { type DeepLink } from '../types/DeepLink.js'
