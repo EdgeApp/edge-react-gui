@@ -19,7 +19,7 @@ import { PluginBridge, pop as pluginPop } from '../../modules/UI/scenes/Plugins/
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
 import type { GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import styles from '../../styles/scenes/PluginsStyle.js'
-import { type BuySellPlugin, type PluginUrlMap } from '../../types/GuiPluginTypes.js'
+import { type PluginUrlMap } from '../../types/GuiPluginTypes.js'
 import { type GuiWallet } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance.js'
@@ -27,7 +27,7 @@ import { showError } from '../services/AirshipInstance.js'
 const BACK = s.strings.title_back
 
 type Props = {
-  plugin: BuySellPlugin & PluginUrlMap,
+  plugin: PluginUrlMap,
   navigation: any,
   account: any,
   guiWallet: GuiWallet,

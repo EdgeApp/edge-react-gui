@@ -76,13 +76,17 @@ export const pluginUrlMap: { [pluginId: string]: PluginUrlMap } = {
     uri: 'https://earn.mycred.io/edge',
     name: 'Cred',
     permissions: ['camera']
+  },
+  custom: {
+    pluginId: 'custom',
+    uri: '',
+    name: '',
+    permissions: ['camera', 'location']
   }
 }
 
-export const devPlugin: BuySellPlugin & PluginUrlMap = {
+export const devPlugin: BuySellPlugin = {
   pluginId: 'custom',
-  uri: '',
-  name: '',
   id: '',
   priority: 99,
   paymentType: '',
@@ -90,10 +94,7 @@ export const devPlugin: BuySellPlugin & PluginUrlMap = {
   title: 'Custom Dev',
   paymentTypeLogoKey: 'credit',
   partnerIconPath: '',
-  cryptoCodes: [],
-  supportEmail: '',
-  permissions: ['camera', 'location'],
-  isLegacy: false
+  cryptoCodes: []
 }
 
 export const collapsePlugins = function (pluginsRaw: Array<string | BuySellPlugin>, platform: string, countryCode: string): Array<BuySellPlugin> {

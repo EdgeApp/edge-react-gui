@@ -7,7 +7,7 @@ import { Actions } from 'react-native-router-flux'
 import { SEND_CONFIRMATION } from '../../../../constants/SceneKeys.js'
 import s from '../../../../locales/strings.js'
 import { type GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
-import { type BuySellPlugin } from '../../../../types/GuiPluginTypes.js'
+import { type PluginUrlMap } from '../../../../types/GuiPluginTypes.js'
 import { type GuiWallet } from '../../../../types/types.js'
 
 type Wallet = {
@@ -32,7 +32,7 @@ function formatWallet (w: GuiWallet): Wallet {
 }
 
 type Context = {
-  plugin: BuySellPlugin & { environment: { [key: string]: any } },
+  plugin: PluginUrlMap & { environment: { [key: string]: any } },
 
   folder: EdgeDataStore,
   wallet?: GuiWallet,

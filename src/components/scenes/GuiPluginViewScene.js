@@ -8,7 +8,7 @@ import { Bridge, onMethod } from 'yaob'
 
 import { setPluginScene } from '../../modules/UI/scenes/Plugins/BackButton.js'
 import { EdgeProvider } from '../../modules/UI/scenes/Plugins/EdgeProvider.js'
-import { type BuySellPlugin, type PluginUrlMap } from '../../types/GuiPluginTypes.js'
+import { type PluginUrlMap } from '../../types/GuiPluginTypes.js'
 import type { Dispatch, State } from '../../types/reduxTypes.js'
 import { javascript } from '../../util/bridge/injectThisInWebView.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -107,11 +107,17 @@ function makeOuterWebViewBridge<Root> (onRoot: (root: Root) => mixed, debug: boo
 
 // Plugin scene --------------------------------------------------------
 
-type Props = {
-  dispatch: Dispatch,
-  plugin: BuySellPlugin & PluginUrlMap,
-  state: State
+type OwnProps = {
+  // The GUI plugin we are showing the user:
+  plugin: PluginUrlMap,
+
+  // Set this to add stuff to the plugin URI:
+  deepPath?: string
 }
+
+type DispatchProps = { dispatch: Dispatch }
+type StateProps = { state: State }
+type Props = OwnProps & DispatchProps & StateProps
 
 type PluginWorkerApi = {
   setEdgeProvider(provider: EdgeProvider): Promise<mixed>
@@ -188,12 +194,13 @@ class GuiPluginView extends React.Component<Props> {
   }
 
   render () {
-    const { uri, addOnUrl = '', originWhitelist = ['file://*', 'https://*', 'http://*', 'edge://*'] } = this.props.plugin
+    const { plugin, deepPath = '' } = this.props
+    const { uri, originWhitelist = ['file://*', 'https://*', 'http://*', 'edge://*'] } = plugin
     const userAgent =
       Platform.OS === 'android'
         ? 'Mozilla/5.0 (Linux; U; Android 4.4.2; en-us; SCH-I535 Build/KOT49H) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30'
         : 'Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_1 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Version/10.0 Mobile/14E304 Safari/602.1'
-    const expandedUri = `${uri}${addOnUrl}`
+    const expandedUri = `${uri}${deepPath}`
 
     return (
       <SceneWrapper background="body" hasTabs={false}>
@@ -221,6 +228,6 @@ class GuiPluginView extends React.Component<Props> {
 // Connector -----------------------------------------------------------
 
 export const GuiPluginViewScene = connect(
-  state => ({ state }),
-  dispatch => ({ dispatch })
+  (state: State): StateProps => ({ state }),
+  (dispatch: Dispatch): DispatchProps => ({ dispatch })
 )(GuiPluginView)

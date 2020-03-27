@@ -30,7 +30,7 @@ import Text from '../../modules/UI/components/FormattedText'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import styles from '../../styles/scenes/PluginsStyle.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { type BuySellPlugin, type PluginUrlMap } from '../../types/GuiPluginTypes.js'
+import { type BuySellPlugin } from '../../types/GuiPluginTypes.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { type CountryData } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
@@ -138,10 +138,12 @@ class GuiPluginList extends Component<Props, State> {
   /**
    * Launch the provided plugin, including pre-flight checks.
    */
-  async openPlugin (plugin: BuySellPlugin & PluginUrlMap) {
-    const { pluginId } = plugin
+  async openPlugin (listRow: BuySellPlugin) {
+    const { pluginId } = listRow
+    const plugin = pluginUrlMap[pluginId]
 
     // Grab a custom URI if necessary:
+    let deepPath: string | void = listRow.addOnUrl
     if (pluginId === 'custom') {
       const { developerUri } = this.state
       const modal = createInputModal({
@@ -157,23 +159,22 @@ class GuiPluginList extends Component<Props, State> {
         yesButton: { title: s.strings.load_plugin },
         noButton: { title: s.strings.string_cancel_cap }
       })
-      const response: string | void = await launchModal(modal)
-      if (response == null) return
+      deepPath = await launchModal(modal)
+      if (deepPath == null) return
 
-      this.setState({ developerUri: response })
+      if (deepPath !== developerUri) {
+        this.setState({ developerUri: deepPath })
 
-      // Directly hack the global plugin:
-      plugin.uri = response
-
-      // Write to disk lazily:
-      AsyncStorage.setItem(DEVELOPER_PLUGIN_KEY, JSON.stringify({ uri: response })).catch(showError)
+        // Write to disk lazily:
+        AsyncStorage.setItem(DEVELOPER_PLUGIN_KEY, JSON.stringify({ uri: deepPath })).catch(showError)
+      }
     }
 
     // Launch!
     if (plugin.isLegacy) {
       return Actions[PLUGIN_VIEW_LEGACY]({ plugin })
     }
-    return Actions[PLUGIN_VIEW]({ plugin })
+    return Actions[PLUGIN_VIEW]({ plugin, deepPath })
   }
 
   async showCountrySelectionModal () {
@@ -199,42 +200,42 @@ class GuiPluginList extends Component<Props, State> {
     this.showCountrySelectionModal().catch(showError)
   }
 
-  _renderPlugin = ({ item }) => (
-    <TouchableWithoutFeedback onPress={() => this.openPlugin(item).catch(showError)}>
-      <View style={styles.pluginRow}>
-        <View style={styles.pluginRowLogoAndInfo}>
-          <View style={styles.logo}>
-            <Image style={styles.logoImage} source={paymentTypeLogosById[item.paymentTypeLogoKey]} />
+  _renderPlugin = ({ item }) => {
+    const { pluginId } = item
+    const plugin = pluginUrlMap[pluginId]
+
+    return (
+      <TouchableWithoutFeedback onPress={() => this.openPlugin(item).catch(showError)}>
+        <View style={styles.pluginRow}>
+          <View style={styles.pluginRowLogoAndInfo}>
+            <View style={styles.logo}>
+              <Image style={styles.logoImage} source={paymentTypeLogosById[item.paymentTypeLogoKey]} />
+            </View>
+            <View style={styles.textBoxWrap}>
+              <Text style={styles.titleText}>{item.title}</Text>
+              <Text style={styles.subtitleText}>{item.cryptoCodes.length > 0 && `Currencies: ${item.cryptoCodes.join(', ')}`}</Text>
+              <Text style={styles.subtitleText}>{item.description}</Text>
+            </View>
           </View>
-          <View style={styles.textBoxWrap}>
-            <Text style={styles.titleText}>{item.title}</Text>
-            <Text style={styles.subtitleText}>{item.cryptoCodes.length > 0 && `Currencies: ${item.cryptoCodes.join(', ')}`}</Text>
-            <Text style={styles.subtitleText}>{item.description}</Text>
+          <View style={styles.pluginRowPoweredByRow}>
+            <Text style={styles.footerText}>Powered by </Text>
+            <Image style={styles.partnerIconImage} source={{ uri: item.partnerIconPath }} />
+            <Text style={styles.footerText}> {plugin.name}</Text>
           </View>
         </View>
-        <View style={styles.pluginRowPoweredByRow}>
-          <Text style={styles.footerText}>Powered by </Text>
-          <Image style={styles.partnerIconImage} source={{ uri: item.partnerIconPath }} />
-          <Text style={styles.footerText}> {item.name}</Text>
-        </View>
-      </View>
-    </TouchableWithoutFeedback>
-  )
+      </TouchableWithoutFeedback>
+    )
+  }
 
   render () {
     const { countryCode, developerModeOn, direction } = this.props
     const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)
 
     // Pick a filter based on our direction:
-    const pluginsBuySellPlugins: Array<BuySellPlugin> = direction === 'buy' ? getBuyPlugins(Platform.OS, countryCode) : getSellPlugins(Platform.OS, countryCode)
+    const plugins: Array<BuySellPlugin> = direction === 'buy' ? getBuyPlugins(Platform.OS, countryCode) : getSellPlugins(Platform.OS, countryCode)
 
     // Sort the plugins:
-    pluginsBuySellPlugins.sort((a: BuySellPlugin, b: BuySellPlugin) => a.priority - b.priority)
-
-    const plugins: Array<BuySellPlugin & PluginUrlMap> = pluginsBuySellPlugins.map((_buySellPlugin: BuySellPlugin) => {
-      const _pluginUrlMap = pluginUrlMap[_buySellPlugin.pluginId]
-      return { ..._pluginUrlMap, ..._buySellPlugin }
-    })
+    plugins.sort((a: BuySellPlugin, b: BuySellPlugin) => a.priority - b.priority)
 
     // Add the dev mode plugin if enabled:
     if (developerModeOn) {

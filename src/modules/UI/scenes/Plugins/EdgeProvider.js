@@ -24,7 +24,7 @@ import s from '../../../../locales/strings'
 import * as SETTINGS_SELECTORS from '../../../../modules/Settings/selectors.js'
 import { Icon } from '../../../../modules/UI/components/Icon/Icon.ui.js'
 import type { GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
-import { type BuySellPlugin } from '../../../../types/GuiPluginTypes.js'
+import { type PluginUrlMap } from '../../../../types/GuiPluginTypes.js'
 import type { Dispatch, State } from '../../../../types/reduxTypes.js'
 import { type GuiWallet } from '../../../../types/types.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
@@ -85,11 +85,11 @@ export type EdgeProviderSpendTarget = {
 
 export class EdgeProvider extends Bridgeable {
   _pluginId: string
-  _plugin: BuySellPlugin
+  _plugin: PluginUrlMap
   _dispatch: Dispatch
   _state: State
 
-  constructor (plugin: BuySellPlugin, state: State, dispatch: Dispatch) {
+  constructor (plugin: PluginUrlMap, state: State, dispatch: Dispatch) {
     super()
     this._plugin = plugin
     this._pluginId = plugin.pluginId
