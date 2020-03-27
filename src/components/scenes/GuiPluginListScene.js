@@ -1,6 +1,7 @@
 // @flow
 
 import AsyncStorage from '@react-native-community/async-storage'
+import { asObject, asString } from 'cleaners'
 import { createInputModal } from 'edge-components'
 import { type EdgeAccount } from 'edge-core-js/types'
 import React, { Component } from 'react'
@@ -70,27 +71,30 @@ type DispatchProps = {
 
 type Props = OwnProps & StateProps & DispatchProps
 type State = {
-  developerPlugin: BuySellPlugin & PluginUrlMap
+  developerUri: string
 }
 
 const MODAL_DATA_FILE = 'pluginModalTracker.json'
 const DEVELOPER_PLUGIN_KEY = 'developerPlugin'
+const asDeveloperUri = asObject({ uri: asString })
 
 class GuiPluginList extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {
-      developerPlugin: devPlugin
+      developerUri: ''
     }
   }
+
   async componentDidMount () {
     await this.checkDisclaimer()
     this.checkCountry()
 
-    const storedDeveloperPlugin = await AsyncStorage.getItem(DEVELOPER_PLUGIN_KEY)
-    this.setState({
-      developerPlugin: storedDeveloperPlugin ? JSON.parse(storedDeveloperPlugin) : devPlugin
-    })
+    const text = await AsyncStorage.getItem(DEVELOPER_PLUGIN_KEY)
+    if (text != null) {
+      const clean = asDeveloperUri(JSON.parse(text))
+      this.setState({ developerUri: clean.uri })
+    }
   }
 
   /**
@@ -170,6 +174,7 @@ class GuiPluginList extends Component<Props, State> {
   }
 
   openCustomPlugin (plugin: BuySellPlugin & PluginUrlMap) {
+    const { developerUri } = this.state
     const modal = createInputModal({
       icon: <IonIcon name="md-globe" size={42} color={THEME.COLORS.SECONDARY} />,
       title: s.strings.load_plugin,
@@ -177,17 +182,22 @@ class GuiPluginList extends Component<Props, State> {
         label: s.strings.plugin_url,
         autoCorrect: false,
         returnKeyType: 'go',
-        initialValue: plugin.uri,
+        initialValue: developerUri,
         autoFocus: true
       },
       yesButton: { title: s.strings.load_plugin },
       noButton: { title: s.strings.string_cancel_cap }
     })
-    launchModal(modal).then(async response => {
+    launchModal(modal).then(response => {
       if (response) {
+        this.setState({ developerUri: response })
+
+        // Directly hack the global plugin:
         plugin.uri = response
-        await AsyncStorage.setItem(DEVELOPER_PLUGIN_KEY, JSON.stringify(plugin))
         Actions[PLUGIN_VIEW]({ plugin })
+
+        // Write to disk lazily:
+        AsyncStorage.setItem(DEVELOPER_PLUGIN_KEY, JSON.stringify({ uri: response })).catch(showError)
       }
     })
   }
@@ -255,7 +265,7 @@ class GuiPluginList extends Component<Props, State> {
 
     // Add the dev mode plugin if enabled:
     if (developerModeOn) {
-      plugins.push(this.state.developerPlugin)
+      plugins.push(devPlugin)
     }
 
     return (
