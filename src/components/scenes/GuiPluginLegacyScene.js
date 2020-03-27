@@ -56,7 +56,7 @@ const legacyJavascript = `(function() {
   };
 })()`
 
-class PluginView extends React.Component<PluginProps, PluginState> {
+class GuiPluginLegacy extends React.Component<PluginProps, PluginState> {
   bridge: any
   webview: any
   successUrl: ?string
@@ -339,8 +339,7 @@ const mapDispatchToProps = dispatch => ({
   thisDispatch: dispatch
 })
 
-const LegacyPluginViewConnect = connect(
+export const GuiPluginLegacyScene = connect(
   mapStateToProps,
   mapDispatchToProps
-)(PluginView)
-export { LegacyPluginViewConnect }
+)(GuiPluginLegacy)

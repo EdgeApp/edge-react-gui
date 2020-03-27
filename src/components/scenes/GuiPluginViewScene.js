@@ -115,7 +115,7 @@ type PluginWorkerApi = {
   setEdgeProvider(provider: EdgeProvider): Promise<mixed>
 }
 
-class PluginView extends React.Component<Props> {
+class GuiPluginView extends React.Component<Props> {
   _callbacks: WebViewCallbacks
   _canGoBack: boolean
   _edgeProvider: EdgeProvider
@@ -208,10 +208,7 @@ class PluginView extends React.Component<Props> {
 
 // Connector -----------------------------------------------------------
 
-const mapStateToProps = state => ({ state })
-const mapDispatchToProps = dispatch => ({ dispatch })
-
-export const PluginViewConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PluginView)
+export const GuiPluginViewScene = connect(
+  state => ({ state }),
+  dispatch => ({ dispatch })
+)(GuiPluginView)

@@ -76,7 +76,7 @@ type State = {
 const MODAL_DATA_FILE = 'pluginModalTracker.json'
 const DEVELOPER_PLUGIN_KEY = 'developerPlugin'
 
-class PluginList extends Component<Props, State> {
+class GuiPluginList extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {
@@ -298,7 +298,7 @@ class PluginList extends Component<Props, State> {
   }
 }
 
-export const PluginListScene = connect(
+export const GuiPluginListScene = connect(
   (state: ReduxState): StateProps => ({
     developerModeOn: state.ui.settings.developerModeOn,
     countryCode: state.ui.settings.countryCode,
@@ -309,4 +309,4 @@ export const PluginListScene = connect(
       dispatch(updateOneSetting({ countryCode }))
     }
   })
-)(PluginList)
+)(GuiPluginList)
