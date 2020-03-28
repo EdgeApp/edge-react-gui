@@ -131,7 +131,7 @@ Object {
         "exchangeRates": Object {},
       },
       "fioAddress": Object {
-        "expiration": 2019-01-01T08:00:00.000Z,
+        "expiration": 2020-01-01T10:10:10.000Z,
         "feeCollected": 0,
         "fioAddressName": "",
         "fioAddresses": Array [],

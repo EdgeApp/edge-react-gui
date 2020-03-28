@@ -38,7 +38,7 @@ test('initialState', () => {
       exchangeRates: {}
     },
     fioAddress: {
-      expiration: new Date('1/1/2019'),
+      expiration: new Date('2020-01-01T10:10:10Z'),
       feeCollected: 0,
       fioAddressName: '',
       fioAddresses: [],
