@@ -34,7 +34,7 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
   },
   'safello-sell': {
     pluginId: 'safello-sell',
-    storeId: 'com.safello.sell',
+    storeId: 'com.safello',
     baseUri: 'https://app.safello.com/',
     displayName: 'Safello',
     originWhitelist: ['https://safello.com', 'https://app.safello.com', 'http://safello.com']
