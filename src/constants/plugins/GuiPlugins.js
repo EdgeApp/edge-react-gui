@@ -138,10 +138,14 @@ export const collapsePlugins = function (pluginsRaw: Array<string | BuySellPlugi
   })
 
   // Delete countryCodes
-  return pluginsFilteredByCountryCode.map(pluginObj => {
+  pluginsFilteredByCountryCode.forEach(pluginObj => {
     delete pluginObj.countryCodes
-    return pluginObj
   })
+
+  // Sort:
+  pluginsFilteredByCountryCode.sort((a: BuySellPlugin, b: BuySellPlugin) => a.priority - b.priority)
+
+  return pluginsFilteredByCountryCode
 }
 
 export const getBuyPlugins = function (platform: string, countryCode: string): Array<BuySellPlugin> {

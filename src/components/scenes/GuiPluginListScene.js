@@ -234,9 +234,6 @@ class GuiPluginList extends Component<Props, State> {
     // Pick a filter based on our direction:
     const plugins: Array<BuySellPlugin> = direction === 'buy' ? getBuyPlugins(Platform.OS, countryCode) : getSellPlugins(Platform.OS, countryCode)
 
-    // Sort the plugins:
-    plugins.sort((a: BuySellPlugin, b: BuySellPlugin) => a.priority - b.priority)
-
     // Add the dev mode plugin if enabled:
     if (developerModeOn) {
       plugins.push(devPlugin)
