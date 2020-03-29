@@ -137,11 +137,11 @@ class GuiPluginView extends React.Component<Props> {
     setPluginScene(this)
 
     // Set up the plugin:
-    const { dispatch, plugin, state } = this.props
+    const { deepPath, deepQuery, dispatch, plugin, state } = this.props
 
     // Set up the EdgeProvider:
     this.updatePromoCode(plugin, state)
-    this._edgeProvider = new EdgeProvider(plugin, state, dispatch)
+    this._edgeProvider = new EdgeProvider(plugin, state, dispatch, deepPath, deepQuery, this._promoCode)
 
     // Set up the WebView bridge:
     this._canGoBack = false
@@ -165,9 +165,9 @@ class GuiPluginView extends React.Component<Props> {
   }
 
   componentDidUpdate () {
-    const { plugin, state } = this.props
+    const { deepPath, deepQuery, plugin, state } = this.props
     this.updatePromoCode(plugin, state)
-    this._edgeProvider.updateState(state)
+    this._edgeProvider._updateState(state, deepPath, deepQuery, this._promoCode)
   }
 
   updatePromoCode (plugin: GuiPlugin, state: State) {

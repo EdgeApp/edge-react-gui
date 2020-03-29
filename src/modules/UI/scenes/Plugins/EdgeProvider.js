@@ -9,7 +9,7 @@ import Mailer from 'react-native-mail'
 import { Actions } from 'react-native-router-flux'
 import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
-import { Bridgeable } from 'yaob'
+import { Bridgeable, update } from 'yaob'
 
 import { createCurrencyWalletAndSelectForPlugins } from '../../../../actions/CreateWalletActions.js'
 import { trackAccountEvent, trackConversion } from '../../../../actions/TrackingActions.js'
@@ -24,7 +24,7 @@ import s from '../../../../locales/strings'
 import * as SETTINGS_SELECTORS from '../../../../modules/Settings/selectors.js'
 import { Icon } from '../../../../modules/UI/components/Icon/Icon.ui.js'
 import type { GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
-import { type GuiPlugin } from '../../../../types/GuiPluginTypes.js'
+import { type GuiPlugin, type GuiPluginQuery } from '../../../../types/GuiPluginTypes.js'
 import type { Dispatch, State } from '../../../../types/reduxTypes.js'
 import { type GuiWallet } from '../../../../types/types.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
@@ -88,15 +88,28 @@ export class EdgeProvider extends Bridgeable {
   _dispatch: Dispatch
   _state: State
 
-  constructor (plugin: GuiPlugin, state: State, dispatch: Dispatch) {
+  // Properties:
+  deepPath: string | void
+  deepQuery: GuiPluginQuery | void
+  promoCode: string | void
+
+  constructor (plugin: GuiPlugin, state: State, dispatch: Dispatch, deepPath?: string, deepQuery?: GuiPluginQuery, promoCode?: string) {
     super()
     this._plugin = plugin
     this._dispatch = dispatch
     this._state = state
+
+    this.deepPath = deepPath
+    this.deepQuery = deepQuery
+    this.promoCode = promoCode
   }
 
-  updateState = (arg: any) => {
-    this._state = arg
+  _updateState (state: State, deepPath?: string, deepQuery?: GuiPluginQuery, promoCode?: string): void {
+    this._state = state
+    this.deepPath = deepPath
+    this.deepQuery = deepQuery
+    this.promoCode = promoCode
+    update(this)
   }
 
   // Set the currency wallet to interact with. This will show a wallet selector modal
