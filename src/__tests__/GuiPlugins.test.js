@@ -83,7 +83,7 @@ const testJson = asGuiPluginJson([
     pluginId: 'phony',
     title: 'Credit card',
     paymentType: 'credit',
-    countryCodes: { US: true, AU: true }
+    forCountries: ['US', 'AU']
   },
   {
     id: 'phony-apple',
@@ -91,7 +91,7 @@ const testJson = asGuiPluginJson([
     addOnUrl: '/applePay', // Different URL
     title: 'Apple Pay',
     paymentType: 'applepay',
-    countryCodes: { US: true },
+    forCountries: ['US'],
     forPlatform: 'ios'
   },
   {
@@ -102,7 +102,7 @@ const testJson = asGuiPluginJson([
       wire: true,
       hack: true
     },
-    countryCodes: { US: true, JP: true }
+    forCountries: ['US', 'JP']
   },
   '----- Sorting -----',
   {

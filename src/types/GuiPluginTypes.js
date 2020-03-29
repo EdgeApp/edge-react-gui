@@ -77,7 +77,6 @@ const asGuiPluginJsonRow = asObject({
   cryptoCodes: asOptional(asArray(asString)),
 
   // Filtering & sorting:
-  countryCodes: asOptional(asMap(asBoolean)),
   forCountries: asOptional(asArray(asString)),
   forPlatform: asOptional(asString),
   priority: asOptional(asNumber)
@@ -97,8 +96,7 @@ export function filterGuiPluginJson (cleanJson: GuiPluginJson, platform: string,
     if (typeof row === 'string') continue
 
     // Filtering:
-    const { id, countryCodes, forCountries, forPlatform, priority } = row
-    if (countryCodes != null && !countryCodes[countryCode]) continue
+    const { id, forCountries, forPlatform, priority } = row
     if (forCountries != null && forCountries.indexOf(countryCode) < 0) continue
     if (forPlatform != null && forPlatform !== platform) continue
     if (priority != null) priorities[id] = priority
