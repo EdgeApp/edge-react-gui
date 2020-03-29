@@ -2,7 +2,9 @@
   {
     "id": "simplex",
     "pluginId": "simplex",
-    "paymentType": "credit",
+    "paymentTypes": [
+      "credit"
+    ],
     "description": "Fee: ~7% / Settlement: 10-30 minutes\nLimit: $18000/day",
     "title": "Credit and Debit Card",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/03/simplex-logo-sm-square.png",
@@ -254,7 +256,9 @@
   {
     "id": "wyre",
     "pluginId": "wyre",
-    "paymentType": "bank",
+    "paymentTypes": [
+      "bank"
+    ],
     "description": "Fee: 1% / Settlement: 1-5 days\nLimit: $2500/week",
     "title": "ACH Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/01/wyre-logo-square-small.png",
@@ -310,7 +314,9 @@
     "cryptoCodes": [
       "BTC"
     ],
-    "paymentType": "bank",
+    "paymentTypes": [
+      "bank"
+    ],
     "description": "Fee: 1.2% / Settlement: 1-2 days\nLimit: €5000/day with no KYC",
     "title": "SEPA Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/09/logoBity.png",
@@ -319,7 +325,9 @@
   {
     "id": "moonpay",
     "pluginId": "moonpay",
-    "paymentType": "credit",
+    "paymentTypes": [
+      "credit"
+    ],
     "description": "Fee: 6.5% / Settlement: 10 minutes\nLimit: $2000/day",
     "title": "Credit Card",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/05/icon_black_small.png",
@@ -387,7 +395,9 @@
   {
     "id": "safello",
     "pluginId": "safello",
-    "paymentType": "credit",
+    "paymentTypes": [
+      "credit"
+    ],
     "description": "Fee: 5.75% / Settlement: Instant\nLimit: €2500/day",
     "title": "Credit Card",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/06/Safello-Logo-Green-background.png",
@@ -405,7 +415,9 @@
   {
     "id": "safello.bank",
     "pluginId": "safello",
-    "paymentType": "bank",
+    "paymentTypes": [
+      "bank"
+    ],
     "description": "Fee: 4% / Settlement: 1-2 days\nLimit: €2500/day",
     "title": "Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/06/Safello-Logo-Green-background.png",
@@ -424,10 +436,10 @@
   {
     "id": "libertyx",
     "pluginId": "libertyx",
-    "paymentType": {
-      "cash": true,
-      "credit": true
-    },
+    "paymentTypes": [
+      "cash",
+      "credit"
+    ],
     "description": "Fee: 3-8% / Settlement: Instant\nLimit: $200 - $3000/day",
     "title": "Cash and Debit Card",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/05/libertyXlogo.png",
@@ -442,10 +454,9 @@
   {
     "id": "banxa.bank",
     "pluginId": "banxa",
-    "paymentType": {
-      "bank": true,
-      "cash": false
-    },
+    "paymentTypes": [
+      "bank"
+    ],
     "description": "Fee: 4-6% / Settlement: 5 min-24 hours\nLimit: $50000/day",
     "title": "POLi Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
@@ -464,10 +475,9 @@
   {
     "id": "banxa.cash",
     "pluginId": "banxa",
-    "paymentType": {
-      "bank": false,
-      "cash": true
-    },
+    "paymentTypes": [
+      "cash"
+    ],
     "description": "Fee: 4-6% / Settlement: 5 min-24 hours\nLimit: $9000/day",
     "title": "Cash with Newsagent",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
@@ -484,7 +494,9 @@
   {
     "id": "bits of gold",
     "pluginId": "bitsofgold",
-    "paymentType": "bank",
+    "paymentTypes": [
+      "bank"
+    ],
     "description": "Fee: ~6.5% / Settlement: 1-48 hours\nLimit: €5000/day",
     "title": "Israeli Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/bits-of-gold-logo-sm.png",
@@ -542,10 +554,10 @@
   {
     "id": "moonpay",
     "forPlatform": "ios",
-    "paymentType": {
-      "credit": true,
-      "applepay": true
-    },
+    "paymentTypes": [
+      "credit",
+      "applepay"
+    ],
     "paymentTypeLogoKey": "applepay",
     "title": "Apple Pay and Credit Card"
   },
@@ -555,10 +567,10 @@
     "forCountries": [
       "SE"
     ],
-    "paymentType": {
-      "bank": true,
-      "credit": true
-    },
+    "paymentTypes": [
+      "bank",
+      "credit"
+    ],
     "title": "Swish and Credit Card",
     "sortIndex": 2,
     "paymentTypeLogoKey": "swish"

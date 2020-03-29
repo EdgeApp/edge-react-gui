@@ -102,6 +102,6 @@ export const customPluginRow: GuiPluginRow = {
   description: '',
   partnerIconPath: undefined,
   paymentTypeLogoKey: 'credit',
-  paymentType: '',
+  paymentTypes: [],
   cryptoCodes: []
 }

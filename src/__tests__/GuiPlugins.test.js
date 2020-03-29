@@ -82,7 +82,7 @@ const testJson = asGuiPluginJson([
     id: 'phony-credit',
     pluginId: 'phony',
     title: 'Credit card',
-    paymentType: 'credit',
+    paymentTypes: ['credit'],
     forCountries: ['US', 'AU']
   },
   {
@@ -90,7 +90,7 @@ const testJson = asGuiPluginJson([
     pluginId: 'phony', // Duplicated plugin
     addOnUrl: '/applePay', // Different URL
     title: 'Apple Pay',
-    paymentType: 'applepay',
+    paymentTypes: ['applepay'],
     forCountries: ['US'],
     forPlatform: 'ios'
   },
@@ -98,10 +98,7 @@ const testJson = asGuiPluginJson([
     id: 'gox',
     pluginId: 'gox',
     title: 'Wire transfer',
-    paymentType: {
-      wire: true,
-      hack: true
-    },
+    paymentTypes: ['wire', 'hack'],
     forCountries: ['US', 'JP']
   },
   '----- Sorting -----',

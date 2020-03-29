@@ -1,6 +1,6 @@
 // @flow
 
-import { asArray, asBoolean, asEither, asMap, asNumber, asObject, asOptional, asString } from 'cleaners'
+import { asArray, asEither, asNumber, asObject, asOptional, asString } from 'cleaners'
 
 import { type Permission } from '../reducers/PermissionsReducer.js'
 
@@ -50,7 +50,7 @@ export type GuiPluginRow = {
   description: string,
   partnerIconPath?: string,
   paymentTypeLogoKey?: string,
-  paymentType?: string | { [type: string]: boolean },
+  paymentTypes: string[],
   cryptoCodes: string[]
 }
 
@@ -73,7 +73,7 @@ const asGuiPluginJsonRow = asObject({
   description: asOptional(asString),
   partnerIconPath: asOptional(asString),
   paymentTypeLogoKey: asOptional(asString),
-  paymentType: asOptional(asEither(asString, asMap(asBoolean))),
+  paymentTypes: asOptional(asArray(asString)),
   cryptoCodes: asOptional(asArray(asString)),
 
   // Filtering & sorting:
@@ -109,6 +109,7 @@ export function filterGuiPluginJson (cleanJson: GuiPluginJson, platform: string,
         addOnUrl: '',
         title: '',
         description: '',
+        paymentTypes: [],
         cryptoCodes: []
       }
     }
@@ -121,7 +122,7 @@ export function filterGuiPluginJson (cleanJson: GuiPluginJson, platform: string,
     if (row.description != null) merged.description = row.description
     if (row.partnerIconPath != null) merged.partnerIconPath = row.partnerIconPath
     if (row.paymentTypeLogoKey != null) merged.paymentTypeLogoKey = row.paymentTypeLogoKey
-    if (row.paymentType != null) merged.paymentType = row.paymentType
+    if (row.paymentTypes != null) merged.paymentTypes = row.paymentTypes
     if (row.cryptoCodes != null) merged.cryptoCodes = row.cryptoCodes
   }
 
