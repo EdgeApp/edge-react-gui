@@ -8,7 +8,7 @@ import { Bridge, onMethod } from 'yaob'
 
 import { setPluginScene } from '../../modules/UI/scenes/Plugins/BackButton.js'
 import { EdgeProvider } from '../../modules/UI/scenes/Plugins/EdgeProvider.js'
-import { type GuiPlugin } from '../../types/GuiPluginTypes.js'
+import { type GuiPlugin, type GuiPluginQuery, makePluginUri } from '../../types/GuiPluginTypes.js'
 import type { Dispatch, State } from '../../types/reduxTypes.js'
 import { javascript } from '../../util/bridge/injectThisInWebView.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -111,8 +111,9 @@ type OwnProps = {
   // The GUI plugin we are showing the user:
   plugin: GuiPlugin,
 
-  // Set this to add stuff to the plugin URI:
-  deepPath?: string
+  // Set these to add stuff to the plugin URI:
+  deepPath?: string,
+  deepQuery?: GuiPluginQuery
 }
 
 type DispatchProps = { dispatch: Dispatch }
@@ -194,9 +195,9 @@ class GuiPluginView extends React.Component<Props> {
   }
 
   render () {
-    const { plugin, deepPath = '' } = this.props
-    const { baseUri, originWhitelist = ['file://*', 'https://*', 'http://*', 'edge://*'] } = plugin
-    const uri = `${baseUri}${deepPath}`
+    const { plugin, deepPath, deepQuery } = this.props
+    const { originWhitelist = ['file://*', 'https://*', 'http://*', 'edge://*'] } = plugin
+    const uri = makePluginUri(plugin, { deepPath, deepQuery })
 
     const userAgent =
       Platform.OS === 'android'

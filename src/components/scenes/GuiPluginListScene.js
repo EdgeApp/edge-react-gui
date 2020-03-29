@@ -142,11 +142,11 @@ class GuiPluginList extends Component<Props, State> {
    * Launch the provided plugin, including pre-flight checks.
    */
   async openPlugin (listRow: GuiPluginRow) {
-    const { pluginId } = listRow
+    const { pluginId, deepQuery } = listRow
     const plugin = guiPlugins[pluginId]
 
     // Grab a custom URI if necessary:
-    let deepPath: string | void = listRow.addOnUrl
+    let { deepPath } = listRow
     if (pluginId === 'custom') {
       const { developerUri } = this.state
       const modal = createInputModal({
@@ -177,7 +177,7 @@ class GuiPluginList extends Component<Props, State> {
     if (plugin.isLegacy) {
       return Actions[PLUGIN_VIEW_LEGACY]({ plugin })
     }
-    return Actions[PLUGIN_VIEW]({ plugin, deepPath })
+    return Actions[PLUGIN_VIEW]({ plugin, deepPath, deepQuery })
   }
 
   async showCountrySelectionModal () {

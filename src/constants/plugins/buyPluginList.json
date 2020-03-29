@@ -431,7 +431,7 @@
       "XRP"
     ],
     "paymentTypeLogoKey": "bank",
-    "addOnUrl": "buy/bank"
+    "deepPath": "/buy/bank"
   },
   {
     "id": "libertyx",
@@ -449,7 +449,8 @@
     "cryptoCodes": [
       "BTC"
     ],
-    "paymentTypeLogoKey": "cash"
+    "paymentTypeLogoKey": "cash",
+    "deepPath": "/"
   },
   {
     "id": "banxa.bank",
@@ -470,7 +471,10 @@
       "ETH"
     ],
     "paymentTypeLogoKey": "poli",
-    "addOnUrl": "/?country=AU&payment=POLI"
+    "deepQuery": {
+      "country": "AU",
+      "payment": "POLI"
+    }
   },
   {
     "id": "banxa.cash",
@@ -489,7 +493,10 @@
       "ETH"
     ],
     "paymentTypeLogoKey": "newsagent",
-    "addOnUrl": "?country=AU&payment=BLUEONLINE"
+    "deepQuery": {
+      "country": "AU",
+      "payment": "BLUEONLINE"
+    }
   },
   {
     "id": "bits of gold",
@@ -507,7 +514,11 @@
       "BTC"
     ],
     "paymentTypeLogoKey": "bank",
-    "addOnUrl": "buy?order_id=null&page=0"
+    "deepPath": "/buy",
+    "deepQuery": {
+      "order_id": "null",
+      "page": "0"
+    }
   },
   "----- Sorting -----",
   {
@@ -595,7 +606,10 @@
     "forCountries": [
       "GB"
     ],
-    "addOnUrl": "/?country=GB&payment_id=6018",
+    "deepQuery": {
+      "country": "GB",
+      "payment_id": "6018"
+    },
     "title": "Faster Payments",
     "paymentTypeLogoKey": "fasterPayments",
     "description": "Fee: ~2.5% / Settlement: Instant-1 hour\nLimit: £5000",
@@ -613,7 +627,10 @@
     "forCountries": [
       "NL"
     ],
-    "addOnUrl": "/?payment=IDEAL&country=nl",
+    "deepQuery": {
+      "country": "nl",
+      "payment": "IDEAL"
+    },
     "title": "iDEAL",
     "paymentTypeLogoKey": "ideal",
     "description": "Fee: ~2.9% / Settlement: Instant\nLimit: €10000",

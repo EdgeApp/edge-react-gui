@@ -146,7 +146,15 @@
       "BTC"
     ],
     "paymentTypeLogoKey": "bank",
-    "addOnUrl": "sell?order_id=null&page=0&utm_source=Edge&utm_medium=mobile_app&utm_campaign=co&etag=true"
+    "deepPath": "/sell",
+    "deepQuery": {
+      "order_id": "null",
+      "page": "0",
+      "utm_source": "Edge",
+      "utm_medium": "mobile_app",
+      "utm_campaign": "co",
+      "etag": "true"
+    }
   },
   {
     "id": "bitrefill",
@@ -482,7 +490,13 @@
       "BTC"
     ],
     "paymentTypeLogoKey": "bank",
-    "addOnUrl": "sdk/quickbuy.html?appId=e12e499b-4b81-465a-a7ad-d0ed12843887&tab=sell&utm_source=Edge&utm_medium=Wallet"
+    "deepPath": "/sdk/quickbuy.html",
+    "deepQuery": {
+      "appId": "e12e499b-4b81-465a-a7ad-d0ed12843887",
+      "tab": "sell",
+      "utm_source": "Edge",
+      "utm_medium": "Wallet"
+    }
   },
   "----- Sorting -----",
   {

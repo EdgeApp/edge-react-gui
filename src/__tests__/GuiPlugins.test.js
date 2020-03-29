@@ -2,7 +2,7 @@
 /* globals describe it expect */
 
 import { guiPlugins } from '../constants/plugins/GuiPlugins.js'
-import { type GuiPluginRow, asGuiPluginJson, filterGuiPluginJson } from '../types/GuiPluginTypes.js'
+import { type GuiPlugin, type GuiPluginRow, asGuiPluginJson, filterGuiPluginJson, makePluginUri } from '../types/GuiPluginTypes.js'
 
 const buyPluginJson = asGuiPluginJson(require('../constants/plugins/buyPluginList.json'))
 const sellPluginJson = asGuiPluginJson(require('../constants/plugins/sellPluginList.json'))
@@ -66,6 +66,23 @@ describe('GuiPlugins tools', () => {
 
     expect(titles(list)).toEqual([])
   })
+
+  it("produce correct URI's", () => {
+    const testPlugin: GuiPlugin = {
+      pluginId: 'local',
+      storeId: 'custom',
+      baseUri: 'file://test/',
+      baseQuery: { api_key: 'edge' },
+      displayName: 'Test Plugin'
+    }
+    const opts = {
+      deepPath: 'sell',
+      deepQuery: { kickback: null }
+    }
+
+    expect(makePluginUri(testPlugin, opts)).toEqual('file://test/sell?api_key=edge&kickback')
+    expect(makePluginUri({ ...testPlugin, lockUriPath: true }, opts)).toEqual('file://test/?api_key=edge&kickback')
+  })
 })
 
 function pluginIds (plugins: GuiPluginRow[]): string[] {
@@ -88,7 +105,7 @@ const testJson = asGuiPluginJson([
   {
     id: 'phony-apple',
     pluginId: 'phony', // Duplicated plugin
-    addOnUrl: '/applePay', // Different URL
+    deepPath: '/applePay', // Different URL
     title: 'Apple Pay',
     paymentTypes: ['applepay'],
     forCountries: ['US'],

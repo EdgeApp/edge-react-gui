@@ -1,8 +1,17 @@
 // @flow
 
-import { asArray, asEither, asNumber, asObject, asOptional, asString } from 'cleaners'
+import { asArray, asEither, asMap, asNull, asNumber, asObject, asOptional, asString } from 'cleaners'
 
 import { type Permission } from '../reducers/PermissionsReducer.js'
+
+/**
+ * A set of query parameters to pass to a plugin.
+ */
+export type GuiPluginQuery = {
+  // Use a string for key/value queries, like `?foo=bar`
+  // Use null for key-only queries, like `?baz`
+  [key: string]: string | null
+}
 
 /**
  * A unique WebView-based plugin.
@@ -25,6 +34,10 @@ export type GuiPlugin = {
   // The URI to show in the WebView.
   // Both the plugin list & deep links can add stuff to the end of this:
   baseUri: string,
+  baseQuery?: GuiPluginQuery,
+
+  // Don't append the deep path to the URI when set:
+  lockUriPath?: true,
 
   // Scene title to display when inside the plugin:
   displayName: string,
@@ -44,7 +57,8 @@ export type GuiPlugin = {
  */
 export type GuiPluginRow = {
   pluginId: string,
-  addOnUrl: string,
+  deepPath: string,
+  deepQuery: GuiPluginQuery,
 
   title: string,
   description: string,
@@ -65,8 +79,9 @@ const asGuiPluginJsonRow = asObject({
   // The plugin to display if we select this item:
   pluginId: asOptional(asString),
 
-  // Optional suffix to add to plugin URI:
-  addOnUrl: asOptional(asString),
+  // Optional stuff to add to the plugin URI:
+  deepPath: asOptional(asString),
+  deepQuery: asOptional(asMap(asEither(asString, asNull))),
 
   // List display options:
   title: asOptional(asString),
@@ -106,7 +121,8 @@ export function filterGuiPluginJson (cleanJson: GuiPluginJson, platform: string,
     if (mergedRows[id] == null) {
       mergedRows[id] = {
         pluginId: '',
-        addOnUrl: '',
+        deepPath: '',
+        deepQuery: {},
         title: '',
         description: '',
         paymentTypes: [],
@@ -117,7 +133,8 @@ export function filterGuiPluginJson (cleanJson: GuiPluginJson, platform: string,
     // Merging:
     const merged = mergedRows[id]
     if (row.pluginId != null) merged.pluginId = row.pluginId
-    if (row.addOnUrl != null) merged.addOnUrl = row.addOnUrl
+    if (row.deepPath != null) merged.deepPath = row.deepPath
+    if (row.deepQuery != null) merged.deepQuery = { ...merged.deepQuery, ...row.deepQuery }
     if (row.title != null) merged.title = row.title
     if (row.description != null) merged.description = row.description
     if (row.partnerIconPath != null) merged.partnerIconPath = row.partnerIconPath
@@ -131,4 +148,34 @@ export function filterGuiPluginJson (cleanJson: GuiPluginJson, platform: string,
     .filter(id => mergedRows[id].pluginId !== '')
     .sort((a, b) => sortIndexes[a] - sortIndexes[b])
     .map(id => mergedRows[id])
+}
+
+/**
+ * Prepares a plugin's URI.
+ */
+export function makePluginUri (
+  plugin: GuiPlugin,
+  opts: {
+    deepPath?: string,
+    deepQuery?: GuiPluginQuery
+  }
+): string {
+  const { baseUri, baseQuery = {}, lockUriPath = false } = plugin
+  const { deepPath = '', deepQuery = {} } = opts
+  const query = { ...baseQuery, ...deepQuery }
+
+  // Assemble the query part:
+  const queryString = Object.keys(query)
+    .map(key => {
+      let out = encodeURIComponent(key)
+      if (query[key] != null) out += `=${encodeURIComponent(query[key])}`
+      return out
+    })
+    .join('&')
+
+  // Assemble the URI:
+  let uri = baseUri
+  if (!lockUriPath) uri += deepPath
+  if (queryString.length > 0) uri += `?${queryString}`
+  return uri
 }

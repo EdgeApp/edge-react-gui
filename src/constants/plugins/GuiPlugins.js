@@ -11,7 +11,7 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
   libertyx: {
     pluginId: 'libertyx',
     storeId: 'com.libertyx',
-    baseUri: 'https://libertyx.com/a/',
+    baseUri: 'https://libertyx.com/a',
     displayName: 'LibertyX',
     originWhitelist: ['https://libertyx.com'],
     permissions: ['location']
@@ -19,27 +19,28 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
   moonpay: {
     pluginId: 'moonpay',
     storeId: 'io.moonpay.buy',
-    baseUri: 'https://buy.moonpay.io?apiKey=pk_live_Y1vQHUgfppB4oMEZksB8DYNQAdA4sauy',
+    baseUri: 'https://buy.moonpay.io',
+    baseQuery: { apiKey: 'pk_live_Y1vQHUgfppB4oMEZksB8DYNQAdA4sauy' },
     displayName: 'MoonPay'
   },
   safello: {
     pluginId: 'safello',
     storeId: 'com.safello',
-    baseUri: 'https://safello.com/edge/',
+    baseUri: 'https://safello.com/edge',
     displayName: 'Safello',
     originWhitelist: ['https://safello.com', 'https://app.safello.com', 'http://safello.com']
   },
   'safello-sell': {
     pluginId: 'safello-sell',
     storeId: 'com.safello',
-    baseUri: 'https://app.safello.com/',
+    baseUri: 'https://app.safello.com',
     displayName: 'Safello',
     originWhitelist: ['https://safello.com', 'https://app.safello.com', 'http://safello.com']
   },
   bitsofgold: {
     pluginId: 'bitsofgold',
     storeId: 'bitsofgold',
-    baseUri: 'https://www.bitsofgold.co.il/order/',
+    baseUri: 'https://www.bitsofgold.co.il/order',
     displayName: 'Bits of Gold',
     permissions: ['camera']
   },
@@ -54,12 +55,14 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     pluginId: 'simplex',
     storeId: 'co.edgesecure.simplex',
     baseUri: hostedUri + 'co.edgesecure.simplex/index.html',
+    lockUriPath: true,
     displayName: 'Simplex'
   },
   wyre: {
     pluginId: 'wyre',
     storeId: 'co.edgesecure.wyre',
     baseUri: hostedUri + 'co.edgesecure.wyre/index.html',
+    lockUriPath: true,
     displayName: 'Wyre',
     permissions: ['camera']
     // supportEmail: 'support@sendwyre.com'
@@ -68,6 +71,7 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     pluginId: 'bity',
     storeId: 'com.bity',
     baseUri: hostedUri + 'com.bity/index.html',
+    lockUriPath: true,
     displayName: 'Bity'
     // supportßEmail: 'support@bity.com'
   },
@@ -75,6 +79,7 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     pluginId: 'bitrefill',
     storeId: 'co.edgesecure.bitrefill',
     baseUri: hostedUri + 'co.edgesecure.bitrefill/index.html',
+    lockUriPath: true,
     displayName: 'Bitrefill',
     isLegacy: true
   },
@@ -96,7 +101,8 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
 
 export const customPluginRow: GuiPluginRow = {
   pluginId: 'custom',
-  addOnUrl: '',
+  deepPath: '',
+  deepQuery: {},
 
   title: 'Custom Dev',
   description: '',
