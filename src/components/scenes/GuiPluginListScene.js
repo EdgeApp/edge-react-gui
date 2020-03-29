@@ -23,14 +23,14 @@ import paymentTypeLogoNewsagent from '../../assets/images/paymentTypes/paymentTy
 import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLogoPoli.png'
 import paymentTypeLogoSwish from '../../assets/images/paymentTypes/paymentTypeLogoSwish.png'
 import { ARROW_RIGHT, COUNTRY_CODES, FLAG_LOGO_URL, PLUGIN_VIEW, PLUGIN_VIEW_LEGACY, SIMPLE_ICONS } from '../../constants/indexConstants.js'
-import { devPlugin, getBuyPlugins, getSellPlugins, guiPlugins } from '../../constants/plugins/GuiPlugins.js'
+import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins.js'
 import s from '../../locales/strings.js'
 import { getSyncedSettingsAsync, setSyncedSettingsAsync } from '../../modules/Core/Account/settings.js'
 import Text from '../../modules/UI/components/FormattedText'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import styles from '../../styles/scenes/PluginsStyle.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { type BuySellPlugin } from '../../types/GuiPluginTypes.js'
+import { type GuiPluginRow, asGuiPluginJson, filterGuiPluginJson } from '../../types/GuiPluginTypes.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { type CountryData } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
@@ -39,6 +39,9 @@ import { SceneWrapper } from '../common/SceneWrapper.js'
 import { CountrySelectionModal } from '../modals/CountrySelectionModal.js'
 import { SimpleConfirmationModal } from '../modals/SimpleConfirmationModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
+
+const buyPluginJson = asGuiPluginJson(require('../../constants/plugins/buyPluginList.json'))
+const sellPluginJson = asGuiPluginJson(require('../../constants/plugins/sellPluginList.json'))
 
 const paymentTypeLogosById = {
   credit: paymentTypeLogoCreditCard,
@@ -138,7 +141,7 @@ class GuiPluginList extends Component<Props, State> {
   /**
    * Launch the provided plugin, including pre-flight checks.
    */
-  async openPlugin (listRow: BuySellPlugin) {
+  async openPlugin (listRow: GuiPluginRow) {
     const { pluginId } = listRow
     const plugin = guiPlugins[pluginId]
 
@@ -232,11 +235,11 @@ class GuiPluginList extends Component<Props, State> {
     const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)
 
     // Pick a filter based on our direction:
-    const plugins: Array<BuySellPlugin> = direction === 'buy' ? getBuyPlugins(Platform.OS, countryCode) : getSellPlugins(Platform.OS, countryCode)
+    const plugins = filterGuiPluginJson(direction === 'buy' ? buyPluginJson : sellPluginJson, Platform.OS, countryCode)
 
     // Add the dev mode plugin if enabled:
     if (developerModeOn) {
-      plugins.push(devPlugin)
+      plugins.push(customPluginRow)
     }
 
     return (

@@ -1,5 +1,7 @@
 // @flow
 
+import { asArray, asBoolean, asEither, asMap, asNumber, asObject, asOptional, asString } from 'cleaners'
+
 import { type Permission } from '../reducers/PermissionsReducer.js'
 
 /**
@@ -37,18 +39,97 @@ export type GuiPlugin = {
   permissions?: Permission[]
 }
 
-export type BuySellPlugin = {
-  id: string,
+/**
+ * A row in the plugin list scene, after being distilled down from JSON.
+ */
+export type GuiPluginRow = {
   pluginId: string,
-  priority: number,
-  paymentType: string | { [string]: boolean },
-  description: string,
+  addOnUrl: string,
+
   title: string,
-  paymentTypeLogoKey: string,
-  partnerIconPath: string,
-  cryptoCodes?: Array<string>,
-  countryCodes?: { [string]: boolean },
-  forPlatform?: string,
-  forCountries?: Array<string>,
-  addOnUrl?: string // Optional suffix to add to plugin URI
+  description: string,
+  partnerIconPath?: string,
+  paymentTypeLogoKey?: string,
+  paymentType?: string | { [type: string]: boolean },
+  cryptoCodes: string[]
+}
+
+/**
+ * The plugin list scene stores its data in JSON files,
+ * which have an array of these rows mixed with strings for comments.
+ */
+const asGuiPluginJsonRow = asObject({
+  // A unique string to identify this particular row:
+  id: asString,
+
+  // The plugin to display if we select this item:
+  pluginId: asOptional(asString),
+
+  // Optional suffix to add to plugin URI:
+  addOnUrl: asOptional(asString),
+
+  // List display options:
+  title: asOptional(asString),
+  description: asOptional(asString),
+  partnerIconPath: asOptional(asString),
+  paymentTypeLogoKey: asOptional(asString),
+  paymentType: asOptional(asEither(asString, asMap(asBoolean))),
+  cryptoCodes: asOptional(asArray(asString)),
+
+  // Filtering & sorting:
+  countryCodes: asOptional(asMap(asBoolean)),
+  forCountries: asOptional(asArray(asString)),
+  forPlatform: asOptional(asString),
+  priority: asOptional(asNumber)
+})
+export const asGuiPluginJson = asArray(asEither(asString, asGuiPluginJsonRow))
+export type GuiPluginJson = $Call<typeof asGuiPluginJson, any>
+
+/**
+ * Helper function to turn a GuiPluginJson into a cooked list.
+ * Call `asGuiPluginJson` to clean & validate the input file first.
+ */
+export function filterGuiPluginJson (cleanJson: GuiPluginJson, platform: string, countryCode: string): GuiPluginRow[] {
+  // Filter and merge related rows:
+  const mergedRows: { [id: string]: GuiPluginRow } = {}
+  const priorities: { [id: string]: number } = {}
+  for (const row of cleanJson) {
+    if (typeof row === 'string') continue
+
+    // Filtering:
+    const { id, countryCodes, forCountries, forPlatform, priority } = row
+    if (countryCodes != null && !countryCodes[countryCode]) continue
+    if (forCountries != null && forCountries.indexOf(countryCode) < 0) continue
+    if (forPlatform != null && forPlatform !== platform) continue
+    if (priority != null) priorities[id] = priority
+
+    // Defaults:
+    if (priorities[id] == null) priorities[id] = 0
+    if (mergedRows[id] == null) {
+      mergedRows[id] = {
+        pluginId: '',
+        addOnUrl: '',
+        title: '',
+        description: '',
+        cryptoCodes: []
+      }
+    }
+
+    // Merging:
+    const merged = mergedRows[id]
+    if (row.pluginId != null) merged.pluginId = row.pluginId
+    if (row.addOnUrl != null) merged.addOnUrl = row.addOnUrl
+    if (row.title != null) merged.title = row.title
+    if (row.description != null) merged.description = row.description
+    if (row.partnerIconPath != null) merged.partnerIconPath = row.partnerIconPath
+    if (row.paymentTypeLogoKey != null) merged.paymentTypeLogoKey = row.paymentTypeLogoKey
+    if (row.paymentType != null) merged.paymentType = row.paymentType
+    if (row.cryptoCodes != null) merged.cryptoCodes = row.cryptoCodes
+  }
+
+  // Build the sorted output list, removing rows without pluginIds:
+  return Object.keys(mergedRows)
+    .filter(id => mergedRows[id].pluginId !== '')
+    .sort((a, b) => priorities[a] - priorities[b])
+    .map(id => mergedRows[id])
 }

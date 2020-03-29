@@ -3,20 +3,22 @@
 exports[`GuiPlugins tools filter android + US as expected 1`] = `
 Array [
   Object {
-    "id": "phony-credit",
+    "addOnUrl": "",
+    "cryptoCodes": Array [],
+    "description": "",
     "paymentType": "credit",
     "pluginId": "phony",
-    "priority": 3,
     "title": "Credit card",
   },
   Object {
-    "id": "gox",
+    "addOnUrl": "",
+    "cryptoCodes": Array [],
+    "description": "",
     "paymentType": Object {
       "hack": true,
       "wire": true,
     },
     "pluginId": "gox",
-    "priority": 4,
     "title": "Wire transfer",
   },
 ]
@@ -25,17 +27,14 @@ Array [
 exports[`GuiPlugins tools filter ios + JP as expected 1`] = `
 Array [
   Object {
-    "forCountries": Array [
-      "JP",
-      "GB",
-    ],
-    "id": "gox",
+    "addOnUrl": "",
+    "cryptoCodes": Array [],
+    "description": "",
     "paymentType": Object {
       "hack": true,
       "wire": true,
     },
     "pluginId": "gox",
-    "priority": 1,
     "title": "Nice lawsuit",
   },
 ]
@@ -45,29 +44,29 @@ exports[`GuiPlugins tools filter ios + US as expected 1`] = `
 Array [
   Object {
     "addOnUrl": "/applePay",
-    "forPlatform": "ios",
-    "id": "phony-apple",
+    "cryptoCodes": Array [],
+    "description": "",
     "paymentType": "applepay",
     "pluginId": "phony",
-    "priority": 2,
     "title": "Apple Pay",
   },
   Object {
-    "id": "gox",
+    "addOnUrl": "",
+    "cryptoCodes": Array [],
+    "description": "",
     "paymentType": Object {
       "hack": true,
       "wire": true,
     },
     "pluginId": "gox",
-    "priority": 4,
     "title": "Wire transfer",
   },
   Object {
-    "forPlatform": "ios",
-    "id": "phony-credit",
+    "addOnUrl": "",
+    "cryptoCodes": Array [],
+    "description": "",
     "paymentType": "credit",
     "pluginId": "phony",
-    "priority": 5,
     "title": "Credit card",
   },
 ]
@@ -82,15 +81,14 @@ Array [
     ],
     "description": "Fee: ~6.5% / Settlement: 1-48 hours
 Limit: €5000/day",
-    "id": "bits of gold",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/bits-of-gold-logo-sm.png",
     "paymentType": "bank",
     "paymentTypeLogoKey": "bank",
     "pluginId": "bitsofgold",
-    "priority": 2,
     "title": "Israeli Bank Transfer",
   },
   Object {
+    "addOnUrl": "",
     "cryptoCodes": Array [
       "BTC",
       "BCH",
@@ -100,12 +98,10 @@ Limit: €5000/day",
     ],
     "description": "Fee: ~7% / Settlement: 10-30 minutes
 Limit: $18000/day",
-    "id": "simplex",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/03/simplex-logo-sm-square.png",
     "paymentType": "credit",
     "paymentTypeLogoKey": "credit",
     "pluginId": "simplex",
-    "priority": 4,
     "title": "Credit and Debit Card",
   },
 ]
@@ -114,6 +110,7 @@ Limit: $18000/day",
 exports[`Production plugin data Buy plugins match snapshot on iOS + US 1`] = `
 Array [
   Object {
+    "addOnUrl": "",
     "cryptoCodes": Array [
       "BTC",
       "ETH",
@@ -121,15 +118,14 @@ Array [
     ],
     "description": "Fee: 1% / Settlement: 1-5 days
 Limit: $2500/week",
-    "id": "wyre",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/01/wyre-logo-square-small.png",
     "paymentType": "bank",
     "paymentTypeLogoKey": "bank",
     "pluginId": "wyre",
-    "priority": 1,
     "title": "ACH Bank Transfer",
   },
   Object {
+    "addOnUrl": "",
     "cryptoCodes": Array [
       "BTC",
       "BCH",
@@ -139,15 +135,14 @@ Limit: $2500/week",
     ],
     "description": "Fee: ~7% / Settlement: 10-30 minutes
 Limit: $18000/day",
-    "id": "simplex",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/03/simplex-logo-sm-square.png",
     "paymentType": "credit",
     "paymentTypeLogoKey": "credit",
     "pluginId": "simplex",
-    "priority": 4,
     "title": "Credit and Debit Card",
   },
   Object {
+    "addOnUrl": "",
     "cryptoCodes": Array [
       "BTC",
       "BCH",
@@ -166,8 +161,6 @@ Limit: $18000/day",
     ],
     "description": "Fee: 6.5% / Settlement: 10 minutes
 Limit: $2000/day",
-    "forPlatform": "ios",
-    "id": "moonpay",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/05/icon_black_small.png",
     "paymentType": Object {
       "applepay": true,
@@ -175,16 +168,15 @@ Limit: $2000/day",
     },
     "paymentTypeLogoKey": "applepay",
     "pluginId": "moonpay",
-    "priority": 5,
     "title": "Apple Pay and Credit Card",
   },
   Object {
+    "addOnUrl": "",
     "cryptoCodes": Array [
       "BTC",
     ],
     "description": "Fee: 3-8% / Settlement: Instant
 Limit: $200 - $3000/day",
-    "id": "libertyx",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/05/libertyXlogo.png",
     "paymentType": Object {
       "cash": true,
@@ -192,7 +184,6 @@ Limit: $200 - $3000/day",
     },
     "paymentTypeLogoKey": "cash",
     "pluginId": "libertyx",
-    "priority": 7,
     "title": "Cash and Debit Card",
   },
 ]
@@ -201,6 +192,7 @@ Limit: $200 - $3000/day",
 exports[`Production plugin data Sell plugins match snapshot on iOS + US 1`] = `
 Array [
   Object {
+    "addOnUrl": "",
     "cryptoCodes": Array [
       "BTC",
       "ETH",
@@ -208,15 +200,14 @@ Array [
     ],
     "description": "Fee: 1% / Settlement: 1-5 days
 Limit: Unlimited",
-    "id": "wyre",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/01/wyre-logo-square-small.png",
     "paymentType": "bank",
     "paymentTypeLogoKey": "bank",
     "pluginId": "wyre",
-    "priority": 1,
     "title": "ACH Bank Transfer",
   },
   Object {
+    "addOnUrl": "",
     "cryptoCodes": Array [
       "BTC",
       "DASH",
@@ -225,12 +216,10 @@ Limit: Unlimited",
       "LTC",
     ],
     "description": "Buy gift cards and reload phones with crypto",
-    "id": "bitrefill",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/01/bitrefill-2.png",
     "paymentType": "giftcard",
     "paymentTypeLogoKey": "giftcard",
     "pluginId": "bitrefill",
-    "priority": 5,
     "title": "Gift Cards",
   },
 ]

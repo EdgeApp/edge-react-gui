@@ -1,11 +1,11 @@
 // @flow
 /* globals describe it expect */
 
-import { collapsePlugins, guiPlugins } from '../constants/plugins/GuiPlugins.js'
-import { type BuySellPlugin } from '../types/GuiPluginTypes.js'
+import { guiPlugins } from '../constants/plugins/GuiPlugins.js'
+import { type GuiPluginRow, asGuiPluginJson, filterGuiPluginJson } from '../types/GuiPluginTypes.js'
 
-const buyPluginJson = require('../constants/plugins/buyPluginList.json')
-const sellPluginJson = require('../constants/plugins/sellPluginList.json')
+const buyPluginJson = asGuiPluginJson(require('../constants/plugins/buyPluginList.json'))
+const sellPluginJson = asGuiPluginJson(require('../constants/plugins/sellPluginList.json'))
 
 describe('Production plugin data', () => {
   it('Has accurate pluginId fields', () => {
@@ -24,21 +24,21 @@ describe('Production plugin data', () => {
   })
 
   it('Buy plugins match snapshot on iOS + US', () => {
-    expect(collapsePlugins(buyPluginJson, 'ios', 'US')).toMatchSnapshot()
+    expect(filterGuiPluginJson(buyPluginJson, 'ios', 'US')).toMatchSnapshot()
   })
 
   it('Sell plugins match snapshot on iOS + US', () => {
-    expect(collapsePlugins(sellPluginJson, 'ios', 'US')).toMatchSnapshot()
+    expect(filterGuiPluginJson(sellPluginJson, 'ios', 'US')).toMatchSnapshot()
   })
 
   it('Buy plugins match snapshot on android + IL', () => {
-    expect(collapsePlugins(buyPluginJson, 'android', 'IL')).toMatchSnapshot()
+    expect(filterGuiPluginJson(buyPluginJson, 'android', 'IL')).toMatchSnapshot()
   })
 })
 
 describe('GuiPlugins tools', () => {
   it('filter android + US as expected', () => {
-    const list = collapsePlugins(testJson, 'android', 'US')
+    const list = filterGuiPluginJson(testJson, 'android', 'US')
 
     expect(titles(list)).toEqual(['Credit card', 'Wire transfer'])
     expect(pluginIds(list)).toEqual(['phony', 'gox'])
@@ -46,7 +46,7 @@ describe('GuiPlugins tools', () => {
   })
 
   it('filter ios + US as expected', () => {
-    const list = collapsePlugins(testJson, 'ios', 'US')
+    const list = filterGuiPluginJson(testJson, 'ios', 'US')
 
     expect(titles(list)).toEqual(['Apple Pay', 'Wire transfer', 'Credit card'])
     expect(pluginIds(list)).toEqual(['phony', 'gox', 'phony'])
@@ -54,7 +54,7 @@ describe('GuiPlugins tools', () => {
   })
 
   it('filter ios + JP as expected', () => {
-    const list = collapsePlugins(testJson, 'ios', 'JP')
+    const list = filterGuiPluginJson(testJson, 'ios', 'JP')
 
     expect(titles(list)).toEqual(['Nice lawsuit'])
     expect(pluginIds(list)).toEqual(['gox'])
@@ -62,22 +62,22 @@ describe('GuiPlugins tools', () => {
   })
 
   it('filter everything for GB', () => {
-    const list = collapsePlugins(testJson, 'ios', 'GB')
+    const list = filterGuiPluginJson(testJson, 'ios', 'GB')
 
     expect(titles(list)).toEqual([])
   })
 })
 
-function pluginIds (plugins: BuySellPlugin[]): string[] {
+function pluginIds (plugins: GuiPluginRow[]): string[] {
   return plugins.map(plugin => plugin.pluginId)
 }
 
-function titles (plugins: BuySellPlugin[]): string[] {
+function titles (plugins: GuiPluginRow[]): string[] {
   return plugins.map(plugin => plugin.title)
 }
 
 // This test data is designed to exercise specific problem areas:
-const testJson: any = [
+const testJson = asGuiPluginJson([
   {
     id: 'phony-credit',
     pluginId: 'phony',
@@ -131,4 +131,4 @@ const testJson: any = [
     forCountries: ['JP', 'GB'], // Note that GB isn't supported above
     priority: 1
   }
-]
+])

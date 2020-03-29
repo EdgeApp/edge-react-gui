@@ -3,10 +3,7 @@
 import { Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 
-import { type BuySellPlugin, type GuiPlugin } from '../../types/GuiPluginTypes.js'
-
-const buyPlugins = require('./buyPluginList.json')
-const sellPlugins = require('./sellPluginList.json')
+import { type GuiPlugin, type GuiPluginRow } from '../../types/GuiPluginTypes.js'
 
 const hostedUri = Platform.OS === 'android' ? 'file:///android_asset/plugins/' : `file:///${RNFS.MainBundlePath}/plugins/`
 
@@ -97,61 +94,14 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
   }
 }
 
-export const devPlugin: BuySellPlugin = {
+export const customPluginRow: GuiPluginRow = {
   pluginId: 'custom',
-  id: '',
-  priority: 99,
-  paymentType: '',
-  description: '',
+  addOnUrl: '',
+
   title: 'Custom Dev',
+  description: '',
+  partnerIconPath: undefined,
   paymentTypeLogoKey: 'credit',
-  partnerIconPath: '',
+  paymentType: '',
   cryptoCodes: []
-}
-
-export const collapsePlugins = function (pluginsRaw: Array<string | BuySellPlugin>, platform: string, countryCode: string): Array<BuySellPlugin> {
-  const collapsedById: { [id: string]: BuySellPlugin } = {}
-
-  // Collapse all
-  pluginsRaw.forEach(pluginObjOrString => {
-    if (typeof pluginObjOrString !== 'string') {
-      let objToMerge
-      if (pluginObjOrString.forPlatform && pluginObjOrString.forPlatform === platform) {
-        objToMerge = pluginObjOrString
-      } else if (pluginObjOrString.forCountries && pluginObjOrString.forCountries.includes(countryCode)) {
-        objToMerge = pluginObjOrString
-      } else if (!pluginObjOrString.forPlatform && !pluginObjOrString.forCountries) {
-        objToMerge = pluginObjOrString
-      }
-      const id = pluginObjOrString.id
-      collapsedById[id] = { ...collapsedById[id], ...objToMerge }
-    }
-  })
-  const pluginsAll: Array<BuySellPlugin> = Object.keys(collapsedById).map((id: string) => collapsedById[id])
-
-  // Filter by countryCode
-  const pluginsFilteredByCountryCode: Array<BuySellPlugin> = pluginsAll.filter((pluginObj: BuySellPlugin) => {
-    if (pluginObj.countryCodes) {
-      return pluginObj.countryCodes[countryCode]
-    }
-    return false
-  })
-
-  // Delete countryCodes
-  pluginsFilteredByCountryCode.forEach(pluginObj => {
-    delete pluginObj.countryCodes
-  })
-
-  // Sort:
-  pluginsFilteredByCountryCode.sort((a: BuySellPlugin, b: BuySellPlugin) => a.priority - b.priority)
-
-  return pluginsFilteredByCountryCode
-}
-
-export const getBuyPlugins = function (platform: string, countryCode: string): Array<BuySellPlugin> {
-  return collapsePlugins(buyPlugins, platform, countryCode)
-}
-
-export const getSellPlugins = function (platform: string, countryCode: string): Array<BuySellPlugin> {
-  return collapsePlugins(sellPlugins, platform, countryCode)
 }
