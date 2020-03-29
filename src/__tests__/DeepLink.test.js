@@ -73,7 +73,7 @@ describe('parseDeepLink', function () {
     })
 
     it('edge: with path', function () {
-      const result = parseDeepLink('edge://plugins/simplex/rabbit/hole?param=alice')
+      const result = parseDeepLink('edge://plugin/simplex/rabbit/hole?param=alice')
       expect(result.type).toBe('plugin')
 
       if (result.type !== 'plugin') return
@@ -83,7 +83,7 @@ describe('parseDeepLink', function () {
     })
 
     it('edge: with no path', function () {
-      const result = parseDeepLink('edge://plugins/simplex?param=alice')
+      const result = parseDeepLink('edge://plugin/simplex?param=alice')
       expect(result.type).toBe('plugin')
 
       if (result.type !== 'plugin') return
@@ -93,7 +93,7 @@ describe('parseDeepLink', function () {
     })
 
     it('https:', function () {
-      const result = parseDeepLink('https://deep.edge.app/plugins/simplex/rabbit/hole?param=alice')
+      const result = parseDeepLink('https://deep.edge.app/plugin/simplex/rabbit/hole?param=alice')
       expect(result.type).toBe('plugin')
 
       if (result.type !== 'plugin') return

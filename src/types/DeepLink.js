@@ -72,7 +72,7 @@ export function parseDeepLink (uri: string): DeepLink {
   if (url.protocol === 'https:' && url.host === 'deep.edge.app') {
     const pathParts = url.pathname.split('/')
     const [resourceName = ''] = pathParts.splice(1, 1)
-    if (resourceName === 'plugins') {
+    if (resourceName === 'plugin') {
       // https://deep.edge.app/plugins/[plugin id][/...][?...]
       return parseDeepLinkPlugins(pathParts, url.query)
     }
@@ -86,7 +86,7 @@ export function parseDeepLink (uri: string): DeepLink {
   if (url.protocol === 'edge:') {
     const pathParts = url.pathname.split('/')
     switch (url.host) {
-      case 'plugins':
+      case 'plugin':
         // edge://plugins/[plugin id][/...][?...]
         return parseDeepLinkPlugins(pathParts, url.query)
       case 'pay':
