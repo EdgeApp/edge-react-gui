@@ -32,7 +32,10 @@ import styles from '../../styles/scenes/PluginsStyle.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { type GuiPluginRow, asGuiPluginJson, filterGuiPluginJson } from '../../types/GuiPluginTypes.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
+import { type AccountReferral } from '../../types/ReferralTypes.js'
+import { type PluginTweak } from '../../types/TweakTypes.js'
 import { type CountryData } from '../../types/types.js'
+import { bestOfPlugins } from '../../util/ReferralHelpers.js'
 import { scale } from '../../util/scaling.js'
 import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -63,6 +66,8 @@ type OwnProps = {
 
 type StateProps = {
   account: EdgeAccount,
+  accountPlugins: PluginTweak[],
+  accountReferral: AccountReferral,
   countryCode: string,
   developerModeOn: boolean
 }
@@ -231,11 +236,15 @@ class GuiPluginList extends Component<Props, State> {
   }
 
   render () {
-    const { countryCode, developerModeOn, direction } = this.props
+    const { accountPlugins, accountReferral, countryCode, developerModeOn, direction } = this.props
     const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)
 
     // Pick a filter based on our direction:
-    const plugins = filterGuiPluginJson(direction === 'buy' ? buyPluginJson : sellPluginJson, Platform.OS, countryCode)
+    let plugins = filterGuiPluginJson(direction === 'buy' ? buyPluginJson : sellPluginJson, Platform.OS, countryCode)
+
+    // Filter disabled plugins:
+    const activePlugins = bestOfPlugins(accountPlugins, accountReferral, undefined)
+    plugins = plugins.filter(plugin => !activePlugins.disabled[plugin.pluginId])
 
     // Add the dev mode plugin if enabled:
     if (developerModeOn) {
@@ -284,9 +293,11 @@ class GuiPluginList extends Component<Props, State> {
 
 export const GuiPluginListScene = connect(
   (state: ReduxState): StateProps => ({
-    developerModeOn: state.ui.settings.developerModeOn,
+    account: state.core.account,
+    accountPlugins: state.account.referralCache.accountPlugins,
+    accountReferral: state.account.accountReferral,
     countryCode: state.ui.settings.countryCode,
-    account: state.core.account
+    developerModeOn: state.ui.settings.developerModeOn
   }),
   (dispatch: Dispatch): DispatchProps => ({
     updateCountryCode (countryCode: string) {
