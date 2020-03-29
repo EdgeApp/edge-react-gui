@@ -107,28 +107,28 @@ const testJson = asGuiPluginJson([
   '----- Sorting -----',
   {
     id: 'phony-credit',
-    priority: 3
+    sortIndex: 3
   },
   {
     id: 'gox',
-    priority: 4
+    sortIndex: 4
   },
   '----- Platform Specifics -----',
   {
     id: 'phony-apple',
     forPlatform: 'ios',
-    priority: 2 // Apple Pay to top on iOS
+    sortIndex: 2 // Apple Pay to top on iOS
   },
   {
     id: 'phony-credit',
     forPlatform: 'ios',
-    priority: 5 // Credit to bottom on iOS
+    sortIndex: 5 // Credit to bottom on iOS
   },
   '----- Country Specifics -----',
   {
     id: 'gox',
     title: 'Nice lawsuit', // Special title in Japan
     forCountries: ['JP', 'GB'], // Note that GB isn't supported above
-    priority: 1
+    sortIndex: 1
   }
 ])

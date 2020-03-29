@@ -475,27 +475,27 @@
   "----- Sorting -----",
   {
     "id": "simplex",
-    "priority": 4
+    "sortIndex": 4
   },
   {
     "id": "wyre",
-    "priority": 1
+    "sortIndex": 1
   },
   {
     "id": "bity",
-    "priority": 1
+    "sortIndex": 1
   },
   {
     "id": "bits of gold",
-    "priority": 3
+    "sortIndex": 3
   },
   {
     "id": "bitrefill",
-    "priority": 5
+    "sortIndex": 5
   },
   {
     "id": "safello.bank",
-    "priority": 2
+    "sortIndex": 2
   },
   "----- iOS specifics -----",
   "----- Country Specifics -----",
@@ -504,7 +504,7 @@
     "forCountries": [
       "IL"
     ],
-    "priority": 2,
+    "sortIndex": 2,
     "title": "Israeli Bank Transfer"
   },
   {

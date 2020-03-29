@@ -79,7 +79,7 @@ const asGuiPluginJsonRow = asObject({
   // Filtering & sorting:
   forCountries: asOptional(asArray(asString)),
   forPlatform: asOptional(asString),
-  priority: asOptional(asNumber)
+  sortIndex: asOptional(asNumber)
 })
 export const asGuiPluginJson = asArray(asEither(asString, asGuiPluginJsonRow))
 export type GuiPluginJson = $Call<typeof asGuiPluginJson, any>
@@ -91,18 +91,18 @@ export type GuiPluginJson = $Call<typeof asGuiPluginJson, any>
 export function filterGuiPluginJson (cleanJson: GuiPluginJson, platform: string, countryCode: string): GuiPluginRow[] {
   // Filter and merge related rows:
   const mergedRows: { [id: string]: GuiPluginRow } = {}
-  const priorities: { [id: string]: number } = {}
+  const sortIndexes: { [id: string]: number } = {}
   for (const row of cleanJson) {
     if (typeof row === 'string') continue
 
     // Filtering:
-    const { id, forCountries, forPlatform, priority } = row
+    const { id, forCountries, forPlatform, sortIndex } = row
     if (forCountries != null && forCountries.indexOf(countryCode) < 0) continue
     if (forPlatform != null && forPlatform !== platform) continue
-    if (priority != null) priorities[id] = priority
+    if (sortIndex != null) sortIndexes[id] = sortIndex
 
     // Defaults:
-    if (priorities[id] == null) priorities[id] = 0
+    if (sortIndexes[id] == null) sortIndexes[id] = 0
     if (mergedRows[id] == null) {
       mergedRows[id] = {
         pluginId: '',
@@ -128,6 +128,6 @@ export function filterGuiPluginJson (cleanJson: GuiPluginJson, platform: string,
   // Build the sorted output list, removing rows without pluginIds:
   return Object.keys(mergedRows)
     .filter(id => mergedRows[id].pluginId !== '')
-    .sort((a, b) => priorities[a] - priorities[b])
+    .sort((a, b) => sortIndexes[a] - sortIndexes[b])
     .map(id => mergedRows[id])
 }
