@@ -77,11 +77,13 @@ describe('GuiPlugins tools', () => {
     }
     const opts = {
       deepPath: 'sell',
-      deepQuery: { kickback: null }
+      deepQuery: { kickback: null },
+      promoCode: 'deals'
     }
 
     expect(makePluginUri(testPlugin, opts)).toEqual('file://test/sell?api_key=edge&kickback')
     expect(makePluginUri({ ...testPlugin, lockUriPath: true }, opts)).toEqual('file://test/?api_key=edge&kickback')
+    expect(makePluginUri({ ...testPlugin, queryPromoCode: 'cheat' }, opts)).toEqual('file://test/sell?api_key=edge&kickback&cheat=deals')
   })
 })
 

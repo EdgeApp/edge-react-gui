@@ -11,6 +11,7 @@ import { EdgeProvider } from '../../modules/UI/scenes/Plugins/EdgeProvider.js'
 import { type GuiPlugin, type GuiPluginQuery, makePluginUri } from '../../types/GuiPluginTypes.js'
 import type { Dispatch, State } from '../../types/reduxTypes.js'
 import { javascript } from '../../util/bridge/injectThisInWebView.js'
+import { bestOfPlugins } from '../../util/ReferralHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance.js'
 import { requestPermission } from '../services/PermissionsManager.js'
@@ -128,6 +129,7 @@ class GuiPluginView extends React.Component<Props> {
   _callbacks: WebViewCallbacks
   _canGoBack: boolean
   _edgeProvider: EdgeProvider
+  _promoCode: string | void
   _webview: WebView | void
 
   constructor (props) {
@@ -138,6 +140,7 @@ class GuiPluginView extends React.Component<Props> {
     const { dispatch, plugin, state } = this.props
 
     // Set up the EdgeProvider:
+    this.updatePromoCode(plugin, state)
     this._edgeProvider = new EdgeProvider(plugin, state, dispatch)
 
     // Set up the WebView bridge:
@@ -162,7 +165,16 @@ class GuiPluginView extends React.Component<Props> {
   }
 
   componentDidUpdate () {
-    this._edgeProvider.updateState(this.props.state)
+    const { plugin, state } = this.props
+    this.updatePromoCode(plugin, state)
+    this._edgeProvider.updateState(state)
+  }
+
+  updatePromoCode (plugin: GuiPlugin, state: State) {
+    const accountPlugins = state.account.referralCache.accountPlugins
+    const accountReferral = state.account.accountReferral
+    const activePlugins = bestOfPlugins(accountPlugins, accountReferral, undefined)
+    this._promoCode = activePlugins.promoCodes[plugin.pluginId]
   }
 
   async checkPermissions () {
@@ -197,7 +209,11 @@ class GuiPluginView extends React.Component<Props> {
   render () {
     const { plugin, deepPath, deepQuery } = this.props
     const { originWhitelist = ['file://*', 'https://*', 'http://*', 'edge://*'] } = plugin
-    const uri = makePluginUri(plugin, { deepPath, deepQuery })
+    const uri = makePluginUri(plugin, {
+      deepPath,
+      deepQuery,
+      promoCode: this._promoCode
+    })
 
     const userAgent =
       Platform.OS === 'android'

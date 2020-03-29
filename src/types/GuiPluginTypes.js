@@ -39,6 +39,9 @@ export type GuiPlugin = {
   // Don't append the deep path to the URI when set:
   lockUriPath?: true,
 
+  // Pass any promo codes using this query parameter:
+  queryPromoCode?: string,
+
   // Scene title to display when inside the plugin:
   displayName: string,
 
@@ -157,12 +160,18 @@ export function makePluginUri (
   plugin: GuiPlugin,
   opts: {
     deepPath?: string,
-    deepQuery?: GuiPluginQuery
+    deepQuery?: GuiPluginQuery,
+    promoCode?: string
   }
 ): string {
-  const { baseUri, baseQuery = {}, lockUriPath = false } = plugin
-  const { deepPath = '', deepQuery = {} } = opts
+  const { baseUri, baseQuery = {}, lockUriPath = false, queryPromoCode } = plugin
+  const { deepPath = '', deepQuery = {}, promoCode } = opts
   const query = { ...baseQuery, ...deepQuery }
+
+  // Grab any extra query parameters:
+  if (queryPromoCode != null && promoCode != null) {
+    query[queryPromoCode] = promoCode
+  }
 
   // Assemble the query part:
   const queryString = Object.keys(query)

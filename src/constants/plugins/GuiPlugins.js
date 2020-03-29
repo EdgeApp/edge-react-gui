@@ -21,6 +21,7 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     storeId: 'io.moonpay.buy',
     baseUri: 'https://buy.moonpay.io',
     baseQuery: { apiKey: 'pk_live_Y1vQHUgfppB4oMEZksB8DYNQAdA4sauy' },
+    queryPromoCode: 'apiKey',
     displayName: 'MoonPay'
   },
   safello: {
@@ -41,6 +42,7 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     pluginId: 'bitsofgold',
     storeId: 'bitsofgold',
     baseUri: 'https://www.bitsofgold.co.il/order',
+    queryPromoCode: 'utm_term',
     displayName: 'Bits of Gold',
     permissions: ['camera']
   },
@@ -72,6 +74,7 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     storeId: 'com.bity',
     baseUri: hostedUri + 'com.bity/index.html',
     lockUriPath: true,
+    queryPromoCode: 'client_value',
     displayName: 'Bity'
     // supportßEmail: 'support@bity.com'
   },
