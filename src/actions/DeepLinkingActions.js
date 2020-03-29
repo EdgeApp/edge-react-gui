@@ -68,12 +68,16 @@ function handleLink (dispatch: Dispatch, state: ReduxState, link: DeepLink): boo
     case 'passwordRecovery':
       return false
 
-    case 'plugin':
-      if (link.pluginId === 'simplex') {
-        const plugin = guiPlugins.simplex
-        Actions.push(PLUGIN_VIEW_DEEP, { plugin })
+    case 'plugin': {
+      const { pluginId, path, query } = link
+      const plugin = guiPlugins[pluginId]
+      if (pluginId === 'custom' || plugin == null || plugin.pluginId == null) {
+        showError(new Error(`No plugin named ${pluginId} exists`))
+        return true
       }
+      Actions.push(PLUGIN_VIEW_DEEP, { plugin, deepPath: path, deepQuery: query })
       return true
+    }
 
     case 'promotion': {
       if (!state.account.accountReferralLoaded) return false

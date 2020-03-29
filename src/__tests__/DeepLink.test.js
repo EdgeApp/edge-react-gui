@@ -72,13 +72,23 @@ describe('parseDeepLink', function () {
       expect(result.query).toEqual({ param: 'alice' })
     })
 
-    it('edge:', function () {
+    it('edge: with path', function () {
       const result = parseDeepLink('edge://plugins/simplex/rabbit/hole?param=alice')
       expect(result.type).toBe('plugin')
 
       if (result.type !== 'plugin') return
       expect(result.pluginId).toBe('simplex')
       expect(result.path).toBe('/rabbit/hole')
+      expect(result.query).toEqual({ param: 'alice' })
+    })
+
+    it('edge: with no path', function () {
+      const result = parseDeepLink('edge://plugins/simplex?param=alice')
+      expect(result.type).toBe('plugin')
+
+      if (result.type !== 'plugin') return
+      expect(result.pluginId).toBe('simplex')
+      expect(result.path).toBe('')
       expect(result.query).toEqual({ param: 'alice' })
     })
 
