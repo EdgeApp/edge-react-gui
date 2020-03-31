@@ -197,13 +197,13 @@ export class FioAddressRegisterScene extends Component<Props, State> {
           style={[styles.feedbackIcon, fioAddressStyles.statusIconError]}
           type={Constants.MATERIAL_COMMUNITY}
           name={Constants.CLOSE_CIRCLE_ICON}
-          size={30}
+          size={25}
         />
       )
     }
     if (isValid && isAvailable && touched) {
       icon = (
-        <Icon style={[styles.feedbackIcon, fioAddressStyles.statusIconOk]} type={Constants.MATERIAL_COMMUNITY} name={Constants.CHECK_CIRCLE_ICON} size={30} />
+        <Icon style={[styles.feedbackIcon, fioAddressStyles.statusIconOk]} type={Constants.MATERIAL_COMMUNITY} name={Constants.CHECK_CIRCLE_ICON} size={25} />
       )
     }
 

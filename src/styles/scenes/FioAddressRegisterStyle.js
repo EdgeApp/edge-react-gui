@@ -22,8 +22,8 @@ export const styles = StyleSheet.create({
     paddingVertical: scale(8)
   },
   inputContainer: {
-    width: deviceWidth - scale(25) - scale(40),
-    marginTop: scale(16),
+    width: deviceWidth - scale(30) - scale(40),
+    marginTop: scale(14),
     marginBottom: scale(8)
   },
   statusIconError: {
