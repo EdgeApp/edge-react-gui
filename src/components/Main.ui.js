@@ -382,7 +382,7 @@ export class MainComponent extends Component<Props> {
                       key={Constants.PLUGIN_VIEW}
                       navTransparent={true}
                       component={ifLoggedIn(GuiPluginViewScene, LoadingScene)}
-                      renderTitle={props => this.renderTitle(props.plugin.name)}
+                      renderTitle={props => this.renderTitle(props.plugin.displayName)}
                       renderLeftButton={renderPluginBackButton(BACK)}
                       renderRightButton={this.renderExitButton()}
                       hideTabBar
@@ -391,7 +391,7 @@ export class MainComponent extends Component<Props> {
                       key={Constants.PLUGIN_VIEW_LEGACY}
                       navTransparent={true}
                       component={ifLoggedIn(GuiPluginLegacyScene, LoadingScene)}
-                      renderTitle={props => this.renderTitle(props.plugin.name)}
+                      renderTitle={props => this.renderTitle(props.plugin.displayName)}
                       renderLeftButton={renderLegacyPluginBackButton(BACK)}
                       renderRightButton={this.renderExitButton()}
                       hideTabBar
@@ -413,7 +413,7 @@ export class MainComponent extends Component<Props> {
                       key={Constants.PLUGIN_VIEW}
                       navTransparent={true}
                       component={ifLoggedIn(GuiPluginViewScene, LoadingScene)}
-                      renderTitle={props => this.renderTitle(props.plugin.name)}
+                      renderTitle={props => this.renderTitle(props.plugin.displayName)}
                       renderLeftButton={renderPluginBackButton(BACK)}
                       renderRightButton={this.renderExitButton()}
                       hideTabBar
@@ -422,7 +422,7 @@ export class MainComponent extends Component<Props> {
                       key={Constants.PLUGIN_VIEW_LEGACY}
                       navTransparent={true}
                       component={ifLoggedIn(GuiPluginLegacyScene, LoadingScene)}
-                      renderTitle={props => this.renderTitle(props.plugin.name)}
+                      renderTitle={props => this.renderTitle(props.plugin.displayName)}
                       renderLeftButton={renderLegacyPluginBackButton(BACK)}
                       renderRightButton={this.renderExitButton()}
                       hideTabBar
@@ -514,7 +514,7 @@ export class MainComponent extends Component<Props> {
                     key={Constants.PLUGIN_EARN_INTEREST}
                     navTransparent={true}
                     component={ifLoggedIn(GuiPluginViewScene, LoadingScene)}
-                    renderTitle={props => this.renderTitle(props.plugin.name)}
+                    renderTitle={props => this.renderTitle(props.plugin.displayName)}
                     renderLeftButton={renderPluginBackButton(BACK)}
                     renderRightButton={this.renderExitButton()}
                     hideTabBar
@@ -604,7 +604,7 @@ export class MainComponent extends Component<Props> {
                     key={Constants.PLUGIN_VIEW}
                     navTransparent={true}
                     component={ifLoggedIn(GuiPluginViewScene, LoadingScene)}
-                    renderTitle={props => this.renderTitle(props.plugin.name)}
+                    renderTitle={props => this.renderTitle(props.plugin.displayName)}
                     renderLeftButton={renderPluginBackButton(BACK)}
                     renderRightButton={this.renderExitButton()}
                   />

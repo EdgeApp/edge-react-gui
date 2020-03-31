@@ -37,8 +37,8 @@ type DispatchProps = {
 
 type StateProps = {
   accountPlugins: PluginTweak[],
-  exchanges: EdgePluginMap<EdgeSwapConfig>,
   accountReferral: AccountReferral,
+  exchanges: EdgePluginMap<EdgeSwapConfig>,
   settingsPreferredSwap: string | void
 }
 
@@ -224,8 +224,8 @@ const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 export const SwapSettingsScene = connect(
   (state: ReduxState): StateProps => ({
     accountPlugins: state.account.referralCache.accountPlugins,
-    exchanges: state.core.account.swapConfig,
     accountReferral: state.account.accountReferral,
+    exchanges: state.core.account.swapConfig,
     settingsPreferredSwap: state.ui.settings.preferredSwapPluginId
   }),
   (dispatch: Dispatch): DispatchProps => ({

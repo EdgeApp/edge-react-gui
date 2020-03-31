@@ -13,7 +13,7 @@ import requestImage from '../../assets/images/transactions/transactions-request.
 import sendImage from '../../assets/images/transactions/transactions-send.png'
 import TransactionRow from '../../connectors/TransactionRowConnector.js'
 import * as Constants from '../../constants/indexConstants.js'
-import { pluginUrlMap } from '../../constants/plugins/GuiPlugins.js'
+import { guiPlugins } from '../../constants/plugins/GuiPlugins.js'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/index'
@@ -271,7 +271,7 @@ export class TransactionList extends Component<Props, State> {
           <WiredProgressBar progress={getSelectedWalletLoadingPercent} />
         </TouchableOpacity>
         {transactions.length !== 0 && Constants.getSpecialCurrencyInfo(currencyCode).showEarnInterestCard && (
-          <TouchableOpacity onPress={() => Actions[Constants.PLUGIN_EARN_INTEREST]({ plugin: pluginUrlMap.cred })} style={styles.earnInterestContainer}>
+          <TouchableOpacity onPress={() => Actions[Constants.PLUGIN_EARN_INTEREST]({ plugin: guiPlugins.cred })} style={styles.earnInterestContainer}>
             <View style={styles.earnInterestBox}>
               <Image style={styles.earnInterestImage} source={credLogo} resizeMode={'contain'} />
               <T style={styles.earnInterestText}>{sprintf(s.strings.earn_interest_on, currencyName)}</T>

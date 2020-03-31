@@ -23,22 +23,28 @@ import paymentTypeLogoNewsagent from '../../assets/images/paymentTypes/paymentTy
 import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLogoPoli.png'
 import paymentTypeLogoSwish from '../../assets/images/paymentTypes/paymentTypeLogoSwish.png'
 import { ARROW_RIGHT, COUNTRY_CODES, FLAG_LOGO_URL, PLUGIN_VIEW, PLUGIN_VIEW_LEGACY, SIMPLE_ICONS } from '../../constants/indexConstants.js'
-import { devPlugin, getBuyPlugins, getSellPlugins, pluginUrlMap } from '../../constants/plugins/GuiPlugins.js'
+import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins.js'
 import s from '../../locales/strings.js'
 import { getSyncedSettingsAsync, setSyncedSettingsAsync } from '../../modules/Core/Account/settings.js'
 import Text from '../../modules/UI/components/FormattedText'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import styles from '../../styles/scenes/PluginsStyle.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { type BuySellPlugin, type PluginUrlMap } from '../../types/GuiPluginTypes.js'
+import { type GuiPluginRow, asGuiPluginJson, filterGuiPluginJson } from '../../types/GuiPluginTypes.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
+import { type AccountReferral } from '../../types/ReferralTypes.js'
+import { type PluginTweak } from '../../types/TweakTypes.js'
 import { type CountryData } from '../../types/types.js'
+import { bestOfPlugins } from '../../util/ReferralHelpers.js'
 import { scale } from '../../util/scaling.js'
 import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { CountrySelectionModal } from '../modals/CountrySelectionModal.js'
 import { SimpleConfirmationModal } from '../modals/SimpleConfirmationModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
+
+const buyPluginJson = asGuiPluginJson(require('../../constants/plugins/buyPluginList.json'))
+const sellPluginJson = asGuiPluginJson(require('../../constants/plugins/sellPluginList.json'))
 
 const paymentTypeLogosById = {
   credit: paymentTypeLogoCreditCard,
@@ -60,6 +66,8 @@ type OwnProps = {
 
 type StateProps = {
   account: EdgeAccount,
+  accountPlugins: PluginTweak[],
+  accountReferral: AccountReferral,
   countryCode: string,
   developerModeOn: boolean
 }
@@ -138,10 +146,12 @@ class GuiPluginList extends Component<Props, State> {
   /**
    * Launch the provided plugin, including pre-flight checks.
    */
-  async openPlugin (plugin: BuySellPlugin & PluginUrlMap) {
-    const { pluginId } = plugin
+  async openPlugin (listRow: GuiPluginRow) {
+    const { pluginId, deepQuery } = listRow
+    const plugin = guiPlugins[pluginId]
 
     // Grab a custom URI if necessary:
+    let { deepPath } = listRow
     if (pluginId === 'custom') {
       const { developerUri } = this.state
       const modal = createInputModal({
@@ -157,23 +167,22 @@ class GuiPluginList extends Component<Props, State> {
         yesButton: { title: s.strings.load_plugin },
         noButton: { title: s.strings.string_cancel_cap }
       })
-      const response: string | void = await launchModal(modal)
-      if (response == null) return
+      deepPath = await launchModal(modal)
+      if (deepPath == null) return
 
-      this.setState({ developerUri: response })
+      if (deepPath !== developerUri) {
+        this.setState({ developerUri: deepPath })
 
-      // Directly hack the global plugin:
-      plugin.uri = response
-
-      // Write to disk lazily:
-      AsyncStorage.setItem(DEVELOPER_PLUGIN_KEY, JSON.stringify({ uri: response })).catch(showError)
+        // Write to disk lazily:
+        AsyncStorage.setItem(DEVELOPER_PLUGIN_KEY, JSON.stringify({ uri: deepPath })).catch(showError)
+      }
     }
 
     // Launch!
     if (plugin.isLegacy) {
       return Actions[PLUGIN_VIEW_LEGACY]({ plugin })
     }
-    return Actions[PLUGIN_VIEW]({ plugin })
+    return Actions[PLUGIN_VIEW]({ plugin, deepPath, deepQuery })
   }
 
   async showCountrySelectionModal () {
@@ -199,46 +208,47 @@ class GuiPluginList extends Component<Props, State> {
     this.showCountrySelectionModal().catch(showError)
   }
 
-  _renderPlugin = ({ item }) => (
-    <TouchableWithoutFeedback onPress={() => this.openPlugin(item).catch(showError)}>
-      <View style={styles.pluginRow}>
-        <View style={styles.pluginRowLogoAndInfo}>
-          <View style={styles.logo}>
-            <Image style={styles.logoImage} source={paymentTypeLogosById[item.paymentTypeLogoKey]} />
+  _renderPlugin = ({ item }) => {
+    const { pluginId } = item
+    const plugin = guiPlugins[pluginId]
+
+    return (
+      <TouchableWithoutFeedback onPress={() => this.openPlugin(item).catch(showError)}>
+        <View style={styles.pluginRow}>
+          <View style={styles.pluginRowLogoAndInfo}>
+            <View style={styles.logo}>
+              <Image style={styles.logoImage} source={paymentTypeLogosById[item.paymentTypeLogoKey]} />
+            </View>
+            <View style={styles.textBoxWrap}>
+              <Text style={styles.titleText}>{item.title}</Text>
+              <Text style={styles.subtitleText}>{item.cryptoCodes.length > 0 && `Currencies: ${item.cryptoCodes.join(', ')}`}</Text>
+              <Text style={styles.subtitleText}>{item.description}</Text>
+            </View>
           </View>
-          <View style={styles.textBoxWrap}>
-            <Text style={styles.titleText}>{item.title}</Text>
-            <Text style={styles.subtitleText}>{item.cryptoCodes.length > 0 && `Currencies: ${item.cryptoCodes.join(', ')}`}</Text>
-            <Text style={styles.subtitleText}>{item.description}</Text>
+          <View style={styles.pluginRowPoweredByRow}>
+            <Text style={styles.footerText}>Powered by </Text>
+            <Image style={styles.partnerIconImage} source={{ uri: item.partnerIconPath }} />
+            <Text style={styles.footerText}> {plugin.displayName}</Text>
           </View>
         </View>
-        <View style={styles.pluginRowPoweredByRow}>
-          <Text style={styles.footerText}>Powered by </Text>
-          <Image style={styles.partnerIconImage} source={{ uri: item.partnerIconPath }} />
-          <Text style={styles.footerText}> {item.name}</Text>
-        </View>
-      </View>
-    </TouchableWithoutFeedback>
-  )
+      </TouchableWithoutFeedback>
+    )
+  }
 
   render () {
-    const { countryCode, developerModeOn, direction } = this.props
+    const { accountPlugins, accountReferral, countryCode, developerModeOn, direction } = this.props
     const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)
 
     // Pick a filter based on our direction:
-    const pluginsBuySellPlugins: Array<BuySellPlugin> = direction === 'buy' ? getBuyPlugins(Platform.OS, countryCode) : getSellPlugins(Platform.OS, countryCode)
+    let plugins = filterGuiPluginJson(direction === 'buy' ? buyPluginJson : sellPluginJson, Platform.OS, countryCode)
 
-    // Sort the plugins:
-    pluginsBuySellPlugins.sort((a: BuySellPlugin, b: BuySellPlugin) => a.priority - b.priority)
-
-    const plugins: Array<BuySellPlugin & PluginUrlMap> = pluginsBuySellPlugins.map((_buySellPlugin: BuySellPlugin) => {
-      const _pluginUrlMap = pluginUrlMap[_buySellPlugin.pluginId]
-      return { ..._pluginUrlMap, ..._buySellPlugin }
-    })
+    // Filter disabled plugins:
+    const activePlugins = bestOfPlugins(accountPlugins, accountReferral, undefined)
+    plugins = plugins.filter(plugin => !activePlugins.disabled[plugin.pluginId])
 
     // Add the dev mode plugin if enabled:
     if (developerModeOn) {
-      plugins.push(devPlugin)
+      plugins.push(customPluginRow)
     }
 
     return (
@@ -283,9 +293,11 @@ class GuiPluginList extends Component<Props, State> {
 
 export const GuiPluginListScene = connect(
   (state: ReduxState): StateProps => ({
-    developerModeOn: state.ui.settings.developerModeOn,
+    account: state.core.account,
+    accountPlugins: state.account.referralCache.accountPlugins,
+    accountReferral: state.account.accountReferral,
     countryCode: state.ui.settings.countryCode,
-    account: state.core.account
+    developerModeOn: state.ui.settings.developerModeOn
   }),
   (dispatch: Dispatch): DispatchProps => ({
     updateCountryCode (countryCode: string) {

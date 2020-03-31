@@ -14,7 +14,7 @@ import iconImage from '../../assets/images/otp/OTP-badge_sm.png'
 import WalletIcon from '../../assets/images/walletlist/my-wallets.png'
 import XPubModal from '../../connectors/XPubModalConnector.js'
 import * as Constants from '../../constants/indexConstants.js'
-import { pluginUrlMap } from '../../constants/plugins/GuiPlugins.js'
+import { guiPlugins } from '../../constants/plugins/GuiPlugins.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getDefaultIsoFiat, getIsAccountBalanceVisible } from '../../modules/Settings/selectors.js'
@@ -513,7 +513,7 @@ export default class WalletList extends Component<Props, State> {
           </View>
         </TouchableWithoutFeedback>
         <TouchableWithoutFeedback
-          onPress={() => Actions[Constants.PLUGIN_EARN_INTEREST]({ plugin: pluginUrlMap.cred })}
+          onPress={() => Actions[Constants.PLUGIN_EARN_INTEREST]({ plugin: guiPlugins.cred })}
           style={buyMultipleCryptoStyle.buyMultipleCryptoContainer}
         >
           <View style={buyMultipleCryptoStyle.buyMultipleCryptoBox}>

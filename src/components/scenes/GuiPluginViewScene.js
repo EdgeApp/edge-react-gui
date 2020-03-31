@@ -8,9 +8,10 @@ import { Bridge, onMethod } from 'yaob'
 
 import { setPluginScene } from '../../modules/UI/scenes/Plugins/BackButton.js'
 import { EdgeProvider } from '../../modules/UI/scenes/Plugins/EdgeProvider.js'
-import { type BuySellPlugin, type PluginUrlMap } from '../../types/GuiPluginTypes.js'
+import { type GuiPlugin, type GuiPluginQuery, makePluginUri } from '../../types/GuiPluginTypes.js'
 import type { Dispatch, State } from '../../types/reduxTypes.js'
 import { javascript } from '../../util/bridge/injectThisInWebView.js'
+import { bestOfPlugins } from '../../util/ReferralHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance.js'
 import { requestPermission } from '../services/PermissionsManager.js'
@@ -107,11 +108,18 @@ function makeOuterWebViewBridge<Root> (onRoot: (root: Root) => mixed, debug: boo
 
 // Plugin scene --------------------------------------------------------
 
-type Props = {
-  dispatch: Dispatch,
-  plugin: BuySellPlugin & PluginUrlMap,
-  state: State
+type OwnProps = {
+  // The GUI plugin we are showing the user:
+  plugin: GuiPlugin,
+
+  // Set these to add stuff to the plugin URI:
+  deepPath?: string,
+  deepQuery?: GuiPluginQuery
 }
+
+type DispatchProps = { dispatch: Dispatch }
+type StateProps = { state: State }
+type Props = OwnProps & DispatchProps & StateProps
 
 type PluginWorkerApi = {
   setEdgeProvider(provider: EdgeProvider): Promise<mixed>
@@ -121,6 +129,7 @@ class GuiPluginView extends React.Component<Props> {
   _callbacks: WebViewCallbacks
   _canGoBack: boolean
   _edgeProvider: EdgeProvider
+  _promoCode: string | void
   _webview: WebView | void
 
   constructor (props) {
@@ -128,10 +137,11 @@ class GuiPluginView extends React.Component<Props> {
     setPluginScene(this)
 
     // Set up the plugin:
-    const { dispatch, plugin, state } = this.props
+    const { deepPath, deepQuery, dispatch, plugin, state } = this.props
 
     // Set up the EdgeProvider:
-    this._edgeProvider = new EdgeProvider(plugin, state, dispatch)
+    this.updatePromoCode(plugin, state)
+    this._edgeProvider = new EdgeProvider(plugin, state, dispatch, deepPath, deepQuery, this._promoCode)
 
     // Set up the WebView bridge:
     this._canGoBack = false
@@ -155,7 +165,16 @@ class GuiPluginView extends React.Component<Props> {
   }
 
   componentDidUpdate () {
-    this._edgeProvider.updateState(this.props.state)
+    const { deepPath, deepQuery, plugin, state } = this.props
+    this.updatePromoCode(plugin, state)
+    this._edgeProvider._updateState(state, deepPath, deepQuery, this._promoCode)
+  }
+
+  updatePromoCode (plugin: GuiPlugin, state: State) {
+    const accountPlugins = state.account.referralCache.accountPlugins
+    const accountReferral = state.account.accountReferral
+    const activePlugins = bestOfPlugins(accountPlugins, accountReferral, undefined)
+    this._promoCode = activePlugins.promoCodes[plugin.pluginId]
   }
 
   async checkPermissions () {
@@ -188,12 +207,18 @@ class GuiPluginView extends React.Component<Props> {
   }
 
   render () {
-    const { uri, addOnUrl = '', originWhitelist = ['file://*', 'https://*', 'http://*', 'edge://*'] } = this.props.plugin
+    const { plugin, deepPath, deepQuery } = this.props
+    const { originWhitelist = ['file://*', 'https://*', 'http://*', 'edge://*'] } = plugin
+    const uri = makePluginUri(plugin, {
+      deepPath,
+      deepQuery,
+      promoCode: this._promoCode
+    })
+
     const userAgent =
       Platform.OS === 'android'
         ? 'Mozilla/5.0 (Linux; U; Android 4.4.2; en-us; SCH-I535 Build/KOT49H) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30'
         : 'Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_1 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Version/10.0 Mobile/14E304 Safari/602.1'
-    const expandedUri = `${uri}${addOnUrl}`
 
     return (
       <SceneWrapper background="body" hasTabs={false}>
@@ -209,7 +234,7 @@ class GuiPluginView extends React.Component<Props> {
           originWhitelist={originWhitelist}
           ref={this._callbacks.setRef}
           setWebContentsDebuggingEnabled={true}
-          source={{ uri: expandedUri }}
+          source={{ uri }}
           userAgent={userAgent + ' hasEdgeProvider edge/app.edge.'}
           useWebKit
         />
@@ -221,6 +246,6 @@ class GuiPluginView extends React.Component<Props> {
 // Connector -----------------------------------------------------------
 
 export const GuiPluginViewScene = connect(
-  state => ({ state }),
-  dispatch => ({ dispatch })
+  (state: State): StateProps => ({ state }),
+  (dispatch: Dispatch): DispatchProps => ({ dispatch })
 )(GuiPluginView)
