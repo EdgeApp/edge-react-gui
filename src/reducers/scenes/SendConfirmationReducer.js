@@ -21,6 +21,7 @@ export type GuiMakeSpendInfo = {
   lockInputs?: boolean,
   uniqueIdentifier?: string,
   otherParams?: Object,
+  dismissAlert?: boolean,
   onBack?: () => void,
   onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void
 }

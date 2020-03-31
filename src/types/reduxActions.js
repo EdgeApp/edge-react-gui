@@ -221,3 +221,20 @@ export type Action =
   | { type: 'FIO/FIO_ADDRESS_UPDATE_SELECTED_WALLET', data: { selectedWallet: EdgeCurrencyWallet | null, expiration: string, feeCollected: number } }
   | { type: 'FIO/FIO_ADDRESS_SET_FIO_ADDRESS', data: { fioAddressName: string, expiration: string } }
   | { type: 'FIO/SET_FIO_ADDRESSES', data: { fioAddresses: FioAddress[] } }
+  | { type: 'FIO/FIO_ADDRESS_REG_INFO_LOADING', data: boolean }
+  | {
+      type: 'FIO/SET_FIO_ADDRESS_REG_INFO',
+      data: {
+        handleRegistrationInfo: {
+          activationCost: number,
+          supportedCurrencies: { [currencyCode: string]: boolean }
+        },
+        addressRegistrationPaymentInfo: {
+          [currencyCode: string]: {
+            amount: string,
+            nativeAmount: string,
+            address: string
+          }
+        }
+      }
+    }

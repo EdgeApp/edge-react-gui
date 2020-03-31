@@ -57,7 +57,7 @@ export class FioAddressListScene extends Component<Props> {
     const { fioAddresses, isConnected } = this.props
 
     if (fioAddresses.length === 0 && isConnected) {
-      Actions[Constants.FIO_ADDRESS]()
+      Actions[Constants.FIO_ADDRESS_REGISTER]()
     }
   }
 

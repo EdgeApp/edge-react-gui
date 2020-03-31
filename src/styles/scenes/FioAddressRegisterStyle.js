@@ -3,81 +3,50 @@
 import { StyleSheet } from 'react-native'
 
 import THEME from '../../theme/variables/airbitz'
+import { PLATFORM } from '../../theme/variables/platform'
 import { scale } from '../../util/scaling.js'
 
+const deviceWidth = PLATFORM.deviceWidth
+
 export const styles = StyleSheet.create({
-  gradient: {
-    height: THEME.HEADER
-  },
-  view: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  icon: {
-    paddingTop: scale(35)
-  },
   image: {
+    alignSelf: 'center',
+    marginTop: scale(24),
     height: scale(50),
     width: scale(55)
   },
+  title: {
+    paddingTop: scale(24)
+  },
+  paddings: {
+    paddingVertical: scale(8)
+  },
   inputContainer: {
-    width: '89%'
-  },
-  mainView: {
-    flex: 3,
-    backgroundColor: THEME.COLORS.WHITE,
-    paddingTop: scale(40),
-    paddingBottom: scale(20),
-    paddingLeft: scale(15),
-    paddingRight: scale(15)
-  },
-  text: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: scale(30)
-  },
-  status: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: scale(5)
-  },
-  nextButton: {
-    marginTop: scale(30)
+    width: deviceWidth - scale(25) - scale(40),
+    marginTop: scale(16),
+    marginBottom: scale(8)
   },
   statusIconError: {
-    marginTop: scale(27),
     color: THEME.COLORS.ACCENT_RED
   },
   statusIconOk: {
-    marginTop: scale(27),
     color: THEME.COLORS.ACCENT_MINT
   },
-  available: {
-    color: THEME.COLORS.ACCENT_MINT
-  },
-  notAvailable: {
-    color: THEME.COLORS.ACCENT_RED
-  },
-  formField: {
-    display: 'flex',
+  formFieldView: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingLeft: scale(10),
-    paddingRight: scale(5),
-    marginRight: 'auto'
+    justifyContent: 'space-between'
   },
-  toggleButton: {
-    backgroundColor: THEME.COLORS.PRIMARY,
-    height: scale(58),
-    justifyContent: 'flex-start',
-    alignItems: 'center'
+  statusIcon: {
+    width: scale(25),
+    height: scale(25)
   },
-  underlay: {
-    color: `${THEME.COLORS.PRIMARY}${THEME.ALPHA.LOW}`
+  bottomSpace: {
+    paddingBottom: scale(400)
+  },
+  selectWalletBlock: {
+    marginTop: scale(48),
+    paddingHorizontal: scale(18),
+    paddingBottom: scale(10),
+    backgroundColor: THEME.COLORS.GRAY_3
   }
 })

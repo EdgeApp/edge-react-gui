@@ -46,6 +46,7 @@ import { FioAddressConnector } from '../connectors/scenes/FioAddressConnector'
 import { FioAddressDetailsConnector } from '../connectors/scenes/FioAddressDetailsConnector'
 import { FioAddressListConnector } from '../connectors/scenes/FioAddressListConnector'
 import { FioAddressRegisterConnector } from '../connectors/scenes/FioAddressRegisterConnector'
+import { FioAddressRegisterSelectWalletConnector } from '../connectors/scenes/FioAddressRegisterSelectWalletConnector'
 import ManageTokens from '../connectors/scenes/ManageTokensConnector.js'
 import OtpSettingsSceneConnector from '../connectors/scenes/OtpSettingsSceneConnector.js'
 import PasswordRecoveryConnector from '../connectors/scenes/PasswordRecoveryConnector.js'
@@ -650,9 +651,21 @@ export class MainComponent extends Component<Props> {
                     key={Constants.FIO_ADDRESS_REGISTER}
                     navTransparent={true}
                     component={FioAddressRegisterConnector}
-                    renderTitle={this.renderTitle(FIO_ADDRESS)}
+                    renderTitle={this.renderTitle(FIO_ADDRESS_CONFIRMATION)}
                     renderLeftButton={this.renderBackButton(BACK)}
                     renderRightButton={this.renderMenuButton()}
+                    onLeft={Actions.pop}
+                  />
+                </Stack>
+
+                <Stack key={Constants.FIO_ADDRESS_REGISTER_SELECT_WALLET}>
+                  <Scene
+                    key={Constants.FIO_ADDRESS_REGISTER_SELECT_WALLET}
+                    navTransparent={true}
+                    component={FioAddressRegisterSelectWalletConnector}
+                    renderTitle={this.renderTitle(FIO_ADDRESS_CONFIRMATION)}
+                    renderLeftButton={this.renderBackButton(BACK)}
+                    renderRightButton={this.renderEmptyButton()}
                     onLeft={Actions.pop}
                   />
                 </Stack>
@@ -664,7 +677,7 @@ export class MainComponent extends Component<Props> {
                     component={FioAddressConfirmConnector}
                     renderTitle={this.renderTitle(FIO_ADDRESS_CONFIRMATION)}
                     renderLeftButton={this.renderBackButton(BACK)}
-                    renderRightButton={this.renderMenuButton()}
+                    renderRightButton={this.renderEmptyButton()}
                     onLeft={Actions.pop}
                   />
                 </Stack>
