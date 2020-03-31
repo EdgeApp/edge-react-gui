@@ -504,7 +504,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: ~6.5% / Settlement: 1-48 hours\nLimit: €5000/day",
+    "description": "Fee: 2.5% / Settlement: 1-48 hours\nLimit: €10000+/day",
     "title": "Israeli Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/bits-of-gold-logo-sm.png",
     "forCountries": [

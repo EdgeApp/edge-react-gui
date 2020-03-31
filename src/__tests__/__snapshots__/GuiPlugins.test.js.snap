@@ -95,8 +95,8 @@ Array [
       "order_id": "null",
       "page": "0",
     },
-    "description": "Fee: ~6.5% / Settlement: 1-48 hours
-Limit: €5000/day",
+    "description": "Fee: 2.5% / Settlement: 1-48 hours
+Limit: €10000+/day",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/bits-of-gold-logo-sm.png",
     "paymentTypeLogoKey": "bank",
     "paymentTypes": Array [
