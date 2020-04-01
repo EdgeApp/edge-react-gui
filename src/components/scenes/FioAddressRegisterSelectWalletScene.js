@@ -108,11 +108,9 @@ export class FioAddressRegisterSelectWalletScene extends Component<Props> {
                 showError(s.strings.create_wallet_account_error_sending_transaction)
               }, 750)
             } else if (edgeTransaction) {
-              Alert.alert(
-                `${s.strings.fio_address_register_form_field_label} ${s.strings.fragment_wallet_unconfirmed}`,
-                s.strings.fio_address_register_pending,
-                [{ text: s.strings.string_ok_cap }]
-              )
+              Alert.alert(`${s.strings.fio_address_label} ${s.strings.fragment_wallet_unconfirmed}`, s.strings.fio_address_register_pending, [
+                { text: s.strings.string_ok_cap }
+              ])
               Actions[Constants.WALLET_LIST]()
             }
           }

@@ -121,7 +121,7 @@ export class FioAddressConfirmScene extends Component<Props, State> {
       <SceneWrapper>
         <View style={styles.scene}>
           <View style={styles.info}>
-            <T style={styles.title}>{s.strings.fio_address_confirm_screen_label}</T>
+            <T style={styles.title}>{s.strings.fio_address_label}</T>
             <T style={styles.titleLarge}>{fioAddressName}</T>
             <View style={styles.spacer} />
             <T style={styles.title}>{s.strings.fio_address_confirm_screen_registration_label}</T>

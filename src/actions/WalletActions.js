@@ -18,6 +18,7 @@ import { getEnabledTokensFromFile, setEnabledTokens, updateEnabledTokens } from 
 import { updateExchangeRates } from '../modules/ExchangeRates/action.js'
 import * as SETTINGS_SELECTORS from '../modules/Settings/selectors'
 import { updateMostRecentWallets, updateSettings } from '../modules/Settings/SettingsActions'
+import type { ExchangedFlipInputAmounts } from '../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
@@ -502,3 +503,13 @@ export const checkEnabledTokensArray = (walletId: string, newEnabledTokens: Arra
     }
   })
 }
+
+export const requestChangeAmounts = (amounts: ExchangedFlipInputAmounts) => ({
+  type: 'FIO/FIO_REQUEST_CHANGE_AMOUNTS',
+  data: { amounts }
+})
+
+export const requestSaveFioModalData = (fioModalData: any) => ({
+  type: 'FIO/FIO_REQUEST_SAVE_MODAL_DATA',
+  data: { fioModalData }
+})

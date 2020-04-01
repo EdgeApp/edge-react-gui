@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyInfo, EdgeDenomination } from 'edge-core-js'
+import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import _ from 'lodash'
 
 import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
@@ -81,6 +81,20 @@ export const getSelectedWalletLoadingPercent = (state: State) => {
 export const getTransactions = (state: State): Array<TransactionListTx> => {
   const transactions = state.ui.scenes.transactionList.transactions
   return transactions
+}
+
+export const getFioSelectedRequest = (state: State): Object => {
+  const request = state.ui.scenes.fioRequest.fioPendingRequestSelected
+  return request
+}
+
+export const getFioSelectedSentRequest = (state: State): Object => {
+  const request = state.ui.scenes.fioRequest.fioSentRequestSelected
+  return request
+}
+
+export const getFioWalletByAddress = (state: State): EdgeCurrencyWallet | null => {
+  return state.ui.scenes.fioAddress.fioWalletByAddress
 }
 
 export const getDenominations = (state: State, currencyCode: string) => {
@@ -191,4 +205,25 @@ export const convertNativeToExchangeRateDenomination = (settings: Object, curren
   if (!exchangeDenomination || !nativeAmount || nativeAmount === '0') return '0'
   const nativeToExchangeRatio: string = exchangeDenomination.multiplier
   return convertNativeToExchange(nativeToExchangeRatio)(nativeAmount)
+}
+
+export const findWalletByFioAddress = async (state: State, fioAddress: string): Promise<EdgeCurrencyWallet | null> => {
+  const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
+
+  if (fioWallets.length) {
+    for (const wallet: EdgeCurrencyWallet of fioWallets) {
+      const fioAddresses: string[] = await wallet.otherMethods.getFioAddressNames()
+      if (fioAddresses.length > 0) {
+        for (const address of fioAddresses) {
+          if (address.toLowerCase() === fioAddress.toLowerCase()) {
+            return wallet
+          }
+        }
+      }
+    }
+
+    return null
+  } else {
+    return null
+  }
 }

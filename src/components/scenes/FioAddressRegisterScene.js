@@ -265,12 +265,12 @@ export class FioAddressRegisterScene extends Component<Props, State> {
                 style={this.materialInputOnWhiteStyle}
                 clearButtonMode={this.clearButtonMode}
                 autoCorrect={false}
-                placeholder={s.strings.fio_address_register_form_field_label}
+                placeholder={s.strings.fio_address_label}
                 caretHidden={true}
                 onChangeText={this.handleFioAddressChange}
                 onSubmitEditing={this.handleNextButton}
                 selectionColor={THEME.COLORS.ACCENT_MINT}
-                label={s.strings.fio_address_register_form_field_label}
+                label={s.strings.fio_address_label}
                 value={fioAddress.replace(replaceRegex, '')}
                 suffix={FIO_DOMAIN_DEFAULT}
                 maxLength={this.inputMaxLength}

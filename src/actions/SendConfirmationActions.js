@@ -189,6 +189,14 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
   const spendInfo = state.ui.scenes.sendConfirmation.spendInfo
   const guiMakeSpendInfo = state.ui.scenes.sendConfirmation.guiMakeSpendInfo
 
+  try {
+    if (guiMakeSpendInfo.beforeTransaction) {
+      await guiMakeSpendInfo.beforeTransaction()
+    }
+  } catch (e) {
+    return
+  }
+
   if (!spendInfo) throw new Error(s.strings.invalid_spend_request)
   const authRequired = getAuthRequired(state, spendInfo)
   const pin = state.ui.scenes.sendConfirmation.pin

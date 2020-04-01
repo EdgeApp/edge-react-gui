@@ -72,6 +72,7 @@ exports[`Request should render with loaded props 1`] = `
   >
     <ShareButtons
       copyToClipboard={[Function]}
+      fioAddressModal={[Function]}
       shareViaEmail={[Function]}
       shareViaSMS={[Function]}
       shareViaShare={[Function]}

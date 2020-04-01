@@ -24,7 +24,8 @@ export type FioAddressSceneState = {
       address: string
     }
   },
-  regInfoLoading: boolean
+  regInfoLoading: boolean,
+  fioWalletByAddress: EdgeCurrencyWallet | null
 }
 
 export type BuyAddressResponse = {
@@ -56,7 +57,8 @@ const initialState: FioAddressSceneState = {
     supportedCurrencies: {}
   },
   addressRegistrationPaymentInfo: {},
-  regInfoLoading: false
+  regInfoLoading: false,
+  fioWalletByAddress: null
 }
 
 export const fioAddress: Reducer<FioAddressSceneState, Action> = (state = initialState, action: Action) => {
@@ -105,6 +107,12 @@ export const fioAddress: Reducer<FioAddressSceneState, Action> = (state = initia
       return {
         ...state,
         regInfoLoading: action.data
+      }
+    case 'FIO/FIO_WALLET_BY_ADDRESS':
+      if (!action.data) throw new Error(`Invalid action FIO/FIO_WALLET_BY_ADDRESS`)
+      return {
+        ...state,
+        fioWalletByAddress: action.data.wallet
       }
     default:
       return state

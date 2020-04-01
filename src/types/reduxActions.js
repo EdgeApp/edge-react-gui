@@ -3,6 +3,7 @@
 import { type Disklet } from 'disklet'
 import { type EdgeAccount, type EdgeContext, type EdgeCurrencyWallet, type EdgeLobby, type EdgeParsedUri, type EdgeReceiveAddress } from 'edge-core-js'
 
+import type { ExchangedFlipInputAmounts } from '../modules/UI/components/FlipInput/ExchangedFlipInput2'
 import { type PermissionsState } from '../reducers/PermissionsReducer.js'
 import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
 import { type TweakSource } from '../util/ReferralHelpers.js'
@@ -45,6 +46,15 @@ type LegacyActionName =
   | 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL'
   | 'UPDATE_WALLET_FIAT_BALANCE_VISIBILITY'
   | 'UPDATE_WALLET_LOADING_PROGRESS'
+  | 'FIO/FIO_REQUEST_LIST_PENDING'
+  | 'FIO/FIO_REQUEST_LIST_SENT'
+  | 'FIO/FIO_PENDING_REQUEST_SELECTED'
+  | 'FIO/FIO_SENT_REQUEST_SELECTED'
+  | 'FIO/FIO_REQUEST_LIST_REMOVE'
+  | 'FIO/FIO_ADDRESS_UPDATE_FIO_ADDRESS_NAME'
+  | 'FIO/FIO_ADDRESS_UPDATE_SELECTED_WALLET'
+  | 'FIO/FIO_REQUEST_CHANGE_AMOUNTS'
+  | 'FIO/FIO_REQUEST_SAVE_MODAL_DATA'
 
 // Actions with no payload:
 type NoDataActionName =
@@ -239,3 +249,11 @@ export type Action =
         }
       }
     }
+  | { type: 'FIO/FIO_WALLET_BY_ADDRESS', data: { wallet: EdgeCurrencyWallet | null } }
+  | { type: 'FIO/FIO_REQUEST_CHANGE_AMOUNTS', data: { amounts: ExchangedFlipInputAmounts } }
+  | { type: 'FIO/FIO_REQUEST_SAVE_MODAL_DATA', data: { fioModalData: any } }
+  | { type: 'FIO/FIO_REQUEST_LIST_PENDING', data: { fioRequestsPending: Object[], more: number, page: number } }
+  | { type: 'FIO/FIO_REQUEST_LIST_SENT', data: { fioRequestsSent: Object[], more: number, page: number } }
+  | { type: 'FIO/FIO_PENDING_REQUEST_SELECTED', data: { fioPendingRequestSelected: Object } }
+  | { type: 'FIO/FIO_REQUEST_LIST_REMOVE', data: { requestId: string } }
+  | { type: 'FIO/FIO_SENT_REQUEST_SELECTED', data: { fioSentRequestSelected: Object } }

@@ -138,12 +138,28 @@ Object {
         "fioAddressName": "",
         "fioAddresses": Array [],
         "fioAddressesLoading": false,
+        "fioWalletByAddress": null,
         "handleRegistrationInfo": Object {
           "activationCost": 40,
           "supportedCurrencies": Object {},
         },
         "regInfoLoading": false,
         "selectedWallet": null,
+      },
+      "fioRequest": Object {
+        "amounts": Object {
+          "exchangeAmount": "",
+          "nativeAmount": "",
+        },
+        "fioModalData": Object {},
+        "fioPendingRequestSelected": Object {},
+        "fioSentRequestSelected": Object {},
+        "pendingMore": 0,
+        "pendingPage": 1,
+        "requests": Array [],
+        "sentMore": 0,
+        "sentPage": 1,
+        "sentRequests": Array [],
       },
       "passwordRecoveryReminderModal": Object {
         "isVisible": false,

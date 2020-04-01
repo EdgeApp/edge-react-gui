@@ -46,6 +46,10 @@ import { FioAddressDetailsConnector } from '../connectors/scenes/FioAddressDetai
 import { FioAddressListConnector } from '../connectors/scenes/FioAddressListConnector'
 import { FioAddressRegisterConnector } from '../connectors/scenes/FioAddressRegisterConnector'
 import { FioAddressRegisterSelectWalletConnector } from '../connectors/scenes/FioAddressRegisterSelectWalletConnector'
+import { FioPendingRequestConnector } from '../connectors/scenes/FioPendingRequestConnector'
+import { FioRequestConfirmationConnector } from '../connectors/scenes/FioRequestConfirmationConnector.js'
+import { FioRequestListConnector } from '../connectors/scenes/FioRequestListConnector'
+import { FioSentRequestConnector } from '../connectors/scenes/FioSentRequestConnector'
 import ManageTokens from '../connectors/scenes/ManageTokensConnector.js'
 import OtpSettingsSceneConnector from '../connectors/scenes/OtpSettingsSceneConnector.js'
 import PasswordRecoveryConnector from '../connectors/scenes/PasswordRecoveryConnector.js'
@@ -116,6 +120,9 @@ const CREATE_WALLET_ACCOUNT_SETUP = s.strings.create_wallet_create_account
 const CREATE_WALLET_ACCOUNT_ACTIVATE = s.strings.create_wallet_account_activate
 const FIO_ADDRESS = s.strings.title_fio_address
 const FIO_ADDRESS_CONFIRMATION = s.strings.title_fio_address_confirmation
+const FIO_REQUEST = s.strings.drawer_fio_requests
+const FIO_PENDING_REQUEST_DETAILS = s.strings.title_fio_pending_request_details
+const FIO_SENT_REQUEST_DETAILS = s.strings.title_fio_sent_request_details
 const TRANSACTIONS_EXPORT = s.strings.title_export_transactions
 const BUY = s.strings.title_buy
 const SELL = s.strings.title_sell
@@ -338,6 +345,15 @@ export class MainComponent extends Component<Props> {
                 renderLeftButton={this.renderBackButton()}
                 renderRightButton={this.renderRequestMenuButton()}
                 hideTabBar
+              />
+
+              <Scene
+                key={Constants.FIO_REQUEST_CONFIRMATION}
+                navTransparent={true}
+                component={FioRequestConfirmationConnector}
+                renderTitle={this.renderWalletName()}
+                renderLeftButton={this.renderBackButton(BACK)}
+                renderRightButton={this.renderMenuButton()}
               />
 
               <Scene
@@ -705,6 +721,42 @@ export class MainComponent extends Component<Props> {
               component={FioAddressDetailsConnector}
               renderTitle={this.renderTitle(FIO_ADDRESS)}
               renderRightButton={this.renderMenuButton()}
+            />
+          </Stack>
+
+          <Stack key={Constants.FIO_REQUEST_LIST}>
+            <Scene
+              key={Constants.FIO_REQUEST_LIST}
+              navTransparent={true}
+              component={FioRequestListConnector}
+              renderTitle={this.renderTitle(FIO_REQUEST)}
+              renderLeftButton={this.renderBackButton(BACK)}
+              renderRightButton={this.renderMenuButton()}
+              onLeft={Actions.pop}
+            />
+          </Stack>
+
+          <Stack key={Constants.FIO_PENDING_REQUEST_DETAILS}>
+            <Scene
+              key={Constants.FIO_PENDING_REQUEST_DETAILS}
+              navTransparent={true}
+              component={FioPendingRequestConnector}
+              renderTitle={this.renderTitle(FIO_PENDING_REQUEST_DETAILS)}
+              renderLeftButton={this.renderBackButton(BACK)}
+              renderRightButton={this.renderEmptyButton()}
+              onLeft={Actions.pop}
+            />
+          </Stack>
+
+          <Stack key={Constants.FIO_SENT_REQUEST_DETAILS}>
+            <Scene
+              key={Constants.FIO_SENT_REQUEST_DETAILS}
+              navTransparent={true}
+              component={FioSentRequestConnector}
+              renderTitle={this.renderTitle(FIO_SENT_REQUEST_DETAILS)}
+              renderLeftButton={this.renderBackButton(BACK)}
+              renderRightButton={this.renderEmptyButton()}
+              onLeft={Actions.pop}
             />
           </Stack>
         </Scene>
