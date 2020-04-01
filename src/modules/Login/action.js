@@ -7,7 +7,7 @@ import { sprintf } from 'sprintf-js'
 
 import { loadAccountReferral, refreshAccountReferral } from '../../actions/AccountReferralActions.js'
 import { trackAccountEvent } from '../../actions/TrackingActions.js'
-import { getEnabledTokens } from '../../actions/WalletActions.js'
+import { checkEnabledTokensArray, getEnabledTokens, setWalletEnabledTokens } from '../../actions/WalletActions.js'
 import { showError } from '../../components/services/AirshipInstance.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
@@ -170,7 +170,12 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       // Ensure the creation reason is available before creating wallets:
       await dispatch(loadAccountReferral(account))
       const { currencyCodes } = getState().account.accountReferral
-      await createDefaultWallets(account, defaultFiat, currencyCodes, dispatch)
+      const fiatCurrencyCode = 'iso:' + defaultFiat
+      if (currencyCodes && currencyCodes.length > 0) {
+        await createCustomWallets(account, fiatCurrencyCode, currencyCodes, dispatch)
+      } else {
+        await createDefaultWallets(account, fiatCurrencyCode, dispatch)
+      }
       dispatch(refreshAccountReferral())
     } else {
       // Load the creation reason more lazily:
@@ -303,27 +308,45 @@ async function safeCreateWallet (account: EdgeAccount, walletType: string, walle
       data: { currencyCode: wallet.currencyInfo.currencyCode, walletId: wallet.id }
     })
   }
+  return wallet
+}
+
+/**
+ * Creates the custom default wallets inside a new account.
+ */
+async function createCustomWallets (account: EdgeAccount, fiatCurrencyCode: string, currencyCodes: string[], dispatch: Dispatch) {
+  const currencyInfos = []
+  for (const code of currencyCodes) {
+    const [parent] = code.split(':')
+    if (currencyInfos.find(info => info.currencyCode === parent)) continue
+    const currencyInfo = findCurrencyInfo(account, parent)
+    if (currencyInfo != null) currencyInfos.push(currencyInfo)
+  }
+
+  if (currencyInfos.length === 0) {
+    return createDefaultWallets(account, fiatCurrencyCode, dispatch)
+  }
+
+  for (const currencyInfo of currencyInfos) {
+    const walletName = sprintf(s.strings.my_crypto_wallet_name, currencyInfo.displayName)
+    const wallet = await safeCreateWallet(account, currencyInfo.walletType, walletName, fiatCurrencyCode, dispatch)
+
+    const tokenCodes = []
+    for (const code of currencyCodes) {
+      const [parent, child] = code.split(':')
+      if (parent === currencyInfo.currencyCode && child != null) tokenCodes.push(child)
+      if (tokenCodes.length > 0) {
+        dispatch(setWalletEnabledTokens(wallet.id, tokenCodes, []))
+        dispatch(checkEnabledTokensArray(wallet.id, tokenCodes))
+      }
+    }
+  }
 }
 
 /**
  * Creates the default wallets inside a new account.
  */
-async function createDefaultWallets (account: EdgeAccount, defaultFiat: string, currencyCodes?: string[], dispatch: Dispatch) {
-  const fiatCurrencyCode = 'iso:' + defaultFiat
-
-  if (currencyCodes != null) {
-    for (const currencyCode of currencyCodes) {
-      const currencyInfo = findCurrencyInfo(account, currencyCode)
-      if (currencyInfo == null) continue
-
-      const walletName = sprintf(s.strings.my_crypto_wallet_name, currencyInfo.displayName)
-      await safeCreateWallet(account, currencyInfo.walletType, walletName, fiatCurrencyCode, dispatch)
-    }
-
-    dispatch(trackAccountEvent('SignupWalletsCreated'))
-    return
-  }
-
+async function createDefaultWallets (account: EdgeAccount, fiatCurrencyCode: string, dispatch: Dispatch) {
   // TODO: Run these in parallel once the Core has safer locking:
   await safeCreateWallet(account, 'wallet:bitcoin', s.strings.string_first_bitcoin_wallet_name, fiatCurrencyCode, dispatch)
   await safeCreateWallet(account, 'wallet:bitcoincash', s.strings.string_first_bitcoincash_wallet_name, fiatCurrencyCode, dispatch)
