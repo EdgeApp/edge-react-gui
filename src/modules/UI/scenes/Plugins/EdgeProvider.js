@@ -84,16 +84,26 @@ export type EdgeProviderSpendTarget = {
 }
 
 export class EdgeProvider extends Bridgeable {
+  // Private properties:
   _plugin: GuiPlugin
   _dispatch: Dispatch
   _state: State
 
-  // Properties:
+  // Public properties:
   deepPath: string | void
   deepQuery: GuiPluginQuery | void
   promoCode: string | void
+  restartPlugin: () => void
 
-  constructor (plugin: GuiPlugin, state: State, dispatch: Dispatch, deepPath?: string, deepQuery?: GuiPluginQuery, promoCode?: string) {
+  constructor (
+    plugin: GuiPlugin,
+    state: State,
+    dispatch: Dispatch,
+    restartPlugin: () => void,
+    deepPath?: string,
+    deepQuery?: GuiPluginQuery,
+    promoCode?: string
+  ) {
     super()
     this._plugin = plugin
     this._dispatch = dispatch
@@ -102,6 +112,7 @@ export class EdgeProvider extends Bridgeable {
     this.deepPath = deepPath
     this.deepQuery = deepQuery
     this.promoCode = promoCode
+    this.restartPlugin = restartPlugin
   }
 
   _updateState (state: State, deepPath?: string, deepQuery?: GuiPluginQuery, promoCode?: string): void {
