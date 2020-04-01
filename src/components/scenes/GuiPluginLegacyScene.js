@@ -1,6 +1,6 @@
 // @flow
 
-import { type EdgeMetadata } from 'edge-core-js'
+import { type EdgeCurrencyWallet, type EdgeMetadata } from 'edge-core-js'
 import React from 'react'
 import { BackHandler, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -19,20 +19,21 @@ import { PluginBridge, pop as pluginPop } from '../../modules/UI/scenes/Plugins/
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
 import type { GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import styles from '../../styles/scenes/PluginsStyle.js'
-import { type BuySellPlugin, type PluginUrlMap } from '../../types/types.js'
+import { type GuiPlugin } from '../../types/GuiPluginTypes.js'
+import { type GuiWallet } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance.js'
 
 const BACK = s.strings.title_back
 
-type PluginProps = {
-  plugin: BuySellPlugin & PluginUrlMap,
+type Props = {
+  plugin: GuiPlugin,
   navigation: any,
   account: any,
-  guiWallet: any,
+  guiWallet: GuiWallet,
   coreWallet: any,
-  coreWallets: any,
-  wallets: any,
+  coreWallets: { [id: string]: EdgeCurrencyWallet },
+  wallets: { [id: string]: GuiWallet },
   walletName: any,
   walletId: any,
   currentState: any,
@@ -41,7 +42,7 @@ type PluginProps = {
   sendConfirmationUpdateTx(GuiMakeSpendInfo): void
 }
 
-type PluginState = {
+type State = {
   showWalletList: any
 }
 
@@ -56,13 +57,13 @@ const legacyJavascript = `(function() {
   };
 })()`
 
-class PluginView extends React.Component<PluginProps, PluginState> {
+class GuiPluginLegacy extends React.Component<Props, State> {
   bridge: any
   webview: any
   successUrl: ?string
   openingSendConfirmation: boolean
 
-  constructor (props) {
+  constructor (props: Props) {
     super(props)
     console.log('pvs: Legacy')
     this.state = {
@@ -70,7 +71,9 @@ class PluginView extends React.Component<PluginProps, PluginState> {
     }
     this.webview = null
 
-    const apiKey = ENV.PLUGIN_API_KEYS ? ENV.PLUGIN_API_KEYS[props.plugin.name] : 'edgeWallet' // latter is dummy code
+    // This is a gross misuse of the displayName,
+    // and the second value is just a dummy, but heh, legacy:
+    const apiKey = ENV.PLUGIN_API_KEYS ? ENV.PLUGIN_API_KEYS[props.plugin.displayName] : 'edgeWallet'
     this.bridge = new PluginBridge({
       plugin: {
         ...props.plugin,
@@ -83,7 +86,6 @@ class PluginView extends React.Component<PluginProps, PluginState> {
       walletId: props.walletId,
       navigationState: this.props.navigation.state,
       folder: props.account.pluginData,
-      pluginId: props.plugin.pluginId,
       toggleWalletList: this.toggleWalletList,
       chooseWallet: this.chooseWallet,
       back: this._webviewBack,
@@ -287,7 +289,11 @@ class PluginView extends React.Component<PluginProps, PluginState> {
   }
 
   render () {
-    const { uri } = this.props.plugin
+    const { baseUri } = this.props.plugin
+
+    // We don't support deep linking or custom query parameters,
+    // but they would go here if we needed that:
+    const uri = baseUri
 
     return (
       <SceneWrapper background="body" hasTabs={false}>
@@ -339,8 +345,7 @@ const mapDispatchToProps = dispatch => ({
   thisDispatch: dispatch
 })
 
-const LegacyPluginViewConnect = connect(
+export const GuiPluginLegacyScene = connect(
   mapStateToProps,
   mapDispatchToProps
-)(PluginView)
-export { LegacyPluginViewConnect }
+)(GuiPluginLegacy)

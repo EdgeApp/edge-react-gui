@@ -1,11 +1,11 @@
 // @flow
 
 import AsyncStorage from '@react-native-community/async-storage'
+import { asObject, asString } from 'cleaners'
 import { createInputModal } from 'edge-components'
 import { type EdgeAccount } from 'edge-core-js/types'
 import React, { Component } from 'react'
-// eslint-disable-next-line react-native/split-platform-components
-import { FlatList, Image, PermissionsAndroid, Platform, TouchableWithoutFeedback, View } from 'react-native'
+import { FlatList, Image, Platform, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
@@ -22,22 +22,29 @@ import paymentTypeLogoIdeal from '../../assets/images/paymentTypes/paymentTypeLo
 import paymentTypeLogoNewsagent from '../../assets/images/paymentTypes/paymentTypeLogoNewsagent.png'
 import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLogoPoli.png'
 import paymentTypeLogoSwish from '../../assets/images/paymentTypes/paymentTypeLogoSwish.png'
-import { ANDROID, ARROW_RIGHT, COUNTRY_CODES, FLAG_LOGO_URL, PLUGIN_VIEW, PLUGIN_VIEW_LEGACY, SIMPLE_ICONS } from '../../constants/indexConstants.js'
-import { devPlugin, getBuyPlugins, getSellPlugins, pluginUrlMap } from '../../constants/plugins/buySellPlugins.js'
+import { ARROW_RIGHT, COUNTRY_CODES, FLAG_LOGO_URL, PLUGIN_VIEW, PLUGIN_VIEW_LEGACY, SIMPLE_ICONS } from '../../constants/indexConstants.js'
+import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins.js'
 import s from '../../locales/strings.js'
 import { getSyncedSettingsAsync, setSyncedSettingsAsync } from '../../modules/Core/Account/settings.js'
 import Text from '../../modules/UI/components/FormattedText'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import styles from '../../styles/scenes/PluginsStyle.js'
 import { THEME } from '../../theme/variables/airbitz.js'
+import { type GuiPluginRow, asGuiPluginJson, filterGuiPluginJson } from '../../types/GuiPluginTypes.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
-import { type BuySellPlugin, type CountryData, type PluginUrlMap } from '../../types/types.js'
+import { type AccountReferral } from '../../types/ReferralTypes.js'
+import { type PluginTweak } from '../../types/TweakTypes.js'
+import { type CountryData } from '../../types/types.js'
+import { bestOfPlugins } from '../../util/ReferralHelpers.js'
 import { scale } from '../../util/scaling.js'
 import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { CountrySelectionModal } from '../modals/CountrySelectionModal.js'
 import { SimpleConfirmationModal } from '../modals/SimpleConfirmationModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
+
+const buyPluginJson = asGuiPluginJson(require('../../constants/plugins/buyPluginList.json'))
+const sellPluginJson = asGuiPluginJson(require('../../constants/plugins/sellPluginList.json'))
 
 const paymentTypeLogosById = {
   credit: paymentTypeLogoCreditCard,
@@ -59,6 +66,8 @@ type OwnProps = {
 
 type StateProps = {
   account: EdgeAccount,
+  accountPlugins: PluginTweak[],
+  accountReferral: AccountReferral,
   countryCode: string,
   developerModeOn: boolean
 }
@@ -69,27 +78,30 @@ type DispatchProps = {
 
 type Props = OwnProps & StateProps & DispatchProps
 type State = {
-  developerPlugin: BuySellPlugin & PluginUrlMap
+  developerUri: string
 }
 
 const MODAL_DATA_FILE = 'pluginModalTracker.json'
 const DEVELOPER_PLUGIN_KEY = 'developerPlugin'
+const asDeveloperUri = asObject({ uri: asString })
 
-class PluginList extends Component<Props, State> {
+class GuiPluginList extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {
-      developerPlugin: devPlugin
+      developerUri: ''
     }
   }
+
   async componentDidMount () {
     await this.checkDisclaimer()
     this.checkCountry()
 
-    const storedDeveloperPlugin = await AsyncStorage.getItem(DEVELOPER_PLUGIN_KEY)
-    this.setState({
-      developerPlugin: storedDeveloperPlugin ? JSON.parse(storedDeveloperPlugin) : devPlugin
-    })
+    const text = await AsyncStorage.getItem(DEVELOPER_PLUGIN_KEY)
+    if (text != null) {
+      const clean = asDeveloperUri(JSON.parse(text))
+      this.setState({ developerUri: clean.uri })
+    }
   }
 
   /**
@@ -126,77 +138,54 @@ class PluginList extends Component<Props, State> {
   /**
    * Verify that we have a country selected
    */
-  async checkCountry () {
+  checkCountry () {
     const { countryCode } = this.props
-    if (!countryCode) this.openCountrySelectionModal()
+    if (!countryCode) this.showCountrySelectionModal().catch(showError)
   }
 
-  _onPress = (plugin: BuySellPlugin & PluginUrlMap) => {
-    const { pluginId, permissions = [] } = plugin
+  /**
+   * Launch the provided plugin, including pre-flight checks.
+   */
+  async openPlugin (listRow: GuiPluginRow) {
+    const { pluginId, deepQuery } = listRow
+    const plugin = guiPlugins[pluginId]
+
+    // Grab a custom URI if necessary:
+    let { deepPath } = listRow
     if (pluginId === 'custom') {
-      this.openCustomPlugin(plugin)
-      return
-    }
-    if (permissions.length > 0) {
-      if (Platform.OS === ANDROID) {
-        this.requestAndroidPermissions(permissions, plugin)
-        return
+      const { developerUri } = this.state
+      const modal = createInputModal({
+        icon: <IonIcon name="md-globe" size={42} color={THEME.COLORS.SECONDARY} />,
+        title: s.strings.load_plugin,
+        input: {
+          label: s.strings.plugin_url,
+          autoCorrect: false,
+          returnKeyType: 'go',
+          initialValue: developerUri,
+          autoFocus: true
+        },
+        yesButton: { title: s.strings.load_plugin },
+        noButton: { title: s.strings.string_cancel_cap }
+      })
+      deepPath = await launchModal(modal)
+      if (deepPath == null) return
+
+      if (deepPath !== developerUri) {
+        this.setState({ developerUri: deepPath })
+
+        // Write to disk lazily:
+        AsyncStorage.setItem(DEVELOPER_PLUGIN_KEY, JSON.stringify({ uri: deepPath })).catch(showError)
       }
     }
-    this.openPlugin(plugin)
-  }
 
-  requestAndroidPermissions = async (permissionList: Array<string>, plugin: BuySellPlugin & PluginUrlMap) => {
-    let reqType
-    switch (permissionList[0]) {
-      case 'camera':
-        reqType = PermissionsAndroid.PERMISSIONS.CAMERA
-        break
-      default:
-        reqType = PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+    // Launch!
+    if (plugin.isLegacy) {
+      return Actions[PLUGIN_VIEW_LEGACY]({ plugin })
     }
-    try {
-      const request = reqType
-      const granted = await PermissionsAndroid.request(request, {})
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        this.openPlugin(plugin)
-      } else {
-        this.openPlugin(plugin)
-      }
-    } catch (error) {
-      showError(error)
-    }
+    return Actions[PLUGIN_VIEW]({ plugin, deepPath, deepQuery })
   }
 
-  openCustomPlugin (plugin: BuySellPlugin & PluginUrlMap) {
-    const modal = createInputModal({
-      icon: <IonIcon name="md-globe" size={42} color={THEME.COLORS.SECONDARY} />,
-      title: s.strings.load_plugin,
-      input: {
-        label: s.strings.plugin_url,
-        autoCorrect: false,
-        returnKeyType: 'go',
-        initialValue: plugin.uri,
-        autoFocus: true
-      },
-      yesButton: { title: s.strings.load_plugin },
-      noButton: { title: s.strings.string_cancel_cap }
-    })
-    launchModal(modal).then(async response => {
-      if (response) {
-        plugin.uri = response
-        await AsyncStorage.setItem(DEVELOPER_PLUGIN_KEY, JSON.stringify(plugin))
-        Actions[PLUGIN_VIEW]({ plugin })
-      }
-    })
-  }
-
-  openPlugin = (plugin: BuySellPlugin & PluginUrlMap) => {
-    const key = plugin.isLegacy ? PLUGIN_VIEW_LEGACY : PLUGIN_VIEW
-    Actions[key]({ plugin })
-  }
-
-  openCountrySelectionModal = async () => {
+  async showCountrySelectionModal () {
     const { account, updateCountryCode, countryCode } = this.props
 
     const selectedCountryCode: string = await Airship.show(bridge => <CountrySelectionModal bridge={bridge} countryCode={countryCode} />)
@@ -215,46 +204,51 @@ class PluginList extends Component<Props, State> {
     }
   }
 
-  _renderPlugin = ({ item }) => (
-    <TouchableWithoutFeedback onPress={() => this._onPress(item)}>
-      <View style={styles.pluginRow}>
-        <View style={styles.pluginRowLogoAndInfo}>
-          <View style={styles.logo}>
-            <Image style={styles.logoImage} source={paymentTypeLogosById[item.paymentTypeLogoKey]} />
+  _handleCountryPress = () => {
+    this.showCountrySelectionModal().catch(showError)
+  }
+
+  _renderPlugin = ({ item }) => {
+    const { pluginId } = item
+    const plugin = guiPlugins[pluginId]
+
+    return (
+      <TouchableWithoutFeedback onPress={() => this.openPlugin(item).catch(showError)}>
+        <View style={styles.pluginRow}>
+          <View style={styles.pluginRowLogoAndInfo}>
+            <View style={styles.logo}>
+              <Image style={styles.logoImage} source={paymentTypeLogosById[item.paymentTypeLogoKey]} />
+            </View>
+            <View style={styles.textBoxWrap}>
+              <Text style={styles.titleText}>{item.title}</Text>
+              <Text style={styles.subtitleText}>{item.cryptoCodes.length > 0 && `Currencies: ${item.cryptoCodes.join(', ')}`}</Text>
+              <Text style={styles.subtitleText}>{item.description}</Text>
+            </View>
           </View>
-          <View style={styles.textBoxWrap}>
-            <Text style={styles.titleText}>{item.title}</Text>
-            <Text style={styles.subtitleText}>{item.cryptoCodes.length > 0 && `Currencies: ${item.cryptoCodes.join(', ')}`}</Text>
-            <Text style={styles.subtitleText}>{item.description}</Text>
+          <View style={styles.pluginRowPoweredByRow}>
+            <Text style={styles.footerText}>Powered by </Text>
+            <Image style={styles.partnerIconImage} source={{ uri: item.partnerIconPath }} />
+            <Text style={styles.footerText}> {plugin.displayName}</Text>
           </View>
         </View>
-        <View style={styles.pluginRowPoweredByRow}>
-          <Text style={styles.footerText}>Powered by </Text>
-          <Image style={styles.partnerIconImage} source={{ uri: item.partnerIconPath }} />
-          <Text style={styles.footerText}> {item.name}</Text>
-        </View>
-      </View>
-    </TouchableWithoutFeedback>
-  )
+      </TouchableWithoutFeedback>
+    )
+  }
 
   render () {
-    const { countryCode, developerModeOn, direction } = this.props
+    const { accountPlugins, accountReferral, countryCode, developerModeOn, direction } = this.props
     const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)
 
     // Pick a filter based on our direction:
-    const pluginsBuySellPlugins: Array<BuySellPlugin> = direction === 'buy' ? getBuyPlugins(Platform.OS, countryCode) : getSellPlugins(Platform.OS, countryCode)
+    let plugins = filterGuiPluginJson(direction === 'buy' ? buyPluginJson : sellPluginJson, Platform.OS, countryCode)
 
-    // Sort the plugins:
-    pluginsBuySellPlugins.sort((a: BuySellPlugin, b: BuySellPlugin) => a.priority - b.priority)
-
-    const plugins: Array<BuySellPlugin & PluginUrlMap> = pluginsBuySellPlugins.map((_buySellPlugin: BuySellPlugin) => {
-      const _pluginUrlMap = pluginUrlMap[_buySellPlugin.pluginId]
-      return { ..._pluginUrlMap, ..._buySellPlugin }
-    })
+    // Filter disabled plugins:
+    const activePlugins = bestOfPlugins(accountPlugins, accountReferral, undefined)
+    plugins = plugins.filter(plugin => !activePlugins.disabled[plugin.pluginId])
 
     // Add the dev mode plugin if enabled:
     if (developerModeOn) {
-      plugins.push(this.state.developerPlugin)
+      plugins.push(customPluginRow)
     }
 
     return (
@@ -283,7 +277,7 @@ class PluginList extends Component<Props, State> {
 
     return (
       <View style={styles.selectedCountryWrapper}>
-        <TouchableWithoutFeedback style={styles.selectedCountry} onPress={this.openCountrySelectionModal}>
+        <TouchableWithoutFeedback style={styles.selectedCountry} onPress={this._handleCountryPress}>
           <View style={styles.selectedCountryTextWrapper}>
             <View style={{ flexDirection: 'row' }}>
               {flag}
@@ -297,15 +291,17 @@ class PluginList extends Component<Props, State> {
   }
 }
 
-export const PluginListScene = connect(
+export const GuiPluginListScene = connect(
   (state: ReduxState): StateProps => ({
-    developerModeOn: state.ui.settings.developerModeOn,
+    account: state.core.account,
+    accountPlugins: state.account.referralCache.accountPlugins,
+    accountReferral: state.account.accountReferral,
     countryCode: state.ui.settings.countryCode,
-    account: state.core.account
+    developerModeOn: state.ui.settings.developerModeOn
   }),
   (dispatch: Dispatch): DispatchProps => ({
     updateCountryCode (countryCode: string) {
       dispatch(updateOneSetting({ countryCode }))
     }
   })
-)(PluginList)
+)(GuiPluginList)

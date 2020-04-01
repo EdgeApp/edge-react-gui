@@ -1,27 +1,49 @@
 // @flow
 
-import type { EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeDataStore, EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
 import { Alert, Linking } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import { SEND_CONFIRMATION } from '../../../../constants/SceneKeys.js'
 import s from '../../../../locales/strings.js'
 import { type GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
+import { type GuiPlugin } from '../../../../types/GuiPluginTypes.js'
+import { type GuiWallet } from '../../../../types/types.js'
 
-const formatWallet = w => {
+type Wallet = {
+  id: string,
+  name: string,
+  type: string,
+  currencyCode: string,
+  primaryNativeBalance: string,
+  fiatCurrencyCode: string
+}
+type Wallets = Array<Wallet>
+function formatWallet (w: GuiWallet): Wallet {
   return {
     id: w.id,
     name: w.name,
     type: w.type,
+    // $FlowFixMe: There is no `currencyInfo`, so what is happening here?
     currencyCode: w.currencyCode ? w.currencyCode : w.currencyInfo.currencyCode,
     primaryNativeBalance: w.primaryNativeBalance,
     fiatCurrencyCode: w.fiatCurrencyCode
   }
 }
 
-type Context = any
-type Wallet = any
-type Wallets = Array<Wallet>
+type Context = {
+  plugin: GuiPlugin & { environment: { [key: string]: any } },
+
+  folder: EdgeDataStore,
+  wallet?: GuiWallet,
+  wallets: { [id: string]: GuiWallet },
+  coreWallets: { [id: string]: EdgeCurrencyWallet },
+
+  back(): void,
+  chooseWallet(id: string, currencyCode: string): void,
+  toggleWalletList(): void,
+  renderTitle(title: string): void
+}
 type Address = {
   encodeUri: string,
   address: EdgeReceiveAddress
@@ -29,6 +51,7 @@ type Address = {
 
 // TODO: either get rid of PluginBridge class or refactor out these globals
 let navStack: Array<string> = []
+// $FlowFixMe
 let _context: Context = null
 
 export function pop (): any {
@@ -95,6 +118,7 @@ export class PluginBridge {
     const coreWallet = this.context.coreWallets[walletId]
     const currencyCode = data.currencyCode
     const address = await coreWallet.getReceiveAddress({ currencyCode })
+    // $FlowFixMe There are null cases here that might cause issues:
     const encodeUri = await coreWallet.encodeUri(address)
     return { encodeUri, address }
   }
@@ -175,7 +199,7 @@ export class PluginBridge {
 
   readData = async (data: any): Promise<string> => {
     try {
-      const response = await this.context.folder.getItem(this.context.pluginId, data.key)
+      const response = await this.context.folder.getItem(this.context.plugin.storeId, data.key)
       console.log('LOGGING readData response is: ', response)
       return response
     } catch (e) {
@@ -188,7 +212,7 @@ export class PluginBridge {
     const { key, value } = data
     try {
       console.log('LOGGING about to write data with key: ', key, ' and value: ', value)
-      await this.context.folder.setItem(this.context.pluginId, key, value)
+      await this.context.folder.setItem(this.context.plugin.storeId, key, value)
       console.log('LOGGING successfully written data and returning true')
       return true
     } catch (e) {
@@ -198,7 +222,7 @@ export class PluginBridge {
   }
 
   clearData (): Promise<boolean> {
-    return this.context.folder.deletePlugin(this.context.pluginId).then(() => {
+    return this.context.folder.deleteStore(this.context.plugin.storeId).then(() => {
       return true
     })
   }
@@ -217,7 +241,7 @@ export class PluginBridge {
   }
 
   debugLevel (data: any): Promise<boolean> {
-    console.log(`LOGGING ${this.context.plugin.key}  ${data.level}: ${data.text}`)
+    console.log(`LOGGING ${this.context.plugin.pluginId}  ${data.level}: ${data.text}`)
     return Promise.resolve(true)
   }
 

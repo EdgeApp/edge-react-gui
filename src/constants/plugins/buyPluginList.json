@@ -1,0 +1,639 @@
+[
+  {
+    "id": "simplex",
+    "pluginId": "simplex",
+    "paymentTypes": [
+      "credit"
+    ],
+    "description": "Fee: ~7% / Settlement: 10-30 minutes\nLimit: $18000/day",
+    "title": "Credit and Debit Card",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/03/simplex-logo-sm-square.png",
+    "forCountries": [
+      "AF",
+      "AL",
+      "DZ",
+      "AS",
+      "AD",
+      "AO",
+      "AI",
+      "AQ",
+      "AG",
+      "AR",
+      "AM",
+      "AW",
+      "AU",
+      "AT",
+      "AZ",
+      "BH",
+      "BD",
+      "BB",
+      "BY",
+      "BE",
+      "BZ",
+      "BJ",
+      "BM",
+      "BT",
+      "BO",
+      "BQ",
+      "BA",
+      "BV",
+      "BR",
+      "IO",
+      "BN",
+      "BG",
+      "BF",
+      "BI",
+      "CM",
+      "CA",
+      "CV",
+      "KY",
+      "CF",
+      "TD",
+      "CL",
+      "CN",
+      "CX",
+      "CC",
+      "CO",
+      "KM",
+      "CG",
+      "CD",
+      "CK",
+      "CR",
+      "HR",
+      "CU",
+      "CW",
+      "CY",
+      "CZ",
+      "CI",
+      "DK",
+      "DJ",
+      "DM",
+      "DO",
+      "EC",
+      "EG",
+      "SV",
+      "GQ",
+      "ER",
+      "EE",
+      "FK",
+      "FO",
+      "FJ",
+      "FI",
+      "FR",
+      "GF",
+      "PF",
+      "TF",
+      "GA",
+      "GM",
+      "GE",
+      "DE",
+      "GI",
+      "GR",
+      "GL",
+      "GD",
+      "GP",
+      "GU",
+      "GT",
+      "GG",
+      "GN",
+      "GW",
+      "GY",
+      "HT",
+      "HM",
+      "VA",
+      "HN",
+      "HK",
+      "HU",
+      "IS",
+      "IN",
+      "ID",
+      "IQ",
+      "IE",
+      "IM",
+      "IL",
+      "IT",
+      "JM",
+      "JP",
+      "JE",
+      "JO",
+      "KZ",
+      "KE",
+      "KI",
+      "KR",
+      "KW",
+      "KG",
+      "LA",
+      "LV",
+      "LB",
+      "LS",
+      "LR",
+      "LY",
+      "LI",
+      "LT",
+      "LU",
+      "MO",
+      "MK",
+      "MG",
+      "MW",
+      "MY",
+      "MV",
+      "ML",
+      "MT",
+      "MH",
+      "MQ",
+      "MR",
+      "MU",
+      "YT",
+      "MX",
+      "FM",
+      "MD",
+      "MC",
+      "MN",
+      "ME",
+      "MS",
+      "MA",
+      "MZ",
+      "MM",
+      "NA",
+      "NR",
+      "NP",
+      "NL",
+      "NC",
+      "NZ",
+      "NI",
+      "NE",
+      "NG",
+      "NU",
+      "NF",
+      "MP",
+      "NO",
+      "OM",
+      "PW",
+      "PS",
+      "PG",
+      "PY",
+      "PE",
+      "PH",
+      "PN",
+      "PL",
+      "PT",
+      "PR",
+      "QA",
+      "RO",
+      "RU",
+      "RW",
+      "RE",
+      "BL",
+      "SH",
+      "KN",
+      "LC",
+      "MF",
+      "PM",
+      "VC",
+      "WS",
+      "SM",
+      "ST",
+      "SA",
+      "SN",
+      "RS",
+      "SC",
+      "SL",
+      "SG",
+      "SX",
+      "SK",
+      "SI",
+      "SB",
+      "SO",
+      "ZA",
+      "GS",
+      "SS",
+      "ES",
+      "SD",
+      "SR",
+      "SJ",
+      "SZ",
+      "SE",
+      "CH",
+      "TW",
+      "TJ",
+      "TZ",
+      "TH",
+      "TL",
+      "TG",
+      "TK",
+      "TO",
+      "TR",
+      "TM",
+      "TC",
+      "TV",
+      "UG",
+      "UA",
+      "AE",
+      "GB",
+      "US",
+      "UM",
+      "UY",
+      "UZ",
+      "VU",
+      "VE",
+      "VN",
+      "VG",
+      "VI",
+      "WF",
+      "EH",
+      "ZM",
+      "ZW"
+    ],
+    "cryptoCodes": [
+      "BTC",
+      "BCH",
+      "ETH",
+      "LTC",
+      "XRP"
+    ],
+    "paymentTypeLogoKey": "credit"
+  },
+  {
+    "id": "wyre",
+    "pluginId": "wyre",
+    "paymentTypes": [
+      "bank"
+    ],
+    "description": "Fee: 1% / Settlement: 1-5 days\nLimit: $2500/week",
+    "title": "ACH Bank Transfer",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/01/wyre-logo-square-small.png",
+    "forCountries": [
+      "US"
+    ],
+    "cryptoCodes": [
+      "BTC",
+      "ETH",
+      "DAI"
+    ],
+    "paymentTypeLogoKey": "bank"
+  },
+  {
+    "id": "bity",
+    "pluginId": "bity",
+    "forCountries": [
+      "AT",
+      "BE",
+      "BG",
+      "CH",
+      "CY",
+      "CZ",
+      "DK",
+      "EE",
+      "FI",
+      "FR",
+      "DE",
+      "GR",
+      "HU",
+      "IE",
+      "IT",
+      "LV",
+      "LT",
+      "LU",
+      "MT",
+      "NL",
+      "PL",
+      "PT",
+      "RO",
+      "SK",
+      "SI",
+      "ES",
+      "SE",
+      "HR",
+      "IS",
+      "LI",
+      "MC",
+      "NO",
+      "SM",
+      "GB"
+    ],
+    "cryptoCodes": [
+      "BTC"
+    ],
+    "paymentTypes": [
+      "bank"
+    ],
+    "description": "Fee: 1.2% / Settlement: 1-2 days\nLimit: €5000/day with no KYC",
+    "title": "SEPA Bank Transfer",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/09/logoBity.png",
+    "paymentTypeLogoKey": "bank"
+  },
+  {
+    "id": "moonpay",
+    "pluginId": "moonpay",
+    "paymentTypes": [
+      "credit"
+    ],
+    "description": "Fee: 6.5% / Settlement: 10 minutes\nLimit: $2000/day",
+    "title": "Credit Card",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/05/icon_black_small.png",
+    "forCountries": [
+      "AT",
+      "AU",
+      "BE",
+      "BG",
+      "BR",
+      "HR",
+      "CA",
+      "CY",
+      "CZ",
+      "DK",
+      "EE",
+      "FI",
+      "FR",
+      "DE",
+      "GR",
+      "HK",
+      "HU",
+      "IS",
+      "IE",
+      "IT",
+      "JP",
+      "KR",
+      "LV",
+      "LI",
+      "LT",
+      "LU",
+      "MT",
+      "MX",
+      "NL",
+      "NO",
+      "PL",
+      "PT",
+      "RO",
+      "RU",
+      "SK",
+      "SI",
+      "ES",
+      "SE",
+      "ZA",
+      "GB",
+      "US"
+    ],
+    "cryptoCodes": [
+      "BTC",
+      "BCH",
+      "ETH",
+      "DAI",
+      "LTC",
+      "EOS",
+      "XRP",
+      "XLM",
+      "BAT",
+      "BNB",
+      "PAX",
+      "TUSD",
+      "USDC",
+      "USDT"
+    ],
+    "paymentTypeLogoKey": "credit"
+  },
+  {
+    "id": "safello",
+    "pluginId": "safello",
+    "paymentTypes": [
+      "credit"
+    ],
+    "description": "Fee: 5.75% / Settlement: Instant\nLimit: €2500/day",
+    "title": "Credit Card",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/06/Safello-Logo-Green-background.png",
+    "forCountries": [
+      "SE"
+    ],
+    "cryptoCodes": [
+      "BTC",
+      "ETH",
+      "BCH",
+      "XRP"
+    ],
+    "paymentTypeLogoKey": "credit"
+  },
+  {
+    "id": "safello.bank",
+    "pluginId": "safello",
+    "paymentTypes": [
+      "bank"
+    ],
+    "description": "Fee: 4% / Settlement: 1-2 days\nLimit: €2500/day",
+    "title": "Bank Transfer",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/06/Safello-Logo-Green-background.png",
+    "forCountries": [
+      "SE"
+    ],
+    "cryptoCodes": [
+      "BTC",
+      "ETH",
+      "BCH",
+      "XRP"
+    ],
+    "paymentTypeLogoKey": "bank",
+    "deepPath": "/buy/bank"
+  },
+  {
+    "id": "libertyx",
+    "pluginId": "libertyx",
+    "paymentTypes": [
+      "cash",
+      "credit"
+    ],
+    "description": "Fee: 3-8% / Settlement: Instant\nLimit: $200 - $3000/day",
+    "title": "Cash and Debit Card",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/05/libertyXlogo.png",
+    "forCountries": [
+      "US"
+    ],
+    "cryptoCodes": [
+      "BTC"
+    ],
+    "paymentTypeLogoKey": "cash",
+    "deepPath": "/"
+  },
+  {
+    "id": "banxa.bank",
+    "pluginId": "banxa",
+    "paymentTypes": [
+      "bank"
+    ],
+    "description": "Fee: 4-6% / Settlement: 5 min-24 hours\nLimit: $50000/day",
+    "title": "POLi Bank Transfer",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
+    "forCountries": [
+      "GB",
+      "AU",
+      "NL"
+    ],
+    "cryptoCodes": [
+      "BTC",
+      "ETH"
+    ],
+    "paymentTypeLogoKey": "poli",
+    "deepQuery": {
+      "country": "AU",
+      "payment": "POLI"
+    }
+  },
+  {
+    "id": "banxa.cash",
+    "pluginId": "banxa",
+    "paymentTypes": [
+      "cash"
+    ],
+    "description": "Fee: 4-6% / Settlement: 5 min-24 hours\nLimit: $9000/day",
+    "title": "Cash with Newsagent",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
+    "forCountries": [
+      "AU"
+    ],
+    "cryptoCodes": [
+      "BTC",
+      "ETH"
+    ],
+    "paymentTypeLogoKey": "newsagent",
+    "deepQuery": {
+      "country": "AU",
+      "payment": "BLUEONLINE"
+    }
+  },
+  {
+    "id": "bits of gold",
+    "pluginId": "bitsofgold",
+    "paymentTypes": [
+      "bank"
+    ],
+    "description": "Fee: 2.5% / Settlement: 1-48 hours\nLimit: €10000+/day",
+    "title": "Israeli Bank Transfer",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/bits-of-gold-logo-sm.png",
+    "forCountries": [
+      "IL"
+    ],
+    "cryptoCodes": [
+      "BTC"
+    ],
+    "paymentTypeLogoKey": "bank",
+    "deepPath": "/buy",
+    "deepQuery": {
+      "order_id": "null",
+      "page": "0"
+    }
+  },
+  "----- Sorting -----",
+  {
+    "id": "simplex",
+    "sortIndex": 4
+  },
+  {
+    "id": "bits of gold",
+    "sortIndex": 2
+  },
+  {
+    "id": "wyre",
+    "sortIndex": 1
+  },
+  {
+    "id": "bity",
+    "sortIndex": 1
+  },
+  {
+    "id": "safello.bank",
+    "sortIndex": 1
+  },
+  {
+    "id": "banxa.bank",
+    "sortIndex": 1
+  },
+  {
+    "id": "banxa.cash",
+    "sortIndex": 7
+  },
+  {
+    "id": "libertyx",
+    "sortIndex": 7
+  },
+  {
+    "id": "safello",
+    "sortIndex": 6
+  },
+  {
+    "id": "moonpay",
+    "sortIndex": 5
+  },
+  "----- iOS specifics -----",
+  {
+    "id": "moonpay",
+    "forPlatform": "ios",
+    "paymentTypes": [
+      "credit",
+      "applepay"
+    ],
+    "paymentTypeLogoKey": "applepay",
+    "title": "Apple Pay and Credit Card"
+  },
+  "----- Country Specifics -----",
+  {
+    "id": "safello",
+    "forCountries": [
+      "SE"
+    ],
+    "paymentTypes": [
+      "bank",
+      "credit"
+    ],
+    "title": "Swish and Credit Card",
+    "sortIndex": 2,
+    "paymentTypeLogoKey": "swish"
+  },
+  {
+    "id": "safello.bank",
+    "forCountries": [
+      "SE"
+    ],
+    "paymentTypeLogoKey": "bankgirot",
+    "title": "Bankgiro"
+  },
+  {
+    "id": "safello.bank",
+    "forCountries": [
+      "DK"
+    ],
+    "title": "DKK Bank Transfer"
+  },
+  {
+    "id": "banxa.bank",
+    "forCountries": [
+      "GB"
+    ],
+    "deepQuery": {
+      "country": "GB",
+      "payment_id": "6018"
+    },
+    "title": "Faster Payments",
+    "paymentTypeLogoKey": "fasterPayments",
+    "description": "Fee: ~2.5% / Settlement: Instant-1 hour\nLimit: £5000",
+    "sortIndex": 1
+  },
+  {
+    "id": "bity",
+    "forCountries": [
+      "GB"
+    ],
+    "sortIndex": 2
+  },
+  {
+    "id": "banxa.bank",
+    "forCountries": [
+      "NL"
+    ],
+    "deepQuery": {
+      "country": "nl",
+      "payment": "IDEAL"
+    },
+    "title": "iDEAL",
+    "paymentTypeLogoKey": "ideal",
+    "description": "Fee: ~2.9% / Settlement: Instant\nLimit: €10000",
+    "sortIndex": 1
+  }
+]

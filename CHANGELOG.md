@@ -1,5 +1,13 @@
 # edge-react-gui
 
+## 1.11.10
+
+- Reduced Bits of Gold fees
+- Expanded price tracking for ERC20 tokens
+- Updated Totle plugin
+- Enhanced deeplinking
+- Bug fixes
+
 ## 1.11.9
 
 - Samsung S7 crash fix

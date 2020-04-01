@@ -4,7 +4,7 @@ import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { showError } from '../components/services/AirshipInstance.js'
-import { pluginUrlMap } from '../constants/plugins/buySellPlugins.js'
+import { guiPlugins } from '../constants/plugins/GuiPlugins.js'
 import { EDGE_LOGIN, PLUGIN_VIEW_DEEP, SCAN } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
 import { type DeepLink } from '../types/DeepLink.js'
@@ -68,12 +68,16 @@ function handleLink (dispatch: Dispatch, state: ReduxState, link: DeepLink): boo
     case 'passwordRecovery':
       return false
 
-    case 'plugin':
-      if (link.pluginId === 'simplex') {
-        const plugin = pluginUrlMap['co.edgesecure.simplex']
-        Actions.push(PLUGIN_VIEW_DEEP, { plugin })
+    case 'plugin': {
+      const { pluginId, path, query } = link
+      const plugin = guiPlugins[pluginId]
+      if (pluginId === 'custom' || plugin == null || plugin.pluginId == null) {
+        showError(new Error(`No plugin named ${pluginId} exists`))
+        return true
       }
+      Actions.push(PLUGIN_VIEW_DEEP, { plugin, deepPath: path, deepQuery: query })
       return true
+    }
 
     case 'promotion': {
       if (!state.account.accountReferralLoaded) return false
