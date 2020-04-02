@@ -56,7 +56,7 @@ export const getRegInfo = (fioAddress: string, selectedWallet: EdgeCurrencyWalle
   try {
     const buyAddressResponse: BuyAddressResponse = await fioPlugin.otherMethods.buyAddressRequest({
       address: fioAddress,
-      referralCode: 'fio',
+      referralCode: 'edge',
       publicKey: selectedWallet.publicWalletInfo.keys.publicKey
     })
 
