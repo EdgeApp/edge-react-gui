@@ -42,7 +42,6 @@ import DefaultFiatSettingConnector from '../connectors/scenes/DefaultFiatSetting
 import EdgeLoginSceneConnector from '../connectors/scenes/EdgeLoginSceneConnector'
 import EditToken from '../connectors/scenes/EditTokenConnector.js'
 import { FioAddressConfirmConnector } from '../connectors/scenes/FioAddressConfirmConnector'
-import { FioAddressConnector } from '../connectors/scenes/FioAddressConnector'
 import { FioAddressDetailsConnector } from '../connectors/scenes/FioAddressDetailsConnector'
 import { FioAddressListConnector } from '../connectors/scenes/FioAddressListConnector'
 import { FioAddressRegisterConnector } from '../connectors/scenes/FioAddressRegisterConnector'
@@ -622,17 +621,6 @@ export class MainComponent extends Component<Props> {
                     onLeft={Actions.pop}
                   />
                 </Stack>
-                <Stack key={Constants.FIO_ADDRESS}>
-                  <Scene
-                    key={Constants.FIO_ADDRESS}
-                    navTransparent={true}
-                    component={FioAddressConnector}
-                    renderTitle={this.renderTitle(FIO_ADDRESS)}
-                    renderLeftButton={this.renderEmptyButton()}
-                    renderRightButton={this.renderMenuButton()}
-                    onLeft={Actions.pop}
-                  />
-                </Stack>
 
                 <Stack key={Constants.FIO_ADDRESS_LIST}>
                   <Scene
@@ -833,10 +821,6 @@ export class MainComponent extends Component<Props> {
     }
     if (this.isCurrentScene(Constants.PLUGIN_VIEW)) {
       handlePluginBack()
-      return true
-    }
-    if (this.isCurrentScene(Constants.FIO_ADDRESS)) {
-      Actions.popTo(Constants.WALLET_LIST_SCENE)
       return true
     }
     Actions.pop()

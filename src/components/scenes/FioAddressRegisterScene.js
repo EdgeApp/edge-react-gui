@@ -263,7 +263,6 @@ export class FioAddressRegisterScene extends Component<Props, State> {
             <View style={fioAddressStyles.formFieldView}>
               <FormField
                 style={this.materialInputOnWhiteStyle}
-                autoFocus
                 clearButtonMode={this.clearButtonMode}
                 autoCorrect={false}
                 placeholder={s.strings.fio_address_register_form_field_label}
