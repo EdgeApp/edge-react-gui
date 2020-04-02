@@ -87,6 +87,7 @@ export class AddressModal extends Component<AddressModalProps, AddressModalState
   }
 
   fetchDomain = async (domain: string, currencyTicker: string) => {
+    if (!domain) return ;
     domain = domain.trim().toLowerCase();
     if (!this.checkIfDomain(domain)) {
       throw new ResolutionError(ResolutionErrorCode.UnsupportedDomain, { domain })
