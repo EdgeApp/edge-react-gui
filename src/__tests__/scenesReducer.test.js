@@ -54,16 +54,12 @@ test('initialState', () => {
     },
     fioRequest: {
       requests: [],
-      pendingMore: 0,
-      pendingPage: 1,
       amounts: {
         exchangeAmount: '',
         nativeAmount: ''
       },
       fioModalData: {},
       sentRequests: [],
-      sentMore: 0,
-      sentPage: 1,
       fioPendingRequestSelected: {},
       fioSentRequestSelected: {}
     },

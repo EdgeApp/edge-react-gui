@@ -199,17 +199,6 @@ export class FioRequestList extends Component<Props, State> {
     )
   }
 
-  stylesByStatus = (status: string) => {
-    if (isRejectedFioRequest(status)) {
-      return requestListStyles.rejectedCol
-    }
-    if (isSentFioRequest(status)) {
-      return requestListStyles.receivedCol
-    }
-
-    return null
-  }
-
   statusField = (status: string) => {
     if (isRejectedFioRequest(status)) {
       return <T style={requestListStyles.rejected}>{s.strings.fio_reject_status}</T>
@@ -222,26 +211,30 @@ export class FioRequestList extends Component<Props, State> {
   }
 
   requestedTimeAndMemo = (time: Date, memo: string) => {
+    const maxLength = 40
+    const memoStr = memo && memo.length > maxLength ? memo.slice(0, maxLength) + '... ' : memo
     return (
       <View>
         <T style={requestListStyles.text}>
           {this.getFormattedTime(time)}
-          {memo ? ` - ${memo}` : ''}
+          {memoStr ? ` - ${memoStr}` : ''}
         </T>
       </View>
     )
   }
 
   requestedIcon = (status?: string = '') => {
+    let icon
     if (isRejectedFioRequest(status)) {
-      return <Image style={styles.transactionLogo} source={invalidIcon} />
+      icon = <Image style={requestListStyles.transactionStatusLogo} source={invalidIcon} />
     }
     if (isSentFioRequest(status)) {
-      return <Image style={styles.transactionLogo} source={checkedIcon} />
+      icon = <Image style={requestListStyles.transactionStatusLogo} source={checkedIcon} />
     }
     return (
       <View>
         <Image style={styles.transactionLogo} source={fioRequestsIcon} />
+        {icon}
       </View>
     )
   }
@@ -364,7 +357,6 @@ export class FioRequestList extends Component<Props, State> {
   }
 
   renderSentTx = (transaction: Object) => {
-    const textStyles = this.stylesByStatus(transaction.item.status)
     return (
       <TouchableHighlight
         onPress={() => this.selectSentRequest(transaction.item)}
@@ -392,8 +384,8 @@ export class FioRequestList extends Component<Props, State> {
               </View>
             </View>
             <View style={requestListStyles.columnCurrency}>
-              <View>{this.currencyField(transaction.item.token_code, transaction.item.content.amount, textStyles)}</View>
-              <View>{this.fiatField(transaction.item.content.token_code, this.props.fiatSymbol, transaction.item.content.amount, textStyles)}</View>
+              <View>{this.currencyField(transaction.item.token_code, transaction.item.content.amount)}</View>
+              <View>{this.fiatField(transaction.item.content.token_code, this.props.fiatSymbol, transaction.item.content.amount)}</View>
               <View>{this.statusField(transaction.item.status)}</View>
             </View>
           </View>

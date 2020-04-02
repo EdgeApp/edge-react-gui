@@ -154,11 +154,7 @@ Object {
         "fioModalData": Object {},
         "fioPendingRequestSelected": Object {},
         "fioSentRequestSelected": Object {},
-        "pendingMore": 0,
-        "pendingPage": 1,
         "requests": Array [],
-        "sentMore": 0,
-        "sentPage": 1,
         "sentRequests": Array [],
       },
       "passwordRecoveryReminderModal": Object {

@@ -7,29 +7,21 @@ import type { ExchangedFlipInputAmounts } from '../UI/components/FlipInput/Excha
 
 export type FioRequestState = {
   requests: Object[],
-  pendingMore: number,
-  pendingPage: number,
   amounts: ExchangedFlipInputAmounts,
   fioModalData: any,
   sentRequests: Object[],
-  sentMore: number,
-  sentPage: number,
   fioPendingRequestSelected: Object,
   fioSentRequestSelected: Object
 }
 
 const initialState: FioRequestState = {
   requests: [],
-  pendingMore: 0,
-  pendingPage: 1,
   amounts: {
     exchangeAmount: '',
     nativeAmount: ''
   },
   fioModalData: {},
   sentRequests: [],
-  sentMore: 0,
-  sentPage: 1,
   fioPendingRequestSelected: {},
   fioSentRequestSelected: {}
 }
@@ -50,22 +42,17 @@ export const fioRequest: Reducer<FioRequestState, Action> = (state = initialStat
       }
     case 'FIO/FIO_REQUEST_LIST_PENDING':
       if (!action.data) throw new Error('Invalid action FIO_REQUEST_LIST_PENDING')
-      // todo: implement 'more' logic
       const fioRequestsPending = [...state.requests, ...action.data.fioRequestsPending]
       return {
         ...state,
-        requests: fioRequestsPending,
-        pendingMore: action.data.more,
-        pendingPage: action.data.page
+        requests: fioRequestsPending
       }
     case 'FIO/FIO_REQUEST_LIST_SENT':
       if (!action.data) throw new Error('Invalid action FIO_REQUEST_LIST_SENT')
       const fioRequestsSent = [...state.sentRequests, ...action.data.fioRequestsSent]
       return {
         ...state,
-        sentRequests: fioRequestsSent,
-        sentMore: action.data.more,
-        sentPage: action.data.page
+        sentRequests: fioRequestsSent
       }
     case 'FIO/FIO_PENDING_REQUEST_SELECTED':
       if (!action.data) throw new Error('Invalid action FIO_PENDING_REQUEST_SELECTED')

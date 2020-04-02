@@ -86,7 +86,7 @@ export const styles = {
     flexDirection: 'row',
     height: scale(75),
     justifyContent: 'flex-start',
-    width: '75%'
+    width: '65%'
   },
   controls: {
     alignItems: 'center',
@@ -203,6 +203,14 @@ export const styles = {
   trash: {
     height: scale(25),
     width: scale(25)
+  },
+  transactionStatusLogo: {
+    position: 'absolute',
+    right: scale(2),
+    top: scale(-7),
+    width: scale(16),
+    height: scale(16),
+    borderRadius: scale(8)
   }
 }
 

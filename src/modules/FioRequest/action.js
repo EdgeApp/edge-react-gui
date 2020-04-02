@@ -2,22 +2,21 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 
 import { showError } from '../../components/services/AirshipInstance'
-import { LIMIT } from '../../constants/indexConstants'
 import s from '../../locales/strings'
 import type { Dispatch, GetState } from '../../types/reduxTypes.js'
 import { findWalletByFioAddress, getFioWallets } from '../UI/selectors'
 
-const requestListPending = (fioRequestsPending: any, more = 0, page = 1) => ({
+const requestListPending = (fioRequestsPending: any) => ({
   type: 'FIO/FIO_REQUEST_LIST_PENDING',
-  data: { fioRequestsPending, more, page }
+  data: { fioRequestsPending }
 })
 
-const requestListSent = (fioRequestsSent: any, more = 0, page = 1) => ({
+const requestListSent = (fioRequestsSent: any) => ({
   type: 'FIO/FIO_REQUEST_LIST_SENT',
-  data: { fioRequestsSent, more, page }
+  data: { fioRequestsSent }
 })
 
-export const getFioRequestsPending = (page: number = 1) => (dispatch: Dispatch, getState: GetState) => {
+export const getFioRequestsPending = () => (dispatch: Dispatch, getState: GetState) => {
   const wallets = getFioWallets(getState())
   dispatch(requestListPending([]))
   if (wallets != null) {
@@ -27,13 +26,11 @@ export const getFioRequestsPending = (page: number = 1) => (dispatch: Dispatch, 
         if (fioAddresses.length > 0) {
           wallet.otherMethods
             .fioAction('getPendingFioRequests', {
-              fioPublicKey,
-              limit: LIMIT,
-              offset: (page - 1) * LIMIT
+              fioPublicKey
             })
-            .then(({ requests, more }) => {
+            .then(({ requests }) => {
               if (requests) {
-                dispatch(requestListPending(requests, more, page))
+                dispatch(requestListPending(requests))
               } else {
                 showError(s.strings.fio_get_requests_error)
               }
@@ -47,7 +44,7 @@ export const getFioRequestsPending = (page: number = 1) => (dispatch: Dispatch, 
   }
 }
 
-export const getFioRequestsSent = (page: number = 1) => (dispatch: Dispatch, getState: GetState) => {
+export const getFioRequestsSent = () => (dispatch: Dispatch, getState: GetState) => {
   const wallets = getFioWallets(getState())
   dispatch(requestListSent([]))
   if (wallets != null) {
@@ -57,13 +54,11 @@ export const getFioRequestsSent = (page: number = 1) => (dispatch: Dispatch, get
         if (fioAddresses.length > 0) {
           wallet.otherMethods
             .fioAction('getSentFioRequests', {
-              fioPublicKey,
-              limit: LIMIT,
-              offset: (page - 1) * LIMIT
+              fioPublicKey
             })
             .then(fioRequestsSentRes => {
               if (fioRequestsSentRes) {
-                dispatch(requestListSent(fioRequestsSentRes.requests, fioRequestsSentRes.more, page))
+                dispatch(requestListSent(fioRequestsSentRes.requests))
               } else {
                 showError(s.strings.fio_get_requests_error)
               }
