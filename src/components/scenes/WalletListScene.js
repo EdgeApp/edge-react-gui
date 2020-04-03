@@ -26,7 +26,6 @@ import { WiredProgressBar } from '../../modules/UI/components/WiredProgressBar/W
 import { getWalletLoadingPercent } from '../../modules/UI/selectors.js'
 import { addWalletStyle } from '../../styles/components/AddWalletStyle.js'
 import { buyMultipleCryptoStyle } from '../../styles/components/BuyCryptoStyle.js'
-import { TwoButtonModalStyle } from '../../styles/components/TwoButtonModalStyle.js'
 import styles from '../../styles/scenes/WalletListStyle'
 import THEME from '../../theme/variables/airbitz'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
@@ -41,7 +40,8 @@ import { launchModal } from '../common/ModalProvider.js'
 import SortableWalletListRow from '../common/SortableWalletListRow.js'
 import { WiredBalanceBox } from '../common/WiredBalanceBox.js'
 import { StaticModalComponent } from '../modals/StaticModalComponent.js'
-import { TwoButtonTextModalComponent } from '../modals/TwoButtonTextModalComponent.js'
+import { TwoButtonSimpleConfirmationModal } from '../modals/TwoButtonSimpleConfirmationModal.js'
+import { Airship } from '../services/AirshipInstance.js'
 
 const DONE_TEXT = s.strings.string_done_cap
 const WALLETS_HEADER_TEXT = s.strings.fragment_wallets_header
@@ -98,6 +98,22 @@ export default class WalletList extends Component<Props, State> {
       showMessageModal: false,
       messageModalMessage: null,
       isWalletProgressVisible: true
+    }
+  }
+
+  async componentDidMount () {
+    if (this.state.showOtpResetModal) {
+      const resolved = await Airship.show(bridge => (
+        <TwoButtonSimpleConfirmationModal
+          bridge={bridge}
+          iconImage={iconImage}
+          title={s.strings.otp_modal_reset_headline}
+          subTitle={s.strings.otp_modal_reset_description}
+          cancelText={s.strings.request_review_answer_no}
+          doneText={s.strings.request_review_answer_yes}
+        />
+      ))
+      resolved ? this.keepOtp() : this.disableOtp()
     }
   }
 
@@ -234,21 +250,6 @@ export default class WalletList extends Component<Props, State> {
   }
 
   launchModal = () => {
-    if (this.state.showOtpResetModal) {
-      return (
-        <TwoButtonTextModalComponent
-          style={TwoButtonModalStyle}
-          headerText={s.strings.otp_modal_reset_headline}
-          launchModal
-          middleText={s.strings.otp_modal_reset_description}
-          iconImage={iconImage}
-          cancelText={s.strings.otp_disable}
-          doneText={s.strings.otp_keep}
-          onCancel={this.disableOtp}
-          onDone={this.keepOtp}
-        />
-      )
-    }
     if (this.state.showMessageModal && this.state.messageModalMessage != null) {
       return <StaticModalComponent cancel={this.cancelStatic} body={this.state.messageModalMessage} modalDismissTimerSeconds={8} isVisible />
     }

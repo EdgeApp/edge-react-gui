@@ -8,5 +8,6 @@ export { THEME } from '../../theme/variables/airbitz.js'
 export { AirshipModal } from '../common/AirshipModal.js'
 export { ContentArea } from '../common/ContentArea.js'
 export { IconCircle } from '../common/IconCircle.js'
+export { ModalIcon } from '../common/ModalIcon.js'
 export { ModalCloseArrow } from '../common/ModalCloseArrow.js'
 export type { AirshipBridge }
