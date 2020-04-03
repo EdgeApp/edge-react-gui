@@ -473,7 +473,7 @@
     "paymentTypeLogoKey": "poli",
     "deepQuery": {
       "country": "AU",
-      "payment": "POLI"
+      "payment_id": "POLI"
     }
   },
   {
@@ -495,7 +495,73 @@
     "paymentTypeLogoKey": "newsagent",
     "deepQuery": {
       "country": "AU",
-      "payment": "BLUEONLINE"
+      "payment_id": "BLUEONLINE"
+    }
+  },
+  {
+    "id": "banxa.payid",
+    "pluginId": "banxa",
+    "paymentTypes": [
+      "bank"
+    ],
+    "description": "Fee: 4-6% / Settlement: Instant\nLimit: $50000/day",
+    "title": "PayID",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
+    "forCountries": [
+      "AU"
+    ],
+    "cryptoCodes": [
+      "BTC",
+      "ETH"
+    ],
+    "paymentTypeLogoKey": "payid",
+    "deepQuery": {
+      "country": "AU",
+      "payment_id": "5035"
+    }
+  },
+  {
+    "id": "banxa.bpay",
+    "pluginId": "banxa",
+    "paymentTypes": [
+      "bank"
+    ],
+    "description": "Fee: $3 / Settlement: 5 min-24 hours\nLimit: $50000/day",
+    "title": "BPay",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
+    "forCountries": [
+      "AU"
+    ],
+    "cryptoCodes": [
+      "BTC",
+      "ETH"
+    ],
+    "paymentTypeLogoKey": "bpay",
+    "deepQuery": {
+      "country": "AU",
+      "payment_id": "5034"
+    }
+  },
+  {
+    "id": "banxa.auspost",
+    "pluginId": "banxa",
+    "paymentTypes": [
+      "cash"
+    ],
+    "description": "Fee: 4-6% / Settlement: Instant\nLimit: $50000/day",
+    "title": "Australia Post",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
+    "forCountries": [
+      "AU"
+    ],
+    "cryptoCodes": [
+      "BTC",
+      "ETH"
+    ],
+    "paymentTypeLogoKey": "auspost",
+    "deepQuery": {
+      "country": "AU",
+      "payment_id": "5033"
     }
   },
   {
@@ -548,6 +614,18 @@
   {
     "id": "banxa.cash",
     "sortIndex": 7
+  },
+  {
+    "id": "banxa.bpay",
+    "sortIndex": 3
+  },
+  {
+    "id": "banxa.payid",
+    "sortIndex": 3
+  },
+  {
+    "id": "banxa.auspost",
+    "sortIndex": 4
   },
   {
     "id": "libertyx",
