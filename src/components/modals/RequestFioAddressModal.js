@@ -50,6 +50,8 @@ export class FioAddressModal extends Component<AddressModalProps, AddressModalSt
   _setClipboard = async () => {
     try {
       const address = await Clipboard.getString()
+      const isFioAddress = await this.props.fioPlugin.otherMethods.isAccountAvailable(address)
+      if (!isFioAddress) return
 
       this.setState({
         clipboard: address
