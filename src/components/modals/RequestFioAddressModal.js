@@ -94,7 +94,6 @@ export class FioAddressModal extends Component<AddressModalProps, AddressModalSt
 
   validateAddress = async (): Promise<boolean> => {
     const address: string = this.state.address
-    // if memo is empty is ok, if not empty it must be visible characters and eq or less than 64 characters
     if (address && (await this.props.fioPlugin.otherMethods.isAccountAvailable(address))) {
       this.setState({
         addressError: '',
@@ -116,7 +115,6 @@ export class FioAddressModal extends Component<AddressModalProps, AddressModalSt
 
   validateMemo = (): boolean => {
     const memo: string = this.state.memo
-    // if memo is empty is ok, if not empty it must be visible characters and eq or less than 64 characters
     if (!memo || (this.isASCII(memo) && memo.length <= 64)) {
       this.setState({
         memoError: '',
@@ -198,7 +196,7 @@ export class FioAddressModal extends Component<AddressModalProps, AddressModalSt
   }
 }
 
-export type FioAddressModalOpts = { fioPlugin: any, isConnected: boolean }
+export type FioAddressModalOpts = { fioPlugin: EdgeCurrencyConfig, isConnected: boolean }
 
 export const createFioAddressModal = (opts: FioAddressModalOpts) => {
   function FioAddressModalWrapped (props: { +onDone: Function }) {

@@ -99,8 +99,6 @@ export const confirmRequest = (
     })
     cb()
   } catch (e) {
-    console.log(e)
-    console.log(e.json)
     showError(s.strings.fio_confirm_request_error)
   }
 }

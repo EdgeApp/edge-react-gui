@@ -64,7 +64,6 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
       const allWalletsArr: any = Object.values(this.props.allWallets)
       try {
         for (const item of allWalletsArr) {
-          // allWalletsArr.forEach(async function (item, index, arr) {
           if (item.type === FIO_WALLET_TYPE) {
             const engine = this.props.account.currencyWallets[item.id]
             const fioAddresses: string[] = await engine.otherMethods.getFioAddressNames()
