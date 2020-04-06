@@ -63,14 +63,11 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
         if (type === 'fio') {
           const engine = state.core.account.currencyWallets[walletId]
           if (engine != null) {
-            fioAddress = await engine.otherMethods.getFioAddress()[0]
-            if (!fioAddress) {
-              try {
-                const fioAddresses = await engine.otherMethods.getFioAddressNames()
-                fioAddress = fioAddresses[0]
-              } catch (e) {
-                fioAddress = ''
-              }
+            try {
+              const fioAddresses = await engine.otherMethods.getFioAddressNames()
+              fioAddress = fioAddresses.length ? fioAddresses[0] : ''
+            } catch (e) {
+              fioAddress = ''
             }
           }
         }

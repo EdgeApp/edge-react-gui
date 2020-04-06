@@ -394,4 +394,4 @@ export const FIAT_CODES_SYMBOLS = {
 
 export const FIO_WALLET_TYPE = 'wallet:fio'
 export const FIO_STR = 'FIO'
-export const FIO_DOMAIN_DEFAULT = '@fiotestnet'
+export const FIO_DOMAIN_DEFAULT = '@edge'

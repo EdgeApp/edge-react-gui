@@ -114,6 +114,8 @@ class FormField extends Component {
           keyboardType={this.props.keyboardType}
           maxLength={this.props.maxLength}
           autoCorrect={this.props.autoCorrect || false}
+          multiline={this.props.multiline}
+          suffix={this.props.suffix}
         />
       )
     }
