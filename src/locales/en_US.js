@@ -418,6 +418,7 @@ const strings = {
   transaction_details_fiat_modal_header: '%s AMOUNT',
   transaction_details_fiat_label: 'Choose an amount',
   transaction_details_error_invalid: 'Invalid Transaction',
+  transaction_details_choose_a_sub_category: 'Choose a sub-category',
   tx_detail_picker_title: 'Choose a Category:',
   transaction_details_notes_title: 'Notes',
   string_fee_with_brackets: '(Fee)',

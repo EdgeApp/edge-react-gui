@@ -131,11 +131,12 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
       const fullCategory = metadata.category || ''
       const colonOccurrence = fullCategory.indexOf(':')
       if (fullCategory && colonOccurrence) {
-        const splittedCategory = fullCategory.split(':')
-        const category = splittedCategory[0].toLowerCase()
+        const splittedFullCategory = UTILS.splitTransactionCategory(fullCategory)
+        const { subCategory } = splittedFullCategory
+        const category = splittedFullCategory.category.toLowerCase()
         return {
           category: categories[category] ? categories[category].key : defaultCategory,
-          subCategory: splittedCategory[1]
+          subCategory
         }
       }
     }
@@ -150,7 +151,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
   onChangePayee = (payeeName: string, thumbnailPath: string) => {
     this.setState({ payeeName, thumbnailPath })
   }
-  openPersonInput () {
+  openPersonInput = () => {
     const personLabel = this.state.direction === 'receive' ? s.strings.transaction_details_payer : s.strings.transaction_details_payee
     Airship.show(bridge => (
       <TransactionDetailsPersonInput
@@ -164,7 +165,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
   }
 
   onChangeFiat = (amountFiat: string) => this.setState({ amountFiat })
-  openFiatInput () {
+  openFiatInput = () => {
     Airship.show(bridge => (
       <TransactionDetailsFiatInput
         bridge={bridge}
@@ -176,7 +177,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
   }
 
   onChangeCategory = (category: string, subCategory: string) => this.setState({ category, subCategory })
-  openCategoryInput () {
+  openCategoryInput = () => {
     Airship.show(bridge => (
       <TransactionDetailsCategoryInput
         bridge={bridge}
@@ -191,11 +192,11 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
   }
 
   onChangeNotes = (notes: string) => this.setState({ notes })
-  openNotesInput () {
+  openNotesInput = () => {
     Airship.show(bridge => <TransactionDetailsNotesInput bridge={bridge} notes={this.state.notes} onChange={this.onChangeNotes} />).then(_ => {})
   }
 
-  async openAdvancedDetails () {
+  openAdvancedDetails = async () => {
     const { edgeTransaction, currencyInfo } = this.props
     await launchModal(
       createAdvancedTransactionDetailsModal({

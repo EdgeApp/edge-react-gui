@@ -190,7 +190,6 @@ export class MainComponent extends Component<Props> {
               renderTitle={this.renderTitle(TRANSACTION_DETAILS)}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderMenuButton()}
-              hideTabBar
             />
             <Scene
               key={Constants.EDGE_LOGIN}

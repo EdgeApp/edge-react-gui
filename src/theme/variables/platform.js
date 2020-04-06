@@ -13,8 +13,7 @@ const PLATFORM = {
   usableHeight: deviceHeight - (Platform.OS === 'ios' ? 44 : 62) - 69 - (isIphoneX ? 57 : 0),
   isIphoneX,
   deviceWidth,
-  deviceHeight,
-  OS: Platform.OS
+  deviceHeight
 }
 
 export { PLATFORM }

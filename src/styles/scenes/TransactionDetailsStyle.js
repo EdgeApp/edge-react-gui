@@ -1,6 +1,6 @@
 // @flow
 
-import { StyleSheet } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 
 import { MaterialInputOnWhite } from '../../styles/components/FormFieldStyles'
 import THEME from '../../theme/variables/airbitz'
@@ -230,7 +230,7 @@ export const styles = {
     borderWidth: 1,
     borderColor: '#CCCCCC',
     borderRadius: 3,
-    height: PLATFORM.deviceHeight * 0.45 - (PLATFORM.OS === 'android' ? rem(1.25) : 0),
+    height: PLATFORM.deviceHeight * 0.45 - (Platform.OS === 'android' ? rem(1.25) : 0),
     paddingVertical: rem(0.1),
     paddingHorizontal: rem(0.8)
   },

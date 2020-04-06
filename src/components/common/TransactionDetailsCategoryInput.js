@@ -5,6 +5,7 @@ import { TouchableWithoutFeedback, View } from 'react-native'
 import s from '../../locales/strings.js'
 import FormattedText from '../../modules/UI/components/FormattedText/index'
 import styles, { materialInput } from '../../styles/scenes/TransactionDetailsStyle'
+import { splitTransactionCategory } from '../../util/utils.js'
 import { FormField } from '../common/FormField'
 import SubCategorySelect from '../common/TransactionSubCategorySelect.js'
 import { type AirshipBridge, AirshipModal } from '../modals/modalParts'
@@ -55,9 +56,9 @@ export class TransactionDetailsCategoryInput extends Component<Props, State> {
   }
   onSelectSubCategory = (input: string) => {
     const { bridge, subCategories, setNewSubcategory } = this.props
-    const splittedSubCategory = input.split(':')
-    const category = splittedSubCategory[0].toLowerCase()
-    const subCategory = splittedSubCategory[1]
+    const splittedFullCategory = splitTransactionCategory(input)
+    const { subCategory } = splittedFullCategory
+    const category = splittedFullCategory.category.toLowerCase()
     this.setState({ category, subCategory })
     this.props.onChange(category, subCategory)
     if (!subCategories.find(item => item === input)) {
@@ -93,7 +94,7 @@ export class TransactionDetailsCategoryInput extends Component<Props, State> {
                 autoFocus
                 blurOnSubmit
                 autoCapitalize="none"
-                label="Choose a sub-category"
+                label={s.strings.transaction_details_choose_a_sub_category}
                 returnKeyType={'done'}
                 style={materialInput}
                 fontSize={materialInput.fontSize}

@@ -555,3 +555,13 @@ export const getFeeDisplayed = (number: number): string => {
 
   return number.toFixed(defaultAmount)
 }
+
+export const splitTransactionCategory = (fullCategory: string) => {
+  const splittedCategory = fullCategory.split(':')
+  const categoryArray = splittedCategory.shift()
+
+  return {
+    category: categoryArray,
+    subCategory: splittedCategory.length > 0 ? splittedCategory.join(':') : ''
+  }
+}

@@ -27,7 +27,7 @@ const mapStateToProps = (state: State, ownProps: TransactionDetailsOwnProps) => 
     : UTILS.getWalletDefaultDenomProps(wallet, settings, edgeTransaction.currencyCode)
 
   const nativeAmount = edgeTransaction && edgeTransaction.nativeAmount ? bns.abs(edgeTransaction.nativeAmount) : ''
-  const cryptoAmount: string = UTILS.convertNativeToDisplay(walletDefaultDenomProps.multiplier)(nativeAmount)
+  const cryptoAmount: string = UI_SELECTORS.convertNativeToExchangeRateDenomination(settings, currencyCode, nativeAmount)
   const currentFiatAmount = UI_SELECTORS.convertCurrencyFromExchangeRates(
     state.exchangeRates,
     currencyCode,
