@@ -618,7 +618,7 @@ const strings = {
   fio_address_first_screen_end:
     'Similar to website names, your FIO Address can be used to send you tokens/coins without ever having to see or send your public key.',
   fio_address_wallet_selection_text:
-    'FIO Address requires an annual fee. This payment is required by the FIO Protocol and not a requirement of Edge. The current annual cost is equivalent to %s FIO, but may fluctuate in the future. Each FIO Address comes with bundled transaction to cover limited number of certain transactions such FIO Request. Select a wallet to pay from:',
+    'FIO Address requires an annual fee. This payment is required by the FIO Protocol and not a requirement of Edge. The current annual cost is equivalent to %s FIO, but may fluctuate in the future. Each FIO Address includes a number of free actions, such as payment requests, where the mining fee is waived. Select a wallet to pay from:',
   fio_address_list: 'Fio Address List',
   fio_address_register_first_free: 'Register First Free FIO Address',
   fio_address_register_custom_domain: 'Register custom domain',
