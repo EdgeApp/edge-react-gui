@@ -10,7 +10,7 @@ import type { ExchangeRatesState } from '../../modules/ExchangeRates/reducer'
 import { isRejectedFioRequest, isSentFioRequest } from '../../modules/FioRequest/util'
 import T from '../../modules/UI/components/FormattedText/index'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
-import styles from '../../styles/scenes/FioSentRequestDetailsStyle.js'
+import { styles } from '../../styles/scenes/FioSentRequestDetailsStyle.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 
 export type FioSentRequestDetailsProps = {
@@ -121,7 +121,7 @@ export class FioSentRequestDetailsComponent extends Component<Props, LocalState>
           <View>{this.requestedField(this.props.selectedFioSentRequest.payer_fio_address, this.props.selectedFioSentRequest.status)}</View>
           <View>{this.dateField(new Date(this.props.selectedFioSentRequest.time_stamp))}</View>
           <View>{this.memoField(this.props.selectedFioSentRequest.content.memo)}</View>
-          <View style={styles.row2}>
+          <View style={styles.lineRow}>
             <View style={styles.line} />
           </View>
         </SafeAreaView>

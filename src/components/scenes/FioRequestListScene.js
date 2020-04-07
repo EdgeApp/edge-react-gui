@@ -1,19 +1,16 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Alert, Animated, FlatList, Image, Platform, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { Alert, Animated, FlatList, Platform, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 
-import checkedIcon from '../../assets/images/createWallet/check_icon_lg.png'
-import invalidIcon from '../../assets/images/createWallet/invalid_icon.png'
-import fioRequestsIcon from '../../assets/images/fio/fio_sent_request.png'
 import * as Constants from '../../constants/indexConstants'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
+import FioRequestRow from '../../modules/FioRequest/components/FioRequestRow'
 import FullScreenLoader from '../../modules/FioRequest/components/FullScreenLoader'
 import SwipeListView from '../../modules/FioRequest/components/SwipeListView'
-import { isRejectedFioRequest, isSentFioRequest } from '../../modules/FioRequest/util'
 import T from '../../modules/UI/components/FormattedText/index'
 import { styles as requestListStyles } from '../../styles/scenes/FioRequestListStyle'
 import styles from '../../styles/scenes/TransactionListStyle'
@@ -55,7 +52,6 @@ const PENDING_TEXT = s.strings.fio_pendingrequest
 const SENT_TEXT = s.strings.fio_sentrequest
 
 export class FioRequestList extends Component<Props, State> {
-  underlayColor = '#AAA'
   listFooterHeight = 50
 
   constructor (props: Props) {
@@ -73,26 +69,7 @@ export class FioRequestList extends Component<Props, State> {
     this.props.animation = new Animated.Value(0)
   }
 
-  UNSAFE_componentWillReceiveProps (nextProps: Props) {}
-
   handleScrollEnd = () => {}
-
-  convertCurrencyStringFromCurrencyCode (code: string) {
-    switch (code) {
-      case 'BTC':
-        return 'Bitcoin'
-      case 'BCH':
-        return 'Bitcoin Cash'
-      case 'ETH':
-        return 'Ethereum'
-      case 'LTC':
-        return 'Litecoin'
-      case 'DASH':
-        return 'Dash'
-      default:
-        return ''
-    }
-  }
 
   sortDescending = (data: any[]) => {
     if (data !== undefined) {
@@ -147,17 +124,7 @@ export class FioRequestList extends Component<Props, State> {
     }
   }
 
-  currencyField = (symbol: string, amount: string, styles: any) => {
-    return (
-      <View>
-        <T style={[requestListStyles.currency, styles]}>
-          {symbol} {amount}
-        </T>
-      </View>
-    )
-  }
-
-  fiatAmount = (currencyCode: string, amount: string) => {
+  fiatAmount = (currencyCode: string, amount: string): string => {
     const { exchangeRates, isoFiatCurrencyCode } = this.props
     let fiatPerCrypto
     if (currencyCode === Constants.FIO_STR) {
@@ -171,97 +138,6 @@ export class FioRequestList extends Component<Props, State> {
     return (fiatPerCrypto * amountToMultiply).toFixed(2)
   }
 
-  fiatField = (currencyCode: string, fiatSymbol: string, amount: string, styles: any) => {
-    return (
-      <View>
-        <T style={[requestListStyles.fiat, styles]}>
-          {fiatSymbol} {this.fiatAmount(currencyCode, amount)}
-        </T>
-      </View>
-    )
-  }
-
-  requestedField = (coinType: string) => {
-    return (
-      <View>
-        <T style={requestListStyles.title}>
-          {s.strings.title_fio_requested} {this.convertCurrencyStringFromCurrencyCode(coinType)}
-        </T>
-      </View>
-    )
-  }
-
-  sentField = (sentTo: string) => {
-    return (
-      <View>
-        <T style={requestListStyles.title}>{sentTo}</T>
-      </View>
-    )
-  }
-
-  statusField = (status: string) => {
-    if (isRejectedFioRequest(status)) {
-      return <T style={requestListStyles.rejected}>{s.strings.fio_reject_status}</T>
-    }
-    if (isSentFioRequest(status)) {
-      return <T style={requestListStyles.received}>{s.strings.fragment_transaction_list_receive_prefix}</T>
-    }
-
-    return null
-  }
-
-  requestedTimeAndMemo = (time: Date, memo: string) => {
-    const maxLength = 40
-    const memoStr = memo && memo.length > maxLength ? memo.slice(0, maxLength) + '... ' : memo
-    return (
-      <View>
-        <T style={requestListStyles.text}>
-          {this.getFormattedTime(time)}
-          {memoStr ? ` - ${memoStr}` : ''}
-        </T>
-      </View>
-    )
-  }
-
-  requestedIcon = (status?: string = '') => {
-    let icon
-    if (isRejectedFioRequest(status)) {
-      icon = <Image style={requestListStyles.transactionStatusLogo} source={invalidIcon} />
-    }
-    if (isSentFioRequest(status)) {
-      icon = <Image style={requestListStyles.transactionStatusLogo} source={checkedIcon} />
-    }
-    return (
-      <View>
-        <Image style={styles.transactionLogo} source={fioRequestsIcon} />
-        {icon}
-      </View>
-    )
-  }
-
-  dateOnly = (date: Date) => {
-    return date.getFullYear() + date.getMonth() + date.getDate()
-  }
-
-  getFormattedTime = (date: Date) => {
-    let hh = date.getHours()
-    let mm = date.getMinutes()
-    const symbol = hh >= 12 ? 'PM' : 'AM'
-
-    if (hh > 12) {
-      hh = hh % 12
-    }
-    // These lines ensure you have two-digits
-    if (mm < 10) {
-      mm = '0' + mm
-    }
-
-    // This formats your string to HH:MM:SS
-    const t = hh + ':' + mm + ' ' + symbol
-
-    return t
-  }
-
   headerTitle = (headerDate: Date) => {
     return intl.formatExpDate(headerDate, true)
   }
@@ -270,14 +146,6 @@ export class FioRequestList extends Component<Props, State> {
     return (
       <View style={requestListStyles.rowContainer}>
         <T style={requestListStyles.rowTitle}>{headerTitle}</T>
-      </View>
-    )
-  }
-
-  headerRow = (headerDate: Date) => {
-    return (
-      <View style={requestListStyles.rowContainer}>
-        <T style={requestListStyles.rowTitle}>{intl.formatExpDate(headerDate, true)}</T>
       </View>
     )
   }
@@ -307,90 +175,65 @@ export class FioRequestList extends Component<Props, State> {
     Actions[Constants.FIO_SENT_REQUEST_DETAILS]()
   }
 
-  addHeadersTransactions = (txs: Array<Object>) => {
-    let i = 0
-    const newArr: Array<Object> = []
-    let tempArr: Array<Object> = []
+  addHeadersTransactions = (txs: any[]) => {
+    const headers: any[] = []
+    let transactionsInSection: any[] = []
     let previousTimestamp = 0
     let previousTitle = ''
     if (txs) {
-      txs.forEach(transaction => {
+      txs.forEach((transaction, i) => {
         if (i === 0) {
-          tempArr = []
+          transactionsInSection = []
           previousTimestamp = transaction.time_stamp
         }
-        if (i > 0 && this.dateOnly(new Date(previousTimestamp)) !== this.dateOnly(new Date(transaction.time_stamp))) {
-          newArr.push({ title: previousTitle, data: tempArr })
-          tempArr = []
+        if (i > 0 && intl.formatExpDate(new Date(previousTimestamp)) !== intl.formatExpDate(new Date(transaction.time_stamp))) {
+          headers.push({ title: previousTitle, data: transactionsInSection })
+          transactionsInSection = []
         }
-        tempArr.push(transaction)
+        transactionsInSection.push(transaction)
         previousTimestamp = transaction.time_stamp
         previousTitle = this.headerTitle(new Date(transaction.time_stamp))
-        i++
       })
-      newArr.push({ title: previousTitle, data: tempArr })
+      headers.push({ title: previousTitle, data: transactionsInSection })
     }
-    return newArr
+    return headers
   }
 
-  // this can be moved into it's own component if it makes sense
-  renderTx = (transaction: Object) => {
+  renderTx = (itemObj: { item: any, index: number }) => {
+    const { item: transaction } = itemObj
+    return <FioRequestRow transaction={transaction} onSelect={this.selectRequest} fiatSymbol={this.props.fiatSymbol} fiatAmount={this.fiatAmount} />
+  }
+
+  renderSentTx = (itemObj: { item: any, index: number }) => {
+    const { item: transaction, index } = itemObj
+    const isHeaderRow =
+      index === 0 ||
+      (index > 0 &&
+        intl.formatExpDate(new Date(this.props.sentFioRequests[index - 1].time_stamp), true) !== intl.formatExpDate(new Date(transaction.time_stamp), true))
     return (
-      <TouchableHighlight onPress={() => this.selectRequest(transaction.item)} style={requestListStyles.rowFront} underlayColor={this.underlayColor}>
-        <View key={transaction.item.fio_request_id.toString()}>
-          <View style={requestListStyles.rowItem}>
-            <View style={requestListStyles.columnItem}>
-              <View>{this.requestedIcon()}</View>
-              <View>
-                <View>{this.requestedField(transaction.item.content.token_code)}</View>
-                <View>{this.requestedTimeAndMemo(new Date(transaction.item.time_stamp), transaction.item.content.memo)}</View>
-              </View>
-            </View>
-            <View style={requestListStyles.columnCurrency}>
-              <View>{this.currencyField(transaction.item.content.token_code, transaction.item.content.amount)}</View>
-              <View>{this.fiatField(transaction.item.content.token_code, this.props.fiatSymbol, transaction.item.content.amount)}</View>
-            </View>
-          </View>
-        </View>
-      </TouchableHighlight>
+      <FioRequestRow
+        transaction={transaction}
+        onSelect={this.selectSentRequest}
+        isSent={true}
+        isHeaderRow={isHeaderRow}
+        fiatSymbol={this.props.fiatSymbol}
+        fiatAmount={this.fiatAmount}
+      />
     )
   }
 
-  renderSentTx = (transaction: Object) => {
+  renderHiddenItem (transaction: any, rowMap: any[]) {
     return (
-      <TouchableHighlight
-        onPress={() => this.selectSentRequest(transaction.item)}
-        style={
-          transaction.index === 0 ||
-          (transaction.index > 0 &&
-            this.dateOnly(new Date(this.props.sentFioRequests[transaction.index - 1].time_stamp)) !== this.dateOnly(new Date(transaction.item.time_stamp)))
-            ? requestListStyles.rowFrontWithHeader
-            : requestListStyles.rowFront
-        }
-        underlayColor={this.underlayColor}
-      >
-        <View key={transaction.item.fio_request_id.toString()}>
-          {transaction.index === 0 && <View>{this.headerRow(new Date(transaction.item.time_stamp))}</View>}
-          {transaction.index > 0 &&
-            this.dateOnly(new Date(this.props.sentFioRequests[transaction.index - 1].time_stamp)) !== this.dateOnly(new Date(transaction.item.time_stamp)) && (
-            <View>{this.headerRow(new Date(transaction.item.time_stamp))}</View>
-          )}
-          <View style={requestListStyles.rowItem}>
-            <View style={requestListStyles.columnItem}>
-              <View>{this.requestedIcon(transaction.item.status)}</View>
-              <View>
-                <View>{this.sentField(transaction.item.payer_fio_address)}</View>
-                <View>{this.requestedTimeAndMemo(new Date(transaction.item.time_stamp), transaction.item.content.memo)}</View>
-              </View>
-            </View>
-            <View style={requestListStyles.columnCurrency}>
-              <View>{this.currencyField(transaction.item.token_code, transaction.item.content.amount)}</View>
-              <View>{this.fiatField(transaction.item.content.token_code, this.props.fiatSymbol, transaction.item.content.amount)}</View>
-              <View>{this.statusField(transaction.item.status)}</View>
-            </View>
-          </View>
-        </View>
-      </TouchableHighlight>
+      <View style={requestListStyles.rowBack}>
+        <TouchableOpacity
+          style={[requestListStyles.backRightBtn, requestListStyles.backRightBtnRight]}
+          onPress={() =>
+            this.rejectRow(rowMap, transaction.item.fio_request_id.toString(), transaction.item.fio_request_id, transaction.item.payer_fio_address)
+          }
+        >
+          <T style={requestListStyles.backTextWhite}>Reject</T>
+        </TouchableOpacity>
+      </View>
     )
   }
 
@@ -414,34 +257,11 @@ export class FioRequestList extends Component<Props, State> {
                 renderItem={this.renderTx}
                 keyExtractor={item => item.fio_request_id.toString()}
                 extraData={this.state}
-                renderHiddenItem={(transaction, rowMap) => (
-                  <View style={requestListStyles.rowBack}>
-                    <TouchableOpacity
-                      style={[requestListStyles.backRightBtn, requestListStyles.backRightBtnRight]}
-                      onPress={_ =>
-                        this.rejectRow(rowMap, transaction.item.fio_request_id.toString(), transaction.item.fio_request_id, transaction.item.payer_fio_address)
-                      }
-                    >
-                      <T style={requestListStyles.backTextWhite}>Reject</T>
-                    </TouchableOpacity>
-                  </View>
-                )}
+                renderHiddenItem={this.renderHiddenItem}
                 renderSectionHeader={({ section }) => <View style={requestListStyles.rowHeaderOnly}>{this.headerRowUsingTitle(section.title)}</View>}
-                leftOpenValue={0}
                 rightOpenValue={-75}
                 onSwipeValueChange={this.onSwipeValueChange}
-                closeOnRowBeginSwipe={false}
-                closeOnScroll={true}
-                closeOnRowPress={true}
-                closeOnRowOpen={true}
-                disableLeftSwipe={false}
                 disableRightSwipe={true}
-                recalculateHiddenLayout={false}
-                previewFirstRow={false}
-                directionalDistanceChangeThreshold={2}
-                swipeToOpenPercent={50}
-                swipeToOpenVelocityContribution={0}
-                swipeToClosePercent={50}
               />
             </View>
           </View>

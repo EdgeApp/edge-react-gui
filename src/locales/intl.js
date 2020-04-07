@@ -159,6 +159,18 @@ const intlHandler = {
     }).format(expirationDate)
   },
 
+  /**
+   * Returns time string depending on locale
+   * @param date
+   * @returns {string}
+   */
+  formatTime (date: Date): string {
+    return new Intl.DateTimeFormat(locale.localeIdentifier.replace('_', '-'), {
+      hour: 'numeric',
+      minute: 'numeric'
+    }).format(new Date(date))
+  },
+
   // $FlowFixMe: add after implementation
   formatDate (date, options) {
     throw new Error('Not implemented')

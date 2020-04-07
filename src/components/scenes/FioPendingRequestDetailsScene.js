@@ -16,7 +16,7 @@ import T from '../../modules/UI/components/FormattedText/index'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import { MaterialInput } from '../../styles/components/FormFieldStyles.js'
 import { styles as CryptoExchangeSceneStyle } from '../../styles/scenes/CryptoExchangeSceneStyles.js'
-import styles from '../../styles/scenes/FioPendingRequestDetailsStyle.js'
+import { styles } from '../../styles/scenes/FioPendingRequestDetailsStyle.js'
 import type { State } from '../../types/reduxTypes'
 import type { GuiWallet } from '../../types/types'
 import { FormField } from '../common/FormField'
@@ -284,7 +284,7 @@ export class FioPendingRequestDetailsComponent extends Component<Props, LocalSta
           </View>
           <View>{this.requestedField(this.props.selectedFioPendingRequest.payee_fio_address)}</View>
           <View>{this.dateField(new Date(this.props.selectedFioPendingRequest.time_stamp))}</View>
-          <View style={styles.memostyle}>
+          <View style={styles.memo}>
             <FormField
               style={materialStyle}
               label="Memo"
@@ -294,11 +294,11 @@ export class FioPendingRequestDetailsComponent extends Component<Props, LocalSta
               multiline={true}
             />
           </View>
-          <View style={styles.row2}>
+          <View style={styles.lineRow}>
             <View style={styles.line} />
           </View>
           <View style={CryptoExchangeSceneStyle.shim} />
-          <View style={styles.row3}>
+          <View style={styles.buttonRow}>
             <TextAndIconButton
               style={{ ...CryptoExchangeSceneStyle.flipWrapper.walletSelector, container: styles.selectWalletBtn }}
               onPress={this.launchFromWalletSelector}
@@ -307,7 +307,7 @@ export class FioPendingRequestDetailsComponent extends Component<Props, LocalSta
             />
           </View>
           <View style={CryptoExchangeSceneStyle.shim} />
-          <View style={styles.row2}>{this.renderButton()}</View>
+          <View style={styles.buttonRow}>{this.renderButton()}</View>
           <View style={CryptoExchangeSceneStyle.shim} />
         </SafeAreaView>
       </SceneWrapper>

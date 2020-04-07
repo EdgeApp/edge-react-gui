@@ -12,7 +12,7 @@ const SOFT_MENU_BAR_HEIGHT = ExtraDimensions.get('SOFT_MENU_BAR_HEIGHT')
 const titleColor = 'rgba(128,137,151,1.0)'
 const bgColor = 'rgba(245,245,245,1.0)'
 
-export const styles = {
+export const styles = StyleSheet.create({
   scene: {
     flex: 1,
     flexDirection: 'column',
@@ -67,10 +67,6 @@ export const styles = {
     top: 0,
     width: scale(75)
   },
-  backRightBtnLeft: {
-    backgroundColor: THEME.COLORS.ACCENT_BLUE,
-    right: scale(75)
-  },
   backRightBtnRight: {
     backgroundColor: THEME.COLORS.ACCENT_RED,
     right: 0
@@ -87,10 +83,6 @@ export const styles = {
     height: scale(75),
     justifyContent: 'flex-start',
     width: '65%'
-  },
-  controls: {
-    alignItems: 'center',
-    marginBottom: scale(30)
   },
   currency: {
     color: THEME.COLORS.BLUE_3,
@@ -144,36 +136,6 @@ export const styles = {
   row: {
     height: '50%'
   },
-  standalone: {
-    marginBottom: scale(30),
-    marginTop: scale(30)
-  },
-  standaloneRowBack: {
-    alignItems: 'center',
-    backgroundColor: THEME.COLORS.ACCENT_MINT,
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: scale(15)
-  },
-  standaloneRowFront: {
-    alignItems: 'center',
-    backgroundColor: THEME.COLORS.GRAY_2, // or #ccc,
-    height: scale(75),
-    justifyContent: 'center'
-  },
-  switch: {
-    alignItems: 'center',
-    borderColor: THEME.COLORS.BLACK,
-    borderWidth: scale(1),
-    paddingVertical: scale(10),
-    width: Dimensions.get('window').width / 4
-  },
-  switchContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: scale(5)
-  },
   text: {
     fontSize: scale(14),
     fontWeight: 'normal'
@@ -181,28 +143,6 @@ export const styles = {
   title: {
     fontSize: scale(16),
     fontWeight: 'normal'
-  },
-  rejectedCol: {
-    color: THEME.COLORS.ACCENT_RED
-  },
-  receivedCol: {
-    color: THEME.COLORS.ACCENT_MINT
-  },
-  rejected: {
-    fontSize: scale(12),
-    fontWeight: 'normal',
-    textAlign: 'right',
-    color: THEME.COLORS.ACCENT_RED
-  },
-  received: {
-    fontSize: scale(12),
-    fontWeight: 'normal',
-    textAlign: 'right',
-    color: THEME.COLORS.ACCENT_MINT
-  },
-  trash: {
-    height: scale(25),
-    width: scale(25)
   },
   transactionStatusLogo: {
     position: 'absolute',
@@ -212,6 +152,4 @@ export const styles = {
     height: scale(16),
     borderRadius: scale(8)
   }
-}
-
-export default StyleSheet.create(styles)
+})

@@ -15,7 +15,7 @@ import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/Flip
 import T from '../../modules/UI/components/FormattedText/index'
 import { MaterialInput } from '../../styles/components/FormFieldStyles.js'
 import { styles as CryptoExchangeSceneStyle } from '../../styles/scenes/CryptoExchangeSceneStyles.js'
-import styles from '../../styles/scenes/FioRequestConfirmationStyle'
+import { styles } from '../../styles/scenes/FioRequestConfirmationStyle'
 import type { GuiCurrencyInfo } from '../../types/types'
 import { FormFieldSelect } from '../common/FormFieldSelect'
 import { SceneWrapper } from '../common/SceneWrapper'

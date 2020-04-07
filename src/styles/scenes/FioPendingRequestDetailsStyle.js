@@ -5,24 +5,14 @@ import { StyleSheet } from 'react-native'
 import THEME from '../../theme/variables/airbitz'
 import { scale } from '../../util/scaling.js'
 
-const backgroundColor = 'rgba(245,245,245,1.0)'
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: backgroundColor,
-    borderBottomColor: THEME.COLORS.GRAY_3, // was #D9E2ED
-    borderBottomWidth: scale(2),
-    height: scale(50),
-    justifyContent: 'center',
-    paddingLeft: scale(15)
-  },
+export const styles = StyleSheet.create({
   line: {
     backgroundColor: THEME.COLORS.WHITE,
     height: 0,
     paddingLeft: scale(50),
     paddingRight: scale(50)
   },
-  memostyle: {
+  memo: {
     paddingLeft: scale(50),
     paddingRight: scale(50)
   },
@@ -31,14 +21,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingTop: scale(30)
   },
-  row2: {
+  lineRow: {
     display: 'flex',
     justifyContent: 'center',
     paddingLeft: scale(50),
     paddingRight: scale(50),
     paddingTop: 0
   },
-  row3: {
+  buttonRow: {
     display: 'flex',
     justifyContent: 'center',
     height: scale(44),
@@ -65,5 +55,3 @@ const styles = StyleSheet.create({
     backgroundColor: THEME.COLORS.OPACITY_WHITE
   }
 })
-
-export default styles
