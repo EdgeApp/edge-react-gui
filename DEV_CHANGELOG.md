@@ -1,5 +1,15 @@
 # edge-react-gui
 
+## 1.12.0
+
+- Add FIO currency support
+  - Includes new screens to view and register new FIO addresses
+- Upgrade edge-currency-accountbased to v0.7.1
+  - FIO currency
+  - XLM transaction history fix
+- Upgrade edge-core-js to v0.16.25
+  - Prioritize swap providers with active promo codes.
+
 ## 1.11.10
 
 - Upgrade edge-exchange-plugins to v0.9.2
