@@ -212,8 +212,8 @@ export class FioAddressRegisterScene extends Component<Props, State> {
 
   renderFioWallets () {
     const { fioWallets } = this.props
-    const { selectedWallet, isAvailable } = this.state
-    if (isAvailable && fioWallets && fioWallets.length > 1) {
+    const { selectedWallet } = this.state
+    if (fioWallets && fioWallets.length > 1) {
       return (
         <View style={styles.blockPadding}>
           <View>
