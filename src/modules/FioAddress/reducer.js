@@ -12,7 +12,36 @@ export type FioAddressSceneState = {
   fioAddressesLoading: boolean,
   selectedWallet: EdgeCurrencyWallet | null,
   expiration: Date,
-  feeCollected: number
+  feeCollected: number,
+  handleRegistrationInfo: {
+    activationCost: number,
+    supportedCurrencies: { [currencyCode: string]: boolean }
+  },
+  addressRegistrationPaymentInfo: {
+    [currencyCode: string]: {
+      amount: string,
+      nativeAmount: string,
+      address: string
+    }
+  },
+  regInfoLoading: boolean
+}
+
+export type BuyAddressResponse = {
+  error: any,
+  success: {
+    charge: {
+      pricing: {
+        [currencyCode: string]: {
+          amount: string,
+          currency: string
+        }
+      },
+      addresses: {
+        [currencyCode: string]: string
+      }
+    }
+  }
 }
 
 const initialState: FioAddressSceneState = {
@@ -21,7 +50,13 @@ const initialState: FioAddressSceneState = {
   fioAddressesLoading: false,
   selectedWallet: null,
   expiration: new Date('2020-01-01T10:10:10Z'),
-  feeCollected: 0
+  feeCollected: 0,
+  handleRegistrationInfo: {
+    activationCost: 40,
+    supportedCurrencies: {}
+  },
+  addressRegistrationPaymentInfo: {},
+  regInfoLoading: false
 }
 
 export const fioAddress: Reducer<FioAddressSceneState, Action> = (state = initialState, action: Action) => {
@@ -58,6 +93,18 @@ export const fioAddress: Reducer<FioAddressSceneState, Action> = (state = initia
         ...state,
         fioAddresses: action.data.fioAddresses,
         fioAddressesLoading: false
+      }
+    case 'FIO/SET_FIO_ADDRESS_REG_INFO':
+      if (!action.data) throw new Error(`Invalid action addressRegistrationPaymentInfo`)
+      return {
+        ...state,
+        addressRegistrationPaymentInfo: action.data.addressRegistrationPaymentInfo,
+        handleRegistrationInfo: action.data.handleRegistrationInfo
+      }
+    case 'FIO/FIO_ADDRESS_REG_INFO_LOADING':
+      return {
+        ...state,
+        regInfoLoading: action.data
       }
     default:
       return state

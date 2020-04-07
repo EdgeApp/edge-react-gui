@@ -43,7 +43,13 @@ test('initialState', () => {
       fioAddressName: '',
       fioAddresses: [],
       fioAddressesLoading: false,
-      selectedWallet: null
+      selectedWallet: null,
+      handleRegistrationInfo: {
+        activationCost: 40,
+        supportedCurrencies: {}
+      },
+      addressRegistrationPaymentInfo: {},
+      regInfoLoading: false
     },
     requestType: {
       useLegacyAddress: false,

@@ -1,5 +1,13 @@
 # edge-react-gui
 
+## 1.12.0
+
+- Add FIO - register address, send, and receive
+- Added additional Banxa payment methods
+- Fix missing XLM transaction history
+- Move Exchange side menu button
+- Remove countries from Simplex Sell
+
 ## 1.11.10
 
 - Reduced Bits of Gold fees

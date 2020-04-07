@@ -254,13 +254,15 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
     edgeSignedTransaction.wallet = wallet
 
     playSendSound().catch(error => console.log(error)) // Fail quietly
-    Alert.alert(s.strings.transaction_success, s.strings.transaction_success_message, [
-      {
-        onPress () {},
-        style: 'default',
-        text: s.strings.string_ok
-      }
-    ])
+    if (!guiMakeSpendInfo.dismissAlert) {
+      Alert.alert(s.strings.transaction_success, s.strings.transaction_success_message, [
+        {
+          onPress () {},
+          style: 'default',
+          text: s.strings.string_ok
+        }
+      ])
+    }
 
     if (guiMakeSpendInfo.onDone) {
       guiMakeSpendInfo.onDone(null, edgeSignedTransaction)

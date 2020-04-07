@@ -86,7 +86,8 @@ export class AddressModal extends Component<AddressModalProps, AddressModalState
     return domain.endsWith('.zil') || domain.endsWith('.crypto') || domain.endsWith('.eth')
   }
 
-  fetchDomain = async (domain: string, currencyTicker: string) => {
+  fetchDomain = async (domain: string, currencyTicker: string): Promise<string> => {
+    domain = domain.trim().toLowerCase()
     if (!this.checkIfDomain(domain)) {
       throw new ResolutionError(ResolutionErrorCode.UnsupportedDomain, { domain })
     }
@@ -105,6 +106,7 @@ export class AddressModal extends Component<AddressModalProps, AddressModalState
   }
 
   resolveAddress = async (domain: string, currencyTicker: string) => {
+    if (!domain) return
     try {
       this.setStatusLabel(s.strings.resolving)
       const addr = await this.fetchDomain(domain, currencyTicker)

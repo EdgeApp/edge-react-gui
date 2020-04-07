@@ -57,6 +57,8 @@ export default class Main extends Component<Props> {
               <Separator />
               <SellButton />
               <Separator />
+              <ExchangeButton />
+              <Separator />
               <EarnInterestButton />
               <Separator />
               <FioAddressButton />
@@ -68,8 +70,6 @@ export default class Main extends Component<Props> {
               <SweepPrivateKeyButton />
               <Separator />
               <RequestButton />
-              <Separator />
-              <ExchangeButton />
               <Separator />
               <TermsOfServiceButton />
               <Separator />

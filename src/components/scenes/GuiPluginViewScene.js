@@ -9,7 +9,7 @@ import { Bridge, onMethod } from 'yaob'
 import { setPluginScene } from '../../modules/UI/scenes/Plugins/BackButton.js'
 import { EdgeProvider } from '../../modules/UI/scenes/Plugins/EdgeProvider.js'
 import { type GuiPlugin, type GuiPluginQuery, makePluginUri } from '../../types/GuiPluginTypes.js'
-import type { Dispatch, State } from '../../types/reduxTypes.js'
+import type { Dispatch, State as ReduxState } from '../../types/reduxTypes.js'
 import { javascript } from '../../util/bridge/injectThisInWebView.js'
 import { bestOfPlugins } from '../../util/ReferralHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -118,14 +118,18 @@ type OwnProps = {
 }
 
 type DispatchProps = { dispatch: Dispatch }
-type StateProps = { state: State }
+type StateProps = { state: ReduxState }
 type Props = OwnProps & DispatchProps & StateProps
+
+type State = {
+  webViewKey: number
+}
 
 type PluginWorkerApi = {
   setEdgeProvider(provider: EdgeProvider): Promise<mixed>
 }
 
-class GuiPluginView extends React.Component<Props> {
+class GuiPluginView extends React.Component<Props, State> {
   _callbacks: WebViewCallbacks
   _canGoBack: boolean
   _edgeProvider: EdgeProvider
@@ -133,15 +137,19 @@ class GuiPluginView extends React.Component<Props> {
   _webview: WebView | void
 
   constructor (props) {
+    const { deepPath, deepQuery, dispatch, plugin, state } = props
     super(props)
     setPluginScene(this)
 
-    // Set up the plugin:
-    const { deepPath, deepQuery, dispatch, plugin, state } = this.props
+    // Mechanism to re-boot the webview:
+    this.state = { webViewKey: 0 }
+    const restartPlugin = () => {
+      this.setState({ webViewKey: this.state.webViewKey + 1 })
+    }
 
     // Set up the EdgeProvider:
     this.updatePromoCode(plugin, state)
-    this._edgeProvider = new EdgeProvider(plugin, state, dispatch, deepPath, deepQuery, this._promoCode)
+    this._edgeProvider = new EdgeProvider(plugin, state, dispatch, restartPlugin, deepPath, deepQuery, this._promoCode)
 
     // Set up the WebView bridge:
     this._canGoBack = false
@@ -170,7 +178,7 @@ class GuiPluginView extends React.Component<Props> {
     this._edgeProvider._updateState(state, deepPath, deepQuery, this._promoCode)
   }
 
-  updatePromoCode (plugin: GuiPlugin, state: State) {
+  updatePromoCode (plugin: GuiPlugin, state: ReduxState) {
     const accountPlugins = state.account.referralCache.accountPlugins
     const accountReferral = state.account.accountReferral
     const activePlugins = bestOfPlugins(accountPlugins, accountReferral, undefined)
@@ -232,6 +240,7 @@ class GuiPluginView extends React.Component<Props> {
           onNavigationStateChange={this.onNavigationStateChange}
           onMessage={this._callbacks.onMessage}
           originWhitelist={originWhitelist}
+          key={`webView${this.state.webViewKey}`}
           ref={this._callbacks.setRef}
           setWebContentsDebuggingEnabled={true}
           source={{ uri }}
@@ -246,6 +255,6 @@ class GuiPluginView extends React.Component<Props> {
 // Connector -----------------------------------------------------------
 
 export const GuiPluginViewScene = connect(
-  (state: State): StateProps => ({ state }),
+  (state: ReduxState): StateProps => ({ state }),
   (dispatch: Dispatch): DispatchProps => ({ dispatch })
 )(GuiPluginView)

@@ -7,20 +7,15 @@ import { View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import * as Constants from '../../constants/indexConstants'
-import { FIO_WALLET_TYPE } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/index'
 import ABSlider from '../../modules/UI/components/Slider/index.js'
-import { MaterialInput } from '../../styles/components/FormFieldStyles.js'
 import { styles } from '../../styles/scenes/FioAddressConfirmStyle'
 import { getFeeDisplayed } from '../../util/utils'
-import { FormFieldSelect } from '../common/FormFieldSelect.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 
 export type State = {
-  selectedWallet: Object | null,
-  displayFee: number | null,
   balance: number | null,
   sliderDisabled: boolean | false,
   loading: boolean | false
@@ -28,90 +23,41 @@ export type State = {
 
 export type StateProps = {
   fioAddressName: string,
-  fioWallets: EdgeCurrencyWallet[],
-  account: any,
-  defaultFiatCode: string,
   isConnected: boolean
 }
 
+export type NavigationProps = {
+  paymentWallet: EdgeCurrencyWallet,
+  fee: number,
+  ownerPublicKey: string
+}
+
 export type DispatchProps = {
-  createCurrencyWallet: (walletName: string, walletType: string, fiatCurrencyCode: string) => any,
   changeConfirmSelectedWallet: (selectedWallet: EdgeCurrencyWallet | null, expiration: string, feeCollected: number) => any
 }
 
-type Props = StateProps & DispatchProps
+type Props = NavigationProps & StateProps & DispatchProps
 
 export class FioAddressConfirmScene extends Component<Props, State> {
   state: State = {
-    selectedWallet: null,
-    displayFee: null,
     balance: null,
     sliderDisabled: false,
     loading: false
   }
 
-  async componentDidMount () {
-    const { fioWallets } = this.props
-    if (fioWallets.length === 0) {
-      const wallet: EdgeCurrencyWallet | null = await this.createFioWallet()
-      await this.setState({
-        selectedWallet: {
-          value: wallet ? wallet.name : s.strings.fio_address_register_no_wallet_name,
-          wallet
-        }
-      })
-      this.setFeeAndBalance()
-    } else if (fioWallets.length > 0) {
-      await this.setState({
-        selectedWallet: {
-          value: fioWallets[0].name,
-          wallet: fioWallets[0]
-        }
-      })
-      this.setFeeAndBalance()
-    }
+  componentDidMount () {
+    this.setBalance()
   }
 
   toggleLoading (loading: boolean = false) {
     this.setState({ loading })
   }
 
-  createFioWallet = async (): Promise<EdgeCurrencyWallet | null> => {
-    const { createCurrencyWallet, defaultFiatCode } = this.props
-    try {
-      const wallet = await createCurrencyWallet(s.strings.fio_address_register_default_fio_wallet_name, FIO_WALLET_TYPE, defaultFiatCode)
-      return wallet
-    } catch (e) {
-      return null
-    }
-  }
-
-  handleFioWalletChange = (value: string, index: number, data: Object) => {
-    this.setState({
-      selectedWallet: data[index]
-    })
-    this.setFeeAndBalance()
-  }
-
-  saveFioAddress = async () => {
-    const { selectedWallet } = this.state
-    if (selectedWallet) {
-      const { wallet } = selectedWallet
-      const { fioAddressName } = this.props
-      try {
-        const { expiration, feeCollected } = await wallet.otherMethods.fioAction('registerFioAddress', { fioAddress: fioAddressName })
-        this.confirmSelected(expiration, feeCollected)
-      } catch (e) {
-        showError(s.strings.fio_register_address_err_msg)
-      }
-    }
-    this.toggleLoading()
-  }
-
   toggleButton = () => {
-    const { displayFee, balance } = this.state
-    if (displayFee !== null && balance !== null) {
-      if (displayFee > balance) {
+    const { fee } = this.props
+    const { balance } = this.state
+    if (fee !== null && balance !== null) {
+      if (fee > balance) {
         this.setState({
           sliderDisabled: true
         })
@@ -119,83 +65,57 @@ export class FioAddressConfirmScene extends Component<Props, State> {
     }
   }
 
-  setFeeAndBalance = async () => {
-    await this.setFee()
-    await this.setBalance()
-    this.toggleButton()
-  }
-
-  setFee = async () => {
-    const { selectedWallet } = this.state
-    if (selectedWallet) {
-      const { wallet } = selectedWallet
-      try {
-        const fee = await wallet.otherMethods.getFee('registerFioAddress')
-        const displayFee = fee / Constants.BILLION
-        this.setState({
-          displayFee
-        })
-      } catch (e) {
-        showError(s.strings.fio_get_fee_err_msg)
-      }
-    }
-  }
-
   setBalance = async () => {
-    const { selectedWallet } = this.state
-    if (selectedWallet) {
-      const { wallet } = selectedWallet
-      try {
-        const balance = await wallet.getBalance()
+    const { paymentWallet } = this.props
+    try {
+      const balance = await paymentWallet.getBalance()
 
-        if (balance || balance === 0) {
-          const newBalance = balance / Constants.BILLION
-          this.setState({
-            balance: newBalance
-          })
-        }
-      } catch (e) {
+      if (balance || balance === 0) {
+        const newBalance = parseInt(balance) / Constants.BILLION
         this.setState({
-          balance: 0
+          balance: newBalance
         })
       }
+
+      this.toggleButton()
+    } catch (e) {
+      this.setState({
+        balance: 0
+      })
     }
   }
 
-  confirmSelected = (expiration: string, feeCollected: number): void => {
-    const { selectedWallet } = this.state
-    const { changeConfirmSelectedWallet, isConnected } = this.props
+  saveFioAddress = async () => {
+    const { isConnected, fioAddressName, paymentWallet, ownerPublicKey } = this.props
     if (!isConnected) {
       showError(s.strings.fio_network_alert_text)
       return
     }
-    changeConfirmSelectedWallet(selectedWallet && selectedWallet.wallet, expiration, feeCollected)
+
+    this.toggleLoading(true)
+
+    try {
+      const { expiration, feeCollected } = await paymentWallet.otherMethods.fioAction('registerFioAddress', { fioAddress: fioAddressName, ownerPublicKey })
+      this.confirmSelected(expiration, feeCollected)
+    } catch (e) {
+      showError(s.strings.fio_register_address_err_msg)
+    }
+    this.toggleLoading()
+  }
+
+  confirmSelected = (expiration: string, feeCollected: number): void => {
+    const { paymentWallet, changeConfirmSelectedWallet, isConnected } = this.props
+    if (!isConnected) {
+      showError(s.strings.fio_network_alert_text)
+      return
+    }
+    changeConfirmSelectedWallet(paymentWallet, expiration, feeCollected)
     window.requestAnimationFrame(() => Actions[Constants.FIO_ADDRESS_REGISTER_SUCCESS]({ registerSuccess: true }))
   }
 
-  onNextPress = () => {
-    const { selectedWallet } = this.state
-    if (selectedWallet) {
-      if (!this.props.isConnected) {
-        showError(s.strings.fio_network_alert_text)
-        return
-      }
-      this.toggleLoading(true)
-      this.saveFioAddress()
-    }
-  }
-
   render () {
-    const { fioAddressName, fioWallets } = this.props
-    const { selectedWallet, displayFee, balance, loading } = this.state
-
-    const MaterialInputStyle = {
-      ...MaterialInput,
-      container: {
-        ...MaterialInput.container,
-        width: '100%'
-      }
-    }
+    const { fioAddressName, fee } = this.props
+    const { balance, loading } = this.state
 
     return (
       <SceneWrapper>
@@ -206,44 +126,24 @@ export class FioAddressConfirmScene extends Component<Props, State> {
             <View style={styles.spacer} />
             <T style={styles.title}>{s.strings.fio_address_confirm_screen_registration_label}</T>
             <T style={styles.title}>
-              {displayFee ? getFeeDisplayed(displayFee) : '0'} {balance ? s.strings.fio_address_confirm_screen_fio_label : ''}
+              {fee ? getFeeDisplayed(fee) : '0'} {balance ? s.strings.fio_address_confirm_screen_fio_label : ''}
             </T>
             <View style={styles.spacer} />
             <T style={styles.title}>{s.strings.fio_address_confirm_screen_balance_label}</T>
-            <T style={balance && displayFee !== null && displayFee <= balance ? styles.title : styles.titleDisabled}>
+            <T style={balance && fee !== null && fee <= balance ? styles.title : styles.titleDisabled}>
               {balance ? balance.toFixed(2) : '0'} {balance ? s.strings.fio_address_confirm_screen_fio_label : ''}
             </T>
           </View>
-          {fioWallets && fioWallets.length > 1 && (
-            <View style={styles.blockPadding}>
-              <View style={styles.select}>
-                <FormFieldSelect
-                  style={MaterialInputStyle}
-                  onChangeText={this.handleFioWalletChange}
-                  label={s.strings.fio_address_confirm_screen_select_wallet_label}
-                  value={selectedWallet ? selectedWallet.value : ''}
-                  data={fioWallets.map(wallet => ({
-                    value: wallet.name ? wallet.name : s.strings.fio_address_register_no_wallet_name,
-                    wallet
-                  }))}
-                />
-              </View>
-            </View>
-          )}
           <View style={styles.blockPadding}>
             <Scene.Footer style={styles.footer}>
               <ABSlider
                 forceUpdateGuiCounter={false}
                 resetSlider={false}
                 parentStyle={styles.sliderStyle}
-                onSlidingComplete={this.onNextPress}
-                sliderDisabled={!balance || (balance !== null && displayFee !== null && displayFee > balance) || !selectedWallet}
+                onSlidingComplete={this.saveFioAddress}
+                sliderDisabled={!balance || (balance !== null && fee !== null && fee > balance)}
                 showSpinner={loading}
-                disabledText={
-                  selectedWallet
-                    ? s.strings.fio_address_confirm_screen_disabled_slider_label
-                    : s.strings.fio_address_confirm_screen_disabled_slider_nowallet_label
-                }
+                disabledText={s.strings.fio_address_confirm_screen_disabled_slider_label}
               />
             </Scene.Footer>
           </View>
