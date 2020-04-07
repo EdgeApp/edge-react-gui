@@ -34,7 +34,7 @@ export const styles = {
   },
   tileContainerNotes: {
     width: '100%',
-    height: scale(110),
+    minHeight: rem(4.5),
     backgroundColor: '#FFFFFF',
     padding: rem(0.8),
     borderBottomWidth: 1,
@@ -87,10 +87,7 @@ export const styles = {
   },
   tileTextNotes: {
     color: THEME.COLORS.GRAY_5,
-    fontSize: rem(0.9),
-    flex: 1,
-    flexWrap: 'wrap'
-    // height: rem(3)
+    fontSize: rem(0.9)
   },
   tileIcon: {
     position: 'absolute',
@@ -230,9 +227,8 @@ export const styles = {
     borderWidth: 1,
     borderColor: '#CCCCCC',
     borderRadius: 3,
-    height: PLATFORM.deviceHeight * 0.45 - (Platform.OS === 'android' ? rem(1.25) : 0),
-    paddingVertical: rem(0.1),
-    paddingHorizontal: rem(0.8)
+    height: PLATFORM.deviceHeight * (Platform.OS === 'android' ? 0.3 : 0.35),
+    padding: rem(0.8)
   },
   inputNotes: {
     color: THEME.COLORS.GRAY_2,
@@ -285,6 +281,11 @@ export const styles = {
     fontSize: scale(16),
     color: '#58595C',
     textAlignVertical: 'center'
+  },
+  contactThumbnail: {
+    height: scale(40),
+    width: scale(40),
+    borderRadius: scale(20)
   }
 }
 

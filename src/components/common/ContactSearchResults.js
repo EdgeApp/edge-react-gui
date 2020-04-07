@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import React, { Component } from 'react'
 import { FlatList, Image, TouchableHighlight, View } from 'react-native'
@@ -6,12 +6,29 @@ import { FlatList, Image, TouchableHighlight, View } from 'react-native'
 import ContactImage from '../../assets/images/contact.png'
 import FormattedText from '../../modules/UI/components/FormattedText/index'
 import styles from '../../styles/scenes/TransactionDetailsStyle'
-import { scale } from '../../util/scaling.js'
+import type { GuiContact } from '../../types/types.js'
 
-class ContactSearchResults extends Component {
+type Props = {
+  contacts: Array<GuiContact>,
+  currentPayeeText: string,
+  onSelectPayee: (string, string) => void,
+  bottomGap?: number
+}
+
+type FlatListItem = {
+  item: GuiContact,
+  index: number
+}
+
+export class ContactSearchResults extends Component<Props> {
   render () {
-    const filteredArray = this.props.contacts.filter(entry => (entry.givenName + ' ' + entry.familyName).indexOf(this.props.currentPayeeText) >= 0)
-
+    const filteredArray = this.props.contacts.filter(contact => {
+      const { givenName, familyName } = contact
+      const givenNameLowerCase = givenName ? givenName.toLowerCase() : ''
+      const familyNameLowerCase = familyName ? familyName.toLowerCase() : ''
+      const inputTextLowerCase = this.props.currentPayeeText.toLowerCase()
+      return givenNameLowerCase.includes(inputTextLowerCase) || familyNameLowerCase.includes(inputTextLowerCase)
+    })
     return (
       <FlatList
         style={styles.resultList}
@@ -19,29 +36,28 @@ class ContactSearchResults extends Component {
         data={filteredArray}
         initialNumToRender={12}
         keyboardShouldPersistTaps="handled"
-        keyExtractor={this.keyExtractor}
+        keyExtractor={(item: GuiContact, index: number) => index.toString()}
         renderItem={this.renderResult}
       />
     )
   }
-
-  renderResult = data => {
-    const fullName = data.item.familyName ? data.item.givenName + ' ' + data.item.familyName : data.item.givenName
-
+  renderResult = ({ item }: FlatListItem) => {
+    const { familyName, givenName, thumbnailPath } = item
+    const fullName = familyName ? `${givenName} ${familyName}` : givenName
     return (
       <View style={styles.singleContactWrap}>
         <TouchableHighlight
           style={[styles.singleContact]}
-          onPress={() => this.props.onSelectPayee(fullName, data.item.thumbnailPath)}
+          onPress={() => this.props.onSelectPayee(fullName, thumbnailPath)}
           underlayColor={styles.underlayColor.color}
         >
           <View style={[styles.contactInfoWrap]}>
             <View style={styles.contactLeft}>
               <View style={[styles.contactLogo]}>
-                {data.item.thumbnailPath ? (
-                  <Image source={{ uri: data.item.thumbnailPath }} style={{ height: scale(40), width: scale(40), borderRadius: 20 }} />
+                {thumbnailPath ? (
+                  <Image source={{ uri: thumbnailPath }} style={styles.contactThumbnail} />
                 ) : (
-                  <Image source={ContactImage} style={{ height: scale(40), width: scale(40), borderRadius: 20 }} />
+                  <Image source={ContactImage} style={styles.contactThumbnail} />
                 )}
               </View>
               <View style={[styles.contactLeftTextWrap]}>
@@ -53,8 +69,4 @@ class ContactSearchResults extends Component {
       </View>
     )
   }
-
-  keyExtractor = (item, index) => String(index)
 }
-
-export default ContactSearchResults

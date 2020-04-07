@@ -3,7 +3,7 @@
 import { abs, bns, sub } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeDenomination, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import React, { Component, Fragment } from 'react'
-import { Image, TouchableWithoutFeedback, View } from 'react-native'
+import { Image, ScrollView, TouchableWithoutFeedback, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
@@ -302,7 +302,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     const fiatSymbol = UTILS.getFiatSymbol(guiWallet.fiatCurrencyCode)
     const fiatValue = UTILS.truncateDecimals(amountFiat.replace('-', ''), 2, true)
     const currentFiat: fiatCurrentAmountUI = this.getCurrentFiat()
-    const personLabel = direction === 'receive' ? s.strings.transaction_details_sender : s.strings.transaction_details_recepient
+    const personLabel = direction === 'receive' ? s.strings.transaction_details_sender : s.strings.transaction_details_recipient
     const personName = payeeName && payeeName !== '' ? this.state.payeeName : personLabel
     const personHeader = sprintf(s.strings.transaction_details_person_name, personLabel)
 
@@ -310,80 +310,82 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
       <Fragment>
         <SceneWrapper bodySplit={scale(24)}>
           <View style={styles.container}>
-            <View style={styles.tilesContainer}>
-              <TouchableWithoutFeedback onPress={this.openPersonInput}>
-                <View style={styles.tileContainerBig}>
-                  <Image style={[styles.tileIcon]} source={editIcon} />
-                  <FormattedText style={styles.tileTextTop}>{personHeader}</FormattedText>
-                  <View style={styles.tileRow}>
-                    {thumbnailPath ? (
-                      <Image style={[styles.tileThumbnail]} source={{ uri: thumbnailPath }} />
-                    ) : (
-                      <Icon type={Constants.ION_ICONS} name={Constants.CONTACT} size={iconSize.avatar} style={styles.tileAvatarIcon} />
-                    )}
-                    <FormattedText style={styles.tileTextBottom}>{personName}</FormattedText>
-                  </View>
-                </View>
-              </TouchableWithoutFeedback>
-              <View style={styles.tileContainer}>
-                <FormattedText style={styles.tileTextTop}>{sprintf(s.strings.transaction_details_crypto_amount, crypto.currencyName)}</FormattedText>
-                <FormattedText style={styles.tileTextBottom}>
-                  {`${crypto.symbolString} `}
-                  {crypto.amountString}
-                  {crypto.feeString ? ` (${crypto.feeString})` : ''}
-                </FormattedText>
-              </View>
-              <TouchableWithoutFeedback onPress={this.openFiatInput}>
-                <View style={styles.tileContainer}>
-                  <Image style={[styles.tileIcon]} source={editIcon} />
-                  <FormattedText style={styles.tileTextTop}>{sprintf(s.strings.transaction_details_amount_in_fiat, fiatCurrencyCode)}</FormattedText>
-                  <View style={styles.tileRow}>
-                    <FormattedText style={styles.tileTextBottom}>{`${fiatSymbol} `}</FormattedText>
-                    <FormattedText style={styles.tileTextBottom}>{fiatValue}</FormattedText>
-                  </View>
-                </View>
-              </TouchableWithoutFeedback>
-              <View style={styles.tileContainer}>
-                <FormattedText style={styles.tileTextTop}>{s.strings.transaction_details_amount_current_price}</FormattedText>
-                <View style={styles.tileRow}>
-                  <FormattedText style={styles.tileTextPrice}>
-                    {`${fiatSymbol} `}
-                    {currentFiat.amount}
-                  </FormattedText>
-                  <FormattedText style={parseFloat(currentFiat.difference) >= 0 ? styles.tileTextPriceChangeUp : styles.tileTextPriceChangeDown}>
-                    {parseFloat(currentFiat.difference) >= 0 ? currentFiat.percentage : `- ${currentFiat.percentage}`}%
-                  </FormattedText>
-                </View>
-              </View>
-              <TouchableWithoutFeedback onPress={this.openCategoryInput}>
-                <View style={styles.tileContainerBig}>
-                  <Image style={[styles.tileIcon]} source={editIcon} />
-                  <FormattedText style={styles.tileTextTop}>{s.strings.transaction_details_category_title}</FormattedText>
-                  <View style={styles.tileRow}>
-                    <View style={styles.tileCategory}>
-                      <FormattedText style={styles.tileCategoryText}>{categories[category].syntax}</FormattedText>
+            <ScrollView>
+              <View style={styles.tilesContainer}>
+                <TouchableWithoutFeedback onPress={this.openPersonInput}>
+                  <View style={styles.tileContainerBig}>
+                    <Image style={[styles.tileIcon]} source={editIcon} />
+                    <FormattedText style={styles.tileTextTop}>{personHeader}</FormattedText>
+                    <View style={styles.tileRow}>
+                      {thumbnailPath ? (
+                        <Image style={[styles.tileThumbnail]} source={{ uri: thumbnailPath }} />
+                      ) : (
+                        <Icon type={Constants.ION_ICONS} name={Constants.CONTACT} size={iconSize.avatar} style={styles.tileAvatarIcon} />
+                      )}
+                      <FormattedText style={styles.tileTextBottom}>{personName}</FormattedText>
                     </View>
-                    <FormattedText style={styles.tileSubCategoryText}>{subCategory}</FormattedText>
+                  </View>
+                </TouchableWithoutFeedback>
+                <View style={styles.tileContainer}>
+                  <FormattedText style={styles.tileTextTop}>{sprintf(s.strings.transaction_details_crypto_amount, crypto.currencyName)}</FormattedText>
+                  <FormattedText style={styles.tileTextBottom}>
+                    {`${crypto.symbolString} `}
+                    {crypto.amountString}
+                    {crypto.feeString ? ` (${crypto.feeString})` : ''}
+                  </FormattedText>
+                </View>
+                <TouchableWithoutFeedback onPress={this.openFiatInput}>
+                  <View style={styles.tileContainer}>
+                    <Image style={[styles.tileIcon]} source={editIcon} />
+                    <FormattedText style={styles.tileTextTop}>{sprintf(s.strings.transaction_details_amount_in_fiat, fiatCurrencyCode)}</FormattedText>
+                    <View style={styles.tileRow}>
+                      <FormattedText style={styles.tileTextBottom}>{`${fiatSymbol} `}</FormattedText>
+                      <FormattedText style={styles.tileTextBottom}>{fiatValue}</FormattedText>
+                    </View>
+                  </View>
+                </TouchableWithoutFeedback>
+                <View style={styles.tileContainer}>
+                  <FormattedText style={styles.tileTextTop}>{s.strings.transaction_details_amount_current_price}</FormattedText>
+                  <View style={styles.tileRow}>
+                    <FormattedText style={styles.tileTextPrice}>
+                      {`${fiatSymbol} `}
+                      {currentFiat.amount}
+                    </FormattedText>
+                    <FormattedText style={parseFloat(currentFiat.difference) >= 0 ? styles.tileTextPriceChangeUp : styles.tileTextPriceChangeDown}>
+                      {parseFloat(currentFiat.difference) >= 0 ? currentFiat.percentage : `- ${currentFiat.percentage}`}%
+                    </FormattedText>
                   </View>
                 </View>
-              </TouchableWithoutFeedback>
-              <TouchableWithoutFeedback onPress={this.openNotesInput}>
-                <View style={styles.tileContainerNotes}>
-                  <Image style={[styles.tileIcon]} source={editIcon} />
-                  <FormattedText style={styles.tileTextTop}>{s.strings.transaction_details_notes_title}</FormattedText>
-                  <FormattedText style={styles.tileTextNotes}>{notes}</FormattedText>
+                <TouchableWithoutFeedback onPress={this.openCategoryInput}>
+                  <View style={styles.tileContainerBig}>
+                    <Image style={[styles.tileIcon]} source={editIcon} />
+                    <FormattedText style={styles.tileTextTop}>{s.strings.transaction_details_category_title}</FormattedText>
+                    <View style={styles.tileRow}>
+                      <View style={styles.tileCategory}>
+                        <FormattedText style={styles.tileCategoryText}>{categories[category].syntax}</FormattedText>
+                      </View>
+                      <FormattedText style={styles.tileSubCategoryText}>{subCategory}</FormattedText>
+                    </View>
+                  </View>
+                </TouchableWithoutFeedback>
+                <TouchableWithoutFeedback onPress={this.openNotesInput}>
+                  <View style={styles.tileContainerNotes}>
+                    <Image style={[styles.tileIcon]} source={editIcon} />
+                    <FormattedText style={styles.tileTextTop}>{s.strings.transaction_details_notes_title}</FormattedText>
+                    <FormattedText style={styles.tileTextNotes}>{notes}</FormattedText>
+                  </View>
+                </TouchableWithoutFeedback>
+                <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
+                  <FormattedText style={styles.textTransactionData}>{s.strings.transaction_details_view_advanced_data}</FormattedText>
+                </TouchableWithoutFeedback>
+                <View style={styles.spacer} />
+                <View style={styles.saveButtonContainer}>
+                  <PrimaryButton style={styles.saveButton} onPress={this.onSaveTxDetails}>
+                    <PrimaryButton.Text>{s.strings.string_save}</PrimaryButton.Text>
+                  </PrimaryButton>
                 </View>
-              </TouchableWithoutFeedback>
-              <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
-                <FormattedText style={styles.textTransactionData}>{s.strings.transaction_details_view_advanced_data}</FormattedText>
-              </TouchableWithoutFeedback>
-              <View style={styles.spacer} />
-              <View style={styles.saveButtonContainer}>
-                <PrimaryButton style={styles.saveButton} onPress={this.onSaveTxDetails}>
-                  <PrimaryButton.Text>{s.strings.string_save}</PrimaryButton.Text>
-                </PrimaryButton>
               </View>
-            </View>
+            </ScrollView>
           </View>
         </SceneWrapper>
       </Fragment>

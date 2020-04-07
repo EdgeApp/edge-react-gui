@@ -9,7 +9,7 @@ import styles, { materialInput } from '../../styles/scenes/TransactionDetailsSty
 import type { GuiContact } from '../../types/types.js'
 import { FormField } from '../common/FormField'
 import { type AirshipBridge, AirshipModal } from '../modals/modalParts'
-import ContactSearchResults from './ContactSearchResults.js'
+import { ContactSearchResults } from './ContactSearchResults.js'
 
 type Props = {
   bridge: AirshipBridge<null>,

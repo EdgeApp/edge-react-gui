@@ -399,7 +399,7 @@ const strings = {
   transaction_details_category_title: 'Category',
   transaction_details_payee: 'Payee',
   transaction_details_payer: 'Payer',
-  transaction_details_recepient: 'Recepient',
+  transaction_details_recipient: 'Recipient',
   transaction_details_sender: 'Sender',
   transaction_details_person_name: '%s Name',
   transaction_details_person_input: 'Choose a %s',

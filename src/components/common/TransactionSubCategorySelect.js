@@ -31,11 +31,14 @@ class SubCategorySelect extends Component<Props, State> {
     }
   }
 
+  filterSubcategory = () => {
+    const { subcategoriesList, enteredSubcategory } = this.props
+    return subcategoriesList.filter(subCategory => subCategory.toLowerCase().includes(enteredSubcategory.toLowerCase()))
+  }
+
   render () {
     const { categories } = this.props
-    const filteredSubcats = !this.props.enteredSubcategory
-      ? this.props.subcategoriesList
-      : this.props.subcategoriesList.filter(entry => entry.indexOf(this.props.enteredSubcategory) >= 0)
+    const filteredSubcats = !this.props.enteredSubcategory ? this.props.subcategoriesList : this.filterSubcategory()
     let newPotentialSubCategories = []
     let newPotentialSubCategoriesFiltered = []
     if (this.props.enteredSubcategory) {

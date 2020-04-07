@@ -20,11 +20,10 @@ type State = {
 }
 
 export class TransactionDetailsNotesInput extends Component<Props, State> {
-  input: any
+  notesInput: any
   constructor (props: Props) {
     super(props)
     this.state = { notes: props.notes }
-    this.input = React.createRef()
   }
   onChange = (notes: string) => {
     this.setState({ notes })
@@ -38,7 +37,7 @@ export class TransactionDetailsNotesInput extends Component<Props, State> {
         <TouchableWithoutFeedback onPress={() => bridge.resolve(null)}>
           <View style={styles.airshipContainer}>
             <FormattedText style={styles.airshipHeader}>{s.strings.transaction_details_notes_title}</FormattedText>
-            <TouchableWithoutFeedback onPress={() => this.input.focus()}>
+            <TouchableWithoutFeedback onPress={() => this.notesInput.focus()}>
               <View style={styles.inputNotesWrap}>
                 <TextInput
                   autoFocus
@@ -49,7 +48,7 @@ export class TransactionDetailsNotesInput extends Component<Props, State> {
                   underlineColorAndroid={'transparent'}
                   placeholderTextColor={THEME.COLORS.GRAY_3}
                   value={notes}
-                  ref={this.input}
+                  ref={ref => (this.notesInput = ref)}
                   onChangeText={this.onChange}
                   placeholder={s.strings.transaction_details_notes_title}
                 />
