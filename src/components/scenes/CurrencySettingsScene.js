@@ -147,11 +147,11 @@ export class CurrencySettingsComponent extends Component<Props, State> {
 export const CurrencySettingsScene = connect(
   (state: ReduxState, ownProps: NavigationProps): StateProps => {
     const { currencyInfo } = ownProps
-    const { currencyCode, defaultSettings, pluginName } = currencyInfo
+    const { currencyCode, defaultSettings, pluginId } = currencyInfo
 
     const { account } = state.core
     const defaultElectrumServer = defaultSettings.electrumServers ? defaultSettings.electrumServers[0] : ''
-    const userSettings = account.currencyConfig[pluginName].userSettings
+    const userSettings = account.currencyConfig[pluginId].userSettings
     const electrumServers = userSettings ? userSettings.electrumServers : []
     const disableFetchingServers = userSettings ? userSettings.disableFetchingServers : false
     return {

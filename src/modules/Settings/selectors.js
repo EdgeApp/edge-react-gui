@@ -130,8 +130,8 @@ export const getSupportedWalletTypes = (state: State) => {
 
   const supportedWalletTypes = []
   for (const currencyInfo of allCurrencyInfos) {
-    if (currencyInfo.pluginName === 'fio' && global.isFioDisabled) continue // FIO disable changes
-    if (currencyInfo.pluginName === 'bitcoin') {
+    if (currencyInfo.pluginId === 'fio' && global.isFioDisabled) continue // FIO disable changes
+    if (currencyInfo.pluginId === 'bitcoin') {
       supportedWalletTypes.push({
         label: 'Bitcoin (Segwit)',
         value: 'wallet:bitcoin-bip49',

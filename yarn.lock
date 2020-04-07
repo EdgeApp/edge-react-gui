@@ -4030,10 +4030,10 @@ edge-components@^0.0.26:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.16.25:
-  version "0.16.25"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.16.25.tgz#4caf6e853ab4c9112df5f346bb9c77bce0426819"
-  integrity sha512-JcZqRfNq9otrW/pSKYccaVz3nvs2htpJy8WPPHkMsir/5FtaZqir9YqFIlYWyoaHAwyhaW1kamxpxZvsQvG+eg==
+edge-core-js@^0.17.0:
+  version "0.17.0"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.0.tgz#70f09fdff492ed1f06367787f55d7de410a80a33"
+  integrity sha512-4iEe63nhFnfxb2E/3fQjOG9nejrUC+dVzqSI1jwEGQ4dkCRg4Qf1klFEonw/3mtzRF0Wzr7V/ASPqywsumALrg==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -4053,7 +4053,6 @@ edge-core-js@^0.16.25:
     redux-pixies "^0.3.6"
     rfc4648 "^1.1.0"
     scrypt-js "^2.0.3"
-    ws "^5.1.1"
     yaob "^0.3.6"
 
 edge-currency-accountbased@^0.7.1:
@@ -4115,10 +4114,10 @@ edge-currency-monero@^0.2.4:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#william/v0.14.0-hardfork"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.9.3:
-  version "0.9.3"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.9.3.tgz#06825741e2fb2b3a9debfb70c7e4cab02da76bab"
-  integrity sha512-sgr1R/CAtfjq3S1/aJ+SgQhKTTDqwP7yFULNBLGALR+Z3KhDIRFuq4mQJDW/MFgZvgUJWXFU1c3ljMwzmoMP3Q==
+edge-exchange-plugins@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.10.0.tgz#792ca2def1a15fd8643fc8451227a52077d9ea9c"
+  integrity sha512-2KLTQbZdTsxIIJgvdwIdXRdIVelXZDv5QsvMtnINMpd6sU/Y0Rxxzmdp5BmgO6XTV9z/TBrTcN/Yla9NUolc2Q==
   dependencies:
     biggystring "^3.0.2"
     esm "^3.2.4"
@@ -12628,7 +12627,7 @@ ws@^3.2.0, ws@^3.3.1:
     safe-buffer "~5.1.0"
     ultron "~1.1.0"
 
-ws@^5.1.1, ws@^5.2.0:
+ws@^5.2.0:
   version "5.2.2"
   resolved "https://registry.yarnpkg.com/ws/-/ws-5.2.2.tgz#dffef14866b8e8dc9133582514d1befaf96e980f"
   integrity sha512-jaHFD6PFv6UgoIVda6qZllptQsMlDEJkTQcybzzXDYM1XO9Y8em691FGMPmM46WGyLU4z9KMgQN+qrux/nhlHA==

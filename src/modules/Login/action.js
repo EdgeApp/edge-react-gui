@@ -251,8 +251,8 @@ export const mergeSettings = (
   if (finalSettings.customTokens && account != null) {
     const { currencyConfig } = account
     finalSettings.customTokens = finalSettings.customTokens.filter((customToken: CustomTokenInfo) => {
-      for (const pluginName in currencyConfig) {
-        const { currencyInfo } = currencyConfig[pluginName]
+      for (const pluginId in currencyConfig) {
+        const { currencyInfo } = currencyConfig[pluginId]
         if (customToken.currencyCode === currencyInfo.currencyCode) return false
       }
       return true
@@ -278,8 +278,8 @@ export const logoutRequest = (username?: string) => (dispatch: Dispatch, getStat
  * Finds the currency info for a currency code.
  */
 function findCurrencyInfo (account: EdgeAccount, currencyCode: string): EdgeCurrencyInfo | void {
-  for (const pluginName in account.currencyConfig) {
-    const { currencyInfo } = account.currencyConfig[pluginName]
+  for (const pluginId in account.currencyConfig) {
+    const { currencyInfo } = account.currencyConfig[pluginId]
     if (currencyInfo.currencyCode.toUpperCase() === currencyCode) {
       return currencyInfo
     }

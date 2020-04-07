@@ -44,14 +44,14 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
 
   componentDidMount = () => {
     const { swapInfo } = this.props
-    const { pluginName } = swapInfo.quote
-    if (pluginName === 'changelly') {
+    const { pluginId } = swapInfo.quote
+    if (pluginId === 'changelly') {
       this.checkChangellyKYC().catch(showError)
-    } else if (pluginName === 'changenow') {
+    } else if (pluginId === 'changenow') {
       this.checkChangeNowKYC().catch(showError)
-    } else if (pluginName === 'coinswitch') {
+    } else if (pluginId === 'coinswitch') {
       this.checkCoinswitchKYC().catch(showError)
-    } else if (pluginName === 'foxExchange') {
+    } else if (pluginId === 'foxExchange') {
       this.checkFoxExchangeKYC().catch(showError)
     }
     logEvent('SwapQuote')
@@ -146,14 +146,14 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
   render () {
     const { fromCurrencyIcon, fromDenomination, fromWalletCurrencyName, swapInfo, toCurrencyIcon, toDenomination, toWalletCurrencyName } = this.props
     const { fee, fromDisplayAmount, fromFiat, toDisplayAmount, toFiat } = swapInfo
-    const { isEstimate, pluginName } = swapInfo.quote
+    const { isEstimate, pluginId } = swapInfo.quote
     const { fromWallet, toWallet } = swapInfo.request
 
     return (
       <SceneWrapper>
         <ScrollView>
           <View style={styles.topLogoRow}>
-            <Image source={swapPluginLogos[pluginName]} resizeMode={'contain'} style={styles.logoImage} />
+            <Image source={swapPluginLogos[pluginId]} resizeMode={'contain'} style={styles.logoImage} />
           </View>
           <View style={styles.centerRow}>
             <ExchangeQuoteComponent

@@ -1,15 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import {
-  type EdgeCurrencyWallet,
-  type EdgeMetadata,
-  type EdgeSpendInfo,
-  type EdgeSwapQuote,
-  type EdgeSwapRequest,
-  type EdgeTransaction,
-  errorNames
-} from 'edge-core-js/types'
+import { type EdgeCurrencyWallet, type EdgeMetadata, type EdgeSpendInfo, type EdgeSwapQuote, type EdgeSwapRequest, errorNames } from 'edge-core-js/types'
 import React from 'react'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -244,7 +236,7 @@ const processSwapQuoteError = (error: any) => (dispatch: Dispatch, getState: Get
         }
 
         case 'needsActivation': {
-          if (error.pluginName === 'shapeshift') {
+          if (error.pluginId === 'shapeshift') {
             Alert.alert(s.strings.kyc_title, s.strings.kyc_message, [
               { text: s.strings.string_cancel_cap, onPress: () => {} },
               { text: s.strings.string_ok, onPress: () => Actions[Constants.SWAP_ACTIVATE_SHAPESHIFT]() }
@@ -255,7 +247,7 @@ const processSwapQuoteError = (error: any) => (dispatch: Dispatch, getState: Get
         }
 
         case 'noVerification': {
-          if (error.pluginName === 'shapeshift') {
+          if (error.pluginId === 'shapeshift') {
             Airship.show(bridge => <SwapVerifyShapeshiftModal bridge={bridge} />)
             return
           }
@@ -283,13 +275,13 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
   dispatch({ type: 'START_SHIFT_TRANSACTION' })
 
   const { quote, request } = swapInfo
-  const { pluginName, toNativeAmount } = quote
+  const { pluginId, toNativeAmount } = quote
   const { fromWallet, toWallet, toCurrencyCode } = request
 
   try {
     logEvent('SwapStart')
-    const broadcastedTransaction: EdgeTransaction = await quote.approve()
-    await fromWallet.saveTx(broadcastedTransaction)
+    const result = await quote.approve()
+    await fromWallet.saveTx(result.transaction)
 
     const category = sprintf(
       'exchange:%s %s %s',
@@ -298,12 +290,12 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
       state.cryptoExchange.toCurrencyCode
     )
     const account = CORE_SELECTORS.getAccount(state)
-    const si = account.swapConfig[pluginName].swapInfo
+    const si = account.swapConfig[pluginId].swapInfo
     const name = si.displayName
     const supportEmail = si.supportEmail
-    const quoteIdUri = si.quoteUri && quote.quoteId ? si.quoteUri + quote.quoteId : broadcastedTransaction.txid
-    const payinAddress = broadcastedTransaction.otherParams != null ? broadcastedTransaction.otherParams.payinAddress : ''
-    const uniqueIdentifier = broadcastedTransaction.otherParams != null ? broadcastedTransaction.otherParams.uniqueIdentifier : ''
+    const quoteIdUri = si.orderUri != null && result.orderId != null ? si.orderUri + result.orderId : result.transaction.txid
+    const payinAddress = result.transaction.otherParams != null ? result.transaction.otherParams.payinAddress : ''
+    const uniqueIdentifier = result.transaction.otherParams != null ? result.transaction.otherParams.uniqueIdentifier : ''
     const isEstimate = quote.isEstimate ? s.strings.estimated_quote : s.strings.fixed_quote
     const notes =
       sprintf(
@@ -314,7 +306,7 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
         state.cryptoExchange.toDisplayAmount,
         state.cryptoExchange.toWalletPrimaryInfo.displayDenomination.name,
         toWallet.name,
-        quote.destinationAddress,
+        result.destinationAddress || '',
         quoteIdUri,
         payinAddress,
         uniqueIdentifier,
@@ -329,7 +321,7 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
       notes
     }
     Actions.popTo(Constants.EXCHANGE_SCENE)
-    await fromWallet.saveTxMetadata(broadcastedTransaction.txid, broadcastedTransaction.currencyCode, edgeMetaData)
+    await fromWallet.saveTxMetadata(result.transaction.txid, result.transaction.currencyCode, edgeMetaData)
 
     dispatch({ type: 'SHIFT_COMPLETE' })
 
@@ -341,7 +333,7 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
     const exchangeAmount = await toWallet.nativeToDenomination(toNativeAmount, toCurrencyCode)
     trackConversion('SwapSuccess', {
       account,
-      pluginId: pluginName,
+      pluginId,
       currencyCode: toCurrencyCode,
       exchangeAmount: Number(exchangeAmount)
     })
