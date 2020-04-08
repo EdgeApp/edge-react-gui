@@ -53,13 +53,15 @@ test('initialState', () => {
       fioWalletByAddress: null
     },
     fioRequest: {
-      requests: [],
       amounts: {
         exchangeAmount: '',
         nativeAmount: ''
       },
       fioModalData: {},
+      requests: [],
       sentRequests: [],
+      requestsLoading: false,
+      sentRequestsLoading: false,
       fioPendingRequestSelected: {},
       fioSentRequestSelected: {}
     },

@@ -25,16 +25,18 @@ const mapStateToProps = (state: State) => {
   const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
 
   const pendingFioRequests = state.ui.scenes.fioRequest.requests
+  const pendingRequestsLoading = state.ui.scenes.fioRequest.requestsLoading
   const sentFioRequests = state.ui.scenes.fioRequest.sentRequests
+  const sentRequestsLoading = state.ui.scenes.fioRequest.sentRequestsLoading
   const exchangeRates = state.exchangeRates
   const animation = new Animated.Value(0)
   const out: StateProps = {
-    loading: false,
+    loading: pendingRequestsLoading || sentRequestsLoading,
     selectedCurrencyCode: currencyCode,
     isoFiatCurrencyCode,
     fiatSymbol,
     pendingFioRequests,
-    sentFioRequests,
+    sentFioRequests: sentFioRequests.sort((a, b) => (a.time_stamp > b.time_stamp ? -1 : 1)),
     exchangeRates,
     animation,
     wallets,

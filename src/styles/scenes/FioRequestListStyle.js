@@ -151,5 +151,10 @@ export const styles = StyleSheet.create({
     width: scale(16),
     height: scale(16),
     borderRadius: scale(8)
+  },
+  emptyListContainer: {
+    paddingVertical: scale(30),
+    paddingHorizontal: scale(20),
+    opacity: 0.5
   }
 })

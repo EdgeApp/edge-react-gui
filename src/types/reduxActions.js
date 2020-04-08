@@ -252,8 +252,8 @@ export type Action =
   | { type: 'FIO/FIO_WALLET_BY_ADDRESS', data: { wallet: EdgeCurrencyWallet | null } }
   | { type: 'FIO/FIO_REQUEST_CHANGE_AMOUNTS', data: { amounts: ExchangedFlipInputAmounts } }
   | { type: 'FIO/FIO_REQUEST_SAVE_MODAL_DATA', data: { fioModalData: any } }
-  | { type: 'FIO/FIO_REQUEST_LIST_PENDING', data: { fioRequestsPending: Object[], more: number, page: number } }
-  | { type: 'FIO/FIO_REQUEST_LIST_SENT', data: { fioRequestsSent: Object[], more: number, page: number } }
+  | { type: 'FIO/FIO_REQUEST_LIST_PENDING', data: { fioRequestsPending: any[], isLoading: boolean, isReset: boolean } }
+  | { type: 'FIO/FIO_REQUEST_LIST_SENT', data: { fioRequestsSent: any[], isLoading: boolean, isReset: boolean } }
   | { type: 'FIO/FIO_PENDING_REQUEST_SELECTED', data: { fioPendingRequestSelected: Object } }
   | { type: 'FIO/FIO_REQUEST_LIST_REMOVE', data: { requestId: string } }
   | { type: 'FIO/FIO_SENT_REQUEST_SELECTED', data: { fioSentRequestSelected: Object } }

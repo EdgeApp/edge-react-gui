@@ -71,15 +71,6 @@ export class FioRequestList extends Component<Props, State> {
 
   handleScrollEnd = () => {}
 
-  sortDescending = (data: any[]) => {
-    if (data !== undefined) {
-      if (data.length > 0) {
-        data.sort((a, b) => (a.time_stamp > b.time_stamp ? -1 : 1))
-      }
-    }
-    return data
-  }
-
   closeRow = (rowMap: any[], rowKey: any) => {
     if (rowMap[rowKey]) {
       rowMap[rowKey].closeRow()
@@ -238,10 +229,9 @@ export class FioRequestList extends Component<Props, State> {
   }
 
   render () {
-    const sentTxs = this.sortDescending(this.props.sentFioRequests)
-    const isAndroid = Platform.OS === 'android'
+    const { loading, pendingFioRequests, sentFioRequests } = this.props
     const { rejectLoading } = this.state
-    const { loading } = this.props
+    const isAndroid = Platform.OS === 'android'
     return (
       <SceneWrapper>
         {(rejectLoading || loading) && <FullScreenLoader />}
@@ -250,10 +240,15 @@ export class FioRequestList extends Component<Props, State> {
             <View style={requestListStyles.listContainer}>
               <T style={requestListStyles.listTitle}>{PENDING_TEXT}</T>
             </View>
+            {!loading && !pendingFioRequests.length ? (
+              <View style={requestListStyles.emptyListContainer}>
+                <T style={requestListStyles.text}>{s.strings.fio_no_requests_label}</T>
+              </View>
+            ) : null}
             <View style={requestListStyles.container}>
               <SwipeListView
                 useSectionList
-                sections={this.addHeadersTransactions(this.props.pendingFioRequests)}
+                sections={this.addHeadersTransactions(pendingFioRequests)}
                 renderItem={this.renderTx}
                 keyExtractor={item => item.fio_request_id.toString()}
                 extraData={this.state}
@@ -269,15 +264,20 @@ export class FioRequestList extends Component<Props, State> {
             <View style={requestListStyles.listContainer}>
               <T style={requestListStyles.listTitle}>{SENT_TEXT}</T>
             </View>
+            {!loading && !sentFioRequests.length ? (
+              <View style={requestListStyles.emptyListContainer}>
+                <T style={requestListStyles.text}>{s.strings.fio_no_requests_label}</T>
+              </View>
+            ) : null}
             <View style={requestListStyles.scrollView}>
               <View style={requestListStyles.container}>
                 <View style={[isAndroid ? requestListStyles.androidTransactionsWrap : requestListStyles.transactionsWrap]}>
                   <FlatList
                     ListFooterComponent={<View style={{ height: isAndroid ? this.listFooterHeight : 0 }} />}
                     style={styles.transactionsScrollWrap}
-                    data={sentTxs}
+                    data={sentFioRequests}
                     renderItem={this.renderSentTx}
-                    initialNumToRender={sentTxs ? sentTxs.length : 0}
+                    initialNumToRender={sentFioRequests ? sentFioRequests.length : 0}
                     onEndReached={this.handleScrollEnd}
                     onEndReachedThreshold={SCROLL_THRESHOLD}
                     keyExtractor={item => item.fio_request_id.toString()}

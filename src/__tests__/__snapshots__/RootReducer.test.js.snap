@@ -155,7 +155,9 @@ Object {
         "fioPendingRequestSelected": Object {},
         "fioSentRequestSelected": Object {},
         "requests": Array [],
+        "requestsLoading": false,
         "sentRequests": Array [],
+        "sentRequestsLoading": false,
       },
       "passwordRecoveryReminderModal": Object {
         "isVisible": false,

@@ -639,6 +639,7 @@
   "fio_register_address_err_msg": "There was an issue registering an address. Please try later.",
   "fio_no_bundled_err_title": "Renew FIO Address",
   "fio_no_bundled_err_msg": "Your FIO Address ran out of free transactions. Please renew your FIO Address.",
+  "fio_no_requests_label": "No requests",
   "fio_reject_request_title": "FIO Request",
   "fio_reject_request_message": "Reject Request?",
   "fio_reject_request_yes": "Yes, Reject",

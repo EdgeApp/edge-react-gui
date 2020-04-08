@@ -6,70 +6,62 @@ import s from '../../locales/strings'
 import type { Dispatch, GetState } from '../../types/reduxTypes.js'
 import { findWalletByFioAddress, getFioWallets } from '../UI/selectors'
 
-const requestListPending = (fioRequestsPending: any) => ({
+const requestListPending = (fioRequestsPending: any[], isLoading?: boolean = true, isReset?: boolean = false) => ({
   type: 'FIO/FIO_REQUEST_LIST_PENDING',
-  data: { fioRequestsPending }
+  data: { fioRequestsPending, isLoading, isReset }
 })
 
-const requestListSent = (fioRequestsSent: any) => ({
+const requestListSent = (fioRequestsSent: any[], isLoading?: boolean = true, isReset?: boolean = false) => ({
   type: 'FIO/FIO_REQUEST_LIST_SENT',
-  data: { fioRequestsSent }
+  data: { fioRequestsSent, isLoading, isReset }
 })
 
-export const getFioRequestsPending = () => (dispatch: Dispatch, getState: GetState) => {
+export const getFioRequestsPending = () => async (dispatch: Dispatch, getState: GetState) => {
   const wallets = getFioWallets(getState())
-  dispatch(requestListPending([]))
-  if (wallets != null) {
-    wallets.forEach(wallet => {
+  dispatch(requestListPending([], true, true))
+  if (wallets.length) {
+    for (const wallet of wallets) {
       const fioPublicKey = wallet.publicWalletInfo.keys.publicKey
-      wallet.otherMethods.getFioAddresses().then(fioAddresses => {
-        if (fioAddresses.length > 0) {
-          wallet.otherMethods
-            .fioAction('getPendingFioRequests', {
-              fioPublicKey
-            })
-            .then(({ requests }) => {
-              if (requests) {
-                dispatch(requestListPending(requests))
-              } else {
-                showError(s.strings.fio_get_requests_error)
-              }
-            })
-            .catch(() => {
-              //
-            })
+      const fioAddresses = await wallet.otherMethods.getFioAddresses()
+      if (fioAddresses.length > 0) {
+        try {
+          const { requests } = await wallet.otherMethods.fioAction('getPendingFioRequests', { fioPublicKey })
+          if (requests) {
+            dispatch(requestListPending(requests))
+          } else {
+            showError(s.strings.fio_get_requests_error)
+          }
+        } catch (e) {
+          //
         }
-      })
-    })
+      }
+    }
   }
+  dispatch(requestListPending([], false))
 }
 
-export const getFioRequestsSent = () => (dispatch: Dispatch, getState: GetState) => {
+export const getFioRequestsSent = () => async (dispatch: Dispatch, getState: GetState) => {
   const wallets = getFioWallets(getState())
-  dispatch(requestListSent([]))
-  if (wallets != null) {
-    wallets.forEach(wallet => {
+  dispatch(requestListSent([], true, true))
+  if (wallets.length) {
+    for (const wallet of wallets) {
       const fioPublicKey = wallet.publicWalletInfo.keys.publicKey
-      wallet.otherMethods.getFioAddresses().then(fioAddresses => {
-        if (fioAddresses.length > 0) {
-          wallet.otherMethods
-            .fioAction('getSentFioRequests', {
-              fioPublicKey
-            })
-            .then(fioRequestsSentRes => {
-              if (fioRequestsSentRes) {
-                dispatch(requestListSent(fioRequestsSentRes.requests))
-              } else {
-                showError(s.strings.fio_get_requests_error)
-              }
-            })
-            .catch(() => {
-              //
-            })
+      const fioAddresses = await wallet.otherMethods.getFioAddresses()
+      if (fioAddresses.length > 0) {
+        try {
+          const { requests } = await wallet.otherMethods.fioAction('getSentFioRequests', { fioPublicKey })
+          if (requests) {
+            dispatch(requestListSent(requests))
+          } else {
+            showError(s.strings.fio_get_requests_error)
+          }
+        } catch (e) {
+          //
         }
-      })
-    })
+      }
+    }
   }
+  dispatch(requestListSent([], false))
 }
 
 export const confirmRequest = (
