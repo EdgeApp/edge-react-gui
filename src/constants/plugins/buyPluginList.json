@@ -328,7 +328,7 @@
     "paymentTypes": [
       "credit"
     ],
-    "description": "Fee: 6.5% / Settlement: 10 minutes\nLimit: $2000/day",
+    "description": "Fee: 6.5% / Settlement: 10 minutes\nLimit: $10000/day",
     "title": "Credit Card",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/05/icon_black_small.png",
     "forCountries": [
