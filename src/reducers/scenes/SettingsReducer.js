@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyInfo, EdgeDenomination } from 'edge-core-js'
+import { type EdgeAccount, type EdgeCurrencyInfo, type EdgeDenomination } from 'edge-core-js'
 import _ from 'lodash'
 
 import * as Constants from '../../constants/indexConstants.js'
@@ -111,11 +111,9 @@ export type SettingsState = {
   }
 }
 
-const currencyPLuginUtil = (state, payloadData): SettingsState => {
+function currencyPLuginUtil (state: SettingsState, currencyInfo: EdgeCurrencyInfo): SettingsState {
   const { plugins } = state
-  const { supportedWalletTypes } = plugins
-  const { allCurrencyInfos } = plugins
-  const { currencyInfo } = payloadData
+  const { allCurrencyInfos, supportedWalletTypes } = plugins
   const { pluginName, walletType } = currencyInfo
 
   // Build up object with all the information for the parent currency, accesible by the currencyCode
@@ -142,6 +140,7 @@ const currencyPLuginUtil = (state, payloadData): SettingsState => {
         currencyCode: metatoken.currencyCode,
         denominations: metatoken.denominations,
         symbolImage: metatoken.symbolImage,
+        // $FlowFixMe
         symbolImageDarkMono: metatoken.symbolImageDarkMono
       }
     }
@@ -167,22 +166,22 @@ const currencyPLuginUtil = (state, payloadData): SettingsState => {
 
 export const settingsLegacy = (state: SettingsState = initialState, action: Action) => {
   switch (action.type) {
-    case 'ACCOUNT/LOGGED_IN': {
-      if (!action.data) throw new Error('Invalid Action')
+    case 'LOGIN': {
+      const account = action.data
 
       // Setup default denominations for settings based on currencyInfo
-      if (!action.data.currencyPlugins) return state
       const newState = { ...state }
-      for (const plugin of action.data.currencyPlugins) {
-        const currencyCode = plugin.currencyInfo.currencyCode
+      for (const pluginId of Object.keys(account.currencyConfig)) {
+        const { currencyInfo } = account.currencyConfig[pluginId]
+        const { currencyCode } = currencyInfo
         if (!newState[currencyCode]) newState[currencyCode] = {}
         if (!newState[currencyCode].denomination) {
-          newState[currencyCode].denomination = plugin.currencyInfo.denominations[0].multiplier
+          newState[currencyCode].denomination = currencyInfo.denominations[0].multiplier
         }
         if (!newState[currencyCode].denominations) {
-          newState[currencyCode].denominations = plugin.currencyInfo.denominations
+          newState[currencyCode].denominations = currencyInfo.denominations
         }
-        for (const token of plugin.currencyInfo.metaTokens) {
+        for (const token of currencyInfo.metaTokens) {
           const tokenCode = token.currencyCode
           newState[tokenCode] = {
             denomination: token.denominations[0].multiplier,
@@ -195,11 +194,10 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
 
     case 'ACCOUNT_INIT_COMPLETE': {
       if (!action.data) throw new Error('Invalid action')
+      const account: EdgeAccount = action.data.account
       const {
         touchIdInfo,
-        account,
         otpInfo,
-        currencyPlugins,
         autoLogoutTimeInSeconds,
         defaultFiat,
         defaultIsoFiat,
@@ -255,9 +253,9 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
           }
         }
       })
-      currencyPlugins.forEach(key => {
-        newState = currencyPLuginUtil(newState, key)
-      })
+      for (const pluginId of Object.keys(account.currencyConfig)) {
+        newState = currencyPLuginUtil(newState, account.currencyConfig[pluginId].currencyInfo)
+      }
       customTokensSettings.forEach(key => {
         const { currencyCode } = key
         newState = {
