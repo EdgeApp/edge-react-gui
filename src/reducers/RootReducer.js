@@ -21,6 +21,7 @@ export type RootState = {
 
   // Next username to auto-fill at the login screen, or blank if none:
   +nextUsername: string | null,
+  +showMainApp: boolean,
 
   // Deep link waiting to be fulfilled:
   +pendingDeepLink: DeepLink | null,
@@ -47,6 +48,16 @@ export const rootReducer: Reducer<RootState, Action> = combineReducers({
         const { username = null } = action.data
         return username
       }
+    }
+    return state
+  },
+
+  showMainApp (state: boolean = true, action: Action): boolean {
+    switch (action.type) {
+      case 'LOGOUT':
+        return false
+      case 'SHOW_MAIN_APP':
+        return true
     }
     return state
   },

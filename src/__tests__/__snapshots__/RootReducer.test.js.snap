@@ -91,6 +91,7 @@ Object {
     "contacts": "undetermined",
     "location": "undetermined",
   },
+  "showMainApp": true,
   "ui": Object {
     "passwordReminder": Object {
       "lastLoginDate": -Infinity,
