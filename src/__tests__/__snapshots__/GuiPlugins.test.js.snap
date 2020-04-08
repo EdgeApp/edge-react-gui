@@ -188,7 +188,7 @@ Limit: $18000/day",
     "deepPath": "",
     "deepQuery": Object {},
     "description": "Fee: 6.5% / Settlement: 10 minutes
-Limit: $2000/day",
+Limit: $10000/day",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/05/icon_black_small.png",
     "paymentTypeLogoKey": "applepay",
     "paymentTypes": Array [
