@@ -125,6 +125,35 @@ Limit: $18000/day",
     "pluginId": "simplex",
     "title": "Credit and Debit Card",
   },
+  Object {
+    "cryptoCodes": Array [
+      "BTC",
+      "BCH",
+      "ETH",
+      "DAI",
+      "LTC",
+      "EOS",
+      "XRP",
+      "XLM",
+      "BAT",
+      "BNB",
+      "PAX",
+      "TUSD",
+      "USDC",
+      "USDT",
+    ],
+    "deepPath": "",
+    "deepQuery": Object {},
+    "description": "Fee: 6.5% / Settlement: 10 minutes
+Limit: $10000/day",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/05/icon_black_small.png",
+    "paymentTypeLogoKey": "credit",
+    "paymentTypes": Array [
+      "credit",
+    ],
+    "pluginId": "moonpay",
+    "title": "Credit Card",
+  },
 ]
 `;
 
