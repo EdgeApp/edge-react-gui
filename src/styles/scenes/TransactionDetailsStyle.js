@@ -38,8 +38,7 @@ export const styles = {
     backgroundColor: '#FFFFFF',
     padding: rem(0.8),
     borderBottomWidth: 1,
-    borderBottomColor: THEME.COLORS.GRAY_3,
-    justifyContent: 'center'
+    borderBottomColor: THEME.COLORS.GRAY_3
   },
   tileContainer: {
     width: '100%',
@@ -56,7 +55,7 @@ export const styles = {
   },
   textTransactionData: {
     color: THEME.COLORS.SECONDARY,
-    marginTop: rem(0.8),
+    marginVertical: rem(1.3),
     fontSize: rem(0.9),
     width: '100%',
     marginLeft: 'auto',
@@ -67,6 +66,11 @@ export const styles = {
     color: THEME.COLORS.SECONDARY,
     fontSize: rem(0.7),
     marginBottom: rem(0.1)
+  },
+  tileTextTopNotes: {
+    color: THEME.COLORS.SECONDARY,
+    fontSize: rem(0.7),
+    marginBottom: rem(0.5)
   },
   tileTextBottom: {
     color: THEME.COLORS.GRAY_5,
@@ -139,7 +143,8 @@ export const styles = {
     flex: 1
   },
   saveButtonContainer: {
-    padding: rem(0.5)
+    paddingHorizontal: rem(0.5),
+    paddingBottom: rem(0.8)
   },
   saveButton: {
     height: rem(3)

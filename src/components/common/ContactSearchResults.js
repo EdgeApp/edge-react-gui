@@ -22,13 +22,18 @@ type FlatListItem = {
 
 export class ContactSearchResults extends Component<Props> {
   render () {
-    const filteredArray = this.props.contacts.filter(contact => {
-      const { givenName, familyName } = contact
-      const givenNameLowerCase = givenName ? givenName.toLowerCase() : ''
-      const familyNameLowerCase = familyName ? familyName.toLowerCase() : ''
-      const inputTextLowerCase = this.props.currentPayeeText.toLowerCase()
-      return givenNameLowerCase.includes(inputTextLowerCase) || familyNameLowerCase.includes(inputTextLowerCase)
-    })
+    const filteredArray = []
+    const { contacts, currentPayeeText } = this.props
+    const formattedInputText = currentPayeeText.toLowerCase().replace(/\s+/g, '') // Remove all whitepsaces
+    for (let i = 0; i < contacts.length; i++) {
+      const { givenName, familyName } = contacts[i]
+      const givenNameLowerCase = givenName ? givenName.toLowerCase().replace(/\s+/g, '') : ''
+      const familyNameLowerCase = familyName ? familyName.toLowerCase().replace(/\s+/g, '') : ''
+      const fullName = givenNameLowerCase + familyNameLowerCase
+      if (fullName.includes(formattedInputText)) {
+        filteredArray.push(contacts[i])
+      }
+    }
     return (
       <FlatList
         style={styles.resultList}
@@ -36,11 +41,12 @@ export class ContactSearchResults extends Component<Props> {
         data={filteredArray}
         initialNumToRender={12}
         keyboardShouldPersistTaps="handled"
-        keyExtractor={(item: GuiContact, index: number) => index.toString()}
+        keyExtractor={this.keyExtractor}
         renderItem={this.renderResult}
       />
     )
   }
+  keyExtractor = (item: GuiContact, index: number) => index.toString()
   renderResult = ({ item }: FlatListItem) => {
     const { familyName, givenName, thumbnailPath } = item
     const fullName = familyName ? `${givenName} ${familyName}` : givenName

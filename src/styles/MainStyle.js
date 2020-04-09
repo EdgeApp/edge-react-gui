@@ -3,6 +3,7 @@
 import { StyleSheet } from 'react-native'
 
 import THEME from '../theme/variables/airbitz.js'
+import { scale } from '../util/scaling.js'
 
 export const stylesRaw = {
   titleWrapper: {
@@ -28,6 +29,23 @@ export const stylesRaw = {
   },
   footerTabStyles: {
     height: THEME.FOOTER_TABS_HEIGHT
+  },
+  transactionDetailsDateTimeContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: '100%'
+  },
+  transactionDetailsDate: {
+    fontSize: scale(15),
+    color: THEME.COLORS.WHITE,
+    fontFamily: THEME.FONTS.DEFAULT,
+    lineHeight: 0
+  },
+  transactionDetailsTime: {
+    fontSize: scale(11),
+    color: THEME.COLORS.HEADER_TEXT_SECONDARY,
+    fontFamily: THEME.FONTS.DEFAULT,
+    lineHeight: 0
   }
 }
 

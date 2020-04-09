@@ -106,7 +106,6 @@ tabBarIconFilesSelected[Constants.PLUGIN_SELL] = sellIconSelected
 tabBarIconFilesSelected[Constants.TRANSACTION_LIST] = exchangeIconSelected
 tabBarIconFilesSelected[Constants.EXCHANGE] = exchangeIconSelected
 
-const TRANSACTION_DETAILS = s.strings.title_transaction_details
 const WALLETS = s.strings.title_wallets
 const CREATE_WALLET_IMPORT = s.strings.create_wallet_import_title
 const CREATE_WALLET_SELECT_CRYPTO = s.strings.title_create_wallet_select_crypto
@@ -187,7 +186,7 @@ export class MainComponent extends Component<Props> {
               onEnter={() => this.props.requestPermission('contacts')}
               clone
               component={TransactionDetails}
-              renderTitle={this.renderTitle(TRANSACTION_DETAILS)}
+              renderTitle={this.renderTransactionDetailsHeader}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderMenuButton()}
             />
@@ -696,6 +695,17 @@ export class MainComponent extends Component<Props> {
         <PasswordReminderModal />
         <PasswordRecoveryReminderModalConnector />
       </Fragment>
+    )
+  }
+
+  renderTransactionDetailsHeader = (props: any) => {
+    const dateString = props.edgeTransaction && props.edgeTransaction.dateString ? props.edgeTransaction.dateString : ''
+    const time = props.edgeTransaction && props.edgeTransaction.time ? props.edgeTransaction.time : ''
+    return (
+      <View style={styles.transactionDetailsDateTimeContainer}>
+        <T style={styles.transactionDetailsDate}>{dateString}</T>
+        <T style={styles.transactionDetailsTime}>{time}</T>
+      </View>
     )
   }
 

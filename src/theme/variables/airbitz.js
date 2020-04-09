@@ -98,7 +98,9 @@ export const THEME = {
 
     TRANSPARENT: 'transparent',
 
-    ROW_PRESSED: '#D9E3ED' // same as GRAY_3
+    ROW_PRESSED: '#D9E3ED', // same as GRAY_3
+
+    HEADER_TEXT_SECONDARY: '#A4C7DF'
   }
 }
 

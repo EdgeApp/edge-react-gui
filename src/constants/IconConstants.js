@@ -42,7 +42,6 @@ export const WALLET_ICON = 'ios-wallet'
 export const IOS_INFO_ICON = 'ios-information-circle-outline'
 export const ANDROID_INFO_ICON = 'md-information-circle-outline'
 export const WARNING = 'ios-warning'
-export const CONTACT = 'ios-contact'
 
 // Material
 export const MATERIAL_ICONS = 'material'
