@@ -21,6 +21,7 @@ import sellIcon from '../assets/images/tabbar/sell.png'
 import walletIconSelected from '../assets/images/tabbar/wallets_selected.png'
 import walletIcon from '../assets/images/tabbar/wallets.png'
 import { CreateWalletChoiceComponent } from '../components/scenes/CreateWalletChoiceScene.js'
+import { CurrencySettingsScene } from '../components/scenes/CurrencySettingsScene.js'
 import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
 import { requestPermission } from '../components/services/PermissionsManager.js'
 import ExchangeDropMenu from '../connectors/components/HeaderMenuExchangeConnector'
@@ -37,7 +38,6 @@ import { CreateWalletSelectCrypto } from '../connectors/scenes/CreateWalletSelec
 import { CreateWalletSelectFiat } from '../connectors/scenes/CreateWalletSelectFiatConnector'
 import { CryptoExchangeQuoteConnector } from '../connectors/scenes/CryptoExchangeQuoteConnector.js'
 import { CryptoExchangeSceneConnector as ExchangeConnector } from '../connectors/scenes/CryptoExchangeSceneConnector'
-import CurrencySettings from '../connectors/scenes/CurrencySettingsConnector'
 import DefaultFiatSettingConnector from '../connectors/scenes/DefaultFiatSettingConnector'
 import EdgeLoginSceneConnector from '../connectors/scenes/EdgeLoginSceneConnector'
 import EditToken from '../connectors/scenes/EditTokenConnector.js'
@@ -589,7 +589,14 @@ export class MainComponent extends Component<Props> {
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderEmptyButton()}
             />
-            {this.renderCurrencySettings()}
+            <Scene
+              key={Constants.CURRENCY_SETTINGS}
+              navTransparent={true}
+              component={CurrencySettingsScene}
+              renderTitle={props => <CurrencySettingsTitle currencyInfo={props.currencyInfo} />}
+              renderLeftButton={this.renderBackButton()}
+              renderRightButton={this.renderEmptyButton()}
+            />
             <Scene
               key={Constants.DEFAULT_FIAT_SETTING}
               navTransparent={true}
@@ -703,26 +710,6 @@ export class MainComponent extends Component<Props> {
         </Scene>
       </Drawer>
     )
-  }
-
-  renderCurrencySettings = () => {
-    const settings = []
-    for (const key in Constants.CURRENCY_SETTINGS) {
-      const { pluginName, currencyCode } = Constants.CURRENCY_SETTINGS[key]
-      settings.push(
-        <Scene
-          key={key}
-          pluginName={pluginName}
-          currencyCode={currencyCode}
-          navTransparent={true}
-          component={CurrencySettings}
-          renderTitle={<CurrencySettingsTitle key={key} pluginName={pluginName} />}
-          renderLeftButton={this.renderBackButton()}
-          renderRightButton={this.renderEmptyButton()}
-        />
-      )
-    }
-    return settings
   }
 
   renderHeaderWalletSelector = () => {

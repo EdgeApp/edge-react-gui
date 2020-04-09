@@ -49,6 +49,31 @@ export const DEFAULT_STARTER_WALLET_NAMES = {
   XZC: s.strings.string_first_zcoin_wallet_name
 }
 
+/**
+ * Plugins in this list have settings scenes.
+ * The order of this list sets the order of the rows.
+ */
+export const CURRENCY_SETTINGS_KEYS = [
+  'bitcoin',
+  'bitcointestnet',
+  'bitcoincash',
+  'ethereum',
+  'dash',
+  'litecoin',
+  'bitcoinsv',
+  'zcoin',
+  'digibyte',
+  'qtum',
+  'vertcoin',
+  'feathercoin',
+  'ravencoin',
+  'bitcoingold',
+  'smartcash',
+  'groestlcoin',
+  'eboost',
+  'ufo'
+]
+
 // Put these in reverse order of preference
 export const PREFERRED_TOKENS = ['WINGS', 'HERC', 'REP', 'AGLD', 'RIF']
 

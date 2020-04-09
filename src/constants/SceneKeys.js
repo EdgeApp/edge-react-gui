@@ -20,6 +20,7 @@ export const CREATE_WALLET_NAME = 'createWalletName'
 export const CREATE_WALLET_REVIEW = 'createWalletReview'
 export const CREATE_WALLET_SELECT_CRYPTO = 'createWalletSelectCrypto'
 export const CREATE_WALLET_SELECT_FIAT = 'createWalletSelectFiat'
+export const CURRENCY_SETTINGS = 'currencySettings'
 export const DEFAULT_FIAT_SETTING = 'defaultFiatSetting'
 export const EDGE_LOGIN = 'edgeLogin'
 export const EDIT_TOKEN = 'editToken'
@@ -61,78 +62,3 @@ export const TRANSACTIONS_EXPORT = 'transactionsExport'
 export const WALLET_LIST = 'walletList'
 export const WALLET_LIST_NOT_USED = 'walletList_notused'
 export const WALLET_LIST_SCENE = 'walletListScene' // distinguished as actual scene vs. stack
-
-export const CURRENCY_SETTINGS = {
-  btcSettings: {
-    pluginName: 'bitcoin',
-    currencyCode: 'BTC'
-  },
-  tbtcSettigs: {
-    pluginName: 'bitcointestnet',
-    currencyCode: 'TBTC'
-  },
-  bchSettings: {
-    pluginName: 'bitcoincash',
-    currencyCode: 'BCH'
-  },
-  ethSettings: {
-    pluginName: 'ethereum',
-    currencyCode: 'ETH'
-  },
-  dashSettings: {
-    pluginName: 'dash',
-    currencyCode: 'DASH'
-  },
-  ltcSettings: {
-    pluginName: 'litecoin',
-    currencyCode: 'LTC'
-  },
-  bsvSettings: {
-    pluginName: 'bitcoinsv',
-    currencyCode: 'BSV'
-  },
-  zcoinSettings: {
-    pluginName: 'zcoin',
-    currencyCode: 'XZC'
-  },
-  dgbSettings: {
-    pluginName: 'digibyte',
-    currencyCode: 'DGB'
-  },
-  qtumSettings: {
-    pluginName: 'qtum',
-    currencyCode: 'QTUM'
-  },
-  vtcSettings: {
-    pluginName: 'vertcoin',
-    currencyCode: 'VTC'
-  },
-  ftcSettings: {
-    pluginName: 'feathercoin',
-    currencyCode: 'FTC'
-  },
-  rvnSettings: {
-    pluginName: 'ravencoin',
-    currencyCode: 'RVN'
-  },
-  btgSettings: {
-    pluginName: 'bitcoingold',
-    currencyCode: 'BTG'
-  },
-  smartcashSettings: {
-    pluginName: 'smartcash',
-    currencyCode: 'SMART'
-  },
-  grsSettings: {
-    pluginName: 'groestlcoin',
-    currencyCode: 'GRS'
-  },
-  ebstSettings: {
-    pluginName: 'eboost',
-    currencyCode: 'EBST'
-  },
-  ufoSettings: {
-    pluginName: 'ufo',
-    currencyCode: 'UFO'
-  }
-}
