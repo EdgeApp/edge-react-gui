@@ -172,9 +172,9 @@ export class FioAddressRegisterScene extends Component<Props, State> {
   }
 
   renderButton () {
-    const { isValid, isAvailable } = this.state
+    const { isValid, isAvailable, loading } = this.state
 
-    if (isValid && isAvailable) {
+    if (isValid && isAvailable && !loading) {
       return (
         <View style={styles.buttons}>
           <PrimaryButton style={[styles.next]} onPress={this.handleNextButton} disabled={!isAvailable}>
