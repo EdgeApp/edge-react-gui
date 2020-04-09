@@ -6,8 +6,9 @@ import { showError } from '../../components/services/AirshipInstance'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings'
 import type { Dispatch, GetState } from '../../types/reduxTypes'
+import { truncateDecimals } from '../../util/utils'
 import { getAccount } from '../Core/selectors'
-import { getExchangeDenomination } from '../Settings/selectors'
+import { getDisplayDenomination, getExchangeDenomination } from '../Settings/selectors'
 import { getFioWallets } from '../UI/selectors'
 import type { BuyAddressResponse } from './reducer'
 
@@ -63,6 +64,7 @@ export const getRegInfo = (fioAddress: string, selectedWallet: EdgeCurrencyWalle
   const account = getAccount(state)
   const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[Constants.FIO_STR]
   const fioPlugin = account.currencyConfig[currencyPluginName]
+  const displayDenomination = getDisplayDenomination(state, Constants.FIO_STR)
 
   let activationCost = 0
 
@@ -73,7 +75,7 @@ export const getRegInfo = (fioAddress: string, selectedWallet: EdgeCurrencyWalle
 
   try {
     const fee = await selectedWallet.otherMethods.getFee('registerFioAddress')
-    activationCost = fee / Constants.BILLION
+    activationCost = parseFloat(truncateDecimals(bns.div(`${fee}`, displayDenomination.multiplier, 18), 6))
   } catch (e) {
     showError(s.strings.fio_get_fee_err_msg)
   }

@@ -1,5 +1,6 @@
 // @flow
 
+import { bns } from 'biggystring'
 import { Scene } from 'edge-components'
 import { type EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
@@ -11,7 +12,7 @@ import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/index'
 import ABSlider from '../../modules/UI/components/Slider/index.js'
 import { styles } from '../../styles/scenes/FioAddressConfirmStyle'
-import { getFeeDisplayed } from '../../util/utils'
+import { getFeeDisplayed, truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 
@@ -23,6 +24,7 @@ export type State = {
 
 export type StateProps = {
   fioAddressName: string,
+  denominationMultiplier: string,
   isConnected: boolean
 }
 
@@ -71,7 +73,7 @@ export class FioAddressConfirmScene extends Component<Props, State> {
       const balance = await paymentWallet.getBalance()
 
       if (balance || balance === 0) {
-        const newBalance = parseInt(balance) / Constants.BILLION
+        const newBalance = parseFloat(truncateDecimals(bns.div(balance, this.props.denominationMultiplier, 18), 6))
         this.setState({
           balance: newBalance
         })
