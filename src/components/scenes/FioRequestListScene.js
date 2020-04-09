@@ -1,5 +1,6 @@
 // @flow
 
+import type { EdgeDenomination } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Alert, Animated, FlatList, Platform, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -29,6 +30,7 @@ export type StateProps = {
   loading: boolean,
   isoFiatCurrencyCode: string,
   fiatSymbol: string,
+  displayDenominations: { [string]: EdgeDenomination },
   exchangeRates: any,
   pendingFioRequests: any[],
   sentFioRequests: any[],
@@ -135,8 +137,10 @@ export class FioRequestList extends Component<Props, State> {
 
   headerRowUsingTitle = (headerTitle: string) => {
     return (
-      <View style={requestListStyles.rowContainer}>
-        <T style={requestListStyles.rowTitle}>{headerTitle}</T>
+      <View style={styles.singleDateArea}>
+        <View style={styles.leftDateArea}>
+          <T style={styles.formattedDate}>{headerTitle}</T>
+        </View>
       </View>
     )
   }
@@ -191,8 +195,21 @@ export class FioRequestList extends Component<Props, State> {
   }
 
   renderTx = (itemObj: { item: any, index: number }) => {
-    const { item: transaction } = itemObj
-    return <FioRequestRow transaction={transaction} onSelect={this.selectRequest} fiatSymbol={this.props.fiatSymbol} fiatAmount={this.fiatAmount} />
+    const { item: transaction, index } = itemObj
+    const isLastOfDate =
+      index + 1 === this.props.pendingFioRequests.length ||
+      (index > 0 &&
+        intl.formatExpDate(new Date(this.props.pendingFioRequests[index + 1].time_stamp), true) !== intl.formatExpDate(new Date(transaction.time_stamp), true))
+    return (
+      <FioRequestRow
+        transaction={transaction}
+        isLastOfDate={isLastOfDate}
+        onSelect={this.selectRequest}
+        fiatSymbol={this.props.fiatSymbol}
+        fiatAmount={this.fiatAmount}
+        displayDenominations={this.props.displayDenominations}
+      />
+    )
   }
 
   renderSentTx = (itemObj: { item: any, index: number }) => {
@@ -201,14 +218,20 @@ export class FioRequestList extends Component<Props, State> {
       index === 0 ||
       (index > 0 &&
         intl.formatExpDate(new Date(this.props.sentFioRequests[index - 1].time_stamp), true) !== intl.formatExpDate(new Date(transaction.time_stamp), true))
+    const isLastOfDate =
+      index + 1 === this.props.sentFioRequests.length ||
+      (index > 0 &&
+        intl.formatExpDate(new Date(this.props.sentFioRequests[index + 1].time_stamp), true) !== intl.formatExpDate(new Date(transaction.time_stamp), true))
     return (
       <FioRequestRow
         transaction={transaction}
         onSelect={this.selectSentRequest}
         isSent={true}
         isHeaderRow={isHeaderRow}
+        isLastOfDate={isLastOfDate}
         fiatSymbol={this.props.fiatSymbol}
         fiatAmount={this.fiatAmount}
+        displayDenominations={this.props.displayDenominations}
       />
     )
   }
@@ -253,7 +276,7 @@ export class FioRequestList extends Component<Props, State> {
                 keyExtractor={item => item.fio_request_id.toString()}
                 extraData={this.state}
                 renderHiddenItem={this.renderHiddenItem}
-                renderSectionHeader={({ section }) => <View style={requestListStyles.rowHeaderOnly}>{this.headerRowUsingTitle(section.title)}</View>}
+                renderSectionHeader={({ section }) => this.headerRowUsingTitle(section.title)}
                 rightOpenValue={-75}
                 onSwipeValueChange={this.onSwipeValueChange}
                 disableRightSwipe={true}

@@ -46,17 +46,17 @@ export const fioRequest: Reducer<FioRequestState, Action> = (state = initialStat
       }
     case 'FIO/FIO_REQUEST_LIST_PENDING':
       if (!action.data) throw new Error('Invalid action FIO_REQUEST_LIST_PENDING')
-      if (!action.data.isLoading) {
-        return {
-          ...state,
-          requestsLoading: false
-        }
-      }
       if (action.data.isReset) {
         return {
           ...state,
           requests: [],
           requestsLoading: action.data.isLoading
+        }
+      }
+      if (!action.data.isLoading) {
+        return {
+          ...state,
+          requestsLoading: false
         }
       }
       const fioRequestsPending = [...state.requests, ...action.data.fioRequestsPending]
@@ -67,17 +67,17 @@ export const fioRequest: Reducer<FioRequestState, Action> = (state = initialStat
       }
     case 'FIO/FIO_REQUEST_LIST_SENT':
       if (!action.data) throw new Error('Invalid action FIO_REQUEST_LIST_SENT')
-      if (!action.data.isLoading) {
-        return {
-          ...state,
-          sentRequestsLoading: false
-        }
-      }
       if (action.data.isReset) {
         return {
           ...state,
           sentRequests: [],
           sentRequestsLoading: action.data.isLoading
+        }
+      }
+      if (!action.data.isLoading) {
+        return {
+          ...state,
+          sentRequestsLoading: false
         }
       }
       const fioRequestsSent = [...state.sentRequests, ...action.data.fioRequestsSent]

@@ -210,7 +210,7 @@ export const convertNativeToExchangeRateDenomination = (settings: Object, curren
 export const findWalletByFioAddress = async (state: State, fioAddress: string): Promise<EdgeCurrencyWallet | null> => {
   const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
 
-  if (fioWallets.length) {
+  if (fioWallets && fioWallets.length) {
     for (const wallet: EdgeCurrencyWallet of fioWallets) {
       const fioAddresses: string[] = await wallet.otherMethods.getFioAddressNames()
       if (fioAddresses.length > 0) {

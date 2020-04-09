@@ -1,15 +1,15 @@
 // @flow
 
+import type { EdgeDenomination } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Image, TouchableHighlight, View } from 'react-native'
 
-import checkedIcon from '../../../assets/images/createWallet/check_icon_lg.png'
-import invalidIcon from '../../../assets/images/createWallet/invalid_icon.png'
 import fioRequestsIcon from '../../../assets/images/fio/fio_sent_request.png'
 import { intl } from '../../../locales/intl'
 import s from '../../../locales/strings'
 import { styles as requestListStyles } from '../../../styles/scenes/FioRequestListStyle'
 import styles from '../../../styles/scenes/TransactionListStyle'
+import THEME from '../../../theme/variables/airbitz'
 import T from '../../UI/components/FormattedText/index'
 import { isRejectedFioRequest, isSentFioRequest } from '../util'
 
@@ -18,139 +18,121 @@ type Props = {
   fiatSymbol: string,
   fiatAmount: (currencyCode: string, amount: string) => string,
   onSelect: any => void,
+  displayDenominations: { [string]: EdgeDenomination },
   isHeaderRow?: boolean,
+  isLastOfDate?: boolean,
   isSent?: boolean
 }
 
 class FioRequestRow extends Component<Props> {
-  underlayColor = '#AAA'
+  underlayColor = THEME.COLORS.ROW_PRESSED
 
   static defaultProps: Props = {
     transaction: {},
     fiatSymbol: '',
+    displayDenominations: {},
     fiatAmount: () => '',
     onSelect: () => {},
     isHeaderRow: false,
+    isLastOfDate: false,
     isSent: false
   }
 
-  convertCurrencyStringFromCurrencyCode (code: string) {
-    switch (code) {
-      case 'BTC':
-        return 'Bitcoin'
-      case 'BCH':
-        return 'Bitcoin Cash'
-      case 'ETH':
-        return 'Ethereum'
-      case 'LTC':
-        return 'Litecoin'
-      case 'DASH':
-        return 'Dash'
-      default:
-        return ''
-    }
-  }
-
-  headerRow = (headerDate: Date) => {
-    return (
-      <View style={requestListStyles.rowContainer}>
-        <T style={requestListStyles.rowTitle}>{intl.formatExpDate(headerDate, true)}</T>
-      </View>
-    )
-  }
-
-  sentField = (sentTo: string) => {
-    return (
-      <View>
-        <T style={requestListStyles.title}>{sentTo}</T>
-      </View>
-    )
-  }
-
-  requestedIcon = (status?: string = '') => {
-    let icon
-    if (isRejectedFioRequest(status)) {
-      icon = <Image style={requestListStyles.transactionStatusLogo} source={invalidIcon} />
-    }
-    if (isSentFioRequest(status)) {
-      icon = <Image style={requestListStyles.transactionStatusLogo} source={checkedIcon} />
-    }
-    return (
-      <View>
-        <Image style={styles.transactionLogo} source={fioRequestsIcon} />
-        {icon}
-      </View>
-    )
-  }
-
   requestedTimeAndMemo = (time: Date, memo: string) => {
-    const maxLength = 40
+    const maxLength = 34
     const memoStr = memo && memo.length > maxLength ? memo.slice(0, maxLength) + '... ' : memo
     return (
-      <View>
-        <T style={requestListStyles.text}>
-          {intl.formatTime(time)}
-          {memoStr ? ` - ${memoStr}` : ''}
-        </T>
-      </View>
+      <T style={[styles.transactionPendingTime, styles.transactionTime]}>
+        {intl.formatTime(time)}
+        {memoStr ? ` - ${memoStr}` : ''}
+      </T>
     )
   }
 
-  currencyField = (symbol: string, amount: string, styles: any) => {
+  currencyField = (currencyCode: string, amount: string, status: string) => {
+    let fieldStyle = styles.transactionPartialConfirmation
+    if (status && isSentFioRequest(status)) {
+      fieldStyle = styles.transactionDetailsReceivedTx
+    }
+    if (status && isRejectedFioRequest(status)) {
+      fieldStyle = styles.transactionDetailsSentTx
+    }
+
+    const symbol = this.props.displayDenominations[currencyCode] ? this.props.displayDenominations[currencyCode].symbol : ''
+
     return (
-      <View>
-        <T style={[requestListStyles.currency, styles]}>
-          {symbol} {amount}
-        </T>
-      </View>
+      <T style={fieldStyle}>
+        {symbol} {amount}
+      </T>
     )
   }
 
-  fiatField = (currencyCode: string, amount: string, styles: any) => {
+  fiatField = (currencyCode: string, amount: string) => {
     return (
-      <View>
-        <T style={[requestListStyles.fiat, styles]}>
-          {this.props.fiatSymbol} {this.props.fiatAmount(currencyCode, amount)}
-        </T>
-      </View>
+      <T style={[styles.transactionFiat]}>
+        {this.props.fiatSymbol} {this.props.fiatAmount(currencyCode, amount)}
+      </T>
     )
   }
 
-  requestedField = (coinType: string) => {
-    return (
-      <View>
-        <T style={requestListStyles.title}>
-          {s.strings.title_fio_requested} {this.convertCurrencyStringFromCurrencyCode(coinType)}
-        </T>
-      </View>
-    )
+  requestedField = (currencyCode: string) => {
+    const name = this.props.displayDenominations[currencyCode] ? this.props.displayDenominations[currencyCode].name : ''
+    return `${s.strings.title_fio_requested} ${name}`
+  }
+
+  showStatus = (status: string) => {
+    let statusStyle = styles.transactionPartialConfirmation
+    let label = s.strings.fragment_wallet_unconfirmed
+    if (isSentFioRequest(status)) {
+      statusStyle = styles.transactionDetailsReceivedTx
+      label = s.strings.fragment_transaction_list_receive_prefix
+    }
+    if (isRejectedFioRequest(status)) {
+      statusStyle = styles.transactionPending
+      label = s.strings.fio_reject_status
+    }
+    return <T style={[styles.transactionPendingTime, statusStyle]}>{label}</T>
   }
 
   render () {
-    const { transaction, onSelect, isSent, isHeaderRow } = this.props
+    const { transaction, onSelect, isSent, isHeaderRow, isLastOfDate } = this.props
     return (
-      <TouchableHighlight
-        onPress={() => onSelect(transaction)}
-        style={isHeaderRow ? requestListStyles.rowFrontWithHeader : requestListStyles.rowFront}
-        underlayColor={this.underlayColor}
-      >
-        <View key={transaction.fio_request_id.toString()}>
-          {isHeaderRow && <View>{this.headerRow(new Date(transaction.time_stamp))}</View>}
-          <View style={requestListStyles.rowItem}>
-            <View style={requestListStyles.columnItem}>
-              <View>{this.requestedIcon(isSent ? transaction.status : '')}</View>
-              <View>
-                <View>{isSent ? this.sentField(transaction.payer_fio_address) : this.requestedField(transaction.content.token_code)}</View>
-                <View>{this.requestedTimeAndMemo(new Date(transaction.time_stamp), transaction.content.memo)}</View>
-              </View>
-            </View>
-            <View style={requestListStyles.columnCurrency}>
-              <View>{this.currencyField(transaction.content.token_code, transaction.content.amount)}</View>
-              <View>{this.fiatField(transaction.content.token_code, transaction.content.amount)}</View>
+      <View key={transaction.fio_request_id.toString()} style={[styles.singleTransactionWrap]}>
+        {isHeaderRow && (
+          <View style={styles.singleDateArea}>
+            <View style={styles.leftDateArea}>
+              <T style={styles.formattedDate}>{intl.formatExpDate(new Date(transaction.time_stamp), true)}</T>
             </View>
           </View>
-        </View>
-      </TouchableHighlight>
+        )}
+        <TouchableHighlight
+          onPress={() => onSelect(transaction)}
+          underlayColor={this.underlayColor}
+          style={[styles.singleTransaction, { borderBottomWidth: isLastOfDate ? 0 : 1 }]}
+        >
+          <View style={[styles.transactionInfoWrap]}>
+            <View style={styles.transactionLeft}>
+              <View style={[styles.transactionLeftLogoWrap]}>
+                <Image style={[styles.transactionLogo, requestListStyles.transactionLogo]} source={fioRequestsIcon} />
+              </View>
+            </View>
+
+            <View style={[styles.transactionRight]}>
+              <View style={[styles.transactionDetailsRow, transaction.content.memo ? styles.transactionDetailsRowMargin : null]}>
+                <T style={[styles.transactionPartner]} adjustsFontSizeToFit={true} minimumFontScale={0.6}>
+                  {isSent ? transaction.payer_fio_address : this.requestedField(transaction.content.token_code)}
+                </T>
+                {this.currencyField(transaction.content.token_code, transaction.content.amount, isSent ? transaction.status : '')}
+              </View>
+              <View style={[styles.transactionDetailsRow]}>
+                {this.requestedTimeAndMemo(new Date(transaction.time_stamp), transaction.content.memo)}
+                {this.fiatField(transaction.content.token_code, transaction.content.amount)}
+              </View>
+              {isSent ? <View style={[styles.transactionDetailsRow, styles.transactionDetailsRowMargin]}>{this.showStatus(transaction.status)}</View> : null}
+            </View>
+          </View>
+        </TouchableHighlight>
+      </View>
     )
   }
 }

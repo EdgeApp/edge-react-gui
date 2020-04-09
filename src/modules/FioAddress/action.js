@@ -9,32 +9,15 @@ import type { Dispatch, GetState } from '../../types/reduxTypes'
 import { truncateDecimals } from '../../util/utils'
 import { getAccount } from '../Core/selectors'
 import { getDisplayDenomination, getExchangeDenomination } from '../Settings/selectors'
-import { getFioWallets } from '../UI/selectors'
+import { findWalletByFioAddress, getFioWallets } from '../UI/selectors'
 import type { BuyAddressResponse } from './reducer'
 
 export const setFioWalletByFioAddress = (fioAddressToUse: string) => async (dispatch: Dispatch, getState: GetState) => {
-  const wallets: EdgeCurrencyWallet[] = getFioWallets(getState())
-  const fioAddress = fioAddressToUse.toLowerCase()
-  if (wallets != null) {
-    for (const wallet: EdgeCurrencyWallet of wallets) {
-      const fioAddresses: string[] = await wallet.otherMethods.getFioAddressNames()
-      if (fioAddresses.length > 0) {
-        for (const address of fioAddresses) {
-          if (address.toLowerCase() === fioAddress) {
-            return dispatch({
-              type: 'FIO/FIO_WALLET_BY_ADDRESS',
-              data: { wallet }
-            })
-          }
-        }
-      }
-    }
-  } else {
-    return dispatch({
-      type: 'FIO/FIO_WALLET_BY_ADDRESS',
-      data: { wallet: null }
-    })
-  }
+  const wallet = await findWalletByFioAddress(getState(), fioAddressToUse)
+  dispatch({
+    type: 'FIO/FIO_WALLET_BY_ADDRESS',
+    data: { wallet }
+  })
 }
 
 export const refreshAllFioAddresses = (cb?: Function) => async (dispatch: Dispatch, getState: GetState) => {

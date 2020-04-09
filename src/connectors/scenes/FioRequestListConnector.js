@@ -8,6 +8,7 @@ import { FioRequestList } from '../../components/scenes/FioRequestListScene'
 import { isConnectedState } from '../../modules/Core/selectors'
 import { updateExchangeRates } from '../../modules/ExchangeRates/action.js'
 import { getFioRequestsPending, getFioRequestsSent, rejectRequest } from '../../modules/FioRequest/action'
+import { getDisplayDenomination } from '../../modules/Settings/selectors'
 import { getSelectedCurrencyCode, getSelectedWallet, getWallets } from '../../modules/UI/selectors.js'
 import type { Dispatch, State } from '../../types/reduxTypes'
 import { getFiatSymbol } from '../../util/utils'
@@ -30,11 +31,31 @@ const mapStateToProps = (state: State) => {
   const sentRequestsLoading = state.ui.scenes.fioRequest.sentRequestsLoading
   const exchangeRates = state.exchangeRates
   const animation = new Animated.Value(0)
+
+  const displayDenominations = {}
+  for (const pRequest of pendingFioRequests) {
+    const {
+      content: { token_code }
+    } = pRequest
+    if (!displayDenominations[token_code]) {
+      displayDenominations[token_code] = getDisplayDenomination(state, token_code)
+    }
+  }
+  for (const sRequest of sentFioRequests) {
+    const {
+      content: { token_code }
+    } = sRequest
+    if (!displayDenominations[token_code]) {
+      displayDenominations[token_code] = getDisplayDenomination(state, token_code)
+    }
+  }
+
   const out: StateProps = {
     loading: pendingRequestsLoading || sentRequestsLoading,
     selectedCurrencyCode: currencyCode,
     isoFiatCurrencyCode,
     fiatSymbol,
+    displayDenominations,
     pendingFioRequests,
     sentFioRequests: sentFioRequests.sort((a, b) => (a.time_stamp > b.time_stamp ? -1 : 1)),
     exchangeRates,
