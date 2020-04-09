@@ -1,11 +1,16 @@
 // @flow
 
+import { type EdgeCurrencyInfo } from 'edge-core-js'
 import React, { Component, Fragment } from 'react'
 import { ScrollView, Text } from 'react-native'
+import { connect } from 'react-redux'
 
+import { disableCustomNodes, enableCustomNodes, saveCustomNodesList, setDenominationKeyRequest } from '../../actions/SettingsActions.js'
 import s from '../../locales/strings.js'
+import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import { dayText } from '../../styles/common/textStyles.js'
-import { THEME } from '../../theme/variables/airbitz'
+import { THEME } from '../../theme/variables/airbitz.js'
+import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import type { GuiDenomination } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
@@ -17,27 +22,30 @@ import { SetCustomNodesModal } from '../modals/SetCustomNodesModal.ui.js'
 const SETTINGS_DENOMINATION_TEXT = s.strings.settings_denominations_title
 const CUSTOM_NODES_TEXT = s.strings.settings_custom_nodes_title
 
-type Props = {
+type NavigationProps = {
+  currencyInfo: EdgeCurrencyInfo
+}
+type StateProps = {
   denominations: Array<GuiDenomination>,
-  logo: string,
-  selectDenomination: string => void,
   selectedDenominationKey: string,
   electrumServers: Array<string>,
   disableFetchingServers: boolean,
-  saveCustomNodesList: (Array<string>) => void,
-  setCustomNodesModalVisibility: (visibility: boolean | null) => void,
-  enableCustomNodes: () => void,
-  disableCustomNodes: () => void,
-  logo: string,
   defaultElectrumServer: string
 }
+type DispatchProps = {
+  disableCustomNodes(): void,
+  enableCustomNodes(): void,
+  saveCustomNodesList(nodes: Array<string>): void,
+  selectDenomination(string): void
+}
+type Props = NavigationProps & StateProps & DispatchProps
 
 type State = {
   isSetCustomNodesModalVisible: boolean,
   activatedBy: string | null
 }
 
-export default class CurrencySettings extends Component<Props, State> {
+export class CurrencySettingsComponent extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {
@@ -135,3 +143,37 @@ export default class CurrencySettings extends Component<Props, State> {
     )
   }
 }
+
+export const CurrencySettingsScene = connect(
+  (state: ReduxState, ownProps: NavigationProps): StateProps => {
+    const { currencyInfo } = ownProps
+    const { currencyCode, defaultSettings, pluginName } = currencyInfo
+
+    const { account } = state.core
+    const defaultElectrumServer = defaultSettings.electrumServers ? defaultSettings.electrumServers[0] : ''
+    const userSettings = account.currencyConfig[pluginName].userSettings
+    const electrumServers = userSettings ? userSettings.electrumServers : []
+    const disableFetchingServers = userSettings ? userSettings.disableFetchingServers : false
+    return {
+      denominations: SETTINGS_SELECTORS.getDenominations(state, currencyCode),
+      selectedDenominationKey: SETTINGS_SELECTORS.getDisplayDenominationKey(state, currencyCode),
+      electrumServers,
+      disableFetchingServers,
+      defaultElectrumServer
+    }
+  },
+  (dispatch: Dispatch, ownProps: NavigationProps): DispatchProps => ({
+    disableCustomNodes () {
+      dispatch(disableCustomNodes(ownProps.currencyInfo.currencyCode))
+    },
+    enableCustomNodes () {
+      dispatch(enableCustomNodes(ownProps.currencyInfo.currencyCode))
+    },
+    selectDenomination (denominationKey) {
+      dispatch(setDenominationKeyRequest(ownProps.currencyInfo.currencyCode, denominationKey))
+    },
+    saveCustomNodesList (nodesList: Array<string>) {
+      dispatch(saveCustomNodesList(ownProps.currencyInfo.currencyCode, nodesList))
+    }
+  })
+)(CurrencySettingsComponent)

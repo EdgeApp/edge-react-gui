@@ -26,10 +26,8 @@ const defaultDisklet: Disklet = flowHack
 export const core: Reducer<CoreState, Action> = combineReducers({
   account (state: EdgeAccount = defaultAccount, action: Action): EdgeAccount {
     switch (action.type) {
-      case 'ACCOUNT/LOGGED_IN': {
-        if (!action.data) throw new Error('Invalid Action')
-        return action.data.account
-      }
+      case 'LOGIN':
+        return action.data
       case 'LOGOUT':
         return defaultAccount
     }

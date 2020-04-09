@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyWallet, EdgeDataStore, EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
+import { type EdgeAccount, type EdgeCurrencyWallet, type EdgeReceiveAddress, type EdgeTransaction } from 'edge-core-js'
 import { Alert, Linking } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
@@ -34,7 +34,7 @@ function formatWallet (w: GuiWallet): Wallet {
 type Context = {
   plugin: GuiPlugin & { environment: { [key: string]: any } },
 
-  folder: EdgeDataStore,
+  account: EdgeAccount,
   wallet?: GuiWallet,
   wallets: { [id: string]: GuiWallet },
   coreWallets: { [id: string]: EdgeCurrencyWallet },
@@ -199,7 +199,7 @@ export class PluginBridge {
 
   readData = async (data: any): Promise<string> => {
     try {
-      const response = await this.context.folder.getItem(this.context.plugin.storeId, data.key)
+      const response = await this.context.account.dataStore.getItem(this.context.plugin.storeId, data.key)
       console.log('LOGGING readData response is: ', response)
       return response
     } catch (e) {
@@ -212,7 +212,7 @@ export class PluginBridge {
     const { key, value } = data
     try {
       console.log('LOGGING about to write data with key: ', key, ' and value: ', value)
-      await this.context.folder.setItem(this.context.plugin.storeId, key, value)
+      await this.context.account.dataStore.setItem(this.context.plugin.storeId, key, value)
       console.log('LOGGING successfully written data and returning true')
       return true
     } catch (e) {
@@ -222,7 +222,7 @@ export class PluginBridge {
   }
 
   clearData (): Promise<boolean> {
-    return this.context.folder.deleteStore(this.context.plugin.storeId).then(() => {
+    return this.context.account.dataStore.deleteStore(this.context.plugin.storeId).then(() => {
       return true
     })
   }

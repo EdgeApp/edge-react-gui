@@ -2,7 +2,7 @@
 
 import type { EdgeAccount } from 'edge-core-js'
 import { getSupportedBiometryType } from 'edge-login-ui-rn'
-import React, { type Node, Component } from 'react'
+import React, { Component } from 'react'
 import { Image, ScrollView, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
@@ -10,6 +10,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import * as Constants from '../../constants/indexConstants'
+import { CURRENCY_SETTINGS_KEYS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
 import { THEME } from '../../theme/variables/airbitz.js'
@@ -137,6 +138,8 @@ export default class SettingsOverview extends Component<Props, State> {
   }
 
   render () {
+    const { account } = this.props
+
     const autoLogout = secondsToDisplay(this.props.autoLogoutTimeInSeconds)
     const timeStrings = {
       seconds: s.strings.settings_seconds,
@@ -192,7 +195,15 @@ export default class SettingsOverview extends Component<Props, State> {
             <SettingsSwitchRow key={'useTouchID'} text={this.state.touchIdText} value={this.props.touchIdEnabled} onPress={this._onToggleTouchIdOption} />
           )}
 
-          {this.renderCurrencyRows()}
+          {CURRENCY_SETTINGS_KEYS.map(pluginId => {
+            if (account.currencyConfig[pluginId] == null) return null
+            const { currencyInfo } = account.currencyConfig[pluginId]
+            const { displayName, symbolImage } = currencyInfo
+            const icon = symbolImage != null ? <Image style={styles.currencyLogo} source={{ uri: symbolImage }} /> : undefined
+            const onPress = () => Actions[Constants.CURRENCY_SETTINGS]({ currencyInfo })
+
+            return <SettingsRow key={pluginId} icon={icon} text={displayName} onPress={onPress} right={rightArrow} />
+          })}
 
           <SettingsSwitchRow key="developerMode" text={s.strings.settings_developer_mode} value={this.props.developerModeOn} onPress={this.onDeveloperPress} />
           <SettingsRow onPress={this.showRestoreWalletModal} text={s.strings.restore_wallets_modal_title} />
@@ -206,26 +217,6 @@ export default class SettingsOverview extends Component<Props, State> {
         </ScrollView>
       </SceneWrapper>
     )
-  }
-
-  renderCurrencyRows (): Node[] {
-    const { account } = this.props
-    const rightArrow = <AntDesignIcon name="right" color={THEME.COLORS.GRAY_2} size={THEME.rem(1)} />
-
-    const out: Node[] = []
-    for (const currencyKey in Constants.CURRENCY_SETTINGS) {
-      const onPress = Actions[currencyKey]
-
-      // Grab out the displayName & logo, if the currency exists:
-      const { pluginName } = Constants.CURRENCY_SETTINGS[currencyKey]
-      const currencyConfig = pluginName && account.currencyConfig ? account.currencyConfig[pluginName] : null
-      if (currencyConfig == null) continue
-      const { displayName, symbolImage } = currencyConfig.currencyInfo
-      const icon = symbolImage != null ? <Image style={styles.currencyLogo} source={{ uri: symbolImage }} /> : undefined
-
-      out.push(<SettingsRow key={currencyKey} icon={icon} text={displayName} onPress={onPress} right={rightArrow} />)
-    }
-    return out
   }
 
   showConfirmPasswordModal = () => {

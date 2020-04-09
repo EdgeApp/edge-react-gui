@@ -93,7 +93,7 @@ export const initialState = {
   passwordUseCount: 0
 }
 
-export const untranslatedReducer = (state: PasswordReminderState = initialState, action: PasswordReminderReducerAction): PasswordReminderState => {
+export const untranslatedReducer: Reducer<PasswordReminderState, PasswordReminderReducerAction> = (state = initialState, action) => {
   switch (action.type) {
     case 'NEW_ACCOUNT_LOGIN': {
       const lastPasswordUseDate = action.data.lastLoginDate
@@ -184,16 +184,10 @@ export const untranslatedReducer = (state: PasswordReminderState = initialState,
   }
 }
 
-export const translate = (reducer: typeof untranslatedReducer): Reducer<PasswordReminderState, Action> => (state, action: Action) => {
-  let translatedAction = {
-    type: 'default',
-    data: {}
-  }
-
-  // $FlowFixMe
-  if ((action.type === 'LOGIN' || action.type === 'ACCOUNT_INIT_COMPLETE') && action.data.account.newAccount) {
+function translateAction (action: Action): PasswordReminderReducerAction {
+  if (action.type === 'ACCOUNT_INIT_COMPLETE' && action.data.account.newAccount) {
     const now = Date.now()
-    translatedAction = {
+    return {
       type: 'NEW_ACCOUNT_LOGIN',
       data: {
         lastLoginDate: now,
@@ -202,10 +196,9 @@ export const translate = (reducer: typeof untranslatedReducer): Reducer<Password
     }
   }
 
-  // $FlowFixMe
-  if ((action.type === 'LOGIN' || action.type === 'ACCOUNT_INIT_COMPLETE') && action.data.account.passwordLogin) {
+  if (action.type === 'ACCOUNT_INIT_COMPLETE' && action.data.account.passwordLogin) {
     const now = Date.now()
-    translatedAction = {
+    return {
       type: 'PASSWORD_LOGIN',
       data: {
         ...action.data.passwordReminder,
@@ -215,9 +208,8 @@ export const translate = (reducer: typeof untranslatedReducer): Reducer<Password
     }
   }
 
-  // $FlowFixMe
-  if ((action.type === 'LOGIN' || action.type === 'ACCOUNT_INIT_COMPLETE') && !(action.data.account.passwordLogin || action.data.account.newAccount)) {
-    translatedAction = {
+  if (action.type === 'ACCOUNT_INIT_COMPLETE' && !(action.data.account.passwordLogin || action.data.account.newAccount)) {
+    return {
       type: 'NON_PASSWORD_LOGIN',
       data: {
         ...action.data.passwordReminder,
@@ -227,7 +219,7 @@ export const translate = (reducer: typeof untranslatedReducer): Reducer<Password
   }
 
   if (action.type === 'PASSWORD_USED') {
-    translatedAction = {
+    return {
       type: 'PASSWORD_USED',
       data: {
         lastPasswordUseDate: Date.now()
@@ -235,7 +227,7 @@ export const translate = (reducer: typeof untranslatedReducer): Reducer<Password
     }
   }
   if (action.type === 'UI/SETTINGS/SET_SETTINGS_LOCK' && action.data === false) {
-    translatedAction = {
+    return {
       type: 'PASSWORD_USED',
       data: {
         lastPasswordUseDate: Date.now()
@@ -243,7 +235,7 @@ export const translate = (reducer: typeof untranslatedReducer): Reducer<Password
     }
   }
   if (action.type === 'PASSWORD_REMINDER_MODAL/CHECK_PASSWORD_SUCCESS') {
-    translatedAction = {
+    return {
       type: 'PASSWORD_USED',
       data: {
         lastPasswordUseDate: Date.now()
@@ -252,20 +244,23 @@ export const translate = (reducer: typeof untranslatedReducer): Reducer<Password
   }
 
   if (action.type === 'PASSWORD_REMINDER/PASSWORD_REMINDER_POSTPONED') {
-    translatedAction = {
+    return {
       type: 'PASSWORD_REMINDER_POSTPONED',
       data: {}
     }
   }
 
   if (action.type === 'PASSWORD_REMINDER_MODAL/REQUEST_CHANGE_PASSWORD') {
-    translatedAction = {
+    return {
       type: 'REQUEST_CHANGE_PASSWORD',
       data: {}
     }
   }
 
-  return reducer(state, translatedAction)
+  return {
+    type: 'default',
+    data: {}
+  }
 }
 
-export const passwordReminder: Reducer<PasswordReminderState, Action> = translate(untranslatedReducer)
+export const passwordReminder: Reducer<PasswordReminderState, Action> = (state, action) => untranslatedReducer(state, translateAction(action))
