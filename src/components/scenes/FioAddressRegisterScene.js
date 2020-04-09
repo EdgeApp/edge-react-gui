@@ -25,11 +25,13 @@ import { showError } from '../services/AirshipInstance'
 export type State = {
   selectedWallet: { value: string | null, wallet: EdgeCurrencyWallet } | null,
   fioAddress: string,
+  fieldLabel: string,
   isValid: boolean,
   touched: boolean,
   loading: boolean,
   isAvailable: boolean | null,
-  replaceRegex: RegExp
+  replaceRegex: RegExp,
+  fieldPos: number
 }
 
 export type StateProps = {
@@ -71,11 +73,13 @@ export class FioAddressRegisterScene extends Component<Props, State> {
   state = {
     selectedWallet: null,
     fioAddress: '',
+    fieldLabel: s.strings.fio_address_choose_label,
     isValid: true,
     touched: false,
     isAvailable: false,
     loading: false,
-    replaceRegex: new RegExp(`${FIO_DOMAIN_DEFAULT}`)
+    replaceRegex: new RegExp(`${FIO_DOMAIN_DEFAULT}`),
+    fieldPos: 200
   }
 
   componentDidMount () {
@@ -151,6 +155,23 @@ export class FioAddressRegisterScene extends Component<Props, State> {
       touched: true,
       isAvailable: null,
       loading: false
+    })
+  }
+
+  handleFioAddressFocus = () => {
+    this.setState({ fieldLabel: s.strings.fio_address_label })
+    this.refs._scrollView.scrollTo({ x: 0, y: this.state.fieldPos, animated: true })
+  }
+
+  handleFioAddressBlur = () => {
+    if (!this.state.fioAddress) {
+      this.setState({ fieldLabel: s.strings.fio_address_choose_label })
+    }
+  }
+
+  fieldViewOnLayout = () => {
+    this.refs._fieldView.measure((x, y) => {
+      this.setState({ fieldPos: y })
     })
   }
 
@@ -234,7 +255,7 @@ export class FioAddressRegisterScene extends Component<Props, State> {
   }
 
   render () {
-    const { fioAddress, touched, isAvailable, replaceRegex } = this.state
+    const { fioAddress, touched, isAvailable, replaceRegex, fieldLabel } = this.state
 
     let chooseHandleErrorMessage = ''
     if (touched && !this.props.isConnected) {
@@ -247,7 +268,7 @@ export class FioAddressRegisterScene extends Component<Props, State> {
     return (
       <SafeAreaView>
         <Gradient style={styles.scrollableGradient} />
-        <ScrollView>
+        <ScrollView ref="_scrollView">
           <View style={[styles.scrollableView]}>
             <Image source={fioAddressIcon} style={fioAddressStyles.image} resizeMode={'cover'} />
             <View style={[styles.createWalletPromptArea, fioAddressStyles.paddings, fioAddressStyles.title]}>
@@ -260,17 +281,20 @@ export class FioAddressRegisterScene extends Component<Props, State> {
               <T style={styles.handleRequirementsText}>{s.strings.fio_address_first_screen_end}</T>
             </View>
 
-            <View style={fioAddressStyles.formFieldView}>
+            <View style={fioAddressStyles.formFieldView} ref="_fieldView" onLayout={this.fieldViewOnLayout}>
               <FormField
                 style={this.materialInputOnWhiteStyle}
                 clearButtonMode={this.clearButtonMode}
                 autoCorrect={false}
-                placeholder={s.strings.fio_address_register_form_field_label}
+                autoCapitalize="none"
+                placeholder={s.strings.fio_address_label}
                 caretHidden={true}
+                onFocus={this.handleFioAddressFocus}
+                onBlur={this.handleFioAddressBlur}
                 onChangeText={this.handleFioAddressChange}
                 onSubmitEditing={this.handleNextButton}
                 selectionColor={THEME.COLORS.ACCENT_MINT}
-                label={s.strings.fio_address_register_form_field_label}
+                label={fieldLabel}
                 value={fioAddress.replace(replaceRegex, '')}
                 suffix={FIO_DOMAIN_DEFAULT}
                 maxLength={this.inputMaxLength}
