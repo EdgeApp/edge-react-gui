@@ -18,6 +18,7 @@ import walletIcon from '../../../../../assets/images/sidenav/wallets.png'
 import * as Constants from '../../../../../constants/indexConstants.js'
 import { guiPlugins } from '../../../../../constants/plugins/GuiPlugins.js'
 import s from '../../../../../locales/strings.js'
+import type { FioAddress } from '../../../../../types/types'
 import { scale } from '../../../../../util/scaling.js'
 import styles from '../style'
 import { Button } from './Button/Button.ui.js'
@@ -39,11 +40,12 @@ const FIO_ADDRESS_TEXT = s.strings.drawer_fio_address
 
 export type Props = {
   logout: (username?: string) => void,
-  usersView: boolean
+  usersView: boolean,
+  fioAddresses: FioAddress[] | null
 }
 export default class Main extends Component<Props> {
   render () {
-    const { usersView } = this.props
+    const { usersView, fioAddresses } = this.props
 
     return usersView ? (
       <UserList />
@@ -61,7 +63,7 @@ export default class Main extends Component<Props> {
               <Separator />
               <EarnInterestButton />
               <Separator />
-              <FioAddressButton />
+              <FioAddressButton fioAddresses={fioAddresses} />
               <Separator />
               <WalletsButton />
               <Separator />
@@ -304,12 +306,15 @@ const LogoutButton = ({ onPress }) => {
   )
 }
 
-const goToFioAddressesScene = () => Actions[Constants.FIO_ADDRESS_LIST]()
-const FioAddressButton = () => {
+const goToFioAddressesScene = async (fioAddresses: FioAddress[] | null) => {
+  if (!fioAddresses || !fioAddresses.length) return Actions[Constants.FIO_ADDRESS_REGISTER]()
+  return Actions[Constants.FIO_ADDRESS_LIST]()
+}
+const FioAddressButton = ({ fioAddresses }) => {
   // FIO disable changes below
   if (global.isFioDisabled) return null
   return (
-    <Button onPress={goToFioAddressesScene}>
+    <Button onPress={() => goToFioAddressesScene(fioAddresses)}>
       <Button.Row>
         <Button.Left>
           <Image source={fioAddressIcon} style={styles.iconImage} />
