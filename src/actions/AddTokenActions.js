@@ -63,8 +63,8 @@ export const addTokenAsync = async (
 
   // Check for conflicting currency codes:
   const { currencyConfig } = account
-  for (const pluginName in currencyConfig) {
-    const { currencyInfo } = currencyConfig[pluginName]
+  for (const pluginId in currencyConfig) {
+    const { currencyInfo } = currencyConfig[pluginId]
     if (currencyCode === currencyInfo.currencyCode) {
       throw new Error(sprintf(s.strings.error_token_exists, currencyCode))
     }

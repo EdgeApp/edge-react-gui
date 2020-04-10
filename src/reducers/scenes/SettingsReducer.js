@@ -87,7 +87,7 @@ export type SettingsState = {
   pinLoginEnabled: boolean,
   otpResetDate: ?string,
   plugins: {
-    [pluginName: string]: EdgeCurrencyInfo,
+    [pluginId: string]: EdgeCurrencyInfo,
     allCurrencyInfos: Array<EdgeCurrencyInfo>,
     supportedWalletTypes: Array<string>
   },
@@ -114,7 +114,7 @@ export type SettingsState = {
 function currencyPLuginUtil (state: SettingsState, currencyInfo: EdgeCurrencyInfo): SettingsState {
   const { plugins } = state
   const { allCurrencyInfos, supportedWalletTypes } = plugins
-  const { pluginName, walletType } = currencyInfo
+  const { pluginId, walletType } = currencyInfo
 
   // Build up object with all the information for the parent currency, accesible by the currencyCode
   const defaultParentCurrencyInfo = state[currencyInfo.currencyCode]
@@ -157,7 +157,7 @@ function currencyPLuginUtil (state: SettingsState, currencyInfo: EdgeCurrencyInf
     ...currencyInfos,
     plugins: {
       ...plugins,
-      [pluginName]: currencyInfo,
+      [pluginId]: currencyInfo,
       allCurrencyInfos: [...allCurrencyInfos, currencyInfo],
       supportedWalletTypes: [...supportedWalletTypes, walletType]
     }

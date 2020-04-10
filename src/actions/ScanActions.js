@@ -46,7 +46,7 @@ import { paymentProtocolUriReceived } from './SendConfirmationActions.js'
 const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWallet, guiWallet: GuiWallet, link: ReturnAddressLink) => {
   const { currencyName, sourceName = '', successUri = '' } = link
   dispatch({ type: 'DISABLE_SCAN' })
-  if (currencyName !== edgeWallet.currencyInfo.pluginName) {
+  if (currencyName !== edgeWallet.currencyInfo.pluginId) {
     // Mismatching currency
     const body = sprintf(s.strings.currency_mismatch_popup_body, currencyName, currencyName)
     setTimeout(
