@@ -8,6 +8,7 @@ import { Actions } from 'react-native-router-flux'
 
 import * as Constants from '../../constants/indexConstants'
 import { FIO_WALLET_TYPE } from '../../constants/WalletAndCurrencyConstants'
+import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
 import ExchangeRate from '../../modules/UI/components/ExchangeRate/index.js'
@@ -121,7 +122,7 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
 
   fiatAmount = (amount: string) => {
     const fiatPerCrypto = this.props.exchangeSecondaryToPrimaryRatio
-    return (fiatPerCrypto * parseFloat(amount)).toFixed(2)
+    return intl.formatNumber(fiatPerCrypto * parseFloat(amount), { toFixed: 2 }) || '0'
   }
 
   handleFioWalletChange = (something: string, index: number, data: any) => {

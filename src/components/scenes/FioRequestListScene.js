@@ -119,16 +119,11 @@ export class FioRequestList extends Component<Props, State> {
 
   fiatAmount = (currencyCode: string, amount: string): string => {
     const { exchangeRates, isoFiatCurrencyCode } = this.props
-    let fiatPerCrypto
-    if (currencyCode === Constants.FIO_STR) {
-      fiatPerCrypto = 1
-    } else {
-      const rateKey = `${currencyCode}_${isoFiatCurrencyCode}`
-      fiatPerCrypto = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
-    }
+    const rateKey = `${currencyCode}_${isoFiatCurrencyCode}`
+    const fiatPerCrypto = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
     const amountToMultiply = parseFloat(amount)
 
-    return (fiatPerCrypto * amountToMultiply).toFixed(2)
+    return intl.formatNumber(fiatPerCrypto * amountToMultiply, { toFixed: 2 }) || '0'
   }
 
   headerTitle = (headerDate: Date) => {
@@ -236,16 +231,14 @@ export class FioRequestList extends Component<Props, State> {
     )
   }
 
-  renderHiddenItem (transaction: any, rowMap: any[]) {
+  renderHiddenItem = (transaction: any, rowMap: any[]) => {
     return (
       <View style={requestListStyles.rowBack}>
         <TouchableOpacity
           style={[requestListStyles.backRightBtn, requestListStyles.backRightBtnRight]}
-          onPress={() =>
-            this.rejectRow(rowMap, transaction.item.fio_request_id.toString(), transaction.item.fio_request_id, transaction.item.payer_fio_address)
-          }
+          onPress={_ => this.rejectRow(rowMap, transaction.item.fio_request_id.toString(), transaction.item.fio_request_id, transaction.item.payer_fio_address)}
         >
-          <T style={requestListStyles.backTextWhite}>Reject</T>
+          <T style={requestListStyles.backTextWhite}>{s.strings.swap_terms_reject_button}</T>
         </TouchableOpacity>
       </View>
     )

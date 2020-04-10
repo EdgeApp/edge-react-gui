@@ -80,16 +80,11 @@ export class FioPendingRequestDetailsComponent extends Component<Props, LocalSta
 
   fiatAmount = (currencyCode: string, amount: string) => {
     const { exchangeRates, isoFiatCurrencyCode } = this.props
-    let fiatPerCrypto
-    if (currencyCode === Constants.FIO_STR) {
-      fiatPerCrypto = 1
-    } else {
-      const rateKey = `${currencyCode}_${isoFiatCurrencyCode}`
-      fiatPerCrypto = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
-    }
+    const rateKey = `${currencyCode}_${isoFiatCurrencyCode}`
+    const fiatPerCrypto = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
     const amountToMultiply = parseFloat(amount)
 
-    return (fiatPerCrypto * amountToMultiply).toFixed(2)
+    return intl.formatNumber(fiatPerCrypto * amountToMultiply, { toFixed: 2 }) || '0'
   }
 
   amountField = (amount: string, currencyCode: string, cryptoSymbol: string, currencySymbol: string) => {
@@ -173,8 +168,7 @@ export class FioPendingRequestDetailsComponent extends Component<Props, LocalSta
             edgeTransaction.metadata ? edgeTransaction.metadata.notes : this.state.memo,
             0,
             () => {
-              Actions.pop()
-              Actions.pop()
+              Actions.popTo(Constants.FIO_REQUEST_LIST)
               Actions.replace(Constants.TRANSACTION_DETAILS, { edgeTransaction: edgeTransaction })
             }
           )

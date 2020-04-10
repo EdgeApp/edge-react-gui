@@ -72,7 +72,7 @@ export const confirmRequest = (
   notes?: string = '',
   fee: number = 0,
   cb: Function
-) => async () => {
+) => async (dispatch: Dispatch) => {
   try {
     await fioWalletByAddress.otherMethods.fioAction('recordObtData', {
       fioRequestId: pendingRequest.fio_request_id,
@@ -89,6 +89,7 @@ export const confirmRequest = (
       tpid: '',
       status: 'sent_to_blockchain'
     })
+    dispatch(getFioRequestsPending())
     cb()
   } catch (e) {
     showError(s.strings.fio_confirm_request_error)

@@ -3,7 +3,6 @@
 import React, { Component } from 'react'
 import { View } from 'react-native'
 
-import * as Constants from '../../constants/indexConstants'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import type { ExchangeRatesState } from '../../modules/ExchangeRates/reducer'
@@ -40,16 +39,11 @@ export class FioSentRequestDetailsComponent extends Component<Props, LocalState>
 
   fiatAmount = (currencyCode: string, amount: string) => {
     const { exchangeRates, isoFiatCurrencyCode } = this.props
-    let fiatPerCrypto
-    if (currencyCode === Constants.FIO_STR) {
-      fiatPerCrypto = 1
-    } else {
-      const rateKey = `${currencyCode}_${isoFiatCurrencyCode}`
-      fiatPerCrypto = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
-    }
+    const rateKey = `${currencyCode}_${isoFiatCurrencyCode}`
+    const fiatPerCrypto = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
     const amountToMultiply = parseFloat(amount)
 
-    return (fiatPerCrypto * amountToMultiply).toFixed(2)
+    return intl.formatNumber(fiatPerCrypto * amountToMultiply, { toFixed: 2 }) || '0'
   }
 
   amountField = (amount: string, currencyCode: string, cryptoSymbol: string, currencySymbol: string) => {
