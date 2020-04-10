@@ -88,6 +88,7 @@ export const THEME = {
     GRAY_2: '#87939E',
     GRAY_3: '#D9E3ED',
     GRAY_4: '#F4F5F6',
+    GRAY_5: '#353535',
     WHITE: '#FFFFFF',
     OFF_WHITE: '#F6F6F6',
     CLEAR: 'rgba(0, 0, 0, 0)',
@@ -97,7 +98,9 @@ export const THEME = {
 
     TRANSPARENT: 'transparent',
 
-    ROW_PRESSED: '#D9E3ED' // same as GRAY_3
+    ROW_PRESSED: '#D9E3ED', // same as GRAY_3
+
+    HEADER_TEXT_SECONDARY: '#A4C7DF'
   }
 }
 
