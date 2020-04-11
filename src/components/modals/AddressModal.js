@@ -12,6 +12,8 @@ import s from '../../locales/strings.js'
 import styles from '../../styles/scenes/ScaneStyle'
 import { colors as COLORS } from '../../theme/variables/airbitz.js'
 import ResolutionError, { ResolutionErrorCode } from '../common/ResolutionError.js'
+import { findDenominationSymbol } from '../../util/utils'
+import { domainToUnicode } from 'url'
 
 // INTERACTIVE_MODAL /////////////////////////////////////////////////////////////////////////////
 type AddressModalProps = {
@@ -82,8 +84,16 @@ export class AddressModal extends Component<AddressModalProps, AddressModalState
     this.updateUri(domain)
   }
 
-  checkIfDomain = (domain: string): boolean => {
-    return domain.endsWith('.zil') || domain.endsWith('.crypto') || domain.endsWith('.eth') || domain.endsWith('.xyz') || domain.endsWith('.luxe') || domain.endsWith('.kred')
+  checkIfDomain = (domain: string) : boolean => {
+    return this.checkIfUnstoppableDomain(domain) || this.checkIfEnsDomain(domain);
+  }
+
+  checkIfUnstoppableDomain = (domain: string): boolean => {
+    return domain.endsWith('.zil') || domain.endsWith('.crypto')
+  }
+
+  checkIfEnsDomain = (domain: string): boolean => {
+    return domain.endsWith('.eth') || domain.endsWith('.luxe') || domain.endsWith('.kred') ||  domain.endsWith('.xyz')
   }
 
   fetchDomain = async (domain: string, currencyTicker: string): Promise<string> => {
@@ -92,7 +102,7 @@ export class AddressModal extends Component<AddressModalProps, AddressModalState
       throw new ResolutionError(ResolutionErrorCode.UnsupportedDomain, { domain })
     }
     const baseurl = `https://unstoppabledomains.com/api/v1`
-    const url = `${baseurl}/${domain}`
+    const url = this.checkIfEnsDomain(domain) ? `${baseurl}/${domain}/${currencyTicker}` : `${baseurl}/${domain}`;
     const response = await global.fetch(url).then(res => res.json())
     const { addresses, meta } = response
     if (!meta || !meta.owner) {
