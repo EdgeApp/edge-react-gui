@@ -83,7 +83,7 @@ export class AddressModal extends Component<AddressModalProps, AddressModalState
   }
 
   checkIfDomain = (domain: string): boolean => {
-    return domain.endsWith('.zil') || domain.endsWith('.crypto') || domain.endsWith('.eth')
+    return domain.endsWith('.zil') || domain.endsWith('.crypto') || domain.endsWith('.eth') || domain.endsWith('.xyz') || domain.endsWith('.luxe') || domain.endsWith('.kred')
   }
 
   fetchDomain = async (domain: string, currencyTicker: string): Promise<string> => {
