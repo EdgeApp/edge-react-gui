@@ -83,7 +83,6 @@ export class TransactionRowComponent extends Component<Props, State> {
       txName = SENT_TEXT + currencyName
       txImage = sentTypeImage
 
-      //if (this.props.selectedCurrencyCode == "XZC") {
       if (tx.wallet.type === "wallet:zcoins") {
         if (tx.otherParams.isMint) {
           txName = "Anonymized"
