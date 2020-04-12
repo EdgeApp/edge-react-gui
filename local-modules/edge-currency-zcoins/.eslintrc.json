@@ -1,0 +1,13 @@
+{
+  "extends": ["plugin:flowtype/recommended", "standard"],
+  "parser": "babel-eslint",
+  "plugins": ["flowtype", "standard"],
+  "rules": {
+    "camelcase": "error",
+    "flowtype/generic-spacing": "off",
+    "no-throw-literal": "error",
+    "no-var": "error",
+    "prefer-const": "error",
+    "standard/computed-property-even-spacing": "off"
+  }
+}

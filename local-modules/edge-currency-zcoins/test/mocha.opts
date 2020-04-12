@@ -1,0 +1,4 @@
+--colors
+--reporter mocha-multi-reporters
+--reporter-options configFile=mocha-config.json
+--timeout 10000

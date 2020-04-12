@@ -31,12 +31,32 @@ const contextOptions = {
   plugins: allPlugins
 }
 
+import { NativeModules } from 'react-native';
+const { RNZcoinSigma } = NativeModules;
+
 const isReactNative = detectBundler.isReactNative
 const nativeIo = isReactNative
   ? {
     'edge-currency-accountbased': makeAccountbasedIo(),
     'edge-currency-bitcoin': makeBitcoinIo(),
-    'edge-currency-monero': makeMoneroIo()
+    'edge-currency-monero': makeMoneroIo(),
+    'edge-currency-zcoins': {
+      ...makeBitcoinIo(),
+      sigmaMint: (denomination, privateKey, index) => {
+        return new Promise((resolve, reject) => {
+          RNZcoinSigma.getMintCommitment(denomination, privateKey, index, (commitment, serialNumber) => {
+            resolve({ commitment, serialNumber })
+          })
+        })
+      },
+      sigmaSpend: (denomination, privateKey, index, anonymitySet, groupId, blockHash, txHash) => {
+        return new Promise((resolve, reject) => {
+          RNZcoinSigma.getSpendProof(denomination, privateKey, index, anonymitySet, groupId, blockHash, txHash, (proof) => {
+            resolve(proof)
+          })
+        })
+      }
+    }
   }
   : {}
 

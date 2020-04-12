@@ -1,0 +1,36 @@
+[
+  {
+    "network": "bitcoin",
+    "gapLimit": "10",
+    "walletType": "wallet:bitcoin",
+    "bip": "bip49",
+    "rawKeys": {
+      "master": {
+        "xpub": "xpub661MyMwAqRbcF6JxG5NqmWiCbURzYtg95A5T7m6bdJ27FHDuLcVHmAg4unEMvdNi5VniUWgxxDJM5odBjUUzuSNCciED3sbfdX37NsdKTiQ"
+      }
+    },
+    "seed": "chicken valve parrot park animal proof youth detail glance review artwork cluster drive more charge lunar uncle neglect brain act rose job photo spot",
+    "engineState": {
+      "addressInfos": {},
+      "parsedTxs": {},
+      "scriptHashes": {}
+    }
+  },
+  {
+    "network": "bitcoincash",
+    "gapLimit": "10",
+    "walletType": "wallet:bitcoincash-bip44",
+    "bip": "bip44",
+    "rawKeys": {
+      "master": {
+        "xpub": "xpub661MyMwAqRbcF6JxG5NqmWiCbURzYtg95A5T7m6bdJ27FHDuLcVHmAg4unEMvdNi5VniUWgxxDJM5odBjUUzuSNCciED3sbfdX37NsdKTiQ"
+      }
+    },
+    "seed": "chicken valve parrot park animal proof youth detail glance review artwork cluster drive more charge lunar uncle neglect brain act rose job photo spot",
+    "engineState": {
+      "addressInfos": {},
+      "parsedTxs": {},
+      "scriptHashes": {}
+    }
+  }
+]

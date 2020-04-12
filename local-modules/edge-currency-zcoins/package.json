@@ -1,0 +1,113 @@
+{
+  "name": "edge-currency-zcoins",
+  "version": "4.6.3",
+  "description": "Edge Bitcoin currency plugin",
+  "homepage": "https://edge.app",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Airbitz/edge-currency-bitcoin.git"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "author": "Edge",
+  "contributors": [
+    "Eliran Zach <eliran@edge.app>",
+    "William Swanson <william@edge.app>",
+    "Paul Puey <paul@edge.app>",
+    "Stan Synko <stan@airbitz.co>",
+    "Kylan Hurt <kylan@edge.app>"
+  ],
+  "files": [
+    "CHANGELOG.md",
+    "index.js",
+    "lib/*",
+    "LICENSE",
+    "package.json",
+    "README.md"
+  ],
+  "main": "./index.js",
+  "module": "./lib/index.js",
+  "scripts": {
+    "build": "rimraf lib && sucrase ./src -q -d ./lib -t flow && webpack",
+    "flow": "flow",
+    "format": "import-sort -l --write '*.js' 'src/**/*.js' 'test/**/*.js'; prettier-eslint --write '*.js' 'src/**/*.js' 'test/**/*.js'",
+    "lint": "eslint '*.js' 'src/**/*.js' 'test/**/*.js'",
+    "precommit": " ",
+    "prepare": "npm run build",
+    "security": "yarn audit",
+    "test": "nyc mocha -r sucrase/register './test/**/*.js'",
+    "posttest": "nyc report --reporter=cobertura --reporter=html",
+    "updot": "updot"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run precommit"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint",
+      "import-sort --list-different",
+      "prettier-eslint --list-different"
+    ]
+  },
+  "dependencies": {
+    "bcoin": "git+https://github.com/Airbitz/bcoin.git#primitiveBuild",
+    "biggystring": "3.0.2",
+    "bn.js": "^4.11.8",
+    "bs58grscheck": "https://github.com/Groestlcoin/bs58grscheck",
+    "bs58smartcheck": "^2.0.4",
+    "buffer": "^5.2.1",
+    "chai": "^4.2.0",
+    "esm": "^3.2.4",
+    "eventemitter3": "^3.1.0",
+    "jsonschema": "^1.2.4",
+    "secp256k1": "^3.7.1",
+    "stable": "^0.1.8",
+    "unorm": "^1.4.1",
+    "uri-js": "^4.2.2",
+    "url-parse": "^1.4.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-flow": "^7.0.0",
+    "@babel/runtime": "^7.0.0",
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.5",
+    "edge-core-js": "0.15.0",
+    "eslint": "5.9.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-flowtype": "^3.2.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-node": "^8.0.0",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "flow-bin": "^0.82.0",
+    "husky": "^1.1.3",
+    "import-sort-cli": "^5.2.0",
+    "import-sort-parser-babylon": "^5.2.0",
+    "import-sort-style-module": "^5.0.0",
+    "jsonfile": "^5.0.0",
+    "lint-staged": "^8.1.0",
+    "mocha": "^5.2.0",
+    "mocha-junit-reporter": "^1.18.0",
+    "mocha-multi-reporters": "^1.1.7",
+    "mochawesome": "^3.0.3",
+    "node-fetch": "^2.2.0",
+    "nyc": "^13.0.1",
+    "prettier-eslint-cli": "^4.7.1",
+    "request": "^2.88.0",
+    "rimraf": "^2.6.2",
+    "sucrase": "^3.9.5",
+    "updot": "^1.1.7",
+    "webpack": "^4.29.3",
+    "webpack-cli": "^3.2.3"
+  },
+  "importSort": {
+    ".js, .es": {
+      "parser": "babylon",
+      "style": "module"
+    }
+  },
+  "react-native": "./lib/index.js"
+}

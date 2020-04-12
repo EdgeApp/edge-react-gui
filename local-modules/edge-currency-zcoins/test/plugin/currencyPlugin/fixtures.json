@@ -1,0 +1,956 @@
+[
+  {
+    "pluginName": "bitcoin",
+    "WALLET_TYPE": "wallet:bitcoin",
+    "WALLET_FORMAT": "bip32",
+    "Test Currency code": "BTC",
+    "key": [39, 190, 34, 129, 208, 32, 145, 88, 191, 217, 226, 98, 183, 16, 52, 150, 52, 53, 31, 137, 164, 40, 236, 146, 128, 107, 129, 59, 192, 240, 40, 238],
+    "xpub": "xpub69FqMgncSEcrs989ejBWTBBcDNFDqkwEd7y53pVeXm8368TNfb9jCd2ne3ccpx9vvgBdpv79Edc69i2Q69kXtrdmLcQM8seffnCXzwzvWa6",
+    "invalid key name": {
+      "type": "wallet:bitcoin",
+      "keys": { "bitcoinKeyz" :"12345678abcd" }
+    },
+    "invalid wallet type": {
+      "type": "shitcoin",
+      "keys": { "bitcoinKeyz" :"12345678abcd" }
+    },
+    "parseUri": {
+      "address only": ["1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX", {
+        "publicAddress": "1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX",
+        "metadata": {}
+      }],
+      "address only2": ["3LDsS579y7sruadqu11beEJoTjdFiFCdX4", {
+        "publicAddress": "3LDsS579y7sruadqu11beEJoTjdFiFCdX4",
+        "metadata": {}
+      }],
+      "address only3": ["bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4", {
+        "publicAddress": "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4",
+        "metadata": {}
+      }],
+      "address only4": ["bc1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3qccfmv3", {
+        "publicAddress": "bc1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3qccfmv3",
+        "metadata": {}
+      }],
+      "uri address": ["bitcoin:1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX", {
+        "publicAddress": "1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX",
+        "metadata": {}
+      }],
+      "uri address with amount": ["bitcoin:1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX?amount=12345.6789", {
+        "publicAddress": "1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX",
+        "metadata": {},
+        "nativeAmount": "1234567890000",
+        "currencyCode": "BTC"
+      }],
+      "uri address with amount & label": ["bitcoin:1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX?amount=1234.56789&label=Johnny%20Bitcoin", {
+        "publicAddress": "1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX",
+        "metadata": {
+          "name": "Johnny Bitcoin"
+        },
+        "nativeAmount": "123456789000",
+        "currencyCode": "BTC"
+      }],
+      "uri address with amount, label & message": ["bitcoin:1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX?amount=1234.56789&label=Johnny%20Bitcoin&message=Hello%20World,%20I%20miss%20you%20!", {
+        "publicAddress": "1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX",
+        "metadata": {
+          "name": "Johnny Bitcoin",
+          "notes": "Hello World, I miss you !"
+        },
+        "nativeAmount": "123456789000",
+        "currencyCode": "BTC"
+      }],
+      "uri address with unsupported param": ["bitcoin:1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX?unsupported=helloworld&amount=12345.6789", {
+        "publicAddress": "1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX",
+        "metadata": {},
+        "nativeAmount": "1234567890000",
+        "currencyCode": "BTC"
+      }],
+      "wif 1 - Compressed": ["L5FyMaAPJGqivZmCzFAEATptdvgha4UqwVWbLLZgr5iLGtQRo4x2", {
+        "metadata": {},
+        "privateKeys": [ "L5FyMaAPJGqivZmCzFAEATptdvgha4UqwVWbLLZgr5iLGtQRo4x2"]
+      }],
+      "wif 2 - Compressed": ["KzjzkvbBjyaVeECBJFFv5eTwRrsQ4eBg8BNoPpr1z6tjyua6KGEd", {
+        "metadata": {},
+        "privateKeys": [ "KzjzkvbBjyaVeECBJFFv5eTwRrsQ4eBg8BNoPpr1z6tjyua6KGEd"]
+      }],
+      "wif 3 - Compressed": ["Kzfwq67yZCotkVShh6tvFZ2WZCZ3C6CLpt9ec2LA3Zdpm17ynXac", {
+        "metadata": {},
+        "privateKeys": [ "Kzfwq67yZCotkVShh6tvFZ2WZCZ3C6CLpt9ec2LA3Zdpm17ynXac"]
+      }],
+      "wif 1 - Non Compressed": ["5Kb8kLf9zgWQnogidDA76MzPL6TsZZY36hWXMssSzNydYXYB9KF", {
+        "metadata": {},
+        "privateKeys": [ "5Kb8kLf9zgWQnogidDA76MzPL6TsZZY36hWXMssSzNydYXYB9KF"]
+      }],
+      "wif 2 - Non Compressed": ["5Hpu8shonqW1TomfUat1RQBjyabiwyQYqara7nUM3YRGU9hx8Eg", {
+        "metadata": {},
+        "privateKeys": [ "5Hpu8shonqW1TomfUat1RQBjyabiwyQYqara7nUM3YRGU9hx8Eg"]
+      }],
+      "wif 3 - Non Compressed": ["5JJY5LkdXsRSh1X2pLMezk3f11wHkSBJM1AmJ6zKJyzJtQnAe3F", {
+        "metadata": {},
+        "privateKeys": [ "5JJY5LkdXsRSh1X2pLMezk3f11wHkSBJM1AmJ6zKJyzJtQnAe3F"]
+      }],
+      "backwards compatible bip70": ["bitcoin:1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX?amount=0.11&r=https://merchant.com/pay.php?h%3D2a8628fc2fbe", {
+        "publicAddress": "1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX",
+        "metadata": {},
+        "nativeAmount": "11000000",
+        "currencyCode": "BTC",
+        "paymentProtocolURL": "https://merchant.com/pay.php?h=2a8628fc2fbe"
+      }],
+      "non backwards compatible bip70": ["bitcoin:?r=https://merchant.com/pay.php?h%3D2a8628fc2fbe", {
+        "metadata": {},
+        "paymentProtocolURL": "https://merchant.com/pay.php?h=2a8628fc2fbe"
+      }]
+    },
+    "encodeUri": {
+      "address only": [{"publicAddress": "1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX"}, "1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX"],
+      "legacy address1": [{"legacyAddress": "34YtuLdPgopC8xNMKo98oJkGmeSQUrUWvc"}, "34YtuLdPgopC8xNMKo98oJkGmeSQUrUWvc"],
+      "legacy address2": [{"legacyAddress": "1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX"}, "1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX"],
+      "legacy address": [{"legacyAddress": "34YtuLdPgopC8xNMKo98oJkGmeSQUrUWvc"}, "34YtuLdPgopC8xNMKo98oJkGmeSQUrUWvc"],
+      "new format address": [{"publicAddress": "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4"}, "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4"],
+      "address & amount": [{
+        "publicAddress": "1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX",
+        "nativeAmount": "123456780000"
+      }, "bitcoin:1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX?amount=1234.5678"],
+      "address, amount, and label": [{
+        "publicAddress": "1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX",
+        "nativeAmount": "123456780000",
+        "currencyCode": "BTC",
+        "metadata": {
+          "name": "Johnny Bitcoin"
+        }
+      }, "bitcoin:1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX?amount=1234.5678&label=Johnny%20Bitcoin"],
+      "address, amount, label, & message": [{
+        "publicAddress": "1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX",
+        "nativeAmount": "123456780000",
+        "currencyCode": "BTC",
+        "metadata": {
+          "name": "Johnny Bitcoin",
+          "notes": "Hello World, I miss you !"
+        }
+      }, "bitcoin:1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX?amount=1234.5678&label=Johnny%20Bitcoin&message=Hello%20World,%20I%20miss%20you%20!"],
+      "invalid currencyCode": [{
+        "publicAddress": "1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX",
+        "nativeAmount": "123456780000",
+        "currencyCode": "INVALID",
+        "metadata": {
+          "name": "Johnny Bitcoin",
+          "notes": "Hello World, I miss you !"
+        }
+      }]
+    },
+    "getSplittableTypes": {
+      "bip32": ["wallet:bitcoincash", "wallet:bitcoingold"],
+      "bip44": ["wallet:bitcoincash", "wallet:bitcoingold"],
+      "bip49": ["wallet:bitcoingold"],
+      "bip84": ["wallet:bitcoingold"]
+    }
+  },
+  {
+    "pluginName": "litecoin",
+    "WALLET_TYPE": "wallet:litecoin",
+    "WALLET_FORMAT": "bip44",
+    "Test Currency code": "LTC",
+    "key": [39, 190, 34, 129, 208, 32, 145, 88, 191, 217, 226, 98, 183, 16, 52, 150, 52, 53, 31, 137, 164, 40, 236, 146, 128, 107, 129, 59, 192, 240, 40, 238],
+    "xpub": "xpub6CUgpZYSditAHLGHepYbZzskB16AQx69mnD5iUVjd7pdWjP67ZzMNCw8n8Sg2xidi2pVAd35rbeYjxSr5CMUfEGgggFr8Z4bwm1n8YpV8Rn",
+    "invalid key name": {
+      "type": "wallet:litecoin",
+      "keys": {
+        "litecoinKeyz" :"12345678abcd",
+        "format": "bip44"
+      }
+    },
+    "invalid wallet type": {
+      "type": "shitcoin",
+      "keys": { "litecoinKeyz" :"12345678abcd" }
+    },
+    "parseUri": {
+      "address only": ["LajyQBeZaBA1NkZDeY8YT5RYYVRkXMvb2T", {
+        "publicAddress": "LajyQBeZaBA1NkZDeY8YT5RYYVRkXMvb2T",
+        "metadata": {}
+      }],
+      "address only2": ["MSS1jxX7vEjHi5ujzszwTsZCnSDhkWKrBd", {
+        "publicAddress": "MSS1jxX7vEjHi5ujzszwTsZCnSDhkWKrBd",
+        "metadata": {}
+      }],
+      "uri address": ["litecoin:LajyQBeZaBA1NkZDeY8YT5RYYVRkXMvb2T", {
+        "publicAddress": "LajyQBeZaBA1NkZDeY8YT5RYYVRkXMvb2T",
+        "metadata": {}
+      }],
+      "uri address with amount": ["litecoin:LajyQBeZaBA1NkZDeY8YT5RYYVRkXMvb2T?amount=12345.6789", {
+        "publicAddress": "LajyQBeZaBA1NkZDeY8YT5RYYVRkXMvb2T",
+        "metadata": {},
+        "nativeAmount": "1234567890000",
+        "currencyCode": "LTC"
+      }],
+      "uri address with amount & label": ["litecoin:LajyQBeZaBA1NkZDeY8YT5RYYVRkXMvb2T?amount=1234.56789&label=Johnny%20Litecoin", {
+        "publicAddress": "LajyQBeZaBA1NkZDeY8YT5RYYVRkXMvb2T",
+        "metadata": {
+          "name": "Johnny Litecoin"
+        },
+        "nativeAmount": "123456789000",
+        "currencyCode": "LTC"
+      }],
+      "uri address with amount, label & message": ["litecoin:LajyQBeZaBA1NkZDeY8YT5RYYVRkXMvb2T?amount=1234.56789&label=Johnny%20Litecoin&message=Hello%20World,%20I%20miss%20you%20!", {
+        "publicAddress": "LajyQBeZaBA1NkZDeY8YT5RYYVRkXMvb2T",
+        "metadata": {
+          "name": "Johnny Litecoin",
+          "notes": "Hello World, I miss you !"
+        },
+        "nativeAmount": "123456789000",
+        "currencyCode": "LTC"
+      }],
+      "uri address with unsupported param": ["litecoin:LajyQBeZaBA1NkZDeY8YT5RYYVRkXMvb2T?unsupported=helloworld&amount=12345.6789", {
+        "publicAddress": "LajyQBeZaBA1NkZDeY8YT5RYYVRkXMvb2T",
+        "metadata": {},
+        "nativeAmount": "1234567890000",
+        "currencyCode": "LTC"
+      }],
+      "legacy address only": ["3EUxVRMAwPk2ZpBdiqRtY9uxWXSkgVCTFN", {
+        "publicAddress": "MLh6oJm8tWbTNKTXpiREMoAMqE3CbYzgi6",
+        "metadata": {},
+        "legacyAddress": "3EUxVRMAwPk2ZpBdiqRtY9uxWXSkgVCTFN"
+      }],
+      "legacy uri address": ["litecoin:3EUxVRMAwPk2ZpBdiqRtY9uxWXSkgVCTFN", {
+        "publicAddress": "MLh6oJm8tWbTNKTXpiREMoAMqE3CbYzgi6",
+        "metadata": {},
+        "legacyAddress": "3EUxVRMAwPk2ZpBdiqRtY9uxWXSkgVCTFN"
+      }],
+      "legacy uri address with amount": ["litecoin:3EUxVRMAwPk2ZpBdiqRtY9uxWXSkgVCTFN?amount=12345.6789", {
+        "publicAddress": "MLh6oJm8tWbTNKTXpiREMoAMqE3CbYzgi6",
+        "metadata": {},
+        "nativeAmount": "1234567890000",
+        "currencyCode": "LTC",
+        "legacyAddress": "3EUxVRMAwPk2ZpBdiqRtY9uxWXSkgVCTFN"
+      }],
+      "legacy uri address with amount & label": ["litecoin:3EUxVRMAwPk2ZpBdiqRtY9uxWXSkgVCTFN?amount=1234.56789&label=Johnny%20Litecoin", {
+        "publicAddress": "MLh6oJm8tWbTNKTXpiREMoAMqE3CbYzgi6",
+        "metadata": {
+          "name": "Johnny Litecoin"
+        },
+        "nativeAmount": "123456789000",
+        "currencyCode": "LTC",
+        "legacyAddress": "3EUxVRMAwPk2ZpBdiqRtY9uxWXSkgVCTFN"
+      }],
+      "legacy uri address with amount, label & message": ["litecoin:3EUxVRMAwPk2ZpBdiqRtY9uxWXSkgVCTFN?amount=1234.56789&label=Johnny%20Litecoin&message=Hello%20World,%20I%20miss%20you%20!", {
+        "publicAddress": "MLh6oJm8tWbTNKTXpiREMoAMqE3CbYzgi6",
+        "metadata": {
+          "name": "Johnny Litecoin",
+          "notes": "Hello World, I miss you !"
+        },
+        "nativeAmount": "123456789000",
+        "currencyCode": "LTC",
+        "legacyAddress": "3EUxVRMAwPk2ZpBdiqRtY9uxWXSkgVCTFN"
+      }],
+      "legacy uri address with unsupported param": ["litecoin:3EUxVRMAwPk2ZpBdiqRtY9uxWXSkgVCTFN?unsupported=helloworld&amount=12345.6789", {
+        "publicAddress": "MLh6oJm8tWbTNKTXpiREMoAMqE3CbYzgi6",
+        "metadata": {},
+        "nativeAmount": "1234567890000",
+        "currencyCode": "LTC",
+        "legacyAddress": "3EUxVRMAwPk2ZpBdiqRtY9uxWXSkgVCTFN"
+      }],
+      "wif 1 - Compressed": ["T5t9N5NirTH5Bo65CEm1Z5W7jyu9ezbuMvPzuD2DoPnPGJkmpq8B", {
+        "metadata": {},
+        "privateKeys": [ "T5t9N5NirTH5Bo65CEm1Z5W7jyu9ezbuMvPzuD2DoPnPGJkmpq8B"]
+      }],
+      "wif 2 - Compressed": ["T3A5JtqoKrmR4AVEdXdmbB6kGLpt5iWp54cUw3udZuHX3PKLymvR", {
+        "metadata": {},
+        "privateKeys": [ "T3A5JtqoKrmR4AVEdXdmbB6kGLpt5iWp54cUw3udZuHX3PKLymvR"]
+      }],
+      "wif 3 - Compressed": ["T4ZYxYMAE85w5moF5FBCiQjLiorr346tyPkz4m8tHCQBXsjL8zm7", {
+        "metadata": {},
+        "privateKeys": [ "T4ZYxYMAE85w5moF5FBCiQjLiorr346tyPkz4m8tHCQBXsjL8zm7"]
+      }],
+      "wif 1 - Non Compressed": ["6vzHEqCk5kUSL8KBZr4XhfiDTwiihLKaMAdb6dhhq34tabicz73", {
+        "metadata": {},
+        "privateKeys": [ "6vzHEqCk5kUSL8KBZr4XhfiDTwiihLKaMAdb6dhhq34tabicz73"]
+      }],
+      "wif 2 - Non Compressed": ["6vNUJU9VXjs79rr9jvqsoXFekNStYnYMnC287mnAovUhnTbA8cF", {
+        "metadata": {},
+        "privateKeys": [ "6vNUJU9VXjs79rr9jvqsoXFekNStYnYMnC287mnAovUhnTbA8cF"]
+      }],
+      "wif 3 - Non Compressed": ["6vusDCJqPM7KVAiMzXL8F27MWTfZ5sw8XJL1XT9wwgDMhfcugVQ", {
+        "metadata": {},
+        "privateKeys": [ "6vusDCJqPM7KVAiMzXL8F27MWTfZ5sw8XJL1XT9wwgDMhfcugVQ"]
+      }],
+      "backwards compatible bip70": ["litecoin:3EUxVRMAwPk2ZpBdiqRtY9uxWXSkgVCTFN?amount=0.11&r=https://merchant.com/pay.php?h%3D2a8628fc2fbe", {
+        "publicAddress": "MLh6oJm8tWbTNKTXpiREMoAMqE3CbYzgi6",
+        "legacyAddress": "3EUxVRMAwPk2ZpBdiqRtY9uxWXSkgVCTFN",
+        "metadata": {},
+        "nativeAmount": "11000000",
+        "currencyCode": "LTC",
+        "paymentProtocolURL": "https://merchant.com/pay.php?h=2a8628fc2fbe"
+      }],
+      "non backwards compatible bip70": ["litecoin:?r=https://merchant.com/pay.php?h%3D2a8628fc2fbe", {
+        "metadata": {},
+        "paymentProtocolURL": "https://merchant.com/pay.php?h=2a8628fc2fbe"
+      }]
+    },
+    "encodeUri": {
+      "address only": [{"publicAddress": "LajyQBeZaBA1NkZDeY8YT5RYYVRkXMvb2T"}, "LajyQBeZaBA1NkZDeY8YT5RYYVRkXMvb2T"],
+      "legacy address1": [{"legacyAddress": "34YtuLdPgopC8xNMKo98oJkGmeSQUrUWvc"}, "34YtuLdPgopC8xNMKo98oJkGmeSQUrUWvc"],
+      "legacy address2": [{"legacyAddress": "LajyQBeZaBA1NkZDeY8YT5RYYVRkXMvb2T"}, "LajyQBeZaBA1NkZDeY8YT5RYYVRkXMvb2T"],
+      "legacy address3": [{"legacyAddress": "M816EdyuvWV7oETCfQeZb5mGWm9nHczijH"}, "M816EdyuvWV7oETCfQeZb5mGWm9nHczijH"],
+      "legacy address4": [{"legacyAddress": "M816EdyuvWV7oETCfQeZb5mGWm9nHczijH", "publicAddress": "LajyQBeZaBA1NkZDeY8YT5RYYVRkXMvb2T"}, "M816EdyuvWV7oETCfQeZb5mGWm9nHczijH"],
+      "new format address": [{"publicAddress": "MJiPwX84iBe4WnFDwsYGgtnz1XonPhUqhf"}, "MJiPwX84iBe4WnFDwsYGgtnz1XonPhUqhf"],
+      "address & amount": [{
+        "publicAddress": "LajyQBeZaBA1NkZDeY8YT5RYYVRkXMvb2T",
+        "nativeAmount": "123456780000"
+      }, "litecoin:LajyQBeZaBA1NkZDeY8YT5RYYVRkXMvb2T?amount=1234.5678"],
+      "address, amount, and label": [{
+        "publicAddress": "LajyQBeZaBA1NkZDeY8YT5RYYVRkXMvb2T",
+        "nativeAmount": "123456780000",
+        "currencyCode": "LTC",
+        "metadata": {
+          "name": "Johnny Litecoin"
+        }
+      }, "litecoin:LajyQBeZaBA1NkZDeY8YT5RYYVRkXMvb2T?amount=1234.5678&label=Johnny%20Litecoin"],
+      "address, amount, label, & message": [{
+        "publicAddress": "LajyQBeZaBA1NkZDeY8YT5RYYVRkXMvb2T",
+        "nativeAmount": "123456780000",
+        "currencyCode": "LTC",
+        "metadata": {
+          "name": "Johnny Litecoin",
+          "notes": "Hello World, I miss you !"
+        }
+      }, "litecoin:LajyQBeZaBA1NkZDeY8YT5RYYVRkXMvb2T?amount=1234.5678&label=Johnny%20Litecoin&message=Hello%20World,%20I%20miss%20you%20!"],
+      "invalid currencyCode": [{
+        "publicAddress": "LajyQBeZaBA1NkZDeY8YT5RYYVRkXMvb2T",
+        "nativeAmount": "123456780000",
+        "currencyCode": "INVALID",
+        "metadata": {
+          "name": "Johnny Litecoin",
+          "notes": "Hello World, I miss you !"
+        }
+      }]
+    }
+  },
+  {
+    "pluginName": "bitcoincash",
+    "WALLET_TYPE": "wallet:bitcoincash",
+    "WALLET_FORMAT": "bip44",
+    "Test Currency code": "BCH",
+    "key": [39, 190, 34, 129, 208, 32, 145, 88, 191, 217, 226, 98, 183, 16, 52, 150, 52, 53, 31, 137, 164, 40, 236, 146, 128, 107, 129, 59, 192, 240, 40, 238],
+    "xpub": "xpub6C7zQbq278xkqpJGb4Ewp9KSmJSdiqwYV45NCRDBLmgU9ighAuSsiDAicWm38ZXRUcYLnMEkH88tLF5ssfUMX3MtvrsgCmHYnmv2jHfev6z",
+    "invalid key name": {
+      "type": "wallet:bitcoincash",
+      "keys": {
+        "bitcoincashKeyz" :"12345678abcd",
+        "format": "bip44"
+      }
+    },
+    "invalid wallet type": {
+      "type": "shitcoin",
+      "keys": { "bitcoincashKeyz" :"12345678abcd" }
+    },
+    "parseUri": {
+      "address only": ["bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a", {
+        "publicAddress": "bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a",
+        "metadata": {}
+      }],
+      "address only2": ["bitcoincash:qr95sy3j9xwd2ap32xkykttr4cvcu7as4y0qverfuy", {
+        "publicAddress": "bitcoincash:qr95sy3j9xwd2ap32xkykttr4cvcu7as4y0qverfuy",
+        "metadata": {}
+      }],
+      "uri address": ["bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a", {
+        "publicAddress": "bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a",
+        "metadata": {}
+      }],
+      "uri address with amount": ["bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a?amount=12345.6789", {
+        "publicAddress": "bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a",
+        "metadata": {},
+        "nativeAmount": "1234567890000",
+        "currencyCode": "BCH"
+      }],
+      "uri address with amount & label": ["bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a?amount=1234.56789&label=Johnny%20BitcoinCash", {
+        "publicAddress": "bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a",
+        "metadata": {
+          "name": "Johnny BitcoinCash"
+        },
+        "nativeAmount": "123456789000",
+        "currencyCode": "BCH"
+      }],
+      "uri address with amount, label & message": ["bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a?amount=1234.56789&label=Johnny%20BitcoinCash&message=Hello%20World,%20I%20miss%20you%20!", {
+        "publicAddress": "bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a",
+        "metadata": {
+          "name": "Johnny BitcoinCash",
+          "notes": "Hello World, I miss you !"
+        },
+        "nativeAmount": "123456789000",
+        "currencyCode": "BCH"
+      }],
+      "uri address with unsupported param": ["bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a?unsupported=helloworld&amount=12345.6789", {
+        "publicAddress": "bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a",
+        "metadata": {},
+        "nativeAmount": "1234567890000",
+        "currencyCode": "BCH"
+      }],
+      "legacy address only": ["1BpEi6DfDAUFd7GtittLSdBeYJvcoaVggu", {
+        "publicAddress": "bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a",
+        "metadata": {},
+        "legacyAddress": "1BpEi6DfDAUFd7GtittLSdBeYJvcoaVggu"
+      }],
+      "legacy uri address": ["bitcoincash:1BpEi6DfDAUFd7GtittLSdBeYJvcoaVggu", {
+        "publicAddress": "bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a",
+        "metadata": {},
+        "legacyAddress": "1BpEi6DfDAUFd7GtittLSdBeYJvcoaVggu"
+      }],
+      "legacy uri address with amount": ["bitcoincash:1BpEi6DfDAUFd7GtittLSdBeYJvcoaVggu?amount=12345.6789", {
+        "publicAddress": "bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a",
+        "metadata": {},
+        "nativeAmount": "1234567890000",
+        "currencyCode": "BCH",
+        "legacyAddress": "1BpEi6DfDAUFd7GtittLSdBeYJvcoaVggu"
+      }],
+      "legacy uri address with amount & label": ["bitcoincash:1BpEi6DfDAUFd7GtittLSdBeYJvcoaVggu?amount=1234.56789&label=Johnny%20BitcoinCash", {
+        "publicAddress": "bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a",
+        "metadata": {
+          "name": "Johnny BitcoinCash"
+        },
+        "nativeAmount": "123456789000",
+        "currencyCode": "BCH",
+        "legacyAddress": "1BpEi6DfDAUFd7GtittLSdBeYJvcoaVggu"
+      }],
+      "legacy uri address with amount, label & message": ["bitcoincash:1BpEi6DfDAUFd7GtittLSdBeYJvcoaVggu?amount=1234.56789&label=Johnny%20BitcoinCash&message=Hello%20World,%20I%20miss%20you%20!", {
+        "publicAddress": "bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a",
+        "metadata": {
+          "name": "Johnny BitcoinCash",
+          "notes": "Hello World, I miss you !"
+        },
+        "nativeAmount": "123456789000",
+        "currencyCode": "BCH",
+        "legacyAddress": "1BpEi6DfDAUFd7GtittLSdBeYJvcoaVggu"
+      }],
+      "legacy uri address with unsupported param": ["bitcoincash:1BpEi6DfDAUFd7GtittLSdBeYJvcoaVggu?unsupported=helloworld&amount=12345.6789", {
+        "publicAddress": "bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a",
+        "metadata": {},
+        "nativeAmount": "1234567890000",
+        "currencyCode": "BCH",
+        "legacyAddress": "1BpEi6DfDAUFd7GtittLSdBeYJvcoaVggu"
+      }],
+      "wif 1 - Compressed": ["L5FyMaAPJGqivZmCzFAEATptdvgha4UqwVWbLLZgr5iLGtQRo4x2", {
+        "metadata": {},
+        "privateKeys": [ "L5FyMaAPJGqivZmCzFAEATptdvgha4UqwVWbLLZgr5iLGtQRo4x2"]
+      }],
+      "wif 2 - Compressed": ["KzjzkvbBjyaVeECBJFFv5eTwRrsQ4eBg8BNoPpr1z6tjyua6KGEd", {
+        "metadata": {},
+        "privateKeys": [ "KzjzkvbBjyaVeECBJFFv5eTwRrsQ4eBg8BNoPpr1z6tjyua6KGEd"]
+      }],
+      "wif 3 - Compressed": ["Kzfwq67yZCotkVShh6tvFZ2WZCZ3C6CLpt9ec2LA3Zdpm17ynXac", {
+        "metadata": {},
+        "privateKeys": [ "Kzfwq67yZCotkVShh6tvFZ2WZCZ3C6CLpt9ec2LA3Zdpm17ynXac"]
+      }],
+      "wif 1 - Non Compressed": ["5Kb8kLf9zgWQnogidDA76MzPL6TsZZY36hWXMssSzNydYXYB9KF", {
+        "metadata": {},
+        "privateKeys": [ "5Kb8kLf9zgWQnogidDA76MzPL6TsZZY36hWXMssSzNydYXYB9KF"]
+      }],
+      "wif 2 - Non Compressed": ["5Hpu8shonqW1TomfUat1RQBjyabiwyQYqara7nUM3YRGU9hx8Eg", {
+        "metadata": {},
+        "privateKeys": [ "5Hpu8shonqW1TomfUat1RQBjyabiwyQYqara7nUM3YRGU9hx8Eg"]
+      }],
+      "wif 3 - Non Compressed": ["5JJY5LkdXsRSh1X2pLMezk3f11wHkSBJM1AmJ6zKJyzJtQnAe3F", {
+        "metadata": {},
+        "privateKeys": [ "5JJY5LkdXsRSh1X2pLMezk3f11wHkSBJM1AmJ6zKJyzJtQnAe3F"]
+      }]
+    },
+    "encodeUri": {
+      "address only": [{"publicAddress": "bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a"}, "bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a"],
+      "legacy address1": [{"legacyAddress": "1BpEi6DfDAUFd7GtittLSdBeYJvcoaVggu"}, "1BpEi6DfDAUFd7GtittLSdBeYJvcoaVggu"],
+      "address & amount": [{
+        "publicAddress": "bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a",
+        "nativeAmount": "123456780000"
+      }, "bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a?amount=1234.5678"],
+      "address, amount, and label": [{
+        "publicAddress": "bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a",
+        "nativeAmount": "123456780000",
+        "currencyCode": "BCH",
+        "metadata": {
+          "name": "Johnny BitcoinCash"
+        }
+      }, "bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a?amount=1234.5678&label=Johnny%20BitcoinCash"],
+      "address, amount, label, & message": [{
+        "publicAddress": "bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a",
+        "nativeAmount": "123456780000",
+        "currencyCode": "BCH",
+        "metadata": {
+          "name": "Johnny BitcoinCash",
+          "notes": "Hello World, I miss you !"
+        }
+      }, "bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a?amount=1234.5678&label=Johnny%20BitcoinCash&message=Hello%20World,%20I%20miss%20you%20!"],
+      "invalid currencyCode": [{
+        "publicAddress": "bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a",
+        "nativeAmount": "123456780000",
+        "currencyCode": "INVALID",
+        "metadata": {
+          "name": "Johnny BitcoinCash",
+          "notes": "Hello World, I miss you !"
+        }
+      }]
+    }
+  },
+  {
+    "pluginName": "zcoin",
+    "WALLET_TYPE": "wallet:zcoin",
+    "WALLET_FORMAT": "bip44",
+    "Test Currency code": "XZC",
+    "key": [39, 190, 34, 129, 208, 32, 145, 88, 191, 217, 226, 98, 183, 16, 52, 150, 52, 53, 31, 137, 164, 40, 236, 146, 128, 107, 129, 59, 192, 240, 40, 238],
+    "xpub": "xpub6CnGSFBso9rc7NwJxH7TAk27uThysAfy7AtFZpZeMYonpyFrYVXPWzp1gpZGKmtFC4LV2Gmeui3q1d419WRah4NNH7Et1T3o61JgmPH5iwJ",
+    "invalid key name": {
+      "type": "wallet:zcoin",
+      "keys": {
+        "zcoinKeyz" :"12345678abcd",
+        "format": "bip44"
+      }
+    },
+    "invalid wallet type": {
+      "type": "shitcoin",
+      "keys": { "zcoinKeyz" :"12345678abcd" }
+    },
+    "parseUri": {
+      "address only": ["aL1aoLHKm8LiDT7vYRRnNgY5EhnapiJaty", {
+        "publicAddress": "aL1aoLHKm8LiDT7vYRRnNgY5EhnapiJaty",
+        "metadata": {}
+      }],
+      "address only2": ["ZzyfJFVqCWnzEXCDTUyhaseLW7GzCq9sA1", {
+        "publicAddress": "ZzyfJFVqCWnzEXCDTUyhaseLW7GzCq9sA1",
+        "metadata": {}
+      }],
+      "uri address": ["zcoin:aL1aoLHKm8LiDT7vYRRnNgY5EhnapiJaty", {
+        "publicAddress": "aL1aoLHKm8LiDT7vYRRnNgY5EhnapiJaty",
+        "metadata": {}
+      }],
+      "uri address with amount": ["zcoin:aL1aoLHKm8LiDT7vYRRnNgY5EhnapiJaty?amount=12345.6789", {
+        "publicAddress": "aL1aoLHKm8LiDT7vYRRnNgY5EhnapiJaty",
+        "metadata": {},
+        "nativeAmount": "1234567890000",
+        "currencyCode": "XZC"
+      }],
+      "uri address with amount & label": ["zcoin:aL1aoLHKm8LiDT7vYRRnNgY5EhnapiJaty?amount=1234.56789&label=Johnny%20Zcoin", {
+        "publicAddress": "aL1aoLHKm8LiDT7vYRRnNgY5EhnapiJaty",
+        "metadata": {
+          "name": "Johnny Zcoin"
+        },
+        "nativeAmount": "123456789000",
+        "currencyCode": "XZC"
+      }],
+      "uri address with amount, label & message": ["zcoin:aL1aoLHKm8LiDT7vYRRnNgY5EhnapiJaty?amount=1234.56789&label=Johnny%20Zcoin&message=Hello%20World,%20I%20miss%20you%20!", {
+        "publicAddress": "aL1aoLHKm8LiDT7vYRRnNgY5EhnapiJaty",
+        "metadata": {
+          "name": "Johnny Zcoin",
+          "notes": "Hello World, I miss you !"
+        },
+        "nativeAmount": "123456789000",
+        "currencyCode": "XZC"
+      }],
+      "uri address with unsupported param": ["zcoin:aL1aoLHKm8LiDT7vYRRnNgY5EhnapiJaty?unsupported=helloworld&amount=12345.6789", {
+        "publicAddress": "aL1aoLHKm8LiDT7vYRRnNgY5EhnapiJaty",
+        "metadata": {},
+        "nativeAmount": "1234567890000",
+        "currencyCode": "XZC"
+      }],
+      "wif 1 - Compressed": ["YBHu5hraCFjDhXqGoWDzC8hZ9TfKaCe4VQU4nSuTPqRM1n8Nwvu4", {
+        "metadata": {},
+        "privateKeys": [ "YBHu5hraCFjDhXqGoWDzC8hZ9TfKaCe4VQU4nSuTPqRM1n8Nwvu4"]
+      }],
+      "wif 2 - Compressed": ["YBfH26UnzrLqkosKnERVUg9xgxueanZbjiiZEMCrNQbiBeKe7mDW", {
+        "metadata": {},
+        "privateKeys": [ "YBfH26UnzrLqkosKnERVUg9xgxueanZbjiiZEMCrNQbiBeKe7mDW"]
+      }],
+      "wif 3 - Compressed": ["YCH6gkpCwGmUb7uG1HMjLrPh3K8gT4wmwtzPyNwysJSekncHqRxG", {
+        "metadata": {},
+        "privateKeys": [ "YCH6gkpCwGmUb7uG1HMjLrPh3K8gT4wmwtzPyNwysJSekncHqRxG"]
+      }],
+      "wif 1 - Non Compressed": ["83FPakvmYu5GD8v3GzXQmbLRef9WpnuCU7hnkMqdMo8fFSG6TX6", {
+        "metadata": {},
+        "privateKeys": [ "83FPakvmYu5GD8v3GzXQmbLRef9WpnuCU7hnkMqdMo8fFSG6TX6"]
+      }],
+      "wif 2 - Non Compressed": ["84hKkFAhnsnaJiAhceBynC2ZsZegSRXmeaPh7mwtwsTtFWi5xAs", {
+        "metadata": {},
+        "privateKeys": [ "84hKkFAhnsnaJiAhceBynC2ZsZegSRXmeaPh7mwtwsTtFWi5xAs"]
+      }],
+      "wif 3 - Non Compressed": ["83nie713kHUxvPUMzbTXvU7NDA45nK9nQ34PPqmibSumzbqmopG", {
+        "metadata": {},
+        "privateKeys": [ "83nie713kHUxvPUMzbTXvU7NDA45nK9nQ34PPqmibSumzbqmopG"]
+      }]
+    },
+    "encodeUri": {
+      "address only": [{"publicAddress": "aL1aoLHKm8LiDT7vYRRnNgY5EhnapiJaty"}, "aL1aoLHKm8LiDT7vYRRnNgY5EhnapiJaty"],
+      "legacy address1": [{"legacyAddress": "ZzyfJFVqCWnzEXCDTUyhaseLW7GzCq9sA1"}, "ZzyfJFVqCWnzEXCDTUyhaseLW7GzCq9sA1"],
+      "legacy address2": [{"legacyAddress": "aL1aoLHKm8LiDT7vYRRnNgY5EhnapiJaty"}, "aL1aoLHKm8LiDT7vYRRnNgY5EhnapiJaty"],
+      "legacy address3": [{"legacyAddress": "a5ozVQfAhdbctoyi6scufVWNp3gSvmVchf"}, "a5ozVQfAhdbctoyi6scufVWNp3gSvmVchf"],
+      "new format address": [{"publicAddress": "ZzyfJFVqCWnzEXCDTUyhaseLW7GzCq9sA1"}, "ZzyfJFVqCWnzEXCDTUyhaseLW7GzCq9sA1"],
+      "address & amount": [{
+        "publicAddress": "aL1aoLHKm8LiDT7vYRRnNgY5EhnapiJaty",
+        "nativeAmount": "123456780000"
+      }, "zcoin:aL1aoLHKm8LiDT7vYRRnNgY5EhnapiJaty?amount=1234.5678"],
+      "address, amount, and label": [{
+        "publicAddress": "aL1aoLHKm8LiDT7vYRRnNgY5EhnapiJaty",
+        "nativeAmount": "123456780000",
+        "currencyCode": "XZC",
+        "metadata": {
+          "name": "Johnny Zcoin"
+        }
+      }, "zcoin:aL1aoLHKm8LiDT7vYRRnNgY5EhnapiJaty?amount=1234.5678&label=Johnny%20Zcoin"],
+      "address, amount, label, & message": [{
+        "publicAddress": "aL1aoLHKm8LiDT7vYRRnNgY5EhnapiJaty",
+        "nativeAmount": "123456780000",
+        "currencyCode": "XZC",
+        "metadata": {
+          "name": "Johnny Zcoin",
+          "notes": "Hello World, I miss you !"
+        }
+      }, "zcoin:aL1aoLHKm8LiDT7vYRRnNgY5EhnapiJaty?amount=1234.5678&label=Johnny%20Zcoin&message=Hello%20World,%20I%20miss%20you%20!"],
+      "invalid currencyCode": [{
+        "publicAddress": "aL1aoLHKm8LiDT7vYRRnNgY5EhnapiJaty",
+        "nativeAmount": "123456780000",
+        "currencyCode": "INVALID",
+        "metadata": {
+          "name": "Johnny Zcoin",
+          "notes": "Hello World, I miss you !"
+        }
+      }]
+    }
+  },
+  {
+    "pluginName": "feathercoin",
+    "WALLET_TYPE": "wallet:feathercoin",
+    "WALLET_FORMAT": "bip44",
+    "Test Currency code": "FTC",
+    "key": [39, 190, 34, 129, 208, 32, 145, 88, 191, 217, 226, 98, 183, 16, 52, 150, 52, 53, 31, 137, 164, 40, 236, 146, 128, 107, 129, 59, 192, 240, 40, 238],
+    "xpub": "xpub6ChzKkhP5f8rrRaqY1QSwU8sw4b22F4hxv1AMRgzASGbdi2JQP6fbembwEWqYkeCcwWBNq9Mva77czMtb3SnVXN7tgjWTRAX43cxbeXhnHN",
+    "invalid key name": {
+      "type": "wallet:feathercoin",
+      "keys": {
+        "feathercoinKeyz" :"12345678abcd",
+        "format": "bip44"
+      }
+    },
+    "invalid wallet type": {
+      "type": "shitcoin",
+      "keys": { "feathercoinKeyz" :"12345678abcd" }
+    },
+    "parseUri": {
+      "address only": ["6fLKmA19ESYgg5HPq9q3UvY3EJ6HThr5DD", {
+        "publicAddress": "6fLKmA19ESYgg5HPq9q3UvY3EJ6HThr5DD",
+        "metadata": {}
+      }],
+      "address only2": ["34edSxw6dnV1Jnmev1p1tkb1UoPEcwxRqH", {
+        "publicAddress": "34edSxw6dnV1Jnmev1p1tkb1UoPEcwxRqH",
+        "metadata": {}
+      }],
+      "uri address": ["feathercoin:6fLKmA19ESYgg5HPq9q3UvY3EJ6HThr5DD", {
+        "publicAddress": "6fLKmA19ESYgg5HPq9q3UvY3EJ6HThr5DD",
+        "metadata": {}
+      }],
+      "uri address with amount": ["feathercoin:6fLKmA19ESYgg5HPq9q3UvY3EJ6HThr5DD?amount=12345.6789", {
+        "publicAddress": "6fLKmA19ESYgg5HPq9q3UvY3EJ6HThr5DD",
+        "metadata": {},
+        "nativeAmount": "1234567890000",
+        "currencyCode": "FTC"
+      }],
+      "uri address with amount & label": ["feathercoin:6fLKmA19ESYgg5HPq9q3UvY3EJ6HThr5DD?amount=1234.56789&label=Johnny%20feathercoin", {
+        "publicAddress": "6fLKmA19ESYgg5HPq9q3UvY3EJ6HThr5DD",
+        "metadata": {
+          "name": "Johnny feathercoin"
+        },
+        "nativeAmount": "123456789000",
+        "currencyCode": "FTC"
+      }],
+      "uri address with amount, label & message": ["feathercoin:6fLKmA19ESYgg5HPq9q3UvY3EJ6HThr5DD?amount=1234.56789&label=Johnny%20feathercoin&message=Hello%20World,%20I%20miss%20you%20!", {
+        "publicAddress": "6fLKmA19ESYgg5HPq9q3UvY3EJ6HThr5DD",
+        "metadata": {
+          "name": "Johnny feathercoin",
+          "notes": "Hello World, I miss you !"
+        },
+        "nativeAmount": "123456789000",
+        "currencyCode": "FTC"
+      }],
+      "uri address with unsupported param": ["feathercoin:6fLKmA19ESYgg5HPq9q3UvY3EJ6HThr5DD?unsupported=helloworld&amount=12345.6789", {
+        "publicAddress": "6fLKmA19ESYgg5HPq9q3UvY3EJ6HThr5DD",
+        "metadata": {},
+        "nativeAmount": "1234567890000",
+        "currencyCode": "FTC"
+      }],
+      "wif 1 - Compressed": ["N47FY4qJv91pFpYyFFwryQ6TtnQyZoPwHhxfSnwK7G7hfodE6rhV", {
+        "metadata": {},
+        "privateKeys": [ "N47FY4qJv91pFpYyFFwryQ6TtnQyZoPwHhxfSnwK7G7hfodE6rhV"]
+      }],
+      "wif 2 - Compressed": ["N53U9kfZWsLMZq9o3iPZELGpbdTV3m8xS7MXSPHzqECSfjirLgeg", {
+        "metadata": {},
+        "privateKeys": [ "N53U9kfZWsLMZq9o3iPZELGpbdTV3m8xS7MXSPHzqECSfjirLgeg"]
+      }],
+      "wif 3 - Compressed": ["N4ScbPqYDbVhLJwdM8RZwAkEYbiUvzRds9a9kJr16HMrmkYeVQ5S", {
+        "metadata": {},
+        "privateKeys": [ "N4ScbPqYDbVhLJwdM8RZwAkEYbiUvzRds9a9kJr16HMrmkYeVQ5S"]
+      }],
+      "wif 1 - Non Compressed": ["5mqebQ4pSz8iSRG2qKCozVwreLk9xPqZi8PatU4XhvUR74RsHHX", {
+        "metadata": {},
+        "privateKeys": [ "5mqebQ4pSz8iSRG2qKCozVwreLk9xPqZi8PatU4XhvUR74RsHHX"]
+      }],
+      "wif 2 - Non Compressed": ["5mXfNw2PmToNzMjCVbKHbwkLCLU6rXdxiPGEMXUz4xdQHFocors", {
+        "metadata": {},
+        "privateKeys": [ "5mXfNw2PmToNzMjCVbKHbwkLCLU6rXdxiPGEMXUz4xdQHFocors"]
+      }],
+      "wif 3 - Non Compressed": ["5mYYGU3ixuUq3o55iTbsBLwPonjbToHBqTvXtKzzSqPg3Gpjhvd", {
+        "metadata": {},
+        "privateKeys": [ "5mYYGU3ixuUq3o55iTbsBLwPonjbToHBqTvXtKzzSqPg3Gpjhvd"]
+      }]
+    },
+    "encodeUri": {
+      "address only": [{"publicAddress": "6fLKmA19ESYgg5HPq9q3UvY3EJ6HThr5DD"}, "6fLKmA19ESYgg5HPq9q3UvY3EJ6HThr5DD"],
+      "legacy address1": [{"legacyAddress": "34YtuLdPgopC8xNMKo98oJkGmeSQUrUWvc"}, "34YtuLdPgopC8xNMKo98oJkGmeSQUrUWvc"],
+      "legacy address2": [{"legacyAddress": "6fLKmA19ESYgg5HPq9q3UvY3EJ6HThr5DD"}, "6fLKmA19ESYgg5HPq9q3UvY3EJ6HThr5DD"],
+      "new format address": [{"publicAddress": "fc1q4apxcls6tfrjmuhjjg2vw5csecc7yzjdp73y44"}, "fc1q4apxcls6tfrjmuhjjg2vw5csecc7yzjdp73y44"],
+      "address & amount": [{
+        "publicAddress": "6fLKmA19ESYgg5HPq9q3UvY3EJ6HThr5DD",
+        "nativeAmount": "123456780000"
+      }, "feathercoin:6fLKmA19ESYgg5HPq9q3UvY3EJ6HThr5DD?amount=1234.5678"],
+      "address, amount, and label": [{
+        "publicAddress": "6fLKmA19ESYgg5HPq9q3UvY3EJ6HThr5DD",
+        "nativeAmount": "123456780000",
+        "currencyCode": "FTC",
+        "metadata": {
+          "name": "Johnny feathercoin"
+        }
+      }, "feathercoin:6fLKmA19ESYgg5HPq9q3UvY3EJ6HThr5DD?amount=1234.5678&label=Johnny%20feathercoin"],
+      "address, amount, label, & message": [{
+        "publicAddress": "6fLKmA19ESYgg5HPq9q3UvY3EJ6HThr5DD",
+        "nativeAmount": "123456780000",
+        "currencyCode": "FTC",
+        "metadata": {
+          "name": "Johnny feathercoin",
+          "notes": "Hello World, I miss you !"
+        }
+      }, "feathercoin:6fLKmA19ESYgg5HPq9q3UvY3EJ6HThr5DD?amount=1234.5678&label=Johnny%20feathercoin&message=Hello%20World,%20I%20miss%20you%20!"],
+      "invalid currencyCode": [{
+        "publicAddress": "6fLKmA19ESYgg5HPq9q3UvY3EJ6HThr5DD",
+        "nativeAmount": "123456780000",
+        "currencyCode": "INVALID",
+        "metadata": {
+          "name": "Johnny feathercoin",
+          "notes": "Hello World, I miss you !"
+        }
+      }]
+    }
+  },
+  {
+    "pluginName": "smartcash",
+    "WALLET_TYPE": "wallet:smartcash",
+    "Test Currency code": "SMART",
+    "WALLET_FORMAT": "bip44",
+    "key": [39, 190, 34, 129, 208, 32, 145, 88, 191, 217, 226, 98, 183, 16, 52, 150, 52, 53, 31, 137, 164, 40, 236, 146, 128, 107, 129, 59, 192, 240, 40, 238],
+    "xpub": "xpub6DVeXNsPJet3rgM2RbNdaE7e5AKWYQuMSHFMcCMya39KhjGgTB8D9LKDWBLggVgF5V2gVEz3VBeiyh4S4q9vgC8fFUdDdAqBQTc9BN16rTd",
+    "invalid key name": {
+      "type": "wallet:smartcash",
+      "keys": {
+        "smartcashKeyz" :"12345678abcd",
+        "format": "bip44"
+      }
+    },
+    "invalid wallet type": {
+      "type": "shitcoin",
+      "keys": { "smartcashKeyz" :"12345678abcd" }
+    },
+    "parseUri": {
+      "address only": ["ScZ5enspA3DpbSkX1SYxkCLyu8gh4qzTWH", {
+        "publicAddress": "ScZ5enspA3DpbSkX1SYxkCLyu8gh4qzTWH",
+        "metadata": {}
+      }],
+      "address only2": ["SbpLx8iLAiJavTSsPd8NayHv4VAvgDASqm", {
+        "publicAddress": "SbpLx8iLAiJavTSsPd8NayHv4VAvgDASqm",
+        "metadata": {}
+      }],
+      "uri address": ["smartcash:ScZ5enspA3DpbSkX1SYxkCLyu8gh4qzTWH", {
+        "publicAddress": "ScZ5enspA3DpbSkX1SYxkCLyu8gh4qzTWH",
+        "metadata": {}
+      }],
+      "uri address with amount": ["smartcash:ScZ5enspA3DpbSkX1SYxkCLyu8gh4qzTWH?amount=12345.6789", {
+        "publicAddress": "ScZ5enspA3DpbSkX1SYxkCLyu8gh4qzTWH",
+        "metadata": {},
+        "nativeAmount": "1234567890000",
+        "currencyCode": "SMART"
+      }],
+      "uri address with amount & label": ["smartcash:ScZ5enspA3DpbSkX1SYxkCLyu8gh4qzTWH?amount=1234.56789&label=Johnny%20smartcash", {
+        "publicAddress": "ScZ5enspA3DpbSkX1SYxkCLyu8gh4qzTWH",
+        "metadata": {
+          "name": "Johnny smartcash"
+        },
+        "nativeAmount": "123456789000",
+        "currencyCode": "SMART"
+      }],
+      "uri address with amount, label & message": ["smartcash:ScZ5enspA3DpbSkX1SYxkCLyu8gh4qzTWH?amount=1234.56789&label=Johnny%20smartcash&message=Hello%20World,%20I%20miss%20you%20!", {
+        "publicAddress": "ScZ5enspA3DpbSkX1SYxkCLyu8gh4qzTWH",
+        "metadata": {
+          "name": "Johnny smartcash",
+          "notes": "Hello World, I miss you !"
+        },
+        "nativeAmount": "123456789000",
+        "currencyCode": "SMART"
+      }],
+      "uri address with unsupported param": ["smartcash:ScZ5enspA3DpbSkX1SYxkCLyu8gh4qzTWH?unsupported=helloworld&amount=12345.6789", {
+        "publicAddress": "ScZ5enspA3DpbSkX1SYxkCLyu8gh4qzTWH",
+        "metadata": {},
+        "nativeAmount": "1234567890000",
+        "currencyCode": "SMART"
+      }],
+      "wif 1 - Non Compressed": ["VLqHRdvdNPgspEjPM6ee5CcLKc4CFBvafN183pevjxXKX1uZGe1m", {
+        "metadata": {},
+        "privateKeys": [ "VLqHRdvdNPgspEjPM6ee5CcLKc4CFBvafN183pevjxXKX1uZGe1m"]
+      }],
+      "wif 2 - Non Compressed": ["VMmoBs8yPgCuxFXpdtFfvKvFyPVd2sBzPX2qfnLvL2F98RtF2eY6", {
+        "metadata": {},
+        "privateKeys": [ "VMmoBs8yPgCuxFXpdtFfvKvFyPVd2sBzPX2qfnLvL2F98RtF2eY6"]
+      }],
+      "wif 3 - Non Compressed": ["VPVHLd9Yw2gr8DX2UcJHwKEHLEZZpLyv2ZBGyNRXdBuKjieCWv45", {
+        "metadata": {},
+        "privateKeys": [ "VPVHLd9Yw2gr8DX2UcJHwKEHLEZZpLyv2ZBGyNRXdBuKjieCWv45"]
+      }]
+    },
+    "encodeUri": {
+      "address only": [{"publicAddress": "ScZ5enspA3DpbSkX1SYxkCLyu8gh4qzTWH"}, "ScZ5enspA3DpbSkX1SYxkCLyu8gh4qzTWH"],
+      "legacy address1": [{"legacyAddress": "SUMxvsfKB4aqs3vq9pBydsDafxHWRSoUik"}, "SUMxvsfKB4aqs3vq9pBydsDafxHWRSoUik"],
+      "legacy address2": [{"legacyAddress": "ScZ5enspA3DpbSkX1SYxkCLyu8gh4qzTWH"}, "ScZ5enspA3DpbSkX1SYxkCLyu8gh4qzTWH"],
+      "new format address": [{"publicAddress": "SdH3wzDKrXSuaHpjrEh8CLx44LsqcRbqcT"}, "SdH3wzDKrXSuaHpjrEh8CLx44LsqcRbqcT"],
+      "address & amount": [{
+        "publicAddress": "ScZ5enspA3DpbSkX1SYxkCLyu8gh4qzTWH",
+        "nativeAmount": "123456780000"
+      }, "smartcash:ScZ5enspA3DpbSkX1SYxkCLyu8gh4qzTWH?amount=1234.5678"],
+      "address, amount, and label": [{
+        "publicAddress": "ScZ5enspA3DpbSkX1SYxkCLyu8gh4qzTWH",
+        "nativeAmount": "123456780000",
+        "currencyCode": "SMART",
+        "metadata": {
+          "name": "Johnny smartcash"
+        }
+      }, "smartcash:ScZ5enspA3DpbSkX1SYxkCLyu8gh4qzTWH?amount=1234.5678&label=Johnny%20smartcash"],
+      "address, amount, label, & message": [{
+        "publicAddress": "ScZ5enspA3DpbSkX1SYxkCLyu8gh4qzTWH",
+        "nativeAmount": "123456780000",
+        "currencyCode": "SMART",
+        "metadata": {
+          "name": "Johnny smartcash",
+          "notes": "Hello World, I miss you !"
+        }
+      }, "smartcash:ScZ5enspA3DpbSkX1SYxkCLyu8gh4qzTWH?amount=1234.5678&label=Johnny%20smartcash&message=Hello%20World,%20I%20miss%20you%20!"],
+      "invalid currencyCode": [{
+        "publicAddress": "ScZ5enspA3DpbSkX1SYxkCLyu8gh4qzTWH",
+        "nativeAmount": "123456780000",
+        "currencyCode": "INVALID",
+        "metadata": {
+          "name": "Johnny smartcash",
+          "notes": "Hello World, I miss you !"
+        }
+      }]
+    }
+  },
+  {
+    "pluginName": "groestlcoin",
+    "WALLET_TYPE": "wallet:groestlcoin",
+    "Test Currency code": "GRS",
+    "WALLET_FORMAT": "bip49",
+    "key": [39, 190, 34, 129, 208, 32, 145, 88, 191, 217, 226, 98, 183, 16, 52, 150, 52, 53, 31, 137, 164, 40, 236, 146, 128, 107, 129, 59, 192, 240, 40, 238],
+    "xpub": "xpub6DT2aMbePyfoHG4jR2xgoeRDMNoJvXdduFk6PtqMQuYJbrBGoEM1oTJfAJrY1QPoGsWfpfAexHnnwgP6E8tBDoGP34RhjysPxM4byTSEZtW",
+    "invalid key name": {
+      "type": "wallet:groestlcoin",
+      "keys": {
+        "groestlcoinKeyz" :"12345678abcd",
+        "format": "bip49"
+      }
+    },
+    "invalid wallet type": {
+      "type": "shitcoin",
+      "keys": { "groestlcoinKeyz" :"12345678abcd" }
+    },
+    "parseUri": {
+      "address only": ["3933BTHZdySDxk7PBqtPjARNfcj1ULbatY", {
+        "publicAddress": "3933BTHZdySDxk7PBqtPjARNfcj1ULbatY",
+        "metadata": {}
+      }],
+      "address only2": ["FhnTYU7uu52ozkEqbYZqnwL1azyr44cN4q", {
+        "publicAddress": "FhnTYU7uu52ozkEqbYZqnwL1azyr44cN4q",
+        "metadata": {}
+      }],
+      "address only3": ["grs1qyzpu545r3pelyp4kktmr3hxfhwchyqmkk5w7l5", {
+        "publicAddress": "grs1qyzpu545r3pelyp4kktmr3hxfhwchyqmkk5w7l5",
+        "metadata": {}
+      }],
+      "uri address": ["groestlcoin:3933BTHZdySDxk7PBqtPjARNfcj1ULbatY", {
+        "publicAddress": "3933BTHZdySDxk7PBqtPjARNfcj1ULbatY",
+        "metadata": {}
+      }],
+      "uri address with amount": ["groestlcoin:3933BTHZdySDxk7PBqtPjARNfcj1ULbatY?amount=12345.6789", {
+        "publicAddress": "3933BTHZdySDxk7PBqtPjARNfcj1ULbatY",
+        "metadata": {},
+        "nativeAmount": "1234567890000",
+        "currencyCode": "GRS"
+      }],
+      "uri address with amount & label": ["groestlcoin:3933BTHZdySDxk7PBqtPjARNfcj1ULbatY?amount=1234.56789&label=Johnny%20groestlcoin", {
+        "publicAddress": "3933BTHZdySDxk7PBqtPjARNfcj1ULbatY",
+        "metadata": {
+          "name": "Johnny groestlcoin"
+        },
+        "nativeAmount": "123456789000",
+        "currencyCode": "GRS"
+      }],
+      "uri address with amount, label & message": ["groestlcoin:3933BTHZdySDxk7PBqtPjARNfcj1ULbatY?amount=1234.56789&label=Johnny%20groestlcoin&message=Hello%20World,%20I%20miss%20you%20!", {
+        "publicAddress": "3933BTHZdySDxk7PBqtPjARNfcj1ULbatY",
+        "metadata": {
+          "name": "Johnny groestlcoin",
+          "notes": "Hello World, I miss you !"
+        },
+        "nativeAmount": "123456789000",
+        "currencyCode": "GRS"
+      }],
+      "uri address with unsupported param": ["groestlcoin:3933BTHZdySDxk7PBqtPjARNfcj1ULbatY?unsupported=helloworld&amount=12345.6789", {
+        "publicAddress": "3933BTHZdySDxk7PBqtPjARNfcj1ULbatY",
+        "metadata": {},
+        "nativeAmount": "1234567890000",
+        "currencyCode": "GRS"
+      }],
+      "wif 1 - Compressed": ["5KZF3uBKFVgFpGGVuj1nihZGSFaovM4i32BXGTHENHF5ytp5e2g", {
+        "metadata": {},
+        "privateKeys": [ "5KZF3uBKFVgFpGGVuj1nihZGSFaovM4i32BXGTHENHF5ytp5e2g"]
+      }],
+      "wif 2 - Compressed": ["L3JqVWfMMvd62HYpeUEX7xWk5K24j4KuP8NeCYr3mL9UY9qQ8Zw4", {
+        "metadata": {},
+        "privateKeys": [ "L3JqVWfMMvd62HYpeUEX7xWk5K24j4KuP8NeCYr3mL9UY9qQ8Zw4"]
+      }],
+      "wif 1 - Non Compressed": ["L1qoZLKEyzShjLNxSbXw1xXgvj8CHMoNKVjek5uEB6DY39udr3Nc", {
+        "metadata": {},
+        "privateKeys": [ "L1qoZLKEyzShjLNxSbXw1xXgvj8CHMoNKVjek5uEB6DY39udr3Nc"]
+      }]
+    },
+    "encodeUri": {
+      "address only": [{"publicAddress": "3933BTHZdySDxk7PBqtPjARNfcj1ULbatY"}, "3933BTHZdySDxk7PBqtPjARNfcj1ULbatY"],
+      "legacy address2": [{"legacyAddress": "3933BTHZdySDxk7PBqtPjARNfcj1ULbatY"}, "3933BTHZdySDxk7PBqtPjARNfcj1ULbatY"],
+      "address & amount": [{
+        "publicAddress": "3933BTHZdySDxk7PBqtPjARNfcj1ULbatY",
+        "nativeAmount": "123456780000"
+      }, "groestlcoin:3933BTHZdySDxk7PBqtPjARNfcj1ULbatY?amount=1234.5678"],
+      "address, amount, and label": [{
+        "publicAddress": "3933BTHZdySDxk7PBqtPjARNfcj1ULbatY",
+        "nativeAmount": "123456780000",
+        "currencyCode": "GRS",
+        "metadata": {
+          "name": "Johnny groestlcoin"
+        }
+      }, "groestlcoin:3933BTHZdySDxk7PBqtPjARNfcj1ULbatY?amount=1234.5678&label=Johnny%20groestlcoin"],
+      "address, amount, label, & message": [{
+        "publicAddress": "3933BTHZdySDxk7PBqtPjARNfcj1ULbatY",
+        "nativeAmount": "123456780000",
+        "currencyCode": "GRS",
+        "metadata": {
+          "name": "Johnny groestlcoin",
+          "notes": "Hello World, I miss you !"
+        }
+      }, "groestlcoin:3933BTHZdySDxk7PBqtPjARNfcj1ULbatY?amount=1234.5678&label=Johnny%20groestlcoin&message=Hello%20World,%20I%20miss%20you%20!"],
+      "invalid currencyCode": [{
+        "publicAddress": "3933BTHZdySDxk7PBqtPjARNfcj1ULbatY",
+        "nativeAmount": "123456780000",
+        "currencyCode": "INVALID",
+        "metadata": {
+          "name": "Johnny groestlcoin",
+          "notes": "Hello World, I miss you !"
+        }
+      }]
+    }
+  }
+]

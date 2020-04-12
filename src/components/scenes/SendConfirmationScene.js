@@ -96,6 +96,8 @@ type State = {|
 export class SendConfirmation extends Component<Props, State> {
   pinInput: any
   flipInput: any
+  pendingExchangeAmountChangedCallParam: ?ExchangedFlipInputAmounts = null
+  pendingXZCSpendCreation: ?boolean = false
 
   constructor (props: Props) {
     super(props)
@@ -339,6 +341,10 @@ export class SendConfirmation extends Component<Props, State> {
   onExchangeAmountChanged = async ({ nativeAmount, exchangeAmount }: ExchangedFlipInputAmounts) => {
     const { fiatPerCrypto, coreWallet, sceneState, currencyCode, newSpendInfo, updateTransaction, getAuthRequiredDispatch } = this.props
     this.setState({ showSpinner: true })
+    if (coreWallet.type === 'wallet:zcoins' && this.pendingXZCSpendCreation) {
+      this.pendingExchangeAmountChangedCallParam = { nativeAmount, exchangeAmount }
+      return
+    }
     const amountFiatString: string = bns.mul(exchangeAmount, fiatPerCrypto.toString())
     const amountFiat: number = parseFloat(amountFiatString)
     const metadata: EdgeMetadata = { amountFiat }
@@ -349,11 +355,30 @@ export class SendConfirmation extends Component<Props, State> {
     const authType: any = getAuthRequiredDispatch(spendInfo) // Type casting any cause dispatch returns a function
     try {
       newSpendInfo(spendInfo, authType)
+      if (coreWallet.type === 'wallet:zcoins') {
+        this.pendingXZCSpendCreation = true
+      }
       const edgeTransaction = await coreWallet.makeSpend(spendInfo)
       updateTransaction(edgeTransaction, guiMakeSpendInfoClone, false, null)
       this.setState({ showSpinner: false })
+      if (coreWallet.type === 'wallet:zcoins') {
+        this.pendingXZCSpendCreation = false
+        if (this.pendingExchangeAmountChangedCallParam != null) {
+          const params = this.pendingExchangeAmountChangedCallParam
+          this.pendingExchangeAmountChangedCallParam = null
+          this.onExchangeAmountChanged(params)
+        }
+      }
     } catch (e) {
       console.log(e)
+      if (coreWallet.type === 'wallet:zcoins') {
+        this.pendingXZCSpendCreation = false
+        if (this.pendingExchangeAmountChangedCallParam != null) {
+          const params = this.pendingExchangeAmountChangedCallParam
+          this.pendingExchangeAmountChangedCallParam = null
+          this.onExchangeAmountChanged(params)
+        }
+      }
       updateTransaction(null, guiMakeSpendInfoClone, false, e)
     }
   }

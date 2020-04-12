@@ -27,6 +27,7 @@ import com.oblador.vectoricons.VectorIconsPackage;
 import com.peel.react.TcpSocketsModule;
 import com.psykar.cookiemanager.CookieManagerPackage;
 import com.reactlibrary.DiskletPackage;
+import com.reactlibrary.RNZcoinSigmaPackage;
 import com.reactnativecommunity.art.ARTPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.reactnativecommunity.webview.RNCWebViewPackage;
@@ -84,7 +85,8 @@ public class MainApplication extends Application implements ReactApplication {
               new ReactNativeContacts(),
               new RNCameraPackage(),
               new RCTLocalePackage(),
-              new ExtraDimensionsPackage());
+              new ExtraDimensionsPackage(),
+              new RNZcoinSigmaPackage());
         }
 
         @Override

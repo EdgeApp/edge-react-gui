@@ -82,6 +82,13 @@ export class TransactionRowComponent extends Component<Props, State> {
       // XXX -paulvp Why is this hard coded here?
       txName = SENT_TEXT + currencyName
       txImage = sentTypeImage
+
+      //if (this.props.selectedCurrencyCode == "XZC") {
+      if (tx.wallet.type === "wallet:zcoins") {
+        if (tx.otherParams.isMint) {
+          txName = "Anonymized"
+        }
+      }  
     } else {
       txName = RECEIVED_TEXT + currencyName
       txImage = receivedTypeImage
@@ -124,10 +131,16 @@ export class TransactionRowComponent extends Component<Props, State> {
     }
 
     const walletBlockHeight = this.props.walletBlockHeight || 0
-    const requiredConfirmations = this.props.requiredConfirmations
+    let requiredConfirmations = this.props.requiredConfirmations
     let currentConfirmations = 0
     if (walletBlockHeight && tx.blockHeight > 0) {
       currentConfirmations = walletBlockHeight - tx.blockHeight + 1
+    }
+
+    if (tx.wallet.type === "wallet:zcoins") {
+      if (tx.otherParams.isMint) {
+        requiredConfirmations = 6;
+      }
     }
 
     if (walletBlockHeight === 0) {
