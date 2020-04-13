@@ -69,8 +69,6 @@ export type RequestLoadingProps = {
 
 export type RequestDispatchProps = {
   refreshReceiveAddressRequest(string): void,
-  requestChangeAmounts: ExchangedFlipInputAmounts => void,
-  requestSaveFioModalData: any => void,
   refreshAllFioAddresses: () => Promise<void>
 }
 type ModalState = 'NOT_YET_SHOWN' | 'VISIBLE' | 'SHOWN'
@@ -287,9 +285,8 @@ export class Request extends Component<Props, State> {
 
   onExchangeAmountChanged = async (amounts: ExchangedFlipInputAmounts) => {
     const { publicAddress, legacyAddress } = this.state
-    const { currencyCode, requestChangeAmounts } = this.props
+    const { currencyCode } = this.props
     this.amounts = amounts
-    requestChangeAmounts(amounts)
     if (!currencyCode) return
     const edgeEncodeUri: EdgeEncodeUri =
       this.props.useLegacyAddress && legacyAddress ? { publicAddress, legacyAddress, currencyCode } : { publicAddress, currencyCode }
@@ -397,14 +394,9 @@ export class Request extends Component<Props, State> {
       return
     }
     const fioAddressModal = createFioAddressModal({ fioPlugin: this.props.fioPlugin, isConnected: this.props.isConnected })
-    const data = await launchModal(fioAddressModal)
-    if (data) {
-      await this.props.requestSaveFioModalData(data)
-      this.sendRequest()
+    const fioModalData = await launchModal(fioAddressModal)
+    if (fioModalData) {
+      Actions[Constants.FIO_REQUEST_CONFIRMATION]({ fioModalData, amounts: this.amounts })
     }
-  }
-
-  sendRequest = () => {
-    Actions[Constants.FIO_REQUEST_CONFIRMATION]()
   }
 }

@@ -83,16 +83,6 @@ export const getTransactions = (state: State): Array<TransactionListTx> => {
   return transactions
 }
 
-export const getFioSelectedRequest = (state: State): Object => {
-  const request = state.ui.scenes.fioRequest.fioPendingRequestSelected
-  return request
-}
-
-export const getFioSelectedSentRequest = (state: State): Object => {
-  const request = state.ui.scenes.fioRequest.fioSentRequestSelected
-  return request
-}
-
 export const getFioWalletByAddress = (state: State): EdgeCurrencyWallet | null => {
   return state.ui.scenes.fioAddress.fioWalletByAddress
 }

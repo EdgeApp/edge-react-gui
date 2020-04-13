@@ -8,10 +8,11 @@ import { createCurrencyWalletAndAddToSwap } from '../../actions/CreateWalletActi
 import { selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
 import type {
   FioPendingRequestDetailsDispatchProps as DispatchProps,
-  FioPendingRequestDetailsStateProps as StateProps
+  FioPendingRequestDetailsStateProps as StateProps,
+  NavigationProps
 } from '../../components/scenes/FioPendingRequestDetailsScene'
 import { FioPendingRequestDetailsComponent } from '../../components/scenes/FioPendingRequestDetailsScene'
-import { DEFAULT_STARTER_WALLET_NAMES, USD_FIAT } from '../../constants/indexConstants'
+import { DEFAULT_STARTER_WALLET_NAMES, FIAT_CODES_SYMBOLS, USD_FIAT } from '../../constants/indexConstants'
 import { setFioWalletByFioAddress } from '../../modules/FioAddress/action'
 import { confirmRequest } from '../../modules/FioRequest/action'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
@@ -20,29 +21,25 @@ import type { Dispatch, State } from '../../types/reduxTypes'
 import type { GuiWallet } from '../../types/types'
 import { emptyGuiWallet } from '../../types/types'
 
-const mapStateToProps = (state: State) => {
+const mapStateToProps = (state: State, ownProps: NavigationProps) => {
   const wallet = UI_SELECTORS.getSelectedWallet(state)
   const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
-  const selectedFioPendingRequest = UI_SELECTORS.getFioSelectedRequest(state)
   const fioWalletByAddress = UI_SELECTORS.getFioWalletByAddress(state)
   const supportedWalletTypes = SETTINGS_SELECTORS.getSupportedWalletTypes(state)
-  const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, selectedFioPendingRequest.content.token_code)
+  const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, ownProps.selectedFioPendingRequest.content.token_code)
   const fromWallet: GuiWallet | null = state.cryptoExchange.fromWallet
   const toWallet: GuiWallet | null = state.cryptoExchange.toWallet
   const wallets = state.ui.wallets.byId
-  const fiatSymbol = ''
+  const fiatSymbol = FIAT_CODES_SYMBOLS[wallet.fiatCurrencyCode]
   let fromCurrencyCode
   if (fromWallet) {
     fromCurrencyCode = state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name
   } else {
     fromCurrencyCode = ''
   }
-
   const exchangeRates = state.exchangeRates
   const toCurrencyCode = state.cryptoExchange.toCurrencyCode || ''
-
   const out: StateProps = {
-    selectedFioPendingRequest,
     exchangeDenomination,
     supportedWalletTypes,
     fromCurrencyCode,

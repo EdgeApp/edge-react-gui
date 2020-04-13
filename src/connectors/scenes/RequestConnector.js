@@ -3,14 +3,13 @@
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet } from 'edge-core-js'
 import { connect } from 'react-redux'
 
-import { refreshReceiveAddressRequest, requestChangeAmounts, requestSaveFioModalData } from '../../actions/WalletActions'
+import { refreshReceiveAddressRequest } from '../../actions/WalletActions'
 import type { RequestDispatchProps, RequestLoadingProps, RequestStateProps } from '../../components/scenes/RequestScene'
 import { Request } from '../../components/scenes/RequestScene'
 import * as Constants from '../../constants/indexConstants'
 import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
-import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
 import type { Dispatch, State } from '../../types/reduxTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types.js'
@@ -91,12 +90,6 @@ const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps 
 const mapDispatchToProps = (dispatch: Dispatch): RequestDispatchProps => ({
   refreshReceiveAddressRequest: (walletId: string) => {
     dispatch(refreshReceiveAddressRequest(walletId))
-  },
-  requestChangeAmounts: (amounts: ExchangedFlipInputAmounts) => {
-    dispatch(requestChangeAmounts(amounts))
-  },
-  requestSaveFioModalData: (fioModalData: any) => {
-    dispatch(requestSaveFioModalData(fioModalData))
   },
   refreshAllFioAddresses: () => dispatch(refreshAllFioAddresses())
 })

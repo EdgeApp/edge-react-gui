@@ -18,10 +18,14 @@ import { MaterialInput } from '../../styles/components/FormFieldStyles.js'
 import { styles as CryptoExchangeSceneStyle } from '../../styles/scenes/CryptoExchangeSceneStyles.js'
 import { styles } from '../../styles/scenes/FioPendingRequestDetailsStyle.js'
 import type { State } from '../../types/reduxTypes'
-import type { GuiWallet } from '../../types/types'
+import type { FioRequest, GuiWallet } from '../../types/types'
 import { FormField } from '../common/FormField'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { Airship, showError } from '../services/AirshipInstance'
+
+export type NavigationProps = {
+  selectedFioPendingRequest: FioRequest
+}
 
 export type FioPendingRequestDetailsStateProps = {
   fromWallet: GuiWallet,
@@ -39,8 +43,8 @@ export type FioPendingRequestDetailsStateProps = {
 
   fioWalletByAddress: EdgeCurrencyWallet | null,
   exchangeDenomination: EdgeDenomination,
-  selectedFioPendingRequest: any,
-  isoFiatCurrencyCode: any
+  isoFiatCurrencyCode: string,
+  fiatSymbol: string
 }
 
 export type FioPendingRequestDetailsDispatchProps = {
@@ -48,18 +52,18 @@ export type FioPendingRequestDetailsDispatchProps = {
   openModal(data: 'from' | 'to'): mixed,
   fioAcceptRequest: (
     fioWalletByAddress: EdgeCurrencyWallet,
-    pendingRequest: Object,
+    pendingRequest: FioRequest,
     payerPublicAddress: string,
     txId: string,
     notes?: string,
     fee: number,
     cb: Function
-  ) => any,
+  ) => void,
   createCurrencyWallet: (walletType: string, currencyCode: string) => void,
   setFioWalletByFioAddress: string => void
 }
 
-type Props = FioPendingRequestDetailsStateProps & FioPendingRequestDetailsDispatchProps
+type Props = FioPendingRequestDetailsStateProps & FioPendingRequestDetailsDispatchProps & NavigationProps
 
 type LocalState = {
   memo: string
@@ -78,6 +82,10 @@ export class FioPendingRequestDetailsComponent extends Component<Props, LocalSta
     this.props.setFioWalletByFioAddress(this.props.selectedFioPendingRequest.payer_fio_address)
   }
 
+  memoChanged (text: string) {
+    this.setState({ memo: text })
+  }
+
   fiatAmount = (currencyCode: string, amount: string) => {
     const { exchangeRates, isoFiatCurrencyCode } = this.props
     const rateKey = `${currencyCode}_${isoFiatCurrencyCode}`
@@ -87,12 +95,13 @@ export class FioPendingRequestDetailsComponent extends Component<Props, LocalSta
     return intl.formatNumber(fiatPerCrypto * amountToMultiply, { toFixed: 2 }) || '0'
   }
 
-  amountField = (amount: string, currencyCode: string, cryptoSymbol: string, currencySymbol: string) => {
+  amountField = () => {
     return (
       <View style={styles.row}>
         <T style={styles.title}>
-          Amount: {amount} {cryptoSymbol} ({currencySymbol}
-          {this.fiatAmount(currencyCode, amount)})
+          {s.strings.fio_request_amount} {this.props.selectedFioPendingRequest.content.amount} {this.props.selectedFioPendingRequest.content.token_code} (
+          {this.props.fiatSymbol}
+          {this.fiatAmount(this.props.selectedFioPendingRequest.content.token_code, this.props.selectedFioPendingRequest.content.amount)})
         </T>
       </View>
     )
@@ -101,7 +110,7 @@ export class FioPendingRequestDetailsComponent extends Component<Props, LocalSta
   requestedField = (payee: string) => {
     return (
       <View style={styles.row}>
-        <T style={styles.title}>Request from</T>
+        <T style={styles.title}>{s.strings.fio_request_from_label}</T>
         <T style={styles.value}>{payee}</T>
       </View>
     )
@@ -110,7 +119,7 @@ export class FioPendingRequestDetailsComponent extends Component<Props, LocalSta
   dateField = (date: Date) => {
     return (
       <View style={styles.row}>
-        <T style={styles.title}>Date</T>
+        <T style={styles.title}>{s.strings.fio_date_label}</T>
         <T style={styles.value}>{intl.formatExpDate(date, true)}</T>
       </View>
     )
@@ -268,24 +277,16 @@ export class FioPendingRequestDetailsComponent extends Component<Props, LocalSta
     return (
       <SceneWrapper>
         <SafeAreaView>
-          <View>
-            {this.amountField(
-              this.props.selectedFioPendingRequest.content.amount,
-              this.props.selectedFioPendingRequest.content.token_code,
-              this.props.selectedFioPendingRequest.content.token_code,
-              '$'
-            )}
-          </View>
+          <View>{this.amountField()}</View>
           <View>{this.requestedField(this.props.selectedFioPendingRequest.payee_fio_address)}</View>
           <View>{this.dateField(new Date(this.props.selectedFioPendingRequest.time_stamp))}</View>
           <View style={styles.memo}>
             <FormField
               style={materialStyle}
-              label="Memo"
-              onChangeText={text => this.setState({ memo: text })}
+              label={s.strings.unique_identifier_memo}
+              onChangeText={this.memoChanged}
               value={this.state.memo}
-              placeholder="Memo"
-              multiline={true}
+              placeholder={s.strings.unique_identifier_memo}
             />
           </View>
           <View style={styles.lineRow}>

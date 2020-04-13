@@ -36,8 +36,6 @@ const PLUGIN_BUY_TEXT = s.strings.title_plugin_buy
 const PLUGIN_SELL_TEXT = s.strings.title_plugin_sell
 const EARN_INTEREST_TEXT = s.strings.earn_interest
 const TERMS_OF_SERVICE_TEXT = s.strings.title_terms_of_service
-const FIO_ADDRESS_TEXT = s.strings.drawer_fio_address
-const FIO_REQUESTS_TEXT = s.strings.drawer_fio_requests
 
 export type Props = {
   logout: (username?: string) => void,
@@ -321,7 +319,7 @@ const FioAddressButton = () => {
 
         <Button.Center>
           <Button.Text>
-            <Text>{FIO_ADDRESS_TEXT}</Text>
+            <Text>{s.strings.drawer_fio_address}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>
@@ -340,7 +338,7 @@ const FioRequestsButton = () => {
 
         <Button.Center>
           <Button.Text>
-            <Text>{FIO_REQUESTS_TEXT}</Text>
+            <Text>{s.strings.drawer_fio_requests}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>

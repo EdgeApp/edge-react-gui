@@ -115,6 +115,12 @@ export const buildExchangeRates = async (state: State) => {
       } else {
         finalExchangeRates[reverseExchangeRateKey] = 0
       }
+
+      // todo: remove when real rates available for FIO
+      if (key === 'FIO_iso:USD') {
+        finalExchangeRates[key] = 0
+        finalExchangeRates[reverseExchangeRateKey] = 0
+      }
     }
   }
   return finalExchangeRates

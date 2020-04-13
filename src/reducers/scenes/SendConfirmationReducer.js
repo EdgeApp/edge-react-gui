@@ -26,7 +26,7 @@ export type GuiMakeSpendInfo = {
   memo?: any,
   onBack?: () => void,
   onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void,
-  beforeTransaction?: () => void
+  beforeTransaction?: () => Promise<void>
 }
 
 export type SendConfirmationState = {

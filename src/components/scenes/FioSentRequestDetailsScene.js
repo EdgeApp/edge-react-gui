@@ -10,17 +10,22 @@ import { isRejectedFioRequest, isSentFioRequest } from '../../modules/FioRequest
 import T from '../../modules/UI/components/FormattedText/index'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import { styles } from '../../styles/scenes/FioSentRequestDetailsStyle.js'
+import type { FioRequest } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 
+export type NavigationProps = {
+  selectedFioSentRequest: FioRequest
+}
+
 export type FioSentRequestDetailsProps = {
-  selectedFioSentRequest: any,
-  isoFiatCurrencyCode: any,
+  fiatSymbol: string,
+  isoFiatCurrencyCode: string,
   exchangeRates: ExchangeRatesState
 }
 
 export type FioSentRequestDetailsDispatchProps = {}
 
-type Props = FioSentRequestDetailsProps & FioSentRequestDetailsDispatchProps
+type Props = FioSentRequestDetailsProps & FioSentRequestDetailsDispatchProps & NavigationProps
 
 type LocalState = {
   memo: string,
@@ -46,12 +51,13 @@ export class FioSentRequestDetailsComponent extends Component<Props, LocalState>
     return intl.formatNumber(fiatPerCrypto * amountToMultiply, { toFixed: 2 }) || '0'
   }
 
-  amountField = (amount: string, currencyCode: string, cryptoSymbol: string, currencySymbol: string) => {
+  amountField = () => {
     return (
       <View style={styles.row}>
         <T style={styles.title}>
-          Amount: {amount} {cryptoSymbol} ({currencySymbol}
-          {this.fiatAmount(currencyCode, amount)})
+          {s.strings.fio_request_amount} {this.props.selectedFioSentRequest.content.amount} {this.props.selectedFioSentRequest.content.token_code} (
+          {this.props.fiatSymbol}
+          {this.fiatAmount(this.props.selectedFioSentRequest.content.token_code, this.props.selectedFioSentRequest.content.amount)})
         </T>
       </View>
     )
@@ -82,7 +88,7 @@ export class FioSentRequestDetailsComponent extends Component<Props, LocalState>
     if (memo) {
       return (
         <View style={styles.row}>
-          <T style={styles.title}>Memo</T>
+          <T style={styles.title}>{s.strings.unique_identifier_memo}</T>
           <T style={styles.title}>{memo}</T>
         </View>
       )
@@ -104,14 +110,7 @@ export class FioSentRequestDetailsComponent extends Component<Props, LocalState>
     return (
       <SceneWrapper>
         <SafeAreaView>
-          <View>
-            {this.amountField(
-              this.props.selectedFioSentRequest.content.amount,
-              this.props.selectedFioSentRequest.content.token_code,
-              this.props.selectedFioSentRequest.content.token_code,
-              '$'
-            )}
-          </View>
+          <View>{this.amountField()}</View>
           <View>{this.requestedField(this.props.selectedFioSentRequest.payer_fio_address, this.props.selectedFioSentRequest.status)}</View>
           <View>{this.dateField(new Date(this.props.selectedFioSentRequest.time_stamp))}</View>
           <View>{this.memoField(this.props.selectedFioSentRequest.content.memo)}</View>

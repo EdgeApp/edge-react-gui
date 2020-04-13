@@ -147,16 +147,9 @@ Object {
         "selectedWallet": null,
       },
       "fioRequest": Object {
-        "amounts": Object {
-          "exchangeAmount": "",
-          "nativeAmount": "",
-        },
-        "fioModalData": Object {},
-        "fioPendingRequestSelected": Object {},
-        "fioSentRequestSelected": Object {},
-        "requests": Array [],
-        "requestsLoading": false,
-        "sentRequests": Array [],
+        "fioRequestsPending": Array [],
+        "fioRequestsSent": Array [],
+        "pendingRequestsLoading": false,
         "sentRequestsLoading": false,
       },
       "passwordRecoveryReminderModal": Object {

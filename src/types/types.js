@@ -224,3 +224,18 @@ export type FioAddress = {
   name: string,
   expiration: string
 }
+
+export type FioRequest = {
+  fio_request_id: string,
+  content: {
+    payee_public_address: string,
+    amount: string,
+    token_code: string,
+    chain_code: string,
+    memo: string
+  },
+  payee_fio_address: string,
+  payer_fio_address: string,
+  status: string,
+  time_stamp: string
+}

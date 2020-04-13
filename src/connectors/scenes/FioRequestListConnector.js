@@ -25,15 +25,12 @@ const mapStateToProps = (state: State) => {
   const currencyCode = getSelectedCurrencyCode(state)
   const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
 
-  const pendingFioRequests = state.ui.scenes.fioRequest.requests
-  const pendingRequestsLoading = state.ui.scenes.fioRequest.requestsLoading
-  const sentFioRequests = state.ui.scenes.fioRequest.sentRequests
-  const sentRequestsLoading = state.ui.scenes.fioRequest.sentRequestsLoading
+  const { fioRequestsPending, fioRequestsSent, pendingRequestsLoading, sentRequestsLoading } = state.ui.scenes.fioRequest
   const exchangeRates = state.exchangeRates
   const animation = new Animated.Value(0)
 
   const displayDenominations = {}
-  for (const pRequest of pendingFioRequests) {
+  for (const pRequest of fioRequestsPending) {
     const {
       content: { token_code }
     } = pRequest
@@ -41,7 +38,7 @@ const mapStateToProps = (state: State) => {
       displayDenominations[token_code] = getDisplayDenomination(state, token_code)
     }
   }
-  for (const sRequest of sentFioRequests) {
+  for (const sRequest of fioRequestsSent) {
     const {
       content: { token_code }
     } = sRequest
@@ -56,8 +53,8 @@ const mapStateToProps = (state: State) => {
     isoFiatCurrencyCode,
     fiatSymbol,
     displayDenominations,
-    pendingFioRequests,
-    sentFioRequests: sentFioRequests.sort((a, b) => (a.time_stamp > b.time_stamp ? -1 : 1)),
+    fioRequestsPending,
+    fioRequestsSent: fioRequestsSent.sort((a, b) => (a.time_stamp > b.time_stamp ? -1 : 1)),
     exchangeRates,
     animation,
     wallets,
@@ -69,9 +66,6 @@ const mapStateToProps = (state: State) => {
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   getFioRequestsPending: () => dispatch(getFioRequestsPending()),
   getFioRequestsSent: () => dispatch(getFioRequestsSent()),
-  setFioPendingRequestSelected: (fioPendingRequestSelected: Object) =>
-    dispatch({ type: 'FIO/FIO_PENDING_REQUEST_SELECTED', data: { fioPendingRequestSelected } }),
-  setFioSentRequestSelected: (fioSentRequestSelected: Object) => dispatch({ type: 'FIO/FIO_SENT_REQUEST_SELECTED', data: { fioSentRequestSelected } }),
   fioRejectRequest: (fioRequestId: string, payerFioAddress: string, cb: Function) => {
     dispatch(rejectRequest(fioRequestId, payerFioAddress, cb))
   },

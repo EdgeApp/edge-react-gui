@@ -9,7 +9,6 @@ import styles from './styles.js'
 
 const COPY_TEXT = s.strings.fragment_request_copy_title
 const SHARE_TEXT = s.strings.string_share
-const FIO_ADDRESS_TEXT = s.strings.fio_address_label
 
 export type Props = {
   fioAddressModal: Function,
@@ -28,7 +27,7 @@ export class ShareButtons extends PureComponent<Props> {
 
     return (
       <View style={styles.view}>
-        <ShareButton displayName={FIO_ADDRESS_TEXT} border={styles.borderRight} onPress={fioAddressModal} />
+        <ShareButton displayName={s.strings.fio_address_confirm_screen_label} border={styles.borderRight} onPress={fioAddressModal} />
         <ShareButton displayName={COPY_TEXT} border={styles.borderRight} onPress={copyToClipboard} />
         {/* <ShareButton
         style={styles.border}

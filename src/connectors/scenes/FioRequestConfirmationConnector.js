@@ -1,5 +1,6 @@
 // @flow
 
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import { connect } from 'react-redux'
 
 import { refreshReceiveAddressRequest, selectWalletFromModal } from '../../actions/WalletActions'
@@ -17,8 +18,7 @@ const mapStateToProps = (state: State): FioRequestConfirmationProps => {
   const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
   const account = CORE_SELECTORS.getAccount(state)
   const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
-  const allWallets: any = UI_SELECTORS.getWallets(state)
-  const { amounts, fioModalData } = state.ui.scenes.fioRequest
+  const fioWallets: EdgeCurrencyWallet[] = UI_SELECTORS.getFioWallets(state)
   const isConnected = CORE_SELECTORS.isConnectedState(state)
 
   if (!guiWallet || !currencyCode) {
@@ -29,9 +29,7 @@ const mapStateToProps = (state: State): FioRequestConfirmationProps => {
       primaryCurrencyInfo: emptyCurrencyInfo,
       secondaryCurrencyInfo: emptyCurrencyInfo,
       publicAddress: '',
-      amounts,
-      fioModalData,
-      allWallets,
+      fioWallets,
       account,
       isConnected
     }
@@ -66,9 +64,7 @@ const mapStateToProps = (state: State): FioRequestConfirmationProps => {
     chainCode: guiWallet.currencyCode,
     primaryCurrencyInfo,
     secondaryCurrencyInfo,
-    amounts,
-    fioModalData,
-    allWallets,
+    fioWallets,
     account,
     isConnected
   }

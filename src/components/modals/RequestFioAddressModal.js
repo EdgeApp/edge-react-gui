@@ -3,7 +3,7 @@
 import { FormField, InputAndButtonStyle, MaterialInputStyle, Modal, ModalStyle, PrimaryButton, SecondaryButton, TertiaryButton } from 'edge-components'
 import type { EdgeCurrencyConfig } from 'edge-core-js'
 import React, { Component } from 'react'
-import { Clipboard, Image, Text, View } from 'react-native'
+import { ActivityIndicator, Clipboard, Image, Text, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import fioRequestsIcon from '../../assets/images/fio/SendModule_FioAddress.png'
@@ -19,13 +19,12 @@ type AddressModalProps = {
 type AddressModalState = {
   clipboard: string,
   address: string,
-  addressLabel: string,
   addressError: string,
   memo: string,
-  memoLabel: string,
   memoError: string,
   addressFocus: boolean,
-  memoFocus: boolean
+  memoFocus: boolean,
+  addressValidationLoading: boolean
 }
 export class FioAddressModal extends Component<AddressModalProps, AddressModalState> {
   constructor (props: AddressModalProps) {
@@ -33,13 +32,12 @@ export class FioAddressModal extends Component<AddressModalProps, AddressModalSt
     this.state = {
       clipboard: '',
       address: '',
-      addressLabel: s.strings.fio_address_label,
       addressError: '',
       memo: '',
-      memoLabel: s.strings.unique_identifier_memo,
       memoError: '',
       addressFocus: true,
-      memoFocus: false
+      memoFocus: false,
+      addressValidationLoading: false
     }
   }
 
@@ -78,6 +76,10 @@ export class FioAddressModal extends Component<AddressModalProps, AddressModalSt
     this.updateAddress(clipboard)
   }
 
+  onCancel = () => {
+    this.props.onDone(null)
+  }
+
   onSubmit = async () => {
     const validAddress = await this.validateAddress()
     const validMemo = this.validateMemo()
@@ -96,20 +98,29 @@ export class FioAddressModal extends Component<AddressModalProps, AddressModalSt
 
   validateAddress = async (): Promise<boolean> => {
     const address: string = this.state.address
-    if (address && (await this.props.fioPlugin.otherMethods.isAccountAvailable(address))) {
+    let accountIsValid
+    this.setState({
+      addressValidationLoading: true
+    })
+    try {
+      accountIsValid = await this.props.fioPlugin.otherMethods.isAccountAvailable(address)
+    } catch (e) {
+      accountIsValid = false
+    }
+    if (address && accountIsValid) {
       this.setState({
         addressError: '',
-        addressLabel: s.strings.fio_address_label,
         addressFocus: false,
-        memoFocus: true
+        memoFocus: true,
+        addressValidationLoading: false
       })
       return true
     } else {
       this.setState({
         addressError: s.strings.fragment_send_send_to_fio_error_inline,
-        addressLabel: s.strings.fragment_send_send_to_fio_error,
         addressFocus: true,
-        memoFocus: false
+        memoFocus: false,
+        addressValidationLoading: false
       })
       return false
     }
@@ -119,14 +130,12 @@ export class FioAddressModal extends Component<AddressModalProps, AddressModalSt
     const memo: string = this.state.memo
     if (!memo || (this.isASCII(memo) && memo.length <= 64)) {
       this.setState({
-        memoError: '',
-        memoLabel: s.strings.unique_identifier_memo
+        memoError: ''
       })
       return true
     } else {
       this.setState({
-        memoError: s.strings.fragment_send_send_to_fio_error_memo_inline,
-        memoLabel: s.strings.fragment_send_send_to_fio_memo_error
+        memoError: s.strings.fragment_send_send_to_fio_error_memo_inline
       })
       return false
     }
@@ -138,7 +147,7 @@ export class FioAddressModal extends Component<AddressModalProps, AddressModalSt
 
   render () {
     const copyMessage = this.state.clipboard ? sprintf(s.strings.string_paste_address, this.state.clipboard) : null
-    const { address, memo, addressError, addressLabel, memoError, memoLabel, addressFocus, memoFocus } = this.state
+    const { address, memo, addressError, memoError, addressFocus, memoFocus, addressValidationLoading } = this.state
     return (
       <View style={ModalStyle.modal}>
         <Modal.Icon>
@@ -156,8 +165,8 @@ export class FioAddressModal extends Component<AddressModalProps, AddressModalSt
                 value={address}
                 onChangeText={this.updateAddress}
                 error={addressError}
-                placeholder={s.strings.fio_address_label}
-                label={addressLabel}
+                placeholder={s.strings.fio_address_confirm_screen_label}
+                label={s.strings.fio_address_confirm_screen_label}
                 autoFocus={addressFocus}
                 onBlur={this.onValidateAddress}
                 onSubmitEditing={this.onValidateAddress}
@@ -168,7 +177,8 @@ export class FioAddressModal extends Component<AddressModalProps, AddressModalSt
                 onChangeText={this.updateMemo}
                 error={memoError}
                 placeholder={s.strings.unique_identifier_memo}
-                label={memoLabel}
+                label={s.strings.unique_identifier_memo}
+                autoCapitalize="sentences"
                 autoFocus={memoFocus}
                 onBlur={this.onValidateMemo}
                 onSubmitEditing={this.onValidateMemo}
@@ -184,11 +194,15 @@ export class FioAddressModal extends Component<AddressModalProps, AddressModalSt
               </Modal.Row>
             )}
             <Modal.Row style={[InputAndButtonStyle.row]}>
-              <SecondaryButton onPress={() => this.props.onDone(null)} style={[InputAndButtonStyle.noButton]}>
+              <SecondaryButton onPress={this.onCancel} style={[InputAndButtonStyle.noButton]}>
                 <SecondaryButton.Text style={[InputAndButtonStyle.buttonText]}>{s.strings.string_cancel_cap}</SecondaryButton.Text>
               </SecondaryButton>
-              <PrimaryButton onPress={() => this.onSubmit()} style={[InputAndButtonStyle.yesButton]}>
-                <PrimaryButton.Text style={[InputAndButtonStyle.buttonText]}>{s.strings.string_done_cap}</PrimaryButton.Text>
+              <PrimaryButton onPress={this.onSubmit} disabled={addressValidationLoading} style={[InputAndButtonStyle.yesButton]}>
+                {addressValidationLoading ? (
+                  <ActivityIndicator size="small" />
+                ) : (
+                  <PrimaryButton.Text style={[InputAndButtonStyle.buttonText]}>{s.strings.string_done_cap}</PrimaryButton.Text>
+                )}
               </PrimaryButton>
             </Modal.Row>
           </Modal.Footer>
