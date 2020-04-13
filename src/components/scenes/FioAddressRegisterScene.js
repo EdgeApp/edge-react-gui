@@ -25,7 +25,6 @@ import { showError, showToast } from '../services/AirshipInstance'
 export type State = {
   selectedWallet: { value: string | null, wallet: EdgeCurrencyWallet } | null,
   fioAddress: string,
-  fieldLabel: string,
   isValid: boolean,
   touched: boolean,
   loading: boolean,
@@ -38,13 +37,12 @@ export type State = {
 export type StateProps = {
   fioWallets: EdgeCurrencyWallet[],
   fioPlugin: EdgeCurrencyConfig,
-  defaultFiatCode: string,
   isConnected: boolean
 }
 
 export type DispatchProps = {
   changeFioAddressName: (fioAddressName: string) => void,
-  createCurrencyWallet: (walletName: string, walletType: string, fiatCurrencyCode: string) => any
+  createFioWallet: () => Promise<any>
 }
 
 type Props = StateProps & DispatchProps
@@ -74,7 +72,6 @@ export class FioAddressRegisterScene extends Component<Props, State> {
   state = {
     selectedWallet: null,
     fioAddress: '',
-    fieldLabel: s.strings.fio_address_choose_label,
     isValid: true,
     touched: false,
     isAvailable: false,
@@ -100,11 +97,11 @@ export class FioAddressRegisterScene extends Component<Props, State> {
   }
 
   createFioWallet = async (): Promise<void> => {
-    const { createCurrencyWallet, defaultFiatCode } = this.props
+    const { createFioWallet } = this.props
     showToast(s.strings.preparing_fio_wallet)
     this.setState({ walletLoading: true })
     try {
-      const wallet = await createCurrencyWallet(s.strings.fio_address_register_default_fio_wallet_name, Constants.FIO_WALLET_TYPE, defaultFiatCode)
+      const wallet = await createFioWallet()
       this.setState({
         selectedWallet: {
           value: wallet.name,
@@ -177,14 +174,7 @@ export class FioAddressRegisterScene extends Component<Props, State> {
   }
 
   handleFioAddressFocus = () => {
-    this.setState({ fieldLabel: s.strings.fio_address_label })
     this.refs._scrollView.scrollTo({ x: 0, y: this.state.fieldPos, animated: true })
-  }
-
-  handleFioAddressBlur = () => {
-    if (!this.state.fioAddress) {
-      this.setState({ fieldLabel: s.strings.fio_address_choose_label })
-    }
   }
 
   fieldViewOnLayout = () => {
@@ -273,7 +263,7 @@ export class FioAddressRegisterScene extends Component<Props, State> {
   }
 
   render () {
-    const { fioAddress, touched, isAvailable, replaceRegex, fieldLabel } = this.state
+    const { fioAddress, touched, isAvailable, replaceRegex } = this.state
 
     let chooseHandleErrorMessage = ''
     if (touched && !this.props.isConnected) {
@@ -308,11 +298,10 @@ export class FioAddressRegisterScene extends Component<Props, State> {
                 placeholder={s.strings.fio_address_label}
                 caretHidden={true}
                 onFocus={this.handleFioAddressFocus}
-                onBlur={this.handleFioAddressBlur}
                 onChangeText={this.handleFioAddressChange}
                 onSubmitEditing={this.handleNextButton}
                 selectionColor={THEME.COLORS.ACCENT_MINT}
-                label={fieldLabel}
+                label={s.strings.fio_address_choose_label}
                 value={fioAddress.replace(replaceRegex, '')}
                 suffix={FIO_DOMAIN_DEFAULT}
                 maxLength={this.inputMaxLength}

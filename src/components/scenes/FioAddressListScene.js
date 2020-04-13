@@ -1,7 +1,8 @@
 // @flow
 
+import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, ScrollView, View } from 'react-native'
+import { ActivityIndicator, Linking, ScrollView, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import { FioAddressItem } from '../../components/common/FioAddressItem'
@@ -15,15 +16,22 @@ import { styles } from '../../styles/scenes/FioAddressListStyle'
 import type { FioAddress } from '../../types/types'
 import { showError } from '../services/AirshipInstance'
 
+type State = {
+  domainLoading: boolean
+}
+
 export type StateProps = {
   fioAddresses: FioAddress[],
+  fioWallets: EdgeCurrencyWallet[],
+  fioPlugin: EdgeCurrencyConfig,
   loading: boolean,
   isConnected: boolean
 }
 
 export type DispatchProps = {
   setFioAddress: (fioAddress: string, expiration: string) => void,
-  refreshAllFioAddresses: (cb: Function) => Promise<void>
+  refreshAllFioAddresses: (cb: Function) => Promise<void>,
+  createFioWallet: () => Promise<any>
 }
 
 export type NavigationProps = {
@@ -32,8 +40,11 @@ export type NavigationProps = {
 
 type Props = StateProps & DispatchProps & NavigationProps
 
-export class FioAddressListScene extends Component<Props> {
+export class FioAddressListScene extends Component<Props, State> {
   willFocusSubscription = null
+  state = {
+    domainLoading: false
+  }
 
   fetchData () {
     const { refreshAllFioAddresses, isConnected } = this.props
@@ -61,6 +72,33 @@ export class FioAddressListScene extends Component<Props> {
     }
   }
 
+  async registerDomain () {
+    const { fioPlugin, fioWallets, createFioWallet } = this.props
+    let publicKey
+    if (fioWallets && fioWallets.length) {
+      publicKey = fioWallets[0].publicWalletInfo.keys.publicKey
+    } else {
+      this.setState({ domainLoading: true })
+      try {
+        const fioWallet = await createFioWallet()
+        publicKey = fioWallet.publicWalletInfo.keys.publicKey
+      } catch (e) {
+        showError(s.strings.create_wallet_failed_message)
+      }
+      this.setState({ domainLoading: false })
+    }
+    if (!publicKey) return
+    const url = `${await fioPlugin.otherMethods.getRegDomainUrl()}${publicKey}`
+    Linking.canOpenURL(url).then(supported => {
+      if (supported) {
+        Linking.openURL(url)
+      } else {
+        console.log("Don't know how to open URI: " + url)
+        showError("Don't know how to open URI: " + url)
+      }
+    })
+  }
+
   onPress = (fioAddress: string, expirationValue: string) => {
     this.props.setFioAddress(fioAddress, expirationValue)
     Actions[Constants.FIO_ADDRESS_DETAILS]({ fioAddress, expirationValue })
@@ -68,6 +106,7 @@ export class FioAddressListScene extends Component<Props> {
 
   render () {
     const { fioAddresses, loading } = this.props
+    const { domainLoading } = this.state
 
     return (
       <SafeAreaView>
@@ -89,6 +128,16 @@ export class FioAddressListScene extends Component<Props> {
               </Button.Text>
             </Button.Center>
           </Button>
+        </View>
+        <View style={styles.domainVew}>
+          <T>{s.strings.fio_address_reg_domain_label}</T>
+        </View>
+        <View style={styles.button}>
+          <TouchableHighlight disabled={domainLoading} onPress={() => this.registerDomain()} underlayColor={styles.underlay.color}>
+            <View>
+              {domainLoading ? <ActivityIndicator style={styles.link} size={'small'} /> : <T style={styles.link}>{s.strings.fio_address_reg_domain}</T>}
+            </View>
+          </TouchableHighlight>
         </View>
       </SafeAreaView>
     )

@@ -2,14 +2,20 @@
 import { bns } from 'biggystring'
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 
+import { createCurrencyWallet } from '../../actions/CreateWalletActions'
 import { showError } from '../../components/services/AirshipInstance'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings'
 import type { Dispatch, GetState } from '../../types/reduxTypes'
 import { getAccount } from '../Core/selectors'
-import { getExchangeDenomination } from '../Settings/selectors'
+import { getDefaultIsoFiat, getExchangeDenomination } from '../Settings/selectors'
 import { getFioWallets } from '../UI/selectors'
 import type { BuyAddressResponse } from './reducer'
+
+export const createFioWallet = () => (dispatch: Dispatch, getState: GetState) => {
+  const fiatCurrencyCode = getDefaultIsoFiat(getState())
+  return dispatch(createCurrencyWallet(s.strings.fio_address_register_default_fio_wallet_name, Constants.FIO_WALLET_TYPE, fiatCurrencyCode, false, false))
+}
 
 export const refreshAllFioAddresses = (cb?: Function) => async (dispatch: Dispatch, getState: GetState) => {
   const wallets: EdgeCurrencyWallet[] = getFioWallets(getState())
