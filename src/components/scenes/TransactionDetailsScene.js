@@ -278,11 +278,15 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     const { currentFiatAmount } = this.props
     const { amountFiat } = this.state
 
+    const amount = currentFiatAmount
+      ? parseFloat(currentFiatAmount)
+        .toFixed(2)
+        .toString()
+      : '0'
     const fiatAmount = amountFiat.replace(',', '.')
-    const difference = currentFiatAmount ? parseFloat(currentFiatAmount) - parseFloat(fiatAmount) : 0
-    const percentageFloat = currentFiatAmount && parseFloat(fiatAmount) > 0 ? (difference / parseFloat(fiatAmount)) * 100 : 0
+    const difference = amount ? parseFloat(amount) - parseFloat(fiatAmount) : 0
+    const percentageFloat = amount && parseFloat(fiatAmount) > 0 ? (difference / parseFloat(fiatAmount)) * 100 : 0
     const percentage = bns.toFixed(percentageFloat.toString(), 2, 2)
-    const amount = currentFiatAmount ? bns.toFixed(currentFiatAmount.toString(), 2, 2) : '0'
 
     return {
       amount,
