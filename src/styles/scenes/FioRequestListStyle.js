@@ -82,5 +82,8 @@ export const styles = StyleSheet.create({
     paddingVertical: scale(30),
     paddingHorizontal: scale(20),
     opacity: 0.5
+  },
+  listFooter: {
+    height: scale(50)
   }
 })

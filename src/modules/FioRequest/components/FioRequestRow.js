@@ -10,11 +10,12 @@ import s from '../../../locales/strings'
 import { styles as requestListStyles } from '../../../styles/scenes/FioRequestListStyle'
 import styles from '../../../styles/scenes/TransactionListStyle'
 import THEME from '../../../theme/variables/airbitz'
+import type { FioRequest } from '../../../types/types'
 import T from '../../UI/components/FormattedText/index'
 import { isRejectedFioRequest, isSentFioRequest } from '../util'
 
 type Props = {
-  transaction: any,
+  fioRequest: FioRequest,
   fiatSymbol: string,
   fiatAmount: (currencyCode: string, amount: string) => string,
   onSelect: any => void,
@@ -28,7 +29,20 @@ class FioRequestRow extends Component<Props> {
   underlayColor = THEME.COLORS.ROW_PRESSED
 
   static defaultProps: Props = {
-    transaction: {},
+    fioRequest: {
+      fio_request_id: '',
+      content: {
+        payee_public_address: '',
+        amount: '',
+        token_code: '',
+        chain_code: '',
+        memo: ''
+      },
+      payee_fio_address: '',
+      payer_fio_address: '',
+      status: '',
+      time_stamp: ''
+    },
     fiatSymbol: '',
     displayDenominations: {},
     fiatAmount: () => '',
@@ -95,18 +109,18 @@ class FioRequestRow extends Component<Props> {
   }
 
   render () {
-    const { transaction, onSelect, isSent, isHeaderRow, isLastOfDate } = this.props
+    const { fioRequest, onSelect, isSent, isHeaderRow, isLastOfDate } = this.props
     return (
-      <View key={transaction.fio_request_id.toString()} style={[styles.singleTransactionWrap]}>
+      <View key={fioRequest.fio_request_id.toString()} style={[styles.singleTransactionWrap]}>
         {isHeaderRow && (
           <View style={styles.singleDateArea}>
             <View style={styles.leftDateArea}>
-              <T style={styles.formattedDate}>{intl.formatExpDate(new Date(transaction.time_stamp), true)}</T>
+              <T style={styles.formattedDate}>{intl.formatExpDate(new Date(fioRequest.time_stamp), true)}</T>
             </View>
           </View>
         )}
         <TouchableHighlight
-          onPress={() => onSelect(transaction)}
+          onPress={() => onSelect(fioRequest)}
           underlayColor={this.underlayColor}
           style={[styles.singleTransaction, { borderBottomWidth: isLastOfDate ? 0 : 1 }]}
         >
@@ -118,17 +132,17 @@ class FioRequestRow extends Component<Props> {
             </View>
 
             <View style={[styles.transactionRight]}>
-              <View style={[styles.transactionDetailsRow, transaction.content.memo ? styles.transactionDetailsRowMargin : null]}>
+              <View style={[styles.transactionDetailsRow, fioRequest.content.memo ? styles.transactionDetailsRowMargin : null]}>
                 <T style={[styles.transactionPartner]} adjustsFontSizeToFit={true} minimumFontScale={0.6}>
-                  {isSent ? transaction.payer_fio_address : this.requestedField(transaction.content.token_code)}
+                  {isSent ? fioRequest.payer_fio_address : this.requestedField(fioRequest.content.token_code)}
                 </T>
-                {this.currencyField(transaction.content.token_code, transaction.content.amount, isSent ? transaction.status : '')}
+                {this.currencyField(fioRequest.content.token_code, fioRequest.content.amount, isSent ? fioRequest.status : '')}
               </View>
               <View style={[styles.transactionDetailsRow]}>
-                {this.requestedTimeAndMemo(new Date(transaction.time_stamp), transaction.content.memo)}
-                {this.fiatField(transaction.content.token_code, transaction.content.amount)}
+                {this.requestedTimeAndMemo(new Date(fioRequest.time_stamp), fioRequest.content.memo)}
+                {this.fiatField(fioRequest.content.token_code, fioRequest.content.amount)}
               </View>
-              {isSent ? <View style={[styles.transactionDetailsRow, styles.transactionDetailsRowMargin]}>{this.showStatus(transaction.status)}</View> : null}
+              {isSent ? <View style={[styles.transactionDetailsRow, styles.transactionDetailsRowMargin]}>{this.showStatus(fioRequest.status)}</View> : null}
             </View>
           </View>
         </TouchableHighlight>

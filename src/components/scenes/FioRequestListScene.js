@@ -12,10 +12,11 @@ import s from '../../locales/strings.js'
 import FioRequestRow from '../../modules/FioRequest/components/FioRequestRow'
 import FullScreenLoader from '../../modules/FioRequest/components/FullScreenLoader'
 import SwipeListView from '../../modules/FioRequest/components/SwipeListView'
+import SwipeRow from '../../modules/FioRequest/components/SwipeRow'
 import T from '../../modules/UI/components/FormattedText/index'
 import { styles as requestListStyles } from '../../styles/scenes/FioRequestListStyle'
 import styles from '../../styles/scenes/TransactionListStyle'
-import type { GuiWallet } from '../../types/types'
+import type { FioRequest, GuiWallet } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 
@@ -39,7 +40,6 @@ export type StateProps = {
 }
 
 export type DispatchProps = {
-  updateExchangeRates: () => any,
   getFioRequestsPending: () => any,
   getFioRequestsSent: () => any,
   fioRejectRequest: (fioRequestId: string, payerFioAddress: string, cb: Function) => void,
@@ -48,12 +48,7 @@ export type DispatchProps = {
 
 type Props = StateProps & DispatchProps
 
-const PENDING_TEXT = s.strings.fio_pendingrequest
-const SENT_TEXT = s.strings.fio_sentrequest
-
 export class FioRequestList extends Component<Props, State> {
-  listFooterHeight = 50
-
   constructor (props: Props) {
     super(props)
     this.state = {
@@ -63,21 +58,18 @@ export class FioRequestList extends Component<Props, State> {
   }
 
   componentDidMount = () => {
-    this.props.updateExchangeRates()
     this.props.getFioRequestsPending()
     this.props.getFioRequestsSent()
     this.props.animation = new Animated.Value(0)
   }
 
-  handleScrollEnd = () => {}
-
-  closeRow = (rowMap: any[], rowKey: any) => {
+  closeRow = (rowMap: { [string]: SwipeRow }, rowKey: string) => {
     if (rowMap[rowKey]) {
       rowMap[rowKey].closeRow()
     }
   }
 
-  rejectFioRequest = (rowMap: any[], rowKey: any, requestId: string, payerFioAddress: string) => {
+  rejectFioRequest = (rowMap: { [string]: SwipeRow }, rowKey: string, requestId: string, payerFioAddress: string) => {
     if (!this.props.isConnected) {
       showError(s.strings.fio_network_alert_text)
       return
@@ -92,7 +84,7 @@ export class FioRequestList extends Component<Props, State> {
     })
   }
 
-  rejectRow = (rowMap: any[], rowKey: any, requestId: string, payerFioAddress: string) => {
+  rejectRow = (rowMap: { [string]: SwipeRow }, rowKey: string, requestId: string, payerFioAddress: string) => {
     Alert.alert(
       s.strings.fio_reject_request_title,
       s.strings.fio_reject_request_message,
@@ -108,10 +100,10 @@ export class FioRequestList extends Component<Props, State> {
     )
   }
 
-  onSwipeValueChange = (swipeData: any) => {
+  onSwipeValueChange = (swipeData: { value: string }) => {
     const { value } = swipeData
     if (this.props.animation) {
-      this.props.animation.setValue(Math.abs(value))
+      this.props.animation.setValue(Math.abs(parseFloat(value)))
     }
   }
 
@@ -124,10 +116,6 @@ export class FioRequestList extends Component<Props, State> {
     return intl.formatNumber(fiatPerCrypto * amountToMultiply, { toFixed: 2 }) || '0'
   }
 
-  headerTitle = (headerDate: Date) => {
-    return intl.formatExpDate(headerDate, true)
-  }
-
   headerRowUsingTitle = (headerTitle: string) => {
     return (
       <View style={styles.singleDateArea}>
@@ -138,62 +126,62 @@ export class FioRequestList extends Component<Props, State> {
     )
   }
 
-  selectRequest = (tx: Object) => {
+  selectRequest = (fioRequest: FioRequest) => {
     if (!this.props.isConnected) {
       showError(s.strings.fio_network_alert_text)
       return
     }
     const { wallets } = this.props
     for (const walletKey: string of Object.keys(wallets)) {
-      if (wallets[walletKey].currencyCode.toLowerCase() === tx.content.chain_code.toLowerCase()) {
-        Actions[Constants.FIO_PENDING_REQUEST_DETAILS]({ selectedFioPendingRequest: tx })
+      if (wallets[walletKey].currencyCode.toLowerCase() === fioRequest.content.chain_code.toLowerCase()) {
+        Actions[Constants.FIO_PENDING_REQUEST_DETAILS]({ selectedFioPendingRequest: fioRequest })
         return
       }
     }
     showError(`${s.strings.err_token_not_in_wallet_title}. ${s.strings.err_token_not_in_wallet_msg}`)
   }
 
-  selectSentRequest = (tx: Object) => {
+  selectSentRequest = (fioRequest: FioRequest) => {
     if (!this.props.isConnected) {
       showError(s.strings.fio_network_alert_text)
       return
     }
-    Actions[Constants.FIO_SENT_REQUEST_DETAILS]({ selectedFioSentRequest: tx })
+    Actions[Constants.FIO_SENT_REQUEST_DETAILS]({ selectedFioSentRequest: fioRequest })
   }
 
-  addHeadersTransactions = (txs: any[]) => {
+  addHeadersTransactions = (txs: FioRequest[]) => {
     const headers: any[] = []
     let transactionsInSection: any[] = []
     let previousTimestamp = 0
     let previousTitle = ''
     if (txs) {
-      txs.forEach((transaction, i) => {
+      txs.forEach((fioRequest, i) => {
         if (i === 0) {
           transactionsInSection = []
-          previousTimestamp = transaction.time_stamp
+          previousTimestamp = fioRequest.time_stamp
         }
-        if (i > 0 && intl.formatExpDate(new Date(previousTimestamp)) !== intl.formatExpDate(new Date(transaction.time_stamp))) {
+        if (i > 0 && intl.formatExpDate(new Date(previousTimestamp)) !== intl.formatExpDate(new Date(fioRequest.time_stamp))) {
           headers.push({ title: previousTitle, data: transactionsInSection })
           transactionsInSection = []
         }
-        transactionsInSection.push(transaction)
-        previousTimestamp = transaction.time_stamp
-        previousTitle = this.headerTitle(new Date(transaction.time_stamp))
+        transactionsInSection.push(fioRequest)
+        previousTimestamp = fioRequest.time_stamp
+        previousTitle = intl.formatExpDate(new Date(fioRequest.time_stamp), true)
       })
       headers.push({ title: previousTitle, data: transactionsInSection })
     }
     return headers
   }
 
-  renderTx = (itemObj: { item: any, index: number }) => {
-    const { item: transaction, index } = itemObj
+  renderTx = (itemObj: { item: FioRequest, index: number }) => {
+    const { item: fioRequest, index } = itemObj
     const isLastOfDate =
       index + 1 === this.props.fioRequestsPending.length ||
       (index > 0 &&
-        intl.formatExpDate(new Date(this.props.fioRequestsPending[index + 1].time_stamp), true) !== intl.formatExpDate(new Date(transaction.time_stamp), true))
+        intl.formatExpDate(new Date(this.props.fioRequestsPending[index + 1].time_stamp), true) !== intl.formatExpDate(new Date(fioRequest.time_stamp), true))
     return (
       <FioRequestRow
-        transaction={transaction}
+        fioRequest={fioRequest}
         isLastOfDate={isLastOfDate}
         onSelect={this.selectRequest}
         fiatSymbol={this.props.fiatSymbol}
@@ -203,19 +191,19 @@ export class FioRequestList extends Component<Props, State> {
     )
   }
 
-  renderSentTx = (itemObj: { item: any, index: number }) => {
-    const { item: transaction, index } = itemObj
+  renderSentTx = (itemObj: { item: FioRequest, index: number }) => {
+    const { item: fioRequest, index } = itemObj
     const isHeaderRow =
       index === 0 ||
       (index > 0 &&
-        intl.formatExpDate(new Date(this.props.fioRequestsSent[index - 1].time_stamp), true) !== intl.formatExpDate(new Date(transaction.time_stamp), true))
+        intl.formatExpDate(new Date(this.props.fioRequestsSent[index - 1].time_stamp), true) !== intl.formatExpDate(new Date(fioRequest.time_stamp), true))
     const isLastOfDate =
       index + 1 === this.props.fioRequestsSent.length ||
       (index > 0 &&
-        intl.formatExpDate(new Date(this.props.fioRequestsSent[index + 1].time_stamp), true) !== intl.formatExpDate(new Date(transaction.time_stamp), true))
+        intl.formatExpDate(new Date(this.props.fioRequestsSent[index + 1].time_stamp), true) !== intl.formatExpDate(new Date(fioRequest.time_stamp), true))
     return (
       <FioRequestRow
-        transaction={transaction}
+        fioRequest={fioRequest}
         onSelect={this.selectSentRequest}
         isSent={true}
         isHeaderRow={isHeaderRow}
@@ -227,12 +215,12 @@ export class FioRequestList extends Component<Props, State> {
     )
   }
 
-  renderHiddenItem = (transaction: any, rowMap: any[]) => {
+  renderHiddenItem = (rowObj: { item: FioRequest }, rowMap: { [string]: SwipeRow }) => {
     return (
       <View style={requestListStyles.rowBack}>
         <TouchableOpacity
           style={[requestListStyles.backRightBtn, requestListStyles.backRightBtnRight]}
-          onPress={_ => this.rejectRow(rowMap, transaction.item.fio_request_id.toString(), transaction.item.fio_request_id, transaction.item.payer_fio_address)}
+          onPress={_ => this.rejectRow(rowMap, rowObj.item.fio_request_id.toString(), rowObj.item.fio_request_id, rowObj.item.payer_fio_address)}
         >
           <T style={requestListStyles.backTextWhite}>{s.strings.swap_terms_reject_button}</T>
         </TouchableOpacity>
@@ -250,7 +238,7 @@ export class FioRequestList extends Component<Props, State> {
         <View style={requestListStyles.scene}>
           <View style={requestListStyles.row}>
             <View style={requestListStyles.listContainer}>
-              <T style={requestListStyles.listTitle}>{PENDING_TEXT}</T>
+              <T style={requestListStyles.listTitle}>{s.strings.fio_pendingrequest}</T>
             </View>
             {!loading && !fioRequestsPending.length ? (
               <View style={requestListStyles.emptyListContainer}>
@@ -274,7 +262,7 @@ export class FioRequestList extends Component<Props, State> {
           </View>
           <View style={requestListStyles.row}>
             <View style={requestListStyles.listContainer}>
-              <T style={requestListStyles.listTitle}>{SENT_TEXT}</T>
+              <T style={requestListStyles.listTitle}>{s.strings.fio_sentrequest}</T>
             </View>
             {!loading && !fioRequestsSent.length ? (
               <View style={requestListStyles.emptyListContainer}>
@@ -285,12 +273,11 @@ export class FioRequestList extends Component<Props, State> {
               <View style={requestListStyles.container}>
                 <View style={[isAndroid ? requestListStyles.androidTransactionsWrap : requestListStyles.transactionsWrap]}>
                   <FlatList
-                    ListFooterComponent={<View style={{ height: isAndroid ? this.listFooterHeight : 0 }} />}
+                    ListFooterComponent={<View style={{ height: isAndroid ? requestListStyles.listFooter.height : 0 }} />}
                     style={styles.transactionsScrollWrap}
                     data={fioRequestsSent}
                     renderItem={this.renderSentTx}
                     initialNumToRender={fioRequestsSent ? fioRequestsSent.length : 0}
-                    onEndReached={this.handleScrollEnd}
                     onEndReachedThreshold={SCROLL_THRESHOLD}
                     keyExtractor={item => item.fio_request_id.toString()}
                   />

@@ -6,7 +6,6 @@ import { connect } from 'react-redux'
 import type { DispatchProps, StateProps } from '../../components/scenes/FioRequestListScene'
 import { FioRequestList } from '../../components/scenes/FioRequestListScene'
 import { isConnectedState } from '../../modules/Core/selectors'
-import { updateExchangeRates } from '../../modules/ExchangeRates/action.js'
 import { getFioRequestsPending, getFioRequestsSent, rejectRequest } from '../../modules/FioRequest/action'
 import { getDisplayDenomination } from '../../modules/Settings/selectors'
 import { getSelectedCurrencyCode, getSelectedWallet, getWallets } from '../../modules/UI/selectors.js'
@@ -69,8 +68,7 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   fioRejectRequest: (fioRequestId: string, payerFioAddress: string, cb: Function) => {
     dispatch(rejectRequest(fioRequestId, payerFioAddress, cb))
   },
-  removeFioPendingRequest: (requestId: string) => dispatch({ type: 'FIO/FIO_REQUEST_LIST_REMOVE', data: { requestId } }),
-  updateExchangeRates: () => dispatch(updateExchangeRates())
+  removeFioPendingRequest: (requestId: string) => dispatch({ type: 'FIO/FIO_REQUEST_LIST_REMOVE', data: { requestId } })
 })
 
 export const FioRequestListConnector = connect(

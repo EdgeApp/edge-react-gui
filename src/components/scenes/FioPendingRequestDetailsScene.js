@@ -17,8 +17,8 @@ import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import { MaterialInput } from '../../styles/components/FormFieldStyles.js'
 import { styles as CryptoExchangeSceneStyle } from '../../styles/scenes/CryptoExchangeSceneStyles.js'
 import { styles } from '../../styles/scenes/FioPendingRequestDetailsStyle.js'
-import type { State } from '../../types/reduxTypes'
-import type { FioRequest, GuiWallet } from '../../types/types'
+import THEME from '../../theme/variables/airbitz'
+import type { FioRequest, GuiWallet, GuiWalletType } from '../../types/types'
 import { FormField } from '../common/FormField'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -28,19 +28,16 @@ export type NavigationProps = {
 }
 
 export type FioPendingRequestDetailsStateProps = {
-  fromWallet: GuiWallet,
-  toWallet: GuiWallet,
-
   // The following props are used to populate the confirmation modal
   fromCurrencyCode: string,
   toCurrencyCode: string,
 
   // Number of times To and From wallets were flipped
   wallets: { [string]: GuiWallet },
-  supportedWalletTypes: Array<Object>,
-  state: State,
+  supportedWalletTypes: GuiWalletType[],
   exchangeRates: ExchangeRatesState,
 
+  selectedWallet: GuiWallet | null,
   fioWalletByAddress: EdgeCurrencyWallet | null,
   exchangeDenomination: EdgeDenomination,
   isoFiatCurrencyCode: string,
@@ -59,7 +56,6 @@ export type FioPendingRequestDetailsDispatchProps = {
     fee: number,
     cb: Function
   ) => void,
-  createCurrencyWallet: (walletType: string, currencyCode: string) => void,
   setFioWalletByFioAddress: string => void
 }
 
@@ -80,6 +76,47 @@ export class FioPendingRequestDetailsComponent extends Component<Props, LocalSta
 
   componentDidMount (): void {
     this.props.setFioWalletByFioAddress(this.props.selectedFioPendingRequest.payer_fio_address)
+    this.setDefaultWallet()
+  }
+
+  setDefaultWallet () {
+    const { onSelectWallet } = this.props
+    const { allowedWallets } = this.getWalletsListData()
+    if (allowedWallets && allowedWallets.length) {
+      onSelectWallet(allowedWallets[0].id, allowedWallets[0].currencyCode)
+    }
+  }
+
+  getWalletsListData (): { allowedWallets: GuiWallet[], supportedWalletTypes: GuiWalletType[] } {
+    const { toCurrencyCode, wallets } = this.props
+    const walletCurrencyCodes = []
+    const allowedWallets = []
+    for (const id in wallets) {
+      const wallet = wallets[id]
+      if (wallet.currencyCode === 'ETH' && wallet.enabledTokens.length > 0) {
+        walletCurrencyCodes.push(wallet.currencyCode)
+        if (wallet.receiveAddress && wallet.receiveAddress.publicAddress) {
+          if (wallet.currencyCode === this.props.selectedFioPendingRequest.content.chain_code) {
+            allowedWallets.push(wallets[id])
+          }
+        }
+      }
+      if (toCurrencyCode === wallet.currencyCode) {
+        walletCurrencyCodes.push(wallet.currencyCode)
+        if (wallet.receiveAddress && wallet.receiveAddress.publicAddress) {
+          if (wallet.currencyCode === this.props.selectedFioPendingRequest.content.chain_code) {
+            allowedWallets.push(wallets[id])
+          }
+        }
+      }
+    }
+    const supportedWalletTypes = []
+    for (const swt of this.props.supportedWalletTypes) {
+      if (!walletCurrencyCodes.includes(swt.currencyCode) && swt.currencyCode !== 'EOS' && toCurrencyCode !== swt.currencyCode) {
+        supportedWalletTypes.push(swt)
+      }
+    }
+    return { allowedWallets, supportedWalletTypes }
   }
 
   memoChanged (text: string) {
@@ -200,58 +237,18 @@ export class FioPendingRequestDetailsComponent extends Component<Props, LocalSta
   }
 
   renderDropUp = () => {
-    const { onSelectWallet, toCurrencyCode, toWallet, wallets } = this.props
-    let excludedCurrencyCode = '' // should allow for multiple excluded currencyCodes
-    // some complex logic because 'toCurrencyCode/fromCurrencyCode'
-    // can be denomination (needs to change to actual currencyCode)
-    if (toWallet) {
-      if (toWallet.enabledTokens.length > 1) {
-        // could be token
-        excludedCurrencyCode = toCurrencyCode
-      } else {
-        excludedCurrencyCode = toWallet.currencyCode
-      }
-    }
-    const walletCurrencyCodes = []
-    const allowedWallets = []
-    for (const id in wallets) {
-      const wallet = wallets[id]
-      if (wallet.currencyCode === 'ETH' && wallet.enabledTokens.length > 0) {
-        walletCurrencyCodes.push(wallet.currencyCode)
-        if (wallet.receiveAddress && wallet.receiveAddress.publicAddress) {
-          if (wallet.currencyCode === this.props.selectedFioPendingRequest.content.chain_code) {
-            allowedWallets.push(wallets[id])
-          }
-        }
-      }
-      if (excludedCurrencyCode !== wallet.currencyCode) {
-        walletCurrencyCodes.push(wallet.currencyCode)
-        if (wallet.receiveAddress && wallet.receiveAddress.publicAddress) {
-          if (wallet.currencyCode === this.props.selectedFioPendingRequest.content.chain_code) {
-            allowedWallets.push(wallets[id])
-          }
-        }
-      }
-    }
-    const supportedWalletTypes = []
-    for (let i = 0; i < this.props.supportedWalletTypes.length; i++) {
-      const swt = this.props.supportedWalletTypes[i]
-      if (!walletCurrencyCodes.includes(swt.currencyCode) && swt.currencyCode !== 'EOS' && excludedCurrencyCode !== swt.currencyCode) {
-        supportedWalletTypes.push(swt)
-      }
-    }
+    const { onSelectWallet } = this.props
+
+    const { allowedWallets, supportedWalletTypes } = this.getWalletsListData()
 
     Airship.show(bridge => (
       <WalletListModal
         bridge={bridge}
         wallets={allowedWallets}
         type={Constants.FROM}
-        existingWalletToFilterId={toWallet.id}
-        existingWalletToFilterCurrencyCode={toCurrencyCode}
         supportedWalletTypes={supportedWalletTypes}
         excludedCurrencyCode={[]}
         showWalletCreators={false}
-        state={this.props.state}
         headerTitle={s.strings.fio_src_wallet}
         excludedTokens={[]}
         noWalletCodes={[]}
@@ -261,18 +258,15 @@ export class FioPendingRequestDetailsComponent extends Component<Props, LocalSta
       if (response) {
         if (response.id) {
           onSelectWallet(response.id, response.currencyCode)
-          return
         }
-        this.props.createCurrencyWallet(response.value, response.currencyCode)
       }
     })
-    return null
   }
 
   render () {
     const materialStyle = MaterialInput
-    materialStyle.tintColor = 'white'
-    materialStyle.baseColor = 'white'
+    materialStyle.tintColor = THEME.COLORS.WHITE
+    materialStyle.baseColor = THEME.COLORS.WHITE
 
     return (
       <SceneWrapper>
@@ -298,7 +292,7 @@ export class FioPendingRequestDetailsComponent extends Component<Props, LocalSta
               style={{ ...CryptoExchangeSceneStyle.flipWrapper.walletSelector, container: styles.selectWalletBtn }}
               onPress={this.launchFromWalletSelector}
               icon={Constants.KEYBOARD_ARROW_DOWN}
-              title={this.props.fromWallet.name || s.strings.fio_src_wallet}
+              title={this.props.selectedWallet ? this.props.selectedWallet.name : s.strings.fio_src_wallet}
             />
           </View>
           <View style={CryptoExchangeSceneStyle.shim} />

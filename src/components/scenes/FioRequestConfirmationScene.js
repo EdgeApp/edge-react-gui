@@ -67,23 +67,23 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
   async componentDidMount () {
     if (this.props.fioWallets) {
       const walletAddresses = []
-      try {
-        for (const fioWallet: EdgeCurrencyWallet of this.props.fioWallets) {
+      for (const fioWallet: EdgeCurrencyWallet of this.props.fioWallets) {
+        try {
           const fioAddresses: string[] = await fioWallet.otherMethods.getFioAddressNames()
           if (fioAddresses.length > 0) {
             for (const fioAddress of fioAddresses) {
               walletAddresses.push({ fioAddress, fioWallet })
             }
           }
+        } catch (e) {
+          continue
         }
-
-        this.setState({
-          walletAddresses,
-          selectedFioAddress: walletAddresses[0].fioAddress
-        })
-      } catch (e) {
-        //
       }
+
+      this.setState({
+        walletAddresses,
+        selectedFioAddress: walletAddresses[0].fioAddress
+      })
     }
   }
 
