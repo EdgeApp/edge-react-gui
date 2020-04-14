@@ -815,6 +815,12 @@ export class MainComponent extends Component<Props> {
       handlePluginBack()
       return true
     }
+    if (this.isCurrentScene(Constants.FIO_ADDRESS_REGISTER)) {
+      if (Actions.currentParams.noAddresses) {
+        Actions.popTo(Constants.WALLET_LIST_SCENE)
+        return true
+      }
+    }
     Actions.pop()
     return true
   }

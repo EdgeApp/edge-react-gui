@@ -18,12 +18,11 @@ export const createFioWallet = () => (dispatch: Dispatch, getState: GetState) =>
 }
 
 export const refreshAllFioAddresses = (cb?: Function) => async (dispatch: Dispatch, getState: GetState) => {
-  const wallets: EdgeCurrencyWallet[] = getFioWallets(getState())
-  let fioAddresses = []
-
   dispatch({
     type: 'FIO/SET_FIO_ADDRESSES_PROGRESS'
   })
+  const wallets: EdgeCurrencyWallet[] = getFioWallets(getState())
+  let fioAddresses = []
 
   if (wallets != null) {
     for (const wallet: EdgeCurrencyWallet of wallets) {

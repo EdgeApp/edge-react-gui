@@ -13,7 +13,6 @@ import * as Constants from '../../constants/indexConstants.js'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
-import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import T from '../../modules/UI/components/FormattedText/index'
 import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
@@ -71,8 +70,7 @@ export type FullWalletListRowLoadedOwnProps = {
 
 export type FullWalletListRowLoadedDispatchProps = {
   selectWallet: (walletId: string, currencyCode: string) => void,
-  getEnabledTokensList: (walletId: string) => void,
-  refreshAllFioAddresses: () => Promise<void>
+  getEnabledTokensList: (walletId: string) => void
 }
 
 export type FullWalletListRowLoadedComponentProps = FullWalletListRowLoadedStateProps & FullWalletListRowLoadedOwnProps & FullWalletListRowLoadedDispatchProps
@@ -98,9 +96,6 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
   UNSAFE_componentWillMount () {
     const walletId = this.props.data.item.id
     this.props.getEnabledTokensList(walletId)
-    if (this.props.data.item.type === Constants.FIO_WALLET_TYPE) {
-      this.props.refreshAllFioAddresses()
-    }
   }
 
   render () {
@@ -291,8 +286,7 @@ const mapStateToProps = (state: State, ownProps: FullWalletListRowLoadedOwnProps
 }
 const mapDispatchToProps = dispatch => ({
   selectWallet: (walletId: string, currencyCode): string => dispatch(selectWallet(walletId, currencyCode, Constants.WALLET_LIST_SCENE)),
-  getEnabledTokensList: (walletId: string) => dispatch(getEnabledTokens(walletId)),
-  refreshAllFioAddresses: () => dispatch(refreshAllFioAddresses())
+  getEnabledTokensList: (walletId: string) => dispatch(getEnabledTokens(walletId))
 })
 
 const FullWalletListRowConnected = connect(

@@ -14,6 +14,7 @@ import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import { styles } from '../../styles/scenes/FioAddressListStyle'
 import type { FioAddress } from '../../types/types'
+import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 
 type State = {
@@ -54,8 +55,8 @@ export class FioAddressListScene extends Component<Props, State> {
     refreshAllFioAddresses(() => this.checkForFioAddresses())
   }
 
-  componentDidMount () {
-    this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
+  componentDidMount (): void {
+    this.willFocusSubscription = this.props.navigation.addListener('didFocus', () => {
       this.fetchData()
     })
   }
@@ -68,11 +69,11 @@ export class FioAddressListScene extends Component<Props, State> {
     const { fioAddresses, isConnected } = this.props
 
     if (fioAddresses.length === 0 && isConnected) {
-      Actions[Constants.FIO_ADDRESS_REGISTER]()
+      Actions[Constants.FIO_ADDRESS_REGISTER]({ noAddresses: true })
     }
   }
 
-  async registerDomain () {
+  registerDomain = async () => {
     const { fioPlugin, fioWallets, createFioWallet } = this.props
     let publicKey
     if (fioWallets && fioWallets.length) {
@@ -99,6 +100,10 @@ export class FioAddressListScene extends Component<Props, State> {
     })
   }
 
+  registerAddress () {
+    Actions[Constants.FIO_ADDRESS_REGISTER]()
+  }
+
   onPress = (fioAddress: string, expirationValue: string) => {
     this.props.setFioAddress(fioAddress, expirationValue)
     Actions[Constants.FIO_ADDRESS_DETAILS]({ fioAddress, expirationValue })
@@ -107,6 +112,15 @@ export class FioAddressListScene extends Component<Props, State> {
   render () {
     const { fioAddresses, loading } = this.props
     const { domainLoading } = this.state
+
+    if (!fioAddresses.length) {
+      return (
+        <SceneWrapper>
+          <Gradient style={styles.gradient} />
+          <ActivityIndicator style={styles.loading} size={'large'} />
+        </SceneWrapper>
+      )
+    }
 
     return (
       <SafeAreaView>
@@ -121,7 +135,7 @@ export class FioAddressListScene extends Component<Props, State> {
           <T>{s.strings.fio_address_first_screen_end}</T>
         </View>
         <View style={styles.button}>
-          <Button onPress={() => Actions[Constants.FIO_ADDRESS_REGISTER]()} style={styles.toggleButton} underlayColor={styles.underlay.color}>
+          <Button onPress={this.registerAddress} style={styles.toggleButton} underlayColor={styles.underlay.color}>
             <Button.Center>
               <Button.Text>
                 <T>{s.strings.fio_address_list_screen_button_register}</T>
@@ -133,7 +147,7 @@ export class FioAddressListScene extends Component<Props, State> {
           <T>{s.strings.fio_address_reg_domain_label}</T>
         </View>
         <View style={styles.button}>
-          <TouchableHighlight disabled={domainLoading} onPress={() => this.registerDomain()} underlayColor={styles.underlay.color}>
+          <TouchableHighlight disabled={domainLoading} onPress={this.registerDomain} underlayColor={styles.underlay.color}>
             <View>
               {domainLoading ? <ActivityIndicator style={styles.link} size={'small'} /> : <T style={styles.link}>{s.strings.fio_address_reg_domain}</T>}
             </View>
