@@ -1,13 +1,9 @@
 // @flow
 
 import { StyleSheet } from 'react-native'
-import ExtraDimensions from 'react-native-extra-dimensions-android'
 
 import THEME from '../../theme/variables/airbitz'
-import { PLATFORM } from '../../theme/variables/platform.js'
 import { scale } from '../../util/scaling.js'
-
-const SOFT_MENU_BAR_HEIGHT = ExtraDimensions.get('SOFT_MENU_BAR_HEIGHT')
 
 export const styles = StyleSheet.create({
   scene: {
@@ -19,10 +15,6 @@ export const styles = StyleSheet.create({
   },
   transactionsWrap: {
     flex: 1
-  },
-  androidTransactionsWrap: {
-    flex: 1,
-    height: PLATFORM.usableHeight - SOFT_MENU_BAR_HEIGHT + THEME.HEADER
   },
   scrollView: {
     flex: 1
@@ -82,8 +74,5 @@ export const styles = StyleSheet.create({
     paddingVertical: scale(30),
     paddingHorizontal: scale(20),
     opacity: 0.5
-  },
-  listFooter: {
-    height: scale(50)
   }
 })

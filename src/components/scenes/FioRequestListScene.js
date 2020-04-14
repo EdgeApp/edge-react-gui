@@ -2,7 +2,7 @@
 
 import type { EdgeDenomination } from 'edge-core-js'
 import React, { Component } from 'react'
-import { Alert, Animated, FlatList, Platform, TouchableOpacity, View } from 'react-native'
+import { Alert, Animated, FlatList, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 
@@ -231,7 +231,7 @@ export class FioRequestList extends Component<Props, State> {
   render () {
     const { loading, fioRequestsPending, fioRequestsSent } = this.props
     const { rejectLoading } = this.state
-    const isAndroid = Platform.OS === 'android'
+
     return (
       <SceneWrapper>
         {(rejectLoading || loading) && <FullScreenLoader />}
@@ -271,9 +271,8 @@ export class FioRequestList extends Component<Props, State> {
             ) : null}
             <View style={requestListStyles.scrollView}>
               <View style={requestListStyles.container}>
-                <View style={[isAndroid ? requestListStyles.androidTransactionsWrap : requestListStyles.transactionsWrap]}>
+                <View style={requestListStyles.transactionsWrap}>
                   <FlatList
-                    ListFooterComponent={<View style={{ height: isAndroid ? requestListStyles.listFooter.height : 0 }} />}
                     style={styles.transactionsScrollWrap}
                     data={fioRequestsSent}
                     renderItem={this.renderSentTx}
