@@ -53,6 +53,8 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
       this.checkCoinswitchKYC().catch(showError)
     } else if (pluginId === 'foxExchange') {
       this.checkFoxExchangeKYC().catch(showError)
+    } else if (pluginId === 'switchain') {
+      this.checkSwitchainKYC().catch(showError)
     }
     logEvent('SwapQuote')
   }
@@ -97,6 +99,25 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
       {
         text: s.strings.swap_terms_kyc_link,
         uri: 'https://changelly.com/aml-kyc'
+      }
+    ])
+    if (!result) timeExpired(swapInfo)
+  }
+
+  async checkSwitchainKYC () {
+    const { account, swapInfo, timeExpired } = this.props
+    const result = await swapVerifyTerms(account.swapConfig.switchain, [
+      {
+        text: s.strings.swap_terms_terms_link,
+        uri: 'https://www.switchain.com/tos'
+      },
+      {
+        text: s.strings.swap_terms_privacy_link,
+        uri: 'https://www.switchain.com/policy'
+      },
+      {
+        text: s.strings.swap_terms_kyc_link,
+        uri: 'https://www.switchain.com/policy'
       }
     ])
     if (!result) timeExpired(swapInfo)
