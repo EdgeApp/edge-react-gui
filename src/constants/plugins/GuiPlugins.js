@@ -42,7 +42,7 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     pluginId: 'bitsofgold',
     storeId: 'bitsofgold',
     baseUri: 'https://www.bitsofgold.co.il/order',
-    queryPromoCode: 'utm_term',
+    queryPromoCode: 'promo_code',
     displayName: 'Bits of Gold',
     permissions: ['camera']
   },
