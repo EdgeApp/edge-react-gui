@@ -228,7 +228,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
 
     const absoluteAmount = abs(edgeTransaction.nativeAmount)
     const convertedAmount = UTILS.convertNativeToDisplay(walletDefaultDenomProps.multiplier)(absoluteAmount)
-    const currencyName = guiWallet.currencyNames[guiWallet.currencyCode]
+    const currencyName = guiWallet.currencyNames[edgeTransaction.currencyCode]
     const symbolString =
       UTILS.isCryptoParentCurrency(guiWallet, edgeTransaction.currencyCode) && walletDefaultDenomProps.symbol ? walletDefaultDenomProps.symbol : ''
 
@@ -246,7 +246,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     const absoluteAmount = abs(edgeTransaction.nativeAmount)
     const symbolString =
       UTILS.isCryptoParentCurrency(guiWallet, edgeTransaction.currencyCode) && walletDefaultDenomProps.symbol ? walletDefaultDenomProps.symbol : ''
-    const currencyName = guiWallet.currencyNames[guiWallet.currencyCode]
+    const currencyName = guiWallet.currencyNames[edgeTransaction.currencyCode]
 
     if (edgeTransaction.networkFee) {
       const convertedAmount = UTILS.convertNativeToDisplay(walletDefaultDenomProps.multiplier)(absoluteAmount)

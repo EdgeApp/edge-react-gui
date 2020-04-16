@@ -36,14 +36,12 @@ const rawStyles = {
   transactionDetailsDate: {
     fontSize: THEME.rem(1),
     color: THEME.COLORS.WHITE,
-    fontFamily: THEME.FONTS.DEFAULT,
-    lineHeight: 0
+    fontFamily: THEME.FONTS.DEFAULT
   },
   transactionDetailsTime: {
     fontSize: THEME.rem(0.6875),
     color: THEME.COLORS.HEADER_TEXT_SECONDARY,
-    fontFamily: THEME.FONTS.DEFAULT,
-    lineHeight: 0
+    fontFamily: THEME.FONTS.DEFAULT
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
