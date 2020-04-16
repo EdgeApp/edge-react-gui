@@ -23,7 +23,6 @@
   <uses-feature android:name="android.hardware.location" android:required="false" />
 
   <uses-sdk
-    android:minSdkVersion="23"
     android:targetSdkVersion="28" />
 
   <application
