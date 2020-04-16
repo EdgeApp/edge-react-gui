@@ -17,7 +17,6 @@
   "drawer_fio_address": "FIO Address",
   "network_alert_title": "No Internet connection",
   "fio_network_alert_text": "FIO functionality requires internet connection.",
-  "fio_address_label": "FIO Address",
   "fio_address_choose_label": "Choose a FIO Address",
   "error_token_exists": "A currency named %s already exists",
   "warning_low_or_custom_fee": "Using a low fee may increase the amount of time it takes for your transaction to confirm.",

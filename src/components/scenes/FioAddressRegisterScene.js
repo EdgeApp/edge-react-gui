@@ -42,7 +42,7 @@ export type StateProps = {
 
 export type DispatchProps = {
   changeFioAddressName: (fioAddressName: string) => void,
-  createFioWallet: () => Promise<any>
+  createFioWallet: () => Promise<EdgeCurrencyWallet>
 }
 
 type Props = StateProps & DispatchProps
@@ -295,7 +295,7 @@ export class FioAddressRegisterScene extends Component<Props, State> {
                 clearButtonMode={this.clearButtonMode}
                 autoCorrect={false}
                 autoCapitalize="none"
-                placeholder={s.strings.fio_address_label}
+                placeholder={s.strings.fio_address_confirm_screen_label}
                 caretHidden={true}
                 onFocus={this.handleFioAddressFocus}
                 onChangeText={this.handleFioAddressChange}

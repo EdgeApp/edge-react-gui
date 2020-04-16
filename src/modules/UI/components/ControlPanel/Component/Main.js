@@ -35,7 +35,6 @@ const PLUGIN_BUY_TEXT = s.strings.title_plugin_buy
 const PLUGIN_SELL_TEXT = s.strings.title_plugin_sell
 const EARN_INTEREST_TEXT = s.strings.earn_interest
 const TERMS_OF_SERVICE_TEXT = s.strings.title_terms_of_service
-const FIO_ADDRESS_TEXT = s.strings.drawer_fio_address
 
 export type Props = {
   logout: (username?: string) => void,
@@ -304,12 +303,11 @@ const LogoutButton = ({ onPress }) => {
   )
 }
 
-const goToFioAddressesScene = () => Actions[Constants.FIO_ADDRESS_LIST]()
 const FioAddressButton = () => {
   // FIO disable changes below
   if (global.isFioDisabled) return null
   return (
-    <Button onPress={goToFioAddressesScene}>
+    <Button onPress={Actions[Constants.FIO_ADDRESS_LIST]}>
       <Button.Row>
         <Button.Left>
           <Image source={fioAddressIcon} style={styles.iconImage} />
@@ -317,7 +315,7 @@ const FioAddressButton = () => {
 
         <Button.Center>
           <Button.Text>
-            <Text>{FIO_ADDRESS_TEXT}</Text>
+            <Text>{s.strings.drawer_fio_address}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>

@@ -21,7 +21,6 @@ const strings = {
 
   network_alert_title: 'No Internet connection',
   fio_network_alert_text: 'FIO functionality requires internet connection.',
-  fio_address_label: 'FIO Address',
   fio_address_choose_label: 'Choose a FIO Address',
 
   // Error messages:

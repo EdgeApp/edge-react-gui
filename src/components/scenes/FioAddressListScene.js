@@ -17,10 +17,6 @@ import type { FioAddress } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 
-type State = {
-  domainLoading: boolean
-}
-
 export type StateProps = {
   fioAddresses: FioAddress[],
   fioWallets: EdgeCurrencyWallet[],
@@ -31,8 +27,7 @@ export type StateProps = {
 
 export type DispatchProps = {
   setFioAddress: (fioAddress: string, expiration: string) => void,
-  refreshAllFioAddresses: (cb: Function) => Promise<void>,
-  createFioWallet: () => Promise<any>
+  refreshAllFioAddresses: () => Promise<void>
 }
 
 export type NavigationProps = {
@@ -41,18 +36,15 @@ export type NavigationProps = {
 
 type Props = StateProps & DispatchProps & NavigationProps
 
-export class FioAddressListScene extends Component<Props, State> {
-  willFocusSubscription = null
-  state = {
-    domainLoading: false
-  }
+export class FioAddressListScene extends Component<Props> {
+  willFocusSubscription: { remove: () => void } | null = null
 
   fetchData () {
     const { refreshAllFioAddresses, isConnected } = this.props
     if (!isConnected) {
       showError(s.strings.fio_network_alert_text)
     }
-    refreshAllFioAddresses(() => this.checkForFioAddresses())
+    refreshAllFioAddresses()
   }
 
   componentDidMount (): void {
@@ -61,34 +53,23 @@ export class FioAddressListScene extends Component<Props, State> {
     })
   }
 
-  componentWillUnmount () {
+  componentDidUpdate (prevProps: Props): void {
+    const { fioAddresses, loading, isConnected } = this.props
+
+    if (!loading && prevProps.loading) {
+      if (fioAddresses.length === 0 && isConnected) {
+        Actions[Constants.FIO_ADDRESS_REGISTER]({ noAddresses: true })
+      }
+    }
+  }
+
+  componentWillUnmount (): void {
     this.willFocusSubscription && this.willFocusSubscription.remove()
   }
 
-  checkForFioAddresses () {
-    const { fioAddresses, isConnected } = this.props
-
-    if (fioAddresses.length === 0 && isConnected) {
-      Actions[Constants.FIO_ADDRESS_REGISTER]({ noAddresses: true })
-    }
-  }
-
   registerDomain = async () => {
-    const { fioPlugin, fioWallets, createFioWallet } = this.props
-    let publicKey
-    if (fioWallets && fioWallets.length) {
-      publicKey = fioWallets[0].publicWalletInfo.keys.publicKey
-    } else {
-      this.setState({ domainLoading: true })
-      try {
-        const fioWallet = await createFioWallet()
-        publicKey = fioWallet.publicWalletInfo.keys.publicKey
-      } catch (e) {
-        showError(s.strings.create_wallet_failed_message)
-      }
-      this.setState({ domainLoading: false })
-    }
-    if (!publicKey) return
+    const { fioPlugin, fioWallets } = this.props
+    const publicKey = fioWallets[0].publicWalletInfo.keys.publicKey
     const url = `${await fioPlugin.otherMethods.getRegDomainUrl()}${publicKey}`
     Linking.canOpenURL(url).then(supported => {
       if (supported) {
@@ -100,10 +81,6 @@ export class FioAddressListScene extends Component<Props, State> {
     })
   }
 
-  registerAddress () {
-    Actions[Constants.FIO_ADDRESS_REGISTER]()
-  }
-
   onPress = (fioAddress: string, expirationValue: string) => {
     this.props.setFioAddress(fioAddress, expirationValue)
     Actions[Constants.FIO_ADDRESS_DETAILS]({ fioAddress, expirationValue })
@@ -111,7 +88,6 @@ export class FioAddressListScene extends Component<Props, State> {
 
   render () {
     const { fioAddresses, loading } = this.props
-    const { domainLoading } = this.state
 
     if (!fioAddresses.length) {
       return (
@@ -135,7 +111,7 @@ export class FioAddressListScene extends Component<Props, State> {
           <T>{s.strings.fio_address_first_screen_end}</T>
         </View>
         <View style={styles.button}>
-          <Button onPress={this.registerAddress} style={styles.toggleButton} underlayColor={styles.underlay.color}>
+          <Button onPress={Actions[Constants.FIO_ADDRESS_REGISTER]} style={styles.toggleButton} underlayColor={styles.underlay.color}>
             <Button.Center>
               <Button.Text>
                 <T>{s.strings.fio_address_list_screen_button_register}</T>
@@ -147,9 +123,9 @@ export class FioAddressListScene extends Component<Props, State> {
           <T>{s.strings.fio_address_reg_domain_label}</T>
         </View>
         <View style={styles.button}>
-          <TouchableHighlight disabled={domainLoading} onPress={this.registerDomain} underlayColor={styles.underlay.color}>
+          <TouchableHighlight onPress={this.registerDomain} underlayColor={styles.underlay.color}>
             <View>
-              {domainLoading ? <ActivityIndicator style={styles.link} size={'small'} /> : <T style={styles.link}>{s.strings.fio_address_reg_domain}</T>}
+              <T style={styles.link}>{s.strings.fio_address_reg_domain}</T>
             </View>
           </TouchableHighlight>
         </View>
