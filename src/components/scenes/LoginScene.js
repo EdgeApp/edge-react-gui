@@ -28,7 +28,6 @@ type DispatchProps = {
   deepLinkHandled(): void,
   initializeAccount(account: EdgeAccount, touchIdInfo: Object): void,
   logout(): void,
-  showMainApp(): void,
   showSendLogsModal(): void
 }
 type Props = StateProps & DispatchProps
@@ -43,10 +42,6 @@ class LoginSceneComponent extends Component<Props, State> {
     super(props)
     this.state = { counter: 0 }
     slowlog(this, /.*/, global.slowlogOptions)
-  }
-
-  componentDidMount () {
-    this.props.showMainApp()
   }
 
   componentDidUpdate (oldProps: Props) {
@@ -127,9 +122,6 @@ export const LoginScene = connect(
     },
     logout () {
       dispatch(logoutRequest())
-    },
-    showMainApp () {
-      dispatch({ type: 'SHOW_MAIN_APP' })
     },
     showSendLogsModal () {
       dispatch(showSendLogsModal())

@@ -150,9 +150,7 @@ type DispatchProps = {
   showReEnableOtpModal(): void
 }
 
-type StateProps = {
-  showMainApp: boolean
-}
+type StateProps = {}
 
 type Props = DispatchProps & StateProps
 
@@ -190,8 +188,8 @@ export class MainComponent extends Component<Props> {
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderHelpButton()}
             />
-            {this.props.showMainApp && this.renderTransactionDetailsView()}
-            {this.props.showMainApp && this.renderTabView()}
+            {this.renderTransactionDetailsView()}
+            {this.renderTabView()}
           </Stack>
         </RouterWithRedux>
         <PasswordReminderModal />
@@ -821,9 +819,7 @@ export class MainComponent extends Component<Props> {
 }
 
 export const Main = connect(
-  (state: ReduxState): StateProps => ({
-    showMainApp: state.showMainApp
-  }),
+  (state: ReduxState): StateProps => ({}),
   (dispatch: Dispatch): DispatchProps => ({
     // Navigation actions:
     logout (username?: string): void {
