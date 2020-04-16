@@ -50,6 +50,11 @@ export const loadAccountReferral = (account: EdgeAccount) => async (dispatch: Di
   dispatch({ type: 'ACCOUNT_REFERRAL_LOADED', data: { cache, referral } })
   saveAccountReferral(getState())
   saveReferralCache(getState())
+
+  // Now try activating the same link as a promotion (with silent errors):
+  try {
+    await activatePromotion(installerId)(dispatch, getState)
+  } catch (error) {}
 }
 
 /**
