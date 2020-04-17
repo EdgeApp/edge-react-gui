@@ -409,7 +409,7 @@
   "transaction_detail_unable_to_load_transaction": "No es posible cargar la transacción",
   "string_confirm": "Confirmar",
   "fragment_tx_detail_mining_fee_with_symbol": "",
-  "fragment_tx_detail_mining_fee_with_denom": "",
+  "fragment_tx_detail_mining_fee_with_denom": "+ %1f %2s comisión",
   "string_search": "Buscar",
   "confirm_password_text": "Confirmar contraseña",
   "title_otp_keep_modal": "Autenticación de doble factor",
