@@ -13,7 +13,7 @@ import { createCurrencyWalletAndAddToSwap } from '../../actions/CreateWalletActi
 import { type SetNativeAmountInfo, getQuoteForTransaction, selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
 import { updateMostRecentWalletsSelected } from '../../actions/WalletActions.js'
 import CryptoExchangeMessageConnector from '../../connectors/components/CryptoExchangeMessageConnector'
-import { WalletListModalConnected as WalletListModal } from '../../connectors/components/WalletListModalConnector.js'
+import { WalletListModalConnected as WalletListModal } from '../../connectors/components/WalletListModalConnector2.js'
 import { ARROW_DOWN_BOLD, DEFAULT_STARTER_WALLET_NAMES, MATERIAL_COMMUNITY } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import { getSettings } from '../../modules/Settings/selectors.js'
@@ -262,7 +262,7 @@ class CryptoExchangeComponent extends Component<Props, State> {
   }
 
   renderDropUp = (whichWallet: 'from' | 'to') => {
-    const { account, onSelectWallet, fromCurrencyCode, fromWallet, toCurrencyCode, toWallet, wallets } = this.props
+    const { account, onSelectWallet, wallets } = this.props
     const walletCurrencyCodes = []
     const allowedWallets = []
     for (const id in wallets) {
@@ -280,22 +280,16 @@ class CryptoExchangeComponent extends Component<Props, State> {
         supportedWalletTypes.push(swt)
       }
     }
-    const filterWalletId = whichWallet === 'to' ? fromWallet.id : toWallet.id
-    const filterWalletCurrencyCode = whichWallet === 'to' ? fromCurrencyCode : toCurrencyCode
     Airship.show(bridge => (
       <WalletListModal
         bridge={bridge}
-        wallets={allowedWallets}
-        type={whichWallet}
-        existingWalletToFilterId={filterWalletId}
-        existingWalletToFilterCurrencyCode={filterWalletCurrencyCode}
-        supportedWalletTypes={supportedWalletTypes}
-        excludedCurrencyCode={[]}
-        showWalletCreators={whichWallet === 'to'}
         headerTitle={whichWallet === 'to' ? s.strings.select_recv_wallet : s.strings.select_src_wallet}
-        excludedTokens={[]}
-        noWalletCodes={[]}
-        disableZeroBalance={false}
+        wallets={allowedWallets}
+        createWalletCurrencies={supportedWalletTypes}
+        showCreateWallet={whichWallet === 'to'}
+        excludeWalletIds={undefined} // To be remove at the last clean up commit
+        allowedCurrencyCodes={undefined} // To be remove at the last clean up commit
+        excludeCurrencyCodes={undefined} // To be remove at the last clean up commit
       />
     )).then((response: GuiWallet | Object | null) => {
       if (response) {
