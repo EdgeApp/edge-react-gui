@@ -409,7 +409,7 @@
   "transaction_detail_unable_to_load_transaction": "取引を読み込むことができません",
   "string_confirm": "確認",
   "fragment_tx_detail_mining_fee_with_symbol": "",
-  "fragment_tx_detail_mining_fee_with_denom": "",
+  "fragment_tx_detail_mining_fee_with_denom": "+ %1f %2s 手数料",
   "string_search": "検索",
   "confirm_password_text": "パスワード確認",
   "title_otp_keep_modal": "２段階認証",
