@@ -13,7 +13,7 @@ import type { Dispatch, State as ReduxState } from '../../types/reduxTypes.js'
 import { javascript } from '../../util/bridge/injectThisInWebView.js'
 import { bestOfPlugins } from '../../util/ReferralHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { showError } from '../services/AirshipInstance.js'
+import { showError, showToast } from '../services/AirshipInstance.js'
 import { requestPermission } from '../services/PermissionsManager.js'
 
 // WebView bridge managemer --------------------------------------------
@@ -134,6 +134,7 @@ class GuiPluginView extends React.Component<Props, State> {
   _canGoBack: boolean
   _edgeProvider: EdgeProvider
   _promoCode: string | void
+  _promoMessage: string | void
   _webview: WebView | void
 
   constructor (props) {
@@ -169,7 +170,12 @@ class GuiPluginView extends React.Component<Props, State> {
   }
 
   componentDidMount () {
-    this.checkPermissions().catch(showError)
+    this.checkPermissions()
+      .then(() => {
+        const message = this._promoMessage
+        if (message != null) showToast(message)
+      })
+      .catch(showError)
   }
 
   componentDidUpdate () {
@@ -183,6 +189,7 @@ class GuiPluginView extends React.Component<Props, State> {
     const accountReferral = state.account.accountReferral
     const activePlugins = bestOfPlugins(accountPlugins, accountReferral, undefined)
     this._promoCode = activePlugins.promoCodes[plugin.pluginId]
+    this._promoMessage = activePlugins.promoMessages[plugin.pluginId]
   }
 
   async checkPermissions () {

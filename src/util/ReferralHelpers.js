@@ -30,7 +30,8 @@ export type PluginSummary = {
   preferredFiatPluginId: string | void,
   preferredSwapPluginId: string | void,
   disabled: { [pluginId: string]: true },
-  promoCodes: { [pluginId: string]: string }
+  promoCodes: { [pluginId: string]: string },
+  promoMessages: { [pluginId: string]: string }
 }
 
 /**
@@ -70,7 +71,8 @@ export function bestOfPlugins (
     preferredFiatPluginId: undefined,
     preferredSwapPluginId: settingsPreferredSwap,
     disabled: {},
-    promoCodes: {}
+    promoCodes: {},
+    promoMessages: {}
   }
 
   // Fold in the account affiliate information:
@@ -112,7 +114,8 @@ function mergePluginSummaries (a: PluginSummary, b: PluginSummary): PluginSummar
     preferredFiatPluginId,
     preferredSwapPluginId,
     disabled: { ...a.disabled, ...b.disabled },
-    promoCodes: { ...a.promoCodes, ...b.promoCodes }
+    promoCodes: { ...a.promoCodes, ...b.promoCodes },
+    promoMessages: { ...a.promoMessages, ...b.promoMessages }
   }
 }
 
@@ -138,18 +141,20 @@ function summarizePlugins (plugins: PluginTweak[], now: Date): PluginSummary {
     preferredFiatPluginId: undefined,
     preferredSwapPluginId: undefined,
     disabled: {},
-    promoCodes: {}
+    promoCodes: {},
+    promoMessages: {}
   }
 
   // Search through the account creation plugin tweaks:
   for (const plugin of plugins) {
-    const { pluginId, preferredFiat = false, preferredSwap = false, promoCode, disabled } = plugin
+    const { pluginId, disabled, preferredFiat = false, preferredSwap = false, promoCode, promoMessage } = plugin
     if (!isActive(plugin, now)) continue
 
     if (preferredFiat) out.preferredFiatPluginId = pluginId
     if (preferredSwap) out.preferredSwapPluginId = pluginId
     if (disabled) out.disabled[pluginId] = true
     if (promoCode != null) out.promoCodes[pluginId] = promoCode
+    if (promoMessage != null) out.promoMessages[pluginId] = promoMessage
   }
   return out
 }

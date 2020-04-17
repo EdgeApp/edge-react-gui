@@ -34,6 +34,7 @@ export const asPluginTweak = asObject({
   preferredFiat: asOptional(asBoolean),
   preferredSwap: asOptional(asBoolean),
   promoCode: asOptional(asString),
+  promoMessage: asOptional(asString),
   disabled: asOptional(asBoolean, false),
 
   startDate: asOptional(asDate),
