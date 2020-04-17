@@ -31,7 +31,18 @@ describe('parseDeepLink', function () {
 
     it('Wrong host', () => {
       const result = parseDeepLink('edge-ret://edgey/1234567890a')
+      expect(result.type).toBe('returnAddress')
+    })
+  })
+
+  describe('pay', () => {
+    it('edge://pay/bitcoin/1FeexV6bAHb8ybZjqQMjJrcCrHGW9sb6uF?amount=0.001', () => {
+      const result = parseDeepLink('edge://pay/bitcoin/1FeexV6bAHb8ybZjqQMjJrcCrHGW9sb6uF?amount=0.001')
       expect(result.type).toBe('other')
+
+      if (result.type !== 'other') return
+      expect(result.protocol).toBe('bitcoin')
+      expect(result.uri).toBe('bitcoin:1FeexV6bAHb8ybZjqQMjJrcCrHGW9sb6uF?amount=0.001')
     })
   })
 

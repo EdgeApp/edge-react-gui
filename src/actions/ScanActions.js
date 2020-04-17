@@ -43,7 +43,7 @@ import { sweepPrivateKeyFail, sweepPrivateKeyStart, sweepPrivateKeySuccess } fro
 import { secondaryModalActivated } from './SecondaryModalActions.js'
 import { paymentProtocolUriReceived } from './SendConfirmationActions.js'
 
-const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWallet, guiWallet: GuiWallet, link: ReturnAddressLink) => {
+export const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWallet, guiWallet: GuiWallet, link: ReturnAddressLink) => {
   const { currencyName, sourceName = '', successUri = '' } = link
   dispatch({ type: 'DISABLE_SCAN' })
   if (currencyName !== edgeWallet.currencyInfo.pluginId) {
