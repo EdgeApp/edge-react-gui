@@ -1,5 +1,13 @@
 # edge-react-gui
 
+## 1.12.1
+
+- New exchange provider Switchain
+- Increased limit and added more countries to MoonPay
+- New transaction details screen
+- Enhanced deeplinking capabilities
+- Bug fixes and visual enhancements
+
 ## 1.12.0
 
 - Add FIO - register address, send, and receive
