@@ -409,7 +409,7 @@
   "transaction_detail_unable_to_load_transaction": "Không thể tải các giao dịch",
   "string_confirm": "Xác nhận",
   "fragment_tx_detail_mining_fee_with_symbol": "",
-  "fragment_tx_detail_mining_fee_with_denom": "",
+  "fragment_tx_detail_mining_fee_with_denom": "+ %1f %2s phí",
   "string_search": "Tìm kiếm",
   "confirm_password_text": "Xác nhận mật khẩu",
   "title_otp_keep_modal": "Xác thực mật mã lần 2 (2FA)",
