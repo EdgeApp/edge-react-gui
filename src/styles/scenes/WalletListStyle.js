@@ -483,8 +483,8 @@ export const styles = {
     padding: THEME.rem(0.5)
   },
   promoIcon: {
-    width: THEME.rem(2),
-    height: THEME.rem(2),
+    width: THEME.rem(3),
+    height: THEME.rem(3),
     margin: THEME.rem(0.5)
   },
   promoText: {
