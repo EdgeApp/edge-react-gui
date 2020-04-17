@@ -409,7 +409,7 @@
   "transaction_detail_unable_to_load_transaction": "거래를 로딩할 수 없습니다.",
   "string_confirm": "확인",
   "fragment_tx_detail_mining_fee_with_symbol": "",
-  "fragment_tx_detail_mining_fee_with_denom": "",
+  "fragment_tx_detail_mining_fee_with_denom": "+ %1f %2s 수수료",
   "string_search": "검색",
   "confirm_password_text": "암호 확인",
   "title_otp_keep_modal": "2단계 인증 (2FA)",
