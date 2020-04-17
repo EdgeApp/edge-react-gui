@@ -17,6 +17,7 @@ import URL from 'url-parse'
  *   - plugin: GUI plugin deep link
  *   - promotion: Activate a promotion code
  *   - recovery: Password recovery
+ *   - swap: Crypto-to-crypto swap
  *   - x-callback-url: Address request
  *
  * The `edge://` protocol is the preferred way to link into the application,
@@ -64,12 +65,18 @@ export type ReturnAddressLink = {
   successUri?: string
 }
 
+export type SwapLink = {
+  type: 'swap'
+  // We may eventually add query parameters to pre-populate currencies.
+}
+
 export type DeepLink =
   | EdgeLoginLink
   | PasswordRecoveryLink
   | PluginLink
   | PromotionLink
   | ReturnAddressLink
+  | SwapLink
   | {
       type: 'other',
       protocol: string, // Without the ':'
@@ -144,6 +151,10 @@ function parseEdgeProtocol (url: URL): DeepLink {
     case 'recovery': {
       const { token = '' } = url.query
       return { type: 'passwordRecovery', passwordRecoveryKey: token }
+    }
+
+    case 'swap': {
+      return { type: 'swap' }
     }
 
     case 'x-callback-url': {
