@@ -409,7 +409,7 @@
   "transaction_detail_unable_to_load_transaction": "Не удается загрузить транзакцию",
   "string_confirm": "Подтвердить",
   "fragment_tx_detail_mining_fee_with_symbol": "",
-  "fragment_tx_detail_mining_fee_with_denom": "",
+  "fragment_tx_detail_mining_fee_with_denom": "+ %1f %2s комиссия",
   "string_search": "Поиск",
   "confirm_password_text": "Подтвердить пароль",
   "title_otp_keep_modal": "Двухфакторная аутентификация",
