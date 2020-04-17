@@ -18,7 +18,7 @@
     - Remove deprecated `EdgeAccount.pluginData`. Use `EdgeAccount.dataStore`.
     - Remove deprecated `EdgeIo.WebSocket`.
 
-- Upgrade edge-exchange-plugins to v0.10.1
+- Upgrade edge-exchange-plugins to v0.10.2
   - Add Switchain swap plugin.
   - Pass promo codes to Changelly, ChangeNow, and Godex.
   - Fix ChangeNow on Android & add better logging.
