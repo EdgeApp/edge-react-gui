@@ -171,21 +171,22 @@ export class TransactionRowComponent extends Component<Props, State> {
     const transactionCategory = transactionMeta ? transactionMeta.category : null
     let formattedTransactionCategory = null
     if (transactionCategory) {
-      const categoryArray = transactionCategory.split(':')
-      if (categoryArray[1]) {
-        const mainCategory = categoryArray[0].toLowerCase()
+      const splittedFullCategory = UTILS.splitTransactionCategory(transactionCategory)
+      const { category, subCategory } = splittedFullCategory
+      if (subCategory) {
+        const mainCategory = category.toLowerCase()
         switch (mainCategory) {
           case 'exchange':
-            formattedTransactionCategory = `${s.strings.fragment_transaction_exchange}:${categoryArray[1]}`
+            formattedTransactionCategory = `${s.strings.fragment_transaction_exchange}:${subCategory}`
             break
           case 'expense':
-            formattedTransactionCategory = `${s.strings.fragment_transaction_expense}:${categoryArray[1]}`
+            formattedTransactionCategory = `${s.strings.fragment_transaction_expense}:${subCategory}`
             break
           case 'transfer':
-            formattedTransactionCategory = `${s.strings.fragment_transaction_transfer}:${categoryArray[1]}`
+            formattedTransactionCategory = `${s.strings.fragment_transaction_transfer}:${subCategory}`
             break
           case 'income':
-            formattedTransactionCategory = `${s.strings.fragment_transaction_income}:${categoryArray[1]}`
+            formattedTransactionCategory = `${s.strings.fragment_transaction_income}:${subCategory}`
             break
           default:
             break

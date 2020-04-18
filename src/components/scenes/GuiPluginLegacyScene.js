@@ -85,7 +85,6 @@ class GuiPluginLegacy extends React.Component<Props, State> {
       walletName: props.walletName,
       walletId: props.walletId,
       navigationState: this.props.navigation.state,
-      folder: props.account.pluginData,
       toggleWalletList: this.toggleWalletList,
       chooseWallet: this.chooseWallet,
       back: this._webviewBack,

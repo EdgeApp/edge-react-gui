@@ -29,8 +29,8 @@ describe.skip('Account', () => {
       const defaultDenom = SYNCED_ACCOUNT_DEFAULTS[key].denomination
       if (defaultDenom) {
         // if it's in synced settings defaults
-        const pluginName = CURRENCY_PLUGIN_NAMES[key]
-        if (pluginName) {
+        const pluginId = CURRENCY_PLUGIN_NAMES[key]
+        if (pluginId) {
           // and is a plugin
           // check that default denom is in plugin options for denoms
           const plugin = account.currencyConfig[CURRENCY_PLUGIN_NAMES[key]]

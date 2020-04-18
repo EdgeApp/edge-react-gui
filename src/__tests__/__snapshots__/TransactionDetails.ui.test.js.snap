@@ -3,203 +3,476 @@
 exports[`TransactionDetails.ui should render 1`] = `
 <React.Fragment>
   <SceneWrapper
-    background="body"
     bodySplit={33.709859154929575}
   >
-    <ScrollViewMock
-      gradientHeight="50%"
-      keyboardShouldPersistTaps="handled"
-      overScrollMode="never"
-      scrollEnabled={true}
-    >
-      <View
-        style={
-          Object {
-            "alignItems": "stretch",
-            "backgroundColor": "#FFFFFF",
-            "flexDirection": "column",
-            "marginTop": 33.709859154929575,
-            "paddingTop": 44.946478873239435,
-          }
+    <View
+      style={
+        Object {
+          "backgroundColor": "#F4F5F6",
+          "flex": 1,
+          "height": "100%",
+          "width": "100%",
         }
-      >
-        <PayeeIcon
-          direction="receive"
-          thumbnailPath="thumb/nail/path"
-        />
+      }
+    >
+      <ScrollViewMock>
         <View
           style={
             Object {
-              "alignItems": "center",
+              "flex": 1,
               "flexDirection": "column",
+              "width": "100%",
             }
           }
         >
+          <TouchableWithoutFeedback
+            onPress={[Function]}
+          >
+            <View
+              style={
+                Object {
+                  "backgroundColor": "#FFFFFF",
+                  "borderBottomColor": "#D9E3ED",
+                  "borderBottomWidth": 1,
+                  "height": 101,
+                  "justifyContent": "center",
+                  "padding": 18,
+                  "width": "100%",
+                }
+              }
+            >
+              <Image
+                source={
+                  Object {
+                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
+                  }
+                }
+                style={
+                  Array [
+                    Object {
+                      "height": 16,
+                      "position": "absolute",
+                      "right": 10,
+                      "top": 10,
+                      "width": 16,
+                    },
+                  ]
+                }
+              />
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#0E4B75",
+                    "fontSize": 16,
+                    "marginBottom": 2,
+                  }
+                }
+              >
+                Sender Name
+              </FormattedText>
+              <View
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                  }
+                }
+              >
+                <Image
+                  source={
+                    Object {
+                      "uri": "thumb/nail/path",
+                    }
+                  }
+                  style={
+                    Array [
+                      Object {
+                        "borderRadius": 20,
+                        "height": 40,
+                        "marginRight": 9,
+                        "width": 40,
+                      },
+                    ]
+                  }
+                />
+                <FormattedText
+                  style={
+                    Object {
+                      "color": "#353535",
+                      "fontSize": 22,
+                    }
+                  }
+                >
+                  Sender
+                </FormattedText>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
           <View
             style={
               Object {
-                "alignItems": "center",
-                "padding": 5.618309859154929,
-                "width": "80%",
+                "backgroundColor": "#FFFFFF",
+                "borderBottomColor": "#D9E3ED",
+                "borderBottomWidth": 1,
+                "height": 90,
+                "justifyContent": "center",
+                "padding": 18,
+                "width": "100%",
               }
             }
           >
-            <TextInput
-              allowFontScaling={true}
-              autoCapitalize="words"
-              autoCorrect={false}
-              defaultValue=""
-              onFocus={[Function]}
-              placeholder="Payee"
-              placeholderTextColor="#87939E"
-              rejectResponderTermination={true}
+            <FormattedText
               style={
-                Array [
-                  Object {
-                    "color": "#4A5157",
-                    "fontFamily": "SourceSansPro-Black",
-                    "fontSize": 23.87781690140845,
-                    "height": 33.709859154929575,
-                    "textAlign": "center",
-                    "width": "100%",
-                  },
-                  undefined,
-                ]
+                Object {
+                  "color": "#0E4B75",
+                  "fontSize": 16,
+                  "marginBottom": 2,
+                }
               }
-              underlineColorAndroid="transparent"
-            />
+            >
+              Bitcoin Amount
+            </FormattedText>
+            <FormattedText
+              style={
+                Object {
+                  "color": "#353535",
+                  "fontSize": 22,
+                }
+              }
+            >
+              ₿ 
+              0.00000123
+              
+            </FormattedText>
           </View>
-        </View>
-        <View
-          style={
-            Object {
-              "alignSelf": "center",
-              "borderBottomColor": "#CCCCCC",
-              "borderBottomWidth": 1,
-              "height": 1.4045774647887324,
-              "width": "38%",
-            }
-          }
-        />
-        <View
-          style={
-            Object {
-              "alignItems": "center",
-              "flexDirection": "column",
-              "padding": 5.618309859154929,
-            }
-          }
-        >
-          <FormattedText
+          <TouchableWithoutFeedback
+            onPress={[Function]}
+          >
+            <View
+              style={
+                Object {
+                  "backgroundColor": "#FFFFFF",
+                  "borderBottomColor": "#D9E3ED",
+                  "borderBottomWidth": 1,
+                  "height": 90,
+                  "justifyContent": "center",
+                  "padding": 18,
+                  "width": "100%",
+                }
+              }
+            >
+              <Image
+                source={
+                  Object {
+                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
+                  }
+                }
+                style={
+                  Array [
+                    Object {
+                      "height": 16,
+                      "position": "absolute",
+                      "right": 10,
+                      "top": 10,
+                      "width": 16,
+                    },
+                  ]
+                }
+              />
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#0E4B75",
+                    "fontSize": 16,
+                    "marginBottom": 2,
+                  }
+                }
+              >
+                Amount in iso:USD
+              </FormattedText>
+              <View
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                  }
+                }
+              >
+                <FormattedText
+                  style={
+                    Object {
+                      "color": "#353535",
+                      "fontSize": 22,
+                    }
+                  }
+                >
+                  $ 
+                </FormattedText>
+                <FormattedText
+                  style={
+                    Object {
+                      "color": "#353535",
+                      "fontSize": 22,
+                    }
+                  }
+                >
+                  0.00
+                </FormattedText>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+          <View
             style={
               Object {
-                "color": "#87939E",
-                "fontSize": 19.664084507042254,
+                "backgroundColor": "#FFFFFF",
+                "borderBottomColor": "#D9E3ED",
+                "borderBottomWidth": 1,
+                "height": 90,
+                "justifyContent": "center",
+                "padding": 18,
+                "width": "100%",
               }
             }
           >
-            Aug 31st, 2018, 9:59:40 PM
-          </FormattedText>
+            <FormattedText
+              style={
+                Object {
+                  "color": "#0E4B75",
+                  "fontSize": 16,
+                  "marginBottom": 2,
+                }
+              }
+            >
+              Amount at Current Price
+            </FormattedText>
+            <View
+              style={
+                Object {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                }
+              }
+            >
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#353535",
+                    "flex": 1,
+                    "fontSize": 22,
+                  }
+                }
+              >
+                $ 
+                120.00
+              </FormattedText>
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#66EDA8",
+                    "fontSize": 22,
+                  }
+                }
+              >
+                0
+                %
+              </FormattedText>
+            </View>
+          </View>
+          <TouchableWithoutFeedback
+            onPress={[Function]}
+          >
+            <View
+              style={
+                Object {
+                  "backgroundColor": "#FFFFFF",
+                  "borderBottomColor": "#D9E3ED",
+                  "borderBottomWidth": 1,
+                  "height": 101,
+                  "justifyContent": "center",
+                  "padding": 18,
+                  "width": "100%",
+                }
+              }
+            >
+              <Image
+                source={
+                  Object {
+                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
+                  }
+                }
+                style={
+                  Array [
+                    Object {
+                      "height": 16,
+                      "position": "absolute",
+                      "right": 10,
+                      "top": 10,
+                      "width": 16,
+                    },
+                  ]
+                }
+              />
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#0E4B75",
+                    "fontSize": 16,
+                    "marginBottom": 2,
+                  }
+                }
+              >
+                Category
+              </FormattedText>
+              <View
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                  }
+                }
+              >
+                <View
+                  style={
+                    Object {
+                      "backgroundColor": "#A4C7DF",
+                      "borderRadius": 3,
+                      "marginVertical": 7,
+                      "paddingHorizontal": 11,
+                      "paddingVertical": 7,
+                    }
+                  }
+                >
+                  <FormattedText
+                    style={
+                      Object {
+                        "color": "#0E4B75",
+                        "fontSize": 20,
+                      }
+                    }
+                  >
+                    Income
+                  </FormattedText>
+                </View>
+                <FormattedText
+                  style={
+                    Object {
+                      "color": "#353535",
+                      "marginHorizontal": 16,
+                      "marginVertical": 7,
+                    }
+                  }
+                >
+                  
+                </FormattedText>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback
+            onPress={[Function]}
+          >
+            <View
+              style={
+                Object {
+                  "backgroundColor": "#FFFFFF",
+                  "borderBottomColor": "#D9E3ED",
+                  "borderBottomWidth": 1,
+                  "minHeight": 101,
+                  "padding": 18,
+                  "width": "100%",
+                }
+              }
+            >
+              <Image
+                source={
+                  Object {
+                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
+                  }
+                }
+                style={
+                  Array [
+                    Object {
+                      "height": 16,
+                      "position": "absolute",
+                      "right": 10,
+                      "top": 10,
+                      "width": 16,
+                    },
+                  ]
+                }
+              />
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#0E4B75",
+                    "fontSize": 16,
+                    "marginBottom": 11,
+                  }
+                }
+              >
+                Notes
+              </FormattedText>
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#353535",
+                    "fontSize": 20,
+                  }
+                }
+              >
+                
+              </FormattedText>
+            </View>
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback
+            onPress={[Function]}
+          >
+            <FormattedText
+              style={
+                Object {
+                  "color": "#0E4B75",
+                  "fontSize": 20,
+                  "marginLeft": "auto",
+                  "marginRight": "auto",
+                  "marginVertical": 29,
+                  "textAlign": "center",
+                  "width": "100%",
+                }
+              }
+            >
+              View Advanced Transaction Data
+            </FormattedText>
+          </TouchableWithoutFeedback>
+          <View
+            style={
+              Object {
+                "flex": 1,
+              }
+            }
+          />
+          <View
+            style={
+              Object {
+                "paddingBottom": 18,
+                "paddingHorizontal": 11,
+              }
+            }
+          >
+            <PrimaryButton
+              onPress={[Function]}
+              style={
+                Object {
+                  "height": 67,
+                }
+              }
+            >
+              <Text>
+                Save
+              </Text>
+            </PrimaryButton>
+          </View>
         </View>
-        <AmountArea
-          categories={
-            Object {
-              "exchange": Object {
-                "color": "#F1AA19",
-                "key": "exchange",
-                "syntax": "Exchange",
-              },
-              "expense": Object {
-                "color": "#E85466",
-                "key": "expense",
-                "syntax": "Expense",
-              },
-              "income": Object {
-                "color": "#0073D9",
-                "key": "income",
-                "syntax": "Income",
-              },
-              "transfer": Object {
-                "color": "#0D2145",
-                "key": "transfer",
-                "syntax": "Transfer",
-              },
-            }
-          }
-          category="income"
-          categorySelectVisibility={false}
-          color="#0073D9"
-          cryptoCurrencyCode="BTC"
-          direction="receive"
-          edgeTransaction={
-            Object {
-              "blockHeight": 0,
-              "currencyCode": "BTC",
-              "date": 1535752780.947,
-              "nativeAmount": "123",
-              "networkFee": "1",
-              "otherParams": Object {},
-              "ourReceiveAddresses": Array [
-                "this is an address",
-              ],
-              "signedTx": "this is a signed tx",
-              "txid": "this is the txid",
-              "wallet": Object {
-                "allDenominations": Object {},
-                "balances": Object {
-                  "BTC": "123123",
-                },
-                "blockHeight": 12345,
-                "currencyCode": "BTC",
-                "currencyInfo": Object {},
-                "displayPrivateSeed": "private seed",
-                "displayPublicSeed": "public seed",
-                "fiatCurrencyCode": "iso:USD",
-                "id": "123",
-                "name": "wallet name",
-              },
-            }
-          }
-          fiatAmount="0.00"
-          fiatCurrencyCode="iso:USD"
-          fiatCurrencySymbol="$"
-          guiWallet={
-            Object {
-              "allDenominations": Object {},
-              "balances": Object {
-                "BTC": "123123",
-              },
-              "blockHeight": 12345,
-              "currencyCode": "BTC",
-              "currencyInfo": Object {},
-              "displayPrivateSeed": "private seed",
-              "displayPublicSeed": "public seed",
-              "fiatCurrencyCode": "iso:USD",
-              "id": "123",
-              "name": "wallet name",
-            }
-          }
-          onBlurFiatFxn={[Function]}
-          onBlurNotes={[Function]}
-          onChangeCategory={[Function]}
-          onChangeFiatFxn={[Function]}
-          onChangeNotesFxn={[Function]}
-          onEnterCategories={[Function]}
-          onEnterSubcategories={[Function]}
-          onExitCategories={[Function]}
-          onFocusFiatAmount={[Function]}
-          onFocusNotes={[Function]}
-          onNotesKeyboardReturn={[Function]}
-          onPressAdvancedDetailsButton={[Function]}
-          onPressFxn={[Function]}
-          onSelectSubCategory={[Function]}
-          onSubcategoryKeyboardReturn={[Function]}
-          subCategory=""
-          subCategorySelectVisibility={false}
-          txExplorerUrl={null}
-        />
-      </View>
-    </ScrollViewMock>
+      </ScrollViewMock>
+    </View>
   </SceneWrapper>
 </React.Fragment>
 `;
@@ -207,206 +480,476 @@ exports[`TransactionDetails.ui should render 1`] = `
 exports[`TransactionDetails.ui should render with negative nativeAmount and fiatAmount 1`] = `
 <React.Fragment>
   <SceneWrapper
-    background="body"
     bodySplit={33.709859154929575}
   >
-    <ScrollViewMock
-      gradientHeight="50%"
-      keyboardShouldPersistTaps="handled"
-      overScrollMode="never"
-      scrollEnabled={true}
-    >
-      <View
-        style={
-          Object {
-            "alignItems": "stretch",
-            "backgroundColor": "#FFFFFF",
-            "flexDirection": "column",
-            "marginTop": 33.709859154929575,
-            "paddingTop": 44.946478873239435,
-          }
+    <View
+      style={
+        Object {
+          "backgroundColor": "#F4F5F6",
+          "flex": 1,
+          "height": "100%",
+          "width": "100%",
         }
-      >
-        <PayeeIcon
-          direction="send"
-          thumbnailPath="thumb/nail/path"
-        />
+      }
+    >
+      <ScrollViewMock>
         <View
           style={
             Object {
-              "alignItems": "center",
+              "flex": 1,
               "flexDirection": "column",
+              "width": "100%",
             }
           }
         >
+          <TouchableWithoutFeedback
+            onPress={[Function]}
+          >
+            <View
+              style={
+                Object {
+                  "backgroundColor": "#FFFFFF",
+                  "borderBottomColor": "#D9E3ED",
+                  "borderBottomWidth": 1,
+                  "height": 101,
+                  "justifyContent": "center",
+                  "padding": 18,
+                  "width": "100%",
+                }
+              }
+            >
+              <Image
+                source={
+                  Object {
+                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
+                  }
+                }
+                style={
+                  Array [
+                    Object {
+                      "height": 16,
+                      "position": "absolute",
+                      "right": 10,
+                      "top": 10,
+                      "width": 16,
+                    },
+                  ]
+                }
+              />
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#0E4B75",
+                    "fontSize": 16,
+                    "marginBottom": 2,
+                  }
+                }
+              >
+                Recipient Name
+              </FormattedText>
+              <View
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                  }
+                }
+              >
+                <Image
+                  source={
+                    Object {
+                      "uri": "thumb/nail/path",
+                    }
+                  }
+                  style={
+                    Array [
+                      Object {
+                        "borderRadius": 20,
+                        "height": 40,
+                        "marginRight": 9,
+                        "width": 40,
+                      },
+                    ]
+                  }
+                />
+                <FormattedText
+                  style={
+                    Object {
+                      "color": "#353535",
+                      "fontSize": 22,
+                    }
+                  }
+                >
+                  Recipient
+                </FormattedText>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
           <View
             style={
               Object {
-                "alignItems": "center",
-                "padding": 5.618309859154929,
-                "width": "80%",
+                "backgroundColor": "#FFFFFF",
+                "borderBottomColor": "#D9E3ED",
+                "borderBottomWidth": 1,
+                "height": 90,
+                "justifyContent": "center",
+                "padding": 18,
+                "width": "100%",
               }
             }
           >
-            <TextInput
-              allowFontScaling={true}
-              autoCapitalize="words"
-              autoCorrect={false}
-              defaultValue=""
-              onFocus={[Function]}
-              placeholder="Payee"
-              placeholderTextColor="#87939E"
-              rejectResponderTermination={true}
+            <FormattedText
               style={
-                Array [
-                  Object {
-                    "color": "#4A5157",
-                    "fontFamily": "SourceSansPro-Black",
-                    "fontSize": 23.87781690140845,
-                    "height": 33.709859154929575,
-                    "textAlign": "center",
-                    "width": "100%",
-                  },
-                  undefined,
-                ]
+                Object {
+                  "color": "#0E4B75",
+                  "fontSize": 16,
+                  "marginBottom": 2,
+                }
               }
-              underlineColorAndroid="transparent"
-            />
+            >
+              Bitcoin Amount
+            </FormattedText>
+            <FormattedText
+              style={
+                Object {
+                  "color": "#353535",
+                  "fontSize": 22,
+                }
+              }
+            >
+              ₿ 
+              0.00000122
+               (+ 0 fee)
+            </FormattedText>
           </View>
-        </View>
-        <View
-          style={
-            Object {
-              "alignSelf": "center",
-              "borderBottomColor": "#CCCCCC",
-              "borderBottomWidth": 1,
-              "height": 1.4045774647887324,
-              "width": "38%",
-            }
-          }
-        />
-        <View
-          style={
-            Object {
-              "alignItems": "center",
-              "flexDirection": "column",
-              "padding": 5.618309859154929,
-            }
-          }
-        >
-          <FormattedText
+          <TouchableWithoutFeedback
+            onPress={[Function]}
+          >
+            <View
+              style={
+                Object {
+                  "backgroundColor": "#FFFFFF",
+                  "borderBottomColor": "#D9E3ED",
+                  "borderBottomWidth": 1,
+                  "height": 90,
+                  "justifyContent": "center",
+                  "padding": 18,
+                  "width": "100%",
+                }
+              }
+            >
+              <Image
+                source={
+                  Object {
+                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
+                  }
+                }
+                style={
+                  Array [
+                    Object {
+                      "height": 16,
+                      "position": "absolute",
+                      "right": 10,
+                      "top": 10,
+                      "width": 16,
+                    },
+                  ]
+                }
+              />
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#0E4B75",
+                    "fontSize": 16,
+                    "marginBottom": 2,
+                  }
+                }
+              >
+                Amount in iso:USD
+              </FormattedText>
+              <View
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                  }
+                }
+              >
+                <FormattedText
+                  style={
+                    Object {
+                      "color": "#353535",
+                      "fontSize": 22,
+                    }
+                  }
+                >
+                  $ 
+                </FormattedText>
+                <FormattedText
+                  style={
+                    Object {
+                      "color": "#353535",
+                      "fontSize": 22,
+                    }
+                  }
+                >
+                  6392.93
+                </FormattedText>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+          <View
             style={
               Object {
-                "color": "#87939E",
-                "fontSize": 19.664084507042254,
+                "backgroundColor": "#FFFFFF",
+                "borderBottomColor": "#D9E3ED",
+                "borderBottomWidth": 1,
+                "height": 90,
+                "justifyContent": "center",
+                "padding": 18,
+                "width": "100%",
               }
             }
           >
-            Aug 31st, 2018, 9:59:40 PM
-          </FormattedText>
+            <FormattedText
+              style={
+                Object {
+                  "color": "#0E4B75",
+                  "fontSize": 16,
+                  "marginBottom": 2,
+                }
+              }
+            >
+              Amount at Current Price
+            </FormattedText>
+            <View
+              style={
+                Object {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                }
+              }
+            >
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#353535",
+                    "flex": 1,
+                    "fontSize": 22,
+                  }
+                }
+              >
+                $ 
+                120.00
+              </FormattedText>
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#E85466",
+                    "fontSize": 22,
+                  }
+                }
+              >
+                - 98.12
+                %
+              </FormattedText>
+            </View>
+          </View>
+          <TouchableWithoutFeedback
+            onPress={[Function]}
+          >
+            <View
+              style={
+                Object {
+                  "backgroundColor": "#FFFFFF",
+                  "borderBottomColor": "#D9E3ED",
+                  "borderBottomWidth": 1,
+                  "height": 101,
+                  "justifyContent": "center",
+                  "padding": 18,
+                  "width": "100%",
+                }
+              }
+            >
+              <Image
+                source={
+                  Object {
+                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
+                  }
+                }
+                style={
+                  Array [
+                    Object {
+                      "height": 16,
+                      "position": "absolute",
+                      "right": 10,
+                      "top": 10,
+                      "width": 16,
+                    },
+                  ]
+                }
+              />
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#0E4B75",
+                    "fontSize": 16,
+                    "marginBottom": 2,
+                  }
+                }
+              >
+                Category
+              </FormattedText>
+              <View
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                  }
+                }
+              >
+                <View
+                  style={
+                    Object {
+                      "backgroundColor": "#A4C7DF",
+                      "borderRadius": 3,
+                      "marginVertical": 7,
+                      "paddingHorizontal": 11,
+                      "paddingVertical": 7,
+                    }
+                  }
+                >
+                  <FormattedText
+                    style={
+                      Object {
+                        "color": "#0E4B75",
+                        "fontSize": 20,
+                      }
+                    }
+                  >
+                    Expense
+                  </FormattedText>
+                </View>
+                <FormattedText
+                  style={
+                    Object {
+                      "color": "#353535",
+                      "marginHorizontal": 16,
+                      "marginVertical": 7,
+                    }
+                  }
+                >
+                  
+                </FormattedText>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback
+            onPress={[Function]}
+          >
+            <View
+              style={
+                Object {
+                  "backgroundColor": "#FFFFFF",
+                  "borderBottomColor": "#D9E3ED",
+                  "borderBottomWidth": 1,
+                  "minHeight": 101,
+                  "padding": 18,
+                  "width": "100%",
+                }
+              }
+            >
+              <Image
+                source={
+                  Object {
+                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
+                  }
+                }
+                style={
+                  Array [
+                    Object {
+                      "height": 16,
+                      "position": "absolute",
+                      "right": 10,
+                      "top": 10,
+                      "width": 16,
+                    },
+                  ]
+                }
+              />
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#0E4B75",
+                    "fontSize": 16,
+                    "marginBottom": 11,
+                  }
+                }
+              >
+                Notes
+              </FormattedText>
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#353535",
+                    "fontSize": 20,
+                  }
+                }
+              >
+                
+              </FormattedText>
+            </View>
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback
+            onPress={[Function]}
+          >
+            <FormattedText
+              style={
+                Object {
+                  "color": "#0E4B75",
+                  "fontSize": 20,
+                  "marginLeft": "auto",
+                  "marginRight": "auto",
+                  "marginVertical": 29,
+                  "textAlign": "center",
+                  "width": "100%",
+                }
+              }
+            >
+              View Advanced Transaction Data
+            </FormattedText>
+          </TouchableWithoutFeedback>
+          <View
+            style={
+              Object {
+                "flex": 1,
+              }
+            }
+          />
+          <View
+            style={
+              Object {
+                "paddingBottom": 18,
+                "paddingHorizontal": 11,
+              }
+            }
+          >
+            <PrimaryButton
+              onPress={[Function]}
+              style={
+                Object {
+                  "height": 67,
+                }
+              }
+            >
+              <Text>
+                Save
+              </Text>
+            </PrimaryButton>
+          </View>
         </View>
-        <AmountArea
-          categories={
-            Object {
-              "exchange": Object {
-                "color": "#F1AA19",
-                "key": "exchange",
-                "syntax": "Exchange",
-              },
-              "expense": Object {
-                "color": "#E85466",
-                "key": "expense",
-                "syntax": "Expense",
-              },
-              "income": Object {
-                "color": "#0073D9",
-                "key": "income",
-                "syntax": "Income",
-              },
-              "transfer": Object {
-                "color": "#0D2145",
-                "key": "transfer",
-                "syntax": "Transfer",
-              },
-            }
-          }
-          category="expense"
-          categorySelectVisibility={false}
-          color="#E85466"
-          cryptoCurrencyCode="BTC"
-          direction="send"
-          edgeTransaction={
-            Object {
-              "blockHeight": 0,
-              "currencyCode": "BTC",
-              "date": 1535752780.947,
-              "metadata": Object {
-                "amountFiat": -6392.93,
-              },
-              "nativeAmount": "-123",
-              "networkFee": "1",
-              "otherParams": Object {},
-              "ourReceiveAddresses": Array [
-                "this is an address",
-              ],
-              "signedTx": "this is a signed tx",
-              "txid": "this is the txid",
-              "wallet": Object {
-                "allDenominations": Object {},
-                "balances": Object {
-                  "BTC": "123123",
-                },
-                "blockHeight": 12345,
-                "currencyCode": "BTC",
-                "currencyInfo": Object {},
-                "displayPrivateSeed": "private seed",
-                "displayPublicSeed": "public seed",
-                "fiatCurrencyCode": "iso:USD",
-                "id": "123",
-                "name": "wallet name",
-              },
-            }
-          }
-          fiatAmount="6392.93"
-          fiatCurrencyCode="iso:USD"
-          fiatCurrencySymbol="$"
-          guiWallet={
-            Object {
-              "allDenominations": Object {},
-              "balances": Object {
-                "BTC": "123123",
-              },
-              "blockHeight": 12345,
-              "currencyCode": "BTC",
-              "currencyInfo": Object {},
-              "displayPrivateSeed": "private seed",
-              "displayPublicSeed": "public seed",
-              "fiatCurrencyCode": "iso:USD",
-              "id": "123",
-              "name": "wallet name",
-            }
-          }
-          onBlurFiatFxn={[Function]}
-          onBlurNotes={[Function]}
-          onChangeCategory={[Function]}
-          onChangeFiatFxn={[Function]}
-          onChangeNotesFxn={[Function]}
-          onEnterCategories={[Function]}
-          onEnterSubcategories={[Function]}
-          onExitCategories={[Function]}
-          onFocusFiatAmount={[Function]}
-          onFocusNotes={[Function]}
-          onNotesKeyboardReturn={[Function]}
-          onPressAdvancedDetailsButton={[Function]}
-          onPressFxn={[Function]}
-          onSelectSubCategory={[Function]}
-          onSubcategoryKeyboardReturn={[Function]}
-          subCategory=""
-          subCategorySelectVisibility={false}
-          txExplorerUrl={null}
-        />
-      </View>
-    </ScrollViewMock>
+      </ScrollViewMock>
+    </View>
   </SceneWrapper>
 </React.Fragment>
 `;
@@ -414,203 +957,476 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
 exports[`TransactionDetails.ui should render with tx date off by 1000x in future 1`] = `
 <React.Fragment>
   <SceneWrapper
-    background="body"
     bodySplit={33.709859154929575}
   >
-    <ScrollViewMock
-      gradientHeight="50%"
-      keyboardShouldPersistTaps="handled"
-      overScrollMode="never"
-      scrollEnabled={true}
-    >
-      <View
-        style={
-          Object {
-            "alignItems": "stretch",
-            "backgroundColor": "#FFFFFF",
-            "flexDirection": "column",
-            "marginTop": 33.709859154929575,
-            "paddingTop": 44.946478873239435,
-          }
+    <View
+      style={
+        Object {
+          "backgroundColor": "#F4F5F6",
+          "flex": 1,
+          "height": "100%",
+          "width": "100%",
         }
-      >
-        <PayeeIcon
-          direction="receive"
-          thumbnailPath="thumb/nail/path"
-        />
+      }
+    >
+      <ScrollViewMock>
         <View
           style={
             Object {
-              "alignItems": "center",
+              "flex": 1,
               "flexDirection": "column",
+              "width": "100%",
             }
           }
         >
+          <TouchableWithoutFeedback
+            onPress={[Function]}
+          >
+            <View
+              style={
+                Object {
+                  "backgroundColor": "#FFFFFF",
+                  "borderBottomColor": "#D9E3ED",
+                  "borderBottomWidth": 1,
+                  "height": 101,
+                  "justifyContent": "center",
+                  "padding": 18,
+                  "width": "100%",
+                }
+              }
+            >
+              <Image
+                source={
+                  Object {
+                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
+                  }
+                }
+                style={
+                  Array [
+                    Object {
+                      "height": 16,
+                      "position": "absolute",
+                      "right": 10,
+                      "top": 10,
+                      "width": 16,
+                    },
+                  ]
+                }
+              />
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#0E4B75",
+                    "fontSize": 16,
+                    "marginBottom": 2,
+                  }
+                }
+              >
+                Sender Name
+              </FormattedText>
+              <View
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                  }
+                }
+              >
+                <Image
+                  source={
+                    Object {
+                      "uri": "thumb/nail/path",
+                    }
+                  }
+                  style={
+                    Array [
+                      Object {
+                        "borderRadius": 20,
+                        "height": 40,
+                        "marginRight": 9,
+                        "width": 40,
+                      },
+                    ]
+                  }
+                />
+                <FormattedText
+                  style={
+                    Object {
+                      "color": "#353535",
+                      "fontSize": 22,
+                    }
+                  }
+                >
+                  Sender
+                </FormattedText>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
           <View
             style={
               Object {
-                "alignItems": "center",
-                "padding": 5.618309859154929,
-                "width": "80%",
+                "backgroundColor": "#FFFFFF",
+                "borderBottomColor": "#D9E3ED",
+                "borderBottomWidth": 1,
+                "height": 90,
+                "justifyContent": "center",
+                "padding": 18,
+                "width": "100%",
               }
             }
           >
-            <TextInput
-              allowFontScaling={true}
-              autoCapitalize="words"
-              autoCorrect={false}
-              defaultValue=""
-              onFocus={[Function]}
-              placeholder="Payee"
-              placeholderTextColor="#87939E"
-              rejectResponderTermination={true}
+            <FormattedText
               style={
-                Array [
-                  Object {
-                    "color": "#4A5157",
-                    "fontFamily": "SourceSansPro-Black",
-                    "fontSize": 23.87781690140845,
-                    "height": 33.709859154929575,
-                    "textAlign": "center",
-                    "width": "100%",
-                  },
-                  undefined,
-                ]
+                Object {
+                  "color": "#0E4B75",
+                  "fontSize": 16,
+                  "marginBottom": 2,
+                }
               }
-              underlineColorAndroid="transparent"
-            />
+            >
+              Bitcoin Amount
+            </FormattedText>
+            <FormattedText
+              style={
+                Object {
+                  "color": "#353535",
+                  "fontSize": 22,
+                }
+              }
+            >
+              ₿ 
+              0.00000123
+              
+            </FormattedText>
           </View>
-        </View>
-        <View
-          style={
-            Object {
-              "alignSelf": "center",
-              "borderBottomColor": "#CCCCCC",
-              "borderBottomWidth": 1,
-              "height": 1.4045774647887324,
-              "width": "38%",
-            }
-          }
-        />
-        <View
-          style={
-            Object {
-              "alignItems": "center",
-              "flexDirection": "column",
-              "padding": 5.618309859154929,
-            }
-          }
-        >
-          <FormattedText
+          <TouchableWithoutFeedback
+            onPress={[Function]}
+          >
+            <View
+              style={
+                Object {
+                  "backgroundColor": "#FFFFFF",
+                  "borderBottomColor": "#D9E3ED",
+                  "borderBottomWidth": 1,
+                  "height": 90,
+                  "justifyContent": "center",
+                  "padding": 18,
+                  "width": "100%",
+                }
+              }
+            >
+              <Image
+                source={
+                  Object {
+                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
+                  }
+                }
+                style={
+                  Array [
+                    Object {
+                      "height": 16,
+                      "position": "absolute",
+                      "right": 10,
+                      "top": 10,
+                      "width": 16,
+                    },
+                  ]
+                }
+              />
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#0E4B75",
+                    "fontSize": 16,
+                    "marginBottom": 2,
+                  }
+                }
+              >
+                Amount in iso:USD
+              </FormattedText>
+              <View
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                  }
+                }
+              >
+                <FormattedText
+                  style={
+                    Object {
+                      "color": "#353535",
+                      "fontSize": 22,
+                    }
+                  }
+                >
+                  $ 
+                </FormattedText>
+                <FormattedText
+                  style={
+                    Object {
+                      "color": "#353535",
+                      "fontSize": 22,
+                    }
+                  }
+                >
+                  0.00
+                </FormattedText>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+          <View
             style={
               Object {
-                "color": "#87939E",
-                "fontSize": 19.664084507042254,
+                "backgroundColor": "#FFFFFF",
+                "borderBottomColor": "#D9E3ED",
+                "borderBottomWidth": 1,
+                "height": 90,
+                "justifyContent": "center",
+                "padding": 18,
+                "width": "100%",
               }
             }
           >
-            Aug 31st, 2018, 9:59:40 PM
-          </FormattedText>
+            <FormattedText
+              style={
+                Object {
+                  "color": "#0E4B75",
+                  "fontSize": 16,
+                  "marginBottom": 2,
+                }
+              }
+            >
+              Amount at Current Price
+            </FormattedText>
+            <View
+              style={
+                Object {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                }
+              }
+            >
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#353535",
+                    "flex": 1,
+                    "fontSize": 22,
+                  }
+                }
+              >
+                $ 
+                120.00
+              </FormattedText>
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#66EDA8",
+                    "fontSize": 22,
+                  }
+                }
+              >
+                0
+                %
+              </FormattedText>
+            </View>
+          </View>
+          <TouchableWithoutFeedback
+            onPress={[Function]}
+          >
+            <View
+              style={
+                Object {
+                  "backgroundColor": "#FFFFFF",
+                  "borderBottomColor": "#D9E3ED",
+                  "borderBottomWidth": 1,
+                  "height": 101,
+                  "justifyContent": "center",
+                  "padding": 18,
+                  "width": "100%",
+                }
+              }
+            >
+              <Image
+                source={
+                  Object {
+                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
+                  }
+                }
+                style={
+                  Array [
+                    Object {
+                      "height": 16,
+                      "position": "absolute",
+                      "right": 10,
+                      "top": 10,
+                      "width": 16,
+                    },
+                  ]
+                }
+              />
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#0E4B75",
+                    "fontSize": 16,
+                    "marginBottom": 2,
+                  }
+                }
+              >
+                Category
+              </FormattedText>
+              <View
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                  }
+                }
+              >
+                <View
+                  style={
+                    Object {
+                      "backgroundColor": "#A4C7DF",
+                      "borderRadius": 3,
+                      "marginVertical": 7,
+                      "paddingHorizontal": 11,
+                      "paddingVertical": 7,
+                    }
+                  }
+                >
+                  <FormattedText
+                    style={
+                      Object {
+                        "color": "#0E4B75",
+                        "fontSize": 20,
+                      }
+                    }
+                  >
+                    Income
+                  </FormattedText>
+                </View>
+                <FormattedText
+                  style={
+                    Object {
+                      "color": "#353535",
+                      "marginHorizontal": 16,
+                      "marginVertical": 7,
+                    }
+                  }
+                >
+                  
+                </FormattedText>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback
+            onPress={[Function]}
+          >
+            <View
+              style={
+                Object {
+                  "backgroundColor": "#FFFFFF",
+                  "borderBottomColor": "#D9E3ED",
+                  "borderBottomWidth": 1,
+                  "minHeight": 101,
+                  "padding": 18,
+                  "width": "100%",
+                }
+              }
+            >
+              <Image
+                source={
+                  Object {
+                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
+                  }
+                }
+                style={
+                  Array [
+                    Object {
+                      "height": 16,
+                      "position": "absolute",
+                      "right": 10,
+                      "top": 10,
+                      "width": 16,
+                    },
+                  ]
+                }
+              />
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#0E4B75",
+                    "fontSize": 16,
+                    "marginBottom": 11,
+                  }
+                }
+              >
+                Notes
+              </FormattedText>
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#353535",
+                    "fontSize": 20,
+                  }
+                }
+              >
+                
+              </FormattedText>
+            </View>
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback
+            onPress={[Function]}
+          >
+            <FormattedText
+              style={
+                Object {
+                  "color": "#0E4B75",
+                  "fontSize": 20,
+                  "marginLeft": "auto",
+                  "marginRight": "auto",
+                  "marginVertical": 29,
+                  "textAlign": "center",
+                  "width": "100%",
+                }
+              }
+            >
+              View Advanced Transaction Data
+            </FormattedText>
+          </TouchableWithoutFeedback>
+          <View
+            style={
+              Object {
+                "flex": 1,
+              }
+            }
+          />
+          <View
+            style={
+              Object {
+                "paddingBottom": 18,
+                "paddingHorizontal": 11,
+              }
+            }
+          >
+            <PrimaryButton
+              onPress={[Function]}
+              style={
+                Object {
+                  "height": 67,
+                }
+              }
+            >
+              <Text>
+                Save
+              </Text>
+            </PrimaryButton>
+          </View>
         </View>
-        <AmountArea
-          categories={
-            Object {
-              "exchange": Object {
-                "color": "#F1AA19",
-                "key": "exchange",
-                "syntax": "Exchange",
-              },
-              "expense": Object {
-                "color": "#E85466",
-                "key": "expense",
-                "syntax": "Expense",
-              },
-              "income": Object {
-                "color": "#0073D9",
-                "key": "income",
-                "syntax": "Income",
-              },
-              "transfer": Object {
-                "color": "#0D2145",
-                "key": "transfer",
-                "syntax": "Transfer",
-              },
-            }
-          }
-          category="income"
-          categorySelectVisibility={false}
-          color="#0073D9"
-          cryptoCurrencyCode="BTC"
-          direction="receive"
-          edgeTransaction={
-            Object {
-              "blockHeight": 0,
-              "currencyCode": "BTC",
-              "date": 1535752780947,
-              "nativeAmount": "123",
-              "networkFee": "1",
-              "otherParams": Object {},
-              "ourReceiveAddresses": Array [
-                "this is an address",
-              ],
-              "signedTx": "this is a signed tx",
-              "txid": "this is the txid",
-              "wallet": Object {
-                "allDenominations": Object {},
-                "balances": Object {
-                  "BTC": "123123",
-                },
-                "blockHeight": 12345,
-                "currencyCode": "BTC",
-                "currencyInfo": Object {},
-                "displayPrivateSeed": "private seed",
-                "displayPublicSeed": "public seed",
-                "fiatCurrencyCode": "iso:USD",
-                "id": "123",
-                "name": "wallet name",
-              },
-            }
-          }
-          fiatAmount="0.00"
-          fiatCurrencyCode="iso:USD"
-          fiatCurrencySymbol="$"
-          guiWallet={
-            Object {
-              "allDenominations": Object {},
-              "balances": Object {
-                "BTC": "123123",
-              },
-              "blockHeight": 12345,
-              "currencyCode": "BTC",
-              "currencyInfo": Object {},
-              "displayPrivateSeed": "private seed",
-              "displayPublicSeed": "public seed",
-              "fiatCurrencyCode": "iso:USD",
-              "id": "123",
-              "name": "wallet name",
-            }
-          }
-          onBlurFiatFxn={[Function]}
-          onBlurNotes={[Function]}
-          onChangeCategory={[Function]}
-          onChangeFiatFxn={[Function]}
-          onChangeNotesFxn={[Function]}
-          onEnterCategories={[Function]}
-          onEnterSubcategories={[Function]}
-          onExitCategories={[Function]}
-          onFocusFiatAmount={[Function]}
-          onFocusNotes={[Function]}
-          onNotesKeyboardReturn={[Function]}
-          onPressAdvancedDetailsButton={[Function]}
-          onPressFxn={[Function]}
-          onSelectSubCategory={[Function]}
-          onSubcategoryKeyboardReturn={[Function]}
-          subCategory=""
-          subCategorySelectVisibility={false}
-          txExplorerUrl={null}
-        />
-      </View>
-    </ScrollViewMock>
+      </ScrollViewMock>
+    </View>
   </SceneWrapper>
 </React.Fragment>
 `;
@@ -618,203 +1434,476 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
 exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1`] = `
 <React.Fragment>
   <SceneWrapper
-    background="body"
     bodySplit={33.709859154929575}
   >
-    <ScrollViewMock
-      gradientHeight="50%"
-      keyboardShouldPersistTaps="handled"
-      overScrollMode="never"
-      scrollEnabled={true}
-    >
-      <View
-        style={
-          Object {
-            "alignItems": "stretch",
-            "backgroundColor": "#FFFFFF",
-            "flexDirection": "column",
-            "marginTop": 33.709859154929575,
-            "paddingTop": 44.946478873239435,
-          }
+    <View
+      style={
+        Object {
+          "backgroundColor": "#F4F5F6",
+          "flex": 1,
+          "height": "100%",
+          "width": "100%",
         }
-      >
-        <PayeeIcon
-          direction="receive"
-          thumbnailPath="thumb/nail/path"
-        />
+      }
+    >
+      <ScrollViewMock>
         <View
           style={
             Object {
-              "alignItems": "center",
+              "flex": 1,
               "flexDirection": "column",
+              "width": "100%",
             }
           }
         >
+          <TouchableWithoutFeedback
+            onPress={[Function]}
+          >
+            <View
+              style={
+                Object {
+                  "backgroundColor": "#FFFFFF",
+                  "borderBottomColor": "#D9E3ED",
+                  "borderBottomWidth": 1,
+                  "height": 101,
+                  "justifyContent": "center",
+                  "padding": 18,
+                  "width": "100%",
+                }
+              }
+            >
+              <Image
+                source={
+                  Object {
+                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
+                  }
+                }
+                style={
+                  Array [
+                    Object {
+                      "height": 16,
+                      "position": "absolute",
+                      "right": 10,
+                      "top": 10,
+                      "width": 16,
+                    },
+                  ]
+                }
+              />
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#0E4B75",
+                    "fontSize": 16,
+                    "marginBottom": 2,
+                  }
+                }
+              >
+                Sender Name
+              </FormattedText>
+              <View
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                  }
+                }
+              >
+                <Image
+                  source={
+                    Object {
+                      "uri": "thumb/nail/path",
+                    }
+                  }
+                  style={
+                    Array [
+                      Object {
+                        "borderRadius": 20,
+                        "height": 40,
+                        "marginRight": 9,
+                        "width": 40,
+                      },
+                    ]
+                  }
+                />
+                <FormattedText
+                  style={
+                    Object {
+                      "color": "#353535",
+                      "fontSize": 22,
+                    }
+                  }
+                >
+                  Sender
+                </FormattedText>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
           <View
             style={
               Object {
-                "alignItems": "center",
-                "padding": 5.618309859154929,
-                "width": "80%",
+                "backgroundColor": "#FFFFFF",
+                "borderBottomColor": "#D9E3ED",
+                "borderBottomWidth": 1,
+                "height": 90,
+                "justifyContent": "center",
+                "padding": 18,
+                "width": "100%",
               }
             }
           >
-            <TextInput
-              allowFontScaling={true}
-              autoCapitalize="words"
-              autoCorrect={false}
-              defaultValue=""
-              onFocus={[Function]}
-              placeholder="Payee"
-              placeholderTextColor="#87939E"
-              rejectResponderTermination={true}
+            <FormattedText
               style={
-                Array [
-                  Object {
-                    "color": "#4A5157",
-                    "fontFamily": "SourceSansPro-Black",
-                    "fontSize": 23.87781690140845,
-                    "height": 33.709859154929575,
-                    "textAlign": "center",
-                    "width": "100%",
-                  },
-                  undefined,
-                ]
+                Object {
+                  "color": "#0E4B75",
+                  "fontSize": 16,
+                  "marginBottom": 2,
+                }
               }
-              underlineColorAndroid="transparent"
-            />
+            >
+              Bitcoin Amount
+            </FormattedText>
+            <FormattedText
+              style={
+                Object {
+                  "color": "#353535",
+                  "fontSize": 22,
+                }
+              }
+            >
+              ₿ 
+              0.00000123
+              
+            </FormattedText>
           </View>
-        </View>
-        <View
-          style={
-            Object {
-              "alignSelf": "center",
-              "borderBottomColor": "#CCCCCC",
-              "borderBottomWidth": 1,
-              "height": 1.4045774647887324,
-              "width": "38%",
-            }
-          }
-        />
-        <View
-          style={
-            Object {
-              "alignItems": "center",
-              "flexDirection": "column",
-              "padding": 5.618309859154929,
-            }
-          }
-        >
-          <FormattedText
+          <TouchableWithoutFeedback
+            onPress={[Function]}
+          >
+            <View
+              style={
+                Object {
+                  "backgroundColor": "#FFFFFF",
+                  "borderBottomColor": "#D9E3ED",
+                  "borderBottomWidth": 1,
+                  "height": 90,
+                  "justifyContent": "center",
+                  "padding": 18,
+                  "width": "100%",
+                }
+              }
+            >
+              <Image
+                source={
+                  Object {
+                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
+                  }
+                }
+                style={
+                  Array [
+                    Object {
+                      "height": 16,
+                      "position": "absolute",
+                      "right": 10,
+                      "top": 10,
+                      "width": 16,
+                    },
+                  ]
+                }
+              />
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#0E4B75",
+                    "fontSize": 16,
+                    "marginBottom": 2,
+                  }
+                }
+              >
+                Amount in iso:USD
+              </FormattedText>
+              <View
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                  }
+                }
+              >
+                <FormattedText
+                  style={
+                    Object {
+                      "color": "#353535",
+                      "fontSize": 22,
+                    }
+                  }
+                >
+                  $ 
+                </FormattedText>
+                <FormattedText
+                  style={
+                    Object {
+                      "color": "#353535",
+                      "fontSize": 22,
+                    }
+                  }
+                >
+                  0.00
+                </FormattedText>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+          <View
             style={
               Object {
-                "color": "#87939E",
-                "fontSize": 19.664084507042254,
+                "backgroundColor": "#FFFFFF",
+                "borderBottomColor": "#D9E3ED",
+                "borderBottomWidth": 1,
+                "height": 90,
+                "justifyContent": "center",
+                "padding": 18,
+                "width": "100%",
               }
             }
           >
-            Aug 31st, 2018, 9:59:40 PM
-          </FormattedText>
+            <FormattedText
+              style={
+                Object {
+                  "color": "#0E4B75",
+                  "fontSize": 16,
+                  "marginBottom": 2,
+                }
+              }
+            >
+              Amount at Current Price
+            </FormattedText>
+            <View
+              style={
+                Object {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                }
+              }
+            >
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#353535",
+                    "flex": 1,
+                    "fontSize": 22,
+                  }
+                }
+              >
+                $ 
+                120.00
+              </FormattedText>
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#66EDA8",
+                    "fontSize": 22,
+                  }
+                }
+              >
+                0
+                %
+              </FormattedText>
+            </View>
+          </View>
+          <TouchableWithoutFeedback
+            onPress={[Function]}
+          >
+            <View
+              style={
+                Object {
+                  "backgroundColor": "#FFFFFF",
+                  "borderBottomColor": "#D9E3ED",
+                  "borderBottomWidth": 1,
+                  "height": 101,
+                  "justifyContent": "center",
+                  "padding": 18,
+                  "width": "100%",
+                }
+              }
+            >
+              <Image
+                source={
+                  Object {
+                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
+                  }
+                }
+                style={
+                  Array [
+                    Object {
+                      "height": 16,
+                      "position": "absolute",
+                      "right": 10,
+                      "top": 10,
+                      "width": 16,
+                    },
+                  ]
+                }
+              />
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#0E4B75",
+                    "fontSize": 16,
+                    "marginBottom": 2,
+                  }
+                }
+              >
+                Category
+              </FormattedText>
+              <View
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                  }
+                }
+              >
+                <View
+                  style={
+                    Object {
+                      "backgroundColor": "#A4C7DF",
+                      "borderRadius": 3,
+                      "marginVertical": 7,
+                      "paddingHorizontal": 11,
+                      "paddingVertical": 7,
+                    }
+                  }
+                >
+                  <FormattedText
+                    style={
+                      Object {
+                        "color": "#0E4B75",
+                        "fontSize": 20,
+                      }
+                    }
+                  >
+                    Income
+                  </FormattedText>
+                </View>
+                <FormattedText
+                  style={
+                    Object {
+                      "color": "#353535",
+                      "marginHorizontal": 16,
+                      "marginVertical": 7,
+                    }
+                  }
+                >
+                  
+                </FormattedText>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback
+            onPress={[Function]}
+          >
+            <View
+              style={
+                Object {
+                  "backgroundColor": "#FFFFFF",
+                  "borderBottomColor": "#D9E3ED",
+                  "borderBottomWidth": 1,
+                  "minHeight": 101,
+                  "padding": 18,
+                  "width": "100%",
+                }
+              }
+            >
+              <Image
+                source={
+                  Object {
+                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
+                  }
+                }
+                style={
+                  Array [
+                    Object {
+                      "height": 16,
+                      "position": "absolute",
+                      "right": 10,
+                      "top": 10,
+                      "width": 16,
+                    },
+                  ]
+                }
+              />
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#0E4B75",
+                    "fontSize": 16,
+                    "marginBottom": 11,
+                  }
+                }
+              >
+                Notes
+              </FormattedText>
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#353535",
+                    "fontSize": 20,
+                  }
+                }
+              >
+                
+              </FormattedText>
+            </View>
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback
+            onPress={[Function]}
+          >
+            <FormattedText
+              style={
+                Object {
+                  "color": "#0E4B75",
+                  "fontSize": 20,
+                  "marginLeft": "auto",
+                  "marginRight": "auto",
+                  "marginVertical": 29,
+                  "textAlign": "center",
+                  "width": "100%",
+                }
+              }
+            >
+              View Advanced Transaction Data
+            </FormattedText>
+          </TouchableWithoutFeedback>
+          <View
+            style={
+              Object {
+                "flex": 1,
+              }
+            }
+          />
+          <View
+            style={
+              Object {
+                "paddingBottom": 18,
+                "paddingHorizontal": 11,
+              }
+            }
+          >
+            <PrimaryButton
+              onPress={[Function]}
+              style={
+                Object {
+                  "height": 67,
+                }
+              }
+            >
+              <Text>
+                Save
+              </Text>
+            </PrimaryButton>
+          </View>
         </View>
-        <AmountArea
-          categories={
-            Object {
-              "exchange": Object {
-                "color": "#F1AA19",
-                "key": "exchange",
-                "syntax": "Exchange",
-              },
-              "expense": Object {
-                "color": "#E85466",
-                "key": "expense",
-                "syntax": "Expense",
-              },
-              "income": Object {
-                "color": "#0073D9",
-                "key": "income",
-                "syntax": "Income",
-              },
-              "transfer": Object {
-                "color": "#0D2145",
-                "key": "transfer",
-                "syntax": "Transfer",
-              },
-            }
-          }
-          category="income"
-          categorySelectVisibility={false}
-          color="#0073D9"
-          cryptoCurrencyCode="BTC"
-          direction="receive"
-          edgeTransaction={
-            Object {
-              "blockHeight": 0,
-              "currencyCode": "BTC",
-              "date": 1535752.780947,
-              "nativeAmount": "123",
-              "networkFee": "1",
-              "otherParams": Object {},
-              "ourReceiveAddresses": Array [
-                "this is an address",
-              ],
-              "signedTx": "this is a signed tx",
-              "txid": "this is the txid",
-              "wallet": Object {
-                "allDenominations": Object {},
-                "balances": Object {
-                  "BTC": "123123",
-                },
-                "blockHeight": 12345,
-                "currencyCode": "BTC",
-                "currencyInfo": Object {},
-                "displayPrivateSeed": "private seed",
-                "displayPublicSeed": "public seed",
-                "fiatCurrencyCode": "iso:USD",
-                "id": "123",
-                "name": "wallet name",
-              },
-            }
-          }
-          fiatAmount="0.00"
-          fiatCurrencyCode="iso:USD"
-          fiatCurrencySymbol="$"
-          guiWallet={
-            Object {
-              "allDenominations": Object {},
-              "balances": Object {
-                "BTC": "123123",
-              },
-              "blockHeight": 12345,
-              "currencyCode": "BTC",
-              "currencyInfo": Object {},
-              "displayPrivateSeed": "private seed",
-              "displayPublicSeed": "public seed",
-              "fiatCurrencyCode": "iso:USD",
-              "id": "123",
-              "name": "wallet name",
-            }
-          }
-          onBlurFiatFxn={[Function]}
-          onBlurNotes={[Function]}
-          onChangeCategory={[Function]}
-          onChangeFiatFxn={[Function]}
-          onChangeNotesFxn={[Function]}
-          onEnterCategories={[Function]}
-          onEnterSubcategories={[Function]}
-          onExitCategories={[Function]}
-          onFocusFiatAmount={[Function]}
-          onFocusNotes={[Function]}
-          onNotesKeyboardReturn={[Function]}
-          onPressAdvancedDetailsButton={[Function]}
-          onPressFxn={[Function]}
-          onSelectSubCategory={[Function]}
-          onSubcategoryKeyboardReturn={[Function]}
-          subCategory=""
-          subCategorySelectVisibility={false}
-          txExplorerUrl={null}
-        />
-      </View>
-    </ScrollViewMock>
+      </ScrollViewMock>
+    </View>
   </SceneWrapper>
 </React.Fragment>
 `;

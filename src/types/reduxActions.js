@@ -1,7 +1,7 @@
 // @flow
 
 import { type Disklet } from 'disklet'
-import type { EdgeContext, EdgeCurrencyWallet, EdgeLobby, EdgeParsedUri, EdgeReceiveAddress } from 'edge-core-js'
+import { type EdgeAccount, type EdgeContext, type EdgeCurrencyWallet, type EdgeLobby, type EdgeParsedUri, type EdgeReceiveAddress } from 'edge-core-js'
 
 import { type PermissionsState } from '../reducers/PermissionsReducer.js'
 import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
@@ -12,7 +12,6 @@ import { type CustomTokenInfo, type FioAddress, type GuiContact, type GuiCurrenc
 
 type LegacyActionName =
   | 'ACCOUNT_INIT_COMPLETE'
-  | 'ACCOUNT/LOGGED_IN'
   | 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES'
   | 'NEW_RECEIVE_ADDRESS'
   | 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_FAIL'
@@ -156,6 +155,7 @@ export type Action =
       data: { activeWalletIds: Array<string> }
     }
   | { type: 'IS_CHECKING_HANDLE_AVAILABILITY', data: boolean }
+  | { type: 'LOGIN', data: EdgeAccount }
   | { type: 'LOGOUT', data: { username?: string } }
   | { type: 'LOGS/SEND_LOGS_REQUEST', text: string }
   | { type: 'LOGS/SEND_LOGS_SUCCESS', result: string }

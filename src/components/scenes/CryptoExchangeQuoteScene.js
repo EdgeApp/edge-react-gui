@@ -44,15 +44,17 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
 
   componentDidMount = () => {
     const { swapInfo } = this.props
-    const { pluginName } = swapInfo.quote
-    if (pluginName === 'changelly') {
+    const { pluginId } = swapInfo.quote
+    if (pluginId === 'changelly') {
       this.checkChangellyKYC().catch(showError)
-    } else if (pluginName === 'changenow') {
+    } else if (pluginId === 'changenow') {
       this.checkChangeNowKYC().catch(showError)
-    } else if (pluginName === 'coinswitch') {
+    } else if (pluginId === 'coinswitch') {
       this.checkCoinswitchKYC().catch(showError)
-    } else if (pluginName === 'foxExchange') {
+    } else if (pluginId === 'foxExchange') {
       this.checkFoxExchangeKYC().catch(showError)
+    } else if (pluginId === 'switchain') {
+      this.checkSwitchainKYC().catch(showError)
     }
     logEvent('SwapQuote')
   }
@@ -102,6 +104,25 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
     if (!result) timeExpired(swapInfo)
   }
 
+  async checkSwitchainKYC () {
+    const { account, swapInfo, timeExpired } = this.props
+    const result = await swapVerifyTerms(account.swapConfig.switchain, [
+      {
+        text: s.strings.swap_terms_terms_link,
+        uri: 'https://www.switchain.com/tos'
+      },
+      {
+        text: s.strings.swap_terms_privacy_link,
+        uri: 'https://www.switchain.com/policy'
+      },
+      {
+        text: s.strings.swap_terms_kyc_link,
+        uri: 'https://www.switchain.com/policy'
+      }
+    ])
+    if (!result) timeExpired(swapInfo)
+  }
+
   async checkChangeNowKYC () {
     const { account, swapInfo, timeExpired } = this.props
     const result = await swapVerifyTerms(account.swapConfig.changenow, [
@@ -146,14 +167,14 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
   render () {
     const { fromCurrencyIcon, fromDenomination, fromWalletCurrencyName, swapInfo, toCurrencyIcon, toDenomination, toWalletCurrencyName } = this.props
     const { fee, fromDisplayAmount, fromFiat, toDisplayAmount, toFiat } = swapInfo
-    const { isEstimate, pluginName } = swapInfo.quote
+    const { isEstimate, pluginId } = swapInfo.quote
     const { fromWallet, toWallet } = swapInfo.request
 
     return (
       <SceneWrapper>
         <ScrollView>
           <View style={styles.topLogoRow}>
-            <Image source={swapPluginLogos[pluginName]} resizeMode={'contain'} style={styles.logoImage} />
+            <Image source={swapPluginLogos[pluginId]} resizeMode={'contain'} style={styles.logoImage} />
           </View>
           <View style={styles.centerRow}>
             <ExchangeQuoteComponent

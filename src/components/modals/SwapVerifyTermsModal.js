@@ -34,14 +34,14 @@ type Props = {
 
 function SwapVerifyTermsModal (props: Props) {
   const { bridge, swapInfo, links } = props
-  const { displayName, pluginName } = swapInfo
+  const { displayName, pluginId } = swapInfo
   const iconSize = THEME.rem(1.75)
   const linkStyle = dayText('small', 'link')
 
   return (
     <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(false)}>
       <IconCircle>
-        <Image source={swapPluginIcons[pluginName]} resizeMode={'contain'} style={{ height: iconSize, width: iconSize }} />
+        <Image source={swapPluginIcons[pluginId]} resizeMode={'contain'} style={{ height: iconSize, width: iconSize }} />
       </IconCircle>
 
       <ContentArea padding="wide">

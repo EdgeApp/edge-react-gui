@@ -32,30 +32,27 @@ import { updateWalletsEnabledTokens, updateWalletsRequest } from '../Core/Wallet
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
-const getFirstActiveWalletInfo = (account: EdgeAccount, currencyCodes: { [string]: string }) => {
+function getFirstActiveWalletInfo (account: EdgeAccount): { walletId: string, currencyCode: string } {
+  // Find the first wallet:
   const walletId = account.activeWalletIds[0]
   const walletKey = account.allKeys.find(key => key.id === walletId)
   if (!walletKey) {
     throw new Error('Cannot find a walletInfo for the active wallet')
   }
-  const currencyCode = currencyCodes[walletKey.type]
-  return {
-    walletId,
-    currencyCode
+
+  // Find the matching currency code:
+  const currencyCodes = {}
+  for (const pluginId of Object.keys(account.currencyConfig)) {
+    const { currencyInfo } = account.currencyConfig[pluginId]
+    currencyCodes[currencyInfo.walletType] = currencyInfo.currencyCode
   }
+  const currencyCode = currencyCodes[walletKey.type]
+
+  return { walletId, currencyCode }
 }
 
 export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => async (dispatch: Dispatch, getState: GetState) => {
-  const currencyPlugins = []
-  const currencyCodes = {}
-
-  for (const pluginName in account.currencyConfig) {
-    const { currencyInfo } = account.currencyConfig[pluginName]
-    const { currencyCode } = currencyInfo
-    currencyCodes[currencyInfo.walletType] = currencyCode
-    currencyPlugins.push({ pluginName, currencyInfo })
-  }
-  dispatch({ type: 'ACCOUNT/LOGGED_IN', data: { account, currencyPlugins } })
+  dispatch({ type: 'LOGIN', data: account })
   Actions[Constants.EDGE]()
 
   const walletInfos = account.allKeys
@@ -65,11 +62,10 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
   const state = getState()
   const context = CORE_SELECTORS.getContext(state)
   let accountInitObject = {
-    account: account,
+    account,
     touchIdInfo: touchIdInfo,
     walletId: '',
     currencyCode: '',
-    currencyPlugins,
     otpInfo: { enabled: account.otpKey != null, otpKey: account.otpKey, otpResetPending: false },
     autoLogoutTimeInSeconds: 3600,
     bluetoothMode: false,
@@ -102,7 +98,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       newAccount = true
     } else {
       // We have a wallet
-      const { walletId, currencyCode } = getFirstActiveWalletInfo(account, currencyCodes)
+      const { walletId, currencyCode } = getFirstActiveWalletInfo(account)
       accountInitObject.walletId = walletId
       accountInitObject.currencyCode = currencyCode
     }
@@ -255,8 +251,8 @@ export const mergeSettings = (
   if (finalSettings.customTokens && account != null) {
     const { currencyConfig } = account
     finalSettings.customTokens = finalSettings.customTokens.filter((customToken: CustomTokenInfo) => {
-      for (const pluginName in currencyConfig) {
-        const { currencyInfo } = currencyConfig[pluginName]
+      for (const pluginId in currencyConfig) {
+        const { currencyInfo } = currencyConfig[pluginId]
         if (customToken.currencyCode === currencyInfo.currencyCode) return false
       }
       return true
@@ -282,8 +278,8 @@ export const logoutRequest = (username?: string) => (dispatch: Dispatch, getStat
  * Finds the currency info for a currency code.
  */
 function findCurrencyInfo (account: EdgeAccount, currencyCode: string): EdgeCurrencyInfo | void {
-  for (const pluginName in account.currencyConfig) {
-    const { currencyInfo } = account.currencyConfig[pluginName]
+  for (const pluginId in account.currencyConfig) {
+    const { currencyInfo } = account.currencyConfig[pluginId]
     if (currencyInfo.currencyCode.toUpperCase() === currencyCode) {
       return currencyInfo
     }

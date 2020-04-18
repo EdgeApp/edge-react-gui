@@ -184,3 +184,11 @@ export const calculateWalletFiatBalanceWithoutState = (wallet: GuiWallet, curren
   fiatValue = convertCurrencyWithoutState(exchangeRates, currencyCode, wallet.isoFiatCurrencyCode, cryptoAmount)
   return intl.formatNumber(fiatValue, { toFixed: 2 }) || '0'
 }
+
+export const convertNativeToExchangeRateDenomination = (settings: Object, currencyCode: string, nativeAmount: string): string => {
+  const denominations = settings[currencyCode].denominations
+  const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
+  if (!exchangeDenomination || !nativeAmount || nativeAmount === '0') return '0'
+  const nativeToExchangeRatio: string = exchangeDenomination.multiplier
+  return convertNativeToExchange(nativeToExchangeRatio)(nativeAmount)
+}

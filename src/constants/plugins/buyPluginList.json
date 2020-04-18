@@ -317,7 +317,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 1.2% / Settlement: 1-2 days\nLimit: €5000/day with no KYC",
+    "description": "Fee: 1.55% / Settlement: 1-2 days\nLimit: €5000/day with no KYC",
     "title": "SEPA Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/09/logoBity.png",
     "paymentTypeLogoKey": "bank"
@@ -328,7 +328,7 @@
     "paymentTypes": [
       "credit"
     ],
-    "description": "Fee: 6.5% / Settlement: 10 minutes\nLimit: $2000/day",
+    "description": "Fee: 6.5% / Settlement: 10 minutes\nLimit: $10000/day",
     "title": "Credit Card",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/05/icon_black_small.png",
     "forCountries": [
@@ -372,6 +372,18 @@
       "SE",
       "ZA",
       "GB",
+      "CO",
+      "GH",
+      "IL",
+      "IN",
+      "ID",
+      "MY",
+      "PK",
+      "PH",
+      "QA",
+      "TH",
+      "VE",
+      "VN",
       "US"
     ],
     "cryptoCodes": [

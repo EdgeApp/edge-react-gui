@@ -19,7 +19,7 @@ export const loadAccountReferral = (account: EdgeAccount) => async (dispatch: Di
   try {
     const [cacheText, referralText] = await Promise.all([
       account.localDisklet.getText(REFERRAL_CACHE_FILE).catch(() => '{}'),
-      account.disklet.getText(ACCOUNT_REFERRAL_FILE)
+      account.disklet.getText(ACCOUNT_REFERRAL_FILE).catch(() => '{}')
     ])
     const cache = asDiskReferralCache(JSON.parse(cacheText))
     const referral = unpackAccountReferral(JSON.parse(referralText))
@@ -50,6 +50,11 @@ export const loadAccountReferral = (account: EdgeAccount) => async (dispatch: Di
   dispatch({ type: 'ACCOUNT_REFERRAL_LOADED', data: { cache, referral } })
   saveAccountReferral(getState())
   saveReferralCache(getState())
+
+  // Now try activating the same link as a promotion (with silent errors):
+  try {
+    await activatePromotion(installerId)(dispatch, getState)
+  } catch (error) {}
 }
 
 /**
@@ -165,10 +170,10 @@ const asDiskPromotion = asObject({
 })
 
 const asDiskAccountReferral = asObject({
-  creationDate: asDate,
+  creationDate: asOptional(asDate),
   installerId: asOptional(asString),
   currencyCodes: asCurrencyCodes,
-  promotions: asArray(asDiskPromotion),
+  promotions: asOptional(asArray(asDiskPromotion), []),
 
   // User overrides:
   ignoreAccountSwap: asOptional(asBoolean, false),
