@@ -107,17 +107,19 @@ export const parseScannedUri = (data: string) => (dispatch: Dispatch, getState: 
   // Check for things other than coins:
   const deepLink = parseDeepLink(data)
   switch (deepLink.type) {
-    case 'edgeLogin':
-    case 'passwordRecovery':
-    case 'plugin':
-      dispatch(launchDeepLink(deepLink))
-      return
+    case 'other':
+      // Handle this link type below:
+      break
     case 'returnAddress':
       try {
         return doRequestAddress(dispatch, edgeWallet, guiWallet, deepLink)
       } catch (e) {
         console.log(e)
       }
+      break
+    default:
+      dispatch(launchDeepLink(deepLink))
+      return
   }
 
   edgeWallet.parseUri(data, currencyCode).then(
