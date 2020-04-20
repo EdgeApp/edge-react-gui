@@ -1,0 +1,89 @@
+<html>
+  <head>
+    <script type="text/javascript">
+      const timerIndex = setTimeout(()=>logStatusMsg('Failed to find EdgeProvider object.'), 10000);
+
+      function logStatusMsg(msg) {
+        document.getElementById("status").innerHTML += `<li>${msg}</li>`;
+        console.log(msg);
+      }
+
+      function isEdge() {
+        return window.navigator.userAgent.indexOf("app.edge") >= 0;
+      }
+
+      function restartPlugin(edgeProvider) {
+        if(edgeProvider.restartPlugin) {
+          edgeProvider.restartPlugin();
+        } else {
+          logStatusMsg(`ERROR: edgeProvider missing restartPlugin`)
+          console.error('ERROR: edgeProvider missing restartPlugin:', edgeProvider)
+        }
+      }
+
+      function getQueryParams() {
+        // Simplex encodes ampersands for HTML (for some reason)
+        const regex = /(&amp;)/gi;
+        const searchStr = window.location.search.replace(regex, '&');
+        const urlParams = new URLSearchParams(searchStr);
+        if(urlParams.has('dont_track')) {
+          return {dontTrack: true};
+        } else {
+          let hasAllParams = true;
+          if(!urlParams.has('currency')) {
+            logStatusMsg(`ERROR: Missing required query param: currency`);
+            hasAllParams = false;
+          }
+          if(!urlParams.has('digital_amount')) {
+            logStatusMsg(`ERROR: Missing required query param: digital_amount`);
+            hasAllParams = false;
+          }
+          if(!urlParams.has('order_id')) {
+            logStatusMsg(`ERROR: Missing required query param: order_id`);
+            hasAllParams = false;
+          }
+          if(hasAllParams) {
+            let currencyCode = urlParams.get('currency');
+            let digitalAmount = urlParams.get('digital_amount');
+            let orderId = urlParams.get('order_id');
+            return {currencyCode, digitalAmount, orderId};
+          }
+        }
+      }
+
+      function getEdgeProvider(callback) {
+        if (window.edgeProvider != null) {
+          callback(window.edgeProvider);
+        } else {
+          document.addEventListener("edgeProviderReady", function() {
+            callback(window.edgeProvider);
+          });
+        }
+      }
+
+      if(isEdge()) {
+        getEdgeProvider(edgeProvider=>{
+          clearTimeout(timerIndex);
+          const {currencyCode, digitalAmount, orderId, dontTrack} = getQueryParams();
+          if(dontTrack) {
+            restartPlugin(edgeProvider);
+          } else {
+            if(currencyCode && digitalAmount && orderId) {
+              edgeProvider.trackConversion({currencyCode: 'iso:'+currencyCode, exchangeAmount: digitalAmount, orderId});
+              logStatusMsg(`Successfully tracked conversion = currencyCode:${currencyCode} digitalAmount:${digitalAmount} orderId:${orderId}`)
+              restartPlugin(edgeProvider);
+            }
+          }
+        });
+      }
+    </script>
+  </head>
+  <body style="background: #68DE99; color: white;">
+  <div style="display: flex; flex-direction: column; justify-content: center; align-content: flex-start; text-align: left;">
+    <h1>Edge App</h1>
+    <ul id="status">
+      <li>Waiting to load window.edgeProvider</li>
+    </ul>
+  </div>
+  </body>
+</html>
