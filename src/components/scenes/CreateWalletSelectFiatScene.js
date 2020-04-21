@@ -3,32 +3,35 @@
 import React, { Component } from 'react'
 import { Alert, FlatList, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import { connect } from 'react-redux'
 
 import * as Constants from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
+import { getDefaultFiat } from '../../modules/Settings/selectors.js'
 import Text from '../../modules/UI/components/FormattedText/index'
 import styles, { styles as stylesRaw } from '../../styles/scenes/CreateWalletStyle.js'
+import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import type { FlatListItem, GuiFiatType, GuiWalletType } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
-import * as UTILS from '../../util/utils'
+import { getSupportedFiats } from '../../util/utils'
 import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
-export type CreateWalletSelectFiatOwnProps = {
+type OwnProps = {
   selectedWalletType: GuiWalletType,
-  supportedFiats: Array<GuiFiatType>,
   cleanedPrivateKey?: string
 }
-export type CreateWalletSelectFiatStateProps = {
+type StateProps = {
   supportedFiats: Array<GuiFiatType>
 }
-export type Props = CreateWalletSelectFiatOwnProps & CreateWalletSelectFiatStateProps
+type Props = OwnProps & StateProps
+
 type State = {
   searchTerm: string,
   selectedFiat: string
 }
 
-export class CreateWalletSelectFiat extends Component<Props, State> {
+class CreateWalletSelectFiatComponent extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {
@@ -87,13 +90,9 @@ export class CreateWalletSelectFiat extends Component<Props, State> {
     }
   }
 
-  handleOnFocus = () => {
-    UTILS.noOp()
-  }
+  handleOnFocus = () => {}
 
-  handleOnBlur = () => {
-    UTILS.noOp()
-  }
+  handleOnBlur = () => {}
 
   render () {
     const filteredArray = this.props.supportedFiats.filter(entry => {
@@ -159,3 +158,10 @@ export class CreateWalletSelectFiat extends Component<Props, State> {
     return item.value
   }
 }
+
+export const CreateWalletSelectFiatScene = connect(
+  (state: ReduxState): StateProps => ({
+    supportedFiats: getSupportedFiats(getDefaultFiat(state))
+  }),
+  (dispatch: Dispatch) => ({})
+)(CreateWalletSelectFiatComponent)

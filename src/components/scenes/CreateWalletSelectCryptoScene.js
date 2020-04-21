@@ -3,14 +3,16 @@
 import React, { Component } from 'react'
 import { Alert, FlatList, Image, Keyboard, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import { connect } from 'react-redux'
 
 import { CREATE_WALLET_CHOICE, CREATE_WALLET_SELECT_FIAT, getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
+import { getSupportedWalletTypes } from '../../modules/Settings/selectors.js'
 import Text from '../../modules/UI/components/FormattedText/index'
 import styles, { styles as stylesRaw } from '../../styles/scenes/CreateWalletStyle.js'
-import type { FlatListItem, GuiWalletType } from '../../types/types.js'
+import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
+import { type FlatListItem, type GuiWalletType } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
-import * as UTILS from '../../util/utils'
 import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance.js'
@@ -42,14 +44,10 @@ const WALLET_TYPE_ORDER = [
   'wallet:ufo'
 ]
 
-export type CreateWalletSelectCryptoOwnProps = {
+type StateProps = {
   supportedWalletTypes: Array<GuiWalletType>
 }
-export type CreateWalletSelectCryptoStateProps = {
-  supportedWalletTypes: Array<GuiWalletType>
-}
-
-type Props = CreateWalletSelectCryptoOwnProps & CreateWalletSelectCryptoStateProps
+type Props = StateProps
 
 type State = {
   selectedWalletType: string,
@@ -58,7 +56,7 @@ type State = {
   errorShown: boolean
 }
 
-export class CreateWalletSelectCrypto extends Component<Props, State> {
+class CreateWalletSelectCryptoComponent extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {
@@ -129,13 +127,9 @@ export class CreateWalletSelectCrypto extends Component<Props, State> {
     }
   }
 
-  handleOnFocus = () => {
-    UTILS.noOp()
-  }
+  handleOnFocus = () => {}
 
-  handleOnBlur = () => {
-    UTILS.noOp()
-  }
+  handleOnBlur = () => {}
 
   static getDerivedStateFromProps (nextProps: Props, prevState: State) {
     let { errorShown } = prevState
@@ -207,8 +201,14 @@ export class CreateWalletSelectCrypto extends Component<Props, State> {
   }
 
   renderWalletTypeResult = (data: FlatListItem<GuiWalletType>) => {
+    const { value, symbolImageDarkMono, currencyCode } = data.item
+
+    // Ripple hack:
+    let { label } = data.item
+    if (currencyCode.toLowerCase() === 'xrp') label = 'Ripple'
+
     return (
-      <View style={[styles.singleCryptoTypeWrap, data.item.value === this.state.selectedWalletType && styles.selectedItem]}>
+      <View style={[styles.singleCryptoTypeWrap, value === this.state.selectedWalletType && styles.selectedItem]}>
         <TouchableHighlight
           style={[styles.singleCryptoType]}
           onPress={() => this.handleSelectWalletType(data.item)}
@@ -217,15 +217,15 @@ export class CreateWalletSelectCrypto extends Component<Props, State> {
           <View style={[styles.cryptoTypeInfoWrap]}>
             <View style={styles.cryptoTypeLeft}>
               <View style={[styles.cryptoTypeLogo]}>
-                {data.item.symbolImageDarkMono ? (
-                  <Image source={{ uri: data.item.symbolImageDarkMono }} style={[styles.cryptoTypeLogo, { borderRadius: 20 }]} />
+                {symbolImageDarkMono ? (
+                  <Image source={{ uri: symbolImageDarkMono }} style={[styles.cryptoTypeLogo, { borderRadius: 20 }]} />
                 ) : (
                   <View style={styles.cryptoTypeLogo} />
                 )}
               </View>
               <View style={[styles.cryptoTypeLeftTextWrap]}>
                 <Text style={[styles.cryptoTypeName]}>
-                  {data.item.label} - {data.item.currencyCode}
+                  {label} - {currencyCode}
                 </Text>
               </View>
             </View>
@@ -239,3 +239,10 @@ export class CreateWalletSelectCrypto extends Component<Props, State> {
     return item.value
   }
 }
+
+export const CreateWalletSelectCryptoScene = connect(
+  (state: ReduxState): StateProps => ({
+    supportedWalletTypes: getSupportedWalletTypes(state)
+  }),
+  (dispatch: Dispatch) => ({})
+)(CreateWalletSelectCryptoComponent)
