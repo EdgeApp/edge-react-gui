@@ -47,11 +47,6 @@ export const getActiveWalletIds = (state: State): Array<string> => {
   return activeWalletIds
 }
 
-export const getArchivedWalletIds = (state: State): Array<string> => {
-  const archivedWalletIds = state.ui.wallets.archivedWalletIds
-  return archivedWalletIds
-}
-
 export const getWalletLoadingPercent = (state: State) => {
   const walletsForProgress = state.ui.wallets.walletLoadingProgress
   const walletIds = Object.keys(walletsForProgress)

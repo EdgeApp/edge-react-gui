@@ -23,6 +23,7 @@ import walletIcon from '../assets/images/tabbar/wallets.png'
 import { CreateWalletChoiceComponent } from '../components/scenes/CreateWalletChoiceScene.js'
 import { CurrencySettingsScene } from '../components/scenes/CurrencySettingsScene.js'
 import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
+import { WalletListScene } from '../components/scenes/WalletListScene.js'
 import { requestPermission } from '../components/services/PermissionsManager.js'
 import ExchangeDropMenu from '../connectors/components/HeaderMenuExchangeConnector'
 import RequestDropMenu from '../connectors/components/HeaderMenuRequestConnector'
@@ -56,7 +57,6 @@ import SettingsOverview from '../connectors/scenes/SettingsOverviewConnector'
 import TransactionDetails from '../connectors/scenes/TransactionDetailsConnector.js'
 import TransactionListConnector from '../connectors/scenes/TransactionListConnector'
 import TransactionsExportSceneConnector from '../connectors/scenes/TransactionsExportSceneConnector'
-import WalletList from '../connectors/scenes/WalletListConnector'
 import SendConfirmationOptions from '../connectors/SendConfirmationOptionsConnector.js'
 import SpendingLimitsConnector from '../connectors/SpendingLimitsConnector.js'
 import * as Constants from '../constants/indexConstants'
@@ -223,7 +223,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.WALLET_LIST_SCENE}
                 navTransparent={true}
-                component={WalletList}
+                component={WalletListScene}
                 renderTitle={this.renderTitle(WALLETS)}
                 renderLeftButton={this.renderHelpButton()}
                 renderRightButton={this.renderMenuButton()}

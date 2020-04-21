@@ -28,15 +28,3 @@ export const toggleAccountBalanceVisibility = () => (dispatch: Dispatch, getStat
     })
     .catch(showError)
 }
-
-export const updateArchivedWalletsOrder = (archivedWalletIds: Array<string>) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { account } = state.core
-
-  const newKeyStates = archivedWalletIds.reduce((keyStates, id, index) => {
-    keyStates[id] = { sortIndex: index }
-    return keyStates
-  }, {})
-
-  return account.changeWalletStates(newKeyStates).catch(error => console.log(error))
-}

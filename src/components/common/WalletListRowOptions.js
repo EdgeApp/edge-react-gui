@@ -14,7 +14,7 @@ import { scale } from '../../util/scaling.js'
 type Props = {
   walletKey: string,
   executeWalletRowOption: (walletKey: string, option: string) => void,
-  currencyCode: Array<string>,
+  currencyCode: string,
   customStyles: StyleSheet.Styles
 }
 
