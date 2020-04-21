@@ -9,8 +9,6 @@ export * from './CountryConstants.js'
 
 export const ANDROID = 'android'
 export const IOS = 'ios'
-export const FROM = 'from'
-export const TO = 'to'
 
 export const CRYPTO_EXCHANGE = 'cryptoExchange'
 

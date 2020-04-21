@@ -66,8 +66,8 @@ export type CryptoExchangeSceneComponentDispatchProps = {
 type Props = CryptoExchangeSceneComponentStateProps & CryptoExchangeSceneComponentDispatchProps
 
 type LocalState = {
-  whichWallet: string, // Which wallet selector dropdown was tapped
-  whichWalletFocus: string, // Which wallet FlipInput was last focused and edited
+  whichWallet: 'from' | 'to', // Which wallet selector dropdown was tapped
+  whichWalletFocus: 'from' | 'to', // Which wallet FlipInput was last focused and edited
   fromExchangeAmount: string,
   forceUpdateGuiCounter: number,
   toExchangeAmount: string
@@ -81,8 +81,8 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
   constructor (props: Props) {
     super(props)
     const newState: LocalState = {
-      whichWallet: Constants.FROM,
-      whichWalletFocus: Constants.FROM,
+      whichWallet: 'from',
+      whichWalletFocus: 'from',
       forceUpdateGuiCounter: 0,
       fromExchangeAmount: '',
       toExchangeAmount: ''
@@ -103,9 +103,9 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
     } else {
       // Check which wallet we are currently editing.
       // Only change the exchangeAmount of the opposite wallet to prevent feedback loops
-      if (this.state.whichWalletFocus === Constants.FROM) {
+      if (this.state.whichWalletFocus === 'from') {
         this.setState({ toExchangeAmount: nextProps.toExchangeAmount })
-      } else if (this.state.whichWalletFocus === Constants.TO) {
+      } else {
         this.setState({ fromExchangeAmount: nextProps.fromExchangeAmount })
       }
     }
@@ -135,8 +135,8 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
     } else {
       toSecondaryInfo = emptyCurrencyInfo
     }
-    const isFromFocused = this.state.whichWalletFocus === Constants.FROM
-    const isToFocused = this.state.whichWalletFocus === Constants.TO
+    const isFromFocused = this.state.whichWalletFocus === 'from'
+    const isToFocused = this.state.whichWalletFocus === 'to'
     const fromHeaderText = sprintf(s.strings.exchange_from_wallet, this.props.fromWallet.name)
     const toHeaderText = sprintf(s.strings.exchange_to_wallet, this.props.toWallet.name)
     return (
@@ -191,8 +191,8 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
   }
   getQuote = () => {
     const data: SetNativeAmountInfo = {
-      whichWallet: this.state.whichWalletFocus === Constants.FROM ? 'from' : 'to',
-      primaryNativeAmount: this.state.whichWalletFocus === Constants.FROM ? this.fromAmountNative : this.toAmountNative
+      whichWallet: this.state.whichWalletFocus,
+      primaryNativeAmount: this.state.whichWalletFocus === 'from' ? this.fromAmountNative : this.toAmountNative
     }
     if (data.primaryNativeAmount && data.primaryNativeAmount !== '0') {
       this.props.getQuoteForTransaction(data)
@@ -220,29 +220,29 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
 
   launchFromWalletSelector = () => {
     this.props.openModal('from')
-    this.renderDropUp(Constants.FROM)
+    this.renderDropUp('from')
     this.setState({
-      whichWallet: Constants.FROM
+      whichWallet: 'from'
     })
   }
 
   launchToWalletSelector = () => {
     this.props.openModal('to')
-    this.renderDropUp(Constants.TO)
+    this.renderDropUp('to')
     this.setState({
-      whichWallet: Constants.TO
+      whichWallet: 'to'
     })
   }
   focusFromWallet = () => {
     this.setState({
-      whichWallet: Constants.FROM,
-      whichWalletFocus: Constants.FROM
+      whichWallet: 'from',
+      whichWalletFocus: 'from'
     })
   }
   focusToWallet = () => {
     this.setState({
-      whichWallet: Constants.TO,
-      whichWalletFocus: Constants.TO
+      whichWallet: 'to',
+      whichWalletFocus: 'to'
     })
   }
 
@@ -256,7 +256,7 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
     this.toAmountDisplay = amounts.exchangeAmount
   }
 
-  renderDropUp = (whichWallet: string) => {
+  renderDropUp = (whichWallet: 'from' | 'to') => {
     const { onSelectWallet, fromCurrencyCode, fromWallet, toCurrencyCode, toWallet, wallets } = this.props
     const walletCurrencyCodes = []
     const allowedWallets = []
@@ -274,8 +274,8 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
         supportedWalletTypes.push(swt)
       }
     }
-    const filterWalletId = whichWallet === Constants.TO ? fromWallet.id : toWallet.id
-    const filterWalletCurrencyCode = whichWallet === Constants.TO ? fromCurrencyCode : toCurrencyCode
+    const filterWalletId = whichWallet === 'to' ? fromWallet.id : toWallet.id
+    const filterWalletCurrencyCode = whichWallet === 'to' ? fromCurrencyCode : toCurrencyCode
     Airship.show(bridge => (
       <WalletListModal
         bridge={bridge}
@@ -285,8 +285,8 @@ export class CryptoExchangeScene extends Component<Props, LocalState> {
         existingWalletToFilterCurrencyCode={filterWalletCurrencyCode}
         supportedWalletTypes={supportedWalletTypes}
         excludedCurrencyCode={[]}
-        showWalletCreators={whichWallet === Constants.TO}
-        headerTitle={whichWallet === Constants.TO ? s.strings.select_recv_wallet : s.strings.select_src_wallet}
+        showWalletCreators={whichWallet === 'to'}
+        headerTitle={whichWallet === 'to' ? s.strings.select_recv_wallet : s.strings.select_src_wallet}
         excludedTokens={[]}
         noWalletCodes={[]}
         disableZeroBalance={false}
