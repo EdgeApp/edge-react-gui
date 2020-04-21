@@ -24,9 +24,6 @@ Object {
       "isProcessing": false,
       "lobby": null,
     },
-    "wallets": Object {
-      "byId": Object {},
-    },
   },
   "cryptoExchange": Object {
     "calculatingMax": false,

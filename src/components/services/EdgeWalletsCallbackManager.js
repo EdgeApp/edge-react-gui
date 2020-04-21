@@ -17,9 +17,9 @@ class EdgeWalletsManager extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: State): Props => {
-  const ids = Object.keys(state.core.wallets.byId)
+  const { currencyWallets = {} } = state.core.account
   return {
-    ids
+    ids: Object.keys(currencyWallets)
   }
 }
 
