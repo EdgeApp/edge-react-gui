@@ -128,7 +128,6 @@
   "create_wallet_import_input_prompt": "Semilla privada",
   "create_wallet_import_successful": "¡Importación correcta!",
   "create_wallet_select_valid_crypto": "Seleccione un tipo de cartera válido por favor",
-  "create_wallet_selcet_crypto_unloaded_plugins_error": "Algunos tipos de cartera no están disponibles. Por favor espera a que la cuenta cargue completamente para acceder a todos los tipos de cartera.",
   "create_wallet_invalid_input": "Entrada inválida",
   "create_wallet_select_valid_fiat": "Seleccione una moneda fiat por favor",
   "create_wallet_choose_crypto": "Seleccione un tipo de cartera",
