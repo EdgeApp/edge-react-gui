@@ -1,6 +1,7 @@
 // @flow
 
 import { createYesNoModal } from 'edge-components'
+import { type EdgeAccount } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, Animated, FlatList, Image, Linking, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -22,7 +23,7 @@ import * as Constants from '../../constants/indexConstants.js'
 import { guiPlugins } from '../../constants/plugins/GuiPlugins.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
-import { getDefaultIsoFiat, getIsAccountBalanceVisible, getOtpResetPending, getSupportedWalletTypes } from '../../modules/Settings/selectors.js'
+import { getDefaultIsoFiat, getIsAccountBalanceVisible, getOtpResetPending } from '../../modules/Settings/selectors.js'
 import T from '../../modules/UI/components/FormattedText/index'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
@@ -37,7 +38,8 @@ import THEME from '../../theme/variables/airbitz'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
 import { type MessageTweak } from '../../types/TweakTypes.js'
-import { type GuiWallet, type GuiWalletType } from '../../types/types.js'
+import { type GuiWallet } from '../../types/types.js'
+import { makeGuiWalletType } from '../../util/CurrencyInfoHelpers.js'
 import { type TweakSource, bestOfMessages } from '../../util/ReferralHelpers.js'
 import { scale } from '../../util/scaling.js'
 import { getTotalFiatAmountFromExchangeRates } from '../../util/utils.js'
@@ -53,11 +55,11 @@ const WALLETS_HEADER_TEXT = s.strings.fragment_wallets_header
 const ARCHIVED_TEXT = s.strings.fragmet_wallets_list_archive_title_capitalized
 
 type StateProps = {
+  account: EdgeAccount,
   accountMessages: MessageTweak[],
   accountReferral: AccountReferral,
   activeWalletIds: Array<string>,
   customTokens: Array<any>,
-  ethereumWalletType?: GuiWalletType,
   exchangeRates: Object,
   otpResetPending: boolean,
   // TODO: This component is grabing GuiWallet objects out of redux and adding
@@ -407,7 +409,7 @@ class WalletListComponent extends Component<Props, State> {
   }
 
   addToken = async () => {
-    const { wallets, ethereumWalletType } = this.props
+    const { account, wallets } = this.props
     let tokenEnabledWallets = 0
 
     // count number of token-enabled wallets
@@ -432,18 +434,25 @@ class WalletListComponent extends Component<Props, State> {
 
     // if no token-enabled wallets then allow creation of token-enabled wallet
     if (tokenEnabledWallets === 0) {
-      const modal = createYesNoModal({
-        title: s.strings.wallet_list_add_token_modal_title,
-        message: s.strings.wallet_list_add_token_modal_message,
-        icon: <Icon type={Constants.ION_ICONS} name={Constants.WALLET_ICON} size={30} />,
-        noButtonText: s.strings.string_cancel_cap,
-        yesButtonText: s.strings.title_create_wallet
-      })
-
-      if (ethereumWalletType) {
-        return (await launchModal(modal)) ? Actions[Constants.CREATE_WALLET_SELECT_FIAT]({ selectedWalletType: ethereumWalletType }) : null
-      } else {
+      const { ethereum } = account.currencyConfig
+      if (ethereum == null) {
         return Alert.alert(s.strings.create_wallet_invalid_input, s.strings.create_wallet_select_valid_crypto)
+      }
+
+      const answer = await launchModal(
+        createYesNoModal({
+          title: s.strings.wallet_list_add_token_modal_title,
+          message: s.strings.wallet_list_add_token_modal_message,
+          icon: <Icon type={Constants.ION_ICONS} name={Constants.WALLET_ICON} size={30} />,
+          noButtonText: s.strings.string_cancel_cap,
+          yesButtonText: s.strings.title_create_wallet
+        })
+      )
+
+      if (answer) {
+        Actions[Constants.CREATE_WALLET_SELECT_FIAT]({
+          selectedWalletType: makeGuiWalletType(ethereum.currencyInfo)
+        })
       }
     }
   }
@@ -536,16 +545,12 @@ export const WalletListScene = connect(
     // We need to hack Flow, since this component is adding fields to these objects:
     const wallets: any = state.ui.wallets.byId
 
-    // TODO: This will cause us to re-render on every update:
-    const supportedWalletTypes = getSupportedWalletTypes(state)
-    const ethereumWalletType = supportedWalletTypes.find(item => item.value === 'wallet:ethereum')
-
     return {
+      account: state.core.account,
       accountMessages: state.account.referralCache.accountMessages,
       accountReferral: state.account.accountReferral,
       activeWalletIds,
       customTokens: state.ui.settings.customTokens,
-      ethereumWalletType,
       exchangeRates: state.exchangeRates,
       otpResetPending: getOtpResetPending(state),
       wallets

@@ -21,12 +21,12 @@ import { WalletListModalConnected as WalletListModal } from '../../../../connect
 import { DEFAULT_STARTER_WALLET_NAMES, EXCLAMATION, MATERIAL_COMMUNITY } from '../../../../constants/indexConstants'
 import { SEND_CONFIRMATION } from '../../../../constants/SceneKeys.js'
 import s from '../../../../locales/strings'
-import * as SETTINGS_SELECTORS from '../../../../modules/Settings/selectors.js'
 import { Icon } from '../../../../modules/UI/components/Icon/Icon.ui.js'
 import type { GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
 import { type GuiPlugin, type GuiPluginQuery } from '../../../../types/GuiPluginTypes.js'
 import type { Dispatch, State } from '../../../../types/reduxTypes.js'
 import { type GuiWallet } from '../../../../types/types.js'
+import { getGuiWalletTypes } from '../../../../util/CurrencyInfoHelpers.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 
@@ -179,7 +179,7 @@ export class EdgeProvider extends Bridgeable {
       }
     }
     //
-    const supportedWalletTypesPreFilter = SETTINGS_SELECTORS.getSupportedWalletTypes(this._state)
+    const supportedWalletTypesPreFilter = getGuiWalletTypes(this._state.core.account)
     const supportedWalletTypes = []
     for (let i = 0; i < supportedWalletTypesPreFilter.length; i++) {
       const swt = supportedWalletTypesPreFilter[i]
@@ -216,7 +216,7 @@ export class EdgeProvider extends Bridgeable {
         this._dispatch(selectWallet(selectedWallet.id, code))
         return Promise.resolve(code)
       }
-      const settings = SETTINGS_SELECTORS.getSettings(this._state)
+      const settings = this._state.ui.settings
       const walletName = DEFAULT_STARTER_WALLET_NAMES[selectedWallet.currencyCode]
       try {
         if (typeof selectedWallet.value === 'string') {

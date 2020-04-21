@@ -143,7 +143,6 @@ const strings = {
   create_wallet_import_input_prompt: 'Private Seed',
   create_wallet_import_successful: 'Import Successful!',
   create_wallet_select_valid_crypto: 'Please select a valid wallet type',
-  create_wallet_selcet_crypto_unloaded_plugins_error: 'Some wallet types unavailable. Please wait for account to fully load to access all wallet types.',
   create_wallet_invalid_input: 'Invalid input',
   create_wallet_select_valid_fiat: 'Please select a valid fiat currency',
   create_wallet_choose_crypto: 'Choose a wallet type',

@@ -1,6 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
+import { type EdgeAccount } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, Keyboard, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -15,7 +16,7 @@ import CryptoExchangeMessageConnector from '../../connectors/components/CryptoEx
 import { WalletListModalConnected as WalletListModal } from '../../connectors/components/WalletListModalConnector.js'
 import { ARROW_DOWN_BOLD, DEFAULT_STARTER_WALLET_NAMES, MATERIAL_COMMUNITY } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
-import { getSettings, getSupportedWalletTypes } from '../../modules/Settings/selectors.js'
+import { getSettings } from '../../modules/Settings/selectors.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
 import { CryptoExchangeFlipInputWrapperComponent } from '../../modules/UI/components/FlipInput/CryptoExchangeFlipInputWrapperComponent.js'
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2'
@@ -23,12 +24,15 @@ import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import { getExchangeRate } from '../../modules/UI/selectors.js'
 import { styles } from '../../styles/scenes/CryptoExchangeSceneStyles.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
-import { type GuiCurrencyInfo, type GuiWallet, type GuiWalletType, emptyCurrencyInfo, emptyGuiWallet } from '../../types/types.js'
+import { type GuiCurrencyInfo, type GuiWallet, emptyCurrencyInfo, emptyGuiWallet } from '../../types/types.js'
+import { getGuiWalletTypes } from '../../util/CurrencyInfoHelpers.js'
 import { getDenomFromIsoCode } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { Airship } from '../services/AirshipInstance.js'
 
 type StateProps = {
+  account: EdgeAccount,
+
   // The following props are used to populate the CryptoExchangeFlipInputs
   fromWallet: GuiWallet,
   fromExchangeAmount: string,
@@ -55,7 +59,6 @@ type StateProps = {
   forceUpdateGuiCounter: number,
   calculatingMax: boolean,
   wallets: { [id: string]: GuiWallet },
-  supportedWalletTypes: Array<GuiWalletType>,
   creatingWallet: boolean,
   defaultIsoFiat: string
 }
@@ -259,7 +262,7 @@ class CryptoExchangeComponent extends Component<Props, State> {
   }
 
   renderDropUp = (whichWallet: 'from' | 'to') => {
-    const { onSelectWallet, fromCurrencyCode, fromWallet, toCurrencyCode, toWallet, wallets } = this.props
+    const { account, onSelectWallet, fromCurrencyCode, fromWallet, toCurrencyCode, toWallet, wallets } = this.props
     const walletCurrencyCodes = []
     const allowedWallets = []
     for (const id in wallets) {
@@ -269,9 +272,10 @@ class CryptoExchangeComponent extends Component<Props, State> {
         allowedWallets.push(wallets[id])
       }
     }
+    const guiWalletTypes = getGuiWalletTypes(account)
     const supportedWalletTypes = []
-    for (let i = 0; i < this.props.supportedWalletTypes.length; i++) {
-      const swt = this.props.supportedWalletTypes[i]
+    for (let i = 0; i < guiWalletTypes.length; i++) {
+      const swt = guiWalletTypes[i]
       if (!walletCurrencyCodes.includes(swt.currencyCode) && swt.currencyCode !== 'EOS') {
         supportedWalletTypes.push(swt)
       }
@@ -314,7 +318,6 @@ export const CryptoExchangeScene = connect(
   (state: ReduxState): StateProps => {
     const fromWallet = state.cryptoExchange.fromWallet
     const toWallet = state.cryptoExchange.toWallet
-    const supportedWalletTypes = getSupportedWalletTypes(state)
     let fromCurrencyCode,
       fromPrimaryInfo: GuiCurrencyInfo,
       fromButtonText: string,
@@ -356,6 +359,7 @@ export const CryptoExchangeScene = connect(
     const settings = getSettings(state)
     const defaultIsoFiat = settings.defaultIsoFiat
     return {
+      account: state.core.account,
       fromWallet: fromWallet || emptyGuiWallet,
       fromExchangeAmount,
       fromCurrencyCode,
@@ -377,7 +381,6 @@ export const CryptoExchangeScene = connect(
       forceUpdateGuiCounter: state.cryptoExchange.forceUpdateGuiCounter,
       calculatingMax: state.cryptoExchange.calculatingMax,
       wallets,
-      supportedWalletTypes,
       creatingWallet,
       defaultIsoFiat
     }
