@@ -128,7 +128,6 @@
   "create_wallet_import_input_prompt": "Từ khóa riêng",
   "create_wallet_import_successful": "Nhập thành công!",
   "create_wallet_select_valid_crypto": "Vui lòng chọn loại ví hợp lệ",
-  "create_wallet_selcet_crypto_unloaded_plugins_error": "Một số loại ví không có sẵn. Xin vui lòng chờ cho các tài khoản để tải đầy đủ để truy cập vào tất cả các loại ví.",
   "create_wallet_invalid_input": "Dữ liệu nhập không hợp lệ",
   "create_wallet_select_valid_fiat": "Vui lòng chọn một loại tiền tệ fiat hợp lệ",
   "create_wallet_choose_crypto": "Chọn loại ví",
