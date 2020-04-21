@@ -128,7 +128,6 @@
   "create_wallet_import_input_prompt": "Seed",
   "create_wallet_import_successful": "가져오기가 완료되었습니다.",
   "create_wallet_select_valid_crypto": "유효한 월렛 종류를 선택하십시오.",
-  "create_wallet_selcet_crypto_unloaded_plugins_error": "몇가지 종류의 월렛은 사용할 수 없습니다. 계정이 로딩되어 모든 종류의 월렛에 접속할 때까지 기다려주세요.",
   "create_wallet_invalid_input": "입력이 잘못되었습니다",
   "create_wallet_select_valid_fiat": "유효한 피아트 통화를 선택하십시오.",
   "create_wallet_choose_crypto": "월렛 종류를 선택",
