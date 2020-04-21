@@ -18,7 +18,7 @@ import T from '../../modules/UI/components/FormattedText/index'
 import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
 import styles, { customWalletListOptionsStyles, styles as styleRaw } from '../../styles/scenes/WalletListStyle.js'
 import type { State } from '../../types/reduxTypes.js'
-import type { CustomTokenInfo, GuiDenomination } from '../../types/types.js'
+import { type CustomTokenInfo, type GuiDenomination, type GuiWallet } from '../../types/types.js'
 import { decimalOrZero, getFiatSymbol, getObjectDiff, getYesterdayDateRoundDownHour, truncateDecimals } from '../../util/utils.js'
 import { ProgressPie } from './ProgressPie.js'
 import WalletListRowOptions from './WalletListRowOptions'
@@ -101,7 +101,9 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
   render () {
     const { data, walletFiatSymbol, settings, exchangeRates, showBalance } = this.props
     const progress = this.getProgress()
-    const walletData = data.item
+    const walletData: GuiWallet & {
+      executeWalletRowOption: (walletId: string, option: string) => void
+    } = data.item
     const currencyCode = walletData.currencyCode
     const denomination = this.props.displayDenomination
     const multiplier = denomination.multiplier

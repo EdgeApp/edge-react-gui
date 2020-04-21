@@ -128,7 +128,6 @@
   "create_wallet_import_input_prompt": "プライベートシード",
   "create_wallet_import_successful": "インポート成功",
   "create_wallet_select_valid_crypto": "有効なウォレットタイプを選択してください",
-  "create_wallet_selcet_crypto_unloaded_plugins_error": "一部のウォレットは使用できません。\nすべてのタイプのウォレットにアカウントがアクセスするために完全ロードされるまでお待ちください。",
   "create_wallet_invalid_input": "無効なインプットです",
   "create_wallet_select_valid_fiat": "有効な法定通貨を選択してください",
   "create_wallet_choose_crypto": "ウォレットタイプを選択",

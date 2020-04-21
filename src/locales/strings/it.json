@@ -128,7 +128,6 @@
   "create_wallet_import_input_prompt": "Seed",
   "create_wallet_import_successful": "Importazione effettuata con successo!",
   "create_wallet_select_valid_crypto": "Seleziona un tipo di portafoglio valido",
-  "create_wallet_selcet_crypto_unloaded_plugins_error": "Alcuni tipi di portafoglio non sono disponibili. Attendere che l'account carichi completamente per accedere a tutti i tipi di portafoglio.",
   "create_wallet_invalid_input": "Importo non valido",
   "create_wallet_select_valid_fiat": "Seleziona una valuta fiat valida",
   "create_wallet_choose_crypto": "Seleziona un tipo di portafoglio",

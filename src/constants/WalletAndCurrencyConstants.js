@@ -74,6 +74,36 @@ export const CURRENCY_SETTINGS_KEYS = [
   'ufo'
 ]
 
+/**
+ * Determines the sort order of the various currencies the app supports.
+ * Use `sortCurrencyInfos` to actually do the sorting.
+ */
+export const WALLET_TYPE_ORDER = [
+  'wallet:bitcoin',
+  'wallet:bitcoincash',
+  'wallet:monero',
+  'wallet:ethereum',
+  'wallet:binance',
+  'wallet:bitcoinsv',
+  'wallet:litecoin',
+  'wallet:eos',
+  'wallet:ripple',
+  'wallet:rsk',
+  'wallet:stellar',
+  'wallet:dash',
+  'wallet:tezos',
+  'wallet:digibyte',
+  'wallet:vertcoin',
+  'wallet:ravencoin',
+  'wallet:qtum',
+  'wallet:feathercoin',
+  'wallet:bitcoingold',
+  'wallet:smartcash',
+  'wallet:groestlcoin',
+  'wallet:zcoin',
+  'wallet:ufo'
+]
+
 // Put these in reverse order of preference
 export const PREFERRED_TOKENS = ['WINGS', 'HERC', 'REP', 'AGLD', 'RIF']
 

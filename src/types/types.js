@@ -116,9 +116,9 @@ export type TransactionListTx = {
   unfilteredIndex: number
 }
 
-export type FlatListItem = {
-  key: number,
-  item: any
+export type FlatListItem<T> = {
+  index: number,
+  item: T
 }
 
 export type DeviceDimensions = {

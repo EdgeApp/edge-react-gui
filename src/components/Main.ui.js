@@ -21,8 +21,15 @@ import sellIcon from '../assets/images/tabbar/sell.png'
 import walletIconSelected from '../assets/images/tabbar/wallets_selected.png'
 import walletIcon from '../assets/images/tabbar/wallets.png'
 import { CreateWalletChoiceComponent } from '../components/scenes/CreateWalletChoiceScene.js'
+import { CreateWalletImportScene } from '../components/scenes/CreateWalletImportScene.js'
+import { CreateWalletReviewScene } from '../components/scenes/CreateWalletReviewScene.js'
+import { CreateWalletSelectCryptoScene } from '../components/scenes/CreateWalletSelectCryptoScene.js'
+import { CreateWalletSelectFiatScene } from '../components/scenes/CreateWalletSelectFiatScene.js'
+import { CryptoExchangeScene } from '../components/scenes/CryptoExchangeScene.js'
 import { CurrencySettingsScene } from '../components/scenes/CurrencySettingsScene.js'
+import { DefaultFiatSettingScene } from '../components/scenes/DefaultFiatSettingScene.js'
 import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
+import { WalletListScene } from '../components/scenes/WalletListScene.js'
 import { requestPermission } from '../components/services/PermissionsManager.js'
 import ExchangeDropMenu from '../connectors/components/HeaderMenuExchangeConnector'
 import RequestDropMenu from '../connectors/components/HeaderMenuRequestConnector'
@@ -32,13 +39,7 @@ import ChangePasswordConnector from '../connectors/scenes/ChangePasswordConnecto
 import ChangePinConnector from '../connectors/scenes/ChangePinConnector.ui'
 import { CreateWalletAccountSelectConnector } from '../connectors/scenes/CreateWalletAccountSelectConnector.js'
 import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWalletAccountSetupConnector.js'
-import { CreateWalletImportConnector } from '../connectors/scenes/CreateWalletImportConnector.js'
-import { CreateWalletReview } from '../connectors/scenes/CreateWalletReviewConnector'
-import { CreateWalletSelectCrypto } from '../connectors/scenes/CreateWalletSelectCryptoConnector'
-import { CreateWalletSelectFiat } from '../connectors/scenes/CreateWalletSelectFiatConnector'
 import { CryptoExchangeQuoteConnector } from '../connectors/scenes/CryptoExchangeQuoteConnector.js'
-import { CryptoExchangeSceneConnector as ExchangeConnector } from '../connectors/scenes/CryptoExchangeSceneConnector'
-import DefaultFiatSettingConnector from '../connectors/scenes/DefaultFiatSettingConnector'
 import EdgeLoginSceneConnector from '../connectors/scenes/EdgeLoginSceneConnector'
 import EditToken from '../connectors/scenes/EditTokenConnector.js'
 import { FioAddressConfirmConnector } from '../connectors/scenes/FioAddressConfirmConnector'
@@ -56,7 +57,6 @@ import SettingsOverview from '../connectors/scenes/SettingsOverviewConnector'
 import TransactionDetails from '../connectors/scenes/TransactionDetailsConnector.js'
 import TransactionListConnector from '../connectors/scenes/TransactionListConnector'
 import TransactionsExportSceneConnector from '../connectors/scenes/TransactionsExportSceneConnector'
-import WalletList from '../connectors/scenes/WalletListConnector'
 import SendConfirmationOptions from '../connectors/SendConfirmationOptionsConnector.js'
 import SpendingLimitsConnector from '../connectors/SpendingLimitsConnector.js'
 import * as Constants from '../constants/indexConstants'
@@ -223,7 +223,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.WALLET_LIST_SCENE}
                 navTransparent={true}
-                component={WalletList}
+                component={WalletListScene}
                 renderTitle={this.renderTitle(WALLETS)}
                 renderLeftButton={this.renderHelpButton()}
                 renderRightButton={this.renderMenuButton()}
@@ -241,7 +241,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.CREATE_WALLET_IMPORT}
                 navTransparent={true}
-                component={CreateWalletImportConnector}
+                component={CreateWalletImportScene}
                 renderTitle={this.renderTitle(CREATE_WALLET_IMPORT)}
                 renderLeftButton={this.renderBackButton()}
                 renderRightButton={this.renderEmptyButton()}
@@ -250,7 +250,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.CREATE_WALLET_SELECT_CRYPTO}
                 navTransparent={true}
-                component={CreateWalletSelectCrypto}
+                component={CreateWalletSelectCryptoScene}
                 renderTitle={this.renderTitle(CREATE_WALLET_SELECT_CRYPTO)}
                 renderLeftButton={this.renderBackButton()}
                 renderRightButton={this.renderEmptyButton()}
@@ -268,7 +268,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.CREATE_WALLET_SELECT_FIAT}
                 navTransparent={true}
-                component={CreateWalletSelectFiat}
+                component={CreateWalletSelectFiatScene}
                 renderTitle={this.renderTitle(CREATE_WALLET_SELECT_FIAT)}
                 renderLeftButton={this.renderBackButton()}
                 renderRightButton={this.renderEmptyButton()}
@@ -277,7 +277,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.CREATE_WALLET_REVIEW}
                 navTransparent={true}
-                component={CreateWalletReview}
+                component={CreateWalletReviewScene}
                 renderTitle={this.renderTitle(CREATE_WALLET)}
                 renderLeftButton={this.renderBackButton()}
                 renderRightButton={this.renderEmptyButton()}
@@ -441,7 +441,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.EXCHANGE_SCENE}
                 navTransparent={true}
-                component={ExchangeConnector}
+                component={CryptoExchangeScene}
                 renderTitle={this.renderTitle(EXCHANGE)}
                 renderLeftButton={this.renderExchangeButton()}
                 renderRightButton={this.renderMenuButton()}
@@ -598,7 +598,7 @@ export class MainComponent extends Component<Props> {
             <Scene
               key={Constants.DEFAULT_FIAT_SETTING}
               navTransparent={true}
-              component={DefaultFiatSettingConnector}
+              component={DefaultFiatSettingScene}
               renderTitle={this.renderTitle(DEFAULT_FIAT)}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderEmptyButton()}

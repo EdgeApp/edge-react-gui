@@ -21,7 +21,7 @@ import { showDeleteWalletModal } from './DeleteWalletModalActions.js'
 import { showResyncWalletModal } from './ResyncWalletModalActions.js'
 import { showSplitWalletModal } from './SplitWalletModalActions.js'
 
-export const walletRowOption = (walletId: string, option: string, archived: boolean) => {
+export function walletRowOption (walletId: string, option: string, archived: boolean) {
   if (option === 'archive' && archived) {
     option = 'activate'
   }
@@ -229,5 +229,8 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
         }
       }
     }
+
+    default:
+      return (dispatch: Dispatch) => undefined
   }
 }

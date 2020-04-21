@@ -128,7 +128,6 @@
   "create_wallet_import_input_prompt": "Clé privée",
   "create_wallet_import_successful": "Importation terminée!",
   "create_wallet_select_valid_crypto": "Veuillez choisir un type de Wallet valide.",
-  "create_wallet_selcet_crypto_unloaded_plugins_error": "Certains portefeuilles ne sont pas disponible. Nous vous prions de patienter afin de pouvoir accéder à tous les types de portefeuilles.",
   "create_wallet_invalid_input": "Entrée invalide",
   "create_wallet_select_valid_fiat": "Veuillez sélectionner les fiat valides",
   "create_wallet_choose_crypto": "Choisissez le type d'un portefeuille",
