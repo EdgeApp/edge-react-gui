@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import { bns } from 'biggystring'
 import React, { Component } from 'react'
@@ -8,15 +8,30 @@ import { connect } from 'react-redux'
 import sort from '../../assets/images/walletlist/sort.png'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
+import { type ExchangeRatesState } from '../../modules/ExchangeRates/reducer.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import T from '../../modules/UI/components/FormattedText/index'
 import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
+import { type SettingsState } from '../../reducers/scenes/SettingsReducer.js'
 import styles, { styles as styleRaw } from '../../styles/scenes/WalletListStyle.js'
+import { type State as ReduxState } from '../../types/reduxTypes.js'
 import { decimalOrZero, getFiatSymbol, truncateDecimals } from '../../util/utils'
 
 const DIVIDE_PRECISION = 18
 
-class SortableWalletListRow extends Component<Props, State> {
+type OwnProps = {
+  data: any,
+  showBalance: boolean | ((state: ReduxState) => boolean)
+}
+type StateProps = {
+  exchangeRates: ExchangeRatesState,
+  showBalance: boolean,
+  settings: SettingsState,
+  walletFiatSymbol: string | void
+}
+type Props = OwnProps & StateProps
+
+class SortableWalletListRow extends Component<Props> {
   render () {
     let multiplier,
       name,
@@ -51,11 +66,7 @@ class SortableWalletListRow extends Component<Props, State> {
     }
 
     return (
-      <TouchableHighlight
-        style={[styles.rowContainer, styles.sortableWalletListRow]}
-        underlayColor={styleRaw.walletRowUnderlay.color}
-        {...this.props.sortHandlers}
-      >
+      <TouchableHighlight style={[styles.rowContainer, styles.sortableWalletListRow]} underlayColor={styleRaw.walletRowUnderlay.color}>
         {walletData.currencyCode ? (
           <View style={[styles.rowContent]}>
             <View style={[styles.rowDragArea]}>
@@ -96,17 +107,11 @@ class SortableWalletListRow extends Component<Props, State> {
   }
 }
 
-export default connect((state, ownProps) => {
-  const settings = state.ui.settings
-  const exchangeRates = state.exchangeRates
-
-  const data = ownProps.data || null
-  const walletFiatSymbol = data ? getFiatSymbol(data.isoFiatCurrencyCode) : ''
-
-  return {
+export default connect(
+  (state: ReduxState, ownProps: OwnProps): StateProps => ({
     showBalance: typeof ownProps.showBalance === 'function' ? ownProps.showBalance(state) : ownProps.showBalance,
-    settings,
-    exchangeRates,
-    walletFiatSymbol
-  }
-})(SortableWalletListRow)
+    settings: state.ui.settings,
+    exchangeRates: state.exchangeRates,
+    walletFiatSymbol: ownProps.data ? getFiatSymbol(ownProps.data.isoFiatCurrencyCode) : ''
+  })
+)(SortableWalletListRow)
