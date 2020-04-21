@@ -47,6 +47,7 @@ import { FioAddressDetailsConnector } from '../connectors/scenes/FioAddressDetai
 import { FioAddressListConnector } from '../connectors/scenes/FioAddressListConnector'
 import { FioAddressRegisterConnector } from '../connectors/scenes/FioAddressRegisterConnector'
 import { FioAddressRegisterSelectWalletConnector } from '../connectors/scenes/FioAddressRegisterSelectWalletConnector'
+import { FioRequestConfirmationConnector } from '../connectors/scenes/FioRequestConfirmationConnector.js'
 import ManageTokens from '../connectors/scenes/ManageTokensConnector.js'
 import OtpSettingsSceneConnector from '../connectors/scenes/OtpSettingsSceneConnector.js'
 import PasswordRecoveryConnector from '../connectors/scenes/PasswordRecoveryConnector.js'
@@ -336,6 +337,15 @@ export class MainComponent extends Component<Props> {
                 renderLeftButton={this.renderBackButton()}
                 renderRightButton={this.renderRequestMenuButton()}
                 hideTabBar
+              />
+
+              <Scene
+                key={Constants.FIO_REQUEST_CONFIRMATION}
+                navTransparent={true}
+                component={FioRequestConfirmationConnector}
+                renderTitle={this.renderWalletName()}
+                renderLeftButton={this.renderBackButton(BACK)}
+                renderRightButton={this.renderMenuButton()}
               />
 
               <Scene
