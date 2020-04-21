@@ -206,7 +206,7 @@ export class CreateWalletSelectCrypto extends Component<Props, State> {
     )
   }
 
-  renderWalletTypeResult = (data: FlatListItem) => {
+  renderWalletTypeResult = (data: FlatListItem<GuiWalletType>) => {
     return (
       <View style={[styles.singleCryptoTypeWrap, data.item.value === this.state.selectedWalletType && styles.selectedItem]}>
         <TouchableHighlight

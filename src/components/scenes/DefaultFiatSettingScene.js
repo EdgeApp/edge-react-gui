@@ -93,7 +93,7 @@ export default class DefaultFiatSetting extends Component<Props, State> {
     return isValid
   }
 
-  renderFiatTypeResult = (data: FlatListItem) => {
+  renderFiatTypeResult = (data: FlatListItem<GuiFiatType>) => {
     return (
       <View style={[styles.singleFiatTypeWrap, data.item.value === this.state.selectedFiat && styles.selectedItem]}>
         <TouchableHighlight style={[styles.singleFiatType]} onPress={() => this.onSelectFiat(data.item)} underlayColor={stylesRaw.underlayColor.color}>

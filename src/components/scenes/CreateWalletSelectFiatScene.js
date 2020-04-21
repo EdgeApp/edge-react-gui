@@ -135,7 +135,7 @@ export class CreateWalletSelectFiat extends Component<Props, State> {
     )
   }
 
-  renderFiatTypeResult = (data: FlatListItem) => {
+  renderFiatTypeResult = (data: FlatListItem<GuiFiatType>) => {
     return (
       <View style={[styles.singleCryptoTypeWrap, data.item.value === this.state.selectedFiat && styles.selectedItem]}>
         <TouchableHighlight
