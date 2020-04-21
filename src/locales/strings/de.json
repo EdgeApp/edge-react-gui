@@ -128,7 +128,6 @@
   "create_wallet_import_input_prompt": "Privater Schlüssel",
   "create_wallet_import_successful": "Importieren erfolgreich!",
   "create_wallet_select_valid_crypto": "Wählen Sie bitte eine gültige Walletart aus",
-  "create_wallet_selcet_crypto_unloaded_plugins_error": "Einige Wallet-Typen sind nicht verfügbar. Bitte warten Sie auf das Konto, um alle Wallet-Typen vollständig zu laden.",
   "create_wallet_invalid_input": "Ungültige Eingabe",
   "create_wallet_select_valid_fiat": "Wählen Sie bitte eine gültige Fiat-Währung",
   "create_wallet_choose_crypto": "Wallet-Typ wählen",
