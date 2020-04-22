@@ -140,6 +140,9 @@ export const styles = {
   },
   legacyAddressModalIcon: {
     color: THEME.COLORS.ACCENT_RED
+  },
+  title: {
+    textAlign: 'center'
   }
 }
 export default StyleSheet.create(styles)

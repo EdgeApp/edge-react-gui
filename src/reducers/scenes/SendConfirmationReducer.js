@@ -22,8 +22,11 @@ export type GuiMakeSpendInfo = {
   uniqueIdentifier?: string,
   otherParams?: Object,
   dismissAlert?: boolean,
+  fioAddress?: string,
+  memo?: string,
   onBack?: () => void,
-  onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void
+  onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void,
+  beforeTransaction?: () => Promise<void>
 }
 
 export type SendConfirmationState = {

@@ -11,6 +11,7 @@ const COPY_TEXT = s.strings.fragment_request_copy_title
 const SHARE_TEXT = s.strings.string_share
 
 export type Props = {
+  fioAddressModal: Function,
   copyToClipboard: Function,
   shareViaShare: Function
 }
@@ -20,11 +21,13 @@ export class ShareButtons extends PureComponent<Props> {
       copyToClipboard,
       // shareViaEmail,
       // shareViaSMS,
-      shareViaShare
+      shareViaShare,
+      fioAddressModal
     } = this.props
 
     return (
       <View style={styles.view}>
+        <ShareButton displayName={s.strings.fio_address_confirm_screen_label} border={styles.borderRight} onPress={fioAddressModal} />
         <ShareButton displayName={COPY_TEXT} border={styles.borderRight} onPress={copyToClipboard} />
         {/* <ShareButton
         style={styles.border}
