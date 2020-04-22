@@ -7,6 +7,7 @@ import { Actions } from 'react-native-router-flux'
 import buysellIcon from '../../../../../assets/images/sidenav/buysell.png'
 import exchangeIcon from '../../../../../assets/images/sidenav/exchange.png'
 import fioAddressIcon from '../../../../../assets/images/sidenav/fioaddress.png'
+import fioRequestsIcon from '../../../../../assets/images/sidenav/fiorequests.png'
 import logoutImage from '../../../../../assets/images/sidenav/logout.png'
 import receiveIcon from '../../../../../assets/images/sidenav/receive.png'
 import scanIcon from '../../../../../assets/images/sidenav/scan.png'
@@ -62,6 +63,8 @@ export default class Main extends Component<Props> {
               <EarnInterestButton />
               <Separator />
               <FioAddressButton />
+              <Separator />
+              <FioRequestsButton />
               <Separator />
               <WalletsButton />
               <Separator />
@@ -318,6 +321,25 @@ const FioAddressButton = () => {
         <Button.Center>
           <Button.Text>
             <Text>{FIO_ADDRESS_TEXT}</Text>
+          </Button.Text>
+        </Button.Center>
+      </Button.Row>
+    </Button>
+  )
+}
+
+const goToFioRequestsScene = () => Actions[Constants.FIO_REQUEST_LIST]()
+const FioRequestsButton = () => {
+  return (
+    <Button onPress={goToFioRequestsScene}>
+      <Button.Row>
+        <Button.Left>
+          <Image source={fioRequestsIcon} style={styles.iconImage} />
+        </Button.Left>
+
+        <Button.Center>
+          <Button.Text>
+            <Text>{s.strings.drawer_fio_requests}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>
