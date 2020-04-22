@@ -236,6 +236,7 @@ export type FioRequest = {
   },
   payee_fio_address: string,
   payer_fio_address: string,
+  payer_fio_public_key: string,
   status: string,
   time_stamp: string,
   fioWalletId?: string

@@ -51,6 +51,7 @@ class FioRequestRow extends Component<Props> {
       },
       payee_fio_address: '',
       payer_fio_address: '',
+      payer_fio_public_key: '',
       status: '',
       time_stamp: ''
     },
@@ -159,6 +160,13 @@ class FioRequestRow extends Component<Props> {
 const mapStateToProps = (state: State, ownProps: OwnProps) => {
   const { fioRequest } = ownProps
   const wallet = getSelectedWallet(state)
+  if (!wallet) {
+    return {
+      displayDenomination: {},
+      fiatSymbol: '',
+      fiatAmount: ''
+    }
+  }
   const displayDenomination = getDisplayDenomination(state, fioRequest.content.token_code)
   const fiatSymbol = getFiatSymbol(wallet.fiatCurrencyCode)
   const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode

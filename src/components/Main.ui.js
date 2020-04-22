@@ -47,8 +47,10 @@ import { FioAddressDetailsConnector } from '../connectors/scenes/FioAddressDetai
 import { FioAddressListConnector } from '../connectors/scenes/FioAddressListConnector'
 import { FioAddressRegisterConnector } from '../connectors/scenes/FioAddressRegisterConnector'
 import { FioAddressRegisterSelectWalletConnector } from '../connectors/scenes/FioAddressRegisterSelectWalletConnector'
+import { FioPendingRequestConnector } from '../connectors/scenes/FioPendingRequestConnector'
 import { FioRequestConfirmationConnector } from '../connectors/scenes/FioRequestConfirmationConnector.js'
 import { FioRequestListConnector } from '../connectors/scenes/FioRequestListConnector'
+import { FioSentRequestConnector } from '../connectors/scenes/FioSentRequestConnector'
 import ManageTokens from '../connectors/scenes/ManageTokensConnector.js'
 import OtpSettingsSceneConnector from '../connectors/scenes/OtpSettingsSceneConnector.js'
 import PasswordRecoveryConnector from '../connectors/scenes/PasswordRecoveryConnector.js'
@@ -725,6 +727,30 @@ export class MainComponent extends Component<Props> {
               renderTitle={this.renderTitle(s.strings.drawer_fio_requests)}
               renderLeftButton={this.renderBackButton(BACK)}
               renderRightButton={this.renderMenuButton()}
+              onLeft={Actions.pop}
+            />
+          </Stack>
+
+          <Stack key={Constants.FIO_PENDING_REQUEST_DETAILS}>
+            <Scene
+              key={Constants.FIO_PENDING_REQUEST_DETAILS}
+              navTransparent={true}
+              component={FioPendingRequestConnector}
+              renderTitle={this.renderTitle(s.strings.title_fio_pending_request_details)}
+              renderLeftButton={this.renderBackButton(BACK)}
+              renderRightButton={this.renderEmptyButton()}
+              onLeft={Actions.pop}
+            />
+          </Stack>
+
+          <Stack key={Constants.FIO_SENT_REQUEST_DETAILS}>
+            <Scene
+              key={Constants.FIO_SENT_REQUEST_DETAILS}
+              navTransparent={true}
+              component={FioSentRequestConnector}
+              renderTitle={this.renderTitle(s.strings.title_fio_sent_request_details)}
+              renderLeftButton={this.renderBackButton(BACK)}
+              renderRightButton={this.renderEmptyButton()}
               onLeft={Actions.pop}
             />
           </Stack>
