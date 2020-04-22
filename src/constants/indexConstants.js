@@ -11,6 +11,3 @@ export const ANDROID = 'android'
 export const IOS = 'ios'
 
 export const CRYPTO_EXCHANGE = 'cryptoExchange'
-
-export const BILLION = 1000000000
-export const LIMIT = 0

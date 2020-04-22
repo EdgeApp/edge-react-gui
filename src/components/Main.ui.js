@@ -656,7 +656,7 @@ export class MainComponent extends Component<Props> {
               navTransparent={true}
               component={FioAddressListConnector}
               renderTitle={this.renderTitle(FIO_ADDRESS)}
-              renderLeftButton={this.renderHelpButton()}
+              renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderMenuButton()}
               onLeft={Actions.pop}
             />
@@ -861,6 +861,12 @@ export class MainComponent extends Component<Props> {
     if (this.isCurrentScene(Constants.PLUGIN_VIEW)) {
       handlePluginBack()
       return true
+    }
+    if (this.isCurrentScene(Constants.FIO_ADDRESS_REGISTER)) {
+      if (Actions.currentParams.noAddresses) {
+        Actions.popTo(Constants.WALLET_LIST_SCENE)
+        return true
+      }
     }
     Actions.pop()
     return true
