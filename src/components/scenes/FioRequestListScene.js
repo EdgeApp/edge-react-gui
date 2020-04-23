@@ -6,6 +6,7 @@ import { Alert, FlatList, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
+import { sprintf } from 'sprintf-js'
 
 import * as Constants from '../../constants/indexConstants'
 import { intl } from '../../locales/intl'
@@ -194,7 +195,11 @@ export class FioRequestList extends Component<StateProps, State> {
         return
       }
     }
-    showError(`${s.strings.err_token_not_in_wallet_title}. ${s.strings.err_token_not_in_wallet_msg}`)
+    Alert.alert(
+      sprintf(s.strings.err_token_not_in_wallet_title, fioRequest.content.token_code),
+      sprintf(s.strings.err_token_not_in_wallet_msg, fioRequest.content.token_code),
+      [{ text: s.strings.string_ok_cap }]
+    )
   }
 
   selectSentRequest = (fioRequest: FioRequest) => {

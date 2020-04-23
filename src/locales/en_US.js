@@ -710,8 +710,8 @@ const strings = {
   fio_get_requests_error: 'There was an issue fetching requests',
   fio_confirm_request_error: 'There was an issue during request send',
   fio_reject_request_error: 'There was an issue during request rejection',
-  err_token_not_in_wallet_title: 'Token not available',
-  err_token_not_in_wallet_msg: 'The requested token is not supported or not enabled in your wallet.',
+  err_token_not_in_wallet_title: 'No %s Wallet',
+  err_token_not_in_wallet_msg: 'Your account does not have a %s wallet to pay this request',
   err_no_address_title: 'No FIO Address found.',
   // Unstoppable resolution error codes
   resolving: 'Resolving...',
