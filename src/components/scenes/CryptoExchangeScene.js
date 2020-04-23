@@ -12,8 +12,8 @@ import { sprintf } from 'sprintf-js'
 import { createCurrencyWalletAndAddToSwap } from '../../actions/CreateWalletActions.js'
 import { type SetNativeAmountInfo, getQuoteForTransaction, selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
 import { updateMostRecentWalletsSelected } from '../../actions/WalletActions.js'
+import { WalletListModal } from '../../components/modals/WalletListModal2.js'
 import CryptoExchangeMessageConnector from '../../connectors/components/CryptoExchangeMessageConnector'
-import { WalletListModalConnected as WalletListModal } from '../../connectors/components/WalletListModalConnector2.js'
 import { ARROW_DOWN_BOLD, DEFAULT_STARTER_WALLET_NAMES, MATERIAL_COMMUNITY } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import { type SupportedWalletTypes, getSettings } from '../../modules/Settings/selectors.js'
@@ -266,9 +266,6 @@ class CryptoExchangeComponent extends Component<Props, State> {
         bridge={bridge}
         headerTitle={whichWallet === 'to' ? s.strings.select_recv_wallet : s.strings.select_src_wallet}
         showCreateWallet={whichWallet === 'to'}
-        excludeWalletIds={undefined} // To be remove at the last clean up commit
-        allowedCurrencyCodes={undefined} // To be remove at the last clean up commit
-        excludeCurrencyCodes={undefined} // To be remove at the last clean up commit
       />
     )).then((response: GuiWallet | TokenSelectObject | SupportedWalletTypes | null) => {
       if (response) {
