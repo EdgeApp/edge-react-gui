@@ -83,6 +83,9 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   ETH: {
     denomination: '1000000000000000000'
   },
+  ETC: {
+    denomination: '1000000000000000000'
+  },
   UFO: {
     denomination: '100000000'
   },
@@ -254,6 +257,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   QTUM: 'object',
   XMR: 'object',
   ETH: 'object',
+  ETC: 'object',
   UFO: 'object',
   REP: 'object',
   WINGS: 'object',

@@ -17,6 +17,9 @@ const fakeExchangeRate = {
   ETH: {
     value: (1 / 231000000000000000000) * randomSeed
   },
+  ETC: {
+    value: (1 / 231000000000000000000) * randomSeed
+  },
   TRD: {
     value: 2 * randomSeed
   },
