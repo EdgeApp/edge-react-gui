@@ -28,6 +28,7 @@ import { CreateWalletSelectFiatScene } from '../components/scenes/CreateWalletSe
 import { CryptoExchangeScene } from '../components/scenes/CryptoExchangeScene.js'
 import { CurrencySettingsScene } from '../components/scenes/CurrencySettingsScene.js'
 import { DefaultFiatSettingScene } from '../components/scenes/DefaultFiatSettingScene.js'
+import { PromotionSettingsScene } from '../components/scenes/PromotionSettingsScene.js'
 import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
 import { WalletListScene } from '../components/scenes/WalletListScene.js'
 import { requestPermission } from '../components/services/PermissionsManager.js'
@@ -605,6 +606,14 @@ export class MainComponent extends Component<Props> {
               navTransparent={true}
               component={CurrencySettingsScene}
               renderTitle={props => <CurrencySettingsTitle currencyInfo={props.currencyInfo} />}
+              renderLeftButton={this.renderBackButton()}
+              renderRightButton={this.renderEmptyButton()}
+            />
+            <Scene
+              key={Constants.PROMOTION_SETTINGS}
+              navTransparent={true}
+              component={PromotionSettingsScene}
+              renderTitle={this.renderTitle(s.strings.title_promotion_settings)}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderEmptyButton()}
             />

@@ -48,7 +48,6 @@ type LegacyActionName =
 
 // Actions with no payload:
 type NoDataActionName =
-  | 'ACCOUNT_SWAP_IGNORED'
   | 'ADD_NEW_CUSTOM_TOKEN_FAILURE'
   | 'ADD_TOKEN_START'
   | 'CLOSE_SELECT_USER'
@@ -112,6 +111,7 @@ export type Action =
   | { type: 'ACCOUNT_ACTIVATION_INFO', data: HandleActivationInfo }
   | { type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO', data: AccountActivationPaymentInfo }
   | { type: 'ACCOUNT_REFERRAL_LOADED', data: { referral: AccountReferral, cache: ReferralCache } }
+  | { type: 'ACCOUNT_SWAP_IGNORED', data: boolean }
   | { type: 'ACCOUNT_TWEAKS_REFRESHED', data: ReferralCache }
   | {
       type: 'ADD_NEW_CUSTOM_TOKEN_SUCCESS',

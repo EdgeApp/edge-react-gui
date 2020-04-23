@@ -99,8 +99,8 @@ export const hideMessageTweak = (messageId: string, source: TweakSource) => asyn
 /**
  * Deactivates any swap plugin preferences from the account affiliation.
  */
-export const ignoreAccountSwap = () => async (dispatch: Dispatch, getState: GetState) => {
-  dispatch({ type: 'ACCOUNT_SWAP_IGNORED' })
+export const ignoreAccountSwap = (ignore: boolean = true) => async (dispatch: Dispatch, getState: GetState) => {
+  dispatch({ type: 'ACCOUNT_SWAP_IGNORED', data: ignore })
   saveAccountReferral(getState())
 }
 

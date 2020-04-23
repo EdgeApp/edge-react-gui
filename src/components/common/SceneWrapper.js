@@ -34,7 +34,10 @@ type Props = {
   hasHeader?: boolean,
 
   // True if this scene has a bottom tab bar:
-  hasTabs?: boolean
+  hasTabs?: boolean,
+
+  // Padding to add inside the scene border:
+  padding?: number
 }
 
 /**
@@ -75,7 +78,7 @@ export class SceneWrapper extends Component<Props> {
    * Render the scene wrapper component, given various items from the context.
    */
   renderScene (gap: SafeAreaGap, keyboardAnimation: Animated.Value | null, keyboardHeight: number) {
-    const { children, background = 'header', bodySplit = 0 } = this.props
+    const { children, background = 'header', bodySplit = 0, padding = 0 } = this.props
 
     // Render the scene container:
     const finalChildren = typeof children === 'function' ? children({ ...gap, bottom: keyboardHeight }) : children
@@ -89,7 +92,7 @@ export class SceneWrapper extends Component<Props> {
     // Render the background, if any:
     if (background === 'none') return scene
     return (
-      <Gradient reverse={background === 'drawer'} style={styles.gradient}>
+      <Gradient reverse={background === 'drawer'} style={[styles.gradient, { padding }]}>
         {background === 'body' && <View style={[styles.body, { top: gap.top + bodySplit }]} />}
         {scene}
       </Gradient>
