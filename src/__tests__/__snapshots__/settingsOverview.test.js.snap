@@ -129,6 +129,18 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
       text="PIN Re-login"
       value={false}
     />
+    <SettingsRow
+      onPress={[Function]}
+      right={
+        <Icon
+          allowFontScaling={false}
+          color="#87939E"
+          name="right"
+          size={22}
+        />
+      }
+      text="Promotion Settings"
+    />
     <SettingsSwitchRow
       onPress={[Function]}
       text="Developer Mode"
@@ -296,6 +308,18 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
       onPress={[Function]}
       text="PIN Re-login"
       value={false}
+    />
+    <SettingsRow
+      onPress={[Function]}
+      right={
+        <Icon
+          allowFontScaling={false}
+          color="#87939E"
+          name="right"
+          size={22}
+        />
+      }
+      text="Promotion Settings"
     />
     <SettingsSwitchRow
       onPress={[Function]}

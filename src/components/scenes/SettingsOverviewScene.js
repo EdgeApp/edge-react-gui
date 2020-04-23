@@ -111,6 +111,10 @@ export default class SettingsOverview extends Component<Props, State> {
     return Actions[Constants.SPENDING_LIMITS]()
   }
 
+  _onPressPromotionSettings = () => {
+    Actions.push(Constants.PROMOTION_SETTINGS)
+  }
+
   _onPressOpenLogoffTime = () => {}
 
   _onPressOpenDefaultCurrency = () => {}
@@ -205,6 +209,7 @@ export default class SettingsOverview extends Component<Props, State> {
             return <SettingsRow key={pluginId} icon={icon} text={displayName} onPress={onPress} right={rightArrow} />
           })}
 
+          <SettingsRow text={s.strings.title_promotion_settings} right={rightArrow} onPress={this._onPressPromotionSettings} />
           <SettingsSwitchRow key="developerMode" text={s.strings.settings_developer_mode} value={this.props.developerModeOn} onPress={this.onDeveloperPress} />
           <SettingsRow onPress={this.showRestoreWalletModal} text={s.strings.restore_wallets_modal_title} />
           <SettingsRow text={s.strings.title_terms_of_service} onPress={Actions[Constants.TERMS_OF_SERVICE]} right={rightArrow} />
