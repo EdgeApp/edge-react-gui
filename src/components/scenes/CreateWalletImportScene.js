@@ -6,7 +6,7 @@ import { ActivityIndicator, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import { CREATE_WALLET_SELECT_FIAT, CURRENCY_PLUGIN_NAMES } from '../../constants/indexConstants.js'
+import { CREATE_WALLET_SELECT_FIAT, CURRENCY_PLUGIN_NAMES, getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
 import Text from '../../modules/UI/components/FormattedText'
@@ -75,14 +75,22 @@ class CreateWalletImportComponent extends Component<Props, State> {
   }
 
   render () {
-    const { error, isProcessing } = this.state
+    const { error, isProcessing, input } = this.state
+    const { selectedWalletType } = this.props
+    const { currencyCode } = selectedWalletType
+    const specialCurrencyInfo = getSpecialCurrencyInfo(currencyCode)
+    if (!specialCurrencyInfo.isImportKeySupported) throw new Error()
+    const instructionKey = specialCurrencyInfo.isImportKeySupported.privateKeyInstructions
+    const instructionSyntax = s.strings[instructionKey]
+    const labelKey = specialCurrencyInfo.isImportKeySupported.privateKeyLabel
+    const labelSyntax = s.strings[labelKey]
     return (
       <SafeAreaView>
         <View style={styles.scene}>
           <Gradient style={styles.gradient} />
           <View style={styles.view}>
             <View style={styles.createWalletPromptArea}>
-              <Text style={styles.instructionalText}>{s.strings.create_wallet_import_instructions}</Text>
+              <Text style={styles.instructionalText}>{instructionSyntax}</Text>
             </View>
             <FormField
               style={[{ flex: 1, height: 150 }]}
@@ -90,8 +98,8 @@ class CreateWalletImportComponent extends Component<Props, State> {
               clearButtonMode={'while-editing'}
               autoCorrect={false}
               onChangeText={this.onChangeText}
-              label={s.strings.create_wallet_import_input_prompt}
-              value={this.state.input}
+              label={labelSyntax}
+              value={input}
               returnKeyType={'next'}
               onSubmitEditing={this.onNext}
               numberOfLines={5}
