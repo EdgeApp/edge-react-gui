@@ -32,9 +32,11 @@ export const refreshAllFioAddresses = () => async (dispatch: Dispatch, getState:
     }
   }
 
-  dispatch({
-    type: 'FIO/SET_FIO_ADDRESSES',
-    data: { fioAddresses }
+  window.requestAnimationFrame(() => {
+    dispatch({
+      type: 'FIO/SET_FIO_ADDRESSES',
+      data: { fioAddresses }
+    })
   })
 }
 
