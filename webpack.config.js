@@ -5,7 +5,7 @@ const path = require('path')
 const webpack = require('webpack')
 
 // Set this to false for easier debugging:
-const production = true
+const production = false
 
 const babelOptions = {
   babelrc: false,

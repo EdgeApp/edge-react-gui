@@ -44,6 +44,7 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   XLM: {
     denomination: '10000000'
   },
+  NEO: {denomination: '1'},
   BNB: {
     denomination: '100000000'
   },
@@ -252,6 +253,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   DGB: 'object',
   LTC: 'object',
   BNB: 'object',
+  NEO: 'object',
   FTC: 'object',
   VTC: 'object',
   XTZ: 'object',

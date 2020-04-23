@@ -25,6 +25,7 @@ export const FEE_STRINGS = {
 export const DEFAULT_STARTER_WALLET_NAMES = {
   BCH: s.strings.string_first_bitcoincash_wallet_name,
   BNB: s.strings.string_first_bnb_wallet_name,
+  NEO: s.strings.string_first_bnb_wallet_name,
   BSV: s.strings.string_first_bitcoin_sv_wallet_name,
   BTC: s.strings.string_first_bitcoin_wallet_name,
   BTG: s.strings.string_first_bitcoin_gold_wallet_name,
@@ -115,6 +116,7 @@ export const PREFERRED_TOKENS = ['WINGS', 'HERC', 'REP', 'AGLD', 'RIF']
 export const CURRENCY_PLUGIN_NAMES = {
   BCH: 'bitcoincash',
   BNB: 'binance',
+  NEO: 'neo',
   BSV: 'bitcoinsv',
   BTC: 'bitcoin',
   BTG: 'bitcoingold',
@@ -271,6 +273,7 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     isImportKeySupported: true,
     dummyPublicAddress: 'bnb1rt449yu7us6hmk4pmyr8talc60ydkwp4qkvcl7'
   },
+  NEO: {},
   TUSD: {
     showEarnInterestCard: true
   },
