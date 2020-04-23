@@ -14,6 +14,11 @@ import { decimalOrZero, truncateDecimals } from '../../util/utils.js'
 
 const DIVIDE_PRECISION = 18
 
+export type TokenSelectObject = {
+  id: string,
+  currencyCode: string
+}
+
 type StateProps = {
   displayDenomination: EdgeDenomination
 }
@@ -28,7 +33,7 @@ type OwnProps = {
   disabled: boolean,
   image: any,
   name: string,
-  onPress({ id: string, currencyCode: string }): void
+  onPress(TokenSelectObject): void
 }
 type Props = OwnProps & StateProps
 

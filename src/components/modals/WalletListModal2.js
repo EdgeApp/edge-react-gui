@@ -1,25 +1,28 @@
 // @flow
 
 import { FormField, MaterialInputStyle } from 'edge-components'
+import type { EdgeCurrencyInfo } from 'edge-core-js'
 import React, { Component, Fragment } from 'react'
 import { FlatList, View } from 'react-native'
 
 import { CryptoExchangeCreateWalletRow } from '../../components/common/CryptoExchangeCreateWalletRow.js'
 import { CryptoExchangeWalletListTokenRowConnected as CryptoExchangeWalletListRow } from '../../connectors/components/CryptoExchangeWalletListRowConnector.js'
+import { type SupportedWalletTypes, getSupportedWalletTypesByCurencyInfos } from '../../modules/Settings/selectors.js'
 import type { GuiWallet, MostRecentWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
+import { type TokenSelectObject } from '../common/CryptoExchangeWalletListTokenRow.js'
 import { type AirshipBridge, AirshipModal } from './modalParts.js'
 
 export type StateProps = {
+  wallets: { [string]: GuiWallet },
   activeWalletIds: Array<string>,
-  mostRecentWallets: Array<MostRecentWallet>
+  mostRecentWallets: Array<MostRecentWallet>,
+  allCurrencyInfos: Array<EdgeCurrencyInfo>
 }
 
 type OwnProps = {
-  bridge: AirshipBridge<GuiWallet | Object | null>,
+  bridge: AirshipBridge<GuiWallet | TokenSelectObject | SupportedWalletTypes | null>,
   headerTitle: string,
-  wallets: Array<GuiWallet>,
-  createWalletCurrencies: Array<Object>,
   showCreateWallet: boolean,
   excludeWalletIds?: Array<string>,
   allowedCurrencyCodes?: Array<string>,
@@ -28,7 +31,7 @@ type OwnProps = {
 
 type Record = {
   walletItem: GuiWallet | null,
-  createWalletCurrency: Object | null,
+  createWalletCurrency: SupportedWalletTypes | null,
   mostRecentUsed?: boolean,
   currencyCode?: string | null,
   headerLabel?: string
@@ -56,39 +59,39 @@ export class WalletListModal extends Component<Props, State> {
   }
 
   initializeRecords = (props: Props) => {
-    const { activeWalletIds, wallets, excludeWalletIds, allowedCurrencyCodes, excludeCurrencyCodes, createWalletCurrencies } = props
+    const { activeWalletIds, wallets, excludeWalletIds, allowedCurrencyCodes, excludeCurrencyCodes, allCurrencyInfos, showCreateWallet } = props
     const records = []
     // Initialize Wallets
-    for (let i = 0; i < activeWalletIds.length; i++) {
-      const wallet = wallets.find(wallet => wallet.id === activeWalletIds[i])
-      const excludeWallet = wallet && excludeWalletIds ? excludeWalletIds.find(id => id === wallet.id) : null
+    for (const walletId of activeWalletIds) {
+      const wallet = wallets[walletId]
+      const excludeWallet = wallet && excludeWalletIds ? excludeWalletIds.find(id => id === wallet.id) : false
       if (wallet && !excludeWallet) {
-        if (!excludeWallet) {
-          records.push({
-            walletItem: wallet,
-            createWalletCurrency: null
-          })
-        }
+        records.push({
+          walletItem: wallet,
+          createWalletCurrency: null
+        })
       }
     }
     // Initialize Create Wallets
-    for (let i = 0; i < createWalletCurrencies.length; i++) {
-      const createWalletCurrency = createWalletCurrencies[i]
-      const { currencyCode } = createWalletCurrency
-      const checkAllowedCurrencyCodes = allowedCurrencyCodes ? allowedCurrencyCodes.find(code => code === currencyCode) : true
-      const checkExcludeCurrencyCodes = excludeCurrencyCodes ? excludeCurrencyCodes.find(code => code === currencyCode) : false
-      if (checkAllowedCurrencyCodes && !checkExcludeCurrencyCodes) {
-        records.push({
-          walletItem: null,
-          createWalletCurrency
-        })
+    if (showCreateWallet) {
+      const createWalletCurrencies = getSupportedWalletTypesByCurencyInfos(allCurrencyInfos)
+      for (const createWalletCurrency of createWalletCurrencies) {
+        const { currencyCode } = createWalletCurrency
+        const checkAllowedCurrencyCodes = allowedCurrencyCodes ? allowedCurrencyCodes.find(code => code === currencyCode) : true
+        const checkExcludeCurrencyCodes = excludeCurrencyCodes ? excludeCurrencyCodes.find(code => code === currencyCode) : false
+        if (checkAllowedCurrencyCodes && !checkExcludeCurrencyCodes) {
+          records.push({
+            walletItem: null,
+            createWalletCurrency
+          })
+        }
       }
     }
     return records
   }
 
-  setWalletRecordsLabel = (wallets: Array<Record>, header: string): Array<Record> => {
-    return wallets.map((record: Record, i: number) => {
+  setWalletRecordsLabel = (records: Array<Record>, header: string): Array<Record> => {
+    return records.map((record: Record, i: number) => {
       if (i === 0) {
         return {
           ...record,
@@ -130,17 +133,17 @@ export class WalletListModal extends Component<Props, State> {
         const wallet = record.walletItem
         const tokenValue = wallet ? wallet.enabledTokens.length : 0
         if (wallet) {
-          return total + tokenValue + 1
+          return total + tokenValue + 1 // should be remove when the parent currency code is added on the enabledTokens
         }
         return total
       }, 0)
       if (walletTokenCount > 4 && walletTokenCount < 11) {
-        const wallets = this.setWalletRecordsLabel(records, 'normalWalletHeader')
-        return [...this.getMostRecentlyUsedWalletRecords(2), ...wallets]
+        const walletRecords = this.setWalletRecordsLabel(records, 'normalWalletHeader')
+        return [...this.getMostRecentlyUsedWalletRecords(2), ...walletRecords]
       }
       if (walletTokenCount > 10) {
-        const wallets = this.setWalletRecordsLabel(records, 'normalWalletHeader')
-        return [...this.getMostRecentlyUsedWalletRecords(3), ...wallets]
+        const walletRecords = this.setWalletRecordsLabel(records, 'normalWalletHeader')
+        return [...this.getMostRecentlyUsedWalletRecords(3), ...walletRecords]
       }
       return records
     }
@@ -148,8 +151,7 @@ export class WalletListModal extends Component<Props, State> {
     // Search Input Filter
     const inputLowerCase = input.toLowerCase()
     const filteredRecords = []
-    for (let i = 0; i < records.length; i++) {
-      const record: Record = records[i]
+    for (const record of records) {
       const { walletItem, createWalletCurrency } = record
 
       if (walletItem) {
@@ -182,8 +184,8 @@ export class WalletListModal extends Component<Props, State> {
   }
 
   selectWallet = (wallet: GuiWallet) => this.props.bridge.resolve(wallet)
-  selectTokenWallet = (obj: Object) => this.props.bridge.resolve(obj)
-  createWallet = (supportedWallet: Object) => this.props.bridge.resolve(supportedWallet)
+  selectTokenWallet = (tokenSelectObject: TokenSelectObject) => this.props.bridge.resolve(tokenSelectObject)
+  createWallet = (createWalletCurrency: SupportedWalletTypes) => this.props.bridge.resolve(createWalletCurrency)
   renderWalletItem = ({ item }: FlatListItem) => {
     const { showCreateWallet, allowedCurrencyCodes, excludeCurrencyCodes } = this.props
     const { walletItem, createWalletCurrency, mostRecentUsed, currencyCode, headerLabel } = item

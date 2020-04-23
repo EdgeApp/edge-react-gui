@@ -12,7 +12,7 @@ import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selecto
 import { CryptoExchangeWalletListRowStyle as styles } from '../../styles/components/CryptoExchangeWalletListRowStyle.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
 import { decimalOrZero, getFiatSymbol, truncateDecimals } from '../../util/utils.js'
-import { CryptoExchangeWalletListTokenRow } from './CryptoExchangeWalletListTokenRow.js'
+import { type TokenSelectObject, CryptoExchangeWalletListTokenRow } from './CryptoExchangeWalletListTokenRow.js'
 
 export type StateProps = {
   denomination: EdgeDenomination,
@@ -26,7 +26,7 @@ export type OwnProps = {
   wallet: GuiWallet,
   onPress(GuiWallet): void,
   excludedCurrencyCode: Array<string>,
-  onTokenPress({ id: string, currencyCode: string }): void,
+  onTokenPress(TokenSelectObject): void,
   excludedTokens: Array<string>,
   disableZeroBalance: boolean,
   searchFilter: string,
