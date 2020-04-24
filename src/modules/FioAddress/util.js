@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 
 import { FIO_WALLET_TYPE } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
@@ -185,4 +185,20 @@ export const makeConnectedWallets = (
   }
 
   return connectedWallets
+}
+
+export const checkPubAddress = async (fioPlugin: EdgeCurrencyConfig, fioAddress: string, chainCode: string, tokenCode: string): Promise<string> => {
+  const isFioAddress = await fioPlugin.otherMethods.isFioAddressValid(fioAddress)
+  try {
+    if (isFioAddress) {
+      const { public_address: publicAddress } = await fioPlugin.otherMethods.getConnectedPublicAddress(fioAddress, chainCode, tokenCode)
+      if (publicAddress && publicAddress.length > 1) {
+        return publicAddress
+      }
+    }
+  } catch (e) {
+    throw new Error(s.strings.err_no_address_title)
+  }
+
+  return ''
 }
