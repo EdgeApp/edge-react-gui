@@ -43,6 +43,7 @@ import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWa
 import { CryptoExchangeQuoteConnector } from '../connectors/scenes/CryptoExchangeQuoteConnector.js'
 import EdgeLoginSceneConnector from '../connectors/scenes/EdgeLoginSceneConnector'
 import EditToken from '../connectors/scenes/EditTokenConnector.js'
+import { FioAccountSettingsConnector } from '../connectors/scenes/FioAccountSettingsConnector'
 import { FioAddressConfirmConnector } from '../connectors/scenes/FioAddressConfirmConnector'
 import { FioAddressDetailsConnector } from '../connectors/scenes/FioAddressDetailsConnector'
 import { FioAddressListConnector } from '../connectors/scenes/FioAddressListConnector'
@@ -52,6 +53,7 @@ import { FioConnectWalletConfirmConnector } from '../connectors/scenes/FioConnec
 import { FioConnectWalletConnector } from '../connectors/scenes/FioConnectWalletConnector'
 import { FioDisconnectWalletsConnector } from '../connectors/scenes/FioDisconnectWalletsConnector'
 import { FioPendingRequestConnector } from '../connectors/scenes/FioPendingRequestConnector'
+import { FioRenewAddressConnector } from '../connectors/scenes/FioRenewAddressConnector'
 import { FioRequestConfirmationConnector } from '../connectors/scenes/FioRequestConfirmationConnector.js'
 import { FioRequestListConnector } from '../connectors/scenes/FioRequestListConnector'
 import { FioSentRequestConnector } from '../connectors/scenes/FioSentRequestConnector'
@@ -741,6 +743,24 @@ export class MainComponent extends Component<Props> {
               navTransparent={true}
               component={ifLoggedIn(FioConnectWalletConfirmConnector)}
               renderTitle={this.renderTitle(s.strings.title_fio_connect_to_wallet)}
+              renderLeftButton={this.renderBackButton(BACK)}
+              renderRightButton={this.renderMenuButton()}
+              onLeft={Actions.pop}
+            />
+            <Scene
+              key={Constants.FIO_ACCOUNT_SETTINGS}
+              navTransparent={true}
+              component={FioAccountSettingsConnector}
+              renderTitle={this.renderTitle(s.strings.title_fio_account_settings)}
+              renderLeftButton={this.renderBackButton(BACK)}
+              renderRightButton={this.renderMenuButton()}
+              onLeft={Actions.pop}
+            />
+            <Scene
+              key={Constants.FIO_RENEW_ADDRESS}
+              navTransparent={true}
+              component={FioRenewAddressConnector}
+              renderTitle={this.renderTitle(s.strings.title_fio_renew_address)}
               renderLeftButton={this.renderBackButton(BACK)}
               renderRightButton={this.renderMenuButton()}
               onLeft={Actions.pop}

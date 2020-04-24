@@ -328,3 +328,31 @@ export const checkPubAddress = async (fioPlugin: EdgeCurrencyConfig, fioAddress:
 
   return ''
 }
+
+export const getRenewalFee = async (fioWallet: EdgeCurrencyWallet | null): Promise<number> => {
+  if (fioWallet) {
+    try {
+      const { fee } = await fioWallet.otherMethods.fioAction('getFee', {
+        endPoint: 'renew_fio_address',
+        fioAddress: ''
+      })
+
+      return fee
+    } catch (e) {
+      throw new Error(s.strings.fio_get_fee_err_msg)
+    }
+  }
+  throw new Error(s.strings.fio_get_fee_err_msg)
+}
+
+export const renewFioAddress = async (fioWallet: EdgeCurrencyWallet | null, fioAddress: string, fee: number): Promise<{ expiration: string }> => {
+  if (fioWallet) {
+    try {
+      const { expiration } = await fioWallet.otherMethods.fioAction('renewFioAddress', { fioAddress, maxFee: fee })
+      return { expiration }
+    } catch (e) {
+      throw new Error(s.strings.fio_renew_address_err_msg)
+    }
+  }
+  throw new Error(s.strings.fio_renew_address_err_msg)
+}
