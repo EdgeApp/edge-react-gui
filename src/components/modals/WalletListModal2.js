@@ -1,17 +1,18 @@
 // @flow
 
 import { FormField, MaterialInputStyle } from 'edge-components'
-import type { EdgeCurrencyInfo } from 'edge-core-js'
+import { type EdgeAccount } from 'edge-core-js'
 import React, { Component, Fragment } from 'react'
 import { FlatList, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import { CryptoExchangeCreateWalletRow } from '../../components/common/CryptoExchangeCreateWalletRow.js'
 import { CryptoExchangeWalletListTokenRowConnected as CryptoExchangeWalletListRow } from '../../connectors/components/CryptoExchangeWalletListRowConnector.js'
-import { type SupportedWalletTypes, getPlugins, getSupportedWalletTypesByCurencyInfos } from '../../modules/Settings/selectors.js'
 import { getActiveWalletIds } from '../../modules/UI/selectors.js'
 import type { State as StateType } from '../../types/reduxTypes.js'
 import type { FlatListItem, GuiWallet, MostRecentWallet } from '../../types/types.js'
+import { type GuiWalletType } from '../../types/types.js'
+import { getGuiWalletTypes } from '../../util/CurrencyInfoHelpers.js'
 import { scale } from '../../util/scaling.js'
 import { type TokenSelectObject } from '../common/CryptoExchangeWalletListTokenRow.js'
 import { type AirshipBridge, AirshipModal } from './modalParts.js'
@@ -20,11 +21,11 @@ type StateProps = {
   wallets: { [string]: GuiWallet },
   activeWalletIds: Array<string>,
   mostRecentWallets: Array<MostRecentWallet>,
-  allCurrencyInfos: Array<EdgeCurrencyInfo>
+  account: EdgeAccount
 }
 
 type OwnProps = {
-  bridge: AirshipBridge<GuiWallet | TokenSelectObject | SupportedWalletTypes | null>,
+  bridge: AirshipBridge<GuiWallet | TokenSelectObject | GuiWalletType | null>,
   headerTitle: string,
   showCreateWallet?: boolean,
   excludeWalletIds?: Array<string>,
@@ -34,7 +35,7 @@ type OwnProps = {
 
 type Record = {
   walletItem: GuiWallet | null,
-  createWalletCurrency: SupportedWalletTypes | null,
+  createWalletCurrency: GuiWalletType | null,
   mostRecentUsed?: boolean,
   currencyCode?: string | null,
   headerLabel?: string
@@ -57,7 +58,7 @@ class WalletListModalConnected extends Component<Props, State> {
   }
 
   initializeRecords = (props: Props) => {
-    const { activeWalletIds, wallets, excludeWalletIds, allowedCurrencyCodes, excludeCurrencyCodes, allCurrencyInfos, showCreateWallet } = props
+    const { activeWalletIds, wallets, excludeWalletIds, allowedCurrencyCodes, excludeCurrencyCodes, showCreateWallet, account } = props
     const records = []
     // Initialize Wallets
     for (const walletId of activeWalletIds) {
@@ -72,7 +73,7 @@ class WalletListModalConnected extends Component<Props, State> {
     }
     // Initialize Create Wallets
     if (showCreateWallet) {
-      const createWalletCurrencies = getSupportedWalletTypesByCurencyInfos(allCurrencyInfos)
+      const createWalletCurrencies = getGuiWalletTypes(account)
       for (const createWalletCurrency of createWalletCurrencies) {
         const { currencyCode } = createWalletCurrency
         const checkAllowedCurrencyCodes = allowedCurrencyCodes ? allowedCurrencyCodes.find(code => code === currencyCode) : true
@@ -183,7 +184,7 @@ class WalletListModalConnected extends Component<Props, State> {
 
   selectWallet = (wallet: GuiWallet) => this.props.bridge.resolve(wallet)
   selectTokenWallet = (tokenSelectObject: TokenSelectObject) => this.props.bridge.resolve(tokenSelectObject)
-  createWallet = (createWalletCurrency: SupportedWalletTypes) => this.props.bridge.resolve(createWalletCurrency)
+  createWallet = (createWalletCurrency: GuiWalletType) => this.props.bridge.resolve(createWalletCurrency)
   renderWalletItem = ({ item }: FlatListItem<Record>) => {
     const { showCreateWallet, allowedCurrencyCodes, excludeCurrencyCodes } = this.props
     const { walletItem, createWalletCurrency, mostRecentUsed, currencyCode, headerLabel } = item
@@ -258,7 +259,7 @@ const WalletListModal = connect(
         ? getActiveWalletIds(state).filter(id => !(wallets[id] != null && wallets[id].type === 'wallet:fio'))
         : getActiveWalletIds(state),
       mostRecentWallets: state.ui.settings.mostRecentWallets,
-      allCurrencyInfos: getPlugins(state).allCurrencyInfos
+      account: state.core.account
     }
   }
 )(WalletListModalConnected)

@@ -125,46 +125,6 @@ export const getPluginInfo = (state: State, type: string): EdgeCurrencyInfo => {
   return currencyInfo
 }
 
-export type SupportedWalletTypes = {
-  label: string,
-  value: string,
-  symbolImage?: string,
-  symbolImageDarkMono?: string,
-  currencyCode: string
-}
-export const getSupportedWalletTypes = (state: State): Array<SupportedWalletTypes> => getSupportedWalletTypesByCurencyInfos(getPlugins(state).allCurrencyInfos)
-export const getSupportedWalletTypesByCurencyInfos = (allCurrencyInfos: Array<EdgeCurrencyInfo>): Array<SupportedWalletTypes> => {
-  const supportedWalletTypes = []
-  for (const currencyInfo of allCurrencyInfos) {
-    if (currencyInfo.pluginId === 'fio' && global.isFioDisabled) continue // FIO disable changes
-    if (currencyInfo.pluginId === 'bitcoin') {
-      supportedWalletTypes.push({
-        label: 'Bitcoin (Segwit)',
-        value: 'wallet:bitcoin-bip49',
-        symbolImage: currencyInfo.symbolImage,
-        symbolImageDarkMono: currencyInfo.symbolImageDarkMono,
-        currencyCode: currencyInfo.currencyCode
-      })
-      supportedWalletTypes.push({
-        label: 'Bitcoin (no Segwit)',
-        value: 'wallet:bitcoin-bip44',
-        symbolImage: currencyInfo.symbolImage,
-        symbolImageDarkMono: currencyInfo.symbolImageDarkMono,
-        currencyCode: currencyInfo.currencyCode
-      })
-    } else {
-      supportedWalletTypes.push({
-        label: currencyInfo.displayName,
-        value: currencyInfo.walletType,
-        symbolImage: currencyInfo.symbolImage,
-        symbolImageDarkMono: currencyInfo.symbolImageDarkMono,
-        currencyCode: currencyInfo.currencyCode
-      })
-    }
-  }
-  return supportedWalletTypes
-}
-
 export const getSettingsLock = (state: State) => {
   const settings = getSettings(state)
   return settings.changesLocked
