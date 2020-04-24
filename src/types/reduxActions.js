@@ -238,3 +238,4 @@ export type Action =
         }
       }
     }
+  | { type: 'FIO/UPDATE_PUB_ADDRESSES', data: { connectedPubAddresses: { [fioAddress: string]: { [currencyCode: string]: string } } } }

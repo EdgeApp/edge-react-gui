@@ -2,15 +2,17 @@
 
 import { type Reducer, combineReducers } from 'redux'
 
+import { type FioState, fio } from '../../reducers/FioReducer.js'
 import { type PasswordReminderState, passwordReminder } from '../../reducers/PasswordReminderReducer.js'
 import { type ScenesState, scenes } from '../../reducers/scenes/ScenesReducer.js'
 import { type SettingsState, settings } from '../../reducers/scenes/SettingsReducer.js'
 import { type WalletsState, wallets } from '../../reducers/scenes/WalletsReducer.js'
 import { type Action } from '../../types/reduxTypes.js'
 
-export { passwordReminder, scenes, wallets, settings }
+export { fio, passwordReminder, scenes, wallets, settings }
 
 export type UiState = {
+  +fio: FioState,
   +passwordReminder: PasswordReminderState,
   +scenes: ScenesState,
   +settings: SettingsState,
@@ -18,6 +20,7 @@ export type UiState = {
 }
 
 const uiInner: Reducer<UiState, Action> = combineReducers({
+  fio,
   passwordReminder,
   scenes,
   settings,
