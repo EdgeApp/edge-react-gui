@@ -20,7 +20,7 @@ import { showError } from '../services/AirshipInstance'
 export type StateProps = {
   fioAddresses: FioAddress[],
   fioWallets: EdgeCurrencyWallet[],
-  fioPlugin: EdgeCurrencyConfig,
+  fioPlugin: EdgeCurrencyConfig | null,
   loading: boolean,
   isConnected: boolean
 }
@@ -69,6 +69,7 @@ export class FioAddressListScene extends Component<Props> {
 
   registerDomain = async () => {
     const { fioPlugin, fioWallets } = this.props
+    if (!fioPlugin) return
     const publicKey = fioWallets[0].publicWalletInfo.keys.publicKey
     const url = `${await fioPlugin.otherMethods.getRegDomainUrl()}${publicKey}`
     Linking.canOpenURL(url).then(supported => {

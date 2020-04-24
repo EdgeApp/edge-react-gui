@@ -231,6 +231,9 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
     if (state.ui.scenes.sendConfirmation.transactionMetadata) {
       edgeMetadata = { ...edgeMetadata, ...state.ui.scenes.sendConfirmation.transactionMetadata }
     }
+    if (guiMakeSpendInfo.fioAddress) {
+      edgeMetadata.name = guiMakeSpendInfo.fioAddress
+    }
     const publicAddress = spendInfo ? spendInfo.spendTargets[0].publicAddress : ''
     if (publicAddress) {
       if (edgeMetadata.notes) {

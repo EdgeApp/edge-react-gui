@@ -48,6 +48,9 @@ import { FioAddressDetailsConnector } from '../connectors/scenes/FioAddressDetai
 import { FioAddressListConnector } from '../connectors/scenes/FioAddressListConnector'
 import { FioAddressRegisterConnector } from '../connectors/scenes/FioAddressRegisterConnector'
 import { FioAddressRegisterSelectWalletConnector } from '../connectors/scenes/FioAddressRegisterSelectWalletConnector'
+import { FioConnectWalletConfirmConnector } from '../connectors/scenes/FioConnectWalletConfirmConnector'
+import { FioConnectWalletConnector } from '../connectors/scenes/FioConnectWalletConnector'
+import { FioDisconnectWalletsConnector } from '../connectors/scenes/FioDisconnectWalletsConnector'
 import { FioPendingRequestConnector } from '../connectors/scenes/FioPendingRequestConnector'
 import { FioRequestConfirmationConnector } from '../connectors/scenes/FioRequestConfirmationConnector.js'
 import { FioRequestListConnector } from '../connectors/scenes/FioRequestListConnector'
@@ -715,6 +718,31 @@ export class MainComponent extends Component<Props> {
               renderTitle={this.renderTitle(FIO_ADDRESS)}
               renderLeftButton={this.renderBackButton(BACK)}
               renderRightButton={this.renderMenuButton()}
+            />
+            <Scene
+              key={Constants.FIO_CONNECT_TO_WALLETS}
+              navTransparent={true}
+              component={FioConnectWalletConnector}
+              renderTitle={this.renderTitle(s.strings.title_fio_connect_to_wallet)}
+              renderLeftButton={this.renderBackButton(BACK)}
+              renderRightButton={this.renderMenuButton()}
+              onLeft={Actions.pop}
+            />
+            <Scene
+              key={Constants.FIO_ADDRESS_DISCONNECT_WALLETS}
+              navTransparent={true}
+              component={FioDisconnectWalletsConnector}
+              renderTitle={this.renderTitle(s.strings.title_fio_disconnect_wallets)}
+              renderLeftButton={this.renderBackButton(BACK)}
+              onLeft={Actions.pop}
+            />
+            <Scene
+              key={Constants.FIO_CONNECT_TO_WALLETS_CONFIRM}
+              navTransparent={true}
+              component={FioConnectWalletConfirmConnector}
+              renderTitle={this.renderTitle(s.strings.title_fio_connect_to_wallet)}
+              renderLeftButton={this.renderBackButton(BACK)}
+              onLeft={Actions.pop}
             />
           </Stack>
 

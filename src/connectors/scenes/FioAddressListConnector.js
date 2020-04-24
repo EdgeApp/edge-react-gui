@@ -17,7 +17,7 @@ const mapStateToProps = (state: State) => {
   const fioAddresses: FioAddress[] = state.ui.scenes.fioAddress.fioAddresses
   const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
   const loading: boolean = state.ui.scenes.fioAddress.fioAddressesLoading
-  const fioPlugin = account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO]
+  const fioPlugin = account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
 
   const out: StateProps = {
     fioAddresses,

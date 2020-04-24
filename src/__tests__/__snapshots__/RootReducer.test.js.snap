@@ -92,6 +92,9 @@ Object {
     "location": "undetermined",
   },
   "ui": Object {
+    "fio": Object {
+      "connectedPubAddresses": Object {},
+    },
     "passwordReminder": Object {
       "lastLoginDate": -Infinity,
       "lastPasswordUseDate": -Infinity,

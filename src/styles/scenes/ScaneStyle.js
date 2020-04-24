@@ -96,6 +96,9 @@ export const styles = {
   addressModalButton: {
     width: '100%'
   },
+  title: {
+    textAlign: 'center'
+  },
 
   // These seem unused, and should be cleaned up later:
   modalMiddle: {
@@ -140,9 +143,6 @@ export const styles = {
   },
   legacyAddressModalIcon: {
     color: THEME.COLORS.ACCENT_RED
-  },
-  title: {
-    textAlign: 'center'
   }
 }
 export default StyleSheet.create(styles)
