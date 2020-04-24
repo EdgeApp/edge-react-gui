@@ -12,7 +12,7 @@ import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selecto
 import { CryptoExchangeWalletListRowStyle as styles } from '../../styles/components/CryptoExchangeWalletListRowStyle.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
 import { decimalOrZero, getFiatSymbol, truncateDecimals } from '../../util/utils.js'
-import { CryptoExchangeWalletListTokenRow } from './CryptoExchangeWalletListTokenRow.js'
+import { type TokenSelectObject, CryptoExchangeWalletListTokenRow } from './CryptoExchangeWalletListTokenRow.js'
 
 export type StateProps = {
   denomination: EdgeDenomination,
@@ -26,12 +26,14 @@ export type OwnProps = {
   wallet: GuiWallet,
   onPress(GuiWallet): void,
   excludedCurrencyCode: Array<string>,
-  onTokenPress({ id: string, currencyCode: string }): void,
+  onTokenPress(TokenSelectObject): void,
   excludedTokens: Array<string>,
   disableZeroBalance: boolean,
   searchFilter: string,
   currencyCodeFilter: string,
-  isMostRecentWallet?: boolean
+  isMostRecentWallet?: boolean,
+  allowedCurrencyCodes?: Array<string>,
+  excludeCurrencyCodes?: Array<string>
 }
 
 type LocalState = {
@@ -104,25 +106,29 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
     }
   }
   renderTokens = () => {
-    const { wallet, settings, exchangeRates, searchFilter, isMostRecentWallet, currencyCodeFilter } = this.props
-    const searchFilterLowerCase = searchFilter.toLowerCase()
+    const { wallet, settings, exchangeRates, searchFilter, isMostRecentWallet, currencyCodeFilter, allowedCurrencyCodes, excludeCurrencyCodes } = this.props
     if (this.props.wallet.enabledTokens.length > 0) {
       const tokens = []
       const metaTokenBalances = this.state.enabledNativeBalances
       for (const property in metaTokenBalances) {
         if (metaTokenBalances.hasOwnProperty(property)) {
           if (property !== this.props.wallet.currencyCode) {
-            const formattedFiatBalance = calculateWalletFiatBalanceWithoutState(wallet, property, settings, exchangeRates)
-            if (!this.props.denomination || !this.props.denomination.multiplier) {
-              return []
-            }
+            // Token Filters
+            const checkAllowedCurrencyCodes = allowedCurrencyCodes
+              ? allowedCurrencyCodes.find(currencyCode => {
+                const [currency, token] = currencyCode.split(':')
+                return currency === property || token === property
+              })
+              : true
+            const checkExcludeCurrencyCodes = excludeCurrencyCodes
+              ? excludeCurrencyCodes.find(currencyCode => {
+                const [currency, token] = currencyCode.split(':')
+                return currency === property || token === property
+              })
+              : false
             const { name } = this.props.wallet
             const token = this.props.wallet.metaTokens.find(item => item.currencyCode === property)
-            const tokenImage = token ? token.symbolImage : ''
-            const nativeAmount = metaTokenBalances[property]
-            const disabled = this.props.excludedCurrencyCode.includes(property) || this.props.disableZeroBalance
-
-            // Token Filters
+            const searchFilterLowerCase = searchFilter.toLowerCase()
             const walletNameString = name.toLowerCase()
             const currencyNameString = token ? token.currencyName.toLowerCase() : ''
             const currencyCodeString = token ? token.currencyCode.toLowerCase() : ''
@@ -135,7 +141,14 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
             const searchInputFilter = excludedCurrencyFilter && basicFilter
             const mostRecentUsedCheck = isMostRecentWallet ? currencyCodeString === currencyCodeFilter.toLowerCase() : true
 
-            if (searchFilter !== '' ? searchInputFilter : mostRecentUsedCheck) {
+            if (searchFilter !== '' ? searchInputFilter : mostRecentUsedCheck && checkAllowedCurrencyCodes && !checkExcludeCurrencyCodes) {
+              const formattedFiatBalance = calculateWalletFiatBalanceWithoutState(wallet, property, settings, exchangeRates)
+              if (!this.props.denomination || !this.props.denomination.multiplier) {
+                return []
+              }
+              const tokenImage = token ? token.symbolImage : ''
+              const nativeAmount = metaTokenBalances[property]
+              const disabled = this.props.excludedCurrencyCode.includes(property) || this.props.disableZeroBalance
               tokens.push(
                 <CryptoExchangeWalletListTokenRow
                   key={property}
@@ -160,7 +173,9 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
     return null
   }
   renderWallet = () => {
-    const { wallet, searchFilter, isMostRecentWallet, currencyCodeFilter } = this.props
+    const { wallet, searchFilter, isMostRecentWallet, currencyCodeFilter, allowedCurrencyCodes, excludeCurrencyCodes } = this.props
+    const checkAllowedCurrencyCodes = allowedCurrencyCodes ? allowedCurrencyCodes.find(currencyCode => currencyCode === wallet.currencyCode) : true
+    const checkExcludeCurrencyCodes = excludeCurrencyCodes ? excludeCurrencyCodes.find(currencyCode => currencyCode === wallet.currencyCode) : false
     const searchFilterLowerCase = searchFilter.toLowerCase()
     const nameString = wallet.name.toLowerCase()
     const currencyNameString = wallet.currencyNames[wallet.currencyCode].toLowerCase()
@@ -172,7 +187,7 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
       currencyCodeString.includes(searchFilterLowerCase)
     const mostRecentUsedCheck = isMostRecentWallet ? currencyCodeString === currencyCodeFilter.toLowerCase() : true
 
-    if (searchFilter !== '' ? filter : mostRecentUsedCheck) {
+    if (searchFilter !== '' ? filter : mostRecentUsedCheck && checkAllowedCurrencyCodes && !checkExcludeCurrencyCodes) {
       return (
         <TouchableHighlight style={styles.touchable} underlayColor={styles.underlayColor} onPress={this.onPress}>
           <View style={styles.rowContainerTop}>

@@ -12,8 +12,8 @@ import { sprintf } from 'sprintf-js'
 import { createCurrencyWalletAndAddToSwap } from '../../actions/CreateWalletActions.js'
 import { type SetNativeAmountInfo, getQuoteForTransaction, selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
 import { updateMostRecentWalletsSelected } from '../../actions/WalletActions.js'
+import { WalletListModal } from '../../components/modals/WalletListModal2.js'
 import CryptoExchangeMessageConnector from '../../connectors/components/CryptoExchangeMessageConnector'
-import { WalletListModalConnected as WalletListModal } from '../../connectors/components/WalletListModalConnector.js'
 import { ARROW_DOWN_BOLD, DEFAULT_STARTER_WALLET_NAMES, MATERIAL_COMMUNITY } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import { getSettings } from '../../modules/Settings/selectors.js'
@@ -24,9 +24,9 @@ import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import { getExchangeRate } from '../../modules/UI/selectors.js'
 import { styles } from '../../styles/scenes/CryptoExchangeSceneStyles.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
-import { type GuiCurrencyInfo, type GuiWallet, emptyCurrencyInfo, emptyGuiWallet } from '../../types/types.js'
-import { getGuiWalletTypes } from '../../util/CurrencyInfoHelpers.js'
+import { type GuiCurrencyInfo, type GuiWallet, type GuiWalletType, emptyCurrencyInfo, emptyGuiWallet } from '../../types/types.js'
 import { getDenomFromIsoCode } from '../../util/utils.js'
+import { type TokenSelectObject } from '../common/CryptoExchangeWalletListTokenRow.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { Airship } from '../services/AirshipInstance.js'
 
@@ -58,7 +58,6 @@ type StateProps = {
   // Number of times To and From wallets were flipped
   forceUpdateGuiCounter: number,
   calculatingMax: boolean,
-  wallets: { [id: string]: GuiWallet },
   creatingWallet: boolean,
   defaultIsoFiat: string
 }
@@ -261,46 +260,17 @@ class CryptoExchangeComponent extends Component<Props, State> {
     this.toAmountDisplay = amounts.exchangeAmount
   }
 
-  renderDropUp = (whichWallet: 'from' | 'to') => {
-    const { account, onSelectWallet, fromCurrencyCode, fromWallet, toCurrencyCode, toWallet, wallets } = this.props
-    const walletCurrencyCodes = []
-    const allowedWallets = []
-    for (const id in wallets) {
-      const wallet = wallets[id]
-      walletCurrencyCodes.push(wallet.currencyCode)
-      if (wallet.receiveAddress && wallet.receiveAddress.publicAddress) {
-        allowedWallets.push(wallets[id])
-      }
-    }
-    const guiWalletTypes = getGuiWalletTypes(account)
-    const supportedWalletTypes = []
-    for (let i = 0; i < guiWalletTypes.length; i++) {
-      const swt = guiWalletTypes[i]
-      if (!walletCurrencyCodes.includes(swt.currencyCode) && swt.currencyCode !== 'EOS') {
-        supportedWalletTypes.push(swt)
-      }
-    }
-    const filterWalletId = whichWallet === 'to' ? fromWallet.id : toWallet.id
-    const filterWalletCurrencyCode = whichWallet === 'to' ? fromCurrencyCode : toCurrencyCode
+  renderDropUp = (whichWallet: string) => {
     Airship.show(bridge => (
       <WalletListModal
         bridge={bridge}
-        wallets={allowedWallets}
-        type={whichWallet}
-        existingWalletToFilterId={filterWalletId}
-        existingWalletToFilterCurrencyCode={filterWalletCurrencyCode}
-        supportedWalletTypes={supportedWalletTypes}
-        excludedCurrencyCode={[]}
-        showWalletCreators={whichWallet === 'to'}
         headerTitle={whichWallet === 'to' ? s.strings.select_recv_wallet : s.strings.select_src_wallet}
-        excludedTokens={[]}
-        noWalletCodes={[]}
-        disableZeroBalance={false}
+        showCreateWallet={whichWallet === 'to'}
       />
-    )).then((response: GuiWallet | Object | null) => {
+    )).then((response: GuiWallet | TokenSelectObject | GuiWalletType | null) => {
       if (response) {
-        if (response.id) {
-          onSelectWallet(response.id, response.currencyCode)
+        if (typeof response.id === 'string') {
+          this.props.onSelectWallet(response.id, response.currencyCode)
           return
         }
         if (typeof response.value === 'string') {
@@ -354,7 +324,6 @@ export const CryptoExchangeScene = connect(
       toButtonText = s.strings.select_recv_wallet
       toFiatToCrypto = 1
     }
-    const wallets = state.ui.wallets.byId
     const creatingWallet = state.cryptoExchange.creatingWallet
     const settings = getSettings(state)
     const defaultIsoFiat = settings.defaultIsoFiat
@@ -380,7 +349,6 @@ export const CryptoExchangeScene = connect(
       toCurrencyIconDark: state.cryptoExchange.toCurrencyIconDark || '',
       forceUpdateGuiCounter: state.cryptoExchange.forceUpdateGuiCounter,
       calculatingMax: state.cryptoExchange.calculatingMax,
-      wallets,
       creatingWallet,
       defaultIsoFiat
     }
