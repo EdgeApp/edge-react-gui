@@ -12,7 +12,7 @@ import Text from '../../modules/UI/components/FormattedText/index'
 import styles, { styles as stylesRaw } from '../../styles/scenes/CreateWalletStyle.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { type FlatListItem, type GuiWalletType } from '../../types/types.js'
-import { getCurrencyInfos, getGuiWalletTypes, makeGuiWalletType } from '../../util/CurrencyInfoHelpers.js'
+import { getGuiWalletTypes } from '../../util/CurrencyInfoHelpers.js'
 import { scale } from '../../util/scaling.js'
 import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -38,8 +38,7 @@ class CreateWalletSelectCryptoComponent extends Component<Props, State> {
 
   getWalletType (walletType: string): GuiWalletType | void {
     const { account } = this.props
-    const info = getCurrencyInfos(account).find(info => info.walletType === walletType)
-    if (info != null) return makeGuiWalletType(info)
+    return getGuiWalletTypes(account).find(type => type.value === walletType)
   }
 
   onNext = () => {
