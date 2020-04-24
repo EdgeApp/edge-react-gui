@@ -24,6 +24,14 @@ export const fio: Reducer<FioState, Action> = (state = initialState, action: Act
         ...state,
         connectedPubAddresses: action.data.connectedPubAddresses
       }
+    case 'FIO/UPDATE_PUB_ADDRESSES_FOR_FIO_ADDRESS':
+      if (!action.data) throw new Error(`Invalid action FIO/UPDATE_PUB_ADDRESSES`)
+      const { connectedPubAddresses } = state
+      connectedPubAddresses[action.data.fioAddress] = { ...connectedPubAddresses[action.data.fioAddress], ...action.data.pubAddresses }
+      return {
+        ...state,
+        connectedPubAddresses
+      }
     default:
       return state
   }

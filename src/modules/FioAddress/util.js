@@ -3,6 +3,7 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 
 import { FIO_WALLET_TYPE } from '../../constants/WalletAndCurrencyConstants'
+import s from '../../locales/strings'
 import type { FioConnectionWalletItem, GuiWallet } from '../../types/types'
 
 export const isPubAddressNotConnected = (pubAddress: string | null): boolean => {
@@ -47,6 +48,36 @@ export const refreshPubAddressesForFioAddress = async (
     }
   }
   return pubAddresses
+}
+
+export const updatePubAddressesForFioAddress = async (
+  fioWallet: EdgeCurrencyWallet | null,
+  fioAddress: string,
+  wallets: { chainCode: string, tokenCode: string, publicAddress: string }[]
+) => {
+  if (!fioWallet) throw new Error(s.strings.fio_connect_wallets_err)
+  let maxFee: number
+  try {
+    const { fee } = await fioWallet.otherMethods.fioAction('getFeeForAddPublicAddress', {
+      fioAddress
+    })
+    maxFee = fee
+  } catch (e) {
+    throw new Error(s.strings.fio_get_fee_err_msg)
+  }
+  try {
+    await fioWallet.otherMethods.fioAction('addPublicAddresses', {
+      fioAddress,
+      publicAddresses: wallets.map(({ chainCode, tokenCode, publicAddress }) => ({
+        token_code: tokenCode,
+        chain_code: chainCode,
+        public_address: publicAddress
+      })),
+      maxFee
+    })
+  } catch (e) {
+    throw new Error(s.strings.fio_connect_wallets_err)
+  }
 }
 
 export const findWalletByFioAddress = async (fioWallets: EdgeCurrencyWallet[], fioAddress: string): Promise<EdgeCurrencyWallet | null> => {
@@ -108,4 +139,50 @@ export const makeNotConnectedWallets = (
   }
 
   return notConnectedWallets
+}
+
+export const makeConnectedWallets = (
+  wallets: { [walletId: string]: GuiWallet },
+  connectedPubAddresses: { [fullCurrencyCode: string]: string }
+): { [key: string]: FioConnectionWalletItem } => {
+  const connectedWallets = {}
+  for (const walletKey: string in wallets) {
+    if (wallets[walletKey].type === FIO_WALLET_TYPE) continue
+    const publicAddress = wallets[walletKey].receiveAddress.publicAddress
+    if (!publicAddress) continue
+    const fullCurrencyCode = `${wallets[walletKey].currencyCode}:${wallets[walletKey].currencyCode}`
+    if (publicAddress === connectedPubAddresses[fullCurrencyCode]) {
+      connectedWallets[`${wallets[walletKey].id}-${wallets[walletKey].currencyCode}`] = {
+        key: `${wallets[walletKey].id}-${wallets[walletKey].currencyCode}`,
+        id: wallets[walletKey].id,
+        publicAddress,
+        symbolImage: wallets[walletKey].symbolImage,
+        name: wallets[walletKey].name,
+        currencyCode: wallets[walletKey].currencyCode,
+        chainCode: wallets[walletKey].currencyCode,
+        fullCurrencyCode
+      }
+    }
+    if (wallets[walletKey].enabledTokens && wallets[walletKey].enabledTokens.length) {
+      for (const enabledToken: string of wallets[walletKey].enabledTokens) {
+        const tokenData = wallets[walletKey].metaTokens.find(metaToken => metaToken.currencyCode === enabledToken)
+        if (!tokenData) continue
+        const fullCurrencyCode = `${wallets[walletKey].currencyCode}:${tokenData.currencyCode}`
+        if (publicAddress === connectedPubAddresses[fullCurrencyCode]) {
+          connectedWallets[`${wallets[walletKey].id}-${tokenData.currencyCode}`] = {
+            key: `${wallets[walletKey].id}-${tokenData.currencyCode}`,
+            id: wallets[walletKey].id,
+            publicAddress,
+            symbolImage: tokenData.symbolImage,
+            name: wallets[walletKey].name,
+            currencyCode: tokenData.currencyCode,
+            chainCode: wallets[walletKey].currencyCode,
+            fullCurrencyCode
+          }
+        }
+      }
+    }
+  }
+
+  return connectedWallets
 }

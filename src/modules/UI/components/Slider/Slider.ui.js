@@ -19,7 +19,8 @@ type Props = {
   forceUpdateGuiCounter: number,
   onSlidingComplete: () => {},
   parentStyle: any,
-  showSpinner: boolean
+  showSpinner: boolean,
+  disabledText?: string
 }
 
 type State = {
@@ -65,7 +66,7 @@ export default class ABSlider extends Component<Props, State> {
 
   render () {
     const thumbStyle = !this.props.sliderDisabled ? styles.thumb : styles.disabledThumb
-    const sliderText = !this.props.sliderDisabled ? SLIDE_TO_COMPLETE_TEXT : ENTER_AN_AMOUNT_TEXT
+    const sliderText = !this.props.sliderDisabled ? SLIDE_TO_COMPLETE_TEXT : this.props.disabledText || ENTER_AN_AMOUNT_TEXT
 
     return (
       <View style={[styles.container, this.props.parentStyle]}>
