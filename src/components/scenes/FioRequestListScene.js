@@ -2,12 +2,14 @@
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
-import { Alert, FlatList, TouchableOpacity, View } from 'react-native'
+import { Alert, FlatList, Image, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
+import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
+import fioRequestsIcon from '../../assets/images/sidenav/fiorequests.png'
 import * as Constants from '../../constants/indexConstants'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
@@ -15,9 +17,11 @@ import { FioRequestRowConnector as FioRequestRow } from '../../modules/FioReques
 import T from '../../modules/UI/components/FormattedText/index'
 import { styles as requestListStyles } from '../../styles/scenes/FioRequestListStyle'
 import styles from '../../styles/scenes/TransactionListStyle'
+import { THEME } from '../../theme/variables/airbitz'
 import type { FioRequest, GuiWallet } from '../../types/types'
 import FullScreenLoader from '../common/FullScreenLoader'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
 import { showError } from '../services/AirshipInstance'
 
 const SCROLL_THRESHOLD = 0.5
@@ -36,6 +40,8 @@ export type StateProps = {
 }
 
 export class FioRequestList extends Component<StateProps, State> {
+  headerIconSize = THEME.rem(1.375)
+
   constructor (props: StateProps) {
     super(props)
     this.state = {
@@ -283,9 +289,7 @@ export class FioRequestList extends Component<StateProps, State> {
         {(rejectLoading || loading) && <FullScreenLoader />}
         <View style={requestListStyles.scene}>
           <View style={requestListStyles.row}>
-            <View style={requestListStyles.listContainer}>
-              <T style={requestListStyles.listTitle}>{s.strings.fio_pending_requests}</T>
-            </View>
+            <SettingsHeaderRow icon={<Image source={fioRequestsIcon} style={requestListStyles.iconImage} />} text={s.strings.fio_pending_requests} />
             {!loading && !fioRequestsPending.length ? (
               <View style={requestListStyles.emptyListContainer}>
                 <T style={requestListStyles.text}>{s.strings.fio_no_requests_label}</T>
@@ -305,9 +309,7 @@ export class FioRequestList extends Component<StateProps, State> {
             </View>
           </View>
           <View style={requestListStyles.row}>
-            <View style={requestListStyles.listContainer}>
-              <T style={requestListStyles.listTitle}>{s.strings.fio_sent_requests}</T>
-            </View>
+            <SettingsHeaderRow icon={<IonIcon name="ios-send" color={THEME.COLORS.WHITE} size={this.headerIconSize} />} text={s.strings.fio_sent_requests} />
             {!loading && !fioRequestsSent.length ? (
               <View style={requestListStyles.emptyListContainer}>
                 <T style={requestListStyles.text}>{s.strings.fio_no_requests_label}</T>

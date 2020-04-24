@@ -23,19 +23,6 @@ export const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'stretch'
   },
-  listContainer: {
-    backgroundColor: THEME.COLORS.GRAY_4,
-    borderBottomColor: THEME.COLORS.GRAY_3,
-    borderBottomWidth: scale(2),
-    height: scale(50),
-    justifyContent: 'center',
-    paddingLeft: scale(15)
-  },
-  listTitle: {
-    fontSize: scale(16),
-    fontWeight: 'normal'
-  },
-
   backRightBtn: {
     alignItems: 'center',
     bottom: 0,
@@ -77,5 +64,9 @@ export const styles = StyleSheet.create({
   },
   swipeRow: {
     right: scale(-75)
+  },
+  iconImage: {
+    width: scale(22),
+    height: scale(22)
   }
 })
