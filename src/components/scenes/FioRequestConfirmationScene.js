@@ -126,6 +126,8 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
         this.setState({ loading: false })
         showError(`${s.strings.fio_request_error_header}. ${error.json ? JSON.stringify(error.json.fields[0].error) : ''}`)
       }
+    } else {
+      showError(s.strings.fio_wallet_missing_for_fio_address)
     }
   }
 

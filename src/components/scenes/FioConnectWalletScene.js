@@ -76,6 +76,10 @@ export class FioConnectWalletScene extends Component<Props, State> {
     if (selectedWalletsMap[wallet.key]) {
       delete selectedWalletsMap[wallet.key]
     } else {
+      if (Object.keys(selectedWalletsMap).length > 4) {
+        showError(s.strings.fio_connect_only_5_per_once)
+        return
+      }
       selectedWalletsMap[wallet.key] = wallet
     }
 
@@ -129,7 +133,7 @@ export class FioConnectWalletScene extends Component<Props, State> {
   render () {
     const { notConnectedWallets } = this.props
     const { selectedWalletsMap, fioWalletLoading } = this.state
-    const continueDisabled = !Object.keys(selectedWalletsMap).length
+    const continueDisabled = !Object.keys(selectedWalletsMap).length || Object.keys(selectedWalletsMap).length > 5
 
     return (
       <SceneWrapper background="body">
