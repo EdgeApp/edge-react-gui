@@ -62,6 +62,9 @@ export const loadAccountReferral = (account: EdgeAccount) => async (dispatch: Di
 export const activatePromotion = (installerId: string) => async (dispatch: Dispatch, getState: GetState) => {
   const uri = `https://util1.edge.app/api/v1/promo?installerId=${installerId}`
   const reply = await fetch(uri)
+  if (reply.status === 404) {
+    throw new Error(`Invalid promotion code ${installerId}`)
+  }
   if (!reply.ok) {
     throw new Error(`Util server returned status code ${reply.status}`)
   }
