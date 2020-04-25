@@ -50,7 +50,7 @@ export class FioAddressModal extends Component<AddressModalProps, AddressModalSt
       if (!isFioAddress) return
 
       this.setState({
-        clipboard: address
+        clipboard: address.toLowerCase()
       })
     } catch (e) {
       //
@@ -60,7 +60,7 @@ export class FioAddressModal extends Component<AddressModalProps, AddressModalSt
   updateAddress = (address: string) => {
     this.setState(
       {
-        address,
+        address: address.toLowerCase(),
         addressError: ''
       },
       this.validateAddressQueue

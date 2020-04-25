@@ -150,7 +150,7 @@ export class AddressModal extends Component<AddressModalProps, AddressModalState
       this.fioCheckQueue = 0
       try {
         const { currencyCode, coreWallet, fioPlugin } = this.props
-        const publicAddress = await checkPubAddress(fioPlugin, uri, coreWallet.currencyInfo.currencyCode, currencyCode)
+        const publicAddress = await checkPubAddress(fioPlugin, uri.toLowerCase(), coreWallet.currencyInfo.currencyCode, currencyCode)
         this.setStatusLabel(s.strings.fragment_send_address)
         if (!publicAddress) {
           return this.setState({ fieldError: s.strings.err_no_address_title })

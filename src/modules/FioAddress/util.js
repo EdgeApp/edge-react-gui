@@ -191,7 +191,7 @@ export const checkPubAddress = async (fioPlugin: EdgeCurrencyConfig, fioAddress:
   const isFioAddress = await fioPlugin.otherMethods.isFioAddressValid(fioAddress)
   try {
     if (isFioAddress) {
-      const { public_address: publicAddress } = await fioPlugin.otherMethods.getConnectedPublicAddress(fioAddress, chainCode, tokenCode)
+      const { public_address: publicAddress } = await fioPlugin.otherMethods.getConnectedPublicAddress(fioAddress.toLowerCase(), chainCode, tokenCode)
       if (publicAddress && publicAddress.length > 1) {
         return publicAddress
       }
