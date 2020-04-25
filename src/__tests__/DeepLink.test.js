@@ -123,6 +123,14 @@ describe('parseDeepLink', function () {
       'https://dl.edge.app/bob': {
         type: 'promotion',
         installerId: 'bob'
+      },
+      'https://dl.edge.app/?af=bob': {
+        type: 'promotion',
+        installerId: 'bob'
+      },
+      'https://dl.edge.app': {
+        type: 'promotion',
+        installerId: ''
       }
     })
   })
