@@ -47,6 +47,7 @@ export class FioDisconnectWalletScene extends Component<Props, State> {
   confirm = async (): Promise<void> => {
     const { selectedToRemove } = this.state
     const { fioWallet, fioAddressName, updatePubAddresses, pubAddresses, isConnected } = this.props
+    const newPubAddresses = { ...pubAddresses }
     if (isConnected) {
       this.setState({ disconnectWalletsLoading: true })
       try {
@@ -54,7 +55,7 @@ export class FioDisconnectWalletScene extends Component<Props, State> {
           fioWallet,
           fioAddressName,
           Object.keys(selectedToRemove).map((walletKey: string) => {
-            pubAddresses[selectedToRemove[walletKey].fullCurrencyCode] = '0'
+            newPubAddresses[selectedToRemove[walletKey].fullCurrencyCode] = '0'
             return {
               chainCode: selectedToRemove[walletKey].chainCode,
               tokenCode: selectedToRemove[walletKey].currencyCode,
@@ -62,7 +63,7 @@ export class FioDisconnectWalletScene extends Component<Props, State> {
             }
           })
         )
-        updatePubAddresses(fioAddressName, pubAddresses)
+        updatePubAddresses(fioAddressName, newPubAddresses)
         showToast(s.strings.fio_disconnect_wallets_success)
         Actions.popTo(Constants.FIO_ADDRESS_DETAILS)
       } catch (e) {
@@ -79,6 +80,10 @@ export class FioDisconnectWalletScene extends Component<Props, State> {
     if (selectedToRemove[wallet.key]) {
       delete selectedToRemove[wallet.key]
     } else {
+      if (Object.keys(selectedToRemove).length > 4) {
+        showError(s.strings.fio_disconnect_only_5_per_once)
+        return
+      }
       selectedToRemove[wallet.key] = wallet
     }
 

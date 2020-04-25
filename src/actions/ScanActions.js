@@ -107,7 +107,6 @@ export const parseScannedUri = (data: string) => async (dispatch: Dispatch, getS
   const guiWallet = state.ui.wallets.byId[selectedWalletId]
   const currencyCode = state.ui.wallets.selectedCurrencyCode
 
-  console.log(data)
   let fioAddress
   const account = CORE_SELECTORS.getAccount(state)
   if (account && account.currencyConfig) {
@@ -125,8 +124,7 @@ export const parseScannedUri = (data: string) => async (dispatch: Dispatch, getS
       return showError(e.message)
     }
   }
-  console.log(fioAddress)
-  console.log(data)
+
   // Check for things other than coins:
   const deepLink = parseDeepLink(data)
   switch (deepLink.type) {

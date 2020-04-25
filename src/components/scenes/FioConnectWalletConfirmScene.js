@@ -48,12 +48,13 @@ export class FioConnectWalletConfirmScene extends Component<Props, State> {
     const { fioWallet, fioAddressName, selectedWallets, updatePubAddresses, pubAddresses, isConnected } = this.props
     if (isConnected) {
       this.setState({ connectWalletsLoading: true })
+      const newPubAddresses = { ...pubAddresses }
       try {
         await updatePubAddressesForFioAddress(
           fioWallet,
           fioAddressName,
           selectedWallets.map((wallet: FioConnectionWalletItem) => {
-            pubAddresses[wallet.fullCurrencyCode] = wallet.publicAddress
+            newPubAddresses[wallet.fullCurrencyCode] = wallet.publicAddress
             return {
               tokenCode: wallet.currencyCode,
               chainCode: wallet.chainCode,
@@ -61,7 +62,7 @@ export class FioConnectWalletConfirmScene extends Component<Props, State> {
             }
           })
         )
-        updatePubAddresses(fioAddressName, pubAddresses)
+        updatePubAddresses(fioAddressName, newPubAddresses)
         showToast(s.strings.fio_connect_wallets_success)
         Actions.popTo(Constants.FIO_ADDRESS_DETAILS)
       } catch (e) {
