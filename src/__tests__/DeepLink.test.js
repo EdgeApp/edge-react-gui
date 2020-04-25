@@ -1,32 +1,39 @@
 // @flow
 /* globals describe it expect */
 
-import { parseDeepLink } from '../types/DeepLink.js'
+import { type DeepLink, parseDeepLink } from '../types/DeepLink.js'
+
+/**
+ * Generates deep link unit tests using a simple table format.
+ */
+function makeLinkTests (tests: { [uri: string]: DeepLink }): void {
+  for (const link of Object.keys(tests)) {
+    const expected = tests[link]
+    it(link, function () {
+      expect(parseDeepLink(link)).toEqual(expected)
+    })
+  }
+}
 
 describe('parseDeepLink', function () {
   describe('edgeLogin', () => {
-    it('airbitz:', () => {
-      const result = parseDeepLink('airbitz://edge/1234567890a')
-      expect(result.type).toBe('edgeLogin')
-
-      if (result.type !== 'edgeLogin') return
-      expect(result.lobbyId).toBe('1234567890a')
-    })
-
-    it('edge:', () => {
-      const result = parseDeepLink('edge://edge/1234567890a')
-      expect(result.type).toBe('edgeLogin')
-
-      if (result.type !== 'edgeLogin') return
-      expect(result.lobbyId).toBe('1234567890a')
-    })
-
-    it('https://www.edge.app/edgelogin', () => {
-      const result = parseDeepLink('https://www.edge.app/edgelogin?address=1234567890a')
-      expect(result.type).toBe('edgeLogin')
-
-      if (result.type !== 'edgeLogin') return
-      expect(result.lobbyId).toBe('1234567890a')
+    makeLinkTests({
+      'edge://edge/1234567890a': {
+        type: 'edgeLogin',
+        lobbyId: '1234567890a'
+      },
+      'airbitz://edge/1234567890a': {
+        type: 'edgeLogin',
+        lobbyId: '1234567890a'
+      },
+      'https://deep.edge.app/edge/1234567890a': {
+        type: 'edgeLogin',
+        lobbyId: '1234567890a'
+      },
+      'https://www.edge.app/edgelogin?address=1234567890a': {
+        type: 'edgeLogin',
+        lobbyId: '1234567890a'
+      }
     })
 
     it('Wrong host', () => {
@@ -35,92 +42,88 @@ describe('parseDeepLink', function () {
     })
   })
 
-  describe('pay', () => {
-    it('edge://pay/bitcoin/1FeexV6bAHb8ybZjqQMjJrcCrHGW9sb6uF?amount=0.001', () => {
-      const result = parseDeepLink('edge://pay/bitcoin/1FeexV6bAHb8ybZjqQMjJrcCrHGW9sb6uF?amount=0.001')
-      expect(result.type).toBe('other')
-
-      if (result.type !== 'other') return
-      expect(result.protocol).toBe('bitcoin')
-      expect(result.uri).toBe('bitcoin:1FeexV6bAHb8ybZjqQMjJrcCrHGW9sb6uF?amount=0.001')
+  describe('passwordRecovery', function () {
+    makeLinkTests({
+      'edge://recovery?token=1234567890a': {
+        type: 'passwordRecovery',
+        passwordRecoveryKey: '1234567890a'
+      },
+      'airbitz://recovery?token=1234567890a': {
+        type: 'passwordRecovery',
+        passwordRecoveryKey: '1234567890a'
+      },
+      'https://recovery.edgesecure.co?token=1234567890a': {
+        type: 'passwordRecovery',
+        passwordRecoveryKey: '1234567890a'
+      }
     })
   })
 
-  describe('passwordRecovery', function () {
-    it('airbitz:', function () {
-      const result = parseDeepLink('airbitz://recovery?token=1234567890a')
-      expect(result.type).toBe('passwordRecovery')
-
-      if (result.type !== 'passwordRecovery') return
-      expect(result.passwordRecoveryKey).toBe('1234567890a')
-    })
-
-    it('edge:', function () {
-      const result = parseDeepLink('airbitz://recovery?token=1234567890a')
-      expect(result.type).toBe('passwordRecovery')
-
-      if (result.type !== 'passwordRecovery') return
-      expect(result.passwordRecoveryKey).toBe('1234567890a')
-    })
-
-    it('https://recovery.edgesecure.co', function () {
-      const result = parseDeepLink('https://recovery.edgesecure.co?token=1234567890a')
-      expect(result.type).toBe('passwordRecovery')
-
-      if (result.type !== 'passwordRecovery') return
-      expect(result.passwordRecoveryKey).toBe('1234567890a')
+  describe('pay', () => {
+    makeLinkTests({
+      'edge://pay/bitcoin/1FeexV6bAHb8ybZjqQMjJrcCrHGW9sb6uF?amount=0.001': {
+        type: 'other',
+        protocol: 'bitcoin',
+        uri: 'bitcoin:1FeexV6bAHb8ybZjqQMjJrcCrHGW9sb6uF?amount=0.001'
+      }
     })
   })
 
   describe('plugin', function () {
-    it('edge-ret:', function () {
-      const result = parseDeepLink('edge-ret://plugins/simplex/rabbit/hole?param=alice')
-      expect(result.type).toBe('plugin')
-
-      if (result.type !== 'plugin') return
-      expect(result.pluginId).toBe('simplex')
-      expect(result.path).toBe('/rabbit/hole')
-      expect(result.query).toEqual({ param: 'alice' })
-    })
-
-    it('edge: with path', function () {
-      const result = parseDeepLink('edge://plugin/simplex/rabbit/hole?param=alice')
-      expect(result.type).toBe('plugin')
-
-      if (result.type !== 'plugin') return
-      expect(result.pluginId).toBe('simplex')
-      expect(result.path).toBe('/rabbit/hole')
-      expect(result.query).toEqual({ param: 'alice' })
-    })
-
-    it('edge: with no path', function () {
-      const result = parseDeepLink('edge://plugin/simplex?param=alice')
-      expect(result.type).toBe('plugin')
-
-      if (result.type !== 'plugin') return
-      expect(result.pluginId).toBe('simplex')
-      expect(result.path).toBe('')
-      expect(result.query).toEqual({ param: 'alice' })
-    })
-
-    it('https:', function () {
-      const result = parseDeepLink('https://deep.edge.app/plugin/simplex/rabbit/hole?param=alice')
-      expect(result.type).toBe('plugin')
-
-      if (result.type !== 'plugin') return
-      expect(result.pluginId).toBe('simplex')
-      expect(result.path).toBe('/rabbit/hole')
-      expect(result.query).toEqual({ param: 'alice' })
+    makeLinkTests({
+      'edge://plugin/simplex/rabbit/hole?param=alice': {
+        type: 'plugin',
+        pluginId: 'simplex',
+        path: '/rabbit/hole',
+        query: { param: 'alice' }
+      },
+      'edge://plugin/simplex/?param=alice': {
+        type: 'plugin',
+        pluginId: 'simplex',
+        path: '/',
+        query: { param: 'alice' }
+      },
+      'edge://plugin/simplex?param=alice': {
+        type: 'plugin',
+        pluginId: 'simplex',
+        path: '',
+        query: { param: 'alice' }
+      },
+      'edge://plugin/simplex': {
+        type: 'plugin',
+        pluginId: 'simplex',
+        path: '',
+        query: {}
+      },
+      'https://deep.edge.app/plugin/simplex/rabbit/hole?param=alice': {
+        type: 'plugin',
+        pluginId: 'simplex',
+        path: '/rabbit/hole',
+        query: { param: 'alice' }
+      },
+      'edge-ret://plugins/simplex/rabbit/hole?param=alice': {
+        type: 'plugin',
+        pluginId: 'simplex',
+        path: '/rabbit/hole',
+        query: { param: 'alice' }
+      }
     })
   })
 
   describe('promotion', function () {
-    it('https://dl.edge.app', function () {
-      const result = parseDeepLink('https://dl.edge.app/bob')
-      expect(result.type).toBe('promotion')
-
-      if (result.type !== 'promotion') return
-      expect(result.installerId).toBe('bob')
+    makeLinkTests({
+      'edge://promotion/bob': {
+        type: 'promotion',
+        installerId: 'bob'
+      },
+      'https://deep.edge.app/promotion/bob': {
+        type: 'promotion',
+        installerId: 'bob'
+      },
+      'https://dl.edge.app/bob': {
+        type: 'promotion',
+        installerId: 'bob'
+      }
     })
   })
 
@@ -213,6 +216,14 @@ describe('parseDeepLink', function () {
       expect(result.currencyName).toBe('dashy')
       expect(result.sourceName).toBe('Crypto Tip')
       expect(result.successUri).toBe(undefined)
+    })
+  })
+
+  describe('swap', () => {
+    makeLinkTests({
+      'edge://swap': {
+        type: 'swap'
+      }
     })
   })
 })
