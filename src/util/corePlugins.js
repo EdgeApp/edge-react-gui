@@ -81,7 +81,8 @@ export const swapPlugins = {
   godex: ENV.GODEX_INIT,
   // shapeshift: ENV.SHAPESHIFT_INIT,
   switchain: ENV.SWITCHAIN_INIT,
-  totle: ENV.TOTLE_INIT
+  totle: ENV.TOTLE_INIT,
+  transfer: true
 }
 
 export const allPlugins = {
