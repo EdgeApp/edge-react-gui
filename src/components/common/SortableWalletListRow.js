@@ -47,6 +47,8 @@ class SortableWalletListRow extends Component<Props> {
       fiatBalanceString
     const { data, walletFiatSymbol, settings, exchangeRates, showBalance } = this.props
     const walletData = data
+    // $FlowFixMe react-native-sortable-listview sneakily injects this prop:
+    const { sortHandlers } = this.props
 
     if (walletData.currencyCode) {
       // if wallet is done loading
@@ -66,7 +68,7 @@ class SortableWalletListRow extends Component<Props> {
     }
 
     return (
-      <TouchableHighlight style={[styles.rowContainer, styles.sortableWalletListRow]} underlayColor={styleRaw.walletRowUnderlay.color}>
+      <TouchableHighlight style={[styles.rowContainer, styles.sortableWalletListRow]} underlayColor={styleRaw.walletRowUnderlay.color} {...sortHandlers}>
         {walletData.currencyCode ? (
           <View style={[styles.rowContent]}>
             <View style={[styles.rowDragArea]}>

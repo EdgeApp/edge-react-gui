@@ -88,13 +88,7 @@ export class WalletListTokenRow extends PureComponent<Props> {
     }
 
     return (
-      <TouchableHighlight
-        style={styles.tokenRowContainer}
-        underlayColor={styleRaw.tokenRowUnderlay.color}
-        delayLongPress={500}
-        onPress={this.selectWallet}
-        {...this.props.sortHandlers}
-      >
+      <TouchableHighlight style={styles.tokenRowContainer} underlayColor={styleRaw.tokenRowUnderlay.color} delayLongPress={500} onPress={this.selectWallet}>
         <View style={[styles.rowContent]}>
           <View style={styles.rowIconWrap}>
             {symbolImage && <Image style={[styles.rowCurrencyLogoAndroid]} source={{ uri: symbolImage }} resizeMode="cover" />}
