@@ -48,13 +48,12 @@ export const loadAccountReferral = (account: EdgeAccount) => async (dispatch: Di
   }
 
   dispatch({ type: 'ACCOUNT_REFERRAL_LOADED', data: { cache, referral } })
-  saveAccountReferral(getState())
-  saveReferralCache(getState())
+  await Promise.all([saveAccountReferral(getState()), saveReferralCache(getState())])
 
-  // Now try activating the same link as a promotion (with silent errors):
-  try {
-    await activatePromotion(installerId)(dispatch, getState)
-  } catch (error) {}
+  // Also try activating the same link as a promotion (with silent errors):
+  if (installerId != null) {
+    await activatePromotion(installerId)(dispatch, getState).catch(() => undefined)
+  }
 }
 
 /**
@@ -63,6 +62,9 @@ export const loadAccountReferral = (account: EdgeAccount) => async (dispatch: Di
 export const activatePromotion = (installerId: string) => async (dispatch: Dispatch, getState: GetState) => {
   const uri = `https://util1.edge.app/api/v1/promo?installerId=${installerId}`
   const reply = await fetch(uri)
+  if (reply.status === 404) {
+    throw new Error(`Invalid promotion code ${installerId}`)
+  }
   if (!reply.ok) {
     throw new Error(`Util server returned status code ${reply.status}`)
   }

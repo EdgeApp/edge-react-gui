@@ -24,9 +24,10 @@ import URL from 'url-parse'
  * but Edge also supports some feature-specific https domains:
  *
  *   - https://dl.edge.app/... = edge://promotion/...
+ *   - https://dl.edge.app/?af=... = edge://promotion/...
  *   - https://recovery.edgesecure.co/... = edge://recovery/...
  *
- * We also support some legacy prefixes:
+ * We also support some legacy prefixes (but don't use these):
  *
  *   - https://www.edge.app/edgelogin?address=... = edge://edge/...
  *   - edge-ret://plugins/simplex/... = edge://plugin/simplex/...
@@ -95,6 +96,11 @@ export function parseDeepLink (uri: string): DeepLink {
   }
 
   const url = new URL(uri, true)
+
+  // Handle dl.edge.app links:
+  if (url.protocol === 'https:' && url.host === 'dl.edge.app') {
+    return parseDownloadLink(url)
+  }
 
   // Handle the edge:// protocol:
   if (url.protocol === 'edge:') {
@@ -169,6 +175,14 @@ function parseEdgeProtocol (url: URL): DeepLink {
   throw new SyntaxError('Unknown deep link format')
 }
 
+function parseDownloadLink (url: URL): PromotionLink {
+  if (url.query.af != null) {
+    return { type: 'promotion', installerId: url.query.af }
+  }
+  const [, installerId = ''] = url.pathname.split('/')
+  return { type: 'promotion', installerId }
+}
+
 /**
  * Handles requests for a payment address, like
  * `edge://x-callback-url/request-litecoin-address` or
@@ -182,7 +196,6 @@ function parseReturnAddress (url: URL, currencyName: string): DeepLink {
 
 const prefixes: Array<[string, string]> = [
   // Alternative HTTPS links:
-  ['https://dl.edge.app/', 'edge://promotion/'],
   ['https://recovery.edgesecure.co', 'edge://recovery'],
 
   // Legacy links:
