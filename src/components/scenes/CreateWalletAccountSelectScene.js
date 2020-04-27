@@ -8,7 +8,7 @@ import { sprintf } from 'sprintf-js'
 
 import eosLogo from '../../assets/images/currencies/fa_logo_eos.png'
 import steemLogo from '../../assets/images/currencies/fa_logo_steem.png'
-import { WalletListModalConnected as WalletListModal } from '../../connectors/components/WalletListModalConnector.js'
+import { type WalletListResult, WalletListModal } from '../../components/modals/WalletListModal2.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
 import Text from '../../modules/UI/components/FormattedText'
@@ -106,33 +106,20 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
   }
 
   onPressSelect = () => {
-    const { supportedCurrencies, wallets } = this.props
-    const allowedWallets = []
-    for (const id in wallets) {
-      const wallet = wallets[id]
-      if (supportedCurrencies[wallet.currencyCode]) {
-        allowedWallets.push(wallets[id])
+    const { supportedCurrencies } = this.props
+    const allowedCurrencyCodes = []
+    for (const currency in supportedCurrencies) {
+      if (supportedCurrencies[currency]) {
+        allowedCurrencyCodes.push(currency)
       }
     }
-    Airship.show(bridge => (
-      <WalletListModal
-        bridge={bridge}
-        wallets={allowedWallets}
-        existingWalletToFilterId={''}
-        existingWalletToFilterCurrencyCode={''}
-        supportedWalletTypes={[]}
-        excludedCurrencyCode={[]}
-        showWalletCreators={false}
-        headerTitle={s.strings.select_wallet}
-        excludedTokens={[]}
-        noWalletCodes={[]}
-        disableZeroBalance={false}
-      />
-    )).then((response: GuiWallet | Object | null) => {
-      if (response) {
-        this.onSelectWallet(response.id, response.currencyCode)
+    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />).then(
+      (response: WalletListResult) => {
+        if (response && typeof response.id === 'string') {
+          this.onSelectWallet(response.id, response.currencyCode)
+        }
       }
-    })
+    )
   }
 
   onPressSubmit = async () => {

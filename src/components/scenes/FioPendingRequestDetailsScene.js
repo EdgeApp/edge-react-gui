@@ -6,7 +6,7 @@ import React, { Component } from 'react'
 import { View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
-import { WalletListModalConnected as WalletListModal } from '../../connectors/components/WalletListModalConnector.js'
+import { type WalletListResult, WalletListModal } from '../../components/modals/WalletListModal2.js'
 import * as Constants from '../../constants/indexConstants'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
@@ -18,7 +18,7 @@ import { MaterialInput } from '../../styles/components/FormFieldStyles.js'
 import { styles as CryptoExchangeSceneStyle } from '../../styles/scenes/CryptoExchangeSceneStyles.js'
 import { styles } from '../../styles/scenes/FioPendingRequestDetailsStyle.js'
 import THEME from '../../theme/variables/airbitz'
-import type { FioRequest, GuiWallet, GuiWalletType } from '../../types/types'
+import type { FioRequest, GuiWallet } from '../../types/types'
 import { FormField } from '../common/FormField'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -31,7 +31,6 @@ export type FioPendingRequestDetailsStateProps = {
   fromCurrencyCode: string,
   toCurrencyCode: string,
   wallets: { [string]: GuiWallet },
-  guiWalletTypes: GuiWalletType[],
   exchangeRates: ExchangeRatesState,
   selectedWallet: GuiWallet | null,
   fioWalletByAddress: EdgeCurrencyWallet | null,
@@ -74,36 +73,20 @@ export class FioPendingRequestDetailsComponent extends Component<Props, LocalSta
     }
   }
 
-  getWalletsListData (): { allowedWallets: GuiWallet[], supportedWalletTypes: GuiWalletType[] } {
-    const { toCurrencyCode, guiWalletTypes, wallets } = this.props
-    const walletCurrencyCodes = []
+  getWalletsListData (): { allowedWallets: GuiWallet[] } {
+    const { toCurrencyCode, wallets } = this.props
     const allowedWallets = []
     for (const id in wallets) {
       const wallet = wallets[id]
-      if (wallet.currencyCode === 'ETH' && wallet.enabledTokens.length > 0) {
-        walletCurrencyCodes.push(wallet.currencyCode)
-        if (wallet.receiveAddress && wallet.receiveAddress.publicAddress) {
-          if (wallet.currencyCode === this.props.selectedFioPendingRequest.content.chain_code) {
-            allowedWallets.push(wallets[id])
-          }
-        }
-      }
-      if (toCurrencyCode === wallet.currencyCode) {
-        walletCurrencyCodes.push(wallet.currencyCode)
-        if (wallet.receiveAddress && wallet.receiveAddress.publicAddress) {
-          if (wallet.currencyCode === this.props.selectedFioPendingRequest.content.chain_code) {
-            allowedWallets.push(wallets[id])
-          }
-        }
+      const checkIfEthAndTokens = wallet.currencyCode === 'ETH' && wallet.enabledTokens.length > 0
+      const checkToCurrencyCode = toCurrencyCode === wallet.currencyCode
+      const checkPublicAddress = wallet.receiveAddress && wallet.receiveAddress.publicAddress
+      const checkCurrencyToChainCode = wallet.currencyCode === this.props.selectedFioPendingRequest.content.chain_code
+      if ((checkIfEthAndTokens || checkToCurrencyCode) && checkPublicAddress && checkCurrencyToChainCode) {
+        allowedWallets.push(wallets[id])
       }
     }
-    const supportedWalletTypes = []
-    for (const swt of guiWalletTypes) {
-      if (!walletCurrencyCodes.includes(swt.currencyCode) && swt.currencyCode !== 'EOS' && toCurrencyCode !== swt.currencyCode) {
-        supportedWalletTypes.push(swt)
-      }
-    }
-    return { allowedWallets, supportedWalletTypes }
+    return { allowedWallets }
   }
 
   memoChanged = (text: string): void => {
@@ -248,30 +231,24 @@ export class FioPendingRequestDetailsComponent extends Component<Props, LocalSta
   }
 
   renderDropUp = () => {
-    const { onSelectWallet } = this.props
+    const { wallets, onSelectWallet } = this.props
+    const { allowedWallets } = this.getWalletsListData()
 
-    const { allowedWallets, supportedWalletTypes } = this.getWalletsListData()
+    const excludeWalletIds = []
+    for (const walletId in wallets) {
+      const includedWallet = allowedWallets.find(allowedWallet => allowedWallet.id === walletId)
+      if (!includedWallet) {
+        excludeWalletIds.push(walletId)
+      }
+    }
 
-    Airship.show(bridge => (
-      <WalletListModal
-        bridge={bridge}
-        wallets={allowedWallets}
-        type="from"
-        supportedWalletTypes={supportedWalletTypes}
-        excludedCurrencyCode={[]}
-        showWalletCreators={false}
-        headerTitle={s.strings.fio_src_wallet}
-        excludedTokens={[]}
-        noWalletCodes={[]}
-        disableZeroBalance={false}
-      />
-    )).then((response: GuiWallet | Object | null) => {
-      if (response) {
-        if (response.id) {
+    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} excludeWalletIds={excludeWalletIds} />).then(
+      (response: WalletListResult) => {
+        if (response && typeof response.id === 'string') {
           onSelectWallet(response.id, response.currencyCode)
         }
       }
-    })
+    )
   }
 
   render () {
