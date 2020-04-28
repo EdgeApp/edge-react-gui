@@ -30,7 +30,7 @@ type OwnProps = {
 type StateProps = {
   fiatSymbol: string,
   fiatAmount: string,
-  displayDenomination: EdgeDenomination | null
+  displayDenomination: EdgeDenomination
 }
 
 type Props = OwnProps & StateProps
@@ -83,7 +83,7 @@ class FioRequestRow extends Component<Props> {
       fieldStyle = styles.transactionDetailsSentTx
     }
 
-    const symbol = this.props.displayDenomination ? this.props.displayDenomination.symbol : ''
+    const symbol = this.props.displayDenomination.symbol || ''
 
     return (
       <T style={fieldStyle}>
@@ -93,7 +93,8 @@ class FioRequestRow extends Component<Props> {
   }
 
   requestedField = () => {
-    const name = this.props.displayDenomination ? this.props.displayDenomination.name : ''
+    const { displayDenomination, fioRequest } = this.props
+    const name = displayDenomination.name || fioRequest.content.token_code
     return `${s.strings.title_fio_requested} ${name}`
   }
 
@@ -157,6 +158,7 @@ class FioRequestRow extends Component<Props> {
     )
   }
 }
+const emptyDisplayDenomination = { name: '', multiplier: '0' }
 
 const mapStateToProps = (state: State, ownProps: OwnProps) => {
   const { fioRequest } = ownProps
@@ -168,11 +170,10 @@ const mapStateToProps = (state: State, ownProps: OwnProps) => {
       fiatAmount: ''
     }
   }
-  let displayDenomination = null
+  let displayDenomination = emptyDisplayDenomination
   try {
     displayDenomination = getDisplayDenomination(state, fioRequest.content.token_code)
   } catch (e) {
-    displayDenomination = { name: fioRequest.content.token_code, multiplier: '0' }
     console.log('No denomination for this Token Code -', fioRequest.content.token_code)
   }
   const fiatSymbol = getFiatSymbol(wallet.fiatCurrencyCode)

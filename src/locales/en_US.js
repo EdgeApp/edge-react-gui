@@ -722,8 +722,6 @@ const strings = {
   fio_wallet_connect_return: 'Do not remove',
   fio_show_connected_wallets: 'Show connected',
   fio_connect_no_wallets: 'There are no wallets',
-  fio_connect_only_5_per_once: 'You can connect up to 5 wallets at a time',
-  fio_disconnect_only_5_per_once: 'You can disconnect up to 5 wallets at a time',
   fio_connect_checkbox_text: 'I acknowledge that, once connected, one address from each connected wallet will become public',
   fio_connect_wallets_err: 'There was an issue during operation execution. Please try later.',
   fio_wallet_missing_for_fio_address: 'Sys error. Cannot find FIO Wallet for FIO Address',

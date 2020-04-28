@@ -68,5 +68,13 @@ export const styles = StyleSheet.create({
   iconImage: {
     width: scale(22),
     height: scale(22)
+  },
+  rejectLoading: {
+    paddingBottom: scale(130)
+  },
+  loading: {
+    flex: 1,
+    marginTop: scale(40),
+    alignSelf: 'center'
   }
 })

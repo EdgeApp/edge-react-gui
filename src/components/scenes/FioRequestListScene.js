@@ -2,7 +2,7 @@
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
-import { Alert, FlatList, Image, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, FlatList, Image, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
@@ -27,7 +27,8 @@ import { showError } from '../services/AirshipInstance'
 const SCROLL_THRESHOLD = 0.5
 
 export type State = {
-  loading: boolean,
+  loadingPending: boolean,
+  loadingSent: boolean,
   rejectLoading: boolean,
   fioRequestsPending: FioRequest[],
   fioRequestsSent: FioRequest[]
@@ -45,7 +46,8 @@ export class FioRequestList extends Component<StateProps, State> {
   constructor (props: StateProps) {
     super(props)
     this.state = {
-      loading: false,
+      loadingPending: false,
+      loadingSent: false,
       rejectLoading: false,
       fioRequestsPending: [],
       fioRequestsSent: []
@@ -61,7 +63,7 @@ export class FioRequestList extends Component<StateProps, State> {
   getFioRequestsPending = async () => {
     const { fioWallets } = this.props
     let fioRequestsPending = []
-    this.setState({ fioRequestsPending: [], loading: true })
+    this.setState({ fioRequestsPending: [], loadingPending: true })
     if (fioWallets.length) {
       try {
         for (const wallet of fioWallets) {
@@ -91,13 +93,13 @@ export class FioRequestList extends Component<StateProps, State> {
       }
     }
 
-    this.setState({ fioRequestsPending: fioRequestsPending.sort((a, b) => (a.time_stamp < b.time_stamp ? -1 : 1)), loading: false })
+    this.setState({ fioRequestsPending: fioRequestsPending.sort((a, b) => (a.time_stamp < b.time_stamp ? -1 : 1)), loadingPending: false })
   }
 
   getFioRequestsSent = async () => {
     const { fioWallets } = this.props
     let fioRequestsSent = []
-    this.setState({ fioRequestsSent: [], loading: true })
+    this.setState({ fioRequestsSent: [], loadingSent: true })
     if (fioWallets.length) {
       try {
         for (const wallet of fioWallets) {
@@ -121,7 +123,7 @@ export class FioRequestList extends Component<StateProps, State> {
       }
     }
 
-    this.setState({ fioRequestsSent: fioRequestsSent.sort((a, b) => (a.time_stamp > b.time_stamp ? -1 : 1)), loading: false })
+    this.setState({ fioRequestsSent: fioRequestsSent.sort((a, b) => (a.time_stamp > b.time_stamp ? -1 : 1)), loadingSent: false })
   }
 
   removeFioPendingRequest = (requestId: string): void => {
@@ -282,20 +284,21 @@ export class FioRequestList extends Component<StateProps, State> {
   }
 
   render () {
-    const { loading, rejectLoading, fioRequestsPending, fioRequestsSent } = this.state
+    const { loadingPending, loadingSent, rejectLoading, fioRequestsPending, fioRequestsSent } = this.state
 
     return (
       <SceneWrapper>
-        {(rejectLoading || loading) && <FullScreenLoader />}
+        {rejectLoading && <FullScreenLoader indicatorStyles={requestListStyles.rejectLoading} />}
         <View style={requestListStyles.scene}>
           <View style={requestListStyles.row}>
             <SettingsHeaderRow icon={<Image source={fioRequestsIcon} style={requestListStyles.iconImage} />} text={s.strings.fio_pending_requests} />
-            {!loading && !fioRequestsPending.length ? (
+            {!loadingPending && !fioRequestsPending.length ? (
               <View style={requestListStyles.emptyListContainer}>
                 <T style={requestListStyles.text}>{s.strings.fio_no_requests_label}</T>
               </View>
             ) : null}
             <View style={requestListStyles.container}>
+              {loadingPending && <ActivityIndicator style={requestListStyles.loading} size={'small'} />}
               <SwipeListView
                 useSectionList
                 sections={this.pendingRequestHeaders()}
@@ -310,7 +313,7 @@ export class FioRequestList extends Component<StateProps, State> {
           </View>
           <View style={requestListStyles.row}>
             <SettingsHeaderRow icon={<IonIcon name="ios-send" color={THEME.COLORS.WHITE} size={this.headerIconSize} />} text={s.strings.fio_sent_requests} />
-            {!loading && !fioRequestsSent.length ? (
+            {!loadingSent && !fioRequestsSent.length ? (
               <View style={requestListStyles.emptyListContainer}>
                 <T style={requestListStyles.text}>{s.strings.fio_no_requests_label}</T>
               </View>
@@ -318,6 +321,7 @@ export class FioRequestList extends Component<StateProps, State> {
             <View style={requestListStyles.scrollView}>
               <View style={requestListStyles.container}>
                 <View style={requestListStyles.requestsWrap}>
+                  {loadingSent && <ActivityIndicator style={requestListStyles.loading} size={'small'} />}
                   <FlatList
                     style={styles.transactionsScrollWrap}
                     data={fioRequestsSent}

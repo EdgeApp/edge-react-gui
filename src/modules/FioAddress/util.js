@@ -53,9 +53,33 @@ export const refreshPubAddressesForFioAddress = async (
 export const updatePubAddressesForFioAddress = async (
   fioWallet: EdgeCurrencyWallet | null,
   fioAddress: string,
-  wallets: { chainCode: string, tokenCode: string, publicAddress: string }[]
+  publicAddresses: { chainCode: string, tokenCode: string, publicAddress: string }[]
 ) => {
   if (!fioWallet) throw new Error(s.strings.fio_connect_wallets_err)
+  let publicAddressesToConnect = []
+  const limitPerCall = 5
+  for (const { chainCode, tokenCode, publicAddress } of publicAddresses) {
+    publicAddressesToConnect.push({
+      token_code: tokenCode,
+      chain_code: chainCode,
+      public_address: publicAddress
+    })
+    if (publicAddressesToConnect.length === limitPerCall) {
+      await addPublicAddresses(fioWallet, fioAddress, publicAddressesToConnect)
+      publicAddressesToConnect = []
+    }
+  }
+
+  if (publicAddressesToConnect.length) {
+    await addPublicAddresses(fioWallet, fioAddress, publicAddressesToConnect)
+  }
+}
+
+export const addPublicAddresses = async (
+  fioWallet: EdgeCurrencyWallet,
+  fioAddress: string,
+  publicAddresses: { token_code: string, chain_code: string, public_address: string }[]
+) => {
   let maxFee: number
   try {
     const { fee } = await fioWallet.otherMethods.fioAction('getFeeForAddPublicAddress', {
@@ -68,11 +92,7 @@ export const updatePubAddressesForFioAddress = async (
   try {
     await fioWallet.otherMethods.fioAction('addPublicAddresses', {
       fioAddress,
-      publicAddresses: wallets.map(({ chainCode, tokenCode, publicAddress }) => ({
-        token_code: tokenCode,
-        chain_code: chainCode,
-        public_address: publicAddress
-      })),
+      publicAddresses,
       maxFee
     })
   } catch (e) {
