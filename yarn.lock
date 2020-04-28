@@ -1196,10 +1196,10 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@fioprotocol/fiojs@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@fioprotocol/fiojs/-/fiojs-1.0.0.tgz#76243d1d3e710ed3d97cf55025d4011ea3e0b454"
-  integrity sha512-H1OMN2npNWyv1hKPX/nDi6w+YtKpuTe6IdGBKdkdrHR7XtCX7TBVwC6oPA5rnVDi+pK6bCTMzNkrCa8WPtEM7A==
+"@fioprotocol/fiojs@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@fioprotocol/fiojs/-/fiojs-1.0.1.tgz#81779437603741bc4ca1c76d119b64c4157a3874"
+  integrity sha512-+rxJ/ynUkox/DO3ihHPpAc//DDI+DQvrphLqwRKufw0atC3GKluGR2qMTeO45O0UjorvOIw6esuuG7NpbVUm8Q==
   dependencies:
     ajv "^6.10.2"
     babel-runtime "6.26.0"
@@ -1213,12 +1213,12 @@
     randombytes "^2.1.0"
     text-encoding "0.7.0"
 
-"@fioprotocol/fiosdk@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@fioprotocol/fiosdk/-/fiosdk-1.0.1.tgz#55e1b3a6f047c93007936731a1ba647571021c5d"
-  integrity sha512-xVhVmmj5vuXsBSt2QX+ogMkgp0/VVoD2/YUf66F/oBpKRwWXtJWS4N/v4JQMOIQC0lxSOrx1FAqVq6KZlS8ihQ==
+"@fioprotocol/fiosdk@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@fioprotocol/fiosdk/-/fiosdk-1.0.2.tgz#fece083173ef7e309b49e9312538fffa1896a346"
+  integrity sha512-ABukfhRfUqmu+tHqfUUBqw2FSIfkaMUp4ALtlXZwYBd1ZgH0pYBbzrSGR8KHJyEXcs3sEvWb9nh1alu68ztDLg==
   dependencies:
-    "@fioprotocol/fiojs" "1.0.0"
+    "@fioprotocol/fiojs" "1.0.1"
     "@types/text-encoding" "0.0.35"
     bip39 "^3.0.2"
     hdkey "^1.1.1"
@@ -4055,13 +4055,13 @@ edge-core-js@^0.17.0:
     scrypt-js "^2.0.3"
     yaob "^0.3.6"
 
-edge-currency-accountbased@^0.7.3:
-  version "0.7.3"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.3.tgz#8a0fb88da6e202f9e882369d5e1d5407fb85466c"
-  integrity sha512-VG8/5Z16AiNlaHEpk5b/zi2teWcUkVrXsLIgMxwYqJkzSckAG9INzuWY9Gn6/aeoq2KzKZQnlFabWj/L6HduAQ==
+edge-currency-accountbased@^0.7.4:
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.4.tgz#357ea974722b91d4be0b84555eb99b5cdd53ce5a"
+  integrity sha512-+K4HWKtwiQIo0J0mGw9m2yhzn457xKcrhtODiJYR/S3PtQByzd96fHDd39fKVSJpvSROAjSd2jF7l887yb6hgA==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
-    "@fioprotocol/fiosdk" "^1.0.1"
+    "@fioprotocol/fiosdk" "^1.0.2"
     base-x "^1.0.4"
     biggystring "^3.0.0"
     bip39 "^3.0.2"
