@@ -410,50 +410,36 @@ class WalletListComponent extends Component<Props, State> {
 
   addToken = async () => {
     const { account, wallets } = this.props
-    let tokenEnabledWallets = 0
 
-    // count number of token-enabled wallets
+    // check for existence of any token-enabled wallets
     for (const key in wallets) {
       const wallet = wallets[key]
       const specialCurrencyInfo = getSpecialCurrencyInfo(wallet.currencyCode)
       if (specialCurrencyInfo.isCustomTokensSupported) {
-        tokenEnabledWallets++
-      }
-    }
-
-    // check for existence of any token-enabled wallets
-    if (tokenEnabledWallets > 0) {
-      for (const key in wallets) {
-        const wallet = wallets[key]
-        const specialCurrencyInfo = getSpecialCurrencyInfo(wallet.currencyCode)
-        if (specialCurrencyInfo.isCustomTokensSupported) {
-          return this.props.walletRowOption(wallet.id, 'manageTokens', wallet.archived)
-        }
+        return Actions.manageTokens({ guiWallet: wallet })
       }
     }
 
     // if no token-enabled wallets then allow creation of token-enabled wallet
-    if (tokenEnabledWallets === 0) {
-      const { ethereum } = account.currencyConfig
-      if (ethereum == null) {
-        return Alert.alert(s.strings.create_wallet_invalid_input, s.strings.create_wallet_select_valid_crypto)
-      }
+    const { ethereum } = account.currencyConfig
+    if (ethereum == null) {
+      return Alert.alert(s.strings.create_wallet_invalid_input, s.strings.create_wallet_select_valid_crypto)
+    }
 
-      const answer = await launchModal(
-        createYesNoModal({
-          title: s.strings.wallet_list_add_token_modal_title,
-          message: s.strings.wallet_list_add_token_modal_message,
-          icon: <Icon type={Constants.ION_ICONS} name={Constants.WALLET_ICON} size={30} />,
-          noButtonText: s.strings.string_cancel_cap,
-          yesButtonText: s.strings.title_create_wallet
-        })
-      )
+    const answer = await launchModal(
+      createYesNoModal({
+        title: s.strings.wallet_list_add_token_modal_title,
+        message: s.strings.wallet_list_add_token_modal_message,
+        icon: <Icon type={Constants.ION_ICONS} name={Constants.WALLET_ICON} size={30} />,
+        noButtonText: s.strings.string_cancel_cap,
+        yesButtonText: s.strings.title_create_wallet
+      })
+    )
 
-      if (answer) {
-        Actions[Constants.CREATE_WALLET_SELECT_FIAT]({
-          selectedWalletType: makeGuiWalletType(ethereum.currencyInfo)
-        })
-      }
+    if (answer) {
+      Actions[Constants.CREATE_WALLET_SELECT_FIAT]({
+        selectedWalletType: makeGuiWalletType(ethereum.currencyInfo)
+      })
     }
   }
 
