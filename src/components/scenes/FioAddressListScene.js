@@ -54,10 +54,10 @@ export class FioAddressListScene extends Component<Props> {
   }
 
   componentDidUpdate (prevProps: Props): void {
-    const { fioAddresses, loading, isConnected } = this.props
+    const { fioAddresses, loading } = this.props
 
     if (!loading && prevProps.loading) {
-      if (fioAddresses.length === 0 && isConnected) {
+      if (fioAddresses.length === 0) {
         Actions[Constants.FIO_ADDRESS_REGISTER]({ noAddresses: true })
       }
     }
