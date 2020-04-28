@@ -80,10 +80,6 @@ export class FioDisconnectWalletScene extends Component<Props, State> {
     if (selectedToRemove[wallet.key]) {
       delete selectedToRemove[wallet.key]
     } else {
-      if (Object.keys(selectedToRemove).length > 4) {
-        showError(s.strings.fio_disconnect_only_5_per_once)
-        return
-      }
       selectedToRemove[wallet.key] = wallet
     }
 
