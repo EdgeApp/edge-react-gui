@@ -83,17 +83,14 @@ type DispatchProps = {
 type Props = StateProps & DispatchProps
 
 type State = {
-  sortableMode: boolean,
   sortableListOpacity: number,
   fullListOpacity: number,
   sortableListZIndex: number,
   sortableListExists: boolean,
   fullListZIndex: number,
   fullListExists: boolean,
-  balanceBoxVisible: boolean,
   showOtpResetModal: boolean,
   showMessageModal: boolean,
-  isWalletProgressVisible: boolean,
   messageModalMessage: ?string
 }
 
@@ -102,18 +99,15 @@ class WalletListComponent extends Component<Props, State> {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
     this.state = {
-      sortableMode: false,
       sortableListOpacity: new Animated.Value(0),
       sortableListZIndex: new Animated.Value(0),
       sortableListExists: false,
       fullListOpacity: new Animated.Value(1),
       fullListZIndex: new Animated.Value(100),
       fullListExists: true,
-      balanceBoxVisible: true,
       showOtpResetModal: this.props.otpResetPending,
       showMessageModal: false,
-      messageModalMessage: null,
-      isWalletProgressVisible: true
+      messageModalMessage: null
     }
   }
 
@@ -126,14 +120,10 @@ class WalletListComponent extends Component<Props, State> {
   }
 
   executeWalletRowOption = (walletId: string, option: string) => {
-    if (option !== 'sort') {
-      return this.props.walletRowOption(walletId, option, this.props.wallets[walletId].archived)
+    if (option === 'sort') {
+      return this.enableSorting()
     }
-    if (this.state.sortableMode) {
-      this.disableSorting()
-    } else {
-      this.enableSorting()
-    }
+    return this.props.walletRowOption(walletId, option, this.props.wallets[walletId].archived)
   }
 
   render () {
@@ -305,7 +295,6 @@ class WalletListComponent extends Component<Props, State> {
               data={activeWalletsArray}
               extraData={this.props.wallets}
               renderItem={this.renderItem}
-              sortableMode={this.state.sortableMode}
               ListFooterComponent={this.renderFooter()}
               ListHeaderComponent={this.renderPromoCard()}
             />
@@ -393,19 +382,11 @@ class WalletListComponent extends Component<Props, State> {
     return activeOrdered
   }
 
-  onActiveRowMoved = (action: any) => {
-    const newOrder = this.getNewOrder(this.props.activeWalletIds, action) // pass the old order to getNewOrder with the action ( from, to, and  )
-
+  onActiveRowMoved = (action: { from: number, to: number }) => {
+    const newOrder = [...this.props.activeWalletIds]
+    newOrder.splice(action.to, 0, newOrder.splice(action.from, 1)[0])
     this.props.updateActiveWalletsOrder(newOrder)
     this.forceUpdate()
-  }
-
-  getNewOrder = (order: any, action: any) => {
-    const { to, from } = action
-    const newOrder = [...order]
-    newOrder.splice(to, 0, newOrder.splice(from, 1)[0])
-
-    return newOrder
   }
 
   addToken = async () => {
