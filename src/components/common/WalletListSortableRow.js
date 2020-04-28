@@ -31,7 +31,7 @@ type StateProps = {
 }
 type Props = OwnProps & StateProps
 
-class SortableWalletListRow extends Component<Props> {
+class WalletListSortableRowComponent extends Component<Props> {
   render () {
     let multiplier,
       name,
@@ -109,11 +109,11 @@ class SortableWalletListRow extends Component<Props> {
   }
 }
 
-export default connect(
+export const WalletListSortableRow = connect(
   (state: ReduxState, ownProps: OwnProps): StateProps => ({
     showBalance: typeof ownProps.showBalance === 'function' ? ownProps.showBalance(state) : ownProps.showBalance,
     settings: state.ui.settings,
     exchangeRates: state.exchangeRates,
     walletFiatSymbol: ownProps.data ? getFiatSymbol(ownProps.data.isoFiatCurrencyCode) : ''
   })
-)(SortableWalletListRow)
+)(WalletListSortableRowComponent)

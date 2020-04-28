@@ -21,7 +21,7 @@ import type { State } from '../../types/reduxTypes.js'
 import { type CustomTokenInfo, type GuiDenomination, type GuiWallet } from '../../types/types.js'
 import { decimalOrZero, getFiatSymbol, getObjectDiff, getYesterdayDateRoundDownHour, truncateDecimals } from '../../util/utils.js'
 import { ProgressPie } from './ProgressPie.js'
-import WalletListRowOptions from './WalletListRowOptions'
+import { WalletListMenu } from './WalletListMenu.js'
 
 const DIVIDE_PRECISION = 18
 
@@ -30,7 +30,7 @@ export type OwnProps = {
   showBalance: boolean | Function
 }
 
-export default class FullWalletListRow extends Component<OwnProps> {
+export class WalletListRow extends Component<OwnProps> {
   constructor (props: OwnProps) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
@@ -211,7 +211,7 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
                 </View>
               </View>
               <View style={styles.rowOptionsWrap}>
-                <WalletListRowOptions
+                <WalletListMenu
                   currencyCode={walletData.currencyCode}
                   executeWalletRowOption={walletData.executeWalletRowOption}
                   walletKey={id}

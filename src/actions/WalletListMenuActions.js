@@ -6,7 +6,6 @@ import { Actions } from 'react-native-router-flux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
-import { refreshWallet } from '../actions/WalletActions.js'
 import { launchModal } from '../components/common/ModalProvider.js'
 import { showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants'
@@ -20,8 +19,9 @@ import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { showDeleteWalletModal } from './DeleteWalletModalActions.js'
 import { showResyncWalletModal } from './ResyncWalletModalActions.js'
 import { showSplitWalletModal } from './SplitWalletModalActions.js'
+import { refreshWallet } from './WalletActions.js'
 
-export function walletRowOption (walletId: string, option: string, archived: boolean) {
+export function walletListMenuAction (walletId: string, option: string, archived: boolean) {
   if (option === 'archive' && archived) {
     option = 'activate'
   }

@@ -29,7 +29,7 @@ const modifiedMenuDropDownStyle = {
   }
 }
 
-export default class WalletListRowOptions extends Component<Props> {
+export class WalletListMenu extends Component<Props> {
   options: Array<{ value: string, label: string }>
   constructor (props: Props) {
     super(props)

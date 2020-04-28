@@ -14,7 +14,7 @@ import { connect } from 'react-redux'
 import { hideMessageTweak } from '../../actions/AccountReferralActions.js'
 import { disableOtp, keepOtp } from '../../actions/OtpActions.js'
 import { toggleAccountBalanceVisibility, updateActiveWalletsOrder } from '../../actions/WalletListActions.js'
-import { walletRowOption } from '../../actions/WalletOptionsActions.js'
+import { walletListMenuAction } from '../../actions/WalletListMenuActions.js'
 import credLogo from '../../assets/images/cred_logo.png'
 import iconImage from '../../assets/images/otp/OTP-badge_sm.png'
 import WalletIcon from '../../assets/images/walletlist/my-wallets.png'
@@ -43,9 +43,9 @@ import { makeGuiWalletType } from '../../util/CurrencyInfoHelpers.js'
 import { type TweakSource, bestOfMessages } from '../../util/ReferralHelpers.js'
 import { scale } from '../../util/scaling.js'
 import { getTotalFiatAmountFromExchangeRates } from '../../util/utils.js'
-import FullWalletListRow from '../common/FullWalletListRow.js'
 import { launchModal } from '../common/ModalProvider.js'
-import SortableWalletListRow from '../common/SortableWalletListRow.js'
+import { WalletListRow } from '../common/WalletListRow.js'
+import { WalletListSortableRow } from '../common/WalletListSortableRow.js'
 import { WiredBalanceBox } from '../common/WiredBalanceBox.js'
 import { StaticModalComponent } from '../modals/StaticModalComponent.js'
 import { TwoButtonTextModalComponent } from '../modals/TwoButtonTextModalComponent.js'
@@ -263,11 +263,11 @@ class WalletListComponent extends Component<Props, State> {
   }
 
   renderRow = (row: Object) => {
-    return <SortableWalletListRow data={row} showBalance={getIsAccountBalanceVisible} />
+    return <WalletListSortableRow data={row} showBalance={getIsAccountBalanceVisible} />
   }
 
   renderItem = (item: Object) => {
-    return <FullWalletListRow data={item} showBalance={getIsAccountBalanceVisible} customTokens={this.props.customTokens} />
+    return <WalletListRow data={item} showBalance={getIsAccountBalanceVisible} customTokens={this.props.customTokens} />
   }
 
   renderActiveSortableList = (activeWalletsArray: Array<{ key: string }>, activeWalletsObject: {}) => {
@@ -534,7 +534,7 @@ export const WalletListScene = connect(
       dispatch(updateActiveWalletsOrder(activeWalletIds))
     },
     walletRowOption (walletId, option, archived) {
-      dispatch(walletRowOption(walletId, option, archived))
+      dispatch(walletListMenuAction(walletId, option, archived))
     },
     disableOtp () {
       dispatch(disableOtp())
