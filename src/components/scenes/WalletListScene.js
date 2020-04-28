@@ -14,7 +14,7 @@ import { connect } from 'react-redux'
 import { hideMessageTweak } from '../../actions/AccountReferralActions.js'
 import { disableOtp, keepOtp } from '../../actions/OtpActions.js'
 import { toggleAccountBalanceVisibility, updateActiveWalletsOrder } from '../../actions/WalletListActions.js'
-import { walletListMenuAction } from '../../actions/WalletListMenuActions.js'
+import { type WalletListMenuKey, walletListMenuAction } from '../../actions/WalletListMenuActions.js'
 import credLogo from '../../assets/images/cred_logo.png'
 import iconImage from '../../assets/images/otp/OTP-badge_sm.png'
 import WalletIcon from '../../assets/images/walletlist/my-wallets.png'
@@ -66,9 +66,8 @@ type StateProps = {
   // junk to them. It needs to stop doing that.
   wallets: {
     [walletId: string]: GuiWallet & {
-      archived: boolean,
       key: string,
-      executeWalletRowOption: (walletId: string, option: string) => void
+      executeWalletRowOption: (walletId: string, option: WalletListMenuKey) => void
     }
   }
 }
@@ -76,7 +75,7 @@ type DispatchProps = {
   hideMessageTweak(messageId: string, source: TweakSource): void,
   toggleAccountBalanceVisibility(): void,
   updateActiveWalletsOrder(walletIds: Array<string>): void,
-  walletRowOption(walletId: string, option: string, archived: boolean): void,
+  walletRowOption(walletId: string, option: WalletListMenuKey): void,
   disableOtp(): void,
   keepOtp(): void
 }
@@ -119,11 +118,11 @@ class WalletListComponent extends Component<Props, State> {
     }
   }
 
-  executeWalletRowOption = (walletId: string, option: string) => {
+  executeWalletRowOption = (walletId: string, option: WalletListMenuKey) => {
     if (option === 'sort') {
       return this.enableSorting()
     }
-    return this.props.walletRowOption(walletId, option, this.props.wallets[walletId].archived)
+    return this.props.walletRowOption(walletId, option)
   }
 
   render () {
@@ -533,8 +532,8 @@ export const WalletListScene = connect(
     updateActiveWalletsOrder (activeWalletIds) {
       dispatch(updateActiveWalletsOrder(activeWalletIds))
     },
-    walletRowOption (walletId, option, archived) {
-      dispatch(walletListMenuAction(walletId, option, archived))
+    walletRowOption (walletId, option) {
+      dispatch(walletListMenuAction(walletId, option))
     },
     disableOtp () {
       dispatch(disableOtp())

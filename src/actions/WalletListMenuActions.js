@@ -21,30 +21,10 @@ import { showResyncWalletModal } from './ResyncWalletModalActions.js'
 import { showSplitWalletModal } from './SplitWalletModalActions.js'
 import { refreshWallet } from './WalletActions.js'
 
-export function walletListMenuAction (walletId: string, option: string, archived: boolean) {
-  if (option === 'archive' && archived) {
-    option = 'activate'
-  }
+export type WalletListMenuKey = 'sort' | 'rename' | 'delete' | 'resync' | 'exportWalletTransactions' | 'getSeed' | 'split' | 'manageTokens' | 'viewXPub'
+
+export function walletListMenuAction (walletId: string, option: WalletListMenuKey) {
   switch (option) {
-    case 'restore':
-    case 'activate': {
-      return (dispatch: Dispatch, getState: GetState) => {
-        const state = getState()
-        const account = CORE_SELECTORS.getAccount(state)
-
-        account.changeWalletStates({ [walletId]: { archived: false } }).catch(showError)
-      }
-    }
-
-    case 'archive': {
-      return (dispatch: Dispatch, getState: GetState) => {
-        const state = getState()
-        const account = CORE_SELECTORS.getAccount(state)
-
-        account.changeWalletStates({ [walletId]: { archived: true } }).catch(showError)
-      }
-    }
-
     case 'manageTokens': {
       return (dispatch: Dispatch, getState: GetState) => {
         const state = getState()

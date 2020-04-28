@@ -1,5 +1,6 @@
 // @flow
 
+import { type WalletListMenuKey } from '../actions/WalletListMenuActions.js'
 import s from '../locales/strings.js'
 
 export const MAX_TOKEN_CODE_CHARACTERS = 7
@@ -276,6 +277,76 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     showEarnInterestCard: true
   }
 }
+
+/**
+ * Customizes which coins get which options on the wallet list scene.
+ */
+export const WALLET_LIST_MENU: {
+  currencyCodes?: string[],
+  label: string,
+  value: WalletListMenuKey
+}[] = [
+  {
+    label: s.strings.fragment_wallets_sort,
+    value: 'sort'
+  },
+  {
+    label: s.strings.string_rename,
+    value: 'rename'
+  },
+  {
+    label: s.strings.string_delete,
+    value: 'delete'
+  },
+  {
+    label: s.strings.string_resync,
+    value: 'resync'
+  },
+  {
+    label: s.strings.fragment_wallets_export_transactions,
+    value: 'exportWalletTransactions'
+  },
+  {
+    label: s.strings.string_master_private_key,
+    value: 'getSeed'
+  },
+  {
+    currencyCodes: ['BTC', 'BCH'],
+    label: s.strings.string_split_wallet,
+    value: 'split'
+  },
+  {
+    currencyCodes: ['ETH', 'RBTC'],
+    label: s.strings.string_add_edit_tokens,
+    value: 'manageTokens'
+  },
+  {
+    currencyCodes: [
+      'BTC',
+      'BCH',
+      'DASH',
+      'FTC',
+      'XZC',
+      'LTC',
+      'UFO',
+      'QTUM',
+      'VTC',
+      'BTG',
+      'DGB',
+      'SMART',
+      'GRS',
+      'BSV',
+      'EBST',
+      'EOS',
+      'DOGE',
+      'RVN',
+      'RBTC',
+      'TBTC'
+    ],
+    label: s.strings.fragment_wallets_view_xpub,
+    value: 'viewXPub'
+  }
+]
 
 export const USD_FIAT = 'iso:USD'
 export const getSymbolFromCurrency = (currencyCode: string) => {

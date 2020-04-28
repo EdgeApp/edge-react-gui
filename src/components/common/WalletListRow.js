@@ -213,9 +213,9 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
               <View style={styles.rowOptionsWrap}>
                 <WalletListMenu
                   currencyCode={walletData.currencyCode}
-                  executeWalletRowOption={walletData.executeWalletRowOption}
-                  walletKey={id}
                   customStyles={customWalletListOptionsStyles}
+                  executeWalletRowOption={walletData.executeWalletRowOption}
+                  walletId={id}
                 />
               </View>
             </View>

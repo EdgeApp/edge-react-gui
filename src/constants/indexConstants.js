@@ -2,7 +2,6 @@
 
 export * from './SceneKeys'
 export * from './IconConstants'
-export * from './DropDownValueConstants'
 export { REQUEST_STATUS } from './RequestStatusConstants'
 export * from './WalletAndCurrencyConstants.js'
 export * from './CountryConstants.js'
@@ -10,4 +9,7 @@ export * from './CountryConstants.js'
 export const ANDROID = 'android'
 export const IOS = 'ios'
 
-export const CRYPTO_EXCHANGE = 'cryptoExchange'
+// Popup menu keys:
+export const CHANGE_MINING_FEE_VALUE = 'changeMiningFee'
+export const EXCHANGE_MAX_AMOUNT_VALUE = 'exchangeMaxAmountValue'
+export const HELP_VALUE = 'helpValue'
