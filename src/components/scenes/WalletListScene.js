@@ -38,12 +38,13 @@ import THEME from '../../theme/variables/airbitz'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
 import { type MessageTweak } from '../../types/TweakTypes.js'
-import { type GuiWallet } from '../../types/types.js'
+import { type FlatListItem, type GuiWallet } from '../../types/types.js'
 import { makeGuiWalletType } from '../../util/CurrencyInfoHelpers.js'
 import { type TweakSource, bestOfMessages } from '../../util/ReferralHelpers.js'
 import { scale } from '../../util/scaling.js'
 import { getTotalFiatAmountFromExchangeRates } from '../../util/utils.js'
 import { launchModal } from '../common/ModalProvider.js'
+import { WalletListEmptyRow } from '../common/WalletListEmptyRow.js'
 import { WalletListRow } from '../common/WalletListRow.js'
 import { WalletListSortableRow } from '../common/WalletListSortableRow.js'
 import { WiredBalanceBox } from '../common/WiredBalanceBox.js'
@@ -59,17 +60,9 @@ type StateProps = {
   accountMessages: MessageTweak[],
   accountReferral: AccountReferral,
   activeWalletIds: Array<string>,
-  customTokens: Array<any>,
   exchangeRates: Object,
   otpResetPending: boolean,
-  // TODO: This component is grabing GuiWallet objects out of redux and adding
-  // junk to them. It needs to stop doing that.
-  wallets: {
-    [walletId: string]: GuiWallet & {
-      key: string,
-      executeWalletRowOption: (walletId: string, option: WalletListMenuKey) => void
-    }
-  }
+  wallets: { [walletId: string]: GuiWallet }
 }
 type DispatchProps = {
   hideMessageTweak(messageId: string, source: TweakSource): void,
@@ -126,27 +119,7 @@ class WalletListComponent extends Component<Props, State> {
   }
 
   render () {
-    const { wallets, activeWalletIds } = this.props
-    const walletsArray = []
-    const activeWallets = {}
-    for (const wallet in wallets) {
-      const theWallet = wallets[wallet]
-      theWallet.key = wallet
-      theWallet.executeWalletRowOption = this.executeWalletRowOption
-      walletsArray.push(theWallet)
-      if (activeWalletIds.includes(wallet)) activeWallets[wallet] = wallets[wallet]
-    }
-
-    const activeWalletsArray = activeWalletIds.map(function (x) {
-      const tempWalletObj = { key: x }
-      return wallets[x] || tempWalletObj
-    })
-
-    const activeWalletsObject = {}
-    activeWalletIds.forEach(function (x) {
-      const tempWalletObj = wallets[x] ? wallets[x] : { key: null }
-      activeWalletsObject[x] = tempWalletObj
-    })
+    const { wallets } = this.props
 
     return (
       <SafeAreaView>
@@ -205,11 +178,7 @@ class WalletListComponent extends Component<Props, State> {
               </View>
             </Gradient>
 
-            {Object.keys(wallets).length > 0 ? (
-              this.renderActiveSortableList(activeWalletsArray, activeWalletsObject)
-            ) : (
-              <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size={'large'} />
-            )}
+            {Object.keys(wallets).length > 0 ? this.renderActiveSortableList() : <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size={'large'} />}
           </View>
           {this.launchModal()}
         </View>
@@ -261,15 +230,24 @@ class WalletListComponent extends Component<Props, State> {
     })
   }
 
-  renderRow = (row: Object) => {
-    return <WalletListSortableRow data={row} showBalance={getIsAccountBalanceVisible} />
+  renderSortableRow = (guiWallet: GuiWallet | void) => {
+    return guiWallet != null ? <WalletListSortableRow guiWallet={guiWallet} showBalance={getIsAccountBalanceVisible} /> : <WalletListEmptyRow />
   }
 
-  renderItem = (item: Object) => {
-    return <WalletListRow data={item} showBalance={getIsAccountBalanceVisible} customTokens={this.props.customTokens} />
+  renderRow = (data: FlatListItem<{ key: string }>) => {
+    const { wallets } = this.props
+    const guiWallet = wallets[data.item.key]
+
+    return guiWallet != null ? (
+      <WalletListRow guiWallet={guiWallet} executeWalletRowOption={this.executeWalletRowOption} showBalance={getIsAccountBalanceVisible} />
+    ) : (
+      <WalletListEmptyRow />
+    )
   }
 
-  renderActiveSortableList = (activeWalletsArray: Array<{ key: string }>, activeWalletsObject: {}) => {
+  renderActiveSortableList () {
+    const { wallets, activeWalletIds } = this.props
+
     return (
       <View style={styles.listsContainer}>
         {this.state.sortableListExists && (
@@ -279,11 +257,11 @@ class WalletListComponent extends Component<Props, State> {
           >
             <SortableListView
               style={styles.sortableWalletListContainer}
-              data={activeWalletsObject}
+              data={wallets}
               order={this.props.activeWalletIds}
               onRowMoved={this.onActiveRowMoved}
               render={ARCHIVED_TEXT}
-              renderRow={this.renderRow}
+              renderRow={this.renderSortableRow}
             />
           </Animated.View>
         )}
@@ -291,9 +269,9 @@ class WalletListComponent extends Component<Props, State> {
           <Animated.View testID={'fullList'} style={[{ flex: 1, opacity: this.state.fullListOpacity, zIndex: this.state.fullListZIndex }, styles.fullList]}>
             <FlatList
               style={styles.sortableWalletListContainer}
-              data={activeWalletsArray}
+              data={activeWalletIds.map(key => ({ key }))}
               extraData={this.props.wallets}
-              renderItem={this.renderItem}
+              renderItem={this.renderRow}
               ListFooterComponent={this.renderFooter()}
               ListHeaderComponent={this.renderPromoCard()}
             />
@@ -366,19 +344,6 @@ class WalletListComponent extends Component<Props, State> {
         this.setState({ sortableListExists: false })
       })
     })
-  }
-
-  sortActiveWallets = (wallets: any): Array<string> => {
-    const activeOrdered = Object.keys(wallets)
-      .filter(key => !wallets[key].archived) // filter out archived wallets
-      .sort((a, b) => {
-        if (wallets[a].sortIndex === wallets[b].sortIndex) {
-          return -1
-        } else {
-          return wallets[a].sortIndex - wallets[b].sortIndex
-        }
-      }) // sort them according to their (previous) sortIndices
-    return activeOrdered
   }
 
   onActiveRowMoved = (action: { from: number, to: number }) => {
@@ -508,18 +473,14 @@ export const WalletListScene = connect(
       })
     }
 
-    // We need to hack Flow, since this component is adding fields to these objects:
-    const wallets: any = state.ui.wallets.byId
-
     return {
       account: state.core.account,
       accountMessages: state.account.referralCache.accountMessages,
       accountReferral: state.account.accountReferral,
       activeWalletIds,
-      customTokens: state.ui.settings.customTokens,
       exchangeRates: state.exchangeRates,
       otpResetPending: getOtpResetPending(state),
-      wallets
+      wallets: state.ui.wallets.byId
     }
   },
   (dispatch: Dispatch): DispatchProps => ({
