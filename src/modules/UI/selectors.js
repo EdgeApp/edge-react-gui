@@ -3,7 +3,6 @@
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import _ from 'lodash'
 
-import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
 import { intl } from '../../locales/intl.js'
 import type { State } from '../../types/reduxTypes.js'
 import type { GuiDenomination, GuiWallet, TransactionListTx } from '../../types/types.js'
@@ -135,11 +134,6 @@ export const getSceneState = (state: State, sceneKey: string) => {
 }
 
 export const getExchangeRate = (state: State, fromCurrencyCode: string, toCurrencyCode: string): number => {
-  if (fromCurrencyCode === FIO_STR || toCurrencyCode === FIO_STR) {
-    // TODO: add real exchange rate
-    return 0
-  }
-
   const exchangeRates = state.exchangeRates
   const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
   const rate = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
