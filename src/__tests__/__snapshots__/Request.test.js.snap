@@ -32,15 +32,76 @@ exports[`Request should render with loaded props 1`] = `
       exchangeSecondaryToPrimaryRatio={Object {}}
       forceUpdateGuiCounter={0}
       headerText="Receive to undefined"
+      inputAccessoryViewID=""
       isEditable={true}
       isFiatOnTop={true}
       isFocus={false}
       keyboardVisible={false}
       onExchangeAmountChanged={[Function]}
+      onNext={[Function]}
       overridePrimaryExchangeAmount=""
       primaryCurrencyInfo={Object {}}
       secondaryCurrencyInfo={Object {}}
+      topReturnKeyType="done"
     />
+    <InputAccessoryView
+      backgroundColor="rgba(255, 255, 255, 0.5)"
+      nativeID=""
+    >
+      <View
+        style={
+          Object {
+            "backgroundColor": "#FFFFFF",
+            "flex": 1,
+            "flexDirection": "row",
+            "justifyContent": "space-between",
+          }
+        }
+      >
+        <TouchableOpacity
+          activeOpacity={0.2}
+          onPress={[Function]}
+          style={
+            Object {
+              "paddingHorizontal": 21.068661971830984,
+              "paddingVertical": 9.832042253521127,
+            }
+          }
+        >
+          <Text
+            style={
+              Object {
+                "color": "#0073D9",
+                "fontSize": 22.473239436619718,
+              }
+            }
+          >
+            Cancel
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          activeOpacity={0.2}
+          onPress={[Function]}
+          style={
+            Object {
+              "paddingHorizontal": 21.068661971830984,
+              "paddingVertical": 9.832042253521127,
+            }
+          }
+        >
+          <Text
+            style={
+              Object {
+                "color": "#0073D9",
+                "fontSize": 22.473239436619718,
+              }
+            }
+          >
+            Next
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </InputAccessoryView>
     <View
       style={
         Object {

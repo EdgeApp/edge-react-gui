@@ -4,7 +4,8 @@ import { bns } from 'biggystring'
 import { createSimpleConfirmModal } from 'edge-components'
 import type { EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, Clipboard, Dimensions, Platform, View } from 'react-native'
+import type { RefObject } from 'react-native'
+import { ActivityIndicator, Clipboard, Dimensions, InputAccessoryView, Platform, Text, TouchableOpacity, View } from 'react-native'
 import ContactsWrapper from 'react-native-contacts-wrapper'
 import RNFS from 'react-native-fs'
 import { Actions } from 'react-native-router-flux'
@@ -79,11 +80,15 @@ export type State = {
   publicAddress: string,
   legacyAddress: string,
   encodedURI: string,
-  minimumPopupModalState: CurrencyMinimumPopupState
+  minimumPopupModalState: CurrencyMinimumPopupState,
+  isFioMode: boolean
 }
+
+const inputAccessoryViewID: string = 'cancelHeaderId'
 
 export class Request extends Component<Props, State> {
   amounts: ExchangedFlipInputAmounts
+  flipInput: RefObject | null = null
 
   constructor (props: Props) {
     super(props)
@@ -97,7 +102,8 @@ export class Request extends Component<Props, State> {
       publicAddress: props.publicAddress,
       legacyAddress: props.legacyAddress,
       encodedURI: '',
-      minimumPopupModalState
+      minimumPopupModalState,
+      isFioMode: false
     }
     if (this.shouldShowMinimumModal(props)) {
       if (!props.currencyCode) return
@@ -228,6 +234,17 @@ export class Request extends Component<Props, State> {
     this.onCloseXRPMinimumModal()
   }
 
+  onNext = () => {
+    if (this.state.isFioMode) {
+      this.setState({ isFioMode: false })
+      this.fioAddressModal()
+    }
+  }
+
+  flipInputRef = (ref: RefObject) => {
+    this.flipInput = ref && ref.flipInput ? ref.flipInput.current : null
+  }
+
   render () {
     if (this.props.loading) {
       return <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size={'large'} />
@@ -248,6 +265,7 @@ export class Request extends Component<Props, State> {
 
         <View style={styles.main}>
           <ExchangedFlipInput
+            ref={this.flipInputRef}
             headerText={flipInputHeaderText}
             headerLogo={flipInputHeaderLogo}
             primaryCurrencyInfo={primaryCurrencyInfo}
@@ -260,7 +278,21 @@ export class Request extends Component<Props, State> {
             color={THEME.COLORS.WHITE}
             isFiatOnTop={true}
             isFocus={false}
+            onNext={this.onNext}
+            topReturnKeyType={this.state.isFioMode ? 'next' : 'done'}
+            inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : ''}
           />
+
+          <InputAccessoryView backgroundColor={THEME.COLORS.OPAQUE_WHITE} nativeID={this.state.isFioMode ? inputAccessoryViewID : ''}>
+            <View style={styles.accessoryView}>
+              <TouchableOpacity style={styles.accessoryBtn} onPress={this.cancelFioMode}>
+                <Text style={styles.accessoryText}>{s.strings.string_cancel_cap}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.accessoryBtn} onPress={this.nextFioMode}>
+                <Text style={styles.accessoryText}>{s.strings.string_next_capitalized}</Text>
+              </TouchableOpacity>
+            </View>
+          </InputAccessoryView>
 
           <View style={styles.qrContainer}>
             <QrCode data={this.state.encodedURI} size={qrSize} />
@@ -384,13 +416,12 @@ export class Request extends Component<Props, State> {
       return
     }
     if (this.amounts) {
-      const native = parseFloat(this.amounts.nativeAmount)
-      if (native <= 0) {
-        showError(`${s.strings.fio_request_by_fio_address_error_invalid_amount_header}. ${s.strings.fio_request_by_fio_address_error_invalid_amount}`)
+      if (bns.lte(this.amounts.nativeAmount, '0')) {
+        this.fioMode()
         return
       }
     } else {
-      showError(`${s.strings.fio_request_by_fio_address_error_invalid_amount_header}. ${s.strings.fio_request_by_fio_address_error_invalid_amount}`)
+      this.fioMode()
       return
     }
     const fioAddressModal = createFioAddressModal({ fioPlugin: this.props.fioPlugin, isConnected: this.props.isConnected })
@@ -398,5 +429,27 @@ export class Request extends Component<Props, State> {
     if (fioModalData) {
       Actions[Constants.FIO_REQUEST_CONFIRMATION]({ fioModalData, amounts: this.amounts })
     }
+  }
+
+  fioMode = () => {
+    if (this.flipInput) {
+      this.flipInput.textInputTopFocus()
+      this.setState({ isFioMode: true })
+    }
+  }
+
+  cancelFioMode = () => {
+    this.setState({ isFioMode: false }, () => {
+      if (this.flipInput) {
+        this.flipInput.textInputTopBlur()
+      }
+    })
+  }
+
+  nextFioMode = () => {
+    if (this.flipInput) {
+      this.flipInput.textInputTopBlur()
+    }
+    this.onNext()
   }
 }
