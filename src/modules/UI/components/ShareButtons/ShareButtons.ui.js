@@ -7,7 +7,7 @@ import s from '../../../../locales/strings'
 import ShareButton from '../ShareButton'
 import styles from './styles.js'
 
-const COPY_TEXT = s.strings.fragment_request_copy_title
+const COPY_TEXT = s.strings.request_copy_address
 const SHARE_TEXT = s.strings.string_share
 
 export type Props = {
