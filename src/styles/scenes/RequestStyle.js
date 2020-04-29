@@ -2,6 +2,7 @@
 
 import { StyleSheet } from 'react-native'
 
+import THEME from '../../theme/variables/airbitz'
 import { scale } from '../../util/scaling.js'
 
 export const styles = StyleSheet.create({
@@ -28,5 +29,19 @@ export const styles = StyleSheet.create({
   shareButtonsContainer: {
     alignItems: 'stretch',
     justifyContent: 'center'
+  },
+  accessoryView: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: THEME.COLORS.WHITE
+  },
+  accessoryBtn: {
+    paddingVertical: scale(7),
+    paddingHorizontal: scale(15)
+  },
+  accessoryText: {
+    color: THEME.COLORS.ACCENT_BLUE,
+    fontSize: scale(16)
   }
 })
