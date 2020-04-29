@@ -68,7 +68,7 @@
   "fragment_excahnge_wallet_to_header_title": "Choose a wallet to exchange funds to:",
   "fragment_insufficient_funds": "insufficient funds",
   "fragmet_invalid_password": "Invalid Password",
-  "fragment_request_copy_title": "Copy",
+  "fragment_request_copy_title": "Copy Address",
   "fragment_request_subtitle": "Request",
   "fragment_request_address_copied": "Request address successfully copied to clipboard",
   "request_minimum_notification_title": "Minimum Balance Required",
