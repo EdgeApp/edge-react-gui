@@ -208,6 +208,7 @@ const strings = {
   mining_fee_high_label_choice: 'High',
   mining_fee_low_label_choice: 'Low',
   mining_fee_standard_label_choice: 'Standard',
+  request_copy_address: 'Copy Address',
   request_qr_email_title: '%1$s %2$s Request',
   request_qr_your_receiving_wallet_address: 'Your Receiving Wallet Address',
   request_review_question_title: 'Enjoying %1$s?',
