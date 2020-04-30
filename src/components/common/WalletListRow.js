@@ -2,14 +2,14 @@
 
 import { bns } from 'biggystring'
 import React, { Component } from 'react'
-import { ActivityIndicator, Image, TouchableHighlight, View } from 'react-native'
+import { Image, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import slowlog from 'react-native-slowlog'
 import { connect } from 'react-redux'
 
 import { getEnabledTokens, selectWallet } from '../../actions/WalletActions.js'
+import { type WalletListMenuKey } from '../../actions/WalletListMenuActions.js'
 import WalletListTokenRow from '../../connectors/WalletListTokenRowConnector.js'
-import * as Constants from '../../constants/indexConstants.js'
+import { TRANSACTION_LIST, WALLET_LIST_SCENE } from '../../constants/indexConstants.js'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
@@ -17,71 +17,41 @@ import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import T from '../../modules/UI/components/FormattedText/index'
 import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
 import styles, { customWalletListOptionsStyles, styles as styleRaw } from '../../styles/scenes/WalletListStyle.js'
-import type { State } from '../../types/reduxTypes.js'
+import { type State as ReduxState } from '../../types/reduxTypes.js'
 import { type CustomTokenInfo, type GuiDenomination, type GuiWallet } from '../../types/types.js'
 import { decimalOrZero, getFiatSymbol, getObjectDiff, getYesterdayDateRoundDownHour, truncateDecimals } from '../../util/utils.js'
 import { ProgressPie } from './ProgressPie.js'
-import WalletListRowOptions from './WalletListRowOptions'
+import { WalletListMenu } from './WalletListMenu.js'
 
 const DIVIDE_PRECISION = 18
 
-export type OwnProps = {
-  data: any, // TODO: Need to type this
+type OwnProps = {
+  guiWallet: GuiWallet,
+  executeWalletRowOption(walletId: string, option: WalletListMenuKey): void,
   showBalance: boolean | Function
 }
-
-export default class FullWalletListRow extends Component<OwnProps> {
-  constructor (props: OwnProps) {
-    super(props)
-    slowlog(this, /.*/, global.slowlogOptions)
-  }
-
-  shouldComponentUpdate (nextProps: OwnProps) {
-    const diffElement = getObjectDiff(this.props, nextProps, {
-      data: true,
-      item: true
-    })
-    return !!diffElement
-  }
-
-  render () {
-    return (
-      <View>
-        {this.props.data.item.id ? <FullWalletListRowConnected data={this.props.data} showBalance={this.props.showBalance} /> : <FullListRowEmptyData />}
-      </View>
-    )
-  }
-}
-
-export type FullWalletListRowLoadedStateProps = {
+type StateProps = {
+  customTokens: Array<CustomTokenInfo>,
   displayDenomination: GuiDenomination,
   exchangeDenomination: GuiDenomination,
-  customTokens: Array<CustomTokenInfo>,
-  walletFiatSymbol: string,
-  settings: Object,
   exchangeRates: { [string]: number },
+  settings: Object,
+  walletFiatSymbol: string,
   walletsProgress: Object
 }
-
-export type FullWalletListRowLoadedOwnProps = {
-  data: any,
-  showBalance: boolean | Function
+type DispatchProps = {
+  getEnabledTokensList(walletId: string): void,
+  selectWallet(walletId: string, currencyCode: string): void
 }
+type Props = OwnProps & StateProps & DispatchProps
 
-export type FullWalletListRowLoadedDispatchProps = {
-  selectWallet: (walletId: string, currencyCode: string) => void,
-  getEnabledTokensList: (walletId: string) => void
-}
-
-export type FullWalletListRowLoadedComponentProps = FullWalletListRowLoadedStateProps & FullWalletListRowLoadedOwnProps & FullWalletListRowLoadedDispatchProps
-
-class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoadedComponentProps> {
+class WalletListRowComponent extends Component<Props> {
   _onPressSelectWallet = (walletId, currencyCode, publicAddress) => {
     this.props.selectWallet(walletId, currencyCode)
     // if it's EOS then we need to see if activated, if not then it will get routed somewhere else
     // if it's not EOS then go to txList, if it's EOS and activated with publicAddress then go to txList
     if (currencyCode !== 'EOS' || (currencyCode === 'EOS' && publicAddress)) {
-      Actions[Constants.TRANSACTION_LIST]({ params: 'walletList' })
+      Actions[TRANSACTION_LIST]({ params: 'walletList' })
     }
   }
 
@@ -93,30 +63,28 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
     return !!diffElement
   }
 
-  UNSAFE_componentWillMount () {
-    const walletId = this.props.data.item.id
-    this.props.getEnabledTokensList(walletId)
+  componentDidMount () {
+    const { guiWallet } = this.props
+    this.props.getEnabledTokensList(guiWallet.id)
   }
 
   render () {
-    const { data, walletFiatSymbol, settings, exchangeRates, showBalance } = this.props
+    const { guiWallet, walletFiatSymbol, settings, exchangeRates, showBalance } = this.props
     const progress = this.getProgress()
-    const walletData: GuiWallet & {
-      executeWalletRowOption: (walletId: string, option: string) => void
-    } = data.item
-    const currencyCode = walletData.currencyCode
+
+    const currencyCode = guiWallet.currencyCode
     const denomination = this.props.displayDenomination
     const multiplier = denomination.multiplier
-    const id = walletData.id
-    const name = walletData.name || s.strings.string_no_name
+    const id = guiWallet.id
+    const name = guiWallet.name || s.strings.string_no_name
     const symbol = denomination.symbol
-    const symbolImageDarkMono = walletData.symbolImageDarkMono
-    const preliminaryCryptoAmount = truncateDecimals(bns.div(walletData.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)
+    const symbolImageDarkMono = guiWallet.symbolImageDarkMono
+    const preliminaryCryptoAmount = truncateDecimals(bns.div(guiWallet.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)
     const finalCryptoAmount = intl.formatNumber(decimalOrZero(preliminaryCryptoAmount, 6)) // check if infinitesimal (would display as zero), cut off trailing zeroes
     const finalCryptoAmountString = showBalance ? `${symbol || ''} ${finalCryptoAmount}` : ''
     // need to crossreference tokensEnabled with nativeBalances
     const enabledNativeBalances = {}
-    const enabledTokens = walletData.enabledTokens
+    const enabledTokens = guiWallet.enabledTokens
 
     const customTokens = this.props.customTokens
     const enabledNotHiddenTokens = enabledTokens.filter(token => {
@@ -125,24 +93,24 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
       const tokenIndex = customTokens.findIndex(item => item.currencyCode === token)
       // if token is not supposed to be visible, not point in enabling it
       if (tokenIndex > -1 && customTokens[tokenIndex].isVisible === false) isVisible = false
-      if (SYNCED_ACCOUNT_DEFAULTS[token] && walletData.enabledTokens.includes(token)) {
+      if (SYNCED_ACCOUNT_DEFAULTS[token] && guiWallet.enabledTokens.includes(token)) {
         // if hardcoded token
         isVisible = true // and enabled then make visible (overwrite customToken isVisible flag)
       }
       return isVisible
     })
 
-    for (const prop in walletData.nativeBalances) {
-      if (walletData.nativeBalances.hasOwnProperty(prop)) {
+    for (const prop in guiWallet.nativeBalances) {
+      if (guiWallet.nativeBalances.hasOwnProperty(prop)) {
         if (prop !== currencyCode && enabledNotHiddenTokens.indexOf(prop) >= 0) {
-          enabledNativeBalances[prop] = walletData.nativeBalances[prop]
+          enabledNativeBalances[prop] = guiWallet.nativeBalances[prop]
         }
       }
     }
-    const rateKey = `${currencyCode}_${walletData.isoFiatCurrencyCode}`
+    const rateKey = `${currencyCode}_${guiWallet.isoFiatCurrencyCode}`
     const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : null
     // Fiat Balance Formatting
-    const fiatBalance = calculateWalletFiatBalanceWithoutState(walletData, currencyCode, settings, exchangeRates)
+    const fiatBalance = calculateWalletFiatBalanceWithoutState(guiWallet, currencyCode, settings, exchangeRates)
     const fiatBalanceFormat = fiatBalance && parseFloat(fiatBalance) > 0.000001 ? fiatBalance : 0
     const fiatBalanceSymbol = showBalance && exchangeRate ? walletFiatSymbol : ''
     const fiatBalanceString = showBalance && exchangeRate ? fiatBalanceFormat : ''
@@ -152,7 +120,7 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
     const exchangeRateString = exchangeRateFormat ? `${exchangeRateFormat}/${currencyCode}` : s.strings.no_exchange_rate
     // Yesterdays Percentage Difference Formatting
     const yesterdayUsdExchangeRate = exchangeRates[`${currencyCode}_iso:USD_${getYesterdayDateRoundDownHour()}`]
-    const fiatExchangeRate = walletData.isoFiatCurrencyCode !== 'iso:USD' ? exchangeRates[`iso:USD_${walletData.isoFiatCurrencyCode}`] : 1
+    const fiatExchangeRate = guiWallet.isoFiatCurrencyCode !== 'iso:USD' ? exchangeRates[`iso:USD_${guiWallet.isoFiatCurrencyCode}`] : 1
     const yesterdayExchangeRate = yesterdayUsdExchangeRate * fiatExchangeRate
     const differenceYesterday = exchangeRate ? exchangeRate - yesterdayExchangeRate : null
     let differencePercentage = differenceYesterday ? (differenceYesterday / yesterdayExchangeRate) * 100 : null
@@ -180,7 +148,7 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
           <TouchableHighlight
             style={[styles.rowContainer]}
             underlayColor={styleRaw.walletRowUnderlay.color}
-            onPress={() => this._onPressSelectWallet(id, currencyCode, walletData.receiveAddress.publicAddress)}
+            onPress={() => this._onPressSelectWallet(id, currencyCode, guiWallet.receiveAddress.publicAddress)}
           >
             <View style={[styles.rowContent]}>
               <View style={styles.rowIconWrap}>
@@ -211,11 +179,11 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
                 </View>
               </View>
               <View style={styles.rowOptionsWrap}>
-                <WalletListRowOptions
-                  currencyCode={walletData.currencyCode}
-                  executeWalletRowOption={walletData.executeWalletRowOption}
-                  walletKey={id}
+                <WalletListMenu
+                  currencyCode={guiWallet.currencyCode}
                   customStyles={customWalletListOptionsStyles}
+                  executeWalletRowOption={this.props.executeWalletRowOption}
+                  walletId={id}
                 />
               </View>
             </View>
@@ -227,10 +195,11 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
   }
 
   renderTokenRow = (parentId: string, metaTokenBalances, progress: number) => {
+    const { guiWallet } = this.props
     const tokens = []
     for (const property in metaTokenBalances) {
       if (metaTokenBalances.hasOwnProperty(property)) {
-        if (property !== this.props.data.item.currencyCode) {
+        if (property !== guiWallet.currencyCode) {
           tokens.push(
             <WalletListTokenRow
               parentId={parentId}
@@ -249,10 +218,9 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
   }
 
   getProgress = () => {
-    const { data } = this.props
-    const walletId = data.item ? data.item.id : null
-    const walletProgress = walletId ? this.props.walletsProgress[walletId] : 1
+    const { guiWallet } = this.props
 
+    const walletProgress = this.props.walletsProgress[guiWallet.id]
     if (walletProgress === 1) {
       return 1
     }
@@ -265,47 +233,24 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
     return walletProgress
   }
 }
-const mapStateToProps = (state: State, ownProps: FullWalletListRowLoadedOwnProps): FullWalletListRowLoadedStateProps => {
-  const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, ownProps.data.item.currencyCode)
-  const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, ownProps.data.item.currencyCode)
-  const settings = state.ui.settings
-  const customTokens = settings.customTokens
-  const walletsProgress = state.ui.wallets.walletLoadingProgress
 
-  const data = ownProps.data || null
-  const wallet = data ? data.item : null
-  const walletFiatSymbol = wallet ? getFiatSymbol(wallet.isoFiatCurrencyCode) : ''
-  return {
-    showBalance: typeof ownProps.showBalance === 'function' ? ownProps.showBalance(state) : ownProps.showBalance,
-    displayDenomination,
-    exchangeDenomination,
-    customTokens,
-    walletFiatSymbol,
-    settings,
+export const WalletListRow = connect(
+  (state: ReduxState, ownProps: OwnProps): StateProps => ({
+    customTokens: state.ui.settings.customTokens,
+    displayDenomination: SETTINGS_SELECTORS.getDisplayDenomination(state, ownProps.guiWallet.currencyCode),
+    exchangeDenomination: SETTINGS_SELECTORS.getExchangeDenomination(state, ownProps.guiWallet.currencyCode),
     exchangeRates: state.exchangeRates,
-    walletsProgress
-  }
-}
-const mapDispatchToProps = dispatch => ({
-  selectWallet: (walletId: string, currencyCode): string => dispatch(selectWallet(walletId, currencyCode, Constants.WALLET_LIST_SCENE)),
-  getEnabledTokensList: (walletId: string) => dispatch(getEnabledTokens(walletId))
-})
-
-const FullWalletListRowConnected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(FullWalletListRowLoadedComponent)
-
-class FullListRowEmptyData extends Component<any> {
-  render () {
-    return (
-      <TouchableHighlight style={[styles.rowContainer, styles.emptyRow]} underlayColor={styleRaw.emptyRowUnderlay.color}>
-        <View style={[styles.rowContent]}>
-          <View style={[styles.rowNameTextWrap]}>
-            <ActivityIndicator style={{ height: 18, width: 18 }} />
-          </View>
-        </View>
-      </TouchableHighlight>
-    )
-  }
-}
+    settings: state.ui.settings,
+    showBalance: typeof ownProps.showBalance === 'function' ? ownProps.showBalance(state) : ownProps.showBalance,
+    walletFiatSymbol: getFiatSymbol(ownProps.guiWallet.isoFiatCurrencyCode),
+    walletsProgress: state.ui.wallets.walletLoadingProgress
+  }),
+  (dispatch: Dispatch): DispatchProps => ({
+    getEnabledTokensList (walletId: string) {
+      dispatch(getEnabledTokens(walletId))
+    },
+    selectWallet (walletId: string, currencyCode) {
+      dispatch(selectWallet(walletId, currencyCode, WALLET_LIST_SCENE))
+    }
+  })
+)(WalletListRowComponent)
