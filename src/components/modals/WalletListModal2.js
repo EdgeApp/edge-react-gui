@@ -17,6 +17,8 @@ import { scale } from '../../util/scaling.js'
 import { type TokenSelectObject } from '../common/CryptoExchangeWalletListTokenRow.js'
 import { type AirshipBridge, AirshipModal } from './modalParts.js'
 
+export type WalletListResult = GuiWallet | TokenSelectObject | GuiWalletType | null
+
 type StateProps = {
   wallets: { [string]: GuiWallet },
   activeWalletIds: Array<string>,
@@ -25,7 +27,7 @@ type StateProps = {
 }
 
 type OwnProps = {
-  bridge: AirshipBridge<GuiWallet | TokenSelectObject | GuiWalletType | null>,
+  bridge: AirshipBridge<WalletListResult>,
   headerTitle: string,
   showCreateWallet?: boolean,
   excludeWalletIds?: Array<string>,
