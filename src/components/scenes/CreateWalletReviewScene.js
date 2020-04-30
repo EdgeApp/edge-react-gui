@@ -29,14 +29,7 @@ type StateProps = {
   isCreatingWallet: boolean
 }
 type DispatchProps = {
-  createCurrencyWallet(
-    walletName: string,
-    walletType: string,
-    fiatCurrencyCode: string,
-    isScenePop: boolean,
-    selectWallet: boolean,
-    cleanedPrivateKey?: string
-  ): void
+  createCurrencyWallet(walletName: string, walletType: string, fiatCurrencyCode: string, cleanedPrivateKey?: string): void
 }
 type Props = OwnProps & StateProps & DispatchProps
 
@@ -57,16 +50,7 @@ class CreateWalletReviewComponent extends Component<Props, State> {
 
   onSubmit = async () => {
     const { walletName, selectedWalletType, selectedFiat, cleanedPrivateKey, createCurrencyWallet } = this.props
-    let isScenePop = true
-    if (cleanedPrivateKey) isScenePop = false // don't pop after wallet create because we need animation
-    const createdWallet = await createCurrencyWallet(
-      walletName,
-      selectedWalletType.value,
-      fixFiatCurrencyCode(selectedFiat.value),
-      isScenePop,
-      false,
-      cleanedPrivateKey
-    )
+    const createdWallet = await createCurrencyWallet(walletName, selectedWalletType.value, fixFiatCurrencyCode(selectedFiat.value), cleanedPrivateKey)
     // note that we will be using cleanedPrivateKey as a flag for an imported private key
     if (createdWallet && cleanedPrivateKey) {
       this.setState({
@@ -133,8 +117,8 @@ export const CreateWalletReviewScene = connect(
     isCreatingWallet: state.ui.scenes.createWallet.isCreatingWallet
   }),
   (dispatch: Dispatch): DispatchProps => ({
-    createCurrencyWallet (walletName: string, walletType: string, fiatCurrencyCode: string, isScenePop: boolean, selectWallet: boolean, importText?: string) {
-      dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode, isScenePop, false, importText))
+    createCurrencyWallet (walletName: string, walletType: string, fiatCurrencyCode: string, importText?: string) {
+      dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode, true, false, importText))
     }
   })
 )(CreateWalletReviewComponent)
