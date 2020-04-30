@@ -3,6 +3,7 @@
 import { type Disklet } from 'disklet'
 import { type EdgeAccount, type EdgeContext, type EdgeCurrencyWallet, type EdgeLobby, type EdgeParsedUri, type EdgeReceiveAddress } from 'edge-core-js'
 
+import type { CcWalletMap } from '../reducers/FioReducer'
 import { type PermissionsState } from '../reducers/PermissionsReducer.js'
 import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
 import { type TweakSource } from '../util/ReferralHelpers.js'
@@ -238,5 +239,5 @@ export type Action =
         }
       }
     }
-  | { type: 'FIO/UPDATE_PUB_ADDRESSES', data: { connectedPubAddresses: { [fioAddress: string]: { [fullCurrencyCode: string]: string } } } }
-  | { type: 'FIO/UPDATE_PUB_ADDRESSES_FOR_FIO_ADDRESS', data: { fioAddress: string, pubAddresses: { [fullCurrencyCode: string]: string } } }
+  | { type: 'FIO/UPDATE_CONNECTED_WALLETS', data: { connectedWalletsByFioAddress: { [fioAddress: string]: CcWalletMap } } }
+  | { type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS', data: { fioAddress: string, ccWalletMap: CcWalletMap } }

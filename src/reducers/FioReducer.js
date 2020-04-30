@@ -4,33 +4,38 @@ import type { Reducer } from 'redux'
 
 import type { Action } from '../types/reduxActions'
 
+/**
+ * { [fullCurrencyCode]: walletId }
+ */
+export type CcWalletMap = {
+  [fullCurrencyCode: string]: string
+}
+
 export type FioState = {
-  connectedPubAddresses: {
-    [fioAddress: string]: {
-      [fullCurrencyCode: string]: string
-    }
+  connectedWalletsByFioAddress: {
+    [fioAddress: string]: CcWalletMap
   }
 }
 
 const initialState: FioState = {
-  connectedPubAddresses: {}
+  connectedWalletsByFioAddress: {}
 }
 
 export const fio: Reducer<FioState, Action> = (state = initialState, action: Action) => {
   switch (action.type) {
-    case 'FIO/UPDATE_PUB_ADDRESSES':
-      if (!action.data) throw new Error(`Invalid action FIO/UPDATE_PUB_ADDRESSES`)
+    case 'FIO/UPDATE_CONNECTED_WALLETS':
+      if (!action.data) throw new Error(`Invalid action FIO/UPDATE_CONNECTED_WALLETS`)
       return {
         ...state,
-        connectedPubAddresses: action.data.connectedPubAddresses
+        connectedWalletsByFioAddress: action.data.connectedWalletsByFioAddress
       }
-    case 'FIO/UPDATE_PUB_ADDRESSES_FOR_FIO_ADDRESS':
-      if (!action.data) throw new Error(`Invalid action FIO/UPDATE_PUB_ADDRESSES`)
-      const { connectedPubAddresses } = state
-      connectedPubAddresses[action.data.fioAddress] = { ...connectedPubAddresses[action.data.fioAddress], ...action.data.pubAddresses }
+    case 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS':
+      if (!action.data) throw new Error(`Invalid action FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS`)
+      const { connectedWalletsByFioAddress } = state
+      connectedWalletsByFioAddress[action.data.fioAddress] = { ...connectedWalletsByFioAddress[action.data.fioAddress], ...action.data.ccWalletMap }
       return {
         ...state,
-        connectedPubAddresses
+        connectedWalletsByFioAddress
       }
     default:
       return state

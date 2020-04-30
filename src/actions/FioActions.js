@@ -3,10 +3,10 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 
 import { FIO_WALLET_TYPE } from '../constants/WalletAndCurrencyConstants'
-import { refreshPubAddressesForFioAddress } from '../modules/FioAddress/util'
+import { refreshConnectedWalletsForFioAddress } from '../modules/FioAddress/util'
 import type { Dispatch } from '../types/reduxTypes.js'
 
-export const refreshPubAddresses = async (dispatch: Dispatch, currencyWallets: { [walletId: string]: EdgeCurrencyWallet }) => {
+export const refreshConnectedWallets = async (dispatch: Dispatch, currencyWallets: { [walletId: string]: EdgeCurrencyWallet }) => {
   const wallets: EdgeCurrencyWallet[] = []
   const fioWallets: EdgeCurrencyWallet[] = []
   for (const walletId of Object.keys(currencyWallets)) {
@@ -15,18 +15,18 @@ export const refreshPubAddresses = async (dispatch: Dispatch, currencyWallets: {
     }
     wallets.push(currencyWallets[walletId])
   }
-  const connectedPubAddresses = {}
+  const connectedWalletsByFioAddress = {}
   for (const fioWallet: EdgeCurrencyWallet of fioWallets) {
     const fioAddresses = await fioWallet.otherMethods.getFioAddressNames()
     for (const fioAddress: string of fioAddresses) {
-      connectedPubAddresses[fioAddress] = await refreshPubAddressesForFioAddress(fioAddress, fioWallet, wallets)
+      connectedWalletsByFioAddress[fioAddress] = await refreshConnectedWalletsForFioAddress(fioAddress, fioWallet, wallets)
     }
   }
 
   dispatch({
-    type: 'FIO/UPDATE_PUB_ADDRESSES',
+    type: 'FIO/UPDATE_CONNECTED_WALLETS',
     data: {
-      connectedPubAddresses
+      connectedWalletsByFioAddress
     }
   })
 }

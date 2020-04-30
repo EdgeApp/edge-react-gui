@@ -11,6 +11,7 @@ import { updatePubAddressesForFioAddress } from '../../modules/FioAddress/util'
 import T from '../../modules/UI/components/FormattedText/index'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import ABSlider from '../../modules/UI/components/Slider/index.js'
+import type { CcWalletMap } from '../../reducers/FioReducer'
 import { styles } from '../../styles/scenes/FioConnectWalletStyle'
 import type { FioConnectionWalletItem } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -22,7 +23,7 @@ export type State = {
 }
 
 export type FioConnectWalletConfirmStateProps = {
-  pubAddresses: { [fullCurrencyCode: string]: string },
+  ccWalletMap: CcWalletMap,
   isConnected: boolean
 }
 
@@ -33,7 +34,7 @@ export type FioConnectWalletConfirmRouteProps = {
 }
 
 export type FioConnectWalletConfirmDispatchProps = {
-  updatePubAddresses: (fioAddress: string, pubAddresses: { [fullCurrencyCode: string]: string }) => void
+  updateConnectedWallets: (fioAddress: string, ccWalletMap: CcWalletMap) => void
 }
 
 type Props = FioConnectWalletConfirmStateProps & FioConnectWalletConfirmDispatchProps & FioConnectWalletConfirmRouteProps
@@ -45,24 +46,25 @@ export class FioConnectWalletConfirmScene extends Component<Props, State> {
   }
 
   confirm = async (): Promise<void> => {
-    const { fioWallet, fioAddressName, selectedWallets, updatePubAddresses, pubAddresses, isConnected } = this.props
+    const { fioWallet, fioAddressName, selectedWallets, updateConnectedWallets, ccWalletMap, isConnected } = this.props
     if (isConnected) {
       this.setState({ connectWalletsLoading: true })
-      const newPubAddresses = { ...pubAddresses }
+      const newCcWalletMap = { ...ccWalletMap }
       try {
         await updatePubAddressesForFioAddress(
           fioWallet,
           fioAddressName,
           selectedWallets.map((wallet: FioConnectionWalletItem) => {
-            newPubAddresses[wallet.fullCurrencyCode] = wallet.publicAddress
+            newCcWalletMap[wallet.fullCurrencyCode] = wallet.id
             return {
+              walletId: wallet.id,
               tokenCode: wallet.currencyCode,
               chainCode: wallet.chainCode,
               publicAddress: wallet.publicAddress
             }
           })
         )
-        updatePubAddresses(fioAddressName, newPubAddresses)
+        updateConnectedWallets(fioAddressName, newCcWalletMap)
         showToast(s.strings.fio_connect_wallets_success)
         Actions.popTo(Constants.FIO_ADDRESS_DETAILS)
       } catch (e) {

@@ -10,6 +10,7 @@ import s from '../../locales/strings.js'
 import { updatePubAddressesForFioAddress } from '../../modules/FioAddress/util'
 import T from '../../modules/UI/components/FormattedText/index'
 import ABSlider from '../../modules/UI/components/Slider/index.js'
+import type { CcWalletMap } from '../../reducers/FioReducer'
 import { CryptoExchangeWalletListRowStyle as walletStyles } from '../../styles/components/CryptoExchangeWalletListRowStyle'
 import { styles } from '../../styles/scenes/FioConnectWalletStyle'
 import type { FioConnectionWalletItem } from '../../types/types'
@@ -22,13 +23,13 @@ export type State = {
 }
 
 export type FioDisconnectWalletsStateProps = {
-  pubAddresses: { [fullCurrencyCode: string]: string },
+  ccWalletMap: CcWalletMap,
   connectedWallets?: { [walletId: string]: FioConnectionWalletItem },
   isConnected: boolean
 }
 
 export type FioDisconnectWalletsDispatchProps = {
-  updatePubAddresses: (fioAddress: string, pubAddresses: { [fullCurrencyCode: string]: string }) => void
+  updateConnectedWallets: (fioAddress: string, ccWalletMap: CcWalletMap) => void
 }
 
 export type FioDisconnectWalletsRouteProps = {
@@ -46,8 +47,8 @@ export class FioDisconnectWalletScene extends Component<Props, State> {
 
   confirm = async (): Promise<void> => {
     const { selectedToRemove } = this.state
-    const { fioWallet, fioAddressName, updatePubAddresses, pubAddresses, isConnected } = this.props
-    const newPubAddresses = { ...pubAddresses }
+    const { fioWallet, fioAddressName, updateConnectedWallets, ccWalletMap, isConnected } = this.props
+    const newCcWalletMap = { ...ccWalletMap }
     if (isConnected) {
       this.setState({ disconnectWalletsLoading: true })
       try {
@@ -55,15 +56,16 @@ export class FioDisconnectWalletScene extends Component<Props, State> {
           fioWallet,
           fioAddressName,
           Object.keys(selectedToRemove).map((walletKey: string) => {
-            newPubAddresses[selectedToRemove[walletKey].fullCurrencyCode] = '0'
+            newCcWalletMap[selectedToRemove[walletKey].fullCurrencyCode] = ''
             return {
+              walletId: selectedToRemove[walletKey].id,
               chainCode: selectedToRemove[walletKey].chainCode,
               tokenCode: selectedToRemove[walletKey].currencyCode,
               publicAddress: '0'
             }
           })
         )
-        updatePubAddresses(fioAddressName, newPubAddresses)
+        updateConnectedWallets(fioAddressName, newCcWalletMap)
         showToast(s.strings.fio_disconnect_wallets_success)
         Actions.popTo(Constants.FIO_ADDRESS_DETAILS)
       } catch (e) {
