@@ -8,7 +8,7 @@ import { sprintf } from 'sprintf-js'
 
 import eosLogo from '../../assets/images/currencies/fa_logo_eos.png'
 import steemLogo from '../../assets/images/currencies/fa_logo_steem.png'
-import { type WalletListResult, WalletListModal } from '../../components/modals/WalletListModal2.js'
+import { type WalletListResult, WalletListModal } from '../../components/modals/WalletListModal.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
 import Text from '../../modules/UI/components/FormattedText'

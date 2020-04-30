@@ -12,7 +12,7 @@ import { sprintf } from 'sprintf-js'
 import { createCurrencyWalletAndAddToSwap } from '../../actions/CreateWalletActions.js'
 import { type SetNativeAmountInfo, getQuoteForTransaction, selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
 import { updateMostRecentWalletsSelected } from '../../actions/WalletActions.js'
-import { type WalletListResult, WalletListModal } from '../../components/modals/WalletListModal2.js'
+import { type WalletListResult, WalletListModal } from '../../components/modals/WalletListModal.js'
 import CryptoExchangeMessageConnector from '../../connectors/components/CryptoExchangeMessageConnector'
 import { ARROW_DOWN_BOLD, DEFAULT_STARTER_WALLET_NAMES, MATERIAL_COMMUNITY } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
@@ -267,14 +267,12 @@ class CryptoExchangeComponent extends Component<Props, State> {
         showCreateWallet={whichWallet === 'to'}
       />
     )).then((response: WalletListResult) => {
-      if (response) {
-        if (typeof response.id === 'string') {
-          this.props.onSelectWallet(response.id, response.currencyCode)
-          return
-        }
-        if (typeof response.value === 'string') {
-          this.props.createCurrencyWallet(response.value, response.currencyCode, this.props.defaultIsoFiat)
-        }
+      if (response && typeof response.id === 'string') {
+        this.props.onSelectWallet(response.id, response.currencyCode)
+        return
+      }
+      if (response && typeof response.value === 'string') {
+        this.props.createCurrencyWallet(response.value, response.currencyCode, this.props.defaultIsoFiat)
       }
     })
     return null

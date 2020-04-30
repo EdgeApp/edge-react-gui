@@ -2,20 +2,18 @@
 import React, { Component } from 'react'
 import { Image, Text, TouchableHighlight, View } from 'react-native'
 
-import localize from '../../locales/strings'
+import s from '../../locales/strings'
 import FormattedText from '../../modules/UI/components/FormattedText/index'
 import { CryptoExchangeWalletListRowStyle as styles } from '../../styles/components/CryptoExchangeWalletListRowStyle.js'
+import { type GuiWalletType } from '../../types/types.js'
 
 type Props = {
-  supportedWallet: Object,
-  onPress(Object): void
+  supportedWallet: GuiWalletType,
+  onPress(GuiWalletType): void
 }
-type State = {}
 
-class CryptoExchangeCreateWalletRow extends Component<Props, State> {
-  onPress = () => {
-    this.props.onPress(this.props.supportedWallet)
-  }
+export class WalletListModalCreateRow extends Component<Props> {
+  onPress = () => this.props.onPress(this.props.supportedWallet)
   render () {
     const { supportedWallet } = this.props
     return (
@@ -30,7 +28,7 @@ class CryptoExchangeCreateWalletRow extends Component<Props, State> {
               <FormattedText style={styles.containerCenterName}>{supportedWallet.label}</FormattedText>
             </View>
             <View style={styles.containerRight}>
-              <Text style={styles.createText}>{localize.strings.fragment_create_wallet_create_wallet}</Text>
+              <Text style={styles.createText}>{s.strings.fragment_create_wallet_create_wallet}</Text>
             </View>
           </View>
         </TouchableHighlight>
@@ -38,5 +36,3 @@ class CryptoExchangeCreateWalletRow extends Component<Props, State> {
     )
   }
 }
-
-export { CryptoExchangeCreateWalletRow }

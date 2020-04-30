@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import { selectWalletFromModal } from '../../actions/WalletActions.js'
-import { type WalletListResult, WalletListModal } from '../../components/modals/WalletListModal2.js'
+import { type WalletListResult, WalletListModal } from '../../components/modals/WalletListModal.js'
 import s from '../../locales/strings.js'
 import WalletSelector from '../../modules/UI/components/Header/Component/WalletSelectorConnector'
 import type { Dispatch } from '../../types/reduxTypes.js'

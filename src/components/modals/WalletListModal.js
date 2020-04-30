@@ -6,7 +6,7 @@ import React, { Component, Fragment } from 'react'
 import { FlatList, View } from 'react-native'
 import { connect } from 'react-redux'
 
-import { CryptoExchangeCreateWalletRow } from '../../components/common/CryptoExchangeCreateWalletRow.js'
+import { WalletListModalCreateRow } from '../../components/common/WalletListModalCreateRow.js'
 import { CryptoExchangeWalletListTokenRowConnected as CryptoExchangeWalletListRow } from '../../connectors/components/CryptoExchangeWalletListRowConnector.js'
 import { getActiveWalletIds } from '../../modules/UI/selectors.js'
 import type { State as StateType } from '../../types/reduxTypes.js'
@@ -211,8 +211,8 @@ class WalletListModalConnected extends Component<Props, State> {
         />
       )
     }
-    if (showCreateWallet) {
-      return <CryptoExchangeCreateWalletRow supportedWallet={createWalletCurrency || {}} onPress={this.createWallet} disableZeroBalance={false} />
+    if (showCreateWallet && createWalletCurrency) {
+      return <WalletListModalCreateRow supportedWallet={createWalletCurrency} onPress={this.createWallet} disableZeroBalance={false} />
     }
     return null
   }
