@@ -74,11 +74,13 @@ class WalletListModalConnected extends Component<Props, State> {
     // Initialize Create Wallets
     if (showCreateWallet) {
       const createWalletCurrencies = getGuiWalletTypes(account)
+      const walletsArray = Object.values(wallets)
       for (const createWalletCurrency of createWalletCurrencies) {
         const { currencyCode } = createWalletCurrency
         const checkAllowedCurrencyCodes = allowedCurrencyCodes ? allowedCurrencyCodes.find(code => code === currencyCode) : true
         const checkExcludeCurrencyCodes = excludeCurrencyCodes ? excludeCurrencyCodes.find(code => code === currencyCode) : false
-        if (checkAllowedCurrencyCodes && !checkExcludeCurrencyCodes) {
+        const checkExistingWallet = walletsArray.find(wallet => (wallet && wallet.currencyCode ? wallet.currencyCode === currencyCode : false))
+        if (checkAllowedCurrencyCodes && !checkExcludeCurrencyCodes && !checkExistingWallet) {
           records.push({
             walletItem: null,
             createWalletCurrency
