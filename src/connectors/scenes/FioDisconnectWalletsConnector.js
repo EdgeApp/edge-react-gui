@@ -10,21 +10,22 @@ import { FioDisconnectWalletScene } from '../../components/scenes/FioDisconnectW
 import { isConnectedState } from '../../modules/Core/selectors'
 import { makeConnectedWallets } from '../../modules/FioAddress/util'
 import { getWallets } from '../../modules/UI/selectors'
+import type { CcWalletMap } from '../../reducers/FioReducer'
 import type { Dispatch, State } from '../../types/reduxTypes'
 
 const mapStateToProps = (state: State, ownProps): StateProps => {
   const wallets = getWallets(state)
-  const pubAddresses = state.ui.fio.connectedPubAddresses[ownProps.fioAddressName]
-  if (!pubAddresses) {
+  const ccWalletMap = state.ui.fio.connectedWalletsByFioAddress[ownProps.fioAddressName]
+  if (!ccWalletMap) {
     return {
-      pubAddresses,
+      ccWalletMap,
       isConnected: isConnectedState(state)
     }
   }
-  const connectedWallets = makeConnectedWallets(wallets, pubAddresses)
+  const connectedWallets = makeConnectedWallets(wallets, ccWalletMap)
 
   const out: StateProps = {
-    pubAddresses,
+    ccWalletMap,
     connectedWallets,
     isConnected: isConnectedState(state)
   }
@@ -32,12 +33,12 @@ const mapStateToProps = (state: State, ownProps): StateProps => {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-  updatePubAddresses: (fioAddress: string, pubAddresses: { [fullCurrencyCode: string]: string }) => {
+  updateConnectedWallets: (fioAddress: string, ccWalletMap: CcWalletMap) => {
     dispatch({
-      type: 'FIO/UPDATE_PUB_ADDRESSES_FOR_FIO_ADDRESS',
+      type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS',
       data: {
         fioAddress,
-        pubAddresses
+        ccWalletMap
       }
     })
   }

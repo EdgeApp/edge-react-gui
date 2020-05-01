@@ -3,7 +3,7 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import _ from 'lodash'
 
-import { refreshPubAddresses } from '../../../actions/FioActions'
+import { refreshConnectedWallets } from '../../../actions/FioActions'
 import type { Dispatch, GetState } from '../../../types/reduxTypes.js'
 import { getReceiveAddresses } from '../../../util/utils.js'
 import * as CORE_SELECTORS from '../selectors'
@@ -23,7 +23,7 @@ export const updateWalletsRequest = () => async (dispatch: Dispatch, getState: G
         receiveAddresses
       }
     })
-    refreshPubAddresses(dispatch, currencyWallets)
+    refreshConnectedWallets(dispatch, currencyWallets)
     return updateWalletsEnabledTokens(getState)
   })
 }

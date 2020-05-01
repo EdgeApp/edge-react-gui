@@ -12,7 +12,7 @@ import { getAccount, getWallets } from '../Core/selectors'
 import { getDefaultIsoFiat, getDisplayDenomination, getExchangeDenomination } from '../Settings/selectors'
 import { getFioWallets } from '../UI/selectors'
 import type { BuyAddressResponse } from './reducer'
-import { findWalletByFioAddress, refreshPubAddressesForFioAddress } from './util'
+import { findWalletByFioAddress, refreshConnectedWalletsForFioAddress } from './util'
 
 export const createFioWallet = () => (dispatch: Dispatch, getState: GetState): Promise<EdgeCurrencyWallet | any> => {
   const fiatCurrencyCode = getDefaultIsoFiat(getState())
@@ -41,19 +41,19 @@ export const refreshAllFioAddresses = () => async (dispatch: Dispatch, getState:
     })
   })
 
-  const { connectedPubAddresses } = state.ui.fio
+  const { connectedWalletsByFioAddress } = state.ui.fio
   const walletsMap: { [string]: EdgeCurrencyWallet } = getWallets(state)
   const wallets = Object.keys(walletsMap).map(walletKey => walletsMap[walletKey])
   for (const { name } of fioAddresses) {
-    if (!connectedPubAddresses[name]) {
+    if (!connectedWalletsByFioAddress[name]) {
       const fioWallet = await findWalletByFioAddress(fioWallets, name)
       if (!fioWallet) continue
-      const pubAddresses = await refreshPubAddressesForFioAddress(name, fioWallet, wallets)
+      const ccWalletMap = await refreshConnectedWalletsForFioAddress(name, fioWallet, wallets)
       dispatch({
-        type: 'FIO/UPDATE_PUB_ADDRESSES_FOR_FIO_ADDRESS',
+        type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS',
         data: {
           fioAddress: name,
-          pubAddresses
+          ccWalletMap
         }
       })
     }

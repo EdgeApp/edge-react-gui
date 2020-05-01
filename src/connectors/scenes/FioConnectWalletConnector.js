@@ -11,11 +11,11 @@ import type { State } from '../../types/reduxTypes'
 const mapStateToProps = (state: State, ownProps): StateProps => {
   const wallets = getWallets(state)
   const fioWallets = getFioWallets(state)
-  const connectedPubAddresses = state.ui.fio.connectedPubAddresses[ownProps.fioAddressName]
+  const ccWalletMap = state.ui.fio.connectedWalletsByFioAddress[ownProps.fioAddressName]
 
-  if (!connectedPubAddresses) return { fioWallets, loading: true }
+  if (!ccWalletMap) return { fioWallets, loading: true }
 
-  const notConnectedWallets = makeNotConnectedWallets(wallets, connectedPubAddresses)
+  const notConnectedWallets = makeNotConnectedWallets(wallets, ccWalletMap)
 
   const out: StateProps = {
     notConnectedWallets,
