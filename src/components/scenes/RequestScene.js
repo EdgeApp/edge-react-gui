@@ -371,10 +371,10 @@ export class Request extends Component<Props, State> {
     }
     const title = sprintf(s.strings.request_qr_email_title, s.strings.app_name, currencyCode)
     const message = sprintf(s.strings.request_qr_email_title, s.strings.app_name, currencyCode) + ': ' + sharedAddress
-    const path = Platform.OS === Constants.IOS ? RNFS.DocumentDirectoryPath + '/' + title + '.txt' : RNFS.ExternalDirectoryPath + '/' + title + '.txt'
+    const path = Platform.OS === 'ios' ? RNFS.DocumentDirectoryPath + '/' + title + '.txt' : RNFS.ExternalDirectoryPath + '/' + title + '.txt'
     RNFS.writeFile(path, message, 'utf8')
       .then(success => {
-        const url = Platform.OS === Constants.IOS ? 'file://' + path : ''
+        const url = Platform.OS === 'ios' ? 'file://' + path : ''
         const shareOptions = {
           url,
           title,
