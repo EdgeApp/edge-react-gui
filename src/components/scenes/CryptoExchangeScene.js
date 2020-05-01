@@ -12,7 +12,7 @@ import { sprintf } from 'sprintf-js'
 import { createCurrencyWalletAndAddToSwap } from '../../actions/CreateWalletActions.js'
 import { type SetNativeAmountInfo, getQuoteForTransaction, selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
 import { updateMostRecentWalletsSelected } from '../../actions/WalletActions.js'
-import { WalletListModal } from '../../components/modals/WalletListModal2.js'
+import { type WalletListResult, WalletListModal } from '../../components/modals/WalletListModal.js'
 import CryptoExchangeMessageConnector from '../../connectors/components/CryptoExchangeMessageConnector'
 import { ARROW_DOWN_BOLD, DEFAULT_STARTER_WALLET_NAMES, MATERIAL_COMMUNITY } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
@@ -24,9 +24,8 @@ import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import { getExchangeRate } from '../../modules/UI/selectors.js'
 import { styles } from '../../styles/scenes/CryptoExchangeSceneStyles.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
-import { type GuiCurrencyInfo, type GuiWallet, type GuiWalletType, emptyCurrencyInfo, emptyGuiWallet } from '../../types/types.js'
+import { type GuiCurrencyInfo, type GuiWallet, emptyCurrencyInfo, emptyGuiWallet } from '../../types/types.js'
 import { getDenomFromIsoCode } from '../../util/utils.js'
-import { type TokenSelectObject } from '../common/CryptoExchangeWalletListTokenRow.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { Airship } from '../services/AirshipInstance.js'
 
@@ -267,15 +266,13 @@ class CryptoExchangeComponent extends Component<Props, State> {
         headerTitle={whichWallet === 'to' ? s.strings.select_recv_wallet : s.strings.select_src_wallet}
         showCreateWallet={whichWallet === 'to'}
       />
-    )).then((response: GuiWallet | TokenSelectObject | GuiWalletType | null) => {
-      if (response) {
-        if (typeof response.id === 'string') {
-          this.props.onSelectWallet(response.id, response.currencyCode)
-          return
-        }
-        if (typeof response.value === 'string') {
-          this.props.createCurrencyWallet(response.value, response.currencyCode, this.props.defaultIsoFiat)
-        }
+    )).then((response: WalletListResult) => {
+      if (response && typeof response.id === 'string') {
+        this.props.onSelectWallet(response.id, response.currencyCode)
+        return
+      }
+      if (response && typeof response.value === 'string') {
+        this.props.createCurrencyWallet(response.value, response.currencyCode, this.props.defaultIsoFiat)
       }
     })
     return null
