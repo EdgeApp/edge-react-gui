@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
 
     // Visuals:
     backgroundColor: THEME.COLORS.SHADOW,
-    opacity: 0.5
+    opacity: THEME.OPACITY.MODAL_DARKNESS
   },
 
   body: {

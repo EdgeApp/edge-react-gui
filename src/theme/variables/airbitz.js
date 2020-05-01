@@ -47,7 +47,8 @@ export const THEME = {
 
   OPACITY: {
     ACTIVE: 0.3,
-    MID: 0.5
+    MID: 0.5,
+    MODAL_DARKNESS: 0.7
   },
 
   ALPHA: {
