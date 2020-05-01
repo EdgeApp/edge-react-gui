@@ -27,7 +27,7 @@ export class ShareButtons extends PureComponent<Props> {
 
     return (
       <View style={styles.view}>
-        <ShareButton displayName={s.strings.fio_address_confirm_screen_label} border={styles.borderRight} onPress={fioAddressModal} />
+        <ShareButton displayName={s.strings.fio_reject_request_title} border={styles.borderRight} onPress={fioAddressModal} />
         <ShareButton displayName={COPY_TEXT} border={styles.borderRight} onPress={copyToClipboard} />
         {/* <ShareButton
         style={styles.border}
