@@ -115,7 +115,7 @@ Limit: €10000+/day",
     ],
     "deepPath": "",
     "deepQuery": Object {},
-    "description": "Fee: ~7% / Settlement: 10-30 minutes
+    "description": "Fee: 7% / Settlement: 10-30 minutes
 Limit: $18000/day",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/03/simplex-logo-sm-square.png",
     "paymentTypeLogoKey": "credit",
@@ -187,7 +187,7 @@ Limit: $2500/week",
     ],
     "deepPath": "",
     "deepQuery": Object {},
-    "description": "Fee: ~7% / Settlement: 10-30 minutes
+    "description": "Fee: 7% / Settlement: 10-30 minutes
 Limit: $18000/day",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/03/simplex-logo-sm-square.png",
     "paymentTypeLogoKey": "credit",
