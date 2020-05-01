@@ -283,16 +283,18 @@ export class Request extends Component<Props, State> {
             inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : ''}
           />
 
-          <InputAccessoryView backgroundColor={THEME.COLORS.OPAQUE_WHITE} nativeID={this.state.isFioMode ? inputAccessoryViewID : ''}>
-            <View style={styles.accessoryView}>
-              <TouchableOpacity style={styles.accessoryBtn} onPress={this.cancelFioMode}>
-                <Text style={styles.accessoryText}>{s.strings.string_cancel_cap}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.accessoryBtn} onPress={this.nextFioMode}>
-                <Text style={styles.accessoryText}>{s.strings.string_next_capitalized}</Text>
-              </TouchableOpacity>
-            </View>
-          </InputAccessoryView>
+          {Platform.OS === 'ios' ? (
+            <InputAccessoryView backgroundColor={THEME.COLORS.OPAQUE_WHITE} nativeID={this.state.isFioMode ? inputAccessoryViewID : ''}>
+              <View style={styles.accessoryView}>
+                <TouchableOpacity style={styles.accessoryBtn} onPress={this.cancelFioMode}>
+                  <Text style={styles.accessoryText}>{s.strings.string_cancel_cap}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.accessoryBtn} onPress={this.nextFioMode}>
+                  <Text style={styles.accessoryText}>{s.strings.string_next_capitalized}</Text>
+                </TouchableOpacity>
+              </View>
+            </InputAccessoryView>
+          ) : null}
 
           <View style={styles.qrContainer}>
             <QrCode data={this.state.encodedURI} size={qrSize} />
@@ -432,7 +434,7 @@ export class Request extends Component<Props, State> {
   }
 
   fioMode = () => {
-    if (this.flipInput) {
+    if (this.flipInput && Platform.OS === 'ios') {
       this.flipInput.textInputTopFocus()
       this.setState({ isFioMode: true })
     }
