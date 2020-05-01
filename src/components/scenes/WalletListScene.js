@@ -3,7 +3,7 @@
 import { createYesNoModal } from 'edge-components'
 import { type EdgeAccount } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, Alert, Animated, FlatList, Image, Linking, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, Alert, Animated, FlatList, Image, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import SortableListView from 'react-native-sortable-listview'
@@ -13,7 +13,7 @@ import { connect } from 'react-redux'
 
 import { hideMessageTweak } from '../../actions/AccountReferralActions.js'
 import { disableOtp, keepOtp } from '../../actions/OtpActions.js'
-import { toggleAccountBalanceVisibility, updateActiveWalletsOrder } from '../../actions/WalletListActions.js'
+import { linkReferralWithCurrencies, toggleAccountBalanceVisibility, updateActiveWalletsOrder } from '../../actions/WalletListActions.js'
 import { type WalletListMenuKey, walletListMenuAction } from '../../actions/WalletListMenuActions.js'
 import credLogo from '../../assets/images/cred_logo.png'
 import iconImage from '../../assets/images/otp/OTP-badge_sm.png'
@@ -70,7 +70,8 @@ type DispatchProps = {
   updateActiveWalletsOrder(walletIds: Array<string>): void,
   walletRowOption(walletId: string, option: WalletListMenuKey): void,
   disableOtp(): void,
-  keepOtp(): void
+  keepOtp(): void,
+  linkReferralWithCurrencies(string): void
 }
 type Props = StateProps & DispatchProps
 
@@ -431,14 +432,14 @@ class WalletListComponent extends Component<Props, State> {
   }
 
   renderPromoCard () {
-    const { accountMessages, accountReferral, hideMessageTweak } = this.props
+    const { accountMessages, accountReferral, hideMessageTweak, linkReferralWithCurrencies } = this.props
     const messageSummary = bestOfMessages(accountMessages, accountReferral)
     if (messageSummary == null) return null
 
     const { message, messageId, messageSource } = messageSummary
     const { uri, iconUri } = message
     function handlePress () {
-      if (uri != null) Linking.openURL(uri)
+      if (uri != null) linkReferralWithCurrencies(uri)
     }
     function handleClose () {
       hideMessageTweak(messageId, messageSource)
@@ -501,6 +502,9 @@ export const WalletListScene = connect(
     },
     keepOtp () {
       dispatch(keepOtp())
+    },
+    linkReferralWithCurrencies (uri) {
+      dispatch(linkReferralWithCurrencies(uri))
     }
   })
 )(WalletListComponent)

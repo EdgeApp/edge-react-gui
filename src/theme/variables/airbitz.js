@@ -95,6 +95,7 @@ export const THEME = {
     OPACITY_WHITE: 'rgba(255, 255, 255, 0.1)',
     OPAQUE_WHITE: 'rgba(255, 255, 255, 0.5)',
     OPACITY_GRAY_1: 'rgba(74, 81, 87, 0.1)',
+    SHADOW: '#000000', // True black for crisp drop shadows
 
     TRANSPARENT: 'transparent',
 

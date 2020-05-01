@@ -80,3 +80,13 @@ export function getGuiWalletTypes (account: EdgeAccount): GuiWalletType[] {
 
   return out
 }
+
+/**
+ * Get specific wallet type for the wallet creation scenes. BTC will always result in segwit
+ */
+export function getGuiWalletType (account: EdgeAccount, currencyCode: string): GuiWalletType | null {
+  const infos = getCurrencyInfos(account)
+  const currencyCodeFormatted = currencyCode.toUpperCase()
+  const currencyInfo = infos.find(info => info.currencyCode === currencyCodeFormatted)
+  return currencyInfo ? makeGuiWalletType(currencyInfo) : null
+}
