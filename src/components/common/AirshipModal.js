@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     top: 0,
 
     // Visuals:
-    backgroundColor: THEME.COLORS.BLACK
+    backgroundColor: THEME.COLORS.SHADOW
   },
 
   screen: {
