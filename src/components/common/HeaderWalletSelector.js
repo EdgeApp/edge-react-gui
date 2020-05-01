@@ -17,8 +17,8 @@ type DispatchProps = {
 class HeaderWalletSelectorConnected extends Component<DispatchProps> {
   onPress = () => {
     Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then((response: WalletListResult) => {
-      if (response && typeof response.id === 'string') {
-        this.props.onSelectWallet(response.id, response.currencyCode)
+      if (response.walletToSelect) {
+        this.props.onSelectWallet(response.walletToSelect.walletId, response.walletToSelect.currencyCode)
       }
     })
     return null

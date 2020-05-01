@@ -17,7 +17,16 @@ import { scale } from '../../util/scaling.js'
 import { type TokenSelectObject } from '../common/CryptoExchangeWalletListTokenRow.js'
 import { type AirshipBridge, AirshipModal } from './modalParts.js'
 
-export type WalletListResult = GuiWallet | TokenSelectObject | GuiWalletType | null
+export type WalletListResult = {
+  walletToSelect?: {
+    walletId: string,
+    currencyCode: string
+  },
+  walletToCreate?: {
+    walletType: string,
+    currencyCode: string
+  }
+}
 
 type StateProps = {
   wallets: { [string]: GuiWallet },
@@ -186,9 +195,11 @@ class WalletListModalConnected extends Component<Props, State> {
     return filteredRecords
   }
 
-  selectWallet = (wallet: GuiWallet) => this.props.bridge.resolve(wallet)
-  selectTokenWallet = (tokenSelectObject: TokenSelectObject) => this.props.bridge.resolve(tokenSelectObject)
-  createWallet = (createWalletCurrency: GuiWalletType) => this.props.bridge.resolve(createWalletCurrency)
+  selectWallet = (wallet: GuiWallet) => this.props.bridge.resolve({ walletToSelect: { walletId: wallet.id, currencyCode: wallet.currencyCode } })
+  selectTokenWallet = (tokenSelectObject: TokenSelectObject) =>
+    this.props.bridge.resolve({ walletToSelect: { walletId: tokenSelectObject.id, currencyCode: tokenSelectObject.currencyCode } })
+  createWallet = (createWalletCurrency: GuiWalletType) =>
+    this.props.bridge.resolve({ walletToCreate: { walletType: createWalletCurrency.value, currencyCode: createWalletCurrency.currencyCode } })
   renderWalletItem = ({ item }: FlatListItem<Record>) => {
     const { showCreateWallet, allowedCurrencyCodes, excludeCurrencyCodes } = this.props
     const { walletItem, createWalletCurrency, mostRecentUsed, currencyCode, headerLabel } = item
@@ -223,7 +234,7 @@ class WalletListModalConnected extends Component<Props, State> {
     const { bridge, headerTitle } = this.props
     const { input } = this.state
     return (
-      <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(null)}>
+      <AirshipModal bridge={bridge} onCancel={() => bridge.resolve({})}>
         {gap => (
           <Fragment>
             <View style={{ flex: 1 }}>

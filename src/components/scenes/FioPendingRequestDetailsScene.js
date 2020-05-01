@@ -232,8 +232,8 @@ export class FioPendingRequestDetailsComponent extends Component<Props, LocalSta
 
     Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={allowedFullCurrencyCode} />).then(
       (response: WalletListResult) => {
-        if (response && typeof response.id === 'string') {
-          onSelectWallet(response.id, response.currencyCode)
+        if (response.walletToSelect) {
+          onSelectWallet(response.walletToSelect.walletId, response.walletToSelect.currencyCode)
         }
       }
     )
