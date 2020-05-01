@@ -158,7 +158,7 @@ export class EdgeProvider extends Bridgeable {
         )
       }
     }
-    throw new Error(s.strings.user_closed_modal_no_wallet) // This is use for flow to not have error when no return is given?
+    throw new Error(s.strings.user_closed_modal_no_wallet)
   }
 
   // Get an address from the user's wallet
