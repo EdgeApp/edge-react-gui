@@ -83,7 +83,7 @@ export async function trackEvent (
 /**
  * Send a raw event to all backends.
  */
-async function logEvent (event: TrackingEvent, values: TrackingValues) {
+export async function logEvent (event: TrackingEvent, values: TrackingValues) {
   return Promise.all([logToFirebase(event, values), logToUtilServer(event, values)]).catch(error => console.warn(error))
 }
 

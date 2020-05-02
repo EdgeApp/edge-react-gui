@@ -7,8 +7,6 @@ import { sprintf } from 'sprintf-js'
 
 import invalidIcon from '../../assets/images/createWallet/invalid_icon.png'
 import validIcon from '../../assets/images/createWallet/valid_icon.png'
-import eosLogo from '../../assets/images/currencies/fa_logo_eos.png'
-import steemLogo from '../../assets/images/currencies/fa_logo_steem.png'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
@@ -26,11 +24,6 @@ import { FormField } from '../common/FormField.js'
 
 const deviceWidth = PLATFORM.deviceWidth
 
-const logos = {
-  eos: eosLogo,
-  steem: steemLogo
-}
-
 export type CreateWalletAccountSetupOwnProps = {
   selectedFiat: GuiFiatType,
   selectedWalletType: GuiWalletType,
@@ -41,7 +34,8 @@ export type CreateWalletAccountSetupOwnProps = {
 
 export type CreateWalletAccountSetupStateProps = {
   handleAvailableStatus: HandleAvailableStatus,
-  isCheckingHandleAvailability: boolean
+  isCheckingHandleAvailability: boolean,
+  currencyConfigs: Object
 }
 
 export type CreateWalletAccountSetupDispatchProps = {
@@ -50,12 +44,14 @@ export type CreateWalletAccountSetupDispatchProps = {
 
 type Props = CreateWalletAccountSetupOwnProps & CreateWalletAccountSetupDispatchProps & CreateWalletAccountSetupStateProps
 type State = {
-  accountHandle: string
+  accountHandle: string,
+  symbolImage: string
 }
 
 export class CreateWalletAccountSetup extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
+
     this.state = {
       accountHandle: props.accountHandle || ''
     }
@@ -108,7 +104,11 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
   }
 
   render () {
-    const { isCheckingHandleAvailability, handleAvailableStatus } = this.props
+    const { isCheckingHandleAvailability, handleAvailableStatus, selectedWalletType, currencyConfigs } = this.props
+    const { accountHandle } = this.state
+    const { currencyCode } = selectedWalletType
+    const walletTypeValue = selectedWalletType.value.replace('wallet:', '')
+    const { symbolImage } = currencyConfigs[walletTypeValue].currencyInfo
     const isHandleAvailable: boolean = handleAvailableStatus === 'AVAILABLE'
     const validityIcon = isHandleAvailable ? validIcon : invalidIcon
     let chooseHandleErrorMessage = ''
@@ -119,16 +119,16 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
     } else if (handleAvailableStatus === 'UNKNOWN_ERROR') {
       chooseHandleErrorMessage = s.strings.create_wallet_account_unknown_error
     }
-    const { accountHandle } = this.state
+
     const showButton = !!accountHandle && isHandleAvailable && !isCheckingHandleAvailability
     return (
       <SafeAreaView>
         <Gradient style={styles.scrollableGradient} />
         <ScrollView>
           <View style={[styles.scrollableView]}>
-            <Image source={logos['eos']} style={styles.currencyLogo} resizeMode={'cover'} />
+            <Image source={{ uri: symbolImage }} style={styles.currencyLogo} resizeMode={'cover'} />
             <View style={[styles.createWalletPromptArea, { paddingTop: 24, paddingBottom: 8 }]}>
-              <Text style={styles.instructionalText}>{sprintf(s.strings.create_wallet_account_review_instructions, 'EOS')}</Text>
+              <Text style={styles.instructionalText}>{sprintf(s.strings.create_wallet_account_review_instructions, currencyCode)}</Text>
             </View>
             <View style={[styles.createWalletPromptArea, { paddingTop: 8, paddingBottom: 8 }]}>
               <Text style={styles.handleRequirementsText}>{s.strings.create_wallet_account_requirements_eos}</Text>

@@ -80,7 +80,8 @@ class FullWalletListRowLoadedComponent extends Component<FullWalletListRowLoaded
     this.props.selectWallet(walletId, currencyCode)
     // if it's EOS then we need to see if activated, if not then it will get routed somewhere else
     // if it's not EOS then go to txList, if it's EOS and activated with publicAddress then go to txList
-    if (currencyCode !== 'EOS' || (currencyCode === 'EOS' && publicAddress)) {
+    const SPECIAL_CURRENCY_INFO = Constants.getSpecialCurrencyInfo(currencyCode)
+    if (!SPECIAL_CURRENCY_INFO.isAccountActivationRequired || (SPECIAL_CURRENCY_INFO.isAccountActivationRequired && publicAddress)) {
       Actions[Constants.TRANSACTION_LIST]({ params: 'walletList' })
     }
   }
