@@ -231,8 +231,9 @@ export class FioPendingRequestDetailsComponent extends Component<Props, LocalSta
   }
 
   renderDropUp = () => {
-    const { wallets, onSelectWallet } = this.props
+    const { wallets, onSelectWallet, toCurrencyCode } = this.props
     const { allowedWallets } = this.getWalletsListData()
+    const allowedCurrencyCodes = [toCurrencyCode]
 
     const excludeWalletIds = []
     for (const walletId in wallets) {
@@ -242,13 +243,13 @@ export class FioPendingRequestDetailsComponent extends Component<Props, LocalSta
       }
     }
 
-    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} excludeWalletIds={excludeWalletIds} />).then(
-      (response: WalletListResult) => {
-        if (response && typeof response.id === 'string') {
-          onSelectWallet(response.id, response.currencyCode)
-        }
+    Airship.show(bridge => (
+      <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} excludeWalletIds={excludeWalletIds} allowedCurrencyCodes={allowedCurrencyCodes} />
+    )).then((response: WalletListResult) => {
+      if (response && typeof response.id === 'string') {
+        onSelectWallet(response.id, response.currencyCode)
       }
-    )
+    })
   }
 
   render () {
