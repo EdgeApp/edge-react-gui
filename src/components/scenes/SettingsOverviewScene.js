@@ -199,15 +199,17 @@ export default class SettingsOverview extends Component<Props, State> {
             <SettingsSwitchRow key={'useTouchID'} text={this.state.touchIdText} value={this.props.touchIdEnabled} onPress={this._onToggleTouchIdOption} />
           )}
 
-          {CURRENCY_SETTINGS_KEYS.map(pluginId => {
-            if (account.currencyConfig[pluginId] == null) return null
-            const { currencyInfo } = account.currencyConfig[pluginId]
-            const { displayName, symbolImage } = currencyInfo
-            const icon = symbolImage != null ? <Image style={styles.currencyLogo} source={{ uri: symbolImage }} /> : undefined
-            const onPress = () => Actions[Constants.CURRENCY_SETTINGS]({ currencyInfo })
+          {Object.keys(account).length > 0
+            ? CURRENCY_SETTINGS_KEYS.map(pluginId => {
+              if (account.currencyConfig[pluginId] == null) return null
+              const { currencyInfo } = account.currencyConfig[pluginId]
+              const { displayName, symbolImage } = currencyInfo
+              const icon = symbolImage != null ? <Image style={styles.currencyLogo} source={{ uri: symbolImage }} /> : undefined
+              const onPress = () => Actions[Constants.CURRENCY_SETTINGS]({ currencyInfo })
 
-            return <SettingsRow key={pluginId} icon={icon} text={displayName} onPress={onPress} right={rightArrow} />
-          })}
+              return <SettingsRow key={pluginId} icon={icon} text={displayName} onPress={onPress} right={rightArrow} />
+            })
+            : null}
 
           <SettingsRow text={s.strings.title_promotion_settings} right={rightArrow} onPress={this._onPressPromotionSettings} />
           <SettingsSwitchRow key="developerMode" text={s.strings.settings_developer_mode} value={this.props.developerModeOn} onPress={this.onDeveloperPress} />
