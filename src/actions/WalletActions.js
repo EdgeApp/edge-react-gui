@@ -43,7 +43,8 @@ export const refreshReceiveAddressRequest = (walletId: string) => (dispatch: Dis
 
 export const selectWallet = (walletId: string, currencyCode: string, from?: string) => (dispatch: Dispatch, getState: GetState) => {
   dispatch(updateMostRecentWalletsSelected(walletId, currencyCode))
-  if (currencyCode === 'EOS') {
+  const SPECIAL_CURRENCY_INFO = Constants.getSpecialCurrencyInfo(currencyCode)
+  if (SPECIAL_CURRENCY_INFO.isAccountActivationRequired) {
     // EOS needs different path in case not activated yet
     dispatch(selectEOSWallet(walletId, currencyCode, from))
     return
@@ -75,11 +76,6 @@ export const selectEOSWallet = (walletId: string, currencyCode: string, from?: s
   const guiWallet = UI_SELECTORS.getWallet(state, walletId)
   if (walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode || from === Constants.WALLET_LIST_SCENE) {
     const { publicAddress } = guiWallet.receiveAddress
-    if (!publicAddress) {
-      // Update all wallets' addresses. Hopefully gets the updated address for the next time
-      // We enter the EOS wallet
-      dispatch(updateWalletsRequest())
-    }
 
     if (publicAddress) {
       // already activated
@@ -88,14 +84,18 @@ export const selectEOSWallet = (walletId: string, currencyCode: string, from?: s
         data: { walletId, currencyCode }
       })
     } else {
+      // Update all wallets' addresses. Hopefully gets the updated address for the next time
+      // We enter the EOSIO wallet
+      dispatch(updateWalletsRequest())
       // not activated yet
-      // find fiat and crypto (EOS) types and populate scene props
+      // find fiat and crypto (EOSIO) types and populate scene props
       const supportedFiats = UTILS.getSupportedFiats()
       const fiatTypeIndex = supportedFiats.findIndex(fiatType => fiatType.value === guiWallet.fiatCurrencyCode)
       const selectedFiat = supportedFiats[fiatTypeIndex]
-
-      const { eos } = state.core.account.currencyConfig
-      const selectedWalletType = makeGuiWalletType(eos.currencyInfo)
+      const supportedWalletTypes = SETTINGS_SELECTORS.getSupportedWalletTypes(state)
+      const selectedWalletType = supportedWalletTypes.find(type => {
+        return type.currencyCode === guiWallet.currencyCode
+      })
       const createWalletAccountSetupSceneProps = {
         accountHandle: guiWallet.name,
         selectedWalletType,
@@ -106,7 +106,7 @@ export const selectEOSWallet = (walletId: string, currencyCode: string, from?: s
       Actions[Constants.CREATE_WALLET_ACCOUNT_SETUP](createWalletAccountSetupSceneProps)
       const modal = createSimpleConfirmModal({
         title: s.strings.create_wallet_account_unfinished_activation_title,
-        message: sprintf(s.strings.create_wallet_account_unfinished_activation_message, 'EOS'),
+        message: sprintf(s.strings.create_wallet_account_unfinished_activation_message, guiWallet.currencyCode),
         icon: <Icon type={Constants.MATERIAL_COMMUNITY} name={Constants.EXCLAMATION} size={30} />,
         buttonText: s.strings.string_ok
       })

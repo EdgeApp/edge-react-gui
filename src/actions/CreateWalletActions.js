@@ -140,7 +140,7 @@ export const fetchWalletAccountActivationPaymentInfo = (paymentParams: AccountPa
         type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR',
         data: 'Network Timeout'
       })
-    }, 12000)
+    }, 16000)
     createdCoreWallet.otherMethods
       .getAccountActivationQuote(paymentParams)
       .then(activationQuote => {
