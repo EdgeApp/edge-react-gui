@@ -434,7 +434,7 @@ export class Request extends Component<Props, State> {
   }
 
   fioMode = () => {
-    if (this.flipInput && Platform.OS === 'ios') {
+    if (this.flipInput) {
       this.flipInput.textInputTopFocus()
       this.setState({ isFioMode: true })
     }
