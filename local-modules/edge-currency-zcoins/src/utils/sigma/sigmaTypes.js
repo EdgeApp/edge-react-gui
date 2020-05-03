@@ -6,8 +6,8 @@ import {
 
 export const SIGMA_ENCRYPTED_FILE = 'mint.json'
 export const RESTORE_FILE = 'restore.json'
-export const OP_SIGMA_MINT = 0xc3
-export const OP_SIGMA_SPEND = 0xc4
+export const OP_SIGMA_MINT = 'c3'
+export const OP_SIGMA_SPEND = 'c4'
 
 export const SIGMA_COIN = 100000000
 

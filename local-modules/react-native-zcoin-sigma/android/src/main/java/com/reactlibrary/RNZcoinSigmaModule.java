@@ -32,25 +32,24 @@ public class RNZcoinSigmaModule extends ReactContextBaseJavaModule {
 	}
 
 	@ReactMethod
-	public void getMintCommitment(Float denomination, ReadableArray privateKey, int index, Callback callback) {
-		byte[] commitment = Sigma.createMintCommitment(CoinDenomination.integerToDenomination((long) (denomination * Util.COIN)),
-				readableArrayToByteArray(privateKey), index);
-		byte[] serialNumber = Sigma.getSerialNumber(CoinDenomination.integerToDenomination((long) (denomination * Util.COIN)),
-				readableArrayToByteArray(privateKey), index);
-		callback.invoke(byteArrayToWritableArray(commitment), byteArrayToWritableArray(serialNumber));
+	public void getMintCommitment(Float denomination, String privateKey, int index, Callback callback) {
+		String commitment = Sigma.createMintCommitment(CoinDenomination.integerToDenomination((long) (denomination * Util.COIN)),
+				privateKey, index);
+		String serialNumber = Sigma.getSerialNumber(CoinDenomination.integerToDenomination((long) (denomination * Util.COIN)),
+				privateKey, index);
+		callback.invoke(commitment, serialNumber);
 	}
 
 	@ReactMethod
-	public void getSpendProof(Float denomination, ReadableArray privateKey, int index, ReadableArray anonymitySet,
+	public void getSpendProof(Float denomination, String privateKey, int index, ReadableArray anonymitySet,
 							  int groupId, String blockHash, String txHash, Callback callback) {
 		String[] anonymitySetArray = new String[anonymitySet.size()];
 		for (int i = 0; i < anonymitySet.size(); i++) {
 			anonymitySetArray[i] = anonymitySet.getString(i);
 		}
-		byte[] spendProof = Sigma.createSpendProof(CoinDenomination.integerToDenomination((long) (denomination * Util.COIN)),
-				readableArrayToByteArray(privateKey), index,
-				anonymitySetArray, groupId, blockHash, txHash);
-		callback.invoke(byteArrayToWritableArray(spendProof));
+		String spendProof = Sigma.createSpendProof(CoinDenomination.integerToDenomination((long) (denomination * Util.COIN)),
+				privateKey, index, anonymitySetArray, groupId, blockHash, txHash);
+		callback.invoke(spendProof);
 	}
 
 	private static WritableArray byteArrayToWritableArray(byte[] byteArray) {

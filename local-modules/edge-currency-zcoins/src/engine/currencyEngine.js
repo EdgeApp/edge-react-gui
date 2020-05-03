@@ -1278,7 +1278,7 @@ export class CurrencyEngine {
           spendTxId: ''
         })
         bcoinTx.outputs[i].address = null
-        bcoinTx.outputs[i].script.fromRaw(Buffer.concat([Buffer.of(OP_SIGMA_MINT), Buffer.from(privateCoin.commitment, 'hex')]))
+        bcoinTx.outputs[i].script.fromRaw(Buffer.concat([Buffer.from(OP_SIGMA_MINT, 'hex'), Buffer.from(privateCoin.commitment, 'hex')]))
       }
 
       await this.writePrivateCoins(mintData)

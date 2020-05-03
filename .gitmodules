@@ -1,0 +1,3 @@
+[submodule "local-modules/react-native-zcoin-sigma/ios/libsigma"]
+	path = local-modules/react-native-zcoin-sigma/ios/libsigma
+	url = https://github.com/zcoinofficial/libsigma.git

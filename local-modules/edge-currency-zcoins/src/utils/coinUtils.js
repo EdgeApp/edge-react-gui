@@ -231,17 +231,13 @@ const hexFromArray = (array: Array<number>): string => {
   }).join('')
 }
 
-const base64ToArray = (base64: string): number[] => {
-  return [...new Int8Array(Buffer.from(base64, 'base64'))]
-}
-
 export const privateCoin = async (value: number, privateKey: string, index: number, io: PluginIo): Promise<PrivateCoin> => {
-  const { commitment, serialNumber } = await io.sigmaMint(value / SIGMA_COIN, base64ToArray(privateKey), index)
+  const { commitment, serialNumber } = await io.sigmaMint(value / SIGMA_COIN, hexFromArray(Buffer.from(privateKey, 'base64')), index)
   return {
     value,
     index,
-    commitment: hexFromArray(commitment),
-    serialNumber: hexFromArray(serialNumber),
+    commitment: commitment,
+    serialNumber: serialNumber,
     groupId: 0,
     isSpend: false,
     spendTxId: ""
@@ -296,17 +292,17 @@ const fillSpendScriptIntoTX = async (mints: SpendCoin[], value: number, privateK
 
     const spendProof = await io.sigmaSpend(
       mint.value / SIGMA_COIN,
-      base64ToArray(privateKey),
+      hexFromArray(Buffer.from(privateKey, 'base64')),
       mint.index,
       mint.anonymitySet,
       mint.groupId,
       mint.blockHash,
       hash
     )
-    logger.info('spend proof ', hexFromArray(spendProof))
+    logger.info('spend proof ', spendProof)
 
     mtx.inputs[i].script.fromRaw(
-      Buffer.concat([Buffer.of(OP_SIGMA_SPEND), Buffer.from(spendProof)])
+      Buffer.concat([Buffer.from(OP_SIGMA_SPEND, 'hex'), Buffer.from(spendProof, 'hex')])
     )
   }
 
@@ -351,7 +347,7 @@ export const createSpendTX = async ({
   privateCoins.forEach((coin, index) => {
     cb.addOutput(addressScript, coin.value)
     cb.outputs[index].address = null
-    cb.outputs[index].script.fromRaw(Buffer.concat([Buffer.of(OP_SIGMA_MINT), Buffer.from(coin.commitment, 'hex')]))
+    cb.outputs[index].script.fromRaw(Buffer.concat([Buffer.from(OP_SIGMA_MINT, 'hex'), Buffer.from(coin.commitment, 'hex')]))
 
     sumOfMint += coin.value
   })

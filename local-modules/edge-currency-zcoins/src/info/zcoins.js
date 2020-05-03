@@ -75,6 +75,8 @@ const currencyInfo: EdgeCurrencyInfo = {
       //'electrums://45.63.92.224:50002',
       //'electrums://47.75.76.176:50002'
       'electrum://95.179.170.3:51001'
+      // 'electrum://209.250.237.87:50001',
+      // 'electrum://209.250.237.87:50002'
     ],
     disableFetchingServers: true
   },

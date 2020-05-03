@@ -1,11 +1,8 @@
-
-#if __has_include("RCTBridgeModule.h")
-#import "RCTBridgeModule.h"
-#else
 #import <React/RCTBridgeModule.h>
-#endif
+
+static NSInteger const CENT = 1000000;
+static NSInteger const COIN = 100000000;
 
 @interface RNZcoinSigma : NSObject <RCTBridgeModule>
 
 @end
-  

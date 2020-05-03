@@ -31,8 +31,7 @@ const contextOptions = {
   plugins: allPlugins
 }
 
-import { NativeModules } from 'react-native';
-const { RNZcoinSigma } = NativeModules;
+import RNZcoinSigma from 'react-native-zcoin-sigma';
 
 const isReactNative = detectBundler.isReactNative
 const nativeIo = isReactNative
