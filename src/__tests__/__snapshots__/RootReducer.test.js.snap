@@ -91,8 +91,10 @@ Object {
     "contacts": "undetermined",
     "location": "undetermined",
   },
-  "showMainApp": true,
   "ui": Object {
+    "fio": Object {
+      "connectedWalletsByFioAddress": Object {},
+    },
     "passwordReminder": Object {
       "lastLoginDate": -Infinity,
       "lastPasswordUseDate": -Infinity,

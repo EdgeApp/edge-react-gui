@@ -7,6 +7,7 @@ import { Actions } from 'react-native-router-flux'
 import buysellIcon from '../../../../../assets/images/sidenav/buysell.png'
 import exchangeIcon from '../../../../../assets/images/sidenav/exchange.png'
 import fioAddressIcon from '../../../../../assets/images/sidenav/fioaddress.png'
+import fioRequestsIcon from '../../../../../assets/images/sidenav/fiorequests.png'
 import logoutImage from '../../../../../assets/images/sidenav/logout.png'
 import receiveIcon from '../../../../../assets/images/sidenav/receive.png'
 import scanIcon from '../../../../../assets/images/sidenav/scan.png'
@@ -35,7 +36,6 @@ const PLUGIN_BUY_TEXT = s.strings.title_plugin_buy
 const PLUGIN_SELL_TEXT = s.strings.title_plugin_sell
 const EARN_INTEREST_TEXT = s.strings.earn_interest
 const TERMS_OF_SERVICE_TEXT = s.strings.title_terms_of_service
-const FIO_ADDRESS_TEXT = s.strings.drawer_fio_address
 
 export type Props = {
   logout: (username?: string) => void,
@@ -62,6 +62,8 @@ export default class Main extends Component<Props> {
               <EarnInterestButton />
               <Separator />
               <FioAddressButton />
+              <Separator />
+              <FioRequestsButton />
               <Separator />
               <WalletsButton />
               <Separator />
@@ -304,12 +306,11 @@ const LogoutButton = ({ onPress }) => {
   )
 }
 
-const goToFioAddressesScene = () => Actions[Constants.FIO_ADDRESS_LIST]()
 const FioAddressButton = () => {
   // FIO disable changes below
   if (global.isFioDisabled) return null
   return (
-    <Button onPress={goToFioAddressesScene}>
+    <Button onPress={Actions[Constants.FIO_ADDRESS_LIST]}>
       <Button.Row>
         <Button.Left>
           <Image source={fioAddressIcon} style={styles.iconImage} />
@@ -317,7 +318,26 @@ const FioAddressButton = () => {
 
         <Button.Center>
           <Button.Text>
-            <Text>{FIO_ADDRESS_TEXT}</Text>
+            <Text>{s.strings.drawer_fio_address}</Text>
+          </Button.Text>
+        </Button.Center>
+      </Button.Row>
+    </Button>
+  )
+}
+
+const goToFioRequestsScene = () => Actions[Constants.FIO_REQUEST_LIST]()
+const FioRequestsButton = () => {
+  return (
+    <Button onPress={goToFioRequestsScene}>
+      <Button.Row>
+        <Button.Left>
+          <Image source={fioRequestsIcon} style={styles.iconImage} />
+        </Button.Left>
+
+        <Button.Center>
+          <Button.Text>
+            <Text>{s.strings.drawer_fio_requests}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>

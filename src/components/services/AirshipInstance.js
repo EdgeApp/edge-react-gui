@@ -3,6 +3,7 @@
 import React from 'react'
 import { makeAirship } from 'react-native-airship'
 
+import { AirshipFullScreenSpinner } from '../common/AirshipFullScreenSpinner.js'
 import { AirshipToast } from '../common/AirshipToast.js'
 import { AlertDropdown } from '../navigation/AlertDropdown.js'
 
@@ -13,6 +14,15 @@ export const Airship = makeAirship()
  */
 export function showActivity<T> (message: string, promise: Promise<T>): Promise<T> {
   Airship.show(bridge => <AirshipToast bridge={bridge} message={message} activity={promise} />)
+  return promise
+}
+
+/**
+ * Shows a message & activity spinner on a fullscreen backdrop, tied to the lifetime of a promise.
+ * No touches will be registed at it's lifetime.
+ */
+export function showFullScreenSpinner<T> (message: string, promise: Promise<T>): Promise<T> {
+  Airship.show(bridge => <AirshipFullScreenSpinner bridge={bridge} message={message} activity={promise} />)
   return promise
 }
 

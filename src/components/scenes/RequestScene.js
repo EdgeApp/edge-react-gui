@@ -2,11 +2,13 @@
 
 import { bns } from 'biggystring'
 import { createSimpleConfirmModal } from 'edge-components'
-import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
+import type { EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, Clipboard, Dimensions, Platform, View } from 'react-native'
+import type { RefObject } from 'react-native'
+import { ActivityIndicator, Clipboard, Dimensions, InputAccessoryView, Platform, Text, TouchableOpacity, View } from 'react-native'
 import ContactsWrapper from 'react-native-contacts-wrapper'
 import RNFS from 'react-native-fs'
+import { Actions } from 'react-native-router-flux'
 import Share from 'react-native-share'
 import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
@@ -26,6 +28,7 @@ import { getObjectDiff } from '../../util/utils'
 import { launchModal } from '../common/ModalProvider.js'
 import { QrCode } from '../common/QrCode.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { createFioAddressModal } from '../modals/RequestFioAddressModal'
 import { showError, showToast } from '../services/AirshipInstance.js'
 
 const PUBLIC_ADDRESS_REFRESH_MS = 2000
@@ -41,7 +44,10 @@ export type RequestStateProps = {
   publicAddress: string,
   legacyAddress: string,
   secondaryCurrencyInfo: GuiCurrencyInfo,
-  useLegacyAddress: boolean
+  useLegacyAddress: boolean,
+  fioPlugin: EdgeCurrencyConfig,
+  fioAddressesExist: boolean,
+  isConnected: boolean
 }
 export type RequestLoadingProps = {
   edgeWallet: null,
@@ -54,11 +60,15 @@ export type RequestLoadingProps = {
   publicAddress: string,
   legacyAddress: string,
   secondaryCurrencyInfo: null,
-  useLegacyAddress: null
+  useLegacyAddress: null,
+  fioPlugin: EdgeCurrencyConfig,
+  fioAddressesExist: boolean,
+  isConnected: boolean
 }
 
 export type RequestDispatchProps = {
-  refreshReceiveAddressRequest(string): void
+  refreshReceiveAddressRequest(string): void,
+  refreshAllFioAddresses: () => Promise<void>
 }
 type ModalState = 'NOT_YET_SHOWN' | 'VISIBLE' | 'SHOWN'
 type CurrencyMinimumPopupState = { [currencyCode: string]: ModalState }
@@ -70,10 +80,16 @@ export type State = {
   publicAddress: string,
   legacyAddress: string,
   encodedURI: string,
-  minimumPopupModalState: CurrencyMinimumPopupState
+  minimumPopupModalState: CurrencyMinimumPopupState,
+  isFioMode: boolean
 }
 
+const inputAccessoryViewID: string = 'cancelHeaderId'
+
 export class Request extends Component<Props, State> {
+  amounts: ExchangedFlipInputAmounts
+  flipInput: RefObject | null = null
+
   constructor (props: Props) {
     super(props)
     const minimumPopupModalState: CurrencyMinimumPopupState = {}
@@ -86,7 +102,8 @@ export class Request extends Component<Props, State> {
       publicAddress: props.publicAddress,
       legacyAddress: props.legacyAddress,
       encodedURI: '',
-      minimumPopupModalState
+      minimumPopupModalState,
+      isFioMode: false
     }
     if (this.shouldShowMinimumModal(props)) {
       if (!props.currencyCode) return
@@ -99,6 +116,7 @@ export class Request extends Component<Props, State> {
 
   componentDidMount () {
     this.generateEncodedUri()
+    this.props.refreshAllFioAddresses()
   }
 
   onCloseXRPMinimumModal = () => {
@@ -216,6 +234,17 @@ export class Request extends Component<Props, State> {
     this.onCloseXRPMinimumModal()
   }
 
+  onNext = () => {
+    if (this.state.isFioMode) {
+      this.setState({ isFioMode: false })
+      this.fioAddressModal()
+    }
+  }
+
+  flipInputRef = (ref: RefObject) => {
+    this.flipInput = ref && ref.flipInput ? ref.flipInput.current : null
+  }
+
   render () {
     if (this.props.loading) {
       return <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size={'large'} />
@@ -236,6 +265,7 @@ export class Request extends Component<Props, State> {
 
         <View style={styles.main}>
           <ExchangedFlipInput
+            ref={this.flipInputRef}
             headerText={flipInputHeaderText}
             headerLogo={flipInputHeaderLogo}
             primaryCurrencyInfo={primaryCurrencyInfo}
@@ -248,7 +278,23 @@ export class Request extends Component<Props, State> {
             color={THEME.COLORS.WHITE}
             isFiatOnTop={true}
             isFocus={false}
+            onNext={this.onNext}
+            topReturnKeyType={this.state.isFioMode ? 'next' : 'done'}
+            inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : ''}
           />
+
+          {Platform.OS === 'ios' ? (
+            <InputAccessoryView backgroundColor={THEME.COLORS.OPAQUE_WHITE} nativeID={this.state.isFioMode ? inputAccessoryViewID : ''}>
+              <View style={styles.accessoryView}>
+                <TouchableOpacity style={styles.accessoryBtn} onPress={this.cancelFioMode}>
+                  <Text style={styles.accessoryText}>{s.strings.string_cancel_cap}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.accessoryBtn} onPress={this.nextFioMode}>
+                  <Text style={styles.accessoryText}>{s.strings.string_next_capitalized}</Text>
+                </TouchableOpacity>
+              </View>
+            </InputAccessoryView>
+          ) : null}
 
           <View style={styles.qrContainer}>
             <QrCode data={this.state.encodedURI} size={qrSize} />
@@ -262,6 +308,7 @@ export class Request extends Component<Props, State> {
             shareViaSMS={this.shareViaSMS}
             shareViaShare={this.shareViaShare}
             copyToClipboard={this.copyToClipboard}
+            fioAddressModal={this.fioAddressModal}
           />
         </View>
       </SceneWrapper>
@@ -271,6 +318,7 @@ export class Request extends Component<Props, State> {
   onExchangeAmountChanged = async (amounts: ExchangedFlipInputAmounts) => {
     const { publicAddress, legacyAddress } = this.state
     const { currencyCode } = this.props
+    this.amounts = amounts
     if (!currencyCode) return
     const edgeEncodeUri: EdgeEncodeUri =
       this.props.useLegacyAddress && legacyAddress ? { publicAddress, legacyAddress, currencyCode } : { publicAddress, currencyCode }
@@ -358,5 +406,52 @@ export class Request extends Component<Props, State> {
   shareViaShare = () => {
     this.shareMessage()
     // console.log('shareViaShare')
+  }
+
+  fioAddressModal = async () => {
+    if (!this.props.isConnected) {
+      showError(s.strings.fio_network_alert_text)
+      return
+    }
+    if (!this.props.fioAddressesExist) {
+      showError(`${s.strings.title_register_fio_address}. ${s.strings.fio_request_by_fio_address_error_no_address}`)
+      return
+    }
+    if (this.amounts) {
+      if (bns.lte(this.amounts.nativeAmount, '0')) {
+        this.fioMode()
+        return
+      }
+    } else {
+      this.fioMode()
+      return
+    }
+    const fioAddressModal = createFioAddressModal({ fioPlugin: this.props.fioPlugin, isConnected: this.props.isConnected })
+    const fioModalData = await launchModal(fioAddressModal)
+    if (fioModalData) {
+      Actions[Constants.FIO_REQUEST_CONFIRMATION]({ fioModalData, amounts: this.amounts })
+    }
+  }
+
+  fioMode = () => {
+    if (this.flipInput && Platform.OS === 'ios') {
+      this.flipInput.textInputTopFocus()
+      this.setState({ isFioMode: true })
+    }
+  }
+
+  cancelFioMode = () => {
+    this.setState({ isFioMode: false }, () => {
+      if (this.flipInput) {
+        this.flipInput.textInputTopBlur()
+      }
+    })
+  }
+
+  nextFioMode = () => {
+    if (this.flipInput) {
+      this.flipInput.textInputTopBlur()
+    }
+    this.onNext()
   }
 }

@@ -16,12 +16,11 @@ import { trackAccountEvent, trackConversion } from '../../../../actions/Tracking
 import { selectWallet } from '../../../../actions/WalletActions'
 import { launchModal } from '../../../../components/common/ModalProvider.js'
 import { TwoButtonSimpleConfirmationModal } from '../../../../components/modals/TwoButtonSimpleConfirmationModal.js'
+import { type WalletListResult, WalletListModal } from '../../../../components/modals/WalletListModal.js'
 import { Airship, showError, showToast } from '../../../../components/services/AirshipInstance.js'
-import { WalletListModalConnected as WalletListModal } from '../../../../connectors/components/WalletListModalConnector.js'
 import { DEFAULT_STARTER_WALLET_NAMES, EXCLAMATION, MATERIAL_COMMUNITY } from '../../../../constants/indexConstants'
 import { SEND_CONFIRMATION } from '../../../../constants/SceneKeys.js'
 import s from '../../../../locales/strings'
-import * as SETTINGS_SELECTORS from '../../../../modules/Settings/selectors.js'
 import { Icon } from '../../../../modules/UI/components/Icon/Icon.ui.js'
 import type { GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
 import { type GuiPlugin, type GuiPluginQuery } from '../../../../types/GuiPluginTypes.js'
@@ -126,107 +125,26 @@ export class EdgeProvider extends Bridgeable {
   // Set the currency wallet to interact with. This will show a wallet selector modal
   // for the user to pick a wallet within their list of wallets that match `currencyCodes`
   // Returns the currencyCode chosen by the user (store: Store)
-  async chooseCurrencyWallet (cCodes: Array<string> = []): Promise<string> {
-    const currencyCodes = []
-    const currencyCodeCount = {}
-    let i = 0
-    for (i; i < cCodes.length; i++) {
-      currencyCodes.push(cCodes[i].toUpperCase())
-      currencyCodeCount[cCodes[i].toUpperCase()] = 0
-    }
-
-    const wallets = this._state.ui.wallets.byId // CORE_SELECTORS.getWallets(this._state)
-    const excludedCurrencyCode = []
-    const excludedTokens = []
-    const walletsToUse = []
-    const walletsToUseCCode = []
-    for (const key in wallets) {
-      const wallet = wallets[key]
-      if (currencyCodes.length === 0) {
-        walletsToUse.push(wallet)
-        walletsToUseCCode.push(wallet.currencyCode)
-      } else {
-        if (!currencyCodes.includes(wallet.currencyCode) && wallet.enabledTokens.length > 0) {
-          if (!excludedCurrencyCode.includes(wallet.currencyCode)) {
-            excludedCurrencyCode.push(wallet.currencyCode)
-          }
-          const ignoredCodes = []
-          let i = 0
-          for (i; i < wallet.enabledTokens.length; i++) {
-            if (!currencyCodes.includes(wallet.enabledTokens[i])) {
-              excludedTokens.push(wallet.enabledTokens[i])
-              ignoredCodes.push(wallet.enabledTokens[i])
-            }
-          }
-          if (wallet.enabledTokens.length > 0 && ignoredCodes.length < wallet.enabledTokens.length) {
-            walletsToUse.push(wallet)
-            walletsToUseCCode.push(wallet.currencyCode)
-          }
-        }
-        if (currencyCodes.includes(wallet.currencyCode)) {
-          if (wallet.enabledTokens.length > 0) {
-            let i = 0
-            for (i; i < wallet.enabledTokens.length; i++) {
-              if (!currencyCodes.includes(wallet.enabledTokens[i])) {
-                excludedTokens.push(wallet.enabledTokens[i])
-              }
-            }
-          }
-          walletsToUse.push(wallet)
-          walletsToUseCCode.push(wallet.currencyCode)
-          currencyCodeCount[wallet.currencyCode]++
-        }
-      }
-    }
-    //
-    const supportedWalletTypesPreFilter = SETTINGS_SELECTORS.getSupportedWalletTypes(this._state)
-    const supportedWalletTypes = []
-    for (let i = 0; i < supportedWalletTypesPreFilter.length; i++) {
-      const swt = supportedWalletTypesPreFilter[i]
-      if (currencyCodes.includes(swt.currencyCode) && !walletsToUseCCode.includes(swt.currencyCode)) {
-        supportedWalletTypes.push(swt)
-      }
-    }
-    // check to see if there are any requested codes that there are no wallets for
-    const noWalletCodes = []
-    if (currencyCodes.length > 0 && walletsToUse.length < 1 && supportedWalletTypes.length < 1) {
-      for (const key in currencyCodeCount) {
-        if (currencyCodeCount[key] === 0) {
-          noWalletCodes.push(key)
-        }
-      }
-    }
-    const selectedWallet = await Airship.show(bridge => (
-      <WalletListModal
-        bridge={bridge}
-        wallets={walletsToUse}
-        supportedWalletTypes={supportedWalletTypes}
-        excludedCurrencyCode={excludedCurrencyCode}
-        showWalletCreators={true}
-        headerTitle={s.strings.choose_your_wallet}
-        excludedTokens={excludedTokens}
-        noWalletCodes={noWalletCodes}
-        disableZeroBalance={false}
-      />
+  async chooseCurrencyWallet (allowedCurrencyCodes: Array<string> = []): Promise<string> {
+    const selectedWallet: WalletListResult = await Airship.show(bridge => (
+      <WalletListModal bridge={bridge} showCreateWallet={true} allowedCurrencyCodes={allowedCurrencyCodes} headerTitle={s.strings.choose_your_wallet} />
     ))
 
-    if (selectedWallet) {
-      if (selectedWallet.id) {
-        const code = selectedWallet.currencyCode
-        this._dispatch(selectWallet(selectedWallet.id, code))
-        return Promise.resolve(code)
-      }
-      const settings = SETTINGS_SELECTORS.getSettings(this._state)
-      const walletName = DEFAULT_STARTER_WALLET_NAMES[selectedWallet.currencyCode]
+    if (selectedWallet && typeof selectedWallet.id === 'string') {
+      this._dispatch(selectWallet(selectedWallet.id, selectedWallet.currencyCode))
+      return Promise.resolve(selectedWallet.currencyCode)
+    }
+
+    if (selectedWallet && typeof selectedWallet.value === 'string') {
       try {
-        if (typeof selectedWallet.value === 'string') {
-          const newWallet: EdgeCurrencyWallet = await this._dispatch(
-            createCurrencyWalletAndSelectForPlugins(walletName, selectedWallet.value, settings.defaultIsoFiat)
-          )
-          this._dispatch(selectWallet(newWallet.id, newWallet.currencyInfo.currencyCode))
-          const returnString: string = newWallet.currencyInfo.currencyCode
-          return Promise.resolve(returnString)
-        }
+        const settings = this._state.ui.settings
+        const walletName = DEFAULT_STARTER_WALLET_NAMES[selectedWallet.currencyCode]
+        const newWallet: EdgeCurrencyWallet = await this._dispatch(
+          createCurrencyWalletAndSelectForPlugins(walletName, selectedWallet.value, settings.defaultIsoFiat)
+        )
+        this._dispatch(selectWallet(newWallet.id, newWallet.currencyInfo.currencyCode))
+        const returnString: string = newWallet.currencyInfo.currencyCode
+        return Promise.resolve(returnString)
       } catch (e) {
         const modal = createSimpleConfirmModal({
           title: s.strings.create_wallet_failed_header,
@@ -241,7 +159,7 @@ export class EdgeProvider extends Bridgeable {
         )
       }
     }
-    throw new Error(s.strings.user_closed_modal_no_wallet)
+    throw new Error(s.strings.user_closed_modal_no_wallet) // This is use for flow to not have error when no return is given?
   }
 
   // Get an address from the user's wallet

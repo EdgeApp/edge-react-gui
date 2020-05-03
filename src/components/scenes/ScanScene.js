@@ -22,7 +22,7 @@ type Props = {
   torchEnabled: boolean,
   scanEnabled: boolean,
   qrCodeScanned: (data: string) => void,
-  parseScannedUri: (data: string) => void,
+  parseScannedUri: (data: string) => Promise<void>,
   toggleEnableTorch: () => void,
   toggleAddressModal: () => void,
   toggleScanToWalletListModal: () => void

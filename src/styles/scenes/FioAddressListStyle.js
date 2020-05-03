@@ -66,6 +66,16 @@ export const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center'
   },
+  domainVew: {
+    paddingHorizontal: scale(15),
+    paddingTop: scale(15),
+    paddingBottom: scale(0)
+  },
+  link: {
+    padding: scale(15),
+    color: THEME.COLORS.ACCENT_BLUE,
+    textAlign: 'center'
+  },
   underlay: {
     color: `${THEME.COLORS.PRIMARY}${THEME.ALPHA.LOW}`
   },

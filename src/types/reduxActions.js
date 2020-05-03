@@ -3,6 +3,7 @@
 import { type Disklet } from 'disklet'
 import { type EdgeAccount, type EdgeContext, type EdgeCurrencyWallet, type EdgeLobby, type EdgeParsedUri, type EdgeReceiveAddress } from 'edge-core-js'
 
+import type { CcWalletMap } from '../reducers/FioReducer'
 import { type PermissionsState } from '../reducers/PermissionsReducer.js'
 import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
 import { type TweakSource } from '../util/ReferralHelpers.js'
@@ -48,7 +49,6 @@ type LegacyActionName =
 
 // Actions with no payload:
 type NoDataActionName =
-  | 'ACCOUNT_SWAP_IGNORED'
   | 'ADD_NEW_CUSTOM_TOKEN_FAILURE'
   | 'ADD_TOKEN_START'
   | 'CLOSE_SELECT_USER'
@@ -66,7 +66,6 @@ type NoDataActionName =
   | 'EDIT_CUSTOM_TOKEN_FAILURE'
   | 'EDIT_CUSTOM_TOKEN_START'
   | 'ENABLE_SCAN'
-  | 'FIO/SET_FIO_ADDRESSES_PROGRESS'
   | 'HIDE_DELETE_TOKEN_MODAL'
   | 'HIDE_PASSWORD_RECOVERY_MODAL'
   | 'INVALIDATE_EDGE_LOBBY'
@@ -89,7 +88,6 @@ type NoDataActionName =
   | 'RECEIVED_INSUFFICENT_FUNDS_ERROR'
   | 'SHIFT_COMPLETE'
   | 'SHOW_DELETE_TOKEN_MODAL'
-  | 'SHOW_MAIN_APP'
   | 'SHOW_PASSWORD_RECOVERY_MODAL'
   | 'START_CALC_MAX'
   | 'START_SHIFT_TRANSACTION'
@@ -105,6 +103,7 @@ type NoDataActionName =
   | 'UNIQUE_IDENTIFIER_MODAL/RESET'
   | 'USE_LEGACY_REQUEST_ADDRESS'
   | 'USE_REGULAR_REQUEST_ADDRESS'
+  | 'FIO/SET_FIO_ADDRESSES_PROGRESS'
 
 export type Action =
   | { type: LegacyActionName, data: any }
@@ -113,6 +112,7 @@ export type Action =
   | { type: 'ACCOUNT_ACTIVATION_INFO', data: HandleActivationInfo }
   | { type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO', data: AccountActivationPaymentInfo }
   | { type: 'ACCOUNT_REFERRAL_LOADED', data: { referral: AccountReferral, cache: ReferralCache } }
+  | { type: 'ACCOUNT_SWAP_IGNORED', data: boolean }
   | { type: 'ACCOUNT_TWEAKS_REFRESHED', data: ReferralCache }
   | {
       type: 'ADD_NEW_CUSTOM_TOKEN_SUCCESS',
@@ -239,3 +239,5 @@ export type Action =
         }
       }
     }
+  | { type: 'FIO/UPDATE_CONNECTED_WALLETS', data: { connectedWalletsByFioAddress: { [fioAddress: string]: CcWalletMap } } }
+  | { type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS', data: { fioAddress: string, ccWalletMap: CcWalletMap } }

@@ -489,7 +489,7 @@ export const styles = {
   },
   promoText: {
     ...dayText('row-left'),
-    flexGrow: 1,
+    flex: 1,
     margin: THEME.rem(0.5)
   },
   promoClose: {

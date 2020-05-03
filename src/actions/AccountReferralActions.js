@@ -19,7 +19,7 @@ export const loadAccountReferral = (account: EdgeAccount) => async (dispatch: Di
   try {
     const [cacheText, referralText] = await Promise.all([
       account.localDisklet.getText(REFERRAL_CACHE_FILE).catch(() => '{}'),
-      account.disklet.getText(ACCOUNT_REFERRAL_FILE)
+      account.disklet.getText(ACCOUNT_REFERRAL_FILE).catch(() => '{}')
     ])
     const cache = asDiskReferralCache(JSON.parse(cacheText))
     const referral = unpackAccountReferral(JSON.parse(referralText))
@@ -48,8 +48,12 @@ export const loadAccountReferral = (account: EdgeAccount) => async (dispatch: Di
   }
 
   dispatch({ type: 'ACCOUNT_REFERRAL_LOADED', data: { cache, referral } })
-  saveAccountReferral(getState())
-  saveReferralCache(getState())
+  await Promise.all([saveAccountReferral(getState()), saveReferralCache(getState())])
+
+  // Also try activating the same link as a promotion (with silent errors):
+  if (installerId != null) {
+    await activatePromotion(installerId)(dispatch, getState).catch(() => undefined)
+  }
 }
 
 /**
@@ -58,6 +62,9 @@ export const loadAccountReferral = (account: EdgeAccount) => async (dispatch: Di
 export const activatePromotion = (installerId: string) => async (dispatch: Dispatch, getState: GetState) => {
   const uri = `https://util1.edge.app/api/v1/promo?installerId=${installerId}`
   const reply = await fetch(uri)
+  if (reply.status === 404) {
+    throw new Error(`Invalid promotion code ${installerId}`)
+  }
   if (!reply.ok) {
     throw new Error(`Util server returned status code ${reply.status}`)
   }
@@ -94,8 +101,8 @@ export const hideMessageTweak = (messageId: string, source: TweakSource) => asyn
 /**
  * Deactivates any swap plugin preferences from the account affiliation.
  */
-export const ignoreAccountSwap = () => async (dispatch: Dispatch, getState: GetState) => {
-  dispatch({ type: 'ACCOUNT_SWAP_IGNORED' })
+export const ignoreAccountSwap = (ignore: boolean = true) => async (dispatch: Dispatch, getState: GetState) => {
+  dispatch({ type: 'ACCOUNT_SWAP_IGNORED', data: ignore })
   saveAccountReferral(getState())
 }
 
@@ -165,10 +172,10 @@ const asDiskPromotion = asObject({
 })
 
 const asDiskAccountReferral = asObject({
-  creationDate: asDate,
+  creationDate: asOptional(asDate),
   installerId: asOptional(asString),
   currencyCodes: asCurrencyCodes,
-  promotions: asArray(asDiskPromotion),
+  promotions: asOptional(asArray(asDiskPromotion), []),
 
   // User overrides:
   ignoreAccountSwap: asOptional(asBoolean, false),

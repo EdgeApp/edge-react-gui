@@ -1196,10 +1196,10 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@fioprotocol/fiojs@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@fioprotocol/fiojs/-/fiojs-1.0.0.tgz#76243d1d3e710ed3d97cf55025d4011ea3e0b454"
-  integrity sha512-H1OMN2npNWyv1hKPX/nDi6w+YtKpuTe6IdGBKdkdrHR7XtCX7TBVwC6oPA5rnVDi+pK6bCTMzNkrCa8WPtEM7A==
+"@fioprotocol/fiojs@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@fioprotocol/fiojs/-/fiojs-1.0.1.tgz#81779437603741bc4ca1c76d119b64c4157a3874"
+  integrity sha512-+rxJ/ynUkox/DO3ihHPpAc//DDI+DQvrphLqwRKufw0atC3GKluGR2qMTeO45O0UjorvOIw6esuuG7NpbVUm8Q==
   dependencies:
     ajv "^6.10.2"
     babel-runtime "6.26.0"
@@ -1213,12 +1213,12 @@
     randombytes "^2.1.0"
     text-encoding "0.7.0"
 
-"@fioprotocol/fiosdk@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@fioprotocol/fiosdk/-/fiosdk-1.0.1.tgz#55e1b3a6f047c93007936731a1ba647571021c5d"
-  integrity sha512-xVhVmmj5vuXsBSt2QX+ogMkgp0/VVoD2/YUf66F/oBpKRwWXtJWS4N/v4JQMOIQC0lxSOrx1FAqVq6KZlS8ihQ==
+"@fioprotocol/fiosdk@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@fioprotocol/fiosdk/-/fiosdk-1.0.2.tgz#fece083173ef7e309b49e9312538fffa1896a346"
+  integrity sha512-ABukfhRfUqmu+tHqfUUBqw2FSIfkaMUp4ALtlXZwYBd1ZgH0pYBbzrSGR8KHJyEXcs3sEvWb9nh1alu68ztDLg==
   dependencies:
-    "@fioprotocol/fiojs" "1.0.0"
+    "@fioprotocol/fiojs" "1.0.1"
     "@types/text-encoding" "0.0.35"
     bip39 "^3.0.2"
     hdkey "^1.1.1"
@@ -3188,10 +3188,10 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-cleaners@^0.1.4:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.1.4.tgz#8eeb3474096e661641983bfc011c372d50e81013"
-  integrity sha512-EfNsbvIl+zFkUkyEYPk8BMlxUulCUxG3eyVFeRvPG21xS2CNsBRqIiPv88W7/yAhhjt7RGZb/GPNU/gLmSpsVw==
+cleaners@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.2.0.tgz#b1a583878f4c217c8f0bd2e7756dca3eaca91003"
+  integrity sha512-UsCPC3eYtqBgk9kYSh8WbFoXbDD4lr9r7wz57MSsluMLFb78ws3ER6Bs2q+7iUmaeBiwZ/+S02FOQ5gEA2y4Sg==
 
 cli-cursor@^1.0.2:
   version "1.0.2"
@@ -4055,16 +4055,17 @@ edge-core-js@^0.17.0:
     scrypt-js "^2.0.3"
     yaob "^0.3.6"
 
-edge-currency-accountbased@^0.7.1:
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.1.tgz#c066cb3f11be2bdeb159da39f565d88bcf3c955e"
-  integrity sha512-9klj0zWQjJjYy0+D6TmjTKl+knZtnO0erkKmzgFx8XkAg4+9zb6OhksYw5xHvSF+/WRQOvYZUIlfigG/YwA1Ow==
+edge-currency-accountbased@^0.7.4:
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.4.tgz#357ea974722b91d4be0b84555eb99b5cdd53ce5a"
+  integrity sha512-+K4HWKtwiQIo0J0mGw9m2yhzn457xKcrhtODiJYR/S3PtQByzd96fHDd39fKVSJpvSROAjSd2jF7l887yb6hgA==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
-    "@fioprotocol/fiosdk" "^1.0.1"
+    "@fioprotocol/fiosdk" "^1.0.2"
     base-x "^1.0.4"
     biggystring "^3.0.0"
     bip39 "^3.0.2"
+    cleaners "^0.2.0"
     eosjs "^20.0.0"
     eosjs-api "^7.0.4"
     eosjs-ecc "^4.0.7"
@@ -4114,12 +4115,13 @@ edge-currency-monero@^0.2.4:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#william/v0.14.0-hardfork"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.10.0.tgz#792ca2def1a15fd8643fc8451227a52077d9ea9c"
-  integrity sha512-2KLTQbZdTsxIIJgvdwIdXRdIVelXZDv5QsvMtnINMpd6sU/Y0Rxxzmdp5BmgO6XTV9z/TBrTcN/Yla9NUolc2Q==
+edge-exchange-plugins@^0.10.3:
+  version "0.10.3"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.10.3.tgz#b6c00a8c554d6a979c22e27a089e76fbcdc010fc"
+  integrity sha512-sXPgMYMxNI0cEw3skPDS9+FIl/gLOaJ++sdM0v0FgJNUOzSe++DsCePJ9FeFwql1NH5Uoegk7W7xJ32XMOGUbg==
   dependencies:
     biggystring "^3.0.2"
+    cleaners "^0.2.0"
     esm "^3.2.4"
     hashjs "^1.2.0"
     iso4217 "^0.2.0"
@@ -4159,9 +4161,9 @@ edge-login-ui-rn@0.6.9:
   version "0.0.1"
   resolved "https://github.com/EdgeApp/edge-plugin-bity.git#2a2015ccc1099cc6eedbcab02eb1904c5c2838fd"
 
-"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#29163e3":
+"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#04e0b82":
   version "0.0.3"
-  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#29163e3dd26a096913c7a36d8cd0da9fa6994b34"
+  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#04e0b822ce64c04e620851f9788c83af359bc97a"
   dependencies:
     moment "^2.22.2"
 
@@ -10009,6 +10011,11 @@ react-native-swipe-gestures@^1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/react-native-swipe-gestures/-/react-native-swipe-gestures-1.0.3.tgz#4160f8d459627323f3a3d2770af4bcd82fd054f5"
   integrity sha512-KOouRzPB2fHFjVombsSdRfYo8SFeNVa4Ho4B5il87DuuF26sPNOtb3je+qaT/xVptedOsCzRPJGbWFMsaBApgg==
+
+react-native-swipe-list-view@1.5.8:
+  version "1.5.8"
+  resolved "https://registry.yarnpkg.com/react-native-swipe-list-view/-/react-native-swipe-list-view-1.5.8.tgz#1da75ed9eb8216c9bb401ee0a3c781e8cdc56093"
+  integrity sha512-GvnnnMClypABc4Tq6VQPvaUVL95LcyiIsE/jI89zDWVB3qvzOC3d/2iiMTxj5CAUg4d9NBBqxx6hzjhK/jvzyQ==
 
 react-native-tab-view@^0.0.77:
   version "0.0.77"

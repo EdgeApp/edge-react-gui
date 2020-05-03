@@ -2,6 +2,41 @@
 
 import URL from 'url-parse'
 
+/*
+ * All Edge deep-linking features are available through the `edge://`
+ * protocol. This protocol comes in three flavors, which are fully equivalent:
+ *
+ *   - edge://<type>/...
+ *   - airbitz://<type>/...
+ *   - https://deep.edge.app/<type>/...
+ *
+ * The `edge://` protocol supports the following link types:
+ *
+ *   - edge: Edge login
+ *   - pay: Payment request
+ *   - plugin: GUI plugin deep link
+ *   - promotion: Activate a promotion code
+ *   - recovery: Password recovery
+ *   - swap: Crypto-to-crypto swap
+ *   - x-callback-url: Address request
+ *
+ * The `edge://` protocol is the preferred way to link into the application,
+ * but Edge also supports some feature-specific https domains:
+ *
+ *   - https://dl.edge.app/... = edge://promotion/...
+ *   - https://dl.edge.app/?af=... = edge://promotion/...
+ *   - https://recovery.edgesecure.co/... = edge://recovery/...
+ *
+ * We also support some legacy prefixes (but don't use these):
+ *
+ *   - https://www.edge.app/edgelogin?address=... = edge://edge/...
+ *   - edge-ret://plugins/simplex/... = edge://plugin/simplex/...
+ *   - edge-ret://x-callback-url/... = edge://x-callback-url/...
+ *   - airbitz-ret://x-callback-url/... = edge://x-callback-url/...
+ *
+ * Besides the edge:// protocol, there are also various coin-specific URI
+ * protocols like `bitcoin:`, which we just pass through as "other".
+ */
 export type EdgeLoginLink = {
   type: 'edgeLogin',
   lobbyId: string
@@ -26,10 +61,14 @@ export type PromotionLink = {
 
 export type ReturnAddressLink = {
   type: 'returnAddress',
-  uri: string, // TODO: Remove once we stop needing to double-parse
   currencyName: string,
   sourceName?: string,
   successUri?: string
+}
+
+export type SwapLink = {
+  type: 'swap'
+  // We may eventually add query parameters to pre-populate currencies.
 }
 
 export type DeepLink =
@@ -38,121 +77,134 @@ export type DeepLink =
   | PluginLink
   | PromotionLink
   | ReturnAddressLink
+  | SwapLink
   | {
       type: 'other',
       protocol: string, // Without the ':'
       uri: string
     }
 
-function parseDeepLinkPlugins (pathParts: Array<string>, query: { [key: string]: string }) {
-  const [pluginId = ''] = pathParts.splice(1, 1)
-  const path = pathParts.join('/')
-  return { type: 'plugin', pluginId, path, query: query }
-}
-
-function parseDeepLinkPay (pathParts: Array<string>, uri: string) {
-  const [protocol = ''] = pathParts.splice(1, 1)
-  // Reconstruct URL and remove resource and currency code:
-  const reHttps = new RegExp(`https://deep.edge.app/pay/${protocol}/`, 'g')
-  const reEdge = new RegExp(`edge://pay/${protocol}/`, 'g')
-  const newPath = uri.replace(reHttps, '').replace(reEdge, '')
-  const newUri = `${protocol}:${newPath}`
-  return { type: 'other', protocol, uri: newUri }
-}
-
 /**
  * Parse a link into the app, identifying special
  * features that Edge knows how to handle.
  */
 export function parseDeepLink (uri: string): DeepLink {
+  // Normalize some legacy cases:
+  for (const prefix of prefixes) {
+    const [from, to] = prefix
+    if (uri.indexOf(from) === 0) uri = uri.replace(from, to)
+  }
+
   const url = new URL(uri, true)
 
-  // Check for https://deep.edge.app/[resource]/[path...]
-  //  Where resource = [plugins|...]
-  if (url.protocol === 'https:' && url.host === 'deep.edge.app') {
-    const pathParts = url.pathname.split('/')
-    const [resourceName = ''] = pathParts.splice(1, 1)
-    if (resourceName === 'plugin') {
-      // https://deep.edge.app/plugins/[plugin id][/...][?...]
-      return parseDeepLinkPlugins(pathParts, url.query)
-    }
-    if (resourceName === 'pay') {
-      // https://deep.edge.app/pay/bitcoin/[address]?amount=0.005&message=hi
-      return parseDeepLinkPay(pathParts, uri)
-    }
+  // Handle dl.edge.app links:
+  if (url.protocol === 'https:' && url.host === 'dl.edge.app') {
+    return parseDownloadLink(url)
   }
 
-  // Check for edge://[resource]/[path...]
+  // Handle the edge:// protocol:
   if (url.protocol === 'edge:') {
-    const pathParts = url.pathname.split('/')
-    switch (url.host) {
-      case 'plugin':
-        // edge://plugins/[plugin id][/...][?...]
-        return parseDeepLinkPlugins(pathParts, url.query)
-      case 'pay':
-        // edge://pay/bitcoin/[address]?amount=0.005&message=hi
-        return parseDeepLinkPay(pathParts, uri)
-      default:
-        // Do Nothing
-        break
-    }
+    return parseEdgeProtocol(url)
   }
 
-  // Check for edge login links:
-  if ((url.protocol === 'edge:' && url.host === 'edge') || (url.protocol === 'airbitz:' && url.host === 'edge')) {
-    return { type: 'edgeLogin', lobbyId: url.pathname.slice(1) }
-  }
-
-  // Check for edge login HTTPS links:
-  if (url.protocol === 'https:' && url.host === 'www.edge.app' && url.pathname === '/edgelogin') {
-    const { address = '' } = url.query
-    return { type: 'edgeLogin', lobbyId: address }
-  }
-
-  // Check for recovery links:
-  if (
-    (url.protocol === 'https:' && url.host === 'recovery.edgesecure.co') ||
-    (url.protocol === 'edge:' && url.host === 'recovery') ||
-    (url.protocol === 'airbitz:' && url.host === 'recovery')
-  ) {
-    const { token = '' } = url.query
-    return { type: 'passwordRecovery', passwordRecoveryKey: token }
-  }
-
-  // Check for plugin deep links:
-  if (url.protocol === 'edge-ret:' && url.host === 'plugins') {
-    const pathParts = url.pathname.split('/')
-    const [pluginId = ''] = pathParts.splice(1, 1)
-    const path = pathParts.join('/')
-    return { type: 'plugin', pluginId, path, query: url.query }
-  }
-
-  // Check for promotion links:
-  if ((url.protocol === 'https:' && url.host === 'dl.edge.app') || (url.protocol === 'edge:' && url.host === 'promotion')) {
-    const pathParts = url.pathname.split('/')
-    const installerId = pathParts[1]
-    return { type: 'promotion', installerId }
-  }
-
-  // Check for the bitcoin-ret protocol:
-  if ((/^[a-z]+-ret:$/.test(url.protocol) || url.protocol === 'airbitz:' || url.protocol === 'edge:') && url.host === 'x-callback-url') {
-    // The currency name can have two locations depending on the protocol:
-    // edge-ret://x-callback-url/request-litecoin-address
-    // litecoin-ret://x-callback-url/request-address
-    const currencyNameMatch = /^airbitz|^edge/.test(url.protocol) ? /^\/request-([a-z]+)-address/.exec(url.pathname) : /^([a-z]+)-ret:$/.exec(url.protocol)
-
-    // Extract the options:
-    if (currencyNameMatch != null) {
-      const currencyName = currencyNameMatch[1]
-      const sourceName = url.query['x-source']
-      const successUri = url.query['x-success']
-      return { type: 'returnAddress', currencyName, sourceName, successUri, uri }
-    }
-
-    // Fall through, since without a currency name, it must be something else:
+  // Handle address requests:
+  if (/^[a-z]+-ret:$/.test(url.protocol)) {
+    // Extract the coin name from the protocol:
+    const coin = url.protocol.slice(0, url.protocol.indexOf('-ret:'))
+    return parseReturnAddress(url, coin)
   }
 
   // Assume anything else is a coin link of some kind:
   const protocol = url.protocol.replace(/:$/, '')
   return { type: 'other', protocol, uri }
 }
+
+/**
+ * Parse an `edge://` link of some kind.
+ */
+function parseEdgeProtocol (url: URL): DeepLink {
+  const [, ...pathParts] = url.pathname.split('/')
+
+  switch (url.host) {
+    case 'edge': {
+      const [lobbyId] = pathParts
+      return { type: 'edgeLogin', lobbyId }
+    }
+
+    case 'pay': {
+      const [protocol = '', ...deepPath] = pathParts
+      const path = deepPath.join('/')
+      const queryString = Object.keys(url.query)
+        .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(url.query[key])}`)
+        .join('&')
+
+      let uri = `${protocol}:${path}`
+      if (queryString.length > 0) uri += `?${queryString}`
+      return { type: 'other', uri, protocol }
+    }
+
+    case 'plugin': {
+      const [pluginId = '', ...deepPath] = pathParts
+      const path = deepPath.length !== 0 ? '/' + deepPath.join('/') : ''
+      return { type: 'plugin', pluginId, path, query: url.query }
+    }
+
+    case 'promotion': {
+      const [installerId] = pathParts
+      return { type: 'promotion', installerId }
+    }
+
+    case 'recovery': {
+      const { token = '' } = url.query
+      return { type: 'passwordRecovery', passwordRecoveryKey: token }
+    }
+
+    case 'swap': {
+      return { type: 'swap' }
+    }
+
+    case 'x-callback-url': {
+      const currencyNameMatch = /^\/request-([a-z]+)-address/.exec(url.pathname)
+      if (currencyNameMatch == null) {
+        throw new SyntaxError('No request-address field')
+      }
+      return parseReturnAddress(url, currencyNameMatch[1])
+    }
+  }
+
+  throw new SyntaxError('Unknown deep link format')
+}
+
+function parseDownloadLink (url: URL): PromotionLink {
+  if (url.query.af != null) {
+    return { type: 'promotion', installerId: url.query.af }
+  }
+  const [, installerId = ''] = url.pathname.split('/')
+  return { type: 'promotion', installerId }
+}
+
+/**
+ * Handles requests for a payment address, like
+ * `edge://x-callback-url/request-litecoin-address` or
+ * `litecoin-ret://x-callback-url/request-address`
+ */
+function parseReturnAddress (url: URL, currencyName: string): DeepLink {
+  const sourceName = url.query['x-source']
+  const successUri = url.query['x-success']
+  return { type: 'returnAddress', currencyName, sourceName, successUri }
+}
+
+const prefixes: Array<[string, string]> = [
+  // Alternative HTTPS links:
+  ['https://recovery.edgesecure.co', 'edge://recovery'],
+
+  // Legacy links:
+  ['https://www.edge.app/edgelogin?address=', 'edge://edge/'],
+  ['edge-ret://plugins/simplex/', 'edge://plugin/simplex/'],
+  ['edge-ret://x-callback-url/', 'edge://x-callback-url/'],
+  ['airbitz-ret://x-callback-url/', 'edge://x-callback-url/'],
+
+  // Alternative schemes:
+  ['https://deep.edge.app/', 'edge://'],
+  ['airbitz://', 'edge://']
+]

@@ -20,25 +20,27 @@ import sellIconSelected from '../assets/images/tabbar/sell_selected.png'
 import sellIcon from '../assets/images/tabbar/sell.png'
 import walletIconSelected from '../assets/images/tabbar/wallets_selected.png'
 import walletIcon from '../assets/images/tabbar/wallets.png'
+import { HeaderWalletSelector } from '../components/common/HeaderWalletSelector.js'
 import { CreateWalletChoiceComponent } from '../components/scenes/CreateWalletChoiceScene.js'
+import { CreateWalletImportScene } from '../components/scenes/CreateWalletImportScene.js'
+import { CreateWalletReviewScene } from '../components/scenes/CreateWalletReviewScene.js'
+import { CreateWalletSelectCryptoScene } from '../components/scenes/CreateWalletSelectCryptoScene.js'
+import { CreateWalletSelectFiatScene } from '../components/scenes/CreateWalletSelectFiatScene.js'
+import { CryptoExchangeScene } from '../components/scenes/CryptoExchangeScene.js'
 import { CurrencySettingsScene } from '../components/scenes/CurrencySettingsScene.js'
+import { DefaultFiatSettingScene } from '../components/scenes/DefaultFiatSettingScene.js'
+import { PromotionSettingsScene } from '../components/scenes/PromotionSettingsScene.js'
 import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
+import { WalletListScene } from '../components/scenes/WalletListScene.js'
 import { requestPermission } from '../components/services/PermissionsManager.js'
 import ExchangeDropMenu from '../connectors/components/HeaderMenuExchangeConnector'
 import RequestDropMenu from '../connectors/components/HeaderMenuRequestConnector'
-import { HeaderWalletSelectorConnector as HeaderWalletSelector } from '../connectors/components/HeaderWalletSelectorConnector.js'
 import AddToken from '../connectors/scenes/AddTokenConnector.js'
 import ChangePasswordConnector from '../connectors/scenes/ChangePasswordConnector.ui'
 import ChangePinConnector from '../connectors/scenes/ChangePinConnector.ui'
 import { CreateWalletAccountSelectConnector } from '../connectors/scenes/CreateWalletAccountSelectConnector.js'
 import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWalletAccountSetupConnector.js'
-import { CreateWalletImportConnector } from '../connectors/scenes/CreateWalletImportConnector.js'
-import { CreateWalletReview } from '../connectors/scenes/CreateWalletReviewConnector'
-import { CreateWalletSelectCrypto } from '../connectors/scenes/CreateWalletSelectCryptoConnector'
-import { CreateWalletSelectFiat } from '../connectors/scenes/CreateWalletSelectFiatConnector'
 import { CryptoExchangeQuoteConnector } from '../connectors/scenes/CryptoExchangeQuoteConnector.js'
-import { CryptoExchangeSceneConnector as ExchangeConnector } from '../connectors/scenes/CryptoExchangeSceneConnector'
-import DefaultFiatSettingConnector from '../connectors/scenes/DefaultFiatSettingConnector'
 import EdgeLoginSceneConnector from '../connectors/scenes/EdgeLoginSceneConnector'
 import EditToken from '../connectors/scenes/EditTokenConnector.js'
 import { FioAddressConfirmConnector } from '../connectors/scenes/FioAddressConfirmConnector'
@@ -46,6 +48,13 @@ import { FioAddressDetailsConnector } from '../connectors/scenes/FioAddressDetai
 import { FioAddressListConnector } from '../connectors/scenes/FioAddressListConnector'
 import { FioAddressRegisterConnector } from '../connectors/scenes/FioAddressRegisterConnector'
 import { FioAddressRegisterSelectWalletConnector } from '../connectors/scenes/FioAddressRegisterSelectWalletConnector'
+import { FioConnectWalletConfirmConnector } from '../connectors/scenes/FioConnectWalletConfirmConnector'
+import { FioConnectWalletConnector } from '../connectors/scenes/FioConnectWalletConnector'
+import { FioDisconnectWalletsConnector } from '../connectors/scenes/FioDisconnectWalletsConnector'
+import { FioPendingRequestConnector } from '../connectors/scenes/FioPendingRequestConnector'
+import { FioRequestConfirmationConnector } from '../connectors/scenes/FioRequestConfirmationConnector.js'
+import { FioRequestListConnector } from '../connectors/scenes/FioRequestListConnector'
+import { FioSentRequestConnector } from '../connectors/scenes/FioSentRequestConnector'
 import ManageTokens from '../connectors/scenes/ManageTokensConnector.js'
 import OtpSettingsSceneConnector from '../connectors/scenes/OtpSettingsSceneConnector.js'
 import PasswordRecoveryConnector from '../connectors/scenes/PasswordRecoveryConnector.js'
@@ -56,7 +65,6 @@ import SettingsOverview from '../connectors/scenes/SettingsOverviewConnector'
 import TransactionDetails from '../connectors/scenes/TransactionDetailsConnector.js'
 import TransactionListConnector from '../connectors/scenes/TransactionListConnector'
 import TransactionsExportSceneConnector from '../connectors/scenes/TransactionsExportSceneConnector'
-import WalletList from '../connectors/scenes/WalletListConnector'
 import SendConfirmationOptions from '../connectors/SendConfirmationOptionsConnector.js'
 import SpendingLimitsConnector from '../connectors/SpendingLimitsConnector.js'
 import * as Constants from '../constants/indexConstants'
@@ -150,9 +158,7 @@ type DispatchProps = {
   showReEnableOtpModal(): void
 }
 
-type StateProps = {
-  showMainApp: boolean
-}
+type StateProps = {}
 
 type Props = DispatchProps & StateProps
 
@@ -190,8 +196,8 @@ export class MainComponent extends Component<Props> {
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderHelpButton()}
             />
-            {this.props.showMainApp && this.renderTransactionDetailsView()}
-            {this.props.showMainApp && this.renderTabView()}
+            {this.renderTransactionDetailsView()}
+            {this.renderTabView()}
           </Stack>
         </RouterWithRedux>
         <PasswordReminderModal />
@@ -225,7 +231,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.WALLET_LIST_SCENE}
                 navTransparent={true}
-                component={WalletList}
+                component={WalletListScene}
                 renderTitle={this.renderTitle(WALLETS)}
                 renderLeftButton={this.renderHelpButton()}
                 renderRightButton={this.renderMenuButton()}
@@ -243,7 +249,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.CREATE_WALLET_IMPORT}
                 navTransparent={true}
-                component={CreateWalletImportConnector}
+                component={CreateWalletImportScene}
                 renderTitle={this.renderTitle(CREATE_WALLET_IMPORT)}
                 renderLeftButton={this.renderBackButton()}
                 renderRightButton={this.renderEmptyButton()}
@@ -252,7 +258,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.CREATE_WALLET_SELECT_CRYPTO}
                 navTransparent={true}
-                component={CreateWalletSelectCrypto}
+                component={CreateWalletSelectCryptoScene}
                 renderTitle={this.renderTitle(CREATE_WALLET_SELECT_CRYPTO)}
                 renderLeftButton={this.renderBackButton()}
                 renderRightButton={this.renderEmptyButton()}
@@ -270,7 +276,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.CREATE_WALLET_SELECT_FIAT}
                 navTransparent={true}
-                component={CreateWalletSelectFiat}
+                component={CreateWalletSelectFiatScene}
                 renderTitle={this.renderTitle(CREATE_WALLET_SELECT_FIAT)}
                 renderLeftButton={this.renderBackButton()}
                 renderRightButton={this.renderEmptyButton()}
@@ -279,7 +285,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.CREATE_WALLET_REVIEW}
                 navTransparent={true}
-                component={CreateWalletReview}
+                component={CreateWalletReviewScene}
                 renderTitle={this.renderTitle(CREATE_WALLET)}
                 renderLeftButton={this.renderBackButton()}
                 renderRightButton={this.renderEmptyButton()}
@@ -338,6 +344,15 @@ export class MainComponent extends Component<Props> {
                 renderLeftButton={this.renderBackButton()}
                 renderRightButton={this.renderRequestMenuButton()}
                 hideTabBar
+              />
+
+              <Scene
+                key={Constants.FIO_REQUEST_CONFIRMATION}
+                navTransparent={true}
+                component={FioRequestConfirmationConnector}
+                renderTitle={this.renderWalletName()}
+                renderLeftButton={this.renderBackButton(BACK)}
+                renderRightButton={this.renderMenuButton()}
               />
 
               <Scene
@@ -443,7 +458,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.EXCHANGE_SCENE}
                 navTransparent={true}
-                component={ExchangeConnector}
+                component={CryptoExchangeScene}
                 renderTitle={this.renderTitle(EXCHANGE)}
                 renderLeftButton={this.renderExchangeButton()}
                 renderRightButton={this.renderMenuButton()}
@@ -598,9 +613,17 @@ export class MainComponent extends Component<Props> {
               renderRightButton={this.renderEmptyButton()}
             />
             <Scene
+              key={Constants.PROMOTION_SETTINGS}
+              navTransparent={true}
+              component={PromotionSettingsScene}
+              renderTitle={this.renderTitle(s.strings.title_promotion_settings)}
+              renderLeftButton={this.renderBackButton()}
+              renderRightButton={this.renderEmptyButton()}
+            />
+            <Scene
               key={Constants.DEFAULT_FIAT_SETTING}
               navTransparent={true}
-              component={DefaultFiatSettingConnector}
+              component={DefaultFiatSettingScene}
               renderTitle={this.renderTitle(DEFAULT_FIAT)}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderEmptyButton()}
@@ -645,7 +668,7 @@ export class MainComponent extends Component<Props> {
               navTransparent={true}
               component={FioAddressListConnector}
               renderTitle={this.renderTitle(FIO_ADDRESS)}
-              renderLeftButton={this.renderHelpButton()}
+              renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderMenuButton()}
               onLeft={Actions.pop}
             />
@@ -696,6 +719,33 @@ export class MainComponent extends Component<Props> {
               renderLeftButton={this.renderBackButton(BACK)}
               renderRightButton={this.renderMenuButton()}
             />
+            <Scene
+              key={Constants.FIO_CONNECT_TO_WALLETS}
+              navTransparent={true}
+              component={FioConnectWalletConnector}
+              renderTitle={this.renderTitle(s.strings.title_fio_connect_to_wallet)}
+              renderLeftButton={this.renderBackButton(BACK)}
+              renderRightButton={this.renderMenuButton()}
+              onLeft={Actions.pop}
+            />
+            <Scene
+              key={Constants.FIO_ADDRESS_DISCONNECT_WALLETS}
+              navTransparent={true}
+              component={FioDisconnectWalletsConnector}
+              renderTitle={this.renderTitle(s.strings.title_fio_disconnect_wallets)}
+              renderLeftButton={this.renderBackButton(BACK)}
+              renderRightButton={this.renderMenuButton()}
+              onLeft={Actions.pop}
+            />
+            <Scene
+              key={Constants.FIO_CONNECT_TO_WALLETS_CONFIRM}
+              navTransparent={true}
+              component={FioConnectWalletConfirmConnector}
+              renderTitle={this.renderTitle(s.strings.title_fio_connect_to_wallet)}
+              renderLeftButton={this.renderBackButton(BACK)}
+              renderRightButton={this.renderMenuButton()}
+              onLeft={Actions.pop}
+            />
           </Stack>
 
           <Stack key={Constants.FIO_ADDRESS_REGISTER_SUCCESS}>
@@ -705,6 +755,42 @@ export class MainComponent extends Component<Props> {
               component={FioAddressDetailsConnector}
               renderTitle={this.renderTitle(FIO_ADDRESS)}
               renderRightButton={this.renderMenuButton()}
+            />
+          </Stack>
+
+          <Stack key={Constants.FIO_REQUEST_LIST}>
+            <Scene
+              key={Constants.FIO_REQUEST_LIST}
+              navTransparent={true}
+              component={FioRequestListConnector}
+              renderTitle={this.renderTitle(s.strings.drawer_fio_requests)}
+              renderLeftButton={this.renderBackButton(BACK)}
+              renderRightButton={this.renderMenuButton()}
+              onLeft={Actions.pop}
+            />
+          </Stack>
+
+          <Stack key={Constants.FIO_PENDING_REQUEST_DETAILS}>
+            <Scene
+              key={Constants.FIO_PENDING_REQUEST_DETAILS}
+              navTransparent={true}
+              component={FioPendingRequestConnector}
+              renderTitle={this.renderTitle(s.strings.title_fio_pending_request_details)}
+              renderLeftButton={this.renderBackButton(BACK)}
+              renderRightButton={this.renderEmptyButton()}
+              onLeft={Actions.pop}
+            />
+          </Stack>
+
+          <Stack key={Constants.FIO_SENT_REQUEST_DETAILS}>
+            <Scene
+              key={Constants.FIO_SENT_REQUEST_DETAILS}
+              navTransparent={true}
+              component={FioSentRequestConnector}
+              renderTitle={this.renderTitle(s.strings.title_fio_sent_request_details)}
+              renderLeftButton={this.renderBackButton(BACK)}
+              renderRightButton={this.renderEmptyButton()}
+              onLeft={Actions.pop}
             />
           </Stack>
         </Scene>
@@ -815,15 +901,19 @@ export class MainComponent extends Component<Props> {
       handlePluginBack()
       return true
     }
+    if (this.isCurrentScene(Constants.FIO_ADDRESS_REGISTER)) {
+      if (Actions.currentParams.noAddresses) {
+        Actions.popTo(Constants.WALLET_LIST_SCENE)
+        return true
+      }
+    }
     Actions.pop()
     return true
   }
 }
 
 export const Main = connect(
-  (state: ReduxState): StateProps => ({
-    showMainApp: state.showMainApp
-  }),
+  (state: ReduxState): StateProps => ({}),
   (dispatch: Dispatch): DispatchProps => ({
     // Navigation actions:
     logout (username?: string): void {

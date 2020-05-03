@@ -7,11 +7,11 @@ import { FioAddressDetailsScene } from '../../components/scenes/FioAddressDetail
 import type { State } from '../../types/reduxTypes'
 
 const mapStateToProps = (state: State) => {
-  const { fioAddress } = state.ui.scenes
+  const { fioAddressName, expiration } = state.ui.scenes.fioAddress
 
   const out: StateProps = {
-    fioAddressName: fioAddress.fioAddressName,
-    expiration: fioAddress.expiration
+    fioAddressName,
+    expiration
   }
   return out
 }

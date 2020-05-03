@@ -37,6 +37,8 @@ export type ExchangedFlipInputOwnProps = {
   isFiatOnTop: boolean,
   isFocus: boolean,
 
+  topReturnKeyType?: string,
+  inputAccessoryViewID?: string,
   headerText: string,
   headerLogo: string | void,
   headerCallback?: () => void
@@ -183,6 +185,8 @@ export class ExchangedFlipInput extends Component<Props, State> {
         isFiatOnTop={this.isFiatOnTop()}
         isFocus={this.props.isFocus}
         onNext={this.props.onNext}
+        topReturnKeyType={this.props.topReturnKeyType}
+        inputAccessoryViewID={this.props.inputAccessoryViewID}
         ref={this.flipInput}
       />
     )

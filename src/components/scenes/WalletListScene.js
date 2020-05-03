@@ -1,14 +1,20 @@
 // @flow
 
 import { createYesNoModal } from 'edge-components'
+import { type EdgeAccount } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, Alert, Animated, FlatList, Image, Linking, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, Alert, Animated, FlatList, Image, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import SortableListView from 'react-native-sortable-listview'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Ionicon from 'react-native-vector-icons/Ionicons'
+import { connect } from 'react-redux'
 
+import { hideMessageTweak } from '../../actions/AccountReferralActions.js'
+import { disableOtp, keepOtp } from '../../actions/OtpActions.js'
+import { linkReferralWithCurrencies, toggleAccountBalanceVisibility, updateActiveWalletsOrder } from '../../actions/WalletListActions.js'
+import { type WalletListMenuKey, walletListMenuAction } from '../../actions/WalletListMenuActions.js'
 import credLogo from '../../assets/images/cred_logo.png'
 import iconImage from '../../assets/images/otp/OTP-badge_sm.png'
 import WalletIcon from '../../assets/images/walletlist/my-wallets.png'
@@ -17,28 +23,30 @@ import * as Constants from '../../constants/indexConstants.js'
 import { guiPlugins } from '../../constants/plugins/GuiPlugins.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
-import { getDefaultIsoFiat, getIsAccountBalanceVisible } from '../../modules/Settings/selectors.js'
+import { getDefaultIsoFiat, getIsAccountBalanceVisible, getOtpResetPending } from '../../modules/Settings/selectors.js'
 import T from '../../modules/UI/components/FormattedText/index'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index.js'
 import { WiredProgressBar } from '../../modules/UI/components/WiredProgressBar/WiredProgressBar.ui.js'
-import { getWalletLoadingPercent } from '../../modules/UI/selectors.js'
+import { getActiveWalletIds, getWalletLoadingPercent } from '../../modules/UI/selectors.js'
 import { addWalletStyle } from '../../styles/components/AddWalletStyle.js'
 import { buyMultipleCryptoStyle } from '../../styles/components/BuyCryptoStyle.js'
 import { TwoButtonModalStyle } from '../../styles/components/TwoButtonModalStyle.js'
 import styles from '../../styles/scenes/WalletListStyle'
 import THEME from '../../theme/variables/airbitz'
+import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
 import { type MessageTweak } from '../../types/TweakTypes.js'
-import type { GuiWalletType } from '../../types/types.js'
-import { type DeviceDimensions } from '../../types/types.js'
+import { type FlatListItem, type GuiWallet } from '../../types/types.js'
+import { makeGuiWalletType } from '../../util/CurrencyInfoHelpers.js'
 import { type TweakSource, bestOfMessages } from '../../util/ReferralHelpers.js'
 import { scale } from '../../util/scaling.js'
-import { getObjectDiff, getTotalFiatAmountFromExchangeRates } from '../../util/utils'
-import FullWalletListRow from '../common/FullWalletListRow.js'
+import { getTotalFiatAmountFromExchangeRates } from '../../util/utils.js'
 import { launchModal } from '../common/ModalProvider.js'
-import SortableWalletListRow from '../common/SortableWalletListRow.js'
+import { WalletListEmptyRow } from '../common/WalletListEmptyRow.js'
+import { WalletListRow } from '../common/WalletListRow.js'
+import { WalletListSortableRow } from '../common/WalletListSortableRow.js'
 import { WiredBalanceBox } from '../common/WiredBalanceBox.js'
 import { StaticModalComponent } from '../modals/StaticModalComponent.js'
 import { TwoButtonTextModalComponent } from '../modals/TwoButtonTextModalComponent.js'
@@ -47,79 +55,53 @@ const DONE_TEXT = s.strings.string_done_cap
 const WALLETS_HEADER_TEXT = s.strings.fragment_wallets_header
 const ARCHIVED_TEXT = s.strings.fragmet_wallets_list_archive_title_capitalized
 
+type StateProps = {
+  account: EdgeAccount,
+  accountMessages: MessageTweak[],
+  accountReferral: AccountReferral,
+  activeWalletIds: Array<string>,
+  exchangeRates: Object,
+  otpResetPending: boolean,
+  wallets: { [walletId: string]: GuiWallet }
+}
+type DispatchProps = {
+  hideMessageTweak(messageId: string, source: TweakSource): void,
+  toggleAccountBalanceVisibility(): void,
+  updateActiveWalletsOrder(walletIds: Array<string>): void,
+  walletRowOption(walletId: string, option: WalletListMenuKey): void,
+  disableOtp(): void,
+  keepOtp(): void,
+  linkReferralWithCurrencies(string): void
+}
+type Props = StateProps & DispatchProps
+
 type State = {
-  sortableMode: boolean,
   sortableListOpacity: number,
   fullListOpacity: number,
   sortableListZIndex: number,
   sortableListExists: boolean,
   fullListZIndex: number,
   fullListExists: boolean,
-  balanceBoxVisible: boolean,
   showOtpResetModal: boolean,
   showMessageModal: boolean,
-  isWalletProgressVisible: boolean,
   messageModalMessage: ?string
 }
-type Props = {
-  activeWalletIds: Array<string>,
-  accountMessages: MessageTweak[],
-  accountReferral: AccountReferral,
-  customTokens: Array<any>,
-  dimensions: DeviceDimensions,
-  wallets: any,
-  renameWalletInput: string,
-  otpResetPending: boolean,
-  updateArchivedWalletsOrder: (Array<string>) => void,
-  updateActiveWalletsOrder: (Array<string>) => void,
-  walletRowOption: (walletId: string, option: string, archived: boolean) => void,
-  disableOtp: () => void,
-  keepOtp: () => void,
-  hideMessageTweak(messageId: string, source: TweakSource): void,
-  toggleAccountBalanceVisibility: () => void,
-  isAccountBalanceVisible: boolean,
-  ethereumWalletType?: GuiWalletType,
-  exchangeRates: Object
-}
-export default class WalletList extends Component<Props, State> {
+
+class WalletListComponent extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
     this.state = {
-      sortableMode: false,
       sortableListOpacity: new Animated.Value(0),
       sortableListZIndex: new Animated.Value(0),
       sortableListExists: false,
       fullListOpacity: new Animated.Value(1),
       fullListZIndex: new Animated.Value(100),
       fullListExists: true,
-      balanceBoxVisible: true,
       showOtpResetModal: this.props.otpResetPending,
       showMessageModal: false,
-      messageModalMessage: null,
-      isWalletProgressVisible: true
+      messageModalMessage: null
     }
-  }
-
-  shouldComponentUpdate (nextProps: Props, nextState: State) {
-    let traverseObjects, ignoreObjects
-    if (this.state.sortableListExists) {
-      traverseObjects = { dimensions: true }
-      ignoreObjects = undefined
-    } else {
-      traverseObjects = undefined
-      ignoreObjects = { dimensions: true }
-    }
-
-    let diffElement2: string = ''
-    const diffElement = getObjectDiff(this.props, nextProps, {
-      traverseObjects,
-      ignoreObjects
-    })
-    if (!diffElement) {
-      diffElement2 = getObjectDiff(this.state, nextState)
-    }
-    return !!diffElement || !!diffElement2
   }
 
   UNSAFE_componentWillReceiveProps (nextProps: Props) {
@@ -130,39 +112,15 @@ export default class WalletList extends Component<Props, State> {
     }
   }
 
-  executeWalletRowOption = (walletId: string, option: string) => {
-    if (option !== 'sort') {
-      return this.props.walletRowOption(walletId, option, this.props.wallets[walletId].archived)
+  executeWalletRowOption = (walletId: string, option: WalletListMenuKey) => {
+    if (option === 'sort') {
+      return this.enableSorting()
     }
-    if (this.state.sortableMode) {
-      this.disableSorting()
-    } else {
-      this.enableSorting()
-    }
+    return this.props.walletRowOption(walletId, option)
   }
 
   render () {
-    const { wallets, activeWalletIds } = this.props
-    const walletsArray = []
-    const activeWallets = {}
-    for (const wallet in wallets) {
-      const theWallet = wallets[wallet]
-      theWallet.key = wallet
-      theWallet.executeWalletRowOption = this.executeWalletRowOption
-      walletsArray.push(theWallet)
-      if (activeWalletIds.includes(wallet)) activeWallets[wallet] = wallets[wallet]
-    }
-
-    const activeWalletsArray = activeWalletIds.map(function (x) {
-      const tempWalletObj = { key: x }
-      return wallets[x] || tempWalletObj
-    })
-
-    const activeWalletsObject = {}
-    activeWalletIds.forEach(function (x) {
-      const tempWalletObj = wallets[x] ? wallets[x] : { key: null }
-      activeWalletsObject[x] = tempWalletObj
-    })
+    const { wallets } = this.props
 
     return (
       <SafeAreaView>
@@ -221,11 +179,7 @@ export default class WalletList extends Component<Props, State> {
               </View>
             </Gradient>
 
-            {Object.keys(wallets).length > 0 ? (
-              this.renderActiveSortableList(activeWalletsArray, activeWalletsObject)
-            ) : (
-              <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size={'large'} />
-            )}
+            {Object.keys(wallets).length > 0 ? this.renderActiveSortableList() : <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size={'large'} />}
           </View>
           {this.launchModal()}
         </View>
@@ -277,15 +231,24 @@ export default class WalletList extends Component<Props, State> {
     })
   }
 
-  renderRow = (row: Object) => {
-    return <SortableWalletListRow data={row} showBalance={getIsAccountBalanceVisible} dimensions={this.props.dimensions} />
+  renderSortableRow = (guiWallet: GuiWallet | void) => {
+    return guiWallet != null ? <WalletListSortableRow guiWallet={guiWallet} showBalance={getIsAccountBalanceVisible} /> : <WalletListEmptyRow />
   }
 
-  renderItem = (item: Object) => {
-    return <FullWalletListRow data={item} showBalance={getIsAccountBalanceVisible} customTokens={this.props.customTokens} />
+  renderRow = (data: FlatListItem<{ key: string }>) => {
+    const { wallets } = this.props
+    const guiWallet = wallets[data.item.key]
+
+    return guiWallet != null ? (
+      <WalletListRow guiWallet={guiWallet} executeWalletRowOption={this.executeWalletRowOption} showBalance={getIsAccountBalanceVisible} />
+    ) : (
+      <WalletListEmptyRow />
+    )
   }
 
-  renderActiveSortableList = (activeWalletsArray: Array<{ key: string }>, activeWalletsObject: {}) => {
+  renderActiveSortableList () {
+    const { wallets, activeWalletIds } = this.props
+
     return (
       <View style={styles.listsContainer}>
         {this.state.sortableListExists && (
@@ -295,13 +258,11 @@ export default class WalletList extends Component<Props, State> {
           >
             <SortableListView
               style={styles.sortableWalletListContainer}
-              data={activeWalletsObject}
+              data={wallets}
               order={this.props.activeWalletIds}
               onRowMoved={this.onActiveRowMoved}
               render={ARCHIVED_TEXT}
-              renderRow={this.renderRow}
-              executeWalletRowOption={this.executeWalletRowOption}
-              dimensions={this.props.dimensions}
+              renderRow={this.renderSortableRow}
             />
           </Animated.View>
         )}
@@ -309,11 +270,9 @@ export default class WalletList extends Component<Props, State> {
           <Animated.View testID={'fullList'} style={[{ flex: 1, opacity: this.state.fullListOpacity, zIndex: this.state.fullListZIndex }, styles.fullList]}>
             <FlatList
               style={styles.sortableWalletListContainer}
-              data={activeWalletsArray}
+              data={activeWalletIds.map(key => ({ key }))}
               extraData={this.props.wallets}
-              renderItem={this.renderItem}
-              sortableMode={this.state.sortableMode}
-              executeWalletRowOption={this.executeWalletRowOption}
+              renderItem={this.renderRow}
               ListFooterComponent={this.renderFooter()}
               ListHeaderComponent={this.renderPromoCard()}
             />
@@ -388,100 +347,45 @@ export default class WalletList extends Component<Props, State> {
     })
   }
 
-  renderArchivedSortableList = (data: any, order: any, label: any, renderRow: any) => {
-    if (order) {
-      return (
-        <SortableListView
-          style={styles.sortableWalletList}
-          data={data}
-          order={order}
-          render={label}
-          onRowMoved={this.onArchivedRowMoved}
-          renderRow={renderRow}
-        />
-      )
-    }
-  }
-
-  sortActiveWallets = (wallets: any): Array<string> => {
-    const activeOrdered = Object.keys(wallets)
-      .filter(key => !wallets[key].archived) // filter out archived wallets
-      .sort((a, b) => {
-        if (wallets[a].sortIndex === wallets[b].sortIndex) {
-          return -1
-        } else {
-          return wallets[a].sortIndex - wallets[b].sortIndex
-        }
-      }) // sort them according to their (previous) sortIndices
-    return activeOrdered
-  }
-
-  onActiveRowMoved = (action: any) => {
-    const newOrder = this.getNewOrder(this.props.activeWalletIds, action) // pass the old order to getNewOrder with the action ( from, to, and  )
-
+  onActiveRowMoved = (action: { from: number, to: number }) => {
+    const newOrder = [...this.props.activeWalletIds]
+    newOrder.splice(action.to, 0, newOrder.splice(action.from, 1)[0])
     this.props.updateActiveWalletsOrder(newOrder)
     this.forceUpdate()
   }
 
-  onArchivedRowMoved = (action: any) => {
-    const wallets = this.props.wallets
-    const activeOrderedWallets = Object.keys(wallets)
-      .filter(key => wallets[key].archived)
-      .sort((a, b) => wallets[a].sortIndex - wallets[b].sortIndex)
-    const order = activeOrderedWallets
-    const newOrder = this.getNewOrder(order, action)
-
-    this.props.updateArchivedWalletsOrder(newOrder)
-    this.forceUpdate()
-  }
-
-  getNewOrder = (order: any, action: any) => {
-    const { to, from } = action
-    const newOrder = [...order]
-    newOrder.splice(to, 0, newOrder.splice(from, 1)[0])
-
-    return newOrder
-  }
-
   addToken = async () => {
-    const { wallets, ethereumWalletType } = this.props
-    let tokenEnabledWallets = 0
+    const { account, wallets } = this.props
 
-    // count number of token-enabled wallets
+    // check for existence of any token-enabled wallets
     for (const key in wallets) {
       const wallet = wallets[key]
       const specialCurrencyInfo = getSpecialCurrencyInfo(wallet.currencyCode)
       if (specialCurrencyInfo.isCustomTokensSupported) {
-        tokenEnabledWallets++
-      }
-    }
-
-    // check for existence of any token-enabled wallets
-    if (tokenEnabledWallets > 0) {
-      for (const key in wallets) {
-        const wallet = wallets[key]
-        const specialCurrencyInfo = getSpecialCurrencyInfo(wallet.currencyCode)
-        if (specialCurrencyInfo.isCustomTokensSupported) {
-          return this.props.walletRowOption(wallet.id, 'manageTokens', wallet.archived)
-        }
+        return Actions.manageTokens({ guiWallet: wallet })
       }
     }
 
     // if no token-enabled wallets then allow creation of token-enabled wallet
-    if (tokenEnabledWallets === 0) {
-      const modal = createYesNoModal({
+    const { ethereum } = account.currencyConfig
+    if (ethereum == null) {
+      return Alert.alert(s.strings.create_wallet_invalid_input, s.strings.create_wallet_select_valid_crypto)
+    }
+
+    const answer = await launchModal(
+      createYesNoModal({
         title: s.strings.wallet_list_add_token_modal_title,
         message: s.strings.wallet_list_add_token_modal_message,
         icon: <Icon type={Constants.ION_ICONS} name={Constants.WALLET_ICON} size={30} />,
         noButtonText: s.strings.string_cancel_cap,
         yesButtonText: s.strings.title_create_wallet
       })
+    )
 
-      if (ethereumWalletType) {
-        return (await launchModal(modal)) ? Actions[Constants.CREATE_WALLET_SELECT_FIAT]({ selectedWalletType: ethereumWalletType }) : null
-      } else {
-        return Alert.alert(s.strings.create_wallet_invalid_input, s.strings.create_wallet_select_valid_crypto)
-      }
+    if (answer) {
+      Actions[Constants.CREATE_WALLET_SELECT_FIAT]({
+        selectedWalletType: makeGuiWalletType(ethereum.currencyInfo)
+      })
     }
   }
 
@@ -528,14 +432,14 @@ export default class WalletList extends Component<Props, State> {
   }
 
   renderPromoCard () {
-    const { accountMessages, accountReferral, hideMessageTweak } = this.props
+    const { accountMessages, accountReferral, hideMessageTweak, linkReferralWithCurrencies } = this.props
     const messageSummary = bestOfMessages(accountMessages, accountReferral)
     if (messageSummary == null) return null
 
     const { message, messageId, messageSource } = messageSummary
     const { uri, iconUri } = message
     function handlePress () {
-      if (uri != null) Linking.openURL(uri)
+      if (uri != null) linkReferralWithCurrencies(uri)
     }
     function handleClose () {
       hideMessageTweak(messageId, messageSource)
@@ -556,3 +460,51 @@ export default class WalletList extends Component<Props, State> {
     )
   }
 }
+
+export const WalletListScene = connect(
+  (state: ReduxState): StateProps => {
+    let activeWalletIds = getActiveWalletIds(state)
+
+    // FIO disable changes below
+    if (global.isFioDisabled) {
+      const { currencyWallets = {} } = state.core.account
+      activeWalletIds = activeWalletIds.filter(id => {
+        const wallet = currencyWallets[id]
+        return wallet == null || wallet.type !== 'wallet:fio'
+      })
+    }
+
+    return {
+      account: state.core.account,
+      accountMessages: state.account.referralCache.accountMessages,
+      accountReferral: state.account.accountReferral,
+      activeWalletIds,
+      exchangeRates: state.exchangeRates,
+      otpResetPending: getOtpResetPending(state),
+      wallets: state.ui.wallets.byId
+    }
+  },
+  (dispatch: Dispatch): DispatchProps => ({
+    hideMessageTweak (messageId: string, source: TweakSource) {
+      dispatch(hideMessageTweak(messageId, source))
+    },
+    toggleAccountBalanceVisibility () {
+      dispatch(toggleAccountBalanceVisibility())
+    },
+    updateActiveWalletsOrder (activeWalletIds) {
+      dispatch(updateActiveWalletsOrder(activeWalletIds))
+    },
+    walletRowOption (walletId, option) {
+      dispatch(walletListMenuAction(walletId, option))
+    },
+    disableOtp () {
+      dispatch(disableOtp())
+    },
+    keepOtp () {
+      dispatch(keepOtp())
+    },
+    linkReferralWithCurrencies (uri) {
+      dispatch(linkReferralWithCurrencies(uri))
+    }
+  })
+)(WalletListComponent)

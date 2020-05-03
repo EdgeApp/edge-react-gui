@@ -7,7 +7,7 @@ import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import fioAddressIcon from '../../assets/images/list_fioAddress.png'
-import { WalletListModalConnected as WalletListModal } from '../../connectors/components/WalletListModalConnector'
+import { type WalletListResult, WalletListModal } from '../../components/modals/WalletListModal.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
@@ -52,33 +52,20 @@ export class FioAddressRegisterSelectWalletScene extends Component<Props> {
   }
 
   onPressSelect = async () => {
-    const { supportedCurrencies, wallets } = this.props
-    const allowedWallets = []
-    for (const id in wallets) {
-      const wallet = wallets[id]
-      if (supportedCurrencies[wallet.currencyCode]) {
-        allowedWallets.push(wallets[id])
+    const { supportedCurrencies } = this.props
+    const allowedCurrencyCodes = []
+    for (const currency in supportedCurrencies) {
+      if (supportedCurrencies[currency]) {
+        allowedCurrencyCodes.push(currency)
       }
     }
-    Airship.show(bridge => (
-      <WalletListModal
-        bridge={bridge}
-        wallets={allowedWallets}
-        existingWalletToFilterId={''}
-        existingWalletToFilterCurrencyCode={''}
-        supportedWalletTypes={[]}
-        excludedCurrencyCode={[]}
-        showWalletCreators={false}
-        headerTitle={s.strings.select_wallet}
-        excludedTokens={[]}
-        noWalletCodes={[]}
-        disableZeroBalance={false}
-      />
-    )).then((response: GuiWallet | Object | null) => {
-      if (response) {
-        this.onSelectWallet(response.id, response.currencyCode)
+    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />).then(
+      (response: WalletListResult) => {
+        if (response && typeof response.id === 'string') {
+          this.onSelectWallet(response.id, response.currencyCode)
+        }
       }
-    })
+    )
   }
 
   onSelectWallet = async (walletId: string, paymentCurrencyCode: string) => {

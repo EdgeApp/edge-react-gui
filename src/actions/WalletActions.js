@@ -16,12 +16,13 @@ import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import { updateWalletsRequest } from '../modules/Core/Wallets/action.js'
 import { getEnabledTokensFromFile, setEnabledTokens, updateEnabledTokens } from '../modules/Core/Wallets/EnabledTokens.js'
 import { updateExchangeRates } from '../modules/ExchangeRates/action.js'
-import * as SETTINGS_SELECTORS from '../modules/Settings/selectors'
+import { getCustomTokens, getSettings } from '../modules/Settings/selectors.js'
 import { updateMostRecentWallets, updateSettings } from '../modules/Settings/SettingsActions'
 import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import type { CustomTokenInfo } from '../types/types.js'
+import { makeGuiWalletType } from '../util/CurrencyInfoHelpers.js'
 import * as UTILS from '../util/utils'
 import { addTokenAsync } from './AddTokenActions.js'
 
@@ -91,10 +92,9 @@ export const selectEOSWallet = (walletId: string, currencyCode: string, from?: s
       const supportedFiats = UTILS.getSupportedFiats()
       const fiatTypeIndex = supportedFiats.findIndex(fiatType => fiatType.value === guiWallet.fiatCurrencyCode)
       const selectedFiat = supportedFiats[fiatTypeIndex]
-      const supportedWalletTypes = SETTINGS_SELECTORS.getSupportedWalletTypes(state)
-      const selectedWalletType = supportedWalletTypes.find(type => {
-        return type.currencyCode === 'EOS'
-      })
+
+      const { eos } = state.core.account.currencyConfig
+      const selectedWalletType = makeGuiWalletType(eos.currencyInfo)
       const createWalletAccountSetupSceneProps = {
         accountHandle: guiWallet.name,
         selectedWalletType,
@@ -208,7 +208,7 @@ export const getEnabledTokens = (walletId: string) => async (dispatch: Dispatch,
   const guiWallet = UI_SELECTORS.getWallet(state, walletId)
 
   // get token information from settings
-  const customTokens: Array<CustomTokenInfo> = SETTINGS_SELECTORS.getCustomTokens(state)
+  const customTokens: Array<CustomTokenInfo> = getCustomTokens(state)
   try {
     const enabledTokens = await getEnabledTokensFromFile(wallet)
     const promiseArray = []
@@ -279,7 +279,7 @@ export const editCustomToken = (
   return (dispatch: Dispatch, getState: GetState) => {
     dispatch({ type: 'EDIT_CUSTOM_TOKEN_START' })
     const state = getState()
-    const settings = SETTINGS_SELECTORS.getSettings(state)
+    const settings = getSettings(state)
     const customTokens = settings.customTokens
     const guiWallet = UI_SELECTORS.getWallet(state, walletId)
     const allTokens = UTILS.mergeTokens(guiWallet.metaTokens, customTokens)
@@ -384,7 +384,7 @@ export const deleteCustomToken = (walletId: string, currencyCode: string) => (di
   const guiWallets = state.ui.wallets.byId
   const account = CORE_SELECTORS.getAccount(state)
   const localSettings = {
-    ...SETTINGS_SELECTORS.getSettings(state)
+    ...getSettings(state)
   }
   const coreWalletsToUpdate = []
   dispatch({ type: 'DELETE_CUSTOM_TOKEN_START' })
