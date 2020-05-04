@@ -207,7 +207,7 @@ export class FioAddressRegisterScene extends Component<Props, State> {
       return (
         <View style={styles.buttons}>
           <PrimaryButton style={[styles.next]} onPress={this.handleNextButton} disabled={!isAvailable || walletLoading}>
-            <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>
+            {walletLoading ? <ActivityIndicator size="small" /> : <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>}
           </PrimaryButton>
         </View>
       )
