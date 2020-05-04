@@ -47,20 +47,13 @@ export const THEME = {
 
   OPACITY: {
     ACTIVE: 0.3,
-
-    FULL: 1.0,
-    HIGH: 0.8,
     MID: 0.5,
-    LOW: 0.1,
-    NONE: 0.0
+    MODAL_DARKNESS: 0.7
   },
 
   ALPHA: {
-    FULL: 99,
-    HIGH: 80,
     MID: 50,
-    LOW: 10,
-    NONE: 0
+    LOW: 10
   },
 
   COLORS: {
