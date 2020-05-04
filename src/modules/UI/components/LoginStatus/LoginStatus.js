@@ -1,17 +1,17 @@
 // @flow
 
-import type { ComponentType } from 'react'
 import React from 'react'
 import { connect } from 'react-redux'
 
+import { LoadingScene } from '../../../../components/scenes/LoadingScene.js'
 import { getLoginStatus } from '../../../Settings/selectors.js'
 
-export function ifLoggedIn<Klass> (LoggedIn: Klass, LoggedOut: ComponentType<{}>): Klass {
+export function ifLoggedIn<Klass> (LoggedIn: Klass): Klass {
   class IfLoggedIn extends React.Component<{ loginStatus: boolean, outerProps: any }> {
     render () {
       const { loginStatus, outerProps } = this.props
       // $FlowFixMe
-      return loginStatus ? <LoggedIn {...outerProps} /> : <LoggedOut {...outerProps} />
+      return loginStatus ? <LoggedIn {...outerProps} /> : <LoadingScene />
     }
   }
   IfLoggedIn.displayName = 'IfLoggedIn'

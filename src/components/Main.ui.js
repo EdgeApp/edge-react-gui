@@ -93,7 +93,6 @@ import { CryptoExchangeQuoteProcessingScreenComponent } from './scenes/CryptoExc
 import { GuiPluginLegacyScene, renderLegacyPluginBackButton } from './scenes/GuiPluginLegacyScene.js'
 import { GuiPluginListScene } from './scenes/GuiPluginListScene.js'
 import { GuiPluginViewScene } from './scenes/GuiPluginViewScene.js'
-import { LoadingScene } from './scenes/LoadingScene.js'
 import { LoginScene } from './scenes/LoginScene.js'
 import { SwapActivateShapeshiftScene } from './scenes/SwapActivateShapeshiftScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
@@ -191,7 +190,7 @@ export class MainComponent extends Component<Props> {
             <Scene
               key={Constants.EDGE_LOGIN}
               navTransparent={true}
-              component={EdgeLoginSceneConnector}
+              component={ifLoggedIn(EdgeLoginSceneConnector)}
               renderTitle={this.renderTitle(EDGE_LOGIN)}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderHelpButton()}
@@ -213,7 +212,7 @@ export class MainComponent extends Component<Props> {
         navTransparent={true}
         onEnter={() => this.props.requestPermission('contacts')}
         clone
-        component={TransactionDetails}
+        component={ifLoggedIn(TransactionDetails)}
         renderTitle={TransactionDetailsTitle}
         renderLeftButton={this.renderBackButton()}
         renderRightButton={this.renderMenuButton()}
@@ -231,7 +230,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.WALLET_LIST_SCENE}
                 navTransparent={true}
-                component={WalletListScene}
+                component={ifLoggedIn(WalletListScene)}
                 renderTitle={this.renderTitle(WALLETS)}
                 renderLeftButton={this.renderHelpButton()}
                 renderRightButton={this.renderMenuButton()}
@@ -240,7 +239,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.CREATE_WALLET_CHOICE}
                 navTransparent={true}
-                component={CreateWalletChoiceComponent}
+                component={ifLoggedIn(CreateWalletChoiceComponent)}
                 renderTitle={this.renderTitle(CREATE_WALLET)}
                 renderLeftButton={this.renderBackButton(WALLETS)}
                 renderRightButton={this.renderEmptyButton()}
@@ -249,7 +248,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.CREATE_WALLET_IMPORT}
                 navTransparent={true}
-                component={CreateWalletImportScene}
+                component={ifLoggedIn(CreateWalletImportScene)}
                 renderTitle={this.renderTitle(CREATE_WALLET_IMPORT)}
                 renderLeftButton={this.renderBackButton()}
                 renderRightButton={this.renderEmptyButton()}
@@ -258,7 +257,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.CREATE_WALLET_SELECT_CRYPTO}
                 navTransparent={true}
-                component={CreateWalletSelectCryptoScene}
+                component={ifLoggedIn(CreateWalletSelectCryptoScene)}
                 renderTitle={this.renderTitle(CREATE_WALLET_SELECT_CRYPTO)}
                 renderLeftButton={this.renderBackButton()}
                 renderRightButton={this.renderEmptyButton()}
@@ -267,7 +266,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.CREATE_WALLET_NAME}
                 navTransparent={true}
-                component={CreateWalletName}
+                component={ifLoggedIn(CreateWalletName)}
                 renderTitle={this.renderTitle(CREATE_WALLET)}
                 renderLeftButton={this.renderBackButton()}
                 renderRightButton={this.renderEmptyButton()}
@@ -276,7 +275,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.CREATE_WALLET_SELECT_FIAT}
                 navTransparent={true}
-                component={CreateWalletSelectFiatScene}
+                component={ifLoggedIn(CreateWalletSelectFiatScene)}
                 renderTitle={this.renderTitle(CREATE_WALLET_SELECT_FIAT)}
                 renderLeftButton={this.renderBackButton()}
                 renderRightButton={this.renderEmptyButton()}
@@ -285,7 +284,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.CREATE_WALLET_REVIEW}
                 navTransparent={true}
-                component={CreateWalletReviewScene}
+                component={ifLoggedIn(CreateWalletReviewScene)}
                 renderTitle={this.renderTitle(CREATE_WALLET)}
                 renderLeftButton={this.renderBackButton()}
                 renderRightButton={this.renderEmptyButton()}
@@ -294,7 +293,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.CREATE_WALLET_ACCOUNT_SETUP}
                 navTransparent={true}
-                component={CreateWalletAccountSetupConnector}
+                component={ifLoggedIn(CreateWalletAccountSetupConnector)}
                 renderTitle={this.renderTitle(CREATE_WALLET_ACCOUNT_SETUP)}
                 renderLeftButton={this.renderBackButton()}
                 renderRightButton={this.renderHelpButton()}
@@ -303,7 +302,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.CREATE_WALLET_ACCOUNT_SELECT}
                 navTransparent={true}
-                component={CreateWalletAccountSelectConnector}
+                component={ifLoggedIn(CreateWalletAccountSelectConnector)}
                 renderTitle={this.renderTitle(CREATE_WALLET_ACCOUNT_ACTIVATE)}
                 renderLeftButton={this.renderBackButton()}
                 renderRightButton={this.renderHelpButton()}
@@ -315,7 +314,7 @@ export class MainComponent extends Component<Props> {
                   this.props.requestPermission('contacts')
                 }}
                 navTransparent={true}
-                component={TransactionListConnector}
+                component={ifLoggedIn(TransactionListConnector)}
                 renderTitle={this.renderHeaderWalletSelector()}
                 renderLeftButton={this.renderBackButton(WALLETS)}
                 renderRightButton={this.renderMenuButton()}
@@ -330,7 +329,7 @@ export class MainComponent extends Component<Props> {
                   this.props.checkAndShowGetCryptoModal(props.data)
                 }}
                 onExit={this.props.dispatchDisableScan}
-                component={Scan}
+                component={ifLoggedIn(Scan)}
                 renderTitle={this.renderHeaderWalletSelector()}
                 renderLeftButton={this.renderBackButton()}
                 renderRightButton={this.renderMenuButton()}
@@ -339,7 +338,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.REQUEST}
                 navTransparent={true}
-                component={Request}
+                component={ifLoggedIn(Request)}
                 renderTitle={this.renderHeaderWalletSelector()}
                 renderLeftButton={this.renderBackButton()}
                 renderRightButton={this.renderRequestMenuButton()}
@@ -349,7 +348,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.FIO_REQUEST_CONFIRMATION}
                 navTransparent={true}
-                component={FioRequestConfirmationConnector}
+                component={ifLoggedIn(FioRequestConfirmationConnector)}
                 renderTitle={this.renderWalletName()}
                 renderLeftButton={this.renderBackButton(BACK)}
                 renderRightButton={this.renderMenuButton()}
@@ -359,7 +358,7 @@ export class MainComponent extends Component<Props> {
                 key={Constants.MANAGE_TOKENS}
                 renderLeftButton={this.renderBackButton()}
                 navTransparent={true}
-                component={ManageTokens}
+                component={ifLoggedIn(ManageTokens)}
                 renderTitle={this.renderTitle(MANAGE_TOKENS)}
                 renderRightButton={this.renderEmptyButton()}
                 animation={'fade'}
@@ -367,7 +366,7 @@ export class MainComponent extends Component<Props> {
               />
               <Scene
                 key={Constants.ADD_TOKEN}
-                component={AddToken}
+                component={ifLoggedIn(AddToken)}
                 navTransparent={true}
                 onLeft={Actions.pop}
                 renderLeftButton={this.renderBackButton()}
@@ -376,7 +375,7 @@ export class MainComponent extends Component<Props> {
               />
               <Scene
                 key={Constants.EDIT_TOKEN}
-                component={EditToken}
+                component={ifLoggedIn(EditToken)}
                 navTransparent={true}
                 renderLeftButton={this.renderBackButton()}
                 renderRightButton={this.renderEmptyButton()}
@@ -385,7 +384,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.TRANSACTIONS_EXPORT}
                 navTransparent={true}
-                component={ifLoggedIn(TransactionsExportSceneConnector, LoadingScene)}
+                component={ifLoggedIn(TransactionsExportSceneConnector)}
                 renderTitle={this.renderTitle(TRANSACTIONS_EXPORT)}
                 renderLeftButton={this.renderBackButton(WALLETS)}
                 renderRightButton={this.renderEmptyButton()}
@@ -396,7 +395,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.PLUGIN_BUY}
                 navTransparent={true}
-                component={GuiPluginListScene}
+                component={ifLoggedIn(GuiPluginListScene)}
                 renderTitle={this.renderTitle(s.strings.title_plugin_buy)}
                 renderLeftButton={this.renderHelpButton()}
                 renderRightButton={this.renderMenuButton()}
@@ -406,7 +405,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.PLUGIN_VIEW}
                 navTransparent={true}
-                component={ifLoggedIn(GuiPluginViewScene, LoadingScene)}
+                component={ifLoggedIn(GuiPluginViewScene)}
                 renderTitle={props => this.renderTitle(props.plugin.displayName)}
                 renderLeftButton={renderPluginBackButton(BACK)}
                 renderRightButton={this.renderExitButton()}
@@ -415,7 +414,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.PLUGIN_VIEW_LEGACY}
                 navTransparent={true}
-                component={ifLoggedIn(GuiPluginLegacyScene, LoadingScene)}
+                component={ifLoggedIn(GuiPluginLegacyScene)}
                 renderTitle={props => this.renderTitle(props.plugin.displayName)}
                 renderLeftButton={renderLegacyPluginBackButton(BACK)}
                 renderRightButton={this.renderExitButton()}
@@ -427,7 +426,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.PLUGIN_SELL}
                 navTransparent={true}
-                component={GuiPluginListScene}
+                component={ifLoggedIn(GuiPluginListScene)}
                 renderTitle={this.renderTitle(s.strings.title_plugin_sell)}
                 renderLeftButton={this.renderHelpButton()}
                 renderRightButton={this.renderMenuButton()}
@@ -437,7 +436,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.PLUGIN_VIEW}
                 navTransparent={true}
-                component={ifLoggedIn(GuiPluginViewScene, LoadingScene)}
+                component={ifLoggedIn(GuiPluginViewScene)}
                 renderTitle={props => this.renderTitle(props.plugin.displayName)}
                 renderLeftButton={renderPluginBackButton(BACK)}
                 renderRightButton={this.renderExitButton()}
@@ -446,7 +445,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.PLUGIN_VIEW_LEGACY}
                 navTransparent={true}
-                component={ifLoggedIn(GuiPluginLegacyScene, LoadingScene)}
+                component={ifLoggedIn(GuiPluginLegacyScene)}
                 renderTitle={props => this.renderTitle(props.plugin.displayName)}
                 renderLeftButton={renderLegacyPluginBackButton(BACK)}
                 renderRightButton={this.renderExitButton()}
@@ -458,7 +457,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.EXCHANGE_SCENE}
                 navTransparent={true}
-                component={CryptoExchangeScene}
+                component={ifLoggedIn(CryptoExchangeScene)}
                 renderTitle={this.renderTitle(EXCHANGE)}
                 renderLeftButton={this.renderExchangeButton()}
                 renderRightButton={this.renderMenuButton()}
@@ -468,7 +467,7 @@ export class MainComponent extends Component<Props> {
                 key={Constants.EXCHANGE_QUOTE_PROCESSING_SCENE}
                 navTransparent={true}
                 hideTabBar
-                component={CryptoExchangeQuoteProcessingScreenComponent}
+                component={ifLoggedIn(CryptoExchangeQuoteProcessingScreenComponent)}
                 renderTitle={this.renderTitle(EXCHANGE)}
                 renderLeftButton={this.renderEmptyButton()}
                 renderRightButton={this.renderEmptyButton()}
@@ -476,7 +475,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.EXCHANGE_QUOTE_SCENE}
                 navTransparent={true}
-                component={CryptoExchangeQuoteConnector}
+                component={ifLoggedIn(CryptoExchangeQuoteConnector)}
                 renderTitle={this.renderTitle(EXCHANGE)}
                 renderLeftButton={this.renderBackButton()}
                 renderRightButton={this.renderMenuButton()}
@@ -484,7 +483,7 @@ export class MainComponent extends Component<Props> {
               <Scene
                 key={Constants.SWAP_ACTIVATE_SHAPESHIFT}
                 navTransparent={true}
-                component={SwapActivateShapeshiftScene}
+                component={ifLoggedIn(SwapActivateShapeshiftScene)}
                 renderTitle={this.renderTitle(s.strings.title_activate_shapeshift)}
                 renderLeftButton={this.renderBackButton(BACK)}
                 renderRightButton={this.renderEmptyButton()}
@@ -499,7 +498,7 @@ export class MainComponent extends Component<Props> {
               navTransparent={true}
               hideTabBar
               panHandlers={null}
-              component={SendConfirmation}
+              component={ifLoggedIn(SendConfirmation)}
               renderTitle={this.renderWalletName()}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderSendConfirmationButton()}
@@ -507,7 +506,7 @@ export class MainComponent extends Component<Props> {
             <Scene
               key={Constants.CHANGE_MINING_FEE_SEND_CONFIRMATION}
               navTransparent={true}
-              component={ChangeMiningFeeScene}
+              component={ifLoggedIn(ChangeMiningFeeScene)}
               renderTitle={this.renderTitle(CHANGE_MINING_FEE)}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderHelpButton()}
@@ -518,7 +517,7 @@ export class MainComponent extends Component<Props> {
             <Scene
               key={Constants.MANAGE_TOKENS_NOT_USED}
               navTransparent={true}
-              component={ManageTokens}
+              component={ifLoggedIn(ManageTokens)}
               renderTitle={this.renderTitle(MANAGE_TOKENS)}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderEmptyButton()}
@@ -527,7 +526,7 @@ export class MainComponent extends Component<Props> {
             <Scene
               key={Constants.ADD_TOKEN}
               navTransparent={true}
-              component={AddToken}
+              component={ifLoggedIn(AddToken)}
               renderTitle={this.renderTitle(ADD_TOKEN)}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderEmptyButton()}
@@ -538,7 +537,7 @@ export class MainComponent extends Component<Props> {
             <Scene
               key={Constants.PLUGIN_EARN_INTEREST}
               navTransparent={true}
-              component={ifLoggedIn(GuiPluginViewScene, LoadingScene)}
+              component={ifLoggedIn(GuiPluginViewScene)}
               renderTitle={props => this.renderTitle(props.plugin.displayName)}
               renderLeftButton={renderPluginBackButton(BACK)}
               renderRightButton={this.renderExitButton()}
@@ -551,7 +550,7 @@ export class MainComponent extends Component<Props> {
               key={Constants.SETTINGS_OVERVIEW}
               navTransparent={true}
               onEnter={() => this.props.showReEnableOtpModal()}
-              component={SettingsOverview}
+              component={ifLoggedIn(SettingsOverview)}
               renderTitle={this.renderTitle(SETTINGS)}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderEmptyButton()}
@@ -559,7 +558,7 @@ export class MainComponent extends Component<Props> {
             <Scene
               key={Constants.CHANGE_PASSWORD}
               navTransparent={true}
-              component={ChangePasswordConnector}
+              component={ifLoggedIn(ChangePasswordConnector)}
               renderTitle={this.renderTitle(CHANGE_PASSWORD)}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderEmptyButton()}
@@ -567,7 +566,7 @@ export class MainComponent extends Component<Props> {
             <Scene
               key={Constants.CHANGE_PIN}
               navTransparent={true}
-              component={ChangePinConnector}
+              component={ifLoggedIn(ChangePinConnector)}
               renderTitle={this.renderTitle(CHANGE_PIN)}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderEmptyButton()}
@@ -575,7 +574,7 @@ export class MainComponent extends Component<Props> {
             <Scene
               key={Constants.OTP_SETUP}
               navTransparent={true}
-              component={OtpSettingsSceneConnector}
+              component={ifLoggedIn(OtpSettingsSceneConnector)}
               renderTitle={this.renderTitle(OTP)}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderEmptyButton()}
@@ -583,7 +582,7 @@ export class MainComponent extends Component<Props> {
             <Scene
               key={Constants.RECOVER_PASSWORD}
               navTransparent={true}
-              component={PasswordRecoveryConnector}
+              component={ifLoggedIn(PasswordRecoveryConnector)}
               renderTitle={this.renderTitle(PASSWORD_RECOVERY)}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderEmptyButton()}
@@ -591,7 +590,7 @@ export class MainComponent extends Component<Props> {
             <Scene
               key={Constants.SPENDING_LIMITS}
               navTransparent={true}
-              component={SpendingLimitsConnector}
+              component={ifLoggedIn(SpendingLimitsConnector)}
               renderTitle={this.renderTitle(SPENDING_LIMITS)}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderEmptyButton()}
@@ -599,7 +598,7 @@ export class MainComponent extends Component<Props> {
             <Scene
               key={Constants.EXCHANGE_SETTINGS}
               navTransparent={true}
-              component={SwapSettingsScene}
+              component={ifLoggedIn(SwapSettingsScene)}
               renderTitle={this.renderTitle(EXCHANGE_SETTINGS)}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderEmptyButton()}
@@ -607,7 +606,7 @@ export class MainComponent extends Component<Props> {
             <Scene
               key={Constants.CURRENCY_SETTINGS}
               navTransparent={true}
-              component={CurrencySettingsScene}
+              component={ifLoggedIn(CurrencySettingsScene)}
               renderTitle={props => <CurrencySettingsTitle currencyInfo={props.currencyInfo} />}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderEmptyButton()}
@@ -615,7 +614,7 @@ export class MainComponent extends Component<Props> {
             <Scene
               key={Constants.PROMOTION_SETTINGS}
               navTransparent={true}
-              component={PromotionSettingsScene}
+              component={ifLoggedIn(PromotionSettingsScene)}
               renderTitle={this.renderTitle(s.strings.title_promotion_settings)}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderEmptyButton()}
@@ -623,7 +622,7 @@ export class MainComponent extends Component<Props> {
             <Scene
               key={Constants.DEFAULT_FIAT_SETTING}
               navTransparent={true}
-              component={DefaultFiatSettingScene}
+              component={ifLoggedIn(DefaultFiatSettingScene)}
               renderTitle={this.renderTitle(DEFAULT_FIAT)}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderEmptyButton()}
@@ -631,7 +630,7 @@ export class MainComponent extends Component<Props> {
             <Scene
               key={Constants.SWAP_ACTIVATE_SHAPESHIFT}
               navTransparent={true}
-              component={SwapActivateShapeshiftScene}
+              component={ifLoggedIn(SwapActivateShapeshiftScene)}
               renderTitle={this.renderTitle(s.strings.title_activate_shapeshift)}
               renderLeftButton={this.renderBackButton(BACK)}
               renderRightButton={this.renderEmptyButton()}
@@ -643,7 +642,7 @@ export class MainComponent extends Component<Props> {
             <Scene
               key={Constants.PLUGIN_VIEW}
               navTransparent={true}
-              component={ifLoggedIn(GuiPluginViewScene, LoadingScene)}
+              component={ifLoggedIn(GuiPluginViewScene)}
               renderTitle={props => this.renderTitle(props.plugin.displayName)}
               renderLeftButton={renderPluginBackButton(BACK)}
               renderRightButton={this.renderExitButton()}
@@ -654,7 +653,7 @@ export class MainComponent extends Component<Props> {
             <Scene
               key={Constants.TERMS_OF_SERVICE}
               navTransparent={true}
-              component={TermsOfServiceComponent}
+              component={ifLoggedIn(TermsOfServiceComponent)}
               renderTitle={this.renderTitle(TERMS_OF_SERVICE)}
               renderLeftButton={this.renderBackButton(BACK)}
               renderRightButton={this.renderEmptyButton()}
@@ -666,7 +665,7 @@ export class MainComponent extends Component<Props> {
             <Scene
               key={Constants.FIO_ADDRESS_LIST}
               navTransparent={true}
-              component={FioAddressListConnector}
+              component={ifLoggedIn(FioAddressListConnector)}
               renderTitle={this.renderTitle(FIO_ADDRESS)}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderMenuButton()}
@@ -678,7 +677,7 @@ export class MainComponent extends Component<Props> {
             <Scene
               key={Constants.FIO_ADDRESS_REGISTER}
               navTransparent={true}
-              component={FioAddressRegisterConnector}
+              component={ifLoggedIn(FioAddressRegisterConnector)}
               renderTitle={this.renderTitle(FIO_ADDRESS_CONFIRMATION)}
               renderLeftButton={this.renderBackButton(BACK)}
               renderRightButton={this.renderMenuButton()}
@@ -690,7 +689,7 @@ export class MainComponent extends Component<Props> {
             <Scene
               key={Constants.FIO_ADDRESS_REGISTER_SELECT_WALLET}
               navTransparent={true}
-              component={FioAddressRegisterSelectWalletConnector}
+              component={ifLoggedIn(FioAddressRegisterSelectWalletConnector)}
               renderTitle={this.renderTitle(FIO_ADDRESS_CONFIRMATION)}
               renderLeftButton={this.renderBackButton(BACK)}
               renderRightButton={this.renderEmptyButton()}
@@ -702,7 +701,7 @@ export class MainComponent extends Component<Props> {
             <Scene
               key={Constants.FIO_ADDRESS_CONFIRM}
               navTransparent={true}
-              component={FioAddressConfirmConnector}
+              component={ifLoggedIn(FioAddressConfirmConnector)}
               renderTitle={this.renderTitle(FIO_ADDRESS_CONFIRMATION)}
               renderLeftButton={this.renderBackButton(BACK)}
               renderRightButton={this.renderEmptyButton()}
@@ -714,7 +713,7 @@ export class MainComponent extends Component<Props> {
             <Scene
               key={Constants.FIO_ADDRESS_DETAILS}
               navTransparent={true}
-              component={FioAddressDetailsConnector}
+              component={ifLoggedIn(FioAddressDetailsConnector)}
               renderTitle={this.renderTitle(FIO_ADDRESS)}
               renderLeftButton={this.renderBackButton(BACK)}
               renderRightButton={this.renderMenuButton()}
@@ -722,7 +721,7 @@ export class MainComponent extends Component<Props> {
             <Scene
               key={Constants.FIO_CONNECT_TO_WALLETS}
               navTransparent={true}
-              component={FioConnectWalletConnector}
+              component={ifLoggedIn(FioConnectWalletConnector)}
               renderTitle={this.renderTitle(s.strings.title_fio_connect_to_wallet)}
               renderLeftButton={this.renderBackButton(BACK)}
               renderRightButton={this.renderMenuButton()}
@@ -731,7 +730,7 @@ export class MainComponent extends Component<Props> {
             <Scene
               key={Constants.FIO_ADDRESS_DISCONNECT_WALLETS}
               navTransparent={true}
-              component={FioDisconnectWalletsConnector}
+              component={ifLoggedIn(FioDisconnectWalletsConnector)}
               renderTitle={this.renderTitle(s.strings.title_fio_disconnect_wallets)}
               renderLeftButton={this.renderBackButton(BACK)}
               renderRightButton={this.renderMenuButton()}
@@ -740,7 +739,7 @@ export class MainComponent extends Component<Props> {
             <Scene
               key={Constants.FIO_CONNECT_TO_WALLETS_CONFIRM}
               navTransparent={true}
-              component={FioConnectWalletConfirmConnector}
+              component={ifLoggedIn(FioConnectWalletConfirmConnector)}
               renderTitle={this.renderTitle(s.strings.title_fio_connect_to_wallet)}
               renderLeftButton={this.renderBackButton(BACK)}
               renderRightButton={this.renderMenuButton()}
@@ -752,7 +751,7 @@ export class MainComponent extends Component<Props> {
             <Scene
               key={Constants.FIO_ADDRESS_REGISTER_SUCCESS}
               navTransparent={true}
-              component={FioAddressDetailsConnector}
+              component={ifLoggedIn(FioAddressDetailsConnector)}
               renderTitle={this.renderTitle(FIO_ADDRESS)}
               renderRightButton={this.renderMenuButton()}
             />
@@ -762,7 +761,7 @@ export class MainComponent extends Component<Props> {
             <Scene
               key={Constants.FIO_REQUEST_LIST}
               navTransparent={true}
-              component={FioRequestListConnector}
+              component={ifLoggedIn(FioRequestListConnector)}
               renderTitle={this.renderTitle(s.strings.drawer_fio_requests)}
               renderLeftButton={this.renderBackButton(BACK)}
               renderRightButton={this.renderMenuButton()}
@@ -774,7 +773,7 @@ export class MainComponent extends Component<Props> {
             <Scene
               key={Constants.FIO_PENDING_REQUEST_DETAILS}
               navTransparent={true}
-              component={FioPendingRequestConnector}
+              component={ifLoggedIn(FioPendingRequestConnector)}
               renderTitle={this.renderTitle(s.strings.title_fio_pending_request_details)}
               renderLeftButton={this.renderBackButton(BACK)}
               renderRightButton={this.renderEmptyButton()}
@@ -786,7 +785,7 @@ export class MainComponent extends Component<Props> {
             <Scene
               key={Constants.FIO_SENT_REQUEST_DETAILS}
               navTransparent={true}
-              component={FioSentRequestConnector}
+              component={ifLoggedIn(FioSentRequestConnector)}
               renderTitle={this.renderTitle(s.strings.title_fio_sent_request_details)}
               renderLeftButton={this.renderBackButton(BACK)}
               renderRightButton={this.renderEmptyButton()}
