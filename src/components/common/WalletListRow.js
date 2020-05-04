@@ -299,7 +299,7 @@ const rawStyles = {
   },
   walletDetailsRowLine: {
     height: 1,
-    borderColor: 'rgba(14, 75, 117, 0.5)',
+    borderColor: THEME.COLORS.WALLET_LIST_OPAQUE_BLUE,
     borderBottomWidth: 1,
     marginTop: scale(12),
     marginBottom: scale(9)
@@ -337,13 +337,13 @@ const rawStyles = {
     fontSize: scale(14),
     textAlign: 'right',
     fontWeight: '400',
-    color: '#77C513'
+    color: THEME.COLORS.WALLET_LIST_DIFF_POSITIVE
   },
   walletDetailsRowDifferenceNegative: {
     fontSize: scale(14),
     textAlign: 'right',
     fontWeight: '400',
-    color: '#E85466'
+    color: THEME.COLORS.WALLET_LIST_DIFF_NEGATIVE
   },
   walletDetailsFiatBalanceRow: {
     flexDirection: 'row'
