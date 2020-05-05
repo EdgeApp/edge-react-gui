@@ -26,7 +26,7 @@ export const styles = {
   tileContainerBig: {
     width: '100%',
     height: rem(4.5),
-    backgroundColor: '#FFFFFF',
+    backgroundColor: THEME.COLORS.WHITE,
     padding: rem(0.8),
     borderBottomWidth: 1,
     borderBottomColor: THEME.COLORS.GRAY_3,
@@ -35,7 +35,7 @@ export const styles = {
   tileContainerNotes: {
     width: '100%',
     minHeight: rem(4.5),
-    backgroundColor: '#FFFFFF',
+    backgroundColor: THEME.COLORS.WHITE,
     padding: rem(0.8),
     borderBottomWidth: 1,
     borderBottomColor: THEME.COLORS.GRAY_3
@@ -43,7 +43,7 @@ export const styles = {
   tileContainer: {
     width: '100%',
     height: rem(4),
-    backgroundColor: '#FFFFFF',
+    backgroundColor: THEME.COLORS.WHITE,
     padding: rem(0.8),
     borderBottomWidth: 1,
     borderBottomColor: THEME.COLORS.GRAY_3,
@@ -114,7 +114,7 @@ export const styles = {
     paddingHorizontal: rem(0.5),
     paddingVertical: rem(0.3),
     marginVertical: rem(0.3),
-    backgroundColor: '#A4C7DF',
+    backgroundColor: THEME.COLORS.TRANSACTION_DETAILS_SECONDARY,
     borderRadius: 3
   },
   tileCategoryText: {
@@ -137,7 +137,7 @@ export const styles = {
   },
   fiatInput: {
     borderBottomWidth: 1,
-    borderBottomColor: '#CCCCCC'
+    borderBottomColor: THEME.COLORS.TRANSACTION_DETAILS_GREY_1
   },
   spacer: {
     flex: 1
@@ -163,7 +163,7 @@ export const styles = {
     paddingVertical: rem(0.2),
     marginRight: rem(0.6),
     borderWidth: 1,
-    borderColor: '#A4C7DF',
+    borderColor: THEME.COLORS.TRANSACTION_DETAILS_SECONDARY,
     borderRadius: 3
   },
   inputCategoryContainterSelected: {
@@ -172,8 +172,8 @@ export const styles = {
     marginRight: rem(0.6),
     borderWidth: 1,
     borderRadius: 3,
-    borderColor: '#A4C7DF',
-    backgroundColor: '#A4C7DF'
+    borderColor: THEME.COLORS.TRANSACTION_DETAILS_SECONDARY,
+    backgroundColor: THEME.COLORS.TRANSACTION_DETAILS_SECONDARY
   },
   inputCategoryText: {
     color: THEME.COLORS.SECONDARY,
@@ -207,7 +207,7 @@ export const styles = {
     justifyContent: 'space-between',
     backgroundColor: THEME.COLORS.WHITE,
     borderBottomWidth: 1,
-    borderColor: '#EEE'
+    borderColor: THEME.COLORS.TRANSACTION_DETAILS_GREY_4
   },
   rowContent: {
     flex: 1,
@@ -230,7 +230,7 @@ export const styles = {
   },
   inputNotesWrap: {
     borderWidth: 1,
-    borderColor: '#CCCCCC',
+    borderColor: THEME.COLORS.TRANSACTION_DETAILS_GREY_1,
     borderRadius: 3,
     height: PLATFORM.deviceHeight * (Platform.OS === 'android' ? 0.3 : 0.35),
     padding: rem(0.8)
@@ -256,7 +256,7 @@ export const styles = {
   singleContact: {
     height: scale(60),
     borderBottomWidth: 1,
-    borderBottomColor: '#D8D6D6',
+    borderBottomColor: THEME.COLORS.TRANSACTION_DETAILS_GREY_2,
     padding: scale(10),
     paddingRight: scale(15),
     paddingLeft: scale(15)
@@ -284,7 +284,7 @@ export const styles = {
   },
   contactName: {
     fontSize: scale(16),
-    color: '#58595C',
+    color: THEME.COLORS.TRANSACTION_DETAILS_GREY_3,
     textAlignVertical: 'center'
   },
   contactThumbnail: {
