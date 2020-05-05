@@ -661,6 +661,8 @@
   "send_fio_request_error_memo_invalid_character": "Carattere non valido nel memo",
   "fio_request_by_fio_address_error_no_address": "Prima di poter richiedere fondi usando FIO, devi prima registrare il tuo indirizzo FIO. Vedi menu laterale.",
   "fio_request_amount": "Importo:",
+  "fio_request_by_fio_address_error_invalid_amount_header": "",
+  "fio_request_by_fio_address_error_invalid_amount": "",
   "fio_request_requesting_from": "Invia richiesta da",
   "fio_request_requesting_to": "Invia richiesta a",
   "fio_request_error_header": "Richiesta non riuscita",
