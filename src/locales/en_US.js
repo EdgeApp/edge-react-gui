@@ -709,6 +709,8 @@ const strings = {
   send_fio_request_error_memo_invalid_character: 'Invalid character in memo',
   fio_request_by_fio_address_error_no_address: 'Before you can request funds using FIO, you must first register your own FIO Address. See side menu.',
   fio_request_amount: 'Amount:',
+  fio_request_by_fio_address_error_invalid_amount_header: 'Invalid Amount',
+  fio_request_by_fio_address_error_invalid_amount: 'Please enter an amount before requesting with FIO',
   fio_request_requesting_from: 'Send request from',
   fio_request_requesting_to: 'Send request to',
   fio_request_error_header: 'Request Failed',

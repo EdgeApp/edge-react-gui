@@ -284,13 +284,13 @@ export class Request extends Component<Props, State> {
           />
 
           {Platform.OS === 'ios' ? (
-            <InputAccessoryView backgroundColor={THEME.COLORS.OPAQUE_WHITE} nativeID={this.state.isFioMode ? inputAccessoryViewID : ''}>
+            <InputAccessoryView backgroundColor={THEME.COLORS.OPAQUE_WHITE} nativeID={inputAccessoryViewID}>
               <View style={styles.accessoryView}>
                 <TouchableOpacity style={styles.accessoryBtn} onPress={this.cancelFioMode}>
-                  <Text style={styles.accessoryText}>{s.strings.string_cancel_cap}</Text>
+                  <Text style={styles.accessoryText}>{this.state.isFioMode ? s.strings.string_cancel_cap : ''}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.accessoryBtn} onPress={this.nextFioMode}>
-                  <Text style={styles.accessoryText}>{s.strings.string_next_capitalized}</Text>
+                  <Text style={styles.accessoryText}>{this.state.isFioMode ? s.strings.string_next_capitalized : 'Done'}</Text>
                 </TouchableOpacity>
               </View>
             </InputAccessoryView>
@@ -417,14 +417,14 @@ export class Request extends Component<Props, State> {
       showError(`${s.strings.title_register_fio_address}. ${s.strings.fio_request_by_fio_address_error_no_address}`)
       return
     }
-    if (this.amounts) {
-      if (bns.lte(this.amounts.nativeAmount, '0')) {
+    if (!this.amounts || bns.lte(this.amounts.nativeAmount, '0')) {
+      if (Platform.OS === 'android') {
+        showError(`${s.strings.fio_request_by_fio_address_error_invalid_amount_header}. ${s.strings.fio_request_by_fio_address_error_invalid_amount}`)
+        return
+      } else {
         this.fioMode()
         return
       }
-    } else {
-      this.fioMode()
-      return
     }
     const fioAddressModal = createFioAddressModal({ fioPlugin: this.props.fioPlugin, isConnected: this.props.isConnected })
     const fioModalData = await launchModal(fioAddressModal)
@@ -449,9 +449,13 @@ export class Request extends Component<Props, State> {
   }
 
   nextFioMode = () => {
-    if (this.flipInput) {
-      this.flipInput.textInputTopBlur()
+    if (this.state.isFioMode && (!this.amounts || bns.lte(this.amounts.nativeAmount, '0'))) {
+      showError(`${s.strings.fio_request_by_fio_address_error_invalid_amount_header}. ${s.strings.fio_request_by_fio_address_error_invalid_amount}`)
+    } else {
+      if (this.flipInput) {
+        this.flipInput.textInputTopBlur()
+      }
+      this.onNext()
     }
-    this.onNext()
   }
 }

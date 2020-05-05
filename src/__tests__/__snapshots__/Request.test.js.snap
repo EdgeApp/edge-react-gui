@@ -46,7 +46,7 @@ exports[`Request should render with loaded props 1`] = `
     />
     <InputAccessoryView
       backgroundColor="rgba(255, 255, 255, 0.5)"
-      nativeID=""
+      nativeID="cancelHeaderId"
     >
       <View
         style={
@@ -76,7 +76,7 @@ exports[`Request should render with loaded props 1`] = `
               }
             }
           >
-            Cancel
+            
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -97,7 +97,7 @@ exports[`Request should render with loaded props 1`] = `
               }
             }
           >
-            Next
+            Done
           </Text>
         </TouchableOpacity>
       </View>
