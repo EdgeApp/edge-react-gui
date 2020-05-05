@@ -155,7 +155,7 @@ class WalletListRowComponent extends Component<Props> {
               <View style={styles.rowIconWrap}>
                 {symbolImageDarkMono && <Image style={[styles.rowCurrencyLogoAndroid]} source={{ uri: symbolImageDarkMono }} resizeMode="cover" />}
                 <View style={styles.rowCurrencyLogoAndroid}>
-                  <ProgressPie size={rowCurrencyOverlaySize} color={'rgba(255, 255, 255, 0.75)'} progress={progress} />
+                  <ProgressPie size={rowCurrencyOverlaySize} color={THEME.COLORS.OPAQUE_WHITE_2} progress={progress} />
                 </View>
               </View>
               <View style={styles.walletDetailsContainer}>

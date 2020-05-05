@@ -4,6 +4,8 @@ import { Shape, Surface, Transform } from '@react-native-community/art'
 import qrcodeGenerator from 'qrcode-generator'
 import React from 'react'
 
+import { THEME } from '../../theme/variables/airbitz.js'
+
 type Props = {
   data: string,
   size: number, // In device pixels
@@ -16,7 +18,7 @@ type Props = {
  * Renders a QR code.
  */
 export function QrCode (props: Props) {
-  const { data, size, padding = 1, backgroundColor = 'white', foregroundColor = 'black' } = props
+  const { data, size, padding = 1, backgroundColor = THEME.COLORS.WHITE, foregroundColor = THEME.COLORS.GENERIC_BLACK } = props
 
   // Generate an SVG path:
   const code = qrcodeGenerator(0, 'H')

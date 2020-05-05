@@ -22,7 +22,7 @@ export function SettingsRow (props: Props): Node {
   const { disabled = false, icon, text, right, onPress } = props
 
   return (
-    <TouchableHighlight onPress={onPress} underlayColor="rgba(0,0,0,0)">
+    <TouchableHighlight onPress={onPress} underlayColor={THEME.COLORS.CLEAR}>
       <View style={styles.row}>
         {icon != null ? <View style={styles.padding}>{icon}</View> : undefined}
         <Text style={disabled ? styles.disabledText : styles.text}>{text}</Text>
