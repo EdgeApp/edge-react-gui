@@ -48,7 +48,7 @@ export class TransactionDetailsNotesInput extends Component<Props, State> {
                   autoCorrect={false}
                   style={styles.inputNotes}
                   autoCapitalize="sentences"
-                  underlineColorAndroid={'transparent'}
+                  underlineColorAndroid={THEME.COLORS.TRANSPARENT}
                   placeholderTextColor={THEME.COLORS.GRAY_3}
                   value={notes}
                   ref={ref => (this.notesInput = ref)}

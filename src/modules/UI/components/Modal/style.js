@@ -14,7 +14,7 @@ export const styles = {
     top: (PLATFORM.deviceHeight * 1) / 8,
     left: 0,
     right: 0,
-    backgroundColor: 'transparent'
+    backgroundColor: THEME.COLORS.TRANSPARENT
   },
   visibleModal: {
     zIndex: 1,
@@ -41,7 +41,7 @@ export const styles = {
     height: scale(30)
   },
   exitButton: {
-    backgroundColor: 'transparent',
+    backgroundColor: THEME.COLORS.TRANSPARENT,
     width: scale(30),
     height: scale(30),
     alignItems: 'center',
@@ -49,7 +49,7 @@ export const styles = {
   },
   exitText: {
     fontSize: scale(18),
-    backgroundColor: 'transparent',
+    backgroundColor: THEME.COLORS.TRANSPARENT,
     color: THEME.COLORS.GRAY_1
   },
   iconWrapper: {},
