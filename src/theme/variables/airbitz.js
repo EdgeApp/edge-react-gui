@@ -94,7 +94,8 @@ export const THEME = {
 
     ROW_PRESSED: '#D9E3ED', // same as GRAY_3
 
-    HEADER_TEXT_SECONDARY: '#A4C7DF'
+    HEADER_TEXT_SECONDARY: '#A4C7DF',
+    APP_STATUS_BAR: '#00000040'
   }
 }
 
