@@ -257,12 +257,21 @@ exports[`TransactionDetails.ui should render 1`] = `
                 style={
                   Object {
                     "color": "#353535",
-                    "flex": 1,
                     "fontSize": 22,
                   }
                 }
               >
                 $ 
+              </FormattedText>
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#353535",
+                    "flex": 1,
+                    "fontSize": 22,
+                  }
+                }
+              >
                 120.00
               </FormattedText>
               <FormattedText
@@ -734,12 +743,21 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
                 style={
                   Object {
                     "color": "#353535",
-                    "flex": 1,
                     "fontSize": 22,
                   }
                 }
               >
                 $ 
+              </FormattedText>
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#353535",
+                    "flex": 1,
+                    "fontSize": 22,
+                  }
+                }
+              >
                 120.00
               </FormattedText>
               <FormattedText
@@ -1211,12 +1229,21 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
                 style={
                   Object {
                     "color": "#353535",
-                    "flex": 1,
                     "fontSize": 22,
                   }
                 }
               >
                 $ 
+              </FormattedText>
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#353535",
+                    "flex": 1,
+                    "fontSize": 22,
+                  }
+                }
+              >
                 120.00
               </FormattedText>
               <FormattedText
@@ -1688,12 +1715,21 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
                 style={
                   Object {
                     "color": "#353535",
-                    "flex": 1,
                     "fontSize": 22,
                   }
                 }
               >
                 $ 
+              </FormattedText>
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#353535",
+                    "flex": 1,
+                    "fontSize": 22,
+                  }
+                }
+              >
                 120.00
               </FormattedText>
               <FormattedText
