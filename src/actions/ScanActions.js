@@ -11,8 +11,10 @@ import URL from 'url-parse'
 import { selectWalletForExchange } from '../actions/CryptoExchangeActions.js'
 import { launchModal } from '../components/common/ModalProvider.js'
 import { createAddressModal } from '../components/modals/AddressModal.js'
+import { showError } from '../components/services/AirshipInstance'
 import {
   ADD_TOKEN,
+  CURRENCY_PLUGIN_NAMES,
   EXCHANGE_SCENE,
   FA_MONEY_ICON,
   getSpecialCurrencyInfo,
@@ -26,6 +28,7 @@ import {
 } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
+import { checkPubAddress } from '../modules/FioAddress/util'
 import Text from '../modules/UI/components/FormattedText'
 import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import OptionIcon from '../modules/UI/components/OptionIcon/OptionIcon.ui.js'
@@ -96,7 +99,7 @@ export const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWal
   }
 }
 
-export const parseScannedUri = (data: string) => (dispatch: Dispatch, getState: GetState) => {
+export const parseScannedUri = (data: string) => async (dispatch: Dispatch, getState: GetState) => {
   if (!data) return
   const state = getState()
   const selectedWalletId = state.ui.wallets.selectedWalletId
@@ -104,20 +107,40 @@ export const parseScannedUri = (data: string) => (dispatch: Dispatch, getState: 
   const guiWallet = state.ui.wallets.byId[selectedWalletId]
   const currencyCode = state.ui.wallets.selectedCurrencyCode
 
+  let fioAddress
+  const account = CORE_SELECTORS.getAccount(state)
+  if (account && account.currencyConfig) {
+    const fioPlugin = account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
+    const walletId: string = UI_SELECTORS.getSelectedWalletId(state)
+    const coreWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
+    const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
+    try {
+      const publicAddress = await checkPubAddress(fioPlugin, data.toLowerCase(), coreWallet.currencyInfo.currencyCode, currencyCode)
+      if (publicAddress) {
+        fioAddress = data.toLowerCase()
+        data = publicAddress
+      }
+    } catch (e) {
+      return showError(e.message)
+    }
+  }
+
   // Check for things other than coins:
   const deepLink = parseDeepLink(data)
   switch (deepLink.type) {
-    case 'edgeLogin':
-    case 'passwordRecovery':
-    case 'plugin':
-      dispatch(launchDeepLink(deepLink))
-      return
+    case 'other':
+      // Handle this link type below:
+      break
     case 'returnAddress':
       try {
         return doRequestAddress(dispatch, edgeWallet, guiWallet, deepLink)
       } catch (e) {
         console.log(e)
       }
+      break
+    default:
+      dispatch(launchDeepLink(deepLink))
+      return
   }
 
   edgeWallet.parseUri(data, currencyCode).then(
@@ -178,6 +201,10 @@ export const parseScannedUri = (data: string) => (dispatch: Dispatch, getState: 
         uniqueIdentifier: parsedUri.uniqueIdentifier,
         nativeAmount
       }
+
+      if (fioAddress) {
+        guiMakeSpendInfo.fioAddress = fioAddress
+      }
       Actions[SEND_CONFIRMATION]({ guiMakeSpendInfo })
       // dispatch(sendConfirmationUpdateTx(parsedUri))
     },
@@ -229,9 +256,12 @@ export const toggleAddressModal = () => async (dispatch: Dispatch, getState: Get
   const walletId: string = UI_SELECTORS.getSelectedWalletId(state)
   const coreWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
   const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
+  const account = CORE_SELECTORS.getAccount(state)
+  const fioPlugin = account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
   const addressModal = createAddressModal({
     walletId,
     coreWallet,
+    fioPlugin,
     currencyCode
   })
   const uri = await launchModal(addressModal)

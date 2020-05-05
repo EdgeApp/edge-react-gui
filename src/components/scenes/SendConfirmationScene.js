@@ -27,6 +27,7 @@ import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/ty
 import { convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../util/utils.js'
 import { AddressTextWithBlockExplorerModal } from '../common/AddressTextWithBlockExplorerModal'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { showError } from '../services/AirshipInstance'
 
 const DIVIDE_PRECISION = 18
 
@@ -60,7 +61,8 @@ export type SendConfirmationStateProps = {
   coreWallet: EdgeCurrencyWallet,
   sceneState: SendConfirmationState,
   toggleCryptoOnTop: number,
-  guiWallet: GuiWallet
+  guiWallet: GuiWallet,
+  isConnected: boolean
 }
 
 export type SendConfirmationDispatchProps = {
@@ -205,6 +207,9 @@ export class SendConfirmation extends Component<Props, State> {
     const destination = transactionMetadata ? transactionMetadata.name : ''
     const DESTINATION_TEXT = sprintf(s.strings.send_confirmation_to, destination)
     const ADDRESS_TEXT = sprintf(s.strings.send_confirmation_address, address)
+    const fioAddress = this.props.guiMakeSpendInfo && this.props.guiMakeSpendInfo.fioAddress ? this.props.guiMakeSpendInfo.fioAddress : ''
+    const memo = this.props.guiMakeSpendInfo && this.props.guiMakeSpendInfo.memo ? this.props.guiMakeSpendInfo.memo : ''
+    const displayAddress = fioAddress ? '' : address
 
     const feeCalculated = !!networkFee || !!parentNetworkFee
 
@@ -268,7 +273,7 @@ export class SendConfirmation extends Component<Props, State> {
                     </Scene.Row>
                   )}
 
-                  {!!address && (
+                  {!!displayAddress && (
                     <AddressTextWithBlockExplorerModal address={address} addressExplorer={addressExplorer}>
                       <Scene.Row style={{ paddingVertical: 4 }}>
                         <Recipient.Text style={{}}>
@@ -276,6 +281,28 @@ export class SendConfirmation extends Component<Props, State> {
                         </Recipient.Text>
                       </Scene.Row>
                     </AddressTextWithBlockExplorerModal>
+                  )}
+
+                  {!!fioAddress && (
+                    <Scene.Row style={{ paddingVertical: 10 }}>
+                      <Recipient.Text style={{}}>
+                        <Text>{sprintf(s.strings.fio_address, fioAddress)}</Text>
+                      </Recipient.Text>
+                    </Scene.Row>
+                  )}
+
+                  {!!memo && (
+                    <Scene.Row style={{ paddingBottom: 5, paddingTop: 10 }}>
+                      <Recipient.Text style={{}}>
+                        <Text>{fioAddress ? s.strings.unique_identifier_memo : ''}:</Text>
+                      </Recipient.Text>
+                    </Scene.Row>
+                  )}
+
+                  {!!memo && (
+                    <Scene.Row style={{ paddingTop: 0, paddingBottom: 10 }}>
+                      <Text style={styles.rowText}>{memo}</Text>
+                    </Scene.Row>
                   )}
 
                   {isTaggableCurrency && (
@@ -337,7 +364,11 @@ export class SendConfirmation extends Component<Props, State> {
   }
 
   onExchangeAmountChanged = async ({ nativeAmount, exchangeAmount }: ExchangedFlipInputAmounts) => {
-    const { fiatPerCrypto, coreWallet, sceneState, currencyCode, newSpendInfo, updateTransaction, getAuthRequiredDispatch } = this.props
+    const { fiatPerCrypto, coreWallet, sceneState, currencyCode, newSpendInfo, updateTransaction, getAuthRequiredDispatch, isConnected } = this.props
+    if (!isConnected) {
+      showError(s.strings.fio_network_alert_text)
+      return
+    }
     this.setState({ showSpinner: true })
     const amountFiatString: string = bns.mul(exchangeAmount, fiatPerCrypto.toString())
     const amountFiat: number = parseFloat(amountFiatString)

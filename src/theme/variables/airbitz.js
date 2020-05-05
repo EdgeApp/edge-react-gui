@@ -47,20 +47,13 @@ export const THEME = {
 
   OPACITY: {
     ACTIVE: 0.3,
-
-    FULL: 1.0,
-    HIGH: 0.8,
     MID: 0.5,
-    LOW: 0.1,
-    NONE: 0.0
+    MODAL_DARKNESS: 0.7
   },
 
   ALPHA: {
-    FULL: 99,
-    HIGH: 80,
     MID: 50,
-    LOW: 10,
-    NONE: 0
+    LOW: 10
   },
 
   COLORS: {
@@ -95,6 +88,7 @@ export const THEME = {
     OPACITY_WHITE: 'rgba(255, 255, 255, 0.1)',
     OPAQUE_WHITE: 'rgba(255, 255, 255, 0.5)',
     OPACITY_GRAY_1: 'rgba(74, 81, 87, 0.1)',
+    SHADOW: '#000000', // True black for crisp drop shadows
 
     TRANSPARENT: 'transparent',
 

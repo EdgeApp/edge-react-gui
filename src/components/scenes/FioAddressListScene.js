@@ -1,7 +1,8 @@
 // @flow
 
+import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, ScrollView, View } from 'react-native'
+import { ActivityIndicator, Linking, ScrollView, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import { FioAddressItem } from '../../components/common/FioAddressItem'
@@ -13,17 +14,20 @@ import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
 import { styles } from '../../styles/scenes/FioAddressListStyle'
 import type { FioAddress } from '../../types/types'
+import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 
 export type StateProps = {
   fioAddresses: FioAddress[],
+  fioWallets: EdgeCurrencyWallet[],
+  fioPlugin: EdgeCurrencyConfig | null,
   loading: boolean,
   isConnected: boolean
 }
 
 export type DispatchProps = {
   setFioAddress: (fioAddress: string, expiration: string) => void,
-  refreshAllFioAddresses: (cb: Function) => Promise<void>
+  refreshAllFioAddresses: () => Promise<void>
 }
 
 export type NavigationProps = {
@@ -33,32 +37,49 @@ export type NavigationProps = {
 type Props = StateProps & DispatchProps & NavigationProps
 
 export class FioAddressListScene extends Component<Props> {
-  willFocusSubscription = null
+  willFocusSubscription: { remove: () => void } | null = null
 
   fetchData () {
     const { refreshAllFioAddresses, isConnected } = this.props
     if (!isConnected) {
       showError(s.strings.fio_network_alert_text)
     }
-    refreshAllFioAddresses(() => this.checkForFioAddresses())
+    refreshAllFioAddresses()
   }
 
-  componentDidMount () {
-    this.willFocusSubscription = this.props.navigation.addListener('willFocus', () => {
+  componentDidMount (): void {
+    this.willFocusSubscription = this.props.navigation.addListener('didFocus', () => {
       this.fetchData()
     })
   }
 
-  componentWillUnmount () {
+  componentDidUpdate (prevProps: Props): void {
+    const { fioAddresses, loading } = this.props
+
+    if (!loading && prevProps.loading) {
+      if (fioAddresses.length === 0) {
+        Actions[Constants.FIO_ADDRESS_REGISTER]({ noAddresses: true })
+      }
+    }
+  }
+
+  componentWillUnmount (): void {
     this.willFocusSubscription && this.willFocusSubscription.remove()
   }
 
-  checkForFioAddresses () {
-    const { fioAddresses, isConnected } = this.props
-
-    if (fioAddresses.length === 0 && isConnected) {
-      Actions[Constants.FIO_ADDRESS_REGISTER]()
-    }
+  registerDomain = async () => {
+    const { fioPlugin, fioWallets } = this.props
+    if (!fioPlugin) return
+    const publicKey = fioWallets[0].publicWalletInfo.keys.publicKey
+    const url = `${await fioPlugin.otherMethods.getRegDomainUrl()}${publicKey}`
+    Linking.canOpenURL(url).then(supported => {
+      if (supported) {
+        Linking.openURL(url)
+      } else {
+        console.log("Don't know how to open URI: " + url)
+        showError("Don't know how to open URI: " + url)
+      }
+    })
   }
 
   onPress = (fioAddress: string, expirationValue: string) => {
@@ -68,6 +89,15 @@ export class FioAddressListScene extends Component<Props> {
 
   render () {
     const { fioAddresses, loading } = this.props
+
+    if (!fioAddresses.length) {
+      return (
+        <SceneWrapper>
+          <Gradient style={styles.gradient} />
+          <ActivityIndicator style={styles.loading} size={'large'} />
+        </SceneWrapper>
+      )
+    }
 
     return (
       <SafeAreaView>
@@ -82,13 +112,23 @@ export class FioAddressListScene extends Component<Props> {
           <T>{s.strings.fio_address_first_screen_end}</T>
         </View>
         <View style={styles.button}>
-          <Button onPress={() => Actions[Constants.FIO_ADDRESS_REGISTER]()} style={styles.toggleButton} underlayColor={styles.underlay.color}>
+          <Button onPress={Actions[Constants.FIO_ADDRESS_REGISTER]} style={styles.toggleButton} underlayColor={styles.underlay.color}>
             <Button.Center>
               <Button.Text>
                 <T>{s.strings.fio_address_list_screen_button_register}</T>
               </Button.Text>
             </Button.Center>
           </Button>
+        </View>
+        <View style={styles.domainVew}>
+          <T>{s.strings.fio_address_reg_domain_label}</T>
+        </View>
+        <View style={styles.button}>
+          <TouchableHighlight onPress={this.registerDomain} underlayColor={styles.underlay.color}>
+            <View>
+              <T style={styles.link}>{s.strings.fio_address_reg_domain}</T>
+            </View>
+          </TouchableHighlight>
         </View>
       </SafeAreaView>
     )

@@ -1,9 +1,8 @@
 // @flow
 
-import type { EdgeCurrencyInfo, EdgeDenomination } from 'edge-core-js'
+import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import _ from 'lodash'
 
-import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
 import { intl } from '../../locales/intl.js'
 import type { State } from '../../types/reduxTypes.js'
 import type { GuiDenomination, GuiWallet, TransactionListTx } from '../../types/types.js'
@@ -45,11 +44,6 @@ export const getSelectedWallet = (state: State) => {
 export const getActiveWalletIds = (state: State): Array<string> => {
   const activeWalletIds = state.ui.wallets.activeWalletIds
   return activeWalletIds
-}
-
-export const getArchivedWalletIds = (state: State): Array<string> => {
-  const archivedWalletIds = state.ui.wallets.archivedWalletIds
-  return archivedWalletIds
 }
 
 export const getWalletLoadingPercent = (state: State) => {
@@ -140,11 +134,6 @@ export const getSceneState = (state: State, sceneKey: string) => {
 }
 
 export const getExchangeRate = (state: State, fromCurrencyCode: string, toCurrencyCode: string): number => {
-  if (fromCurrencyCode === FIO_STR || toCurrencyCode === FIO_STR) {
-    // TODO: add real exchange rate
-    return 0
-  }
-
   const exchangeRates = state.exchangeRates
   const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
   const rate = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
@@ -191,4 +180,25 @@ export const convertNativeToExchangeRateDenomination = (settings: Object, curren
   if (!exchangeDenomination || !nativeAmount || nativeAmount === '0') return '0'
   const nativeToExchangeRatio: string = exchangeDenomination.multiplier
   return convertNativeToExchange(nativeToExchangeRatio)(nativeAmount)
+}
+
+export const findWalletByFioAddress = async (state: State, fioAddress: string): Promise<EdgeCurrencyWallet | null> => {
+  const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
+
+  if (fioWallets && fioWallets.length) {
+    for (const wallet: EdgeCurrencyWallet of fioWallets) {
+      const fioAddresses: string[] = await wallet.otherMethods.getFioAddressNames()
+      if (fioAddresses.length > 0) {
+        for (const address of fioAddresses) {
+          if (address.toLowerCase() === fioAddress.toLowerCase()) {
+            return wallet
+          }
+        }
+      }
+    }
+
+    return null
+  } else {
+    return null
+  }
 }

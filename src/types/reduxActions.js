@@ -3,6 +3,7 @@
 import { type Disklet } from 'disklet'
 import { type EdgeAccount, type EdgeContext, type EdgeCurrencyWallet, type EdgeLobby, type EdgeParsedUri, type EdgeReceiveAddress } from 'edge-core-js'
 
+import type { CcWalletMap } from '../reducers/FioReducer'
 import { type PermissionsState } from '../reducers/PermissionsReducer.js'
 import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
 import { type TweakSource } from '../util/ReferralHelpers.js'
@@ -48,7 +49,6 @@ type LegacyActionName =
 
 // Actions with no payload:
 type NoDataActionName =
-  | 'ACCOUNT_SWAP_IGNORED'
   | 'ADD_NEW_CUSTOM_TOKEN_FAILURE'
   | 'ADD_TOKEN_START'
   | 'CLOSE_SELECT_USER'
@@ -112,6 +112,7 @@ export type Action =
   | { type: 'ACCOUNT_ACTIVATION_INFO', data: HandleActivationInfo }
   | { type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO', data: AccountActivationPaymentInfo }
   | { type: 'ACCOUNT_REFERRAL_LOADED', data: { referral: AccountReferral, cache: ReferralCache } }
+  | { type: 'ACCOUNT_SWAP_IGNORED', data: boolean }
   | { type: 'ACCOUNT_TWEAKS_REFRESHED', data: ReferralCache }
   | {
       type: 'ADD_NEW_CUSTOM_TOKEN_SUCCESS',
@@ -238,3 +239,5 @@ export type Action =
         }
       }
     }
+  | { type: 'FIO/UPDATE_CONNECTED_WALLETS', data: { connectedWalletsByFioAddress: { [fioAddress: string]: CcWalletMap } } }
+  | { type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS', data: { fioAddress: string, ccWalletMap: CcWalletMap } }

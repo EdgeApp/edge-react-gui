@@ -20,7 +20,7 @@ import { styles as fioAddressStyles } from '../../styles/scenes/FioAddressRegist
 import THEME from '../../theme/variables/airbitz'
 import { FormField } from '../common/FormField.js'
 import { FormFieldSelect } from '../common/FormFieldSelect'
-import { showError } from '../services/AirshipInstance'
+import { showError, showToast } from '../services/AirshipInstance'
 
 export type State = {
   selectedWallet: { value: string | null, wallet: EdgeCurrencyWallet } | null,
@@ -28,25 +28,27 @@ export type State = {
   isValid: boolean,
   touched: boolean,
   loading: boolean,
+  walletLoading: boolean,
   isAvailable: boolean | null,
-  replaceRegex: RegExp
+  replaceRegex: RegExp,
+  fieldPos: number
 }
 
 export type StateProps = {
   fioWallets: EdgeCurrencyWallet[],
   fioPlugin: EdgeCurrencyConfig,
-  defaultFiatCode: string,
   isConnected: boolean
 }
 
 export type DispatchProps = {
   changeFioAddressName: (fioAddressName: string) => void,
-  createCurrencyWallet: (walletName: string, walletType: string, fiatCurrencyCode: string) => any
+  createFioWallet: () => Promise<EdgeCurrencyWallet>
 }
 
 type Props = StateProps & DispatchProps
 
 export class FioAddressRegisterScene extends Component<Props, State> {
+  fioCheckQueue: number = 0
   clearButtonMode = 'while-editing'
   returnKeyType = 'next'
   inputMaxLength = 15
@@ -66,7 +68,6 @@ export class FioAddressRegisterScene extends Component<Props, State> {
       ...fioAddressStyles.inputContainer
     }
   }
-  bcValidationTimer: TimeoutID | null
 
   state = {
     selectedWallet: null,
@@ -75,7 +76,9 @@ export class FioAddressRegisterScene extends Component<Props, State> {
     touched: false,
     isAvailable: false,
     loading: false,
-    replaceRegex: new RegExp(`${FIO_DOMAIN_DEFAULT}`)
+    walletLoading: false,
+    replaceRegex: new RegExp(`${FIO_DOMAIN_DEFAULT}`),
+    fieldPos: 200
   }
 
   componentDidMount () {
@@ -94,17 +97,21 @@ export class FioAddressRegisterScene extends Component<Props, State> {
   }
 
   createFioWallet = async (): Promise<void> => {
-    const { createCurrencyWallet, defaultFiatCode } = this.props
+    const { createFioWallet } = this.props
+    showToast(s.strings.preparing_fio_wallet)
+    this.setState({ walletLoading: true })
     try {
-      const wallet = await createCurrencyWallet(s.strings.fio_address_register_default_fio_wallet_name, Constants.FIO_WALLET_TYPE, defaultFiatCode)
+      const wallet = await createFioWallet()
       this.setState({
         selectedWallet: {
           value: wallet.name,
           wallet
-        }
+        },
+        walletLoading: false
       })
     } catch (e) {
-      //
+      this.setState({ walletLoading: false })
+      showError(s.strings.create_wallet_failed_message)
     }
   }
 
@@ -112,6 +119,7 @@ export class FioAddressRegisterScene extends Component<Props, State> {
     const { changeFioAddressName, isConnected } = this.props
     const { fioAddress, selectedWallet } = this.state
     if (isConnected) {
+      if (!selectedWallet) return showError(s.strings.create_wallet_failed_message)
       changeFioAddressName(fioAddress + FIO_DOMAIN_DEFAULT)
       Actions[Constants.FIO_ADDRESS_REGISTER_SELECT_WALLET]({ selectedWallet })
     } else {
@@ -119,16 +127,35 @@ export class FioAddressRegisterScene extends Component<Props, State> {
     }
   }
 
-  handleFioAddressChange = async (fioAddressChanged: string) => {
-    fioAddressChanged = fioAddressChanged.replace(this.state.replaceRegex, '')
+  checkFioAddress (fioAddress: string) {
     this.setState({
       loading: true
     })
+    this.fioCheckQueue++
+    setTimeout(async () => {
+      // do not check if user continue typing fio address
+      if (this.fioCheckQueue > 1) {
+        return --this.fioCheckQueue
+      }
+      this.fioCheckQueue = 0
+      try {
+        const { fioPlugin } = this.props
+        const isAvailable = fioPlugin.otherMethods ? await fioPlugin.otherMethods.validateAccount(fioAddress + FIO_DOMAIN_DEFAULT) : false
+        this.setState({
+          isAvailable,
+          loading: false
+        })
+      } catch (e) {
+        this.setState({
+          loading: false
+        })
+      }
+    }, 1000)
+  }
 
-    if (this.bcValidationTimer) {
-      clearTimeout(this.bcValidationTimer)
-      this.bcValidationTimer = null
-    }
+  handleFioAddressChange = (fioAddressChanged: string) => {
+    fioAddressChanged = fioAddressChanged.replace(this.state.replaceRegex, '')
+
     if (!this.props.isConnected) {
       return this.setState({
         fioAddress: fioAddressChanged,
@@ -137,20 +164,22 @@ export class FioAddressRegisterScene extends Component<Props, State> {
         loading: false
       })
     }
-    const { fioPlugin } = this.props
-    this.bcValidationTimer = window.requestAnimationFrame(async () => {
-      const isAvailable = fioPlugin.otherMethods ? await fioPlugin.otherMethods.validateAccount(fioAddressChanged + FIO_DOMAIN_DEFAULT) : false
-      this.setState({
-        isAvailable,
-        loading: false
-      })
-    })
+    this.checkFioAddress(fioAddressChanged)
 
     this.setState({
       fioAddress: fioAddressChanged,
       touched: true,
-      isAvailable: null,
-      loading: false
+      isAvailable: null
+    })
+  }
+
+  handleFioAddressFocus = () => {
+    this.refs._scrollView.scrollTo({ x: 0, y: this.state.fieldPos, animated: true })
+  }
+
+  fieldViewOnLayout = () => {
+    this.refs._fieldView.measure((x, y) => {
+      this.setState({ fieldPos: y })
     })
   }
 
@@ -172,13 +201,13 @@ export class FioAddressRegisterScene extends Component<Props, State> {
   }
 
   renderButton () {
-    const { isValid, isAvailable, loading } = this.state
+    const { isValid, isAvailable, loading, walletLoading } = this.state
 
     if (isValid && isAvailable && !loading) {
       return (
         <View style={styles.buttons}>
-          <PrimaryButton style={[styles.next]} onPress={this.handleNextButton} disabled={!isAvailable}>
-            <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>
+          <PrimaryButton style={[styles.next]} onPress={this.handleNextButton} disabled={!isAvailable || walletLoading}>
+            {walletLoading ? <ActivityIndicator size="small" /> : <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>}
           </PrimaryButton>
         </View>
       )
@@ -207,7 +236,7 @@ export class FioAddressRegisterScene extends Component<Props, State> {
       )
     }
 
-    return <View style={fioAddressStyles.statusIcon}>{loading ? <ActivityIndicator style={styles.feedbackIcon} /> : icon}</View>
+    return <View style={fioAddressStyles.statusIcon}>{loading ? <ActivityIndicator style={styles.feedbackIcon} size="small" /> : icon}</View>
   }
 
   renderFioWallets () {
@@ -247,7 +276,7 @@ export class FioAddressRegisterScene extends Component<Props, State> {
     return (
       <SafeAreaView>
         <Gradient style={styles.scrollableGradient} />
-        <ScrollView>
+        <ScrollView ref="_scrollView">
           <View style={[styles.scrollableView]}>
             <Image source={fioAddressIcon} style={fioAddressStyles.image} resizeMode={'cover'} />
             <View style={[styles.createWalletPromptArea, fioAddressStyles.paddings, fioAddressStyles.title]}>
@@ -260,17 +289,19 @@ export class FioAddressRegisterScene extends Component<Props, State> {
               <T style={styles.handleRequirementsText}>{s.strings.fio_address_first_screen_end}</T>
             </View>
 
-            <View style={fioAddressStyles.formFieldView}>
+            <View style={fioAddressStyles.formFieldView} ref="_fieldView" onLayout={this.fieldViewOnLayout}>
               <FormField
                 style={this.materialInputOnWhiteStyle}
                 clearButtonMode={this.clearButtonMode}
                 autoCorrect={false}
-                placeholder={s.strings.fio_address_register_form_field_label}
+                autoCapitalize="none"
+                placeholder={s.strings.fio_address_confirm_screen_label}
                 caretHidden={true}
+                onFocus={this.handleFioAddressFocus}
                 onChangeText={this.handleFioAddressChange}
                 onSubmitEditing={this.handleNextButton}
                 selectionColor={THEME.COLORS.ACCENT_MINT}
-                label={s.strings.fio_address_register_form_field_label}
+                label={s.strings.fio_address_choose_label}
                 value={fioAddress.replace(replaceRegex, '')}
                 suffix={FIO_DOMAIN_DEFAULT}
                 maxLength={this.inputMaxLength}

@@ -26,10 +26,10 @@ export class Gradient extends Component<Props> {
   }
 
   render () {
-    const { reverse, style } = this.props
+    const { children, reverse, style } = this.props
     return (
       <LinearGradient style={style} start={UPPER_LEFT} end={UPPER_RIGHT} colors={reverse ? REVERSE_COLORS : COLORS}>
-        {this.props.children}
+        {children}
       </LinearGradient>
     )
   }

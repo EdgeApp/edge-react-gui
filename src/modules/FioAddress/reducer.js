@@ -68,7 +68,7 @@ export const fioAddress: Reducer<FioAddressSceneState, Action> = (state = initia
         fioAddressName: action.data.fioAddressName
       }
     case 'FIO/FIO_ADDRESS_UPDATE_SELECTED_WALLET':
-      if (!action.data) throw new Error('Invalid action FIO_ADDRESS_UPDATE_FIO_ADDRESS_NAME')
+      if (!action.data) throw new Error('Invalid action FIO_ADDRESS_UPDATE_SELECTED_WALLET')
       return {
         ...state,
         selectedWallet: action.data.selectedWallet,

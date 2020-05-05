@@ -37,11 +37,16 @@ export class FioAddressDetailsScene extends Component<Props, State> {
     }
   }
 
+  _onToggleConnectWallets = (): void => {
+    const { fioAddressName } = this.props
+    Actions[Constants.FIO_CONNECT_TO_WALLETS]({ fioAddressName })
+  }
+
   renderButton () {
     if (this.props.registerSuccess) {
       return (
         <View style={styles.buttons}>
-          <TouchableHighlight style={styles.bottomButton} onPress={() => Actions[Constants.FIO_ADDRESS_LIST]()} underlayColor={styles.underlay.color}>
+          <TouchableHighlight style={styles.bottomButton} onPress={Actions[Constants.FIO_ADDRESS_LIST]} underlayColor={styles.underlay.color}>
             <View style={styles.bottomButtonTextWrap}>
               <T style={styles.bottomButtonText}>{s.strings.fio_address_list}</T>
             </View>
@@ -49,6 +54,16 @@ export class FioAddressDetailsScene extends Component<Props, State> {
         </View>
       )
     }
+
+    return (
+      <View style={styles.buttons}>
+        <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleConnectWallets} underlayColor={styles.underlay.color}>
+          <View style={[styles.bottomButtonTextWrap, styles.buttonWithLoader]}>
+            <T style={styles.bottomButtonText}>{s.strings.fio_address_details_screen_connect_to_wallets}</T>
+          </View>
+        </TouchableHighlight>
+      </View>
+    )
   }
 
   render () {

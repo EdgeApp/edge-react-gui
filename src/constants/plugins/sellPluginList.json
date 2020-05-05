@@ -5,7 +5,7 @@
     "paymentTypes": [
       "credit"
     ],
-    "description": "Fee: ~4% / Settlement: 10-30 minutes\nLimit: €4400/day",
+    "description": "Fee: 4% / Settlement: 10-30 minutes\nLimit: €4400/day",
     "title": "Credit and Debit Card",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/03/simplex-logo-sm-square.png",
     "forCountries": [],

@@ -189,6 +189,14 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
   const spendInfo = state.ui.scenes.sendConfirmation.spendInfo
   const guiMakeSpendInfo = state.ui.scenes.sendConfirmation.guiMakeSpendInfo
 
+  try {
+    if (guiMakeSpendInfo.beforeTransaction) {
+      await guiMakeSpendInfo.beforeTransaction()
+    }
+  } catch (e) {
+    return
+  }
+
   if (!spendInfo) throw new Error(s.strings.invalid_spend_request)
   const authRequired = getAuthRequired(state, spendInfo)
   const pin = state.ui.scenes.sendConfirmation.pin
@@ -222,6 +230,9 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
     let edgeMetadata = { ...spendInfo.metadata }
     if (state.ui.scenes.sendConfirmation.transactionMetadata) {
       edgeMetadata = { ...edgeMetadata, ...state.ui.scenes.sendConfirmation.transactionMetadata }
+    }
+    if (guiMakeSpendInfo.fioAddress) {
+      edgeMetadata.name = guiMakeSpendInfo.fioAddress
     }
     const publicAddress = spendInfo ? spendInfo.spendTargets[0].publicAddress : ''
     if (publicAddress) {

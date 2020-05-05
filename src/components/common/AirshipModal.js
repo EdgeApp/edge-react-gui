@@ -48,7 +48,7 @@ export class AirshipModal extends Component<Props> {
     // Animate in:
     Animated.parallel([
       Animated.timing(this.opacity, {
-        toValue: 0.7,
+        toValue: THEME.OPACITY.MODAL_DARKNESS,
         duration: 300,
         useNativeDriver: true
       }),
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     top: 0,
 
     // Visuals:
-    backgroundColor: THEME.COLORS.BLACK
+    backgroundColor: THEME.COLORS.SHADOW
   },
 
   screen: {

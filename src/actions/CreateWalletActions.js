@@ -16,7 +16,6 @@ import s from '../locales/strings.js'
 import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import { getExchangeDenomination } from '../modules/Settings/selectors.js'
 import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
-import { errorModal } from '../modules/UI/components/Modals/ErrorModal.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { logEvent } from '../util/tracking.js'
@@ -104,7 +103,7 @@ export const createCurrencyWallet = (
       return edgeWallet
     })
     .catch(async error => {
-      await launchModal(errorModal(s.strings.create_wallet_failed, error))
+      showError(error)
       dispatch({ type: 'UI/WALLETS/CREATE_WALLET_FAILURE' })
     })
 }

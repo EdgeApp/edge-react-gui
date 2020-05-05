@@ -58,6 +58,8 @@ export type FlipInputOwnProps = {
   isFiatOnTop: boolean,
   isFocus: boolean,
 
+  topReturnKeyType?: string,
+  inputAccessoryViewID?: string,
   headerText: string,
   headerLogo: string | void,
   headerCallback?: () => void,
@@ -277,6 +279,30 @@ export class FlipInput extends Component<Props, State> {
     )
   }
 
+  textInputTopFocus = () => {
+    if (this.state.isToggled) {
+      if (this.textInputBack) {
+        this.textInputBack.focus()
+      }
+    } else {
+      if (this.textInputFront) {
+        this.textInputFront.focus()
+      }
+    }
+  }
+
+  textInputTopBlur = () => {
+    if (this.state.isToggled) {
+      if (this.textInputBack) {
+        this.textInputBack.blur()
+      }
+    } else {
+      if (this.textInputFront) {
+        this.textInputFront.blur()
+      }
+    }
+  }
+
   getTextInputFrontRef = (ref: TextInput | null) => {
     this.textInputFront = ref
   }
@@ -311,13 +337,14 @@ export class FlipInput extends Component<Props, State> {
               autoCorrect={false}
               keyboardType="numeric"
               selectionColor="white"
-              returnKeyType="done"
+              returnKeyType={this.props.topReturnKeyType || 'done'}
               underlineColorAndroid={'transparent'}
               ref={this.getTextInputFrontRef}
               onFocus={this.textInputFrontFocusTrue}
               onBlur={this.textInputFrontFocusFalse}
               editable={this.props.isEditable}
               onSubmitEditing={this.props.onNext}
+              inputAccessoryViewID={this.props.inputAccessoryViewID || null}
             />
           </View>
         </View>
@@ -359,13 +386,14 @@ export class FlipInput extends Component<Props, State> {
               autoCorrect={false}
               keyboardType="numeric"
               selectionColor="white"
-              returnKeyType="done"
+              returnKeyType={this.props.topReturnKeyType || 'done'}
               underlineColorAndroid={'transparent'}
               ref={this.getTextInputBackRef}
               onFocus={this.textInputBackFocusTrue}
               onBlur={this.textInputBackFocusFalse}
               editable={this.props.isEditable}
               onSubmitEditing={this.props.onNext}
+              inputAccessoryViewID={this.props.inputAccessoryViewID || null}
             />
           </View>
         </View>

@@ -37,7 +37,7 @@ const accountInner: Reducer<AccountState, Action> = combineReducers({
         return { ...referral, promotions }
       }
       case 'ACCOUNT_SWAP_IGNORED': {
-        return { ...state, ignoreAccountSwap: true }
+        return { ...state, ignoreAccountSwap: action.data }
       }
       case 'MESSAGE_TWEAK_HIDDEN': {
         const { messageId, source } = action.data

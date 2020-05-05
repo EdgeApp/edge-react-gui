@@ -2,29 +2,40 @@
 
 import React, { Component } from 'react'
 import { Alert, FlatList, Keyboard, StyleSheet, TouchableHighlight, View } from 'react-native'
+import { Actions } from 'react-native-router-flux'
+import { connect } from 'react-redux'
 
+import { setDefaultFiatRequest } from '../../actions/SettingsActions'
 import s from '../../locales/strings.js'
+import { getDefaultFiat } from '../../modules/Settings/selectors'
 import Text from '../../modules/UI/components/FormattedText/index'
 import { MaterialInputOnWhite } from '../../styles/components/FormFieldStyles.js'
 import { THEME } from '../../theme/variables/airbitz'
+import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import type { FlatListItem, GuiFiatType } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
+import { getSupportedFiats } from '../../util/utils'
 import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
 const DEFAULT_FIAT_PICKER_PLACEHOLDER = s.strings.settings_select_currency
 const INVALID_DATA_TEXT = s.strings.fragment_create_wallet_select_valid
 
-type Props = {
-  supportedFiats: Array<GuiFiatType>,
+type StateProps = {
+  supportedFiats: Array<GuiFiatType>
+}
+type DispatchProps = {
   onSelectFiat: string => void
 }
+type Props = StateProps & DispatchProps
+
 type State = {
   supportedFiats: Array<GuiFiatType>,
   selectedFiat: string,
   searchTerm: string
 }
-export default class DefaultFiatSetting extends Component<Props, State> {
+
+class DefaultFiatSettingComponent extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {
@@ -93,7 +104,7 @@ export default class DefaultFiatSetting extends Component<Props, State> {
     return isValid
   }
 
-  renderFiatTypeResult = (data: FlatListItem) => {
+  renderFiatTypeResult = (data: FlatListItem<GuiFiatType>) => {
     return (
       <View style={[styles.singleFiatTypeWrap, data.item.value === this.state.selectedFiat && styles.selectedItem]}>
         <TouchableHighlight style={[styles.singleFiatType]} onPress={() => this.onSelectFiat(data.item)} underlayColor={stylesRaw.underlayColor.color}>
@@ -165,3 +176,15 @@ const stylesRaw = {
   }
 }
 const styles: typeof stylesRaw = StyleSheet.create(stylesRaw)
+
+export const DefaultFiatSettingScene = connect(
+  (state: ReduxState): StateProps => ({
+    supportedFiats: getSupportedFiats(getDefaultFiat(state))
+  }),
+  (dispatch: Dispatch): DispatchProps => ({
+    onSelectFiat (selectedDefaultFiat) {
+      dispatch(setDefaultFiatRequest(selectedDefaultFiat))
+      Actions.pop()
+    }
+  })
+)(DefaultFiatSettingComponent)
