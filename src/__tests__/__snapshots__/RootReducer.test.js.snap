@@ -357,6 +357,9 @@ Object {
       "OMG": Object {
         "denomination": "1000000000000000000",
       },
+      "OXT": Object {
+        "denomination": "1000000000000000000",
+      },
       "PAX": Object {
         "denomination": "1000000000000000000",
       },
