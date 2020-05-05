@@ -17,6 +17,7 @@ import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import T from '../../modules/UI/components/FormattedText/index'
 import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
 import styles, { customWalletListOptionsStyles, styles as styleRaw } from '../../styles/scenes/WalletListStyle.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 import { type State as ReduxState } from '../../types/reduxTypes.js'
 import { type CustomTokenInfo, type GuiDenomination, type GuiWallet } from '../../types/types.js'
 import { decimalOrZero, getFiatSymbol, getObjectDiff, getYesterdayDateRoundDownHour, truncateDecimals } from '../../util/utils.js'
@@ -154,7 +155,7 @@ class WalletListRowComponent extends Component<Props> {
               <View style={styles.rowIconWrap}>
                 {symbolImageDarkMono && <Image style={[styles.rowCurrencyLogoAndroid]} source={{ uri: symbolImageDarkMono }} resizeMode="cover" />}
                 <View style={styles.rowCurrencyLogoAndroid}>
-                  <ProgressPie size={styles.rowCurrencyOverlaySize} color={'rgba(255, 255, 255, 0.75)'} progress={progress} />
+                  <ProgressPie size={styles.rowCurrencyOverlaySize} color={THEME.COLORS.OPAQUE_WHITE_2} progress={progress} />
                 </View>
               </View>
               <View style={styles.walletDetailsContainer}>

@@ -172,7 +172,7 @@ class WalletListComponent extends Component<Props, State> {
                   >
                     <View style={styles.plusSpacer} />
                     <TouchableOpacity style={[styles.walletsBoxHeaderAddWallet]} onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]}>
-                      <Ionicon name="md-add" style={[styles.dropdownIcon]} size={28} color="white" />
+                      <Ionicon name="md-add" style={[styles.dropdownIcon]} size={28} color={THEME.COLORS.WHITE} />
                     </TouchableOpacity>
                   </Animated.View>
                 )}

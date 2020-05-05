@@ -10,6 +10,7 @@ import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/index'
 import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
 import styles, { styles as styleRaw } from '../../styles/scenes/WalletListStyle'
+import { THEME } from '../../theme/variables/airbitz.js'
 import { type GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils'
 import { ProgressPie } from './ProgressPie.js'
@@ -93,7 +94,7 @@ export class WalletListTokenRow extends PureComponent<Props> {
           <View style={styles.rowIconWrap}>
             {symbolImage && <Image style={[styles.rowCurrencyLogoAndroid]} source={{ uri: symbolImage }} resizeMode="cover" />}
             <View style={styles.rowCurrencyLogoAndroid}>
-              <ProgressPie size={styles.rowCurrencyOverlaySize} color={'rgba(255, 255, 255, 0.75)'} progress={progress} />
+              <ProgressPie size={styles.rowCurrencyOverlaySize} color={THEME.COLORS.OPAQUE_WHITE_2} progress={progress} />
             </View>
           </View>
           <View style={styles.walletDetailsContainer}>
