@@ -7,6 +7,7 @@ import _ from 'lodash'
 import { FIAT_CODES_SYMBOLS, getSymbolFromCurrency } from '../constants/indexConstants.js'
 import { intl } from '../locales/intl.js'
 import { convertCurrency } from '../modules/UI/selectors.js'
+import { THEME } from '../theme/variables/airbitz.js'
 import type { State } from '../types/reduxTypes.js'
 import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet } from '../types/types.js'
 
@@ -89,15 +90,15 @@ export const getFiatSymbol = (code: string) => {
 }
 
 export const logInfo = (msg: string) => {
-  console.log('%c ' + msg, 'background: grey; font-weight: bold; display: block;')
+  console.log('%c ' + msg, 'background: ' + THEME.COLORS.GENERIC_GREY + '; font-weight: bold; display: block;')
 }
 
 export const logWarning = (msg: string) => {
-  console.log('%c ' + msg, 'background: yellow; font-weight: bold; display: block;')
+  console.log('%c ' + msg, 'background: ' + THEME.COLORS.GENERIC_YELLOW + '; font-weight: bold; display: block;')
 }
 
 export const logError = (msg: string) => {
-  console.log('%c ' + msg, 'background: red; font-weight: bold; display: block;')
+  console.log('%c ' + msg, 'background: ' + THEME.COLORS.GENERIC_RED + '; font-weight: bold; display: block;')
 }
 
 // will take the metaTokens property on the wallet (that comes from currencyInfo), merge with account-level custom tokens added, and only return if enabled (wallet-specific)
