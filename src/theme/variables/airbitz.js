@@ -77,6 +77,10 @@ export const THEME = {
     ACCENT_MINT: '#66EDA8',
 
     GENERIC_BLACK: '#000000',
+    GENERIC_RED: '#ff0000',
+    GENERIC_ORANGE: '#ffa500',
+    GENERIC_GREEN: '#008000',
+    GENERIC_PURPLE: '#800080',
 
     BLACK: '#25292C',
     GRAY_1: '#4A5157',
@@ -90,6 +94,7 @@ export const THEME = {
     OPACITY_WHITE: 'rgba(255, 255, 255, 0.1)',
     OPAQUE_WHITE: 'rgba(255, 255, 255, 0.5)',
     OPAQUE_WHITE_2: 'rgba(255, 255, 255, 0.75)',
+    OPAQUE_WHITE_3: 'rgba(255, 255, 255, 0.60)',
     OPACITY_GRAY_1: 'rgba(74, 81, 87, 0.1)',
     SHADOW: '#000000', // True black for crisp drop shadows
 
