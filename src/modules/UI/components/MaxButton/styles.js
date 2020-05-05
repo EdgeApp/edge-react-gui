@@ -1,21 +1,22 @@
 // @flow
+import { THEME } from '../../../../theme/variables/airbitz.js'
 
 // Can't access sub-properties if using Stylesheet.create({})
 const styles = {
   over: {
-    color: 'red'
+    color: THEME.COLORS.GENERIC_RED
   },
   max: {
-    color: 'orange'
+    color: THEME.COLORS.GENERIC_ORANGE
   },
   under: {
-    color: 'green'
+    color: THEME.COLORS.GENERIC_GREEN
   },
   button: {
     flex: 1
   },
   undefined: {
-    color: 'purple'
+    color: THEME.COLORS.GENERIC_PURPLE
   }
 }
 

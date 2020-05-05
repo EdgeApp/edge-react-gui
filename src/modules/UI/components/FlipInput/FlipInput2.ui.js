@@ -8,6 +8,7 @@ import FAIcon from 'react-native-vector-icons/MaterialIcons'
 
 import * as Constants from '../../../../constants/indexConstants'
 import { intl } from '../../../../locales/intl'
+import { THEME } from '../../../../theme/variables/airbitz.js'
 import { scale } from '../../../../util/scaling.js'
 import * as UTILS from '../../../../util/utils.js'
 import { bottom, styles, top } from './styles.js'
@@ -331,14 +332,14 @@ export class FlipInput extends Component<Props, State> {
             <TextInput
               style={[top.amount]}
               placeholder={'0'}
-              placeholderTextColor={'rgba(255, 255, 255, 0.60)'}
+              placeholderTextColor={THEME.COLORS.OPAQUE_WHITE_3}
               value={amount}
               onChangeText={onChangeText}
               autoCorrect={false}
               keyboardType="numeric"
-              selectionColor="white"
+              selectionColor={THEME.COLORS.WHITE}
               returnKeyType={this.props.topReturnKeyType || 'done'}
-              underlineColorAndroid={'transparent'}
+              underlineColorAndroid={THEME.COLORS.TRANSPARENT}
               ref={this.getTextInputFrontRef}
               onFocus={this.textInputFrontFocusTrue}
               onBlur={this.textInputFrontFocusFalse}
@@ -380,14 +381,14 @@ export class FlipInput extends Component<Props, State> {
             <TextInput
               style={[top.amount]}
               placeholder={this.props.isFiatOnTop ? 'Amount' : '0'}
-              placeholderTextColor={'rgba(255, 255, 255, 0.60)'}
+              placeholderTextColor={THEME.COLORS.OPAQUE_WHITE_3}
               value={amount}
               onChangeText={onChangeText}
               autoCorrect={false}
               keyboardType="numeric"
-              selectionColor="white"
+              selectionColor={THEME.COLORS.WHITE}
               returnKeyType={this.props.topReturnKeyType || 'done'}
-              underlineColorAndroid={'transparent'}
+              underlineColorAndroid={THEME.COLORS.TRANSPARENT}
               ref={this.getTextInputBackRef}
               onFocus={this.textInputBackFocusTrue}
               onBlur={this.textInputBackFocusFalse}

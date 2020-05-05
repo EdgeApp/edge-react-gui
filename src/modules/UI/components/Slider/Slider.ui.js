@@ -7,6 +7,7 @@ import slowlog from 'react-native-slowlog'
 
 import leftArrowImg from '../../../../assets/images/slider/keyboard-arrow-left.png'
 import s from '../../../../locales/strings.js'
+import { THEME } from '../../../../theme/variables/airbitz.js'
 import { scale } from '../../../../util/scaling.js'
 import styles from './styles.js'
 
@@ -81,8 +82,8 @@ export default class ABSlider extends Component<Props, State> {
           trackStyle={styles.track}
           thumbStyle={thumbStyle}
           thumbImage={leftArrowImg}
-          minimumTrackTintColor="transparent"
-          maximumTrackTintColor="transparent"
+          minimumTrackTintColor={THEME.COLORS.TRANSPARENT}
+          maximumTrackTintColor={THEME.COLORS.TRANSPARENT}
           thumbTouchSize={{ width: scale(160), height: scale(160) }}
         />
 
