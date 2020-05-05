@@ -27,7 +27,6 @@ const mapStateToProps = (state: State, ownProps: NavigationProps) => {
       isoFiatCurrencyCode: '',
       fiatSymbol: '',
       exchangeRates: {},
-      toCurrencyCode: '',
       selectedWallet: wallet,
       fioWalletByAddress
     }
@@ -39,7 +38,6 @@ const mapStateToProps = (state: State, ownProps: NavigationProps) => {
   const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, selectedFioPendingRequest.content.token_code)
   const fiatSymbol = FIAT_CODES_SYMBOLS[fiatCurrencyCode]
   const fromCurrencyCode = selectedFioPendingRequest.content.token_code
-  const toCurrencyCode = selectedFioPendingRequest.content.token_code
   const exchangeRates = state.exchangeRates
   const wallets = state.ui.wallets.byId
   const out: StateProps = {
@@ -49,7 +47,6 @@ const mapStateToProps = (state: State, ownProps: NavigationProps) => {
     isoFiatCurrencyCode,
     fiatSymbol,
     exchangeRates,
-    toCurrencyCode,
     selectedWallet: wallet,
     fioWalletByAddress
   }
