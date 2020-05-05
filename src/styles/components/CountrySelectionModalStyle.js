@@ -18,7 +18,7 @@ export const styles = {
   singleCountry: {
     height: scale(60),
     borderBottomWidth: 1,
-    borderBottomColor: '#D8D6D6',
+    borderBottomColor: THEME.COLORS.COUNTRY_SELECTION_MODAL_GRAY_1,
     padding: scale(10),
     paddingRight: scale(15),
     paddingLeft: scale(15)
@@ -46,12 +46,12 @@ export const styles = {
   },
   countryName: {
     fontSize: scale(16),
-    color: '#58595C',
+    color: THEME.COLORS.COUNTRY_SELECTION_MODAL_GRAY_2,
     textAlignVertical: 'center'
   },
   countryBitAmount: {
     fontSize: scale(16),
-    color: '#000000',
+    color: THEME.COLORS.COUNTRY_SELECTION_MODAL_BLACK,
     textAlignVertical: 'center'
   },
   underlayColor: {
