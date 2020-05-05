@@ -81,6 +81,8 @@ export const THEME = {
     GENERIC_ORANGE: '#ffa500',
     GENERIC_GREEN: '#008000',
     GENERIC_PURPLE: '#800080',
+    GENERIC_YELLOW: '#ffff00',
+    GENERIC_GREY: '#808080',
 
     BLACK: '#25292C',
     GRAY_1: '#4A5157',
