@@ -13,7 +13,7 @@ export const styles = {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
-    backgroundColor: 'white',
+    backgroundColor: THEME.COLORS.WHITE,
     padding: scale(15),
     marginRight: scale(5)
   },
@@ -21,7 +21,7 @@ export const styles = {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
-    backgroundColor: 'white',
+    backgroundColor: THEME.COLORS.WHITE,
     padding: scale(15),
     marginLeft: scale(5)
   },
