@@ -5,8 +5,8 @@ import { StyleSheet } from 'react-native'
 import THEME from '../../theme/variables/airbitz'
 import { scale } from '../../util/scaling'
 
-const borderBottomColor = '#D8E2ED'
-const fontColor = '#4B5158'
+const borderBottomColor = THEME.COLORS.FIO_ADDRESS_LIST_BORDER_BOTTOM
+const fontColor = THEME.COLORS.FIO_ADDRESS_LIST_FONT
 
 export const styles = StyleSheet.create({
   gradient: {
