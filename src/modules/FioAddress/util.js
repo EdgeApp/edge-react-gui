@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 
 import { FIO_WALLET_TYPE } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
@@ -8,11 +8,18 @@ import type { CcWalletMap } from '../../reducers/FioReducer'
 import type { FioConnectionWalletItem, GuiWallet } from '../../types/types'
 
 const CONNECTED_WALLETS = 'ConnectedWallets.json'
+const FIO_ADDRESS_CACHE = 'FioAddressCache.json'
 
 type DiskletConnectedWallets = {
   [fullCurrencyCode: string]: {
     walletId: string,
     publicAddress: string
+  }
+}
+
+export type FioAddresses = {
+  addresses: {
+    [address: string]: boolean
   }
 }
 
@@ -337,4 +344,30 @@ export const checkPubAddress = async (fioPlugin: EdgeCurrencyConfig, fioAddress:
   }
 
   return ''
+}
+
+export const addToFioAddressCache = async (account: EdgeAccount, fioAddressesToAdd: string[]): Promise<FioAddresses> => {
+  const fioAddressesObject = await getFioAddressCache(account)
+  let writeToDisklet = false
+
+  for (const fioAddressToAdd of fioAddressesToAdd) {
+    if (!fioAddressesObject.addresses[fioAddressToAdd]) {
+      fioAddressesObject['addresses'][fioAddressToAdd] = true
+      writeToDisklet = true
+    }
+  }
+
+  if (writeToDisklet) {
+    await account.disklet.setText(FIO_ADDRESS_CACHE, JSON.stringify(fioAddressesObject))
+  }
+  return fioAddressesObject
+}
+
+export const getFioAddressCache = async (account: EdgeAccount): Promise<FioAddresses> => {
+  try {
+    const fioAddressObject = await account.disklet.getText(FIO_ADDRESS_CACHE)
+    return JSON.parse(fioAddressObject)
+  } catch (e) {
+    return { addresses: {} }
+  }
 }
