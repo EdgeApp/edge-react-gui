@@ -71,8 +71,8 @@ type Props = FlipInputOwnProps
 
 // Assumes a US locale decimal input
 function setPrimaryToSecondary (props: Props, primaryDecimalAmount: string) {
-  // Formats into locale specific format
-  const primaryDisplayAmount = intl.formatNumberInput(primaryDecimalAmount)
+  // Formats into locale specific format. Add currency symbol
+  const primaryDisplayAmount = addCurrencySymbol(props.primaryInfo.currencySymbol, intl.formatNumberInput(primaryDecimalAmount))
 
   // Converts to secondary value using exchange rate
   let secondaryDecimalAmount = bns.mul(primaryDecimalAmount, props.exchangeSecondaryToPrimaryRatio)
@@ -80,8 +80,8 @@ function setPrimaryToSecondary (props: Props, primaryDecimalAmount: string) {
   // Truncate to however many decimals the secondary format should have
   secondaryDecimalAmount = UTILS.truncateDecimals(secondaryDecimalAmount, props.secondaryInfo.maxConversionDecimals)
 
-  // Format into locale specific format
-  const secondaryDisplayAmount = intl.formatNumberInput(secondaryDecimalAmount)
+  // Format into locale specific format. Add currency symbol
+  const secondaryDisplayAmount = addCurrencySymbol(props.secondaryInfo.currencySymbol, intl.formatNumberInput(secondaryDecimalAmount))
 
   // Set the state for display in render()
   return { primaryDisplayAmount, secondaryDisplayAmount }
@@ -89,12 +89,16 @@ function setPrimaryToSecondary (props: Props, primaryDecimalAmount: string) {
 
 // Pretty much the same as setPrimaryToSecondary
 function setSecondaryToPrimary (props: Props, secondaryDecimalAmount: string) {
-  const secondaryDisplayAmount = intl.formatNumberInput(secondaryDecimalAmount)
+  const secondaryDisplayAmount = addCurrencySymbol(props.secondaryInfo.currencySymbol, intl.formatNumberInput(secondaryDecimalAmount))
   let primaryDecimalAmount = props.exchangeSecondaryToPrimaryRatio === '0' ? '0' : bns.div(secondaryDecimalAmount, props.exchangeSecondaryToPrimaryRatio, 18)
   primaryDecimalAmount = UTILS.truncateDecimals(primaryDecimalAmount, props.primaryInfo.maxConversionDecimals)
-  const primaryDisplayAmount = intl.formatNumberInput(primaryDecimalAmount)
+  const primaryDisplayAmount = addCurrencySymbol(props.primaryInfo.currencySymbol, intl.formatNumberInput(primaryDecimalAmount))
   return { secondaryDisplayAmount, primaryDisplayAmount, primaryDecimalAmount }
 }
+
+const addCurrencySymbol = (currencySymbol: string, displayAmount: string) =>
+  displayAmount.includes(currencySymbol) ? displayAmount : `${currencySymbol} ${displayAmount}`
+const removeCurrencySymbol = (currencySymbol: string, displayAmount: string) => displayAmount.replace(currencySymbol, '').trim()
 
 const getInitialState = (props: Props) => {
   const state: State = {
@@ -194,10 +198,10 @@ export class FlipInput extends Component<Props, State> {
       })
     } else {
       if (!this.state.isToggled) {
-        const decimalAmount = intl.formatToNativeNumber(this.state.primaryDisplayAmount)
+        const decimalAmount = intl.formatToNativeNumber(removeCurrencySymbol(this.props.primaryInfo.currencySymbol, this.state.primaryDisplayAmount))
         this.setState(setPrimaryToSecondary(nextProps, decimalAmount))
       } else {
-        const decimalAmount = intl.formatToNativeNumber(this.state.secondaryDisplayAmount)
+        const decimalAmount = intl.formatToNativeNumber(removeCurrencySymbol(this.props.secondaryInfo.currencySymbol, this.state.secondaryDisplayAmount))
         const newState = setSecondaryToPrimary(nextProps, decimalAmount)
         this.setState({
           primaryDisplayAmount: newState.primaryDisplayAmount,
@@ -242,10 +246,10 @@ export class FlipInput extends Component<Props, State> {
     }
   }
 
-  onPrimaryAmountChange = (displayAmount: string) => {
-    if (!intl.isValidInput(displayAmount)) {
-      return
-    }
+  onPrimaryAmountChange = (amountChanged: string) => {
+    const displayAmount = removeCurrencySymbol(this.props.primaryInfo.currencySymbol, amountChanged)
+    if (!intl.isValidInput(displayAmount)) return
+
     // Do any necessary formatting of the display value such as truncating decimals
     const formattedDisplayAmount = intl.truncateDecimals(intl.prettifyNumber(displayAmount), this.props.primaryInfo.maxEntryDecimals)
 
@@ -258,10 +262,10 @@ export class FlipInput extends Component<Props, State> {
     })
   }
 
-  onSecondaryAmountChange = (displayAmount: string) => {
-    if (!intl.isValidInput(displayAmount)) {
-      return
-    }
+  onSecondaryAmountChange = (amountChanged: string) => {
+    const displayAmount = removeCurrencySymbol(this.props.secondaryInfo.currencySymbol, amountChanged)
+    if (!intl.isValidInput(displayAmount)) return
+
     // Do any necessary formatting of the display value such as truncating decimals
     const formattedDisplayAmount = intl.truncateDecimals(intl.prettifyNumber(displayAmount), this.props.secondaryInfo.maxEntryDecimals)
 
@@ -328,7 +332,6 @@ export class FlipInput extends Component<Props, State> {
         <View style={top.row} key={'top'}>
           <Text style={[top.currencyCode]}>{fieldInfo.currencyCode}</Text>
           <View style={[top.amountContainer]}>
-            <Text style={[top.symbol]}>{fieldInfo.currencySymbol}</Text>
             <TextInput
               style={[top.amount]}
               placeholder={'0'}
@@ -377,7 +380,6 @@ export class FlipInput extends Component<Props, State> {
         <View style={top.row} key={'top'}>
           <Text style={[top.currencyCode]}>{fieldInfo.currencyName}</Text>
           <View style={[top.amountContainer]}>
-            <Text style={[top.symbol]}>{fieldInfo.currencySymbol}</Text>
             <TextInput
               style={[top.amount]}
               placeholder={this.props.isFiatOnTop ? 'Amount' : '0'}
@@ -408,7 +410,6 @@ export class FlipInput extends Component<Props, State> {
         <View style={bottom.row}>
           <Text style={[bottom.currencyCode]}>{fieldInfo.currencyCode}</Text>
           <View style={[top.amountContainer]}>
-            <Text style={[bottom.symbol]}>{fieldInfo.currencySymbol}</Text>
             <Text style={[bottom.amount, !amount && bottom.alert]} numberOfLines={1} ellipsizeMode="tail">
               {amount || '0'}
             </Text>
