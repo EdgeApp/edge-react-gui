@@ -4030,10 +4030,10 @@ edge-components@^0.0.26:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.17.0:
-  version "0.17.0"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.0.tgz#70f09fdff492ed1f06367787f55d7de410a80a33"
-  integrity sha512-4iEe63nhFnfxb2E/3fQjOG9nejrUC+dVzqSI1jwEGQ4dkCRg4Qf1klFEonw/3mtzRF0Wzr7V/ASPqywsumALrg==
+edge-core-js@^0.17.1:
+  version "0.17.1"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.1.tgz#5e8b2a14cf5d725cee96ded280f8383f22168866"
+  integrity sha512-44zjos70+Ud4UH0TJ2go7nZrH+aQHXapkO6HZEl6OxCXLHBYAbl54EmsfhNmutAwMjTmLK71UGHvFrKAXoP+tA==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -4049,7 +4049,7 @@ edge-core-js@^0.17.0:
     json-csv "^1.5.0"
     node-fetch "^2.0.0"
     redux "^3.6.0"
-    redux-keto "^0.3.2"
+    redux-keto "^0.3.3"
     redux-pixies "^0.3.6"
     rfc4648 "^1.1.0"
     scrypt-js "^2.0.3"
@@ -10361,10 +10361,10 @@ recompose@^0.26.0:
     hoist-non-react-statics "^2.3.1"
     symbol-observable "^1.0.4"
 
-redux-keto@^0.3.2:
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/redux-keto/-/redux-keto-0.3.2.tgz#15c18d61fec5e76e3d0d3f02767a996fee4ff622"
-  integrity sha512-ZSCnq/8bHW/LmXLKn0v770av4lQG2S56LMpeW8ebQHY3LwHuVyilSd0XewCwYl37ZIN11t7AxHWFj+Fso9l7NA==
+redux-keto@^0.3.3:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/redux-keto/-/redux-keto-0.3.3.tgz#db31fbfcbab11784cd2992d7ce204f6e50807969"
+  integrity sha512-JRbMmmhFHLXCl2J3Hb8zCTdM5O0jtY70mRnh/83xArCWeuWQoJK8adzUXiw9egEi//e7ti1Y/FzJlYbZYOSn8A==
 
 redux-pixies@^0.3.6:
   version "0.3.6"
