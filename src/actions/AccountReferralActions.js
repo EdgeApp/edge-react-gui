@@ -18,8 +18,10 @@ export const loadAccountReferral = (account: EdgeAccount) => async (dispatch: Di
   // First try the disk:
   try {
     const [cacheText, referralText] = await Promise.all([
+      // Cache errors are fine:
       account.localDisklet.getText(REFERRAL_CACHE_FILE).catch(() => '{}'),
-      account.disklet.getText(ACCOUNT_REFERRAL_FILE).catch(() => '{}')
+      // Referral errors mean we aren't affiliated:
+      account.disklet.getText(ACCOUNT_REFERRAL_FILE)
     ])
     const cache = asDiskReferralCache(JSON.parse(cacheText))
     const referral = unpackAccountReferral(JSON.parse(referralText))
@@ -27,9 +29,31 @@ export const loadAccountReferral = (account: EdgeAccount) => async (dispatch: Di
     return
   } catch (error) {}
 
-  // Do not affiliate already-created accounts:
-  if (!account.newAccount) return
+  // Try new account affiliation:
+  if (account.newAccount) {
+    try {
+      await createAccountReferral()(dispatch, getState)
+      return
+    } catch (error) {}
+  }
 
+  // Otherwise, just use default values:
+  const referral: AccountReferral = {
+    promotions: [],
+    ignoreAccountSwap: false,
+    hiddenAccountMessages: {}
+  }
+  const cache: ReferralCache = {
+    accountMessages: [],
+    accountPlugins: []
+  }
+  dispatch({ type: 'ACCOUNT_REFERRAL_LOADED', data: { cache, referral } })
+}
+
+/**
+ * Copies device referral information into the account on first login.
+ */
+const createAccountReferral = () => async (dispatch: Dispatch, getState: GetState) => {
   // Copy the app install reason into the account:
   const state = getState()
   const { installerId, currencyCodes, messages, plugins } = state.deviceReferral
