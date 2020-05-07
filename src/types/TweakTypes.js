@@ -1,12 +1,11 @@
 // @flow
 
-import { type Cleaner, asArray, asBoolean, asDate, asNumber, asObject, asOptional, asString } from 'cleaners'
+import { type Cleaner, asBoolean, asDate, asNumber, asObject, asOptional, asString } from 'cleaners'
 
 /**
  * A currency code to create a wallet for, normalized to uppercase.
  */
 export const asCurrencyCode: Cleaner<string> = raw => asString(raw).toUpperCase()
-export const asCurrencyCodes = asOptional(asArray(asCurrencyCode))
 
 /**
  * An message card to show the user.
@@ -23,7 +22,6 @@ export const asMessageTweak = asObject({
   durationDays: asNumber
 })
 export type MessageTweak = $Call<typeof asMessageTweak, any>
-export const asMessageTweaks: Cleaner<MessageTweak[]> = asOptional(asArray(asMessageTweak), [])
 
 /**
  * Adjusts a plugin's behavior within the app,
@@ -41,4 +39,3 @@ export const asPluginTweak = asObject({
   durationDays: asNumber
 })
 export type PluginTweak = $Call<typeof asPluginTweak, any>
-export const asPluginTweaks: Cleaner<PluginTweak[]> = asOptional(asArray(asPluginTweak), [])
