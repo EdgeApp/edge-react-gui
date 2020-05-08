@@ -173,7 +173,7 @@ export const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: scale(2),
-    marginRight: scale(2),
+    marginRight: scale(8),
     flexDirection: 'row',
     borderColor: THEME.COLORS.GRAY_4
     // borderWidth: 0.1,
@@ -188,39 +188,12 @@ export const styles = {
     alignSelf: 'center',
     marginRight: scale(10)
   },
-  transferBox: {
-    backgroundColor: `${THEME.COLORS.WHITE}${THEME.ALPHA.LOW}`,
-    // opacity: THEME.OPACITY.MID,
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: scale(2),
-    marginRight: scale(8),
-    flexDirection: 'row',
-    borderColor: THEME.COLORS.GRAY_4
-    // borderWidth: 0.1,
-  },
-  transferWrap: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  transferIcon: {
-    textAlignVertical: 'center',
-    alignSelf: 'center',
-    marginRight: scale(10)
-  },
   request: {
     fontSize: scale(18),
     color: THEME.COLORS.WHITE,
     marginHorizontal: scale(12)
   },
   send: {
-    fontSize: scale(18),
-    color: THEME.COLORS.WHITE,
-    marginHorizontal: scale(12)
-  },
-  transfer: {
     fontSize: scale(18),
     color: THEME.COLORS.WHITE,
     marginHorizontal: scale(12)
