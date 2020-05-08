@@ -7,7 +7,6 @@ import RNFS from 'react-native-fs'
 import Mailer from 'react-native-mail'
 import Share from 'react-native-share'
 
-import { IOS } from '../../constants/indexConstants'
 import s from '../../locales/strings'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
 import { styles } from '../../styles/scenes/TransactionsExportSceneStyle.js'
@@ -62,7 +61,7 @@ export class TransactionsExportSceneComponent extends Component<Props> {
   }
 
   filePath = (format: string) => {
-    const directory = Platform.OS === IOS ? RNFS.DocumentDirectoryPath : RNFS.ExternalDirectoryPath
+    const directory = Platform.OS === 'ios' ? RNFS.DocumentDirectoryPath : RNFS.ExternalDirectoryPath
     return directory + '/' + this.fileName(format)
   }
 
@@ -95,7 +94,7 @@ export class TransactionsExportSceneComponent extends Component<Props> {
 
     RNFS.writeFile(path, file, 'utf8')
       .then(success => {
-        if (Platform.OS === IOS) {
+        if (Platform.OS === 'ios') {
           this.openShareApp(path, 'Share Transactions ' + format)
           return
         }
