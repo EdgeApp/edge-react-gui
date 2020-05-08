@@ -3912,7 +3912,7 @@ diffie-hellman@^5.0.0:
     miller-rabin "^4.0.0"
     randombytes "^2.0.0"
 
-disklet@^0.4.1, disklet@^0.4.4:
+disklet@^0.4.4:
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/disklet/-/disklet-0.4.4.tgz#e83bde7311a0fa8e8e78dc4fd57e8f26c05bba91"
   integrity sha512-K2U1ulxRZwkanVTUMP0AxkCniRJ3cP9Tr9m2DTMYb0N1paFHfX8c/fxLV5cz2dAnTtb7D/4y0mrigpPYLsb0vw==

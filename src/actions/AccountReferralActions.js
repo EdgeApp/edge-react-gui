@@ -5,7 +5,7 @@ import { type EdgeAccount } from 'edge-core-js/types'
 
 import { type Dispatch, type GetState, type State } from '../types/reduxTypes.js'
 import { type AccountReferral, type Promotion, type ReferralCache } from '../types/ReferralTypes.js'
-import { asCurrencyCodes, asMessageTweaks, asPluginTweaks } from '../types/TweakTypes.js'
+import { asCurrencyCode, asMessageTweak, asPluginTweak } from '../types/TweakTypes.js'
 import { type TweakSource, lockStartDates } from '../util/ReferralHelpers.js'
 
 const REFERRAL_CACHE_FILE = 'ReferralCache.json'
@@ -18,8 +18,10 @@ export const loadAccountReferral = (account: EdgeAccount) => async (dispatch: Di
   // First try the disk:
   try {
     const [cacheText, referralText] = await Promise.all([
+      // Cache errors are fine:
       account.localDisklet.getText(REFERRAL_CACHE_FILE).catch(() => '{}'),
-      account.disklet.getText(ACCOUNT_REFERRAL_FILE).catch(() => '{}')
+      // Referral errors mean we aren't affiliated:
+      account.disklet.getText(ACCOUNT_REFERRAL_FILE)
     ])
     const cache = asDiskReferralCache(JSON.parse(cacheText))
     const referral = unpackAccountReferral(JSON.parse(referralText))
@@ -27,9 +29,31 @@ export const loadAccountReferral = (account: EdgeAccount) => async (dispatch: Di
     return
   } catch (error) {}
 
-  // Do not affiliate already-created accounts:
-  if (!account.newAccount) return
+  // Try new account affiliation:
+  if (account.newAccount) {
+    try {
+      await createAccountReferral()(dispatch, getState)
+      return
+    } catch (error) {}
+  }
 
+  // Otherwise, just use default values:
+  const referral: AccountReferral = {
+    promotions: [],
+    ignoreAccountSwap: false,
+    hiddenAccountMessages: {}
+  }
+  const cache: ReferralCache = {
+    accountMessages: [],
+    accountPlugins: []
+  }
+  dispatch({ type: 'ACCOUNT_REFERRAL_LOADED', data: { cache, referral } })
+}
+
+/**
+ * Copies device referral information into the account on first login.
+ */
+const createAccountReferral = () => async (dispatch: Dispatch, getState: GetState) => {
   // Copy the app install reason into the account:
   const state = getState()
   const { installerId, currencyCodes, messages, plugins } = state.deviceReferral
@@ -167,14 +191,14 @@ function unpackAccountReferral (raw: any): AccountReferral {
 const asDiskPromotion = asObject({
   installerId: asString,
   hiddenMessages: asOptional(asMap(asBoolean), {}),
-  messages: asMessageTweaks,
-  plugins: asPluginTweaks
+  messages: asOptional(asArray(asMessageTweak), []),
+  plugins: asOptional(asArray(asPluginTweak), [])
 })
 
 const asDiskAccountReferral = asObject({
   creationDate: asOptional(asDate),
   installerId: asOptional(asString),
-  currencyCodes: asCurrencyCodes,
+  currencyCodes: asOptional(asArray(asCurrencyCode)),
   promotions: asOptional(asArray(asDiskPromotion), []),
 
   // User overrides:
@@ -189,14 +213,14 @@ const asDiskAccountReferral = asObject({
  * The referral cache, as stored on disk.
  */
 const asDiskReferralCache = asObject({
-  accountMessages: asMessageTweaks,
-  accountPlugins: asPluginTweaks
+  accountMessages: asOptional(asArray(asMessageTweak), []),
+  accountPlugins: asOptional(asArray(asPluginTweak), [])
 })
 
 /**
  * Account tweaks & promotions as sent down by the server on refresh.
  */
 const asServerTweaks = asObject({
-  messages: asMessageTweaks,
-  plugins: asPluginTweaks
+  messages: asOptional(asArray(asMessageTweak), []),
+  plugins: asOptional(asArray(asPluginTweak), [])
 })
