@@ -52,7 +52,6 @@
 		DA285EAE2203BF3000F79CE6 /* exchange_logo_faast@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DA285EAB2203BF2F00F79CE6 /* exchange_logo_faast@2x.png */; };
 		DA89DDF820F2CFD70012B4BD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DA89DDF720F2CFD70012B4BD /* GoogleService-Info.plist */; };
 		DAF7C41220C505CC005B7898 /* plugins in Resources */ = {isa = PBXBuildFile; fileRef = DAF7C41120C505CC005B7898 /* plugins */; };
-		E638431C20EFE23300EA9FE9 /* alt_splash.png in Resources */ = {isa = PBXBuildFile; fileRef = E63842DA20EFE23300EA9FE9 /* alt_splash.png */; };
 		E6C089A7217E7ADB003DE9B9 /* exchange_logo_changelly.png in Resources */ = {isa = PBXBuildFile; fileRef = E6C0899B217E7AD7003DE9B9 /* exchange_logo_changelly.png */; };
 		E6C089A9217E7ADB003DE9B9 /* exchange_logo_changenow.png in Resources */ = {isa = PBXBuildFile; fileRef = E6C0899D217E7AD8003DE9B9 /* exchange_logo_changenow.png */; };
 		E6C089AA217E7ADB003DE9B9 /* exchange_logo_changenow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E6C0899E217E7AD9003DE9B9 /* exchange_logo_changenow@2x.png */; };
@@ -121,7 +120,6 @@
 		DCFC9E062F0D18DD4E39B5C5 /* libPods-edge.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-edge.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF62D00B1BE94D6E8890A424 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		E22452AEA7F9422FA609E7B4 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
-		E63842DA20EFE23300EA9FE9 /* alt_splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = alt_splash.png; sourceTree = "<group>"; };
 		E682D9AD200DF9A70042F9BA /* edge.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = edge.entitlements; path = edge/edge.entitlements; sourceTree = "<group>"; };
 		E6C0899B217E7AD7003DE9B9 /* exchange_logo_changelly.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = exchange_logo_changelly.png; sourceTree = "<group>"; };
 		E6C0899D217E7AD8003DE9B9 /* exchange_logo_changenow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = exchange_logo_changenow.png; sourceTree = "<group>"; };
@@ -281,7 +279,6 @@
 				E6C089A0217E7AD9003DE9B9 /* exchange_logo_shapeshift.png */,
 				E6C089A1217E7AD9003DE9B9 /* exchange_logo_shapeshift@2x.png */,
 				E6C089A2217E7ADA003DE9B9 /* exchange_logo_shapeshift@3x.png */,
-				E63842DA20EFE23300EA9FE9 /* alt_splash.png */,
 				FD982BCB1FACDEF00057F035 /* LaunchScreen.xib */,
 				6ED8C11F21BB685C00CC03C7 /* splash.png */,
 			);
@@ -367,7 +364,6 @@
 				E6C089AB217E7ADB003DE9B9 /* exchange_logo_changenow@3x.png in Resources */,
 				E6C089A9217E7ADB003DE9B9 /* exchange_logo_changenow.png in Resources */,
 				E6C089AE217E7ADB003DE9B9 /* exchange_logo_shapeshift@3x.png in Resources */,
-				E638431C20EFE23300EA9FE9 /* alt_splash.png in Resources */,
 				6ED8C12021BB685C00CC03C7 /* splash.png in Resources */,
 				E6C089B0217E7ADB003DE9B9 /* exchange_logo_changelly@3x.png in Resources */,
 				DAF7C41220C505CC005B7898 /* plugins in Resources */,
