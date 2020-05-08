@@ -420,7 +420,7 @@
   "transaction_details_copy_signed_tx": "Copia il Raw Hex firmato",
   "transaction_details_modal_debug_info": "Informazioni di debug:\n",
   "transaction_history_permission": "Vuoi condividere l'intera cronologia delle transazioni di %s con questo partner?",
-  "transaction_details_fiat_modal_header": "%s IMPORTO",
+  "transaction_details_fiat_modal_header": "",
   "transaction_details_fiat_label": "Scegli un importo",
   "transaction_details_error_invalid": "Transazione non valida",
   "transaction_details_choose_a_sub_category": "Scegli una sotto-categoria",
