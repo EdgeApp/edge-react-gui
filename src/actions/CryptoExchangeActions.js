@@ -276,22 +276,26 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
 
   const { quote, request } = swapInfo
   const { pluginId, toNativeAmount } = quote
-  const { fromWallet, toWallet, toCurrencyCode } = request
+  const { fromWallet, toWallet, fromCurrencyCode, toCurrencyCode } = request
 
   try {
     logEvent('SwapStart')
     const result = await quote.approve()
     await fromWallet.saveTx(result.transaction)
 
-    const category = sprintf(
-      'exchange:%s %s %s',
-      state.cryptoExchange.fromCurrencyCode,
-      s.strings.word_to_in_convert_from_to_string,
-      state.cryptoExchange.toCurrencyCode
-    )
     const account = CORE_SELECTORS.getAccount(state)
     const si = account.swapConfig[pluginId].swapInfo
-    const name = si.displayName
+
+    let category: string
+    let name: string
+    if (pluginId === 'transfer') {
+      category = sprintf('transfer:%s %s %s', fromCurrencyCode, s.strings.word_to_in_convert_from_to_string, toWallet.name)
+      name = toWallet.name || ''
+    } else {
+      category = sprintf('exchange:%s %s %s', fromCurrencyCode, s.strings.word_to_in_convert_from_to_string, toCurrencyCode)
+      name = si.displayName
+    }
+
     const supportEmail = si.supportEmail
     const quoteIdUri = si.orderUri != null && result.orderId != null ? si.orderUri + result.orderId : result.transaction.txid
     const payinAddress = result.transaction.otherParams != null ? result.transaction.otherParams.payinAddress : ''
