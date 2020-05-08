@@ -13,7 +13,6 @@ import { Airship, showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants'
 import { intl } from '../locales/intl'
 import s from '../locales/strings.js'
-import * as CORE_SELECTORS from '../modules/Core/selectors'
 import * as SETTINGS_SELECTORS from '../modules/Settings/selectors.js'
 import * as UI_SELECTORS from '../modules/UI/selectors'
 import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
@@ -43,8 +42,9 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (disp
       throw new Error('No currency selected') // Should never happen
     }
 
-    const fromCoreWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
-    const toCoreWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, toWallet.id)
+    const { currencyWallets = {} } = state.core.account
+    const fromCoreWallet: EdgeCurrencyWallet = currencyWallets[fromWallet.id]
+    const toCoreWallet: EdgeCurrencyWallet = currencyWallets[toWallet.id]
     const request: EdgeSwapRequest = {
       fromCurrencyCode,
       fromWallet: fromCoreWallet,
@@ -83,7 +83,8 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
   if (!fromWallet) {
     return
   }
-  const wallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
+  const { currencyWallets = {} } = state.core.account
+  const wallet: EdgeCurrencyWallet = currencyWallets[fromWallet.id]
   const currencyCode = state.cryptoExchange.fromCurrencyCode ? state.cryptoExchange.fromCurrencyCode : undefined
   const parentCurrencyCode = wallet.currencyInfo.currencyCode
   if (Constants.getSpecialCurrencyInfo(parentCurrencyCode).noMaxSpend) {

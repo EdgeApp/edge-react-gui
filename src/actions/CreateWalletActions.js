@@ -13,7 +13,6 @@ import { type AccountPaymentParams } from '../components/scenes/CreateWalletAcco
 import { showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
-import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import { getExchangeDenomination } from '../modules/Settings/selectors.js'
 import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
@@ -189,8 +188,9 @@ export const createAccountTransaction = (createdWalletId: string, accountName: s
   // check available funds
   const state = getState()
   const { account } = state.core
+  const { currencyWallets = {} } = account
   const createdWallet = UI_SELECTORS.getWallet(state, createdWalletId)
-  const paymentWallet = CORE_SELECTORS.getWallet(state, paymentWalletId)
+  const paymentWallet = currencyWallets[paymentWalletId]
   const createdWalletCurrencyCode = createdWallet.currencyCode
   const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[createdWalletCurrencyCode]
   const currencyPlugin = account.currencyConfig[currencyPluginName]

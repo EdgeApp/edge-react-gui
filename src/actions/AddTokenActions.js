@@ -6,7 +6,6 @@ import { sprintf } from 'sprintf-js'
 import { showError } from '../components/services/AirshipInstance.js'
 import s from '../locales/strings.js'
 import * as SETTINGS_API from '../modules/Core/Account/settings'
-import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import { setEnabledTokens } from '../modules/Core/Wallets/EnabledTokens.js'
 import * as UI_WALLET_SELECTORS from '../modules/UI/selectors.js'
 import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
@@ -57,12 +56,13 @@ export const addTokenAsync = async (
   state: State
 ) => {
   const { account } = state.core
+  const { currencyConfig, currencyWallets = {} } = account
+
   const uiWallet = UI_WALLET_SELECTORS.getWallet(state, walletId)
   // create modified object structure to match metaTokens
   const newTokenObj: CustomTokenInfo = WALLET_ACTIONS.assembleCustomToken(currencyName, currencyCode, contractAddress, denomination, uiWallet.type)
 
   // Check for conflicting currency codes:
-  const { currencyConfig } = account
   for (const pluginId in currencyConfig) {
     const { currencyInfo } = currencyConfig[pluginId]
     if (currencyCode === currencyInfo.currencyCode) {
@@ -70,7 +70,7 @@ export const addTokenAsync = async (
     }
   }
 
-  const coreWallet = CORE_SELECTORS.getWallet(state, walletId)
+  const coreWallet = currencyWallets[walletId]
   await coreWallet.addCustomToken(newTokenObj)
   coreWallet.enableTokens([currencyCode])
   const settingsOnFile = await SETTINGS_API.getSyncedSettingsAsync(account)

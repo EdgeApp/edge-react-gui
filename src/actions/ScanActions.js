@@ -27,7 +27,6 @@ import {
   WARNING
 } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
-import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import { checkPubAddress } from '../modules/FioAddress/util'
 import Text from '../modules/UI/components/FormattedText'
 import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
@@ -103,8 +102,10 @@ export const parseScannedUri = (data: string) => async (dispatch: Dispatch, getS
   if (!data) return
   const state = getState()
   const { account } = state.core
+  const { currencyWallets = {} } = account
+
   const selectedWalletId = state.ui.wallets.selectedWalletId
-  const edgeWallet = state.core.wallets.byId[selectedWalletId]
+  const edgeWallet = currencyWallets[selectedWalletId]
   const guiWallet = state.ui.wallets.byId[selectedWalletId]
   const currencyCode = state.ui.wallets.selectedCurrencyCode
 
@@ -112,7 +113,7 @@ export const parseScannedUri = (data: string) => async (dispatch: Dispatch, getS
   if (account && account.currencyConfig) {
     const fioPlugin = account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
     const walletId: string = UI_SELECTORS.getSelectedWalletId(state)
-    const coreWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
+    const coreWallet: EdgeCurrencyWallet = currencyWallets[walletId]
     const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
     try {
       const publicAddress = await checkPubAddress(fioPlugin, data.toLowerCase(), coreWallet.currencyInfo.currencyCode, currencyCode)
@@ -254,8 +255,10 @@ export const isPaymentProtocolUri = (parsedUri: EdgeParsedUri): boolean => {
 export const toggleAddressModal = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
+  const { currencyWallets = {} } = account
+
   const walletId: string = UI_SELECTORS.getSelectedWalletId(state)
-  const coreWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
+  const coreWallet: EdgeCurrencyWallet = currencyWallets[walletId]
   const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
   const fioPlugin = account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
   const addressModal = createAddressModal({
@@ -320,8 +323,10 @@ export const privateKeyModalActivated = () => async (dispatch: Dispatch, getStat
     const state = getState()
     const parsedUri = state.ui.scenes.scan.parsedUri
     if (!parsedUri) return
+
+    const { currencyWallets = {} } = state.core.account
     const selectedWalletId = state.ui.wallets.selectedWalletId
-    const edgeWallet = state.core.wallets.byId[selectedWalletId]
+    const edgeWallet = currencyWallets[selectedWalletId]
 
     const spendInfo: EdgeSpendInfo = {
       privateKeys: parsedUri.privateKeys,

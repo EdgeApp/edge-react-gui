@@ -10,7 +10,7 @@ import { launchModal } from '../components/common/ModalProvider.js'
 import { showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants'
 import s from '../locales/strings.js'
-import * as CORE_SELECTORS from '../modules/Core/selectors.js'
+import { getWalletName } from '../modules/Core/selectors.js'
 import Text from '../modules/UI/components/FormattedText'
 import * as WALLET_SELECTORS from '../modules/UI/selectors.js'
 import { B } from '../styles/common/textStyles.js'
@@ -74,7 +74,8 @@ export function walletListMenuAction (walletId: string, option: WalletListMenuKe
     case 'viewXPub': {
       return (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
-        const wallet = CORE_SELECTORS.getWallet(state, walletId)
+        const { currencyWallets = {} } = state.core.account
+        const wallet = currencyWallets[walletId]
         const xPub = wallet.getDisplayPublicSeed()
         const xPubExplorer = wallet.currencyInfo.xpubExplorer && xPub ? sprintf(wallet.currencyInfo.xpubExplorer, xPub) : ''
         dispatch({ type: 'OPEN_VIEWXPUB_WALLET_MODAL', data: { xPub, walletId, xPubExplorer } })
@@ -84,7 +85,8 @@ export function walletListMenuAction (walletId: string, option: WalletListMenuKe
     case 'exportWalletTransactions': {
       return async (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
-        const wallet = state.core.wallets.byId[walletId]
+        const { currencyWallets = {} } = state.core.account
+        const wallet = currencyWallets[walletId]
         Actions[Constants.TRANSACTIONS_EXPORT]({ sourceWallet: wallet })
       }
     }
@@ -93,7 +95,8 @@ export function walletListMenuAction (walletId: string, option: WalletListMenuKe
       return async (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
         const { account } = state.core
-        const walletName = CORE_SELECTORS.getWalletName(state, walletId)
+        const { currencyWallets = {} } = account
+        const walletName = getWalletName(state, walletId)
         try {
           const input = {
             label: s.strings.confirm_password_text,
@@ -149,7 +152,7 @@ export function walletListMenuAction (walletId: string, option: WalletListMenuKe
           })
           const resolveValue = await launchModal(getSeedModal)
           if (resolveValue) {
-            const wallet = CORE_SELECTORS.getWallet(state, walletId)
+            const wallet = currencyWallets[walletId]
             const seed = wallet.getDisplayPrivateSeed()
             const modal = createSimpleConfirmModal({
               title: s.strings.fragment_wallets_get_seed_wallet,
@@ -177,7 +180,8 @@ export function walletListMenuAction (walletId: string, option: WalletListMenuKe
       return async (dispatch: Dispatch, getState: GetState) => {
         try {
           const state = getState()
-          const wallet = CORE_SELECTORS.getWallet(state, walletId)
+          const { currencyWallets = {} } = state.core.account
+          const wallet = currencyWallets[walletId]
           const walletName = wallet.name
           const input = {
             label: s.strings.fragment_wallets_rename_wallet,

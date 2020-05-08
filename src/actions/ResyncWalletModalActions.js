@@ -6,7 +6,7 @@ import React from 'react'
 import { launchModal } from '../components/common/ModalProvider.js'
 import { RESYNC } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
-import { getWallet, getWalletName } from '../modules/Core/selectors.js'
+import { getWalletName } from '../modules/Core/selectors.js'
 import Text from '../modules/UI/components/FormattedText/index'
 import OptionIcon from '../modules/UI/components/OptionIcon/OptionIcon.ui'
 import { B } from '../styles/common/textStyles.js'
@@ -14,7 +14,8 @@ import type { Dispatch, GetState } from '../types/reduxTypes.js'
 
 export const showResyncWalletModal = (walletId: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const wallet = getWallet(state, walletId)
+  const { currencyWallets = {} } = state.core.account
+  const wallet = currencyWallets[walletId]
   const walletName = getWalletName(state, walletId)
 
   // Use `launchModal` to put the modal component on screen:

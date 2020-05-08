@@ -1,20 +1,14 @@
 // @flow
 
-import type { EdgeCurrencyWallet } from 'edge-core-js'
-
 import type { State } from '../../types/reduxTypes.js'
 import { getYesterdayDateRoundDownHour } from '../../util/utils.js'
 import { getDefaultIsoFiat } from '../Settings/selectors.js'
 
 // Wallets
 
-export const getWallet = (state: State, walletId: string): EdgeCurrencyWallet => {
-  const wallet = state.core.wallets.byId[walletId]
-  return wallet
-}
-
 export const getWalletName = (state: State, walletId: string): string => {
-  const wallet = getWallet(state, walletId)
+  const { currencyWallets = {} } = state.core.account
+  const wallet = currencyWallets[walletId]
   return (wallet && wallet.name) || 'no wallet name'
 }
 

@@ -5,7 +5,6 @@ import _ from 'lodash'
 
 import { showTransactionDropdown } from '../components/navigation/TransactionDropdown.js'
 import { showError } from '../components/services/AirshipInstance.js'
-import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
 import type { TransactionListTx } from '../types/types.js'
@@ -82,7 +81,8 @@ export const fetchMoreTransactions = (walletId: string, currencyCode: string, re
 }
 
 const getAndMergeTransactions = async (state: State, dispatch: Dispatch, walletId: string, currencyCode: string, options: Object) => {
-  const wallet = CORE_SELECTORS.getWallet(state, walletId)
+  const { currencyWallets = {} } = state.core.account
+  const wallet = currencyWallets[walletId]
   if (!wallet) return
   // initialize the master array of transactions that will eventually go into Redux
   let transactionsWithKeys = [] // array of transactions as objects with key included for sorting?

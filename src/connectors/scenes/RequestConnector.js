@@ -7,7 +7,6 @@ import { refreshReceiveAddressRequest } from '../../actions/WalletActions'
 import type { RequestDispatchProps, RequestLoadingProps, RequestStateProps } from '../../components/scenes/RequestScene'
 import { Request } from '../../components/scenes/RequestScene'
 import * as Constants from '../../constants/indexConstants'
-import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
@@ -17,6 +16,7 @@ import { getCurrencyInfo, getDenomFromIsoCode } from '../../util/utils'
 
 const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps => {
   const { account } = state.core
+  const { currencyWallets = {} } = account
   const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
   const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
 
@@ -44,7 +44,7 @@ const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps 
     }
   }
 
-  const edgeWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, guiWallet.id)
+  const edgeWallet: EdgeCurrencyWallet = currencyWallets[guiWallet.id]
   const primaryDisplayDenomination: GuiDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
   const primaryExchangeDenomination: GuiDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
   const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)

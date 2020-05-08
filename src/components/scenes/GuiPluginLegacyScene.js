@@ -12,7 +12,6 @@ import ENV from '../../../env.json'
 import { sendConfirmationUpdateTx } from '../../actions/SendConfirmationActions'
 import { selectWallet } from '../../actions/WalletActions'
 import s from '../../locales/strings.js'
-import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
 import T from '../../modules/UI/components/FormattedText/index'
 import BackButton from '../../modules/UI/components/Header/Component/BackButton.ui'
 import { PluginBridge, pop as pluginPop } from '../../modules/UI/scenes/Plugins/api'
@@ -319,9 +318,9 @@ class GuiPluginLegacy extends React.Component<Props, State> {
 
 const mapStateToProps = state => {
   const { account } = state.core
+  const { currencyWallets = {} } = account
   const guiWallet = UI_SELECTORS.getSelectedWallet(state)
-  const coreWallet = guiWallet && guiWallet.id ? CORE_SELECTORS.getWallet(state, guiWallet.id) : null
-  const coreWallets = state.core.wallets.byId
+  const coreWallet = guiWallet && guiWallet.id ? currencyWallets[guiWallet.id] : null
   const wallets = state.ui.wallets.byId
   const walletName = coreWallet ? coreWallet.name : null
   const walletId = coreWallet ? coreWallet.id : null
@@ -330,7 +329,7 @@ const mapStateToProps = state => {
     account,
     guiWallet,
     coreWallet,
-    coreWallets,
+    coreWallets: currencyWallets,
     wallets,
     walletName,
     walletId,

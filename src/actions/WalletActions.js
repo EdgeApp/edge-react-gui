@@ -12,7 +12,6 @@ import { showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import * as SETTINGS_API from '../modules/Core/Account/settings.js'
-import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import { updateWalletsRequest } from '../modules/Core/Wallets/action.js'
 import { getEnabledTokensFromFile, setEnabledTokens, updateEnabledTokens } from '../modules/Core/Wallets/EnabledTokens.js'
 import { updateExchangeRates } from '../modules/ExchangeRates/action.js'
@@ -28,10 +27,11 @@ import { addTokenAsync } from './AddTokenActions.js'
 
 export const refreshReceiveAddressRequest = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
+  const { currencyWallets = {} } = state.core.account
   const currentWalletId = state.ui.wallets.selectedWalletId
 
   if (walletId === currentWalletId) {
-    const wallet = state.core.wallets.byId[walletId]
+    const wallet = currencyWallets[walletId]
     wallet.getReceiveAddress().then(receiveAddress => {
       dispatch({
         type: 'UI/WALLETS/REFRESH_RECEIVE_ADDRESS',
@@ -49,6 +49,7 @@ export const selectWallet = (walletId: string, currencyCode: string, from?: stri
     return
   }
   const state = getState()
+  const { currencyWallets = {} } = state.core.account
   const currentWalletId = state.ui.wallets.selectedWalletId
   const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
   if (walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode) {
@@ -56,7 +57,7 @@ export const selectWallet = (walletId: string, currencyCode: string, from?: stri
       type: 'UI/WALLETS/SELECT_WALLET',
       data: { walletId, currencyCode }
     })
-    const wallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
+    const wallet: EdgeCurrencyWallet = currencyWallets[walletId]
     wallet
       .getReceiveAddress({ currencyCode })
       .then(receiveAddress => {
@@ -134,7 +135,8 @@ const upsertFrequency = 3000
 
 export const refreshWallet = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const wallet = CORE_SELECTORS.getWallet(state, walletId)
+  const { currencyWallets = {} } = state.core.account
+  const wallet = currencyWallets[walletId]
   if (wallet) {
     if (!refreshDetails.delayUpsert) {
       const now = Date.now()
@@ -184,8 +186,9 @@ export const setWalletEnabledTokens = (walletId: string, enabledTokens: Array<st
   dispatch({ type: 'MANAGE_TOKENS_START' })
   // get a snapshot of the state
   const state = getState()
+  const { currencyWallets = {} } = state.core.account
   // get a copy of the relevant core wallet
-  const wallet = CORE_SELECTORS.getWallet(state, walletId)
+  const wallet = currencyWallets[walletId]
   // now actually tell the wallet to enable the token(s) in the core and save to file
   return setEnabledTokens(wallet, enabledTokens, disabledTokens).then(() => {
     // let Redux know it was completed successfully
@@ -202,8 +205,10 @@ export const setWalletEnabledTokens = (walletId: string, enabledTokens: Array<st
 export const getEnabledTokens = (walletId: string) => async (dispatch: Dispatch, getState: GetState) => {
   // get a snapshot of the state
   const state = getState()
+  const { currencyWallets = {} } = state.core.account
+
   // get the AbcWallet
-  const wallet = CORE_SELECTORS.getWallet(state, walletId)
+  const wallet = currencyWallets[walletId]
   if (!wallet) return
   const guiWallet = UI_SELECTORS.getWallet(state, walletId)
 
