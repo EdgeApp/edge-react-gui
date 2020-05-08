@@ -156,7 +156,7 @@ export default class FlipInput extends Component<Props, State> {
           onChangeText={onChangeText}
           autoCorrect={false}
           keyboardType="numeric"
-          selectionColor={THEME.COLORS.WHITE}
+          selectionColor={THEME.COLORS.GENERIC_WHITE}
           returnKeyType="done"
           underlineColorAndroid={THEME.COLORS.TRANSPARENT}
           ref={ref => {
@@ -183,7 +183,7 @@ export default class FlipInput extends Component<Props, State> {
           onChangeText={onChangeText}
           autoCorrect={false}
           keyboardType="numeric"
-          selectionColor={THEME.COLORS.WHITE}
+          selectionColor={THEME.COLORS.GENERIC_WHITE}
           returnKeyType="done"
           underlineColorAndroid={THEME.COLORS.TRANSPARENT}
           ref={ref => {
