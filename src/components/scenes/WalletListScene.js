@@ -3,7 +3,7 @@
 import { createYesNoModal } from 'edge-components'
 import { type EdgeAccount } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, Alert, Animated, FlatList, Image, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, Alert, Animated, FlatList, Image, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import SortableListView from 'react-native-sortable-listview'
@@ -30,11 +30,12 @@ import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/index.js'
 import { WiredProgressBar } from '../../modules/UI/components/WiredProgressBar/WiredProgressBar.ui.js'
 import { getActiveWalletIds, getWalletLoadingPercent } from '../../modules/UI/selectors.js'
+import { dayText } from '../../styles/common/textStyles.js'
 import { addWalletStyle } from '../../styles/components/AddWalletStyle.js'
 import { buyMultipleCryptoStyle } from '../../styles/components/BuyCryptoStyle.js'
 import { TwoButtonModalStyle } from '../../styles/components/TwoButtonModalStyle.js'
-import styles from '../../styles/scenes/WalletListStyle'
-import THEME from '../../theme/variables/airbitz'
+import { THEME } from '../../theme/variables/airbitz.js'
+import { PLATFORM } from '../../theme/variables/platform.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
 import { type MessageTweak } from '../../types/TweakTypes.js'
@@ -460,6 +461,139 @@ class WalletListComponent extends Component<Props, State> {
     )
   }
 }
+
+const rawStyles = {
+  gradient: {
+    height: THEME.HEADER
+  },
+  container: {
+    flex: 1,
+    alignItems: 'stretch'
+  },
+  // bottom major portion of screen
+  walletsBox: {
+    // one
+    flex: 1
+  },
+  walletsBoxHeaderWrap: {
+    paddingLeft: scale(12),
+    paddingRight: scale(6),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    height: scale(50)
+  },
+  walletsBoxHeaderTextWrap: {
+    paddingVertical: scale(12)
+  },
+  leftArea: {
+    flexDirection: 'row'
+  },
+  walletIcon: {
+    width: scale(22),
+    height: scale(22),
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  walletsBoxHeaderText: {
+    fontSize: scale(18),
+    color: THEME.COLORS.WHITE,
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    marginLeft: scale(16)
+  },
+  donePlusContainer: {
+    width: scale(132),
+    height: scale(50),
+    marginRight: scale(7)
+  },
+  donePlusSortable: {
+    alignItems: 'flex-end'
+  },
+  plusContainer: {
+    position: 'absolute',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: scale(50),
+    flexDirection: 'row',
+    width: '100%'
+  },
+  plusSpacer: {
+    flex: 1,
+    width: '100%'
+  },
+  walletsBoxHeaderAddWallet: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    top: 0,
+    left: 0,
+    height: '100%',
+    paddingVertical: scale(12),
+    width: scale(82)
+  },
+  doneContainer: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: scale(50)
+  },
+  walletsBoxDoneTextWrap: {
+    paddingVertical: scale(12)
+  },
+  walletsBoxDoneText: {
+    fontSize: scale(18),
+    color: THEME.COLORS.WHITE,
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    top: 0,
+    left: 0
+  },
+  dropdownIcon: {
+    textAlignVertical: 'center',
+    alignSelf: 'center',
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  sortableWalletListContainer: {
+    flex: 1,
+    width: '100%'
+  },
+  listsContainer: {
+    flex: 1
+  },
+  sortableList: {
+    flex: 1,
+    position: 'absolute',
+    height: PLATFORM.usableHeight - scale(130) - scale(50)
+  },
+  fullList: {
+    flex: 1,
+    // position: 'absolute',
+    height: PLATFORM.usableHeight - scale(130) - scale(50)
+  },
+
+  // Promo area:
+  promoArea: {
+    padding: THEME.rem(0.5)
+  },
+  promoCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: THEME.COLORS.WHITE,
+    margin: THEME.rem(0.5),
+    padding: THEME.rem(0.5)
+  },
+  promoIcon: {
+    width: THEME.rem(2),
+    height: THEME.rem(2),
+    margin: THEME.rem(0.5)
+  },
+  promoText: {
+    ...dayText('row-left'),
+    flex: 1,
+    margin: THEME.rem(0.5)
+  },
+  promoClose: {
+    padding: THEME.rem(0.5)
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const WalletListScene = connect(
   (state: ReduxState): StateProps => {
