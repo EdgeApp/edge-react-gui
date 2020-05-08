@@ -440,7 +440,7 @@ const strings = {
   transaction_details_copy_signed_tx: 'Copy Signed Raw Hex',
   transaction_details_modal_debug_info: 'Debug Info:\n',
   transaction_history_permission: 'Would you like to share the entire transaction history of %s with this partner?',
-  transaction_details_fiat_modal_header: '%s AMOUNT',
+  transaction_details_fiat_modal_header: '%s Amount',
   transaction_details_fiat_label: 'Choose an amount',
   transaction_details_error_invalid: 'Invalid Transaction',
   transaction_details_choose_a_sub_category: 'Choose a sub-category',

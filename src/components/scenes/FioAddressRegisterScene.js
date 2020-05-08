@@ -167,7 +167,7 @@ export class FioAddressRegisterScene extends Component<Props, State> {
     this.checkFioAddress(fioAddressChanged)
 
     this.setState({
-      fioAddress: fioAddressChanged,
+      fioAddress: fioAddressChanged.toLowerCase(),
       touched: true,
       isAvailable: null
     })
