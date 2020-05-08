@@ -7,11 +7,11 @@ import { launchModal } from '../components/common/ModalProvider.js'
 import { showError } from '../components/services/AirshipInstance.js'
 import { SPLIT } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
-import { getWalletName } from '../modules/Core/selectors.js'
 import Text from '../modules/UI/components/FormattedText/index'
 import OptionIcon from '../modules/UI/components/OptionIcon/OptionIcon.ui'
 import { B } from '../styles/common/textStyles.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
+import { getWalletName } from '../util/CurrencyWalletHelpers.js'
 import { refreshWallet } from './WalletActions.js'
 
 const getSplitType = (currencyCode: string) => (currencyCode === 'BCH' ? 'wallet:bitcoinsv' : 'wallet:bitcoincash')
@@ -21,7 +21,6 @@ export const showSplitWalletModal = (walletId: string) => async (dispatch: Dispa
   const { account } = state.core
   const { currencyWallets = {} } = account
   const edgeWallet = currencyWallets[walletId]
-  const walletName = getWalletName(state, walletId)
 
   let bodyText = s.strings.fragment_wallets_split_wallet_first_confirm_message_mobile
   if (edgeWallet.currencyInfo.currencyCode === 'BCH') {
@@ -33,7 +32,7 @@ export const showSplitWalletModal = (walletId: string) => async (dispatch: Dispa
     message: (
       <Text style={{ textAlign: 'center' }}>
         {bodyText}
-        <B>{`${walletName}?`}</B>
+        <B>{`${getWalletName(edgeWallet)}?`}</B>
       </Text>
     ),
     icon: <OptionIcon iconName={SPLIT} />,

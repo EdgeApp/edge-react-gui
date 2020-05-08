@@ -10,12 +10,12 @@ import { launchModal } from '../components/common/ModalProvider.js'
 import { showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants'
 import s from '../locales/strings.js'
-import { getWalletName } from '../modules/Core/selectors.js'
 import Text from '../modules/UI/components/FormattedText'
 import * as WALLET_SELECTORS from '../modules/UI/selectors.js'
 import { B } from '../styles/common/textStyles.js'
 import { THEME } from '../theme/variables/airbitz.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
+import { getWalletName } from '../util/CurrencyWalletHelpers.js'
 import { showDeleteWalletModal } from './DeleteWalletModalActions.js'
 import { showResyncWalletModal } from './ResyncWalletModalActions.js'
 import { showSplitWalletModal } from './SplitWalletModalActions.js'
@@ -96,7 +96,8 @@ export function walletListMenuAction (walletId: string, option: WalletListMenuKe
         const state = getState()
         const { account } = state.core
         const { currencyWallets = {} } = account
-        const walletName = getWalletName(state, walletId)
+        const wallet = currencyWallets[walletId]
+
         try {
           const input = {
             label: s.strings.confirm_password_text,
@@ -142,7 +143,7 @@ export function walletListMenuAction (walletId: string, option: WalletListMenuKe
             message: (
               <Text>
                 {s.strings.fragment_wallets_get_seed_wallet_first_confirm_message_mobile}
-                <B>{walletName}</B>
+                <B>{getWalletName(wallet)}</B>
               </Text>
             ),
             input,
@@ -152,7 +153,6 @@ export function walletListMenuAction (walletId: string, option: WalletListMenuKe
           })
           const resolveValue = await launchModal(getSeedModal)
           if (resolveValue) {
-            const wallet = currencyWallets[walletId]
             const seed = wallet.getDisplayPrivateSeed()
             const modal = createSimpleConfirmModal({
               title: s.strings.fragment_wallets_get_seed_wallet,

@@ -4,14 +4,6 @@ import type { State } from '../../types/reduxTypes.js'
 import { getYesterdayDateRoundDownHour } from '../../util/utils.js'
 import { getDefaultIsoFiat } from '../Settings/selectors.js'
 
-// Wallets
-
-export const getWalletName = (state: State, walletId: string): string => {
-  const { currencyWallets = {} } = state.core.account
-  const wallet = currencyWallets[walletId]
-  return (wallet && wallet.name) || 'no wallet name'
-}
-
 export const buildExchangeRates = async (state: State) => {
   const { account } = state.core
   const { currencyWallets = {}, exchangeCache } = account
