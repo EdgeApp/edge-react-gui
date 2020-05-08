@@ -7,14 +7,9 @@ import { getYesterdayDateRoundDownHour } from '../../util/utils.js'
 import { getDefaultIsoFiat } from '../Settings/selectors.js'
 
 // Wallets
-export const getWallets = (state: State): { [walletId: string]: EdgeCurrencyWallet } => {
-  const wallets = state.core.wallets.byId
-  return wallets
-}
 
 export const getWallet = (state: State, walletId: string): EdgeCurrencyWallet => {
-  const wallets = getWallets(state)
-  const wallet = wallets[walletId]
+  const wallet = state.core.wallets.byId[walletId]
   return wallet
 }
 
@@ -25,10 +20,8 @@ export const getWalletName = (state: State, walletId: string): string => {
 
 export const buildExchangeRates = async (state: State) => {
   const { account } = state.core
-  const { exchangeCache } = account
-  const wallets = getWallets(state)
+  const { currencyWallets = {}, exchangeCache } = account
   const accountIsoFiat = getDefaultIsoFiat(state)
-  const walletIds = Object.keys(wallets)
 
   const exchangeRates: { [pair: string]: Promise<number> } = {}
   const finalExchangeRates = {}
@@ -36,8 +29,8 @@ export const buildExchangeRates = async (state: State) => {
   if (accountIsoFiat !== 'iso:USD') {
     exchangeRates[`iso:USD_${accountIsoFiat}`] = exchangeCache.convertCurrency('iso:USD', accountIsoFiat)
   }
-  for (const id of walletIds) {
-    const wallet = wallets[id]
+  for (const id of Object.keys(currencyWallets)) {
+    const wallet = currencyWallets[id]
     const walletIsoFiat = wallet.fiatCurrencyCode
     const currencyCode = wallet.currencyInfo.currencyCode // should get GUI or core versions?
     // need to get both forward and backwards exchange rates for wallets & account fiats, for each parent currency AND each token

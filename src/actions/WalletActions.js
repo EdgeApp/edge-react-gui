@@ -351,7 +351,7 @@ export const editCustomToken = (
 export async function deleteCustomTokenAsync (walletId: string, currencyCode: string, getState: GetState) {
   const state = getState()
   const { account } = state.core
-  const coreWallets = CORE_SELECTORS.getWallets(state)
+  const { currencyWallets = {} } = account
   const guiWallets = state.ui.wallets.byId
   const coreWalletsToUpdate = []
   const receivedSyncSettings = await SETTINGS_API.getSyncedSettings(account)
@@ -365,7 +365,7 @@ export async function deleteCustomTokenAsync (walletId: string, currencyCode: st
     // Flow is having issues here, need to fix
     // $FlowFixMe
     const temporaryWalletId = wallet.id
-    const theCoreWallet = coreWallets[temporaryWalletId]
+    const theCoreWallet = currencyWallets[temporaryWalletId]
     // $FlowFixMe
     if (wallet.enabledTokens && wallet.enabledTokens.length > 0) {
       // if the wallet has some enabled tokens
@@ -381,7 +381,7 @@ export async function deleteCustomTokenAsync (walletId: string, currencyCode: st
 export const deleteCustomToken = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
-  const coreWallets = CORE_SELECTORS.getWallets(state)
+  const { currencyWallets = {} } = account
   const guiWallets = state.ui.wallets.byId
   const localSettings = {
     ...getSettings(state)
@@ -410,7 +410,7 @@ export const deleteCustomToken = (walletId: string, currencyCode: string) => (di
         // Flow is having issues here, need to fix
         // $FlowFixMe
         const temporaryWalletId = wallet.id
-        const theCoreWallet = coreWallets[temporaryWalletId]
+        const theCoreWallet = currencyWallets[temporaryWalletId]
         // $FlowFixMe
         if (wallet.enabledTokens && wallet.enabledTokens.length > 0) {
           coreWalletsToUpdate.push(theCoreWallet)
