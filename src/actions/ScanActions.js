@@ -399,7 +399,7 @@ export const toggleAddressModal = () => async (dispatch: Dispatch, getState: Get
   const fioPlugin = account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
 
   const uri = await Airship.show(bridge => (
-    <AddressModal2 bridge={bridge} walletId={walletId} coreWallet={coreWallet} fioPlugin={fioPlugin} currencyCode={currencyCode} />
+    <AddressModal2 bridge={bridge} walletId={walletId} coreWallet={coreWallet} fioPlugin={fioPlugin} currencyCode={currencyCode} account={account} />
   ))
 
   if (uri) {

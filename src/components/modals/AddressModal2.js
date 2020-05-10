@@ -1,17 +1,24 @@
 // @flow
 
-import { FormField, InputAndButtonStyle, MaterialInputStyle, PrimaryButton, SecondaryButton, TertiaryButton } from 'edge-components'
-import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
-import React, { Component } from 'react'
-import { ActivityIndicator, Clipboard, Text, View } from 'react-native'
+import { FormField, TertiaryButton } from 'edge-components'
+import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
+import React, { Component, Fragment } from 'react'
+import { Clipboard, FlatList, Image, InputAccessoryView, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
+import ENS_LOGO from '../../assets/images/ens_logo.png'
+import FIO_LOGO from '../../assets/images/fio_logo.png'
 import s from '../../locales/strings.js'
-import { checkPubAddress } from '../../modules/FioAddress/util'
-import styles from '../../styles/scenes/ScaneStyle'
+import { checkPubAddress, getFioAddressCache } from '../../modules/FioAddress/util.js'
+import Text from '../../modules/UI/components/FormattedText/index'
+import styles, { addressInputStyles, iconStyles } from '../../styles/components/ScanAddressModal.js'
+import type { FlatListItem } from '../../types/types.js'
 import ResolutionError, { ResolutionErrorCode } from '../common/ResolutionError.js'
-import { type AirshipBridge, AirshipModal, ContentArea, dayText, IconCircle, THEME } from './modalParts.js'
+import { type AirshipBridge, AirshipModal, dayText, IconCircle } from './modalParts.js'
+
+const MODAL_ICON = 'address-book-o'
+const inputAccessoryViewID: string = 'inputAccessoryViewID'
 
 export type AddressModalOpts = {
   walletId: string,
@@ -24,7 +31,8 @@ type Props = {
   bridge: AirshipBridge<string | null>,
   coreWallet: EdgeCurrencyWallet,
   fioPlugin: EdgeCurrencyConfig,
-  currencyCode: string
+  currencyCode: string,
+  account: EdgeAccount
 }
 
 type State = {
@@ -32,19 +40,11 @@ type State = {
   uri: string,
   statusLabel: string,
   fieldError: string,
-  cryptoAddress?: string
+  cryptoAddress?: string,
+  fioAddresses: string[]
 }
 
-const MODAL_ICON = 'address-book-o'
-
 export class AddressModal2 extends Component<Props, State> {
-  /* static Icon = Icon
-  static Title = Title
-  static Description = Description
-  static Body = Body
-  static Footer = Footer
-  static Item = Item
-  static Row = Row */
   fioCheckQueue: number = 0
 
   constructor (props: Props) {
@@ -55,12 +55,14 @@ export class AddressModal2 extends Component<Props, State> {
       uri: '',
       statusLabel: s.strings.fragment_send_address,
       cryptoAddress: undefined,
-      fieldError: ''
+      fieldError: '',
+      fioAddresses: []
     }
   }
 
   componentDidMount () {
     this._setClipboard(this.props)
+    this.setFioAddresses()
   }
 
   _setClipboard = async props => {
@@ -78,6 +80,12 @@ export class AddressModal2 extends Component<Props, State> {
     } catch (e) {
       // Failure is acceptable
     }
+  }
+
+  setFioAddresses = async () => {
+    const fioAddressesObject = await getFioAddressCache(this.props.account)
+    const fioAddresses = fioAddressesObject.addresses ? Object.keys(fioAddressesObject.addresses) : []
+    this.setState({ fioAddresses: fioAddresses.sort() })
   }
 
   setStatusLabel = (status: string) => {
@@ -199,6 +207,34 @@ export class AddressModal2 extends Component<Props, State> {
     })
   }
 
+  onPressFioAddress = (address: string) => {
+    this.setState({ uri: address }, async () => {
+      if (await this.isFioAddressValid(address)) {
+        await this.checkIfFioAddress(address)
+      }
+      this.handleSubmit()
+    })
+  }
+
+  renderFioAddressRow = ({ item }: FlatListItem<string>) => {
+    let addressType
+    if (this.checkIfDomain(item)) {
+      addressType = ENS_LOGO
+    } else if (item.includes('@')) {
+      addressType = FIO_LOGO
+    } else {
+      return null
+    }
+    return (
+      <TouchableWithoutFeedback onPress={() => this.onPressFioAddress(item)}>
+        <View style={styles.tileContainer}>
+          <Image source={addressType} style={styles.fioAddressAvatarContainer} resizeMode={'cover'} />
+          <Text style={styles.fioAddressText}>{item}</Text>
+        </View>
+      </TouchableWithoutFeedback>
+    )
+  }
+
   handleSubmit = () => {
     const { uri, cryptoAddress, fieldError } = this.state
     const submitData = cryptoAddress || uri
@@ -206,52 +242,64 @@ export class AddressModal2 extends Component<Props, State> {
     this.props.bridge.resolve(submitData)
   }
   handleClose = () => this.props.bridge.resolve(null)
+  keyExtractor = (item: string, index: number) => index.toString()
   render () {
     const copyMessage = this.state.clipboard ? sprintf(s.strings.string_paste_address, this.state.clipboard) : null
     const { uri, statusLabel, fieldError } = this.state
     return (
       <AirshipModal bridge={this.props.bridge} onCancel={this.handleClose}>
-        <IconCircle>
-          <FontAwesomeIcon name={MODAL_ICON} size={THEME.rem(2)} color={THEME.COLORS.SECONDARY} />
-        </IconCircle>
-        <ContentArea>
-          <Text style={dayText('title')}>{s.strings.fragment_send_address_dialog_title_short}</Text>
-          <Text style={dayText('autoCenter')}>{s.strings.address_modal_body}</Text>
-          <View>
-            <FormField
-              autoFocus
-              blurOnSubmit
-              returnKeyType="done"
-              autoCapitalize="none"
-              autoCorrect={false}
-              style={MaterialInputStyle}
-              value={uri}
-              onChangeText={this.onChangeTextDelayed}
-              error={fieldError}
-              label={statusLabel}
-              onSubmitEditing={this.handleSubmit}
-            />
-          </View>
-          {copyMessage && (
-            <View style={InputAndButtonStyle.tertiaryButtonRow}>
-              <TertiaryButton ellipsizeMode={'middle'} onPress={this.onPasteFromClipboard} numberOfLines={1} style={styles.addressModalButton}>
-                <TertiaryButton.Text>{copyMessage}</TertiaryButton.Text>
-              </TertiaryButton>
-            </View>
-          )}
-          <View style={InputAndButtonStyle.buttonsArea}>
-            <SecondaryButton style={InputAndButtonStyle.noButton} onPress={this.handleClose}>
-              <SecondaryButton.Text style={InputAndButtonStyle.buttonText}>{s.strings.string_cancel_cap}</SecondaryButton.Text>
-            </SecondaryButton>
-            <PrimaryButton style={InputAndButtonStyle.yesButton} onPress={this.handleSubmit}>
-              {statusLabel === s.strings.resolving ? (
-                <ActivityIndicator size="small" />
-              ) : (
-                <PrimaryButton.Text style={[InputAndButtonStyle.buttonText]}>{s.strings.string_done_cap}</PrimaryButton.Text>
+        {gap => (
+          <Fragment>
+            <IconCircle>
+              <FontAwesomeIcon name={MODAL_ICON} size={iconStyles.size} color={iconStyles.color} />
+            </IconCircle>
+            <View style={styles.container}>
+              <View style={styles.tileContainerHeader}>
+                <Text style={dayText('title')}>{s.strings.scan_address_modal_header}</Text>
+                <Text style={dayText('title')}>{s.strings.scan_address_modal_sub_header}</Text>
+              </View>
+              {copyMessage && (
+                <View style={styles.tileContainerButtons}>
+                  <TertiaryButton ellipsizeMode={'middle'} onPress={this.onPasteFromClipboard} numberOfLines={1} style={styles.addressModalButton}>
+                    <TertiaryButton.Text>{copyMessage}</TertiaryButton.Text>
+                  </TertiaryButton>
+                </View>
               )}
-            </PrimaryButton>
-          </View>
-        </ContentArea>
+              <View style={styles.tileContainerInput}>
+                <InputAccessoryView nativeID={inputAccessoryViewID}>
+                  <View style={styles.accessoryView}>
+                    <TouchableOpacity style={styles.accessoryBtn} onPress={this.handleClose}>
+                      <Text style={styles.accessoryText}>{s.strings.string_cancel_cap}</Text>
+                    </TouchableOpacity>
+                  </View>
+                </InputAccessoryView>
+                <FormField
+                  autoFocus
+                  blurOnSubmit
+                  returnKeyType="done"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  style={addressInputStyles}
+                  value={uri}
+                  onChangeText={this.onChangeTextDelayed}
+                  error={fieldError}
+                  label={statusLabel}
+                  onSubmitEditing={this.handleSubmit}
+                  inputAccessoryViewID={inputAccessoryViewID}
+                />
+              </View>
+              <FlatList
+                style={{ flex: 1, marginBottom: -gap.bottom }}
+                contentContainerStyle={{ paddingBottom: gap.bottom }}
+                data={this.state.fioAddresses}
+                initialNumToRender={24}
+                keyboardShouldPersistTaps="handled"
+                keyExtractor={this.keyExtractor}
+                renderItem={this.renderFioAddressRow}
+              />
+            </View>
+          </Fragment>
+        )}
       </AirshipModal>
     )
   }
