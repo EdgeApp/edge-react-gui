@@ -2,15 +2,16 @@
 
 import type { EdgeDenomination } from 'edge-core-js'
 import React, { PureComponent } from 'react'
-import { Image, TouchableHighlight, View } from 'react-native'
+import { Image, StyleSheet, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/index'
 import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
-import styles, { styles as styleRaw } from '../../styles/scenes/WalletListStyle'
+import { THEME } from '../../theme/variables/airbitz.js'
 import { type GuiWallet } from '../../types/types.js'
+import { scale, scaleH } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils'
 import { ProgressPie } from './ProgressPie.js'
 
@@ -88,12 +89,12 @@ export class WalletListTokenRow extends PureComponent<Props> {
     }
 
     return (
-      <TouchableHighlight style={styles.tokenRowContainer} underlayColor={styleRaw.tokenRowUnderlay.color} delayLongPress={500} onPress={this.selectWallet}>
+      <TouchableHighlight style={styles.tokenRowContainer} underlayColor={THEME.COLORS.ROW_PRESSED} delayLongPress={500} onPress={this.selectWallet}>
         <View style={[styles.rowContent]}>
           <View style={styles.rowIconWrap}>
             {symbolImage && <Image style={[styles.rowCurrencyLogoAndroid]} source={{ uri: symbolImage }} resizeMode="cover" />}
             <View style={styles.rowCurrencyLogoAndroid}>
-              <ProgressPie size={styles.rowCurrencyOverlaySize} color={'rgba(255, 255, 255, 0.75)'} progress={progress} />
+              <ProgressPie size={rowCurrencyOverlaySize} color={'rgba(255, 255, 255, 0.75)'} progress={progress} />
             </View>
           </View>
           <View style={styles.walletDetailsContainer}>
@@ -123,3 +124,106 @@ export class WalletListTokenRow extends PureComponent<Props> {
     )
   }
 }
+
+const rowCurrencyOverlaySize = scale(23.3)
+const rawStyles = {
+  rowContent: {
+    flex: 1,
+    flexDirection: 'row'
+  },
+  rowIconWrap: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: scale(36)
+  },
+  rowCurrencyLogoAndroid: {
+    position: 'absolute',
+    top: 8,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: scale(23),
+    width: scale(23),
+    marginRight: scale(12),
+    marginLeft: scale(3),
+    resizeMode: 'contain',
+    alignSelf: 'center'
+  },
+  rowOptionsWrap: {
+    width: scaleH(37)
+  },
+  tokenRowContainer: {
+    padding: scale(6),
+    paddingLeft: scale(8),
+    height: scale(106),
+    backgroundColor: THEME.COLORS.GRAY_4,
+    borderBottomWidth: 1,
+    borderColor: THEME.COLORS.GRAY_3
+  },
+  walletDetailsContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    marginTop: scale(5)
+  },
+  walletDetailsRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  walletDetailsRowLine: {
+    height: 1,
+    borderColor: 'rgba(14, 75, 117, 0.5)',
+    borderBottomWidth: 1,
+    marginTop: scale(12),
+    marginBottom: scale(9)
+  },
+  walletDetailsRowCurrency: {
+    flex: 1,
+    fontSize: scale(18)
+  },
+  walletDetailsRowValue: {
+    textAlign: 'right',
+    fontSize: scale(18),
+    color: THEME.COLORS.GRAY_1
+  },
+  walletDetailsRowName: {
+    flex: 1,
+    fontSize: scale(14),
+    color: THEME.COLORS.SECONDARY
+  },
+  walletDetailsRowFiat: {
+    fontSize: scale(14),
+    textAlign: 'right',
+    color: THEME.COLORS.SECONDARY
+  },
+  walletDetailsRowExchangeRate: {
+    fontSize: scale(14),
+    textAlign: 'left',
+    color: THEME.COLORS.GRAY_1
+  },
+  walletDetailsRowDifferenceNeutral: {
+    fontSize: scale(14),
+    textAlign: 'right',
+    color: THEME.COLORS.SECONDARY
+  },
+  walletDetailsRowDifferencePositive: {
+    fontSize: scale(14),
+    textAlign: 'right',
+    fontWeight: '400',
+    color: '#77C513'
+  },
+  walletDetailsRowDifferenceNegative: {
+    fontSize: scale(14),
+    textAlign: 'right',
+    fontWeight: '400',
+    color: '#E85466'
+  },
+  walletDetailsFiatBalanceRow: {
+    flexDirection: 'row'
+  },
+  walletDetailsExchangeRow: {
+    flexDirection: 'row',
+    flex: 1
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

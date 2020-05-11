@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import React, { Component } from 'react'
-import { Image, TouchableHighlight, View } from 'react-native'
+import { Image, StyleSheet, TouchableHighlight, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import sort from '../../assets/images/walletlist/sort.png'
@@ -13,9 +13,11 @@ import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import T from '../../modules/UI/components/FormattedText/index'
 import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
 import { type SettingsState } from '../../reducers/scenes/SettingsReducer.js'
-import styles, { styles as styleRaw } from '../../styles/scenes/WalletListStyle.js'
+import { THEME } from '../../theme/variables/airbitz'
+import { PLATFORM } from '../../theme/variables/platform.js'
 import { type State as ReduxState } from '../../types/reduxTypes.js'
 import { type GuiWallet } from '../../types/types.js'
+import { scale } from '../../util/scaling.js'
 import { decimalOrZero, getFiatSymbol, truncateDecimals } from '../../util/utils'
 
 const DIVIDE_PRECISION = 18
@@ -53,7 +55,7 @@ class WalletListSortableRowComponent extends Component<Props> {
     const fiatBalanceString = showBalance ? fiatBalanceFormat : ''
 
     return (
-      <TouchableHighlight style={[styles.rowContainer, styles.sortableWalletListRow]} underlayColor={styleRaw.walletRowUnderlay.color} {...sortHandlers}>
+      <TouchableHighlight style={[styles.rowContainer, styles.sortableWalletListRow]} underlayColor={THEME.COLORS.ROW_PRESSED} {...sortHandlers}>
         <View style={[styles.rowContent]}>
           <View style={[styles.rowDragArea]}>
             <Image source={sort} style={styles.rowDragIcon} />
@@ -85,6 +87,89 @@ class WalletListSortableRowComponent extends Component<Props> {
     )
   }
 }
+
+const rawStyles = {
+  sortableWalletListRow: {
+    width: PLATFORM.deviceWidth,
+    height: scale(60),
+    backgroundColor: THEME.COLORS.WHITE,
+    paddingVertical: scale(6),
+    paddingHorizontal: scale(20),
+    justifyContent: 'space-between',
+    borderBottomWidth: scale(1),
+    borderColor: THEME.COLORS.WHITE
+  },
+  rowContainer: {
+    padding: scale(6),
+    paddingLeft: scale(8),
+    height: scale(106),
+    backgroundColor: THEME.COLORS.WHITE,
+    borderBottomWidth: scale(1),
+    borderBottomColor: THEME.COLORS.GRAY_3
+  },
+  rowContent: {
+    flex: 1,
+    flexDirection: 'row'
+  },
+  rowIconWrap: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: scale(36)
+  },
+  rowDragArea: {
+    justifyContent: 'center',
+    marginRight: scale(10),
+    marginLeft: scale(4)
+  },
+  rowDragCurrencyLogo: {
+    height: scale(22),
+    width: scale(22),
+    marginRight: scale(5),
+    resizeMode: 'contain',
+    alignSelf: 'center'
+  },
+  rowDragIcon: {
+    top: scale(2),
+    height: scale(15),
+    width: scale(15)
+  },
+  symbol: {
+    fontFamily: THEME.FONTS.SYMBOLS
+  },
+  walletDetailsContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    marginTop: scale(5)
+  },
+  walletDetailsRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  walletDetailsRowCurrency: {
+    flex: 1,
+    fontSize: scale(18)
+  },
+  walletDetailsRowValue: {
+    textAlign: 'right',
+    fontSize: scale(18),
+    color: THEME.COLORS.GRAY_1
+  },
+  walletDetailsRowName: {
+    flex: 1,
+    fontSize: scale(14),
+    color: THEME.COLORS.SECONDARY
+  },
+  walletDetailsRowFiat: {
+    fontSize: scale(14),
+    textAlign: 'right',
+    color: THEME.COLORS.SECONDARY
+  },
+  walletDetailsFiatBalanceRow: {
+    flexDirection: 'row'
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const WalletListSortableRow = connect(
   (state: ReduxState, ownProps: OwnProps): StateProps => ({

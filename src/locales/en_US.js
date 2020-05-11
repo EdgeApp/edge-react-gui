@@ -132,7 +132,6 @@ const strings = {
   fragment_wallets_get_seed_wallet_first_confirm_message_mobile: 'Are you sure you want to reveal the private seed for the following wallet?\n',
   fragmet_wallets_delete_wallet_first_confirm_message_mobile: 'Are you sure you want to delete \n',
   fragmet_wallets_delete_fio_extra_message_mobile: 'The FIO key from this wallet has been used to register FIO Address(es).',
-  fragmet_wallets_list_archive_title_capitalized: 'Archive',
   fragment_wallets_syncing_wallet_txs: 'Synchronizing wallet transactions...',
   wallet_list_add_wallet: 'Add Wallet',
   wallet_list_add_token: 'Add Token',
