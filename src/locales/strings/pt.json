@@ -117,7 +117,6 @@
   "fragment_wallets_get_seed_wallet_first_confirm_message_mobile": "",
   "fragmet_wallets_delete_wallet_first_confirm_message_mobile": "Você tem certeza que deseja excluir\n",
   "fragmet_wallets_delete_fio_extra_message_mobile": "",
-  "fragmet_wallets_list_archive_title_capitalized": "Arquivo",
   "fragment_wallets_syncing_wallet_txs": "Sincronizando as transações da carteira...",
   "wallet_list_add_wallet": "",
   "wallet_list_add_token": "",
