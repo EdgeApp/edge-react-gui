@@ -420,7 +420,7 @@
   "transaction_details_copy_signed_tx": "",
   "transaction_details_modal_debug_info": "",
   "transaction_history_permission": "",
-  "transaction_details_fiat_modal_header": "",
+  "transaction_details_fiat_modal_header": "%s сумма",
   "transaction_details_fiat_label": "",
   "transaction_details_error_invalid": "",
   "transaction_details_choose_a_sub_category": "",
