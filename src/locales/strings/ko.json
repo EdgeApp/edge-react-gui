@@ -117,7 +117,6 @@
   "fragment_wallets_get_seed_wallet_first_confirm_message_mobile": "정말로 다음 월릿에 개인 시드를 공개하시겠습니까?\n",
   "fragmet_wallets_delete_wallet_first_confirm_message_mobile": "정말로 삭제 하시겠습니까?\n",
   "fragmet_wallets_delete_fio_extra_message_mobile": "",
-  "fragmet_wallets_list_archive_title_capitalized": "아카이브",
   "fragment_wallets_syncing_wallet_txs": "월렛 거래내역을 동기화중...",
   "wallet_list_add_wallet": "월렛 추가",
   "wallet_list_add_token": "토큰 추가",
