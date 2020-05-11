@@ -54,7 +54,9 @@ type Record = {
 
 type State = {
   input: string,
-  records: Array<Record>
+  records: Array<Record>,
+  allowedCurrencyCodes?: Array<string>,
+  excludeCurrencyCodes?: Array<string>
 }
 
 type Props = StateProps & OwnProps
@@ -64,13 +66,24 @@ class WalletListModalConnected extends Component<Props, State> {
     super(props)
     this.state = {
       input: '',
-      records: this.initializeRecords(props)
+      records: []
     }
   }
 
-  initializeRecords = (props: Props) => {
-    const { activeWalletIds, wallets, excludeWalletIds, allowedCurrencyCodes, excludeCurrencyCodes, showCreateWallet, account } = props
+  static getDerivedStateFromProps (props: Props) {
+    const { activeWalletIds, wallets, excludeWalletIds, showCreateWallet, account } = props
+
+    // Uppercase currency codes
+    let { allowedCurrencyCodes, excludeCurrencyCodes } = props
+    if (allowedCurrencyCodes != null) {
+      allowedCurrencyCodes = allowedCurrencyCodes.map(code => code.toUpperCase())
+    }
+    if (excludeCurrencyCodes != null) {
+      excludeCurrencyCodes = excludeCurrencyCodes.map(code => code.toUpperCase())
+    }
+
     const records = []
+
     // Initialize Wallets
     for (const walletId of activeWalletIds) {
       const wallet = wallets[walletId]
@@ -82,6 +95,7 @@ class WalletListModalConnected extends Component<Props, State> {
         })
       }
     }
+
     // Initialize Create Wallets
     if (showCreateWallet) {
       const createWalletCurrencies = getGuiWalletTypes(account)
@@ -99,7 +113,11 @@ class WalletListModalConnected extends Component<Props, State> {
         }
       }
     }
-    return records
+    return {
+      records,
+      allowedCurrencyCodes,
+      excludeCurrencyCodes
+    }
   }
 
   setWalletRecordsLabel = (records: Array<Record>, header: string): Array<Record> => {
@@ -201,7 +219,8 @@ class WalletListModalConnected extends Component<Props, State> {
   createWallet = (createWalletCurrency: GuiWalletType) =>
     this.props.bridge.resolve({ walletToCreate: { walletType: createWalletCurrency.value, currencyCode: createWalletCurrency.currencyCode } })
   renderWalletItem = ({ item }: FlatListItem<Record>) => {
-    const { showCreateWallet, allowedCurrencyCodes, excludeCurrencyCodes } = this.props
+    const { showCreateWallet } = this.props
+    const { allowedCurrencyCodes, excludeCurrencyCodes } = this.state
     const { walletItem, createWalletCurrency, mostRecentUsed, currencyCode, headerLabel } = item
     if (walletItem) {
       return (
