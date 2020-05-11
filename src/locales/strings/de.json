@@ -117,7 +117,6 @@
   "fragment_wallets_get_seed_wallet_first_confirm_message_mobile": "Sind Sie sicher, dass Sie die private Mnemonik für die folgende Wallet anzeigen möchten?\n",
   "fragmet_wallets_delete_wallet_first_confirm_message_mobile": "Sind Sie sicher, dass Sie löschen möchten?",
   "fragmet_wallets_delete_fio_extra_message_mobile": "Der FIO-Schlüssel dieser Brieftasche wurde verwendet, um FIO-Adresse(n) zu registrieren.",
-  "fragmet_wallets_list_archive_title_capitalized": "Archivieren",
   "fragment_wallets_syncing_wallet_txs": "Synchronisieren von Wallet-Transaktionen...",
   "wallet_list_add_wallet": "Wallet hinzufügen",
   "wallet_list_add_token": "Token hinzufügen",
