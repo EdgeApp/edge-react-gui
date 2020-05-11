@@ -117,7 +117,6 @@
   "fragment_wallets_get_seed_wallet_first_confirm_message_mobile": "Souhaitez-vous vraiment afficher le Seed privé pour le portefeuille suivant?\n",
   "fragmet_wallets_delete_wallet_first_confirm_message_mobile": "Souhaitez-vous vraiment l'effacer\n",
   "fragmet_wallets_delete_fio_extra_message_mobile": "",
-  "fragmet_wallets_list_archive_title_capitalized": "Archiver",
   "fragment_wallets_syncing_wallet_txs": "Synchronisation de transactions de portefeuilles est en cours ",
   "wallet_list_add_wallet": "Ajouter un portefeuille",
   "wallet_list_add_token": "Ajouter les Tokens",
