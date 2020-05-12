@@ -297,6 +297,9 @@ Object {
       "EOS": Object {
         "denomination": "10000",
       },
+      "ETC": Object {
+        "denomination": "1000000000000000000",
+      },
       "ETH": Object {
         "denomination": "1000000000000000000",
       },

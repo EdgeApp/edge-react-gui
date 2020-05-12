@@ -52,6 +52,7 @@ export type SettingsState = {
   FTC: CurrencySetting,
   RVN: CurrencySetting,
   ETH: CurrencySetting,
+  ETC: CurrencySetting,
   LTC: CurrencySetting,
   VTC: CurrencySetting,
   XZC: CurrencySetting,

@@ -11,7 +11,8 @@ export const FEE_ALERT_THRESHOLD = 5.0 // this is denominated in dollars
 export const CURRENCY_SYMBOL_IMAGES = {
   BCH: 'https://developer.airbitz.co/content/bitcoincash-logo-solo-64.png',
   BTC: 'https://developer.airbitz.co/content/bitcoin-logo-solo-64.png',
-  ETH: 'https://developer.airbitz.co/content/ethereum-logo-solo-64.png'
+  ETH: 'https://developer.airbitz.co/content/ethereum-logo-solo-64.png',
+  ETC: 'https://developer.airbitz.co/content/ethereum-classic-logo-solo-64.png'
 }
 
 // Translations for custom fee keys:
@@ -59,6 +60,7 @@ export const CURRENCY_SETTINGS_KEYS = [
   'bitcointestnet',
   'bitcoincash',
   'ethereum',
+  'ethereumclassic',
   'dash',
   'litecoin',
   'bitcoinsv',
@@ -84,6 +86,7 @@ export const WALLET_TYPE_ORDER = [
   'wallet:bitcoincash',
   'wallet:monero',
   'wallet:ethereum',
+  'wallet:ethereumclassic',
   'wallet:binance',
   'wallet:bitcoinsv',
   'wallet:litecoin',
@@ -121,6 +124,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   EBST: 'eboost',
   EOS: 'eos',
   ETH: 'ethereum',
+  ETC: 'ethereumclassic',
   FIO: 'fio',
   FTC: 'feathercoin',
   GRS: 'groestlcoin',
