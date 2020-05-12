@@ -68,6 +68,11 @@ export const styles = {
     justifyContent: 'center',
     alignItems: 'center'
   },
+  transferIcon: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(16),
+    height: scale(16)
+  },
   addressBookIcon: {
     color: THEME.COLORS.WHITE,
     fontSize: scale(16),

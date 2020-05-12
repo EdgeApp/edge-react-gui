@@ -11,7 +11,6 @@ import { sprintf } from 'sprintf-js'
 import credLogo from '../../assets/images/cred_logo.png'
 import requestImage from '../../assets/images/transactions/transactions-request.png'
 import sendImage from '../../assets/images/transactions/transactions-send.png'
-import transferImage from '../../assets/images/transactions/transactions-transfer.png'
 import TransactionRow from '../../connectors/TransactionRowConnector.js'
 import * as Constants from '../../constants/indexConstants.js'
 import { guiPlugins } from '../../constants/plugins/GuiPlugins.js'
@@ -54,8 +53,7 @@ export type StateProps = {
 
 export type DispatchProps = {
   fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => any,
-  toggleBalanceVisibility: () => void,
-  selectFromWalletForExchange: (walletId: string, currencyCode: string) => void
+  toggleBalanceVisibility: () => void
 }
 
 type Props = StateProps & DispatchProps
@@ -71,7 +69,6 @@ type State = {
 const SHOW_BALANCE_TEXT = s.strings.string_show_balance
 const REQUEST_TEXT = s.strings.fragment_request_subtitle
 const SEND_TEXT = s.strings.fragment_send_subtitle
-const TRANSFER_TEXT = s.strings.fragment_transaction_transfer
 
 const emptyArray = []
 
@@ -169,8 +166,7 @@ export class TransactionList extends Component<Props, State> {
       fiatCurrencyCode,
       isoFiatCurrencyCode,
       isBalanceVisible,
-      transactions,
-      selectFromWalletForExchange
+      transactions
     } = this.props
 
     // should we get rid of "loading" area? Currently unused
@@ -267,19 +263,6 @@ export class TransactionList extends Component<Props, State> {
                   <View style={[styles.sendWrap]}>
                     <Image style={{ width: 25, height: 25 }} source={sendImage} />
                     <T style={styles.send}>{SEND_TEXT}</T>
-                  </View>
-                </TouchableHighlight>
-                <TouchableHighlight
-                  style={[styles.transferBox, styles.button]}
-                  underlayColor={styleRaw.underlay.color}
-                  onPress={() => {
-                    selectFromWalletForExchange(uiWallet.id, currencyCode)
-                    Actions.exchangeScene()
-                  }}
-                >
-                  <View style={[styles.transferWrap]}>
-                    <Image style={{ width: 25, height: 25 }} source={transferImage} />
-                    <T style={styles.transfer}>{TRANSFER_TEXT}</T>
                   </View>
                 </TouchableHighlight>
               </View>

@@ -14,13 +14,16 @@ describe('Scan component', () => {
       torchEnabled: false,
       scanEnabled: false,
       showToWalletModal: false,
+      currentWalletId: '',
+      currentCurrencyCode: '',
       wallets: {},
       qrCodeScanned: jest.fn(),
       parseScannedUri: jest.fn(),
       toggleEnableTorch: jest.fn(),
       toggleAddressModal: jest.fn(),
       toggleScanToWalletListModal: jest.fn(),
-      onSelectWallet: jest.fn()
+      onSelectWallet: jest.fn(),
+      selectFromWalletForExchange: jest.fn()
     }
     const actual = renderer.render(<Scan {...props} />)
 
@@ -34,13 +37,16 @@ describe('Scan component', () => {
       torchEnabled: false,
       scanEnabled: false,
       showToWalletModal: false,
+      currentWalletId: '',
+      currentCurrencyCode: '',
+      wallets: {},
       qrCodeScanned: jest.fn(),
       parseScannedUri: jest.fn(),
       toggleEnableTorch: jest.fn(),
       toggleAddressModal: jest.fn(),
       toggleScanToWalletListModal: jest.fn(),
       onSelectWallet: jest.fn(),
-      wallets: {}
+      selectFromWalletForExchange: jest.fn()
     }
     const actual = renderer.render(<Scan {...props} />)
 

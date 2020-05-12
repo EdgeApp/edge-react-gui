@@ -4,7 +4,6 @@ import type { EdgeCurrencyInfo, EdgeCurrencyWallet } from 'edge-core-js'
 import _ from 'lodash'
 import { connect } from 'react-redux'
 
-import { selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
 import { fetchMoreTransactions } from '../../actions/TransactionListActions'
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions.js'
 import type { DispatchProps, StateProps } from '../../components/scenes/TransactionListScene'
@@ -90,9 +89,6 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => dispatch(fetchMoreTransactions(walletId, currencyCode, reset)),
   toggleBalanceVisibility: () => {
     dispatch(toggleAccountBalanceVisibility())
-  },
-  selectFromWalletForExchange: (walletId: string, currencyCode: string) => {
-    dispatch(selectWalletForExchange(walletId, currencyCode, 'from'))
   }
 })
 
