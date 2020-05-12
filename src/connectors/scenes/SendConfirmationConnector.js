@@ -17,7 +17,7 @@ import {
 import { activated as uniqueIdentifierModalActivated } from '../../actions/UniqueIdentifierModalActions.js'
 import type { SendConfirmationDispatchProps, SendConfirmationStateProps } from '../../components/scenes/SendConfirmationScene'
 import { SendConfirmation } from '../../components/scenes/SendConfirmationScene'
-import { getWallet, isConnectedState } from '../../modules/Core/selectors.js'
+import { getWallet } from '../../modules/Core/selectors.js'
 import { getDisplayDenomination, getExchangeDenomination as settingsGetExchangeDenomination, getPlugins } from '../../modules/Settings/selectors.js'
 import {
   getError,
@@ -111,7 +111,7 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
     sceneState,
     coreWallet,
     toggleCryptoOnTop,
-    isConnected: isConnectedState(state)
+    isConnected: state.network.isConnected
   }
   return out
 }

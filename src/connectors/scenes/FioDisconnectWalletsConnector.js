@@ -7,7 +7,6 @@ import type {
   FioDisconnectWalletsStateProps as StateProps
 } from '../../components/scenes/FioDisconnectWalletScene'
 import { FioDisconnectWalletScene } from '../../components/scenes/FioDisconnectWalletScene'
-import { isConnectedState } from '../../modules/Core/selectors'
 import { makeConnectedWallets } from '../../modules/FioAddress/util'
 import { getWallets } from '../../modules/UI/selectors'
 import type { CcWalletMap } from '../../reducers/FioReducer'
@@ -19,7 +18,7 @@ const mapStateToProps = (state: State, ownProps): StateProps => {
   if (!ccWalletMap) {
     return {
       ccWalletMap,
-      isConnected: isConnectedState(state)
+      isConnected: state.network.isConnected
     }
   }
   const connectedWallets = makeConnectedWallets(wallets, ccWalletMap)
@@ -27,7 +26,7 @@ const mapStateToProps = (state: State, ownProps): StateProps => {
   const out: StateProps = {
     ccWalletMap,
     connectedWallets,
-    isConnected: isConnectedState(state)
+    isConnected: state.network.isConnected
   }
   return out
 }

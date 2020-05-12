@@ -6,18 +6,17 @@ import { connect } from 'react-redux'
 import type { DispatchProps, StateProps } from '../../components/scenes/FioAddressRegisterScene'
 import { FioAddressRegisterScene } from '../../components/scenes/FioAddressRegisterScene'
 import * as Constants from '../../constants/indexConstants'
-import { getAccount, isConnectedState } from '../../modules/Core/selectors'
 import { createFioWallet } from '../../modules/FioAddress/action'
 import { getFioWallets } from '../../modules/UI/selectors'
 import type { Dispatch, State } from '../../types/reduxTypes'
 
 const mapStateToProps = (state: State) => {
-  const account = getAccount(state)
+  const { account } = state.core
   if (!account || !account.currencyConfig) {
     return {
       fioWallets: [],
       fioPlugin: {},
-      isConnected: isConnectedState(state)
+      isConnected: state.network.isConnected
     }
   }
   const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
@@ -26,7 +25,7 @@ const mapStateToProps = (state: State) => {
   const out: StateProps = {
     fioWallets,
     fioPlugin,
-    isConnected: isConnectedState(state)
+    isConnected: state.network.isConnected
   }
   return out
 }

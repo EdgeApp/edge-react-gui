@@ -8,7 +8,7 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings'
 import type { Dispatch, GetState } from '../../types/reduxTypes'
 import { truncateDecimals } from '../../util/utils'
-import { getAccount, getWallets } from '../Core/selectors'
+import { getWallets } from '../Core/selectors'
 import { getDefaultIsoFiat, getDisplayDenomination, getExchangeDenomination } from '../Settings/selectors'
 import { getFioWallets } from '../UI/selectors'
 import type { BuyAddressResponse } from './reducer'
@@ -62,7 +62,7 @@ export const refreshAllFioAddresses = () => async (dispatch: Dispatch, getState:
 
 export const getRegInfo = (fioAddress: string, selectedWallet: EdgeCurrencyWallet) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const account = getAccount(state)
+  const { account } = state.core
   const fioPlugin = account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO]
   const displayDenomination = getDisplayDenomination(state, Constants.FIO_STR)
 

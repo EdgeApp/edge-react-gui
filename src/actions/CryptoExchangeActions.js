@@ -110,7 +110,7 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
 }
 
 async function fetchSwapQuote (state: State, request: EdgeSwapRequest): Promise<GuiSwapInfo> {
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
 
   // Find preferred swap provider:
   const activePlugins = bestOfPlugins(state.account.referralCache.accountPlugins, state.account.accountReferral, state.ui.settings.preferredSwapPluginId)
@@ -130,7 +130,7 @@ async function fetchSwapQuote (state: State, request: EdgeSwapRequest): Promise<
 
   // Currency conversion tools:
   const { fromWallet, toWallet, fromCurrencyCode, toCurrencyCode } = request
-  const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
+  const currencyConverter = account.exchangeCache
 
   // Format from amount:
   const fromPrimaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
@@ -272,6 +272,7 @@ const processSwapQuoteError = (error: any) => (dispatch: Dispatch, getState: Get
 
 export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
+  const { account } = state.core
   dispatch({ type: 'START_SHIFT_TRANSACTION' })
 
   const { quote, request } = swapInfo
@@ -283,7 +284,6 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
     const result = await quote.approve()
     await fromWallet.saveTx(result.transaction)
 
-    const account = CORE_SELECTORS.getAccount(state)
     const si = account.swapConfig[pluginId].swapInfo
 
     let category: string
@@ -390,7 +390,7 @@ export const selectWalletForExchange = (walletId: string, currencyCode: string, 
 
 export const checkEnabledExchanges = () => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
   // make sure exchanges are enabled
   let isAnyExchangeEnabled = false
   const exchanges = account.swapConfig
@@ -406,7 +406,8 @@ export const checkEnabledExchanges = () => (dispatch: Dispatch, getState: GetSta
 }
 
 async function getBalanceMessage (state: State, wallet: GuiWallet, currencyCode: string) {
-  const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
+  const { account } = state.core
+  const currencyConverter = account.exchangeCache
   const balanceInCrypto = wallet.nativeBalances[currencyCode]
   const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
   const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, currencyCode)

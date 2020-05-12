@@ -92,6 +92,7 @@ export function walletListMenuAction (walletId: string, option: WalletListMenuKe
     case 'getSeed': {
       return async (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
+        const { account } = state.core
         const walletName = CORE_SELECTORS.getWalletName(state, walletId)
         try {
           const input = {
@@ -109,7 +110,6 @@ export function walletListMenuAction (walletId: string, option: WalletListMenuKe
           }
 
           const validateInput = async input => {
-            const account = CORE_SELECTORS.getAccount(state)
             const isPassword = await account.checkPassword(input)
             if (isPassword) {
               dispatch({ type: 'PASSWORD_USED' })

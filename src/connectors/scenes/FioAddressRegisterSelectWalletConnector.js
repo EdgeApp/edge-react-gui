@@ -5,7 +5,6 @@ import { connect } from 'react-redux'
 
 import type { DispatchProps, StateProps } from '../../components/scenes/FioAddressRegisterSelectWalletScene'
 import { FioAddressRegisterSelectWalletScene } from '../../components/scenes/FioAddressRegisterSelectWalletScene'
-import { isConnectedState } from '../../modules/Core/selectors'
 import { getRegInfo } from '../../modules/FioAddress/action'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import { getFioWallets } from '../../modules/UI/selectors'
@@ -30,7 +29,7 @@ const mapStateToProps = (state: State) => {
     activationCost,
     wallets,
     loading,
-    isConnected: isConnectedState(state)
+    isConnected: state.network.isConnected
   }
   return out
 }

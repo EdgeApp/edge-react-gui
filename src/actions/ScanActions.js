@@ -102,13 +102,13 @@ export const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWal
 export const parseScannedUri = (data: string) => async (dispatch: Dispatch, getState: GetState) => {
   if (!data) return
   const state = getState()
+  const { account } = state.core
   const selectedWalletId = state.ui.wallets.selectedWalletId
   const edgeWallet = state.core.wallets.byId[selectedWalletId]
   const guiWallet = state.ui.wallets.byId[selectedWalletId]
   const currencyCode = state.ui.wallets.selectedCurrencyCode
 
   let fioAddress
-  const account = CORE_SELECTORS.getAccount(state)
   if (account && account.currencyConfig) {
     const fioPlugin = account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
     const walletId: string = UI_SELECTORS.getSelectedWalletId(state)
@@ -253,10 +253,10 @@ export const isPaymentProtocolUri = (parsedUri: EdgeParsedUri): boolean => {
 
 export const toggleAddressModal = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
+  const { account } = state.core
   const walletId: string = UI_SELECTORS.getSelectedWalletId(state)
   const coreWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
   const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
-  const account = CORE_SELECTORS.getAccount(state)
   const fioPlugin = account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
   const addressModal = createAddressModal({
     walletId,

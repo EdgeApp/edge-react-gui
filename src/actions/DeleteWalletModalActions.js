@@ -7,7 +7,7 @@ import { launchModal } from '../components/common/ModalProvider.js'
 import { showError } from '../components/services/AirshipInstance.js'
 import { DELETE } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
-import { getAccount, getWalletName } from '../modules/Core/selectors.js'
+import { getWalletName } from '../modules/Core/selectors.js'
 import Text from '../modules/UI/components/FormattedText/index'
 import OptionIcon from '../modules/UI/components/OptionIcon/OptionIcon.ui'
 import { B } from '../styles/common/textStyles.js'
@@ -15,8 +15,8 @@ import type { Dispatch, GetState } from '../types/reduxTypes.js'
 
 export const showDeleteWalletModal = (walletId: string, additionalMsg: string = '') => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
+  const { account } = state.core
   const walletName = getWalletName(state, walletId)
-  const account = getAccount(state)
 
   // Use `launchModal` to put the modal component on screen:
   const modal = createYesNoModal({

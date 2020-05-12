@@ -13,7 +13,7 @@ import { showError } from '../components/services/AirshipInstance.js'
 import { EXCLAMATION, FEE_ALERT_THRESHOLD, MATERIAL_COMMUNITY, SEND_CONFIRMATION, TRANSACTION_DETAILS } from '../constants/indexConstants'
 import { getSpecialCurrencyInfo, getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
-import { getAccount, getWallet } from '../modules/Core/selectors.js'
+import { getWallet } from '../modules/Core/selectors.js'
 import { getExchangeDenomination as settingsGetExchangeDenomination } from '../modules/Settings/selectors.js'
 import Text from '../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
@@ -171,7 +171,7 @@ export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => 
 
 export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const account = getAccount(state)
+  const { account } = state.core
   const selectedWalletId = getSelectedWalletId(state)
   const wallet = getWallet(state, selectedWalletId)
   const edgeUnsignedTransaction: EdgeTransaction = getTransaction(state)

@@ -318,7 +318,7 @@ class GuiPluginLegacy extends React.Component<Props, State> {
 }
 
 const mapStateToProps = state => {
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
   const guiWallet = UI_SELECTORS.getSelectedWallet(state)
   const coreWallet = guiWallet && guiWallet.id ? CORE_SELECTORS.getWallet(state, guiWallet.id) : null
   const coreWallets = state.core.wallets.byId

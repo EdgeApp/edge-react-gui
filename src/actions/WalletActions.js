@@ -350,9 +350,9 @@ export const editCustomToken = (
 
 export async function deleteCustomTokenAsync (walletId: string, currencyCode: string, getState: GetState) {
   const state = getState()
+  const { account } = state.core
   const coreWallets = CORE_SELECTORS.getWallets(state)
   const guiWallets = state.ui.wallets.byId
-  const account = CORE_SELECTORS.getAccount(state)
   const coreWalletsToUpdate = []
   const receivedSyncSettings = await SETTINGS_API.getSyncedSettings(account)
   receivedSyncSettings[currencyCode].isVisible = false
@@ -380,9 +380,9 @@ export async function deleteCustomTokenAsync (walletId: string, currencyCode: st
 
 export const deleteCustomToken = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
+  const { account } = state.core
   const coreWallets = CORE_SELECTORS.getWallets(state)
   const guiWallets = state.ui.wallets.byId
-  const account = CORE_SELECTORS.getAccount(state)
   const localSettings = {
     ...getSettings(state)
   }
@@ -463,6 +463,7 @@ export const updateWalletLoadingProgress = (walletId: string, newWalletProgress:
 
 export const updateMostRecentWalletsSelected = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
+  const { account } = state.core
   const { mostRecentWallets } = state.ui.settings
   const currentMostRecentWallets = mostRecentWallets.filter(wallet => {
     return wallet.id !== walletId || wallet.currencyCode !== currencyCode
@@ -472,7 +473,7 @@ export const updateMostRecentWalletsSelected = (walletId: string, currencyCode: 
   }
   currentMostRecentWallets.unshift({ id: walletId, currencyCode })
 
-  SETTINGS_API.setMostRecentWalletsSelected(CORE_SELECTORS.getAccount(state), currentMostRecentWallets)
+  SETTINGS_API.setMostRecentWalletsSelected(account, currentMostRecentWallets)
     .then(() => {
       dispatch(updateMostRecentWallets(currentMostRecentWallets))
     })
@@ -481,9 +482,10 @@ export const updateMostRecentWalletsSelected = (walletId: string, currencyCode: 
 
 export const removeMostRecentWallet = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
+  const { account } = state.core
   const { mostRecentWallets } = state.ui.settings
   const currentMostRecentWallets = mostRecentWallets.filter(wallet => wallet.id !== walletId || wallet.currencyCode !== currencyCode)
-  SETTINGS_API.setMostRecentWalletsSelected(CORE_SELECTORS.getAccount(state), currentMostRecentWallets)
+  SETTINGS_API.setMostRecentWalletsSelected(account, currentMostRecentWallets)
     .then(() => {
       dispatch(updateMostRecentWallets(currentMostRecentWallets))
     })

@@ -7,7 +7,7 @@ import { launchModal } from '../components/common/ModalProvider.js'
 import { showError } from '../components/services/AirshipInstance.js'
 import { SPLIT } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
-import { getAccount, getWallet, getWalletName } from '../modules/Core/selectors.js'
+import { getWallet, getWalletName } from '../modules/Core/selectors.js'
 import Text from '../modules/UI/components/FormattedText/index'
 import OptionIcon from '../modules/UI/components/OptionIcon/OptionIcon.ui'
 import { B } from '../styles/common/textStyles.js'
@@ -18,9 +18,9 @@ const getSplitType = (currencyCode: string) => (currencyCode === 'BCH' ? 'wallet
 
 export const showSplitWalletModal = (walletId: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
+  const { account } = state.core
   const walletName = getWalletName(state, walletId)
   const edgeWallet = getWallet(state, walletId)
-  const account = getAccount(state)
 
   let bodyText = s.strings.fragment_wallets_split_wallet_first_confirm_message_mobile
   if (edgeWallet.currencyInfo.currencyCode === 'BCH') {

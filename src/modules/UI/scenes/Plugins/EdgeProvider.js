@@ -214,7 +214,7 @@ export class EdgeProvider extends Bridgeable {
   // Write data to user's account. This data is encrypted and persisted in their Edge
   // account and transferred between devices
   async writeData (data: { [key: string]: string }) {
-    const account = CORE_SELECTORS.getAccount(this._state)
+    const { account } = this._state.core
     const store = account.dataStore
     console.log('edgeProvider writeData: ', JSON.stringify(data))
     await Promise.all(Object.keys(data).map(key => store.setItem(this._plugin.storeId, key, data[key])))
@@ -226,7 +226,7 @@ export class EdgeProvider extends Bridgeable {
   // 'keys' is an array of strings with keys to lookup.
   // Returns an object with a map of key value pairs from the keys passed in
   async readData (keys: Array<string>): Promise<Object> {
-    const account = CORE_SELECTORS.getAccount(this._state)
+    const { account } = this._state.core
     const store = account.dataStore
     const returnObj = {}
     for (let i = 0; i < keys.length; i++) {
@@ -383,7 +383,7 @@ export class EdgeProvider extends Bridgeable {
       const exchangeAmount = await coreWallet.nativeToDenomination(transaction.nativeAmount, transaction.currencyCode)
       trackConversion('EdgeProviderConversion', {
         pluginId: this._plugin.storeId,
-        account: CORE_SELECTORS.getAccount(this._state),
+        account: this._state.core.account,
         currencyCode: transaction.currencyCode,
         exchangeAmount: Number(bns.abs(exchangeAmount))
       })
@@ -397,7 +397,7 @@ export class EdgeProvider extends Bridgeable {
       this._dispatch(
         trackConversion('EdgeProviderConversion', {
           pluginId: this._plugin.storeId,
-          account: CORE_SELECTORS.getAccount(this._state),
+          account: this._state.core.account,
           currencyCode,
           exchangeAmount
         })

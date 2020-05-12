@@ -56,10 +56,10 @@ export const addTokenAsync = async (
   denomination: string,
   state: State
 ) => {
+  const { account } = state.core
   const uiWallet = UI_WALLET_SELECTORS.getWallet(state, walletId)
   // create modified object structure to match metaTokens
   const newTokenObj: CustomTokenInfo = WALLET_ACTIONS.assembleCustomToken(currencyName, currencyCode, contractAddress, denomination, uiWallet.type)
-  const account = CORE_SELECTORS.getAccount(state)
 
   // Check for conflicting currency codes:
   const { currencyConfig } = account
