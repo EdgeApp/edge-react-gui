@@ -11,7 +11,7 @@ import { type Dispatch, type GetState } from '../types/reduxTypes.js'
 
 export const loginWithEdge = (lobbyId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const account = state.core.account
+  const { account } = state.core
   account
     .fetchLobby(lobbyId)
     .then((lobby: EdgeLobby) => {

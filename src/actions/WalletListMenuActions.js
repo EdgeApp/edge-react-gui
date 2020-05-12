@@ -10,12 +10,12 @@ import { launchModal } from '../components/common/ModalProvider.js'
 import { showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants'
 import s from '../locales/strings.js'
-import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import Text from '../modules/UI/components/FormattedText'
 import * as WALLET_SELECTORS from '../modules/UI/selectors.js'
 import { B } from '../styles/common/textStyles.js'
 import { THEME } from '../theme/variables/airbitz.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
+import { getWalletName } from '../util/CurrencyWalletHelpers.js'
 import { showDeleteWalletModal } from './DeleteWalletModalActions.js'
 import { showResyncWalletModal } from './ResyncWalletModalActions.js'
 import { showSplitWalletModal } from './SplitWalletModalActions.js'
@@ -74,7 +74,8 @@ export function walletListMenuAction (walletId: string, option: WalletListMenuKe
     case 'viewXPub': {
       return (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
-        const wallet = CORE_SELECTORS.getWallet(state, walletId)
+        const { currencyWallets = {} } = state.core.account
+        const wallet = currencyWallets[walletId]
         const xPub = wallet.getDisplayPublicSeed()
         const xPubExplorer = wallet.currencyInfo.xpubExplorer && xPub ? sprintf(wallet.currencyInfo.xpubExplorer, xPub) : ''
         dispatch({ type: 'OPEN_VIEWXPUB_WALLET_MODAL', data: { xPub, walletId, xPubExplorer } })
@@ -84,7 +85,8 @@ export function walletListMenuAction (walletId: string, option: WalletListMenuKe
     case 'exportWalletTransactions': {
       return async (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
-        const wallet = state.core.wallets.byId[walletId]
+        const { currencyWallets = {} } = state.core.account
+        const wallet = currencyWallets[walletId]
         Actions[Constants.TRANSACTIONS_EXPORT]({ sourceWallet: wallet })
       }
     }
@@ -92,7 +94,10 @@ export function walletListMenuAction (walletId: string, option: WalletListMenuKe
     case 'getSeed': {
       return async (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
-        const walletName = CORE_SELECTORS.getWalletName(state, walletId)
+        const { account } = state.core
+        const { currencyWallets = {} } = account
+        const wallet = currencyWallets[walletId]
+
         try {
           const input = {
             label: s.strings.confirm_password_text,
@@ -109,7 +114,6 @@ export function walletListMenuAction (walletId: string, option: WalletListMenuKe
           }
 
           const validateInput = async input => {
-            const account = CORE_SELECTORS.getAccount(state)
             const isPassword = await account.checkPassword(input)
             if (isPassword) {
               dispatch({ type: 'PASSWORD_USED' })
@@ -139,7 +143,7 @@ export function walletListMenuAction (walletId: string, option: WalletListMenuKe
             message: (
               <Text>
                 {s.strings.fragment_wallets_get_seed_wallet_first_confirm_message_mobile}
-                <B>{walletName}</B>
+                <B>{getWalletName(wallet)}</B>
               </Text>
             ),
             input,
@@ -149,7 +153,6 @@ export function walletListMenuAction (walletId: string, option: WalletListMenuKe
           })
           const resolveValue = await launchModal(getSeedModal)
           if (resolveValue) {
-            const wallet = CORE_SELECTORS.getWallet(state, walletId)
             const seed = wallet.getDisplayPrivateSeed()
             const modal = createSimpleConfirmModal({
               title: s.strings.fragment_wallets_get_seed_wallet,
@@ -177,7 +180,8 @@ export function walletListMenuAction (walletId: string, option: WalletListMenuKe
       return async (dispatch: Dispatch, getState: GetState) => {
         try {
           const state = getState()
-          const wallet = CORE_SELECTORS.getWallet(state, walletId)
+          const { currencyWallets = {} } = state.core.account
+          const wallet = currencyWallets[walletId]
           const walletName = wallet.name
           const input = {
             label: s.strings.fragment_wallets_rename_wallet,

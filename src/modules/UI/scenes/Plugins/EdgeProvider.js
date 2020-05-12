@@ -26,7 +26,6 @@ import type { GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmat
 import { type GuiPlugin, type GuiPluginQuery } from '../../../../types/GuiPluginTypes.js'
 import type { Dispatch, State } from '../../../../types/reduxTypes.js'
 import { type GuiWallet } from '../../../../types/types.js'
-import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 
 type EdgeReceiveAddress = {
@@ -214,7 +213,7 @@ export class EdgeProvider extends Bridgeable {
   // Write data to user's account. This data is encrypted and persisted in their Edge
   // account and transferred between devices
   async writeData (data: { [key: string]: string }) {
-    const account = CORE_SELECTORS.getAccount(this._state)
+    const { account } = this._state.core
     const store = account.dataStore
     console.log('edgeProvider writeData: ', JSON.stringify(data))
     await Promise.all(Object.keys(data).map(key => store.setItem(this._plugin.storeId, key, data[key])))
@@ -226,7 +225,7 @@ export class EdgeProvider extends Bridgeable {
   // 'keys' is an array of strings with keys to lookup.
   // Returns an object with a map of key value pairs from the keys passed in
   async readData (keys: Array<string>): Promise<Object> {
-    const account = CORE_SELECTORS.getAccount(this._state)
+    const { account } = this._state.core
     const store = account.dataStore
     const returnObj = {}
     for (let i = 0; i < keys.length; i++) {
@@ -242,8 +241,9 @@ export class EdgeProvider extends Bridgeable {
 
   async getWalletHistory () {
     // Get Wallet Info
+    const { currencyWallets = {} } = this._state.core.account
     const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
-    const coreWallet = CORE_SELECTORS.getWallet(this._state, guiWallet.id)
+    const coreWallet = currencyWallets[guiWallet.id]
     const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(this._state)
 
     // Prompt user with yes/no modal for permission
@@ -292,8 +292,9 @@ export class EdgeProvider extends Bridgeable {
 
   // Request that the user spend to an address or multiple addresses
   async requestSpend (spendTargets: Array<EdgeProviderSpendTarget>, options: EdgeRequestSpendOptions = {}): Promise<EdgeTransaction | void> {
+    const { currencyWallets = {} } = this._state.core.account
     const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
-    const coreWallet = CORE_SELECTORS.getWallet(this._state, guiWallet.id)
+    const coreWallet = currencyWallets[guiWallet.id]
 
     const { currencyCode = coreWallet.currencyInfo.currencyCode, customNetworkFee, metadata, lockInputs = true, uniqueIdentifier } = options
 
@@ -325,8 +326,9 @@ export class EdgeProvider extends Bridgeable {
 
   // Request that the user spend to a URI
   async requestSpendUri (uri: string, options: EdgeRequestSpendOptions = {}): Promise<EdgeTransaction | void> {
+    const { currencyWallets = {} } = this._state.core.account
     const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
-    const coreWallet = CORE_SELECTORS.getWallet(this._state, guiWallet.id)
+    const coreWallet = currencyWallets[guiWallet.id]
     const result = await coreWallet.parseUri(uri)
 
     const { currencyCode = result.currencyCode, customNetworkFee, metadata, lockInputs = true, uniqueIdentifier } = options
@@ -350,8 +352,9 @@ export class EdgeProvider extends Bridgeable {
   // log response afterwards line 451
   async signMessage (message: string) /* EdgeSignedMessage */ {
     console.log(`signMessage message:***${message}***`)
+    const { currencyWallets = {} } = this._state.core.account
     const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
-    const coreWallet = CORE_SELECTORS.getWallet(this._state, guiWallet.id)
+    const coreWallet = currencyWallets[guiWallet.id]
     const signedMessage = await coreWallet.otherMethods.signMessageBase64(message, guiWallet.receiveAddress.publicAddress)
     console.log(`signMessage public address:***${guiWallet.receiveAddress.publicAddress}***`)
     console.log(`signMessage signedMessage:***${signedMessage}***`)
@@ -383,7 +386,7 @@ export class EdgeProvider extends Bridgeable {
       const exchangeAmount = await coreWallet.nativeToDenomination(transaction.nativeAmount, transaction.currencyCode)
       trackConversion('EdgeProviderConversion', {
         pluginId: this._plugin.storeId,
-        account: CORE_SELECTORS.getAccount(this._state),
+        account: this._state.core.account,
         currencyCode: transaction.currencyCode,
         exchangeAmount: Number(bns.abs(exchangeAmount))
       })
@@ -397,7 +400,7 @@ export class EdgeProvider extends Bridgeable {
       this._dispatch(
         trackConversion('EdgeProviderConversion', {
           pluginId: this._plugin.storeId,
-          account: CORE_SELECTORS.getAccount(this._state),
+          account: this._state.core.account,
           currencyCode,
           exchangeAmount
         })

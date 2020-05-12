@@ -13,7 +13,6 @@ import { type AccountPaymentParams } from '../components/scenes/CreateWalletAcco
 import { showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
-import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import { getExchangeDenomination } from '../modules/Settings/selectors.js'
 import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
@@ -26,7 +25,7 @@ export const createCurrencyWalletAndAddToSwap = (walletName: string, walletType:
   getState: GetState
 ) => {
   const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
 
   dispatch({ type: 'UI/WALLETS/CREATE_WALLET_START' })
   // Try and get the new format param from the legacy walletType if it's mentioned
@@ -59,7 +58,7 @@ export const createCurrencyWalletAndSelectForPlugins = (walletName: string, wall
   getState: GetState
 ) => {
   const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
 
   // dispatch({ type: 'UI/WALLETS/CREATE_WALLET_START' })
   // Try and get the new format param from the legacy walletType if it's mentioned
@@ -81,7 +80,7 @@ export const createCurrencyWallet = (
   importText?: string // for creating wallet from private seed / key
 ) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
 
   dispatch({ type: 'UI/WALLETS/CREATE_WALLET_START' })
   // Try and get the new format param from the legacy walletType if it's mentioned
@@ -110,7 +109,7 @@ export const createCurrencyWallet = (
 
 export const fetchAccountActivationInfo = (currencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
   const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[currencyCode]
   const currencyPlugin = account.currencyConfig[currencyPluginName]
   try {
@@ -163,7 +162,7 @@ export const fetchWalletAccountActivationPaymentInfo = (paymentParams: AccountPa
 export const checkHandleAvailability = (currencyCode: string, accountName: string) => async (dispatch: Dispatch, getState: GetState) => {
   dispatch({ type: 'IS_CHECKING_HANDLE_AVAILABILITY', data: true })
   const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
   const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[currencyCode]
   const currencyPlugin = account.currencyConfig[currencyPluginName]
   try {
@@ -188,9 +187,10 @@ export const createAccountTransaction = (createdWalletId: string, accountName: s
 ) => {
   // check available funds
   const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
+  const { currencyWallets = {} } = account
   const createdWallet = UI_SELECTORS.getWallet(state, createdWalletId)
-  const paymentWallet = CORE_SELECTORS.getWallet(state, paymentWalletId)
+  const paymentWallet = currencyWallets[paymentWalletId]
   const createdWalletCurrencyCode = createdWallet.currencyCode
   const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[createdWalletCurrencyCode]
   const currencyPlugin = account.currencyConfig[currencyPluginName]
@@ -248,7 +248,7 @@ export const createAccountTransaction = (createdWalletId: string, accountName: s
 
 export const createHandleUnavailableModal = (newWalletId: string, accountName: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
   account.changeWalletStates({
     [newWalletId]: {
       deleted: true

@@ -14,18 +14,18 @@ import {
   type CreateWalletAccountSelectOwnProps,
   CreateWalletAccountSelect
 } from '../../components/scenes/CreateWalletAccountSelectScene'
-import { getWallet } from '../../modules/Core/selectors.js'
 import { getDefaultDenomination } from '../../modules/UI/selectors.js'
 import type { Dispatch, State } from '../../types/reduxTypes.js'
 
 const mapStateToProps = (state: State, ownProps: CreateWalletAccountSelectOwnProps) => {
+  const { currencyWallets = {} } = state.core.account
   const wallets = state.ui.wallets.byId
   const handleActivationInfo = state.ui.scenes.createWallet.handleActivationInfo
   const walletAccountActivationPaymentInfo = state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
   const { supportedCurrencies, activationCost } = handleActivationInfo
   const { currencyCode, paymentAddress, amount, expireTime } = walletAccountActivationPaymentInfo
   const isCreatingWallet = state.ui.scenes.createWallet.isCreatingWallet
-  const existingCoreWallet = ownProps.existingWalletId ? getWallet(state, ownProps.existingWalletId) : null
+  const existingCoreWallet = ownProps.existingWalletId ? currencyWallets[ownProps.existingWalletId] : null
   const paymentDenomination = currencyCode ? getDefaultDenomination(state, currencyCode) : {}
   let paymentDenominationSymbol
   if (paymentDenomination) {

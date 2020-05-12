@@ -13,7 +13,6 @@ import { Airship, showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants'
 import { intl } from '../locales/intl'
 import s from '../locales/strings.js'
-import * as CORE_SELECTORS from '../modules/Core/selectors'
 import * as SETTINGS_SELECTORS from '../modules/Settings/selectors.js'
 import * as UI_SELECTORS from '../modules/UI/selectors'
 import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
@@ -43,8 +42,9 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (disp
       throw new Error('No currency selected') // Should never happen
     }
 
-    const fromCoreWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
-    const toCoreWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, toWallet.id)
+    const { currencyWallets = {} } = state.core.account
+    const fromCoreWallet: EdgeCurrencyWallet = currencyWallets[fromWallet.id]
+    const toCoreWallet: EdgeCurrencyWallet = currencyWallets[toWallet.id]
     const request: EdgeSwapRequest = {
       fromCurrencyCode,
       fromWallet: fromCoreWallet,
@@ -83,7 +83,8 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
   if (!fromWallet) {
     return
   }
-  const wallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
+  const { currencyWallets = {} } = state.core.account
+  const wallet: EdgeCurrencyWallet = currencyWallets[fromWallet.id]
   const currencyCode = state.cryptoExchange.fromCurrencyCode ? state.cryptoExchange.fromCurrencyCode : undefined
   const parentCurrencyCode = wallet.currencyInfo.currencyCode
   if (Constants.getSpecialCurrencyInfo(parentCurrencyCode).noMaxSpend) {
@@ -110,7 +111,7 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
 }
 
 async function fetchSwapQuote (state: State, request: EdgeSwapRequest): Promise<GuiSwapInfo> {
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
 
   // Find preferred swap provider:
   const activePlugins = bestOfPlugins(state.account.referralCache.accountPlugins, state.account.accountReferral, state.ui.settings.preferredSwapPluginId)
@@ -130,7 +131,7 @@ async function fetchSwapQuote (state: State, request: EdgeSwapRequest): Promise<
 
   // Currency conversion tools:
   const { fromWallet, toWallet, fromCurrencyCode, toCurrencyCode } = request
-  const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
+  const currencyConverter = account.exchangeCache
 
   // Format from amount:
   const fromPrimaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
@@ -272,6 +273,7 @@ const processSwapQuoteError = (error: any) => (dispatch: Dispatch, getState: Get
 
 export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
+  const { account } = state.core
   dispatch({ type: 'START_SHIFT_TRANSACTION' })
 
   const { quote, request } = swapInfo
@@ -283,7 +285,6 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
     const result = await quote.approve()
     await fromWallet.saveTx(result.transaction)
 
-    const account = CORE_SELECTORS.getAccount(state)
     const si = account.swapConfig[pluginId].swapInfo
 
     let category: string
@@ -390,7 +391,7 @@ export const selectWalletForExchange = (walletId: string, currencyCode: string, 
 
 export const checkEnabledExchanges = () => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
   // make sure exchanges are enabled
   let isAnyExchangeEnabled = false
   const exchanges = account.swapConfig
@@ -406,7 +407,8 @@ export const checkEnabledExchanges = () => (dispatch: Dispatch, getState: GetSta
 }
 
 async function getBalanceMessage (state: State, wallet: GuiWallet, currencyCode: string) {
-  const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
+  const { account } = state.core
+  const currencyConverter = account.exchangeCache
   const balanceInCrypto = wallet.nativeBalances[currencyCode]
   const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
   const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, currencyCode)

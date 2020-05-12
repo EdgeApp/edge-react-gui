@@ -13,7 +13,6 @@ import { showError } from '../components/services/AirshipInstance.js'
 import { EXCLAMATION, FEE_ALERT_THRESHOLD, MATERIAL_COMMUNITY, SEND_CONFIRMATION, TRANSACTION_DETAILS } from '../constants/indexConstants'
 import { getSpecialCurrencyInfo, getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
-import { getAccount, getWallet } from '../modules/Core/selectors.js'
 import { getExchangeDenomination as settingsGetExchangeDenomination } from '../modules/Settings/selectors.js'
 import Text from '../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
@@ -80,8 +79,10 @@ const BITPAY = {
 
 export const paymentProtocolUriReceived = ({ paymentProtocolURL }: EdgePaymentProtocolUri) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
+  const { currencyWallets = {} } = state.core.account
+
   const walletId = getSelectedWalletId(state)
-  const edgeWallet = getWallet(state, walletId)
+  const edgeWallet = currencyWallets[walletId]
 
   Promise.resolve(paymentProtocolURL)
     .then(paymentProtocolURL => edgeWallet.getPaymentProtocolInfo(paymentProtocolURL))
@@ -118,8 +119,10 @@ export const sendConfirmationUpdateTx = (guiMakeSpendInfo: GuiMakeSpendInfo | Ed
   getState: GetState
 ) => {
   const state = getState()
+  const { currencyWallets = {} } = state.core.account
+
   const walletId = getSelectedWalletId(state)
-  const edgeWallet = getWallet(state, walletId)
+  const edgeWallet = currencyWallets[walletId]
   const guiMakeSpendInfoClone = { ...guiMakeSpendInfo }
   const spendInfo = getSpendInfo(state, guiMakeSpendInfoClone)
 
@@ -139,8 +142,10 @@ export const sendConfirmationUpdateTx = (guiMakeSpendInfo: GuiMakeSpendInfo | Ed
 
 export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
+  const { currencyWallets = {} } = state.core.account
+
   const walletId = getSelectedWalletId(state)
-  const edgeWallet = getWallet(state, walletId)
+  const edgeWallet = currencyWallets[walletId]
   const spendInfo = getSpendInfo(state)
 
   edgeWallet
@@ -171,9 +176,11 @@ export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => 
 
 export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const account = getAccount(state)
+  const { account } = state.core
+  const { currencyWallets = {} } = account
+
   const selectedWalletId = getSelectedWalletId(state)
-  const wallet = getWallet(state, selectedWalletId)
+  const wallet = currencyWallets[selectedWalletId]
   const edgeUnsignedTransaction: EdgeTransaction = getTransaction(state)
 
   const guiWallet = getSelectedWallet(state)

@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeMetadata, EdgeTransaction } from 'edge-core-js'
+import { type EdgeCurrencyWallet, type EdgeMetadata, type EdgeTransaction } from 'edge-core-js'
 import { Actions } from 'react-native-router-flux'
 
 import { showError } from '../components/services/AirshipInstance.js'
@@ -44,8 +44,8 @@ export const setNewSubcategory = (newSubcategory: string) => (dispatch: Dispatch
     .catch(showError)
 }
 
-export const getSelectedWallet = (state: State) => {
+export const getSelectedWallet = (state: State): EdgeCurrencyWallet => {
   const { selectedWalletId } = state.ui.wallets
-  const selectedWallet = state.core.wallets.byId[selectedWalletId]
-  return selectedWallet
+  const { currencyWallets = {} } = state.core.account
+  return currencyWallets[selectedWalletId]
 }

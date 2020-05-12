@@ -7,7 +7,6 @@ import { refreshReceiveAddressRequest } from '../../actions/WalletActions'
 import type { RequestDispatchProps, RequestLoadingProps, RequestStateProps } from '../../components/scenes/RequestScene'
 import { Request } from '../../components/scenes/RequestScene'
 import * as Constants from '../../constants/indexConstants'
-import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
@@ -16,13 +15,14 @@ import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/ty
 import { getCurrencyInfo, getDenomFromIsoCode } from '../../util/utils'
 
 const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps => {
+  const { account } = state.core
+  const { currencyWallets = {} } = account
   const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
   const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
 
   const plugins: Object = SETTINGS_SELECTORS.getPlugins(state)
   const allCurrencyInfos: Array<EdgeCurrencyInfo> = plugins.allCurrencyInfos
   const currencyInfo: EdgeCurrencyInfo | void = getCurrencyInfo(allCurrencyInfos, currencyCode)
-  const account = CORE_SELECTORS.getAccount(state)
   const fioPlugin = account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO]
 
   if (!guiWallet || !currencyCode) {
@@ -40,11 +40,11 @@ const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps 
       useLegacyAddress: null,
       fioPlugin,
       fioAddressesExist: false,
-      isConnected: CORE_SELECTORS.isConnectedState(state)
+      isConnected: state.network.isConnected
     }
   }
 
-  const edgeWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, guiWallet.id)
+  const edgeWallet: EdgeCurrencyWallet = currencyWallets[guiWallet.id]
   const primaryDisplayDenomination: GuiDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
   const primaryExchangeDenomination: GuiDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
   const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
@@ -81,7 +81,7 @@ const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps 
     useLegacyAddress: state.ui.scenes.requestType.useLegacyAddress,
     fioPlugin,
     fioAddressesExist,
-    isConnected: CORE_SELECTORS.isConnectedState(state)
+    isConnected: state.network.isConnected
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch): RequestDispatchProps => ({

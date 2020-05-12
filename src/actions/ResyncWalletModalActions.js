@@ -6,16 +6,16 @@ import React from 'react'
 import { launchModal } from '../components/common/ModalProvider.js'
 import { RESYNC } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
-import { getWallet, getWalletName } from '../modules/Core/selectors.js'
 import Text from '../modules/UI/components/FormattedText/index'
 import OptionIcon from '../modules/UI/components/OptionIcon/OptionIcon.ui'
 import { B } from '../styles/common/textStyles.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
+import { getWalletName } from '../util/CurrencyWalletHelpers.js'
 
 export const showResyncWalletModal = (walletId: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const wallet = getWallet(state, walletId)
-  const walletName = getWalletName(state, walletId)
+  const { currencyWallets = {} } = state.core.account
+  const wallet = currencyWallets[walletId]
 
   // Use `launchModal` to put the modal component on screen:
   const modal = createYesNoModal({
@@ -23,7 +23,7 @@ export const showResyncWalletModal = (walletId: string) => async (dispatch: Disp
     message: (
       <Text style={{ textAlign: 'center' }}>
         {s.strings.fragment_wallets_resync_wallet_first_confirm_message_mobile}
-        <B>{`${walletName}?`}</B>
+        <B>{`${getWalletName(wallet)}?`}</B>
       </Text>
     ),
     icon: <OptionIcon iconName={RESYNC} />,

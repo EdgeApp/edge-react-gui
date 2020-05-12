@@ -27,7 +27,6 @@ import {
   SYNCED_ACCOUNT_DEFAULTS,
   SYNCED_ACCOUNT_TYPES
 } from '../Core/Account/settings.js'
-import * as CORE_SELECTORS from '../Core/selectors'
 import { updateWalletsEnabledTokens, updateWalletsRequest } from '../Core/Wallets/action.js'
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
@@ -60,7 +59,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
   console.log('Wallet Infos:', filteredWalletInfos)
 
   const state = getState()
-  const context = CORE_SELECTORS.getContext(state)
+  const { context } = state.core
   let accountInitObject = {
     account,
     touchIdInfo: touchIdInfo,
@@ -269,7 +268,7 @@ export const mergeSettings = (
 export const logoutRequest = (username?: string) => (dispatch: Dispatch, getState: GetState) => {
   Actions.popTo(Constants.LOGIN, { username })
   const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
   dispatch({ type: 'LOGOUT', data: { username } })
   if (typeof account.logout === 'function') account.logout()
 }

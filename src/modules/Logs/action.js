@@ -12,22 +12,25 @@ import * as LOGS_API from './api'
 export const sendLogs = (text: string) => async (dispatch: Dispatch, getState: GetState) => {
   dispatch({ type: 'LOGS/SEND_LOGS_REQUEST', text })
 
-  const core = getState().core
+  const state = getState()
+  const { account } = state.core
   let walletDump = ''
-  if (core && core.wallets && core.wallets.byId) {
+  if (account) {
+    const { currencyWallets = {} } = account
+
     let accountSummary = '***Account Wallet Summary***\n'
-    for (const walletId in core.wallets.byId) {
-      const codes = await core.wallets.byId[walletId].getEnabledTokens()
+    for (const walletId in currencyWallets) {
+      const codes = await currencyWallets[walletId].getEnabledTokens()
       if (codes.length === 0) {
-        codes.push(core.wallets.byId[walletId].currencyInfo.currencyCode)
+        codes.push(currencyWallets[walletId].currencyInfo.currencyCode)
       }
       for (let i = 0; i < codes.length; i++) {
-        const txs = await core.wallets.byId[walletId].getNumTransactions({ currencyCode: codes[i] })
+        const txs = await currencyWallets[walletId].getNumTransactions({ currencyCode: codes[i] })
         accountSummary += `${codes[i]}: ${txs} txs\n`
       }
     }
-    for (const walletId in core.wallets.byId) {
-      const wallet = core.wallets.byId[walletId]
+    for (const walletId in currencyWallets) {
+      const wallet = currencyWallets[walletId]
       if (wallet) {
         const dataDump = await wallet.dumpData()
         let ds = ''

@@ -8,7 +8,6 @@ import { sprintf } from 'sprintf-js'
 import { TwoButtonSimpleConfirmationModal } from '../components/modals/TwoButtonSimpleConfirmationModal.js'
 import { Airship } from '../components/services/AirshipInstance.js'
 import s from '../locales/strings.js'
-import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import type { State } from '../types/reduxTypes.js'
 
 const SWAP_COUNT_DATA_FILE = 'swapCountData.json'
@@ -37,7 +36,7 @@ const requestReview = async () => {
 }
 
 export const updateSwapCount = async (state: State) => {
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
   let swapCountData
   try {
     const swapCountDataStr = await account.disklet.getText(SWAP_COUNT_DATA_FILE)
