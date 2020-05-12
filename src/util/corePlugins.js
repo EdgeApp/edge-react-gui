@@ -29,7 +29,7 @@ export const currencyPlugins = {
   // edge-currency-accountbased:
   eos: true,
   ethereum: ENV.ETHEREUM_INIT,
-  ethereumclassic: true,
+  ethereumclassic: false,
   fio: true,
   stellar: true,
   ripple: true,
