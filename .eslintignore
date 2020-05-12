@@ -1,4 +1,7 @@
-node_modules
 **/scratch.*
-src/util/bridge/rolledUp.js
-src/util/bridge/injectThisInWebView.js
+/android/
+/flow-typed/
+/ios/
+/src/util/bridge/injectThisInWebView.js
+/src/util/bridge/rolledUp.js
+node_modules
