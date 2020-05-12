@@ -88,18 +88,6 @@ export const getFiatSymbol = (code: string) => {
   return getSymbolFromCurrency(code)
 }
 
-export const logInfo = (msg: string) => {
-  console.log('%c ' + msg, 'background: grey; font-weight: bold; display: block;')
-}
-
-export const logWarning = (msg: string) => {
-  console.log('%c ' + msg, 'background: yellow; font-weight: bold; display: block;')
-}
-
-export const logError = (msg: string) => {
-  console.log('%c ' + msg, 'background: red; font-weight: bold; display: block;')
-}
-
 // will take the metaTokens property on the wallet (that comes from currencyInfo), merge with account-level custom tokens added, and only return if enabled (wallet-specific)
 // $FlowFixMe
 export const mergeTokens = (preferredEdgeMetaTokens: Array<$ReadOnly<EdgeMetaToken | CustomTokenInfo>>, edgeMetaTokens: Array<CustomTokenInfo>) => {
