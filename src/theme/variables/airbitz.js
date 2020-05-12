@@ -78,9 +78,6 @@ export const THEME = {
 
     GENERIC_BLACK: 'black',
     GENERIC_RED: 'red',
-    GENERIC_ORANGE: 'orange',
-    GENERIC_GREEN: 'green',
-    GENERIC_PURPLE: 'purple',
     GENERIC_YELLOW: 'yellow',
     GENERIC_GREY: 'grey',
     GENERIC_WHITE: 'white',
