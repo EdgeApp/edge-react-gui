@@ -15,16 +15,6 @@ export function getHeaderHeight () {
   return 56
 }
 
-export const colors = {
-  gradient: {
-    light: '#3b7ada',
-    dark: '#2b5698'
-  },
-
-  primary: '#2a5799',
-  secondary: '#4977bb'
-}
-
 // https://projects.invisionapp.com/d/main#/console/10954562/239168414/inspect
 export const THEME = {
   rem (n: number) {
@@ -66,10 +56,6 @@ export const THEME = {
       DARK: '#0D2145',
       LIGHT: '#0E4B75'
     },
-    GRADIENT_REVERSE: {
-      LIGHT: '#0D2145',
-      DARK: '#0E4B75'
-    },
 
     ACCENT_BLUE: '#0073D9', // Airbitz blue
     ACCENT_ORANGE: '#F1AA19',
@@ -84,7 +70,6 @@ export const THEME = {
     GRAY_5: '#353535',
     WHITE: '#FFFFFF',
     OFF_WHITE: '#F6F6F6',
-    CLEAR: 'rgba(0, 0, 0, 0)',
     OPACITY_WHITE: 'rgba(255, 255, 255, 0.1)',
     OPAQUE_WHITE: 'rgba(255, 255, 255, 0.5)',
     OPACITY_GRAY_1: 'rgba(74, 81, 87, 0.1)',

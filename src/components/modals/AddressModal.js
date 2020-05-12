@@ -11,7 +11,7 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { checkPubAddress } from '../../modules/FioAddress/util'
 import styles from '../../styles/scenes/ScaneStyle'
-import { colors as COLORS } from '../../theme/variables/airbitz.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 import ResolutionError, { ResolutionErrorCode } from '../common/ResolutionError.js'
 
 // INTERACTIVE_MODAL /////////////////////////////////////////////////////////////////////////////
@@ -209,7 +209,7 @@ export class AddressModal extends Component<AddressModalProps, AddressModalState
     return (
       <View style={ModalStyle.modal}>
         <Modal.Icon>
-          <FAIcon name={Constants.ADDRESS_BOOK_O} size={24} color={COLORS.primary} />
+          <FAIcon name={Constants.ADDRESS_BOOK_O} size={24} color={THEME.COLORS.SECONDARY} />
         </Modal.Icon>
         <Modal.Container>
           <Modal.Icon.AndroidHackSpacer />
