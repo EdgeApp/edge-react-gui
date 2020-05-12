@@ -77,9 +77,6 @@ export const THEME = {
     ACCENT_MINT: '#66EDA8',
 
     GENERIC_BLACK: 'black',
-    GENERIC_RED: 'red',
-    GENERIC_YELLOW: 'yellow',
-    GENERIC_GREY: 'grey',
     GENERIC_WHITE: 'white',
 
     BLACK: '#25292C',
