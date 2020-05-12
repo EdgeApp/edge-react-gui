@@ -16,7 +16,7 @@ import { disableOtp, keepOtp } from '../../actions/OtpActions.js'
 import { linkReferralWithCurrencies, toggleAccountBalanceVisibility, updateActiveWalletsOrder } from '../../actions/WalletListActions.js'
 import { type WalletListMenuKey, walletListMenuAction } from '../../actions/WalletListMenuActions.js'
 import credLogo from '../../assets/images/cred_logo.png'
-import iconImage from '../../assets/images/otp/OTP-badge_sm.png'
+import otpIcon from '../../assets/images/otp/OTP-badge_sm.png'
 import WalletIcon from '../../assets/images/walletlist/my-wallets.png'
 import XPubModal from '../../connectors/XPubModalConnector.js'
 import * as Constants from '../../constants/indexConstants.js'
@@ -31,7 +31,6 @@ import { getActiveWalletIds, getWalletLoadingPercent } from '../../modules/UI/se
 import { dayText, nightText } from '../../styles/common/textStyles.js'
 import { addWalletStyle } from '../../styles/components/AddWalletStyle.js'
 import { buyMultipleCryptoStyle } from '../../styles/components/BuyCryptoStyle.js'
-import { TwoButtonModalStyle } from '../../styles/components/TwoButtonModalStyle.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
@@ -49,8 +48,8 @@ import { WalletListEmptyRow } from '../common/WalletListEmptyRow.js'
 import { WalletListRow } from '../common/WalletListRow.js'
 import { WalletListSortableRow } from '../common/WalletListSortableRow.js'
 import { WiredBalanceBox } from '../common/WiredBalanceBox.js'
-import { StaticModalComponent } from '../modals/StaticModalComponent.js'
-import { TwoButtonTextModalComponent } from '../modals/TwoButtonTextModalComponent.js'
+import { TwoButtonSimpleConfirmationModal } from '../modals/TwoButtonSimpleConfirmationModal.js'
+import { Airship } from '../services/AirshipInstance.js'
 
 type StateProps = {
   account: EdgeAccount,
@@ -73,10 +72,7 @@ type DispatchProps = {
 type Props = StateProps & DispatchProps
 
 type State = {
-  sorting: boolean,
-  showOtpResetModal: boolean,
-  showMessageModal: boolean,
-  messageModalMessage: ?string
+  sorting: boolean
 }
 
 class WalletListComponent extends Component<Props, State> {
@@ -84,18 +80,27 @@ class WalletListComponent extends Component<Props, State> {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
     this.state = {
-      sorting: false,
-      showOtpResetModal: this.props.otpResetPending,
-      showMessageModal: false,
-      messageModalMessage: null
+      sorting: false
     }
   }
 
-  UNSAFE_componentWillReceiveProps (nextProps: Props) {
-    if (nextProps.otpResetPending && nextProps.otpResetPending !== this.props.otpResetPending) {
-      this.setState({
-        showOtpResetModal: true
-      })
+  componentDidMount () {
+    this.checkOtpResetPendingModal()
+  }
+
+  checkOtpResetPendingModal = async () => {
+    if (this.props.otpResetPending) {
+      const resolved = await Airship.show(bridge => (
+        <TwoButtonSimpleConfirmationModal
+          bridge={bridge}
+          icon={<Image source={otpIcon} />}
+          title={s.strings.otp_modal_reset_headline}
+          subTitle={s.strings.otp_modal_reset_description}
+          cancelText={s.strings.request_review_answer_no}
+          doneText={s.strings.request_review_answer_yes}
+        />
+      ))
+      resolved ? this.props.keepOtp() : this.props.disableOtp()
     }
   }
 
@@ -156,54 +161,9 @@ class WalletListComponent extends Component<Props, State> {
             />
           </CrossFade>
         </View>
-        {this.launchModal()}
         <XPubModal />
       </SceneWrapper>
     )
-  }
-
-  launchModal = () => {
-    if (this.state.showOtpResetModal) {
-      return (
-        <TwoButtonTextModalComponent
-          style={TwoButtonModalStyle}
-          headerText={s.strings.otp_modal_reset_headline}
-          launchModal
-          middleText={s.strings.otp_modal_reset_description}
-          iconImage={iconImage}
-          cancelText={s.strings.otp_disable}
-          doneText={s.strings.otp_keep}
-          onCancel={this.disableOtp}
-          onDone={this.keepOtp}
-        />
-      )
-    }
-    if (this.state.showMessageModal && this.state.messageModalMessage != null) {
-      return <StaticModalComponent cancel={this.cancelStatic} body={this.state.messageModalMessage} modalDismissTimerSeconds={8} isVisible />
-    }
-
-    return null
-  }
-  disableOtp = () => {
-    this.props.disableOtp()
-    this.setState({
-      showMessageModal: true,
-      showOtpResetModal: false,
-      messageModalMessage: s.strings.otp_disabled_modal
-    })
-  }
-
-  keepOtp = () => {
-    this.props.keepOtp()
-    this.setState({
-      showOtpResetModal: false
-    })
-  }
-
-  cancelStatic = () => {
-    this.setState({
-      showMessageModal: false
-    })
   }
 
   renderSortableRow = (guiWallet: GuiWallet | void) => {

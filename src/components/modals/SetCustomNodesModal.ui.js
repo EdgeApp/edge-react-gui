@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react'
-import { TextInput, View } from 'react-native'
+import { Platform, StyleSheet, TextInput, View } from 'react-native'
 
 import { MATERIAL_COMMUNITY, SERVER } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
@@ -8,7 +8,9 @@ import { PrimaryButton, SecondaryButton } from '../../modules/UI/components/Butt
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import { InteractiveModal } from '../../modules/UI/components/Modals/InteractiveModal/InteractiveModal.ui.js'
-import styles, { styles as rawStyle } from '../../styles/SettingsComponentsStyle.js'
+import { THEME } from '../../theme/variables/airbitz.js'
+import { PLATFORM } from '../../theme/variables/platform.js'
+import { isIphoneX } from '../../util/isIphoneX.js'
 import { noOp } from '../../util/utils.js'
 
 export type SetCustomNodesModalOwnProps = {
@@ -107,3 +109,41 @@ export class SetCustomNodesModal extends Component<SetCustomNodeModalProps, SetC
     )
   }
 }
+
+export const rawStyle = {
+  customNodesInputWrap: {
+    borderWidth: 1,
+    borderColor: '#CCCCCC',
+    borderRadius: 3,
+    height: PLATFORM.deviceHeight * 0.13 - (Platform.OS === 'android' ? 23 : 0) + (isIphoneX ? 60 : 0),
+    padding: 3
+  },
+  customNodesInput: {
+    height: PLATFORM.deviceHeight * 0.13 - (Platform.OS === 'android' ? 23 : 0) + (isIphoneX ? 60 : 0) - 8,
+    color: THEME.COLORS.GRAY_1,
+    fontSize: 15,
+    fontFamily: THEME.FONTS.DEFAULT,
+    paddingVertical: 0,
+    textAlignVertical: 'top'
+  },
+  buttonsWrap: {
+    flexDirection: 'column'
+  },
+  primaryButton: {
+    marginBottom: 8
+  },
+  primaryButtonText: {
+    color: THEME.COLORS.WHITE
+  },
+  secondaryButtonText: {
+    color: THEME.COLORS.WHITE
+  },
+  placeholderText: {
+    color: THEME.COLORS.GRAY_2
+  },
+  placeholderUnderline: {
+    color: THEME.COLORS.TRANSPARENT
+  }
+}
+
+const styles = StyleSheet.create(rawStyle)
