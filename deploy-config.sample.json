@@ -29,6 +29,12 @@
       "develop": {
         "hockeyAppId": "xxxxxxxxx"
       }
+    },
+    "envJson": {
+      "yolo": {
+        "YOLO_USERNAME": "",
+        "YOLO_PASSWORD": ""
+      }
     }
   }
 }

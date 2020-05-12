@@ -7,6 +7,7 @@ import { Keyboard, StatusBar, StyleSheet, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 import { connect } from 'react-redux'
 
+import ENV from '../../../env.json'
 import { showSendLogsModal } from '../../actions/SettingsActions'
 import edgeBackgroundImage from '../../assets/images/edgeBackground/login_bg.jpg'
 import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
@@ -16,6 +17,7 @@ import THEME from '../../theme/variables/airbitz.js'
 import { type DeepLink } from '../../types/DeepLink.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { showHelpModal } from '../modals/HelpModal.js'
+import { showError } from '../services/AirshipInstance.js'
 import { LoadingScene } from './LoadingScene.js'
 
 type StateProps = {
@@ -37,11 +39,27 @@ type State = {
   passwordRecoveryKey?: string
 }
 
+let firstRun = true
+
 class LoginSceneComponent extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = { counter: 0 }
     slowlog(this, /.*/, global.slowlogOptions)
+  }
+
+  componentDidMount () {
+    const { YOLO_USERNAME, YOLO_PASSWORD } = ENV
+    if (YOLO_USERNAME != null && YOLO_PASSWORD != null && firstRun) {
+      const { context, initializeAccount } = this.props
+      firstRun = false
+      setTimeout(() => {
+        context
+          .loginWithPassword(YOLO_USERNAME, YOLO_PASSWORD)
+          .then(account => initializeAccount(account, {}))
+          .catch(showError)
+      }, 500)
+    }
   }
 
   componentDidUpdate (oldProps: Props) {
