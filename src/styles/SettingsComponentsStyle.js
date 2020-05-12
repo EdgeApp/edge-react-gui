@@ -84,7 +84,7 @@ export const styles = {
   },
   customNodesInputWrap: {
     borderWidth: 1,
-    borderColor: '#CCCCCC',
+    borderColor: THEME.COLORS.SETTINGS_COMPONENT_GREY,
     borderRadius: 3,
     height: PLATFORM.deviceHeight * 0.13 - (Platform.OS === 'android' ? 23 : 0) + (isIphoneX ? 60 : 0),
     padding: 3

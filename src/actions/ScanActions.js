@@ -35,7 +35,7 @@ import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
 import { B } from '../styles/common/textStyles.js'
 import styles from '../styles/scenes/ScaneStyle.js'
-import { colors as COLORS } from '../theme/variables/airbitz.js'
+import { THEME } from '../theme/variables/airbitz.js'
 import { type ReturnAddressLink, parseDeepLink } from '../types/DeepLink.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import type { GuiWallet } from '../types/types.js'
@@ -365,7 +365,7 @@ export const checkAndShowGetCryptoModal = () => async (dispatch: Dispatch, getSt
       threeButtonModal = createThreeButtonModal({
         title: s.strings.buy_crypto_modal_title,
         message: messageSyntax,
-        icon: <Icon name={SHOPPING_CART} type={MATERIAL_ICONS} size={32} color={COLORS.primary} />,
+        icon: <Icon name={SHOPPING_CART} type={MATERIAL_ICONS} size={32} color={THEME.COLORS.SECONDARY} />,
         primaryButton: {
           text: sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode),
           returnValue: 'buy'
@@ -385,7 +385,7 @@ export const checkAndShowGetCryptoModal = () => async (dispatch: Dispatch, getSt
       threeButtonModal = createThreeButtonModal({
         title: s.strings.buy_crypto_modal_title,
         message: messageSyntax,
-        icon: <Icon name={SHOPPING_CART} type={MATERIAL_ICONS} size={32} color={COLORS.primary} />,
+        icon: <Icon name={SHOPPING_CART} type={MATERIAL_ICONS} size={32} color={THEME.COLORS.SECONDARY} />,
         primaryButton: {
           text: sprintf(s.strings.buy_crypto_modal_exchange),
           returnValue: 'exchange'

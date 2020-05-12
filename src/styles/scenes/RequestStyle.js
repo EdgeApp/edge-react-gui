@@ -17,10 +17,8 @@ export const styles = StyleSheet.create({
     marginBottom: scale(10)
   },
 
-  // The white background is a theme-independent part of the QR code:
-  // eslint-disable-next-line react-native/no-color-literals
   qrContainer: {
-    backgroundColor: 'white',
+    backgroundColor: THEME.COLORS.QR_CODE_BACKGROUND,
     marginTop: scale(15),
     borderRadius: scale(4),
     padding: scale(4)

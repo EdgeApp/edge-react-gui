@@ -21,7 +21,7 @@ import * as SETTINGS_ACTIONS from '../modules/Settings/SettingsActions.js'
 import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import { convertCurrency } from '../modules/UI/selectors.js'
 import { newSpendingLimits } from '../reducers/SpendingLimitsReducer.js'
-import { colors, THEME } from '../theme/variables/airbitz.js'
+import { THEME } from '../theme/variables/airbitz.js'
 import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
 import { disableOtp, keepOtp } from './OtpActions.js'
 
@@ -302,7 +302,7 @@ export const showSendLogsModal = () => async (dispatch: Dispatch, getState: GetS
         <IonIcon
           name="ios-paper-plane"
           size={24}
-          color={colors.primary}
+          color={THEME.COLORS.SECONDARY}
           style={[
             {
               backgroundColor: THEME.COLORS.TRANSPARENT,

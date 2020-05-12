@@ -7,13 +7,14 @@ import { Platform, StatusBar, Text, TextInput } from 'react-native'
 import RNFS from 'react-native-fs'
 
 import ENV from '../env.json'
+import { THEME } from './theme/variables/airbitz.js'
 import { log, logToServer } from './util/logger'
 
 // Set up the transparent status bar at boot time on Android:
 StatusBar.setBarStyle('light-content')
 if (StatusBar.setTranslucent != null) {
   StatusBar.setTranslucent(true)
-  StatusBar.setBackgroundColor('#00000040')
+  StatusBar.setBackgroundColor(THEME.COLORS.APP_STATUS_BAR)
 }
 
 const ENABLE_WHY_DID_YOU_UPDATE = false

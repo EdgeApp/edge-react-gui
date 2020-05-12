@@ -7,6 +7,7 @@ import FAIcon from 'react-native-vector-icons/MaterialIcons'
 
 import * as Constants from '../../../../constants/indexConstants'
 import { intl } from '../../../../locales/intl'
+import { THEME } from '../../../../theme/variables/airbitz.js'
 import type { FlipInputFieldInfo } from '../../../../types/types.js'
 import * as UTILS from '../../../../util/utils.js'
 import { bottom, styles, top } from './styles.js'
@@ -150,14 +151,14 @@ export default class FlipInput extends Component<Props, State> {
         <TextInput
           style={[top.amount, Platform.OS === 'ios' ? {} : { paddingBottom: 2 }]}
           placeholder={'0'}
-          placeholderTextColor={'rgba(255, 255, 255, 0.60)'}
+          placeholderTextColor={THEME.COLORS.OPAQUE_WHITE_3}
           value={amount}
           onChangeText={onChangeText}
           autoCorrect={false}
           keyboardType="numeric"
-          selectionColor="white"
+          selectionColor={THEME.COLORS.WHITE}
           returnKeyType="done"
-          underlineColorAndroid={'transparent'}
+          underlineColorAndroid={THEME.COLORS.TRANSPARENT}
           ref={ref => {
             this.textInputFront = ref
           }}
@@ -177,14 +178,14 @@ export default class FlipInput extends Component<Props, State> {
         <TextInput
           style={[top.amount, Platform.OS === 'ios' ? {} : { paddingBottom: 2 }]}
           placeholder={'0'}
-          placeholderTextColor={'rgba(255, 255, 255, 0.60)'}
+          placeholderTextColor={THEME.COLORS.OPAQUE_WHITE_3}
           value={amount}
           onChangeText={onChangeText}
           autoCorrect={false}
           keyboardType="numeric"
-          selectionColor="white"
+          selectionColor={THEME.COLORS.WHITE}
           returnKeyType="done"
-          underlineColorAndroid={'transparent'}
+          underlineColorAndroid={THEME.COLORS.TRANSPARENT}
           ref={ref => {
             this.textInputBack = ref
           }}
