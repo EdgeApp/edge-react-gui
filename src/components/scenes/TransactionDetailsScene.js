@@ -14,7 +14,7 @@ import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/index.js'
 import FormattedText from '../../modules/UI/components/FormattedText/index.js'
 import styles, { iconSize } from '../../styles/scenes/TransactionDetailsStyle.js'
-import type { GuiContact, GuiWallet } from '../../types/types.js'
+import type { FioObtRecord, GuiContact, GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils.js'
 import { launchModal } from '../common/ModalProvider.js'
@@ -67,13 +67,15 @@ export type TransactionDetailsOwnProps = {
   currencyCode: string,
   guiWallet: GuiWallet,
   currentFiatAmount: string,
-  walletDefaultDenomProps: EdgeDenomination
+  walletDefaultDenomProps: EdgeDenomination,
+  fioObtData: FioObtRecord | null
 }
 
 export type TransactionDetailsDispatchProps = {
   setNewSubcategory: (string, Array<string>) => void,
   setTransactionDetails: (transaction: EdgeTransaction, edgeMetadata: EdgeMetadata) => void,
-  getSubcategories: () => void
+  getSubcategories: () => void,
+  refreshFioObtData: () => void
 }
 
 type State = {
@@ -144,6 +146,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
 
   componentDidMount () {
     this.props.getSubcategories()
+    this.props.refreshFioObtData()
   }
 
   // Inputs Components
@@ -295,6 +298,25 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     }
   }
 
+  renderFioData () {
+    const { fioObtData } = this.props
+    if (!fioObtData) return
+
+    return (
+      <View style={styles.tileContainerBig}>
+        <FormattedText style={styles.tileTextTop}>
+          {s.strings.fragment_transaction_list_sent_prefix}
+          {this.state.direction === 'receive' ? s.strings.word_to_in_convert_from_to_string : s.strings.fragment_send_from_label}
+        </FormattedText>
+        <View style={styles.tileRow}>
+          <FormattedText style={styles.tileTextBottom}>
+            {this.state.direction === 'receive' ? fioObtData.payee_fio_address : fioObtData.payer_fio_address}
+          </FormattedText>
+        </View>
+      </View>
+    )
+  }
+
   // Render
   render () {
     const { guiWallet } = this.props
@@ -329,6 +351,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                     </View>
                   </View>
                 </TouchableWithoutFeedback>
+                {this.renderFioData()}
                 <View style={styles.tileContainer}>
                   <FormattedText style={styles.tileTextTop}>{sprintf(s.strings.transaction_details_crypto_amount, crypto.currencyName)}</FormattedText>
                   <FormattedText style={styles.tileTextBottom}>

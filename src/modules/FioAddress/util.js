@@ -5,7 +5,7 @@ import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import { FIO_WALLET_TYPE } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import type { CcWalletMap } from '../../reducers/FioReducer'
-import type { FioConnectionWalletItem, GuiWallet } from '../../types/types'
+import type { FioConnectionWalletItem, FioObtRecord, GuiWallet } from '../../types/types'
 
 const CONNECTED_WALLETS = 'ConnectedWallets.json'
 
@@ -327,4 +327,18 @@ export const checkPubAddress = async (fioPlugin: EdgeCurrencyConfig, fioAddress:
   }
 
   return ''
+}
+
+export const getFioObtData = async (fioWallets: EdgeCurrencyWallet[]): Promise<FioObtRecord[]> => {
+  let obtDataRecords = []
+  for (const fioWallet: EdgeCurrencyWallet of fioWallets) {
+    try {
+      const { obt_data_records } = await fioWallet.otherMethods.fioAction('getObtData', {})
+      obtDataRecords = [...obtDataRecords, ...obt_data_records]
+    } catch (e) {
+      //
+    }
+  }
+
+  return obtDataRecords
 }

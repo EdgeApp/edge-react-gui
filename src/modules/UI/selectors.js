@@ -202,3 +202,8 @@ export const findWalletByFioAddress = async (state: State, fioAddress: string): 
     return null
   }
 }
+
+export const getFioObtDataByTxId = (state: State, txId: string): any | null => {
+  const { obtRecords } = state.ui.fio
+  return obtRecords.find(obtRecord => obtRecord.content.obt_id === txId)
+}

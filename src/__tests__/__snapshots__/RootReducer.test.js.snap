@@ -91,6 +91,7 @@ Object {
   "ui": Object {
     "fio": Object {
       "connectedWalletsByFioAddress": Object {},
+      "obtRecords": Array [],
     },
     "passwordReminder": Object {
       "lastLoginDate": -Infinity,

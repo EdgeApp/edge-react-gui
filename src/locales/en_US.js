@@ -98,6 +98,7 @@ const strings = {
   scan_invalid_address_error_description: 'Not a valid public address',
   fragment_send_send_to_hint: 'Public Address or Private Key',
   fragment_send_subtitle: 'Send',
+  fragment_send_from_label: 'from',
   fragment_transaction_exchange: 'Exchange',
   fragment_transaction_expense: 'Expense',
   fragment_transaction_income: 'Income',

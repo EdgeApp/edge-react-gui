@@ -74,10 +74,12 @@ describe('TransactionDetails.ui', () => {
       guiWallet: fakeGuiWallet,
       currentFiatAmount: '120',
       walletDefaultDenomProps: settings[fakeGuiWallet.currencyCode].denominations,
+      fioObtData: null,
       setNewSubcategory: jest.fn(),
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),
-      displayDropdownAlert: jest.fn()
+      displayDropdownAlert: jest.fn(),
+      refreshFioObtData: jest.fn()
     }
     const actual = renderer.render(<TransactionDetails {...props} />)
 
@@ -107,10 +109,12 @@ describe('TransactionDetails.ui', () => {
       guiWallet: fakeGuiWallet,
       currentFiatAmount: '120',
       walletDefaultDenomProps: settings[fakeGuiWallet.currencyCode].denominations,
+      fioObtData: null,
       setNewSubcategory: jest.fn(),
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),
-      displayDropdownAlert: jest.fn()
+      displayDropdownAlert: jest.fn(),
+      refreshFioObtData: jest.fn()
     }
     const actual = renderer.render(<TransactionDetails {...props} />)
 
@@ -140,10 +144,12 @@ describe('TransactionDetails.ui', () => {
       guiWallet: fakeGuiWallet,
       currentFiatAmount: '120',
       walletDefaultDenomProps: settings[fakeGuiWallet.currencyCode].denominations,
+      fioObtData: null,
       setNewSubcategory: jest.fn(),
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),
-      displayDropdownAlert: jest.fn()
+      displayDropdownAlert: jest.fn(),
+      refreshFioObtData: jest.fn()
     }
     const actual = renderer.render(<TransactionDetails {...props} />)
 
@@ -176,10 +182,12 @@ describe('TransactionDetails.ui', () => {
       guiWallet: fakeGuiWallet,
       currentFiatAmount: '120',
       walletDefaultDenomProps: settings[fakeGuiWallet.currencyCode].denominations,
+      fioObtData: null,
       setNewSubcategory: jest.fn(),
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),
-      displayDropdownAlert: jest.fn()
+      displayDropdownAlert: jest.fn(),
+      refreshFioObtData: jest.fn()
     }
     const actual = renderer.render(<TransactionDetails {...props} />)
 

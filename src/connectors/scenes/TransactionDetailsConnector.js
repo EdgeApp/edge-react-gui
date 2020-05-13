@@ -4,12 +4,14 @@ import { bns } from 'biggystring'
 import { type EdgeCurrencyInfo, type EdgeDenomination, type EdgeMetadata, type EdgeTransaction } from 'edge-core-js'
 import { connect } from 'react-redux'
 
+import { refreshFioObtData } from '../../actions/FioActions'
 import { getSubcategories, setNewSubcategory, setTransactionDetails } from '../../actions/TransactionDetailsActions.js'
 import type { TransactionDetailsOwnProps } from '../../components/scenes/TransactionDetailsScene.js'
 import { TransactionDetails } from '../../components/scenes/TransactionDetailsScene.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
 import type { Dispatch, State } from '../../types/reduxTypes.js'
+import type { FioObtRecord } from '../../types/types'
 import * as UTILS from '../../util/utils.js'
 
 const mapStateToProps = (state: State, ownProps: TransactionDetailsOwnProps) => {
@@ -35,6 +37,7 @@ const mapStateToProps = (state: State, ownProps: TransactionDetailsOwnProps) => 
     wallet.isoFiatCurrencyCode,
     parseFloat(cryptoAmount)
   )
+  const fioObtData: FioObtRecord | null = UI_SELECTORS.getFioObtDataByTxId(state, ownProps.edgeTransaction.txid)
 
   return {
     contacts,
@@ -43,7 +46,8 @@ const mapStateToProps = (state: State, ownProps: TransactionDetailsOwnProps) => 
     currencyCode,
     guiWallet: wallet,
     currentFiatAmount,
-    walletDefaultDenomProps
+    walletDefaultDenomProps,
+    fioObtData
   }
 }
 
@@ -52,7 +56,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(setTransactionDetails(transaction, edgeMetadata))
   },
   getSubcategories: () => dispatch(getSubcategories()),
-  setNewSubcategory: (newSubcategory: string) => dispatch(setNewSubcategory(newSubcategory))
+  setNewSubcategory: (newSubcategory: string) => dispatch(setNewSubcategory(newSubcategory)),
+  refreshFioObtData: () => dispatch(refreshFioObtData())
 })
 
 export default connect(

@@ -3,6 +3,7 @@
 import type { Reducer } from 'redux'
 
 import type { Action } from '../types/reduxActions'
+import type { FioObtRecord } from '../types/types'
 
 /**
  * { [fullCurrencyCode]: walletId }
@@ -14,11 +15,13 @@ export type CcWalletMap = {
 export type FioState = {
   connectedWalletsByFioAddress: {
     [fioAddress: string]: CcWalletMap
-  }
+  },
+  obtRecords: FioObtRecord[]
 }
 
 const initialState: FioState = {
-  connectedWalletsByFioAddress: {}
+  connectedWalletsByFioAddress: {},
+  obtRecords: []
 }
 
 export const fio: Reducer<FioState, Action> = (state = initialState, action: Action) => {
@@ -36,6 +39,12 @@ export const fio: Reducer<FioState, Action> = (state = initialState, action: Act
       return {
         ...state,
         connectedWalletsByFioAddress
+      }
+    case 'FIO/SET_OBT_DATA':
+      if (!action.data) throw new Error('Invalid action SET_OBT_DATA')
+      return {
+        ...state,
+        obtRecords: action.data
       }
     default:
       return state
