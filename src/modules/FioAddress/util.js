@@ -352,7 +352,7 @@ export const addToFioAddressCache = async (account: EdgeAccount, fioAddressesToA
 
   for (const fioAddressToAdd of fioAddressesToAdd) {
     if (!fioAddressesObject.addresses[fioAddressToAdd]) {
-      fioAddressesObject['addresses'][fioAddressToAdd] = true
+      fioAddressesObject.addresses[fioAddressToAdd] = true
       writeToDisklet = true
     }
   }

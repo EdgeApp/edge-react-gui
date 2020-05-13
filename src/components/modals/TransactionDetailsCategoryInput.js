@@ -33,7 +33,7 @@ type State = {
 }
 
 export class TransactionDetailsCategoryInput extends Component<Props, State> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     const { category, subCategory } = props
     const categories = this.formattedCategories(props.categories)
@@ -72,7 +72,7 @@ export class TransactionDetailsCategoryInput extends Component<Props, State> {
     bridge.resolve(null)
   }
 
-  render () {
+  render() {
     const { bridge } = this.props
     const { categories, category, subCategory } = this.state
     return (
@@ -122,6 +122,7 @@ export class TransactionDetailsCategoryInput extends Component<Props, State> {
       </AirshipModal>
     )
   }
+
   getSortedCategories = (): Array<string> => {
     const { categories, category } = this.state
     const selectedCategories = categories.filter(item => item.key === category)
@@ -129,6 +130,7 @@ export class TransactionDetailsCategoryInput extends Component<Props, State> {
     const sortedCategories = [...selectedCategories, ...filteredCategories]
     return sortedCategories.map(category => category.key)
   }
+
   getSortedSubCategories = () => {
     const { categories, subCategories } = this.props
     const { category } = this.state

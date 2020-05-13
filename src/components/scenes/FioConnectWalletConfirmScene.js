@@ -82,7 +82,7 @@ export class FioConnectWalletConfirmScene extends Component<Props, State> {
     this.setState({ acknowledge: !acknowledge })
   }
 
-  render () {
+  render() {
     const { fioAddressName, selectedWallets } = this.props
     const { acknowledge, connectWalletsLoading } = this.state
 
@@ -124,7 +124,7 @@ export class FioConnectWalletConfirmScene extends Component<Props, State> {
             <View style={styles.spacer} />
             <ABSlider
               forceUpdateGuiCounter={false}
-              resetSlider={true}
+              resetSlider
               onSlidingComplete={this.confirm}
               sliderDisabled={!acknowledge}
               disabledText={s.strings.send_confirmation_slide_to_confirm}

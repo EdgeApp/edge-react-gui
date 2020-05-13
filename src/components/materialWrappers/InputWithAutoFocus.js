@@ -53,15 +53,16 @@ class InputWithAutoFocus extends Component<Props, State> {
     placeholder: '',
     multiline: true
   }
+
   textInput: TextField
-  UNSAFE_componentWillMount () {
+  UNSAFE_componentWillMount() {
     this.textInput = null
     this.setState({
       inputText: ''
     })
   }
 
-  UNSAFE_componentWillReceiveProps (nextProps: any) {
+  UNSAFE_componentWillReceiveProps(nextProps: any) {
     if (nextProps.value !== this.state.inputText) {
       this.setState({
         inputText: nextProps.value
@@ -69,7 +70,7 @@ class InputWithAutoFocus extends Component<Props, State> {
     }
   }
 
-  render () {
+  render() {
     const value = this.props.value ? this.props.value : ''
     const error = this.props.error ? this.props.error : ''
     const {
@@ -140,11 +141,13 @@ class InputWithAutoFocus extends Component<Props, State> {
       this.props.onSubmitEditing()
     }
   }
+
   onFocus = () => {
     if (this.props.onFocus) {
       this.props.onFocus()
     }
   }
+
   onBlur = () => {
     if (this.props.onBlur) {
       this.props.onBlur()

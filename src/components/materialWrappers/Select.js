@@ -34,7 +34,7 @@ class Select extends Component<Props, State> {
     onFocus: null
   }
 
-  render () {
+  render() {
     const value = this.props.value ? this.props.value : ''
     const error = this.props.error ? this.props.error : ''
     const { containerStyle, fontSize, labelFontSize, baseColor, textColor, onChangeText, data, valueExtractor, labelExtractor } = this.props

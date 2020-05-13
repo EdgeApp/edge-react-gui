@@ -19,7 +19,7 @@ type Props = {
 type State = DisplayTime
 
 export class AutoLogoutModal extends Component<Props, State> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     const { autoLogoutTimeInSeconds } = this.props
     this.state = secondsToDisplay(autoLogoutTimeInSeconds)
@@ -37,10 +37,10 @@ export class AutoLogoutModal extends Component<Props, State> {
     bridge.resolve(null)
   }
 
-  render () {
+  render() {
     const { bridge } = this.props
 
-    const numberPickerOptions = [<Picker.Item key={'disable'} label={s.strings.string_disable} value={0} />]
+    const numberPickerOptions = [<Picker.Item key="disable" label={s.strings.string_disable} value={0} />]
     for (let i = 1; i < 60; i++) {
       const text = String(i)
       numberPickerOptions.push(<Picker.Item key={text} label={text} value={i} />)
@@ -64,7 +64,7 @@ export class AutoLogoutModal extends Component<Props, State> {
     return (
       <AirshipModal bridge={bridge} onCancel={this.handleCancel}>
         <IconCircle>
-          <IonIcon name={'ios-time'} size={THEME.rem(2)} color={THEME.COLORS.SECONDARY} />
+          <IonIcon name="ios-time" size={THEME.rem(2)} color={THEME.COLORS.SECONDARY} />
         </IconCircle>
         <ContentArea>
           <Text style={dayText('title')}>{s.strings.dialog_title}</Text>

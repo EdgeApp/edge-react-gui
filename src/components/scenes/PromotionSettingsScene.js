@@ -30,7 +30,7 @@ type DispatchProps = {
 type Props = StateProps & DispatchProps
 
 export class PromotionSettingsComponent extends React.Component<Props> {
-  render () {
+  render() {
     const { accountReferral, deviceReferral, removePromotion } = this.props
 
     const addIcon = <AntDesignIcon name="pluscircleo" color={THEME.COLORS.GRAY_2} size={THEME.rem(1)} />
@@ -111,10 +111,10 @@ export const PromotionSettingsScene = connect(
     deviceReferral: state.deviceReferral
   }),
   (dispatch: Dispatch): DispatchProps => ({
-    activatePromotion (installerId: string): Promise<void> {
+    activatePromotion(installerId: string): Promise<void> {
       return dispatch(activatePromotion(installerId))
     },
-    removePromotion (installerId: string): Promise<void> {
+    removePromotion(installerId: string): Promise<void> {
       return dispatch(removePromotion(installerId))
     }
   })

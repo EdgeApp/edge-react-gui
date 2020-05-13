@@ -12,7 +12,7 @@ type Props = {
   onComplete(): void
 }
 export default class PasswordRecovery extends Component<Props> {
-  render () {
+  render() {
     return (
       <SceneWrapper hasTabs={false} background="body">
         <PasswordRecoveryScreen

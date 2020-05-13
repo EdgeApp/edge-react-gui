@@ -20,24 +20,29 @@ class IconButton extends Component<Props, State> {
   static defaultProps = {
     iconType: Constants.MATERIAL_ICONS
   }
-  UNSAFE_componentWillMount () {
+
+  UNSAFE_componentWillMount() {
     this.setState({
       pressed: false
     })
   }
+
   _onPressButton = () => {
     this.props.onPress()
   }
+
   _onShowUnderlay = () => {
     this.setState({
       pressed: true
     })
   }
+
   _onHideUnderlay = () => {
     this.setState({
       pressed: false
     })
   }
+
   renderIcon = (icon: string, iconPressed: string, iconSize: number) => {
     let style = icon
     if (this.state.pressed) {
@@ -46,7 +51,7 @@ class IconButton extends Component<Props, State> {
     return <Icon style={style} name={this.props.icon} size={iconSize} type={this.props.iconType} />
   }
 
-  render () {
+  render() {
     const { container, icon, iconPressed, iconSize, underlayColor } = this.props.style
     return (
       <TouchableHighlight

@@ -47,7 +47,7 @@ export class AdvancedTransactionDetailsModal extends Component<AdvancedTransacti
     onDone()
   }
 
-  render () {
+  render() {
     const { txid, signedTx } = this.props
     const isTxId = !!txid
     const isSignedTx = !!signedTx
@@ -103,7 +103,7 @@ export type AdvancedTransactionDetailsOpts = {
 }
 
 export const createAdvancedTransactionDetailsModal = (opts: AdvancedTransactionDetailsOpts) => {
-  function AdvancedTransactionDetailsWrapped (props: { +onDone: Function }) {
+  function AdvancedTransactionDetailsWrapped(props: { +onDone: Function }) {
     return <AdvancedTransactionDetailsModal {...opts} {...props} />
   }
   return AdvancedTransactionDetailsWrapped

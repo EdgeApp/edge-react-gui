@@ -25,7 +25,7 @@ type State = {
 export class ModalProvider extends React.Component<{}, State> {
   +id: string
 
-  constructor (props: {}) {
+  constructor(props: {}) {
     super(props)
     this.state = { isHiding: false, queue: [] }
 
@@ -33,11 +33,11 @@ export class ModalProvider extends React.Component<{}, State> {
     globalInstances[this.id] = this
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     delete globalInstances[this.id]
   }
 
-  render () {
+  render() {
     // If the queue is empty, render nothing:
     if (this.state.queue.length === 0) return null
 
@@ -67,7 +67,7 @@ export class ModalProvider extends React.Component<{}, State> {
     this.setState({ isHiding: false, queue: this.state.queue.slice(1) })
   }
 
-  launchModal<Result> (Component: ComponentType<ModalProps<Result>>, modalProps: Object): Promise<Result> {
+  launchModal<Result>(Component: ComponentType<ModalProps<Result>>, modalProps: Object): Promise<Result> {
     return new Promise(resolve =>
       // Push the component onto the end of the queue:
       this.setState({
@@ -93,7 +93,7 @@ const globalInstances: { [id: string]: ModalProvider } = {}
 /**
  * If there are multiple ModalProviders mounted, just pick one:
  */
-function getInstance () {
+function getInstance() {
   for (const id in globalInstances) {
     return globalInstances[id]
   }
@@ -106,6 +106,6 @@ function getInstance () {
  * Receives a single prop, `onDone`, which it should call to hide itself.
  * The value passed to `onDone` becomes the returned promise result.
  */
-export async function launchModal<Result> (Component: ComponentType<ModalProps<Result>>, modalProps: Object = {}): Promise<Result> {
+export async function launchModal<Result>(Component: ComponentType<ModalProps<Result>>, modalProps: Object = {}): Promise<Result> {
   return getInstance().launchModal(Component, modalProps)
 }

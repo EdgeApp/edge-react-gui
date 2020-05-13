@@ -33,7 +33,7 @@ type LocalState = {
 }
 
 export class FioSentRequestDetailsComponent extends Component<Props, LocalState> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     const state: LocalState = {
       memo: '',
@@ -106,7 +106,7 @@ export class FioSentRequestDetailsComponent extends Component<Props, LocalState>
     )
   }
 
-  render () {
+  render() {
     return (
       <SceneWrapper>
         <SafeAreaView>

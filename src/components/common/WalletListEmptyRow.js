@@ -7,7 +7,7 @@ import { THEME } from '../../theme/variables/airbitz.js'
 import { scale } from '../../util/scaling.js'
 
 export class WalletListEmptyRow extends Component<{}> {
-  render () {
+  render() {
     return (
       <TouchableHighlight style={[styles.rowContainer, styles.emptyRow]} underlayColor={THEME.COLORS.ROW_PRESSED}>
         <View style={styles.rowContent}>

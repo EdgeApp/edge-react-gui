@@ -12,7 +12,7 @@ export type ContainerProps = {
   style?: StyleSheet.Styles
 }
 export class Container extends Component<ContainerProps> {
-  render () {
+  render() {
     const { children, style, ...props } = this.props
     return (
       <View style={[styles.container, style]} {...props}>
@@ -28,7 +28,7 @@ export type HeaderProps = {
   style?: StyleSheet.Styles
 }
 export class Header extends Component<HeaderProps> {
-  render () {
+  render() {
     const { children, style, ...props } = this.props
     return (
       <View style={[styles.header, style]} {...props}>
@@ -51,7 +51,7 @@ type AndroidHackSpacerProps = {
   style?: StyleSheet.Styles
 }
 export class AndroidHackSpacer extends Component<AndroidHackSpacerProps> {
-  render () {
+  render() {
     return <View style={styles.androidHackSpacer} />
   }
 }
@@ -63,7 +63,7 @@ export type IconProps = {
 }
 export class Icon extends Component<IconProps> {
   static AndroidHackSpacer = AndroidHackSpacer
-  render () {
+  render() {
     const { children, style, ...props } = this.props
     return (
       <View style={[styles.icon, style]} {...props}>
@@ -79,7 +79,7 @@ type TitleProps = {
   style?: StyleSheet.Styles
 }
 export class Title extends Component<TitleProps> {
-  render () {
+  render() {
     const { children, style, ...props } = this.props
     return (
       <Text style={[styles.title, style]} {...props}>
@@ -95,7 +95,7 @@ export type DescriptionProps = {
   style?: StyleSheet.Styles
 }
 export class Description extends Component<DescriptionProps> {
-  render () {
+  render() {
     const { children, style, ...props } = this.props
     return (
       <Text style={[styles.description, style]} {...props}>
@@ -111,7 +111,7 @@ type BodyProps = {
   style?: StyleSheet.Styles
 }
 export class Body extends Component<BodyProps> {
-  render () {
+  render() {
     const { children, style, ...props } = this.props
     return (
       <View style={[styles.body, style]} {...props}>
@@ -127,7 +127,7 @@ type FooterProps = {
   style?: StyleSheet.Styles
 }
 export class Footer extends Component<FooterProps> {
-  render () {
+  render() {
     const { children, style, ...props } = this.props
     return (
       <View style={[styles.footer, style]} {...props}>
@@ -143,7 +143,7 @@ type ItemProps = {
   style?: StyleSheet.Styles
 }
 export class Item extends Component<ItemProps> {
-  render () {
+  render() {
     const { children, style, ...props } = this.props
     return (
       <View style={[styles.item, style]} {...props}>
@@ -159,7 +159,7 @@ type RowProps = {
   style?: StyleSheet.Styles
 }
 export class Row extends Component<RowProps> {
-  render () {
+  render() {
     const { children, style, ...props } = this.props
     return (
       <View style={[styles.row, style]} {...props}>
@@ -185,7 +185,7 @@ export class InteractiveModal extends Component<Props> {
   static Item = Item
   static Row = Row
 
-  render () {
+  render() {
     const { isActive, style, ...props } = this.props
     const children = React.Children.toArray(this.props.children)
     const icon = children.find(child => child.type === InteractiveModal.Icon)

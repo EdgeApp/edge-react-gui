@@ -15,7 +15,7 @@ export const getEnabledTokensFromFile = async (wallet: EdgeCurrencyWallet): Prom
   }
 }
 
-export async function setEnabledTokens (wallet: EdgeCurrencyWallet, tokens: Array<string>, tokensToDisable?: Array<string>) {
+export async function setEnabledTokens(wallet: EdgeCurrencyWallet, tokens: Array<string>, tokensToDisable?: Array<string>) {
   // initialize array for eventual setting of file
   const finalTextArray = [...tokens]
   // now stringify the new tokens
@@ -29,7 +29,7 @@ export async function setEnabledTokens (wallet: EdgeCurrencyWallet, tokens: Arra
   return tokens
 }
 
-export async function updateEnabledTokens (wallet: EdgeCurrencyWallet, tokensToEnable: Array<string>, tokensToDisable: Array<string>) {
+export async function updateEnabledTokens(wallet: EdgeCurrencyWallet, tokensToEnable: Array<string>, tokensToDisable: Array<string>) {
   try {
     const tokensText = await wallet.disklet.getText(ENABLED_TOKENS_FILENAME)
     const enabledTokens = JSON.parse(tokensText)

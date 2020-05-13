@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
 })
 
 export default class Fees extends Component {
-  render () {
+  render() {
     const { primaryFee, secondaryFee } = this.props
     return (
       <View style={styles.view}>

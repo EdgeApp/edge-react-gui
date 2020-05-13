@@ -46,6 +46,7 @@ class ExchangeQuoteComponent extends Component<Props, State> {
     }
     return null
   }
+
   showExplanationForEstimate = () => {
     const modal = createSimpleConfirmModal({
       title: s.strings.estimated_exchange_rate,
@@ -55,6 +56,7 @@ class ExchangeQuoteComponent extends Component<Props, State> {
     })
     launchModal(modal).then((response: null) => {})
   }
+
   renderHeadline = () => {
     const styles = sceneStyles.quoteDetailContainer
     if (this.props.isEstimate) {
@@ -71,7 +73,8 @@ class ExchangeQuoteComponent extends Component<Props, State> {
     }
     return <FormattedText style={styles.headlineText}>{this.props.headline}</FormattedText>
   }
-  render () {
+
+  render() {
     const styles = sceneStyles.quoteDetailContainer
     const container = this.props.isTop ? styles.containerExpanded : styles.containerCollapsed
     return (

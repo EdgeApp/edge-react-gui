@@ -5,21 +5,21 @@ import dateformat from 'dateformat'
 /* globals jest */
 jest.mock('dateformat', () => (number, format) => dateformat(number, format, true)) // force timezone to UTC
 jest.mock('react-native-device-info', () => ({
-  getBuildNumber () {
+  getBuildNumber() {
     return '2019010101'
   },
-  getDeviceLocale () {
+  getDeviceLocale() {
     return 'en_US'
   },
-  getVersion () {
+  getVersion() {
     return '1.2.3'
   },
-  isTablet () {
+  isTablet() {
     return false
   }
 }))
 jest.mock('edge-login-ui-rn', () => ({
-  getSupportedBiometryType () {
+  getSupportedBiometryType() {
     return 'FaceID'
   }
 }))
@@ -29,8 +29,8 @@ jest.mock(
   'react-native-sound',
   () =>
     class Sound {
-      static setCategory () {}
-      play () {}
+      static setCategory() {}
+      play() {}
     }
 )
 jest.mock('react-native-camera', () => ({

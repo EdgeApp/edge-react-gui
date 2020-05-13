@@ -152,7 +152,7 @@ export const refreshAccountReferral = () => async (dispatch: Dispatch, getState:
 /**
  * Writes the account referral information from redux to the disk.
  */
-async function saveAccountReferral (state: State): Promise<void> {
+async function saveAccountReferral(state: State): Promise<void> {
   const { account } = state.core
   const { accountReferral } = state.account
   await account.disklet.setText(ACCOUNT_REFERRAL_FILE, JSON.stringify(accountReferral))
@@ -161,7 +161,7 @@ async function saveAccountReferral (state: State): Promise<void> {
 /**
  * Writes the referral cache from redux to the disk.
  */
-async function saveReferralCache (state: State): Promise<void> {
+async function saveReferralCache(state: State): Promise<void> {
   const { account } = state.core
   const { referralCache } = state.account
   await account.localDisklet.setText(REFERRAL_CACHE_FILE, JSON.stringify(referralCache))
@@ -170,7 +170,7 @@ async function saveReferralCache (state: State): Promise<void> {
 /**
  * Turns on-disk data into a AccountReferral structure.
  */
-function unpackAccountReferral (raw: any): AccountReferral {
+function unpackAccountReferral(raw: any): AccountReferral {
   const clean = asDiskAccountReferral(raw)
   const out: AccountReferral = {
     creationDate: clean.creationDate,

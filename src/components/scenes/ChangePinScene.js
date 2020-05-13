@@ -29,7 +29,7 @@ export default class ChangePassword extends Component<ChangePinComponentProps> {
     this.props.onComplete()
   }
 
-  render () {
+  render() {
     return (
       <SceneWrapper hasTabs={false} background="body">
         <ChangePinScreen account={this.props.account} context={this.props.context} onComplete={this.onComplete} onCancel={this.onComplete} showHeader={false} />

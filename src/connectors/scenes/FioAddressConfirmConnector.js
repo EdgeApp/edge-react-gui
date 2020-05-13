@@ -29,7 +29,4 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
     })
 })
 
-export const FioAddressConfirmConnector = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(FioAddressConfirmScene)
+export const FioAddressConfirmConnector = connect(mapStateToProps, mapDispatchToProps)(FioAddressConfirmScene)

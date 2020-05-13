@@ -37,7 +37,4 @@ const mapStateToProps = (state: State, ownProps: OwnProps): Props => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  null
-)(CryptoExchangeMessageBoxComponent)
+export default connect(mapStateToProps, null)(CryptoExchangeMessageBoxComponent)

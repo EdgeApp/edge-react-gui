@@ -27,7 +27,7 @@ export type SceneProps = {
 type Props = StateProps & SceneProps
 
 export class FioAddressDetailsScene extends Component<Props, State> {
-  componentDidMount () {
+  componentDidMount() {
     const { fioAddress } = this.props
 
     if (!fioAddress) {
@@ -42,7 +42,7 @@ export class FioAddressDetailsScene extends Component<Props, State> {
     Actions[Constants.FIO_CONNECT_TO_WALLETS]({ fioAddressName })
   }
 
-  renderButton () {
+  renderButton() {
     if (this.props.registerSuccess) {
       return (
         <View style={styles.buttons}>
@@ -66,7 +66,7 @@ export class FioAddressDetailsScene extends Component<Props, State> {
     )
   }
 
-  render () {
+  render() {
     const { fioAddressName, expiration } = this.props
     return (
       <SceneWrapper>

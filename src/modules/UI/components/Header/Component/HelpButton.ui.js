@@ -13,10 +13,10 @@ const HELP_TEXT = s.strings.string_help
 type Props = {}
 
 export default class HelpButton extends Component<Props> {
-  render () {
+  render() {
     return (
       <TouchableOpacity style={styles.sideTextWrap} onPress={() => showHelpModal()}>
-        <T style={[styles.sideText]}>{HELP_TEXT}</T>
+        <T style={styles.sideText}>{HELP_TEXT}</T>
       </TouchableOpacity>
     )
   }

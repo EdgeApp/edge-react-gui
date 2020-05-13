@@ -7,7 +7,7 @@ import { scale } from '../../util/scaling.js'
 /**
  * Calculates the height of the header (where the back button lives).
  */
-export function getHeaderHeight () {
+export function getHeaderHeight() {
   if (Platform.OS === 'ios') {
     const majorVersionIOS = Number(Platform.Version)
     return majorVersionIOS > 9 && majorVersionIOS < 11 ? 62 : 44
@@ -17,7 +17,7 @@ export function getHeaderHeight () {
 
 // https://projects.invisionapp.com/d/main#/console/10954562/239168414/inspect
 export const THEME = {
-  rem (n: number) {
+  rem(n: number) {
     return Math.round(n * scale(16))
   },
 

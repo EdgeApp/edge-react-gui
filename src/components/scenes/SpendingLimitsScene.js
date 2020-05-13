@@ -33,7 +33,7 @@ export type SpendingLimitsState = {
   transactionIsEnabled: boolean
 }
 export class SpendingLimitsComponent extends Component<SpendingLimitsOwnProps, SpendingLimitsState> {
-  constructor (props: SpendingLimitsOwnProps) {
+  constructor(props: SpendingLimitsOwnProps) {
     super(props)
     this.state = {
       password: '',
@@ -42,7 +42,7 @@ export class SpendingLimitsComponent extends Component<SpendingLimitsOwnProps, S
     }
   }
 
-  render () {
+  render() {
     const { currencySymbol } = this.props
     const { transactionAmount, transactionIsEnabled } = this.state
     const { onTransactionIsEnabledChanged, onTransactionAmountChanged, onPasswordChanged, onSubmit } = this
@@ -51,7 +51,7 @@ export class SpendingLimitsComponent extends Component<SpendingLimitsOwnProps, S
       <SafeAreaView style={{}}>
         <Gradient style={styles.gradient} />
 
-        <Scene key={'SpendingLimitsSceneKey'} style={styles.scene}>
+        <Scene key="SpendingLimitsSceneKey" style={styles.scene}>
           <KeyboardAwareScrollView>
             <Scene.Header>
               <PasswordInput label={ENTER_YOUR_PASSWORD} onChangeText={onPasswordChanged} />
@@ -79,7 +79,7 @@ export class SpendingLimitsComponent extends Component<SpendingLimitsOwnProps, S
                   label={TRANSACTION_SPENDING_LIMIT_PLACEHOLDER}
                   suffix={currencySymbol}
                   autoCorrect={false}
-                  keyboardType={'numeric'}
+                  keyboardType="numeric"
                 />
               </Scene.Row>
             </Scene.Body>

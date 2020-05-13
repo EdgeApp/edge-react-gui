@@ -12,7 +12,7 @@ export type Props = {
   thumbnailPath: string,
   direction: string
 }
-export function PayeeIcon (props: Props) {
+export function PayeeIcon(props: Props) {
   if (props.thumbnailPath) {
     return <Image source={{ uri: props.thumbnailPath }} style={styles.payeeIcon} />
   }

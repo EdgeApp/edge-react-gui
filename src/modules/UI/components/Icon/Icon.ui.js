@@ -34,7 +34,7 @@ const Icon = ({ style, name, size, type }: Props) => {
     case Constants.MATERIAL_COMMUNITY:
       return <MCIcon style={style} color={THEME.COLORS.SECONDARY} name={name} size={size} />
     default:
-      return <FAIcon name={'question'} color={THEME.COLORS.SECONDARY} style={style} />
+      return <FAIcon name="question" color={THEME.COLORS.SECONDARY} style={style} />
   }
 }
 

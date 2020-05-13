@@ -26,7 +26,7 @@ export type PasswordRecoveryReminderModalProps = PasswordRecoveryReminderModalOw
   PasswordRecoveryReminderModalDispatchProps
 
 export class PasswordRecoveryReminderModalComponent extends Component<PasswordRecoveryReminderModalProps> {
-  render () {
+  render() {
     const { isVisible, hidePasswordRecoveryReminderModal, onGoToPasswordRecoveryScene } = this.props
     return (
       <InteractiveModal legacy isActive={isVisible} onModalHide={hidePasswordRecoveryReminderModal}>

@@ -11,10 +11,10 @@ export type TextProps = {
   style?: StyleSheet.Styles
 }
 class Text extends Component<TextProps> {
-  render () {
+  render() {
     const { children, style, ...props } = this.props
     return (
-      <RNText numberOfLines={1} ellipsizeMode={'middle'} style={[styles.buttonText, styles.primaryButtonText, style]} {...props}>
+      <RNText numberOfLines={1} ellipsizeMode="middle" style={[styles.buttonText, styles.primaryButtonText, style]} {...props}>
         {children}
       </RNText>
     )
@@ -28,7 +28,7 @@ export type Props = {
 }
 export class PrimaryButton extends Component<Props> {
   static Text = Text
-  render () {
+  render() {
     const { children, style, ...props } = this.props
     return (
       <TouchableHighlight underlayColor={rawStyles.primaryButtonUnderlay.color} style={[styles.button, styles.primaryButton, style]} {...props}>

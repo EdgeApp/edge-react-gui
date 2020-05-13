@@ -56,7 +56,7 @@ type LocalState = {
 }
 
 export class FioRequestConfirmationComponent extends Component<Props, LocalState> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = {
       loading: false,
@@ -65,7 +65,7 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
     }
   }
 
-  async componentDidMount () {
+  async componentDidMount() {
     if (this.props.fioWallets) {
       const walletAddresses = []
       for (const fioWallet: EdgeCurrencyWallet of this.props.fioWallets) {
@@ -146,7 +146,7 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
     return item.fioAddress
   }
 
-  render () {
+  render() {
     const { loading, selectedFioAddress, walletAddresses } = this.state
     const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio } = this.props
     if (!primaryCurrencyInfo || !secondaryCurrencyInfo) return null
@@ -198,7 +198,7 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
         </View>
         <View style={styles.button}>
           <PrimaryButton onPress={this.onNextPress}>
-            {loading ? <ActivityIndicator size={'small'} /> : <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>}
+            {loading ? <ActivityIndicator size="small" /> : <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>}
           </PrimaryButton>
         </View>
         <View style={CryptoExchangeSceneStyle.shim} />

@@ -29,17 +29,14 @@ export const mapStateToProps = (state: State, ownProps: OwnProps): StateProps =>
 }
 
 export const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-  shift (swapInfo: GuiSwapInfo) {
+  shift(swapInfo: GuiSwapInfo) {
     dispatch(shiftCryptoCurrency(swapInfo))
   },
-  timeExpired (swapInfo: GuiSwapInfo) {
+  timeExpired(swapInfo: GuiSwapInfo) {
     dispatch(exchangeTimerExpired(swapInfo))
   }
 })
 
-const CryptoExchangeQuoteConnector = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CryptoExchangeQuoteScreenComponent)
+const CryptoExchangeQuoteConnector = connect(mapStateToProps, mapDispatchToProps)(CryptoExchangeQuoteScreenComponent)
 
 export { CryptoExchangeQuoteConnector }

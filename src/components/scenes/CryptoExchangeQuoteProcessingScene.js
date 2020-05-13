@@ -8,7 +8,7 @@ import FormattedText from '../../modules/UI/components/FormattedText/index'
 import { styles } from '../../styles/scenes/CryptoExchangeQuoteProcessingSceneStyles.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
-export function CryptoExchangeQuoteProcessingScreenComponent (props: {}) {
+export function CryptoExchangeQuoteProcessingScreenComponent(props: {}) {
   return (
     <SceneWrapper hasTabs={false}>
       <View style={styles.top}>

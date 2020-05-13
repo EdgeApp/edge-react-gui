@@ -42,7 +42,7 @@ export type Props = {
   usersView: boolean
 }
 export default class Main extends Component<Props> {
-  render () {
+  render() {
     const { usersView } = this.props
 
     return usersView ? (

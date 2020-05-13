@@ -38,13 +38,14 @@ type State = {
 }
 
 class CreateWalletReviewComponent extends Component<Props, State> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = {
       isAnimationVisible: false
     }
   }
-  componentDidMount () {
+
+  componentDidMount() {
     Keyboard.dismiss()
   }
 
@@ -63,7 +64,7 @@ class CreateWalletReviewComponent extends Component<Props, State> {
     Actions.pop()
   }
 
-  render () {
+  render() {
     const { isCreatingWallet } = this.props
     const { isAnimationVisible } = this.state
 
@@ -89,12 +90,12 @@ class CreateWalletReviewComponent extends Component<Props, State> {
                 </Text>
               </View>
 
-              <View style={[styles.buttons]}>
-                <SecondaryButton style={[styles.cancel]} onPress={this.onBack}>
+              <View style={styles.buttons}>
+                <SecondaryButton style={styles.cancel} onPress={this.onBack}>
                   <SecondaryButton.Text>{s.strings.title_back}</SecondaryButton.Text>
                 </SecondaryButton>
 
-                <PrimaryButton style={[styles.create]} onPress={this.onSubmit} disabled={isCreatingWallet}>
+                <PrimaryButton style={styles.create} onPress={this.onSubmit} disabled={isCreatingWallet}>
                   {isCreatingWallet ? <ActivityIndicator /> : <PrimaryButton.Text>{s.strings.fragment_create_wallet_create_wallet}</PrimaryButton.Text>}
                 </PrimaryButton>
               </View>
@@ -103,7 +104,7 @@ class CreateWalletReviewComponent extends Component<Props, State> {
         ) : (
           <FullScreenTransitionComponent
             onDone={() => Actions.popTo(WALLET_LIST_SCENE)}
-            image={<Image source={CheckIcon} style={[styles.currencyLogo, { marginBottom: 36 }]} resizeMode={'cover'} />}
+            image={<Image source={CheckIcon} style={[styles.currencyLogo, { marginBottom: 36 }]} resizeMode="cover" />}
             text={<Text style={styles.createWalletImportTransitionText}>{s.strings.create_wallet_import_successful}</Text>}
           />
         )}
@@ -117,7 +118,7 @@ export const CreateWalletReviewScene = connect(
     isCreatingWallet: state.ui.scenes.createWallet.isCreatingWallet
   }),
   (dispatch: Dispatch): DispatchProps => ({
-    createCurrencyWallet (walletName: string, walletType: string, fiatCurrencyCode: string, importText?: string) {
+    createCurrencyWallet(walletName: string, walletType: string, fiatCurrencyCode: string, importText?: string) {
       dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode, true, false, importText))
     }
   })

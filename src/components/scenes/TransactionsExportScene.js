@@ -23,7 +23,7 @@ type StateProps = {
 type Props = StateProps & PassedProps
 
 export class TransactionsExportSceneComponent extends Component<Props> {
-  render () {
+  render() {
     return (
       <SceneWrapper background="body">
         <View style={styles.shim} />

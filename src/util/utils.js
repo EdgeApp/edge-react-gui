@@ -12,7 +12,7 @@ import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet } from '
 
 export const DIVIDE_PRECISION = 18
 
-export function capitalize (string: string): string {
+export function capitalize(string: string): string {
   if (!string) return ''
   const firstLetter = string.charAt(0).toUpperCase()
   const otherLetters = string.slice(1)
@@ -58,7 +58,7 @@ export const getSettingsTokenMultiplier = (currencyCode: string, settings: Objec
   return multiplier
 }
 
-export function getWalletDefaultDenomProps (
+export function getWalletDefaultDenomProps(
   wallet: GuiWallet,
   settingsState: Object,
   currencyCode?: string // for metaTokens
@@ -188,7 +188,7 @@ export const convertDisplayToNative = (nativeToDisplayRatio: string) => (display
 
 export const isCryptoParentCurrency = (wallet: GuiWallet, currencyCode: string) => currencyCode === wallet.currencyCode
 
-export function getNewArrayWithoutItem<T> (array: Array<T>, targetItem: T): Array<T> {
+export function getNewArrayWithoutItem<T>(array: Array<T>, targetItem: T): Array<T> {
   return array.filter(item => item !== targetItem)
 }
 
@@ -196,7 +196,7 @@ export const getNewArrayWithItem = (array: Array<any>, item: any) => (!array.inc
 
 const restrictedCurrencyCodes = ['BTC']
 
-export function getDenomFromIsoCode (currencyCode: string): GuiDenomination {
+export function getDenomFromIsoCode(currencyCode: string): GuiDenomination {
   if (restrictedCurrencyCodes.findIndex(item => item === currencyCode) !== -1) {
     return {
       name: '',
@@ -213,7 +213,7 @@ export function getDenomFromIsoCode (currencyCode: string): GuiDenomination {
   return denom
 }
 
-export function getAllDenomsOfIsoCurrencies (): Array<GuiDenomination> {
+export function getAllDenomsOfIsoCurrencies(): Array<GuiDenomination> {
   // Convert map to an array
   const denomArray = []
 
@@ -254,7 +254,7 @@ export const getSupportedFiats = (defaultCurrencyCode?: string): Array<{ label: 
  * Adds the `iso:` prefix to a currency code, if it's missing.
  * @param {*} currencyCode A currency code we believe to be a fiat value.
  */
-export function fixFiatCurrencyCode (currencyCode: string) {
+export function fixFiatCurrencyCode(currencyCode: string) {
   // These are included in the currency-symbol-map library,
   // and therefore might sneak into contexts where we expect fiat codes:
   if (currencyCode === 'BTC' || currencyCode === 'ETH') return currencyCode
@@ -324,7 +324,7 @@ export type PrecisionAdjustParams = {
   primaryExchangeMultiplier: string
 }
 
-export function precisionAdjust (params: PrecisionAdjustParams): number {
+export function precisionAdjust(params: PrecisionAdjustParams): number {
   const order = Math.floor(Math.log(params.exchangeSecondaryToPrimaryRatio) / Math.LN10 + 0.000000001) // because float math sucks like that
   const exchangeRateOrderOfMagnitude = Math.pow(10, order)
 
@@ -373,7 +373,7 @@ export const daysBetween = (DateInMsA: number, dateInMsB: number) => {
 // Does a shallow compare of obj1 to obj2 and returns the element name of the element which differs
 // between the two. Will recursively deep compare any unequal elements specified in traverseObjects.
 // Returns the element name of the unequal element or '' if objects are equal
-export function getObjectDiff (obj1: Object, obj2: Object, traverseObjects?: Object, ignoreObjects?: Object): string {
+export function getObjectDiff(obj1: Object, obj2: Object, traverseObjects?: Object, ignoreObjects?: Object): string {
   const comparedElements = {}
   for (const e in obj1) {
     if (ignoreObjects && ignoreObjects[e]) {
@@ -424,7 +424,7 @@ export function getObjectDiff (obj1: Object, obj2: Object, traverseObjects?: Obj
   return ''
 }
 
-export function runWithTimeout<T> (promise: Promise<T>, ms: number, error: Error = new Error(`Timeout of ${ms}ms exceeded`)): Promise<T> {
+export function runWithTimeout<T>(promise: Promise<T>, ms: number, error: Error = new Error(`Timeout of ${ms}ms exceeded`)): Promise<T> {
   const timeout = new Promise((resolve, reject) => {
     const timer = setTimeout(() => reject(error), ms)
     const onDone = () => clearTimeout(timer)
@@ -433,7 +433,7 @@ export function runWithTimeout<T> (promise: Promise<T>, ms: number, error: Error
   return Promise.race([promise, timeout])
 }
 
-export function snooze (ms: number): Promise<void> {
+export function snooze(ms: number): Promise<void> {
   return new Promise((resolve: any) => setTimeout(resolve, ms))
 }
 
@@ -546,7 +546,7 @@ export const getFeeDisplayed = (number: number): string => {
   return number.toFixed(defaultAmount)
 }
 
-export function splitTransactionCategory (
+export function splitTransactionCategory(
   fullCategory: string
 ): {
   category: string,

@@ -26,7 +26,4 @@ export const mapDispatchToProps = (dispatch: Dispatch) => ({
   setPasswordReminder: (passwordReminder: PasswordReminder) => dispatch(setPasswordReminder(passwordReminder))
 })
 
-export const passwordReminderModalConnector = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PasswordReminderModal)
+export const passwordReminderModalConnector = connect(mapStateToProps, mapDispatchToProps)(PasswordReminderModal)

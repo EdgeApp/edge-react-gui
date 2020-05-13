@@ -24,7 +24,7 @@ type State = {
 }
 
 class MenuDropDown extends Component<Props, State> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = {
       height: 0,
@@ -33,7 +33,7 @@ class MenuDropDown extends Component<Props, State> {
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
-  shouldComponentUpdate (nextProps: Props, nextState: State) {
+  shouldComponentUpdate(nextProps: Props, nextState: State) {
     let diffElement2: string = ''
     const diffElement = getObjectDiff(this.props, nextProps, {
       data: true,
@@ -54,7 +54,7 @@ class MenuDropDown extends Component<Props, State> {
     return !!diffElement || !!diffElement2
   }
 
-  renderMenuOptions (style: StyleSheet.Styles) {
+  renderMenuOptions(style: StyleSheet.Styles) {
     const items = this.props.data.map(item => (
       <MenuOption style={style.menuOption} value={item.value} key={'ld' + (item.key || item.value)}>
         <View style={style.menuOptionItem}>
@@ -65,7 +65,7 @@ class MenuDropDown extends Component<Props, State> {
     return items
   }
 
-  render () {
+  render() {
     const style = this.props.style
     return (
       <View style={style.container}>

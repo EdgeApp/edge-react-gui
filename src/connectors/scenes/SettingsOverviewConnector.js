@@ -64,7 +64,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   toggleDeveloperMode: (developerModeOn: boolean) => dispatch(setDeveloperModeOn(developerModeOn))
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SettingsOverview)
+export default connect(mapStateToProps, mapDispatchToProps)(SettingsOverview)

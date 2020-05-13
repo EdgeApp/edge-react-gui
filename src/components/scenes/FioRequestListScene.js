@@ -46,7 +46,7 @@ export type StateProps = {
 export class FioRequestList extends Component<StateProps, State> {
   headerIconSize = THEME.rem(1.375)
 
-  constructor (props: StateProps) {
+  constructor(props: StateProps) {
     super(props)
     this.state = {
       loadingPending: true,
@@ -271,7 +271,7 @@ export class FioRequestList extends Component<StateProps, State> {
     return headers
   }
 
-  listKeyExtractor (item: FioRequest) {
+  listKeyExtractor(item: FioRequest) {
     return item.fio_request_id.toString()
   }
 
@@ -294,7 +294,7 @@ export class FioRequestList extends Component<StateProps, State> {
       index + 1 === this.state.fioRequestsSent.length ||
       (index > 0 &&
         intl.formatExpDate(new Date(this.state.fioRequestsSent[index + 1].time_stamp), true) !== intl.formatExpDate(new Date(fioRequest.time_stamp), true))
-    return <FioRequestRow fioRequest={fioRequest} onSelect={this.selectSentRequest} isSent={true} isHeaderRow={isHeaderRow} isLastOfDate={isLastOfDate} />
+    return <FioRequestRow fioRequest={fioRequest} onSelect={this.selectSentRequest} isSent isHeaderRow={isHeaderRow} isLastOfDate={isLastOfDate} />
   }
 
   renderHiddenItem = (rowObj: { item: FioRequest }, rowMap: { [string]: SwipeRow }) => {
@@ -310,7 +310,7 @@ export class FioRequestList extends Component<StateProps, State> {
     )
   }
 
-  render () {
+  render() {
     const { loadingPending, loadingSent, rejectLoading, fioRequestsPending, fioRequestsSent } = this.state
 
     return (
@@ -325,7 +325,7 @@ export class FioRequestList extends Component<StateProps, State> {
               </View>
             ) : null}
             <View style={requestListStyles.container}>
-              {loadingPending && <ActivityIndicator style={requestListStyles.loading} size={'small'} />}
+              {loadingPending && <ActivityIndicator style={requestListStyles.loading} size="small" />}
               <SwipeListView
                 useSectionList
                 sections={this.pendingRequestHeaders()}
@@ -334,7 +334,7 @@ export class FioRequestList extends Component<StateProps, State> {
                 renderHiddenItem={this.renderHiddenItem}
                 renderSectionHeader={this.headerRowUsingTitle}
                 rightOpenValue={requestListStyles.swipeRow.right}
-                disableRightSwipe={true}
+                disableRightSwipe
               />
             </View>
           </View>
@@ -348,7 +348,7 @@ export class FioRequestList extends Component<StateProps, State> {
             <View style={requestListStyles.scrollView}>
               <View style={requestListStyles.container}>
                 <View style={requestListStyles.requestsWrap}>
-                  {loadingSent && <ActivityIndicator style={requestListStyles.loading} size={'small'} />}
+                  {loadingSent && <ActivityIndicator style={requestListStyles.loading} size="small" />}
                   <FlatList
                     style={styles.transactionsScrollWrap}
                     data={fioRequestsSent}

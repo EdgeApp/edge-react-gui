@@ -4,7 +4,7 @@
 const fs = require('fs')
 const path = require('path')
 
-function makeNativeHeaders () {
+function makeNativeHeaders() {
   let apiKey = 'Error: Set up env.json & re-run scrips/makeNativeHeaders.js'
   try {
     apiKey = require('../env.json').AIRBITZ_API_KEY

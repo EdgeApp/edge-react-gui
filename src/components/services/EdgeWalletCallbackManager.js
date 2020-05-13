@@ -26,11 +26,11 @@ type EdgeWalletCallbackManagerDispatchProps = {
 type Props = EdgeWalletCallbackManagerStateProps & EdgeWalletCallbackManagerDispatchProps
 
 class EdgeWalletCallbackManager extends React.Component<Props> {
-  render () {
+  render() {
     return null
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const { wallet } = this.props
 
     wallet.on('newTransactions', transactions => {
@@ -112,7 +112,4 @@ const mapDispatchToProps = (dispatch: Dispatch): EdgeWalletCallbackManagerDispat
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(EdgeWalletCallbackManager)
+export default connect(mapStateToProps, mapDispatchToProps)(EdgeWalletCallbackManager)

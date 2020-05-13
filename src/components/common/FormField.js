@@ -46,14 +46,16 @@ class FormField extends Component {
     keyboardType: 'default',
     multiline: false
   }
-  UNSAFE_componentWillMount () {
+
+  UNSAFE_componentWillMount() {
     const secure = this.props.secureTextEntry ? this.props.secureTextEntry : false
     this.setState({
       secure: secure,
       autoFocus: this.props.autoFocus
     })
   }
-  render () {
+
+  render() {
     const { style = {} } = this.props
     const { container, baseColor, tintColor, textColor, errorColor, titleTextStyle } = style
     if (this.props.autoFocus) {
@@ -120,6 +122,7 @@ class FormField extends Component {
       )
     }
   }
+
   onSubmitEditing = () => {
     if (this.props.onSubmitEditing) {
       this.props.onSubmitEditing()

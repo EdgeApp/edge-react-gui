@@ -158,7 +158,7 @@ export const updateTouchIdEnabled = (arg: boolean, account: EdgeAccount) => asyn
   }
 }
 
-export function togglePinLoginEnabled (pinLoginEnabled: boolean) {
+export function togglePinLoginEnabled(pinLoginEnabled: boolean) {
   return (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
     const { context, account } = state.core
@@ -303,13 +303,11 @@ export const showSendLogsModal = () => async (dispatch: Dispatch, getState: GetS
           name="ios-paper-plane"
           size={24}
           color={THEME.COLORS.SECONDARY}
-          style={[
-            {
-              backgroundColor: THEME.COLORS.TRANSPARENT,
-              zIndex: 1015,
-              elevation: 1015
-            }
-          ]}
+          style={{
+            backgroundColor: THEME.COLORS.TRANSPARENT,
+            zIndex: 1015,
+            elevation: 1015
+          }}
         />
       ),
       title: s.strings.settings_button_send_logs,
@@ -332,7 +330,7 @@ export const showRestoreWalletsModal = () => async (dispatch: Dispatch, getState
   const { account } = state.core
   const restoreWalletsModal = createYesNoModal({
     title: s.strings.restore_wallets_modal_title,
-    icon: <Icon type={'entypo'} name="wallet" size={30} />,
+    icon: <Icon type="entypo" name="wallet" size={30} />,
     message: s.strings.restore_wallets_modal_description,
     noButtonText: s.strings.restore_wallets_modal_cancel,
     yesButtonText: s.strings.restore_wallets_modal_confirm

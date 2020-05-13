@@ -21,14 +21,14 @@ type Props = {
  * Allows the user to select one of the enabled exchanges,
  * or none to get the best price.
  */
-export function SwapPreferredModal (props: Props) {
+export function SwapPreferredModal(props: Props) {
   const { bridge, exchanges, selected } = props
 
   const sortedIds = Object.keys(exchanges)
     .sort((a, b) => exchanges[a].swapInfo.displayName.localeCompare(exchanges[b].swapInfo.displayName))
     .filter(pluginId => exchanges[pluginId].enabled)
 
-  function renderRow (pluginId: string | void): Node {
+  function renderRow(pluginId: string | void): Node {
     let check: Node | void
     if (selected === pluginId) {
       check = <AntDesignIcon name="check" color={THEME.COLORS.GRAY_1} size={iconSize} style={styles.icon} />
@@ -37,13 +37,13 @@ export function SwapPreferredModal (props: Props) {
     const { text, icon } =
       pluginId != null
         ? {
-          text: exchanges[pluginId].swapInfo.displayName,
-          icon: <Image resizeMode="contain" style={styles.icon} source={getSwapPluginIcon(pluginId)} />
-        }
+            text: exchanges[pluginId].swapInfo.displayName,
+            icon: <Image resizeMode="contain" style={styles.icon} source={getSwapPluginIcon(pluginId)} />
+          }
         : {
-          text: s.strings.swap_preferred_cheapest,
-          icon: <AntDesignIcon name="barschart" color={THEME.COLORS.GRAY_1} size={iconSize} style={styles.icon} />
-        }
+            text: s.strings.swap_preferred_cheapest,
+            icon: <AntDesignIcon name="barschart" color={THEME.COLORS.GRAY_1} size={iconSize} style={styles.icon} />
+          }
 
     return (
       <TouchableOpacity onPress={() => bridge.resolve({ type: 'select', pluginId })}>
@@ -59,13 +59,13 @@ export function SwapPreferredModal (props: Props) {
   return (
     <AirshipModal bridge={bridge} padding={margin} onCancel={() => bridge.resolve({ type: 'cancel' })}>
       {gap => (
-        <Fragment>
+        <>
           <Text style={styles.headerText}>{s.strings.swap_preferred_header}</Text>
           <ScrollView style={{ marginBottom: -gap.bottom }} contentContainerStyle={{ paddingBottom: gap.bottom }}>
             {renderRow(undefined)}
             {sortedIds.map(pluginId => renderRow(pluginId))}
           </ScrollView>
-        </Fragment>
+        </>
       )}
     </AirshipModal>
   )

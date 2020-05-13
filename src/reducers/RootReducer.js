@@ -37,11 +37,11 @@ export type RootState = {
 }
 
 export const rootReducer: Reducer<RootState, Action> = combineReducers({
-  deviceReferral (state: DeviceReferral = defaultDeviceReferral, action: Action): DeviceReferral {
+  deviceReferral(state: DeviceReferral = defaultDeviceReferral, action: Action): DeviceReferral {
     return action.type === 'DEVICE_REFERRAL_LOADED' ? action.data : state
   },
 
-  nextUsername (state: string | null = null, action: Action): string | null {
+  nextUsername(state: string | null = null, action: Action): string | null {
     switch (action.type) {
       case 'LOGOUT': {
         const { username = null } = action.data
@@ -51,7 +51,7 @@ export const rootReducer: Reducer<RootState, Action> = combineReducers({
     return state
   },
 
-  pendingDeepLink (state: DeepLink | null = null, action: Action): DeepLink | null {
+  pendingDeepLink(state: DeepLink | null = null, action: Action): DeepLink | null {
     switch (action.type) {
       case 'DEEP_LINK_RECEIVED':
         return action.data

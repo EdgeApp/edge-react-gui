@@ -32,7 +32,7 @@ type State = {
 }
 
 export default class ABSlider extends Component<Props, State> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
 
     this.state = {
@@ -52,7 +52,7 @@ export default class ABSlider extends Component<Props, State> {
     }
   }
 
-  UNSAFE_componentWillReceiveProps (nextProps: Props) {
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
     if (nextProps.resetSlider && nextProps.forceUpdateGuiCounter !== this.state.forceUpdateGuiCounter) {
       this.setState({
         value: 10,
@@ -65,7 +65,7 @@ export default class ABSlider extends Component<Props, State> {
     this.setState({ value })
   }
 
-  render () {
+  render() {
     const thumbStyle = !this.props.sliderDisabled ? styles.thumb : styles.disabledThumb
     const sliderText = !this.props.sliderDisabled ? SLIDE_TO_COMPLETE_TEXT : this.props.disabledText || ENTER_AN_AMOUNT_TEXT
 

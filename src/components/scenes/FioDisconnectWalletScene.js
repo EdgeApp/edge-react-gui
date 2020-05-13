@@ -77,7 +77,7 @@ export class FioDisconnectWalletScene extends Component<Props, State> {
     }
   }
 
-  selectWallet (wallet: FioConnectionWalletItem): void {
+  selectWallet(wallet: FioConnectionWalletItem): void {
     const { selectedToRemove } = this.state
     if (selectedToRemove[wallet.key]) {
       delete selectedToRemove[wallet.key]
@@ -103,15 +103,15 @@ export class FioDisconnectWalletScene extends Component<Props, State> {
         >
           <View style={walletStyles.rowContainerTop}>
             <View style={walletStyles.containerLeft}>
-              {wallet.symbolImage ? <Image style={walletStyles.imageContainer} source={{ uri: wallet.symbolImage }} resizeMode={'contain'} /> : <T>-</T>}
+              {wallet.symbolImage ? <Image style={walletStyles.imageContainer} source={{ uri: wallet.symbolImage }} resizeMode="contain" /> : <T>-</T>}
             </View>
             <View style={styles.walletDetailsContainer}>
               <View style={styles.walletDetailsCol}>
-                <T style={[styles.walletDetailsRowCurrency]}>{wallet.currencyCode}</T>
-                <T style={[styles.walletDetailsRowName]}>{wallet.name}</T>
+                <T style={styles.walletDetailsRowCurrency}>{wallet.currencyCode}</T>
+                <T style={styles.walletDetailsRowName}>{wallet.name}</T>
               </View>
               <View style={styles.walletDetailsCol}>
-                <T style={[walletStyles.walletDetailsRowFiat]}>{isSelected ? s.strings.fio_wallet_connect_return : s.strings.fio_wallet_connect_remove}</T>
+                <T style={walletStyles.walletDetailsRowFiat}>{isSelected ? s.strings.fio_wallet_connect_return : s.strings.fio_wallet_connect_remove}</T>
               </View>
             </View>
           </View>
@@ -121,7 +121,7 @@ export class FioDisconnectWalletScene extends Component<Props, State> {
     return null
   }
 
-  render () {
+  render() {
     const { connectedWallets } = this.props
     const { selectedToRemove, disconnectWalletsLoading } = this.state
 
@@ -150,7 +150,7 @@ export class FioDisconnectWalletScene extends Component<Props, State> {
         <View style={[styles.bottomSection, styles.bottomSectionBlue]}>
           <ABSlider
             forceUpdateGuiCounter={false}
-            resetSlider={true}
+            resetSlider
             onSlidingComplete={this.confirm}
             sliderDisabled={!Object.keys(selectedToRemove).length}
             disabledText={s.strings.send_confirmation_slide_to_confirm}

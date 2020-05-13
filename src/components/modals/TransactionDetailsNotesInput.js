@@ -24,7 +24,7 @@ type State = {
 export class TransactionDetailsNotesInput extends Component<Props, State> {
   notesInput: TextInput
 
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = { notes: props.notes }
   }
@@ -34,7 +34,7 @@ export class TransactionDetailsNotesInput extends Component<Props, State> {
     this.props.onChange(notes)
   }
 
-  render () {
+  render() {
     const { bridge, title, placeholder } = this.props
     const { notes } = this.state
     return (

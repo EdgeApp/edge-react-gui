@@ -16,14 +16,14 @@ const goToUrl = () => {
   Linking.openURL('https://ShapeShift.io')
 }
 
-export function SwapVerifyShapeshiftModal (props: Props) {
+export function SwapVerifyShapeshiftModal(props: Props) {
   const { bridge } = props
   const iconSize = THEME.rem(1.75)
 
   return (
     <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(false)}>
       <IconCircle>
-        <Image source={swapPluginIcons.shapeshift} resizeMode={'contain'} style={{ height: iconSize, width: iconSize }} />
+        <Image source={swapPluginIcons.shapeshift} resizeMode="contain" style={{ height: iconSize, width: iconSize }} />
       </IconCircle>
 
       <ContentArea padding="wide">

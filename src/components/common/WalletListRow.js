@@ -56,7 +56,7 @@ class WalletListRowComponent extends Component<Props> {
     }
   }
 
-  shouldComponentUpdate (nextProps) {
+  shouldComponentUpdate(nextProps) {
     const diffElement = getObjectDiff(this.props, nextProps, {
       data: true,
       item: true
@@ -64,12 +64,12 @@ class WalletListRowComponent extends Component<Props> {
     return !!diffElement
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const { guiWallet } = this.props
     this.props.getEnabledTokensList(guiWallet.id)
   }
 
-  render () {
+  render() {
     const { guiWallet, walletFiatSymbol, settings, exchangeRates, showBalance } = this.props
     const progress = this.getProgress()
 
@@ -144,39 +144,39 @@ class WalletListRowComponent extends Component<Props> {
     }
 
     return (
-      <View style={[{ width: '100%' }]}>
+      <View style={{ width: '100%' }}>
         <View>
           <TouchableHighlight
-            style={[styles.rowContainer]}
+            style={styles.rowContainer}
             underlayColor={THEME.COLORS.ROW_PRESSED}
             onPress={() => this._onPressSelectWallet(id, currencyCode, guiWallet.receiveAddress.publicAddress)}
           >
-            <View style={[styles.rowContent]}>
+            <View style={styles.rowContent}>
               <View style={styles.rowIconWrap}>
-                {symbolImageDarkMono && <Image style={[styles.rowCurrencyLogoAndroid]} source={{ uri: symbolImageDarkMono }} resizeMode="cover" />}
+                {symbolImageDarkMono && <Image style={styles.rowCurrencyLogoAndroid} source={{ uri: symbolImageDarkMono }} resizeMode="cover" />}
                 <View style={styles.rowCurrencyLogoAndroid}>
                   <ProgressPie size={rowCurrencyOverlaySize} color={THEME.COLORS.OPAQUE_WHITE_2} progress={progress} />
                 </View>
               </View>
               <View style={styles.walletDetailsContainer}>
                 <View style={styles.walletDetailsRow}>
-                  <T style={[styles.walletDetailsRowCurrency]}>{currencyCode}</T>
-                  <T style={[styles.walletDetailsRowValue]}>{finalCryptoAmountString}</T>
+                  <T style={styles.walletDetailsRowCurrency}>{currencyCode}</T>
+                  <T style={styles.walletDetailsRowValue}>{finalCryptoAmountString}</T>
                 </View>
                 <View style={styles.walletDetailsRow}>
-                  <T style={[styles.walletDetailsRowName]}>{name}</T>
+                  <T style={styles.walletDetailsRowName}>{name}</T>
                   <View style={styles.walletDetailsFiatBalanceRow}>
-                    <T style={[styles.walletDetailsRowFiat]}>{fiatBalanceSymbol}</T>
-                    <T style={[styles.walletDetailsRowFiat]}>{fiatBalanceString}</T>
+                    <T style={styles.walletDetailsRowFiat}>{fiatBalanceSymbol}</T>
+                    <T style={styles.walletDetailsRowFiat}>{fiatBalanceString}</T>
                   </View>
                 </View>
                 <View style={styles.walletDetailsRowLine} />
                 <View style={styles.walletDetailsRow}>
                   <View style={styles.walletDetailsExchangeRow}>
-                    <T style={[styles.walletDetailsRowExchangeRate]}>{exchangeRateFiatSymbol}</T>
-                    <T style={[styles.walletDetailsRowExchangeRate]}>{exchangeRateString}</T>
+                    <T style={styles.walletDetailsRowExchangeRate}>{exchangeRateFiatSymbol}</T>
+                    <T style={styles.walletDetailsRowExchangeRate}>{exchangeRateString}</T>
                   </View>
-                  <T style={[differencePercentageStringStyle]}>{differencePercentageString}</T>
+                  <T style={differencePercentageStringStyle}>{differencePercentageString}</T>
                 </View>
               </View>
               <View style={styles.rowOptionsWrap}>
@@ -367,10 +367,10 @@ export const WalletListRow = connect(
     walletsProgress: state.ui.wallets.walletLoadingProgress
   }),
   (dispatch: Dispatch): DispatchProps => ({
-    getEnabledTokensList (walletId: string) {
+    getEnabledTokensList(walletId: string) {
       dispatch(getEnabledTokens(walletId))
     },
-    selectWallet (walletId: string, currencyCode) {
+    selectWallet(walletId: string, currencyCode) {
       dispatch(selectWallet(walletId, currencyCode, WALLET_LIST_SCENE))
     }
   })

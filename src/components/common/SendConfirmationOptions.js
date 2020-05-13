@@ -32,7 +32,7 @@ type Props = {
 }
 
 export default class SendConfirmationOptions extends Component<Props> {
-  handleMenuOptions (key: Option | string) {
+  handleMenuOptions(key: Option | string) {
     switch (key) {
       case CHANGE_MINING_FEE:
         return this.props.changeMiningFee(this.props.sourceWallet)
@@ -47,7 +47,7 @@ export default class SendConfirmationOptions extends Component<Props> {
     }
   }
 
-  render () {
+  render() {
     const defaultMenuStyle = MenuDropDownStyle
     const { currencyCode, isEditable } = this.props
     return (
@@ -77,7 +77,7 @@ export default class SendConfirmationOptions extends Component<Props> {
             {!!getSpecialCurrencyInfo(currencyCode).uniqueIdentifier && (
               <MenuOption value={ADD_UNIQUE_IDENTIFIER} style={defaultMenuStyle.menuOption}>
                 <View style={defaultMenuStyle.menuOptionItem}>
-                  <Text style={[defaultMenuStyle.optionText]}>{getSpecialCurrencyInfo(currencyCode).uniqueIdentifier.addButtonText}</Text>
+                  <Text style={defaultMenuStyle.optionText}>{getSpecialCurrencyInfo(currencyCode).uniqueIdentifier.addButtonText}</Text>
                 </View>
               </MenuOption>
             )}

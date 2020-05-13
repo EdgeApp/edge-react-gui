@@ -9,7 +9,7 @@ const MINUTE = 60
 const HOUR = 60 * 60
 const DAY = 24 * 60 * 60
 
-export function secondsToDisplay (seconds: number): DisplayTime {
+export function secondsToDisplay(seconds: number): DisplayTime {
   if (seconds < MINUTE) {
     return {
       measurement: 'seconds',
@@ -33,7 +33,7 @@ export function secondsToDisplay (seconds: number): DisplayTime {
   }
 }
 
-export function displayToSeconds (time: DisplayTime): number {
+export function displayToSeconds(time: DisplayTime): number {
   switch (time.measurement) {
     case 'seconds':
       return time.value

@@ -428,7 +428,7 @@ export const setSpendingLimits = (account: EdgeAccount, spendingLimits: Spending
     return setLocalSettings(account, updatedSettings)
   })
 }
-export async function setPasswordRecoveryRemindersAsync (account: EdgeAccount, level: string, wasShown: boolean) {
+export async function setPasswordRecoveryRemindersAsync(account: EdgeAccount, level: string, wasShown: boolean) {
   const settings = await getSyncedSettings(account)
   const passwordRecoveryRemindersShown = {
     ...settings.passwordRecoveryRemindersShown,
@@ -459,7 +459,7 @@ export const getSyncedSettings = (account: EdgeAccount) =>
       return setSyncedSettings(account, SYNCED_ACCOUNT_DEFAULTS)
     })
 
-export async function getSyncedSettingsAsync (account: EdgeAccount): Promise<any> {
+export async function getSyncedSettingsAsync(account: EdgeAccount): Promise<any> {
   try {
     const text = await account.disklet.getText(SYNCED_SETTINGS_FILENAME)
     const settingsFromFile = JSON.parse(text)
@@ -476,19 +476,19 @@ export const setSyncedSettings = (account: EdgeAccount, settings: Object) => {
   account.disklet.setText(SYNCED_SETTINGS_FILENAME, text)
 }
 
-export async function setSyncedSettingsAsync (account: EdgeAccount, settings: Object) {
+export async function setSyncedSettingsAsync(account: EdgeAccount, settings: Object) {
   const text = JSON.stringify(settings)
   await account.disklet.setText(SYNCED_SETTINGS_FILENAME, text)
 }
 
 export type CategoriesFile = { categories: Array<string> }
 
-export async function setSubcategoriesRequest (account: EdgeAccount, subcategories: CategoriesFile) {
+export async function setSubcategoriesRequest(account: EdgeAccount, subcategories: CategoriesFile) {
   // const subcats = await getSyncedSubcategories(account)
   return setSyncedSubcategories(account, subcategories)
 }
 
-export async function setSyncedSubcategories (account: EdgeAccount, subcategories: CategoriesFile) {
+export async function setSyncedSubcategories(account: EdgeAccount, subcategories: CategoriesFile) {
   let finalText = {}
   if (!subcategories.categories) {
     finalText.categories = subcategories

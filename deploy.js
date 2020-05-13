@@ -67,7 +67,7 @@ let _currentPath = __dirname
 
 main()
 
-function main () {
+function main() {
   if (argv.length < 4) {
     mylog('Usage: node deploy.js [project] [platform] [branch]')
     mylog('  project options: edge')
@@ -89,7 +89,7 @@ function main () {
   buildCommonPost(buildObj)
 }
 
-function makeCommonPre (argv, buildObj) {
+function makeCommonPre(argv, buildObj) {
   buildObj.guiDir = __dirname
   buildObj.repoBranch = argv[4] // master or develop
   buildObj.platformType = argv[3] // ios or android
@@ -97,7 +97,7 @@ function makeCommonPre (argv, buildObj) {
   buildObj.tmpDir = `${buildObj.guiDir}/temp`
 }
 
-function makeProject (project, buildObj) {
+function makeProject(project, buildObj) {
   const config = JSON.parse(fs.readFileSync(`${buildObj.guiDir}/deploy-config.json`, 'utf8'))
 
   Object.assign(buildObj, config[project])
@@ -107,7 +107,7 @@ function makeProject (project, buildObj) {
   console.log(buildObj)
 }
 
-function makeCommonPost (buildObj) {
+function makeCommonPost(buildObj) {
   const packageJson = JSON.parse(fs.readFileSync(buildObj.guiDir + '/package.json', 'utf8'))
   buildObj.version = packageJson.version
   if (buildObj.repoBranch === 'develop') {
@@ -155,7 +155,7 @@ function makeCommonPost (buildObj) {
   }
 }
 
-function buildIos (buildObj) {
+function buildIos(buildObj) {
   chdir(buildObj.guiDir)
 
   if (fs.existsSync(`${buildObj.guiDir}/GoogleService-Info.plist`)) {
@@ -234,7 +234,7 @@ function buildIos (buildObj) {
   call(cmdStr)
 }
 
-function buildAndroid (buildObj) {
+function buildAndroid(buildObj) {
   if (fs.existsSync(`${buildObj.guiDir}/google-services.json`)) {
     call(`cp -a ${buildObj.guiDir}/google-services.json ${buildObj.guiPlatformDir}/app/`)
   }
@@ -268,7 +268,7 @@ function buildAndroid (buildObj) {
   buildObj.ipaFile = buildObj.guiPlatformDir + '/app/build/outputs/apk/release/app-release.apk'
 }
 
-function buildCommonPost (buildObj) {
+function buildCommonPost(buildObj) {
   let curl
   const notes = `${buildObj.productName} ${buildObj.version} (${buildObj.buildNum}) branch: ${buildObj.repoBranch} #${buildObj.guiHash}`
 
@@ -322,9 +322,7 @@ function buildCommonPost (buildObj) {
     mylog('***********************\n')
 
     mylog('*** Getting upload URL/ID')
-    curl = `curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'X-API-Token: ${
-      buildObj.appCenterApiToken
-    }' 'https://api.appcenter.ms/v0.1/apps/${buildObj.appCenterGroupName}/${buildObj.appCenterAppName}/release_uploads'`
+    curl = `curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'X-API-Token: ${buildObj.appCenterApiToken}' 'https://api.appcenter.ms/v0.1/apps/${buildObj.appCenterGroupName}/${buildObj.appCenterAppName}/release_uploads'`
     let response = rmNewline(cmd(curl))
     let responseObj = JSON.parse(response)
     console.log('Got reply', response)
@@ -334,33 +332,27 @@ function buildCommonPost (buildObj) {
     call(curl)
 
     mylog('\n*** Change resource status to committed')
-    curl = `curl -X PATCH --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'X-API-Token: ${
-      buildObj.appCenterApiToken
-    }' -d '{ "status": "committed" }' 'https://api.appcenter.ms/v0.1/apps/${buildObj.appCenterGroupName}/${buildObj.appCenterAppName}/release_uploads/${
-      responseObj.upload_id
-    }'`
+    curl = `curl -X PATCH --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'X-API-Token: ${buildObj.appCenterApiToken}' -d '{ "status": "committed" }' 'https://api.appcenter.ms/v0.1/apps/${buildObj.appCenterGroupName}/${buildObj.appCenterAppName}/release_uploads/${responseObj.upload_id}'`
     response = rmNewline(cmd(curl))
     responseObj = JSON.parse(response)
     console.log('Got reply', response)
 
     mylog('\n*** Releasing to distribution group')
-    curl = `curl -X PATCH --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'X-API-Token: ${
-      buildObj.appCenterApiToken
-    }' -d '{ "destination_name": "${buildObj.appCenterDistroGroup}", "release_notes": "${notes}" }' 'https://api.appcenter.ms/${responseObj.release_url}'`
+    curl = `curl -X PATCH --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'X-API-Token: ${buildObj.appCenterApiToken}' -d '{ "destination_name": "${buildObj.appCenterDistroGroup}", "release_notes": "${notes}" }' 'https://api.appcenter.ms/${responseObj.release_url}'`
     call(curl)
 
     mylog('\n*** Upload to App Center Complete ***')
   }
 }
 
-function builddate () {
+function builddate() {
   const date = new Date()
 
   const dateStr = sprintf('%d-%02d-%02d', date.getFullYear(), date.getMonth() + 1, date.getDate())
   return dateStr
 }
 
-function buildnum (oldBuild = '') {
+function buildnum(oldBuild = '') {
   const date = new Date()
   const year = date.getFullYear() - 2000
   const month = date.getMonth() + 1
@@ -385,16 +377,16 @@ function buildnum (oldBuild = '') {
   return buildNum
 }
 
-function rmNewline (text) {
+function rmNewline(text) {
   return text.replace(/(\r\n|\n|\r)/gm, '')
 }
 
-function chdir (path) {
+function chdir(path) {
   console.log('chdir: ' + path)
   _currentPath = path
 }
 
-function call (cmdstring) {
+function call(cmdstring) {
   console.log('call: ' + cmdstring)
   const opts = {
     encoding: 'utf8',
@@ -406,7 +398,7 @@ function call (cmdstring) {
   childProcess.execSync(cmdstring, opts)
 }
 
-function cmd (cmdstring) {
+function cmd(cmdstring) {
   console.log('cmd: ' + cmdstring)
   const opts = {
     encoding: 'utf8',

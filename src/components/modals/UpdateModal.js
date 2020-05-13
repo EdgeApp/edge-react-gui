@@ -19,7 +19,7 @@ type Props = {
 }
 
 export class UpdateModal extends Component<Props> {
-  render () {
+  render() {
     const { bridge } = this.props
 
     return (

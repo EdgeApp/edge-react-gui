@@ -60,7 +60,7 @@ type State = {
 export type EditTokenComponentProps = EditTokenDispatchProps & EditTokenOwnProps & EditTokenStateProps
 
 export default class EditToken extends Component<EditTokenComponentProps, State> {
-  constructor (props: EditTokenComponentProps) {
+  constructor(props: EditTokenComponentProps) {
     super(props)
     const tokenInfoIndex = _.findIndex(props.customTokens, item => item.currencyCode === props.currencyCode)
     if (tokenInfoIndex >= 0) {
@@ -80,10 +80,10 @@ export default class EditToken extends Component<EditTokenComponentProps, State>
     }
   }
 
-  render () {
+  render() {
     const { editCustomTokenProcessing } = this.props
     return (
-      <Fragment>
+      <>
         <SceneWrapper avoidKeyboard background="body">
           {gap => (
             <ScrollView style={[styles.container, { marginBottom: -gap.bottom }]} contentContainerStyle={{ paddingBottom: gap.bottom }}>
@@ -91,58 +91,58 @@ export default class EditToken extends Component<EditTokenComponentProps, State>
                 <Text style={styles.instructionalText}>{s.strings.edittoken_top_instructions}</Text>
               </View>
               <View style={styles.formArea}>
-                <View style={[styles.nameArea]}>
+                <View style={styles.nameArea}>
                   <FormField
-                    style={[styles.currencyName]}
+                    style={styles.currencyName}
                     value={this.state.currencyName}
                     onChangeText={this.onChangeName}
-                    autoCapitalize={'words'}
+                    autoCapitalize="words"
                     label={s.strings.addtoken_name_input_text}
-                    returnKeyType={'done'}
+                    returnKeyType="done"
                     autoCorrect={false}
                   />
                 </View>
-                <View style={[styles.currencyCodeArea]}>
+                <View style={styles.currencyCodeArea}>
                   <FormField
-                    style={[styles.currencyCodeInput]}
+                    style={styles.currencyCodeInput}
                     value={this.state.currencyCode}
                     onChangeText={this.onChangeCurrencyCode}
-                    autoCapitalize={'characters'}
+                    autoCapitalize="characters"
                     label={s.strings.addtoken_currency_code_input_text}
-                    returnKeyType={'done'}
+                    returnKeyType="done"
                     autoCorrect={false}
                     maxLength={MAX_TOKEN_CODE_CHARACTERS}
                   />
                 </View>
-                <View style={[styles.contractAddressArea]}>
+                <View style={styles.contractAddressArea}>
                   <FormField
-                    style={[styles.contractAddressInput]}
+                    style={styles.contractAddressInput}
                     value={this.state.contractAddress}
                     onChangeText={this.onChangeContractAddress}
                     label={s.strings.addtoken_contract_address_input_text}
-                    returnKeyType={'done'}
+                    returnKeyType="done"
                     autoCorrect={false}
                   />
                 </View>
-                <View style={[styles.decimalPlacesArea]}>
+                <View style={styles.decimalPlacesArea}>
                   <FormField
-                    style={[styles.decimalPlacesInput]}
+                    style={styles.decimalPlacesInput}
                     value={this.state.decimalPlaces}
                     onChangeText={this.onChangeDecimalPlaces}
                     label={s.strings.addtoken_denomination_input_text}
                     autoCorrect={false}
-                    keyboardType={'numeric'}
+                    keyboardType="numeric"
                   />
                 </View>
               </View>
               <View style={styles.errorMessageArea}>
                 <Text style={styles.errorMessageText}>{this.state.errorMessage}</Text>
               </View>
-              <View style={[styles.buttonsArea]}>
-                <TertiaryButton onPress={this.props.showDeleteTokenModal} style={[styles.deleteButton]}>
+              <View style={styles.buttonsArea}>
+                <TertiaryButton onPress={this.props.showDeleteTokenModal} style={styles.deleteButton}>
                   <TertiaryButton.Text>{s.strings.edittoken_delete_token}</TertiaryButton.Text>
                 </TertiaryButton>
-                <PrimaryButton style={[styles.saveButton]} onPress={this._onSave}>
+                <PrimaryButton style={styles.saveButton} onPress={this._onSave}>
                   {editCustomTokenProcessing ? <ActivityIndicator /> : <PrimaryButton.Text>{s.strings.string_save}</PrimaryButton.Text>}
                 </PrimaryButton>
               </View>
@@ -162,7 +162,7 @@ export default class EditToken extends Component<EditTokenComponentProps, State>
           }
           onExitButtonFxn={() => this.props.hideDeleteTokenModal()}
         />
-      </Fragment>
+      </>
     )
   }
 

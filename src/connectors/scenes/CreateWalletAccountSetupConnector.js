@@ -15,7 +15,4 @@ const mapDispatchToProps = (dispatch: Dispatch, ownProps) => ({
   checkHandleAvailability: (handle: string) => dispatch(checkHandleAvailability(ownProps.selectedWalletType.currencyCode, handle))
 })
 
-export const CreateWalletAccountSetupConnector = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CreateWalletAccountSetup)
+export const CreateWalletAccountSetupConnector = connect(mapStateToProps, mapDispatchToProps)(CreateWalletAccountSetup)

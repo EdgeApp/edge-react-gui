@@ -21,12 +21,12 @@ export default class BuyCrypto extends Component<Props> {
     return wallet.currencyNames[wallet.currencyCode]
   }
 
-  render () {
+  render() {
     return (
       <TouchableWithoutFeedback onPress={Actions[Constants.PLUGIN_BUY]}>
         <View style={style.buyCryptoContainer}>
           <View style={style.buyCryptoBox}>
-            <Image style={style.buyCryptoBoxImage} source={{ uri: this.props.wallet.symbolImage }} resizeMode={'cover'} />
+            <Image style={style.buyCryptoBoxImage} source={{ uri: this.props.wallet.symbolImage }} resizeMode="cover" />
             <T style={style.buyCryptoBoxText}>{sprintf(s.strings.transaction_list_buy_crypto_message, this.getCurrencyName)}</T>
           </View>
           <View style={style.buyCryptoNoTransactionBox}>

@@ -16,7 +16,4 @@ const mapStateToProps = (state: State) => {
   return out
 }
 
-export const FioAddressDetailsConnector = connect(
-  mapStateToProps,
-  {}
-)(FioAddressDetailsScene)
+export const FioAddressDetailsConnector = connect(mapStateToProps, {})(FioAddressDetailsScene)

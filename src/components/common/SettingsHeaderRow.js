@@ -15,7 +15,7 @@ type Props = {
 /**
  * A blue header row in a settings scene.
  */
-export function SettingsHeaderRow (props: Props) {
+export function SettingsHeaderRow(props: Props) {
   const { icon, text } = props
 
   return (

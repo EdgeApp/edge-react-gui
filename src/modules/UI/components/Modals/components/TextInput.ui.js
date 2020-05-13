@@ -49,7 +49,7 @@ export type Props = {
   value?: string
 }
 export class TextInput extends Component<Props> {
-  render () {
+  render() {
     const props = { ...DEFAULTS, ...this.props }
     return <TextField {...props} />
   }

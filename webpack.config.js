@@ -21,12 +21,12 @@ module.exports = {
   module: {
     rules: production
       ? [
-        {
-          test: /\.js$/,
-          exclude: /(@babel\/runtime|babel-runtime)/,
-          use: { loader: 'babel-loader', options: babelOptions }
-        }
-      ]
+          {
+            test: /\.js$/,
+            exclude: /(@babel\/runtime|babel-runtime)/,
+            use: { loader: 'babel-loader', options: babelOptions }
+          }
+        ]
       : []
   },
   output: {

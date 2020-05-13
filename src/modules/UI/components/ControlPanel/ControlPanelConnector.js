@@ -59,7 +59,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   openSelectUser: () => dispatch({ type: 'OPEN_SELECT_USER' }),
   closeSelectUser: () => dispatch({ type: 'CLOSE_SELECT_USER' })
 })
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ControlPanel)
+export default connect(mapStateToProps, mapDispatchToProps)(ControlPanel)

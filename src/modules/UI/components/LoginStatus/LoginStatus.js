@@ -6,9 +6,9 @@ import { connect } from 'react-redux'
 import { LoadingScene } from '../../../../components/scenes/LoadingScene.js'
 import { getLoginStatus } from '../../../Settings/selectors.js'
 
-export function ifLoggedIn<Klass> (LoggedIn: Klass): Klass {
+export function ifLoggedIn<Klass>(LoggedIn: Klass): Klass {
   class IfLoggedIn extends React.Component<{ loginStatus: boolean, outerProps: any }> {
-    render () {
+    render() {
       const { loginStatus, outerProps } = this.props
       // $FlowFixMe
       return loginStatus ? <LoggedIn {...outerProps} /> : <LoadingScene />
@@ -23,9 +23,5 @@ export function ifLoggedIn<Klass> (LoggedIn: Klass): Klass {
   const mergeProps = (stateProps, dispatchProps, ownProps) => stateProps
 
   // $FlowFixMe
-  return connect(
-    mapStateToProps,
-    null,
-    mergeProps
-  )(IfLoggedIn)
+  return connect(mapStateToProps, null, mergeProps)(IfLoggedIn)
 }

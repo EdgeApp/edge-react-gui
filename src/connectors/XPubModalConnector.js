@@ -15,7 +15,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   onExit: () => dispatch({ type: 'CLOSE_VIEWXPUB_WALLET_MODAL' })
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(XPubModal)
+export default connect(mapStateToProps, mapDispatchToProps)(XPubModal)
