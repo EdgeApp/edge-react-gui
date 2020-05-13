@@ -690,5 +690,9 @@
   "UnspecifiedCurrency": "Il dominio %1$s non ha un indirizzo %2$s associato ad esso",
   "NamingServiceDown": "%3$s il servizio di denominazione è inattivo al momento",
   "UnsupportedCurrency": "%2$s non è supportato per %1%s",
-  "RecordNotFound": "Nessun %2%s record trovato per %1$s"
+  "RecordNotFound": "Nessun %2%s record trovato per %1$s",
+  "update_header": "",
+  "update_fresh": "",
+  "update_now": "",
+  "update_later": ""
 }
