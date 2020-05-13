@@ -419,7 +419,7 @@
   "transaction_details_copy_signed_tx": "Copiar hexadecimal firmado",
   "transaction_details_modal_debug_info": "Información de depuración:\n",
   "transaction_history_permission": "¿Quieres compartir todo el historial de transacciones de %s con este socio?",
-  "transaction_details_fiat_modal_header": "Cantidad de %s",
+  "transaction_details_fiat_modal_header": "",
   "transaction_details_fiat_label": "Elegir una cantidad",
   "transaction_details_error_invalid": "Transacción inválida",
   "transaction_details_choose_a_sub_category": "Elegir sub-categoría",
@@ -690,5 +690,9 @@
   "UnspecifiedCurrency": "El dominio %1$s no tiene dirección %2$s adjunta a él",
   "NamingServiceDown": "El servicio de nomenclatura de %3$s está caído en este momento",
   "UnsupportedCurrency": "%2$s no es compatible con %1%s",
-  "RecordNotFound": "Ningún registro %2%s encontrado para %1$s"
+  "RecordNotFound": "Ningún registro %2%s encontrado para %1$s",
+  "update_header": "",
+  "update_fresh": "",
+  "update_now": "",
+  "update_later": ""
 }
