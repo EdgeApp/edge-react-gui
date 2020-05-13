@@ -9714,6 +9714,11 @@ react-native-animatable@^1.3.1:
   dependencies:
     prop-types "^15.6.2"
 
+react-native-check-version@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/react-native-check-version/-/react-native-check-version-1.0.5.tgz#45c622214efbfbb106fd8cfb7cf73d520d21a691"
+  integrity sha512-AvS1LfImO8NHpy6DYEU7o5Y7ob0pe1k/Q+IQyYAuOETpuTpcLd2TL3bdcV9oGWnp8DL1IOGPXEIIqz+GT/ATfg==
+
 "react-native-contacts-wrapper@git://github.com/EdgeApp/react-native-contacts-wrapper.git#a57a5d9":
   version "0.2.4"
   resolved "git://github.com/EdgeApp/react-native-contacts-wrapper.git#a57a5d97ea7ee8c1b8968d57287d6e2653bfff06"

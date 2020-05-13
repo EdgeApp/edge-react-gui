@@ -739,7 +739,12 @@ const strings = {
   UnspecifiedCurrency: 'Domain %1$s has no %2$s address attached to it',
   NamingServiceDown: '%3$s naming service is down at the moment',
   UnsupportedCurrency: '%2$s is not supported for %1%s',
-  RecordNotFound: 'No %2%s record found for %1$s'
+  RecordNotFound: 'No %2%s record found for %1$s',
+
+  update_header: 'Update Available',
+  update_fresh: 'A fresh new version of Edge is now available. Please update to get our hot new features and fixes.',
+  update_now: 'Update Now',
+  update_later: "I'll do it later"
 }
 
 // export default strings
