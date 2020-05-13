@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
 
     // Children:
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    overflow: 'hidden'
   }
 })
