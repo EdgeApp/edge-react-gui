@@ -690,5 +690,9 @@
   "UnspecifiedCurrency": "Die Domain %1$s hat keine %2$s Adresse angehängt",
   "NamingServiceDown": "%3$s Benennungsdienst ist momentan nicht verfügbar",
   "UnsupportedCurrency": "%2$s wird für %1%s nicht unterstützt",
-  "RecordNotFound": "Kein %2%s Eintrag gefunden für %1$s"
+  "RecordNotFound": "Kein %2%s Eintrag gefunden für %1$s",
+  "update_header": "",
+  "update_fresh": "",
+  "update_now": "",
+  "update_later": ""
 }
