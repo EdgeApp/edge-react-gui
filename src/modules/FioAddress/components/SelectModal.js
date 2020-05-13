@@ -1,7 +1,7 @@
 // @flow
 
 import { FormField, MaterialInputStyle } from 'edge-components'
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { FlatList, Image, TouchableHighlight, View } from 'react-native'
 
 import fioAddressListIcon from '../../../assets/images/list_fioAddress.png'

@@ -294,7 +294,6 @@ export const getCurrencyInfo = (allCurrencyInfos: Array<EdgeCurrencyInfo>, curre
       }
     }
   }
-  return void 0
 }
 
 export const denominationToDecimalPlaces = (denomination: string): string => {

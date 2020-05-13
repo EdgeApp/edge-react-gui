@@ -53,7 +53,7 @@ export class AirshipDropdown extends Component<Props> {
       // Start the auto-hide timer:
       if (autoHideMs) {
         this.timeout = setTimeout(() => {
-          this.timeout = void 0
+          this.timeout = undefined
           bridge.resolve()
         }, autoHideMs)
       }

@@ -1,7 +1,7 @@
 // @flow
 
 import { type EdgePluginMap, type EdgeSwapConfig } from 'edge-core-js/types'
-import React, { type Node, Component, Fragment } from 'react'
+import React, { type Node, Component } from 'react'
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native'
 import CookieManager from 'react-native-cookies'
 import { Actions } from 'react-native-router-flux'

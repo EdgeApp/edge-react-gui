@@ -1,6 +1,6 @@
 // @flow
 
-import React, { type Node, Fragment } from 'react'
+import React, { type Node } from 'react'
 import { Image, Text, View } from 'react-native'
 
 type Props = {

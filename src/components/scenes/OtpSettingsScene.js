@@ -1,7 +1,7 @@
 // @flow
 
 import { createStaticModal, createYesNoModal } from 'edge-components'
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { Clipboard, Image, Text, TouchableOpacity, View } from 'react-native'
 
 import iconImage from '../../assets/images/otp/OTP-badge_sm.png'

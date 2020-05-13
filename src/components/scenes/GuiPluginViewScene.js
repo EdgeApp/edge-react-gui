@@ -41,7 +41,7 @@ function makeOuterWebViewBridge<Root>(onRoot: (root: Root) => mixed, debug: bool
   const tryReleasingRoot = () => {
     if (gatedRoot != null && webview != null) {
       onRoot(gatedRoot)
-      gatedRoot = void 0
+      gatedRoot = undefined
     }
   }
 
@@ -62,7 +62,7 @@ function makeOuterWebViewBridge<Root>(onRoot: (root: Root) => mixed, debug: bool
     // of YAOB's message format to determine when the client has restarted.
     if (bridge != null && Array.isArray(message.events) && message.events.find(event => event.localId === 0)) {
       bridge.close(new Error('plugin: The WebView has been unmounted.'))
-      bridge = void 0
+      bridge = undefined
     }
 
     // If we have no bridge, start one:

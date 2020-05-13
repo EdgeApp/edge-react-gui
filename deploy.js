@@ -306,13 +306,13 @@ function buildCommonPost(buildObj) {
       `-F sourceMap=@${buildObj.bundleMapFile} ` +
       `-F minifiedUrl=${buildObj.bundleUrl} ` +
       `-F minifiedFile=@${buildObj.bundlePath} ` +
-      `-F overwrite=true`
+      '-F overwrite=true'
     call(curl)
 
     if (buildObj.dSymFile) {
       const cpa = `cp -a "${buildObj.dSymFile}/Contents/Resources/DWARF/${buildObj.xcodeScheme}" ${buildObj.tmpDir}/`
       call(cpa)
-      curl = `/usr/bin/curl https://upload.bugsnag.com/ ` + `-F dsym=@${buildObj.tmpDir}/${buildObj.xcodeScheme} ` + `-F projectRoot=${buildObj.guiPlatformDir}`
+      curl = '/usr/bin/curl https://upload.bugsnag.com/ ' + `-F dsym=@${buildObj.tmpDir}/${buildObj.xcodeScheme} ` + `-F projectRoot=${buildObj.guiPlatformDir}`
       call(curl)
     }
   }

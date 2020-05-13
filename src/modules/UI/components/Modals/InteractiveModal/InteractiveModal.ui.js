@@ -2,7 +2,7 @@
 
 import React, { type Node, Component } from 'react'
 import { Dimensions, Platform, StyleSheet, Text, View } from 'react-native'
-import { default as Modal } from 'react-native-modal'
+import Modal from 'react-native-modal'
 
 import { styles } from './styles.js'
 

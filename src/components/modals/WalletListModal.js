@@ -2,7 +2,7 @@
 
 import { FormField, MaterialInputStyle } from 'edge-components'
 import { type EdgeAccount } from 'edge-core-js'
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { FlatList, View } from 'react-native'
 import { connect } from 'react-redux'
 

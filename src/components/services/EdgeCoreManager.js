@@ -5,7 +5,7 @@ import { type EdgeContext, type EdgeFakeWorld, MakeEdgeContext, MakeFakeEdgeWorl
 import makeAccountbasedIo from 'edge-currency-accountbased/lib/react-native-io.js'
 import makeBitcoinIo from 'edge-currency-bitcoin/lib/react-native-io.js'
 import makeMoneroIo from 'edge-currency-monero/lib/react-native-io.js'
-import React, { Fragment, PureComponent } from 'react'
+import React, { PureComponent } from 'react'
 import { Alert, AppState } from 'react-native'
 import SplashScreen from 'react-native-smart-splash-screen'
 

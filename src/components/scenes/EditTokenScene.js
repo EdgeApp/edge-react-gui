@@ -2,7 +2,7 @@
 
 import type { EdgeMetaToken } from 'edge-core-js'
 import _ from 'lodash'
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { ActivityIndicator, Alert, ScrollView, View } from 'react-native'
 
 import { DELETE, MAX_TOKEN_CODE_CHARACTERS } from '../../constants/indexConstants'

@@ -3,13 +3,11 @@
 exports[`MenuDropDown component should render without props 1`] = `
 <View
   style={
-    Array [
-      Object {
-        "backgroundColor": "#FFFFFF",
-        "flex": 1,
-        "flexDirection": "column",
-      },
-    ]
+    Object {
+      "backgroundColor": "#FFFFFF",
+      "flex": 1,
+      "flexDirection": "column",
+    }
   }
 >
   <View
@@ -66,13 +64,11 @@ exports[`MenuDropDown component should render without props 1`] = `
   >
     <View
       style={
-        Array [
-          Object {
-            "flex": 1,
-            "flexDirection": "row",
-            "height": 56.183098591549296,
-          },
-        ]
+        Object {
+          "flex": 1,
+          "flexDirection": "row",
+          "height": 56.183098591549296,
+        }
       }
     >
       <View
@@ -84,11 +80,9 @@ exports[`MenuDropDown component should render without props 1`] = `
       >
         <View
           style={
-            Array [
-              Object {
-                "justifyContent": "center",
-              },
-            ]
+            Object {
+              "justifyContent": "center",
+            }
           }
         >
           <Image
@@ -110,15 +104,13 @@ exports[`MenuDropDown component should render without props 1`] = `
       </View>
       <View
         style={
-          Array [
-            Object {
-              "flex": 1,
-              "flexDirection": "column",
-              "height": "100%",
-              "justifyContent": "center",
-              "width": "100%",
-            },
-          ]
+          Object {
+            "flex": 1,
+            "flexDirection": "column",
+            "height": "100%",
+            "justifyContent": "center",
+            "width": "100%",
+          }
         }
       >
         <View
@@ -136,11 +128,9 @@ exports[`MenuDropDown component should render without props 1`] = `
             adjustsFontSizeToFit={true}
             minimumFontScale={0.6}
             style={
-              Array [
-                Object {
-                  "flex": 1,
-                },
-              ]
+              Object {
+                "flex": 1,
+              }
             }
           >
             Sent Monero
@@ -160,12 +150,10 @@ exports[`MenuDropDown component should render without props 1`] = `
         </View>
         <View
           style={
-            Array [
-              Object {
-                "flexDirection": "row",
-                "width": "100%",
-              },
-            ]
+            Object {
+              "flexDirection": "row",
+              "width": "100%",
+            }
           }
         >
           <FormattedText
@@ -185,12 +173,10 @@ exports[`MenuDropDown component should render without props 1`] = `
           </FormattedText>
           <FormattedText
             style={
-              Array [
-                Object {
-                  "color": "#0E4B75",
-                  "fontSize": 12,
-                },
-              ]
+              Object {
+                "color": "#0E4B75",
+                "fontSize": 12,
+              }
             }
           >
             $ 0.00

@@ -1,7 +1,7 @@
 // @flow
 
 import { type EdgeCurrencyInfo } from 'edge-core-js'
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { ScrollView, Text } from 'react-native'
 import { connect } from 'react-redux'
 

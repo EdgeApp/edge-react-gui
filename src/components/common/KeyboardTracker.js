@@ -31,6 +31,7 @@ export class KeyboardTracker extends Component<Props> {
   animation: Animated.Value
   animationGoal: number
   nextDuration: number
+  // eslint-disable-next-line no-use-before-define
   sub: KeyboardSubscriber
 
   constructor(props: Props) {

@@ -29,7 +29,7 @@ export const fio: Reducer<FioState, Action> = (state = initialState, action: Act
         ...state,
         connectedWalletsByFioAddress: action.data.connectedWalletsByFioAddress
       }
-    case 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS':
+    case 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS': {
       if (!action.data) throw new Error(`Invalid action FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS`)
       const { connectedWalletsByFioAddress } = state
       connectedWalletsByFioAddress[action.data.fioAddress] = { ...connectedWalletsByFioAddress[action.data.fioAddress], ...action.data.ccWalletMap }
@@ -37,6 +37,7 @@ export const fio: Reducer<FioState, Action> = (state = initialState, action: Act
         ...state,
         connectedWalletsByFioAddress
       }
+    }
     default:
       return state
   }

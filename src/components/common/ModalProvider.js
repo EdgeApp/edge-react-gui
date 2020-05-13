@@ -2,7 +2,7 @@
 
 import React, { type ComponentType } from 'react'
 import { Dimensions, Platform } from 'react-native'
-import { default as Modal } from 'react-native-modal'
+import Modal from 'react-native-modal'
 
 export type ModalProps<Result> = { onDone(result: Result): mixed }
 

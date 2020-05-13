@@ -1,3 +1,4 @@
+/* eslint-disable quote-props */
 // @flow
 
 import React, { Component } from 'react'

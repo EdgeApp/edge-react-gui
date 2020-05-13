@@ -252,12 +252,10 @@ exports[`SendConfirmation XRP 1`] = `
         >
           <FormattedText
             style={
-              Array [
-                Object {
-                  "color": "#4A5157",
-                  "fontSize": 25.28239436619718,
-                },
-              ]
+              Object {
+                "color": "#4A5157",
+                "fontSize": 25.28239436619718,
+              }
             }
           >
             Add Destination Tag

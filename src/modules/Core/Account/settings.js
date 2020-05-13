@@ -1,3 +1,4 @@
+/* eslint-disable quote-props */
 // @flow
 
 import type { EdgeAccount } from 'edge-core-js'

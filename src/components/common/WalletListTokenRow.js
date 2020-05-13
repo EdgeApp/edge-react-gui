@@ -79,7 +79,7 @@ export class WalletListTokenRow extends PureComponent<Props> {
       differencePercentageString = ''
     } else if (exchangeRate && differencePercentage && differencePercentage === 0) {
       differencePercentageStringStyle = styles.walletDetailsRowDifferenceNeutral
-      differencePercentageString = `0.00%`
+      differencePercentageString = '0.00%'
     } else if (exchangeRate && differencePercentage && differencePercentage < 0) {
       differencePercentageStringStyle = styles.walletDetailsRowDifferenceNegative
       differencePercentageString = `- ${Math.abs(differencePercentage).toFixed(2)}%`
