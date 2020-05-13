@@ -690,5 +690,9 @@
   "UnspecifiedCurrency": "",
   "NamingServiceDown": "",
   "UnsupportedCurrency": "",
-  "RecordNotFound": ""
+  "RecordNotFound": "",
+  "update_header": "",
+  "update_fresh": "",
+  "update_now": "",
+  "update_later": ""
 }
