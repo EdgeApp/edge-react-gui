@@ -267,12 +267,12 @@ class CryptoExchangeComponent extends Component<Props, State> {
         showCreateWallet={whichWallet === 'to'}
       />
     )).then((response: WalletListResult) => {
-      if (response && typeof response.id === 'string') {
-        this.props.onSelectWallet(response.id, response.currencyCode)
+      if (response.walletToSelect) {
+        this.props.onSelectWallet(response.walletToSelect.walletId, response.walletToSelect.currencyCode)
         return
       }
-      if (response && typeof response.value === 'string') {
-        this.props.createCurrencyWallet(response.value, response.currencyCode, this.props.defaultIsoFiat)
+      if (response.walletToCreate) {
+        this.props.createCurrencyWallet(response.walletToCreate.walletType, response.walletToCreate.currencyCode, this.props.defaultIsoFiat)
       }
     })
     return null

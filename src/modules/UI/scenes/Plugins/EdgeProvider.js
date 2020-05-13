@@ -129,18 +129,18 @@ export class EdgeProvider extends Bridgeable {
       <WalletListModal bridge={bridge} showCreateWallet={true} allowedCurrencyCodes={allowedCurrencyCodes} headerTitle={s.strings.choose_your_wallet} />
     ))
 
-    if (selectedWallet && typeof selectedWallet.id === 'string') {
-      this._dispatch(selectWallet(selectedWallet.id, selectedWallet.currencyCode))
-      return Promise.resolve(selectedWallet.currencyCode)
+    if (selectedWallet.walletToSelect) {
+      const { walletId, currencyCode } = selectedWallet.walletToSelect
+      this._dispatch(selectWallet(walletId, currencyCode))
+      return Promise.resolve(currencyCode)
     }
 
-    if (selectedWallet && typeof selectedWallet.value === 'string') {
+    if (selectedWallet.walletToCreate) {
+      const { walletType, currencyCode } = selectedWallet.walletToCreate
       try {
         const settings = this._state.ui.settings
-        const walletName = DEFAULT_STARTER_WALLET_NAMES[selectedWallet.currencyCode]
-        const newWallet: EdgeCurrencyWallet = await this._dispatch(
-          createCurrencyWalletAndSelectForPlugins(walletName, selectedWallet.value, settings.defaultIsoFiat)
-        )
+        const walletName = DEFAULT_STARTER_WALLET_NAMES[currencyCode]
+        const newWallet: EdgeCurrencyWallet = await this._dispatch(createCurrencyWalletAndSelectForPlugins(walletName, walletType, settings.defaultIsoFiat))
         this._dispatch(selectWallet(newWallet.id, newWallet.currencyInfo.currencyCode))
         const returnString: string = newWallet.currencyInfo.currencyCode
         return Promise.resolve(returnString)
@@ -158,7 +158,7 @@ export class EdgeProvider extends Bridgeable {
         )
       }
     }
-    throw new Error(s.strings.user_closed_modal_no_wallet) // This is use for flow to not have error when no return is given?
+    throw new Error(s.strings.user_closed_modal_no_wallet)
   }
 
   // Get an address from the user's wallet

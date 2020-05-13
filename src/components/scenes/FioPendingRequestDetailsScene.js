@@ -29,7 +29,6 @@ export type NavigationProps = {
 
 export type FioPendingRequestDetailsStateProps = {
   fromCurrencyCode: string,
-  toCurrencyCode: string,
   wallets: { [string]: GuiWallet },
   exchangeRates: ExchangeRatesState,
   selectedWallet: GuiWallet | null,
@@ -66,27 +65,23 @@ export class FioPendingRequestDetailsComponent extends Component<Props, LocalSta
   }
 
   setDefaultWallet (): void {
-    const { onSelectWallet } = this.props
-    const { allowedWallets } = this.getWalletsListData()
-    if (allowedWallets && allowedWallets.length) {
-      onSelectWallet(allowedWallets[0].id, allowedWallets[0].currencyCode)
-    }
-  }
-
-  getWalletsListData (): { allowedWallets: GuiWallet[] } {
-    const { toCurrencyCode, wallets } = this.props
-    const allowedWallets = []
-    for (const id in wallets) {
-      const wallet = wallets[id]
-      const checkIfEthAndTokens = wallet.currencyCode === 'ETH' && wallet.enabledTokens.length > 0
-      const checkToCurrencyCode = toCurrencyCode === wallet.currencyCode
-      const checkPublicAddress = wallet.receiveAddress && wallet.receiveAddress.publicAddress
-      const checkCurrencyToChainCode = wallet.currencyCode === this.props.selectedFioPendingRequest.content.chain_code
-      if ((checkIfEthAndTokens || checkToCurrencyCode) && checkPublicAddress && checkCurrencyToChainCode) {
-        allowedWallets.push(wallets[id])
+    const { onSelectWallet, wallets, selectedFioPendingRequest } = this.props
+    const { chain_code, token_code } = selectedFioPendingRequest.content
+    const confirmTokenCode = token_code && token_code !== chain_code ? token_code : null
+    const walletKeys = Object.keys(wallets)
+    for (const walletKey of walletKeys) {
+      const wallet = wallets[walletKey]
+      if (chain_code.toUpperCase() === wallet.currencyCode) {
+        if (confirmTokenCode && wallet.enabledTokens.find(token => token === token_code.toUpperCase())) {
+          onSelectWallet(wallet.id, wallet.currencyCode)
+          return
+        } else if (!confirmTokenCode) {
+          onSelectWallet(wallet.id, wallet.currencyCode)
+          return
+        }
       }
     }
-    return { allowedWallets }
+    showError(s.strings.fio_request_default_wallet_error)
   }
 
   memoChanged = (text: string): void => {
@@ -231,25 +226,17 @@ export class FioPendingRequestDetailsComponent extends Component<Props, LocalSta
   }
 
   renderDropUp = () => {
-    const { wallets, onSelectWallet, toCurrencyCode } = this.props
-    const { allowedWallets } = this.getWalletsListData()
-    const allowedCurrencyCodes = [toCurrencyCode]
+    const { onSelectWallet, selectedFioPendingRequest } = this.props
+    const { chain_code, token_code } = selectedFioPendingRequest.content
+    const allowedFullCurrencyCode = chain_code !== token_code && token_code && token_code !== '' ? [`${chain_code}:${token_code}`] : [chain_code]
 
-    const excludeWalletIds = []
-    for (const walletId in wallets) {
-      const includedWallet = allowedWallets.find(allowedWallet => allowedWallet.id === walletId)
-      if (!includedWallet) {
-        excludeWalletIds.push(walletId)
+    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={allowedFullCurrencyCode} />).then(
+      (response: WalletListResult) => {
+        if (response.walletToSelect) {
+          onSelectWallet(response.walletToSelect.walletId, response.walletToSelect.currencyCode)
+        }
       }
-    }
-
-    Airship.show(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} excludeWalletIds={excludeWalletIds} allowedCurrencyCodes={allowedCurrencyCodes} />
-    )).then((response: WalletListResult) => {
-      if (response && typeof response.id === 'string') {
-        onSelectWallet(response.id, response.currencyCode)
-      }
-    })
+    )
   }
 
   render () {
