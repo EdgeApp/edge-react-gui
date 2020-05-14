@@ -691,8 +691,8 @@
   "NamingServiceDown": "%3$s il servizio di denominazione è inattivo al momento",
   "UnsupportedCurrency": "%2$s non è supportato per %1%s",
   "RecordNotFound": "Nessun %2%s record trovato per %1$s",
-  "update_header": "",
-  "update_fresh": "",
-  "update_now": "",
-  "update_later": ""
+  "update_header": "Aggiornamento disponibile",
+  "update_fresh": "Una nuova versione di Edge è ora disponibile. Aggiorna per ottenere le nostre nuove funzionalità e correzioni.",
+  "update_now": "Aggiorna ora",
+  "update_later": "Lo farò più tardi"
 }
