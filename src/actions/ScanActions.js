@@ -390,17 +390,10 @@ export const checkAndShowGetCryptoModal = () => async (dispatch: Dispatch, getSt
 
 export const toggleAddressModal = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const { account } = state.core
-  const { currencyWallets = {} } = account
-
   const walletId: string = UI_SELECTORS.getSelectedWalletId(state)
-  const coreWallet: EdgeCurrencyWallet = currencyWallets[walletId]
   const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
-  const fioPlugin = account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
 
-  const uri = await Airship.show(bridge => (
-    <AddressModal2 bridge={bridge} walletId={walletId} coreWallet={coreWallet} fioPlugin={fioPlugin} currencyCode={currencyCode} account={account} />
-  ))
+  const uri = await Airship.show(bridge => <AddressModal2 bridge={bridge} walletId={walletId} currencyCode={currencyCode} />)
 
   if (uri) {
     dispatch(parseScannedUri(uri))

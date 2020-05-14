@@ -5,14 +5,17 @@ import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-c
 import React, { Component, Fragment } from 'react'
 import { Clipboard, FlatList, Image, InputAccessoryView, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
+import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import ENS_LOGO from '../../assets/images/ens_logo.png'
 import FIO_LOGO from '../../assets/images/fio_logo.png'
+import { CURRENCY_PLUGIN_NAMES } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import { checkPubAddress, getFioAddressCache } from '../../modules/FioAddress/util.js'
 import Text from '../../modules/UI/components/FormattedText/index'
 import styles, { addressInputStyles, iconStyles } from '../../styles/components/ScanAddressModal.js'
+import type { State as StateType } from '../../types/reduxTypes.js'
 import type { FlatListItem } from '../../types/types.js'
 import ResolutionError, { ResolutionErrorCode } from '../common/ResolutionError.js'
 import { type AirshipBridge, AirshipModal, dayText, IconCircle } from './modalParts.js'
@@ -27,11 +30,15 @@ export type AddressModalOpts = {
   currencyCode: string
 }
 
-type Props = {
+type OwnProps = {
   bridge: AirshipBridge<string | null>,
+  walletId: string,
+  currencyCode: string
+}
+
+type StateProps = {
   coreWallet: EdgeCurrencyWallet,
   fioPlugin: EdgeCurrencyConfig,
-  currencyCode: string,
   account: EdgeAccount
 }
 
@@ -44,7 +51,9 @@ type State = {
   fioAddresses: string[]
 }
 
-export class AddressModal2 extends Component<Props, State> {
+type Props = StateProps & OwnProps
+
+class AddressModal2Connected extends Component<Props, State> {
   fioCheckQueue: number = 0
 
   constructor (props: Props) {
@@ -304,3 +313,16 @@ export class AddressModal2 extends Component<Props, State> {
     )
   }
 }
+
+const AddressModal2 = connect(
+  (state: StateType, ownProps: OwnProps): StateProps => {
+    const { account } = state.core
+    const { currencyWallets = {} } = account
+    return {
+      account,
+      coreWallet: currencyWallets[ownProps.walletId],
+      fioPlugin: account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
+    }
+  }
+)(AddressModal2Connected)
+export { AddressModal2 }
