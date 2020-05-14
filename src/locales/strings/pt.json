@@ -666,6 +666,7 @@
   "fio_request_requesting_to": "",
   "fio_request_error_header": "",
   "fio_request_ok_body": "",
+  "fio_request_default_wallet_error": "",
   "fio_get_requests_error": "",
   "fio_confirm_request_error": "",
   "fio_reject_request_error": "",
