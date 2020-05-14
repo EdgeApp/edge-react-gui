@@ -666,6 +666,7 @@
   "fio_request_requesting_to": "Anfrage senden an",
   "fio_request_error_header": "Anfrage fehlgeschlagen",
   "fio_request_ok_body": "Ihre Anfrage wurde erfolgreich gesendet",
+  "fio_request_default_wallet_error": "",
   "fio_get_requests_error": "Es gab ein Problem beim Abrufen von Anfragen",
   "fio_confirm_request_error": "Während der Anfrage gab es ein Problem",
   "fio_reject_request_error": "Es gab ein Problem während der Ablehnung der Anfrage",
