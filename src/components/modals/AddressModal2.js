@@ -1,9 +1,9 @@
 // @flow
 
-import { FormField, TertiaryButton } from 'edge-components'
+import { FormField, MaterialInputStyle, TertiaryButton } from 'edge-components'
 import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component, Fragment } from 'react'
-import { Clipboard, FlatList, Image, InputAccessoryView, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { Clipboard, FlatList, Image, InputAccessoryView, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
@@ -14,7 +14,7 @@ import { CURRENCY_PLUGIN_NAMES } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import { checkPubAddress, getFioAddressCache } from '../../modules/FioAddress/util.js'
 import Text from '../../modules/UI/components/FormattedText/index'
-import styles, { addressInputStyles, iconStyles } from '../../styles/components/ScanAddressModal.js'
+import THEME from '../../theme/variables/airbitz.js'
 import type { State as StateType } from '../../types/reduxTypes.js'
 import type { FlatListItem } from '../../types/types.js'
 import ResolutionError, { ResolutionErrorCode } from '../common/ResolutionError.js'
@@ -277,7 +277,7 @@ class AddressModal2Connected extends Component<Props, State> {
               <View style={styles.tileContainerInput}>
                 <InputAccessoryView nativeID={inputAccessoryViewID}>
                   <View style={styles.accessoryView}>
-                    <TouchableOpacity style={styles.accessoryBtn} onPress={this.handleClose}>
+                    <TouchableOpacity style={styles.accessoryButton} onPress={this.handleClose}>
                       <Text style={styles.accessoryText}>{s.strings.string_cancel_cap}</Text>
                     </TouchableOpacity>
                   </View>
@@ -326,3 +326,84 @@ const AddressModal2 = connect(
   }
 )(AddressModal2Connected)
 export { AddressModal2 }
+
+const { rem } = THEME
+
+const addressInputStyles = {
+  ...MaterialInputStyle,
+  container: {
+    ...MaterialInputStyle.container,
+    paddingTop: 0
+  }
+}
+
+const iconStyles = {
+  size: rem(2),
+  color: THEME.COLORS.SECONDARY
+}
+
+const tileStyles = {
+  width: '100%',
+  backgroundColor: THEME.COLORS.WHITE,
+  borderBottomWidth: 1,
+  borderBottomColor: THEME.COLORS.GRAY_3,
+  padding: rem(0.5)
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: '100%',
+    flexDirection: 'column'
+  },
+  tileContainerHeader: {
+    ...tileStyles
+  },
+  tileContainerButtons: {
+    ...tileStyles,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  tileContainerInput: {
+    ...tileStyles,
+    paddingTop: 0,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  tileContainer: {
+    ...tileStyles,
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  fioAddressAvatarContainer: {
+    width: rem(2.2),
+    height: rem(2.2),
+    borderRadius: rem(1.1),
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  fioAddressText: {
+    fontSize: rem(1.2),
+    paddingLeft: rem(0.8)
+  },
+  addressModalButton: {
+    width: '100%'
+  },
+
+  // Accessory Input
+  accessoryView: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: THEME.COLORS.WHITE
+  },
+  accessoryButton: {
+    padding: rem(0.5)
+  },
+  accessoryText: {
+    color: THEME.COLORS.ACCENT_BLUE,
+    fontSize: rem(1)
+  }
+})
