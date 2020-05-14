@@ -582,17 +582,65 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 2.5% / Settlement: 1-48 hours\nLimit: €10000+/day",
-    "title": "Israeli Bank Transfer",
+    "description": "Fee: 3% / Settlement: 1-48 hours\nLevel 1 Limit: €10000/day\nLevel 2 Limit: Unlimited",
+    "title": "SEPA Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/bits-of-gold-logo-sm.png",
     "forCountries": [
-      "IL"
+      "AD",
+      "AT",
+      "BE",
+      "BG",
+      "BL",
+      "CH",
+      "CY",
+      "CZ",
+      "DE",
+      "DK",
+      "EE",
+      "ES",
+      "FI",
+      "FR",
+      "GB",
+      "GF",
+      "GG",
+      "GI",
+      "GP",
+      "GR",
+      "HR",
+      "HU",
+      "IE",
+      "IL",
+      "IM",
+      "IS",
+      "IT",
+      "JE",
+      "LI",
+      "LT",
+      "LU",
+      "LV",
+      "MC",
+      "MF",
+      "MQ",
+      "MT",
+      "NL",
+      "NO",
+      "PL",
+      "PM",
+      "PT",
+      "RE",
+      "RO",
+      "SE",
+      "SI",
+      "SK",
+      "SM",
+      "VA",
+      "YT"
     ],
     "cryptoCodes": [
       "BTC"
     ],
     "paymentTypeLogoKey": "bank",
-    "deepPath": "/buy",
+    "deepPath": "/order/buy",
     "deepQuery": {
       "order_id": "null",
       "page": "0"
@@ -605,7 +653,7 @@
   },
   {
     "id": "bits of gold",
-    "sortIndex": 2
+    "sortIndex": 6
   },
   {
     "id": "wyre",
@@ -711,6 +759,14 @@
       "GB"
     ],
     "sortIndex": 2
+  },
+  {
+    "id": "bits of gold",
+    "forCountries": [
+      "IL"
+    ],
+    "sortIndex": 2,
+    "title": "Israeli Bank Transfer"
   },
   {
     "id": "banxa.bank",
