@@ -10,8 +10,7 @@ import URL from 'url-parse'
 
 import { selectWalletForExchange } from '../actions/CryptoExchangeActions.js'
 import { launchModal } from '../components/common/ModalProvider.js'
-import { AddressModal2 } from '../components/modals/AddressModal2.js'
-import { Airship, showError } from '../components/services/AirshipInstance'
+import { showError } from '../components/services/AirshipInstance'
 import {
   ADD_TOKEN,
   CURRENCY_PLUGIN_NAMES,
@@ -385,17 +384,5 @@ export const checkAndShowGetCryptoModal = () => async (dispatch: Dispatch, getSt
   } catch (e) {
     // Don't bother the user with this error, but log it quietly:
     console.log(e)
-  }
-}
-
-export const toggleAddressModal = () => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const walletId: string = UI_SELECTORS.getSelectedWalletId(state)
-  const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
-
-  const uri = await Airship.show(bridge => <AddressModal2 bridge={bridge} walletId={walletId} currencyCode={currencyCode} />)
-
-  if (uri) {
-    dispatch(parseScannedUri(uri))
   }
 }
