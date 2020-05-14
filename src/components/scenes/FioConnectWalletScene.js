@@ -101,7 +101,7 @@ export class FioConnectWalletScene extends Component<Props, State> {
         >
           <View style={walletStyles.rowContainerTop}>
             <View style={walletStyles.containerLeft}>
-              <Image style={walletStyles.imageContainer} source={{ uri: wallet.symbolImage }} resizeMode={'contain'} />
+              {wallet.symbolImage ? <Image style={walletStyles.imageContainer} source={{ uri: wallet.symbolImage }} resizeMode={'contain'} /> : <T>-</T>}
             </View>
             <View style={styles.walletDetailsContainer}>
               <View style={styles.walletDetailsCol}>

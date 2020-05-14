@@ -198,7 +198,14 @@ export class FioRequestList extends Component<StateProps, State> {
     }
     const { wallets } = this.props
     for (const walletKey: string of Object.keys(wallets)) {
-      if (wallets[walletKey].currencyCode.toLowerCase() === fioRequest.content.chain_code.toLowerCase()) {
+      if (wallets[walletKey].currencyCode.toUpperCase() === fioRequest.content.token_code.toUpperCase()) {
+        Actions[Constants.FIO_PENDING_REQUEST_DETAILS]({ selectedFioPendingRequest: fioRequest })
+        return
+      }
+      if (
+        wallets[walletKey].currencyCode.toUpperCase() === fioRequest.content.chain_code.toUpperCase() &&
+        wallets[walletKey].enabledTokens.indexOf(fioRequest.content.token_code.toUpperCase()) > -1
+      ) {
         Actions[Constants.FIO_PENDING_REQUEST_DETAILS]({ selectedFioPendingRequest: fioRequest })
         return
       }
