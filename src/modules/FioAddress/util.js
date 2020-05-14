@@ -249,8 +249,13 @@ export const makeNotConnectedWallets = (wallets: { [walletId: string]: GuiWallet
     }
     if (wallets[walletKey].enabledTokens && wallets[walletKey].enabledTokens.length) {
       for (const enabledToken: string of wallets[walletKey].enabledTokens) {
-        const tokenData = wallets[walletKey].metaTokens.find(metaToken => metaToken.currencyCode === enabledToken)
-        if (!tokenData) continue
+        let tokenData = wallets[walletKey].metaTokens.find(metaToken => metaToken.currencyCode === enabledToken)
+        if (!tokenData) {
+          tokenData = {
+            currencyCode: enabledToken,
+            symbolImage: ''
+          }
+        }
         const fullCurrencyCode = `${wallets[walletKey].currencyCode}:${tokenData.currencyCode}`
         if (!ccWalletMap[fullCurrencyCode]) {
           notConnectedWallets[`${wallets[walletKey].id}-${tokenData.currencyCode}`] = {
@@ -291,8 +296,13 @@ export const makeConnectedWallets = (wallets: { [walletId: string]: GuiWallet },
     }
     if (wallets[walletKey].enabledTokens && wallets[walletKey].enabledTokens.length) {
       for (const enabledToken: string of wallets[walletKey].enabledTokens) {
-        const tokenData = wallets[walletKey].metaTokens.find(metaToken => metaToken.currencyCode === enabledToken)
-        if (!tokenData) continue
+        let tokenData = wallets[walletKey].metaTokens.find(metaToken => metaToken.currencyCode === enabledToken)
+        if (!tokenData) {
+          tokenData = {
+            currencyCode: enabledToken,
+            symbolImage: ''
+          }
+        }
         const fullCurrencyCode = `${wallets[walletKey].currencyCode}:${tokenData.currencyCode}`
         if (ccWalletMap[fullCurrencyCode] === wallets[walletKey].id) {
           connectedWallets[`${wallets[walletKey].id}-${tokenData.currencyCode}`] = {
