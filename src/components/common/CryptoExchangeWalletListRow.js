@@ -180,39 +180,45 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
     const nameString = wallet.name.toLowerCase()
     const currencyNameString = wallet.currencyNames[wallet.currencyCode].toLowerCase()
     const currencyCodeString = wallet.currencyCode.toLowerCase()
-    const filter =
+    const filterMatched =
       searchFilterLowerCase === '' ||
       nameString.includes(searchFilterLowerCase) ||
       currencyNameString.includes(searchFilterLowerCase) ||
       currencyCodeString.includes(searchFilterLowerCase)
     const mostRecentUsedCheck = isMostRecentWallet ? currencyCodeString === currencyCodeFilter.toLowerCase() : true
 
-    if (searchFilter !== '' ? filter : mostRecentUsedCheck && checkAllowedCurrencyCodes && !checkExcludeCurrencyCodes) {
-      return (
-        <TouchableHighlight style={styles.touchable} underlayColor={styles.underlayColor} onPress={this.onPress}>
-          <View style={styles.rowContainerTop}>
-            <View style={styles.containerLeft}>
-              <Image style={styles.imageContainer} source={{ uri: wallet.symbolImage }} resizeMode={'contain'} />
+    if (!checkAllowedCurrencyCodes || checkExcludeCurrencyCodes) {
+      return null
+    }
+    if (searchFilter === '' && !filterMatched) {
+      return null
+    }
+    if (!mostRecentUsedCheck) {
+      return null
+    }
+    return (
+      <TouchableHighlight style={styles.touchable} underlayColor={styles.underlayColor} onPress={this.onPress}>
+        <View style={styles.rowContainerTop}>
+          <View style={styles.containerLeft}>
+            <Image style={styles.imageContainer} source={{ uri: wallet.symbolImage }} resizeMode={'contain'} />
+          </View>
+          <View style={styles.walletDetailsContainer}>
+            <View style={styles.walletDetailsRow}>
+              <FormattedText style={[styles.walletDetailsRowCurrency]}>{wallet.currencyCode}</FormattedText>
+              <FormattedText style={[styles.walletDetailsRowValue]}>
+                {this.state.cryptoSymbol} {this.state.cryptoBalance}
+              </FormattedText>
             </View>
-            <View style={styles.walletDetailsContainer}>
-              <View style={styles.walletDetailsRow}>
-                <FormattedText style={[styles.walletDetailsRowCurrency]}>{wallet.currencyCode}</FormattedText>
-                <FormattedText style={[styles.walletDetailsRowValue]}>
-                  {this.state.cryptoSymbol} {this.state.cryptoBalance}
-                </FormattedText>
-              </View>
-              <View style={styles.walletDetailsRow}>
-                <FormattedText style={[styles.walletDetailsRowName]}>{wallet.name}</FormattedText>
-                <FormattedText style={[styles.walletDetailsRowFiat]}>
-                  {this.state.fiatSymbol} {this.state.fiatBalance}
-                </FormattedText>
-              </View>
+            <View style={styles.walletDetailsRow}>
+              <FormattedText style={[styles.walletDetailsRowName]}>{wallet.name}</FormattedText>
+              <FormattedText style={[styles.walletDetailsRowFiat]}>
+                {this.state.fiatSymbol} {this.state.fiatBalance}
+              </FormattedText>
             </View>
           </View>
-        </TouchableHighlight>
-      )
-    }
-    return null
+        </View>
+      </TouchableHighlight>
+    )
   }
   render () {
     return (

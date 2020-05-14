@@ -265,6 +265,7 @@ class CryptoExchangeComponent extends Component<Props, State> {
         bridge={bridge}
         headerTitle={whichWallet === 'to' ? s.strings.select_recv_wallet : s.strings.select_src_wallet}
         showCreateWallet={whichWallet === 'to'}
+        excludeCurrencyCodes={whichWallet === 'from' ? ['XTZ'] : []}
       />
     )).then((response: WalletListResult) => {
       if (response && typeof response.id === 'string') {
