@@ -1,5 +1,10 @@
 # edge-react-gui
 
+## 1.12.4 (2020-05-14)
+
+- Add logic to prevent excluded currency codes from appearing in search results
+- Temporarily exclude XTZ in exchange from-wallet selector
+
 ## 1.12.3 (2020-05-08)
 
 - Upgrade edge-core-js to v0.17.1
