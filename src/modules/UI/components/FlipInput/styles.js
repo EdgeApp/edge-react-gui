@@ -95,14 +95,8 @@ export const top = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'flex-end'
   },
-  symbol: {
-    fontSize: scale(15),
-    color: THEME.COLORS.WHITE,
-    fontFamily: THEME.FONTS.SYMBOLS,
-    marginRight: scale(5),
-    textAlign: 'right'
-  },
   amount: {
+    width: '100%',
     fontSize: scale(15),
     color: THEME.COLORS.WHITE,
     fontFamily: THEME.FONTS.SYMBOLS,
@@ -123,20 +117,8 @@ export const bottom = StyleSheet.create({
     alignItems: 'center',
     paddingTop: scale(8)
   },
-  amountContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'flex-end'
-  },
-  symbol: {
-    fontSize: scale(10),
-    color: THEME.COLORS.WHITE,
-    opacity: THEME.OPACITY.MID,
-    fontFamily: THEME.FONTS.SYMBOLS,
-    marginRight: scale(5),
-    textAlign: 'right'
-  },
   amount: {
+    width: '100%',
     fontSize: scale(10),
     color: THEME.COLORS.WHITE,
     opacity: THEME.OPACITY.MID,
