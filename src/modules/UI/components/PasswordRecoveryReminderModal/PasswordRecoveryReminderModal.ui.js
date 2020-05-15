@@ -8,7 +8,7 @@ import { PrimaryButton } from '../Buttons/PrimaryButton.ui.js'
 import { TertiaryButton } from '../Buttons/TertiaryButton.ui.js'
 import Text from '../FormattedText/FormattedText.ui.js'
 import { Icon } from '../Icon/Icon.ui'
-import { InteractiveModal } from '../Modals'
+import { InteractiveModal } from '../Modals/InteractiveModal/InteractiveModal.ui.js'
 import { styles } from './PasswordRecoveryReminderModalStyles.js'
 
 export type PasswordRecoveryReminderModalOwnProps = {}

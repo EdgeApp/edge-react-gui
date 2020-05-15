@@ -5,7 +5,7 @@ import { ActivityIndicator, Text, View } from 'react-native'
 
 import s from '../../locales/strings.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
-import { NonInteractiveModal } from '../../modules/UI/components/Modals/index'
+import { NonInteractiveModal } from '../../modules/UI/components/Modals/NonInteractiveModal/NonInteractiveModal.ui.js'
 import styles from '../../styles/scenes/ScaneStyle.js'
 
 export type Props = {

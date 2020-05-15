@@ -9,7 +9,8 @@ import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton
 import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
-import { InteractiveModal, TextInput } from '../../modules/UI/components/Modals/index'
+import { TextInput } from '../../modules/UI/components/Modals/components/TextInput.ui.js'
+import { InteractiveModal } from '../../modules/UI/components/Modals/InteractiveModal/InteractiveModal.ui.js'
 
 export type Props = {
   isActive: boolean,

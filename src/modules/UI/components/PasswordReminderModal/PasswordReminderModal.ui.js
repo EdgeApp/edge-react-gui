@@ -10,7 +10,7 @@ import type { PasswordReminder } from '../../../../types/types.js'
 import { SecondaryButton } from '../Buttons/SecondaryButton.ui.js'
 import { TertiaryButton } from '../Buttons/TertiaryButton.ui.js'
 import { Icon } from '../Icon/Icon.ui'
-import { InteractiveModal } from '../Modals'
+import { InteractiveModal } from '../Modals/InteractiveModal/InteractiveModal.ui.js'
 import { PasswordInput } from './components/PasswordInput.ui.js'
 import { styles } from './styles.js'
 
