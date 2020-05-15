@@ -7,7 +7,7 @@ import { connect } from 'react-redux'
 
 import { intl } from '../../locales/intl'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
-import FormattedText from '../../modules/UI/components/FormattedText/index'
+import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { CryptoExchangeWalletListRowStyle as styles } from '../../styles/components/CryptoExchangeWalletListRowStyle.js'
 import type { State } from '../../types/reduxTypes.js'
 import { decimalOrZero, truncateDecimals } from '../../util/utils.js'

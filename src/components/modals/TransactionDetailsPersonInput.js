@@ -5,7 +5,7 @@ import { TouchableWithoutFeedback, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../locales/strings.js'
-import FormattedText from '../../modules/UI/components/FormattedText/index'
+import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import styles, { materialInput } from '../../styles/scenes/TransactionDetailsStyle'
 import { type GuiContact } from '../../types/types.js'
 import { ContactSearchResults } from '../common/ContactSearchResults.js'

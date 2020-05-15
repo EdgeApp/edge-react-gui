@@ -7,7 +7,7 @@ import { getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
 import s from '../../locales/strings'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
-import Text from '../../modules/UI/components/FormattedText/index'
+import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import { InteractiveModal, TextInput } from '../../modules/UI/components/Modals/index'
 

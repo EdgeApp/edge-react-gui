@@ -8,7 +8,7 @@ import { launchModal } from '../../../../components/common/ModalProvider.js'
 import { ANDROID_INFO_ICON, EXCLAMATION, ION_ICONS, IOS_INFO_ICON, MATERIAL_COMMUNITY } from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings.js'
 import { styles as sceneStyles } from '../../../../styles/scenes/CryptoExchangeQuoteSceneStyles.js'
-import FormattedText from '../../components/FormattedText'
+import FormattedText from '../../components/FormattedText/FormattedText.ui.js'
 import { IconButton } from '../Buttons/IconButton.ui'
 import { Icon } from '../Icon/Icon.ui'
 

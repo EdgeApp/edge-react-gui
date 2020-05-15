@@ -9,7 +9,7 @@ import { sprintf } from 'sprintf-js'
 import { showError } from '../../../../../components/services/AirshipInstance.js'
 import * as Constants from '../../../../../constants/indexConstants.js'
 import s from '../../../../../locales/strings'
-import T from '../../../components/FormattedText'
+import T from '../../../components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../../Icon/Icon.ui.js'
 import styles from '../style'
 

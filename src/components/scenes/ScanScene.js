@@ -12,7 +12,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import SecondaryModal from '../../connectors/SecondaryModalConnector.js'
 import s from '../../locales/strings.js'
-import T from '../../modules/UI/components/FormattedText/index'
+import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { type PermissionStatus } from '../../reducers/PermissionsReducer.js'
 import styles, { styles as styleRaw } from '../../styles/scenes/ScaneStyle'
 import { scale } from '../../util/scaling.js'

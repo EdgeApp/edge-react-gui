@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/SimpleLineIcons'
 
 import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
 import CheckBox from '../../modules/UI/components/CheckBox/index'
-import Text from '../../modules/UI/components/FormattedText/index'
+import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { styles, underlayColor } from '../../styles/scenes/ManageTokensStyle.js'
 import * as UTILS from '../../util/utils.js'
 

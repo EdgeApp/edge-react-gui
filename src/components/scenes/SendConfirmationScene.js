@@ -17,7 +17,7 @@ import { SelectFioAddressConnector as SelectFioAddress } from '../../modules/Fio
 import ExchangeRate from '../../modules/UI/components/ExchangeRate/index.js'
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import { ExchangedFlipInput } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
-import Text from '../../modules/UI/components/FormattedText/index'
+import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { PinInput } from '../../modules/UI/components/PinInput/PinInput.ui.js'
 import Recipient from '../../modules/UI/components/Recipient/index.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'

@@ -6,7 +6,7 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import s from '../../../../locales/strings'
 import { THEME } from '../../../../theme/variables/airbitz.js'
 import { scale } from '../../../../util/scaling.js'
-import FormattedText from '../FormattedText'
+import FormattedText from '../FormattedText/FormattedText.ui.js'
 
 export type Props = {
   copyToClipboard(): mixed,

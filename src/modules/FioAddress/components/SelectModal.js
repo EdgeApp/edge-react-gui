@@ -9,7 +9,7 @@ import { type AirshipBridge, AirshipModal } from '../../../components/modals/mod
 import { CryptoExchangeWalletListRowStyle as styles } from '../../../styles/components/CryptoExchangeWalletListRowStyle.js'
 import type { FlatListItem } from '../../../types/types.js'
 import { scale } from '../../../util/scaling.js'
-import T from '../../UI/components/FormattedText/index'
+import T from '../../UI/components/FormattedText/FormattedText.ui.js'
 
 type Item = {
   label: string,

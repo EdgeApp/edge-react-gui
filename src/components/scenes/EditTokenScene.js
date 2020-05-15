@@ -9,7 +9,7 @@ import { DELETE, MAX_TOKEN_CODE_CHARACTERS } from '../../constants/indexConstant
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { TertiaryButton } from '../../modules/UI/components/Buttons/TertiaryButton.ui.js'
-import Text from '../../modules/UI/components/FormattedText/index'
+import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import StylizedModal from '../../modules/UI/components/Modal/Modal.ui'
 import OptionIcon from '../../modules/UI/components/OptionIcon/OptionIcon.ui'
 import styles from '../../styles/scenes/EditTokenStyle.js'

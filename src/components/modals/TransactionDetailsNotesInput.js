@@ -4,7 +4,7 @@ import { TextInput, TouchableWithoutFeedback, View } from 'react-native'
 
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
-import FormattedText from '../../modules/UI/components/FormattedText/index.js'
+import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import styles from '../../styles/scenes/TransactionDetailsStyle.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { type AirshipBridge, AirshipModal } from './modalParts.js'

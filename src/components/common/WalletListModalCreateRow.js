@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { Image, Text, TouchableHighlight, View } from 'react-native'
 
 import s from '../../locales/strings'
-import FormattedText from '../../modules/UI/components/FormattedText/index'
+import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { CryptoExchangeWalletListRowStyle as styles } from '../../styles/components/CryptoExchangeWalletListRowStyle.js'
 import { type GuiWalletType } from '../../types/types.js'
 
