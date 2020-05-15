@@ -4,7 +4,6 @@ const strings = {
   app_name: 'Edge Wallet',
   app_name_short: 'Edge',
   bitcoin_received: '%1$s Received',
-  bitcoin_remaining: '%1$s Remaining…',
   calculator_done: 'Done',
   change_mining_fee_body: 'Warning: Low Fees may cause long delays in transaction confirmation',
   change_currency_fee: 'Change Currency',
