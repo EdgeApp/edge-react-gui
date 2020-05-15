@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 
 import { CREATE_WALLET_SELECT_FIAT, CURRENCY_PLUGIN_NAMES, getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
+import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import { errorModal } from '../../modules/UI/components/Modals/ErrorModal.js'

@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { TextInput, TouchableWithoutFeedback, View } from 'react-native'
 
 import s from '../../locales/strings.js'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/index.js'
+import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import FormattedText from '../../modules/UI/components/FormattedText/index.js'
 import styles from '../../styles/scenes/TransactionDetailsStyle.js'
 import { THEME } from '../../theme/variables/airbitz.js'

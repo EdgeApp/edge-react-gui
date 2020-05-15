@@ -6,7 +6,7 @@ import { Switch } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import s from '../../locales/strings.js'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
+import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { PasswordInput } from '../../modules/UI/components/Modals/components/PasswordInput.ui.js'
 import { TextInput } from '../../modules/UI/components/Modals/components/TextInput.ui.js'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'

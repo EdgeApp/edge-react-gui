@@ -13,7 +13,7 @@ import { styles as CryptoExchangeSceneStyle } from '../../../styles/scenes/Crypt
 import { styles } from '../../../styles/scenes/FioRequestConfirmationStyle'
 import type { State } from '../../../types/reduxTypes'
 import type { GuiWallet } from '../../../types/types'
-import { TextAndIconButton } from '../../UI/components/Buttons'
+import { TextAndIconButton } from '../../UI/components/Buttons/TextAndIconButton.ui.js'
 import Text from '../../UI/components/FormattedText/index'
 import * as UI_SELECTORS from '../../UI/selectors.js'
 import { checkRecordSendFee, findWalletByFioAddress } from '../util'

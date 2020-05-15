@@ -6,7 +6,8 @@ import { ActivityIndicator, Image, Text, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../locales/strings.js'
-import { PrimaryButton, SecondaryButton } from '../../modules/UI/components/Buttons/index'
+import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
+import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
 import { styles } from '../../styles/scenes/EdgeLoginSceneStyle.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 

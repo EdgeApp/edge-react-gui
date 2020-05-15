@@ -5,7 +5,7 @@ import { ActivityIndicator, Image, StyleSheet, View } from 'react-native'
 
 import * as Constants from '../../../../constants/indexConstants'
 import type { GuiCurrencyInfo, GuiWallet } from '../../../../types/types.js'
-import { TextAndIconButton } from '../Buttons'
+import { TextAndIconButton } from '../Buttons/TextAndIconButton.ui.js'
 import { WalletNameHeader } from '../Header/Component/WalletNameHeader.ui'
 import type { ExchangedFlipInputAmounts } from './ExchangedFlipInput2.js'
 import { ExchangedFlipInput } from './ExchangedFlipInput2.js'

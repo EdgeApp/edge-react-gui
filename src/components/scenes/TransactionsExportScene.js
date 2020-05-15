@@ -8,7 +8,7 @@ import Mailer from 'react-native-mail'
 import Share from 'react-native-share'
 
 import s from '../../locales/strings'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
+import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { styles } from '../../styles/scenes/TransactionsExportSceneStyle.js'
 import { sanitizeForFilename } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'

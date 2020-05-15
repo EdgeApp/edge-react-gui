@@ -6,7 +6,8 @@ import { Image, Linking, Text, View } from 'react-native'
 
 import { swapPluginIcons } from '../../assets/images/exchange'
 import s from '../../locales/strings.js'
-import { PrimaryButton, SecondaryButton } from '../../modules/UI/components/Buttons/index'
+import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
+import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type AirshipBridge, AirshipModal, ContentArea, dayText, IconCircle, THEME } from './modalParts.js'
 

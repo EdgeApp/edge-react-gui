@@ -17,7 +17,7 @@ import CryptoExchangeMessageConnector from '../../connectors/components/CryptoEx
 import { ARROW_DOWN_BOLD, DEFAULT_STARTER_WALLET_NAMES, MATERIAL_COMMUNITY } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import { getSettings } from '../../modules/Settings/selectors.js'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
+import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { CryptoExchangeFlipInputWrapperComponent } from '../../modules/UI/components/FlipInput/CryptoExchangeFlipInputWrapperComponent.js'
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'

@@ -7,7 +7,7 @@ import slowlog from 'react-native-slowlog'
 
 import { MAX_TOKEN_CODE_CHARACTERS } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
+import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText/index'
 import { styles } from '../../styles/scenes/AddTokenStyles.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
