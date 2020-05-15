@@ -9,7 +9,7 @@ import THEME from '../../../../theme/variables/airbitz.js'
 import Gradient from '../../components/Gradient/Gradient.ui'
 
 type props = {
-  style: StyleSheet.Styles,
+  style?: StyleSheet.Styles,
   children: Node
 }
 

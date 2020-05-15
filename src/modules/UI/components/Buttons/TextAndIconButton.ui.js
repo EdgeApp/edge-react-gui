@@ -11,8 +11,7 @@ type Props = {
   icon: string,
   style: StyleSheet.Styles,
   onPress: Function,
-  title: string | Function,
-  iconType: string
+  title: string | Function
 }
 type State = {
   pressed: boolean

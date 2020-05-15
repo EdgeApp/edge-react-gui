@@ -24,7 +24,7 @@ class Text extends Component<TextProps> {
 export type Props = {
   children: Node,
   style?: StyleSheet.Styles,
-  onPress: () => void
+  onPress?: () => mixed
 }
 export class TertiaryButton extends Component<Props> {
   static Text = Text

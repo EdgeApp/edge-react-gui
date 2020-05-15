@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import { IconButton } from './IconButton.ui'
 import { PrimaryButton } from './PrimaryButton.ui.js'

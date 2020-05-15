@@ -14,9 +14,9 @@ const EXCHANGE_RATE_LOADING_TEXT = s.strings.drawer_exchange_rate_loading
 
 type Props = {
   primaryInfo: Object,
-  primaryDisplayAmount: string,
+  primaryDisplayAmount?: string, // defaults to '1'
   secondaryInfo: Object,
-  secondaryDisplayAmount: string
+  secondaryDisplayAmount: string | number
 }
 
 export default class ExchangeRate extends Component<Props> {
