@@ -53,7 +53,7 @@ type State = {
 
 type Props = StateProps & OwnProps
 
-class AddressModal2Connected extends Component<Props, State> {
+class AddressModalConnected extends Component<Props, State> {
   fioCheckQueue: number = 0
 
   constructor (props: Props) {
@@ -313,7 +313,7 @@ class AddressModal2Connected extends Component<Props, State> {
   }
 }
 
-const AddressModal2 = connect(
+const AddressModal = connect(
   (state: StateType, ownProps: OwnProps): StateProps => {
     const { account } = state.core
     const { currencyWallets = {} } = account
@@ -323,8 +323,8 @@ const AddressModal2 = connect(
       fioPlugin: account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
     }
   }
-)(AddressModal2Connected)
-export { AddressModal2 }
+)(AddressModalConnected)
+export { AddressModal }
 
 const { rem } = THEME
 

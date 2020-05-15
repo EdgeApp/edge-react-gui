@@ -17,7 +17,7 @@ import { type PermissionStatus } from '../../reducers/PermissionsReducer.js'
 import styles, { styles as styleRaw } from '../../styles/scenes/ScaneStyle'
 import { scale } from '../../util/scaling.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { AddressModal2 } from '../modals/AddressModal2.js'
+import { AddressModal } from '../modals/AddressModal.js'
 import { Airship } from '../services/AirshipInstance'
 
 type Props = {
@@ -94,7 +94,7 @@ export class Scan extends Component<Props> {
 
   _onToggleAddressModal = async () => {
     const { walletId, currencyCode } = this.props
-    const uri = await Airship.show(bridge => <AddressModal2 bridge={bridge} walletId={walletId} currencyCode={currencyCode} />)
+    const uri = await Airship.show(bridge => <AddressModal bridge={bridge} walletId={walletId} currencyCode={currencyCode} />)
     if (uri) {
       this.props.parseScannedUri(uri)
     }
