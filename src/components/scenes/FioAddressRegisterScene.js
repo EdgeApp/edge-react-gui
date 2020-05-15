@@ -13,7 +13,7 @@ import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton
 import T from '../../modules/UI/components/FormattedText/index'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
+import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import { MaterialInput, MaterialInputOnWhite } from '../../styles/components/FormFieldStyles.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
 import { styles as fioAddressStyles } from '../../styles/scenes/FioAddressRegisterStyle'

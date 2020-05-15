@@ -12,7 +12,7 @@ import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton
 import Text from '../../modules/UI/components/FormattedText'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import { errorModal } from '../../modules/UI/components/Modals/ErrorModal.js'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
+import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { type GuiWalletType } from '../../types/types.js'
