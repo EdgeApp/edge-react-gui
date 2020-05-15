@@ -11,8 +11,10 @@ const mapStateToProps = (state: State) => {
   const fioWallets = getFioWallets(state)
   const wallets = getWallets(state)
   const wallet = getSelectedWallet(state)
+  const account = state.core.account
   if (!wallet) {
     const out: StateProps = {
+      account,
       wallets: {},
       fioWallets: [],
       isConnected: state.network.isConnected
@@ -21,6 +23,7 @@ const mapStateToProps = (state: State) => {
   }
 
   const out: StateProps = {
+    account,
     wallets,
     fioWallets,
     isConnected: state.network.isConnected
