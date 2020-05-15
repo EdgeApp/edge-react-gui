@@ -13,6 +13,7 @@ import { showError } from '../components/services/AirshipInstance.js'
 import { EXCLAMATION, FEE_ALERT_THRESHOLD, MATERIAL_COMMUNITY, SEND_CONFIRMATION, TRANSACTION_DETAILS } from '../constants/indexConstants'
 import { getSpecialCurrencyInfo, getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
+import { addToFioAddressCache } from '../modules/FioAddress/util.js'
 import { getExchangeDenomination as settingsGetExchangeDenomination } from '../modules/Settings/selectors.js'
 import Text from '../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
@@ -280,6 +281,10 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
           text: s.strings.string_ok
         }
       ])
+    }
+
+    if (guiMakeSpendInfo.fioAddress) {
+      addToFioAddressCache(account, [guiMakeSpendInfo.fioAddress])
     }
 
     if (guiMakeSpendInfo.onDone) {
