@@ -265,7 +265,6 @@ class AddressModal2Connected extends Component<Props, State> {
             <View style={styles.container}>
               <View style={styles.tileContainerHeader}>
                 <Text style={dayText('title')}>{s.strings.scan_address_modal_header}</Text>
-                <Text style={dayText('title')}>{s.strings.scan_address_modal_sub_header}</Text>
               </View>
               {copyMessage && (
                 <View style={styles.tileContainerButtons}>
@@ -347,7 +346,7 @@ const tileStyles = {
   backgroundColor: THEME.COLORS.WHITE,
   borderBottomWidth: 1,
   borderBottomColor: THEME.COLORS.GRAY_3,
-  padding: rem(0.5)
+  padding: rem(1)
 }
 
 const styles = StyleSheet.create({
@@ -357,10 +356,14 @@ const styles = StyleSheet.create({
     flexDirection: 'column'
   },
   tileContainerHeader: {
-    ...tileStyles
+    ...tileStyles,
+    borderBottomWidth: 0,
+    paddingVertical: rem(0.5)
   },
   tileContainerButtons: {
     ...tileStyles,
+    paddingVertical: rem(0.5),
+    borderBottomWidth: 0,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center'
@@ -368,6 +371,7 @@ const styles = StyleSheet.create({
   tileContainerInput: {
     ...tileStyles,
     paddingTop: 0,
+    paddingBottom: rem(0.5),
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center'

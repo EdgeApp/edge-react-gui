@@ -732,8 +732,7 @@ const strings = {
   fio_connect_wallets_success: 'Wallets connected. Your FIO Address is now connected to your wallets and ready to use.',
   fio_disconnect_wallets_success: 'Wallets disconnected.',
   address_modal_body: 'Please enter a public address, private key or FIO address',
-  scan_address_modal_header: 'Enter Recipient',
-  scan_address_modal_sub_header: 'FIO or Public Address',
+  scan_address_modal_header: 'Enter Recipient FIO, ENS, or Public Address',
   // Unstoppable resolution error codes
   resolving: 'Resolving...',
   UnregisteredDomain: 'Domain %1$s is not registered',
