@@ -23,13 +23,6 @@ import { type AirshipBridge, AirshipModal, dayText, IconCircle } from './modalPa
 const MODAL_ICON = 'address-book-o'
 const inputAccessoryViewID: string = 'inputAccessoryViewID'
 
-export type AddressModalOpts = {
-  walletId: string,
-  coreWallet: EdgeCurrencyWallet,
-  fioPlugin: EdgeCurrencyConfig,
-  currencyCode: string
-}
-
 type OwnProps = {
   bridge: AirshipBridge<string | null>,
   walletId: string,
