@@ -80,10 +80,8 @@ class CreateWalletImportComponent extends Component<Props, State> {
     const { currencyCode } = selectedWalletType
     const specialCurrencyInfo = getSpecialCurrencyInfo(currencyCode)
     if (!specialCurrencyInfo.isImportKeySupported) throw new Error()
-    const instructionKey = specialCurrencyInfo.isImportKeySupported.privateKeyInstructions
-    const instructionSyntax = s.strings[instructionKey]
-    const labelKey = specialCurrencyInfo.isImportKeySupported.privateKeyLabel
-    const labelSyntax = s.strings[labelKey]
+    const instructionSyntax = specialCurrencyInfo.isImportKeySupported.privateKeyInstructions
+    const labelKeySyntax = specialCurrencyInfo.isImportKeySupported.privateKeyLabel
     return (
       <SafeAreaView>
         <View style={styles.scene}>
@@ -98,7 +96,7 @@ class CreateWalletImportComponent extends Component<Props, State> {
               clearButtonMode={'while-editing'}
               autoCorrect={false}
               onChangeText={this.onChangeText}
-              label={labelSyntax}
+              label={labelKeySyntax}
               value={input}
               returnKeyType={'next'}
               onSubmitEditing={this.onNext}

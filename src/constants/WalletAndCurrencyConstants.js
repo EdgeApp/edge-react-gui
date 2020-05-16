@@ -187,7 +187,8 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     dummyPublicAddress: '0x74f9452e22fe58e27575f176fc884729d88267ba', // rj116
     allowZeroTx: true,
     isImportKeySupported: {
-      privateKeyLabel: 'private seed'
+      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_instructions
     },
     isCustomTokensSupported: false,
     isTokensSupported: true
@@ -205,8 +206,8 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     },
     displayBuyCrypto: false,
     isImportKeySupported: {
-      privateKeyLabel: 'create_wallet_import_input_prompt',
-      privateKeyInstructions: 'create_wallet_import_instructions'
+      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_instructions
     }
   },
   XRP: {
@@ -222,8 +223,8 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     },
     displayBuyCrypto: true,
     isImportKeySupported: {
-      privateKeyLabel: 'create_wallet_import_input_prompt',
-      privateKeyInstructions: 'create_wallet_import_instructions'
+      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_instructions
     }
   },
   XMR: {
@@ -241,8 +242,8 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
       identifierKeyboardType: 'default'
     },
     isImportKeySupported: {
-      privateKeyLabel: 'create_wallet_import_active_key_input_prompt',
-      privateKeyInstructions: 'create_wallet_import_active_key_instructions'
+      privateKeyLabel: s.strings.create_wallet_import_active_key_input_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_active_key_instructions
     }
   },
   ETH: {
@@ -250,8 +251,8 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     allowZeroTx: true,
     displayBuyCrypto: true,
     isImportKeySupported: {
-      privateKeyLabel: 'create_wallet_import_input_prompt',
-      privateKeyInstructions: 'create_wallet_import_instructions'
+      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_instructions
     },
     isCustomTokensSupported: true,
     isTokensSupported: true,
@@ -260,8 +261,8 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   DAI: {
     displayBuyCrypto: true,
     isImportKeySupported: {
-      privateKeyLabel: 'create_wallet_import_input_prompt',
-      privateKeyInstructions: 'create_wallet_import_instructions'
+      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_instructions
     }
   },
   HERC: {
@@ -274,8 +275,8 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     isUriEncodedStructure: true,
     dummyPublicAddress: 'tz1cVgSd4oY25pDkH7vdvVp5DfPkZwT2hXwX',
     isImportKeySupported: {
-      privateKeyLabel: 'create_wallet_import_input_prompt',
-      privateKeyInstructions: 'create_wallet_import_instructions'
+      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_instructions
     }
   },
   BNB: {
@@ -285,8 +286,8 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
       identifierKeyboardType: 'default'
     },
     isImportKeySupported: {
-      privateKeyLabel: 'create_wallet_import_input_prompt',
-      privateKeyInstructions: 'create_wallet_import_instructions'
+      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_instructions
     },
     dummyPublicAddress: 'bnb1rt449yu7us6hmk4pmyr8talc60ydkwp4qkvcl7'
   },
