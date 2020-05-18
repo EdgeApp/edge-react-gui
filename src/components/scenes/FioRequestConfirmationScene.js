@@ -9,6 +9,7 @@ import { Actions } from 'react-native-router-flux'
 import * as Constants from '../../constants/indexConstants'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
+import { addToFioAddressCache } from '../../modules/FioAddress/util.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
 import ExchangeRate from '../../modules/UI/components/ExchangeRate/index.js'
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2'
@@ -121,6 +122,7 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
         })
         this.setState({ loading: false })
         showToast(s.strings.fio_request_ok_body)
+        addToFioAddressCache(this.props.account, [this.props.fioModalData.fioAddress])
         Actions.popTo(Constants.TRANSACTION_LIST)
       } catch (error) {
         this.setState({ loading: false })

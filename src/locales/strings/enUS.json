@@ -684,6 +684,7 @@
   "fio_connect_wallets_success": "Wallets connected. Your FIO Address is now connected to your wallets and ready to use.",
   "fio_disconnect_wallets_success": "Wallets disconnected.",
   "address_modal_body": "Please enter a public address, private key or FIO address",
+  "scan_address_modal_header": "Enter Recipient FIO, ENS, or Public Address",
   "resolving": "Resolving...",
   "UnregisteredDomain": "Domain %1$s is not registered",
   "UnspecifiedResolver": "Domain %1$s is not configured",

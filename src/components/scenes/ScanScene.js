@@ -17,6 +17,8 @@ import { type PermissionStatus } from '../../reducers/PermissionsReducer.js'
 import styles, { styles as styleRaw } from '../../styles/scenes/ScaneStyle'
 import { scale } from '../../util/scaling.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { AddressModal } from '../modals/AddressModal.js'
+import { Airship } from '../services/AirshipInstance'
 
 type Props = {
   cameraPermission: PermissionStatus,
@@ -24,10 +26,11 @@ type Props = {
   scanEnabled: boolean,
   currentWalletId: string,
   currentCurrencyCode: string,
+  walletId: string,
+  currencyCode: string,
   qrCodeScanned: (data: string) => void,
   parseScannedUri: (data: string) => Promise<void>,
   toggleEnableTorch: () => void,
-  toggleAddressModal: () => void,
   toggleScanToWalletListModal: () => void,
   selectFromWalletForExchange: (walletId: string, currencyCode: string) => void
 }
@@ -89,8 +92,12 @@ export class Scan extends Component<Props> {
     this.props.toggleEnableTorch()
   }
 
-  _onToggleAddressModal = () => {
-    this.props.toggleAddressModal()
+  _onToggleAddressModal = async () => {
+    const { walletId, currencyCode } = this.props
+    const uri = await Airship.show(bridge => <AddressModal bridge={bridge} walletId={walletId} currencyCode={currencyCode} />)
+    if (uri) {
+      this.props.parseScannedUri(uri)
+    }
   }
 
   openSettingsTapped = () => {

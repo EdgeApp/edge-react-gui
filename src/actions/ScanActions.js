@@ -10,7 +10,6 @@ import URL from 'url-parse'
 
 import { selectWalletForExchange } from '../actions/CryptoExchangeActions.js'
 import { launchModal } from '../components/common/ModalProvider.js'
-import { createAddressModal } from '../components/modals/AddressModal.js'
 import { showError } from '../components/services/AirshipInstance'
 import {
   ADD_TOKEN,
@@ -250,27 +249,6 @@ export const isPrivateKeyUri = (parsedUri: EdgeParsedUri): boolean => {
 export const isPaymentProtocolUri = (parsedUri: EdgeParsedUri): boolean => {
   // $FlowFixMe should be paymentProtocolUrl (lowercased)?
   return !!parsedUri.paymentProtocolURL && !parsedUri.publicAddress
-}
-
-export const toggleAddressModal = () => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { account } = state.core
-  const { currencyWallets = {} } = account
-
-  const walletId: string = UI_SELECTORS.getSelectedWalletId(state)
-  const coreWallet: EdgeCurrencyWallet = currencyWallets[walletId]
-  const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
-  const fioPlugin = account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
-  const addressModal = createAddressModal({
-    walletId,
-    coreWallet,
-    fioPlugin,
-    currencyCode
-  })
-  const uri = await launchModal(addressModal)
-  if (uri) {
-    dispatch(parseScannedUri(uri))
-  }
 }
 
 export const legacyAddressModalContinueButtonPressed = () => (dispatch: Dispatch, getState: GetState) => {
