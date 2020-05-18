@@ -66,7 +66,7 @@ export class FioSentRequestDetailsComponent extends Component<Props, LocalState>
   requestedField = (payer: string, status: string) => {
     let statusLabel = (
       <T style={styles.title}>
-        {s.strings.title_fio_requested} {s.strings.fragment_transaction_list_sent_prefix}
+        {s.strings.title_request} {s.strings.fragment_transaction_list_sent_prefix}
         {s.strings.word_to_in_convert_from_to_string}
       </T>
     )

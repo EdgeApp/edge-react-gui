@@ -221,6 +221,22 @@ exports[`SendConfirmation should render with destination 1`] = `
             </AddressTextWithBlockExplorerModal>
           </Item>
         </Padding>
+        <Padding
+          style={
+            Object {
+              "paddingHorizontal": 54,
+            }
+          }
+        >
+          <Item
+            style={
+              Object {
+                "alignItems": "center",
+                "flex": -1,
+              }
+            }
+          />
+        </Padding>
       </View>
       <Footer
         style={
@@ -234,6 +250,7 @@ exports[`SendConfirmation should render with destination 1`] = `
       >
         <ABSlider
           forceUpdateGuiCounter={0}
+          onSlidingComplete={[Function]}
           parentStyle={
             Object {
               "width": 379.23591549295776,
@@ -455,6 +472,22 @@ exports[`SendConfirmation should render with standard props 1`] = `
             </AddressTextWithBlockExplorerModal>
           </Item>
         </Padding>
+        <Padding
+          style={
+            Object {
+              "paddingHorizontal": 54,
+            }
+          }
+        >
+          <Item
+            style={
+              Object {
+                "alignItems": "center",
+                "flex": -1,
+              }
+            }
+          />
+        </Padding>
       </View>
       <Footer
         style={
@@ -468,6 +501,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
       >
         <ABSlider
           forceUpdateGuiCounter={0}
+          onSlidingComplete={[Function]}
           parentStyle={
             Object {
               "width": 379.23591549295776,
@@ -669,6 +703,22 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
             </Row>
           </Item>
         </Padding>
+        <Padding
+          style={
+            Object {
+              "paddingHorizontal": 54,
+            }
+          }
+        >
+          <Item
+            style={
+              Object {
+                "alignItems": "center",
+                "flex": -1,
+              }
+            }
+          />
+        </Padding>
       </View>
       <Footer
         style={
@@ -682,6 +732,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
       >
         <ABSlider
           forceUpdateGuiCounter={0}
+          onSlidingComplete={[Function]}
           parentStyle={
             Object {
               "width": 379.23591549295776,
@@ -913,6 +964,22 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
             </Row>
           </Item>
         </Padding>
+        <Padding
+          style={
+            Object {
+              "paddingHorizontal": 54,
+            }
+          }
+        >
+          <Item
+            style={
+              Object {
+                "alignItems": "center",
+                "flex": -1,
+              }
+            }
+          />
+        </Padding>
       </View>
       <Footer
         style={
@@ -928,6 +995,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
       >
         <ABSlider
           forceUpdateGuiCounter={0}
+          onSlidingComplete={[Function]}
           parentStyle={
             Object {
               "width": 379.23591549295776,

@@ -5,7 +5,7 @@ import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-c
 import { FIO_WALLET_TYPE } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import type { CcWalletMap } from '../../reducers/FioReducer'
-import type { FioConnectionWalletItem, GuiWallet } from '../../types/types'
+import type { FioConnectionWalletItem, FioObtRecord, GuiWallet } from '../../types/types'
 
 const CONNECTED_WALLETS = 'ConnectedWallets.json'
 const FIO_ADDRESS_CACHE = 'FioAddressCache.json'
@@ -370,4 +370,70 @@ export const getFioAddressCache = async (account: EdgeAccount): Promise<FioAddre
   } catch (e) {
     return { addresses: {} }
   }
+}
+
+export const checkRecordSendFee = async (fioWallet: EdgeCurrencyWallet, fioAddress: string) => {
+  try {
+    const getFeeResult = await fioWallet.otherMethods.fioAction('getFee', {
+      endPoint: 'record_obt_data',
+      fioAddress: fioAddress
+    })
+    if (getFeeResult.fee) {
+      throw new Error(s.strings.fio_no_bundled_err_msg)
+    }
+  } catch (e) {
+    throw new Error(s.strings.fio_get_fee_err_msg)
+  }
+}
+
+export const recordSend = async (
+  senderWallet: EdgeCurrencyWallet,
+  senderFioAddress: string,
+  params: {
+    payeeFioAddress: string,
+    payerPublicAddress: string,
+    payeePublicAddress: string,
+    amount: string,
+    currencyCode: string,
+    chainCode: string,
+    txid: string,
+    memo: string
+  }
+) => {
+  if (senderFioAddress && senderWallet) {
+    const { payeeFioAddress, payerPublicAddress, payeePublicAddress, amount, currencyCode, chainCode, txid, memo } = params
+    try {
+      await senderWallet.otherMethods.fioAction('recordObtData', {
+        payerFioAddress: senderFioAddress,
+        payeeFioAddress,
+        payerPublicAddress,
+        payeePublicAddress,
+        amount,
+        tokenCode: currencyCode,
+        chainCode,
+        obtId: txid,
+        memo,
+        maxFee: 0,
+        tpid: '',
+        status: 'sent_to_blockchain'
+      })
+    } catch (e) {
+      //
+      throw new Error(e.message)
+    }
+  }
+}
+
+export const getFioObtData = async (fioWallets: EdgeCurrencyWallet[]): Promise<FioObtRecord[]> => {
+  let obtDataRecords = []
+  for (const fioWallet: EdgeCurrencyWallet of fioWallets) {
+    try {
+      const { obt_data_records } = await fioWallet.otherMethods.fioAction('getObtData', {})
+      obtDataRecords = [...obtDataRecords, ...obt_data_records]
+    } catch (e) {
+      //
+    }
+  }
+
+  return obtDataRecords
 }

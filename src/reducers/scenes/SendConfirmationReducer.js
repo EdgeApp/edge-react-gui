@@ -24,6 +24,7 @@ export type GuiMakeSpendInfo = {
   dismissAlert?: boolean,
   fioAddress?: string,
   memo?: string,
+  isSendUsingFioAddress?: boolean,
   onBack?: () => void,
   onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void,
   beforeTransaction?: () => Promise<void>

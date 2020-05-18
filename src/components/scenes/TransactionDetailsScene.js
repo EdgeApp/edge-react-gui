@@ -192,7 +192,15 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
 
   onChangeNotes = (notes: string) => this.setState({ notes })
   openNotesInput = () => {
-    Airship.show(bridge => <TransactionDetailsNotesInput bridge={bridge} notes={this.state.notes} onChange={this.onChangeNotes} />).then(_ => {})
+    Airship.show(bridge => (
+      <TransactionDetailsNotesInput
+        bridge={bridge}
+        title={s.strings.transaction_details_notes_title}
+        placeholder={s.strings.transaction_details_notes_title}
+        notes={this.state.notes}
+        onChange={this.onChangeNotes}
+      />
+    )).then(_ => {})
   }
 
   openAdvancedDetails = async () => {
