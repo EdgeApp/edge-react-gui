@@ -587,6 +587,29 @@
     }
   },
   {
+    "id": "banxa.credit",
+    "pluginId": "banxa",
+    "paymentTypes": [
+      "credit"
+    ],
+    "description": "Fee: 2.9% / Settlement: Instant\nLimit: $5000/day",
+    "title": "Credit Card",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
+    "forCountries": [
+      "AU",
+      "HK"
+    ],
+    "cryptoCodes": [
+      "BTC",
+      "ETH"
+    ],
+    "paymentTypeLogoKey": "credit",
+    "deepQuery": {
+      "country": "au",
+      "payment_id": "6028"
+    }
+  },
+  {
     "id": "bits of gold",
     "pluginId": "bitsofgold",
     "paymentTypes": [
@@ -785,11 +808,21 @@
     ],
     "deepQuery": {
       "country": "nl",
-      "payment": "IDEAL"
+      "payment_id": "IDEAL"
     },
     "title": "iDEAL",
     "paymentTypeLogoKey": "ideal",
     "description": "Fee: 2.9% / Settlement: Instant\nLimit: €10000",
     "sortIndex": 1
+  },{
+    "id": "banxa.credit",
+    "forCountries": [
+      "HK"
+    ],
+    "deepQuery": {
+      "country": "hk",
+      "payment_id": "6026"
+    },
+    "description": "Fee: 2.9% / Settlement: Instant\nLimit: HK$50000/day"
   }
 ]
