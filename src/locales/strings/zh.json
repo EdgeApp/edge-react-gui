@@ -684,6 +684,7 @@
   "fio_connect_wallets_success": "",
   "fio_disconnect_wallets_success": "",
   "address_modal_body": "",
+  "scan_address_modal_header": "",
   "resolving": "",
   "UnregisteredDomain": "",
   "UnspecifiedResolver": "",
