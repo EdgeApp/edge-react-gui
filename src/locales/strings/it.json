@@ -684,6 +684,7 @@
   "fio_connect_wallets_success": "Portafogli collegati. Il tuo indirizzo FIO è ora connesso ai tuoi portafogli e pronto all'uso.",
   "fio_disconnect_wallets_success": "Portafogli disconnessi.",
   "address_modal_body": "Inserisci un indirizzo pubblico, una chiave privata o un indirizzo FIO",
+  "scan_address_modal_header": "",
   "resolving": "Risoluzione...",
   "UnregisteredDomain": "Il dominio %1$s non è registrato",
   "UnspecifiedResolver": "Il dominio %1$s non è configurato",
