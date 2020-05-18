@@ -4030,6 +4030,13 @@ edge-components@^0.0.26:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
+edge-components@^0.0.27:
+  version "0.0.27"
+  resolved "https://registry.yarnpkg.com/edge-components/-/edge-components-0.0.27.tgz#4364d57fe3733a98cb846892069a2fcd887a10f3"
+  integrity sha512-UBJeGdC/Z6HKSAfdb2zCSZVFMhl9gDrj7DqUVR5cqMwHAc75Spx/FNmqpfcCrBiKlHaybF1oxNJ/2HYiNbGFdA==
+  dependencies:
+    react-native-linear-gradient "^2.4.0"
+
 edge-core-js@^0.17.1:
   version "0.17.1"
   resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.1.tgz#5e8b2a14cf5d725cee96ded280f8383f22168866"
