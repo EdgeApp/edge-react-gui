@@ -90,13 +90,14 @@ Array [
     "cryptoCodes": Array [
       "BTC",
     ],
-    "deepPath": "/buy",
+    "deepPath": "/order/buy",
     "deepQuery": Object {
       "order_id": "null",
       "page": "0",
     },
-    "description": "Fee: 2.5% / Settlement: 1-48 hours
-Limit: €10000+/day",
+    "description": "Fee: 3% / Settlement: 1-48 hours
+Level 1 Limit: €10000/day
+Level 2 Limit: Unlimited",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/bits-of-gold-logo-sm.png",
     "paymentTypeLogoKey": "bank",
     "paymentTypes": Array [
@@ -138,6 +139,8 @@ Limit: $18000/day",
       "BAT",
       "BNB",
       "PAX",
+      "QTUM",
+      "RVN",
       "TUSD",
       "USDC",
       "USDT",
@@ -210,6 +213,8 @@ Limit: $18000/day",
       "BAT",
       "BNB",
       "PAX",
+      "QTUM",
+      "RVN",
       "TUSD",
       "USDC",
       "USDT",

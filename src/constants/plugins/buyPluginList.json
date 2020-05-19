@@ -332,13 +332,16 @@
     "title": "Credit Card",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/05/icon_black_small.png",
     "forCountries": [
-      "AT",
+      "AR",
       "AU",
+      "AT",
       "BE",
-      "BG",
       "BR",
-      "HR",
+      "BG",
       "CA",
+      "CL",
+      "CO",
+      "HR",
       "CY",
       "CZ",
       "DK",
@@ -350,41 +353,46 @@
       "HK",
       "HU",
       "IS",
+      "IN",
+      "ID",
       "IE",
+      "IL",
       "IT",
       "JP",
       "KR",
+      "KW",
       "LV",
       "LI",
       "LT",
       "LU",
+      "MY",
       "MT",
+      "MU",
       "MX",
       "NL",
+      "NZ",
       "NO",
+      "PH",
       "PL",
       "PT",
+      "QA",
       "RO",
       "RU",
+      "SA",
+      "SG",
       "SK",
       "SI",
+      "ZA",
       "ES",
       "SE",
-      "ZA",
-      "GB",
-      "CO",
-      "GH",
-      "IL",
-      "IN",
-      "ID",
-      "MY",
-      "PK",
-      "PH",
-      "QA",
+      "CH",
+      "TW",
       "TH",
-      "VE",
-      "VN",
-      "US"
+      "TR",
+      "AE",
+      "GB",
+      "US",
+      "VN"
     ],
     "cryptoCodes": [
       "BTC",
@@ -398,6 +406,8 @@
       "BAT",
       "BNB",
       "PAX",
+      "QTUM",
+      "RVN",
       "TUSD",
       "USDC",
       "USDT"
@@ -577,22 +587,93 @@
     }
   },
   {
+    "id": "banxa.credit",
+    "pluginId": "banxa",
+    "paymentTypes": [
+      "credit"
+    ],
+    "description": "Fee: 2.9% / Settlement: Instant\nLimit: $5000/day",
+    "title": "Credit Card",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
+    "forCountries": [
+      "AU",
+      "HK"
+    ],
+    "cryptoCodes": [
+      "BTC",
+      "ETH"
+    ],
+    "paymentTypeLogoKey": "credit",
+    "deepQuery": {
+      "country": "au",
+      "payment_id": "6028"
+    }
+  },
+  {
     "id": "bits of gold",
     "pluginId": "bitsofgold",
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 2.5% / Settlement: 1-48 hours\nLimit: €10000+/day",
-    "title": "Israeli Bank Transfer",
+    "description": "Fee: 3% / Settlement: 1-48 hours\nLevel 1 Limit: €10000/day\nLevel 2 Limit: Unlimited",
+    "title": "SEPA Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/bits-of-gold-logo-sm.png",
     "forCountries": [
-      "IL"
+      "AD",
+      "AT",
+      "BE",
+      "BG",
+      "BL",
+      "CH",
+      "CY",
+      "CZ",
+      "DE",
+      "DK",
+      "EE",
+      "ES",
+      "FI",
+      "FR",
+      "GB",
+      "GF",
+      "GG",
+      "GI",
+      "GP",
+      "GR",
+      "HR",
+      "HU",
+      "IE",
+      "IL",
+      "IM",
+      "IS",
+      "IT",
+      "JE",
+      "LI",
+      "LT",
+      "LU",
+      "LV",
+      "MC",
+      "MF",
+      "MQ",
+      "MT",
+      "NL",
+      "NO",
+      "PL",
+      "PM",
+      "PT",
+      "RE",
+      "RO",
+      "SE",
+      "SI",
+      "SK",
+      "SM",
+      "VA",
+      "YT"
     ],
     "cryptoCodes": [
       "BTC"
     ],
     "paymentTypeLogoKey": "bank",
-    "deepPath": "/buy",
+    "deepPath": "/order/buy",
     "deepQuery": {
       "order_id": "null",
       "page": "0"
@@ -605,7 +686,7 @@
   },
   {
     "id": "bits of gold",
-    "sortIndex": 2
+    "sortIndex": 6
   },
   {
     "id": "wyre",
@@ -638,6 +719,10 @@
   {
     "id": "banxa.auspost",
     "sortIndex": 4
+  },
+  {
+    "id": "banxa.credit",
+    "sortIndex": 4.5
   },
   {
     "id": "libertyx",
@@ -713,17 +798,35 @@
     "sortIndex": 2
   },
   {
+    "id": "bits of gold",
+    "forCountries": [
+      "IL"
+    ],
+    "sortIndex": 2,
+    "title": "Israeli Bank Transfer"
+  },
+  {
     "id": "banxa.bank",
     "forCountries": [
       "NL"
     ],
     "deepQuery": {
       "country": "nl",
-      "payment": "IDEAL"
+      "payment_id": "IDEAL"
     },
     "title": "iDEAL",
     "paymentTypeLogoKey": "ideal",
     "description": "Fee: 2.9% / Settlement: Instant\nLimit: €10000",
     "sortIndex": 1
+  },{
+    "id": "banxa.credit",
+    "forCountries": [
+      "HK"
+    ],
+    "deepQuery": {
+      "country": "hk",
+      "payment_id": "6026"
+    },
+    "description": "Fee: 2.9% / Settlement: Instant\nLimit: HK$50000/day"
   }
 ]
