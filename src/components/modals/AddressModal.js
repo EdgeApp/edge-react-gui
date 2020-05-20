@@ -3,7 +3,7 @@
 import { FormField, MaterialInputStyle, TertiaryButton } from 'edge-components'
 import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component, Fragment } from 'react'
-import { Clipboard, FlatList, Image, InputAccessoryView, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { Clipboard, FlatList, Image, InputAccessoryView, Platform, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
@@ -267,13 +267,15 @@ class AddressModalConnected extends Component<Props, State> {
                 </View>
               )}
               <View style={styles.tileContainerInput}>
-                <InputAccessoryView nativeID={inputAccessoryViewID}>
-                  <View style={styles.accessoryView}>
-                    <TouchableOpacity style={styles.accessoryButton} onPress={this.handleClose}>
-                      <Text style={styles.accessoryText}>{s.strings.string_cancel_cap}</Text>
-                    </TouchableOpacity>
-                  </View>
-                </InputAccessoryView>
+                {Platform.OS === 'ios' ? (
+                  <InputAccessoryView nativeID={inputAccessoryViewID}>
+                    <View style={styles.accessoryView}>
+                      <TouchableOpacity style={styles.accessoryButton} onPress={this.handleClose}>
+                        <Text style={styles.accessoryText}>{s.strings.string_cancel_cap}</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </InputAccessoryView>
+                ) : null}
                 <FormField
                   autoFocus
                   blurOnSubmit
