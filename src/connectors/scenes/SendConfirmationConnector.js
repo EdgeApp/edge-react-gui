@@ -4,6 +4,7 @@ import { type EdgeCurrencyInfo, type EdgeSpendInfo, type EdgeTransaction, errorN
 import { connect } from 'react-redux'
 
 import {
+  type FioSenderInfo,
   getAuthRequiredDispatch,
   newPin,
   newSpendInfo,
@@ -124,7 +125,7 @@ const mapDispatchToProps = (dispatch: Dispatch): SendConfirmationDispatchProps =
   sendConfirmationUpdateTx: guiMakeSpendInfo => dispatch(sendConfirmationUpdateTx(guiMakeSpendInfo)),
   reset: () => dispatch(reset()),
   updateSpendPending: (pending: boolean): any => dispatch(updateSpendPending(pending)),
-  signBroadcastAndSave: (): any => dispatch(signBroadcastAndSave()),
+  signBroadcastAndSave: (fioSender?: FioSenderInfo): any => dispatch(signBroadcastAndSave(fioSender)),
   onChangePin: (pin: string) => dispatch(newPin(pin)),
   uniqueIdentifierButtonPressed: () => {
     dispatch(uniqueIdentifierModalActivated())

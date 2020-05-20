@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import { createYesNoModal } from 'edge-components'
-import type { EdgeMetadata, EdgeParsedUri, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeMetadata, EdgeParsedUri, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import React from 'react'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -13,7 +13,7 @@ import { showError } from '../components/services/AirshipInstance.js'
 import { EXCLAMATION, FEE_ALERT_THRESHOLD, MATERIAL_COMMUNITY, SEND_CONFIRMATION, TRANSACTION_DETAILS } from '../constants/indexConstants'
 import { getSpecialCurrencyInfo, getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
-import { addToFioAddressCache } from '../modules/FioAddress/util.js'
+import { addToFioAddressCache, checkRecordSendFee, recordSend } from '../modules/FioAddress/util'
 import { getExchangeDenomination as settingsGetExchangeDenomination } from '../modules/Settings/selectors.js'
 import Text from '../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
@@ -25,6 +25,14 @@ import { B } from '../styles/common/textStyles.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { convertNativeToExchange } from '../util/utils'
 import { playSendSound } from './SoundActions.js'
+
+export type FioSenderInfo = {
+  fioAddress: string,
+  fioWallet: EdgeCurrencyWallet | null,
+  fioError: string,
+  memo: string,
+  memoError: string
+}
 
 export const newSpendInfo = (spendInfo: EdgeSpendInfo, authRequired: AuthType) => ({
   type: 'UI/SEND_CONFIMATION/NEW_SPEND_INFO',
@@ -175,7 +183,7 @@ export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => 
     .catch(showError)
 }
 
-export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: GetState) => {
+export const signBroadcastAndSave = (fioSender?: FioSenderInfo) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
   const { currencyWallets = {} } = account
@@ -253,6 +261,11 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
     if (!edgeMetadata.amountFiat) {
       edgeMetadata.amountFiat = amountFiat
     }
+    if (guiMakeSpendInfo.fioAddress && fioSender) {
+      let fioNotes = `${s.strings.fragment_transaction_list_sent_prefix}${s.strings.fragment_send_from_label.toLowerCase()} ${fioSender.fioAddress}`
+      fioNotes += fioSender.memo ? `\n${s.strings.fio_sender_memo_label}: ${fioSender.memo}` : ''
+      edgeMetadata.notes = `${fioNotes}\n${edgeMetadata.notes || ''}`
+    }
     if (getSpecialCurrencyInfo(currencyCode).uniqueIdentifierToNotes && edgeSignedTransaction.otherParams != null) {
       const newNotesSyntax = sprintf(
         s.strings.tx_notes_metadata,
@@ -285,6 +298,43 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
 
     if (guiMakeSpendInfo.fioAddress) {
       addToFioAddressCache(account, [guiMakeSpendInfo.fioAddress])
+    }
+
+    if (fioSender) {
+      const { fioAddress, fioWallet, memo } = fioSender
+      const payeeFioAddress = guiMakeSpendInfo.fioAddress
+      if (
+        payeeFioAddress &&
+        fioAddress &&
+        fioWallet &&
+        edgeSignedTransaction.otherParams &&
+        edgeSignedTransaction.otherParams.transactionJson &&
+        edgeSignedTransaction.otherParams.transactionJson.actions &&
+        edgeSignedTransaction.otherParams.transactionJson.actions.length
+      ) {
+        const payerPublicAddress = edgeSignedTransaction.otherParams.transactionJson.actions[0].data.from
+        const payeePublicAddress = edgeSignedTransaction.otherParams.transactionJson.actions[0].data.to
+        const amount = edgeSignedTransaction.otherParams.transactionJson.actions[0].data.quantity
+        let chainCode
+        if (edgeSignedTransaction.wallet && edgeSignedTransaction.wallet.currencyInfo) {
+          chainCode = edgeSignedTransaction.wallet.currencyInfo.currencyCode
+        }
+        try {
+          await checkRecordSendFee(fioWallet, fioAddress)
+        } catch (e) {
+          showError(e.message)
+        }
+        recordSend(fioWallet, fioAddress, {
+          payeeFioAddress,
+          payerPublicAddress,
+          payeePublicAddress,
+          amount: amount && bns.div(amount, exchangeDenomination.multiplier, 18),
+          currencyCode: edgeSignedTransaction.currencyCode,
+          chainCode: chainCode || guiWallet.currencyCode,
+          txid: edgeSignedTransaction.txid,
+          memo
+        })
+      }
     }
 
     if (guiMakeSpendInfo.onDone) {

@@ -8,10 +8,12 @@ import { TouchableOpacity, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
+import { type FioSenderInfo } from '../../actions/SendConfirmationActions'
 import { UniqueIdentifierModalConnect as UniqueIdentifierModal } from '../../connectors/UniqueIdentifierModalConnector.js'
 import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD, getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
+import { SelectFioAddressConnector as SelectFioAddress } from '../../modules/FioAddress/components/SelectFioAddress'
 import ExchangeRate from '../../modules/UI/components/ExchangeRate/index.js'
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import { ExchangedFlipInput } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
@@ -27,7 +29,6 @@ import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/ty
 import { convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../util/utils.js'
 import { AddressTextWithBlockExplorerModal } from '../common/AddressTextWithBlockExplorerModal'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { showError } from '../services/AirshipInstance'
 
 const DIVIDE_PRECISION = 18
 
@@ -67,7 +68,7 @@ export type SendConfirmationStateProps = {
 
 export type SendConfirmationDispatchProps = {
   updateSpendPending: boolean => any,
-  signBroadcastAndSave: () => any,
+  signBroadcastAndSave: (fioSender?: FioSenderInfo) => any,
   reset: () => any,
   updateAmount: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) => any,
   sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo) => any,
@@ -92,7 +93,8 @@ type State = {|
   keyboardVisible: boolean,
   showSpinner: boolean,
   isFiatOnTop: boolean,
-  isFocus: boolean
+  isFocus: boolean,
+  fioSender: FioSenderInfo
 |}
 
 export class SendConfirmation extends Component<Props, State> {
@@ -113,6 +115,13 @@ export class SendConfirmation extends Component<Props, State> {
       forceUpdateGuiCounter: 0,
       nativeAmount: props.nativeAmount,
       showSpinner: false,
+      fioSender: {
+        fioAddress: '',
+        fioWallet: null,
+        fioError: '',
+        memo: '',
+        memoError: ''
+      },
       isFiatOnTop: !!(props.guiMakeSpendInfo && props.guiMakeSpendInfo.nativeAmount && bns.eq(props.guiMakeSpendInfo.nativeAmount, '0')),
       isFocus: !!(props.guiMakeSpendInfo && props.guiMakeSpendInfo.nativeAmount && bns.eq(props.guiMakeSpendInfo.nativeAmount, '0'))
     }
@@ -209,12 +218,16 @@ export class SendConfirmation extends Component<Props, State> {
     const ADDRESS_TEXT = sprintf(s.strings.send_confirmation_address, address)
     const fioAddress = this.props.guiMakeSpendInfo && this.props.guiMakeSpendInfo.fioAddress ? this.props.guiMakeSpendInfo.fioAddress : ''
     const memo = this.props.guiMakeSpendInfo && this.props.guiMakeSpendInfo.memo ? this.props.guiMakeSpendInfo.memo : ''
+    const fio = this.props.guiMakeSpendInfo && this.props.guiMakeSpendInfo.isSendUsingFioAddress ? this.state.fioSender : null
     const displayAddress = fioAddress ? '' : address
 
     const feeCalculated = !!networkFee || !!parentNetworkFee
 
     const sliderDisabled =
-      this.props.sliderDisabled || !feeCalculated || (!getSpecialCurrencyInfo(this.props.currencyCode).allowZeroTx && this.props.nativeAmount === '0')
+      this.props.sliderDisabled ||
+      !feeCalculated ||
+      (!getSpecialCurrencyInfo(this.props.currencyCode).allowZeroTx && this.props.nativeAmount === '0') ||
+      (fio && (!!fio.fioError || !!fio.memoError))
 
     const isTaggableCurrency = !!getSpecialCurrencyInfo(currencyCode).uniqueIdentifier
     const networkFeeData = this.getNetworkFeeData()
@@ -240,6 +253,11 @@ export class SendConfirmation extends Component<Props, State> {
               ) : (
                 <ExchangeRate secondaryDisplayAmount={this.props.fiatPerCrypto} primaryInfo={primaryInfo} secondaryInfo={secondaryInfo} />
               )}
+              {fio && fio.fioError ? (
+                <Text style={[styles.error, styles.errorText]} numberOfLines={2}>
+                  {fio.fioError}
+                </Text>
+              ) : null}
             </View>
 
             <View style={styles.main}>
@@ -283,28 +301,6 @@ export class SendConfirmation extends Component<Props, State> {
                     </AddressTextWithBlockExplorerModal>
                   )}
 
-                  {!!fioAddress && (
-                    <Scene.Row style={{ paddingVertical: 10 }}>
-                      <Recipient.Text style={{}}>
-                        <Text>{sprintf(s.strings.fio_address, fioAddress)}</Text>
-                      </Recipient.Text>
-                    </Scene.Row>
-                  )}
-
-                  {!!memo && (
-                    <Scene.Row style={{ paddingBottom: 5, paddingTop: 10 }}>
-                      <Recipient.Text style={{}}>
-                        <Text>{fioAddress ? s.strings.unique_identifier_memo : ''}:</Text>
-                      </Recipient.Text>
-                    </Scene.Row>
-                  )}
-
-                  {!!memo && (
-                    <Scene.Row style={{ paddingTop: 0, paddingBottom: 10 }}>
-                      <Text style={styles.rowText}>{memo}</Text>
-                    </Scene.Row>
-                  )}
-
                   {isTaggableCurrency && (
                     <Scene.Row style={{ paddingVertical: 10 }}>
                       <TouchableOpacity
@@ -332,13 +328,49 @@ export class SendConfirmation extends Component<Props, State> {
                   )}
                 </Scene.Item>
               </Scene.Padding>
+
+              <Scene.Padding style={{ paddingHorizontal: 54 }}>
+                <Scene.Item style={{ alignItems: 'center', flex: -1 }}>
+                  {!!fioAddress && (
+                    <Scene.Row style={{ paddingTop: 10, paddingBottom: fio ? 0 : 10 }}>
+                      <Recipient.Text style={{}}>
+                        <Text>{sprintf(s.strings.send_to_title, fioAddress)}</Text>
+                      </Recipient.Text>
+                    </Scene.Row>
+                  )}
+
+                  {!!memo && (
+                    <Scene.Row style={{ paddingBottom: 5, paddingTop: 10 }}>
+                      <Recipient.Text style={{}}>
+                        <Text>{fioAddress ? s.strings.unique_identifier_memo : ''}:</Text>
+                      </Recipient.Text>
+                    </Scene.Row>
+                  )}
+
+                  {!!memo && (
+                    <Scene.Row style={{ paddingTop: 0, paddingBottom: 10 }}>
+                      <Text style={styles.rowText}>{memo}</Text>
+                    </Scene.Row>
+                  )}
+                </Scene.Item>
+              </Scene.Padding>
+
+              {fio && (
+                <SelectFioAddress
+                  selected={fio.fioAddress}
+                  memo={fio.memo}
+                  memoError={fio.memoError}
+                  onSelect={this.onFioAddressSelect}
+                  onMemoChange={this.onMemoChange}
+                />
+              )}
             </View>
             <Scene.Footer style={[styles.footer, isTaggableCurrency && styles.footerWithPaymentId]}>
               <ABSlider
                 forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
                 resetSlider={this.props.resetSlider}
                 parentStyle={styles.sliderStyle}
-                onSlidingComplete={this.props.signBroadcastAndSave}
+                onSlidingComplete={this.signBroadcastAndSave}
                 sliderDisabled={sliderDisabled}
                 showSpinner={this.state.showSpinner || this.props.pending}
               />
@@ -356,6 +388,14 @@ export class SendConfirmation extends Component<Props, State> {
     )
   }
 
+  signBroadcastAndSave = () => {
+    const { guiMakeSpendInfo } = this.props
+    if (guiMakeSpendInfo && guiMakeSpendInfo.isSendUsingFioAddress) {
+      return this.props.signBroadcastAndSave(this.state.fioSender)
+    }
+    this.props.signBroadcastAndSave()
+  }
+
   handleChangePin = (pin: string) => {
     this.props.onChangePin(pin)
     if (pin.length >= 4) {
@@ -364,11 +404,7 @@ export class SendConfirmation extends Component<Props, State> {
   }
 
   onExchangeAmountChanged = async ({ nativeAmount, exchangeAmount }: ExchangedFlipInputAmounts) => {
-    const { fiatPerCrypto, coreWallet, sceneState, currencyCode, newSpendInfo, updateTransaction, getAuthRequiredDispatch, isConnected } = this.props
-    if (!isConnected) {
-      showError(s.strings.fio_network_alert_text)
-      return
-    }
+    const { fiatPerCrypto, coreWallet, sceneState, currencyCode, newSpendInfo, updateTransaction, getAuthRequiredDispatch } = this.props
     this.setState({ showSpinner: true })
     const amountFiatString: string = bns.mul(exchangeAmount, fiatPerCrypto.toString())
     const amountFiat: number = parseFloat(amountFiatString)
@@ -478,6 +514,21 @@ export class SendConfirmation extends Component<Props, State> {
       feeSyntax: sprintf(s.strings.send_confirmation_fee_line, cryptoFeeString, fiatFeeString),
       feeStyle
     }
+  }
+
+  onFioAddressSelect = (fioAddress: string, fioWallet: EdgeCurrencyWallet, error: string) => {
+    const { fioSender } = this.state
+    fioSender.fioAddress = fioAddress
+    fioSender.fioWallet = fioWallet
+    fioSender.fioError = error
+    this.setState({ fioSender })
+  }
+
+  onMemoChange = (memo: string, error: string) => {
+    const { fioSender } = this.state
+    fioSender.memo = memo
+    fioSender.memoError = error
+    this.setState({ fioSender })
   }
 }
 

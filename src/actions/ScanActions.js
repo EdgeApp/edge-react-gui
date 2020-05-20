@@ -204,6 +204,7 @@ export const parseScannedUri = (data: string) => async (dispatch: Dispatch, getS
 
       if (fioAddress) {
         guiMakeSpendInfo.fioAddress = fioAddress
+        guiMakeSpendInfo.isSendUsingFioAddress = true
       }
       Actions[SEND_CONFIRMATION]({ guiMakeSpendInfo })
       // dispatch(sendConfirmationUpdateTx(parsedUri))
