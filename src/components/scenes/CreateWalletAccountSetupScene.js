@@ -20,6 +20,7 @@ import { PLATFORM } from '../../theme/variables/platform.js'
 import type { GuiFiatType, GuiWalletType } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { trackEvent } from '../../util/tracking.js'
+import { debounce } from '../../util/utils'
 import { FormField } from '../common/FormField.js'
 
 const deviceWidth = PLATFORM.deviceWidth
@@ -58,6 +59,7 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
     if (this.state.accountHandle) {
       props.checkHandleAvailability(this.state.accountHandle)
     }
+    this.debouncedCheckHandleAvailability = debounce(this.checkHandleAvailability, 400, false)
   }
 
   componentDidMount () {
@@ -79,9 +81,13 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
   }
 
   handleChangeHandle = (accountHandle: string) => {
-    const { checkHandleAvailability } = this.props
     this.setState({ accountHandle })
-    checkHandleAvailability(accountHandle)
+    this.debouncedCheckHandleAvailability()
+  }
+
+  checkHandleAvailability = () => {
+    const { accountHandle } = this.state
+    this.props.checkHandleAvailability(accountHandle)
   }
 
   onSetup = () => {
