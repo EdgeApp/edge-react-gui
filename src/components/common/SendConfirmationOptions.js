@@ -58,7 +58,7 @@ export default class SendConfirmationOptions extends Component<Props> {
           </MenuTrigger>
 
           <MenuOptions optionsContainerStyle={styles.optionContainer}>
-            {isEditable && !getSpecialCurrencyInfo(currencyCode).noChangeMiningFee && (
+            {!getSpecialCurrencyInfo(currencyCode).noChangeMiningFee && (
               <MenuOption value={CHANGE_MINING_FEE} style={defaultMenuStyle.menuOption}>
                 <View style={defaultMenuStyle.menuOptionItem}>
                   <Text style={defaultMenuStyle.optionText}>{CHANGE_MINING_FEE_TEXT}</Text>
