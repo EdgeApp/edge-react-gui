@@ -19,6 +19,7 @@ import { PLATFORM } from '../../theme/variables/platform.js'
 import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { logEvent } from '../../util/tracking.js'
+import { debounce } from '../../util/utils'
 import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
 
 const deviceWidth = PLATFORM.deviceWidth
@@ -57,6 +58,7 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
     if (this.state.accountHandle) {
       props.checkHandleAvailability(this.state.accountHandle)
     }
+    this.debouncedCheckHandleAvailability = debounce(this.checkHandleAvailability, 400, false)
   }
 
   componentDidMount() {
@@ -78,9 +80,13 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
   }
 
   handleChangeHandle = (accountHandle: string) => {
-    const { checkHandleAvailability } = this.props
     this.setState({ accountHandle })
-    checkHandleAvailability(accountHandle)
+    this.debouncedCheckHandleAvailability()
+  }
+
+  checkHandleAvailability = () => {
+    const { accountHandle } = this.state
+    this.props.checkHandleAvailability(accountHandle)
   }
 
   onSetup = () => {
@@ -103,17 +109,12 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
     )
   }
 
-<<<<<<< HEAD
-  render() {
-    const { isCheckingHandleAvailability, handleAvailableStatus } = this.props
-=======
   render () {
     const { isCheckingHandleAvailability, handleAvailableStatus, selectedWalletType, currencyConfigs } = this.props
     const { accountHandle } = this.state
     const { currencyCode } = selectedWalletType
     const walletTypeValue = selectedWalletType.value.replace('wallet:', '')
     const { symbolImage } = currencyConfigs[walletTypeValue].currencyInfo
->>>>>>> 9c9987ad2... Refactor EOS activation process and fix activation bugs
     const isHandleAvailable: boolean = handleAvailableStatus === 'AVAILABLE'
     const validityIcon = isHandleAvailable ? validIcon : invalidIcon
     let chooseHandleErrorMessage = ''
@@ -130,13 +131,8 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
       <SafeAreaView>
         <Gradient style={styles.scrollableGradient} />
         <ScrollView>
-<<<<<<< HEAD
           <View style={styles.scrollableView}>
-            <Image source={logos.eos} style={styles.currencyLogo} resizeMode="cover" />
-=======
-          <View style={[styles.scrollableView]}>
             <Image source={{ uri: symbolImage }} style={styles.currencyLogo} resizeMode={'cover'} />
->>>>>>> 9c9987ad2... Refactor EOS activation process and fix activation bugs
             <View style={[styles.createWalletPromptArea, { paddingTop: 24, paddingBottom: 8 }]}>
               <Text style={styles.instructionalText}>{sprintf(s.strings.create_wallet_account_review_instructions, currencyCode)}</Text>
             </View>
