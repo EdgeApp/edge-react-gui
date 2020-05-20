@@ -3,7 +3,18 @@
 import { FormField, MaterialInputStyle, TertiaryButton } from 'edge-components'
 import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component, Fragment } from 'react'
-import { Clipboard, FlatList, Image, InputAccessoryView, Platform, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Clipboard,
+  FlatList,
+  Image,
+  InputAccessoryView,
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View
+} from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
@@ -12,11 +23,12 @@ import ENS_LOGO from '../../assets/images/ens_logo.png'
 import FIO_LOGO from '../../assets/images/fio_logo.png'
 import { CURRENCY_PLUGIN_NAMES } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
-import { checkPubAddress, getFioAddressCache } from '../../modules/FioAddress/util.js'
+import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
+import { type FioAddresses, checkPubAddress, getFioAddressCache } from '../../modules/FioAddress/util.js'
 import Text from '../../modules/UI/components/FormattedText/index'
 import THEME from '../../theme/variables/airbitz.js'
-import type { State as StateType } from '../../types/reduxTypes.js'
-import type { FlatListItem } from '../../types/types.js'
+import type { Dispatch, State as StateType } from '../../types/reduxTypes.js'
+import type { FioAddress, FlatListItem } from '../../types/types.js'
 import ResolutionError, { ResolutionErrorCode } from '../common/ResolutionError.js'
 import { type AirshipBridge, AirshipModal, dayText, IconCircle } from './modalParts.js'
 
@@ -26,13 +38,24 @@ const inputAccessoryViewID: string = 'inputAccessoryViewID'
 type OwnProps = {
   bridge: AirshipBridge<string | null>,
   walletId: string,
-  currencyCode: string
+  currencyCode: string,
+  title?: string,
+  subtitle?: string,
+  showPasteButton?: boolean,
+  isFioOnly?: boolean,
+  useUserFioAddressesOnly?: boolean
 }
 
 type StateProps = {
+  account: EdgeAccount,
+  userFioAddresses: FioAddress[],
+  userFioAddressesLoading: boolean,
   coreWallet: EdgeCurrencyWallet,
-  fioPlugin: EdgeCurrencyConfig,
-  account: EdgeAccount
+  fioPlugin: EdgeCurrencyConfig
+}
+
+type DispatchProps = {
+  refreshAllFioAddresses: () => Promise<void>
 }
 
 type State = {
@@ -41,10 +64,11 @@ type State = {
   statusLabel: string,
   fieldError: string,
   cryptoAddress?: string,
-  fioAddresses: string[]
+  fioAddresses: FioAddresses,
+  filteredFioAddresses: string[]
 }
 
-type Props = StateProps & OwnProps
+type Props = StateProps & OwnProps & DispatchProps
 
 class AddressModalConnected extends Component<Props, State> {
   fioCheckQueue: number = 0
@@ -58,13 +82,20 @@ class AddressModalConnected extends Component<Props, State> {
       statusLabel: s.strings.fragment_send_address,
       cryptoAddress: undefined,
       fieldError: '',
-      fioAddresses: []
+      fioAddresses: { addresses: {} },
+      filteredFioAddresses: []
     }
   }
 
   componentDidMount () {
     this._setClipboard(this.props)
-    this.setFioAddresses()
+    this.getFioAddresses()
+  }
+
+  componentDidUpdate (prevProps) {
+    if (this.props.useUserFioAddressesOnly && prevProps.userFioAddresses !== this.props.userFioAddresses) {
+      this.filterFioAddresses(this.state.uri)
+    }
   }
 
   _setClipboard = async props => {
@@ -84,10 +115,14 @@ class AddressModalConnected extends Component<Props, State> {
     }
   }
 
-  setFioAddresses = async () => {
-    const fioAddressesObject = await getFioAddressCache(this.props.account)
-    const fioAddresses = fioAddressesObject.addresses ? Object.keys(fioAddressesObject.addresses) : []
-    this.setState({ fioAddresses: fioAddresses.sort() })
+  getFioAddresses = async () => {
+    const { useUserFioAddressesOnly, refreshAllFioAddresses, account } = this.props
+    if (useUserFioAddressesOnly) {
+      refreshAllFioAddresses()
+    } else {
+      this.setState({ fioAddresses: await getFioAddressCache(account) })
+      this.filterFioAddresses('')
+    }
   }
 
   setStatusLabel = (status: string) => {
@@ -96,6 +131,32 @@ class AddressModalConnected extends Component<Props, State> {
 
   setCryptoAddress = (address?: string) => {
     this.setState({ cryptoAddress: address })
+  }
+
+  filterFioAddresses = (uri: string): void => {
+    const { useUserFioAddressesOnly, userFioAddresses, isFioOnly } = this.props
+    const { fioAddresses } = this.state
+    const fioAddressesArray = []
+
+    if (useUserFioAddressesOnly) {
+      for (const address of userFioAddresses) {
+        const addressLowerCase = address.name.toLowerCase()
+        if (uri !== '' && !addressLowerCase.includes(uri.toLowerCase())) continue // Autocomplete/Filter Check
+        fioAddressesArray.push(address.name)
+      }
+    }
+
+    if (!useUserFioAddressesOnly) {
+      for (const address in fioAddresses.addresses) {
+        if (!fioAddresses.addresses[address]) continue // Ignore when address is not active (boolean false)
+        const addressLowerCase = address.toLowerCase()
+        if (uri !== '' && !addressLowerCase.includes(uri.toLowerCase())) continue // Autocomplete/Filter check
+        if (isFioOnly && (this.checkIfDomain(address) || !address.includes('@'))) continue // if isFioOnly is true. Ignore address if not a valid FIO address
+        fioAddressesArray.push(address)
+      }
+    }
+
+    this.setState({ filteredFioAddresses: fioAddressesArray.sort() })
   }
 
   onChangeTextDelayed = (domain: string) => {
@@ -194,9 +255,8 @@ class AddressModalConnected extends Component<Props, State> {
   }
 
   updateUri = (uri: string) => {
-    this.setState({
-      uri
-    })
+    this.setState({ uri })
+    this.filterFioAddresses(uri)
   }
 
   onPasteFromClipboard = () => {
@@ -247,7 +307,8 @@ class AddressModalConnected extends Component<Props, State> {
   keyExtractor = (item: string, index: number) => index.toString()
   render () {
     const copyMessage = this.state.clipboard ? sprintf(s.strings.string_paste_address, this.state.clipboard) : null
-    const { uri, statusLabel, fieldError } = this.state
+    const { uri, statusLabel, fieldError, filteredFioAddresses } = this.state
+    const { title, subtitle, showPasteButton, userFioAddressesLoading } = this.props
     return (
       <AirshipModal bridge={this.props.bridge} onCancel={this.handleClose}>
         {gap => (
@@ -257,9 +318,10 @@ class AddressModalConnected extends Component<Props, State> {
             </IconCircle>
             <View style={styles.container}>
               <View style={styles.tileContainerHeader}>
-                <Text style={dayText('title')}>{s.strings.scan_address_modal_header}</Text>
+                <Text style={dayText('title')}>{title || s.strings.address_modal_default_header}</Text>
+                {subtitle && <Text style={dayText('autoCenter')}>{subtitle}</Text>}
               </View>
-              {copyMessage && (
+              {showPasteButton && copyMessage && (
                 <View style={styles.tileContainerButtons}>
                   <TertiaryButton ellipsizeMode={'middle'} onPress={this.onPasteFromClipboard} numberOfLines={1} style={styles.addressModalButton}>
                     <TertiaryButton.Text>{copyMessage}</TertiaryButton.Text>
@@ -291,15 +353,21 @@ class AddressModalConnected extends Component<Props, State> {
                   inputAccessoryViewID={inputAccessoryViewID}
                 />
               </View>
-              <FlatList
-                style={{ flex: 1, marginBottom: -gap.bottom }}
-                contentContainerStyle={{ paddingBottom: gap.bottom }}
-                data={this.state.fioAddresses}
-                initialNumToRender={24}
-                keyboardShouldPersistTaps="handled"
-                keyExtractor={this.keyExtractor}
-                renderItem={this.renderFioAddressRow}
-              />
+              {!userFioAddressesLoading ? (
+                <FlatList
+                  style={{ flex: 1, marginBottom: -gap.bottom }}
+                  contentContainerStyle={{ paddingBottom: gap.bottom }}
+                  data={filteredFioAddresses}
+                  initialNumToRender={24}
+                  keyboardShouldPersistTaps="handled"
+                  keyExtractor={this.keyExtractor}
+                  renderItem={this.renderFioAddressRow}
+                />
+              ) : (
+                <View style={styles.loaderContainer}>
+                  <ActivityIndicator />
+                </View>
+              )}
             </View>
           </Fragment>
         )}
@@ -315,9 +383,12 @@ const AddressModal = connect(
     return {
       account,
       coreWallet: currencyWallets[ownProps.walletId],
+      userFioAddresses: state.ui.scenes.fioAddress.fioAddresses,
+      userFioAddressesLoading: state.ui.scenes.fioAddress.fioAddressesLoading,
       fioPlugin: account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
     }
-  }
+  },
+  (dispatch: Dispatch): DispatchProps => ({ refreshAllFioAddresses: () => dispatch(refreshAllFioAddresses()) })
 )(AddressModalConnected)
 export { AddressModal }
 
@@ -389,6 +460,11 @@ const styles = StyleSheet.create({
   },
   addressModalButton: {
     width: '100%'
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
 
   // Accessory Input
