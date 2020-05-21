@@ -25,7 +25,7 @@ export const showDeleteWalletModal = (walletId: string, additionalMsg: string = 
       <Text style={{ textAlign: 'center' }}>
         {s.strings.fragmet_wallets_delete_wallet_first_confirm_message_mobile}
         <B>{`${getWalletName(currencyWallets[walletId])}?`}</B>
-        {additionalMsg}
+        {`\n \n ${additionalMsg}`}
       </Text>
     ),
     icon: <OptionIcon iconName={DELETE} />,
