@@ -5,7 +5,7 @@ import type { EdgeCurrencyWallet, EdgeMetadata, EdgeTransaction } from 'edge-cor
 import { FIO_WALLET_TYPE } from '../constants/WalletAndCurrencyConstants'
 import s from '../locales/strings'
 import { getFioObtData, refreshConnectedWalletsForFioAddress } from '../modules/FioAddress/util'
-import { getFioWallets, getWalletLoadingPercent } from '../modules/UI/selectors'
+import { getFioWallets } from '../modules/UI/selectors'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import type { FioObtRecord } from '../types/types'
 
@@ -36,24 +36,23 @@ export const refreshConnectedWallets = async (dispatch: Dispatch, currencyWallet
 
 export const checkFioObtData = (walletId: string, transactions: EdgeTransaction[]) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const progressPercentage = getWalletLoadingPercent(state)
-  if (progressPercentage < 100) {
+  const { currencyWallets, activeWalletIds } = state.core.account
+  if (Object.keys(currencyWallets).length !== activeWalletIds.length) {
     setTimeout(() => {
       dispatch(checkFioObtData(walletId, transactions))
     }, 400)
     return
   }
-  const wallets = state.core.account.currencyWallets
   const fioWallets = getFioWallets(state)
 
-  const wallet = wallets[walletId]
+  const wallet = currencyWallets[walletId]
   const obtDataRecords = await getFioObtData(fioWallets)
 
   for (const transaction: EdgeTransaction of transactions) {
     const edgeMetadata: EdgeMetadata = transaction.metadata || { notes: '' }
     const obtForTx: FioObtRecord | void = obtDataRecords.find(obtRecord => obtRecord.content.obt_id === transaction.txid)
     if (!obtForTx) return
-    if (edgeMetadata.notes) edgeMetadata.notes = ''
+    if (!edgeMetadata.notes) edgeMetadata.notes = ''
     let fioNotes = `${s.strings.fragment_transaction_list_sent_prefix}${s.strings.word_to_in_convert_from_to_string} ${obtForTx.payee_fio_address}`
     if (obtForTx.content.memo) fioNotes += `\n${s.strings.fio_sender_memo_label}: ${obtForTx.content.memo}`
     edgeMetadata.notes = `${fioNotes}\n${edgeMetadata.notes || ''}`

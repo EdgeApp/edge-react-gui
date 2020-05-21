@@ -74,7 +74,7 @@ class SelectFioAddress extends Component<Props, LocalState> {
       if (fioWallet) {
         const fioNames = await fioWallet.otherMethods.getFioAddressNames()
         this.setState({ fioAddresses: fioNames.map((name: string) => ({ value: name })) }, () => {
-          this.setFioAddress(fioNames[0])
+          fioNames[0] && this.setFioAddress(fioNames[0])
         })
       }
     } else {
