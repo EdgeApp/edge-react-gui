@@ -679,6 +679,52 @@
       "page": "0"
     }
   },
+  {
+    "id": "transak.upi",
+    "pluginId": "transak",
+    "paymentTypes": [
+      "bank"
+    ],
+    "description": "Fee: 0.75% / Settlement: Instant\nLimit: ₹1,000,000/day",
+    "title": "United Payments Interface",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/transak.png",
+    "forCountries": [
+      "IN"
+    ],
+    "cryptoCodes": [
+      "BTC",
+      "ETH",
+      "and more"
+    ],
+    "paymentTypeLogoKey": "upi",
+    "deepQuery": {
+      "countryCode": "IN",
+      "paymentMethod": "upi"
+    }
+  },
+  {
+    "id": "transak.bank",
+    "pluginId": "transak",
+    "paymentTypes": [
+      "bank"
+    ],
+    "description": "Fee: 0.75% / Settlement: 2min - 4hours\nLimit: ₹1,000,000/day",
+    "title": "NEFT Transfer",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/transak.png",
+    "forCountries": [
+      "IN"
+    ],
+    "cryptoCodes": [
+      "BTC",
+      "ETH",
+      "and more"
+    ],
+    "paymentTypeLogoKey": "bank",
+    "deepQuery": {
+      "countryCode": "IN",
+      "paymentMethod": "neft_bank_transfer"
+    }
+  },
   "----- Sorting -----",
   {
     "id": "simplex",
@@ -735,6 +781,14 @@
   {
     "id": "moonpay",
     "sortIndex": 5
+  },
+  {
+    "id": "transak.upi",
+    "sortIndex": 1
+  },
+  {
+    "id": "transak.bank",
+    "sortIndex": 2
   },
   "----- iOS specifics -----",
   {

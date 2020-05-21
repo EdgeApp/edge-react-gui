@@ -93,6 +93,14 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     displayName: 'Cred',
     permissions: ['camera']
   },
+  transak: {
+    pluginId: 'transak',
+    storeId: 'transak',
+    baseUri: 'https://global.transak.com',
+    baseQuery: { apiKey: '07c66ef7-33e4-47dd-b036-c8d28a50d962', themeColor: '0D2145', disableWalletAddressForm: 'true' },
+    displayName: 'Transak',
+    permissions: ['camera']
+  },
   custom: {
     pluginId: 'custom',
     storeId: 'custom',

@@ -24,6 +24,7 @@ import paymentTypeLogoNewsagent from '../../assets/images/paymentTypes/paymentTy
 import paymentTypeLogoPayid from '../../assets/images/paymentTypes/paymentTypeLogoPayid.png'
 import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLogoPoli.png'
 import paymentTypeLogoSwish from '../../assets/images/paymentTypes/paymentTypeLogoSwish.png'
+import paymentTypeLogoUpi from '../../assets/images/paymentTypes/paymentTypeLogoUpi.png'
 import { ARROW_RIGHT, COUNTRY_CODES, FLAG_LOGO_URL, PLUGIN_VIEW, PLUGIN_VIEW_LEGACY, SIMPLE_ICONS } from '../../constants/indexConstants.js'
 import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins.js'
 import s from '../../locales/strings.js'
@@ -62,7 +63,8 @@ const paymentTypeLogosById = {
   newsagent: paymentTypeLogoNewsagent,
   payid: paymentTypeLogoPayid,
   poli: paymentTypeLogoPoli,
-  swish: paymentTypeLogoSwish
+  swish: paymentTypeLogoSwish,
+  upi: paymentTypeLogoUpi
 }
 
 type OwnProps = {
