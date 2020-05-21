@@ -79,7 +79,8 @@ export class SwapSettings extends Component<Props, State> {
       )
     }
 
-    this.sortedIds = Object.keys(exchanges).sort((a, b) => exchanges[a].swapInfo.displayName.localeCompare(exchanges[b].swapInfo.displayName))
+    const exchangeIds = Object.keys(exchanges).filter(id => id !== 'transfer')
+    this.sortedIds = exchangeIds.sort((a, b) => exchanges[a].swapInfo.displayName.localeCompare(exchanges[b].swapInfo.displayName))
   }
 
   componentWillUnmount () {
