@@ -5,7 +5,7 @@
     "paymentTypes": [
       "credit"
     ],
-    "description": "Fee: 7% / Settlement: 10-30 minutes\nLimit: $18000/day",
+    "description": "Fee: 7% / Settlement: 10 - 30min\nLimit: $18000/day",
     "title": "Credit and Debit Card",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/03/simplex-logo-sm-square.png",
     "forCountries": [
@@ -259,7 +259,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 1% / Settlement: 1-5 days\nLimit: $2500/week",
+    "description": "Fee: 1% / Settlement: 1 - 5days\nLimit: $2500/week",
     "title": "ACH Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/01/wyre-logo-square-small.png",
     "forCountries": [
@@ -317,7 +317,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 1.55% / Settlement: 1-2 days\nLimit: €5000/day with no KYC",
+    "description": "Fee: 1.55% / Settlement: 1 - 2days\nLimit: €5000/day with no KYC",
     "title": "SEPA Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/09/logoBity.png",
     "paymentTypeLogoKey": "bank"
@@ -328,7 +328,7 @@
     "paymentTypes": [
       "credit"
     ],
-    "description": "Fee: 6.5% / Settlement: 10 minutes\nLimit: $10000/day",
+    "description": "Fee: 6.5% / Settlement: 10 minutes\nDaily Limit: $10800\nMonthly Limit: $54000",
     "title": "Credit Card",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/05/icon_black_small.png",
     "forCountries": [
@@ -440,7 +440,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 4% / Settlement: 1-2 days\nLimit: €2500/day",
+    "description": "Fee: 4% / Settlement: 1 - 2days\nLimit: €2500/day",
     "title": "Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/06/Safello-Logo-Green-background.png",
     "forCountries": [
@@ -480,7 +480,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 2.5% / Settlement: 5 min-24 hours\nLimit: $50000/day",
+    "description": "Fee: 2.5% / Settlement: 5min - 24hours\nLimit: $50000/day",
     "title": "POLi Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
     "forCountries": [
@@ -504,7 +504,7 @@
     "paymentTypes": [
       "cash"
     ],
-    "description": "Fee: 5.5% / Settlement: 5 min-24 hours\nLimit: $9000/day",
+    "description": "Fee: 5.5% / Settlement: 5min - 24hours\nLimit: $9000/day",
     "title": "Cash with Newsagent",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
     "forCountries": [
@@ -548,7 +548,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 2% / Settlement: 1-48 hours\nLimit: €10000+/day",
+    "description": "Fee: 2% / Settlement: 1 - 48hours\nLimit: €10000+/day",
     "title": "BPay",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
     "forCountries": [
@@ -615,7 +615,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 3% / Settlement: 1-48 hours\nLevel 1 Limit: €10000/day\nLevel 2 Limit: Unlimited",
+    "description": "Fee: 3% / Settlement: 1 - 48hours\nLevel 1 Limit: €10000/day\nLevel 2 Limit: Unlimited",
     "title": "SEPA Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/bits-of-gold-logo-sm.png",
     "forCountries": [
@@ -841,7 +841,7 @@
     },
     "title": "Faster Payments",
     "paymentTypeLogoKey": "fasterPayments",
-    "description": "Fee: 2.5% / Settlement: Instant-1 hour\nLimit: £5000",
+    "description": "Fee: 2.5% / Settlement: Instant - 1hour\nLimit: £5000",
     "sortIndex": 1
   },
   {
