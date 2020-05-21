@@ -117,7 +117,7 @@
   "fragment_wallets_split_wallet_first_confirm_message_mobile": "Sei sicuro di voler dividere\n",
   "fragment_wallets_get_seed_wallet_first_confirm_message_mobile": "Sei sicuro di voler rivelare i seed privati di questo portafoglio?\n",
   "fragmet_wallets_delete_wallet_first_confirm_message_mobile": "Sei sicuro di voler cancellare\n",
-  "fragmet_wallets_delete_fio_extra_message_mobile": "La chiave FIO di questo portafoglio è stata utilizzata per registrare l'indirizzo (o gli indirizzi) FIO.",
+  "fragmet_wallets_delete_fio_extra_message_mobile": "",
   "fragment_wallets_syncing_wallet_txs": "Sto sincronizzando le transazioni del portafoglio...",
   "wallet_list_add_wallet": "Aggiungi Portafoglio",
   "wallet_list_add_token": "Aggiungi un token",
