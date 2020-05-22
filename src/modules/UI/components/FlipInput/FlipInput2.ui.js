@@ -35,7 +35,8 @@ type State = {
   overridePrimaryDecimalAmount: string,
   forceUpdateGuiCounter: number,
   primaryDisplayAmount: string, // Actual display amount including 1000s separator and localized for region
-  secondaryDisplayAmount: string // Actual display amount including 1000s separator and localized for region
+  secondaryDisplayAmount: string, // Actual display amount including 1000s separator and localized for region
+  rerenderCounter: number
 }
 
 export type FlipInputOwnProps = {
@@ -98,7 +99,13 @@ function setSecondaryToPrimary (props: Props, secondaryDecimalAmount: string) {
 
 const addCurrencySymbol = (currencySymbol: string, displayAmount: string) =>
   displayAmount.includes(currencySymbol) ? displayAmount : `${currencySymbol} ${displayAmount}`
-const removeCurrencySymbol = (currencySymbol: string, displayAmount: string) => displayAmount.replace(currencySymbol, '').trim()
+const removeCurrencySymbol = (currencySymbol: string, previousDisplayAmount: string, displayAmount: string) => {
+  // This looks for a number left if the currency symbol and moves it to the far right
+  if (previousDisplayAmount === displayAmount.substring(1)) {
+    displayAmount = previousDisplayAmount + displayAmount[0]
+  }
+  return displayAmount.replace(currencySymbol, '').trim()
+}
 
 const getInitialState = (props: Props) => {
   const state: State = {
@@ -108,7 +115,8 @@ const getInitialState = (props: Props) => {
     overridePrimaryDecimalAmount: '',
     primaryDisplayAmount: '',
     forceUpdateGuiCounter: 0,
-    secondaryDisplayAmount: ''
+    secondaryDisplayAmount: '',
+    rerenderCounter: 0
   }
 
   let stateAmounts = {}
@@ -198,10 +206,14 @@ export class FlipInput extends Component<Props, State> {
       })
     } else {
       if (!this.state.isToggled) {
-        const decimalAmount = intl.formatToNativeNumber(removeCurrencySymbol(this.props.primaryInfo.currencySymbol, this.state.primaryDisplayAmount))
+        const decimalAmount = intl.formatToNativeNumber(
+          removeCurrencySymbol(this.props.primaryInfo.currencySymbol, this.state.primaryDisplayAmount, this.state.primaryDisplayAmount)
+        )
         this.setState(setPrimaryToSecondary(nextProps, decimalAmount))
       } else {
-        const decimalAmount = intl.formatToNativeNumber(removeCurrencySymbol(this.props.secondaryInfo.currencySymbol, this.state.secondaryDisplayAmount))
+        const decimalAmount = intl.formatToNativeNumber(
+          removeCurrencySymbol(this.props.secondaryInfo.currencySymbol, this.state.secondaryDisplayAmount, this.state.secondaryDisplayAmount)
+        )
         const newState = setSecondaryToPrimary(nextProps, decimalAmount)
         this.setState({
           primaryDisplayAmount: newState.primaryDisplayAmount,
@@ -247,7 +259,7 @@ export class FlipInput extends Component<Props, State> {
   }
 
   onPrimaryAmountChange = (amountChanged: string) => {
-    const displayAmount = removeCurrencySymbol(this.props.primaryInfo.currencySymbol, amountChanged)
+    const displayAmount = removeCurrencySymbol(this.props.primaryInfo.currencySymbol, this.state.primaryDisplayAmount, amountChanged)
     if (!intl.isValidInput(displayAmount)) return
 
     // Do any necessary formatting of the display value such as truncating decimals
@@ -263,7 +275,7 @@ export class FlipInput extends Component<Props, State> {
   }
 
   onSecondaryAmountChange = (amountChanged: string) => {
-    const displayAmount = removeCurrencySymbol(this.props.secondaryInfo.currencySymbol, amountChanged)
+    const displayAmount = removeCurrencySymbol(this.props.secondaryInfo.currencySymbol, this.state.secondaryDisplayAmount, amountChanged)
     if (!intl.isValidInput(displayAmount)) return
 
     // Do any necessary formatting of the display value such as truncating decimals
@@ -313,7 +325,7 @@ export class FlipInput extends Component<Props, State> {
   }
 
   textInputFrontFocusTrue = () => {
-    this.setState({ textInputFrontFocus: true })
+    this.setState({ textInputFrontFocus: true, rerenderCounter: this.state.rerenderCounter + 1 })
   }
 
   textInputFrontFocusFalse = () => {
@@ -341,6 +353,7 @@ export class FlipInput extends Component<Props, State> {
               autoCorrect={false}
               keyboardType="numeric"
               selectionColor={THEME.COLORS.WHITE}
+              selection={{ start: amount.length, end: amount.length }}
               returnKeyType={this.props.topReturnKeyType || 'done'}
               underlineColorAndroid={THEME.COLORS.TRANSPARENT}
               ref={this.getTextInputFrontRef}
@@ -389,6 +402,7 @@ export class FlipInput extends Component<Props, State> {
               autoCorrect={false}
               keyboardType="numeric"
               selectionColor={THEME.COLORS.WHITE}
+              selection={{ start: amount.length, end: amount.length }}
               returnKeyType={this.props.topReturnKeyType || 'done'}
               underlineColorAndroid={THEME.COLORS.TRANSPARENT}
               ref={this.getTextInputBackRef}

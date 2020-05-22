@@ -1,5 +1,6 @@
 // @flow
 
+import transferFullLogo from '../edgeLogo/Edge_logo_L.png'
 import changellyFullLogo from './exchange_logo_changelly.png'
 import changenowFullLogo from './exchange_logo_changenow.png'
 import coinswitchFullLogo from './exchange_logo_coinswitch.png'
@@ -9,7 +10,6 @@ import godexFullLogo from './exchange_logo_godex.png'
 import shapeshiftFullLogo from './exchange_logo_shapeshift.png'
 import switchainFullLogo from './exchange_logo_switchain.png'
 import totleFullLogo from './exchange_logo_totle.png'
-import transferFullLogo from '../edgeLogo/Edge_logo_L.png'
 import changellyLogo from './settingsExchangeChangelly.png'
 import changenowLogo from './settingsExchangeChangenow.png'
 import coinswitchLogo from './settingsExchangeCoinswitch.png'
