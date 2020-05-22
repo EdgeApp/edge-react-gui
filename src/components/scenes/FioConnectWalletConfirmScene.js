@@ -2,7 +2,7 @@
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
-import { TouchableWithoutFeedback, View } from 'react-native'
+import { ScrollView, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import * as Constants from '../../constants/indexConstants'
@@ -88,7 +88,7 @@ export class FioConnectWalletConfirmScene extends Component<Props, State> {
 
     return (
       <SceneWrapper>
-        <View>
+        <ScrollView>
           <View style={styles.info}>
             <T style={styles.title}>{s.strings.fio_address_register_form_field_label}</T>
             <T style={styles.titleLarge}>{fioAddressName}</T>
@@ -130,8 +130,10 @@ export class FioConnectWalletConfirmScene extends Component<Props, State> {
               disabledText={s.strings.send_confirmation_slide_to_confirm}
               showSpinner={connectWalletsLoading}
             />
+            <View style={styles.spacer} />
+            <View style={styles.spacer} />
           </View>
-        </View>
+        </ScrollView>
       </SceneWrapper>
     )
   }
