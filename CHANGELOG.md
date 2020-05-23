@@ -30,6 +30,7 @@
 ## 1.12.4 (2020-05-14)
 
 - Prevent excluded currency codes from appearing in wallet modal search results
+- Temporarily exclude XTZ in exchange from-wallet selector
 
 ## 1.12.3 (2020-05-08)
 
