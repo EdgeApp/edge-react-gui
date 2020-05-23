@@ -90,7 +90,6 @@
 
 - Switch from jsc-android to react-native-v8 to fix Samsung S7 device family crashes
 
-
 ## 1.11.8 (2020-03-24)
 
 - Fix error message on Create Wallet caused by partially enabled FIO wallet
@@ -153,11 +152,11 @@
 
 ## 1.11.0
 
-- Redesign of Wallet List and Transaction History screens 
-- Improved 2FA Background Notifications 
-- Safello - Sell 
-- Safello - Denmark region support added 
-- Safello - Additional payment method added for Sweden 
+- Redesign of Wallet List and Transaction History screens
+- Improved 2FA Background Notifications
+- Safello - Sell
+- Safello - Denmark region support added
+- Safello - Additional payment method added for Sweden
 - Support new DAI and SAI
 - Other minor fixes
 
